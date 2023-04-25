@@ -857,23 +857,23 @@ export const SquareLooksX2Y2MarketplaceIcon = (props: SVGProps) => (
         />
         <path
           d="M294.337 92.4489C272.272 70.8879 242.087 57.6 208.8 57.6C141.2 57.6 86.4 112.4 86.4 180C86.4 247.6 141.2 302.4 208.8 302.4C242.087 302.4 272.272 289.112 294.337 267.551C268.016 301.872 226.592 324 180 324C100.471 324 36 259.529 36 180C36 100.471 100.471 36 180 36C226.592 36 268.016 58.1282 294.337 92.4489Z"
-          fill="url(#paint0_linear_992_26815)"
+          fill={`url(#${props.gradientId}paint0_linear_992_26815)`}
         />
         <path
           d="M117.33 250.042C134.983 267.29 159.13 277.92 185.76 277.92C239.84 277.92 283.68 234.08 283.68 180C283.68 125.92 239.84 82.08 185.76 82.08C159.13 82.08 134.983 92.7099 117.33 109.958C138.387 82.5025 171.526 64.8 208.8 64.8C272.423 64.8 324 116.377 324 180C324 243.623 272.423 295.2 208.8 295.2C171.526 295.2 138.387 277.497 117.33 250.042Z"
-          fill="url(#paint1_linear_992_26815)"
+          fill={`url(#${props.gradientId}paint1_linear_992_26815)`}
         />
         <path
           fillRule="evenodd"
           clipRule="evenodd"
           d="M266.4 180C266.4 227.717 227.717 266.4 180 266.4C132.283 266.4 93.6 227.717 93.6 180C93.6 132.283 132.283 93.6 180 93.6C227.717 93.6 266.4 132.283 266.4 180ZM237.6 180C237.6 211.811 211.811 237.6 180 237.6C148.189 237.6 122.4 211.811 122.4 180C122.4 148.189 148.189 122.4 180 122.4C211.811 122.4 237.6 148.189 237.6 180Z"
-          fill="url(#paint2_linear_992_26815)"
+          fill={`url(#${props.gradientId}paint2_linear_992_26815)`}
         />
       </g>
     </g>
     <defs>
       <linearGradient
-        id="paint0_linear_992_26815"
+        id={`${props.gradientId}paint0_linear_992_26815`}
         x1="36"
         y1="175.035"
         x2="324"
@@ -884,7 +884,7 @@ export const SquareLooksX2Y2MarketplaceIcon = (props: SVGProps) => (
         <stop offset="1" stopColor="#562EC8" />
       </linearGradient>
       <linearGradient
-        id="paint1_linear_992_26815"
+        id={`${props.gradientId}paint1_linear_992_26815`}
         x1="36"
         y1="175.035"
         x2="324"
@@ -895,7 +895,7 @@ export const SquareLooksX2Y2MarketplaceIcon = (props: SVGProps) => (
         <stop offset="1" stopColor="#562EC8" />
       </linearGradient>
       <linearGradient
-        id="paint2_linear_992_26815"
+        id={`${props.gradientId}paint2_linear_992_26815`}
         x1="36"
         y1="175.035"
         x2="324"

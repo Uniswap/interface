@@ -14,6 +14,7 @@ import {
   SquareZoraMarketplaceIcon,
 } from 'nft/components/icons'
 import { DetailsOrigin, GenieAsset, Listing, Markets, UpdatedGenieAsset, WalletAsset } from 'nft/types'
+import { v4 as uuidv4 } from 'uuid'
 
 export function getRarityStatus(
   rarityStatusCache: Map<string, boolean>,
@@ -42,38 +43,36 @@ export const getAssetHref = (asset: GenieAsset | WalletAsset, origin?: DetailsOr
 
 export const getMarketplaceIcon = (
   marketplace: string,
-  width: string | number,
-  height: string | number,
-  gradientId?: string
+  size: string | number = "16",
 ) => {
   switch (marketplace.toLowerCase()) {
     case Markets.Opensea:
-      return <SquareOpenSeaMarketplaceIcon width={width} height={height} />
+      return <SquareOpenSeaMarketplaceIcon width={size} height={size} />
     case Markets.LooksRare:
-      return <SquareLooksRareMarketplaceIcon width={width} height={height} />
+      return <SquareLooksRareMarketplaceIcon width={size} height={size} />
     case Markets.X2Y2:
-      return <SquareLooksX2Y2MarketplaceIcon width={width} height={height} />
+      return <SquareLooksX2Y2MarketplaceIcon width={size} height={size} gradientId={uuidv4()}/>
     case Markets.Blur:
-      return <SquareLooksBlurMarketplaceIcon width={width} height={height} />
+      return <SquareLooksBlurMarketplaceIcon width={size} height={size} />
     case Markets.Sudoswap:
-      return <SquareSudoSwapMarketplaceIcon width={width} height={height} />
+      return <SquareSudoSwapMarketplaceIcon width={size} height={size} />
     case Markets.NFTX:
-      return <SquareNftXMarketplaceIcon width={width} height={height} gradientId={gradientId} />
+      return <SquareNftXMarketplaceIcon width={size} height={size} gradientId={uuidv4()} />
     case Markets.Gem:
-      return <SquareGemMarketplaceIcon width={width} height={height} gradientId={gradientId} />
+      return <SquareGemMarketplaceIcon width={size} height={size} gradientId={uuidv4()} />
     case Markets.Zora:
-      return <SquareZoraMarketplaceIcon width={width} height={height} gradientId={gradientId} />
+      return <SquareZoraMarketplaceIcon width={size} height={size} gradientId={uuidv4()} />
     case Markets.Ensvision:
-      return <SquareEnsVisionMarketplaceIcon width={width} height={height} />
+      return <SquareEnsVisionMarketplaceIcon width={size} height={size} />
     case Markets.Cryptopunks:
     case 'larvalabs':
-      return <SquareCryptopunksMarketplaceIcon width={width} height={height} />
+      return <SquareCryptopunksMarketplaceIcon width={size} height={size} />
     case Markets.Rarible:
-      return <SquareRaribleMarketplaceIcon width={width} height={height} />
+      return <SquareRaribleMarketplaceIcon width={size} height={size} />
     case Markets.Foundation:
-      return <SquareFoundationMarketplaceIcon width={width} height={height} />
+      return <SquareFoundationMarketplaceIcon width={size} height={size} />
     case Markets.NFT20:
-      return <SquareNft20MarketplaceIcon width={width} height={height} />
+      return <SquareNft20MarketplaceIcon width={size} height={size} />
     default:
       return null
   }

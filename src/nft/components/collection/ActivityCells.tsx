@@ -200,7 +200,7 @@ export const PriceCell = ({ marketplace, price }: { marketplace?: Markets | stri
 
   return (
     <Row display={{ sm: 'none', md: 'flex' }} gap="8">
-      {marketplace && getMarketplaceIcon(marketplace, '16', '16')}
+      {marketplace && getMarketplaceIcon(marketplace, '16')}
       {formattedPrice ? (
         formattedPrice.length > 6 ? (
           <PriceTooltip price={formattedPrice} />

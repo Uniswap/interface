@@ -544,7 +544,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
                 key={market}
                 value={
                   <MarketNameWrapper>
-                    {getMarketplaceIcon(market, '16', '16')}
+                    {getMarketplaceIcon(market, '16')}
                     {MARKETPLACE_ITEMS[market as keyof typeof MARKETPLACE_ITEMS]}
                   </MarketNameWrapper>
                 }

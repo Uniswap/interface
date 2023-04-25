@@ -175,7 +175,7 @@ const AssetActivity = ({ events }: { events: ActivityEvent[] | undefined }) => {
               <TD>
                 {formattedPrice && (
                   <PriceContainer>
-                    {marketplace && getMarketplaceIcon(marketplace, '16', '16')}
+                    {marketplace && getMarketplaceIcon(marketplace, '16')}
                     {formattedPrice} ETH
                   </PriceContainer>
                 )}

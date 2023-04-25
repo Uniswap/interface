@@ -23,7 +23,6 @@ import { useQuery } from 'react-query'
 import { Link, useNavigate } from 'react-router-dom'
 import styled, { css, useTheme } from 'styled-components/macro'
 import { ExternalLink, ThemedText } from 'theme'
-import { v4 as uuidv4 } from 'uuid'
 
 const TWITTER_WIDTH = 560
 const TWITTER_HEIGHT = 480
@@ -244,7 +243,7 @@ const OwnerContainer = ({ asset }: { asset: WalletAsset }) => {
         </ThemedText.SubHeader>
         {listing && (
           <MarketplaceIcon href={listing.marketplaceUrl}>
-            {getMarketplaceIcon(listing.marketplace, '20', '20', uuidv4())}
+            {getMarketplaceIcon(listing.marketplace, '20')}
           </MarketplaceIcon>
         )}
       </HeaderRow>
@@ -378,7 +377,7 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
               Best Price
             </ThemedText.SubHeader>
             <MarketplaceIcon href={cheapestOrder.marketplaceUrl}>
-              {getMarketplaceIcon(cheapestOrder.marketplace, '20', '20', uuidv4())}
+              {getMarketplaceIcon(cheapestOrder.marketplace, '20')}
             </MarketplaceIcon>
           </HeaderRow>
           <PriceRow>

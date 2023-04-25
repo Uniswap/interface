@@ -99,7 +99,7 @@ const MarketplaceItem = ({
 
   const titleWithLogo = (
     <MarketNameWrapper>
-      {getMarketplaceIcon(title, '16', '16')}
+      {getMarketplaceIcon(title, '16')}
       {title}
     </MarketNameWrapper>
   )
