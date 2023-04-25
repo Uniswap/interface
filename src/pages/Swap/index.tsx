@@ -196,7 +196,7 @@ export function Swap({
   }, [])
 
   // dismiss warning if all imported tokens are in active lists
-  const defaultTokens = useDefaultActiveTokens()
+  const defaultTokens = useDefaultActiveTokens(chainId)
   const importTokensNotInDefault = useMemo(
     () =>
       urlLoadedTokens &&

@@ -74,7 +74,7 @@ const BAD_RECIPIENT_ADDRESSES: { [address: string]: true } = {
 // from the current swap inputs, compute the best trade and return it.
 export function useDerivedSwapInfo(
   state: SwapState,
-  defaultChainId?: SupportedChainId
+  chainId: SupportedChainId | undefined
 ): {
   currencies: { [field in Field]?: Currency | null }
   currencyBalances: { [field in Field]?: CurrencyAmount<Currency> }
@@ -96,8 +96,8 @@ export function useDerivedSwapInfo(
     recipient,
   } = state
 
-  const inputCurrency = useCurrency(inputCurrencyId, defaultChainId)
-  const outputCurrency = useCurrency(outputCurrencyId, defaultChainId)
+  const inputCurrency = useCurrency(inputCurrencyId, chainId)
+  const outputCurrency = useCurrency(outputCurrencyId, chainId)
   const recipientLookup = useENS(recipient ?? undefined)
   const to: string | null = (recipient === null ? account : recipientLookup.address) ?? null
 

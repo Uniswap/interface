@@ -16,8 +16,8 @@ export {
 
 // mimics useAllBalances
 export function useAllTokenBalances(): [{ [tokenAddress: string]: CurrencyAmount<Token> | undefined }, boolean] {
-  const { account } = useWeb3React()
-  const allTokens = useDefaultActiveTokens()
+  const { account, chainId } = useWeb3React()
+  const allTokens = useDefaultActiveTokens(chainId)
   const allTokensArray = useMemo(() => Object.values(allTokens ?? {}), [allTokens])
   const [balances, balancesIsLoading] = useTokenBalancesWithLoadingIndicator(account ?? undefined, allTokensArray)
   return [balances ?? {}, balancesIsLoading]

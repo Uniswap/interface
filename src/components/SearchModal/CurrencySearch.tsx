@@ -85,7 +85,7 @@ export function CurrencySearch({
     }
   }, [isAddressSearch])
 
-  const defaultTokens = useDefaultActiveTokens()
+  const defaultTokens = useDefaultActiveTokens(chainId)
   const filteredTokens: Token[] = useMemo(() => {
     return Object.values(defaultTokens).filter(getTokenFilter(debouncedQuery))
   }, [defaultTokens, debouncedQuery])

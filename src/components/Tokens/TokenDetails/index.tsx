@@ -153,13 +153,16 @@ export default function TokenDetails({
       ) {
         return
       }
+
       const newDefaultTokenID = tokens[Field.OUTPUT]?.currencyId ?? tokens[Field.INPUT]?.currencyId
       startTokenTransition(() =>
         navigate(
           getTokenDetailsURL({
-            address: newDefaultTokenID === 'ETH' ? 'NATIVE' : newDefaultTokenID,
+            // The function falls back to "NATIVE" if the address is null
+            address: newDefaultTokenID === 'ETH' ? null : newDefaultTokenID,
             chain,
             inputAddress:
+              // If only one token was selected before we navigate, it becomes the output and we don't need to set an input token.
               tokens[Field.INPUT] && tokens[Field.INPUT]?.currencyId !== newDefaultTokenID
                 ? tokens[Field.INPUT]?.currencyId
                 : null,
@@ -238,6 +241,7 @@ export default function TokenDetails({
               chainId={pageChainId}
               prefilledState={{
                 [Field.INPUT]: { currencyId: inputToken?.wrapped?.address },
+                // TODO: move this check into the Swap component
                 [Field.OUTPUT]: { currencyId: address === NATIVE_CHAIN_ID ? 'ETH' : address },
               }}
               onCurrencyChange={handleCurrencyChange}
