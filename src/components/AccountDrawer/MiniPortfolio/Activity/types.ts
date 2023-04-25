@@ -14,7 +14,7 @@ export type Activity = {
   logos?: Array<string | undefined>
   currencies?: Array<Currency | undefined>
   otherAccount?: string
-  receipt?: Receipt
+  receipt?: Omit<Receipt, 'nonce'>
 }
 
 export type ActivityMap = { [hash: string]: Activity | undefined }

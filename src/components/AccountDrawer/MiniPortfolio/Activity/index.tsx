@@ -109,6 +109,23 @@ export function ActivityTab({ account }: { account: string }) {
     fetchPolicy: 'cache-first',
   })
 
+  // remove local transactions with nonces that are duplicates of remote transactions
+  useEffect(() => {
+    const remoteActivity = data?.portfolios?.[0]
+    if (!remoteActivity) return
+    const overlap = []
+    const localActivityList = Object.values(localMap)
+    const remoteActivityList = Object.values(!remoteActivity.assetActivities)
+    for (const localAction of localActivityList) {
+      for (const remoteAction of remoteActivityList) {
+        if (localAction?.nonce === remoteAction.nonce) {
+          overlap.push(localAction)
+        }
+      }
+    }
+    // overlap.forEach()
+  }, [data?.portfolios, localMap])
+
   // We only refetch remote activity if the user renavigates to the activity tab by changing tabs or opening the drawer
   useEffect(() => {
     const currentTime = Date.now()
