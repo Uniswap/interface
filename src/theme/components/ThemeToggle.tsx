@@ -34,6 +34,10 @@ export function SystemThemeUpdater() {
   }
 
   useEffect(() => {
+    /*
+     * Need to fallback to support older browsers (mainly, Safari < 14).
+     * See: https://developer.mozilla.org/en-US/docs/Web/API/MediaQueryList#browser_compatibility
+     */
     try {
       DARKMODE_MEDIA_QUERY.addEventListener('change', listener)
     } catch (e) {
