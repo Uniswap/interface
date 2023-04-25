@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`BuyCell renders add to bag button 1`] = `
+<DocumentFragment>
+  <div
+    class="_1klryar0 rgw6eztm rgw6ez101 rgw6ez4rk rgw6ez4s0 rgw6ez4uo rgw6ez1lf rgw6ez4v9"
+  >
+    <button
+      class="_1klryar0 e2d0r6h e2d0r6g _127l8hd8 rgw6ezen rgw6ezcb rgw6ezg0 e2d0r6f rgw6ez2qu rgw6ez2x9 rgw6ez33a rgw6ez2k1 rgw6ez1du rgw6ez5gp rgw6ez875 rgw6ez7zp rgw6ez8ct"
+    >
+      Add to bag
+    </button>
+  </div>
+</DocumentFragment>
+`;

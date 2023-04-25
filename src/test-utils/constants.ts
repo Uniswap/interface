@@ -1,9 +1,9 @@
 import { CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
 import { V3Route } from '@uniswap/smart-order-router'
 import { FeeAmount, Pool } from '@uniswap/v3-sdk'
-import { NftStandard } from 'graphql/data/__generated__/types-and-hooks'
+import { NftActivityType, NftStandard, OrderStatus } from 'graphql/data/__generated__/types-and-hooks'
 import JSBI from 'jsbi'
-import { GenieAsset, Markets, WalletAsset } from 'nft/types'
+import { ActivityEvent, GenieAsset, Markets, WalletAsset } from 'nft/types'
 import { InterfaceTrade } from 'state/routing/types'
 
 export const TEST_TOKEN_1 = new Token(1, '0x0000000000000000000000000000000000000001', 18, 'ABC', 'Abc')
@@ -124,4 +124,33 @@ export const TEST_NFT_WALLET_ASSET: WalletAsset = {
   basisPoints: 0,
   date_acquired: '1682024661',
   sellOrders: [],
+}
+
+export const TEST_NFT_ACTIVITY_EVENT: ActivityEvent = {
+  collectionAddress: '0xed5af388653567af2f388e6224dc7c4b3241c544',
+  tokenId: '5674',
+  tokenMetadata: {
+    name: 'Azuki #5674',
+    imageUrl:
+      'https://cdn.center.app/1/0xED5AF388653567Af2F388E6224dC7C4b3241C544/5674/b2e5cb241d4a28bb3688ff6ae12f2d60c9850721f35f5104b5c42b31511e8a42.png',
+    smallImageUrl: 'https://i.seadn.io/gcs/files/e2dabe8f353ed6354f5a1927e3d8bd64.png?w=500&auto=format',
+    metadataUrl: 'ipfs://QmZcH4YvBVVRJtdn4RdbaqgspFU8gH6P9vomDpBVpAL3u4/5674',
+    rarity: {
+      source: 'RARITY_SNIPER',
+      rank: 9412,
+      score: 2778,
+    },
+    suspiciousFlag: false,
+    standard: NftStandard.Erc721,
+  },
+  eventType: NftActivityType.Listing,
+  marketplace: 'OPENSEA',
+  fromAddress: '0xbf9fda32692b25c6083cbe48399ef019b62f0712',
+  toAddress: undefined,
+  transactionHash: undefined,
+  price: '15.2',
+  orderStatus: OrderStatus.Valid,
+  quantity: 1,
+  url: 'https://opensea.io/assets/0xed5af388653567af2f388e6224dc7c4b3241c544/5674',
+  eventTimestamp: 1682444662,
 }
