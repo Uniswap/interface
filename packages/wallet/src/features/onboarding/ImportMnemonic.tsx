@@ -31,6 +31,7 @@ export function ImportMnemonic(): JSX.Element {
                 type: ImportAccountType.Mnemonic,
                 validatedMnemonic: mnemonic,
                 validatedPassword: passwordInputProps.value,
+                markAsActive: true,
               })
             )
           }}>
