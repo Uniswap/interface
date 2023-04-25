@@ -21,6 +21,7 @@ import { AnimatedFlex, Box, Flex } from 'src/components/layout'
 import { SpinningLoader } from 'src/components/loading/SpinningLoader'
 import { Text } from 'src/components/Text'
 import { dimensions } from 'src/styles/sizing'
+import { usePrevious } from 'src/utils/hooks'
 import { openSettings } from 'src/utils/linking'
 import { Barcode, BarcodeFormat, scanBarcodes } from 'vision-camera-code-scanner'
 
@@ -57,7 +58,9 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
 
   // QR codes are a "type" of Barcode in the scanning library
   const [barcodes, setBarcodes] = useState<Barcode[]>([])
-  const data = barcodes[0]?.content.data
+  const data = barcodes[0]?.content.data.toString()
+  // Keep track of the previously scanned code to prevent duplicate scans
+  const prevData = usePrevious(data)
   const [infoLayout, setInfoLayout] = useState<LayoutRectangle | null>()
   const [connectionLayout, setConnectionLayout] = useState<LayoutRectangle | null>()
 
@@ -92,10 +95,9 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
   }, [permission, t])
 
   useEffect(() => {
-    if (!data) return
-
-    onScanCode(data.toString())
-  }, [data, onScanCode])
+    if (!data || data === prevData) return
+    onScanCode(data)
+  }, [data, prevData, onScanCode])
 
   const frameProcessor = useFrameProcessor((frame) => {
     'worklet'
