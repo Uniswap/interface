@@ -102,7 +102,7 @@
     "expo": "47.0.11",
     "expo-av": "13.0.2",
     "expo-blur": "12.0.1",
-    "expo-clipboard": "2.0.3",
+    "expo-clipboard": "4.1.2",
     "expo-haptics": "12.0.1",
     "expo-linear-gradient": "12.0.1",
     "expo-local-authentication": "12.1.0",

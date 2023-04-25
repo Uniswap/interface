@@ -358,13 +358,13 @@ PODS:
     - ReactCommon/turbomodule/core
   - EXBlur (12.0.1):
     - ExpoModulesCore
-  - EXClipboard (2.0.3):
-    - ExpoModulesCore
   - EXLocalAuthentication (12.1.0):
     - ExpoModulesCore
   - experiment-react-native-client (1.0.0):
     - React-Core
   - Expo (47.0.11):
+    - ExpoModulesCore
+  - ExpoClipboard (4.1.2):
     - ExpoModulesCore
   - ExpoHaptics (12.0.1):
     - ExpoModulesCore
@@ -1002,10 +1002,10 @@ DEPENDENCIES:
   - EXApplication (from `../node_modules/expo-application/ios`)
   - EXAV (from `../node_modules/expo-av/ios`)
   - EXBlur (from `../node_modules/expo-blur/ios`)
-  - EXClipboard (from `../node_modules/expo-clipboard/ios`)
   - EXLocalAuthentication (from `../node_modules/expo-local-authentication/ios`)
   - "experiment-react-native-client (from `../node_modules/@amplitude/experiment-react-native-client`)"
   - Expo (from `../node_modules/expo`)
+  - ExpoClipboard (from `../node_modules/expo-clipboard/ios`)
   - ExpoHaptics (from `../node_modules/expo-haptics/ios`)
   - ExpoLinearGradient (from `../node_modules/expo-linear-gradient/ios`)
   - ExpoModulesCore (from `../node_modules/expo-modules-core`)
@@ -1140,14 +1140,14 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-av/ios"
   EXBlur:
     :path: "../node_modules/expo-blur/ios"
-  EXClipboard:
-    :path: "../node_modules/expo-clipboard/ios"
   EXLocalAuthentication:
     :path: "../node_modules/expo-local-authentication/ios"
   experiment-react-native-client:
     :path: "../node_modules/@amplitude/experiment-react-native-client"
   Expo:
     :path: "../node_modules/expo"
+  ExpoClipboard:
+    :path: "../node_modules/expo-clipboard/ios"
   ExpoHaptics:
     :path: "../node_modules/expo-haptics/ios"
   ExpoLinearGradient:
@@ -1303,10 +1303,10 @@ SPEC CHECKSUMS:
   EXApplication: 034b1c40a8e9fe1bff76a1e511ee90dff64ad834
   EXAV: 9a45d37772c5329294c054a041dcc39931fc5032
   EXBlur: d87af64a1b4ae264059983bf54baca72be2cbc7d
-  EXClipboard: ead52260683fc856e58f5cc70f5ea5999bb9c049
   EXLocalAuthentication: 4c7166ed3133d2c75586093833936652e7d2c7fc
   experiment-react-native-client: c2af8630b6209c5d4dcebdcd71ba7ad38abdcc38
   Expo: dedd83acfd4d70cbec6ac2f1b4433462d95c70bc
+  ExpoClipboard: 9b87df0ad145e3aa841614fab6aea54b7a604850
   ExpoHaptics: 5a56d30a87ea213dd00b09566dc4b441a4dff97f
   ExpoLinearGradient: b40c2133ad57ae105b1b12a319e314463c817f6b
   ExpoModulesCore: b5d21c8880afda6fb6ee95469f9ac2ec9b98e995

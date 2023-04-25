@@ -471,6 +471,9 @@ export function CopiedNotification({
     case CopyNotificationType.TransactionId:
       title = t('Transaction ID copied')
       break
+    case CopyNotificationType.Image:
+      title = t('Image copied')
+      break
   }
 
   return (

@@ -1,11 +1,12 @@
 import { ApolloQueryResult } from '@apollo/client'
 import { ThemeProvider } from '@shopify/restyle'
 import { isAddress } from 'ethers/lib/utils'
+import { impactAsync } from 'expo-haptics'
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { TouchableOpacity } from 'react-native'
 import ContextMenu from 'react-native-context-menu-view'
-import { useAppSelector } from 'src/app/hooks'
+import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { AppStackScreenProp, useAppStackNavigation } from 'src/app/navigation/types'
 import EllipsisIcon from 'src/assets/icons/ellipsis.svg'
 import ShareIcon from 'src/assets/icons/share.svg'
@@ -31,6 +32,8 @@ import { useNFTMenu } from 'src/features/nfts/hooks'
 import { BlurredImageBackground } from 'src/features/nfts/item/BlurredImageBackground'
 import { CollectionPreviewCard } from 'src/features/nfts/item/CollectionPreviewCard'
 import { NFTTraitList } from 'src/features/nfts/item/traits'
+import { pushNotification } from 'src/features/notifications/notificationSlice'
+import { AppNotificationType, CopyNotificationType } from 'src/features/notifications/types'
 import { ModalName } from 'src/features/telemetry/constants'
 import { useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
 import { ExploreModalAwareView } from 'src/screens/ModalAwareView'
@@ -39,6 +42,7 @@ import { colorsDark } from 'src/styles/color'
 import { iconSizes } from 'src/styles/sizing'
 import { darkTheme } from 'src/styles/theme'
 import { areAddressesEqual } from 'src/utils/addresses'
+import { setClipboardImage } from 'src/utils/clipboard'
 import {
   MIN_COLOR_CONTRAST_THRESHOLD,
   passesContrast,
@@ -52,6 +56,7 @@ export function NFTItemScreen({
 }: AppStackScreenProp<Screens.NFTItem>): JSX.Element {
   const { t } = useTranslation()
   const activeAccountAddress = useActiveAccountAddressWithThrow()
+  const dispatch = useAppDispatch()
 
   const navigation = useAppStackNavigation()
 
@@ -121,6 +126,17 @@ export function NFTItemScreen({
     }
     return darkTheme.colors.textTertiary
   }, [colorLight])
+
+  const onLongPressNFTImage = async (): Promise<void> => {
+    setClipboardImage(asset?.image?.url)
+    impactAsync()
+    dispatch(
+      pushNotification({
+        type: AppNotificationType.Copied,
+        copyType: CopyNotificationType.Image,
+      })
+    )
+  }
 
   return (
     <ThemeProvider theme={darkTheme}>
@@ -206,7 +222,9 @@ export function NFTItemScreen({
                         <Loader.Image />
                       </Box>
                     ) : asset?.image?.url ? (
-                      <NFTViewer autoplay uri={asset.image.url} />
+                      <TouchableArea onPress={onLongPressNFTImage}>
+                        <NFTViewer autoplay uri={asset.image.url} />
+                      </TouchableArea>
                     ) : (
                       <Box
                         aspectRatio={1}

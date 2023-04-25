@@ -124,6 +124,7 @@ export type TransactionNotification =
 export enum CopyNotificationType {
   Address = 'address',
   TransactionId = 'transactionId',
+  Image = 'image',
 }
 
 export interface CopyNotification extends AppNotificationBase {

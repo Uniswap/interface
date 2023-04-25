@@ -8328,7 +8328,7 @@ __metadata:
     expo: 47.0.11
     expo-av: 13.0.2
     expo-blur: 12.0.1
-    expo-clipboard: 2.0.3
+    expo-clipboard: 4.1.2
     expo-haptics: 12.0.1
     expo-linear-gradient: 12.0.1
     expo-local-authentication: 12.1.0
@@ -14586,12 +14586,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"expo-clipboard@npm:2.0.3":
-  version: 2.0.3
-  resolution: "expo-clipboard@npm:2.0.3"
-  dependencies:
-    expo-modules-core: ~0.4.4
-  checksum: a190a8de06ce825d2aba6dc5fd2ef67d48bf9be63ed085cdc22fc4c7bd0bb616996bd2edb550b3da4b73d2840f02078587460d83298eb825f29da226304ca575
+"expo-clipboard@npm:4.1.2":
+  version: 4.1.2
+  resolution: "expo-clipboard@npm:4.1.2"
+  peerDependencies:
+    expo: "*"
+  checksum: c9f97013b0ea95cfcf34c0e14bf5b35d52b9ebd3a2ce1f9b675db1f94e8cc03040834b5d3b58e3678bd85297dc8a797ec38e353860b4db5c70ae1087698a30ad
   languageName: node
   linkType: hard
 
@@ -14709,16 +14709,6 @@ __metadata:
     compare-versions: ^3.4.0
     invariant: ^2.2.4
   checksum: f5add659b2f43c2784dce86986ec709feac38a60881afd013049ef86b106eeba9217427d01b9da27e00b678e9f47518ffa5d7676f95408c6e3966093d48252e8
-  languageName: node
-  linkType: hard
-
-"expo-modules-core@npm:~0.4.4":
-  version: 0.4.10
-  resolution: "expo-modules-core@npm:0.4.10"
-  dependencies:
-    compare-versions: ^3.4.0
-    invariant: ^2.2.4
-  checksum: 92bd05c15a6f1c65dbb89e993f6672e40e3d8f34702faf238a71eea15ca816d4aeb6216ff2eafb5151e7d14e1e373a823b90e085f421304751566f5e776855d8
   languageName: node
   linkType: hard
 
