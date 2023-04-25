@@ -20,7 +20,7 @@ const Wrapper = styled.div<{ isDarkMode: boolean }>`
   display: flex;
   flex-flow: column nowrap;
   margin: 0;
-  min-height: 720px;
+  flex: 1 1;
   min-width: 375px;
   position: relative;
   width: 100%;
