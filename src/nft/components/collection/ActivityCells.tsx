@@ -3,7 +3,7 @@ import { InterfacePageName, NFTEventName } from '@uniswap/analytics-events'
 import { ChainId } from '@uniswap/smart-order-router'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { useNftGraphqlEnabled } from 'featureFlags/flags/nftlGraphql'
-import { NftActivityType, NftMarketplace, OrderStatus } from 'graphql/data/__generated__/types-and-hooks'
+import { NftActivityType, OrderStatus } from 'graphql/data/__generated__/types-and-hooks'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import {
@@ -58,15 +58,6 @@ const AddressLink = styled(ExternalLink)`
   }
 `
 
-const isPurchasableOrder = (orderStatus?: OrderStatus, marketplace?: string): boolean => {
-  if (!marketplace || !orderStatus) return false
-  const purchasableMarkets = Object.keys(NftMarketplace).map((market) => market.toLowerCase())
-
-  const validOrder = orderStatus === OrderStatus.Valid
-  const purchasableMarket = purchasableMarkets.includes(marketplace.toLowerCase())
-  return validOrder && purchasableMarket
-}
-
 const formatListingStatus = (status: OrderStatus): string => {
   switch (status) {
     case OrderStatus.Executed:
@@ -76,7 +67,7 @@ const formatListingStatus = (status: OrderStatus): string => {
     case OrderStatus.Expired:
       return 'Expired'
     case OrderStatus.Valid:
-      return 'Unavailable'
+      return 'Add to Bag'
     default:
       return ''
   }
@@ -114,8 +105,6 @@ export const BuyCell = ({
     return itemsInBag.some((item) => asset.tokenId === item.asset.tokenId && asset.address === item.asset.address)
   }, [asset, itemsInBag])
 
-  const purchasableOrder = isPurchasableOrder(event.orderStatus, event.marketplace)
-
   const trace = useTrace({ page: InterfacePageName.NFT_COLLECTION_PAGE })
   const eventProperties = {
     collection_address: asset.address,
@@ -129,16 +118,16 @@ export const BuyCell = ({
       {event.eventType === NftActivityType.Listing && event.orderStatus ? (
         <Box
           as="button"
-          className={purchasableOrder && isSelected ? styles.removeCell : styles.buyCell}
+          className={event.orderStatus === OrderStatus.Valid && isSelected ? styles.removeCell : styles.buyCell}
           onClick={(e: MouseEvent) => {
             e.preventDefault()
             isSelected ? removeAsset([asset]) : selectAsset([asset])
             !isSelected && !cartExpanded && !isMobile && toggleCart()
             !isSelected && sendAnalyticsEvent(NFTEventName.NFT_BUY_ADDED, { eventProperties })
           }}
-          disabled={!purchasableOrder}
+          disabled={event.orderStatus !== OrderStatus.Valid}
         >
-          {purchasableOrder ? (
+          {event.orderStatus === OrderStatus.Valid ? (
             <>{`${isSelected ? 'Remove' : 'Add to bag'}`}</>
           ) : (
             <>{`${formatListingStatus(event.orderStatus)}`}</>
