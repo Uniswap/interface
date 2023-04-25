@@ -18,7 +18,7 @@ describe('Universal search bar', () => {
       .and('contain.text', 'UNI')
       .and('contain.text', '$')
       .and('contain.text', '%')
-    cy.get('[data-cy="searchbar-token-row-UNI"]').click()
+    cy.get('[data-cy="searchbar-token-row-UNI"]').first().click()
 
     cy.get('div').contains('Uniswap').should('exist')
     // Stats should have: TVL, 24H Volume, 52W low, 52W high.
