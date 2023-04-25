@@ -12,16 +12,10 @@ export function HomeScreen(): JSX.Element {
   const address = account?.address
 
   return (
-    <Flex
-      alignItems="center"
-      backgroundColor="$background2"
-      flexGrow={1}
-      padding="$spacing12"
-      width="100%">
+    <Flex alignItems="center" flexGrow={1} width="100%">
       {address ? (
         <Flex
           backgroundColor="$background1"
-          borderRadius="$rounded16"
           flexGrow={1}
           gap="$spacing8"
           paddingBottom="$spacing24"

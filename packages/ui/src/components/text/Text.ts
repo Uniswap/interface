@@ -6,6 +6,7 @@ export const Text = styled(TamaguiText, {
   // TODO(EXT-61): keep investigating how to get text to wrap
   wordWrap: 'break-word',
   flex: 1,
+  flexGrow: 0, // Would expect the default to be this, but default seems to be 1
   flexWrap: 'wrap',
 
   variants: {

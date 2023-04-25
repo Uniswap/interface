@@ -1,11 +1,12 @@
+import { YStack } from 'ui/src'
 import { Flex } from 'ui/src/components/layout/Flex'
+import { useSagaStatus } from 'wallet/src/state/useSagaStatus'
 import Locked from '../features/auth/Locked'
 import { authSagaName } from '../features/auth/saga'
 import { DappRequestContent } from '../features/dappRequests/DappRequestContent'
 import { HomeScreen } from '../features/home/HomeScreen'
 import { isOnboardedSelector } from '../features/wallet/selectors'
 import { useAppSelector } from '../state'
-import { useSagaStatus } from '../state/useSagaStatus'
 import { SagaStatus } from '../utils/saga'
 
 function WebNavigationInner(): JSX.Element {
@@ -23,17 +24,30 @@ function WebNavigationInner(): JSX.Element {
     throw new Error('you should have onboarded')
   }
 
-  if (isLoggedIn) {
+  if (!isLoggedIn) {
     return <Locked />
   }
 
   return areRequestsPending ? <DappRequestContent /> : <HomeScreen />
 }
 
+const CONTENT_MIN_HEIGHT = 576 // Subtract 2 * $spacing12 from 600 height
+
 export function WebNavigation(): JSX.Element {
   return (
-    <Flex flex={1} maxHeight={600} overflow="visible" width={350}>
-      <WebNavigationInner />
-    </Flex>
+    <YStack backgroundColor="$background2">
+      <YStack
+        backgroundColor="$background1"
+        borderRadius="$rounded24"
+        flex={1}
+        height={CONTENT_MIN_HEIGHT}
+        margin="$spacing12"
+        overflow="hidden"
+        width={350}>
+        <Flex flex={1} flexGrow={1} overflow="visible">
+          <WebNavigationInner />
+        </Flex>
+      </YStack>
+    </YStack>
   )
 }

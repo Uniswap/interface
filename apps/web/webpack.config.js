@@ -80,12 +80,6 @@ const swcLoaderConfiguration = {
   },
 }
 
-const imageLoaderConfiguration = {
-  test: /\.(ttf|png)$/,
-  loader: 'file-loader',
-  include: [path.resolve(rootDir, 'node_modules/@react-navigation/elements')],
-}
-
 const tamaguiLoaderConfiguration = {
   loader: 'tamagui-loader',
   options: {
@@ -159,13 +153,9 @@ const options = {
   mode: NODE_ENV,
   entry: {
     background: './src/background/index.ts',
-    // options: "./src/options/index.tsx",
-    // permissions: "./src/permissions/index.tsx",
     popup: './src/popup.tsx',
     providerScript: './src/contentScript/provider.ts',
     injected: './src/contentScript/injected.js',
-    // contentScript: "./src/contentScript/index.ts",
-    // injected: "../provider-injection/dist/browser/index.js",
   },
   output: {
     filename: '[name].js',
@@ -202,13 +192,7 @@ const options = {
       {
         test: new RegExp('.(' + fileExtensions.join('|') + ')$'),
         type: 'asset/resource',
-        // exclude: /node_modules/,
-        loader: 'file-loader',
-        options: {
-          name: 'assets/[name].[ext]',
-        },
       },
-      imageLoaderConfiguration,
       babelLoaderConfiguration,
       swcLoaderConfiguration,
       // tamaguiLoaderConfiguration, // NOTE(peter) turned off for now bc it's not working with our webpack conifg. it's just an optimization compiler that we can configure later once i figure it out
@@ -287,22 +271,6 @@ const options = {
           to: '[name][ext]',
           force: true,
         },
-        // {
-        //   // use a different icon depending on the NODE_ENV
-        //   from: `src/anchor-${NODE_ENV}.png`,
-        //   to: "anchor.png",
-        //   force: true,
-        // },
-        // {
-        //   from: `src/assets/`,
-        //   to: "assets/",
-        //   force: true,
-        // },
-        // {
-        //   from: "../provider-injection/dist/browser/index.js",
-        //   to: "injected.js",
-        //   force: true,
-        // },
       ],
     }),
   ],

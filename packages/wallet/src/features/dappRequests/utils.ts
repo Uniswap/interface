@@ -11,7 +11,7 @@ type WindowParams = {
 const APPROVAL_WINDOW_PARAMS: WindowParams = {
   type: 'popup',
   width: 375,
-  height: 550,
+  height: 630,
   top: 150,
   left: 1800,
 }
