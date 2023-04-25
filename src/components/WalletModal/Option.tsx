@@ -25,10 +25,8 @@ const OptionCardClickable = styled.button<{ clickable: boolean; selected: boolea
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  margin-top: 2rem;
-  padding: 1rem;
+  padding: 18px;
 
-  margin-top: 0;
   transition: ${({ theme }) => theme.transition.duration.fast};
   opacity: ${({ clickable, selected }) => (!clickable && !selected ? '0.5' : '1')};
 
