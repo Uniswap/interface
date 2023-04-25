@@ -2,7 +2,8 @@
 const { VanillaExtractPlugin } = require('@vanilla-extract/webpack-plugin')
 const { execSync } = require('child_process')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
-const { DefinePlugin } = require('webpack')
+const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin')
+const { DefinePlugin, IgnorePlugin } = require('webpack')
 
 const commitHash = execSync('git rev-parse HEAD').toString().trim()
 const isProduction = process.env.NODE_ENV === 'production'
@@ -13,15 +14,30 @@ const shouldLintOrTypeCheck = !isProduction
 
 module.exports = {
   babel: {
-    plugins: ['@vanilla-extract/babel-plugin'],
-    env: {
-      test: {
-        plugins: ['istanbul'],
-      },
-      development: {
-        plugins: ['istanbul'],
-      },
-    },
+    plugins: [
+      '@vanilla-extract/babel-plugin',
+      ...(process.env.REACT_APP_ADD_COVERAGE_INSTRUMENTATION
+        ? [
+            [
+              'istanbul',
+              {
+                all: true,
+                include: ['src/**/*.tsx', 'src/**/*.ts'],
+                exclude: [
+                  'src/**/*.css',
+                  'src/**/*.css.ts',
+                  'src/**/*.test.ts',
+                  'src/**/*.test.tsx',
+                  'src/**/*.spec.ts',
+                  'src/**/*.spec.tsx',
+                  'src/**/graphql/**/*',
+                  'src/**/*.d.ts',
+                ],
+              },
+            ],
+          ]
+        : []),
+    ],
   },
   eslint: {
     enable: shouldLintOrTypeCheck,
@@ -29,6 +45,7 @@ module.exports = {
       return Object.assign(eslintConfig, {
         cache: true,
         cacheLocation: 'node_modules/.cache/eslint/',
+        ignorePath: '.gitignore',
       })
     },
   },
@@ -38,6 +55,10 @@ module.exports = {
   jest: {
     configure(jestConfig) {
       return Object.assign(jestConfig, {
+        transform: {
+          '\\.css\\.ts$': './vanilla.transform.cjs',
+          ...jestConfig.transform,
+        },
         cacheDirectory: 'node_modules/.cache/jest',
         transformIgnorePatterns: ['@uniswap/conedison/format', '@uniswap/conedison/provider'],
         moduleNameMapper: {
@@ -50,23 +71,34 @@ module.exports = {
   webpack: {
     plugins: [new VanillaExtractPlugin({ identifiers: 'short' })],
     configure: (webpackConfig) => {
-      webpackConfig.plugins = webpackConfig.plugins.map((plugin) => {
-        // Extend process.env with dynamic values (eg commit hash).
-        // This will make dynamic values available to JavaScript only, not to interpolated HTML (ie index.html).
-        if (plugin instanceof DefinePlugin) {
-          Object.assign(plugin.definitions['process.env'], {
-            REACT_APP_GIT_COMMIT_HASH: JSON.stringify(commitHash),
-          })
-        }
+      webpackConfig.plugins = webpackConfig.plugins
+        .map((plugin) => {
+          // Extend process.env with dynamic values (eg commit hash).
+          // This will make dynamic values available to JavaScript only, not to interpolated HTML (ie index.html).
+          if (plugin instanceof DefinePlugin) {
+            Object.assign(plugin.definitions['process.env'], {
+              REACT_APP_GIT_COMMIT_HASH: JSON.stringify(commitHash),
+            })
+          }
 
-        // CSS ordering is mitigated through scoping / naming conventions, so we can ignore order warnings.
-        // See https://webpack.js.org/plugins/mini-css-extract-plugin/#remove-order-warnings.
-        if (plugin instanceof MiniCssExtractPlugin) {
-          plugin.options.ignoreOrder = true
-        }
+          // CSS ordering is mitigated through scoping / naming conventions, so we can ignore order warnings.
+          // See https://webpack.js.org/plugins/mini-css-extract-plugin/#remove-order-warnings.
+          if (plugin instanceof MiniCssExtractPlugin) {
+            plugin.options.ignoreOrder = true
+          }
 
-        return plugin
-      })
+          return plugin
+        })
+        .filter((plugin) => {
+          // Case sensitive paths are enforced by TypeScript.
+          // See https://www.typescriptlang.org/tsconfig#forceConsistentCasingInFileNames.
+          if (plugin instanceof CaseSensitivePathsPlugin) return false
+
+          // IgnorePlugin is used to tree-shake moment locales, but we do not use moment in this project.
+          if (plugin instanceof IgnorePlugin) return false
+
+          return true
+        })
 
       // We're currently on Webpack 4.x which doesn't support the `exports` field in package.json.
       // Instead, we need to manually map the import path to the correct exports path (eg dist or build folder).

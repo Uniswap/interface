@@ -1,9 +1,9 @@
+import { Trans } from '@lingui/macro'
 import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
 import { InterfacePageName, NFTEventName } from '@uniswap/analytics-events'
 import { ChainId } from '@uniswap/smart-order-router'
 import { MouseoverTooltip } from 'components/Tooltip'
-import { useNftGraphqlEnabled } from 'featureFlags/flags/nftlGraphql'
-import { NftActivityType, OrderStatus } from 'graphql/data/__generated__/types-and-hooks'
+import { NftActivityType, NftMarketplace, OrderStatus } from 'graphql/data/__generated__/types-and-hooks'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import {
@@ -24,13 +24,13 @@ import {
   TokenMetadata,
   TokenRarity,
 } from 'nft/types'
+import { getMarketplaceIcon } from 'nft/utils'
 import { shortenAddress } from 'nft/utils/address'
 import { buildActivityAsset } from 'nft/utils/buildActivityAsset'
-import { formatEth, formatEthPrice } from 'nft/utils/currency'
-import { getTimeDifference, isValidDate } from 'nft/utils/date'
+import { formatEth } from 'nft/utils/currency'
+import { getTimeDifference } from 'nft/utils/date'
 import { putCommas } from 'nft/utils/putCommas'
-import { fallbackProvider, getRarityProviderLogo } from 'nft/utils/rarity'
-import { MouseEvent, useMemo, useState } from 'react'
+import { MouseEvent, ReactNode, useMemo, useState } from 'react'
 import styled from 'styled-components/macro'
 import { ExternalLink } from 'theme'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
@@ -58,18 +58,31 @@ const AddressLink = styled(ExternalLink)`
   }
 `
 
-const formatListingStatus = (status: OrderStatus): string => {
+const isPurchasableOrder = (orderStatus?: OrderStatus, marketplace?: string): boolean => {
+  if (!marketplace || !orderStatus) return false
+  const purchasableMarkets = Object.keys(NftMarketplace).map((market) => market.toLowerCase())
+
+  const validOrder = orderStatus === OrderStatus.Valid
+  const isPurchasableMarket = purchasableMarkets.includes(marketplace.toLowerCase())
+  return validOrder && isPurchasableMarket
+}
+
+const formatListingStatus = (status: OrderStatus, orderIsPurchasable: boolean, isSelected: boolean): ReactNode => {
+  if (orderIsPurchasable) {
+    return isSelected ? <Trans>Remove</Trans> : <Trans>Add to bag</Trans>
+  }
+
   switch (status) {
     case OrderStatus.Executed:
-      return 'Sold'
+      return <Trans>Sold</Trans>
     case OrderStatus.Cancelled:
-      return 'Cancelled'
+      return <Trans>Cancelled</Trans>
     case OrderStatus.Expired:
-      return 'Expired'
+      return <Trans>Expired</Trans>
     case OrderStatus.Valid:
-      return 'Add to Bag'
+      return <Trans>Unavailable</Trans>
     default:
-      return ''
+      return null
   }
 }
 
@@ -96,17 +109,16 @@ export const BuyCell = ({
   isMobile,
   ethPriceInUSD,
 }: BuyCellProps) => {
-  const isNftGraphqlEnabled = useNftGraphqlEnabled()
   const asset = useMemo(
-    () => buildActivityAsset(event, collectionName, ethPriceInUSD, isNftGraphqlEnabled),
-    [event, collectionName, ethPriceInUSD, isNftGraphqlEnabled]
+    () => buildActivityAsset(event, collectionName, ethPriceInUSD),
+    [event, collectionName, ethPriceInUSD]
   )
   const isSelected = useMemo(() => {
     return itemsInBag.some((item) => asset.tokenId === item.asset.tokenId && asset.address === item.asset.address)
   }, [asset, itemsInBag])
 
+  const orderIsPurchasable = isPurchasableOrder(event.orderStatus, event.marketplace)
   const trace = useTrace({ page: InterfacePageName.NFT_COLLECTION_PAGE })
-
   const eventProperties = {
     collection_address: asset.address,
     token_id: asset.tokenId,
@@ -119,20 +131,16 @@ export const BuyCell = ({
       {event.eventType === NftActivityType.Listing && event.orderStatus ? (
         <Box
           as="button"
-          className={event.orderStatus === OrderStatus.Valid && isSelected ? styles.removeCell : styles.buyCell}
+          className={orderIsPurchasable && isSelected ? styles.removeCell : styles.buyCell}
           onClick={(e: MouseEvent) => {
             e.preventDefault()
             isSelected ? removeAsset([asset]) : selectAsset([asset])
             !isSelected && !cartExpanded && !isMobile && toggleCart()
             !isSelected && sendAnalyticsEvent(NFTEventName.NFT_BUY_ADDED, { eventProperties })
           }}
-          disabled={event.orderStatus !== OrderStatus.Valid}
+          disabled={!orderIsPurchasable}
         >
-          {event.orderStatus === OrderStatus.Valid ? (
-            <>{`${isSelected ? 'Remove' : 'Add to bag'}`}</>
-          ) : (
-            <>{`${formatListingStatus(event.orderStatus)}`}</>
-          )}
+          {formatListingStatus(event.orderStatus, orderIsPurchasable, isSelected)}
         </Box>
       ) : (
         '-'
@@ -163,17 +171,6 @@ export const AddressCell = ({ address, desktopLBreakpoint, chainId }: AddressCel
   )
 }
 
-export const MarketplaceIcon = ({ marketplace }: { marketplace: Markets | string }) => {
-  return (
-    <Box
-      as="img"
-      alt={marketplace}
-      src={`/nft/svgs/marketplaces/${marketplace.toLowerCase()}.svg`}
-      className={styles.marketplaceIcon}
-    />
-  )
-}
-
 const PriceTooltip = ({ price }: { price: string }) => (
   <MouseoverTooltip
     text={
@@ -188,20 +185,11 @@ const PriceTooltip = ({ price }: { price: string }) => (
 )
 
 export const PriceCell = ({ marketplace, price }: { marketplace?: Markets | string; price?: string | number }) => {
-  const isNftGraphqlEnabled = useNftGraphqlEnabled()
-  const formattedPrice = useMemo(
-    () =>
-      price
-        ? isNftGraphqlEnabled
-          ? formatEth(parseFloat(price?.toString()))
-          : putCommas(formatEthPrice(price.toString()))?.toString()
-        : null,
-    [isNftGraphqlEnabled, price]
-  )
+  const formattedPrice = useMemo(() => (price ? formatEth(parseFloat(price?.toString())) : null), [price])
 
   return (
     <Row display={{ sm: 'none', md: 'flex' }} gap="8">
-      {marketplace && <MarketplaceIcon marketplace={marketplace} />}
+      {marketplace && getMarketplaceIcon(marketplace, '16')}
       {formattedPrice ? (
         formattedPrice.length > 6 ? (
           <PriceTooltip price={formattedPrice} />
@@ -269,25 +257,16 @@ export const EventCell = ({
   price,
   isMobile,
 }: EventCellProps) => {
-  const isNftGraphqlEnabled = useNftGraphqlEnabled()
-  const formattedPrice = useMemo(
-    () =>
-      price
-        ? isNftGraphqlEnabled
-          ? formatEth(parseFloat(price?.toString()))
-          : putCommas(formatEthPrice(price.toString()))?.toString()
-        : null,
-    [isNftGraphqlEnabled, price]
-  )
+  const formattedPrice = useMemo(() => (price ? formatEth(parseFloat(price?.toString())) : null), [price])
   return (
     <Column height="full" justifyContent="center" gap="4">
       <Row className={styles.eventDetail} color={eventColors(eventType)}>
         {renderEventIcon(eventType)}
         {ActivityEventTypeDisplay[eventType]}
       </Row>
-      {eventTimestamp && (isValidDate(eventTimestamp) || isNftGraphqlEnabled) && !isMobile && !eventOnly && (
+      {eventTimestamp && !isMobile && !eventOnly && (
         <Row className={styles.eventTime}>
-          {getTimeDifference(eventTimestamp.toString(), isNftGraphqlEnabled)}
+          {getTimeDifference(eventTimestamp.toString())}
           {eventTransactionHash && <ExternalLinkIcon transactionHash={eventTransactionHash} />}
         </Row>
       )}
@@ -339,9 +318,7 @@ interface RankingProps {
 }
 
 const Ranking = ({ rarity, collectionName, rarityVerified }: RankingProps) => {
-  const source = (rarity as TokenRarity).source || (rarity as Rarity).primaryProvider
   const rank = (rarity as TokenRarity).rank || (rarity as Rarity).providers?.[0].rank
-  const rarityProviderLogo = getRarityProviderLogo(source)
 
   if (!rank) return null
 
@@ -351,12 +328,10 @@ const Ranking = ({ rarity, collectionName, rarityVerified }: RankingProps) => {
         text={
           <Row>
             <Box display="flex" marginRight="4">
-              <img src={rarityProviderLogo} alt="cardLogo" width={16} />
+              <img src="/nft/svgs/gem.svg" alt="cardLogo" width={16} />
             </Box>
             <Box width="full" fontSize="14">
-              {rarityVerified
-                ? `Verified by ${collectionName}`
-                : `Ranking by ${source === 'Genie' ? fallbackProvider : source}`}
+              {rarityVerified ? `Verified by ${collectionName}` : `Ranking by Rarity Sniper`}
             </Box>
           </Row>
         }
@@ -383,7 +358,6 @@ const getItemImage = (tokenMetadata?: TokenMetadata): string | undefined => {
 export const ItemCell = ({ event, rarityVerified, collectionName, eventTimestamp, isMobile }: ItemCellProps) => {
   const [loaded, setLoaded] = useState(false)
   const [noContent, setNoContent] = useState(!getItemImage(event.tokenMetadata))
-  const isNftGraphqlEnabled = useNftGraphqlEnabled()
 
   return (
     <Row gap="16" overflow="hidden" whiteSpace="nowrap">
@@ -412,10 +386,7 @@ export const ItemCell = ({ event, rarityVerified, collectionName, eventTimestamp
             collectionName={collectionName}
           />
         )}
-        {isMobile &&
-          eventTimestamp &&
-          (isValidDate(eventTimestamp) || isNftGraphqlEnabled) &&
-          getTimeDifference(eventTimestamp.toString(), isNftGraphqlEnabled)}
+        {isMobile && eventTimestamp && getTimeDifference(eventTimestamp.toString())}
       </Column>
     </Row>
   )

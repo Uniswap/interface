@@ -92,14 +92,6 @@ const PriceRow = styled.div`
   align-items: flex-end;
 `
 
-const MarketplaceIcon = styled.img`
-  width: 20px;
-  height: 20px;
-  border-radius: 4px;
-  margin-top: auto;
-  margin-bottom: auto;
-`
-
 const BuyNowButton = styled.div<{ assetInBag: boolean; margin: boolean; useAccentColor: boolean }>`
   position: relative;
   width: 100%;
@@ -210,6 +202,11 @@ const DefaultLink = styled(Link)`
   text-decoration: none;
 `
 
+const MarketplaceIcon = styled(ExternalLink)`
+  display: flex;
+  align-items: center;
+`
+
 const OwnerContainer = ({ asset }: { asset: WalletAsset }) => {
   const navigate = useNavigate()
   const { data: USDValue } = useQuery(['fetchPrice', {}], () => fetchPrice(), {})
@@ -241,13 +238,11 @@ const OwnerContainer = ({ asset }: { asset: WalletAsset }) => {
   return (
     <BestPriceContainer>
       <HeaderRow>
-        <ThemedText.SubHeader color="accentAction" fontWeight={500} lineHeight="24px">
-          {listing ? 'Your Price' : 'List for Sale'}
-        </ThemedText.SubHeader>
+        <ThemedText.SubHeader color="accentAction">{listing ? 'Your Price' : 'List for Sale'}</ThemedText.SubHeader>
         {listing && (
-          <ExternalLink href={listing.marketplaceUrl}>
-            <MarketplaceIcon alt={listing.marketplace} src={getMarketplaceIcon(listing.marketplace)} />
-          </ExternalLink>
+          <MarketplaceIcon href={listing.marketplaceUrl}>
+            {getMarketplaceIcon(listing.marketplace, '20')}
+          </MarketplaceIcon>
         )}
       </HeaderRow>
       <PriceRow>
@@ -300,9 +295,7 @@ const NotForSale = ({ collectionName, collectionUrl }: { collectionName: string;
     <BestPriceContainer>
       <NotForSaleContainer>
         <CancelListingIcon width="79px" height="79px" color={theme.textTertiary} />
-        <ThemedText.SubHeader fontWeight={500} lineHeight="24px">
-          Not for sale
-        </ThemedText.SubHeader>
+        <ThemedText.SubHeader>Not for sale</ThemedText.SubHeader>
         <DiscoveryContainer>
           <ThemedText.BodySecondary fontSize="14px" lineHeight="20px">
             Discover similar NFTs for sale in
@@ -376,12 +369,10 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
       ) : isForSale ? (
         <BestPriceContainer>
           <HeaderRow>
-            <ThemedText.SubHeader color="accentAction" fontWeight={500} lineHeight="24px">
-              Best Price
-            </ThemedText.SubHeader>
-            <ExternalLink href={cheapestOrder.marketplaceUrl}>
-              <MarketplaceIcon alt={cheapestOrder.marketplace} src={getMarketplaceIcon(cheapestOrder.marketplace)} />
-            </ExternalLink>
+            <ThemedText.SubHeader color="accentAction">Best Price</ThemedText.SubHeader>
+            <MarketplaceIcon href={cheapestOrder.marketplaceUrl}>
+              {getMarketplaceIcon(cheapestOrder.marketplace, '20')}
+            </MarketplaceIcon>
           </HeaderRow>
           <PriceRow>
             <ThemedText.MediumHeader fontSize="28px" lineHeight="36px">
