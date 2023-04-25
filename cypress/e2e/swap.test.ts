@@ -1,5 +1,6 @@
 import { USDC_MAINNET } from '../../src/constants/tokens'
 import { HardhatProvider } from '../support/hardhat'
+import { getTestSelector } from '../utils'
 
 describe('Swap', () => {
   let hardhat: HardhatProvider
@@ -43,13 +44,13 @@ describe('Swap', () => {
       .then((balance) => Number(balance.toFixed(1)))
       .then((initialBalance) => {
         cy.get('#swap-currency-output .open-currency-select-button').click()
-        cy.get('[data-testid="token-search-input"]').clear().type(TOKEN_ADDRESS)
+        cy.get(getTestSelector('token-search-input')).clear().type(TOKEN_ADDRESS)
         cy.contains('USDC').click()
         cy.get('#swap-currency-output .token-amount-input').clear().type(BALANCE_INCREMENT.toString())
         cy.get('#swap-currency-input .token-amount-input').should('not.equal', '')
         cy.get('#swap-button').click()
         cy.get('#confirm-swap-or-send').click()
-        cy.get('[data-testid="dismiss-tx-confirmation"]').click()
+        cy.get(getTestSelector('dismiss-tx-confirmation')).click()
         // ui check
         cy.get('#swap-currency-output [data-testid="balance-text"]').should(
           'have.text',
@@ -72,5 +73,19 @@ describe('Swap', () => {
     cy.get('.token-item-0xc778417E063141139Fce010982780140Aa0cD5Ab').click()
     cy.get('#swap-currency-input .token-amount-input').clear().type('0.01')
     cy.get('#swap-currency-output .token-amount-input').should('have.value', '0.01')
+  })
+
+  it('should render and dismiss the wallet rejection modal', () => {
+    cy.stub(hardhat.wallet, 'sendTransaction').rejects(new Error('user cancelled'))
+    cy.get('#swap-currency-output .open-currency-select-button').click()
+    cy.get(getTestSelector('token-search-input')).clear().type(USDC_MAINNET.address)
+    cy.contains('USDC').click()
+    cy.get('#swap-currency-output .token-amount-input').clear().type('1')
+    cy.get('#swap-currency-input .token-amount-input').should('not.equal', '')
+    cy.get('#swap-button').click()
+    cy.get('#confirm-swap-or-send').click()
+    cy.contains('Transaction rejected').should('exist')
+    cy.contains('Dismiss').click()
+    cy.contains('Transaction rejected').should('not.exist')
   })
 })
