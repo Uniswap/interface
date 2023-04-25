@@ -17,7 +17,7 @@ export interface SwapState {
   readonly recipient: string | null
 }
 
-const initialState: SwapState = queryParametersToSwapState(parsedQueryString())
+export const initialState: SwapState = queryParametersToSwapState(parsedQueryString())
 
 export default createReducer<SwapState>(initialState, (builder) =>
   builder

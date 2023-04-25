@@ -1,8 +1,50 @@
 import { USDC_MAINNET } from '../../src/constants/tokens'
+import { WETH_GOERLI } from '../fixtures/constants'
 import { HardhatProvider } from '../support/hardhat'
+import { getTestSelector } from '../utils'
 
 describe('Swap', () => {
   let hardhat: HardhatProvider
+  const verifyAmount = (field: 'input' | 'output', amountText: string | null) => {
+    if (amountText === null) {
+      cy.get(`#swap-currency-${field} .token-amount-input`).should('not.have.value')
+    } else {
+      cy.get(`#swap-currency-${field} .token-amount-input`).should('have.value', amountText)
+    }
+  }
+
+  const verifyToken = (field: 'input' | 'output', tokenSymbol: string | null) => {
+    if (tokenSymbol === null) {
+      cy.get(`#swap-currency-${field} .token-symbol-container`).should('contain.text', 'Select token')
+    } else {
+      cy.get(`#swap-currency-${field} .token-symbol-container`).should('contain.text', tokenSymbol)
+    }
+  }
+
+  const selectOutput = (tokenSymbol: string) => {
+    // open token selector...
+    cy.contains('Select token').click()
+    // select token...
+    cy.contains(tokenSymbol).click()
+
+    cy.get('body')
+      .then(($body) => {
+        if ($body.find(getTestSelector('TokenSafetyWrapper')).length) {
+          return 'I understand'
+        }
+
+        return 'no-op' // Don't click on anything, a no-op
+      })
+      .then((content) => {
+        if (content !== 'no-op') {
+          cy.contains(content).click()
+        }
+      })
+
+    // token selector should close...
+    cy.contains('Search name or paste address').should('not.exist')
+  }
+
   before(() => {
     cy.visit('/swap', { ethereum: 'hardhat' }).then((window) => {
       hardhat = window.hardhat
@@ -10,10 +52,10 @@ describe('Swap', () => {
   })
 
   it('starts with ETH selected by default', () => {
-    cy.get('#swap-currency-input .token-amount-input').should('have.value', '')
-    cy.get('#swap-currency-input .token-symbol-container').should('contain.text', 'ETH')
-    cy.get('#swap-currency-output .token-amount-input').should('not.have.value')
-    cy.get('#swap-currency-output .token-symbol-container').should('contain.text', 'Select token')
+    verifyAmount('input', '')
+    verifyToken('input', 'ETH')
+    verifyAmount('output', null)
+    verifyToken('output', null)
   })
 
   it('can enter an amount into input', () => {
@@ -63,14 +105,73 @@ describe('Swap', () => {
       })
   })
 
-  it('add a recipient does not exist unless in expert mode', () => {
-    cy.get('#add-recipient-button').should('not.exist')
+  it('should have the correct default input/output and token selection should work', () => {
+    cy.visit('/swap')
+    verifyToken('input', 'ETH')
+    verifyToken('output', null)
+
+    selectOutput('WETH')
+    cy.get(getTestSelector('swap-currency-button')).first().click()
+
+    verifyToken('input', 'WETH')
+    verifyToken('output', 'ETH')
   })
 
-  it.skip('ETH to wETH is same value (wrapped swaps have no price impact)', () => {
-    cy.get('#swap-currency-output .open-currency-select-button').click()
-    cy.get('.token-item-0xc778417E063141139Fce010982780140Aa0cD5Ab').click()
+  it('should have the correct default input from URL params ', () => {
+    cy.visit(`/swap?inputCurrency=${WETH_GOERLI}`)
+
+    verifyToken('input', 'WETH')
+    verifyToken('output', null)
+
+    selectOutput('Ether')
+    cy.get(getTestSelector('swap-currency-button')).first().click()
+
+    verifyToken('input', 'ETH')
+    verifyToken('output', 'WETH')
+  })
+
+  it('should have the correct default output from URL params ', () => {
+    cy.visit(`/swap?outputCurrency=${WETH_GOERLI}`)
+
+    verifyToken('input', null)
+    verifyToken('output', 'WETH')
+
+    cy.get(getTestSelector('swap-currency-button')).first().click()
+    verifyToken('input', 'WETH')
+    verifyToken('output', null)
+
+    selectOutput('Ether')
+    cy.get(getTestSelector('swap-currency-button')).first().click()
+
+    verifyToken('input', 'ETH')
+    verifyToken('output', 'WETH')
+  })
+
+  it('ETH to wETH is same value (wrapped swaps have no price impact)', () => {
+    cy.visit('/swap')
+    selectOutput('WETH')
     cy.get('#swap-currency-input .token-amount-input').clear().type('0.01')
     cy.get('#swap-currency-output .token-amount-input').should('have.value', '0.01')
+  })
+
+  it('Opens and closes the settings menu', () => {
+    cy.visit('/swap')
+    cy.contains('Settings').should('not.exist')
+    cy.get(getTestSelector('swap-settings-button')).click()
+    cy.contains('Slippage tolerance').should('exist')
+    cy.contains('Transaction deadline').should('exist')
+    cy.contains('Auto Router API').should('exist')
+    cy.contains('Expert Mode').should('exist')
+    cy.get(getTestSelector('swap-settings-button')).click()
+    cy.contains('Settings').should('not.exist')
+  })
+
+  it('inputs reset when navigating between pages', () => {
+    cy.get('#swap-currency-input .token-amount-input').clear().type('0.01')
+    cy.get('#swap-currency-output .token-amount-input').should('not.equal', '')
+    cy.visit('/pool')
+    cy.visit('/swap')
+    cy.get('#swap-currency-input .token-amount-input').should('have.value', '')
+    cy.get('#swap-currency-output .token-amount-input').should('not.equal', '')
   })
 })

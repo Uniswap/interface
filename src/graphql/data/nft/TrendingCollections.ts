@@ -1,4 +1,3 @@
-import { useNftGraphqlEnabled } from 'featureFlags/flags/nftlGraphql'
 import gql from 'graphql-tag'
 import { TrendingCollection } from 'nft/types'
 import { useMemo } from 'react'
@@ -53,13 +52,11 @@ gql`
 `
 
 export function useTrendingCollections(size: number, timePeriod: HistoryDuration) {
-  const isNftGraphqlEnabled = useNftGraphqlEnabled()
   const { data, loading, error } = useTrendingCollectionsQuery({
     variables: {
       size,
       timePeriod,
     },
-    skip: !isNftGraphqlEnabled,
   })
 
   const trendingCollections: TrendingCollection[] | undefined = useMemo(

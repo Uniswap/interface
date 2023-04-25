@@ -1,17 +1,14 @@
 import { OpacityHoverState } from 'components/Common'
-import { useNftGraphqlEnabled } from 'featureFlags/flags/nftlGraphql'
 import { NftActivityType } from 'graphql/data/__generated__/types-and-hooks'
 import { useNftActivity } from 'graphql/data/nft/NftActivity'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { themeVars, vars } from 'nft/css/sprinkles.css'
 import { useBag, useIsMobile } from 'nft/hooks'
-import { ActivityFetcher } from 'nft/queries/genie/ActivityFetcher'
-import { ActivityEvent, ActivityEventResponse, ActivityEventType } from 'nft/types'
+import { ActivityEvent, ActivityEventType } from 'nft/types'
 import { fetchPrice } from 'nft/utils/fetchPrice'
 import { useCallback, useEffect, useReducer, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
-import { useInfiniteQuery } from 'react-query'
 import styled from 'styled-components/macro'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 
@@ -66,51 +63,13 @@ export const reduceFilters = (state: typeof initialFilterState, action: { eventT
 const baseHref = (event: ActivityEvent) => `/#/nfts/asset/${event.collectionAddress}/${event.tokenId}?origin=activity`
 
 export const Activity = ({ contractAddress, rarityVerified, collectionName, chainId }: ActivityProps) => {
-  const isNftGraphqlEnabled = useNftGraphqlEnabled()
   const [activeFilters, filtersDispatch] = useReducer(reduceFilters, initialFilterState)
 
   const {
-    data: eventsData,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    isSuccess,
-    isLoading,
-  } = useInfiniteQuery<ActivityEventResponse>(
-    [
-      'collectionActivity',
-      {
-        contractAddress,
-        activeFilters,
-      },
-    ],
-    async ({ pageParam = '' }) => {
-      return await ActivityFetcher(
-        contractAddress,
-        {
-          eventTypes: Object.keys(activeFilters)
-            .filter((key) => activeFilters[key as ActivityEventType])
-            .map((key) => key as ActivityEventType),
-        },
-        pageParam
-      )
-    },
-    {
-      getNextPageParam: (lastPage) => {
-        return lastPage.events?.length === 25 ? lastPage.cursor : undefined
-      },
-      refetchInterval: 15000,
-      refetchIntervalInBackground: false,
-      refetchOnWindowFocus: false,
-      refetchOnMount: false,
-    }
-  )
-
-  const {
-    nftActivity: gqlEventsData,
-    hasNext,
-    loadMore,
-    loading,
+    nftActivity,
+    hasNext: hasNextActivity,
+    loadMore: loadMoreActivities,
+    loading: activitiesAreLoading,
   } = useNftActivity(
     {
       activityTypes: Object.keys(activeFilters)
@@ -121,18 +80,7 @@ export const Activity = ({ contractAddress, rarityVerified, collectionName, chai
     25
   )
 
-  const { events, gatedHasNext, gatedLoadMore, gatedLoading, gatedIsLoadingMore } = {
-    events: isNftGraphqlEnabled
-      ? gqlEventsData
-      : isSuccess
-      ? eventsData?.pages.map((page) => page.events).flat()
-      : undefined,
-    gatedHasNext: isNftGraphqlEnabled ? hasNext : hasNextPage,
-    gatedLoadMore: isNftGraphqlEnabled ? loadMore : fetchNextPage,
-    gatedLoading: isNftGraphqlEnabled ? loading : isLoading,
-    gatedIsLoadingMore: isNftGraphqlEnabled ? hasNext && gqlEventsData?.length : isFetchingNextPage,
-  }
-
+  const isLoadingMore = hasNextActivity && nftActivity?.length
   const itemsInBag = useBag((state) => state.itemsInBag)
   const addAssetsToBag = useBag((state) => state.addAssetsToBag)
   const removeAssetsFromBag = useBag((state) => state.removeAssetsFromBag)
@@ -173,20 +121,20 @@ export const Activity = ({ contractAddress, rarityVerified, collectionName, chai
         <Filter eventType={ActivityEventType.Sale} />
         <Filter eventType={ActivityEventType.Transfer} />
       </Row>
-      {gatedLoading ? (
+      {activitiesAreLoading ? (
         <ActivityLoader />
       ) : (
-        events && (
+        nftActivity && (
           <Column marginTop="36">
             <HeaderRow />
             <InfiniteScroll
-              next={gatedLoadMore}
-              hasMore={!!gatedHasNext}
-              loader={gatedIsLoadingMore ? <ActivityPageLoader rowCount={2} /> : null}
-              dataLength={events?.length ?? 0}
+              next={loadMoreActivities}
+              hasMore={!!hasNextActivity}
+              loader={isLoadingMore ? <ActivityPageLoader rowCount={2} /> : null}
+              dataLength={nftActivity?.length ?? 0}
               style={{ overflow: 'unset' }}
             >
-              {events.map(
+              {nftActivity.map(
                 (event, i) =>
                   event.eventType && (
                     <Box
