@@ -1,8 +1,9 @@
+import { Trans } from '@lingui/macro'
 import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
 import { InterfacePageName, NFTEventName } from '@uniswap/analytics-events'
 import { ChainId } from '@uniswap/smart-order-router'
 import { MouseoverTooltip } from 'components/Tooltip'
-import { NftActivityType, OrderStatus } from 'graphql/data/__generated__/types-and-hooks'
+import { NftActivityType, NftMarketplace, OrderStatus } from 'graphql/data/__generated__/types-and-hooks'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import {
@@ -29,7 +30,7 @@ import { buildActivityAsset } from 'nft/utils/buildActivityAsset'
 import { formatEth } from 'nft/utils/currency'
 import { getTimeDifference } from 'nft/utils/date'
 import { putCommas } from 'nft/utils/putCommas'
-import { MouseEvent, useMemo, useState } from 'react'
+import { MouseEvent, ReactNode, useMemo, useState } from 'react'
 import styled from 'styled-components/macro'
 import { ExternalLink } from 'theme'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
@@ -57,18 +58,31 @@ const AddressLink = styled(ExternalLink)`
   }
 `
 
-const formatListingStatus = (status: OrderStatus): string => {
+const isPurchasableOrder = (orderStatus?: OrderStatus, marketplace?: string): boolean => {
+  if (!marketplace || !orderStatus) return false
+  const purchasableMarkets = Object.keys(NftMarketplace).map((market) => market.toLowerCase())
+
+  const validOrder = orderStatus === OrderStatus.Valid
+  const isPurchasableMarket = purchasableMarkets.includes(marketplace.toLowerCase())
+  return validOrder && isPurchasableMarket
+}
+
+const formatListingStatus = (status: OrderStatus, orderIsPurchasable: boolean, isSelected: boolean): ReactNode => {
+  if (orderIsPurchasable) {
+    return isSelected ? <Trans>Remove</Trans> : <Trans>Add to bag</Trans>
+  }
+
   switch (status) {
     case OrderStatus.Executed:
-      return 'Sold'
+      return <Trans>Sold</Trans>
     case OrderStatus.Cancelled:
-      return 'Cancelled'
+      return <Trans>Cancelled</Trans>
     case OrderStatus.Expired:
-      return 'Expired'
+      return <Trans>Expired</Trans>
     case OrderStatus.Valid:
-      return 'Add to Bag'
+      return <Trans>Unavailable</Trans>
     default:
-      return ''
+      return null
   }
 }
 
@@ -103,6 +117,7 @@ export const BuyCell = ({
     return itemsInBag.some((item) => asset.tokenId === item.asset.tokenId && asset.address === item.asset.address)
   }, [asset, itemsInBag])
 
+  const orderIsPurchasable = isPurchasableOrder(event.orderStatus, event.marketplace)
   const trace = useTrace({ page: InterfacePageName.NFT_COLLECTION_PAGE })
   const eventProperties = {
     collection_address: asset.address,
@@ -116,20 +131,16 @@ export const BuyCell = ({
       {event.eventType === NftActivityType.Listing && event.orderStatus ? (
         <Box
           as="button"
-          className={event.orderStatus === OrderStatus.Valid && isSelected ? styles.removeCell : styles.buyCell}
+          className={orderIsPurchasable && isSelected ? styles.removeCell : styles.buyCell}
           onClick={(e: MouseEvent) => {
             e.preventDefault()
             isSelected ? removeAsset([asset]) : selectAsset([asset])
             !isSelected && !cartExpanded && !isMobile && toggleCart()
             !isSelected && sendAnalyticsEvent(NFTEventName.NFT_BUY_ADDED, { eventProperties })
           }}
-          disabled={event.orderStatus !== OrderStatus.Valid}
+          disabled={!orderIsPurchasable}
         >
-          {event.orderStatus === OrderStatus.Valid ? (
-            <>{`${isSelected ? 'Remove' : 'Add to bag'}`}</>
-          ) : (
-            <>{`${formatListingStatus(event.orderStatus)}`}</>
-          )}
+          {formatListingStatus(event.orderStatus, orderIsPurchasable, isSelected)}
         </Box>
       ) : (
         '-'
