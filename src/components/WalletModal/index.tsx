@@ -115,7 +115,7 @@ export default function WalletModal({ openSettings }: { openSettings: () => void
         <IconButton Icon={Settings} onClick={openSettings} data-testid="wallet-settings" />
       </AutoRow>
       {activationState.status === ActivationStatus.ERROR ? (
-        <ConnectionErrorView state={activationState} />
+        <ConnectionErrorView />
       ) : (
         <AutoColumn gap="16px">
           <OptionGrid data-testid="option-grid">

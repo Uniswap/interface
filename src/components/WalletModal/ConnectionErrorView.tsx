@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { useCloseAccountDrawer } from 'components/AccountDrawer'
 import { ButtonEmpty, ButtonPrimary } from 'components/Button'
-import { ActivationErrorState, useTryActivation } from 'connection/activate'
+import { ActivationStatus, useActivationState } from 'connection/activate'
 import { AlertTriangle } from 'react-feather'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
@@ -22,10 +22,14 @@ const AlertTriangleIcon = styled(AlertTriangle)`
   color: ${({ theme }) => theme.accentCritical};
 `
 
-export default function ConnectionErrorView({ state }: { state: ActivationErrorState }) {
-  const tryActivation = useTryActivation()
+// TODO(cartcrom): move this to a top level modal, rather than inline in the drawer
+export default function ConnectionErrorView() {
+  const { activationState, tryActivation, cancelActivation } = useActivationState()
   const closeDrawer = useCloseAccountDrawer()
-  const retry = () => tryActivation(state.connection, closeDrawer)
+
+  if (activationState.status !== ActivationStatus.ERROR) return null
+
+  const retry = () => tryActivation(activationState.connection, closeDrawer)
 
   return (
     <Wrapper>
@@ -42,7 +46,7 @@ export default function ConnectionErrorView({ state }: { state: ActivationErrorS
         <Trans>Try Again</Trans>
       </ButtonPrimary>
       <ButtonEmpty width="fit-content" padding="0" marginTop={20}>
-        <ThemedText.Link onClick={close} marginBottom={12}>
+        <ThemedText.Link onClick={cancelActivation} marginBottom={12}>
           <Trans>Back to wallet selection</Trans>
         </ThemedText.Link>
       </ButtonEmpty>
