@@ -99,6 +99,15 @@ export const filterKnownErrors: Required<ClientOptions>['beforeSend'] = (event: 
     if (error.message.match(/WebAssembly.instantiate\(\): Wasm code generation disallowed by embedder/)) {
       return null
     }
+
+    // This error is expected based on our constent security policy preventing cross-origin frames.
+    if (
+      error.message.match(
+        /Blocked a frame with origin "https:\/\/app.uniswap.org" from accessing a cross-origin frame./
+      )
+    ) {
+      return null
+    }
   }
 
   return event

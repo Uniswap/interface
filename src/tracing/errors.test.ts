@@ -168,5 +168,12 @@ describe('filterKnownErrors', () => {
       )
       expect(filterKnownErrors(ERROR, { originalException })).toBeNull()
     })
+
+    it('filters cross-origin frame request errors', () => {
+      const originalException = new Error(
+        'Blocked a frame with origin "https://app.uniswap.org" from accessing a cross-origin frame.'
+      )
+      expect(filterKnownErrors(ERROR, { originalException })).toBeNull()
+    })
   })
 })
