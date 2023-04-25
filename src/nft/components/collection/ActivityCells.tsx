@@ -111,7 +111,7 @@ export const BuyCell = ({
     return itemsInBag.some((item) => asset.tokenId === item.asset.tokenId && asset.address === item.asset.address)
   }, [asset, itemsInBag])
 
-  const purchasableOrder = isPurchasableOrder(event.orderStatus, event.marketplace)
+  const orderIsPurchasable = isPurchasableOrder(event.orderStatus, event.marketplace)
   const trace = useTrace({ page: InterfacePageName.NFT_COLLECTION_PAGE })
 
   const eventProperties = {
@@ -126,16 +126,16 @@ export const BuyCell = ({
       {event.eventType === NftActivityType.Listing && event.orderStatus ? (
         <Box
           as="button"
-          className={purchasableOrder && isSelected ? styles.removeCell : styles.buyCell}
+          className={orderIsPurchasable && isSelected ? styles.removeCell : styles.buyCell}
           onClick={(e: MouseEvent) => {
             e.preventDefault()
             isSelected ? removeAsset([asset]) : selectAsset([asset])
             !isSelected && !cartExpanded && !isMobile && toggleCart()
             !isSelected && sendAnalyticsEvent(NFTEventName.NFT_BUY_ADDED, { eventProperties })
           }}
-          disabled={purchasableOrder}
+          disabled={orderIsPurchasable}
         >
-          {purchasableOrder ? (
+          {orderIsPurchasable ? (
             <>{`${isSelected ? 'Remove' : 'Add to bag'}`}</>
           ) : (
             <>{`${formatListingStatus(event.orderStatus)}`}</>
