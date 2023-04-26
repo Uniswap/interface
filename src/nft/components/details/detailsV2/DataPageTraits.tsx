@@ -3,6 +3,7 @@ import Column from 'components/Column'
 import { ScrollBarStyles } from 'components/Common'
 import Row from 'components/Row'
 import { GenieAsset, Trait } from 'nft/types'
+import { formatEth } from 'nft/utils'
 import { useMemo } from 'react'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
@@ -30,15 +31,16 @@ const TraitRowValue = styled(ThemedText.BodySmall)<{ $flex?: number; alignRight?
 `
 
 const TraitRow = ({ trait }: { trait: Trait }) => {
+  // TODO: Replace with actual rarity, count, and floor price when BE supports
+  const randomRarity = Math.random()
   return (
-    <Row padding="12px 0px">
+    <Row padding="12px 9px 12px 0px">
       <TraitValue>
         <SubheaderTiny>{trait.trait_type}</SubheaderTiny>{' '}
         <ThemedText.BodyPrimary lineHeight="20px">{trait.trait_value}</ThemedText.BodyPrimary>
       </TraitValue>
-      {/* TODO: replace with actual data when Trait floor is added to BE */}
-      <TraitRowValue $flex={2}>123.456 ETH</TraitRowValue>
-      <TraitRowValue>123</TraitRowValue>
+      <TraitRowValue $flex={2}>{formatEth(randomRarity * 1000)} ETH</TraitRowValue>
+      <TraitRowValue>{Math.round(randomRarity * 10000)}</TraitRowValue>
       <TraitRowValue $flex={1.5} alignRight={true}>
         Bars
       </TraitRowValue>
@@ -65,6 +67,8 @@ const TraitsHeader = styled(ThemedText.SubHeaderSmall)<{ $flex?: number; alignRi
 
 const TraitRowContainer = styled.div`
   overflow-y: auto;
+  overflow-x hidden;
+  width: calc(100% + 12px);
 `
 
 const TraitsContent = ({ traits }: { traits?: Trait[] }) => {
