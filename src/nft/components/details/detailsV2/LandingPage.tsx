@@ -13,9 +13,10 @@ const Container = styled.div`
   min-height: ${({ theme }) => `calc(100vh - ${theme.navHeight}px)`};
   align-items: center;
   padding: 22px 20px 0px;
-  gap: 80px;
+  gap: 26px;
 
   @media screen and (min-width: ${BREAKPOINTS.sm}px) {
+    gap: 64px;
     padding-top: 28px;
   }
 
@@ -23,6 +24,7 @@ const Container = styled.div`
     flex-direction: row;
     padding-top: 0px;
     padding-bottom: ${({ theme }) => `${theme.navHeight}px`};
+    gap: 80px;
   }
 `
 
