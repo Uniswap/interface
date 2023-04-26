@@ -15,6 +15,7 @@ export type Activity = {
   currencies?: Array<Currency | undefined>
   otherAccount?: string
   receipt?: Omit<Receipt, 'nonce'>
+  nonce?: number | null
 }
 
 export type ActivityMap = { [hash: string]: Activity | undefined }

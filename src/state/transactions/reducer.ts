@@ -82,6 +82,6 @@ const transactionSlice = createSlice({
   },
 })
 
-export const { addTransaction, clearAllTransactions, checkedTransaction, finalizeTransaction } =
+export const { addTransaction, clearAllTransactions, checkedTransaction, finalizeTransaction, removeTransaction } =
   transactionSlice.actions
 export default transactionSlice.reducer
