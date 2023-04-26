@@ -21,11 +21,9 @@ function useTokensFromMap(
   return useMemo(() => {
     if (!chainId) return {}
 
-    const targetChainId = chainId
-
     // reduce to just tokens
-    return Object.keys(tokenMap[targetChainId] ?? {}).reduce<{ [address: string]: Token }>((newMap, address) => {
-      newMap[address] = tokenMap[targetChainId][address].token
+    return Object.keys(tokenMap[chainId] ?? {}).reduce<{ [address: string]: Token }>((newMap, address) => {
+      newMap[address] = tokenMap[chainId][address].token
       return newMap
     }, {})
   }, [chainId, tokenMap])
