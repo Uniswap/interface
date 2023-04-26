@@ -1,6 +1,5 @@
 import { BaseVariant, FeatureFlag, featureFlagSettings, useUpdateFlag } from 'featureFlags'
 import { DetailsV2Variant, useDetailsV2Flag } from 'featureFlags/flags/nftDetails'
-import { NftGraphqlVariant, useNftGraphqlFlag } from 'featureFlags/flags/nftlGraphql'
 import { PayWithAnyTokenVariant, usePayWithAnyTokenFlag } from 'featureFlags/flags/payWithAnyToken'
 import { SwapWidgetVariant, useSwapWidgetFlag } from 'featureFlags/flags/swapWidget'
 import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
@@ -215,12 +214,6 @@ export default function FeatureFlagModal() {
         value={useSwapWidgetFlag()}
         featureFlag={FeatureFlag.swapWidget}
         label="Swap Widget"
-      />
-      <FeatureFlagOption
-        variant={NftGraphqlVariant}
-        value={useNftGraphqlFlag()}
-        featureFlag={FeatureFlag.nftGraphql}
-        label="Migrate NFT read endpoints to GQL"
       />
       <FeatureFlagOption
         variant={DetailsV2Variant}

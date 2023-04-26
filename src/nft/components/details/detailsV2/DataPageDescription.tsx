@@ -1,13 +1,18 @@
 import { Trans } from '@lingui/macro'
+import styled from 'styled-components/macro'
 
 import { Tab, TabbedComponent } from './TabbedComponent'
 
+const DescriptionContentContainer = styled.div`
+  height: 252px;
+`
+
 const DescriptionContent = () => {
-  return <div>Description Content</div>
+  return <DescriptionContentContainer>Description Content</DescriptionContentContainer>
 }
 
 const DetailsContent = () => {
-  return <div>Details Content</div>
+  return <DescriptionContentContainer>Details Content</DescriptionContentContainer>
 }
 
 enum DescriptionTabsKeys {
@@ -35,5 +40,5 @@ const DescriptionTabs: Map<string, Tab> = new Map([
 ])
 
 export const DataPageDescription = () => {
-  return <TabbedComponent tabs={DescriptionTabs} style={{ height: '288px' }} />
+  return <TabbedComponent tabs={DescriptionTabs} />
 }

@@ -143,15 +143,13 @@ export enum Markets {
   NFTX = 'nftx',
   Opensea = 'opensea',
   Rarible = 'rarible',
-  Uniswap = 'Uniswap',
-  Uniswap_V2 = 'Uniswap_V2',
-  SushiSwap = 'SushiSwap',
-  SuperRare = 'superrare',
   Sudoswap = 'sudoswap',
-  KnownOrigin = 'knownorigin',
-  WETH = 'weth',
   Cryptopunks = 'cryptopunks',
-  CryptoPhunks = 'cryptophunks',
+  Gem = 'gem',
+  Foundation = 'foundation',
+  Zora = 'zora',
+  Blur = 'blur',
+  Ensvision = 'ensvision',
 }
 
 export const isPooledMarket = (market?: Markets): boolean => {

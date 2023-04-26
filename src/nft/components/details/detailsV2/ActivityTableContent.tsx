@@ -1,3 +1,5 @@
+import { TableContentContainer } from './shared'
+
 export const ActivityTableContent = () => {
-  return <div>Activity Content</div>
+  return <TableContentContainer>Activity Content</TableContentContainer>
 }
