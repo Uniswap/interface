@@ -76,7 +76,7 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
       <Column paddingX="8">
         {NETWORK_SELECTOR_CHAINS.map((chainId: SupportedChainId) => (
           <ChainSelectorRow
-            disabled={isUniWallet && chainId === SupportedChainId.CELO}
+            disabled={isUniWallet && [SupportedChainId.CELO, SupportedChainId.BNB].includes(chainId)}
             onSelectChain={onSelectChain}
             targetChain={chainId}
             key={chainId}
