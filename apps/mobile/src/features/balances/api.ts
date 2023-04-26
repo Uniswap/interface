@@ -6,8 +6,7 @@ import { walletContextValue } from 'src/app/walletContext'
 import { ChainId } from 'src/constants/chains'
 import { NativeCurrency } from 'src/features/tokens/NativeCurrency'
 import { getPollingIntervalByBlocktime } from 'src/utils/chainId'
-import { buildCurrencyId, currencyAddress as getCurrencyAddress } from 'src/utils/currencyId'
-import { logger } from 'src/utils/logger'
+import { currencyAddress as getCurrencyAddress } from 'src/utils/currencyId'
 
 const BALANCES_REDUCER_NAME = 'onchain-balances'
 
@@ -52,14 +51,6 @@ export const onChainBalanceApi = createApi({
           const balance = await erc20Contract.callStatic.balanceOf?.(accountAddress)
           return { data: balance.toString() }
         } catch (e: unknown) {
-          logger.error(
-            'balances/api',
-            'balance',
-            `Unable to get balance for currency: ${
-              chainId && currencyAddress ? buildCurrencyId(chainId, currencyAddress) : undefined
-            }`,
-            e
-          )
           return { error: { status: 500, data: e } }
         }
       },

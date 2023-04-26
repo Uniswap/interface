@@ -53,7 +53,6 @@ export const fiatOnRampApi = createApi({
             return { data: response.isBuyAllowed ?? false }
           })
           .catch((e) => {
-            logger.error('fiatOnRamp/api', 'isFiatOnRampBuyAllowed', e)
             sendAnalyticsEvent(MoonpayEventName.MOONPAY_GEOCHECK_COMPLETED, {
               success: false,
               networkError: true,

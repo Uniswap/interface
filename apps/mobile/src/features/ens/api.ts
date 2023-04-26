@@ -3,7 +3,6 @@ import { createApi, fetchBaseQuery, retry, skipToken } from '@reduxjs/toolkit/qu
 import { walletContextValue } from 'src/app/walletContext'
 import { ChainId } from 'src/constants/chains'
 import { areAddressesEqual } from 'src/utils/addresses'
-import { logger } from 'src/utils/logger'
 import { ONE_MINUTE_MS, ONE_SECOND_MS } from 'src/utils/time'
 export type EnslookupParams = {
   nameOrAddress: string
@@ -40,7 +39,6 @@ export const ensApi = createApi({
           const checkedName = areAddressesEqual(fwdAddr, address) ? name : null
           return { data: checkedName }
         } catch (e: unknown) {
-          logger.error('ens/api', 'name', 'Error getting ens name', e)
           return { error: { status: 500, data: e } }
         }
       },
@@ -56,7 +54,6 @@ export const ensApi = createApi({
 
           return { data: address }
         } catch (e: unknown) {
-          logger.error('ens/api', 'address', 'Error getting ens address', e)
           return { error: { status: 500, data: e } }
         }
       },
@@ -75,7 +72,6 @@ export const ensApi = createApi({
           const avatarURL = checkedName ? await provider.getAvatar(checkedName) : null
           return { data: avatarURL }
         } catch (e: unknown) {
-          logger.error('ens/api', 'avatar', 'Error getting ens avatar', e)
           return { error: { status: 500, data: e } }
         }
       },
