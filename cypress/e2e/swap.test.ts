@@ -47,9 +47,7 @@ describe('Swap', () => {
 
   describe('Swap on main page', () => {
     before(() => {
-      cy.visit('/swap', { ethereum: 'hardhat' }).then((window) => {
-        hardhat = window.hardhat
-      })
+      cy.visit('/swap')
     })
 
     it('starts with ETH selected by default', () => {
@@ -150,6 +148,9 @@ describe('Swap', () => {
     })
 
     it('can swap ETH for USDC', () => {
+      cy.visit('/swap', { ethereum: 'hardhat' }).then((window) => {
+        hardhat = window.hardhat
+      })
       const TOKEN_ADDRESS = USDC_MAINNET.address
       const BALANCE_INCREMENT = 1
       cy.then(() => hardhat.utils.getBalance(hardhat.wallet.address, USDC_MAINNET))
