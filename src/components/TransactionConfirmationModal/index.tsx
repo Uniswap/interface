@@ -30,14 +30,14 @@ const Wrapper = styled.div`
   width: 100%;
   padding: 1rem;
 `
-const Section = styled(AutoColumn)<{ inline?: boolean }>`
-  padding: ${({ inline }) => (inline ? '0' : '0')};
+
+const ConfirmationModalWrapper = styled(Wrapper)`
+  padding: 0.5rem;
 `
 
-const BottomSection = styled(Section)`
+const BottomSection = styled(AutoColumn)`
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
-  padding-bottom: 10px;
 `
 
 const ConfirmedIcon = styled(ColumnCenter)<{ inline?: boolean }>`
@@ -125,7 +125,7 @@ function TransactionSubmittedContent({
 
   return (
     <Wrapper>
-      <Section inline={inline}>
+      <AutoColumn>
         {!inline && (
           <RowBetween>
             <div />
@@ -166,7 +166,7 @@ function TransactionSubmittedContent({
             </ExternalLink>
           )}
         </AutoColumn>
-      </Section>
+      </AutoColumn>
     </Wrapper>
   )
 }
@@ -183,8 +183,8 @@ export function ConfirmationModalContent({
   bottomContent?: () => ReactNode | undefined
 }) {
   return (
-    <Wrapper>
-      <Section gap="0.5rem">
+    <ConfirmationModalWrapper>
+      <AutoColumn gap="0.5rem" padding="1em 0.5rem 0">
         <Row>
           <BackArrowIcon style={{ position: 'absolute' }} onClick={onDismiss} data-cy="confirmation-close-icon" />
           <Text fontWeight={500} fontSize={16} marginX="auto">
@@ -192,9 +192,9 @@ export function ConfirmationModalContent({
           </Text>
         </Row>
         {topContent()}
-      </Section>
+      </AutoColumn>
       {bottomContent && <BottomSection gap="12px">{bottomContent()}</BottomSection>}
-    </Wrapper>
+    </ConfirmationModalWrapper>
   )
 }
 
@@ -202,7 +202,7 @@ export function TransactionErrorContent({ message, onDismiss }: { message: React
   const theme = useTheme()
   return (
     <Wrapper>
-      <Section>
+      <AutoColumn>
         <RowBetween>
           <Text fontWeight={600} fontSize={16}>
             <Trans>Error</Trans>
@@ -213,7 +213,7 @@ export function TransactionErrorContent({ message, onDismiss }: { message: React
           <AlertTriangle color={theme.accentCritical} style={{ strokeWidth: 1 }} size={90} />
           <ThemedText.MediumHeader textAlign="center">{message}</ThemedText.MediumHeader>
         </AutoColumn>
-      </Section>
+      </AutoColumn>
       <BottomSection gap="12px">
         <ButtonPrimary onClick={onDismiss}>
           <Trans>Dismiss</Trans>
@@ -252,7 +252,7 @@ function L2Content({
 
   return (
     <Wrapper>
-      <Section inline={inline}>
+      <AutoColumn>
         {!inline && (
           <RowBetween mb="16px">
             <Badge>
@@ -318,7 +318,7 @@ function L2Content({
             </Text>
           </ButtonPrimary>
         </AutoColumn>
-      </Section>
+      </AutoColumn>
     </Wrapper>
   )
 }

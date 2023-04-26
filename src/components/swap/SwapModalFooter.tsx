@@ -201,12 +201,12 @@ export default function SwapModalFooter({
 
   return (
     <>
-      <Column gap="md">
+      <Column gap="md" padding="0 0.5rem">
         {details.map(([label, detail, color], i) => (
           <SwapModalDetailRow key={i} label={label} value={detail} color={color} />
         ))}
       </Column>
-      {showAcceptChanges && (
+      {showAcceptChanges ? (
         <SwapShowAcceptChanges justify="flex-start" gap="0px" data-testid="show-accept-changes">
           <RowBetween>
             <RowFixed>
@@ -223,39 +223,41 @@ export default function SwapModalFooter({
             </ButtonPrimary>
           </RowBetween>
         </SwapShowAcceptChanges>
-      )}
-      <AutoRow>
-        <TraceEvent
-          events={[BrowserEvent.onClick]}
-          element={InterfaceElementName.CONFIRM_SWAP_BUTTON}
-          name={SwapEventName.SWAP_SUBMITTED_BUTTON_CLICKED}
-          properties={formatSwapButtonClickEventProperties({
-            trade,
-            hash,
-            allowedSlippage,
-            transactionDeadlineSecondsSinceEpoch,
-            isAutoSlippage,
-            isAutoRouterApi: !clientSideRouter,
-            swapQuoteReceivedDate,
-            routes,
-            fiatValueInput: fiatValueInput.data,
-            fiatValueOutput: fiatValueOutput.data,
-          })}
-        >
-          <ButtonError
-            data-testid="confirm-swap-button"
-            onClick={onConfirm}
-            disabled={disabledConfirm}
-            style={{ margin: '10px 0 0 0' }}
-            id={InterfaceElementName.CONFIRM_SWAP_BUTTON}
+      ) : (
+        <AutoRow>
+          <TraceEvent
+            events={[BrowserEvent.onClick]}
+            element={InterfaceElementName.CONFIRM_SWAP_BUTTON}
+            name={SwapEventName.SWAP_SUBMITTED_BUTTON_CLICKED}
+            properties={formatSwapButtonClickEventProperties({
+              trade,
+              hash,
+              allowedSlippage,
+              transactionDeadlineSecondsSinceEpoch,
+              isAutoSlippage,
+              isAutoRouterApi: !clientSideRouter,
+              swapQuoteReceivedDate,
+              routes,
+              fiatValueInput: fiatValueInput.data,
+              fiatValueOutput: fiatValueOutput.data,
+            })}
           >
-            <Text fontSize={20} fontWeight={500}>
-              <Trans>Swap</Trans>
-            </Text>
-          </ButtonError>
-        </TraceEvent>
-        {swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}
-      </AutoRow>
+            <ButtonError
+              data-testid="confirm-swap-button"
+              onClick={onConfirm}
+              disabled={disabledConfirm}
+              style={{ margin: '10px 0 0 0' }}
+              id={InterfaceElementName.CONFIRM_SWAP_BUTTON}
+            >
+              <Text fontSize={20} fontWeight={500}>
+                <Trans>Swap</Trans>
+              </Text>
+            </ButtonError>
+          </TraceEvent>
+
+          {swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}
+        </AutoRow>
+      )}
     </>
   )
 }

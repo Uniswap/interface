@@ -5,7 +5,8 @@ import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import Row from 'components/Row'
 import Tooltip from 'components/Tooltip'
 import { ReactNode, useState } from 'react'
-import styled from 'styled-components/macro'
+import { Info } from 'react-feather'
+import styled, { useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
 const MAX_AMOUNT_STR_LENGTH = 9
@@ -30,6 +31,7 @@ interface AmountProps {
 
 export function SwapModalHeaderAmount({ tooltipText, label, amount, usdAmount }: AmountProps) {
   const [showHoverTooltip, setShowHoverTooltip] = useState(false)
+  const theme = useTheme()
 
   let formattedAmount = formatCurrencyAmount(amount, NumberType.TokenTx)
   if (formattedAmount.length > MAX_AMOUNT_STR_LENGTH) {
@@ -39,12 +41,17 @@ export function SwapModalHeaderAmount({ tooltipText, label, amount, usdAmount }:
   return (
     <Row align="flex-start" justify="space-between" gap="0.75rem">
       <Row width="wrap-content">
-        <ThemedText.BodySecondary
-          onMouseEnter={() => setShowHoverTooltip(true)}
-          onMouseLeave={() => setShowHoverTooltip(false)}
-        >
+        <ThemedText.BodySecondary>
           <Label>{label}</Label>
         </ThemedText.BodySecondary>
+        {tooltipText && (
+          <Info
+            size={16}
+            color={theme.textSecondary}
+            onMouseEnter={() => setShowHoverTooltip(true)}
+            onMouseLeave={() => setShowHoverTooltip(false)}
+          />
+        )}
         <Tooltip show={showHoverTooltip} placement="right" text={tooltipText} />
       </Row>
 
