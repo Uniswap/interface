@@ -1,5 +1,4 @@
 import { isAddress } from '@ethersproject/address'
-import { useNftGraphqlEnabled } from 'featureFlags/flags/nftlGraphql'
 import gql from 'graphql-tag'
 import { GenieCollection } from 'nft/types'
 import { blocklistedCollections } from 'nft/utils'
@@ -80,9 +79,8 @@ function useCollectionQuerySearch(query: string, skip?: boolean): useCollectionS
 }
 
 export function useCollectionSearch(queryOrAddress: string): useCollectionSearchReturnProps {
-  const isNftGraphqlEnabled = useNftGraphqlEnabled()
   const isName = !isAddress(queryOrAddress.toLowerCase())
-  const queryResult = useCollectionQuerySearch(queryOrAddress, isNftGraphqlEnabled ? !isName : true)
-  const addressResult = useCollection(queryOrAddress, isNftGraphqlEnabled ? isName : true)
+  const queryResult = useCollectionQuerySearch(queryOrAddress, /* skip= */ !isName)
+  const addressResult = useCollection(queryOrAddress, /* skip= */ isName)
   return isName ? queryResult : { data: [addressResult.data], loading: addressResult.loading }
 }

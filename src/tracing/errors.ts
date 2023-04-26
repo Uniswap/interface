@@ -86,11 +86,23 @@ export const filterKnownErrors: Required<ClientOptions>['beforeSend'] = (event: 
     if (error.message.match(/Unexpected token '<'/)) return null
 
     /*
+     * Errors coming from OneKey (a desktop wallet) can be ignored for now.
+     * These errors are either application-specific, or they will be thrown separately outside of OneKey.
+     */
+    if (error.name.match(/OneKey\.app/i)) return null
+
+    /*
      * Content security policy 'unsafe-eval' errors can be filtered out because there are expected failures.
      * For example, if a user runs an eval statement in console this error would still get thrown.
      * TODO(INFRA-176): We should extend this to filter out any type of CSP error.
      */
     if (error.message.match(/'unsafe-eval'.*content security policy/i)) {
+      return null
+    }
+
+    // WebAssembly compilation fails because we do not allow 'unsafe-eval' in our CSP.
+    // Any thrown errors are due to 3P extensions/applications, so we do not need to handle them.
+    if (error.message.match(/WebAssembly.instantiate\(\): Wasm code generation disallowed by embedder/)) {
       return null
     }
   }

@@ -92,14 +92,6 @@ const PriceRow = styled.div`
   align-items: flex-end;
 `
 
-const MarketplaceIcon = styled.img`
-  width: 20px;
-  height: 20px;
-  border-radius: 4px;
-  margin-top: auto;
-  margin-bottom: auto;
-`
-
 const BuyNowButton = styled.div<{ assetInBag: boolean; margin: boolean; useAccentColor: boolean }>`
   position: relative;
   width: 100%;
@@ -210,6 +202,11 @@ const DefaultLink = styled(Link)`
   text-decoration: none;
 `
 
+const MarketplaceIcon = styled(ExternalLink)`
+  display: flex;
+  align-items: center;
+`
+
 const OwnerContainer = ({ asset }: { asset: WalletAsset }) => {
   const navigate = useNavigate()
   const { data: USDValue } = useQuery(['fetchPrice', {}], () => fetchPrice(), {})
@@ -243,9 +240,9 @@ const OwnerContainer = ({ asset }: { asset: WalletAsset }) => {
       <HeaderRow>
         <ThemedText.SubHeader color="accentAction">{listing ? 'Your Price' : 'List for Sale'}</ThemedText.SubHeader>
         {listing && (
-          <ExternalLink href={listing.marketplaceUrl}>
-            <MarketplaceIcon alt={listing.marketplace} src={getMarketplaceIcon(listing.marketplace)} />
-          </ExternalLink>
+          <MarketplaceIcon href={listing.marketplaceUrl}>
+            {getMarketplaceIcon(listing.marketplace, '20')}
+          </MarketplaceIcon>
         )}
       </HeaderRow>
       <PriceRow>
@@ -373,9 +370,9 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
         <BestPriceContainer>
           <HeaderRow>
             <ThemedText.SubHeader color="accentAction">Best Price</ThemedText.SubHeader>
-            <ExternalLink href={cheapestOrder.marketplaceUrl}>
-              <MarketplaceIcon alt={cheapestOrder.marketplace} src={getMarketplaceIcon(cheapestOrder.marketplace)} />
-            </ExternalLink>
+            <MarketplaceIcon href={cheapestOrder.marketplaceUrl}>
+              {getMarketplaceIcon(cheapestOrder.marketplace, '20')}
+            </MarketplaceIcon>
           </HeaderRow>
           <PriceRow>
             <ThemedText.MediumHeader fontSize="28px" lineHeight="36px">
