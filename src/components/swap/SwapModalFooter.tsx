@@ -8,8 +8,10 @@ import {
 } from '@uniswap/analytics-events'
 import { formatCurrencyAmount, formatPriceImpact, NumberType } from '@uniswap/conedison/format'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
+import { useWeb3React } from '@web3-react/core'
 import Column from 'components/Column'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
+import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import {
   formatPercentInBasisPointsNumber,
   formatPercentNumber,
@@ -164,6 +166,8 @@ export default function SwapModalFooter({
   const [lastExecutionPrice, setLastExecutionPrice] = useState(trade.executionPrice)
   const [priceUpdate, setPriceUpdate] = useState<number | undefined>()
   const theme = useTheme()
+  const { chainId } = useWeb3React()
+  const nativeCurrency = useNativeCurrency(chainId)
 
   useEffect(() => {
     if (!trade.executionPrice.equalTo(lastExecutionPrice)) {
@@ -186,35 +190,47 @@ export default function SwapModalFooter({
     const label = `${trade.executionPrice.baseCurrency?.symbol} `
     const labelInverted = `${trade.executionPrice.quoteCurrency?.symbol}`
     const formattedPrice = formatTransactionAmount(priceToPreciseFloat(trade.executionPrice))
-    const details: Array<[ReactNode, string] | [ReactNode, string | ReactNode, string | undefined]> = [
-      [t`Exchange rate`, `${'1 ' + labelInverted + ' = ' + formattedPrice ?? '-'} ${label}`],
-      [t`Network fee`, `~${formatCurrencyAmount(trade.gasUseEstimateUSD, NumberType.FiatGasPrice)}`],
-      [
-        t`Price impact`,
-        trade.priceImpact ? formatPriceImpact(trade.priceImpact) : '-',
-        getPriceImpactWarning(trade.priceImpact),
-      ],
+    const details: Array<{
+      label: ReactNode | string
+      value: ReactNode | string
+      labelTooltipText?: string
+      color?: string
+    }> = [
+      { label: t`Exchange rate`, value: `${'1 ' + labelInverted + ' = ' + formattedPrice ?? '-'} ${label}` },
+      {
+        label: t`Network fee`,
+        value: `~${formatCurrencyAmount(trade.gasUseEstimateUSD, NumberType.FiatGasPrice)}`,
+        labelTooltipText: t`The fee paid to miners who process your transaction. This must be paid in ${nativeCurrency.symbol}.`,
+      },
+      {
+        label: t`Price impact`,
+        value: trade.priceImpact ? formatPriceImpact(trade.priceImpact) : '-',
+        color: getPriceImpactWarning(trade.priceImpact),
+        labelTooltipText: t`The impact your trade has on the market price of this pool.`,
+      },
     ]
     if (trade.tradeType === TradeType.EXACT_INPUT) {
-      details.push([
-        t`Minimum received`,
-        `${trade.minimumAmountOut(allowedSlippage).toSignificant(6)} ${trade.outputAmount.currency.symbol}`,
-      ])
+      details.push({
+        label: t`Minimum received`,
+        value: `${trade.minimumAmountOut(allowedSlippage).toSignificant(6)} ${trade.outputAmount.currency.symbol}`,
+        labelTooltipText: t`The minimum amount you are guaranteed to receive. If the price slips any further, your transaction will revert.`,
+      })
     } else {
-      details.push([
-        t`Maximum sent`,
-        `${trade.maximumAmountIn(allowedSlippage).toSignificant(6)} ${trade.inputAmount.currency.symbol}`,
-      ])
+      details.push({
+        label: t`Maximum sent`,
+        value: `${trade.maximumAmountIn(allowedSlippage).toSignificant(6)} ${trade.inputAmount.currency.symbol}`,
+        labelTooltipText: t`The maximum amount you are guaranteed to spend. If the price slips any further, your transaction will revert.`,
+      })
     }
 
     return details
-  }, [allowedSlippage, trade])
+  }, [allowedSlippage, nativeCurrency.symbol, trade])
 
   return (
     <>
       <Column gap="md" padding="0 0.5rem">
-        {details.map(([label, detail, color], i) => (
-          <SwapModalDetailRow key={i} label={label} value={detail} color={color} />
+        {details.map(({ label, value, color, labelTooltipText }, i) => (
+          <SwapModalDetailRow key={i} label={label} value={value} color={color} labelTooltipText={labelTooltipText} />
         ))}
       </Column>
       {showAcceptChanges ? (

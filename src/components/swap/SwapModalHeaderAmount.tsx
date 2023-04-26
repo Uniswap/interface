@@ -23,13 +23,14 @@ const Value = styled.span`
 `
 
 interface AmountProps {
+  field: 'input' | 'output'
   tooltipText?: ReactNode
   label: string
   amount: CurrencyAmount<Currency>
   usdAmount?: number
 }
 
-export function SwapModalHeaderAmount({ tooltipText, label, amount, usdAmount }: AmountProps) {
+export function SwapModalHeaderAmount({ tooltipText, label, amount, usdAmount, field }: AmountProps) {
   const [showHoverTooltip, setShowHoverTooltip] = useState(false)
   const theme = useTheme()
 
@@ -58,7 +59,7 @@ export function SwapModalHeaderAmount({ tooltipText, label, amount, usdAmount }:
       <Column align="flex-end">
         <Row gap="0.5rem" width="wrap-content">
           <CurrencyLogo currency={amount.currency} size="1.75rem" />
-          <ThemedText.HeadlineMedium color="primary">
+          <ThemedText.HeadlineMedium color="primary" data-testid={`${field}-amount`}>
             {formattedAmount} {amount.currency.symbol}
           </ThemedText.HeadlineMedium>
         </Row>

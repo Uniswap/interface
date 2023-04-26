@@ -50,8 +50,14 @@ export default function SwapModalHeader({
 
   return (
     <AutoColumn gap="0.5rem" style={{ marginTop: '1rem' }}>
-      <SwapModalHeaderAmount label={t`You pay`} amount={trade.inputAmount} usdAmount={fiatValueInput.data} />
       <SwapModalHeaderAmount
+        field="input"
+        label={t`You pay`}
+        amount={trade.inputAmount}
+        usdAmount={fiatValueInput.data}
+      />
+      <SwapModalHeaderAmount
+        field="output"
         label={t`You receive`}
         amount={trade.outputAmount}
         usdAmount={fiatValueOutput.data}
