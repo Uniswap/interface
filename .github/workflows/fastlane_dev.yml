@@ -89,12 +89,11 @@ jobs:
 
       - name: Pod Install
         uses: nick-fields/retry@7d4a37704547a311dbb66ebdf5b23ec19374a767
-        working-directory: ./apps/mobile
         with:
           timeout_minutes: 20
           retry_wait_seconds: 2
           max_attempts: 3
-          command: cd ios && pod install && cd ..
+          command: cd apps/mobile/ios && pod install && cd ..
 
       - name: Build + deploy dev iOS app
         working-directory: ./apps/mobile
