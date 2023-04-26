@@ -59,6 +59,22 @@ const StyledMedia = styled.img`
   width: 100%;
 `
 
+const StyledSubheaderText = styled(ThemedText.SubHeaderSmall)`
+  line-height: 20px;
+
+  @media screen and (min-width: ${BREAKPOINTS.sm}px) {
+    line-height: 24px !important;
+    font-size: 16px !important;
+  }
+`
+
+const StyledHeadlineText = styled(ThemedText.HeadlineSmall)`
+  @media screen and (min-width: ${BREAKPOINTS.sm}px) {
+    line-height: 44px !important;
+    font-size: 36px !important;
+  }
+`
+
 interface LandingPageProps {
   asset: GenieAsset
   collection: CollectionInfoForAsset
@@ -73,10 +89,10 @@ export const LandingPage = ({ asset, collection }: LandingPageProps) => {
       <InfoContainer>
         <InfoDetailsContainer>
           <Row justify="center" gap="4px" align="center">
-            <ThemedText.SubHeader>{collection.collectionName}</ThemedText.SubHeader>
+            <StyledSubheaderText>{collection.collectionName}</StyledSubheaderText>
             {collection.isVerified && <VerifiedIcon width="16px" height="16px" />}
           </Row>
-          <ThemedText.HeadlineLarge>{collection.collectionName}</ThemedText.HeadlineLarge>
+          <StyledHeadlineText>{collection.collectionName}</StyledHeadlineText>
         </InfoDetailsContainer>
       </InfoContainer>
     </Container>
