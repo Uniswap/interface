@@ -55,6 +55,7 @@ export function usePortfolioBalances(
     onCompleted,
     pollInterval: shouldPoll ? PollingInterval.Fast : undefined,
     variables: { ownerAddress: address },
+    skip: !address,
   })
 
   const persistedError = usePersistedError(loading, error)

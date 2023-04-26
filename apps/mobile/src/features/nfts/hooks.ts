@@ -34,6 +34,7 @@ export function useNFT(
   const { data, loading, refetch } = useNftsQuery({
     variables: { ownerAddress: owner },
     pollInterval: PollingInterval.Slow,
+    skip: !owner,
   })
 
   const nft = useMemo(
