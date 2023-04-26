@@ -148,97 +148,101 @@ describe('Swap', () => {
     })
 
     it('can swap ETH for USDC', () => {
-      cy.visit('/swap', { ethereum: 'hardhat' }).then((window) => {
-        hardhat = window.hardhat
-      })
       const TOKEN_ADDRESS = USDC_MAINNET.address
       const BALANCE_INCREMENT = 1
-      cy.then(() => hardhat.utils.getBalance(hardhat.wallet.address, USDC_MAINNET))
+      cy.visit('/swap', { ethereum: 'hardhat' })
+        .then((window) => {
+          hardhat = window.hardhat
+        })
+        .then(() => hardhat.utils.getBalance(hardhat.wallet.address, USDC_MAINNET))
         .then((balance) => Number(balance.toFixed(1)))
         .then((initialBalance) => {
           cy.get('#swap-currency-output .open-currency-select-button').click()
-          cy.get('[data-testid="token-search-input"]').clear().type(TOKEN_ADDRESS)
+          cy.get(getTestSelector('token-search-input')).clear().type(TOKEN_ADDRESS)
           cy.contains('USDC').click()
           cy.get('#swap-currency-output .token-amount-input').clear().type(BALANCE_INCREMENT.toString())
           cy.get('#swap-currency-input .token-amount-input').should('not.equal', '')
           cy.get('#swap-button').click()
           cy.get('#confirm-swap-or-send').click()
-          cy.get('[data-testid="dismiss-tx-confirmation"]').click()
-          // ui check
-          cy.get('#swap-currency-output [data-testid="balance-text"]').should(
-            'have.text',
-            `Balance: ${initialBalance + BALANCE_INCREMENT}`
-          )
+          cy.get(getTestSelector('dismiss-tx-confirmation')).click()
 
-          // chain state check
-          cy.then(() => hardhat.utils.getBalance(hardhat.wallet.address, USDC_MAINNET))
-            .then((balance) => Number(balance.toFixed(1)))
-            .should('eq', initialBalance + BALANCE_INCREMENT)
+          cy.then(() => hardhat.send('hardhat_mine', ['0x1', '0xc'])).then(() => {
+            // ui check
+            cy.get('#swap-currency-output [data-testid="balance-text"]').should(
+              'have.text',
+              `Balance: ${initialBalance + BALANCE_INCREMENT}`
+            )
+
+            // chain state check
+            cy.then(() => hardhat.utils.getBalance(hardhat.wallet.address, USDC_MAINNET))
+              .then((balance) => Number(balance.toFixed(1)))
+              .should('eq', initialBalance + BALANCE_INCREMENT)
+          })
         })
     })
-  })
 
-  describe('Swap on Token Detail Page', () => {
-    beforeEach(() => {
-      // On mobile widths, we just link back to /swap instead of rendering the swap component.
-      cy.viewport(1200, 800)
-      cy.visit(`/tokens/goerli/${UNI_GOERLI}`).then(() => {
-        cy.wait('@eth_blockNumber')
-        cy.scrollTo('top')
+    describe('Swap on Token Detail Page', () => {
+      beforeEach(() => {
+        // On mobile widths, we just link back to /swap instead of rendering the swap component.
+        cy.viewport(1200, 800)
+        cy.visit(`/tokens/goerli/${UNI_GOERLI}`).then(() => {
+          cy.wait('@eth_blockNumber')
+          cy.scrollTo('top')
+        })
       })
-    })
 
-    it('should have the expected output for a tokens detail page', () => {
-      verifyAmount('input', '')
-      verifyToken('input', null)
-      verifyAmount('output', null)
-      verifyToken('output', 'UNI')
-    })
-
-    it('should automatically navigate to the new TDP', () => {
-      selectToken('WETH', 'output')
-      cy.url().should('include', `${WETH_GOERLI}`)
-      cy.url().should('not.include', `${UNI_GOERLI}`)
-    })
-
-    it('should not share swap state with the main swap page', () => {
-      verifyToken('output', 'UNI')
-      selectToken('WETH', 'input')
-      cy.visit('/swap')
-      cy.contains('UNI').should('not.exist')
-      cy.contains('WETH').should('not.exist')
-    })
-
-    it('can enter an amount into input', () => {
-      cy.get('#swap-currency-input .token-amount-input').clear().type('0.001').should('have.value', '0.001')
-    })
-
-    it('zero swap amount', () => {
-      cy.get('#swap-currency-input .token-amount-input').clear().type('0.0').should('have.value', '0.0')
-    })
-
-    it('invalid swap amount', () => {
-      cy.get('#swap-currency-input .token-amount-input').clear().type('\\').should('have.value', '')
-    })
-
-    it('can enter an amount into output', () => {
-      cy.get('#swap-currency-output .token-amount-input').clear().type('0.001').should('have.value', '0.001')
-    })
-
-    it('zero output amount', () => {
-      cy.get('#swap-currency-output .token-amount-input').clear().type('0.0').should('have.value', '0.0')
-    })
-
-    it('should show a L2 token even if the user is connected to a different network', () => {
-      cy.visit('/tokens').then(() => {
-        cy.wait('@eth_blockNumber')
+      it('should have the expected output for a tokens detail page', () => {
+        verifyAmount('input', '')
+        verifyToken('input', null)
+        verifyAmount('output', null)
+        verifyToken('output', 'UNI')
       })
-      cy.get(getTestSelector('tokens-network-filter-selected')).click()
-      cy.get(getTestSelector('tokens-network-filter-option-arbitrum')).click()
-      cy.get(getTestSelector('tokens-network-filter-selected')).should('contain', 'Arbitrum')
-      cy.get(getTestSelector('token-table-row-ARB')).click()
-      verifyToken('output', 'ARB')
-      cy.contains('Connect to Arbitrum').should('exist')
+
+      it('should automatically navigate to the new TDP', () => {
+        selectToken('WETH', 'output')
+        cy.url().should('include', `${WETH_GOERLI}`)
+        cy.url().should('not.include', `${UNI_GOERLI}`)
+      })
+
+      it('should not share swap state with the main swap page', () => {
+        verifyToken('output', 'UNI')
+        selectToken('WETH', 'input')
+        cy.visit('/swap')
+        cy.contains('UNI').should('not.exist')
+        cy.contains('WETH').should('not.exist')
+      })
+
+      it('can enter an amount into input', () => {
+        cy.get('#swap-currency-input .token-amount-input').clear().type('0.001').should('have.value', '0.001')
+      })
+
+      it('zero swap amount', () => {
+        cy.get('#swap-currency-input .token-amount-input').clear().type('0.0').should('have.value', '0.0')
+      })
+
+      it('invalid swap amount', () => {
+        cy.get('#swap-currency-input .token-amount-input').clear().type('\\').should('have.value', '')
+      })
+
+      it('can enter an amount into output', () => {
+        cy.get('#swap-currency-output .token-amount-input').clear().type('0.001').should('have.value', '0.001')
+      })
+
+      it('zero output amount', () => {
+        cy.get('#swap-currency-output .token-amount-input').clear().type('0.0').should('have.value', '0.0')
+      })
+
+      it('should show a L2 token even if the user is connected to a different network', () => {
+        cy.visit('/tokens').then(() => {
+          cy.wait('@eth_blockNumber')
+        })
+        cy.get(getTestSelector('tokens-network-filter-selected')).click()
+        cy.get(getTestSelector('tokens-network-filter-option-arbitrum')).click()
+        cy.get(getTestSelector('tokens-network-filter-selected')).should('contain', 'Arbitrum')
+        cy.get(getTestSelector('token-table-row-ARB')).click()
+        verifyToken('output', 'ARB')
+        cy.contains('Connect to Arbitrum').should('exist')
+      })
     })
   })
 })
