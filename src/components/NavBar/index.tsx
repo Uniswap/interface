@@ -72,6 +72,16 @@ export const PageTabs = () => {
           <Trans>Liquid Stake</Trans>
         </a>
       )}
+      {!isMobile && (
+        <a
+          href="https://forge-beta.netlify.app/assets"
+          rel="noopener noreferrer"
+          id="pool-nav-link"
+          className={styles.menuItem}
+        >
+          <Trans>Assets</Trans>
+        </a>
+      )}
     </div>
   )
 }

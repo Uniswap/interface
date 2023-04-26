@@ -30,6 +30,7 @@ or visit [app.uniswap.org](https://app.uniswap.org).
 
 ## Unsupported tokens
 
+
 Check out `useUnsupportedTokenList()` in [src/state/lists/hooks.ts](./src/state/lists/hooks.ts) for blocking tokens in your instance of the interface.
 
 You can block an entire list of tokens by passing in a tokenlist like [here](./src/constants/lists.ts)
