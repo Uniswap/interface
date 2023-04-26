@@ -68,13 +68,11 @@ jobs:
 
       - name: Yarn Install
         uses: nick-fields/retry@7d4a37704547a311dbb66ebdf5b23ec19374a767
-        run: 
-          working-directory: ./
         with:
           timeout_minutes: 10
           retry_wait_seconds: 2
           max_attempts: 3
-          command: yarn && cd apps/mobile && yarn
+          command: cd ../.. && yarn && cd apps/mobile && yarn
 
       - name: Update Ruby build tools
         uses: nick-fields/retry@7d4a37704547a311dbb66ebdf5b23ec19374a767
