@@ -245,7 +245,7 @@ const AuthenticatedHeader = () => {
           }}
           disabled={false}
         >
-          <Trans>Buy EVMOS</Trans>
+          <Trans>Bridge to Evmos</Trans>
         </BuyCryptoButton>
         <BuyCryptoButton
           size={ButtonSize.medium}
