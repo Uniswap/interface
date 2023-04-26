@@ -156,6 +156,7 @@ describe('Swap', () => {
 
   it('should render and dismiss the wallet rejection modal', () => {
     cy.stub(hardhat.wallet, 'sendTransaction').rejects(new Error('user cancelled'))
+    
     cy.get('#swap-currency-output .open-currency-select-button').click()
     cy.get(getTestSelector('token-search-input')).clear().type(USDC_MAINNET.address)
     cy.contains('USDC').click()
