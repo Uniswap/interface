@@ -123,7 +123,7 @@ export function CurrencySearch({
 
   const filteredSortedTokens = useSortTokensByQuery(debouncedQuery, sortedTokens)
 
-  const native = useNativeCurrency()
+  const native = useNativeCurrency(chainId)
   const wrapped = native.wrapped
 
   const searchCurrencies: Currency[] = useMemo(() => {

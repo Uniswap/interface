@@ -123,7 +123,6 @@ export default function TokenDetails({
   )
 
   const { token: detailedToken, didFetchFromChain } = useRelevantToken(address, pageChainId, tokenQueryData)
-  const { token: inputToken } = useRelevantToken(inputTokenAddress, pageChainId, undefined)
 
   const tokenWarning = address ? checkWarning(address) : null
   const isBlockedToken = tokenWarning?.canProceed === false
@@ -240,8 +239,7 @@ export default function TokenDetails({
             <Swap
               chainId={pageChainId}
               prefilledState={{
-                [Field.INPUT]: { currencyId: inputToken?.wrapped?.address },
-                // TODO: move this check into the Swap component
+                [Field.INPUT]: { currencyId: inputTokenAddress },
                 [Field.OUTPUT]: { currencyId: address === NATIVE_CHAIN_ID ? 'ETH' : address },
               }}
               onCurrencyChange={handleCurrencyChange}

@@ -2,7 +2,7 @@ import { arrayify } from '@ethersproject/bytes'
 import { parseBytes32String } from '@ethersproject/strings'
 import { Currency, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { isSupportedChain } from 'constants/chains'
+import { isSupportedChain, SupportedChainId } from 'constants/chains'
 import { useBytes32TokenContract, useTokenContract } from 'hooks/useContract'
 import { NEVER_RELOAD, useSingleCallResult } from 'lib/hooks/multicall'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
@@ -92,9 +92,12 @@ export function useTokenFromMapOrNetwork(tokens: TokenMap, tokenAddress?: string
  * Returns null if currency is loading or null was passed.
  * Returns undefined if currencyId is invalid or token does not exist.
  */
-export function useCurrencyFromMap(tokens: TokenMap, currencyId?: string | null): Currency | null | undefined {
-  const nativeCurrency = useNativeCurrency()
-  const { chainId } = useWeb3React()
+export function useCurrencyFromMap(
+  tokens: TokenMap,
+  chainId: SupportedChainId | undefined,
+  currencyId?: string | null
+): Currency | null | undefined {
+  const nativeCurrency = useNativeCurrency(chainId)
   const isNative = Boolean(nativeCurrency && currencyId?.toUpperCase() === 'ETH')
   const shorthandMatchAddress = useMemo(() => {
     const chain = supportedChainId(chainId)
@@ -108,6 +111,5 @@ export function useCurrencyFromMap(tokens: TokenMap, currencyId?: string | null)
   // this case so we use our builtin wrapped token instead of wrapped tokens on token lists
   const wrappedNative = nativeCurrency?.wrapped
   if (wrappedNative?.address?.toUpperCase() === currencyId?.toUpperCase()) return wrappedNative
-
   return isNative ? nativeCurrency : token
 }

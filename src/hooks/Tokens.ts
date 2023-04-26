@@ -162,5 +162,5 @@ export function useToken(tokenAddress?: string | null): Token | null | undefined
 
 export function useCurrency(currencyId?: string | null, chainId?: SupportedChainId): Currency | null | undefined {
   const tokens = useDefaultActiveTokens(chainId)
-  return useCurrencyFromMap(tokens, currencyId)
+  return useCurrencyFromMap(tokens, chainId, currencyId)
 }

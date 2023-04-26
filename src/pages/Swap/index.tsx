@@ -24,6 +24,7 @@ import { getChainInfo } from 'constants/chainInfo'
 import { isSupportedChain, SupportedChainId } from 'constants/chains'
 import useENSAddress from 'hooks/useENSAddress'
 import usePermit2Allowance, { AllowanceState } from 'hooks/usePermit2Allowance'
+import usePrevious from 'hooks/usePrevious'
 import { useSwapCallback } from 'hooks/useSwapCallback'
 import { useUSDPrice } from 'hooks/useUSDPrice'
 import JSBI from 'jsbi'
@@ -56,7 +57,7 @@ import { NATIVE_CHAIN_ID } from '../../constants/tokens'
 import { useCurrency, useDefaultActiveTokens } from '../../hooks/Tokens'
 import { useIsSwapUnsupported } from '../../hooks/useIsSwapUnsupported'
 import useWrapCallback, { WrapErrorText, WrapType } from '../../hooks/useWrapCallback'
-import { Field } from '../../state/swap/actions'
+import { Field, replaceSwapState } from '../../state/swap/actions'
 import { useDefaultsFromURLSearch, useDerivedSwapInfo, useSwapActionHandlers } from '../../state/swap/hooks'
 import swapReducer, { initialState as initialSwapState, SwapState } from '../../state/swap/reducer'
 import { useExpertModeManager } from '../../state/user/hooks'
@@ -167,7 +168,7 @@ export default function SwapPage({ className }: { className?: string }) {
  */
 export function Swap({
   className,
-  prefilledState,
+  prefilledState = {},
   chainId,
   onCurrencyChange,
 }: {
@@ -226,6 +227,23 @@ export function Swap({
   // swap state
   const [state, dispatch] = useReducer(swapReducer, { ...initialSwapState, ...prefilledState })
   const { typedValue, recipient, independentField } = state
+
+  const previousConnectedChainId = usePrevious(connectedChainId)
+  useEffect(() => {
+    const combinedInitialState = { ...initialSwapState, ...prefilledState }
+    console.log({ combinedInitialState })
+    if (previousConnectedChainId && previousConnectedChainId !== connectedChainId) {
+      dispatch(
+        replaceSwapState({
+          ...initialSwapState,
+          ...prefilledState,
+          field: combinedInitialState.independentField ?? Field.INPUT,
+          inputCurrencyId: combinedInitialState.INPUT.currencyId ?? undefined,
+          outputCurrencyId: combinedInitialState.OUTPUT.currencyId ?? undefined,
+        })
+      )
+    }
+  }, [connectedChainId, prefilledState, previousConnectedChainId])
 
   const {
     trade: { state: tradeState, trade },
@@ -521,6 +539,7 @@ export function Swap({
   const showDetailsDropdown = Boolean(
     !showWrap && userHasSpecifiedInputOutput && (trade || routeIsLoading || routeIsSyncing)
   )
+  const disableTokenInputs = chainId !== connectedChainId
 
   return (
     <SwapWrapper chainId={chainId} className={className} id="swap-page">
@@ -557,6 +576,7 @@ export function Swap({
               label={
                 independentField === Field.OUTPUT && !showWrap ? <Trans>From (at most)</Trans> : <Trans>From</Trans>
               }
+              disabled={disableTokenInputs}
               value={formattedAmounts[Field.INPUT]}
               showMaxButton={showMaxButton}
               currency={currencies[Field.INPUT] ?? null}
@@ -580,7 +600,7 @@ export function Swap({
             <ArrowContainer
               data-testid="swap-currency-button"
               onClick={() => {
-                onSwitchTokens()
+                !disableTokenInputs && onSwitchTokens()
               }}
               color={theme.textPrimary}
             >
@@ -598,6 +618,7 @@ export function Swap({
             <Trace section={InterfaceSectionName.CURRENCY_OUTPUT_PANEL}>
               <SwapCurrencyInputPanel
                 value={formattedAmounts[Field.OUTPUT]}
+                disabled={disableTokenInputs}
                 onUserInput={handleTypeOutput}
                 label={independentField === Field.INPUT && !showWrap ? <Trans>To (at least)</Trans> : <Trans>To</Trans>}
                 showMaxButton={false}

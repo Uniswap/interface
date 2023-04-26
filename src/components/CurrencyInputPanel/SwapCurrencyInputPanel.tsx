@@ -204,6 +204,7 @@ interface SwapCurrencyInputPanelProps {
   renderBalance?: (amount: CurrencyAmount<Currency>) => ReactNode
   locked?: boolean
   loading?: boolean
+  disabled?: boolean
 }
 
 export default function SwapCurrencyInputPanel({
@@ -226,6 +227,7 @@ export default function SwapCurrencyInputPanel({
   hideInput = false,
   locked = false,
   loading = false,
+  disabled = false,
   ...rest
 }: SwapCurrencyInputPanelProps) {
   const [modalOpen, setModalOpen] = useState(false)
@@ -258,13 +260,13 @@ export default function SwapCurrencyInputPanel({
               className="token-amount-input"
               value={value}
               onUserInput={onUserInput}
-              disabled={!chainAllowed}
+              disabled={!chainAllowed || disabled}
               $loading={loading}
             />
           )}
 
           <CurrencySelect
-            disabled={!chainAllowed}
+            disabled={!chainAllowed || disabled}
             visible={currency !== undefined}
             selected={!!currency}
             hideInput={hideInput}
