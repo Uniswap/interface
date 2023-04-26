@@ -183,21 +183,32 @@ export default function SwapModalFooter({
   }, [shouldLogModalCloseEvent, showAcceptChanges, setShouldLogModalCloseEvent, trade, priceUpdate])
 
   const details = useMemo(() => {
-    const details: Array<[ReactNode, string] | [ReactNode, string | ReactNode, string | undefined]> = []
-
     const label = `${trade.executionPrice.baseCurrency?.symbol} `
     const labelInverted = `${trade.executionPrice.quoteCurrency?.symbol}`
     const formattedPrice = formatTransactionAmount(priceToPreciseFloat(trade.executionPrice))
-    details.push([t`Exchange rate`, `${'1 ' + labelInverted + ' = ' + formattedPrice ?? '-'} ${label}`])
-    details.push([t`Network fee`, `~${formatCurrencyAmount(trade.gasUseEstimateUSD, NumberType.FiatGasPrice)}`])
-    details.push([
-      t`Price impact`,
-      trade.priceImpact ? formatPriceImpact(trade.priceImpact) : '-',
-      getPriceImpactWarning(trade.priceImpact),
-    ])
+    const details: Array<[ReactNode, string] | [ReactNode, string | ReactNode, string | undefined]> = [
+      [t`Exchange rate`, `${'1 ' + labelInverted + ' = ' + formattedPrice ?? '-'} ${label}`],
+      [t`Network fee`, `~${formatCurrencyAmount(trade.gasUseEstimateUSD, NumberType.FiatGasPrice)}`],
+      [
+        t`Price impact`,
+        trade.priceImpact ? formatPriceImpact(trade.priceImpact) : '-',
+        getPriceImpactWarning(trade.priceImpact),
+      ],
+    ]
+    if (trade.tradeType === TradeType.EXACT_INPUT) {
+      details.push([
+        t`Minimum received`,
+        `${trade.minimumAmountOut(allowedSlippage).toSignificant(6)} ${trade.outputAmount.currency.symbol}`,
+      ])
+    } else {
+      details.push([
+        t`Maximum sent`,
+        `${trade.maximumAmountIn(allowedSlippage).toSignificant(6)} ${trade.inputAmount.currency.symbol}`,
+      ])
+    }
 
     return details
-  }, [trade])
+  }, [allowedSlippage, trade])
 
   return (
     <>
