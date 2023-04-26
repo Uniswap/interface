@@ -83,7 +83,7 @@ export default function FiatOnrampModal() {
   const { height: windowHeight } = useWindowSize()
   const modalHeight = useMemo(() => {
     if (!windowHeight) {
-      return 580 // 580 is a reasonable fallback
+      return 620 // use this as a fallback if we can't get the window height
     }
     const modalHeightPx = windowHeight - theme.navHeight
     return Math.min(Math.round((modalHeightPx / windowHeight) * 100), 80)
@@ -135,7 +135,7 @@ export default function FiatOnrampModal() {
   }, [fetchSignedIframeUrl])
 
   return (
-    <Modal isOpen={fiatOnrampModalOpen} onDismiss={closeModal} maxHeight={modalHeight} minHeight={modalHeight}>
+    <Modal isOpen={fiatOnrampModalOpen} onDismiss={closeModal} height={modalHeight}>
       <Wrapper data-testid="fiat-onramp-modal" isDarkMode={isDarkMode}>
         {error ? (
           <>

@@ -105,7 +105,7 @@ export default memo(function CurrencySearchModal({
       break
   }
   return (
-    <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={modalHeight} minHeight={modalHeight}>
+    <Modal isOpen={isOpen} onDismiss={onDismiss} height={modalHeight}>
       {content}
     </Modal>
   )
