@@ -35,7 +35,7 @@ const RarityBar = styled.div<{ $color?: string }>`
   background: ${({ $color, theme }) => $color ?? theme.backgroundOutline};
   width: 2px;
   height: 10px;
-  display: flex;
+  border-radius: 2px;
 `
 
 interface RarityValue {
