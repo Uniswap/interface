@@ -15,3 +15,9 @@ export class NetworkError extends Error {
     this.name = 'NetworkError'
   }
 }
+
+export enum SpamCode {
+  LOW = 0, // same as isSpam = false on TokenProject
+  MEDIUM = 1, // same as isSpam = true on TokenProject
+  HIGH = 2, // has a URL in token name
+}

@@ -1,3 +1,4 @@
+import { SpamCode } from 'src/data/types'
 import { AssetType } from 'src/entities/assets'
 import {
   deriveCurrencyAmountFromAssetResponse,
@@ -58,6 +59,9 @@ export default function parseSendTransaction(
     )
     const transactedUSDValue = parseUSDValueFromAssetChange(change.transactedValue)
 
+    // Filter out send transactions with tokens that have spamCode 2 (token with URL name)
+    const isSpam = Boolean(change.asset.project?.spamCode === SpamCode.HIGH)
+
     if (!(recipient && tokenAddress)) return undefined
 
     return {
@@ -67,6 +71,7 @@ export default function parseSendTransaction(
       recipient,
       currencyAmountRaw,
       transactedUSDValue,
+      isSpam,
     }
   }
 

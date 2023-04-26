@@ -98,8 +98,10 @@ export function parseDataResponseToTransactionDetails(
     return data.portfolios[0].assetActivities.reduce((accum: TransactionDetails[], t) => {
       const parsed = extractTransactionDetails(t)
 
-      // Filter out spam if desired, currently only for receive transactions
-      const isSpam = parsed?.typeInfo.type === TransactionType.Receive && parsed.typeInfo.isSpam
+      // Filter out spam if desired, currently only for send/receive transactions
+      const isSpam =
+        (parsed?.typeInfo.type === TransactionType.Receive && parsed.typeInfo.isSpam) ||
+        (parsed?.typeInfo.type === TransactionType.Send && parsed.typeInfo.isSpam)
 
       if (parsed && !(hideSpamTokens && isSpam)) {
         accum.push(parsed)

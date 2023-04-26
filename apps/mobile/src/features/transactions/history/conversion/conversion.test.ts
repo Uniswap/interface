@@ -314,6 +314,7 @@ describe(parseSendTransaction, () => {
       recipient: TO_ADDRESS,
       currencyAmountRaw: '1000000000000000000',
       transactedUSDValue: 1,
+      isSpam: false,
     })
   })
   it('Send: parse ERC721 send', () => {

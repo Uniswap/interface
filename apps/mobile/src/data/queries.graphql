@@ -467,6 +467,7 @@ query TransactionList($address: String!) {
             project {
               id
               isSpam
+              spamCode
             }
           }
           tokenStandard

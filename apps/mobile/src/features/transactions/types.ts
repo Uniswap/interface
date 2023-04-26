@@ -168,6 +168,7 @@ export interface SendTokenTransactionInfo extends BaseTransactionInfo {
   currencyAmountRaw?: string
   tokenId?: string // optional. NFT token id
   nftSummaryInfo?: NFTSummaryInfo // optional. NFT metadata
+  isSpam?: boolean
 }
 
 export interface ReceiveTokenTransactionInfo extends BaseTransactionInfo {
