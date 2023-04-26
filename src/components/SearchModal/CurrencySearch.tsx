@@ -5,6 +5,7 @@ import { InterfaceEventName, InterfaceModalName } from '@uniswap/analytics-event
 import { Currency, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { sendEvent } from 'components/analytics'
+import { isSupportedChain } from 'constants/chains'
 import useDebounce from 'hooks/useDebounce'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useToggle from 'hooks/useToggle'
@@ -95,19 +96,19 @@ export function CurrencySearch({
     () =>
       !balancesAreLoading
         ? filteredTokens
-            .filter((token) => {
-              if (onlyShowCurrenciesWithBalance) {
-                return balances[token.address]?.greaterThan(0)
-              }
+          .filter((token) => {
+            if (onlyShowCurrenciesWithBalance) {
+              return balances[token.address]?.greaterThan(0)
+            }
 
-              // If there is no query, filter out unselected user-added tokens with no balance.
-              if (!debouncedQuery && token instanceof UserAddedToken) {
-                if (selectedCurrency?.equals(token) || otherSelectedCurrency?.equals(token)) return true
-                return balances[token.address]?.greaterThan(0)
-              }
-              return true
-            })
-            .sort(tokenComparator.bind(null, balances))
+            // If there is no query, filter out unselected user-added tokens with no balance.
+            if (!debouncedQuery && token instanceof UserAddedToken) {
+              if (selectedCurrency?.equals(token) || otherSelectedCurrency?.equals(token)) return true
+              return balances[token.address]?.greaterThan(0)
+            }
+            return true
+          })
+          .sort(tokenComparator.bind(null, balances))
         : [],
     [
       balances,
@@ -124,17 +125,25 @@ export function CurrencySearch({
   const filteredSortedTokens = useSortTokensByQuery(debouncedQuery, sortedTokens)
 
   const native = useNativeCurrency()
-  const wrapped = native.wrapped
+  const wrapped = isSupportedChain(chainId) ? native.wrapped : undefined
 
   const searchCurrencies: Currency[] = useMemo(() => {
     const s = debouncedQuery.toLowerCase().trim()
 
-    const tokens = filteredSortedTokens.filter((t) => !(t.equals(wrapped) || (disableNonToken && t.isNative)))
+    const tokens = filteredSortedTokens.filter(
+      (t) => !wrapped || !(t.equals(wrapped) || (disableNonToken && t.isNative))
+    )
     const shouldShowWrapped =
-      !onlyShowCurrenciesWithBalance || (!balancesAreLoading && balances[wrapped.address]?.greaterThan(0))
-    const natives = (
-      disableNonToken || native.equals(wrapped) ? [wrapped] : shouldShowWrapped ? [native, wrapped] : [native]
-    ).filter((n) => n.symbol?.toLowerCase()?.indexOf(s) !== -1 || n.name?.toLowerCase()?.indexOf(s) !== -1)
+      !!wrapped &&
+      (!onlyShowCurrenciesWithBalance || (!balancesAreLoading && balances[wrapped.address]?.greaterThan(0)))
+    const natives = wrapped
+      ? (disableNonToken || native.equals(wrapped)
+        ? [wrapped]
+        : shouldShowWrapped
+          ? [native, wrapped]
+          : [native]
+      ).filter((n) => n.symbol?.toLowerCase()?.indexOf(s) !== -1 || n.name?.toLowerCase()?.indexOf(s) !== -1)
+      : []
 
     return [...natives, ...tokens]
   }, [
