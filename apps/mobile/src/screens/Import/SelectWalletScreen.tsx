@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React, { useCallback, useEffect, useMemo, useReducer, useRef } from 'react'
+import React, { useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView } from 'react-native-gesture-handler'
 import { useAppDispatch } from 'src/app/hooks'
@@ -24,6 +24,10 @@ import {
 } from 'src/features/wallet/pendingAccountsSaga'
 import { activateAccount } from 'src/features/wallet/walletSlice'
 import { OnboardingScreens } from 'src/screens/Screens'
+import { ONE_SECOND_MS } from 'src/utils/time'
+import { useTimeout } from 'src/utils/timing'
+
+const FORCED_LOADING_DURATION = 3 * ONE_SECOND_MS // 3s
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.SelectWallet>
 
@@ -79,6 +83,8 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props): JS
 
     return EMPTY_ARRAY
   }, [allAddressBalances, addresses])
+
+  const isOnlyOneAccount = initialShownAccounts.length === 1
 
   const showError = error && !initialShownAccounts.length
 
@@ -166,24 +172,36 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props): JS
     t,
   ])
 
+  // Force a fixed duration loading state for smoother transition (as we show different UI for 1 vs multiple wallets)
+  const [isForcedLoading, setIsForcedLoading] = useState(true)
+  useTimeout(() => setIsForcedLoading(false), FORCED_LOADING_DURATION)
+
+  const isLoading = loading || isForcedLoading || isImportingAccounts
+
+  const title = isLoading
+    ? t('Searching for wallets')
+    : isOnlyOneAccount
+    ? t('One wallet found')
+    : t('Select wallets to import')
+
+  const subtitle = isLoading
+    ? t('Your wallets will appear below.')
+    : isOnlyOneAccount
+    ? t('Please confirm that the wallet below is the one you’d like to import.')
+    : t('We found several wallets associated with your recovery phrase.')
+
   return (
     <>
       <OnboardingScreen
-        subtitle={
-          !showError
-            ? t(
-                'You can import any of your wallet addresses that are associated with your recovery phrase.'
-              )
-            : undefined
-        }
-        title={!showError ? t('Select addresses to import') : ''}>
+        subtitle={!showError ? subtitle : undefined}
+        title={!showError ? title : ''}>
         {showError ? (
           <BaseCard.ErrorState
             retryButtonLabel={t('Retry')}
             title={t("Couldn't load addresses")}
             onRetry={onRetry}
           />
-        ) : isImportingAccounts || loading ? (
+        ) : isLoading ? (
           <Flex grow justifyContent="space-between">
             <Loader.Wallets repeat={5} />
           </Flex>
@@ -197,6 +215,7 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props): JS
                     key={ownerAddress}
                     address={ownerAddress}
                     balance={tokensTotalDenominatedValue?.value}
+                    hideSelectionCircle={isOnlyOneAccount}
                     name={ElementName.WalletCard}
                     selected={selectedAddresses.includes(ownerAddress)}
                     testID={`${ElementName.WalletCard}-${i + 1}`}
