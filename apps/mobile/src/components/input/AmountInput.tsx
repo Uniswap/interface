@@ -10,11 +10,59 @@ type Props = {
   dimTextColor?: boolean
 } & TextInputProps
 
+const periodRegExp = /\./g
+const commaRegExp = /,/g
+
+export function convertToDotAsDecimalSeparator(input: string): string {
+  // Determine the decimal and thousand separators
+  const commaCount = (input.match(commaRegExp) || []).length
+  const dotCount = (input.match(periodRegExp) || []).length
+
+  let decimalSeparator: string | null = null
+  let thousandSeparator: string | null = null
+
+  if (commaCount === 1 && dotCount === 0) {
+    decimalSeparator = ','
+  } else if (dotCount === 1 && commaCount === 0) {
+    decimalSeparator = '.'
+  } else if (commaCount > 1 && dotCount === 0) {
+    thousandSeparator = ','
+  } else if (dotCount > 1 && commaCount === 0) {
+    thousandSeparator = '.'
+  } else if (dotCount > 0 && commaCount > 0) {
+    // If both commas and dots are present, the one that appears last is the decimal separator
+    decimalSeparator = input.lastIndexOf(',') > input.lastIndexOf('.') ? ',' : '.'
+    thousandSeparator = decimalSeparator === ',' ? '.' : ','
+  }
+
+  const thousandRegExp = thousandSeparator === '.' ? periodRegExp : commaRegExp
+
+  if (decimalSeparator) {
+    const parts = input.split(decimalSeparator)
+    const decimalPart = parts.pop()
+    const thousandsPart = parts.join('')
+
+    // Remove thousands separators
+    const withoutThousandsSeparators = thousandSeparator
+      ? thousandsPart.replace(thousandRegExp, '')
+      : thousandsPart
+
+    // Combine withoutThousandsSeparators and decimalPart with a dot as a separator
+    return `${withoutThousandsSeparators}.${decimalPart}`
+  } else {
+    // Input has only thousands separators
+    const result = input.replace(thousandRegExp, '')
+    return result
+  }
+}
+
 export const AmountInput = forwardRef<NativeTextInput, Props>(
   ({ onChangeText, value, showCurrencySign, dimTextColor, showSoftInputOnFocus, ...rest }, ref) => {
     const handleChange = useCallback(
       (text: string) => {
-        const parsedText = showCurrencySign ? text.substring(1) : text
+        const parsedText = convertToDotAsDecimalSeparator(
+          showCurrencySign ? text.substring(1) : text
+        )
 
         if (parsedText === '' || inputRegex.test(escapeRegExp(parsedText))) {
           onChangeText?.(parsedText)

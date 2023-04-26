@@ -1,9 +1,13 @@
 import { ImpactFeedbackStyle } from 'expo-haptics'
 import React, { memo, useMemo } from 'react'
 import { TextInputProps } from 'react-native'
+import { getNumberFormatSettings } from 'react-native-localize'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { AnimatedBox, Box } from 'src/components/layout'
 import { Text } from 'src/components/Text'
+
+// if this setting is changed in phone settings the app would be restarted
+const { decimalSeparator } = getNumberFormatSettings()
 
 enum KeyAction {
   Insert = 'insert',
@@ -203,7 +207,11 @@ function KeyButton({
         color={isDisabled ? 'textSecondary' : 'textPrimary'}
         textAlign="center"
         variant="headlineMedium">
-        {label}
+        {
+          label === '.' ? decimalSeparator : label
+          /* respect phone settings to show decimal separator in the numpad,
+           * but in the input we always have '.' as a decimal separator for now*/
+        }
       </Text>
     </TouchableArea>
   )
