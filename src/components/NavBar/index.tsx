@@ -74,7 +74,7 @@ export const PageTabs = () => {
       )}
       {!isMobile && (
         <a
-          href="https://forge-beta.netlify.app/assets"
+          href="https://app.forge.trade/assets"
           rel="noopener noreferrer"
           id="pool-nav-link"
           className={styles.menuItem}
