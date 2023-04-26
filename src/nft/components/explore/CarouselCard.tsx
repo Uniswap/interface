@@ -2,7 +2,7 @@ import { formatNumberOrString, NumberType } from '@uniswap/conedison/format'
 import { loadingAnimation } from 'components/Loader/styled'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { useCollection } from 'graphql/data/nft/Collection'
-import { VerifiedIcon } from 'nft/components/icons'
+import { UniswapMagentaIcon, VerifiedIcon } from 'nft/components/icons'
 import { Markets, TrendingCollection } from 'nft/types'
 import { ethNumberStandardFormatter } from 'nft/utils'
 import styled from 'styled-components/macro'
@@ -246,7 +246,7 @@ export const CarouselCard = ({ collection, onClick }: CarouselCardProps) => {
         <CardBottomContainer>
           <>
             <TableElement>
-              <MarketplaceIcon src="/nft/svgs/marketplaces/uniswap-magenta.svg" alt="Uniswap icon" />
+              <UniswapMagentaIcon width="20" height="20" />
               <FirstColumnTextWrapper>
                 <ThemedText.SubHeaderSmall color="userThemeColor">Uniswap</ThemedText.SubHeaderSmall>
               </FirstColumnTextWrapper>

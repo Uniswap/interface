@@ -22,22 +22,22 @@ describe('filterKnownErrors', () => {
     const originalException = new (class extends Error {
       requestBody = JSON.stringify({ method: 'eth_blockNumber' })
     })()
-    expect(filterKnownErrors(ERROR, { originalException })).toBe(null)
+    expect(filterKnownErrors(ERROR, { originalException })).toBeNull()
   })
 
   it('filters network change errors', () => {
     const originalException = new Error('underlying network changed')
-    expect(filterKnownErrors(ERROR, { originalException })).toBe(null)
+    expect(filterKnownErrors(ERROR, { originalException })).toBeNull()
   })
 
   it('filters user rejected request errors', () => {
     const originalException = new Error('user rejected transaction')
-    expect(filterKnownErrors(ERROR, { originalException })).toBe(null)
+    expect(filterKnownErrors(ERROR, { originalException })).toBeNull()
   })
 
   it('filters invalid HTML response errors', () => {
     const originalException = new SyntaxError("Unexpected token '<'")
-    expect(filterKnownErrors(ERROR, { originalException })).toBe(null)
+    expect(filterKnownErrors(ERROR, { originalException })).toBeNull()
   })
 
   describe('chunk errors', () => {
@@ -152,14 +152,21 @@ describe('filterKnownErrors', () => {
       const originalException = new Error(
         "Refused to evaluate a string as JavaScript because 'unsafe-eval' is not an allowed source of script in the following Content Security Policy directive: \"script-src 'self' https://www.google-analytics.com https://www.googletagmanager.com 'unsafe-inlin..."
       )
-      expect(filterKnownErrors(ERROR, { originalException })).toBe(null)
+      expect(filterKnownErrors(ERROR, { originalException })).toBeNull()
     })
 
     it('filters CSP unsafe-eval compile/instatiate errors', () => {
       const originalException = new Error(
         "Refused to compile or instantiate WebAssembly module because 'unsafe-eval' is not an allowed source of script in the following Content Security Policy directive: \"script-src 'self' https://www.google-a..."
       )
-      expect(filterKnownErrors(ERROR, { originalException })).toBe(null)
+      expect(filterKnownErrors(ERROR, { originalException })).toBeNull()
+    })
+
+    it('filters WebAssembly compilation errors', () => {
+      const originalException = new Error(
+        'Aborted(CompileError: WebAssembly.instantiate(): Wasm code generation disallowed by embedder). Build with -sASSERTIONS for more info.'
+      )
+      expect(filterKnownErrors(ERROR, { originalException })).toBeNull()
     })
   })
 })
