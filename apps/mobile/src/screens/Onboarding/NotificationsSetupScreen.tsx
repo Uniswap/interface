@@ -1,13 +1,14 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { Alert } from 'react-native'
+import { Alert, Image, StyleSheet } from 'react-native'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { i18n } from 'src/app/i18n'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
-import OnboardingNotificationIcon from 'src/assets/backgrounds/onboarding-notifications-bgicon.svg'
+import { ONBOARDING_NOTIFICATIONS_DARK, ONBOARDING_NOTIFICATIONS_LIGHT } from 'src/assets'
 import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import { Flex } from 'src/components/layout'
+import { useIsDarkMode } from 'src/features/appearance/hooks'
 import { useBiometricAppSettings } from 'src/features/biometrics/hooks'
 import { promptPushPermission } from 'src/features/notifications/Onesignal'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
@@ -78,8 +79,8 @@ export function NotificationsSetupScreen({ navigation, route: { params } }: Prop
     <OnboardingScreen
       subtitle={t('Get notified when your transfers, swaps, and approvals complete.')}
       title={t('Turn on push notifications')}>
-      <Flex centered grow>
-        <OnboardingNotificationIcon />
+      <Flex centered shrink py="spacing24">
+        <NotificationsBackgroundImage />
       </Flex>
       <Button
         emphasis={ButtonEmphasis.Tertiary}
@@ -87,7 +88,6 @@ export function NotificationsSetupScreen({ navigation, route: { params } }: Prop
         name={ElementName.Skip}
         onPress={onPressNext}
       />
-
       <Button
         label={t('Turn on notifications')}
         name={ElementName.Enable}
@@ -96,3 +96,20 @@ export function NotificationsSetupScreen({ navigation, route: { params } }: Prop
     </OnboardingScreen>
   )
 }
+
+const NotificationsBackgroundImage = (): JSX.Element => {
+  const isDarkMode = useIsDarkMode()
+  return (
+    <Image
+      source={isDarkMode ? ONBOARDING_NOTIFICATIONS_DARK : ONBOARDING_NOTIFICATIONS_LIGHT}
+      style={styles.image}
+    />
+  )
+}
+
+const styles = StyleSheet.create({
+  image: {
+    height: '100%',
+    resizeMode: 'contain',
+  },
+})

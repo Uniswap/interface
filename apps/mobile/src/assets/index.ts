@@ -9,3 +9,6 @@ export const ONBOARDING_QR_ETCHING_VIDEO_LIGHT = require('./videos/light-etching
 export const ONBOARDING_QR_ETCHING_VIDEO_DARK = require('./videos/dark-etching.mp4')
 export const AVATARS_LIGHT = require('./misc/avatars-light.png')
 export const AVATARS_DARK = require('./misc/avatars-dark.png')
+
+export const ONBOARDING_NOTIFICATIONS_DARK = require('./backgrounds/notifications-dark.png')
+export const ONBOARDING_NOTIFICATIONS_LIGHT = require('./backgrounds/notifications-light.png')
