@@ -1,9 +1,8 @@
-import { ApolloClient, InMemoryCache, NormalizedCacheObject, useQuery } from '@apollo/client'
+import { ApolloClient, InMemoryCache, useQuery } from '@apollo/client'
 import { PoolData } from 'components/Pools/PoolTable'
 import { SupportedChainId } from 'constants/chains'
-import dayjs from 'dayjs'
 import gql from 'graphql-tag'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 function formatTokenSymbol(address: string, symbol: string) {
   return symbol
@@ -40,73 +39,8 @@ const fujiClient = new ApolloClient({
     },
   },
 })
-const fujiBlockClient = new ApolloClient({
-  uri: 'https://api.orbitmarket.io/subgraphs/name/forge-trade/blocks-subgraph',
-  cache: new InMemoryCache(),
-  queryDeduplication: true,
-  defaultOptions: {
-    watchQuery: {
-      fetchPolicy: 'cache-first',
-    },
-    query: {
-      fetchPolicy: 'cache-first',
-      errorPolicy: 'all',
-    },
-  },
-})
 
-const GET_BLOCKS = (timestamps: string[]) => {
-  let queryString = 'query blocks {'
-  queryString += timestamps.map((timestamp) => {
-    return `t${timestamp}:blocks(first: 1, orderBy: timestamp, orderDirection: desc, where: { timestamp_gt: ${timestamp}, timestamp_lt: ${
-      timestamp + 600
-    } }) {
-        number
-      }`
-  })
-  queryString += '}'
-  return gql(queryString)
-}
-
-async function splitQuery<Type>(
-  query: any,
-  client: ApolloClient<NormalizedCacheObject>,
-  vars: any[],
-  values: any[],
-  skipCount = 1000
-) {
-  let fetchedData = {}
-  let allFound = false
-  let skip = 0
-  try {
-    while (!allFound) {
-      let end = values.length
-      if (skip + skipCount < values.length) {
-        end = skip + skipCount
-      }
-      const sliced = values.slice(skip, end)
-      const result = await client.query<Type>({
-        query: query(...vars, sliced),
-        fetchPolicy: 'network-only',
-      })
-      fetchedData = {
-        ...fetchedData,
-        ...result.data,
-      }
-      if (Object.keys(result.data).length < skipCount || skip + skipCount > values.length) {
-        allFound = true
-      } else {
-        skip += skipCount
-      }
-    }
-    return fetchedData
-  } catch (e) {
-    console.log(e)
-    return undefined
-  }
-}
-
-function useBlocksFromTimestamps(timestamps: number[]): {
+function useBlocksFromTimestamps(): {
   blocks:
     | {
         timestamp: string
@@ -117,44 +51,45 @@ function useBlocksFromTimestamps(timestamps: number[]): {
 } {
   const activeNetwork = { id: SupportedChainId.MAINNET }
   const [blocks, setBlocks] = useState<any>()
-  const [error, setError] = useState(false)
+  const error = false
 
   // derive blocks based on active network
   const networkBlocks = blocks?.[activeNetwork.id]
 
+  const blocksPerHour = (60 * 60) / 4
+
   useEffect(() => {
     async function fetchData() {
-      const results = await splitQuery(GET_BLOCKS, fujiBlockClient, [], timestamps)
-      if (results) {
-        setBlocks({ ...(blocks ?? {}), [activeNetwork.id]: results })
-      } else {
-        setError(true)
+      const results = await fetch('https://subgraph.satsuma-prod.com/09c9cf3574cc/orbital-apes/v3-subgraph/status')
+      const data = await results.json()
+      let latestBlock = data.data.indexingStatusForCurrentVersion.chains[0]?.latestBlock?.number
+
+      if (latestBlock) {
+        latestBlock = parseInt(latestBlock)
       }
+
+      const b24 = latestBlock - blocksPerHour * 24
+      const b48 = latestBlock - blocksPerHour * 48
+      const b7d = latestBlock - blocksPerHour * 24 * 7
+
+      const time24 = new Date()
+      const time48 = new Date()
+      const time7d = new Date()
+
+      const ret = [
+        { timestamp: (time24.setDate(time24.getDate() - 1) / 1000).toString(), number: b24.toString() },
+        { timestamp: (time48.setDate(time48.getDate() - 2) / 1000).toString(), number: b48.toString() },
+        { timestamp: (time7d.setDate(time7d.getDate() - 7) / 1000).toString(), number: b7d.toString() },
+      ]
+      setBlocks(ret)
     }
     if (!networkBlocks && !error) {
       fetchData()
     }
-  })
-
-  const blocksFormatted = useMemo(() => {
-    if (blocks?.[activeNetwork.id]) {
-      const networkBlocks = blocks?.[activeNetwork.id]
-      const formatted = []
-      for (const t in networkBlocks) {
-        if (networkBlocks[t].length > 0) {
-          formatted.push({
-            timestamp: t.split('t')[1],
-            number: networkBlocks[t][0]['number'],
-          })
-        }
-      }
-      return formatted
-    }
-    return undefined
-  }, [activeNetwork.id, blocks])
+  }, [blocksPerHour, error, networkBlocks])
 
   return {
-    blocks: blocksFormatted,
+    blocks,
     error,
   }
 }
@@ -168,14 +103,6 @@ const get2DayChange = (valueNow: string, value24HoursAgo: string, value48HoursAg
     return [currentChange, 0]
   }
   return [currentChange, adjustedPercentChange]
-}
-
-function useDeltaTimestamps(): [number, number, number] {
-  const utcCurrentTime = dayjs()
-  const t1 = utcCurrentTime.subtract(1, 'day').startOf('minute').unix()
-  const t2 = utcCurrentTime.subtract(2, 'day').startOf('minute').unix()
-  const tWeek = utcCurrentTime.subtract(1, 'week').startOf('minute').unix()
-  return [t1, t2, tWeek]
 }
 
 const POOLS_BULK = (block: number | undefined) => {
@@ -275,8 +202,7 @@ export function usePoolDatas(): {
   // get client
   const dataClient = fujiClient
   // get blocks from historic timestamps
-  const [t24, t48, tWeek] = useDeltaTimestamps()
-  const { blocks, error: blockError } = useBlocksFromTimestamps([t24, t48, tWeek])
+  const { blocks, error: blockError } = useBlocksFromTimestamps()
   const [block24, block48, blockWeek] = blocks ?? []
 
   const { loading, error, data } = useQuery<PoolDataResponse>(POOLS_BULK(undefined), {
