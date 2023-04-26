@@ -3,7 +3,7 @@ import { V3Route } from '@uniswap/smart-order-router'
 import { FeeAmount, Pool } from '@uniswap/v3-sdk'
 import { NftActivityType, NftStandard, OrderStatus } from 'graphql/data/__generated__/types-and-hooks'
 import JSBI from 'jsbi'
-import { ActivityEvent, GenieAsset, Markets, WalletAsset } from 'nft/types'
+import { ActivityEvent, CollectionInfoForAsset, GenieAsset, Markets, WalletAsset } from 'nft/types'
 import { InterfaceTrade } from 'state/routing/types'
 
 export const TEST_TOKEN_1 = new Token(1, '0x0000000000000000000000000000000000000001', 18, 'ABC', 'Abc')
@@ -153,4 +153,16 @@ export const TEST_NFT_ACTIVITY_EVENT: ActivityEvent = {
   quantity: 1,
   url: 'https://opensea.io/assets/0xed5af388653567af2f388e6224dc7c4b3241c544/5674',
   eventTimestamp: 1682444662,
+}
+
+export const TEST_NFT_COLLECTION_INFO_FOR_ASSET: CollectionInfoForAsset = {
+  collectionDescription:
+    'Take the red bean to join the garden. View the collection at [azuki.com/gallery](https://azuki.com/gallery).\r\n\r\nAzuki starts with a collection of 10,000 avatars that give you membership access to The Garden: a corner of the internet where artists, builders, and web3 enthusiasts meet to create a decentralized future. Azuki holders receive access to exclusive drops, experiences, and more. Visit [azuki.com](https://azuki.com) for more details.\r\n\r\nWe rise together. We build together. We grow together.',
+  collectionImageUrl:
+    'https://i.seadn.io/gae/H8jOCJuQokNqGBpkBN5wk1oZwO7LM8bNnrHCaekV2nKjnCqw6UB5oaH8XyNeBDj6bA_n1mjejzhFQUP3O1NfjFLHr3FOaeHcTOOT?w=500&auto=format',
+  collectionName: 'Azuki',
+  discordUrl: 'https://discord.gg/azuki',
+  externalUrl: 'http://www.azuki.com',
+  isVerified: true,
+  totalSupply: 10000,
 }

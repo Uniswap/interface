@@ -89,7 +89,7 @@ export const LandingPage = ({ asset, collection }: LandingPageProps) => {
       <InfoContainer>
         <InfoDetailsContainer>
           <Row justify="center" gap="4px" align="center">
-            <StyledSubheaderText>{collection.collectionName}</StyledSubheaderText>
+            <StyledSubheaderText>{asset.name ?? `${asset.collectionName} #${asset.tokenId}`}</StyledSubheaderText>
             {collection.isVerified && <VerifiedIcon width="16px" height="16px" />}
           </Row>
           <StyledHeadlineText>{collection.collectionName}</StyledHeadlineText>
