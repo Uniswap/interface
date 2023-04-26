@@ -6,7 +6,6 @@ import { ChainId } from 'src/constants/chains'
 import { PollingInterval } from 'src/constants/misc'
 import { FEATURE_FLAGS } from 'src/features/experiments/constants'
 import { useFeatureFlag } from 'src/features/experiments/hooks'
-import { SAFE_TOKENS_TO_LOG } from 'src/features/routing/logging'
 import { useQuoteQuery } from 'src/features/routing/routingApi'
 import { PermitSignatureInfo } from 'src/features/transactions/swap/usePermit2Signature'
 import { useActiveAccount } from 'src/features/wallet/hooks'
@@ -84,14 +83,10 @@ export function useRouterQuote(params: UseQuoteProps) {
     }
   )
 
-  /* ---Custom request logging for failed quote requests--- */
   if (result.error) {
-    // only log non USD quotes, or USD quotes on widely used tokens
-    const shouldReportError =
-      !isUSDQuote ||
-      (isUSDQuote && SAFE_TOKENS_TO_LOG.some((token) => token.address === tokenInAddress))
-
-    shouldReportError &&
+    // We expect the routing API to fail on USDC quotes for long tail tokens (no routes found for our high min threshold of USDC amount)
+    // To avoid crowding logs, only log errors for non-USDC quotes
+    !isUSDQuote &&
       logger.error(
         'routing/hooks',
         'useRouterQuote',
@@ -99,7 +94,7 @@ export function useRouterQuote(params: UseQuoteProps) {
           currencyIdIn: `${tokenInChainId}-${tokenInAddress}`,
           currencyIdOut: `${tokenOutChainId}-${tokenOutAddress}`,
           currencyNameIn: currencyIn?.name,
-          currencyNameOut: currencyOut?.name, // name makes it much faster to debug in logs
+          currencyNameOut: currencyOut?.name,
           amount: amountSpecified?.quotient.toString(),
         })}`
       )
