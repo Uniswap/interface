@@ -23,7 +23,7 @@ module.exports = {
       },
       mining: {
         auto: false,
-        interval: 8000,
+        interval: 0,
       },
     },
   },
