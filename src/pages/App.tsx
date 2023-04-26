@@ -223,7 +223,7 @@ export default function App() {
           <HeaderWrapper transparent={isHeaderTransparent}>
             <NavBar blur={isHeaderTransparent} />
           </HeaderWrapper>
-          <BodyWrapper>
+          <BodyWrapper $maxWidth="100%">
             <Popups />
             <Polling />
             <TopLevelModals />
