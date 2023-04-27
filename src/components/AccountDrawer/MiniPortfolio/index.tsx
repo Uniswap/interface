@@ -3,7 +3,6 @@ import { Trace, TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, InterfaceSectionName, SharedEventName } from '@uniswap/analytics-events'
 import Column from 'components/Column'
 import { AutoRow } from 'components/Row'
-import { useMiniPortfolioEnabled } from 'featureFlags/flags/miniPortfolio'
 import { useIsNftPage } from 'hooks/useIsNftPage'
 import { useAtomValue } from 'jotai/utils'
 import { useState } from 'react'
@@ -87,50 +86,41 @@ const Pages: Array<Page> = [
   },
 ]
 
-function MiniPortfolio({ account }: { account: string }) {
+export default function MiniPortfolio({ account }: { account: string }) {
   const isNftPage = useIsNftPage()
   const [currentPage, setCurrentPage] = useState(isNftPage ? 1 : 0)
   const shouldDisableNFTRoutes = useAtomValue(shouldDisableNFTRoutesAtom)
 
   const Page = Pages[currentPage].component
   return (
-    <Wrapper>
-      <Nav>
-        {Pages.map(({ title, loggingElementName, key }, index) => {
-          if (shouldDisableNFTRoutes && loggingElementName.includes('nft')) return null
-          return (
-            <TraceEvent
-              events={[BrowserEvent.onClick]}
-              name={SharedEventName.NAVBAR_CLICKED}
-              element={loggingElementName}
-              key={index}
-            >
-              <NavItem
-                data-testid={`mini-portfolio-nav-${key}`}
-                onClick={() => setCurrentPage(index)}
-                active={currentPage === index}
-                key={`Mini Portfolio page ${index}`}
-              >
-                {title}
-              </NavItem>
-            </TraceEvent>
-          )
-        })}
-      </Nav>
-      <PageWrapper>
-        <Page account={account} />
-      </PageWrapper>
-    </Wrapper>
-  )
-}
-
-export default function MiniPortfolioWrapper({ account }: { account: string }) {
-  const flagEnabled = useMiniPortfolioEnabled()
-  if (!flagEnabled) return null
-
-  return (
     <Trace section={InterfaceSectionName.MINI_PORTFOLIO}>
-      <MiniPortfolio account={account} />
+      <Wrapper>
+        <Nav>
+          {Pages.map(({ title, loggingElementName, key }, index) => {
+            if (shouldDisableNFTRoutes && loggingElementName.includes('nft')) return null
+            return (
+              <TraceEvent
+                events={[BrowserEvent.onClick]}
+                name={SharedEventName.NAVBAR_CLICKED}
+                element={loggingElementName}
+                key={index}
+              >
+                <NavItem
+                  data-testid={`mini-portfolio-nav-${key}`}
+                  onClick={() => setCurrentPage(index)}
+                  active={currentPage === index}
+                  key={`Mini Portfolio page ${index}`}
+                >
+                  {title}
+                </NavItem>
+              </TraceEvent>
+            )
+          })}
+        </Nav>
+        <PageWrapper>
+          <Page account={account} />
+        </PageWrapper>
+      </Wrapper>
     </Trace>
   )
 }

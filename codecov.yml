@@ -9,13 +9,17 @@ ignore:
   - "**/constants/**/*"
   - "constants/**/*"
 
-coverage:
-  status:
-    project:
-      default:
+flag_management:
+  default_rules:
+    statuses:
+      - type: project
         target: auto
         threshold: 1%
         if_ci_failed: error
-    patch:
-      default:
+      - type: patch
         target: 80%
+  individual_flags:
+    - name: e2e-tests
+      statuses:
+        - type: patch
+          target: 0%

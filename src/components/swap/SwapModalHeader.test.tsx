@@ -10,16 +10,6 @@ import noop from 'utils/noop'
 
 import SwapModalHeader from './SwapModalHeader'
 
-jest.mock('@web3-react/core', () => {
-  const web3React = jest.requireActual('@web3-react/core')
-  return {
-    ...web3React,
-    useWeb3React: () => ({
-      chainId: 1,
-    }),
-  }
-})
-
 jest.mock('@uniswap/analytics')
 const mockSendAnalyticsEvent = sendAnalyticsEvent as jest.MockedFunction<typeof sendAnalyticsEvent>
 
