@@ -147,6 +147,7 @@ export default function SwapModalFooter({
           })}
         >
           <ButtonError
+            data-testid="confirm-swap-button"
             onClick={onConfirm}
             disabled={disabledConfirm}
             style={{ margin: '10px 0 0 0' }}
@@ -157,7 +158,6 @@ export default function SwapModalFooter({
             </Text>
           </ButtonError>
         </TraceEvent>
-
         {swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}
       </AutoRow>
     </>

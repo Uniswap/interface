@@ -3,8 +3,8 @@ import Column from 'components/Column'
 import Row from 'components/Row'
 import { getMarketplaceFee, getRoyalty } from 'nft/components/profile/list/utils'
 import { ListingMarket, WalletAsset } from 'nft/types'
-import { formatEth } from 'nft/utils'
-import styled from 'styled-components/macro'
+import { formatEth, getMarketplaceIcon } from 'nft/utils'
+import styled, { css } from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
 const FeeWrap = styled(Row)`
@@ -17,17 +17,22 @@ const RoyaltyContainer = styled(Column)`
   padding: 4px 0px;
 `
 
-const MarketIcon = styled.img`
+const iconStyles = css`
   width: 16px;
   height: 16px;
-  border-radius: 2px;
-  object-fit: cover;
   outline: 1px solid ${({ theme }) => theme.backgroundInteractive};
   margin-right: 8px;
 `
 
-const CollectionIcon = styled(MarketIcon)`
+const MarketIcon = styled.div`
+  border-radius: 4px;
+  ${iconStyles}
+`
+
+const CollectionIcon = styled.img`
+  object-fit: cover;
   border-radius: 50%;
+  ${iconStyles}
 `
 
 const FeePercent = styled(ThemedText.Caption)`
@@ -57,7 +62,7 @@ export const RoyaltyTooltip = ({
       {selectedMarkets.map((market) => (
         <FeeWrap key={asset.collection?.address ?? '' + asset.tokenId + market.name + 'fee'}>
           <Row>
-            <MarketIcon src={market.icon} />
+            <MarketIcon>{getMarketplaceIcon(market.name, '16')}</MarketIcon>
             <ThemedText.Caption lineHeight="16px" marginRight="12px">
               {market.name}&nbsp;
               <Trans>fee</Trans>

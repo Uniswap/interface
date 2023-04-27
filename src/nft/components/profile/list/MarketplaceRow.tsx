@@ -12,6 +12,7 @@ import {
 } from 'nft/components/profile/list/utils'
 import { useSellAsset } from 'nft/hooks'
 import { ListingMarket, WalletAsset } from 'nft/types'
+import { getMarketplaceIcon } from 'nft/utils'
 import { formatEth, formatUsdPrice } from 'nft/utils/currency'
 import { fetchPrice } from 'nft/utils/fetchPrice'
 import { Dispatch, DispatchWithoutAction, useCallback, useEffect, useMemo, useReducer, useState } from 'react'
@@ -64,11 +65,10 @@ const MarketIconWrapper = styled(Column)`
   cursor: pointer;
 `
 
-const MarketIcon = styled.img<{ index: number }>`
+const MarketIcon = styled.div<{ index: number }>`
   width: 20px;
   height: 20px;
   border-radius: 4px;
-  object-fit: cover;
   z-index: ${({ index }) => 2 - index};
   margin-left: ${({ index }) => `${index === 0 ? 0 : -8}px`};
   outline: 1px solid ${({ theme }) => theme.backgroundInteractive};
@@ -214,7 +214,7 @@ export const MarketplaceRow = ({
                   removeMarket && removeMarket()
                 }}
               >
-                <MarketIcon alt={market.name} src={market.icon} index={index} />
+                <MarketIcon index={index}>{getMarketplaceIcon(market.name, '20')}</MarketIcon>
                 <RemoveMarketplaceWrap hovered={marketIconHovered && (expandMarketplaceRows ?? false)}>
                   <img width="20px" src="/nft/svgs/minusCircle.svg" alt="Remove item" />
                 </RemoveMarketplaceWrap>
