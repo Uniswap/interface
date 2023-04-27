@@ -88,7 +88,7 @@ export enum ListingStatus {
 }
 
 export interface AssetRow {
-  images: (string | undefined)[]
+  image: string | undefined
   name?: string
   status: ListingStatus
   marketplace: ListingMarket

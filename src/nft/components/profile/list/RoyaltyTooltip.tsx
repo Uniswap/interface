@@ -4,7 +4,7 @@ import Row from 'components/Row'
 import { getMarketplaceFee, getRoyalty } from 'nft/components/profile/list/utils'
 import { ListingMarket, WalletAsset } from 'nft/types'
 import { formatEth, getMarketplaceIcon } from 'nft/utils'
-import styled from 'styled-components/macro'
+import styled, { css } from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
 const FeeWrap = styled(Row)`
@@ -17,21 +17,22 @@ const RoyaltyContainer = styled(Column)`
   padding: 4px 0px;
 `
 
-const MarketIcon = styled.div`
+const iconStyles = css`
   width: 16px;
   height: 16px;
-  border-radius: 4px;
   outline: 1px solid ${({ theme }) => theme.backgroundInteractive};
   margin-right: 8px;
 `
 
+const MarketIcon = styled.div`
+  border-radius: 4px;
+  ${iconStyles}
+`
+
 const CollectionIcon = styled.img`
-  width: 16px;
-  height: 16px;
   object-fit: cover;
-  outline: 1px solid ${({ theme }) => theme.backgroundInteractive};
-  margin-right: 8px;
   border-radius: 50%;
+  ${iconStyles}
 `
 
 const FeePercent = styled(ThemedText.Caption)`

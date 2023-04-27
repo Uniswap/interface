@@ -138,7 +138,7 @@ export const ContentRow = ({
         failed={failed}
         ref={rowRef}
       >
-        {isCollectionApprovalSection ? <CollectionIcon src={row.images[0]} /> : <AssetIcon src={row.images[0]} />}
+        {isCollectionApprovalSection ? <CollectionIcon src={row.image} /> : <AssetIcon src={row.image} />}
         <MarketplaceIcon>{getMarketplaceIcon(row.marketplace.name, '24')}</MarketplaceIcon>
         <ContentName>{row.name}</ContentName>
         {isCollectionApprovalSection && (row as CollectionRow).isVerified && <StyledVerifiedIcon />}
