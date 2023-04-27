@@ -111,6 +111,7 @@
     "jest-fetch-mock": "^3.0.3",
     "jest-styled-components": "^7.0.8",
     "ms.macro": "^2.0.0",
+    "path-browserify": "^1.0.1",
     "prettier": "^2.7.1",
     "react-scripts": "^4.0.3",
     "serve": "^11.3.2",
