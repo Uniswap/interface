@@ -6,8 +6,8 @@ import { Chain, SearchTokensQuery, useSearchTokensQuery } from './__generated__/
 import { chainIdToBackendName } from './util'
 
 gql`
-  query SearchTokens($searchQuery: String!) {
-    searchTokens(searchQuery: $searchQuery) {
+  query SearchTokens($searchQuery: String!, $_fs: String) {
+    searchTokens(searchQuery: $searchQuery, _fs: $_fs) {
       id
       decimals
       name
@@ -72,10 +72,11 @@ function searchTokenSortFunction(
   else return (b.market?.volume24H?.value ?? 0) - (a.market?.volume24H?.value ?? 0)
 }
 
-export function useSearchTokens(searchQuery: string, chainId: number) {
+export function useSearchTokens(searchQuery: string, chainId: number, alternateSourceEnabled: boolean) {
   const { data, loading, error } = useSearchTokensQuery({
     variables: {
       searchQuery,
+      _fs: alternateSourceEnabled ? 'DATASOURCE:ALTERNATE' : undefined,
     },
     skip: !searchQuery,
   })

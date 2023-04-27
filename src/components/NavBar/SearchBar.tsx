@@ -4,6 +4,7 @@ import { sendAnalyticsEvent, Trace, TraceEvent, useTrace } from '@uniswap/analyt
 import { BrowserEvent, InterfaceElementName, InterfaceEventName, InterfaceSectionName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import clsx from 'clsx'
+import { useAlternateTxSourceFlagEnabled } from 'featureFlags/flags/alternateTxSource'
 import { useNftGraphqlEnabled } from 'featureFlags/flags/nftlGraphql'
 import { useCollectionSearch } from 'graphql/data/nft/CollectionSearch'
 import { useSearchTokens } from 'graphql/data/SearchTokens'
@@ -85,7 +86,12 @@ export const SearchBar = () => {
   }, [gqlCollections, gqlCollectionsAreLoading, isNftGraphqlEnabled, queryCollections, queryCollectionsAreLoading])
 
   const { chainId } = useWeb3React()
-  const { data: tokens, loading: tokensAreLoading } = useSearchTokens(debouncedSearchValue, chainId ?? 1)
+  const alternateSourceEnabled = useAlternateTxSourceFlagEnabled()
+  const { data: tokens, loading: tokensAreLoading } = useSearchTokens(
+    debouncedSearchValue,
+    chainId ?? 1,
+    alternateSourceEnabled
+  )
 
   const isNFTPage = useIsNftPage()
 
