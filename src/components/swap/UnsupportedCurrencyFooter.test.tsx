@@ -27,7 +27,7 @@ jest.mock('../../hooks/Tokens')
 jest.mock('../../utils/getExplorerLink')
 
 describe('UnsupportedCurrencyFooter.tsx', () => {
-  it('matches base snapshot', () => {
+  it('renders', () => {
     mocked(useUnsupportedTokens).mockImplementation(() => ({ unsupportedTokenAddress: unsupportedToken }))
     const { asFragment } = render(<UnsupportedCurrencyFooter show={true} currencies={[unsupportedToken]} />)
     expect(asFragment()).toMatchSnapshot()
