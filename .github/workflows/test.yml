@@ -86,6 +86,18 @@ jobs:
           path: build
           if-no-files-found: error
 
+  size-tests:
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/setup
+      - uses: actions/download-artifact@v3
+        with:
+          name: build
+          path: build
+      - run: yarn test:size
+
   build-e2e:
     runs-on: ubuntu-latest
     steps:
@@ -107,21 +119,14 @@ jobs:
           path: build
           if-no-files-found: error
 
-  size-tests:
-    needs: [build]
+  # Allows for parallel re-runs of cypress tests without re-building.
+  cypress-rerun:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: ./.github/actions/setup
-      - uses: actions/download-artifact@v3
-        with:
-          name: build
-          path: build
-      - run: yarn test:size
-
+      - run: exit 0
 
   cypress-test-matrix:
-    needs: [build-e2e]
+    needs: [build-e2e, cypress-rerun]
     runs-on: ubuntu-latest
     container: cypress/browsers:node-18.14.1-chrome-111.0.5563.64-1-ff-111.0-edge-111.0.1661.43-1
     strategy:
