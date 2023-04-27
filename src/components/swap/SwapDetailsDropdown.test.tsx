@@ -33,7 +33,7 @@ describe('SwapDetailsDropdown.tsx', () => {
     expect(screen.getByText('Fetching best price...')).toBeInTheDocument()
   })
 
-  it('interactive components work as expected once trade is loaded', () => {
+  it('is interactive once loaded', () => {
     TEST_TRADE_EXACT_INPUT.gasUseEstimateUSD = toCurrencyAmount(TEST_TOKEN_1, 1)
     render(
       <SwapDetailsDropdown
