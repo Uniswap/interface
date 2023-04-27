@@ -13,13 +13,17 @@ const MAX_AMOUNT_STR_LENGTH = 9
 
 export const Label = styled.span`
   color: ${({ theme }) => theme.textSecondary};
-  margin-right: 0.5rem;
+  margin-right: 8px;
   max-width: 75%;
 `
 
 const Value = styled.span`
   color: ${({ theme }) => theme.textSecondary};
   text-align: end;
+`
+
+const AmountContainer = styled(Column)`
+  align-items: flex-end;
 `
 
 interface AmountProps {
@@ -40,7 +44,7 @@ export function SwapModalHeaderAmount({ tooltipText, label, amount, usdAmount, f
   }
 
   return (
-    <Row align="flex-start" justify="space-between" gap="0.75rem">
+    <Row align="flex-start" justify="space-between" gap="12px">
       <Row width="wrap-content">
         <ThemedText.BodySecondary>
           <Label>{label}</Label>
@@ -56,9 +60,9 @@ export function SwapModalHeaderAmount({ tooltipText, label, amount, usdAmount, f
         <Tooltip show={showHoverTooltip} placement="right" text={tooltipText} />
       </Row>
 
-      <Column align="flex-end">
+      <AmountContainer>
         <Row gap="0.5rem" width="wrap-content">
-          <CurrencyLogo currency={amount.currency} size="1.75rem" />
+          <CurrencyLogo currency={amount.currency} size="28px" />
           <ThemedText.HeadlineMedium color="primary" data-testid={`${field}-amount`}>
             {formattedAmount} {amount.currency.symbol}
           </ThemedText.HeadlineMedium>
@@ -68,7 +72,7 @@ export function SwapModalHeaderAmount({ tooltipText, label, amount, usdAmount, f
             <Value>${usdAmount.toFixed(2)}</Value>
           </ThemedText.BodySecondary>
         )}
-      </Column>
+      </AmountContainer>
     </Row>
   )
 }

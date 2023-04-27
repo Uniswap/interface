@@ -26,12 +26,12 @@ import { AlertTriangle } from 'react-feather'
 import { Text } from 'rebass'
 import { InterfaceTrade } from 'state/routing/types'
 import { useClientSideRouter, useUserSlippageTolerance } from 'state/user/hooks'
-import { useTheme } from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { formatTransactionAmount, priceToPreciseFloat } from 'utils/formatNumbers'
 import { computeRealizedPriceImpact, getPriceImpactWarning } from 'utils/prices'
 
-import { ButtonError, ButtonPrimary } from '../Button'
+import { ButtonError, SmallButtonPrimary } from '../Button'
 import { AutoRow, RowBetween, RowFixed } from '../Row'
 import { SwapCallbackError, SwapShowAcceptChanges } from './styleds'
 import { SwapModalDetailRow } from './SwapModalDetailRow'
@@ -129,6 +129,15 @@ const formatSwapButtonClickEventProperties = ({
   swap_quote_block_number: trade.blockNumber,
   ...formatRoutesEventProperties(routes),
 })
+
+const DetailsContainer = styled(Column)`
+  padding: 0 8px;
+`
+
+const StyledAlertTriangle = styled(AlertTriangle)`
+  margin-right: 8px;
+  min-width: 24px;
+`
 
 export default function SwapModalFooter({
   trade,
@@ -228,26 +237,23 @@ export default function SwapModalFooter({
 
   return (
     <>
-      <Column gap="md" padding="0 0.5rem">
+      <DetailsContainer gap="md">
         {details.map(({ label, value, color, labelTooltipText }, i) => (
           <SwapModalDetailRow key={i} label={label} value={value} color={color} labelTooltipText={labelTooltipText} />
         ))}
-      </Column>
+      </DetailsContainer>
       {showAcceptChanges ? (
-        <SwapShowAcceptChanges justify="flex-start" gap="0px" data-testid="show-accept-changes">
+        <SwapShowAcceptChanges justify="flex-start" data-testid="show-accept-changes">
           <RowBetween>
             <RowFixed>
-              <AlertTriangle size={20} style={{ marginRight: '8px', minWidth: 24 }} />
+              <StyledAlertTriangle size={20} />
               <ThemedText.DeprecatedMain color={theme.accentAction}>
                 <Trans>Price Updated</Trans>
               </ThemedText.DeprecatedMain>
             </RowFixed>
-            <ButtonPrimary
-              style={{ padding: '.5rem', width: 'fit-content', fontSize: '0.825rem', borderRadius: '12px' }}
-              onClick={onAcceptChanges}
-            >
+            <SmallButtonPrimary onClick={onAcceptChanges}>
               <Trans>Accept</Trans>
-            </ButtonPrimary>
+            </SmallButtonPrimary>
           </RowBetween>
         </SwapShowAcceptChanges>
       ) : (

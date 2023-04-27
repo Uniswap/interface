@@ -459,14 +459,11 @@ export const SpinnerSVG = styled.svg`
   ${SpinnerCss}
 `
 
-const BackArrowLink = styled(StyledInternalLink)`
-  color: ${({ theme }) => theme.textPrimary};
-`
-export function BackArrow({ to }: { to: string }) {
+export function BackArrowLink({ to }: { to: string }) {
   return (
-    <BackArrowLink to={to}>
-      <ArrowLeft />
-    </BackArrowLink>
+    <StyledInternalLink to={to}>
+      <BackArrowIcon />
+    </StyledInternalLink>
   )
 }
 

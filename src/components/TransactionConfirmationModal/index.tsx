@@ -74,15 +74,15 @@ function ConfirmationPendingContent({
           <CustomLightSpinner src={Circle} alt="loader" size={inline ? '40px' : '90px'} />
         </ConfirmedIcon>
         <AutoColumn gap="md" justify="center">
-          <Text fontWeight={500} fontSize={20} color={theme.textPrimary} textAlign="center">
+          <ThemedText.SubHeaderLarge color={theme.textPrimary} textAlign="center">
             <Trans>Waiting for confirmation</Trans>
-          </Text>
-          <Text fontWeight={600} fontSize={16} color={theme.textPrimary} textAlign="center">
+          </ThemedText.SubHeaderLarge>
+          <ThemedText.SubHeader color={theme.textPrimary} textAlign="center">
             {pendingText}
-          </Text>
-          <Text fontWeight={400} fontSize={12} color={theme.textSecondary} textAlign="center" marginBottom="12px">
+          </ThemedText.SubHeader>
+          <ThemedText.SubHeaderSmall color={theme.textSecondary} textAlign="center" marginBottom="12px">
             <Trans>Confirm this transaction in your wallet</Trans>
-          </Text>
+          </ThemedText.SubHeaderSmall>
         </AutoColumn>
       </AutoColumn>
     </Wrapper>
@@ -135,7 +135,7 @@ function TransactionSubmittedContent({
         <ConfirmedIcon inline={inline}>
           <ArrowUpCircle strokeWidth={1} size={inline ? '40px' : '75px'} color={theme.accentActive} />
         </ConfirmedIcon>
-        <AutoColumn gap="md" justify="center" style={{ paddingBottom: '12px' }}>
+        <AutoColumn gap="md" justify="center" padding="0 0 12px 0">
           <ThemedText.MediumHeader textAlign="center">
             <Trans>Transaction submitted</Trans>
           </ThemedText.MediumHeader>
@@ -184,12 +184,12 @@ export function ConfirmationModalContent({
 }) {
   return (
     <ConfirmationModalWrapper>
-      <AutoColumn gap="0.5rem" padding="1em 0.5rem 0">
+      <AutoColumn gap="sm" padding="16px 8px 0">
         <Row>
           <BackArrowIcon style={{ position: 'absolute' }} onClick={onDismiss} data-cy="confirmation-close-icon" />
-          <Text fontWeight={500} fontSize={16} marginX="auto">
-            {title}
-          </Text>
+          <Row justify="center">
+            <ThemedText.SubHeader>{title}</ThemedText.SubHeader>
+          </Row>
         </Row>
         {topContent()}
       </AutoColumn>
@@ -277,7 +277,7 @@ function L2Content({
           )}
         </ConfirmedIcon>
         <AutoColumn gap="md" justify="center">
-          <Text fontWeight={500} fontSize={20} textAlign="center">
+          <ThemedText.SubHeaderLarge textAlign="center">
             {!hash ? (
               <Trans>Confirm transaction in wallet</Trans>
             ) : !confirmed ? (
@@ -287,7 +287,7 @@ function L2Content({
             ) : (
               <Trans>Error</Trans>
             )}
-          </Text>
+          </ThemedText.SubHeaderLarge>
           <Text fontWeight={400} fontSize={16} textAlign="center">
             {transaction ? <TransactionSummary info={transaction.info} /> : pendingText}
           </Text>
@@ -300,7 +300,7 @@ function L2Content({
           ) : (
             <div style={{ height: '17px' }} />
           )}
-          <Text color={theme.textTertiary} style={{ margin: '20px 0 0 0' }} fontSize="14px">
+          <ThemedText.SubHeaderSmall color={theme.textTertiary} marginTop="20px">
             {!secondsToConfirm ? (
               <div style={{ height: '24px' }} />
             ) : (
@@ -311,11 +311,11 @@ function L2Content({
                 </span>
               </div>
             )}
-          </Text>
+          </ThemedText.SubHeaderSmall>
           <ButtonPrimary onClick={onDismiss} style={{ margin: '4px 0 0 0' }}>
-            <Text fontWeight={500} fontSize={20}>
+            <ThemedText.SubHeaderLarge fontWeight={500} fontSize={20}>
               {inline ? <Trans>Return</Trans> : <Trans>Close</Trans>}
-            </Text>
+            </ThemedText.SubHeaderLarge>
           </ButtonPrimary>
         </AutoColumn>
       </AutoColumn>

@@ -4,15 +4,11 @@ type Gap = keyof DefaultTheme['grids']
 
 export const Column = styled.div<{
   gap?: Gap
-  align?: 'flex-start' | 'center' | 'flex-end' | 'stretch'
-  padding?: string
 }>`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   gap: ${({ gap, theme }) => gap && theme.grids[gap]};
-  align-items: ${({ align }) => align && align};
-  padding: ${({ padding }) => padding};
 `
 export const ColumnCenter = styled(Column)`
   width: 100%;
