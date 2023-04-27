@@ -2,13 +2,13 @@
 
 exports[`LandingPage renders it correctly 1`] = `
 <DocumentFragment>
-  .c6 {
+  .c7 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
 }
 
-.c7 {
+.c8 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -26,11 +26,11 @@ exports[`LandingPage renders it correctly 1`] = `
   gap: 4px;
 }
 
-.c8 {
+.c9 {
   color: #7780A0;
 }
 
-.c10 {
+.c11 {
   color: #0D111C;
 }
 
@@ -48,6 +48,14 @@ exports[`LandingPage renders it correctly 1`] = `
   justify-content: flex-start;
 }
 
+.c4 {
+  width: 100%;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
 .c0 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -56,7 +64,7 @@ exports[`LandingPage renders it correctly 1`] = `
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
   flex-direction: column;
-  min-height: calc(100vh - 72px);
+  min-height: calc(100vh - 72px - 52px);
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -65,16 +73,11 @@ exports[`LandingPage renders it correctly 1`] = `
   gap: 26px;
 }
 
-.c4 {
-  width: 100%;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
+.c5 {
   gap: 40px;
 }
 
-.c5 {
+.c6 {
   gap: 4px;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -93,7 +96,7 @@ exports[`LandingPage renders it correctly 1`] = `
   width: 100%;
 }
 
-.c9 {
+.c10 {
   line-height: 20px;
 }
 
@@ -101,6 +104,12 @@ exports[`LandingPage renders it correctly 1`] = `
   .c0 {
     gap: 64px;
     padding-top: 28px;
+  }
+}
+
+@media screen and (min-width:768px) {
+  .c0 {
+    min-height: calc(100vh - 72px );
   }
 }
 
@@ -116,7 +125,7 @@ exports[`LandingPage renders it correctly 1`] = `
 }
 
 @media screen and (min-width:640px) {
-  .c4 {
+  .c5 {
     width: 560px;
   }
 }
@@ -124,19 +133,19 @@ exports[`LandingPage renders it correctly 1`] = `
 @media screen and (min-width:640px) {
   .c1 {
     width: 560px;
-    width: 560px;
+    height: 560px;
   }
 }
 
 @media screen and (min-width:640px) {
-  .c9 {
+  .c10 {
     line-height: 24px !important;
     font-size: 16px !important;
   }
 }
 
 @media screen and (min-width:640px) {
-  .c11 {
+  .c12 {
     line-height: 44px !important;
     font-size: 36px !important;
   }
@@ -154,18 +163,18 @@ exports[`LandingPage renders it correctly 1`] = `
       />
     </div>
     <div
-      class="c3 c4"
+      class="c3 c4 c5"
     >
       <div
-        class="c3 c5"
+        class="c3 c6"
       >
         <div
-          class="c6 c7"
+          class="c7 c8"
         >
           <div
-            class="c8 c9 css-1aekuku"
+            class="c9 c10 css-1aekuku"
           >
-            Azuki #3318
+            Azuki
           </div>
           <svg
             fill="none"
@@ -185,9 +194,9 @@ exports[`LandingPage renders it correctly 1`] = `
           </svg>
         </div>
         <div
-          class="c10 c11 css-iapcxi"
+          class="c11 c12 css-iapcxi"
         >
-          Azuki
+          Azuki #3318
         </div>
       </div>
     </div>
