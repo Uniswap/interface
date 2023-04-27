@@ -515,6 +515,16 @@ export function nativeOnChain(chainId: number): NativeCurrency | Token {
   return (cachedNativeCurrency[chainId] = nativeCurrency)
 }
 
+export function getSwapCurrencyId(currency: Currency): string {
+  if (currency.isToken) {
+    return currency.address
+  }
+  if (currency.isNative) {
+    return NATIVE_CHAIN_ID
+  }
+  return ''
+}
+
 export const TOKEN_SHORTHANDS: { [shorthand: string]: { [chainId in SupportedChainId]?: string } } = {
   USDC: {
     [SupportedChainId.MAINNET]: USDC_MAINNET.address,

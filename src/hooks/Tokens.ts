@@ -3,6 +3,7 @@ import { useWeb3React } from '@web3-react/core'
 import { getChainInfo } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
 import { DEFAULT_INACTIVE_LIST_URLS, DEFAULT_LIST_OF_LISTS } from 'constants/lists'
+import { Maybe } from 'graphql/jsutils/Maybe'
 import { useCurrencyFromMap, useTokenFromMapOrNetwork } from 'lib/hooks/useCurrency'
 import { getTokenFilter } from 'lib/hooks/useTokenList/filtering'
 import { useMemo } from 'react'
@@ -14,10 +15,7 @@ import { useUserAddedTokens } from '../state/user/hooks'
 import { TokenAddressMap, useUnsupportedTokenList } from './../state/lists/hooks'
 
 // reduce token map into standard address <-> Token mapping, optionally include user added tokens
-function useTokensFromMap(
-  tokenMap: TokenAddressMap,
-  chainId: SupportedChainId | undefined
-): { [address: string]: Token } {
+function useTokensFromMap(tokenMap: TokenAddressMap, chainId: Maybe<SupportedChainId>): { [address: string]: Token } {
   return useMemo(() => {
     if (!chainId) return {}
 
@@ -34,7 +32,7 @@ export function useAllTokensMultichain(): TokenAddressMap {
 }
 
 // Returns all tokens from the default list + user added tokens
-export function useDefaultActiveTokens(chainId: SupportedChainId | undefined): { [address: string]: Token } {
+export function useDefaultActiveTokens(chainId: Maybe<SupportedChainId>): { [address: string]: Token } {
   const defaultListTokens = useCombinedActiveList()
   const tokensFromMap = useTokensFromMap(defaultListTokens, chainId)
   const userAddedTokens = useUserAddedTokens()
@@ -160,7 +158,8 @@ export function useToken(tokenAddress?: string | null): Token | null | undefined
   return useTokenFromMapOrNetwork(tokens, tokenAddress)
 }
 
-export function useCurrency(currencyId?: string | null, chainId?: SupportedChainId): Currency | null | undefined {
-  const tokens = useDefaultActiveTokens(chainId)
-  return useCurrencyFromMap(tokens, chainId, currencyId)
+export function useCurrency(currencyId: Maybe<string>, chainId?: SupportedChainId): Currency | null | undefined {
+  const { chainId: connectedChainId } = useWeb3React()
+  const tokens = useDefaultActiveTokens(chainId ?? connectedChainId)
+  return useCurrencyFromMap(tokens, chainId ?? connectedChainId, currencyId)
 }

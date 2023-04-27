@@ -3,6 +3,7 @@ import { parseBytes32String } from '@ethersproject/strings'
 import { Currency, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { isSupportedChain, SupportedChainId } from 'constants/chains'
+import { Maybe } from 'graphql/jsutils/Maybe'
 import { useBytes32TokenContract, useTokenContract } from 'hooks/useContract'
 import { NEVER_RELOAD, useSingleCallResult } from 'lib/hooks/multicall'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
@@ -94,7 +95,7 @@ export function useTokenFromMapOrNetwork(tokens: TokenMap, tokenAddress?: string
  */
 export function useCurrencyFromMap(
   tokens: TokenMap,
-  chainId: SupportedChainId | undefined,
+  chainId: Maybe<SupportedChainId>,
   currencyId?: string | null
 ): Currency | null | undefined {
   const nativeCurrency = useNativeCurrency(chainId)

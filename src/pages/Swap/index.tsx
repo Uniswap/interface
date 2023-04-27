@@ -52,7 +52,7 @@ import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
 import { ArrowWrapper, PageWrapper, SwapCallbackError, SwapWrapper } from '../../components/swap/styleds'
 import SwapHeader from '../../components/swap/SwapHeader'
 import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
-import { TOKEN_SHORTHANDS } from '../../constants/tokens'
+import { getSwapCurrencyId, TOKEN_SHORTHANDS } from '../../constants/tokens'
 import { NATIVE_CHAIN_ID } from '../../constants/tokens'
 import { useCurrency, useDefaultActiveTokens } from '../../hooks/Tokens'
 import { useIsSwapUnsupported } from '../../hooks/useIsSwapUnsupported'
@@ -146,11 +146,19 @@ const TRADE_STRING = 'SwapRouter'
 
 export default function SwapPage({ className }: { className?: string }) {
   const { chainId: connectedChainId } = useWeb3React()
+  const loadedUrlParams = useDefaultsFromURLSearch()
   return (
     <Trace page={InterfacePageName.SWAP_PAGE} shouldLogImpression>
       <>
         <PageWrapper>
-          <Swap className={className} chainId={connectedChainId} />
+          <Swap
+            className={className}
+            chainId={connectedChainId}
+            prefilledState={{
+              [Field.INPUT]: { currencyId: loadedUrlParams?.[Field.INPUT]?.currencyId },
+              [Field.OUTPUT]: { currencyId: loadedUrlParams?.[Field.OUTPUT]?.currencyId },
+            }}
+          />
           <NetworkAlert />
         </PageWrapper>
         <SwitchLocaleLink />
@@ -171,21 +179,22 @@ export function Swap({
   prefilledState = {},
   chainId,
   onCurrencyChange,
+  disableTokenInputs = false,
 }: {
   className?: string
   prefilledState?: Partial<SwapState>
   chainId: SupportedChainId | undefined
   onCurrencyChange?: (selected: Pick<SwapState, Field.INPUT | Field.OUTPUT>) => void
+  disableTokenInputs?: boolean
 }) {
   const { account, chainId: connectedChainId, connector } = useWeb3React()
-  const loadedUrlParams = useDefaultsFromURLSearch()
   const [newSwapQuoteNeedsLogging, setNewSwapQuoteNeedsLogging] = useState(true)
   const [fetchingSwapQuoteStartTime, setFetchingSwapQuoteStartTime] = useState<Date | undefined>()
 
   // token warning stuff
   const [loadedInputCurrency, loadedOutputCurrency] = [
-    useCurrency(loadedUrlParams?.[Field.INPUT]?.currencyId),
-    useCurrency(loadedUrlParams?.[Field.OUTPUT]?.currencyId),
+    useCurrency(prefilledState?.[Field.INPUT]?.currencyId),
+    useCurrency(prefilledState?.[Field.OUTPUT]?.currencyId),
   ]
   const [dismissTokenWarning, setDismissTokenWarning] = useState<boolean>(false)
   const urlLoadedTokens: Token[] = useMemo(
@@ -231,7 +240,6 @@ export function Swap({
   const previousConnectedChainId = usePrevious(connectedChainId)
   useEffect(() => {
     const combinedInitialState = { ...initialSwapState, ...prefilledState }
-    console.log({ combinedInitialState })
     if (previousConnectedChainId && previousConnectedChainId !== connectedChainId) {
       dispatch(
         replaceSwapState({
@@ -472,7 +480,7 @@ export function Swap({
       onCurrencySelection(Field.INPUT, inputCurrency)
       onCurrencyChange?.({
         [Field.INPUT]: {
-          currencyId: inputCurrency.isToken ? inputCurrency.address : inputCurrency.isNative ? NATIVE_CHAIN_ID : '',
+          currencyId: getSwapCurrencyId(inputCurrency),
         },
         [Field.OUTPUT]: state[Field.OUTPUT],
       })
@@ -539,7 +547,6 @@ export function Swap({
   const showDetailsDropdown = Boolean(
     !showWrap && userHasSpecifiedInputOutput && (trade || routeIsLoading || routeIsSyncing)
   )
-  const disableTokenInputs = chainId !== connectedChainId
 
   return (
     <SwapWrapper chainId={chainId} className={className} id="swap-page">

@@ -110,6 +110,7 @@ export default function TokenDetails({
     [urlAddress]
   )
 
+  const { chainId: connectedChainId } = useWeb3React()
   const pageChainId = CHAIN_NAME_TO_CHAIN_ID[chain]
 
   const tokenQueryData = tokenQuery.token
@@ -244,6 +245,7 @@ export default function TokenDetails({
                 [Field.OUTPUT]: { currencyId: address === NATIVE_CHAIN_ID ? 'ETH' : address },
               }}
               onCurrencyChange={handleCurrencyChange}
+              disableTokenInputs={pageChainId !== connectedChainId}
             />
           </div>
           {tokenWarning && <TokenSafetyMessage tokenAddress={address} warning={tokenWarning} />}

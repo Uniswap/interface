@@ -1,9 +1,10 @@
 import { NativeCurrency, Token } from '@uniswap/sdk-core'
 import { SupportedChainId } from 'constants/chains'
 import { nativeOnChain } from 'constants/tokens'
+import { Maybe } from 'graphql/jsutils/Maybe'
 import { useMemo } from 'react'
 
-export default function useNativeCurrency(chainId?: SupportedChainId): NativeCurrency | Token {
+export default function useNativeCurrency(chainId: Maybe<SupportedChainId>): NativeCurrency | Token {
   return useMemo(
     () =>
       chainId
