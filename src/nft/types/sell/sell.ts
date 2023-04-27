@@ -5,7 +5,6 @@ import { GenieCollection, PriceInfo } from '../common'
 export interface ListingMarket {
   name: string
   fee: number
-  icon: string
 }
 
 export interface SellOrder {
@@ -92,19 +91,18 @@ export interface AssetRow {
   images: (string | undefined)[]
   name?: string
   status: ListingStatus
+  marketplace: ListingMarket
   callback?: () => Promise<void>
 }
 
 export interface ListingRow extends AssetRow {
   asset: WalletAsset
-  marketplace: ListingMarket
   price?: number
 }
 
 export interface CollectionRow extends AssetRow {
   collectionAddress?: string
   isVerified?: boolean
-  marketplace: ListingMarket
   nftStandard?: NftStandard
 }
 
