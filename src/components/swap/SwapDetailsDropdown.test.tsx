@@ -1,6 +1,6 @@
 import userEvent from '@testing-library/user-event'
 import { TEST_ALLOWED_SLIPPAGE, TEST_TOKEN_1, TEST_TRADE_EXACT_INPUT, toCurrencyAmount } from 'test-utils/constants'
-import { render, screen } from 'test-utils/render'
+import { act, render, screen } from 'test-utils/render'
 
 import SwapDetailsDropdown from './SwapDetailsDropdown'
 
@@ -36,7 +36,7 @@ describe('SwapDetailsDropdown.tsx', () => {
     )
     expect(screen.getByTestId('swap-details-header-row')).toBeInTheDocument()
     expect(screen.getByTestId('trade-price-container')).toBeInTheDocument()
-    userEvent.click(screen.getByTestId('swap-details-header-row'))
+    await act(() => userEvent.click(screen.getByTestId('swap-details-header-row')))
     expect(screen.getByTestId('advanced-swap-details')).toBeInTheDocument()
     expect(screen.getByTestId('swap-route-info')).toBeInTheDocument()
   })
