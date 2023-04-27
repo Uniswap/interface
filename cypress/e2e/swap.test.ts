@@ -1,7 +1,11 @@
+import { hexValue } from 'ethers/lib/utils'
+
 import { USDC_MAINNET } from '../../src/constants/tokens'
 import { WETH_GOERLI } from '../fixtures/constants'
 import { HardhatProvider } from '../support/hardhat'
 import { getTestSelector } from '../utils'
+
+const MAINNET_USDC_ADDRESS = USDC_MAINNET.address.substring(0, 8)
 
 describe('Swap', () => {
   let hardhat: HardhatProvider
@@ -79,7 +83,6 @@ describe('Swap', () => {
   })
 
   it('can swap ETH for USDC', () => {
-    const TOKEN_ADDRESS = USDC_MAINNET.address
     const BALANCE_INCREMENT = 1
     cy.visit('/swap', { ethereum: 'hardhat' })
       .then((window) => {
@@ -89,7 +92,7 @@ describe('Swap', () => {
       .then((balance) => Number(balance.toFixed(1)))
       .then((initialBalance) => {
         cy.get('#swap-currency-output .open-currency-select-button').click()
-        cy.get(getTestSelector('token-search-input')).clear().type(TOKEN_ADDRESS)
+        cy.get(getTestSelector('token-search-input')).clear().type(MAINNET_USDC_ADDRESS)
         cy.contains('USDC').click()
         cy.get('#swap-currency-output .token-amount-input').clear().type(BALANCE_INCREMENT.toString())
         cy.get('#swap-currency-input .token-amount-input').should('not.equal', '')
@@ -113,37 +116,49 @@ describe('Swap', () => {
   })
 
   it('should render an error when a transaction fails due to a passed deadline', () => {
-    const TOKEN_ADDRESS = USDC_MAINNET.address
     const BALANCE_INCREMENT = 1
-    cy.then(() => hardhat.utils.getBalance(hardhat.wallet.address, USDC_MAINNET))
+    const DEADLINE_MINUTES = 30
+    cy.visit('/swap', { ethereum: 'hardhat' })
+      .then((window) => {
+        hardhat = window.hardhat
+      })
+      .then(() => hardhat.utils.getBalance(hardhat.wallet.address, USDC_MAINNET))
       .then((balance) => Number(balance.toFixed(1)))
       .then((initialBalance) => {
         // input swap info
         cy.get('#swap-currency-output .open-currency-select-button').click()
-        cy.get('[data-testid="token-search-input"]').clear().type(TOKEN_ADDRESS)
+        cy.get(getTestSelector('token-search-input')).clear().type(MAINNET_USDC_ADDRESS)
         cy.contains('USDC').click()
         cy.get('#swap-currency-output .token-amount-input').clear().type(BALANCE_INCREMENT.toString())
         cy.get('#swap-currency-input .token-amount-input').should('not.equal', '')
 
         // set deadline to minimum (1 minute)
         cy.get(getTestSelector('open-settings-dialog-button')).click()
-        cy.get(getTestSelector('deadline-input')).clear().type('1')
+        cy.get(getTestSelector('deadline-input')).clear().type(DEADLINE_MINUTES.toString())
         cy.get('body').click('topRight')
         cy.get(getTestSelector('deadline-input')).should('not.exist')
 
         cy.get('#swap-button').click()
         cy.get('#confirm-swap-or-send').click()
 
-        // todo: mine past the deadline before this transaction is confirmed
+        cy.then(() => hardhat.send('eth_getBlockByNumber', ['latest']))
+          .then((block) => block.timestamp * 2)
+          .then((timestampIncrease) => {
+            hardhat.send('evm_increaseTime', [hexValue(timestampIncrease)])
+            hardhat.send('hardhat_mine', [hexValue(1), hexValue(timestampIncrease)])
+          })
 
-        cy.get('[data-testid="dismiss-tx-confirmation"]').click()
-        // ui check
-        cy.get('#swap-currency-output [data-testid="balance-text"]').should('have.text', `Balance: ${initialBalance}`)
+        cy.then(() => hardhat.send('hardhat_mine', ['0x1', '0xc'])).then(() => {
+          cy.get(getTestSelector('dismiss-tx-confirmation')).click()
 
-        // chain state check
-        cy.then(() => hardhat.utils.getBalance(hardhat.wallet.address, USDC_MAINNET))
-          .then((balance) => Number(balance.toFixed(1)))
-          .should('eq', initialBalance)
+          // ui check
+          cy.get('#swap-currency-output [data-testid="balance-text"]').should('have.text', `Balance: ${initialBalance}`)
+
+          // chain state check
+          cy.then(() => hardhat.utils.getBalance(hardhat.wallet.address, USDC_MAINNET))
+            .then((balance) => Number(balance.toFixed(1)))
+            .should('eq', initialBalance)
+        })
       })
   })
 
