@@ -1,9 +1,12 @@
 /* eslint-env node */
 const { VanillaExtractPlugin } = require('@vanilla-extract/webpack-plugin')
+const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin')
 const { execSync } = require('child_process')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
-const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin')
-const { DefinePlugin, IgnorePlugin } = require('webpack')
+const path = require('path')
+const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin')
+const { DefinePlugin, IgnorePlugin, ProvidePlugin } = require('webpack')
+const { InjectManifest } = require('workbox-webpack-plugin')
 
 const commitHash = execSync('git rev-parse HEAD').toString().trim()
 const isProduction = process.env.NODE_ENV === 'production'
@@ -44,8 +47,13 @@ module.exports = {
     pluginOptions(eslintConfig) {
       return Object.assign(eslintConfig, {
         cache: true,
-        cacheLocation: 'node_modules/.cache/eslint/',
+        cacheLocation: 'node_modules/.cache/.eslintcache',
         ignorePath: '.gitignore',
+        // Clear the create-react-app overrides to use the defaults.
+        formatter: undefined,
+        eslintPath: undefined,
+        resolvePluginsRelativeTo: undefined,
+        baseConfig: undefined,
       })
     },
   },
@@ -55,11 +63,13 @@ module.exports = {
   jest: {
     configure(jestConfig) {
       return Object.assign(jestConfig, {
-        transform: {
-          '\\.css\\.ts$': './vanilla.transform.cjs',
-          ...jestConfig.transform,
-        },
         cacheDirectory: 'node_modules/.cache/jest',
+        transform: Object.assign(jestConfig.transform, {
+          // Transform vanilla-extract using its own transformer.
+          // See https://sandroroth.com/blog/vanilla-extract-cra#jest-transform.
+          '\\.css\\.ts$': '@vanilla-extract/jest-transform',
+        }),
+        // Use @uniswap/conedison's build directly, as jest does not support its exports.
         transformIgnorePatterns: ['@uniswap/conedison/format', '@uniswap/conedison/provider'],
         moduleNameMapper: {
           '@uniswap/conedison/format': '@uniswap/conedison/dist/format',
@@ -69,7 +79,13 @@ module.exports = {
     },
   },
   webpack: {
-    plugins: [new VanillaExtractPlugin({ identifiers: 'short' })],
+    plugins: [
+      // react-markdown requires process, and Webpack 5 does not polyfill, so we provide it explicitly.
+      new ProvidePlugin({ process: 'process/browser' }),
+      // vanilla-extract has poor performance on M1 machines with 'debug' identifiers.
+      // See https://github.com/vanilla-extract-css/vanilla-extract/issues/771#issuecomment-1249524366.
+      new VanillaExtractPlugin({ identifiers: 'short' }),
+    ],
     configure: (webpackConfig) => {
       webpackConfig.plugins = webpackConfig.plugins
         .map((plugin) => {
@@ -79,6 +95,15 @@ module.exports = {
             Object.assign(plugin.definitions['process.env'], {
               REACT_APP_GIT_COMMIT_HASH: JSON.stringify(commitHash),
             })
+          }
+
+          // Increase the cacheable file size (by the ServiceWorker) so that main.<hash>.js is cached.
+          if (plugin instanceof InjectManifest) {
+            plugin.config.maximumFileSizeToCacheInBytes = 7.5 * 1024 * 1024 // 7.5 MB
+            // Coverage increases the file size.
+            if (process.env.REACT_APP_ADD_COVERAGE_INSTRUMENTATION) {
+              plugin.config.maximumFileSizeToCacheInBytes *= 2
+            }
           }
 
           // CSS ordering is mitigated through scoping / naming conventions, so we can ignore order warnings.
@@ -100,10 +125,35 @@ module.exports = {
           return true
         })
 
-      // We're currently on Webpack 4.x which doesn't support the `exports` field in package.json.
-      // Instead, we need to manually map the import path to the correct exports path (eg dist or build folder).
-      // See https://github.com/webpack/webpack/issues/9509.
-      webpackConfig.resolve.alias['@uniswap/conedison'] = '@uniswap/conedison/dist'
+      webpackConfig.resolve.plugins = webpackConfig.resolve.plugins.map((plugin) => {
+        // Allow vanilla-extract in production builds.
+        // See https://sandroroth.com/blog/vanilla-extract-cra#production-build.
+        if (plugin instanceof ModuleScopePlugin) {
+          plugin.allowedPaths.push(path.join(__dirname, 'node_modules/@vanilla-extract/webpack-plugin'))
+        }
+
+        return plugin
+      })
+
+      const rules = webpackConfig.module.rules[1].oneOf
+      webpackConfig.module.rules[1].oneOf = rules.map((rule) => {
+        // The fallback rule (eg for dependencies).
+        if (rule.loader && rule.loader.match(/babel-loader/) && !rule.include) {
+          // Allow not-fully-specified modules so that legacy packages are still able to build.
+          rule.resolve = { fullySpecified: false }
+
+          // The class properties transform is required for @uniswap/analytics to build.
+          rule.options.plugins.push('@babel/plugin-proposal-class-properties')
+        }
+        return rule
+      })
+
+      // react-markdown requires path, and Webpack 5 does not polyfill, so we polyfill it.
+      webpackConfig.resolve.fallback = { path: require.resolve('path-browserify') }
+
+      // Ignore failed source mappings to avoid spamming the console.
+      // See https://webpack.js.org/loaders/source-map-loader#ignoring-warnings.
+      webpackConfig.ignoreWarnings = [/Failed to parse source map/]
 
       return webpackConfig
     },
