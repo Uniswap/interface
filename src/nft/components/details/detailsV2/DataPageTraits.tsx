@@ -7,6 +7,7 @@ import { formatEth } from 'nft/utils'
 import { useMemo } from 'react'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
+import { opacify } from 'theme/utils'
 
 import { RarityGraph } from './RarityGraph'
 import { Tab, TabbedComponent } from './TabbedComponent'
@@ -49,11 +50,6 @@ const TraitRow = ({ trait }: { trait: Trait }) => {
   )
 }
 
-const TraitsContentContainer = styled(Column)`
-  max-height: 432px;
-  ${ScrollBarStyles}
-`
-
 const TraitsHeaderContainer = styled(Row)`
   padding-right: 12px;
 `
@@ -67,14 +63,34 @@ const TraitsHeader = styled(ThemedText.SubHeaderSmall)<{ $flex?: number; alignRi
 `
 
 const TraitRowContainer = styled.div`
+  position: relative;
+`
+
+const TraitRowScrollableContainer = styled.div`
   overflow-y: auto;
-  overflow-x hidden;
+  overflow-x: hidden;
+  max-height: 412px;
   padding-right: 12px;
+  ${ScrollBarStyles}
+`
+
+const Scrim = styled.div<{ isBottom?: boolean }>`
+  position: absolute;
+  height: 88px !important;
+  left: 0px;
+  right: 12px;
+  ${({ isBottom }) => !isBottom && 'top: 0px'};
+  ${({ isBottom }) => isBottom && 'bottom: 0px'};
+  ${({ isBottom }) => !isBottom && 'transform: matrix(1, 0, 0, -1, 0, 0)'};
+
+  background: ${({ theme }) =>
+    `linear-gradient(180deg, ${opacify(0, theme.backgroundSurface)} 0%, ${theme.backgroundSurface} 100%)`}};
+  display: flex;
 `
 
 const TraitsContent = ({ traits }: { traits?: Trait[] }) => {
   return (
-    <TraitsContentContainer>
+    <Column>
       <TraitsHeaderContainer>
         <TraitsHeader $flex={3}>
           <Trans>Trait</Trans>
@@ -90,11 +106,15 @@ const TraitsContent = ({ traits }: { traits?: Trait[] }) => {
         </TraitsHeader>
       </TraitsHeaderContainer>
       <TraitRowContainer>
-        {traits?.map((trait) => (
-          <TraitRow trait={trait} key={trait.trait_type + ':' + trait.trait_value} />
-        ))}
+        <Scrim />
+        <TraitRowScrollableContainer>
+          {traits?.map((trait) => (
+            <TraitRow trait={trait} key={trait.trait_type + ':' + trait.trait_value} />
+          ))}
+        </TraitRowScrollableContainer>
+        <Scrim isBottom={true} />
       </TraitRowContainer>
-    </TraitsContentContainer>
+    </Column>
   )
 }
 
