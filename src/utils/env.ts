@@ -19,6 +19,10 @@ export function isAppUniswapOrg({ hostname }: { hostname: string }): boolean {
   return hostname === 'app.uniswap.org'
 }
 
+function isAppUniswapStagingOrg({ hostname }: { hostname: string }): boolean {
+  return hostname === 'app.uniswap-staging.org'
+}
+
 export function isSentryEnabled(): boolean {
   // Disable in e2e test environments
   if (isProductionEnv() && !isAppUniswapOrg(window.location)) return false
