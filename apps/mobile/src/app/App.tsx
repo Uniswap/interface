@@ -32,7 +32,7 @@ import { useTrmPrefetch } from 'src/features/trm/api'
 import { useSignerAccounts } from 'src/features/wallet/hooks'
 import { DynamicThemeProvider } from 'src/styles/DynamicThemeProvider'
 import { useAppStateTrigger } from 'src/utils/useAppStateTrigger'
-import { getStatsigEnvironmentTier } from 'src/utils/version'
+import { getSentryEnvironment, getStatsigEnvironmentTier } from 'src/utils/version'
 import { StatsigProvider } from 'statsig-react-native'
 
 // Keep the splash screen visible while we fetch resources until one of our landing pages loads
@@ -46,6 +46,7 @@ const DUMMY_STATSIG_SDK_KEY = 'client-000000000000000000000000000000000000000000
 
 if (!__DEV__) {
   Sentry.init({
+    environment: getSentryEnvironment(),
     dsn: config.sentryDsn,
     tracesSampler: (_) => {
       return 0.2

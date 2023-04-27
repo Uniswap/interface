@@ -38,3 +38,19 @@ enum StatsigEnvironmentTier {
   BETA = 'beta',
   PROD = 'production',
 }
+
+export function getSentryEnvironment(): SentryEnvironment {
+  if (isDevBuild()) {
+    return SentryEnvironment.DEV
+  }
+  if (isBetaBuild()) {
+    return SentryEnvironment.BETA
+  }
+  return SentryEnvironment.PROD
+}
+
+enum SentryEnvironment {
+  DEV = 'development',
+  BETA = 'beta',
+  PROD = 'production',
+}

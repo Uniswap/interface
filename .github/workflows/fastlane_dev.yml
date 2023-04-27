@@ -153,4 +153,4 @@ jobs:
           sentry-cli releases finalize $SENTRY_RELEASE --log-level=info
 
           # Create new deploy for this Sentry release
-          sentry-cli releases deploys $SENTRY_RELEASE new -e dev
+          sentry-cli releases deploys $SENTRY_RELEASE new -e development
