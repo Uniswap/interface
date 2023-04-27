@@ -16,16 +16,18 @@ jest.mock('../../hooks/Tokens')
 
 jest.mock('../../utils/getExplorerLink')
 
-describe('UnsupportedCurrencyFooter.tsx', () => {
+describe('UnsupportedCurrencyFooter.tsx with unsupported tokens', () => {
+  beforeEach(() => {
+    mocked(useUnsupportedTokens).mockImplementation(() => ({ [unsupportedTokenAddress]: unsupportedToken }))
+    mocked(getExplorerLink).mockImplementation(() => unsupportedTokenExplorerLink)
+  })
+
   it('renders', () => {
-    mocked(useUnsupportedTokens).mockImplementation(() => ({ unsupportedTokenAddress: unsupportedToken }))
     const { asFragment } = render(<UnsupportedCurrencyFooter show={true} currencies={[unsupportedToken]} />)
     expect(asFragment()).toMatchSnapshot()
   })
 
   it('works as expected when one unsupported token exists', async () => {
-    mocked(useUnsupportedTokens).mockImplementation(() => ({ [unsupportedTokenAddress]: unsupportedToken }))
-    mocked(getExplorerLink).mockImplementation(() => unsupportedTokenExplorerLink)
     const rendered = render(<UnsupportedCurrencyFooter show={true} currencies={[unsupportedToken]} />)
     await userEvent.click(screen.getByTestId('read-more-button'))
     expect(screen.getByText('Unsupported Assets')).toBeInTheDocument()
@@ -47,9 +49,14 @@ describe('UnsupportedCurrencyFooter.tsx', () => {
       rendered.queryByText((content) => content.startsWith('Some assets are not available through this interface'))
     ).toBeNull()
   }, 10_000)
+})
+
+describe('UnsupportedCurrencyFooter.tsx with no unsupported tokens', () => {
+  beforeEach(() => {
+    mocked(useUnsupportedTokens).mockImplementation(() => ({}))
+  })
 
   it('works as expected when no unsupported tokens exist', async () => {
-    mocked(useUnsupportedTokens).mockImplementation(() => ({}))
     const rendered = render(<UnsupportedCurrencyFooter show={true} currencies={[unsupportedToken]} />)
     fireEvent.click(screen.getByTestId('read-more-button'))
     expect(screen.getByText('Unsupported Assets')).toBeInTheDocument()

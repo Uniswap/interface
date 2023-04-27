@@ -65,6 +65,12 @@ export default function UnsupportedCurrencyFooter({
 
   const unsupportedTokens = useUnsupportedTokens()
 
+  if (tokens.length > 0) {
+    console.log('unsupportedTokens', Object.keys(unsupportedTokens))
+    console.log('tokens', tokens)
+    console.log(Object.keys(unsupportedTokens).includes(tokens[0].address))
+  }
+
   return (
     <DetailsFooter show={show}>
       <Modal isOpen={showDetails} onDismiss={() => setShowDetails(false)}>
