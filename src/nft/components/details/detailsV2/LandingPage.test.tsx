@@ -1,4 +1,4 @@
-import { TEST_NFT_ASSET, TEST_NFT_COLLECTION_INFO_FOR_ASSET } from 'test-utils/constants'
+import { TEST_NFT_ASSET, TEST_NFT_COLLECTION_INFO_FOR_ASSET } from 'test-utils/nft/fixtures'
 import { render } from 'test-utils/render'
 
 import { LandingPage } from './LandingPage'

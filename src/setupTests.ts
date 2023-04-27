@@ -3,6 +3,7 @@ import 'jest-styled-components' // adds style diffs to snapshot tests
 
 import type { createPopper } from '@popperjs/core'
 import { useWeb3React } from '@web3-react/core'
+import ResizeObserver from 'resize-observer-polyfill'
 import { Readable } from 'stream'
 import { mocked } from 'test-utils/mocked'
 import { TextDecoder, TextEncoder } from 'util'
@@ -15,6 +16,8 @@ if (typeof global.TextEncoder === 'undefined') {
   global.TextEncoder = TextEncoder
   global.TextDecoder = TextDecoder as typeof global.TextDecoder
 }
+
+global.ResizeObserver = ResizeObserver
 
 global.matchMedia =
   global.matchMedia ||
