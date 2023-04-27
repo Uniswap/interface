@@ -3,7 +3,6 @@ on:
   push:
     branches:
       - 'releases/staging'
-  workflow_dispatch:
 
 jobs:
   deploy-to-staging:
