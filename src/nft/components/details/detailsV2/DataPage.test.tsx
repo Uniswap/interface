@@ -1,4 +1,4 @@
-import { TEST_NFT_ASSET } from 'test-utils/nftFixtures'
+import { TEST_NFT_ASSET } from 'test-utils/nft/nftFixtures'
 import { render } from 'test-utils/render'
 
 import { DataPage } from './DataPage'

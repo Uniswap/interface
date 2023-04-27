@@ -1,5 +1,5 @@
 import { UniformAspectRatios } from 'nft/types'
-import { TEST_NFT_ASSET } from 'test-utils/nftFixtures'
+import { TEST_NFT_ASSET } from 'test-utils/nft/nftFixtures'
 import { render } from 'test-utils/render'
 
 import { CollectionAsset } from './CollectionAsset'
