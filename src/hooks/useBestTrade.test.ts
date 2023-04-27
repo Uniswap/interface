@@ -16,13 +16,6 @@ import useIsWindowVisible from './useIsWindowVisible'
 const USDCAmount = CurrencyAmount.fromRawAmount(USDC_MAINNET, '10000')
 const DAIAmount = CurrencyAmount.fromRawAmount(DAI, '10000')
 
-jest.mock('@web3-react/core', () => {
-  return {
-    useWeb3React: () => ({
-      chainId: 1,
-    }),
-  }
-})
 jest.mock('./useAutoRouterSupported')
 jest.mock('./useClientSideV3Trade')
 jest.mock('./useDebounce')

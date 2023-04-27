@@ -24,10 +24,13 @@
     "strict": true,
     "strictNullChecks": true,
     "target": "ESNext",
-    "tsBuildInfoFile": "node_modules/.cache/.tsbuildinfo",
+    "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo/build", // avoid clobbering the cypress tsbuildinfo
     "types": ["jest"],
     "useUnknownInCatchVariables": false
   },
-  "exclude": ["node_modules", "cypress"],
-  "include": ["src/**/*", "src/**/*.json"]
+  "exclude": ["node_modules"],
+  "include": ["src/**/*", "src/**/*.json"],
+  "watchOptions": {
+    "excludeDirectories": ["node_modules"]
+  }
 }

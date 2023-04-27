@@ -1,4 +1,6 @@
-import { getTestSelector } from '../utils'
+import { getClassContainsSelector, getTestSelector } from '../utils'
+
+const UNI_ADDRESS = '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984'
 
 describe('Token details', () => {
   before(() => {
@@ -7,7 +9,7 @@ describe('Token details', () => {
 
   it('Uniswap token should have all information populated', () => {
     // Uniswap token
-    cy.visit('/tokens/ethereum/0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984')
+    cy.visit(`/tokens/ethereum/${UNI_ADDRESS}`)
 
     // Price chart should be filled in
     cy.get('[data-cy="chart-header"]').should('include.text', '$')
@@ -28,18 +30,16 @@ describe('Token details', () => {
 
     // Links section should link out to Etherscan, More analytics, Website, Twitter
     cy.get('[data-cy="resources-container"]').within(() => {
-      cy.contains('Etherscan')
-        .should('have.attr', 'href')
-        .and('include', 'etherscan.io/address/0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984')
+      cy.contains('Etherscan').should('have.attr', 'href').and('include', `etherscan.io/address/${UNI_ADDRESS}`)
       cy.contains('More analytics')
         .should('have.attr', 'href')
-        .and('include', 'info.uniswap.org/#/tokens/0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984')
+        .and('include', `info.uniswap.org/#/tokens/${UNI_ADDRESS}`)
       cy.contains('Website').should('have.attr', 'href').and('include', 'uniswap.org')
       cy.contains('Twitter').should('have.attr', 'href').and('include', 'twitter.com/Uniswap')
     })
 
     // Contract address should be displayed
-    cy.contains('0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984').should('exist')
+    cy.contains(UNI_ADDRESS).should('exist')
 
     // Swap widget should have this token pre-selected as the “destination” token
     cy.get(getTestSelector('token-select')).should('include.text', 'UNI')
@@ -88,5 +88,29 @@ describe('Token details', () => {
     cy.get('[data-cy="token-safety-message"]')
       .should('include.text', 'Warning')
       .and('include.text', "This token isn't traded on leading U.S. centralized exchanges")
+  })
+
+  describe('Swap on Token Detail Page', () => {
+    const verifyOutputToken = (outputText: string) => {
+      cy.get(getClassContainsSelector('TokenButtonRow')).last().contains(outputText)
+    }
+
+    beforeEach(() => {
+      // On mobile widths, we just link back to /swap instead of rendering the swap component.
+      cy.viewport(1200, 800)
+      cy.visit(`/tokens/goerli/${UNI_ADDRESS}`).then(() => {
+        cy.wait('@eth_blockNumber')
+      })
+    })
+
+    it('should have the expected output for a tokens detail page', () => {
+      verifyOutputToken('UNI')
+    })
+
+    it('should not share swap state with the main swap page', () => {
+      verifyOutputToken('UNI')
+      cy.visit('/swap')
+      cy.contains('UNI').should('not.exist')
+    })
   })
 })

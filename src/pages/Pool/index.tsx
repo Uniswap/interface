@@ -10,6 +10,7 @@ import PositionList from 'components/PositionList'
 import { RowBetween, RowFixed } from 'components/Row'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import { isSupportedChain } from 'constants/chains'
+import { useFilterPossiblyMaliciousPositions } from 'hooks/useFilterPossiblyMaliciousPositions'
 import { useV3Positions } from 'hooks/useV3Positions'
 import { useMemo } from 'react'
 import { AlertTriangle, BookOpen, ChevronDown, ChevronsRight, Inbox, Layers } from 'react-feather'
@@ -211,10 +212,12 @@ export default function Pool() {
     [[], []]
   ) ?? [[], []]
 
-  const filteredPositions = useMemo(
+  const userSelectedPositionSet = useMemo(
     () => [...openPositions, ...(userHideClosedPositions ? [] : closedPositions)],
     [closedPositions, openPositions, userHideClosedPositions]
   )
+
+  const filteredPositions = useFilterPossiblyMaliciousPositions(userSelectedPositionSet)
 
   if (!isSupportedChain(chainId)) {
     return <WrongNetworkCard />

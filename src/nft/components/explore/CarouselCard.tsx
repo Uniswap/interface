@@ -1,11 +1,10 @@
 import { formatNumberOrString, NumberType } from '@uniswap/conedison/format'
 import { loadingAnimation } from 'components/Loader/styled'
 import { LoadingBubble } from 'components/Tokens/loading'
-import { useNftGraphqlEnabled } from 'featureFlags/flags/nftlGraphql'
 import { useCollection } from 'graphql/data/nft/Collection'
-import { VerifiedIcon } from 'nft/components/icons'
+import { UniswapMagentaIcon, VerifiedIcon } from 'nft/components/icons'
 import { Markets, TrendingCollection } from 'nft/types'
-import { ethNumberStandardFormatter, formatWeiToDecimal } from 'nft/utils'
+import { ethNumberStandardFormatter } from 'nft/utils'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme/components/text'
 
@@ -237,7 +236,6 @@ const MARKETS_ENUM_TO_NAME = {
 
 export const CarouselCard = ({ collection, onClick }: CarouselCardProps) => {
   const { data: gqlCollection, loading } = useCollection(collection.address ?? '')
-  const isNftGraphqlEnabled = useNftGraphqlEnabled()
 
   if (loading) return <LoadingCarouselCard />
 
@@ -248,7 +246,7 @@ export const CarouselCard = ({ collection, onClick }: CarouselCardProps) => {
         <CardBottomContainer>
           <>
             <TableElement>
-              <MarketplaceIcon src="/nft/svgs/marketplaces/uniswap-magenta.svg" alt="Uniswap icon" />
+              <UniswapMagentaIcon width="20" height="20" />
               <FirstColumnTextWrapper>
                 <ThemedText.SubHeaderSmall color="userThemeColor">Uniswap</ThemedText.SubHeaderSmall>
               </FirstColumnTextWrapper>
@@ -256,10 +254,7 @@ export const CarouselCard = ({ collection, onClick }: CarouselCardProps) => {
             <TableElement>
               {collection.floor && (
                 <ThemedText.SubHeaderSmall color="userThemeColor">
-                  {isNftGraphqlEnabled
-                    ? ethNumberStandardFormatter(collection.floor)
-                    : formatWeiToDecimal(collection.floor.toString())}{' '}
-                  ETH Floor
+                  {ethNumberStandardFormatter(collection.floor)} ETH Floor
                 </ThemedText.SubHeaderSmall>
               )}
             </TableElement>

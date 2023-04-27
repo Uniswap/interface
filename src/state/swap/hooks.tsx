@@ -6,7 +6,8 @@ import { useBestTrade } from 'hooks/useBestTrade'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { ParsedQs } from 'qs'
 import { ReactNode, useCallback, useEffect, useMemo } from 'react'
-import { useAppDispatch, useAppSelector } from 'state/hooks'
+import { AnyAction } from 'redux'
+import { useAppDispatch } from 'state/hooks'
 import { InterfaceTrade, TradeState } from 'state/routing/types'
 import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
 
@@ -16,21 +17,15 @@ import useENS from '../../hooks/useENS'
 import useParsedQueryString from '../../hooks/useParsedQueryString'
 import { isAddress } from '../../utils'
 import { useCurrencyBalances } from '../connection/hooks'
-import { AppState } from '../types'
 import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies, typeInput } from './actions'
 import { SwapState } from './reducer'
 
-export function useSwapState(): AppState['swap'] {
-  return useAppSelector((state) => state.swap)
-}
-
-export function useSwapActionHandlers(): {
+export function useSwapActionHandlers(dispatch: React.Dispatch<AnyAction>): {
   onCurrencySelection: (field: Field, currency: Currency) => void
   onSwitchTokens: () => void
   onUserInput: (field: Field, typedValue: string) => void
   onChangeRecipient: (recipient: string | null) => void
 } {
-  const dispatch = useAppDispatch()
   const onCurrencySelection = useCallback(
     (field: Field, currency: Currency) => {
       dispatch(
@@ -76,7 +71,7 @@ const BAD_RECIPIENT_ADDRESSES: { [address: string]: true } = {
 }
 
 // from the current swap inputs, compute the best trade and return it.
-export function useDerivedSwapInfo(): {
+export function useDerivedSwapInfo(state: SwapState): {
   currencies: { [field in Field]?: Currency | null }
   currencyBalances: { [field in Field]?: CurrencyAmount<Currency> }
   parsedAmount: CurrencyAmount<Currency> | undefined
@@ -95,7 +90,7 @@ export function useDerivedSwapInfo(): {
     [Field.INPUT]: { currencyId: inputCurrencyId },
     [Field.OUTPUT]: { currencyId: outputCurrencyId },
     recipient,
-  } = useSwapState()
+  } = state
 
   const inputCurrency = useCurrency(inputCurrencyId)
   const outputCurrency = useCurrency(outputCurrencyId)

@@ -4,16 +4,6 @@ import { render, screen } from 'test-utils/render'
 
 import Pool from '.'
 
-jest.mock('@web3-react/core', () => {
-  const web3React = jest.requireActual('@web3-react/core')
-  return {
-    ...web3React,
-    useWeb3React: () => ({
-      chainId: 1,
-    }),
-  }
-})
-
 describe('networks', () => {
   it('renders error card when unsupported chain is selected', () => {
     jest.spyOn(chains, 'isSupportedChain').mockReturnValue(false)
