@@ -82,10 +82,10 @@ export const RarityGraph = ({ trait, rarity }: { trait: Trait; rarity: number })
   const rarityLevel = getRarityLevel(rarity)
   return (
     <Row gap="1.68px" justify="flex-end">
-      {Array.from({ length: 20 }).map((_, i) => (
+      {Array.from({ length: 20 }).map((_, index) => (
         <RarityBar
-          key={trait.trait_value + '_bar_' + i}
-          $color={i * 0.05 <= 1 - rarity ? rarityLevel?.color : undefined}
+          key={trait.trait_value + '_bar_' + index}
+          $color={index * 0.05 <= 1 - rarity ? rarityLevel?.color : undefined}
         />
       ))}
     </Row>

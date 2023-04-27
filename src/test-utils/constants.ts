@@ -90,40 +90,6 @@ export const TEST_NFT_ASSET: GenieAsset = {
   creator: {},
 }
 
-export const TEST_NFT_ASSET_WITH_TRAITS: GenieAsset = {
-  ...TEST_NFT_ASSET,
-  traits: [
-    {
-      trait_type: 'Eyes',
-      trait_value: 'Concerned',
-    },
-    {
-      trait_type: 'Hair',
-      trait_value: 'Silver Bob',
-    },
-    {
-      trait_type: 'Type',
-      trait_value: 'Human',
-    },
-    {
-      trait_type: 'Mouth',
-      trait_value: 'Frown',
-    },
-    {
-      trait_type: 'Offhand',
-      trait_value: 'Bat',
-    },
-    {
-      trait_type: 'Clothing',
-      trait_value: 'Red Perfecto Jacket',
-    },
-    {
-      trait_type: 'Background',
-      trait_value: 'Dark Blue',
-    },
-  ],
-}
-
 export const TEST_NFT_WALLET_ASSET: WalletAsset = {
   id: 'TmZ0QXNzZXQ6RVRIRVJFVU1fMHgyOTY1MkMyZTlEMzY1NjQzNEJjODEzM2M2OTI1OEM4ZDA1MjkwZjQxXzIzNTk=',
   imageUrl: 'https://c.neevacdn.net/image/upload/xyz/T96PksTnWGNh79CrzLn-zpYfqRWtD5wME0MBPL_Md6Q.png',
