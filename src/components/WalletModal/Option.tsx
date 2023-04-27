@@ -16,7 +16,7 @@ const OptionCardLeft = styled.div`
   align-items: center;
 `
 
-const OptionCardClickable = styled.button<{ clickable: boolean; selected: boolean }>`
+const OptionCardClickable = styled.button<{ selected: boolean }>`
   background-color: ${({ theme }) => theme.backgroundModule};
   border: none;
   width: 100% !important;
@@ -28,16 +28,14 @@ const OptionCardClickable = styled.button<{ clickable: boolean; selected: boolea
   padding: 18px;
 
   transition: ${({ theme }) => theme.transition.duration.fast};
-  opacity: ${({ clickable, selected }) => (!clickable && !selected ? '0.5' : '1')};
-
-  ${({ clickable }) => !clickable && 'pointer-events: none'};
+  opacity: ${({ disabled, selected }) => (disabled && !selected ? '0.5' : '1')};
 
   &:hover {
-    cursor: ${({ clickable }) => clickable && 'pointer'};
-    background-color: ${({ theme, clickable }) => clickable && theme.hoverState};
+    cursor: ${({ disabled }) => !disabled && 'pointer'};
+    background-color: ${({ theme, disabled }) => !disabled && theme.hoverState};
   }
   &:focus {
-    background-color: ${({ theme, clickable }) => clickable && theme.hoverState};
+    background-color: ${({ theme, disabled }) => !disabled && theme.hoverState};
   }
 `
 
@@ -83,7 +81,7 @@ export default function Option({ connection }: { connection: Connection }) {
     >
       <OptionCardClickable
         onClick={activate}
-        clickable={!isSomeConnectorPending}
+        disabled={isSomeConnectorPending}
         selected={isCurrentOptionPending}
         data-testid="wallet-modal-option"
       >
