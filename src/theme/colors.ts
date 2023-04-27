@@ -83,6 +83,7 @@ export const colors = {
   blue900: '#040E34',
   blueVibrant: '#587BFF',
   // TODO: add magenta 50-900
+  magenta300: '#FD82FF',
   magentaVibrant: '#FC72FF',
   purple300: '#8440F2',
   purple900: '#1C0337',
@@ -119,6 +120,7 @@ const commonTheme = {
   chain_10_background: colors.red900,
   chain_42161_background: colors.blue900,
   chain_56_background: colors.networkBsc,
+  promotional: colors.magenta300,
 
   brandedGradient: 'linear-gradient(139.57deg, #FF79C9 4.35%, #FFB8E2 96.44%);',
   promotionalGradient: 'radial-gradient(101.8% 4091.31% at 0% 0%, #4673FA 0%, #9646FA 100%);',

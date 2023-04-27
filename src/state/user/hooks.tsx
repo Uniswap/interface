@@ -18,6 +18,7 @@ import {
   addSerializedToken,
   updateHideClosedPositions,
   updateHideUniswapWalletBanner,
+  updateUserBuyFiatFlowCompleted,
   updateUserClientSideRouter,
   updateUserDeadline,
   updateUserExpertMode,
@@ -66,6 +67,18 @@ export function useUserLocaleManager(): [SupportedLocale | null, (newLocale: Sup
 
 export function useIsExpertMode(): boolean {
   return useAppSelector((state) => state.user.userExpertMode)
+}
+
+export function useBuyFiatFlowCompleted(): [boolean | undefined, (buyFiatFlowCompleted: boolean) => void] {
+  const dispatch = useAppDispatch()
+  const buyFiatFlowCompleted = useAppSelector((state) => state.user.buyFiatFlowCompleted)
+  const setBuyFiatFlowCompleted = useCallback(
+    (buyFiatFlowCompleted: boolean) => {
+      dispatch(updateUserBuyFiatFlowCompleted(buyFiatFlowCompleted))
+    },
+    [dispatch]
+  )
+  return [buyFiatFlowCompleted, setBuyFiatFlowCompleted]
 }
 
 export function useExpertModeManager(): [boolean, () => void] {

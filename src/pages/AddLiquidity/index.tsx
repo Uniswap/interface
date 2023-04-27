@@ -6,12 +6,14 @@ import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { FeeAmount, NonfungiblePositionManager } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
+import { useToggleAccountDrawer } from 'components/AccountDrawer'
 import OwnershipWarning from 'components/addLiquidity/OwnershipWarning'
 import { sendEvent } from 'components/analytics'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
-import { useToggleWalletDrawer } from 'components/WalletDropdown'
+import { isSupportedChain } from 'constants/chains'
 import usePrevious from 'hooks/usePrevious'
 import { useSingleCallResult } from 'lib/hooks/multicall'
+import { PositionPageUnsupportedContent } from 'pages/Pool/PositionPage'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
@@ -80,7 +82,16 @@ import {
 
 const DEFAULT_ADD_IN_RANGE_SLIPPAGE_TOLERANCE = new Percent(50, 10_000)
 
-export default function AddLiquidity() {
+export default function AddLiquidityWrapper() {
+  const { chainId } = useWeb3React()
+  if (isSupportedChain(chainId)) {
+    return <AddLiquidity />
+  } else {
+    return <PositionPageUnsupportedContent />
+  }
+}
+
+function AddLiquidity() {
   const navigate = useNavigate()
   const {
     currencyIdA,
@@ -91,7 +102,7 @@ export default function AddLiquidity() {
   const { account, chainId, provider } = useWeb3React()
   const theme = useTheme()
 
-  const toggleWalletDrawer = useToggleWalletDrawer() // toggle wallet when disconnected
+  const toggleWalletDrawer = useToggleAccountDrawer() // toggle wallet when disconnected
   const expertMode = useIsExpertMode()
   const addTransaction = useTransactionAdder()
   const positionManager = useV3NFTPositionManagerContract()

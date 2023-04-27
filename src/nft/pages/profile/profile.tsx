@@ -2,8 +2,8 @@ import { Trans } from '@lingui/macro'
 import { Trace } from '@uniswap/analytics'
 import { InterfacePageName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
+import { useToggleAccountDrawer } from 'components/AccountDrawer'
 import { ButtonPrimary } from 'components/Button'
-import { useToggleWalletDrawer } from 'components/WalletDropdown'
 import { XXXL_BAG_WIDTH } from 'nft/components/bag/Bag'
 import { ListPage } from 'nft/components/profile/list/ListPage'
 import { ProfilePage } from 'nft/components/profile/view/ProfilePage'
@@ -67,7 +67,7 @@ const ProfileContent = () => {
 
   const { account } = useWeb3React()
   const accountRef = useRef(account)
-  const toggleWalletDrawer = useToggleWalletDrawer()
+  const toggleWalletDrawer = useToggleAccountDrawer()
 
   useEffect(() => {
     if (accountRef.current !== account) {

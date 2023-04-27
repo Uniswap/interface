@@ -1,4 +1,3 @@
-import { BigNumber } from '@ethersproject/bignumber'
 import { CollectionTableColumn, TimePeriod } from 'nft/types'
 import { useMemo } from 'react'
 import { CellProps, Column, Row } from 'react-table'
@@ -28,10 +27,7 @@ const compareFloats = (a?: number, b?: number): 1 | -1 => {
 const CollectionTable = ({ data, timePeriod }: { data: CollectionTableColumn[]; timePeriod: TimePeriod }) => {
   const floorSort = useMemo(() => {
     return (rowA: Row<CollectionTableColumn>, rowB: Row<CollectionTableColumn>) => {
-      const aFloor = BigNumber.from(rowA.original.floor.value ?? 0)
-      const bFloor = BigNumber.from(rowB.original.floor.value ?? 0)
-
-      return aFloor.gte(bFloor) ? 1 : -1
+      return compareFloats(rowA.original.floor.value, rowB.original.floor.value)
     }
   }, [])
 

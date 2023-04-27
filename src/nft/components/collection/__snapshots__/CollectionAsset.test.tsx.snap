@@ -1,0 +1,402 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`NftCard renders correctly 1`] = `
+<DocumentFragment>
+  .c4 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c5 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c16 {
+  color: #0D111C;
+}
+
+.c11 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c2 {
+  position: relative;
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.c2:hover {
+  opacity: 1;
+}
+
+.c6 {
+  overflow: hidden;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+}
+
+.c8 {
+  width: 100%;
+  aspect-ratio: 1;
+  -webkit-transition: 250ms ease -webkit-transform;
+  -webkit-transition: 250ms ease transform;
+  transition: 250ms ease transform;
+  will-change: transform;
+  object-fit: contain;
+  visibility: visible;
+  background: linear-gradient(270deg,#D2D9EE 0%,#FFFFFF 100%);
+}
+
+.c9 {
+  position: relative;
+  height: 84px;
+}
+
+.c12 {
+  position: absolute;
+  width: 100%;
+  padding: 16px 8px 0px;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  gap: 8px;
+  height: 84px;
+  background: #FFFFFF;
+  will-change: transform;
+  -webkit-transition: 250ms ease -webkit-transform;
+  -webkit-transition: 250ms ease transform;
+  transition: 250ms ease transform;
+}
+
+.c24 {
+  position: absolute;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 8px 0px;
+  bottom: -32px;
+  left: 8px;
+  right: 8px;
+  color: #F5F6FC;
+  background: #FB118E;
+  -webkit-transition: 250ms ease bottom,250ms ease visibility;
+  transition: 250ms ease bottom,250ms ease visibility;
+  will-change: transform;
+  border-radius: 8px;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  font-weight: 600 !important;
+  line-height: 16px;
+  visibility: hidden;
+  cursor: pointer;
+}
+
+.c24:before {
+  background-size: 100%;
+  border-radius: inherit;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  content: '';
+}
+
+.c24:hover:before {
+  background-color: #98A1C014;
+}
+
+.c24:active:before {
+  background-color: #B8C0DC3d;
+}
+
+.c0 {
+  position: relative;
+  border-radius: 12px;
+  background-color: #FFFFFF;
+  overflow: hidden;
+  box-shadow: 0px 0px 8px rgba(51,53,72,0.04),1px 2px 4px rgba(51,53,72,0.12);
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  isolation: isolate;
+}
+
+.c0:after {
+  content: '';
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  left: 0px;
+  border: 1px solid;
+  border-radius: 12px;
+  border-color: #D2D9EE;
+  pointer-events: none;
+  -webkit-transition: 250ms ease border;
+  transition: 250ms ease border;
+  will-change: border;
+}
+
+.c0:hover .c23 {
+  visibility: visible;
+  bottom: 8px;
+}
+
+.c0:hover .c10 {
+  height: 112px;
+  -webkit-transform: translateY(-28px);
+  -ms-transform: translateY(-28px);
+  transform: translateY(-28px);
+}
+
+.c0:hover .c7 {
+  -webkit-transform: scale(1.15);
+  -ms-transform: scale(1.15);
+  transform: scale(1.15);
+}
+
+.c1 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+}
+
+.c13 {
+  gap: 4px;
+  overflow: hidden;
+  width: 100%;
+  padding: 0px 8px;
+  height: 48px;
+}
+
+.c14 {
+  gap: 8px;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c15 {
+  justify-items: center;
+  overflow: hidden;
+  white-space: nowrap;
+  gap: 8px;
+}
+
+.c17 {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-weight: 600 !important;
+  line-height: 20px;
+}
+
+.c20 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c21 {
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.c22 {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  line-height: 24px;
+}
+
+.c19 {
+  display: inline-block;
+  height: inherit;
+}
+
+.c3 {
+  position: absolute;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  top: 12px;
+  left: 12px;
+  height: 32px;
+  width: 32px;
+  padding: 0px;
+  background: rgba(93,103,133,0.24);
+  color: #F5F6FC;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  border-radius: 32px;
+  z-index: 2;
+}
+
+.c18 {
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  color: #7780A0;
+  background: #E8ECFB;
+  padding: 4px 6px;
+  border-radius: 4px;
+  font-weight: 700 !important;
+  line-height: 12px;
+  text-align: right;
+  cursor: pointer;
+}
+
+@media screen and (max-width:640px) {
+  .c12 {
+    height: 112px;
+    -webkit-transform: translateY(-28px);
+    -ms-transform: translateY(-28px);
+    transform: translateY(-28px);
+  }
+}
+
+@media screen and (max-width:640px) {
+  .c24 {
+    visibility: visible;
+    bottom: 8px;
+  }
+}
+
+@media screen and (max-width:640px) {
+
+}
+
+<div
+    class="c0"
+    data-testid="nft-collection-asset"
+    draggable="false"
+  >
+    <a
+      class="c1"
+      href="#/nfts/asset/0xed5af388653567af2f388e6224dc7c4b3241c544/3318?origin=collection"
+    >
+      <div
+        class="c2"
+      >
+        <div
+          class="c3"
+        >
+          <svg
+            fill="none"
+            height="20"
+            viewBox="0 0 24 24"
+            width="20"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              clip-rule="evenodd"
+              d="M24 16.06V14.806C24 14.69 23.888 14.606 23.778 14.638L17.856 16.35C17.824 16.358 17.796 16.376 17.774 16.4C17.1396 17.1008 16.6005 17.571 16.4578 17.6955L16.448 17.704C16.08 18.016 15.624 18.186 15.144 18.186H14.093C13.4894 18.186 13 17.6966 13 17.093C13 16.4894 13.4894 16 14.093 16H14.704C14.748 16 14.79 15.984 14.822 15.956L15.042 15.754C15.136 15.668 15.248 15.564 15.382 15.43C15.3933 15.4187 15.4047 15.4073 15.4163 15.3958C15.4868 15.3256 15.5621 15.2505 15.636 15.168C15.724 15.082 15.81 14.986 15.89 14.892C16.024 14.748 16.152 14.598 16.286 14.44C16.382 14.336 16.47 14.218 16.556 14.1C16.652 13.988 16.746 13.862 16.834 13.742C16.8666 13.6941 16.9013 13.6457 16.9367 13.5963C16.9708 13.5486 17.0057 13.5 17.04 13.45C17.104 13.354 17.168 13.252 17.222 13.156C17.39 12.896 17.532 12.618 17.652 12.34C17.707 12.2211 17.751 12.096 17.7937 11.9743C17.7992 11.9588 17.8046 11.9434 17.81 11.928C17.858 11.786 17.898 11.652 17.928 11.51C18 11.176 18.016 10.844 17.984 10.512C17.9764 10.4136 17.9688 10.317 17.9477 10.2255C17.9454 10.2152 17.944 10.2046 17.944 10.194C17.936 10.126 17.92 10.05 17.898 9.98001C17.826 9.65601 17.714 9.332 17.572 9.014C17.524 8.89599 17.468 8.77599 17.414 8.66598C17.286 8.42802 17.152 8.19001 17 7.96C16.9695 7.91136 16.9357 7.86209 16.902 7.81289C16.8762 7.77511 16.8503 7.73737 16.826 7.70002C16.7297 7.5514 16.6213 7.40815 16.5163 7.26916C16.4926 7.2379 16.4692 7.20686 16.446 7.17602C16.384 7.09458 16.3161 7.01314 16.2477 6.93116C16.2103 6.88629 16.1728 6.84127 16.136 6.79599C16.032 6.66998 15.93 6.54998 15.826 6.43201C15.454 6.01201 15.064 5.63198 14.716 5.30802C14.652 5.24399 14.582 5.18001 14.51 5.11798C14.24 4.87201 13.994 4.65801 13.788 4.49198C13.726 4.44425 13.6703 4.39722 13.6185 4.35345C13.5835 4.32387 13.5503 4.29579 13.518 4.26998C13.4545 4.22272 13.3996 4.18086 13.3537 4.14585C13.3258 4.12459 13.3012 4.10585 13.28 4.08998C13.264 4.078 13.246 4.06999 13.228 4.06398C13.0932 4.02615 13 3.90323 13 3.76322V2.11201C13 1.80401 12.876 1.52802 12.678 1.326C12.48 1.12398 12.204 1 11.9 1C11.292 1 10.8 1.498 10.8 2.11201V3.2656C10.8 3.32504 10.7432 3.36806 10.686 3.35198L10.376 3.26399L10.102 3.18821C10.1004 3.18775 10.0987 3.18716 10.097 3.18657C10.0934 3.18529 10.0898 3.18401 10.086 3.18401C10.082 3.18401 10.078 3.18348 10.0742 3.18244L7.93999 2.60399C7.84603 2.578 7.766 2.68 7.81402 2.766L8.15602 3.39801C8.17546 3.44665 8.2001 3.4953 8.22543 3.54529C8.24175 3.57751 8.25835 3.61028 8.27403 3.64398C8.33001 3.75602 8.38603 3.87399 8.44002 3.992C8.48799 4.09599 8.53601 4.198 8.59203 4.30999C8.61561 4.36275 8.63965 4.41614 8.66403 4.4703C8.75336 4.6687 8.8473 4.87732 8.94 5.10202L8.94079 5.10389C9.02051 5.29326 9.10024 5.48265 9.17001 5.68C9.36199 6.178 9.54402 6.70999 9.70201 7.25601C9.7413 7.37805 9.7727 7.49617 9.80452 7.61587C9.81806 7.66682 9.83168 7.71806 9.84601 7.77001L9.86799 7.866C9.93201 8.12001 9.98799 8.372 10.028 8.62601C10.06 8.8 10.09 8.96598 10.106 9.134L10.106 9.13407C10.13 9.32404 10.154 9.51401 10.162 9.70398C10.178 9.87801 10.186 10.06 10.186 10.234C10.186 10.678 10.146 11.106 10.052 11.51C10.0462 11.5316 10.0403 11.5534 10.0344 11.5755C10.008 11.6739 9.98068 11.776 9.94802 11.874C9.91838 11.9792 9.87997 12.0844 9.84008 12.1937C9.82613 12.2319 9.812 12.2706 9.798 12.31C9.7957 12.3162 9.7934 12.3224 9.7911 12.3286C9.76138 12.4087 9.73114 12.4902 9.694 12.57C9.49601 13.046 9.24999 13.52 8.99602 13.964C8.624 14.622 8.25002 15.2 7.988 15.572C7.97207 15.5959 7.95652 15.6186 7.94154 15.6405C7.92269 15.6681 7.90474 15.6944 7.88803 15.72C7.80601 15.836 7.89002 16 8.032 16H9.707C10.3106 16 10.8 16.4894 10.8 17.093C10.8 17.6966 10.3106 18.186 9.707 18.186H8.00003C7.24802 18.186 6.55203 17.76 6.21599 17.078C6.042 16.736 5.974 16.36 6.01402 15.992C6.02401 15.882 5.94199 15.778 5.82999 15.778H0.17403C0.0779956 15.778 0 15.856 0 15.952V16.068C0 19.676 2.914 22.6 6.51002 22.6H16.656C18.5579 22.6 19.6378 20.8669 20.6993 19.1634C20.9951 18.6886 21.2896 18.216 21.6 17.784C22.158 17.008 23.5 16.392 23.892 16.224C23.956 16.196 24 16.132 24 16.06ZM1.51195 13.202L1.42794 13.334C1.35397 13.448 1.43594 13.6 1.57593 13.6H6.78395C6.84196 13.6 6.89594 13.572 6.92796 13.524C6.99596 13.4201 7.05994 13.312 7.11795 13.202C7.56797 12.446 7.96794 11.628 8.11394 11.024C8.45594 9.55604 7.72595 7.19805 6.87994 5.30201C6.82396 5.17604 6.64993 5.16401 6.57596 5.28004L1.51195 13.202Z"
+              fill="white"
+              fill-rule="evenodd"
+            />
+          </svg>
+        </div>
+        <div
+          class="c4 c5 c6"
+        >
+          <img
+            class="c7 c8"
+            draggable="false"
+            src="https://cdn.center.app/1/0xED5AF388653567Af2F388E6224dC7C4b3241C544/3318/50ed67ad647d0aa0cad0b830d136a677efc2fb72a44587bc35f2a5fb334a7fdf.png"
+          />
+        </div>
+      </div>
+      <div
+        class="c9"
+      >
+        <div
+          class="c10 c11 c12"
+        >
+          <div
+            class="c11 c13"
+          >
+            <div
+              class="c4 c5 c14"
+            >
+              <div
+                class="c4 c5 c15"
+              >
+                <div
+                  class="c16 c17 css-zhpkf8"
+                >
+                  Azuki #3318
+                </div>
+              </div>
+              <div
+                class="c16 c18 css-4u0e4f"
+              >
+                <div
+                  class="c19"
+                >
+                  <div>
+                    # 7,079
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="c4 c5 c20"
+            >
+              <div
+                class="c100 c4 c5 c21"
+              >
+                <div
+                  class="c16 c101 c22 css-1jljtub"
+                >
+                  15.8 ETH
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="c16 c23 c24 css-zhpkf8"
+      >
+        Add to bag
+      </div>
+    </a>
+  </div>
+</DocumentFragment>
+`;

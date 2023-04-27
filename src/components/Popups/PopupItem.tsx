@@ -1,38 +1,49 @@
-import { useCallback, useEffect } from 'react'
+import { useEffect } from 'react'
 import { X } from 'react-feather'
-import styled, { useTheme } from 'styled-components/macro'
+import styled, { css, useTheme } from 'styled-components/macro'
 
 import { useRemovePopup } from '../../state/application/hooks'
 import { PopupContent } from '../../state/application/reducer'
 import FailedNetworkSwitchPopup from './FailedNetworkSwitchPopup'
 import TransactionPopup from './TransactionPopup'
 
-const StyledClose = styled(X)`
+const StyledClose = styled(X)<{ $padding: number }>`
   position: absolute;
-  right: 20px;
-  top: 20px;
+  right: ${({ $padding }) => `${$padding}px`};
+  top: ${({ $padding }) => `${$padding}px`};
 
   :hover {
     cursor: pointer;
   }
 `
-const Popup = styled.div`
+const PopupCss = css<{ show: boolean }>`
   display: inline-block;
   width: 100%;
-  padding: 1em;
+  visibility: ${({ show }) => (show ? 'visible' : 'hidden')};
   background-color: ${({ theme }) => theme.backgroundSurface};
   position: relative;
+  border: 1px solid ${({ theme }) => theme.backgroundOutline};
   border-radius: 16px;
-  padding: 20px;
-  padding-right: 35px;
   overflow: hidden;
+  box-shadow: ${({ theme }) => theme.deepShadow};
+  transition: ${({ theme }) => `visibility ${theme.transition.duration.fast} ease-in-out`};
 
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
-    min-width: 290px;
-    &:not(:last-of-type) {
-      margin-right: 20px;
-    }
-  `}
+  min-width: 290px;
+  &:not(:last-of-type) {
+    margin-right: 20px;
+  }
+`}
+`
+
+const TransactionPopupContainer = styled.div`
+  ${PopupCss}
+  padding: 2px 0px;
+`
+
+const FailedSwitchNetworkPopupContainer = styled.div<{ show: boolean }>`
+  ${PopupCss}
+  padding: 20px 35px 20px 20px;
 `
 
 export default function PopupItem({
@@ -45,32 +56,34 @@ export default function PopupItem({
   popKey: string
 }) {
   const removePopup = useRemovePopup()
-  const removeThisPopup = useCallback(() => removePopup(popKey), [popKey, removePopup])
+  const theme = useTheme()
+
   useEffect(() => {
     if (removeAfterMs === null) return undefined
 
     const timeout = setTimeout(() => {
-      removeThisPopup()
+      removePopup(popKey)
     }, removeAfterMs)
 
     return () => {
       clearTimeout(timeout)
     }
-  }, [removeAfterMs, removeThisPopup])
+  }, [popKey, removeAfterMs, removePopup])
 
-  const theme = useTheme()
-
-  let popupContent
   if ('txn' in content) {
-    popupContent = <TransactionPopup hash={content.txn.hash} />
+    return (
+      <TransactionPopupContainer show={true}>
+        <StyledClose $padding={16} color={theme.textSecondary} onClick={() => removePopup(popKey)} />
+        <TransactionPopup hash={content.txn.hash} />
+      </TransactionPopupContainer>
+    )
   } else if ('failedSwitchNetwork' in content) {
-    popupContent = <FailedNetworkSwitchPopup chainId={content.failedSwitchNetwork} />
+    return (
+      <FailedSwitchNetworkPopupContainer show={true}>
+        <StyledClose $padding={20} color={theme.textSecondary} onClick={() => removePopup(popKey)} />
+        <FailedNetworkSwitchPopup chainId={content.failedSwitchNetwork} />
+      </FailedSwitchNetworkPopupContainer>
+    )
   }
-
-  return popupContent ? (
-    <Popup>
-      <StyledClose color={theme.textSecondary} onClick={removeThisPopup} />
-      {popupContent}
-    </Popup>
-  ) : null
+  return null
 }

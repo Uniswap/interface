@@ -20,7 +20,7 @@ import CurrencyLogo from '../../Logo/CurrencyLogo'
 import Row, { RowFixed } from '../../Row'
 import { MouseoverTooltip } from '../../Tooltip'
 import { LoadingRows, MenuItem } from '../styleds'
-import * as styles from './index.css'
+import { scrollbarStyle } from './index.css'
 
 function currencyKey(currency: Currency): string {
   return currency.isToken ? currency.address : 'ETHER'
@@ -63,6 +63,10 @@ const Tag = styled.div`
 
 const WarningContainer = styled.div`
   margin-left: 0.3em;
+`
+
+const ListWrapper = styled.div`
+  padding-right: 0.25rem;
 `
 
 function Balance({ balance }: { balance: CurrencyAmount<Currency> }) {
@@ -212,7 +216,7 @@ export const formatAnalyticsEventProperties = (
 })
 
 const LoadingRow = () => (
-  <LoadingRows>
+  <LoadingRows data-testid="loading-rows">
     <div />
     <div />
     <div />
@@ -290,10 +294,10 @@ export default function CurrencyList({
   }, [])
 
   return (
-    <div style={{ paddingRight: '4px' }}>
+    <ListWrapper>
       {isLoading ? (
         <FixedSizeList
-          className={styles.scrollbarStyle}
+          className={scrollbarStyle}
           height={height}
           ref={fixedListRef as any}
           width="100%"
@@ -305,7 +309,7 @@ export default function CurrencyList({
         </FixedSizeList>
       ) : (
         <FixedSizeList
-          className={styles.scrollbarStyle}
+          className={scrollbarStyle}
           height={height}
           ref={fixedListRef as any}
           width="100%"
@@ -317,6 +321,6 @@ export default function CurrencyList({
           {Row}
         </FixedSizeList>
       )}
-    </div>
+    </ListWrapper>
   )
 }

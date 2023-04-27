@@ -1,6 +1,5 @@
 import { i18n } from '@lingui/core'
 import { I18nProvider } from '@lingui/react'
-import * as Sentry from '@sentry/react'
 import { DEFAULT_LOCALE, SupportedLocale } from 'constants/locales'
 import {
   af,
@@ -83,9 +82,8 @@ export async function dynamicActivate(locale: SupportedLocale) {
     const catalog = await import(`locales/${locale}.js`)
     // Bundlers will either export it as default or as a named export named default.
     i18n.load(locale, catalog.messages || catalog.default.messages)
-  } catch (error) {
-    console.error(error)
-    Sentry.captureException(new Error(`Unable to load locale (${locale})`))
+  } catch (error: unknown) {
+    console.error(new Error(`Unable to load locale (${locale}): ${error}`))
   }
   i18n.activate(locale)
 }

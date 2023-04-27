@@ -12,6 +12,7 @@ import { Trade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
 import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import { useWeb3React } from '@web3-react/core'
+import { useToggleAccountDrawer } from 'components/AccountDrawer'
 import { sendEvent } from 'components/analytics'
 import Loader from 'components/Icons/LoadingSpinner'
 import { NetworkAlert } from 'components/NetworkAlert/NetworkAlert'
@@ -20,7 +21,6 @@ import SwapDetailsDropdown from 'components/swap/SwapDetailsDropdown'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import { MouseoverTooltip } from 'components/Tooltip'
-import { useToggleWalletDrawer } from 'components/WalletDropdown'
 import Widget from 'components/Widget'
 import { isSupportedChain } from 'constants/chains'
 import { useSwapWidgetEnabled } from 'featureFlags/flags/swapWidget'
@@ -30,7 +30,7 @@ import { useSwapCallback } from 'hooks/useSwapCallback'
 import { useUSDPrice } from 'hooks/useUSDPrice'
 import JSBI from 'jsbi'
 import { formatSwapQuoteReceivedEventProperties } from 'lib/utils/analytics'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useReducer, useState } from 'react'
 import { ReactNode } from 'react'
 import { ArrowDown, Info } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
@@ -57,19 +57,14 @@ import { useCurrency, useDefaultActiveTokens } from '../../hooks/Tokens'
 import { useIsSwapUnsupported } from '../../hooks/useIsSwapUnsupported'
 import useWrapCallback, { WrapErrorText, WrapType } from '../../hooks/useWrapCallback'
 import { Field } from '../../state/swap/actions'
-import {
-  useDefaultsFromURLSearch,
-  useDerivedSwapInfo,
-  useSwapActionHandlers,
-  useSwapState,
-} from '../../state/swap/hooks'
+import { useDefaultsFromURLSearch, useDerivedSwapInfo, useSwapActionHandlers } from '../../state/swap/hooks'
+import swapReducer, { initialState as initialSwapState } from '../../state/swap/reducer'
 import { useExpertModeManager } from '../../state/user/hooks'
 import { LinkStyledButton, ThemedText } from '../../theme'
 import { computeFiatValuePriceImpact } from '../../utils/computeFiatValuePriceImpact'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { computeRealizedPriceImpact, warningSeverity } from '../../utils/prices'
 import { supportedChainId } from '../../utils/supportedChainId'
-
 const ArrowContainer = styled.div`
   display: inline-block;
   display: inline-flex;
@@ -127,7 +122,7 @@ const DetailsSwapSection = styled(SwapSection)`
   border-top-right-radius: 0;
 `
 
-export function getIsValidSwapQuote(
+function getIsValidSwapQuote(
   trade: InterfaceTrade<Currency, Currency, TradeType> | undefined,
   tradeState: TradeState,
   swapInputError?: ReactNode
@@ -194,12 +189,13 @@ export default function Swap({ className }: { className?: string }) {
   const theme = useTheme()
 
   // toggle wallet when disconnected
-  const toggleWalletDrawer = useToggleWalletDrawer()
+  const toggleWalletDrawer = useToggleAccountDrawer()
 
   // for expert mode
   const [isExpertMode] = useExpertModeManager()
   // swap state
-  const { independentField, typedValue, recipient } = useSwapState()
+  const [state, dispatch] = useReducer(swapReducer, initialSwapState)
+  const { typedValue, recipient, independentField } = state
   const {
     trade: { state: tradeState, trade },
     allowedSlippage,
@@ -207,7 +203,7 @@ export default function Swap({ className }: { className?: string }) {
     parsedAmount,
     currencies,
     inputError: swapInputError,
-  } = useDerivedSwapInfo()
+  } = useDerivedSwapInfo(state)
 
   const {
     wrapType,
@@ -248,7 +244,7 @@ export default function Swap({ className }: { className?: string }) {
     [fiatValueTradeInput, fiatValueTradeOutput, routeIsSyncing, trade]
   )
 
-  const { onSwitchTokens, onCurrencySelection, onUserInput, onChangeRecipient } = useSwapActionHandlers()
+  const { onSwitchTokens, onCurrencySelection, onUserInput, onChangeRecipient } = useSwapActionHandlers(dispatch)
   const isValid = !swapInputError
   const dependentField: Field = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT
 
@@ -552,6 +548,7 @@ export default function Swap({ className }: { className?: string }) {
                     element={InterfaceElementName.SWAP_TOKENS_REVERSE_ARROW_BUTTON}
                   >
                     <ArrowContainer
+                      data-testid="swap-currency-button"
                       onClick={() => {
                         onSwitchTokens()
                       }}

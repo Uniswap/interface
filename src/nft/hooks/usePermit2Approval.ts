@@ -7,16 +7,24 @@ import usePermit2Allowance, { AllowanceState } from 'hooks/usePermit2Allowance'
 import { useCallback, useMemo, useState } from 'react'
 import invariant from 'tiny-invariant'
 
+// TODO: This should be removed when the sdk is updated to include the new UR address
+const NFT_UNIVERSAL_ROUTER_MAINNET_ADDRESS = '0x4c60051384bd2d3c01bfc845cf5f4b44bcbe9de5'
+
 export default function usePermit2Approval(
   amount?: CurrencyAmount<Token>,
   maximumAmount?: CurrencyAmount<Token>,
-  enabled?: boolean
+  enabled?: boolean,
+  shouldUseNftRouter?: boolean
 ) {
   const { chainId } = useWeb3React()
 
   const allowance = usePermit2Allowance(
     enabled ? maximumAmount ?? (amount?.currency.isToken ? (amount as CurrencyAmount<Token>) : undefined) : undefined,
-    enabled && chainId ? UNIVERSAL_ROUTER_ADDRESS(chainId) : undefined
+    enabled && chainId
+      ? shouldUseNftRouter && chainId === 1
+        ? NFT_UNIVERSAL_ROUTER_MAINNET_ADDRESS
+        : UNIVERSAL_ROUTER_ADDRESS(chainId)
+      : undefined
   )
   const isApprovalLoading = allowance.state === AllowanceState.REQUIRED && allowance.isApprovalLoading
   const [isAllowancePending, setIsAllowancePending] = useState(false)

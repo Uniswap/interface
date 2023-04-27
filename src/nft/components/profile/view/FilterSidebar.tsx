@@ -28,6 +28,7 @@ import InfiniteLoader from 'react-window-infinite-loader'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { TRANSITION_DURATIONS } from 'theme/styles'
+import noop from 'utils/noop'
 
 import { WALLET_COLLECTIONS_PAGINATION_LIMIT } from './ProfilePage'
 import * as styles from './ProfilePage.css'
@@ -190,7 +191,7 @@ const CollectionSelect = ({
 
   // Only load 1 page of items at a time.
   // Pass an empty callback to InfiniteLoader in case it asks us to load more than once.
-  const loadMoreItems = isFetchingNextPage ? () => null : fetchNextPage
+  const loadMoreItems = isFetchingNextPage ? noop : fetchNextPage
 
   // Every row is loaded except for our loading indicator row.
   const isItemLoaded = useCallback(

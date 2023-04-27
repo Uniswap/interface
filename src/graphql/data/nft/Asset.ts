@@ -39,33 +39,18 @@ gql`
         node {
           id
           name
-          ownerAddress
           image {
             url
           }
           smallImage {
             url
           }
-          originalImage {
-            url
-          }
           tokenId
-          description
           animationUrl
           suspiciousFlag
           collection {
             name
             isVerified
-            image {
-              url
-            }
-            creator {
-              address
-              profileImage {
-                url
-              }
-              isVerified
-            }
             nftContracts {
               address
               standard
@@ -98,11 +83,8 @@ gql`
             }
           }
           rarities {
-            provider
             rank
-            score
           }
-          metadataUrl
         }
         cursor
       }

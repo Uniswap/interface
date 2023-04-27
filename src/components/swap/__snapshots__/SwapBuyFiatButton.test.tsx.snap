@@ -1,0 +1,157 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SwapBuyFiatButton.tsx matches base snapshot 1`] = `
+<DocumentFragment>
+  .c1 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  display: inline-block;
+  text-align: center;
+  line-height: inherit;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  font-size: inherit;
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  color: white;
+  background-color: primary;
+  border: 0;
+  border-radius: 4px;
+}
+
+.c2 {
+  padding: 16px;
+  width: 100%;
+  font-weight: 500;
+  text-align: center;
+  border-radius: 20px;
+  outline: none;
+  border: 1px solid transparent;
+  color: #0D111C;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
+  will-change: transform;
+  -webkit-transition: -webkit-transform 450ms ease;
+  -webkit-transition: transform 450ms ease;
+  transition: transform 450ms ease;
+  -webkit-transform: perspective(1px) translateZ(0);
+  -ms-transform: perspective(1px) translateZ(0);
+  transform: perspective(1px) translateZ(0);
+}
+
+.c2:disabled {
+  opacity: 50%;
+  cursor: auto;
+  pointer-events: none;
+}
+
+.c2 > * {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.c2 > a {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+}
+
+.c3 {
+  padding: 0;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  background: none;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+}
+
+.c3:focus {
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+}
+
+.c3:hover {
+  opacity: 0.9;
+}
+
+.c3:active {
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+}
+
+.c3:disabled {
+  opacity: 50%;
+  cursor: auto;
+}
+
+.c0 {
+  display: inline-block;
+  height: inherit;
+}
+
+.c5 {
+  height: 8px;
+  width: 8px;
+  background-color: #4C82FB;
+  border-radius: 50%;
+}
+
+.c4 {
+  color: #7780A0;
+  gap: 4px;
+}
+
+.c4:focus {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+}
+
+.c4:active {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+}
+
+<div
+    class="c0"
+  >
+    <div>
+      <button
+        class="c1 c2 c3 c4"
+        data-testid="buy-fiat-button"
+      >
+        Buy
+        <div
+          class="c5"
+          data-testid="buy-fiat-flow-incomplete-indicator"
+        />
+      </button>
+    </div>
+  </div>
+</DocumentFragment>
+`;

@@ -1,10 +1,12 @@
 import { Trans } from '@lingui/macro'
 import { Percent } from '@uniswap/sdk-core'
+import { useFiatOnRampButtonEnabled } from 'featureFlags/flags/fiatOnRampButton'
+import { subhead } from 'nft/css/common.css'
 import styled from 'styled-components/macro'
 
-import { ThemedText } from '../../theme'
 import { RowBetween, RowFixed } from '../Row'
 import SettingsTab from '../Settings'
+import SwapBuyFiatButton from './SwapBuyFiatButton'
 
 const StyledSwapHeader = styled.div`
   padding: 8px 12px;
@@ -13,14 +15,27 @@ const StyledSwapHeader = styled.div`
   color: ${({ theme }) => theme.textSecondary};
 `
 
+const TextHeader = styled.div`
+  color: ${({ theme }) => theme.textPrimary};
+  margin-right: 8px;
+  display: flex;
+  line-height: 20px;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+`
+
 export default function SwapHeader({ allowedSlippage }: { allowedSlippage: Percent }) {
+  const fiatOnRampButtonEnabled = useFiatOnRampButtonEnabled()
+
   return (
     <StyledSwapHeader>
       <RowBetween>
-        <RowFixed>
-          <ThemedText.DeprecatedBlack fontWeight={500} fontSize={16} style={{ marginRight: '8px' }}>
+        <RowFixed style={{ gap: '8px' }}>
+          <TextHeader className={subhead}>
             <Trans>Swap</Trans>
-          </ThemedText.DeprecatedBlack>
+          </TextHeader>
+          {fiatOnRampButtonEnabled && <SwapBuyFiatButton />}
         </RowFixed>
         <RowFixed>
           <SettingsTab placeholderSlippage={allowedSlippage} />
