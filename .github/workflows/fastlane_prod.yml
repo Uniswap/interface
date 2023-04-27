@@ -25,9 +25,6 @@ jobs:
       MOONPAY_WIDGET_API_URL: ${{ secrets.MOONPAY_WIDGET_API_URL }}
       ONESIGNAL_APP_ID: ${{ secrets.ONESIGNAL_APP_ID }}
       WALLETCONNECT_PROJECT_ID: ${{ secrets.WALLETCONNECT_PROJECT_ID }}
-    defaults:
-      run:
-        working-directory: ./apps/mobile
     steps:
       - uses: styfle/cancel-workflow-action@860d4c7374d6e4a1c482e80897cb913ae46692ac
         with:
@@ -74,7 +71,7 @@ jobs:
           timeout_minutes: 10
           retry_wait_seconds: 2
           max_attempts: 3
-          command: cd ../.. && yarn && cd apps/mobile && yarn
+          command: yarn && cd apps/mobile && yarn
 
       - name: Update Ruby build tools
         uses: nick-fields/retry@7d4a37704547a311dbb66ebdf5b23ec19374a767
@@ -98,9 +95,10 @@ jobs:
           timeout_minutes: 20
           retry_wait_seconds: 2
           max_attempts: 3
-          command: cd ios && pod install && cd ..
+          command: cd apps/mobile/ios && pod install && cd ..
 
       - name: Build + deploy prod iOS app
+        working-directory: ./apps/mobile
         run: |
           export PATH="/usr/lib/ccache:/usr/local/opt/ccache/libexec:$PATH"
           export CCACHE_SLOPPINESS=clang_index_store,file_stat_matches,include_file_ctime,include_file_mtime,ivfsoverlay,pch_defines,modules,system_headers,time_macros
@@ -130,10 +128,12 @@ jobs:
           URL_TO_FASTLANE_CERTIFICATES_REPO: ${{ secrets.URL_TO_FASTLANE_CERTIFICATES_REPO }}
 
       - name: Generate iOS bundle and sourcemaps
+        working-directory: ./apps/mobile
         run: |
           yarn react-native bundle --platform ios --dev false --entry-file index.js --reset-cache --bundle-output main.jsbundle --sourcemap-output main.jsbundle.map --minify false
 
       - name: Create Sentry release with sourcemaps
+        working-directory: ./apps/mobile
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
