@@ -28,7 +28,7 @@ describe('UnsupportedCurrencyFooter.tsx with unsupported tokens', () => {
 
   it('works as expected when one unsupported token exists', async () => {
     const rendered = render(<UnsupportedCurrencyFooter show={true} currencies={[unsupportedToken]} />)
-    await userEvent.click(screen.getByTestId('read-more-button'))
+    await act(() => userEvent.click(screen.getByTestId('read-more-button')))
     expect(screen.getByText('Unsupported Assets')).toBeInTheDocument()
     expect(
       screen.getByText((content) => content.startsWith('Some assets are not available through this interface'))
@@ -40,7 +40,7 @@ describe('UnsupportedCurrencyFooter.tsx with unsupported tokens', () => {
       'href',
       unsupportedTokenExplorerLink
     )
-    await userEvent.click(screen.getByTestId('close-icon'))
+    await act(() => userEvent.click(screen.getByTestId('close-icon')))
     await waitForElementToBeRemoved(rendered.queryByTestId('unsupported-token-card'))
     expect(rendered.queryByText('Unsupported Assets')).toBeNull()
     expect(rendered.queryByTestId('unsupported-token-card')).toBeNull()
