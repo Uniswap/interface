@@ -50,6 +50,14 @@ const StyledLogo = styled.img`
   margin-left: 6px;
 `
 
+const ConfirmationModalContentWrapper = styled(AutoColumn)`
+  padding: 0 0 12px 0;
+`
+
+const ConfirmationModalTopContentWrapper = styled(AutoColumn)`
+  padding: 16px 8px 0;
+`
+
 function ConfirmationPendingContent({
   onDismiss,
   pendingText,
@@ -135,7 +143,7 @@ function TransactionSubmittedContent({
         <ConfirmedIcon inline={inline}>
           <ArrowUpCircle strokeWidth={1} size={inline ? '40px' : '75px'} color={theme.accentActive} />
         </ConfirmedIcon>
-        <AutoColumn gap="md" justify="center" padding="0 0 12px 0">
+        <ConfirmationModalContentWrapper gap="md" justify="center">
           <ThemedText.MediumHeader textAlign="center">
             <Trans>Transaction submitted</Trans>
           </ThemedText.MediumHeader>
@@ -165,7 +173,7 @@ function TransactionSubmittedContent({
               </Text>
             </ExternalLink>
           )}
-        </AutoColumn>
+        </ConfirmationModalContentWrapper>
       </AutoColumn>
     </Wrapper>
   )
@@ -184,7 +192,7 @@ export function ConfirmationModalContent({
 }) {
   return (
     <ConfirmationModalWrapper>
-      <AutoColumn gap="sm" padding="16px 8px 0">
+      <ConfirmationModalTopContentWrapper gap="sm">
         <Row>
           <BackArrowIcon style={{ position: 'absolute' }} onClick={onDismiss} data-cy="confirmation-close-icon" />
           <Row justify="center">
@@ -192,7 +200,7 @@ export function ConfirmationModalContent({
           </Row>
         </Row>
         {topContent()}
-      </AutoColumn>
+      </ConfirmationModalTopContentWrapper>
       {bottomContent && <BottomSection gap="12px">{bottomContent()}</BottomSection>}
     </ConfirmationModalWrapper>
   )
