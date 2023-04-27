@@ -31,7 +31,6 @@ const TraitRowScrollableContainer = styled.div`
   overflow-y: auto;
   overflow-x: hidden;
   max-height: 412px;
-  padding-right: 12px;
   ${ScrollBarStyles}
 `
 
