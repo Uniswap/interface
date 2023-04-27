@@ -61,4 +61,3 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.RELEASE_SERVICE_ACCESS_TOKEN }}
         run: gh pr merge --delete-branch --merge --auto "${{ steps.create-pull-request.outputs.pull-request-number }}"
-    
