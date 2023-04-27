@@ -1,4 +1,4 @@
-import { TEST_NFT_ACTIVITY_EVENT } from 'test-utils/constants'
+import { TEST_NFT_ACTIVITY_EVENT } from 'test-utils/nftFixtures'
 import { render, screen } from 'test-utils/render'
 
 import { BuyCell } from './ActivityCells'
