@@ -46,7 +46,7 @@ describe('filterKnownErrors', () => {
       originalException.name = 'xd.<anonymous>(/Applications/OneKey.app/Contents/Resources/static/preload.js)'
       expect(filterKnownErrors(ERROR, { originalException })).toBe(null)
     })
-    it('filter errors with just OneKey', () => {
+    it('filter OneKey errors (Windows users)', () => {
       const originalException = new Error()
       originalException.name = 'yd.<anonymous>(C:\Users\xyz\AppData\Local\Programs\OneKey\resources\static\preload.js)'
       expect(filterKnownErrors(ERROR, { originalException })).toBe(null)
