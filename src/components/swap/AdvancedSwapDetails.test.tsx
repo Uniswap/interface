@@ -1,3 +1,4 @@
+import userEvent from '@testing-library/user-event'
 import {
   TEST_ALLOWED_SLIPPAGE,
   TEST_TOKEN_1,
@@ -5,19 +6,9 @@ import {
   TEST_TRADE_EXACT_OUTPUT,
   toCurrencyAmount,
 } from 'test-utils/constants'
-import { fireEvent, render, screen } from 'test-utils/render'
+import { render, screen } from 'test-utils/render'
 
 import { AdvancedSwapDetails } from './AdvancedSwapDetails'
-
-jest.mock('@web3-react/core', () => {
-  const web3React = jest.requireActual('@web3-react/core')
-  return {
-    ...web3React,
-    useWeb3React: () => ({
-      chainId: 1,
-    }),
-  }
-})
 
 describe('AdvancedSwapDetails.tsx', () => {
   it('matches base snapshot', () => {
@@ -29,20 +20,20 @@ describe('AdvancedSwapDetails.tsx', () => {
 
   it('renders correct copy on mouseover', async () => {
     render(<AdvancedSwapDetails trade={TEST_TRADE_EXACT_INPUT} allowedSlippage={TEST_ALLOWED_SLIPPAGE} />)
-    fireEvent.mouseOver(screen.getByText('Price Impact'))
+    userEvent.hover(screen.getByText('Price Impact'))
     expect(await screen.findByText(/The impact your trade has on the market price of this pool./i)).toBeVisible()
-    fireEvent.mouseOver(screen.getByText('Expected Output'))
+    userEvent.hover(screen.getByText('Expected Output'))
     expect(await screen.findByText(/The amount you expect to receive at the current market price./i)).toBeVisible()
-    fireEvent.mouseOver(screen.getByText(/Minimum received/i))
+    userEvent.hover(screen.getByText(/Minimum received/i))
     expect(await screen.findByText(/The minimum amount you are guaranteed to receive./i)).toBeVisible()
   })
 
   it('renders correct tooltips for test trade with exact output and gas use estimate USD', async () => {
     TEST_TRADE_EXACT_OUTPUT.gasUseEstimateUSD = toCurrencyAmount(TEST_TOKEN_1, 1)
     render(<AdvancedSwapDetails trade={TEST_TRADE_EXACT_OUTPUT} allowedSlippage={TEST_ALLOWED_SLIPPAGE} />)
-    fireEvent.mouseOver(screen.getByText(/Maximum sent/i))
+    userEvent.hover(screen.getByText(/Maximum sent/i))
     expect(await screen.findByText(/The minimum amount you are guaranteed to receive./i)).toBeVisible()
-    fireEvent.mouseOver(screen.getByText('Network Fee'))
+    userEvent.hover(screen.getByText('Network Fee'))
     expect(await screen.findByText(/The fee paid to miners who process your transaction./i)).toBeVisible()
   })
 
