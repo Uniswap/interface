@@ -71,6 +71,9 @@ function App(): JSX.Element | null {
     async function fetchAndSetDeviceId(): Promise<void> {
       const uniqueId = await getUniqueId()
       setDeviceId(uniqueId)
+      Sentry.setUser({
+        id: uniqueId,
+      })
     }
     fetchAndSetDeviceId()
   }, [])
