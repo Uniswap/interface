@@ -9,8 +9,6 @@ import { getEnvName, isProductionEnv } from 'utils/env'
 
 import { beforeSend } from './errors'
 
-export { trace } from './trace'
-
 // Dump some metadata into the window to allow client verification.
 window.GIT_COMMIT_HASH = process.env.REACT_APP_GIT_COMMIT_HASH
 

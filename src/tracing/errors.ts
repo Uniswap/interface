@@ -86,6 +86,12 @@ export const filterKnownErrors: Required<ClientOptions>['beforeSend'] = (event: 
     if (error.message.match(/Unexpected token '<'/)) return null
 
     /*
+     * Errors coming from OneKey (a desktop wallet) can be ignored for now.
+     * These errors are either application-specific, or they will be thrown separately outside of OneKey.
+     */
+    if (error.name.match(/OneKey\.app/i)) return null
+
+    /*
      * Content security policy 'unsafe-eval' errors can be filtered out because there are expected failures.
      * For example, if a user runs an eval statement in console this error would still get thrown.
      * TODO(INFRA-176): We should extend this to filter out any type of CSP error.

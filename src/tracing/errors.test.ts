@@ -40,6 +40,12 @@ describe('filterKnownErrors', () => {
     expect(filterKnownErrors(ERROR, { originalException })).toBeNull()
   })
 
+  it('filter errors from OneKey app', () => {
+    const originalException = new Error()
+    originalException.name = 'xd.<anonymous>(/Applications/OneKey.app/Contents/Resources/static/preload.js)'
+    expect(filterKnownErrors(ERROR, { originalException })).toBe(null)
+  })
+
   describe('chunk errors', () => {
     afterEach(() => {
       jest.restoreAllMocks()
