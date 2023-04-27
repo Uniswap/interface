@@ -3,13 +3,19 @@ import { SharedEventName } from '@uniswap/analytics-events'
 import React, { createContext, memo, PropsWithChildren, useEffect, useMemo, useRef } from 'react'
 import { useIsPartOfNavigationTree } from 'src/app/navigation/hooks'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
-import { ElementName, MarkNames, ModalName, SectionName } from 'src/features/telemetry/constants'
+import {
+  ElementName,
+  ManualPageViewScreen,
+  MarkNames,
+  ModalName,
+  SectionName,
+} from 'src/features/telemetry/constants'
 import { useTrace } from 'src/features/telemetry/hooks'
 import { AppScreen, Screens } from 'src/screens/Screens'
 import { logger } from 'src/utils/logger'
 
 export interface ITraceContext {
-  screen?: AppScreen
+  screen?: AppScreen | ManualPageViewScreen
 
   // Enclosed section name. Can be as wide or narrow as necessary to
   // provide telemetry context.
@@ -172,7 +178,7 @@ function NavAwareTrace({
 
 export const Trace = memo(_Trace)
 
-export const DIRECT_LOG_ONLY_SCREENS: AppScreen[] = [
+export const DIRECT_LOG_ONLY_SCREENS: (AppScreen | ManualPageViewScreen)[] = [
   Screens.TokenDetails,
   Screens.ExternalProfile,
   Screens.NFTItem,
@@ -181,7 +187,7 @@ export const DIRECT_LOG_ONLY_SCREENS: AppScreen[] = [
 
 function shouldLogScreen(
   directFromPage: boolean | undefined,
-  screen: AppScreen | undefined
+  screen: AppScreen | ManualPageViewScreen | undefined
 ): boolean {
   return directFromPage || screen === undefined || !DIRECT_LOG_ONLY_SCREENS.includes(screen)
 }

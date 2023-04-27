@@ -2,6 +2,7 @@ import { CompositeScreenProps } from '@react-navigation/native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { StackScreenProps } from '@react-navigation/stack'
 import { useResponsiveProp } from '@shopify/restyle'
+import { SharedEventName } from '@uniswap/analytics-events'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert } from 'react-native'
@@ -26,6 +27,7 @@ import { Text } from 'src/components/Text'
 import { isICloudAvailable } from 'src/features/CloudBackup/RNICloudBackupsManager'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { ImportType } from 'src/features/onboarding/utils'
+import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { ElementName } from 'src/features/telemetry/constants'
 import { BackupType } from 'src/features/wallet/accounts/types'
 import { useActiveAccount } from 'src/features/wallet/hooks'
@@ -80,6 +82,14 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
     })
   }
 
+  const onPressSkipBack = (): void => {
+    sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
+      element: ElementName.AddBackupNone,
+      screen: OnboardingScreens.Backup,
+    })
+    onPressNext()
+  }
+
   const disabled = !activeAccountBackups || activeAccountBackups.length < 1
   const showSkipOption =
     !activeAccountBackups?.length &&
@@ -113,7 +123,7 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
               emphasis={ButtonEmphasis.Tertiary}
               label={t('I already backed up')}
               name={ElementName.Next}
-              onPress={onPressNext}
+              onPress={onPressSkipBack}
             />
           ) : (
             <Button
@@ -149,6 +159,39 @@ function BackupOptions({
     checkICloudAvailable()
   }, [])
 
+  const onPressICloudBackup = (): void => {
+    if (!iCloudAvailable) {
+      Alert.alert(
+        t('iCloud Drive not available'),
+        t(
+          'Please verify that you are logged in to an Apple ID with iCloud Drive enabled on this device and try again.'
+        ),
+        [
+          { text: t('Go to settings'), onPress: openSettings, style: 'default' },
+          { text: t('Not now'), style: 'cancel' },
+        ]
+      )
+      return
+    }
+    sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
+      element: ElementName.AddiCloudBackup,
+      screen: OnboardingScreens.Backup,
+    })
+    navigate({
+      name: OnboardingScreens.BackupCloudPassword,
+      params,
+      merge: true,
+    })
+  }
+
+  const onPressManualBackup = (): void => {
+    sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
+      element: ElementName.AddManualBackup,
+      screen: OnboardingScreens.Backup,
+    })
+    navigate({ name: OnboardingScreens.BackupManual, params, merge: true })
+  }
+
   return (
     <Flex gap="none" spacerProps={spacerProps}>
       <BackupOptionButton
@@ -156,36 +199,14 @@ function BackupOptions({
         completed={backupMethods?.includes(BackupType.Cloud)}
         label={t('iCloud backup')}
         name={ElementName.AddiCloudBackup}
-        onPress={(): void => {
-          if (!iCloudAvailable) {
-            Alert.alert(
-              t('iCloud Drive not available'),
-              t(
-                'Please verify that you are logged in to an Apple ID with iCloud Drive enabled on this device and try again.'
-              ),
-              [
-                { text: t('Go to settings'), onPress: openSettings, style: 'default' },
-                { text: t('Not now'), style: 'cancel' },
-              ]
-            )
-            return
-          }
-
-          navigate({
-            name: OnboardingScreens.BackupCloudPassword,
-            params,
-            merge: true,
-          })
-        }}
+        onPress={onPressICloudBackup}
       />
       <BackupOptionButton
         Icon={PencilIcon}
         completed={backupMethods?.includes(BackupType.Manual)}
         label={t('Manual backup')}
         name={ElementName.AddManualBackup}
-        onPress={(): void => {
-          navigate({ name: OnboardingScreens.BackupManual, params, merge: true })
-        }}
+        onPress={onPressManualBackup}
       />
     </Flex>
   )

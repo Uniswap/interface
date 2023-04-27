@@ -1,4 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
+import { SharedEventName } from '@uniswap/analytics-events'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert, Image, StyleSheet } from 'react-native'
@@ -13,6 +14,7 @@ import { useBiometricAppSettings } from 'src/features/biometrics/hooks'
 import { promptPushPermission } from 'src/features/notifications/Onesignal'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { OnboardingEntryPoint } from 'src/features/onboarding/utils'
+import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { ElementName } from 'src/features/telemetry/constants'
 import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
 import { useNativeAccountExists } from 'src/features/wallet/hooks'
@@ -46,6 +48,10 @@ export function NotificationsSetupScreen({ navigation, route: { params } }: Prop
   const hasSeedPhrase = useNativeAccountExists()
 
   const onPressNext = (): void => {
+    sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
+      element: ElementName.Skip,
+      screen: OnboardingScreens.Notifications,
+    })
     navigateToNextScreen()
   }
 
@@ -60,6 +66,10 @@ export function NotificationsSetupScreen({ navigation, route: { params } }: Prop
           })
         )
       )
+      sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
+        element: ElementName.Enable,
+        screen: OnboardingScreens.Notifications,
+      })
       navigateToNextScreen()
     }, showNotificationSettingsAlert)
   }

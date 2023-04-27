@@ -1,6 +1,7 @@
 import { useFocusEffect } from '@react-navigation/core'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { useResponsiveProp } from '@shopify/restyle'
+import { SharedEventName } from '@uniswap/analytics-events'
 import { TFunction } from 'i18next'
 import React, { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -18,6 +19,7 @@ import { importAccountActions } from 'src/features/import/importAccountSaga'
 import { ImportAccountType } from 'src/features/import/types'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { ImportType, OnboardingEntryPoint } from 'src/features/onboarding/utils'
+import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { ElementName } from 'src/features/telemetry/constants'
 import { Account, AccountType } from 'src/features/wallet/accounts/types'
 import { createAccountActions } from 'src/features/wallet/createAccountSaga'
@@ -142,7 +144,11 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props): JS
     })
   }
 
-  const handleOnPress = (nav: OnboardingScreens, importType: ImportType): void => {
+  const handleOnPress = (
+    nav: OnboardingScreens,
+    importType: ImportType,
+    elementName: ElementName
+  ): void => {
     // Delete any pending accounts before entering flow.
     dispatch(pendingAccountActions.trigger(PendingAccountActions.DELETE))
     if (importType === ImportType.CreateNew) {
@@ -153,6 +159,11 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props): JS
       handleOnPressRestoreBackup()
       return
     }
+
+    sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
+      element: elementName,
+      screen: OnboardingScreens.ImportMethod,
+    })
 
     navigation.navigate({
       name: nav,
@@ -176,7 +187,7 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props): JS
             icon={icon(theme)}
             name={name}
             title={title(t)}
-            onPress={(): void => handleOnPress(nav, importType)}
+            onPress={(): void => handleOnPress(nav, importType, name)}
           />
         ))}
       </Flex>
@@ -185,7 +196,11 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props): JS
           color="accentAction"
           variant="buttonLabelMedium"
           onPress={(): void =>
-            handleOnPress(OnboardingScreens.RestoreCloudBackup, ImportType.Restore)
+            handleOnPress(
+              OnboardingScreens.RestoreCloudBackup,
+              ImportType.Restore,
+              ElementName.OnboardingImportBackup
+            )
           }>
           {t('Restore from iCloud')}
         </Text>

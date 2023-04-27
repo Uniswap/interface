@@ -1,4 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
+import { SharedEventName } from '@uniswap/analytics-events'
 import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert, StyleSheet } from 'react-native'
@@ -17,6 +18,7 @@ import {
 import { setRequiredForTransactions } from 'src/features/biometrics/slice'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { ImportType } from 'src/features/onboarding/utils'
+import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { ElementName } from 'src/features/telemetry/constants'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { openSettings } from 'src/utils/linking'
@@ -38,6 +40,11 @@ export function SecuritySetupScreen({ navigation, route: { params } }: Props): J
   }, [navigation, params])
 
   const onMaybeLaterPressed = useCallback(() => {
+    sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
+      element: ElementName.Skip,
+      screen: OnboardingScreens.Security,
+    })
+
     if (params?.importType === ImportType.Watch) {
       onPressNext()
     } else {
@@ -48,6 +55,11 @@ export function SecuritySetupScreen({ navigation, route: { params } }: Props): J
   const onPressEnableSecurity = useCallback(async () => {
     const authStatus = await tryLocalAuthenticate({
       disableDeviceFallback: true,
+    })
+
+    sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
+      element: ElementName.Enable,
+      screen: OnboardingScreens.Security,
     })
 
     if (

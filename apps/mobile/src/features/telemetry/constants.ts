@@ -94,6 +94,15 @@ export const enum ModalName {
 }
 
 /**
+ * Views not within the navigation stack that we still want to
+ * log Pageview events for. (Usually presented as nested views within another screen)
+ */
+export const enum ManualPageViewScreen {
+  WriteDownRecoveryPhrase = 'WriteDownRecoveryPhrase',
+  ConfirmRecoveryPhrase = 'ConfirmRecoveryPhrase',
+}
+
+/**
  * Known element names for telemetry purposes.
  * Use to identify low-level components given a TraceContext
  */
@@ -103,6 +112,7 @@ export const enum ElementName {
   AddManualBackup = 'add-manual-backup',
   AddViewOnlyWallet = 'add-view-only-wallet',
   AddiCloudBackup = 'add-icloud-backup',
+  AddBackupNone = 'add-backup-none',
   Back = 'back',
   Buy = 'buy',
   Cancel = 'cancel',

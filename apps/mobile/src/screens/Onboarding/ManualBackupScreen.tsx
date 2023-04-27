@@ -1,5 +1,6 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { useResponsiveProp } from '@shopify/restyle'
+import { SharedEventName } from '@uniswap/analytics-events'
 import { addScreenshotListener } from 'expo-screen-capture'
 import React, { useEffect, useReducer, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -18,7 +19,8 @@ import { MnemonicTest } from 'src/components/mnemonic/MnemonicTest'
 import WarningModal from 'src/components/modals/WarningModal/WarningModal'
 import { useLockScreenOnBlur } from 'src/features/authentication/lockScreenContext'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
-import { ElementName, ModalName } from 'src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'src/features/telemetry'
+import { ElementName, ManualPageViewScreen, ModalName } from 'src/features/telemetry/constants'
 import { BackupType, SignerMnemonicAccount } from 'src/features/wallet/accounts/types'
 import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
 import { useActiveAccount } from 'src/features/wallet/hooks'
@@ -88,6 +90,21 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
     xs: t('Confirm your recovery phrase') + '. ' + t('Select the missing words in order.'),
     sm: t('Select the missing words in order.'),
   })
+
+  // Manually log as page views as these screens are not captured in navigation events
+  useEffect(() => {
+    switch (view) {
+      case View.View:
+        sendAnalyticsEvent(SharedEventName.PAGE_VIEWED, {
+          screen: ManualPageViewScreen.WriteDownRecoveryPhrase,
+        })
+        break
+      case View.Test:
+        sendAnalyticsEvent(SharedEventName.PAGE_VIEWED, {
+          screen: ManualPageViewScreen.ConfirmRecoveryPhrase,
+        })
+    }
+  }, [view])
 
   switch (view) {
     case View.Education:
