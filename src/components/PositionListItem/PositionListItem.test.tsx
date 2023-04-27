@@ -10,23 +10,10 @@ import { render } from 'test-utils/render'
 
 import PositionListItem from '.'
 
-jest.mock('hooks/usePools')
-
-jest.mock('utils/unwrappedToken')
-
-jest.mock('hooks/Tokens')
-
 jest.mock('components/DoubleLogo')
-
-jest.mock('@web3-react/core', () => {
-  const web3React = jest.requireActual('@web3-react/core')
-  return {
-    ...web3React,
-    useWeb3React: () => ({
-      chainId: 1,
-    }),
-  }
-})
+jest.mock('hooks/Tokens')
+jest.mock('hooks/usePools')
+jest.mock('utils/unwrappedToken')
 
 beforeEach(() => {
   mocked(useToken).mockImplementation((tokenAddress?: string | null | undefined) => {

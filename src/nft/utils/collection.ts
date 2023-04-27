@@ -27,4 +27,7 @@ export const blocklistedCollections = [
   '0xd5eeac01b0d1d929d6cffaaf78020af137277293',
   '0x85c08fffa9510f87019efdcf986301873cbb10d6',
   '0x32d7e58933fceea6b73a13f8e30605d80915b616',
+  '0x85c08fffa9510f87019efdcf986301873cbb10d6',
+  '0xd5eeac01b0d1d929d6cffaaf78020af137277293',
+  '0x88e49f9fd4cc3d30f2f46c652f59fb52c4874f23',
 ]
