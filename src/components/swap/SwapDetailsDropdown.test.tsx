@@ -26,7 +26,7 @@ describe('SwapDetailsDropdown.tsx', () => {
     expect(asFragment()).toMatchSnapshot()
   })
 
-  it('loading state contains expected elements', () => {
+  it('renders loading state', () => {
     render(
       <SwapDetailsDropdown trade={undefined} syncing={true} loading={true} allowedSlippage={TEST_ALLOWED_SLIPPAGE} />
     )
