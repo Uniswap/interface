@@ -4,21 +4,19 @@ import { BrowserEvent, InterfaceElementName, SwapEventName } from '@uniswap/anal
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import AnimatedDropdown from 'components/AnimatedDropdown'
-import Card, { OutlineCard } from 'components/Card'
+import { OutlineCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
 import { LoadingOpacityContainer } from 'components/Loader/styled'
 import Row, { RowBetween, RowFixed } from 'components/Row'
-import { MouseoverTooltipContent } from 'components/Tooltip'
 import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
 import { useState } from 'react'
-import { ChevronDown, Info } from 'react-feather'
+import { ChevronDown } from 'react-feather'
 import { InterfaceTrade } from 'state/routing/types'
 import styled, { keyframes, useTheme } from 'styled-components/macro'
-import { HideSmall, ThemedText } from 'theme'
+import { ThemedText } from 'theme'
 
 import { AdvancedSwapDetails } from './AdvancedSwapDetails'
 import GasEstimateBadge from './GasEstimateBadge'
-import { ResponsiveTooltipContainer } from './styleds'
 import SwapRoute from './SwapRoute'
 import TradePrice from './TradePrice'
 
@@ -29,13 +27,6 @@ const Wrapper = styled(Row)`
   padding: 8px 12px;
   margin-top: 0;
   min-height: 32px;
-`
-
-const StyledInfoIcon = styled(Info)`
-  height: 16px;
-  width: 16px;
-  margin-right: 4px;
-  color: ${({ theme }) => theme.textTertiary};
 `
 
 const StyledCard = styled(OutlineCard)`
@@ -128,35 +119,13 @@ export default function SwapDetailsDropdown({ trade, syncing, loading, allowedSl
           shouldLogImpression={!showDetails}
         >
           <StyledHeaderRow onClick={() => setShowDetails(!showDetails)} disabled={!trade} open={showDetails}>
-            <RowFixed style={{ position: 'relative' }}>
-              {loading || syncing ? (
+            <RowFixed style={{ position: 'relative' }} align="center">
+              {Boolean(loading || syncing) && (
                 <StyledPolling>
                   <StyledPollingDot>
                     <Spinner />
                   </StyledPollingDot>
                 </StyledPolling>
-              ) : (
-                <HideSmall>
-                  <MouseoverTooltipContent
-                    wrap={false}
-                    content={
-                      <ResponsiveTooltipContainer origin="top right" style={{ padding: '0' }}>
-                        <Card padding="12px">
-                          <AdvancedSwapDetails
-                            trade={trade}
-                            allowedSlippage={allowedSlippage}
-                            syncing={syncing}
-                            hideInfoTooltips={true}
-                          />
-                        </Card>
-                      </ResponsiveTooltipContainer>
-                    }
-                    placement="bottom"
-                    disableHover={showDetails}
-                  >
-                    <StyledInfoIcon color={trade ? theme.textTertiary : theme.deprecated_bg3} />
-                  </MouseoverTooltipContent>
-                </HideSmall>
               )}
               {trade ? (
                 <LoadingOpacityContainer $loading={syncing}>

@@ -18,8 +18,18 @@
     <meta name="theme-color" content="#FC72FF" />
     <meta
       http-equiv="Content-Security-Policy"
-      content="script-src 'self' https://www.google-analytics.com https://www.googletagmanager.com 'unsafe-inline'"
+      <% if (process.env.REACT_APP_CSP_ALLOW_UNSAFE_EVAL) { %>
+        content="script-src 'self' https://www.google-analytics.com https://www.googletagmanager.com 'unsafe-inline' 'unsafe-eval'"
+      <% } else { %>
+        content="script-src 'self' https://www.google-analytics.com https://www.googletagmanager.com 'unsafe-inline'"
+      <% } %>
     />
+
+    <!-- 
+      Apple Smart App Banner for Safari on iOS
+      https://developer.apple.com/documentation/webkit/promoting_apps_with_smart_app_banners
+     -->
+    <meta name="apple-itunes-app" content="app-id=6443944476">
 
     <!--
       manifest.json provides metadata used when the app is installed as a PWA.

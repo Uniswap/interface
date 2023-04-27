@@ -1,4 +1,4 @@
-import assert = require('assert')
+import assert from 'assert'
 
 describe('Service Worker', () => {
   before(() => {

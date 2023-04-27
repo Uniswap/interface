@@ -15,7 +15,7 @@ import { ApplicationModal } from 'state/application/reducer'
 import styled, { useTheme } from 'styled-components/macro'
 import { CloseIcon, ThemedText } from 'theme'
 
-import uniPng from '../../assets/images/uniwallet.svg'
+import uniPng from '../../assets/images/uniwallet_modal_icon.png'
 import { DownloadButton } from './DownloadButton'
 
 const UniwalletConnectWrapper = styled(RowBetween)`
@@ -88,8 +88,8 @@ export default function UniwalletModal() {
               fgColor={theme.darkMode ? theme.backgroundSurface : theme.black}
               imageSettings={{
                 src: uniPng,
-                height: 27,
-                width: 27,
+                height: 33,
+                width: 33,
                 excavate: false,
               }}
             />

@@ -187,7 +187,7 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
         data-testid="open-settings-dialog-button"
         aria-label={t`Transaction Settings`}
       >
-        <StyledMenuIcon />
+        <StyledMenuIcon data-testid="swap-settings-button" />
         {expertMode && (
           <EmojiWrapper>
             <span role="img" aria-label="wizard-icon">
