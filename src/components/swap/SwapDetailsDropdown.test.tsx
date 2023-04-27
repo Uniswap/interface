@@ -3,16 +3,6 @@ import { fireEvent, render, screen } from 'test-utils/render'
 
 import SwapDetailsDropdown from './SwapDetailsDropdown'
 
-jest.mock('@web3-react/core', () => {
-  const web3React = jest.requireActual('@web3-react/core')
-  return {
-    ...web3React,
-    useWeb3React: () => ({
-      chainId: 1,
-    }),
-  }
-})
-
 describe('SwapDetailsDropdown.tsx', () => {
   it('renders a trade', () => {
     const { asFragment } = render(
