@@ -2,13 +2,13 @@
 
 exports[`SwapModalFooter.tsx matches base snapshot, test trade exact input 1`] = `
 <DocumentFragment>
-  .c2 {
+  .c3 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
 }
 
-.c3 {
+.c4 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -25,7 +25,7 @@ exports[`SwapModalFooter.tsx matches base snapshot, test trade exact input 1`] =
   justify-content: space-between;
 }
 
-.c1 {
+.c2 {
   color: #0D111C;
 }
 
@@ -42,118 +42,121 @@ exports[`SwapModalFooter.tsx matches base snapshot, test trade exact input 1`] =
   -ms-flex-pack: start;
   justify-content: flex-start;
   gap: 12px;
-  padding: 0 0.5rem;
 }
 
-.c7 {
+.c8 {
   display: inline-block;
   height: inherit;
 }
 
-.c4 {
+.c5 {
   color: #7780A0;
-  margin-right: 0.5rem;
+  margin-right: 8px;
   max-width: 75%;
 }
 
-.c5 {
+.c6 {
   color: #0D111C;
   text-align: end;
 }
 
-.c6 {
+.c7 {
   max-width: 45%;
   overflow-wrap: break-word;
 }
 
+.c1 {
+  padding: 0 8px;
+}
+
 <div
-    class="c0"
+    class="c0 c1"
   >
     <div
-      class="c1 css-zhpkf8"
+      class="c2 css-zhpkf8"
     >
       <div
-        class="c2 c3"
+        class="c3 c4"
       >
         <span
-          class="c4"
+          class="c5"
         >
           Exchange rate
         </span>
         <span
-          class="c5 c6"
+          class="c6 c7"
         >
           1 DEF = 1.00 ABC 
         </span>
       </div>
     </div>
     <div
-      class="c1 css-zhpkf8"
+      class="c2 css-zhpkf8"
     >
       <div
-        class="c2 c3"
+        class="c3 c4"
       >
         <div
-          class="c7"
+          class="c8"
         >
           <div>
             <span
-              class="c4"
+              class="c5"
             >
               Network fee
             </span>
           </div>
         </div>
         <span
-          class="c5 c6"
+          class="c6 c7"
         >
           ~-
         </span>
       </div>
     </div>
     <div
-      class="c1 css-zhpkf8"
+      class="c2 css-zhpkf8"
     >
       <div
-        class="c2 c3"
+        class="c3 c4"
       >
         <div
-          class="c7"
+          class="c8"
         >
           <div>
             <span
-              class="c4"
+              class="c5"
             >
               Price impact
             </span>
           </div>
         </div>
         <span
-          class="c5 c6"
+          class="c6 c7"
         >
           105566.373%
         </span>
       </div>
     </div>
     <div
-      class="c1 css-zhpkf8"
+      class="c2 css-zhpkf8"
     >
       <div
-        class="c2 c3"
+        class="c3 c4"
       >
         <div
-          class="c7"
+          class="c8"
         >
           <div>
             <span
-              class="c4"
+              class="c5"
             >
               Minimum received
             </span>
           </div>
         </div>
         <span
-          class="c5 c6"
+          class="c6 c7"
         >
           0.00000000000000098 DEF
         </span>
