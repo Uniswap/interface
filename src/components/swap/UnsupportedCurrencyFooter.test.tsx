@@ -2,7 +2,7 @@ import userEvent from '@testing-library/user-event'
 import { Token } from '@uniswap/sdk-core'
 import { useUnsupportedTokens } from 'hooks/Tokens'
 import { mocked } from 'test-utils/mocked'
-import { fireEvent, render, screen, waitForElementToBeRemoved, within } from 'test-utils/render'
+import { act, render, screen, waitForElementToBeRemoved, within } from 'test-utils/render'
 import { getExplorerLink } from 'utils/getExplorerLink'
 
 import UnsupportedCurrencyFooter from './UnsupportedCurrencyFooter'
@@ -13,13 +13,12 @@ const unsupportedToken = new Token(1, unsupportedTokenAddress, 18, 'ALTDOM-MAR20
 const unsupportedTokenExplorerLink = 'www.blahblah.com'
 
 jest.mock('../../hooks/Tokens')
-
 jest.mock('../../utils/getExplorerLink')
 
 describe('UnsupportedCurrencyFooter.tsx with unsupported tokens', () => {
   beforeEach(() => {
-    mocked(useUnsupportedTokens).mockImplementation(() => ({ [unsupportedTokenAddress]: unsupportedToken }))
-    mocked(getExplorerLink).mockImplementation(() => unsupportedTokenExplorerLink)
+    mocked(useUnsupportedTokens).mockReturnValue({ [unsupportedTokenAddress]: unsupportedToken })
+    mocked(getExplorerLink).mockReturnValue(unsupportedTokenExplorerLink)
   })
 
   it('renders', () => {
@@ -48,23 +47,23 @@ describe('UnsupportedCurrencyFooter.tsx with unsupported tokens', () => {
     expect(
       rendered.queryByText((content) => content.startsWith('Some assets are not available through this interface'))
     ).toBeNull()
-  }, 10_000)
+  })
 })
 
 describe('UnsupportedCurrencyFooter.tsx with no unsupported tokens', () => {
   beforeEach(() => {
-    mocked(useUnsupportedTokens).mockImplementation(() => ({}))
+    mocked(useUnsupportedTokens).mockReturnValue({})
   })
 
   it('works as expected when no unsupported tokens exist', async () => {
     const rendered = render(<UnsupportedCurrencyFooter show={true} currencies={[unsupportedToken]} />)
-    fireEvent.click(screen.getByTestId('read-more-button'))
+    await act(() => userEvent.click(screen.getByTestId('read-more-button')))
     expect(screen.getByText('Unsupported Assets')).toBeInTheDocument()
     expect(
       screen.getByText((content) => content.startsWith('Some assets are not available through this interface'))
     ).toBeInTheDocument()
     expect(rendered.queryByTestId('unsupported-token-card')).toBeNull()
-    fireEvent.click(screen.getByTestId('close-icon'))
+    await act(() => userEvent.click(screen.getByTestId('close-icon')))
     await waitForElementToBeRemoved(screen.getByText('Unsupported Assets'))
     expect(rendered.queryByText('Unsupported Assets')).toBeNull()
     expect(
