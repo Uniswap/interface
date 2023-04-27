@@ -1,5 +1,6 @@
+import userEvent from '@testing-library/user-event'
 import { TEST_ALLOWED_SLIPPAGE, TEST_TOKEN_1, TEST_TRADE_EXACT_INPUT, toCurrencyAmount } from 'test-utils/constants'
-import { fireEvent, render, screen } from 'test-utils/render'
+import { render, screen } from 'test-utils/render'
 
 import SwapDetailsDropdown from './SwapDetailsDropdown'
 
@@ -23,7 +24,7 @@ describe('SwapDetailsDropdown.tsx', () => {
     expect(screen.getByText('Fetching best price...')).toBeInTheDocument()
   })
 
-  it('is interactive once loaded', () => {
+  it('is interactive once loaded', async () => {
     TEST_TRADE_EXACT_INPUT.gasUseEstimateUSD = toCurrencyAmount(TEST_TOKEN_1, 1)
     render(
       <SwapDetailsDropdown
@@ -35,7 +36,7 @@ describe('SwapDetailsDropdown.tsx', () => {
     )
     expect(screen.getByTestId('swap-details-header-row')).toBeInTheDocument()
     expect(screen.getByTestId('trade-price-container')).toBeInTheDocument()
-    fireEvent.click(screen.getByTestId('swap-details-header-row'))
+    userEvent.click(screen.getByTestId('swap-details-header-row'))
     expect(screen.getByTestId('advanced-swap-details')).toBeInTheDocument()
     expect(screen.getByTestId('swap-route-info')).toBeInTheDocument()
   })
