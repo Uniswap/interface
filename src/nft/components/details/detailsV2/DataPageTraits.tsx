@@ -3,52 +3,13 @@ import Column from 'components/Column'
 import { ScrollBarStyles } from 'components/Common'
 import Row from 'components/Row'
 import { GenieAsset, Trait } from 'nft/types'
-import { formatEth } from 'nft/utils'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { opacify } from 'theme/utils'
 
-import { RarityGraph } from './RarityGraph'
 import { Tab, TabbedComponent } from './TabbedComponent'
-
-const SubheaderTiny = styled.div`
-  font-size: 10px;
-  line-height: 16px;
-  font-weight: 600;
-  color: ${({ theme }) => theme.textSecondary};
-`
-
-const TraitValue = styled(Column)`
-  gap: 4px;
-  flex: 3;
-`
-
-const TraitRowValue = styled(ThemedText.BodySmall)<{ $flex?: number; alignRight?: boolean }>`
-  display: flex;
-  line-height: 20px;
-  padding-top: 20px;
-  flex: ${({ $flex }) => $flex ?? 1};
-  ${({ alignRight }) => alignRight && 'justify-content: flex-end'};
-`
-
-const TraitRow = ({ trait }: { trait: Trait }) => {
-  // TODO: Replace with actual rarity, count, and floor price when BE supports
-  const randomRarity = Math.random()
-  return (
-    <Row padding="12px 0px">
-      <TraitValue>
-        <SubheaderTiny>{trait.trait_type}</SubheaderTiny>{' '}
-        <ThemedText.BodyPrimary lineHeight="20px">{trait.trait_value}</ThemedText.BodyPrimary>
-      </TraitValue>
-      <TraitRowValue $flex={2}>{formatEth(randomRarity * 1000)} ETH</TraitRowValue>
-      <TraitRowValue>{Math.round(randomRarity * 10000)}</TraitRowValue>
-      <TraitRowValue $flex={1.5} alignRight={true}>
-        <RarityGraph trait={trait} rarity={randomRarity} />
-      </TraitRowValue>
-    </Row>
-  )
-}
+import { TraitRow } from './TraitRow'
 
 const TraitsHeaderContainer = styled(Row)`
   padding-right: 12px;
@@ -89,6 +50,28 @@ const Scrim = styled.div<{ isBottom?: boolean }>`
 `
 
 const TraitsContent = ({ traits }: { traits?: Trait[] }) => {
+  const [userCanScroll, setUserCanScroll] = useState(false)
+  const [scrollProgress, setScrollProgress] = useState(0)
+  const scrollRef = (node: HTMLDivElement) => {
+    if (node !== null) {
+      const canScroll = node.scrollHeight > node.clientHeight
+      canScroll !== userCanScroll && setUserCanScroll(canScroll)
+    }
+  }
+
+  const scrollHandler = (event: React.UIEvent<HTMLDivElement>) => {
+    const scrollTop = event.currentTarget.scrollTop
+    const containerHeight = event.currentTarget.clientHeight
+    const scrollHeight = event.currentTarget.scrollHeight
+
+    setScrollProgress(scrollTop ? ((scrollTop + containerHeight) / scrollHeight) * 100 : 0)
+  }
+
+  // This is needed to prevent rerenders when handling scrolls
+  const traitRows = useMemo(() => {
+    return traits?.map((trait) => <TraitRow trait={trait} key={trait.trait_type + ':' + trait.trait_value} />)
+  }, [traits])
+
   return (
     <Column>
       <TraitsHeaderContainer>
@@ -106,13 +89,11 @@ const TraitsContent = ({ traits }: { traits?: Trait[] }) => {
         </TraitsHeader>
       </TraitsHeaderContainer>
       <TraitRowContainer>
-        <Scrim />
-        <TraitRowScrollableContainer>
-          {traits?.map((trait) => (
-            <TraitRow trait={trait} key={trait.trait_type + ':' + trait.trait_value} />
-          ))}
+        {scrollProgress > 0 && <Scrim />}
+        <TraitRowScrollableContainer ref={scrollRef} onScroll={scrollHandler}>
+          {traitRows}
         </TraitRowScrollableContainer>
-        <Scrim isBottom={true} />
+        {userCanScroll && scrollProgress !== 100 && <Scrim isBottom={true} />}
       </TraitRowContainer>
     </Column>
   )
