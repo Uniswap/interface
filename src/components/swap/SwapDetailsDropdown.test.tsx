@@ -14,7 +14,7 @@ jest.mock('@web3-react/core', () => {
 })
 
 describe('SwapDetailsDropdown.tsx', () => {
-  it('matches base snapshot', () => {
+  it('renders a trade', () => {
     const { asFragment } = render(
       <SwapDetailsDropdown
         trade={TEST_TRADE_EXACT_INPUT}
