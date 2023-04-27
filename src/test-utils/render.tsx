@@ -1,8 +1,8 @@
 import { MockedProvider } from '@apollo/client/testing'
 import { i18n } from '@lingui/core'
 import { I18nProvider } from '@lingui/react'
-import { render, renderHook } from '@testing-library/react'
-import Web3Provider from 'components/Web3Provider'
+import { queries } from '@testing-library/dom'
+import { render, renderHook, RenderHookOptions, RenderOptions } from '@testing-library/react'
 import { DEFAULT_LOCALE } from 'constants/locales'
 import { BlockNumberProvider } from 'lib/hooks/useBlockNumber'
 import catalog from 'locales/en-US'
@@ -21,8 +21,8 @@ i18n.loadLocaleData({
   [DEFAULT_LOCALE]: { plurals: en },
 })
 i18n.activate(DEFAULT_LOCALE)
-
 const MockedI18nProvider = ({ children }: any) => <I18nProvider i18n={i18n}>{children}</I18nProvider>
+
 const queryClient = new QueryClient()
 
 const WithProviders = ({ children }: { children?: ReactNode }) => {
@@ -31,13 +31,15 @@ const WithProviders = ({ children }: { children?: ReactNode }) => {
       <Provider store={store}>
         <QueryClientProvider client={queryClient}>
           <HashRouter>
-            <Web3Provider>
-              <MockedProvider>
-                <BlockNumberProvider>
-                  <ThemeProvider>{children}</ThemeProvider>
-                </BlockNumberProvider>
-              </MockedProvider>
-            </Web3Provider>
+            {/*
+             * Web3Provider is mocked through setupTests.ts
+             * To test behavior that depends on Web3Provider, use jest.unmock('@web3-react/core')
+             */}
+            <MockedProvider>
+              <BlockNumberProvider>
+                <ThemeProvider>{children}</ThemeProvider>
+              </BlockNumberProvider>
+            </MockedProvider>
           </HashRouter>
         </QueryClientProvider>
       </Provider>
@@ -45,9 +47,18 @@ const WithProviders = ({ children }: { children?: ReactNode }) => {
   )
 }
 
-const customRender = (ui: ReactElement) => render(ui, { wrapper: WithProviders })
-const customRenderHook = <Result, Props>(hook: (initialProps: Props) => Result) =>
-  renderHook(hook, { wrapper: WithProviders })
+type CustomRenderOptions = Omit<RenderOptions, 'wrapper'>
+const customRender = (ui: ReactElement, options?: CustomRenderOptions) => {
+  return render<typeof queries>(ui, { ...options, wrapper: WithProviders })
+}
+
+type CustomRenderHookOptions<Props> = Omit<RenderHookOptions<Props>, 'wrapper'>
+const customRenderHook = <Result, Props>(
+  hook: (initialProps: Props) => Result,
+  options?: CustomRenderHookOptions<Props>
+) => {
+  return renderHook(hook, { ...options, wrapper: WithProviders })
+}
 
 export * from '@testing-library/react'
 export { customRender as render }

@@ -16,7 +16,7 @@ try {
 }
 
 // The last recorded size for these assets, as reported by `yarn build`.
-const LAST_SIZE_MAIN_KB = 420
+const LAST_SIZE_MAIN_KB = 435
 
 // This is the async-loaded js, called <number>.<hash>.js, with a matching css file.
 const LAST_SIZE_ENTRY_KB = 1442

@@ -33,9 +33,11 @@ function buildTokenList(count: number): TokenList {
 
 describe('shouldAcceptMinorVersionUpdate', () => {
   it('returns false for patch when tokens have changed', () => {
+    jest.spyOn(console, 'debug').mockReturnValue(undefined)
     expect(shouldAcceptVersionUpdate('test_list', buildTokenList(1), buildTokenList(2), VersionUpgrade.PATCH)).toEqual(
       false
     )
+    expect(console.debug).toHaveBeenCalledWith(expect.stringMatching(/should have been MAJOR/))
   })
 
   it('returns true for patch when tokens are the same', () => {
@@ -57,8 +59,10 @@ describe('shouldAcceptMinorVersionUpdate', () => {
   })
 
   it('returns false for minor version bump with tokens removed', () => {
+    jest.spyOn(console, 'debug').mockReturnValue(undefined)
     expect(shouldAcceptVersionUpdate('test_list', buildTokenList(2), buildTokenList(1), VersionUpgrade.MINOR)).toEqual(
       false
     )
+    expect(console.debug).toHaveBeenCalledWith(expect.stringMatching(/should have been MAJOR/))
   })
 })

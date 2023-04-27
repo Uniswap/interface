@@ -1,0 +1,539 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SwapModalHeader.tsx matches base snapshot, test trade exact input 1`] = `
+<DocumentFragment>
+  .c1 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  padding: 0.75rem 1rem;
+}
+
+.c5 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c6 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c8 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 0px;
+}
+
+.c16 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: flex-end;
+  -webkit-box-align: flex-end;
+  -ms-flex-align: flex-end;
+  align-items: flex-end;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c7 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c9 {
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  margin: -0px;
+}
+
+.c21 {
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+}
+
+.c18 {
+  color: #0D111C;
+}
+
+.c26 {
+  color: #7780A0;
+}
+
+.c24 {
+  width: 100%;
+  height: 1px;
+  background-color: #D2D9EE;
+}
+
+.c2 {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: 16px;
+}
+
+.c19 {
+  width: 100%;
+  padding: 1rem;
+  border-radius: 16px;
+}
+
+.c3 {
+  border: 1px solid #E8ECFB;
+  background-color: #F5F6FC;
+}
+
+.c0 {
+  display: grid;
+  grid-auto-rows: auto;
+  grid-row-gap: 4px;
+}
+
+.c4 {
+  display: grid;
+  grid-auto-rows: auto;
+  grid-row-gap: 8px;
+}
+
+.c25 {
+  display: grid;
+  grid-auto-rows: auto;
+  grid-row-gap: 8px;
+  justify-items: flex-start;
+}
+
+.c13 {
+  border-radius: 12px;
+  border-radius: 12px;
+  height: 24px;
+  width: 50%;
+  width: 50%;
+  -webkit-animation: fAQEyV 1.5s infinite;
+  animation: fAQEyV 1.5s infinite;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  background: linear-gradient( to left,#E8ECFB 25%,#fff 50%,#E8ECFB 75% );
+  will-change: background-position;
+  background-size: 400%;
+}
+
+.c22 {
+  display: inline-block;
+  height: inherit;
+}
+
+.c14 {
+  border-radius: 4px;
+  width: 4rem;
+  height: 1rem;
+}
+
+.c12 {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: radial-gradient(white 60%,#ffffff00 calc(70% + 1px));
+  box-shadow: 0 0 1px white;
+}
+
+.c11 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.c17 {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  padding: 0;
+  grid-template-columns: 1fr auto;
+  grid-gap: 0.25rem;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  text-align: left;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  padding: 8px 0;
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+
+.c23 {
+  color: #7780A0;
+}
+
+.c10 {
+  text-overflow: ellipsis;
+  max-width: 220px;
+  overflow: hidden;
+  text-align: right;
+}
+
+.c20 {
+  padding: 0;
+}
+
+.c15 {
+  padding: 4px;
+  border-radius: 12px;
+  height: 40px;
+  width: 40px;
+  position: relative;
+  margin-top: -18px;
+  margin-bottom: -18px;
+  left: calc(50% - 16px);
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background-color: #FFFFFF;
+  border: 4px solid;
+  border-color: #F5F6FC;
+  z-index: 2;
+}
+
+<div
+    class="c0"
+    style="margin-top: 1rem;"
+  >
+    <div
+      class="c1 c2 c3"
+    >
+      <div
+        class="c4"
+      >
+        <div
+          class="c5 c6 c7"
+        >
+          <div
+            class="c5 c8 c9"
+          >
+            <div
+              class="c10 css-13xjr5l"
+              data-testid="input-amount"
+            >
+              0.000000000000001
+            </div>
+          </div>
+          <div
+            class="c5 c8 c9"
+          >
+            <div
+              class="c11"
+              style="margin-right: 12px;"
+            >
+              <img
+                alt="ABC logo"
+                class="c12"
+                src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
+              />
+            </div>
+            <div
+              class="css-10ob8xa"
+              data-testid="input-symbol"
+            >
+              ABC
+            </div>
+          </div>
+        </div>
+        <div
+          class="c5 c6 c7"
+        >
+          <div
+            class="css-zhpkf8"
+          >
+            <div
+              class="c13 c14"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="c15"
+    >
+      <svg
+        fill="none"
+        height="16"
+        stroke="#0D111C"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        viewBox="0 0 24 24"
+        width="16"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <line
+          x1="12"
+          x2="12"
+          y1="5"
+          y2="19"
+        />
+        <polyline
+          points="19 12 12 19 5 12"
+        />
+      </svg>
+    </div>
+    <div
+      class="c1 c2 c3"
+      style="margin-bottom: 0.25rem;"
+    >
+      <div
+        class="c4"
+      >
+        <div
+          class="c5 c16 c7"
+        >
+          <div
+            class="c5 c8 c9"
+          >
+            <div
+              class="c10 css-1kwqs79"
+              data-testid="output-amount"
+            >
+              0.000000000000001
+            </div>
+          </div>
+          <div
+            class="c5 c8 c9"
+          >
+            <div
+              class="c11"
+              style="margin-right: 12px;"
+            >
+              <img
+                alt="DEF logo"
+                class="c12"
+                src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
+              />
+            </div>
+            <div
+              class="css-10ob8xa"
+              data-testid="output-symbol"
+            >
+              DEF
+            </div>
+          </div>
+        </div>
+        <div
+          class="c5 c6 c7"
+        >
+          <div
+            class="css-zhpkf8"
+          >
+            <div
+              class="css-zhpkf8"
+            >
+              <div
+                class="c13 c14"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="c5 c6 c7"
+      style="margin-top: 0.25rem; padding: 0px 1rem;"
+    >
+      <button
+        class="c17"
+        title="1 DEF = 1.00 ABC "
+      >
+        <div
+          class="c18 css-zhpkf8"
+        >
+          1 DEF = 1.00 ABC 
+        </div>
+         
+      </button>
+    </div>
+    <div
+      class="c5 c19 c3"
+      style="padding: .75rem; margin-top: 0.5rem;"
+    >
+      <div
+        class="c5 c19 c20"
+      >
+        <div
+          class="c4"
+        >
+          <div
+            class="c5 c6 c7"
+          >
+            <div
+              class="c5 c6 c21"
+            >
+              <div
+                class="c22"
+              >
+                <div>
+                  <div
+                    class="css-zhpkf8"
+                  >
+                    Expected Output
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="c18 css-q4yjm0"
+            >
+              0.000000000000001  DEF
+            </div>
+          </div>
+          <div
+            class="c5 c6 c7"
+          >
+            <div
+              class="c5 c6 c21"
+            >
+              <div
+                class="c22"
+              >
+                <div>
+                  <div
+                    class="css-zhpkf8"
+                  >
+                    Price Impact
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="c18 css-q4yjm0"
+            >
+              <div
+                class="c23 css-1aekuku"
+              >
+                105567.37%
+              </div>
+            </div>
+          </div>
+          <div
+            class="c24"
+          />
+          <div
+            class="c5 c6 c7"
+          >
+            <div
+              class="c5 c6 c21"
+              style="margin-right: 20px;"
+            >
+              <div
+                class="c22"
+              >
+                <div>
+                  <div
+                    class="css-zhpkf8"
+                  >
+                    Minimum received after slippage (2.00%)
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="css-q4yjm0"
+            >
+              0.00000000000000098 DEF
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="c25"
+      style="padding: .75rem 1rem;"
+    >
+      <div
+        class="c26 css-k51stg"
+        style="width: 100%;"
+      >
+        Output is estimated. You will receive at least 
+        <b>
+          0.00000000000000098 DEF
+        </b>
+         or the transaction will revert.
+      </div>
+    </div>
+    <div
+      class="c25"
+      data-testid="recipient-info"
+      style="padding: 12px 0px 0px 0px;"
+    >
+      <div
+        class="c26 css-8mokm4"
+      >
+        Output will be sent to 
+        <b
+          title="0x0000000000000000000000000000000000000004"
+        >
+          0x0000...0004
+        </b>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;

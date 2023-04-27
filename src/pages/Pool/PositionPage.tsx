@@ -346,7 +346,7 @@ const useInverter = ({
   }
 }
 
-function PositionPageUnsupportedContent() {
+export function PositionPageUnsupportedContent() {
   return (
     <PageWrapper>
       <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
