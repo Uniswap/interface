@@ -73,12 +73,7 @@ export const PageTabs = () => {
         </a>
       )}
       {!isMobile && (
-        <a
-          href="https://app.forge.trade/assets"
-          rel="noopener noreferrer"
-          id="pool-nav-link"
-          className={styles.menuItem}
-        >
+        <a href="https://assets.forge.trade/" rel="noopener noreferrer" id="pool-nav-link" className={styles.menuItem}>
           <Trans>Assets</Trans>
         </a>
       )}

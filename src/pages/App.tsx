@@ -22,6 +22,7 @@ import { useIsExpertMode } from '../state/user/hooks'
 import DarkModeQueryParamReader from '../theme/components/DarkModeQueryParamReader'
 import AddLiquidity from './AddLiquidity'
 import { RedirectDuplicateTokenIds } from './AddLiquidity/redirects'
+import RedirectAssets from './Assets'
 import MigrateV2 from './MigrateV2'
 import MigrateV2Pair from './MigrateV2/MigrateV2Pair'
 import NotFound from './NotFound'
@@ -164,6 +165,7 @@ export default function App() {
                 <Route path="swap" element={<Swap />} />
 
                 <Route path="pools" element={<Pools />} />
+                <Route path="assets" element={<RedirectAssets />} />
 
                 <Route path="pool" element={<Pool />} />
                 <Route path="pool/:tokenId" element={<PositionPage />} />
