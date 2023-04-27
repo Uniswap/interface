@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`SwapModalFooter.tsx matches base snapshot 1`] = `
+exports[`SwapModalFooter.tsx renders with a disabled button with no account 1`] = `
 <DocumentFragment>
   .c0 {
   box-sizing: border-box;
