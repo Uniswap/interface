@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`SwapModalHeader.tsx matches base snapshot, test trade exact input 1`] = `
+exports[`SwapModalHeader.tsx matches base snapshot for test trade with exact input 1`] = `
 <DocumentFragment>
   .c1 {
   box-sizing: border-box;
