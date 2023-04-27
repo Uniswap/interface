@@ -32,7 +32,7 @@ export const TraitRow = ({ trait }: { trait: Trait }) => {
   // rarity eventually should be number of items with this trait / total number of items, smaller rarity means more rare
   const randomRarity = Math.random()
   return (
-    <Row padding="12px 0px">
+    <Row padding="12px 8px 12px 0px">
       <TraitValue>
         <SubheaderTiny>{trait.trait_type}</SubheaderTiny>{' '}
         <ThemedText.BodyPrimary lineHeight="20px">{trait.trait_value}</ThemedText.BodyPrimary>
