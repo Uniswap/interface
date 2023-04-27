@@ -519,10 +519,7 @@ export function getSwapCurrencyId(currency: Currency): string {
   if (currency.isToken) {
     return currency.address
   }
-  if (currency.isNative) {
-    return NATIVE_CHAIN_ID
-  }
-  return ''
+  return NATIVE_CHAIN_ID
 }
 
 export const TOKEN_SHORTHANDS: { [shorthand: string]: { [chainId in SupportedChainId]?: string } } = {

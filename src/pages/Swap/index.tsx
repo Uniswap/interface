@@ -53,7 +53,6 @@ import { ArrowWrapper, PageWrapper, SwapCallbackError, SwapWrapper } from '../..
 import SwapHeader from '../../components/swap/SwapHeader'
 import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
 import { getSwapCurrencyId, TOKEN_SHORTHANDS } from '../../constants/tokens'
-import { NATIVE_CHAIN_ID } from '../../constants/tokens'
 import { useCurrency, useDefaultActiveTokens } from '../../hooks/Tokens'
 import { useIsSwapUnsupported } from '../../hooks/useIsSwapUnsupported'
 import useWrapCallback, { WrapErrorText, WrapType } from '../../hooks/useWrapCallback'
@@ -502,7 +501,7 @@ export function Swap({
       onCurrencyChange?.({
         [Field.INPUT]: state[Field.INPUT],
         [Field.OUTPUT]: {
-          currencyId: outputCurrency.isToken ? outputCurrency.address : outputCurrency.isNative ? NATIVE_CHAIN_ID : '',
+          currencyId: getSwapCurrencyId(outputCurrency),
         },
       })
     },
