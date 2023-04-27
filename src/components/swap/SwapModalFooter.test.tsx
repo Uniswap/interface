@@ -7,7 +7,7 @@ const swapErrorMessage = 'swap error'
 const fiatValue = { data: 123, isLoading: false }
 
 describe('SwapModalFooter.tsx', () => {
-  it('matches base snapshot', () => {
+  it('renders with a disabled button with no account', () => {
     const { asFragment } = render(
       <SwapModalFooter
         trade={TEST_TRADE_EXACT_INPUT}
