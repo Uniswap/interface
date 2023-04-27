@@ -161,7 +161,8 @@ export default function TokenDetails({
             address: newDefaultTokenID === 'ETH' ? null : newDefaultTokenID,
             chain,
             inputAddress:
-              // If only one token was selected before we navigate, it becomes the output and we don't need to set an input token.
+              // If only one token was selected before we navigate, then it was the default token and it's being replaced.
+              // On the new page, the *new* default token becomes the output, and we don't have another option to set as the input token.
               tokens[Field.INPUT] && tokens[Field.INPUT]?.currencyId !== newDefaultTokenID
                 ? tokens[Field.INPUT]?.currencyId
                 : null,

@@ -3,7 +3,7 @@ import { SupportedChainId } from 'constants/chains'
 import { nativeOnChain } from 'constants/tokens'
 import { useMemo } from 'react'
 
-export default function useNativeCurrency(chainId: SupportedChainId | undefined): NativeCurrency | Token {
+export default function useNativeCurrency(chainId?: SupportedChainId): NativeCurrency | Token {
   return useMemo(
     () =>
       chainId
