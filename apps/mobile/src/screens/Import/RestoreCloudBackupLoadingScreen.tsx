@@ -58,7 +58,7 @@ export function RestoreCloudBackupLoadingScreen({
     startFetchingICloudBackups()
 
     return setTimeout(() => {
-      logger.error(
+      logger.debug(
         'RestoreCloudBackupLoadingScreen',
         'fetchICloudBackupsWithTimeout',
         `Timed out fetching iCloud backups after ${MAX_LOADING_TIMEOUT_MS}ms`
