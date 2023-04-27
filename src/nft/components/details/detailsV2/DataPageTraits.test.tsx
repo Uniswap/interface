@@ -9,4 +9,4 @@ it('data page trait component does not load with asset with no traits', () => {
 })
 
 // TODO: add test for trait component with asset with traits when rarity is not randomly generated
-// while rarities are randomly generated, snapshots will always never match
+// while rarities are randomly generated, snapshots will never match
