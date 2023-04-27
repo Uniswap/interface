@@ -40,10 +40,17 @@ describe('filterKnownErrors', () => {
     expect(filterKnownErrors(ERROR, { originalException })).toBeNull()
   })
 
-  it('filter errors from OneKey app', () => {
-    const originalException = new Error()
-    originalException.name = 'xd.<anonymous>(/Applications/OneKey.app/Contents/Resources/static/preload.js)'
-    expect(filterKnownErrors(ERROR, { originalException })).toBe(null)
+  describe('OneKey', () => {
+    it('filter errors with OneKey.app', () => {
+      const originalException = new Error()
+      originalException.name = 'xd.<anonymous>(/Applications/OneKey/Contents/Resources/static/preload.js)'
+      expect(filterKnownErrors(ERROR, { originalException })).toBe(null)
+    })
+    it('filter errors with just OneKey', () => {
+      const originalException = new Error()
+      originalException.name = 'xd.<anonymous>(/Applications/OneKey.app/Contents/Resources/static/preload.js)'
+      expect(filterKnownErrors(ERROR, { originalException })).toBe(null)
+    })
   })
 
   describe('chunk errors', () => {
