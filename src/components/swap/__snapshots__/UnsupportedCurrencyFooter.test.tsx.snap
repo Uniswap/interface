@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`UnsupportedCurrencyFooter.tsx matches base snapshot 1`] = `
+exports[`UnsupportedCurrencyFooter.tsx renders 1`] = `
 <DocumentFragment>
   .c1 {
   box-sizing: border-box;

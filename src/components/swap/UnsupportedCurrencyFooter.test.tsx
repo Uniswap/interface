@@ -12,16 +12,6 @@ const unsupportedTokenSymbol = 'ALTDOM-MAR2021'
 const unsupportedToken = new Token(1, unsupportedTokenAddress, 18, 'ALTDOM-MAR2021')
 const unsupportedTokenExplorerLink = 'www.blahblah.com'
 
-jest.mock('@web3-react/core', () => {
-  const web3React = jest.requireActual('@web3-react/core')
-  return {
-    ...web3React,
-    useWeb3React: () => ({
-      chainId: 1,
-    }),
-  }
-})
-
 jest.mock('../../hooks/Tokens')
 
 jest.mock('../../utils/getExplorerLink')
