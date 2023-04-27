@@ -29,6 +29,7 @@ const TraitRowValue = styled(ThemedText.BodySmall)<{ $flex?: number; alignRight?
 
 export const TraitRow = ({ trait }: { trait: Trait }) => {
   // TODO: Replace with actual rarity, count, and floor price when BE supports
+  // rarity eventually should be number of items with this trait / total number of items, smaller rarity means more rare
   const randomRarity = Math.random()
   return (
     <Row padding="12px 0px">
