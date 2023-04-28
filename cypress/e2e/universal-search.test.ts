@@ -1,5 +1,3 @@
-import { getTestSelector } from '../utils'
-
 describe('Universal search bar', () => {
   before(() => {
     cy.visit('/')
@@ -22,8 +20,8 @@ describe('Universal search bar', () => {
 
     cy.get('div').contains('Uniswap').should('exist')
     // Stats should have: TVL, 24H Volume, 52W low, 52W high.
-    cy.get(getTestSelector('token-details-stats')).should('exist')
-    cy.get(getTestSelector('token-details-stats')).within(() => {
+    cy.getByTestId('token-details-stats').should('exist')
+    cy.getByTestId('token-details-stats').within(() => {
       cy.get('[data-cy="tvl"]').should('include.text', '$')
       cy.get('[data-cy="volume-24h"]').should('include.text', '$')
       cy.get('[data-cy="52w-low"]').should('include.text', '$')
@@ -31,7 +29,7 @@ describe('Universal search bar', () => {
     })
 
     // About section should have description of token.
-    cy.get(getTestSelector('token-details-about-section')).should('exist')
+    cy.getByTestId('token-details-about-section').should('exist')
     cy.contains('UNI is the governance token for Uniswap').should('exist')
   })
 

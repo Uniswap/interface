@@ -1,6 +1,5 @@
 import { USDC_MAINNET } from '../../src/constants/tokens'
 import { WETH_GOERLI } from '../fixtures/constants'
-import { getTestSelector } from '../utils'
 
 describe('Swap', () => {
   const verifyAmount = (field: 'input' | 'output', amountText: string | null) => {
@@ -27,7 +26,7 @@ describe('Swap', () => {
 
     cy.get('body')
       .then(($body) => {
-        if ($body.find(getTestSelector('TokenSafetyWrapper')).length) {
+        if ($body.find('[data-testid=TokenSafetyWrapper]').length) {
           return 'I understand'
         }
 
@@ -82,13 +81,13 @@ describe('Swap', () => {
         .then((balance) => Number(balance.toFixed(1)))
         .then((initialBalance) => {
           cy.get('#swap-currency-output .open-currency-select-button').click()
-          cy.get(getTestSelector('token-search-input')).clear().type(TOKEN_ADDRESS)
+          cy.getByTestId('token-search-input').clear().type(TOKEN_ADDRESS)
           cy.contains('USDC').click()
           cy.get('#swap-currency-output .token-amount-input').clear().type(BALANCE_INCREMENT.toString())
           cy.get('#swap-currency-input .token-amount-input').should('not.equal', '')
           cy.get('#swap-button').click()
           cy.get('#confirm-swap-or-send').click()
-          cy.get(getTestSelector('dismiss-tx-confirmation')).click()
+          cy.getByTestId('dismiss-tx-confirmation').click()
 
           cy.then(() => hardhat.provider.send('hardhat_mine', ['0x1', '0xc'])).then(() => {
             // ui check
@@ -112,7 +111,7 @@ describe('Swap', () => {
     verifyToken('output', null)
 
     selectOutput('WETH')
-    cy.get(getTestSelector('swap-currency-button')).first().click()
+    cy.getByTestId('swap-currency-button').first().click()
 
     verifyToken('input', 'WETH')
     verifyToken('output', 'ETH')
@@ -125,7 +124,7 @@ describe('Swap', () => {
     verifyToken('output', null)
 
     selectOutput('Ether')
-    cy.get(getTestSelector('swap-currency-button')).first().click()
+    cy.getByTestId('swap-currency-button').first().click()
 
     verifyToken('input', 'ETH')
     verifyToken('output', 'WETH')
@@ -137,12 +136,12 @@ describe('Swap', () => {
     verifyToken('input', null)
     verifyToken('output', 'WETH')
 
-    cy.get(getTestSelector('swap-currency-button')).first().click()
+    cy.getByTestId('swap-currency-button').first().click()
     verifyToken('input', 'WETH')
     verifyToken('output', null)
 
     selectOutput('Ether')
-    cy.get(getTestSelector('swap-currency-button')).first().click()
+    cy.getByTestId('swap-currency-button').first().click()
 
     verifyToken('input', 'ETH')
     verifyToken('output', 'WETH')
@@ -162,7 +161,7 @@ describe('Swap', () => {
         cy.stub(hardhat.wallet, 'sendTransaction').rejects(new Error('user cancelled'))
 
         cy.get('#swap-currency-output .open-currency-select-button').click()
-        cy.get(getTestSelector('token-search-input')).clear().type(USDC_MAINNET.address)
+        cy.getByTestId('token-search-input').clear().type(USDC_MAINNET.address)
         cy.contains('USDC').click()
         cy.get('#swap-currency-output .token-amount-input').clear().type('1')
         cy.get('#swap-currency-input .token-amount-input').should('not.equal', '')
@@ -177,12 +176,12 @@ describe('Swap', () => {
   it('Opens and closes the settings menu', () => {
     cy.visit('/swap')
     cy.contains('Settings').should('not.exist')
-    cy.get(getTestSelector('swap-settings-button')).click()
+    cy.getByTestId('swap-settings-button').click()
     cy.contains('Slippage tolerance').should('exist')
     cy.contains('Transaction deadline').should('exist')
     cy.contains('Auto Router API').should('exist')
     cy.contains('Expert Mode').should('exist')
-    cy.get(getTestSelector('swap-settings-button')).click()
+    cy.getByTestId('swap-settings-button').click()
     cy.contains('Settings').should('not.exist')
   })
 

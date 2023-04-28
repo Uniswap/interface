@@ -37,8 +37,14 @@ declare global {
        */
       userState?: Partial<UserState>
     }
+    interface Chainable {
+      /** Get one or more DOM elements by data-testid attribute. */
+      getByTestId<E extends Node = HTMLElement>(selectorId: string): Chainable<JQuery<E>>
+    }
   }
 }
+
+Cypress.Commands.add('getByTestId', (selectorId: string) => cy.get(`[data-testid=${selectorId}`))
 
 // sets up the injected provider to be a mock ethereum provider with the given mnemonic/index
 // eslint-disable-next-line no-undef

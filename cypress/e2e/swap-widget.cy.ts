@@ -1,16 +1,15 @@
 import { FeatureFlag } from '../../src/featureFlags/flags/featureFlags'
-import { getClassContainsSelector, getTestSelector } from '../utils'
 
 const UNI_GOERLI = '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984'
 const WETH_GOERLI = '0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6'
 
 describe('swap widget integration tests', () => {
   const verifyInputToken = (inputText: string) => {
-    cy.get(getClassContainsSelector('TokenButtonRow')).first().contains(inputText)
+    cy.get('[class*=TokenButtonRow]').first().contains(inputText)
   }
 
   const verifyOutputToken = (outputText: string) => {
-    cy.get(getClassContainsSelector('TokenButtonRow')).last().contains(outputText)
+    cy.get('[class*=TokenButtonRow]').last().contains(outputText)
   }
 
   const selectOutputAndSwitch = (outputText: string) => {
@@ -21,7 +20,7 @@ describe('swap widget integration tests', () => {
 
     cy.get('body')
       .then(($body) => {
-        if ($body.find(getTestSelector('TokenSafetyWrapper')).length) {
+        if ($body.find('[data-testid=TokenSafetyWrapper]').length) {
           return 'I understand'
         }
 
@@ -34,7 +33,7 @@ describe('swap widget integration tests', () => {
     // token selector should close...
     cy.contains('Search name or paste address').should('not.exist')
 
-    cy.get(getClassContainsSelector('ReverseButton')).first().click()
+    cy.get('[class*=ReverseButton]').first().click()
   }
 
   describe('widget on swap page', () => {
@@ -81,7 +80,7 @@ describe('swap widget integration tests', () => {
       verifyInputToken('Select token')
       verifyOutputToken('WETH')
 
-      cy.get(getClassContainsSelector('ReverseButton')).first().click()
+      cy.get('[class*=ReverseButton]').first().click()
       verifyInputToken('WETH')
       verifyOutputToken('Select token')
 
