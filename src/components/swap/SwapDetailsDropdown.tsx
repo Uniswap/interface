@@ -118,7 +118,12 @@ export default function SwapDetailsDropdown({ trade, syncing, loading, allowedSl
           element={InterfaceElementName.SWAP_DETAILS_DROPDOWN}
           shouldLogImpression={!showDetails}
         >
-          <StyledHeaderRow onClick={() => setShowDetails(!showDetails)} disabled={!trade} open={showDetails}>
+          <StyledHeaderRow
+            data-testid="swap-details-header-row"
+            onClick={() => setShowDetails(!showDetails)}
+            disabled={!trade}
+            open={showDetails}
+          >
             <RowFixed style={{ position: 'relative' }} align="center">
               {Boolean(loading || syncing) && (
                 <StyledPolling>
@@ -128,7 +133,7 @@ export default function SwapDetailsDropdown({ trade, syncing, loading, allowedSl
                 </StyledPolling>
               )}
               {trade ? (
-                <LoadingOpacityContainer $loading={syncing}>
+                <LoadingOpacityContainer $loading={syncing} data-testid="trade-price-container">
                   <TradePrice price={trade.executionPrice} />
                 </LoadingOpacityContainer>
               ) : loading || syncing ? (
@@ -159,11 +164,11 @@ export default function SwapDetailsDropdown({ trade, syncing, loading, allowedSl
         <AnimatedDropdown open={showDetails}>
           <AutoColumn gap="sm" style={{ padding: '0', paddingBottom: '8px' }}>
             {trade ? (
-              <StyledCard>
+              <StyledCard data-testid="advanced-swap-details">
                 <AdvancedSwapDetails trade={trade} allowedSlippage={allowedSlippage} syncing={syncing} />
               </StyledCard>
             ) : null}
-            {trade ? <SwapRoute trade={trade} syncing={syncing} /> : null}
+            {trade ? <SwapRoute data-testid="swap-route-info" trade={trade} syncing={syncing} /> : null}
           </AutoColumn>
         </AnimatedDropdown>
       </AutoColumn>
