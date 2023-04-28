@@ -40,14 +40,20 @@ const Scrim = styled.div<{ isBottom?: boolean }>`
   position: absolute;
   height: 88px;
   left: 0px;
-  right: 12px;
-  ${({ isBottom }) => !isBottom && 'top: 0px'};
-  ${({ isBottom }) => !isBottom && 'transform: matrix(1, 0, 0, -1, 0, 0)'};
+  right: 6px;
+  // ${({ isBottom }) => !isBottom && 'top: 0px'};
+  // ${({ isBottom }) => !isBottom && 'transform: matrix(1, 0, 0, -1, 0, 0)'};
 
-  ${({ isBottom }) => isBottom && 'bottom: 0px'};
+  ${({ isBottom }) =>
+    isBottom
+      ? 'bottom: 0px'
+      : `
+        top: 0px;
+        transform: matrix(1, 0, 0, -1, 0, 0);
+      `};
 
   background: ${({ theme }) =>
-    `linear-gradient(180deg, ${opacify(0, theme.backgroundSurface)} 0%, ${theme.backgroundSurface} 100%)`}};
+    `linear-gradient(180deg, ${opacify(0, theme.backgroundSurface)} 0%, ${theme.backgroundSurface} 100%)`};
   display: flex;
 `
 
