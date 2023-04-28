@@ -41,8 +41,6 @@ const Scrim = styled.div<{ isBottom?: boolean }>`
   height: 88px;
   left: 0px;
   right: 6px;
-  // ${({ isBottom }) => !isBottom && 'top: 0px'};
-  // ${({ isBottom }) => !isBottom && 'transform: matrix(1, 0, 0, -1, 0, 0)'};
 
   ${({ isBottom }) =>
     isBottom
