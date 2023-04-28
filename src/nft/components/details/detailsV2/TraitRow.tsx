@@ -19,12 +19,12 @@ const TraitValue = styled(Column)`
   flex: 3;
 `
 
-const TraitRowValue = styled(ThemedText.BodySmall)<{ $flex?: number; alignRight?: boolean }>`
+const TraitRowValue = styled(ThemedText.BodySmall)<{ $flex?: number; justify?: string }>`
   display: flex;
   line-height: 20px;
   padding-top: 20px;
   flex: ${({ $flex }) => $flex ?? 1};
-  ${({ alignRight }) => alignRight && 'justify-content: flex-end'};
+  justify-content: ${({ justify }) => justify};
 `
 
 export const TraitRow = ({ trait }: { trait: Trait }) => {
@@ -39,7 +39,7 @@ export const TraitRow = ({ trait }: { trait: Trait }) => {
       </TraitValue>
       <TraitRowValue $flex={2}>{formatEth(randomRarity * 1000)} ETH</TraitRowValue>
       <TraitRowValue>{Math.round(randomRarity * 10000)}</TraitRowValue>
-      <TraitRowValue $flex={1.5} alignRight={true}>
+      <TraitRowValue $flex={1.5} justify="flex-end">
         <RarityGraph trait={trait} rarity={randomRarity} />
       </TraitRowValue>
     </Row>

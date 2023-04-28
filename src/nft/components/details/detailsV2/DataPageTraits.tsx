@@ -15,12 +15,12 @@ const TraitsHeaderContainer = styled(Row)`
   padding-right: 12px;
 `
 
-const TraitsHeader = styled(ThemedText.SubHeaderSmall)<{ $flex?: number; alignRight?: boolean }>`
+const TraitsHeader = styled(ThemedText.SubHeaderSmall)<{ $flex?: number; justify?: string }>`
   display: flex;
   line-height: 20px;
   color: ${({ theme }) => theme.textSecondary};
   flex: ${({ $flex }) => $flex ?? 1};
-  ${({ alignRight }) => alignRight && 'justify-content: flex-end'};
+  justify-content: ${({ justify }) => justify};
 `
 
 const TraitRowContainer = styled.div`
@@ -86,7 +86,7 @@ const TraitsContent = ({ traits }: { traits?: Trait[] }) => {
         <TraitsHeader>
           <Trans>Quantity</Trans>
         </TraitsHeader>{' '}
-        <TraitsHeader $flex={1.5} alignRight={true}>
+        <TraitsHeader $flex={1.5} justify="flex-end">
           <Trans>Rarity</Trans>
         </TraitsHeader>
       </TraitsHeaderContainer>
