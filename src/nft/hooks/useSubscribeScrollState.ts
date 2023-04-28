@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState } from 'react'
 
 export function useSubscribeScrollState() {
   const [userCanScroll, setUserCanScroll] = useState(false)
@@ -17,5 +17,5 @@ export function useSubscribeScrollState() {
 
     setScrollProgress(scrollTop ? ((scrollTop + containerHeight) / scrollHeight) * 100 : 0)
   }
-  return { scrollRef, scrollHandler, scrollProgress, userCanScroll}
+  return { scrollRef, scrollHandler, scrollProgress, userCanScroll }
 }
