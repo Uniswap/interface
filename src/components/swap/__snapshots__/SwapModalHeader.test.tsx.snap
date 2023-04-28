@@ -2,13 +2,13 @@
 
 exports[`SwapModalHeader.tsx matches base snapshot, test trade exact input 1`] = `
 <DocumentFragment>
-  .c1 {
+  .c2 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
 }
 
-.c3 {
+.c4 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -17,7 +17,7 @@ exports[`SwapModalHeader.tsx matches base snapshot, test trade exact input 1`] =
   width: wrap-content;
 }
 
-.c2 {
+.c3 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -35,50 +35,50 @@ exports[`SwapModalHeader.tsx matches base snapshot, test trade exact input 1`] =
   gap: 12px;
 }
 
-.c4 {
-  width: -webkit-wrap-content;
-  width: -moz-wrap-content;
-  width: wrap-content;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-}
-
-.c10 {
-  width: -webkit-wrap-content;
-  width: -moz-wrap-content;
-  width: wrap-content;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 0.5rem;
-}
-
 .c5 {
+  width: -webkit-wrap-content;
+  width: -moz-wrap-content;
+  width: wrap-content;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c11 {
+  width: -webkit-wrap-content;
+  width: -moz-wrap-content;
+  width: wrap-content;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 8px;
+}
+
+.c6 {
   color: #7780A0;
 }
 
-.c8 {
+.c9 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -95,10 +95,10 @@ exports[`SwapModalHeader.tsx matches base snapshot, test trade exact input 1`] =
 .c0 {
   display: grid;
   grid-auto-rows: auto;
-  grid-row-gap: 0.5rem;
+  grid-row-gap: 8px;
 }
 
-.c12 {
+.c13 {
   width: 28px;
   height: 28px;
   border-radius: 50%;
@@ -106,7 +106,7 @@ exports[`SwapModalHeader.tsx matches base snapshot, test trade exact input 1`] =
   box-shadow: 0 0 1px white;
 }
 
-.c11 {
+.c12 {
   position: relative;
   display: -webkit-box;
   display: -webkit-flex;
@@ -114,29 +114,33 @@ exports[`SwapModalHeader.tsx matches base snapshot, test trade exact input 1`] =
   display: flex;
 }
 
-.c7 {
+.c8 {
   display: inline-block;
   height: inherit;
 }
 
-.c6 {
+.c7 {
   color: #7780A0;
   margin-right: 8px;
   max-width: 75%;
 }
 
-.c9 {
+.c10 {
   -webkit-align-items: flex-end;
   -webkit-box-align: flex-end;
   -ms-flex-align: flex-end;
   align-items: flex-end;
 }
 
-.c13 {
-  margin: 0.75rem 0.125rem;
+.c14 {
+  margin: 12px 2px;
 }
 
-.c14 {
+.c1 {
+  margin: 16px 0 0 0;
+}
+
+.c15 {
   border: none;
   border-bottom: 1px solid #D2D9EE;
   margin: 0 0;
@@ -147,42 +151,41 @@ exports[`SwapModalHeader.tsx matches base snapshot, test trade exact input 1`] =
 }
 
 <div
-    class="c0"
-    style="margin-top: 1rem;"
+    class="c0 c1"
   >
     <div
-      class="c1 c2"
+      class="c2 c3"
     >
       <div
-        class="c3 c4"
+        class="c4 c5"
         width="wrap-content"
       >
         <div
-          class="c5 css-1jljtub"
+          class="c6 css-1jljtub"
         >
           <span
-            class="c6"
+            class="c7"
           >
             You pay
           </span>
         </div>
         <div
-          class="c7"
+          class="c8"
         />
       </div>
       <div
-        class="c8 c9"
+        class="c9 c10"
       >
         <div
-          class="c3 c10"
+          class="c4 c11"
           width="wrap-content"
         >
           <div
-            class="c11"
+            class="c12"
           >
             <img
               alt="ABC logo"
-              class="c12"
+              class="c13"
               src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
             />
           </div>
@@ -196,17 +199,17 @@ exports[`SwapModalHeader.tsx matches base snapshot, test trade exact input 1`] =
       </div>
     </div>
     <div
-      class="c1 c2"
+      class="c2 c3"
     >
       <div
-        class="c3 c4"
+        class="c4 c5"
         width="wrap-content"
       >
         <div
-          class="c5 css-1jljtub"
+          class="c6 css-1jljtub"
         >
           <span
-            class="c6"
+            class="c7"
           >
             You receive
           </span>
@@ -241,22 +244,22 @@ exports[`SwapModalHeader.tsx matches base snapshot, test trade exact input 1`] =
           />
         </svg>
         <div
-          class="c7"
+          class="c8"
         />
       </div>
       <div
-        class="c8 c9"
+        class="c9 c10"
       >
         <div
-          class="c3 c10"
+          class="c4 c11"
           width="wrap-content"
         >
           <div
-            class="c11"
+            class="c12"
           >
             <img
               alt="DEF logo"
-              class="c12"
+              class="c13"
               src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
             />
           </div>
@@ -270,10 +273,10 @@ exports[`SwapModalHeader.tsx matches base snapshot, test trade exact input 1`] =
       </div>
     </div>
     <div
-      class="c13"
+      class="c14"
     >
       <hr
-        class="c14"
+        class="c15"
       />
     </div>
   </div>
@@ -282,13 +285,13 @@ exports[`SwapModalHeader.tsx matches base snapshot, test trade exact input 1`] =
 
 exports[`SwapModalHeader.tsx test trade exact output, no recipient 1`] = `
 <DocumentFragment>
-  .c1 {
+  .c2 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
 }
 
-.c3 {
+.c4 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -297,7 +300,7 @@ exports[`SwapModalHeader.tsx test trade exact output, no recipient 1`] = `
   width: wrap-content;
 }
 
-.c2 {
+.c3 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -315,50 +318,50 @@ exports[`SwapModalHeader.tsx test trade exact output, no recipient 1`] = `
   gap: 12px;
 }
 
-.c4 {
-  width: -webkit-wrap-content;
-  width: -moz-wrap-content;
-  width: wrap-content;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-}
-
-.c10 {
-  width: -webkit-wrap-content;
-  width: -moz-wrap-content;
-  width: wrap-content;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 0.5rem;
-}
-
 .c5 {
+  width: -webkit-wrap-content;
+  width: -moz-wrap-content;
+  width: wrap-content;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c11 {
+  width: -webkit-wrap-content;
+  width: -moz-wrap-content;
+  width: wrap-content;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 8px;
+}
+
+.c6 {
   color: #7780A0;
 }
 
-.c8 {
+.c9 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -375,10 +378,10 @@ exports[`SwapModalHeader.tsx test trade exact output, no recipient 1`] = `
 .c0 {
   display: grid;
   grid-auto-rows: auto;
-  grid-row-gap: 0.5rem;
+  grid-row-gap: 8px;
 }
 
-.c12 {
+.c13 {
   width: 28px;
   height: 28px;
   border-radius: 50%;
@@ -386,7 +389,7 @@ exports[`SwapModalHeader.tsx test trade exact output, no recipient 1`] = `
   box-shadow: 0 0 1px white;
 }
 
-.c11 {
+.c12 {
   position: relative;
   display: -webkit-box;
   display: -webkit-flex;
@@ -394,29 +397,33 @@ exports[`SwapModalHeader.tsx test trade exact output, no recipient 1`] = `
   display: flex;
 }
 
-.c7 {
+.c8 {
   display: inline-block;
   height: inherit;
 }
 
-.c6 {
+.c7 {
   color: #7780A0;
   margin-right: 8px;
   max-width: 75%;
 }
 
-.c9 {
+.c10 {
   -webkit-align-items: flex-end;
   -webkit-box-align: flex-end;
   -ms-flex-align: flex-end;
   align-items: flex-end;
 }
 
-.c13 {
-  margin: 0.75rem 0.125rem;
+.c14 {
+  margin: 12px 2px;
 }
 
-.c14 {
+.c1 {
+  margin: 16px 0 0 0;
+}
+
+.c15 {
   border: none;
   border-bottom: 1px solid #D2D9EE;
   margin: 0 0;
@@ -427,42 +434,41 @@ exports[`SwapModalHeader.tsx test trade exact output, no recipient 1`] = `
 }
 
 <div
-    class="c0"
-    style="margin-top: 1rem;"
+    class="c0 c1"
   >
     <div
-      class="c1 c2"
+      class="c2 c3"
     >
       <div
-        class="c3 c4"
+        class="c4 c5"
         width="wrap-content"
       >
         <div
-          class="c5 css-1jljtub"
+          class="c6 css-1jljtub"
         >
           <span
-            class="c6"
+            class="c7"
           >
             You pay
           </span>
         </div>
         <div
-          class="c7"
+          class="c8"
         />
       </div>
       <div
-        class="c8 c9"
+        class="c9 c10"
       >
         <div
-          class="c3 c10"
+          class="c4 c11"
           width="wrap-content"
         >
           <div
-            class="c11"
+            class="c12"
           >
             <img
               alt="ABC logo"
-              class="c12"
+              class="c13"
               src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
             />
           </div>
@@ -476,17 +482,17 @@ exports[`SwapModalHeader.tsx test trade exact output, no recipient 1`] = `
       </div>
     </div>
     <div
-      class="c1 c2"
+      class="c2 c3"
     >
       <div
-        class="c3 c4"
+        class="c4 c5"
         width="wrap-content"
       >
         <div
-          class="c5 css-1jljtub"
+          class="c6 css-1jljtub"
         >
           <span
-            class="c6"
+            class="c7"
           >
             You receive
           </span>
@@ -521,22 +527,22 @@ exports[`SwapModalHeader.tsx test trade exact output, no recipient 1`] = `
           />
         </svg>
         <div
-          class="c7"
+          class="c8"
         />
       </div>
       <div
-        class="c8 c9"
+        class="c9 c10"
       >
         <div
-          class="c3 c10"
+          class="c4 c11"
           width="wrap-content"
         >
           <div
-            class="c11"
+            class="c12"
           >
             <img
               alt="GHI logo"
-              class="c12"
+              class="c13"
               src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000003/logo.png"
             />
           </div>
@@ -550,10 +556,10 @@ exports[`SwapModalHeader.tsx test trade exact output, no recipient 1`] = `
       </div>
     </div>
     <div
-      class="c13"
+      class="c14"
     >
       <hr
-        class="c14"
+        class="c15"
       />
     </div>
   </div>

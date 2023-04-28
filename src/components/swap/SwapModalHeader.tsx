@@ -10,7 +10,7 @@ import { ThemedText } from 'theme'
 import { SwapModalHeaderAmount } from './SwapModalHeaderAmount'
 
 const RuleWrapper = styled.div`
-  margin: 0.75rem 0.125rem;
+  margin: 12px 2px;
 `
 
 const HeaderContainer = styled(AutoColumn)`
@@ -20,7 +20,7 @@ const HeaderContainer = styled(AutoColumn)`
 const Rule = styled.hr<{ padded?: true; scrollingEdge?: 'top' | 'bottom' }>`
   border: none;
   border-bottom: 1px solid ${({ theme }) => theme.backgroundOutline};
-  margin: 0 ${({ padded }) => (padded ? '0.75rem' : 0)};
+  margin: 0 ${({ padded }) => (padded ? '12px' : 0)};
   margin-bottom: ${({ scrollingEdge }) => (scrollingEdge === 'bottom' ? -1 : 0)}px;
   margin-top: ${({ scrollingEdge }) => (scrollingEdge !== 'bottom' ? -1 : 0)}px;
 

@@ -28,11 +28,11 @@ const Wrapper = styled.div`
   border-radius: 20px;
   outline: 1px solid ${({ theme }) => theme.backgroundOutline};
   width: 100%;
-  padding: 1rem;
+  padding: 16px;
 `
 
 const ConfirmationModalWrapper = styled(Wrapper)`
-  padding: 0.5rem;
+  padding: 8px;
 `
 
 const BottomSection = styled(AutoColumn)`
@@ -194,7 +194,7 @@ export function ConfirmationModalContent({
     <ConfirmationModalWrapper>
       <ConfirmationModalTopContentWrapper gap="sm">
         <Row>
-          <BackArrowIcon style={{ position: 'absolute' }} onClick={onDismiss} data-cy="confirmation-close-icon" />
+          <BackArrowIcon onClick={onDismiss} data-cy="confirmation-close-icon" />
           <Row justify="center">
             <ThemedText.SubHeader>{title}</ThemedText.SubHeader>
           </Row>

@@ -19,7 +19,7 @@ const Row = styled(Box)<{
   padding: ${({ padding }) => padding};
   border: ${({ border }) => border};
   border-radius: ${({ borderRadius }) => borderRadius};
-  gap: ${({ gap, theme }) => (gap && theme.grids[gap as Gap]) || gap};
+  gap: ${({ gap, theme }) => (gap && theme.grids[gap as Gap]) ?? gap};
 `
 
 export const RowBetween = styled(Row)`

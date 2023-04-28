@@ -139,6 +139,13 @@ const StyledAlertTriangle = styled(AlertTriangle)`
   min-width: 24px;
 `
 
+type DetailItem = {
+  label: ReactNode | string
+  value: ReactNode | string
+  labelTooltipText?: string
+  color?: string
+}
+
 export default function SwapModalFooter({
   trade,
   allowedSlippage,
@@ -199,12 +206,7 @@ export default function SwapModalFooter({
     const label = `${trade.executionPrice.baseCurrency?.symbol} `
     const labelInverted = `${trade.executionPrice.quoteCurrency?.symbol}`
     const formattedPrice = formatTransactionAmount(priceToPreciseFloat(trade.executionPrice))
-    const details: Array<{
-      label: ReactNode | string
-      value: ReactNode | string
-      labelTooltipText?: string
-      color?: string
-    }> = [
+    const details: Array<DetailItem> = [
       { label: t`Exchange rate`, value: `${'1 ' + labelInverted + ' = ' + formattedPrice ?? '-'} ${label}` },
       {
         label: t`Network fee`,
