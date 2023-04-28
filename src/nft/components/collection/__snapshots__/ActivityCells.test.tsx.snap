@@ -1,3 +1,15 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`BuyCell renders add to bag button 1`] = `undefined`;
+exports[`BuyCell renders add to bag button 1`] = `
+<DocumentFragment>
+  <div
+    class="reset_base__1klryar0 sprinkles_marginLeft_auto_sm__rgw6eztm sprinkles_marginRight_auto_sm__rgw6ez101 sprinkles_display_none_sm__rgw6ez4rk sprinkles_display_flex_lg__rgw6ez4s0 sprinkles_flexDirection_column_sm__rgw6ez4uo sprinkles_height_full_sm__rgw6ez1lf sprinkles_justifyContent_center_sm__rgw6ez4v9"
+  >
+    <button
+      class="reset_base__1klryar0 Activity_buyCell__e2d0r6h Activity_baseBuyCell__e2d0r6g common__127l8hd8 sprinkles_fontWeight_semibold_sm__rgw6ezen sprinkles_fontSize_16_sm__rgw6ezcb sprinkles_lineHeight_20_sm__rgw6ezg0 Activity__e2d0r6f sprinkles_paddingLeft_16_sm__rgw6ez2qu sprinkles_paddingRight_16_sm__rgw6ez2x9 sprinkles_paddingTop_12_sm__rgw6ez33a sprinkles_paddingBottom_12_sm__rgw6ez2k1 sprinkles_width_max_sm__rgw6ez1du sprinkles_background_none_default__rgw6ez5gp sprinkles_border_none_default__rgw6ez875 sprinkles_borderRadius_12_default__rgw6ez7zp sprinkles_transition_250_default__rgw6ez8ct"
+    >
+      Add to bag
+    </button>
+  </div>
+</DocumentFragment>
+`;
