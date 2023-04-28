@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 import Column from 'components/Column'
 import { ScrollBarStyles } from 'components/Common'
 import Row from 'components/Row'
-import { GenieAsset, Trait } from 'nft/types'
+import { Trait } from 'nft/types'
 import { useMemo, useState } from 'react'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
@@ -105,7 +105,7 @@ enum TraitTabsKeys {
   Traits = 'traits',
 }
 
-export const DataPageTraits = ({ asset }: { asset: GenieAsset }) => {
+export const DataPageTraits = ({ traits }: { traits: Trait[] }) => {
   const TraitTabs: Map<string, Tab> = useMemo(
     () =>
       new Map([
@@ -114,12 +114,12 @@ export const DataPageTraits = ({ asset }: { asset: GenieAsset }) => {
           {
             title: <Trans>Traits</Trans>,
             key: TraitTabsKeys.Traits,
-            content: <TraitsContent traits={asset.traits} />,
-            count: asset.traits?.length,
+            content: <TraitsContent traits={traits} />,
+            count: traits?.length,
           },
         ],
       ]),
-    [asset.traits]
+    [traits]
   )
   return <TabbedComponent tabs={TraitTabs} />
 }
