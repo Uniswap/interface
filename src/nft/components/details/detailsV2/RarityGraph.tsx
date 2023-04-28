@@ -23,58 +23,43 @@ enum RarityLevel {
   ExtremelyRare = 'Extremely Rare',
 }
 
-const RarityLevels: Map<string, RarityValue> = new Map([
-  [
-    RarityLevel.VeryCommon,
-    {
-      threshold: 0.8,
-      color: colors.gray500,
-    },
-  ],
-  [
-    RarityLevel.Common,
-    {
-      threshold: 0.6,
-      color: colors.green300,
-    },
-  ],
-  [
-    RarityLevel.Rare,
-    {
-      threshold: 0.4,
-      color: colors.blueVibrant,
-    },
-  ],
-  [
-    RarityLevel.VeryRare,
-    {
-      threshold: 0.2,
-      color: colors.purpleVibrant,
-    },
-  ],
-  [
-    RarityLevel.ExtremelyRare,
-    {
-      threshold: 0,
-      color: colors.magentaVibrant,
-    },
-  ],
-])
+const RarityLevels: { [key in RarityLevel]: RarityValue } = {
+  [RarityLevel.VeryCommon]: {
+    threshold: 0.8,
+    color: colors.gray500,
+  },
+  [RarityLevel.Common]: {
+    threshold: 0.6,
+    color: colors.green300,
+  },
+  [RarityLevel.Rare]: {
+    threshold: 0.4,
+    color: colors.blueVibrant,
+  },
+  [RarityLevel.VeryRare]: {
+    threshold: 0.2,
+    color: colors.purpleVibrant,
+  },
+  [RarityLevel.ExtremelyRare]: {
+    threshold: 0,
+    color: colors.magentaVibrant,
+  },
+}
 
 function getRarityLevel(rarity: number) {
   switch (true) {
-    case rarity > (RarityLevels.get(RarityLevel.VeryCommon)?.threshold ?? Number.MAX_SAFE_INTEGER):
-      return RarityLevels.get(RarityLevel.VeryCommon)
-    case rarity > (RarityLevels.get(RarityLevel.Common)?.threshold ?? Number.MAX_SAFE_INTEGER):
-      return RarityLevels.get(RarityLevel.Common)
-    case rarity > (RarityLevels.get(RarityLevel.Rare)?.threshold ?? Number.MAX_SAFE_INTEGER):
-      return RarityLevels.get(RarityLevel.Rare)
-    case rarity > (RarityLevels.get(RarityLevel.VeryRare)?.threshold ?? Number.MAX_SAFE_INTEGER):
-      return RarityLevels.get(RarityLevel.VeryRare)
-    case rarity >= (RarityLevels.get(RarityLevel.ExtremelyRare)?.threshold ?? Number.MAX_SAFE_INTEGER):
-      return RarityLevels.get(RarityLevel.ExtremelyRare)
+    case rarity > RarityLevels[RarityLevel.VeryCommon].threshold:
+      return RarityLevels[RarityLevel.VeryCommon]
+    case rarity > RarityLevels[RarityLevel.Common].threshold:
+      return RarityLevels[RarityLevel.Common]
+    case rarity > RarityLevels[RarityLevel.Rare].threshold:
+      return RarityLevels[RarityLevel.Rare]
+    case rarity > RarityLevels[RarityLevel.VeryRare].threshold:
+      return RarityLevels[RarityLevel.VeryRare]
+    case rarity >= RarityLevels[RarityLevel.ExtremelyRare].threshold:
+      return RarityLevels[RarityLevel.ExtremelyRare]
     default:
-      return RarityLevels.get(RarityLevel.VeryCommon)
+      return RarityLevels[RarityLevel.VeryCommon]
   }
 }
 
