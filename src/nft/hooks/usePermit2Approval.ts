@@ -20,7 +20,7 @@ const useUniversalRouterAddress = (
   const shouldUseUpdatedContract = usePwatNewContractEnabled()
 
   const canPermit = enabled && chainId
-  const forceNftRouter = shouldUseNftRouter && chainId === 1
+  const forceNftRouter = canPermit && shouldUseNftRouter && chainId === 1
 
   if (forceNftRouter) {
     contractToApprove = shouldUseUpdatedContract
