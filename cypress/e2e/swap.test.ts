@@ -1,4 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
+import { formatEther, parseEther } from 'ethers/lib/utils'
 
 import { USDC_MAINNET } from '../../src/constants/tokens'
 import { WETH_GOERLI } from '../fixtures/constants'
@@ -198,28 +199,19 @@ describe('Swap', () => {
   })
 
   it.only('should render an error for slippage failure', () => {
-    const TOKEN_ADDRESS = USDC_MAINNET.address
     const SLIPPAGE = 0.01
-    const SWAP_OUTPUT_AMOUNT = 1
 
     cy.visit('/swap', { ethereum: 'hardhat' })
       .hardhat()
       .then((hardhat) => {
         hardhat
           .reset()
-          .then(() => hardhat.getBalance(hardhat.wallet.address, USDC_MAINNET))
-          .then((balance) => Number(balance.toFixed(1)))
+          .then(() => hardhat.provider.getBalance(hardhat.wallet.address))
           .then((initialBalance) => {
-            const estimateGasStub = cy
-              .stub(hardhat.provider, 'send')
-              .withArgs('eth_estimateGas')
-              .callsFake(() => {
-                console.log('callsFake')
-                return new Promise((resolve) => resolve(BigNumber.from(200_000)))
-              })
-
-            estimateGasStub.callThrough()
-
+            const swapInputAmount = formatEther(initialBalance.div(2).sub(parseEther('1')))
+            const send = cy.stub(hardhat.provider, 'send')
+            send.withArgs('eth_estimateGas').resolves(BigNumber.from(20_000_000))
+            send.callThrough()
             // set slippage low
             cy.get(getTestSelector('open-settings-dialog-button')).click()
             cy.get(getTestSelector('slippage-input')).clear().type(SLIPPAGE.toString())
@@ -227,31 +219,29 @@ describe('Swap', () => {
             cy.get(getTestSelector('slippage-input')).should('not.exist')
 
             cy.get('#swap-currency-output .open-currency-select-button').click()
-            cy.get(getTestSelector('token-search-input')).clear().type(TOKEN_ADDRESS.substring(0, 6))
             cy.contains('USDC').click()
 
-            cy.get('#swap-currency-input .token-amount-input').clear().type(SWAP_OUTPUT_AMOUNT.toString())
+            cy.get('#swap-currency-input .token-amount-input').clear().type(swapInputAmount)
             cy.get('#swap-currency-output .token-amount-input').should('not.equal', '')
             cy.get('#swap-button').click()
             cy.get('#confirm-swap-or-send').click()
             cy.get(getTestSelector('dismiss-tx-confirmation')).click()
 
-            cy.get('#swap-currency-input .token-amount-input').clear().type(SWAP_OUTPUT_AMOUNT.toString())
+            cy.get('#swap-currency-input .token-amount-input').clear().type(swapInputAmount)
             cy.get('#swap-currency-output .token-amount-input').should('not.equal', '')
             cy.get('#swap-button').click()
             cy.get('#confirm-swap-or-send').click()
             cy.get(getTestSelector('dismiss-tx-confirmation')).click()
 
-            cy.then(() => hardhat.provider.send('hardhat_mine', ['0x1', '0xc'])).then(() => {
-              // check for a successful transaction notification
-              cy.get(getTestSelector('transaction-notif-popup'))
-
+            cy.then(() => hardhat.provider.send('hardhat_mine', ['0x2', '0xc'])).then(() => {
               // check for a failed transaction notification
-              cy.get(getTestSelector('transaction-notif-popup'))
-              // chain state check
-              cy.then(() => hardhat.wallet.getBalance('latest'))
-                .then((balance) => balance.toString())
-                .should('eq', (initialBalance - SWAP_OUTPUT_AMOUNT).toString())
+              cy.contains('Swap failed').should('exist')
+
+              cy.then(() => hardhat.provider.getBalance(hardhat.wallet.address)).then((finalBalance) => {
+                // The difference between final and initial balance should be equal to the amount of gas used
+                expect(initialBalance.gt(finalBalance)).to.be.true
+                expect(finalBalance.sub(initialBalance).abs().lt(parseEther('0.01'))).to.be.true
+              })
             })
           })
       })

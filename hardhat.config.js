@@ -17,7 +17,6 @@ module.exports = {
   networks: {
     hardhat: {
       chainId: 1,
-      loggingEnabled: true,
       forking: mainnetFork,
       accounts: {
         count: 1,
