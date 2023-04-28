@@ -1,5 +1,6 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { useResponsiveProp } from '@shopify/restyle'
+import { SharedEventName } from '@uniswap/analytics-events'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard } from 'react-native'
@@ -14,6 +15,7 @@ import { GenericImportForm } from 'src/features/import/GenericImportForm'
 import { importAccountActions } from 'src/features/import/importAccountSaga'
 import { ImportAccountType } from 'src/features/import/types'
 import { SafeKeyboardOnboardingScreen } from 'src/features/onboarding/SafeKeyboardOnboardingScreen'
+import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { ElementName } from 'src/features/telemetry/constants'
 import { useIsSmartContractAddress } from 'src/features/transactions/transfer/hooks'
 import { useAccounts } from 'src/features/wallet/hooks'
@@ -79,6 +81,10 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX
           })
         )
       }
+      sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
+        screen: OnboardingScreens.WatchWallet,
+        element: ElementName.Continue,
+      })
       navigation.navigate({ name: OnboardingScreens.Notifications, params, merge: true })
     }
   }, [dispatch, isValid, navigation, normalizedValue, params, resolvedAddress, value])

@@ -1,5 +1,6 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { useResponsiveProp } from '@shopify/restyle'
+import { SharedEventName } from '@uniswap/analytics-events'
 import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, TextInput as NativeTextInput } from 'react-native'
@@ -15,6 +16,7 @@ import { Text } from 'src/components/Text'
 import { NICKNAME_MAX_LENGTH } from 'src/constants/accounts'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { ImportType } from 'src/features/onboarding/utils'
+import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { ElementName } from 'src/features/telemetry/constants'
 import { AccountType } from 'src/features/wallet/accounts/types'
 import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
@@ -71,6 +73,11 @@ export function EditNameScreen({ navigation, route: { params } }: Props): JSX.El
   }, [dispatch, navigation])
 
   const onPressNext = (): void => {
+    sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
+      screen: OnboardingScreens.EditName,
+      element: ElementName.Continue,
+    })
+
     navigation.navigate({
       name:
         params?.importType === ImportType.CreateNew
