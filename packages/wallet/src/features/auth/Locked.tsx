@@ -3,7 +3,6 @@ import { useState } from 'react'
 import { Image, Input, InputProps, Stack, Text, YStack } from 'ui/src'
 import {
   Button,
-  ButtonEmphasis,
   ButtonSize,
 } from 'ui/src/components/button/Button'
 import { UNISWAP_LOGO } from 'wallet/src/assets'
@@ -101,9 +100,9 @@ function Locked(): JSX.Element {
         />
       </YStack>
       <Button
-        buttonEmphasis={ButtonEmphasis.Primary}
         buttonSize={ButtonSize.Large}
-        onPress={onPress}>
+        onPress={onPress}
+        theme="primary">
         Unlock
       </Button>
     </Stack>

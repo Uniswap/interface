@@ -1,14 +1,11 @@
-import { forwardRef } from 'react'
+import { Link } from 'react-router-dom'
 
 import {
   ButtonFrame,
-  ButtonProps as TamaguiButtonProps,
   ButtonText,
   GetProps,
+  ButtonProps as TamaguiButtonProps,
   styled,
-  TamaguiElement,
-  themeable,
-  useButton,
 } from 'tamagui'
 
 export enum ButtonSize {
@@ -31,6 +28,12 @@ const CustomButtonFrame = styled(ButtonFrame, {
   // instead of setting border: 0 when no border, make it 1px but transparent, so the
   // size or alignment of a button won't change unexpectedly between variants
   borderWidth: 1,
+  flexGrow: 1,
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'center',
+  // @ts-ignore: TODO: figure out why ButtonFrame inherits a hardcoded height value
+  height: '100%',
 
   variants: {
     buttonSize: {
@@ -40,86 +43,42 @@ const CustomButtonFrame = styled(ButtonFrame, {
       },
       [ButtonSize.Medium]: {
         padding: '$spacing12',
-        borderRadius: '$rounded16',
+        borderRadius: '$roundedFull',
       },
       [ButtonSize.Large]: {
         padding: '$spacing16',
         borderRadius: '$rounded20',
       },
     },
-    buttonEmphasis: {
-      [ButtonEmphasis.Primary]: {
-        backgroundColor: '$magentaVibrant',
-        borderColor: '$none',
-      },
-      [ButtonEmphasis.Secondary]: {
-        backgroundColor: '$background3',
-        borderColor: '$none',
-      },
-      [ButtonEmphasis.Tertiary]: {
-        backgroundColor: '$none',
-        borderColor: '$backgroundOutline',
-      },
-      [ButtonEmphasis.Detrimental]: {
-        backgroundColor: '$accentCriticalSoft',
-        borderColor: '$none',
-      },
-      [ButtonEmphasis.Warning]: {
-        backgroundColor: '$accentWarningSoft',
-        borderColor: '$none',
-      },
-    },
   } as const,
 
   defaultVariants: {
     buttonSize: ButtonSize.Medium,
-    buttonEmphasis: ButtonEmphasis.Primary,
   },
 })
 
 const CustomButtonText = styled(ButtonText, {
-  variants: {
-    buttonEmphasis: {
-      [ButtonEmphasis.Primary]: {
-        color: '$white',
-        fontFamily: '$body',
-      },
-      [ButtonEmphasis.Secondary]: {
-        color: '$textPrimary',
-        fontFamily: '$body',
-      },
-      [ButtonEmphasis.Tertiary]: {
-        color: '$textPrimary',
-        fontFamily: '$body',
-      },
-      [ButtonEmphasis.Detrimental]: {
-        color: '$accentCritical',
-        fontFamily: '$body',
-      },
-      [ButtonEmphasis.Warning]: {
-        color: '$accentWarning',
-        fontFamily: '$body',
-      },
-    },
-  } as const,
-
-  defaultVariants: {
-    buttonSize: ButtonSize.Medium,
-    buttonEmphasis: ButtonEmphasis.Primary,
-  },
+  name: 'ButtonText',
+  tag: 'span',
 })
 
 type CustomButtonProps = GetProps<typeof CustomButtonFrame>
 
-type CustomButtonTextProps = GetProps<typeof CustomButtonText>
-
 export type ButtonProps = TamaguiButtonProps &
-  CustomButtonProps &
-  CustomButtonTextProps
+  CustomButtonProps
 
-export const Button = themeable(
-  forwardRef<TamaguiElement, ButtonProps>((propsIn, ref) => {
-    const { props } = useButton(propsIn, { Text: CustomButtonText })
-    return <CustomButtonFrame {...props} ref={ref} role="button" />
-  })
+// TODO: investigate why styleable doesn't pass theme down to CustomButtonText through theme={props.theme}
+export const Button = CustomButtonFrame.styleable(({ children, ...props }: ButtonProps) => {
+  return (
+    <CustomButtonFrame {...props} theme={props.theme}>
+      {/* TODO: improve styling button text based on size of button, e.g. derive weight and color from size / theme */}
+      <CustomButtonText fontWeight="600">{children}</CustomButtonText>
+    </CustomButtonFrame>
+  )
+})
+
+export const LinkButton = ({ to, children, ...props }: ButtonProps & { to: string }) => (
+  <Link to={to} style={{ display: 'flex', textDecoration: 'none' }}>
+    <Button {...props} theme={props.theme}>{children}</Button>
+  </Link>
 )

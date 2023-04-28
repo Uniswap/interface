@@ -1,5 +1,5 @@
 import { useDispatch } from 'react-redux'
-import { Button, ButtonEmphasis } from 'ui/src/components/button/Button'
+import { Button } from 'ui/src/components/button/Button'
 import { Flex } from 'ui/src/components/layout/Flex'
 import { Text } from 'ui/src/components/text/Text'
 import { iconSize } from 'ui/src/theme/tokens'
@@ -33,11 +33,10 @@ export function PortfolioHeader({
         </Text>
       </Flex>
       <Button
-        buttonEmphasis={ButtonEmphasis.Tertiary}
-        color="$textPrimary"
         onPress={(): void => {
           return dispatch(authActions.reset())
-        }}>
+        }}
+        theme="tertiary">
         Lock
       </Button>
     </Flex>

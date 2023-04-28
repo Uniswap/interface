@@ -1,7 +1,6 @@
 import { YStack } from 'ui/src'
 import {
   Button,
-  ButtonEmphasis,
   ButtonSize,
 } from 'ui/src/components/button/Button'
 import { Flex } from 'ui/src/components/layout/Flex'
@@ -61,19 +60,15 @@ export function DappRequestContent(): JSX.Element {
               </Text>
               <YStack gap="$spacing16" marginTop="$spacing16">
                 <Button
-                  buttonEmphasis={ButtonEmphasis.Primary}
                   buttonSize={ButtonSize.Large}
-                  fontSize={18}
-                  fontWeight="medium"
-                  onPress={(): void => onConfirm(requestWithDisplay)}>
+                  onPress={(): void => onConfirm(requestWithDisplay)}
+                  theme="primary">
                   Confirm
                 </Button>
                 <Button
-                  buttonEmphasis={ButtonEmphasis.Secondary}
                   buttonSize={ButtonSize.Large}
-                  fontSize={18}
-                  fontWeight="medium"
-                  onPress={(): void => onCancel(requestWithDisplay)}>
+                  onPress={(): void => onCancel(requestWithDisplay)}
+                  theme="secondary">
                   Cancel
                 </Button>
               </YStack>

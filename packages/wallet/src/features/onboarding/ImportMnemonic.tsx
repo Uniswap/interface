@@ -58,10 +58,8 @@ export function ImportMnemonic(): JSX.Element {
             </XStack>
             <Form.Trigger asChild>
               <Button
-                fontSize={18}
-                fontWeight="400"
-                paddingHorizontal="$spacing24"
-                paddingVertical="$spacing16">
+                theme="primary"
+                width="100%">
                 Import
               </Button>
             </Form.Trigger>

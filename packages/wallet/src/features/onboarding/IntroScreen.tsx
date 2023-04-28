@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { LinkButton } from 'ui/src/components/button/Button'
 import { Circle, Text, XStack, YStack } from 'ui/src'
 
 function InfoRow({
@@ -31,43 +31,12 @@ export function IntroScreen(): JSX.Element {
           variant="headlineMedium">
           Get started with Uniswap Wallet
         </Text>
-        {/* TODO: add a styled link that looks like a button. */}
-        <Link
-          // eslint-disable-next-line react-native/no-inline-styles
-          style={{
-            display: 'flex',
-            textDecoration: 'none',
-          }}
-          to="import">
-          <Text
-            backgroundColor="$background3"
-            borderRadius="$rounded16"
-            color="$textPrimary"
-            flexGrow={1}
-            padding="$spacing12"
-            textAlign="center"
-            variant="buttonLabelMedium">
-            I already have a wallet
-          </Text>
-        </Link>
-        <Link
-          // eslint-disable-next-line react-native/no-inline-styles
-          style={{
-            display: 'flex',
-            textDecoration: 'none',
-          }}
-          to="create">
-          <Text
-            backgroundColor="$magentaVibrant"
-            borderRadius="$rounded16"
-            color="$white"
-            flexGrow={1}
-            padding="$spacing12"
-            textAlign="center"
-            variant="buttonLabelMedium">
-            Create a new wallet
-          </Text>
-        </Link>
+        <LinkButton theme="secondary" to="import">
+          I already have a wallet
+        </LinkButton>
+        <LinkButton theme="primary" to="create">
+          Create a new wallet
+        </LinkButton>
       </YStack>
       <YStack gap="$spacing24" justifyContent="center">
         <InfoRow
