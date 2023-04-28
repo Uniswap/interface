@@ -29,7 +29,7 @@ export function SwapModalDetailRow({ label, value, color, labelTooltipText }: De
       <Row align="flex-start" justify="space-between">
         {labelTooltipText ? (
           <MouseoverTooltip text={labelTooltipText}>
-            <Label>{label}</Label>
+            <Label cursor="help">{label}</Label>
           </MouseoverTooltip>
         ) : (
           <Label>{label}</Label>

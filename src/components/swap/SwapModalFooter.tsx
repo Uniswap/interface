@@ -250,7 +250,7 @@ export default function SwapModalFooter({
             <RowFixed>
               <StyledAlertTriangle size={20} />
               <ThemedText.DeprecatedMain color={theme.accentAction}>
-                <Trans>Price Updated</Trans>
+                <Trans>Price updated</Trans>
               </ThemedText.DeprecatedMain>
             </RowFixed>
             <SmallButtonPrimary onClick={onAcceptChanges}>

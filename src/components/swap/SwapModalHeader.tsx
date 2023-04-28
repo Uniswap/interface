@@ -40,7 +40,7 @@ export default function SwapModalHeader({
 
   const estimateMessage = useMemo(() => {
     return trade.tradeType === TradeType.EXACT_INPUT ? (
-      <ThemedText.DeprecatedItalic fontWeight={400} textAlign="left" style={{ width: '100%' }}>
+      <ThemedText.Caption textAlign="left" style={{ width: '100%' }}>
         <Trans>
           Output is estimated. You will receive at least{' '}
           <b>
@@ -48,9 +48,9 @@ export default function SwapModalHeader({
           </b>{' '}
           or the transaction will revert.
         </Trans>
-      </ThemedText.DeprecatedItalic>
+      </ThemedText.Caption>
     ) : (
-      <ThemedText.DeprecatedItalic fontWeight={400} textAlign="left" style={{ width: '100%' }}>
+      <ThemedText.Caption textAlign="left" style={{ width: '100%' }}>
         <Trans>
           Input is estimated. You will sell at most{' '}
           <b>
@@ -58,7 +58,7 @@ export default function SwapModalHeader({
           </b>{' '}
           or the transaction will revert.
         </Trans>
-      </ThemedText.DeprecatedItalic>
+      </ThemedText.Caption>
     )
   }, [allowedSlippage, trade])
 

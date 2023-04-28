@@ -140,7 +140,7 @@ export function SwapCallbackError({ error }: { error: ReactNode }) {
 export const SwapShowAcceptChanges = styled(AutoColumn)`
   background-color: ${({ theme }) => transparentize(0.95, theme.deprecated_primary3)};
   color: ${({ theme }) => theme.accentAction};
-  padding: 0.5rem;
+  padding: 12px;
   border-radius: 12px;
   margin-top: 8px;
 `

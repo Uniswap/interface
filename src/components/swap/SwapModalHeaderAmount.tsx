@@ -3,15 +3,15 @@ import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import Column from 'components/Column'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import Row from 'components/Row'
-import Tooltip from 'components/Tooltip'
-import { ReactNode, useState } from 'react'
-import { Info } from 'react-feather'
-import styled, { useTheme } from 'styled-components/macro'
+import { MouseoverTooltip } from 'components/Tooltip'
+import { ReactNode } from 'react'
+import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
 const MAX_AMOUNT_STR_LENGTH = 9
 
-export const Label = styled.span`
+export const Label = styled.span<{ cursor?: string }>`
+  cursor: ${({ cursor }) => cursor};
   color: ${({ theme }) => theme.textSecondary};
   margin-right: 8px;
   max-width: 75%;
@@ -35,9 +35,6 @@ interface AmountProps {
 }
 
 export function SwapModalHeaderAmount({ tooltipText, label, amount, usdAmount, field }: AmountProps) {
-  const [showHoverTooltip, setShowHoverTooltip] = useState(false)
-  const theme = useTheme()
-
   let formattedAmount = formatCurrencyAmount(amount, NumberType.TokenTx)
   if (formattedAmount.length > MAX_AMOUNT_STR_LENGTH) {
     formattedAmount = formatCurrencyAmount(amount, NumberType.SwapTradeAmount)
@@ -47,17 +44,14 @@ export function SwapModalHeaderAmount({ tooltipText, label, amount, usdAmount, f
     <Row align="flex-start" justify="space-between" gap="md">
       <Row width="wrap-content">
         <ThemedText.BodySecondary>
-          <Label>{label}</Label>
+          {tooltipText ? (
+            <MouseoverTooltip text={tooltipText}>
+              <Label cursor="help">{label}</Label>
+            </MouseoverTooltip>
+          ) : (
+            <Label>{label}</Label>
+          )}
         </ThemedText.BodySecondary>
-        {tooltipText && (
-          <Info
-            size={16}
-            color={theme.textSecondary}
-            onMouseEnter={() => setShowHoverTooltip(true)}
-            onMouseLeave={() => setShowHoverTooltip(false)}
-          />
-        )}
-        <Tooltip show={showHoverTooltip} placement="right" text={tooltipText} />
       </Row>
 
       <AmountContainer>

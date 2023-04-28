@@ -81,7 +81,7 @@ describe('SwapModalFooter.tsx', () => {
     expect(setShouldLogModalCloseEventFn).toHaveBeenCalledWith(false)
     const showAcceptChanges = screen.getByTestId('show-accept-changes')
     expect(showAcceptChanges).toBeInTheDocument()
-    expect(within(showAcceptChanges).getByText('Price Updated')).toBeVisible()
+    expect(within(showAcceptChanges).getByText('Price updated')).toBeVisible()
     expect(within(showAcceptChanges).getByText('Accept')).toBeVisible()
     expect(sendAnalyticsEventMock).toHaveBeenCalledTimes(1)
   })

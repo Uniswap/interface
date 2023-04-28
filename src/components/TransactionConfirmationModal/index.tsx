@@ -13,7 +13,7 @@ import styled, { useTheme } from 'styled-components/macro'
 import { isL2ChainId } from 'utils/chains'
 
 import Circle from '../../assets/images/blue-loader.svg'
-import { BackArrowIcon, ExternalLink, ThemedText } from '../../theme'
+import { ExternalLink, ThemedText } from '../../theme'
 import { CloseIcon, CustomLightSpinner } from '../../theme'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import { TransactionSummary } from '../AccountDetails/TransactionSummary'
@@ -55,7 +55,7 @@ const ConfirmationModalContentWrapper = styled(AutoColumn)`
 `
 
 const ConfirmationModalTopContentWrapper = styled(AutoColumn)`
-  padding: 16px 8px 0;
+  padding: 8px 8px 0;
 `
 
 function ConfirmationPendingContent({
@@ -194,10 +194,10 @@ export function ConfirmationModalContent({
     <ConfirmationModalWrapper>
       <ConfirmationModalTopContentWrapper gap="sm">
         <Row>
-          <BackArrowIcon onClick={onDismiss} data-cy="confirmation-close-icon" />
-          <Row justify="center">
+          <Row justify="center" marginLeft="24px">
             <ThemedText.SubHeader>{title}</ThemedText.SubHeader>
           </Row>
+          <CloseIcon onClick={onDismiss} data-cy="confirmation-close-icon" />
         </Row>
         {topContent()}
       </ConfirmationModalTopContentWrapper>
