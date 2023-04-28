@@ -19,6 +19,7 @@ jobs:
           token: ${{ secrets.SERVICE_ACCOUNT_PAT }}
           ref: main
       - name: Get marketing version number
+        working-directory: ./apps/mobile
         run: |
           fastlane ios getMarketingVersionNumber
         env:
