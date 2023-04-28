@@ -16,21 +16,17 @@ const useUniversalRouterAddress = (
   shouldUseNftRouter?: boolean,
   chainId?: number
 ): string | undefined => {
-  let contractToApprove: string | undefined
   const shouldUseUpdatedContract = usePwatNewContractEnabled()
 
-  const canPermit = enabled && chainId
-  const forceNftRouter = canPermit && shouldUseNftRouter && chainId === 1
+  if (!enabled || !chainId) return
 
-  if (forceNftRouter) {
-    contractToApprove = shouldUseUpdatedContract
-      ? NFT_UNIVERSAL_ROUTER_MAINNET_ADDRESS
-      : DEPRECATED_NFT_UNIVERSAL_ROUTER_MAINNET_ADDRESS
-  } else if (canPermit) {
-    contractToApprove = UNIVERSAL_ROUTER_ADDRESS(chainId)
+  if (shouldUseNftRouter && chainId === 1) {
+    if (shouldUseUpdatedContract) return NFT_UNIVERSAL_ROUTER_MAINNET_ADDRESS
+
+    return DEPRECATED_NFT_UNIVERSAL_ROUTER_MAINNET_ADDRESS
   }
 
-  return useMemo(() => contractToApprove, [contractToApprove])
+  return UNIVERSAL_ROUTER_ADDRESS(chainId)
 }
 
 export default function usePermit2Approval(
@@ -40,11 +36,11 @@ export default function usePermit2Approval(
   shouldUseNftRouter?: boolean
 ) {
   const { chainId } = useWeb3React()
-  const contractToApprove = useUniversalRouterAddress(enabled, shouldUseNftRouter, chainId)
+  const universalRouterAddress = useUniversalRouterAddress(enabled, shouldUseNftRouter, chainId)
 
   const allowance = usePermit2Allowance(
     enabled ? maximumAmount ?? (amount?.currency.isToken ? (amount as CurrencyAmount<Token>) : undefined) : undefined,
-    contractToApprove
+    universalRouterAddress
   )
   const isApprovalLoading = allowance.state === AllowanceState.REQUIRED && allowance.isApprovalLoading
   const [isAllowancePending, setIsAllowancePending] = useState(false)
