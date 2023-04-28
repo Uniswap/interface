@@ -1,6 +1,7 @@
 import { BaseVariant, FeatureFlag, featureFlagSettings, useUpdateFlag } from 'featureFlags'
 import { DetailsV2Variant, useDetailsV2Flag } from 'featureFlags/flags/nftDetails'
 import { PayWithAnyTokenVariant, usePayWithAnyTokenFlag } from 'featureFlags/flags/payWithAnyToken'
+import { PwatNewContractVariant, usePwatNewContractFlag } from 'featureFlags/flags/pwatNewContract'
 import { SwapWidgetVariant, useSwapWidgetFlag } from 'featureFlags/flags/swapWidget'
 import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
 import { useUpdateAtom } from 'jotai/utils'
@@ -220,6 +221,12 @@ export default function FeatureFlagModal() {
         value={useDetailsV2Flag()}
         featureFlag={FeatureFlag.detailsV2}
         label="Use the new details page for nfts"
+      />
+      <FeatureFlagOption
+        variant={PwatNewContractVariant}
+        value={usePwatNewContractFlag()}
+        featureFlag={FeatureFlag.newContractForPWAT}
+        label="enables the updated contract for pwat"
       />
       <FeatureFlagGroup name="Debug">
         <FeatureFlagOption
