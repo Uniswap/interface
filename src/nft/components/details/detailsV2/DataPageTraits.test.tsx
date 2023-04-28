@@ -1,10 +1,10 @@
-import { TEST_NFT_ASSET } from 'test-utils/constants'
+import { TEST_NFT_ASSET } from 'test-utils/nft/fixtures'
 import { render } from 'test-utils/render'
 
 import { DataPageTraits } from './DataPageTraits'
 
 it('data page trait component does not load with asset with no traits', () => {
-  const { asFragment } = render(<DataPageTraits asset={TEST_NFT_ASSET} />)
+  const { asFragment } = render(<DataPageTraits traits={TEST_NFT_ASSET.traits ?? []} />)
   expect(asFragment()).toMatchSnapshot()
 })
 
