@@ -7,20 +7,20 @@ import { ReactComponent as TwitterI } from './images/twitter-safe.svg'
 export const DiscordIcon = styled(DiscordI)<{ size?: number; fill?: string }>`
   height: ${({ size }) => (size ? size + 'px' : '32px')};
   width: ${({ size }) => (size ? size + 'px' : '32px')};
-  fill: ${({ fill }) => fill ?? '#98A1C0'};
+  fill: ${({ fill, theme }) => fill || theme.accentActive};
   opacity: 1;
 `
 
 export const TwitterIcon = styled(TwitterI)<{ size?: number; fill?: string }>`
   height: ${({ size }) => (size ? size + 'px' : '32px')};
   width: ${({ size }) => (size ? size + 'px' : '32px')};
-  fill: ${({ fill }) => fill ?? '#98A1C0'};
+  fill: ${({ fill, theme }) => fill || theme.accentActive};
   opacity: 1;
 `
 
 export const GithubIcon = styled(GithubI)<{ size?: number; fill?: string }>`
   height: ${({ size }) => (size ? size + 'px' : '32px')};
   width: ${({ size }) => (size ? size + 'px' : '32px')};
-  fill: ${({ fill }) => fill ?? '#98A1C0'};
+  fill: ${({ fill, theme }) => fill || theme.accentActive};
   opacity: 1;
 `

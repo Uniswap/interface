@@ -85,6 +85,7 @@ const BannerButton = styled(ButtonEmpty)`
 `
 
 const ProtocolBanner = () => {
+  // TODO: add on protocol link https://pegasys.finance/
   const isDarkMode = useIsDarkMode()
   return (
     <Banner isDarkMode={isDarkMode}>

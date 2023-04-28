@@ -5,7 +5,7 @@ import styled, { DefaultTheme } from 'styled-components/macro'
 import { BREAKPOINTS } from 'theme'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 
-export enum CardType {
+enum CardType {
   Primary = 'Primary',
   Secondary = 'Secondary',
 }
@@ -30,13 +30,14 @@ const StyledCard = styled.div<{ isDarkMode: boolean; backgroundImgSrc?: string; 
   padding: 24px;
   height: 212px;
   border-radius: 24px;
-  border: 1px solid ${({ theme, type }) => (type === CardType.Primary ? 'transparent' : theme.backgroundOutline)};
+  border: 1px solid ${({ theme }) => theme.backgroundBorderGradient};
   box-shadow: 0px 10px 24px 0px rgba(51, 53, 72, 0.04);
   transition: ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.ease} border`};
 
   &:hover {
-    border: 1px solid ${({ theme, isDarkMode }) => (isDarkMode ? theme.backgroundInteractive : theme.textTertiary)};
+    border: 1px solid ${({ theme }) => theme.accentAction};
   }
+
   @media screen and (min-width: ${BREAKPOINTS.sm}px) {
     height: ${({ backgroundImgSrc }) => (backgroundImgSrc ? 360 : 260)}px;
   }
@@ -88,7 +89,7 @@ const CardDescription = styled.div<{ type: CardType }>`
 `
 
 const CardCTA = styled(CardDescription)`
-  color: ${({ theme }) => theme.accentAction};
+  color: ${({ theme }) => theme.accentActive};
   font-weight: 500;
   margin: 24px 0 0;
   cursor: pointer;

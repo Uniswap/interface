@@ -2,9 +2,8 @@ import { Trans } from '@lingui/macro'
 import { Trace, TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, InterfacePageName, SharedEventName } from '@uniswap/analytics-events'
 import { AboutFooter } from 'components/About/AboutFooter'
-import Card, { CardType } from 'components/About/Card'
-import { MAIN_CARDS, MORE_CARDS } from 'components/About/constants'
-import ProtocolBanner from 'components/About/ProtocolBanner'
+import Card from 'components/About/Card'
+import { MAIN_CARDS } from 'components/About/constants'
 import { BaseButton } from 'components/Button'
 import { useSwapWidgetEnabled } from 'featureFlags/flags/swapWidget'
 import { useAtomValue } from 'jotai/utils'
@@ -73,12 +72,10 @@ const GlowContainer = styled.div`
     height: 100vh;
   }
 `
-// TODO: landing
 const Glow = styled.div`
   position: absolute;
   top: 68px;
   bottom: 0;
-  background: radial-gradient(72.04% 72.04% at 50% 3.99%, #ff37eb 0%, rgba(166, 151, 255, 0) 100%);
   filter: blur(72px);
   border-radius: 24px;
   max-width: 480px;
@@ -114,8 +111,8 @@ const TitleText = styled.h1<{ isDarkMode: boolean }>`
   margin: 0 0 24px;
   background: ${({ isDarkMode }) =>
     isDarkMode
-      ? 'linear-gradient(20deg, rgba(255, 244, 207, 1) 10%, rgba(255, 87, 218, 1) 100%)'
-      : 'linear-gradient(10deg, rgba(255,79,184,1) 0%, rgba(255,159,251,1) 100%)'};
+      ? 'linear-gradient(20deg, rgba(25, 235, 206, 1) 0%, rgba(138, 21, 230, 1) 100%)'
+      : 'linear-gradient(10deg, rgba(138, 21, 230, 1) 0%, #68e1ffbe 100%)'};
   background-clip: text;
   -webkit-background-clip: text;
 
@@ -156,13 +153,13 @@ const LandingButton = styled(BaseButton)`
 `
 
 const ButtonCTA = styled(LandingButton)`
-  background: linear-gradient(93.06deg, #ff00c7 2.66%, #ff9ffb 98.99%);
+  background: linear-gradient(90deg, rgba(25, 235, 206, 1) 0%, rgba(138, 21, 230, 1) 84.28%);
   border: none;
   color: ${({ theme }) => theme.white};
   transition: ${({ theme }) => `all ${theme.transition.duration.medium} ${theme.transition.timing.ease}`};
 
   &:hover {
-    box-shadow: 0px 0px 16px 0px #ff00c7;
+    box-shadow: 0px 0px 16px 0px rgba(25, 235, 206, 1);
   }
 `
 
@@ -207,6 +204,7 @@ const LearnMoreContainer = styled.div`
 const LearnMoreArrow = styled(ArrowDownCircle)`
   margin-left: 14px;
   size: 20px;
+  color: ${({ theme }) => theme.accentActive};
 `
 
 const AboutContentContainer = styled.div<{ isDarkMode: boolean }>`
@@ -228,7 +226,7 @@ const CardGrid = styled.div<{ cols: number }>`
   display: grid;
   gap: 12px;
   width: 100%;
-  padding: 24px 0 0;
+  padding: 24px 0 80px;
   max-width: 1440px;
   scroll-margin: ${({ theme }) => `${theme.navHeight}px 0 0`};
 
@@ -394,12 +392,6 @@ export default function Landing() {
                 />
               ))}
             </CardGrid>
-            <CardGrid cols={3}>
-              {MORE_CARDS.map(({ darkIcon, lightIcon, ...card }) => (
-                <Card {...card} icon={isDarkMode ? darkIcon : lightIcon} key={card.title} type={CardType.Secondary} />
-              ))}
-            </CardGrid>
-            <ProtocolBanner />
             <AboutFooter />
           </AboutContentContainer>
         </PageContainer>

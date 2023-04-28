@@ -322,7 +322,7 @@ export const lightTheme: Theme = {
   textTertiary: colors.gray300,
 
   accentAction: colors.purpleMain,
-  accentActive: colors.blue400,
+  accentActive: colors.purpleMain,
   accentSuccess: colors.green300,
   accentWarning: colors.gold400,
   accentFailure: colors.red400,

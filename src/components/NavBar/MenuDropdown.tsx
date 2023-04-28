@@ -11,7 +11,6 @@ import {
   BarChartIcon,
   DiscordIconMenu,
   EllipsisIcon,
-  GithubIconMenu,
   GovernanceIcon,
   PoolIcon,
   TwitterIconMenu,
@@ -215,7 +214,7 @@ export const MenuDropdown = () => {
                 )}
               </Box>
               <IconRow>
-                <Icon href="https://discord.com/invite/FCfyBSbCU5">
+                <Icon href="https://discord.com/invite/UzjWbWWERz">
                   <DiscordIconMenu
                     className={styles.hover}
                     width={24}
@@ -223,16 +222,8 @@ export const MenuDropdown = () => {
                     color={themeVars.colors.textSecondary}
                   />
                 </Icon>
-                <Icon href="https://twitter.com/Uniswap">
+                <Icon href="https://twitter.com/PegasysDEX">
                   <TwitterIconMenu
-                    className={styles.hover}
-                    width={24}
-                    height={24}
-                    color={themeVars.colors.textSecondary}
-                  />
-                </Icon>
-                <Icon href="https://github.com/Uniswap">
-                  <GithubIconMenu
                     className={styles.hover}
                     width={24}
                     height={24}
