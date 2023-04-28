@@ -55,6 +55,7 @@ function useTryActivation() {
           return
         }
 
+        // Failed Connection events are logged here, while successful ones are logged by Web3Provider
         sendAnalyticsEvent(InterfaceEventName.WALLET_CONNECT_TXN_COMPLETED, {
           result: WalletConnectionResult.FAILED,
           wallet_type: connection.getName(),
