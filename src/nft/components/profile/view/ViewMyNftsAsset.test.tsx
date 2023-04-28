@@ -1,4 +1,4 @@
-import { TEST_NFT_WALLET_ASSET } from 'test-utils/constants'
+import { TEST_NFT_WALLET_ASSET } from 'test-utils/nft/fixtures'
 import { render } from 'test-utils/render'
 
 import { ViewMyNftsAsset } from './ViewMyNftsAsset'

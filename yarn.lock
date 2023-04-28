@@ -9046,10 +9046,10 @@ cyclist@^1.0.1:
   resolved "https://registry.yarnpkg.com/cyclist/-/cyclist-1.0.1.tgz#596e9698fd0c80e12038c2b82d6eb1b35b6224d9"
   integrity sha1-WW6WmP0MgOEgOMK4LW6xs1tiJNk=
 
-cypress-hardhat@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/cypress-hardhat/-/cypress-hardhat-1.0.1.tgz#11b86653282769dadc0bd0c65ca41011865b0762"
-  integrity sha512-eGD7fNM8BXShXEsDbO/m2jv9mx7jHs44bnuWKYxO29ySXX5Soz9+AFYelhzKDvh/T+MJy1YqApPbif9+PNA++g==
+cypress-hardhat@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/cypress-hardhat/-/cypress-hardhat-2.0.0.tgz#98f07370270ec7c754d35f77c73b216d9f924abb"
+  integrity sha512-YLLVZa/15CBo7mmu5JuIGAPg4jLbSYTw/LR690tx90WEiIaPH9diHzWAE41wB+cvmgM7fGwhKnKEEeE1s1DWKg==
 
 cypress@*, cypress@10.3.1:
   version "10.3.1"
