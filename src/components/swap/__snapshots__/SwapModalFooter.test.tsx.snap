@@ -52,7 +52,12 @@ exports[`SwapModalFooter.tsx matches base snapshot, test trade exact input 1`] =
 .c5 {
   color: #7780A0;
   margin-right: 8px;
-  max-width: 75%;
+}
+
+.c9 {
+  cursor: help;
+  color: #7780A0;
+  margin-right: 8px;
 }
 
 .c6 {
@@ -78,11 +83,11 @@ exports[`SwapModalFooter.tsx matches base snapshot, test trade exact input 1`] =
       <div
         class="c3 c4"
       >
-        <span
-          class="c5"
+        <div
+          class="c2 c5 css-zhpkf8"
         >
           Exchange rate
-        </span>
+        </div>
         <span
           class="c6 c7"
         >
@@ -100,11 +105,12 @@ exports[`SwapModalFooter.tsx matches base snapshot, test trade exact input 1`] =
           class="c8"
         >
           <div>
-            <span
-              class="c5"
+            <div
+              class="c2 c9 css-zhpkf8"
+              cursor="help"
             >
               Network fee
-            </span>
+            </div>
           </div>
         </div>
         <span
@@ -124,11 +130,12 @@ exports[`SwapModalFooter.tsx matches base snapshot, test trade exact input 1`] =
           class="c8"
         >
           <div>
-            <span
-              class="c5"
+            <div
+              class="c2 c9 css-zhpkf8"
+              cursor="help"
             >
               Price impact
-            </span>
+            </div>
           </div>
         </div>
         <span
@@ -148,11 +155,12 @@ exports[`SwapModalFooter.tsx matches base snapshot, test trade exact input 1`] =
           class="c8"
         >
           <div>
-            <span
-              class="c5"
+            <div
+              class="c2 c9 css-zhpkf8"
+              cursor="help"
             >
               Minimum received
-            </span>
+            </div>
           </div>
         </div>
         <span

@@ -10,11 +10,10 @@ import { ThemedText } from 'theme'
 
 const MAX_AMOUNT_STR_LENGTH = 9
 
-export const Label = styled.span<{ cursor?: string }>`
+export const Label = styled(ThemedText.BodySmall)<{ cursor?: string }>`
   cursor: ${({ cursor }) => cursor};
   color: ${({ theme }) => theme.textSecondary};
   margin-right: 8px;
-  max-width: 75%;
 `
 
 const Value = styled.span`
@@ -62,9 +61,9 @@ export function SwapModalHeaderAmount({ tooltipText, label, amount, usdAmount, f
           </ThemedText.HeadlineMedium>
         </Row>
         {usdAmount && (
-          <ThemedText.BodySecondary>
+          <ThemedText.BodySmall>
             <Value>${usdAmount.toFixed(2)}</Value>
-          </ThemedText.BodySecondary>
+          </ThemedText.BodySmall>
         )}
       </AmountContainer>
     </Row>

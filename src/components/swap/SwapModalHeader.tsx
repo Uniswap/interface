@@ -10,7 +10,7 @@ import { ThemedText } from 'theme'
 import { SwapModalHeaderAmount } from './SwapModalHeaderAmount'
 
 const RuleWrapper = styled.div`
-  margin: 12px 2px;
+  margin: 16px 2px 24px;
 `
 
 const HeaderContainer = styled(AutoColumn)`

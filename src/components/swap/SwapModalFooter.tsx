@@ -285,7 +285,7 @@ export default function SwapModalFooter({
               $borderRadius="12px"
               id={InterfaceElementName.CONFIRM_SWAP_BUTTON}
             >
-              <Text fontSize={20} fontWeight={500}>
+              <Text fontSize={20} fontWeight={600}>
                 <Trans>Swap</Trans>
               </Text>
             </ButtonError>

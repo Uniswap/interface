@@ -78,6 +78,10 @@ exports[`SwapModalHeader.tsx matches base snapshot, test trade exact input 1`] =
   color: #7780A0;
 }
 
+.c7 {
+  color: #0D111C;
+}
+
 .c9 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -114,15 +118,20 @@ exports[`SwapModalHeader.tsx matches base snapshot, test trade exact input 1`] =
   display: flex;
 }
 
-.c8 {
+.c14 {
   display: inline-block;
   height: inherit;
 }
 
-.c7 {
+.c8 {
   color: #7780A0;
   margin-right: 8px;
-  max-width: 75%;
+}
+
+.c15 {
+  cursor: help;
+  color: #7780A0;
+  margin-right: 8px;
 }
 
 .c10 {
@@ -132,15 +141,15 @@ exports[`SwapModalHeader.tsx matches base snapshot, test trade exact input 1`] =
   align-items: flex-end;
 }
 
-.c14 {
-  margin: 12px 2px;
+.c16 {
+  margin: 16px 2px 24px;
 }
 
 .c1 {
   margin: 16px 0 0 0;
 }
 
-.c15 {
+.c17 {
   border: none;
   border-bottom: 1px solid #D2D9EE;
   margin: 0 0;
@@ -163,15 +172,12 @@ exports[`SwapModalHeader.tsx matches base snapshot, test trade exact input 1`] =
         <div
           class="c6 css-1jljtub"
         >
-          <span
-            class="c7"
+          <div
+            class="c7 c8 css-zhpkf8"
           >
             You pay
-          </span>
+          </div>
         </div>
-        <div
-          class="c8"
-        />
       </div>
       <div
         class="c9 c10"
@@ -208,44 +214,19 @@ exports[`SwapModalHeader.tsx matches base snapshot, test trade exact input 1`] =
         <div
           class="c6 css-1jljtub"
         >
-          <span
-            class="c7"
+          <div
+            class="c14"
           >
-            You receive
-          </span>
+            <div>
+              <div
+                class="c7 c15 css-zhpkf8"
+                cursor="help"
+              >
+                You receive
+              </div>
+            </div>
+          </div>
         </div>
-        <svg
-          fill="none"
-          height="16"
-          stroke="#7780A0"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          viewBox="0 0 24 24"
-          width="16"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <circle
-            cx="12"
-            cy="12"
-            r="10"
-          />
-          <line
-            x1="12"
-            x2="12"
-            y1="16"
-            y2="12"
-          />
-          <line
-            x1="12"
-            x2="12.01"
-            y1="8"
-            y2="8"
-          />
-        </svg>
-        <div
-          class="c8"
-        />
       </div>
       <div
         class="c9 c10"
@@ -273,10 +254,10 @@ exports[`SwapModalHeader.tsx matches base snapshot, test trade exact input 1`] =
       </div>
     </div>
     <div
-      class="c14"
+      class="c16"
     >
       <hr
-        class="c15"
+        class="c17"
       />
     </div>
   </div>
@@ -361,6 +342,10 @@ exports[`SwapModalHeader.tsx test trade exact output, no recipient 1`] = `
   color: #7780A0;
 }
 
+.c7 {
+  color: #0D111C;
+}
+
 .c9 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -397,15 +382,20 @@ exports[`SwapModalHeader.tsx test trade exact output, no recipient 1`] = `
   display: flex;
 }
 
-.c8 {
+.c14 {
   display: inline-block;
   height: inherit;
 }
 
-.c7 {
+.c8 {
   color: #7780A0;
   margin-right: 8px;
-  max-width: 75%;
+}
+
+.c15 {
+  cursor: help;
+  color: #7780A0;
+  margin-right: 8px;
 }
 
 .c10 {
@@ -415,15 +405,15 @@ exports[`SwapModalHeader.tsx test trade exact output, no recipient 1`] = `
   align-items: flex-end;
 }
 
-.c14 {
-  margin: 12px 2px;
+.c16 {
+  margin: 16px 2px 24px;
 }
 
 .c1 {
   margin: 16px 0 0 0;
 }
 
-.c15 {
+.c17 {
   border: none;
   border-bottom: 1px solid #D2D9EE;
   margin: 0 0;
@@ -446,15 +436,12 @@ exports[`SwapModalHeader.tsx test trade exact output, no recipient 1`] = `
         <div
           class="c6 css-1jljtub"
         >
-          <span
-            class="c7"
+          <div
+            class="c7 c8 css-zhpkf8"
           >
             You pay
-          </span>
+          </div>
         </div>
-        <div
-          class="c8"
-        />
       </div>
       <div
         class="c9 c10"
@@ -491,44 +478,19 @@ exports[`SwapModalHeader.tsx test trade exact output, no recipient 1`] = `
         <div
           class="c6 css-1jljtub"
         >
-          <span
-            class="c7"
+          <div
+            class="c14"
           >
-            You receive
-          </span>
+            <div>
+              <div
+                class="c7 c15 css-zhpkf8"
+                cursor="help"
+              >
+                You receive
+              </div>
+            </div>
+          </div>
         </div>
-        <svg
-          fill="none"
-          height="16"
-          stroke="#7780A0"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          viewBox="0 0 24 24"
-          width="16"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <circle
-            cx="12"
-            cy="12"
-            r="10"
-          />
-          <line
-            x1="12"
-            x2="12"
-            y1="16"
-            y2="12"
-          />
-          <line
-            x1="12"
-            x2="12.01"
-            y1="8"
-            y2="8"
-          />
-        </svg>
-        <div
-          class="c8"
-        />
       </div>
       <div
         class="c9 c10"
@@ -556,10 +518,10 @@ exports[`SwapModalHeader.tsx test trade exact output, no recipient 1`] = `
       </div>
     </div>
     <div
-      class="c14"
+      class="c16"
     >
       <hr
-        class="c15"
+        class="c17"
       />
     </div>
   </div>
