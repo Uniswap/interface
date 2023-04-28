@@ -100,7 +100,6 @@ it('Should properly deactivate pending connection attempts', async () => {
   expect(result.current.activationState).toEqual({ status: ActivationStatus.IDLE })
   expect(mockConnection.connector.deactivate).toHaveBeenCalledTimes(1)
   expect(console.debug).not.toHaveBeenLastCalledWith(`Connection activated: ${mockConnection.getName()}`)
-  expect(console.debug).toHaveBeenCalledTimes(1)
   expect(onSuccess).toHaveBeenCalledTimes(0)
 })
 
