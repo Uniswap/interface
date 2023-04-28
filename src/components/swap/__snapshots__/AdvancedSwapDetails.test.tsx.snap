@@ -1,0 +1,165 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AdvancedSwapDetails.tsx matches base snapshot 1`] = `
+<DocumentFragment>
+  .c0 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c4 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c5 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c6 {
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+}
+
+.c8 {
+  color: #0D111C;
+}
+
+.c10 {
+  width: 100%;
+  height: 1px;
+  background-color: #D2D9EE;
+}
+
+.c1 {
+  width: 100%;
+  padding: 1rem;
+  border-radius: 16px;
+}
+
+.c3 {
+  display: grid;
+  grid-auto-rows: auto;
+  grid-row-gap: 8px;
+}
+
+.c7 {
+  display: inline-block;
+  height: inherit;
+}
+
+.c9 {
+  color: #7780A0;
+}
+
+.c2 {
+  padding: 0;
+}
+
+<div
+    class="c0 c1 c2"
+  >
+    <div
+      class="c3"
+    >
+      <div
+        class="c0 c4 c5"
+      >
+        <div
+          class="c0 c4 c6"
+        >
+          <div
+            class="c7"
+          >
+            <div>
+              <div
+                class="css-zhpkf8"
+              >
+                Expected Output
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="c8 css-q4yjm0"
+        >
+          0.000000000000001  DEF
+        </div>
+      </div>
+      <div
+        class="c0 c4 c5"
+      >
+        <div
+          class="c0 c4 c6"
+        >
+          <div
+            class="c7"
+          >
+            <div>
+              <div
+                class="css-zhpkf8"
+              >
+                Price Impact
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="c8 css-q4yjm0"
+        >
+          <div
+            class="c9 css-1aekuku"
+          >
+            105567.37%
+          </div>
+        </div>
+      </div>
+      <div
+        class="c10"
+      />
+      <div
+        class="c0 c4 c5"
+      >
+        <div
+          class="c0 c4 c6"
+          style="margin-right: 20px;"
+        >
+          <div
+            class="c7"
+          >
+            <div>
+              <div
+                class="css-zhpkf8"
+              >
+                Minimum received after slippage (2.00%)
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="css-q4yjm0"
+        >
+          0.00000000000000098 DEF
+        </div>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;

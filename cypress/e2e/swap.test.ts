@@ -1,3 +1,4 @@
+import { USDC_MAINNET } from '../../src/constants/tokens'
 import { WETH_GOERLI } from '../fixtures/constants'
 import { getTestSelector } from '../utils'
 
@@ -43,7 +44,7 @@ describe('Swap', () => {
   }
 
   before(() => {
-    cy.visit('/swap')
+    cy.visit('/swap', { ethereum: 'hardhat' })
   })
 
   it('starts with ETH selected by default', () => {
@@ -71,6 +72,38 @@ describe('Swap', () => {
 
   it('zero output amount', () => {
     cy.get('#swap-currency-output .token-amount-input').clear().type('0.0').should('have.value', '0.0')
+  })
+
+  it('can swap ETH for USDC', () => {
+    const TOKEN_ADDRESS = USDC_MAINNET.address
+    const BALANCE_INCREMENT = 1
+    cy.hardhat().then((hardhat) => {
+      cy.then(() => hardhat.getBalance(hardhat.wallet.address, USDC_MAINNET))
+        .then((balance) => Number(balance.toFixed(1)))
+        .then((initialBalance) => {
+          cy.get('#swap-currency-output .open-currency-select-button').click()
+          cy.get(getTestSelector('token-search-input')).clear().type(TOKEN_ADDRESS)
+          cy.contains('USDC').click()
+          cy.get('#swap-currency-output .token-amount-input').clear().type(BALANCE_INCREMENT.toString())
+          cy.get('#swap-currency-input .token-amount-input').should('not.equal', '')
+          cy.get('#swap-button').click()
+          cy.get('#confirm-swap-or-send').click()
+          cy.get(getTestSelector('dismiss-tx-confirmation')).click()
+
+          cy.then(() => hardhat.provider.send('hardhat_mine', ['0x1', '0xc'])).then(() => {
+            // ui check
+            cy.get('#swap-currency-output [data-testid="balance-text"]').should(
+              'have.text',
+              `Balance: ${initialBalance + BALANCE_INCREMENT}`
+            )
+
+            // chain state check
+            cy.then(() => hardhat.getBalance(hardhat.wallet.address, USDC_MAINNET))
+              .then((balance) => Number(balance.toFixed(1)))
+              .should('eq', initialBalance + BALANCE_INCREMENT)
+          })
+        })
+    })
   })
 
   it('should have the correct default input/output and token selection should work', () => {
@@ -120,6 +153,25 @@ describe('Swap', () => {
     selectOutput('WETH')
     cy.get('#swap-currency-input .token-amount-input').clear().type('0.01')
     cy.get('#swap-currency-output .token-amount-input').should('have.value', '0.01')
+  })
+
+  it('should render and dismiss the wallet rejection modal', () => {
+    cy.visit('/swap', { ethereum: 'hardhat' })
+      .hardhat()
+      .then((hardhat) => {
+        cy.stub(hardhat.wallet, 'sendTransaction').rejects(new Error('user cancelled'))
+
+        cy.get('#swap-currency-output .open-currency-select-button').click()
+        cy.get(getTestSelector('token-search-input')).clear().type(USDC_MAINNET.address)
+        cy.contains('USDC').click()
+        cy.get('#swap-currency-output .token-amount-input').clear().type('1')
+        cy.get('#swap-currency-input .token-amount-input').should('not.equal', '')
+        cy.get('#swap-button').click()
+        cy.get('#confirm-swap-or-send').click()
+        cy.contains('Transaction rejected').should('exist')
+        cy.contains('Dismiss').click()
+        cy.contains('Transaction rejected').should('not.exist')
+      })
   })
 
   it('Opens and closes the settings menu', () => {

@@ -4,6 +4,7 @@ import Loader from 'components/Icons/LoadingSpinner'
 import Row from 'components/Row'
 import { VerifiedIcon } from 'nft/components/icons'
 import { AssetRow, CollectionRow, ListingStatus } from 'nft/types'
+import { getMarketplaceIcon } from 'nft/utils'
 import { useEffect, useRef } from 'react'
 import { Check, XOctagon } from 'react-feather'
 import styled, { css, useTheme } from 'styled-components/macro'
@@ -37,7 +38,7 @@ const AssetIcon = styled.img`
   z-index: 1;
 `
 
-const MarketplaceIcon = styled.img`
+const MarketplaceIcon = styled.div`
   border-radius: 4px;
   height: 24px;
   width: 24px;
@@ -137,8 +138,8 @@ export const ContentRow = ({
         failed={failed}
         ref={rowRef}
       >
-        {isCollectionApprovalSection ? <CollectionIcon src={row.images[0]} /> : <AssetIcon src={row.images[0]} />}
-        <MarketplaceIcon src={row.images[1]} />
+        {isCollectionApprovalSection ? <CollectionIcon src={row.image} /> : <AssetIcon src={row.image} />}
+        <MarketplaceIcon>{getMarketplaceIcon(row.marketplace.name, '24')}</MarketplaceIcon>
         <ContentName>{row.name}</ContentName>
         {isCollectionApprovalSection && (row as CollectionRow).isVerified && <StyledVerifiedIcon />}
         <IconWrapper>
