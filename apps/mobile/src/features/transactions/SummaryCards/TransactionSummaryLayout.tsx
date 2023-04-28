@@ -43,7 +43,7 @@ function TransactionSummaryLayout({
 }: {
   transaction: TransactionDetails
   title?: string
-  caption?: string
+  caption: string
   bg?: ResponsiveValue<keyof Theme['colors'], Theme>
   icon?: JSX.Element
   onRetry?: () => void
@@ -63,6 +63,8 @@ function TransactionSummaryLayout({
   title = title ?? getTransactionSummaryTitle(transaction, t) ?? ''
 
   const inProgress = status === TransactionStatus.Cancelling || status === TransactionStatus.Pending
+  const inCancelling =
+    status === TransactionStatus.Cancelled || status === TransactionStatus.Cancelling
 
   // Monitor latest nonce to identify queued transactions.
   const lowestPendingNonce = useLowestPendingNonce()
@@ -113,30 +115,25 @@ function TransactionSummaryLayout({
       : wrappedAddedTime.format('MMM D') // current year
   }, [transaction.addedTime])
 
-  const rightBlock = inProgress ? (
-    <SpinningLoader disabled={queued} size={LOADING_SPINNER_SIZE} />
-  ) : transaction.status === TransactionStatus.Cancelled ||
-    transaction.status === TransactionStatus.Cancelling ? (
+  const statusIconSize = theme.iconSizes.icon16
+  const statusIconFill = theme.colors.background0
+
+  const rightBlock = inCancelling ? (
     <SlashCircleIcon
       color={theme.colors.accentCritical}
-      fill={theme.colors.background0}
+      fill={statusIconFill}
       fillOpacity={1}
-      height={theme.iconSizes.icon16}
-      width={theme.iconSizes.icon16}
+      height={statusIconSize}
+      width={statusIconSize}
     />
-  ) : transaction.status === TransactionStatus.Failed ? (
+  ) : status === TransactionStatus.Failed ? (
     <Box alignItems="flex-end" flexGrow={1} justifyContent="space-between">
       <AlertTriangle
         color={theme.colors.accentWarning}
-        fill={theme.colors.background0}
-        height={theme.iconSizes.icon16}
-        width={theme.iconSizes.icon16}
+        fill={statusIconFill}
+        height={statusIconSize}
+        width={statusIconSize}
       />
-      {status === TransactionStatus.Failed && onRetry && (
-        <Text color="accentActive" variant="buttonLabelSmall" onPress={onRetry}>
-          {t('Retry')}
-        </Text>
-      )}
     </Box>
   ) : (
     <Text color="textTertiary" variant="bodyMicro">
@@ -147,44 +144,41 @@ function TransactionSummaryLayout({
   return (
     <>
       <TouchableArea mb="spacing24" overflow="hidden" onPress={onPress}>
-        <Flex
-          grow
-          row
-          alignItems="flex-start"
-          bg={bg ?? 'background0'}
-          borderRadius="rounded16"
-          justifyContent="space-between">
-          <Flex
-            row
-            shrink
-            alignItems="center"
-            gap="spacing12"
-            height="100%"
-            justifyContent="flex-start"
-            pr="spacing8">
-            {icon && (
-              <Flex centered height={TXN_HISTORY_ICON_SIZE} width={TXN_HISTORY_ICON_SIZE}>
-                {icon}
-              </Flex>
-            )}
-            <Flex shrink gap="none">
-              <Flex row alignItems="center" gap="spacing4">
+        <Flex grow row bg={bg ?? 'background0'} gap="spacing12">
+          {icon && (
+            <Flex centered width={TXN_HISTORY_ICON_SIZE}>
+              {icon}
+            </Flex>
+          )}
+          <Flex grow shrink gap="none">
+            <Flex grow gap="none">
+              <Flex grow row alignItems="center" gap="spacing4" justifyContent="space-between">
                 <Text color="textPrimary" numberOfLines={1} variant="bodyLarge">
                   {title}
                 </Text>
+                {!inProgress && rightBlock}
               </Flex>
-              {caption && (
-                <Text color="textSecondary" numberOfLines={1} variant="subheadSmall">
-                  {caption}
-                </Text>
-              )}
+              <Flex grow row>
+                <Box flexGrow={1} flexShrink={1}>
+                  <Text color="textSecondary" numberOfLines={1} variant="subheadSmall">
+                    {caption}
+                  </Text>
+                </Box>
+                {status === TransactionStatus.Failed && onRetry && (
+                  <Box flexShrink={0}>
+                    <Text color="accentActive" variant="buttonLabelSmall" onPress={onRetry}>
+                      {t('Retry')}
+                    </Text>
+                  </Box>
+                )}
+              </Flex>
             </Flex>
           </Flex>
-          <Flex
-            height={inProgress ? '100%' : undefined}
-            justifyContent={inProgress ? 'center' : undefined}>
-            {rightBlock}
-          </Flex>
+          {inProgress && (
+            <Flex height="100%" justifyContent="center">
+              <SpinningLoader disabled={queued} size={LOADING_SPINNER_SIZE} />
+            </Flex>
+          )}
         </Flex>
       </TouchableArea>
       {showActionsModal && (
