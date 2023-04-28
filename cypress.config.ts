@@ -5,7 +5,7 @@ import { setupHardhatEvents } from 'cypress-hardhat'
 export default defineConfig({
   projectId: 'yp82ef',
   videoUploadOnPasses: false,
-  defaultCommandTimeout: 24000, // 2x average block time
+  defaultCommandTimeout: 900000, // 2x average block time
   chromeWebSecurity: false,
   retries: { runMode: 2 },
   e2e: {

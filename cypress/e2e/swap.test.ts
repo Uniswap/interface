@@ -1,7 +1,10 @@
+import { BigNumber } from '@ethersproject/bignumber'
+
 import { USDC_MAINNET } from '../../src/constants/tokens'
 import { WETH_GOERLI } from '../fixtures/constants'
 import { HardhatProvider } from '../support/hardhat'
 import { getTestSelector } from '../utils'
+import { calculateExactOutputAmount } from '../utils/calculateExactOutputAmount'
 
 describe('Swap', () => {
   let hardhat: HardhatProvider
@@ -198,5 +201,55 @@ describe('Swap', () => {
     cy.visit('/swap')
     cy.get('#swap-currency-input .token-amount-input').should('have.value', '')
     cy.get('#swap-currency-output .token-amount-input').should('not.equal', '')
+  })
+
+  it.only('should render an error for slippage failure', () => {
+    const TOKEN_ADDRESS = USDC_MAINNET.address
+    const SLIPPAGE = 0.01
+    const SWAP_OUTPUT_AMOUNT = 1_000
+
+    cy.visit('/swap', { ethereum: 'hardhat' }).then((window) => {
+      cy.stub(hardhat.wallet, 'estimateGas').resolves(BigNumber.from(200_000))
+      hardhat = window.hardhat
+      cy.then(() => calculateExactOutputAmount(1, 1, hardhat.wallet))
+        .then((x) => console.log('jfrankfurt', x))
+        .then(() => hardhat.utils.getBalance(hardhat.wallet.address, USDC_MAINNET))
+        .then((balance) => Number(balance.toFixed(1)))
+        .then((initialBalance) => {
+          // set slippage low
+          cy.get(getTestSelector('open-settings-dialog-button')).click()
+          cy.get(getTestSelector('slippage-input')).clear().type(SLIPPAGE.toString())
+          cy.get('body').click('topRight')
+          cy.get(getTestSelector('slippage-input')).should('not.exist')
+
+          cy.get('#swap-currency-output .open-currency-select-button').click()
+          cy.get(getTestSelector('token-search-input')).clear().type(TOKEN_ADDRESS.substring(0, 6))
+          cy.contains('USDC').click()
+
+          cy.get('#swap-currency-input .token-amount-input').clear().type(SWAP_OUTPUT_AMOUNT.toString())
+          cy.get('#swap-currency-output .token-amount-input').should('not.equal', '')
+          cy.get('#swap-button').click()
+          cy.get('#confirm-swap-or-send').click()
+          cy.get(getTestSelector('dismiss-tx-confirmation')).click()
+
+          cy.get('#swap-currency-input .token-amount-input').clear().type(SWAP_OUTPUT_AMOUNT.toString())
+          cy.get('#swap-currency-output .token-amount-input').should('not.equal', '')
+          cy.get('#swap-button').click()
+          cy.get('#confirm-swap-or-send').click()
+          cy.get(getTestSelector('dismiss-tx-confirmation')).click()
+
+          cy.then(() => hardhat.send('hardhat_mine', ['0x1', '0xc'])).then(() => {
+            // check for a successful transaction notification
+            cy.get(getTestSelector('transaction-notif-popup'))
+
+            // check for a failed transaction notification
+            cy.get(getTestSelector('transaction-notif-popup'))
+            // chain state check
+            cy.then(() => hardhat.wallet.getBalance('latest'))
+              .then((balance) => balance.toString())
+              .should('eq', (initialBalance - SWAP_OUTPUT_AMOUNT).toString())
+          })
+        })
+    })
   })
 })

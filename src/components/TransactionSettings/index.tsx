@@ -199,6 +199,7 @@ export default function TransactionSettings({ placeholderSlippage }: Transaction
                 </SlippageEmojiContainer>
               ) : null}
               <Input
+                data-testid="slippage-input"
                 placeholder={placeholderSlippage.toFixed(2)}
                 value={
                   slippageInput.length > 0

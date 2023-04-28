@@ -164,6 +164,7 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
               <ButtonError
                 error={true}
                 padding="12px"
+                data-testid="turn-on-expert-mode"
                 onClick={() => {
                   const confirmWord = t`confirm`
                   if (window.prompt(t`Please type the word "${confirmWord}" to enable expert mode.`) === confirmWord) {
@@ -184,6 +185,7 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
         disabled={!isSupportedChainId(chainId)}
         onClick={toggle}
         id="open-settings-dialog-button"
+        data-testid="open-settings-dialog-button"
         aria-label={t`Transaction Settings`}
       >
         <StyledMenuIcon data-testid="swap-settings-button" />
