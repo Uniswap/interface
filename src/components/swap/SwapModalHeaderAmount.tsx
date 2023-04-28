@@ -44,7 +44,7 @@ export function SwapModalHeaderAmount({ tooltipText, label, amount, usdAmount, f
   }
 
   return (
-    <Row align="flex-start" justify="space-between" gap="12px">
+    <Row align="flex-start" justify="space-between" gap="md">
       <Row width="wrap-content">
         <ThemedText.BodySecondary>
           <Label>{label}</Label>
@@ -61,7 +61,7 @@ export function SwapModalHeaderAmount({ tooltipText, label, amount, usdAmount, f
       </Row>
 
       <AmountContainer>
-        <Row gap="0.5rem" width="wrap-content">
+        <Row gap="sm" width="wrap-content">
           <CurrencyLogo currency={amount.currency} size="28px" />
           <ThemedText.HeadlineMedium color="primary" data-testid={`${field}-amount`}>
             {formattedAmount} {amount.currency.symbol}

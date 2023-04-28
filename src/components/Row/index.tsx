@@ -1,5 +1,6 @@
 import { Box } from 'rebass/styled-components'
 import styled from 'styled-components/macro'
+import { Gap } from 'theme'
 
 const Row = styled(Box)<{
   width?: string
@@ -8,7 +9,7 @@ const Row = styled(Box)<{
   padding?: string
   border?: string
   borderRadius?: string
-  gap?: string
+  gap?: Gap | string
 }>`
   width: ${({ width }) => width ?? '100%'};
   display: flex;
@@ -18,7 +19,7 @@ const Row = styled(Box)<{
   padding: ${({ padding }) => padding};
   border: ${({ border }) => border};
   border-radius: ${({ borderRadius }) => borderRadius};
-  gap: ${({ gap }) => gap};
+  gap: ${({ gap, theme }) => (gap && theme.grids[gap as Gap]) || gap};
 `
 
 export const RowBetween = styled(Row)`

@@ -13,6 +13,10 @@ const RuleWrapper = styled.div`
   margin: 0.75rem 0.125rem;
 `
 
+const HeaderContainer = styled(AutoColumn)`
+  margin: 16px 0 0 0;
+`
+
 const Rule = styled.hr<{ padded?: true; scrollingEdge?: 'top' | 'bottom' }>`
   border: none;
   border-bottom: 1px solid ${({ theme }) => theme.backgroundOutline};
@@ -59,7 +63,7 @@ export default function SwapModalHeader({
   }, [allowedSlippage, trade])
 
   return (
-    <AutoColumn gap="0.5rem" style={{ marginTop: '1rem' }}>
+    <HeaderContainer gap="sm">
       <SwapModalHeaderAmount
         field="input"
         label={t`You pay`}
@@ -76,6 +80,6 @@ export default function SwapModalHeader({
       <RuleWrapper>
         <Rule />
       </RuleWrapper>
-    </AutoColumn>
+    </HeaderContainer>
   )
 }

@@ -1,6 +1,11 @@
 import { rootCssString } from 'nft/css/cssStringFromTheme'
 import React, { useMemo } from 'react'
-import { createGlobalStyle, css, ThemeProvider as StyledComponentsThemeProvider } from 'styled-components/macro'
+import {
+  createGlobalStyle,
+  css,
+  DefaultTheme,
+  ThemeProvider as StyledComponentsThemeProvider,
+} from 'styled-components/macro'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 
 import { darkTheme, lightTheme } from './colors'
@@ -66,6 +71,8 @@ const opacities = {
 const fonts = {
   code: 'courier, courier new, serif',
 }
+
+export type Gap = keyof DefaultTheme['grids']
 
 function getSettings(darkMode: boolean) {
   return {
