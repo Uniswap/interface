@@ -201,19 +201,16 @@ exports[`data page trait component does not load with asset with no traits 1`] =
         >
           Trait
         </div>
-         
         <div
           class="c9 c11 css-1aekuku"
         >
           Floor price
         </div>
-         
         <div
           class="c9 c12 css-1aekuku"
         >
           Quantity
         </div>
-         
         <div
           class="c9 c13 css-1aekuku"
         >
