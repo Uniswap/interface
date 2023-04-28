@@ -68,8 +68,8 @@ export default function Option({ connection }: { connection: Connection }) {
   const closeDrawer = useCloseAccountDrawer()
   const activate = () => tryActivation(connection, closeDrawer)
 
-  const isSomeConnectorPending = activationState.status === ActivationStatus.PENDING
-  const isCurrentOptionPending = isSomeConnectorPending && activationState.connection.type === connection.type
+  const isSomeOptionPending = activationState.status === ActivationStatus.PENDING
+  const isCurrentOptionPending = isSomeOptionPending && activationState.connection.type === connection.type
   const isDarkMode = useIsDarkMode()
 
   return (
@@ -81,7 +81,7 @@ export default function Option({ connection }: { connection: Connection }) {
     >
       <OptionCardClickable
         onClick={activate}
-        disabled={isSomeConnectorPending}
+        disabled={isSomeOptionPending}
         selected={isCurrentOptionPending}
         data-testid="wallet-modal-option"
       >
