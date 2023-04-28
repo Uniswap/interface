@@ -44,6 +44,7 @@ jobs:
           token: ${{ secrets.SERVICE_ACCOUNT_PAT }}
           ref: main # use main so that the next step gets the most recent Fastfile 
       - name: Get marketing version number
+        working-directory: ./apps/mobile
         run: |
           fastlane ios getMarketingVersionNumber
         env:
