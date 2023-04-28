@@ -1,4 +1,4 @@
-import { Connection, ConnectionType } from 'connection'
+import { Connection, ConnectionType } from 'connection/types'
 
 export const getIsInjected = () => Boolean(window.ethereum)
 
@@ -28,6 +28,7 @@ export enum ErrorCode {
   CB_REJECTED_REQUEST = 'Error: User denied account authorization',
 }
 
+// TODO(WEB-3279): merge this function with existing didUserReject for Swap errors
 export function didUserReject(connection: Connection, error: any): boolean {
   return (
     error?.code === ErrorCode.USER_REJECTED_REQUEST ||

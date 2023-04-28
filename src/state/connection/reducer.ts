@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { ConnectionType } from 'connection'
+import { ConnectionType } from 'connection/types'
 
 interface ConnectionState {
   errorByConnectionType: Record<ConnectionType, string | undefined>

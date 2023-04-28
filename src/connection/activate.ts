@@ -1,6 +1,6 @@
 import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { InterfaceEventName, WalletConnectionResult } from '@uniswap/analytics-events'
-import { Connection } from 'connection'
+import { Connection } from 'connection/types'
 import { atom } from 'jotai'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { useCallback } from 'react'
@@ -18,14 +18,13 @@ export enum ActivationStatus {
 type ActivationPendingState = { status: ActivationStatus.PENDING; connection: Connection }
 type ActivationErrorState = { status: ActivationStatus.ERROR; connection: Connection; error: any }
 const IDLE_ACTIVATION_STATE = { status: ActivationStatus.IDLE } as const
-
 type ActivationState = ActivationPendingState | ActivationErrorState | typeof IDLE_ACTIVATION_STATE
 
-const pendingConnectionStateAtom = atom<ActivationState>(IDLE_ACTIVATION_STATE)
+const activationStateAtom = atom<ActivationState>(IDLE_ACTIVATION_STATE)
 
 function useTryActivation() {
   const dispatch = useAppDispatch()
-  const setActivationState = useUpdateAtom(pendingConnectionStateAtom)
+  const setActivationState = useUpdateAtom(activationStateAtom)
 
   return useCallback(
     async (connection: Connection, onSuccess: () => void) => {
@@ -49,7 +48,7 @@ function useTryActivation() {
       } catch (error) {
         // TODO(WEB-3162): re-add special treatment for already-pending injected errors
         console.debug(`web3-react connection error: ${JSON.stringify(error)}`)
-
+        console.log(error.message)
         // Gracefully handles errors from the user rejecting a connection attempt
         if (didUserReject(connection, error)) {
           setActivationState(IDLE_ACTIVATION_STATE)
@@ -68,7 +67,7 @@ function useTryActivation() {
 }
 
 function useCancelActivation() {
-  const setActivationState = useUpdateAtom(pendingConnectionStateAtom)
+  const setActivationState = useUpdateAtom(activationStateAtom)
   return useCallback(
     () =>
       setActivationState((activationState) => {
@@ -80,7 +79,7 @@ function useCancelActivation() {
 }
 
 export function useActivationState() {
-  const activationState = useAtomValue(pendingConnectionStateAtom)
+  const activationState = useAtomValue(activationStateAtom)
   const tryActivation = useTryActivation()
   const cancelActivation = useCancelActivation()
 

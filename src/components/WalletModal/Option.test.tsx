@@ -1,8 +1,8 @@
 import { Connector } from '@web3-react/types'
 import UNIWALLET_ICON from 'assets/images/uniwallet.png'
-import { Connection, ConnectionType } from 'connection'
 import { useActivationState } from 'connection/activate'
-import { render, renderHook } from 'test-utils/render'
+import { Connection, ConnectionType } from 'connection/types'
+import { act, render, renderHook } from 'test-utils/render'
 
 import Option from './Option'
 
@@ -40,7 +40,7 @@ describe('Wallet Option', () => {
 
     const component = render(<Option connection={mockConnection1} />)
     const option = component.getByTestId('wallet-modal-option')
-    option.click()
+    act(() => option.click())
 
     expect(option).toMatchSnapshot()
   })
@@ -51,7 +51,7 @@ describe('Wallet Option', () => {
 
     const component = render(<Option connection={mockConnection1} />)
     const option = component.getByTestId('wallet-modal-option')
-    option.click()
+    act(() => option.click())
 
     expect(option).toMatchSnapshot()
   })

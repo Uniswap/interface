@@ -22,8 +22,6 @@ import { Connection, ConnectionType } from './types'
 import { getIsCoinbaseWallet, getIsInjected, getIsMetaMaskWallet } from './utils'
 import { UniwalletConnect, WalletConnectPopup } from './WalletConnect'
 
-export * from './types'
-
 function onError(error: Error) {
   console.debug(`web3-react error: ${error}`)
 }

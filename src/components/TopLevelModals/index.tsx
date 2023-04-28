@@ -8,7 +8,6 @@ import useAccountRiskCheck from 'hooks/useAccountRiskCheck'
 import { lazy } from 'react'
 import { useModalIsOpen, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
-import { isIOS } from 'utils/userAgent'
 
 const Bag = lazy(() => import('nft/components/bag/Bag'))
 const TransactionCompleteModal = lazy(() => import('nft/components/collection/TransactionCompleteModal'))
@@ -27,7 +26,7 @@ export default function TopLevelModals() {
       <AddressClaimModal isOpen={addressClaimOpen} onDismiss={addressClaimToggle} />
       <ConnectedAccountBlocked account={account} isOpen={accountBlocked} />
       <Bag />
-      {!isIOS && <UniwalletModal />}
+      <UniwalletModal />
       <UniswapWalletBanner />
       <TransactionCompleteModal />
       <AirdropModal />
