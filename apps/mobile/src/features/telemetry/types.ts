@@ -2,8 +2,10 @@ import { RenderPassReport } from '@shopify/react-native-performance'
 import { MoonpayEventName, SharedEventName, SwapEventName } from '@uniswap/analytics-events'
 import { TraceProps } from 'src/components/telemetry/Trace'
 import { TraceEventProps } from 'src/components/telemetry/TraceEvent'
+import { ChainId } from 'src/constants/chains'
 import { ImportType } from 'src/features/onboarding/utils'
 import { MobileEventName } from 'src/features/telemetry/constants'
+import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
 import { EthMethod, WCEventType, WCRequestOutcome } from 'src/features/walletConnect/types'
 
 type BaseEventProperty = Partial<TraceEventProps & TraceProps> | undefined
@@ -28,6 +30,20 @@ export type MoonpayTransactionEventProperties = BaseEventProperty &
   // allow any object of strings for now
   Record<string, string>
 
+export type AssetDetailsBaseProperties = {
+  name?: string
+  address: string
+  chain?: number
+}
+
+export type SearchResultContextProperties = {
+  category?: string
+  query?: string
+  suggestion_count?: number
+  position?: number
+  isHistory?: boolean
+}
+
 export type EventProperties = {
   [MobileEventName.BalancesReport]: {
     total_balances_usd: number
@@ -42,34 +58,25 @@ export type EventProperties = {
   [MobileEventName.ExploreFilterSelected]: {
     filter_type: string
   }
-  [MobileEventName.ExploreSearchResultClicked]: {
-    name: string
-    address: string
-    type: 'collection' | 'token' | 'address'
-    query?: string
-    suggestion_count?: number
-    position?: number
-    chain?: number
-    isHistory?: boolean
-  }
+  [MobileEventName.ExploreSearchResultClicked]: SearchResultContextProperties &
+    AssetDetailsBaseProperties & {
+      type: 'collection' | 'token' | 'address'
+    }
   [MobileEventName.ExploreSearchCancel]: {
     query: string
   }
-  [MobileEventName.ExploreTokenItemSelected]: {
-    address: string
-    name?: string
+  [MobileEventName.ExploreTokenItemSelected]: AssetDetailsBaseProperties & {
     position: number
-    chain: number
   }
-  [MobileEventName.FavoriteItem]: {
-    address: string
-    name?: string
-    chain?: number
+  [MobileEventName.FavoriteItem]: AssetDetailsBaseProperties & {
     type: 'token' | 'wallet'
   }
   [MobileEventName.FiatOnRampQuickActionButtonPressed]: BaseEventProperty
   [MobileEventName.FiatOnRampBannerPressed]: BaseEventProperty
   [MobileEventName.FiatOnRampWidgetOpened]: BaseEventProperty & { externalTransactionId: string }
+  [MobileEventName.NetworkFilterSelected]: BaseEventProperty & {
+    chain: ChainId | 'All'
+  }
   [MobileEventName.OnboardingCompleted]: {
     wallet_type: ImportType
     accounts_imported_count: number
@@ -86,6 +93,11 @@ export type EventProperties = {
     transaction_hash: string
   } & SwapTradeBaseProperties
   [MobileEventName.TokenDetailsOtherChainButtonPressed]: BaseEventProperty
+  [MobileEventName.TokenSelected]: BaseEventProperty &
+    AssetDetailsBaseProperties &
+    SearchResultContextProperties & {
+      field: CurrencyField
+    }
   [MobileEventName.WalletAdded]: {
     wallet_type: ImportType
     accounts_imported_count: number

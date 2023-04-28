@@ -14,6 +14,7 @@ import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { QRCodeScanner } from 'src/components/QRCodeScanner/QRCodeScanner'
 import { WalletQRCode } from 'src/components/QRCodeScanner/WalletQRCode'
+import { Trace } from 'src/components/telemetry/Trace'
 import { Text } from 'src/components/Text'
 import { ConnectedDappsList } from 'src/components/WalletConnect/ConnectedDapps/ConnectedDappsList'
 import { getSupportedURI, URIType } from 'src/components/WalletConnect/ScanSheet/util'
@@ -155,15 +156,19 @@ export function WalletConnectModal({
           />
         )}
         {currentScreenState === ScannerModalState.ScanQr && (
-          <QRCodeScanner
-            numConnections={sessions.length}
-            shouldFreezeCamera={shouldFreezeCamera}
-            onPressConnections={onPressShowConnectedDapps}
-            onScanCode={onScanCode}
-          />
+          <Trace logImpression element={ElementName.WalletConnectScan}>
+            <QRCodeScanner
+              numConnections={sessions.length}
+              shouldFreezeCamera={shouldFreezeCamera}
+              onPressConnections={onPressShowConnectedDapps}
+              onScanCode={onScanCode}
+            />
+          </Trace>
         )}
         {currentScreenState === ScannerModalState.WalletQr && (
-          <WalletQRCode address={activeAddress} />
+          <Trace logImpression element={ElementName.WalletQRCode}>
+            <WalletQRCode address={activeAddress} />
+          </Trace>
         )}
         <Flex centered mb="spacing36" mt="spacing16" mx="spacing16">
           <TouchableArea

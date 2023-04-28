@@ -15,7 +15,8 @@ import WarningModal from 'src/components/modals/WarningModal/WarningModal'
 import { Trace } from 'src/components/telemetry/Trace'
 import { Text } from 'src/components/Text'
 import { ModalName, SectionName } from 'src/features/telemetry/constants'
-import { DerivedSwapInfo, useSwapActionHandlers } from 'src/features/transactions/swap/hooks'
+import { useTokenFormActionHandlers } from 'src/features/transactions/hooks'
+import { DerivedSwapInfo } from 'src/features/transactions/swap/hooks'
 import { SwapForm } from 'src/features/transactions/swap/SwapForm'
 import { SwapReview } from 'src/features/transactions/swap/SwapReview'
 import { SwapStatus } from 'src/features/transactions/swap/SwapStatus'
@@ -124,7 +125,7 @@ export function TransactionFlow({
     transform: [{ translateX: screenXOffset.value }],
   }))
 
-  const { onToggleUSDInput } = useSwapActionHandlers(dispatch)
+  const { onToggleUSDInput } = useTokenFormActionHandlers(dispatch)
 
   return (
     <TouchableWithoutFeedback>
@@ -320,20 +321,19 @@ function SwapInnerContent({
         </Trace>
       )
     case TransactionStep.REVIEW:
+      // Removed trace from here as it doesn't fire for some reason. Event fires in the component itself, can investigate at a later date
       return (
-        <Trace logImpression section={SectionName.SwapReview}>
-          <SwapReview
-            approveTxRequest={approveTxRequest}
-            derivedSwapInfo={derivedSwapInfo}
-            exactValue={exactValue}
-            gasFallbackUsed={gasFallbackUsed}
-            totalGasFee={totalGasFee}
-            txRequest={txRequest}
-            warnings={warnings}
-            onNext={onReviewNext}
-            onPrev={onReviewPrev}
-          />
-        </Trace>
+        <SwapReview
+          approveTxRequest={approveTxRequest}
+          derivedSwapInfo={derivedSwapInfo}
+          exactValue={exactValue}
+          gasFallbackUsed={gasFallbackUsed}
+          totalGasFee={totalGasFee}
+          txRequest={txRequest}
+          warnings={warnings}
+          onNext={onReviewNext}
+          onPrev={onReviewPrev}
+        />
       )
     default:
       return null

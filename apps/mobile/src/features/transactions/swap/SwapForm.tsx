@@ -18,15 +18,20 @@ import { SpinningLoader } from 'src/components/loading/SpinningLoader'
 import { Warning, WarningAction, WarningSeverity } from 'src/components/modals/WarningModal/types'
 import WarningModal, { getAlertColor } from 'src/components/modals/WarningModal/WarningModal'
 import { Trace } from 'src/components/telemetry/Trace'
+import { TracePressEvent } from 'src/components/telemetry/TraceEvent'
 import { Text } from 'src/components/Text'
+import { TokenSelectorFlow } from 'src/components/TokenSelector/TokenSelector'
 import { useUSDCPrice } from 'src/features/routing/useUSDCPrice'
 import { ElementName, ModalName, SectionName } from 'src/features/telemetry/constants'
-import { useShouldShowNativeKeyboard } from 'src/features/transactions/hooks'
+import {
+  useShouldShowNativeKeyboard,
+  useTokenFormActionHandlers,
+  useTokenSelectorActionHandlers,
+} from 'src/features/transactions/hooks'
 import { useSwapAnalytics } from 'src/features/transactions/swap/analytics'
 import {
   DerivedSwapInfo,
   useShowSwapNetworkNotification,
-  useSwapActionHandlers,
 } from 'src/features/transactions/swap/hooks'
 import { SwapArrowButton } from 'src/features/transactions/swap/SwapArrowButton'
 import { isPriceImpactWarning } from 'src/features/transactions/swap/useSwapWarnings'
@@ -80,8 +85,8 @@ function _SwapForm({
     onSetExactAmount,
     onSetMax,
     onCreateTxId,
-    onShowTokenSelector,
-  } = useSwapActionHandlers(dispatch)
+  } = useTokenFormActionHandlers(dispatch)
+  const { onShowTokenSelector } = useTokenSelectorActionHandlers(dispatch, TokenSelectorFlow.Swap)
 
   useShowSwapNetworkNotification(chainId)
 
@@ -256,11 +261,13 @@ function _SwapForm({
                   ) / 2
                 }
                 position="absolute">
-                <SwapArrowButton
-                  bg="background2"
-                  size={SWAP_DIRECTION_BUTTON_SIZE}
-                  onPress={onSwitchCurrencies}
-                />
+                <TracePressEvent element={ElementName.SwitchCurrenciesButton}>
+                  <SwapArrowButton
+                    bg="background2"
+                    size={SWAP_DIRECTION_BUTTON_SIZE}
+                    onPress={onSwitchCurrencies}
+                  />
+                </TracePressEvent>
               </Box>
             </Box>
           </Box>

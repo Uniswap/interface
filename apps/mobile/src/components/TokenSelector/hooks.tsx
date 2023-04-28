@@ -1,11 +1,14 @@
 import { Token } from '@uniswap/sdk-core'
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { flowToModalName, TokenSelectorFlow } from 'src/components/TokenSelector/TokenSelector'
 import { MATIC_MAINNET_ADDRESS } from 'src/constants/addresses'
 import { ChainId } from 'src/constants/chains'
 import { DAI, USDC, USDT, WBTC, WRAPPED_NATIVE_CURRENCY } from 'src/constants/tokens'
 import { useTokenProjects } from 'src/features/dataApi/tokenProjects'
 import { CurrencyInfo, GqlResult } from 'src/features/dataApi/types'
 import { usePersistedError } from 'src/features/dataApi/utils'
+import { sendAnalyticsEvent } from 'src/features/telemetry'
+import { MobileEventName } from 'src/features/telemetry/constants'
 import { NativeCurrency } from 'src/features/tokens/NativeCurrency'
 import { areAddressesEqual } from 'src/utils/addresses'
 import { currencyId } from 'src/utils/currencyId'
@@ -38,7 +41,10 @@ export function useAllCommonBaseCurrencies(): GqlResult<CurrencyInfo[]> {
   return { data: filteredBaseCurrencyInfos, loading, error: persistedError, refetch }
 }
 
-export function useFilterCallbacks(chainId: ChainId | null): {
+export function useFilterCallbacks(
+  chainId: ChainId | null,
+  flow: TokenSelectorFlow
+): {
   chainFilter: ChainId | null
   searchFilter: string | null
   onChangeChainFilter: (newChainFilter: ChainId | null) => void
@@ -52,9 +58,16 @@ export function useFilterCallbacks(chainId: ChainId | null): {
     setChainFilter(chainId)
   }, [chainId])
 
-  const onChangeChainFilter = useCallback((newChainFilter: typeof chainFilter) => {
-    setChainFilter(newChainFilter)
-  }, [])
+  const onChangeChainFilter = useCallback(
+    (newChainFilter: typeof chainFilter) => {
+      setChainFilter(newChainFilter)
+      sendAnalyticsEvent(MobileEventName.NetworkFilterSelected, {
+        chain: newChainFilter ?? 'All',
+        modal: flowToModalName(flow),
+      })
+    },
+    [flow]
+  )
 
   const onClearSearchFilter = useCallback(() => {
     setSearchFilter(null)

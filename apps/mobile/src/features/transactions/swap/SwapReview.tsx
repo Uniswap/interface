@@ -5,7 +5,8 @@ import { useAppTheme } from 'src/app/hooks'
 import InfoCircleSVG from 'src/assets/icons/info-circle.svg'
 import { Warning, WarningAction, WarningSeverity } from 'src/components/modals/WarningModal/types'
 import WarningModal from 'src/components/modals/WarningModal/WarningModal'
-import { ElementName, ModalName } from 'src/features/telemetry/constants'
+import { Trace } from 'src/components/telemetry/Trace'
+import { ElementName, ModalName, SectionName } from 'src/features/telemetry/constants'
 import {
   DerivedSwapInfo,
   useAcceptedTrade,
@@ -249,17 +250,19 @@ export function SwapReview({
           onClose={onCloseGasWarning}
         />
       )}
-      <TransactionReview
-        actionButtonProps={actionButtonProps}
-        currencyInInfo={currencyInInfo}
-        currencyOutInfo={currencyOutInfo}
-        formattedAmountIn={amountIn}
-        formattedAmountOut={amountOut}
-        inputCurrencyUSDValue={currencyAmountsUSDValue[CurrencyField.INPUT]}
-        outputCurrencyUSDValue={currencyAmountsUSDValue[CurrencyField.OUTPUT]}
-        transactionDetails={getTransactionDetails()}
-        onPrev={onPrev}
-      />
+      <Trace logImpression section={SectionName.SwapReview}>
+        <TransactionReview
+          actionButtonProps={actionButtonProps}
+          currencyInInfo={currencyInInfo}
+          currencyOutInfo={currencyOutInfo}
+          formattedAmountIn={amountIn}
+          formattedAmountOut={amountOut}
+          inputCurrencyUSDValue={currencyAmountsUSDValue[CurrencyField.INPUT]}
+          outputCurrencyUSDValue={currencyAmountsUSDValue[CurrencyField.OUTPUT]}
+          transactionDetails={getTransactionDetails()}
+          onPrev={onPrev}
+        />
+      </Trace>
     </>
   )
 }

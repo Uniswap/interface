@@ -19,10 +19,15 @@ import { Warning, WarningAction, WarningSeverity } from 'src/components/modals/W
 import WarningModal, { getAlertColor } from 'src/components/modals/WarningModal/WarningModal'
 import { NFTTransfer } from 'src/components/NFT/NFTTransfer'
 import { Text } from 'src/components/Text'
+import { TokenSelectorFlow } from 'src/components/TokenSelector/TokenSelector'
 import { useUSDCValue } from 'src/features/routing/useUSDCPrice'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
-import { useShouldShowNativeKeyboard } from 'src/features/transactions/hooks'
-import { useSwapActionHandlers, useUSDTokenUpdater } from 'src/features/transactions/swap/hooks'
+import {
+  useShouldShowNativeKeyboard,
+  useTokenFormActionHandlers,
+  useTokenSelectorActionHandlers,
+} from 'src/features/transactions/hooks'
+import { useUSDTokenUpdater } from 'src/features/transactions/swap/hooks'
 import {
   CurrencyField,
   transactionStateActions,
@@ -92,7 +97,11 @@ export function TransferTokenForm({
     hasWarning: false,
   })
 
-  const { onShowTokenSelector, onSetExactAmount, onSetMax } = useSwapActionHandlers(dispatch)
+  const { onShowTokenSelector } = useTokenSelectorActionHandlers(
+    dispatch,
+    TokenSelectorFlow.Transfer
+  )
+  const { onSetExactAmount, onSetMax } = useTokenFormActionHandlers(dispatch)
   const onToggleShowRecipientSelector = useOnToggleShowRecipientSelector(dispatch)
 
   const { isBlocked, isBlockedLoading } = useIsBlockedActiveAddress()

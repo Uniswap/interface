@@ -57,6 +57,7 @@ const EtherscanHeaderItem: SearchResultOrHeader = {
 }
 
 export interface SearchContext {
+  category?: string
   query?: string
   position?: number
   suggestionCount?: number

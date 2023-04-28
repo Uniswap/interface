@@ -1,10 +1,16 @@
+import { AnyAction } from '@reduxjs/toolkit'
 import { Currency } from '@uniswap/sdk-core'
 import { BigNumberish } from 'ethers'
 import { useCallback, useMemo, useState } from 'react'
 import { LayoutChangeEvent } from 'react-native'
 import { useAppSelector } from 'src/app/hooks'
+import { SearchContext } from 'src/components/explore/search/SearchResultsSection'
+import { flowToModalName, TokenSelectorFlow } from 'src/components/TokenSelector/TokenSelector'
 import { ChainId } from 'src/constants/chains'
 import { EMPTY_ARRAY } from 'src/constants/misc'
+import { AssetType } from 'src/entities/assets'
+import { sendAnalyticsEvent } from 'src/features/telemetry'
+import { MobileEventName } from 'src/features/telemetry/constants'
 import { useCurrencyInfo } from 'src/features/tokens/useCurrencyInfo'
 import {
   makeSelectAddressTransactions,
@@ -14,7 +20,11 @@ import {
   createSwapFromStateFromDetails,
   createWrapFormStateFromDetails,
 } from 'src/features/transactions/swap/createSwapFromStateFromDetails'
-import { TransactionState } from 'src/features/transactions/transactionState/transactionState'
+import {
+  CurrencyField,
+  TransactionState,
+  transactionStateActions,
+} from 'src/features/transactions/transactionState/transactionState'
 import {
   TransactionDetails,
   TransactionStatus,
@@ -22,6 +32,7 @@ import {
 } from 'src/features/transactions/types'
 import { useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
 import { theme } from 'src/styles/theme'
+import { currencyAddress } from 'src/utils/currencyId'
 
 export function usePendingTransactions(
   address: Address | null,
@@ -116,6 +127,135 @@ export function useCreateWrapFormState(
       outputCurrency,
     })
   }, [chainId, inputCurrency, outputCurrency, transaction, txId])
+}
+
+export function useTokenSelectorActionHandlers(
+  dispatch: React.Dispatch<AnyAction>,
+  flow: TokenSelectorFlow
+): {
+  onShowTokenSelector: (field: CurrencyField) => void
+  onHideTokenSelector: () => void
+  onSelectCurrency: (currency: Currency, field: CurrencyField, context: SearchContext) => void
+} {
+  const onShowTokenSelector = useCallback(
+    (field: CurrencyField) => dispatch(transactionStateActions.showTokenSelector(field)),
+    [dispatch]
+  )
+
+  const onHideTokenSelector = useCallback(
+    () => dispatch(transactionStateActions.showTokenSelector(undefined)),
+    [dispatch]
+  )
+
+  const onSelectCurrency = useCallback(
+    (currency: Currency, field: CurrencyField, context: SearchContext) => {
+      dispatch(
+        transactionStateActions.selectCurrency({
+          field,
+          tradeableAsset: {
+            address: currencyAddress(currency),
+            chainId: currency.chainId,
+            type: AssetType.Currency,
+          },
+        })
+      )
+
+      // log event that a currency was selected
+      sendAnalyticsEvent(MobileEventName.TokenSelected, {
+        name: currency.name,
+        address: currencyAddress(currency),
+        chain: currency.chainId,
+        modal: flowToModalName(flow),
+        field,
+        category: context.category,
+        position: context.position,
+        suggestion_count: context.suggestionCount,
+        query: context.query,
+      })
+
+      // hide screen when done selecting
+      onHideTokenSelector()
+    },
+    [dispatch, flow, onHideTokenSelector]
+  )
+  return { onSelectCurrency, onShowTokenSelector, onHideTokenSelector }
+}
+
+/** Set of handlers wrapping actions involving user input */
+export function useTokenFormActionHandlers(dispatch: React.Dispatch<AnyAction>): {
+  onCreateTxId: (txId: string) => void
+  onFocusInput: () => void
+  onFocusOutput: () => void
+  onSwitchCurrencies: () => void
+  onToggleUSDInput: (isUSDInput: boolean) => void
+  onSetExactAmount: (field: CurrencyField, value: string, isUSDInput?: boolean) => void
+  onSetMax: (amount: string) => void
+} {
+  const onUpdateExactTokenAmount = useCallback(
+    (field: CurrencyField, amount: string) =>
+      dispatch(transactionStateActions.updateExactAmountToken({ field, amount })),
+    [dispatch]
+  )
+
+  const onUpdateExactUSDAmount = useCallback(
+    (field: CurrencyField, amount: string) =>
+      dispatch(transactionStateActions.updateExactAmountUSD({ field, amount })),
+    [dispatch]
+  )
+
+  const onSetExactAmount = useCallback(
+    (field: CurrencyField, value: string, isUSDInput?: boolean) => {
+      const updater = isUSDInput ? onUpdateExactUSDAmount : onUpdateExactTokenAmount
+      updater(field, value)
+    },
+    [onUpdateExactUSDAmount, onUpdateExactTokenAmount]
+  )
+
+  const onSetMax = useCallback(
+    (amount: string) => {
+      // when setting max amount, always switch to token mode because
+      // our token/usd updater doesnt handle this case yet
+      dispatch(transactionStateActions.toggleUSDInput(false))
+      dispatch(
+        transactionStateActions.updateExactAmountToken({ field: CurrencyField.INPUT, amount })
+      )
+      // Unfocus the CurrencyInputField by setting focusOnCurrencyField to null
+      dispatch(transactionStateActions.onFocus(null))
+    },
+    [dispatch]
+  )
+
+  const onSwitchCurrencies = useCallback(() => {
+    dispatch(transactionStateActions.switchCurrencySides())
+  }, [dispatch])
+
+  const onToggleUSDInput = useCallback(
+    (isUSDInput: boolean) => dispatch(transactionStateActions.toggleUSDInput(isUSDInput)),
+    [dispatch]
+  )
+
+  const onCreateTxId = useCallback(
+    (txId: string) => dispatch(transactionStateActions.setTxId(txId)),
+    [dispatch]
+  )
+
+  const onFocusInput = useCallback(
+    () => dispatch(transactionStateActions.onFocus(CurrencyField.INPUT)),
+    [dispatch]
+  )
+  const onFocusOutput = useCallback(
+    () => dispatch(transactionStateActions.onFocus(CurrencyField.OUTPUT)),
+    [dispatch]
+  )
+  return {
+    onCreateTxId,
+    onFocusInput,
+    onFocusOutput,
+    onSwitchCurrencies,
+    onToggleUSDInput,
+    onSetExactAmount,
+    onSetMax,
+  }
 }
 
 /**

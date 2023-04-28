@@ -1,12 +1,17 @@
 import { Currency } from '@uniswap/sdk-core'
 import React, { useMemo, useReducer, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { SearchContext } from 'src/components/explore/search/SearchResultsSection'
 import { WarningAction } from 'src/components/modals/WarningModal/types'
 import { RecipientSelect } from 'src/components/RecipientSelect/RecipientSelect'
-import { TokenSelector, TokenSelectorVariation } from 'src/components/TokenSelector/TokenSelector'
+import {
+  TokenSelector,
+  TokenSelectorFlow,
+  TokenSelectorVariation,
+} from 'src/components/TokenSelector/TokenSelector'
 import { useTransactionGasFee } from 'src/features/gas/hooks'
 import { GasSpeed } from 'src/features/gas/types'
-import { useSwapActionHandlers } from 'src/features/transactions/swap/hooks'
+import { useTokenSelectorActionHandlers } from 'src/features/transactions/hooks'
 import { TransactionFlow, TransactionStep } from 'src/features/transactions/TransactionFlow'
 import {
   CurrencyField,
@@ -31,7 +36,10 @@ interface TransferFormProps {
 export function TransferFlow({ prefilledState, onClose }: TransferFormProps): JSX.Element {
   const [state, dispatch] = useReducer(transactionStateReducer, prefilledState || emptyState)
   const { t } = useTranslation()
-  const { onSelectCurrency, onHideTokenSelector } = useSwapActionHandlers(dispatch)
+  const { onSelectCurrency, onHideTokenSelector } = useTokenSelectorActionHandlers(
+    dispatch,
+    TokenSelectorFlow.Transfer
+  )
   const onSelectRecipient = useOnSelectRecipient(dispatch)
   const onToggleShowRecipientSelector = useOnToggleShowRecipientSelector(dispatch)
   const derivedTransferInfo = useDerivedTransferInfo(state)
@@ -78,10 +86,11 @@ export function TransferFlow({ prefilledState, onClose }: TransferFormProps): JS
       step={step}
       tokenSelector={
         <TokenSelector
+          flow={TokenSelectorFlow.Transfer}
           variation={TokenSelectorVariation.BalancesOnly}
           onBack={onHideTokenSelector}
-          onSelectCurrency={(currency: Currency): void =>
-            onSelectCurrency(CurrencyField.INPUT, currency)
+          onSelectCurrency={(currency: Currency, context: SearchContext): void =>
+            onSelectCurrency(currency, CurrencyField.INPUT, context)
           }
         />
       }

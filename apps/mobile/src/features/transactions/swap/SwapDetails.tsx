@@ -5,8 +5,10 @@ import { TouchableOpacity } from 'react-native-gesture-handler'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Flex } from 'src/components/layout/Flex'
 import { Warning } from 'src/components/modals/WarningModal/types'
+import { TracePressEvent } from 'src/components/telemetry/TraceEvent'
 import { Text } from 'src/components/Text'
 import { useUSDCPrice } from 'src/features/routing/useUSDCPrice'
+import { ElementName } from 'src/features/telemetry/constants'
 import { Trade } from 'src/features/transactions/swap/useTrade'
 import { getRateToDisplay } from 'src/features/transactions/swap/utils'
 import { TransactionDetails } from 'src/features/transactions/TransactionDetails'
@@ -75,16 +77,18 @@ export function SwapDetails({
               </TouchableOpacity>
             </Flex>
             <Flex centered row gap="none">
-              <TouchableArea
-                backgroundColor="accentActive"
-                borderRadius="rounded8"
-                px="spacing8"
-                py="spacing4"
-                onPress={onAcceptTrade}>
-                <Text color="textOnBrightPrimary" variant="buttonLabelSmall">
-                  {t('Accept')}
-                </Text>
-              </TouchableArea>
+              <TracePressEvent element={ElementName.AcceptNewRate}>
+                <TouchableArea
+                  backgroundColor="accentActive"
+                  borderRadius="rounded8"
+                  px="spacing8"
+                  py="spacing4"
+                  onPress={onAcceptTrade}>
+                  <Text color="textOnBrightPrimary" variant="buttonLabelSmall">
+                    {t('Accept')}
+                  </Text>
+                </TouchableArea>
+              </TracePressEvent>
             </Flex>
           </Flex>
         ) : null

@@ -2,8 +2,9 @@ import { BottomSheetSectionList } from '@gorhom/bottom-sheet'
 import { Currency } from '@uniswap/sdk-core'
 import React, { memo, useCallback, useEffect, useMemo, useRef } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import { ListRenderItemInfo, SectionList } from 'react-native'
+import { SectionList } from 'react-native'
 import { useAppSelector, useAppTheme } from 'src/app/hooks'
+import { SearchContext } from 'src/components/explore/search/SearchResultsSection'
 import { Box, Flex, Inset } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { Loader } from 'src/components/loading'
@@ -35,7 +36,7 @@ import { useDebounce } from 'src/utils/timing'
 
 interface TokenSearchResultListProps {
   onChangeChainFilter: (newChainFilter: ChainId | null) => void
-  onSelectCurrency: (currency: Currency) => void
+  onSelectCurrency: (currency: Currency, context: SearchContext) => void
   searchFilter: string | null
   chainFilter: ChainId | null
   variation: TokenSelectorVariation
@@ -268,16 +269,22 @@ function _TokenSearchResultList({
   }, [sections])
 
   const renderItem = useCallback(
-    ({ item }: ListRenderItemInfo<TokenOption>) => {
+    ({ item, section, index }: { item: TokenOption; section: TokenSection; index: number }) => {
+      const searchContext: SearchContext = {
+        category: section.title,
+        query: searchFilter ?? undefined,
+        position: index + 1,
+        suggestionCount: section.data.length,
+      }
       return (
         <TokenOptionItem
           option={item}
           showNetworkPill={!chainFilter && item.currencyInfo.currency.chainId !== ChainId.Mainnet}
-          onPress={(): void => onSelectCurrency?.(item.currencyInfo.currency)}
+          onPress={(): void => onSelectCurrency?.(item.currencyInfo.currency, searchContext)}
         />
       )
     },
-    [onSelectCurrency, chainFilter]
+    [searchFilter, chainFilter, onSelectCurrency]
   )
 
   useEffect(() => {

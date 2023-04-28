@@ -14,7 +14,6 @@ import { useAppDispatch } from 'src/app/hooks'
 import { useContractManager, useProvider } from 'src/app/walletContext'
 import { SWAP_ROUTER_ADDRESSES } from 'src/constants/addresses'
 import { ChainId } from 'src/constants/chains'
-import { AssetType } from 'src/entities/assets'
 import { useOnChainCurrencyBalance } from 'src/features/balances/api'
 import { ContractManager } from 'src/features/contracts/ContractManager'
 import { CurrencyInfo } from 'src/features/dataApi/types'
@@ -52,14 +51,13 @@ import {
 import {
   CurrencyField,
   TransactionState,
-  transactionStateActions,
   updateExactAmountToken,
   updateExactAmountUSD,
 } from 'src/features/transactions/transactionState/transactionState'
 import { BaseDerivedInfo } from 'src/features/transactions/transactionState/types'
 import { useActiveAccount, useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
 import { areAddressesEqual } from 'src/utils/addresses'
-import { buildCurrencyId, currencyAddress } from 'src/utils/currencyId'
+import { buildCurrencyId } from 'src/utils/currencyId'
 import { formatCurrencyAmount, NumberType } from 'src/utils/format'
 import { useAsyncData, usePrevious } from 'src/utils/hooks'
 import { logger } from 'src/utils/logger'
@@ -275,118 +273,6 @@ export function useUSDTokenUpdater(
       updateExactAmountUSD({ amount: usdPrice?.toFixed(NUM_USD_DECIMALS_DISPLAY) || '' })
     )
   }, [dispatch, shouldUseUSDRef, exactAmountUSD, exactAmountToken, exactCurrency, price])
-}
-
-/** Set of handlers wrapping actions involving user input */
-export function useSwapActionHandlers(dispatch: React.Dispatch<AnyAction>): {
-  onCreateTxId: (txId: string) => void
-  onFocusInput: () => void
-  onFocusOutput: () => void
-  onHideTokenSelector: () => void
-  onSelectCurrency: (field: CurrencyField, currency: Currency) => void
-  onSwitchCurrencies: () => void
-  onToggleUSDInput: (isUSDInput: boolean) => void
-  onSetExactAmount: (field: CurrencyField, value: string, isUSDInput?: boolean) => void
-  onSetMax: (amount: string) => void
-  onShowTokenSelector: (field: CurrencyField) => void
-} {
-  const onHideTokenSelector = useCallback(
-    () => dispatch(transactionStateActions.showTokenSelector(undefined)),
-    [dispatch]
-  )
-
-  const onSelectCurrency = useCallback(
-    (field: CurrencyField, currency: Currency) => {
-      dispatch(
-        transactionStateActions.selectCurrency({
-          field,
-          tradeableAsset: {
-            address: currencyAddress(currency),
-            chainId: currency.chainId,
-            type: AssetType.Currency,
-          },
-        })
-      )
-
-      // hide screen when done selecting
-      onHideTokenSelector()
-    },
-    [dispatch, onHideTokenSelector]
-  )
-
-  const onUpdateExactTokenAmount = useCallback(
-    (field: CurrencyField, amount: string) =>
-      dispatch(transactionStateActions.updateExactAmountToken({ field, amount })),
-    [dispatch]
-  )
-
-  const onUpdateExactUSDAmount = useCallback(
-    (field: CurrencyField, amount: string) =>
-      dispatch(transactionStateActions.updateExactAmountUSD({ field, amount })),
-    [dispatch]
-  )
-
-  const onSetExactAmount = useCallback(
-    (field: CurrencyField, value: string, isUSDInput?: boolean) => {
-      const updater = isUSDInput ? onUpdateExactUSDAmount : onUpdateExactTokenAmount
-      updater(field, value)
-    },
-    [onUpdateExactUSDAmount, onUpdateExactTokenAmount]
-  )
-
-  const onSetMax = useCallback(
-    (amount: string) => {
-      // when setting max amount, always switch to token mode because
-      // our token/usd updater doesnt handle this case yet
-      dispatch(transactionStateActions.toggleUSDInput(false))
-      dispatch(
-        transactionStateActions.updateExactAmountToken({ field: CurrencyField.INPUT, amount })
-      )
-      // Unfocus the CurrencyInputField by setting focusOnCurrencyField to null
-      dispatch(transactionStateActions.onFocus(null))
-    },
-    [dispatch]
-  )
-
-  const onSwitchCurrencies = useCallback(() => {
-    dispatch(transactionStateActions.switchCurrencySides())
-  }, [dispatch])
-
-  const onToggleUSDInput = useCallback(
-    (isUSDInput: boolean) => dispatch(transactionStateActions.toggleUSDInput(isUSDInput)),
-    [dispatch]
-  )
-
-  const onCreateTxId = useCallback(
-    (txId: string) => dispatch(transactionStateActions.setTxId(txId)),
-    [dispatch]
-  )
-
-  const onShowTokenSelector = useCallback(
-    (field: CurrencyField) => dispatch(transactionStateActions.showTokenSelector(field)),
-    [dispatch]
-  )
-
-  const onFocusInput = useCallback(
-    () => dispatch(transactionStateActions.onFocus(CurrencyField.INPUT)),
-    [dispatch]
-  )
-  const onFocusOutput = useCallback(
-    () => dispatch(transactionStateActions.onFocus(CurrencyField.OUTPUT)),
-    [dispatch]
-  )
-  return {
-    onCreateTxId,
-    onFocusInput,
-    onFocusOutput,
-    onHideTokenSelector,
-    onSelectCurrency,
-    onSwitchCurrencies,
-    onToggleUSDInput,
-    onSetExactAmount,
-    onSetMax,
-    onShowTokenSelector,
-  }
 }
 
 export enum ApprovalAction {
