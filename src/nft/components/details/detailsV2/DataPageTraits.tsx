@@ -38,7 +38,7 @@ const TraitRowScrollableContainer = styled.div`
 
 const Scrim = styled.div<{ isBottom?: boolean }>`
   position: absolute;
-  height: 88px !important;
+  height: 88px;
   left: 0px;
   right: 12px;
   ${({ isBottom }) => !isBottom && 'top: 0px'};
