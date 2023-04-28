@@ -197,17 +197,19 @@ const Helper = ({ children, color }: PropsWithChildren<HelperTextProps>) => {
 }
 
 const InputCurrencyValue = ({
+  usingPayWithAnyToken,
   totalEthPrice,
   activeCurrency,
   tradeState,
   trade,
 }: {
+  usingPayWithAnyToken: boolean
   totalEthPrice: BigNumber
   activeCurrency: Currency | undefined | null
   tradeState: TradeState
   trade: InterfaceTrade<Currency, Currency, TradeType> | undefined
 }) => {
-  if (!trade) {
+  if (!usingPayWithAnyToken) {
     return (
       <ThemedText.BodyPrimary lineHeight="20px" fontWeight="500">
         {formatWeiToDecimal(totalEthPrice.toString())}
@@ -226,7 +228,7 @@ const InputCurrencyValue = ({
 
   return (
     <ValueText color={tradeState === TradeState.SYNCING ? 'textTertiary' : 'textPrimary'}>
-      {ethNumberStandardFormatter(trade.inputAmount.toExact())}
+      {ethNumberStandardFormatter(trade?.inputAmount.toExact())}
     </ValueText>
   )
 }
@@ -235,15 +237,15 @@ const FiatValue = ({
   usdcValue,
   priceImpact,
   tradeState,
-  hasTrade,
+  usingPayWithAnyToken,
 }: {
   usdcValue: CurrencyAmount<Token> | null
   priceImpact: PriceImpact | undefined
   tradeState: TradeState
-  hasTrade: boolean
+  usingPayWithAnyToken: boolean
 }) => {
   if (!usdcValue) {
-    if (hasTrade && (tradeState === TradeState.INVALID || tradeState === TradeState.NO_ROUTE_FOUND)) {
+    if (usingPayWithAnyToken && (tradeState === TradeState.INVALID || tradeState === TradeState.NO_ROUTE_FOUND)) {
       return null
     }
 
@@ -313,6 +315,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
   const [tokenSelectorOpen, setTokenSelectorOpen] = useState(false)
   const isPending = PENDING_BAG_STATUSES.includes(bagStatus)
   const activeCurrency = inputCurrency ?? defaultCurrency
+  const usingPayWithAnyToken = !!inputCurrency && chainId === SupportedChainId.MAINNET
 
   useSubscribeTransactionState(setModalIsOpen)
   const fetchAssets = useFetchAssets()
@@ -325,7 +328,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
     trade,
     maximumAmountIn,
     allowedSlippage,
-  } = useDerivedPayWithAnyTokenSwapInfo(inputCurrency, parsedOutputAmount)
+  } = useDerivedPayWithAnyTokenSwapInfo(usingPayWithAnyToken ? inputCurrency : undefined, parsedOutputAmount)
   const { allowance, isAllowancePending, isApprovalLoading, updateAllowance } = usePermit2Approval(
     trade?.inputAmount.currency.isToken ? (trade?.inputAmount as CurrencyAmount<Token>) : undefined,
     maximumAmountIn,
@@ -336,7 +339,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
 
   const fiatValueTradeInput = useStablecoinValue(trade?.inputAmount)
   const fiatValueTradeOutput = useStablecoinValue(parsedOutputAmount)
-  const usdcValue = trade ? fiatValueTradeInput : fiatValueTradeOutput
+  const usdcValue = usingPayWithAnyToken ? fiatValueTradeInput : fiatValueTradeOutput
 
   const { balance: balanceInEth } = useWalletBalance()
   const sufficientBalance = useMemo(() => {
@@ -406,7 +409,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
     } else if (bagStatus === BagStatus.PROCESSING_TRANSACTION) {
       disabled = true
       buttonText = <Trans>Transaction pending</Trans>
-    } else if (trade && tradeState !== TradeState.VALID) {
+    } else if (usingPayWithAnyToken && tradeState !== TradeState.VALID) {
       disabled = true
       buttonText = <Trans>Fetching Route</Trans>
 
@@ -448,7 +451,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
     } else if (sufficientBalance === true) {
       disabled = false
       buttonText = <Trans>Pay</Trans>
-      helperText = trade ? <Trans>Refunds for unavailable items will be given in ETH</Trans> : undefined
+      helperText = usingPayWithAnyToken ? <Trans>Refunds for unavailable items will be given in ETH</Trans> : undefined
     }
 
     return {
@@ -474,7 +477,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
     chainId,
     sufficientBalance,
     bagStatus,
-    trade,
+    usingPayWithAnyToken,
     tradeState,
     allowance.state,
     priceImpact,
@@ -521,6 +524,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
                 <Trans>Total</Trans>
               </ThemedText.SubHeaderSmall>
               <InputCurrencyValue
+                usingPayWithAnyToken={usingPayWithAnyToken}
                 totalEthPrice={totalEthPrice}
                 activeCurrency={activeCurrency}
                 tradeState={tradeState}
@@ -532,7 +536,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
             usdcValue={usdcValue}
             priceImpact={priceImpact}
             tradeState={tradeState}
-            hasTrade={Boolean(trade)}
+            usingPayWithAnyToken={usingPayWithAnyToken}
           />
         </FooterHeader>
         <TraceEvent
