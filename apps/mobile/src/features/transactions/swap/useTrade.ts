@@ -73,7 +73,7 @@ interface UseTradeArgs {
   otherCurrency: NullUndefined<Currency>
   tradeType: TradeType
   pollingInterval?: PollingInterval
-  slippageTolerance?: number
+  customSlippageTolerance?: number
   isUSDQuote?: boolean
 }
 
@@ -83,7 +83,7 @@ export function useTrade(args: UseTradeArgs): TradeWithStatus {
     otherCurrency,
     tradeType,
     pollingInterval,
-    slippageTolerance,
+    customSlippageTolerance,
     isUSDQuote,
   } = args
   const [debouncedAmountSpecified, isDebouncing] = useDebounceWithStatus(amountSpecified)
@@ -105,7 +105,7 @@ export function useTrade(args: UseTradeArgs): TradeWithStatus {
     otherCurrency,
     tradeType,
     pollingInterval,
-    slippageTolerance,
+    customSlippageTolerance,
     isUSDQuote,
   })
 
@@ -141,35 +141,36 @@ export function useTrade(args: UseTradeArgs): TradeWithStatus {
 export function useSetTradeSlippage(
   trade: TradeWithStatus,
   userSetSlippage?: number
-): TradeWithStatus {
-  const autoSlippageTolerance = useAutoSlippageTolerance(trade?.trade)
+): { trade: TradeWithStatus; autoSlippageTolerance: number } {
+  // Always calculate and return autoSlippageTolerance so the UI can warn user when custom slippage is set higher than auto slippage
+  const autoSlippageTolerance = useCalculateAutoSlippage(trade?.trade)
   return useMemo(() => {
-    if (!trade.trade) return trade
+    // If the user has set a custom slippage, use that in the trade instead of the auto-slippage
+    if (!trade.trade || userSetSlippage) return { trade, autoSlippageTolerance }
 
-    if (autoSlippageTolerance && userSetSlippage === undefined) {
-      const { loading, error, isFetching } = trade
-      const { tradeType, deadline, quote, inputAmount, outputAmount } = trade.trade
-      const tokenInIsNative = inputAmount.currency.isNative
-      const tokenOutIsNative = outputAmount.currency.isNative
+    const { loading, error, isFetching } = trade
+    const { tradeType, deadline, quote, inputAmount, outputAmount } = trade.trade
+    const tokenInIsNative = inputAmount.currency.isNative
+    const tokenOutIsNative = outputAmount.currency.isNative
 
-      const newTrade = transformQuoteToTrade(
-        tokenInIsNative,
-        tokenOutIsNative,
-        tradeType,
-        deadline,
-        autoSlippageTolerance,
-        quote
-      )
+    const newTrade = transformQuoteToTrade(
+      tokenInIsNative,
+      tokenOutIsNative,
+      tradeType,
+      deadline,
+      autoSlippageTolerance,
+      quote
+    )
 
-      return {
+    return {
+      trade: {
         trade: newTrade,
         loading,
         error,
         isFetching,
-      }
+      },
+      autoSlippageTolerance,
     }
-
-    return trade
   }, [trade, autoSlippageTolerance, userSetSlippage])
 }
 
@@ -183,7 +184,7 @@ export function useSetTradeSlippage(
   Note: not using BigNumber because it sucks at decimals and we're dealing with USD values anyways
  */
 // TODO: move logic to `transformResponse` method of routingApi when endpoint returns output USD value
-function useAutoSlippageTolerance(trade: NullUndefined<Trade>): number {
+function useCalculateAutoSlippage(trade: NullUndefined<Trade>): number {
   const chainId = trade?.quote?.route?.[0]?.[0]?.tokenIn.chainId
   const gasCostUSD = trade?.quote?.gasUseEstimateUSD
   const outputAmountUSD = useUSDCValue(trade?.outputAmount)?.toExact()

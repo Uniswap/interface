@@ -21,7 +21,7 @@ export interface UseQuoteProps {
   skip?: boolean
   fetchSimulatedGasLimit?: boolean
   permitSignatureInfo?: PermitSignatureInfo | null
-  slippageTolerance?: number
+  customSlippageTolerance?: number
   isUSDQuote?: boolean
 }
 
@@ -41,7 +41,7 @@ export function useRouterQuote(params: UseQuoteProps) {
     skip,
     fetchSimulatedGasLimit,
     permitSignatureInfo,
-    slippageTolerance,
+    customSlippageTolerance,
     isUSDQuote,
   } = params
 
@@ -76,7 +76,7 @@ export function useRouterQuote(params: UseQuoteProps) {
           recipient: recipient?.address,
           fetchSimulatedGasLimit,
           permitSignatureInfo,
-          slippageTolerance,
+          slippageTolerance: customSlippageTolerance,
         },
     {
       pollingInterval,

@@ -291,6 +291,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
             <PlusIcon
               color={theme.colors.textPrimary}
               height={theme.iconSizes.icon16}
+              strokeWidth={2}
               width={theme.iconSizes.icon16}
             />
           </Box>

@@ -89,7 +89,8 @@ export type DerivedSwapInfo<
   wrapType: WrapType
   selectingCurrencyField?: CurrencyField
   txId?: string
-  slippageTolerance?: number
+  autoSlippageTolerance?: number
+  customSlippageTolerance?: number
 }
 
 /** Returns information derived from the current swap state */
@@ -103,7 +104,7 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
     focusOnCurrencyField = CurrencyField.INPUT,
     selectingCurrencyField,
     txId,
-    slippageTolerance,
+    customSlippageTolerance,
   } = state
 
   const activeAccount = useActiveAccount()
@@ -149,14 +150,19 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
 
   const shouldGetQuote = !isWrapAction(wrapType)
 
+  // Fetch the trade quote. If customSlippageTolerance is undefined, then the quote is fetched with DEFAULT_SLIPPAGE_TOLERANCE
   const tradeWithoutSlippage = useTrade({
     amountSpecified: shouldGetQuote ? amountSpecified : null,
     otherCurrency,
     tradeType: isExactIn ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT,
-    slippageTolerance,
+    customSlippageTolerance,
   })
 
-  const trade = useSetTradeSlippage(tradeWithoutSlippage, slippageTolerance)
+  // Calculate autolippage tolerance for trade. If customSlippageTolerance is undefined, then the Trade slippage is set to the calculated value.
+  const { trade, autoSlippageTolerance } = useSetTradeSlippage(
+    tradeWithoutSlippage,
+    customSlippageTolerance
+  )
 
   const currencyAmounts = useMemo(
     () =>
@@ -216,7 +222,8 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
       wrapType,
       selectingCurrencyField,
       txId,
-      slippageTolerance,
+      autoSlippageTolerance,
+      customSlippageTolerance,
     }
   }, [
     chainId,
@@ -232,7 +239,8 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
     trade,
     txId,
     wrapType,
-    slippageTolerance,
+    autoSlippageTolerance,
+    customSlippageTolerance,
   ])
 }
 
@@ -674,6 +682,7 @@ export function useSwapCallback(
   trade: Trade | null | undefined,
   currencyInAmountUSD: NullUndefined<CurrencyAmount<Currency>>,
   currencyOutAmountUSD: NullUndefined<CurrencyAmount<Currency>>,
+  isAutoSlippage: boolean,
   onSubmit: () => void,
   txId?: string
 ): () => void {
@@ -713,6 +722,7 @@ export function useSwapCallback(
           : undefined,
         transaction_deadline_seconds: trade.deadline,
         swap_quote_block_number: trade.quote?.blockNumber,
+        is_auto_slippage: isAutoSlippage,
       })
     }
   }, [
@@ -726,6 +736,7 @@ export function useSwapCallback(
     txId,
     approveTxRequest,
     onSubmit,
+    isAutoSlippage,
   ])
 }
 

@@ -46,7 +46,7 @@ export function NetworkFee({
   )
 
   return (
-    <Flex row alignItems="center" justifyContent="space-between" px="spacing12" py="spacing12">
+    <Flex row alignItems="center" justifyContent="space-between">
       <Text variant="subheadSmall">{t('Network fee')}</Text>
       <Flex row alignItems="center" gap="spacing8">
         <InlineNetworkPill chainId={chainId} />

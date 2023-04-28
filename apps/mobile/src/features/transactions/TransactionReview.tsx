@@ -205,12 +205,7 @@ export function TransactionReview({
           </Flex>
         ) : null}
       </AnimatedFlex>
-      <AnimatedFlex
-        entering={FadeInUp}
-        exiting={FadeOut}
-        flexGrow={0}
-        gap="spacing12"
-        justifyContent="flex-end">
+      <AnimatedFlex entering={FadeInUp} exiting={FadeOut} gap="spacing12" justifyContent="flex-end">
         {transactionDetails}
         <Flex row gap="spacing8">
           <Button

@@ -119,6 +119,7 @@ export type EventProperties = {
   [SharedEventName.APP_LOADED]: BaseEventProperty
   [SharedEventName.ELEMENT_CLICKED]: BaseEventProperty
   [SharedEventName.PAGE_VIEWED]: BaseEventProperty
+  [SwapEventName.SWAP_DETAILS_EXPANDED]: BaseEventProperty
   [SwapEventName.SWAP_QUOTE_RECEIVED]: {
     quote_latency_milliseconds?: number
   } & SwapTradeBaseProperties

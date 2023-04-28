@@ -6,20 +6,21 @@ import InfoCircleSVG from 'src/assets/icons/info-circle.svg'
 import { Warning, WarningAction, WarningSeverity } from 'src/components/modals/WarningModal/types'
 import WarningModal from 'src/components/modals/WarningModal/WarningModal'
 import { Trace } from 'src/components/telemetry/Trace'
-import { ElementName, ModalName, SectionName } from 'src/features/telemetry/constants'
+import { ModalName, SectionName } from 'src/features/telemetry/constants'
 import {
   DerivedSwapInfo,
   useAcceptedTrade,
   useSwapCallback,
   useWrapCallback,
 } from 'src/features/transactions/swap/hooks'
+import SlippageInfoModal from 'src/features/transactions/swap/SlippageInfoModal'
 import { SwapDetails } from 'src/features/transactions/swap/SwapDetails'
 import {
+  getActionElementName,
   getActionName,
   isWrapAction,
   requireAcceptNewTrade,
 } from 'src/features/transactions/swap/utils'
-import { WrapType } from 'src/features/transactions/swap/wrapSaga'
 import { TransactionDetails } from 'src/features/transactions/TransactionDetails'
 import { TransactionReview } from 'src/features/transactions/TransactionReview'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
@@ -55,6 +56,7 @@ export function SwapReview({
   const account = useActiveAccountWithThrow()
   const [showWarningModal, setShowWarningModal] = useState(false)
   const [showGasWarningModal, setShowGasWarningModal] = useState(false)
+  const [showSlippageModal, setShowSlippageModal] = useState(false)
   const [warningAcknowledged, setWarningAcknowledged] = useState(false)
   const [shouldSubmitTx, setShouldSubmitTx] = useState(false)
 
@@ -67,6 +69,8 @@ export function SwapReview({
     exactCurrencyField,
     txId,
     currencyAmountsUSDValue,
+    autoSlippageTolerance,
+    customSlippageTolerance,
   } = derivedSwapInfo
 
   const swapWarning = warnings.find((warning) => warning.severity >= WarningSeverity.Medium)
@@ -96,6 +100,7 @@ export function SwapReview({
     trade,
     currencyAmountsUSDValue[CurrencyField.INPUT],
     currencyAmountsUSDValue[CurrencyField.OUTPUT],
+    !customSlippageTolerance,
     onNext,
     txId
   )
@@ -141,6 +146,14 @@ export function SwapReview({
     setShowGasWarningModal(false)
   }, [])
 
+  const onShowSlippageModal = useCallback(() => {
+    setShowSlippageModal(true)
+  }, [])
+
+  const onCloseSlippageModal = useCallback(() => {
+    setShowSlippageModal(false)
+  }, [])
+
   const actionButtonDisabled =
     noValidSwap ||
     blockingWarning ||
@@ -152,12 +165,7 @@ export function SwapReview({
   const actionButtonProps = {
     disabled: actionButtonDisabled,
     label: getActionName(t, wrapType),
-    name:
-      wrapType === WrapType.Wrap
-        ? ElementName.Wrap
-        : wrapType === WrapType.Unwrap
-        ? ElementName.Unwrap
-        : ElementName.Swap,
+    name: getActionElementName(wrapType),
     onPress,
   }
 
@@ -180,6 +188,8 @@ export function SwapReview({
     return (
       <SwapDetails
         acceptedTrade={acceptedTrade}
+        autoSlippageTolerance={autoSlippageTolerance}
+        customSlippageTolerance={customSlippageTolerance}
         gasFallbackUsed={gasFallbackUsed}
         gasFee={totalGasFee}
         newTradeToAccept={newTradeToAccept}
@@ -187,6 +197,7 @@ export function SwapReview({
         warning={swapWarning}
         onAcceptTrade={onAcceptTrade}
         onShowGasWarning={onShowGasWarning}
+        onShowSlippageModal={onShowSlippageModal}
         onShowWarning={onShowWarning}
       />
     )
@@ -248,6 +259,14 @@ export function SwapReview({
           severity={WarningSeverity.Medium}
           title={t('Conservative network fee estimate')}
           onClose={onCloseGasWarning}
+        />
+      )}
+      {showSlippageModal && acceptedTrade && (
+        <SlippageInfoModal
+          autoSlippageTolerance={autoSlippageTolerance}
+          isCustomSlippage={!!customSlippageTolerance}
+          trade={acceptedTrade}
+          onClose={onCloseSlippageModal}
         />
       )}
       <Trace logImpression section={SectionName.SwapReview}>

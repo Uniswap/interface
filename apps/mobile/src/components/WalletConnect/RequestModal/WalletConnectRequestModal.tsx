@@ -280,10 +280,10 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
                 </Flex>
               </SectionContainer>
             )}
-            {methodCostsGas(request) ? (
-              <NetworkFee chainId={chainId} gasFee={gasFeeInfo?.gasFee} />
-            ) : (
-              <Box px="spacing16" py="spacing12">
+            <Box px="spacing16" py="spacing12">
+              {methodCostsGas(request) ? (
+                <NetworkFee chainId={chainId} gasFee={gasFeeInfo?.gasFee} />
+              ) : (
                 <Flex row alignItems="center" justifyContent="space-between">
                   <Text color="textPrimary" variant="subheadSmall">
                     {t('Network')}
@@ -298,8 +298,8 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
                     textVariant="subheadSmall"
                   />
                 </Flex>
-              </Box>
-            )}
+              )}
+            </Box>
 
             <SectionContainer>
               <AccountDetails address={request.account} />

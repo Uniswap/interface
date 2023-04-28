@@ -1,24 +1,26 @@
 import { AnyAction } from '@reduxjs/toolkit'
 import { providers } from 'ethers'
-import React, { Dispatch, useCallback, useEffect, useState } from 'react'
+import React, { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { TouchableWithoutFeedback } from 'react-native'
+import { Keyboard, TouchableWithoutFeedback } from 'react-native'
 import { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAppTheme } from 'src/app/hooks'
 import DollarSign from 'src/assets/icons/dollar.svg'
 import EyeIcon from 'src/assets/icons/eye.svg'
+import SettingsIcon from 'src/assets/icons/settings.svg'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { AnimatedFlex, Flex } from 'src/components/layout'
 import { Warning, WarningSeverity } from 'src/components/modals/WarningModal/types'
 import WarningModal from 'src/components/modals/WarningModal/WarningModal'
 import { Trace } from 'src/components/telemetry/Trace'
 import { Text } from 'src/components/Text'
-import { ModalName, SectionName } from 'src/features/telemetry/constants'
+import { ElementName, ModalName, SectionName } from 'src/features/telemetry/constants'
 import { useTokenFormActionHandlers } from 'src/features/transactions/hooks'
 import { DerivedSwapInfo } from 'src/features/transactions/swap/hooks'
 import { SwapForm } from 'src/features/transactions/swap/SwapForm'
 import { SwapReview } from 'src/features/transactions/swap/SwapReview'
+import SwapSettingsModal from 'src/features/transactions/swap/SwapSettingsModal'
 import { SwapStatus } from 'src/features/transactions/swap/SwapStatus'
 import { DerivedTransferInfo } from 'src/features/transactions/transfer/hooks'
 import { TransferReview } from 'src/features/transactions/transfer/TransferReview'
@@ -73,6 +75,14 @@ type InnerContentProps = Pick<
   showingSelectorScreen: boolean
 }
 
+type HeaderContentProps = Pick<
+  TransactionFlowProps,
+  'dispatch' | 'derivedInfo' | 'flowName' | 'step' | 'showUSDToggle' | 'isUSDInput'
+> & {
+  setShowViewOnlyModal: Dispatch<SetStateAction<boolean>>
+  setShowSettingsModal: Dispatch<SetStateAction<boolean>>
+}
+
 function isSwapInfo(
   derivedInfo: DerivedTransferInfo | DerivedSwapInfo
 ): derivedInfo is DerivedSwapInfo {
@@ -101,10 +111,11 @@ export function TransactionFlow({
 }: TransactionFlowProps): JSX.Element {
   const theme = useAppTheme()
   const insets = useSafeAreaInsets()
-  const account = useActiveAccountWithThrow()
   const { t } = useTranslation()
 
   const [showViewOnlyModal, setShowViewOnlyModal] = useState(false)
+  const [showSettingsModal, setShowSettingsModal] = useState(false)
+
   const isSwap = isSwapInfo(derivedInfo)
   const hideInnerContentRouter = showTokenSelector || showRecipientSelector
 
@@ -137,60 +148,16 @@ export function TransactionFlow({
           style={{ marginBottom: insets.bottom }}
           width="100%">
           {step !== TransactionStep.SUBMITTED && (
-            <Flex
-              row
-              alignItems="center"
-              justifyContent="space-between"
-              pt="spacing8"
-              px="spacing12">
-              <Text textAlign="left" variant={{ xs: 'subheadSmall', sm: 'subheadLarge' }}>
-                {flowName}
-              </Text>
-              <Flex row gap="spacing4">
-                {step === TransactionStep.FORM && showUSDToggle ? (
-                  <TouchableArea
-                    hapticFeedback
-                    bg={isUSDInput ? 'accentActionSoft' : 'background2'}
-                    borderRadius="rounded16"
-                    px="spacing8"
-                    py="spacing4"
-                    onPress={(): void => onToggleUSDInput(!isUSDInput)}>
-                    <Flex row alignItems="center" gap="spacing4">
-                      <DollarSign
-                        color={isUSDInput ? theme.colors.accentAction : theme.colors.textSecondary}
-                        height={theme.iconSizes.icon16}
-                        width={theme.iconSizes.icon16}
-                      />
-                      <Text
-                        color={isUSDInput ? 'accentAction' : 'textSecondary'}
-                        variant="buttonLabelSmall">
-                        {t('USD')}
-                      </Text>
-                    </Flex>
-                  </TouchableArea>
-                ) : null}
-                {account?.type === AccountType.Readonly ? (
-                  <TouchableArea
-                    bg="background2"
-                    borderRadius="rounded12"
-                    justifyContent="center"
-                    px="spacing8"
-                    py="spacing4"
-                    onPress={(): void => setShowViewOnlyModal(true)}>
-                    <Flex row alignItems="center" gap="spacing4">
-                      <EyeIcon
-                        color={theme.colors.textTertiary}
-                        height={theme.iconSizes.icon16}
-                        width={theme.iconSizes.icon16}
-                      />
-                      <Text color="textTertiary" variant="buttonLabelSmall">
-                        {t('View-only')}
-                      </Text>
-                    </Flex>
-                  </TouchableArea>
-                ) : null}
-              </Flex>
-            </Flex>
+            <HeaderContent
+              derivedInfo={derivedInfo}
+              dispatch={dispatch}
+              flowName={flowName}
+              isUSDInput={isUSDInput}
+              setShowSettingsModal={setShowSettingsModal}
+              setShowViewOnlyModal={setShowViewOnlyModal}
+              showUSDToggle={showUSDToggle}
+              step={step}
+            />
           )}
           {renderInnerContentRouter && (
             <InnerContentRouter
@@ -231,11 +198,128 @@ export function TransactionFlow({
             onConfirm={(): void => setShowViewOnlyModal(false)}
           />
         )}
-
+        {isSwap && showSettingsModal ? (
+          <SwapSettingsModal
+            derivedSwapInfo={derivedInfo}
+            dispatch={dispatch}
+            onClose={(): void => {
+              setShowSettingsModal(false)
+            }}
+          />
+        ) : null}
         {showTokenSelector ? tokenSelector : null}
         {showRecipientSelector && recipientSelector ? recipientSelector : null}
       </AnimatedFlex>
     </TouchableWithoutFeedback>
+  )
+}
+
+function HeaderContent({
+  dispatch,
+  derivedInfo,
+  flowName,
+  step,
+  showUSDToggle,
+  isUSDInput,
+  setShowSettingsModal,
+  setShowViewOnlyModal,
+}: HeaderContentProps): JSX.Element {
+  const theme = useAppTheme()
+  const account = useActiveAccountWithThrow()
+  const { t } = useTranslation()
+  const { onToggleUSDInput } = useTokenFormActionHandlers(dispatch)
+
+  const onPressSwapSettings = (): void => {
+    setShowSettingsModal(true)
+    Keyboard.dismiss()
+  }
+
+  const isSwap = isSwapInfo(derivedInfo)
+  const derivedSwapInfo = isSwap ? derivedInfo : undefined
+  const { customSlippageTolerance } = derivedSwapInfo ?? {}
+
+  return (
+    <Flex
+      row
+      alignItems="center"
+      justifyContent="space-between"
+      pl="spacing12"
+      pr={customSlippageTolerance ? 'spacing8' : 'spacing16'}
+      pt="spacing8">
+      <Text variant={{ xs: 'subheadSmall', sm: 'subheadLarge' }}>{flowName}</Text>
+      <Flex row gap="spacing4">
+        {step === TransactionStep.FORM && showUSDToggle ? (
+          <TouchableArea
+            hapticFeedback
+            bg={isUSDInput ? 'accentActionSoft' : 'background2'}
+            borderRadius="rounded16"
+            px="spacing8"
+            py="spacing4"
+            onPress={(): void => onToggleUSDInput(!isUSDInput)}>
+            <Flex row alignItems="center" gap="spacing4">
+              <DollarSign
+                color={isUSDInput ? theme.colors.accentAction : theme.colors.textSecondary}
+                height={theme.iconSizes.icon16}
+                width={theme.iconSizes.icon16}
+              />
+              <Text
+                color={isUSDInput ? 'accentAction' : 'textSecondary'}
+                variant="buttonLabelSmall">
+                {t('USD')}
+              </Text>
+            </Flex>
+          </TouchableArea>
+        ) : null}
+        {account?.type === AccountType.Readonly ? (
+          <TouchableArea
+            bg="background2"
+            borderRadius="rounded12"
+            justifyContent="center"
+            px="spacing8"
+            py="spacing4"
+            onPress={(): void => setShowViewOnlyModal(true)}>
+            <Flex row alignItems="center" gap="spacing4">
+              <EyeIcon
+                color={theme.colors.textTertiary}
+                height={theme.iconSizes.icon16}
+                width={theme.iconSizes.icon16}
+              />
+              <Text color="textTertiary" variant="buttonLabelSmall">
+                {t('View-only')}
+              </Text>
+            </Flex>
+          </TouchableArea>
+        ) : null}
+        {step === TransactionStep.FORM && isSwap ? (
+          <TouchableArea
+            hapticFeedback
+            name={ElementName.SwapSettings}
+            onPress={onPressSwapSettings}>
+            <Flex
+              centered
+              row
+              bg={customSlippageTolerance ? 'background2' : 'none'}
+              borderRadius="roundedFull"
+              gap="spacing4"
+              px={customSlippageTolerance ? 'spacing8' : 'none'}
+              py="spacing4">
+              {customSlippageTolerance ? (
+                <Text color="textSecondary" variant="buttonLabelMicro">
+                  {t('{{slippage}}% slippage', {
+                    slippage: customSlippageTolerance.toFixed(2),
+                  })}
+                </Text>
+              ) : null}
+              <SettingsIcon
+                color={theme.colors.textTertiary}
+                height={theme.iconSizes.icon28}
+                width={theme.iconSizes.icon28}
+              />
+            </Flex>
+          </TouchableArea>
+        ) : null}
+      </Flex>
+    </Flex>
   )
 }
 

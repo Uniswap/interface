@@ -2,6 +2,8 @@ import { Currency, TradeType } from '@uniswap/sdk-core'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { TouchableOpacity } from 'react-native-gesture-handler'
+import { useAppTheme } from 'src/app/hooks'
+import InfoCircle from 'src/assets/icons/info-circle.svg'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Flex } from 'src/components/layout/Flex'
 import { Warning } from 'src/components/modals/WarningModal/types'
@@ -19,11 +21,14 @@ interface SwapDetailsProps {
   trade: Trade<Currency, Currency, TradeType>
   gasFee?: string
   gasFallbackUsed?: boolean
+  customSlippageTolerance?: number
+  autoSlippageTolerance?: number
   newTradeToAccept: boolean
   warning?: Warning
   onAcceptTrade: () => void
   onShowWarning?: () => void
   onShowGasWarning: () => void
+  onShowSlippageModal: () => void
 }
 
 export function SwapDetails({
@@ -31,12 +36,16 @@ export function SwapDetails({
   gasFee,
   gasFallbackUsed,
   newTradeToAccept,
+  customSlippageTolerance,
+  autoSlippageTolerance,
   trade,
   warning,
   onAcceptTrade,
   onShowWarning,
   onShowGasWarning,
+  onShowSlippageModal,
 }: SwapDetailsProps): JSX.Element {
+  const theme = useAppTheme()
   const { t } = useTranslation()
   const [showInverseRate, setShowInverseRate] = useState(false)
 
@@ -44,6 +53,11 @@ export function SwapDetails({
   const usdcPrice = useUSDCPrice(showInverseRate ? price.quoteCurrency : price.baseCurrency)
   const acceptedRate = getRateToDisplay(acceptedTrade, showInverseRate)
   const rate = getRateToDisplay(trade, showInverseRate)
+
+  // Make text the warning color if user is setting custom slippage higher than auto slippage value
+  const showSlippageWarning = autoSlippageTolerance
+    ? acceptedTrade.slippageTolerance > autoSlippageTolerance
+    : false
 
   return (
     <TransactionDetails
@@ -96,19 +110,14 @@ export function SwapDetails({
       chainId={acceptedTrade.inputAmount.currency.chainId}
       gasFallbackUsed={gasFallbackUsed}
       gasFee={gasFee}
+      showExpandedChildren={!!customSlippageTolerance}
       showWarning={warning && !newTradeToAccept}
       warning={warning}
       onShowGasWarning={onShowGasWarning}
       onShowWarning={onShowWarning}>
-      <Flex
-        row
-        alignItems="center"
-        gap="spacing8"
-        justifyContent="space-between"
-        px="spacing12"
-        py="spacing12">
+      <Flex row alignItems="center" justifyContent="space-between">
         <Text variant="subheadSmall">{t('Rate')}</Text>
-        <Flex row flex={1} flexBasis="100%" flexShrink={1} gap="none" justifyContent="flex-end">
+        <Flex row flexShrink={1} gap="none" justifyContent="flex-end">
           <TouchableOpacity onPress={(): void => setShowInverseRate(!showInverseRate)}>
             <Text adjustsFontSizeToFit numberOfLines={1} variant="subheadSmall">
               {acceptedRate}
@@ -117,6 +126,32 @@ export function SwapDetails({
               </Text>
             </Text>
           </TouchableOpacity>
+        </Flex>
+      </Flex>
+      <Flex row alignItems="center" justifyContent="space-between">
+        <TouchableArea onPress={onShowSlippageModal}>
+          <Flex row gap="spacing4">
+            <Text variant="subheadSmall">{t('Max slippage')}</Text>
+            <InfoCircle
+              color={theme.colors.textPrimary}
+              height={theme.iconSizes.icon20}
+              width={theme.iconSizes.icon20}
+            />
+          </Flex>
+        </TouchableArea>
+        <Flex row gap="spacing8">
+          {!customSlippageTolerance ? (
+            <Flex centered bg="accentActionSoft" borderRadius="roundedFull" px="spacing8">
+              <Text color="accentAction" variant="buttonLabelMicro">
+                {t('Auto')}
+              </Text>
+            </Flex>
+          ) : null}
+          <Text
+            color={showSlippageWarning ? 'accentWarning' : 'textPrimary'}
+            variant="subheadSmall">
+            {`${acceptedTrade.slippageTolerance.toFixed(2).toString()}%`}
+          </Text>
         </Flex>
       </Flex>
     </TransactionDetails>

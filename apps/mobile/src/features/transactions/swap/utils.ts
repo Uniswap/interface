@@ -9,6 +9,7 @@ import { TFunction } from 'i18next'
 import { ChainId } from 'src/constants/chains'
 import { WRAPPED_NATIVE_CURRENCY } from 'src/constants/tokens'
 import { AssetType } from 'src/entities/assets'
+import { ElementName } from 'src/features/telemetry/constants'
 import { PermitOptions } from 'src/features/transactions/permit/usePermitSignature'
 import { PermitSignatureInfo } from 'src/features/transactions/swap/usePermit2Signature'
 import { Trade } from 'src/features/transactions/swap/useTrade'
@@ -122,6 +123,17 @@ export const getActionName = (t: TFunction, wrapType: WrapType): string => {
   }
 }
 
+export const getActionElementName = (wrapType: WrapType): ElementName => {
+  switch (wrapType) {
+    case WrapType.Unwrap:
+      return ElementName.Unwrap
+    case WrapType.Wrap:
+      return ElementName.Wrap
+    default:
+      return ElementName.Swap
+  }
+}
+
 export const getReviewActionName = (t: TFunction, wrapType: WrapType): string => {
   switch (wrapType) {
     case WrapType.Unwrap:
@@ -179,7 +191,7 @@ export const prepareSwapFormState = ({
 }
 
 // rounds to nearest basis point
-const slippageToleranceToPercent = (slippage: number): Percent => {
+export const slippageToleranceToPercent = (slippage: number): Percent => {
   const basisPoints = Math.round(slippage * 100)
   return new Percent(basisPoints, 10_000)
 }

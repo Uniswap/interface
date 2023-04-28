@@ -1,6 +1,10 @@
-import React, { PropsWithChildren, ReactNode } from 'react'
+import { SwapEventName } from '@uniswap/analytics-events'
+import React, { PropsWithChildren, ReactNode, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useAppTheme } from 'src/app/hooks'
 import AlertTriangle from 'src/assets/icons/alert-triangle.svg'
+import AnglesMaximize from 'src/assets/icons/angles-maximize.svg'
+import AnglesMinimize from 'src/assets/icons/angles-minimize.svg'
 import { AccountDetails } from 'src/components/accounts/AccountDetails'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Box } from 'src/components/layout/Box'
@@ -11,6 +15,7 @@ import { getAlertColor } from 'src/components/modals/WarningModal/WarningModal'
 import { NetworkFee } from 'src/components/Network/NetworkFee'
 import { Text } from 'src/components/Text'
 import { ChainId } from 'src/constants/chains'
+import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
 
 const ALERT_ICONS_SIZE = 18
@@ -20,6 +25,7 @@ interface TransactionDetailsProps {
   chainId: ChainId
   gasFee?: string
   gasFallbackUsed?: boolean
+  showExpandedChildren?: boolean
   showWarning?: boolean
   warning?: Warning
   onShowWarning?: () => void
@@ -29,6 +35,7 @@ interface TransactionDetailsProps {
 export function TransactionDetails({
   banner,
   children,
+  showExpandedChildren,
   chainId,
   gasFee,
   gasFallbackUsed,
@@ -38,8 +45,18 @@ export function TransactionDetails({
   onShowWarning,
 }: PropsWithChildren<TransactionDetailsProps>): JSX.Element {
   const theme = useAppTheme()
+  const { t } = useTranslation()
   const userAddress = useActiveAccountAddressWithThrow()
   const warningColor = getAlertColor(warning?.severity)
+
+  const [showChildren, setShowChildren] = useState(showExpandedChildren)
+
+  const onPressToggleShowChildren = (): void => {
+    if (!showChildren) {
+      sendAnalyticsEvent(SwapEventName.SWAP_DETAILS_EXPANDED)
+    }
+    setShowChildren(!showChildren)
+  }
 
   return (
     <Box>
@@ -74,19 +91,45 @@ export function TransactionDetails({
             <Separator color="background1" width={1} />
           </>
         )}
-        {children}
-        <Separator color="background1" width={1} />
-        <NetworkFee
-          chainId={chainId}
-          gasFallbackUsed={gasFallbackUsed}
-          gasFee={gasFee}
-          onShowGasWarning={onShowGasWarning}
-        />
+        <Flex gap="spacing12" px="spacing12" py="spacing12">
+          {showChildren ? <Flex gap="spacing12">{children}</Flex> : null}
+          <NetworkFee
+            chainId={chainId}
+            gasFallbackUsed={gasFallbackUsed}
+            gasFee={gasFee}
+            onShowGasWarning={onShowGasWarning}
+          />
+        </Flex>
         <Separator color="background1" width={1} />
         <Box px="spacing12" py="spacing12">
           <AccountDetails address={userAddress} iconSize={20} />
         </Box>
       </Flex>
+      {children ? (
+        <TouchableArea
+          alignItems="center"
+          flexDirection="row"
+          justifyContent="center"
+          py="spacing8"
+          onPress={onPressToggleShowChildren}>
+          <Text color="textTertiary" variant="bodySmall">
+            {showChildren ? t('Show less') : t('Show more')}
+          </Text>
+          {showChildren ? (
+            <AnglesMinimize
+              color={theme.colors.textTertiary}
+              height={theme.iconSizes.icon20}
+              width={theme.iconSizes.icon20}
+            />
+          ) : (
+            <AnglesMaximize
+              color={theme.colors.textTertiary}
+              height={theme.iconSizes.icon20}
+              width={theme.iconSizes.icon20}
+            />
+          )}
+        </TouchableArea>
+      ) : null}
     </Box>
   )
 }
