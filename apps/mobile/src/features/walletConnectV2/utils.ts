@@ -1,12 +1,16 @@
-import { ProposalTypes, SessionTypes, SignClientTypes } from '@walletconnect/types'
+import { PairingTypes, ProposalTypes, SessionTypes, SignClientTypes } from '@walletconnect/types'
 import { Web3WalletTypes } from '@walletconnect/web3wallet'
 import { utils } from 'ethers'
+import { Alert } from 'react-native'
+import { i18n } from 'src/app/i18n'
 import { ChainId } from 'src/constants/chains'
 import { EMPTY_ARRAY } from 'src/constants/misc'
 import { EthMethod, EthSignMethod } from 'src/features/walletConnect/types'
 import { SignRequest, TransactionRequest } from 'src/features/walletConnect/walletConnectSlice'
+import { wcWeb3Wallet } from 'src/features/walletConnectV2/saga'
 import { unique } from 'src/utils/array'
 import { toSupportedChainId } from 'src/utils/chainId'
+import { logger } from 'src/utils/logger'
 
 /**
  * Construct WalletConnect 2.0 proposal namespaces from required and optional namespaces.
@@ -280,5 +284,25 @@ export function getAddressAndMessageToSign(
     case EthMethod.SignTypedData:
     case EthMethod.SignTypedDataV4:
       return { address: params[0], rawMessage: params[1], message: null }
+  }
+}
+
+export async function pairWithWalletConnectURI(uri: string): Promise<void | PairingTypes.Struct> {
+  try {
+    return await wcWeb3Wallet.core.pairing.pair({ uri })
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (e: any) {
+    logger.error(
+      'walletConnectV2',
+      'pairWithWalletConnectURI',
+      `Error with new WalletConnect v2 pairing: ${e.message}`
+    )
+    Alert.alert(
+      i18n.t('WalletConnect Error'),
+      i18n.t(`There was an issue with WalletConnect. \n\n Error information:\n {{error}}`, {
+        error: typeof e === 'object' ? e?.message : '',
+      })
+    )
+    return Promise.reject(e)
   }
 }

@@ -26,7 +26,7 @@ import { useWCTimeoutError } from 'src/features/wallet/hooks'
 import { selectActiveAccountAddress } from 'src/features/wallet/selectors'
 import { useWalletConnect } from 'src/features/walletConnect/useWalletConnect'
 import { connectToApp } from 'src/features/walletConnect/WalletConnect'
-import { wcWeb3Wallet } from 'src/features/walletConnectV2/saga'
+import { pairWithWalletConnectURI } from 'src/features/walletConnectV2/utils'
 import { ONE_SECOND_MS } from 'src/utils/time'
 
 const WC_TIMEOUT_DURATION_MS = 10 * ONE_SECOND_MS // timeout after 10 seconds
@@ -91,7 +91,7 @@ export function WalletConnectModal({
       }
 
       if (walletConnectV2Enabled && supportedURI.type === URIType.WalletConnectV2URL) {
-        wcWeb3Wallet.core.pairing.pair({ uri: supportedURI.value })
+        pairWithWalletConnectURI(supportedURI.value)
       }
 
       if (supportedURI.type === URIType.EasterEgg) {

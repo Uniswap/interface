@@ -13,7 +13,7 @@ import { selectAccounts, selectActiveAccount } from 'src/features/wallet/selecto
 import { activateAccount } from 'src/features/wallet/walletSlice'
 import { connectToApp, isValidWCUrl } from 'src/features/walletConnect/WalletConnect'
 import { setDidOpenFromDeepLink } from 'src/features/walletConnect/walletConnectSlice'
-import { wcWeb3Wallet } from 'src/features/walletConnectV2/saga'
+import { pairWithWalletConnectURI } from 'src/features/walletConnectV2/utils'
 import { logger } from 'src/utils/logger'
 import { Statsig } from 'statsig-react-native'
 import { call, fork, put, takeLatest } from 'typed-redux-saga'
@@ -60,7 +60,7 @@ export function* handleDeepLink(action: ReturnType<typeof openDeepLink>) {
 
         const walletConnectV2Enabled = Statsig.checkGate(FEATURE_FLAGS.WalletConnectV2)
         if (walletConnectV2Enabled && parseUri(wcUri).version === 2) {
-          wcWeb3Wallet.core.pairing.pair({ uri: wcUri })
+          pairWithWalletConnectURI(wcUri)
         }
       }
       // Set didOpenFromDeepLink so that `returnToPreviousApp()` is enabled during WalletConnect flows
