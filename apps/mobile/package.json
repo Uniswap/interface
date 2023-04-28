@@ -89,7 +89,7 @@
     "@uniswap/v3-sdk": "3.9.0",
     "@walletconnect/react-native-compat": "2.7.0",
     "@walletconnect/utils": "2.7.0",
-    "@walletconnect/web3wallet": "1.5.1",
+    "@walletconnect/web3wallet": "1.6.0",
     "apollo3-cache-persist": "0.14.1",
     "async-mutex": "0.3.2",
     "babel-plugin-transform-inline-environment-variables": "0.4.4",
