@@ -22,7 +22,7 @@ jobs:
       
       - name: Get marketing version number
         run: |
-          fastlane ios getMarketingVersionNumber
+          cd apps/mobile && fastlane ios getMarketingVersionNumber
         env:
           APP_STORE_CONNECT_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
           APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
