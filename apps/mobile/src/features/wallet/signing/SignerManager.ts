@@ -2,6 +2,7 @@ import { Signer } from 'ethers'
 import { Account, AccountType } from 'src/features/wallet/accounts/types'
 import { NativeSigner } from 'src/features/wallet/signing/NativeSigner'
 import { getAddressesForStoredPrivateKeys } from 'src/lib/RNEthersRs'
+import { logger } from 'src/utils/logger'
 
 export class SignerManager {
   private readonly _signers: Record<Address, Signer> = {}
@@ -19,6 +20,12 @@ export class SignerManager {
       this._signers[account.address] = new NativeSigner(account.address)
       return this._signers[account.address]
     }
+
+    logger.error(
+      'SignerManager',
+      'getSignerForAccount',
+      `no signer found for account: ${account.address} of type: ${account.type}`
+    )
 
     throw Error('Signer type currently unsupported')
   }
