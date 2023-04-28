@@ -2,8 +2,9 @@ import { Trans } from '@lingui/macro'
 import Column from 'components/Column'
 import { ScrollBarStyles } from 'components/Common'
 import Row from 'components/Row'
+import { useSubscribeScrollState } from 'nft/hooks'
 import { Trait } from 'nft/types'
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { opacify } from 'theme/utils'
@@ -56,22 +57,7 @@ const Scrim = styled.div<{ isBottom?: boolean }>`
 `
 
 const TraitsContent = ({ traits }: { traits?: Trait[] }) => {
-  const [userCanScroll, setUserCanScroll] = useState(false)
-  const [scrollProgress, setScrollProgress] = useState(0)
-  const scrollRef = (node: HTMLDivElement) => {
-    if (node !== null) {
-      const canScroll = node.scrollHeight > node.clientHeight
-      canScroll !== userCanScroll && setUserCanScroll(canScroll)
-    }
-  }
-
-  const scrollHandler = (event: React.UIEvent<HTMLDivElement>) => {
-    const scrollTop = event.currentTarget.scrollTop
-    const containerHeight = event.currentTarget.clientHeight
-    const scrollHeight = event.currentTarget.scrollHeight
-
-    setScrollProgress(scrollTop ? ((scrollTop + containerHeight) / scrollHeight) * 100 : 0)
-  }
+  const { userCanScroll, scrollRef, scrollProgress, scrollHandler } = useSubscribeScrollState()
 
   // This is needed to prevent rerenders when handling scrolls
   const traitRows = useMemo(() => {
