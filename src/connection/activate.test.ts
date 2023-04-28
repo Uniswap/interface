@@ -1,27 +1,11 @@
 import { Web3ReactHooks } from '@web3-react/core'
 import { Connector } from '@web3-react/types'
+import { createDeferredPromise } from 'test-utils/promise'
 
 import { act, renderHook } from '../test-utils/render'
 import { ActivationStatus, useActivationState } from './activate'
 import { Connection, ConnectionType } from './types'
 import { ErrorCode } from './utils'
-
-type DeferredPromise = {
-  promise: Promise<unknown>
-  resolve: () => void
-  reject: (reason: unknown) => void
-}
-function createDeferredPromise() {
-  const defferedPromise = {} as DeferredPromise
-
-  const promise = new Promise<void>((resolve, reject) => {
-    defferedPromise.reject = reject
-    defferedPromise.resolve = resolve
-  })
-  defferedPromise.promise = promise
-
-  return defferedPromise
-}
 
 class MockConnector extends Connector {
   activate: () => void
@@ -56,7 +40,8 @@ function createMockConnection(
 }
 
 beforeEach(() => {
-  console.error = jest.fn()
+  jest.spyOn(console, 'error').mockReturnValue()
+  jest.spyOn(console, 'debug').mockReturnValue()
 })
 
 it('Should initialize with proper IDLE state', async () => {
@@ -79,6 +64,7 @@ it('Should call activate function on a connection', async () => {
 
   expect(result.current.activationState).toEqual({ status: ActivationStatus.PENDING, connection: mockConnection })
   expect(mockConnection.connector.activate).toHaveBeenCalledTimes(1)
+  expect(console.debug).toHaveBeenLastCalledWith(`Connection activating: ${mockConnection.getName()}`)
   expect(onSuccess).toHaveBeenCalledTimes(0)
 
   await act(async () => {
@@ -88,6 +74,8 @@ it('Should call activate function on a connection', async () => {
 
   expect(result.current.activationState).toEqual({ status: ActivationStatus.IDLE })
   expect(mockConnection.connector.activate).toHaveBeenCalledTimes(1)
+  expect(console.debug).toHaveBeenLastCalledWith(`Connection activated: ${mockConnection.getName()}`)
+  expect(console.debug).toHaveBeenCalledTimes(2)
   expect(onSuccess).toHaveBeenCalledTimes(1)
 })
 
@@ -111,6 +99,8 @@ it('Should properly deactivate pending connection attempts', async () => {
 
   expect(result.current.activationState).toEqual({ status: ActivationStatus.IDLE })
   expect(mockConnection.connector.deactivate).toHaveBeenCalledTimes(1)
+  expect(console.debug).not.toHaveBeenLastCalledWith(`Connection activated: ${mockConnection.getName()}`)
+  expect(console.debug).toHaveBeenCalledTimes(1)
   expect(onSuccess).toHaveBeenCalledTimes(0)
 })
 
@@ -140,6 +130,8 @@ it('Should properly display error state', async () => {
     connection: mockConnection,
     error: 'Failed to connect',
   })
+  expect(console.debug).toHaveBeenLastCalledWith(`Connection failed: ${mockConnection.getName()}`)
+  expect(console.debug).toHaveBeenCalledTimes(2)
   expect(mockConnection.connector.activate).toHaveBeenCalledTimes(1)
   expect(onSuccess).toHaveBeenCalledTimes(0)
 })
@@ -162,6 +154,7 @@ it('Should successfully retry a failed activation', async () => {
     connection: mockConnection,
     error: 'Failed to connect',
   })
+  expect(console.debug).toHaveBeenLastCalledWith(`Connection failed: ${mockConnection.getName()}`)
   expect(mockConnection.connector.activate).toHaveBeenCalledTimes(1)
   expect(onSuccess).toHaveBeenCalledTimes(0)
 
@@ -169,6 +162,8 @@ it('Should successfully retry a failed activation', async () => {
 
   expect(result.current.activationState).toEqual({ status: ActivationStatus.IDLE })
   expect(mockConnection.connector.activate).toHaveBeenCalledTimes(2)
+  expect(console.debug).toHaveBeenLastCalledWith(`Connection activated: ${mockConnection.getName()}`)
+  expect(console.debug).toHaveBeenCalledTimes(4)
   expect(onSuccess).toHaveBeenCalledTimes(1)
 })
 

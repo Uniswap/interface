@@ -83,7 +83,7 @@ export default function Option({ connection }: { connection: Connection }) {
         onClick={activate}
         disabled={isSomeOptionPending}
         selected={isCurrentOptionPending}
-        data-testid="wallet-modal-option"
+        data-testid={`wallet-option-${connection.type}`}
       >
         <OptionCardLeft>
           <IconWrapper>

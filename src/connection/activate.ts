@@ -36,6 +36,8 @@ function useTryActivation() {
 
       try {
         setActivationState({ status: ActivationStatus.PENDING, connection })
+
+        console.debug(`Connection activating: ${connection.getName()}`)
         await connection.connector.activate()
 
         console.debug(`Connection activated: ${connection.getName()}`)
@@ -46,9 +48,10 @@ function useTryActivation() {
 
         onSuccess()
       } catch (error) {
-        // TODO(WEB-3162): re-add special treatment for already-pending injected errors
-        console.debug(`web3-react connection error: ${JSON.stringify(error)}`)
-        console.log(error.message)
+        // TODO(WEB-3162): re-add special treatment for already-pending injected errors & move debug to after didUserReject() check
+        console.debug(`Connection failed: ${connection.getName()}`)
+        console.error(error)
+
         // Gracefully handles errors from the user rejecting a connection attempt
         if (didUserReject(connection, error)) {
           setActivationState(IDLE_ACTIVATION_STATE)
