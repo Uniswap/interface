@@ -2,7 +2,7 @@
   "name": "universe",
   "version": "0.0.0",
   "dependencies": {
-    "@babel/runtime": "^7.18.9",
+    "@babel/runtime": "7.18.9",
     "@commitlint/cli": "^17.4.2",
     "@commitlint/config-conventional": "^17.4.2",
     "@manypkg/cli": "^0.19.2",
@@ -38,7 +38,7 @@
     "json5": "2.2.2",
     "node-fetch": "2.6.7",
     "qs": "6.11.0",
-    "react": "^18.2.0",
+    "react": "18.2.0",
     "react-dom": "^18.2.0",
     "react-native-svg": "13.4.0",
     "react-native-web": "^0.18.12",
