@@ -69,13 +69,13 @@ const TraitsContent = ({ traits }: { traits?: Trait[] }) => {
       <TraitsHeaderContainer>
         <TraitsHeader $flex={3}>
           <Trans>Trait</Trans>
-        </TraitsHeader>{' '}
+        </TraitsHeader>
         <TraitsHeader $flex={2}>
           <Trans>Floor price</Trans>
-        </TraitsHeader>{' '}
+        </TraitsHeader>
         <TraitsHeader>
           <Trans>Quantity</Trans>
-        </TraitsHeader>{' '}
+        </TraitsHeader>
         <TraitsHeader $flex={1.5} justify="flex-end">
           <Trans>Rarity</Trans>
         </TraitsHeader>

@@ -34,7 +34,7 @@ export const TraitRow = ({ trait }: { trait: Trait }) => {
   return (
     <Row padding="12px 8px 12px 0px">
       <TraitValue>
-        <SubheaderTiny>{trait.trait_type}</SubheaderTiny>{' '}
+        <SubheaderTiny>{trait.trait_type}</SubheaderTiny>
         <ThemedText.BodyPrimary lineHeight="20px">{trait.trait_value}</ThemedText.BodyPrimary>
       </TraitValue>
       <TraitRowValue $flex={2}>{formatEth(randomRarity * 1000)} ETH</TraitRowValue>
