@@ -6,23 +6,21 @@
 // ***********************************************************
 
 import '@cypress/code-coverage/support'
+import 'cypress-hardhat/lib/browser'
 
 import { Eip1193Bridge } from '@ethersproject/experimental/lib/eip1193-bridge'
 import assert from 'assert'
-import { Network } from 'cypress-hardhat/lib/browser'
 
 import { FeatureFlag } from '../../src/featureFlags/flags/featureFlags'
 import { UserState } from '../../src/state/user/reducer'
 import { CONNECTED_WALLET_USER_STATE } from '../utils/user-state'
 import { injected } from './ethereum'
-import { HardhatProvider } from './hardhat'
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Cypress {
     interface ApplicationWindow {
       ethereum: Eip1193Bridge
-      hardhat: HardhatProvider
     }
     interface VisitOptions {
       serviceWorker?: true
@@ -38,10 +36,6 @@ declare global {
        * @default {@type import('../utils/user-state').CONNECTED_WALLET_USER_STATE}
        */
       userState?: Partial<UserState>
-    }
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    interface Chainable<Subject> {
-      task(event: 'hardhat'): Chainable<Network>
     }
   }
 }
@@ -59,8 +53,8 @@ Cypress.Commands.overwrite(
 
     return cy
       .intercept('/service-worker.js', options?.serviceWorker ? undefined : { statusCode: 404 })
-      .task('hardhat')
-      .then((network) =>
+      .provider()
+      .then((provider) =>
         original({
           ...options,
           url: hashUrl,
@@ -84,9 +78,7 @@ Cypress.Commands.overwrite(
 
             // Inject the mock ethereum provider.
             if (options?.ethereum === 'hardhat') {
-              // The provider is exposed via hardhat to allow mocking / network manipulation.
-              win.hardhat = new HardhatProvider(network)
-              win.ethereum = win.hardhat
+              win.ethereum = provider
             } else {
               win.ethereum = injected
             }
