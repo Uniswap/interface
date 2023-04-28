@@ -14,7 +14,6 @@ import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { SupportedChainId } from 'constants/chains'
-import { usePayWithAnyTokenEnabled } from 'featureFlags/flags/payWithAnyToken'
 import { useCurrency } from 'hooks/Tokens'
 import { AllowanceState } from 'hooks/usePermit2Allowance'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
@@ -55,9 +54,9 @@ const Footer = styled.div`
   border-bottom-right-radius: 12px;
 `
 
-const FooterHeader = styled(Column)<{ usingPayWithAnyToken?: boolean }>`
+const FooterHeader = styled(Column)`
   padding-top: 8px;
-  padding-bottom: ${({ usingPayWithAnyToken }) => (usingPayWithAnyToken ? '16px' : '20px')};
+  padding-bottom: 16px;
 `
 
 const CurrencyRow = styled(Row)`
@@ -198,19 +197,17 @@ const Helper = ({ children, color }: PropsWithChildren<HelperTextProps>) => {
 }
 
 const InputCurrencyValue = ({
-  usingPayWithAnyToken,
   totalEthPrice,
   activeCurrency,
   tradeState,
   trade,
 }: {
-  usingPayWithAnyToken: boolean
   totalEthPrice: BigNumber
   activeCurrency: Currency | undefined | null
   tradeState: TradeState
   trade: InterfaceTrade<Currency, Currency, TradeType> | undefined
 }) => {
-  if (!usingPayWithAnyToken) {
+  if (!trade) {
     return (
       <ThemedText.BodyPrimary lineHeight="20px" fontWeight="500">
         {formatWeiToDecimal(totalEthPrice.toString())}
@@ -229,7 +226,7 @@ const InputCurrencyValue = ({
 
   return (
     <ValueText color={tradeState === TradeState.SYNCING ? 'textTertiary' : 'textPrimary'}>
-      {ethNumberStandardFormatter(trade?.inputAmount.toExact())}
+      {ethNumberStandardFormatter(trade.inputAmount.toExact())}
     </ValueText>
   )
 }
@@ -238,15 +235,15 @@ const FiatValue = ({
   usdcValue,
   priceImpact,
   tradeState,
-  usingPayWithAnyToken,
+  hasTrade,
 }: {
   usdcValue: CurrencyAmount<Token> | null
   priceImpact: PriceImpact | undefined
   tradeState: TradeState
-  usingPayWithAnyToken: boolean
+  hasTrade: boolean
 }) => {
   if (!usdcValue) {
-    if (usingPayWithAnyToken && (tradeState === TradeState.INVALID || tradeState === TradeState.NO_ROUTE_FOUND)) {
+    if (hasTrade && (tradeState === TradeState.INVALID || tradeState === TradeState.NO_ROUTE_FOUND)) {
       return null
     }
 
@@ -292,7 +289,6 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
   const { account, chainId, connector } = useWeb3React()
   const connected = Boolean(account && chainId)
   const totalEthPrice = useBagTotalEthPrice()
-  const shouldUsePayWithAnyToken = usePayWithAnyTokenEnabled()
   const inputCurrency = useTokenInput((state) => state.inputCurrency)
   const setInputCurrency = useTokenInput((state) => state.setInputCurrency)
   const defaultCurrency = useCurrency('ETH')
@@ -317,7 +313,6 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
   const [tokenSelectorOpen, setTokenSelectorOpen] = useState(false)
   const isPending = PENDING_BAG_STATUSES.includes(bagStatus)
   const activeCurrency = inputCurrency ?? defaultCurrency
-  const usingPayWithAnyToken = !!inputCurrency && shouldUsePayWithAnyToken && chainId === SupportedChainId.MAINNET
 
   useSubscribeTransactionState(setModalIsOpen)
   const fetchAssets = useFetchAssets()
@@ -330,11 +325,10 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
     trade,
     maximumAmountIn,
     allowedSlippage,
-  } = useDerivedPayWithAnyTokenSwapInfo(usingPayWithAnyToken ? inputCurrency : undefined, parsedOutputAmount)
+  } = useDerivedPayWithAnyTokenSwapInfo(inputCurrency, parsedOutputAmount)
   const { allowance, isAllowancePending, isApprovalLoading, updateAllowance } = usePermit2Approval(
     trade?.inputAmount.currency.isToken ? (trade?.inputAmount as CurrencyAmount<Token>) : undefined,
     maximumAmountIn,
-    shouldUsePayWithAnyToken,
     true
   )
   usePayWithAnyTokenSwap(trade, allowance, allowedSlippage)
@@ -342,7 +336,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
 
   const fiatValueTradeInput = useStablecoinValue(trade?.inputAmount)
   const fiatValueTradeOutput = useStablecoinValue(parsedOutputAmount)
-  const usdcValue = usingPayWithAnyToken ? fiatValueTradeInput : fiatValueTradeOutput
+  const usdcValue = trade ? fiatValueTradeInput : fiatValueTradeOutput
 
   const { balance: balanceInEth } = useWalletBalance()
   const sufficientBalance = useMemo(() => {
@@ -412,7 +406,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
     } else if (bagStatus === BagStatus.PROCESSING_TRANSACTION) {
       disabled = true
       buttonText = <Trans>Transaction pending</Trans>
-    } else if (usingPayWithAnyToken && tradeState !== TradeState.VALID) {
+    } else if (trade && tradeState !== TradeState.VALID) {
       disabled = true
       buttonText = <Trans>Fetching Route</Trans>
 
@@ -454,7 +448,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
     } else if (sufficientBalance === true) {
       disabled = false
       buttonText = <Trans>Pay</Trans>
-      helperText = usingPayWithAnyToken ? <Trans>Refunds for unavailable items will be given in ETH</Trans> : undefined
+      helperText = trade ? <Trans>Refunds for unavailable items will be given in ETH</Trans> : undefined
     }
 
     return {
@@ -480,7 +474,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
     chainId,
     sufficientBalance,
     bagStatus,
-    usingPayWithAnyToken,
+    trade,
     tradeState,
     allowance.state,
     priceImpact,
@@ -501,70 +495,46 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
   return (
     <FooterContainer>
       <Footer>
-        {shouldUsePayWithAnyToken && (
-          <FooterHeader gap="xs" usingPayWithAnyToken={shouldUsePayWithAnyToken}>
-            <CurrencyRow>
-              <Column gap="xs">
-                <ThemedText.SubHeaderSmall>
-                  <Trans>Pay with</Trans>
-                </ThemedText.SubHeaderSmall>
-                <CurrencyInput
-                  onClick={() => {
-                    if (!bagIsLocked) {
-                      setTokenSelectorOpen(true)
-                      sendAnalyticsEvent(NFTEventName.NFT_BUY_TOKEN_SELECTOR_CLICKED)
-                    }
-                  }}
-                >
-                  <CurrencyLogo currency={activeCurrency} size="24px" />
-                  <ThemedText.HeadlineSmall fontWeight={500} lineHeight="24px">
-                    {activeCurrency?.symbol}
-                  </ThemedText.HeadlineSmall>
-                  <ChevronDown size={20} color={theme.textSecondary} />
-                </CurrencyInput>
-              </Column>
-              <TotalColumn gap="xs">
-                <ThemedText.SubHeaderSmall marginBottom="4px">
-                  <Trans>Total</Trans>
-                </ThemedText.SubHeaderSmall>
-                <InputCurrencyValue
-                  usingPayWithAnyToken={usingPayWithAnyToken}
-                  totalEthPrice={totalEthPrice}
-                  activeCurrency={activeCurrency}
-                  tradeState={tradeState}
-                  trade={trade}
-                />
-              </TotalColumn>
-            </CurrencyRow>
-            <FiatValue
-              usdcValue={usdcValue}
-              priceImpact={priceImpact}
-              tradeState={tradeState}
-              usingPayWithAnyToken={usingPayWithAnyToken}
-            />
-          </FooterHeader>
-        )}
-        {!shouldUsePayWithAnyToken && (
-          <FooterHeader gap="xs">
-            <Row justify="space-between">
-              <div>
-                <ThemedText.HeadlineSmall>Total</ThemedText.HeadlineSmall>
-              </div>
-              <div>
-                <ThemedText.HeadlineSmall>
-                  {formatWeiToDecimal(totalEthPrice.toString())}
-                  &nbsp;{activeCurrency?.symbol ?? 'ETH'}
+        <FooterHeader gap="xs">
+          <CurrencyRow>
+            <Column gap="xs">
+              <ThemedText.SubHeaderSmall>
+                <Trans>Pay with</Trans>
+              </ThemedText.SubHeaderSmall>
+              <CurrencyInput
+                onClick={() => {
+                  if (!bagIsLocked) {
+                    setTokenSelectorOpen(true)
+                    sendAnalyticsEvent(NFTEventName.NFT_BUY_TOKEN_SELECTOR_CLICKED)
+                  }
+                }}
+              >
+                <CurrencyLogo currency={activeCurrency} size="24px" />
+                <ThemedText.HeadlineSmall fontWeight={500} lineHeight="24px">
+                  {activeCurrency?.symbol}
                 </ThemedText.HeadlineSmall>
-              </div>
-            </Row>
-            <FiatValue
-              usdcValue={usdcValue}
-              priceImpact={priceImpact}
-              tradeState={tradeState}
-              usingPayWithAnyToken={usingPayWithAnyToken}
-            />
-          </FooterHeader>
-        )}
+                <ChevronDown size={20} color={theme.textSecondary} />
+              </CurrencyInput>
+            </Column>
+            <TotalColumn gap="xs">
+              <ThemedText.SubHeaderSmall marginBottom="4px">
+                <Trans>Total</Trans>
+              </ThemedText.SubHeaderSmall>
+              <InputCurrencyValue
+                totalEthPrice={totalEthPrice}
+                activeCurrency={activeCurrency}
+                tradeState={tradeState}
+                trade={trade}
+              />
+            </TotalColumn>
+          </CurrencyRow>
+          <FiatValue
+            usdcValue={usdcValue}
+            priceImpact={priceImpact}
+            tradeState={tradeState}
+            hasTrade={Boolean(trade)}
+          />
+        </FooterHeader>
         <TraceEvent
           events={[BrowserEvent.onClick]}
           name={NFTEventName.NFT_BUY_BAG_PAY}

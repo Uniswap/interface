@@ -13,18 +13,19 @@ const NFT_UNIVERSAL_ROUTER_MAINNET_ADDRESS = '0x4c60051384bd2d3c01bfc845cf5f4b44
 export default function usePermit2Approval(
   amount?: CurrencyAmount<Token>,
   maximumAmount?: CurrencyAmount<Token>,
-  enabled?: boolean,
   shouldUseNftRouter?: boolean
 ) {
   const { chainId } = useWeb3React()
 
+  let contractToApprove: string | undefined
+  if (chainId) {
+    const forceNftRouter = shouldUseNftRouter && chainId === 1
+    contractToApprove = forceNftRouter ? NFT_UNIVERSAL_ROUTER_MAINNET_ADDRESS : UNIVERSAL_ROUTER_ADDRESS(chainId)
+  }
+
   const allowance = usePermit2Allowance(
-    enabled ? maximumAmount ?? (amount?.currency.isToken ? (amount as CurrencyAmount<Token>) : undefined) : undefined,
-    enabled && chainId
-      ? shouldUseNftRouter && chainId === 1
-        ? NFT_UNIVERSAL_ROUTER_MAINNET_ADDRESS
-        : UNIVERSAL_ROUTER_ADDRESS(chainId)
-      : undefined
+    maximumAmount ?? (amount?.currency.isToken ? (amount as CurrencyAmount<Token>) : undefined),
+    contractToApprove
   )
   const isApprovalLoading = allowance.state === AllowanceState.REQUIRED && allowance.isApprovalLoading
   const [isAllowancePending, setIsAllowancePending] = useState(false)
