@@ -37,6 +37,7 @@ const TraitRowScrollableContainer = styled.div`
   ${ScrollBarStyles}
 `
 
+// Scrim that fades out the top and bottom of the scrollable container, isBottom changes the direction and placement of the fade
 const Scrim = styled.div<{ isBottom?: boolean }>`
   position: absolute;
   height: 88px;
