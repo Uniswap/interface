@@ -89,27 +89,22 @@ Cypress.Commands.overwrite(
 )
 
 beforeEach(() => {
+  cy.intercept('*', (req) => {
+    req.headers['referer'] = 'https://app.uniswap.org'
+    req.headers['origin'] = 'https://app.uniswap.org'
+    req.continue()
+  })
   // Infura security policies are based on Origin headers.
   // These are stripped by cypress because chromeWebSecurity === false; this adds them back in.
-  cy.intercept(/infura.io/, (res) => {
-    res.headers['origin'] = 'http://localhost:3000'
-    res.alias = res.body.method
-    res.continue()
+  cy.intercept(/infura.io/, (req) => {
+    req.headers['referer'] = 'http://localhost:3000'
+    req.headers['origin'] = 'http://localhost:3000'
+    req.alias = req.body.method
+    req.continue()
   })
 
-  // Graphql security policies are based on Origin headers.
-  // These are stripped by cypress because chromeWebSecurity === false; this adds them back in.
-  cy.intercept('https://api.uniswap.org/v1/graphql', (res) => {
-    res.headers['origin'] = 'https://app.uniswap.org'
-    res.continue()
-  })
-  cy.intercept('https://beta.api.uniswap.org/v1/graphql', (res) => {
-    res.headers['origin'] = 'https://app.uniswap.org'
-    res.continue()
-  })
-
-  cy.intercept('https://api.uniswap.org/v1/amplitude-proxy', (res) => {
-    res.reply(JSON.stringify({}))
+  cy.intercept('https://api.uniswap.org/v1/amplitude-proxy', (req) => {
+    req.reply(JSON.stringify({}))
   })
 })
 
