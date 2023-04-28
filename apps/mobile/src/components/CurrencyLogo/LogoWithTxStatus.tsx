@@ -10,7 +10,7 @@ import UnknownStatus from 'src/assets/icons/question-in-circle.svg'
 import WalletConnectLogo from 'src/assets/icons/walletconnect.svg'
 import MoonpayLogo from 'src/assets/logos/moonpay.svg'
 import { CurrencyLogo, STATUS_RATIO } from 'src/components/CurrencyLogo'
-import { NetworkLogo } from 'src/components/CurrencyLogo/NetworkLogo'
+import { TransactionSummaryNetworkLogo } from 'src/components/CurrencyLogo/NetworkLogo'
 import { ImageUri } from 'src/components/images/ImageUri'
 import { NFTViewer } from 'src/components/images/NFTViewer'
 import { RemoteImage } from 'src/components/images/RemoteImage'
@@ -21,7 +21,6 @@ import { AssetType } from 'src/entities/assets'
 import { CurrencyInfo } from 'src/features/dataApi/types'
 import { NFTTradeType, TransactionStatus, TransactionType } from 'src/features/transactions/types'
 import { WalletConnectEvent } from 'src/features/walletConnect/saga'
-import { getNetworkForegroundColor } from 'src/utils/colors'
 import { logger } from 'src/utils/logger'
 
 interface LogoWithTxStatusProps {
@@ -81,16 +80,7 @@ export function LogoWithTxStatus(props: CurrencyStatusProps | NFTStatusProps): J
 
   let icon: JSX.Element | undefined
   if (chainId && chainId !== ChainId.Mainnet) {
-    icon = (
-      <NetworkLogo
-        backgroundColor={getNetworkForegroundColor(theme, chainId)}
-        borderColor={theme.colors.background0}
-        borderRadius="rounded8"
-        borderWidth={2}
-        chainId={chainId}
-        size={size * STATUS_RATIO}
-      />
-    )
+    icon = <TransactionSummaryNetworkLogo chainId={chainId} size={size * STATUS_RATIO} />
   } else {
     let Icon: React.FC<SvgProps> | undefined
     switch (txType) {
@@ -167,7 +157,9 @@ export function DappLogoWithTxStatus({
   const getStatusIcon = (): JSX.Element | undefined => {
     switch (event) {
       case WalletConnectEvent.NetworkChanged:
-        return chainId ? <NetworkLogo chainId={chainId} size={statusSize} /> : undefined
+        return chainId ? (
+          <TransactionSummaryNetworkLogo chainId={chainId} size={statusSize} />
+        ) : undefined
       case WalletConnectEvent.TransactionConfirmed:
         return <Approve color={green} fill={fill} height={statusSize} width={statusSize} />
       case WalletConnectEvent.TransactionFailed:
@@ -249,30 +241,25 @@ export function DappLogoWithWCBadge({
 
   return (
     <Box height={totalSize} width={totalSize}>
-      <Box left={4} position="absolute" top={0}>
+      <Box left={2} top={0}>
         {dappImage}
       </Box>
-      <Box
-        backgroundColor="background1"
-        borderColor="background0"
-        borderRadius="roundedFull"
-        borderWidth={2}
-        bottom={0}
-        position="absolute"
-        right={0}>
-        {chainId && chainId !== ChainId.Mainnet ? (
-          <NetworkLogo
-            backgroundColor={getNetworkForegroundColor(theme, chainId)}
-            borderColor={theme.colors.background0}
-            borderRadius="rounded8"
-            borderWidth={2}
-            chainId={chainId}
-            size={size * STATUS_RATIO}
-          />
-        ) : (
+      {chainId && chainId !== ChainId.Mainnet ? (
+        <Box bottom={-2} position="absolute" right={-2}>
+          <TransactionSummaryNetworkLogo chainId={chainId} size={size * STATUS_RATIO} />
+        </Box>
+      ) : (
+        <Box
+          backgroundColor="background1"
+          borderColor="background0"
+          borderRadius="roundedFull"
+          borderWidth={2}
+          bottom={0}
+          position="absolute"
+          right={0}>
           <WalletConnectLogo height={statusSize} width={statusSize} />
-        )}
-      </Box>
+        </Box>
+      )}
     </Box>
   )
 }

@@ -60,12 +60,7 @@ exports[`renders a currency logo with network logo 1`] = `
         Array [
           Object {
             "borderRadius": 999999,
-            "borderWidth": 0,
             "display": "flex",
-          },
-          Object {
-            "backgroundColor": undefined,
-            "borderColor": undefined,
           },
         ]
       }

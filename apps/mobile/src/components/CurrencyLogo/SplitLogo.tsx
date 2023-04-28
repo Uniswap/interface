@@ -1,11 +1,9 @@
 import React from 'react'
-import { useAppTheme } from 'src/app/hooks'
 import { CurrencyLogo, STATUS_RATIO } from 'src/components/CurrencyLogo'
-import { NetworkLogo } from 'src/components/CurrencyLogo/NetworkLogo'
+import { TransactionSummaryNetworkLogo } from 'src/components/CurrencyLogo/NetworkLogo'
 import { Box } from 'src/components/layout/Box'
 import { ChainId } from 'src/constants/chains'
 import { CurrencyInfo } from 'src/features/dataApi/types'
-import { getNetworkForegroundColor } from 'src/utils/colors'
 
 interface Props {
   inputCurrencyInfo: NullUndefined<CurrencyInfo>
@@ -24,20 +22,11 @@ export function SplitLogo({
   outputCurrencyInfo,
   chainId,
 }: Props): JSX.Element {
-  const theme = useAppTheme()
-
   const iconSize = size / 2
 
   const icon =
     chainId && chainId !== ChainId.Mainnet ? (
-      <NetworkLogo
-        backgroundColor={getNetworkForegroundColor(theme, chainId)}
-        borderColor={theme.colors.background0}
-        borderRadius="rounded8"
-        borderWidth={2}
-        chainId={chainId}
-        size={size * STATUS_RATIO}
-      />
+      <TransactionSummaryNetworkLogo chainId={chainId} size={size * STATUS_RATIO} />
     ) : undefined
 
   return (

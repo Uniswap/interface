@@ -6,34 +6,54 @@ import { Box } from 'src/components/layout/Box'
 import { ChainId, CHAIN_INFO } from 'src/constants/chains'
 import { iconSizes } from 'src/styles/sizing'
 import { Theme } from 'src/styles/theme'
+import { getNetworkColorKey } from 'src/utils/colors'
 
 type NetworkLogoProps = {
   chainId: ChainId
-  borderWidth?: number
-  borderRadius?: keyof Theme['borderRadii']
-  borderColor?: string
-  backgroundColor?: string
   size?: number
 } & SpacingProps<Theme> &
   SpacingShorthandProps<Theme>
 
+export function TransactionSummaryNetworkLogo({
+  chainId,
+  size = iconSizes.icon20,
+}: Pick<NetworkLogoProps, 'chainId' | 'size'>): JSX.Element {
+  const { logo } = CHAIN_INFO[chainId]
+  const backgroundColor = getNetworkColorKey(chainId)
+
+  // We need to wrap the network logo because it's a circle, but we need a rectangle,
+  // but we can use border and background color on the same view, as for some reason
+  // background color is visible through the border on the outline
+  // Similiar issue: https://stackoverflow.com/questions/43756623/react-native-border-radius-makes-outline
+  return (
+    <Box borderColor="background0" borderRadius="rounded8" borderWidth={2}>
+      <Box backgroundColor={backgroundColor} borderColor="background0" style={style.innerWrapper}>
+        {logo && (
+          <Image
+            source={logo}
+            style={[
+              style.image,
+              {
+                width: size,
+                height: size,
+              },
+            ]}
+          />
+        )}
+      </Box>
+    </Box>
+  )
+}
+
 export function NetworkLogo({
   chainId,
-  borderWidth = 0,
-  borderRadius = 'roundedFull',
-  backgroundColor,
-  borderColor,
   size = iconSizes.icon20,
   ...rest
 }: NetworkLogoProps): JSX.Element {
   const { logo } = CHAIN_INFO[chainId]
 
   return (
-    <Box
-      borderRadius={borderRadius}
-      borderWidth={borderWidth}
-      style={{ backgroundColor, borderColor }}
-      {...rest}>
+    <Box borderRadius="roundedFull" {...rest}>
       {logo && (
         <Image
           source={logo}
