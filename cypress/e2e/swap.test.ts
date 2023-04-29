@@ -213,15 +213,17 @@ describe('Swap', () => {
             send.withArgs('eth_estimateGas').resolves(BigNumber.from(2_000_000))
             send.callThrough()
 
-            // Sets slippage to a very low value
+            // Set slippage to a very low value.
             cy.get(getTestSelector('open-settings-dialog-button')).click()
             cy.get(getTestSelector('slippage-input')).clear().type(SLIPPAGE.toString())
             cy.get('body').click('topRight')
             cy.get(getTestSelector('slippage-input')).should('not.exist')
 
+            // Select USDC as output token from the common bases menu.
             cy.get('#swap-currency-output .open-currency-select-button').click()
             cy.contains('USDC').click()
 
+            // Set the input amount to the max amount minus the gas buffer.
             cy.get('#swap-currency-input .token-amount-input').clear().type(swapInputAmount)
             cy.get('#swap-currency-output .token-amount-input').should('not.equal', '')
             cy.get('#swap-button').click()
@@ -229,14 +231,16 @@ describe('Swap', () => {
             cy.get(getTestSelector('dismiss-tx-confirmation')).click()
 
             cy.then(() => hardhat.provider.send('hardhat_mine', ['0x2', '0xc'])).then(() => {
-              // check for a failed transaction notification
+              // Check for a failed transaction notification.
               cy.contains('Swap failed').should('exist')
 
+              // Assert that the balance is unchanged. (aside from gas costs)
               cy.then(() => hardhat.provider.getBalance(hardhat.wallet.address)).then((finalBalance) => {
-                // The difference between final and initial balance should be equal to the amount of gas used
                 expect(initialBalance.gt(finalBalance)).to.be.true
                 expect(finalBalance.gt(ETH_GAS_BUFFER)).to.be.true
               })
+
+              // Assert that the USDC balance is unchanged.
               cy.then(() => hardhat.getBalance(hardhat.wallet.address, USDC_MAINNET)).then((usdcBalance) => {
                 expect(usdcBalance.equalTo(0)).to.be.true
               })
