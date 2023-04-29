@@ -78,9 +78,7 @@ export function useUniversalRouterSwapCallback(
           let gasEstimate: BigNumber
           try {
             gasEstimate = await provider.estimateGas(tx)
-            console.log('jfrankfurt:gasEstimate', gasEstimate.toNumber())
           } catch (gasError) {
-            console.log('jfrankfurt:gasError', gasError, tx)
             setTraceStatus('failed_precondition')
             setTraceError(gasError)
             console.warn(gasError)
@@ -104,7 +102,6 @@ export function useUniversalRouterSwapCallback(
             })
           return response
         } catch (swapError: unknown) {
-          console.log('jfrankfurt: ', swapError)
           if (swapError instanceof ModifiedSwapError) throw swapError
 
           // Cancellations are not failures, and must be accounted for as 'cancelled'.

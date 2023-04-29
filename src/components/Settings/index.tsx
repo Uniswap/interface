@@ -164,7 +164,6 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
               <ButtonError
                 error={true}
                 padding="12px"
-                data-testid="turn-on-expert-mode"
                 onClick={() => {
                   const confirmWord = t`confirm`
                   if (window.prompt(t`Please type the word "${confirmWord}" to enable expert mode.`) === confirmWord) {

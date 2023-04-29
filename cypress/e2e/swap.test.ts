@@ -198,7 +198,7 @@ describe('Swap', () => {
     cy.get('#swap-currency-output .token-amount-input').should('not.equal', '')
   })
 
-  it.only('should render an error for slippage failure', () => {
+  it('should render an error for slippage failure', () => {
     const SLIPPAGE = 0.01
 
     cy.visit('/swap', { ethereum: 'hardhat' })
@@ -212,7 +212,8 @@ describe('Swap', () => {
             const send = cy.stub(hardhat.provider, 'send')
             send.withArgs('eth_estimateGas').resolves(BigNumber.from(20_000_000))
             send.callThrough()
-            // set slippage low
+
+            // Sets slippage to a very low value
             cy.get(getTestSelector('open-settings-dialog-button')).click()
             cy.get(getTestSelector('slippage-input')).clear().type(SLIPPAGE.toString())
             cy.get('body').click('topRight')
