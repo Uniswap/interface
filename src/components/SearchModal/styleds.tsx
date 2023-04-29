@@ -6,7 +6,8 @@ import { AutoColumn } from '../Column'
 import { RowBetween } from '../Row'
 
 export const PaddedColumn = styled(AutoColumn)`
-  padding: 20px;
+  padding-top: 20px;
+  padding-bottom: 20px;
 `
 
 export const MenuItem = styled(RowBetween)<{ dim?: boolean }>`
@@ -15,6 +16,7 @@ export const MenuItem = styled(RowBetween)<{ dim?: boolean }>`
   display: grid;
   grid-template-columns: auto minmax(auto, 1fr) auto minmax(0, 72px);
   grid-gap: 16px;
+  border-radius: 16px;
   cursor: ${({ disabled }) => !disabled && 'pointer'};
   pointer-events: ${({ disabled }) => disabled && 'none'};
   :hover {
@@ -42,13 +44,13 @@ export const SearchInput = styled.input`
   border-radius: 12px;
   color: ${({ theme }) => theme.textPrimary};
   border-style: solid;
-  border: 1px solid ${({ theme }) => theme.backgroundOutline};
+  border: 1px solid ${({ theme }) => theme.accentActive};
   -webkit-appearance: none;
 
   font-size: 16px;
 
   ::placeholder {
-    color: ${({ theme }) => theme.textTertiary};
+    color: ${({ theme }) => theme.accentActiveSoft};
     font-size: 16px;
   }
   transition: border 100ms;
@@ -61,7 +63,7 @@ export const SearchInput = styled.input`
 export const Separator = styled.div`
   width: 100%;
   height: 1px;
-  background-color: ${({ theme }) => theme.backgroundOutline};
+  background-color: ${({ theme }) => theme.accentActiveSoft};
 `
 
 export const LoadingRows = styled(BaseLoadingRows)`

@@ -59,10 +59,10 @@ const CurrencySelect = styled(ButtonGray)<{
   disabled?: boolean
 }>`
   align-items: center;
-  background-color: ${({ selected, theme }) => (selected ? theme.backgroundInteractive : theme.accentAction)};
+  background-color: ${({ selected, theme }) => (selected ? theme.backgroundInteractive : theme.accentActionSoft)};
   opacity: ${({ disabled }) => (!disabled ? 1 : 0.4)};
   box-shadow: ${({ selected }) => (selected ? 'none' : '0px 6px 10px rgba(0, 0, 0, 0.075)')};
-  color: ${({ selected, theme }) => (selected ? theme.textPrimary : theme.white)};
+  color: ${({ selected, theme }) => (selected ? theme.textPrimary : theme.accentActive)};
   cursor: pointer;
   height: unset;
   border-radius: 16px;
@@ -79,7 +79,7 @@ const CurrencySelect = styled(ButtonGray)<{
 
   &:hover,
   &:active {
-    background-color: ${({ theme, selected }) => (selected ? theme.backgroundInteractive : theme.accentAction)};
+    background-color: ${({ theme, selected }) => (selected ? theme.backgroundInteractive : theme.accentActionSoft)};
   }
 
   &:before {
@@ -144,7 +144,7 @@ const StyledDropDown = styled(DropDown)<{ selected: boolean }>`
   margin-left: 8px;
 
   path {
-    stroke: ${({ selected, theme }) => (selected ? theme.textPrimary : theme.white)};
+    stroke: ${({ selected, theme }) => (selected ? theme.textPrimary : theme.accentActive)};
     stroke-width: 2px;
   }
 `

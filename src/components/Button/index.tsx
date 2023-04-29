@@ -70,7 +70,7 @@ export const ButtonPrimary = styled(BaseButton)`
   font-size: 20px;
   font-weight: 600;
   padding: 16px;
-  color: ${({ theme }) => theme.accentTextLightPrimary};
+  color: ${({ theme }) => theme.accentTextButton};
   &:focus {
     box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.05, theme.accentAction)};
     background-color: ${({ theme }) => darken(0.05, theme.accentAction)};
@@ -262,25 +262,20 @@ const ButtonConfirmedStyle = styled(BaseButton)`
 
 const ButtonErrorStyle = styled(BaseButton)`
   background-color: ${({ theme }) => theme.accentFailure};
-  border: 1px solid ${({ theme }) => theme.accentFailure};
 
   &:focus {
-    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.05, theme.accentFailure)};
-    background-color: ${({ theme }) => darken(0.05, theme.accentFailure)};
+    background-color: ${({ theme }) => theme.accentFailure};
   }
+
   &:hover {
-    background-color: ${({ theme }) => darken(0.05, theme.accentFailure)};
+    background-color: ${({ theme }) => theme.accentCritical};
   }
-  &:active {
-    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.1, theme.accentFailure)};
-    background-color: ${({ theme }) => darken(0.1, theme.accentFailure)};
-  }
+
   &:disabled {
     opacity: 50%;
     cursor: auto;
     box-shadow: none;
     background-color: ${({ theme }) => theme.accentFailure};
-    border: 1px solid ${({ theme }) => theme.accentFailure};
   }
 `
 

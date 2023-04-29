@@ -30,12 +30,9 @@ const FancyButton = styled.button`
   font-size: 1rem;
   width: auto;
   min-width: 3.5rem;
-  border: 1px solid ${({ theme }) => theme.deprecated_bg3};
+  border: 1px solid transparent;
   outline: none;
-  background: ${({ theme }) => theme.deprecated_bg1};
-  :hover {
-    border: 1px solid ${({ theme }) => theme.deprecated_bg4};
-  }
+  background: ${({ theme }) => theme.backgroundInteractive};
   :focus {
     border: 1px solid ${({ theme }) => theme.accentAction};
   }
@@ -47,12 +44,12 @@ const Option = styled(FancyButton)<{ active: boolean }>`
   :hover {
     cursor: pointer;
   }
-  background-color: ${({ active, theme }) => active && theme.accentAction};
-  color: ${({ active, theme }) => (active ? theme.white : theme.textPrimary)};
+  background-color: ${({ active, theme }) => active && theme.accentActionSoft};
+  color: ${({ active, theme }) => (active ? theme.accentActive : theme.textPrimary)};
 `
 
 const Input = styled.input`
-  background: ${({ theme }) => theme.deprecated_bg1};
+  background: ${({ theme }) => theme.backgroundInteractive};
   font-size: 16px;
   border-radius: 12px;
   width: auto;

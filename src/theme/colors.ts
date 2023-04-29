@@ -256,7 +256,7 @@ export const darkTheme = {
   backgroundBackdrop: colors.gray950,
   backgroundSurface: colors.deep,
   backgroundModule: colors.input,
-  backgroundInteractive: colors.gray700,
+  backgroundInteractive: colors.input,
   backgroundFloating: opacify(12, colors.black),
   backgroundOutline: opacify(24, colors.gray300),
   backgroundScrim: opacify(72, colors.deep),
@@ -271,7 +271,7 @@ export const darkTheme = {
   accentActive: colors.cyanText,
   accentSuccess: colors.green200,
   accentWarning: colors.gold200,
-  accentFailure: colors.red300,
+  accentFailure: colors.red500,
   accentCritical: colors.red300,
 
   accentActionSoft: opacify(24, colors.blueButton),
@@ -283,12 +283,12 @@ export const darkTheme = {
   accentTextDarkPrimary: opacify(80, colors.deep),
   accentTextDarkSecondary: opacify(60, colors.deep),
   accentTextDarkTertiary: opacify(24, colors.deep),
-
+  accentTextButton: colors.cyanText,
   accentTextLightPrimary: colors.gray50,
   accentTextLightSecondary: opacify(72, colors.gray50),
   accentTextLightTertiary: opacify(12, colors.gray50),
 
-  deepShadow: '12px 16px 24px rgba(0, 0, 0, 0.24), 12px 8px 12px rgba(0, 0, 0, 0.24), 4px 4px 8px rgba(0, 0, 0, 0.32);',
+  deepShadow: `0px 10px 24px ${opacify(24, colors.cyanText)}, 10px 0px 24px ${opacify(24, colors.purpleVibrantMain)}`,
   shallowShadow: '4px 4px 10px rgba(0, 0, 0, 0.24), 2px 2px 4px rgba(0, 0, 0, 0.12), 1px 2px 2px rgba(0, 0, 0, 0.12);',
 
   networkDefaultShadow: `0px 40px 120px ${opacify(16, colors.blue400)}`,
@@ -337,13 +337,12 @@ export const lightTheme: Theme = {
   accentTextDarkPrimary: opacify(80, colors.gray900),
   accentTextDarkSecondary: opacify(60, colors.gray900),
   accentTextDarkTertiary: opacify(24, colors.gray900),
-
+  accentTextButton: colors.white,
   accentTextLightPrimary: colors.gray50,
   accentTextLightSecondary: opacify(72, colors.gray50),
   accentTextLightTertiary: opacify(12, colors.gray50),
 
-  deepShadow:
-    '8px 12px 20px rgba(51, 53, 72, 0.04), 4px 6px 12px rgba(51, 53, 72, 0.02), 4px 4px 8px rgba(51, 53, 72, 0.04);',
+  deepShadow: `0px 10px 24px ${opacify(24, colors.cyanText)}, 10px 0px 24px ${opacify(24, colors.purpleVibrantMain)}`,
   shallowShadow:
     '6px 6px 10px rgba(51, 53, 72, 0.01), 2px 2px 6px rgba(51, 53, 72, 0.02), 1px 2px 2px rgba(51, 53, 72, 0.02);',
 

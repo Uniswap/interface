@@ -32,7 +32,7 @@ import JSBI from 'jsbi'
 import { formatSwapQuoteReceivedEventProperties } from 'lib/utils/analytics'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ReactNode } from 'react'
-import { ArrowDown, Info } from 'react-feather'
+import { ArrowDown, Info, RefreshCcw } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
 import { Text } from 'rebass'
 import { InterfaceTrade } from 'state/routing/types'
@@ -557,12 +557,7 @@ export default function Swap({ className }: { className?: string }) {
                     }}
                     color={theme.textPrimary}
                   >
-                    <ArrowDown
-                      size="16"
-                      color={
-                        currencies[Field.INPUT] && currencies[Field.OUTPUT] ? theme.textPrimary : theme.textTertiary
-                      }
-                    />
+                    <RefreshCcw size="16" color={theme.accentActive} />
                   </ArrowContainer>
                 </TraceEvent>
               </ArrowWrapper>

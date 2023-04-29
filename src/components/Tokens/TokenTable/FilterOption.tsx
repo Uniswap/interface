@@ -2,7 +2,7 @@ import styled from 'styled-components/macro'
 const FilterOption = styled.button<{ active: boolean; highlight?: boolean }>`
   height: 100%;
   color: ${({ theme, active }) => (active ? theme.accentActive : theme.textPrimary)};
-  background-color: ${({ theme, active }) => (active ? theme.accentActiveSoft : theme.backgroundInteractive)};
+  background-color: ${({ theme, active }) => (active ? theme.accentActive : theme.backgroundSurface)};
   margin: 0;
   padding: 6px 12px 6px 14px;
   border-radius: 12px;
@@ -15,9 +15,10 @@ const FilterOption = styled.button<{ active: boolean; highlight?: boolean }>`
 
   :hover {
     cursor: pointer;
-    background-color: ${({ theme, active }) => (active ? theme.accentActiveSoft : theme.backgroundModule)};
-    opacity: ${({ theme, active }) => (active ? theme.opacity.hover : 1)};
+    background-color: ${({ theme }) => theme.accentActiveSoft};
+    color: ${({ theme }) => theme.accentActive};
   }
+
   :focus {
     background-color: ${({ theme, active }) => (active ? theme.accentActiveSoft : theme.backgroundInteractive)};
   }
