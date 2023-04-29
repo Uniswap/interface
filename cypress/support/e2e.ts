@@ -44,7 +44,7 @@ declare global {
   }
 }
 
-Cypress.Commands.add('getByTestId', (selectorId: string) => cy.get(`[data-testid=${selectorId}`))
+Cypress.Commands.add('getByTestId', (selectorId: string) => cy.get(`[data-testid=${selectorId}]`))
 
 // sets up the injected provider to be a mock ethereum provider with the given mnemonic/index
 // eslint-disable-next-line no-undef
