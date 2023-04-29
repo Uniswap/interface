@@ -6,6 +6,7 @@ import { Checkbox } from 'nft/components/layout/Checkbox'
 import { buttonTextMedium, caption } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
 import { ListingMarket } from 'nft/types'
+import { getMarketplaceIcon } from 'nft/utils'
 import { ListingMarkets } from 'nft/utils/listNfts'
 import { Dispatch, FormEvent, useMemo, useReducer, useRef } from 'react'
 import styled from 'styled-components/macro'
@@ -23,13 +24,6 @@ const MarketplaceRowWrapper = styled(Row)`
     background-color: ${({ theme }) => theme.backgroundInteractive};
   }
   border-radius: 12px;
-`
-
-const MarketplaceDropdownIcon = styled.img`
-  width: 24px;
-  height: 24px;
-  border-radius: 4px;
-  object-fit: cover;
 `
 
 const FeeText = styled.div`
@@ -60,7 +54,7 @@ const MarketplaceRow = ({ market, setSelectedMarkets, selectedMarkets }: Marketp
   return (
     <MarketplaceRowWrapper onMouseEnter={toggleHovered} onMouseLeave={toggleHovered} onClick={toggleSelected}>
       <Row gap="12" onClick={toggleSelected}>
-        <MarketplaceDropdownIcon alt={market.name} src={market.icon} />
+        {getMarketplaceIcon(market.name, '24')}
         <Column>
           <ThemedText.BodyPrimary>{market.name}</ThemedText.BodyPrimary>
           <FeeText className={caption}>{market.fee}% fee</FeeText>
@@ -93,12 +87,11 @@ const HeaderButtonContentWrapper = styled.div`
   display: flex;
 `
 
-const MarketIcon = styled.img<{ index: number; totalSelected: number }>`
+const MarketIcon = styled.div<{ index: number; totalSelected: number }>`
   height: 20px;
   width: 20px;
   margin-right: 8px;
-  border: 1px solid;
-  border-color: ${({ theme }) => theme.backgroundInteractive};
+  outline: 1px solid ${({ theme }) => theme.backgroundInteractive};
   border-radius: 4px;
   z-index: ${({ index, totalSelected }) => totalSelected - index};
   margin-left: ${({ index }) => `${index === 0 ? 0 : -18}px`};
@@ -156,13 +149,9 @@ export const SelectMarketplacesDropdown = ({
         <HeaderButtonContentWrapper>
           {selectedMarkets.map((market, index) => {
             return (
-              <MarketIcon
-                key={index}
-                alt={market.name}
-                src={market.icon}
-                totalSelected={selectedMarkets.length}
-                index={index}
-              />
+              <MarketIcon key={index} totalSelected={selectedMarkets.length} index={index}>
+                {getMarketplaceIcon(market.name, '20')}
+              </MarketIcon>
             )
           })}
           {dropdownDisplayText}

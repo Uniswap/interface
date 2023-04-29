@@ -93,7 +93,7 @@ const getListings = (sellAssets: WalletAsset[]): [CollectionRow[], ListingRow[]]
   sellAssets.forEach((asset) => {
     asset.marketplaces?.forEach((marketplace: ListingMarket) => {
       const newListing = {
-        images: [asset.smallImageUrl, marketplace.icon],
+        image: asset.smallImageUrl,
         name: asset.name || `#${asset.tokenId}`,
         status: ListingStatus.DEFINED,
         asset,
@@ -109,7 +109,7 @@ const getListings = (sellAssets: WalletAsset[]): [CollectionRow[], ListingRow[]]
         )
       ) {
         const newCollectionRow = {
-          images: [asset.asset_contract.image_url, marketplace.icon],
+          image: asset.asset_contract.image_url,
           name: asset.asset_contract.name,
           status: ListingStatus.DEFINED,
           collectionAddress: asset.asset_contract.address,
