@@ -80,9 +80,10 @@ module.exports = {
   },
   webpack: {
     plugins: [
-      // react-markdown requires process, and Webpack 5 does not polyfill, so we provide it explicitly.
+      // react-markdown requires path to be global, and Webpack 5 does polyfill node globals, so we polyfill it.
       new ProvidePlugin({ process: 'process/browser' }),
       // vanilla-extract has poor performance on M1 machines with 'debug' identifiers.
+      // See https://vanilla-extract.style/documentation/integrations/webpack/#identifiers for docs.
       // See https://github.com/vanilla-extract-css/vanilla-extract/issues/771#issuecomment-1249524366.
       new VanillaExtractPlugin({ identifiers: 'short' }),
     ],
@@ -127,6 +128,7 @@ module.exports = {
 
       webpackConfig.resolve.plugins = webpackConfig.resolve.plugins.map((plugin) => {
         // Allow vanilla-extract in production builds.
+        // This is necessary because create-react-app guards against external imports.
         // See https://sandroroth.com/blog/vanilla-extract-cra#production-build.
         if (plugin instanceof ModuleScopePlugin) {
           plugin.allowedPaths.push(path.join(__dirname, 'node_modules/@vanilla-extract/webpack-plugin'))
@@ -135,6 +137,7 @@ module.exports = {
         return plugin
       })
 
+      // create-react-app specifies rules as a oneOf, so we need to modify this one-off to modify transpilation.
       const rules = webpackConfig.module.rules[1].oneOf
       webpackConfig.module.rules[1].oneOf = rules.map((rule) => {
         // The fallback rule (eg for dependencies).
@@ -148,10 +151,12 @@ module.exports = {
         return rule
       })
 
-      // react-markdown requires path, and Webpack 5 does not polyfill, so we polyfill it.
+      // react-markdown requires path to be importable, and Webpack 5 does resolve node globals, so we resolve it.
       webpackConfig.resolve.fallback = { path: require.resolve('path-browserify') }
 
       // Ignore failed source mappings to avoid spamming the console.
+      // Source mappings for a package will fail if the package does not provide them, but the build will still succeed,
+      // and there is nothing we can do about this. This should be turned off only when debugging missing sourcemaps.
       // See https://webpack.js.org/loaders/source-map-loader#ignoring-warnings.
       webpackConfig.ignoreWarnings = [/Failed to parse source map/]
 
