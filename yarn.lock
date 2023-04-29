@@ -8711,10 +8711,10 @@ csstype@^3.0.2, csstype@^3.0.7:
   resolved "https://registry.yarnpkg.com/csstype/-/csstype-3.1.0.tgz#4ddcac3718d787cf9df0d1b7d15033925c8f29f2"
   integrity sha512-uX1KG+x9h5hIJsaKR9xHUeUraxf8IODOwq9JLNPq6BwB04a/xgpq3rcx47l5BZu5zBPlgD342tdke3Hom/nJRA==
 
-cypress-hardhat@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/cypress-hardhat/-/cypress-hardhat-1.0.1.tgz#11b86653282769dadc0bd0c65ca41011865b0762"
-  integrity sha512-eGD7fNM8BXShXEsDbO/m2jv9mx7jHs44bnuWKYxO29ySXX5Soz9+AFYelhzKDvh/T+MJy1YqApPbif9+PNA++g==
+cypress-hardhat@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/cypress-hardhat/-/cypress-hardhat-2.0.0.tgz#98f07370270ec7c754d35f77c73b216d9f924abb"
+  integrity sha512-YLLVZa/15CBo7mmu5JuIGAPg4jLbSYTw/LR690tx90WEiIaPH9diHzWAE41wB+cvmgM7fGwhKnKEEeE1s1DWKg==
 
 cypress@*, cypress@10.3.1:
   version "10.3.1"

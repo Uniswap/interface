@@ -6,23 +6,21 @@
 // ***********************************************************
 
 import '@cypress/code-coverage/support'
+import 'cypress-hardhat/lib/browser'
 
 import { Eip1193Bridge } from '@ethersproject/experimental/lib/eip1193-bridge'
 import assert from 'assert'
-import { Network } from 'cypress-hardhat/lib/browser'
 
 import { FeatureFlag } from '../../src/featureFlags/flags/featureFlags'
 import { UserState } from '../../src/state/user/reducer'
 import { CONNECTED_WALLET_USER_STATE } from '../utils/user-state'
 import { injected } from './ethereum'
-import { HardhatProvider } from './hardhat'
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Cypress {
     interface ApplicationWindow {
       ethereum: Eip1193Bridge
-      hardhat: HardhatProvider
     }
     interface VisitOptions {
       serviceWorker?: true
@@ -38,10 +36,6 @@ declare global {
        * @default {@type import('../utils/user-state').CONNECTED_WALLET_USER_STATE}
        */
       userState?: Partial<UserState>
-    }
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    interface Chainable<Subject> {
-      task(event: 'hardhat'): Chainable<Network>
     }
   }
 }
@@ -59,8 +53,8 @@ Cypress.Commands.overwrite(
 
     return cy
       .intercept('/service-worker.js', options?.serviceWorker ? undefined : { statusCode: 404 })
-      .task('hardhat')
-      .then((network) =>
+      .provider()
+      .then((provider) =>
         original({
           ...options,
           url: hashUrl,
@@ -84,9 +78,7 @@ Cypress.Commands.overwrite(
 
             // Inject the mock ethereum provider.
             if (options?.ethereum === 'hardhat') {
-              // The provider is exposed via hardhat to allow mocking / network manipulation.
-              win.hardhat = new HardhatProvider(network)
-              win.ethereum = win.hardhat
+              win.ethereum = provider
             } else {
               win.ethereum = injected
             }
@@ -97,28 +89,31 @@ Cypress.Commands.overwrite(
 )
 
 beforeEach(() => {
-  // Infura security policies are based on Origin headers.
-  // These are stripped by cypress because chromeWebSecurity === false; this adds them back in.
-  cy.intercept(/infura.io/, (res) => {
-    res.headers['origin'] = 'http://localhost:3000'
-    res.alias = res.body.method
-    res.continue()
+  // Many API calls enforce that requests come from our app, so we must mock Origin and Referer.
+  cy.intercept('*', (req) => {
+    req.headers['referer'] = 'https://app.uniswap.org'
+    req.headers['origin'] = 'https://app.uniswap.org'
   })
-
-  // Graphql security policies are based on Origin headers.
-  // These are stripped by cypress because chromeWebSecurity === false; this adds them back in.
-  cy.intercept('https://api.uniswap.org/v1/graphql', (res) => {
-    res.headers['origin'] = 'https://app.uniswap.org'
-    res.continue()
-  })
-  cy.intercept('https://beta.api.uniswap.org/v1/graphql', (res) => {
-    res.headers['origin'] = 'https://app.uniswap.org'
-    res.continue()
-  })
-
-  cy.intercept('https://api.uniswap.org/v1/amplitude-proxy', (res) => {
-    res.reply(JSON.stringify({}))
-  })
+    // Infura uses a test endpoint, which allow-lists http://localhost:3000 instead.
+    .intercept(/infura.io/, (req) => {
+      req.headers['referer'] = 'http://localhost:3000'
+      req.headers['origin'] = 'http://localhost:3000'
+      req.alias = req.body.method
+      req.continue()
+    })
+    // Mock Amplitude responses to avoid analytics from tests.
+    .intercept('https://api.uniswap.org/v1/amplitude-proxy', (req) => {
+      const requestBody = JSON.stringify(req.body)
+      const byteSize = new Blob([requestBody]).size
+      req.reply(
+        JSON.stringify({
+          code: 200,
+          server_upload_time: Date.now(),
+          payload_size_bytes: byteSize,
+          events_ingested: req.body.events.length,
+        })
+      )
+    })
 })
 
 Cypress.on('uncaught:exception', () => {

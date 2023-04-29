@@ -1,5 +1,7 @@
 import { Trans } from '@lingui/macro'
+import { useCloseAccountDrawer } from 'components/AccountDrawer'
 import { ButtonEmpty, ButtonPrimary } from 'components/Button'
+import { ActivationStatus, useActivationState } from 'connection/activate'
 import { AlertTriangle } from 'react-feather'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
@@ -20,13 +22,15 @@ const AlertTriangleIcon = styled(AlertTriangle)`
   color: ${({ theme }) => theme.accentCritical};
 `
 
-export default function ConnectionErrorView({
-  retryActivation,
-  openOptions,
-}: {
-  retryActivation: () => void
-  openOptions: () => void
-}) {
+// TODO(cartcrom): move this to a top level modal, rather than inline in the drawer
+export default function ConnectionErrorView() {
+  const { activationState, tryActivation, cancelActivation } = useActivationState()
+  const closeDrawer = useCloseAccountDrawer()
+
+  if (activationState.status !== ActivationStatus.ERROR) return null
+
+  const retry = () => tryActivation(activationState.connection, closeDrawer)
+
   return (
     <Wrapper>
       <AlertTriangleIcon />
@@ -38,11 +42,11 @@ export default function ConnectionErrorView({
           The connection attempt failed. Please click try again and follow the steps to connect in your wallet.
         </Trans>
       </ThemedText.BodyPrimary>
-      <ButtonPrimary $borderRadius="16px" onClick={retryActivation}>
+      <ButtonPrimary $borderRadius="16px" onClick={retry}>
         <Trans>Try Again</Trans>
       </ButtonPrimary>
       <ButtonEmpty width="fit-content" padding="0" marginTop={20}>
-        <ThemedText.Link onClick={openOptions} marginBottom={12}>
+        <ThemedText.Link onClick={cancelActivation} marginBottom={12}>
           <Trans>Back to wallet selection</Trans>
         </ThemedText.Link>
       </ButtonEmpty>
