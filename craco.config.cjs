@@ -2,7 +2,6 @@
 const { VanillaExtractPlugin } = require('@vanilla-extract/webpack-plugin')
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin')
 const { execSync } = require('child_process')
-const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const path = require('path')
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin')
 const { DefinePlugin, IgnorePlugin, ProvidePlugin } = require('webpack')
@@ -105,12 +104,6 @@ module.exports = {
             if (process.env.REACT_APP_ADD_COVERAGE_INSTRUMENTATION) {
               plugin.config.maximumFileSizeToCacheInBytes *= 2
             }
-          }
-
-          // CSS ordering is mitigated through scoping / naming conventions, so we can ignore order warnings.
-          // See https://webpack.js.org/plugins/mini-css-extract-plugin/#remove-order-warnings.
-          if (plugin instanceof MiniCssExtractPlugin) {
-            plugin.options.ignoreOrder = true
           }
 
           return plugin
