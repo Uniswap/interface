@@ -5,7 +5,6 @@ const { execSync } = require('child_process')
 const path = require('path')
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin')
 const { DefinePlugin, IgnorePlugin, ProvidePlugin } = require('webpack')
-const { InjectManifest } = require('workbox-webpack-plugin')
 
 const commitHash = execSync('git rev-parse HEAD').toString().trim()
 const isProduction = process.env.NODE_ENV === 'production'
@@ -81,12 +80,13 @@ module.exports = {
     plugins: [
       // react-markdown requires path to be global, and Webpack 5 does polyfill node globals, so we polyfill it.
       new ProvidePlugin({ process: 'process/browser' }),
-      // vanilla-extract has poor performance on M1 machines with 'debug' identifiers.
+      // vanilla-extract has poor performance on M1 machines with 'debug' identifiers, so we use 'short' instead.
       // See https://vanilla-extract.style/documentation/integrations/webpack/#identifiers for docs.
       // See https://github.com/vanilla-extract-css/vanilla-extract/issues/771#issuecomment-1249524366.
       new VanillaExtractPlugin({ identifiers: 'short' }),
     ],
     configure: (webpackConfig) => {
+      // Configure webpack plugins:
       webpackConfig.plugins = webpackConfig.plugins
         .map((plugin) => {
           // Extend process.env with dynamic values (eg commit hash).
@@ -97,19 +97,10 @@ module.exports = {
             })
           }
 
-          // Increase the cacheable file size (by the ServiceWorker) so that main.<hash>.js is cached.
-          if (plugin instanceof InjectManifest) {
-            plugin.config.maximumFileSizeToCacheInBytes = 7.5 * 1024 * 1024 // 7.5 MB
-            // Coverage increases the file size.
-            if (process.env.REACT_APP_ADD_COVERAGE_INSTRUMENTATION) {
-              plugin.config.maximumFileSizeToCacheInBytes *= 2
-            }
-          }
-
           return plugin
         })
         .filter((plugin) => {
-          // Case sensitive paths are enforced by TypeScript.
+          // Case sensitive paths are already enforced by TypeScript.
           // See https://www.typescriptlang.org/tsconfig#forceConsistentCasingInFileNames.
           if (plugin instanceof CaseSensitivePathsPlugin) return false
 
@@ -119,20 +110,24 @@ module.exports = {
           return true
         })
 
-      webpackConfig.resolve.plugins = webpackConfig.resolve.plugins.map((plugin) => {
-        // Allow vanilla-extract in production builds.
-        // This is necessary because create-react-app guards against external imports.
-        // See https://sandroroth.com/blog/vanilla-extract-cra#production-build.
-        if (plugin instanceof ModuleScopePlugin) {
-          plugin.allowedPaths.push(path.join(__dirname, 'node_modules/@vanilla-extract/webpack-plugin'))
-        }
+      // Configure webpack resolution:
+      webpackConfig.resolve = Object.assign(webpackConfig.resolve, {
+        plugins: webpackConfig.resolve.plugins.map((plugin) => {
+          // Allow vanilla-extract in production builds.
+          // This is necessary because create-react-app guards against external imports.
+          // See https://sandroroth.com/blog/vanilla-extract-cra#production-build.
+          if (plugin instanceof ModuleScopePlugin) {
+            plugin.allowedPaths.push(path.join(__dirname, 'node_modules/@vanilla-extract/webpack-plugin'))
+          }
 
-        return plugin
+          return plugin
+        }),
+        // react-markdown requires path to be importable, and Webpack 5 does resolve node globals, so we resolve it.
+        fallback: { path: require.resolve('path-browserify') },
       })
 
-      // create-react-app specifies rules as a oneOf, so we need to modify this one-off to modify transpilation.
-      const rules = webpackConfig.module.rules[1].oneOf
-      webpackConfig.module.rules[1].oneOf = rules.map((rule) => {
+      // Configure webpack transpilation (create-react-app specifies transpilation rules in a oneOf):
+      webpackConfig.module.rules[1].oneOf = webpackConfig.module.rules[1].oneOf.map((rule) => {
         // The fallback rule (eg for dependencies).
         if (rule.loader && rule.loader.match(/babel-loader/) && !rule.include) {
           // Allow not-fully-specified modules so that legacy packages are still able to build.
@@ -144,12 +139,9 @@ module.exports = {
         return rule
       })
 
-      // react-markdown requires path to be importable, and Webpack 5 does resolve node globals, so we resolve it.
-      webpackConfig.resolve.fallback = { path: require.resolve('path-browserify') }
-
       // Ignore failed source mappings to avoid spamming the console.
       // Source mappings for a package will fail if the package does not provide them, but the build will still succeed,
-      // and there is nothing we can do about this. This should be turned off only when debugging missing sourcemaps.
+      // so it is unnecessary (and bothersome) to log it. This should be turned off when debugging missing sourcemaps.
       // See https://webpack.js.org/loaders/source-map-loader#ignoring-warnings.
       webpackConfig.ignoreWarnings = [/Failed to parse source map/]
 
