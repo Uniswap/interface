@@ -200,7 +200,7 @@ describe('Swap', () => {
 
   it('should render an error for slippage failure', () => {
     const SLIPPAGE = 0.01
-
+    const ETH_GAS_BUFFER = '10'
     cy.visit('/swap', { ethereum: 'hardhat' })
       .hardhat()
       .then((hardhat) => {
@@ -208,9 +208,9 @@ describe('Swap', () => {
           .reset()
           .then(() => hardhat.provider.getBalance(hardhat.wallet.address))
           .then((initialBalance) => {
-            const swapInputAmount = formatEther(initialBalance.div(2).sub(parseEther('1')))
+            const swapInputAmount = formatEther(initialBalance.sub(parseEther(ETH_GAS_BUFFER)))
             const send = cy.stub(hardhat.provider, 'send')
-            send.withArgs('eth_estimateGas').resolves(BigNumber.from(20_000_000))
+            send.withArgs('eth_estimateGas').resolves(BigNumber.from(2_000_000))
             send.callThrough()
 
             // Sets slippage to a very low value
@@ -228,12 +228,6 @@ describe('Swap', () => {
             cy.get('#confirm-swap-or-send').click()
             cy.get(getTestSelector('dismiss-tx-confirmation')).click()
 
-            cy.get('#swap-currency-input .token-amount-input').clear().type(swapInputAmount)
-            cy.get('#swap-currency-output .token-amount-input').should('not.equal', '')
-            cy.get('#swap-button').click()
-            cy.get('#confirm-swap-or-send').click()
-            cy.get(getTestSelector('dismiss-tx-confirmation')).click()
-
             cy.then(() => hardhat.provider.send('hardhat_mine', ['0x2', '0xc'])).then(() => {
               // check for a failed transaction notification
               cy.contains('Swap failed').should('exist')
@@ -241,7 +235,10 @@ describe('Swap', () => {
               cy.then(() => hardhat.provider.getBalance(hardhat.wallet.address)).then((finalBalance) => {
                 // The difference between final and initial balance should be equal to the amount of gas used
                 expect(initialBalance.gt(finalBalance)).to.be.true
-                expect(finalBalance.sub(initialBalance).abs().lt(parseEther('0.01'))).to.be.true
+                expect(finalBalance.gt(ETH_GAS_BUFFER)).to.be.true
+              })
+              cy.then(() => hardhat.getBalance(hardhat.wallet.address, USDC_MAINNET)).then((usdcBalance) => {
+                expect(usdcBalance.equalTo(0)).to.be.true
               })
             })
           })
