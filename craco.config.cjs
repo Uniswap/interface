@@ -2,9 +2,11 @@
 const { VanillaExtractPlugin } = require('@vanilla-extract/webpack-plugin')
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin')
 const { execSync } = require('child_process')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const path = require('path')
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin')
 const { DefinePlugin, IgnorePlugin, ProvidePlugin } = require('webpack')
+const WorkboxPlugin = require('workbox-webpack-plugin')
 
 const commitHash = execSync('git rev-parse HEAD').toString().trim()
 const isProduction = process.env.NODE_ENV === 'production'
@@ -97,6 +99,18 @@ module.exports = {
             })
           }
 
+          // CSS ordering is mitigated through scoping / naming conventions, so we can ignore order warnings.
+          // See https://webpack.js.org/plugins/mini-css-extract-plugin/#remove-order-warnings.
+          if (plugin instanceof MiniCssExtractPlugin) {
+            plugin.options.ignoreOrder = true
+          }
+
+          // Coverage greatly increases the main chunk size, so we can ignore the workbox maximum file size when
+          // coverage is enabled.
+          if (plugin instanceof WorkboxPlugin.InjectManifest && process.env.REACT_APP_ADD_COVERAGE_INSTRUMENTATION) {
+            plugin.config.maximumFileSizeToCacheInBytes = 0
+          }
+
           return plugin
         })
         .filter((plugin) => {
@@ -138,6 +152,19 @@ module.exports = {
         }
         return rule
       })
+
+      // Create a vendor chunk for packages that change less frequently than our release frequency.
+      webpackConfig.optimization.splitChunks = {
+        cacheGroups: {
+          vendor: {
+            // Select any scoped packages (eg @uniswap) or react packages. This is arbitrary, but the hope is that
+            // it will not include packages with a lot of churn (ie installs, uninstalls, or upgrades).
+            test: /[\\/]node_modules[\\/](@|react)/,
+            name: 'vendor',
+            chunks: 'all',
+          },
+        },
+      }
 
       // Ignore failed source mappings to avoid spamming the console.
       // Source mappings for a package will fail if the package does not provide them, but the build will still succeed,
