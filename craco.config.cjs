@@ -6,7 +6,6 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const path = require('path')
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin')
 const { DefinePlugin, IgnorePlugin, ProvidePlugin } = require('webpack')
-const WorkboxPlugin = require('workbox-webpack-plugin')
 
 const commitHash = execSync('git rev-parse HEAD').toString().trim()
 const isProduction = process.env.NODE_ENV === 'production'
@@ -105,12 +104,6 @@ module.exports = {
             plugin.options.ignoreOrder = true
           }
 
-          // Coverage greatly increases the main chunk size, so we can ignore the workbox maximum file size when
-          // coverage is enabled.
-          if (plugin instanceof WorkboxPlugin.InjectManifest && process.env.REACT_APP_ADD_COVERAGE_INSTRUMENTATION) {
-            plugin.config.maximumFileSizeToCacheInBytes = 0
-          }
-
           return plugin
         })
         .filter((plugin) => {
@@ -153,18 +146,26 @@ module.exports = {
         return rule
       })
 
-      // Create a vendor chunk for packages that change less frequently than our release frequency.
-      webpackConfig.optimization.splitChunks = {
-        cacheGroups: {
-          vendor: {
-            // Select any scoped packages (eg @uniswap) or react packages. This is arbitrary, but the hope is that
-            // it will not include packages with a lot of churn (ie installs, uninstalls, or upgrades).
-            test: /[\\/]node_modules[\\/](@|react)/,
-            name: 'vendor',
-            chunks: 'all',
+      // Configure webpack optimization:
+      webpackConfig.optimization = Object.assign(webpackConfig.optimization, {
+        splitChunks: {
+          // Cap the size to 5MB.
+          // react-scripts suggests a chunk size under 1MB after gzip, but we can only measure maxSize before gzip.
+          // react-scripts caps cacheable chunks at 5MB, so we cap chunk size there.
+          // See https://github.com/facebook/create-react-app/blob/d960b9e/packages/react-scripts/config/webpack.config.js#L713-L716.
+          maxSize: 5 * 1024 * 1024,
+          // Optimize over all chunks, instead of async chunks (the default), so that initial chunks are also optimized.
+          chunks: 'all',
+          // Create a vendor chunk for node_modules, as they change less frequently than our release cadence.
+          // This mimics the default behavior of webpack, but adds the name `vendor` to the chunk for readability.
+          cacheGroups: {
+            vendors: {
+              test: /[\\/]node_modules[\\/]/,
+              name: 'vendor',
+            },
           },
         },
-      }
+      })
 
       // Ignore failed source mappings to avoid spamming the console.
       // Source mappings for a package will fail if the package does not provide them, but the build will still succeed,
