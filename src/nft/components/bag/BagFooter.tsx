@@ -14,7 +14,6 @@ import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { SupportedChainId } from 'constants/chains'
-import { usePayWithAnyTokenEnabled } from 'featureFlags/flags/payWithAnyToken'
 import { useCurrency } from 'hooks/Tokens'
 import { AllowanceState } from 'hooks/usePermit2Allowance'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
@@ -55,9 +54,9 @@ const Footer = styled.div`
   border-bottom-right-radius: 12px;
 `
 
-const FooterHeader = styled(Column)<{ usingPayWithAnyToken?: boolean }>`
+const FooterHeader = styled(Column)`
   padding-top: 8px;
-  padding-bottom: ${({ usingPayWithAnyToken }) => (usingPayWithAnyToken ? '16px' : '20px')};
+  padding-bottom: 16px;
 `
 
 const CurrencyRow = styled(Row)`
@@ -292,7 +291,6 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
   const { account, chainId, connector } = useWeb3React()
   const connected = Boolean(account && chainId)
   const totalEthPrice = useBagTotalEthPrice()
-  const shouldUsePayWithAnyToken = usePayWithAnyTokenEnabled()
   const inputCurrency = useTokenInput((state) => state.inputCurrency)
   const setInputCurrency = useTokenInput((state) => state.setInputCurrency)
   const defaultCurrency = useCurrency('ETH')
@@ -317,7 +315,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
   const [tokenSelectorOpen, setTokenSelectorOpen] = useState(false)
   const isPending = PENDING_BAG_STATUSES.includes(bagStatus)
   const activeCurrency = inputCurrency ?? defaultCurrency
-  const usingPayWithAnyToken = !!inputCurrency && shouldUsePayWithAnyToken && chainId === SupportedChainId.MAINNET
+  const usingPayWithAnyToken = !!inputCurrency && chainId === SupportedChainId.MAINNET
 
   useSubscribeTransactionState(setModalIsOpen)
   const fetchAssets = useFetchAssets()
@@ -334,7 +332,6 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
   const { allowance, isAllowancePending, isApprovalLoading, updateAllowance } = usePermit2Approval(
     trade?.inputAmount.currency.isToken ? (trade?.inputAmount as CurrencyAmount<Token>) : undefined,
     maximumAmountIn,
-    shouldUsePayWithAnyToken,
     true
   )
   usePayWithAnyTokenSwap(trade, allowance, allowedSlippage)
@@ -501,70 +498,47 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
   return (
     <FooterContainer>
       <Footer>
-        {shouldUsePayWithAnyToken && (
-          <FooterHeader gap="xs" usingPayWithAnyToken={shouldUsePayWithAnyToken}>
-            <CurrencyRow>
-              <Column gap="xs">
-                <ThemedText.SubHeaderSmall>
-                  <Trans>Pay with</Trans>
-                </ThemedText.SubHeaderSmall>
-                <CurrencyInput
-                  onClick={() => {
-                    if (!bagIsLocked) {
-                      setTokenSelectorOpen(true)
-                      sendAnalyticsEvent(NFTEventName.NFT_BUY_TOKEN_SELECTOR_CLICKED)
-                    }
-                  }}
-                >
-                  <CurrencyLogo currency={activeCurrency} size="24px" />
-                  <ThemedText.HeadlineSmall fontWeight={500} lineHeight="24px">
-                    {activeCurrency?.symbol}
-                  </ThemedText.HeadlineSmall>
-                  <ChevronDown size={20} color={theme.textSecondary} />
-                </CurrencyInput>
-              </Column>
-              <TotalColumn gap="xs">
-                <ThemedText.SubHeaderSmall marginBottom="4px">
-                  <Trans>Total</Trans>
-                </ThemedText.SubHeaderSmall>
-                <InputCurrencyValue
-                  usingPayWithAnyToken={usingPayWithAnyToken}
-                  totalEthPrice={totalEthPrice}
-                  activeCurrency={activeCurrency}
-                  tradeState={tradeState}
-                  trade={trade}
-                />
-              </TotalColumn>
-            </CurrencyRow>
-            <FiatValue
-              usdcValue={usdcValue}
-              priceImpact={priceImpact}
-              tradeState={tradeState}
-              usingPayWithAnyToken={usingPayWithAnyToken}
-            />
-          </FooterHeader>
-        )}
-        {!shouldUsePayWithAnyToken && (
-          <FooterHeader gap="xs">
-            <Row justify="space-between">
-              <div>
-                <ThemedText.HeadlineSmall>Total</ThemedText.HeadlineSmall>
-              </div>
-              <div>
-                <ThemedText.HeadlineSmall>
-                  {formatWeiToDecimal(totalEthPrice.toString())}
-                  &nbsp;{activeCurrency?.symbol ?? 'ETH'}
+        <FooterHeader gap="xs">
+          <CurrencyRow>
+            <Column gap="xs">
+              <ThemedText.SubHeaderSmall>
+                <Trans>Pay with</Trans>
+              </ThemedText.SubHeaderSmall>
+              <CurrencyInput
+                onClick={() => {
+                  if (!bagIsLocked) {
+                    setTokenSelectorOpen(true)
+                    sendAnalyticsEvent(NFTEventName.NFT_BUY_TOKEN_SELECTOR_CLICKED)
+                  }
+                }}
+              >
+                <CurrencyLogo currency={activeCurrency} size="24px" />
+                <ThemedText.HeadlineSmall fontWeight={500} lineHeight="24px">
+                  {activeCurrency?.symbol}
                 </ThemedText.HeadlineSmall>
-              </div>
-            </Row>
-            <FiatValue
-              usdcValue={usdcValue}
-              priceImpact={priceImpact}
-              tradeState={tradeState}
-              usingPayWithAnyToken={usingPayWithAnyToken}
-            />
-          </FooterHeader>
-        )}
+                <ChevronDown size={20} color={theme.textSecondary} />
+              </CurrencyInput>
+            </Column>
+            <TotalColumn gap="xs">
+              <ThemedText.SubHeaderSmall marginBottom="4px">
+                <Trans>Total</Trans>
+              </ThemedText.SubHeaderSmall>
+              <InputCurrencyValue
+                usingPayWithAnyToken={usingPayWithAnyToken}
+                totalEthPrice={totalEthPrice}
+                activeCurrency={activeCurrency}
+                tradeState={tradeState}
+                trade={trade}
+              />
+            </TotalColumn>
+          </CurrencyRow>
+          <FiatValue
+            usdcValue={usdcValue}
+            priceImpact={priceImpact}
+            tradeState={tradeState}
+            usingPayWithAnyToken={usingPayWithAnyToken}
+          />
+        </FooterHeader>
         <TraceEvent
           events={[BrowserEvent.onClick]}
           name={NFTEventName.NFT_BUY_BAG_PAY}
