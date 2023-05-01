@@ -1,6 +1,14 @@
 import { Box } from 'rebass/styled-components'
-import styled from 'styled-components/macro'
+import styled, { DefaultTheme } from 'styled-components/macro'
 
+type Gap = keyof DefaultTheme['grids']
+
+/*
+ * TODO(WEB-XXXX):
+ * Setting `width: 100%` by default prevents composability in complex flex layouts.
+ * Same applies to `RowFixed` and its negative margins. This component needs to be
+ * further investigated and improved to make UI work easier.
+ */
 const Row = styled(Box)<{
   width?: string
   align?: string
@@ -18,7 +26,7 @@ const Row = styled(Box)<{
   padding: ${({ padding }) => padding};
   border: ${({ border }) => border};
   border-radius: ${({ borderRadius }) => borderRadius};
-  gap: ${({ gap }) => gap};
+  gap: ${({ gap, theme }) => gap && (theme.grids[gap as Gap] || gap)};
 `
 
 export const RowBetween = styled(Row)`
