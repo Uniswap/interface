@@ -105,6 +105,15 @@ module.exports = {
       // See https://github.com/webpack/webpack/issues/9509.
       webpackConfig.resolve.alias['@uniswap/conedison'] = '@uniswap/conedison/dist'
 
+      // Configure webpack optimization:
+      webpackConfig.optimization.splitChunks = Object.assign(webpackConfig.optimization.splitChunks, {
+        // Cap the chunk size to 5MB.
+        // react-scripts suggests a chunk size under 1MB after gzip, but we can only measure maxSize before gzip.
+        // react-scripts also caps cacheable chunks at 5MB, which gzips to below 1MB, so we cap chunk size there.
+        // See https://github.com/facebook/create-react-app/blob/d960b9e/packages/react-scripts/config/webpack.config.js#L713-L716.
+        maxSize: 5 * 1024 * 1024,
+      })
+
       return webpackConfig
     },
   },
