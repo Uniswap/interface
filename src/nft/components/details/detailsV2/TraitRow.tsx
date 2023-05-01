@@ -24,11 +24,12 @@ const TraitRowContainer = styled(Row)`
   text-decoration: none;
 `
 
-const SubheaderTiny = styled.div<{ $color?: string }>`
+const SubheaderTiny = styled.div<{ $color?: string; $opacity?: number }>`
   font-size: 10px;
   line-height: 16px;
   font-weight: 600;
   color: ${({ theme, $color }) => ($color ? $color : theme.textSecondary)};
+  opacity: ${({ $opacity }) => $opacity ?? 1};
 `
 
 const TraitColumnValue = styled(Column)<{ $flex?: number; $alignItems?: string }>`
@@ -47,7 +48,7 @@ const TraitRowValue = styled(ThemedText.BodySmall)<{ $flex?: number; $justifyCon
 
 export const TraitRow = ({ trait, collectionAddress }: { trait: Trait; collectionAddress: string }) => {
   const [rowHovered, toggleRowHovered] = useReducer((s) => !s, false)
-  // TODO: Replace with actual rarity, count, and floor price when BE supports
+  // TODO(NFT-1189): Replace with actual rarity, count, and floor price when BE supports
   // rarity eventually should be number of items with this trait / total number of items, smaller rarity means more rare
   const randomRarity = useMemo(() => Math.random(), [])
   const rarityLevel = getRarityLevel(randomRarity)
@@ -67,7 +68,9 @@ export const TraitRow = ({ trait, collectionAddress }: { trait: Trait; collectio
         <TraitRowValue $flex={2}>{formatEth(randomRarity * 1000)} ETH</TraitRowValue>
         <TraitRowValue>{Math.round(randomRarity * 10000)}</TraitRowValue>
         <TraitColumnValue $flex={1.5} $alignItems="flex-end">
-          <SubheaderTiny $color={rarityLevel.color}>&nbsp;{rowHovered && rarityLevel.hoverText}</SubheaderTiny>
+          <SubheaderTiny $color={rarityLevel.color} $opacity={rowHovered ? 1 : 0}>
+            {rarityLevel.caption}
+          </SubheaderTiny>
           <RarityGraph trait={trait} rarity={randomRarity} />
         </TraitColumnValue>
       </TraitRowContainer>

@@ -14,7 +14,7 @@ const RarityBar = styled.div<{ $color?: string }>`
 interface RarityValue {
   threshold: number
   color: string
-  hoverText: React.ReactNode
+  caption: React.ReactNode
 }
 
 enum RarityLevel {
@@ -29,27 +29,27 @@ const RarityLevels: { [key in RarityLevel]: RarityValue } = {
   [RarityLevel.VeryCommon]: {
     threshold: 0.8,
     color: colors.gray500,
-    hoverText: <Trans>Very common</Trans>,
+    caption: <Trans>Very common</Trans>,
   },
   [RarityLevel.Common]: {
     threshold: 0.6,
     color: colors.green300,
-    hoverText: <Trans>Common</Trans>,
+    caption: <Trans>Common</Trans>,
   },
   [RarityLevel.Rare]: {
     threshold: 0.4,
     color: colors.blueVibrant,
-    hoverText: <Trans>Rare</Trans>,
+    caption: <Trans>Rare</Trans>,
   },
   [RarityLevel.VeryRare]: {
     threshold: 0.2,
     color: colors.purpleVibrant,
-    hoverText: <Trans>Very rare</Trans>,
+    caption: <Trans>Very rare</Trans>,
   },
   [RarityLevel.ExtremelyRare]: {
     threshold: 0,
     color: colors.magentaVibrant,
-    hoverText: <Trans>Extremely rare</Trans>,
+    caption: <Trans>Extremely rare</Trans>,
   },
 }
 
