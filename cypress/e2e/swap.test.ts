@@ -171,6 +171,7 @@ describe('Swap', () => {
             cy.contains('WETH').click()
             cy.get('#swap-currency-output .token-amount-input').clear().type(BALANCE_INCREMENT.toString())
             cy.get('#swap-currency-input .token-amount-input').should('not.equal', '')
+            cy.get(getTestSelector('wrap-button')).should('not.be.disabled')
             cy.get(getTestSelector('wrap-button')).click()
             cy.get(getTestSelector('web3-status-connected')).should('have.descendants', ':contains("1 Pending")')
 
@@ -206,11 +207,13 @@ describe('Swap', () => {
           cy.contains('WETH').click()
           cy.get('#swap-currency-output .token-amount-input').clear().type(BALANCE_INCREMENT.toString())
           cy.get('#swap-currency-input .token-amount-input').should('not.equal', '')
+          cy.get(getTestSelector('wrap-button')).should('not.be.disabled')
           cy.get(getTestSelector('wrap-button')).click()
           cy.get(getTestSelector('web3-status-connected')).should('have.descendants', ':contains("1 Pending")')
 
           cy.then(() => hardhat.provider.send('hardhat_mine', ['0x1', '0xc'])).then(() => {
             cy.get(getTestSelector('swap-currency-button')).click()
+            cy.get(getTestSelector('wrap-button')).should('not.be.disabled')
             cy.get(getTestSelector('wrap-button')).click()
             cy.get(getTestSelector('web3-status-connected')).should('have.descendants', ':contains("1 Pending")')
 
