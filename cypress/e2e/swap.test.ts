@@ -201,7 +201,7 @@ describe('Swap', () => {
   it('should render an error for slippage failure', () => {
     const SLIPPAGE = 0.01
     const ETH_GAS_BUFFER = '10'
-    cy.visit('/swap', { ethereum: 'hardhat', timeout: 60 * 1000 })
+    cy.visit('/swap', { ethereum: 'hardhat' })
       .hardhat()
       .then((hardhat) => {
         hardhat
