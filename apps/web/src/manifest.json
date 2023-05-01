@@ -31,14 +31,14 @@
         "https://app.uniswap.org/*"
       ],
       "js": [
-        "providerScript.js"
+        "injected.js"
       ]
     }
   ],
   "web_accessible_resources": [
     {
       "resources": [
-        "injected.js"
+        "ethereum.js"
       ],
       "matches": [
         "http://localhost:3000/*",

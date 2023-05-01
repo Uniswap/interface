@@ -154,8 +154,8 @@ const options = {
   entry: {
     background: './src/background/index.ts',
     popup: './src/popup.tsx',
-    providerScript: './src/contentScript/provider.ts',
-    injected: './src/contentScript/injected.js',
+    injected: './src/contentScript/injected.ts',
+    ethereum: './src/contentScript/ethereum.js',
   },
   output: {
     filename: '[name].js',

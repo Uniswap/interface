@@ -88,7 +88,7 @@ export interface BaseProviderState {
   isConnected: boolean
 }
 
-export class UniswapInjectedProvider extends EventEmitter {
+export class InjectedProvider extends EventEmitter {
   state!: BaseProviderState
 
   protected static _defaultState: BaseProviderState = {
@@ -124,7 +124,7 @@ export class UniswapInjectedProvider extends EventEmitter {
     super()
 
     this.setState({
-      ...UniswapInjectedProvider._defaultState,
+      ...InjectedProvider._defaultState,
     })
 
     this.isUniswapWallet = true
@@ -509,7 +509,7 @@ export class UniswapInjectedProvider extends EventEmitter {
       // Reset private state
 
       this.setState({
-        ...UniswapInjectedProvider._defaultState,
+        ...InjectedProvider._defaultState,
       })
     }
     // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#disconnect
