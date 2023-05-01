@@ -334,8 +334,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
   const { allowance, isAllowancePending, isApprovalLoading, updateAllowance } = usePermit2Approval(
     trade?.inputAmount.currency.isToken ? (trade?.inputAmount as CurrencyAmount<Token>) : undefined,
     maximumAmountIn,
-    shouldUsePayWithAnyToken,
-    true
+    shouldUsePayWithAnyToken
   )
   usePayWithAnyTokenSwap(trade, allowance, allowedSlippage)
   const priceImpact = usePriceImpact(trade)
