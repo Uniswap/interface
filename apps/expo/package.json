@@ -5,8 +5,6 @@
     "@ethersproject/shims": "5.6.0",
     "@expo/config": "^7.0.2",
     "@expo/metro-config": "^0.3.21",
-    "@react-navigation/native": "^6.1.2",
-    "@react-navigation/native-stack": "^6.9.8",
     "@tamagui/font-inter": "^1.16.5",
     "burnt": "^0.10.0",
     "dotenv": "^16.0.3",

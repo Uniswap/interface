@@ -3,8 +3,6 @@
   "version": "0.0.0",
   "dependencies": {
     "@apollo/client": "3.7.11",
-    "@react-navigation/native": "^6.1.2",
-    "@react-navigation/native-stack": "^6.9.8",
     "@reduxjs/toolkit": "1.9.3",
     "@tamagui/animations-react-native": "^1.16.5",
     "@tamagui/colors": "^1.16.5",

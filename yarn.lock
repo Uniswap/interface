@@ -7325,7 +7325,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-navigation/core@npm:^6.2.2, @react-navigation/core@npm:^6.4.8":
+"@react-navigation/core@npm:^6.2.2":
   version: 6.4.8
   resolution: "@react-navigation/core@npm:6.4.8"
   dependencies:
@@ -7360,7 +7360,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-navigation/elements@npm:^1.3.1, @react-navigation/elements@npm:^1.3.17, @react-navigation/elements@npm:^1.3.4":
+"@react-navigation/elements@npm:^1.3.1, @react-navigation/elements@npm:^1.3.4":
   version: 1.3.17
   resolution: "@react-navigation/elements@npm:1.3.17"
   peerDependencies:
@@ -7388,22 +7388,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-navigation/native-stack@npm:^6.9.8":
-  version: 6.9.12
-  resolution: "@react-navigation/native-stack@npm:6.9.12"
-  dependencies:
-    "@react-navigation/elements": ^1.3.17
-    warn-once: ^0.1.0
-  peerDependencies:
-    "@react-navigation/native": ^6.0.0
-    react: "*"
-    react-native: "*"
-    react-native-safe-area-context: ">= 3.0.0"
-    react-native-screens: ">= 3.0.0"
-  checksum: 20e05983d157ed330575a13d34174ed4d6092b61d5fe5ff55050b2f4f8470ae81c53f6e87215f686a8b00067c799c91fb65638866b7adf8970ecdc6d188108e3
-  languageName: node
-  linkType: hard
-
 "@react-navigation/native@npm:6.0.11":
   version: 6.0.11
   resolution: "@react-navigation/native@npm:6.0.11"
@@ -7416,21 +7400,6 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: 0dab07c8144d0b50cfbbd52f2a2da7dd9284d67ed1fd638691eed04fd035881f40233e88998d6337804af573c93bd484c641344b7fd19c4395d698463fb8972b
-  languageName: node
-  linkType: hard
-
-"@react-navigation/native@npm:^6.1.2":
-  version: 6.1.6
-  resolution: "@react-navigation/native@npm:6.1.6"
-  dependencies:
-    "@react-navigation/core": ^6.4.8
-    escape-string-regexp: ^4.0.0
-    fast-deep-equal: ^3.1.3
-    nanoid: ^3.1.23
-  peerDependencies:
-    react: "*"
-    react-native: "*"
-  checksum: 7d54fe80a39d163819fbf646d2c9c907f4ac967446527d81debf450aebeabaaad2428d7004c725015ed535c57cc99f2f8a1ca96b383c87bdcaaff9fcb567549a
   languageName: node
   linkType: hard
 
@@ -20923,8 +20892,6 @@ __metadata:
     "@expo/config": ^7.0.2
     "@expo/metro-config": ^0.3.21
     "@google/semantic-release-replace-plugin": 1.2.0
-    "@react-navigation/native": ^6.1.2
-    "@react-navigation/native-stack": ^6.9.8
     "@semantic-release/changelog": ^6.0.2
     "@semantic-release/commit-analyzer": ^9.0.2
     "@semantic-release/git": ^10.0.1
@@ -40387,8 +40354,6 @@ __metadata:
     "@graphql-codegen/cli": 3.2.2
     "@graphql-codegen/typescript-operations": 3.0.2
     "@graphql-codegen/typescript-react-apollo": 3.3.7
-    "@react-navigation/native": ^6.1.2
-    "@react-navigation/native-stack": ^6.9.8
     "@reduxjs/toolkit": 1.9.3
     "@tamagui/animations-react-native": ^1.16.5
     "@tamagui/colors": ^1.16.5
