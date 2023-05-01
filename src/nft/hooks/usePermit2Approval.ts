@@ -8,8 +8,8 @@ import usePermit2Allowance, { AllowanceState } from 'hooks/usePermit2Allowance'
 import { useCallback, useMemo, useState } from 'react'
 import invariant from 'tiny-invariant'
 
-const DEPRECATED_NFT_UNIVERSAL_ROUTER_MAINNET_ADDRESS = '0x4c60051384bd2d3c01bfc845cf5f4b44bcbe9de5'
-const NFT_UNIVERSAL_ROUTER_MAINNET_ADDRESS = '0x3fC91A3afd70395Cd496C647d5a6CC9D4B2b7FAD'
+const NFT_UNIVERSAL_ROUTER_MAINNET_ADDRESS_V_1_39 = '0x4c60051384bd2d3c01bfc845cf5f4b44bcbe9de5'
+const NFT_UNIVERSAL_ROUTER_MAINNET_ADDRESS_V_1_50 = '0x3fC91A3afd70395Cd496C647d5a6CC9D4B2b7FAD'
 
 const useUniversalRouterAddress = (shouldUseNftRouter: boolean, chainId: number | undefined): string | undefined => {
   const shouldUseUpdatedContract = usePwatNewContractEnabled()
@@ -17,9 +17,9 @@ const useUniversalRouterAddress = (shouldUseNftRouter: boolean, chainId: number 
   if (!chainId) return
 
   if (shouldUseNftRouter && chainId === 1) {
-    if (shouldUseUpdatedContract) return NFT_UNIVERSAL_ROUTER_MAINNET_ADDRESS
+    if (shouldUseUpdatedContract) return NFT_UNIVERSAL_ROUTER_MAINNET_ADDRESS_V_1_50
 
-    return DEPRECATED_NFT_UNIVERSAL_ROUTER_MAINNET_ADDRESS
+    return NFT_UNIVERSAL_ROUTER_MAINNET_ADDRESS_V_1_39
   }
 
   return UNIVERSAL_ROUTER_ADDRESS(chainId)
