@@ -636,7 +636,12 @@ export default function Swap({ className }: { className?: string }) {
                       </ButtonLight>
                     </TraceEvent>
                   ) : showWrap ? (
-                    <ButtonPrimary disabled={Boolean(wrapInputError)} onClick={onWrap} fontWeight={600}>
+                    <ButtonPrimary
+                      disabled={Boolean(wrapInputError)}
+                      onClick={onWrap}
+                      fontWeight={600}
+                      data-testid="wrap-button"
+                    >
                       {wrapInputError ? (
                         <WrapErrorText wrapInputError={wrapInputError} />
                       ) : wrapType === WrapType.WRAP ? (

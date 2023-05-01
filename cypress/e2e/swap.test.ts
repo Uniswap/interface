@@ -1,3 +1,5 @@
+import { SupportedChainId, WETH9 } from '@uniswap/sdk-core'
+
 import { USDC_MAINNET } from '../../src/constants/tokens'
 import { WETH_GOERLI } from '../fixtures/constants'
 import { getTestSelector } from '../utils'
@@ -153,6 +155,83 @@ describe('Swap', () => {
     selectOutput('WETH')
     cy.get('#swap-currency-input .token-amount-input').clear().type('0.01')
     cy.get('#swap-currency-output .token-amount-input').should('have.value', '0.01')
+  })
+
+  it('should be able to wrap ETH', () => {
+    const BALANCE_INCREMENT = 1
+    cy.visit('/swap', { ethereum: 'hardhat' })
+      .hardhat()
+      .then((hardhat) => {
+        hardhat
+          .reset()
+          .then(() => hardhat.getBalance(hardhat.wallet.address, WETH9[SupportedChainId.MAINNET]))
+          .then((balance) => Number(balance.toFixed(1)))
+          .then((initialWethBalance) => {
+            cy.get('#swap-currency-output .open-currency-select-button').click()
+            cy.contains('WETH').click()
+            cy.get('#swap-currency-output .token-amount-input').clear().type(BALANCE_INCREMENT.toString())
+            cy.get('#swap-currency-input .token-amount-input').should('not.equal', '')
+            cy.get(getTestSelector('wrap-button')).click()
+            cy.get(getTestSelector('web3-status-connected')).should('have.descendants', ':contains("1 Pending")')
+
+            cy.then(() => hardhat.provider.send('hardhat_mine', ['0x1', '0xc'])).then(() => {
+              // The pending transaction indicator should be gone.
+              cy.get(getTestSelector('web3-status-connected')).should('not.have.descendants', ':contains("1 Pending")')
+
+              // The UI balance should have increased.
+              cy.get('#swap-currency-output [data-testid="balance-text"]').should(
+                'have.text',
+                `Balance: ${initialWethBalance + BALANCE_INCREMENT}`
+              )
+
+              // There should be a successful wrap notification.
+              cy.contains('Wrapped').should('exist')
+
+              // The user's WETH account balance should have increased
+              cy.then(() => hardhat.getBalance(hardhat.wallet.address, WETH9[SupportedChainId.MAINNET]))
+                .then((balance) => Number(balance.toFixed(1)))
+                .should('eq', initialWethBalance + BALANCE_INCREMENT)
+            })
+          })
+      })
+  })
+
+  it('should be able to unwrap WETH', () => {
+    const BALANCE_INCREMENT = 1
+    cy.visit('/swap', { ethereum: 'hardhat' })
+      .hardhat()
+      .then((hardhat) => {
+        hardhat.reset().then(() => {
+          cy.get('#swap-currency-output .open-currency-select-button').click()
+          cy.contains('WETH').click()
+          cy.get('#swap-currency-output .token-amount-input').clear().type(BALANCE_INCREMENT.toString())
+          cy.get('#swap-currency-input .token-amount-input').should('not.equal', '')
+          cy.get(getTestSelector('wrap-button')).click()
+          cy.get(getTestSelector('web3-status-connected')).should('have.descendants', ':contains("1 Pending")')
+
+          cy.then(() => hardhat.provider.send('hardhat_mine', ['0x1', '0xc'])).then(() => {
+            cy.get(getTestSelector('swap-currency-button')).click()
+            cy.get(getTestSelector('wrap-button')).click()
+            cy.get(getTestSelector('web3-status-connected')).should('have.descendants', ':contains("1 Pending")')
+
+            cy.then(() => hardhat.provider.send('hardhat_mine', ['0x1', '0xc'])).then(() => {
+              // The pending transaction indicator should be gone.
+              cy.get(getTestSelector('web3-status-connected')).should('not.have.descendants', ':contains("1 Pending")')
+
+              // The UI balance should have increased.
+              cy.get('#swap-currency-input [data-testid="balance-text"]').should('have.text', `Balance: ${0}`)
+
+              // There should be a successful wrap notification.
+              cy.contains('Unwrapped').should('exist')
+
+              // The user's WETH account balance should have increased
+              cy.then(() => hardhat.getBalance(hardhat.wallet.address, WETH9[SupportedChainId.MAINNET]))
+                .then((balance) => Number(balance.toFixed(1)))
+                .should('eq', 0)
+            })
+          })
+        })
+      })
   })
 
   it('should render and dismiss the wallet rejection modal', () => {
