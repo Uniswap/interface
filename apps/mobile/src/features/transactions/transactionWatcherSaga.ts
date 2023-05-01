@@ -109,7 +109,7 @@ export function* watchFlashbotsTransaction(transaction: TransactionDetails): Gen
 
   const txStatus = yield* call(getFlashbotsTxConfirmation, hash, chainId)
   if (txStatus === TransactionStatus.Failed || txStatus === TransactionStatus.Unknown) {
-    yield* call(finalizeTransaction, transaction, null, TransactionStatus.Failed)
+    yield* call(finalizeTransaction, transaction, null, TransactionStatus.Failed as StatusOverride)
     yield* put(
       pushNotification({
         type: AppNotificationType.Error,
@@ -291,13 +291,15 @@ export function* waitForTxnInvalidated(
   }
 }
 
+type StatusOverride =
+  | TransactionStatus.Success
+  | TransactionStatus.Failed
+  | TransactionStatus.Cancelled
+
 function* finalizeTransaction(
   transaction: TransactionDetails,
   ethersReceipt?: providers.TransactionReceipt | null,
-  statusOverride?:
-    | TransactionStatus.Success
-    | TransactionStatus.Failed
-    | TransactionStatus.Cancelled
+  statusOverride?: StatusOverride
 ): Generator<
   | PutEffect<{
       payload: FinalizedTransactionDetails
