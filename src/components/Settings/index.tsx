@@ -144,9 +144,9 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
                 />
               </RowBetween>
             )}
-            <Divider />
             <ClientSideRouterSettings enabled={clientSideRouterEnabled}>
               <AutoColumn gap="16px">
+                <Divider />
                 <MaxSlippageSettings placeholder={placeholderSlippage} />
                 {showDeadlineSettings && (
                   <>
