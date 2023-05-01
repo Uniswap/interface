@@ -12731,7 +12731,7 @@ __metadata:
     react: 18.2.0
     react-dom: 18.2.0
     react-native: 0.70.8
-    react-native-reanimated: ^3.0.2
+    react-native-reanimated: 2.14.4
     react-native-web: 0.18.12
     react-native-web-lite: ^1.16.5
     react-redux: 8.0.5
@@ -34244,25 +34244,6 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: ec24225a145a8636065b464660256bed99ba5f50c7f6c74899838f5563e59a342ea217c285a06be8bdd5549e2faaf1ebdac6986011a767ba814a4cf469ed9bdb
-  languageName: node
-  linkType: hard
-
-"react-native-reanimated@npm:^3.0.2":
-  version: 3.0.2
-  resolution: "react-native-reanimated@npm:3.0.2"
-  dependencies:
-    "@babel/plugin-transform-object-assign": ^7.16.7
-    "@babel/preset-typescript": ^7.16.7
-    convert-source-map: ^1.7.0
-    invariant: ^2.2.4
-    lodash.isequal: ^4.5.0
-    setimmediate: ^1.0.5
-    string-hash-64: ^1.0.3
-  peerDependencies:
-    "@babel/core": ^7.0.0-0
-    react: "*"
-    react-native: "*"
-  checksum: 7635d6d490eecdf74d3b3560e0696df14c8528f58b4c79d680bb623053e6a13e51e05f62aa9d40e1d53e9b2c90d67ac77ff1f4128400f14ab4a524ef3dec036b
   languageName: node
   linkType: hard
 
