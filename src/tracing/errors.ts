@@ -95,7 +95,7 @@ export const filterKnownErrors: Required<ClientOptions>['beforeSend'] = (event: 
      * Errors coming from a Chrome Extension can be ignored for now. These errors are usually caused by extensions injecting
      * scripts into the page, which we cannot control.
      */
-    if (error.name.match(/chrome-extension:\/\//i)) return null
+    if (error.stack?.match(/chrome-extension:\/\//i)) return null
 
     /*
      * Content security policy 'unsafe-eval' errors can be filtered out because there are expected failures.
