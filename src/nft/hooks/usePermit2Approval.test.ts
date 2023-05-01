@@ -15,7 +15,7 @@ const mockUsePermit2Allowance = usePermit2Allowance as jest.MockedFunction<typeo
 describe('usePermit2Approval', () => {
   it('sets spender of the correct UR contract from NFT side', async () => {
     mockUsePermit2Allowance.mockReturnValue({ state: AllowanceState.LOADING })
-    renderHook(() => usePermit2Approval(USDCAmount, undefined, true, true))
+    renderHook(() => usePermit2Approval(USDCAmount, undefined, true))
     expect(mockUsePermit2Allowance).toHaveBeenCalledWith(USDCAmount, NFT_UNIVERSAL_ROUTER_MAINNET_ADDRESS)
   })
 })
