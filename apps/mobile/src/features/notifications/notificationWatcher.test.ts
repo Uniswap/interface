@@ -28,7 +28,7 @@ export const createFinalizedTxAction = (
     typeInfo,
     id: txId,
   },
-  type: '',
+  type: 'transactions/finalizeTransaction',
 })
 
 describe(pushTransactionNotification, () => {

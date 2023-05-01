@@ -17,6 +17,8 @@ import type { AppStore } from 'src/app/store'
 import { persistedReducer } from 'src/app/store'
 import { EXPORTS_FOR_TEST } from 'src/data/cache'
 import { setupErrorLink } from 'src/data/utils'
+import { ensApi } from 'src/features/ens/api'
+import { routingApi } from 'src/features/routing/routingApi'
 import { theme } from 'src/styles/theme'
 
 // This type interface extends the default options for render from RTL, as well
@@ -40,7 +42,14 @@ export function renderWithProviders(
     mocks = [],
     preloadedState = {},
     // Automatically create a store instance if no store was passed in
-    store = configureStore({ reducer: persistedReducer, preloadedState }),
+    store = configureStore({
+      reducer: persistedReducer,
+      preloadedState,
+      middleware: (getDefaultMiddleware) =>
+        // TODO: fix typing
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        getDefaultMiddleware().concat(routingApi.middleware, ensApi.middleware) as any,
+    }),
     ...renderOptions
   }: ExtendedRenderOptions = {}
 ): // TODO (MOB-3857): add more specific types

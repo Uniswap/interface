@@ -216,7 +216,7 @@ export const fiatOnRampTxDetailsFailed: TransactionDetails & {
 
 export const finalizedTxAction: ReturnType<typeof finalizeTransaction> = {
   payload: { ...txDetailsConfirmed, status: TransactionStatus.Success },
-  type: '',
+  type: 'transactions/finalizeTransaction',
 }
 
 export const swapNotification = {
