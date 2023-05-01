@@ -78,7 +78,7 @@ describe('Swap', () => {
 
   it('can swap ETH for USDC', () => {
     const BALANCE_INCREMENT = 1
-    cy.visit('/swap', { ethereum: 'hardhat', timeout: 60 * 1000 })
+    cy.visit('/swap', { ethereum: 'hardhat' })
       .hardhat()
       .then((hardhat) => {
         hardhat
@@ -113,7 +113,7 @@ describe('Swap', () => {
   it('should render an error when a transaction fails due to a passed deadline', () => {
     const BALANCE_INCREMENT = 1
     const DEADLINE_MINUTES = 30
-    cy.visit('/swap', { ethereum: 'hardhat', timeout: 60 * 1000 })
+    cy.visit('/swap', { ethereum: 'hardhat' })
       .hardhat()
       .then((hardhat) => {
         hardhat
