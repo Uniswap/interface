@@ -206,6 +206,7 @@ describe('Swap', () => {
       .then((hardhat) => {
         hardhat
           .reset()
+          .then(() => hardhat.provider.send('evm_setAutomine', [false]))
           .then(() => hardhat.provider.getBalance(hardhat.wallet.address))
           .then((initialBalance) => {
             const swapInputAmount = formatEther(initialBalance.sub(parseEther(ETH_GAS_BUFFER)))
