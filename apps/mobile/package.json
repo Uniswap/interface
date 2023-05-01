@@ -140,7 +140,7 @@
     "react-native-vision-camera": "2.15.2",
     "react-native-wagmi-charts": "2.2.0",
     "react-native-webview": "11.14.3",
-    "react-redux": "7.2.5",
+    "react-redux": "8.0.5",
     "redux-persist": "6.0.0",
     "redux-saga": "1.2.2",
     "rive-react-native": "3.0.41",

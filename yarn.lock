@@ -11588,7 +11588,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/hoist-non-react-statics@npm:^3.3.0, @types/hoist-non-react-statics@npm:^3.3.1":
+"@types/hoist-non-react-statics@npm:^3.3.1":
   version: 3.3.1
   resolution: "@types/hoist-non-react-statics@npm:3.3.1"
   dependencies:
@@ -11922,18 +11922,6 @@ __metadata:
   dependencies:
     "@types/react": "*"
   checksum: 1b620095ddf2fe85157df9d57435edc619587eacb1a4fadd91c977c200cef8008e7fec4d8c5429ce373e1a2158199f1162f9c84e8e5a7d0b71a2224f31b64dfd
-  languageName: node
-  linkType: hard
-
-"@types/react-redux@npm:^7.1.16":
-  version: 7.1.25
-  resolution: "@types/react-redux@npm:7.1.25"
-  dependencies:
-    "@types/hoist-non-react-statics": ^3.3.0
-    "@types/react": "*"
-    hoist-non-react-statics: ^3.3.0
-    redux: ^4.0.0
-  checksum: a61ec25cbf8bb3720850402d3c49493fcff4afb73ad447d161460b5d4c600c984ad48708e8564d2fd32052eaa3c3b3f655c5b300ce813429637cce9e5958329f
   languageName: node
   linkType: hard
 
@@ -12485,7 +12473,7 @@ __metadata:
     react-native-wagmi-charts: 2.2.0
     react-native-web: 0.18.12
     react-native-webview: 11.14.3
-    react-redux: 7.2.5
+    react-redux: 8.0.5
     react-svg-loader: ^3.0.3
     react-test-renderer: 18.2.0
     redux-flipper: 2.0.2
@@ -12746,7 +12734,7 @@ __metadata:
     react-native-reanimated: ^3.0.2
     react-native-web: 0.18.12
     react-native-web-lite: ^1.16.5
-    react-redux: ^8.0.5
+    react-redux: 8.0.5
     react-refresh: ^0.14.0
     react-router-dom: 6.10.0
     serve: ^14.2.0
@@ -21007,7 +20995,7 @@ __metadata:
     react-native-screens: 3.18.2
     react-native-svg: 13.8.0
     react-native-web: 0.18.12
-    react-redux: ^8.0.5
+    react-redux: 8.0.5
     semantic-release: ^20.1.0
     semantic-release-monorepo: ^7.0.5
     standard-version: next
@@ -34524,28 +34512,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-redux@npm:7.2.5":
-  version: 7.2.5
-  resolution: "react-redux@npm:7.2.5"
-  dependencies:
-    "@babel/runtime": ^7.12.1
-    "@types/react-redux": ^7.1.16
-    hoist-non-react-statics: ^3.3.2
-    loose-envify: ^1.4.0
-    prop-types: ^15.7.2
-    react-is: ^16.13.1
-  peerDependencies:
-    react: ^16.8.3 || ^17
-  peerDependenciesMeta:
-    react-dom:
-      optional: true
-    react-native:
-      optional: true
-  checksum: 04ac4a4178067cbcfc05506dfea9f7e01730093a5752f050567f7ae4a38c03c96da9d8fed051f8ab1ecede5ea8a15ee41c5f6c5eeb7f04f37e4d13e431ec7830
-  languageName: node
-  linkType: hard
-
-"react-redux@npm:^8.0.5":
+"react-redux@npm:8.0.5":
   version: 8.0.5
   resolution: "react-redux@npm:8.0.5"
   dependencies:
@@ -40504,7 +40471,7 @@ __metadata:
     react-i18next: 11.18.6
     react-native: 0.70.8
     react-native-safe-area-context: 4.5.0
-    react-redux: ^8.0.5
+    react-redux: 8.0.5
     redux-logger: 3.0.6
     redux-persist: 6.0.0
     redux-saga: 1.2.2
