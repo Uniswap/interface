@@ -12361,7 +12361,7 @@ __metadata:
     "@uniswap/ethers-rs-mobile": 0.0.1
     "@uniswap/permit2-sdk": 1.2.0
     "@uniswap/router-sdk": 1.4.0
-    "@uniswap/sdk-core": 3.2.1
+    "@uniswap/sdk-core": 3.2.2
     "@uniswap/universal-router-sdk": 1.1.2
     "@uniswap/v2-sdk": 3.0.1
     "@uniswap/v3-sdk": 3.9.0
@@ -12510,20 +12510,6 @@ __metadata:
     "@uniswap/v2-sdk": ^3.0.1
     "@uniswap/v3-sdk": ^3.8.3
   checksum: bbe31514659acf5c9e0dc50e931d788755856e61581a9c201342068925d73db8f19f2b9c6e241d17962fd600eb355aa6df9839156ce0d85d034d0d5aac5986fe
-  languageName: node
-  linkType: hard
-
-"@uniswap/sdk-core@npm:3.2.1":
-  version: 3.2.1
-  resolution: "@uniswap/sdk-core@npm:3.2.1"
-  dependencies:
-    "@ethersproject/address": ^5.0.2
-    big.js: ^5.2.2
-    decimal.js-light: ^2.5.0
-    jsbi: ^3.1.4
-    tiny-invariant: ^1.1.0
-    toformat: ^2.0.0
-  checksum: d9df235bd1e219d90a8535a26a2dfef56be2bc25eed2362e45f60ee908cffa0790f13b64bdc3007a852401e513b5d893f95dbb60b77f7fabf36e845f87f1f24c
   languageName: node
   linkType: hard
 

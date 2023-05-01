@@ -611,21 +611,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/helper-module-imports@npm:^7.14.5":
+"@babel/helper-module-imports@npm:^7.14.5, @babel/helper-module-imports@npm:^7.18.6":
   version: 7.21.4
   resolution: "@babel/helper-module-imports@npm:7.21.4"
   dependencies:
     "@babel/types": ^7.21.4
   checksum: bd330a2edaafeb281fbcd9357652f8d2666502567c0aad71db926e8499c773c9ea9c10dfaae30122452940326d90c8caff5c649ed8e1bf15b23f858758d3abc6
-  languageName: node
-  linkType: hard
-
-"@babel/helper-module-imports@npm:^7.18.6":
-  version: 7.18.6
-  resolution: "@babel/helper-module-imports@npm:7.18.6"
-  dependencies:
-    "@babel/types": ^7.18.6
-  checksum: f393f8a3b3304b1b7a288a38c10989de754f01d29caf62ce7c4e5835daf0a27b81f3ac687d9d2780d39685aae7b55267324b512150e7b2be967b0c493b6a1def
   languageName: node
   linkType: hard
 
@@ -8291,7 +8282,7 @@ __metadata:
     "@uniswap/ethers-rs-mobile": 0.0.1
     "@uniswap/permit2-sdk": 1.2.0
     "@uniswap/router-sdk": 1.4.0
-    "@uniswap/sdk-core": 3.2.1
+    "@uniswap/sdk-core": 3.2.2
     "@uniswap/universal-router-sdk": 1.1.2
     "@uniswap/v2-sdk": 3.0.1
     "@uniswap/v3-sdk": 3.9.0
@@ -8443,9 +8434,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@uniswap/sdk-core@npm:3.2.1, @uniswap/sdk-core@npm:^3.0.0-alpha.3, @uniswap/sdk-core@npm:^3.0.1, @uniswap/sdk-core@npm:^3.1.0":
-  version: 3.2.1
-  resolution: "@uniswap/sdk-core@npm:3.2.1"
+"@uniswap/sdk-core@npm:3.2.2, @uniswap/sdk-core@npm:^3.0.0-alpha.3, @uniswap/sdk-core@npm:^3.0.1, @uniswap/sdk-core@npm:^3.1.0":
+  version: 3.2.2
+  resolution: "@uniswap/sdk-core@npm:3.2.2"
   dependencies:
     "@ethersproject/address": ^5.0.2
     big.js: ^5.2.2
@@ -8453,7 +8444,7 @@ __metadata:
     jsbi: ^3.1.4
     tiny-invariant: ^1.1.0
     toformat: ^2.0.0
-  checksum: d9df235bd1e219d90a8535a26a2dfef56be2bc25eed2362e45f60ee908cffa0790f13b64bdc3007a852401e513b5d893f95dbb60b77f7fabf36e845f87f1f24c
+  checksum: 6a2b85ef429b2f19324764944f7de309e74509bcc7c4f869e4fb39b836e75d3efda6c842a35511e9e4747dddaf24c4675f2bf980668110e742c76bafab29e8b4
   languageName: node
   linkType: hard
 
@@ -8633,7 +8624,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@walletconnect/core@npm:2.7.1":
+"@walletconnect/core@npm:2.7.1, @walletconnect/core@npm:^2.6.1":
   version: 2.7.1
   resolution: "@walletconnect/core@npm:2.7.1"
   dependencies:
@@ -8653,29 +8644,6 @@ __metadata:
     lodash.isequal: 4.5.0
     uint8arrays: ^3.1.0
   checksum: 26c31b1d35c3886f6179bc7338240def167ad57f783f468fc19024c968a0773d68eb7661e0d368aa09b812f201f1ad46842e9b409f273caee701dc50cd9db233
-  languageName: node
-  linkType: hard
-
-"@walletconnect/core@npm:^2.6.1":
-  version: 2.7.0
-  resolution: "@walletconnect/core@npm:2.7.0"
-  dependencies:
-    "@walletconnect/heartbeat": 1.2.1
-    "@walletconnect/jsonrpc-provider": ^1.0.12
-    "@walletconnect/jsonrpc-utils": ^1.0.7
-    "@walletconnect/jsonrpc-ws-connection": ^1.0.11
-    "@walletconnect/keyvaluestorage": ^1.0.2
-    "@walletconnect/logger": ^2.0.1
-    "@walletconnect/relay-api": ^1.0.9
-    "@walletconnect/relay-auth": ^1.0.4
-    "@walletconnect/safe-json": ^1.0.2
-    "@walletconnect/time": ^1.0.2
-    "@walletconnect/types": 2.7.0
-    "@walletconnect/utils": 2.7.0
-    events: ^3.3.0
-    lodash.isequal: 4.5.0
-    uint8arrays: ^3.1.0
-  checksum: 86017de59ef2fd48638897878aad109cb43b2bf40ec4c172972389e6569eb3228fe662ae022e345f38432b890d0b39059cc5fda3f3607f8e9024b587b26a5d70
   languageName: node
   linkType: hard
 
@@ -8882,7 +8850,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@walletconnect/utils@npm:2.7.0, @walletconnect/utils@npm:^2.6.1":
+"@walletconnect/utils@npm:2.7.0":
   version: 2.7.0
   resolution: "@walletconnect/utils@npm:2.7.0"
   dependencies:
@@ -8905,7 +8873,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@walletconnect/utils@npm:2.7.1":
+"@walletconnect/utils@npm:2.7.1, @walletconnect/utils@npm:^2.6.1":
   version: 2.7.1
   resolution: "@walletconnect/utils@npm:2.7.1"
   dependencies:
@@ -12770,14 +12738,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"decode-uri-component@npm:^0.2.0":
-  version: 0.2.0
-  resolution: "decode-uri-component@npm:0.2.0"
-  checksum: f3749344ab9305ffcfe4bfe300e2dbb61fc6359e2b736812100a3b1b6db0a5668cba31a05e4b45d4d63dbf1a18dfa354cd3ca5bb3ededddabb8cd293f4404f94
-  languageName: node
-  linkType: hard
-
-"decode-uri-component@npm:^0.2.2":
+"decode-uri-component@npm:^0.2.0, decode-uri-component@npm:^0.2.2":
   version: 0.2.2
   resolution: "decode-uri-component@npm:0.2.2"
   checksum: 95476a7d28f267292ce745eac3524a9079058bbb35767b76e3ee87d42e34cd0275d2eb19d9d08c3e167f97556e8a2872747f5e65cbebcac8b0c98d83e285f139
@@ -17259,7 +17220,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"is-core-module@npm:^2.11.0, is-core-module@npm:^2.12.0, is-core-module@npm:^2.2.0":
+"is-core-module@npm:^2.12.0, is-core-module@npm:^2.2.0":
   version: 2.12.0
   resolution: "is-core-module@npm:2.12.0"
   dependencies:
@@ -23226,7 +23187,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"query-string@npm:7.1.1, query-string@npm:^7.0.0":
+"query-string@npm:7.1.1":
   version: 7.1.1
   resolution: "query-string@npm:7.1.1"
   dependencies:
@@ -23238,7 +23199,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"query-string@npm:7.1.3":
+"query-string@npm:7.1.3, query-string@npm:^7.0.0":
   version: 7.1.3
   resolution: "query-string@npm:7.1.3"
   dependencies:
@@ -24370,16 +24331,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"redux@npm:^4.0.4":
-  version: 4.1.2
-  resolution: "redux@npm:4.1.2"
-  dependencies:
-    "@babel/runtime": ^7.9.2
-  checksum: 6a839cee5bd580c5298d968e9e2302150e961318253819bcd97f9d945a5a409559eacddf6026f4118bb68b681c593d90e8a2c5bbf278f014aff9bf0d2d8fa084
-  languageName: node
-  linkType: hard
-
-"redux@npm:^4.2.0":
+"redux@npm:^4.0.4, redux@npm:^4.2.0":
   version: 4.2.1
   resolution: "redux@npm:4.2.1"
   dependencies:
@@ -24707,14 +24659,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"reselect@npm:^4.0.0":
-  version: 4.1.7
-  resolution: "reselect@npm:4.1.7"
-  checksum: 738d8e2b8f0dca154ad29de6a209c9fbca2d70ae6788fd85df87f2c74b95a65bbf2d16d43a9e2faff39de34d17a29d706ba08a6b2ee5660c09589edbd19af7e1
-  languageName: node
-  linkType: hard
-
-"reselect@npm:^4.1.7":
+"reselect@npm:^4.0.0, reselect@npm:^4.1.7":
   version: 4.1.8
   resolution: "reselect@npm:4.1.8"
   checksum: a4ac87cedab198769a29be92bc221c32da76cfdad6911eda67b4d3e7136dca86208c3b210e31632eae31ebd2cded18596f0dd230d3ccc9e978df22f233b5583e
@@ -24783,20 +24728,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"resolve@npm:^1.1.6, resolve@npm:^1.10.0, resolve@npm:^1.13.1, resolve@npm:^1.14.2, resolve@npm:^1.20.0, resolve@npm:^1.3.2":
-  version: 1.22.2
-  resolution: "resolve@npm:1.22.2"
-  dependencies:
-    is-core-module: ^2.11.0
-    path-parse: ^1.0.7
-    supports-preserve-symlinks-flag: ^1.0.0
-  bin:
-    resolve: bin/resolve
-  checksum: 7e5df75796ebd429445d102d5824482ee7e567f0070b2b45897b29bb4f613dcbc262e0257b8aeedb3089330ccaea0d6a0464df1a77b2992cf331dcda0f4cb549
-  languageName: node
-  linkType: hard
-
-"resolve@npm:^1.19.0":
+"resolve@npm:^1.1.6, resolve@npm:^1.10.0, resolve@npm:^1.13.1, resolve@npm:^1.14.2, resolve@npm:^1.19.0, resolve@npm:^1.20.0, resolve@npm:^1.3.2":
   version: 1.22.3
   resolution: "resolve@npm:1.22.3"
   dependencies:
@@ -24837,20 +24769,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"resolve@patch:resolve@^1.1.6#~builtin<compat/resolve>, resolve@patch:resolve@^1.10.0#~builtin<compat/resolve>, resolve@patch:resolve@^1.13.1#~builtin<compat/resolve>, resolve@patch:resolve@^1.14.2#~builtin<compat/resolve>, resolve@patch:resolve@^1.20.0#~builtin<compat/resolve>, resolve@patch:resolve@^1.3.2#~builtin<compat/resolve>":
-  version: 1.22.2
-  resolution: "resolve@patch:resolve@npm%3A1.22.2#~builtin<compat/resolve>::version=1.22.2&hash=07638b"
-  dependencies:
-    is-core-module: ^2.11.0
-    path-parse: ^1.0.7
-    supports-preserve-symlinks-flag: ^1.0.0
-  bin:
-    resolve: bin/resolve
-  checksum: 66cc788f13b8398de18eb4abb3aed90435c84bb8935953feafcf7231ba4cd191b2c10b4a87b1e9681afc34fb138c705f91f7330ff90bfa36f457e5584076a2b8
-  languageName: node
-  linkType: hard
-
-"resolve@patch:resolve@^1.19.0#~builtin<compat/resolve>":
+"resolve@patch:resolve@^1.1.6#~builtin<compat/resolve>, resolve@patch:resolve@^1.10.0#~builtin<compat/resolve>, resolve@patch:resolve@^1.13.1#~builtin<compat/resolve>, resolve@patch:resolve@^1.14.2#~builtin<compat/resolve>, resolve@patch:resolve@^1.19.0#~builtin<compat/resolve>, resolve@patch:resolve@^1.20.0#~builtin<compat/resolve>, resolve@patch:resolve@^1.3.2#~builtin<compat/resolve>":
   version: 1.22.3
   resolution: "resolve@patch:resolve@npm%3A1.22.3#~builtin<compat/resolve>::version=1.22.3&hash=07638b"
   dependencies:
