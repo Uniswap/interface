@@ -3,8 +3,8 @@
 exports[`renders selection circle 1`] = `
 <View
   style={
-    Array [
-      Object {
+    [
+      {
         "alignItems": "center",
         "borderColor": "#FC72FF",
         "borderRadius": 999999,
@@ -20,8 +20,8 @@ exports[`renders selection circle 1`] = `
 >
   <View
     style={
-      Array [
-        Object {
+      [
+        {
           "backgroundColor": "#FC72FF",
           "borderRadius": 999999,
           "display": "flex",

@@ -3,13 +3,13 @@
 exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
 <View
   style={
-    Array [
-      Object {
+    [
+      {
         "backgroundColor": "#FFFFFF",
         "display": "flex",
         "flex": 1,
       },
-      Object {
+      {
         "paddingLeft": undefined,
         "paddingRight": undefined,
       },
@@ -19,17 +19,17 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
   <View
     onLayout={[Function]}
     style={
-      Array [
-        Array [
-          Object {
+      [
+        [
+          {
             "flex": 1,
             "justifyContent": "flex-end",
           },
-          Object {
+          {
             "marginBottom": 10,
           },
         ],
-        Object {
+        {
           "paddingBottom": 0,
         },
       ]
@@ -42,8 +42,8 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
       <View>
         <View
           style={
-            Array [
-              Object {
+            [
+              {
                 "alignItems": "stretch",
                 "display": "flex",
                 "flexDirection": "column",
@@ -52,11 +52,11 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                 "paddingBottom": 16,
                 "paddingHorizontal": 16,
               },
-              Array [
-                Object {
+              [
+                {
                   "flexGrow": 1,
                 },
-                Object {
+                {
                   "paddingTop": 200,
                 },
               ],
@@ -65,8 +65,8 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
         >
           <View
             style={
-              Array [
-                Object {
+              [
+                {
                   "alignItems": "stretch",
                   "display": "flex",
                   "flexDirection": "column",
@@ -80,8 +80,8 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
               allowFontScaling={true}
               maxFontSizeMultiplier={1.2}
               style={
-                Array [
-                  Object {
+                [
+                  {
                     "color": "#0E1524",
                     "display": "flex",
                     "fontFamily": "Inter-Medium",
@@ -97,8 +97,8 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
             </Text>
             <View
               style={
-                Array [
-                  Object {
+                [
+                  {
                     "display": "flex",
                     "flexGrow": 0,
                     "flexShrink": 0,
@@ -111,8 +111,8 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
               allowFontScaling={true}
               maxFontSizeMultiplier={1.4}
               style={
-                Array [
-                  Object {
+                [
+                  {
                     "color": "#5D6785",
                     "display": "flex",
                     "fontFamily": "Inter-Regular",
@@ -128,8 +128,8 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
           </View>
           <View
             style={
-              Array [
-                Object {
+              [
+                {
                   "display": "flex",
                   "flexGrow": 0,
                   "flexShrink": 0,
@@ -140,8 +140,8 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
           />
           <View
             style={
-              Array [
-                Object {
+              [
+                {
                   "alignItems": "stretch",
                   "display": "flex",
                   "flexDirection": "column",
@@ -153,8 +153,8 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
           >
             <View
               style={
-                Array [
-                  Object {
+                [
+                  {
                     "alignItems": "stretch",
                     "display": "flex",
                     "flexDirection": "column",
@@ -166,8 +166,8 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
               <View
                 onTouchEnd={[Function]}
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "alignItems": "stretch",
                       "display": "flex",
                       "flexDirection": "column",
@@ -178,8 +178,8 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
               >
                 <View
                   style={
-                    Array [
-                      Object {
+                    [
+                      {
                         "alignItems": "center",
                         "backgroundColor": "#FFFFFF",
                         "borderColor": "#F5F6FC",
@@ -199,8 +199,8 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                 >
                   <View
                     style={
-                      Array [
-                        Object {
+                      [
+                        {
                           "alignItems": "flex-end",
                           "display": "flex",
                           "flexDirection": "row",
@@ -229,8 +229,8 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                       selectionColor="#0E1524"
                       spellCheck={false}
                       style={
-                        Array [
-                          Object {
+                        [
+                          {
                             "backgroundColor": "transparent",
                             "borderRadius": 12,
                             "color": "#0E1524",
@@ -249,8 +249,8 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                   </View>
                   <View
                     style={
-                      Array [
-                        Object {
+                      [
+                        {
                           "display": "flex",
                           "flexGrow": 0,
                           "flexShrink": 0,
@@ -262,8 +262,8 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                   <View
                     onLayout={[Function]}
                     style={
-                      Array [
-                        Object {
+                      [
+                        {
                           "alignItems": "center",
                           "display": "flex",
                           "flexDirection": "row",
@@ -281,15 +281,15 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                       maxFontSizeMultiplier={1.4}
                       numberOfLines={1}
                       style={
-                        Array [
-                          Object {
+                        [
+                          {
                             "color": "#5D6785",
                             "display": "flex",
                             "fontFamily": "Inter-Medium",
                             "fontSize": 17,
                             "lineHeight": 24,
                           },
-                          Object {
+                          {
                             "flexShrink": 1,
                           },
                         ]
@@ -299,8 +299,8 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                     </Text>
                     <View
                       style={
-                        Array [
-                          Object {
+                        [
+                          {
                             "display": "flex",
                             "flexGrow": 0,
                             "flexShrink": 0,
@@ -312,7 +312,7 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                     />
                     <View
                       accessibilityState={
-                        Object {
+                        {
                           "disabled": false,
                         }
                       }
@@ -320,7 +320,7 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                       collapsable={false}
                       focusable={true}
                       hitSlop={
-                        Object {
+                        {
                           "bottom": 5,
                           "left": 5,
                           "right": 5,
@@ -335,7 +335,7 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                       onResponderTerminationRequest={[Function]}
                       onStartShouldSetResponder={[Function]}
                       style={
-                        Object {
+                        {
                           "alignItems": "center",
                           "backgroundColor": "#E8ECFB",
                           "borderColor": "transparent",
@@ -348,8 +348,8 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                     >
                       <View
                         style={
-                          Array [
-                            Object {
+                          [
+                            {
                               "alignItems": "center",
                               "display": "flex",
                               "flexDirection": "row",
@@ -369,8 +369,8 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                         />
                         <View
                           style={
-                            Array [
-                              Object {
+                            [
+                              {
                                 "display": "flex",
                                 "flexGrow": 0,
                                 "flexShrink": 0,
@@ -384,8 +384,8 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                           allowFontScaling={true}
                           maxFontSizeMultiplier={1.2}
                           style={
-                            Array [
-                              Object {
+                            [
+                              {
                                 "color": "#0E1524",
                                 "display": "flex",
                                 "fontFamily": "Inter-SemiBold",
@@ -402,8 +402,8 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                     </View>
                     <View
                       style={
-                        Array [
-                          Object {
+                        [
+                          {
                             "display": "flex",
                             "flexGrow": 0,
                             "flexShrink": 0,
@@ -419,15 +419,15 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                       maxFontSizeMultiplier={1.4}
                       numberOfLines={1}
                       style={
-                        Array [
-                          Object {
+                        [
+                          {
                             "color": "#5D6785",
                             "display": "flex",
                             "fontFamily": "Inter-Medium",
                             "fontSize": 17,
                             "lineHeight": 24,
                           },
-                          Object {
+                          {
                             "flexShrink": 1,
                           },
                         ]
@@ -439,8 +439,8 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                 </View>
                 <View
                   style={
-                    Array [
-                      Object {
+                    [
+                      {
                         "display": "flex",
                         "flexGrow": 0,
                         "flexShrink": 0,
@@ -451,8 +451,8 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                 />
                 <View
                   style={
-                    Array [
-                      Object {
+                    [
+                      {
                         "alignItems": "stretch",
                         "display": "flex",
                         "flexDirection": "column",
@@ -465,8 +465,8 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
             </View>
             <View
               style={
-                Array [
-                  Object {
+                [
+                  {
                     "display": "flex",
                     "flexGrow": 0,
                     "flexShrink": 0,
@@ -477,8 +477,8 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
             />
             <View
               style={
-                Array [
-                  Object {
+                [
+                  {
                     "display": "flex",
                     "paddingBottom": 4,
                   },
@@ -487,7 +487,7 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
             >
               <View
                 accessibilityState={
-                  Object {
+                  {
                     "disabled": false,
                   }
                 }
@@ -495,7 +495,7 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                 collapsable={false}
                 focusable={true}
                 hitSlop={
-                  Object {
+                  {
                     "bottom": 5,
                     "left": 5,
                     "right": 5,
@@ -510,7 +510,7 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                 onResponderTerminationRequest={[Function]}
                 onStartShouldSetResponder={[Function]}
                 style={
-                  Object {
+                  {
                     "alignItems": "center",
                     "backgroundColor": "#FC72FF",
                     "borderColor": "transparent",
@@ -524,8 +524,8 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
               >
                 <View
                   style={
-                    Array [
-                      Object {
+                    [
+                      {
                         "alignItems": "stretch",
                         "borderRadius": 16,
                         "display": "flex",
@@ -545,12 +545,12 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                     focusable={false}
                     height="100%"
                     style={
-                      Array [
-                        Object {
+                      [
+                        {
                           "backgroundColor": "transparent",
                           "borderWidth": 0,
                         },
-                        Object {
+                        {
                           "flex": 0,
                           "height": "100%",
                           "width": "100%",
@@ -561,7 +561,7 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                   >
                     <RNSVGGroup
                       fill={
-                        Object {
+                        {
                           "payload": 4278190080,
                           "type": 0,
                         }
@@ -570,7 +570,7 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                       <RNSVGDefs>
                         <RNSVGLinearGradient
                           gradient={
-                            Array [
+                            [
                               0,
                               -958215,
                               1,
@@ -588,7 +588,7 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                       </RNSVGDefs>
                       <RNSVGRect
                         fill={
-                          Object {
+                          {
                             "brushRef": "background",
                             "type": 1,
                           }
@@ -596,7 +596,7 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                         height="150%"
                         opacity={1}
                         propList={
-                          Array [
+                          [
                             "fill",
                           ]
                         }
@@ -609,8 +609,8 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                 </View>
                 <View
                   style={
-                    Array [
-                      Object {
+                    [
+                      {
                         "alignItems": "center",
                         "display": "flex",
                         "flexDirection": "row",
@@ -625,8 +625,8 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                     allowFontScaling={true}
                     maxFontSizeMultiplier={1.2}
                     style={
-                      Array [
-                        Object {
+                      [
+                        {
                           "color": "#FFFFFF",
                           "display": "flex",
                           "fontFamily": "Inter-SemiBold",

@@ -17,9 +17,9 @@
   },
   "devDependencies": {
     "@tamagui/build": "^1.16.5",
-    "eslint": "^8.21.0",
+    "eslint": "8.21.0",
     "prettier": "latest",
-    "typescript": "^4.9.4"
+    "typescript": "4.9.4"
   },
   "files": [
     "types",

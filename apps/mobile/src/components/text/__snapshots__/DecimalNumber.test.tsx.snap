@@ -5,8 +5,8 @@ exports[`renders a DecimalNumber 1`] = `
   allowFontScaling={true}
   maxFontSizeMultiplier={1.4}
   style={
-    Array [
-      Object {
+    [
+      {
         "color": "#0E1524",
         "display": "flex",
         "fontFamily": "Inter-Medium",
@@ -21,8 +21,8 @@ exports[`renders a DecimalNumber 1`] = `
     allowFontScaling={true}
     maxFontSizeMultiplier={1.4}
     style={
-      Array [
-        Object {
+      [
+        {
           "color": "#888FAB",
           "display": "flex",
           "fontFamily": "Inter-Medium",
@@ -43,8 +43,8 @@ exports[`renders a DecimalNumber without a comma separator 1`] = `
   allowFontScaling={true}
   maxFontSizeMultiplier={1.4}
   style={
-    Array [
-      Object {
+    [
+      {
         "color": "#0E1524",
         "display": "flex",
         "fontFamily": "Inter-Medium",
@@ -59,8 +59,8 @@ exports[`renders a DecimalNumber without a comma separator 1`] = `
     allowFontScaling={true}
     maxFontSizeMultiplier={1.4}
     style={
-      Array [
-        Object {
+      [
+        {
           "color": "#888FAB",
           "display": "flex",
           "fontFamily": "Inter-Medium",
@@ -81,8 +81,8 @@ exports[`renders a DecimalNumber without a decimal part 1`] = `
   allowFontScaling={true}
   maxFontSizeMultiplier={1.4}
   style={
-    Array [
-      Object {
+    [
+      {
         "color": "#0E1524",
         "display": "flex",
         "fontFamily": "Inter-Medium",

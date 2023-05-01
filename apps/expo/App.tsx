@@ -1,10 +1,10 @@
 import 'expo-dev-client'
-import { Provider } from 'wallet/src/provider/tamagui-provider'
+import { useFonts } from 'expo-font'
 import React from 'react'
 import { Stack } from 'tamagui'
 import { Button } from 'ui/src/components/button/Button'
 import { Text } from 'ui/src/components/text/Text'
-import { useFonts } from 'expo-font'
+import { Provider } from 'wallet/src/provider/tamagui-provider'
 
 export default function App(): JSX.Element | null {
   const [loaded] = useFonts({
@@ -19,10 +19,10 @@ export default function App(): JSX.Element | null {
     <Provider>
       <Stack
         alignItems="center"
-        width="100%"
         marginTop="$spacing48"
         paddingHorizontal="$spacing16"
-        rowGap="$spacing4">
+        rowGap="$spacing4"
+        width="100%">
         <Text variant="headlineLarge">This is App</Text>
         <Text variant="headlineSmall">Enjoy buttons</Text>
         <Button theme="primary">One</Button>

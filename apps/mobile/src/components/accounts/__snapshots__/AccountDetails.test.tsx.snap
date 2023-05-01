@@ -3,8 +3,8 @@
 exports[`AccountDetails renders without error 1`] = `
 <View
   style={
-    Array [
-      Object {
+    [
+      {
         "alignItems": "center",
         "display": "flex",
         "flexDirection": "row",
@@ -16,8 +16,8 @@ exports[`AccountDetails renders without error 1`] = `
 >
   <View
     style={
-      Array [
-        Object {
+      [
+        {
           "alignItems": "stretch",
           "display": "flex",
           "flex": 1,
@@ -30,8 +30,8 @@ exports[`AccountDetails renders without error 1`] = `
   >
     <View
       style={
-        Array [
-          Object {
+        [
+          {
             "alignItems": "center",
             "display": "flex",
             "flexDirection": "row",
@@ -42,8 +42,8 @@ exports[`AccountDetails renders without error 1`] = `
     >
       <View
         style={
-          Array [
-            Object {
+          [
+            {
               "backgroundColor": "transparent",
               "borderColor": "transparent",
               "borderRadius": 999999,
@@ -51,7 +51,7 @@ exports[`AccountDetails renders without error 1`] = `
               "display": "flex",
               "position": "relative",
             },
-            Object {
+            {
               "padding": 0,
             },
           ]
@@ -59,8 +59,8 @@ exports[`AccountDetails renders without error 1`] = `
       >
         <View
           style={
-            Array [
-              Object {
+            [
+              {
                 "display": "flex",
                 "height": 50,
                 "width": 50,
@@ -70,8 +70,8 @@ exports[`AccountDetails renders without error 1`] = `
         >
           <View
             style={
-              Array [
-                Object {
+              [
+                {
                   "display": "flex",
                   "height": 50,
                   "width": 50,
@@ -81,7 +81,7 @@ exports[`AccountDetails renders without error 1`] = `
           >
             <View
               style={
-                Object {
+                {
                   "flex": 1,
                 }
               }
@@ -91,16 +91,16 @@ exports[`AccountDetails renders without error 1`] = `
                 mask={
                   <UniconMask
                     attributeData={
-                      Object {
+                      {
                         "0": "#5CFE9D",
                         "1": "#B8C3B7",
-                        "2": Array [
-                          Object {
+                        "2": [
+                          {
                             "path": "M34 20C34 28.8366 26.8366 36 18 36C9.16344 36 2 28.8366 2 20L2 -3.8147e-06L34 -1.01717e-06V20Z",
                           },
                         ],
-                        "3": Array [
-                          Object {
+                        "3": [
+                          {
                             "fillType": "evenOdd",
                             "path": "M16 8C12.2937 6.62854 9.37146 3.70632 8 0C6.62854 3.70632 3.70632 6.62854 0 8C3.70632 9.37146 6.62854 12.2937 8 16C9.37146 12.2937 12.2937 9.37146 16 8ZM8 11C9.65685 11 11 9.65685 11 8C11 6.34315 9.65685 5 8 5C6.34315 5 5 6.34315 5 8C5 9.65685 6.34315 11 8 11Z",
                           },
@@ -114,8 +114,8 @@ exports[`AccountDetails renders without error 1`] = `
               >
                 <View
                   transform={
-                    Array [
-                      Object {
+                    [
+                      {
                         "scale": 1.3513513513513513,
                       },
                     ]
@@ -129,7 +129,7 @@ exports[`AccountDetails renders without error 1`] = `
                   >
                     <View
                       colors={
-                        Array [
+                        [
                           "#5CFE9D",
                           "#B8C3B7",
                         ]
@@ -155,16 +155,16 @@ exports[`AccountDetails renders without error 1`] = `
                 mask={
                   <UniconMask
                     attributeData={
-                      Object {
+                      {
                         "0": "#5CFE9D",
                         "1": "#B8C3B7",
-                        "2": Array [
-                          Object {
+                        "2": [
+                          {
                             "path": "M34 20C34 28.8366 26.8366 36 18 36C9.16344 36 2 28.8366 2 20L2 -3.8147e-06L34 -1.01717e-06V20Z",
                           },
                         ],
-                        "3": Array [
-                          Object {
+                        "3": [
+                          {
                             "fillType": "evenOdd",
                             "path": "M16 8C12.2937 6.62854 9.37146 3.70632 8 0C6.62854 3.70632 3.70632 6.62854 0 8C3.70632 9.37146 6.62854 12.2937 8 16C9.37146 12.2937 12.2937 9.37146 16 8ZM8 11C9.65685 11 11 9.65685 11 8C11 6.34315 9.65685 5 8 5C6.34315 5 5 6.34315 5 8C5 9.65685 6.34315 11 8 11Z",
                           },
@@ -192,8 +192,8 @@ exports[`AccountDetails renders without error 1`] = `
       </View>
       <View
         style={
-          Array [
-            Object {
+          [
+            {
               "display": "flex",
               "flexGrow": 0,
               "flexShrink": 0,
@@ -204,8 +204,8 @@ exports[`AccountDetails renders without error 1`] = `
       />
       <View
         style={
-          Array [
-            Object {
+          [
+            {
               "alignItems": "flex-start",
               "display": "flex",
               "flexShrink": 1,
@@ -215,8 +215,8 @@ exports[`AccountDetails renders without error 1`] = `
       >
         <View
           style={
-            Array [
-              Object {
+            [
+              {
                 "alignItems": "center",
                 "display": "flex",
                 "flexDirection": "row",
@@ -231,8 +231,8 @@ exports[`AccountDetails renders without error 1`] = `
             maxFontSizeMultiplier={1.4}
             numberOfLines={1}
             style={
-              Array [
-                Object {
+              [
+                {
                   "color": "#0E1524",
                   "display": "flex",
                   "fontFamily": "Inter-Medium",
@@ -251,8 +251,8 @@ exports[`AccountDetails renders without error 1`] = `
   </View>
   <View
     style={
-      Array [
-        Object {
+      [
+        {
           "display": "flex",
           "flexGrow": 0,
           "flexShrink": 0,
@@ -264,8 +264,8 @@ exports[`AccountDetails renders without error 1`] = `
   />
   <View
     style={
-      Array [
-        Object {
+      [
+        {
           "alignItems": "stretch",
           "display": "flex",
           "flex": 1,
@@ -280,8 +280,8 @@ exports[`AccountDetails renders without error 1`] = `
       allowFontScaling={true}
       maxFontSizeMultiplier={1.4}
       style={
-        Array [
-          Object {
+        [
+          {
             "color": "#5D6785",
             "display": "flex",
             "fontFamily": "Inter-Medium",
@@ -300,8 +300,8 @@ exports[`AccountDetails renders without error 1`] = `
 exports[`AccountDetails renders without error with chevron 1`] = `
 <View
   style={
-    Array [
-      Object {
+    [
+      {
         "alignItems": "center",
         "display": "flex",
         "flexDirection": "row",
@@ -313,8 +313,8 @@ exports[`AccountDetails renders without error with chevron 1`] = `
 >
   <View
     style={
-      Array [
-        Object {
+      [
+        {
           "alignItems": "stretch",
           "display": "flex",
           "flex": 1,
@@ -327,8 +327,8 @@ exports[`AccountDetails renders without error with chevron 1`] = `
   >
     <View
       style={
-        Array [
-          Object {
+        [
+          {
             "alignItems": "center",
             "display": "flex",
             "flexDirection": "row",
@@ -339,8 +339,8 @@ exports[`AccountDetails renders without error with chevron 1`] = `
     >
       <View
         style={
-          Array [
-            Object {
+          [
+            {
               "backgroundColor": "transparent",
               "borderColor": "transparent",
               "borderRadius": 999999,
@@ -348,7 +348,7 @@ exports[`AccountDetails renders without error with chevron 1`] = `
               "display": "flex",
               "position": "relative",
             },
-            Object {
+            {
               "padding": 0,
             },
           ]
@@ -356,8 +356,8 @@ exports[`AccountDetails renders without error with chevron 1`] = `
       >
         <View
           style={
-            Array [
-              Object {
+            [
+              {
                 "display": "flex",
                 "height": 50,
                 "width": 50,
@@ -367,8 +367,8 @@ exports[`AccountDetails renders without error with chevron 1`] = `
         >
           <View
             style={
-              Array [
-                Object {
+              [
+                {
                   "display": "flex",
                   "height": 50,
                   "width": 50,
@@ -378,7 +378,7 @@ exports[`AccountDetails renders without error with chevron 1`] = `
           >
             <View
               style={
-                Object {
+                {
                   "flex": 1,
                 }
               }
@@ -388,16 +388,16 @@ exports[`AccountDetails renders without error with chevron 1`] = `
                 mask={
                   <UniconMask
                     attributeData={
-                      Object {
+                      {
                         "0": "#5CFE9D",
                         "1": "#B8C3B7",
-                        "2": Array [
-                          Object {
+                        "2": [
+                          {
                             "path": "M34 20C34 28.8366 26.8366 36 18 36C9.16344 36 2 28.8366 2 20L2 -3.8147e-06L34 -1.01717e-06V20Z",
                           },
                         ],
-                        "3": Array [
-                          Object {
+                        "3": [
+                          {
                             "fillType": "evenOdd",
                             "path": "M16 8C12.2937 6.62854 9.37146 3.70632 8 0C6.62854 3.70632 3.70632 6.62854 0 8C3.70632 9.37146 6.62854 12.2937 8 16C9.37146 12.2937 12.2937 9.37146 16 8ZM8 11C9.65685 11 11 9.65685 11 8C11 6.34315 9.65685 5 8 5C6.34315 5 5 6.34315 5 8C5 9.65685 6.34315 11 8 11Z",
                           },
@@ -411,8 +411,8 @@ exports[`AccountDetails renders without error with chevron 1`] = `
               >
                 <View
                   transform={
-                    Array [
-                      Object {
+                    [
+                      {
                         "scale": 1.3513513513513513,
                       },
                     ]
@@ -426,7 +426,7 @@ exports[`AccountDetails renders without error with chevron 1`] = `
                   >
                     <View
                       colors={
-                        Array [
+                        [
                           "#5CFE9D",
                           "#B8C3B7",
                         ]
@@ -452,16 +452,16 @@ exports[`AccountDetails renders without error with chevron 1`] = `
                 mask={
                   <UniconMask
                     attributeData={
-                      Object {
+                      {
                         "0": "#5CFE9D",
                         "1": "#B8C3B7",
-                        "2": Array [
-                          Object {
+                        "2": [
+                          {
                             "path": "M34 20C34 28.8366 26.8366 36 18 36C9.16344 36 2 28.8366 2 20L2 -3.8147e-06L34 -1.01717e-06V20Z",
                           },
                         ],
-                        "3": Array [
-                          Object {
+                        "3": [
+                          {
                             "fillType": "evenOdd",
                             "path": "M16 8C12.2937 6.62854 9.37146 3.70632 8 0C6.62854 3.70632 3.70632 6.62854 0 8C3.70632 9.37146 6.62854 12.2937 8 16C9.37146 12.2937 12.2937 9.37146 16 8ZM8 11C9.65685 11 11 9.65685 11 8C11 6.34315 9.65685 5 8 5C6.34315 5 5 6.34315 5 8C5 9.65685 6.34315 11 8 11Z",
                           },
@@ -489,8 +489,8 @@ exports[`AccountDetails renders without error with chevron 1`] = `
       </View>
       <View
         style={
-          Array [
-            Object {
+          [
+            {
               "display": "flex",
               "flexGrow": 0,
               "flexShrink": 0,
@@ -501,8 +501,8 @@ exports[`AccountDetails renders without error with chevron 1`] = `
       />
       <View
         style={
-          Array [
-            Object {
+          [
+            {
               "alignItems": "flex-start",
               "display": "flex",
               "flexShrink": 1,
@@ -512,8 +512,8 @@ exports[`AccountDetails renders without error with chevron 1`] = `
       >
         <View
           style={
-            Array [
-              Object {
+            [
+              {
                 "alignItems": "center",
                 "display": "flex",
                 "flexDirection": "row",
@@ -528,8 +528,8 @@ exports[`AccountDetails renders without error with chevron 1`] = `
             maxFontSizeMultiplier={1.4}
             numberOfLines={1}
             style={
-              Array [
-                Object {
+              [
+                {
                   "color": "#0E1524",
                   "display": "flex",
                   "fontFamily": "Inter-Medium",
@@ -548,8 +548,8 @@ exports[`AccountDetails renders without error with chevron 1`] = `
   </View>
   <View
     style={
-      Array [
-        Object {
+      [
+        {
           "display": "flex",
           "flexGrow": 0,
           "flexShrink": 0,
@@ -561,8 +561,8 @@ exports[`AccountDetails renders without error with chevron 1`] = `
   />
   <View
     style={
-      Array [
-        Object {
+      [
+        {
           "alignItems": "stretch",
           "display": "flex",
           "flex": 1,
@@ -577,8 +577,8 @@ exports[`AccountDetails renders without error with chevron 1`] = `
       allowFontScaling={true}
       maxFontSizeMultiplier={1.4}
       style={
-        Array [
-          Object {
+        [
+          {
             "color": "#5D6785",
             "display": "flex",
             "fontFamily": "Inter-Medium",
@@ -592,8 +592,8 @@ exports[`AccountDetails renders without error with chevron 1`] = `
     </Text>
     <View
       style={
-        Array [
-          Object {
+        [
+          {
             "display": "flex",
             "flexGrow": 0,
             "flexShrink": 0,
@@ -605,16 +605,16 @@ exports[`AccountDetails renders without error with chevron 1`] = `
     />
     <View
       style={
-        Array [
-          Object {
+        [
+          {
             "alignItems": "center",
             "borderRadius": 999999,
             "display": "flex",
             "justifyContent": "center",
           },
-          Object {
-            "transform": Array [
-              Object {
+          {
+            "transform": [
+              {
                 "rotate": "180deg",
               },
             ],
@@ -633,12 +633,12 @@ exports[`AccountDetails renders without error with chevron 1`] = `
         minX={0}
         minY={0}
         style={
-          Array [
-            Object {
+          [
+            {
               "backgroundColor": "transparent",
               "borderWidth": 0,
             },
-            Object {
+            {
               "flex": 0,
               "height": 50,
               "width": 50,
@@ -652,7 +652,7 @@ exports[`AccountDetails renders without error with chevron 1`] = `
         <RNSVGGroup
           fill={null}
           propList={
-            Array [
+            [
               "fill",
             ]
           }
@@ -660,13 +660,13 @@ exports[`AccountDetails renders without error with chevron 1`] = `
           <RNSVGPath
             d="M15 6L9 12L15 18"
             fill={
-              Object {
+              {
                 "payload": 4278190080,
                 "type": 0,
               }
             }
             propList={
-              Array [
+              [
                 "stroke",
                 "strokeWidth",
                 "strokeLinecap",
@@ -674,7 +674,7 @@ exports[`AccountDetails renders without error with chevron 1`] = `
               ]
             }
             stroke={
-              Object {
+              {
                 "payload": 4284311429,
                 "type": 0,
               }

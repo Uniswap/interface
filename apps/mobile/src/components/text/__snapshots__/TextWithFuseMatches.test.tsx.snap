@@ -3,8 +3,8 @@
 exports[`renders text with few matches 1`] = `
 <View
   style={
-    Array [
-      Object {
+    [
+      {
         "alignItems": "stretch",
         "display": "flex",
         "flexDirection": "row",
@@ -17,8 +17,8 @@ exports[`renders text with few matches 1`] = `
     allowFontScaling={true}
     maxFontSizeMultiplier={1.4}
     style={
-      Array [
-        Object {
+      [
+        {
           "color": "#0E1524",
           "display": "flex",
           "fontFamily": "Inter-Medium",
@@ -34,8 +34,8 @@ exports[`renders text with few matches 1`] = `
     allowFontScaling={true}
     maxFontSizeMultiplier={1.4}
     style={
-      Array [
-        Object {
+      [
+        {
           "color": "#0E1524",
           "display": "flex",
           "fontFamily": "Inter-Medium",
@@ -51,8 +51,8 @@ exports[`renders text with few matches 1`] = `
     allowFontScaling={true}
     maxFontSizeMultiplier={1.4}
     style={
-      Array [
-        Object {
+      [
+        {
           "color": "#888FAB",
           "display": "flex",
           "fontFamily": "Inter-Medium",
@@ -68,8 +68,8 @@ exports[`renders text with few matches 1`] = `
     allowFontScaling={true}
     maxFontSizeMultiplier={1.4}
     style={
-      Array [
-        Object {
+      [
+        {
           "color": "#888FAB",
           "display": "flex",
           "fontFamily": "Inter-Medium",
@@ -85,8 +85,8 @@ exports[`renders text with few matches 1`] = `
     allowFontScaling={true}
     maxFontSizeMultiplier={1.4}
     style={
-      Array [
-        Object {
+      [
+        {
           "color": "#0E1524",
           "display": "flex",
           "fontFamily": "Inter-Medium",
@@ -102,8 +102,8 @@ exports[`renders text with few matches 1`] = `
     allowFontScaling={true}
     maxFontSizeMultiplier={1.4}
     style={
-      Array [
-        Object {
+      [
+        {
           "color": "#0E1524",
           "display": "flex",
           "fontFamily": "Inter-Medium",
@@ -119,8 +119,8 @@ exports[`renders text with few matches 1`] = `
     allowFontScaling={true}
     maxFontSizeMultiplier={1.4}
     style={
-      Array [
-        Object {
+      [
+        {
           "color": "#0E1524",
           "display": "flex",
           "fontFamily": "Inter-Medium",
@@ -136,8 +136,8 @@ exports[`renders text with few matches 1`] = `
     allowFontScaling={true}
     maxFontSizeMultiplier={1.4}
     style={
-      Array [
-        Object {
+      [
+        {
           "color": "#0E1524",
           "display": "flex",
           "fontFamily": "Inter-Medium",
@@ -153,8 +153,8 @@ exports[`renders text with few matches 1`] = `
     allowFontScaling={true}
     maxFontSizeMultiplier={1.4}
     style={
-      Array [
-        Object {
+      [
+        {
           "color": "#0E1524",
           "display": "flex",
           "fontFamily": "Inter-Medium",
@@ -170,8 +170,8 @@ exports[`renders text with few matches 1`] = `
     allowFontScaling={true}
     maxFontSizeMultiplier={1.4}
     style={
-      Array [
-        Object {
+      [
+        {
           "color": "#888FAB",
           "display": "flex",
           "fontFamily": "Inter-Medium",
@@ -187,8 +187,8 @@ exports[`renders text with few matches 1`] = `
     allowFontScaling={true}
     maxFontSizeMultiplier={1.4}
     style={
-      Array [
-        Object {
+      [
+        {
           "color": "#888FAB",
           "display": "flex",
           "fontFamily": "Inter-Medium",
@@ -204,8 +204,8 @@ exports[`renders text with few matches 1`] = `
     allowFontScaling={true}
     maxFontSizeMultiplier={1.4}
     style={
-      Array [
-        Object {
+      [
+        {
           "color": "#888FAB",
           "display": "flex",
           "fontFamily": "Inter-Medium",
@@ -221,8 +221,8 @@ exports[`renders text with few matches 1`] = `
     allowFontScaling={true}
     maxFontSizeMultiplier={1.4}
     style={
-      Array [
-        Object {
+      [
+        {
           "color": "#888FAB",
           "display": "flex",
           "fontFamily": "Inter-Medium",
@@ -238,8 +238,8 @@ exports[`renders text with few matches 1`] = `
     allowFontScaling={true}
     maxFontSizeMultiplier={1.4}
     style={
-      Array [
-        Object {
+      [
+        {
           "color": "#888FAB",
           "display": "flex",
           "fontFamily": "Inter-Medium",
@@ -255,8 +255,8 @@ exports[`renders text with few matches 1`] = `
     allowFontScaling={true}
     maxFontSizeMultiplier={1.4}
     style={
-      Array [
-        Object {
+      [
+        {
           "color": "#888FAB",
           "display": "flex",
           "fontFamily": "Inter-Medium",
@@ -272,8 +272,8 @@ exports[`renders text with few matches 1`] = `
     allowFontScaling={true}
     maxFontSizeMultiplier={1.4}
     style={
-      Array [
-        Object {
+      [
+        {
           "color": "#888FAB",
           "display": "flex",
           "fontFamily": "Inter-Medium",
@@ -289,8 +289,8 @@ exports[`renders text with few matches 1`] = `
     allowFontScaling={true}
     maxFontSizeMultiplier={1.4}
     style={
-      Array [
-        Object {
+      [
+        {
           "color": "#888FAB",
           "display": "flex",
           "fontFamily": "Inter-Medium",
@@ -306,8 +306,8 @@ exports[`renders text with few matches 1`] = `
     allowFontScaling={true}
     maxFontSizeMultiplier={1.4}
     style={
-      Array [
-        Object {
+      [
+        {
           "color": "#888FAB",
           "display": "flex",
           "fontFamily": "Inter-Medium",
@@ -323,8 +323,8 @@ exports[`renders text with few matches 1`] = `
     allowFontScaling={true}
     maxFontSizeMultiplier={1.4}
     style={
-      Array [
-        Object {
+      [
+        {
           "color": "#888FAB",
           "display": "flex",
           "fontFamily": "Inter-Medium",
@@ -340,8 +340,8 @@ exports[`renders text with few matches 1`] = `
     allowFontScaling={true}
     maxFontSizeMultiplier={1.4}
     style={
-      Array [
-        Object {
+      [
+        {
           "color": "#888FAB",
           "display": "flex",
           "fontFamily": "Inter-Medium",
@@ -357,8 +357,8 @@ exports[`renders text with few matches 1`] = `
     allowFontScaling={true}
     maxFontSizeMultiplier={1.4}
     style={
-      Array [
-        Object {
+      [
+        {
           "color": "#888FAB",
           "display": "flex",
           "fontFamily": "Inter-Medium",
@@ -374,8 +374,8 @@ exports[`renders text with few matches 1`] = `
     allowFontScaling={true}
     maxFontSizeMultiplier={1.4}
     style={
-      Array [
-        Object {
+      [
+        {
           "color": "#888FAB",
           "display": "flex",
           "fontFamily": "Inter-Medium",
@@ -396,8 +396,8 @@ exports[`renders text without matches 1`] = `
   maxFontSizeMultiplier={1.4}
   numberOfLines={1}
   style={
-    Array [
-      Object {
+    [
+      {
         "color": "#0E1524",
         "display": "flex",
         "fontFamily": "Inter-Medium",

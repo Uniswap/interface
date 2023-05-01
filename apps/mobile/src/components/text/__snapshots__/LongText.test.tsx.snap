@@ -3,8 +3,8 @@
 exports[`renders a LongText 1`] = `
 <View
   style={
-    Array [
-      Object {
+    [
+      {
         "alignItems": "stretch",
         "display": "flex",
         "flexDirection": "column",
@@ -20,15 +20,15 @@ exports[`renders a LongText 1`] = `
     onLayout={[Function]}
     onTextLayout={[Function]}
     style={
-      Array [
-        Object {
+      [
+        {
           "color": "#0E1524",
           "display": "flex",
           "fontFamily": "Inter-Regular",
           "fontSize": 15,
           "lineHeight": 20,
         },
-        Object {
+        {
           "color": "#0E1524",
         },
       ]

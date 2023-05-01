@@ -3,8 +3,8 @@
 exports[`SearchPopularTokens renders without error 1`] = `
 <View
   style={
-    Array [
-      Object {
+    [
+      {
         "display": "flex",
         "padding": 8,
       },
@@ -16,8 +16,8 @@ exports[`SearchPopularTokens renders without error 1`] = `
   >
     <View
       style={
-        Array [
-          Object {
+        [
+          {
             "alignItems": "stretch",
             "display": "flex",
             "flexDirection": "column",
@@ -29,8 +29,8 @@ exports[`SearchPopularTokens renders without error 1`] = `
     >
       <View
         style={
-          Array [
-            Object {
+          [
+            {
               "alignItems": "flex-start",
               "display": "flex",
               "flexDirection": "row",
@@ -44,8 +44,8 @@ exports[`SearchPopularTokens renders without error 1`] = `
       >
         <View
           style={
-            Array [
-              Object {
+            [
+              {
                 "alignItems": "center",
                 "display": "flex",
                 "flexDirection": "row",
@@ -58,8 +58,8 @@ exports[`SearchPopularTokens renders without error 1`] = `
         >
           <View
             style={
-              Array [
-                Object {
+              [
+                {
                   "backgroundColor": "#E8ECFB",
                   "borderRadius": 999999,
                   "display": "flex",
@@ -71,8 +71,8 @@ exports[`SearchPopularTokens renders without error 1`] = `
           />
           <View
             style={
-              Array [
-                Object {
+              [
+                {
                   "display": "flex",
                   "flexGrow": 0,
                   "flexShrink": 0,
@@ -84,8 +84,8 @@ exports[`SearchPopularTokens renders without error 1`] = `
           />
           <View
             style={
-              Array [
-                Object {
+              [
+                {
                   "alignItems": "flex-start",
                   "display": "flex",
                   "flexDirection": "column",
@@ -97,8 +97,8 @@ exports[`SearchPopularTokens renders without error 1`] = `
           >
             <View
               style={
-                Array [
-                  Object {
+                [
+                  {
                     "alignItems": "center",
                     "display": "flex",
                     "flexDirection": "row",
@@ -108,8 +108,8 @@ exports[`SearchPopularTokens renders without error 1`] = `
             >
               <View
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "alignItems": "center",
                       "display": "flex",
                       "flexDirection": "row",
@@ -127,8 +127,8 @@ exports[`SearchPopularTokens renders without error 1`] = `
                     maxFontSizeMultiplier={1.4}
                     numberOfLines={1}
                     style={
-                      Array [
-                        Object {
+                      [
+                        {
                           "color": "transparent",
                           "display": "flex",
                           "fontFamily": "Inter-Medium",
@@ -144,8 +144,8 @@ exports[`SearchPopularTokens renders without error 1`] = `
                 </View>
                 <View
                   style={
-                    Array [
-                      Object {
+                    [
+                      {
                         "backgroundColor": "#E8ECFB",
                         "borderRadius": 4,
                         "bottom": "5%",
@@ -162,8 +162,8 @@ exports[`SearchPopularTokens renders without error 1`] = `
             </View>
             <View
               style={
-                Array [
-                  Object {
+                [
+                  {
                     "display": "flex",
                     "flexGrow": 0,
                     "flexShrink": 0,
@@ -174,8 +174,8 @@ exports[`SearchPopularTokens renders without error 1`] = `
             />
             <View
               style={
-                Array [
-                  Object {
+                [
+                  {
                     "alignItems": "center",
                     "display": "flex",
                     "flexDirection": "row",
@@ -187,8 +187,8 @@ exports[`SearchPopularTokens renders without error 1`] = `
             >
               <View
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "alignItems": "center",
                       "display": "flex",
                       "flexDirection": "row",
@@ -198,8 +198,8 @@ exports[`SearchPopularTokens renders without error 1`] = `
               >
                 <View
                   style={
-                    Array [
-                      Object {
+                    [
+                      {
                         "alignItems": "center",
                         "display": "flex",
                         "flexDirection": "row",
@@ -217,8 +217,8 @@ exports[`SearchPopularTokens renders without error 1`] = `
                       maxFontSizeMultiplier={1.4}
                       numberOfLines={1}
                       style={
-                        Array [
-                          Object {
+                        [
+                          {
                             "color": "transparent",
                             "display": "flex",
                             "fontFamily": "Inter-Medium",
@@ -234,8 +234,8 @@ exports[`SearchPopularTokens renders without error 1`] = `
                   </View>
                   <View
                     style={
-                      Array [
-                        Object {
+                      [
+                        {
                           "backgroundColor": "#E8ECFB",
                           "borderRadius": 4,
                           "bottom": "5%",
@@ -256,8 +256,8 @@ exports[`SearchPopularTokens renders without error 1`] = `
       </View>
       <View
         style={
-          Array [
-            Object {
+          [
+            {
               "display": "flex",
               "flexGrow": 0,
               "flexShrink": 0,
@@ -268,8 +268,8 @@ exports[`SearchPopularTokens renders without error 1`] = `
       />
       <View
         style={
-          Array [
-            Object {
+          [
+            {
               "alignItems": "flex-start",
               "display": "flex",
               "flexDirection": "row",
@@ -283,8 +283,8 @@ exports[`SearchPopularTokens renders without error 1`] = `
       >
         <View
           style={
-            Array [
-              Object {
+            [
+              {
                 "alignItems": "center",
                 "display": "flex",
                 "flexDirection": "row",
@@ -297,8 +297,8 @@ exports[`SearchPopularTokens renders without error 1`] = `
         >
           <View
             style={
-              Array [
-                Object {
+              [
+                {
                   "backgroundColor": "#E8ECFB",
                   "borderRadius": 999999,
                   "display": "flex",
@@ -310,8 +310,8 @@ exports[`SearchPopularTokens renders without error 1`] = `
           />
           <View
             style={
-              Array [
-                Object {
+              [
+                {
                   "display": "flex",
                   "flexGrow": 0,
                   "flexShrink": 0,
@@ -323,8 +323,8 @@ exports[`SearchPopularTokens renders without error 1`] = `
           />
           <View
             style={
-              Array [
-                Object {
+              [
+                {
                   "alignItems": "flex-start",
                   "display": "flex",
                   "flexDirection": "column",
@@ -336,8 +336,8 @@ exports[`SearchPopularTokens renders without error 1`] = `
           >
             <View
               style={
-                Array [
-                  Object {
+                [
+                  {
                     "alignItems": "center",
                     "display": "flex",
                     "flexDirection": "row",
@@ -347,8 +347,8 @@ exports[`SearchPopularTokens renders without error 1`] = `
             >
               <View
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "alignItems": "center",
                       "display": "flex",
                       "flexDirection": "row",
@@ -366,8 +366,8 @@ exports[`SearchPopularTokens renders without error 1`] = `
                     maxFontSizeMultiplier={1.4}
                     numberOfLines={1}
                     style={
-                      Array [
-                        Object {
+                      [
+                        {
                           "color": "transparent",
                           "display": "flex",
                           "fontFamily": "Inter-Medium",
@@ -383,8 +383,8 @@ exports[`SearchPopularTokens renders without error 1`] = `
                 </View>
                 <View
                   style={
-                    Array [
-                      Object {
+                    [
+                      {
                         "backgroundColor": "#E8ECFB",
                         "borderRadius": 4,
                         "bottom": "5%",
@@ -401,8 +401,8 @@ exports[`SearchPopularTokens renders without error 1`] = `
             </View>
             <View
               style={
-                Array [
-                  Object {
+                [
+                  {
                     "display": "flex",
                     "flexGrow": 0,
                     "flexShrink": 0,
@@ -413,8 +413,8 @@ exports[`SearchPopularTokens renders without error 1`] = `
             />
             <View
               style={
-                Array [
-                  Object {
+                [
+                  {
                     "alignItems": "center",
                     "display": "flex",
                     "flexDirection": "row",
@@ -426,8 +426,8 @@ exports[`SearchPopularTokens renders without error 1`] = `
             >
               <View
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "alignItems": "center",
                       "display": "flex",
                       "flexDirection": "row",
@@ -437,8 +437,8 @@ exports[`SearchPopularTokens renders without error 1`] = `
               >
                 <View
                   style={
-                    Array [
-                      Object {
+                    [
+                      {
                         "alignItems": "center",
                         "display": "flex",
                         "flexDirection": "row",
@@ -456,8 +456,8 @@ exports[`SearchPopularTokens renders without error 1`] = `
                       maxFontSizeMultiplier={1.4}
                       numberOfLines={1}
                       style={
-                        Array [
-                          Object {
+                        [
+                          {
                             "color": "transparent",
                             "display": "flex",
                             "fontFamily": "Inter-Medium",
@@ -473,8 +473,8 @@ exports[`SearchPopularTokens renders without error 1`] = `
                   </View>
                   <View
                     style={
-                      Array [
-                        Object {
+                      [
+                        {
                           "backgroundColor": "#E8ECFB",
                           "borderRadius": 4,
                           "bottom": "5%",
@@ -501,8 +501,8 @@ exports[`SearchPopularTokens renders without error 1`] = `
 exports[`SearchPopularTokens renders without error 2`] = `
 <RCTScrollView
   data={
-    Array [
-      Object {
+    [
+      {
         "address": null,
         "chainId": 1,
         "logoUrl": "ethlogo.png",
@@ -510,7 +510,7 @@ exports[`SearchPopularTokens renders without error 2`] = `
         "symbol": "ETH",
         "type": 1,
       },
-      Object {
+      {
         "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
         "chainId": 1,
         "logoUrl": "wbtclogo.png",
@@ -518,7 +518,7 @@ exports[`SearchPopularTokens renders without error 2`] = `
         "symbol": "WBTC",
         "type": 1,
       },
-      Object {
+      {
         "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
         "chainId": 1,
         "logoUrl": "usdclogo.png",
@@ -542,8 +542,8 @@ exports[`SearchPopularTokens renders without error 2`] = `
   removeClippedSubviews={false}
   renderItem={[Function]}
   scrollEventThrottle={50}
-  stickyHeaderIndices={Array []}
-  viewabilityConfigCallbackPairs={Array []}
+  stickyHeaderIndices={[]}
+  viewabilityConfigCallbackPairs={[]}
 >
   <View>
     <View
@@ -555,7 +555,7 @@ exports[`SearchPopularTokens renders without error 2`] = `
         collapsable={false}
         focusable={true}
         hitSlop={
-          Object {
+          {
             "bottom": 5,
             "left": 5,
             "right": 5,
@@ -570,7 +570,7 @@ exports[`SearchPopularTokens renders without error 2`] = `
         onResponderTerminationRequest={[Function]}
         onStartShouldSetResponder={[Function]}
         style={
-          Object {
+          {
             "display": "flex",
             "opacity": 1,
           }
@@ -579,8 +579,8 @@ exports[`SearchPopularTokens renders without error 2`] = `
       >
         <View
           style={
-            Array [
-              Object {
+            [
+              {
                 "alignItems": "center",
                 "display": "flex",
                 "flexDirection": "row",
@@ -593,8 +593,8 @@ exports[`SearchPopularTokens renders without error 2`] = `
         >
           <View
             style={
-              Array [
-                Object {
+              [
+                {
                   "alignItems": "center",
                   "display": "flex",
                   "height": 40,
@@ -606,16 +606,16 @@ exports[`SearchPopularTokens renders without error 2`] = `
           >
             <Image
               source={
-                Object {
+                {
                   "uri": "ethlogo.png",
                 }
               }
               style={
-                Array [
-                  Object {
+                [
+                  {
                     "resizeMode": "contain",
                   },
-                  Object {
+                  {
                     "backgroundColor": "#D2D9EE",
                     "borderColor": "#D2D9EE",
                     "borderRadius": 20,
@@ -629,8 +629,8 @@ exports[`SearchPopularTokens renders without error 2`] = `
           </View>
           <View
             style={
-              Array [
-                Object {
+              [
+                {
                   "display": "flex",
                   "flexGrow": 0,
                   "flexShrink": 0,
@@ -642,8 +642,8 @@ exports[`SearchPopularTokens renders without error 2`] = `
           />
           <View
             style={
-              Array [
-                Object {
+              [
+                {
                   "alignItems": "stretch",
                   "display": "flex",
                   "flexDirection": "column",
@@ -654,8 +654,8 @@ exports[`SearchPopularTokens renders without error 2`] = `
           >
             <View
               style={
-                Array [
-                  Object {
+                [
+                  {
                     "alignItems": "center",
                     "display": "flex",
                     "flexDirection": "row",
@@ -668,8 +668,8 @@ exports[`SearchPopularTokens renders without error 2`] = `
                 allowFontScaling={true}
                 maxFontSizeMultiplier={1.4}
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "color": "#0E1524",
                       "display": "flex",
                       "fontFamily": "Inter-Medium",
@@ -684,8 +684,8 @@ exports[`SearchPopularTokens renders without error 2`] = `
             </View>
             <View
               style={
-                Array [
-                  Object {
+                [
+                  {
                     "display": "flex",
                     "flexGrow": 0,
                     "flexShrink": 0,
@@ -698,8 +698,8 @@ exports[`SearchPopularTokens renders without error 2`] = `
               allowFontScaling={true}
               maxFontSizeMultiplier={1.4}
               style={
-                Array [
-                  Object {
+                [
+                  {
                     "color": "#5D6785",
                     "display": "flex",
                     "fontFamily": "Inter-Medium",
@@ -724,7 +724,7 @@ exports[`SearchPopularTokens renders without error 2`] = `
         collapsable={false}
         focusable={true}
         hitSlop={
-          Object {
+          {
             "bottom": 5,
             "left": 5,
             "right": 5,
@@ -739,7 +739,7 @@ exports[`SearchPopularTokens renders without error 2`] = `
         onResponderTerminationRequest={[Function]}
         onStartShouldSetResponder={[Function]}
         style={
-          Object {
+          {
             "display": "flex",
             "opacity": 1,
           }
@@ -748,8 +748,8 @@ exports[`SearchPopularTokens renders without error 2`] = `
       >
         <View
           style={
-            Array [
-              Object {
+            [
+              {
                 "alignItems": "center",
                 "display": "flex",
                 "flexDirection": "row",
@@ -762,8 +762,8 @@ exports[`SearchPopularTokens renders without error 2`] = `
         >
           <View
             style={
-              Array [
-                Object {
+              [
+                {
                   "alignItems": "center",
                   "display": "flex",
                   "height": 40,
@@ -775,16 +775,16 @@ exports[`SearchPopularTokens renders without error 2`] = `
           >
             <Image
               source={
-                Object {
+                {
                   "uri": "wbtclogo.png",
                 }
               }
               style={
-                Array [
-                  Object {
+                [
+                  {
                     "resizeMode": "contain",
                   },
-                  Object {
+                  {
                     "backgroundColor": "#D2D9EE",
                     "borderColor": "#D2D9EE",
                     "borderRadius": 20,
@@ -798,8 +798,8 @@ exports[`SearchPopularTokens renders without error 2`] = `
           </View>
           <View
             style={
-              Array [
-                Object {
+              [
+                {
                   "display": "flex",
                   "flexGrow": 0,
                   "flexShrink": 0,
@@ -811,8 +811,8 @@ exports[`SearchPopularTokens renders without error 2`] = `
           />
           <View
             style={
-              Array [
-                Object {
+              [
+                {
                   "alignItems": "stretch",
                   "display": "flex",
                   "flexDirection": "column",
@@ -823,8 +823,8 @@ exports[`SearchPopularTokens renders without error 2`] = `
           >
             <View
               style={
-                Array [
-                  Object {
+                [
+                  {
                     "alignItems": "center",
                     "display": "flex",
                     "flexDirection": "row",
@@ -837,8 +837,8 @@ exports[`SearchPopularTokens renders without error 2`] = `
                 allowFontScaling={true}
                 maxFontSizeMultiplier={1.4}
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "color": "#0E1524",
                       "display": "flex",
                       "fontFamily": "Inter-Medium",
@@ -853,8 +853,8 @@ exports[`SearchPopularTokens renders without error 2`] = `
             </View>
             <View
               style={
-                Array [
-                  Object {
+                [
+                  {
                     "display": "flex",
                     "flexGrow": 0,
                     "flexShrink": 0,
@@ -867,8 +867,8 @@ exports[`SearchPopularTokens renders without error 2`] = `
               allowFontScaling={true}
               maxFontSizeMultiplier={1.4}
               style={
-                Array [
-                  Object {
+                [
+                  {
                     "color": "#5D6785",
                     "display": "flex",
                     "fontFamily": "Inter-Medium",
@@ -893,7 +893,7 @@ exports[`SearchPopularTokens renders without error 2`] = `
         collapsable={false}
         focusable={true}
         hitSlop={
-          Object {
+          {
             "bottom": 5,
             "left": 5,
             "right": 5,
@@ -908,7 +908,7 @@ exports[`SearchPopularTokens renders without error 2`] = `
         onResponderTerminationRequest={[Function]}
         onStartShouldSetResponder={[Function]}
         style={
-          Object {
+          {
             "display": "flex",
             "opacity": 1,
           }
@@ -917,8 +917,8 @@ exports[`SearchPopularTokens renders without error 2`] = `
       >
         <View
           style={
-            Array [
-              Object {
+            [
+              {
                 "alignItems": "center",
                 "display": "flex",
                 "flexDirection": "row",
@@ -931,8 +931,8 @@ exports[`SearchPopularTokens renders without error 2`] = `
         >
           <View
             style={
-              Array [
-                Object {
+              [
+                {
                   "alignItems": "center",
                   "display": "flex",
                   "height": 40,
@@ -944,16 +944,16 @@ exports[`SearchPopularTokens renders without error 2`] = `
           >
             <Image
               source={
-                Object {
+                {
                   "uri": "usdclogo.png",
                 }
               }
               style={
-                Array [
-                  Object {
+                [
+                  {
                     "resizeMode": "contain",
                   },
-                  Object {
+                  {
                     "backgroundColor": "#D2D9EE",
                     "borderColor": "#D2D9EE",
                     "borderRadius": 20,
@@ -967,8 +967,8 @@ exports[`SearchPopularTokens renders without error 2`] = `
           </View>
           <View
             style={
-              Array [
-                Object {
+              [
+                {
                   "display": "flex",
                   "flexGrow": 0,
                   "flexShrink": 0,
@@ -980,8 +980,8 @@ exports[`SearchPopularTokens renders without error 2`] = `
           />
           <View
             style={
-              Array [
-                Object {
+              [
+                {
                   "alignItems": "stretch",
                   "display": "flex",
                   "flexDirection": "column",
@@ -992,8 +992,8 @@ exports[`SearchPopularTokens renders without error 2`] = `
           >
             <View
               style={
-                Array [
-                  Object {
+                [
+                  {
                     "alignItems": "center",
                     "display": "flex",
                     "flexDirection": "row",
@@ -1006,8 +1006,8 @@ exports[`SearchPopularTokens renders without error 2`] = `
                 allowFontScaling={true}
                 maxFontSizeMultiplier={1.4}
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "color": "#0E1524",
                       "display": "flex",
                       "fontFamily": "Inter-Medium",
@@ -1022,8 +1022,8 @@ exports[`SearchPopularTokens renders without error 2`] = `
             </View>
             <View
               style={
-                Array [
-                  Object {
+                [
+                  {
                     "display": "flex",
                     "flexGrow": 0,
                     "flexShrink": 0,
@@ -1036,8 +1036,8 @@ exports[`SearchPopularTokens renders without error 2`] = `
               allowFontScaling={true}
               maxFontSizeMultiplier={1.4}
               style={
-                Array [
-                  Object {
+                [
+                  {
                     "color": "#5D6785",
                     "display": "flex",
                     "fontFamily": "Inter-Medium",

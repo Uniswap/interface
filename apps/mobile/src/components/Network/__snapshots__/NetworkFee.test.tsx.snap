@@ -3,8 +3,8 @@
 exports[`NetworkFee renders a NetworkFee in a loading state 1`] = `
 <View
   style={
-    Array [
-      Object {
+    [
+      {
         "alignItems": "center",
         "display": "flex",
         "flexDirection": "row",
@@ -17,8 +17,8 @@ exports[`NetworkFee renders a NetworkFee in a loading state 1`] = `
     allowFontScaling={true}
     maxFontSizeMultiplier={1.4}
     style={
-      Array [
-        Object {
+      [
+        {
           "color": "#0E1524",
           "display": "flex",
           "fontFamily": "Inter-Medium",
@@ -32,8 +32,8 @@ exports[`NetworkFee renders a NetworkFee in a loading state 1`] = `
   </Text>
   <View
     style={
-      Array [
-        Object {
+      [
+        {
           "display": "flex",
           "flexGrow": 0,
           "flexShrink": 0,
@@ -45,8 +45,8 @@ exports[`NetworkFee renders a NetworkFee in a loading state 1`] = `
   />
   <View
     style={
-      Array [
-        Object {
+      [
+        {
           "alignItems": "center",
           "display": "flex",
           "flexDirection": "row",
@@ -57,8 +57,8 @@ exports[`NetworkFee renders a NetworkFee in a loading state 1`] = `
   >
     <View
       style={
-        Array [
-          Object {
+        [
+          {
             "alignItems": "center",
             "borderColor": "transparent",
             "borderRadius": 12,
@@ -69,7 +69,7 @@ exports[`NetworkFee renders a NetworkFee in a loading state 1`] = `
             "paddingHorizontal": 8,
             "paddingVertical": 2,
           },
-          Object {
+          {
             "backgroundColor": "#3939391a",
             "borderColor": "transparent",
           },
@@ -80,15 +80,15 @@ exports[`NetworkFee renders a NetworkFee in a loading state 1`] = `
         allowFontScaling={true}
         maxFontSizeMultiplier={1.2}
         style={
-          Array [
-            Object {
+          [
+            {
               "color": "#0E1524",
               "display": "flex",
               "fontFamily": "Inter-SemiBold",
               "fontSize": 12,
               "lineHeight": 17,
             },
-            Object {
+            {
               "color": "#393939",
             },
           ]
@@ -99,8 +99,8 @@ exports[`NetworkFee renders a NetworkFee in a loading state 1`] = `
     </View>
     <View
       style={
-        Array [
-          Object {
+        [
+          {
             "display": "flex",
             "flexGrow": 0,
             "flexShrink": 0,
@@ -114,8 +114,8 @@ exports[`NetworkFee renders a NetworkFee in a loading state 1`] = `
       allowFontScaling={true}
       maxFontSizeMultiplier={1.4}
       style={
-        Array [
-          Object {
+        [
+          {
             "color": "#0E1524",
             "display": "flex",
             "fontFamily": "Inter-Medium",
@@ -129,8 +129,8 @@ exports[`NetworkFee renders a NetworkFee in a loading state 1`] = `
     </Text>
     <View
       style={
-        Array [
-          Object {
+        [
+          {
             "display": "flex",
             "flexGrow": 0,
             "flexShrink": 0,
@@ -142,14 +142,14 @@ exports[`NetworkFee renders a NetworkFee in a loading state 1`] = `
     />
     <View
       style={
-        Array [
-          Object {
+        [
+          {
             "display": "flex",
           },
-          Array [
-            Object {
-              "transform": Array [
-                Object {
+          [
+            {
+              "transform": [
+                {
                   "rotateZ": "0deg",
                 },
               ],
@@ -172,8 +172,8 @@ exports[`NetworkFee renders a NetworkFee in a loading state 1`] = `
 exports[`NetworkFee renders a NetworkFee normally 1`] = `
 <View
   style={
-    Array [
-      Object {
+    [
+      {
         "alignItems": "center",
         "display": "flex",
         "flexDirection": "row",
@@ -186,8 +186,8 @@ exports[`NetworkFee renders a NetworkFee normally 1`] = `
     allowFontScaling={true}
     maxFontSizeMultiplier={1.4}
     style={
-      Array [
-        Object {
+      [
+        {
           "color": "#0E1524",
           "display": "flex",
           "fontFamily": "Inter-Medium",
@@ -201,8 +201,8 @@ exports[`NetworkFee renders a NetworkFee normally 1`] = `
   </Text>
   <View
     style={
-      Array [
-        Object {
+      [
+        {
           "display": "flex",
           "flexGrow": 0,
           "flexShrink": 0,
@@ -214,8 +214,8 @@ exports[`NetworkFee renders a NetworkFee normally 1`] = `
   />
   <View
     style={
-      Array [
-        Object {
+      [
+        {
           "alignItems": "center",
           "display": "flex",
           "flexDirection": "row",
@@ -226,8 +226,8 @@ exports[`NetworkFee renders a NetworkFee normally 1`] = `
   >
     <View
       style={
-        Array [
-          Object {
+        [
+          {
             "alignItems": "center",
             "borderColor": "transparent",
             "borderRadius": 12,
@@ -238,7 +238,7 @@ exports[`NetworkFee renders a NetworkFee normally 1`] = `
             "paddingHorizontal": 8,
             "paddingVertical": 2,
           },
-          Object {
+          {
             "backgroundColor": "#3939391a",
             "borderColor": "transparent",
           },
@@ -249,15 +249,15 @@ exports[`NetworkFee renders a NetworkFee normally 1`] = `
         allowFontScaling={true}
         maxFontSizeMultiplier={1.2}
         style={
-          Array [
-            Object {
+          [
+            {
               "color": "#0E1524",
               "display": "flex",
               "fontFamily": "Inter-SemiBold",
               "fontSize": 12,
               "lineHeight": 17,
             },
-            Object {
+            {
               "color": "#393939",
             },
           ]
@@ -268,8 +268,8 @@ exports[`NetworkFee renders a NetworkFee normally 1`] = `
     </View>
     <View
       style={
-        Array [
-          Object {
+        [
+          {
             "display": "flex",
             "flexGrow": 0,
             "flexShrink": 0,
@@ -283,8 +283,8 @@ exports[`NetworkFee renders a NetworkFee normally 1`] = `
       allowFontScaling={true}
       maxFontSizeMultiplier={1.4}
       style={
-        Array [
-          Object {
+        [
+          {
             "color": "#0E1524",
             "display": "flex",
             "fontFamily": "Inter-Medium",
@@ -298,8 +298,8 @@ exports[`NetworkFee renders a NetworkFee normally 1`] = `
     </Text>
     <View
       style={
-        Array [
-          Object {
+        [
+          {
             "display": "flex",
             "flexGrow": 0,
             "flexShrink": 0,
@@ -311,14 +311,14 @@ exports[`NetworkFee renders a NetworkFee normally 1`] = `
     />
     <View
       style={
-        Array [
-          Object {
+        [
+          {
             "display": "flex",
           },
-          Array [
-            Object {
-              "transform": Array [
-                Object {
+          [
+            {
+              "transform": [
+                {
                   "rotateZ": "0deg",
                 },
               ],
@@ -341,8 +341,8 @@ exports[`NetworkFee renders a NetworkFee normally 1`] = `
 exports[`NetworkFee renders a NetworkFee with a warning 1`] = `
 <View
   style={
-    Array [
-      Object {
+    [
+      {
         "alignItems": "center",
         "display": "flex",
         "flexDirection": "row",
@@ -355,8 +355,8 @@ exports[`NetworkFee renders a NetworkFee with a warning 1`] = `
     allowFontScaling={true}
     maxFontSizeMultiplier={1.4}
     style={
-      Array [
-        Object {
+      [
+        {
           "color": "#0E1524",
           "display": "flex",
           "fontFamily": "Inter-Medium",
@@ -370,8 +370,8 @@ exports[`NetworkFee renders a NetworkFee with a warning 1`] = `
   </Text>
   <View
     style={
-      Array [
-        Object {
+      [
+        {
           "display": "flex",
           "flexGrow": 0,
           "flexShrink": 0,
@@ -383,8 +383,8 @@ exports[`NetworkFee renders a NetworkFee with a warning 1`] = `
   />
   <View
     style={
-      Array [
-        Object {
+      [
+        {
           "alignItems": "center",
           "display": "flex",
           "flexDirection": "row",
@@ -395,8 +395,8 @@ exports[`NetworkFee renders a NetworkFee with a warning 1`] = `
   >
     <View
       style={
-        Array [
-          Object {
+        [
+          {
             "alignItems": "center",
             "borderColor": "transparent",
             "borderRadius": 12,
@@ -407,7 +407,7 @@ exports[`NetworkFee renders a NetworkFee with a warning 1`] = `
             "paddingHorizontal": 8,
             "paddingVertical": 2,
           },
-          Object {
+          {
             "backgroundColor": "#3939391a",
             "borderColor": "transparent",
           },
@@ -418,15 +418,15 @@ exports[`NetworkFee renders a NetworkFee with a warning 1`] = `
         allowFontScaling={true}
         maxFontSizeMultiplier={1.2}
         style={
-          Array [
-            Object {
+          [
+            {
               "color": "#0E1524",
               "display": "flex",
               "fontFamily": "Inter-SemiBold",
               "fontSize": 12,
               "lineHeight": 17,
             },
-            Object {
+            {
               "color": "#393939",
             },
           ]
@@ -437,8 +437,8 @@ exports[`NetworkFee renders a NetworkFee with a warning 1`] = `
     </View>
     <View
       style={
-        Array [
-          Object {
+        [
+          {
             "display": "flex",
             "flexGrow": 0,
             "flexShrink": 0,
@@ -452,8 +452,8 @@ exports[`NetworkFee renders a NetworkFee with a warning 1`] = `
       allowFontScaling={true}
       maxFontSizeMultiplier={1.4}
       style={
-        Array [
-          Object {
+        [
+          {
             "color": "#0E1524",
             "display": "flex",
             "fontFamily": "Inter-Medium",
@@ -467,8 +467,8 @@ exports[`NetworkFee renders a NetworkFee with a warning 1`] = `
     </Text>
     <View
       style={
-        Array [
-          Object {
+        [
+          {
             "display": "flex",
             "flexGrow": 0,
             "flexShrink": 0,
@@ -480,14 +480,14 @@ exports[`NetworkFee renders a NetworkFee with a warning 1`] = `
     />
     <View
       style={
-        Array [
-          Object {
+        [
+          {
             "display": "flex",
           },
-          Array [
-            Object {
-              "transform": Array [
-                Object {
+          [
+            {
+              "transform": [
+                {
                   "rotateZ": "0deg",
                 },
               ],

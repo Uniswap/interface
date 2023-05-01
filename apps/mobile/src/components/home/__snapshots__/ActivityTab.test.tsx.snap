@@ -3,15 +3,15 @@
 exports[`ActivityTab renders without error 1`] = `
 <View
   style={
-    Array [
-      Object {
+    [
+      {
         "alignItems": "stretch",
         "display": "flex",
         "flexDirection": "column",
         "flexGrow": 1,
         "justifyContent": "flex-start",
       },
-      Object {
+      {
         "paddingHorizontal": 24,
       },
     ]
@@ -19,7 +19,7 @@ exports[`ActivityTab renders without error 1`] = `
 >
   <View
     style={
-      Object {
+      {
         "flex": 1,
       }
     }
@@ -39,7 +39,7 @@ exports[`ActivityTab renders without error 1`] = `
       applyWindowCorrection={[Function]}
       canChangeSize={true}
       contentContainerStyle={
-        Object {
+        {
           "backgroundColor": undefined,
           "minHeight": 1,
           "minWidth": 1,
@@ -48,20 +48,20 @@ exports[`ActivityTab renders without error 1`] = `
       contentHeight={0}
       contentWidth={0}
       data={
-        Array [
-          Object {
+        [
+          {
             "id": 1,
             "itemType": "LOADING",
           },
-          Object {
+          {
             "id": 2,
             "itemType": "LOADING",
           },
-          Object {
+          {
             "id": 3,
             "itemType": "LOADING",
           },
-          Object {
+          {
             "id": 4,
             "itemType": "LOADING",
           },
@@ -69,20 +69,20 @@ exports[`ActivityTab renders without error 1`] = `
       }
       dataProvider={
         DataProvider {
-          "_data": Array [
-            Object {
+          "_data": [
+            {
               "id": 1,
               "itemType": "LOADING",
             },
-            Object {
+            {
               "id": 2,
               "itemType": "LOADING",
             },
-            Object {
+            {
               "id": 3,
               "itemType": "LOADING",
             },
-            Object {
+            {
               "id": 4,
               "itemType": "LOADING",
             },
@@ -97,7 +97,7 @@ exports[`ActivityTab renders without error 1`] = `
       }
       disableRecycling={false}
       estimatedItemSize={92}
-      extendedState={Object {}}
+      extendedState={{}}
       externalScrollView={[Function]}
       finalRenderAheadOffset={250}
       forceNonDeterministicRendering={true}
@@ -115,24 +115,24 @@ exports[`ActivityTab renders without error 1`] = `
           "_getSpan": [Function],
           "_maxSpan": 1,
           "_setLayoutForType": [Function],
-          "_tempDim": Object {
+          "_tempDim": {
             "height": 0,
             "width": 0,
           },
           "averageWindow": AverageWindow {
             "currentAverage": 92,
             "currentCount": 1,
-            "inputValues": Array [
+            "inputValues": [
               92,
             ],
             "nextIndex": 1,
           },
           "defaultEstimatedItemSize": 100,
-          "layoutObject": Object {
+          "layoutObject": {
             "size": undefined,
             "span": undefined,
           },
-          "props": Object {
+          "props": {
             "ListEmptyComponent": null,
             "ListFooterComponent": <React.Fragment>
               <Memo
@@ -142,20 +142,20 @@ exports[`ActivityTab renders without error 1`] = `
                 height={0.1}
               />
             </React.Fragment>,
-            "data": Array [
-              Object {
+            "data": [
+              {
                 "id": 1,
                 "itemType": "LOADING",
               },
-              Object {
+              {
                 "id": 2,
                 "itemType": "LOADING",
               },
-              Object {
+              {
                 "id": 3,
                 "itemType": "LOADING",
               },
-              Object {
+              {
                 "id": 4,
                 "itemType": "LOADING",
               },
@@ -193,8 +193,8 @@ exports[`ActivityTab renders without error 1`] = `
       scrollEventThrottle={16}
       scrollThrottle={16}
       scrollViewProps={
-        Object {
-          "contentContainerStyle": Object {
+        {
+          "contentContainerStyle": {
             "backgroundColor": undefined,
             "minHeight": 1,
             "minWidth": 1,
@@ -202,7 +202,7 @@ exports[`ActivityTab renders without error 1`] = `
           "onLayout": [Function],
           "onScrollBeginDrag": [Function],
           "refreshControl": undefined,
-          "style": Object {
+          "style": {
             "minHeight": 1,
             "minWidth": 1,
           },
@@ -210,17 +210,17 @@ exports[`ActivityTab renders without error 1`] = `
       }
       showsVerticalScrollIndicator={false}
       style={
-        Object {
+        {
           "minHeight": 1,
           "minWidth": 1,
         }
       }
       suppressBoundedSizeException={true}
       windowCorrectionConfig={
-        Object {
+        {
           "applyToInitialOffset": true,
           "applyToItemScroll": true,
-          "value": Object {
+          "value": {
             "endCorrection": 0,
             "startCorrection": 0,
             "windowShift": -0,
@@ -231,7 +231,7 @@ exports[`ActivityTab renders without error 1`] = `
       <View>
         <View
           style={
-            Object {
+            {
               "flexDirection": "column",
             }
           }
@@ -244,7 +244,7 @@ exports[`ActivityTab renders without error 1`] = `
             renderAheadOffset={0}
             scrollOffset={0}
             style={
-              Object {
+              {
                 "height": 0,
                 "width": 0,
               }
@@ -261,15 +261,15 @@ exports[`ActivityTab renders without error 1`] = `
 exports[`ActivityTab renders without error 2`] = `
 <View
   style={
-    Array [
-      Object {
+    [
+      {
         "alignItems": "stretch",
         "display": "flex",
         "flexDirection": "column",
         "flexGrow": 1,
         "justifyContent": "flex-start",
       },
-      Object {
+      {
         "paddingHorizontal": 24,
       },
     ]
@@ -277,7 +277,7 @@ exports[`ActivityTab renders without error 2`] = `
 >
   <View
     style={
-      Object {
+      {
         "flex": 1,
       }
     }
@@ -304,7 +304,7 @@ exports[`ActivityTab renders without error 2`] = `
       applyWindowCorrection={[Function]}
       canChangeSize={true}
       contentContainerStyle={
-        Object {
+        {
           "backgroundColor": undefined,
           "minHeight": 1,
           "minWidth": 1,
@@ -313,39 +313,39 @@ exports[`ActivityTab renders without error 2`] = `
       contentHeight={0}
       contentWidth={0}
       data={
-        Array [
-          Object {
+        [
+          {
             "itemType": "HEADER",
             "title": "February 1990",
           },
-          Object {
+          {
             "addedTime": 634722508000,
             "chainId": 1,
             "from": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
             "hash": "0xaef17b4b697be91ab3d7eca4b92fa53efeb2da6b",
             "id": "0xaef17b4b697be91ab3d7eca4b92fa53efeb2da6b",
-            "options": Object {
-              "request": Object {},
+            "options": {
+              "request": {},
             },
             "status": "confirmed",
-            "typeInfo": Object {
+            "typeInfo": {
               "approvalAmount": "1",
               "spender": "0x1234567890123456789012345678901234567890",
               "tokenAddress": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
               "type": "approve",
             },
           },
-          Object {
+          {
             "addedTime": 634722508000,
             "chainId": 1,
             "from": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
             "hash": "0x8123abfa76b2bd459df69d4cffefde0e51b81cf2",
             "id": "0x8123abfa76b2bd459df69d4cffefde0e51b81cf2",
-            "options": Object {
-              "request": Object {},
+            "options": {
+              "request": {},
             },
             "status": "confirmed",
-            "typeInfo": Object {
+            "typeInfo": {
               "expectedOutputCurrencyAmountRaw": "1000000000000000000",
               "inputCurrencyAmountRaw": "1000000000000000000",
               "inputCurrencyId": "1-0x6B175474E89094C44Da98b954EedeAC495271d0F",
@@ -360,39 +360,39 @@ exports[`ActivityTab renders without error 2`] = `
       }
       dataProvider={
         DataProvider {
-          "_data": Array [
-            Object {
+          "_data": [
+            {
               "itemType": "HEADER",
               "title": "February 1990",
             },
-            Object {
+            {
               "addedTime": 634722508000,
               "chainId": 1,
               "from": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
               "hash": "0xaef17b4b697be91ab3d7eca4b92fa53efeb2da6b",
               "id": "0xaef17b4b697be91ab3d7eca4b92fa53efeb2da6b",
-              "options": Object {
-                "request": Object {},
+              "options": {
+                "request": {},
               },
               "status": "confirmed",
-              "typeInfo": Object {
+              "typeInfo": {
                 "approvalAmount": "1",
                 "spender": "0x1234567890123456789012345678901234567890",
                 "tokenAddress": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
                 "type": "approve",
               },
             },
-            Object {
+            {
               "addedTime": 634722508000,
               "chainId": 1,
               "from": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
               "hash": "0x8123abfa76b2bd459df69d4cffefde0e51b81cf2",
               "id": "0x8123abfa76b2bd459df69d4cffefde0e51b81cf2",
-              "options": Object {
-                "request": Object {},
+              "options": {
+                "request": {},
               },
               "status": "confirmed",
-              "typeInfo": Object {
+              "typeInfo": {
                 "expectedOutputCurrencyAmountRaw": "1000000000000000000",
                 "inputCurrencyAmountRaw": "1000000000000000000",
                 "inputCurrencyId": "1-0x6B175474E89094C44Da98b954EedeAC495271d0F",
@@ -414,7 +414,7 @@ exports[`ActivityTab renders without error 2`] = `
       }
       disableRecycling={false}
       estimatedItemSize={92}
-      extendedState={Object {}}
+      extendedState={{}}
       externalScrollView={[Function]}
       finalRenderAheadOffset={250}
       forceNonDeterministicRendering={true}
@@ -432,24 +432,24 @@ exports[`ActivityTab renders without error 2`] = `
           "_getSpan": [Function],
           "_maxSpan": 1,
           "_setLayoutForType": [Function],
-          "_tempDim": Object {
+          "_tempDim": {
             "height": 0,
             "width": 0,
           },
           "averageWindow": AverageWindow {
             "currentAverage": 92,
             "currentCount": 1,
-            "inputValues": Array [
+            "inputValues": [
               92,
             ],
             "nextIndex": 1,
           },
           "defaultEstimatedItemSize": 100,
-          "layoutObject": Object {
+          "layoutObject": {
             "size": undefined,
             "span": undefined,
           },
-          "props": Object {
+          "props": {
             "ListEmptyComponent": <ForwardRef
               flexGrow={1}
             >
@@ -464,39 +464,39 @@ exports[`ActivityTab renders without error 2`] = `
                 height={0.1}
               />
             </React.Fragment>,
-            "data": Array [
-              Object {
+            "data": [
+              {
                 "itemType": "HEADER",
                 "title": "February 1990",
               },
-              Object {
+              {
                 "addedTime": 634722508000,
                 "chainId": 1,
                 "from": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
                 "hash": "0xaef17b4b697be91ab3d7eca4b92fa53efeb2da6b",
                 "id": "0xaef17b4b697be91ab3d7eca4b92fa53efeb2da6b",
-                "options": Object {
-                  "request": Object {},
+                "options": {
+                  "request": {},
                 },
                 "status": "confirmed",
-                "typeInfo": Object {
+                "typeInfo": {
                   "approvalAmount": "1",
                   "spender": "0x1234567890123456789012345678901234567890",
                   "tokenAddress": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
                   "type": "approve",
                 },
               },
-              Object {
+              {
                 "addedTime": 634722508000,
                 "chainId": 1,
                 "from": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
                 "hash": "0x8123abfa76b2bd459df69d4cffefde0e51b81cf2",
                 "id": "0x8123abfa76b2bd459df69d4cffefde0e51b81cf2",
-                "options": Object {
-                  "request": Object {},
+                "options": {
+                  "request": {},
                 },
                 "status": "confirmed",
-                "typeInfo": Object {
+                "typeInfo": {
                   "expectedOutputCurrencyAmountRaw": "1000000000000000000",
                   "inputCurrencyAmountRaw": "1000000000000000000",
                   "inputCurrencyId": "1-0x6B175474E89094C44Da98b954EedeAC495271d0F",
@@ -541,8 +541,8 @@ exports[`ActivityTab renders without error 2`] = `
       scrollEventThrottle={16}
       scrollThrottle={16}
       scrollViewProps={
-        Object {
-          "contentContainerStyle": Object {
+        {
+          "contentContainerStyle": {
             "backgroundColor": undefined,
             "minHeight": 1,
             "minWidth": 1,
@@ -550,7 +550,7 @@ exports[`ActivityTab renders without error 2`] = `
           "onLayout": [Function],
           "onScrollBeginDrag": [Function],
           "refreshControl": undefined,
-          "style": Object {
+          "style": {
             "minHeight": 1,
             "minWidth": 1,
           },
@@ -558,17 +558,17 @@ exports[`ActivityTab renders without error 2`] = `
       }
       showsVerticalScrollIndicator={false}
       style={
-        Object {
+        {
           "minHeight": 1,
           "minWidth": 1,
         }
       }
       suppressBoundedSizeException={true}
       windowCorrectionConfig={
-        Object {
+        {
           "applyToInitialOffset": true,
           "applyToItemScroll": true,
-          "value": Object {
+          "value": {
             "endCorrection": 0,
             "startCorrection": 0,
             "windowShift": -0,
@@ -579,7 +579,7 @@ exports[`ActivityTab renders without error 2`] = `
       <View>
         <View
           style={
-            Object {
+            {
               "flexDirection": "column",
             }
           }
@@ -592,7 +592,7 @@ exports[`ActivityTab renders without error 2`] = `
             renderAheadOffset={0}
             scrollOffset={0}
             style={
-              Object {
+              {
                 "height": 0,
                 "width": 0,
               }

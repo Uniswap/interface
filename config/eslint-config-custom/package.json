@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "dependencies": {
     "@react-native-community/eslint-config": "3.0.3",
-    "eslint": "^8.21.0",
+    "eslint": "8.21.0",
     "eslint-config-next": "^13.1.3",
     "eslint-config-prettier": "8.7.0",
     "eslint-config-turbo": "latest",
@@ -13,7 +13,7 @@
     "eslint-plugin-spellcheck": "0.0.20",
     "eslint-plugin-storybook": "^0.6.10",
     "prettier": "2.8.4",
-    "typescript": "^4.9.4"
+    "typescript": "4.9.4"
   },
   "license": "MIT",
   "main": "index.js",

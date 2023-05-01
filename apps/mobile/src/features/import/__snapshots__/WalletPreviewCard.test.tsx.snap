@@ -6,7 +6,7 @@ exports[`renders wallet preview card 1`] = `
   collapsable={false}
   focusable={true}
   hitSlop={
-    Object {
+    {
       "bottom": 5,
       "left": 5,
       "right": 5,
@@ -21,7 +21,7 @@ exports[`renders wallet preview card 1`] = `
   onResponderTerminationRequest={[Function]}
   onStartShouldSetResponder={[Function]}
   style={
-    Object {
+    {
       "backgroundColor": "#FFFFFF",
       "borderColor": "#FC72FF",
       "borderRadius": 20,
@@ -35,8 +35,8 @@ exports[`renders wallet preview card 1`] = `
 >
   <View
     style={
-      Array [
-        Object {
+      [
+        {
           "alignItems": "center",
           "display": "flex",
           "flexDirection": "row",
@@ -47,8 +47,8 @@ exports[`renders wallet preview card 1`] = `
   >
     <View
       style={
-        Array [
-          Object {
+        [
+          {
             "alignItems": "center",
             "display": "flex",
             "flexDirection": "row",
@@ -60,8 +60,8 @@ exports[`renders wallet preview card 1`] = `
     >
       <View
         style={
-          Array [
-            Object {
+          [
+            {
               "display": "flex",
               "height": 32,
               "width": 32,
@@ -71,8 +71,8 @@ exports[`renders wallet preview card 1`] = `
       >
         <View
           style={
-            Array [
-              Object {
+            [
+              {
                 "display": "flex",
                 "height": 32,
                 "width": 32,
@@ -82,7 +82,7 @@ exports[`renders wallet preview card 1`] = `
         >
           <View
             style={
-              Object {
+              {
                 "flex": 1,
               }
             }
@@ -92,16 +92,16 @@ exports[`renders wallet preview card 1`] = `
               mask={
                 <UniconMask
                   attributeData={
-                    Object {
+                    {
                       "0": "#5CFE9D",
                       "1": "#B8C3B7",
-                      "2": Array [
-                        Object {
+                      "2": [
+                        {
                           "path": "M34 20C34 28.8366 26.8366 36 18 36C9.16344 36 2 28.8366 2 20L2 -3.8147e-06L34 -1.01717e-06V20Z",
                         },
                       ],
-                      "3": Array [
-                        Object {
+                      "3": [
+                        {
                           "fillType": "evenOdd",
                           "path": "M16 8C12.2937 6.62854 9.37146 3.70632 8 0C6.62854 3.70632 3.70632 6.62854 0 8C3.70632 9.37146 6.62854 12.2937 8 16C9.37146 12.2937 12.2937 9.37146 16 8ZM8 11C9.65685 11 11 9.65685 11 8C11 6.34315 9.65685 5 8 5C6.34315 5 5 6.34315 5 8C5 9.65685 6.34315 11 8 11Z",
                         },
@@ -115,8 +115,8 @@ exports[`renders wallet preview card 1`] = `
             >
               <View
                 transform={
-                  Array [
-                    Object {
+                  [
+                    {
                       "scale": 0.8648648648648649,
                     },
                   ]
@@ -130,7 +130,7 @@ exports[`renders wallet preview card 1`] = `
                 >
                   <View
                     colors={
-                      Array [
+                      [
                         "#5CFE9D",
                         "#B8C3B7",
                       ]
@@ -156,16 +156,16 @@ exports[`renders wallet preview card 1`] = `
               mask={
                 <UniconMask
                   attributeData={
-                    Object {
+                    {
                       "0": "#5CFE9D",
                       "1": "#B8C3B7",
-                      "2": Array [
-                        Object {
+                      "2": [
+                        {
                           "path": "M34 20C34 28.8366 26.8366 36 18 36C9.16344 36 2 28.8366 2 20L2 -3.8147e-06L34 -1.01717e-06V20Z",
                         },
                       ],
-                      "3": Array [
-                        Object {
+                      "3": [
+                        {
                           "fillType": "evenOdd",
                           "path": "M16 8C12.2937 6.62854 9.37146 3.70632 8 0C6.62854 3.70632 3.70632 6.62854 0 8C3.70632 9.37146 6.62854 12.2937 8 16C9.37146 12.2937 12.2937 9.37146 16 8ZM8 11C9.65685 11 11 9.65685 11 8C11 6.34315 9.65685 5 8 5C6.34315 5 5 6.34315 5 8C5 9.65685 6.34315 11 8 11Z",
                         },
@@ -192,8 +192,8 @@ exports[`renders wallet preview card 1`] = `
       </View>
       <View
         style={
-          Array [
-            Object {
+          [
+            {
               "display": "flex",
               "flexGrow": 0,
               "flexShrink": 0,
@@ -205,8 +205,8 @@ exports[`renders wallet preview card 1`] = `
       />
       <View
         style={
-          Array [
-            Object {
+          [
+            {
               "display": "flex",
             },
           ]
@@ -216,8 +216,8 @@ exports[`renders wallet preview card 1`] = `
           allowFontScaling={true}
           maxFontSizeMultiplier={1.4}
           style={
-            Array [
-              Object {
+            [
+              {
                 "color": "#0E1524",
                 "display": "flex",
                 "fontFamily": "Inter-Medium",
@@ -233,8 +233,8 @@ exports[`renders wallet preview card 1`] = `
     </View>
     <View
       style={
-        Array [
-          Object {
+        [
+          {
             "display": "flex",
             "flexGrow": 0,
             "flexShrink": 0,
@@ -246,8 +246,8 @@ exports[`renders wallet preview card 1`] = `
     />
     <View
       style={
-        Array [
-          Object {
+        [
+          {
             "alignItems": "center",
             "borderColor": "#FC72FF",
             "borderRadius": 999999,
@@ -263,8 +263,8 @@ exports[`renders wallet preview card 1`] = `
     >
       <View
         style={
-          Array [
-            Object {
+          [
+            {
               "backgroundColor": "#FC72FF",
               "borderRadius": 999999,
               "display": "flex",

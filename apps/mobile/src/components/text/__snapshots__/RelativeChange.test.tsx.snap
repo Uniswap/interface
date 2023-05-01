@@ -3,8 +3,8 @@
 exports[`renders a relative change 1`] = `
 <View
   style={
-    Array [
-      Object {
+    [
+      {
         "alignItems": "center",
         "display": "flex",
         "flexDirection": "row",
@@ -19,9 +19,9 @@ exports[`renders a relative change 1`] = `
     height={16}
     strokeWidth={2}
     style={
-      Object {
-        "transform": Array [
-          Object {
+      {
+        "transform": [
+          {
             "rotate": "180deg",
           },
         ],
@@ -31,8 +31,8 @@ exports[`renders a relative change 1`] = `
   />
   <View
     style={
-      Array [
-        Object {
+      [
+        {
           "display": "flex",
           "flexGrow": 0,
           "flexShrink": 0,
@@ -46,8 +46,8 @@ exports[`renders a relative change 1`] = `
     allowFontScaling={true}
     maxFontSizeMultiplier={1.4}
     style={
-      Array [
-        Object {
+      [
+        {
           "color": "#5D6785",
           "display": "flex",
           "fontFamily": "Inter-Medium",
@@ -65,8 +65,8 @@ exports[`renders a relative change 1`] = `
 exports[`renders placeholders with absolute change 1`] = `
 <View
   style={
-    Array [
-      Object {
+    [
+      {
         "alignItems": "center",
         "display": "flex",
         "flexDirection": "row",
@@ -81,9 +81,9 @@ exports[`renders placeholders with absolute change 1`] = `
     height={16}
     strokeWidth={2}
     style={
-      Object {
-        "transform": Array [
-          Object {
+      {
+        "transform": [
+          {
             "rotate": "180deg",
           },
         ],
@@ -93,8 +93,8 @@ exports[`renders placeholders with absolute change 1`] = `
   />
   <View
     style={
-      Array [
-        Object {
+      [
+        {
           "display": "flex",
           "flexGrow": 0,
           "flexShrink": 0,
@@ -108,8 +108,8 @@ exports[`renders placeholders with absolute change 1`] = `
     allowFontScaling={true}
     maxFontSizeMultiplier={1.4}
     style={
-      Array [
-        Object {
+      [
+        {
           "color": "#5D6785",
           "display": "flex",
           "fontFamily": "Inter-Medium",
@@ -127,8 +127,8 @@ exports[`renders placeholders with absolute change 1`] = `
 exports[`renders placeholders without a change 1`] = `
 <View
   style={
-    Array [
-      Object {
+    [
+      {
         "alignItems": "center",
         "display": "flex",
         "flexDirection": "row",
@@ -141,8 +141,8 @@ exports[`renders placeholders without a change 1`] = `
     allowFontScaling={true}
     maxFontSizeMultiplier={1.4}
     style={
-      Array [
-        Object {
+      [
+        {
           "color": "#5D6785",
           "display": "flex",
           "fontFamily": "Inter-Medium",

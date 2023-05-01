@@ -3,8 +3,8 @@
 exports[`renders a currency logo with network logo 1`] = `
 <View
   style={
-    Array [
-      Object {
+    [
+      {
         "alignItems": "center",
         "display": "flex",
         "height": 20,
@@ -16,16 +16,16 @@ exports[`renders a currency logo with network logo 1`] = `
 >
   <Image
     source={
-      Object {
+      {
         "uri": "https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984/logo.png",
       }
     }
     style={
-      Array [
-        Object {
+      [
+        {
           "resizeMode": "contain",
         },
-        Object {
+        {
           "backgroundColor": "#D2D9EE",
           "borderColor": "#D2D9EE",
           "borderRadius": 10,
@@ -38,14 +38,14 @@ exports[`renders a currency logo with network logo 1`] = `
   />
   <View
     style={
-      Array [
-        Object {
+      [
+        {
           "bottom": 0,
           "display": "flex",
           "position": "absolute",
           "right": 0,
           "shadowColor": "#000000",
-          "shadowOffset": Object {
+          "shadowOffset": {
             "height": 2,
             "width": 0,
           },
@@ -57,8 +57,8 @@ exports[`renders a currency logo with network logo 1`] = `
   >
     <View
       style={
-        Array [
-          Object {
+        [
+          {
             "borderRadius": 999999,
             "display": "flex",
           },
@@ -72,8 +72,8 @@ exports[`renders a currency logo with network logo 1`] = `
 exports[`renders a currency logo without network logo 1`] = `
 <View
   style={
-    Array [
-      Object {
+    [
+      {
         "alignItems": "center",
         "display": "flex",
         "height": 20,
@@ -85,16 +85,16 @@ exports[`renders a currency logo without network logo 1`] = `
 >
   <Image
     source={
-      Object {
+      {
         "uri": "https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984/logo.png",
       }
     }
     style={
-      Array [
-        Object {
+      [
+        {
           "resizeMode": "contain",
         },
-        Object {
+        {
           "backgroundColor": "#D2D9EE",
           "borderColor": "#D2D9EE",
           "borderRadius": 10,

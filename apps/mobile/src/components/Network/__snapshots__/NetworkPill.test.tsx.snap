@@ -3,8 +3,8 @@
 exports[`NetworkPill renders a NetworkPill with border 1`] = `
 <View
   style={
-    Array [
-      Object {
+    [
+      {
         "alignItems": "center",
         "borderColor": "transparent",
         "borderRadius": 999999,
@@ -15,7 +15,7 @@ exports[`NetworkPill renders a NetworkPill with border 1`] = `
         "paddingHorizontal": 4,
         "paddingVertical": 8,
       },
-      Object {
+      {
         "backgroundColor": "#2098531a",
         "borderColor": "#209853",
       },
@@ -26,15 +26,15 @@ exports[`NetworkPill renders a NetworkPill with border 1`] = `
     allowFontScaling={true}
     maxFontSizeMultiplier={1.4}
     style={
-      Array [
-        Object {
+      [
+        {
           "color": "#0E1524",
           "display": "flex",
           "fontFamily": "Inter-Regular",
           "fontSize": 15,
           "lineHeight": 20,
         },
-        Object {
+        {
           "color": "#209853",
         },
       ]
@@ -48,8 +48,8 @@ exports[`NetworkPill renders a NetworkPill with border 1`] = `
 exports[`NetworkPill renders a NetworkPill without image 1`] = `
 <View
   style={
-    Array [
-      Object {
+    [
+      {
         "alignItems": "center",
         "borderColor": "transparent",
         "borderRadius": 999999,
@@ -60,7 +60,7 @@ exports[`NetworkPill renders a NetworkPill without image 1`] = `
         "paddingHorizontal": 4,
         "paddingVertical": 8,
       },
-      Object {
+      {
         "backgroundColor": "#2098531a",
         "borderColor": "transparent",
       },
@@ -71,15 +71,15 @@ exports[`NetworkPill renders a NetworkPill without image 1`] = `
     allowFontScaling={true}
     maxFontSizeMultiplier={1.4}
     style={
-      Array [
-        Object {
+      [
+        {
           "color": "#0E1524",
           "display": "flex",
           "fontFamily": "Inter-Regular",
           "fontSize": 15,
           "lineHeight": 20,
         },
-        Object {
+        {
           "color": "#209853",
         },
       ]
@@ -93,8 +93,8 @@ exports[`NetworkPill renders a NetworkPill without image 1`] = `
 exports[`NetworkPill renders an InlineNetworkPill 1`] = `
 <View
   style={
-    Array [
-      Object {
+    [
+      {
         "alignItems": "center",
         "borderColor": "transparent",
         "borderRadius": 12,
@@ -105,7 +105,7 @@ exports[`NetworkPill renders an InlineNetworkPill 1`] = `
         "paddingHorizontal": 8,
         "paddingVertical": 2,
       },
-      Object {
+      {
         "backgroundColor": "#2098531a",
         "borderColor": "transparent",
       },
@@ -116,15 +116,15 @@ exports[`NetworkPill renders an InlineNetworkPill 1`] = `
     allowFontScaling={true}
     maxFontSizeMultiplier={1.2}
     style={
-      Array [
-        Object {
+      [
+        {
           "color": "#0E1524",
           "display": "flex",
           "fontFamily": "Inter-SemiBold",
           "fontSize": 12,
           "lineHeight": 17,
         },
-        Object {
+        {
           "color": "#209853",
         },
       ]

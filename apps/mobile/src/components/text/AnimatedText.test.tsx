@@ -10,16 +10,16 @@ describe(AnimatedText, () => {
       <TextInput
         allowFontScaling={true}
         animatedProps={
-          Object {
+          {
             "text": "Rendered",
           }
         }
         editable={false}
         maxFontSizeMultiplier={1.4}
         style={
-          Array [
-            Array [
-              Object {},
+          [
+            [
+              {},
             ],
           ]
         }
