@@ -33,10 +33,10 @@ export function PortfolioHeader({
         </Text>
       </Flex>
       <Button
+        theme="tertiary"
         onPress={(): void => {
           return dispatch(authActions.reset())
-        }}
-        theme="tertiary">
+        }}>
         Lock
       </Button>
     </Flex>

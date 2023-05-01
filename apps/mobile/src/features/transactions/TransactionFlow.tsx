@@ -136,8 +136,6 @@ export function TransactionFlow({
     transform: [{ translateX: screenXOffset.value }],
   }))
 
-  const { onToggleUSDInput } = useTokenFormActionHandlers(dispatch)
-
   return (
     <TouchableWithoutFeedback>
       <AnimatedFlex grow row gap="none" height="100%" style={wrapperStyle}>

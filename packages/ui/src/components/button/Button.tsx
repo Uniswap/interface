@@ -2,9 +2,9 @@ import { Link } from 'react-router-dom'
 
 import {
   ButtonFrame,
+  ButtonProps as TamaguiButtonProps,
   ButtonText,
   GetProps,
-  ButtonProps as TamaguiButtonProps,
   styled,
 } from 'tamagui'
 
@@ -32,6 +32,7 @@ const CustomButtonFrame = styled(ButtonFrame, {
   flexDirection: 'row',
   alignItems: 'center',
   justifyContent: 'center',
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore: TODO: figure out why ButtonFrame inherits a hardcoded height value
   height: '100%',
 
@@ -64,21 +65,35 @@ const CustomButtonText = styled(ButtonText, {
 
 type CustomButtonProps = GetProps<typeof CustomButtonFrame>
 
-export type ButtonProps = TamaguiButtonProps &
-  CustomButtonProps
+export type ButtonProps = TamaguiButtonProps & CustomButtonProps
 
 // TODO: investigate why styleable doesn't pass theme down to CustomButtonText through theme={props.theme}
-export const Button = CustomButtonFrame.styleable(({ children, ...props }: ButtonProps) => {
-  return (
-    <CustomButtonFrame {...props} theme={props.theme}>
-      {/* TODO: improve styling button text based on size of button, e.g. derive weight and color from size / theme */}
-      <CustomButtonText fontWeight="600">{children}</CustomButtonText>
-    </CustomButtonFrame>
-  )
-})
+export const Button = CustomButtonFrame.styleable(
+  ({ children, ...props }: ButtonProps) => {
+    return (
+      <CustomButtonFrame {...props} theme={props.theme}>
+        {/* TODO: improve styling button text based on size of button, e.g. derive weight and color from size / theme */}
+        <CustomButtonText fontWeight="600">{children}</CustomButtonText>
+      </CustomButtonFrame>
+    )
+  }
+)
 
-export const LinkButton = ({ to, children, ...props }: ButtonProps & { to: string }) => (
-  <Link to={to} style={{ display: 'flex', textDecoration: 'none' }}>
-    <Button {...props} theme={props.theme}>{children}</Button>
+export const LinkButton = ({
+  to,
+  children,
+  ...props
+}: ButtonProps & { to: string }): JSX.Element => (
+  <Link style={styles.linkButton} to={to}>
+    <Button {...props} theme={props.theme}>
+      {children}
+    </Button>
   </Link>
 )
+
+const styles = {
+  linkButton: {
+    display: 'flex',
+    textDecoration: 'none',
+  },
+}

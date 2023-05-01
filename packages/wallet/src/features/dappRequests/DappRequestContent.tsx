@@ -1,8 +1,5 @@
 import { YStack } from 'ui/src'
-import {
-  Button,
-  ButtonSize,
-} from 'ui/src/components/button/Button'
+import { Button, ButtonSize } from 'ui/src/components/button/Button'
 import { Flex } from 'ui/src/components/layout/Flex'
 import { Text } from 'ui/src/components/text/Text'
 import { useAppDispatch, useAppSelector } from 'wallet/src/state'
@@ -61,14 +58,14 @@ export function DappRequestContent(): JSX.Element {
               <YStack gap="$spacing16" marginTop="$spacing16">
                 <Button
                   buttonSize={ButtonSize.Large}
-                  onPress={(): void => onConfirm(requestWithDisplay)}
-                  theme="primary">
+                  theme="primary"
+                  onPress={(): void => onConfirm(requestWithDisplay)}>
                   Confirm
                 </Button>
                 <Button
                   buttonSize={ButtonSize.Large}
-                  onPress={(): void => onCancel(requestWithDisplay)}
-                  theme="secondary">
+                  theme="secondary"
+                  onPress={(): void => onCancel(requestWithDisplay)}>
                   Cancel
                 </Button>
               </YStack>

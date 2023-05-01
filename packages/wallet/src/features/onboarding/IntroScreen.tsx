@@ -1,5 +1,5 @@
-import { LinkButton } from 'ui/src/components/button/Button'
 import { Circle, Text, XStack, YStack } from 'ui/src'
+import { LinkButton } from 'ui/src/components/button/Button'
 
 function InfoRow({
   primaryText,

@@ -3,22 +3,12 @@
   "pipeline": {
     "typecheck": {
       "inputs": [
-        "{packages,apps}/*+(.ts|.tsx)"
+        "{packages,apps,config}/*+(.ts|.tsx)"
       ],
       "outputs": []
     },
-    "lint": {
-      "inputs": [
-        "{packages,apps}/*+(.ts|.tsx)"
-      ],
-      "outputs": []
-    },
-    "lint:fix": {
-      "inputs": [
-        "{packages,apps}/*+(.ts|.tsx)"
-      ],
-      "outputs": []
-    },
+    "lint": {},
+    "lint:fix": {},
     "//#staged:lint:fix": {
       "outputs": []
     },
@@ -26,16 +16,10 @@
       "outputs": []
     },
     "test": {
-      "inputs": [
-        "{packages,apps}/*+(.ts|.tsx)"
-      ],
-      "outputs": []
-    },
-    "tests#test": {
-      "inputs": [
-        "packages/ui/**"
-      ],
-      "outputs": []
+      "dependsOn": [
+        "typecheck",
+        "lint"
+      ]
     },
     "build": {
       "inputs": [

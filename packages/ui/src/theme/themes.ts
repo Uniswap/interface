@@ -4,7 +4,9 @@ import { createTheme } from 'tamagui'
 import { colorsDark, colorsLight, opacify } from './color'
 
 // TODO: systematize hover and focus states. requires consolidating mobile and web design systems (they have different button styles right now)
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const hoverColor = (color: any) => opacify(85, color)
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const pressedColor = (color: any) => opacify(65, color)
 
 // TODO: use tokens.color instead of colorsLight/Dark
@@ -165,7 +167,7 @@ const dark_tertiary_Button: BaseTheme = {
   backgroundPress: colorsDark.none,
   borderColor: colorsDark.backgroundOutline,
 }
-  const dark_tertiary_ButtonText: BaseTheme = {
+const dark_tertiary_ButtonText: BaseTheme = {
   ...dark,
   color: colorsDark.textOnBrightPrimary,
 }

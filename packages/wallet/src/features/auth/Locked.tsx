@@ -1,10 +1,7 @@
 import { useState } from 'react'
 
 import { Image, Input, InputProps, Stack, Text, YStack } from 'ui/src'
-import {
-  Button,
-  ButtonSize,
-} from 'ui/src/components/button/Button'
+import { Button, ButtonSize } from 'ui/src/components/button/Button'
 import { UNISWAP_LOGO } from 'wallet/src/assets'
 import { useSagaStatus } from 'wallet/src/state/useSagaStatus'
 import { useAppDispatch } from '../../state'
@@ -99,10 +96,7 @@ function Locked(): JSX.Element {
           color="$textPrimary"
         />
       </YStack>
-      <Button
-        buttonSize={ButtonSize.Large}
-        onPress={onPress}
-        theme="primary">
+      <Button buttonSize={ButtonSize.Large} theme="primary" onPress={onPress}>
         Unlock
       </Button>
     </Stack>

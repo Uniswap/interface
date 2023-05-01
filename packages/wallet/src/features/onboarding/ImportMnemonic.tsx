@@ -57,9 +57,7 @@ export function ImportMnemonic(): JSX.Element {
               />
             </XStack>
             <Form.Trigger asChild>
-              <Button
-                theme="primary"
-                width="100%">
+              <Button theme="primary" width="100%">
                 Import
               </Button>
             </Form.Trigger>
