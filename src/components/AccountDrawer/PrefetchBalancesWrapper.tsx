@@ -13,7 +13,7 @@ function wasPending(previousTxs: { [hash: string]: TransactionDetails | undefine
   return previousTx && isTxPending(previousTx)
 }
 
-function useHasUpdatedTx() {
+function useHasUpdatedTx(account: string | undefined) {
   // TODO: consider monitoring tx's on chains other than the wallet's current chain
   const currentChainTxs = useAllTransactions()
 
@@ -27,12 +27,12 @@ function useHasUpdatedTx() {
   const previousPendingTxs = usePrevious(pendingTxs)
 
   return useMemo(() => {
-    if (!previousPendingTxs) return false
+    if (!previousPendingTxs || !account) return false
     return Object.values(currentChainTxs).some(
-      (tx) => !isTxPending(tx) && wasPending(previousPendingTxs, tx),
+      (tx) => tx.from === account && !isTxPending(tx) && wasPending(previousPendingTxs, tx),
       [currentChainTxs, previousPendingTxs]
     )
-  }, [currentChainTxs, previousPendingTxs])
+  }, [account, currentChainTxs, previousPendingTxs])
 }
 
 /* Prefetches & caches portfolio balances when the wrapped component is hovered or the user completes a transaction */
@@ -53,7 +53,7 @@ export default function PrefetchBalancesWrapper({ children }: PropsWithChildren)
   const accountChanged = prevAccount !== undefined && prevAccount !== account
 
   // TODO(cartcrom): add delay for refetching on optimism, as there is high latency in new balances being available
-  const hasUpdatedTx = useHasUpdatedTx()
+  const hasUpdatedTx = useHasUpdatedTx(account)
   // Listens for account changes & recently updated transactions to keep portfolio balances fresh in apollo cache
   useEffect(() => {
     if (hasUpdatedTx || accountChanged) {
