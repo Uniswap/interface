@@ -21,8 +21,8 @@ export default function TokenDetailsPage() {
   const isNative = tokenAddress === NATIVE_CHAIN_ID
   const [timePeriod, setTimePeriod] = useAtom(pageTimePeriodAtom)
   const [detailedTokenAddress, duration] = useMemo(
-    /* tokenAddress will always be defined in the path for for this page to render, but useParams will always
-      return optional arguments; nullish coalescing operator is present here to appease typechecker */
+    // tokenAddress will always be defined in the path for for this page to render, but useParams will always
+    // return optional arguments; nullish coalescing operator is present here to appease typechecker
     () => [isNative ? getNativeTokenDBAddress(chain) : tokenAddress ?? '', toHistoryDuration(timePeriod)],
     [chain, isNative, timePeriod, tokenAddress]
   )
