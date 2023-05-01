@@ -83,11 +83,10 @@ describe('Swap', () => {
       .then((hardhat) => {
         hardhat
           .reset()
+          .then(() => hardhat.provider.send('evm_setAutomine', [true]))
           .then(() => hardhat.getBalance(hardhat.wallet.address, USDC_MAINNET))
           .then((balance) => Number(balance.toFixed(1)))
           .then((initialBalance) => {
-            hardhat.provider.send('evm_setAutomine', [true])
-
             cy.get('#swap-currency-output .open-currency-select-button').click()
             cy.contains('USDC').click()
             cy.get('#swap-currency-output .token-amount-input').clear().type(BALANCE_INCREMENT.toString())
@@ -121,8 +120,6 @@ describe('Swap', () => {
           .then(() => hardhat.getBalance(hardhat.wallet.address, USDC_MAINNET))
           .then((balance) => Number(balance.toFixed(1)))
           .then((initialBalance) => {
-            hardhat.provider.send('evm_setAutomine', [false])
-
             // input swap info
             cy.get('#swap-currency-output .open-currency-select-button').click()
             cy.contains('USDC').click()
