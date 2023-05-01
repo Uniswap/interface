@@ -14,6 +14,11 @@ const isProduction = process.env.NODE_ENV === 'production'
 // Omit them from production builds, as they slow down the feedback loop.
 const shouldLintOrTypeCheck = !isProduction
 
+function getCacheDirectory(cacheName) {
+  // Include the trailing slash to denote that this is a directory.
+  return `${path.join(__dirname, 'node_modules/.cache/', cacheName)}/`
+}
+
 module.exports = {
   babel: {
     plugins: [
@@ -46,13 +51,13 @@ module.exports = {
     pluginOptions(eslintConfig) {
       return Object.assign(eslintConfig, {
         cache: true,
-        cacheLocation: 'node_modules/.cache/.eslintcache',
+        cacheLocation: getCacheDirectory('eslint'),
         ignorePath: '.gitignore',
-        // Clear the create-react-app overrides to use the defaults.
-        formatter: undefined,
-        eslintPath: undefined,
-        resolvePluginsRelativeTo: undefined,
-        baseConfig: undefined,
+        // Use our own eslint/plugins/config, as overrides interfere with caching.
+        // This ensures that `yarn start` and `yarn lint` share one cache.
+        eslintPath: require.resolve('eslint'),
+        resolvePluginsRelativeTo: null,
+        baseConfig: null,
       })
     },
   },
@@ -62,7 +67,7 @@ module.exports = {
   jest: {
     configure(jestConfig) {
       return Object.assign(jestConfig, {
-        cacheDirectory: 'node_modules/.cache/jest',
+        cacheDirectory: getCacheDirectory('jest'),
         transform: Object.assign(jestConfig.transform, {
           // Transform vanilla-extract using its own transformer.
           // See https://sandroroth.com/blog/vanilla-extract-cra#jest-transform.
@@ -102,6 +107,12 @@ module.exports = {
           // See https://webpack.js.org/plugins/mini-css-extract-plugin/#remove-order-warnings.
           if (plugin instanceof MiniCssExtractPlugin) {
             plugin.options.ignoreOrder = true
+          }
+
+          // Disable TypeScript's config overwrite, as it interferes with incremental build caching.
+          // This ensures that `yarn start` and `yarn typecheck` share one cache.
+          if (plugin.constructor.name == 'ForkTsCheckerWebpackPlugin') {
+            delete plugin.options.typescript.configOverwrite
           }
 
           return plugin
@@ -147,24 +158,26 @@ module.exports = {
       })
 
       // Configure webpack optimization:
-      webpackConfig.optimization = Object.assign(webpackConfig.optimization, {
-        splitChunks: {
-          // Cap the chunk size to 5MB.
-          // react-scripts suggests a chunk size under 1MB after gzip, but we can only measure maxSize before gzip.
-          // react-scripts also caps cacheable chunks at 5MB, which gzips to below 1MB, so we cap chunk size there.
-          // See https://github.com/facebook/create-react-app/blob/d960b9e/packages/react-scripts/config/webpack.config.js#L713-L716.
-          maxSize: 5 * 1024 * 1024,
-          // Optimize over all chunks, instead of async chunks (the default), so that initial chunks are also optimized.
-          chunks: 'all',
-          // Create a vendor chunk for node_modules, as they change less frequently than our release cadence.
-          // This mimics the default behavior of webpack, but adds the name `vendor` to the chunk for readability.
-          cacheGroups: {
-            vendors: {
-              test: /[\\/]node_modules[\\/]/,
-              name: 'vendor',
-            },
-          },
-        },
+      webpackConfig.optimization = Object.assign(
+        webpackConfig.optimization,
+        isProduction
+          ? {
+              splitChunks: {
+                // Cap the chunk size to 5MB.
+                // react-scripts suggests a chunk size under 1MB after gzip, but we can only measure maxSize before gzip.
+                // react-scripts also caps cacheable chunks at 5MB, which gzips to below 1MB, so we cap chunk size there.
+                // See https://github.com/facebook/create-react-app/blob/d960b9e/packages/react-scripts/config/webpack.config.js#L713-L716.
+                maxSize: 5 * 1024 * 1024,
+                // Optimize over all chunks, instead of async chunks (the default), so that initial chunks are also optimized.
+                chunks: 'all',
+              },
+            }
+          : {}
+      )
+
+      // Configure webpack caching:
+      webpackConfig.cache = Object.assign(webpackConfig.cache, {
+        cacheDirectory: getCacheDirectory('webpack'),
       })
 
       // Ignore failed source mappings to avoid spamming the console.
