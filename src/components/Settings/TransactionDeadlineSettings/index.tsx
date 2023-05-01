@@ -44,7 +44,7 @@ export default function TransactionDeadlineSettings() {
     // Parse user input and set the deadline if valid, error otherwise
     try {
       const parsed: number = Number.parseInt(value) * 60
-      if (!Number.isInteger(parsed) || parsed < 60 || parsed > THREE_DAYS_IN_SECONDS) {
+      if (parsed < 60 || parsed > THREE_DAYS_IN_SECONDS) {
         setDeadlineError(DeadlineError.InvalidInput)
       } else {
         setDeadline(parsed)
