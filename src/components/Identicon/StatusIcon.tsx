@@ -1,6 +1,6 @@
 import { useWeb3React } from '@web3-react/core'
 import { Unicon } from 'components/Unicon'
-import { Connection, ConnectionType } from 'connection'
+import { Connection, ConnectionType } from 'connection/types'
 import useENSAvatar from 'hooks/useENSAvatar'
 import styled from 'styled-components/macro'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'

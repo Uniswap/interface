@@ -11,14 +11,10 @@ import invariant from 'tiny-invariant'
 const DEPRECATED_NFT_UNIVERSAL_ROUTER_MAINNET_ADDRESS = '0x4c60051384bd2d3c01bfc845cf5f4b44bcbe9de5'
 const NFT_UNIVERSAL_ROUTER_MAINNET_ADDRESS = '0x3fC91A3afd70395Cd496C647d5a6CC9D4B2b7FAD'
 
-const useUniversalRouterAddress = (
-  enabled?: boolean,
-  shouldUseNftRouter?: boolean,
-  chainId?: number
-): string | undefined => {
+const useUniversalRouterAddress = (shouldUseNftRouter: boolean, chainId: number | undefined): string | undefined => {
   const shouldUseUpdatedContract = usePwatNewContractEnabled()
 
-  if (!enabled || !chainId) return
+  if (!chainId) return
 
   if (shouldUseNftRouter && chainId === 1) {
     if (shouldUseUpdatedContract) return NFT_UNIVERSAL_ROUTER_MAINNET_ADDRESS
@@ -32,14 +28,13 @@ const useUniversalRouterAddress = (
 export default function usePermit2Approval(
   amount?: CurrencyAmount<Token>,
   maximumAmount?: CurrencyAmount<Token>,
-  enabled?: boolean,
   shouldUseNftRouter?: boolean
 ) {
   const { chainId } = useWeb3React()
-  const universalRouterAddress = useUniversalRouterAddress(enabled, shouldUseNftRouter, chainId)
+  const universalRouterAddress = useUniversalRouterAddress(shouldUseNftRouter ?? false, chainId)
 
   const allowance = usePermit2Allowance(
-    enabled ? maximumAmount ?? (amount?.currency.isToken ? (amount as CurrencyAmount<Token>) : undefined) : undefined,
+    maximumAmount ?? (amount?.currency.isToken ? (amount as CurrencyAmount<Token>) : undefined),
     universalRouterAddress
   )
   const isApprovalLoading = allowance.state === AllowanceState.REQUIRED && allowance.isApprovalLoading

@@ -1,5 +1,5 @@
-import { ConnectionType } from 'connection'
 import { useGetConnection } from 'connection'
+import { ConnectionType } from 'connection/types'
 import { useMemo } from 'react'
 import { useAppSelector } from 'state/hooks'
 

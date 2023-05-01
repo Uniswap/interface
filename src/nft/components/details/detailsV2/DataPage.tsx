@@ -47,7 +47,7 @@ export const DataPage = ({ asset }: { asset: GenieAsset }) => {
       <DataPageHeader />
       <ContentContainer>
         <LeftColumn>
-          <DataPageTraits asset={asset} />
+          {!!asset.traits?.length && <DataPageTraits traits={asset.traits} />}
           <DataPageDescription />
         </LeftColumn>
         <DataPageTable />
