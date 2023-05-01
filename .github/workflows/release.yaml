@@ -114,7 +114,7 @@ jobs:
           githubToken: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload source maps to Sentry
-        uses: getsentry/action-release@bd5f874fcda966ba48139b0140fb3ec0cb3aabdd
+        uses: getsentry/action-release@4744f6a65149f441c5f396d5b0877307c0db52c7
         continue-on-error: true
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}

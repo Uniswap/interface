@@ -98,7 +98,7 @@ enum TraitTabsKeys {
   Traits = 'traits',
 }
 
-export const DataPageTraits = ({ asset }: { asset: GenieAsset }) => {
+export const DataPageTraits = ({ traits }: { traits: Trait[] }) => {
   const TraitTabs: Map<string, Tab> = useMemo(
     () =>
       new Map([
