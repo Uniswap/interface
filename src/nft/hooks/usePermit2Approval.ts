@@ -27,10 +27,8 @@ export default function usePermit2Approval(
       break
   }
 
-  const allowance = usePermit2Allowance(
-    maximumAmount ?? (amount?.currency.isToken ? (amount as CurrencyAmount<Token>) : undefined),
-    universalRouterAddress
-  )
+  const allowanceAmount = maximumAmount ?? (amount?.currency.isToken ? (amount as CurrencyAmount<Token>) : undefined)
+  const allowance = usePermit2Allowance(allowanceAmount, universalRouterAddress)
   const isApprovalLoading = allowance.state === AllowanceState.REQUIRED && allowance.isApprovalLoading
   const [isAllowancePending, setIsAllowancePending] = useState(false)
   const updateAllowance = useCallback(async () => {
