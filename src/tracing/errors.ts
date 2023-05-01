@@ -89,7 +89,7 @@ export const filterKnownErrors: Required<ClientOptions>['beforeSend'] = (event: 
      * Errors coming from OneKey (a desktop wallet) can be ignored for now.
      * These errors are either application-specific, or they will be thrown separately outside of OneKey.
      */
-    if (error.name.match(/OneKey/i)) return null
+    if (error.stack?.match(/OneKey/i)) return null
 
     /*
      * Content security policy 'unsafe-eval' errors can be filtered out because there are expected failures.
