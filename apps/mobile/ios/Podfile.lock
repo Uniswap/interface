@@ -934,7 +934,7 @@ PODS:
     - React-Core
   - RNGestureHandler (2.6.0):
     - React-Core
-  - RNImageColors (1.5.1):
+  - RNImageColors (1.5.2):
     - React-Core
   - RNLocalize (2.2.6):
     - React-Core
@@ -1405,7 +1405,7 @@ SPEC CHECKSUMS:
   RNFBRemoteConfig: a735b4f7a4ef15adb57b51f0041cfba2925a4393
   RNFlashList: 18d906a373da5ff16776e5013df9495d826edc7e
   RNGestureHandler: 920eb17f5b1e15dae6e5ed1904045f8f90e0b11e
-  RNImageColors: fd9777591fc765780e035f4bec7a42edabc86eb4
+  RNImageColors: 9ac05083b52d5c350e6972650ae3ba0e556466c1
   RNLocalize: d4b8af4e442d4bcca54e68fc687a2129b4d71a81
   RNPermissions: de7b7c3fe1680d974ac7a85e3e97aa539c0e68ea
   RNReanimated: 6668b0587bebd4b15dd849b99e5a9c70fc12ed95

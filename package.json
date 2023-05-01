@@ -8,7 +8,7 @@
     "@manypkg/cli": "^0.19.2",
     "@types/react": "^18.0.15",
     "concurrently": "^7.6.0",
-    "danger": "10.8.0",
+    "danger": "11.2.6",
     "dotenv-cli": "^7.0.0",
     "eslint": "^8.21.0",
     "is-ci": "^3.0.1",

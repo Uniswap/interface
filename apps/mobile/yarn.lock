@@ -8625,7 +8625,7 @@ __metadata:
     react-native-flipper-performance-plugin: 0.3.1
     react-native-gesture-handler: 2.6.0
     react-native-get-random-values: 1.8.0
-    react-native-image-colors: 1.5.1
+    react-native-image-colors: 1.5.2
     react-native-localize: ^2.2.6
     react-native-markdown-display: 7.0.0-alpha.2
     react-native-mmkv: 2.4.3
@@ -19387,16 +19387,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"json5@npm:^0.5.1":
-  version: 0.5.1
-  resolution: "json5@npm:0.5.1"
-  bin:
-    json5: lib/cli.js
-  checksum: 9b85bf06955b23eaa4b7328aa8892e3887e81ca731dd27af04a5f5f1458fbc5e1de57a24442e3272f8a888dd1abe1cb68eb693324035f6b3aeba4fcab7667d62
-  languageName: node
-  linkType: hard
-
-"json5@npm:^1.0.1":
+"json5@npm:1.0.2":
   version: 1.0.2
   resolution: "json5@npm:1.0.2"
   dependencies:
@@ -19404,15 +19395,6 @@ __metadata:
   bin:
     json5: lib/cli.js
   checksum: 866458a8c58a95a49bef3adba929c625e82532bcff1fe93f01d29cb02cac7c3fe1f4b79951b7792c2da9de0b32871a8401a6e3c5b36778ad852bf5b8a61165d7
-  languageName: node
-  linkType: hard
-
-"json5@npm:^2.1.0, json5@npm:^2.1.2, json5@npm:^2.2.2":
-  version: 2.2.3
-  resolution: "json5@npm:2.2.3"
-  bin:
-    json5: lib/cli.js
-  checksum: 2a7436a93393830bce797d4626275152e37e877b265e94ca69c99e3d20c2b9dab021279146a39cdb700e71b2dd32a4cebd1514cd57cee102b1af906ce5040349
   languageName: node
   linkType: hard
 
@@ -21907,13 +21889,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"node-fetch@npm:2.6.0":
-  version: 2.6.0
-  resolution: "node-fetch@npm:2.6.0"
-  checksum: 2b741e9315c1c07df4a291d0b304892fa7e8d623fe789fedd53f9bcb8d09102b07591b4b93e552a65dfc457eee9d5d879d0440aefdb64f2d78e7cb78cbad28e9
-  languageName: node
-  linkType: hard
-
 "node-fetch@npm:2.6.7":
   version: 2.6.7
   resolution: "node-fetch@npm:2.6.7"
@@ -21925,20 +21900,6 @@ __metadata:
     encoding:
       optional: true
   checksum: 8d816ffd1ee22cab8301c7756ef04f3437f18dace86a1dae22cf81db8ef29c0bf6655f3215cb0cdb22b420b6fe141e64b26905e7f33f9377a7fa59135ea3e10b
-  languageName: node
-  linkType: hard
-
-"node-fetch@npm:^2.0.0-alpha.8, node-fetch@npm:^2.2.0, node-fetch@npm:^2.6.0, node-fetch@npm:^2.6.1, node-fetch@npm:^2.6.7":
-  version: 2.6.9
-  resolution: "node-fetch@npm:2.6.9"
-  dependencies:
-    whatwg-url: ^5.0.0
-  peerDependencies:
-    encoding: ^0.1.0
-  peerDependenciesMeta:
-    encoding:
-      optional: true
-  checksum: acb04f9ce7224965b2b59e71b33c639794d8991efd73855b0b250921382b38331ffc9d61bce502571f6cc6e11a8905ca9b1b6d4aeb586ab093e2756a1fd190d0
   languageName: node
   linkType: hard
 
@@ -24251,15 +24212,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-image-colors@npm:1.5.1":
-  version: 1.5.1
-  resolution: "react-native-image-colors@npm:1.5.1"
+"react-native-image-colors@npm:1.5.2":
+  version: 1.5.2
+  resolution: "react-native-image-colors@npm:1.5.2"
   dependencies:
     node-vibrant: 3.1.6
   peerDependencies:
     react: "*"
     react-native: "*"
-  checksum: e6bcd851f536997be9097eec2fc6863ede2f52102732cdbeec48cb9bc971bafaa1254a32ca60b46997aa271c28b244284718bf29eeed741d12fed85845cc107b
+  checksum: b4ebd9d8ce093f7caf2b4865c7f154e226d161e17c1f073fed322c6a16a7ccef2b7cc915069f8be4476cbb5cd2a6659359f12974c78f881c2d5cb790b87b5281
   languageName: node
   linkType: hard
 
