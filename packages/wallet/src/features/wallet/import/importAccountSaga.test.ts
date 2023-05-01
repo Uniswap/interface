@@ -8,7 +8,7 @@ import {
   SAMPLE_SEED_ADDRESS_2,
   signerManager,
 } from '../../../test/__fixtures__'
-import { addAccounts } from '../slice'
+import { activateAccount, addAccounts } from '../slice'
 import { AccountType } from '../types'
 import { importAccount } from './importAccountSaga'
 import {
@@ -71,7 +71,7 @@ describe(importAccount, () => {
           mnemonicId: SAMPLE_SEED_ADDRESS_1,
         },
       ]),
-      // activateAccount(SAMPLE_SEED_ADDRESS_1),
+      activateAccount(SAMPLE_SEED_ADDRESS_1),
       // unlockWallet(),
     ])
   })
@@ -110,7 +110,7 @@ describe(importAccount, () => {
           timeImportedMs: expect.any(Number),
         },
       ]),
-      // activateAccount(NATIVE_ADDRESS),
+      activateAccount(NATIVE_ADDRESS),
       // unlockWallet(),
     ])
   })

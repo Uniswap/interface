@@ -1,5 +1,5 @@
 import { Outlet } from 'react-router-dom'
-import { Stack, Text } from 'ui/src'
+import { Circle, Stack, Text, XStack } from 'ui/src'
 
 export function OnboardingWrapper(): JSX.Element {
   return (
@@ -14,6 +14,13 @@ export function OnboardingWrapper(): JSX.Element {
         marginBottom="$spacing60">
         <Outlet />
       </Stack>
+      {/* TODO: actually associate these with the step. */}
+      <XStack gap="$spacing8" marginBottom="$spacing16">
+        <Circle backgroundColor="black" size={8} />
+        <Circle backgroundColor="black" size={8} />
+        <Circle backgroundColor="black" size={8} />
+        <Circle backgroundColor="black" size={8} />
+      </XStack>
     </Stack>
   )
 }

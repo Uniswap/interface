@@ -2,11 +2,11 @@ import dayjs from 'dayjs'
 import { CallEffect } from 'redux-saga/effects'
 import { all, call, put } from 'typed-redux-saga'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
+import { activateAccount, addAccounts } from 'wallet/src/features/wallet/slice'
+import { Account, AccountType } from 'wallet/src/features/wallet/types'
 import { getChecksumAddress } from 'wallet/src/utils/addresses'
 import { createMonitoredSaga } from 'wallet/src/utils/saga'
 import { logger } from '../../logger/logger'
-import { addAccounts } from '../slice'
-import { Account, AccountType } from '../types'
 import { ImportAccountParams, ImportAccountType } from './types'
 
 export const IMPORT_WALLET_AMOUNT = 10
@@ -172,7 +172,7 @@ function* importMnemonicAccounts(
 function* onAccountImport(account: Account, ignoreActivate?: boolean) {
   yield* put(addAccounts([account]))
   if (!ignoreActivate) {
-    // yield* put(activateAccount(account.address))
+    yield* put(activateAccount(account.address))
   }
   // yield* put(unlockWallet())
   logger.debug(

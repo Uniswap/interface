@@ -4,13 +4,10 @@ import { Flex } from 'ui/src/components/layout/Flex'
 import { PortfolioBalance } from 'wallet/src/features/home/PortfolioBalance'
 import { PortfolioHeader } from 'wallet/src/features/home/PortfolioHeader'
 import { TokenBalanceList } from 'wallet/src/features/home/TokenBalanceList'
-import { useAppSelector } from '../../state'
+import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
 export function HomeScreen(): JSX.Element {
-  const accounts = useAppSelector((state) => state?.wallet?.accounts)
-  const account = Object.values(accounts)?.[0]
-  const address = account?.address
-
+  const address = useActiveAccountAddressWithThrow()
   return (
     <Flex alignItems="center" flexGrow={1} width="100%">
       {address ? (

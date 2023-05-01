@@ -1,6 +1,7 @@
 import { createAnimations } from '@tamagui/animations-css'
 
-export const animations = createAnimations({
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const animations: any = createAnimations({
   bouncy: {
     type: 'spring',
     damping: 10,

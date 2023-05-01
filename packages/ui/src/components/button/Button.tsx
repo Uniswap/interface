@@ -28,13 +28,12 @@ const CustomButtonFrame = styled(ButtonFrame, {
   // instead of setting border: 0 when no border, make it 1px but transparent, so the
   // size or alignment of a button won't change unexpectedly between variants
   borderWidth: 1,
-  flexGrow: 1,
   flexDirection: 'row',
   alignItems: 'center',
   justifyContent: 'center',
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore: TODO: figure out why ButtonFrame inherits a hardcoded height value
-  height: '100%',
+  height: 'auto',
 
   variants: {
     buttonSize: {
@@ -81,10 +80,13 @@ export const Button = CustomButtonFrame.styleable(
 
 export const LinkButton = ({
   to,
+  state,
+  onClick,
   children,
   ...props
-}: ButtonProps & { to: string }): JSX.Element => (
-  <Link style={styles.linkButton} to={to}>
+}: // eslint-disable-next-line @typescript-eslint/no-explicit-any
+ButtonProps & { to: string; state?: any; onClick?: any }): JSX.Element => (
+  <Link state={state} style={styles.linkButton} to={to} onClick={onClick}>
     <Button {...props} theme={props.theme}>
       {children}
     </Button>

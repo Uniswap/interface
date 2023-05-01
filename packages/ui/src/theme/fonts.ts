@@ -1,6 +1,7 @@
 import { createInterFont } from '@tamagui/font-inter'
 
-export const headingFont = createInterFont({
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const headingFont: any = createInterFont({
   size: {
     6: 15,
   },
@@ -32,7 +33,8 @@ export const headingFont = createInterFont({
   },
 })
 
-export const bodyFont = createInterFont(
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const bodyFont: any = createInterFont(
   {
     face: {
       700: { normal: 'InterBold' },
