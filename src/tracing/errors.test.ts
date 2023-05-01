@@ -40,6 +40,12 @@ describe('filterKnownErrors', () => {
     expect(filterKnownErrors(ERROR, { originalException })).toBeNull()
   })
 
+  it('filters chrome-extension errors', () => {
+    const originalException = new Error()
+    originalException.name = 'r(chrome-extension://kglcipoddmbniebnibibkghfijekllbl/js/inject'
+    expect(filterKnownErrors(ERROR, { originalException })).toBeNull()
+  })
+
   describe('OneKey', () => {
     it('filter OneKey errors (macOS users)', () => {
       const originalException = new Error()

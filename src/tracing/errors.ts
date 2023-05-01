@@ -92,6 +92,12 @@ export const filterKnownErrors: Required<ClientOptions>['beforeSend'] = (event: 
     if (error.name.match(/OneKey/i)) return null
 
     /*
+     * Errors coming from a Chrome Extension can be ignored for now. These errors are usually caused by extensions injecting
+     * scripts into the page, which we cannot control.
+     */
+    if (error.name.match(/chrome-extension:\/\//i)) return null
+
+    /*
      * Content security policy 'unsafe-eval' errors can be filtered out because there are expected failures.
      * For example, if a user runs an eval statement in console this error would still get thrown.
      * TODO(INFRA-176): We should extend this to filter out any type of CSP error.
