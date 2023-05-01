@@ -43,13 +43,20 @@ describe('filterKnownErrors', () => {
   describe('OneKey', () => {
     it('filter OneKey errors (macOS users)', () => {
       const originalException = new Error()
-      originalException.name = 'xd.<anonymous>(/Applications/OneKey.app/Contents/Resources/static/preload.js)'
+      originalException.stack = `
+        SyntaxError: Unexpected token u in JSON at position 0
+          at JSON.parse(<anonymous>)
+          at _d._handleAccountChange(/Applications/OneKey.app/Contents/Resources/static/preload.js:2:1634067)
+      `
       expect(filterKnownErrors(ERROR, { originalException })).toBeNull()
     })
     it('filter OneKey errors (Windows users)', () => {
       const originalException = new Error()
-      originalException.name =
-        'yd.<anonymous>(C:\\Users\\xyz\\AppData\\Local\\Programs\\OneKey\\resources\\static\\preload.js)'
+      originalException.stack = `
+        SyntaxError: Unexpected token u in JSON at position 0
+          at JSON.parse(<anonymous>)
+          vd._handleAccountChange(C:\\Users\\example\\AppData\\Local\\Programs\\OneKey\\resources\\static\\preload.js:2:1626130
+      `
       expect(filterKnownErrors(ERROR, { originalException })).toBeNull()
     })
   })
