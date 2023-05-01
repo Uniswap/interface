@@ -4,8 +4,6 @@ import { USDC_MAINNET } from '../../src/constants/tokens'
 import { WETH_GOERLI } from '../fixtures/constants'
 import { getTestSelector } from '../utils'
 
-const MAINNET_USDC_ADDRESS = USDC_MAINNET.address.substring(0, 8)
-
 describe('Swap', () => {
   const verifyAmount = (field: 'input' | 'output', amountText: string | null) => {
     if (amountText === null) {
@@ -80,79 +78,89 @@ describe('Swap', () => {
 
   it('can swap ETH for USDC', () => {
     const BALANCE_INCREMENT = 1
-    cy.hardhat().then((hardhat) => {
-      cy.then(() => hardhat.getBalance(hardhat.wallet.address, USDC_MAINNET))
-        .then((balance) => Number(balance.toFixed(1)))
-        .then((initialBalance) => {
-          cy.get('#swap-currency-output .open-currency-select-button').click()
-          cy.get(getTestSelector('token-search-input')).clear().type(TOKEN_ADDRESS)
-          cy.contains('USDC').click()
-          cy.get('#swap-currency-output .token-amount-input').clear().type(BALANCE_INCREMENT.toString())
-          cy.get('#swap-currency-input .token-amount-input').should('not.equal', '')
-          cy.get('#swap-button').click()
-          cy.get('#confirm-swap-or-send').click()
-          cy.get(getTestSelector('dismiss-tx-confirmation')).click()
+    cy.visit('/swap', { ethereum: 'hardhat' })
+      .hardhat()
+      .then((hardhat) => {
+        hardhat
+          .reset()
+          .then(() => hardhat.getBalance(hardhat.wallet.address, USDC_MAINNET))
+          .then((balance) => Number(balance.toFixed(1)))
+          .then((initialBalance) => {
+            hardhat.provider.send('evm_setAutomine', [true])
 
-          cy.then(() => hardhat.provider.send('hardhat_mine', ['0x1', '0xc'])).then(() => {
-            // ui check
+            cy.get('#swap-currency-output .open-currency-select-button').click()
+            cy.contains('USDC').click()
+            cy.get('#swap-currency-output .token-amount-input').clear().type(BALANCE_INCREMENT.toString())
+            cy.get('#swap-currency-input .token-amount-input').should('not.equal', '')
+            cy.get('#swap-button').click()
+            cy.get('#confirm-swap-or-send').click()
+            cy.get(getTestSelector('dismiss-tx-confirmation')).click()
+
+            // Check that the new balance is reflected in the UI
             cy.get('#swap-currency-output [data-testid="balance-text"]').should(
               'have.text',
               `Balance: ${initialBalance + BALANCE_INCREMENT}`
             )
 
-            // chain state check
+            // Check that the balance is incremented on chain
             cy.then(() => hardhat.getBalance(hardhat.wallet.address, USDC_MAINNET))
               .then((balance) => Number(balance.toFixed(1)))
               .should('eq', initialBalance + BALANCE_INCREMENT)
           })
-        })
-    })
+      })
   })
 
   it('should render an error when a transaction fails due to a passed deadline', () => {
     const BALANCE_INCREMENT = 1
     const DEADLINE_MINUTES = 30
     cy.visit('/swap', { ethereum: 'hardhat' })
-      .then((window) => {
-        hardhat = window.hardhat
-      })
-      .then(() => hardhat.utils.getBalance(hardhat.wallet.address, USDC_MAINNET))
-      .then((balance) => Number(balance.toFixed(1)))
-      .then((initialBalance) => {
-        // input swap info
-        cy.get('#swap-currency-output .open-currency-select-button').click()
-        cy.get(getTestSelector('token-search-input')).clear().type(MAINNET_USDC_ADDRESS)
-        cy.contains('USDC').click()
-        cy.get('#swap-currency-output .token-amount-input').clear().type(BALANCE_INCREMENT.toString())
-        cy.get('#swap-currency-input .token-amount-input').should('not.equal', '')
+      .hardhat()
+      .then((hardhat) => {
+        hardhat
+          .reset()
+          .then(() => hardhat.getBalance(hardhat.wallet.address, USDC_MAINNET))
+          .then((balance) => Number(balance.toFixed(1)))
+          .then((initialBalance) => {
+            hardhat.provider.send('evm_setAutomine', [false])
 
-        // set deadline to minimum (1 minute)
-        cy.get(getTestSelector('open-settings-dialog-button')).click()
-        cy.get(getTestSelector('deadline-input')).clear().type(DEADLINE_MINUTES.toString())
-        cy.get('body').click('topRight')
-        cy.get(getTestSelector('deadline-input')).should('not.exist')
+            // input swap info
+            cy.get('#swap-currency-output .open-currency-select-button').click()
+            cy.contains('USDC').click()
+            cy.get('#swap-currency-output .token-amount-input').clear().type(BALANCE_INCREMENT.toString())
+            cy.get('#swap-currency-input .token-amount-input').should('not.equal', '')
 
-        cy.get('#swap-button').click()
-        cy.get('#confirm-swap-or-send').click()
+            // set deadline to minimum (1 minute)
+            cy.get(getTestSelector('open-settings-dialog-button')).click()
+            cy.get(getTestSelector('deadline-input')).clear().type(DEADLINE_MINUTES.toString())
+            cy.get('body').click('topRight')
+            cy.get(getTestSelector('deadline-input')).should('not.exist')
 
-        cy.then(() => hardhat.send('eth_getBlockByNumber', ['latest']))
-          .then((block) => block.timestamp * 2)
-          .then((timestampIncrease) => {
-            hardhat.send('evm_increaseTime', [hexValue(timestampIncrease)])
-            hardhat.send('hardhat_mine', [hexValue(1), hexValue(timestampIncrease)])
+            cy.get('#swap-button').click()
+            cy.get('#confirm-swap-or-send').click()
+
+            // Mine a block past the deadline
+            cy.then(() => hardhat.provider.send('eth_getBlockByNumber', ['latest']))
+              .then((block) => block.timestamp * 2)
+              .then((timestampIncrease) => {
+                hardhat.provider.send('evm_increaseTime', [hexValue(timestampIncrease)])
+                hardhat.provider.send('hardhat_mine', [hexValue(1), hexValue(timestampIncrease)])
+              })
+
+            cy.then(() => hardhat.provider.send('hardhat_mine', ['0x1', '0xc'])).then(() => {
+              cy.get(getTestSelector('dismiss-tx-confirmation')).click()
+
+              // Check that the balance is unchanged in the UI
+              cy.get('#swap-currency-output [data-testid="balance-text"]').should(
+                'have.text',
+                `Balance: ${initialBalance}`
+              )
+
+              // Check that the balance is unchanged on chain
+              cy.then(() => hardhat.getBalance(hardhat.wallet.address, USDC_MAINNET))
+                .then((balance) => Number(balance.toFixed(1)))
+                .should('eq', initialBalance)
+            })
           })
-
-        cy.then(() => hardhat.send('hardhat_mine', ['0x1', '0xc'])).then(() => {
-          cy.get(getTestSelector('dismiss-tx-confirmation')).click()
-
-          // ui check
-          cy.get('#swap-currency-output [data-testid="balance-text"]').should('have.text', `Balance: ${initialBalance}`)
-
-          // chain state check
-          cy.then(() => hardhat.utils.getBalance(hardhat.wallet.address, USDC_MAINNET))
-            .then((balance) => Number(balance.toFixed(1)))
-            .should('eq', initialBalance)
-        })
       })
   })
 
