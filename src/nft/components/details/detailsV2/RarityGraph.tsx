@@ -1,3 +1,4 @@
+import { Trans } from '@lingui/macro'
 import Row from 'components/Row'
 import { Trait } from 'nft/types'
 import styled from 'styled-components/macro'
@@ -13,6 +14,7 @@ const RarityBar = styled.div<{ $color?: string }>`
 interface RarityValue {
   threshold: number
   color: string
+  caption: React.ReactNode
 }
 
 enum RarityLevel {
@@ -27,26 +29,31 @@ const RarityLevels: { [key in RarityLevel]: RarityValue } = {
   [RarityLevel.VeryCommon]: {
     threshold: 0.8,
     color: colors.gray500,
+    caption: <Trans>Very common</Trans>,
   },
   [RarityLevel.Common]: {
     threshold: 0.6,
     color: colors.green300,
+    caption: <Trans>Common</Trans>,
   },
   [RarityLevel.Rare]: {
     threshold: 0.4,
     color: colors.blueVibrant,
+    caption: <Trans>Rare</Trans>,
   },
   [RarityLevel.VeryRare]: {
     threshold: 0.2,
     color: colors.purpleVibrant,
+    caption: <Trans>Very rare</Trans>,
   },
   [RarityLevel.ExtremelyRare]: {
     threshold: 0,
     color: colors.magentaVibrant,
+    caption: <Trans>Extremely rare</Trans>,
   },
 }
 
-function getRarityLevel(rarity: number) {
+export function getRarityLevel(rarity: number) {
   switch (true) {
     case rarity > RarityLevels[RarityLevel.VeryCommon].threshold:
       return RarityLevels[RarityLevel.VeryCommon]
