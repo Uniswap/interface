@@ -44,10 +44,20 @@ const PrimaryMenuRow = ({
     <>
       {to ? (
         <NavLink to={to} className={styles.MenuRow}>
-          <Row onClick={close}>{children}</Row>
+          <Row alignItems="flex-start" onClick={close}>
+            {children}
+          </Row>
         </NavLink>
       ) : (
-        <Row cursor="pointer" as="a" href={href} target="_blank" rel="noopener noreferrer" className={styles.MenuRow}>
+        <Row
+          cursor="pointer"
+          alignItems="flex-start"
+          as="a"
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={styles.MenuRow}
+        >
           {children}
         </Row>
       )}
