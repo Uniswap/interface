@@ -178,7 +178,7 @@ const CandleChart = ({
   }, [chartCreated, color, data, height, setValue, setLabel, theme.background])
 
   return (
-    <Wrapper minHeight={minHeight}>
+    <Wrapper minHeight={minHeight} padding={"10px"}>
       <RowBetween>
         {topLeft ?? null}
         {topRight ?? null}

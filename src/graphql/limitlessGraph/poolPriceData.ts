@@ -279,6 +279,29 @@ export function usePoolPriceData(
     uniswapPoolAddress,
   ])
 
+  // const fakePriceData = [
+  //   {
+  //     time: 1682377200,
+  //     open: 5.0465835688061,
+  //     close: 16.0465835688061,
+  //     high: 20.0465835688061,
+  //     low: 3.0465835688061,
+  //   },
+  //   {
+  //     time: 1682377350,
+  //     open: 13.0465835688061,
+  //     close: 16.0465835688061,
+  //     high: 12.0465835688061,
+  //     low: 20.0465835688061,
+  //   },
+  //   {
+  //     time: 1682377900,
+  //     open: 50.0465835688061,
+  //     close: 25.0465835688061,
+  //     high: 80.0465835688061,
+  //     low: 20.0465835688061,
+  //   },    
+  // ]
   // return data
   return priceData?.priceData ?? []
 }

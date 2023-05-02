@@ -857,29 +857,6 @@ export default function Swap({ className }: { className?: string }) {
   // time
   // : 
   // 1682377200
-  const fakePriceData = [
-    {
-      time: 1682377200,
-      open: 5.0465835688061,
-      close: 16.0465835688061,
-      high: 20.0465835688061,
-      low: 3.0465835688061,
-    },
-    {
-      time: 1682377350,
-      open: 13.0465835688061,
-      close: 16.0465835688061,
-      high: 12.0465835688061,
-      low: 20.0465835688061,
-    },
-    {
-      time: 1682377900,
-      open: 50.0465835688061,
-      close: 25.0465835688061,
-      high: 80.0465835688061,
-      low: 20.0465835688061,
-    },    
-  ]
 
   // // token0 price.
   const enoughAllowance = (!leverage && allowance.state === AllowanceState.REQUIRED) || (leverage && (leverageApprovalState === ApprovalState.NOT_APPROVED))
@@ -938,7 +915,7 @@ export default function Swap({ className }: { className?: string }) {
                         <MonoSpace>
                           {latestValue
                             ? formatDollarAmount(latestValue, 2)
-                          : null
+                          : formatDollarAmount(0, 2)
                           }
                         </MonoSpace>
                       </ThemedText.BodySecondary>
@@ -952,7 +929,7 @@ export default function Swap({ className }: { className?: string }) {
                     </ThemedText.DeprecatedMain>
                   </AutoColumn>
                   <CandleChart
-                        data={fakePriceData ?? []}
+                        data={priceData ?? []}
                         setValue={setLatestValue}
                         setLabel={setValueLabel}
                         // color={"#2172E5"}
