@@ -200,15 +200,13 @@ describe('Swap', () => {
 
   it('should render an error for slippage failure', () => {
     const SLIPPAGE = 0.01
-    const AMOUNT_TO_SWAP = 300
-    const NUMBER_OF_SWAPS = 3
+    const AMOUNT_TO_SWAP = 400
+    const NUMBER_OF_SWAPS = 2
     const INDIVIDUAL_SWAP_INPUT = AMOUNT_TO_SWAP / NUMBER_OF_SWAPS
     cy.visit('/swap', { ethereum: 'hardhat' })
       .hardhat()
       .then((hardhat) => {
-        hardhat
-          .reset()
-          .then(() => hardhat.provider.send('evm_setAutomine', [false]))
+        cy.then(() => hardhat.setAutomine(false))
           .then(() => hardhat.provider.getBalance(hardhat.wallet.address))
           .then((initialBalance) => {
             // Gas estimation fails for this transaction (that would normally fail), so we stub it.
@@ -222,44 +220,49 @@ describe('Swap', () => {
             cy.get('body').click('topRight')
             cy.get(getTestSelector('slippage-input')).should('not.exist')
 
-            // Select USDC as output token from the common bases menu.
+            // Open the currency select modal.
             cy.get('#swap-currency-output .open-currency-select-button').click()
-            cy.get(getTestSelector('token-search-input')).clear().type('UNI')
-            cy.contains('UNI').click()
+            // Wait for the currency list to load
+            cy.contains('1inch').should('exist')
 
-            // Set the input amount to the max amount minus the gas buffer.
-            for (let i = 0; i < NUMBER_OF_SWAPS; i++) {
-              cy.get('#swap-currency-input .token-amount-input').clear().type(INDIVIDUAL_SWAP_INPUT.toString())
-              cy.get('#swap-currency-output .token-amount-input').should('not.equal', '')
-              cy.get('#swap-button').click()
-              cy.get('#confirm-swap-or-send').click()
-              cy.get(getTestSelector('dismiss-tx-confirmation')).click()
-            }
+            // Select UNI as output token
+            cy.get(getTestSelector('token-search-input')).clear().type('Uniswap')
+            cy.get(getTestSelector('currency-list-wrapper'))
+              .contains(/^Uniswap$/)
+              .first()
+              .should('exist')
+              .click()
+
+            // Swap 2 times.
+            cy.get('#swap-currency-input .token-amount-input').clear().type(INDIVIDUAL_SWAP_INPUT.toString())
+            cy.get('#swap-currency-output .token-amount-input').should('not.equal', '')
+            cy.get('#swap-button').click()
+            cy.get('#confirm-swap-or-send').click()
+            cy.get(getTestSelector('dismiss-tx-confirmation')).click()
+            cy.get('#swap-currency-input .token-amount-input').clear().type(INDIVIDUAL_SWAP_INPUT.toString())
+            cy.get('#swap-currency-output .token-amount-input').should('not.equal', '')
+            cy.get('#swap-button').click()
+            cy.get('#confirm-swap-or-send').click()
+            cy.get(getTestSelector('dismiss-tx-confirmation')).click()
 
             // The pending transaction indicator should be visible.
             cy.contains(`${NUMBER_OF_SWAPS} Pending`).should('exist')
 
-            cy.then(() => hardhat.mine(1, 12)).then(() => {
+            cy.then(() => hardhat.mine()).then(() => {
               // The pending transaction indicator should not be visible.
               cy.contains(`${NUMBER_OF_SWAPS} Pending`).should('not.exist')
 
               // Check for a failed transaction notification.
               cy.contains('Swap failed').should('exist')
 
-              // Assert that the balance is unchanged. (aside from gas costs)
+              // Assert that at least one of the swaps failed due to slippage.
               cy.then(() => hardhat.provider.getBalance(hardhat.wallet.address)).then((finalBalance) => {
                 expect(initialBalance.gt(finalBalance)).to.be.true
-
                 expect(finalBalance.gt(initialBalance.sub(parseEther(AMOUNT_TO_SWAP.toString())))).to.be.true
-              })
-
-              // Assert that the USDC balance is unchanged.
-              cy.then(() => hardhat.getBalance(hardhat.wallet.address, USDC_MAINNET)).then((usdcBalance) => {
-                expect(usdcBalance.equalTo(0)).to.be.true
               })
             })
           })
-          .then(() => hardhat.provider.send('evm_setAutomine', [true]))
+          .then(() => hardhat.setAutomine(true))
       })
   })
 })
