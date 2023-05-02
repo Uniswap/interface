@@ -35,11 +35,6 @@ runs:
 
     - uses: actions/checkout@7884fcad6b5d53d10323aee724dc68d8b9096a2e
       with:
-        token: ${{ secrets.SERVICE_ACCOUNT_PAT }}
-        ref: main # use main so that the next step gets the most recent Fastfile
-
-    - uses: actions/checkout@7884fcad6b5d53d10323aee724dc68d8b9096a2e
-      with:
         fetch-depth: 0
         ref: ${{ inputs.branch }}
 
