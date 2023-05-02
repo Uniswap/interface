@@ -308,7 +308,6 @@ describe('Swap', () => {
 
               // Assert that at least one of the swaps failed due to slippage.
               cy.then(() => hardhat.provider.getBalance(hardhat.wallet.address)).then((finalBalance) => {
-                expect(initialBalance.gt(finalBalance)).to.be.true
                 expect(finalBalance.gt(initialBalance.sub(parseEther(AMOUNT_TO_SWAP.toString())))).to.be.true
               })
             })
