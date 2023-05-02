@@ -106,7 +106,7 @@ describe('swap reducer', () => {
   describe('updateRouterPreference', () => {
     it('updates the routerPreference', () => {
       store.dispatch(updateUserRouterPreference({ userRouterPreference: RouterPreference.API }))
-      expect(store.getState().routerPreference).toEqual(RouterPreference.API)
+      expect(store.getState().userRouterPreference).toEqual(RouterPreference.API)
     })
   })
 

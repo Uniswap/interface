@@ -22,7 +22,7 @@ export interface UserState {
   userExpertMode: boolean
 
   // which route should be used to calculate trades
-  routerPreference: RouterPreference
+  userRouterPreference: RouterPreference
 
   // hides closed (inactive) positions across the app
   userHideClosedPositions: boolean
@@ -63,8 +63,7 @@ export const initialState: UserState = {
   selectedWallet: undefined,
   userExpertMode: false,
   userLocale: null,
-  userClientSideRouter: false,
-  routerPreference: RouterPreference.PRICE,
+  userRouterPreference: RouterPreference.PRICE,
   userHideClosedPositions: false,
   userSlippageTolerance: 'auto',
   userSlippageToleranceHasBeenMigratedToAuto: true,
@@ -104,7 +103,7 @@ const userSlice = createSlice({
       state.timestamp = currentTimestamp()
     },
     updateUserRouterPreference(state, action) {
-      state.routerPreference = action.payload.userRouterPreference
+      state.userRouterPreference = action.payload.userRouterPreference
     },
     updateHideClosedPositions(state, action) {
       state.userHideClosedPositions = action.payload.userHideClosedPositions

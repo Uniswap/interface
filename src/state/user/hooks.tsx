@@ -96,7 +96,7 @@ export function useExpertModeManager(): [boolean, () => void] {
 export function useRouterPreference(): [RouterPreference, (routerPreference: RouterPreference) => void] {
   const dispatch = useAppDispatch()
 
-  const routerPreference = useAppSelector((state) => state.user.routerPreference)
+  const routerPreference = useAppSelector((state) => state.user.userRouterPreference)
 
   const setRouterPreference = useCallback(
     (newRouterPreference: RouterPreference) => {
