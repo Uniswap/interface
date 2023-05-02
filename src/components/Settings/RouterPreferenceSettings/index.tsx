@@ -1,5 +1,4 @@
 import { Trans } from '@lingui/macro'
-import { sendEvent } from 'components/analytics'
 import Column from 'components/Column'
 import Radio from 'components/Radio'
 import Row, { RowBetween, RowFixed } from 'components/Row'
@@ -23,14 +22,6 @@ const PreferencesContainer = styled(Column)`
 export default function RouterPreferenceSettings() {
   const [routerPreference, setRouterPreference] = useRouterPreference()
 
-  const toggleAutoRouting = () => {
-    sendEvent({
-      category: 'Routing',
-      action: routerPreference === RouterPreference.PRICE ? 'enable routing API' : 'disable routing API',
-    })
-    setRouterPreference(routerPreference === RouterPreference.PRICE ? RouterPreference.API : RouterPreference.PRICE)
-  }
-
   const isAutoRoutingActive = routerPreference === RouterPreference.PRICE
 
   return (
@@ -46,7 +37,11 @@ export default function RouterPreferenceSettings() {
             </ThemedText.Caption>
           </Column>
         </RowFixed>
-        <Toggle id="toggle-optimized-router-button" isActive={isAutoRoutingActive} toggle={toggleAutoRouting} />
+        <Toggle
+          id="toggle-optimized-router-button"
+          isActive={isAutoRoutingActive}
+          toggle={() => setRouterPreference(isAutoRoutingActive ? RouterPreference.API : RouterPreference.PRICE)}
+        />
       </RowBetween>
       {!isAutoRoutingActive && (
         <PreferencesContainer>
