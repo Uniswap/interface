@@ -3,7 +3,7 @@
 // https://github.com/software-mansion/react-native-reanimated/issues/2976
 
 import { BottomSheetFlatList } from '@gorhom/bottom-sheet'
-import React, { forwardRef } from 'react'
+import React, { forwardRef, PropsWithChildren } from 'react'
 import { FlatList, FlatListProps, LayoutChangeEvent, View } from 'react-native'
 import Animated, { ILayoutAnimationBuilder } from 'react-native-reanimated'
 
@@ -16,12 +16,16 @@ const AnimatedView = Animated.createAnimatedComponent(View)
 
 const createCellRenderer = (
   itemLayoutAnimation?: ILayoutAnimationBuilder
-): React.FC<{
-  onLayout: (event: LayoutChangeEvent) => void
-}> => {
-  const cellRenderer: React.FC<{
+): React.FC<
+  PropsWithChildren<{
     onLayout: (event: LayoutChangeEvent) => void
-  }> = (props) => {
+  }>
+> => {
+  const cellRenderer: React.FC<
+    PropsWithChildren<{
+      onLayout: (event: LayoutChangeEvent) => void
+    }>
+  > = (props) => {
     return (
       <AnimatedView layout={itemLayoutAnimation as never} onLayout={props.onLayout}>
         {props.children}

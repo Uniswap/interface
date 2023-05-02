@@ -41,7 +41,7 @@ runs:
       shell: bash
       working-directory: ./
       run: |
-        yarn --immutable && cd apps/mobile && yarn --immutable
+        yarn --immutable
       env:
         # CI optimizations. Overrides yarnrc.yml options (or their defaults) in the CI action.
         YARN_ENABLE_GLOBAL_CACHE: 'false' # Use local cache folder to keep downloaded archives

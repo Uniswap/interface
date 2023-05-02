@@ -3,7 +3,12 @@ import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import _ from 'lodash'
 import React, { memo, useCallback, useEffect, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { TextInput, TextInputProps } from 'react-native'
+import {
+  NativeSyntheticEvent,
+  TextInput,
+  TextInputProps,
+  TextInputSelectionChangeEventData,
+} from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
 import { AmountInput } from 'src/components/input/AmountInput'
 import { MaxAmountButton } from 'src/components/input/MaxAmountButton'
@@ -186,7 +191,8 @@ export function _CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element 
       nativeEvent: {
         selection: { start, end },
       },
-    }) => selectionChange && selectionChange(start, end),
+    }: NativeSyntheticEvent<TextInputSelectionChangeEventData>) =>
+      selectionChange && selectionChange(start, end),
     [selectionChange]
   )
 

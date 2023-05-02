@@ -228,10 +228,5 @@
     "typechain": "5.2.0",
     "typescript": "4.9.4",
     "yarn-deduplicate": "6.0.0"
-  },
-  "resolutions": {
-    "json5": "1.0.2",
-    "node-fetch": "2.6.7",
-    "react-native-fast-image@8.6.3": "patch:react-native-fast-image@npm%3A8.6.3#./.yarn/patches/react-native-fast-image-npm-8.6.3-03ee2d23c0.patch"
   }
 }

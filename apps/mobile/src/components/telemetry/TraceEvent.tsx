@@ -1,5 +1,5 @@
 import { SharedEventName } from '@uniswap/analytics-events'
-import React, { PropsWithChildren } from 'react'
+import React, { PropsWithChildren, ReactNode } from 'react'
 import { NativeSyntheticEvent, NativeTouchEvent } from 'react-native'
 import { ITraceContext, Trace, TraceContext } from 'src/components/telemetry/Trace'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
@@ -34,7 +34,7 @@ function _TraceEvent(props: PropsWithChildren<TraceEventProps>): JSX.Element {
   return (
     <Trace {...logEventProps}>
       <TraceContext.Consumer>
-        {(consumedProps): Record<string, unknown>[] | null | undefined =>
+        {(consumedProps): ReactNode =>
           React.Children.map(children, (child) => {
             if (!React.isValidElement(child)) {
               return child

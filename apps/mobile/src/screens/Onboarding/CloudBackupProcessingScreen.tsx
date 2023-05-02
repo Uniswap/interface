@@ -37,7 +37,8 @@ export function CloudBackupProcessingScreen({
   const [processing, doneProcessing] = useReducer(() => false, true)
 
   const handleBackupError = useCallback(
-    (error) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (error: any) => {
       logger.error('CloudBackupProcessingScreen', 'handleBackupError', error)
       Alert.alert(
         t('iCloud error'),

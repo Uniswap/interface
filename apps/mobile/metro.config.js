@@ -5,7 +5,18 @@
  * @format
  */
 
+const path = require('path');
 const { getDefaultConfig } = require('metro-config')
+
+const mobileRoot = path.resolve(__dirname)
+const workspaceRoot = path.resolve(mobileRoot, '../..');
+
+const watchFolders = [
+  mobileRoot,
+  `${workspaceRoot}/node_modules`
+  // not yet enabled
+  // `${workspaceRoot}/packages`
+]
 
 module.exports = (async () => {
   const {
@@ -19,6 +30,7 @@ module.exports = (async () => {
         .split(',')
         .concat(sourceExts)
         .concat(['svg', 'cjs']),
+      nodeModulesPaths: [`${workspaceRoot}/node_modules`],
     },
     transformer: {
       getTransformOptions: async () => ({
@@ -29,5 +41,6 @@ module.exports = (async () => {
       }),
       babelTransformerPath: require.resolve('react-native-svg-transformer'),
     },
+    watchFolders,
   }
 })()

@@ -1,4 +1,4 @@
-import React, { ErrorInfo } from 'react'
+import React, { ErrorInfo, PropsWithChildren } from 'react'
 import { useTranslation } from 'react-i18next'
 import RNRestart from 'react-native-restart'
 import DeadLuni from 'src/assets/graphics/dead-luni.svg'
@@ -14,8 +14,8 @@ interface ErrorBoundaryState {
 
 // Uncaught errors during renders of subclasses will be caught here
 // Errors in handlers (e.g. press handler) will not reach here
-export class ErrorBoundary extends React.Component<unknown, ErrorBoundaryState> {
-  constructor(props: unknown) {
+export class ErrorBoundary extends React.Component<PropsWithChildren<unknown>, ErrorBoundaryState> {
+  constructor(props: PropsWithChildren<unknown>) {
     super(props)
     this.state = { error: null }
   }

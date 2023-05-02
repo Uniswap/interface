@@ -353,7 +353,14 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
   )
 
   const renderTab = useCallback(
-    ({ route }) => {
+    ({
+      route,
+    }: {
+      route: {
+        key: SectionName
+        title: string
+      }
+    }) => {
       switch (route?.key) {
         case SectionName.HomeTokensTab:
           return (

@@ -62,7 +62,14 @@ export function ExternalProfileScreen({
   )
 
   const renderTab = useCallback(
-    ({ route }) => {
+    ({
+      route,
+    }: {
+      route: {
+        key: SectionName
+        title: string
+      }
+    }) => {
       switch (route?.key) {
         case SectionName.ProfileActivityTab:
           return <ActivityTab containerProps={sharedProps} owner={address} />

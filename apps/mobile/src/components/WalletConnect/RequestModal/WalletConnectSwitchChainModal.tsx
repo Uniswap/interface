@@ -70,6 +70,8 @@ export function WalletConnectSwitchChainModal({ onClose, request }: Props): JSX.
     }
   }
 
+  const dappName = dapp.name
+
   return (
     <BottomSheetModal name={ModalName.WCSwitchChainRequest} onClose={handleClose}>
       <Flex gap="spacing24" paddingBottom="spacing48" paddingHorizontal="spacing16" pt="spacing36">
@@ -77,8 +79,8 @@ export function WalletConnectSwitchChainModal({ onClose, request }: Props): JSX.
           <DappHeaderIcon showChain dapp={{ ...dapp, chain_id: newChainId }} />
           <Text textAlign="center" variant="headlineSmall">
             <Trans t={t}>
-              <Text fontWeight="bold">{{ dapp: dapp.name }}</Text> wants to connect to the{' '}
-              {newChainName} network
+              <Text fontWeight="bold">{dappName}</Text> wants to connect to the {newChainName}{' '}
+              network
             </Trans>
           </Text>
           <LinkButton

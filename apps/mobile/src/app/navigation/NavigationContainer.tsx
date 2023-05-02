@@ -6,7 +6,7 @@ import {
 } from '@react-navigation/native'
 import { AnyAction } from '@reduxjs/toolkit'
 import { SharedEventName } from '@uniswap/analytics-events'
-import React, { Dispatch, FC, useEffect, useState } from 'react'
+import React, { Dispatch, FC, PropsWithChildren, useEffect, useState } from 'react'
 import { Linking } from 'react-native'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { RootParamList } from 'src/app/navigation/types'
@@ -23,7 +23,10 @@ interface Props {
 export const navigationRef = createNavigationContainerRef()
 
 /** Wrapped `NavigationContainer` with telemetry tracing. */
-export const NavigationContainer: FC<Props> = ({ children, onReady }) => {
+export const NavigationContainer: FC<PropsWithChildren<Props>> = ({
+  children,
+  onReady,
+}: PropsWithChildren<Props>) => {
   const dispatch = useAppDispatch()
   const theme = useAppTheme()
   const [routeName, setRouteName] = useState<AppScreen>()

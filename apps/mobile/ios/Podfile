@@ -1,7 +1,7 @@
 # changes from here: https://docs.expo.dev/bare/installing-expo-modules/
 require File.join(File.dirname(`node --print "require.resolve('expo/package.json')"`), "scripts/autolinking")
-require_relative '../node_modules/react-native/scripts/react_native_pods'
-require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
+require_relative '../../../node_modules/react-native/scripts/react_native_pods'
+require_relative '../../../node_modules/@react-native-community/cli-platform-ios/native_modules'
 
 platform :ios, '14.0'
 
@@ -23,11 +23,11 @@ target 'Uniswap' do
     # Pods for testing
   end
 
-  pod 'EthersRS', :path =>  '../node_modules/@uniswap/ethers-rs-mobile'
+  pod 'EthersRS', :path =>  '../../../node_modules/@uniswap/ethers-rs-mobile'
   pod 'WalletConnectSwift' => '1.6.0'
   pod 'Argon2Swift'
 
-  permissions_path = '../node_modules/react-native-permissions/ios'
+  permissions_path = '../../../node_modules/react-native-permissions/ios'
   pod 'Permission-FaceID', :path => "#{permissions_path}/FaceID"
   pod 'Permission-Notifications', :path => "#{permissions_path}/Notifications"
 
@@ -39,7 +39,7 @@ target 'Uniswap' do
   # https://github.com/facebook/react-native/issues/31480#issuecomment-915583038
   if ENV['USE_FLIPPER']
     use_flipper!({'Flipper' => '0.162.0', 'Flipper-Folly' => '2.6.9'})
-    pod 'react-native-flipper', :path =>  '../node_modules/react-native-flipper'
+    pod 'react-native-flipper', :path =>  '../../../node_modules/react-native-flipper'
   end
 
   post_install do |installer|

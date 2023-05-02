@@ -101,9 +101,10 @@ export function LongText(props: LongTextProps): JSX.Element {
               // add our own custom link handler since it has security checks that only open http/https links
               openUri(url)
               return false
-            }}>
-            {text}
-          </Markdown>
+            }}
+            // HACK: children prop no in TS definition
+            {...{ children: text }}
+          />
         ) : (
           text
         )}

@@ -12,7 +12,7 @@ export function useAdaptiveFooterHeight({ headerHeight }: { headerHeight?: numbe
   const activeAccount = useActiveAccount()
 
   const onContentSizeChange = useCallback(
-    (_, contentHeight) => {
+    (_: number, contentHeight: number) => {
       if (headerHeight === undefined) return
       const footerHeightCorrection =
         dimensions.fullHeight + headerHeight - TAB_BAR_HEIGHT - contentHeight + 1

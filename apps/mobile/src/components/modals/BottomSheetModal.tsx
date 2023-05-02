@@ -79,7 +79,8 @@ export function BottomSheetModal({
     : backgroundColor ?? theme.colors.background1
 
   const renderBackdrop = useCallback(
-    (props) => (
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (props: any) => (
       <BottomSheetBackdrop
         {...props}
         appearsOnIndex={APPEARS_ON_INDEX}
@@ -92,7 +93,8 @@ export function BottomSheetModal({
   )
 
   const renderHandleBar = useCallback(
-    (props) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (props: any) => {
       // This adds an extra gap of unwanted space
       if (renderBehindInset && hideHandlebar) {
         return null
@@ -212,7 +214,8 @@ export function BottomSheetDetachedModal({
   }, [modalRef])
 
   const renderHandleBar = useCallback(
-    (props) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (props: any) => {
       return <HandleBar {...props} backgroundColor={backgroundColor} hidden={hideHandlebar} />
     },
     [backgroundColor, hideHandlebar]

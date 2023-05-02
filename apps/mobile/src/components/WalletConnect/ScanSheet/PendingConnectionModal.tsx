@@ -271,6 +271,8 @@ export const PendingConnectionModal = ({ pendingSession, onClose }: Props): JSX.
     [activeAddress, dispatch, onClose, selectedChainId, pendingSession, didOpenFromDeepLink]
   )
 
+  const dappName = pendingSession.dapp.name || pendingSession.dapp.url
+
   return (
     <BottomSheetModal name={ModalName.WCPendingConnection} onClose={onClose}>
       <AnimatedFlex
@@ -285,10 +287,7 @@ export const PendingConnectionModal = ({ pendingSession, onClose }: Props): JSX.
           <DappHeaderIcon dapp={pendingSession.dapp} showChain={false} />
           <Text textAlign="center" variant="headlineSmall">
             <Trans t={t}>
-              <Text fontWeight="bold">
-                {{ dapp: pendingSession.dapp.name || pendingSession.dapp.url }}
-              </Text>{' '}
-              wants to connect to your wallet
+              <Text fontWeight="bold">{dappName}</Text> wants to connect to your wallet
             </Trans>
           </Text>
           <LinkButton
