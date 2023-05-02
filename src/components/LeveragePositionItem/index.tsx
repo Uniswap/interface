@@ -126,11 +126,16 @@ const PrimaryPositionIdData = styled(AutoColumn)`
   align-items: center;
   width: 100%;
   > * {
-    margin-right: 8px;
+    margin-right: 2px;
   }
-  margin-bottom: 8px;
+  margin-bottom: 2px;
 `
-
+const SymbolLabel = ( {value}: { value: string|undefined}) => (
+ 
+    <FeeTierText>
+      {value}
+    </FeeTierText>
+)
 const ItemValueLabel = ({label, value}: { label: string, value: string}) => (
   <Column style={{width: "fit-content"}}>
     <ThemedText.Caption style={{whiteSpace: "nowrap"}}>
@@ -294,14 +299,14 @@ export default function LeveragePositionItem({
   // &nbsp;{currency0?.symbol}&nbsp;/&nbsp;{currency1?.symbol}
   return (
     <ItemWrapper>
-      <RowBetween>
+      <RowBetween width = {"100"}>
         <PrimaryPositionIdData>
           <AutoColumn>
             <DoubleCurrencyLogo currency0={currency0 ?? undefined} currency1={currency1 ?? undefined} size={18} margin />
-            <ThemedText.SubHeader>
-              Long {isToken0 ? currency0?.symbol : currency1?.symbol}/ 
+            <ThemedText.Caption>
+              {(Number(totalValue)/Number(initialCollateral)).toFixed(1).toString()}x Long {isToken0 ? currency0?.symbol : currency1?.symbol}/ 
               {isToken0 ? currency1?.symbol : currency0?.symbol}
-            </ThemedText.SubHeader>
+            </ThemedText.Caption>
             {true ? (
               <RangeLineItem>
                 <RangeText>
@@ -315,13 +320,13 @@ export default function LeveragePositionItem({
                     <HoverInlineText text={currency0?.symbol} /> per <HoverInlineText text={currency1?.symbol ?? ''} />
                   </Trans>
                 </RangeText>{' '}
-                <HideSmall>
+                {/* <HideSmall>
                   <DoubleArrow>↔</DoubleArrow>{' '}
                 </HideSmall>
-                <SmallOnly>
+               <<SmallOnly>
                   <DoubleArrow>↔</DoubleArrow>{' '}
                 </SmallOnly>
-                <RangeText>
+                RangeText>
                   <ExtentsText>
                     <Trans>Cur Price:</Trans>
                   </ExtentsText>
@@ -332,14 +337,47 @@ export default function LeveragePositionItem({
                     <HoverInlineText text={currency0?.symbol} /> per{' '}
                     <HoverInlineText maxCharacters={10} text={currency1?.symbol} />
                   </Trans>
-                </RangeText>
+                </RangeText>*/}
               </RangeLineItem>
             ) : (
               <Loader />
             )}
           </AutoColumn>
         </PrimaryPositionIdData>
-        <AutoColumn gap="8px" style={{marginRight: "150px"}}>
+        <AutoColumn gap="px" style={{marginRight: "15px"}}>
+            <ItemValueLabel label={"Position"} value={Number(totalLiquidity).toFixed(2).toString() + " "}/>
+            <SymbolLabel value= {(isToken0 ? currency0?.symbol : currency1?.symbol)} />
+        </AutoColumn>
+        <AutoColumn gap="2px" style={{marginRight: "15px"}}>
+            <ItemValueLabel label={"Position Value"} value={Number(totalValue).toFixed(2).toString()}/>
+            <SymbolLabel value= {(!isToken0 ? currency0?.symbol : currency1?.symbol)} />
+        </AutoColumn>
+          <AutoColumn gap="2px" style={{marginRight: "15px"}}>
+          <ItemValueLabel label={"Collateral"} value={new BN(initialCollateral).toString()}/>
+          <SymbolLabel value= {(isToken0 ? currency0?.symbol : currency1?.symbol)} />          
+          </AutoColumn>
+          <AutoColumn gap="8px" style={{marginRight: "15px"}}>
+          <ItemValueLabel label={"Debt"} value={new BN(totalDebtInput).toString()}/>
+          <SymbolLabel value= {(isToken0 ? currency0?.symbol : currency1?.symbol)} />          
+          </AutoColumn>
+          <AutoColumn gap="2px" style={{marginRight: "15px"}}>
+          <ItemValueLabel label={"Remaining Premium "} value={
+            (Number(remainingPremium)>0?remainingPremium.toString():"0" )}/>
+          <SymbolLabel value= {(isToken0 ? currency0?.symbol : currency1?.symbol)} />          
+
+          </AutoColumn>
+          <AutoColumn gap="2px" style={{marginRight: "10px" }} >
+            <ResponsiveButtonPrimary 
+            //data-cy="join-pool-button" id="join-pool-button"
+             onClick={() => setShowClose(!showClose)}>
+              <Trans>Close</Trans>
+            </ResponsiveButtonPrimary>
+          <ResponsiveButtonPrimary onClick={() => setShowAddPremium(!showAddPremium)} >
+            <Trans>Add Premium</Trans>
+          </ResponsiveButtonPrimary>
+          </AutoColumn>
+
+       {/* <AutoColumn gap="8px" style={{marginRight: "150px"}}>
             <ItemValueLabel label={"Total Position"} value={totalLiquidity + " " + (isToken0 ? currency0?.symbol : currency1?.symbol)}/>
         </AutoColumn>
         <AutoRow justify="flex-start" width="100%" marginBottom="16px">
@@ -357,7 +395,7 @@ export default function LeveragePositionItem({
           <ItemValueLabel label={"Remaining Premium "} value={
             (Number(remainingPremium)>0?remainingPremium.toString():"0" )+ " " + (isToken0 ? currency1?.symbol : currency0?.symbol)}/>
           </AutoColumn>
-        </AutoRow>
+        </AutoRow> */}
 
       </RowBetween>
       <RowBetween>
@@ -401,14 +439,14 @@ export default function LeveragePositionItem({
           )
           }
 
-          <ResponsiveButtonPrimary 
+          {/*<ResponsiveButtonPrimary 
           //data-cy="join-pool-button" id="join-pool-button"
            onClick={() => setShowClose(!showClose)}>
             <Trans>Close Position</Trans>
           </ResponsiveButtonPrimary>
           <ResponsiveButtonPrimary onClick={() => setShowAddPremium(!showAddPremium)} >
             <Trans>Add Premium</Trans>
-          </ResponsiveButtonPrimary>
+          </ResponsiveButtonPrimary>*/}
         </AutoRow>
       </RowBetween>
     </ItemWrapper>

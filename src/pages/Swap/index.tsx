@@ -223,9 +223,8 @@ export const MonoSpace = styled.span`
 
 
 
-
+ // background-color: ${({ theme }) => theme.backgroundSurface};
 const LeveragePositionsWrapper = styled.main`
-  background-color: ${({ theme }) => theme.backgroundSurface};
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
   padding: 4px;
   margin-left: 20px;
@@ -935,8 +934,24 @@ export default function Swap({ className }: { className?: string }) {
                         // color={"#2172E5"}
                       />
                   </AutoRow>
+                               <LeveragePositionsWrapper>
+                  {leveragePositions.length > 0 ? (
+                    <LeveragePositionsList positions={leveragePositions} userHideClosedPositions={hideClosedLeveragePositions} setUserHideClosedPositions={onHideClosedLeveragePositions} />
+                  ) : (
+                    <ErrorContainer>
+                      <ThemedText.DeprecatedBody color={theme.textTertiary} textAlign="center">
+                        {/* <InboxIcon strokeWidth={1} style={{ marginTop: '2em' }} /> */}
+                        <div>
+                          <Trans>Your active borrow positions will appear here.</Trans>
+                        </div>
+                      </ThemedText.DeprecatedBody>
+                    </ErrorContainer>
+                  )
+                  }
+                </LeveragePositionsWrapper>
                   {/* <PairChartSection token0PriceQuery={token0PriceQuery} token1PriceQuery={token1PriceQuery} token0symbol={inputCurrency?.symbol} token1symbol={outputCurrency?.symbol} onChangeTimePeriod={setTimePeriod} /> */}
                 </AutoRow>
+ 
                 <SwapWrapper chainId={chainId} className={className} id="swap-page">
                   <SwapHeader allowedSlippage={allowedSlippage} />
                   { leverage ? (
@@ -1363,7 +1378,9 @@ export default function Swap({ className }: { className?: string }) {
                       {isExpertMode && swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}
                     </div>
                   </AutoColumn>
+
                 </SwapWrapper>
+
               </RowBetween>
 
               <AutoRow>
