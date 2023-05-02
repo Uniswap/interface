@@ -11,7 +11,7 @@ function getUniqueAddressesFromPositions(positions: PositionDetails[]): string[]
     new Set(positions.reduce<string[]>((acc, position) => acc.concat(position.token0, position.token1), []))
   )
 }
-/*
+/**
  * This function is an attempt to filter out an observed phishing attack from LP list UIs.
  * Attackers would airdrop valueless LP positions with urls in the symbol to render phishing sites into users' LP position list view.
  *
