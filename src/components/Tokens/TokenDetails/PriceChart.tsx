@@ -74,6 +74,7 @@ const ChartHeader = styled.div`
   ${textFadeIn};
   animation-duration: ${({ theme }) => theme.transition.duration.medium};
   padding-left: 10px;
+  padding-top: 10px;
 `
 export const TokenPrice = styled.span`
   font-size: 36px;

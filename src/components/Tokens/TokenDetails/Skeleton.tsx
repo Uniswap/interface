@@ -38,7 +38,7 @@ export const LeftPanel = styled.div`
   flex: 1;
   max-width: 780px;
   overflow: hidden;
-  background: ${({ theme }) => theme.backgroundSurface};
+  background: ${({ theme }) => theme.backgroundScrolledSurface};
   box-shadow: ${({ theme }) => theme.deepShadow};
   border-radius: 16px;
   padding-left: 24px;
@@ -78,7 +78,7 @@ export const TokenInfoContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 4px;
+  margin-bottom: 10px;
   ${textFadeIn};
   animation-duration: ${({ theme }) => theme.transition.duration.medium};
 `
