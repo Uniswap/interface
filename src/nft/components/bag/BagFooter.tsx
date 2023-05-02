@@ -317,7 +317,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
   const isPending = PENDING_BAG_STATUSES.includes(bagStatus)
   const activeCurrency = inputCurrency ?? defaultCurrency
   const usingPayWithAnyToken = !!inputCurrency && chainId === SupportedChainId.MAINNET
-  const universalRouterAddress = useNftUniversalRouterAddress()
+  const { universalRouterAddress, universalRouterAddressIsLoading } = useNftUniversalRouterAddress()
 
   useSubscribeTransactionState(setModalIsOpen)
   const fetchAssets = useFetchAssets()
@@ -337,6 +337,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
     universalRouterAddress
   )
   usePayWithAnyTokenSwap(trade, allowance, allowedSlippage)
+  const loadingTradeState = tradeState !== TradeState.VALID || universalRouterAddressIsLoading
   const priceImpact = usePriceImpact(trade)
 
   const fiatValueTradeInput = useStablecoinValue(trade?.inputAmount)
@@ -411,7 +412,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
     } else if (bagStatus === BagStatus.PROCESSING_TRANSACTION) {
       disabled = true
       buttonText = <Trans>Transaction pending</Trans>
-    } else if (usingPayWithAnyToken && tradeState !== TradeState.VALID) {
+    } else if (usingPayWithAnyToken && loadingTradeState) {
       disabled = true
       buttonText = <Trans>Fetching Route</Trans>
 
@@ -481,6 +482,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
     bagStatus,
     usingPayWithAnyToken,
     tradeState,
+    universalRouterAddressIsLoading,
     allowance.state,
     priceImpact,
     connector,

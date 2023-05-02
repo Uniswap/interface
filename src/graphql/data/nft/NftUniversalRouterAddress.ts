@@ -11,10 +11,16 @@ gql`
   }
 `
 
-export function useNftUniversalRouterAddress(): string | undefined {
-  const { data } = useNftUniversalRouterAddressQuery({
+export function useNftUniversalRouterAddress() {
+  const { data, loading } = useNftUniversalRouterAddressQuery({
     fetchPolicy: 'no-cache',
   })
 
-  return useMemo(() => data?.nftRoute?.toAddress, [data])
+  return useMemo(
+    () => ({
+      universalRouterAddress: data?.nftRoute?.toAddress,
+      universalRouterAddressIsLoading: loading,
+    }),
+    [data?.nftRoute?.toAddress, loading]
+  )
 }
