@@ -732,6 +732,7 @@ export function Swap({
               onClick={updateAllowance}
               disabled={isAllowancePending || isApprovalLoading}
               style={{ gap: 14 }}
+              data-testid="swap-approve-button"
             >
               {isAllowancePending ? (
                 <>
