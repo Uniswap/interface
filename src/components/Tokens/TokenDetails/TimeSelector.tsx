@@ -13,11 +13,11 @@ const TimeOptionsWrapper = styled.div`
 const TimeOptionsContainer = styled.div`
   display: flex;
   justify-content: flex-end;
-  margin-top: 4px;
-  gap: 4px;
+  margin-top: 0px;
+  gap: 5px;
   border-radius: 16px;
   height: 40px;
-  padding: 4px;
+  padding: 5px;
   width: fit-content;
 
   @media only screen and (max-width: ${MEDIUM_MEDIA_BREAKPOINT}) {
@@ -31,16 +31,17 @@ const TimeButton = styled.button<{ active: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: ${({ theme, active }) => (active ? theme.backgroundInteractive : 'transparent')};
+  background-color: ${({ theme, active }) => (active ? theme.accentActionSoft : 'transparent')};
   font-weight: 600;
   font-size: 16px;
   padding: 6px 12px;
-  border-radius: 12px;
+  border-radius: 30px;
   line-height: 20px;
   border: none;
   cursor: pointer;
-  color: ${({ theme, active }) => (active ? theme.textPrimary : theme.textSecondary)};
+  color: ${({ theme, active }) => (active ? theme.accentActive : theme.textSecondary)};
   transition-duration: ${({ theme }) => theme.transition.duration.fast};
+
   :hover {
     ${({ active, theme }) => !active && `opacity: ${theme.opacity.hover};`}
   }

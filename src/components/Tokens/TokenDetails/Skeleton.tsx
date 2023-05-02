@@ -38,6 +38,11 @@ export const LeftPanel = styled.div`
   flex: 1;
   max-width: 780px;
   overflow: hidden;
+  background: ${({ theme }) => theme.backgroundSurface};
+  border-radius: 16px;
+  padding-left: 24px;
+  padding-right: 24px;
+  padding-top: 24px;
 `
 export const RightPanel = styled.div`
   display: none;
@@ -56,6 +61,8 @@ export const ChartContainer = styled.div`
   margin-bottom: 24px;
   align-items: flex-start;
   width: 100%;
+  background: ${({ theme }) => theme.backgroundModule};
+  border-radius: 16px;
 `
 const LoadingChartContainer = styled.div`
   display: flex;
