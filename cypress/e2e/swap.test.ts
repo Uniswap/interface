@@ -164,14 +164,19 @@ describe('Swap', () => {
       .then((hardhat) => {
         hardhat
           .reset()
+          .then(() => hardhat.provider.send('evm_setAutomine', [true]))
           .then(() => hardhat.getBalance(hardhat.wallet.address, WETH9[SupportedChainId.MAINNET]))
           .then((balance) => Number(balance.toFixed(1)))
           .then((initialWethBalance) => {
-            hardhat.provider.send('evm_setAutomine', [true])
+            // Select WETH for the token output.
             cy.get('#swap-currency-output .open-currency-select-button').click()
             cy.contains('WETH').click()
+
+            // Enter the amount to wrap.
             cy.get('#swap-currency-output .token-amount-input').clear().type(BALANCE_INCREMENT.toString())
             cy.get('#swap-currency-input .token-amount-input').should('not.equal', '')
+
+            // Click the wrap button.
             cy.get(getTestSelector('wrap-button')).should('not.be.disabled')
             cy.get(getTestSelector('wrap-button')).click()
 
@@ -205,43 +210,57 @@ describe('Swap', () => {
     cy.visit('/swap', { ethereum: 'hardhat' })
       .hardhat()
       .then((hardhat) => {
-        hardhat.reset().then(() => {
-          hardhat.provider.send('evm_setAutomine', [true])
+        hardhat
+          .reset()
+          .then(() => hardhat.provider.send('evm_setAutomine', [true]))
+          .then(() => {
+            // Select WETH for the token output.
+            cy.get('#swap-currency-output .open-currency-select-button').click()
+            cy.contains('WETH').click()
 
-          cy.get('#swap-currency-output .open-currency-select-button').click()
-          cy.contains('WETH').click()
-          cy.get('#swap-currency-output .token-amount-input').clear().type(BALANCE_INCREMENT.toString())
-          cy.get('#swap-currency-input .token-amount-input').should('not.equal', '')
-          cy.get(getTestSelector('wrap-button')).should('not.be.disabled')
-          cy.get(getTestSelector('wrap-button')).click()
+            // Enter the amount to wrap.
+            cy.get('#swap-currency-output .token-amount-input').clear().type(BALANCE_INCREMENT.toString())
+            cy.get('#swap-currency-input .token-amount-input').should('not.equal', '')
 
-          // <automine transaction>
+            // Click the wrap button.
+            cy.get(getTestSelector('wrap-button')).should('not.be.disabled')
+            cy.get(getTestSelector('wrap-button')).click()
 
-          cy.get(getTestSelector('web3-status-connected')).should('have.descendants', ':contains("1 Pending")')
+            // <automine transaction>
 
-          cy.get(getTestSelector('swap-currency-button')).click()
-          cy.get(getTestSelector('wrap-button')).should('not.be.disabled')
-          cy.get(getTestSelector('wrap-button')).click()
+            // The pending transaction indicator should be visible.
+            cy.contains('1 Pending').should('exist')
+            // The user should see a notification telling them they successfully wrapped their ETH.
+            cy.contains('Wrapped').should('exist')
 
-          // The pending transaction indicator should be visible.
-          cy.get(getTestSelector('web3-status-connected')).should('have.descendants', ':contains("1 Pending")')
+            // Switch to unwrapping the ETH we just wrapped.
+            cy.get(getTestSelector('swap-currency-button')).click()
+            cy.get(getTestSelector('wrap-button')).should('not.be.disabled')
 
-          // <automine transaction>
+            // Click the Unwrap button.
+            cy.get(getTestSelector('wrap-button')).click()
 
-          // The pending transaction indicator should be gone.
-          cy.get(getTestSelector('web3-status-connected')).should('not.have.descendants', ':contains("1 Pending")')
+            // The pending transaction indicator should be visible.
+            cy.contains('1 Pending').should('exist')
 
-          // The UI balance should have increased.
-          cy.get('#swap-currency-input [data-testid="balance-text"]').should('have.text', `Balance: ${0}`)
+            // <automine transaction>
 
-          // There should be a successful wrap notification.
-          cy.contains('Unwrapped').should('exist')
+            // The pending transaction indicator should be gone.
+            cy.contains('1 Pending').should('not.exist')
+            // The user should see a notification telling them they successfully unwrapped their ETH.
+            cy.contains('Unwrapped').should('exist')
 
-          // The user's WETH account balance should have increased
-          cy.then(() => hardhat.getBalance(hardhat.wallet.address, WETH9[SupportedChainId.MAINNET]))
-            .then((balance) => Number(balance.toFixed(1)))
-            .should('eq', 0)
-        })
+            // The UI balance should have increased.
+            cy.get('#swap-currency-input [data-testid="balance-text"]').should('have.text', `Balance: ${0}`)
+
+            // There should be a successful wrap notification.
+            cy.contains('Unwrapped').should('exist')
+
+            // The user's WETH account balance should have increased
+            cy.then(() => hardhat.getBalance(hardhat.wallet.address, WETH9[SupportedChainId.MAINNET]))
+              .then((balance) => Number(balance.toFixed(1)))
+              .should('eq', 0)
+          })
       })
   })
 
