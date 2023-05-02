@@ -37,14 +37,13 @@ const NUMBER_WITH_MAX_TWO_DECIMAL_PLACES = /^(?:\d*\.\d{0,2}|\d+)$/
 export default function MaxSlippageSettings({ placeholder }: { placeholder: Percent }) {
   const [userSlippageTolerance, setUserSlippageTolerance] = useUserSlippageTolerance()
 
-  const defaultInputValue =
+  // If user has previously entered a custom deadline, we want to show that value in the input field
+  // instead of a placeholder by defualt
+  const [slippageInput, setSlippageInput] = useState(
     userSlippageTolerance !== 'auto' && !userSlippageTolerance.equalTo(placeholder)
       ? userSlippageTolerance.toFixed(2)
       : ''
-
-  // If user has previously entered a custom deadline, we want to show that value in the input field
-  // instead of a placeholder by defualt
-  const [slippageInput, setSlippageInput] = useState(defaultInputValue)
+  )
   const [slippageError, setSlippageError] = useState<SlippageError | false>(false)
 
   const parseSlippageInput = (value: string) => {
@@ -135,7 +134,7 @@ export default function MaxSlippageSettings({ placeholder }: { placeholder: Perc
             onChange={(e) => parseSlippageInput(e.target.value)}
             onBlur={() => {
               // When the input field is blurred, reset the input field to the current slippage tolerance
-              setSlippageInput(defaultInputValue)
+              setSlippageInput(userSlippageTolerance !== 'auto' ? userSlippageTolerance.toFixed(2) : '')
               setSlippageError(false)
             }}
           />
