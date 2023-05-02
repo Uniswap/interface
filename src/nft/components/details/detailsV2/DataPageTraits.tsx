@@ -3,7 +3,7 @@ import Column from 'components/Column'
 import { ScrollBarStyles } from 'components/Common'
 import Row from 'components/Row'
 import { useSubscribeScrollState } from 'nft/hooks'
-import { Trait } from 'nft/types'
+import { GenieAsset } from 'nft/types'
 import { useMemo } from 'react'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
@@ -57,13 +57,15 @@ const Scrim = styled.div<{ isBottom?: boolean }>`
   display: flex;
 `
 
-const TraitsContent = ({ traits }: { traits?: Trait[] }) => {
+const TraitsContent = ({ asset }: { asset: GenieAsset }) => {
   const { userCanScroll, scrollRef, scrollProgress, scrollHandler } = useSubscribeScrollState()
 
   // This is needed to prevent rerenders when handling scrolls
   const traitRows = useMemo(() => {
-    return traits?.map((trait) => <TraitRow trait={trait} key={trait.trait_type + ':' + trait.trait_value} />)
-  }, [traits])
+    return asset.traits?.map((trait) => (
+      <TraitRow collectionAddress={asset.address} trait={trait} key={trait.trait_type + ':' + trait.trait_value} />
+    ))
+  }, [asset.address, asset.traits])
 
   return (
     <Column>
@@ -96,7 +98,7 @@ enum TraitTabsKeys {
   Traits = 'traits',
 }
 
-export const DataPageTraits = ({ traits }: { traits: Trait[] }) => {
+export const DataPageTraits = ({ asset }: { asset: GenieAsset }) => {
   const TraitTabs: Map<string, Tab> = useMemo(
     () =>
       new Map([
@@ -105,12 +107,12 @@ export const DataPageTraits = ({ traits }: { traits: Trait[] }) => {
           {
             title: <Trans>Traits</Trans>,
             key: TraitTabsKeys.Traits,
-            content: <TraitsContent traits={traits} />,
-            count: traits?.length,
+            content: <TraitsContent asset={asset} />,
+            count: asset.traits?.length,
           },
         ],
       ]),
-    [traits]
+    [asset]
   )
   return <TabbedComponent tabs={TraitTabs} />
 }
