@@ -20,7 +20,6 @@ export function toURL(entry: string | PrecacheEntry): string {
   return typeof entry === 'string' ? entry : entry.url
 }
 
-
 export const splitAssetsAndEntries = (
   resources: (string | PrecacheEntry)[]
 ): { assets: string[]; entries: PrecacheEntry[] } => {
@@ -39,4 +38,4 @@ export const splitAssetsAndEntries = (
     },
     { assets: [], entries: [] }
   )
-}mport { toURL } from './utils'
+}

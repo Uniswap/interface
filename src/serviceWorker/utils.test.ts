@@ -15,7 +15,7 @@ describe('splitAssetsAndEntries', () => {
     const result = splitAssetsAndEntries(resources)
 
     expect(result).toEqual({
-      assets: ['/media/image.jpg', '/main.js', '/styles.css'],
+      assets: ['index.html', '/media/image.jpg'],
       entries: [
         { url: '/main.js', revision: 'abc123' },
         { url: '/styles.css', revision: 'def456' },
@@ -43,14 +43,13 @@ describe('splitAssetsAndEntries', () => {
   test('handles input with only assets', () => {
     const resources = [
       { url: '/media/image.jpg', revision: 'abc123' },
-      { url: '/main.js', revision: 'def456' },
-      { url: '/styles.css', revision: 'ghi789' },
+      { url: '/media/image2.jpg', revision: 'abc123' },
     ]
 
     const result = splitAssetsAndEntries(resources)
 
     expect(result).toEqual({
-      assets: ['/media/image.jpg', '/main.js', '/styles.css'],
+      assets: ['/media/image.jpg', '/media/image2.jpg'],
       entries: [],
     })
   })
