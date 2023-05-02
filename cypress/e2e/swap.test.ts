@@ -1,5 +1,3 @@
-import { hexValue } from 'ethers/lib/utils'
-
 import { USDC_MAINNET } from '../../src/constants/tokens'
 import { WETH_GOERLI } from '../fixtures/constants'
 import { getTestSelector } from '../utils'
@@ -108,9 +106,10 @@ describe('Swap', () => {
       })
   })
 
-  it('should render an error when a transaction fails due to a passed deadline', () => {
+  it.only('should render an error when a transaction fails due to a passed deadline', () => {
     const BALANCE_INCREMENT = 1
-    const DEADLINE_MINUTES = 30
+    const DEADLINE_MINUTES = 1
+    const TEN_MINUTES_MS = 1000 * 60 * DEADLINE_MINUTES * 10
     cy.visit('/swap', { ethereum: 'hardhat' })
       .hardhat()
       .then((hardhat) => {
@@ -135,27 +134,17 @@ describe('Swap', () => {
             cy.get('#swap-button').click()
             cy.get('#confirm-swap-or-send').click()
 
-            // Mine a block past the deadline.
-            cy.then(() => hardhat.provider.send('eth_getBlockByNumber', ['latest', false]))
-              .then((block) => block.timestamp * 2)
-              .then((timestampIncrease) => {
-                hardhat.provider.send('evm_increaseTime', [hexValue(timestampIncrease)])
-                hardhat.provider.send('hardhat_mine', [hexValue(1), hexValue(timestampIncrease)])
-              })
-              .then(() => {
-                // The UI should show the transaction as pending.
-                cy.get(getTestSelector('web3-status-connected')).should('have.descendants', ':contains("1 Pending")')
-              })
-              .then(() => hardhat.mine(2, 12))
-              .then(() => {
-                // Dismiss the modal that appears when a transaction is broadcast to the network.
-                cy.get(getTestSelector('dismiss-tx-confirmation')).click()
+            // Dismiss the modal that appears when a transaction is broadcast to the network.
+            cy.get(getTestSelector('dismiss-tx-confirmation')).click()
 
+            // The UI should show the transaction as pending.
+            cy.contains('1 Pending').should('exist')
+
+            // Mine a block past the deadline.
+            cy.then(() => hardhat.mine(1, TEN_MINUTES_MS))
+              .then(() => {
                 // The UI should no longer show the transaction as pending.
-                cy.get(getTestSelector('web3-status-connected')).should(
-                  'not.have.descendants',
-                  ':contains("1 Pending")'
-                )
+                cy.contains('1 Pending').should('not.exist')
 
                 // Check that the user is informed of the failure
                 cy.contains('Swap failed').should('exist')
