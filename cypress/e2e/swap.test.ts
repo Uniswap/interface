@@ -132,7 +132,6 @@ describe('Swap', () => {
                     .then((balance) => Number(balance.toFixed(1)))
                     .should('eq', initialBalance)
                 })
-                .then(() => hardhat.provider.send('evm_setAutomine', [true]))
             })
         })
     })
