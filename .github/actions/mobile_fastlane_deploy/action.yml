@@ -1,4 +1,4 @@
-name: [mobile] fastlane deploy
+name: '[mobile] fastlane deploy'
 
 description: 'Deploys fastlane for the given environment and app identifiers'
 inputs:
