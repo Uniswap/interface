@@ -39,7 +39,7 @@
     "test:e2e:build": "RN_SRC_EXT=e2e.js detox build -c ios.sim.debug",
     "test:e2e:packager": "RN_SRC_EXT=e2e.js,e2e.ts yarn start:production --no-interactive",
     "test:e2e:run": "RN_SRC_EXT=e2e.js detox test -c ios.sim.debug",
-    "tsc:compile": "tsc --project .",
+    "tsc:compile": "tsc -b",
     "unicons": "cd scripts && python3 populate_svgs.py && cd .. && yarn lint --fix",
     "pod": "./scripts/podinstall.sh"
   },
@@ -148,6 +148,7 @@
     "typed-redux-saga": "1.5.0",
     "uuid": "9.0.0",
     "vision-camera-code-scanner": "0.1.6",
+    "wallet": "workspace:^",
     "wcag-contrast": "3.0.0"
   },
   "devDependencies": {

@@ -64,6 +64,14 @@
     "noErrorTruncation": true,                /* This setting also truncates inferred return types when you hover over things in VS Code, so disabling it helps us type better. */
 
   },
+  "references": [
+    {
+      "path": "../../packages/ui"
+    },
+    {
+      "path": "../../packages/wallet"
+    }
+  ],
   "exclude": [
     "node_modules",
     "babel.config.js",

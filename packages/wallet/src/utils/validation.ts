@@ -1,5 +1,9 @@
 import { trimToLength } from './string'
 
+export function assert(predicate: unknown, errorMessage: string): void {
+  if (!predicate) throw new Error(errorMessage)
+}
+
 export function errorToString(
   error: string | number | Record<string, string>,
   maxLength = 240

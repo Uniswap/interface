@@ -12201,6 +12201,7 @@ __metadata:
     typescript: 4.9.4
     uuid: 9.0.0
     vision-camera-code-scanner: 0.1.6
+    wallet: "workspace:^"
     wcag-contrast: 3.0.0
     yarn-deduplicate: 6.0.0
   languageName: unknown

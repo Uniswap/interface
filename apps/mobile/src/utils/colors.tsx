@@ -5,7 +5,7 @@ import { useAppTheme } from 'src/app/hooks'
 import { ChainId } from 'src/constants/chains'
 import { colors as GlobalColors, GlobalPalette } from 'src/styles/color'
 import { theme as FixedTheme, Theme } from 'src/styles/theme'
-import { assert } from 'src/utils/validation'
+import { assert } from 'wallet/src/utils/validation'
 import { hex } from 'wcag-contrast'
 
 export const MIN_COLOR_CONTRAST_THRESHOLD = 3

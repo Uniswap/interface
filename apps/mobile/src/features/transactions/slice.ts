@@ -10,7 +10,7 @@ import {
   TransactionStatus,
   TransactionType,
 } from 'src/features/transactions/types'
-import { assert } from 'src/utils/validation'
+import { assert } from 'wallet/src/utils/validation'
 
 export interface TransactionState {
   [address: Address]: ChainIdToTxIdToDetails

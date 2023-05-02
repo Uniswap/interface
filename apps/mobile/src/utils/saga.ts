@@ -3,7 +3,7 @@ import { call, CallEffect, delay, Effect, put, race, take, TakeEffect } from 're
 import { pushNotification } from 'src/features/notifications/notificationSlice'
 import { AppNotificationType } from 'src/features/notifications/types'
 import { logger } from 'src/utils/logger'
-import { errorToString } from 'src/utils/validation'
+import { errorToString } from 'wallet/src/utils/validation'
 
 /**
  * A convenience utility to create a saga and trigger action

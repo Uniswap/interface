@@ -13,9 +13,8 @@ import {
   take,
   TakeEffect,
 } from 'redux-saga/effects'
+import { errorToString } from 'wallet/src/utils/validation'
 import { logger } from '../features/logger/logger'
-
-import { errorToString } from '../utils/validation'
 
 /**
  * A convenience utility to create a saga and trigger action

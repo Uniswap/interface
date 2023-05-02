@@ -13,9 +13,8 @@ const workspaceRoot = path.resolve(mobileRoot, '../..');
 
 const watchFolders = [
   mobileRoot,
-  `${workspaceRoot}/node_modules`
-  // not yet enabled
-  // `${workspaceRoot}/packages`
+  `${workspaceRoot}/node_modules`,
+  `${workspaceRoot}/packages`
 ]
 
 module.exports = (async () => {
