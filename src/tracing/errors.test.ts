@@ -40,6 +40,17 @@ describe('filterKnownErrors', () => {
     expect(filterKnownErrors(ERROR, { originalException })).toBeNull()
   })
 
+  it('filters chrome-extension errors', () => {
+    const originalException = new Error()
+    originalException.stack = ` 
+      TypeError: Cannot create proxy with a non-object as target or handler
+        at pa(chrome-extension://kbjhmlgclljgdhmhffjofbobmficicjp/proxy-window-evm.a5430696.js:22:216604)
+        at da(chrome-extension://kbjhmlgclljgdhmhffjofbobmficicjp/proxy-window-evm.a5430696.js:22:212968)
+        at a(../../../../src/helpers.ts:98:1)
+    `
+    expect(filterKnownErrors(ERROR, { originalException })).toBeNull()
+  })
+
   describe('OneKey', () => {
     it('filter OneKey errors (macOS users)', () => {
       const originalException = new Error()
