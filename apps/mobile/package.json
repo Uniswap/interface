@@ -29,7 +29,7 @@
     "ios:release": "react-native run-ios --configuration Release",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx && eslint src/locales/en/translation.json",
     "lmu": "yarn prepare-for-pr",
-    "prepare-for-pr": "yarn && yarn pod && yarn-deduplicate && yarn lint --fix && yarn tsc:compile && yarn test -u && yarn apollo:generate && yarn i18n:extract",
+    "prepare-for-pr": "yarn && yarn pod && yarn-deduplicate && yarn lint --fix && yarn typecheck && yarn test -u && yarn apollo:generate && yarn i18n:extract",
     "start": "NODE_ENV=development react-native start",
     "start:production": "NODE_ENV=production react-native start --reset-cache",
     "storybook": "storybook dev -p 6006",
@@ -39,7 +39,7 @@
     "test:e2e:build": "RN_SRC_EXT=e2e.js detox build -c ios.sim.debug",
     "test:e2e:packager": "RN_SRC_EXT=e2e.js,e2e.ts yarn start:production --no-interactive",
     "test:e2e:run": "RN_SRC_EXT=e2e.js detox test -c ios.sim.debug",
-    "tsc:compile": "tsc -b",
+    "typecheck": "tsc -b",
     "unicons": "cd scripts && python3 populate_svgs.py && cd .. && yarn lint --fix",
     "pod": "./scripts/podinstall.sh"
   },

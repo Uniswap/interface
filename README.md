@@ -42,14 +42,15 @@ Store all product related shared packages code here. Packages should be broken d
 
 ## TODO's
 
-- [ ] single global ignore files
-- [ ] fix the extra needed `yarn` command to install mobile
-- [ ] patch in a single place for shared packages
+### Monorepo
+
+- [ ] Bring back husky once mobile is integrated
 - [ ] add storybook back
 - [ ] Evaluate Turbo licensing
-- [ ] Running Turbo with `--since=HEAD^1` should be refactored to select the PR's first commit hash instead
+
+### Wallet Package
+
 - [ ] Define standard for checksumming addresses
-- [ ] Bring back husky once mobile is integrated
 
 ## Monorepo Background
 
