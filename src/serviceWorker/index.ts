@@ -3,12 +3,11 @@ import 'workbox-precaching' // defines __WB_MANIFEST
 import { clientsClaim } from 'workbox-core'
 import { ExpirationPlugin } from 'workbox-expiration'
 import { precacheAndRoute } from 'workbox-precaching'
-import { PrecacheEntry } from 'workbox-precaching/_types'
 import { registerRoute, Route } from 'workbox-routing'
 import { CacheFirst } from 'workbox-strategies'
 
 import { DocumentRoute } from './document'
-import { toURL } from './utils'
+import { splitAssetsAndEntries } from './utils'
 
 declare const self: ServiceWorkerGlobalScope
 
@@ -21,26 +20,6 @@ registerRoute(new DocumentRoute())
 
 // Splits entries into assets, which are loaded on-demand; and entries, which are precached.
 // Effectively, this caches all media assets on-demand and pre-caches everything else.
-export const splitAssetsAndEntries = (
-  resources: (string | PrecacheEntry)[]
-): { assets: string[]; entries: PrecacheEntry[] } => {
-  return resources.reduce<{ assets: string[]; entries: PrecacheEntry[] }>(
-    ({ assets, entries }, entry) => {
-      if (typeof entry === 'string') {
-        // If the entry is a string, it's the index.html file.
-        return { entries, assets: [...assets, entry] }
-      } else if (entry.url.includes('/media/')) {
-        // If the entry is a media file, it's an asset.
-        return { entries, assets: [...assets, toURL(entry)] }
-      } else {
-        // Otherwise, it's an entry.
-        return { entries: [...entries, entry], assets }
-      }
-    },
-    { assets: [], entries: [] }
-  )
-}
-
 const { assets, entries } = splitAssetsAndEntries(self.__WB_MANIFEST)
 
 // Registers the assets' routes for on-demand caching.

@@ -1,6 +1,6 @@
 import { PrecacheEntry } from 'workbox-precaching/_types'
 
-import { splitAssetsAndEntries } from './index'
+import { splitAssetsAndEntries } from './utils'
 
 describe('splitAssetsAndEntries', () => {
   test('splits resources into assets and entries', () => {
