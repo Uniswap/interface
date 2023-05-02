@@ -25,7 +25,6 @@
     "lint": "yarn eslint --ignore-path .gitignore --cache --cache-location node_modules/.cache/eslint/ .",
     "typecheck": "tsc",
     "test": "craco test",
-    "test:size": "node scripts/test-size.js",
     "cypress:open": "cypress open --browser chrome --e2e",
     "cypress:run": "cypress run --browser chrome --e2e",
     "deduplicate": "yarn-deduplicate --strategy=highest"
