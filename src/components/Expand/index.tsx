@@ -30,7 +30,7 @@ export default function Expand({
     <Column gap="md">
       <RowBetween>
         {header}
-        <ButtonContainer gap="md" onClick={() => setExpanded(!isExpanded)}>
+        <ButtonContainer gap="xs" onClick={() => setExpanded(!isExpanded)}>
           {button}
           <ExpandIcon isExpanded={isExpanded} />
         </ButtonContainer>

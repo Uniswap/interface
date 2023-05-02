@@ -19,11 +19,11 @@ const NUMBERS_ONLY = /^[0-9\b]+$/
 export default function TransactionDeadlineSettings() {
   const [deadline, setDeadline] = useUserTransactionTTL()
 
-  // If user has set a custom deadline, we want to show that value in the input field
+  const defaultInputValue = deadline && deadline !== DEFAULT_DEADLINE_FROM_NOW ? (deadline / 60).toString() : ''
+
+  // If user has previously entered a custom deadline, we want to show that value in the input field
   // instead of a placeholder by defualt
-  const [deadlineInput, setDeadlineInput] = useState(
-    deadline && deadline !== DEFAULT_DEADLINE_FROM_NOW ? (deadline / 60).toString() : ''
-  )
+  const [deadlineInput, setDeadlineInput] = useState(defaultInputValue)
   const [deadlineError, setDeadlineError] = useState<DeadlineError | false>(false)
 
   function parseCustomDeadline(value: string) {
@@ -74,6 +74,11 @@ export default function TransactionDeadlineSettings() {
             placeholder={(DEFAULT_DEADLINE_FROM_NOW / 60).toString()}
             value={deadlineInput}
             onChange={(e) => parseCustomDeadline(e.target.value)}
+            onBlur={() => {
+              // When the input field is blurred, reset the input field to the current deadline
+              setDeadlineInput(defaultInputValue)
+              setDeadlineError(false)
+            }}
           />
           <ThemedText.BodyPrimary>
             <Trans>minutes</Trans>
