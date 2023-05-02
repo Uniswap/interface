@@ -1,4 +1,4 @@
-name: Commit protection for releases/prod
+name: '[mobile] Commit protection for releases/prod'
 
 # This CI job will review the contents of any PR that is targeting the releases/prod branch
 # for merging. It reviews all of the commits in the PR in question and confirms that each of
@@ -18,21 +18,18 @@ jobs:
         with:
           token: ${{ secrets.SERVICE_ACCOUNT_PAT }}
           ref: main
-      - name: Get marketing version number
-        working-directory: ./apps/mobile
-        run: |
-          fastlane ios getMarketingVersionNumber
-        env:
-          APP_STORE_CONNECT_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
-          APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
-          APP_STORE_CONNECT_KEY_CONTENT: ${{ secrets.APP_STORE_CONNECT_KEY_CONTENT }}
-          CI: true
+
+      - name: 📢 Get marketing version number
+        uses: ./.github/actions/mobile_marketing_version
+        id: marketing-version
+
       - uses: actions/checkout@7884fcad6b5d53d10323aee724dc68d8b9096a2e
         with:
           token: ${{ secrets.SERVICE_ACCOUNT_PAT }}
-          ref: releases/${{ env.IOS_VERSION_NUMBER }}
+          ref: releases/${{ steps.marketing-version.outputs.marketing-version }}
           fetch-depth: 0
-      - name: 'Test for presence of commits on releases/[marketingVersionNumber] branch'
+
+      - name: '🤼‍♂️ Test for presence of commits on releases/[marketingVersionNumber] branch'
         env:
           GH_TOKEN: ${{ secrets.SERVICE_ACCOUNT_PAT }}
         run: |

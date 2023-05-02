@@ -1,4 +1,4 @@
-name: '[monorepo] Build/Test'
+name: '[monorepo] Code Quality Checks'
 
 on:
   workflow_call:
@@ -20,7 +20,7 @@ on:
 
 jobs:
   build-and-test:
-    name: Build and Test
+    name: Typecheck, Lint, Build, and Test
     runs-on: ubuntu-latest
     env:
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
@@ -35,22 +35,17 @@ jobs:
         with:
           fetch-depth: 2
 
-      - name: Set Node.js 18.14.0
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18.14.0
+      - name: 📥 Install
+        uses: ./.github/actions/monorepo_yarn_install
 
-      - name: 📥 Monorepo install
-        uses: ./.github/actions/monorepo-yarn-install
-
-      - name: 🕵️ Typecheck
+      - name: 🕵️  Typecheck
         run: yarn g:typecheck
 
       - name: 🔬 Lint
         run: yarn g:lint
 
-      - name: 🏗 Build
+      - name: 🏗  Build
         run: yarn g:build
 
-      - name: 🧪 Unit tests
+      - name: 🧪 Unit Tests
         run: yarn g:test

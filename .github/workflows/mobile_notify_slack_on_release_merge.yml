@@ -1,4 +1,4 @@
-name: Slack notifications for releases/* merges
+name: '[mobile] Slack notifications for releases/* merges'
 
 # This CI job will push notifications to Slack whenever code is merged into any of the
 # release branches.
@@ -19,10 +19,12 @@ jobs:
         run: |
           echo $GITHUB_CONTEXT | jq '.event.commits[] | [.url, .id[0:7], .author.username, .timestamp, .message] | @tsv' | sed 's/"//g' | sed 's/\\t/;/g' | sed 's/\\n/;/g' | sed 's/\\//g' | awk -F';' '{print "• <"$1"|"$2"> (<https://github.com/"$3"|"$3">, "$4") - "$5}' | sed 's/$/\\n/g' | tr -d '\n' > /tmp/foo
           echo "SLACK_COMMITS=$(cat /tmp/foo)" >> $GITHUB_ENV
+
       - name: Testing
         run: |
           echo "${{ env.SLACK_COMMITS }}"
-      - name: Send custom JSON data to Slack workflow
+
+      - name: 💬 Send custom JSON data to Slack workflow
         id: slack
         uses: slackapi/slack-github-action@007b2c3c751a190b6f0f040e47ed024deaa72844
         with:

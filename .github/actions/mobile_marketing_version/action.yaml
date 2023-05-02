@@ -1,0 +1,20 @@
+name: '[mobile] Marketing Version'
+description: 'Fetch the current marketing version from the mobile app code via fastlane'
+outputs:
+  marketing-version:
+    description: 'the current marketing version from the mobile app code via fastlane'
+    value: ${{ env.IOS_VERSION_NUMBER }}
+
+runs:
+  using: 'composite'
+
+  steps:
+      - name: 📢 Get marketing version number
+      working-directory: ./apps/mobile
+      run: |
+        fastlane ios getMarketingVersionNumber
+      env:
+        APP_STORE_CONNECT_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
+        APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+        APP_STORE_CONNECT_KEY_CONTENT: ${{ secrets.APP_STORE_CONNECT_KEY_CONTENT }}
+        CI: true

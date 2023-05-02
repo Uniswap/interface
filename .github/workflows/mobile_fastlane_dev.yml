@@ -1,0 +1,22 @@
+name: '[mobile] Fastlane deploy dev (iOS)'
+
+on:
+  push:
+    branches:
+      - releases/dev
+
+jobs:
+  ios:
+    name: iOS
+    runs-on: macos-latest
+    timeout-minutes: 180
+    steps:
+      - name: 📥 Install
+        uses: ./.github/actions/mobile_fastlane_deploy
+        with:
+          branch: main
+          configuration: Dev
+          sentry-env: development
+          apple-app-id: ${{ secrets.APPLE_APP_ID_DEV }}
+          app-identifier: ${{ secrets.APP_IDENTIFIER_DEV }}
+          onesignal-app-id: ${{ secrets.ONESIGNAL_APP_ID_DEV }}

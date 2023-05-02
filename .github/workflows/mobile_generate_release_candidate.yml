@@ -1,0 +1,29 @@
+name: '- 1 | [mobile] Generate releases/[versionNumber] branch'
+
+# This CI job is responsible for generating a new release candidate branch, branched off of `main` branch.
+# It will automatically kick off a beta build, and so will subsequent pushes to the branch. 
+
+on:
+  workflow_dispatch:
+
+jobs:
+  generate-release-branch:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@7884fcad6b5d53d10323aee724dc68d8b9096a2e
+        with:
+          token: ${{ secrets.SERVICE_ACCOUNT_PAT }}
+
+      - name: Setup git
+        run: |
+          git config user.name "UL Mobile Service Account"
+          git config user.email "hello-happy-puppy@users.noreply.github.com"
+      
+      - name: 📢 Get marketing version number
+        uses: ./.github/actions/mobile_marketing_version
+        id: marketing-version
+          
+      - name: ↔️  Checkout and push to releases/[${{ steps.marketing-version.outputs.marketing-version }}]
+        run: |
+          git checkout -b releases/${{ steps.marketing-version.outputs.marketing-version }}
+          git push -u origin releases/${{ steps.marketing-version.outputs.marketing-version }}:releases/${{ steps.marketing-version.outputs.marketing-version }}

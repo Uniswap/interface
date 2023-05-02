@@ -1,4 +1,4 @@
-name: 9 | Push to public repo from releases/prod
+name: '- 4 | [mobile] Push to public repo from releases/prod'
 
 # This CI job is responsible for generating PRs that merge the contents of the private
 # UL Mobile repository to the public mirror.
@@ -18,6 +18,7 @@ jobs:
           ref: releases/prod
           repository: Uniswap/wallet-internal
           path: 'private'
+
       - uses: actions/checkout@7884fcad6b5d53d10323aee724dc68d8b9096a2e
         name: 'Check out main from public repository'
         with:
@@ -25,21 +26,26 @@ jobs:
           ref: main
           repository: Uniswap/wallet
           path: 'public'
+
       - uses: actions/setup-python@d27e3f3d7c64b4bbf8e4abfb9b63b83e846e0435
-        name: 'Setup Python'
+        name: '🐍 Setup Python'
         with:
           python-version: '3.10'
+
       - name: 'Install dependencies'
         run: |
           pip install gitignore-parser
+
       - name: 'Run cleaning script'
         run: |
           cd private
           python scripts/clean_for_publication.py
+
       - name: 'Configure repository to point to the right upstream'
         run: |
           rm -rf private/.git
           mv public/.git private
+
       - uses: peter-evans/create-pull-request@ea54357f43e3d1cf1125471d0814f4d02cc0d364
         id: cpr
         with:

@@ -1,0 +1,27 @@
+name: '- 2 | [mobile] Fastlane deploy beta (iOS)'
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - '^releases\/(?!dev|prod)([0-9]\.[0-9]+$)'
+
+jobs:
+  ios:
+    name: iOS
+    runs-on: macos-latest
+    timeout-minutes: 180
+    steps:
+      - name: 📢 Get marketing version number
+        uses: ./.github/actions/mobile_marketing_version
+        id: marketing-version
+
+      - name: 📥 Install
+        uses: ./.github/actions/mobile_fastlane_deploy
+        with:
+          branch: releases/${{ steps.marketing-version.outputs.marketing-version }}
+          configuration: Beta
+          sentry-env: beta
+          apple-app-id: ${{ secrets.APPLE_APP_ID_BETA }}
+          app-identifier: ${{ secrets.APP_IDENTIFIER_BETA }}
+          onesignal-app-id: ${{ secrets.ONESIGNAL_APP_ID_BETA }}
