@@ -4,7 +4,7 @@ import {
   SwapOptions as UniversalRouterSwapOptions,
   SwapRouter as UniversalSwapRouter,
 } from '@uniswap/universal-router-sdk'
-import { BigNumber, BigNumberish } from 'ethers'
+import { BigNumber } from 'ethers'
 import { TFunction } from 'i18next'
 import { ChainId } from 'src/constants/chains'
 import { WRAPPED_NATIVE_CURRENCY } from 'src/constants/tokens'
@@ -108,9 +108,6 @@ export const getRateToDisplay = (trade: Trade, showInverseRate: boolean): string
   const inverseRate = `1 ${baseCurrency.symbol} = ${formattedPrice} ${quoteCurrency.symbol}`
   return showInverseRate ? rate : inverseRate
 }
-
-export const formatAsHexString = (input?: BigNumberish): string | undefined =>
-  input !== undefined ? BigNumber.from(input).toHexString() : input
 
 export const getActionName = (t: TFunction, wrapType: WrapType): string => {
   switch (wrapType) {

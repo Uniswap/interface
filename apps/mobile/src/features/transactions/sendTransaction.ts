@@ -8,7 +8,6 @@ import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
 import { transactionActions } from 'src/features/transactions/slice'
 import { Trade } from 'src/features/transactions/swap/useTrade'
-import { formatAsHexString } from 'src/features/transactions/swap/utils'
 import {
   TransactionDetails,
   TransactionOptions,
@@ -27,6 +26,7 @@ import { getCurrencyAddressForAnalytics } from 'src/utils/currencyId'
 import { formatCurrencyAmount, NumberType } from 'src/utils/format'
 import { logger } from 'src/utils/logger'
 import { call, put, select } from 'typed-redux-saga'
+import { hexlifyTransaction } from 'wallet/src/utils/transaction'
 
 export interface SendTransactionParams {
   // internal id used for tracking transactions before theyre submitted
@@ -90,30 +90,6 @@ export async function signAndSendTransaction(
   const signedTx = await connectedSigner.signTransaction(populatedRequest)
   const transactionResponse = await provider.sendTransaction(signedTx)
   return { transactionResponse, populatedRequest }
-}
-
-// hexlifyTransaction is idemnpotent so it's safe to call more than once on a singular transaction request
-function hexlifyTransaction(
-  transferTxRequest: providers.TransactionRequest
-): providers.TransactionRequest {
-  const { value, nonce, gasLimit, gasPrice, maxPriorityFeePerGas, maxFeePerGas } = transferTxRequest
-  return {
-    ...transferTxRequest,
-    nonce: formatAsHexString(nonce),
-    value: formatAsHexString(value),
-    gasLimit: formatAsHexString(gasLimit),
-
-    // only pass in for legacy chains
-    ...(gasPrice ? { gasPrice: formatAsHexString(gasPrice) } : {}),
-
-    // only pass in for eip1559 tx
-    ...(maxPriorityFeePerGas
-      ? {
-          maxPriorityFeePerGas: formatAsHexString(maxPriorityFeePerGas),
-          maxFeePerGas: formatAsHexString(maxFeePerGas),
-        }
-      : {}),
-  }
 }
 
 function* addTransaction(
