@@ -83,7 +83,6 @@ describe('Swap', () => {
       .then((hardhat) => {
         hardhat
           .reset()
-          .then(() => hardhat.provider.send('evm_setAutomine', [true]))
           .then(() => hardhat.getBalance(hardhat.wallet.address, USDC_MAINNET))
           .then((balance) => Number(balance.toFixed(1)))
           .then((initialBalance) => {
@@ -117,16 +116,17 @@ describe('Swap', () => {
       .then((hardhat) => {
         hardhat
           .reset()
+          .then(() => hardhat.provider.send('evm_setAutomine', [false]))
           .then(() => hardhat.getBalance(hardhat.wallet.address, USDC_MAINNET))
           .then((balance) => Number(balance.toFixed(1)))
           .then((initialBalance) => {
-            // input swap info
+            // Input swap info.
             cy.get('#swap-currency-output .open-currency-select-button').click()
             cy.contains('USDC').click()
             cy.get('#swap-currency-output .token-amount-input').clear().type(BALANCE_INCREMENT.toString())
             cy.get('#swap-currency-input .token-amount-input').should('not.equal', '')
 
-            // set deadline to minimum (1 minute)
+            // Set deadline to minimum. (1 minute)
             cy.get(getTestSelector('open-settings-dialog-button')).click()
             cy.get(getTestSelector('deadline-input')).clear().type(DEADLINE_MINUTES.toString())
             cy.get('body').click('topRight')
@@ -135,28 +135,43 @@ describe('Swap', () => {
             cy.get('#swap-button').click()
             cy.get('#confirm-swap-or-send').click()
 
-            // Mine a block past the deadline
-            cy.then(() => hardhat.provider.send('eth_getBlockByNumber', ['latest']))
+            // Mine a block past the deadline.
+            cy.then(() => hardhat.provider.send('eth_getBlockByNumber', ['latest', false]))
               .then((block) => block.timestamp * 2)
               .then((timestampIncrease) => {
                 hardhat.provider.send('evm_increaseTime', [hexValue(timestampIncrease)])
                 hardhat.provider.send('hardhat_mine', [hexValue(1), hexValue(timestampIncrease)])
               })
+              .then(() => {
+                // The UI should show the transaction as pending.
+                cy.get(getTestSelector('web3-status-connected')).should('have.descendants', ':contains("1 Pending")')
+              })
+              .then(() => hardhat.mine(2, 12))
+              .then(() => {
+                // Dismiss the modal that appears when a transaction is broadcast to the network.
+                cy.get(getTestSelector('dismiss-tx-confirmation')).click()
 
-            cy.then(() => hardhat.provider.send('hardhat_mine', ['0x1', '0xc'])).then(() => {
-              cy.get(getTestSelector('dismiss-tx-confirmation')).click()
+                // The UI should no longer show the transaction as pending.
+                cy.get(getTestSelector('web3-status-connected')).should(
+                  'not.have.descendants',
+                  ':contains("1 Pending")'
+                )
 
-              // Check that the balance is unchanged in the UI
-              cy.get('#swap-currency-output [data-testid="balance-text"]').should(
-                'have.text',
-                `Balance: ${initialBalance}`
-              )
+                // Check that the user is informed of the failure
+                cy.contains('Swap failed').should('exist')
 
-              // Check that the balance is unchanged on chain
-              cy.then(() => hardhat.getBalance(hardhat.wallet.address, USDC_MAINNET))
-                .then((balance) => Number(balance.toFixed(1)))
-                .should('eq', initialBalance)
-            })
+                // Check that the balance is unchanged in the UI
+                cy.get('#swap-currency-output [data-testid="balance-text"]').should(
+                  'have.text',
+                  `Balance: ${initialBalance}`
+                )
+
+                // Check that the balance is unchanged on chain
+                cy.then(() => hardhat.getBalance(hardhat.wallet.address, USDC_MAINNET))
+                  .then((balance) => Number(balance.toFixed(1)))
+                  .should('eq', initialBalance)
+              })
+              .then(() => hardhat.provider.send('evm_setAutomine', [true]))
           })
       })
   })
