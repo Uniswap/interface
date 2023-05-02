@@ -31,7 +31,8 @@ enum WrapInputError {
 }
 
 export function WrapErrorText({ wrapInputError }: { wrapInputError: WrapInputError }) {
-  const native = useNativeCurrency()
+  const { chainId } = useWeb3React()
+  const native = useNativeCurrency(chainId)
   const wrapped = native?.wrapped
 
   switch (wrapInputError) {
