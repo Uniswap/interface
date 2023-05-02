@@ -9,7 +9,7 @@ runs:
   using: 'composite'
 
   steps:
-      - name: 📢 Get marketing version number
+    - name: 📢 Get marketing version number
       working-directory: ./apps/mobile
       run: |
         fastlane ios getMarketingVersionNumber
