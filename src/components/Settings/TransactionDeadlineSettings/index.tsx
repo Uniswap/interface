@@ -66,7 +66,7 @@ export default function TransactionDeadlineSettings() {
           />
         </Row>
       }
-      button={<Trans>{deadline / 60}</Trans>}
+      button={<Trans>{deadline / 60}m</Trans>}
     >
       <Row>
         <InputContainer gap="md" error={!!deadlineError}>

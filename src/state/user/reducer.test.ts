@@ -1,4 +1,5 @@
 import { createStore, Store } from 'redux'
+import { RouterPreference } from 'state/routing/slice'
 
 import { DEFAULT_DEADLINE_FROM_NOW } from '../../constants/misc'
 import { updateVersion } from '../global/actions'
@@ -9,10 +10,10 @@ import reducer, {
   updateHideClosedPositions,
   updateHideUniswapWalletBanner,
   updateSelectedWallet,
-  updateUserClientSideRouter,
   updateUserDeadline,
   updateUserExpertMode,
   updateUserLocale,
+  updateUserRouterPreference,
   updateUserSlippageTolerance,
   UserState,
 } from './reducer'
@@ -102,10 +103,10 @@ describe('swap reducer', () => {
     })
   })
 
-  describe('updateUserClientSideRouter', () => {
-    it('updates the userClientSideRouter', () => {
-      store.dispatch(updateUserClientSideRouter({ userClientSideRouter: true }))
-      expect(store.getState().userClientSideRouter).toEqual(true)
+  describe('updateRouterPreference', () => {
+    it('updates the routerPreference', () => {
+      store.dispatch(updateUserRouterPreference({ userRouterPreference: RouterPreference.API }))
+      expect(store.getState().routerPreference).toEqual(RouterPreference.API)
     })
   })
 

@@ -7,6 +7,7 @@ import { L2_DEADLINE_FROM_NOW } from 'constants/misc'
 import JSBI from 'jsbi'
 import { useCallback, useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
+import { RouterPreference } from 'state/routing/slice'
 import { UserAddedToken } from 'types/tokens'
 
 import { V2_FACTORY_ADDRESSES } from '../../constants/addresses'
@@ -19,10 +20,10 @@ import {
   updateHideClosedPositions,
   updateHideUniswapWalletBanner,
   updateUserBuyFiatFlowCompleted,
-  updateUserClientSideRouter,
   updateUserDeadline,
   updateUserExpertMode,
   updateUserLocale,
+  updateUserRouterPreference,
   updateUserSlippageTolerance,
 } from './reducer'
 import { SerializedPair, SerializedToken } from './types'
@@ -92,19 +93,19 @@ export function useExpertModeManager(): [boolean, () => void] {
   return [expertMode, toggleSetExpertMode]
 }
 
-export function useClientSideRouter(): [boolean, (userClientSideRouter: boolean) => void] {
+export function useRouterPreference(): [RouterPreference, (routerPreference: RouterPreference) => void] {
   const dispatch = useAppDispatch()
 
-  const clientSideRouter = useAppSelector((state) => Boolean(state.user.userClientSideRouter))
+  const routerPreference = useAppSelector((state) => state.user.routerPreference)
 
-  const setClientSideRouter = useCallback(
-    (newClientSideRouter: boolean) => {
-      dispatch(updateUserClientSideRouter({ userClientSideRouter: newClientSideRouter }))
+  const setRouterPreference = useCallback(
+    (newRouterPreference: RouterPreference) => {
+      dispatch(updateUserRouterPreference({ userRouterPreference: newRouterPreference }))
     },
     [dispatch]
   )
 
-  return [clientSideRouter, setClientSideRouter]
+  return [routerPreference, setRouterPreference]
 }
 
 /**

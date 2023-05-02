@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { ConnectionType } from 'connection'
 import { SupportedLocale } from 'constants/locales'
+import { RouterPreference } from 'state/routing/slice'
 
 import { DEFAULT_DEADLINE_FROM_NOW } from '../../constants/misc'
 import { updateVersion } from '../global/actions'
@@ -20,7 +21,8 @@ export interface UserState {
 
   userExpertMode: boolean
 
-  userClientSideRouter: boolean // whether routes should be calculated with the client side router only
+  // which route should be used to calculate trades
+  routerPreference: RouterPreference
 
   // hides closed (inactive) positions across the app
   userHideClosedPositions: boolean
@@ -62,6 +64,7 @@ export const initialState: UserState = {
   userExpertMode: false,
   userLocale: null,
   userClientSideRouter: false,
+  routerPreference: RouterPreference.PRICE,
   userHideClosedPositions: false,
   userSlippageTolerance: 'auto',
   userSlippageToleranceHasBeenMigratedToAuto: true,
@@ -100,8 +103,8 @@ const userSlice = createSlice({
       state.userDeadline = action.payload.userDeadline
       state.timestamp = currentTimestamp()
     },
-    updateUserClientSideRouter(state, action) {
-      state.userClientSideRouter = action.payload.userClientSideRouter
+    updateUserRouterPreference(state, action) {
+      state.routerPreference = action.payload.userRouterPreference
     },
     updateHideClosedPositions(state, action) {
       state.userHideClosedPositions = action.payload.userHideClosedPositions
@@ -172,7 +175,7 @@ export const {
   updateUserBuyFiatFlowCompleted,
   updateSelectedWallet,
   updateHideClosedPositions,
-  updateUserClientSideRouter,
+  updateUserRouterPreference,
   updateUserDeadline,
   updateUserExpertMode,
   updateUserLocale,

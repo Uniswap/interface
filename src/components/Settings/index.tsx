@@ -1,11 +1,8 @@
 // eslint-disable-next-line no-restricted-imports
-import { t, Trans } from '@lingui/macro'
+import { t } from '@lingui/macro'
 import { Percent } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { sendEvent } from 'components/analytics'
-import Column, { AutoColumn } from 'components/Column'
-import { RowBetween, RowFixed } from 'components/Row'
-import Toggle from 'components/Toggle'
+import { AutoColumn } from 'components/Column'
 import { L2_CHAIN_IDS } from 'constants/chains'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { isSupportedChainId } from 'lib/hooks/routing/clientSideSmartOrderRouter'
@@ -13,11 +10,12 @@ import { useRef } from 'react'
 import { Settings } from 'react-feather'
 import { useModalIsOpen, useToggleSettingsMenu } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
-import { useClientSideRouter } from 'state/user/hooks'
+import { RouterPreference } from 'state/routing/slice'
+import { useRouterPreference } from 'state/user/hooks'
 import styled from 'styled-components/macro'
-import { ThemedText } from 'theme'
 
 import MaxSlippageSettings from './MaxSlippageSettings'
+import RouterPreferenceSettings from './RouterPreference'
 import TransactionDeadlineSettings from './TransactionDeadlineSettings'
 
 const StyledMenuIcon = styled(Settings)`
@@ -104,7 +102,7 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
   const toggle = useToggleSettingsMenu()
   useOnClickOutside(node, open ? toggle : undefined)
 
-  const [clientSideRouterEnabled, setClientSideRouterEnabled] = useClientSideRouter()
+  const [userRouterPreference] = useRouterPreference()
 
   return (
     <StyledMenu ref={node}>
@@ -119,32 +117,8 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
       {open && (
         <MenuFlyout>
           <AutoColumn gap="16px" style={{ padding: '1rem' }}>
-            {isSupportedChainId(chainId) && (
-              <RowBetween>
-                <RowFixed>
-                  <Column gap="xs">
-                    <ThemedText.BodySecondary>
-                      <Trans>Auto Router API</Trans>
-                    </ThemedText.BodySecondary>
-                    <ThemedText.Caption color="textSecondary">
-                      <Trans>Finds the best route across liquidity sources.</Trans>
-                    </ThemedText.Caption>
-                  </Column>
-                </RowFixed>
-                <Toggle
-                  id="toggle-optimized-router-button"
-                  isActive={!clientSideRouterEnabled}
-                  toggle={() => {
-                    sendEvent({
-                      category: 'Routing',
-                      action: clientSideRouterEnabled ? 'enable routing API' : 'disable routing API',
-                    })
-                    setClientSideRouterEnabled(!clientSideRouterEnabled)
-                  }}
-                />
-              </RowBetween>
-            )}
-            <ClientSideRouterSettings enabled={clientSideRouterEnabled}>
+            {isSupportedChainId(chainId) && <RouterPreferenceSettings />}
+            <ClientSideRouterSettings enabled={userRouterPreference !== RouterPreference.PRICE}>
               <AutoColumn gap="16px">
                 <Divider />
                 <MaxSlippageSettings placeholder={placeholderSlippage} />
