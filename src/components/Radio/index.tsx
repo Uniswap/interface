@@ -1,7 +1,9 @@
+import { RowBetween } from 'components/Row'
 import { darken } from 'polished'
+import { PropsWithChildren } from 'react'
 import styled from 'styled-components/macro'
 
-const Wrapper = styled.button<{ isActive?: boolean; activeElement?: boolean }>`
+const Button = styled.button<{ isActive?: boolean; activeElement?: boolean }>`
   align-items: center;
   background: transparent;
   border: 2px solid ${({ theme, isActive }) => (isActive ? theme.accentAction : theme.backgroundOutline)};
@@ -23,7 +25,7 @@ const ToggleElementHoverStyle = (hasBgColor: boolean, theme: any, isActive?: boo
         color: isActive ? theme.white : theme.textTertiary,
       }
 
-const ToggleElement = styled.span<{ isActive?: boolean; bgColor?: string }>`
+const ButtonFill = styled.span<{ isActive?: boolean; bgColor?: string }>`
   animation: 0.1s opacity ease-in;
   background: ${({ theme, bgColor, isActive }) =>
     isActive ? bgColor ?? theme.accentAction : bgColor ? theme.deprecated_bg4 : theme.textTertiary};
@@ -36,17 +38,24 @@ const ToggleElement = styled.span<{ isActive?: boolean; bgColor?: string }>`
   opacity: ${({ isActive }) => (isActive ? '1' : '0')};
 `
 
-interface ToggleProps {
+const Container = styled(RowBetween)`
+  cursor: pointer;
+`
+
+interface RadioProps {
   id?: string
-  bgColor?: string
+  className?: string
   isActive: boolean
   toggle: () => void
 }
 
-export default function Radio({ id, isActive, toggle }: ToggleProps) {
+export default function Radio({ id, className, isActive, children, toggle }: PropsWithChildren<RadioProps>) {
   return (
-    <Wrapper id={id} isActive={isActive} onClick={toggle}>
-      <ToggleElement isActive={isActive} />
-    </Wrapper>
+    <Container className={className} onClick={toggle}>
+      {children}
+      <Button id={id} isActive={isActive}>
+        <ButtonFill isActive={isActive} />
+      </Button>
+    </Container>
   )
 }

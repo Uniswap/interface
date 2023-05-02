@@ -1,14 +1,14 @@
 import { Trans } from '@lingui/macro'
 import Column from 'components/Column'
 import Radio from 'components/Radio'
-import Row, { RowBetween, RowFixed } from 'components/Row'
+import { RowBetween, RowFixed } from 'components/Row'
 import Toggle from 'components/Toggle'
 import { RouterPreference } from 'state/routing/slice'
 import { useRouterPreference } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
-const Preference = styled(Row)`
+const Preference = styled(Radio)`
   background-color: ${({ theme }) => theme.backgroundModule};
   padding: 12px 16px;
 `
@@ -45,7 +45,10 @@ export default function RouterPreferenceSettings() {
       </RowBetween>
       {!isAutoRoutingActive && (
         <PreferencesContainer>
-          <Preference>
+          <Preference
+            isActive={routerPreference === RouterPreference.API}
+            toggle={() => setRouterPreference(RouterPreference.API)}
+          >
             <Column gap="xs">
               <ThemedText.BodyPrimary>
                 <Trans>Uniswap API</Trans>
@@ -54,12 +57,11 @@ export default function RouterPreferenceSettings() {
                 <Trans>Finds the best route on the Uniswap Protocol using the Uniswap Labs Routing API.</Trans>
               </ThemedText.Caption>
             </Column>
-            <Radio
-              isActive={routerPreference === RouterPreference.API}
-              toggle={() => setRouterPreference(RouterPreference.API)}
-            />
           </Preference>
-          <Preference>
+          <Preference
+            isActive={routerPreference === RouterPreference.CLIENT}
+            toggle={() => setRouterPreference(RouterPreference.CLIENT)}
+          >
             <Column gap="xs">
               <ThemedText.BodyPrimary>
                 <Trans>Uniswap client</Trans>
@@ -71,10 +73,6 @@ export default function RouterPreferenceSettings() {
                 </Trans>
               </ThemedText.Caption>
             </Column>
-            <Radio
-              isActive={routerPreference === RouterPreference.CLIENT}
-              toggle={() => setRouterPreference(RouterPreference.CLIENT)}
-            />
           </Preference>
         </PreferencesContainer>
       )}
