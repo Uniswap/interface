@@ -27,6 +27,7 @@ export const InputContainer = styled(Row)<{ error?: boolean }>`
   padding: 8px 16px;
   border-radius: 12px;
   width: auto;
+  flex: 1;
   input {
     color: ${({ theme, error }) => (error ? theme.accentFailure : theme.textPrimary)};
   }
