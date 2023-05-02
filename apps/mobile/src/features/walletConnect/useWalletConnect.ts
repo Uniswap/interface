@@ -4,6 +4,7 @@ import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { AppModalState, selectModalState } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
 import {
+  selectHasPendingSessionError,
   selectPendingRequests,
   selectPendingSession,
   selectSessions,
@@ -19,6 +20,7 @@ interface WalletConnect {
   pendingRequests: WalletConnectRequest[]
   modalState: AppModalState<ScannerModalState>
   pendingSession: WalletConnectPendingSession | null
+  hasPendingSessionError: boolean
 }
 
 export function useWalletConnect(address: NullUndefined<string>): WalletConnect {
@@ -27,6 +29,7 @@ export function useWalletConnect(address: NullUndefined<string>): WalletConnect 
   const pendingRequests = useAppSelector(selectPendingRequests)
   const modalState = useAppSelector(selectModalState(ModalName.WalletConnectScan))
   const pendingSession = useAppSelector(selectPendingSession)
+  const hasPendingSessionError = useAppSelector(selectHasPendingSessionError)
 
-  return { sessions, pendingRequests, modalState, pendingSession }
+  return { sessions, pendingRequests, modalState, pendingSession, hasPendingSessionError }
 }

@@ -1,5 +1,5 @@
 import { selectionAsync } from 'expo-haptics'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert } from 'react-native'
 import 'react-native-reanimated'
@@ -44,13 +44,22 @@ export function WalletConnectModal({
   const theme = useAppTheme()
   const isDarkMode = useIsDarkMode()
   const activeAddress = useAppSelector(selectActiveAccountAddress)
-  const { sessions } = useWalletConnect(activeAddress)
+  const { sessions, hasPendingSessionError } = useWalletConnect(activeAddress)
   const [currentScreenState, setCurrentScreenState] =
     useState<ScannerModalState>(initialScreenState)
   const { hasScanError, setHasScanError, shouldFreezeCamera, setShouldFreezeCamera } =
     useWCTimeoutError(WC_TIMEOUT_DURATION_MS)
   const { preload, navigate } = useEagerExternalProfileRootNavigation()
   const walletConnectV2Enabled = useFeatureFlag(FEATURE_FLAGS.WalletConnectV2)
+
+  // Update QR scanner states when pending session error alert is shown from WCv2 saga event channel
+  useEffect(() => {
+    setHasScanError(hasPendingSessionError)
+    if (hasPendingSessionError) {
+      // Cancels the pending connection state in QRCodeScanner
+      setShouldFreezeCamera(false)
+    }
+  }, [hasPendingSessionError, setShouldFreezeCamera, setHasScanError])
 
   const onScanCode = useCallback(
     async (uri: string) => {
@@ -91,7 +100,28 @@ export function WalletConnectModal({
       }
 
       if (walletConnectV2Enabled && supportedURI.type === URIType.WalletConnectV2URL) {
-        pairWithWalletConnectURI(supportedURI.value)
+        setShouldFreezeCamera(true)
+        try {
+          await pairWithWalletConnectURI(supportedURI.value)
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (errorMessage: any) {
+          setHasScanError(true)
+          setShouldFreezeCamera(false)
+          Alert.alert(
+            t('WalletConnect Error'),
+            t(`There was an issue with WalletConnect. \n\n Error information:\n {{error}}`, {
+              error: errorMessage,
+            }),
+            [
+              {
+                text: t('OK'),
+                onPress: (): void => {
+                  setHasScanError(false)
+                },
+              },
+            ]
+          )
+        }
       }
 
       if (supportedURI.type === URIType.EasterEgg) {

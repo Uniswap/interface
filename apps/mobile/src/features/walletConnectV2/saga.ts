@@ -22,6 +22,7 @@ import {
   addRequest,
   addSession,
   removeSession,
+  setHasPendingSessionError,
 } from 'src/features/walletConnect/walletConnectSlice'
 import {
   getAccountAddressFromEIP155String,
@@ -112,8 +113,19 @@ function createWalletConnectV2Channel(): EventChannel<Action<unknown>> {
           i18n.t('Uniswap Wallet currently only supports {{ chains }}. \n\n {{ error }}', {
             chains: chainLabels,
             error: e,
-          })
+          }),
+          [
+            {
+              text: 'OK',
+              onPress: (): void => {
+                emit(setHasPendingSessionError(false))
+              },
+            },
+          ]
         )
+
+        // Set error state to cancel loading state in WalletConnectModal UI
+        emit(setHasPendingSessionError(true))
 
         logger.debug(
           'WalletConnectV2Saga',

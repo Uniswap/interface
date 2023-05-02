@@ -1,8 +1,10 @@
 import { createAction } from '@reduxjs/toolkit'
 import { parseUri } from '@walletconnect/utils'
+import { Alert } from 'react-native'
 import { URL } from 'react-native-url-polyfill'
 import { ForkEffect } from 'redux-saga/effects'
 import { appSelect } from 'src/app/hooks'
+import { i18n } from 'src/app/i18n'
 import { handleMoonpayReturnLink } from 'src/features/deepLinking/handleMoonpayReturnLink'
 import { handleSwapLink } from 'src/features/deepLinking/handleSwapLink'
 import { handleTransactionLink } from 'src/features/deepLinking/handleTransactionLink'
@@ -52,19 +54,8 @@ export function* handleDeepLink(action: ReturnType<typeof openDeepLink>) {
     if (url.pathname.includes('/wc')) {
       // Only initial session connections include `uri` param, signing requests only link to /wc
       const wcUri = url.searchParams.get('uri')
-      if (wcUri) {
-        const isValidWcUri = yield* call(isValidWCUrl, wcUri)
-        if (isValidWcUri) {
-          yield* fork(connectToApp, wcUri)
-        }
-
-        const walletConnectV2Enabled = Statsig.checkGate(FEATURE_FLAGS.WalletConnectV2)
-        if (walletConnectV2Enabled && parseUri(wcUri).version === 2) {
-          pairWithWalletConnectURI(wcUri)
-        }
-      }
-      // Set didOpenFromDeepLink so that `returnToPreviousApp()` is enabled during WalletConnect flows
-      yield* put(setDidOpenFromDeepLink(true))
+      if (!wcUri) return
+      yield* call(handleWalletConnectDeepLink, wcUri)
       return
     }
 
@@ -105,6 +96,31 @@ export function* handleDeepLink(action: ReturnType<typeof openDeepLink>) {
       `Error handling deep link ${action.payload.url}: ${errorMessage}`
     )
   }
+}
+
+async function* handleWalletConnectDeepLink(wcUri: string) {
+  const isValidWcUri = yield* call(isValidWCUrl, wcUri)
+  if (isValidWcUri) {
+    yield* fork(connectToApp, wcUri)
+  }
+
+  const walletConnectV2Enabled = Statsig.checkGate(FEATURE_FLAGS.WalletConnectV2)
+  if (walletConnectV2Enabled && parseUri(wcUri).version === 2) {
+    try {
+      pairWithWalletConnectURI(wcUri)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (errorMessage: any) {
+      Alert.alert(
+        i18n.t('WalletConnect Error'),
+        i18n.t(`There was an issue with WalletConnect. \n\n Error information:\n {{error}}`, {
+          error: errorMessage,
+        })
+      )
+    }
+  }
+
+  // Set didOpenFromDeepLink so that `returnToPreviousApp()` is enabled during WalletConnect flows
+  yield* put(setDidOpenFromDeepLink(true))
 }
 
 export function* parseAndValidateUserAddress(userAddress: string | null) {

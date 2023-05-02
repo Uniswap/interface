@@ -28,3 +28,7 @@ export const selectPendingSession = (state: RootState): WalletConnectPendingSess
 export const selectDidOpenFromDeepLink = (state: RootState): boolean => {
   return state.walletConnect.didOpenFromDeepLink ?? false
 }
+
+export const selectHasPendingSessionError = (state: RootState): boolean => {
+  return state.walletConnect.hasPendingSessionError ?? false
+}

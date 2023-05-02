@@ -1,8 +1,6 @@
 import { PairingTypes, ProposalTypes, SessionTypes, SignClientTypes } from '@walletconnect/types'
 import { Web3WalletTypes } from '@walletconnect/web3wallet'
 import { utils } from 'ethers'
-import { Alert } from 'react-native'
-import { i18n } from 'src/app/i18n'
 import { ChainId } from 'src/constants/chains'
 import { EMPTY_ARRAY } from 'src/constants/misc'
 import { EthMethod, EthSignMethod } from 'src/features/walletConnect/types'
@@ -292,17 +290,12 @@ export async function pairWithWalletConnectURI(uri: string): Promise<void | Pair
     return await wcWeb3Wallet.core.pairing.pair({ uri })
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (e: any) {
+    const errorMessage = typeof e === 'object' ? e?.message : ''
     logger.error(
       'walletConnectV2',
       'pairWithWalletConnectURI',
-      `Error with new WalletConnect v2 pairing: ${e.message}`
+      `Error with new WalletConnect v2 pairing: ${errorMessage}`
     )
-    Alert.alert(
-      i18n.t('WalletConnect Error'),
-      i18n.t(`There was an issue with WalletConnect. \n\n Error information:\n {{error}}`, {
-        error: typeof e === 'object' ? e?.message : '',
-      })
-    )
-    return Promise.reject(e)
+    return Promise.reject(errorMessage)
   }
 }
