@@ -20,3 +20,25 @@ jobs:
           apple-app-id: ${{ secrets.APPLE_APP_ID_PROD }}
           app-identifier: ${{ secrets.APP_IDENTIFIER_PROD }}
           onesignal-app-id: ${{ secrets.ONESIGNAL_APP_ID }}
+          uniswap-api-key: ${{ secrets.UNISWAP_API_KEY }}
+          sentry-dsn: ${{ secrets.SENTRY_DSN }}
+          statsig-api-key: ${{ secrets.STATSIG_API_KEY }}
+          statsig-proxy-url: ${{ secrets.STATSIG_PROXY_URL }}
+          amplitude-experiments-deploy-key: ${{ secrets.AMPLITUDE_EXPERIMENTS_DEPLOY_KEY }}
+          infura-project-id: ${{ secrets.INFURA_PROJECT_ID }}
+          moonpay-api-key: ${{ secrets.MOONPAY_API_KEY }}
+          moonpay-api-url: ${{ secrets.MOONPAY_API_URL }}
+          moonpay-widget-api-url: ${{ secrets.MOONPAY_WIDGET_API_URL }}
+          walletconnect-project-id: ${{ secrets.WALLETCONNECT_PROJECT_ID }}
+          apple-id: ${{ secrets.APPLE_ID }}
+          apple-team-id: ${{ secrets.APPLE_TEAM_ID }}
+          app-store-connect-key-id: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
+          app-store-connect-issuer-id: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+          app-store-connect-key-content: ${{ secrets.APP_STORE_CONNECT_KEY_CONTENT }}
+          match-password: ${{ secrets.MATCH_PASSWORD }}
+          ci-keychain-password: ${{ secrets.CI_KEYCHAIN_PASSWORD }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          url-to-fastlane-certificates-repo: ${{ secrets.URL_TO_FASTLANE_CERTIFICATES_REPO }}
+          sentry-auth-token: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          sentry-org: ${{ secrets.SENTRY_ORG }}
+          sentry-project: ${{ secrets.SENTRY_PROJECT }}

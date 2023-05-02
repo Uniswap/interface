@@ -22,6 +22,10 @@ jobs:
       - name: 📢 Get marketing version number
         uses: ./.github/actions/mobile_marketing_version
         id: marketing-version
+        with:
+          app-store-connect-key-id: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
+          app-store-connect-issuer-id: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+          app-store-connect-key-content: ${{ secrets.APP_STORE_CONNECT_KEY_CONTENT }}
           
       - name: ↔️  Checkout and push to releases/[${{ steps.marketing-version.outputs.marketing-version }}]
         run: |

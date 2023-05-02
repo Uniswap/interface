@@ -20,6 +20,72 @@ inputs:
   onesignal-app-id:
     description: 'the onesignal app id for this deployment'
     required: true
+  uniswap-api-key:
+    description: 'passed secret value'
+    required: true
+  sentry-dsn:
+    description: 'passed secret value'
+    required: true
+  statsig-api-key:
+    description: 'passed secret value'
+    required: true
+  statsig-proxy-url:
+    description: 'passed secret value'
+    required: true
+  amplitude-experiments-deploy-key:
+    description: 'passed secret value'
+    required: true
+  infura-project-id:
+    description: 'passed secret value'
+    required: true
+  moonpay-api-key:
+    description: 'passed secret value'
+    required: true
+  moonpay-api-url:
+    description: 'passed secret value'
+    required: true
+  moonpay-widget-api-url:
+    description: 'passed secret value'
+    required: true
+  walletconnect-project-id:
+    description: 'passed secret value'
+    required: true
+  apple-id:
+    description: 'passed secret value'
+    required: true
+  apple-team-id:
+    description: 'passed secret value'
+    required: true
+  app-store-connect-key-id:
+    description: 'passed secret value'
+    required: true
+  app-store-connect-issuer-id:
+    description: 'passed secret value'
+    required: true
+  app-store-connect-key-content:
+    description: 'passed secret value'
+    required: true
+  match-password:
+    description: 'passed secret value'
+    required: true
+  ci-keychain-password:
+    description: 'passed secret value'
+    required: true
+  github-token:
+    description: 'passed secret value'
+    required: true
+  url-to-fastlane-certificates-repo:
+    description: 'passed secret value'
+    required: true
+  sentry-auth-token:
+    description: 'passed secret value'
+    required: true
+  sentry-org:
+    description: 'passed secret value'
+    required: true
+  sentry-project:
+    description: 'passed secret value'
+    required: true
 
 runs:
   using: 'composite'
@@ -40,6 +106,7 @@ runs:
 
     # Set path variables needed for caches
     - name: 𝒳 Set workflow variables
+      shell: bash
       id: workflow-variables
       run: |
         echo "::set-output name=xcode-version::$(xcodebuild -version|tail -1|cut -f3 -d' ')"
@@ -92,37 +159,36 @@ runs:
         ccache -s
       shell: bash
       env:
-        UNISWAP_API_KEY: ${{ secrets.UNISWAP_API_KEY }}
-        SHAKE_CLIENT_ID: ${{ secrets.SHAKE_CLIENT_ID }}
-        SHAKE_CLIENT_SECRET: ${{ secrets.SHAKE_CLIENT_SECRET }}
-        SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
-        STATSIG_API_KEY: ${{ secrets.STATSIG_API_KEY }}
-        STATSIG_PROXY_URL: ${{ secrets.STATSIG_PROXY_URL }}
-        AMPLITUDE_EXPERIMENTS_DEPLOYMENT_KEY: ${{ secrets.AMPLITUDE_EXPERIMENTS_DEPLOYMENT_KEY }}
-        INFURA_PROJECT_ID: ${{ secrets.INFURA_PROJECT_ID }}
-        MOONPAY_API_KEY: ${{ secrets.MOONPAY_API_KEY }}
-        MOONPAY_API_URL: ${{ secrets.MOONPAY_API_URL }}
-        MOONPAY_WIDGET_API_URL: ${{ secrets.MOONPAY_WIDGET_API_URL }}
+        UNISWAP_API_KEY: ${{ inputs.uniswap-api-key }}
+        SENTRY_DSN: ${{ inputs.sentry-dsn }}
+        STATSIG_API_KEY: ${{ inputs.statsig-api-key }}
+        STATSIG_PROXY_URL: ${{ inputs.statsig-proxy-url }}
+        AMPLITUDE_EXPERIMENTS_DEPLOYMENT_KEY: ${{ inputs.amplitude-experiments-deploy-key }}
+        INFURA_PROJECT_ID: ${{ inputs.infura-project-id }}
+        MOONPAY_API_KEY: ${{ inputs.moonpay-api-key }}
+        MOONPAY_API_URL: ${{ inputs.moonpay-api-url }}
+        MOONPAY_WIDGET_API_URL: ${{ inputs.moonpay-widget-api-url }}
         ONESIGNAL_APP_ID: ${{ inputs.onesignal-app-id }}
-        WALLETCONNECT_PROJECT_ID: ${{ secrets.WALLETCONNECT_PROJECT_ID }}
+        WALLETCONNECT_PROJECT_ID: ${{ inputs.walletconnect-project-id }}
         APP_IDENTIFIER: ${{ inputs.app-identifier }}
-        APPLE_ID: ${{ secrets.APPLE_ID }}
+        APPLE_ID: ${{ inputs.apple-id }}
         APPLE_APP_ID: ${{ inputs.apple-app-id }}
-        APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
-        APP_STORE_CONNECT_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
-        APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
-        APP_STORE_CONNECT_KEY_CONTENT: ${{ secrets.APP_STORE_CONNECT_KEY_CONTENT }}
-        MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+        APPLE_TEAM_ID: ${{ inputs.apple-team-id }}
+        APP_STORE_CONNECT_KEY_ID: ${{ inputs.app-store-connect-key-id }}
+        APP_STORE_CONNECT_ISSUER_ID: ${{ inputs.app-store-connect-issuer-id }}
+        APP_STORE_CONNECT_KEY_CONTENT: ${{ inputs.app-store-connect-key-content }}
+        MATCH_PASSWORD: ${{ inputs.match-password }}
         CI: true
         CI_KEYCHAIN_NAME: 'CI_KEYCHAIN'
-        CI_KEYCHAIN_PASSWORD: ${{ secrets.CI_KEYCHAIN_PASSWORD }}
+        CI_KEYCHAIN_PASSWORD: ${{ inputs.ci-keychain-password }}
         CONFIGURATION: ${{ inputs.configuration }}
         GIT_BRANCH_NAME: ${{ github.ref }}
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        URL_TO_FASTLANE_CERTIFICATES_REPO: ${{ secrets.URL_TO_FASTLANE_CERTIFICATES_REPO }}
+        GITHUB_TOKEN: ${{ inputs.github-token }}
+        URL_TO_FASTLANE_CERTIFICATES_REPO: ${{ inputs.url-to-fastlane-certificates-repo }}
 
     - name: 🍎 Generate iOS bundle and sourcemaps
       working-directory: ./apps/mobile
+      shell: bash
       run: |
         yarn react-native bundle --platform ios --dev false --entry-file index.js --reset-cache --bundle-output main.jsbundle --sourcemap-output main.jsbundle.map --minify false
 
@@ -130,10 +196,11 @@ runs:
     - name: 🐞 Create Sentry release with sourcemaps
       working-directory: ./apps/mobile
       env:
-        SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-        SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
-        SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+        SENTRY_AUTH_TOKEN: ${{ inputs.sentry-auth-token }}
+        SENTRY_ORG: ${{ inputs.sentry-org }}
+        SENTRY_PROJECT: ${{ inputs.sentry-project }}
         APP_IDENTIFIER: ${{ inputs.app-identifier }}
+      shell: bash
       run: |
         # Install Sentry CLI
         curl -sL https://sentry.io/get-cli/ | bash

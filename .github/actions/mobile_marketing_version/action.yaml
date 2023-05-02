@@ -1,5 +1,17 @@
 name: '[mobile] Marketing Version'
 description: 'Fetch the current marketing version from the mobile app code via fastlane'
+
+inputs:
+  app-store-connect-key-id:
+    description: 'passed secret value'
+    required: true
+  app-store-connect-issuer-id:
+    description: 'passed secret value'
+    required: true
+  app-store-connect-key-content:
+    description: 'passed secret value'
+    required: true
+
 outputs:
   marketing-version:
     description: 'the current marketing version from the mobile app code via fastlane'
@@ -10,11 +22,12 @@ runs:
 
   steps:
     - name: 📢 Get marketing version number
+      shell: bash
       working-directory: ./apps/mobile
       run: |
         fastlane ios getMarketingVersionNumber
       env:
-        APP_STORE_CONNECT_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
-        APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
-        APP_STORE_CONNECT_KEY_CONTENT: ${{ secrets.APP_STORE_CONNECT_KEY_CONTENT }}
+        APP_STORE_CONNECT_KEY_ID: ${{ inputs.app-store-connect-key-id }}
+        APP_STORE_CONNECT_ISSUER_ID: ${{ inputs.app-store-connect-issuer-id }}
+        APP_STORE_CONNECT_KEY_CONTENT: ${{ inputs.app-store-connect-key-content }}
         CI: true
