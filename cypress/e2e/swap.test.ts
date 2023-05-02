@@ -198,7 +198,7 @@ describe('Swap', () => {
     cy.get('#swap-currency-output .token-amount-input').should('not.equal', '')
   })
 
-  it.only('should render an error for slippage failure', () => {
+  it('should render an error for slippage failure', () => {
     const SLIPPAGE = 0.01
     const AMOUNT_TO_SWAP = 300
     const NUMBER_OF_SWAPS = 3
