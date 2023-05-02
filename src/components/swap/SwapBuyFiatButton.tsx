@@ -56,16 +56,14 @@ export default function SwapBuyFiatButton() {
   const [buyFiatFlowState, setBuyFiatFlowState] = useState(BuyFiatFlowState.INACTIVE)
   const [walletDrawerOpen, toggleWalletDrawer] = useAccountDrawer()
 
-  /*
-   * Depending on the current state of the buy fiat flow the user is in (buyFiatFlowState),
-   * the desired behavior of clicking the 'Buy' button is different.
-   * 1) Initially upon first click, need to check the availability of the feature in the user's
-   * region, and continue the flow.
-   * 2) If the feature is available in the user's region, need to connect a wallet, and continue
-   * the flow.
-   * 3) If the feature is available and a wallet account is connected, show fiat on ramp modal.
-   * 4) If the feature is unavailable, show feature unavailable tooltip.
-   */
+  // Depending on the current state of the buy fiat flow the user is in (buyFiatFlowState),
+  // the desired behavior of clicking the 'Buy' button is different.
+  // 1) Initially upon first click, need to check the availability of the feature in the user's
+  // region, and continue the flow.
+  // 2) If the feature is available in the user's region, need to connect a wallet, and continue
+  // the flow.
+  // 3) If the feature is available and a wallet account is connected, show fiat on ramp modal.
+  // 4) If the feature is unavailable, show feature unavailable tooltip.
   const handleBuyCrypto = useCallback(() => {
     if (!fiatOnrampAvailabilityChecked) {
       setCheckFiatRegionAvailability(true)

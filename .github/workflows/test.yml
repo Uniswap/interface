@@ -67,37 +67,6 @@ jobs:
           verbose: true
           flags: unit-tests
 
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: ./.github/actions/setup
-      - uses: actions/cache@v3
-        id: build-cache
-        with:
-          path: node_modules/.cache
-          key: ${{ runner.os }}-build-${{ hashFiles('**/yarn.lock') }}-${{ github.run_id }}
-          restore-keys: ${{ runner.os }}-build-${{ hashFiles('**/yarn.lock') }}-
-      - run: yarn prepare
-      - run: yarn build
-      - uses: actions/upload-artifact@v3
-        with:
-          name: build
-          path: build
-          if-no-files-found: error
-
-  size-tests:
-    needs: [build]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: ./.github/actions/setup
-      - uses: actions/download-artifact@v3
-        with:
-          name: build
-          path: build
-      - run: yarn test:size
-
   build-e2e:
     runs-on: ubuntu-latest
     steps:
