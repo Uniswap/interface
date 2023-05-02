@@ -27,8 +27,6 @@ runs:
       working-directory: ./apps/mobile
       run: |
         fastlane ios getMarketingVersionNumber
-        echo "marketing-version=${{ env.IOS_VERSION_NUMBER }}"
-        echo "marketing-version=${{ env.IOS_VERSION_NUMBER }}" >> $GITHUB_OUTPUT
       env:
         APP_STORE_CONNECT_KEY_ID: ${{ inputs.app-store-connect-key-id }}
         APP_STORE_CONNECT_ISSUER_ID: ${{ inputs.app-store-connect-issuer-id }}

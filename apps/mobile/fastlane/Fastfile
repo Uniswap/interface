@@ -214,7 +214,7 @@ end
 
     # Setting env variables to be used in the next step of the workflow
     if ENV["CI"]
-      sh "echo IOS_VERSION_NUMBER=#{current_marketing_version} >> $GITHUB_ENV"
+      sh "echo \"marketing-version=#{current_marketing_version}\" >> $GITHUB_OUTPUT"
     end
     
   end
