@@ -53,7 +53,7 @@ export function AdvancedSwapDetails({
 }: AdvancedSwapDetailsProps) {
   const theme = useTheme()
   const { chainId } = useWeb3React()
-  const nativeCurrency = useNativeCurrency()
+  const nativeCurrency = useNativeCurrency(chainId)
 
   const { expectedOutputAmount, priceImpact } = useMemo(() => {
     return {

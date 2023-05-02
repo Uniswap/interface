@@ -8,4 +8,5 @@ export enum FeatureFlag {
   swapWidget = 'swap_widget_replacement_enabled',
   statsigDummy = 'web_dummy_gate_amplitude_id',
   detailsV2 = 'details_v2',
+  removeWidget = 'remove_widget_tdp',
 }

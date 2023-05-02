@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { formatCurrencyAmount, NumberType } from '@uniswap/conedison/format'
+import { useWeb3React } from '@web3-react/core'
 import Column from 'components/Column'
 import { ScrollBarStyles } from 'components/Common'
 import Row from 'components/Row'
@@ -76,7 +77,8 @@ const TweetRow = styled(Row)`
 export const SuccessScreen = ({ overlayClick }: { overlayClick: () => void }) => {
   const theme = useTheme()
   const sellAssets = useSellAsset((state) => state.sellAssets)
-  const nativeCurrency = useNativeCurrency()
+  const { chainId } = useWeb3React()
+  const nativeCurrency = useNativeCurrency(chainId)
 
   const totalEthListingValue = useMemo(() => getTotalEthValue(sellAssets), [sellAssets])
   const parsedAmount = tryParseCurrencyAmount(totalEthListingValue.toString(), nativeCurrency)

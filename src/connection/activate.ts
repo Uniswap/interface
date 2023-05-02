@@ -28,10 +28,8 @@ function useTryActivation() {
 
   return useCallback(
     async (connection: Connection, onSuccess: () => void) => {
-      /*
-       * Skips wallet connection if the connection should override the default
-       * behavior, i.e. install MetaMask or launch Coinbase app
-       */
+      // Skips wallet connection if the connection should override the default
+      // behavior, i.e. install MetaMask or launch Coinbase app
       if (connection.overrideActivate?.()) return
 
       try {

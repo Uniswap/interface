@@ -1,4 +1,5 @@
 import { Token } from '@uniswap/sdk-core'
+import { useWeb3React } from '@web3-react/core'
 import { useMemo } from 'react'
 import { PositionDetails } from 'types/position'
 import { hasURL } from 'utils/urlChecks'
@@ -11,7 +12,7 @@ function getUniqueAddressesFromPositions(positions: PositionDetails[]): string[]
     new Set(positions.reduce<string[]>((acc, position) => acc.concat(position.token0, position.token1), []))
   )
 }
-/*
+/**
  * This function is an attempt to filter out an observed phishing attack from LP list UIs.
  * Attackers would airdrop valueless LP positions with urls in the symbol to render phishing sites into users' LP position list view.
  *
@@ -23,7 +24,8 @@ function getUniqueAddressesFromPositions(positions: PositionDetails[]): string[]
  * The hope is that this approach removes the cheapest version of the attack without punishing non-malicious url symbols
  */
 export function useFilterPossiblyMaliciousPositions(positions: PositionDetails[]): PositionDetails[] {
-  const activeTokensList = useDefaultActiveTokens()
+  const { chainId } = useWeb3React()
+  const activeTokensList = useDefaultActiveTokens(chainId)
 
   const nonListPositionTokenAddresses = useMemo(
     () => getUniqueAddressesFromPositions(positions).filter((address) => !activeTokensList[address]),
