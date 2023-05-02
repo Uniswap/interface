@@ -3385,10 +3385,10 @@
     mkdirp "^1.0.4"
     rimraf "^3.0.2"
 
-"@opensea/seaport-js@^1.0.10":
-  version "1.0.10"
-  resolved "https://registry.yarnpkg.com/@opensea/seaport-js/-/seaport-js-1.0.10.tgz#538eed1316a99d2cf06a57fd874b719efad9c22e"
-  integrity sha512-k4kBmkCNYxAuB6DYRqwcGXik/8x80cHQ4r4bWWFyB0v4AxGNsqMGOwdeDiP1ajxbg4NnmdEpyA8b2p73GiaK7Q==
+"@opensea/seaport-js@^1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@opensea/seaport-js/-/seaport-js-1.2.0.tgz#4edebaa8226f62abc2e5bf350680f172e2860b58"
+  integrity sha512-l5Y5ZfMC2Tm2ZXfsyZZNYo72zKHKUUS4J3UTUdK1+1Sd8GgRzwHkBGlBLyowqTrvosGfXR0BDDupP04H+APUZQ==
   dependencies:
     "@0xsequence/multicall" "^0.39.0"
     ethers "^5.6.7"
