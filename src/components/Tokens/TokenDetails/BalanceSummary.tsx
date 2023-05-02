@@ -12,9 +12,8 @@ import styled, { useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
 const BalancesCard = styled.div`
-  box-shadow: ${({ theme }) => theme.shallowShadow};
+  box-shadow: ${({ theme }) => theme.deepShadow};
   background-color: ${({ theme }) => theme.backgroundSurface};
-  border: ${({ theme }) => `1px solid ${theme.backgroundOutline}`};
   border-radius: 16px;
   color: ${({ theme }) => theme.textPrimary};
   display: none;

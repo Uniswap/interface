@@ -39,6 +39,7 @@ export const LeftPanel = styled.div`
   max-width: 780px;
   overflow: hidden;
   background: ${({ theme }) => theme.backgroundSurface};
+  box-shadow: ${({ theme }) => theme.deepShadow};
   border-radius: 16px;
   padding-left: 24px;
   padding-right: 24px;
