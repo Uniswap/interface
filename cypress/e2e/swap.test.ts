@@ -114,7 +114,7 @@ describe('Swap', () => {
       .then((hardhat) => {
         hardhat
           .reset()
-          .then(() => hardhat.provider.send('evm_setAutomine', [false]))
+          .then(() => hardhat.setAutomine(false))
           .then(() => hardhat.getBalance(hardhat.wallet.address, USDC_MAINNET))
           .then((balance) => Number(balance.toFixed(1)))
           .then((initialBalance) => {
@@ -141,6 +141,7 @@ describe('Swap', () => {
 
             // Mine a block past the deadline.
             cy.then(() => hardhat.mine(1, TEN_MINUTES_MS))
+              .then(() => hardhat.setAutomine(true))
               .then(() => {
                 // The UI should no longer show the transaction as pending.
                 cy.contains('1 Pending').should('not.exist')
