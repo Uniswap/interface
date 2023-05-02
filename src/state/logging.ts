@@ -38,7 +38,7 @@ export const sentryEnhancer = Sentry.createReduxEnhancer({
         lastUpdateVersionTimestamp: user.lastUpdateVersionTimestamp,
         userLocale: user.userLocale,
         userExpertMode: user.userExpertMode,
-        routerPreference: user.userRouterPreference,
+        userRouterPreference: user.userRouterPreference,
         userHideClosedPositions: user.userHideClosedPositions,
         userSlippageTolerance: user.userSlippageTolerance,
         userSlippageToleranceHasBeenMigratedToAuto: user.userSlippageToleranceHasBeenMigratedToAuto,

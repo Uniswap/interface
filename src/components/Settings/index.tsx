@@ -15,7 +15,7 @@ import { useRouterPreference } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 
 import MaxSlippageSettings from './MaxSlippageSettings'
-import RouterPreferenceSettings from './RouterPreference'
+import RouterPreferenceSettings from './RouterPreferenceSettings'
 import TransactionDeadlineSettings from './TransactionDeadlineSettings'
 
 const StyledMenuIcon = styled(Settings)`
