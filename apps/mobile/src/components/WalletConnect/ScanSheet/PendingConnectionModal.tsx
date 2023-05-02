@@ -41,7 +41,7 @@ import {
 import { wcWeb3Wallet } from 'src/features/walletConnectV2/saga'
 import { getSessionNamespaces } from 'src/features/walletConnectV2/utils'
 import { toSupportedChainId } from 'src/utils/chainId'
-import { ONE_SECOND_MS } from 'src/utils/time'
+import { ONE_SECOND_MS } from 'wallet/src/utils/time'
 
 type Props = {
   pendingSession: WalletConnectPendingSession

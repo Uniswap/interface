@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { ONE_MINUTE_MS } from 'src/utils/time'
+import { ONE_MINUTE_MS } from 'wallet/src/utils/time'
 
 const balanceReportFrequency = ONE_MINUTE_MS * 5
 

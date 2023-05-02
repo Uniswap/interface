@@ -1,4 +1,4 @@
-import { ONE_MINUTE_MS, ONE_SECOND_MS } from 'src/utils/time'
+import { ONE_MINUTE_MS, ONE_SECOND_MS } from 'wallet/src/utils/time'
 
 // Polling interval (in milliseconds) for RTK-Query
 export enum PollingInterval {

@@ -5,7 +5,7 @@
   "compilerOptions": {
     "isolatedModules": false,
     "esModuleInterop": true,
-    "allowJs": false,
+    "allowJs": true,
     "resolveJsonModule": true,
     "noEmit": false,
     "jsx": "preserve",

@@ -9,8 +9,8 @@ import { FLASHBOTS_SUPPORTED_CHAINS } from 'src/features/providers/flashbotsProv
 import { getEthersProvider } from 'src/features/providers/getEthersProvider'
 import { getInfuraChainName } from 'src/features/providers/utils'
 import { logger } from 'src/utils/logger'
-import { isStale } from 'src/utils/time'
 import { promiseTimeout, sleep } from 'src/utils/timing'
+import { isStale } from 'wallet/src/utils/time'
 
 enum ProviderStatus {
   Disconnected,

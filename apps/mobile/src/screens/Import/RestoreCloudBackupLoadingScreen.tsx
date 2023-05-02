@@ -16,9 +16,9 @@ import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { ImportType } from 'src/features/onboarding/utils'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { logger } from 'src/utils/logger'
-import { ONE_SECOND_MS } from 'src/utils/time'
 import { useTimeout } from 'src/utils/timing'
 import { useAddBackButton } from 'src/utils/useAddBackButton'
+import { ONE_SECOND_MS } from 'wallet/src/utils/time'
 
 type Props = NativeStackScreenProps<
   OnboardingStackParamList,

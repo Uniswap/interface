@@ -34,9 +34,9 @@ import { AccountType, SignerMnemonicAccount } from 'src/features/wallet/accounts
 import { useAccounts } from 'src/features/wallet/hooks'
 import { resetWallet, setFinishedOnboarding } from 'src/features/wallet/walletSlice'
 import { Screens } from 'src/screens/Screens'
-import { ONE_SECOND_MS } from 'src/utils/time'
 import { useTimeout } from 'src/utils/timing'
 import { getFullAppVersion } from 'src/utils/version'
+import { ONE_SECOND_MS } from 'wallet/src/utils/time'
 
 export function SettingsScreen(): JSX.Element {
   const navigation = useSettingsStackNavigation()

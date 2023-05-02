@@ -24,8 +24,8 @@ import {
 } from 'src/features/wallet/pendingAccountsSaga'
 import { activateAccount } from 'src/features/wallet/walletSlice'
 import { OnboardingScreens } from 'src/screens/Screens'
-import { ONE_SECOND_MS } from 'src/utils/time'
 import { useTimeout } from 'src/utils/timing'
+import { ONE_SECOND_MS } from 'wallet/src/utils/time'
 
 const FORCED_LOADING_DURATION = 3 * ONE_SECOND_MS // 3s
 

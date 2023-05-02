@@ -47,8 +47,8 @@ import {
 import { wcWeb3Wallet } from 'src/features/walletConnectV2/saga'
 import { logger } from 'src/utils/logger'
 import { createSaga } from 'src/utils/saga'
-import { ONE_SECOND_MS } from 'src/utils/time'
 import { call, fork, put, take } from 'typed-redux-saga'
+import { ONE_SECOND_MS } from 'wallet/src/utils/time'
 
 export enum WalletConnectEvent {
   Connected,

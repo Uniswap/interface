@@ -14,7 +14,7 @@ import { extractFiatOnRampTransactionDetails } from 'src/features/transactions/h
 import { serializeQueryParams } from 'src/features/transactions/swap/utils'
 import { TransactionDetails, TransactionStatus } from 'src/features/transactions/types'
 import { logger } from 'src/utils/logger'
-import { ONE_MINUTE_MS } from 'src/utils/time'
+import { ONE_MINUTE_MS } from 'wallet/src/utils/time'
 
 const COMMON_QUERY_PARAMS = serializeQueryParams({ apiKey: config.moonpayApiKey })
 const TRANSACTION_NOT_FOUND = 404

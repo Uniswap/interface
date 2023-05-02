@@ -28,7 +28,7 @@ import {
   makeSelectAccountHideSpamTokens,
   selectActiveAccountAddress,
 } from 'src/features/wallet/selectors'
-import { ONE_SECOND_MS } from 'src/utils/time'
+import { ONE_SECOND_MS } from 'wallet/src/utils/time'
 
 /**
  * For all imported accounts, checks for new transactions and updates

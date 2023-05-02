@@ -22,8 +22,8 @@ import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { PasswordError } from 'src/features/onboarding/PasswordError'
 import { ElementName } from 'src/features/telemetry/constants'
 import { OnboardingScreens } from 'src/screens/Screens'
-import { ONE_HOUR_MS, ONE_MINUTE_MS } from 'src/utils/time'
 import { useAddBackButton } from 'src/utils/useAddBackButton'
+import { ONE_HOUR_MS, ONE_MINUTE_MS } from 'wallet/src/utils/time'
 
 type Props = NativeStackScreenProps<
   OnboardingStackParamList,

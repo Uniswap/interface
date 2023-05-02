@@ -28,7 +28,7 @@ import { wcWeb3Wallet } from 'src/features/walletConnectV2/saga'
 import { toSupportedChainId } from 'src/utils/chainId'
 import { openUri } from 'src/utils/linking'
 import { logger } from 'src/utils/logger'
-import { ONE_SECOND_MS } from 'src/utils/time'
+import { ONE_SECOND_MS } from 'wallet/src/utils/time'
 
 export function DappConnectionItem({
   session,

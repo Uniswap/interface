@@ -33,8 +33,8 @@ import {
   parseTransactionRequest,
 } from 'src/features/walletConnectV2/utils'
 import { logger } from 'src/utils/logger'
-import { ONE_SECOND_MS } from 'src/utils/time'
 import { call, put, take } from 'typed-redux-saga'
+import { ONE_SECOND_MS } from 'wallet/src/utils/time'
 
 export let wcWeb3Wallet: IWeb3Wallet
 

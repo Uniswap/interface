@@ -62,8 +62,8 @@ import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
 import { dimensions } from 'src/styles/sizing'
 import { hideSplashScreen } from 'src/utils/splashScreen'
-import { ONE_SECOND_MS } from 'src/utils/time'
 import { useInterval, useTimeout } from 'src/utils/timing'
+import { ONE_SECOND_MS } from 'wallet/src/utils/time'
 
 const CONTENT_HEADER_HEIGHT_ESTIMATE = 270
 

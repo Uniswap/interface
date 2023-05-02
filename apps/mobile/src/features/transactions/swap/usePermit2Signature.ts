@@ -17,7 +17,7 @@ import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
 import { SignerManager } from 'src/features/wallet/signing/SignerManager'
 import { signTypedData } from 'src/features/wallet/signing/signing'
 import { useAsyncData } from 'src/utils/hooks'
-import { currentTimeInSeconds, inXMinutesUnix } from 'src/utils/time'
+import { currentTimeInSeconds, inXMinutesUnix } from 'wallet/src/utils/time'
 
 const PERMIT2_SIG_VALIDITY_TIME = 30 // minutes
 function getPermitStruct(
