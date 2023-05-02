@@ -1,4 +1,3 @@
-import { AnyAction } from '@reduxjs/toolkit'
 import React, { useCallback, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex } from 'src/components/layout'
@@ -8,7 +7,6 @@ import { Text } from 'src/components/Text'
 import { ChainId } from 'src/constants/chains'
 import { ModalName } from 'src/features/telemetry/constants'
 import { useAllTransactionsBetweenAddresses } from 'src/features/transactions/hooks'
-import { clearRecipient } from 'src/features/transactions/transactionState/transactionState'
 import { useIsSmartContractAddress } from 'src/features/transactions/transfer/hooks'
 import { TransferSpeedbump } from 'src/features/transactions/transfer/TransferTokenForm'
 import {
@@ -18,7 +16,6 @@ import {
 } from 'src/features/wallet/hooks'
 
 interface TransferFormWarningProps {
-  dispatch: React.Dispatch<AnyAction>
   recipient?: string
   chainId?: ChainId
   showSpeedbumpModal: boolean
@@ -28,7 +25,6 @@ interface TransferFormWarningProps {
 }
 
 export function TransferFormSpeedbumps({
-  dispatch,
   recipient,
   chainId,
   showSpeedbumpModal,
@@ -65,9 +61,8 @@ export function TransferFormSpeedbumps({
   ])
 
   const onCloseSmartContractWarning = useCallback(() => {
-    dispatch(clearRecipient())
     setShowSpeedbumpModal(false)
-  }, [dispatch, setShowSpeedbumpModal])
+  }, [setShowSpeedbumpModal])
 
   const onCloseNewRecipientWarning = useCallback(
     () => setShowSpeedbumpModal(false),
@@ -78,17 +73,18 @@ export function TransferFormSpeedbumps({
 
   return (
     <>
-      {showSpeedbumpModal && !isSignerRecipient && isSmartContractAddress && (
+      {showSpeedbumpModal && !isSignerRecipient && isSmartContractAddress && isNewRecipient && (
         <WarningModal
           caption={t(
-            'This address is a smart contract. In many cases, sending tokens directly to a contract will result in the loss of your assets. Please select a different address.'
+            "You're about to send tokens to a smart contract. Sending tokens to certain smart contracts could result in the loss of your tokens. If you’re not sure this is correct please double check the address before proceeding."
           )}
-          confirmText={t('Close')}
+          closeText={t('Cancel')}
+          confirmText={t('Continue')}
           modalName={ModalName.SendWarning}
-          severity={WarningSeverity.High}
-          title={t('Smart contract address')}
+          severity={WarningSeverity.Low}
+          title={t('Is this a wallet address?')}
           onClose={onCloseSmartContractWarning}
-          onConfirm={onCloseSmartContractWarning}
+          onConfirm={onNext}
         />
       )}
       {showSpeedbumpModal && !isSmartContractAddress && !isSignerRecipient && isNewRecipient && (

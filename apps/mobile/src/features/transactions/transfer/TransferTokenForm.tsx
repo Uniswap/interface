@@ -219,7 +219,6 @@ export function TransferTokenForm({
       )}
       <TransferFormSpeedbumps
         chainId={chainId}
-        dispatch={dispatch}
         recipient={recipient}
         setShowSpeedbumpModal={onSetShowSpeedbumpModal}
         setTransferSpeedbump={onSetTransferSpeedbump}
