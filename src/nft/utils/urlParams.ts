@@ -44,11 +44,9 @@ const urlParamsUtils = {
         clonedQuery[key] = []
       }
 
-      /* 
-        query-string package treats arrays with one value as a string.
-        Here we're making sure that we have an array, not a string. Example:
-          const foo = 'hey' // => ['hey']
-      */
+      // query-string package treats arrays with one value as a string.
+      // Here we're making sure that we have an array, not a string. Example:
+      //   const foo = 'hey' // => ['hey']
       if (clonedQuery[key] && typeof clonedQuery[key] === 'string') {
         clonedQuery[key] = [clonedQuery[key]]
       }
@@ -66,23 +64,20 @@ const urlParamsUtils = {
       clonedQuery['buyNow'] = !(clonedQuery['all'] === undefined ? !initialBuyNow : clonedQuery['all'])
       clonedQuery['search'] = clonedQuery['search'] === undefined ? initialSearchText : String(clonedQuery['search'])
 
-      /*
-        Handling an edge case caused by query-string's bad array parsing, when user
-        only selects one trait and reloads the page.
-        Here's the general data-structure for our traits in URL: 
-          `traits=("trait_type","trait_value"),("trait_type","trait_value")`
-
-        Expected behavior: When user selects one trait, there should be an array
-        containing one element.
-
-        Actual behavior: It creates an array with two elements, first element being
-        trait_type & the other trait_value. This causes confusion since we don't know
-        whether user has selected two traits (cause we have two elements in our array)
-        or it's only one.
-
-        Using this block of code, we'll identify if that's the case.
-      */
-
+      // Handling an edge case caused by query-string's bad array parsing, when user
+      // only selects one trait and reloads the page.
+      // Here's the general data-structure for our traits in URL:
+      //   `traits=("trait_type","trait_value"),("trait_type","trait_value")`
+      //
+      // Expected behavior: When user selects one trait, there should be an array
+      // containing one element.
+      //
+      // Actual behavior: It creates an array with two elements, first element being
+      // trait_type & the other trait_value. This causes confusion since we don't know
+      // whether user has selected two traits (cause we have two elements in our array)
+      // or it's only one.
+      //
+      // Using this block of code, we'll identify if that's the case.
       if (clonedQuery['traits'].length === 2) {
         const [trait_type, trait_value] = clonedQuery['traits'] as [string, string]
         const fullTrait = `${trait_type}${trait_value}`
@@ -104,11 +99,9 @@ const urlParamsUtils = {
           collectionStats.traits &&
           collectionStats.traits[trait_type].find((trait) => trait.trait_value === trait_value)
 
-        /*
-          For most cases, `traitInStats` is assigned. In case the trait
-          does not exist in our store, e.g "Number of traits", we have to
-          manually create an object for it.
-        */
+        // For most cases, `traitInStats` is assigned. In case the trait
+        // does not exist in our store, e.g "Number of traits", we have to
+        // manually create an object for it.
         const trait = traitInStats ?? { trait_type, trait_value, trait_count: 0 }
 
         return trait as Trait

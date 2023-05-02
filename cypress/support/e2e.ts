@@ -89,28 +89,31 @@ Cypress.Commands.overwrite(
 )
 
 beforeEach(() => {
-  // Infura security policies are based on Origin headers.
-  // These are stripped by cypress because chromeWebSecurity === false; this adds them back in.
-  cy.intercept(/infura.io/, (res) => {
-    res.headers['origin'] = 'http://localhost:3000'
-    res.alias = res.body.method
-    res.continue()
+  // Many API calls enforce that requests come from our app, so we must mock Origin and Referer.
+  cy.intercept('*', (req) => {
+    req.headers['referer'] = 'https://app.uniswap.org'
+    req.headers['origin'] = 'https://app.uniswap.org'
   })
-
-  // Graphql security policies are based on Origin headers.
-  // These are stripped by cypress because chromeWebSecurity === false; this adds them back in.
-  cy.intercept('https://api.uniswap.org/v1/graphql', (res) => {
-    res.headers['origin'] = 'https://app.uniswap.org'
-    res.continue()
-  })
-  cy.intercept('https://beta.api.uniswap.org/v1/graphql', (res) => {
-    res.headers['origin'] = 'https://app.uniswap.org'
-    res.continue()
-  })
-
-  cy.intercept('https://api.uniswap.org/v1/amplitude-proxy', (res) => {
-    res.reply(JSON.stringify({}))
-  })
+    // Infura uses a test endpoint, which allow-lists http://localhost:3000 instead.
+    .intercept(/infura.io/, (req) => {
+      req.headers['referer'] = 'http://localhost:3000'
+      req.headers['origin'] = 'http://localhost:3000'
+      req.alias = req.body.method
+      req.continue()
+    })
+    // Mock Amplitude responses to avoid analytics from tests.
+    .intercept('https://api.uniswap.org/v1/amplitude-proxy', (req) => {
+      const requestBody = JSON.stringify(req.body)
+      const byteSize = new Blob([requestBody]).size
+      req.reply(
+        JSON.stringify({
+          code: 200,
+          server_upload_time: Date.now(),
+          payload_size_bytes: byteSize,
+          events_ingested: req.body.events.length,
+        })
+      )
+    })
 })
 
 Cypress.on('uncaught:exception', () => {
