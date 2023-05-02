@@ -78,15 +78,13 @@ describe('Swap', () => {
       cy.get('#swap-currency-output .token-amount-input').clear().type('0.0').should('have.value', '0.0')
     })
 
-    it.only('should render an error when a transaction fails due to a passed deadline', () => {
+    it('should render an error when a transaction fails due to a passed deadline', () => {
       const DEADLINE_MINUTES = 1
       const TEN_MINUTES_MS = 1000 * 60 * DEADLINE_MINUTES * 10
       cy.visit('/swap', { ethereum: 'hardhat' })
         .hardhat()
         .then((hardhat) => {
-          hardhat
-            .reset()
-            .then(() => hardhat.setAutomine(false))
+          cy.then(() => hardhat.setAutomine(false))
             .then(() => hardhat.getBalance(hardhat.wallet.address, USDC_MAINNET))
             .then((balance) => Number(balance.toFixed(1)))
             .then((initialBalance) => {
@@ -112,26 +110,24 @@ describe('Swap', () => {
               cy.contains('1 Pending').should('exist')
 
               // Mine a block past the deadline.
-              cy.then(() => hardhat.mine(1, TEN_MINUTES_MS))
-                .then(() => hardhat.setAutomine(true))
-                .then(() => {
-                  // The UI should no longer show the transaction as pending.
-                  cy.contains('1 Pending').should('not.exist')
+              cy.then(() => hardhat.mine(1, TEN_MINUTES_MS)).then(() => {
+                // The UI should no longer show the transaction as pending.
+                cy.contains('1 Pending').should('not.exist')
 
-                  // Check that the user is informed of the failure
-                  cy.contains('Swap failed').should('exist')
+                // Check that the user is informed of the failure
+                cy.contains('Swap failed').should('exist')
 
-                  // Check that the balance is unchanged in the UI
-                  cy.get('#swap-currency-output [data-testid="balance-text"]').should(
-                    'have.text',
-                    `Balance: ${initialBalance}`
-                  )
+                // Check that the balance is unchanged in the UI
+                cy.get('#swap-currency-output [data-testid="balance-text"]').should(
+                  'have.text',
+                  `Balance: ${initialBalance}`
+                )
 
-                  // Check that the balance is unchanged on chain
-                  cy.then(() => hardhat.getBalance(hardhat.wallet.address, USDC_MAINNET))
-                    .then((balance) => Number(balance.toFixed(1)))
-                    .should('eq', initialBalance)
-                })
+                // Check that the balance is unchanged on chain
+                cy.then(() => hardhat.getBalance(hardhat.wallet.address, USDC_MAINNET))
+                  .then((balance) => Number(balance.toFixed(1)))
+                  .should('eq', initialBalance)
+              })
             })
         })
     })
