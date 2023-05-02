@@ -39,15 +39,15 @@ import { InterfaceTrade, LeverageTradeState } from 'state/routing/types'
 import { TradeState } from 'state/routing/types'
 import styled, { useTheme } from 'styled-components/macro'
 import invariant from 'tiny-invariant'
-import { currencyAmountToPreciseFloat, formatTransactionAmount } from 'utils/formatNumbers'
-
+// import { currencyAmountToPreciseFloat, formatTransactionAmount } from 'utils/formatNumbers'
+import { currencyAmountToPreciseFloat, formatDollarAmount, formatTransactionAmount } from 'utils/formatNumbers'
 import AddressInputPanel from '../../components/AddressInputPanel'
 import { ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
 import { GrayCard, LightCard } from '../../components/Card'
 import { AutoColumn, Column } from '../../components/Column'
 import SwapCurrencyInputPanel from '../../components/CurrencyInputPanel/SwapCurrencyInputPanel'
 import LeveragedOutputPanel from '../../components/CurrencyInputPanel/leveragedOutputPanel'
-import { AutoRow, RowBetween } from '../../components/Row'
+import { AutoRow, RowBetween, RowFixed } from '../../components/Row'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
 import ConfirmSwapModal, { LeverageConfirmModal } from '../../components/swap/ConfirmSwapModal'
 import { ArrowWrapper, PageWrapper, SwapCallbackError, SwapWrapper } from '../../components/swap/styleds'
@@ -111,6 +111,10 @@ import { useLeveragePositions } from 'hooks/useV3Positions'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import {Input as NumericalInput} from 'components/NumericalInput'
 import useDebounce from 'hooks/useDebounce'
+import { ONE_HOUR_SECONDS, TimeWindow } from './intervals'
+import { usePoolPriceData } from 'graphql/limitlessGraph/poolPriceData'
+import dayjs from 'dayjs'
+import CandleChart from 'components/CandleChart'
 
 
 const StyledNumericalInput = styled(NumericalInput)`
@@ -211,6 +215,9 @@ const ErrorContainer = styled.div`
   margin: auto;
   max-width: 300px;
   min-height: 25vh;
+`
+export const MonoSpace = styled.span`
+  font-variant-numeric: tabular-nums;
 `
 
 
@@ -804,69 +811,6 @@ export default function Swap({ className }: { className?: string }) {
   // console.log("leverageTrade: ", leverageTrade)
   console.log("leveragePositions", poolAddress, leverageManagerAddress, leveragePositions)
 
-  // const leveragePositions: LeveragePositionDetails[] = [
-  //   {
-  //     token0: inputAddress ?? "0xe39Ab88f8A4777030A534146A9Ca3B52bd5D43A3",
-  //     token1: outputAddress ?? "0xe39Ab88f8A4777030A534146A9Ca3B52bd5D43A3",
-  //     tokenId: BigNumber.from(1),
-  //     totalLiquidity: BigNumber.from(1),
-  //     totalDebt: BigNumber.from(1),
-  //     totalDebtInput: BigNumber.from(1),
-  //     borrowedLiquidity: BigNumber.from(1),
-  //     isToken0: true,
-  //     openBlock: 1,
-  //     tickStart: 1,
-  //     tickFinish: 1,
-  //     timeUntilFinish: 1
-  //   },
-  //   {
-  //     token0: inputAddress ?? "0xe39Ab88f8A4777030A534146A9Ca3B52bd5D43A3",
-  //     token1: outputAddress ?? "0xe39Ab88f8A4777030A534146A9Ca3B52bd5D43A3",
-  //     tokenId: BigNumber.from(2),
-  //     totalLiquidity: BigNumber.from(1),
-  //     totalDebt: BigNumber.from(1),
-  //     totalDebtInput: BigNumber.from(1),
-  //     borrowedLiquidity: BigNumber.from(1),
-  //     isToken0: true,
-  //     openBlock: 1,
-  //     tickStart: 1,
-  //     tickFinish: 1,
-  //     timeUntilFinish: 1
-  //   },
-  //   {
-  //     token0: inputAddress ?? "0xe39Ab88f8A4777030A534146A9Ca3B52bd5D43A3",
-  //     token1: outputAddress ?? "0xe39Ab88f8A4777030A534146A9Ca3B52bd5D43A3",
-  //     tokenId: BigNumber.from(3),
-  //     totalLiquidity: BigNumber.from(1),
-  //     totalDebt: BigNumber.from(1),
-  //     totalDebtInput: BigNumber.from(1),
-  //     borrowedLiquidity: BigNumber.from(1),
-  //     isToken0: true,
-  //     openBlock: 1,
-  //     tickStart: 1,
-  //     tickFinish: 1,
-  //     timeUntilFinish: 1
-  //   }
-  // ]
-  // console.log('trade', trade); 
-  // const params = {
-  //   gasUseEstimateUSD: null,
-  //   blockNumber: "0",
-  //   v2Routes: {},
-  //   // inputAmount as CurrencyAmount<Token>: 0,
-  //   // outputAmount as CurrencyAmount<Token>: 0,
-  //   // tradeType as TradeType: null,
-  //   inputAmount: null, 
-  //   outputAmount :null, 
-  //   tradeType : null ,
-  //   v3Routes: {}
-  // }
-  // const fakeTrade: InterfaceTrade<Currency, Currency, TradeType> = new InterfaceTrade<Currency, Currency, TradeType>(
-  //  params
-  //   )
-      // loadedInputCurrency, 
-      // loadedOutputCurrency, TradeType)
-  // console.log('fakeTrade', fakeTrade, fakeTrade.routes);
   const [debouncedLeverageFactor, onDebouncedLeverageFactor] = useDebouncedChangeHandler(leverageFactor ?? "1", onLeverageFactorChange);
   
   const [poolState, pool] = usePool(currencies.INPUT ?? undefined, currencies.OUTPUT?? undefined, FeeAmount.LOW)
@@ -874,6 +818,68 @@ export default function Swap({ className }: { className?: string }) {
   // // enter token0 price in token1
   // const enterPrice = currency0?.wrapped && currency1?.wrapped 
   // ? tickToPrice(currency0.wrapped, currency1.wrapped, Number(creationTick)) : undefined
+
+  //graph data
+  // graph data
+  const [latestValue, setLatestValue] = useState<number | undefined>()
+  const [valueLabel, setValueLabel] = useState<string | undefined>()
+  const [timeWindow] = useState(TimeWindow.WEEK)
+  const priceData = usePoolPriceData(pool?.token0, pool?.token1, pool?.fee, ONE_HOUR_SECONDS, timeWindow)
+  console.log("priceData: ", priceData)
+  // const adjustedToCurrent = useMemo(() => {
+  //   if (priceData && tokenData && priceData.length > 0) {
+  //     const adjusted = Object.assign([], priceData)
+  //     adjusted.push({
+  //       time: currentTimestamp() / 1000,
+  //       open: priceData[priceData.length - 1].close,
+  //       close: tokenData?.priceUSD,
+  //       high: tokenData?.priceUSD,
+  //       low: priceData[priceData.length - 1].close,
+  //     })
+  //     return adjusted
+  //   } else {
+  //     return undefined
+  //   }
+  // }, [priceData, tokenData])
+
+  // close
+  // : 
+  // 16.0465835688061
+  // high
+  // : 
+  // 16.0465835688061
+  // low
+  // : 
+  // 16.0465835688061
+  // open
+  // : 
+  // 16.0465835688061
+  // time
+  // : 
+  // 1682377200
+  const fakePriceData = [
+    {
+      time: 1682377200,
+      open: 5.0465835688061,
+      close: 16.0465835688061,
+      high: 20.0465835688061,
+      low: 3.0465835688061,
+    },
+    {
+      time: 1682377350,
+      open: 13.0465835688061,
+      close: 16.0465835688061,
+      high: 12.0465835688061,
+      low: 20.0465835688061,
+    },
+    {
+      time: 1682377900,
+      open: 50.0465835688061,
+      close: 25.0465835688061,
+      high: 80.0465835688061,
+      low: 20.0465835688061,
+    },    
+  ]
 
   // // token0 price.
   const enoughAllowance = (!leverage && allowance.state === AllowanceState.REQUIRED) || (leverage && (leverageApprovalState === ApprovalState.NOT_APPROVED))
@@ -925,8 +931,34 @@ export default function Swap({ className }: { className?: string }) {
                         : <Trans>Pair not found</Trans>}
                     </TokenNameCell>
                   </TokenInfoContainer>
-
-                  <PairChartSection token0PriceQuery={token0PriceQuery} token1PriceQuery={token1PriceQuery} token0symbol={inputCurrency?.symbol} token1symbol={outputCurrency?.symbol} onChangeTimePeriod={setTimePeriod} />
+                  <AutoRow>
+                  <AutoColumn>
+                    <RowFixed>
+                      <ThemedText.BodySecondary>
+                        <MonoSpace>
+                          {latestValue
+                            ? formatDollarAmount(latestValue, 2)
+                          : null
+                          }
+                        </MonoSpace>
+                      </ThemedText.BodySecondary>
+                    </RowFixed>
+                    <ThemedText.DeprecatedMain>
+                      {valueLabel ? (
+                        <MonoSpace>{valueLabel} (UTC)</MonoSpace>
+                      ) : (
+                        <MonoSpace>{dayjs.utc().format('MMM D, YYYY')}</MonoSpace>
+                      )}
+                    </ThemedText.DeprecatedMain>
+                  </AutoColumn>
+                  <CandleChart
+                        data={fakePriceData ?? []}
+                        setValue={setLatestValue}
+                        setLabel={setValueLabel}
+                        // color={"#2172E5"}
+                      />
+                  </AutoRow>
+                  {/* <PairChartSection token0PriceQuery={token0PriceQuery} token1PriceQuery={token1PriceQuery} token0symbol={inputCurrency?.symbol} token1symbol={outputCurrency?.symbol} onChangeTimePeriod={setTimePeriod} /> */}
                 </AutoRow>
                 <SwapWrapper chainId={chainId} className={className} id="swap-page">
                   <SwapHeader allowedSlippage={allowedSlippage} />

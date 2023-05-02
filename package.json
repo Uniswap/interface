@@ -197,6 +197,7 @@
     "inter-ui": "^3.13.1",
     "jotai": "^1.3.7",
     "jsbi": "^3.1.4",
+    "lightweight-charts": "^4.0.1",
     "make-plural": "^7.0.0",
     "moment": "^2.29.4",
     "multicodec": "^3.0.1",

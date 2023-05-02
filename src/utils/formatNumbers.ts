@@ -13,6 +13,23 @@ export const currencyAmountToPreciseFloat = (currencyAmount: CurrencyAmount<Curr
   return floatForLargerNumbers
 }
 
+export const formatDollarAmount = (num: number | undefined, digits = 2, round = true) => {
+  if (num === 0) return '$0.00'
+  if (!num) return '-'
+  if (num < 0.001 && digits <= 3) {
+    return '<$0.001'
+  }
+
+  return numbro(num).formatCurrency({
+    average: round,
+    mantissa: num > 1000 ? 2 : digits,
+    abbreviations: {
+      million: 'M',
+      billion: 'B',
+    },
+  })
+}
+
 // Convert [Price] to number with necessary precision for price formatting.
 export const priceToPreciseFloat = (price: Price<Currency, Currency> | undefined) => {
   if (!price) return undefined
