@@ -15,7 +15,7 @@ inputs:
 outputs:
   marketing-version:
     description: 'the current marketing version from the mobile app code via fastlane'
-    value: ${{ env.IOS_VERSION_NUMBER }}
+    value: ${{ steps.get-marketing-version.outputs.marketing-version }}
 
 runs:
   using: 'composite'
@@ -23,9 +23,11 @@ runs:
   steps:
     - name: 📢 Get marketing version number
       shell: bash
+      id: get-marketing-version
       working-directory: ./apps/mobile
       run: |
         fastlane ios getMarketingVersionNumber
+        echo "marketing-version=$(echo $IOS_VERSION_NUMBER)" >> $GITHUB_OUTPUT
       env:
         APP_STORE_CONNECT_KEY_ID: ${{ inputs.app-store-connect-key-id }}
         APP_STORE_CONNECT_ISSUER_ID: ${{ inputs.app-store-connect-issuer-id }}

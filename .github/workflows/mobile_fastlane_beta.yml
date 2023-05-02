@@ -25,7 +25,7 @@ jobs:
           app-store-connect-issuer-id: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
           app-store-connect-key-content: ${{ secrets.APP_STORE_CONNECT_KEY_CONTENT }}
 
-      - name: 📥 Install
+      - name: 📲 Fastlane Deploy Beta
         uses: ./.github/actions/mobile_fastlane_deploy
         with:
           branch: releases/${{ steps.marketing-version.outputs.marketing-version }}

@@ -11,7 +11,7 @@ jobs:
     runs-on: macos-latest
     timeout-minutes: 180
     steps:
-      - name: 📥 Install
+      - name:  📲 Fastlane Deploy Prod
         uses: ./.github/actions/mobile_fastlane_deploy
         with:
           branch: releases/prod
