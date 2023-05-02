@@ -191,10 +191,17 @@ export function Swap({
   const [fetchingSwapQuoteStartTime, setFetchingSwapQuoteStartTime] = useState<Date | undefined>()
 
   // token warning stuff
-  const [loadedInputCurrency, loadedOutputCurrency] = [
-    useCurrency(prefilledState?.[Field.INPUT]?.currencyId),
-    useCurrency(prefilledState?.[Field.OUTPUT]?.currencyId),
-  ]
+  const prefilledInputCurrency = useCurrency(prefilledState?.[Field.INPUT]?.currencyId)
+  const prefilledOutputCurrency = useCurrency(prefilledState?.[Field.OUTPUT]?.currencyId)
+
+  const [loadedInputCurrency, setLoadedInputCurrency] = useState(prefilledInputCurrency)
+  const [loadedOutputCurrency, setLoadedOutputCurrency] = useState(prefilledOutputCurrency)
+
+  useEffect(() => {
+    setLoadedInputCurrency(prefilledInputCurrency)
+    setLoadedOutputCurrency(prefilledOutputCurrency)
+  }, [prefilledInputCurrency, prefilledOutputCurrency])
+
   const [dismissTokenWarning, setDismissTokenWarning] = useState<boolean>(false)
   const urlLoadedTokens: Token[] = useMemo(
     () => [loadedInputCurrency, loadedOutputCurrency]?.filter((c): c is Token => c?.isToken ?? false) ?? [],
@@ -237,9 +244,17 @@ export function Swap({
   const { typedValue, recipient, independentField } = state
 
   const previousConnectedChainId = usePrevious(connectedChainId)
+  const previousPrefilledState = usePrevious(prefilledState)
   useEffect(() => {
     const combinedInitialState = { ...initialSwapState, ...prefilledState }
-    if (previousConnectedChainId && previousConnectedChainId !== connectedChainId) {
+    const chainChanged = previousConnectedChainId && previousConnectedChainId !== connectedChainId
+    const prefilledInputChanged =
+      previousPrefilledState &&
+      previousPrefilledState?.[Field.INPUT]?.currencyId !== prefilledState?.[Field.INPUT]?.currencyId
+    const prefilledOutputChanged =
+      previousPrefilledState &&
+      previousPrefilledState?.[Field.OUTPUT]?.currencyId !== prefilledState?.[Field.OUTPUT]?.currencyId
+    if (chainChanged || prefilledInputChanged || prefilledOutputChanged) {
       dispatch(
         replaceSwapState({
           ...initialSwapState,
@@ -250,7 +265,7 @@ export function Swap({
         })
       )
     }
-  }, [connectedChainId, prefilledState, previousConnectedChainId])
+  }, [connectedChainId, prefilledState, previousConnectedChainId, previousPrefilledState])
 
   const {
     trade: { state: tradeState, trade },

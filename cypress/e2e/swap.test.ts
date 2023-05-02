@@ -1,6 +1,7 @@
 import { WETH9 } from '@uniswap/sdk-core'
 
 import { UNI as UNI_MAINNET, USDC_MAINNET } from '../../src/constants/tokens'
+import { FeatureFlag } from '../../src/featureFlags/flags/featureFlags'
 import { WETH_GOERLI } from '../fixtures/constants'
 import { getTestSelector } from '../utils'
 
@@ -185,7 +186,10 @@ describe('Swap', () => {
     beforeEach(() => {
       // On mobile widths, we just link back to /swap instead of rendering the swap component.
       cy.viewport(1200, 800)
-      cy.visit(`/tokens/ethereum/${UNI_MAINNET[1].address}`, { ethereum: 'hardhat' }).then(() => {
+      cy.visit(`/tokens/ethereum/${UNI_MAINNET[1].address}`, {
+        ethereum: 'hardhat',
+        featureFlags: [FeatureFlag.removeWidget],
+      }).then(() => {
         cy.wait('@eth_blockNumber')
         cy.scrollTo('top')
       })
@@ -207,7 +211,7 @@ describe('Swap', () => {
     it('should not share swap state with the main swap page', () => {
       verifyToken('output', 'UNI')
       selectToken('WETH', 'input')
-      cy.visit('/swap')
+      cy.visit('/swap', { featureFlags: [FeatureFlag.removeWidget] })
       cy.contains('UNI').should('not.exist')
       cy.contains('WETH').should('not.exist')
     })
@@ -233,7 +237,7 @@ describe('Swap', () => {
     })
 
     it('should show a L2 token even if the user is connected to a different network', () => {
-      cy.visit('/tokens', { ethereum: 'hardhat' })
+      cy.visit('/tokens', { ethereum: 'hardhat', featureFlags: [FeatureFlag.removeWidget] })
       cy.get(getTestSelector('tokens-network-filter-selected')).click()
       cy.get(getTestSelector('tokens-network-filter-option-arbitrum')).click()
       cy.get(getTestSelector('tokens-network-filter-selected')).should('contain', 'Arbitrum')
