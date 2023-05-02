@@ -15,7 +15,7 @@ const scriptTag = document.createElement('script')
 
 // The script tag is inserted into the DOM and then removed.
 // injected.js sets up the injected provider for use at window.ethereum
-scriptTag.src = chrome.runtime.getURL('injected.js')
+scriptTag.src = chrome.runtime.getURL('ethereum.js')
 container.appendChild(scriptTag)
 scriptTag.onload = () => {
   if (scriptTag.parentNode) {
