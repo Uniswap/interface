@@ -26,13 +26,10 @@ export const splitAssetsAndEntries = (
   return resources.reduce<{ assets: string[]; entries: PrecacheEntry[] }>(
     ({ assets, entries }, entry) => {
       if (typeof entry === 'string') {
-        // If the entry is a string, it's the index.html file.
         return { entries, assets: [...assets, entry] }
       } else if (entry.url.includes('/media/')) {
-        // If the entry is a media file, it's an asset.
         return { entries, assets: [...assets, toURL(entry)] }
       } else {
-        // Otherwise, it's an entry.
         return { entries: [...entries, entry], assets }
       }
     },
