@@ -51,6 +51,8 @@ interface WidgetProps {
   onReviewSwapClick?: OnReviewSwapClick
 }
 
+// TODO: Remove this component once the TDP is fully migrated to the swap component.
+// eslint-disable-next-line import/no-unused-modules
 export default function Widget({
   defaultTokens,
   width = DEFAULT_WIDGET_WIDTH,

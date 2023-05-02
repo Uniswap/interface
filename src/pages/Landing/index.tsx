@@ -6,7 +6,6 @@ import Card, { CardType } from 'components/About/Card'
 import { MAIN_CARDS, MORE_CARDS } from 'components/About/constants'
 import ProtocolBanner from 'components/About/ProtocolBanner'
 import { BaseButton } from 'components/Button'
-import { useSwapWidgetEnabled } from 'featureFlags/flags/swapWidget'
 import { useAtomValue } from 'jotai/utils'
 import Swap from 'pages/Swap'
 import { parse } from 'qs'
@@ -289,11 +288,6 @@ const Link = styled(NativeLink)`
   ${LinkCss}
 `
 
-const WidgetLandingLink = styled(NativeLink)`
-  ${LinkCss}
-  ${SwapCss}
-`
-
 export default function Landing() {
   const isDarkMode = useIsDarkMode()
 
@@ -306,8 +300,6 @@ export default function Landing() {
   const queryParams = parse(location.search, {
     ignoreQueryPrefix: true,
   })
-
-  const swapWidgetEnabled = useSwapWidgetEnabled()
 
   // This can be simplified significantly once the flag is removed! For now being explicit is clearer.
   useEffect(() => {
@@ -330,15 +322,9 @@ export default function Landing() {
               name={SharedEventName.ELEMENT_CLICKED}
               element={InterfaceElementName.LANDING_PAGE_SWAP_ELEMENT}
             >
-              {swapWidgetEnabled ? (
-                <WidgetLandingLink to="/swap">
-                  <Swap />
-                </WidgetLandingLink>
-              ) : (
-                <Link to="/swap">
-                  <LandingSwap />
-                </Link>
-              )}
+              <Link to="/swap">
+                <LandingSwap />
+              </Link>
             </TraceEvent>
           </LandingSwapContainer>
           <Gradient isDarkMode={isDarkMode} />

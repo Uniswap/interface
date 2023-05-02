@@ -40,10 +40,36 @@ describe('filterKnownErrors', () => {
     expect(filterKnownErrors(ERROR, { originalException })).toBeNull()
   })
 
-  it('filter errors from OneKey app', () => {
+  it('filters chrome-extension errors', () => {
     const originalException = new Error()
-    originalException.name = 'xd.<anonymous>(/Applications/OneKey.app/Contents/Resources/static/preload.js)'
-    expect(filterKnownErrors(ERROR, { originalException })).toBe(null)
+    originalException.stack = ` 
+      TypeError: Cannot create proxy with a non-object as target or handler
+        at pa(chrome-extension://kbjhmlgclljgdhmhffjofbobmficicjp/proxy-window-evm.a5430696.js:22:216604)
+        at da(chrome-extension://kbjhmlgclljgdhmhffjofbobmficicjp/proxy-window-evm.a5430696.js:22:212968)
+        at a(../../../../src/helpers.ts:98:1)
+    `
+    expect(filterKnownErrors(ERROR, { originalException })).toBeNull()
+  })
+
+  describe('OneKey', () => {
+    it('filter OneKey errors (macOS users)', () => {
+      const originalException = new Error()
+      originalException.stack = `
+        SyntaxError: Unexpected token u in JSON at position 0
+          at JSON.parse(<anonymous>)
+          at _d._handleAccountChange(/Applications/OneKey.app/Contents/Resources/static/preload.js:2:1634067)
+      `
+      expect(filterKnownErrors(ERROR, { originalException })).toBeNull()
+    })
+    it('filter OneKey errors (Windows users)', () => {
+      const originalException = new Error()
+      originalException.stack = `
+        SyntaxError: Unexpected token u in JSON at position 0
+          at JSON.parse(<anonymous>)
+          vd._handleAccountChange(C:\\Users\\example\\AppData\\Local\\Programs\\OneKey\\resources\\static\\preload.js:2:1626130
+      `
+      expect(filterKnownErrors(ERROR, { originalException })).toBeNull()
+    })
   })
 
   describe('chunk errors', () => {

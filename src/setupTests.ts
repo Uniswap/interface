@@ -3,6 +3,7 @@ import 'jest-styled-components' // adds style diffs to snapshot tests
 
 import type { createPopper } from '@popperjs/core'
 import { useWeb3React } from '@web3-react/core'
+import failOnConsole from 'jest-fail-on-console'
 import ResizeObserver from 'resize-observer-polyfill'
 import { Readable } from 'stream'
 import { mocked } from 'test-utils/mocked'
@@ -76,4 +77,23 @@ beforeEach(() => {
 
   // Mock useWeb3React to return a chainId of 1 by default.
   mocked(useWeb3React).mockReturnValue({ chainId: 1 } as ReturnType<typeof useWeb3React>)
+})
+
+/**
+ * Fail tests if anything is logged to the console. This keeps the console clean and ensures test output stays readable.
+ * If something should log to the console, it should be stubbed and asserted:
+ * @example
+ * beforeEach(() => jest.spyOn(console, 'error').mockReturnsValue())
+ * it('should log an error', () => {
+ *   example()
+ *   expect(console.error).toHaveBeenCalledWith(expect.any(Error))
+ * })
+ */
+failOnConsole({
+  shouldFailOnAssert: true,
+  shouldFailOnDebug: true,
+  shouldFailOnError: true,
+  shouldFailOnInfo: true,
+  shouldFailOnLog: true,
+  shouldFailOnWarn: true,
 })
