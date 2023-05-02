@@ -1,5 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { formatEther, parseEther } from 'ethers/lib/utils'
+import { parseEther } from 'ethers/lib/utils'
 
 import { USDC_MAINNET } from '../../src/constants/tokens'
 import { WETH_GOERLI } from '../fixtures/constants'
@@ -198,9 +198,11 @@ describe('Swap', () => {
     cy.get('#swap-currency-output .token-amount-input').should('not.equal', '')
   })
 
-  it('should render an error for slippage failure', () => {
+  it.only('should render an error for slippage failure', () => {
     const SLIPPAGE = 0.01
-    const ETH_GAS_BUFFER = '10'
+    const AMOUNT_TO_SWAP = 300
+    const NUMBER_OF_SWAPS = 3
+    const INDIVIDUAL_SWAP_INPUT = AMOUNT_TO_SWAP / NUMBER_OF_SWAPS
     cy.visit('/swap', { ethereum: 'hardhat' })
       .hardhat()
       .then((hardhat) => {
@@ -209,7 +211,7 @@ describe('Swap', () => {
           .then(() => hardhat.provider.send('evm_setAutomine', [false]))
           .then(() => hardhat.provider.getBalance(hardhat.wallet.address))
           .then((initialBalance) => {
-            const swapInputAmount = formatEther(initialBalance.sub(parseEther(ETH_GAS_BUFFER)))
+            // Gas estimation fails for this transaction (that would normally fail), so we stub it.
             const send = cy.stub(hardhat.provider, 'send')
             send.withArgs('eth_estimateGas').resolves(BigNumber.from(2_000_000))
             send.callThrough()
@@ -222,23 +224,33 @@ describe('Swap', () => {
 
             // Select USDC as output token from the common bases menu.
             cy.get('#swap-currency-output .open-currency-select-button').click()
-            cy.contains('USDC').click()
+            cy.get(getTestSelector('token-search-input')).clear().type('UNI')
+            cy.contains('UNI').click()
 
             // Set the input amount to the max amount minus the gas buffer.
-            cy.get('#swap-currency-input .token-amount-input').clear().type(swapInputAmount)
-            cy.get('#swap-currency-output .token-amount-input').should('not.equal', '')
-            cy.get('#swap-button').click()
-            cy.get('#confirm-swap-or-send').click()
-            cy.get(getTestSelector('dismiss-tx-confirmation')).click()
+            for (let i = 0; i < NUMBER_OF_SWAPS; i++) {
+              cy.get('#swap-currency-input .token-amount-input').clear().type(INDIVIDUAL_SWAP_INPUT.toString())
+              cy.get('#swap-currency-output .token-amount-input').should('not.equal', '')
+              cy.get('#swap-button').click()
+              cy.get('#confirm-swap-or-send').click()
+              cy.get(getTestSelector('dismiss-tx-confirmation')).click()
+            }
 
-            cy.then(() => hardhat.provider.send('hardhat_mine', ['0x2', '0xc'])).then(() => {
+            // The pending transaction indicator should be visible.
+            cy.contains(`${NUMBER_OF_SWAPS} Pending`).should('exist')
+
+            cy.then(() => hardhat.mine(1, 12)).then(() => {
+              // The pending transaction indicator should not be visible.
+              cy.contains(`${NUMBER_OF_SWAPS} Pending`).should('not.exist')
+
               // Check for a failed transaction notification.
               cy.contains('Swap failed').should('exist')
 
               // Assert that the balance is unchanged. (aside from gas costs)
               cy.then(() => hardhat.provider.getBalance(hardhat.wallet.address)).then((finalBalance) => {
                 expect(initialBalance.gt(finalBalance)).to.be.true
-                expect(finalBalance.gt(ETH_GAS_BUFFER)).to.be.true
+
+                expect(finalBalance.gt(initialBalance.sub(parseEther(AMOUNT_TO_SWAP.toString())))).to.be.true
               })
 
               // Assert that the USDC balance is unchanged.
@@ -247,6 +259,7 @@ describe('Swap', () => {
               })
             })
           })
+          .then(() => hardhat.provider.send('evm_setAutomine', [true]))
       })
   })
 })

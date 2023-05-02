@@ -15,6 +15,7 @@ import { FeatureFlag } from '../../src/featureFlags/flags/featureFlags'
 import { UserState } from '../../src/state/user/reducer'
 import { CONNECTED_WALLET_USER_STATE } from '../utils/user-state'
 import { injected } from './ethereum'
+import { UNISWAP_LABS_TOKEN_LIST_MOCK } from './uniswapLabsTokenListMock'
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
@@ -113,6 +114,9 @@ beforeEach(() => {
           events_ingested: req.body.events.length,
         })
       )
+    })
+    .intercept('https://gateway.ipfs.io/ipns/tokens.uniswap.org', (req) => {
+      req.reply(UNISWAP_LABS_TOKEN_LIST_MOCK)
     })
 })
 
