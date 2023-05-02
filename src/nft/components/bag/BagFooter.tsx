@@ -336,8 +336,8 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
     maximumAmountIn,
     universalRouterAddress
   )
+  const loadingAllowance = allowance.state === AllowanceState.LOADING || universalRouterAddressIsLoading
   usePayWithAnyTokenSwap(trade, allowance, allowedSlippage)
-  const loadingTradeState = tradeState !== TradeState.VALID || universalRouterAddressIsLoading
   const priceImpact = usePriceImpact(trade)
 
   const fiatValueTradeInput = useStablecoinValue(trade?.inputAmount)
@@ -412,7 +412,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
     } else if (bagStatus === BagStatus.PROCESSING_TRANSACTION) {
       disabled = true
       buttonText = <Trans>Transaction pending</Trans>
-    } else if (usingPayWithAnyToken && loadingTradeState) {
+    } else if (usingPayWithAnyToken && tradeState !== TradeState.VALID) {
       disabled = true
       buttonText = <Trans>Fetching Route</Trans>
 
@@ -426,11 +426,11 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
         buttonTextColor = theme.textPrimary
         helperText = <Trans>Insufficient pool liquidity to complete transaction</Trans>
       }
-    } else if (allowance.state === AllowanceState.REQUIRED || allowance.state === AllowanceState.LOADING) {
+    } else if (allowance.state === AllowanceState.REQUIRED || loadingAllowance) {
       handleClick = () => updateAllowance()
-      disabled = isAllowancePending || isApprovalLoading || allowance.state === AllowanceState.LOADING
+      disabled = isAllowancePending || isApprovalLoading || loadingAllowance
 
-      if (allowance.state === AllowanceState.LOADING) {
+      if (loadingAllowance) {
         buttonText = <Trans>Loading Allowance</Trans>
       } else if (isAllowancePending) {
         buttonText = <Trans>Approve in your wallet</Trans>
@@ -482,8 +482,8 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
     bagStatus,
     usingPayWithAnyToken,
     tradeState,
-    universalRouterAddressIsLoading,
     allowance.state,
+    loadingAllowance,
     priceImpact,
     connector,
     toggleWalletDrawer,
