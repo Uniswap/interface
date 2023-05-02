@@ -76,12 +76,12 @@ export function TransferFormSpeedbumps({
       {showSpeedbumpModal && !isSignerRecipient && isSmartContractAddress && isNewRecipient && (
         <WarningModal
           caption={t(
-            "You're about to send tokens to a smart contract. Sending tokens to certain smart contracts could result in the loss of your tokens. If you’re not sure this is correct please double check the address before proceeding."
+            "You're about to send tokens to a special type of address—a smart contract. Double-check it's the address you intended to send to. If it's wrong, your tokens could be lost forever."
           )}
           closeText={t('Cancel')}
           confirmText={t('Continue')}
           modalName={ModalName.SendWarning}
-          severity={WarningSeverity.Low}
+          severity={WarningSeverity.None}
           title={t('Is this a wallet address?')}
           onClose={onCloseSmartContractWarning}
           onConfirm={onNext}

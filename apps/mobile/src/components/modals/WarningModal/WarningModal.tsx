@@ -76,11 +76,12 @@ export default function WarningModal({
       isDismissible={isDismissible}
       name={modalName}
       onClose={onClose}>
-      <Flex centered gap="spacing16" mb="spacing24" p="spacing24">
+      <Flex centered gap="spacing12" mb="spacing24" p="spacing24">
         <Flex
           centered
           borderRadius="rounded12"
-          p="spacing12"
+          mb="spacing8"
+          p="spacing8"
           style={{
             backgroundColor: opacify(12, theme.colors[alertColor.text]),
           }}>

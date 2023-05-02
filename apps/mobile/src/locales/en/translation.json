@@ -378,7 +378,7 @@
   "You receive": "You receive",
   "Error while checking transaction status": "Error while checking transaction status",
   "Your transaction has failed.": "Your transaction has failed.",
-  "You're about to send tokens to a smart contract. Sending tokens to certain smart contracts could result in the loss of your tokens. If you’re not sure this is correct please double check the address before proceeding.": "You're about to send tokens to a smart contract. Sending tokens to certain smart contracts could result in the loss of your tokens. If you’re not sure this is correct please double check the address before proceeding.",
+  "You're about to send tokens to a special type of address—a smart contract. Double-check it's the address you intended to send to. If it's wrong, your tokens could be lost forever.": "You're about to send tokens to a special type of address—a smart contract. Double-check it's the address you intended to send to. If it's wrong, your tokens could be lost forever.",
   "Is this a wallet address?": "Is this a wallet address?",
   "You haven't transacted with this address before. Please confirm that the address is correct before continuing.": "You haven't transacted with this address before. Please confirm that the address is correct before continuing.",
   "New address": "New address",
