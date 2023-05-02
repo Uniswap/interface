@@ -107,7 +107,6 @@ describe('Swap', () => {
   })
 
   it.only('should render an error when a transaction fails due to a passed deadline', () => {
-    const BALANCE_INCREMENT = 1
     const DEADLINE_MINUTES = 1
     const TEN_MINUTES_MS = 1000 * 60 * DEADLINE_MINUTES * 10
     cy.visit('/swap', { ethereum: 'hardhat' })
@@ -122,7 +121,7 @@ describe('Swap', () => {
             // Input swap info.
             cy.get('#swap-currency-output .open-currency-select-button').click()
             cy.contains('USDC').click()
-            cy.get('#swap-currency-output .token-amount-input').clear().type(BALANCE_INCREMENT.toString())
+            cy.get('#swap-currency-output .token-amount-input').clear().type('1')
             cy.get('#swap-currency-input .token-amount-input').should('not.equal', '')
 
             // Set deadline to minimum. (1 minute)
