@@ -15,7 +15,7 @@ import { TransactionDetails, TransactionStatus } from 'src/features/transactions
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { theme } from 'src/styles/theme'
 import { shortenAddress } from 'src/utils/addresses'
-import { formatUSDPrice, NumberType } from 'src/utils/format'
+import { formatUSDPrice, NumberType } from 'wallet/src/utils/format'
 
 const spacerProps: BoxProps = {
   borderBottomColor: 'backgroundOutline',

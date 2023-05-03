@@ -14,8 +14,8 @@ import { ModalName } from 'src/features/telemetry/constants'
 import { Trade } from 'src/features/transactions/swap/useTrade'
 import { slippageToleranceToPercent } from 'src/features/transactions/swap/utils'
 import { opacify } from 'src/utils/colors'
-import { formatCurrencyAmount, NumberType } from 'src/utils/format'
 import { openUri } from 'src/utils/linking'
+import { formatCurrencyAmount, NumberType } from 'wallet/src/utils/format'
 
 export type SlippageInfoModalProps = {
   trade: Trade<Currency, Currency, TradeType>

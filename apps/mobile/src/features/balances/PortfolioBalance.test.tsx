@@ -7,7 +7,7 @@ import {
 import { PortfolioBalance } from 'src/features/balances/PortfolioBalance'
 import { Portfolios } from 'src/test/gqlFixtures'
 import { render, screen } from 'src/test/test-utils'
-import { formatUSDPrice, NumberType } from 'src/utils/format'
+import { formatUSDPrice, NumberType } from 'wallet/src/utils/format'
 
 const mock: MockedResponse<PortfolioBalanceQuery> = {
   request: {

@@ -7,7 +7,7 @@ import { PollingInterval } from 'src/constants/misc'
 import { isWarmLoadingStatus } from 'src/data/utils'
 import { usePortfolioBalanceQuery } from 'src/data/__generated__/types-and-hooks'
 import { theme } from 'src/styles/theme'
-import { formatUSDPrice, NumberType } from 'src/utils/format'
+import { formatUSDPrice, NumberType } from 'wallet/src/utils/format'
 
 interface PortfolioBalanceProps {
   owner: Address

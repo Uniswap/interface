@@ -18,7 +18,7 @@ import { NFTCollectionContextMenu } from 'src/features/nfts/collection/NFTCollec
 import { iconSizes } from 'src/styles/sizing'
 import { theme as FixedTheme } from 'src/styles/theme'
 import { useExtractedColors } from 'src/utils/colors'
-import { formatNumber, NumberType } from 'src/utils/format'
+import { formatNumber, NumberType } from 'wallet/src/utils/format'
 
 const PROFILE_IMAGE_SIZE = 72
 const PROFILE_IMAGE_WRAPPER_SIZE = PROFILE_IMAGE_SIZE + FixedTheme.spacing.spacing4

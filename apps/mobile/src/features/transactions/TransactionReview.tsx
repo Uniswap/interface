@@ -20,7 +20,7 @@ import { CurrencyInfo } from 'src/features/dataApi/types'
 import { GQLNftAsset } from 'src/features/nfts/hooks'
 import { ElementName } from 'src/features/telemetry/constants'
 import { dimensions, iconSizes } from 'src/styles/sizing'
-import { formatNumberOrString, NumberType } from 'src/utils/format'
+import { formatNumberOrString, NumberType } from 'wallet/src/utils/format'
 
 interface BaseReviewProps {
   actionButtonProps: { disabled: boolean; label: string; name: ElementName; onPress: () => void }

@@ -37,7 +37,7 @@ import {
   currencyIdToAddress,
   currencyIdToChain,
 } from 'src/utils/currencyId'
-import { formatNumber, formatUSDPrice, NumberType } from 'src/utils/format'
+import { formatNumber, formatUSDPrice, NumberType } from 'wallet/src/utils/format'
 
 const FAVORITE_ACTION_INDEX = 0
 const SWAP_ACTION_INDEX = 1

@@ -12,7 +12,7 @@ import {
   TransactionType,
 } from 'src/features/transactions/types'
 import { useActiveAccountAddressWithThrow, useDisplayName } from 'src/features/wallet/hooks'
-import { formatCurrencyAmount, NumberType } from 'src/utils/format'
+import { formatCurrencyAmount, NumberType } from 'wallet/src/utils/format'
 
 type TransferStatusProps = {
   derivedTransferInfo: DerivedTransferInfo

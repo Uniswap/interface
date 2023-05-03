@@ -12,8 +12,8 @@ import {
 import { API_RATE_LIMIT_ERROR, SWAP_NO_ROUTE_ERROR } from 'src/features/routing/routingApi'
 import { DerivedSwapInfo } from 'src/features/transactions/swap/hooks'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
-import { formatPriceImpact } from 'src/utils/format'
 import { useMemoCompare } from 'src/utils/hooks'
+import { formatPriceImpact } from 'wallet/src/utils/format'
 import { isOffline } from '../utils'
 
 const PRICE_IMPACT_THRESHOLD_MEDIUM = new Percent(3, 100) // 3%

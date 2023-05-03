@@ -15,7 +15,7 @@ import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { Account } from 'src/features/wallet/accounts/types'
 import { dimensions, spacing } from 'src/styles/sizing'
 import { opacify } from 'src/utils/colors'
-import { formatUSDPrice } from 'src/utils/format'
+import { formatUSDPrice } from 'wallet/src/utils/format'
 
 const ADDRESS_ROW_HEIGHT = 40
 

@@ -1,4 +1,4 @@
-import { formatNumber, NumberType } from 'src/utils/format'
+import { formatNumber, NumberType } from './format'
 
 it('formats token reference numbers correctly', () => {
   expect(formatNumber(1234567000000000, NumberType.TokenNonTx)).toBe('>999T')
@@ -35,10 +35,16 @@ it('formats fiat estimates on token details pages correctly', () => {
   expect(formatNumber(1.048942, NumberType.FiatTokenDetails)).toBe('$1.049')
 
   expect(formatNumber(0.001231, NumberType.FiatTokenDetails)).toBe('$0.00123')
-  expect(formatNumber(0.00001231, NumberType.FiatTokenDetails)).toBe('$0.0000123')
+  expect(formatNumber(0.00001231, NumberType.FiatTokenDetails)).toBe(
+    '$0.0000123'
+  )
 
-  expect(formatNumber(0.0000001234, NumberType.FiatTokenDetails)).toBe('$0.000000123')
-  expect(formatNumber(0.000000009876, NumberType.FiatTokenDetails)).toBe('<$0.00000001')
+  expect(formatNumber(0.0000001234, NumberType.FiatTokenDetails)).toBe(
+    '$0.000000123'
+  )
+  expect(formatNumber(0.000000009876, NumberType.FiatTokenDetails)).toBe(
+    '<$0.00000001'
+  )
 })
 
 it('formats fiat estimates for tokens correctly', () => {
@@ -49,8 +55,12 @@ it('formats fiat estimates for tokens correctly', () => {
   expect(formatNumber(0.001231, NumberType.FiatTokenPrice)).toBe('$0.00123')
   expect(formatNumber(0.00001231, NumberType.FiatTokenPrice)).toBe('$0.0000123')
 
-  expect(formatNumber(0.0000001234, NumberType.FiatTokenPrice)).toBe('$0.000000123')
-  expect(formatNumber(0.000000009876, NumberType.FiatTokenPrice)).toBe('<$0.00000001')
+  expect(formatNumber(0.0000001234, NumberType.FiatTokenPrice)).toBe(
+    '$0.000000123'
+  )
+  expect(formatNumber(0.000000009876, NumberType.FiatTokenPrice)).toBe(
+    '<$0.00000001'
+  )
 })
 
 it('formats fiat estimates for token stats correctly', () => {
@@ -91,7 +101,9 @@ it('formats Swap text input/output numbers correctly', () => {
   expect(formatNumber(0.987654321, NumberType.SwapTradeAmount)).toBe('0.98765')
   expect(formatNumber(0.9, NumberType.SwapTradeAmount)).toBe('0.90')
   expect(formatNumber(0.901000123, NumberType.SwapTradeAmount)).toBe('0.901')
-  expect(formatNumber(0.000000001, NumberType.SwapTradeAmount)).toBe('0.000000001')
+  expect(formatNumber(0.000000001, NumberType.SwapTradeAmount)).toBe(
+    '0.000000001'
+  )
   expect(formatNumber(0, NumberType.SwapTradeAmount)).toBe('0')
 })
 
@@ -115,7 +127,9 @@ it('formats Swap prices correctly', () => {
 })
 
 it('formats NFT numbers correctly', () => {
-  expect(formatNumber(1234567000000000, NumberType.NFTTokenFloorPrice)).toBe('>999T')
+  expect(formatNumber(1234567000000000, NumberType.NFTTokenFloorPrice)).toBe(
+    '>999T'
+  )
   expect(formatNumber(1002345, NumberType.NFTTokenFloorPrice)).toBe('1.00M')
   expect(formatNumber(1234, NumberType.NFTTokenFloorPrice)).toBe('1.23K')
   expect(formatNumber(12.34467, NumberType.NFTTokenFloorPrice)).toBe('12.34')

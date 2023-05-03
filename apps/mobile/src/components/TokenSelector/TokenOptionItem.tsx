@@ -12,7 +12,7 @@ import WarningIcon from 'src/components/tokens/WarningIcon'
 import { TokenOption } from 'src/components/TokenSelector/types'
 import { SafetyLevel } from 'src/data/__generated__/types-and-hooks'
 import { useTokenWarningDismissed } from 'src/features/tokens/safetyHooks'
-import { formatNumber, formatUSDPrice, NumberType } from 'src/utils/format'
+import { formatNumber, formatUSDPrice, NumberType } from 'wallet/src/utils/format'
 
 interface OptionProps {
   option: TokenOption

@@ -14,7 +14,7 @@ import { ElementName } from 'src/features/telemetry/constants'
 import { Trade } from 'src/features/transactions/swap/useTrade'
 import { getRateToDisplay } from 'src/features/transactions/swap/utils'
 import { TransactionDetails } from 'src/features/transactions/TransactionDetails'
-import { formatPrice, NumberType } from 'src/utils/format'
+import { formatPrice, NumberType } from 'wallet/src/utils/format'
 
 interface SwapDetailsProps {
   acceptedTrade: Trade<Currency, Currency, TradeType>

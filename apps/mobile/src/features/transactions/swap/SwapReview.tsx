@@ -26,7 +26,7 @@ import { TransactionReview } from 'src/features/transactions/TransactionReview'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
 import { AccountType } from 'src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
-import { formatCurrencyAmount, formatNumberOrString, NumberType } from 'src/utils/format'
+import { formatCurrencyAmount, formatNumberOrString, NumberType } from 'wallet/src/utils/format'
 
 interface SwapFormProps {
   onNext: () => void

@@ -9,7 +9,7 @@ import { InlineNetworkPill } from 'src/components/Network/NetworkPill'
 import { Text } from 'src/components/Text'
 import { ChainId } from 'src/constants/chains'
 import { useUSDValue } from 'src/features/gas/hooks'
-import { formatUSDPrice, NumberType } from 'src/utils/format'
+import { formatUSDPrice, NumberType } from 'wallet/src/utils/format'
 
 export function NetworkFee({
   chainId,

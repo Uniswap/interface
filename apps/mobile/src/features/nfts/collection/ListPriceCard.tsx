@@ -7,7 +7,7 @@ import { Box, BoxProps, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { Amount } from 'src/data/__generated__/types-and-hooks'
 import { theme as FixedTheme, Theme } from 'src/styles/theme'
-import { formatNumber, NumberType } from 'src/utils/format'
+import { formatNumber, NumberType } from 'wallet/src/utils/format'
 
 const BLUR_INTENSITY = 35
 

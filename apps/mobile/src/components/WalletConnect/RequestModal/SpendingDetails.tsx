@@ -7,8 +7,8 @@ import { ChainId } from 'src/constants/chains'
 import { useUSDValue } from 'src/features/gas/hooks'
 import { useNativeCurrencyInfo } from 'src/features/tokens/useCurrencyInfo'
 import { iconSizes } from 'src/styles/sizing'
-import { formatCurrencyAmount, formatUSDPrice, NumberType } from 'src/utils/format'
 import { tryParseRawAmount } from 'src/utils/tryParseAmount'
+import { formatCurrencyAmount, formatUSDPrice, NumberType } from 'wallet/src/utils/format'
 
 export function SpendingDetails({
   value,

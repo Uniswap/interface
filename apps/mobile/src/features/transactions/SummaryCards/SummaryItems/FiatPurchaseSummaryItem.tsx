@@ -8,7 +8,7 @@ import TransactionSummaryLayout, {
 } from 'src/features/transactions/SummaryCards/TransactionSummaryLayout'
 import { FiatPurchaseTransactionInfo, TransactionDetails } from 'src/features/transactions/types'
 import { buildCurrencyId } from 'src/utils/currencyId'
-import { formatFiatPrice } from 'src/utils/format'
+import { formatFiatPrice } from 'wallet/src/utils/format'
 
 export default function FiatPurchaseSummaryItem({
   transaction,

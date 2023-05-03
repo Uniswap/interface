@@ -18,8 +18,8 @@ import {
 } from 'src/features/wallet/pendingAccountsSaga'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { shortenAddress } from 'src/utils/addresses'
-import { formatDate } from 'src/utils/format'
 import { useAddBackButton } from 'src/utils/useAddBackButton'
+import { formatDate } from 'wallet/src/utils/format'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.RestoreCloudBackup>
 

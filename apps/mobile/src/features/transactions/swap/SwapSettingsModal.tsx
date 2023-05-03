@@ -31,8 +31,8 @@ import { DerivedSwapInfo } from 'src/features/transactions/swap/hooks'
 import { slippageToleranceToPercent } from 'src/features/transactions/swap/utils'
 import { transactionStateActions } from 'src/features/transactions/transactionState/transactionState'
 import { opacify } from 'src/utils/colors'
-import { formatCurrencyAmount, NumberType } from 'src/utils/format'
 import { openUri } from 'src/utils/linking'
+import { formatCurrencyAmount, NumberType } from 'wallet/src/utils/format'
 
 const SLIPPAGE_INCREMENT = 0.1
 

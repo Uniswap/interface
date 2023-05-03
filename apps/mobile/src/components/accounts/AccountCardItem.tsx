@@ -19,7 +19,7 @@ import { useDisplayName } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
 import { iconSizes } from 'src/styles/sizing'
 import { setClipboard } from 'src/utils/clipboard'
-import { formatUSDPrice, NumberType } from 'src/utils/format'
+import { formatUSDPrice, NumberType } from 'wallet/src/utils/format'
 
 type AccountCardItemProps = {
   address: Address

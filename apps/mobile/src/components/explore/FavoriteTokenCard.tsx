@@ -30,8 +30,8 @@ import {
   TransactionState,
 } from 'src/features/transactions/transactionState/transactionState'
 import { fromGraphQLChain } from 'src/utils/chainId'
-import { formatUSDPrice } from 'src/utils/format'
 import { usePollOnFocusOnly } from 'src/utils/hooks'
+import { formatUSDPrice } from 'wallet/src/utils/format'
 
 export const FAVORITE_TOKEN_CARD_LOADER_HEIGHT = 102
 

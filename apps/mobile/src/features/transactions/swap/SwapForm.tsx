@@ -44,7 +44,7 @@ import { CurrencyField } from 'src/features/transactions/transactionState/transa
 import { createTransactionId } from 'src/features/transactions/utils'
 import { BlockedAddressWarning } from 'src/features/trm/BlockedAddressWarning'
 import { useIsBlockedActiveAddress } from 'src/features/trm/hooks'
-import { formatCurrencyAmount, formatPrice, NumberType } from 'src/utils/format'
+import { formatCurrencyAmount, formatPrice, NumberType } from 'wallet/src/utils/format'
 
 interface SwapFormProps {
   dispatch: Dispatch<AnyAction>

@@ -7,7 +7,7 @@ import { AccountListDocument, AccountListQuery } from 'src/data/__generated__/ty
 import { account } from 'src/test/fixtures'
 import { Portfolios } from 'src/test/gqlFixtures'
 import { render, screen } from 'src/test/test-utils'
-import { formatUSDPrice, NumberType } from 'src/utils/format'
+import { formatUSDPrice, NumberType } from 'wallet/src/utils/format'
 
 jest.mock('@react-navigation/drawer', () => ({ useDrawerStatus: jest.fn(() => 'unknown') }))
 

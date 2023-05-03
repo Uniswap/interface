@@ -11,8 +11,8 @@ import { LongText } from 'src/components/text/LongText'
 import { TokenDetailsScreenQuery } from 'src/data/__generated__/types-and-hooks'
 import { ElementName } from 'src/features/telemetry/constants'
 import { currencyIdToAddress, currencyIdToChain } from 'src/utils/currencyId'
-import { formatNumber, NumberType } from 'src/utils/format'
 import { ExplorerDataType, getExplorerLink, getTwitterLink } from 'src/utils/linking'
+import { formatNumber, NumberType } from 'wallet/src/utils/format'
 import { LinkButtonWithIcon } from './LinkButtonWithIcon'
 
 function StatsRow({
