@@ -130,7 +130,7 @@ export class InjectedProvider extends EventEmitter {
     this.isUniswapWallet = true
     this.publicKey = null
 
-    this.handleConnect(ChainId.Goerli.toString())
+    this.handleConnect(ChainId.Mainnet.toString())
     this.isMetaMask = true
   }
 

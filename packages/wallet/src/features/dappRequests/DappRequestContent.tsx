@@ -1,20 +1,40 @@
-import { YStack } from 'ui/src'
+import { XStack, YStack } from 'ui/src'
 import { Button, ButtonSize } from 'ui/src/components/button/Button'
-import { Flex } from 'ui/src/components/layout/Flex'
 import { Text } from 'ui/src/components/text/Text'
+import { ChainId } from 'wallet/src/features/chains/chains'
+import { SendTransactionDetails } from 'wallet/src/features/dappRequests/requestContent/SendTransactionContent'
+import { SignMessageDetails } from 'wallet/src/features/dappRequests/requestContent/SignMessageContent'
+import { SignTypedDataDetails } from 'wallet/src/features/dappRequests/requestContent/SignTypedDataContent'
+import {
+  useAccounts,
+  useActiveAccountAddressWithThrow,
+} from 'wallet/src/features/wallet/hooks'
 import { useAppDispatch, useAppSelector } from 'wallet/src/state'
 import { DappRequestType } from './dappRequestTypes'
 import { confirmRequest, rejectRequest } from './saga'
 import { DappRequestStoreItem } from './slice'
 
-interface RequestDisplayDetails {
+export interface RequestDisplayDetails {
   message: string
   title: string
   request: DappRequestStoreItem
 }
 
 export function DappRequestContent(): JSX.Element {
+  // Show only the last request
   const pendingRequests = useAppSelector((state) => state.dappRequests.pending)
+  const lastRequest = pendingRequests[pendingRequests.length - 1]
+  const requestWithDisplay = parseRequest(lastRequest)
+
+  const accounts = useAccounts()
+  const activeAccountAddress = useActiveAccountAddressWithThrow()
+  const activeAccount = accounts[activeAccountAddress]
+  if (!activeAccount) {
+    throw new Error('No active account')
+  }
+  // TODO: get active chain id
+  const activeChainId = ChainId.Mainnet
+
   const dispatch = useAppDispatch()
 
   const onConfirm = (requestDisplay: RequestDisplayDetails): void => {
@@ -37,68 +57,108 @@ export function DappRequestContent(): JSX.Element {
     return <Text>No approvals pending</Text>
   }
 
+  let displayDetails = null
+  switch (requestWithDisplay.request.dappRequest.type) {
+    case DappRequestType.SignMessage:
+      displayDetails = (
+        <SignMessageDetails
+          activeAccount={activeAccount}
+          request={requestWithDisplay}
+        />
+      )
+      break
+    case DappRequestType.SignTypedData:
+      displayDetails = (
+        <SignTypedDataDetails
+          activeAccount={activeAccount}
+          chainId={activeChainId}
+          request={requestWithDisplay}
+        />
+      )
+      break
+    case DappRequestType.SendTransaction:
+      displayDetails = (
+        <SendTransactionDetails
+          activeAccount={activeAccount}
+          request={requestWithDisplay}
+        />
+      )
+      break
+  }
+
   return (
     <YStack
-      alignContent="center"
+      key={requestWithDisplay.request.dappRequest.requestId}
+      alignItems="stretch"
+      backgroundColor="$background"
+      flex={1}
+      gap="$spacing12"
       justifyContent="center"
-      paddingHorizontal="$spacing48"
-      paddingTop="$spacing48">
-      {pendingRequests
-        .map(parseRequest)
-        .map((requestWithDisplay: RequestDisplayDetails) => {
-          return (
-            <Flex
-              key={requestWithDisplay.request.dappRequest.requestId}
-              gap="$spacing24">
-              <Text variant="headlineLarge">{requestWithDisplay?.title}</Text>
-              <Text variant="subheadLarge">{requestWithDisplay?.message}</Text>
-              <Text variant="bodySmall">
-                ID: {requestWithDisplay.request.dappRequest.requestId}
-              </Text>
-              <YStack gap="$spacing16" marginTop="$spacing16">
-                <Button
-                  buttonSize={ButtonSize.Large}
-                  theme="primary"
-                  onPress={(): void => onConfirm(requestWithDisplay)}>
-                  Confirm
-                </Button>
-                <Button
-                  buttonSize={ButtonSize.Large}
-                  theme="secondary"
-                  onPress={(): void => onCancel(requestWithDisplay)}>
-                  Cancel
-                </Button>
-              </YStack>
-            </Flex>
-          )
-        })}
+      padding="$spacing24"
+      width="100%">
+      <Text textAlign="center" variant="headlineSmall">
+        {requestWithDisplay.title}
+      </Text>
+      <YStack alignItems="stretch" flexShrink={1} width="100%">
+        {displayDetails ? (
+          displayDetails
+        ) : (
+          <YStack gap="$spacing12">
+            <Text variant="subheadLarge">{requestWithDisplay?.message}</Text>
+            <Text variant="bodySmall">
+              ID: {requestWithDisplay.request.dappRequest.requestId}
+            </Text>
+          </YStack>
+        )}
+      </YStack>
+      <XStack gap="$spacing12">
+        <Button
+          buttonSize={ButtonSize.Medium}
+          flex={1}
+          theme="secondary"
+          onPress={(): void => onCancel(requestWithDisplay)}>
+          Cancel
+        </Button>
+        <Button
+          buttonSize={ButtonSize.Medium}
+          flex={1}
+          theme="primary"
+          onPress={(): void => onConfirm(requestWithDisplay)}>
+          Approve
+        </Button>
+      </XStack>
     </YStack>
   )
 }
 
-const parseRequest = (request: DappRequestStoreItem): RequestDisplayDetails => {
+const parseRequest = (
+  request?: DappRequestStoreItem
+): RequestDisplayDetails => {
+  if (!request) {
+    throw new Error('No request to parse')
+  }
   switch (request.dappRequest.type) {
     case DappRequestType.SignMessage:
       return {
         message: 'Sign this message?',
-        title: 'Sign Message',
+        title: 'Sign Message Request',
         request,
       }
     case DappRequestType.SignTypedData:
       return {
         message: 'Sign this data?',
-        title: 'Sign Data',
+        title: 'Sign TypedData Request',
         request,
       }
     case DappRequestType.SendTransaction:
       return {
         message: 'Confirm this transaction?',
-        title: 'Transaction',
+        title: 'Transaction Request',
         request,
       }
     case DappRequestType.GetAccount:
       return {
-        message: 'Confirm this connection request?',
+        message: 'Connect to this dApp?',
         title: 'Connection Request',
         request,
       }
