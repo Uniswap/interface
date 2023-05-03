@@ -17,7 +17,7 @@ export function isDevelopment() {
 }
 
 type GroupedEntries = { mediaURLs: string[]; precacheEntries: PrecacheEntry[] }
-export const groupEntries = (entries: (string | PrecacheEntry)[]): GroupedEntries => {
+export function groupEntries(entries: (string | PrecacheEntry)[]): GroupedEntries {
   return entries.reduce<GroupedEntries>(
     ({ mediaURLs, precacheEntries }, entry) => {
       if (typeof entry === 'string') {
