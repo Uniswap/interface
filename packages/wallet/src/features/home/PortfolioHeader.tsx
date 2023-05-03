@@ -2,9 +2,9 @@ import { useDispatch } from 'react-redux'
 import { Button } from 'ui/src/components/button/Button'
 import { Flex } from 'ui/src/components/layout/Flex'
 import { Text } from 'ui/src/components/text/Text'
+import { Unicon } from 'ui/src/components/Unicon'
 import { iconSize } from 'ui/src/theme/tokens'
 import { sanitizeAddressText, shortenAddress } from 'wallet/src/utils/addresses'
-import { Unicon } from '../../components/Unicon'
 import { authActions } from '../auth/saga'
 
 type PortfolioHeaderProps = {

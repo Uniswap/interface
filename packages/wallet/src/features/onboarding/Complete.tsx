@@ -1,8 +1,8 @@
 import { Stack } from 'tamagui'
 import { Text } from 'ui/src'
 import { Button } from 'ui/src/components/button/Button'
+import { Unicon } from 'ui/src/components/Unicon'
 import { iconSize } from 'ui/src/theme/tokens'
-import { Unicon } from 'wallet/src/components/Unicon'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 import { sanitizeAddressText, shortenAddress } from 'wallet/src/utils/addresses'
 

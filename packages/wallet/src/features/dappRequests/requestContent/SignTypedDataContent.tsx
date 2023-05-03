@@ -1,5 +1,5 @@
 import { Text, XStack, YStack } from 'ui/src'
-import { Unicon } from 'wallet/src/components/Unicon'
+import { Unicon } from 'ui/src/components/Unicon'
 import { RequestDisplayDetails } from 'wallet/src/features/dappRequests/DappRequestContent'
 import { SignTypedDataRequest } from 'wallet/src/features/dappRequests/dappRequestTypes'
 import { Account } from 'wallet/src/features/wallet/types'
