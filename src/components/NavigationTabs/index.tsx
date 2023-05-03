@@ -79,7 +79,7 @@ export function AddRemoveTabs({
     : '/pools' + (positionID ? `/${positionID.toString()}` : '')
 
   return (
-    <Tabs>
+    <Tabs style={{ width: '100%' }}>
       <RowBetween style={{ padding: '1rem 1rem 0 1rem' }}>
         <StyledHistoryLink
           to={poolLink}

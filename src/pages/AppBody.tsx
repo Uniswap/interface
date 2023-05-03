@@ -5,12 +5,14 @@ import styled from 'styled-components/macro'
 interface BodyWrapperProps {
   $margin?: string
   $maxWidth?: string
+  $background?: string
 }
 
 export const BodyWrapper = styled.main<BodyWrapperProps>`
   position: relative;
   margin-top: ${({ $margin }) => $margin || '0px'};
   max-width: ${({ $maxWidth }) => $maxWidth || '420px'};
+  background: ${({ $background }) => $background || 'transparent'};
   border-radius: 30px;
   margin-left: auto;
   margin-right: auto;

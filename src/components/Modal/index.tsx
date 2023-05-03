@@ -12,7 +12,6 @@ const AnimatedDialogOverlay = animated(DialogOverlay)
 const StyledDialogOverlay = styled(AnimatedDialogOverlay)<{ $scrollOverlay?: boolean }>`
   &[data-reach-dialog-overlay] {
     z-index: ${Z_INDEX.modalBackdrop};
-    background-color: transparent;
     overflow: hidden;
 
     display: flex;

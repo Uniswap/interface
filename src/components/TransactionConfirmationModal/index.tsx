@@ -26,7 +26,6 @@ import AnimatedConfirmation from './AnimatedConfirmation'
 const Wrapper = styled.div`
   background-color: ${({ theme }) => theme.backgroundSurface};
   border-radius: 20px;
-  outline: 1px solid ${({ theme }) => theme.backgroundOutline};
   width: 100%;
   padding: 1rem;
 `

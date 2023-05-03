@@ -263,6 +263,8 @@ export const darkTheme = {
   backgroundScrolledSurface: opacify(72, colors.deep),
   backgroundBorderGradient: 'linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%)',
 
+  rainbowPegasysGradient: 'linear-gradient(90deg, #19EBCE 0%, #8A15E6 84.28%)',
+
   textPrimary: colors.white,
   textSecondary: colors.gray300,
   textTertiary: colors.gray500,
@@ -316,6 +318,8 @@ export const lightTheme: Theme = {
   backgroundScrim: opacify(60, colors.gray900),
   backgroundScrolledSurface: opacify(72, colors.white),
   backgroundBorderGradient: 'linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%)',
+
+  rainbowPegasysGradient: 'linear-gradient(90deg, #19EBCE 0%, #8A15E6 84.28%)',
 
   textPrimary: colors.gray900,
   textSecondary: colors.gray400,

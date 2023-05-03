@@ -31,6 +31,7 @@ import { Text } from 'rebass'
 import { useBurnV3ActionHandlers, useBurnV3State, useDerivedV3BurnInfo } from 'state/burn/v3/hooks'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
+import styled from 'styled-components/macro'
 import { useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
@@ -40,7 +41,6 @@ import { WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
 import { TransactionType } from '../../state/transactions/types'
 import { calculateGasMargin } from '../../utils/calculateGasMargin'
 import { currencyId } from '../../utils/currencyId'
-import AppBody from '../AppBody'
 import { ResponsiveHeaderText, SmallMaxButton, Wrapper } from './styled'
 
 const DEFAULT_REMOVE_V3_LIQUIDITY_SLIPPAGE_TOLERANCE = new Percent(5, 100)
@@ -63,6 +63,7 @@ export default function RemoveLiquidityV3() {
 
   return <Remove tokenId={parsedTokenId} />
 }
+
 function Remove({ tokenId }: { tokenId: BigNumber }) {
   const { position } = useV3PositionFromTokenId(tokenId)
   const theme = useTheme()
@@ -273,6 +274,16 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
         WRAPPED_NATIVE_CURRENCY[liquidityValue0.currency.chainId]?.equals(liquidityValue0.currency.wrapped) ||
         WRAPPED_NATIVE_CURRENCY[liquidityValue1.currency.chainId]?.equals(liquidityValue1.currency.wrapped))
   )
+
+  const BodyWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    background: ${({ theme }) => theme.backgroundScrolledSurface};
+    border-radius: 16px;
+    box-shadow: ${({ theme }) => theme.deepShadow};
+  `
+
   return (
     <AutoColumn>
       <TransactionConfirmationModal
@@ -289,7 +300,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
         )}
         pendingText={pendingText}
       />
-      <AppBody $maxWidth="unset">
+      <BodyWrapper>
         <AddRemoveTabs
           creating={false}
           adding={false}
@@ -421,10 +432,12 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
               </div>
             </AutoColumn>
           ) : (
-            <LoaderGif gif={isDarkMode ? LoadingGif : LoadingGifLight} />
+            <RowBetween style={{ justifyContent: 'center' }}>
+              <LoaderGif gif={isDarkMode ? LoadingGif : LoadingGifLight} size="50px" />
+            </RowBetween>
           )}
         </Wrapper>
-      </AppBody>
+      </BodyWrapper>
     </AutoColumn>
   )
 }

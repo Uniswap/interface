@@ -123,7 +123,7 @@ const HoverText = styled(ThemedText.DeprecatedMain)`
 `
 
 const DoubleArrow = styled.span`
-  color: ${({ theme }) => theme.textTertiary};
+  color: ${({ theme }) => theme.accentActive};
   margin: 0 1rem;
 `
 const ResponsiveRow = styled(RowBetween)`
@@ -829,7 +829,7 @@ function PositionPageContent() {
                             disabled={collecting || !!collectMigrationHash}
                             confirmed={!!collectMigrationHash && !isCollectPending}
                             width="fit-content"
-                            style={{ borderRadius: '12px' }}
+                            style={{ borderRadius: '16px' }}
                             padding="4px 8px"
                             onClick={() => setShowConfirm(true)}
                           >
