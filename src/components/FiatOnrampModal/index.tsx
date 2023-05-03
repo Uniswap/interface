@@ -19,7 +19,7 @@ const Wrapper = styled.div<{ isDarkMode: boolean }>`
   display: flex;
   flex-flow: column nowrap;
   margin: 0;
-  min-height: 720px;
+  flex: 1 1;
   min-width: 375px;
   position: relative;
   width: 100%;
@@ -125,7 +125,7 @@ export default function FiatOnrampModal() {
   }, [fetchSignedIframeUrl])
 
   return (
-    <Modal isOpen={fiatOnrampModalOpen} onDismiss={closeModal} maxHeight={720}>
+    <Modal isOpen={fiatOnrampModalOpen} onDismiss={closeModal} height={80 /* vh */}>
       <Wrapper data-testid="fiat-onramp-modal" isDarkMode={isDarkMode}>
         {error ? (
           <>
