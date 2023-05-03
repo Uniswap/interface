@@ -20,7 +20,7 @@ const approve = async (hardhat: Utils, type: 'token' | 'permit2' | 'both'): Prom
         {
           owner: hardhat.wallet.address,
           token: DAI,
-          spender: UNIVERSAL_ROUTER_ADDRESS(1),
+          spender: UNIVERSAL_ROUTER,
         },
         {
           amount: MaxUint160,
@@ -49,7 +49,7 @@ const expectPermit2MaxApproval = (hardhat: Utils, approvalTime: number) => {
     hardhat.approval.getPermit2Allowance({
       owner: hardhat.wallet.address,
       token: DAI,
-      spender: UNIVERSAL_ROUTER_ADDRESS(1),
+      spender: UNIVERSAL_ROUTER,
     })
   ).then((allowance) => {
     cy.then(() => MaxUint160.eq(allowance.amount)).should('eq', true)
@@ -78,9 +78,14 @@ const swap = () => {
 }
 
 const TEST_BALANCE_INCREMENT = 0.01
+let UNIVERSAL_ROUTER: string
 
-// TODO: Update tests to differentiate between permit2 vs token approval buttons once UI is updated to indicate approval step
+// TODO: Update tests to differentiate between permit2 vs token approval button text once UI is updated to indicate approval step
 describe('Permit2', () => {
+  before(() => {
+    cy.hardhat().then((hardhat) => (UNIVERSAL_ROUTER = UNIVERSAL_ROUTER_ADDRESS(hardhat.network.chainId)))
+  })
+
   beforeEach(() => {
     cy.hardhat().then((hardhat) => hardhat.reset()) // TODO(cartcrom): remove once cypress-hardhat is updated
     cy.hardhat().then((hardhat) => hardhat.provider.send('evm_setAutomine', [true])) // TODO(cartcrom): remove once cypress-hardhat is updated
@@ -104,9 +109,11 @@ describe('Permit2', () => {
   it('can swap DAI for USDC with approval', () => {
     cy.hardhat().then((hardhat) => {
       cy.get('[data-testid="swap-approve-button"]').click()
-      const approvalTime = Date.now()
       cy.get('[data-testid="swap-approve-button"]').should('have.text', 'Approval pending')
 
+      const approvalTime = Date.now()
+
+      // There should be a successful Approved notification
       cy.contains('Approved').should('exist')
 
       swap()
@@ -117,11 +124,52 @@ describe('Permit2', () => {
     })
   })
 
+  it.only('can swap after handling user rejection of approvals and signatures', () => {
+    const USER_REJECTION = { code: 4001 }
+    cy.hardhat().then((hardhat) => {
+      const tokenApprovalstub = cy.stub(hardhat.wallet, 'sendTransaction')
+      tokenApprovalstub.rejects(USER_REJECTION) // reject token approval
+
+      cy.get('[data-testid="swap-approve-button"]').click()
+      cy.get('[data-testid="swap-approve-button"]')
+        .should('have.text', 'Approve use of DAI')
+        .then(() => {
+          const permitApprovalStub = cy.stub(hardhat.provider, 'send')
+          permitApprovalStub.withArgs('eth_signTypedData_v4').rejects(USER_REJECTION) // reject permit approval
+
+          tokenApprovalstub.restore() // allow token approval
+
+          cy.get('[data-testid="swap-approve-button"]').click()
+          cy.get('[data-testid="swap-approve-button"]')
+            .should('have.text', 'Approve use of DAI')
+            .then(() => {
+              permitApprovalStub.restore() // allow permit approval
+
+              cy.get('[data-testid="swap-approve-button"]').click()
+              const approvalTime = Date.now()
+              cy.get('[data-testid="swap-approve-button"]').should('have.text', 'Approval pending')
+
+              // There should be a successful Approved notification
+              cy.contains('Approved').should('exist')
+
+              swap()
+
+              // chain state check
+              expectTokenMaxApproval(hardhat)
+              expectPermit2MaxApproval(hardhat, approvalTime)
+            })
+        })
+    })
+  })
+
   it('can swap DAI for USDC with an existing token approval and missing permit approval', () => {
     cy.hardhat().then((hardhat) => {
       cy.then(() => approve(hardhat, 'token')).then(() => {
         const approvalTime = Date.now()
         cy.get('[data-testid="swap-approve-button"]').click()
+
+        // There should be a successful Approved notification
+        cy.contains('Approved').should('exist')
 
         swap()
 
@@ -136,6 +184,9 @@ describe('Permit2', () => {
       cy.then(() => approve(hardhat, 'permit2')).then(() => {
         cy.get('[data-testid="swap-approve-button"]').click()
         cy.get('[data-testid="swap-approve-button"]').should('have.text', 'Approval pending')
+
+        // There should be a successful Approved notification
+        cy.contains('Approved').should('exist')
 
         swap()
 
@@ -161,6 +212,9 @@ describe('Permit2', () => {
           const approvalTime = Date.now()
           cy.get('[data-testid="swap-approve-button"]').click()
 
+          // There should be a successful Approved notification
+          cy.contains('Approved').should('exist')
+
           swap()
 
           // chain state check
@@ -185,6 +239,9 @@ describe('Permit2', () => {
           const approvalTime = Date.now()
           cy.get('[data-testid="swap-approve-button"]').click()
 
+          // There should be a successful Approved notification
+          cy.contains('Approved').should('exist')
+
           swap()
 
           // chain state check
@@ -207,6 +264,9 @@ describe('Permit2', () => {
         )
         .then(() => {
           cy.get('[data-testid="swap-approve-button"]').click()
+
+          // There should be a successful Approved notification
+          cy.contains('Approved').should('exist')
 
           swap()
 
