@@ -62,13 +62,13 @@
     "g:run-all-checks": "turbo run typecheck lint test build --parallel",
     "g:test": "turbo run test --filter=tests --filter=!@uniswap/mobile --parallel",
     "g:typecheck": "turbo run typecheck --parallel",
-    "staged:lint:fix": "eslint --fix",
     "expo": "yarn workspace expo-app",
     "mobile": "yarn workspace @uniswap/mobile",
-    "web": "yarn workspace @uniswap/web",
+    "staged:lint:fix": "eslint --fix",
     "upgrade:next": "manypkg upgrade next && manypkg upgrade eslint-config-next",
     "upgrade:rnw": "manypkg upgrade react-native-web",
-    "upgrade:tamagui": "manypkg upgrade tamagui && manypkg upgrade @tamagui && manypkg upgrade tamagui-loader && manypkg upgrade react-native-web-lite"
+    "upgrade:tamagui": "manypkg upgrade tamagui && manypkg upgrade @tamagui && manypkg upgrade tamagui-loader && manypkg upgrade react-native-web-lite",
+    "web": "yarn workspace @uniswap/web"
   },
   "workspaces": [
     "apps/*",

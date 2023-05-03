@@ -5,5 +5,8 @@
     "ts-jest": "29.0.5"
   },
   "license": "MIT",
-  "private": true
+  "private": true,
+  "devDependencies": {
+    "@testing-library/jest-native": "5.4.2"
+  }
 }

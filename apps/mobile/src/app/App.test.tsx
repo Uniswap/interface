@@ -12,6 +12,13 @@ jest.mock('src/data/hooks', () => {
 
 jest.mock('react-native-localize', () => mockRNLocalize)
 
+// HACK:(jest output hygiene): skips setting state in component mount useEffect to prevent re-render
+jest.mock('react-native-device-info', () => ({
+  getUniqueId: (): Promise<string> => {
+    throw new Error('Prevent re-render')
+  },
+}))
+
 it('renders correctly', () => {
   render(<App />)
 })

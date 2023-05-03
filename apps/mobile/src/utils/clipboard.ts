@@ -50,7 +50,7 @@ export async function setClipboardImage(imageUrl: string | undefined): Promise<v
 }
 
 // Convert image data blob to base64 encoding
-function blobToBase64(blob: Blob): Promise<ArrayBuffer | string> {
+function blobToBase64(blob: Blob): Promise<ArrayBuffer | string | null> {
   const reader = new FileReader()
   reader.readAsDataURL(blob)
   return new Promise((resolve) => {

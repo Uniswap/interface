@@ -13,7 +13,7 @@ describe(setClipboard, () => {
 describe(getClipboard, () => {
   it('gets string correctly', async () => {
     try {
-      Clipboard.setString('test')
+      await Clipboard.setStringAsync('test')
       expect(await getClipboard()).toEqual('test')
     } catch {}
   })

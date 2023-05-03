@@ -20,9 +20,10 @@ global.console = {
 
 // Mock Amplitde log reporting
 jest.mock('@amplitude/analytics-react-native', () => ({
-  init: () => jest.fn(),
-  identify: () => jest.fn(),
   flush: () => jest.fn(),
+  identify: () => jest.fn(),
+  init: () => jest.fn(),
+  setDeviceId: () => jest.fn(),
   track: () => jest.fn(),
 }))
 
@@ -59,6 +60,7 @@ jest.mock('react-native-vision-camera', () => ({}))
 // Mock expo clipboard lib due to native deps
 jest.mock('expo-clipboard', () => ({
   setString: jest.fn(),
+  setStringAsync: jest.fn(),
   getStringAsync: () => Promise.resolve(),
 }))
 jest.mock('expo-blur', () => ({ BlurView: {} }))
@@ -71,6 +73,8 @@ jest.mock('expo-screen-capture', () => ({ addScreenshotListener: jest.fn() }))
 jest.mock('@react-native-async-storage/async-storage', () => mockAsyncStorage)
 
 require('react-native-reanimated/lib/reanimated2/jestUtils').setUpTests()
+// Disables animated driver warning
+jest.mock('react-native/Libraries/Animated/NativeAnimatedHelper')
 
 // mock initProviders to avoid creating real ethers providers for each test
 jest.mock('src/features/providers/providerSaga')
@@ -79,10 +83,17 @@ jest.mock('src/lib/RNEthersRs')
 
 // Mock WalletConnect v2 packages
 jest.mock('@walletconnect/web3wallet', () => ({
-  Web3Wallet: { init: () => ({ on: jest.fn() }) },
+  Web3Wallet: {
+    init: () => ({
+      on: jest.fn(),
+      getActiveSessions: () => [],
+    }),
+  },
 }))
 jest.mock('@walletconnect/core', () => ({
-  Core: jest.fn().mockImplementation(() => ({})),
+  Core: jest.fn().mockImplementation(() => ({
+    crypto: { getClientId: jest.fn() },
+  })),
 }))
 
 // Mock OneSignal package
