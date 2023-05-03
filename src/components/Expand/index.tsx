@@ -11,9 +11,9 @@ const ButtonContainer = styled(Row)`
   width: unset;
 `
 
-const ExpandIcon = styled(ChevronDown)<{ isExpanded: boolean }>`
+const ExpandIcon = styled(ChevronDown)<{ $isExpanded: boolean }>`
   color: ${({ theme }) => theme.textSecondary};
-  transform: ${({ isExpanded }) => (isExpanded ? 'rotate(180deg)' : 'rotate(0deg)')};
+  transform: ${({ $isExpanded }) => ($isExpanded ? 'rotate(180deg)' : 'rotate(0deg)')};
   transition: transform ${({ theme }) => theme.transition.duration.medium};
 `
 
@@ -32,7 +32,7 @@ export default function Expand({
         {header}
         <ButtonContainer gap="xs" onClick={() => setExpanded(!isExpanded)}>
           {button}
-          <ExpandIcon isExpanded={isExpanded} />
+          <ExpandIcon $isExpanded={isExpanded} />
         </ButtonContainer>
       </RowBetween>
       {isExpanded && children}
