@@ -573,7 +573,7 @@ export function Swap({
         onCancel={handleDismissTokenWarning}
         showCancel={true}
       />
-      <SwapHeader allowedSlippage={allowedSlippage} />
+      <SwapHeader autoSlippage={autoSlippage} />
       <ConfirmSwapModal
         isOpen={showConfirm}
         trade={trade}
