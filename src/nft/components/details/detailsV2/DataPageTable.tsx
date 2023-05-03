@@ -5,7 +5,7 @@ import { ListingsTableContent } from './ListingsTableContent'
 import { OffersTableContent } from './OffersTableContent'
 import { Tab, TabbedComponent } from './TabbedComponent'
 
-enum TableTabsKeys {
+export enum TableTabsKeys {
   Activity = 'activity',
   Offers = 'offers',
   Listings = 'listings',
