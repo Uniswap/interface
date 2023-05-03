@@ -1,7 +1,7 @@
 import { RowBetween } from 'components/Row'
 import { darken } from 'polished'
 import { PropsWithChildren } from 'react'
-import styled from 'styled-components/macro'
+import styled, { DefaultTheme } from 'styled-components/macro'
 
 const Button = styled.button<{ isActive?: boolean; activeElement?: boolean }>`
   align-items: center;
@@ -15,7 +15,7 @@ const Button = styled.button<{ isActive?: boolean; activeElement?: boolean }>`
   width: fit-content;
 `
 
-const ToggleElementHoverStyle = (hasBgColor: boolean, theme: any, isActive?: boolean) =>
+const ToggleElementHoverStyle = (hasBgColor: boolean, theme: DefaultTheme, isActive?: boolean) =>
   hasBgColor
     ? {
         opacity: '0.8',
