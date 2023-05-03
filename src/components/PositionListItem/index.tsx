@@ -2,10 +2,12 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { Trans } from '@lingui/macro'
 import { Percent, Price, Token } from '@uniswap/sdk-core'
 import { Position } from '@uniswap/v3-sdk'
+import LoadingGifLight from 'assets/images/lightLoading.gif'
+import LoadingGif from 'assets/images/loading.gif'
 import RangeBadge from 'components/Badge/RangeBadge'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import HoverInlineText from 'components/HoverInlineText'
-import Loader from 'components/Icons/LoadingSpinner'
+import { LoaderGif } from 'components/Icons/LoadingSpinner'
 import { RowBetween } from 'components/Row'
 import { useToken } from 'hooks/Tokens'
 import useIsTickAtLimit from 'hooks/useIsTickAtLimit'
@@ -15,6 +17,7 @@ import { Link } from 'react-router-dom'
 import { Bound } from 'state/mint/v3/actions'
 import styled from 'styled-components/macro'
 import { HideSmall, MEDIA_WIDTHS, SmallOnly, ThemedText } from 'theme'
+import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { formatTickPrice } from 'utils/formatTickPrice'
 import { unwrappedToken } from 'utils/unwrappedToken'
 import { hasURL } from 'utils/urlChecks'
@@ -174,6 +177,7 @@ export default function PositionListItem({
 }: PositionListItemProps) {
   const token0 = useToken(token0Address)
   const token1 = useToken(token1Address)
+  const isDarkMode = useIsDarkMode()
 
   const currency0 = token0 ? unwrappedToken(token0) : undefined
   const currency1 = token1 ? unwrappedToken(token1) : undefined
@@ -266,7 +270,7 @@ export default function PositionListItem({
           </RangeText>
         </RangeLineItem>
       ) : (
-        <Loader />
+        <LoaderGif gif={isDarkMode ? LoadingGif : LoadingGifLight} size="40px" />
       )}
     </LinkRow>
   )

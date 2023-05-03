@@ -1,7 +1,9 @@
 import { getDeviceId, sendAnalyticsEvent, Trace, user } from '@uniswap/analytics'
 import { CustomUserProperties, getBrowser, InterfacePageName, SharedEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
-import Loader from 'components/Icons/LoadingSpinner'
+import LoadingGifLight from 'assets/images/lightLoading.gif'
+import LoadingGif from 'assets/images/loading.gif'
+import { LoaderGif } from 'components/Icons/LoadingSpinner'
 import TopLevelModals from 'components/TopLevelModals'
 import { useFeatureFlagsIsLoaded } from 'featureFlags'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
@@ -227,7 +229,7 @@ export default function App() {
             <Popups />
             <Polling />
             <TopLevelModals />
-            <Suspense fallback={<Loader />}>
+            <Suspense fallback={<LoaderGif gif={isDarkMode ? LoadingGif : LoadingGifLight} />}>
               {isLoaded ? (
                 <Routes>
                   <Route path="/" element={<Landing />} />
@@ -335,7 +337,7 @@ export default function App() {
                   <Route path="/not-found" element={<NotFound />} />
                 </Routes>
               ) : (
-                <Loader />
+                <LoaderGif gif={isDarkMode ? LoadingGif : LoadingGifLight} />
               )}
             </Suspense>
           </BodyWrapper>

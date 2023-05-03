@@ -14,7 +14,7 @@ import { ButtonConfirmed, ButtonGray, ButtonPrimary } from 'components/Button'
 import { DarkCard, LightCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
-import Loader from 'components/Icons/LoadingSpinner'
+import { LoaderGif } from 'components/Icons/LoadingSpinner'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { RowBetween, RowFixed } from 'components/Row'
 import { Dots } from 'components/swap/styleds'
@@ -37,11 +37,14 @@ import { Bound } from 'state/mint/v3/actions'
 import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'
 import styled, { useTheme } from 'styled-components/macro'
 import { ExternalLink, HideExtraSmall, HideSmall, ThemedText } from 'theme'
+import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { currencyId } from 'utils/currencyId'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 import { formatTickPrice } from 'utils/formatTickPrice'
 import { unwrappedToken } from 'utils/unwrappedToken'
 
+import LoadingGifLight from '../../assets/images/lightLoading.gif'
+import LoadingGif from '../../assets/images/loading.gif'
 import RangeBadge from '../../components/Badge/RangeBadge'
 import { SmallButtonPrimary } from '../../components/Button/index'
 import { getPriceOrderingFromPositionForUI } from '../../components/PositionListItem'
@@ -112,9 +115,9 @@ const ExtentsText = styled.span`
 
 const HoverText = styled(ThemedText.DeprecatedMain)`
   text-decoration: none;
-  color: ${({ theme }) => theme.textTertiary};
+  color: ${({ theme }) => theme.accentActive};
   :hover {
-    color: ${({ theme }) => theme.textPrimary};
+    color: ${({ theme }) => theme.accentActiveSoft};
     text-decoration: none;
   }
 `
@@ -377,6 +380,7 @@ function PositionPageContent() {
   const { tokenId: tokenIdFromUrl } = useParams<{ tokenId?: string }>()
   const { chainId, account, provider } = useWeb3React()
   const theme = useTheme()
+  const isDarkMode = useIsDarkMode()
 
   const parsedTokenId = tokenIdFromUrl ? BigNumber.from(tokenIdFromUrl) : undefined
   const { loading, position: positionDetails } = useV3PositionFromTokenId(parsedTokenId)
@@ -683,27 +687,20 @@ function PositionPageContent() {
                         to={`/increase/${currencyId(currency0)}/${currencyId(currency1)}/${feeAmount}/${tokenId}`}
                         padding="6px 8px"
                         width="fit-content"
-                        $borderRadius="12px"
                         style={{ marginRight: '8px' }}
                       >
                         <Trans>Increase Liquidity</Trans>
                       </ButtonGray>
                     ) : null}
                     {tokenId && !removed ? (
-                      <SmallButtonPrimary
-                        as={Link}
-                        to={`/remove/${tokenId}`}
-                        padding="6px 8px"
-                        width="fit-content"
-                        $borderRadius="12px"
-                      >
+                      <SmallButtonPrimary as={Link} to={`/remove/${tokenId}`} padding="6px 8px" width="fit-content">
                         <Trans>Remove Liquidity</Trans>
                       </SmallButtonPrimary>
                     ) : null}
                   </ActionButtonResponsiveRow>
                 )}
               </ResponsiveRow>
-              <RowBetween></RowBetween>
+              <RowBetween />
             </AutoColumn>
             <ResponsiveRow align="flex-start">
               <HideSmall
@@ -721,6 +718,8 @@ function PositionPageContent() {
                       flexDirection: 'column',
                       justifyContent: 'space-around',
                       minWidth: '340px',
+                      boxShadow: theme.deepShadow,
+                      background: theme.backgroundScrolledSurface,
                     }}
                   >
                     <NFT image={metadata.result.image} height={400} />
@@ -736,14 +735,17 @@ function PositionPageContent() {
                     height="100%"
                     style={{
                       minWidth: '340px',
+                      boxShadow: theme.deepShadow,
+                      display: 'flex',
+                      justifyContent: 'center',
                     }}
                   >
-                    <Loader />
+                    <LoaderGif gif={isDarkMode ? LoadingGif : LoadingGifLight} size="50%" />
                   </DarkCard>
                 )}
               </HideSmall>
               <AutoColumn gap="sm" style={{ width: '100%', height: '100%' }}>
-                <DarkCard>
+                <DarkCard style={{ boxShadow: theme.deepShadow, background: theme.backgroundScrolledSurface }}>
                   <AutoColumn gap="md" style={{ width: '100%' }}>
                     <AutoColumn gap="md">
                       <Label>
@@ -795,7 +797,7 @@ function PositionPageContent() {
                     </LightCard>
                   </AutoColumn>
                 </DarkCard>
-                <DarkCard>
+                <DarkCard style={{ boxShadow: theme.deepShadow, background: theme.backgroundScrolledSurface }}>
                   <AutoColumn gap="md" style={{ width: '100%' }}>
                     <AutoColumn gap="md">
                       <RowBetween style={{ alignItems: 'flex-start' }}>
@@ -905,7 +907,7 @@ function PositionPageContent() {
                 </DarkCard>
               </AutoColumn>
             </ResponsiveRow>
-            <DarkCard>
+            <DarkCard style={{ boxShadow: theme.deepShadow, background: theme.backgroundScrolledSurface }}>
               <AutoColumn gap="md">
                 <RowBetween>
                   <RowFixed>

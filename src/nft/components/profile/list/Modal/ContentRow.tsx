@@ -1,6 +1,8 @@
 import { Trans } from '@lingui/macro'
+import LoadingGifLight from 'assets/images/lightLoading.gif'
+import LoadingGif from 'assets/images/loading.gif'
 import Column from 'components/Column'
-import Loader from 'components/Icons/LoadingSpinner'
+import { LoaderGif } from 'components/Icons/LoadingSpinner'
 import Row from 'components/Row'
 import { VerifiedIcon } from 'nft/components/icons'
 import { AssetRow, CollectionRow, ListingStatus } from 'nft/types'
@@ -8,6 +10,7 @@ import { useEffect, useRef } from 'react'
 import { Check, XOctagon } from 'react-feather'
 import styled, { css, useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
+import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { opacify } from 'theme/utils'
 
 const ContentColumn = styled(Column)<{ failed: boolean }>`
@@ -125,6 +128,7 @@ export const ContentRow = ({
   const theme = useTheme()
   const rowRef = useRef<HTMLDivElement>()
   const failed = row.status === ListingStatus.FAILED || row.status === ListingStatus.REJECTED
+  const isDarkMode = useIsDarkMode()
 
   useEffect(() => {
     row.status === ListingStatus.SIGNING && rowRef.current?.scroll
@@ -143,10 +147,11 @@ export const ContentRow = ({
         {isCollectionApprovalSection && (row as CollectionRow).isVerified && <StyledVerifiedIcon />}
         <IconWrapper>
           {row.status === ListingStatus.DEFINED || row.status === ListingStatus.PENDING ? (
-            <Loader
+            <LoaderGif
               height="14px"
               width="14px"
               stroke={row.status === ListingStatus.PENDING ? theme.accentAction : theme.textTertiary}
+              gif={isDarkMode ? LoadingGif : LoadingGifLight}
             />
           ) : row.status === ListingStatus.SIGNING ? (
             <ProceedText>

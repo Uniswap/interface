@@ -3,9 +3,11 @@ import type { TransactionResponse } from '@ethersproject/providers'
 import { useWeb3React } from '@web3-react/core'
 import uniswapNftAirdropClaim from 'abis/uniswap-nft-airdrop-claim.json'
 import airdropBackgroundv2 from 'assets/images/airdopBackground.png'
+import LoadingGifLight from 'assets/images/lightLoading.gif'
+import LoadingGif from 'assets/images/loading.gif'
 import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button'
 import { OpacityHoverState } from 'components/Common'
-import Loader from 'components/Icons/LoadingSpinner'
+import { LoaderGif } from 'components/Icons/LoadingSpinner'
 import { UNISWAP_NFT_AIRDROP_CLAIM_ADDRESS } from 'constants/addresses'
 import { useContract } from 'hooks/useContract'
 import { ChevronRightIcon } from 'nft/components/icons'
@@ -18,6 +20,7 @@ import { useModalIsOpen, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import styled from 'styled-components/macro'
 import { CloseIcon, ThemedText } from 'theme'
+import { useIsDarkMode } from 'theme/components/ThemeToggle'
 
 import Modal from '../Modal'
 
@@ -192,6 +195,7 @@ const AirdropModal = () => {
   const isOpen = useModalIsOpen(ApplicationModal.UNISWAP_NFT_AIRDROP_CLAIM)
   const usdcAirdropToggle = useToggleModal(ApplicationModal.UNISWAP_NFT_AIRDROP_CLAIM)
   const contract = useContract(UNISWAP_NFT_AIRDROP_CLAIM_ADDRESS, uniswapNftAirdropClaim)
+  const isDarkMode = useIsDarkMode()
 
   const displayError = () => {
     setIsSubmitting(false)
@@ -320,7 +324,7 @@ const AirdropModal = () => {
                   emphasis={ButtonEmphasis.medium}
                   disabled={isSubmitting}
                 >
-                  {isSubmitting && <Loader stroke="white" />}
+                  {isSubmitting && <LoaderGif gif={isDarkMode ? LoadingGif : LoadingGifLight} stroke="white" />}
                   <span>Claim{isSubmitting && 'ing'} USDC</span>
                 </ClaimButton>
               </Body>

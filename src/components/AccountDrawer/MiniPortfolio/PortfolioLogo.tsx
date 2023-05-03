@@ -1,6 +1,9 @@
 import { Currency } from '@uniswap/sdk-core'
+import LoadingGifLight from 'assets/images/lightLoading.gif'
+import LoadingGif from 'assets/images/loading.gif'
 import blankTokenUrl from 'assets/svg/blank_token.svg'
 import { ReactComponent as UnknownStatus } from 'assets/svg/contract-interaction.svg'
+import { LoaderGif } from 'components/Icons/LoadingSpinner'
 import { LogoImage, MissingImageLogo } from 'components/Logo/AssetLogo'
 import { Unicon } from 'components/Unicon'
 import { getChainInfo } from 'constants/chainInfo'
@@ -8,8 +11,8 @@ import { SupportedChainId } from 'constants/chains'
 import useTokenLogoSource from 'hooks/useAssetLogoSource'
 import useENSAvatar from 'hooks/useENSAvatar'
 import React from 'react'
-import { Loader } from 'react-feather'
 import styled, { useTheme } from 'styled-components/macro'
+import { useIsDarkMode } from 'theme/components/ThemeToggle'
 const UnknownContract = styled(UnknownStatus)`
   color: ${({ theme }) => theme.textSecondary};
 `
@@ -96,14 +99,14 @@ export function PortfolioLogo({
   const chainLogo = squareLogoUrl ?? logoUrl
   const { avatar, loading } = useENSAvatar(accountAddress, false)
   const theme = useTheme()
-
+  const isDarkMode = useIsDarkMode()
   const [src, nextSrc] = useTokenLogoSource(currencies?.[0]?.wrapped.address, chainId, currencies?.[0]?.isNative)
   const [src2, nextSrc2] = useTokenLogoSource(currencies?.[1]?.wrapped.address, chainId, currencies?.[1]?.isNative)
 
   let component
   if (accountAddress) {
     component = loading ? (
-      <Loader size={size} />
+      <LoaderGif gif={isDarkMode ? LoadingGif : LoadingGifLight} size={size} />
     ) : avatar ? (
       <ENSAvatarImg src={avatar} alt="avatar" />
     ) : (

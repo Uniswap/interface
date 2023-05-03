@@ -5,9 +5,11 @@ import { sendAnalyticsEvent, TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, NFTEventName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import LoadingGifLight from 'assets/images/lightLoading.gif'
+import LoadingGif from 'assets/images/loading.gif'
 import { useToggleAccountDrawer } from 'components/AccountDrawer'
 import Column from 'components/Column'
-import Loader from 'components/Icons/LoadingSpinner'
+import { LoaderGif } from 'components/Icons/LoadingSpinner'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import Row from 'components/Row'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
@@ -37,9 +39,9 @@ import { AlertTriangle, ChevronDown } from 'react-feather'
 import { InterfaceTrade, TradeState } from 'state/routing/types'
 import styled, { useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
+import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { switchChain } from 'utils/switchChain'
 import { shallow } from 'zustand/shallow'
-
 const FooterContainer = styled.div`
   padding: 0px 12px;
 `
@@ -289,6 +291,7 @@ const PENDING_BAG_STATUSES = [
 export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) => {
   const toggleWalletDrawer = useToggleAccountDrawer()
   const theme = useTheme()
+  const isDarkMode = useIsDarkMode()
   const { account, chainId, connector } = useWeb3React()
   const connected = Boolean(account && chainId)
   const totalEthPrice = useBagTotalEthPrice()
@@ -579,7 +582,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
             backgroundColor={buttonColor}
             textColor={buttonTextColor}
           >
-            {isPending && <Loader size="20px" stroke="white" />}
+            {isPending && <LoaderGif gif={isDarkMode ? LoadingGif : LoadingGifLight} size="20px" stroke="white" />}
             {buttonText}
           </ActionButton>
         </TraceEvent>

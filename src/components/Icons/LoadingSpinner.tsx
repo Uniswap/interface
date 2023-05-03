@@ -1,6 +1,6 @@
 import { useTheme } from 'styled-components/macro'
 
-import { StyledRotatingSVG, StyledSVG } from './shared'
+import { GifLoaderWrapper, StyledRotatingSVG, StyledSVG } from './shared'
 
 /**
  * Takes in custom size and stroke for circle color, default to primary color as fill,
@@ -55,6 +55,48 @@ export function LoaderV2() {
           d="M6.66669 1.33333C6.66669 0.596954 7.26364 0 8.00002 0C9.0506 0 10.0909 0.206926 11.0615 0.608964C12.0321 1.011 12.914 1.60028 13.6569 2.34315C14.3997 3.08601 14.989 3.96793 15.3911 4.93853C15.7931 5.90914 16 6.94943 16 8C16 8.73638 15.4031 9.33333 14.6667 9.33333C13.9303 9.33333 13.3334 8.73638 13.3334 8C13.3334 7.29962 13.1954 6.60609 12.9274 5.95902C12.6594 5.31195 12.2665 4.72401 11.7713 4.22876C11.276 3.73352 10.6881 3.34067 10.041 3.07264C9.39393 2.80462 8.7004 2.66667 8.00002 2.66667C7.26364 2.66667 6.66669 2.06971 6.66669 1.33333Z"
         />
       </StyledSVG>
+    </StyledRotatingSVG>
+  )
+}
+
+export function LoaderGif({
+  size = '16px',
+  stroke,
+  strokeWidth,
+  gif,
+  ...rest
+}: {
+  size?: string
+  stroke?: string
+  strokeWidth?: number
+  gif?: string
+  [k: string]: any
+}) {
+  const theme = useTheme()
+
+  if (gif) {
+    return (
+      <GifLoaderWrapper size={size} {...rest}>
+        <img src={gif} alt="Loading gif" />
+      </GifLoaderWrapper>
+    )
+  }
+
+  return (
+    <StyledRotatingSVG
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      size={size}
+      stroke={stroke ?? theme.accentActive}
+      {...rest}
+    >
+      <path
+        d="M12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22C17.5228 22 22 17.5228 22 12C22 9.27455 20.9097 6.80375"
+        strokeWidth={strokeWidth ?? '2.5'}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
     </StyledRotatingSVG>
   )
 }

@@ -1,12 +1,15 @@
 import { TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, SharedEventName } from '@uniswap/analytics-events'
+import LoadingGifLight from 'assets/images/lightLoading.gif'
+import LoadingGif from 'assets/images/loading.gif'
 import Column from 'components/Column'
 import AlertTriangleFilled from 'components/Icons/AlertTriangleFilled'
-import { LoaderV2 } from 'components/Icons/LoadingSpinner'
+import { LoaderGif } from 'components/Icons/LoadingSpinner'
 import { TransactionStatus } from 'graphql/data/__generated__/types-and-hooks'
 import useENSName from 'hooks/useENSName'
 import styled from 'styled-components/macro'
 import { EllipsisStyle, ThemedText } from 'theme'
+import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 import { PortfolioLogo } from '../PortfolioLogo'
@@ -32,7 +35,7 @@ export function ActivityRow({
 }) {
   const { ENSName } = useENSName(otherAccount)
   const timeSince = useTimeSince(timestamp)
-
+  const isDarkMode = useIsDarkMode()
   const explorerUrl = getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)
 
   return (
@@ -57,7 +60,7 @@ export function ActivityRow({
         }
         right={
           status === TransactionStatus.Pending ? (
-            <LoaderV2 />
+            <LoaderGif gif={isDarkMode ? LoadingGif : LoadingGifLight} />
           ) : status === TransactionStatus.Confirmed ? (
             <StyledTimestamp>{timeSince}</StyledTimestamp>
           ) : (

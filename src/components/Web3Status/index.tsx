@@ -2,9 +2,11 @@ import { Trans } from '@lingui/macro'
 import { sendAnalyticsEvent, TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
+import LoadingGifLight from 'assets/images/lightLoading.gif'
+import LoadingGif from 'assets/images/loading.gif'
 import PortfolioDrawer, { useAccountDrawer } from 'components/AccountDrawer'
 import PrefetchBalancesWrapper from 'components/AccountDrawer/PrefetchBalancesWrapper'
-import Loader from 'components/Icons/LoadingSpinner'
+import { LoaderGif } from 'components/Icons/LoadingSpinner'
 import { IconWrapper } from 'components/Identicon/StatusIcon'
 import { useGetConnection } from 'connection'
 import { Portal } from 'nft/components/common/Portal'
@@ -15,6 +17,7 @@ import { AlertTriangle } from 'react-feather'
 import { useAppSelector } from 'state/hooks'
 import styled from 'styled-components/macro'
 import { colors } from 'theme/colors'
+import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { flexRowNoWrap } from 'theme/styles'
 
 import { isTransactionRecent, useAllTransactions } from '../../state/transactions/hooks'
@@ -157,6 +160,7 @@ function Web3StatusInner() {
     toggleAccountDrawer()
   }, [toggleAccountDrawer])
   const isClaimAvailable = useIsNftClaimAvailable((state) => state.isClaimAvailable)
+  const isDarkMode = useIsDarkMode()
 
   const error = useAppSelector((state) => state.connection.errorByConnectionType[getConnection(connector).type])
 
@@ -201,7 +205,7 @@ function Web3StatusInner() {
               <Text>
                 <Trans>{pending?.length} Pending</Trans>
               </Text>{' '}
-              <Loader stroke="white" />
+              <LoaderGif stroke="white" gif={isDarkMode ? LoadingGif : LoadingGifLight} />
             </RowBetween>
           ) : (
             <AddressAndChevronContainer>

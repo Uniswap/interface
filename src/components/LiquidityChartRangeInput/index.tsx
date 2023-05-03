@@ -1,8 +1,10 @@
 import { Trans } from '@lingui/macro'
 import { Currency, Price, Token } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
+import LoadingGifLight from 'assets/images/lightLoading.gif'
+import LoadingGif from 'assets/images/loading.gif'
 import { AutoColumn, ColumnCenter } from 'components/Column'
-import Loader from 'components/Icons/LoadingSpinner'
+import { LoaderGif } from 'components/Icons/LoadingSpinner'
 import { format } from 'd3'
 import { useColor } from 'hooks/useColor'
 import { saturate } from 'polished'
@@ -11,6 +13,7 @@ import { BarChart2, CloudOff, Inbox } from 'react-feather'
 import { batch } from 'react-redux'
 import { Bound } from 'state/mint/v3/actions'
 import styled, { useTheme } from 'styled-components/macro'
+import { useIsDarkMode } from 'theme/components/ThemeToggle'
 
 import { ThemedText } from '../../theme'
 import { Chart } from './Chart'
@@ -88,9 +91,9 @@ export default function LiquidityChartRangeInput({
   interactive: boolean
 }) {
   const theme = useTheme()
-
   const tokenAColor = useColor(currencyA?.wrapped)
   const tokenBColor = useColor(currencyB?.wrapped)
+  const isDarkMode = useIsDarkMode()
 
   const isSorted = currencyA && currencyB && currencyA?.wrapped.sortsBefore(currencyB?.wrapped)
 
@@ -165,7 +168,11 @@ export default function LiquidityChartRangeInput({
           icon={<Inbox size={56} stroke={theme.textPrimary} />}
         />
       ) : isLoading ? (
-        <InfoBox icon={<Loader size="40px" stroke={theme.deprecated_text4} />} />
+        <InfoBox
+          icon={
+            <LoaderGif size="40px" stroke={theme.deprecated_text4} gif={isDarkMode ? LoadingGif : LoadingGifLight} />
+          }
+        />
       ) : error ? (
         <InfoBox
           message={<Trans>Liquidity data not available.</Trans>}

@@ -99,7 +99,7 @@ export const SmallButtonPrimary = styled(ButtonPrimary)`
   font-size: 16px;
   padding: ${({ padding }) => padding ?? '8px 12px'};
 
-  border-radius: 12px;
+  border-radius: 16px;
 `
 
 const BaseButtonLight = styled(BaseButton)`
@@ -145,10 +145,12 @@ const BaseButtonLight = styled(BaseButton)`
 `
 
 export const ButtonGray = styled(BaseButton)`
-  background-color: ${({ theme }) => theme.deprecated_bg1};
+  background-color: ${({ theme }) => theme.backgroundScrolledSurface};
   color: ${({ theme }) => theme.textSecondary};
   font-size: 16px;
   font-weight: 500;
+  box-shadow: ${({ theme }) => theme.deepShadow};
+  border-radius: 16px;
 
   &:hover {
     background-color: ${({ theme, disabled }) => !disabled && darken(0.05, theme.backgroundInteractive)};
@@ -163,7 +165,7 @@ export const ButtonSecondary = styled(BaseButton)`
   color: ${({ theme }) => theme.accentActive};
   background-color: transparent;
   font-size: 16px;
-  border-radius: 12px;
+  border-radius: 16px;
   padding: ${({ padding }) => (padding ? padding : '10px')};
   box-shadow: ${({ theme }) => theme.deepShadow};
 
