@@ -18,11 +18,11 @@ self.skipWaiting()
 // This must be done before setting up workbox-precaching, so that it takes precedence.
 registerRoute(new DocumentRoute())
 
-// Splits entries into assets, which are loaded on-demand; and entries, which are precached.
-// Effectively, this caches all media assets on-demand and pre-caches everything else.
+// Splits entries into:
+// - mediaURLs: loaded on-demand
+// - precacheEntries
 const { mediaURLs, precacheEntries } = groupEntries(self.__WB_MANIFEST)
 
-// Registers the mediaURLs' routes for on-demand caching.
 registerRoute(
   new Route(
     ({ url }) => mediaURLs.includes('.' + url.pathname),
