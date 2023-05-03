@@ -22,7 +22,7 @@ const PreferencesContainer = styled(Column)`
 export default function RouterPreferenceSettings() {
   const [routerPreference, setRouterPreference] = useRouterPreference()
 
-  const isAutoRoutingActive = routerPreference === RouterPreference.PRICE
+  const isAutoRoutingActive = routerPreference === RouterPreference.AUTO
 
   return (
     <Column gap="md">
@@ -40,7 +40,7 @@ export default function RouterPreferenceSettings() {
         <Toggle
           id="toggle-optimized-router-button"
           isActive={isAutoRoutingActive}
-          toggle={() => setRouterPreference(isAutoRoutingActive ? RouterPreference.API : RouterPreference.PRICE)}
+          toggle={() => setRouterPreference(isAutoRoutingActive ? RouterPreference.API : RouterPreference.AUTO)}
         />
       </RowBetween>
       {!isAutoRoutingActive && (

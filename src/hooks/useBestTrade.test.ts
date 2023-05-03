@@ -38,7 +38,7 @@ beforeEach(() => {
 
   mocked(useIsWindowVisible).mockReturnValue(true)
   mocked(useAutoRouterSupported).mockReturnValue(true)
-  mocked(useRouterPreference).mockReturnValue([RouterPreference.PRICE, () => undefined])
+  mocked(useRouterPreference).mockReturnValue([RouterPreference.AUTO, () => undefined])
 })
 
 describe('#useBestV3Trade ExactIn', () => {

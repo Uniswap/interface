@@ -63,7 +63,7 @@ export const initialState: UserState = {
   selectedWallet: undefined,
   userExpertMode: false,
   userLocale: null,
-  userRouterPreference: RouterPreference.PRICE,
+  userRouterPreference: RouterPreference.AUTO,
   userHideClosedPositions: false,
   userSlippageTolerance: SlippageTolerance.Auto,
   userSlippageToleranceHasBeenMigratedToAuto: true,
