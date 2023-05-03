@@ -1,3 +1,4 @@
+import { act } from '@testing-library/react'
 import { Percent } from '@uniswap/sdk-core'
 import { USDC_MAINNET } from 'constants/tokens'
 import store from 'state'
@@ -42,5 +43,23 @@ describe('useUserSlippageTolerance', () => {
       },
     } = renderHook(() => useUserSlippageTolerance())
     expect(slippage).toBeInstanceOf(Percent)
+  })
+  it('stores default slippage as `auto`', () => {
+    const {
+      result: {
+        current: [, setSlippage],
+      },
+    } = renderHook(() => useUserSlippageTolerance())
+    act(() => setSlippage(SlippageTolerance.Auto))
+    expect(store.getState().user.userSlippageTolerance).toBe(SlippageTolerance.Auto)
+  })
+  it('stores custom slippage as `number`', () => {
+    const {
+      result: {
+        current: [, setSlippage],
+      },
+    } = renderHook(() => useUserSlippageTolerance())
+    act(() => setSlippage(new Percent(5, 10_000)))
+    expect(store.getState().user.userSlippageTolerance).toBe(5)
   })
 })
