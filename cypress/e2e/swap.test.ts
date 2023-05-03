@@ -165,18 +165,16 @@ describe('Swap', () => {
             cy.get('#confirm-swap-or-send').click()
             cy.get(getTestSelector('dismiss-tx-confirmation')).click()
 
-            cy.then(() => hardhat.provider.send('hardhat_mine', ['0x1', '0xc'])).then(() => {
-              // ui check
-              cy.get('#swap-currency-output [data-testid="balance-text"]').should(
-                'have.text',
-                `Balance: ${initialBalance + BALANCE_INCREMENT}`
-              )
+            // ui check
+            cy.get('#swap-currency-output [data-testid="balance-text"]').should(
+              'have.text',
+              `Balance: ${initialBalance + BALANCE_INCREMENT}`
+            )
 
-              // chain state check
-              cy.then(() => hardhat.getBalance(hardhat.wallet.address, USDC_MAINNET))
-                .then((balance) => Number(balance.toFixed(1)))
-                .should('eq', initialBalance + BALANCE_INCREMENT)
-            })
+            // chain state check
+            cy.then(() => hardhat.getBalance(hardhat.wallet.address, USDC_MAINNET))
+              .then((balance) => Number(balance.toFixed(1)))
+              .should('eq', initialBalance + BALANCE_INCREMENT)
           })
       })
     })

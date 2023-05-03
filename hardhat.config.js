@@ -21,11 +21,6 @@ module.exports = {
       accounts: {
         count: 1,
       },
-      // Disable auto-mining so that e2e tests can explicitly test pending states.
-      mining: {
-        auto: false,
-        interval: 0,
-      },
     },
   },
 }
