@@ -48,11 +48,6 @@ jobs:
           echo "TIME_S=$(date +"%s")" >> $GITHUB_ENV
           echo "BETA_REV=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
 
-      - name: '#️⃣ update release hash'
-        run: |
-          git rev-parse HEAD > apps/mobile/.releasehash
-          git commit -m "ci(mobile): update release hash for CODEOWNERS enforcement"
-
       - uses: peter-evans/create-pull-request@ea54357f43e3d1cf1125471d0814f4d02cc0d364
         id: cpr
         with:
