@@ -1,25 +1,28 @@
 import { MediaType } from 'graphql/data/__generated__/types-and-hooks'
 import { GenieAsset } from 'nft/types'
-import styled from 'styled-components/macro'
+import styled, { css } from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
-const StyledImage = styled.img`
+const MediaStyle = css`
   object-fit: contain;
   height: 100%;
   width: 100%;
+  aspect-ratio: 1;
+`
+
+const StyledImage = styled.img`
+  ${MediaStyle}
 `
 
 const StyledVideo = styled.video`
-  object-fit: contain;
-  height: 100%;
-  width: 100%;
+  ${MediaStyle}
 `
 
 const StyledEmbed = styled.div`
   position: relative;
-  height: 100%;
-  width: 100%;
   overflow: hidden;
+  width: 100%;
+  padding-top: 100%;
 `
 
 const StyledIFrame = styled.iframe`
@@ -28,8 +31,8 @@ const StyledIFrame = styled.iframe`
   left: 0;
   right: 0;
   bottom: 0;
-  height: 100%;
   width: 100%;
+  height: 100%;
 `
 
 const AudioContainer = styled.div`

@@ -16,6 +16,7 @@ const LandingPageContainer = styled.div`
   align-items: center;
   padding: 22px 20px 0px;
   gap: 26px;
+  width: 100%;
 
   @media screen and (min-width: ${BREAKPOINTS.sm}px) {
     gap: 64px;
@@ -31,6 +32,7 @@ const LandingPageContainer = styled.div`
     padding-top: 0px;
     padding-bottom: ${({ theme }) => `${theme.navHeight}px`};
     gap: 80px;
+    justify-content: center;
   }
 `
 
