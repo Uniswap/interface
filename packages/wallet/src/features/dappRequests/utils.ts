@@ -1,3 +1,5 @@
+import { logger } from 'wallet/src/features/logger/logger'
+
 const DEFAULT_WINDOW_WIDTH = 2000
 export const REQUESTS_WINDOW_URL = 'requestsWindow.html'
 type WindowParams = {
@@ -45,4 +47,17 @@ export function openRequestsWindowIfNeeded() {
     if (requestsWindow) return
     openRequestsWindow()
   })
+}
+
+export function extractBaseUrl(url?: string): string | undefined {
+  if (!url) return undefined
+  try {
+    const parsedUrl = new URL(url)
+    return `${parsedUrl.protocol}//${parsedUrl.hostname}${
+      parsedUrl.port ? ':' + parsedUrl.port : ''
+    }`
+  } catch (error) {
+    logger.error('utils', 'extractBaseUrl', 'Error parsing url', error)
+    return undefined
+  }
 }

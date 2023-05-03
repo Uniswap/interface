@@ -112,5 +112,7 @@ export interface ChangeChainResponse extends BaseDappResponse {
 
 export interface AccountResponse extends BaseDappResponse {
   type: DappResponseType.AccountResponse
-  accountAddress: string
+  accountAddress: string // account address to be used by the dapp
+  chainId: string // current chain id (should be hexadecimal string)
+  providerUrl: string // provider url of the chain for the current chain
 }

@@ -2,7 +2,10 @@ import { Provider, TransactionResponse } from '@ethersproject/providers'
 import { createAction } from '@reduxjs/toolkit'
 import { ethers, providers } from 'ethers'
 import { call, put, select, take } from 'typed-redux-saga'
-import { getChainIdFromString } from 'wallet/src/constants/chains'
+import { ChainId, getChainIdFromString } from 'wallet/src/constants/chains'
+import { selectChainByDappAndWallet } from 'wallet/src/features/dapp/selectors'
+import { saveDappChain } from 'wallet/src/features/dapp/slice'
+import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
 import { appSelect, RootState } from '../../state'
 import { sendMessageToSpecificTab } from '../../utils/messageUtils'
 import { hexlifyTransaction } from '../../utils/transaction'
@@ -22,7 +25,7 @@ import {
   SignTypedDataResponse,
 } from './dappRequestTypes'
 import { dappRequestActions, DappRequestStoreItem } from './slice'
-import { openRequestsWindowIfNeeded } from './utils'
+import { extractBaseUrl, openRequestsWindowIfNeeded } from './utils'
 
 const DEFAULT_IMAGE_PATH = 'assets/default.png'
 const SUCCESS_IMAGE_PATH = 'assets/success.png'
@@ -110,16 +113,33 @@ export function* sendTransaction(
   return transactionResponse
 }
 
+/**
+ * Gets the active account, and returns the account address, chainId, and providerUrl.
+ * Chain id + provider url are from the last connected chain for the dApp and wallet. If this has not been set, it will be the default chain and provider.
+ * @param requestId
+ * @param senderTabId
+ */
 export function* getAccount(requestId: string, senderTabId: number) {
   const accounts = yield* select<(state: RootState) => Record<string, Account>>(
     (state: RootState) => state.wallet.accounts
   )
   const account = yield* call(getCurrentAccount, accounts)
+  const tab = yield* call(chrome.tabs.get, senderTabId)
+  const dappUrl = extractBaseUrl(tab.url)
+  let chainForWalletAndDapp = ChainId.Mainnet // Default to mainnet
+  if (dappUrl) {
+    chainForWalletAndDapp = yield* select(
+      selectChainByDappAndWallet(dappUrl, account.address)
+    )
+  }
+  const provider = yield* call(getProvider, chainForWalletAndDapp)
 
   const response: AccountResponse = {
     type: DappResponseType.AccountResponse,
     requestId,
     accountAddress: account.address,
+    chainId: chainForWalletAndDapp.toString(16),
+    providerUrl: provider.connection.url,
   }
   yield* call(sendMessageToSpecificTab, response, senderTabId)
 }
@@ -252,6 +272,8 @@ export function* connect(
   const provider = yield* call(getProvider, chainIdEnum)
   yield* put(setCurrentChain({ chainId: chainIdEnum }))
 
+  yield* call(saveLastChainForDapp, senderTabId, chainIdEnum)
+
   // prepare dapp response
   const response: ConnectResponse = {
     type: DappResponseType.ConnectResponse,
@@ -271,16 +293,15 @@ export function* changeChain(
     throw new Error(`Invalid chainId: ${chainId}`)
   }
 
-  // get provider
   const provider = yield* call(getProvider, chainIdEnum)
-  yield* put(setCurrentChain({ chainId: chainIdEnum }))
 
-  const newChainId = yield* call(getCurrentChainId)
+  yield* call(saveLastChainForDapp, senderTabId, chainIdEnum)
+
   const response: ChangeChainResponse = {
     type: DappResponseType.ChainChangeResponse,
     requestId,
     providerUrl: provider.connection.url,
-    chainId: newChainId.toString(),
+    chainId: chainId.toString(),
   }
 
   yield* call(sendMessageToSpecificTab, response, senderTabId)
@@ -345,4 +366,21 @@ export function* handleSignTypedData(
   }
 
   yield* call(sendMessageToSpecificTab, response, senderTabId)
+}
+
+function* saveLastChainForDapp(senderTabId: number, chainId: ChainId) {
+  const tab = yield* call(chrome.tabs.get, senderTabId)
+  const dappUrl = extractBaseUrl(tab.url)
+  const activeWalletAddress = yield* appSelect(selectActiveAccountAddress)
+  if (!activeWalletAddress) throw new Error('No active wallet address')
+
+  if (dappUrl) {
+    yield* put(
+      saveDappChain({
+        chainId,
+        dappUrl,
+        walletAddress: activeWalletAddress,
+      })
+    )
+  }
 }

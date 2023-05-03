@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux'
 import { persistReducer, persistStore } from 'redux-persist'
+import { dappReducer } from 'wallet/src/features/dapp/slice'
 import { monitoredSagaReducers } from 'wallet/src/state/saga'
 import { chainsReducer } from '../features/chains/slice'
 import { dappRequestReducer } from '../features/dappRequests/slice'
@@ -9,9 +10,10 @@ import { PersistedStorage } from '../utils/persistedStorage'
 
 const reducers = {
   chains: chainsReducer,
+  dapp: dappReducer,
+  dappRequests: dappRequestReducer,
   providers: providersReducer,
   saga: monitoredSagaReducers,
-  dappRequests: dappRequestReducer,
   wallet: walletReducer,
 } as const
 

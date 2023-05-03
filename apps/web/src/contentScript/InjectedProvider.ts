@@ -5,7 +5,6 @@ import { ethErrors } from 'eth-rpc-errors'
 import { ethers } from 'ethers'
 import EventEmitter from 'eventemitter3'
 import { v4 as uuidv4 } from 'uuid'
-import { ChainId } from 'wallet/src/constants/chains'
 import {
   AccountResponse,
   BaseDappRequest,
@@ -130,7 +129,6 @@ export class InjectedProvider extends EventEmitter {
     this.isUniswapWallet = true
     this.publicKey = null
 
-    this.handleConnect(ChainId.Mainnet.toString())
     this.isMetaMask = true
   }
 
@@ -370,14 +368,18 @@ export class InjectedProvider extends EventEmitter {
         type: DappRequestType.GetAccount,
         requestId: uuidv4(),
       }
-      const { accountAddress } = await sendRequestAsync<AccountResponse>(
-        getAccountRequest,
-        DappResponseType.AccountResponse
-      )
+      const { accountAddress, chainId, providerUrl } =
+        await sendRequestAsync<AccountResponse>(
+          getAccountRequest,
+          DappResponseType.AccountResponse
+        )
       this.publicKey = accountAddress
 
       // TODO: Remove this once we have a better way to handle the connection state.
       this.setState({ ...this.state, isConnected: true })
+      this.chainId = chainId
+      this.provider = new ethers.providers.JsonRpcProvider(providerUrl)
+      this.emit('connect', { chainId } as ProviderConnectInfo)
     }
     return [this.publicKey]
   }
