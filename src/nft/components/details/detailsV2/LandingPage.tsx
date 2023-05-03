@@ -5,6 +5,8 @@ import { CollectionInfoForAsset, GenieAsset } from 'nft/types'
 import styled from 'styled-components/macro'
 import { BREAKPOINTS, ThemedText } from 'theme'
 
+import { MediaRenderer } from './MediaRenderer'
+
 const MAX_WIDTH = 560
 
 const LandingPageContainer = styled.div`
@@ -40,9 +42,26 @@ const InfoContainer = styled(ColumnCenter)`
   }
 `
 
+const StyledHeadlineText = styled(ThemedText.HeadlineSmall)``
+const StyledSubheaderText = styled(ThemedText.SubHeaderSmall)`
+  line-height: 20px;
+`
+
 const InfoDetailsContainer = styled(Column)`
   gap: 4px;
   align-items: center;
+
+  @media screen and (min-width: ${BREAKPOINTS.sm}px) {
+    ${StyledHeadlineText} {
+      line-height: 44px;
+      font-size: 36px;
+    }
+
+    ${StyledSubheaderText} {
+      line-height: 24px;
+      font-size: 16px;
+    }
+  }
 `
 
 const MediaContainer = styled.div`
@@ -55,28 +74,6 @@ const MediaContainer = styled.div`
   }
 `
 
-const StyledMedia = styled.img`
-  object-fit: contain;
-  height: 100%;
-  width: 100%;
-`
-
-const StyledSubheaderText = styled(ThemedText.SubHeaderSmall)`
-  line-height: 20px;
-
-  @media screen and (min-width: ${BREAKPOINTS.sm}px) {
-    line-height: 24px !important;
-    font-size: 16px !important;
-  }
-`
-
-const StyledHeadlineText = styled(ThemedText.HeadlineSmall)`
-  @media screen and (min-width: ${BREAKPOINTS.sm}px) {
-    line-height: 44px !important;
-    font-size: 36px !important;
-  }
-`
-
 interface LandingPageProps {
   asset: GenieAsset
   collection: CollectionInfoForAsset
@@ -86,7 +83,7 @@ export const LandingPage = ({ asset, collection }: LandingPageProps) => {
   return (
     <LandingPageContainer>
       <MediaContainer>
-        <StyledMedia src={asset.imageUrl} />
+        <MediaRenderer asset={asset} />
       </MediaContainer>
       <InfoContainer>
         <InfoDetailsContainer>
