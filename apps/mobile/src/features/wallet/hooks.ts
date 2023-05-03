@@ -16,7 +16,7 @@ import {
   selectViewOnlyAccounts,
 } from 'src/features/wallet/selectors'
 import { getValidAddress, sanitizeAddressText, shortenAddress } from 'src/utils/addresses'
-import { trimToLength } from 'src/utils/string'
+import { trimToLength } from 'wallet/src/utils/string'
 
 const ENS_TRIM_LENGTH = 8
 

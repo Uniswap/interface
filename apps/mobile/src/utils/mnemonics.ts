@@ -1,7 +1,7 @@
 import { utils, wordlists } from 'ethers'
 import { TFunction } from 'i18next'
 import { MNEMONIC_LENGTH_MAX, MNEMONIC_LENGTH_MIN } from 'src/constants/accounts'
-import { normalizeTextInput } from 'src/utils/string'
+import { normalizeTextInput } from 'wallet/src/utils/string'
 
 export enum MnemonicValidationError {
   InvalidWord = 'InvalidWord',

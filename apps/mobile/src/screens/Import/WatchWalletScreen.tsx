@@ -21,8 +21,8 @@ import { useIsSmartContractAddress } from 'src/features/transactions/transfer/ho
 import { useAccounts } from 'src/features/wallet/hooks'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { getValidAddress } from 'src/utils/addresses'
-import { normalizeTextInput } from 'src/utils/string'
 import { useAddBackButton } from 'src/utils/useAddBackButton'
+import { normalizeTextInput } from 'wallet/src/utils/string'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.WatchWallet>
 

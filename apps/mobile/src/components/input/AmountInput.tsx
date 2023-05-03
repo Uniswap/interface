@@ -1,7 +1,7 @@
 import React, { forwardRef, useCallback, useMemo } from 'react'
 import { KeyboardTypeOptions, TextInput as NativeTextInput } from 'react-native'
 import { TextInput, TextInputProps } from 'src/components/input/TextInput'
-import { escapeRegExp } from 'src/utils/string'
+import { escapeRegExp } from 'wallet/src/utils/string'
 
 const inputRegex = RegExp('^\\d*(?:\\\\[.])?\\d*$') // match escaped "." characters via in a non-capturing group
 
