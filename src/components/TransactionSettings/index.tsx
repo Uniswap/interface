@@ -199,6 +199,7 @@ export default function TransactionSettings({ placeholderSlippage }: Transaction
                 </SlippageEmojiContainer>
               ) : null}
               <Input
+                data-testid="slippage-input"
                 placeholder={placeholderSlippage.toFixed(2)}
                 value={
                   slippageInput.length > 0
@@ -250,6 +251,7 @@ export default function TransactionSettings({ placeholderSlippage }: Transaction
           <RowFixed>
             <OptionCustom style={{ width: '80px' }} warning={!!deadlineError} tabIndex={-1}>
               <Input
+                data-testid="deadline-input"
                 placeholder={(DEFAULT_DEADLINE_FROM_NOW / 60).toString()}
                 value={
                   deadlineInput.length > 0
