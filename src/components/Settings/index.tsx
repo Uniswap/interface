@@ -85,7 +85,7 @@ const Divider = styled.div`
   background-color: ${({ theme }) => theme.backgroundOutline};
 `
 
-export default function SettingsTab({ placeholderSlippage }: { placeholderSlippage: Percent }) {
+export default function SettingsTab({ autoSlippage }: { autoSlippage: Percent }) {
   const { chainId } = useWeb3React()
   const showDeadlineSettings = Boolean(chainId && !L2_CHAIN_IDS.includes(chainId))
 
@@ -110,7 +110,7 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
           <AutoColumn gap="16px" style={{ padding: '1rem' }}>
             {isSupportedChainId(chainId) && <RouterPreferenceSettings />}
             <Divider />
-            <MaxSlippageSettings placeholder={placeholderSlippage} />
+            <MaxSlippageSettings autoSlippage={autoSlippage} />
             {showDeadlineSettings && (
               <>
                 <Divider />

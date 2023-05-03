@@ -37,13 +37,16 @@ const NUMBER_WITH_MAX_TWO_DECIMAL_PLACES = /^(?:\d*\.\d{0,2}|\d+)$/
 const MINIMUM_RECOMMENDED_SLIPPAGE = new Percent(5, 10_000)
 const MAXIMUM_RECOMMENDED_SLIPPAGE = new Percent(1, 100)
 
-export default function MaxSlippageSettings({ placeholder }: { placeholder: Percent }) {
+export default function MaxSlippageSettings({ autoSlippage }: { autoSlippage: Percent }) {
   const [userSlippageTolerance, setUserSlippageTolerance] = useUserSlippageTolerance()
 
-  // If user has previously entered a custom deadline, we want to show that value in the input field
-  // instead of a placeholder by defualt
+  // If user has previously entered a custom slippage, we want to show that value in the input field
+  // instead of a placeholder.
   const [slippageInput, setSlippageInput] = useState(
-    userSlippageTolerance !== SlippageTolerance.Auto && !userSlippageTolerance.equalTo(placeholder)
+    // In order to trigger `custom` mode, we need to set `userSlippageTolerance` to a value that is not `auto`.
+    // To do so, we use `autoSlippage` value. However, since users are likely to change that value,
+    // we render it as a placeholder instead of a value.
+    userSlippageTolerance !== SlippageTolerance.Auto && !userSlippageTolerance.equalTo(autoSlippage)
       ? userSlippageTolerance.toFixed(2)
       : ''
   )
@@ -126,8 +129,8 @@ export default function MaxSlippageSettings({ placeholder }: { placeholder: Perc
           </Option>
           <Option
             onClick={() => {
-              // Use placeholder value as default custom slippage
-              setUserSlippageTolerance(placeholder)
+              // When switching to custom slippage, use `auto` value as a default.
+              setUserSlippageTolerance(autoSlippage)
             }}
             isActive={userSlippageTolerance !== SlippageTolerance.Auto}
           >
@@ -138,7 +141,7 @@ export default function MaxSlippageSettings({ placeholder }: { placeholder: Perc
         </Switch>
         <InputContainer gap="md" error={!!slippageError}>
           <Input
-            placeholder={placeholder.toFixed(2)}
+            placeholder={autoSlippage.toFixed(2)}
             value={slippageInput}
             onChange={(e) => parseSlippageInput(e.target.value)}
             onBlur={() => {

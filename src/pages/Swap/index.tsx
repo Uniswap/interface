@@ -199,6 +199,7 @@ export default function Swap({ className }: { className?: string }) {
   const {
     trade: { state: tradeState, trade },
     allowedSlippage,
+    autoSlippage,
     currencyBalances,
     parsedAmount,
     currencies,
@@ -498,7 +499,7 @@ export default function Swap({ className }: { className?: string }) {
             />
           ) : (
             <SwapWrapper chainId={chainId} className={className} id="swap-page">
-              <SwapHeader allowedSlippage={allowedSlippage} />
+              <SwapHeader autoSlippage={autoSlippage} />
               <ConfirmSwapModal
                 isOpen={showConfirm}
                 trade={trade}
