@@ -78,16 +78,58 @@ describe('Swap', () => {
       cy.get('#swap-currency-output .token-amount-input').clear().type('0.0').should('have.value', '0.0')
     })
 
-    it('should have the correct default input/output and token selection should work', () => {
-      cy.visit('/swap')
-      verifyToken('input', 'ETH')
-      verifyToken('output', null)
+    it('should render an error when a transaction fails due to a passed deadline', () => {
+      const DEADLINE_MINUTES = 1
+      const TEN_MINUTES_MS = 1000 * 60 * DEADLINE_MINUTES * 10
+      cy.visit('/swap', { ethereum: 'hardhat' })
+        .hardhat()
+        .then((hardhat) => {
+          cy.then(() => hardhat.setAutomine(false))
+            .then(() => hardhat.getBalance(hardhat.wallet.address, USDC_MAINNET))
+            .then((balance) => Number(balance.toFixed(1)))
+            .then((initialBalance) => {
+              // Input swap info.
+              cy.get('#swap-currency-output .open-currency-select-button').click()
+              cy.contains('USDC').click()
+              cy.get('#swap-currency-output .token-amount-input').clear().type('1')
+              cy.get('#swap-currency-input .token-amount-input').should('not.equal', '')
 
-      selectToken('WETH', 'output')
-      cy.get(getTestSelector('swap-currency-button')).first().click()
+              // Set deadline to minimum. (1 minute)
+              cy.get(getTestSelector('open-settings-dialog-button')).click()
+              cy.get(getTestSelector('deadline-input')).clear().type(DEADLINE_MINUTES.toString())
+              cy.get('body').click('topRight')
+              cy.get(getTestSelector('deadline-input')).should('not.exist')
 
-      verifyToken('input', 'WETH')
-      verifyToken('output', 'ETH')
+              cy.get('#swap-button').click()
+              cy.get('#confirm-swap-or-send').click()
+
+              // Dismiss the modal that appears when a transaction is broadcast to the network.
+              cy.get(getTestSelector('dismiss-tx-confirmation')).click()
+
+              // The UI should show the transaction as pending.
+              cy.contains('1 Pending').should('exist')
+
+              // Mine a block past the deadline.
+              cy.then(() => hardhat.mine(1, TEN_MINUTES_MS)).then(() => {
+                // The UI should no longer show the transaction as pending.
+                cy.contains('1 Pending').should('not.exist')
+
+                // Check that the user is informed of the failure
+                cy.contains('Swap failed').should('exist')
+
+                // Check that the balance is unchanged in the UI
+                cy.get('#swap-currency-output [data-testid="balance-text"]').should(
+                  'have.text',
+                  `Balance: ${initialBalance}`
+                )
+
+                // Check that the balance is unchanged on chain
+                cy.then(() => hardhat.getBalance(hardhat.wallet.address, USDC_MAINNET))
+                  .then((balance) => Number(balance.toFixed(1)))
+                  .should('eq', initialBalance)
+              })
+            })
+        })
     })
 
     it('should have the correct default input from URL params ', () => {
