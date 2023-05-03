@@ -2,6 +2,7 @@
 .publishignore
 .vscode
 .yarn
+
 CODEOWNERS
 
 apps/mobile/fastlane
@@ -10,6 +11,7 @@ apps/mobile/scripts
 apps/mobile/.env*
 apps/mobile/.storybook
 apps/mobile/codecov.yml
+apps/mobile/.releasehash
 
 apps/web
 packages

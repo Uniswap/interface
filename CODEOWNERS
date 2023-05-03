@@ -1,0 +1,10 @@
+* @Uniswap/wallet @i1skn
+
+.github/actions   @thomasthachil @adjkant @justindomingue @tarikbellamine
+.github/workflows @thomasthachil @adjkant @justindomingue @tarikbellamine
+
+apps/mobile @Uniswap/mobile @i1skn
+apps/mobile/.releasehash @Uniswap/mobile-release-admins
+apps/web @Uniswap/extension
+
+packages/ui @danielcolinjames @justindomingue @tarikbellamine
