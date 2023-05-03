@@ -1,5 +1,3 @@
-import { PrecacheEntry } from 'workbox-precaching/_types'
-
 import { groupEntries } from './utils'
 
 describe('groupEntries', () => {

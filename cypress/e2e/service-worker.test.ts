@@ -8,8 +8,8 @@ describe('Service Worker', () => {
       if (!isValid) {
         throw new Error(
           '\n' +
-          'Service Worker tests must be run on a production-like build\n' +
-          'To test, build with `yarn build:e2e` and serve with `yarn serve`'
+            'Service Worker tests must be run on a production-like build\n' +
+            'To test, build with `yarn build:e2e` and serve with `yarn serve`'
         )
       }
     })
