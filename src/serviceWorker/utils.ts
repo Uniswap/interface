@@ -17,10 +17,12 @@ export function isDevelopment() {
 }
 
 type GroupedEntries = { mediaURLs: string[]; precacheEntries: PrecacheEntry[] }
-export const groupEntries = (entries: PrecacheEntry[]): GroupedEntries => {
+export const groupEntries = (entries: (string | PrecacheEntry)[]): GroupedEntries => {
   return entries.reduce<GroupedEntries>(
     ({ mediaURLs, precacheEntries }, entry) => {
-      if (entry.url.includes('/media/')) {
+      if (typeof entry === 'string') {
+        return { precacheEntries, mediaURLs: [...mediaURLs, entry] }
+      } else if (entry.url.includes('/media/')) {
         return { precacheEntries, mediaURLs: [...mediaURLs, entry.url] }
       } else {
         return { precacheEntries: [...precacheEntries, entry], mediaURLs }
