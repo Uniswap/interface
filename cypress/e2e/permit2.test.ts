@@ -117,8 +117,8 @@ describe('Permit2', () => {
   it('can swap after handling user rejection of approvals and signatures', () => {
     const USER_REJECTION = { code: 4001 }
     cy.hardhat().then((hardhat) => {
-      const tokenApprovalstub = cy.stub(hardhat.wallet, 'sendTransaction')
-      tokenApprovalstub.rejects(USER_REJECTION) // reject token approval
+      const tokenApprovalStub = cy.stub(hardhat.wallet, 'sendTransaction')
+      tokenApprovalStub.rejects(USER_REJECTION) // reject token approval
 
       cy.get('[data-testid="swap-approve-button"]').click()
       cy.get('[data-testid="swap-approve-button"]')
@@ -127,7 +127,7 @@ describe('Permit2', () => {
           const permitApprovalStub = cy.stub(hardhat.provider, 'send')
           permitApprovalStub.withArgs('eth_signTypedData_v4').rejects(USER_REJECTION) // reject permit approval
 
-          tokenApprovalstub.restore() // allow token approval
+          tokenApprovalStub.restore() // allow token approval
 
           cy.get('[data-testid="swap-approve-button"]').click()
           cy.get('[data-testid="swap-approve-button"]')
