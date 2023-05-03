@@ -40,16 +40,17 @@ const MAXIMUM_RECOMMENDED_SLIPPAGE = new Percent(1, 100)
 export default function MaxSlippageSettings({ autoSlippage }: { autoSlippage: Percent }) {
   const [userSlippageTolerance, setUserSlippageTolerance] = useUserSlippageTolerance()
 
-  // If user has previously entered a custom slippage, we want to show that value in the input field
-  // instead of a placeholder.
-  const [slippageInput, setSlippageInput] = useState(
-    // In order to trigger `custom` mode, we need to set `userSlippageTolerance` to a value that is not `auto`.
-    // To do so, we use `autoSlippage` value. However, since users are likely to change that value,
-    // we render it as a placeholder instead of a value.
+  // In order to trigger `custom` mode, we need to set `userSlippageTolerance` to a value that is not `auto`.
+  // To do so, we use `autoSlippage` value. However, since users are likely to change that value,
+  // we render it as a placeholder instead of a value.
+  const defaultSlippageInputValue =
     userSlippageTolerance !== SlippageTolerance.Auto && !userSlippageTolerance.equalTo(autoSlippage)
       ? userSlippageTolerance.toFixed(2)
       : ''
-  )
+
+  // If user has previously entered a custom slippage, we want to show that value in the input field
+  // instead of a placeholder.
+  const [slippageInput, setSlippageInput] = useState(defaultSlippageInputValue)
   const [slippageError, setSlippageError] = useState<SlippageError | false>(false)
 
   const parseSlippageInput = (value: string) => {
@@ -141,12 +142,13 @@ export default function MaxSlippageSettings({ autoSlippage }: { autoSlippage: Pe
         </Switch>
         <InputContainer gap="md" error={!!slippageError}>
           <Input
+            data-testid="slippage-input"
             placeholder={autoSlippage.toFixed(2)}
             value={slippageInput}
             onChange={(e) => parseSlippageInput(e.target.value)}
             onBlur={() => {
-              // When the input field is blurred, reset the input field to the current slippage tolerance
-              setSlippageInput(userSlippageTolerance !== SlippageTolerance.Auto ? userSlippageTolerance.toFixed(2) : '')
+              // When the input field is blurred, reset the input field to the default value
+              setSlippageInput(defaultSlippageInputValue)
               setSlippageError(false)
             }}
           />
