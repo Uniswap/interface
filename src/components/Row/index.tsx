@@ -3,7 +3,7 @@ import styled, { DefaultTheme } from 'styled-components/macro'
 
 type Gap = keyof DefaultTheme['grids']
 
-// TODO(WEB-XXXX):
+// TODO(WEB-3289):
 // Setting `width: 100%` by default prevents composability in complex flex layouts.
 // Same applies to `RowFixed` and its negative margins. This component needs to be
 // further investigated and improved to make UI work easier.
