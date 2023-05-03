@@ -11,7 +11,6 @@ import { BaseCard } from 'src/components/layout/BaseCard'
 import { TabProps, TAB_STYLES } from 'src/components/layout/TabHelpers'
 import { Loader } from 'src/components/loading'
 import { Text } from 'src/components/Text'
-import { EMPTY_ARRAY } from 'src/constants/misc'
 import { isNonPollingRequestInFlight } from 'src/data/utils'
 import { useTransactionListQuery } from 'src/data/__generated__/types-and-hooks'
 import { usePersistedError } from 'src/features/dataApi/utils'
@@ -34,6 +33,7 @@ import WrapSummaryItem from 'src/features/transactions/SummaryCards/SummaryItems
 import { TransactionDetails, TransactionType } from 'src/features/transactions/types'
 import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
 import { makeSelectAccountHideSpamTokens } from 'src/features/wallet/selectors'
+import { EMPTY_ARRAY } from 'wallet/src/constants/misc'
 
 type LoadingItem = {
   itemType: 'LOADING'

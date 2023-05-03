@@ -12,7 +12,6 @@ import { TabProps, TAB_VIEW_SCROLL_THROTTLE } from 'src/components/layout/TabHel
 import { Loader } from 'src/components/loading'
 import { HiddenTokensRow } from 'src/components/TokenBalanceList/HiddenTokensRow'
 import { TokenBalanceItem } from 'src/components/TokenBalanceList/TokenBalanceItem'
-import { EMPTY_ARRAY } from 'src/constants/misc'
 import { isError, isNonPollingRequestInFlight, isWarmLoadingStatus } from 'src/data/utils'
 import { useSortedPortfolioBalances } from 'src/features/dataApi/balances'
 import { PortfolioBalance } from 'src/features/dataApi/types'
@@ -23,6 +22,7 @@ import {
 import { Screens } from 'src/screens/Screens'
 import { dimensions } from 'src/styles/sizing'
 import { useSuspendUpdatesWhenBlured } from 'src/utils/hooks'
+import { EMPTY_ARRAY } from 'wallet/src/constants/misc'
 import { CurrencyId } from 'wallet/src/utils/currencyId'
 
 type TokenBalanceListProps = TabProps & {

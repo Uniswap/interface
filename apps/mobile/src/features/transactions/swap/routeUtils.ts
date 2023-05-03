@@ -2,10 +2,10 @@ import { MixedRouteSDK } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
 import { FeeAmount, Pool, Route as V3Route } from '@uniswap/v3-sdk'
-import { EMPTY_ARRAY } from 'src/constants/misc'
 import { DEFAULT_SLIPPAGE_TOLERANCE } from 'src/constants/transactions'
 import { PoolType, QuoteResult, V2PoolInRoute, V3PoolInRoute } from 'src/features/routing/types'
 import { Trade } from 'src/features/transactions/swap/useTrade'
+import { EMPTY_ARRAY } from 'wallet/src/constants/misc'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
 
 export function transformQuoteToTrade(

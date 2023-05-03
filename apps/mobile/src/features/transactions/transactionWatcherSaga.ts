@@ -3,7 +3,6 @@ import { PutEffect, TakeEffect } from 'redux-saga/effects'
 import { appSelect } from 'src/app/hooks'
 import { i18n } from 'src/app/i18n'
 import { getProvider } from 'src/app/walletContext'
-import { PollingInterval } from 'src/constants/misc'
 import { fetchFiatOnRampTransaction } from 'src/features/fiatOnRamp/api'
 import {
   pushNotification,
@@ -37,6 +36,7 @@ import { logger } from 'src/utils/logger'
 import { sleep } from 'src/utils/timing'
 import { call, delay, fork, put, race, take } from 'typed-redux-saga'
 import { ChainId } from 'wallet/src/constants/chains'
+import { PollingInterval } from 'wallet/src/constants/misc'
 import { ONE_SECOND_MS } from 'wallet/src/utils/time'
 
 const FLASHBOTS_POLLING_INTERVAL = ONE_SECOND_MS * 5

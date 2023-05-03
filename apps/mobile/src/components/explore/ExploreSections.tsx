@@ -12,7 +12,6 @@ import { Box, Flex, Inset } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { Loader } from 'src/components/loading'
 import { Text } from 'src/components/Text'
-import { EMPTY_ARRAY, PollingInterval } from 'src/constants/misc'
 import { WRAPPED_NATIVE_CURRENCY } from 'src/constants/tokens'
 import {
   Chain,
@@ -29,6 +28,7 @@ import { selectHasFavoriteTokens, selectHasWatchedWallets } from 'src/features/f
 import { selectTokensOrderBy } from 'src/features/wallet/selectors'
 import { usePollOnFocusOnly } from 'src/utils/hooks'
 import { ChainId } from 'wallet/src/constants/chains'
+import { EMPTY_ARRAY, PollingInterval } from 'wallet/src/constants/misc'
 import { areAddressesEqual } from 'wallet/src/utils/addresses'
 import { fromGraphQLChain } from 'wallet/src/utils/chainId'
 import { buildCurrencyId, buildNativeCurrencyId } from 'wallet/src/utils/currencyId'

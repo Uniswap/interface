@@ -1,10 +1,10 @@
 import { RootState } from 'src/app/rootReducer'
-import { EMPTY_ARRAY } from 'src/constants/misc'
 import {
   WalletConnectPendingSession,
   WalletConnectRequest,
   WalletConnectSession,
 } from 'src/features/walletConnect/walletConnectSlice'
+import { EMPTY_ARRAY } from 'wallet/src/constants/misc'
 
 export const selectSessions =
   (address: NullUndefined<string>) =>

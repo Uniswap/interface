@@ -7,7 +7,6 @@ import { CheckmarkCircle } from 'src/components/icons/CheckmarkCircle'
 import { Box } from 'src/components/layout/Box'
 import { SpinningLoader } from 'src/components/loading/SpinningLoader'
 import { Text } from 'src/components/Text'
-import { EMPTY_ARRAY } from 'src/constants/misc'
 import { useSelectAddressHasNotifications } from 'src/features/notifications/hooks'
 import { selectActiveAccountNotifications } from 'src/features/notifications/selectors'
 import { AppNotificationType } from 'src/features/notifications/types'
@@ -15,6 +14,7 @@ import { useSortedPendingTransactions } from 'src/features/transactions/hooks'
 import { TransactionStatus } from 'src/features/transactions/types'
 import { selectActiveAccountAddress } from 'src/features/wallet/selectors'
 import { theme as FixedTheme } from 'src/styles/theme'
+import { EMPTY_ARRAY } from 'wallet/src/constants/misc'
 
 const PENDING_TX_TIME_LIMIT = 60_000 * 5 // 5 mins
 const LOADING_SPINNER_SIZE = FixedTheme.iconSizes.icon20

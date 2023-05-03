@@ -1,7 +1,6 @@
 import { expectSaga } from 'redux-saga-test-plan'
 import { call, delay } from 'redux-saga/effects'
 import { getProvider, getProviderManager } from 'src/app/walletContext'
-import { PollingInterval } from 'src/constants/misc'
 import { fetchFiatOnRampTransaction } from 'src/features/fiatOnRamp/api'
 import { waitForProvidersInitialized } from 'src/features/providers/providerSaga'
 import { attemptCancelTransaction } from 'src/features/transactions/cancelTransaction'
@@ -35,6 +34,7 @@ import {
 } from 'src/test/fixtures'
 import { sleep } from 'src/utils/timing'
 import { ChainId } from 'wallet/src/constants/chains'
+import { PollingInterval } from 'wallet/src/constants/misc'
 
 describe(transactionWatcher, () => {
   it('Triggers watchers successfully', () => {

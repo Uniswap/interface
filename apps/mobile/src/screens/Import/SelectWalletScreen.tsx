@@ -8,7 +8,6 @@ import { Button } from 'src/components/buttons/Button'
 import { Box, Flex } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { Loader } from 'src/components/loading'
-import { EMPTY_ARRAY } from 'src/constants/misc'
 import { useSelectWalletScreenQuery } from 'src/data/__generated__/types-and-hooks'
 import { IMPORT_WALLET_AMOUNT } from 'src/features/import/importAccountSaga'
 import WalletPreviewCard from 'src/features/import/WalletPreviewCard'
@@ -25,6 +24,7 @@ import {
 import { activateAccount } from 'src/features/wallet/walletSlice'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { useTimeout } from 'src/utils/timing'
+import { EMPTY_ARRAY } from 'wallet/src/constants/misc'
 import { ONE_SECOND_MS } from 'wallet/src/utils/time'
 
 const FORCED_LOADING_DURATION = 3 * ONE_SECOND_MS // 3s

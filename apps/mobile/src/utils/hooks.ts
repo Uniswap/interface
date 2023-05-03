@@ -1,6 +1,6 @@
 import { useFocusEffect, useIsFocused } from '@react-navigation/core'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { PollingInterval } from 'src/constants/misc'
+import { PollingInterval } from 'wallet/src/constants/misc'
 
 // modified from https://usehooks.com/usePrevious/
 export function usePrevious<T>(value: T): T | undefined {

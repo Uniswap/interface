@@ -20,7 +20,6 @@ import { Loader } from 'src/components/loading'
 import { Trace } from 'src/components/telemetry/Trace'
 import { Text } from 'src/components/Text'
 import { LongText } from 'src/components/text/LongText'
-import { PollingInterval } from 'src/constants/misc'
 import {
   NftActivityType,
   NftItemScreenQuery,
@@ -47,6 +46,7 @@ import {
   passesContrast,
   useNearestThemeColorFromImageUri,
 } from 'src/utils/colors'
+import { PollingInterval } from 'wallet/src/constants/misc'
 import { areAddressesEqual } from 'wallet/src/utils/addresses'
 
 export function NFTItemScreen({

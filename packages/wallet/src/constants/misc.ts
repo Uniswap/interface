@@ -1,6 +1,6 @@
 import { ONE_MINUTE_MS, ONE_SECOND_MS } from 'wallet/src/utils/time'
 
-// Polling interval (in milliseconds)
+// Polling interval (in milliseconds) for RTK-Query
 export enum PollingInterval {
   Slow = 5 * ONE_MINUTE_MS,
   Normal = ONE_MINUTE_MS,

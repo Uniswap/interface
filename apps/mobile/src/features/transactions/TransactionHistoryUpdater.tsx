@@ -5,7 +5,6 @@ import React, { useEffect, useMemo } from 'react'
 import { View } from 'react-native'
 import { batch } from 'react-redux'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
-import { PollingInterval } from 'src/constants/misc'
 import { useRefetchQueries } from 'src/data/hooks'
 import {
   TransactionHistoryUpdaterQueryResult,
@@ -28,6 +27,7 @@ import {
   makeSelectAccountHideSpamTokens,
   selectActiveAccountAddress,
 } from 'src/features/wallet/selectors'
+import { PollingInterval } from 'wallet/src/constants/misc'
 import { ONE_SECOND_MS } from 'wallet/src/utils/time'
 
 /**

@@ -3,10 +3,10 @@ import { Flex } from 'src/components/layout'
 import { WarmLoadingShimmer } from 'src/components/loading/WarmLoadingShimmer'
 import { DecimalNumber } from 'src/components/text/DecimalNumber'
 import { RelativeChange } from 'src/components/text/RelativeChange'
-import { PollingInterval } from 'src/constants/misc'
 import { isWarmLoadingStatus } from 'src/data/utils'
 import { usePortfolioBalanceQuery } from 'src/data/__generated__/types-and-hooks'
 import { theme } from 'src/styles/theme'
+import { PollingInterval } from 'wallet/src/constants/misc'
 import { formatUSDPrice, NumberType } from 'wallet/src/utils/format'
 
 interface PortfolioBalanceProps {

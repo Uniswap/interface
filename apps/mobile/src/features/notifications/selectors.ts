@@ -1,8 +1,8 @@
 import { createSelector, Selector } from '@reduxjs/toolkit'
 import { RootState } from 'src/app/rootReducer'
-import { EMPTY_ARRAY } from 'src/constants/misc'
 import { AppNotification } from 'src/features/notifications/types'
 import { selectActiveAccountAddress } from 'src/features/wallet/selectors'
+import { EMPTY_ARRAY } from 'wallet/src/constants/misc'
 
 const selectNotificationQueue = (state: RootState): AppNotification[] =>
   state.notifications.notificationQueue

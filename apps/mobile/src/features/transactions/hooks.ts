@@ -6,7 +6,6 @@ import { LayoutChangeEvent } from 'react-native'
 import { useAppSelector } from 'src/app/hooks'
 import { SearchContext } from 'src/components/explore/search/SearchResultsSection'
 import { flowToModalName, TokenSelectorFlow } from 'src/components/TokenSelector/TokenSelector'
-import { EMPTY_ARRAY } from 'src/constants/misc'
 import { AssetType } from 'src/entities/assets'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
@@ -32,6 +31,7 @@ import {
 import { useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
 import { theme } from 'src/styles/theme'
 import { ChainId } from 'wallet/src/constants/chains'
+import { EMPTY_ARRAY } from 'wallet/src/constants/misc'
 import { currencyAddress } from 'wallet/src/utils/currencyId'
 
 export function usePendingTransactions(
