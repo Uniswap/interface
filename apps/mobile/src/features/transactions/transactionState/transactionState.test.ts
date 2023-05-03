@@ -1,6 +1,6 @@
 import { AnyAction } from '@reduxjs/toolkit'
-import { NATIVE_ADDRESS } from 'src/constants/addresses'
 import { AssetType, CurrencyAsset } from 'src/entities/assets'
+import { NATIVE_ADDRESS } from 'wallet/src/constants/addresses'
 import { ChainId } from 'wallet/src/constants/chains'
 import {
   CurrencyField,

@@ -1,6 +1,5 @@
 import { TradeType } from '@uniswap/sdk-core'
 import { expectSaga } from 'redux-saga-test-plan'
-import { NATIVE_ADDRESS } from 'src/constants/addresses'
 import { AssetType } from 'src/entities/assets'
 import { pushNotification } from 'src/features/notifications/notificationSlice'
 import { pushTransactionNotification } from 'src/features/notifications/notificationWatcher'
@@ -17,6 +16,7 @@ import {
   UnknownTransactionInfo,
 } from 'src/features/transactions/types'
 import { finalizedTxAction } from 'src/test/fixtures'
+import { NATIVE_ADDRESS } from 'wallet/src/constants/addresses'
 
 const txId = 'uuid-4'
 
