@@ -55,7 +55,7 @@ describe('Service Worker', () => {
       .get('#swap-page')
       // This is emitted after caching the entry file, which takes some time to load.
       .wait('@NotInstalled', { timeout: 60000 })
-      .window({ timeout: 20000 })
+      .window()
       .and((win) => {
         expect(win.navigator.serviceWorker.controller?.state).to.equal('activated')
       })
