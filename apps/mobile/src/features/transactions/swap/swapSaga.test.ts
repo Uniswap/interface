@@ -7,12 +7,12 @@ import { getProvider } from 'src/app/walletContext'
 import { SWAP_ROUTER_ADDRESSES } from 'src/constants/addresses'
 import { ChainId } from 'src/constants/chains'
 import { DAI } from 'src/constants/tokens'
-import { NativeCurrency } from 'src/features/tokens/NativeCurrency'
 import { sendTransaction } from 'src/features/transactions/sendTransaction'
 import { approveAndSwap, SwapParams } from 'src/features/transactions/swap/swapSaga'
 import { Trade } from 'src/features/transactions/swap/useTrade'
 import { ExactInputSwapTransactionInfo, TransactionType } from 'src/features/transactions/types'
 import { account, mockProvider } from 'src/test/fixtures'
+import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
 import { currencyId } from 'wallet/src/utils/currencyId'
 
 const methodParameters: MethodParameters = {

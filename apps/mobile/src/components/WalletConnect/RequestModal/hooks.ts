@@ -3,8 +3,8 @@ import { useMemo } from 'react'
 import { ChainId } from 'src/constants/chains'
 import { useOnChainNativeCurrencyBalance } from 'src/features/balances/api'
 import { TransactionGasFeeInfo } from 'src/features/gas/types'
-import { NativeCurrency } from 'src/features/tokens/NativeCurrency'
 import { hasSufficientFundsIncludingGas } from 'src/features/transactions/utils'
+import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
 
 export function useHasSufficientFunds({
   account,

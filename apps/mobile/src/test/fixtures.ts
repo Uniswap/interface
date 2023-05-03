@@ -18,7 +18,6 @@ import { AssetType } from 'src/entities/assets'
 import { ContractManager } from 'src/features/contracts/ContractManager'
 import { CurrencyInfo } from 'src/features/dataApi/types'
 import { AppNotificationType } from 'src/features/notifications/types'
-import { NativeCurrency } from 'src/features/tokens/NativeCurrency'
 import { finalizeTransaction } from 'src/features/transactions/slice'
 import {
   ApproveTransactionInfo,
@@ -31,6 +30,7 @@ import { Account, AccountType, BackupType } from 'src/features/wallet/accounts/t
 import { SignerManager } from 'src/features/wallet/signing/SignerManager'
 import { initialWalletState } from 'src/features/wallet/walletSlice'
 import { WalletConnectEvent } from 'src/features/walletConnect/saga'
+import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
 import { currencyId } from 'wallet/src/utils/currencyId'
 
 export const MainnetEth = NativeCurrency.onChain(ChainId.Mainnet)

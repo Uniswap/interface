@@ -9,7 +9,7 @@ import { CurrencyInfo, GqlResult } from 'src/features/dataApi/types'
 import { usePersistedError } from 'src/features/dataApi/utils'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
-import { NativeCurrency } from 'src/features/tokens/NativeCurrency'
+import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
 import { areAddressesEqual } from 'wallet/src/utils/addresses'
 import { currencyId } from 'wallet/src/utils/currencyId'
 

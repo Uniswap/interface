@@ -2,9 +2,9 @@ import {
   NATIVE_ADDRESS,
   NATIVE_ADDRESS_ALT,
 } from 'wallet/src/constants/addresses'
-import { NativeCurrency } from 'wallet/src/constants/NativeCurrency'
 import { DAI } from 'wallet/src/constants/tokens'
 import { ChainId } from 'wallet/src/features/chains/chains'
+import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
 import {
   areCurrencyIdsEqual,
   buildCurrencyId,
