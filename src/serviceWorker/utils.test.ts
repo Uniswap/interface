@@ -15,7 +15,7 @@ describe('groupEntries', () => {
     const result = groupEntries(resources)
 
     expect(result).toEqual({
-      onDemandCacheEntries: ['./static/whitepaper.pdf', './static/media/image.jpg'],
+      onDemandCacheEntries: ['./static/whitepaper.pdf', { url: './static/media/image.jpg', revision: 'ghi789' }],
       precacheEntries: [
         { url: './static/js/main.js', revision: 'abc123' },
         { url: './static/css/styles.css', revision: 'def456' },
@@ -49,7 +49,7 @@ describe('groupEntries', () => {
     const result = groupEntries(resources)
 
     expect(result).toEqual({
-      onDemandCacheEntries: ['./static/media/image.jpg', './static/media/image2.jpg'],
+      onDemandCacheEntries: resources,
       precacheEntries: [],
     })
   })

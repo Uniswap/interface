@@ -7,7 +7,7 @@ import { registerRoute, Route } from 'workbox-routing'
 import { CacheFirst } from 'workbox-strategies'
 
 import { DocumentRoute } from './document'
-import { groupEntries } from './utils'
+import { groupEntries, toURL } from './utils'
 
 declare const self: ServiceWorkerGlobalScope
 
@@ -23,9 +23,10 @@ registerRoute(new DocumentRoute())
 const { onDemandCacheEntries, precacheEntries } = groupEntries(self.__WB_MANIFEST)
 
 // Registers the onDemandCacheEntries' routes for on-demand caching.
+const onDemandCacheURLs = onDemandCacheEntries.map(toURL)
 registerRoute(
   new Route(
-    ({ url }) => onDemandCacheEntries.includes('.' + url.pathname),
+    ({ url }) => onDemandCacheURLs.includes('.' + url.pathname),
     new CacheFirst({
       cacheName: 'assets',
       plugins: [new ExpirationPlugin({ maxEntries: 16 })],

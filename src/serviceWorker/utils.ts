@@ -16,18 +16,16 @@ export function isDevelopment() {
   )
 }
 
-function toURL(entry: string | PrecacheEntry): string {
+export function toURL(entry: string | PrecacheEntry): string {
   return typeof entry === 'string' ? entry : entry.url
 }
 
-type GroupedEntries = { onDemandCacheEntries: string[]; precacheEntries: PrecacheEntry[] }
+type GroupedEntries = { onDemandCacheEntries: (string | PrecacheEntry)[]; precacheEntries: PrecacheEntry[] }
 export const groupEntries = (resources: (string | PrecacheEntry)[]): GroupedEntries => {
   return resources.reduce<GroupedEntries>(
     ({ onDemandCacheEntries, precacheEntries }, entry) => {
-      if (typeof entry === 'string') {
+      if (typeof entry === 'string' || entry.url.includes('/media/')) {
         return { precacheEntries, onDemandCacheEntries: [...onDemandCacheEntries, entry] }
-      } else if (entry.url.includes('/media/')) {
-        return { precacheEntries, onDemandCacheEntries: [...onDemandCacheEntries, toURL(entry)] }
       } else {
         return { precacheEntries: [...precacheEntries, entry], onDemandCacheEntries }
       }
