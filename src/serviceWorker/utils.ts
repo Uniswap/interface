@@ -20,16 +20,16 @@ export function toURL(entry: string | PrecacheEntry): string {
   return typeof entry === 'string' ? entry : entry.url
 }
 
-type GroupedEntries = { onDemandCacheEntries: (string | PrecacheEntry)[]; precacheEntries: PrecacheEntry[] }
-export const groupEntries = (resources: (string | PrecacheEntry)[]): GroupedEntries => {
-  return resources.reduce<GroupedEntries>(
-    ({ onDemandCacheEntries, precacheEntries }, entry) => {
+type GroupedEntries = { mediaURLs: string[]; precacheEntries: PrecacheEntry[] }
+export const groupEntries = (entries: (string | PrecacheEntry)[]): GroupedEntries => {
+  return entries.reduce<GroupedEntries>(
+    ({ mediaURLs, precacheEntries }, entry) => {
       if (typeof entry === 'string' || entry.url.includes('/media/')) {
-        return { precacheEntries, onDemandCacheEntries: [...onDemandCacheEntries, entry] }
+        return { precacheEntries, mediaURLs: [...mediaURLs, toURL(entry)] }
       } else {
-        return { precacheEntries: [...precacheEntries, entry], onDemandCacheEntries }
+        return { precacheEntries: [...precacheEntries, entry], mediaURLs }
       }
     },
-    { onDemandCacheEntries: [], precacheEntries: [] }
+    { mediaURLs: [], precacheEntries: [] }
   )
 }

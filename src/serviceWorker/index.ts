@@ -7,7 +7,7 @@ import { registerRoute, Route } from 'workbox-routing'
 import { CacheFirst } from 'workbox-strategies'
 
 import { DocumentRoute } from './document'
-import { groupEntries, toURL } from './utils'
+import { groupEntries } from './utils'
 
 declare const self: ServiceWorkerGlobalScope
 
@@ -20,13 +20,12 @@ registerRoute(new DocumentRoute())
 
 // Splits entries into assets, which are loaded on-demand; and entries, which are precached.
 // Effectively, this caches all media assets on-demand and pre-caches everything else.
-const { onDemandCacheEntries, precacheEntries } = groupEntries(self.__WB_MANIFEST)
+const { mediaURLs, precacheEntries } = groupEntries(self.__WB_MANIFEST)
 
-// Registers the onDemandCacheEntries' routes for on-demand caching.
-const onDemandCacheURLs = onDemandCacheEntries.map(toURL)
+// Registers the mediaURLs' routes for on-demand caching.
 registerRoute(
   new Route(
-    ({ url }) => onDemandCacheURLs.includes('.' + url.pathname),
+    ({ url }) => mediaURLs.includes('.' + url.pathname),
     new CacheFirst({
       cacheName: 'assets',
       plugins: [new ExpirationPlugin({ maxEntries: 16 })],
