@@ -53,7 +53,8 @@ describe('Service Worker', () => {
   it('installs a ServiceWorker', () => {
     cy.visit('/', { serviceWorker: true })
       .get('#swap-page')
-      .wait('@NotInstalled', { timeout: 20000 })
+      // This is emitted after caching the entry file, which takes some time to load.
+      .wait('@NotInstalled', { timeout: 60000 })
       .window({ timeout: 20000 })
       .and((win) => {
         expect(win.navigator.serviceWorker.controller?.state).to.equal('activated')
