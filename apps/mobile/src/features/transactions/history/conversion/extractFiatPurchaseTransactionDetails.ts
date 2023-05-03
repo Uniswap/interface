@@ -6,8 +6,8 @@ import {
   TransactionStatus,
   TransactionType,
 } from 'src/features/transactions/types'
-import { toSupportedChainId } from 'src/utils/chainId'
 import { logger } from 'src/utils/logger'
+import { toSupportedChainId } from 'wallet/src/utils/chainId'
 import { getNativeCurrencyAddressForChain } from 'wallet/src/utils/currencyId'
 
 const MOONPAY_ETH_CONTRACT_ADDRESS = '0x0000000000000000000000000000000000000000'

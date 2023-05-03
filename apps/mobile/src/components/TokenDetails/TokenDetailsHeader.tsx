@@ -7,7 +7,7 @@ import WarningIcon from 'src/components/tokens/WarningIcon'
 import { SafetyLevel, TokenDetailsScreenQuery } from 'src/data/__generated__/types-and-hooks'
 import { flex } from 'src/styles/flex'
 import { theme } from 'src/styles/theme'
-import { fromGraphQLChain } from 'src/utils/chainId'
+import { fromGraphQLChain } from 'wallet/src/utils/chainId'
 
 export interface TokenDetailsHeaderProps {
   data?: TokenDetailsScreenQuery

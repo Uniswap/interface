@@ -16,7 +16,7 @@ import {
   TransactionStatus,
   TransactionType,
 } from 'src/features/transactions/types'
-import { fromGraphQLChain } from 'src/utils/chainId'
+import { fromGraphQLChain } from 'wallet/src/utils/chainId'
 import { getNativeCurrencyAddressForChain } from 'wallet/src/utils/currencyId'
 
 export interface AllFormattedTransactions {

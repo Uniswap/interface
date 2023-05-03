@@ -9,7 +9,7 @@ import { Text } from 'src/components/Text'
 import { CurrencyInfo } from 'src/features/dataApi/types'
 import { DappInfo } from 'src/features/walletConnect/types'
 import { borderRadii, iconSizes } from 'src/styles/sizing'
-import { toSupportedChainId } from 'src/utils/chainId'
+import { toSupportedChainId } from 'wallet/src/utils/chainId'
 
 export function DappHeaderIcon({
   dapp,

@@ -21,7 +21,7 @@ import {
 import { ChainIdTo } from 'src/constants/chains'
 import { ChainState } from 'src/features/chains/types'
 import { chainListToStateMap } from 'src/features/chains/utils'
-import { parseActiveChains } from 'src/utils/chainId'
+import { parseActiveChains } from 'wallet/src/utils/chainId'
 
 export interface Config {
   activeChains: ChainIdTo<ChainState>

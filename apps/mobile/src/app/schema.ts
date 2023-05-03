@@ -1,7 +1,7 @@
 import { ACTIVE_CHAINS } from 'react-native-dotenv'
 import { chainListToStateMap } from 'src/features/chains/utils'
 import { ModalName } from 'src/features/telemetry/constants'
-import { parseActiveChains } from 'src/utils/chainId'
+import { parseActiveChains } from 'wallet/src/utils/chainId'
 
 // only add fields that are persisted
 export const initialSchema = {

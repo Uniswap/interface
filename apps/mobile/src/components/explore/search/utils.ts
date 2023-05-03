@@ -10,7 +10,7 @@ import {
   SearchResultType,
   TokenSearchResult,
 } from 'src/features/explore/searchHistorySlice'
-import { fromGraphQLChain } from 'src/utils/chainId'
+import { fromGraphQLChain } from 'wallet/src/utils/chainId'
 
 const MAX_TOKEN_RESULTS_COUNT = 4
 

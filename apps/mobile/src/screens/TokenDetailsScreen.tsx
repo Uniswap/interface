@@ -39,8 +39,8 @@ import {
 } from 'src/features/transactions/transactionState/transactionState'
 import { Screens } from 'src/screens/Screens'
 import { iconSizes } from 'src/styles/sizing'
-import { fromGraphQLChain } from 'src/utils/chainId'
 import { useExtractedTokenColor } from 'src/utils/colors'
+import { fromGraphQLChain } from 'wallet/src/utils/chainId'
 import { currencyIdToAddress, currencyIdToChain } from 'wallet/src/utils/currencyId'
 import { formatUSDPrice } from 'wallet/src/utils/format'
 

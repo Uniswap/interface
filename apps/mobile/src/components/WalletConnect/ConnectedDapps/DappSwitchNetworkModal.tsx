@@ -10,7 +10,7 @@ import { ChainId } from 'src/constants/chains'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { changeChainId, disconnectFromApp } from 'src/features/walletConnect/WalletConnect'
 import { WalletConnectSessionV1 } from 'src/features/walletConnect/walletConnectSlice'
-import { toSupportedChainId } from 'src/utils/chainId'
+import { toSupportedChainId } from 'wallet/src/utils/chainId'
 
 interface DappSwitchNetworkModalProps {
   selectedSession: WalletConnectSessionV1

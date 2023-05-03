@@ -15,7 +15,7 @@ import {
   TransactionType,
 } from 'src/features/transactions/types'
 import { Account, AccountType } from 'src/features/wallet/accounts/types'
-import { toSupportedChainId } from 'src/utils/chainId'
+import { toSupportedChainId } from 'wallet/src/utils/chainId'
 
 export const OLD_DEMO_ACCOUNT_ADDRESS = '0xdd0E380579dF30E38524F9477808d9eE37E2dEa6'
 

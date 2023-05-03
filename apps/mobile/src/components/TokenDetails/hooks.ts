@@ -5,7 +5,7 @@ import { useMultipleBalances, useSingleBalance } from 'src/features/dataApi/bala
 import { PortfolioBalance } from 'src/features/dataApi/types'
 import { currencyIdToContractInput } from 'src/features/dataApi/utils'
 import { Screens } from 'src/screens/Screens'
-import { fromGraphQLChain } from 'src/utils/chainId'
+import { fromGraphQLChain } from 'wallet/src/utils/chainId'
 import {
   buildCurrencyId,
   buildNativeCurrencyId,

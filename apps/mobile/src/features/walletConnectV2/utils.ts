@@ -7,8 +7,8 @@ import { EthMethod, EthSignMethod } from 'src/features/walletConnect/types'
 import { SignRequest, TransactionRequest } from 'src/features/walletConnect/walletConnectSlice'
 import { wcWeb3Wallet } from 'src/features/walletConnectV2/saga'
 import { unique } from 'src/utils/array'
-import { toSupportedChainId } from 'src/utils/chainId'
 import { logger } from 'src/utils/logger'
+import { toSupportedChainId } from 'wallet/src/utils/chainId'
 
 /**
  * Construct WalletConnect 2.0 proposal namespaces from required and optional namespaces.

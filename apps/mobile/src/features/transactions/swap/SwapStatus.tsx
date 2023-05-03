@@ -16,7 +16,7 @@ import {
 } from 'src/features/transactions/types'
 import { getInputAmountFromTrade, getOutputAmountFromTrade } from 'src/features/transactions/utils'
 import { useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
-import { toSupportedChainId } from 'src/utils/chainId'
+import { toSupportedChainId } from 'wallet/src/utils/chainId'
 
 type SwapStatusProps = {
   derivedSwapInfo: DerivedSwapInfo

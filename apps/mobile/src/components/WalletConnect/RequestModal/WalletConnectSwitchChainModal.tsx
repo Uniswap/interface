@@ -19,7 +19,7 @@ import {
   returnToPreviousApp,
 } from 'src/features/walletConnect/WalletConnect'
 import { SwitchChainRequest } from 'src/features/walletConnect/walletConnectSlice'
-import { toSupportedChainId } from 'src/utils/chainId'
+import { toSupportedChainId } from 'wallet/src/utils/chainId'
 
 interface Props {
   onClose: () => void

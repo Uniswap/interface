@@ -1,6 +1,11 @@
 import { BigNumberish } from 'ethers'
-
-import { ChainId, TESTNET_CHAIN_IDS } from '../features/chains/chains'
+import { PollingInterval } from 'wallet/src/constants/misc'
+import { Chain } from 'wallet/src/data/__generated__/types-and-hooks'
+import {
+  ChainId,
+  isL2Chain,
+  TESTNET_CHAIN_IDS,
+} from 'wallet/src/features/chains/chains'
 
 const supportedChains = Object.values(ChainId).map((c) => c.toString())
 
@@ -26,4 +31,45 @@ export function isTestnet(chainId?: ChainId): boolean {
   if (!chainId) return false
 
   return TESTNET_CHAIN_IDS.includes(chainId)
+}
+
+export function fromGraphQLChain(chain: Chain | undefined): ChainId | null {
+  switch (chain) {
+    case Chain.Ethereum:
+      return ChainId.Mainnet
+    case Chain.Arbitrum:
+      return ChainId.ArbitrumOne
+    case Chain.EthereumGoerli:
+      return ChainId.Goerli
+    case Chain.Optimism:
+      return ChainId.Optimism
+    case Chain.Polygon:
+      return ChainId.Polygon
+  }
+
+  return null
+}
+
+export function toGraphQLChain(chainId: ChainId): Chain | null {
+  switch (chainId) {
+    case ChainId.Mainnet:
+      return Chain.Ethereum
+    case ChainId.ArbitrumOne:
+      return Chain.Arbitrum
+    case ChainId.Goerli:
+      return Chain.EthereumGoerli
+    case ChainId.Optimism:
+      return Chain.Optimism
+    case ChainId.Polygon:
+      return Chain.Polygon
+  }
+  return null
+}
+
+export function getPollingIntervalByBlocktime(
+  chainId?: ChainId
+): PollingInterval {
+  return isL2Chain(chainId)
+    ? PollingInterval.LightningMcQueen
+    : PollingInterval.Fast
 }

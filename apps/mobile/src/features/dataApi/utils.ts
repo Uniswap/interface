@@ -10,7 +10,7 @@ import {
 } from 'src/data/__generated__/types-and-hooks'
 import { CurrencyInfo } from 'src/features/dataApi/types'
 import { NativeCurrency } from 'src/features/tokens/NativeCurrency'
-import { fromGraphQLChain, toGraphQLChain } from 'src/utils/chainId'
+import { fromGraphQLChain, toGraphQLChain } from 'wallet/src/utils/chainId'
 import {
   currencyId,
   CurrencyId,

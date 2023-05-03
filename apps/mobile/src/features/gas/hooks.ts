@@ -10,7 +10,7 @@ import { FeeType, GasSpeed, TransactionGasFeeInfo } from 'src/features/gas/types
 import { useUSDCValue } from 'src/features/routing/useUSDCPrice'
 import { NativeCurrency } from 'src/features/tokens/NativeCurrency'
 import { TransactionDetails } from 'src/features/transactions/types'
-import { getPollingIntervalByBlocktime } from 'src/utils/chainId'
+import { getPollingIntervalByBlocktime } from 'wallet/src/utils/chainId'
 
 export function useTransactionGasFee(
   tx: NullUndefined<providers.TransactionRequest>,

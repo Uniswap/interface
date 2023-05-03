@@ -8,7 +8,7 @@ import { usePersistedError } from 'src/features/dataApi/utils'
 import { NativeCurrency } from 'src/features/tokens/NativeCurrency'
 import { useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
 import { HIDE_SMALL_USD_BALANCES_THRESHOLD } from 'src/features/wallet/walletSlice'
-import { fromGraphQLChain } from 'src/utils/chainId'
+import { fromGraphQLChain } from 'wallet/src/utils/chainId'
 import { currencyId, CurrencyId } from 'wallet/src/utils/currencyId'
 
 type SortedPortfolioBalances = {
