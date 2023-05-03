@@ -2,7 +2,6 @@ import { NetworkStatus } from '@apollo/client'
 import { Token } from '@uniswap/sdk-core'
 import { useCallback, useMemo } from 'react'
 import { PollingInterval } from 'wallet/src/constants/misc'
-import { HIDE_SMALL_USD_BALANCES_THRESHOLD } from 'wallet/src/constants/tokens'
 import { usePortfolioTokenBalancesQuery } from 'wallet/src/data/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'wallet/src/features/chains/chainIdUtils'
 import {
@@ -12,6 +11,7 @@ import {
 } from 'wallet/src/features/dataApi/types'
 import { usePersistedError } from 'wallet/src/features/dataApi/utils'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
+import { HIDE_SMALL_USD_BALANCES_THRESHOLD } from 'wallet/src/features/wallet/slice'
 import { CurrencyId, currencyId } from 'wallet/src/utils/currencyId'
 
 type SortedPortfolioBalances = {

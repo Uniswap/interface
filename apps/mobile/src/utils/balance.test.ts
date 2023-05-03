@@ -1,6 +1,5 @@
 import { CurrencyAmount } from '@uniswap/sdk-core'
 import JSBI from 'jsbi'
-import { DAI } from 'src/constants/tokens'
 import { ArbitrumEth, MainnetEth, OptimismEth, PolygonMatic } from 'src/test/fixtures'
 import {
   maxAmountSpend,
@@ -9,6 +8,7 @@ import {
   MIN_OPTIMISM_FOR_GAS,
   MIN_POLYGON_FOR_GAS,
 } from 'src/utils/balance'
+import { DAI } from 'wallet/src/constants/tokens'
 
 describe(maxAmountSpend, () => {
   it('handles undefined', () => {

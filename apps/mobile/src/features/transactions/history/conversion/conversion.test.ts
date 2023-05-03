@@ -1,5 +1,4 @@
 import { TradeType } from '@uniswap/sdk-core'
-import { WRAPPED_NATIVE_CURRENCY } from 'src/constants/tokens'
 import {
   ActivityType,
   Chain,
@@ -22,6 +21,7 @@ import {
 } from 'src/features/transactions/types'
 import { NATIVE_ADDRESS } from 'wallet/src/constants/addresses'
 import { ChainId } from 'wallet/src/constants/chains'
+import { WRAPPED_NATIVE_CURRENCY } from 'wallet/src/constants/tokens'
 
 /**
  * Testing for API transaction parsing utils.

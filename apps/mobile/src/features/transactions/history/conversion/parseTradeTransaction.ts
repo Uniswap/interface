@@ -1,7 +1,6 @@
 // TODO(MOB-3866): reduce component complexity
 /* eslint-disable complexity */
 import { TradeType } from '@uniswap/sdk-core'
-import { WRAPPED_NATIVE_CURRENCY } from 'src/constants/tokens'
 import {
   deriveCurrencyAmountFromAssetResponse,
   parseUSDValueFromAssetChange,
@@ -15,6 +14,7 @@ import {
   WrapTransactionInfo,
 } from 'src/features/transactions/types'
 import { ChainId } from 'wallet/src/constants/chains'
+import { WRAPPED_NATIVE_CURRENCY } from 'wallet/src/constants/tokens'
 import { buildCurrencyId, buildNativeCurrencyId } from 'wallet/src/utils/currencyId'
 
 export default function parseTradeTransaction(

@@ -1,7 +1,7 @@
 import { CurrencyAmount } from '@uniswap/sdk-core'
 import JSBI from 'jsbi'
-import { DAI } from 'src/constants/tokens'
 import { tryParseExactAmount, tryParseRawAmount } from 'src/utils/tryParseAmount'
+import { DAI } from 'wallet/src/constants/tokens'
 
 const ONE_DAI = CurrencyAmount.fromRawAmount(DAI, JSBI.BigInt('1000000000000000000'))
 const HALF_DAI = CurrencyAmount.fromRawAmount(DAI, JSBI.BigInt('500000000000000000'))

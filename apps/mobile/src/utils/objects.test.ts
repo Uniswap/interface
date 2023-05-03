@@ -1,5 +1,5 @@
-import { DAI, USDC, USDC_ARBITRUM } from 'src/constants/tokens'
 import { flattenObjectOfObjects, unnestObject } from 'src/utils/objects'
+import { DAI, USDC, USDC_ARBITRUM } from 'wallet/src/constants/tokens'
 
 describe(flattenObjectOfObjects, () => {
   it('correctly flattens', () => {
