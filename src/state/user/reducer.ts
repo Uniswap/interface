@@ -21,7 +21,7 @@ export interface UserState {
 
   userExpertMode: boolean
 
-  // which route should be used to calculate trades
+  // which router should be used to calculate trades
   userRouterPreference: RouterPreference
 
   // hides closed (inactive) positions across the app
