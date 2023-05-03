@@ -7,7 +7,7 @@ import React, { useState } from 'react'
 import { useUserSlippageTolerance } from 'state/user/hooks'
 import { SlippageTolerance } from 'state/user/types'
 import styled from 'styled-components/macro'
-import { ThemedText } from 'theme'
+import { CautionTriangle, ThemedText } from 'theme'
 
 import { Input, InputContainer } from '../Input'
 
@@ -154,14 +154,17 @@ export default function MaxSlippageSettings({ autoSlippage }: { autoSlippage: Pe
         </InputContainer>
       </RowBetween>
       {tooLow || tooHigh ? (
-        <RowBetween
-          style={{
-            fontSize: '14px',
-            paddingTop: '7px',
-            color: '#F3841E',
-          }}
-        >
-          {tooLow ? <Trans>Your transaction may fail</Trans> : <Trans>Your transaction may be frontrun</Trans>}
+        <RowBetween gap="md">
+          <CautionTriangle />
+          <ThemedText.SubHeaderSmall color="accentWarning">
+            {tooLow ? (
+              <Trans>
+                Slippage below {MINIMUM_RECOMMENDED_SLIPPAGE.toFixed(2)}% may result in a failed transaction
+              </Trans>
+            ) : (
+              <Trans>Your transaction may be frontrun and result in an unfavorable trade.</Trans>
+            )}
+          </ThemedText.SubHeaderSmall>
         </RowBetween>
       ) : null}
     </Expand>
