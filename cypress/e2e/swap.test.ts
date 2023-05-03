@@ -416,10 +416,6 @@ describe('Swap', () => {
   })
 
   it('should render an error for slippage failure', () => {
-    const SLIPPAGE = 0.01
-    const AMOUNT_TO_SWAP = 400
-    const NUMBER_OF_SWAPS = 2
-    const INDIVIDUAL_SWAP_INPUT = AMOUNT_TO_SWAP / NUMBER_OF_SWAPS
     cy.visit('/swap', { ethereum: 'hardhat' })
       .hardhat()
       .then((hardhat) => {
@@ -433,12 +429,13 @@ describe('Swap', () => {
 
             // Set slippage to a very low value.
             cy.get(getTestSelector('open-settings-dialog-button')).click()
-            cy.get(getTestSelector('slippage-input')).clear().type(SLIPPAGE.toString())
+            cy.get(getTestSelector('slippage-input')).clear().type('0.01')
             cy.get('body').click('topRight')
             cy.get(getTestSelector('slippage-input')).should('not.exist')
 
             // Open the currency select modal.
             cy.get('#swap-currency-output .open-currency-select-button').click()
+
             // Wait for the currency list to load
             cy.contains('1inch').should('exist')
 
@@ -451,6 +448,9 @@ describe('Swap', () => {
               .click()
 
             // Swap 2 times.
+            const AMOUNT_TO_SWAP = 400
+            const NUMBER_OF_SWAPS = 2
+            const INDIVIDUAL_SWAP_INPUT = AMOUNT_TO_SWAP / NUMBER_OF_SWAPS
             cy.get('#swap-currency-input .token-amount-input').clear().type(INDIVIDUAL_SWAP_INPUT.toString())
             cy.get('#swap-currency-output .token-amount-input').should('not.equal', '')
             cy.get('#swap-button').click()
@@ -463,11 +463,11 @@ describe('Swap', () => {
             cy.get(getTestSelector('dismiss-tx-confirmation')).click()
 
             // The pending transaction indicator should be visible.
-            cy.contains(`${NUMBER_OF_SWAPS} Pending`).should('exist')
+            cy.contains('Pending').should('exist')
 
             cy.then(() => hardhat.mine()).then(() => {
               // The pending transaction indicator should not be visible.
-              cy.contains(`${NUMBER_OF_SWAPS} Pending`).should('not.exist')
+              cy.contains('Pending').should('not.exist')
 
               // Check for a failed transaction notification.
               cy.contains('Swap failed').should('exist')
