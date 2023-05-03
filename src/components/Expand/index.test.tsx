@@ -11,6 +11,7 @@ describe('Expand', () => {
     )
     expect(asFragment()).toMatchSnapshot()
   })
+
   it('toggles children on button press', () => {
     render(
       <Expand header={<span>Header</span>} button={<span>Button</span>}>
