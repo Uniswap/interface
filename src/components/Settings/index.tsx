@@ -10,7 +10,6 @@ import { useRef } from 'react'
 import { Settings } from 'react-feather'
 import { useModalIsOpen, useToggleSettingsMenu } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
-import { RouterPreference } from 'state/routing/slice'
 import { useRouterPreference } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 
@@ -79,11 +78,6 @@ const MenuFlyout = styled.span`
   user-select: none;
 `
 
-const ClientSideRouterSettings = styled.div<{ enabled: boolean }>`
-  opacity: ${({ enabled }) => (enabled ? 1 : 0.3)};
-  pointer-events: ${({ enabled }) => (enabled ? 'auto' : 'none')};
-`
-
 const Divider = styled.div`
   width: 100%;
   height: 1px;
@@ -118,18 +112,14 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
         <MenuFlyout>
           <AutoColumn gap="16px" style={{ padding: '1rem' }}>
             {isSupportedChainId(chainId) && <RouterPreferenceSettings />}
-            <ClientSideRouterSettings enabled={userRouterPreference !== RouterPreference.PRICE}>
-              <AutoColumn gap="16px">
+            <Divider />
+            <MaxSlippageSettings placeholder={placeholderSlippage} />
+            {showDeadlineSettings && (
+              <>
                 <Divider />
-                <MaxSlippageSettings placeholder={placeholderSlippage} />
-                {showDeadlineSettings && (
-                  <>
-                    <Divider />
-                    <TransactionDeadlineSettings />
-                  </>
-                )}
-              </AutoColumn>
-            </ClientSideRouterSettings>
+                <TransactionDeadlineSettings />
+              </>
+            )}
           </AutoColumn>
         </MenuFlyout>
       )}

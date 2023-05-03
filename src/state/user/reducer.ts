@@ -5,7 +5,7 @@ import { RouterPreference } from 'state/routing/slice'
 
 import { DEFAULT_DEADLINE_FROM_NOW } from '../../constants/misc'
 import { updateVersion } from '../global/actions'
-import { SerializedPair, SerializedToken } from './types'
+import { SerializedPair, SerializedToken, SlippageTolerance } from './types'
 
 const currentTimestamp = () => new Date().getTime()
 
@@ -28,7 +28,7 @@ export interface UserState {
   userHideClosedPositions: boolean
 
   // user defined slippage tolerance in bips, used in all txns
-  userSlippageTolerance: number | 'auto'
+  userSlippageTolerance: number | SlippageTolerance.Auto
   userSlippageToleranceHasBeenMigratedToAuto: boolean // temporary flag for migration status
 
   // deadline set by user in minutes, used in all txns
@@ -65,7 +65,7 @@ export const initialState: UserState = {
   userLocale: null,
   userRouterPreference: RouterPreference.PRICE,
   userHideClosedPositions: false,
-  userSlippageTolerance: 'auto',
+  userSlippageTolerance: SlippageTolerance.Auto,
   userSlippageToleranceHasBeenMigratedToAuto: true,
   userDeadline: DEFAULT_DEADLINE_FROM_NOW,
   tokens: {},
@@ -141,13 +141,13 @@ const userSlice = createSlice({
         state.userSlippageTolerance < 0 ||
         state.userSlippageTolerance > 5000
       ) {
-        state.userSlippageTolerance = 'auto'
+        state.userSlippageTolerance = SlippageTolerance.Auto
       } else {
         if (
           !state.userSlippageToleranceHasBeenMigratedToAuto &&
           [10, 50, 100].indexOf(state.userSlippageTolerance) !== -1
         ) {
-          state.userSlippageTolerance = 'auto'
+          state.userSlippageTolerance = SlippageTolerance.Auto
           state.userSlippageToleranceHasBeenMigratedToAuto = true
         }
       }

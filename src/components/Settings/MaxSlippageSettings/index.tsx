@@ -5,6 +5,7 @@ import QuestionHelper from 'components/QuestionHelper'
 import Row, { RowBetween } from 'components/Row'
 import React, { useState } from 'react'
 import { useUserSlippageTolerance } from 'state/user/hooks'
+import { SlippageTolerance } from 'state/user/types'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
@@ -33,6 +34,8 @@ const Switch = styled(Row)`
 `
 
 const NUMBER_WITH_MAX_TWO_DECIMAL_PLACES = /^(?:\d*\.\d{0,2}|\d+)$/
+const MINIMUM_RECOMMENDED_SLIPPAGE = new Percent(5, 10_000)
+const MAXIMUM_RECOMMENDED_SLIPPAGE = new Percent(1, 100)
 
 export default function MaxSlippageSettings({ placeholder }: { placeholder: Percent }) {
   const [userSlippageTolerance, setUserSlippageTolerance] = useUserSlippageTolerance()
@@ -40,7 +43,7 @@ export default function MaxSlippageSettings({ placeholder }: { placeholder: Perc
   // If user has previously entered a custom deadline, we want to show that value in the input field
   // instead of a placeholder by defualt
   const [slippageInput, setSlippageInput] = useState(
-    userSlippageTolerance !== 'auto' && !userSlippageTolerance.equalTo(placeholder)
+    userSlippageTolerance !== SlippageTolerance.Auto && !userSlippageTolerance.equalTo(placeholder)
       ? userSlippageTolerance.toFixed(2)
       : ''
   )
@@ -57,7 +60,7 @@ export default function MaxSlippageSettings({ placeholder }: { placeholder: Perc
 
     // If the input is empty, set the slippage to the default
     if (value.length === 0) {
-      setUserSlippageTolerance('auto')
+      setUserSlippageTolerance(SlippageTolerance.Auto)
       return
     }
 
@@ -78,8 +81,10 @@ export default function MaxSlippageSettings({ placeholder }: { placeholder: Perc
     }
   }
 
-  const tooLow = userSlippageTolerance !== 'auto' && userSlippageTolerance.lessThan(new Percent(5, 10_000))
-  const tooHigh = userSlippageTolerance !== 'auto' && userSlippageTolerance.greaterThan(new Percent(1, 100))
+  const tooLow =
+    userSlippageTolerance !== SlippageTolerance.Auto && userSlippageTolerance.lessThan(MINIMUM_RECOMMENDED_SLIPPAGE)
+  const tooHigh =
+    userSlippageTolerance !== SlippageTolerance.Auto && userSlippageTolerance.greaterThan(MAXIMUM_RECOMMENDED_SLIPPAGE)
 
   return (
     <Expand
@@ -97,7 +102,11 @@ export default function MaxSlippageSettings({ placeholder }: { placeholder: Perc
       }
       button={
         <ThemedText.BodyPrimary>
-          {userSlippageTolerance === 'auto' ? <Trans>Auto</Trans> : `${userSlippageTolerance.toFixed(2)}%`}
+          {userSlippageTolerance === SlippageTolerance.Auto ? (
+            <Trans>Auto</Trans>
+          ) : (
+            `${userSlippageTolerance.toFixed(2)}%`
+          )}
         </ThemedText.BodyPrimary>
       }
     >
@@ -107,9 +116,9 @@ export default function MaxSlippageSettings({ placeholder }: { placeholder: Perc
             onClick={() => {
               // Reset the input field when switching to auto
               setSlippageInput('')
-              setUserSlippageTolerance('auto')
+              setUserSlippageTolerance(SlippageTolerance.Auto)
             }}
-            isActive={userSlippageTolerance === 'auto'}
+            isActive={userSlippageTolerance === SlippageTolerance.Auto}
           >
             <ThemedText.BodyPrimary>
               <Trans>Auto</Trans>
@@ -120,7 +129,7 @@ export default function MaxSlippageSettings({ placeholder }: { placeholder: Perc
               // Use placeholder value as default custom slippage
               setUserSlippageTolerance(placeholder)
             }}
-            isActive={userSlippageTolerance !== 'auto'}
+            isActive={userSlippageTolerance !== SlippageTolerance.Auto}
           >
             <ThemedText.BodyPrimary>
               <Trans>Custom</Trans>
@@ -134,13 +143,11 @@ export default function MaxSlippageSettings({ placeholder }: { placeholder: Perc
             onChange={(e) => parseSlippageInput(e.target.value)}
             onBlur={() => {
               // When the input field is blurred, reset the input field to the current slippage tolerance
-              setSlippageInput(userSlippageTolerance !== 'auto' ? userSlippageTolerance.toFixed(2) : '')
+              setSlippageInput(userSlippageTolerance !== SlippageTolerance.Auto ? userSlippageTolerance.toFixed(2) : '')
               setSlippageError(false)
             }}
           />
-          <ThemedText.BodyPrimary>
-            <Trans>%</Trans>
-          </ThemedText.BodyPrimary>
+          <ThemedText.BodyPrimary>%</ThemedText.BodyPrimary>
         </InputContainer>
       </RowBetween>
       {tooLow || tooHigh ? (

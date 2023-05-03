@@ -17,6 +17,7 @@ import reducer, {
   updateUserSlippageTolerance,
   UserState,
 } from './reducer'
+import { SlippageTolerance } from './types'
 
 function buildSerializedPair(token0Address: string, token1Address: string, chainId: number) {
   return {
@@ -55,7 +56,7 @@ describe('swap reducer', () => {
       } as any)
       store.dispatch(updateVersion())
       expect(store.getState().userDeadline).toEqual(DEFAULT_DEADLINE_FROM_NOW)
-      expect(store.getState().userSlippageTolerance).toEqual('auto')
+      expect(store.getState().userSlippageTolerance).toEqual(SlippageTolerance.Auto)
     })
     it('sets allowed slippage and deadline to auto', () => {
       store = createStore(reducer, {

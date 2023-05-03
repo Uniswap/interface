@@ -26,7 +26,7 @@ import {
   updateUserRouterPreference,
   updateUserSlippageTolerance,
 } from './reducer'
-import { SerializedPair, SerializedToken } from './types'
+import { SerializedPair, SerializedToken, SlippageTolerance } from './types'
 
 export function serializeToken(token: Token): SerializedToken {
   return {
@@ -111,24 +111,34 @@ export function useRouterPreference(): [RouterPreference, (routerPreference: Rou
 /**
  * Return the user's slippage tolerance, from the redux store, and a function to update the slippage tolerance
  */
-export function useUserSlippageTolerance(): [Percent | 'auto', (slippageTolerance: Percent | 'auto') => void] {
+export function useUserSlippageTolerance(): [
+  Percent | SlippageTolerance.Auto,
+  (slippageTolerance: Percent | SlippageTolerance.Auto) => void
+] {
   const userSlippageToleranceRaw = useAppSelector((state) => {
     return state.user.userSlippageTolerance
   })
+
+  // TODO(WEB-XXXX): Keep `userSlippageTolerance` as Percent in Redux store and remove this conversion
   const userSlippageTolerance = useMemo(
-    () => (userSlippageToleranceRaw === 'auto' ? 'auto' : new Percent(userSlippageToleranceRaw, 10_000)),
+    () =>
+      userSlippageToleranceRaw === SlippageTolerance.Auto
+        ? SlippageTolerance.Auto
+        : new Percent(userSlippageToleranceRaw, 10_000),
     [userSlippageToleranceRaw]
   )
 
   const dispatch = useAppDispatch()
   const setUserSlippageTolerance = useCallback(
-    (userSlippageTolerance: Percent | 'auto') => {
-      let value: 'auto' | number
+    (userSlippageTolerance: Percent | SlippageTolerance.Auto) => {
+      let value: SlippageTolerance.Auto | number
       try {
         value =
-          userSlippageTolerance === 'auto' ? 'auto' : JSBI.toNumber(userSlippageTolerance.multiply(10_000).quotient)
+          userSlippageTolerance === SlippageTolerance.Auto
+            ? SlippageTolerance.Auto
+            : JSBI.toNumber(userSlippageTolerance.multiply(10_000).quotient)
       } catch (error) {
-        value = 'auto'
+        value = SlippageTolerance.Auto
       }
       dispatch(
         updateUserSlippageTolerance({
@@ -167,7 +177,7 @@ export function useUserHideClosedPositions(): [boolean, (newHideClosedPositions:
 export function useUserSlippageToleranceWithDefault(defaultSlippageTolerance: Percent): Percent {
   const allowedSlippage = useUserSlippageTolerance()[0]
   return useMemo(
-    () => (allowedSlippage === 'auto' ? defaultSlippageTolerance : allowedSlippage),
+    () => (allowedSlippage === SlippageTolerance.Auto ? defaultSlippageTolerance : allowedSlippage),
     [allowedSlippage, defaultSlippageTolerance]
   )
 }
