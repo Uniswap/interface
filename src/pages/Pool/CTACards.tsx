@@ -9,7 +9,7 @@ import { ExternalLink } from '../../theme'
 
 const CTASection = styled.section`
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: 8px;
   opacity: 0.8;
 
@@ -24,7 +24,8 @@ const CTA = styled(ExternalLink)`
   border-radius: 20px;
   position: relative;
   overflow: hidden;
-  border: 1px solid ${({ theme }) => theme.deprecated_bg3};
+  box-shadow: ${({ theme }) => theme.deepShadow};
+  background: ${({ theme }) => theme.backgroundScrolledSurface};
 
   * {
     color: ${({ theme }) => theme.textPrimary};
@@ -32,8 +33,6 @@ const CTA = styled(ExternalLink)`
   }
 
   :hover {
-    border: 1px solid ${({ theme }) => theme.deprecated_bg4};
-
     text-decoration: none;
     * {
       text-decoration: none !important;
@@ -79,7 +78,8 @@ export default function CTACards() {
           </ThemedText.DeprecatedBody>
         </ResponsiveColumn>
       </CTA>
-      <CTA data-testid="cta-infolink" href={infoLink + 'pools'}>
+      {/* TODO: add after review pegasys pools */}
+      {/* <CTA data-testid="cta-infolink" href={infoLink + 'pools'}>
         <ResponsiveColumn>
           <HeaderText style={{ alignSelf: 'flex-start' }}>
             <Trans>Top pools</Trans> ↗
@@ -88,7 +88,7 @@ export default function CTACards() {
             <Trans>Explore Uniswap Analytics.</Trans>
           </ThemedText.DeprecatedBody>
         </ResponsiveColumn>
-      </CTA>
+      </CTA> */}
     </CTASection>
   )
 }

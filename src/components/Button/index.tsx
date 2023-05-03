@@ -159,22 +159,21 @@ export const ButtonGray = styled(BaseButton)`
 `
 
 export const ButtonSecondary = styled(BaseButton)`
-  border: 1px solid ${({ theme }) => theme.deprecated_primary4};
-  color: ${({ theme }) => theme.accentAction};
+  border: 1px solid ${({ theme }) => theme.accentActiveSoft};
+  color: ${({ theme }) => theme.accentActive};
   background-color: transparent;
   font-size: 16px;
   border-radius: 12px;
   padding: ${({ padding }) => (padding ? padding : '10px')};
+  box-shadow: ${({ theme }) => theme.deepShadow};
 
   &:focus {
-    box-shadow: 0 0 0 1pt ${({ theme }) => theme.deprecated_primary4};
     border: 1px solid ${({ theme }) => theme.deprecated_primary3};
   }
   &:hover {
     border: 1px solid ${({ theme }) => theme.deprecated_primary3};
   }
   &:active {
-    box-shadow: 0 0 0 1pt ${({ theme }) => theme.deprecated_primary4};
     border: 1px solid ${({ theme }) => theme.deprecated_primary3};
   }
   &:disabled {

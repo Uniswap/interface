@@ -84,15 +84,20 @@ const PoolMenuItem = styled.div`
   font-weight: 500;
 `
 const MoreOptionsButton = styled(ButtonGray)`
-  border-radius: 12px;
+  border-radius: 30px;
   flex: 1 1 auto;
   padding: 6px 8px;
   width: 100%;
-  background-color: ${({ theme }) => theme.backgroundSurface};
+  background-color: ${({ theme }) => theme.accentAction};
   margin-right: 8px;
+
+  &:hover {
+    opacity: 0.7;
+  }
 `
 
 const MoreOptionsText = styled(ThemedText.DeprecatedBody)`
+  color: ${({ theme }) => theme.accentActive};
   align-items: center;
   display: flex;
 `
@@ -122,7 +127,7 @@ const InboxIcon = styled(Inbox)`
 `
 
 const ResponsiveButtonPrimary = styled(ButtonPrimary)`
-  border-radius: 12px;
+  border-radius: 30px;
   font-size: 16px;
   padding: 6px 8px;
   width: fit-content;
@@ -134,13 +139,11 @@ const ResponsiveButtonPrimary = styled(ButtonPrimary)`
 
 const MainContentWrapper = styled.main`
   background-color: ${({ theme }) => theme.backgroundSurface};
-  border: 1px solid ${({ theme }) => theme.backgroundOutline};
+  box-shadow: ${({ theme }) => theme.deepShadow};
   padding: 0;
   border-radius: 16px;
   display: flex;
   flex-direction: column;
-  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
-    0px 24px 32px rgba(0, 0, 0, 0.01);
 `
 
 function PositionsLoadingPlaceholder() {
@@ -298,7 +301,7 @@ export default function Pool() {
               ) : (
                 <ErrorContainer>
                   <ThemedText.DeprecatedBody color={theme.textTertiary} textAlign="center">
-                    <InboxIcon strokeWidth={1} style={{ marginTop: '2em' }} />
+                    <InboxIcon strokeWidth={2} style={{ marginTop: '2em' }} />
                     <div>
                       <Trans>Your active V3 liquidity positions will appear here.</Trans>
                     </div>

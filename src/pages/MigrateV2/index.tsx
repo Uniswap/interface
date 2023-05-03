@@ -113,8 +113,8 @@ export default function MigrateV2() {
 
   return (
     <>
-      <BodyWrapper style={{ padding: 24 }} $maxWidth="100%">
-        <AutoColumn gap="16px">
+      <BodyWrapper>
+        <AutoColumn gap="16px" style={{ background: theme.backgroundModule, borderRadius: '16px', padding: '24px' }}>
           <AutoRow style={{ alignItems: 'center', justifyContent: 'space-between' }} gap="8px">
             <BackArrow to="/pools" />
             <ThemedText.DeprecatedMediumHeader>
