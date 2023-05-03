@@ -14,9 +14,9 @@ import {
 } from 'src/features/transactions/utils'
 import { selectAccounts } from 'src/features/wallet/selectors'
 import { SignerManager } from 'src/features/wallet/signing/SignerManager'
-import { getValidAddress } from 'src/utils/addresses'
 import { logger } from 'src/utils/logger'
 import { call, put } from 'typed-redux-saga'
+import { getValidAddress } from 'wallet/src/utils/addresses'
 
 export function* attemptReplaceTransaction(
   transaction: TransactionDetails,

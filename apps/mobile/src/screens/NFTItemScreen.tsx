@@ -41,13 +41,13 @@ import { Screens } from 'src/screens/Screens'
 import { colorsDark } from 'src/styles/color'
 import { iconSizes } from 'src/styles/sizing'
 import { darkTheme } from 'src/styles/theme'
-import { areAddressesEqual } from 'src/utils/addresses'
 import { setClipboardImage } from 'src/utils/clipboard'
 import {
   MIN_COLOR_CONTRAST_THRESHOLD,
   passesContrast,
   useNearestThemeColorFromImageUri,
 } from 'src/utils/colors'
+import { areAddressesEqual } from 'wallet/src/utils/addresses'
 
 export function NFTItemScreen({
   route: {

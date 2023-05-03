@@ -26,8 +26,8 @@ import {
   SwitchChainRequest,
   WalletConnectRequest,
 } from 'src/features/walletConnect/walletConnectSlice'
-import { areAddressesEqual } from 'src/utils/addresses'
 import { useAppStateTrigger } from 'src/utils/useAppStateTrigger'
+import { areAddressesEqual } from 'wallet/src/utils/addresses'
 
 export function WalletConnectModals(): JSX.Element {
   const activeAccount = useActiveAccount()

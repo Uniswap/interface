@@ -10,7 +10,7 @@ import { usePersistedError } from 'src/features/dataApi/utils'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
 import { NativeCurrency } from 'src/features/tokens/NativeCurrency'
-import { areAddressesEqual } from 'src/utils/addresses'
+import { areAddressesEqual } from 'wallet/src/utils/addresses'
 import { currencyId } from 'wallet/src/utils/currencyId'
 
 // Use Mainnet base token addresses since TokenProjects query returns each token on Arbitrum, Optimism, Polygon

@@ -13,7 +13,7 @@ import {
   useSearchPopularTokensQuery,
 } from 'src/data/__generated__/types-and-hooks'
 import { SearchResultType, TokenSearchResult } from 'src/features/explore/searchHistorySlice'
-import { areAddressesEqual } from 'src/utils/addresses'
+import { areAddressesEqual } from 'wallet/src/utils/addresses'
 import { fromGraphQLChain } from 'wallet/src/utils/chainId'
 
 export function SearchPopularTokens(): JSX.Element {

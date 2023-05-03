@@ -9,10 +9,10 @@ import {
   unlockWallet,
 } from 'src/features/wallet/walletSlice'
 import { generateAndStorePrivateKey, importMnemonic } from 'src/lib/RNEthersRs'
-import { getValidAddress } from 'src/utils/addresses'
 import { logger } from 'src/utils/logger'
 import { createMonitoredSaga } from 'src/utils/saga'
 import { all, call, put, SagaGenerator } from 'typed-redux-saga'
+import { getValidAddress } from 'wallet/src/utils/addresses'
 
 export const IMPORT_WALLET_AMOUNT = 10
 

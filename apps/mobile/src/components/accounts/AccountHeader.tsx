@@ -2,7 +2,6 @@ import { impactAsync, ImpactFeedbackStyle, selectionAsync } from 'expo-haptics'
 import React, { useCallback } from 'react'
 import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
 import { navigate } from 'src/app/navigation/rootNavigation'
-import ScanQRWCIcon from 'src/assets/icons/scan-qr-wc.svg'
 import SettingsIcon from 'src/assets/icons/settings.svg'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
@@ -18,21 +17,6 @@ import { Screens } from 'src/screens/Screens'
 import { iconSizes } from 'src/styles/sizing'
 import { setClipboard } from 'src/utils/clipboard'
 import { isDevBuild } from 'src/utils/version'
-
-function QRScannerIconButton({ onPress }: { onPress: () => void }): JSX.Element {
-  const theme = useAppTheme()
-
-  return (
-    <TouchableArea hapticFeedback name={ElementName.WalletConnectScan} onPress={onPress}>
-      <ScanQRWCIcon
-        color={theme.colors.textTertiary}
-        height={theme.iconSizes.icon24}
-        opacity="0.8"
-        strokeWidth={2}
-      />
-    </TouchableArea>
-  )
-}
 
 export function AccountHeader(): JSX.Element {
   const theme = useAppTheme()

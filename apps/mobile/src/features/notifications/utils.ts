@@ -18,8 +18,8 @@ import {
   TransactionType,
 } from 'src/features/transactions/types'
 import { WalletConnectEvent } from 'src/features/walletConnect/saga'
-import { getValidAddress, shortenAddress } from 'src/utils/addresses'
 import { logger } from 'src/utils/logger'
+import { getValidAddress, shortenAddress } from 'wallet/src/utils/addresses'
 import { currencyIdToAddress } from 'wallet/src/utils/currencyId'
 import { formatCurrencyAmount, formatUSDPrice, NumberType } from 'wallet/src/utils/format'
 

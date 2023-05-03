@@ -17,7 +17,7 @@ import { useToggleWatchedWalletCallback } from 'src/features/favorites/hooks'
 import { selectWatchedAddressSet } from 'src/features/favorites/selectors'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { ElementName, MobileEventName } from 'src/features/telemetry/constants'
-import { sanitizeAddressText, shortenAddress } from 'src/utils/addresses'
+import { sanitizeAddressText, shortenAddress } from 'wallet/src/utils/addresses'
 
 type SearchWalletItemProps = {
   wallet: WalletSearchResult

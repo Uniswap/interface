@@ -1,6 +1,6 @@
 import { parseUri } from '@walletconnect/utils'
 import { isValidWCUrl } from 'src/features/walletConnect/WalletConnect'
-import { getValidAddress } from 'src/utils/addresses'
+import { getValidAddress } from 'wallet/src/utils/addresses'
 
 export enum URIType {
   WalletConnectURL = 'walletconnect',

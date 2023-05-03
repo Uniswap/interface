@@ -9,9 +9,9 @@ import {
   CurrencyField,
   TransactionState,
 } from 'src/features/transactions/transactionState/transactionState'
-import { getValidAddress } from 'src/utils/addresses'
 import { logger } from 'src/utils/logger'
 import { call } from 'typed-redux-saga'
+import { getValidAddress } from 'wallet/src/utils/addresses'
 import { currencyIdToAddress, currencyIdToChain } from 'wallet/src/utils/currencyId'
 
 export function* handleSwapLink(url: URL): Generator<

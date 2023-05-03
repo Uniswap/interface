@@ -26,7 +26,7 @@ import {
   pendingAccountActions,
 } from 'src/features/wallet/pendingAccountsSaga'
 import { OnboardingScreens } from 'src/screens/Screens'
-import { shortenAddress } from 'src/utils/addresses'
+import { shortenAddress } from 'wallet/src/utils/addresses'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.EditName>
 

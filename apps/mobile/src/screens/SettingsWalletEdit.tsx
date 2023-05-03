@@ -17,7 +17,7 @@ import { ChainId } from 'src/constants/chains'
 import { useENS } from 'src/features/ens/useENS'
 import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
 import { useAccounts } from 'src/features/wallet/hooks'
-import { shortenAddress } from 'src/utils/addresses'
+import { shortenAddress } from 'wallet/src/utils/addresses'
 import { Screens } from './Screens'
 
 type Props = NativeStackScreenProps<SettingsStackParamList, Screens.SettingsWalletEdit>

@@ -5,7 +5,7 @@ import TransactionSummaryLayout, {
   TXN_HISTORY_ICON_SIZE,
 } from 'src/features/transactions/SummaryCards/TransactionSummaryLayout'
 import { TransactionDetails, UnknownTransactionInfo } from 'src/features/transactions/types'
-import { getValidAddress, shortenAddress } from 'src/utils/addresses'
+import { getValidAddress, shortenAddress } from 'wallet/src/utils/addresses'
 
 export default function UnknownSummaryItem({
   transaction,

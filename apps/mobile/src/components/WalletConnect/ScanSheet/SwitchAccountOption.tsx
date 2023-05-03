@@ -7,7 +7,7 @@ import { Text } from 'src/components/Text'
 import { Unicon } from 'src/components/unicons/Unicon'
 import { Account } from 'src/features/wallet/accounts/types'
 import { useDisplayName } from 'src/features/wallet/hooks'
-import { shortenAddress } from 'src/utils/addresses'
+import { shortenAddress } from 'wallet/src/utils/addresses'
 
 type Props = {
   account: Account

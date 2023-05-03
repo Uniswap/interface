@@ -10,7 +10,7 @@ import TransactionSummaryLayout, {
   TXN_HISTORY_ICON_SIZE,
 } from 'src/features/transactions/SummaryCards/TransactionSummaryLayout'
 import { SendTokenTransactionInfo, TransactionDetails } from 'src/features/transactions/types'
-import { shortenAddress } from 'src/utils/addresses'
+import { shortenAddress } from 'wallet/src/utils/addresses'
 import { buildCurrencyId } from 'wallet/src/utils/currencyId'
 
 export default function SendSummaryItem({

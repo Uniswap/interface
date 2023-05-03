@@ -28,8 +28,8 @@ import {
 } from 'src/features/explore/utils'
 import { selectHasFavoriteTokens, selectHasWatchedWallets } from 'src/features/favorites/selectors'
 import { selectTokensOrderBy } from 'src/features/wallet/selectors'
-import { areAddressesEqual } from 'src/utils/addresses'
 import { usePollOnFocusOnly } from 'src/utils/hooks'
+import { areAddressesEqual } from 'wallet/src/utils/addresses'
 import { fromGraphQLChain } from 'wallet/src/utils/chainId'
 import { buildCurrencyId, buildNativeCurrencyId } from 'wallet/src/utils/currencyId'
 

@@ -29,8 +29,8 @@ import {
   WalletSearchResult,
 } from 'src/features/explore/searchHistorySlice'
 import { useIsSmartContractAddress } from 'src/features/transactions/transfer/hooks'
-import { getValidAddress } from 'src/utils/addresses'
 import { logger } from 'src/utils/logger'
+import { getValidAddress } from 'wallet/src/utils/addresses'
 
 export const SEARCH_RESULT_HEADER_KEY = 'header'
 

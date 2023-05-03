@@ -14,7 +14,7 @@ import { ElementName } from 'src/features/telemetry/constants'
 import { TransactionDetails, TransactionStatus } from 'src/features/transactions/types'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { theme } from 'src/styles/theme'
-import { shortenAddress } from 'src/utils/addresses'
+import { shortenAddress } from 'wallet/src/utils/addresses'
 import { formatUSDPrice, NumberType } from 'wallet/src/utils/format'
 
 const spacerProps: BoxProps = {

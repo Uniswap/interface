@@ -4,7 +4,7 @@ import { all, call, put } from 'typed-redux-saga'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import { activateAccount, addAccounts } from 'wallet/src/features/wallet/slice'
 import { Account, AccountType } from 'wallet/src/features/wallet/types'
-import { getChecksumAddress } from 'wallet/src/utils/addresses'
+import { getValidAddress } from 'wallet/src/utils/addresses'
 import { createMonitoredSaga } from 'wallet/src/utils/saga'
 import { logger } from '../../logger/logger'
 import { ImportAccountParams, ImportAccountType } from './types'
@@ -44,7 +44,11 @@ function* importAddressAccount(
   name?: string,
   ignoreActivate?: boolean
 ): Generator<CallEffect<void>, void, unknown> {
-  const formattedAddress = getChecksumAddress(address)
+  const formattedAddress = getValidAddress(address, true)
+  if (!formattedAddress) {
+    throw new Error('Cannot import invalid view-only address')
+  }
+
   const account: Account = {
     type: AccountType.Readonly,
     address: formattedAddress,

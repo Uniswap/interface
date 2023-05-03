@@ -11,7 +11,7 @@ import {
   TransactionListQueryResponse,
   TransactionType,
 } from 'src/features/transactions/types'
-import { areAddressesEqual } from 'src/utils/addresses'
+import { areAddressesEqual } from 'wallet/src/utils/addresses'
 import { fromGraphQLChain } from 'wallet/src/utils/chainId'
 
 // Non-exhaustive list of addresses Moonpay uses when sending purchased tokens

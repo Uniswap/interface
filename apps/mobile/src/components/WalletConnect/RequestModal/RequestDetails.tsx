@@ -17,10 +17,10 @@ import {
   WalletConnectRequest,
 } from 'src/features/walletConnect/walletConnectSlice'
 import { Theme } from 'src/styles/theme'
-import { getValidAddress, shortenAddress } from 'src/utils/addresses'
 import { ExplorerDataType, getExplorerLink } from 'src/utils/linking'
 import { logger } from 'src/utils/logger'
 import { useNoYoloParser } from 'src/utils/useNoYoloParser'
+import { getValidAddress, shortenAddress } from 'wallet/src/utils/addresses'
 
 const getStrMessage = (request: WalletConnectRequest): string => {
   if (request.type === EthMethod.PersonalSign || request.type === EthMethod.EthSign) {

@@ -43,8 +43,8 @@ import {
 } from 'src/features/walletConnect/walletConnectSlice'
 import { wcWeb3Wallet } from 'src/features/walletConnectV2/saga'
 import { iconSizes } from 'src/styles/sizing'
-import { areAddressesEqual } from 'src/utils/addresses'
 import { logger } from 'src/utils/logger'
+import { areAddressesEqual } from 'wallet/src/utils/addresses'
 import { buildCurrencyId } from 'wallet/src/utils/currencyId'
 
 const MAX_MODAL_MESSAGE_HEIGHT = 200

@@ -12,8 +12,8 @@ import { AppNotificationType, CopyNotificationType } from 'src/features/notifica
 import { ElementName } from 'src/features/telemetry/constants'
 import { useDisplayName } from 'src/features/wallet/hooks'
 import { Theme } from 'src/styles/theme'
-import { sanitizeAddressText, shortenAddress } from 'src/utils/addresses'
 import { setClipboard } from 'src/utils/clipboard'
+import { sanitizeAddressText, shortenAddress } from 'wallet/src/utils/addresses'
 
 type AddressDisplayProps = {
   address: string

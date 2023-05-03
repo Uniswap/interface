@@ -8,7 +8,7 @@ import {
   signMessageForAddress,
   signTransactionHashForAddress,
 } from 'src/lib/RNEthersRs'
-import { areAddressesEqual } from 'src/utils/addresses'
+import { areAddressesEqual } from 'wallet/src/utils/addresses'
 import { toSupportedChainId } from 'wallet/src/utils/chainId'
 
 // A signer that uses native keystore to access keys

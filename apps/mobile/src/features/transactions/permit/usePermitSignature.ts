@@ -14,9 +14,9 @@ import { Account } from 'src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
 import { SignerManager } from 'src/features/wallet/signing/SignerManager'
 import { signTypedData } from 'src/features/wallet/signing/signing'
-import { areAddressesEqual } from 'src/utils/addresses'
 import { useAsyncData } from 'src/utils/hooks'
 import { logger } from 'src/utils/logger'
+import { areAddressesEqual } from 'wallet/src/utils/addresses'
 import { inXMinutesUnix } from 'wallet/src/utils/time'
 
 const PERMIT_VALIDITY_TIME = 20 * 60 // 20 mins

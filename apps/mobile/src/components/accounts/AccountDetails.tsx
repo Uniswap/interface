@@ -4,7 +4,7 @@ import { AddressDisplay } from 'src/components/AddressDisplay'
 import { Chevron } from 'src/components/icons/Chevron'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
-import { shortenAddress } from 'src/utils/addresses'
+import { shortenAddress } from 'wallet/src/utils/addresses'
 
 export function AccountDetails({
   address,

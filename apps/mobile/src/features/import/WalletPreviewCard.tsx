@@ -8,7 +8,7 @@ import { ChainId } from 'src/constants/chains'
 import { useIsDarkMode } from 'src/features/appearance/hooks'
 import { useENS } from 'src/features/ens/useENS'
 import { ElementName } from 'src/features/telemetry/constants'
-import { shortenAddress } from 'src/utils/addresses'
+import { shortenAddress } from 'wallet/src/utils/addresses'
 import { formatUSDPrice, NumberType } from 'wallet/src/utils/format'
 
 interface Props {
