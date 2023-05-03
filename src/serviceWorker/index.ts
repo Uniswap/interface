@@ -27,7 +27,7 @@ registerRoute(
   new Route(
     ({ url }) => mediaURLs.includes('.' + url.pathname),
     new CacheFirst({
-      cacheName: 'assets',
+      cacheName: 'media',
       plugins: [new ExpirationPlugin({ maxEntries: 16 })],
     })
   )
