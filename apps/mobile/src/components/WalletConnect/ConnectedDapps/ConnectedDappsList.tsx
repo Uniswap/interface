@@ -8,12 +8,10 @@ import { BackButton } from 'src/components/buttons/BackButton'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { AnimatedFlex, Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
+import { DappConnectedNetworkModal } from 'src/components/WalletConnect/ConnectedDapps/DappConnectedNetworksModal'
 import { DappConnectionItem } from 'src/components/WalletConnect/ConnectedDapps/DappConnectionItem'
 import { DappSwitchNetworkModal } from 'src/components/WalletConnect/ConnectedDapps/DappSwitchNetworkModal'
-import {
-  WalletConnectSession,
-  WalletConnectSessionV1,
-} from 'src/features/walletConnect/walletConnectSlice'
+import { WalletConnectSession } from 'src/features/walletConnect/walletConnectSlice'
 import { dimensions } from 'src/styles/sizing'
 
 type ConnectedDappsProps = {
@@ -25,12 +23,12 @@ export function ConnectedDappsList({ backButton, sessions }: ConnectedDappsProps
   const { t } = useTranslation()
   const theme = useAppTheme()
   const [isEditing, setIsEditing] = useState(false)
-  const [selectedSession, setSelectedSession] = useState<WalletConnectSessionV1>()
+  const [selectedSession, setSelectedSession] = useState<WalletConnectSession>()
 
   return (
     <>
-      <AnimatedFlex fill entering={FadeIn} exiting={FadeOut} pt="spacing16" px="spacing24">
-        <Flex row alignItems="center" justifyContent="space-between">
+      <AnimatedFlex fill entering={FadeIn} exiting={FadeOut} pt="spacing12">
+        <Flex row alignItems="center" justifyContent="space-between" px="spacing24">
           <Box width={theme.iconSizes.icon40}>{backButton ?? <BackButton />}</Box>
           <Text color="textPrimary" variant="bodyLarge">
             {t('Manage connections')}
@@ -52,6 +50,7 @@ export function ConnectedDappsList({ backButton, sessions }: ConnectedDappsProps
         {sessions.length > 0 ? (
           <FlatList
             columnWrapperStyle={ColumnStyle.base}
+            contentContainerStyle={{ paddingHorizontal: theme.spacing.spacing24 }}
             data={sessions}
             keyExtractor={(item): string => item.id}
             numColumns={2}
@@ -64,7 +63,7 @@ export function ConnectedDappsList({ backButton, sessions }: ConnectedDappsProps
             )}
           />
         ) : (
-          <Flex fill alignItems="center" gap="spacing8" style={emptyCardStyle}>
+          <Flex fill alignItems="center" gap="spacing8" px="spacing24" style={emptyCardStyle}>
             <Text color="textPrimary" variant="subheadLarge">
               {t('No apps connected')}
             </Text>
@@ -74,12 +73,18 @@ export function ConnectedDappsList({ backButton, sessions }: ConnectedDappsProps
           </Flex>
         )}
       </AnimatedFlex>
-      {selectedSession && (
-        <DappSwitchNetworkModal
-          selectedSession={selectedSession}
-          onClose={(): void => setSelectedSession(undefined)}
-        />
-      )}
+      {selectedSession &&
+        (selectedSession.version === '1' ? (
+          <DappSwitchNetworkModal
+            selectedSession={selectedSession}
+            onClose={(): void => setSelectedSession(undefined)}
+          />
+        ) : (
+          <DappConnectedNetworkModal
+            session={selectedSession}
+            onClose={(): void => setSelectedSession(undefined)}
+          />
+        ))}
     </>
   )
 }
