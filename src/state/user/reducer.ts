@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { ConnectionType } from 'connection'
+import { ConnectionType } from 'connection/types'
 import { SupportedLocale } from 'constants/locales'
 import { RouterPreference } from 'state/routing/slice'
 

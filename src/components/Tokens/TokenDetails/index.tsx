@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { Trace } from '@uniswap/analytics'
 import { InterfacePageName } from '@uniswap/analytics-events'
-import { Currency, Field } from '@uniswap/widgets'
+import { Currency } from '@uniswap/widgets'
 import { useWeb3React } from '@web3-react/core'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { AboutSection } from 'components/Tokens/TokenDetails/About'
@@ -26,6 +26,7 @@ import Widget from 'components/Widget'
 import { SwapTokens } from 'components/Widget/inputs'
 import { NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
 import { checkWarning } from 'constants/tokenSafety'
+import { useWidgetRemovalEnabled } from 'featureFlags/flags/removeWidgetTdp'
 import { TokenPriceQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { Chain, TokenQuery, TokenQueryData } from 'graphql/data/Token'
 import { QueryToken } from 'graphql/data/Token'
@@ -34,11 +35,15 @@ import { useIsUserAddedTokenOnChain } from 'hooks/Tokens'
 import { useOnGlobalChainSwitch } from 'hooks/useGlobalChainSwitch'
 import { UNKNOWN_TOKEN_SYMBOL, useTokenFromActiveNetwork } from 'lib/hooks/useCurrency'
 import { getTokenAddress } from 'lib/utils/analytics'
+import { Swap } from 'pages/Swap'
 import { useCallback, useMemo, useState, useTransition } from 'react'
 import { ArrowLeft } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
+import { Field } from 'state/swap/actions'
+import { SwapState } from 'state/swap/reducer'
 import styled from 'styled-components/macro'
 import { isAddress } from 'utils'
+import { addressesAreEquivalent } from 'utils/addressesAreEquivalent'
 
 import { OnChangeTimePeriod } from './ChartSection'
 import InvalidTokenDetails from './InvalidTokenDetails'
@@ -111,6 +116,7 @@ export default function TokenDetails({
     [urlAddress]
   )
 
+  const { chainId: connectedChainId } = useWeb3React()
   const pageChainId = CHAIN_NAME_TO_CHAIN_ID[chain]
 
   const tokenQueryData = tokenQuery.token
@@ -124,11 +130,12 @@ export default function TokenDetails({
   )
 
   const { token: detailedToken, didFetchFromChain } = useRelevantToken(address, pageChainId, tokenQueryData)
-  const { token: inputToken } = useRelevantToken(inputTokenAddress, pageChainId, undefined)
+  const { token: widgetInputToken } = useRelevantToken(inputTokenAddress, pageChainId, undefined)
 
   const tokenWarning = address ? checkWarning(address) : null
   const isBlockedToken = tokenWarning?.canProceed === false
   const navigate = useNavigate()
+  const widgetRemovalEnabled = useWidgetRemovalEnabled()
 
   // Wrapping navigate in a transition prevents Suspense from unnecessarily showing fallbacks again.
   const [isPending, startTokenTransition] = useTransition()
@@ -145,7 +152,6 @@ export default function TokenDetails({
     [address, crossChainMap, didFetchFromChain, navigate, detailedToken?.isNative]
   )
   useOnGlobalChainSwitch(navigateToTokenForChain)
-
   const navigateToWidgetSelectedToken = useCallback(
     (tokens: SwapTokens) => {
       const newDefaultToken = tokens[Field.OUTPUT] ?? tokens.default
@@ -163,11 +169,39 @@ export default function TokenDetails({
     [chain, navigate]
   )
 
+  const handleCurrencyChange = useCallback(
+    (tokens: Pick<SwapState, Field.INPUT | Field.OUTPUT>) => {
+      if (
+        addressesAreEquivalent(tokens[Field.INPUT]?.currencyId, address) ||
+        addressesAreEquivalent(tokens[Field.OUTPUT]?.currencyId, address)
+      ) {
+        return
+      }
+
+      const newDefaultTokenID = tokens[Field.OUTPUT]?.currencyId ?? tokens[Field.INPUT]?.currencyId
+      startTokenTransition(() =>
+        navigate(
+          getTokenDetailsURL({
+            // The function falls back to "NATIVE" if the address is null
+            address: newDefaultTokenID === 'ETH' ? null : newDefaultTokenID,
+            chain,
+            inputAddress:
+              // If only one token was selected before we navigate, then it was the default token and it's being replaced.
+              // On the new page, the *new* default token becomes the output, and we don't have another option to set as the input token.
+              tokens[Field.INPUT] && tokens[Field.INPUT]?.currencyId !== newDefaultTokenID
+                ? tokens[Field.INPUT]?.currencyId
+                : null,
+          })
+        )
+      )
+    },
+    [address, chain, navigate]
+  )
+
   const [continueSwap, setContinueSwap] = useState<{ resolve: (value: boolean | PromiseLike<boolean>) => void }>()
 
   const [openTokenSafetyModal, setOpenTokenSafetyModal] = useState(false)
 
-  // Show token safety modal if Swap-reviewing a warning token, at all times if the current token is blocked
   const shouldShowSpeedbump = !useIsUserAddedTokenOnChain(address, pageChainId) && tokenWarning !== null
   const onReviewSwapClick = useCallback(
     () => new Promise<boolean>((resolve) => (shouldShowSpeedbump ? setContinueSwap({ resolve }) : resolve(true))),
@@ -234,14 +268,26 @@ export default function TokenDetails({
 
         <RightPanel onClick={() => isBlockedToken && setOpenTokenSafetyModal(true)}>
           <div style={{ pointerEvents: isBlockedToken ? 'none' : 'auto' }}>
-            <Widget
-              defaultTokens={{
-                [Field.INPUT]: inputToken ?? undefined,
-                default: detailedToken ?? undefined,
-              }}
-              onDefaultTokenChange={navigateToWidgetSelectedToken}
-              onReviewSwapClick={onReviewSwapClick}
-            />
+            {widgetRemovalEnabled ? (
+              <Swap
+                chainId={pageChainId}
+                prefilledState={{
+                  [Field.INPUT]: { currencyId: inputTokenAddress },
+                  [Field.OUTPUT]: { currencyId: address === NATIVE_CHAIN_ID ? 'ETH' : address },
+                }}
+                onCurrencyChange={handleCurrencyChange}
+                disableTokenInputs={pageChainId !== connectedChainId}
+              />
+            ) : (
+              <Widget
+                defaultTokens={{
+                  [Field.INPUT]: widgetInputToken ?? undefined,
+                  default: detailedToken ?? undefined,
+                }}
+                onDefaultTokenChange={navigateToWidgetSelectedToken}
+                onReviewSwapClick={onReviewSwapClick}
+              />
+            )}
           </div>
           {tokenWarning && <TokenSafetyMessage tokenAddress={address} warning={tokenWarning} />}
           {detailedToken && <BalanceSummary token={detailedToken} />}

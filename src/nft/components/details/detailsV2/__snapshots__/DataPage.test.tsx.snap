@@ -61,7 +61,7 @@ exports[`placeholder containers load 1`] = `
   justify-content: flex-start;
 }
 
-.c17 {
+.c15 {
   height: 568px;
 }
 
@@ -84,30 +84,24 @@ exports[`placeholder containers load 1`] = `
 .c10 {
   color: #0D111C;
   line-height: 24px;
-  cursor: default;
-}
-
-.c13 {
-  color: #0D111C;
-  line-height: 24px;
   cursor: pointer;
 }
 
-.c13:hover {
+.c10:hover {
   opacity: 0.6;
 }
 
-.c14 {
+.c12 {
   color: #98A1C0;
   line-height: 24px;
   cursor: pointer;
 }
 
-.c14:hover {
+.c12:hover {
   opacity: 0.6;
 }
 
-.c16 {
+.c14 {
   background: #D2D9EE;
   border-radius: 4px;
   padding: 2px 4px;
@@ -115,7 +109,7 @@ exports[`placeholder containers load 1`] = `
   line-height: 12px;
 }
 
-.c15 {
+.c13 {
   height: 252px;
 }
 
@@ -132,10 +126,6 @@ exports[`placeholder containers load 1`] = `
   -ms-flex-item-align: start;
   align-self: flex-start;
   padding-left: 0px;
-}
-
-.c12 {
-  height: 492px;
 }
 
 .c1 {
@@ -206,33 +196,11 @@ exports[`placeholder containers load 1`] = `
               <div
                 class="c3 c11"
               >
-                Traits
-              </div>
-            </div>
-          </div>
-          <div
-            class="c12"
-          >
-            Traits Content
-          </div>
-        </div>
-        <div
-          class="c7"
-        >
-          <div
-            class="c3 c4 c8"
-          >
-            <div
-              class="c9 c13 css-rjqmed"
-            >
-              <div
-                class="c3 c11"
-              >
                 Description
               </div>
             </div>
             <div
-              class="c9 c14 css-rjqmed"
+              class="c9 c12 css-rjqmed"
             >
               <div
                 class="c3 c11"
@@ -242,7 +210,7 @@ exports[`placeholder containers load 1`] = `
             </div>
           </div>
           <div
-            class="c15"
+            class="c13"
           >
             Description Content
           </div>
@@ -255,7 +223,7 @@ exports[`placeholder containers load 1`] = `
           class="c3 c4 c8"
         >
           <div
-            class="c9 c13 css-rjqmed"
+            class="c9 c10 css-rjqmed"
           >
             <div
               class="c3 c11"
@@ -264,28 +232,28 @@ exports[`placeholder containers load 1`] = `
             </div>
           </div>
           <div
-            class="c9 c14 css-rjqmed"
+            class="c9 c12 css-rjqmed"
           >
             <div
               class="c3 c11"
             >
               Offers
               <div
-                class="c16 css-f8aq60"
+                class="c14 css-f8aq60"
               >
                 10+
               </div>
             </div>
           </div>
           <div
-            class="c9 c14 css-rjqmed"
+            class="c9 c12 css-rjqmed"
           >
             <div
               class="c3 c11"
             >
               Listings
               <div
-                class="c16 css-f8aq60"
+                class="c14 css-f8aq60"
               >
                 10+
               </div>
@@ -293,7 +261,7 @@ exports[`placeholder containers load 1`] = `
           </div>
         </div>
         <div
-          class="c17"
+          class="c15"
         >
           Activity Content
         </div>

@@ -101,6 +101,7 @@ export default function SettingsTab({ autoSlippage }: { autoSlippage: Percent })
         disabled={!isSupportedChainId(chainId)}
         onClick={toggle}
         id="open-settings-dialog-button"
+        data-testid="open-settings-dialog-button"
         aria-label={t`Transaction Settings`}
       >
         <StyledMenuIcon data-testid="swap-settings-button" />

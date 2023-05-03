@@ -71,6 +71,7 @@ export default function TransactionDeadlineSettings() {
       <Row>
         <InputContainer gap="md" error={!!deadlineError}>
           <Input
+            data-testid="deadline-input"
             placeholder={(DEFAULT_DEADLINE_FROM_NOW / 60).toString()}
             value={deadlineInput}
             onChange={(e) => parseCustomDeadline(e.target.value)}

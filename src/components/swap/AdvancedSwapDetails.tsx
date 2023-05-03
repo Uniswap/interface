@@ -37,7 +37,7 @@ function TextWithLoadingPlaceholder({
   children: JSX.Element
 }) {
   return syncing ? (
-    <LoadingRows>
+    <LoadingRows data-testid="loading-rows">
       <div style={{ height: '15px', width: `${width}px` }} />
     </LoadingRows>
   ) : (
@@ -53,7 +53,7 @@ export function AdvancedSwapDetails({
 }: AdvancedSwapDetailsProps) {
   const theme = useTheme()
   const { chainId } = useWeb3React()
-  const nativeCurrency = useNativeCurrency()
+  const nativeCurrency = useNativeCurrency(chainId)
 
   const { expectedOutputAmount, priceImpact } = useMemo(() => {
     return {
