@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link, LinkProps } from 'react-router-dom'
 
 import {
   ButtonFrame,
@@ -43,7 +43,7 @@ const CustomButtonFrame = styled(ButtonFrame, {
       },
       [ButtonSize.Medium]: {
         padding: '$spacing12',
-        borderRadius: '$roundedFull',
+        borderRadius: '$rounded16',
       },
       [ButtonSize.Large]: {
         padding: '$spacing16',
@@ -70,7 +70,10 @@ export type ButtonProps = TamaguiButtonProps & CustomButtonProps
 export const Button = CustomButtonFrame.styleable(
   ({ children, ...props }: ButtonProps) => {
     return (
-      <CustomButtonFrame {...props} theme={props.theme}>
+      <CustomButtonFrame
+        {...props}
+        opacity={props.disabled ? 0.4 : 1}
+        theme={props.theme}>
         {/* TODO: improve styling button text based on size of button, e.g. derive weight and color from size / theme */}
         <CustomButtonText fontWeight="600">{children}</CustomButtonText>
       </CustomButtonFrame>
@@ -78,15 +81,26 @@ export const Button = CustomButtonFrame.styleable(
   }
 )
 
+// TODO: if we ever decide to not use React Router for navigation, we should remove this component as well since it won't be needed
 export const LinkButton = ({
   to,
   state,
   onClick,
   children,
   ...props
-}: // eslint-disable-next-line @typescript-eslint/no-explicit-any
-ButtonProps & { to: string; state?: any; onClick?: any }): JSX.Element => (
-  <Link state={state} style={styles.linkButton} to={to} onClick={onClick}>
+}: ButtonProps & {
+  to: string
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  state?: any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  onClick?: any
+  linkStyleProps?: Pick<LinkProps, 'style'>
+}): JSX.Element => (
+  <Link
+    state={state}
+    style={{ ...styles.linkButton, ...props.linkStyleProps?.style }}
+    to={to}
+    onClick={onClick}>
     <Button {...props} theme={props.theme}>
       {children}
     </Button>
@@ -97,5 +111,8 @@ const styles = {
   linkButton: {
     display: 'flex',
     textDecoration: 'none',
+    focus: {
+      outline: 'none',
+    },
   },
 }

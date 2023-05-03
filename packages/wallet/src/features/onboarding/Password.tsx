@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from 'react-router-dom'
-import { Input, Stack, XStack } from 'tamagui'
+import { Input, Stack, XStack, YStack } from 'tamagui'
 import { Text } from 'ui/src'
 import { Button } from 'ui/src/components/button/Button'
 import { usePasswordInput } from 'wallet/src/features/auth/Locked'
@@ -37,18 +37,40 @@ export function Password(): JSX.Element {
   })
 
   return (
-    <Stack alignItems="center">
-      <Text variant="headlineMedium">Set a password</Text>
-      <Text variant="subheadSmall">You'll need this to unlock your wallet</Text>
+    <Stack alignItems="center" gap="$spacing36" minWidth={450}>
+      <YStack alignItems="center" gap="$spacing8">
+        <Text variant="headlineMedium">Set a password</Text>
+        <Text variant="subheadSmall">
+          You'll need this to unlock your wallet
+        </Text>
+      </YStack>
       <Input
         secureTextEntry
+        backgroundColor="$background1"
+        borderColor="$backgroundOutline"
+        borderRadius="$rounded12"
+        borderWidth={1}
+        focusStyle={styles.inputFocus}
+        height="auto"
+        hoverStyle={styles.inputHover}
         id="password"
-        maxWidth={180}
+        paddingHorizontal="$spacing16"
+        paddingVertical="$spacing12"
+        placeholder="Enter your password"
+        placeholderTextColor="$textTertiary"
+        width="100%"
         {...passwordInputProps}
       />
-      <XStack>
-        <Button onPress={(): void => navigate(-1)}>Back</Button>
+      <XStack gap="$spacing12" width="100%">
         <Button
+          flexGrow={1}
+          theme="secondary"
+          onPress={(): void => navigate(-1)}>
+          Back
+        </Button>
+        <Button
+          flexGrow={1}
+          theme="primary"
           onPress={(): void => {
             dispatch(
               importAccountActions.trigger({
@@ -64,4 +86,9 @@ export function Password(): JSX.Element {
       </XStack>
     </Stack>
   )
+}
+
+const styles = {
+  inputFocus: { borderWidth: 1, borderColor: '$textTertiary', outlineWidth: 0 },
+  inputHover: { borderWidth: 1, borderColor: '$background3', outlineWidth: 0 },
 }

@@ -59,7 +59,7 @@ function Locked(): JSX.Element {
             borderRadius="$rounded24"
             justifyContent="center"
             padding="$spacing12">
-            <Image height={ICON_SIZE} src={UNISWAP_LOGO} width={ICON_SIZE} />
+            <Image height={ICON_SIZE} source={UNISWAP_LOGO} width={ICON_SIZE} />
           </Stack>
         </Stack>
         <Text color="$textPrimary" textAlign="center" variant="headlineMedium">

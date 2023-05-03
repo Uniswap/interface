@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Input, Stack, XStack } from 'tamagui'
+import { Input, Stack, XStack, YStack } from 'tamagui'
 import { Text } from 'ui/src'
 import { Button, LinkButton } from 'ui/src/components/button/Button'
 import { OnboardingRoutes } from 'wallet/src/navigation/constants'
@@ -19,23 +19,44 @@ export function ImportMnemonic(): JSX.Element {
   }
 
   return (
-    <Stack alignItems="center">
-      <Text variant="headlineMedium">Enter your recovery phrase</Text>
-      <Text variant="subheadSmall">
-        Your recovery phrase will only be stored locally on your browser
-      </Text>
+    <Stack alignItems="center" gap="$spacing36" minWidth={450}>
+      <YStack alignItems="center" gap="$spacing8">
+        <Text variant="headlineMedium">Enter your recovery phrase</Text>
+        <Text variant="subheadSmall">
+          Your recovery phrase will only be stored locally on your browser
+        </Text>
+      </YStack>
       <Input
         secureTextEntry
+        backgroundColor="$background1"
+        borderColor="$backgroundOutline"
+        borderRadius="$rounded12"
+        borderWidth={1}
+        focusStyle={styles.inputFocus}
+        height="auto"
+        hoverStyle={styles.inputHover}
         id="mnemonic"
-        maxWidth={180}
+        paddingHorizontal="$spacing16"
+        paddingVertical="$spacing12"
+        placeholder="word1 word2 word3 word4 word5 word6 word7 word8 word9 word10 word11 word12"
+        placeholderTextColor="$textTertiary"
         value={mnemonic}
+        width="100%"
         onChangeText={setMnemonic}
       />
-      <XStack>
-        <Button theme="secondary" onPress={(): void => navigate(-1)}>
-          Cancel
+      <XStack gap="$spacing12" width="100%">
+        <Button
+          flexGrow={1}
+          theme="secondary"
+          onPress={(): void => navigate(-1)}>
+          Back
         </Button>
         <LinkButton
+          disabled={!mnemonic}
+          // this gets passed down to the button component the Link wraps
+          flexGrow={1}
+          // this applies to the Link component itself
+          linkStyleProps={{ style: { flexGrow: 1 } }}
           state={{ data: { mnemonic, from: OnboardingRoutes.Import } }}
           theme="primary"
           to={`../${OnboardingRoutes.Password}`}
@@ -45,4 +66,9 @@ export function ImportMnemonic(): JSX.Element {
       </XStack>
     </Stack>
   )
+}
+
+const styles = {
+  inputFocus: { borderWidth: 1, borderColor: '$textTertiary', outlineWidth: 0 },
+  inputHover: { borderWidth: 1, borderColor: '$background3', outlineWidth: 0 },
 }
