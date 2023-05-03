@@ -8,7 +8,7 @@ import {
   useState,
 } from 'react'
 import { call, getContext } from 'typed-redux-saga'
-import { ChainId } from '../chains/chains'
+import { ChainId } from 'wallet/src/constants/chains'
 
 import { ContractManager } from '../contracts/ContractManager'
 import { logger } from '../logger/logger'

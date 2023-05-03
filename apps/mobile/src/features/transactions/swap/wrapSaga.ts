@@ -3,7 +3,6 @@ import { Contract, providers } from 'ethers'
 import { CallEffect } from 'redux-saga/effects'
 import { Weth } from 'src/abis/types'
 import WETH_ABI from 'src/abis/weth.json'
-import { ChainId } from 'src/constants/chains'
 import { WRAPPED_NATIVE_CURRENCY } from 'src/constants/tokens'
 import { sendTransaction } from 'src/features/transactions/sendTransaction'
 import {
@@ -14,6 +13,7 @@ import {
 import { Account } from 'src/features/wallet/accounts/types'
 import { createMonitoredSaga } from 'src/utils/saga'
 import { call } from 'typed-redux-saga'
+import { ChainId } from 'wallet/src/constants/chains'
 
 export enum WrapType {
   NotApplicable,

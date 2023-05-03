@@ -1,4 +1,3 @@
-import { ChainId } from 'src/constants/chains'
 import { MoonpayTransactionsResponse } from 'src/features/fiatOnRamp/types'
 import {
   FiatPurchaseTransactionInfo,
@@ -7,6 +6,7 @@ import {
   TransactionType,
 } from 'src/features/transactions/types'
 import { logger } from 'src/utils/logger'
+import { ChainId } from 'wallet/src/constants/chains'
 import { toSupportedChainId } from 'wallet/src/utils/chainId'
 import { getNativeCurrencyAddressForChain } from 'wallet/src/utils/currencyId'
 

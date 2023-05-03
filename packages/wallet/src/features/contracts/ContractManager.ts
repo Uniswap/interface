@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { Contract, ContractInterface, providers } from 'ethers'
+import { ChainId } from 'wallet/src/constants/chains'
 import { getValidAddress } from 'wallet/src/utils/addresses'
 import { isNativeCurrencyAddress } from 'wallet/src/utils/currencyId'
-import { ChainId } from '../chains/chains'
 import { logger } from '../logger/logger'
 
 export class ContractManager {

@@ -1,8 +1,12 @@
 import { useMemo } from 'react'
 import { SelectEffect } from 'redux-saga/effects'
 import { select } from 'typed-redux-saga'
+import {
+  ALL_SUPPORTED_CHAIN_IDS,
+  ChainId,
+  ChainIdTo,
+} from 'wallet/src/constants/chains'
 import { useAppSelector } from '../../state'
-import { ALL_SUPPORTED_CHAIN_IDS, ChainId, ChainIdTo } from './chains'
 
 import { ChainState, PartialRootState } from './slice'
 

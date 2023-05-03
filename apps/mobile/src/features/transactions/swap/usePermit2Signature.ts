@@ -11,12 +11,12 @@ import dayjs from 'dayjs'
 import { BigNumber, providers } from 'ethers'
 import { useCallback } from 'react'
 import { useProvider, useWalletSigners } from 'src/app/walletContext'
-import { ChainId } from 'src/constants/chains'
 import { Account } from 'src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
 import { SignerManager } from 'src/features/wallet/signing/SignerManager'
 import { signTypedData } from 'src/features/wallet/signing/signing'
 import { useAsyncData } from 'src/utils/hooks'
+import { ChainId } from 'wallet/src/constants/chains'
 import { currentTimeInSeconds, inXMinutesUnix } from 'wallet/src/utils/time'
 
 const PERMIT2_SIG_VALIDITY_TIME = 30 // minutes

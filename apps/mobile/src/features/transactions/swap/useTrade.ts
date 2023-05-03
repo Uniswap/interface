@@ -5,7 +5,6 @@ import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { Route as V2RouteSDK } from '@uniswap/v2-sdk'
 import { Route as V3RouteSDK } from '@uniswap/v3-sdk'
 import { useMemo } from 'react'
-import { isL2Chain } from 'src/constants/chains'
 import { PollingInterval } from 'src/constants/misc'
 import {
   MAX_AUTO_SLIPPAGE_TOLERANCE,
@@ -17,6 +16,7 @@ import { useUSDCValue } from 'src/features/routing/useUSDCPrice'
 import { transformQuoteToTrade } from 'src/features/transactions/swap/routeUtils'
 import { clearStaleTrades } from 'src/features/transactions/swap/utils'
 import { useDebounceWithStatus } from 'src/utils/timing'
+import { isL2Chain } from 'wallet/src/constants/chains'
 
 // TODO: [MOB-3906] use composition instead of inheritance
 export class Trade<

@@ -3,7 +3,7 @@ import {
   NATIVE_ADDRESS,
   NATIVE_ADDRESS_ALT,
 } from 'wallet/src/constants/addresses'
-import { ChainId, isPolygonChain } from 'wallet/src/features/chains/chains'
+import { ChainId, isPolygonChain } from 'wallet/src/constants/chains'
 import { areAddressesEqual } from './addresses'
 import { toSupportedChainId } from './chainId'
 

@@ -17,7 +17,6 @@ import {
 import { AnimatedFlex, Flex } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { Text } from 'src/components/Text'
-import { ChainId } from 'src/constants/chains'
 import { EMPTY_ARRAY } from 'src/constants/misc'
 import { SafetyLevel, useExploreSearchQuery } from 'src/data/__generated__/types-and-hooks'
 import { useENS } from 'src/features/ens/useENS'
@@ -30,6 +29,7 @@ import {
 } from 'src/features/explore/searchHistorySlice'
 import { useIsSmartContractAddress } from 'src/features/transactions/transfer/hooks'
 import { logger } from 'src/utils/logger'
+import { ChainId } from 'wallet/src/constants/chains'
 import { getValidAddress } from 'wallet/src/utils/addresses'
 
 export const SEARCH_RESULT_HEADER_KEY = 'header'

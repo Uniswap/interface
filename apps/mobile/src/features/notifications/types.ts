@@ -1,8 +1,8 @@
 import { TradeType } from '@uniswap/sdk-core'
-import { ChainId } from 'src/constants/chains'
 import { AssetType } from 'src/entities/assets'
 import { FinalizedTransactionStatus, TransactionType } from 'src/features/transactions/types'
 import { WalletConnectEvent } from 'src/features/walletConnect/saga'
+import { ChainId } from 'wallet/src/constants/chains'
 
 export enum AppNotificationType {
   Default,

@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { ChainId, ChainIdTo } from './chains'
+import { ChainId, ChainIdTo } from 'wallet/src/constants/chains'
 
 export interface ChainState {
   isActive: boolean

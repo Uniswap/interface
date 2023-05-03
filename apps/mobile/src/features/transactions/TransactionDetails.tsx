@@ -14,9 +14,9 @@ import { Warning } from 'src/components/modals/WarningModal/types'
 import { getAlertColor } from 'src/components/modals/WarningModal/WarningModal'
 import { NetworkFee } from 'src/components/Network/NetworkFee'
 import { Text } from 'src/components/Text'
-import { ChainId } from 'src/constants/chains'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
+import { ChainId } from 'wallet/src/constants/chains'
 
 const ALERT_ICONS_SIZE = 18
 

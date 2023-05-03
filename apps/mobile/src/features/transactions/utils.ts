@@ -1,7 +1,6 @@
 import { NetInfoState } from '@react-native-community/netinfo'
 import { CurrencyAmount, NativeCurrency, TradeType } from '@uniswap/sdk-core'
 import { BigNumber, providers } from 'ethers'
-import { ChainId } from 'src/constants/chains'
 import {
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,
@@ -9,6 +8,7 @@ import {
   TransactionStatus,
 } from 'src/features/transactions/types'
 import { v4 as uuid } from 'uuid'
+import { ChainId } from 'wallet/src/constants/chains'
 
 export function getSerializableTransactionRequest(
   request: providers.TransactionRequest,

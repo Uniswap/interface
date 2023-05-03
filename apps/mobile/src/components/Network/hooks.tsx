@@ -4,10 +4,10 @@ import { Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
 import { Separator } from 'src/components/layout/Separator'
 import { Text } from 'src/components/Text'
-import { ChainId, CHAIN_INFO } from 'src/constants/chains'
 import { useActiveChainIds } from 'src/features/chains/utils'
 import { ElementName } from 'src/features/telemetry/constants'
 import { iconSizes } from 'src/styles/sizing'
+import { ChainId, CHAIN_INFO } from 'wallet/src/constants/chains'
 
 export function useNetworkOptions(
   selectedChain: ChainId | null,

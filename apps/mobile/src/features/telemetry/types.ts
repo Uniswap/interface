@@ -2,11 +2,11 @@ import { RenderPassReport } from '@shopify/react-native-performance'
 import { MoonpayEventName, SharedEventName, SwapEventName } from '@uniswap/analytics-events'
 import { TraceProps } from 'src/components/telemetry/Trace'
 import { TraceEventProps } from 'src/components/telemetry/TraceEvent'
-import { ChainId } from 'src/constants/chains'
 import { ImportType } from 'src/features/onboarding/utils'
 import { MobileEventName } from 'src/features/telemetry/constants'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
 import { EthMethod, WCEventType, WCRequestOutcome } from 'src/features/walletConnect/types'
+import { ChainId } from 'wallet/src/constants/chains'
 
 type BaseEventProperty = Partial<TraceEventProps & TraceProps> | undefined
 

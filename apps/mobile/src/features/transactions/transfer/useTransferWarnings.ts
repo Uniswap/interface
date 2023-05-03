@@ -8,12 +8,12 @@ import {
   WarningLabel,
   WarningSeverity,
 } from 'src/components/modals/WarningModal/types'
-import { ChainId } from 'src/constants/chains'
 import { CurrencyInfo } from 'src/features/dataApi/types'
 import { GQLNftAsset } from 'src/features/nfts/hooks'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
 import { DerivedTransferInfo } from 'src/features/transactions/transfer/hooks'
 import { useMemoCompare } from 'src/utils/hooks'
+import { ChainId } from 'wallet/src/constants/chains'
 import { currencyAddress } from 'wallet/src/utils/currencyId'
 import { isOffline } from '../utils'
 

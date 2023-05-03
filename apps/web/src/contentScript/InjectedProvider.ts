@@ -5,7 +5,7 @@ import { ethErrors } from 'eth-rpc-errors'
 import { ethers } from 'ethers'
 import EventEmitter from 'eventemitter3'
 import { v4 as uuidv4 } from 'uuid'
-import { ChainId } from 'wallet/src/features/chains/chains'
+import { ChainId } from 'wallet/src/constants/chains'
 import {
   AccountResponse,
   BaseDappRequest,

@@ -8,12 +8,12 @@ import {
   NATIVE_ADDRESS,
   NATIVE_ADDRESS_ALT,
 } from 'wallet/src/constants/addresses'
-import { WRAPPED_NATIVE_CURRENCY } from 'wallet/src/constants/tokens'
 import {
   ChainId,
   CHAIN_INFO,
   isPolygonChain,
-} from 'wallet/src/features/chains/chains'
+} from 'wallet/src/constants/chains'
+import { WRAPPED_NATIVE_CURRENCY } from 'wallet/src/constants/tokens'
 
 export class NativeCurrency implements NativeCurrencyClass {
   constructor(chainId: number) {

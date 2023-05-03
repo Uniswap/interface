@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { RootState } from 'src/app/rootReducer'
-import { ChainId } from 'src/constants/chains'
 import { SafetyLevel } from 'src/data/__generated__/types-and-hooks'
+import { ChainId } from 'wallet/src/constants/chains'
 
 const SEARCH_HISTORY_LENGTH = 5
 

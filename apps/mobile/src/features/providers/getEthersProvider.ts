@@ -1,7 +1,7 @@
 import { providers as ethersProviders } from 'ethers'
 import { Config } from 'src/config'
-import { ChainId } from 'src/constants/chains'
 import { getInfuraChainName } from 'src/features/providers/utils'
+import { ChainId } from 'wallet/src/constants/chains'
 
 export function getEthersProvider(
   chainId: ChainId,

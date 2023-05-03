@@ -1,10 +1,10 @@
 import { TradeType } from '@uniswap/sdk-core'
 import { providers } from 'ethers'
-import { ChainId, ChainIdTo } from 'src/constants/chains'
 import { TransactionListQuery } from 'src/data/__generated__/types-and-hooks'
 import { AssetType } from 'src/entities/assets'
 import { MoonpayCurrency } from 'src/features/fiatOnRamp/types'
 import { DappInfo } from 'src/features/walletConnect/types'
+import { ChainId, ChainIdTo } from 'wallet/src/constants/chains'
 
 export type ChainIdToTxIdToDetails = ChainIdTo<{ [txId: string]: TransactionDetails }>
 

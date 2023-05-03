@@ -1,6 +1,6 @@
 import Fuse from 'fuse.js'
 import { TokenOption } from 'src/components/TokenSelector/types'
-import { ChainId } from 'src/constants/chains'
+import { ChainId } from 'wallet/src/constants/chains'
 
 const searchOptions: Fuse.IFuseOptions<TokenOption> = {
   includeMatches: true,

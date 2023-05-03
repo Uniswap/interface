@@ -1,7 +1,7 @@
 // Copied from https://github.com/Uniswap/interface/blob/main/src/constants/tokens.ts
 import { Token } from '@uniswap/sdk-core'
+import { ChainId } from 'wallet/src/constants/chains'
 import { UNI_ADDRESS } from './addresses'
-import { ChainId } from './chains'
 
 export const DAI = new Token(
   ChainId.Mainnet,

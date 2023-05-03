@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { createApi, fetchBaseQuery, retry, skipToken } from '@reduxjs/toolkit/query/react'
 import { walletContextValue } from 'src/app/walletContext'
-import { ChainId } from 'src/constants/chains'
+import { ChainId } from 'wallet/src/constants/chains'
 import { areAddressesEqual } from 'wallet/src/utils/addresses'
 import { ONE_MINUTE_MS, ONE_SECOND_MS } from 'wallet/src/utils/time'
 export type EnslookupParams = {

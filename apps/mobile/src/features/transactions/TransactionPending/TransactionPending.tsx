@@ -4,11 +4,11 @@ import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { AnimatedFlex, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
-import { ChainId } from 'src/constants/chains'
 import { ElementName } from 'src/features/telemetry/constants'
 import { StatusAnimation } from 'src/features/transactions/TransactionPending/StatusAnimation'
 import { TransactionDetails, TransactionStatus } from 'src/features/transactions/types'
 import { openTransactionLink } from 'src/utils/linking'
+import { ChainId } from 'wallet/src/constants/chains'
 
 type TransactionStatusProps = {
   transaction: TransactionDetails | undefined

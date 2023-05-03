@@ -3,10 +3,10 @@ import React from 'react'
 import { Image } from 'react-native'
 import { style } from 'src/components/CurrencyLogo/styles'
 import { Box } from 'src/components/layout/Box'
-import { ChainId, CHAIN_INFO } from 'src/constants/chains'
 import { iconSizes } from 'src/styles/sizing'
 import { Theme } from 'src/styles/theme'
 import { getNetworkColorKey } from 'src/utils/colors'
+import { ChainId, CHAIN_INFO } from 'wallet/src/constants/chains'
 
 type NetworkLogoProps = {
   chainId: ChainId

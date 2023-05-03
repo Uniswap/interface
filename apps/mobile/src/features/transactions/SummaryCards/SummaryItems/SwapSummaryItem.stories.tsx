@@ -1,7 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { TradeType } from '@uniswap/sdk-core'
 import React from 'react'
-import { ChainId } from 'src/constants/chains'
 import { TokenDocument } from 'src/data/__generated__/types-and-hooks'
 import {
   ExactInputSwapTransactionInfo,
@@ -10,6 +9,7 @@ import {
   TransactionStatus,
   TransactionType,
 } from 'src/features/transactions/types'
+import { ChainId } from 'wallet/src/constants/chains'
 import { buildCurrencyId, buildNativeCurrencyId } from 'wallet/src/utils/currencyId'
 import SwapSummaryItem from './SwapSummaryItem'
 

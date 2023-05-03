@@ -50,7 +50,6 @@ import {
 import { persistConfig } from 'src/app/store'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { SWAP_ROUTER_ADDRESSES } from 'src/constants/addresses'
-import { ChainId } from 'src/constants/chains'
 import { initialBiometricsSettingsState } from 'src/features/biometrics/slice'
 import { ChainsState, initialChainsState } from 'src/features/chains/chainsSlice'
 import { initialCloudBackupState } from 'src/features/CloudBackup/cloudBackupSlice'
@@ -74,6 +73,7 @@ import { Account, AccountType, SignerMnemonicAccount } from 'src/features/wallet
 import { initialWalletState } from 'src/features/wallet/walletSlice'
 import { initialWalletConnectState } from 'src/features/walletConnect/walletConnectSlice'
 import { account, fiatOnRampTxDetailsFailed, txDetailsConfirmed } from 'src/test/fixtures'
+import { ChainId } from 'wallet/src/constants/chains'
 
 // helps with object assignement
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

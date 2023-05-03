@@ -1,6 +1,5 @@
 import { CurrencyAmount } from '@uniswap/sdk-core'
 import { WarningLabel } from 'src/components/modals/WarningModal/types'
-import { ChainId } from 'src/constants/chains'
 import { DAI, USDC } from 'src/constants/tokens'
 import { DerivedSwapInfo } from 'src/features/transactions/swap/hooks'
 import { getSwapWarnings } from 'src/features/transactions/swap/useSwapWarnings'
@@ -13,6 +12,7 @@ import {
   networkUnknown,
   networkUp,
 } from 'src/test/fixtures'
+import { ChainId } from 'wallet/src/constants/chains'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
 import { isOffline } from '../utils'
 

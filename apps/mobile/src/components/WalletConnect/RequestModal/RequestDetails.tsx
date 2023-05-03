@@ -8,7 +8,6 @@ import { LinkButton } from 'src/components/buttons/LinkButton'
 import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { SpendingDetails } from 'src/components/WalletConnect/RequestModal/SpendingDetails'
-import { ChainId } from 'src/constants/chains'
 import { useENS } from 'src/features/ens/useENS'
 import { EthMethod, EthTransaction } from 'src/features/walletConnect/types'
 import {
@@ -20,6 +19,7 @@ import { Theme } from 'src/styles/theme'
 import { ExplorerDataType, getExplorerLink } from 'src/utils/linking'
 import { logger } from 'src/utils/logger'
 import { useNoYoloParser } from 'src/utils/useNoYoloParser'
+import { ChainId } from 'wallet/src/constants/chains'
 import { getValidAddress, shortenAddress } from 'wallet/src/utils/addresses'
 
 const getStrMessage = (request: WalletConnectRequest): string => {

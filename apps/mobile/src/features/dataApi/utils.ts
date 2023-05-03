@@ -1,7 +1,6 @@
 import { ApolloError } from '@apollo/client'
 import { Token } from '@uniswap/sdk-core'
 import { useEffect, useState } from 'react'
-import { ChainId } from 'src/constants/chains'
 import {
   Chain,
   ContractInput,
@@ -9,6 +8,7 @@ import {
   TopTokensQuery,
 } from 'src/data/__generated__/types-and-hooks'
 import { CurrencyInfo } from 'src/features/dataApi/types'
+import { ChainId } from 'wallet/src/constants/chains'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
 import { fromGraphQLChain, toGraphQLChain } from 'wallet/src/utils/chainId'
 import {

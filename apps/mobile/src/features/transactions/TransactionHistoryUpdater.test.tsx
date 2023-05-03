@@ -4,7 +4,6 @@ import { waitFor } from '@testing-library/react-native'
 import dayjs from 'dayjs'
 import MockDate from 'mockdate'
 import React from 'react'
-import { ChainId } from 'src/constants/chains'
 import {
   TransactionHistoryUpdaterDocument,
   TransactionHistoryUpdaterQuery,
@@ -20,6 +19,7 @@ import { Account } from 'src/features/wallet/accounts/types'
 import { account, account2 } from 'src/test/fixtures'
 import { MAX_FIXTURE_TIMESTAMP, Portfolios, PortfoliosWithReceive } from 'src/test/gqlFixtures'
 import { render } from 'src/test/test-utils'
+import { ChainId } from 'wallet/src/constants/chains'
 
 const mockedRefetchQueries = jest.fn()
 jest.mock('src/data/hooks', () => ({

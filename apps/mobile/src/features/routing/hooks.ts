@@ -2,7 +2,6 @@ import { SerializedError } from '@reduxjs/toolkit'
 import { FetchBaseQueryError, skipToken } from '@reduxjs/toolkit/dist/query'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
-import { ChainId } from 'src/constants/chains'
 import { PollingInterval } from 'src/constants/misc'
 import { FEATURE_FLAGS } from 'src/features/experiments/constants'
 import { useFeatureFlag } from 'src/features/experiments/hooks'
@@ -11,6 +10,7 @@ import { PermitSignatureInfo } from 'src/features/transactions/swap/usePermit2Si
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { logger } from 'src/utils/logger'
 import { useDebounceWithStatus } from 'src/utils/timing'
+import { ChainId } from 'wallet/src/constants/chains'
 import { currencyAddressForSwapQuote } from 'wallet/src/utils/currencyId'
 
 export interface UseQuoteProps {

@@ -5,7 +5,7 @@ import { NetworkLogo } from 'src/components/CurrencyLogo/NetworkLogo'
 import { Flex } from 'src/components/layout'
 import { Box, BoxProps } from 'src/components/layout/Box'
 import { Text } from 'src/components/Text'
-import { ChainId, CHAIN_INFO } from 'src/constants/chains'
+import { ChainId, CHAIN_INFO } from 'wallet/src/constants/chains'
 
 export type NetworkLogosProps = { chains: ChainId[]; showFirstChainLabel?: boolean } & BoxProps
 

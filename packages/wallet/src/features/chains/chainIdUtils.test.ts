@@ -1,4 +1,5 @@
 import { BigNumber } from 'ethers'
+import { ChainId, TESTNET_CHAIN_IDS } from 'wallet/src/constants/chains'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import {
   isTestnet,
@@ -6,7 +7,6 @@ import {
   toSupportedChainId,
 } from 'wallet/src/utils/chainId'
 import { getPollingIntervalByBlocktime } from './chainIdUtils'
-import { ChainId, TESTNET_CHAIN_IDS } from './chains'
 
 describe(toSupportedChainId, () => {
   it('handles undefined input', () => {

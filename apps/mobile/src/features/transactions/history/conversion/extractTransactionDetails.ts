@@ -1,4 +1,3 @@
-import { ChainId } from 'src/constants/chains'
 import { ActivityType } from 'src/data/__generated__/types-and-hooks'
 import parseApproveTransaction from 'src/features/transactions/history/conversion/parseApproveTransaction'
 import parseNFTMintTransaction from 'src/features/transactions/history/conversion/parseMintTransaction'
@@ -12,6 +11,7 @@ import {
   TransactionType,
   TransactionTypeInfo,
 } from 'src/features/transactions/types'
+import { ChainId } from 'wallet/src/constants/chains'
 
 /**
  * Parses txn API response item and identifies known txn type. Helps strictly

@@ -1,7 +1,7 @@
 import { BigNumber } from 'ethers'
+import { ChainId, TESTNET_CHAIN_IDS } from 'wallet/src/constants/chains'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import { Chain } from 'wallet/src/data/__generated__/types-and-hooks'
-import { ChainId, TESTNET_CHAIN_IDS } from 'wallet/src/features/chains/chains'
 import {
   fromGraphQLChain,
   getPollingIntervalByBlocktime,

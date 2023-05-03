@@ -1,12 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import React from 'react'
-import { ChainId } from 'src/constants/chains'
 import {
   TransactionDetails,
   TransactionStatus,
   TransactionType,
   WCConfirmInfo,
 } from 'src/features/transactions/types'
+import { ChainId } from 'wallet/src/constants/chains'
 import WCSummaryItem from './WCSummaryItem'
 
 const meta: Meta<typeof WCSummaryItem> = {

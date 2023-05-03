@@ -1,6 +1,11 @@
 import { providers as ethersProviders } from 'ethers'
 import { Task } from 'redux-saga'
-import { ChainId, CHAIN_INFO, L1ChainInfo, L2ChainInfo } from '../chains/chains'
+import {
+  ChainId,
+  CHAIN_INFO,
+  L1ChainInfo,
+  L2ChainInfo,
+} from 'wallet/src/constants/chains'
 import { logger } from '../logger/logger'
 
 import { getInfuraChainName } from './utils'

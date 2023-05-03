@@ -16,7 +16,6 @@ import {
 import { NetworkLogo } from 'src/components/CurrencyLogo/NetworkLogo'
 import { SplitLogo } from 'src/components/CurrencyLogo/SplitLogo'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
-import { CHAIN_INFO } from 'src/constants/chains'
 import { AssetType } from 'src/entities/assets'
 import { useENS } from 'src/features/ens/useENS'
 import { closeAllModals, closeModal, openModal } from 'src/features/modals/modalSlice'
@@ -57,6 +56,7 @@ import { TransactionStatus, TransactionType } from 'src/features/transactions/ty
 import { selectActiveAccountAddress } from 'src/features/wallet/selectors'
 import { WalletConnectEvent } from 'src/features/walletConnect/saga'
 import { iconSizes } from 'src/styles/sizing'
+import { CHAIN_INFO } from 'wallet/src/constants/chains'
 import { toSupportedChainId } from 'wallet/src/utils/chainId'
 import { buildCurrencyId } from 'wallet/src/utils/currencyId'
 

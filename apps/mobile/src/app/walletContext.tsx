@@ -7,12 +7,12 @@ import React, {
   useEffect,
   useState,
 } from 'react'
-import { ChainId } from 'src/constants/chains'
 import { ContractManager } from 'src/features/contracts/ContractManager'
 import { ProviderManager } from 'src/features/providers/ProviderManager'
 import { SignerManager } from 'src/features/wallet/signing/SignerManager'
 import { logger } from 'src/utils/logger'
 import { call, getContext } from 'typed-redux-saga'
+import { ChainId } from 'wallet/src/constants/chains'
 
 export interface WalletContextValue {
   signers: SignerManager

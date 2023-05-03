@@ -10,7 +10,6 @@ import { Box, Flex } from 'src/components/layout'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { Text } from 'src/components/Text'
 import { DappHeaderIcon } from 'src/components/WalletConnect/DappHeaderIcon'
-import { CHAIN_INFO } from 'src/constants/chains'
 import { pushNotification } from 'src/features/notifications/notificationSlice'
 import { AppNotificationType } from 'src/features/notifications/types'
 import { ModalName } from 'src/features/telemetry/constants'
@@ -22,6 +21,7 @@ import {
 } from 'src/features/walletConnect/walletConnectSlice'
 import { wcWeb3Wallet } from 'src/features/walletConnectV2/saga'
 import { logger } from 'src/utils/logger'
+import { CHAIN_INFO } from 'wallet/src/constants/chains'
 import { ONE_SECOND_MS } from 'wallet/src/utils/time'
 interface DappConnectedNetworkModalProps {
   session: WalletConnectSessionV2

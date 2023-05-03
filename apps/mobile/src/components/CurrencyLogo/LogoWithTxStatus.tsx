@@ -16,12 +16,12 @@ import { NFTViewer } from 'src/components/images/NFTViewer'
 import { RemoteImage } from 'src/components/images/RemoteImage'
 import { Box } from 'src/components/layout/Box'
 import { DappIconPlaceholder } from 'src/components/WalletConnect/DappHeaderIcon'
-import { ChainId } from 'src/constants/chains'
 import { AssetType } from 'src/entities/assets'
 import { CurrencyInfo } from 'src/features/dataApi/types'
 import { NFTTradeType, TransactionStatus, TransactionType } from 'src/features/transactions/types'
 import { WalletConnectEvent } from 'src/features/walletConnect/saga'
 import { logger } from 'src/utils/logger'
+import { ChainId } from 'wallet/src/constants/chains'
 
 interface LogoWithTxStatusProps {
   assetType: AssetType

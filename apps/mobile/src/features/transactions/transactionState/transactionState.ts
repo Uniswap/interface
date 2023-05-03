@@ -1,8 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { shallowEqual } from 'react-redux'
 import { NATIVE_ADDRESS } from 'src/constants/addresses'
-import { ChainId } from 'src/constants/chains'
 import { AssetType, TradeableAsset } from 'src/entities/assets'
+import { ChainId } from 'wallet/src/constants/chains'
 
 export enum CurrencyField {
   INPUT = 'input',

@@ -1,5 +1,5 @@
-import { ChainId } from 'src/constants/chains'
 import { DAI, UNI, USDC } from 'src/constants/tokens'
+import { ChainId } from 'wallet/src/constants/chains'
 
 export enum PermitType {
   AMOUNT = 1,

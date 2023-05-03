@@ -1,6 +1,5 @@
 /* eslint-disable max-lines */
 import { faker } from '@faker-js/faker'
-import { ChainId } from 'src/constants/chains'
 import { DAI, USDC, WBTC, WRAPPED_NATIVE_CURRENCY } from 'src/constants/tokens'
 import {
   ActivityType,
@@ -23,6 +22,7 @@ import {
   TransactionStatus,
 } from 'src/data/__generated__/types-and-hooks'
 import { ACCOUNT_ADDRESS_ONE, ACCOUNT_ADDRESS_TWO } from 'src/test/fixtures'
+import { ChainId } from 'wallet/src/constants/chains'
 
 const FAKER_SEED = 123
 faker.seed(FAKER_SEED)

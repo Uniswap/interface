@@ -2,7 +2,6 @@ import { TradeType } from '@uniswap/sdk-core'
 import { TFunction } from 'i18next'
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ChainId } from 'src/constants/chains'
 import { getFormattedCurrencyAmount } from 'src/features/notifications/utils'
 import { useSelectTransaction } from 'src/features/transactions/hooks'
 import { DerivedSwapInfo } from 'src/features/transactions/swap/hooks'
@@ -16,6 +15,7 @@ import {
 } from 'src/features/transactions/types'
 import { getInputAmountFromTrade, getOutputAmountFromTrade } from 'src/features/transactions/utils'
 import { useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
+import { ChainId } from 'wallet/src/constants/chains'
 import { toSupportedChainId } from 'wallet/src/utils/chainId'
 
 type SwapStatusProps = {

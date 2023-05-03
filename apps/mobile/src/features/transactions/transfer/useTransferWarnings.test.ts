@@ -1,12 +1,12 @@
 import { CurrencyAmount } from '@uniswap/sdk-core'
 import { WarningLabel } from 'src/components/modals/WarningModal/types'
-import { ChainId } from 'src/constants/chains'
 import { AssetType } from 'src/entities/assets'
 import { GQLNftAsset } from 'src/features/nfts/hooks'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
 import { DerivedTransferInfo } from 'src/features/transactions/transfer/hooks'
 import { getTransferWarnings } from 'src/features/transactions/transfer/useTransferWarnings'
 import { networkDown, networkUnknown, networkUp, uniCurrencyInfo } from 'src/test/fixtures'
+import { ChainId } from 'wallet/src/constants/chains'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
 import { isOffline } from '../utils'
 

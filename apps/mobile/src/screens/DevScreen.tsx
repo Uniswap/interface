@@ -9,7 +9,6 @@ import { Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
 import { SheetScreen } from 'src/components/layout/SheetScreen'
 import { Text } from 'src/components/Text'
-import { ChainId } from 'src/constants/chains'
 import { setChainActiveStatus } from 'src/features/chains/chainsSlice'
 import { useActiveChainIds } from 'src/features/chains/utils'
 import { pushNotification } from 'src/features/notifications/notificationSlice'
@@ -21,6 +20,7 @@ import { selectFlashbotsEnabled } from 'src/features/wallet/selectors'
 import { resetWallet, toggleFlashbots } from 'src/features/wallet/walletSlice'
 import { Screens } from 'src/screens/Screens'
 import { logger } from 'src/utils/logger'
+import { ChainId } from 'wallet/src/constants/chains'
 
 export function DevScreen(): JSX.Element {
   const dispatch = useAppDispatch()

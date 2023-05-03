@@ -7,10 +7,10 @@ import { Box, Flex } from 'src/components/layout'
 import { Separator } from 'src/components/layout/Separator'
 import { ActionSheetModal } from 'src/components/modals/ActionSheetModal'
 import { Text } from 'src/components/Text'
-import { ChainId, CHAIN_INFO } from 'src/constants/chains'
 import { useActiveChainIds } from 'src/features/chains/utils'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { iconSizes } from 'src/styles/sizing'
+import { ChainId, CHAIN_INFO } from 'wallet/src/constants/chains'
 
 type Props = {
   selectedChainId: ChainId

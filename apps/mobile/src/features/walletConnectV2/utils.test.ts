@@ -1,9 +1,9 @@
-import { ChainId } from 'src/constants/chains'
 import {
   getAccountAddressFromEIP155String,
   getChainIdFromEIP155String,
   getSupportedWalletConnectChains,
 } from 'src/features/walletConnectV2/utils'
+import { ChainId } from 'wallet/src/constants/chains'
 
 const EIP155_MAINNET = 'eip155:1'
 const EIP155_POLYGON = 'eip155:137'

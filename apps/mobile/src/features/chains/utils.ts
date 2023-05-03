@@ -1,8 +1,8 @@
 import { useMemo } from 'react'
 import { SelectEffect } from 'redux-saga/effects'
 import { appSelect, useAppSelector } from 'src/app/hooks'
-import { ALL_SUPPORTED_CHAIN_IDS, ChainId, ChainIdTo } from 'src/constants/chains'
 import { ChainState } from 'src/features/chains/types'
+import { ALL_SUPPORTED_CHAIN_IDS, ChainId, ChainIdTo } from 'wallet/src/constants/chains'
 
 export function useActiveChainIds(): ChainId[] {
   const chains = useAppSelector((state) => state.chains.byChainId)

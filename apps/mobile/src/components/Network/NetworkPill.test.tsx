@@ -1,7 +1,7 @@
 import React from 'react'
 import { InlineNetworkPill, NetworkPill } from 'src/components/Network/NetworkPill'
-import { ChainId } from 'src/constants/chains'
 import { render } from 'src/test/test-utils'
+import { ChainId } from 'wallet/src/constants/chains'
 
 describe(NetworkPill, () => {
   it('renders a NetworkPill without image', () => {

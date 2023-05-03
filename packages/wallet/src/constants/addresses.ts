@@ -1,5 +1,5 @@
 // Copied from https://github.com/Uniswap/interface/blob/main/src/constants/addresses.ts
-import { ChainId, L1_CHAIN_IDS } from '../features/chains/chains'
+import { ChainId, L1_CHAIN_IDS } from './chains'
 
 type AddressMap<T extends readonly ChainId[]> = Record<ValuesOf<T>, string>
 

@@ -1,5 +1,5 @@
-import { ChainId } from 'src/constants/chains'
 import { ExplorerDataType, getExplorerLink } from 'src/utils/linking'
+import { ChainId } from 'wallet/src/constants/chains'
 
 describe(getExplorerLink, () => {
   it('handles null chainId', () => {

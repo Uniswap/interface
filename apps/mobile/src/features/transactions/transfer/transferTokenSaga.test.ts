@@ -4,7 +4,6 @@ import { expectSaga } from 'redux-saga-test-plan'
 import * as matchers from 'redux-saga-test-plan/matchers'
 import { getContractManager, getProvider } from 'src/app/walletContext'
 import { NATIVE_ADDRESS } from 'src/constants/addresses'
-import { ChainId } from 'src/constants/chains'
 import { DAI } from 'src/constants/tokens'
 import { AssetType } from 'src/entities/assets'
 import { sendTransaction } from 'src/features/transactions/sendTransaction'
@@ -15,6 +14,7 @@ import {
 } from 'src/features/transactions/transfer/useTransferTransactionRequest'
 import { SendTokenTransactionInfo, TransactionType } from 'src/features/transactions/types'
 import { account, mockContractManager, mockProvider, txRequest } from 'src/test/fixtures'
+import { ChainId } from 'wallet/src/constants/chains'
 
 const erc20TranferParams: TransferCurrencyParams = {
   txId: '1',

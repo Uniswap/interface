@@ -1,6 +1,5 @@
 import { CallEffect, ForkEffect, PutEffect, SelectEffect } from 'redux-saga/effects'
 import { appSelect } from 'src/app/hooks'
-import { ChainId } from 'src/constants/chains'
 import { AssetType } from 'src/entities/assets'
 import { pushNotification } from 'src/features/notifications/notificationSlice'
 import { AppNotification, AppNotificationType } from 'src/features/notifications/types'
@@ -11,6 +10,7 @@ import { TransactionType } from 'src/features/transactions/types'
 import { getInputAmountFromTrade, getOutputAmountFromTrade } from 'src/features/transactions/utils'
 import { WalletConnectEvent } from 'src/features/walletConnect/saga'
 import { call, put, takeLatest } from 'typed-redux-saga'
+import { ChainId } from 'wallet/src/constants/chains'
 
 export function* notificationWatcher(): Generator<ForkEffect<never>, void, unknown> {
   yield* takeLatest(finalizeTransaction.type, pushTransactionNotification)

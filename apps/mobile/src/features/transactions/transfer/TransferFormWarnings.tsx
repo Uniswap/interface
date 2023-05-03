@@ -4,7 +4,6 @@ import { Flex } from 'src/components/layout'
 import { WarningSeverity } from 'src/components/modals/WarningModal/types'
 import WarningModal from 'src/components/modals/WarningModal/WarningModal'
 import { Text } from 'src/components/Text'
-import { ChainId } from 'src/constants/chains'
 import { ModalName } from 'src/features/telemetry/constants'
 import { useAllTransactionsBetweenAddresses } from 'src/features/transactions/hooks'
 import { useIsSmartContractAddress } from 'src/features/transactions/transfer/hooks'
@@ -14,6 +13,7 @@ import {
   useDisplayName,
   useSignerAccounts,
 } from 'src/features/wallet/hooks'
+import { ChainId } from 'wallet/src/constants/chains'
 
 interface TransferFormWarningProps {
   recipient?: string

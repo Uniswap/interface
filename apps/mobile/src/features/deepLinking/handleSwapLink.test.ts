@@ -1,7 +1,6 @@
 import { URL } from 'react-native-url-polyfill'
 import { expectSaga } from 'redux-saga-test-plan'
 import { call } from 'redux-saga/effects'
-import { ChainId } from 'src/constants/chains'
 import { DAI, UNI } from 'src/constants/tokens'
 import { AssetType } from 'src/entities/assets'
 import { selectActiveChainIds } from 'src/features/chains/utils'
@@ -13,6 +12,7 @@ import {
   TransactionState,
 } from 'src/features/transactions/transactionState/transactionState'
 import { account } from 'src/test/fixtures'
+import { ChainId } from 'wallet/src/constants/chains'
 
 const formSwapUrl = (
   userAddress?: Address,

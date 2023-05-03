@@ -6,10 +6,10 @@ import { Separator } from 'src/components/layout/Separator'
 import { ActionSheetModal } from 'src/components/modals/ActionSheetModal'
 import { useNetworkOptions } from 'src/components/Network/hooks'
 import { Text } from 'src/components/Text'
-import { ChainId } from 'src/constants/chains'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { changeChainId, disconnectFromApp } from 'src/features/walletConnect/WalletConnect'
 import { WalletConnectSessionV1 } from 'src/features/walletConnect/walletConnectSlice'
+import { ChainId } from 'wallet/src/constants/chains'
 import { toSupportedChainId } from 'wallet/src/utils/chainId'
 
 interface DappSwitchNetworkModalProps {

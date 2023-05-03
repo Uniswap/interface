@@ -1,7 +1,7 @@
 import React from 'react'
 import { NetworkFee } from 'src/components/Network/NetworkFee'
-import { ChainId } from 'src/constants/chains'
 import { render } from 'src/test/test-utils'
+import { ChainId } from 'wallet/src/constants/chains'
 
 jest.mock('src/features/wallet/hooks', () => {
   return {

@@ -5,13 +5,13 @@ import { appSelect } from 'src/app/hooks'
 import { RootState } from 'src/app/rootReducer'
 import { getProviderManager } from 'src/app/walletContext'
 import { config } from 'src/config'
-import { ChainId } from 'src/constants/chains'
 import { setChainActiveStatus } from 'src/features/chains/chainsSlice'
 import { getSortedActiveChainIds } from 'src/features/chains/utils'
 import { ProviderManager } from 'src/features/providers/ProviderManager'
 import { initialized } from 'src/features/providers/providerSlice'
 import { logger } from 'src/utils/logger'
 import { call, fork, join, put, take, takeEvery } from 'typed-redux-saga'
+import { ChainId } from 'wallet/src/constants/chains'
 
 // Initialize Ethers providers for the chains the wallet interacts with
 export function* initProviders() {

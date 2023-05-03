@@ -1,5 +1,5 @@
 import { NativeModules } from 'react-native'
-import { ALL_SUPPORTED_CHAIN_IDS } from 'src/constants/chains'
+import { ALL_SUPPORTED_CHAIN_IDS } from 'wallet/src/constants/chains'
 
 const { RNWalletConnect } = NativeModules
 

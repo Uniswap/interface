@@ -6,7 +6,6 @@ import {
 } from '@uniswap/universal-router-sdk'
 import { BigNumber } from 'ethers'
 import { TFunction } from 'i18next'
-import { ChainId } from 'src/constants/chains'
 import { WRAPPED_NATIVE_CURRENCY } from 'src/constants/tokens'
 import { AssetType } from 'src/entities/assets'
 import { ElementName } from 'src/features/telemetry/constants'
@@ -19,6 +18,7 @@ import {
   ExactOutputSwapTransactionInfo,
   TransactionType,
 } from 'src/features/transactions/types'
+import { ChainId } from 'wallet/src/constants/chains'
 import { areAddressesEqual } from 'wallet/src/utils/addresses'
 import {
   areCurrencyIdsEqual,

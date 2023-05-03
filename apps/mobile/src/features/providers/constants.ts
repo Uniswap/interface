@@ -1,4 +1,4 @@
-import { ChainId, ChainIdTo } from 'src/constants/chains'
+import { ChainId, ChainIdTo } from 'wallet/src/constants/chains'
 
 export interface FlashbotsInfo {
   rpcUrl: string

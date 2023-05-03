@@ -20,7 +20,6 @@ import { TokenDetailsFavoriteButton } from 'src/components/TokenDetails/TokenDet
 import { TokenDetailsHeader } from 'src/components/TokenDetails/TokenDetailsHeader'
 import { TokenDetailsStats } from 'src/components/TokenDetails/TokenDetailsStats'
 import TokenWarningModal from 'src/components/tokens/TokenWarningModal'
-import { ChainId } from 'src/constants/chains'
 import { PollingInterval } from 'src/constants/misc'
 import { isError, isNonPollingRequestInFlight } from 'src/data/utils'
 import {
@@ -40,6 +39,7 @@ import {
 import { Screens } from 'src/screens/Screens'
 import { iconSizes } from 'src/styles/sizing'
 import { useExtractedTokenColor } from 'src/utils/colors'
+import { ChainId } from 'wallet/src/constants/chains'
 import { fromGraphQLChain } from 'wallet/src/utils/chainId'
 import { currencyIdToAddress, currencyIdToChain } from 'wallet/src/utils/currencyId'
 import { formatUSDPrice } from 'wallet/src/utils/format'

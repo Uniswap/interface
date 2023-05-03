@@ -1,5 +1,4 @@
 import { createStore, Store } from '@reduxjs/toolkit'
-import { ChainId } from 'src/constants/chains'
 import {
   addTransaction,
   cancelTransaction,
@@ -18,6 +17,7 @@ import {
   TransactionTypeInfo,
 } from 'src/features/transactions/types'
 import { finalizedTxAction } from 'src/test/fixtures'
+import { ChainId } from 'wallet/src/constants/chains'
 
 const address = '0x123'
 

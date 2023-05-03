@@ -10,7 +10,6 @@ import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { NetworkPill } from 'src/components/Network/NetworkPill'
 import { Text } from 'src/components/Text'
 import { DappHeaderIcon } from 'src/components/WalletConnect/DappHeaderIcon'
-import { CHAIN_INFO } from 'src/constants/chains'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { selectDidOpenFromDeepLink } from 'src/features/walletConnect/selectors'
 import {
@@ -19,6 +18,7 @@ import {
   returnToPreviousApp,
 } from 'src/features/walletConnect/WalletConnect'
 import { SwitchChainRequest } from 'src/features/walletConnect/walletConnectSlice'
+import { CHAIN_INFO } from 'wallet/src/constants/chains'
 import { toSupportedChainId } from 'wallet/src/utils/chainId'
 
 interface Props {

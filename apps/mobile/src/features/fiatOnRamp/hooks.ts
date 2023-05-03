@@ -1,6 +1,5 @@
 import { useCallback, useRef } from 'react'
 import { useAppDispatch } from 'src/app/hooks'
-import { ChainId } from 'src/constants/chains'
 import { addTransaction } from 'src/features/transactions/slice'
 import {
   TransactionDetails,
@@ -8,6 +7,7 @@ import {
   TransactionType,
 } from 'src/features/transactions/types'
 import { createTransactionId } from 'src/features/transactions/utils'
+import { ChainId } from 'wallet/src/constants/chains'
 
 /** Returns a new externalTransactionId and a callback to store the transaction. */
 export function useFiatOnRampTransactionCreator(ownerAddress: string): {

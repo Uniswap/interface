@@ -3,7 +3,7 @@ import { CurrencyLogo } from 'src/components/CurrencyLogo'
 import { arbitrumDaiCurrencyInfo, uniCurrencyInfo } from 'src/test/fixtures'
 import { render } from 'src/test/test-utils'
 
-jest.mock('src/assets', () => 'ethereum-logo.png')
+jest.mock('wallet/src/assets', () => 'ethereum-logo.png')
 
 it('renders a currency logo without network logo', () => {
   const tree = render(<CurrencyLogo currencyInfo={uniCurrencyInfo} size={20} />)

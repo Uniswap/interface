@@ -3,8 +3,8 @@ import { Token } from '@uniswap/sdk-core'
 
 export const HIDE_SMALL_USD_BALANCES_THRESHOLD = 1
 
-import { ChainId } from '../features/chains/chains'
 import { UNI_ADDRESS } from './addresses'
+import { ChainId } from './chains'
 
 export const DAI = new Token(
   ChainId.Mainnet,

@@ -1,7 +1,7 @@
 import { PayloadAction } from '@reduxjs/toolkit'
 import { providers as ethersProviders } from 'ethers'
 import { call, fork, join, put, takeEvery } from 'typed-redux-saga'
-import { ChainId, ChainIdTo } from '../chains/chains'
+import { ChainId, ChainIdTo } from 'wallet/src/constants/chains'
 
 import { ChainState, setChainActiveStatus } from '../chains/slice'
 import { getSortedActiveChainIds } from '../chains/utils'

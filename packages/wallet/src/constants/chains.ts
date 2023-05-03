@@ -8,7 +8,7 @@ import {
   MUMBAI_LOGO,
   OPTIMISM_LOGO,
   POLYGON_LOGO,
-} from 'src/assets'
+} from 'wallet/src/assets'
 
 export type ChainIdTo<T> = Partial<Record<ChainId, T>>
 export type ChainIdToCurrencyIdTo<T> = ChainIdTo<{ [currencyId: string]: T }>
@@ -76,7 +76,9 @@ export interface L2ChainInfo extends L1ChainInfo {
   readonly statusPage?: string
 }
 
-export type ChainInfo = { readonly [chainId: number]: L1ChainInfo | L2ChainInfo } & {
+export type ChainInfo = {
+  readonly [chainId: number]: L1ChainInfo | L2ChainInfo
+} & {
   readonly [chainId in L2ChainId]: L2ChainInfo
 } & { readonly [chainId in L1ChainId]: L1ChainInfo }
 
@@ -141,7 +143,11 @@ export const CHAIN_INFO: ChainInfo = {
     infoLink: 'https://info.uniswap.org/#/polygon/',
     label: 'Polygon Mumbai',
     logo: MUMBAI_LOGO,
-    nativeCurrency: { name: 'Polygon Mumbai Matic', symbol: 'mMATIC', decimals: 18 },
+    nativeCurrency: {
+      name: 'Polygon Mumbai Matic',
+      symbol: 'mMATIC',
+      decimals: 18,
+    },
     rpcUrls: ['https://rpc-endpoints.superfluid.dev/mumbai'],
   },
 }
@@ -159,4 +165,24 @@ export const CHAIN_ID_TO_LOGO: Record<ChainId, ImageSourcePropType> = {
   [ChainId.ArbitrumOne]: ETHEREUM_LOGO,
   [ChainId.Polygon]: POLYGON_LOGO,
   [ChainId.PolygonMumbai]: POLYGON_LOGO,
+}
+
+export function getChainIdFromString(input: string): ChainId | undefined {
+  const parsedInput = parseInt(input, 16)
+  switch (parsedInput) {
+    case ChainId.Mainnet:
+      return ChainId.Mainnet
+    case ChainId.Goerli:
+      return ChainId.Goerli
+    case ChainId.ArbitrumOne:
+      return ChainId.ArbitrumOne
+    case ChainId.Optimism:
+      return ChainId.Optimism
+    case ChainId.Polygon:
+      return ChainId.Polygon
+    case ChainId.PolygonMumbai:
+      return ChainId.PolygonMumbai
+    default:
+      return undefined
+  }
 }

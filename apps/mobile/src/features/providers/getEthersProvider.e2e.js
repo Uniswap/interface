@@ -3,7 +3,7 @@
  * Replaces `getEthersProvider.ts` when RN_SRC_EXT=e2e.js at runtime
  */
 import { JsonRpcProvider } from '@ethersproject/providers'
-import { ChainId } from 'src/constants/chains'
+import { ChainId } from 'wallet/src/constants/chains'
 
 export function getEthersProvider(chainId) {
   if (chainId === ChainId.Mainnet) {
