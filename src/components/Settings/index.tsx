@@ -10,7 +10,6 @@ import { useRef } from 'react'
 import { Settings } from 'react-feather'
 import { useModalIsOpen, useToggleSettingsMenu } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
-import { useRouterPreference } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 
 import MaxSlippageSettings from './MaxSlippageSettings'
@@ -95,8 +94,6 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
 
   const toggle = useToggleSettingsMenu()
   useOnClickOutside(node, open ? toggle : undefined)
-
-  const [userRouterPreference] = useRouterPreference()
 
   return (
     <StyledMenu ref={node}>
