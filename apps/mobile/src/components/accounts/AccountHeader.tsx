@@ -9,13 +9,11 @@ import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Chevron } from 'src/components/icons/Chevron'
 import { Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
-import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { openModal } from 'src/features/modals/modalSlice'
 import { pushNotification } from 'src/features/notifications/notificationSlice'
 import { AppNotificationType, CopyNotificationType } from 'src/features/notifications/types'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { selectActiveAccountAddress } from 'src/features/wallet/selectors'
-import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
 import { Screens } from 'src/screens/Screens'
 import { iconSizes } from 'src/styles/sizing'
 import { setClipboard } from 'src/utils/clipboard'
@@ -48,14 +46,6 @@ export function AccountHeader(): JSX.Element {
   const onPressSettings = (): void => {
     navigate(Screens.SettingsStack, { screen: Screens.Settings })
   }
-
-  const onPressScan = useCallback(() => {
-    // in case we received a pending session from a previous scan after closing modal
-    dispatch(removePendingSession())
-    dispatch(
-      openModal({ name: ModalName.WalletConnectScan, initialState: ScannerModalState.ScanQr })
-    )
-  }, [dispatch])
 
   const onPressCopyAddress = (): void => {
     if (activeAddress) {
@@ -114,19 +104,14 @@ export function AccountHeader(): JSX.Element {
           </Flex>
         )}
       </TouchableArea>
-      <Flex alignItems="center" flexDirection="row" gap="spacing16" justifyContent="flex-end">
-        <QRScannerIconButton onPress={onPressScan} />
-        <TouchableArea hapticFeedback onPress={onPressSettings}>
-          <Flex row alignItems="center">
-            <SettingsIcon
-              color={theme.colors.textTertiary}
-              height={theme.iconSizes.icon28}
-              opacity="0.8"
-              width={theme.iconSizes.icon28}
-            />
-          </Flex>
-        </TouchableArea>
-      </Flex>
+      <TouchableArea hapticFeedback onPress={onPressSettings}>
+        <SettingsIcon
+          color={theme.colors.textTertiary}
+          height={theme.iconSizes.icon28}
+          opacity="0.8"
+          width={theme.iconSizes.icon28}
+        />
+      </TouchableArea>
     </Box>
   )
 }

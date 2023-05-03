@@ -391,111 +391,38 @@ exports[`AccountHeader renders without error 1`] = `
     </View>
   </View>
   <View
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    hitSlop={
+      {
+        "bottom": 5,
+        "left": 5,
+        "right": 5,
+        "top": 5,
+      }
+    }
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
     style={
-      [
-        {
-          "alignItems": "center",
-          "display": "flex",
-          "flexDirection": "row",
-          "justifyContent": "flex-end",
-        },
-      ]
+      {
+        "display": "flex",
+        "opacity": 1,
+      }
     }
   >
-    <View
-      accessible={true}
-      collapsable={false}
-      focusable={true}
-      hitSlop={
-        {
-          "bottom": 5,
-          "left": 5,
-          "right": 5,
-          "top": 5,
-        }
-      }
-      onClick={[Function]}
-      onResponderGrant={[Function]}
-      onResponderMove={[Function]}
-      onResponderRelease={[Function]}
-      onResponderTerminate={[Function]}
-      onResponderTerminationRequest={[Function]}
-      onStartShouldSetResponder={[Function]}
-      style={
-        {
-          "display": "flex",
-          "opacity": 1,
-        }
-      }
-      testID="wallet-connect-scan"
-    >
-      <svg
-        color="#888FAB"
-        data-file-name="SvgScanQrWc"
-        height={24}
-        opacity="0.8"
-        strokeWidth={2}
-      />
-    </View>
-    <View
-      style={
-        [
-          {
-            "display": "flex",
-            "flexGrow": 0,
-            "flexShrink": 0,
-            "width": 16,
-          },
-        ]
-      }
+    <svg
+      color="#888FAB"
+      data-file-name="SvgSettings"
+      height={28}
+      opacity="0.8"
+      width={28}
     />
-    <View
-      accessible={true}
-      collapsable={false}
-      focusable={true}
-      hitSlop={
-        {
-          "bottom": 5,
-          "left": 5,
-          "right": 5,
-          "top": 5,
-        }
-      }
-      onClick={[Function]}
-      onResponderGrant={[Function]}
-      onResponderMove={[Function]}
-      onResponderRelease={[Function]}
-      onResponderTerminate={[Function]}
-      onResponderTerminationRequest={[Function]}
-      onStartShouldSetResponder={[Function]}
-      style={
-        {
-          "display": "flex",
-          "opacity": 1,
-        }
-      }
-    >
-      <View
-        style={
-          [
-            {
-              "alignItems": "center",
-              "display": "flex",
-              "flexDirection": "row",
-              "justifyContent": "flex-start",
-            },
-          ]
-        }
-      >
-        <svg
-          color="#888FAB"
-          data-file-name="SvgSettings"
-          height={28}
-          opacity="0.8"
-          width={28}
-        />
-      </View>
-    </View>
   </View>
 </View>
 `;

@@ -21,7 +21,7 @@ import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { NavBar, SWAP_BUTTON_HEIGHT } from 'src/app/navigation/NavBar'
 import { AppStackScreenProp } from 'src/app/navigation/types'
 import BuyIcon from 'src/assets/icons/buy.svg'
-import ReceiveArrow from 'src/assets/icons/receive.svg'
+import ScanIcon from 'src/assets/icons/scan-receive.svg'
 import SendIcon from 'src/assets/icons/send-action.svg'
 import { AccountHeader } from 'src/components/accounts/AccountHeader'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
@@ -59,6 +59,7 @@ import {
 import { useLastBalancesReporter } from 'src/features/telemetry/hooks'
 import { AccountType } from 'src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
+import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
 import { Screens } from 'src/screens/Screens'
 import { dimensions } from 'src/styles/sizing'
 import { hideSplashScreen } from 'src/utils/splashScreen'
@@ -451,9 +452,11 @@ function QuickActions(): JSX.Element {
   const onPressBuy = (): void => {
     dispatch(openModal({ name: ModalName.FiatOnRamp }))
   }
-  const onPressReceive = (): void => {
+  const onPressScan = (): void => {
+    // in case we received a pending session from a previous scan after closing modal
+    dispatch(removePendingSession())
     dispatch(
-      openModal({ name: ModalName.WalletConnectScan, initialState: ScannerModalState.WalletQr })
+      openModal({ name: ModalName.WalletConnectScan, initialState: ScannerModalState.ScanQr })
     )
   }
   const onPressSend = (): void => {
@@ -484,11 +487,11 @@ function QuickActions(): JSX.Element {
         onPress={onPressSend}
       />
       <ActionButton
-        Icon={ReceiveArrow}
+        Icon={ScanIcon}
         flex={fiatOnRampShown ? 4 : 3} // we need to make more room for Receive button if there are 3 buttons
-        label={t('Receive')}
-        name={ElementName.Receive}
-        onPress={onPressReceive}
+        label={t('Scan')}
+        name={ElementName.WalletConnectScan}
+        onPress={onPressScan}
       />
     </Flex>
   )
@@ -525,7 +528,7 @@ function ActionButton({
       shadowOpacity={0.1}
       shadowRadius={6}
       onPress={onPress}>
-      <Flex centered row gap="spacing4">
+      <Flex centered row gap="none">
         <Icon
           color={theme.colors.magentaVibrant}
           height={theme.iconSizes.icon20}
