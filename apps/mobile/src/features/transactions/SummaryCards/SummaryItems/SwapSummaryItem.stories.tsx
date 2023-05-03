@@ -10,7 +10,7 @@ import {
   TransactionStatus,
   TransactionType,
 } from 'src/features/transactions/types'
-import { buildCurrencyId, buildNativeCurrencyId } from 'src/utils/currencyId'
+import { buildCurrencyId, buildNativeCurrencyId } from 'wallet/src/utils/currencyId'
 import SwapSummaryItem from './SwapSummaryItem'
 
 const meta: Meta<typeof SwapSummaryItem> = {

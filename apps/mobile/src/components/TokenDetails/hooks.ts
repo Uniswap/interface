@@ -11,7 +11,7 @@ import {
   buildNativeCurrencyId,
   CurrencyId,
   currencyIdToChain,
-} from 'src/utils/currencyId'
+} from 'wallet/src/utils/currencyId'
 
 /** Helper hook to retrieve balances across chains for a given currency, for the active account. */
 export function useCrossChainBalances(

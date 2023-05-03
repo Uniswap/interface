@@ -17,8 +17,8 @@ import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { useTokenSafetyLevelColors } from 'src/features/tokens/safetyHooks'
 import { iconSizes } from 'src/styles/sizing'
 import { opacify } from 'src/utils/colors'
-import { currencyIdToAddress, currencyIdToChain } from 'src/utils/currencyId'
 import { ExplorerDataType, getExplorerLink, openUri } from 'src/utils/linking'
+import { currencyIdToAddress, currencyIdToChain } from 'wallet/src/utils/currencyId'
 
 function getTokenSafetyBodyText(safetyLevel: NullUndefined<SafetyLevel>, t: TFunction): string {
   switch (safetyLevel) {

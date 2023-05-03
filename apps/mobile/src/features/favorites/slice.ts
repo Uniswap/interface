@@ -4,8 +4,8 @@ import { ChainId } from 'src/constants/chains'
 import { WBTC } from 'src/constants/tokens'
 import { getNFTAssetKey } from 'src/features/nfts/utils'
 import { removeAccount } from 'src/features/wallet/walletSlice'
-import { CurrencyId, currencyId as idFromCurrency } from 'src/utils/currencyId'
 import { logger } from 'src/utils/logger'
+import { CurrencyId, currencyId as idFromCurrency } from 'wallet/src/utils/currencyId'
 
 export type HiddenNftsByAddress = Record<Address, Record<ReturnType<typeof getNFTAssetKey>, true>>
 

@@ -32,7 +32,7 @@ import {
 } from 'src/features/transactions/types'
 import { useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
 import { theme } from 'src/styles/theme'
-import { currencyAddress } from 'src/utils/currencyId'
+import { currencyAddress } from 'wallet/src/utils/currencyId'
 
 export function usePendingTransactions(
   address: Address | null,

@@ -36,7 +36,7 @@ import {
   buildNativeCurrencyId,
   currencyIdToAddress,
   currencyIdToChain,
-} from 'src/utils/currencyId'
+} from 'wallet/src/utils/currencyId'
 import { formatNumber, formatUSDPrice, NumberType } from 'wallet/src/utils/format'
 
 const FAVORITE_ACTION_INDEX = 0

@@ -1,7 +1,7 @@
 import { TokenOption } from 'src/components/TokenSelector/types'
 import { CurrencyInfo, PortfolioBalance } from 'src/features/dataApi/types'
 import { differenceWith } from 'src/utils/array'
-import { areCurrencyIdsEqual } from 'src/utils/currencyId'
+import { areCurrencyIdsEqual } from 'wallet/src/utils/currencyId'
 
 export function createEmptyBalanceOption(currencyInfo: CurrencyInfo): TokenOption {
   return {

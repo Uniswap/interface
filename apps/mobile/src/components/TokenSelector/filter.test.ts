@@ -4,7 +4,7 @@ import { TokenOption } from 'src/components/TokenSelector/types'
 import { ChainId } from 'src/constants/chains'
 import { DAI, DAI_ARBITRUM_ONE } from 'src/constants/tokens'
 import { NativeCurrency } from 'src/features/tokens/NativeCurrency'
-import { currencyId } from 'src/utils/currencyId'
+import { currencyId } from 'wallet/src/utils/currencyId'
 
 const ETH = NativeCurrency.onChain(ChainId.Mainnet)
 

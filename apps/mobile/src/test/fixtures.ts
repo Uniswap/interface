@@ -31,7 +31,7 @@ import { Account, AccountType, BackupType } from 'src/features/wallet/accounts/t
 import { SignerManager } from 'src/features/wallet/signing/SignerManager'
 import { initialWalletState } from 'src/features/wallet/walletSlice'
 import { WalletConnectEvent } from 'src/features/walletConnect/saga'
-import { currencyId } from 'src/utils/currencyId'
+import { currencyId } from 'wallet/src/utils/currencyId'
 
 export const MainnetEth = NativeCurrency.onChain(ChainId.Mainnet)
 export const PolygonMatic = NativeCurrency.onChain(ChainId.Polygon)

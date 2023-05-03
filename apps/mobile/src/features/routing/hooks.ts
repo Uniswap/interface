@@ -9,9 +9,9 @@ import { useFeatureFlag } from 'src/features/experiments/hooks'
 import { useQuoteQuery } from 'src/features/routing/routingApi'
 import { PermitSignatureInfo } from 'src/features/transactions/swap/usePermit2Signature'
 import { useActiveAccount } from 'src/features/wallet/hooks'
-import { currencyAddressForSwapQuote } from 'src/utils/currencyId'
 import { logger } from 'src/utils/logger'
 import { useDebounceWithStatus } from 'src/utils/timing'
+import { currencyAddressForSwapQuote } from 'wallet/src/utils/currencyId'
 
 export interface UseQuoteProps {
   amountSpecified: CurrencyAmount<Currency> | null | undefined

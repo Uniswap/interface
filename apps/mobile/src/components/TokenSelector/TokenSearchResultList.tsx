@@ -31,8 +31,8 @@ import {
   makeSelectAccountHideSmallBalances,
   makeSelectAccountHideSpamTokens,
 } from 'src/features/wallet/selectors'
-import { CurrencyId } from 'src/utils/currencyId'
 import { useDebounce } from 'src/utils/timing'
+import { CurrencyId } from 'wallet/src/utils/currencyId'
 
 interface TokenSearchResultListProps {
   onChangeChainFilter: (newChainFilter: ChainId | null) => void

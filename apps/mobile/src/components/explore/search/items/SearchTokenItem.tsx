@@ -16,7 +16,7 @@ import {
 } from 'src/features/explore/searchHistorySlice'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { ElementName, MobileEventName } from 'src/features/telemetry/constants'
-import { buildCurrencyId, buildNativeCurrencyId } from 'src/utils/currencyId'
+import { buildCurrencyId, buildNativeCurrencyId } from 'wallet/src/utils/currencyId'
 
 type SearchTokenItemProps = {
   token: TokenSearchResult

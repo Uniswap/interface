@@ -1,7 +1,7 @@
 // Shares similarities with https://github.com/Uniswap/interface/blob/main/src/state/user/reducer.ts
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import type { RootState } from 'src/app/rootReducer'
-import { CurrencyId } from 'src/utils/currencyId'
+import { CurrencyId } from 'wallet/src/utils/currencyId'
 
 interface Tokens {
   dismissedWarningTokens: {

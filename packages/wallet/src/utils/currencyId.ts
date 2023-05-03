@@ -1,8 +1,10 @@
 import { Currency } from '@uniswap/sdk-core'
-
-import { NATIVE_ADDRESS, NATIVE_ADDRESS_ALT } from '../constants/addresses'
-import { ChainId, isPolygonChain } from '../features/chains/chains'
-import { areAddressesEqual, getChecksumAddress } from './addresses'
+import {
+  NATIVE_ADDRESS,
+  NATIVE_ADDRESS_ALT,
+} from 'wallet/src/constants/addresses'
+import { ChainId, isPolygonChain } from 'wallet/src/features/chains/chains'
+import { areAddressesEqual } from './addresses'
 import { toSupportedChainId } from './chainId'
 
 export type CurrencyId = string
@@ -104,11 +106,4 @@ export function currencyIdToGraphQLAddress(
 export function currencyIdToChain(_currencyId?: string): ChainId | null {
   if (!_currencyId) return null
   return toSupportedChainId(_currencyId.split('-')[0])
-}
-
-export function checksumCurrencyId(_currencyId: string): string {
-  return buildCurrencyId(
-    currencyIdToChain(_currencyId) ?? ChainId.Mainnet,
-    getChecksumAddress(currencyIdToAddress(_currencyId))
-  )
 }

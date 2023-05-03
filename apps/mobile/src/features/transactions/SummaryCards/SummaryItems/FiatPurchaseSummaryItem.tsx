@@ -7,7 +7,7 @@ import TransactionSummaryLayout, {
   TXN_HISTORY_ICON_SIZE,
 } from 'src/features/transactions/SummaryCards/TransactionSummaryLayout'
 import { FiatPurchaseTransactionInfo, TransactionDetails } from 'src/features/transactions/types'
-import { buildCurrencyId } from 'src/utils/currencyId'
+import { buildCurrencyId } from 'wallet/src/utils/currencyId'
 import { formatFiatPrice } from 'wallet/src/utils/format'
 
 export default function FiatPurchaseSummaryItem({

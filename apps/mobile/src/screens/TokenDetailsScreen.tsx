@@ -41,7 +41,7 @@ import { Screens } from 'src/screens/Screens'
 import { iconSizes } from 'src/styles/sizing'
 import { fromGraphQLChain } from 'src/utils/chainId'
 import { useExtractedTokenColor } from 'src/utils/colors'
-import { currencyIdToAddress, currencyIdToChain } from 'src/utils/currencyId'
+import { currencyIdToAddress, currencyIdToChain } from 'wallet/src/utils/currencyId'
 import { formatUSDPrice } from 'wallet/src/utils/format'
 
 type Price = NonNullable<

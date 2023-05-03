@@ -22,8 +22,8 @@ import {
 } from 'src/features/wallet/selectors'
 import { Screens } from 'src/screens/Screens'
 import { dimensions } from 'src/styles/sizing'
-import { CurrencyId } from 'src/utils/currencyId'
 import { useSuspendUpdatesWhenBlured } from 'src/utils/hooks'
+import { CurrencyId } from 'wallet/src/utils/currencyId'
 
 type TokenBalanceListProps = TabProps & {
   empty?: JSX.Element | null

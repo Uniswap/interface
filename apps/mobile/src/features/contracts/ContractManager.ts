@@ -2,8 +2,8 @@
 import { Contract, ContractInterface, providers } from 'ethers'
 import { ChainId } from 'src/constants/chains'
 import { getValidAddress } from 'src/utils/addresses'
-import { isNativeCurrencyAddress } from 'src/utils/currencyId'
 import { logger } from 'src/utils/logger'
+import { isNativeCurrencyAddress } from 'wallet/src/utils/currencyId'
 
 export class ContractManager {
   private _contracts: Partial<Record<ChainId, Record<string, Contract>>> = {}

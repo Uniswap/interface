@@ -30,8 +30,8 @@ import { selectHasFavoriteTokens, selectHasWatchedWallets } from 'src/features/f
 import { selectTokensOrderBy } from 'src/features/wallet/selectors'
 import { areAddressesEqual } from 'src/utils/addresses'
 import { fromGraphQLChain } from 'src/utils/chainId'
-import { buildCurrencyId, buildNativeCurrencyId } from 'src/utils/currencyId'
 import { usePollOnFocusOnly } from 'src/utils/hooks'
+import { buildCurrencyId, buildNativeCurrencyId } from 'wallet/src/utils/currencyId'
 
 type ExploreSectionsProps = {
   listRef?: React.MutableRefObject<null>

@@ -15,7 +15,7 @@ import {
   TransactionType,
   WrapTransactionInfo,
 } from 'src/features/transactions/types'
-import { buildCurrencyId, buildNativeCurrencyId } from 'src/utils/currencyId'
+import { buildCurrencyId, buildNativeCurrencyId } from 'wallet/src/utils/currencyId'
 
 export default function parseTradeTransaction(
   transaction: TransactionListQueryResponse

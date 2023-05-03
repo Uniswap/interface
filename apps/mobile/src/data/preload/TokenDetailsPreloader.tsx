@@ -9,7 +9,7 @@ import { useSortedPortfolioBalances } from 'src/features/dataApi/balances'
 import { PortfolioBalance } from 'src/features/dataApi/types'
 import { currencyIdToContractInput } from 'src/features/dataApi/utils'
 import { useActiveAccount } from 'src/features/wallet/hooks'
-import { CurrencyId } from 'src/utils/currencyId'
+import { CurrencyId } from 'wallet/src/utils/currencyId'
 
 /**
  * Helper component to preload token details for the top `count` token by balance

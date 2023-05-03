@@ -6,7 +6,7 @@ import {
   dismissedWarningTokensSelector,
 } from 'src/features/tokens/tokensSlice'
 import { Theme } from 'src/styles/theme'
-import { CurrencyId } from 'src/utils/currencyId'
+import { CurrencyId } from 'wallet/src/utils/currencyId'
 
 export function useTokenWarningDismissed(currencyId: NullUndefined<CurrencyId>): {
   tokenWarningDismissed: boolean // user dismissed warning

@@ -14,7 +14,7 @@ import { openModal } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
 import { AccountType } from 'src/features/wallet/accounts/types'
 import { useSignerAccounts } from 'src/features/wallet/hooks'
-import { CurrencyId } from 'src/utils/currencyId'
+import { CurrencyId } from 'wallet/src/utils/currencyId'
 
 // ignore ref type
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

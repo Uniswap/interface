@@ -13,8 +13,8 @@ import { DerivedTransferInfo } from 'src/features/transactions/transfer/hooks'
 import { Account } from 'src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
 import { toSupportedChainId } from 'src/utils/chainId'
-import { currencyAddress, isNativeCurrencyAddress } from 'src/utils/currencyId'
 import { useAsyncData } from 'src/utils/hooks'
+import { currencyAddress, isNativeCurrencyAddress } from 'wallet/src/utils/currencyId'
 
 export interface BaseTransferParams {
   type: AssetType

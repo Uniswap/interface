@@ -9,7 +9,7 @@ import { QuoteResult, TradeQuoteResult } from 'src/features/routing/types'
 import { transformQuoteToTrade } from 'src/features/transactions/swap/routeUtils'
 import { PermitSignatureInfo } from 'src/features/transactions/swap/usePermit2Signature'
 import { serializeQueryParams } from 'src/features/transactions/swap/utils'
-import { SwapRouterNativeAssets } from 'src/utils/currencyId'
+import { SwapRouterNativeAssets } from 'wallet/src/utils/currencyId'
 
 const DEFAULT_DEADLINE_S = 60 * 30 // 30 minutes in seconds
 

@@ -5,7 +5,7 @@ import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { SwapTradeBaseProperties } from 'src/features/telemetry/types'
 import { DerivedSwapInfo } from 'src/features/transactions/swap/hooks'
 import { Trade } from 'src/features/transactions/swap/useTrade'
-import { currencyAddress, getCurrencyAddressForAnalytics } from 'src/utils/currencyId'
+import { currencyAddress, getCurrencyAddressForAnalytics } from 'wallet/src/utils/currencyId'
 import { formatCurrencyAmount, NumberType } from 'wallet/src/utils/format'
 
 // hook-based analytics because this one is data-lifecycle dependent

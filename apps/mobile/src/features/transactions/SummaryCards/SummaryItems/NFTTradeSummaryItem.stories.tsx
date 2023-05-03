@@ -8,7 +8,7 @@ import {
   TransactionStatus,
   TransactionType,
 } from 'src/features/transactions/types'
-import { buildNativeCurrencyId } from 'src/utils/currencyId'
+import { buildNativeCurrencyId } from 'wallet/src/utils/currencyId'
 import NFTTradeSummaryItem from './NFTTradeSummaryItem'
 
 const meta: Meta<typeof NFTTradeSummaryItem> = {

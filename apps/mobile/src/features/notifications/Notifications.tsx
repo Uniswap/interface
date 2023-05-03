@@ -58,7 +58,7 @@ import { selectActiveAccountAddress } from 'src/features/wallet/selectors'
 import { WalletConnectEvent } from 'src/features/walletConnect/saga'
 import { iconSizes } from 'src/styles/sizing'
 import { toSupportedChainId } from 'src/utils/chainId'
-import { buildCurrencyId } from 'src/utils/currencyId'
+import { buildCurrencyId } from 'wallet/src/utils/currencyId'
 
 export const NOTIFICATION_ICON_SIZE = iconSizes.icon36
 

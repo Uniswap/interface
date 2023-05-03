@@ -13,8 +13,8 @@ import { CurrencyInfo } from 'src/features/dataApi/types'
 import { GQLNftAsset } from 'src/features/nfts/hooks'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
 import { DerivedTransferInfo } from 'src/features/transactions/transfer/hooks'
-import { currencyAddress } from 'src/utils/currencyId'
 import { useMemoCompare } from 'src/utils/hooks'
+import { currencyAddress } from 'wallet/src/utils/currencyId'
 import { isOffline } from '../utils'
 
 export function getTransferWarnings(

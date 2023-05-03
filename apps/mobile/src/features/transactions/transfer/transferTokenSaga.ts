@@ -10,10 +10,10 @@ import { ContractManager } from 'src/features/contracts/ContractManager'
 import { sendTransaction } from 'src/features/transactions/sendTransaction'
 import { TransferTokenParams } from 'src/features/transactions/transfer/useTransferTransactionRequest'
 import { SendTokenTransactionInfo, TransactionType } from 'src/features/transactions/types'
-import { isNativeCurrencyAddress } from 'src/utils/currencyId'
 import { logger } from 'src/utils/logger'
 import { createMonitoredSaga } from 'src/utils/saga'
 import { call } from 'typed-redux-saga'
+import { isNativeCurrencyAddress } from 'wallet/src/utils/currencyId'
 
 type Params = {
   transferTokenParams: TransferTokenParams

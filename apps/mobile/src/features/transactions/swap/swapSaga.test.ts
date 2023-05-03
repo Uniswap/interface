@@ -13,7 +13,7 @@ import { approveAndSwap, SwapParams } from 'src/features/transactions/swap/swapS
 import { Trade } from 'src/features/transactions/swap/useTrade'
 import { ExactInputSwapTransactionInfo, TransactionType } from 'src/features/transactions/types'
 import { account, mockProvider } from 'src/test/fixtures'
-import { currencyId } from 'src/utils/currencyId'
+import { currencyId } from 'wallet/src/utils/currencyId'
 
 const methodParameters: MethodParameters = {
   value: '0x00',

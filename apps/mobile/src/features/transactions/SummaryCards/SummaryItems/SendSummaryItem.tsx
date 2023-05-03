@@ -11,7 +11,7 @@ import TransactionSummaryLayout, {
 } from 'src/features/transactions/SummaryCards/TransactionSummaryLayout'
 import { SendTokenTransactionInfo, TransactionDetails } from 'src/features/transactions/types'
 import { shortenAddress } from 'src/utils/addresses'
-import { buildCurrencyId } from 'src/utils/currencyId'
+import { buildCurrencyId } from 'wallet/src/utils/currencyId'
 
 export default function SendSummaryItem({
   transaction,

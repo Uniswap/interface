@@ -26,7 +26,7 @@ import {
   currencyId,
   currencyIdToAddress,
   currencyIdToChain,
-} from 'src/utils/currencyId'
+} from 'wallet/src/utils/currencyId'
 import { formatPrice, NumberType } from 'wallet/src/utils/format'
 import { CurrencyField, TransactionState } from '../transactionState/transactionState'
 

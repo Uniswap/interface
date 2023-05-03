@@ -17,7 +17,7 @@ import {
   currencyIdToChain,
   currencyIdToGraphQLAddress,
   isNativeCurrencyAddress,
-} from 'src/utils/currencyId'
+} from 'wallet/src/utils/currencyId'
 
 // Converts CurrencyId to ContractInput format for GQL token queries
 export function currencyIdToContractInput(id: CurrencyId): ContractInput {

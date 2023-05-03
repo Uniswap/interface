@@ -8,7 +8,7 @@ import { WarmLoadingShimmer } from 'src/components/loading/WarmLoadingShimmer'
 import { Text } from 'src/components/Text'
 import { RelativeChange } from 'src/components/text/RelativeChange'
 import { PortfolioBalance } from 'src/features/dataApi/types'
-import { CurrencyId } from 'src/utils/currencyId'
+import { CurrencyId } from 'wallet/src/utils/currencyId'
 import { formatNumber, formatUSDPrice, NumberType } from 'wallet/src/utils/format'
 
 interface TokenBalanceItemProps {

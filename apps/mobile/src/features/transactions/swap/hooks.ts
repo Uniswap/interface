@@ -57,11 +57,11 @@ import {
 import { BaseDerivedInfo } from 'src/features/transactions/transactionState/types'
 import { useActiveAccount, useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
 import { areAddressesEqual } from 'src/utils/addresses'
-import { buildCurrencyId } from 'src/utils/currencyId'
 import { useAsyncData, usePrevious } from 'src/utils/hooks'
 import { logger } from 'src/utils/logger'
 import { toStringish } from 'src/utils/number'
 import { tryParseExactAmount } from 'src/utils/tryParseAmount'
+import { buildCurrencyId } from 'wallet/src/utils/currencyId'
 import { formatCurrencyAmount, NumberType } from 'wallet/src/utils/format'
 
 const NUM_USD_DECIMALS_DISPLAY = 2

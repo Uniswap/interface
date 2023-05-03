@@ -22,9 +22,9 @@ import {
 import { Account, AccountType } from 'src/features/wallet/accounts/types'
 import { selectFlashbotsEnabled } from 'src/features/wallet/selectors'
 import { SignerManager } from 'src/features/wallet/signing/SignerManager'
-import { getCurrencyAddressForAnalytics } from 'src/utils/currencyId'
 import { logger } from 'src/utils/logger'
 import { call, put, select } from 'typed-redux-saga'
+import { getCurrencyAddressForAnalytics } from 'wallet/src/utils/currencyId'
 import { formatCurrencyAmount, NumberType } from 'wallet/src/utils/format'
 import { hexlifyTransaction } from 'wallet/src/utils/transaction'
 

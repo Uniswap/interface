@@ -13,8 +13,8 @@ import {
 import { PriceExplorerError } from 'src/components/PriceExplorer/PriceExplorerError'
 import { DatetimeText, PriceText, RelativeChangeText } from 'src/components/PriceExplorer/Text'
 import { TimeRangeGroup } from 'src/components/PriceExplorer/TimeRangeGroup'
-import { CurrencyId } from 'src/utils/currencyId'
 import { invokeImpact } from 'src/utils/haptic'
+import { CurrencyId } from 'wallet/src/utils/currencyId'
 import { useTokenPriceHistory } from './usePriceHistory'
 
 type PriceTextProps = {

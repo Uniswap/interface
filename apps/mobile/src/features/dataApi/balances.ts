@@ -9,7 +9,7 @@ import { NativeCurrency } from 'src/features/tokens/NativeCurrency'
 import { useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
 import { HIDE_SMALL_USD_BALANCES_THRESHOLD } from 'src/features/wallet/walletSlice'
 import { fromGraphQLChain } from 'src/utils/chainId'
-import { currencyId, CurrencyId } from 'src/utils/currencyId'
+import { currencyId, CurrencyId } from 'wallet/src/utils/currencyId'
 
 type SortedPortfolioBalances = {
   balances: PortfolioBalance[]

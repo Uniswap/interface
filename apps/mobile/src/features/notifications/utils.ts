@@ -19,8 +19,8 @@ import {
 } from 'src/features/transactions/types'
 import { WalletConnectEvent } from 'src/features/walletConnect/saga'
 import { getValidAddress, shortenAddress } from 'src/utils/addresses'
-import { currencyIdToAddress } from 'src/utils/currencyId'
 import { logger } from 'src/utils/logger'
+import { currencyIdToAddress } from 'wallet/src/utils/currencyId'
 import { formatCurrencyAmount, formatUSDPrice, NumberType } from 'wallet/src/utils/format'
 
 export const formWCNotificationTitle = (appNotification: WalletConnectNotification): string => {
