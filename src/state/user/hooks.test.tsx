@@ -1,6 +1,11 @@
+import { Percent } from '@uniswap/sdk-core'
 import { USDC_MAINNET } from 'constants/tokens'
+import store from 'state'
+import { renderHook } from 'test-utils/render'
 
-import { deserializeToken, serializeToken } from './hooks'
+import { deserializeToken, serializeToken, useUserSlippageTolerance } from './hooks'
+import { updateUserSlippageTolerance } from './reducer'
+import { SlippageTolerance } from './types'
 
 describe('serializeToken', () => {
   it('serializes the token', () => {
@@ -17,5 +22,25 @@ describe('serializeToken', () => {
 describe('deserializeToken', () => {
   it('deserializes the token', () => {
     expect(deserializeToken(serializeToken(USDC_MAINNET))).toEqual(USDC_MAINNET)
+  })
+})
+
+describe('useUserSlippageTolerance', () => {
+  it('returns `auto` when user has not set a custom slippage', () => {
+    const {
+      result: {
+        current: [slippage],
+      },
+    } = renderHook(() => useUserSlippageTolerance())
+    expect(slippage).toEqual(SlippageTolerance.Auto)
+  })
+  it('returns `Percent` when user has set a custom slippage', () => {
+    store.dispatch(updateUserSlippageTolerance({ userSlippageTolerance: 50 }))
+    const {
+      result: {
+        current: [slippage],
+      },
+    } = renderHook(() => useUserSlippageTolerance())
+    expect(slippage).toBeInstanceOf(Percent)
   })
 })
