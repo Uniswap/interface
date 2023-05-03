@@ -89,11 +89,12 @@ Cypress.Commands.overwrite(
 )
 
 beforeEach(() => {
-  // Many API calls enforce that requests come from our app, so we must mock Origin and Referer.
-  cy.intercept('*', (req) => {
-    req.headers['referer'] = 'https://app.uniswap.org'
-    req.headers['origin'] = 'https://app.uniswap.org'
-  })
+  cy
+    // Many API calls enforce that requests come from our app, so we must mock Origin and Referer.
+    .intercept('*', (req) => {
+      req.headers['referer'] = 'https://app.uniswap.org'
+      req.headers['origin'] = 'https://app.uniswap.org'
+    })
     // Infura uses a test endpoint, which allow-lists http://localhost:3000 instead.
     .intercept(/infura.io/, (req) => {
       req.headers['referer'] = 'http://localhost:3000'
@@ -114,6 +115,10 @@ beforeEach(() => {
         })
       )
     })
+    // Reset hardhat between tests to ensure isolation.
+    // This resets the fork, as well as options like automine.
+    .hardhat()
+    .then((hardhat) => hardhat.reset())
 })
 
 Cypress.on('uncaught:exception', () => {
