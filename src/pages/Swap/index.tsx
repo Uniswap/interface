@@ -707,7 +707,12 @@ export function Swap({
               Connect to {getChainInfo(chainId)?.label}
             </ButtonPrimary>
           ) : showWrap ? (
-            <ButtonPrimary disabled={Boolean(wrapInputError)} onClick={onWrap} fontWeight={600}>
+            <ButtonPrimary
+              disabled={Boolean(wrapInputError)}
+              onClick={onWrap}
+              fontWeight={600}
+              data-testid="wrap-button"
+            >
               {wrapInputError ? (
                 <WrapErrorText wrapInputError={wrapInputError} />
               ) : wrapType === WrapType.WRAP ? (
