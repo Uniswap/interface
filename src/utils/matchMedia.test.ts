@@ -1,61 +1,53 @@
-import { addListener, removeListener } from './matchMedia'
+import { addMediaQueryListener, removeMediaQueryListener } from './matchMedia'
 
-describe('addListener', () => {
+describe('addMediaQueryListener', () => {
   test('adds event listener to media query', () => {
     const mediaQuery = {
       addEventListener: jest.fn(),
       addListener: jest.fn(),
-    }
+    } as unknown as MediaQueryList
 
     const listener = jest.fn()
-    addListener(mediaQuery as unknown as MediaQueryList, listener)
+    addMediaQueryListener(mediaQuery, listener)
 
     expect(mediaQuery.addEventListener).toHaveBeenCalledWith('change', listener)
     expect(mediaQuery.addListener).not.toHaveBeenCalled()
   })
 
-  test('falls back to addListener for older browsers', () => {
+  test('falls back to addMediaQueryListener for older browsers', () => {
     const mediaQuery = {
-      addEventListener: jest.fn(() => {
-        throw new Error('not supported')
-      }),
       addListener: jest.fn(),
-    }
+    } as unknown as MediaQueryList
 
     const listener = jest.fn()
-    addListener(mediaQuery as unknown as MediaQueryList, listener)
+    addMediaQueryListener(mediaQuery, listener)
 
-    expect(mediaQuery.addEventListener).toHaveBeenCalledWith('change', listener)
     expect(mediaQuery.addListener).toHaveBeenCalledWith(listener)
   })
 })
 
-describe('removeListener', () => {
+describe('removeMediaQueryListener', () => {
   test('removes event listener from media query', () => {
     const mediaQuery = {
       removeEventListener: jest.fn(),
       removeListener: jest.fn(),
-    }
+    } as unknown as MediaQueryList
 
     const listener = jest.fn()
-    removeListener(mediaQuery as unknown as MediaQueryList, listener)
+    removeMediaQueryListener(mediaQuery, listener)
 
     expect(mediaQuery.removeEventListener).toHaveBeenCalledWith('change', listener)
     expect(mediaQuery.removeListener).not.toHaveBeenCalled()
   })
 
-  test('falls back to removeListener for older browsers', () => {
+  test('falls back to removeMediaQueryListener for older browsers', () => {
     const mediaQuery = {
-      removeEventListener: jest.fn(() => {
-        throw new Error('not supported')
-      }),
       removeListener: jest.fn(),
-    }
+    } as unknown as MediaQueryList
 
     const listener = jest.fn()
-    removeListener(mediaQuery as unknown as MediaQueryList, listener)
+    removeMediaQueryListener(mediaQuery, listener)
 
-    expect(mediaQuery.removeEventListener).toHaveBeenCalledWith('change', listener)
     expect(mediaQuery.removeListener).toHaveBeenCalledWith(listener)
   })
 })
