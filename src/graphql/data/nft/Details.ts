@@ -22,7 +22,6 @@ gql`
           originalImage {
             url
           }
-          mediaType
           tokenId
           description
           animationUrl
@@ -119,7 +118,6 @@ export function useNftAssetDetails(
           collectionSymbol: asset?.collection?.image?.url,
           imageUrl: asset?.image?.url,
           animationUrl: asset?.animationUrl,
-          mediaType: asset?.mediaType,
           marketplace: listing?.marketplace.toLowerCase() as unknown as Markets,
           name: asset?.name,
           priceInfo: {

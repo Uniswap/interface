@@ -1,5 +1,5 @@
-import { MediaType } from 'graphql/data/__generated__/types-and-hooks'
 import { GenieAsset } from 'nft/types'
+import { isAudio, isVideo } from 'nft/utils'
 import styled, { css } from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
@@ -73,12 +73,31 @@ const ContentNotAvailable = styled(ThemedText.BodySmall)`
   color: ${({ theme }) => theme.textSecondary};
   align-items: center;
   justify-content: center;
-  width: 100%;
-  height: 100%;
+
+  ${MediaStyle}
 `
 
+// TODO: when assets query is moved to nxyz update with mediaType from the query
+enum MediaType {
+  Audio = 'audio',
+  Video = 'video',
+  Image = 'image',
+  Raw = 'raw',
+}
+
+function assetMediaType(asset: GenieAsset): MediaType {
+  if (isAudio(asset.animationUrl ?? '')) {
+    return MediaType.Audio
+  } else if (isVideo(asset.animationUrl ?? '')) {
+    return MediaType.Video
+  } else if (asset.animationUrl) {
+    return MediaType.Raw
+  }
+  return MediaType.Image
+}
+
 export const MediaRenderer = ({ asset }: { asset: GenieAsset }) => {
-  switch (asset.mediaType) {
+  switch (assetMediaType(asset)) {
     case MediaType.Image:
       return <StyledImage src={asset.imageUrl} alt={asset.name || asset.collectionName} />
     case MediaType.Video:
