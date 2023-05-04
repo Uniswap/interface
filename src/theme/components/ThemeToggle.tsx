@@ -5,7 +5,7 @@ import { atomWithStorage, useAtomValue, useUpdateAtom } from 'jotai/utils'
 import ms from 'ms.macro'
 import { useCallback, useEffect, useMemo } from 'react'
 import { Moon, Sun } from 'react-feather'
-import { addListener, removeListener } from 'utils/matchMedia'
+import { addMediaQueryListener, removeMediaQueryListener } from 'utils/matchMedia'
 
 import { Segment, SegmentedControl } from './SegmentedControl'
 import { ThemedText } from './text'
@@ -38,8 +38,8 @@ export function SystemThemeUpdater() {
   )
 
   useEffect(() => {
-    addListener(DARKMODE_MEDIA_QUERY, listener)
-    return () => removeListener(DARKMODE_MEDIA_QUERY, listener)
+    addMediaQueryListener(DARKMODE_MEDIA_QUERY, listener)
+    return () => removeMediaQueryListener(DARKMODE_MEDIA_QUERY, listener)
   }, [setSystemTheme, listener])
 
   return null
