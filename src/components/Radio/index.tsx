@@ -15,7 +15,7 @@ const Button = styled.button<{ isActive?: boolean; activeElement?: boolean }>`
   width: fit-content;
 `
 
-const ToggleElementHoverStyle = (hasBgColor: boolean, theme: DefaultTheme, isActive?: boolean) =>
+const toggleElementHoverStyle = (hasBgColor: boolean, theme: DefaultTheme, isActive?: boolean) =>
   hasBgColor
     ? {
         opacity: '0.8',
@@ -31,7 +31,7 @@ const ButtonFill = styled.span<{ isActive?: boolean; bgColor?: string }>`
     isActive ? bgColor ?? theme.accentAction : bgColor ? theme.deprecated_bg4 : theme.textTertiary};
   border-radius: 50%;
   :hover {
-    ${({ bgColor, theme, isActive }) => ToggleElementHoverStyle(!!bgColor, theme, isActive)}
+    ${({ bgColor, theme, isActive }) => toggleElementHoverStyle(!!bgColor, theme, isActive)}
   }
   width: 10px;
   height: 10px;
@@ -43,17 +43,16 @@ const Container = styled(RowBetween)`
 `
 
 interface RadioProps {
-  id?: string
   className?: string
   isActive: boolean
   toggle: () => void
 }
 
-export default function Radio({ id, className, isActive, children, toggle }: PropsWithChildren<RadioProps>) {
+export default function Radio({ className, isActive, children, toggle }: PropsWithChildren<RadioProps>) {
   return (
     <Container className={className} onClick={toggle}>
       {children}
-      <Button id={id} isActive={isActive}>
+      <Button isActive={isActive}>
         <ButtonFill isActive={isActive} />
       </Button>
     </Container>
