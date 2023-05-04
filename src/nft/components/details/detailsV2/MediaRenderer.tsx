@@ -64,13 +64,17 @@ const AudioContainer = styled.div`
 
 const StyledAudio = styled.audio`
   position: absolute;
+  left: 0;
+  bottom: 0;
+  z-index: 2;
+  width: 100%;
 `
 
 const AudioPlayer = ({ asset }: { asset: GenieAsset }) => {
   return (
     <AudioContainer>
-      <StyledAudio controls src={asset.animationUrl} />
       <StyledImage src={asset.imageUrl} alt={asset.name || asset.collectionName} />
+      <StyledAudio controls src={asset.animationUrl} />
     </AudioContainer>
   )
 }
