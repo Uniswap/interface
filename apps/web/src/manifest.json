@@ -22,7 +22,7 @@
     "service_worker": "background.js",
     "type": "module"
   },
-  "permissions": ["storage", "notifications"], 
+  "permissions": ["storage", "notifications", "tabs"], 
   "content_scripts": [
     {
       "matches": [
