@@ -164,4 +164,9 @@ ignore:
         reason: 'Monorepo migration, delaying to do in separate PR'
         expires: 2023-05-01T00:00:00.000Z
         created: 2023-04-24T00:00:00.000Z
+  SNYK-JS-WORDWRAP-3149973:
+    - '*':
+        reason: 'No known upgrade'
+        expires: 2023-07-01T00:00:00.000Z
+        created: 2023-04-24T00:00:00.000Z
 patch: {}

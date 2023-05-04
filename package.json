@@ -16,10 +16,12 @@
     "is-ci": "^3.0.1",
     "lint-staged": "^13.1.0",
     "prettier": "latest",
+    "prompts": "2.4.2",
     "semantic-release": "^20.1.0",
     "semantic-release-monorepo": "^7.0.5",
     "syncpack": "^8.5.14",
-    "turbo": "latest"
+    "turbo": "latest",
+    "undici": "5.19.1"
   },
   "engines": {
     "node": "=18.12.1",
@@ -62,7 +64,6 @@
     "g:run-all-checks": "turbo run typecheck lint test build --parallel",
     "g:test": "turbo run test --filter=tests --filter=!@uniswap/mobile --parallel",
     "g:typecheck": "turbo run typecheck --parallel",
-    "expo": "yarn workspace expo-app",
     "mobile": "yarn workspace @uniswap/mobile",
     "staged:lint:fix": "eslint --fix",
     "upgrade:next": "manypkg upgrade next && manypkg upgrade eslint-config-next",
