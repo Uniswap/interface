@@ -1,7 +1,7 @@
 import { TransactionResponse } from '@ethersproject/abstract-provider'
 import { BigNumber } from '@ethersproject/bignumber'
 import { t } from '@lingui/macro'
-import { sendAnalyticsEvent } from '@uniswap/analytics'
+import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
 import { SwapEventName } from '@uniswap/analytics-events'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
@@ -49,6 +49,7 @@ export function useUniversalRouterSwapCallback(
   options: SwapOptions
 ) {
   const { account, chainId, provider } = useWeb3React()
+  const analyticsContext = useTrace()
 
   return useCallback(async (): Promise<TransactionResponse> => {
     return trace(
@@ -90,12 +91,19 @@ export function useUniversalRouterSwapCallback(
             .getSigner()
             .sendTransaction({ ...tx, gasLimit })
             .then((response) => {
-              sendAnalyticsEvent(
-                SwapEventName.SWAP_SIGNED,
-                formatSwapSignedAnalyticsEventProperties({ trade, fiatValues, txHash: response.hash })
-              )
+              sendAnalyticsEvent(SwapEventName.SWAP_SIGNED, {
+                ...formatSwapSignedAnalyticsEventProperties({
+                  trade,
+                  fiatValues,
+                  txHash: response.hash,
+                }),
+                ...analyticsContext,
+              })
               if (tx.data !== response.data) {
-                sendAnalyticsEvent(SwapEventName.SWAP_MODIFIED_IN_WALLET, { txHash: response.hash })
+                sendAnalyticsEvent(SwapEventName.SWAP_MODIFIED_IN_WALLET, {
+                  txHash: response.hash,
+                  ...analyticsContext,
+                })
                 throw new ModifiedSwapError()
               }
               return response
@@ -117,6 +125,7 @@ export function useUniversalRouterSwapCallback(
     )
   }, [
     account,
+    analyticsContext,
     chainId,
     fiatValues,
     options.deadline,
