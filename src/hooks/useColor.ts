@@ -5,6 +5,7 @@ import Vibrant from 'node-vibrant/lib/bundle.js'
 import { shade } from 'polished'
 import { useEffect, useState } from 'react'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
+import { useTheme } from 'styled-components/macro'
 import { hex } from 'wcag-contrast'
 
 function URIForEthToken(address: string) {
@@ -69,7 +70,8 @@ async function getColorFromUriPath(uri: string): Promise<string | null> {
 }
 
 export function useColor(token?: Token) {
-  const [color, setColor] = useState('#2172E5')
+  const theme = useTheme()
+  const [color, setColor] = useState(theme.accentActive)
 
   useEffect(() => {
     let stale = false
@@ -84,9 +86,9 @@ export function useColor(token?: Token) {
 
     return () => {
       stale = true
-      setColor('#2172E5')
+      setColor(theme.accentActive)
     }
-  }, [token])
+  }, [theme.accentActive, token])
 
   return color
 }

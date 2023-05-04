@@ -1,13 +1,14 @@
 import { AutoColumn } from 'components/Column'
 import CurrencyInputPanel from 'components/CurrencyInputPanel'
 import Input from 'components/NumericalInput'
-import { BodyWrapper } from 'pages/AppBody'
 import styled from 'styled-components/macro'
 
-export const PageWrapper = styled(BodyWrapper)<{ wide: boolean }>`
+export const PageWrapper = styled.div<{ wide: boolean }>`
   max-width: ${({ wide }) => (wide ? '880px' : '480px')};
   width: 100%;
-
+  background: ${({ theme }) => theme.backgroundScrolledSurface};
+  border-radius: 20px;
+  box-shadow: ${({ theme }) => theme.deepShadow};
   padding: ${({ wide }) => (wide ? '10px' : '0')};
 
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
@@ -76,7 +77,7 @@ export const ResponsiveTwoColumns = styled.div<{ wide: boolean }>`
 
   padding-top: 20px;
 
-  border-top: 1px solid ${({ theme }) => theme.backgroundInteractive};
+  border-top: 1px solid ${({ theme }) => theme.accentActive};
 
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
     grid-template-columns: 1fr;

@@ -31,13 +31,15 @@ const InputRow = styled.div`
 `
 
 const SmallButton = styled(ButtonGray)`
-  border-radius: 8px;
-  padding: 4px;
+  padding: 4px 4px 2px 4px;
+  box-shadow: none;
+  background: ${({ theme }) => theme.accentActionSoft};
 `
 
 const FocusedOutlineCard = styled(OutlineCard)<{ active?: boolean; pulsing?: boolean }>`
   border-color: ${({ active, theme }) => active && theme.accentAction};
   padding: 12px;
+  background: ${({ theme }) => theme.backgroundModule};
   animation: ${({ pulsing, theme }) => pulsing && pulse(theme.accentAction)} 0.8s linear;
 `
 
@@ -64,7 +66,7 @@ const InputTitle = styled(ThemedText.DeprecatedSmall)`
 `
 
 const ButtonLabel = styled(ThemedText.DeprecatedWhite)<{ disabled: boolean }>`
-  color: ${({ theme, disabled }) => (disabled ? theme.textSecondary : theme.textPrimary)} !important;
+  color: ${({ theme, disabled }) => (disabled ? theme.textSecondary : theme.accentActive)} !important;
 `
 
 interface StepCounterProps {

@@ -13,7 +13,7 @@ import usePrevious from 'hooks/usePrevious'
 import { DynamicSection } from 'pages/AddLiquidity/styled'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Box } from 'rebass'
-import styled, { keyframes } from 'styled-components/macro'
+import styled, { keyframes, useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
 import { FeeOption } from './FeeOption'
@@ -34,8 +34,9 @@ const pulse = (color: string) => keyframes`
   }
 `
 const FocusedOutlineCard = styled(Card)<{ pulsing: boolean }>`
-  border: 1px solid ${({ theme }) => theme.backgroundInteractive};
-  animation: ${({ pulsing, theme }) => pulsing && pulse(theme.accentAction)} 0.6s linear;
+  border: 1px solid ${({ theme }) => theme.accentActive};
+  background: ${({ theme }) => theme.backgroundModule};
+  animation: ${({ pulsing, theme }) => pulsing && pulse(theme.accentActive)} 0.6s linear;
   align-self: center;
 `
 
@@ -60,7 +61,7 @@ export default function FeeSelector({
   currencyB?: Currency | undefined
 }) {
   const { chainId } = useWeb3React()
-
+  const theme = useTheme()
   const { isLoading, isError, largestUsageFeeTier, distributions } = useFeeTierDistribution(currencyA, currencyB)
 
   // get pool data on-chain for latest states
@@ -174,7 +175,13 @@ export default function FeeSelector({
               )}
             </AutoColumn>
 
-            <ButtonGray onClick={() => setShowOptions(!showOptions)} width="auto" padding="4px" $borderRadius="6px">
+            <ButtonGray
+              onClick={() => setShowOptions(!showOptions)}
+              width="auto"
+              padding="7px"
+              $borderRadius="16px"
+              style={{ boxShadow: 'none', color: theme.accentActive, background: theme.accentActionSoft }}
+            >
               {showOptions ? <Trans>Hide</Trans> : <Trans>Edit</Trans>}
             </ButtonGray>
           </RowBetween>

@@ -50,17 +50,8 @@ const FixedContainer = styled.div`
 
 const Container = styled.div<{ hideInput: boolean; disabled: boolean }>`
   border-radius: ${({ hideInput }) => (hideInput ? '16px' : '20px')};
-  border: 1px solid ${({ theme }) => theme.backgroundSurface};
-  background-color: ${({ theme }) => theme.deprecated_bg1};
+  border: 1px solid ${({ theme }) => theme.backgroundModule};
   width: ${({ hideInput }) => (hideInput ? '100%' : 'initial')};
-  ${({ theme, hideInput, disabled }) =>
-    !disabled &&
-    `
-    :focus,
-    :hover {
-      border: 1px solid ${hideInput ? ' transparent' : theme.deprecated_bg3};
-    }
-  `}
 `
 
 const CurrencySelect = styled(ButtonGray)<{
@@ -70,11 +61,10 @@ const CurrencySelect = styled(ButtonGray)<{
   disabled?: boolean
 }>`
   align-items: center;
-  background-color: ${({ selected, theme }) => (selected ? theme.backgroundInteractive : theme.accentAction)};
+  background-color: ${({ selected, theme }) => (selected ? theme.backgroundInteractive : theme.accentActionSoft)};
   opacity: ${({ disabled }) => (!disabled ? 1 : 0.4)};
   box-shadow: ${({ selected }) => (selected ? 'none' : '0px 6px 10px rgba(0, 0, 0, 0.075)')};
-  box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.075);
-  color: ${({ selected, theme }) => (selected ? theme.textPrimary : theme.white)};
+  color: ${({ selected, theme }) => (selected ? theme.textPrimary : theme.accentActive)};
   cursor: pointer;
   border-radius: 16px;
   outline: none;
@@ -88,9 +78,31 @@ const CurrencySelect = styled(ButtonGray)<{
   justify-content: space-between;
   margin-left: ${({ hideInput }) => (hideInput ? '0' : '12px')};
   :focus,
-  :hover {
-    background-color: ${({ selected, theme }) => (selected ? theme.deprecated_bg3 : darken(0.05, theme.accentAction))};
+  &:active {
+    background-color: ${({ theme, selected }) => (selected ? theme.backgroundInteractive : theme.accentActionSoft)};
   }
+
+  &:before {
+    background-size: 100%;
+    border-radius: inherit;
+
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+    content: '';
+  }
+
+  &:hover:before {
+    background-color: ${({ theme }) => theme.stateOverlayHover};
+  }
+
+  &:active:before {
+    background-color: ${({ theme }) => theme.stateOverlayPressed};
+  }
+
   visibility: ${({ visible }) => (visible ? 'visible' : 'hidden')};
 `
 
@@ -104,10 +116,11 @@ const InputRow = styled.div<{ selected: boolean }>`
 const LabelRow = styled.div`
   ${flexRowNoWrap};
   align-items: center;
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.textSecondary};
   font-size: 0.75rem;
   line-height: 1rem;
   padding: 0 1rem 1rem;
+
   span:hover {
     cursor: pointer;
     color: ${({ theme }) => darken(0.2, theme.textSecondary)};
@@ -144,10 +157,10 @@ const StyledTokenName = styled.span<{ active?: boolean }>`
 
 const StyledBalanceMax = styled.button<{ disabled?: boolean }>`
   background-color: transparent;
-  background-color: ${({ theme }) => theme.deprecated_primary5};
+  background-color: ${({ theme }) => theme.accentActionSoft};
   border: none;
   border-radius: 12px;
-  color: ${({ theme }) => theme.accentAction};
+  color: ${({ theme }) => theme.accentActive};
   cursor: pointer;
   font-size: 11px;
   font-weight: 500;

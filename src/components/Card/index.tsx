@@ -10,8 +10,8 @@ const Card = styled(Box)<{ width?: string; padding?: string; border?: string; $b
 export default Card
 
 export const LightCard = styled(Card)`
-  border: 1px solid ${({ theme }) => theme.backgroundInteractive};
-  background-color: ${({ theme }) => theme.deprecated_bg1};
+  border: 1px solid ${({ theme }) => theme.accentActive};
+  background-color: ${({ theme }) => theme.backgroundInteractive};
 `
 
 export const GrayCard = styled(Card)`
@@ -27,7 +27,7 @@ export const DarkCard = styled(Card)`
 `
 
 export const OutlineCard = styled(Card)`
-  border: 1px solid ${({ theme }) => theme.deprecated_bg3};
+  border: 1px solid ${({ theme }) => theme.accentActive};
 `
 
 export const YellowCard = styled(Card)`
@@ -37,7 +37,7 @@ export const YellowCard = styled(Card)`
 `
 
 export const BlueCard = styled(Card)`
-  background-color: ${({ theme }) => theme.deprecated_primary5};
-  color: ${({ theme }) => theme.accentAction};
+  background-color: ${({ theme }) => theme.accentActionSoft};
+  color: ${({ theme }) => theme.accentActive};
   border-radius: 12px;
 `

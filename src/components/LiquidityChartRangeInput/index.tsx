@@ -6,8 +6,6 @@ import LoadingGif from 'assets/images/loading.gif'
 import { AutoColumn, ColumnCenter } from 'components/Column'
 import { LoaderGif } from 'components/Icons/LoadingSpinner'
 import { format } from 'd3'
-import { useColor } from 'hooks/useColor'
-import { saturate } from 'polished'
 import React, { ReactNode, useCallback, useMemo } from 'react'
 import { BarChart2, CloudOff, Inbox } from 'react-feather'
 import { batch } from 'react-redux'
@@ -91,8 +89,6 @@ export default function LiquidityChartRangeInput({
   interactive: boolean
 }) {
   const theme = useTheme()
-  const tokenAColor = useColor(currencyA?.wrapped)
-  const tokenBColor = useColor(currencyB?.wrapped)
   const isDarkMode = useIsDarkMode()
 
   const isSorted = currencyA && currencyB && currencyA?.wrapped.sortsBefore(currencyB?.wrapped)
@@ -168,11 +164,7 @@ export default function LiquidityChartRangeInput({
           icon={<Inbox size={56} stroke={theme.textPrimary} />}
         />
       ) : isLoading ? (
-        <InfoBox
-          icon={
-            <LoaderGif size="40px" stroke={theme.deprecated_text4} gif={isDarkMode ? LoadingGif : LoadingGifLight} />
-          }
-        />
+        <InfoBox icon={<LoaderGif size="40px" gif={isDarkMode ? LoadingGif : LoadingGifLight} />} />
       ) : error ? (
         <InfoBox
           message={<Trans>Liquidity data not available.</Trans>}
@@ -195,8 +187,8 @@ export default function LiquidityChartRangeInput({
               },
               brush: {
                 handle: {
-                  west: saturate(0.1, tokenAColor) ?? theme.accentFailure,
-                  east: saturate(0.1, tokenBColor) ?? theme.accentAction,
+                  west: '#19EBCE',
+                  east: '#8A15E6',
                 },
               },
             }}

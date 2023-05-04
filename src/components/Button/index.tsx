@@ -324,14 +324,15 @@ export function ButtonDropdownLight({ disabled = false, children, ...rest }: { d
 
 const ActiveOutlined = styled(ButtonOutlined)`
   border: 1px solid;
-  border-color: ${({ theme }) => theme.accentAction};
+  border-color: ${({ theme }) => theme.accentActive};
+  background-color: ${({ theme }) => theme.backgroundModule};
 `
 
 const Circle = styled.div`
   height: 17px;
   width: 17px;
   border-radius: 50%;
-  background-color: ${({ theme }) => theme.accentAction};
+  background-color: ${({ theme }) => theme.accentActive};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -354,13 +355,13 @@ export function ButtonRadioChecked({ active = false, children, ...rest }: { acti
 
   if (!active) {
     return (
-      <ButtonOutlined $borderRadius="12px" padding="12px 8px" {...rest}>
+      <ButtonOutlined $borderRadius="16px" padding="12px 8px" {...rest}>
         <RowBetween>{children}</RowBetween>
       </ButtonOutlined>
     )
   } else {
     return (
-      <ActiveOutlined {...rest} padding="12px 8px" $borderRadius="12px">
+      <ActiveOutlined {...rest} padding="12px 8px" $borderRadius="16px">
         <RowBetween>
           {children}
           <CheckboxWrapper>
