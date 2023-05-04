@@ -102,7 +102,7 @@
     "@vanilla-extract/webpack-plugin": "^2.1.11",
     "babel-plugin-istanbul": "^6.1.1",
     "cypress": "10.3.1",
-    "cypress-hardhat": "^2.2.0",
+    "cypress-hardhat": "^2.3.0",
     "env-cmd": "^10.1.0",
     "eslint": "^7.11.0",
     "eslint-plugin-import": "^2.27",
