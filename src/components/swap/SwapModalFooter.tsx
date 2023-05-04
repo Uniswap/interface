@@ -140,7 +140,7 @@ export default function SwapModalFooter({
             allowedSlippage,
             transactionDeadlineSecondsSinceEpoch,
             isAutoSlippage,
-            isAutoRouterApi: routerPreference === RouterPreference.AUTO,
+            isAutoRouterApi: routerPreference === RouterPreference.AUTO || routerPreference === RouterPreference.API,
             swapQuoteReceivedDate,
             routes,
             fiatValueInput: fiatValueInput.data,
