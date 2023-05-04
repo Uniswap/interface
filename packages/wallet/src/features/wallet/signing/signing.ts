@@ -22,7 +22,7 @@ export async function signMessage(
   provider?: ethers.providers.JsonRpcProvider
 ): Promise<string> {
   // Mobile code does not explicitly connect to provider,
-  // Extension needs to connect to provider to ensure correct chain
+  // Web needs to connect to provider to ensure correct chain
   const unconnectedSigner = await signerManager.getSignerForAccount(account)
   const signer = provider
     ? unconnectedSigner?.connect(provider)
@@ -52,7 +52,7 @@ export async function signTypedData(
   provider?: ethers.providers.JsonRpcProvider
 ): Promise<string> {
   // Mobile code does not explicitly connect to provider,
-  // Extension needs to connect to provider to ensure correct chain
+  // Web needs to connect to provider to ensure correct chain
   const unconnectedSigner = await signerManager.getSignerForAccount(account)
   const signer = provider
     ? unconnectedSigner?.connect(provider)

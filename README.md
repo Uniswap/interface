@@ -8,9 +8,6 @@ This repository contains code for the Uniswap Wallet and is in transition to a m
 
 ```bash
 yarn
-cd apps/mobile
-yarn
-cd ../../
 ```
 
 ### Running
@@ -44,7 +41,6 @@ Store all product related shared packages code here. Packages should be broken d
 
 ### Monorepo
 
-- [ ] Bring back husky once mobile is integrated
 - [ ] add storybook back
 - [ ] Evaluate Turbo licensing
 

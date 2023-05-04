@@ -12,6 +12,10 @@ apps/mobile/.storybook
 apps/mobile/codecov.yml
 
 apps/web
-packages
-yarn.lock
+*.web.ts
+*.web.js
+*.web.tsx
+*.web.jsx
+
 README.md
+packages/README.md
