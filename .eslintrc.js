@@ -48,7 +48,7 @@ module.exports = {
           'error',
           {
             selector:
-              "MemberExpression[property.name='addEventListener'][object.callee.name='matchMedia'], MemberExpression[property.name='addListener'][object.callee.name='matchMedia']",
+              "MemberExpression[property.name='addEventListener'][object.callee.name='matchMedia'], MemberExpression[property.name='addListener'][object.callee.name='matchMedia'], MemberExpression[property.name='removeEventListener'][object.callee.name='matchMedia'], MemberExpression[property.name='removeListener'][object.callee.name='matchMedia']",
             message: 'Use helper functions in `utils/matchMedia.ts` for media queries.',
           },
         ],
