@@ -30,10 +30,10 @@ export default function RouterPreferenceSettings() {
         <RowFixed>
           <Column gap="xs">
             <ThemedText.BodySecondary>
-              <Trans>Auto Routing</Trans>
+              <Trans>Auto Router API</Trans>
             </ThemedText.BodySecondary>
             <ThemedText.Caption color="textSecondary">
-              <Trans>Finds the best route across liquidity sources.</Trans>
+              <Trans>Use the Uniswap Labs API to get faster quotes.</Trans>
             </ThemedText.Caption>
           </Column>
         </RowFixed>
