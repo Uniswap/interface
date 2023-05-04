@@ -18,9 +18,6 @@ export const Input = styled.input`
   ::placeholder {
     color: ${({ theme }) => theme.textTertiary};
   }
-  :invalid {
-    border-color: ${({ theme }) => theme.accentFailure};
-  }
 `
 
 export const InputContainer = styled(Row)<{ error?: boolean }>`
