@@ -1,13 +1,15 @@
 import { GenieAsset } from 'nft/types'
 import { isAudio, isVideo } from 'nft/utils'
 import styled, { css } from 'styled-components/macro'
-import { ThemedText } from 'theme'
+import { BREAKPOINTS, ThemedText } from 'theme'
 
 const MediaStyle = css`
+  position: relative;
   object-fit: contain;
   height: 100%;
   width: 100%;
   aspect-ratio: 1;
+  z-index: 1;
 `
 
 const StyledImage = styled.img`
@@ -18,11 +20,27 @@ const StyledVideo = styled.video`
   ${MediaStyle}
 `
 
+const MediaShadow = styled.div<{ backgroundImage: string }>`
+  position: absolute;
+  left: 0%;
+  right: 0%;
+  top: 0%;
+  bottom: 0%;
+  background-image: ${({ backgroundImage }) => `url(${backgroundImage})`};
+  filter: blur(25px);
+  border-radius: 20px;
+
+  @media screen and (min-width: ${BREAKPOINTS.xl}px) {
+    filter: blur(50px);
+  }
+`
+
 const StyledEmbed = styled.div`
   position: relative;
   overflow: hidden;
   width: 100%;
   padding-top: 100%;
+  z-index: 1;
 `
 
 const StyledIFrame = styled.iframe`
@@ -96,7 +114,7 @@ function assetMediaType(asset: GenieAsset): MediaType {
   return MediaType.Image
 }
 
-export const MediaRenderer = ({ asset }: { asset: GenieAsset }) => {
+const RenderMediaType = ({ asset }: { asset: GenieAsset }) => {
   switch (assetMediaType(asset)) {
     case MediaType.Image:
       return <StyledImage src={asset.imageUrl} alt={asset.name || asset.collectionName} />
@@ -110,3 +128,10 @@ export const MediaRenderer = ({ asset }: { asset: GenieAsset }) => {
       return <ContentNotAvailable>Content not available</ContentNotAvailable>
   }
 }
+
+export const MediaRenderer = ({ asset }: { asset: GenieAsset }) => (
+  <>
+    <RenderMediaType asset={asset} />
+    <MediaShadow backgroundImage={asset.imageUrl ?? ''} />
+  </>
+)

@@ -67,8 +67,10 @@ const InfoDetailsContainer = styled(Column)`
 `
 
 const MediaContainer = styled.div`
+  position: relative;
   width: 100%;
   height: 100%;
+  filter: drop-shadow(0px 12px 20px rgba(0, 0, 0, 0.1));
 
   @media screen and (min-width: ${BREAKPOINTS.sm}px) {
     width: ${MAX_WIDTH}px;
