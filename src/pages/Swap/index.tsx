@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { sendAnalyticsEvent, Trace, TraceEvent } from '@uniswap/analytics'
+import { sendAnalyticsEvent, Trace, TraceEvent, useTrace } from '@uniswap/analytics'
 import {
   BrowserEvent,
   InterfaceElementName,
@@ -189,6 +189,7 @@ export function Swap({
   const { account, chainId: connectedChainId, connector } = useWeb3React()
   const [newSwapQuoteNeedsLogging, setNewSwapQuoteNeedsLogging] = useState(true)
   const [fetchingSwapQuoteStartTime, setFetchingSwapQuoteStartTime] = useState<Date | undefined>()
+  const trace = useTrace()
 
   // token warning stuff
   const prefilledInputCurrency = useCurrency(prefilledState?.[Field.INPUT]?.currencyId)
@@ -392,13 +393,14 @@ export function Swap({
         chain_id: chainId,
         token_symbol: maximumAmountIn?.currency.symbol,
         token_address: maximumAmountIn?.currency.address,
+        ...trace,
       })
     } catch (e) {
       console.error(e)
     } finally {
       setIsAllowancePending(false)
     }
-  }, [allowance, chainId, maximumAmountIn?.currency.address, maximumAmountIn?.currency.symbol])
+  }, [allowance, chainId, maximumAmountIn?.currency.address, maximumAmountIn?.currency.symbol, trace])
 
   const maxInputAmount: CurrencyAmount<Currency> | undefined = useMemo(
     () => maxAmountSpend(currencyBalances[Field.INPUT]),
@@ -534,10 +536,14 @@ export function Swap({
       // Set the current datetime as the time of receipt of latest swap quote.
       setSwapQuoteReceivedDate(now)
       // Log swap quote.
-      sendAnalyticsEvent(
-        SwapEventName.SWAP_QUOTE_RECEIVED,
-        formatSwapQuoteReceivedEventProperties(trade, trade.gasUseEstimateUSD ?? undefined, fetchingSwapQuoteStartTime)
-      )
+      sendAnalyticsEvent(SwapEventName.SWAP_QUOTE_RECEIVED, {
+        ...formatSwapQuoteReceivedEventProperties(
+          trade,
+          trade.gasUseEstimateUSD ?? undefined,
+          fetchingSwapQuoteStartTime
+        ),
+        ...trace,
+      })
       // Latest swap quote has just been logged, so we don't need to log the current trade anymore
       // unless user inputs change again and a new trade is in the process of being generated.
       setNewSwapQuoteNeedsLogging(false)
@@ -556,6 +562,7 @@ export function Swap({
     fetchingSwapQuoteStartTime,
     trade,
     setSwapQuoteReceivedDate,
+    trace,
   ])
 
   const showDetailsDropdown = Boolean(
