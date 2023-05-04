@@ -20,19 +20,24 @@ const StyledVideo = styled.video`
   ${MediaStyle}
 `
 
-const MediaShadow = styled.div<{ backgroundImage: string }>`
-  position: absolute;
-  left: 0%;
-  right: 0%;
-  top: 0%;
-  bottom: 0%;
-  background-image: ${({ backgroundImage }) => `url(${backgroundImage})`};
-  filter: blur(25px);
+const MediaShadow = styled.img`
+  object-fit: contain;
+  height: 100%;
+  aspect-ratio: 1;
   border-radius: 20px;
+  filter: blur(25px);
 
   @media screen and (min-width: ${BREAKPOINTS.xl}px) {
     filter: blur(50px);
   }
+`
+
+const MediaShadowContainer = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
 `
 
 const StyledEmbed = styled.div`
@@ -132,6 +137,8 @@ const RenderMediaType = ({ asset }: { asset: GenieAsset }) => {
 export const MediaRenderer = ({ asset }: { asset: GenieAsset }) => (
   <>
     <RenderMediaType asset={asset} />
-    <MediaShadow backgroundImage={asset.imageUrl ?? ''} />
+    <MediaShadowContainer>
+      <MediaShadow src={asset.imageUrl ?? ''} />
+    </MediaShadowContainer>
   </>
 )
