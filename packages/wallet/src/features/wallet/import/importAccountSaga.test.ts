@@ -1,6 +1,5 @@
 import { runSaga } from '@redux-saga/core'
 import { PayloadAction } from '@reduxjs/toolkit'
-import { NATIVE_ADDRESS } from 'wallet/src/constants/addresses'
 import {
   SAMPLE_PASSWORD,
   SAMPLE_SEED,
@@ -78,7 +77,7 @@ describe(importAccount, () => {
 
   it('imports readonly account', () => {
     const params: ImportAddressAccountParams = {
-      address: NATIVE_ADDRESS,
+      address: SAMPLE_SEED_ADDRESS_1,
       name: 'READONLY',
       type: ImportAccountType.Address,
     }
@@ -104,13 +103,13 @@ describe(importAccount, () => {
       addAccounts([
         {
           type: AccountType.Readonly,
-          address: NATIVE_ADDRESS,
+          address: SAMPLE_SEED_ADDRESS_1,
           name: 'READONLY',
           pending: true,
           timeImportedMs: expect.any(Number),
         },
       ]),
-      activateAccount(NATIVE_ADDRESS),
+      activateAccount(SAMPLE_SEED_ADDRESS_1),
       // unlockWallet(),
     ])
   })

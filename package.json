@@ -37,6 +37,7 @@
   "private": true,
   "resolutions": {
     "@sideway/formula": "3.0.1",
+    "@xmldom/xmldom": "0.7.7",
     "esbuild": "0.17.5",
     "jpeg-js": "0.4.4",
     "json5": "2.2.2",
@@ -44,15 +45,14 @@
     "qs": "6.11.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-native-fast-image@8.6.3": "patch:react-native-fast-image@npm%3A8.6.3#./.yarn/patches/react-native-fast-image-npm-8.6.3-03ee2d23c0.patch",
     "react-native-svg": "13.8.0",
     "react-native-web": "0.18.12",
     "react-refresh": "^0.14.0",
     "typescript": "4.9.4",
     "ua-parser-js": "0.7.33",
     "webpack": "^5.74.0",
-    "yaml": "2.2.2",
-    "@xmldom/xmldom": "0.7.7",
-    "react-native-fast-image@8.6.3": "patch:react-native-fast-image@npm%3A8.6.3#./.yarn/patches/react-native-fast-image-npm-8.6.3-03ee2d23c0.patch"
+    "yaml": "2.2.2"
   },
   "scripts": {
     "g:build": "turbo run build --concurrency=100%",
@@ -60,9 +60,9 @@
     "g:format:deps": "syncpack format",
     "g:lint": "turbo run lint --parallel",
     "g:lint:fix": "turbo run lint:fix --parallel",
-    "g:rm:nodemodules": "rm -rf node_modules apps/*/node_modules packages/*/node_modules",
+    "g:rm:nodemodules": "rm -rf node_modules apps/*/node_modules config/*/node_modules packages/*/node_modules",
     "g:run-all-checks": "turbo run typecheck lint test build --parallel",
-    "g:test": "turbo run test --filter=tests --filter=!@uniswap/mobile --parallel",
+    "g:test": "turbo run test --parallel",
     "g:typecheck": "turbo run typecheck --parallel",
     "mobile": "yarn workspace @uniswap/mobile",
     "staged:lint:fix": "eslint --fix",

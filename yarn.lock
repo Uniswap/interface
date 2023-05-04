@@ -24010,6 +24010,8 @@ __metadata:
   resolution: "jest-presets@workspace:config/jest-presets"
   dependencies:
     "@testing-library/jest-native": 5.4.2
+    jest-svg-transformer: 1.0.0
+    jest-transform-stub: 2.0.0
     ts-jest: 29.0.5
   languageName: unknown
   linkType: soft
@@ -24169,6 +24171,16 @@ __metadata:
     pretty-format: ^29.5.0
     semver: ^7.3.5
   checksum: fe5df54122ed10eed625de6416a45bc4958d5062b018f05b152bf9785ab7f355dcd55e40cf5da63895bf8278f8d7b2bb4059b2cfbfdee18f509d455d37d8aa2b
+  languageName: node
+  linkType: hard
+
+"jest-svg-transformer@npm:1.0.0":
+  version: 1.0.0
+  resolution: "jest-svg-transformer@npm:1.0.0"
+  peerDependencies:
+    jest: ">22"
+    react: ">=16"
+  checksum: 773a9129bf628101eddd911bf54783736991f2007b10bf7f05f7566a225485b03ca6cb30fcd270bfac845d6c0075976f1def4fccdda113d0d3176cf67ee18ded
   languageName: node
   linkType: hard
 

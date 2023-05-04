@@ -49,3 +49,15 @@ jobs:
 
       - name: 🧪 Unit Tests
         run: yarn g:test
+
+      - name: 🫢 Upload coverage to Codecov
+        uses: codecov/codecov-action@d9f34f8cd5cb3b3eb79b3e4b5dae3a16df499a70
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: false
+
+      - name: ⚠️  Danger
+        run: yarn danger ci
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+

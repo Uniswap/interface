@@ -7,6 +7,7 @@ module.exports = {
   testEnvironment: 'jsdom',
   transform: {
     "^.+\\.tsx?$": "ts-jest",
+    '\\.svg$': 'jest-transformer-svg',
   },
   // coverageDirectory: '<rootDir>/coverage',
   // coverageReporters: ['json','lcov','html'],
@@ -14,6 +15,9 @@ module.exports = {
   //   '<rootDir>/packages/**/src/**/*.ts',
   // ],
   moduleFileExtensions: ["ts", "tsx", "js", "mjs", "cjs", "jsx", "json", "node"],
+  moduleNameMapper: {
+    '.+\\.(css|style|less|sass|scss|png|jpg|ttf|woff|woff2)$': 'jest-transform-stub',
+  },
   modulePathIgnorePatterns: ["<rootDir>/node_modules"],
   testPathIgnorePatterns: ['<rootDir>/node_modules'],
   testMatch: [

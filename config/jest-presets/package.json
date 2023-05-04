@@ -4,9 +4,11 @@
   "dependencies": {
     "ts-jest": "29.0.5"
   },
-  "license": "MIT",
-  "private": true,
   "devDependencies": {
-    "@testing-library/jest-native": "5.4.2"
-  }
+    "@testing-library/jest-native": "5.4.2",
+    "jest-svg-transformer": "1.0.0",
+    "jest-transform-stub": "2.0.0"
+  },
+  "license": "MIT",
+  "private": true
 }
