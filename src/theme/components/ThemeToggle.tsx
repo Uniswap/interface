@@ -5,6 +5,7 @@ import { atomWithStorage, useAtomValue, useUpdateAtom } from 'jotai/utils'
 import ms from 'ms.macro'
 import { useCallback, useEffect, useMemo } from 'react'
 import { Moon, Sun } from 'react-feather'
+import { addListener, removeListener } from 'utils/matchMedia'
 
 import { Segment, SegmentedControl } from './SegmentedControl'
 import { ThemedText } from './text'
@@ -37,15 +38,8 @@ export function SystemThemeUpdater() {
   )
 
   useEffect(() => {
-    /*
-     * Need to fallback to support older browsers (mainly, Safari < 14).
-     * See: https://developer.mozilla.org/en-US/docs/Web/API/MediaQueryList#browser_compatibility
-     */
-    try {
-      DARKMODE_MEDIA_QUERY.addEventListener('change', listener)
-    } catch (e) {
-      DARKMODE_MEDIA_QUERY.addListener(listener)
-    }
+    addListener(DARKMODE_MEDIA_QUERY, listener)
+    return () => removeListener(DARKMODE_MEDIA_QUERY, listener)
   }, [setSystemTheme, listener])
 
   return null
