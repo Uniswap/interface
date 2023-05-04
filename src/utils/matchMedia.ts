@@ -1,7 +1,6 @@
-/*
- * Need to fallback to support older browsers (mainly, Safari < 14).
- * See: https://developer.mozilla.org/en-US/docs/Web/API/MediaQueryList#browser_compatibility
- */
+// Need to fallback to support older browsers (mainly, Safari < 14).
+// See: https://developer.mozilla.org/en-US/docs/Web/API/MediaQueryList#browser_compatibility
+
 export function addListener(mediaQuery: MediaQueryList, listener: (event: MediaQueryListEvent) => void) {
   try {
     mediaQuery.addEventListener('change', listener)
