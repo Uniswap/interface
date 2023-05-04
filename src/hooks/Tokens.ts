@@ -6,11 +6,12 @@ import { DEFAULT_INACTIVE_LIST_URLS, DEFAULT_LIST_OF_LISTS } from 'constants/lis
 import { useCurrencyFromMap, useTokenFromMapOrNetwork } from 'lib/hooks/useCurrency'
 import { getTokenFilter } from 'lib/hooks/useTokenList/filtering'
 import { useMemo } from 'react'
+import { useAppSelector } from 'state/hooks'
 import { isL2ChainId } from 'utils/chains'
 
 import { useAllLists, useCombinedActiveList, useCombinedTokenMapFromUrls } from '../state/lists/hooks'
 import { WrappedTokenInfo } from '../state/lists/wrappedTokenInfo'
-import { useUserAddedTokens, useUserAddedTokensOnChain } from '../state/user/hooks'
+import { deserializeToken, useUserAddedTokens, useUserAddedTokensOnChain } from '../state/user/hooks'
 import { TokenAddressMap, useUnsupportedTokenList } from './../state/lists/hooks'
 
 type Maybe<T> = T | null | undefined
@@ -28,8 +29,36 @@ function useTokensFromMap(tokenMap: TokenAddressMap, chainId: Maybe<SupportedCha
   }, [chainId, tokenMap])
 }
 
-export function useAllTokensMultichain(): TokenAddressMap {
-  return useCombinedTokenMapFromUrls(DEFAULT_LIST_OF_LISTS)
+export type ChainTokenMap = { [chainId in number]?: { [address in string]?: Token } }
+export function useAllTokensMultichain(): ChainTokenMap {
+  const allTokensFromLists = useCombinedTokenMapFromUrls(DEFAULT_LIST_OF_LISTS)
+  const userAddedTokensMap = useAppSelector(({ user: { tokens } }) => tokens)
+
+  return useMemo(() => {
+    const chainTokenMap: ChainTokenMap = {}
+
+    Object.keys(userAddedTokensMap)
+      .map(Number)
+      .forEach((chainId) => {
+        const tokenMap = {} as { [address in string]?: Token }
+        Object.values(userAddedTokensMap[chainId]).forEach((serializedToken) => {
+          tokenMap[serializedToken.address] = deserializeToken(serializedToken)
+        })
+        chainTokenMap[chainId] = tokenMap
+      })
+
+    Object.keys(allTokensFromLists)
+      .map(Number)
+      .forEach((chainId) => {
+        const tokenMap = chainTokenMap[chainId] ?? {}
+        Object.values(allTokensFromLists[chainId]).forEach(({ token }) => {
+          tokenMap[token.address] = token
+        })
+        chainTokenMap[chainId] = tokenMap
+      })
+
+    return chainTokenMap
+  }, [allTokensFromLists, userAddedTokensMap])
 }
 
 // Returns all tokens from the default list + user added tokens
