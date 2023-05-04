@@ -158,7 +158,7 @@ export default function MaxSlippageSettings({ autoSlippage }: { autoSlippage: Pe
       {tooLow || tooHigh ? (
         <RowBetween gap="md">
           <CautionTriangle />
-          <ThemedText.SubHeaderSmall color="accentWarning">
+          <ThemedText.Caption color="accentWarning">
             {tooLow ? (
               <Trans>
                 Slippage below {MINIMUM_RECOMMENDED_SLIPPAGE.toFixed(2)}% may result in a failed transaction
@@ -166,7 +166,7 @@ export default function MaxSlippageSettings({ autoSlippage }: { autoSlippage: Pe
             ) : (
               <Trans>Your transaction may be frontrun and result in an unfavorable trade.</Trans>
             )}
-          </ThemedText.SubHeaderSmall>
+          </ThemedText.Caption>
         </RowBetween>
       ) : null}
     </Expand>
