@@ -84,10 +84,9 @@ describe('Swap', () => {
       const DEADLINE_MINUTES = 1
       const TEN_MINUTES_MS = 1000 * 60 * DEADLINE_MINUTES * 10
       cy.visit('/swap', { ethereum: 'hardhat' })
-        .hardhat()
+        .hardhat({ automine: false })
         .then((hardhat) => {
-          cy.then(() => hardhat.setAutomine(false))
-            .then(() => hardhat.getBalance(hardhat.wallet.address, USDC_MAINNET))
+          cy.then(() => hardhat.getBalance(hardhat.wallet.address, USDC_MAINNET))
             .then((balance) => Number(balance.toFixed(1)))
             .then((initialBalance) => {
               // Input swap info.
@@ -209,18 +208,16 @@ describe('Swap', () => {
             cy.get('#confirm-swap-or-send').click()
             cy.get(getTestSelector('dismiss-tx-confirmation')).click()
 
-            cy.then(() => hardhat.provider.send('hardhat_mine', ['0x1', '0xc'])).then(() => {
-              // ui check
-              cy.get('#swap-currency-output [data-testid="balance-text"]').should(
-                'have.text',
-                `Balance: ${initialBalance + BALANCE_INCREMENT}`
-              )
+            // ui check
+            cy.get('#swap-currency-output [data-testid="balance-text"]').should(
+              'have.text',
+              `Balance: ${initialBalance + BALANCE_INCREMENT}`
+            )
 
-              // chain state check
-              cy.then(() => hardhat.getBalance(hardhat.wallet.address, USDC_MAINNET))
-                .then((balance) => Number(balance.toFixed(1)))
-                .should('eq', initialBalance + BALANCE_INCREMENT)
-            })
+            // chain state check
+            cy.then(() => hardhat.getBalance(hardhat.wallet.address, USDC_MAINNET))
+              .then((balance) => Number(balance.toFixed(1)))
+              .should('eq', initialBalance + BALANCE_INCREMENT)
           })
       })
     })
@@ -417,68 +414,65 @@ describe('Swap', () => {
 
   it('should render an error for slippage failure', () => {
     cy.visit('/swap', { ethereum: 'hardhat' })
-      .hardhat()
+      .hardhat({ automine: false })
       .then((hardhat) => {
-        cy.then(() => hardhat.setAutomine(false))
-          .then(() => hardhat.provider.getBalance(hardhat.wallet.address))
-          .then((initialBalance) => {
-            // Gas estimation fails for this transaction (that would normally fail), so we stub it.
-            const send = cy.stub(hardhat.provider, 'send')
-            send.withArgs('eth_estimateGas').resolves(BigNumber.from(2_000_000))
-            send.callThrough()
+        cy.then(() => hardhat.provider.getBalance(hardhat.wallet.address)).then((initialBalance) => {
+          // Gas estimation fails for this transaction (that would normally fail), so we stub it.
+          const send = cy.stub(hardhat.provider, 'send')
+          send.withArgs('eth_estimateGas').resolves(BigNumber.from(2_000_000))
+          send.callThrough()
 
-            // Set slippage to a very low value.
-            cy.get(getTestSelector('open-settings-dialog-button')).click()
-            cy.get(getTestSelector('slippage-input')).clear().type('0.01')
-            cy.get('body').click('topRight')
-            cy.get(getTestSelector('slippage-input')).should('not.exist')
+          // Set slippage to a very low value.
+          cy.get(getTestSelector('open-settings-dialog-button')).click()
+          cy.get(getTestSelector('slippage-input')).clear().type('0.01')
+          cy.get('body').click('topRight')
+          cy.get(getTestSelector('slippage-input')).should('not.exist')
 
-            // Open the currency select modal.
-            cy.get('#swap-currency-output .open-currency-select-button').click()
+          // Open the currency select modal.
+          cy.get('#swap-currency-output .open-currency-select-button').click()
 
-            // Wait for the currency list to load
-            cy.contains('1inch').should('exist')
+          // Wait for the currency list to load
+          cy.contains('1inch').should('exist')
 
-            // Select UNI as output token
-            cy.get(getTestSelector('token-search-input')).clear().type('Uniswap')
-            cy.get(getTestSelector('currency-list-wrapper'))
-              .contains(/^Uniswap$/)
-              .first()
-              .should('exist')
-              .click()
+          // Select UNI as output token
+          cy.get(getTestSelector('token-search-input')).clear().type('Uniswap')
+          cy.get(getTestSelector('currency-list-wrapper'))
+            .contains(/^Uniswap$/)
+            .first()
+            .should('exist')
+            .click()
 
-            // Swap 2 times.
-            const AMOUNT_TO_SWAP = 400
-            const NUMBER_OF_SWAPS = 2
-            const INDIVIDUAL_SWAP_INPUT = AMOUNT_TO_SWAP / NUMBER_OF_SWAPS
-            cy.get('#swap-currency-input .token-amount-input').clear().type(INDIVIDUAL_SWAP_INPUT.toString())
-            cy.get('#swap-currency-output .token-amount-input').should('not.equal', '')
-            cy.get('#swap-button').click()
-            cy.get('#confirm-swap-or-send').click()
-            cy.get(getTestSelector('dismiss-tx-confirmation')).click()
-            cy.get('#swap-currency-input .token-amount-input').clear().type(INDIVIDUAL_SWAP_INPUT.toString())
-            cy.get('#swap-currency-output .token-amount-input').should('not.equal', '')
-            cy.get('#swap-button').click()
-            cy.get('#confirm-swap-or-send').click()
-            cy.get(getTestSelector('dismiss-tx-confirmation')).click()
+          // Swap 2 times.
+          const AMOUNT_TO_SWAP = 400
+          const NUMBER_OF_SWAPS = 2
+          const INDIVIDUAL_SWAP_INPUT = AMOUNT_TO_SWAP / NUMBER_OF_SWAPS
+          cy.get('#swap-currency-input .token-amount-input').clear().type(INDIVIDUAL_SWAP_INPUT.toString())
+          cy.get('#swap-currency-output .token-amount-input').should('not.equal', '')
+          cy.get('#swap-button').click()
+          cy.get('#confirm-swap-or-send').click()
+          cy.get(getTestSelector('dismiss-tx-confirmation')).click()
+          cy.get('#swap-currency-input .token-amount-input').clear().type(INDIVIDUAL_SWAP_INPUT.toString())
+          cy.get('#swap-currency-output .token-amount-input').should('not.equal', '')
+          cy.get('#swap-button').click()
+          cy.get('#confirm-swap-or-send').click()
+          cy.get(getTestSelector('dismiss-tx-confirmation')).click()
 
-            // The pending transaction indicator should be visible.
-            cy.contains('Pending').should('exist')
+          // The pending transaction indicator should be visible.
+          cy.contains('Pending').should('exist')
 
-            cy.then(() => hardhat.mine()).then(() => {
-              // The pending transaction indicator should not be visible.
-              cy.contains('Pending').should('not.exist')
+          cy.then(() => hardhat.mine()).then(() => {
+            // The pending transaction indicator should not be visible.
+            cy.contains('Pending').should('not.exist')
 
-              // Check for a failed transaction notification.
-              cy.contains('Swap failed').should('exist')
+            // Check for a failed transaction notification.
+            cy.contains('Swap failed').should('exist')
 
-              // Assert that at least one of the swaps failed due to slippage.
-              cy.then(() => hardhat.provider.getBalance(hardhat.wallet.address)).then((finalBalance) => {
-                expect(finalBalance.gt(initialBalance.sub(parseEther(AMOUNT_TO_SWAP.toString())))).to.be.true
-              })
+            // Assert that at least one of the swaps failed due to slippage.
+            cy.then(() => hardhat.provider.getBalance(hardhat.wallet.address)).then((finalBalance) => {
+              expect(finalBalance.gt(initialBalance.sub(parseEther(AMOUNT_TO_SWAP.toString())))).to.be.true
             })
           })
-          .then(() => hardhat.setAutomine(true))
+        })
       })
   })
 })
