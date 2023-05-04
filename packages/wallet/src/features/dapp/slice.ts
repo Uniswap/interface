@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { ChainId } from 'wallet/src/constants/chains'
 
+export const DEFAULT_DAPP_URL = 'DEFAULT_DAPP_URL'
 export interface DappState {
   [dappUrl: string]: {
     [walletAddress: Address]: {

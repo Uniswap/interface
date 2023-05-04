@@ -2,14 +2,12 @@ import { combineReducers } from 'redux'
 import { persistReducer, persistStore } from 'redux-persist'
 import { dappReducer } from 'wallet/src/features/dapp/slice'
 import { monitoredSagaReducers } from 'wallet/src/state/saga'
-import { chainsReducer } from '../features/chains/slice'
 import { dappRequestReducer } from '../features/dappRequests/slice'
 import { providersReducer } from '../features/providers'
 import { walletReducer } from '../features/wallet/slice'
 import { PersistedStorage } from '../utils/persistedStorage'
 
 const reducers = {
-  chains: chainsReducer,
   dapp: dappReducer,
   dappRequests: dappRequestReducer,
   providers: providersReducer,
@@ -17,11 +15,7 @@ const reducers = {
   wallet: walletReducer,
 } as const
 
-const whitelist: Array<keyof typeof reducers> = [
-  'chains',
-  'providers',
-  'wallet',
-]
+const whitelist: Array<keyof typeof reducers> = ['providers', 'wallet', 'dapp']
 
 const persistConfig = {
   key: 'root',

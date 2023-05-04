@@ -4,12 +4,11 @@ import { ethers, providers } from 'ethers'
 import { call, put, select, take } from 'typed-redux-saga'
 import { ChainId, getChainIdFromString } from 'wallet/src/constants/chains'
 import { selectChainByDappAndWallet } from 'wallet/src/features/dapp/selectors'
-import { saveDappChain } from 'wallet/src/features/dapp/slice'
+import { DEFAULT_DAPP_URL, saveDappChain } from 'wallet/src/features/dapp/slice'
 import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
 import { appSelect, RootState } from '../../state'
 import { sendMessageToSpecificTab } from '../../utils/messageUtils'
 import { hexlifyTransaction } from '../../utils/transaction'
-import { setCurrentChain } from '../chains/slice'
 import { getProvider, getSignerManager } from '../wallet/context'
 import { SignerManager } from '../wallet/signing/SignerManager'
 import { signMessage, signTypedDataMessage } from '../wallet/signing/signing'
@@ -84,9 +83,7 @@ export function* sendTransaction(
   requestId: string,
   senderTabId: number
 ) {
-  // Get currently selected chain id
-  const chainId = yield* call(getCurrentChainId)
-
+  const chainId = yield* call(getChainIdForDapp, senderTabId, account.address)
   // Sign and send the transaction
   const provider = yield* call(getProvider, chainId)
   const signerManager = yield* call(getSignerManager)
@@ -250,9 +247,14 @@ export function getCurrentAccount(accounts: Record<string, Account>): Account {
   return account
 }
 
-export function* getCurrentChainId() {
+export function* getChainIdForDapp(
+  senderTabId: number,
+  walletAddress: Address
+) {
+  const tab = yield* call(chrome.tabs.get, senderTabId)
+  const dappUrl = extractBaseUrl(tab.url) || DEFAULT_DAPP_URL
   const chainId = yield* select(
-    (state: RootState) => state.chains.currentChainId
+    selectChainByDappAndWallet(dappUrl, walletAddress)
   )
   return chainId
 }
@@ -270,8 +272,6 @@ export function* connect(
 
   // get provider
   const provider = yield* call(getProvider, chainIdEnum)
-  yield* put(setCurrentChain({ chainId: chainIdEnum }))
-
   yield* call(saveLastChainForDapp, senderTabId, chainIdEnum)
 
   // prepare dapp response
@@ -294,7 +294,6 @@ export function* changeChain(
   }
 
   const provider = yield* call(getProvider, chainIdEnum)
-
   yield* call(saveLastChainForDapp, senderTabId, chainIdEnum)
 
   const response: ChangeChainResponse = {
@@ -314,7 +313,7 @@ export function* handleSignMessage(
   senderTabId: number
 ) {
   // Get currently selected chain id
-  const chainId = yield* call(getCurrentChainId)
+  const chainId = yield* call(getChainIdForDapp, senderTabId, account.address)
   const signerManager = yield* call(getSignerManager)
   const provider = yield* call(getProvider, chainId)
 
@@ -345,7 +344,7 @@ export function* handleSignTypedData(
   senderTabId: number
 ) {
   // Get currently selected chain id
-  const chainId = yield* call(getCurrentChainId)
+  const chainId = yield* call(getChainIdForDapp, senderTabId, account.address)
   const signerManager = yield* call(getSignerManager)
   const provider = yield* call(getProvider, chainId)
 

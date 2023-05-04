@@ -1,10 +1,8 @@
 import { PayloadAction } from '@reduxjs/toolkit'
 import { providers as ethersProviders } from 'ethers'
-import { call, fork, join, put, takeEvery } from 'typed-redux-saga'
-import { ChainId, ChainIdTo } from 'wallet/src/constants/chains'
+import { call, fork, join, put } from 'typed-redux-saga'
+import { ALL_SUPPORTED_CHAIN_IDS, ChainId } from 'wallet/src/constants/chains'
 
-import { ChainState, setChainActiveStatus } from '../chains/slice'
-import { getSortedActiveChainIds } from '../chains/utils'
 import { logger } from '../logger/logger'
 import { getProviderManager } from '../wallet/context'
 import { ProviderManager } from './ProviderManager'
@@ -12,15 +10,7 @@ import { initialized } from './slice'
 
 // Initialize Ethers providers for the chains the wallet interacts with
 export function* initProviders() {
-  // TODO:
-  const chains: ChainIdTo<ChainState> = {
-    [ChainId.Mainnet]: { isActive: true },
-    [ChainId.Goerli]: { isActive: true },
-    [ChainId.Polygon]: { isActive: true },
-    [ChainId.ArbitrumOne]: { isActive: true },
-    [ChainId.Optimism]: { isActive: true },
-  }
-  const activeChains = getSortedActiveChainIds(chains)
+  const activeChains = ALL_SUPPORTED_CHAIN_IDS
 
   logger.debug('providerSaga', 'initProviders', 'Initializing providers')
   const manager = yield* call(getProviderManager)
@@ -33,7 +23,6 @@ export function* initProviders() {
   yield* join(initTasks)
   logger.debug('providerSaga', 'initProviders', 'Providers ready')
   yield* put(initialized())
-  yield* takeEvery(setChainActiveStatus.type, modifyProviders)
 }
 
 function* initProvider(chainId: ChainId, manager: ProviderManager) {

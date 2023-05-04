@@ -1,6 +1,5 @@
 import { createSelector } from '@reduxjs/toolkit'
 import { ChainId } from 'wallet/src/constants/chains'
-
 import { RootState } from 'wallet/src/state'
 
 export const selectChainByDappAndWallet = (dappUrl: string, wallet: Address) =>
