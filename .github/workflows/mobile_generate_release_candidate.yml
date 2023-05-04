@@ -1,4 +1,4 @@
-name: '- 1 | [mobile] Generate releases/[versionNumber] branch'
+name: '1 | [mobile] Generate releases/[versionNumber] branch'
 
 # This CI job is responsible for generating a new release candidate branch, branched off of `main` branch.
 # It will automatically kick off a beta build, and so will subsequent pushes to the branch. 

@@ -1,4 +1,4 @@
-name: '- 2 | [mobile] Fastlane deploy beta (iOS)'
+name: '2 | [mobile] Fastlane deploy beta (iOS)'
 
 on:
   workflow_dispatch:

@@ -1,4 +1,4 @@
-name: '- 4 | [mobile] Push to public repo from releases/prod'
+name: '4 | [mobile] Push to public repo from releases/prod'
 
 # This CI job is responsible for generating PRs that merge the contents of the private
 # UL Mobile repository to the public mirror.
