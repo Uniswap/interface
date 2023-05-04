@@ -2,13 +2,13 @@
 
 exports[`LandingPage renders it correctly 1`] = `
 <DocumentFragment>
-  .c8 {
+  .c7 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
 }
 
-.c9 {
+.c8 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -26,15 +26,15 @@ exports[`LandingPage renders it correctly 1`] = `
   gap: 4px;
 }
 
-.c2 {
-  color: #0D111C;
-}
-
-.c10 {
+.c9 {
   color: #7780A0;
 }
 
-.c4 {
+.c12 {
+  color: #0D111C;
+}
+
+.c3 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -48,7 +48,7 @@ exports[`LandingPage renders it correctly 1`] = `
   justify-content: flex-start;
 }
 
-.c5 {
+.c4 {
   width: 100%;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -56,23 +56,11 @@ exports[`LandingPage renders it correctly 1`] = `
   align-items: center;
 }
 
-.c3 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  background-color: #FFFFFF;
-  color: #7780A0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  width: 100%;
+.c2 {
+  object-fit: contain;
   height: 100%;
+  width: 100%;
+  aspect-ratio: 1;
 }
 
 .c0 {
@@ -93,15 +81,15 @@ exports[`LandingPage renders it correctly 1`] = `
   width: 100%;
 }
 
-.c6 {
+.c5 {
   gap: 40px;
 }
 
-.c12 {
+.c11 {
   line-height: 20px;
 }
 
-.c7 {
+.c6 {
   gap: 4px;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -143,13 +131,13 @@ exports[`LandingPage renders it correctly 1`] = `
 }
 
 @media screen and (min-width:640px) {
-  .c6 {
+  .c5 {
     width: 560px;
   }
 }
 
 @media screen and (min-width:640px) {
-  .c7 .c11 {
+  .c6 .c10 {
     line-height: 24px;
     font-size: 16px;
   }
@@ -168,23 +156,23 @@ exports[`LandingPage renders it correctly 1`] = `
     <div
       class="c1"
     >
-      <div
-        class="c2 c3 css-zhpkf8"
-      >
-        Content not available
-      </div>
+      <img
+        alt="Azuki #3318"
+        class="c2"
+        src="https://cdn.center.app/1/0xED5AF388653567Af2F388E6224dC7C4b3241C544/3318/50ed67ad647d0aa0cad0b830d136a677efc2fb72a44587bc35f2a5fb334a7fdf.png"
+      />
     </div>
     <div
-      class="c4 c5 c6"
+      class="c3 c4 c5"
     >
       <div
-        class="c4 c7"
+        class="c3 c6"
       >
         <div
-          class="c8 c9"
+          class="c7 c8"
         >
           <div
-            class="c10 c11 c12 css-1aekuku"
+            class="c9 c10 c11 css-1aekuku"
           >
             Azuki
           </div>
@@ -206,7 +194,7 @@ exports[`LandingPage renders it correctly 1`] = `
           </svg>
         </div>
         <div
-          class="c2 css-iapcxi"
+          class="c12 css-iapcxi"
         >
           Azuki #3318
         </div>
