@@ -2,7 +2,7 @@ import { SupportedChainId, Token, TradeType as MockTradeType } from '@uniswap/sd
 import { PERMIT2_ADDRESS } from '@uniswap/universal-router-sdk'
 import { DAI as MockDAI, nativeOnChain, USDC_MAINNET as MockUSDC_MAINNET } from 'constants/tokens'
 import { TransactionStatus as MockTxStatus } from 'graphql/data/__generated__/types-and-hooks'
-import { TokenAddressMap } from 'state/lists/hooks'
+import { ChainTokenMap } from 'hooks/Tokens'
 import {
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,
@@ -89,15 +89,15 @@ function mockMultiStatus(info: TransactionInfo, id: string): [TransactionDetails
   ]
 }
 
-const mockTokenAddressMap: TokenAddressMap = {
+const mockTokenAddressMap: ChainTokenMap = {
   [mockChainId]: {
-    [MockDAI.address]: { token: MockDAI },
-    [MockUSDC_MAINNET.address]: { token: MockUSDC_MAINNET },
-  } as TokenAddressMap[number],
+    [MockDAI.address]: MockDAI,
+    [MockUSDC_MAINNET.address]: MockUSDC_MAINNET,
+  },
 }
 
-jest.mock('../../../../state/lists/hooks', () => ({
-  useCombinedActiveList: () => mockTokenAddressMap,
+jest.mock('../../../../hooks/Tokens', () => ({
+  useAllTokensMultichain: () => mockTokenAddressMap,
 }))
 
 jest.mock('../../../../state/transactions/hooks', () => {
@@ -300,7 +300,7 @@ describe('parseLocalActivity', () => {
       },
     } as TransactionDetails
     const chainId = SupportedChainId.MAINNET
-    const tokens = {} as TokenAddressMap
+    const tokens = {} as ChainTokenMap
     expect(parseLocalActivity(details, chainId, tokens)).toMatchObject({
       chainId: 1,
       currencies: [undefined, undefined],
