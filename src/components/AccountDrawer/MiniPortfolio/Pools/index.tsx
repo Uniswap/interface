@@ -22,12 +22,12 @@ import { PositionInfo } from './cache'
 import { useFeeValues } from './hooks'
 import useMultiChainPositions from './useMultiChainPositions'
 
-/*
-  This hook takes an array of PositionInfo objects (format used by the Uniswap Labs gql API).
-  The hook access PositionInfo.details (format used by the NFT position contract),
-  filters the PositionDetails data for malicious content,
-  and then returns the original data in its original format. 
-*/
+/**
+ * Takes an array of PositionInfo objects (format used by the Uniswap Labs gql API).
+ * The hook access PositionInfo.details (format used by the NFT position contract),
+ * filters the PositionDetails data for malicious content,
+ * and then returns the original data in its original format.
+ */
 function useFilterPossiblyMaliciousPositionInfo(positions: PositionInfo[] | undefined): PositionInfo[] {
   const tokenIdsToPositionInfo: Record<string, PositionInfo> = useMemo(
     () =>

@@ -1,11 +1,17 @@
+import { sendAnalyticsEvent, user } from '@uniswap/analytics'
+import { CustomUserProperties, InterfaceEventName, WalletConnectionResult } from '@uniswap/analytics-events'
+import { getWalletMeta } from '@uniswap/conedison/provider/meta'
 import { useWeb3React, Web3ReactHooks, Web3ReactProvider } from '@web3-react/core'
 import { Connector } from '@web3-react/types'
+import { useGetConnection } from 'connection'
 import { isSupportedChain } from 'constants/chains'
 import { RPC_PROVIDERS } from 'constants/providers'
 import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
 import useEagerlyConnect from 'hooks/useEagerlyConnect'
 import useOrderedConnections from 'hooks/useOrderedConnections'
+import usePrevious from 'hooks/usePrevious'
 import { ReactNode, useEffect, useMemo } from 'react'
+import { useConnectedWallets } from 'state/wallets/hooks'
 
 export default function Web3Provider({ children }: { children: ReactNode }) {
   useEagerlyConnect()
@@ -16,17 +22,19 @@ export default function Web3Provider({ children }: { children: ReactNode }) {
 
   return (
     <Web3ReactProvider connectors={connectors} key={key}>
-      <Tracer />
+      <Updater />
       {children}
     </Web3ReactProvider>
   )
 }
 
-function Tracer() {
-  const { chainId, provider } = useWeb3React()
+/** A component to run hooks under the Web3ReactProvider context. */
+function Updater() {
+  const { account, chainId, connector, provider } = useWeb3React()
+
+  // Trace RPC calls (for debugging).
   const networkProvider = isSupportedChain(chainId) ? RPC_PROVIDERS[chainId] : undefined
   const shouldTrace = useTraceJsonRpcFlag() === TraceJsonRpcVariant.Enabled
-
   useEffect(() => {
     if (shouldTrace) {
       provider?.on('debug', trace)
@@ -39,6 +47,40 @@ function Tracer() {
       networkProvider?.off('debug', trace)
     }
   }, [networkProvider, provider, shouldTrace])
+
+  // Send analytics events when the active account changes.
+  const previousAccount = usePrevious(account)
+  const getConnection = useGetConnection()
+  const [connectedWallets, addConnectedWallet] = useConnectedWallets()
+  useEffect(() => {
+    if (account && account !== previousAccount) {
+      const walletType = getConnection(connector).getName()
+      const peerWalletAgent = provider ? getWalletMeta(provider)?.agent : undefined
+      const isReconnect = connectedWallets.some(
+        (wallet) => wallet.account === account && wallet.walletType === walletType
+      )
+
+      // User properties *must* be set before sending corresponding event properties,
+      // so that the event contains the correct and up-to-date user properties.
+      user.set(CustomUserProperties.WALLET_ADDRESS, account)
+      user.set(CustomUserProperties.WALLET_TYPE, walletType)
+      user.set(CustomUserProperties.PEER_WALLET_AGENT, peerWalletAgent ?? '')
+      if (chainId) {
+        user.postInsert(CustomUserProperties.ALL_WALLET_CHAIN_IDS, chainId)
+      }
+      user.postInsert(CustomUserProperties.ALL_WALLET_ADDRESSES_CONNECTED, account)
+
+      sendAnalyticsEvent(InterfaceEventName.WALLET_CONNECT_TXN_COMPLETED, {
+        result: WalletConnectionResult.SUCCEEDED,
+        wallet_address: account,
+        wallet_type: walletType,
+        is_reconnect: isReconnect,
+        peer_wallet_agent: peerWalletAgent,
+      })
+
+      addConnectedWallet({ account, walletType })
+    }
+  }, [account, addConnectedWallet, chainId, connectedWallets, connector, getConnection, previousAccount, provider])
 
   return null
 }
