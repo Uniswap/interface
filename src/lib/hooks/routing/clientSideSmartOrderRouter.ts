@@ -3,9 +3,10 @@ import { BigintIsh, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 // eslint-disable-next-line no-restricted-imports
 import { AlphaRouter, AlphaRouterConfig, ChainId } from '@uniswap/smart-order-router'
 import { SupportedChainId } from 'constants/chains'
+import { nativeOnChain } from 'constants/tokens'
 import JSBI from 'jsbi'
 import { GetQuoteArgs } from 'state/routing/slice'
-import { QuoteResult, QuoteState } from 'state/routing/types'
+import { QuoteResult, QuoteState, SwapRouterNativeAssets } from 'state/routing/types'
 import { transformSwapRouteToGetQuoteResult } from 'utils/transformSwapRouteToGetQuoteResult'
 
 export function toSupportedChainId(chainId: ChainId): SupportedChainId | undefined {
@@ -33,8 +34,15 @@ async function getQuote(
   router: AlphaRouter,
   config: Partial<AlphaRouterConfig>
 ): Promise<QuoteResult> {
-  const currencyIn = new Token(tokenIn.chainId, tokenIn.address, tokenIn.decimals, tokenIn.symbol)
-  const currencyOut = new Token(tokenOut.chainId, tokenOut.address, tokenOut.decimals, tokenOut.symbol)
+  const tokenInIsNative = Object.values(SwapRouterNativeAssets).includes(tokenIn.address as SwapRouterNativeAssets)
+  const tokenOutIsNative = Object.values(SwapRouterNativeAssets).includes(tokenOut.address as SwapRouterNativeAssets)
+
+  const currencyIn = tokenInIsNative
+    ? nativeOnChain(tokenIn.chainId)
+    : new Token(tokenIn.chainId, tokenIn.address, tokenIn.decimals, tokenIn.symbol)
+  const currencyOut = tokenOutIsNative
+    ? nativeOnChain(tokenOut.chainId)
+    : new Token(tokenOut.chainId, tokenOut.address, tokenOut.decimals, tokenOut.symbol)
 
   const baseCurrency = tradeType === TradeType.EXACT_INPUT ? currencyIn : currencyOut
   const quoteCurrency = tradeType === TradeType.EXACT_INPUT ? currencyOut : currencyIn
