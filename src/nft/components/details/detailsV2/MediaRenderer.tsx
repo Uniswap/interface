@@ -1,5 +1,6 @@
 import { GenieAsset } from 'nft/types'
 import { isAudio, isVideo } from 'nft/utils'
+import { useState } from 'react'
 import styled, { css } from 'styled-components/macro'
 import { BREAKPOINTS, ThemedText } from 'theme'
 
@@ -123,26 +124,48 @@ function assetMediaType(asset: GenieAsset): MediaType {
   return MediaType.Image
 }
 
+const RenderMediaShadow = ({ imageUrl }: { imageUrl: string | undefined }) => {
+  const [contentNotAvailable, setContentNotAvailable] = useState(false)
+
+  if (!imageUrl || contentNotAvailable) {
+    return null
+  }
+
+  return (
+    <MediaShadowContainer>
+      <MediaShadow src={imageUrl} onError={() => setContentNotAvailable(true)} />
+    </MediaShadowContainer>
+  )
+}
+
 const RenderMediaType = ({ asset }: { asset: GenieAsset }) => {
+  const [contentNotAvailable, setContentNotAvailable] = useState(false)
+
+  if (contentNotAvailable) {
+    return <ContentNotAvailable>Content not available</ContentNotAvailable>
+  }
+
   switch (assetMediaType(asset)) {
     case MediaType.Image:
-      return <StyledImage src={asset.imageUrl} alt={asset.name || asset.collectionName} />
+      return (
+        <StyledImage
+          src={asset.imageUrl}
+          alt={asset.name || asset.collectionName}
+          onError={() => setContentNotAvailable(true)}
+        />
+      )
     case MediaType.Video:
       return <StyledVideo src={asset.animationUrl} autoPlay controls muted loop />
     case MediaType.Audio:
       return <AudioPlayer asset={asset} />
     case MediaType.Raw:
       return <EmbeddedMediaPlayer asset={asset} />
-    default:
-      return <ContentNotAvailable>Content not available</ContentNotAvailable>
   }
 }
 
 export const MediaRenderer = ({ asset }: { asset: GenieAsset }) => (
   <>
     <RenderMediaType asset={asset} />
-    <MediaShadowContainer>
-      <MediaShadow src={asset.imageUrl ?? ''} />
-    </MediaShadowContainer>
+    <RenderMediaShadow imageUrl={asset.imageUrl} />
   </>
 )
