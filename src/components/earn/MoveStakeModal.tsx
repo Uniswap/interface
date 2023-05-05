@@ -72,9 +72,11 @@ export default function MoveStakeModal({ isOpen, poolInfo, onDismiss, title }: M
   const { address: parsedAddress } = useENS(fromPoolAddress)
 
   // TODO: we can save 1 rpc call here by using multicall
-  const { poolId, stakingPoolExists } = usePoolIdByAddress(parsedAddress ?? undefined)
-  const toPoolId = usePoolIdByAddress(poolInfo?.pool?.address).poolId
-  const fromPoolStakeBalance = useStakeBalance(poolId)
+  const fromPoolId = usePoolIdByAddress(parsedAddress ?? undefined).poolId
+  const { poolId, stakingPoolExists } = usePoolIdByAddress(poolInfo?.pool?.address)
+  // hack to allow moving stake from deprecated pool
+  const defaultPoolId = '0x0000000000000000000000000000000000000000000000000000000000000021'
+  const fromPoolStakeBalance = useStakeBalance(fromPoolId ?? defaultPoolId)
 
   // boilerplate for the slider
   const [percentForSlider, onPercentSelectForSlider] = useDebouncedChangeHandler(percent, onPercentSelect)
@@ -90,12 +92,11 @@ export default function MoveStakeModal({ isOpen, poolInfo, onDismiss, title }: M
     )
   )
 
-  // TODO: check if can improve pool id naming to prevent confusion
   const moveStakeData = {
     amount: parsedAmount?.quotient.toString(),
     pool: parsedAddress,
-    fromPoolId: poolId,
-    poolId: toPoolId,
+    fromPoolId,
+    poolId,
     poolContract: undefined,
     stakingPoolExists,
   }
