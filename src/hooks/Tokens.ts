@@ -5,6 +5,7 @@ import { SupportedChainId } from 'constants/chains'
 import { DEFAULT_INACTIVE_LIST_URLS, DEFAULT_LIST_OF_LISTS } from 'constants/lists'
 import { useCurrencyFromMap, useTokenFromMapOrNetwork } from 'lib/hooks/useCurrency'
 import { getTokenFilter } from 'lib/hooks/useTokenList/filtering'
+import { TokenAddressMap } from 'lib/hooks/useTokenList/utils'
 import { useMemo } from 'react'
 import { useAppSelector } from 'state/hooks'
 import { isL2ChainId } from 'utils/chains'
@@ -12,7 +13,7 @@ import { isL2ChainId } from 'utils/chains'
 import { useAllLists, useCombinedActiveList, useCombinedTokenMapFromUrls } from '../state/lists/hooks'
 import { WrappedTokenInfo } from '../state/lists/wrappedTokenInfo'
 import { deserializeToken, useUserAddedTokens, useUserAddedTokensOnChain } from '../state/user/hooks'
-import { TokenAddressMap, useUnsupportedTokenList } from './../state/lists/hooks'
+import { useUnsupportedTokenList } from './../state/lists/hooks'
 
 type Maybe<T> = T | null | undefined
 
@@ -29,6 +30,7 @@ function useTokensFromMap(tokenMap: TokenAddressMap, chainId: Maybe<SupportedCha
   }, [chainId, tokenMap])
 }
 
+// TODO(INFRA-164): after disallowing unchecked index access, refactor ChainTokenMap to not use ?'s
 export type ChainTokenMap = { [chainId in number]?: { [address in string]?: Token } }
 export function useAllTokensMultichain(): ChainTokenMap {
   const allTokensFromLists = useCombinedTokenMapFromUrls(DEFAULT_LIST_OF_LISTS)
