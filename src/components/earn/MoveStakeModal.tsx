@@ -8,26 +8,18 @@ import { X } from 'react-feather'
 import styled from 'styled-components/macro'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
-import { GRG_TRANSFER_PROXY_ADDRESSES } from '../../constants/addresses'
-//import { isSupportedChain } from '../../constants/chains'
+import { ZERO_ADDRESS } from '../../constants/misc'
 import { GRG } from '../../constants/tokens'
-import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 import useDebouncedChangeHandler from '../../hooks/useDebouncedChangeHandler'
 import useENS from '../../hooks/useENS'
 import { ResponsiveHeaderText, SmallMaxButton } from '../../pages/RemoveLiquidity/styled'
 // TODO: check if should write into state stake hooks
 import { useBurnV3ActionHandlers, useBurnV3State } from '../../state/burn/v3/hooks'
 import { PoolInfo /*,useDerivedPoolInfo*/ } from '../../state/buy/hooks'
-import { useTokenBalance } from '../../state/connection/hooks'
-import {
-  useDelegateCallback,
-  useDelegatePoolCallback,
-  usePoolExtendedContract,
-  usePoolIdByAddress,
-} from '../../state/governance/hooks'
+import { useMoveStakeCallback, usePoolIdByAddress, useStakeBalance } from '../../state/governance/hooks'
 import { ThemedText } from '../../theme'
 import AddressInputPanel from '../AddressInputPanel'
-import { ButtonConfirmed, ButtonPrimary } from '../Button'
+import { /*ButtonConfirmed,*/ ButtonPrimary } from '../Button'
 //import { ButtonError } from '../Button'
 import { LightCard } from '../Card'
 import { AutoColumn } from '../Column'
@@ -47,48 +39,44 @@ const StyledClosed = styled(X)`
   }
 `
 
+/*
 const TextButton = styled.div`
   :hover {
     cursor: pointer;
   }
 `
+*/
 
-interface VoteModalProps {
+interface MoveStakeModalProps {
   isOpen: boolean
-  poolInfo?: PoolInfo
+  poolInfo: PoolInfo
   onDismiss: () => void
   title: ReactNode
 }
 
-// TODO: 'scrollOverlay' prop returns warning in console
-export default function DelegateModal({ isOpen, poolInfo, onDismiss, title }: VoteModalProps) {
-  const { account, chainId } = useWeb3React()
+export default function MoveStakeModal({ isOpen, poolInfo, onDismiss, title }: MoveStakeModalProps) {
+  const { chainId } = useWeb3React()
 
   // state for delegate input
   const [currencyValue] = useState<Currency>(GRG[chainId ?? 1])
-  const [usingDelegate, setUsingDelegate] = useState(false)
   const [typed, setTyped] = useState('')
 
-  function handleRecipientType(val: string) {
+  function handleFromPoolType(val: string) {
     setTyped(val)
   }
 
   const { percent } = useBurnV3State()
   const { onPercentSelect } = useBurnV3ActionHandlers()
 
-  // monitor for self delegation or input for third part delegate
-  // default is self delegation
-  const activeDelegate = poolInfo?.pool?.address ?? typed ?? account
-  const { address: parsedAddress } = useENS(activeDelegate)
+  const fromPoolAddress = typed ?? ZERO_ADDRESS
+  const { address: parsedAddress } = useENS(fromPoolAddress)
 
-  // TODO: in the context of pool grg balance is balance of pool
-  // get the number of votes available to delegate
-  const grgUserBalance = useTokenBalance(account ?? undefined, chainId ? GRG[chainId] : undefined)
-  const grgPoolBalance = useTokenBalance(parsedAddress ?? undefined, chainId ? GRG[chainId] : undefined)
-  const { poolId, stakingPoolExists } = usePoolIdByAddress(parsedAddress ?? undefined)
-  // we only pass the pool extended instance if we have to call the pool directly
-  const poolContract = usePoolExtendedContract(parsedAddress ?? undefined)
-  const grgBalance = usingDelegate ? grgPoolBalance : grgUserBalance
+  // TODO: we can save 1 rpc call here by using multicall
+  const fromPoolId = usePoolIdByAddress(parsedAddress ?? undefined).poolId
+  const { poolId, stakingPoolExists } = usePoolIdByAddress(poolInfo.pool?.address)
+  // hack to allow moving stake from deprecated pool
+  const defaultPoolId = '0x0000000000000000000000000000000000000000000000000000000000000021'
+  const fromPoolStakeBalance = useStakeBalance(fromPoolId ?? defaultPoolId)
 
   // boilerplate for the slider
   const [percentForSlider, onPercentSelectForSlider] = useDebouncedChangeHandler(percent, onPercentSelect)
@@ -96,22 +84,24 @@ export default function DelegateModal({ isOpen, poolInfo, onDismiss, title }: Vo
   const parsedAmount = CurrencyAmount.fromRawAmount(
     currencyValue,
     JSBI.divide(
-      JSBI.multiply(grgBalance ? grgBalance.quotient : JSBI.BigInt(0), JSBI.BigInt(percentForSlider)),
+      JSBI.multiply(
+        fromPoolStakeBalance ? fromPoolStakeBalance.quotient : JSBI.BigInt(0),
+        JSBI.BigInt(percentForSlider)
+      ),
       JSBI.BigInt(100)
     )
   )
 
-  const stakeData = {
+  const moveStakeData = {
     amount: parsedAmount?.quotient.toString(),
     pool: parsedAddress,
+    fromPoolId,
     poolId,
-    poolContract: usingDelegate ? poolContract : undefined,
+    poolContract: undefined,
     stakingPoolExists,
   }
 
-  const delegateUserCallback = useDelegateCallback()
-  const delegatePoolCallback = useDelegatePoolCallback()
-  const delegateCallback = usingDelegate ? delegatePoolCallback : delegateUserCallback
+  const moveStakeCallback = useMoveStakeCallback()
 
   // monitor call to help UI loading state
   const [hash, setHash] = useState<string | undefined>()
@@ -128,14 +118,14 @@ export default function DelegateModal({ isOpen, poolInfo, onDismiss, title }: Vo
     onDismiss()
   }
 
-  async function onDelegate() {
+  async function onMoveStake() {
     setAttempting(true)
 
     // if callback not returned properly ignore
-    if (!delegateCallback || !grgBalance || !stakeData || !currencyValue.isToken) return
+    if (!moveStakeCallback || !fromPoolStakeBalance || !moveStakeData || !currencyValue.isToken) return
 
     // try delegation and store hash
-    const hash = await delegateCallback(stakeData ?? undefined)?.catch((error) => {
+    const hash = await moveStakeCallback(moveStakeData ?? undefined)?.catch((error) => {
       setAttempting(false)
       console.log(error)
     })
@@ -143,22 +133,6 @@ export default function DelegateModal({ isOpen, poolInfo, onDismiss, title }: Vo
     if (hash) {
       setHash(hash)
     }
-  }
-
-  // usingDelegate equals isRbPool
-  const [approval, approveCallback] = useApproveCallback(
-    grgBalance ?? undefined,
-    GRG_TRANSFER_PROXY_ADDRESSES[chainId ?? 1] ?? undefined,
-    usingDelegate
-  )
-
-  async function onAttemptToApprove() {
-    // TODO: check dep requirements
-    if (!approval || !approveCallback) return
-    //if (!provider) throw new Error('missing dependencies')
-    if (!grgBalance) throw new Error('missing GRG amount')
-
-    await approveCallback()
   }
 
   return (
@@ -171,24 +145,13 @@ export default function DelegateModal({ isOpen, poolInfo, onDismiss, title }: Vo
               <StyledClosed stroke="black" onClick={wrappedOnDismiss} />
             </RowBetween>
             <ThemedText.DeprecatedBody>
-              <Trans>Actively staked GRG tokens represent voting power in Rigoblock governance.</Trans>
+              <Trans>Move stake to the pools that maximize your APR, Your voting power will be unaffected.</Trans>
             </ThemedText.DeprecatedBody>
             <ThemedText.DeprecatedBody>
-              <Trans>By staking GRG to a Rigoblock Pool your activate your voting power. You keep 100% of votes.</Trans>
+              <Trans>Please input the pool you want to move your stake from.</Trans>
             </ThemedText.DeprecatedBody>
-            <ThemedText.DeprecatedBody>
-              <Trans>You may also stake GRG from a Rigoblock Pool operated by yourself.</Trans>
-            </ThemedText.DeprecatedBody>
-            <ThemedText.DeprecatedBody>
-              <Trans>Your voting power will unlock at the beginning of the next Rigoblock epoch.</Trans>
-            </ThemedText.DeprecatedBody>
-            {/* confirmed={approval === ApprovalState.APPROVED} disabled={approval !== ApprovalState.NOT_APPROVED} */}
-            {!usingDelegate && approval !== ApprovalState.APPROVED && (
-              <ButtonConfirmed mr="0.5rem" onClick={onAttemptToApprove}>
-                <Trans>Approve Staking</Trans>
-              </ButtonConfirmed>
-            )}
-            {!poolInfo && <AddressInputPanel value={typed} onChange={handleRecipientType} />}
+            {/* we must append deprecated staked pools to the pools array */}
+            <AddressInputPanel value={typed} onChange={handleFromPoolType} />
             <RowBetween>
               <ResponsiveHeaderText>
                 <Trans>{percentForSlider}%</Trans>
@@ -213,24 +176,23 @@ export default function DelegateModal({ isOpen, poolInfo, onDismiss, title }: Vo
               <AutoColumn gap="md">
                 <RowBetween>
                   <ThemedText.DeprecatedBody fontSize={16} fontWeight={500}>
-                    <Trans>Staking {formatCurrencyAmount(parsedAmount, 4)} GRG</Trans>
+                    <Trans>Moving {formatCurrencyAmount(parsedAmount, 4)} GRG Stake</Trans>
                   </ThemedText.DeprecatedBody>
                 </RowBetween>
               </AutoColumn>
             </LightCard>
             <ButtonPrimary
-              disabled={!isAddress(parsedAddress ?? '') || approval !== ApprovalState.APPROVED}
-              onClick={onDelegate}
+              disabled={
+                !fromPoolStakeBalance ||
+                formatCurrencyAmount(parsedAmount, 4) === '0' ||
+                (fromPoolId !== defaultPoolId && !isAddress(parsedAddress ?? ''))
+              }
+              onClick={onMoveStake}
             >
               <ThemedText.DeprecatedMediumHeader color="white">
-                {usingDelegate ? <Trans>Stake From Pool</Trans> : <Trans>Stake From Wallet</Trans>}
+                <Trans>Move Stake</Trans>
               </ThemedText.DeprecatedMediumHeader>
             </ButtonPrimary>
-            <TextButton onClick={() => setUsingDelegate(!usingDelegate)}>
-              <ThemedText.DeprecatedBlue>
-                {usingDelegate ? <Trans>Stake From Wallet</Trans> : <Trans>Stake From Pool</Trans>}
-              </ThemedText.DeprecatedBlue>
-            </TextButton>
           </AutoColumn>
         </ContentWrapper>
       )}
@@ -238,7 +200,7 @@ export default function DelegateModal({ isOpen, poolInfo, onDismiss, title }: Vo
         <LoadingView onDismiss={wrappedOnDismiss}>
           <AutoColumn gap="12px" justify="center">
             <ThemedText.DeprecatedLargeHeader>
-              {usingDelegate ? <Trans>Staking From Pool</Trans> : <Trans>Unlocking Votes</Trans>}
+              <Trans>Moving Stake</Trans>
             </ThemedText.DeprecatedLargeHeader>
             <ThemedText.DeprecatedMain fontSize={36}>{formatCurrencyAmount(parsedAmount, 4)}</ThemedText.DeprecatedMain>
           </AutoColumn>
