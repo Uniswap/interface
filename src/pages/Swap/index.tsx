@@ -797,13 +797,13 @@ export function Swap({
                 {swapInputError ? (
                   swapInputError
                 ) : routeIsSyncing || routeIsLoading ? (
-                  <Trans>Swap</Trans>
+                  <Trans>Review Swap</Trans>
                 ) : priceImpactTooHigh ? (
                   <Trans>Price Impact Too High</Trans>
                 ) : priceImpactSeverity > 2 ? (
                   <Trans>Swap Anyway</Trans>
                 ) : (
-                  <Trans>Swap</Trans>
+                  <Trans>Review Swap</Trans>
                 )}
               </Text>
             </ButtonError>
