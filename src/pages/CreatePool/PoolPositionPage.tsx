@@ -22,6 +22,7 @@ import { RowBetween, RowFixed } from 'components/Row'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 //import Toggle from 'components/Toggle'
 import TransactionConfirmationModal, { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
+import DelegateModal from 'components/vote/DelegateModal'
 import IconButton, { IconHoverText } from 'components/WalletDropdown/IconButton'
 import { /*BIG_INT_ZERO,*/ ZERO_ADDRESS } from 'constants/misc'
 import { nativeOnChain } from 'constants/tokens'
@@ -241,6 +242,8 @@ export function PoolPositionPage() {
   const [showSetLockupModal, setShowSetLockupModal] = useState(false)
   const [showSetSpreadModal, setShowSetSpreadModal] = useState(false)
   const [showSetValueModal, setShowSetValueModal] = useState(false)
+  const [showStakeModal, setShowStakeModal] = useState(false)
+  const [showMoveStakeModal, setShowMoveStakeModal] = useState(false)
 
   // TODO: check how can reduce number of calls by limit update of poolStorage
   //  id is stored in registry so we could save rpc call by using storing in state?
@@ -323,6 +326,22 @@ export function PoolPositionPage() {
     }
   }, [account, toggleWalletModal])
 
+  const handleStakeClick = useCallback(() => {
+    if (account) {
+      setShowStakeModal(true)
+    } else {
+      toggleWalletModal()
+    }
+  }, [account, toggleWalletModal])
+
+  const handleMoveStakeClick = useCallback(() => {
+    if (account) {
+      setShowMoveStakeModal(true)
+    } else {
+      toggleWalletModal()
+    }
+  }, [account, toggleWalletModal])
+
   function modalHeader() {
     return (
       <AutoColumn gap="md" style={{ marginTop: '20px' }}>
@@ -379,6 +398,12 @@ export function PoolPositionPage() {
               onDismiss={() => setShowSetValueModal(false)}
               poolInfo={poolInfo}
               title={<Trans>Set Value</Trans>}
+            />
+            <DelegateModal
+              isOpen={showStakeModal}
+              poolInfo={poolInfo}
+              onDismiss={() => setShowStakeModal(false)}
+              title={<Trans>Stake</Trans>}
             />
           </>
         )}
@@ -663,6 +688,30 @@ export function PoolPositionPage() {
             <DarkCard>
               <AddressCard address={owner} chainId={chainId} label="Pool Operator" />
             </DarkCard>
+          </AutoColumn>
+          <AutoColumn gap="sm" style={{ width: '100%', height: '100%', justifyContent: 'center' }}>
+            <ResponsiveRow>
+              <RowFixed>
+                <ResponsiveButtonPrimary
+                  onClick={handleStakeClick}
+                  width="fit-content"
+                  padding="6px 8px"
+                  $borderRadius="12px"
+                  style={{ marginRight: '8px' }}
+                >
+                  <Trans>Stake</Trans>
+                </ResponsiveButtonPrimary>
+                <ResponsiveButtonPrimary
+                  onClick={handleMoveStakeClick}
+                  width="fit-content"
+                  padding="6px 8px"
+                  $borderRadius="12px"
+                  style={{ marginRight: '8px' }}
+                >
+                  <Trans>Switch</Trans>
+                </ResponsiveButtonPrimary>
+              </RowFixed>
+            </ResponsiveRow>
           </AutoColumn>
         </AutoColumn>
       </PageWrapper>

@@ -17,7 +17,7 @@ import useENS from '../../hooks/useENS'
 import { ResponsiveHeaderText, SmallMaxButton } from '../../pages/RemoveLiquidity/styled'
 // TODO: check if should write into state stake hooks
 import { useBurnV3ActionHandlers, useBurnV3State } from '../../state/burn/v3/hooks'
-//import { useDerivedPoolInfo } from '../../state/buy/hooks'
+import { PoolInfo /*,useDerivedPoolInfo*/ } from '../../state/buy/hooks'
 import { useTokenBalance } from '../../state/connection/hooks'
 import {
   useDelegateCallback,
@@ -55,12 +55,13 @@ const TextButton = styled.div`
 
 interface VoteModalProps {
   isOpen: boolean
+  poolInfo?: PoolInfo
   onDismiss: () => void
   title: ReactNode
 }
 
 // TODO: 'scrollOverlay' prop returns warning in console
-export default function DelegateModal({ isOpen, onDismiss, title }: VoteModalProps) {
+export default function DelegateModal({ isOpen, poolInfo, onDismiss, title }: VoteModalProps) {
   const { account, chainId } = useWeb3React()
 
   // state for delegate input
@@ -77,7 +78,7 @@ export default function DelegateModal({ isOpen, onDismiss, title }: VoteModalPro
 
   // monitor for self delegation or input for third part delegate
   // default is self delegation
-  const activeDelegate = typed ?? account
+  const activeDelegate = poolInfo?.pool?.address ?? typed ?? account
   const { address: parsedAddress } = useENS(activeDelegate)
 
   // TODO: in the context of pool grg balance is balance of pool
@@ -187,7 +188,7 @@ export default function DelegateModal({ isOpen, onDismiss, title }: VoteModalPro
                 <Trans>Approve Staking</Trans>
               </ButtonConfirmed>
             )}
-            <AddressInputPanel value={typed} onChange={handleRecipientType} />
+            {!poolInfo && <AddressInputPanel value={typed} onChange={handleRecipientType} />}
             <RowBetween>
               <ResponsiveHeaderText>
                 <Trans>{percentForSlider}%</Trans>
