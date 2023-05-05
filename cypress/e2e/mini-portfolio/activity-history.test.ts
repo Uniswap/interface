@@ -42,7 +42,7 @@ describe('mini-portfolio activity history', () => {
                           hash: '0x46df998899c4d0f7cc88a914700486d58d088f9f365747c60c32a187f2d44ae8',
                           status: 'CONFIRMED',
                           to: '0x034a40764485f7e08ca16366e503491a6af7850d',
-                          from: '0xad6c0d5cb51eb75645d979817a6a2569219fbd9f',
+                          from: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
                           nonce: currentNonce,
                           __typename: 'Transaction',
                         },
@@ -125,7 +125,7 @@ describe('mini-portfolio activity history', () => {
         cy.get(getTestSelector('mini-portfolio-nav-activity')).click()
 
         // Assert that the local pending transaction is replaced by a remote transaction with the same nonce.
-        cy.contains('Pending').should('not.exist')
+        cy.contains('Swapping').should('not.exist')
       })
   })
 })

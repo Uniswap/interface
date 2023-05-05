@@ -1,9 +1,9 @@
+import { useWeb3React } from '@web3-react/core'
 import { TransactionListQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { useEffect } from 'react'
 import { useTransactionRemover } from 'state/transactions/hooks'
 
 import { ActivityMap } from './types'
-import { useWeb3React } from '@web3-react/core'
 
 // this hook removes local transactions that have nonces that are duplicates of remote transactions
 export function useClearConflictingTransactions(data: TransactionListQuery | undefined, localMap: ActivityMap) {
@@ -14,7 +14,9 @@ export function useClearConflictingTransactions(data: TransactionListQuery | und
     if (!remoteActivity || !account) return
     const duplicateNonceActions = []
     const localActivityList = Object.values(localMap)
-    const ownedRemoteNoncesList = remoteActivity.filter(remoteActivity => remoteActivity.transaction.from === account).map((remoteActivity) => remoteActivity.transaction.nonce)
+    const ownedRemoteNoncesList = remoteActivity
+      .filter((remoteActivity) => remoteActivity.transaction.from === account)
+      .map((remoteActivity) => remoteActivity.transaction.nonce)
     const remoteNonces = new Set(ownedRemoteNoncesList)
     for (const localAction of localActivityList) {
       // nonce is ? guarded because users may have transactions in localstorage without the data
@@ -22,6 +24,7 @@ export function useClearConflictingTransactions(data: TransactionListQuery | und
         duplicateNonceActions.push(localAction)
       }
     }
+
     duplicateNonceActions.forEach((duplicate) => removeLocalTransaction(duplicate.hash))
-  }, [data?.portfolios, localMap, removeLocalTransaction])
+  }, [account, data?.portfolios, localMap, removeLocalTransaction])
 }
