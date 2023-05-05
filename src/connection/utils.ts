@@ -6,7 +6,14 @@ export const getIsInjected = () => Boolean(window.ethereum)
 type NonMetaMaskFlag = 'isRabby' | 'isBraveWallet' | 'isTrustWallet' | 'isLedgerConnect'
 const allNonMetamaskFlags: NonMetaMaskFlag[] = ['isRabby', 'isBraveWallet', 'isTrustWallet', 'isLedgerConnect']
 export const getIsMetaMaskWallet = () =>
-  Boolean(window.ethereum?.isMetaMask && !allNonMetamaskFlags.some((flag) => window.ethereum?.[flag]))
+  Boolean(
+    window.ethereum?.isMetaMask &&
+      window.ethereum?.wallet !== 'pali-v2' &&
+      !allNonMetamaskFlags.some((flag) => window.ethereum?.[flag])
+  )
+
+export const getIsPaliWallet = () =>
+  Boolean(window.ethereum?.wallet === 'pali-v2' && !allNonMetamaskFlags.some((flag) => window.ethereum?.[flag]))
 
 export const getIsCoinbaseWallet = () => Boolean(window.ethereum?.isCoinbaseWallet)
 

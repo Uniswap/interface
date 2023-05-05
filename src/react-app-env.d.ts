@@ -23,6 +23,8 @@ interface Window {
     // set by the Ledger Extension Web 3 browser extension
     isLedgerConnect?: true
     autoRefreshOnNetworkChange?: boolean
+    // Pali build wallet
+    wallet?: string
   }
   web3?: Record<string, unknown>
 }

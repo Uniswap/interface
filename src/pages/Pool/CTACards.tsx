@@ -65,6 +65,7 @@ const ResponsiveColumn = styled(AutoColumn)`
 export default function CTACards() {
   const { chainId } = useWeb3React()
   const { infoLink } = getChainInfoOrDefault(chainId)
+  // TODO: check liquidity docs
 
   return (
     <CTASection>

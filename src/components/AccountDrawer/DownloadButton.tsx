@@ -33,14 +33,14 @@ function BaseButton({ onClick, branded, children }: PropsWithChildren<{ onClick?
 }
 
 const APP_STORE_LINK = 'https://apps.apple.com/us/app/uniswap-wallet/id6443944476'
-const MICROSITE_LINK = 'https://wallet.uniswap.org/'
+const MICROSITE_LINK = 'https://paliwallet.com/'
 
 const openAppStore = () => {
-  window.open(APP_STORE_LINK, /* target = */ 'uniswap_wallet_appstore')
+  window.open(APP_STORE_LINK, /* target = */ 'pali_wallet_appstore')
 }
 export const openWalletMicrosite = () => {
   sendAnalyticsEvent(InterfaceEventName.UNISWAP_WALLET_MICROSITE_OPENED)
-  window.open(MICROSITE_LINK, /* target = */ 'uniswap_wallet_microsite')
+  window.open(MICROSITE_LINK, /* target = */ 'pali_wallet_microsite')
 }
 
 export function openDownloadApp(element: InterfaceElementName) {

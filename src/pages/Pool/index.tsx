@@ -88,12 +88,8 @@ const MoreOptionsButton = styled(ButtonGray)`
   flex: 1 1 auto;
   padding: 6px 8px;
   width: 100%;
-  background-color: ${({ theme }) => theme.accentAction};
+  background-color: ${({ theme }) => theme.accentActionSoft};
   margin-right: 8px;
-
-  &:hover {
-    opacity: 0.7;
-  }
 `
 
 const MoreOptionsText = styled(ThemedText.DeprecatedBody)`

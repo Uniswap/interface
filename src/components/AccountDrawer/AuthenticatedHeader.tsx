@@ -4,7 +4,7 @@ import { BrowserEvent, InterfaceElementName, InterfaceEventName, SharedEventName
 import { formatNumber, NumberType } from '@uniswap/conedison/format'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { ButtonEmphasis, ButtonSize, LoadingButtonSpinner, ThemeButton } from 'components/Button'
+import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button'
 import Column from 'components/Column'
 import { AutoRow } from 'components/Row'
 import { LoadingBubble } from 'components/Tokens/loading'
@@ -121,9 +121,6 @@ const StyledInfoIcon = styled(Info)`
   height: 12px;
   width: 12px;
   flex: 1 1 auto;
-`
-const StyledLoadingButtonSpinner = styled(LoadingButtonSpinner)`
-  fill: ${({ theme }) => theme.accentAction};
 `
 
 const HeaderWrapper = styled.div`

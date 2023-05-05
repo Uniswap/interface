@@ -7,6 +7,7 @@ import { Connector } from '@web3-react/types'
 import COINBASE_ICON from 'assets/images/coinbaseWalletIcon.svg'
 import GNOSIS_ICON from 'assets/images/gnosis.png'
 import METAMASK_ICON from 'assets/images/metamask.svg'
+import PALI_ICON from 'assets/images/pali.svg'
 import UNIWALLET_ICON from 'assets/images/uniwallet.svg'
 import WALLET_CONNECT_ICON from 'assets/images/walletConnectIcon.svg'
 import INJECTED_DARK_ICON from 'assets/svg/browser-wallet-dark.svg'
@@ -18,7 +19,7 @@ import { isMobile, isNonIOSPhone } from 'utils/userAgent'
 
 import { RPC_URLS } from '../constants/networks'
 import { RPC_PROVIDERS } from '../constants/providers'
-import { getIsCoinbaseWallet, getIsInjected, getIsMetaMaskWallet } from './utils'
+import { getIsCoinbaseWallet, getIsInjected, getIsMetaMaskWallet, getIsPaliWallet } from './utils'
 import { UniwalletConnect, WalletConnectPopup } from './WalletConnect'
 
 export enum ConnectionType {
@@ -28,6 +29,7 @@ export enum ConnectionType {
   WALLET_CONNECT = 'WALLET_CONNECT',
   NETWORK = 'NETWORK',
   GNOSIS_SAFE = 'GNOSIS_SAFE',
+  PALI_WALLET = 'PALI_WALLET',
 }
 
 export interface Connection {
@@ -59,6 +61,8 @@ export const networkConnection: Connection = {
 const getIsCoinbaseWalletBrowser = () => isMobile && getIsCoinbaseWallet()
 const getIsMetaMaskBrowser = () => isMobile && getIsMetaMaskWallet()
 const getIsInjectedMobileBrowser = () => getIsCoinbaseWalletBrowser() || getIsMetaMaskBrowser()
+console.log('getIsPaliWallet()', getIsPaliWallet())
+const getIsPaliWalletBrowser = () => !isMobile && getIsPaliWallet()
 
 const getShouldAdvertiseMetaMask = () =>
   !getIsMetaMaskWallet() && !isMobile && (!getIsInjected() || getIsCoinbaseWallet())
@@ -153,6 +157,17 @@ const coinbaseWalletConnection: Connection = {
   },
 }
 
+const [web3PaliWallet, web3PaliHooks] = initializeConnector<MetaMask>((actions) => new MetaMask({ actions, onError }))
+
+const paliWalletConnection: Connection = {
+  getName: () => 'Pali Wallet',
+  connector: web3PaliWallet,
+  hooks: web3PaliHooks,
+  type: ConnectionType.PALI_WALLET,
+  getIcon: () => PALI_ICON,
+  shouldDisplay: () => Boolean(!isMobile || getIsPaliWalletBrowser()),
+}
+
 export function getConnections() {
   return [
     uniwalletConnectConnection,
@@ -161,6 +176,7 @@ export function getConnections() {
     coinbaseWalletConnection,
     gnosisSafeConnection,
     networkConnection,
+    paliWalletConnection,
   ]
 }
 
@@ -185,6 +201,8 @@ export function useGetConnection() {
         case ConnectionType.NETWORK:
           return networkConnection
         case ConnectionType.GNOSIS_SAFE:
+          return gnosisSafeConnection
+        case ConnectionType.PALI_WALLET:
           return gnosisSafeConnection
       }
     }
