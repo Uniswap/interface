@@ -85,6 +85,7 @@ const Container = styled.div`
   right: ${DRAWER_MARGIN};
   top: ${DRAWER_MARGIN};
   z-index: ${Z_INDEX.fixed};
+  border-radius: 12px;
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
     top: 100%;
@@ -122,7 +123,6 @@ const AccountDrawerWrapper = styled.div<{ open: boolean }>`
   width: ${DRAWER_WIDTH};
   font-size: 16px;
   background-color: ${({ theme }) => theme.backgroundSurface};
-  border: ${({ theme }) => `1px solid ${theme.backgroundOutline}`};
 
   box-shadow: ${({ theme }) => theme.deepShadow};
   transition: margin-right ${({ theme }) => theme.transition.duration.medium};

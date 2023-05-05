@@ -17,7 +17,7 @@ import { useProfilePageState, useSellAsset, useWalletCollections } from 'nft/hoo
 import { useIsNftClaimAvailable } from 'nft/hooks/useIsNftClaimAvailable'
 import { ProfilePageStateType } from 'nft/types'
 import { useCallback, useState } from 'react'
-import { ArrowDownRight, ArrowUpRight, Copy, CreditCard, IconProps, Info, Power, Settings } from 'react-feather'
+import { ArrowDownRight, ArrowUpRight, Copy, IconProps, Info, Power, Settings } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
 import { shouldDisableNFTRoutesAtom } from 'state/application/atoms'
 import { useAppDispatch } from 'state/hooks'
@@ -298,26 +298,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
             <Trans>View and sell NFTs</Trans>
           </HeaderButton>
         )}
-        <HeaderButton
-          size={ButtonSize.medium}
-          emphasis={ButtonEmphasis.medium}
-          onClick={handleBuyCryptoClick}
-          disabled={disableBuyCryptoButton}
-          data-testid="wallet-buy-crypto"
-        >
-          {error ? (
-            <ThemedText.BodyPrimary>{error}</ThemedText.BodyPrimary>
-          ) : (
-            <>
-              {fiatOnrampAvailabilityLoading ? (
-                <StyledLoadingButtonSpinner />
-              ) : (
-                <CreditCard height="20px" width="20px" />
-              )}{' '}
-              <Trans>Buy crypto</Trans>
-            </>
-          )}
-        </HeaderButton>
+
         {Boolean(!fiatOnrampAvailable && fiatOnrampAvailabilityChecked) && (
           <FiatOnrampNotAvailableText marginTop="8px">
             <Trans>Not available in your region</Trans>

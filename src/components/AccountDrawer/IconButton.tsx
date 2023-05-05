@@ -14,14 +14,14 @@ export const IconHoverText = styled.span`
 `
 
 const IconStyles = css`
-  background-color: ${({ theme }) => theme.backgroundInteractive};
+  background-color: ${({ theme }) => theme.accentActionSoft};
   border-radius: 12px;
   display: inline-block;
   cursor: pointer;
   position: relative;
   height: 32px;
   width: 32px;
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.accentActive};
   :hover {
     background-color: ${({ theme }) => theme.hoverState};
     transition: ${({

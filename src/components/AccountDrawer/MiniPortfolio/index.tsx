@@ -12,7 +12,6 @@ import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
 import { ActivityTab } from './Activity'
-import NFTs from './NFTs'
 import Pools from './Pools'
 import { PortfolioRowWrapper } from './PortfolioRow'
 import Tokens from './Tokens'
@@ -67,12 +66,12 @@ const Pages: Array<Page> = [
     component: Tokens,
     loggingElementName: InterfaceElementName.MINI_PORTFOLIO_TOKENS_TAB,
   },
-  {
-    title: <Trans>NFTs</Trans>,
-    key: 'nfts',
-    component: NFTs,
-    loggingElementName: InterfaceElementName.MINI_PORTFOLIO_NFT_TAB,
-  },
+  // {
+  //   title: <Trans>NFTs</Trans>,
+  //   key: 'nfts',
+  //   component: NFTs,
+  //   loggingElementName: InterfaceElementName.MINI_PORTFOLIO_NFT_TAB,
+  // },
   {
     title: <Trans>Pools</Trans>,
     key: 'pools',

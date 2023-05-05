@@ -103,7 +103,8 @@ export const walletConnectConnection: Connection = {
   hooks: web3WalletConnectHooks,
   type: ConnectionType.WALLET_CONNECT,
   getIcon: () => WALLET_CONNECT_ICON,
-  shouldDisplay: () => !getIsInjectedMobileBrowser(),
+  // shouldDisplay: () => !getIsInjectedMobileBrowser(),
+  shouldDisplay: () => false,
 }
 
 const [web3UniwalletConnect, web3UniwalletConnectHooks] = initializeConnector<UniwalletConnect>(
@@ -139,8 +140,9 @@ const coinbaseWalletConnection: Connection = {
   hooks: web3CoinbaseWalletHooks,
   type: ConnectionType.COINBASE_WALLET,
   getIcon: () => COINBASE_ICON,
-  shouldDisplay: () =>
-    Boolean((isMobile && !getIsInjectedMobileBrowser()) || !isMobile || getIsCoinbaseWalletBrowser()),
+  shouldDisplay: () => false,
+  // shouldDisplay: () =>
+  //   Boolean((isMobile && !getIsInjectedMobileBrowser()) || !isMobile || getIsCoinbaseWalletBrowser()),
   // If on a mobile browser that isn't the coinbase wallet browser, deeplink to the coinbase wallet app
   overrideActivate: () => {
     if (isMobile && !getIsInjectedMobileBrowser()) {

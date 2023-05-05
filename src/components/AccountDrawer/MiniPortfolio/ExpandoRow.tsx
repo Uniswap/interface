@@ -7,14 +7,15 @@ import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
 const ExpandIcon = styled(ChevronDown)<{ $expanded: boolean }>`
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.accentActive};
   transform: ${({ $expanded }) => ($expanded ? 'rotate(180deg)' : 'rotate(0deg)')};
   transition: transform ${({ theme }) => theme.transition.duration.medium};
 `
 
 const ToggleButton = styled(Row)`
-  background-color: ${({ theme }) => theme.backgroundInteractive};
-  border-radius: 12px;
+  background-color: ${({ theme }) => theme.accentActionSoft};
+  color: ${({ theme }) => theme.accentActive};
+  border-radius: 30px;
   padding: 4px 8px 4px 12px;
   height: 100%;
   width: fit-content;
@@ -40,7 +41,7 @@ export function ExpandoRow({ title = t`Hidden`, numItems, isExpanded, toggle, ch
           {`${title} (${numItems})`}
         </ThemedText.SubHeader>
         <ToggleButton align="center" onClick={toggle}>
-          <ThemedText.LabelSmall color="textSecondary" variant="buttonLabelSmall">
+          <ThemedText.LabelSmall color="none" variant="buttonLabelSmall">
             {isExpanded ? t`Hide` : t`Show`}
           </ThemedText.LabelSmall>
           <ExpandIcon $expanded={isExpanded} />
