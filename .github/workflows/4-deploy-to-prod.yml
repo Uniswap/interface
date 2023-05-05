@@ -25,13 +25,9 @@ jobs:
     environment:
       name: prod
     steps:
-
       - uses: actions/checkout@v3
-
       - uses: ./.github/actions/setup
-
       - run: yarn prepare
-
       - run: yarn build
 
       - name: Pin to IPFS
