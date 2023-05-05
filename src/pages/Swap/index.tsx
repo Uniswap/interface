@@ -227,12 +227,6 @@ export default function Swap({ className }: { className?: string }) {
   )
   const fiatValueInput = useUSDPrice(parsedAmounts[Field.INPUT])
   const fiatValueOutput = useUSDPrice(parsedAmounts[Field.OUTPUT])
-  console.log(
-    'usd price',
-    fiatValueOutput.data?.toFixed(),
-    parsedAmounts[Field.OUTPUT]?.toExact(),
-    parsedAmounts[Field.OUTPUT]?.currency.symbol
-  )
 
   const [routeNotFound, routeIsLoading, routeIsSyncing] = useMemo(
     () => [!trade?.swaps, TradeState.LOADING === tradeState, TradeState.LOADING === tradeState && Boolean(trade)],
