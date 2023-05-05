@@ -9,7 +9,7 @@ jobs:
   tag:
     runs-on: ubuntu-latest
     outputs:
-      new_tag: ${{ steps.github-tag-action.outputs.new_tag }}
+      tag: ${{ steps.github-tag-action.outputs.new_tag }}
       changelog: ${{ steps.github-tag-action.outputs.changelog }}
     steps:
       - uses: actions/checkout@v3
