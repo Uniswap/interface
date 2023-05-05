@@ -198,6 +198,8 @@ export const vars = createGlobalTheme(':root', {
     gray850: '#0E1524',
     gray900: '#0D111C',
     gray950: '#080B11',
+    deep: '#081120',
+    input: '#0B172C',
     accentTextLightTertiary: 'rgba(255, 255, 255, 0.12)',
     outline: 'rgba(153, 161, 189, 0.24)',
     lightGrayOverlay: '#99A1BD14',

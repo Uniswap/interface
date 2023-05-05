@@ -13,7 +13,7 @@ import { ProfilePageStateType } from 'nft/types'
 import { ReactNode } from 'react'
 import { NavLink, NavLinkProps, useLocation, useNavigate } from 'react-router-dom'
 import { shouldDisableNFTRoutesAtom } from 'state/application/atoms'
-import styled from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components/macro'
 
 import { Bag } from './Bag'
 import Blur from './Blur'
@@ -29,21 +29,29 @@ const Nav = styled.nav`
   z-index: 2;
 `
 
+const NavBody = styled.div`
+  display: flex;
+  border-radius: 30px;
+  align-items: center;
+  gap: 5px;
+`
+
 interface MenuItemProps {
   href: string
   id?: NavLinkProps['id']
   isActive?: boolean
   children: ReactNode
   dataTestId?: string
+  background: string
 }
 
-const MenuItem = ({ href, dataTestId, id, isActive, children }: MenuItemProps) => {
+const MenuItem = ({ href, dataTestId, id, isActive, children, background }: MenuItemProps) => {
   return (
     <NavLink
       to={href}
       className={isActive ? styles.activeMenuItem : styles.menuItem}
       id={id}
-      style={{ textDecoration: 'none' }}
+      style={{ textDecoration: 'none', background }}
       data-testid={dataTestId}
     >
       {children}
@@ -55,34 +63,52 @@ export const PageTabs = () => {
   const { pathname } = useLocation()
   const { chainId: connectedChainId } = useWeb3React()
   const chainName = chainIdToBackendName(connectedChainId)
-
+  const theme = useTheme()
   const isPoolActive = useIsPoolsPage()
   const isNftPage = useIsNftPage()
 
   const shouldDisableNFTRoutes = useAtomValue(shouldDisableNFTRoutesAtom)
 
   return (
-    <>
-      <MenuItem href="/swap" isActive={pathname.startsWith('/swap')}>
+    <NavBody>
+      <MenuItem
+        href="/swap"
+        isActive={pathname.startsWith('/swap')}
+        background={pathname.startsWith('/swap') ? theme.backgroundNavBarButton : 'none'}
+      >
         <Trans>Swap</Trans>
       </MenuItem>
-      <MenuItem href={`/tokens/${chainName.toLowerCase()}`} isActive={pathname.startsWith('/tokens')}>
+      <MenuItem
+        href={`/tokens/${chainName.toLowerCase()}`}
+        isActive={pathname.startsWith('/tokens')}
+        background={pathname.startsWith('/tokens') ? theme.backgroundNavBarButton : 'none'}
+      >
         <Trans>Tokens</Trans>
       </MenuItem>
       {!shouldDisableNFTRoutes && (
-        <MenuItem dataTestId="nft-nav" href="/nfts" isActive={isNftPage}>
+        <MenuItem
+          dataTestId="nft-nav"
+          href="/nfts"
+          isActive={isNftPage}
+          background={isNftPage ? theme.backgroundNavBarButton : 'none'}
+        >
           <Trans>NFTs</Trans>
         </MenuItem>
       )}
       <Box display={{ sm: 'flex', lg: 'none', xxl: 'flex' }} width="full">
-        <MenuItem href="/pools" dataTestId="pool-nav-link" isActive={isPoolActive}>
+        <MenuItem
+          href="/pools"
+          dataTestId="pool-nav-link"
+          isActive={isPoolActive}
+          background={isPoolActive ? theme.backgroundNavBarButton : 'none'}
+        >
           <Trans>Pools</Trans>
         </MenuItem>
       </Box>
       <Box marginY={{ sm: '4', md: 'unset' }}>
         <MenuDropdown />
       </Box>
-    </>
+    </NavBody>
   )
 }
 

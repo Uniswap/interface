@@ -62,7 +62,7 @@ const baseMenuItem = style([
     paddingY: '8',
     paddingX: '14',
     marginY: '4',
-    borderRadius: '12',
+    borderRadius: '30',
     transition: '250',
     height: 'min',
     width: 'full',
@@ -75,7 +75,7 @@ const baseMenuItem = style([
     lineHeight: '24px',
     textDecoration: 'none',
     ':hover': {
-      background: vars.color.lightGrayOverlay,
+      background: vars.color.deep,
     },
   },
 ])
@@ -85,12 +85,17 @@ export const menuItem = style([
   sprinkles({
     color: 'textSecondary',
   }),
+  {
+    ':hover': {
+      color: 'white',
+      background: vars.color.input,
+    },
+  },
 ])
 
 export const activeMenuItem = style([
   baseMenuItem,
   sprinkles({
-    color: 'textPrimary',
-    background: 'backgroundFloating',
+    color: 'white',
   }),
 ])

@@ -54,7 +54,7 @@ const NftExplore = lazy(() => import('nft/pages/explore'))
 const Collection = lazy(() => import('nft/pages/collection'))
 const Profile = lazy(() => import('nft/pages/profile/profile'))
 const Asset = lazy(() => import('nft/pages/asset/Asset'))
-
+// TODO: check mobile border
 const MobileBottomBar = styled.div`
   z-index: ${Z_INDEX.sticky};
   position: fixed;
@@ -76,7 +76,7 @@ const MobileBottomBar = styled.div`
 
 const HeaderWrapper = styled.div<{ transparent?: boolean }>`
   ${flexRowNoWrap};
-  background-color: ${({ theme, transparent }) => !transparent && theme.backgroundSurface};
+  background-color: ${({ theme, transparent }) => !transparent && theme.backgroundScrolledSurface};
   border-bottom: ${({ theme, transparent }) => !transparent && `1px solid ${theme.backgroundOutline}`};
   width: 100%;
   justify-content: space-between;
