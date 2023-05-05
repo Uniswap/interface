@@ -32,6 +32,7 @@ function useTokensFromMap(tokenMap: TokenAddressMap, chainId: Maybe<SupportedCha
 
 // TODO(INFRA-164): after disallowing unchecked index access, refactor ChainTokenMap to not use ?'s
 export type ChainTokenMap = { [chainId in number]?: { [address in string]?: Token } }
+/** Returns tokens from all token lists on all chains, combined with user added tokens */
 export function useAllTokensMultichain(): ChainTokenMap {
   const allTokensFromLists = useCombinedTokenMapFromUrls(DEFAULT_LIST_OF_LISTS)
   const userAddedTokensMap = useAppSelector(({ user: { tokens } }) => tokens)
@@ -63,7 +64,7 @@ export function useAllTokensMultichain(): ChainTokenMap {
   }, [allTokensFromLists, userAddedTokensMap])
 }
 
-// Returns all tokens from the default list + user added tokens
+/** Returns all tokens from the default list + user added tokens */
 export function useDefaultActiveTokens(chainId: Maybe<SupportedChainId>): { [address: string]: Token } {
   const defaultListTokens = useCombinedActiveList()
   const tokensFromMap = useTokensFromMap(defaultListTokens, chainId)
