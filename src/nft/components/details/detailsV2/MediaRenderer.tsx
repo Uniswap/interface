@@ -71,16 +71,16 @@ const StyledAudio = styled.audio`
   width: 100%;
 `
 
-const AudioPlayer = ({ asset }: { asset: GenieAsset }) => {
+const AudioPlayer = ({ asset, onError }: { asset: GenieAsset; onError: () => void }) => {
   return (
     <AudioContainer>
-      <StyledImage src={asset.imageUrl} alt={asset.name || asset.collectionName} />
-      <StyledAudio controls src={asset.animationUrl} />
+      <StyledImage src={asset.imageUrl} alt={asset.name || asset.collectionName} onError={onError} />
+      <StyledAudio controls src={asset.animationUrl} onError={onError} />
     </AudioContainer>
   )
 }
 
-const EmbeddedMediaPlayer = ({ asset }: { asset: GenieAsset }) => {
+const EmbeddedMediaPlayer = ({ asset, onError }: { asset: GenieAsset; onError: () => void }) => {
   return (
     <StyledEmbed>
       <StyledIFrame
@@ -90,6 +90,7 @@ const EmbeddedMediaPlayer = ({ asset }: { asset: GenieAsset }) => {
         sandbox="allow-scripts"
         allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
         allowFullScreen
+        onError={onError}
       />
     </StyledEmbed>
   )
@@ -155,11 +156,20 @@ const RenderMediaType = ({ asset }: { asset: GenieAsset }) => {
         />
       )
     case MediaType.Video:
-      return <StyledVideo src={asset.animationUrl} autoPlay controls muted loop />
+      return (
+        <StyledVideo
+          src={asset.animationUrl}
+          autoPlay
+          controls
+          muted
+          loop
+          onError={() => setContentNotAvailable(true)}
+        />
+      )
     case MediaType.Audio:
-      return <AudioPlayer asset={asset} />
+      return <AudioPlayer asset={asset} onError={() => setContentNotAvailable(true)} />
     case MediaType.Raw:
-      return <EmbeddedMediaPlayer asset={asset} />
+      return <EmbeddedMediaPlayer asset={asset} onError={() => setContentNotAvailable(true)} />
   }
 }
 
