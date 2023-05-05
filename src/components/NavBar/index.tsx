@@ -160,7 +160,6 @@ const Navbar = ({ blur }: { blur: boolean }) => {
                   <ChainSelector />
                 </Box>
               )}
-
               <Web3Status />
             </Row>
           </Box>

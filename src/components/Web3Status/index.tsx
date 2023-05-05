@@ -41,6 +41,8 @@ const Web3StatusGeneric = styled(ButtonSecondary)`
   height: 36px;
   margin-right: 2px;
   margin-left: 2px;
+  box-shadow: none;
+  background-color: ${({ theme }) => theme.backgroundConnectButton};
   :focus {
     outline: none;
   }
@@ -59,17 +61,20 @@ const Web3StatusError = styled(Web3StatusGeneric)`
 const Web3StatusConnectWrapper = styled.div<{ faded?: boolean }>`
   ${flexRowNoWrap};
   align-items: center;
-  background-color: ${({ theme }) => theme.accentActionSoft};
+  background: ${({ theme }) => theme.backgroundConnectButton};
   border-radius: ${FULL_BORDER_RADIUS}px;
   border: none;
   padding: 0;
   height: 40px;
+  :hover,
+  :focus {
+    border: 1px solid ${({ theme }) => darken(0.05, theme.deprecated_bg3)};
 
-  color: ${({ theme }) => theme.accentAction};
-  :hover {
-    color: ${({ theme }) => theme.accentActionSoft};
-    stroke: ${({ theme }) => theme.accentActionSoft};
+    :focus {
+      border: 1px solid ${({ theme }) => darken(0.1, theme.backgroundInteractive)};
+    }
   }
+  color: ${({ theme }) => theme.white};
 
   transition: ${({
     theme: {
@@ -82,9 +87,9 @@ const Web3StatusConnected = styled(Web3StatusGeneric)<{
   pending?: boolean
   isClaimAvailable?: boolean
 }>`
-  background-color: ${({ pending, theme }) => (pending ? theme.accentAction : theme.deprecated_bg1)};
-  border: 1px solid ${({ pending, theme }) => (pending ? theme.accentAction : theme.deprecated_bg1)};
-  color: ${({ pending, theme }) => (pending ? theme.white : theme.textPrimary)};
+  background: ${({ theme }) => theme.backgroundConnectButton};
+  border: 1px solid ${({ theme }) => darken(0.1, theme.backgroundInteractive)};
+  color: ${({ theme }) => theme.white};
   font-weight: 500;
   border: ${({ isClaimAvailable }) => isClaimAvailable && `1px solid ${colors.purple300}`};
   :hover,

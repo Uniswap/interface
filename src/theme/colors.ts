@@ -265,6 +265,7 @@ export const darkTheme = {
   backgroundNavbar: opacify(75, colors.black),
   backgroundNavBarButton: colors.deep,
   rainbowPegasysGradient: 'linear-gradient(90deg, #19EBCE 0%, #8A15E6 84.28%)',
+  backgroundConnectButton: 'linear-gradient(90deg, #53D9D9 9.38%, rgba(0, 184, 255, 0.1) 128.42%)',
 
   textPrimary: colors.white,
   textSecondary: colors.gray300,
@@ -322,6 +323,7 @@ export const lightTheme: Theme = {
   backgroundNavbar: opacify(72, colors.deep),
   backgroundNavBarButton: colors.purpleMain,
   rainbowPegasysGradient: 'linear-gradient(90deg, #19EBCE 0%, #8A15E6 84.28%)',
+  backgroundConnectButton: 'linear-gradient(90deg, #665EE1 9.38%, rgba(0, 184, 255, 0.3) 128.42%)',
 
   textPrimary: colors.gray900,
   textSecondary: colors.gray400,
