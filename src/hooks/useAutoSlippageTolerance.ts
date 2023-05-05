@@ -80,7 +80,7 @@ export default function useAutoSlippageTolerance(trade: InterfaceTrade | undefin
 
   const gasEstimate = guesstimateGas(trade)
   const gasEstimateUSD = useStablecoinAmountFromFiatValue(trade?.gasUseEstimateUSD) ?? null
-  const nativeCurrency = useNativeCurrency()
+  const nativeCurrency = useNativeCurrency(chainId)
   const nativeCurrencyPrice = useStablecoinPrice((trade && nativeCurrency) ?? undefined)
 
   return useMemo(() => {

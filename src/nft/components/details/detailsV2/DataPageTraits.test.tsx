@@ -4,7 +4,7 @@ import { render } from 'test-utils/render'
 import { DataPageTraits } from './DataPageTraits'
 
 it('data page trait component does not load with asset with no traits', () => {
-  const { asFragment } = render(<DataPageTraits traits={TEST_NFT_ASSET.traits ?? []} />)
+  const { asFragment } = render(<DataPageTraits asset={TEST_NFT_ASSET} />)
   expect(asFragment()).toMatchSnapshot()
 })
 
