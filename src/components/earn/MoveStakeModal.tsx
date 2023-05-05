@@ -49,7 +49,7 @@ const TextButton = styled.div`
 
 interface MoveStakeModalProps {
   isOpen: boolean
-  poolInfo?: PoolInfo
+  poolInfo: PoolInfo
   onDismiss: () => void
   title: ReactNode
 }
@@ -73,7 +73,7 @@ export default function MoveStakeModal({ isOpen, poolInfo, onDismiss, title }: M
 
   // TODO: we can save 1 rpc call here by using multicall
   const fromPoolId = usePoolIdByAddress(parsedAddress ?? undefined).poolId
-  const { poolId, stakingPoolExists } = usePoolIdByAddress(poolInfo?.pool?.address)
+  const { poolId, stakingPoolExists } = usePoolIdByAddress(poolInfo.pool?.address)
   // hack to allow moving stake from deprecated pool
   const defaultPoolId = '0x0000000000000000000000000000000000000000000000000000000000000021'
   const fromPoolStakeBalance = useStakeBalance(fromPoolId ?? defaultPoolId)
@@ -181,7 +181,10 @@ export default function MoveStakeModal({ isOpen, poolInfo, onDismiss, title }: M
                 </RowBetween>
               </AutoColumn>
             </LightCard>
-            <ButtonPrimary disabled={!isAddress(parsedAddress ?? '')} onClick={onMoveStake}>
+            <ButtonPrimary
+              disabled={!fromPoolStakeBalance || (fromPoolId !== defaultPoolId && !isAddress(parsedAddress ?? ''))}
+              onClick={onMoveStake}
+            >
               <ThemedText.DeprecatedMediumHeader color="white">
                 <Trans>Move Stake</Trans>
               </ThemedText.DeprecatedMediumHeader>

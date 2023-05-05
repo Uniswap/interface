@@ -426,11 +426,13 @@ export function usePoolIdByAddress(pool: string | undefined): { poolId: string; 
 
 // TODO: we must return a currency balance
 export function useStakeBalance(poolId: string | null | undefined): CurrencyAmount<Currency> | undefined {
-  const { chainId } = useWeb3React()
+  const { account, chainId } = useWeb3React()
   const grg = chainId ? GRG[chainId] : undefined
   const stakingContract = useStakingContract()
-  const stake = useSingleCallResult(stakingContract ?? undefined, 'getTotalStakeDelegatedToPool', [poolId ?? undefined])
-    ?.result?.[0]
+  const stake = useSingleCallResult(stakingContract ?? undefined, 'getStakeDelegatedToPoolByOwner', [
+    account,
+    poolId ?? undefined,
+  ])?.result?.[0]
 
   return stake && grg ? CurrencyAmount.fromRawAmount(grg, stake.nextEpochBalance) : undefined
 }
