@@ -432,7 +432,7 @@ export function useStakeBalance(poolId: string | null | undefined): CurrencyAmou
   const stake = useSingleCallResult(stakingContract ?? undefined, 'getTotalStakeDelegatedToPool', [poolId ?? undefined])
     ?.result?.[0]
 
-  return stake && grg ? CurrencyAmount.fromRawAmount(grg, stake.currentEpochBalance) : undefined //result?.[0]?.toNumber()
+  return stake && grg ? CurrencyAmount.fromRawAmount(grg, stake.nextEpochBalance) : undefined
 }
 
 export function useCreateCallback(): (
