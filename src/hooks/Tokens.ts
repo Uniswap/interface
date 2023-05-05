@@ -40,14 +40,16 @@ export function useAllTokensMultichain(): ChainTokenMap {
   return useMemo(() => {
     const chainTokenMap: ChainTokenMap = {}
 
-    Object.keys(userAddedTokensMap).forEach((key) => {
-      const chainId = Number(key)
-      const tokenMap = {} as { [address in string]?: Token }
-      Object.values(userAddedTokensMap[chainId]).forEach((serializedToken) => {
-        tokenMap[serializedToken.address] = deserializeToken(serializedToken)
+    if (userAddedTokensMap) {
+      Object.keys(userAddedTokensMap).forEach((key) => {
+        const chainId = Number(key)
+        const tokenMap = {} as { [address in string]?: Token }
+        Object.values(userAddedTokensMap[chainId]).forEach((serializedToken) => {
+          tokenMap[serializedToken.address] = deserializeToken(serializedToken)
+        })
+        chainTokenMap[chainId] = tokenMap
       })
-      chainTokenMap[chainId] = tokenMap
-    })
+    }
 
     Object.keys(allTokensFromLists).forEach((key) => {
       const chainId = Number(key)
