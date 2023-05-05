@@ -1,4 +1,6 @@
 import { Trans } from '@lingui/macro'
+import { GenieAsset } from 'nft/types'
+import { useMemo } from 'react'
 
 import { ActivityTableContent } from './ActivityTableContent'
 import { ListingsTableContent } from './ListingsTableContent'
@@ -11,35 +13,38 @@ export enum TableTabsKeys {
   Listings = 'listings',
 }
 
-const TableTabs: Map<string, Tab> = new Map([
-  [
-    TableTabsKeys.Activity,
-    {
-      title: <Trans>Activity</Trans>,
-      key: TableTabsKeys.Activity,
-      content: <ActivityTableContent />,
-    },
-  ],
-  [
-    TableTabsKeys.Offers,
-    {
-      title: <Trans>Offers</Trans>,
-      key: TableTabsKeys.Offers,
-      content: <OffersTableContent />,
-      count: 11, // TODO Replace Placeholder with real data
-    },
-  ],
-  [
-    TableTabsKeys.Listings,
-    {
-      title: <Trans>Listings</Trans>,
-      key: TableTabsKeys.Listings,
-      content: <ListingsTableContent />,
-      count: 11, // TODO Replace Placeholder with real data
-    },
-  ],
-])
-
-export const DataPageTable = () => {
+export const DataPageTable = ({ asset }: { asset: GenieAsset }) => {
+  const TableTabs: Map<string, Tab> = useMemo(
+    () =>
+      new Map([
+        [
+          TableTabsKeys.Activity,
+          {
+            title: <Trans>Activity</Trans>,
+            key: TableTabsKeys.Activity,
+            content: <ActivityTableContent />,
+          },
+        ],
+        [
+          TableTabsKeys.Offers,
+          {
+            title: <Trans>Offers</Trans>,
+            key: TableTabsKeys.Offers,
+            content: <OffersTableContent asset={asset} />,
+            count: 11, // TODO Replace Placeholder with real data
+          },
+        ],
+        [
+          TableTabsKeys.Listings,
+          {
+            title: <Trans>Listings</Trans>,
+            key: TableTabsKeys.Listings,
+            content: <ListingsTableContent />,
+            count: 11, // TODO Replace Placeholder with real data
+          },
+        ],
+      ]),
+    [asset]
+  )
   return <TabbedComponent tabs={TableTabs} />
 }
