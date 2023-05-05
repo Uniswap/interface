@@ -8,7 +8,6 @@ export enum TradeState {
   INVALID,
   NO_ROUTE_FOUND,
   VALID,
-  SYNCING,
 }
 
 // from https://github.com/Uniswap/routing-api/blob/main/lib/handlers/schema.ts
@@ -68,12 +67,12 @@ export interface GetQuoteResult {
   routeString: string
 }
 
-export class InterfaceTrade<
-  TInput extends Currency,
-  TOutput extends Currency,
-  TTradeType extends TradeType
-> extends Trade<TInput, TOutput, TTradeType> {
-  gasUseEstimateUSD: CurrencyAmount<Token> | null | undefined
+class ClassicTrade<TInput extends Currency, TOutput extends Currency, TTradeType extends TradeType> extends Trade<
+  TInput,
+  TOutput,
+  TTradeType
+> {
+  gasUseEstimateUSD: string | null | undefined
   blockNumber: string | null | undefined
 
   constructor({
@@ -81,7 +80,7 @@ export class InterfaceTrade<
     blockNumber,
     ...routes
   }: {
-    gasUseEstimateUSD?: CurrencyAmount<Token> | undefined | null
+    gasUseEstimateUSD?: string | undefined | null
     blockNumber?: string | null | undefined
     v2Routes: {
       routev2: V2Route<TInput, TOutput>
@@ -104,4 +103,44 @@ export class InterfaceTrade<
     this.blockNumber = blockNumber
     this.gasUseEstimateUSD = gasUseEstimateUSD
   }
+}
+
+export class InterfaceTrade extends ClassicTrade<Currency, Currency, TradeType> {}
+
+export enum QuoteState {
+  SUCCESS = 'Success',
+  INITIALIZED = 'Initialized',
+  NOT_FOUND = 'Not found',
+}
+
+export type QuoteResult =
+  | {
+      state: QuoteState.INITIALIZED | QuoteState.NOT_FOUND
+      data?: undefined
+    }
+  | {
+      state: QuoteState.SUCCESS
+      data: GetQuoteResult
+    }
+
+export type TradeResult =
+  | {
+      state: QuoteState.INITIALIZED | QuoteState.NOT_FOUND
+      trade?: undefined
+    }
+  | {
+      state: QuoteState.SUCCESS
+      trade: InterfaceTrade
+    }
+
+export enum PoolType {
+  V2Pool = 'v2-pool',
+  V3Pool = 'v3-pool',
+}
+
+// swap router API special cases these strings to represent native currencies
+// all chains have "ETH" as native currency symbol except for polygon
+export enum SwapRouterNativeAssets {
+  MATIC = 'MATIC',
+  ETH = 'ETH',
 }

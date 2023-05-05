@@ -3,14 +3,16 @@ import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { IMetric, MetricLoggerUnit, setGlobalMetric } from '@uniswap/smart-order-router'
 import { sendTiming } from 'components/analytics'
 import { AVERAGE_L1_BLOCK_TIME } from 'constants/chainInfo'
-import { useStablecoinAmountFromFiatValue } from 'hooks/useStablecoinPrice'
 import { useRoutingAPIArguments } from 'lib/hooks/routing/useRoutingAPIArguments'
 import ms from 'ms.macro'
 import { useMemo } from 'react'
 import { RouterPreference, useGetQuoteQuery } from 'state/routing/slice'
 
-import { InterfaceTrade, TradeState } from './types'
-import { computeRoutes, transformRoutesToTrade } from './utils'
+import { InterfaceTrade, QuoteState, TradeState } from './types'
+
+const TRADE_INVALID = { state: TradeState.INVALID, trade: undefined }
+const TRADE_NOT_FOUND = { state: TradeState.NO_ROUTE_FOUND, trade: undefined }
+const TRADE_LOADING = { state: TradeState.LOADING, trade: undefined }
 
 /**
  * Returns the best trade by invoking the routing api or the smart order router on the client
@@ -25,7 +27,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
   routerPreference: RouterPreference
 ): {
   state: TradeState
-  trade: InterfaceTrade<Currency, Currency, TTradeType> | undefined
+  trade: InterfaceTrade | undefined
 } {
   const [currencyIn, currencyOut]: [Currency | undefined, Currency | undefined] = useMemo(
     () =>
@@ -44,10 +46,9 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
   })
 
   const {
-    isLoading,
     isError,
-    data: quoteResult,
-    currentData,
+    data: tradeResult,
+    currentData: currentTradeResult,
   } = useGetQuoteQuery(queryArgs ?? skipToken, {
     // Price-fetching is informational and costly, so it's done less frequently.
     pollingInterval: routerPreference === RouterPreference.PRICE ? ms`1m` : AVERAGE_L1_BLOCK_TIME,
@@ -55,72 +56,24 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
     refetchOnMountOrArgChange: 2 * 60,
   })
 
-  const route = useMemo(
-    () => computeRoutes(currencyIn, currencyOut, tradeType, quoteResult),
-    [currencyIn, currencyOut, quoteResult, tradeType]
-  )
-
-  // get USD gas cost of trade in active chains stablecoin amount
-  const gasUseEstimateUSD = useStablecoinAmountFromFiatValue(quoteResult?.gasUseEstimateUSD) ?? null
-
-  const isSyncing = currentData !== quoteResult
+  const isCurrent = currentTradeResult === tradeResult
 
   return useMemo(() => {
-    if (!currencyIn || !currencyOut || currencyIn.equals(currencyOut)) {
+    if (!amountSpecified || isError || !queryArgs) {
+      return TRADE_INVALID
+    } else if (tradeResult?.state === QuoteState.NOT_FOUND && isCurrent) {
+      return TRADE_NOT_FOUND
+    } else if (!tradeResult?.trade) {
+      // TODO: use `isLoading` returned by rtk-query hook instead of checking for `trade` status
+      return TRADE_LOADING
+    } else {
+      const isCurrent = currentTradeResult === tradeResult
       return {
-        state: TradeState.INVALID,
-        trade: undefined,
+        state: isCurrent ? TradeState.VALID : TradeState.LOADING,
+        trade: tradeResult.trade,
       }
     }
-
-    if (isLoading && !quoteResult) {
-      // only on first hook render
-      return {
-        state: TradeState.LOADING,
-        trade: undefined,
-      }
-    }
-
-    let otherAmount = undefined
-    if (quoteResult) {
-      if (tradeType === TradeType.EXACT_INPUT && currencyOut) {
-        otherAmount = CurrencyAmount.fromRawAmount(currencyOut, quoteResult.quote)
-      }
-
-      if (tradeType === TradeType.EXACT_OUTPUT && currencyIn) {
-        otherAmount = CurrencyAmount.fromRawAmount(currencyIn, quoteResult.quote)
-      }
-    }
-
-    if (isError || !otherAmount || !route || route.length === 0 || !queryArgs) {
-      return {
-        state: TradeState.NO_ROUTE_FOUND,
-        trade: undefined,
-      }
-    }
-
-    try {
-      const trade = transformRoutesToTrade(route, tradeType, quoteResult?.blockNumber, gasUseEstimateUSD)
-      return {
-        // always return VALID regardless of isFetching status
-        state: isSyncing ? TradeState.SYNCING : TradeState.VALID,
-        trade,
-      }
-    } catch (e) {
-      return { state: TradeState.INVALID, trade: undefined }
-    }
-  }, [
-    currencyIn,
-    currencyOut,
-    quoteResult,
-    isLoading,
-    tradeType,
-    isError,
-    route,
-    queryArgs,
-    gasUseEstimateUSD,
-    isSyncing,
-  ])
+  }, [amountSpecified, currentTradeResult, isCurrent, isError, queryArgs, tradeResult])
 }
 
 // only want to enable this when app hook called

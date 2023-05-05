@@ -41,8 +41,8 @@ function useETHValue(currencyAmount?: CurrencyAmount<Currency>): {
     }
   }
 
-  if (!trade || !currencyAmount?.currency || !isGqlSupportedChain(chainId)) {
-    return { data: undefined, isLoading: state === TradeState.LOADING || state === TradeState.SYNCING }
+  if (!trade || state === TradeState.LOADING || !currencyAmount?.currency || !isGqlSupportedChain(chainId)) {
+    return { data: undefined, isLoading: state === TradeState.LOADING }
   }
 
   const { numerator, denominator } = trade.routes[0].midPrice

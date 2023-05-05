@@ -4,7 +4,8 @@ import { BigintIsh, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { AlphaRouter, AlphaRouterConfig, ChainId } from '@uniswap/smart-order-router'
 import { SupportedChainId } from 'constants/chains'
 import JSBI from 'jsbi'
-import { GetQuoteResult } from 'state/routing/types'
+import { GetQuoteArgs } from 'state/routing/slice'
+import { QuoteResult, QuoteState } from 'state/routing/types'
 import { transformSwapRouteToGetQuoteResult } from 'utils/transformSwapRouteToGetQuoteResult'
 
 export function toSupportedChainId(chainId: ChainId): SupportedChainId | undefined {
@@ -19,50 +20,32 @@ export function isSupportedChainId(chainId: ChainId | undefined): boolean {
 
 async function getQuote(
   {
-    type,
+    tradeType,
     tokenIn,
     tokenOut,
     amount: amountRaw,
   }: {
-    type: 'exactIn' | 'exactOut'
+    tradeType: TradeType
     tokenIn: { address: string; chainId: number; decimals: number; symbol?: string }
     tokenOut: { address: string; chainId: number; decimals: number; symbol?: string }
     amount: BigintIsh
   },
   router: AlphaRouter,
   config: Partial<AlphaRouterConfig>
-): Promise<{ data: GetQuoteResult; error?: unknown }> {
+): Promise<QuoteResult> {
   const currencyIn = new Token(tokenIn.chainId, tokenIn.address, tokenIn.decimals, tokenIn.symbol)
   const currencyOut = new Token(tokenOut.chainId, tokenOut.address, tokenOut.decimals, tokenOut.symbol)
 
-  const baseCurrency = type === 'exactIn' ? currencyIn : currencyOut
-  const quoteCurrency = type === 'exactIn' ? currencyOut : currencyIn
+  const baseCurrency = tradeType === TradeType.EXACT_INPUT ? currencyIn : currencyOut
+  const quoteCurrency = tradeType === TradeType.EXACT_INPUT ? currencyOut : currencyIn
   const amount = CurrencyAmount.fromRawAmount(baseCurrency, JSBI.BigInt(amountRaw))
 
-  const swapRoute = await router.route(
-    amount,
-    quoteCurrency,
-    type === 'exactIn' ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT,
-    /*swapConfig=*/ undefined,
-    config
-  )
+  const swapRoute = await router.route(amount, quoteCurrency, tradeType, /*swapConfig=*/ undefined, config)
 
-  if (!swapRoute) throw new Error('Failed to generate client side quote')
+  if (!amountRaw) return { state: QuoteState.INITIALIZED }
+  if (!swapRoute) return { state: QuoteState.NOT_FOUND }
 
-  return { data: transformSwapRouteToGetQuoteResult(type, amount, swapRoute) }
-}
-
-interface QuoteArguments {
-  tokenInAddress: string
-  tokenInChainId: ChainId
-  tokenInDecimals: number
-  tokenInSymbol?: string
-  tokenOutAddress: string
-  tokenOutChainId: ChainId
-  tokenOutDecimals: number
-  tokenOutSymbol?: string
-  amount: string
-  type: 'exactIn' | 'exactOut'
+  return transformSwapRouteToGetQuoteResult(tradeType, amount, swapRoute)
 }
 
 export async function getClientSideQuote(
@@ -76,14 +59,14 @@ export async function getClientSideQuote(
     tokenOutDecimals,
     tokenOutSymbol,
     amount,
-    type,
-  }: QuoteArguments,
+    tradeType,
+  }: GetQuoteArgs,
   router: AlphaRouter,
   config: Partial<AlphaRouterConfig>
 ) {
   return getQuote(
     {
-      type,
+      tradeType,
       tokenIn: {
         address: tokenInAddress,
         chainId: tokenInChainId,

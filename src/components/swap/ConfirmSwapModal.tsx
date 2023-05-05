@@ -1,8 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { Trace } from '@uniswap/analytics'
 import { InterfaceModalName } from '@uniswap/analytics-events'
-import { Trade } from '@uniswap/router-sdk'
-import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
+import { Percent } from '@uniswap/sdk-core'
 import { ReactNode, useCallback, useMemo, useState } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 import { tradeMeaningfullyDiffers } from 'utils/tradeMeaningFullyDiffer'
@@ -31,8 +30,8 @@ export default function ConfirmSwapModal({
   fiatValueOutput,
 }: {
   isOpen: boolean
-  trade: InterfaceTrade<Currency, Currency, TradeType> | undefined
-  originalTrade: Trade<Currency, Currency, TradeType> | undefined
+  trade: InterfaceTrade | undefined
+  originalTrade: InterfaceTrade | undefined
   attemptingTxn: boolean
   txHash: string | undefined
   recipient: string | null

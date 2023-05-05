@@ -1,5 +1,4 @@
 import { Trans } from '@lingui/macro'
-import { Currency, TradeType } from '@uniswap/sdk-core'
 import { sendEvent } from 'components/analytics'
 import { AutoColumn } from 'components/Column'
 import { LoadingOpacityContainer } from 'components/Loader/styled'
@@ -37,15 +36,15 @@ export default function GasEstimateBadge({
   showRoute,
   disableHover,
 }: {
-  trade: InterfaceTrade<Currency, Currency, TradeType> | undefined | null // dollar amount in active chain's stablecoin
+  trade: InterfaceTrade | undefined | null // dollar amount in active chain's stablecoin
   loading: boolean
   showRoute?: boolean // show route instead of gas estimation summary
   disableHover?: boolean
 }) {
   const formattedGasPriceString = trade?.gasUseEstimateUSD
-    ? trade.gasUseEstimateUSD.toFixed(2) === '0.00'
+    ? trade.gasUseEstimateUSD === '0.00'
       ? '<$0.01'
-      : '$' + trade.gasUseEstimateUSD.toFixed(2)
+      : '$' + trade.gasUseEstimateUSD
     : undefined
 
   return (
@@ -73,7 +72,7 @@ export default function GasEstimateBadge({
                   <Trans>Estimated network fee</Trans>
                 </ThemedText.DeprecatedMain>
                 <ThemedText.DeprecatedBody textAlign="center" fontWeight={500} style={{ userSelect: 'none' }}>
-                  <Trans>${trade?.gasUseEstimateUSD?.toFixed(2)}</Trans>
+                  <Trans>${trade?.gasUseEstimateUSD}</Trans>
                 </ThemedText.DeprecatedBody>
                 <ThemedText.DeprecatedMain fontSize="10px" textAlign="center" maxWidth="140px" color="text3">
                   <Trans>Estimate may differ due to your wallet gas settings</Trans>

@@ -106,6 +106,7 @@ export function useSyncWidgetTransactions() {
 
         const eventProperties = {
           ...formatSwapSignedAnalyticsEventProperties({
+            // @ts-ignore because we're removing this soon
             trade,
             // TODO: add once Widgets adds fiat values to callback
             fiatValues: { amountIn: undefined, amountOut: undefined },

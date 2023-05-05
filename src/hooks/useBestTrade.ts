@@ -24,7 +24,7 @@ export function useBestTrade(
   otherCurrency?: Currency
 ): {
   state: TradeState
-  trade: InterfaceTrade<Currency, Currency, TradeType> | undefined
+  trade: InterfaceTrade | undefined
 } {
   const { chainId } = useWeb3React()
   const autoRouterSupported = useAutoRouterSupported()

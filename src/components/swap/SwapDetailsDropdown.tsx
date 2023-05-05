@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
-import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
+import { Percent } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import AnimatedDropdown from 'components/AnimatedDropdown'
 import { OutlineCard } from 'components/Card'
@@ -98,7 +98,7 @@ const Spinner = styled.div`
 `
 
 interface SwapDetailsInlineProps {
-  trade: InterfaceTrade<Currency, Currency, TradeType> | undefined
+  trade: InterfaceTrade | undefined
   syncing: boolean
   loading: boolean
   allowedSlippage: Percent

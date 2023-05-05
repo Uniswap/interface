@@ -43,7 +43,7 @@ const OpenCloseIcon = styled(Plus)<{ open?: boolean }>`
 `
 
 interface SwapRouteProps extends React.HTMLAttributes<HTMLDivElement> {
-  trade: InterfaceTrade<Currency, Currency, TradeType>
+  trade: InterfaceTrade
   syncing: boolean
   fixedOpen?: boolean // fixed in open state, hide open/close icon
 }
@@ -55,12 +55,6 @@ export default memo(function SwapRoute({ trade, syncing, fixedOpen = false, ...r
   const { chainId } = useWeb3React()
 
   const [darkMode] = useDarkModeManager()
-
-  const formattedGasPriceString = trade?.gasUseEstimateUSD
-    ? trade.gasUseEstimateUSD.toFixed(2) === '0.00'
-      ? '<$0.01'
-      : '$' + trade.gasUseEstimateUSD.toFixed(2)
-    : undefined
 
   return (
     <Wrapper {...rest} darkMode={darkMode} fixedOpen={fixedOpen}>
@@ -102,7 +96,7 @@ export default memo(function SwapRoute({ trade, syncing, fixedOpen = false, ...r
               ) : (
                 <ThemedText.DeprecatedMain fontSize={12} width={400} margin={0}>
                   {trade?.gasUseEstimateUSD && chainId && SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId) ? (
-                    <Trans>Best price route costs ~{formattedGasPriceString} in gas. </Trans>
+                    <Trans>Best price route costs ~{trade.gasUseEstimateUSD} in gas. </Trans>
                   ) : null}{' '}
                   <Trans>
                     This route optimizes your total output by considering split routes, multiple hops, and the gas cost
@@ -129,7 +123,7 @@ const V2_DEFAULT_FEE_TIER = 3000
 /**
  * Loops through all routes on a trade and returns an array of diagram entries.
  */
-export function getTokenPath(trade: InterfaceTrade<Currency, Currency, TradeType>): RoutingDiagramEntry[] {
+export function getTokenPath(trade: InterfaceTrade): RoutingDiagramEntry[] {
   return trade.swaps.map(({ route: { path: tokenPath, pools, protocol }, inputAmount, outputAmount }) => {
     const portion =
       trade.tradeType === TradeType.EXACT_INPUT

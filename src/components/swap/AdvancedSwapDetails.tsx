@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
+import { Percent, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import Card from 'components/Card'
 import { LoadingRows } from 'components/Loader/styled'
@@ -21,7 +21,7 @@ const StyledCard = styled(Card)`
 `
 
 interface AdvancedSwapDetailsProps {
-  trade?: InterfaceTrade<Currency, Currency, TradeType>
+  trade?: InterfaceTrade
   allowedSlippage: Percent
   syncing?: boolean
   hideInfoTooltips?: boolean
@@ -152,7 +152,7 @@ export function AdvancedSwapDetails({
             </MouseoverTooltip>
             <TextWithLoadingPlaceholder syncing={syncing} width={50}>
               <ThemedText.DeprecatedBlack textAlign="right" fontSize={14} color={theme.textTertiary}>
-                ~${trade.gasUseEstimateUSD.toFixed(2)}
+                ~${trade.gasUseEstimateUSD}
               </ThemedText.DeprecatedBlack>
             </TextWithLoadingPlaceholder>
           </RowBetween>
