@@ -4,13 +4,17 @@ import { useWeb3React } from '@web3-react/core'
 import { SupportedChainId } from 'constants/chains'
 import useAutoSlippageTolerance from 'hooks/useAutoSlippageTolerance'
 import { useBestTrade } from 'hooks/useBestTrade'
+import { useIsSwapUnsupported } from 'hooks/useIsSwapUnsupported'
+import { useUSDPrice } from 'hooks/useUSDPrice'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { ParsedQs } from 'qs'
 import { ReactNode, useCallback, useEffect, useMemo } from 'react'
 import { AnyAction } from 'redux'
 import { useAppDispatch } from 'state/hooks'
 import { InterfaceTrade, TradeState } from 'state/routing/types'
-import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
+import { useExpertModeManager, useUserSlippageToleranceWithDefault } from 'state/user/hooks'
+import { computeFiatValuePriceImpact } from 'utils/computeFiatValuePriceImpact'
+import { computeRealizedPriceImpact, largerPercentValue, WarningSeverity, warningSeverity } from 'utils/prices'
 
 import { TOKEN_SHORTHANDS } from '../../constants/tokens'
 import { useCurrency } from '../../hooks/Tokens'
@@ -71,11 +75,7 @@ const BAD_RECIPIENT_ADDRESSES: { [address: string]: true } = {
   '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D': true, // v2 router 02
 }
 
-// from the current swap inputs, compute the best trade and return it.
-export function useDerivedSwapInfo(
-  state: SwapState,
-  chainId: SupportedChainId | undefined
-): {
+interface DerivedSwapInfo {
   currencies: { [field in Field]?: Currency | null }
   currencyBalances: { [field in Field]?: CurrencyAmount<Currency> }
   parsedAmount: CurrencyAmount<Currency> | undefined
@@ -85,8 +85,29 @@ export function useDerivedSwapInfo(
     state: TradeState
   }
   allowedSlippage: Percent
-} {
+  swapIsUnsupported: boolean
+  stablecoinValueDifference: Percent | undefined
+  priceImpactTooHigh: boolean
+  showPriceImpactWarning: boolean
+  largerPriceImpact: Percent | undefined
+  priceImpactSeverity: WarningSeverity | undefined
+  swapFiatValues: { amountIn: number | undefined; amountOut: number | undefined }
+  routeIsLoading: boolean
+  routeIsSyncing: boolean
+  fiatValueTradeInput: {
+    data: number | undefined
+    isLoading: boolean
+  }
+  fiatValueTradeOutput: {
+    data: number | undefined
+    isLoading: boolean
+  }
+}
+
+// from the current swap inputs, compute the best trade and return it.
+export function useDerivedSwapInfo(state: SwapState, chainId: SupportedChainId | undefined): DerivedSwapInfo {
   const { account } = useWeb3React()
+  const isExpertMode = useExpertModeManager()
 
   const {
     independentField,
@@ -172,6 +193,35 @@ export function useDerivedSwapInfo(
     return inputError
   }, [account, allowedSlippage, currencies, currencyBalances, parsedAmount, to, trade.trade])
 
+  const swapIsUnsupported = useIsSwapUnsupported(currencies[Field.INPUT], currencies[Field.OUTPUT])
+
+  const routeIsLoading = TradeState.LOADING === trade?.state
+  const routeIsSyncing = TradeState.SYNCING === trade?.state
+
+  const fiatValueTradeInput = useUSDPrice(trade?.trade?.inputAmount)
+  const fiatValueTradeOutput = useUSDPrice(trade?.trade?.outputAmount)
+
+  const stablecoinValueDifference = useMemo(
+    () =>
+      !trade || routeIsSyncing
+        ? undefined
+        : computeFiatValuePriceImpact(fiatValueTradeInput.data, fiatValueTradeOutput.data),
+    [fiatValueTradeInput, fiatValueTradeOutput, routeIsSyncing, trade]
+  )
+
+  const { priceImpactSeverity, largerPriceImpact } = useMemo(() => {
+    const marketPriceImpact = trade?.trade?.priceImpact ? computeRealizedPriceImpact(trade?.trade) : undefined
+    const largerPriceImpact = largerPercentValue(marketPriceImpact, stablecoinValueDifference)
+    return { priceImpactSeverity: warningSeverity(largerPriceImpact), largerPriceImpact }
+  }, [stablecoinValueDifference, trade])
+
+  const priceImpactTooHigh = priceImpactSeverity > 3 && !isExpertMode
+  const showPriceImpactWarning = Boolean(largerPriceImpact && priceImpactSeverity > 3)
+
+  const swapFiatValues = useMemo(() => {
+    return { amountIn: fiatValueTradeInput.data, amountOut: fiatValueTradeOutput.data }
+  }, [fiatValueTradeInput, fiatValueTradeOutput])
+
   return useMemo(
     () => ({
       currencies,
@@ -180,8 +230,37 @@ export function useDerivedSwapInfo(
       inputError,
       trade,
       allowedSlippage,
+      swapIsUnsupported,
+      stablecoinValueDifference,
+      priceImpactTooHigh,
+      showPriceImpactWarning,
+      largerPriceImpact,
+      swapFiatValues,
+      routeIsLoading,
+      routeIsSyncing,
+      fiatValueTradeInput,
+      fiatValueTradeOutput,
+      priceImpactSeverity,
     }),
-    [allowedSlippage, currencies, currencyBalances, inputError, parsedAmount, trade]
+    [
+      allowedSlippage,
+      currencies,
+      currencyBalances,
+      inputError,
+      parsedAmount,
+      priceImpactTooHigh,
+      stablecoinValueDifference,
+      swapIsUnsupported,
+      trade,
+      showPriceImpactWarning,
+      largerPriceImpact,
+      swapFiatValues,
+      routeIsLoading,
+      routeIsSyncing,
+      fiatValueTradeInput,
+      fiatValueTradeOutput,
+      priceImpactSeverity,
+    ]
   )
 }
 

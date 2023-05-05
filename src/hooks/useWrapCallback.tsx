@@ -22,7 +22,7 @@ export enum WrapType {
 
 const NOT_APPLICABLE = { wrapType: WrapType.NOT_APPLICABLE }
 
-enum WrapInputError {
+export enum WrapInputError {
   NO_ERROR, // must be equal to 0 so all other errors are truthy
   ENTER_NATIVE_AMOUNT,
   ENTER_WRAPPED_AMOUNT,

@@ -82,7 +82,7 @@ const IMPACT_TIERS = [
   ALLOWED_PRICE_IMPACT_LOW,
 ]
 
-type WarningSeverity = 0 | 1 | 2 | 3 | 4
+export type WarningSeverity = 0 | 1 | 2 | 3 | 4
 export function warningSeverity(priceImpact: Percent | undefined): WarningSeverity {
   if (!priceImpact) return 0
   // This function is used to calculate the Severity level for % changes in USD value and Price Impact.
@@ -103,4 +103,15 @@ export function getPriceImpactWarning(priceImpact: Percent): 'warning' | 'error'
   if (priceImpact.greaterThan(ALLOWED_PRICE_IMPACT_HIGH)) return 'error'
   if (priceImpact.greaterThan(ALLOWED_PRICE_IMPACT_MEDIUM)) return 'warning'
   return
+}
+
+export function largerPercentValue(a?: Percent, b?: Percent) {
+  if (a && b) {
+    return a.greaterThan(b) ? a : b
+  } else if (a) {
+    return a
+  } else if (b) {
+    return b
+  }
+  return undefined
 }
