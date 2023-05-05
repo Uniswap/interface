@@ -20,7 +20,7 @@ import { fetchSearchCollections } from 'nft/queries'
 import { ChangeEvent, useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useLocation } from 'react-router-dom'
-import styled from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components/macro'
 
 import { ChevronLeftIcon, MagnifyingGlassIcon, NavMagnifyingGlassIcon } from '../../nft/components/icons'
 import { NavIcon } from './NavIcon'
@@ -54,6 +54,7 @@ export const SearchBar = () => {
   const isTablet = useIsTablet()
   const isNftGraphqlEnabled = useNftGraphqlEnabled()
   const isNavSearchInputVisible = useIsNavSearchInputVisible()
+  const theme = useTheme()
 
   useOnClickOutside(searchRef, () => {
     isOpen && toggleOpen()
@@ -129,7 +130,7 @@ export const SearchBar = () => {
     ...trace,
   }
   const placeholderText = useMemo(() => {
-    return isMobileOrTablet ? t`Search` : t`Search tokens and NFT collections`
+    return isMobileOrTablet ? t`Search` : t`Search tokens`
   }, [isMobileOrTablet])
 
   const handleKeyPress = useCallback(
@@ -173,9 +174,10 @@ export const SearchBar = () => {
             !isOpen && !isMobile && magicalGradientOnHover,
             isMobileOrTablet && (isOpen ? styles.visible : styles.hidden)
           )}
-          borderRadius={isOpen || isMobileOrTablet ? undefined : '12'}
-          borderTopRightRadius={isOpen && !isMobile ? '12' : undefined}
-          borderTopLeftRadius={isOpen && !isMobile ? '12' : undefined}
+          style={{ borderColor: isOpen ? theme.searchOutline : theme.accentActive }}
+          borderRadius={isOpen || isMobileOrTablet ? undefined : '30'}
+          borderTopRightRadius={isOpen && !isMobile ? '30' : undefined}
+          borderTopLeftRadius={isOpen && !isMobile ? '30' : undefined}
           borderBottomWidth={isOpen || isMobileOrTablet ? '0px' : '1px'}
           backgroundColor={isOpen ? 'backgroundSurface' : 'searchBackground'}
           onClick={() => !isOpen && toggleOpen()}
@@ -183,7 +185,7 @@ export const SearchBar = () => {
         >
           <Box className={styles.searchContentLeftAlign}>
             <Box display={{ sm: 'none', md: 'flex' }}>
-              <MagnifyingGlassIcon />
+              <MagnifyingGlassIcon color={theme.accentActive} />
             </Box>
             <Box display={{ sm: 'flex', md: 'none' }} color="textTertiary" onClick={toggleOpen}>
               <ChevronLeftIcon />
