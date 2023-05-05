@@ -182,7 +182,11 @@ export default function MoveStakeModal({ isOpen, poolInfo, onDismiss, title }: M
               </AutoColumn>
             </LightCard>
             <ButtonPrimary
-              disabled={!fromPoolStakeBalance || (fromPoolId !== defaultPoolId && !isAddress(parsedAddress ?? ''))}
+              disabled={
+                !fromPoolStakeBalance ||
+                formatCurrencyAmount(parsedAmount, 0) === '0' ||
+                (fromPoolId !== defaultPoolId && !isAddress(parsedAddress ?? ''))
+              }
               onClick={onMoveStake}
             >
               <ThemedText.DeprecatedMediumHeader color="white">
