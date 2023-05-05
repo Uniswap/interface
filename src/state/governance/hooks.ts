@@ -7,7 +7,7 @@ import { toUtf8String, Utf8ErrorFuncs, Utf8ErrorReason } from '@ethersproject/st
 // eslint-disable-next-line no-restricted-imports
 import { t } from '@lingui/macro'
 import { abi as UNI_ABI } from '@uniswap/governance/build/Uni.json'
-import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import GOVERNANCE_RB_ABI from 'abis/governance.json'
 import POOL_EXTENDED_ABI from 'abis/pool-extended.json'
@@ -123,6 +123,7 @@ export interface StakeInfo {
 export interface StakeData {
   amount: string | undefined
   pool: string | null
+  fromPoolId?: string | undefined
   poolId: string | undefined
   poolContract?: Contract | null
   stakingPoolExists?: boolean
@@ -423,6 +424,17 @@ export function usePoolIdByAddress(pool: string | undefined): { poolId: string; 
   return { poolId, stakingPoolExists }
 }
 
+// TODO: we must return a currency balance
+export function useStakeBalance(poolId: string | null | undefined): CurrencyAmount<Currency> | undefined {
+  const { chainId } = useWeb3React()
+  const grg = chainId ? GRG[chainId] : undefined
+  const stakingContract = useStakingContract()
+  const stake = useSingleCallResult(stakingContract ?? undefined, 'getTotalStakeDelegatedToPool', [poolId ?? undefined])
+    ?.result?.[0]
+
+  return stake && grg ? CurrencyAmount.fromRawAmount(grg, stake.currentEpochBalance) : undefined //result?.[0]?.toNumber()
+}
+
 export function useCreateCallback(): (
   name: string | undefined,
   symbol: string | undefined,
@@ -527,6 +539,57 @@ export function useDelegatePoolCallback(): (stakeData: StakeData | undefined) =>
       })
     },
     [account, addTransaction, chainId, provider]
+  )
+}
+
+export function useMoveStakeCallback(): (stakeData: StakeData | undefined) => undefined | Promise<string> {
+  const { account, chainId, provider } = useWeb3React()
+  const addTransaction = useTransactionAdder()
+  const stakingContract = useStakingContract()
+  const stakingProxy = useStakingProxyContract()
+
+  return useCallback(
+    (stakeData: StakeData | undefined) => {
+      if (!provider || !chainId || !account || !stakeData || !isAddress(stakeData.pool ?? '')) return undefined
+      //if (!stakeData.amount) return
+      const createPoolCall = stakingContract?.interface.encodeFunctionData('createStakingPool', [stakeData.pool])
+      // until a staking implementation upgrade, moving delegated stake requires batching from pool deactivation
+      //  and to pool activation
+      const deactivateFromInfo = { status: '1', poolId: stakeData.fromPoolId }
+      const deactivateToInfo = { status: '0', poolId: stakeData.fromPoolId }
+      const deactivateCall = stakingContract?.interface.encodeFunctionData('moveStake', [
+        deactivateFromInfo,
+        deactivateToInfo,
+        stakeData.amount,
+      ])
+      const activateFromInfo = { status: '0', poolId: stakeData.poolId }
+      const activateToInfo = { status: '1', poolId: stakeData.poolId }
+      const activateCall = stakingContract?.interface.encodeFunctionData('moveStake', [
+        activateFromInfo,
+        activateToInfo,
+        stakeData.amount,
+      ])
+      const delegatee = stakeData.pool
+      if (!delegatee) return
+      //const args = [delegatee]
+      // if the staking pool does not exist, user creates it and becomes staking pal
+      const args = !stakeData.stakingPoolExists
+        ? [[createPoolCall, deactivateCall, activateCall]]
+        : [[deactivateCall, activateCall]]
+      if (!stakingProxy) throw new Error('No Staking Contract!')
+      return stakingProxy.estimateGas.batchExecute(...args, {}).then((estimatedGasLimit) => {
+        return stakingProxy
+          .batchExecute(...args, { value: null, gasLimit: calculateGasMargin(estimatedGasLimit) })
+          .then((response: TransactionResponse) => {
+            addTransaction(response, {
+              type: TransactionType.DELEGATE,
+              delegatee,
+            })
+            return response.hash
+          })
+      })
+    },
+    [account, addTransaction, chainId, provider, stakingContract, stakingProxy]
   )
 }
 

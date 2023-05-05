@@ -16,6 +16,7 @@ import SellModal from 'components/createPool/SellModal'
 import SetLockupModal from 'components/createPool/SetLockupModal'
 import SetSpreadModal from 'components/createPool/SetSpreadModal'
 import SetValueModal from 'components/createPool/SetValueModal'
+import MoveStakeModal from 'components/earn/MoveStakeModal'
 //import Loader from 'components/Loader'
 import { RowBetween, RowFixed } from 'components/Row'
 //import { Dots } from 'components/swap/styleds'
@@ -404,6 +405,12 @@ export function PoolPositionPage() {
               poolInfo={poolInfo}
               onDismiss={() => setShowStakeModal(false)}
               title={<Trans>Stake</Trans>}
+            />
+            <MoveStakeModal
+              isOpen={showMoveStakeModal}
+              poolInfo={poolInfo}
+              onDismiss={() => setShowMoveStakeModal(false)}
+              title={<Trans>Move Stake</Trans>}
             />
           </>
         )}
