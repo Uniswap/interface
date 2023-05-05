@@ -122,7 +122,7 @@ export const routingApi = createApi({
           }
         )
       },
-      async queryFn(args: GetQuoteArgs) {
+      async queryFn(args: GetQuoteArgs, _api, _extraOptions, fetch) {
         if (args.routerPreference === RouterPreference.API || args.routerPreference === RouterPreference.PRICE) {
           try {
             const { tokenInAddress, tokenInChainId, tokenOutAddress, tokenOutChainId, amount, tradeType } = args
@@ -136,22 +136,21 @@ export const routingApi = createApi({
               amount,
               type,
             })
-            const response = await fetch(`https://api.uniswap.org/v1/quote?${query}`)
-            if (!response.ok) {
-              let data: string | Record<string, unknown> = await response.text()
+            const response = await fetch(`quote?${query}`)
+            if (response.error) {
               try {
-                data = JSON.parse(data)
-
+                // cast as any here because we do a runtime check on it being an object before indexing into .errorCode
+                const errorData = response.error.data as any
                 // NO_ROUTE should be treated as a valid response to prevent retries.
-                if (typeof data === 'object' && data.errorCode === 'NO_ROUTE') {
+                if (typeof errorData === 'object' && errorData?.errorCode === 'NO_ROUTE') {
                   return { data: { state: QuoteState.NOT_FOUND } }
                 }
               } catch {
-                throw data
+                throw response.error
               }
             }
 
-            const quoteData: GetQuoteResult = await response.json()
+            const quoteData = response.data as GetQuoteResult
             const tradeResult = transformRoutesToTrade(args, quoteData)
             return { data: tradeResult }
           } catch (error: any) {

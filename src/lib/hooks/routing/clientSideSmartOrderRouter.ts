@@ -34,6 +34,10 @@ async function getQuote(
   router: AlphaRouter,
   config: Partial<AlphaRouterConfig>
 ): Promise<QuoteResult> {
+  if (!amountRaw) {
+    return { state: QuoteState.INITIALIZED }
+  }
+
   const tokenInIsNative = Object.values(SwapRouterNativeAssets).includes(tokenIn.address as SwapRouterNativeAssets)
   const tokenOutIsNative = Object.values(SwapRouterNativeAssets).includes(tokenOut.address as SwapRouterNativeAssets)
 
@@ -46,12 +50,13 @@ async function getQuote(
 
   const baseCurrency = tradeType === TradeType.EXACT_INPUT ? currencyIn : currencyOut
   const quoteCurrency = tradeType === TradeType.EXACT_INPUT ? currencyOut : currencyIn
-  const amount = CurrencyAmount.fromRawAmount(baseCurrency, JSBI.BigInt(amountRaw))
 
+  const amount = CurrencyAmount.fromRawAmount(baseCurrency, JSBI.BigInt(amountRaw))
   const swapRoute = await router.route(amount, quoteCurrency, tradeType, /*swapConfig=*/ undefined, config)
 
-  if (!amountRaw) return { state: QuoteState.INITIALIZED }
-  if (!swapRoute) return { state: QuoteState.NOT_FOUND }
+  if (!swapRoute) {
+    return { state: QuoteState.NOT_FOUND }
+  }
 
   return transformSwapRouteToGetQuoteResult(tradeType, amount, swapRoute)
 }
