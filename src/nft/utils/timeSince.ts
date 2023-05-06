@@ -1,31 +1,59 @@
+import { plural, t } from '@lingui/macro'
+
 import { roundAndPluralize } from './roundAndPluralize'
-
-export function timeSince(date: Date, min?: boolean) {
-  const seconds = Math.floor((new Date().getTime() - date.getTime()) / 1000)
-
-  let interval = seconds / 31536000
-
-  if (interval > 1) return roundAndPluralize(interval, min ? 'yr' : 'year')
-
-  interval = seconds / 2592000
-  if (interval > 1) return roundAndPluralize(interval, min ? 'mth' : 'month')
-
-  interval = seconds / 86400
-  if (interval > 1) return roundAndPluralize(interval, 'day')
-
-  interval = seconds / 3600
-
-  if (interval > 1) return roundAndPluralize(interval, min ? 'hr' : 'hour')
-
-  interval = seconds / 60
-  if (interval > 1) return roundAndPluralize(interval, 'min')
-
-  return roundAndPluralize(interval, 'sec')
-}
 
 const MINUTE = 1000 * 60
 const HOUR = MINUTE * 60
 const DAY = 24 * HOUR
+const WEEK = 7 * DAY
+const MONTH = 30 * DAY
+
+export function timeUntil(date: Date): string | undefined {
+  const seconds = Math.floor((date.getTime() - new Date().getTime()) / 1000)
+  if (seconds < 0) return undefined
+
+  let interval = seconds / MONTH
+  if (interval >= 100) return `99+ ${t`months`}`
+  if (interval > 1)
+    return `${interval} ${plural(interval, {
+      one: 'month',
+      other: 'months',
+    })}`
+
+  interval = seconds / WEEK
+  if (interval > 1)
+    return `${interval} ${plural(interval, {
+      one: 'week',
+      other: 'weeks',
+    })}`
+
+  interval = seconds / DAY
+  if (interval > 1)
+    return `${interval} ${plural(interval, {
+      one: 'day',
+      other: 'days',
+    })}`
+
+  interval = seconds / HOUR
+
+  if (interval > 1)
+    return `${interval} ${plural(interval, {
+      one: 'hour',
+      other: 'hours',
+    })}`
+
+  interval = seconds / MINUTE
+  if (interval > 1)
+    return `${interval} ${plural(interval, {
+      one: 'minute',
+      other: 'minutes',
+    })}`
+
+  return `${interval} ${plural(interval, {
+    one: 'second',
+    other: 'seconds',
+  })}`
+}
 
 export const timeLeft = (targetDate: Date): string => {
   const countDown = new Date(targetDate).getTime() - new Date().getTime()

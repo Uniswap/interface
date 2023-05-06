@@ -1,5 +1,5 @@
 import { NftActivityType, NftStandard, OrderStatus } from 'graphql/data/__generated__/types-and-hooks'
-import { ActivityEvent, CollectionInfoForAsset, GenieAsset, Markets, WalletAsset } from 'nft/types'
+import { ActivityEvent, CollectionInfoForAsset, GenieAsset, Markets, Offer, SellOrder, WalletAsset } from 'nft/types'
 
 export const TEST_NFT_ASSET: GenieAsset = {
   id: 'TmZ0QXNzZXQ6MHhlZDVhZjM4ODY1MzU2N2FmMmYzODhlNjIyNGRjN2M0YjMyNDFjNTQ0XzMzMTg=',
@@ -108,4 +108,34 @@ export const TEST_NFT_COLLECTION_INFO_FOR_ASSET: CollectionInfoForAsset = {
   externalUrl: 'http://www.azuki.com',
   isVerified: true,
   totalSupply: 10000,
+}
+
+// TODO fill with test data
+export const TEST_SELL_ORDER: SellOrder = {
+  address: '',
+  createdAt: 0,
+  endAt: 0,
+  id: '',
+  maker: '',
+  marketplace: 'opensea',
+  marketplaceUrl: '',
+  price: {
+    currency: '',
+    value: 1,
+  },
+  quantity: 1,
+}
+
+export const TEST_OFFER: Offer = {
+  createdAt: 1,
+  endAt: 1,
+  id: '',
+  maker: '',
+  marketplace: 'opensea',
+  marketplaceUrl: '',
+  price: {
+    currency: '',
+    value: 1,
+  },
+  quantity: 1,
 }

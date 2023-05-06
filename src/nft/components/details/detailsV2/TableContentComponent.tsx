@@ -1,15 +1,20 @@
-import { ScrollBarStyles } from 'components/Common'
+import { Trans } from '@lingui/macro'
+import { formatCurrencyAmount, NumberType } from '@uniswap/conedison/format'
+import { useWeb3React } from '@web3-react/core'
+import { OpacityHoverState, ScrollBarStyles } from 'components/Common'
 import Row from 'components/Row'
+import { useStablecoinValue } from 'hooks/useStablecoinPrice'
+import useNativeCurrency from 'lib/hooks/useNativeCurrency'
+import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
+import { HomeSearchIcon } from 'nft/components/icons'
 import { useSubscribeScrollState } from 'nft/hooks'
+import { Offer, SellOrder } from 'nft/types'
+import { formatEth, getMarketplaceIcon, timeUntil } from 'nft/utils'
 import styled from 'styled-components/macro'
+import { ThemedText } from 'theme'
 
 import { TableTabsKeys } from './DataPageTable'
 import { Scrim } from './shared'
-
-const CellContainer = styled.div<{ flex?: number; $justifyContent?: string }>`
-  flex: ${(props) => props.flex || 0};
-  justify-content: ${({ $justifyContent }) => $justifyContent};
-`
 
 const TraitRowScrollableContainer = styled.div`
   overflow-y: auto;
@@ -19,40 +24,124 @@ const TraitRowScrollableContainer = styled.div`
   ${ScrollBarStyles}
 `
 
-// TODO convert to styled component
-export interface TableCell {
-  flex?: number
-  justifyContent?: string
-  content: React.ReactNode
-  key: string
-}
-
-interface TableContentContainerProps {
-  headerRow: TableCell[]
-  contentRows: TableCell[][]
+interface TableContentComponentProps {
+  headerRow: React.ReactNode
+  contentRows: React.ReactNode[]
   type: TableTabsKeys
 }
 
-export const TableContentContainer = ({ headerRow, contentRows, type }: TableContentContainerProps) => {
+export const TableContentComponent = ({ headerRow, contentRows, type }: TableContentComponentProps) => {
   const { userCanScroll, scrollRef, scrollProgress, scrollHandler } = useSubscribeScrollState()
 
   return (
     <>
-      <Row gap="12">Header</Row>
-      {contentRows.map((row, index) => (
-        // TODO Replace with real key
-        <Row gap="12" key={type + '_row_' + index}>
-          {scrollProgress > 0 && <Scrim />}
-          <TraitRowScrollableContainer ref={scrollRef} onScroll={scrollHandler}>
-            {row.map((cell) => (
-              <CellContainer flex={cell.flex} $justifyContent={cell.justifyContent} key={cell.key}>
-                {cell.content}
-              </CellContainer>
-            ))}
-          </TraitRowScrollableContainer>
-          {userCanScroll && scrollProgress !== 100 && <Scrim isBottom={true} />}
-        </Row>
-      ))}
+      {headerRow}
+      {scrollProgress > 0 && <Scrim />}
+      <TraitRowScrollableContainer ref={scrollRef} onScroll={scrollHandler}>
+        {contentRows.map((row, index) => (
+          <div key={type + '_row_' + index}>{row}</div>
+        ))}
+      </TraitRowScrollableContainer>
+      {userCanScroll && scrollProgress !== 100 && <Scrim isBottom={true} />}
     </>
+  )
+}
+
+const TableCell = styled.div<{ $flex?: number; $justifyContent?: string; $color?: string }>`
+  flex: ${({ $flex }) => $flex ?? 0};
+  justify-content: ${({ $justifyContent }) => $justifyContent};
+  color: ${({ $color }) => $color};
+`
+
+const ButtonCell = styled(TableCell)`
+  cursor: pointer;
+  padding: 8px 12px;
+  ${OpacityHoverState}
+`
+
+const PriceCell = ({ price }: { price: number }) => {
+  const { chainId } = useWeb3React()
+  const nativeCurrency = useNativeCurrency(chainId)
+  const parsedAmount = tryParseCurrencyAmount(price.toString(), nativeCurrency)
+  const usdValue = useStablecoinValue(parsedAmount)
+  return (
+    <Row gap="8px">
+      <ThemedText.LabelSmall color="textPrimary" lineHeight="16px">
+        {formatEth(price)}
+      </ThemedText.LabelSmall>
+      <ThemedText.BodySmall color="textSecondary" lineHeight="20px">
+        {formatCurrencyAmount(usdValue, NumberType.FiatTokenPrice)}
+      </ThemedText.BodySmall>
+    </Row>
+  )
+}
+
+export const HeaderRow = ({ type, is1155 }: { type: TableTabsKeys; is1155?: boolean }) => {
+  return (
+    <Row gap="12px">
+      <HomeSearchIcon />
+      <TableCell $flex={1}>
+        <ThemedText.SubHeaderSmall color="textSecondary">
+          <Trans>Price</Trans>
+        </ThemedText.SubHeaderSmall>
+      </TableCell>
+      {is1155 && (
+        <TableCell $flex={1}>
+          <ThemedText.SubHeaderSmall color="textSecondary">
+            <Trans>Quantity</Trans>
+          </ThemedText.SubHeaderSmall>
+        </TableCell>
+      )}
+      <TableCell $flex={1}>
+        <ThemedText.SubHeaderSmall color="textSecondary">
+          {type === TableTabsKeys.Offers ? <Trans>From</Trans> : is1155 && <Trans>Seller</Trans>}
+        </ThemedText.SubHeaderSmall>
+      </TableCell>
+      <TableCell $flex={1}>
+        <ThemedText.SubHeaderSmall color="textSecondary">
+          <Trans>Expires in</Trans>
+        </ThemedText.SubHeaderSmall>
+      </TableCell>
+      {/* An empty cell is needed in the headers for proper vertical alignment with the action buttons */}
+      <TableCell $flex={1} />
+    </Row>
+  )
+}
+
+export const ContentRow = ({
+  content,
+  buttonCTA,
+  is1155,
+}: {
+  content: Offer | SellOrder
+  buttonCTA: React.ReactNode
+  is1155?: boolean
+}) => {
+  const date = content.endAt && new Date(content.endAt)
+  return (
+    <Row gap="12px">
+      {getMarketplaceIcon(content.marketplace, '20')}
+      {content.price && (
+        <TableCell $flex={1}>
+          <PriceCell price={content.price.value} />
+        </TableCell>
+      )}
+      {is1155 && (
+        <TableCell $flex={1}>
+          <ThemedText.SubHeaderSmall color="textSecondary">
+            <Trans>Quantity</Trans>
+          </ThemedText.SubHeaderSmall>
+        </TableCell>
+      )}
+      <TableCell $flex={1}>
+        <ThemedText.LabelSmall>{content.maker}</ThemedText.LabelSmall>
+      </TableCell>
+      <TableCell $flex={1}>
+        <ThemedText.LabelSmall>{date ? timeUntil(date) : <Trans>Never</Trans>}</ThemedText.LabelSmall>
+      </TableCell>
+      <ButtonCell>
+        <ThemedText.LabelSmall color="textSecondary">{buttonCTA}</ThemedText.LabelSmall>
+      </ButtonCell>
+    </Row>
   )
 }

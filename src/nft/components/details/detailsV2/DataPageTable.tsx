@@ -39,7 +39,7 @@ export const DataPageTable = ({ asset }: { asset: GenieAsset }) => {
           {
             title: <Trans>Listings</Trans>,
             key: TableTabsKeys.Listings,
-            content: <ListingsTableContent />,
+            content: <ListingsTableContent asset={asset} />,
             count: 11, // TODO Replace Placeholder with real data
           },
         ],

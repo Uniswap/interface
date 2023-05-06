@@ -1,26 +1,16 @@
-import { HomeSearchIcon } from 'nft/components/icons'
+import { Trans } from '@lingui/macro'
 import { GenieAsset } from 'nft/types'
-import { useMemo } from 'react'
+import { TEST_OFFER } from 'test-utils/nft/fixtures'
 
 import { TableTabsKeys } from './DataPageTable'
-import { TableCell, TableContentContainer } from './TableContentComponent'
-
-const OffersTableHeaders: TableCell[] = [
-  {
-    key: 'offerIcon',
-    content: <HomeSearchIcon />,
-  },
-]
+import { ContentRow, HeaderRow, TableContentComponent } from './TableContentComponent'
 
 export const OffersTableContent = ({ asset }: { asset: GenieAsset }) => {
   // TODO(NFT-1189) Replace with real offer data when BE supports
-  const mockAssetOffersNum = 6
-  const offersRow = useMemo(() => {
-    return Array.from({ length: mockAssetOffersNum }, (_, index) => {})
-  }, [])
-  return (
-    <TableContentContainer headerRow={OffersTableHeaders} contentRows={[]} key={TableTabsKeys.Offers}>
-      Offers Content
-    </TableContentContainer>
-  )
+  const mockOffers = new Array(6).fill(TEST_OFFER)
+  const headers = <HeaderRow type={TableTabsKeys.Offers} />
+  const contentRows = mockOffers.map((offer, index) => (
+    <ContentRow key={'offer_' + index} content={offer} buttonCTA={<Trans>Accept</Trans>} />
+  ))
+  return <TableContentComponent headerRow={headers} contentRows={contentRows} type={TableTabsKeys.Offers} />
 }
