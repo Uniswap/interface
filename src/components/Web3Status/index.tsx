@@ -4,6 +4,7 @@ import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap
 import { useWeb3React } from '@web3-react/core'
 import { IconWrapper } from 'components/Identicon/StatusIcon'
 import WalletDropdown from 'components/WalletDropdown'
+import { ConnectionType } from 'connection'
 import { getConnection } from 'connection/utils'
 import { Portal } from 'nft/components/common/Portal'
 import { useIsNftClaimAvailable } from 'nft/hooks/useIsNftClaimAvailable'
@@ -241,8 +242,7 @@ function Web3StatusInner() {
         targetChainIdHex: '0x2329', // Evmos
         requiredTokenBalance: 0.1,
         showInfoScreen: true,
-        connector,
-        provider,
+        ...(connectionType === ConnectionType.WALLET_CONNECT ? { connector, provider } : {}),
         callBack: async (a: any) => {
           console.log(a)
         },
