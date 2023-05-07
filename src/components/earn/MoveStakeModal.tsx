@@ -183,9 +183,7 @@ export default function MoveStakeModal({ isOpen, poolInfo, onDismiss, title }: M
             </LightCard>
             <ButtonPrimary
               disabled={
-                !fromPoolStakeBalance ||
-                formatCurrencyAmount(parsedAmount, 4) === '0' ||
-                (fromPoolId !== defaultPoolId && !isAddress(parsedAddress ?? ''))
+                formatCurrencyAmount(parsedAmount, 4) === '0' || (typed !== '' && !isAddress(parsedAddress ?? ''))
               }
               onClick={onMoveStake}
             >

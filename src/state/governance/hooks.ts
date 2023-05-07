@@ -414,7 +414,10 @@ export function useUserVotesAsOfBlock(block: number | undefined): CurrencyAmount
   return votes && uni ? CurrencyAmount.fromRawAmount(uni, votes) : undefined
 }
 
-export function usePoolIdByAddress(pool: string | undefined): { poolId: string; stakingPoolExists: boolean } {
+export function usePoolIdByAddress(pool: string | undefined): {
+  poolId: string | undefined
+  stakingPoolExists: boolean
+} {
   const registryContract = useRegistryContract()
   const poolId = useSingleCallResult(registryContract ?? undefined, 'getPoolIdFromAddress', [pool ?? undefined])
     ?.result?.[0]
