@@ -8,7 +8,7 @@ import { WalletConnect } from '@web3-react/walletconnect'
 import { SupportedChainId } from 'constants/chains'
 
 import UNISWAP_LOGO_URL from '../assets/svg/logo.svg'
-import { RPC_URLS } from '../constants/networks'
+import { RPC_URLS, RPC_URLS_FOR_BRIDGE } from '../constants/networks'
 import { RPC_PROVIDERS } from '../constants/providers'
 
 export enum ConnectionType {
@@ -65,7 +65,7 @@ const [web3WalletConnect, web3WalletConnectHooks] = initializeConnector<WalletCo
   return new WalletConnect({
     actions,
     options: {
-      rpc: RPC_URLS_WITHOUT_FALLBACKS,
+      rpc: { ...RPC_URLS_WITHOUT_FALLBACKS, ...RPC_URLS_FOR_BRIDGE },
       qrcode: true,
     },
     onError,

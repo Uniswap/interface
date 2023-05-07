@@ -34,7 +34,17 @@ export const RPC_URLS: { [key in SupportedChainId]: string[] } = {
   [SupportedChainId.MAINNET]: [`https://eth.bd.evmos.org:8545`, ...FALLBACK_URLS[SupportedChainId.MAINNET]],
 
   [SupportedChainId.OPTIMISM]: [
-    `https://api.avax-test.network/ext/bc/C/rpc`,
+    // `https://api.avax-test.network/ext/bc/C/rpc`,
+    'https://mainnet.optimism.io',
     ...FALLBACK_URLS[SupportedChainId.MAINNET],
   ],
+}
+
+export const RPC_URLS_FOR_BRIDGE: { [key in number]: string } = {
+  1: 'https://rpc.ankr.com/eth',
+  137: 'https://polygon-rpc.com/',
+  56: 'https://bsc-dataseed1.binance.org',
+  42161: 'https://rpc.ankr.com/arbitrum',
+  43114: 'https://api.avax.network/ext/bc/C/rpc',
+  250: 'https://fantom-mainnet.gateway.pokt.network/v1/lb/62759259ea1b320039c9e7ac',
 }

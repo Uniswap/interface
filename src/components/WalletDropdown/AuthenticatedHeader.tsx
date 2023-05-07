@@ -145,7 +145,7 @@ const HeaderWrapper = styled.div`
 `
 
 const AuthenticatedHeader = () => {
-  const { account, chainId, connector, ENSName } = useWeb3React()
+  const { account, chainId, connector, provider, ENSName } = useWeb3React()
   const [isCopied, setCopied] = useCopyClipboard()
   const copy = useCallback(() => {
     setCopied(account || '')
@@ -237,7 +237,9 @@ const AuthenticatedHeader = () => {
                 address: account,
                 targetChainIdHex: '0x2329', // Evmos
                 requiredTokenBalance: 0,
-                callBack: (a: any) => {
+                connector,
+                provider,
+                callBack: async (a: any) => {
                   console.log(a)
                 },
               })

@@ -196,7 +196,7 @@ const CHEVRON_PROPS = {
 }
 
 function Web3StatusInner() {
-  const { account, connector, ENSName } = useWeb3React()
+  const { account, connector, provider, ENSName } = useWeb3React()
   const connectionType = getConnection(connector).type
   const {
     trade: { state: tradeState, trade },
@@ -240,7 +240,10 @@ function Web3StatusInner() {
         address: account,
         targetChainIdHex: '0x2329', // Evmos
         requiredTokenBalance: 0.1,
-        callBack: (a: any) => {
+        showInfoScreen: true,
+        connector,
+        provider,
+        callBack: async (a: any) => {
           console.log(a)
         },
       })
