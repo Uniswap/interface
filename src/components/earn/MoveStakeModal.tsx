@@ -94,8 +94,8 @@ export default function MoveStakeModal({ isOpen, poolInfo, onDismiss, title }: M
 
   const moveStakeData = {
     amount: parsedAmount?.quotient.toString(),
-    pool: parsedAddress,
-    fromPoolId,
+    pool: poolInfo.pool?.address,
+    fromPoolId: fromPoolId ?? defaultPoolId,
     poolId,
     poolContract: undefined,
     stakingPoolExists,
