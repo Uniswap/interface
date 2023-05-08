@@ -11,7 +11,7 @@ interface NftDetailsProps {
 
 const DetailsBackground = styled.div<{ backgroundImage: string }>`
   position: fixed;
-  top: ${({ theme }) => `-${theme.navHeight}px`};
+  top: 0;
   left: 0;
   right: 0;
   bottom: 0;
