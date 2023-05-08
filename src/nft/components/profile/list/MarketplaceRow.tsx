@@ -148,17 +148,13 @@ export const MarketplaceRow = ({
   )
 
   const fees = useMemo(() => {
-    if (selectedMarkets.length === 1) {
-      return getRoyalty(selectedMarkets[0], asset) + selectedMarkets[0].fee
-    } else {
-      let max = 0
-      for (const selectedMarket of selectedMarkets) {
-        const fee = getRoyalty(selectedMarket, asset) + selectedMarket.fee
-        max = Math.max(fee, max)
-      }
-
-      return max
+    let maxFee = 0
+    for (const selectedMarket of selectedMarkets) {
+      const fee = getRoyalty(selectedMarket, asset) + selectedMarket.fee
+      maxFee = Math.max(fee, maxFee)
     }
+
+    return maxFee
   }, [asset, selectedMarkets])
 
   const feeInEth = price && (price * fees) / 100
