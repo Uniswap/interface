@@ -21,7 +21,7 @@ const StyledPolling = styled.div<{ warning: boolean }>`
   position: fixed;
   display: flex;
   align-items: center;
-  right: 0;
+  left: 0;
   bottom: 0;
   padding: 1rem;
   color: ${({ theme, warning }) => (warning ? theme.deprecated_yellow3 : theme.deprecated_green1)};

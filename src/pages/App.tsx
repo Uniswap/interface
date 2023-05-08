@@ -20,6 +20,7 @@ import { getCLS, getFCP, getFID, getLCP, Metric } from 'web-vitals'
 
 import { useAnalyticsReporter } from '../components/analytics'
 import ErrorBoundary from '../components/ErrorBoundary'
+import MendableSearch from '../components/MendableSearch'
 import NavBar from '../components/NavBar'
 import Polling from '../components/Polling'
 import Popups from '../components/Popups'
@@ -198,6 +199,7 @@ export default function App() {
           </HeaderWrapper>
           <BodyWrapper>
             <Popups />
+            <MendableSearch />
             <Polling />
             <TopLevelModals />
             <Suspense fallback={<Loader />}>
