@@ -3,6 +3,7 @@ import { formatUSDPrice } from '@uniswap/conedison/format'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button'
+import { ConnectionType } from 'connection'
 import { getConnection } from 'connection/utils'
 import { getChainInfoOrDefault } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
@@ -145,7 +146,7 @@ const HeaderWrapper = styled.div`
 `
 
 const AuthenticatedHeader = () => {
-  const { account, chainId, connector, ENSName } = useWeb3React()
+  const { account, chainId, connector, provider, ENSName } = useWeb3React()
   const [isCopied, setCopied] = useCopyClipboard()
   const copy = useCallback(() => {
     setCopied(account || '')
@@ -237,7 +238,8 @@ const AuthenticatedHeader = () => {
                 address: account,
                 targetChainIdHex: '0x2329', // Evmos
                 requiredTokenBalance: 0,
-                callBack: (a: any) => {
+                ...(connectionType === ConnectionType.WALLET_CONNECT ? { connector, provider } : {}),
+                callBack: async (a: any) => {
                   console.log(a)
                 },
               })
