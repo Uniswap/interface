@@ -117,15 +117,9 @@ beforeEach(() => {
       )
     })
     // Mock our own token list responses to avoid the latency of IPFS.
-    .intercept('https://gateway.ipfs.io/ipns/tokens.uniswap.org', (req) => {
-      req.reply(TokenListJSON)
-    })
-    .intercept('https://gateway.ipfs.io/ipns/extendedtokens.uniswap.org', (req) => {
-      req.reply(200)
-    })
-    .intercept('https://gateway.ipfs.io/ipns/unsupportedtokens.uniswap.org', (req) => {
-      req.reply(200)
-    })
+    .intercept('https://gateway.ipfs.io/ipns/tokens.uniswap.org', TokenListJSON)
+    .intercept('https://gateway.ipfs.io/ipns/extendedtokens.uniswap.org', { statusCode: 201, body: { tokens: [] } })
+    .intercept('https://gateway.ipfs.io/ipns/unsupportedtokens.uniswap.org', { statusCode: 201, body: { tokens: [] } })
     // Reset hardhat between tests to ensure isolation.
     // This resets the fork, as well as options like automine.
     .hardhat()
