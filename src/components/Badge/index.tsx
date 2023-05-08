@@ -72,7 +72,7 @@ function pickFontColor(variant: BadgeVariant | undefined, theme: DefaultTheme): 
 
 const Badge = styled.div<PropsWithChildren<BadgeProps>>`
   align-items: center;
-  background: ${({ theme, variant }) => pickBackgroundColor(variant, theme)};
+  background: ${({ theme }) => theme.rainbowPegasysGradient};
   border: ${({ theme, variant }) => pickBorder(variant, theme)};
   border-radius: 0.5rem;
   color: ${({ theme, variant }) => pickFontColor(variant, theme)};
