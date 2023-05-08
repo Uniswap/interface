@@ -29,6 +29,9 @@ const cachingExtractor: typeof babelExtractor = {
     const cacheRoot = path.join(root, 'node_modules/.cache/lingui')
     mkdirSync(cacheRoot, { recursive: true })
     const cachePath = path.join(cacheRoot, filename.replace(/\//g, '-'))
+
+    // Only read from the cache if we're not performing a "clean" run, as a clean run must re-extract from all
+    // files to ensure that obsolete messages are removed.
     if (!process.argv.includes('--clean')) {
       try {
         const cache = readFileSync(cachePath, 'utf8')
