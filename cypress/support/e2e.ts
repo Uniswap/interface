@@ -9,6 +9,7 @@ import '@cypress/code-coverage/support'
 import 'cypress-hardhat/lib/browser'
 
 import { Eip1193Bridge } from '@ethersproject/experimental/lib/eip1193-bridge'
+import TokenListJSON from '@uniswap/default-token-list'
 import assert from 'assert'
 
 import { FeatureFlag } from '../../src/featureFlags/flags/featureFlags'
@@ -114,6 +115,16 @@ beforeEach(() => {
           events_ingested: req.body.events.length,
         })
       )
+    })
+    // Mock our own token list responses to avoid the latency of IPFS.
+    .intercept('https://gateway.ipfs.io/ipns/tokens.uniswap.org', (req) => {
+      req.reply(TokenListJSON)
+    })
+    .intercept('https://gateway.ipfs.io/ipns/extendedtokens.uniswap.org', (req) => {
+      req.reply(200)
+    })
+    .intercept('https://gateway.ipfs.io/ipns/unsupportedtokens.uniswap.org', (req) => {
+      req.reply(200)
     })
     // Reset hardhat between tests to ensure isolation.
     // This resets the fork, as well as options like automine.
