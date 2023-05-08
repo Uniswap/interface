@@ -1,3 +1,4 @@
+import { SupportedChainId } from 'constants/chains'
 import { createStore, Store } from 'redux'
 
 import { updateVersion } from '../global/actions'
@@ -52,6 +53,7 @@ describe('transaction reducer', () => {
           chainId: 1,
           hash: '0x0',
           from: 'abc',
+          nonce: 1,
           info: {
             type: TransactionType.APPROVAL,
             tokenAddress: 'abc',
@@ -79,7 +81,7 @@ describe('transaction reducer', () => {
     it('no op if not valid transaction', () => {
       store.dispatch(
         finalizeTransaction({
-          chainId: 4,
+          chainId: SupportedChainId.MAINNET,
           hash: '0x0',
           receipt: {
             status: 1,
@@ -99,7 +101,8 @@ describe('transaction reducer', () => {
       store.dispatch(
         addTransaction({
           hash: '0x0',
-          chainId: 4,
+          chainId: SupportedChainId.MAINNET,
+          nonce: 1,
           info: { type: TransactionType.APPROVAL, spender: '0x0', tokenAddress: '0x0' },
           from: '0x0',
         })
@@ -107,7 +110,7 @@ describe('transaction reducer', () => {
       const beforeTime = new Date().getTime()
       store.dispatch(
         finalizeTransaction({
-          chainId: 4,
+          chainId: SupportedChainId.MAINNET,
           hash: '0x0',
           receipt: {
             status: 1,
@@ -140,7 +143,7 @@ describe('transaction reducer', () => {
     it('no op if not valid transaction', () => {
       store.dispatch(
         checkedTransaction({
-          chainId: 4,
+          chainId: SupportedChainId.MAINNET,
           hash: '0x0',
           blockNumber: 1,
         })
@@ -151,14 +154,15 @@ describe('transaction reducer', () => {
       store.dispatch(
         addTransaction({
           hash: '0x0',
-          chainId: 4,
+          chainId: SupportedChainId.MAINNET,
+          nonce: 1,
           info: { type: TransactionType.APPROVAL, spender: '0x0', tokenAddress: '0x0' },
           from: '0x0',
         })
       )
       store.dispatch(
         checkedTransaction({
-          chainId: 4,
+          chainId: SupportedChainId.MAINNET,
           hash: '0x0',
           blockNumber: 1,
         })
@@ -170,21 +174,22 @@ describe('transaction reducer', () => {
       store.dispatch(
         addTransaction({
           hash: '0x0',
-          chainId: 4,
+          chainId: SupportedChainId.MAINNET,
+          nonce: 900,
           info: { type: TransactionType.APPROVAL, spender: '0x0', tokenAddress: '0x0' },
           from: '0x0',
         })
       )
       store.dispatch(
         checkedTransaction({
-          chainId: 4,
+          chainId: SupportedChainId.MAINNET,
           hash: '0x0',
           blockNumber: 3,
         })
       )
       store.dispatch(
         checkedTransaction({
-          chainId: 4,
+          chainId: SupportedChainId.MAINNET,
           hash: '0x0',
           blockNumber: 1,
         })
@@ -200,13 +205,15 @@ describe('transaction reducer', () => {
         addTransaction({
           chainId: 1,
           hash: '0x0',
+          nonce: 1,
           info: { type: TransactionType.APPROVAL, spender: 'abc', tokenAddress: 'def' },
           from: 'abc',
         })
       )
       store.dispatch(
         addTransaction({
-          chainId: 4,
+          chainId: SupportedChainId.MAINNET,
+          nonce: 2,
           hash: '0x1',
           info: { type: TransactionType.APPROVAL, spender: 'abc', tokenAddress: 'def' },
           from: 'abc',
