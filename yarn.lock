@@ -9046,10 +9046,10 @@ cyclist@^1.0.1:
   resolved "https://registry.yarnpkg.com/cyclist/-/cyclist-1.0.1.tgz#596e9698fd0c80e12038c2b82d6eb1b35b6224d9"
   integrity sha1-WW6WmP0MgOEgOMK4LW6xs1tiJNk=
 
-cypress-hardhat@^2.2.0:
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/cypress-hardhat/-/cypress-hardhat-2.2.0.tgz#4e1c0f16f0c915dda54ddeccbf5dea19f80eed2f"
-  integrity sha512-Jtzd49vvyWSshR43w18WJ4b/40EhSItTTl82QYBNqiSPPrC/yj0derJHZyqMqq2LZvrsfmiY92fIBDgvxUCxZQ==
+cypress-hardhat@^2.3.0:
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/cypress-hardhat/-/cypress-hardhat-2.3.0.tgz#646b35d57490d060e3fd4441e76e4d91b4ff4ec7"
+  integrity sha512-Sj437lFrUZ9UJGXS5a+DLQPBoyaWUxJafEiydNqKKpViKswBiylHD3ZJu2mrtQ/fhp7lgOPpMP72IQX4Ncwzdg==
   dependencies:
     "@uniswap/permit2-sdk" "^1.2.0"
     "@uniswap/sdk-core" "^3.0.1"
