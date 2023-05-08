@@ -143,7 +143,8 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }): 
   )
 
   const hasVerifiedTokenResults = tokenResults.some(
-    (res: TokenSearchResult) => res.safetyLevel === SafetyLevel.Verified
+    (res: TokenSearchResult) =>
+      res.safetyLevel === SafetyLevel.Verified || res.safetyLevel === SafetyLevel.MediumWarning
   )
   const hasVerifiedNFTResults = nftCollectionResults.some(
     (res: NFTCollectionSearchResult) => res.isVerified
