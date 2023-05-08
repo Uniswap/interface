@@ -17,7 +17,11 @@ import { shortenAddress } from 'utils'
 import { TableTabsKeys } from './DataPageTable'
 import { Scrim } from './shared'
 
-const TraitRowScrollableContainer = styled.div`
+const TableRowsContainer = styled.div`
+  position: relative;
+`
+
+const TableRowScrollableContainer = styled.div`
   overflow-y: auto;
   overflow-x: hidden;
   max-height: 224px;
@@ -37,13 +41,15 @@ export const TableContentComponent = ({ headerRow, contentRows, type }: TableCon
   return (
     <>
       {headerRow}
-      {scrollProgress > 0 && <Scrim />}
-      <TraitRowScrollableContainer ref={scrollRef} onScroll={scrollHandler}>
-        {contentRows.map((row, index) => (
-          <div key={type + '_row_' + index}>{row}</div>
-        ))}
-      </TraitRowScrollableContainer>
-      {userCanScroll && scrollProgress !== 100 && <Scrim isBottom={true} />}
+      <TableRowsContainer>
+        {scrollProgress > 0 && <Scrim />}
+        <TableRowScrollableContainer ref={scrollRef} onScroll={scrollHandler}>
+          {contentRows.map((row, index) => (
+            <div key={type + '_row_' + index}>{row}</div>
+          ))}
+        </TableRowScrollableContainer>
+        {userCanScroll && scrollProgress !== 100 && <Scrim isBottom={true} />}
+      </TableRowsContainer>
     </>
   )
 }
@@ -121,7 +127,7 @@ export const ContentRow = ({
 }) => {
   const date = content.endAt && new Date(content.endAt)
   return (
-    <Row gap="12px">
+    <Row gap="12px" padding="16px 0px">
       {getMarketplaceIcon(content.marketplace, '20')}
       {content.price && (
         <TableCell $flex={1}>
