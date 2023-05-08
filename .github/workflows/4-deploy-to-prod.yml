@@ -5,22 +5,6 @@ on:
       - 'releases/prod'
 
 jobs:
-
-  tag:
-    runs-on: ubuntu-latest
-    outputs:
-      tag: ${{ steps.github-tag-action.outputs.new_tag }}
-      changelog: ${{ steps.github-tag-action.outputs.changelog }}
-    steps:
-      - uses: actions/checkout@v3
-      - name: Bump and tag
-        id: github-tag-action
-        uses: mathieudutour/github-tag-action@v6.0
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          release_branches: .*
-          default_bump: patch
-
   deploy-to-prod:
     environment:
       name: prod
@@ -29,12 +13,19 @@ jobs:
       - uses: ./.github/actions/setup
       - run: yarn prepare
       - run: yarn build
+      - name: Bump and tag
+        id: github-tag-action
+        uses: mathieudutour/github-tag-action@v6.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          release_branches: .*
+          default_bump: patch
 
       - name: Pin to IPFS
         id: pinata
         uses: anantaramdas/ipfs-pinata-deploy-action@39bbda1ce1fe24c69c6f57861b8038278d53688d
         with:
-          pin-name: Uniswap ${{ needs.tag.outputs.new_tag }}
+          pin-name: Uniswap ${{ steps.github-tag-action.outputs.new_tag }}
           path: './build'
           pinata-api-key: ${{ secrets.PINATA_API_KEY }}
           pinata-secret-api-key: ${{ secrets.PINATA_API_SECRET_KEY }}
@@ -50,8 +41,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ needs.tag.outputs.new_tag }}
-          release_name: Release ${{ needs.tag.outputs.new_tag }}
+          tag_name: ${{ steps.github-tag-action.outputs.new_tag }}
+          release_name: Release ${{ steps.github-tag-action.outputs.new_tag }}
           body: |
             IPFS hash of the deployment:
             - CIDv0: `${{ steps.pinata.outputs.hash }}`
@@ -69,7 +60,7 @@ jobs:
             - https://${{ steps.convert-cidv0.outputs.cidv1 }}.ipfs.cf-ipfs.com/
             - [ipfs://${{ steps.pinata.outputs.hash }}/](ipfs://${{ steps.pinata.outputs.hash }}/)
 
-            ${{ needs.tag.outputs.changelog }}
+            ${{ steps.github-tag-action.outputs.changelog }}
 
       - name: Setup node@16 (required by Cloudflare Pages)
         uses: actions/setup-node@v3
