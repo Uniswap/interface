@@ -26,7 +26,7 @@ export default function RouterPreferenceSettings() {
 
   return (
     <Column gap="md">
-      <RowBetween>
+      <RowBetween gap="sm">
         <RowFixed>
           <Column gap="xs">
             <ThemedText.BodySecondary>
