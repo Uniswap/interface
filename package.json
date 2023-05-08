@@ -123,6 +123,7 @@
     "@lingui/macro": "^3.14.0",
     "@lingui/react": "^3.14.0",
     "@looksrare/sdk": "^0.10.2",
+    "@mendable/search": "^0.0.93",
     "@metamask/jazzicon": "^2.0.0",
     "@opensea/seaport-js": "^1.0.2",
     "@popperjs/core": "^2.4.4",

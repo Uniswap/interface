@@ -31,6 +31,10 @@ module.exports = {
       // This is required because conedison uses * to redirect all imports to its dist.
       webpackConfig.resolve.alias['@uniswap/conedison'] = '@uniswap/conedison/dist'
 
+      webpackConfig.optimization.splitChunks = Object.assign(webpackConfig.optimization.splitChunks, {
+        maxSize: 6 * 1024 * 1024
+      })
+
       return webpackConfig
     },
   },

@@ -2643,6 +2643,13 @@
   resolved "https://registry.yarnpkg.com/@looksrare/sdk/-/sdk-0.10.2.tgz#08b14cb6d3a5499ad0417c817dbb2da924477f4f"
   integrity sha512-K3VVq7rpS0hD5IwfhAcAPJZO5IjL0VbL89Zl04x8WnLsFOwXHzsUkxUpRrL8ko2/bgZdgTqWgUWCvbSoVr8hzw==
 
+"@mendable/search@^0.0.93":
+  version "0.0.93"
+  resolved "https://registry.yarnpkg.com/@mendable/search/-/search-0.0.93.tgz#079ff6daa767ec810f6a9fdff4b52d329cc3defd"
+  integrity sha512-MK4WUzp2xz/F/uCC+gNnUCdjD8Mp783uwS2J6N71Pyw2WxE9byg+vx/7yjtS3itW87mIQ8Fo5nWlcEzQlv8zLA==
+  dependencies:
+    posthog-js "^1.45.1"
+
 "@metamask/detect-provider@^1.2.0":
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/@metamask/detect-provider/-/detect-provider-1.2.0.tgz#3667a7531f2a682e3c3a43eaf3a1958bdb42a696"
@@ -9444,6 +9451,11 @@ fd-slicer@~1.1.0:
   dependencies:
     pend "~1.2.0"
 
+fflate@^0.4.1:
+  version "0.4.8"
+  resolved "https://registry.yarnpkg.com/fflate/-/fflate-0.4.8.tgz#f90b82aefbd8ac174213abb338bd7ef848f0f5ae"
+  integrity sha512-FJqqoDBR00Mdj9ppamLa/Y7vxm+PRmNWA67N846RvsoYVMKB4q3y/de5PA7gUmRMYK/8CMz2GDZQmCRN1wBcWA==
+
 figgy-pudding@^3.5.1:
   version "3.5.2"
   resolved "https://registry.yarnpkg.com/figgy-pudding/-/figgy-pudding-3.5.2.tgz#b4eee8148abb01dcf1d1ac34367d59e12fa61d6e"
@@ -14386,6 +14398,14 @@ postcss@^8.1.0:
     nanoid "^3.1.25"
     source-map-js "^0.6.2"
 
+posthog-js@^1.45.1:
+  version "1.55.1"
+  resolved "https://registry.yarnpkg.com/posthog-js/-/posthog-js-1.55.1.tgz#6aa16e0f005b0f3fec541be873643dbdfaa0604f"
+  integrity sha512-WQGAypu0X3aFsphobMxBuF1T9pMFMEAuGx0GKwmbIFkCp8773CJUrYE/7/EkBfu483LTL7s8Gsbax0IQ79h/kQ==
+  dependencies:
+    fflate "^0.4.1"
+    rrweb-snapshot "^1.1.14"
+
 postinstall-postinstall@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/postinstall-postinstall/-/postinstall-postinstall-2.1.0.tgz#4f7f77441ef539d1512c40bd04c71b06a4704ca3"
@@ -15690,6 +15710,11 @@ rollup@^1.31.1:
     "@types/estree" "*"
     "@types/node" "*"
     acorn "^7.1.0"
+
+rrweb-snapshot@^1.1.14:
+  version "1.1.14"
+  resolved "https://registry.yarnpkg.com/rrweb-snapshot/-/rrweb-snapshot-1.1.14.tgz#9d4d9be54a28a893373428ee4393ec7e5bd83fcc"
+  integrity sha512-eP5pirNjP5+GewQfcOQY4uBiDnpqxNRc65yKPW0eSoU1XamDfc4M8oqpXGMyUyvLyxFDB0q0+DChuxxiU2FXBQ==
 
 rsvp@^4.8.4:
   version "4.8.5"
