@@ -119,22 +119,22 @@ describe('Swap Button', () => {
     expect(screen.getByTestId('swap-button')).toBeDisabled()
   })
 
-  it('should render Connect wallet button when not connected', () => {
+  it('should render Connect wallet button when not connected', async () => {
     mocked(useWeb3React).mockReturnValue({ account: undefined } as ReturnType<typeof useWeb3React>)
     render(<SwapButton onSwapClick={jest.fn()} chainId={SupportedChainId.MAINNET} />)
     expect(screen.getByText('Connect Wallet')).toBeInTheDocument()
     expect(screen.getByTestId('swap-button')).toBeEnabled()
-    act(() => {
+    await act(async () => {
       screen.getByText('Connect Wallet').click()
     })
     expect(mockToggleAccountDrawer).toHaveBeenCalled()
   })
 
-  it('should render switch chain button', () => {
+  it('should render switch chain button', async () => {
     render(<SwapButton onSwapClick={jest.fn()} chainId={SupportedChainId.OPTIMISM} />)
     expect(screen.getByText('Connect to Optimism')).toBeInTheDocument()
     expect(screen.getByTestId('swap-button')).toBeEnabled()
-    act(() => {
+    await act(async () => {
       screen.getByText('Connect to Optimism').click()
     })
     expect(switchChain).toHaveBeenCalled()
@@ -178,7 +178,7 @@ describe('Swap Button', () => {
     expect(screen.getByText('Insufficient liquidity for this trade.')).toBeInTheDocument()
   })
 
-  it('should render approval button', () => {
+  it('should render approval button', async () => {
     const mockApprove = jest.fn()
     mockUsePermit2Allowance.mockReturnValue({
       state: AllowanceState.REQUIRED,
@@ -195,6 +195,10 @@ describe('Swap Button', () => {
       </DerivedSwapInfoContextProvider>
     )
     expect(screen.getByTestId('swap-approve-button')).toBeEnabled()
+    await act(async () => {
+      screen.getByTestId('swap-approve-button').click()
+    })
+    expect(mockApprove).toHaveBeenCalled()
   })
 
   it('should render swap button', () => {
