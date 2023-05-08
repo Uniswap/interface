@@ -40,6 +40,7 @@ export const TEST_TRADE_EXACT_INPUT = new InterfaceTrade({
   ],
   v2Routes: [],
   tradeType: TradeType.EXACT_INPUT,
+  gasUseEstimateUSD: '1.00',
 })
 
 export const TEST_TRADE_EXACT_OUTPUT = new InterfaceTrade({
