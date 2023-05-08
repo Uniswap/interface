@@ -1,5 +1,6 @@
 import { CollectionInfoForAsset, GenieAsset } from 'nft/types'
 import styled from 'styled-components/macro'
+import { Z_INDEX } from 'theme/zIndex'
 
 import { DataPage } from './DataPage'
 import { LandingPage } from './LandingPage'
@@ -21,7 +22,7 @@ const DetailsBackground = styled.div<{ backgroundImage: string }>`
 `
 
 const DetailsContentContainer = styled.div`
-  z-index: 2;
+  z-index: ${Z_INDEX.hover};
 `
 
 export const NftDetails = ({ asset, collection }: NftDetailsProps) => {

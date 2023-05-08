@@ -31,7 +31,7 @@ export const SwapWrapper = styled.main<{ chainId: number | undefined }>`
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
   padding: 8px;
   box-shadow: ${({ chainId }) => !!chainId && chainId === SupportedChainId.BNB && '0px 40px 120px 0px #f0b90b29'};
-  z-index: ${Z_INDEX.deprecated_content};
+  z-index: ${Z_INDEX.default};
   transition: transform 250ms ease;
 
   &:hover {
