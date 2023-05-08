@@ -15,26 +15,38 @@ function isEthersRequestError(error: Error): error is Error & { requestBody: str
 }
 
 export function beforeSend(event: ErrorEvent, hint: EventHint) {
-  // Since the interface currently uses HashRouter, URLs will have a # before the path.
-  // This leads to issues when we send the URL into Sentry, as the path gets parsed as a "fragment".
-  // Instead, this logic removes the # part of the URL.
-  // See https://romain-clement.net/articles/sentry-url-fragments/#url-fragments
-  if (event.request?.url) {
-    event.request.url = event.request.url.replace('/#', '')
-  }
+  if (event) {
+    // Since the interface currently uses HashRouter, URLs will have a # before the path.
+    // This leads to issues when we send the URL into Sentry, as the path gets parsed as a "fragment".
+    // Instead, this logic removes the # part of the URL.
+    // See https://romain-clement.net/articles/sentry-url-fragments/#url-fragments
+    if (event.request?.url) {
+      event.request.url = event.request.url.replace('/#', '')
+    }
 
+    // Adds the response status of the chunk that failed to load.
+    event.tags = event.tags || {}
+    const error = hint.originalException
+    if (error instanceof Error) {
+      if (error.message.match(/Loading chunk \d+ failed\. \(([a-zA-Z]+): .+\.chunk\.js\)/)) {
+        const asset = error.message.match(/https?:\/\/.+?\.chunk\.js/)?.[0]
+        event.tags.chunkResponseStatus = getChunkResponseStatus(asset)
+      }
+
+      if (error.message.match(/Loading CSS chunk \d+ failed\. \(.+\.chunk\.css\)/)) {
+        const relativePath = error.message.match(/\/static\/css\/.*\.chunk\.css/)?.[0]
+        const asset = `https://app.uniswap.org${relativePath}`
+        event.tags.chunkResponseStatus = getChunkResponseStatus(asset)
+      }
+    }
+  }
   return filterKnownErrors(event, hint)
 }
 
-function shouldFilterChunkError(asset?: string) {
+function getChunkResponseStatus(asset?: string): number | undefined {
   const entries = [...(performance?.getEntriesByType('resource') ?? [])]
   const resource = entries?.find(({ name }) => name === asset)
-  const status = resource?.responseStatus
-
-  // If the status if 499, then we ignore.
-  // If there's no status (meaning the browser doesn't support `responseStatus`) then we also ignore.
-  // These errors are likely also 499 errors, and we can catch any spikes in non-499 chunk errors via other browsers.
-  return !status || status === 499
+  return resource?.responseStatus
 }
 
 /**
@@ -56,20 +68,6 @@ export const filterKnownErrors: Required<ClientOptions>['beforeSend'] = (event: 
 
     // If the error is based on a user rejecting, it should not be considered an exception.
     if (didUserReject(error)) return null
-
-    // This ignores 499 errors, which are caused by Cloudflare when a request is cancelled.
-    // CF claims that some number of these is expected, and that they should be ignored.
-    // See https://groups.google.com/a/uniswap.org/g/cloudflare-eng/c/t3xvAiJFujY.
-    if (error.message.match(/Loading chunk \d+ failed\. \(([a-zA-Z]+): .+\.chunk\.js\)/)) {
-      const asset = error.message.match(/https?:\/\/.+?\.chunk\.js/)?.[0]
-      if (shouldFilterChunkError(asset)) return null
-    }
-
-    if (error.message.match(/Loading CSS chunk \d+ failed\. \(.+\.chunk\.css\)/)) {
-      const relativePath = error.message.match(/\/static\/css\/.*\.chunk\.css/)?.[0]
-      const asset = `https://app.uniswap.org${relativePath}`
-      if (shouldFilterChunkError(asset)) return null
-    }
 
     // This is caused by HTML being returned for a chunk from Cloudflare.
     // Usually, it's the result of a 499 exception right before it, which should be handled.
