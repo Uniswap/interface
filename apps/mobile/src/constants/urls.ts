@@ -48,3 +48,6 @@ export const APP_FEEDBACK_LINK =
   'https://docs.google.com/forms/d/e/1FAIpQLSepzL5aMuSfRhSgw0zDw_gVmc2aeVevfrb1UbOwn6WGJ--46w/viewform'
 
 export const GET_HELP_LINK = `${uniswapUrls.helpUrl}/hc/en-us/categories/11301970439565-Uniswap-Wallet`
+
+export const UNISWAP_HELP_CENTER_WALLET_URL =
+  'https://support.uniswap.org/hc/en-us/categories/11301970439565-Uniswap-Wallet'
