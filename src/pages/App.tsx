@@ -18,7 +18,7 @@ import { flexRowNoWrap } from 'theme/styles'
 import { Z_INDEX } from 'theme/zIndex'
 import { STATSIG_DUMMY_KEY } from 'tracing'
 import { getEnvName } from 'utils/env'
-import { importWithRetry } from 'utils/lazy'
+import { retry } from 'utils/lazy'
 import { getCLS, getFCP, getFID, getLCP, Metric } from 'web-vitals'
 
 import { useAnalyticsReporter } from '../components/analytics'
@@ -46,12 +46,12 @@ import Swap from './Swap'
 import { RedirectPathToSwapOnly } from './Swap/redirects'
 import Tokens from './Tokens'
 
-const TokenDetails = lazy(() => importWithRetry('./TokenDetails'))
-const Vote = lazy(() => importWithRetry('./Vote'))
-const NftExplore = lazy(() => importWithRetry('nft/pages/explore'))
-const Collection = lazy(() => importWithRetry('nft/pages/collection'))
-const Profile = lazy(() => importWithRetry('nft/pages/profile/profile'))
-const Asset = lazy(() => importWithRetry('nft/pages/asset/Asset'))
+const TokenDetails = lazy(retry(() => import('./TokenDetails')))
+const Vote = lazy(retry(() => import('./Vote')))
+const NftExplore = lazy(retry(() => import('nft/pages/explore')))
+const Collection = lazy(retry(() => import('nft/pages/collection')))
+const Profile = lazy(retry(() => import('nft/pages/profile/profile')))
+const Asset = lazy(retry(() => import('nft/pages/asset/Asset')))
 
 const BodyWrapper = styled.div`
   display: flex;
