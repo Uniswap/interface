@@ -25,24 +25,6 @@ exports[`Expand renders correctly 1`] = `
   justify-content: flex-start;
 }
 
-.c4 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 4px;
-}
-
 .c3 {
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
@@ -65,7 +47,7 @@ exports[`Expand renders correctly 1`] = `
   gap: 12px;
 }
 
-.c5 {
+.c4 {
   cursor: pointer;
   -webkit-box-pack: end;
   -webkit-justify-content: flex-end;
@@ -74,7 +56,7 @@ exports[`Expand renders correctly 1`] = `
   width: unset;
 }
 
-.c6 {
+.c5 {
   color: #7780A0;
   -webkit-transform: rotate(0deg);
   -ms-transform: rotate(0deg);
@@ -95,13 +77,13 @@ exports[`Expand renders correctly 1`] = `
       </span>
       <div
         aria-expanded="false"
-        class="c1 c4 c5"
+        class="c1 c2 c4"
       >
         <span>
           Button
         </span>
         <svg
-          class="c6"
+          class="c5"
           fill="none"
           height="24"
           stroke="currentColor"

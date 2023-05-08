@@ -97,6 +97,7 @@ describe('Swap', () => {
 
               // Set deadline to minimum. (1 minute)
               cy.get(getTestSelector('open-settings-dialog-button')).click()
+              cy.get(getTestSelector('transaction-deadline-settings')).click()
               cy.get(getTestSelector('deadline-input')).clear().type(DEADLINE_MINUTES.toString())
               cy.get('body').click('topRight')
               cy.get(getTestSelector('deadline-input')).should('not.exist')

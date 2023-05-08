@@ -56,6 +56,7 @@ export default function TransactionDeadlineSettings() {
 
   return (
     <Expand
+      testId="transaction-deadline-settings"
       header={
         <Row width="auto">
           <ThemedText.BodySecondary>
