@@ -12,6 +12,10 @@
 /src/graphql/**/__generated__
 schema.graphql
 
+# generated ajv schema
+/src/utils/__generated__/*
+!/src/utils/__generated__/.gitkeep 
+
 # dependencies
 /node_modules
 

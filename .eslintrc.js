@@ -4,6 +4,7 @@ require('@uniswap/eslint-config/load')
 
 module.exports = {
   extends: '@uniswap/eslint-config/react',
+  ignorePatterns: ['src/utils/__generated__/'],
   overrides: [
     {
       files: ['**/*'],
