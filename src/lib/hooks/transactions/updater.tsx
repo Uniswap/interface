@@ -4,7 +4,8 @@ import { SupportedChainId } from 'constants/chains'
 import useBlockNumber, { useFastForwardBlockNumber } from 'lib/hooks/useBlockNumber'
 import ms from 'ms.macro'
 import { useCallback, useEffect } from 'react'
-import { retry, RetryableError, RetryOptions } from 'utils/retry'
+
+import { retry, RetryableError, RetryOptions } from './retry'
 
 interface Transaction {
   addedTime: number

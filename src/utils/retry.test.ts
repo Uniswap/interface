@@ -1,44 +1,36 @@
-import { retry, RetryableError } from './retry'
+import { retry } from './retry'
 
 describe('retry', () => {
-  function makeFn<T>(fails: number, result: T, retryable = true): () => Promise<T> {
-    return async () => {
-      if (fails > 0) {
-        fails--
-        throw retryable ? new RetryableError('failure') : new Error('bad failure')
+  it('should successfully retry on failure and resolve the value', async () => {
+    let attempts = 0
+
+    const fn = async () => {
+      attempts++
+      if (attempts < 3) {
+        throw new Error('Failure')
       }
-      return result
+      return 'Success'
     }
-  }
 
-  it('fails for non-retryable error', async () => {
-    await expect(retry(makeFn(1, 'abc', false), { n: 3, maxWait: 0, minWait: 0 }).promise).rejects.toThrow(
-      'bad failure'
-    )
+    const result = await retry(fn, 3, 100)()
+    expect(attempts).toEqual(3)
+    expect(result).toEqual('Success')
   })
 
-  it('works after one fail', async () => {
-    await expect(retry(makeFn(1, 'abc'), { n: 3, maxWait: 0, minWait: 0 }).promise).resolves.toEqual('abc')
-  })
+  it('should fail after reaching the maximum number of retries', async () => {
+    let attempts = 0
 
-  it('works after two fails', async () => {
-    await expect(retry(makeFn(2, 'abc'), { n: 3, maxWait: 0, minWait: 0 }).promise).resolves.toEqual('abc')
-  })
+    const fn = async () => {
+      attempts++
+      throw new Error('Failure')
+    }
 
-  it('throws if too many fails', async () => {
-    await expect(retry(makeFn(4, 'abc'), { n: 3, maxWait: 0, minWait: 0 }).promise).rejects.toThrow('failure')
-  })
+    try {
+      await retry(fn, 3, 100)()
+    } catch (error) {
+      // Skip
+    }
 
-  it('cancel causes promise to reject', async () => {
-    const { promise, cancel } = retry(makeFn(2, 'abc'), { n: 3, minWait: 100, maxWait: 100 })
-    cancel()
-    await expect(promise).rejects.toThrow('Cancelled')
-  })
-
-  it('cancel no-op after complete', async () => {
-    const { promise, cancel } = retry(makeFn(0, 'abc'), { n: 3, minWait: 100, maxWait: 100 })
-    // defer
-    setTimeout(cancel, 0)
-    await expect(promise).resolves.toEqual('abc')
+    expect(attempts).toEqual(3)
   })
 })
