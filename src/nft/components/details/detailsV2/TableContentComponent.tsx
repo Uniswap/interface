@@ -96,7 +96,7 @@ export const HeaderRow = ({ type, is1155 }: { type: TableTabsKeys; is1155?: bool
         </ThemedText.SubHeaderSmall>
       </TableCell>
       {is1155 && (
-        <TableCell>
+        <TableCell $flex={0.5}>
           <ThemedText.SubHeaderSmall color="textSecondary">
             <Trans>Quantity</Trans>
           </ThemedText.SubHeaderSmall>
@@ -140,7 +140,7 @@ export const ContentRow = ({
         </TableCell>
       )}
       {is1155 && (
-        <TableCell>
+        <TableCell $flex={0.5} $textAlign="center">
           <ThemedText.SubHeaderSmall color="textSecondary">{content.quantity}</ThemedText.SubHeaderSmall>
         </TableCell>
       )}
