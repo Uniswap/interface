@@ -62,7 +62,7 @@
   "scripts": {
     "lint": "eslint . --ext ts,tsx",
     "lint:fix": "eslint . --ext ts,tsx --fix",
-    "start": "webpack serve --config webpack.dev.config.js",
+    "start": "TAMAGUI_TARGET=web webpack serve --config webpack.config.js",
     "test": "jest --passWithNoTests",
     "typecheck": "tsc -b"
   }

@@ -9,8 +9,6 @@ const fs = require('fs')
 const { shouldExclude } = require('tamagui-loader')
 const DotenvPlugin = require('dotenv-webpack')
 
-const rootDir = path.join(__dirname, '..')
-
 const NODE_ENV = process.env.NODE_ENV || 'development'
 const EXTENSION_NAME =
   NODE_ENV === 'development' ? '(DEV) Uniswap Wallet' : 'Uniswap Wallet'
@@ -200,13 +198,9 @@ const options = {
   },
   resolve: {
     alias: {
-      // // NOTE(peter): for whatever reason react is being installed in multiple places and breaking tamagui
-      // // this was the best i could do to ensure it pulls the correct version until i figure out why. this is what's supposed to happen anyway
-      // // if you find yourself here, run `ls node_modules/react` and if the folder exists, this stays, if it doesn't, you can safely remove
-      react: path.resolve('../../node_modules/react'),
-      'react-dom': path.resolve('../../node_modules/react-dom'),
       'react-native$': 'react-native-web',
       'react-native-vector-icons$': 'react-native-vector-icons/dist',
+      'src': path.resolve(__dirname, 'src') // absolute imports in apps/web
     },
     // Add support for web-based extensions so we can share code between mobile/extension
     extensions: [

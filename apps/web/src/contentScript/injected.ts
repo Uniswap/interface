@@ -1,11 +1,11 @@
-import { logger } from 'wallet/src/features/logger/logger'
 import {
   BaseDappRequest,
   BaseDappResponse,
   DappRequestType,
   Message,
-} from '../features/dappRequests/dappRequestTypes'
-import { PortName } from '../types'
+} from 'src/features/dappRequests/dappRequestTypes'
+import { PortName } from 'src/types'
+import { logger } from 'wallet/src/features/logger/logger'
 
 /**
  * Content script that is injected into any webpage while our extension is installed.

@@ -1,7 +1,4 @@
-import { logger } from 'wallet/src/features/logger/logger'
-import { InjectedProvider } from './InjectedProvider'
-
-logger.info('Injected Script', '', '')
+import { InjectedProvider } from 'src/contentScript/InjectedProvider'
 
 window.isUniswapExtensionInstalled = true
 const uniswapProvider = new InjectedProvider()

@@ -16,6 +16,7 @@
     }
   ],
   "compilerOptions": {
+    "baseUrl": "./",
     "types": [
       "chrome",
       "jest"

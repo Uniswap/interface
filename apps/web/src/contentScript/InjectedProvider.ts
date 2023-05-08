@@ -482,7 +482,7 @@ export class InjectedProvider extends EventEmitter {
    * @param typedData typed data to sign
    * @returns
    */
-  handleEthSignTypedData = async (address: any, typedData: any) => {
+  handleEthSignTypedData = async (_address: any, typedData: any) => {
     if (!this.publicKey) {
       throw new Error('Wallet not connected')
     }

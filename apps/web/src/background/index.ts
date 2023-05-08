@@ -1,11 +1,11 @@
 import { AnyAction, Dispatch } from 'redux'
-import { isOnboardedSelector } from 'wallet/src/features/wallet/selectors'
 import {
   BaseDappResponse,
   DappRequestType,
-} from '../features/dappRequests/dappRequestTypes'
-import { addRequest } from '../features/dappRequests/saga'
-import { PortName } from '../types/index'
+} from 'src/features/dappRequests/dappRequestTypes'
+import { addRequest } from 'src/features/dappRequests/saga'
+import { PortName } from 'src/types'
+import { isOnboardedSelector } from 'wallet/src/features/wallet/selectors'
 import { initializeStore, WebState } from './store'
 
 // Since we are in a service worker, this is not persistent and this will be
