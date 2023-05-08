@@ -42,6 +42,7 @@ const AssetPage = () => {
   const detailsV2Enabled = useDetailsV2Enabled()
 
   const [asset, collection] = data
+  console.log(asset.sellorders)
 
   if (loading && !detailsV2Enabled) return <AssetDetailsLoading />
   return (

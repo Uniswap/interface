@@ -15,21 +15,21 @@ export function timeUntil(date: Date): string | undefined {
   let interval = seconds / MONTH
   if (interval >= 100) return `99+ ${t`months`}`
   if (interval > 1)
-    return `${interval} ${plural(interval, {
+    return `${Math.floor(interval)} ${plural(interval, {
       one: 'month',
       other: 'months',
     })}`
 
   interval = seconds / WEEK
   if (interval > 1)
-    return `${interval} ${plural(interval, {
+    return `${Math.floor(interval)} ${plural(interval, {
       one: 'week',
       other: 'weeks',
     })}`
 
   interval = seconds / DAY
   if (interval > 1)
-    return `${interval} ${plural(interval, {
+    return `${Math.floor(interval)} ${plural(interval, {
       one: 'day',
       other: 'days',
     })}`
@@ -37,19 +37,19 @@ export function timeUntil(date: Date): string | undefined {
   interval = seconds / HOUR
 
   if (interval > 1)
-    return `${interval} ${plural(interval, {
+    return `${Math.floor(interval)} ${plural(interval, {
       one: 'hour',
       other: 'hours',
     })}`
 
   interval = seconds / MINUTE
   if (interval > 1)
-    return `${interval} ${plural(interval, {
+    return `${Math.floor(interval)} ${plural(interval, {
       one: 'minute',
       other: 'minutes',
     })}`
 
-  return `${interval} ${plural(interval, {
+  return `${Math.floor(interval)} ${plural(interval, {
     one: 'second',
     other: 'seconds',
   })}`

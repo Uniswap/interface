@@ -12,6 +12,7 @@ import { Offer, SellOrder } from 'nft/types'
 import { formatEth, getMarketplaceIcon, timeUntil } from 'nft/utils'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
+import { shortenAddress } from 'utils'
 
 import { TableTabsKeys } from './DataPageTable'
 import { Scrim } from './shared'
@@ -51,6 +52,7 @@ const TableCell = styled.div<{ $flex?: number; $justifyContent?: string; $color?
   flex: ${({ $flex }) => $flex ?? 0};
   justify-content: ${({ $justifyContent }) => $justifyContent};
   color: ${({ $color }) => $color};
+  flex-wrap: nowrap;
 `
 
 const ButtonCell = styled(TableCell)`
@@ -134,7 +136,7 @@ export const ContentRow = ({
         </TableCell>
       )}
       <TableCell $flex={1}>
-        <ThemedText.LabelSmall>{content.maker}</ThemedText.LabelSmall>
+        <ThemedText.LabelSmall>{shortenAddress(content.maker)}</ThemedText.LabelSmall>
       </TableCell>
       <TableCell $flex={1}>
         <ThemedText.LabelSmall>{date ? timeUntil(date) : <Trans>Never</Trans>}</ThemedText.LabelSmall>

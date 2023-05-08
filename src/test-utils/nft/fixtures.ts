@@ -1,4 +1,10 @@
-import { NftActivityType, NftStandard, OrderStatus } from 'graphql/data/__generated__/types-and-hooks'
+import {
+  NftActivityType,
+  NftMarketplace,
+  NftStandard,
+  OrderStatus,
+  OrderType,
+} from 'graphql/data/__generated__/types-and-hooks'
 import { ActivityEvent, CollectionInfoForAsset, GenieAsset, Markets, Offer, SellOrder, WalletAsset } from 'nft/types'
 
 export const TEST_NFT_ASSET: GenieAsset = {
@@ -110,32 +116,35 @@ export const TEST_NFT_COLLECTION_INFO_FOR_ASSET: CollectionInfoForAsset = {
   totalSupply: 10000,
 }
 
-// TODO fill with test data
 export const TEST_SELL_ORDER: SellOrder = {
-  address: '',
-  createdAt: 0,
-  endAt: 0,
-  id: '',
-  maker: '',
-  marketplace: 'opensea',
-  marketplaceUrl: '',
+  address: '0x29d7ebca656665c1a52a92f830e413e394db6b4f',
+  createdAt: 1683561510000,
+  endAt: 16835823490000,
+  id: 'TmZ0T3JkZXI6MHgyOWQ3ZWJjYTY1NjY2NWMxYTUyYTkyZjgzMGU0MTNlMzk0ZGI2YjRmXzY4MTVfMHg3OWVhNDQ5YzMzNzVlZDFhOWQ3ZDk5ZjgwNjgyMDllYTc0OGM2ZDQyXzQ5NzAwMDAwMDAwMDAwMDAwMDAwMF9vcGVuc2VhX01vbiBNYXkgMDggMjAyMyAxNTo1ODozMCBHTVQrMDAwMCAoQ29vcmRpbmF0ZWQgVW5pdmVyc2FsIFRpbWUp',
+  maker: '0x79ea449c3375ed1a9d7d99f8068209ea748c6d42',
+  marketplace: NftMarketplace.Opensea,
+  marketplaceUrl: 'https://opensea.io/assets/0x29d7ebca656665c1a52a92f830e413e394db6b4f/6815',
   price: {
-    currency: '',
-    value: 1,
+    currency: 'ETH',
+    value: 500,
   },
   quantity: 1,
+  startAt: 1683561507000,
+  status: OrderStatus.Valid,
+  type: OrderType.Listing,
+  protocolParameters: {},
 }
 
 export const TEST_OFFER: Offer = {
-  createdAt: 1,
-  endAt: 1,
-  id: '',
-  maker: '',
-  marketplace: 'opensea',
-  marketplaceUrl: '',
+  createdAt: 1683561510000,
+  endAt: 16835823490000,
+  id: 'TmZ0T3JkZXI6MHgyOWQ3ZWJjYTY1NjY2NWMxYTUyYTkyZjgzMGU0MTNlMzk0ZGI2YjRmXzY4MTVfMHg3OWVhNDQ5YzMzNzVlZDFhOWQ3ZDk5ZjgwNjgyMDllYTc0OGM2ZDQyXzQ5NzAwMDAwMDAwMDAwMDAwMDAwMF9vcGVuc2VhX01vbiBNYXkgMDggMjAyMyAxNTo1ODozMCBHTVQrMDAwMCAoQ29vcmRpbmF0ZWQgVW5pdmVyc2FsIFRpbWUp',
+  maker: '0x79ea449c3375ed1a9d7d99f8068209ea748c6d42',
+  marketplace: NftMarketplace.Opensea,
+  marketplaceUrl: 'https://opensea.io/assets/0x29d7ebca656665c1a52a92f830e413e394db6b4f/6815',
   price: {
-    currency: '',
-    value: 1,
+    currency: 'ETH',
+    value: 500,
   },
   quantity: 1,
 }
