@@ -76,6 +76,10 @@ export const filterKnownErrors: Required<ClientOptions>['beforeSend'] = (event: 
     // Therefore, this can be ignored.
     if (error.message.match(/Unexpected token '<'/)) return null
 
+    // Errors coming from a Chrome Extension can be ignored for now. These errors are usually caused by extensions injecting
+    // scripts into the page, which we cannot control.
+    if (error.stack?.match(/chrome-extension:\/\//i)) return null
+
     // Errors coming from OneKey (a desktop wallet) can be ignored for now.
     // These errors are either application-specific, or they will be thrown separately outside of OneKey.
     if (error.stack?.match(/OneKey/i)) return null
