@@ -132,9 +132,11 @@ const userSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
+    // After adding a new property to the state, its value will be `undefined` (instead of the default)
+    // for all existing users with a previous version of the state in their localStorage.
+    // In order to avoid this, we need to set a default value for each new property manually during hydration.
     builder.addCase(updateVersion, (state) => {
-      // slippage isnt being tracked in local storage, reset to default
-      // noinspection SuspiciousTypeOfGuard
+      // If `userSlippageTolerance` is not present or its value is invalid, reset to default
       if (
         typeof state.userSlippageTolerance !== 'number' ||
         !Number.isInteger(state.userSlippageTolerance) ||
@@ -152,8 +154,7 @@ const userSlice = createSlice({
         }
       }
 
-      // deadline isnt being tracked in local storage, reset to default
-      // noinspection SuspiciousTypeOfGuard
+      // If `userDeadline` is not present or its value is invalid, reset to default
       if (
         typeof state.userDeadline !== 'number' ||
         !Number.isInteger(state.userDeadline) ||
@@ -161,6 +162,11 @@ const userSlice = createSlice({
         state.userDeadline > 180 * 60
       ) {
         state.userDeadline = DEFAULT_DEADLINE_FROM_NOW
+      }
+
+      // If `userRouterPreference` is not present, reset to default
+      if (typeof state.userRouterPreference !== 'string') {
+        state.userRouterPreference = RouterPreference.AUTO
       }
 
       state.lastUpdateVersionTimestamp = currentTimestamp()
