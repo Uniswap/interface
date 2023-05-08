@@ -19,15 +19,19 @@ export default function SwapRoute({
   trade: InterfaceTrade<Currency, Currency, TradeType>
   syncing: boolean
 }) {
-  const autoRouterSupported = useAutoRouterSupported()
-  const routes = getTokenPath(trade)
   const { chainId } = useWeb3React()
+  const autoRouterSupported = useAutoRouterSupported()
 
-  const formattedGasPriceString = trade.gasUseEstimateUSD
-    ? trade.gasUseEstimateUSD.toFixed(2) === '0.00'
-      ? '<$0.01'
-      : '$' + trade.gasUseEstimateUSD.toFixed(2)
-    : undefined
+  const routes = getTokenPath(trade)
+
+  const gasPrice =
+    // TODO(WEB-XXXX)
+    // Can `trade.gasUseEstimateUSD` be defined when `chainId` is not in `SUPPORTED_GAS_ESTIMATE_CHAIN_IDS`?
+    trade.gasUseEstimateUSD && chainId && SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId)
+      ? trade.gasUseEstimateUSD.toFixed(2) === '0.00'
+        ? '<$0.01'
+        : '$' + trade.gasUseEstimateUSD.toFixed(2)
+      : undefined
 
   return (
     <Column gap="md">
@@ -53,9 +57,7 @@ export default function SwapRoute({
             </LoadingRows>
           ) : (
             <ThemedText.Caption color="textSecondary">
-              {trade?.gasUseEstimateUSD && chainId && SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId) ? (
-                <Trans>Best price route costs ~{formattedGasPriceString} in gas. </Trans>
-              ) : null}{' '}
+              {gasPrice ? <Trans>Best price route costs ~{gasPrice} in gas.</Trans> : null}{' '}
               <Trans>
                 This route optimizes your total output by considering split routes, multiple hops, and the gas cost of
                 each step.
