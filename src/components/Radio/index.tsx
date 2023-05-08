@@ -1,7 +1,7 @@
 import { RowBetween } from 'components/Row'
 import { darken } from 'polished'
 import { PropsWithChildren } from 'react'
-import styled, { DefaultTheme } from 'styled-components/macro'
+import styled from 'styled-components/macro'
 
 const Button = styled.button<{ isActive?: boolean; activeElement?: boolean }>`
   align-items: center;
@@ -15,27 +15,17 @@ const Button = styled.button<{ isActive?: boolean; activeElement?: boolean }>`
   width: fit-content;
 `
 
-const toggleElementHoverStyle = (hasBgColor: boolean, theme: DefaultTheme, isActive?: boolean) =>
-  hasBgColor
-    ? {
-        opacity: '0.8',
-      }
-    : {
-        background: isActive ? darken(0.05, theme.accentAction) : darken(0.05, theme.deprecated_bg4),
-        color: isActive ? theme.white : theme.textTertiary,
-      }
-
-const ButtonFill = styled.span<{ isActive?: boolean; bgColor?: string }>`
-  animation: 0.1s opacity ease-in;
-  background: ${({ theme, bgColor, isActive }) =>
-    isActive ? bgColor ?? theme.accentAction : bgColor ? theme.deprecated_bg4 : theme.textTertiary};
+const ButtonFill = styled.span<{ isActive?: boolean }>`
+  background: ${({ theme, isActive }) => (isActive ? theme.accentAction : theme.textTertiary)};
   border-radius: 50%;
   :hover {
-    ${({ bgColor, theme, isActive }) => toggleElementHoverStyle(!!bgColor, theme, isActive)}
+    background: ${({ isActive, theme }) =>
+      isActive ? darken(0.05, theme.accentAction) : darken(0.05, theme.deprecated_bg4)};
+    color: ${({ isActive, theme }) => (isActive ? theme.white : theme.textTertiary)};
   }
   width: 10px;
   height: 10px;
-  opacity: ${({ isActive }) => (isActive ? '1' : '0')};
+  opacity: ${({ isActive }) => (isActive ? 1 : 0)};
 `
 
 const Container = styled(RowBetween)`
