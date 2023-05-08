@@ -163,7 +163,12 @@ export function SwapButton({ chainId, onSwapClick }: SwapButtonProps) {
 
   if (isValid && allowance.state === AllowanceState.REQUIRED) {
     return (
-      <ButtonPrimary onClick={updateAllowance} disabled={isAllowancePending || isApprovalLoading} style={{ gap: 14 }}>
+      <ButtonPrimary
+        onClick={updateAllowance}
+        disabled={isAllowancePending || isApprovalLoading}
+        style={{ gap: 14 }}
+        data-testid="swap-approve-button"
+      >
         {isAllowancePending ? (
           <>
             <Loader size="20px" />
