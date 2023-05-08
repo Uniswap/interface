@@ -707,8 +707,12 @@ export function Swap({
             </TraceEvent>
           ) : chainId && chainId !== connectedChainId ? (
             <ButtonPrimary
-              onClick={() => {
-                switchChain(connector, chainId)
+              onClick={async () => {
+                try {
+                  await switchChain(connector, chainId)
+                } catch (error) {
+                  // Ignore error, which keeps the user on the previous chain.
+                }
               }}
             >
               Connect to {getChainInfo(chainId)?.label}
