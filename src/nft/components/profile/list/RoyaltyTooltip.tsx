@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import Column from 'components/Column'
 import Row from 'components/Row'
-import { getMarketplaceFee, getRoyalty } from 'nft/components/profile/list/utils'
+import { getRoyalty } from 'nft/components/profile/list/utils'
 import { ListingMarket, WalletAsset } from 'nft/types'
 import { formatEth, getMarketplaceIcon } from 'nft/utils'
 import styled, { css } from 'styled-components/macro'
@@ -68,7 +68,7 @@ export const RoyaltyTooltip = ({
               <Trans>fee</Trans>
             </ThemedText.Caption>
           </Row>
-          <FeePercent>{getMarketplaceFee(market, asset)}%</FeePercent>
+          <FeePercent>{market.fee}%</FeePercent>
         </FeeWrap>
       ))}
       <FeeWrap>
