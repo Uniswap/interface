@@ -89,7 +89,6 @@ const EmbeddedMediaPlayer = ({ asset, onError }: { asset: GenieAsset; onError: (
         frameBorder={0}
         sandbox="allow-scripts"
         allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-        allowFullScreen
         onError={onError}
       />
     </StyledEmbed>
