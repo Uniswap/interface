@@ -74,7 +74,11 @@ const StyledAudio = styled.audio`
 const AudioPlayer = ({ asset, onError }: { asset: GenieAsset; onError: () => void }) => {
   return (
     <AudioContainer>
-      <StyledImage src={asset.imageUrl} alt={asset.name || asset.collectionName} onError={onError} />
+      <StyledImage
+        src={asset.imageUrl}
+        alt={asset.name ?? asset.collectionName + ' #' + asset.tokenId}
+        onError={onError}
+      />
       <StyledAudio controls src={asset.animationUrl} onError={onError} />
     </AudioContainer>
   )

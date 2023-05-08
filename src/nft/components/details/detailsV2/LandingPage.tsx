@@ -44,9 +44,28 @@ const InfoContainer = styled(ColumnCenter)`
   }
 `
 
-const StyledHeadlineText = styled(ThemedText.HeadlineSmall)``
+const StyledHeadlineText = styled.div`
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 28px;
+  color: ${({ theme }) => theme.textPrimary};
+
+  @media screen and (min-width: ${BREAKPOINTS.sm}px) {
+    line-height: 44px;
+    font-size: 36px;
+  }
+`
 const StyledSubheaderText = styled(ThemedText.SubHeaderSmall)`
+  font-weight: 500;
+  font-size: 14px;
   line-height: 20px;
+  text-align: center;
+  color: ${({ theme }) => theme.textSecondary};
+
+  @media screen and (min-width: ${BREAKPOINTS.sm}px) {
+    line-height: 24px;
+    font-size: 16px;
+  }
 `
 
 const InfoDetailsContainer = styled(Column)`
