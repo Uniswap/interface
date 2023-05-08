@@ -1,4 +1,5 @@
 import { Trans } from '@lingui/macro'
+import Row from 'components/Row'
 import useAutoRouterSupported from 'hooks/useAutoRouterSupported'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
@@ -39,20 +40,24 @@ const StyledAutoRouterLabel = styled(ThemedText.DeprecatedBlack)`
   }
 `
 
-export function AutoRouterLogo() {
+export default function RouterLabel() {
   const autoRouterSupported = useAutoRouterSupported()
 
-  return autoRouterSupported ? <StyledAutoRouterIcon /> : <StyledStaticRouterIcon />
-}
+  if (autoRouterSupported) {
+    return (
+      <Row gap="6px" width="auto">
+        <StyledAutoRouterIcon />
+        <StyledAutoRouterLabel fontSize={14}>Auto Router</StyledAutoRouterLabel>
+      </Row>
+    )
+  }
 
-export function AutoRouterLabel() {
-  const autoRouterSupported = useAutoRouterSupported()
-
-  return autoRouterSupported ? (
-    <StyledAutoRouterLabel fontSize={14}>Auto Router</StyledAutoRouterLabel>
-  ) : (
-    <ThemedText.DeprecatedBlack fontSize={14}>
-      <Trans>Trade Route</Trans>
-    </ThemedText.DeprecatedBlack>
+  return (
+    <Row gap="6px" width="auto">
+      <StyledStaticRouterIcon />
+      <ThemedText.DeprecatedBlack fontSize={14}>
+        <Trans>Trade Route</Trans>
+      </ThemedText.DeprecatedBlack>
+    </Row>
   )
 }

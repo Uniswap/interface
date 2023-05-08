@@ -5,10 +5,24 @@ import noop from 'utils/noop'
 
 import Popover, { PopoverProps } from '../Popover'
 
-export const TooltipContainer = styled.div`
-  max-width: 256px;
+export enum TooltipSize {
+  Small = '256px',
+  Large = '400px',
+}
+
+const getPaddingForSize = (size: TooltipSize) => {
+  switch (size) {
+    case TooltipSize.Small:
+      return '12px'
+    case TooltipSize.Large:
+      return '16px 20px'
+  }
+}
+
+const TooltipContainer = styled.div<{ size: TooltipSize }>`
+  max-width: ${({ size }) => size};
   cursor: default;
-  padding: 0.6rem 1rem;
+  padding: ${({ size }) => getPaddingForSize(size)};
   pointer-events: auto;
 
   color: ${({ theme }) => theme.textPrimary};
@@ -27,26 +41,17 @@ interface TooltipProps extends Omit<PopoverProps, 'content'> {
   text: ReactNode
   open?: () => void
   close?: () => void
-  disableHover?: boolean // disable the hover and content display
+  size?: TooltipSize
+  disabled?: boolean
   timeout?: number
 }
 
-interface TooltipContentProps extends Omit<PopoverProps, 'content'> {
-  content: ReactNode
-  onOpen?: () => void
-  open?: () => void
-  close?: () => void
-  // whether to wrap the content in a `TooltipContainer`
-  wrap?: boolean
-  disableHover?: boolean // disable the hover and content display
-}
-
-export default function Tooltip({ text, open, close, disableHover, ...rest }: TooltipProps) {
+export default function Tooltip({ text, open, close, disabled, size = TooltipSize.Small, ...rest }: TooltipProps) {
   return (
     <Popover
       content={
         text && (
-          <TooltipContainer onMouseEnter={disableHover ? noop : open} onMouseLeave={disableHover ? noop : close}>
+          <TooltipContainer size={size} onMouseEnter={disabled ? noop : open} onMouseLeave={disabled ? noop : close}>
             {text}
           </TooltipContainer>
         )
@@ -56,25 +61,8 @@ export default function Tooltip({ text, open, close, disableHover, ...rest }: To
   )
 }
 
-function TooltipContent({ content, wrap = false, open, close, disableHover, ...rest }: TooltipContentProps) {
-  return (
-    <Popover
-      content={
-        wrap ? (
-          <TooltipContainer onMouseEnter={disableHover ? noop : open} onMouseLeave={disableHover ? noop : close}>
-            {content}
-          </TooltipContainer>
-        ) : (
-          content
-        )
-      }
-      {...rest}
-    />
-  )
-}
-
 /** Standard text tooltip. */
-export function MouseoverTooltip({ text, disableHover, children, timeout, ...rest }: Omit<TooltipProps, 'show'>) {
+export function MouseoverTooltip({ text, disabled, children, timeout, ...rest }: Omit<TooltipProps, 'show'>) {
   const [show, setShow] = useState(false)
   const open = () => text && setShow(true)
   const close = () => setShow(false)
@@ -93,49 +81,10 @@ export function MouseoverTooltip({ text, disableHover, children, timeout, ...res
   }, [timeout, show])
 
   return (
-    <Tooltip
-      {...rest}
-      open={open}
-      close={close}
-      disableHover={disableHover}
-      show={show}
-      text={disableHover ? null : text}
-    >
-      <div onMouseEnter={disableHover ? noop : open} onMouseLeave={disableHover || timeout ? noop : close}>
+    <Tooltip {...rest} open={open} close={close} disabled={disabled} show={show} text={disabled ? null : text}>
+      <div onMouseEnter={disabled ? noop : open} onMouseLeave={disabled || timeout ? noop : close}>
         {children}
       </div>
     </Tooltip>
-  )
-}
-
-/** Tooltip that displays custom content. */
-export function MouseoverTooltipContent({
-  content,
-  children,
-  onOpen: openCallback = undefined,
-  disableHover,
-  ...rest
-}: Omit<TooltipContentProps, 'show'>) {
-  const [show, setShow] = useState(false)
-  const open = () => {
-    setShow(true)
-    openCallback?.()
-  }
-  const close = () => {
-    setShow(false)
-  }
-
-  return (
-    <TooltipContent
-      {...rest}
-      open={open}
-      close={close}
-      show={!disableHover && show}
-      content={disableHover ? null : content}
-    >
-      <div onMouseEnter={open} onMouseLeave={close}>
-        {children}
-      </div>
-    </TooltipContent>
   )
 }

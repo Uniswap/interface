@@ -13,18 +13,19 @@ import { Separator, ThemedText } from '../../theme'
 import { computeRealizedPriceImpact } from '../../utils/prices'
 import { AutoColumn } from '../Column'
 import { RowBetween, RowFixed } from '../Row'
-import { MouseoverTooltip } from '../Tooltip'
+import { MouseoverTooltip, TooltipSize } from '../Tooltip'
 import FormattedPriceImpact from './FormattedPriceImpact'
+import RouterLabel from './RouterLabel'
+import SwapRoute from './SwapRoute'
 
 const StyledCard = styled(Card)`
   padding: 0;
 `
 
 interface AdvancedSwapDetailsProps {
-  trade?: InterfaceTrade<Currency, Currency, TradeType>
+  trade: InterfaceTrade<Currency, Currency, TradeType>
   allowedSlippage: Percent
   syncing?: boolean
-  hideInfoTooltips?: boolean
 }
 
 function TextWithLoadingPlaceholder({
@@ -45,24 +46,19 @@ function TextWithLoadingPlaceholder({
   )
 }
 
-export function AdvancedSwapDetails({
-  trade,
-  allowedSlippage,
-  syncing = false,
-  hideInfoTooltips = false,
-}: AdvancedSwapDetailsProps) {
+export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }: AdvancedSwapDetailsProps) {
   const theme = useTheme()
   const { chainId } = useWeb3React()
   const nativeCurrency = useNativeCurrency(chainId)
 
   const { expectedOutputAmount, priceImpact } = useMemo(() => {
     return {
-      expectedOutputAmount: trade?.outputAmount,
-      priceImpact: trade ? computeRealizedPriceImpact(trade) : undefined,
+      expectedOutputAmount: trade.outputAmount,
+      priceImpact: computeRealizedPriceImpact(trade),
     }
   }, [trade])
 
-  return !trade ? null : (
+  return (
     <StyledCard>
       <AutoColumn gap="sm">
         <RowBetween>
@@ -74,7 +70,6 @@ export function AdvancedSwapDetails({
                   market price changes while your transaction is pending.
                 </Trans>
               }
-              disableHover={hideInfoTooltips}
             >
               <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
                 <Trans>Expected Output</Trans>
@@ -91,10 +86,7 @@ export function AdvancedSwapDetails({
         </RowBetween>
         <RowBetween>
           <RowFixed>
-            <MouseoverTooltip
-              text={<Trans>The impact your trade has on the market price of this pool.</Trans>}
-              disableHover={hideInfoTooltips}
-            >
+            <MouseoverTooltip text={<Trans>The impact your trade has on the market price of this pool.</Trans>}>
               <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
                 <Trans>Price Impact</Trans>
               </ThemedText.DeprecatedSubHeader>
@@ -116,7 +108,6 @@ export function AdvancedSwapDetails({
                   will revert.
                 </Trans>
               }
-              disableHover={hideInfoTooltips}
             >
               <ThemedText.DeprecatedSubHeader color={theme.textTertiary}>
                 {trade.tradeType === TradeType.EXACT_INPUT ? (
@@ -136,7 +127,7 @@ export function AdvancedSwapDetails({
             </ThemedText.DeprecatedBlack>
           </TextWithLoadingPlaceholder>
         </RowBetween>
-        {!trade?.gasUseEstimateUSD || !chainId || !SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId) ? null : (
+        {!trade.gasUseEstimateUSD || !chainId || !SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId) ? null : (
           <RowBetween>
             <MouseoverTooltip
               text={
@@ -144,7 +135,6 @@ export function AdvancedSwapDetails({
                   The fee paid to miners who process your transaction. This must be paid in {nativeCurrency.symbol}.
                 </Trans>
               }
-              disableHover={hideInfoTooltips}
             >
               <ThemedText.DeprecatedSubHeader color={theme.textTertiary}>
                 <Trans>Network Fee</Trans>
@@ -157,6 +147,18 @@ export function AdvancedSwapDetails({
             </TextWithLoadingPlaceholder>
           </RowBetween>
         )}
+        <Separator />
+        <MouseoverTooltip
+          size={TooltipSize.Large}
+          text={<SwapRoute data-testid="swap-route-info" trade={trade} syncing={syncing} />}
+        >
+          <RowBetween>
+            <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
+              <Trans>Order routing</Trans>
+            </ThemedText.DeprecatedSubHeader>
+            <RouterLabel />
+          </RowBetween>
+        </MouseoverTooltip>
       </AutoColumn>
     </StyledCard>
   )

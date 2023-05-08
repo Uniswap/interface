@@ -1,4 +1,3 @@
-import { TooltipContainer } from 'components/Tooltip'
 import { SupportedChainId } from 'constants/chains'
 import { transparentize } from 'polished'
 import { ReactNode } from 'react'
@@ -150,16 +149,4 @@ export const SwapShowAcceptChanges = styled(AutoColumn)`
   padding: 0.5rem;
   border-radius: 12px;
   margin-top: 8px;
-`
-
-export const ResponsiveTooltipContainer = styled(TooltipContainer)<{ origin?: string; width?: string }>`
-  background-color: ${({ theme }) => theme.backgroundSurface};
-  border: 1px solid ${({ theme }) => theme.backgroundInteractive};
-  padding: 1rem;
-  width: ${({ width }) => width ?? 'auto'};
-
-  ${({ theme, origin }) => theme.deprecated_mediaWidth.deprecated_upToExtraSmall`
-    transform: scale(0.8);
-    transform-origin: ${origin ?? 'top left'};
-  `}
 `

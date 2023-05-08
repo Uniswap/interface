@@ -15,12 +15,12 @@ import { ReactNode } from 'react'
 import { Text } from 'rebass'
 import { InterfaceTrade } from 'state/routing/types'
 import { useClientSideRouter, useUserSlippageTolerance } from 'state/user/hooks'
+import getTokenPath, { RoutingDiagramEntry } from 'utils/getTokenPath'
 import { computeRealizedPriceImpact } from 'utils/prices'
 
 import { ButtonError } from '../Button'
 import { AutoRow } from '../Row'
 import { SwapCallbackError } from './styleds'
-import { getTokenPath, RoutingDiagramEntry } from './SwapRoute'
 
 interface AnalyticsEventProps {
   trade: InterfaceTrade<Currency, Currency, TradeType>

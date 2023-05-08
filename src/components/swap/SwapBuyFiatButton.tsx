@@ -4,7 +4,7 @@ import { BrowserEvent, InterfaceElementName, SharedEventName } from '@uniswap/an
 import { useWeb3React } from '@web3-react/core'
 import { useAccountDrawer } from 'components/AccountDrawer'
 import { ButtonText } from 'components/Button'
-import { MouseoverTooltipContent } from 'components/Tooltip'
+import { MouseoverTooltip } from 'components/Tooltip'
 import { useCallback, useEffect, useState } from 'react'
 import { useBuyFiatFlowCompleted } from 'state/user/hooks'
 import styled from 'styled-components/macro'
@@ -109,9 +109,8 @@ export default function SwapBuyFiatButton() {
     !fiatOnrampAvailabilityChecked || (fiatOnrampAvailabilityChecked && fiatOnrampAvailable)
 
   return (
-    <MouseoverTooltipContent
-      wrap
-      content={
+    <MouseoverTooltip
+      text={
         <div data-testid="fiat-on-ramp-unavailable-tooltip">
           <Trans>Crypto purchases are not available in your region. </Trans>
           <TraceEvent
@@ -126,7 +125,7 @@ export default function SwapBuyFiatButton() {
         </div>
       }
       placement="bottom"
-      disableHover={fiatOnRampsUnavailableTooltipDisabled}
+      disabled={fiatOnRampsUnavailableTooltipDisabled}
     >
       <TraceEvent
         events={[BrowserEvent.onClick]}
@@ -139,6 +138,6 @@ export default function SwapBuyFiatButton() {
           {!buyFiatFlowCompleted && <Dot data-testid="buy-fiat-flow-incomplete-indicator" />}
         </StyledTextButton>
       </TraceEvent>
-    </MouseoverTooltipContent>
+    </MouseoverTooltip>
   )
 }

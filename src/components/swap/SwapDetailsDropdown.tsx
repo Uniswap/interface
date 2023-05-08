@@ -16,8 +16,7 @@ import styled, { keyframes, useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
 import { AdvancedSwapDetails } from './AdvancedSwapDetails'
-import GasEstimateBadge from './GasEstimateBadge'
-import SwapRoute from './SwapRoute'
+import GasEstimateTooltip from './GasEstimateTooltip'
 import TradePrice from './TradePrice'
 
 const Wrapper = styled(Row)`
@@ -147,12 +146,7 @@ export default function SwapDetailsDropdown({ trade, syncing, loading, allowedSl
               showDetails ||
               !chainId ||
               !SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId) ? null : (
-                <GasEstimateBadge
-                  trade={trade}
-                  loading={syncing || loading}
-                  showRoute={!showDetails}
-                  disableHover={showDetails}
-                />
+                <GasEstimateTooltip trade={trade} loading={syncing || loading} disabled={showDetails} />
               )}
               <RotatingArrow
                 stroke={trade ? theme.textTertiary : theme.deprecated_bg3}
@@ -168,7 +162,6 @@ export default function SwapDetailsDropdown({ trade, syncing, loading, allowedSl
                 <AdvancedSwapDetails trade={trade} allowedSlippage={allowedSlippage} syncing={syncing} />
               </StyledCard>
             ) : null}
-            {trade ? <SwapRoute data-testid="swap-route-info" trade={trade} syncing={syncing} /> : null}
           </AutoColumn>
         </AnimatedDropdown>
       </AutoColumn>
