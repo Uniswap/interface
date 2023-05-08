@@ -6,9 +6,10 @@ import useAutoSlippageTolerance from 'hooks/useAutoSlippageTolerance'
 import { useBestTrade } from 'hooks/useBestTrade'
 import { useIsSwapUnsupported } from 'hooks/useIsSwapUnsupported'
 import { useUSDPrice } from 'hooks/useUSDPrice'
+import { ENS_NAME_REGEX } from 'lib/utils/parseENSAddress'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { ParsedQs } from 'qs'
-import { ReactNode, useCallback, useEffect, useMemo } from 'react'
+import { createContext, PropsWithChildren, ReactNode, useCallback, useEffect, useMemo } from 'react'
 import { AnyAction } from 'redux'
 import { useAppDispatch } from 'state/hooks'
 import { InterfaceTrade, TradeState } from 'state/routing/types'
@@ -94,6 +95,7 @@ interface DerivedSwapInfo {
   swapFiatValues: { amountIn: number | undefined; amountOut: number | undefined }
   routeIsLoading: boolean
   routeIsSyncing: boolean
+  swapState: SwapState
   fiatValueTradeInput: {
     data: number | undefined
     isLoading: boolean
@@ -104,8 +106,63 @@ interface DerivedSwapInfo {
   }
 }
 
+export const DerivedSwapInfoContext = createContext<DerivedSwapInfo>({
+  currencies: {},
+  currencyBalances: {},
+  parsedAmount: undefined,
+  inputError: undefined,
+  trade: {
+    trade: undefined,
+    state: TradeState.LOADING,
+  },
+  allowedSlippage: new Percent(0, 100),
+  swapIsUnsupported: false,
+  stablecoinValueDifference: undefined,
+  priceImpactTooHigh: false,
+  showPriceImpactWarning: false,
+  largerPriceImpact: undefined,
+  priceImpactSeverity: undefined,
+  swapFiatValues: { amountIn: undefined, amountOut: undefined },
+  routeIsLoading: false,
+  routeIsSyncing: false,
+  swapState: {
+    independentField: Field.INPUT,
+    typedValue: '',
+    [Field.INPUT]: {
+      currencyId: undefined,
+    },
+    [Field.OUTPUT]: {
+      currencyId: undefined,
+    },
+    recipient: null,
+  },
+  fiatValueTradeInput: {
+    data: undefined,
+    isLoading: false,
+  },
+  fiatValueTradeOutput: {
+    data: undefined,
+    isLoading: false,
+  },
+})
+
+export const DerivedSwapInfoContextProvider = ({
+  state,
+  chainId,
+  children,
+}: PropsWithChildren<{
+  state: SwapState
+  chainId: SupportedChainId | undefined
+}>) => {
+  return (
+    <DerivedSwapInfoContext.Provider value={useDerivedSwapInfo(state, chainId)}>
+      {children}
+    </DerivedSwapInfoContext.Provider>
+  )
+}
+
 // from the current swap inputs, compute the best trade and return it.
-export function useDerivedSwapInfo(state: SwapState, chainId: SupportedChainId | undefined): DerivedSwapInfo {
+function useDerivedSwapInfo(state: SwapState, chainId: SupportedChainId | undefined): DerivedSwapInfo {
   const { account } = useWeb3React()
   const isExpertMode = useExpertModeManager()
 
@@ -241,6 +298,7 @@ export function useDerivedSwapInfo(state: SwapState, chainId: SupportedChainId |
       fiatValueTradeInput,
       fiatValueTradeOutput,
       priceImpactSeverity,
+      swapState: state,
     }),
     [
       allowedSlippage,
@@ -260,6 +318,7 @@ export function useDerivedSwapInfo(state: SwapState, chainId: SupportedChainId |
       fiatValueTradeInput,
       fiatValueTradeOutput,
       priceImpactSeverity,
+      state,
     ]
   )
 }
@@ -283,7 +342,6 @@ function parseIndependentFieldURLParameter(urlParam: any): Field {
   return typeof urlParam === 'string' && urlParam.toLowerCase() === 'output' ? Field.OUTPUT : Field.INPUT
 }
 
-const ENS_NAME_REGEX = /^[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&/=]*)?$/
 const ADDRESS_REGEX = /^0x[a-fA-F0-9]{40}$/
 function validatedRecipient(recipient: any): string | null {
   if (typeof recipient !== 'string') return null

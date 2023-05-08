@@ -23,9 +23,10 @@ import usePrevious from 'hooks/usePrevious'
 import { useSwapCallback } from 'hooks/useSwapCallback'
 import JSBI from 'jsbi'
 import { formatSwapQuoteReceivedEventProperties } from 'lib/utils/analytics'
-import { useCallback, useEffect, useMemo, useReducer, useState } from 'react'
+import { Dispatch, useCallback, useContext, useEffect, useMemo, useReducer, useState } from 'react'
 import { ArrowDown } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
+import { AnyAction } from 'redux'
 import styled, { useTheme } from 'styled-components/macro'
 import { currencyAmountToPreciseFloat, formatTransactionAmount } from 'utils/formatNumbers'
 
@@ -42,7 +43,12 @@ import { getSwapCurrencyId, TOKEN_SHORTHANDS } from '../../constants/tokens'
 import { useCurrency, useDefaultActiveTokens } from '../../hooks/Tokens'
 import useWrapCallback, { WrapType } from '../../hooks/useWrapCallback'
 import { Field, replaceSwapState } from '../../state/swap/actions'
-import { useDefaultsFromURLSearch, useDerivedSwapInfo, useSwapActionHandlers } from '../../state/swap/hooks'
+import {
+  DerivedSwapInfoContext,
+  DerivedSwapInfoContextProvider,
+  useDefaultsFromURLSearch,
+  useSwapActionHandlers,
+} from '../../state/swap/hooks'
 import swapReducer, { initialState as initialSwapState, SwapState } from '../../state/swap/reducer'
 import { useExpertModeManager } from '../../state/user/hooks'
 import { LinkStyledButton } from '../../theme'
@@ -131,6 +137,14 @@ export default function SwapPage({ className }: { className?: string }) {
   )
 }
 
+interface SwapProps {
+  className?: string
+  prefilledState?: Partial<SwapState>
+  chainId: SupportedChainId | undefined
+  onCurrencyChange?: (selected: Pick<SwapState, Field.INPUT | Field.OUTPUT>) => void
+  disableTokenInputs?: boolean
+}
+
 /**
  * The swap component displays the swap interface, manages state for the swap, and triggers onchain swaps.
  *
@@ -138,19 +152,24 @@ export default function SwapPage({ className }: { className?: string }) {
  * However if this component is being used in a context that displays information from a different, unconnected
  * chain (e.g. the TDP), then chainId should refer to the unconnected chain.
  */
-export function Swap({
-  className,
-  prefilledState = {},
+export function Swap(props: SwapProps) {
+  const [state, dispatch] = useReducer(swapReducer, { ...initialSwapState, ...props.prefilledState })
+
+  return (
+    <DerivedSwapInfoContextProvider state={state} chainId={props.chainId}>
+      <SwapInner {...props} dispatch={dispatch} />
+    </DerivedSwapInfoContextProvider>
+  )
+}
+
+function SwapInner({
   chainId,
+  className,
+  prefilledState,
+  disableTokenInputs,
   onCurrencyChange,
-  disableTokenInputs = false,
-}: {
-  className?: string
-  prefilledState?: Partial<SwapState>
-  chainId: SupportedChainId | undefined
-  onCurrencyChange?: (selected: Pick<SwapState, Field.INPUT | Field.OUTPUT>) => void
-  disableTokenInputs?: boolean
-}) {
+  dispatch,
+}: SwapProps & { dispatch: Dispatch<AnyAction> }) {
   const { account, chainId: connectedChainId } = useWeb3React()
   const [newSwapQuoteNeedsLogging, setNewSwapQuoteNeedsLogging] = useState(true)
   const [fetchingSwapQuoteStartTime, setFetchingSwapQuoteStartTime] = useState<Date | undefined>()
@@ -202,9 +221,6 @@ export function Swap({
 
   // for expert mode
   const [isExpertMode] = useExpertModeManager()
-  // swap state
-  const [state, dispatch] = useReducer(swapReducer, { ...initialSwapState, ...prefilledState })
-  const { typedValue, recipient, independentField } = state
 
   const previousConnectedChainId = usePrevious(connectedChainId)
   const previousPrefilledState = usePrevious(prefilledState)
@@ -228,7 +244,7 @@ export function Swap({
         })
       )
     }
-  }, [connectedChainId, prefilledState, previousConnectedChainId, previousPrefilledState])
+  }, [connectedChainId, dispatch, prefilledState, previousConnectedChainId, previousPrefilledState])
 
   const {
     trade: { trade },
@@ -244,7 +260,9 @@ export function Swap({
     routeIsSyncing,
     fiatValueTradeInput,
     fiatValueTradeOutput,
-  } = useDerivedSwapInfo(state, chainId)
+    swapState,
+  } = useContext(DerivedSwapInfoContext)
+  const { recipient, typedValue, independentField } = swapState
 
   const { wrapType } = useWrapCallback(currencies[Field.INPUT], currencies[Field.OUTPUT], typedValue)
   const showWrap: boolean = wrapType !== WrapType.NOT_APPLICABLE
@@ -417,10 +435,10 @@ export function Swap({
         [Field.INPUT]: {
           currencyId: getSwapCurrencyId(inputCurrency),
         },
-        [Field.OUTPUT]: state[Field.OUTPUT],
+        [Field.OUTPUT]: swapState[Field.OUTPUT],
       })
     },
-    [onCurrencyChange, onCurrencySelection, state]
+    [onCurrencyChange, onCurrencySelection, swapState]
   )
 
   const handleMaxInput = useCallback(() => {
@@ -435,13 +453,13 @@ export function Swap({
     (outputCurrency: Currency) => {
       onCurrencySelection(Field.OUTPUT, outputCurrency)
       onCurrencyChange?.({
-        [Field.INPUT]: state[Field.INPUT],
+        [Field.INPUT]: swapState[Field.INPUT],
         [Field.OUTPUT]: {
           currencyId: getSwapCurrencyId(outputCurrency),
         },
       })
     },
-    [onCurrencyChange, onCurrencySelection, state]
+    [onCurrencyChange, onCurrencySelection, swapState]
   )
 
   // Handle time based logging events and event properties.
@@ -605,7 +623,6 @@ export function Swap({
         {showPriceImpactWarning && largerPriceImpact && <PriceImpactWarning priceImpact={largerPriceImpact} />}
         <div>
           <SwapButton
-            state={state}
             chainId={chainId}
             onSwapClick={() => {
               if (isExpertMode) {

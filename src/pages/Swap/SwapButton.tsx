@@ -13,11 +13,10 @@ import { isSupportedChain, SupportedChainId } from 'constants/chains'
 import usePermit2Allowance, { AllowanceState } from 'hooks/usePermit2Allowance'
 import useWrapCallback, { WrapType } from 'hooks/useWrapCallback'
 import JSBI from 'jsbi'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useContext, useMemo, useState } from 'react'
 import { Info, Loader } from 'react-feather'
 import { TradeState } from 'state/routing/types'
-import { useDerivedSwapInfo } from 'state/swap/hooks'
-import { SwapState } from 'state/swap/reducer'
+import { DerivedSwapInfoContext } from 'state/swap/hooks'
 import { ThemedText } from 'theme'
 import invariant from 'tiny-invariant'
 import { getIsValidSwapQuote } from 'utils/getIsValidSwapQuote'
@@ -27,12 +26,11 @@ import { Field } from '../../state/swap/actions'
 import { WrapButton } from './WrapButton'
 
 interface SwapButtonProps {
-  state: SwapState
   chainId: SupportedChainId | undefined
   onSwapClick: () => void
 }
 
-export function SwapButton({ state, chainId, onSwapClick }: SwapButtonProps) {
+export function SwapButton({ chainId, onSwapClick }: SwapButtonProps) {
   const trace = useTrace()
   const { account, chainId: connectedChainId, connector } = useWeb3React()
   const toggleWalletDrawer = useToggleAccountDrawer()
@@ -46,13 +44,14 @@ export function SwapButton({ state, chainId, onSwapClick }: SwapButtonProps) {
     swapIsUnsupported,
     priceImpactTooHigh,
     priceImpactSeverity,
-  } = useDerivedSwapInfo(state, chainId)
+    swapState,
+  } = useContext(DerivedSwapInfoContext)
 
   const {
     wrapType,
     inputError: wrapInputError,
     execute: onWrap,
-  } = useWrapCallback(currencies[Field.INPUT], currencies[Field.OUTPUT], state.typedValue)
+  } = useWrapCallback(currencies[Field.INPUT], currencies[Field.OUTPUT], swapState.typedValue)
 
   const showWrap: boolean = wrapType !== WrapType.NOT_APPLICABLE
   const parsedAmounts = useMemo(
@@ -63,10 +62,10 @@ export function SwapButton({ state, chainId, onSwapClick }: SwapButtonProps) {
             [Field.OUTPUT]: parsedAmount,
           }
         : {
-            [Field.INPUT]: state.independentField === Field.INPUT ? parsedAmount : trade?.inputAmount,
-            [Field.OUTPUT]: state.independentField === Field.OUTPUT ? parsedAmount : trade?.outputAmount,
+            [Field.INPUT]: swapState.independentField === Field.INPUT ? parsedAmount : trade?.inputAmount,
+            [Field.OUTPUT]: swapState.independentField === Field.OUTPUT ? parsedAmount : trade?.outputAmount,
           },
-    [state.independentField, parsedAmount, showWrap, trade]
+    [swapState.independentField, parsedAmount, showWrap, trade]
   )
 
   const maximumAmountIn = useMemo(() => {
@@ -108,7 +107,7 @@ export function SwapButton({ state, chainId, onSwapClick }: SwapButtonProps) {
   const userHasSpecifiedInputOutput = Boolean(
     currencies[Field.INPUT] &&
       currencies[Field.OUTPUT] &&
-      parsedAmounts[state.independentField]?.greaterThan(JSBI.BigInt(0))
+      parsedAmounts[swapState.independentField]?.greaterThan(JSBI.BigInt(0))
   )
 
   if (swapIsUnsupported) {
