@@ -50,7 +50,7 @@ export function ActivityRow({
         }
         title={<ThemedText.SubHeader>{title}</ThemedText.SubHeader>}
         descriptor={
-          <ActivityRowDescriptor color="textSecondary">
+          <ActivityRowDescriptor color="textSecondary" data-testid="mini-portfolio-activity-descriptor">
             {descriptor}
             {ENSName ?? otherAccount}
           </ActivityRowDescriptor>

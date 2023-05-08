@@ -100,6 +100,7 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
           as="button"
           gap="8"
           className={styles.ChainSelector}
+          data-testid="chain-selector-button"
           background={isOpen ? 'accentActiveSoft' : 'none'}
           onClick={() => setIsOpen(!isOpen)}
         >

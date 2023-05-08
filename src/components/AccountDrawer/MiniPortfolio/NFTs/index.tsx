@@ -50,7 +50,7 @@ export default function NFTs({ account }: { account: string }) {
       style={{ overflow: 'unset' }}
       scrollableTarget="wallet-dropdown-scroll-wrapper"
     >
-      <AssetsContainer>
+      <AssetsContainer data-testid="mini-portfolio-nfts-container">
         {walletAssets?.length
           ? walletAssets.map((asset, index) => {
               return (
