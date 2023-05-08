@@ -3,7 +3,7 @@ import Row from 'components/Row'
 import { VerifiedIcon } from 'nft/components/icons'
 import { CollectionInfoForAsset, GenieAsset } from 'nft/types'
 import styled from 'styled-components/macro'
-import { BREAKPOINTS, ThemedText } from 'theme'
+import { BREAKPOINTS } from 'theme'
 
 import { MediaRenderer } from './MediaRenderer'
 
@@ -48,6 +48,7 @@ const StyledHeadlineText = styled.div`
   font-weight: 600;
   font-size: 20px;
   line-height: 28px;
+  text-align: center;
   color: ${({ theme }) => theme.textPrimary};
 
   @media screen and (min-width: ${BREAKPOINTS.sm}px) {
@@ -55,7 +56,7 @@ const StyledHeadlineText = styled.div`
     font-size: 36px;
   }
 `
-const StyledSubheaderText = styled(ThemedText.SubHeaderSmall)`
+const StyledSubheaderText = styled.div`
   font-weight: 500;
   font-size: 14px;
   line-height: 20px;
