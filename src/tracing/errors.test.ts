@@ -31,7 +31,7 @@ describe('beforeSend', () => {
       expect((beforeSend(ERROR, { originalException }) as Event).tags).toBeUndefined()
     })
 
-    it('filters out error when performance is undefined', () => {
+    it('handles when performance is undefined', () => {
       window.performance = undefined as any
       const originalException = new Error('Loading CSS chunk 12 failed. (./static/css/12.d5b3cfe3.chunk.css)')
       expect((beforeSend(ERROR, { originalException }) as Event).tags).toBeUndefined()
