@@ -148,17 +148,17 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
           </RowBetween>
         )}
         <Separator />
-        <MouseoverTooltip
-          size={TooltipSize.Large}
-          text={<SwapRoute data-testid="swap-route-info" trade={trade} syncing={syncing} />}
-        >
-          <RowBetween>
-            <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
-              <Trans>Order routing</Trans>
-            </ThemedText.DeprecatedSubHeader>
+        <RowBetween>
+          <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
+            <Trans>Order routing</Trans>
+          </ThemedText.DeprecatedSubHeader>
+          <MouseoverTooltip
+            size={TooltipSize.Large}
+            text={<SwapRoute data-testid="swap-route-info" trade={trade} syncing={syncing} />}
+          >
             <RouterLabel />
-          </RowBetween>
-        </MouseoverTooltip>
+          </MouseoverTooltip>
+        </RowBetween>
       </AutoColumn>
     </StyledCard>
   )
