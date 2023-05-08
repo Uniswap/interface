@@ -20,6 +20,8 @@ if (typeof global.TextEncoder === 'undefined') {
 
 global.ResizeObserver = ResizeObserver
 
+global.origin = 'https://app.uniswap.org'
+
 global.matchMedia =
   global.matchMedia ||
   function () {

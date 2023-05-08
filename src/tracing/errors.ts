@@ -9,45 +9,51 @@ declare global {
   }
 }
 
-/** Identifies ethers request errors (as thrown by {@type import(@ethersproject/web).fetchJson}). */
+// Identifies ethers request errors (as thrown by {@type import(@ethersproject/web).fetchJson}).
 function isEthersRequestError(error: Error): error is Error & { requestBody: string } {
   return 'requestBody' in error && typeof (error as unknown as Record<'requestBody', unknown>).requestBody === 'string'
 }
 
-export function beforeSend(event: ErrorEvent, hint: EventHint) {
-  if (event) {
-    // Since the interface currently uses HashRouter, URLs will have a # before the path.
-    // This leads to issues when we send the URL into Sentry, as the path gets parsed as a "fragment".
-    // Instead, this logic removes the # part of the URL.
-    // See https://romain-clement.net/articles/sentry-url-fragments/#url-fragments
-    if (event.request?.url) {
-      event.request.url = event.request.url.replace('/#', '')
+// Since the interface currently uses HashRouter, URLs will have a # before the path.
+// This leads to issues when we send the URL into Sentry, as the path gets parsed as a "fragment".
+// Instead, this logic removes the # part of the URL.
+// See https://romain-clement.net/articles/sentry-url-fragments/#url-fragments
+function updateRequestUrl(event: ErrorEvent) {
+  if (event.request?.url) {
+    event.request.url = event.request.url.replace('/#', '')
+  }
+}
+
+// If a request fails due to a chunk error, this looks for that asset in the performance entries.
+// If found, it adds a tag to the event with the response status of the chunk request.
+function addChunkResponseStatusTag(event: ErrorEvent, hint: EventHint) {
+  const error = hint.originalException
+  if (error instanceof Error) {
+    let asset: string | undefined
+    if (error.message.match(/Loading chunk \d+ failed\. \(([a-zA-Z]+): .+\.chunk\.js\)/)) {
+      asset = error.message.match(/https?:\/\/.+?\.chunk\.js/)?.[0]
     }
 
-    // Adds the response status of the chunk that failed to load.
-    const error = hint.originalException
-    if (error instanceof Error) {
-      let asset: string | undefined
-      if (error.message.match(/Loading chunk \d+ failed\. \(([a-zA-Z]+): .+\.chunk\.js\)/)) {
-        asset = error.message.match(/https?:\/\/.+?\.chunk\.js/)?.[0]
-      }
+    if (error.message.match(/Loading CSS chunk \d+ failed\. \(.+\.chunk\.css\)/)) {
+      const relativePath = error.message.match(/\/static\/css\/.*\.chunk\.css/)?.[0]
+      asset = `${window.origin}${relativePath}`
+    }
 
-      if (error.message.match(/Loading CSS chunk \d+ failed\. \(.+\.chunk\.css\)/)) {
-        const relativePath = error.message.match(/\/static\/css\/.*\.chunk\.css/)?.[0]
-        asset = `https://app.uniswap.org${relativePath}`
-      }
-
-      if (asset) {
-        const status = getChunkResponseStatus(asset)
-        if (status) {
-          if (!event.tags) {
-            event.tags = {}
-          }
-          event.tags.chunkResponseStatus = status
+    if (asset) {
+      const status = getChunkResponseStatus(asset)
+      if (status) {
+        if (!event.tags) {
+          event.tags = {}
         }
+        event.tags.chunkResponseStatus = status
       }
     }
   }
+}
+
+export function beforeSend(event: ErrorEvent, hint: EventHint) {
+  updateRequestUrl(event)
+  addChunkResponseStatusTag(event, hint)
   return filterKnownErrors(event, hint)
 }
 
