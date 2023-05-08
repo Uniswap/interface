@@ -1,15 +1,21 @@
 import { t, Trans } from '@lingui/macro'
-import { sendAnalyticsEvent, TraceEvent } from '@uniswap/analytics'
+import { sendAnalyticsEvent, TraceEvent, useTrace } from '@uniswap/analytics'
 import {
   BrowserEvent,
   InterfaceElementName,
+  InterfaceEventName,
   SwapEventName,
   SwapPriceUpdateUserResponse,
 } from '@uniswap/analytics-events'
 import { formatCurrencyAmount, formatPriceImpact, NumberType } from '@uniswap/conedison/format'
-import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
+import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import { useWeb3React } from '@web3-react/core'
 import Column from 'components/Column'
+import { MouseoverTooltip } from 'components/Tooltip'
+import { isSupportedChain } from 'constants/chains'
+import { useMaxAmountIn } from 'hooks/useMaxAmountIn'
+import usePermit2Allowance, { AllowanceState } from 'hooks/usePermit2Allowance'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import {
@@ -21,18 +27,19 @@ import {
   getPriceUpdateBasisPoints,
   getTokenAddress,
 } from 'lib/utils/analytics'
-import { ReactNode, useEffect, useMemo, useState } from 'react'
-import { AlertTriangle } from 'react-feather'
+import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
+import { AlertTriangle, Info, Loader } from 'react-feather'
 import { RouterPreference } from 'state/routing/slice'
 import { InterfaceTrade } from 'state/routing/types'
 import { useRouterPreference, useUserSlippageTolerance } from 'state/user/hooks'
 import styled, { useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
+import invariant from 'tiny-invariant'
 import { formatTransactionAmount, priceToPreciseFloat } from 'utils/formatNumbers'
 import getRoutingDiagramEntries, { RoutingDiagramEntry } from 'utils/getRoutingDiagramEntries'
 import { computeRealizedPriceImpact, getPriceImpactWarning } from 'utils/prices'
 
-import { ButtonError, SmallButtonPrimary } from '../Button'
+import { ButtonError, ButtonPrimary, SmallButtonPrimary } from '../Button'
 import { AutoRow, RowBetween, RowFixed } from '../Row'
 import { SwapCallbackError, SwapShowAcceptChanges } from './styleds'
 import { SwapModalDetailRow } from './SwapModalDetailRow'
@@ -188,6 +195,33 @@ export default function SwapModalFooter({
   const theme = useTheme()
   const { chainId } = useWeb3React()
   const nativeCurrency = useNativeCurrency(chainId)
+  const trace = useTrace()
+
+  const maximumAmountIn = useMaxAmountIn(trade, allowedSlippage)
+
+  const allowance = usePermit2Allowance(
+    maximumAmountIn ?? (trade.inputAmount.currency.isToken ? (trade.inputAmount as CurrencyAmount<Token>) : undefined),
+    isSupportedChain(chainId) ? UNIVERSAL_ROUTER_ADDRESS(chainId) : undefined
+  )
+  const isApprovalLoading = allowance.state === AllowanceState.REQUIRED && allowance.isApprovalLoading
+  const [isAllowancePending, setIsAllowancePending] = useState(false)
+  const updateAllowance = useCallback(async () => {
+    invariant(allowance.state === AllowanceState.REQUIRED)
+    setIsAllowancePending(true)
+    try {
+      await allowance.approveAndPermit()
+      sendAnalyticsEvent(InterfaceEventName.APPROVE_TOKEN_TXN_SUBMITTED, {
+        chain_id: chainId,
+        token_symbol: maximumAmountIn?.currency.symbol,
+        token_address: maximumAmountIn?.currency.address,
+        ...trace,
+      })
+    } catch (e) {
+      console.error(e)
+    } finally {
+      setIsAllowancePending(false)
+    }
+  }, [allowance, chainId, maximumAmountIn?.currency.address, maximumAmountIn?.currency.symbol, trace])
 
   useEffect(() => {
     if (!trade.executionPrice.equalTo(lastExecutionPrice)) {
@@ -268,6 +302,41 @@ export default function SwapModalFooter({
             </SmallButtonPrimary>
           </RowBetween>
         </SwapShowAcceptChanges>
+      ) : allowance.state === AllowanceState.REQUIRED ? (
+        <ButtonPrimary
+          onClick={updateAllowance}
+          disabled={isAllowancePending || isApprovalLoading}
+          style={{ gap: 14, height: 56 }}
+          data-testid="swap-approve-button"
+        >
+          {isAllowancePending ? (
+            <>
+              <Loader size="20px" />
+              <Trans>Approve in your wallet</Trans>
+            </>
+          ) : isApprovalLoading ? (
+            <>
+              <Loader size="20px" />
+              <Trans>Approval pending</Trans>
+            </>
+          ) : (
+            <>
+              <div style={{ height: 20 }}>
+                <MouseoverTooltip
+                  text={
+                    <Trans>
+                      Permission is required for Uniswap to swap each token. This will expire after one month for your
+                      security.
+                    </Trans>
+                  }
+                >
+                  <Info size={20} />
+                </MouseoverTooltip>
+              </div>
+              <Trans>Approve use of {trade.inputAmount.currency.symbol}</Trans>
+            </>
+          )}
+        </ButtonPrimary>
       ) : (
         <AutoRow>
           <TraceEvent
