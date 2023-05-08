@@ -13,6 +13,7 @@ describe('dappSlice', () => {
   beforeEach(() => {
     store = createStore(dappReducer, initialDappState)
   })
+
   it('should save dapp chain correctly', () => {
     const dappUrl = 'https://opensea.io'
     const walletAddress = '0x123'

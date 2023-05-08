@@ -3,16 +3,22 @@ import { createAction } from '@reduxjs/toolkit'
 import { ethers, providers } from 'ethers'
 import { call, put, select, take } from 'typed-redux-saga'
 import { ChainId, getChainIdFromString } from 'wallet/src/constants/chains'
-import { selectChainByDappAndWallet } from 'wallet/src/features/dapp/selectors'
-import { DEFAULT_DAPP_URL, saveDappChain } from 'wallet/src/features/dapp/slice'
+import {
+  getProvider,
+  getSignerManager,
+} from 'wallet/src/features/wallet/context'
 import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
-import { appSelect, RootState } from '../../state'
-import { sendMessageToSpecificTab } from '../../utils/messageUtils'
-import { hexlifyTransaction } from '../../utils/transaction'
-import { getProvider, getSignerManager } from '../wallet/context'
-import { SignerManager } from '../wallet/signing/SignerManager'
-import { signMessage, signTypedDataMessage } from '../wallet/signing/signing'
-import { Account, AccountType } from '../wallet/types'
+import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
+import {
+  signMessage,
+  signTypedDataMessage,
+} from 'wallet/src/features/wallet/signing/signing'
+import { Account, AccountType } from 'wallet/src/features/wallet/types'
+import { hexlifyTransaction } from 'wallet/src/utils/transaction'
+import { appSelect, WebState } from '../../background/store'
+import { sendMessageToSpecificTab } from '../../background/utils/messageUtils'
+import { selectChainByDappAndWallet } from '../dapp/selectors'
+import { DEFAULT_DAPP_URL, saveDappChain } from '../dapp/slice'
 import {
   AccountResponse,
   ChangeChainResponse,
@@ -59,7 +65,7 @@ export function* dappRequestWatcher() {
  * @param requestParams DappRequest and senderTabId (required for sending response)
  */
 export function* handleRequest(requestParams: DappRequestSagaParams) {
-  const accounts = yield* appSelect((state: RootState) => state.wallet.accounts)
+  const accounts = yield* appSelect((state) => state.wallet.accounts)
   const activeAccount = yield* call(getCurrentAccount, accounts)
 
   const requestForStore: DappRequestStoreItem = {
@@ -117,9 +123,7 @@ export function* sendTransaction(
  * @param senderTabId
  */
 export function* getAccount(requestId: string, senderTabId: number) {
-  const accounts = yield* select<(state: RootState) => Record<string, Account>>(
-    (state: RootState) => state.wallet.accounts
-  )
+  const accounts = yield* appSelect((state: WebState) => state.wallet.accounts)
   const account = yield* call(getCurrentAccount, accounts)
   const tab = yield* call(chrome.tabs.get, senderTabId)
   const dappUrl = extractBaseUrl(tab.url)

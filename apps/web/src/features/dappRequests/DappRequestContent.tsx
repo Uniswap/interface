@@ -2,15 +2,15 @@ import { XStack, YStack } from 'ui/src'
 import { Button, ButtonSize } from 'ui/src/components/button/Button'
 import { Text } from 'ui/src/components/text/Text'
 import { ChainId } from 'wallet/src/constants/chains'
-import { SendTransactionDetails } from 'wallet/src/features/dappRequests/requestContent/SendTransactionContent'
-import { SignMessageDetails } from 'wallet/src/features/dappRequests/requestContent/SignMessageContent'
-import { SignTypedDataDetails } from 'wallet/src/features/dappRequests/requestContent/SignTypedDataContent'
 import {
   useAccounts,
   useActiveAccountAddressWithThrow,
 } from 'wallet/src/features/wallet/hooks'
-import { useAppDispatch, useAppSelector } from 'wallet/src/state'
+import { useAppDispatch, useAppSelector } from '../../background/store'
 import { DappRequestType } from './dappRequestTypes'
+import { SendTransactionDetails } from './requestContent/SendTransactionContent'
+import { SignMessageDetails } from './requestContent/SignMessageContent'
+import { SignTypedDataDetails } from './requestContent/SignTypedDataContent'
 import { confirmRequest, rejectRequest } from './saga'
 import { DappRequestStoreItem } from './slice'
 

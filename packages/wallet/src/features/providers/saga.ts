@@ -1,4 +1,3 @@
-import { PayloadAction } from '@reduxjs/toolkit'
 import { providers as ethersProviders } from 'ethers'
 import { call, fork, join, put } from 'typed-redux-saga'
 import { ALL_SUPPORTED_CHAIN_IDS, ChainId } from 'wallet/src/constants/chains'
@@ -53,46 +52,6 @@ function* initProvider(chainId: ChainId, manager: ProviderManager) {
   }
 }
 
-function destroyProvider(chainId: ChainId, manager: ProviderManager): void {
-  logger.debug(
-    'providerSaga',
-    'destroyProvider',
-    'Disabling a provider for:',
-    chainId
-  )
-  if (!manager.hasProvider(chainId)) {
-    logger.debug(
-      'providerSaga',
-      'destroyProvider',
-      'Provider does not exists for:',
-      chainId
-    )
-    return
-  }
-  manager.removeProvider(chainId)
-}
-
-function* modifyProviders(
-  action: PayloadAction<{ chainId: ChainId; isActive: boolean }>
-) {
-  const { chainId, isActive } = action.payload
-  try {
-    const manager = yield* call(getProviderManager)
-    if (isActive) {
-      yield* call(initProvider, chainId, manager)
-    } else {
-      destroyProvider(chainId, manager)
-    }
-  } catch (error) {
-    logger.error(
-      'providerSaga',
-      'modifyProviders',
-      `Error while modifying provider ${chainId}`,
-      error
-    )
-  }
-}
-
 async function createProvider(
   chainId: ChainId,
   manager: ProviderManager
@@ -103,6 +62,6 @@ async function createProvider(
     'Creating a provider for:',
     chainId
   )
-  const provider = await manager.createProvider(chainId)
+  const provider = manager.createProvider(chainId)
   return provider
 }

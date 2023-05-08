@@ -1,23 +1,19 @@
 import { combineReducers } from 'redux'
-import { persistReducer, persistStore } from 'redux-persist'
-import { dappReducer } from 'wallet/src/features/dapp/slice'
+import { persistReducer } from 'redux-persist'
 import { monitoredSagaReducers } from 'wallet/src/state/saga'
-import { dappRequestReducer } from '../features/dappRequests/slice'
 import { providersReducer } from '../features/providers'
 import { walletReducer } from '../features/wallet/slice'
 import { PersistedStorage } from '../utils/persistedStorage'
 
-const reducers = {
-  dapp: dappReducer,
-  dappRequests: dappRequestReducer,
+export const sharedReducers = {
   providers: providersReducer,
   saga: monitoredSagaReducers,
   wallet: walletReducer,
 } as const
 
-const whitelist: Array<keyof typeof reducers> = ['providers', 'wallet', 'dapp']
+const whitelist: Array<keyof typeof sharedReducers> = ['providers', 'wallet']
 
-const persistConfig = {
+export const persistConfig = {
   key: 'root',
   storage: new PersistedStorage(),
   whitelist,
@@ -26,10 +22,8 @@ const persistConfig = {
   // migrate: () => {}
 }
 
-export const rootReducer = persistReducer(
+// used to type RootState
+export const sharedRootReducer = persistReducer(
   persistConfig,
-  combineReducers(reducers)
+  combineReducers(sharedReducers)
 )
-
-// re-export for convenience
-export { persistStore }

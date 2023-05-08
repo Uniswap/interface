@@ -2,7 +2,7 @@ import {
   DappResponseType,
   Message,
   TransactionRejectedResponse,
-} from '../features/dappRequests/dappRequestTypes'
+} from '../../features/dappRequests/dappRequestTypes'
 
 export function sendMessageToActiveTab(message: Message) {
   chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {

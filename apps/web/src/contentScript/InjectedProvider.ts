@@ -5,6 +5,7 @@ import { ethErrors } from 'eth-rpc-errors'
 import { ethers } from 'ethers'
 import EventEmitter from 'eventemitter3'
 import { v4 as uuidv4 } from 'uuid'
+import { logger } from 'wallet/src/features/logger/logger'
 import {
   AccountResponse,
   BaseDappRequest,
@@ -25,8 +26,7 @@ import {
   SignTypedDataRequest,
   SignTypedDataResponse,
   TransactionRejectedResponse,
-} from 'wallet/src/features/dappRequests/dappRequestTypes'
-import { logger } from 'wallet/src/features/logger/logger'
+} from '../features/dappRequests/dappRequestTypes'
 
 export type EthersSendCallback = (error: unknown, response: unknown) => void
 const TIMEOUT_MS = 30000

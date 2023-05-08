@@ -1,4 +1,4 @@
-import type { Middleware, PreloadedState } from '@reduxjs/toolkit'
+import type { Middleware, PreloadedState, Reducer } from '@reduxjs/toolkit'
 import { configureStore } from '@reduxjs/toolkit'
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
 import createSagaMiddleware, { Saga } from 'redux-saga'
@@ -6,24 +6,29 @@ import { SelectEffect } from 'redux-saga/effects'
 import { SagaGenerator, select } from 'typed-redux-saga'
 import { loggerMiddleware } from '../features/logger/middleware'
 import { walletContextValue } from '../features/wallet/context'
-import { persistStore, rootReducer } from './reducer'
+import { sharedRootReducer } from './reducer'
 import { rootSaga } from './saga'
 
-export const createStore = ({
-  afterMiddleware = [],
-  additionalSaga,
-  beforeMiddleware = [],
-  hydrationCallback,
-  preloadedState = {},
-}: {
-  afterMiddleware?: Array<Middleware<unknown>>
-  // enables starting app-specific sagas
-  additionalSaga?: Saga<unknown[]>
-  beforeMiddleware?: Array<Middleware<unknown>>
+interface CreateStoreProps {
+  reducer: Reducer
+  // sagas to load in addition to the shared ones
+  // can be used for app-specific sagas
+  additionalSagas?: Array<Saga<unknown[]>>
+  // middlewares to add after the default middleware
+  // recommended over `middlewareBefore`
+  middlewareAfter?: Array<Middleware<unknown>>
+  // middlewares to before after the default middleware
+  middlewareBefore?: Array<Middleware<unknown>>
   preloadedState?: PreloadedState<RootState>
-  // invoked after store is rehydrated
-  hydrationCallback?: () => void
-}) => {
+}
+
+export function createStore({
+  additionalSagas = [],
+  middlewareAfter = [],
+  middlewareBefore = [],
+  preloadedState = {},
+  reducer,
+}: CreateStoreProps) {
   const sagaMiddleware = createSagaMiddleware({
     context: {
       signers: walletContextValue.signers,
@@ -33,24 +38,24 @@ export const createStore = ({
   })
 
   const store = configureStore({
-    reducer: rootReducer,
+    reducer,
     preloadedState,
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware()
-        .prepend(beforeMiddleware)
+        .prepend(middlewareBefore)
         .concat(loggerMiddleware, sagaMiddleware)
-        .concat(afterMiddleware),
+        .concat(middlewareAfter),
   })
 
-  persistStore(store, null, hydrationCallback)
-
   sagaMiddleware.run(rootSaga)
-  additionalSaga && sagaMiddleware.run(additionalSaga)
+  additionalSagas.forEach((saga) => sagaMiddleware.run(saga))
 
   return store
 }
 
-export type RootState = ReturnType<typeof rootReducer>
+// Utility types and functions to be used inside the wallet shared package
+// Apps should re-define those with a more specific `AppState`
+export type RootState = ReturnType<typeof sharedRootReducer>
 export type AppDispatch = ReturnType<typeof createStore>['dispatch']
 export type AppSelector<T> = (state: RootState) => T
 

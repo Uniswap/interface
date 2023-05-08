@@ -1,10 +1,10 @@
+import { logger } from 'wallet/src/features/logger/logger'
 import {
   BaseDappRequest,
   BaseDappResponse,
   DappRequestType,
   Message,
-} from 'wallet/src/features/dappRequests/dappRequestTypes'
-import { logger } from 'wallet/src/features/logger/logger'
+} from '../features/dappRequests/dappRequestTypes'
 import { PortName } from '../types'
 
 /**

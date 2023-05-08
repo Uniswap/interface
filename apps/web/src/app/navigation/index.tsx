@@ -1,13 +1,13 @@
 import { YStack } from 'ui/src'
 import { Flex } from 'ui/src/components/layout/Flex'
+import Locked from 'wallet/src/features/auth/Locked'
+import { authSagaName } from 'wallet/src/features/auth/saga'
+import { HomeScreen } from 'wallet/src/features/home/HomeScreen'
+import { isOnboardedSelector } from 'wallet/src/features/wallet/selectors'
 import { useSagaStatus } from 'wallet/src/state/useSagaStatus'
-import Locked from '../features/auth/Locked'
-import { authSagaName } from '../features/auth/saga'
-import { DappRequestContent } from '../features/dappRequests/DappRequestContent'
-import { HomeScreen } from '../features/home/HomeScreen'
-import { isOnboardedSelector } from '../features/wallet/selectors'
-import { useAppSelector } from '../state'
-import { SagaStatus } from '../utils/saga'
+import { SagaStatus } from 'wallet/src/utils/saga'
+import { useAppSelector } from '../../background/store'
+import { DappRequestContent } from '../../features/dappRequests/DappRequestContent'
 
 function WebNavigationInner(): JSX.Element {
   const pendingDappRequests = useAppSelector(

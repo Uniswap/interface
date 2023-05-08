@@ -1,25 +1,39 @@
+import { AnyAction, Dispatch } from 'redux'
+import { isOnboardedSelector } from 'wallet/src/features/wallet/selectors'
 import {
   BaseDappResponse,
   DappRequestType,
-} from 'wallet/src/features/dappRequests/dappRequestTypes'
-import { addRequest } from 'wallet/src/features/dappRequests/saga'
-import { isOnboardedSelector } from 'wallet/src/features/wallet/selectors'
-import { createStore } from 'wallet/src/state'
-import { wrapStore } from 'webext-redux'
+} from '../features/dappRequests/dappRequestTypes'
+import { addRequest } from '../features/dappRequests/saga'
 import { PortName } from '../types/index'
+import { initializeStore, WebState } from './store'
 
-// Since we are in a service worker, this is not persistent
-// and this will be reset to false, as expected, whenever
-// the service worker wakes up from idle.
+// Since we are in a service worker, this is not persistent and this will be
+// reset to false, as expected, whenever the service worker wakes up from idle.
 let isInitialized = false
+
+/** Main entrypoint for intiializing the app. */
+const initApp = () => {
+  if (isInitialized) {
+    notifyStoreInitialized()
+    return
+  }
+
+  isInitialized = true
+
+  const store = initializeStore()
+
+  if (store) {
+    maybeOpenOnboarding(store.getState() as unknown as WebState, store.dispatch)
+    notifyStoreInitialized()
+  }
+}
 
 // onInstalled is triggered when the extension is installed or updated. We want to
 // open full screen onboarding when the extension is installed so this listener handles that.
 chrome.runtime.onInstalled.addListener(() => {
-  initializeStore()
+  initApp()
 })
-
-// TODO: Look into using web-ext-redux instead for this:
 
 // Listen to incoming connections from content scripts or popup.
 // Triggers whenever extension "wakes up" from idle.
@@ -30,41 +44,18 @@ chrome.runtime.onConnect.addListener((port) => {
     return
   }
 
-  initializeStore()
+  initApp()
 })
 
-function initializeStore() {
-  if (isInitialized) {
-    notifyStoreInitialized()
-    return
+function maybeOpenOnboarding(
+  state: WebState,
+  dispatch: Dispatch<AnyAction>
+): void {
+  const isOnboarded = isOnboardedSelector(state)
+
+  if (!isOnboarded) {
+    chrome.tabs.create({ url: 'index.html#/onboarding' })
   }
-
-  const store = createStore({
-    hydrationCallback: openOnboardingMaybe,
-  })
-
-  function openOnboardingMaybe(): void {
-    const state = store.getState()
-    const isOnboarded = isOnboardedSelector(state)
-
-    if (!isOnboarded) {
-      chrome.tabs.create({ url: 'index.html#/onboarding' })
-    }
-
-    notifyStoreInitialized()
-  }
-
-  // wraps store in webext-redux
-  wrapStore(store, { portName: PortName.Store })
-
-  isInitialized = true
-
-  // https://github.com/tshaddix/webext-redux/issues/286#issuecomment-1347985776
-  Object.assign(store, {
-    dispatch: store.dispatch.bind(store),
-    getState: store.getState.bind(store),
-    subscribe: store.subscribe.bind(store),
-  })
 
   chrome.runtime.onMessage.addListener(
     (
@@ -77,7 +68,7 @@ function initializeStore() {
       if (!Object.values(DappRequestType).includes(request.type)) return
 
       // Dispatches a saga action which will handle side effects as well
-      store.dispatch(
+      dispatch(
         addRequest({
           dappRequest: request,
           senderTabId: sender.tab?.id || 0,

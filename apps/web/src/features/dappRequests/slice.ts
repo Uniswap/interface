@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { BaseDappRequest } from 'wallet/src/features/dappRequests/dappRequestTypes'
-import { Account } from '../wallet/types'
+import { Account } from 'wallet/src/features/wallet/types'
+import { BaseDappRequest } from './dappRequestTypes'
 export interface DappRequestState {
   pending: DappRequestStoreItem[]
 }

@@ -6,8 +6,6 @@ import {
   authSaga,
   authSagaName,
 } from '../features/auth/saga'
-import { dappRequestApprovalWatcher } from '../features/dappRequests/dappRequestApprovalWatcher'
-import { dappRequestWatcher } from '../features/dappRequests/saga'
 import { initProviders } from '../features/providers'
 import {
   importAccountActions,
@@ -17,12 +15,10 @@ import {
 } from '../features/wallet/import/importAccountSaga'
 import { SagaState } from '../utils/saga'
 
-const sagas = [
-  initProviders,
-  dappRequestWatcher,
-  dappRequestApprovalWatcher,
-] as const
+// Sagas that are spawned at startup
+const sagas = [initProviders] as const
 
+// Stateful sagas that are registered with teh store on startup
 export const monitoredSagas = {
   [importAccountSagaName]: {
     name: importAccountSagaName,

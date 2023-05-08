@@ -1,8 +1,8 @@
 import { Text, XStack, YStack } from 'ui/src'
 import { Unicon } from 'ui/src/components/Unicon'
-import { RequestDisplayDetails } from 'wallet/src/features/dappRequests/DappRequestContent'
-import { SendTransactionRequest } from 'wallet/src/features/dappRequests/dappRequestTypes'
 import { Account } from 'wallet/src/features/wallet/types'
+import { RequestDisplayDetails } from '../DappRequestContent'
+import { SendTransactionRequest } from '../dappRequestTypes'
 
 export const SendTransactionDetails = ({
   activeAccount,
