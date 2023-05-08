@@ -4,9 +4,11 @@ import Column from 'components/Column'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import Row from 'components/Row'
 import { MouseoverTooltip } from 'components/Tooltip'
-import { ReactNode } from 'react'
+import { useWindowSize } from 'hooks/useWindowSize'
+import { PropsWithChildren, ReactNode } from 'react'
+import { TextProps } from 'rebass'
 import styled from 'styled-components/macro'
-import { ThemedText } from 'theme'
+import { BREAKPOINTS, ThemedText } from 'theme'
 
 const MAX_AMOUNT_STR_LENGTH = 9
 
@@ -16,14 +18,13 @@ export const Label = styled(ThemedText.BodySmall)<{ cursor?: string }>`
   margin-right: 8px;
 `
 
-const Value = styled.span`
-  color: ${({ theme }) => theme.textSecondary};
-  text-align: end;
-`
-
-const AmountContainer = styled(Column)`
-  align-items: flex-end;
-`
+const ResponsiveHeadline = ({ children, ...textProps }: PropsWithChildren<TextProps>) => {
+  const { width } = useWindowSize()
+  if (width && width < BREAKPOINTS.xs) {
+    return <ThemedText.HeadlineMedium {...textProps}>{children}</ThemedText.HeadlineMedium>
+  }
+  return <ThemedText.HeadlineLarge {...textProps}>{children}</ThemedText.HeadlineLarge>
+}
 
 interface AmountProps {
   field: 'input' | 'output'
@@ -40,8 +41,8 @@ export function SwapModalHeaderAmount({ tooltipText, label, amount, usdAmount, f
   }
 
   return (
-    <Row align="flex-start" justify="space-between" gap="md">
-      <Row width="wrap-content">
+    <Row align="center" justify="space-between" gap="md">
+      <Column>
         <ThemedText.BodySecondary>
           {tooltipText ? (
             <MouseoverTooltip text={tooltipText}>
@@ -51,21 +52,14 @@ export function SwapModalHeaderAmount({ tooltipText, label, amount, usdAmount, f
             <Label>{label}</Label>
           )}
         </ThemedText.BodySecondary>
-      </Row>
-
-      <AmountContainer>
-        <Row gap="sm" width="wrap-content">
-          <CurrencyLogo currency={amount.currency} size="28px" />
-          <ThemedText.HeadlineMedium color="primary" data-testid={`${field}-amount`}>
+        <Column gap="xs">
+          <ResponsiveHeadline color="primary" data-testid={`${field}-amount`}>
             {formattedAmount} {amount.currency.symbol}
-          </ThemedText.HeadlineMedium>
-        </Row>
-        {usdAmount && (
-          <ThemedText.BodySmall>
-            <Value>${usdAmount.toFixed(2)}</Value>
-          </ThemedText.BodySmall>
-        )}
-      </AmountContainer>
+          </ResponsiveHeadline>
+          {usdAmount && <ThemedText.BodySmall color="textTertiary">${usdAmount.toFixed(2)}</ThemedText.BodySmall>}
+        </Column>
+      </Column>
+      <CurrencyLogo currency={amount.currency} size="36px" />
     </Row>
   )
 }

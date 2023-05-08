@@ -1,6 +1,6 @@
 import { t, Trans } from '@lingui/macro'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
-import { AutoColumn } from 'components/Column'
+import Column, { AutoColumn } from 'components/Column'
 import { useUSDPrice } from 'hooks/useUSDPrice'
 import { useMemo } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
@@ -64,19 +64,21 @@ export default function SwapModalHeader({
 
   return (
     <HeaderContainer gap="sm">
-      <SwapModalHeaderAmount
-        field="input"
-        label={t`You pay`}
-        amount={trade.inputAmount}
-        usdAmount={fiatValueInput.data}
-      />
-      <SwapModalHeaderAmount
-        field="output"
-        label={t`You receive`}
-        amount={trade.outputAmount}
-        usdAmount={fiatValueOutput.data}
-        tooltipText={estimateMessage}
-      />
+      <Column gap="lg">
+        <SwapModalHeaderAmount
+          field="input"
+          label={t`You pay`}
+          amount={trade.inputAmount}
+          usdAmount={fiatValueInput.data}
+        />
+        <SwapModalHeaderAmount
+          field="output"
+          label={t`You receive`}
+          amount={trade.outputAmount}
+          usdAmount={fiatValueOutput.data}
+          tooltipText={estimateMessage}
+        />
+      </Column>
       <RuleWrapper>
         <Rule />
       </RuleWrapper>
