@@ -21,16 +21,18 @@ export default function Expand({
   header,
   button,
   children,
+  testId,
 }: PropsWithChildren<{
   header: ReactElement
   button: ReactElement
+  testId?: string
 }>) {
   const [isExpanded, setExpanded] = useState(false)
   return (
     <Column gap="md">
       <RowBetween>
         {header}
-        <ButtonContainer gap="xs" onClick={() => setExpanded(!isExpanded)} aria-expanded={isExpanded}>
+        <ButtonContainer data-testid={testId} onClick={() => setExpanded(!isExpanded)} aria-expanded={isExpanded}>
           {button}
           <ExpandIcon $isExpanded={isExpanded} />
         </ButtonContainer>

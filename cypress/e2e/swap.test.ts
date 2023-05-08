@@ -429,6 +429,7 @@ describe('Swap', () => {
 
             // Set slippage to a very low value.
             cy.get(getTestSelector('open-settings-dialog-button')).click()
+            cy.get(getTestSelector('max-slippage-settings')).click()
             cy.get(getTestSelector('slippage-input')).clear().type('0.01')
             cy.get('body').click('topRight')
             cy.get(getTestSelector('slippage-input')).should('not.exist')

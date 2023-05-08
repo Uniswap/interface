@@ -29,7 +29,9 @@ export interface UserState {
 
   // user defined slippage tolerance in bips, used in all txns
   userSlippageTolerance: number | SlippageTolerance.Auto
-  userSlippageToleranceHasBeenMigratedToAuto: boolean // temporary flag for migration status
+
+  // flag to indicate whether the user has been migrated from the old slippage tolerance values
+  userSlippageToleranceHasBeenMigratedToAuto: boolean
 
   // deadline set by user in minutes, used in all txns
   userDeadline: number

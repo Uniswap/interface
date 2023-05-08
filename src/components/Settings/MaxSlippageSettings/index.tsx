@@ -92,6 +92,7 @@ export default function MaxSlippageSettings({ autoSlippage }: { autoSlippage: Pe
 
   return (
     <Expand
+      testId="max-slippage-settings"
       header={
         <Row width="auto">
           <ThemedText.BodySecondary>
