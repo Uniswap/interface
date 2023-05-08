@@ -25,18 +25,26 @@ export function beforeSend(event: ErrorEvent, hint: EventHint) {
     }
 
     // Adds the response status of the chunk that failed to load.
-    event.tags = event.tags || {}
     const error = hint.originalException
     if (error instanceof Error) {
+      let asset: string | undefined
       if (error.message.match(/Loading chunk \d+ failed\. \(([a-zA-Z]+): .+\.chunk\.js\)/)) {
-        const asset = error.message.match(/https?:\/\/.+?\.chunk\.js/)?.[0]
-        event.tags.chunkResponseStatus = getChunkResponseStatus(asset)
+        asset = error.message.match(/https?:\/\/.+?\.chunk\.js/)?.[0]
       }
 
       if (error.message.match(/Loading CSS chunk \d+ failed\. \(.+\.chunk\.css\)/)) {
         const relativePath = error.message.match(/\/static\/css\/.*\.chunk\.css/)?.[0]
-        const asset = `https://app.uniswap.org${relativePath}`
-        event.tags.chunkResponseStatus = getChunkResponseStatus(asset)
+        asset = `https://app.uniswap.org${relativePath}`
+      }
+
+      if (asset) {
+        const status = getChunkResponseStatus(asset)
+        if (status) {
+          if (!event.tags) {
+            event.tags = {}
+          }
+          event.tags.chunkResponseStatus = status
+        }
       }
     }
   }
