@@ -98,7 +98,7 @@ export function* handleDeepLink(action: ReturnType<typeof openDeepLink>) {
   }
 }
 
-async function* handleWalletConnectDeepLink(wcUri: string) {
+function* handleWalletConnectDeepLink(wcUri: string) {
   const isValidWcUri = yield* call(isValidWCUrl, wcUri)
   if (isValidWcUri) {
     yield* fork(connectToApp, wcUri)
