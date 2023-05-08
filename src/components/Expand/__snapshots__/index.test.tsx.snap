@@ -94,6 +94,7 @@ exports[`Expand renders correctly 1`] = `
         Header
       </span>
       <div
+        aria-expanded="false"
         class="c1 c4 c5"
       >
         <span>
