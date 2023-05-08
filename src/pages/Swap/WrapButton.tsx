@@ -4,7 +4,7 @@ import { WrapErrorText, WrapInputError, WrapType } from 'hooks/useWrapCallback'
 
 interface WrapButtonProps {
   onClick: (() => Promise<void>) | undefined
-  error: WrapInputError | undefined
+  error?: WrapInputError
   type: WrapType
 }
 

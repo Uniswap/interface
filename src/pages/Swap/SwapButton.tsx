@@ -112,7 +112,7 @@ export function SwapButton({ chainId, onSwapClick }: SwapButtonProps) {
 
   if (swapIsUnsupported) {
     return (
-      <ButtonPrimary disabled={true}>
+      <ButtonPrimary disabled={true} data-testid="swap-button">
         <ThemedText.DeprecatedMain mb="4px">
           <Trans>Unsupported Asset</Trans>
         </ThemedText.DeprecatedMain>
@@ -128,7 +128,7 @@ export function SwapButton({ chainId, onSwapClick }: SwapButtonProps) {
         properties={{ received_swap_quote: getIsValidSwapQuote(trade, tradeState, swapInputError) }}
         element={InterfaceElementName.CONNECT_WALLET_BUTTON}
       >
-        <ButtonLight onClick={toggleWalletDrawer} fontWeight={600}>
+        <ButtonLight data-testid="swap-button" onClick={toggleWalletDrawer} fontWeight={600}>
           <Trans>Connect Wallet</Trans>
         </ButtonLight>
       </TraceEvent>
@@ -138,6 +138,7 @@ export function SwapButton({ chainId, onSwapClick }: SwapButtonProps) {
   if (chainId && chainId !== connectedChainId) {
     return (
       <ButtonPrimary
+        data-testid="swap-button"
         onClick={() => {
           switchChain(connector, chainId)
         }}
@@ -153,7 +154,7 @@ export function SwapButton({ chainId, onSwapClick }: SwapButtonProps) {
 
   if (routeNotFound && userHasSpecifiedInputOutput && !routeIsLoading && !routeIsSyncing) {
     return (
-      <GrayCard style={{ textAlign: 'center' }}>
+      <GrayCard style={{ textAlign: 'center' }} data-testid="swap-button">
         <ThemedText.DeprecatedMain mb="4px">
           <Trans>Insufficient liquidity for this trade.</Trans>
         </ThemedText.DeprecatedMain>
@@ -204,6 +205,7 @@ export function SwapButton({ chainId, onSwapClick }: SwapButtonProps) {
     <ButtonError
       onClick={onSwapClick}
       id="swap-button"
+      data-testid="swap-button"
       disabled={Boolean(
         swapInputError ||
           routeIsSyncing ||

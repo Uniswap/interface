@@ -12,7 +12,7 @@ import {
   toCurrencyAmount,
 } from 'test-utils/constants'
 
-import { computeRealizedLPFeeAmount, warningSeverity } from './prices'
+import { computeRealizedLPFeeAmount, largerPercentValue, warningSeverity } from './prices'
 
 const pair12 = new Pair(
   CurrencyAmount.fromRawAmount(TEST_TOKEN_1, JSBI.BigInt(10000)),
@@ -128,6 +128,19 @@ describe('prices', () => {
     })
     it('correct for 50', () => {
       expect(warningSeverity(new Percent(5, 10))).toEqual(4)
+    })
+  })
+
+  describe('largerPercentValue', () => {
+    it('returns the larger of two percent values', () => {
+      const one = new Percent(1, 100)
+      const ten = new Percent(10, 100)
+      expect(largerPercentValue(one, ten)).toEqual(ten)
+      expect(largerPercentValue(ten, one)).toEqual(ten)
+      expect(largerPercentValue(one, one)).toEqual(one)
+      expect(largerPercentValue(undefined, one)).toEqual(one)
+      expect(largerPercentValue(one, undefined)).toEqual(one)
+      expect(largerPercentValue(undefined, undefined)).toEqual(undefined)
     })
   })
 })
