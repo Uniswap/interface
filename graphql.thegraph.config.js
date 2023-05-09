@@ -1,6 +1,6 @@
 /* eslint-env node */
 
-const defaultConfig = require('./graphql.config')
+const defaultConfig = require('./graphql.data.config')
 
 module.exports = {
   src: defaultConfig.src,

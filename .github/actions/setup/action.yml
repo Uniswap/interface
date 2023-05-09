@@ -10,15 +10,68 @@ runs:
       with:
         node-version: 14
         registry-url: https://registry.npmjs.org
+        cache: 'yarn'
 
-    # node_modules/.cache is intentionally omitted, as this is used for build tool caches.
     - uses: actions/cache@v3
       id: install-cache
       with:
+        # node_modules/.cache is intentionally omitted, as this is used for build tool caches.
         path: |
           node_modules
           !node_modules/.cache
         key: ${{ runner.os }}-install-${{ hashFiles('**/yarn.lock') }}
     - if: steps.install-cache.outputs.cache-hit != 'true'
       run: yarn install --frozen-lockfile --ignore-scripts
+      shell: bash
+
+    # Validators compile quickly, so caching can be omitted.
+    - run: yarn ajv
+      shell: bash
+
+    # Contracts are compiled from source. If source hasn't changed, the contracts do not need to be re-compiled.
+    - uses: actions/cache@v3
+      id: contracts-cache
+      with:
+        path: |
+          src/abis/types
+          src/types/v3
+        key: ${{ runner.os }}-contracts-${{ hashFiles('src/abis/**/*.json', 'node_modules/@uniswap/**/artifacts/contracts/**/*.json') }}
+    - if: steps.contracts-cache.outputs.cache-hit != 'true'
+      run: yarn contracts
+      shell: bash
+
+    # GraphQL is generated from schema. The schema is always fetched, but if unchanged, graphql does not need to be re-generated.
+    - run: yarn graphql:fetch
+      shell: bash
+    - uses: actions/cache@v3
+      id: graphql-cache
+      with:
+        path: src/graphql/**/__generated__
+        key: ${{ runner.os }}-graphql-${{ hashFiles('src/graphql/**/schema.graphql') }}
+    - if: steps.graphql-cache.outputs.cache-hit != 'true'
+      run: yarn graphql:generate
+      shell: bash
+
+    # Messages are extracted from source.
+    # A record of source file content hashes is maintained in node_modules/.cache/lingui by a custom extractor.
+    # Messages are always extracted, but extraction may rely on the custom extractor's loaded cache.
+    - uses: actions/cache@v3
+      id: i18n-extract-cache
+      with:
+        path: |
+          src/locales/en-US.po
+          node_modules/.cache
+        key: ${{ runner.os }}-i18n-extract-${{ github.run_id }}
+        restore-keys: ${{ runner.os }}-i18n-extract-
+    - run: yarn i18n:extract
+      shell: bash
+
+    # Translations are compiled from messages. If messages haven't changed, the translations do not need to be re-compiled.
+    - uses: actions/cache@v3
+      id: i18n-compile-cache
+      with:
+        path: src/locales/*.js
+        key: ${{ runner.os }}-i18n-compile-${{ hashFiles('src/locales/*.po') }}
+    - if: steps.i18n-compile-cache.outputs.cache-hit !='true'
+      run: yarn i18n:compile
       shell: bash
