@@ -1,8 +1,8 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { providers } from 'ethers'
-import { config } from 'src/config'
 import { uniswapUrls } from 'src/constants/urls'
 import { GasFeeResponse } from 'src/features/gas/types'
+import { config } from 'wallet/src/config'
 
 export const gasApi = createApi({
   reducerPath: 'gasApi',

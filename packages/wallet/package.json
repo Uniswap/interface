@@ -37,6 +37,7 @@
     "@testing-library/jest-native": "5.4.2",
     "@types/chrome": "0.0.229",
     "@types/jest": "29.5.0",
+    "@types/node": "20.1.1",
     "@types/react": "^18.0.15",
     "@types/redux-logger": "3.0.9",
     "@types/sinon-chrome": "2.2.11",

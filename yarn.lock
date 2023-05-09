@@ -10342,7 +10342,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:16.9.1, @types/node@npm:^16.0.0":
+"@types/node@npm:*, @types/node@npm:20.1.1":
+  version: 20.1.1
+  resolution: "@types/node@npm:20.1.1"
+  checksum: 47961ee23f873c14c3f6045422ff3059f3bfb10231ef3080a7a72d7215cc8c2623fa8cedb7b246305962fa9c1e0c9e381e04b12eb3e9ec5d076025c6231ac8da
+  languageName: node
+  linkType: hard
+
+"@types/node@npm:16.9.1, @types/node@npm:^16.0.0":
   version: 16.9.1
   resolution: "@types/node@npm:16.9.1"
   checksum: 41afcf183a22d59323a0199dd7e0f46591247f45fc08a4434edb26d56dc279ae4fdb80f37989ddd7a0f45e3857c4933e6e82057ede09c5a829f77e373e680375
@@ -37157,6 +37164,7 @@ __metadata:
     "@testing-library/jest-native": 5.4.2
     "@types/chrome": 0.0.229
     "@types/jest": 29.5.0
+    "@types/node": 20.1.1
     "@types/react": ^18.0.15
     "@types/redux-logger": 3.0.9
     "@types/sinon-chrome": 2.2.11

@@ -9,7 +9,9 @@ module.exports = function (api) {
     [
       'module:react-native-dotenv',
       {
+        envName: 'mobile',
         moduleName: 'react-native-dotenv',
+        path: '../../.env',
         safe: true,
         allowUndefined: false,
       },

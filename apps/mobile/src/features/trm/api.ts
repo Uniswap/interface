@@ -1,7 +1,7 @@
 import { PrefetchOptions } from '@reduxjs/toolkit/dist/query/core/module'
 import { createApi, fetchBaseQuery, skipToken } from '@reduxjs/toolkit/query/react'
-import { config } from 'src/config'
 import { uniswapUrls } from 'src/constants/urls'
+import { config } from 'wallet/src/config'
 
 type ScreenResponse = {
   block: boolean

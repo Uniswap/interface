@@ -1,6 +1,8 @@
 import { BigNumberish } from 'ethers'
 import {
   ChainId,
+  ChainIdTo,
+  ChainState,
   isL2Chain,
   TESTNET_CHAIN_IDS,
 } from 'wallet/src/constants/chains'
@@ -26,6 +28,15 @@ export function parseActiveChains(activeChainsString: string): ChainId[] {
     .split(',')
     .map((id) => parseInt(id, 10) as ChainId)
     .filter(Boolean)
+}
+
+export function chainListToStateMap(
+  chainIds: ChainId[]
+): Partial<Record<ChainId, ChainState>> {
+  return chainIds.reduce<ChainIdTo<ChainState>>((memo, chainId) => {
+    memo[chainId] = { isActive: true }
+    return memo
+  }, {})
 }
 
 export function isTestnet(chainId?: ChainId): boolean {

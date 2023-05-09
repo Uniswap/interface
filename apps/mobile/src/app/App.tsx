@@ -18,7 +18,6 @@ import { WalletContextProvider } from 'src/app/walletContext'
 import { OfflineBanner } from 'src/components/banners/OfflineBanner'
 import { Trace } from 'src/components/telemetry/Trace'
 import { TraceUserProperties } from 'src/components/telemetry/TraceUserProperties'
-import { config } from 'src/config'
 import { usePersistedApolloClient } from 'src/data/hooks'
 import { useIsDarkMode } from 'src/features/appearance/hooks'
 import { LockScreenContextProvider } from 'src/features/authentication/lockScreenContext'
@@ -34,6 +33,7 @@ import { DynamicThemeProvider } from 'src/styles/DynamicThemeProvider'
 import { useAppStateTrigger } from 'src/utils/useAppStateTrigger'
 import { getSentryEnvironment, getStatsigEnvironmentTier } from 'src/utils/version'
 import { StatsigProvider } from 'statsig-react-native'
+import { config } from 'wallet/src/config'
 
 // Keep the splash screen visible while we fetch resources until one of our landing pages loads
 SplashScreen.preventAutoHideAsync()

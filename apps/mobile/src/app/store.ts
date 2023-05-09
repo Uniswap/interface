@@ -8,7 +8,6 @@ import { migrations } from 'src/app/migrations'
 import { ReducerNames, rootReducer, RootState } from 'src/app/rootReducer'
 import { rootSaga } from 'src/app/rootSaga'
 import { walletContextValue } from 'src/app/walletContext'
-import { config } from 'src/config'
 import { onChainBalanceApi } from 'src/features/balances/api'
 import { ensApi } from 'src/features/ens/api'
 import { fiatOnRampApi } from 'src/features/fiatOnRamp/api'
@@ -145,7 +144,7 @@ export const setupStore = (
         trmApi.middleware,
         ...middlewares
       ),
-    devTools: config.debug,
+    devTools: __DEV__,
   })
 }
 export const store = setupStore()

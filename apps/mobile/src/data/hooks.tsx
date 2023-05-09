@@ -8,11 +8,11 @@ import {
 import { MMKVWrapper } from 'apollo3-cache-persist'
 import { useCallback, useEffect, useState } from 'react'
 import { MMKV } from 'react-native-mmkv'
-import { config } from 'src/config'
 import { uniswapUrls } from 'src/constants/urls'
 import { initAndPersistCache } from 'src/data/cache'
 import { setupErrorLink, setupPerformanceLink } from 'src/data/utils'
 import { isNonJestDev } from 'src/utils/environment'
+import { config } from 'wallet/src/config'
 
 const mmkv = new MMKV()
 if (isNonJestDev()) {

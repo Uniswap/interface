@@ -1,7 +1,5 @@
-import { ACTIVE_CHAINS } from 'react-native-dotenv'
-import { chainListToStateMap } from 'src/features/chains/utils'
 import { ModalName } from 'src/features/telemetry/constants'
-import { parseActiveChains } from 'wallet/src/utils/chainId'
+import { config } from 'wallet/src/config'
 
 // only add fields that are persisted
 export const initialSchema = {
@@ -9,7 +7,7 @@ export const initialSchema = {
     byChainId: {},
   },
   chains: {
-    byChainId: chainListToStateMap(parseActiveChains(ACTIVE_CHAINS)),
+    byChainId: config.activeChains,
   },
   favorites: {
     tokens: [],

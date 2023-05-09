@@ -10,6 +10,12 @@ import {
   POLYGON_LOGO,
 } from 'wallet/src/assets'
 
+export interface ChainState {
+  isActive: boolean
+  // More properties can be added here over time
+  // such as priority or hidden
+}
+
 export type ChainIdTo<T> = Partial<Record<ChainId, T>>
 export type ChainIdToCurrencyIdTo<T> = ChainIdTo<{ [currencyId: string]: T }>
 

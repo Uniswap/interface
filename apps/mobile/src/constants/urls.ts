@@ -1,4 +1,4 @@
-import { config } from 'src/config'
+import { config } from 'wallet/src/config'
 
 export const uniswapUrls = {
   helpUrl: 'https://support.uniswap.org',

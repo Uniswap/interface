@@ -1,7 +1,7 @@
 import { getIosPushNotificationServiceEnvironmentAsync } from 'expo-application'
-import { config } from 'src/config'
 import { getOnesignalPushTokenOrError } from 'src/features/notifications/Onesignal'
 import { logger } from 'src/utils/logger'
+import { config } from 'wallet/src/config'
 
 // TODO: [MOB-3915] Change to production server endpoint for push server, currently using test endpoints
 const WC_PUSH_SERVER_BASE_URL = 'https://us-central1-uniswap-mobile.cloudfunctions.net'

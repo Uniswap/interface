@@ -3,11 +3,11 @@ import React from 'react'
 import { Provider } from 'react-redux'
 import { setupStore } from 'src/app/store'
 import { Box } from 'src/components/layout'
-import { config } from 'src/config'
 import { NotificationToastRouter } from 'src/features/notifications/NotificationToastWrapper'
 import { AppNotificationType } from 'src/features/notifications/types'
 import { WalletConnectEvent } from 'src/features/walletConnect/saga'
 import { account } from 'src/test/fixtures'
+import { config } from 'wallet/src/config'
 import { ChainId } from 'wallet/src/constants/chains'
 
 const store = setupStore({
