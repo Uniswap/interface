@@ -104,7 +104,7 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
         </RowFixed>
         <TextWithLoadingPlaceholder syncing={syncing} width={65}>
           <ThemedText.BodySmall>
-            {`${trade.outputAmount.toSignificant(6)}  ${trade.outputAmount.currency.symbol}`}
+            {`${trade.outputAmount.toSignificant(6)} ${trade.outputAmount.currency.symbol}`}
           </ThemedText.BodySmall>
         </TextWithLoadingPlaceholder>
       </RowBetween>
