@@ -558,6 +558,7 @@ export function Swap({
         txHash={txHash}
         allowedSlippage={allowedSlippage}
         onConfirm={handleSwap}
+        allowance={allowance}
         swapErrorMessage={swapErrorMessage}
         onDismiss={handleConfirmDismiss}
         swapQuoteReceivedDate={swapQuoteReceivedDate}
