@@ -1,10 +1,14 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
+import { SharedEventName } from '@uniswap/analytics-events'
 import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { Button } from 'src/components/buttons/Button'
-import { Box, Flex } from 'src/components/layout'
+import { TouchableArea } from 'src/components/buttons/TouchableArea'
+import { Flex } from 'src/components/layout'
+import { Text } from 'src/components/Text'
+import { RECOVERY_PHRASE_HELP_URL } from 'src/constants/urls'
 import { useLockScreenOnBlur } from 'src/features/authentication/lockScreenContext'
 import { GenericImportForm } from 'src/features/import/GenericImportForm'
 import { importAccountActions, IMPORT_WALLET_AMOUNT } from 'src/features/import/importAccountSaga'
@@ -12,6 +16,7 @@ import { ImportAccountType } from 'src/features/import/types'
 import { SafeKeyboardOnboardingScreen } from 'src/features/onboarding/SafeKeyboardOnboardingScreen'
 import { ElementName } from 'src/features/telemetry/constants'
 import { OnboardingScreens } from 'src/screens/Screens'
+import { openUri } from 'src/utils/linking'
 import {
   MnemonicValidationError,
   translateMnemonicErrorMessage,
@@ -95,6 +100,8 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props):
     setValue(text)
   }
 
+  const onPressRecoveryHelpButton = (): Promise<void> => openUri(RECOVERY_PHRASE_HELP_URL)
+
   return (
     <SafeKeyboardOnboardingScreen
       subtitle={t('Your recovery phrase will only be stored locally on your device.')}
@@ -114,14 +121,22 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props):
           onChange={onChange}
         />
       </Flex>
-      <Box pb="spacing4">
+      <Flex centered gap="spacing36" pb="spacing4">
+        <TouchableArea
+          eventName={SharedEventName.ELEMENT_CLICKED}
+          name={ElementName.RecoveryHelpButton}
+          onPress={onPressRecoveryHelpButton}>
+          <Text color="accentAction" variant="bodySmall">
+            {t('How do I find my recovery phrase?')}
+          </Text>
+        </TouchableArea>
         <Button
           disabled={!!errorMessage}
           label={t('Continue')}
           name={ElementName.Next}
           onPress={onSubmit}
         />
-      </Box>
+      </Flex>
     </SafeKeyboardOnboardingScreen>
   )
 }

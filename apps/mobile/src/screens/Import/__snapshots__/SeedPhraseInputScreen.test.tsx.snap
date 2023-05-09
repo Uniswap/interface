@@ -479,12 +479,72 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
               style={
                 [
                   {
+                    "alignItems": "center",
                     "display": "flex",
+                    "flexDirection": "column",
+                    "justifyContent": "center",
                     "paddingBottom": 4,
                   },
                 ]
               }
             >
+              <View
+                accessible={true}
+                collapsable={false}
+                focusable={true}
+                hitSlop={
+                  {
+                    "bottom": 5,
+                    "left": 5,
+                    "right": 5,
+                    "top": 5,
+                  }
+                }
+                onClick={[Function]}
+                onResponderGrant={[Function]}
+                onResponderMove={[Function]}
+                onResponderRelease={[Function]}
+                onResponderTerminate={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
+                style={
+                  {
+                    "display": "flex",
+                    "opacity": 1,
+                  }
+                }
+                testID="recovery-help-button"
+              >
+                <Text
+                  allowFontScaling={true}
+                  maxFontSizeMultiplier={1.4}
+                  style={
+                    [
+                      {
+                        "color": "#FC72FF",
+                        "display": "flex",
+                        "fontFamily": "Inter-Regular",
+                        "fontSize": 15,
+                        "lineHeight": 20,
+                      },
+                    ]
+                  }
+                >
+                  How do I find my recovery phrase?
+                </Text>
+              </View>
+              <View
+                style={
+                  [
+                    {
+                      "display": "flex",
+                      "flexGrow": 0,
+                      "flexShrink": 0,
+                      "height": 36,
+                    },
+                  ]
+                }
+              />
               <View
                 accessibilityState={
                   {

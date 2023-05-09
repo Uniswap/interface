@@ -49,5 +49,6 @@ export const APP_FEEDBACK_LINK =
 
 export const GET_HELP_LINK = `${uniswapUrls.helpUrl}/hc/en-us/categories/11301970439565-Uniswap-Wallet`
 
-export const UNISWAP_HELP_CENTER_WALLET_URL =
-  'https://support.uniswap.org/hc/en-us/categories/11301970439565-Uniswap-Wallet'
+export const RECOVERY_PHRASE_HELP_URL = `${uniswapUrls.helpUrl}/hc/en-us/articles/11380692567949-How-to-import-my-recovery-phrase-`
+
+export const UNISWAP_HELP_CENTER_WALLET_URL = `${uniswapUrls.helpUrl}/hc/en-us/categories/11301970439565-Uniswap-Wallet`

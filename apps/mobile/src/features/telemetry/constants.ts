@@ -151,6 +151,7 @@ export const enum ElementName {
   OpenSettingsButton = 'open-settings-button',
   QRCodeModalToggle = 'qr-code-modal-toggle',
   Receive = 'receive',
+  RecoveryHelpButton = 'recovery-help-button',
   Remove = 'remove',
   RestoreFromICloud = 'restore-from-icloud',
   ReviewSwap = 'review-swap',
