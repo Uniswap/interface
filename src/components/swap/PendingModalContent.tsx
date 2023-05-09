@@ -24,7 +24,7 @@ interface PendingModalContentProps {
 }
 
 const Container = styled(ColumnCenter)`
-  margin: 48px 0 76px;
+  margin: 48px 0 28px;
 `
 
 const LogoContainer = styled.div`

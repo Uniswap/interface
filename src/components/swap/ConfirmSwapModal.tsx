@@ -107,6 +107,7 @@ export default function ConfirmSwapModal({
     ) {
       // We successfully requested Permit2 approval and need to move to the signature step.
       setCurrentStep(currentStep + 1)
+      allowance.permit()
     }
   }, [allowance, currentStep, previousPermitNeeded])
 
@@ -114,7 +115,7 @@ export default function ConfirmSwapModal({
     invariant(allowance.state === AllowanceState.REQUIRED)
     setConfirmModalState(SummaryModalState.ALLOWING)
     try {
-      await allowance.approveAndPermit()
+      await allowance.approve()
       sendAnalyticsEvent(InterfaceEventName.APPROVE_TOKEN_TXN_SUBMITTED, {
         chain_id: chainId,
         token_symbol: maximumAmountIn?.currency.symbol,
@@ -134,6 +135,40 @@ export default function ConfirmSwapModal({
     onDismiss()
     setConfirmModalState(SummaryModalState.REVIEWING)
   }, [isOpen, onDismiss])
+
+  const prepareSwapFlow = useCallback(() => {
+    setTotalSteps(
+      allowance.state === AllowanceState.REQUIRED
+        ? 1 + (allowance.needsSignature ? 1 : 0) + (allowance.needsPermit2Approval ? 1 : 0)
+        : 1
+    )
+    setCurrentStep(0)
+    const steps: PendingModalStep[] = []
+    if (allowance.state === AllowanceState.REQUIRED && allowance.needsPermit2Approval) {
+      steps.push({
+        title: t`Approve permit`,
+        subtitle: t`Proceed in wallet`,
+        label: t`Why are permits required?`,
+        tooltipText: t`Permit2 allows token approvals to be shared and managed across different applications.`,
+        logo: <CurrencyLogo currency={trade?.inputAmount?.currency} size="48px" />,
+      })
+    }
+
+    if (allowance.state === AllowanceState.REQUIRED && allowance.needsSignature) {
+      steps.push({
+        title: t`Approve ${trade?.inputAmount?.currency?.symbol}`,
+        subtitle: t`Proceed in wallet`,
+        label: t`Why are approvals required?`,
+        tooltipText: t`This provides the Uniswap protocol access to your token for trading. For security, this will expire after 30 days.`,
+        logo: <CurrencyLogo currency={trade?.inputAmount?.currency} size="48px" />,
+      })
+    }
+    steps.push({
+      title: t`Confirm Swap`,
+      subtitle: t`Proceed in wallet`,
+    })
+    setPendingModalSteps(steps)
+  }, [allowance, trade?.inputAmount?.currency])
 
   const modalHeader = useCallback(() => {
     if (confirmModalState !== SummaryModalState.REVIEWING && !showAcceptChanges) {
@@ -156,38 +191,7 @@ export default function ConfirmSwapModal({
     return (
       <SwapModalFooter
         onConfirm={async () => {
-          setTotalSteps(
-            allowance.state === AllowanceState.REQUIRED
-              ? 1 + (allowance.needsSignature ? 1 : 0) + (allowance.needsPermit2Approval ? 1 : 0)
-              : 1
-          )
-          setCurrentStep(0)
-          const steps: PendingModalStep[] = []
-          if (allowance.state === AllowanceState.REQUIRED && allowance.needsPermit2Approval) {
-            steps.push({
-              title: t`Approve permit`,
-              subtitle: t`Proceed in wallet`,
-              label: t`Why are permits required?`,
-              tooltipText: t`Permit2 allows token approvals to be shared and managed across different applications.`,
-              logo: <CurrencyLogo currency={trade?.inputAmount?.currency} size="48px" />,
-            })
-          }
-
-          if (allowance.state === AllowanceState.REQUIRED && allowance.needsSignature) {
-            steps.push({
-              title: t`Approve ${trade?.inputAmount?.currency?.symbol}`,
-              subtitle: t`Proceed in wallet`,
-              label: t`Why are approvals required?`,
-              tooltipText: t`This provides the Uniswap protocol access to your token for trading. For security, this will expire after 30 days.`,
-              logo: <CurrencyLogo currency={trade?.inputAmount?.currency} size="48px" />,
-            })
-          }
-          // todo: add success state to this step
-          steps.push({
-            title: t`Confirm Swap`,
-            subtitle: t`Proceed in wallet`,
-          })
-          setPendingModalSteps(steps)
+          prepareSwapFlow()
           if (allowance.state === AllowanceState.REQUIRED) {
             const allowanceResult: boolean = await updateAllowance()
             if (!allowanceResult) {
@@ -230,7 +234,8 @@ export default function ConfirmSwapModal({
     currentStep,
     confirmed,
     transactionSuccess,
-    allowance,
+    prepareSwapFlow,
+    allowance.state,
     updateAllowance,
     onConfirm,
     onAcceptChanges,
