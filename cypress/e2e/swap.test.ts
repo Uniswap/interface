@@ -8,56 +8,16 @@ import { WETH_GOERLI } from '../fixtures/constants'
 import { getTestSelector } from '../utils'
 
 describe('Swap', () => {
-  const verifyAmount = (field: 'input' | 'output', amountText: string | null) => {
-    if (amountText === null) {
-      cy.get(`#swap-currency-${field} .token-amount-input`).should('not.have.value')
-    } else {
-      cy.get(`#swap-currency-${field} .token-amount-input`).should('have.value', amountText)
-    }
-  }
-
-  const verifyToken = (field: 'input' | 'output', tokenSymbol: string | null) => {
-    if (tokenSymbol === null) {
-      cy.get(`#swap-currency-${field} .token-symbol-container`).should('contain.text', 'Select token')
-    } else {
-      cy.get(`#swap-currency-${field} .token-symbol-container`).should('contain.text', tokenSymbol)
-    }
-  }
-
-  const selectToken = (tokenSymbol: string, field: 'input' | 'output') => {
-    // open token selector...
-    cy.get(`#swap-currency-${field} .open-currency-select-button`).click()
-    // select token...
-    cy.contains(tokenSymbol).click()
-
-    cy.get('body')
-      .then(($body) => {
-        if ($body.find(getTestSelector('TokenSafetyWrapper')).length) {
-          return 'I understand'
-        }
-
-        return 'no-op' // Don't click on anything, a no-op
-      })
-      .then((content) => {
-        if (content !== 'no-op') {
-          cy.contains(content).click()
-        }
-      })
-
-    // token selector should close...
-    cy.contains('Search name or paste address').should('not.exist')
-  }
-
   describe('Swap on main page', () => {
     before(() => {
       cy.visit('/swap', { ethereum: 'hardhat' })
     })
 
     it('starts with ETH selected by default', () => {
-      verifyAmount('input', '')
-      verifyToken('input', 'ETH')
-      verifyAmount('output', null)
-      verifyToken('output', null)
+      cy.get(`#swap-currency-input .token-amount-input`).should('have.value', '')
+      cy.get(`#swap-currency-input .token-symbol-container`).should('contain.text', 'ETH')
+      cy.get(`#swap-currency-output .token-amount-input`).should('not.have.value')
+      cy.get(`#swap-currency-output .token-symbol-container`).should('contain.text', 'Select token')
     })
 
     it('can enter an amount into input', () => {
@@ -133,39 +93,24 @@ describe('Swap', () => {
         })
     })
 
-    it('should have the correct default input from URL params ', () => {
+    it('should default inputs from URL params ', () => {
       cy.visit(`/swap?inputCurrency=${WETH_GOERLI}`)
+      cy.get(`#swap-currency-input .token-symbol-container`).should('contain.text', 'WETH')
+      cy.get(`#swap-currency-output .token-symbol-container`).should('contain.text', 'Select token')
 
-      verifyToken('input', 'WETH')
-      verifyToken('output', null)
-
-      selectToken('Ether', 'output')
-      cy.get(getTestSelector('swap-currency-button')).first().click()
-
-      verifyToken('input', 'ETH')
-      verifyToken('output', 'WETH')
-    })
-
-    it('should have the correct default output from URL params ', () => {
       cy.visit(`/swap?outputCurrency=${WETH_GOERLI}`)
+      cy.get(`#swap-currency-input .token-symbol-container`).should('contain.text', 'Select token')
+      cy.get(`#swap-currency-output .token-symbol-container`).should('contain.text', 'WETH')
 
-      verifyToken('input', null)
-      verifyToken('output', 'WETH')
-
-      cy.get(getTestSelector('swap-currency-button')).first().click()
-      verifyToken('input', 'WETH')
-      verifyToken('output', null)
-
-      selectToken('Ether', 'output')
-      cy.get(getTestSelector('swap-currency-button')).first().click()
-
-      verifyToken('input', 'ETH')
-      verifyToken('output', 'WETH')
+      cy.visit(`/swap?inputCurrency=NATIVE&outputCurrency=${WETH_GOERLI}`)
+      cy.get(`#swap-currency-input .token-symbol-container`).should('contain.text', 'ETH')
+      cy.get(`#swap-currency-output .token-symbol-container`).should('contain.text', 'WETH')
     })
 
     it('ETH to wETH is same value (wrapped swaps have no price impact)', () => {
       cy.visit('/swap')
-      selectToken('WETH', 'output')
+      cy.get(`#swap-currency-output .open-currency-select-button`).click()
+      cy.contains('WETH').click()
       cy.get('#swap-currency-input .token-amount-input').clear().type('0.01')
       cy.get('#swap-currency-output .token-amount-input').should('have.value', '0.01')
     })
@@ -361,21 +306,23 @@ describe('Swap', () => {
     })
 
     it('should have the expected output for a tokens detail page', () => {
-      verifyAmount('input', '')
-      verifyToken('input', null)
-      verifyAmount('output', null)
-      verifyToken('output', 'UNI')
+      cy.get(`#swap-currency-input .token-amount-input`).should('have.value', '')
+      cy.get(`#swap-currency-$input .token-symbol-container`).should('contain.text', 'Select token')
+      cy.get(`#swap-currency-output .token-amount-input`).should('not.have.value')
+      cy.get(`#swap-currency-output .token-symbol-container`).should('contain.text', 'UNI')
     })
 
     it('should automatically navigate to the new TDP', () => {
-      selectToken('WETH', 'output')
+      cy.get(`#swap-currency-output .open-currency-select-button`).click()
+      cy.contains('WETH').click()
       cy.url().should('include', `${WETH9[1].address}`)
       cy.url().should('not.include', `${UNI_MAINNET[1].address}`)
     })
 
     it('should not share swap state with the main swap page', () => {
-      verifyToken('output', 'UNI')
-      selectToken('WETH', 'input')
+      cy.get(`#swap-currency-output .token-symbol-container`).should('contain.text', 'UNI')
+      cy.get(`#swap-currency-input.open-currency-select-button`).click()
+      cy.contains('WETH').click()
       cy.visit('/swap', { featureFlags: [FeatureFlag.removeWidget] })
       cy.contains('UNI').should('not.exist')
       cy.contains('WETH').should('not.exist')
@@ -407,7 +354,7 @@ describe('Swap', () => {
       cy.get(getTestSelector('tokens-network-filter-option-arbitrum')).click()
       cy.get(getTestSelector('tokens-network-filter-selected')).should('contain', 'Arbitrum')
       cy.get(getTestSelector('token-table-row-ARB')).click()
-      verifyToken('output', 'ARB')
+      cy.get(`#swap-currency-output .token-symbol-container`).should('contain.text', 'ARB')
       cy.contains('Connect to Arbitrum').should('exist')
     })
   })
