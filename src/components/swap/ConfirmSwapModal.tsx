@@ -5,18 +5,18 @@ import { Trade } from '@uniswap/router-sdk'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
+import Modal from 'components/Modal'
 import { useMaxAmountIn } from 'hooks/useMaxAmountIn'
 import { Allowance, AllowanceState } from 'hooks/usePermit2Allowance'
+import usePrevious from 'hooks/usePrevious'
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
+import { useIsTransactionConfirmed, useTransaction } from 'state/transactions/hooks'
 import invariant from 'tiny-invariant'
 import { tradeMeaningfullyDiffers } from 'utils/tradeMeaningFullyDiffer'
 
-import TransactionConfirmationModal, {
-  ConfirmationModalContent,
-  TransactionErrorContent,
-} from '../TransactionConfirmationModal'
-import { PendingModalContent } from './PendingModalContent'
+import { ConfirmationModalContent, TransactionErrorContent } from '../TransactionConfirmationModal'
+import { PendingModalContent, PendingModalStep } from './PendingModalContent'
 import SwapModalFooter from './SwapModalFooter'
 import SwapModalHeader from './SwapModalHeader'
 
@@ -36,7 +36,6 @@ export default function ConfirmSwapModal({
   onDismiss,
   swapErrorMessage,
   isOpen,
-  attemptingTxn,
   txHash,
   swapQuoteReceivedDate,
   fiatValueInput,
@@ -45,7 +44,6 @@ export default function ConfirmSwapModal({
   isOpen: boolean
   trade: InterfaceTrade<Currency, Currency, TradeType> | undefined
   originalTrade: Trade<Currency, Currency, TradeType> | undefined
-  attemptingTxn: boolean
   txHash: string | undefined
   allowedSlippage: Percent
   allowance: Allowance
@@ -60,16 +58,29 @@ export default function ConfirmSwapModal({
   // shouldLogModalCloseEvent lets the child SwapModalHeader component know when modal has been closed
   // and an event triggered by modal closing should be logged.
   const [shouldLogModalCloseEvent, setShouldLogModalCloseEvent] = useState(false)
-  const showAcceptChanges = useMemo(
-    () => Boolean(trade && originalTrade && tradeMeaningfullyDiffers(trade, originalTrade)),
-    [originalTrade, trade]
-  )
-
   const [confirmModalState, setConfirmModalState] = useState<SummaryModalState>(SummaryModalState.REVIEWING)
+  const showAcceptChanges = useMemo(
+    () =>
+      Boolean(
+        trade &&
+          originalTrade &&
+          tradeMeaningfullyDiffers(trade, originalTrade) &&
+          // no point in resetting the UI if the transaction is already sent.
+          confirmModalState !== SummaryModalState.PENDING_CONFIRMATION
+      ),
+    [confirmModalState, originalTrade, trade]
+  )
 
   const { chainId } = useWeb3React()
   const trace = useTrace()
   const maximumAmountIn = useMaxAmountIn(trade, allowedSlippage)
+  const [totalSteps, setTotalSteps] = useState(1)
+  const [pendingModalSteps, setPendingModalSteps] = useState<PendingModalStep[]>([])
+  const [currentStep, setCurrentStep] = useState(0)
+
+  const transaction = useTransaction(txHash)
+  const confirmed = useIsTransactionConfirmed(txHash)
+  const transactionSuccess = transaction?.receipt?.status === 1
 
   useEffect(() => {
     if (
@@ -77,10 +88,27 @@ export default function ConfirmSwapModal({
       confirmModalState === SummaryModalState.ALLOWING &&
       allowance.state === AllowanceState.ALLOWED
     ) {
+      setCurrentStep(totalSteps - 1)
       onConfirm()
       setConfirmModalState(SummaryModalState.PENDING_CONFIRMATION)
     }
-  }, [allowance.state, confirmModalState, onConfirm, showAcceptChanges])
+  }, [allowance, confirmModalState, currentStep, onConfirm, showAcceptChanges, totalSteps])
+
+  const previousPermitNeeded = usePrevious(
+    allowance.state === AllowanceState.REQUIRED ? allowance.needsPermit2Approval : undefined
+  )
+
+  useEffect(() => {
+    if (
+      allowance.state === AllowanceState.REQUIRED &&
+      !allowance.needsPermit2Approval &&
+      previousPermitNeeded &&
+      allowance.needsSignature
+    ) {
+      // We successfully requested Permit2 approval and need to move to the signature step.
+      setCurrentStep(currentStep + 1)
+    }
+  }, [allowance, currentStep, previousPermitNeeded])
 
   const updateAllowance = useCallback(async () => {
     invariant(allowance.state === AllowanceState.REQUIRED)
@@ -115,48 +143,58 @@ export default function ConfirmSwapModal({
   }, [allowedSlippage, confirmModalState, showAcceptChanges, trade])
 
   const modalBottom = useCallback(() => {
-    if (
-      !showAcceptChanges &&
-      confirmModalState === SummaryModalState.ALLOWING &&
-      allowance.state === AllowanceState.REQUIRED &&
-      allowance.needsPermit2Approval
-    ) {
+    if (confirmModalState !== SummaryModalState.REVIEWING && !showAcceptChanges) {
       return (
         <PendingModalContent
-          title={t`Approve permit`}
-          subtitle={t`Proceed in wallet`}
-          label={t`Why are permits required?`}
-          tooltipText={t`Permit2 allows token approvals to be shared and managed across different applications.`}
-          logo={<CurrencyLogo currency={trade?.inputAmount?.currency} size="48px" />}
+          steps={pendingModalSteps}
+          activeStepIndex={currentStep}
+          confirmed={confirmed}
+          transactionSuccess={transactionSuccess}
         />
       )
     }
-    if (
-      !showAcceptChanges &&
-      confirmModalState === SummaryModalState.ALLOWING &&
-      allowance.state === AllowanceState.REQUIRED &&
-      allowance.needsSignature
-    ) {
-      return (
-        <PendingModalContent
-          title={t`Approve ${trade?.inputAmount?.currency?.symbol}`}
-          subtitle={t`Proceed in wallet`}
-          label={t`Why are approvals required?`}
-          tooltipText={t`This provides the Uniswap protocol access to your token for trading. For security, this will expire after 30 days.`}
-          logo={<CurrencyLogo currency={trade?.inputAmount?.currency} size="48px" />}
-        />
-      )
-    }
-    // todo: create a new pending state for SummaryModalState.PENDING_CONFIRMATION ?
     return (
       <SwapModalFooter
         onConfirm={async () => {
+          setTotalSteps(
+            allowance.state === AllowanceState.REQUIRED
+              ? 1 + (allowance.needsSignature ? 1 : 0) + (allowance.needsPermit2Approval ? 1 : 0)
+              : 1
+          )
+          setCurrentStep(0)
+          const steps: PendingModalStep[] = []
+          if (allowance.state === AllowanceState.REQUIRED && allowance.needsPermit2Approval) {
+            steps.push({
+              title: t`Approve permit`,
+              subtitle: t`Proceed in wallet`,
+              label: t`Why are permits required?`,
+              tooltipText: t`Permit2 allows token approvals to be shared and managed across different applications.`,
+              logo: <CurrencyLogo currency={trade?.inputAmount?.currency} size="48px" />,
+            })
+          }
+
+          if (allowance.state === AllowanceState.REQUIRED && allowance.needsSignature) {
+            steps.push({
+              title: t`Approve ${trade?.inputAmount?.currency?.symbol}`,
+              subtitle: t`Proceed in wallet`,
+              label: t`Why are approvals required?`,
+              tooltipText: t`This provides the Uniswap protocol access to your token for trading. For security, this will expire after 30 days.`,
+              logo: <CurrencyLogo currency={trade?.inputAmount?.currency} size="48px" />,
+            })
+          }
+          // todo: add success state to this step
+          steps.push({
+            title: t`Confirm Swap`,
+            subtitle: t`Proceed in wallet`,
+          })
+          setPendingModalSteps(steps)
           if (allowance.state === AllowanceState.REQUIRED) {
             const allowanceResult: boolean = await updateAllowance()
             if (!allowanceResult) {
               setConfirmModalState(SummaryModalState.REVIEWING)
             }
           } else {
+            setConfirmModalState(SummaryModalState.PENDING_CONFIRMATION)
             onConfirm()
           }
         }}
@@ -178,29 +216,25 @@ export default function ConfirmSwapModal({
       />
     )
   }, [
-    allowance,
     confirmModalState,
+    showAcceptChanges,
     trade,
     txHash,
     allowedSlippage,
-    showAcceptChanges,
     swapErrorMessage,
     swapQuoteReceivedDate,
     fiatValueInput,
     fiatValueOutput,
     shouldLogModalCloseEvent,
-    onAcceptChanges,
+    pendingModalSteps,
+    currentStep,
+    confirmed,
+    transactionSuccess,
+    allowance,
     updateAllowance,
     onConfirm,
+    onAcceptChanges,
   ])
-
-  // text to show while loading
-  const pendingText = (
-    <Trans>
-      Swapping {trade?.inputAmount?.toSignificant(6)} {trade?.inputAmount?.currency?.symbol} for{' '}
-      {trade?.outputAmount?.toSignificant(6)} {trade?.outputAmount?.currency?.symbol}
-    </Trans>
-  )
 
   const confirmationContent = useCallback(
     () =>
@@ -219,15 +253,9 @@ export default function ConfirmSwapModal({
 
   return (
     <Trace modal={InterfaceModalName.CONFIRM_SWAP}>
-      <TransactionConfirmationModal
-        isOpen={isOpen}
-        onDismiss={onModalDismiss}
-        attemptingTxn={attemptingTxn}
-        hash={txHash}
-        content={confirmationContent}
-        pendingText={pendingText}
-        currencyToAdd={trade?.outputAmount.currency}
-      />
+      <Modal isOpen={isOpen} $scrollOverlay={true} onDismiss={onModalDismiss} maxHeight={90}>
+        {confirmationContent()}
+      </Modal>
     </Trace>
   )
 }

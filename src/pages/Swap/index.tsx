@@ -554,7 +554,6 @@ export function Swap({
         trade={trade}
         originalTrade={tradeToConfirm}
         onAcceptChanges={handleAcceptChanges}
-        attemptingTxn={attemptingTxn}
         txHash={txHash}
         allowedSlippage={allowedSlippage}
         onConfirm={handleSwap}
