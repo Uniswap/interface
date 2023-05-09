@@ -576,7 +576,7 @@ function AddLiquidity() {
           onDismiss={handleDismissConfirmation}
           attemptingTxn={attemptingTxn}
           hash={txHash}
-          content={() => (
+          reviewContent={() => (
             <ConfirmationModalContent
               title={<Trans>Add Liquidity</Trans>}
               onDismiss={handleDismissConfirmation}
