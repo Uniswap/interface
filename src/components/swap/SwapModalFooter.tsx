@@ -24,8 +24,9 @@ import {
 import { ReactNode, useEffect, useMemo, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
 import { Text } from 'rebass'
+import { RouterPreference } from 'state/routing/slice'
 import { InterfaceTrade } from 'state/routing/types'
-import { useClientSideRouter, useUserSlippageTolerance } from 'state/user/hooks'
+import { useRouterPreference, useUserSlippageTolerance } from 'state/user/hooks'
 import styled, { useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { formatTransactionAmount, priceToPreciseFloat } from 'utils/formatNumbers'
@@ -177,7 +178,7 @@ export default function SwapModalFooter({
 }) {
   const transactionDeadlineSecondsSinceEpoch = useTransactionDeadline()?.toNumber() // in seconds since epoch
   const isAutoSlippage = useUserSlippageTolerance()[0] === 'auto'
-  const [clientSideRouter] = useClientSideRouter()
+  const [routerPreference] = useRouterPreference()
   const routes = getTokenPath(trade)
   const [lastExecutionPrice, setLastExecutionPrice] = useState(trade.executionPrice)
   const [priceUpdate, setPriceUpdate] = useState<number | undefined>()
@@ -270,7 +271,7 @@ export default function SwapModalFooter({
               allowedSlippage,
               transactionDeadlineSecondsSinceEpoch,
               isAutoSlippage,
-              isAutoRouterApi: !clientSideRouter,
+              isAutoRouterApi: routerPreference === RouterPreference.AUTO || routerPreference === RouterPreference.API,
               swapQuoteReceivedDate,
               routes,
               fiatValueInput: fiatValueInput.data,

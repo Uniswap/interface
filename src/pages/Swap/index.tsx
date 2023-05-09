@@ -271,6 +271,7 @@ export function Swap({
   const {
     trade: { state: tradeState, trade },
     allowedSlippage,
+    autoSlippage,
     currencyBalances,
     parsedAmount,
     currencies,
@@ -579,7 +580,7 @@ export function Swap({
         onCancel={handleDismissTokenWarning}
         showCancel={true}
       />
-      <SwapHeader allowedSlippage={allowedSlippage} />
+      <SwapHeader autoSlippage={autoSlippage} />
       <ConfirmSwapModal
         isOpen={showConfirm}
         trade={trade}
