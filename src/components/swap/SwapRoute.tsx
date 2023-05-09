@@ -14,6 +14,7 @@ import RouterLabel from './RouterLabel'
 
 export default function SwapRoute({
   trade,
+  syncing,
 }: {
   trade: InterfaceTrade<Currency, Currency, TradeType>
   syncing: boolean
@@ -31,7 +32,7 @@ export default function SwapRoute({
         ? '<$0.01'
         : '$' + trade.gasUseEstimateUSD.toFixed(2)
       : undefined
-  const syncing = true
+
   return (
     <Column gap="md">
       <RouterLabel />
