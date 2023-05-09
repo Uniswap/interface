@@ -25,6 +25,8 @@ interface AllowanceRequired {
   token: Token
   isApprovalLoading: boolean
   approveAndPermit: () => Promise<void>
+  approve: () => Promise<void>
+  permit: () => Promise<void>
   needsPermit2Approval: boolean
   needsSignature: boolean
 }
@@ -103,6 +105,19 @@ export default function usePermit2Allowance(amount?: CurrencyAmount<Token>, spen
     }
   }, [addTransaction, shouldRequestApproval, shouldRequestSignature, updatePermitAllowance, updateTokenAllowance])
 
+  const approve = useCallback(async () => {
+    if (shouldRequestApproval) {
+      const { response, info } = await updateTokenAllowance()
+      addTransaction(response, info)
+    }
+  }, [addTransaction, shouldRequestApproval, updateTokenAllowance])
+
+  const permit = useCallback(async () => {
+    if (shouldRequestSignature) {
+      await updatePermitAllowance()
+    }
+  }, [shouldRequestSignature, updatePermitAllowance])
+
   return useMemo(() => {
     if (token) {
       if (!tokenAllowance || !permitAllowance) {
@@ -113,6 +128,8 @@ export default function usePermit2Allowance(amount?: CurrencyAmount<Token>, spen
           state: AllowanceState.REQUIRED,
           isApprovalLoading: false,
           approveAndPermit,
+          approve,
+          permit,
           needsPermit2Approval: !isApproved,
           needsSignature: shouldRequestSignature,
         }
@@ -122,6 +139,8 @@ export default function usePermit2Allowance(amount?: CurrencyAmount<Token>, spen
           state: AllowanceState.REQUIRED,
           isApprovalLoading,
           approveAndPermit,
+          approve,
+          permit,
           needsPermit2Approval: true,
           needsSignature: shouldRequestSignature,
         }
@@ -135,11 +154,13 @@ export default function usePermit2Allowance(amount?: CurrencyAmount<Token>, spen
       needsSignature: false,
     }
   }, [
+    approve,
     approveAndPermit,
     isApprovalLoading,
     isApproved,
     isPermitted,
     isSigned,
+    permit,
     permitAllowance,
     shouldRequestSignature,
     signature,
