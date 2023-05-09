@@ -4,11 +4,12 @@ import { useWeb3React } from '@web3-react/core'
 import { OpacityHoverState, ScrollBarStyles } from 'components/Common'
 import Row from 'components/Row'
 import { OrderType } from 'graphql/data/__generated__/types-and-hooks'
+import { useScreenSize } from 'hooks/useScreenSize'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { AddToBagIcon, HomeSearchIcon } from 'nft/components/icons'
-import { useIsMobile, useSubscribeScrollState } from 'nft/hooks'
+import { useSubscribeScrollState } from 'nft/hooks'
 import { Offer, SellOrder } from 'nft/types'
 import { formatEth, getMarketplaceIcon, timeUntil } from 'nft/utils'
 import styled, { useTheme } from 'styled-components/macro'
@@ -30,6 +31,10 @@ const TableRowScrollableContainer = styled.div`
   ${ScrollBarStyles}
 `
 
+const TableHeaderRowContainer = styled.div<{ userCanScroll: boolean }>`
+  margin-right: ${({ userCanScroll }) => (userCanScroll ? '11px' : '0')};
+`
+
 interface TableContentComponentProps {
   headerRow: React.ReactNode
   contentRows: React.ReactNode[]
@@ -41,7 +46,7 @@ export const TableContentComponent = ({ headerRow, contentRows, type }: TableCon
 
   return (
     <>
-      {headerRow}
+      <TableHeaderRowContainer userCanScroll={userCanScroll}>{headerRow}</TableHeaderRowContainer>
       <TableRowsContainer>
         {scrollProgress > 0 && <Scrim />}
         <TableRowScrollableContainer ref={scrollRef} onScroll={scrollHandler}>
@@ -111,12 +116,14 @@ const PriceCell = ({ price }: { price: number }) => {
 }
 
 export const HeaderRow = ({ type, is1155 }: { type: TableTabsKeys; is1155?: boolean }) => {
-  const isMobile = useIsMobile()
+  const screenSize = useScreenSize()
+  const isMobile = !screenSize['sm']
+  const reducedPriceWidth = isMobile || (screenSize['lg'] && !screenSize['xl'])
 
   return (
     <Row gap="12px" padding="6px 6px 6px 0px">
       <HomeSearchIcon />
-      <TableCell $flex={isMobile ? 1 : 1.75}>
+      <TableCell $flex={reducedPriceWidth ? 1 : 1.75}>
         <ThemedText.SubHeaderSmall color="textSecondary">
           <Trans>Price</Trans>
         </ThemedText.SubHeaderSmall>
@@ -141,7 +148,7 @@ export const HeaderRow = ({ type, is1155 }: { type: TableTabsKeys; is1155?: bool
         </ThemedText.SubHeaderSmall>
       </TableCell>
       {/* An empty cell is needed in the headers for proper vertical alignment with the action buttons */}
-      <TableCell $flex={isMobile ? (type === TableTabsKeys.Offers ? 0.5 : 0.25) : 1}>&nbsp;</TableCell>
+      <TableCell $flex={isMobile ? 0.25 : 1}>&nbsp;</TableCell>
     </Row>
   )
 }
@@ -155,17 +162,20 @@ export const ContentRow = ({
   buttonCTA: React.ReactNode
   is1155?: boolean
 }) => {
-  const isMobile = useIsMobile()
+  const screenSize = useScreenSize()
+  const isMobile = !screenSize['sm']
   const theme = useTheme()
   const date = content.endAt && new Date(content.endAt)
   const isSellOrder = (content as SellOrder).type === OrderType.Listing
+  const reducedPriceWidth = isMobile || (screenSize['lg'] && !screenSize['xl'])
+
   return (
     <Row gap="12px" padding="16px 6px 16px 0px">
       <Link href={content.marketplaceUrl} target="_blank" rel="noopener noreferrer">
         {getMarketplaceIcon(content.marketplace, '20')}
       </Link>
       {content.price && (
-        <TableCell $flex={isMobile ? 1 : 1.75}>
+        <TableCell $flex={reducedPriceWidth ? 1 : 1.75}>
           <PriceCell price={content.price.value} />
         </TableCell>
       )}

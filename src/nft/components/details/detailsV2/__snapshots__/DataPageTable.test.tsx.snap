@@ -2,14 +2,14 @@
 
 exports[`data page listings table content loads with a given asset 1`] = `
 <DocumentFragment>
-  .c0 {
+  .c1 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
   padding: 6px 6px 6px 0px;
 }
 
-.c1 {
+.c2 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -28,24 +28,28 @@ exports[`data page listings table content loads with a given asset 1`] = `
   gap: 12px;
 }
 
-.c3 {
+.c4 {
   color: #7780A0;
 }
 
-.c2 {
+.c0 {
+  margin-right: 0;
+}
+
+.c3 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-  -webkit-flex: 1.75;
-  -ms-flex: 1.75;
-  flex: 1.75;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
   -webkit-flex-shrink: 0;
   -ms-flex-negative: 0;
   flex-shrink: 0;
 }
 
-.c4 {
+.c5 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -62,30 +66,8 @@ exports[`data page listings table content loads with a given asset 1`] = `
   flex-shrink: 0;
 }
 
-.c5 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex: 1;
-  -ms-flex: 1;
-  flex: 1;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-}
-
 @media screen and (max-width:640px) {
-  .c2 {
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -ms-flexbox;
-    display: flex;
-  }
-}
-
-@media screen and (max-width:640px) {
-  .c4 {
+  .c3 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -103,42 +85,46 @@ exports[`data page listings table content loads with a given asset 1`] = `
 }
 
 <div
-    class="c0 c1"
+    class="c0"
   >
-    <svg
-      fill="none"
-      height="20"
-      viewBox="0 0 20 20"
-      width="20"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        d="M17.898 7.57097L11.7212 2.49102C10.7237 1.67268 9.27795 1.67185 8.28045 2.49102L2.10379 7.57016C1.83796 7.78932 1.79877 8.18268 2.01794 8.45018C2.2371 8.71768 2.63213 8.75437 2.89796 8.53604L3.54209 8.00605V15.0002C3.54209 17.0152 4.65209 18.1252 6.66709 18.1252H13.3338C15.3488 18.1252 16.4588 17.0152 16.4588 15.0002V8.00605L17.1029 8.53604C17.2195 8.63187 17.3604 8.67845 17.5004 8.67845C17.6804 8.67845 17.8596 8.601 17.9829 8.451C18.2029 8.1835 18.1638 7.79014 17.898 7.57097ZM15.2088 15.0002C15.2088 16.3143 14.6479 16.8752 13.3338 16.8752H6.66709C5.35292 16.8752 4.79209 16.3143 4.79209 15.0002V6.97852L9.07462 3.45771C9.61045 3.01688 10.3913 3.01688 10.9271 3.45771L15.2096 6.97934V15.0002H15.2088ZM6.45875 10.7643C6.45875 12.4493 7.82958 13.8202 9.51458 13.8202C10.1312 13.8202 10.7038 13.6335 11.1838 13.3176L12.4746 14.6085C12.5962 14.7302 12.7563 14.7918 12.9163 14.7918C13.0763 14.7918 13.2363 14.731 13.358 14.6085C13.6021 14.3644 13.6021 13.9685 13.358 13.7243L12.0663 12.4326C12.3813 11.9518 12.568 11.3794 12.568 10.7627C12.568 9.07854 11.1971 7.70688 9.51295 7.70688C7.82962 7.70854 6.45875 9.07933 6.45875 10.7643ZM11.3196 10.7643C11.3196 11.7602 10.5096 12.5702 9.51458 12.5702C8.51875 12.5702 7.70875 11.7602 7.70875 10.7643C7.70875 9.7685 8.51875 8.9585 9.51458 8.9585C10.5096 8.9585 11.3196 9.7685 11.3196 10.7643Z"
-        fill="#7780A0"
-      />
-    </svg>
     <div
-      class="c2"
+      class="c1 c2"
     >
-      <div
-        class="c3 css-1aekuku"
+      <svg
+        fill="none"
+        height="20"
+        viewBox="0 0 20 20"
+        width="20"
+        xmlns="http://www.w3.org/2000/svg"
       >
-        Price
-      </div>
-    </div>
-    <div
-      class="c4"
-    >
+        <path
+          d="M17.898 7.57097L11.7212 2.49102C10.7237 1.67268 9.27795 1.67185 8.28045 2.49102L2.10379 7.57016C1.83796 7.78932 1.79877 8.18268 2.01794 8.45018C2.2371 8.71768 2.63213 8.75437 2.89796 8.53604L3.54209 8.00605V15.0002C3.54209 17.0152 4.65209 18.1252 6.66709 18.1252H13.3338C15.3488 18.1252 16.4588 17.0152 16.4588 15.0002V8.00605L17.1029 8.53604C17.2195 8.63187 17.3604 8.67845 17.5004 8.67845C17.6804 8.67845 17.8596 8.601 17.9829 8.451C18.2029 8.1835 18.1638 7.79014 17.898 7.57097ZM15.2088 15.0002C15.2088 16.3143 14.6479 16.8752 13.3338 16.8752H6.66709C5.35292 16.8752 4.79209 16.3143 4.79209 15.0002V6.97852L9.07462 3.45771C9.61045 3.01688 10.3913 3.01688 10.9271 3.45771L15.2096 6.97934V15.0002H15.2088ZM6.45875 10.7643C6.45875 12.4493 7.82958 13.8202 9.51458 13.8202C10.1312 13.8202 10.7038 13.6335 11.1838 13.3176L12.4746 14.6085C12.5962 14.7302 12.7563 14.7918 12.9163 14.7918C13.0763 14.7918 13.2363 14.731 13.358 14.6085C13.6021 14.3644 13.6021 13.9685 13.358 13.7243L12.0663 12.4326C12.3813 11.9518 12.568 11.3794 12.568 10.7627C12.568 9.07854 11.1971 7.70688 9.51295 7.70688C7.82962 7.70854 6.45875 9.07933 6.45875 10.7643ZM11.3196 10.7643C11.3196 11.7602 10.5096 12.5702 9.51458 12.5702C8.51875 12.5702 7.70875 11.7602 7.70875 10.7643C7.70875 9.7685 8.51875 8.9585 9.51458 8.9585C10.5096 8.9585 11.3196 9.7685 11.3196 10.7643Z"
+          fill="#7780A0"
+        />
+      </svg>
       <div
-        class="c3 css-1aekuku"
+        class="c3"
       >
-        Expires in
+        <div
+          class="c4 css-1aekuku"
+        >
+          Price
+        </div>
       </div>
-    </div>
-    <div
-      class="c5"
-    >
-       
+      <div
+        class="c5"
+      >
+        <div
+          class="c4 css-1aekuku"
+        >
+          Expires in
+        </div>
+      </div>
+      <div
+        class="c3"
+      >
+         
+      </div>
     </div>
   </div>
   .c0 {
@@ -179,10 +165,6 @@ exports[`data page listings table content loads with a given asset 1`] = `
 
 }
 
-@media screen and (max-width:640px) {
-
-}
-
 <div
     class="c0"
   >
@@ -195,14 +177,14 @@ exports[`data page listings table content loads with a given asset 1`] = `
 
 exports[`data page offers table content loads with a given asset 1`] = `
 <DocumentFragment>
-  .c0 {
+  .c1 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
   padding: 6px 6px 6px 0px;
 }
 
-.c1 {
+.c2 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -221,24 +203,15 @@ exports[`data page offers table content loads with a given asset 1`] = `
   gap: 12px;
 }
 
-.c3 {
+.c4 {
   color: #7780A0;
 }
 
-.c2 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex: 1.75;
-  -ms-flex: 1.75;
-  flex: 1.75;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
+.c0 {
+  margin-right: 0;
 }
 
-.c4 {
+.c3 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -259,10 +232,6 @@ exports[`data page offers table content loads with a given asset 1`] = `
   -webkit-flex: 1;
   -ms-flex: 1;
   flex: 1;
-  -webkit-box-pack: end;
-  -webkit-justify-content: flex-end;
-  -ms-flex-pack: end;
-  justify-content: flex-end;
   -webkit-flex-shrink: 0;
   -ms-flex-negative: 0;
   flex-shrink: 0;
@@ -276,32 +245,27 @@ exports[`data page offers table content loads with a given asset 1`] = `
   -webkit-flex: 1;
   -ms-flex: 1;
   flex: 1;
+  -webkit-box-pack: end;
+  -webkit-justify-content: flex-end;
+  -ms-flex-pack: end;
+  justify-content: flex-end;
   -webkit-flex-shrink: 0;
   -ms-flex-negative: 0;
   flex-shrink: 0;
 }
 
 @media screen and (max-width:640px) {
-  .c2 {
+  .c3 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
     display: flex;
-  }
-}
-
-@media screen and (max-width:640px) {
-  .c4 {
-    display: none;
   }
 }
 
 @media screen and (max-width:640px) {
   .c5 {
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -ms-flexbox;
-    display: flex;
+    display: none;
   }
 }
 
@@ -327,51 +291,55 @@ exports[`data page offers table content loads with a given asset 1`] = `
 }
 
 <div
-    class="c0 c1"
+    class="c0"
   >
-    <svg
-      fill="none"
-      height="20"
-      viewBox="0 0 20 20"
-      width="20"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        d="M17.898 7.57097L11.7212 2.49102C10.7237 1.67268 9.27795 1.67185 8.28045 2.49102L2.10379 7.57016C1.83796 7.78932 1.79877 8.18268 2.01794 8.45018C2.2371 8.71768 2.63213 8.75437 2.89796 8.53604L3.54209 8.00605V15.0002C3.54209 17.0152 4.65209 18.1252 6.66709 18.1252H13.3338C15.3488 18.1252 16.4588 17.0152 16.4588 15.0002V8.00605L17.1029 8.53604C17.2195 8.63187 17.3604 8.67845 17.5004 8.67845C17.6804 8.67845 17.8596 8.601 17.9829 8.451C18.2029 8.1835 18.1638 7.79014 17.898 7.57097ZM15.2088 15.0002C15.2088 16.3143 14.6479 16.8752 13.3338 16.8752H6.66709C5.35292 16.8752 4.79209 16.3143 4.79209 15.0002V6.97852L9.07462 3.45771C9.61045 3.01688 10.3913 3.01688 10.9271 3.45771L15.2096 6.97934V15.0002H15.2088ZM6.45875 10.7643C6.45875 12.4493 7.82958 13.8202 9.51458 13.8202C10.1312 13.8202 10.7038 13.6335 11.1838 13.3176L12.4746 14.6085C12.5962 14.7302 12.7563 14.7918 12.9163 14.7918C13.0763 14.7918 13.2363 14.731 13.358 14.6085C13.6021 14.3644 13.6021 13.9685 13.358 13.7243L12.0663 12.4326C12.3813 11.9518 12.568 11.3794 12.568 10.7627C12.568 9.07854 11.1971 7.70688 9.51295 7.70688C7.82962 7.70854 6.45875 9.07933 6.45875 10.7643ZM11.3196 10.7643C11.3196 11.7602 10.5096 12.5702 9.51458 12.5702C8.51875 12.5702 7.70875 11.7602 7.70875 10.7643C7.70875 9.7685 8.51875 8.9585 9.51458 8.9585C10.5096 8.9585 11.3196 9.7685 11.3196 10.7643Z"
-        fill="#7780A0"
-      />
-    </svg>
     <div
-      class="c2"
+      class="c1 c2"
     >
-      <div
-        class="c3 css-1aekuku"
+      <svg
+        fill="none"
+        height="20"
+        viewBox="0 0 20 20"
+        width="20"
+        xmlns="http://www.w3.org/2000/svg"
       >
-        Price
-      </div>
-    </div>
-    <div
-      class="c4"
-    >
+        <path
+          d="M17.898 7.57097L11.7212 2.49102C10.7237 1.67268 9.27795 1.67185 8.28045 2.49102L2.10379 7.57016C1.83796 7.78932 1.79877 8.18268 2.01794 8.45018C2.2371 8.71768 2.63213 8.75437 2.89796 8.53604L3.54209 8.00605V15.0002C3.54209 17.0152 4.65209 18.1252 6.66709 18.1252H13.3338C15.3488 18.1252 16.4588 17.0152 16.4588 15.0002V8.00605L17.1029 8.53604C17.2195 8.63187 17.3604 8.67845 17.5004 8.67845C17.6804 8.67845 17.8596 8.601 17.9829 8.451C18.2029 8.1835 18.1638 7.79014 17.898 7.57097ZM15.2088 15.0002C15.2088 16.3143 14.6479 16.8752 13.3338 16.8752H6.66709C5.35292 16.8752 4.79209 16.3143 4.79209 15.0002V6.97852L9.07462 3.45771C9.61045 3.01688 10.3913 3.01688 10.9271 3.45771L15.2096 6.97934V15.0002H15.2088ZM6.45875 10.7643C6.45875 12.4493 7.82958 13.8202 9.51458 13.8202C10.1312 13.8202 10.7038 13.6335 11.1838 13.3176L12.4746 14.6085C12.5962 14.7302 12.7563 14.7918 12.9163 14.7918C13.0763 14.7918 13.2363 14.731 13.358 14.6085C13.6021 14.3644 13.6021 13.9685 13.358 13.7243L12.0663 12.4326C12.3813 11.9518 12.568 11.3794 12.568 10.7627C12.568 9.07854 11.1971 7.70688 9.51295 7.70688C7.82962 7.70854 6.45875 9.07933 6.45875 10.7643ZM11.3196 10.7643C11.3196 11.7602 10.5096 12.5702 9.51458 12.5702C8.51875 12.5702 7.70875 11.7602 7.70875 10.7643C7.70875 9.7685 8.51875 8.9585 9.51458 8.9585C10.5096 8.9585 11.3196 9.7685 11.3196 10.7643Z"
+          fill="#7780A0"
+        />
+      </svg>
       <div
-        class="c3 css-1aekuku"
+        class="c3"
       >
-        From
+        <div
+          class="c4 css-1aekuku"
+        >
+          Price
+        </div>
       </div>
-    </div>
-    <div
-      class="c5"
-    >
       <div
-        class="c3 css-1aekuku"
+        class="c5"
       >
-        Expires in
+        <div
+          class="c4 css-1aekuku"
+        >
+          From
+        </div>
       </div>
-    </div>
-    <div
-      class="c6"
-    >
-       
+      <div
+        class="c6"
+      >
+        <div
+          class="c4 css-1aekuku"
+        >
+          Expires in
+        </div>
+      </div>
+      <div
+        class="c3"
+      >
+         
+      </div>
     </div>
   </div>
   .c2 {
@@ -467,9 +435,9 @@ exports[`data page offers table content loads with a given asset 1`] = `
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-  -webkit-flex: 1.75;
-  -ms-flex: 1.75;
-  flex: 1.75;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
   -webkit-flex-shrink: 0;
   -ms-flex-negative: 0;
   flex-shrink: 0;
@@ -584,10 +552,6 @@ exports[`data page offers table content loads with a given asset 1`] = `
     display: -ms-flexbox;
     display: flex;
   }
-}
-
-@media screen and (max-width:640px) {
-
 }
 
 @media screen and (max-width:640px) {
