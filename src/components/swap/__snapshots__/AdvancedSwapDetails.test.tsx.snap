@@ -159,6 +159,26 @@ exports[`AdvancedSwapDetails.tsx matches base snapshot 1`] = `
           0.00000000000000098 DEF
         </div>
       </div>
+      <div
+        class="c0 c4 c5"
+      >
+        <div
+          class="c7"
+        >
+          <div>
+            <div
+              class="css-zhpkf8"
+            >
+              Network Fee
+            </div>
+          </div>
+        </div>
+        <div
+          class="css-q4yjm0"
+        >
+          ~$1.00
+        </div>
+      </div>
     </div>
   </div>
 </DocumentFragment>
