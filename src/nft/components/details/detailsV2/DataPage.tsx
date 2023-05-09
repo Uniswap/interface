@@ -17,6 +17,10 @@ const DataPageContainer = styled(Column)`
   max-width: ${({ theme }) => theme.maxWidth + 128};
   margin: 0 auto;
 
+  @media screen and (max-width: ${BREAKPOINTS.md}px) {
+    height: 100%;
+  }
+
   @media screen and (max-width: ${BREAKPOINTS.sm}px) {
     padding: 24px 48px;
   }
