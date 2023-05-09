@@ -64,16 +64,15 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
     } else if (tradeResult?.state === QuoteState.NOT_FOUND && isCurrent) {
       return TRADE_NOT_FOUND
     } else if (!tradeResult?.trade) {
-      // TODO: use `isLoading` returned by rtk-query hook instead of checking for `trade` status
+      // TODO(WEB-3307): use `isLoading` returned by rtk-query hook instead of checking for `trade` status
       return TRADE_LOADING
     } else {
-      const isCurrent = currentTradeResult === tradeResult
       return {
         state: isCurrent ? TradeState.VALID : TradeState.LOADING,
         trade: tradeResult.trade,
       }
     }
-  }, [amountSpecified, currentTradeResult, isCurrent, isError, queryArgs, tradeResult])
+  }, [amountSpecified, isCurrent, isError, queryArgs, tradeResult])
 }
 
 // only want to enable this when app hook called

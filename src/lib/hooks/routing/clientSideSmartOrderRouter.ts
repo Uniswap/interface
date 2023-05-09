@@ -32,12 +32,8 @@ async function getQuote(
     amount: BigintIsh
   },
   router: AlphaRouter,
-  config: Partial<AlphaRouterConfig>
+  routerConfig: Partial<AlphaRouterConfig>
 ): Promise<QuoteResult> {
-  if (!amountRaw) {
-    return { state: QuoteState.INITIALIZED }
-  }
-
   const tokenInIsNative = Object.values(SwapRouterNativeAssets).includes(tokenIn.address as SwapRouterNativeAssets)
   const tokenOutIsNative = Object.values(SwapRouterNativeAssets).includes(tokenOut.address as SwapRouterNativeAssets)
 
@@ -52,8 +48,13 @@ async function getQuote(
   const quoteCurrency = tradeType === TradeType.EXACT_INPUT ? currencyOut : currencyIn
 
   const amount = CurrencyAmount.fromRawAmount(baseCurrency, JSBI.BigInt(amountRaw))
-  const swapRoute = await router.route(amount, quoteCurrency, tradeType, /*swapConfig=*/ undefined, config)
+  const swapRoute = await router.route(amount, quoteCurrency, tradeType, /*swapConfig=*/ undefined, routerConfig)
 
+  // this check is intentionally left delayed until after the `router.route` call so that on empty input, the
+  // client side routing will begin initialization
+  if (!amountRaw) {
+    return { state: QuoteState.INITIALIZED }
+  }
   if (!swapRoute) {
     return { state: QuoteState.NOT_FOUND }
   }

@@ -8,7 +8,7 @@ import ms from 'ms.macro'
 import qs from 'qs'
 import { trace } from 'tracing/trace'
 
-import { GetQuoteResult, TradeResult } from './types'
+import { QuoteData, TradeResult } from './types'
 import { isExactInput, transformRoutesToTrade } from './utils'
 
 export enum RouterPreference {
@@ -150,7 +150,7 @@ export const routingApi = createApi({
               }
             }
 
-            const quoteData = response.data as GetQuoteResult
+            const quoteData = response.data as QuoteData
             const tradeResult = transformRoutesToTrade(args, quoteData)
             return { data: tradeResult }
           } catch (error: any) {

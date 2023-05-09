@@ -70,7 +70,7 @@ export const formatSwapQuoteReceivedEventProperties = (
     token_in_address: getTokenAddress(trade.inputAmount.currency),
     token_out_address: getTokenAddress(trade.outputAmount.currency),
     price_impact_basis_points: trade ? formatPercentInBasisPointsNumber(computeRealizedPriceImpact(trade)) : undefined,
-    estimated_network_fee_usd: gasUseEstimateUSD ?? undefined,
+    estimated_network_fee_usd: gasUseEstimateUSD,
     chain_id:
       trade.inputAmount.currency.chainId === trade.outputAmount.currency.chainId
         ? trade.inputAmount.currency.chainId

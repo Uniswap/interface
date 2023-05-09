@@ -48,7 +48,7 @@ export type V2PoolInRoute = {
   address?: string
 }
 
-export interface GetQuoteResult {
+export interface QuoteData {
   quoteId?: string
   blockNumber: string
   amount: string
@@ -67,11 +67,11 @@ export interface GetQuoteResult {
   routeString: string
 }
 
-class ClassicTrade<TInput extends Currency, TOutput extends Currency, TTradeType extends TradeType> extends Trade<
-  TInput,
-  TOutput,
-  TTradeType
-> {
+export class ClassicTrade<
+  TInput extends Currency,
+  TOutput extends Currency,
+  TTradeType extends TradeType
+> extends Trade<TInput, TOutput, TTradeType> {
   gasUseEstimateUSD: string | null | undefined
   blockNumber: string | null | undefined
 
@@ -105,7 +105,7 @@ class ClassicTrade<TInput extends Currency, TOutput extends Currency, TTradeType
   }
 }
 
-export class InterfaceTrade extends ClassicTrade<Currency, Currency, TradeType> {}
+export type InterfaceTrade = ClassicTrade<Currency, Currency, TradeType>
 
 export enum QuoteState {
   SUCCESS = 'Success',
@@ -120,7 +120,7 @@ export type QuoteResult =
     }
   | {
       state: QuoteState.SUCCESS
-      data: GetQuoteResult
+      data: QuoteData
     }
 
 export type TradeResult =

@@ -126,7 +126,7 @@ function getIsValidSwapQuote(
   tradeState: TradeState,
   swapInputError?: ReactNode
 ): boolean {
-  return !!swapInputError && !!trade && tradeState === TradeState.VALID
+  return Boolean(swapInputError && trade && tradeState === TradeState.VALID)
 }
 
 function largerPercentValue(a?: Percent, b?: Percent) {

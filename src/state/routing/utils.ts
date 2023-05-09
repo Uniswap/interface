@@ -7,9 +7,9 @@ import { nativeOnChain } from 'constants/tokens'
 
 import { GetQuoteArgs } from './slice'
 import {
-  GetQuoteResult,
-  InterfaceTrade,
+  ClassicTrade,
   PoolType,
+  QuoteData,
   QuoteState,
   SwapRouterNativeAssets,
   TradeResult,
@@ -24,7 +24,7 @@ import {
 export function computeRoutes(
   tokenInIsNative: boolean,
   tokenOutIsNative: boolean,
-  routes: GetQuoteResult['route']
+  routes: QuoteData['route']
 ):
   | {
       routev3: V3Route<Currency, Currency> | null
@@ -70,7 +70,7 @@ export function computeRoutes(
       }
     })
   } catch (e) {
-    console.error('computeRoutes error', e)
+    console.error('Error computing routes', e)
     return
   }
 }
@@ -86,14 +86,14 @@ function isVersionedRoute<T extends V2PoolInRoute | V3PoolInRoute>(
   return route.every((pool) => pool.type === type)
 }
 
-export function transformRoutesToTrade(args: GetQuoteArgs, data: GetQuoteResult): TradeResult {
+export function transformRoutesToTrade(args: GetQuoteArgs, data: QuoteData): TradeResult {
   const { tokenInAddress, tokenOutAddress, tradeType } = args
   const tokenInIsNative = Object.values(SwapRouterNativeAssets).includes(tokenInAddress as SwapRouterNativeAssets)
   const tokenOutIsNative = Object.values(SwapRouterNativeAssets).includes(tokenOutAddress as SwapRouterNativeAssets)
   const { gasUseEstimateUSD, blockNumber } = data
   const routes = computeRoutes(tokenInIsNative, tokenOutIsNative, data.route)
 
-  const trade = new InterfaceTrade({
+  const trade = new ClassicTrade({
     v2Routes:
       routes
         ?.filter(
@@ -133,7 +133,7 @@ export function transformRoutesToTrade(args: GetQuoteArgs, data: GetQuoteResult)
   return { state: QuoteState.SUCCESS, trade }
 }
 
-function parseToken({ address, chainId, decimals, symbol }: GetQuoteResult['route'][0][0]['tokenIn']): Token {
+function parseToken({ address, chainId, decimals, symbol }: QuoteData['route'][0][0]['tokenIn']): Token {
   return new Token(chainId, address, parseInt(decimals.toString()), symbol)
 }
 
