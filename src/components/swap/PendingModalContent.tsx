@@ -29,6 +29,7 @@ const LogoLayer = styled.div`
   z-index: 2;
 `
 
+// TODO: switch to LoaderV2 with updated API to support changing color and size.
 const LoadingIndicator = styled(Loader)`
   width: calc(100% + 8px);
   height: calc(100% + 8px);
