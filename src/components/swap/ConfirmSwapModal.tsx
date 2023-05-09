@@ -8,7 +8,7 @@ import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { useMaxAmountIn } from 'hooks/useMaxAmountIn'
 import { Allowance, AllowanceState } from 'hooks/usePermit2Allowance'
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
-import { Loader } from 'react-feather'
+// import { Loader } from 'react-feather'
 import { InterfaceTrade } from 'state/routing/types'
 import invariant from 'tiny-invariant'
 import { tradeMeaningfullyDiffers } from 'utils/tradeMeaningFullyDiffer'
@@ -25,8 +25,8 @@ enum SummaryModalState {
   REVIEWING,
   APPROVING_PERMIT2, // approving Permit2 contract
   APPROVING_TOKEN, // signing the token approval
-  APPROVED,
-  PENDING_CONFIRMATION, // waiting for the network confirmation
+  APPROVAL_PENDING, // waiting for network confirmationt for the permit2 approval
+  PENDING_CONFIRMATION, // waiting for wallet signature or network confirmation for the actual swap
 }
 
 export default function ConfirmSwapModal({
@@ -75,7 +75,7 @@ export default function ConfirmSwapModal({
   const maximumAmountIn = useMaxAmountIn(trade, allowedSlippage)
 
   useEffect(() => {
-    if (confirmModalState === SummaryModalState.APPROVED && allowance.state === AllowanceState.ALLOWED) {
+    if (confirmModalState === SummaryModalState.APPROVAL_PENDING && allowance.state === AllowanceState.ALLOWED) {
       onConfirm()
       setConfirmModalState(SummaryModalState.PENDING_CONFIRMATION)
     }
@@ -88,7 +88,11 @@ export default function ConfirmSwapModal({
     )
     try {
       await allowance.approveAndPermit(function onApprovalRequestedCallback() {
-        setConfirmModalState(SummaryModalState.APPROVING_TOKEN)
+        // This callback is only triggered if the Permit2 approval is requested.
+        // At this point, the permit2 approval is sent but possibly still pending network confirmation.
+        setConfirmModalState(
+          allowance.needsSignature ? SummaryModalState.APPROVING_TOKEN : SummaryModalState.APPROVAL_PENDING
+        )
       })
       sendAnalyticsEvent(InterfaceEventName.APPROVE_TOKEN_TXN_SUBMITTED, {
         chain_id: chainId,
@@ -98,7 +102,8 @@ export default function ConfirmSwapModal({
       })
     } catch (e) {
       console.error(e)
-      // todo: set error state, render error content in modal
+      // todo: if user rejected, just revert to summary view
+      // if there was another unknow error, render error content in modal
       return false
     }
     // setConfirmModalState(SummaryModalState.PENDING_CONFIRMATION)
@@ -118,7 +123,10 @@ export default function ConfirmSwapModal({
   }, [allowedSlippage, confirmModalState, trade])
 
   const modalBottom = useCallback(() => {
-    if (confirmModalState === SummaryModalState.APPROVING_PERMIT2) {
+    if (
+      confirmModalState === SummaryModalState.APPROVING_PERMIT2 ||
+      confirmModalState === SummaryModalState.APPROVAL_PENDING
+    ) {
       return (
         <PendingModalContent
           title={t`Approve permit`}
@@ -140,16 +148,7 @@ export default function ConfirmSwapModal({
         />
       )
     }
-    if (confirmModalState === SummaryModalState.PENDING_CONFIRMATION) {
-      return (
-        <PendingModalContent
-          title={t`Confirm Swap`}
-          subtitle={t`Proceed in your wallet`}
-          label={t`Why do I need to confirm?`}
-          logo={<Loader size={48} />}
-        />
-      )
-    }
+    // todo: create a new pending state for SummaryModalState.PENDING_CONFIRMATION ?
     return (
       <SwapModalFooter
         onConfirm={async () => {
@@ -157,10 +156,10 @@ export default function ConfirmSwapModal({
             const allowanceResult: boolean = await updateAllowance()
             if (!allowanceResult) {
               setConfirmModalState(SummaryModalState.REVIEWING)
-              return // allowance didn't work, what to do?
             }
+          } else {
+            onConfirm()
           }
-          setConfirmModalState(SummaryModalState.APPROVED)
         }}
         trade={trade}
         hash={txHash}
@@ -190,6 +189,7 @@ export default function ConfirmSwapModal({
     onAcceptChanges,
     allowance.state,
     updateAllowance,
+    onConfirm,
   ])
 
   // text to show while loading
