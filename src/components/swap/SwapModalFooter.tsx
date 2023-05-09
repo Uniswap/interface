@@ -15,7 +15,7 @@ import { ReactNode } from 'react'
 import { Text } from 'rebass'
 import { RouterPreference } from 'state/routing/slice'
 import { InterfaceTrade } from 'state/routing/types'
-import { useUserSlippageTolerance } from 'state/user/hooks'
+import { useRouterPreference, useUserSlippageTolerance } from 'state/user/hooks'
 import getTokenPath, { RoutingDiagramEntry } from 'utils/getTokenPath'
 import { computeRealizedPriceImpact } from 'utils/prices'
 
@@ -124,6 +124,7 @@ export default function SwapModalFooter({
 }) {
   const transactionDeadlineSecondsSinceEpoch = useTransactionDeadline()?.toNumber() // in seconds since epoch
   const isAutoSlippage = useUserSlippageTolerance()[0] === 'auto'
+  const [routerPreference] = useRouterPreference()
   const routes = getTokenPath(trade)
 
   return (
