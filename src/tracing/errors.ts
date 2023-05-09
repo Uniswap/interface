@@ -96,6 +96,9 @@ export const filterKnownErrors: Required<ClientOptions>['beforeSend'] = (event: 
     if (error.message.match(/WebAssembly.instantiate\(\): Wasm code generation disallowed by embedder/)) {
       return null
     }
+
+    // These are caused by user navigation away from the page before a request has finished.
+    if (error.message.startsWith('AbortError')) return null
   }
 
   return event

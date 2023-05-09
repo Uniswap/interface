@@ -97,6 +97,7 @@ describe('Swap', () => {
 
               // Set deadline to minimum. (1 minute)
               cy.get(getTestSelector('open-settings-dialog-button')).click()
+              cy.get(getTestSelector('transaction-deadline-settings')).click()
               cy.get(getTestSelector('deadline-input')).clear().type(DEADLINE_MINUTES.toString())
               cy.get('body').click('topRight')
               cy.get(getTestSelector('deadline-input')).should('not.exist')
@@ -174,10 +175,9 @@ describe('Swap', () => {
       cy.visit('/swap')
       cy.contains('Settings').should('not.exist')
       cy.get(getTestSelector('swap-settings-button')).click()
-      cy.contains('Slippage tolerance').should('exist')
+      cy.contains('Max slippage').should('exist')
       cy.contains('Transaction deadline').should('exist')
       cy.contains('Auto Router API').should('exist')
-      cy.contains('Expert Mode').should('exist')
       cy.get(getTestSelector('swap-settings-button')).click()
       cy.contains('Settings').should('not.exist')
     })
@@ -424,6 +424,7 @@ describe('Swap', () => {
 
           // Set slippage to a very low value.
           cy.get(getTestSelector('open-settings-dialog-button')).click()
+          cy.get(getTestSelector('max-slippage-settings')).click()
           cy.get(getTestSelector('slippage-input')).clear().type('0.01')
           cy.get('body').click('topRight')
           cy.get(getTestSelector('slippage-input')).should('not.exist')
