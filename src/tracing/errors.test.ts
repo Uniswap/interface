@@ -203,8 +203,7 @@ describe('filterKnownErrors', () => {
   })
 
   it('filters AbortErrors', () => {
-    const originalException = new DOMException('The user aborted a request.') as any
-    originalException.name = 'AbortError'
+    const originalException = new DOMException('The user aborted a request.', 'AbortError')
     expect(filterKnownErrors(ERROR, { originalException })).toBeNull()
   })
 })
