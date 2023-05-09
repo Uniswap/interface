@@ -1,10 +1,11 @@
-import { defaultAbiCoder, Interface } from '@ethersproject/abi'
+import { Interface } from '@ethersproject/abi'
 import { getAddress, isAddress } from '@ethersproject/address'
 import { Trans } from '@lingui/macro'
 import { Trace } from '@uniswap/analytics'
 import { PageName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import TOKEN_ABI from 'abis/erc20.json'
 import GOVERNANCE_RB_ABI from 'abis/governance.json'
 import RB_POOL_FACTORY_ABI from 'abis/rb-pool-factory.json'
 import { ButtonError } from 'components/Button'
@@ -176,11 +177,10 @@ export default function CreateProposal() {
         !proposalAction ||
           !isAddress(toAddressValue) ||
           !currencyValue?.isToken ||
-          amountValue === '' ||
           titleValue === '' ||
           bodyValue === ''
       ),
-    [proposalAction, toAddressValue, currencyValue, amountValue, titleValue, bodyValue]
+    [proposalAction, toAddressValue, currencyValue, titleValue, bodyValue]
   )
 
   const hasEnoughVote = Boolean(
@@ -197,67 +197,57 @@ export default function CreateProposal() {
     if (!createProposalCallback || !proposalAction || !currencyValue.isToken) return
 
     const tokenAmount = tryParseCurrencyAmount(amountValue, currencyValue)
-    if (!tokenAmount) return
 
-    createProposalData.actions[0].target = currencyValue.address
-    createProposalData.actions[0].value = '0'
+    createProposalData.actions = [{ target: currencyValue.address, value: '0', data: '' }]
     createProposalData.description = `# ${titleValue}
 
 ${bodyValue}
 `
 
-    let types: string[][]
     let values: string[][]
+    let methods: string[]
+    let targets: string[]
+    let interfaces: Interface[]
     // TODO: add all governance owned methods
     switch (proposalAction) {
       case ProposalAction.TRANSFER_TOKEN: {
-        types = [['address', 'uint256']]
+        if (!tokenAmount) return
         values = [[getAddress(toAddressValue), tokenAmount.quotient.toString()]]
-        //createProposalData.signatures = [`transfer(${types[0].join(',')})`]
+        interfaces = [new Interface(TOKEN_ABI)]
+        targets = [currencyValue.address]
+        methods = ['transfer']
         break
       }
 
       case ProposalAction.APPROVE_TOKEN: {
-        types = [['address', 'uint256']]
+        if (!tokenAmount) return
         values = [[getAddress(toAddressValue), tokenAmount.quotient.toString()]]
-        //createProposalData.signatures = [`approve(${types[0].join(',')})`]
+        interfaces = [new Interface(TOKEN_ABI)]
+        targets = [currencyValue.address]
+        methods = ['approve']
         break
       }
 
       case ProposalAction.UPGRADE_IMPLEMENTATION: {
-        types = [['address']]
         values = [[getAddress(toAddressValue)]]
-        //createProposalData.signatures = [`approve(${types[0].join(',')})`]
+        interfaces = [new Interface(RB_POOL_FACTORY_ABI)]
+        targets = [RB_FACTORY_ADDRESSES[chainId ?? 1]]
+        methods = ['setImplementation']
         break
       }
 
       case ProposalAction.UPGRADE_GOVERNANCE: {
-        types = [['address']]
         values = [[getAddress(toAddressValue)]]
-        //createProposalData.signatures = [`approve(${types[0].join(',')})`]
+        interfaces = [new Interface(GOVERNANCE_RB_ABI)]
+        targets = [GOVERNANCE_PROXY_ADDRESSES[chainId ?? 1]]
+        methods = ['upgradeImplementation']
         break
       }
     }
 
-    createProposalData.actions = []
-    //let ContractInterface: Interface
     for (let i = 0; i < createProposalData.actions.length; i++) {
-      if (ProposalAction.UPGRADE_GOVERNANCE) {
-        const ContractInterface = new Interface(GOVERNANCE_RB_ABI)
-        // TODO: check if we want to write createProposalData.actions[i] = new ProposedAction({...})
-        createProposalData.actions[i].data = ContractInterface.encodeFunctionData('upgradeImplementation', [values[i]])
-        // TODO: check we are covering all chains
-        createProposalData.actions[i].target = GOVERNANCE_PROXY_ADDRESSES[chainId ?? 1]
-        createProposalData.actions[i].value = '0'
-      } else if (ProposalAction.UPGRADE_IMPLEMENTATION) {
-        const ContractInterface = new Interface(RB_POOL_FACTORY_ABI)
-        // TODO: check if we want to write createProposalData.actions[i] = new ProposedAction({...})
-        createProposalData.actions[i].data = ContractInterface.encodeFunctionData('upgradeImplementation', [values[i]])
-        createProposalData.actions[i].target = RB_FACTORY_ADDRESSES[chainId ?? 1]
-        createProposalData.actions[i].value = '0'
-      } else {
-        createProposalData.actions[i].data = defaultAbiCoder.encode(types[i], values[i])
-      }
+      createProposalData.actions[i].target = targets[i]
+      createProposalData.actions[i].data = interfaces[i].encodeFunctionData(methods[i], values[i])
     }
 
     const hash = await createProposalCallback(createProposalData ?? undefined)?.catch(() => {
