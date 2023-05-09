@@ -12,6 +12,7 @@ import { AddToBagIcon, HomeSearchIcon } from 'nft/components/icons'
 import { useSubscribeScrollState } from 'nft/hooks'
 import { Offer, SellOrder } from 'nft/types'
 import { formatEth, getMarketplaceIcon, timeUntil } from 'nft/utils'
+import { Check } from 'react-feather'
 import styled, { useTheme } from 'styled-components/macro'
 import { BREAKPOINTS, ThemedText } from 'theme'
 import { shortenAddress } from 'utils'
@@ -198,8 +199,12 @@ export const ContentRow = ({
       </TableCell>
       <TableCell $flex={isMobile ? 0.25 : 1} $justifyContent="center">
         <ActionButton>
-          {isMobile && isSellOrder ? (
-            <AddToBagIcon color={theme.textSecondary} />
+          {isMobile ? (
+            isSellOrder ? (
+              <AddToBagIcon color={theme.textSecondary} />
+            ) : (
+              <Check color={theme.textSecondary} height="20px" width="20px" />
+            )
           ) : (
             <ThemedText.LabelSmall color="textSecondary">{buttonCTA}</ThemedText.LabelSmall>
           )}
