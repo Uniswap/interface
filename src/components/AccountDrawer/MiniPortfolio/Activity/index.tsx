@@ -16,7 +16,6 @@ import { ActivityRow } from './ActivityRow'
 import { useLocalActivities } from './parseLocal'
 import { parseRemoteActivities } from './parseRemote'
 import { Activity, ActivityMap } from './types'
-import { useClearConflictingTransactions } from './useClearConflictingTransactions'
 
 interface ActivityGroup {
   title: string
@@ -109,8 +108,6 @@ export function ActivityTab({ account }: { account: string }) {
     errorPolicy: 'all',
     fetchPolicy: 'cache-first',
   })
-
-  useClearConflictingTransactions(data, localMap)
 
   // We only refetch remote activity if the user renavigates to the activity tab by changing tabs or opening the drawer
   useEffect(() => {
