@@ -227,11 +227,6 @@ export const getRoyalty = (listingMarket: ListingMarket, asset: WalletAsset) => 
   return baseFee * 0.01
 }
 
-// OpenSea has a 0.5% fee for all assets that do not have a royalty set
-export const getMarketplaceFee = (listingMarket: ListingMarket, asset: WalletAsset) => {
-  return listingMarket.name === 'OpenSea' && !asset.basisPoints ? 0.5 : listingMarket.fee
-}
-
 const BELOW_FLOOR_PRICE_THRESHOLD = 0.8
 
 export const findListingIssues = (sellAssets: WalletAsset[]) => {

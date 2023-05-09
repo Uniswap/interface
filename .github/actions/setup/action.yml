@@ -24,6 +24,10 @@ runs:
       run: yarn install --frozen-lockfile --ignore-scripts
       shell: bash
 
+    # Validators compile quickly, so caching can be omitted.
+    - run: yarn ajv
+      shell: bash
+
     # Contracts are compiled from source. If source hasn't changed, the contracts do not need to be re-compiled.
     - uses: actions/cache@v3
       id: contracts-cache
