@@ -8,13 +8,11 @@
 /src/locales/**/en-US.po
 /src/locales/**/pseudo.po
 
-# generated graphql types
-/src/graphql/**/__generated__
-schema.graphql
+# generated files
+/src/**/__generated__
 
-# generated ajv schema
-/src/utils/__generated__/*
-!/src/utils/__generated__/.gitkeep 
+# schema
+schema.graphql
 
 # dependencies
 /node_modules
