@@ -8,7 +8,7 @@ import { ContentRow, HeaderRow, TableContentComponent } from './TableContentComp
 
 export const ListingsTableContent = ({ asset }: { asset: GenieAsset }) => {
   // TODO(NFT-1189) Replace with real offer data when BE supports
-  const mockListings = new Array(6).fill(TEST_SELL_ORDER)
+  const mockListings = new Array(3).fill(TEST_SELL_ORDER)
   const headers = <HeaderRow type={TableTabsKeys.Listings} is1155={asset.tokenType === NftStandard.Erc1155} />
   const contentRows = mockListings.map((offer, index) => (
     <ContentRow

@@ -126,7 +126,7 @@ export const TEST_SELL_ORDER: SellOrder = {
   marketplaceUrl: 'https://opensea.io/assets/0x29d7ebca656665c1a52a92f830e413e394db6b4f/6815',
   price: {
     currency: 'ETH',
-    value: 500,
+    value: 99999999,
   },
   quantity: 1,
   startAt: 1683561507000,
@@ -144,7 +144,7 @@ export const TEST_OFFER: Offer = {
   marketplaceUrl: 'https://opensea.io/assets/0x29d7ebca656665c1a52a92f830e413e394db6b4f/6815',
   price: {
     currency: 'ETH',
-    value: 500,
+    value: 123.456,
   },
   quantity: 1,
 }

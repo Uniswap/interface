@@ -7,7 +7,7 @@ import { OrderType } from 'graphql/data/__generated__/types-and-hooks'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
-import { CollectionSelectedAssetIcon, HomeSearchIcon } from 'nft/components/icons'
+import { AddToBagIcon, HomeSearchIcon } from 'nft/components/icons'
 import { useIsMobile, useSubscribeScrollState } from 'nft/hooks'
 import { Offer, SellOrder } from 'nft/types'
 import { formatEth, getMarketplaceIcon, timeUntil } from 'nft/utils'
@@ -56,6 +56,7 @@ export const TableContentComponent = ({ headerRow, contentRows, type }: TableCon
 }
 
 const TableCell = styled.div<{ $flex?: number; $justifyContent?: string; $color?: string; hideOnSmall?: boolean }>`
+  display: flex;
   flex: ${({ $flex }) => $flex ?? 1};
   justify-content: ${({ $justifyContent }) => $justifyContent};
   color: ${({ $color }) => $color};
@@ -68,8 +69,9 @@ const TableCell = styled.div<{ $flex?: number; $justifyContent?: string; $color?
 
 const ActionButton = styled.div`
   cursor: pointer;
+  // width: min-content;
+  white-space: nowrap;
   ${OpacityHoverState}
-  width: min-content;
 `
 
 const USDPrice = styled(ThemedText.BodySmall)`
@@ -86,6 +88,7 @@ const Link = styled.a`
   display: block;
   height: 20px;
   width: min-content;
+
   ${OpacityHoverState}
 `
 
@@ -165,23 +168,25 @@ export const ContentRow = ({
       )}
       {is1155 && (
         <TableCell $flex={0.5} $justifyContent="center">
-          <ThemedText.SubHeaderSmall color="textSecondary">{content.quantity}</ThemedText.SubHeaderSmall>
+          <ThemedText.SubHeaderSmall color="textPrimary">{content.quantity}</ThemedText.SubHeaderSmall>
         </TableCell>
       )}
       {(!isSellOrder || is1155) && (
         <TableCell hideOnSmall={true}>
           <Link href={`https://etherscan.io/address/${content.maker}`} target="_blank" rel="noopener noreferrer">
-            <ThemedText.LabelSmall>{shortenAddress(content.maker)}</ThemedText.LabelSmall>
+            <ThemedText.LabelSmall color="textPrimary">{shortenAddress(content.maker)}</ThemedText.LabelSmall>
           </Link>
         </TableCell>
       )}
       <TableCell $justifyContent="flex-end">
-        <ThemedText.LabelSmall>{date ? timeUntil(date) : <Trans>Never</Trans>}</ThemedText.LabelSmall>
+        <ThemedText.LabelSmall color="textPrimary">
+          {date ? timeUntil(date) : <Trans>Never</Trans>}
+        </ThemedText.LabelSmall>
       </TableCell>
       <TableCell $flex={isMobile ? 0.25 : 1} $justifyContent="center">
         <ActionButton>
           {isMobile ? (
-            <CollectionSelectedAssetIcon color={theme.textSecondary} />
+            <AddToBagIcon color={theme.textSecondary} />
           ) : (
             <ThemedText.LabelSmall color="textSecondary">{buttonCTA}</ThemedText.LabelSmall>
           )}

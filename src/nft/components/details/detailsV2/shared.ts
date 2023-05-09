@@ -16,6 +16,7 @@ export const TableContentContainer = styled.div`
 // Scrim that fades out the top and bottom of the scrollable container, isBottom changes the direction and placement of the fade
 export const Scrim = styled.div<{ isBottom?: boolean }>`
   position: absolute;
+  pointer-events: none;
   height: 88px;
   left: 0px;
   right: 6px;
