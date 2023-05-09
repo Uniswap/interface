@@ -4,23 +4,14 @@ import { RowFixed } from 'components/Row'
 import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
 import { InterfaceTrade } from 'state/routing/types'
 import styled from 'styled-components/macro'
+import { ThemedText } from 'theme'
 
 import { ReactComponent as GasIcon } from '../../assets/images/gas-icon.svg'
 import SwapRoute from './SwapRoute'
 
-const GasWrapper = styled(RowFixed)`
-  border-radius: 8px;
-  padding: 4px 6px;
-  height: 24px;
-  color: ${({ theme }) => theme.textTertiary};
-  background-color: ${({ theme }) => theme.deprecated_bg1};
-  font-size: 14px;
-  font-weight: 500;
-  user-select: none;
-`
 const StyledGasIcon = styled(GasIcon)`
   margin-right: 4px;
-  height: 14px;
+  height: 18px;
   & > * {
     stroke: ${({ theme }) => theme.textTertiary};
   }
@@ -49,10 +40,10 @@ export default function GasEstimateTooltip({
       placement="bottom"
     >
       <LoadingOpacityContainer $loading={loading}>
-        <GasWrapper>
+        <RowFixed>
           <StyledGasIcon />
-          {formattedGasPriceString}
-        </GasWrapper>
+          <ThemedText.BodySmall color="textSecondary">{formattedGasPriceString}</ThemedText.BodySmall>
+        </RowFixed>
       </LoadingOpacityContainer>
     </MouseoverTooltip>
   )

@@ -5,7 +5,7 @@ import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import AnimatedDropdown from 'components/AnimatedDropdown'
 import { OutlineCard } from 'components/Card'
-import { AutoColumn } from 'components/Column'
+import Column, { AutoColumn } from 'components/Column'
 import { LoadingOpacityContainer } from 'components/Loader/styled'
 import Row, { RowBetween, RowFixed } from 'components/Row'
 import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
@@ -23,9 +23,6 @@ const Wrapper = styled(Row)`
   width: 100%;
   justify-content: center;
   border-radius: inherit;
-  padding: 8px 12px;
-  margin-top: 0;
-  min-height: 32px;
 `
 
 const StyledCard = styled(OutlineCard)`
@@ -96,6 +93,10 @@ const Spinner = styled.div`
   top: -3px;
 `
 
+const SwapDetailsWrapper = styled(Column)`
+  margin-top: 16px;
+`
+
 interface SwapDetailsInlineProps {
   trade: InterfaceTrade<Currency, Currency, TradeType> | undefined
   syncing: boolean
@@ -109,8 +110,8 @@ export default function SwapDetailsDropdown({ trade, syncing, loading, allowedSl
   const [showDetails, setShowDetails] = useState(false)
 
   return (
-    <Wrapper style={{ marginTop: '0' }}>
-      <AutoColumn gap="sm" style={{ width: '100%', marginBottom: '-8px' }}>
+    <Wrapper>
+      <AutoColumn>
         <TraceEvent
           events={[BrowserEvent.onClick]}
           name={SwapEventName.SWAP_DETAILS_EXPANDED}
@@ -156,13 +157,13 @@ export default function SwapDetailsDropdown({ trade, syncing, loading, allowedSl
           </StyledHeaderRow>
         </TraceEvent>
         <AnimatedDropdown open={showDetails}>
-          <AutoColumn gap="sm" style={{ padding: '0', paddingBottom: '8px' }}>
+          <SwapDetailsWrapper gap="sm">
             {trade ? (
               <StyledCard data-testid="advanced-swap-details">
                 <AdvancedSwapDetails trade={trade} allowedSlippage={allowedSlippage} syncing={syncing} />
               </StyledCard>
             ) : null}
-          </AutoColumn>
+          </SwapDetailsWrapper>
         </AnimatedDropdown>
       </AutoColumn>
     </Wrapper>
