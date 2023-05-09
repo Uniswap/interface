@@ -13,6 +13,7 @@ const POPUP_WIDTH = 400
 const POPUP_OFFSET = 20
 const POPUP_ARROW_WIDTH = 24
 const POPUP_ARROW_OFFSET = 115
+const POPUP_SHADOW_RADIUS = 1000
 
 const PINNED_CHECK_FREQUENCY_IN_MS = 750
 
@@ -83,12 +84,13 @@ export function Complete(): JSX.Element {
             marginRight={POPUP_OFFSET}
             marginTop={POPUP_OFFSET}
             padding="$spacing24"
-            shadowColor="$background3"
-            shadowRadius={25}
+            // TODO(EXT-141): revisit design of shadow (tweak color, figure out why opacity doesn't apply, tweak radius)
+            shadowColor="$textTertiary"
+            shadowRadius={POPUP_SHADOW_RADIUS}
             width={POPUP_WIDTH}>
             {/* arrow pointer attached to popup box */}
             <Stack
-              backgroundColor="$background3"
+              backgroundColor="$background2"
               height={POPUP_ARROW_WIDTH}
               position="absolute"
               right={POPUP_ARROW_OFFSET}
