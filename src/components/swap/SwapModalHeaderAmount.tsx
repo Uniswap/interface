@@ -23,7 +23,11 @@ const ResponsiveHeadline = ({ children, ...textProps }: PropsWithChildren<TextPr
   if (width && width < BREAKPOINTS.xs) {
     return <ThemedText.HeadlineMedium {...textProps}>{children}</ThemedText.HeadlineMedium>
   }
-  return <ThemedText.HeadlineLarge {...textProps}>{children}</ThemedText.HeadlineLarge>
+  return (
+    <ThemedText.HeadlineLarge fontWeight={500} {...textProps}>
+      {children}
+    </ThemedText.HeadlineLarge>
+  )
 }
 
 interface AmountProps {
@@ -42,7 +46,7 @@ export function SwapModalHeaderAmount({ tooltipText, label, amount, usdAmount, f
 
   return (
     <Row align="center" justify="space-between" gap="md">
-      <Column>
+      <Column gap="xs">
         <ThemedText.BodySecondary>
           {tooltipText ? (
             <MouseoverTooltip text={tooltipText}>
