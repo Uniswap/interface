@@ -141,7 +141,7 @@ export const HeaderRow = ({ type, is1155 }: { type: TableTabsKeys; is1155?: bool
         </ThemedText.SubHeaderSmall>
       </TableCell>
       {/* An empty cell is needed in the headers for proper vertical alignment with the action buttons */}
-      <TableCell $flex={isMobile ? 0.25 : 1}>&nbsp;</TableCell>
+      <TableCell $flex={isMobile ? (type === TableTabsKeys.Offers ? 0.5 : 0.25) : 1}>&nbsp;</TableCell>
     </Row>
   )
 }
@@ -188,7 +188,7 @@ export const ContentRow = ({
       </TableCell>
       <TableCell $flex={isMobile ? 0.25 : 1} $justifyContent="center">
         <ActionButton>
-          {isMobile ? (
+          {isMobile && isSellOrder ? (
             <AddToBagIcon color={theme.textSecondary} />
           ) : (
             <ThemedText.LabelSmall color="textSecondary">{buttonCTA}</ThemedText.LabelSmall>
