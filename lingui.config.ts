@@ -2,7 +2,7 @@ import { default as babelExtractor } from '@lingui/cli/api/extractors/babel'
 import { createHash } from 'crypto'
 import { mkdirSync, readFileSync, writeFileSync } from 'fs'
 import * as path from 'path'
-import * as pkgUp from 'pkg-up'
+import * as pkgUp from 'pkg-up' // pkg-up is used by lingui, and is used here to match lingui's own extractors
 
 /**
  * A custom caching extractor for CI.
