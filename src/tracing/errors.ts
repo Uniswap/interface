@@ -110,7 +110,7 @@ export const filterKnownErrors: Required<ClientOptions>['beforeSend'] = (event: 
     }
 
     // These are caused by user navigation away from the page before a request has finished.
-    if (error.message.startsWith('AbortError')) return null
+    if (error instanceof DOMException && error.name === 'AbortError') return null
   }
 
   return event
