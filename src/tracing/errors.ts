@@ -9,6 +9,12 @@ declare global {
   }
 }
 
+export function beforeSend(event: ErrorEvent, hint: EventHint) {
+  updateRequestUrl(event)
+  addChunkResponseStatusTag(event, hint)
+  return filterKnownErrors(event, hint)
+}
+
 // Identifies ethers request errors (as thrown by {@type import(@ethersproject/web).fetchJson}).
 function isEthersRequestError(error: Error): error is Error & { requestBody: string } {
   return 'requestBody' in error && typeof (error as unknown as Record<'requestBody', unknown>).requestBody === 'string'
@@ -49,12 +55,6 @@ function addChunkResponseStatusTag(event: ErrorEvent, hint: EventHint) {
       }
     }
   }
-}
-
-export function beforeSend(event: ErrorEvent, hint: EventHint) {
-  updateRequestUrl(event)
-  addChunkResponseStatusTag(event, hint)
-  return filterKnownErrors(event, hint)
 }
 
 function getChunkResponseStatus(asset?: string): number | undefined {
