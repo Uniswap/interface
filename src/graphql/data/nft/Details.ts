@@ -4,7 +4,6 @@ import { CollectionInfoForAsset, GenieAsset, Markets, SellOrder } from 'nft/type
 import { useMemo } from 'react'
 
 import { NftAsset, useDetailsQuery } from '../__generated__/types-and-hooks'
-import { ASSET_PAGE_SIZE } from './Asset'
 
 gql`
   query Details($address: String!, $tokenId: String!) {
@@ -50,7 +49,7 @@ gql`
             }
             description
           }
-          listings(first: ${ASSET_PAGE_SIZE}) {
+          listings(first: 25) {
             edges {
               node {
                 address
