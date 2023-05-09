@@ -38,8 +38,8 @@ export default function GasEstimateTooltip({
       size={TooltipSize.Large}
       // TODO(WEB-XXXX)
       // Most of Swap-related components accept either `syncing`, `loading` or both props at the same time.
-      // We are often using them interchangeably, but they are not the same. We should clarify the naming
-      // and usage of these props to avoid any confusion and UI misbehavior.
+      // We are often using them interchangeably, or pass both values as one of them (`syncing={loading || syncing}`).
+      // This is confusing and can lead to unpredicted UI behavior. We should refactor and unify this.
       text={<SwapRoute trade={trade} syncing={loading} />}
       placement="bottom"
     >
