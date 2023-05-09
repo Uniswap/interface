@@ -5,7 +5,6 @@ import { LoadingRows } from 'components/Loader/styled'
 import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { InterfaceTrade } from 'state/routing/types'
-import { useTheme } from 'styled-components/macro'
 
 import { Separator, ThemedText } from '../../theme'
 import Column from '../Column'
@@ -39,7 +38,6 @@ function TextWithLoadingPlaceholder({
 }
 
 export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }: AdvancedSwapDetailsProps) {
-  const theme = useTheme()
   const { chainId } = useWeb3React()
   const nativeCurrency = useNativeCurrency(chainId)
 
