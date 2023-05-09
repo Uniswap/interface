@@ -1,5 +1,5 @@
 import { transparentize } from 'polished'
-import { ReactNode, useEffect, useState } from 'react'
+import { PropsWithChildren, ReactNode, useEffect, useState } from 'react'
 import styled from 'styled-components/macro'
 import noop from 'utils/noop'
 
@@ -37,7 +37,7 @@ const TooltipContainer = styled.div<{ size: TooltipSize }>`
   box-shadow: 0 4px 8px 0 ${({ theme }) => transparentize(0.9, theme.shadow1)};
 `
 
-interface TooltipProps extends Omit<PopoverProps, 'content'> {
+type TooltipProps = Omit<PopoverProps, 'content'> & {
   text: ReactNode
   open?: () => void
   close?: () => void
@@ -46,6 +46,8 @@ interface TooltipProps extends Omit<PopoverProps, 'content'> {
   timeout?: number
 }
 
+// TODO(WEB-3305)
+// Migrate to MouseoverTooltip and move this component inline to MouseoverTooltip
 export default function Tooltip({ text, open, close, disabled, size = TooltipSize.Small, ...rest }: TooltipProps) {
   return (
     <Popover
@@ -61,10 +63,24 @@ export default function Tooltip({ text, open, close, disabled, size = TooltipSiz
   )
 }
 
-/** Standard text tooltip. */
-export function MouseoverTooltip({ text, disabled, children, timeout, ...rest }: Omit<TooltipProps, 'show'>) {
+// TODO(WEB-3305)
+// Do not pass through PopoverProps. Prefer higher-level interface to control MouseoverTooltip.
+type MouseoverTooltipProps = Omit<PopoverProps, 'content' | 'show'> &
+  PropsWithChildren<{
+    text: ReactNode
+    size?: TooltipSize
+    disabled?: boolean
+    timeout?: number
+    placement?: PopoverProps['placement']
+    onOpen?: () => void
+  }>
+
+export function MouseoverTooltip({ text, disabled, children, onOpen, timeout, ...rest }: MouseoverTooltipProps) {
   const [show, setShow] = useState(false)
-  const open = () => text && setShow(true)
+  const open = () => {
+    setShow(true)
+    onOpen?.()
+  }
   const close = () => setShow(false)
 
   useEffect(() => {

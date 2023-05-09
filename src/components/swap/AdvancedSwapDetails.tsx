@@ -1,4 +1,6 @@
 import { Trans } from '@lingui/macro'
+import { sendAnalyticsEvent } from '@uniswap/analytics'
+import { InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { LoadingRows } from 'components/Loader/styled'
@@ -114,6 +116,11 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
         <MouseoverTooltip
           size={TooltipSize.Large}
           text={<SwapRoute data-testid="swap-route-info" trade={trade} syncing={syncing} />}
+          onOpen={() => {
+            sendAnalyticsEvent(SwapEventName.SWAP_AUTOROUTER_VISUALIZATION_EXPANDED, {
+              element: InterfaceElementName.AUTOROUTER_VISUALIZATION_ROW,
+            })
+          }}
         >
           <RouterLabel />
         </MouseoverTooltip>
