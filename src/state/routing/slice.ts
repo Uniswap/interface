@@ -79,7 +79,7 @@ interface GetQuoteArgs {
   tokenOutDecimals: number
   tokenOutSymbol?: string
   amount: string
-  routerPreference: RouterPreference
+  routerPreference: RouterPreference | typeof INTERNAL_ROUTER_PREFERENCE_PRICE
   type: 'exactIn' | 'exactOut'
 }
 
