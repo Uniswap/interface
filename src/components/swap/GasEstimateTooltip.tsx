@@ -36,7 +36,7 @@ export default function GasEstimateTooltip({
     <MouseoverTooltip
       disabled={disabled}
       size={TooltipSize.Large}
-      // TODO(WEB-XXXX)
+      // TODO(WEB-3304)
       // Most of Swap-related components accept either `syncing`, `loading` or both props at the same time.
       // We are often using them interchangeably, or pass both values as one of them (`syncing={loading || syncing}`).
       // This is confusing and can lead to unpredicted UI behavior. We should refactor and unify this.

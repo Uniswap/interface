@@ -25,7 +25,7 @@ export default function SwapRoute({
   const routes = getTokenPath(trade)
 
   const gasPrice =
-    // TODO(WEB-XXXX)
+    // TODO(WEB-3303)
     // Can `trade.gasUseEstimateUSD` be defined when `chainId` is not in `SUPPORTED_GAS_ESTIMATE_CHAIN_IDS`?
     trade.gasUseEstimateUSD && chainId && SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId)
       ? trade.gasUseEstimateUSD.toFixed(2) === '0.00'
