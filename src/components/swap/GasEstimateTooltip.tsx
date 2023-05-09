@@ -1,3 +1,5 @@
+import { sendAnalyticsEvent } from '@uniswap/analytics'
+import { InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
 import { Currency, TradeType } from '@uniswap/sdk-core'
 import { LoadingOpacityContainer } from 'components/Loader/styled'
 import { RowFixed } from 'components/Row'
@@ -41,6 +43,11 @@ export default function GasEstimateTooltip({
       // We are often using them interchangeably, or pass both values as one of them (`syncing={loading || syncing}`).
       // This is confusing and can lead to unpredicted UI behavior. We should refactor and unify this.
       text={<SwapRoute trade={trade} syncing={loading} />}
+      onOpen={() => {
+        sendAnalyticsEvent(SwapEventName.SWAP_AUTOROUTER_VISUALIZATION_EXPANDED, {
+          element: InterfaceElementName.AUTOROUTER_VISUALIZATION_ROW,
+        })
+      }}
       placement="bottom"
     >
       <LoadingOpacityContainer $loading={loading}>

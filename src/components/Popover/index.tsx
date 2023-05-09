@@ -105,6 +105,7 @@ export default function Popover({
     modifiers: [
       { name: 'offset', options: { offset: [offsetX, offsetY] } },
       { name: 'arrow', options: { element: arrowElement } },
+      { name: 'preventOverflow', options: { padding: 8 } },
     ],
   }
 
