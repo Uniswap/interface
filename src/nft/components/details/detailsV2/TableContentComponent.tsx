@@ -66,10 +66,10 @@ const TableCell = styled.div<{ $flex?: number; $justifyContent?: string; $color?
   }
 `
 
-const ButtonCell = styled(TableCell)`
+const ActionButton = styled.div`
   cursor: pointer;
   ${OpacityHoverState}
-  justify-content: center;
+  width: min-content;
 `
 
 const USDPrice = styled(ThemedText.BodySmall)`
@@ -79,6 +79,14 @@ const USDPrice = styled(ThemedText.BodySmall)`
   @media screen and (max-width: ${BREAKPOINTS.sm}px) {
     display: none;
   }
+`
+
+const Link = styled.a`
+  text-decoration: none;
+  display: block;
+  height: 20px;
+  width: min-content;
+  ${OpacityHoverState}
 `
 
 const PriceCell = ({ price }: { price: number }) => {
@@ -132,7 +140,6 @@ export const HeaderRow = ({ type, is1155 }: { type: TableTabsKeys; is1155?: bool
   )
 }
 
-// TODO hide all but ETH price, expiration, quantity, and button on small devices, use bag picture
 export const ContentRow = ({
   content,
   buttonCTA,
@@ -148,7 +155,9 @@ export const ContentRow = ({
   const isSellOrder = (content as SellOrder).type === OrderType.Listing
   return (
     <Row gap="12px" padding="16px 0px">
-      {getMarketplaceIcon(content.marketplace, '20')}
+      <Link href={content.marketplaceUrl} target="_blank" rel="noopener noreferrer">
+        {getMarketplaceIcon(content.marketplace, '20')}
+      </Link>
       {content.price && (
         <TableCell $flex={isMobile ? 1 : 1.75}>
           <PriceCell price={content.price.value} />
@@ -161,19 +170,23 @@ export const ContentRow = ({
       )}
       {(!isSellOrder || is1155) && (
         <TableCell hideOnSmall={true}>
-          <ThemedText.LabelSmall>{shortenAddress(content.maker)}</ThemedText.LabelSmall>
+          <Link href={`https://etherscan.io/address/${content.maker}`} target="_blank" rel="noopener noreferrer">
+            <ThemedText.LabelSmall>{shortenAddress(content.maker)}</ThemedText.LabelSmall>
+          </Link>
         </TableCell>
       )}
       <TableCell $justifyContent="flex-end">
         <ThemedText.LabelSmall>{date ? timeUntil(date) : <Trans>Never</Trans>}</ThemedText.LabelSmall>
       </TableCell>
-      <ButtonCell $flex={isMobile ? 0.25 : 1}>
-        {isMobile ? (
-          <CollectionSelectedAssetIcon color={theme.textSecondary} />
-        ) : (
-          <ThemedText.LabelSmall color="textSecondary">{buttonCTA}</ThemedText.LabelSmall>
-        )}
-      </ButtonCell>
+      <TableCell $flex={isMobile ? 0.25 : 1} $justifyContent="center">
+        <ActionButton>
+          {isMobile ? (
+            <CollectionSelectedAssetIcon color={theme.textSecondary} />
+          ) : (
+            <ThemedText.LabelSmall color="textSecondary">{buttonCTA}</ThemedText.LabelSmall>
+          )}
+        </ActionButton>
+      </TableCell>
     </Row>
   )
 }
