@@ -23,7 +23,7 @@ async function validate(schema: ValidationSchema, data: unknown): Promise<unknow
       validatorImport = import('utils/__generated__/validateTokens')
       break
     default:
-      throw new Error('No validation function specified for schema')
+      throw new Error('No validation function specified for token list schema')
   }
 
   const [, validatorModule] = await Promise.all([import('ajv'), validatorImport])
@@ -42,8 +42,8 @@ export async function validateTokens(json: TokenInfo[]): Promise<TokenInfo[]> {
   try {
     await validate(ValidationSchema.TOKENS, { tokens: json })
     return json
-  } catch (err) {
-    throw new Error(`Tokens failed validation: ${err.message}`)
+  } catch (error) {
+    throw new Error(`Tokens failed validation: ${error.message}`)
   }
 }
 
@@ -55,7 +55,7 @@ export async function validateTokenList(json: TokenList): Promise<TokenList> {
   try {
     await validate(ValidationSchema.LIST, json)
     return json
-  } catch (err) {
-    throw new Error(`Token list failed validation: ${err.message}`)
+  } catch (error) {
+    throw new Error(`Token list failed validation: ${error.message}`)
   }
 }
