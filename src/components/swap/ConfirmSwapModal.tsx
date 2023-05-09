@@ -26,6 +26,7 @@ enum SummaryModalState {
   APPROVING_PERMIT2, // approving Permit2 contract
   APPROVING_TOKEN, // signing the token approval
   APPROVAL_PENDING, // waiting for network confirmationt for the permit2 approval
+  APPROVED, // permit2 approval confirmed and token approval signed
   PENDING_CONFIRMATION, // waiting for wallet signature or network confirmation for the actual swap
 }
 
@@ -75,7 +76,10 @@ export default function ConfirmSwapModal({
   const maximumAmountIn = useMaxAmountIn(trade, allowedSlippage)
 
   useEffect(() => {
-    if (confirmModalState === SummaryModalState.APPROVAL_PENDING && allowance.state === AllowanceState.ALLOWED) {
+    if (
+      (confirmModalState === SummaryModalState.APPROVAL_PENDING || confirmModalState === SummaryModalState.APPROVED) &&
+      allowance.state === AllowanceState.ALLOWED
+    ) {
       onConfirm()
       setConfirmModalState(SummaryModalState.PENDING_CONFIRMATION)
     }
@@ -87,12 +91,21 @@ export default function ConfirmSwapModal({
       allowance.needsPermit2Approval ? SummaryModalState.APPROVING_PERMIT2 : SummaryModalState.APPROVING_TOKEN
     )
     try {
-      await allowance.approveAndPermit(function onApprovalRequestedCallback() {
-        // This callback is only triggered if the Permit2 approval is requested.
-        // At this point, the permit2 approval is sent but possibly still pending network confirmation.
-        setConfirmModalState(
-          allowance.needsSignature ? SummaryModalState.APPROVING_TOKEN : SummaryModalState.APPROVAL_PENDING
-        )
+      await allowance.approveAndPermit({
+        onApprovalRequested: () => {
+          // This callback is only triggered if the Permit2 approval is requested.
+          // At this point, the permit2 approval is sent but possibly still pending network confirmation.
+          setConfirmModalState(
+            allowance.needsSignature ? SummaryModalState.APPROVING_TOKEN : SummaryModalState.APPROVAL_PENDING
+          )
+        },
+        onSignatureRequested: () => {
+          // This callback is only triggered if the token approval signatuure is requested.
+          // At this point, the signature is set but the Permit2 approval may still be pending network confirmation.
+          setConfirmModalState(
+            allowance.needsPermit2Approval ? SummaryModalState.APPROVAL_PENDING : SummaryModalState.APPROVED
+          )
+        },
       })
       sendAnalyticsEvent(InterfaceEventName.APPROVE_TOKEN_TXN_SUBMITTED, {
         chain_id: chainId,
@@ -113,6 +126,7 @@ export default function ConfirmSwapModal({
   const onModalDismiss = useCallback(() => {
     if (isOpen) setShouldLogModalCloseEvent(true)
     onDismiss()
+    setConfirmModalState(SummaryModalState.REVIEWING)
   }, [isOpen, onDismiss])
 
   const modalHeader = useCallback(() => {
