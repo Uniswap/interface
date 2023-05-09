@@ -63,17 +63,6 @@ export const ArrowWrapper = styled.div<{ clickable: boolean }>`
       : null}
 `
 
-export const ErrorText = styled(Text)<{ severity?: 0 | 1 | 2 | 3 | 4 }>`
-  color: ${({ theme, severity }) =>
-    severity === 3 || severity === 4
-      ? theme.accentFailure
-      : severity === 2
-      ? theme.deprecated_yellow2
-      : severity === 1
-      ? theme.textPrimary
-      : theme.textSecondary};
-`
-
 export const TruncatedText = styled(Text)`
   text-overflow: ellipsis;
   max-width: 220px;
