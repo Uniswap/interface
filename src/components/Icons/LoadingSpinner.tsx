@@ -28,7 +28,7 @@ export default function Loader({
       {...rest}
     >
       <path
-        d="M12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22C17.5228 22 22 17.5228 22 12C22 9.27455 20.9097 6.80375"
+        d="M2,12 a10,10 0 0,1 10,-10 M12,22 a10,10 0 0,1 -10,-10 M22,12 a10,10 0 0,1 -10,10"
         strokeWidth={strokeWidth ?? '2.5'}
         strokeLinecap="round"
         strokeLinejoin="round"
