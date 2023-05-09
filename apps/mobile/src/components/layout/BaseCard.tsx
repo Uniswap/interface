@@ -10,7 +10,7 @@ import { Trace } from 'src/components/telemetry/Trace'
 import { Text } from 'src/components/Text'
 import { useIsDarkMode } from 'src/features/appearance/hooks'
 import { Theme } from 'src/styles/theme'
-import { opacify } from 'src/utils/colors'
+import { opacify } from 'ui/src/theme/color/utils'
 
 const SHADOW_OFFSET: ShadowProps<Theme>['shadowOffset'] = { width: 4, height: 8 }
 export const SHADOW_OFFSET_SMALL: ShadowProps<Theme>['shadowOffset'] = { width: 0, height: 2 }

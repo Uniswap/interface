@@ -11,8 +11,7 @@ import Reanimated, {
 } from 'react-native-reanimated'
 import { useAppTheme } from 'src/app/hooks'
 import { Box } from 'src/components/layout'
-import { opacify } from 'src/utils/colors'
-
+import { opacify } from 'ui/src/theme/color/utils'
 const SHIMMER_DURATION = 2000 // 2 seconds
 
 type WarmLoadingShimmerProps = {

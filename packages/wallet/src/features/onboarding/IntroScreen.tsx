@@ -1,6 +1,6 @@
 import { Circle, Image, Stack, Text, XStack, YStack } from 'ui/src'
 import { LinkButton } from 'ui/src/components/button/Button'
-import { opacify } from 'ui/src/theme/color'
+import { opacify } from 'ui/src/theme/color/utils'
 import { iconSize } from 'ui/src/theme/tokens'
 import {
   BOLT_ICON,

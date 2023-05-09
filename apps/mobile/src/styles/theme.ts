@@ -1,10 +1,11 @@
 import { createTheme } from '@shopify/restyle'
-import { colorsDark, colorsLight } from 'src/styles/color'
 import { textVariants } from 'src/styles/font'
 import { borderRadii, iconSizes, imageSizes, spacing } from 'src/styles/sizing'
 import { zIndices } from 'src/styles/zIndices'
-import { opacify } from 'src/utils/colors'
+import { colorsDark, colorsLight } from 'ui/src/theme/color'
+import { opacify } from 'ui/src/theme/color/utils'
 
+// TODO: move all of these tokens to shared theme files
 export const theme = createTheme({
   borderRadii,
   // https://iosref.com/res#iphone

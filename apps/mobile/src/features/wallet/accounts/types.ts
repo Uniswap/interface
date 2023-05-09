@@ -1,4 +1,4 @@
-import { Palette } from 'src/styles/color'
+import { Palette } from 'ui/src/theme/color/types'
 
 export enum AccountType {
   SignerMnemonic = 'signerMnemonic', // Key lives in native keystore

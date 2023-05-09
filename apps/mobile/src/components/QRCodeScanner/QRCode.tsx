@@ -6,7 +6,7 @@ import QRCode from 'src/components/QRCodeScanner/custom-qr-code-generator'
 import { Unicon } from 'src/components/unicons/Unicon'
 import { useUniconColors } from 'src/components/unicons/utils'
 import { Theme } from 'src/styles/theme'
-import { opacify } from 'src/utils/colors'
+import { opacify } from 'ui/src/theme/color/utils'
 
 type AddressQRCodeProps = {
   address: Address

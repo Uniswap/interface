@@ -14,10 +14,10 @@ import { openModal } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
 import { AccountType } from 'src/features/wallet/accounts/types'
 import { useActiveAccount } from 'src/features/wallet/hooks'
-import { colors } from 'src/styles/color'
 import { iconSizes } from 'src/styles/sizing'
 import { opacify } from 'src/utils/colors'
 import { openUri } from 'src/utils/linking'
+import { colors } from 'ui/src/theme/color'
 
 interface ActionCardItem {
   title: string

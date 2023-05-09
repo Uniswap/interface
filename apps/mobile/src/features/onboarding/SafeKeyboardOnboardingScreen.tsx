@@ -10,8 +10,8 @@ import { AnimatedFlex, Flex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
 import { Text } from 'src/components/Text'
 import { Theme } from 'src/styles/theme'
-import { opacify } from 'src/utils/colors'
 import { useKeyboardLayout } from 'src/utils/useKeyboardLayout'
+import { opacify } from 'ui/src/theme/color/utils'
 
 type OnboardingScreenProps = {
   subtitle?: string

@@ -13,8 +13,8 @@ import { SWAP_SLIPPAGE_HELP_PAGE_URL } from 'src/constants/urls'
 import { ModalName } from 'src/features/telemetry/constants'
 import { Trade } from 'src/features/transactions/swap/useTrade'
 import { slippageToleranceToPercent } from 'src/features/transactions/swap/utils'
-import { opacify } from 'src/utils/colors'
 import { openUri } from 'src/utils/linking'
+import { opacify } from 'ui/src/theme/color/utils'
 import { formatCurrencyAmount, NumberType } from 'wallet/src/utils/format'
 
 export type SlippageInfoModalProps = {

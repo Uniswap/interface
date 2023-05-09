@@ -1,5 +1,5 @@
 import { createTokens } from 'tamagui'
-import { color } from './color'
+import { colors as color } from 'ui/src/theme/color'
 
 const space = {
   none: 0,

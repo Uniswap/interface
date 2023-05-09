@@ -37,7 +37,6 @@ import { ModalName } from 'src/features/telemetry/constants'
 import { useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
 import { ExploreModalAwareView } from 'src/screens/ModalAwareView'
 import { Screens } from 'src/screens/Screens'
-import { colorsDark } from 'src/styles/color'
 import { iconSizes } from 'src/styles/sizing'
 import { darkTheme } from 'src/styles/theme'
 import { setClipboardImage } from 'src/utils/clipboard'
@@ -46,6 +45,7 @@ import {
   passesContrast,
   useNearestThemeColorFromImageUri,
 } from 'src/utils/colors'
+import { colorsDark } from 'ui/src/theme/color'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import { areAddressesEqual } from 'wallet/src/utils/addresses'
 

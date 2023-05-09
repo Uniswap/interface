@@ -2,9 +2,9 @@ import { createMedia } from '@tamagui/react-native-media-driver'
 import { createTamagui } from 'tamagui'
 import { TamaguiInternalConfig } from 'ui/src'
 import { animations } from 'ui/src/theme/animations'
-import { bodyFont, headingFont } from './theme/fonts'
-import { themes } from './theme/themes'
-import { tokens } from './theme/tokens'
+import { bodyFont, headingFont } from 'ui/src/theme/fonts'
+import { themes } from 'ui/src/theme/themes'
+import { tokens } from 'ui/src/theme/tokens'
 
 export const config: TamaguiInternalConfig = createTamagui({
   animations,

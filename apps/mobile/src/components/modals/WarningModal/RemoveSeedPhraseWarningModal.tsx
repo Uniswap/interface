@@ -14,7 +14,7 @@ import { useAccountListQuery } from 'src/data/__generated__/types-and-hooks'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { Account } from 'src/features/wallet/accounts/types'
 import { dimensions, spacing } from 'src/styles/sizing'
-import { opacify } from 'src/utils/colors'
+import { opacify } from 'ui/src/theme/color/utils'
 import { formatUSDPrice } from 'wallet/src/utils/format'
 
 const ADDRESS_ROW_HEIGHT = 40

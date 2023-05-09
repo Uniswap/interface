@@ -10,7 +10,7 @@ import { Text } from 'src/components/Text'
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { AccountType } from 'src/features/wallet/accounts/types'
-import { opacify } from 'src/utils/colors'
+import { opacify } from 'ui/src/theme/color/utils'
 
 export type WarningModalProps = {
   onClose?: () => void

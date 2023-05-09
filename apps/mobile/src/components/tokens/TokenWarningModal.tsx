@@ -16,8 +16,8 @@ import { SafetyLevel } from 'src/data/__generated__/types-and-hooks'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { useTokenSafetyLevelColors } from 'src/features/tokens/safetyHooks'
 import { iconSizes } from 'src/styles/sizing'
-import { opacify } from 'src/utils/colors'
 import { ExplorerDataType, getExplorerLink, openUri } from 'src/utils/linking'
+import { opacify } from 'ui/src/theme/color/utils'
 import { currencyIdToAddress, currencyIdToChain } from 'wallet/src/utils/currencyId'
 
 function getTokenSafetyBodyText(safetyLevel: NullUndefined<SafetyLevel>, t: TFunction): string {
