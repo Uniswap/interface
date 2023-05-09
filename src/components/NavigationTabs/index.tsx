@@ -57,13 +57,13 @@ export function FindPoolTabs({ origin }: { origin: string }) {
 export function AddRemoveTabs({
   adding,
   creating,
-  defaultSlippage,
+  autoSlippage,
   positionID,
   children,
 }: {
   adding: boolean
   creating: boolean
-  defaultSlippage: Percent
+  autoSlippage: Percent
   positionID?: string | undefined
   showBackLink?: boolean
   children?: ReactNode | undefined
@@ -108,7 +108,7 @@ export function AddRemoveTabs({
           )}
         </ThemedText.DeprecatedMediumHeader>
         <Box style={{ marginRight: '.5rem' }}>{children}</Box>
-        <SettingsTab placeholderSlippage={defaultSlippage} />
+        <SettingsTab autoSlippage={autoSlippage} />
       </RowBetween>
     </Tabs>
   )

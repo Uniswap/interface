@@ -30,6 +30,7 @@ const Wrapper = styled(Column)<{ numItems: number; isExpanded: boolean }>`
   overflow: hidden;
 `
 
+// TODO(WEB-3288): Replace this component to use `components/Expand` under the hood
 type ExpandoRowProps = PropsWithChildren<{ title?: string; numItems: number; isExpanded: boolean; toggle: () => void }>
 export function ExpandoRow({ title = t`Hidden`, numItems, isExpanded, toggle, children }: ExpandoRowProps) {
   if (numItems === 0) return null
