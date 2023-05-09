@@ -41,7 +41,7 @@ const StyledArrowLeft = styled(ArrowLeft)`
 
 export function FindPoolTabs({ origin }: { origin: string }) {
   return (
-    <Tabs>
+    <Tabs style={{ width: '100%' }}>
       <RowBetween style={{ padding: '1rem 1rem 0 1rem', position: 'relative' }}>
         <HistoryLink to={origin}>
           <StyledArrowLeft />

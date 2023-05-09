@@ -8,6 +8,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { Plus } from 'react-feather'
 import { useLocation } from 'react-router'
 import { Text } from 'rebass'
+import styled from 'styled-components/macro'
 
 import { ButtonDropdownLight } from '../../components/Button'
 import { LightCard } from '../../components/Card'
@@ -26,7 +27,6 @@ import { usePairAdder } from '../../state/user/hooks'
 import { StyledInternalLink } from '../../theme'
 import { ThemedText } from '../../theme'
 import { currencyId } from '../../utils/currencyId'
-import AppBody from '../AppBody'
 import { Dots } from '../Pool/styleds'
 
 enum Fields {
@@ -96,15 +96,26 @@ export default function PoolFinder() {
     </LightCard>
   )
 
+  const BodyWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 420px;
+    background: ${({ theme }) => theme.backgroundScrolledSurface};
+    border-radius: 16px;
+    box-shadow: ${({ theme }) => theme.deepShadow};
+    margin-top: 72px;
+  `
+
   return (
     <Trace page={InterfacePageName.POOL_PAGE} shouldLogImpression>
       <>
-        <AppBody>
+        <BodyWrapper>
           <FindPoolTabs origin={query.get('origin') ?? '/pools'} />
           <AutoColumn style={{ padding: '1rem' }} gap="md">
             <BlueCard>
               <AutoColumn gap="10px">
-                <ThemedText.DeprecatedLink fontWeight={400} color="accentAction">
+                <ThemedText.DeprecatedLink fontWeight={400} color="none">
                   <Trans>
                     <b>Tip:</b> Use this tool to find v2 pools that don&apos;t automatically appear in the interface.
                   </Trans>
@@ -229,7 +240,7 @@ export default function PoolFinder() {
             showCommonBases
             selectedCurrency={(activeField === Fields.TOKEN0 ? currency1 : currency0) ?? undefined}
           />
-        </AppBody>
+        </BodyWrapper>
         <SwitchLocaleLink />
       </>
     </Trace>
