@@ -15,7 +15,7 @@ export function beforeSend(event: ErrorEvent, hint: EventHint) {
   return filterKnownErrors(event, hint)
 }
 
-// Identifies ethers request errors (as thrown by {@type import(@ethersproject/web).fetchJson}).
+/** Identifies ethers request errors (as thrown by {@type import(@ethersproject/web).fetchJson}). */
 function isEthersRequestError(error: Error): error is Error & { requestBody: string } {
   return 'requestBody' in error && typeof (error as unknown as Record<'requestBody', unknown>).requestBody === 'string'
 }
