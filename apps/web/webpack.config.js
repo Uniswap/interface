@@ -162,6 +162,8 @@ const options = {
     clean: true,
     publicPath: '',
   },
+  // https://webpack.js.org/configuration/other-options/#level
+  infrastructureLogging: { level: 'warn' },
   module: {
     rules: [
       {
