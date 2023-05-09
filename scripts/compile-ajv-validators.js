@@ -3,7 +3,7 @@
 const fs = require('fs')
 const path = require('path')
 const Ajv = require('ajv')
-const standaloneCode = require('ajv/dist/standalone').default
+const standaloneCode = require(require.resolve('ajv/dist/standalone')).default
 const addFormats = require('ajv-formats')
 const schema = require('@uniswap/token-lists/dist/tokenlist.schema.json')
 
