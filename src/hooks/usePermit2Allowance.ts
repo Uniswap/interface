@@ -95,15 +95,19 @@ export default function usePermit2Allowance(amount?: CurrencyAmount<Token>, spen
   const shouldRequestApproval = !(isApproved || isApprovalLoading)
   const shouldRequestSignature = !(isPermitted || isSigned)
   const addTransaction = useTransactionAdder()
-  const approveAndPermit = useCallback(async () => {
-    if (shouldRequestApproval) {
-      const { response, info } = await updateTokenAllowance()
-      addTransaction(response, info)
-    }
-    if (shouldRequestSignature) {
-      await updatePermitAllowance()
-    }
-  }, [addTransaction, shouldRequestApproval, shouldRequestSignature, updatePermitAllowance, updateTokenAllowance])
+  const approveAndPermit = useCallback(
+    async (onApprovalRequested?: () => void) => {
+      if (shouldRequestApproval) {
+        const { response, info } = await updateTokenAllowance()
+        addTransaction(response, info)
+        onApprovalRequested?.()
+      }
+      if (shouldRequestSignature) {
+        await updatePermitAllowance()
+      }
+    },
+    [addTransaction, shouldRequestApproval, shouldRequestSignature, updatePermitAllowance, updateTokenAllowance]
+  )
 
   const approve = useCallback(async () => {
     if (shouldRequestApproval) {
