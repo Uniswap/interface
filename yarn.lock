@@ -5172,10 +5172,10 @@
   resolved "https://registry.yarnpkg.com/@uniswap/default-token-list/-/default-token-list-9.4.0.tgz#60c4d249b3be5d0123480e5a4fd092a1fd10ef0c"
   integrity sha512-PsYsEPpFs0CIjWHel2FDPo6T/EkZ+RuH9NfX55FbMbZMTuw9TSQEfl8p1fYt6KAMWi0Zy/Mfqp16y+OiYJyoBA==
 
-"@uniswap/eslint-config@^1.1.1":
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/@uniswap/eslint-config/-/eslint-config-1.1.1.tgz#83d2633dad6507ca58bc11c8892035812059488e"
-  integrity sha512-vND/oJTmGCxYpY0E+iXWZT0mJT21/Ryf48yLP0kyWNnXzB5WyJuqei2gHx3nr+HWwRNF6aEbToRr9jNh+J3uBg==
+"@uniswap/eslint-config@^1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@uniswap/eslint-config/-/eslint-config-1.2.0.tgz#1d9565c5ae5982fc0e3585b272e15b89b64b2db0"
+  integrity sha512-hxCmKRbCckQql+/ZKiZBpIm7btexTZ2SRq3lcg3MHDB3VurdIycKSIBGSyxJxAryMC2b83/SubiZ8wNCjP55sQ==
   dependencies:
     "@rushstack/eslint-patch" "^1.2.0"
     "@typescript-eslint/eslint-plugin" "^5.45.1"
