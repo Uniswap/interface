@@ -632,7 +632,7 @@ export function Swap({
           </TraceEvent>
         </ArrowWrapper>
       </div>
-      <AutoColumn gap="md">
+      <AutoColumn gap="xs">
         <div>
           <OutputSwapSection>
             <Trace section={InterfaceSectionName.CURRENCY_OUTPUT_PANEL}>
