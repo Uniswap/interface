@@ -8,7 +8,6 @@ import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { useMaxAmountIn } from 'hooks/useMaxAmountIn'
 import { Allowance, AllowanceState } from 'hooks/usePermit2Allowance'
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
-// import { Loader } from 'react-feather'
 import { InterfaceTrade } from 'state/routing/types'
 import invariant from 'tiny-invariant'
 import { tradeMeaningfullyDiffers } from 'utils/tradeMeaningFullyDiffer'
@@ -23,11 +22,8 @@ import SwapModalHeader from './SwapModalHeader'
 
 enum SummaryModalState {
   REVIEWING,
-  APPROVING_PERMIT2, // approving Permit2 contract
-  APPROVING_TOKEN, // signing the token approval
-  APPROVAL_PENDING, // waiting for network confirmationt for the permit2 approval
-  APPROVED, // permit2 approval confirmed and token approval signed
-  PENDING_CONFIRMATION, // waiting for wallet signature or network confirmation for the actual swap
+  ALLOWING,
+  PENDING_CONFIRMATION,
 }
 
 export default function ConfirmSwapModal({
@@ -76,10 +72,7 @@ export default function ConfirmSwapModal({
   const maximumAmountIn = useMaxAmountIn(trade, allowedSlippage)
 
   useEffect(() => {
-    if (
-      (confirmModalState === SummaryModalState.APPROVAL_PENDING || confirmModalState === SummaryModalState.APPROVED) &&
-      allowance.state === AllowanceState.ALLOWED
-    ) {
+    if (confirmModalState === SummaryModalState.ALLOWING && allowance.state === AllowanceState.ALLOWED) {
       onConfirm()
       setConfirmModalState(SummaryModalState.PENDING_CONFIRMATION)
     }
@@ -87,26 +80,9 @@ export default function ConfirmSwapModal({
 
   const updateAllowance = useCallback(async () => {
     invariant(allowance.state === AllowanceState.REQUIRED)
-    setConfirmModalState(
-      allowance.needsPermit2Approval ? SummaryModalState.APPROVING_PERMIT2 : SummaryModalState.APPROVING_TOKEN
-    )
+    setConfirmModalState(SummaryModalState.ALLOWING)
     try {
-      await allowance.approveAndPermit({
-        onApprovalRequested: () => {
-          // This callback is only triggered if the Permit2 approval is requested.
-          // At this point, the permit2 approval is sent but possibly still pending network confirmation.
-          setConfirmModalState(
-            allowance.needsSignature ? SummaryModalState.APPROVING_TOKEN : SummaryModalState.APPROVAL_PENDING
-          )
-        },
-        onSignatureRequested: () => {
-          // This callback is only triggered if the token approval signatuure is requested.
-          // At this point, the signature is set but the Permit2 approval may still be pending network confirmation.
-          setConfirmModalState(
-            allowance.needsPermit2Approval ? SummaryModalState.APPROVAL_PENDING : SummaryModalState.APPROVED
-          )
-        },
-      })
+      await allowance.approveAndPermit()
       sendAnalyticsEvent(InterfaceEventName.APPROVE_TOKEN_TXN_SUBMITTED, {
         chain_id: chainId,
         token_symbol: maximumAmountIn?.currency.symbol,
@@ -119,7 +95,6 @@ export default function ConfirmSwapModal({
       // if there was another unknow error, render error content in modal
       return false
     }
-    // setConfirmModalState(SummaryModalState.PENDING_CONFIRMATION)
     return true
   }, [allowance, chainId, maximumAmountIn?.currency.address, maximumAmountIn?.currency.symbol, trace])
 
@@ -130,34 +105,44 @@ export default function ConfirmSwapModal({
   }, [isOpen, onDismiss])
 
   const modalHeader = useCallback(() => {
-    if (!trade || confirmModalState !== SummaryModalState.REVIEWING) {
+    if (confirmModalState !== SummaryModalState.REVIEWING && !showAcceptChanges) {
+      return null
+    }
+    if (!trade) {
       return null
     }
     return <SwapModalHeader trade={trade} allowedSlippage={allowedSlippage} />
-  }, [allowedSlippage, confirmModalState, trade])
+  }, [allowedSlippage, confirmModalState, showAcceptChanges, trade])
 
   const modalBottom = useCallback(() => {
     if (
-      confirmModalState === SummaryModalState.APPROVING_PERMIT2 ||
-      confirmModalState === SummaryModalState.APPROVAL_PENDING
+      !showAcceptChanges &&
+      confirmModalState === SummaryModalState.ALLOWING &&
+      allowance.state === AllowanceState.REQUIRED &&
+      allowance.needsPermit2Approval
     ) {
       return (
         <PendingModalContent
           title={t`Approve permit`}
           subtitle={t`Proceed in wallet`}
           label={t`Why are permits required?`}
-          tooltipText={t`todo`}
+          tooltipText={t`Permit2 allows token approvals to be shared and managed across different applications.`}
           logo={<CurrencyLogo currency={trade?.inputAmount?.currency} size="48px" />}
         />
       )
     }
-    if (confirmModalState === SummaryModalState.APPROVING_TOKEN) {
+    if (
+      !showAcceptChanges &&
+      confirmModalState === SummaryModalState.ALLOWING &&
+      allowance.state === AllowanceState.REQUIRED &&
+      allowance.needsSignature
+    ) {
       return (
         <PendingModalContent
           title={t`Approve ${trade?.inputAmount?.currency?.symbol}`}
           subtitle={t`Proceed in wallet`}
           label={t`Why are approvals required?`}
-          tooltipText={t`todo`}
+          tooltipText={t`This provides the Uniswap protocol access to your token for trading. For security, this will expire after 30 days.`}
           logo={<CurrencyLogo currency={trade?.inputAmount?.currency} size="48px" />}
         />
       )
@@ -189,10 +174,14 @@ export default function ConfirmSwapModal({
         shouldLogModalCloseEvent={shouldLogModalCloseEvent}
         setShouldLogModalCloseEvent={setShouldLogModalCloseEvent}
         showAcceptChanges={showAcceptChanges}
-        onAcceptChanges={onAcceptChanges}
+        onAcceptChanges={() => {
+          setConfirmModalState(SummaryModalState.REVIEWING)
+          onAcceptChanges()
+        }}
       />
     )
   }, [
+    allowance,
     confirmModalState,
     trade,
     txHash,
@@ -204,7 +193,6 @@ export default function ConfirmSwapModal({
     fiatValueOutput,
     shouldLogModalCloseEvent,
     onAcceptChanges,
-    allowance.state,
     updateAllowance,
     onConfirm,
   ])
@@ -223,13 +211,13 @@ export default function ConfirmSwapModal({
         <TransactionErrorContent onDismiss={onModalDismiss} message={swapErrorMessage} />
       ) : (
         <ConfirmationModalContent
-          title={<Trans>Review Swap</Trans>}
+          title={confirmModalState === SummaryModalState.REVIEWING ? <Trans>Review Swap</Trans> : undefined}
           onDismiss={onModalDismiss}
           topContent={modalHeader}
           bottomContent={modalBottom}
         />
       ),
-    [onModalDismiss, modalBottom, modalHeader, swapErrorMessage]
+    [swapErrorMessage, onModalDismiss, confirmModalState, modalHeader, modalBottom]
   )
 
   return (
