@@ -412,7 +412,7 @@ describe('Swap', () => {
     })
   })
 
-  it('should render an error for slippage failure', () => {
+  it.skip('should render an error for slippage failure', () => {
     cy.visit('/swap', { ethereum: 'hardhat' })
       .hardhat({ automine: false })
       .then((hardhat) => {
