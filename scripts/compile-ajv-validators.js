@@ -15,6 +15,6 @@ fs.writeFileSync(path.join(__dirname, '../src/utils/__generated__/validateTokenL
 
 const tokensAjv = new Ajv({ code: { source: true, esm: true } })
 addFormats(tokensAjv)
-const validateTokens = tokensAjv.compile(Object.assign({}, schema, { required: ['tokens'] }))
+const validateTokens = tokensAjv.compile({ ...schema, required: ['tokens'] })
 let tokensModuleCode = standaloneCode(tokensAjv, validateTokens)
 fs.writeFileSync(path.join(__dirname, '../src/utils/__generated__/validateTokens.js'), tokensModuleCode)
