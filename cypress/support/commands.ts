@@ -31,6 +31,11 @@ declare global {
   }
 }
 
+const enum LocalStorageKey {
+  USER = 'redux_localstorage_simple_user',
+  FEATURE_FLAGS = 'featureFlags',
+}
+
 // sets up the injected provider to be a mock ethereum provider with the given mnemonic/index
 // eslint-disable-next-line no-undef
 Cypress.Commands.overwrite(
@@ -40,7 +45,9 @@ Cypress.Commands.overwrite(
 
     // Add a hash in the URL if it is not present (to use hash-based routing correctly with queryParams).
     let hashUrl = url.startsWith('/') && url.length > 2 && !url.startsWith('/#') ? `/#${url}` : url
-    if (options?.ethereum === 'goerli') hashUrl += `${url.includes('?') ? '&' : '?'}chain=goerli`
+    if (options?.ethereum === 'goerli') {
+      hashUrl += `${url.includes('?') ? '&' : '?'}chain=goerli`
+    }
 
     return cy
       .intercept('/service-worker.js', options?.serviceWorker ? undefined : { statusCode: 404 })
@@ -57,14 +64,14 @@ Cypress.Commands.overwrite(
 
             // Set initial user state.
             win.localStorage.setItem(
-              'redux_localstorage_simple_user', // storage key for the user reducer using 'redux-localstorage-simple'
+              LocalStorageKey.USER,
               JSON.stringify(options?.userState ?? CONNECTED_WALLET_USER_STATE)
             )
 
             // Set feature flags, if configured.
             if (options?.featureFlags) {
               const featureFlags = options.featureFlags.reduce((flags, flag) => ({ ...flags, [flag]: 'enabled' }), {})
-              win.localStorage.setItem('featureFlags', JSON.stringify(featureFlags))
+              win.localStorage.setItem(LocalStorageKey.FEATURE_FLAGS, JSON.stringify(featureFlags))
             }
 
             // Inject the mock ethereum provider.

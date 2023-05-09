@@ -92,8 +92,6 @@ describe('Token details', () => {
 
   describe('swapping', () => {
     beforeEach(() => {
-      // On mobile widths, we just link back to /swap instead of rendering the swap component.
-      cy.viewport(1200, 800)
       cy.visit(`/tokens/ethereum/${UNI_MAINNET.address}`, {
         ethereum: 'hardhat',
         featureFlags: [FeatureFlag.removeWidget],
