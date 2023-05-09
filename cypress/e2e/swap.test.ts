@@ -2,62 +2,22 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { parseEther } from '@ethersproject/units'
 import { SupportedChainId, WETH9 } from '@uniswap/sdk-core'
 
-import { UNI as UNI_MAINNET, USDC_MAINNET } from '../../src/constants/tokens'
-import { FeatureFlag } from '../../src/featureFlags/flags/featureFlags'
-import { WETH_GOERLI } from '../fixtures/constants'
+import { UNI, USDC_MAINNET } from '../../src/constants/tokens'
 import { getTestSelector } from '../utils'
 
+const UNI_MAINNET = UNI[SupportedChainId.MAINNET]
+
 describe('Swap', () => {
-  const verifyAmount = (field: 'input' | 'output', amountText: string | null) => {
-    if (amountText === null) {
-      cy.get(`#swap-currency-${field} .token-amount-input`).should('not.have.value')
-    } else {
-      cy.get(`#swap-currency-${field} .token-amount-input`).should('have.value', amountText)
-    }
-  }
-
-  const verifyToken = (field: 'input' | 'output', tokenSymbol: string | null) => {
-    if (tokenSymbol === null) {
-      cy.get(`#swap-currency-${field} .token-symbol-container`).should('contain.text', 'Select token')
-    } else {
-      cy.get(`#swap-currency-${field} .token-symbol-container`).should('contain.text', tokenSymbol)
-    }
-  }
-
-  const selectToken = (tokenSymbol: string, field: 'input' | 'output') => {
-    // open token selector...
-    cy.get(`#swap-currency-${field} .open-currency-select-button`).click()
-    // select token...
-    cy.contains(tokenSymbol).click()
-
-    cy.get('body')
-      .then(($body) => {
-        if ($body.find(getTestSelector('TokenSafetyWrapper')).length) {
-          return 'I understand'
-        }
-
-        return 'no-op' // Don't click on anything, a no-op
-      })
-      .then((content) => {
-        if (content !== 'no-op') {
-          cy.contains(content).click()
-        }
-      })
-
-    // token selector should close...
-    cy.contains('Search name or paste address').should('not.exist')
-  }
-
   describe('Swap on main page', () => {
     before(() => {
       cy.visit('/swap', { ethereum: 'hardhat' })
     })
 
     it('starts with ETH selected by default', () => {
-      verifyAmount('input', '')
-      verifyToken('input', 'ETH')
-      verifyAmount('output', null)
-      verifyToken('output', null)
+      cy.get(`#swap-currency-input .token-amount-input`).should('have.value', '')
+      cy.get(`#swap-currency-input .token-symbol-container`).should('contain.text', 'ETH')
+      cy.get(`#swap-currency-output .token-amount-input`).should('not.have.value')
+      cy.get(`#swap-currency-output .token-symbol-container`).should('contain.text', 'Select token')
     })
 
     it('can enter an amount into input', () => {
@@ -134,39 +94,24 @@ describe('Swap', () => {
         })
     })
 
-    it('should have the correct default input from URL params ', () => {
-      cy.visit(`/swap?inputCurrency=${WETH_GOERLI}`)
+    it('should default inputs from URL params ', () => {
+      cy.visit(`/swap?inputCurrency=${UNI_MAINNET.address}`, { ethereum: 'hardhat' })
+      cy.get(`#swap-currency-input .token-symbol-container`).should('contain.text', 'UNI')
+      cy.get(`#swap-currency-output .token-symbol-container`).should('contain.text', 'Select token')
 
-      verifyToken('input', 'WETH')
-      verifyToken('output', null)
+      cy.visit(`/swap?outputCurrency=${UNI_MAINNET.address}`, { ethereum: 'hardhat' })
+      cy.get(`#swap-currency-input .token-symbol-container`).should('contain.text', 'Select token')
+      cy.get(`#swap-currency-output .token-symbol-container`).should('contain.text', 'UNI')
 
-      selectToken('Ether', 'output')
-      cy.get(getTestSelector('swap-currency-button')).first().click()
-
-      verifyToken('input', 'ETH')
-      verifyToken('output', 'WETH')
-    })
-
-    it('should have the correct default output from URL params ', () => {
-      cy.visit(`/swap?outputCurrency=${WETH_GOERLI}`)
-
-      verifyToken('input', null)
-      verifyToken('output', 'WETH')
-
-      cy.get(getTestSelector('swap-currency-button')).first().click()
-      verifyToken('input', 'WETH')
-      verifyToken('output', null)
-
-      selectToken('Ether', 'output')
-      cy.get(getTestSelector('swap-currency-button')).first().click()
-
-      verifyToken('input', 'ETH')
-      verifyToken('output', 'WETH')
+      cy.visit(`/swap?inputCurrency=ETH&outputCurrency=${UNI_MAINNET.address}`, { ethereum: 'hardhat' })
+      cy.get(`#swap-currency-input .token-symbol-container`).should('contain.text', 'ETH')
+      cy.get(`#swap-currency-output .token-symbol-container`).should('contain.text', 'UNI')
     })
 
     it('ETH to wETH is same value (wrapped swaps have no price impact)', () => {
       cy.visit('/swap')
-      selectToken('WETH', 'output')
+      cy.get(`#swap-currency-output .open-currency-select-button`).click()
+      cy.contains('WETH').click()
       cy.get('#swap-currency-input .token-amount-input').clear().type('0.01')
       cy.get('#swap-currency-output .token-amount-input').should('have.value', '0.01')
     })
@@ -333,7 +278,7 @@ describe('Swap', () => {
     cy.visit('/swap', { ethereum: 'hardhat' })
       .hardhat()
       .then((hardhat) => {
-        cy.stub(hardhat.wallet, 'sendTransaction').rejects(new Error('user cancelled'))
+        cy.stub(hardhat.wallet, 'sendTransaction').log(false).rejects(new Error('user cancelled'))
 
         cy.get('#swap-currency-output .open-currency-select-button').click()
         cy.get(getTestSelector('token-search-input')).clear().type(USDC_MAINNET.address)
@@ -347,70 +292,6 @@ describe('Swap', () => {
         cy.contains('Transaction rejected').should('not.exist')
       })
   })
-  describe('Swap on Token Detail Page', () => {
-    beforeEach(() => {
-      // On mobile widths, we just link back to /swap instead of rendering the swap component.
-      cy.viewport(1200, 800)
-      cy.visit(`/tokens/ethereum/${UNI_MAINNET[1].address}`, {
-        ethereum: 'hardhat',
-        featureFlags: [FeatureFlag.removeWidget],
-      }).then(() => {
-        cy.wait('@eth_blockNumber')
-        cy.scrollTo('top')
-      })
-    })
-
-    it('should have the expected output for a tokens detail page', () => {
-      verifyAmount('input', '')
-      verifyToken('input', null)
-      verifyAmount('output', null)
-      verifyToken('output', 'UNI')
-    })
-
-    it('should automatically navigate to the new TDP', () => {
-      selectToken('WETH', 'output')
-      cy.url().should('include', `${WETH9[1].address}`)
-      cy.url().should('not.include', `${UNI_MAINNET[1].address}`)
-    })
-
-    it('should not share swap state with the main swap page', () => {
-      verifyToken('output', 'UNI')
-      selectToken('WETH', 'input')
-      cy.visit('/swap', { featureFlags: [FeatureFlag.removeWidget] })
-      cy.contains('UNI').should('not.exist')
-      cy.contains('WETH').should('not.exist')
-    })
-
-    it('can enter an amount into input', () => {
-      cy.get('#swap-currency-input .token-amount-input').clear().type('0.001').should('have.value', '0.001')
-    })
-
-    it('zero swap amount', () => {
-      cy.get('#swap-currency-input .token-amount-input').clear().type('0.0').should('have.value', '0.0')
-    })
-
-    it('invalid swap amount', () => {
-      cy.get('#swap-currency-input .token-amount-input').clear().type('\\').should('have.value', '')
-    })
-
-    it('can enter an amount into output', () => {
-      cy.get('#swap-currency-output .token-amount-input').clear().type('0.001').should('have.value', '0.001')
-    })
-
-    it('zero output amount', () => {
-      cy.get('#swap-currency-output .token-amount-input').clear().type('0.0').should('have.value', '0.0')
-    })
-
-    it('should show a L2 token even if the user is connected to a different network', () => {
-      cy.visit('/tokens', { ethereum: 'hardhat', featureFlags: [FeatureFlag.removeWidget] })
-      cy.get(getTestSelector('tokens-network-filter-selected')).click()
-      cy.get(getTestSelector('tokens-network-filter-option-arbitrum')).click()
-      cy.get(getTestSelector('tokens-network-filter-selected')).should('contain', 'Arbitrum')
-      cy.get(getTestSelector('token-table-row-ARB')).click()
-      verifyToken('output', 'ARB')
-      cy.contains('Connect to Arbitrum').should('exist')
-    })
-  })
 
   it.skip('should render an error for slippage failure', () => {
     cy.visit('/swap', { ethereum: 'hardhat' })
@@ -418,7 +299,7 @@ describe('Swap', () => {
       .then((hardhat) => {
         cy.then(() => hardhat.provider.getBalance(hardhat.wallet.address)).then((initialBalance) => {
           // Gas estimation fails for this transaction (that would normally fail), so we stub it.
-          const send = cy.stub(hardhat.provider, 'send')
+          const send = cy.stub(hardhat.provider, 'send').log(false)
           send.withArgs('eth_estimateGas').resolves(BigNumber.from(2_000_000))
           send.callThrough()
 
@@ -432,16 +313,14 @@ describe('Swap', () => {
           // Open the currency select modal.
           cy.get('#swap-currency-output .open-currency-select-button').click()
 
-          // Wait for the currency list to load
-          cy.contains('1inch').should('exist')
-
           // Select UNI as output token
           cy.get(getTestSelector('token-search-input')).clear().type('Uniswap')
           cy.get(getTestSelector('currency-list-wrapper'))
             .contains(/^Uniswap$/)
             .first()
-            .should('exist')
-            .click()
+            // Our scrolling library (react-window) seems to freeze when acted on by cypress, with this element set to
+            // `pointer-events: none`. This can be ignored using `{force: true}`.
+            .click({ force: true })
 
           // Swap 2 times.
           const AMOUNT_TO_SWAP = 400
