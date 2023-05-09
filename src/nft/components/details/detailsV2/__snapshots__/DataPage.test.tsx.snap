@@ -152,6 +152,12 @@ exports[`placeholder containers load 1`] = `
   align-self: flex-start;
 }
 
+@media screen and (max-width:768px) {
+  .c1 {
+    height: 100%;
+  }
+}
+
 @media screen and (max-width:640px) {
   .c1 {
     padding: 24px 48px;
