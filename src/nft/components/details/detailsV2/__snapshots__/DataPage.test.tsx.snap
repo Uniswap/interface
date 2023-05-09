@@ -254,11 +254,6 @@ exports[`placeholder containers load 1`] = `
               class="c3 c11"
             >
               Listings
-              <div
-                class="c14 css-f8aq60"
-              >
-                3
-              </div>
             </div>
           </div>
         </div>
