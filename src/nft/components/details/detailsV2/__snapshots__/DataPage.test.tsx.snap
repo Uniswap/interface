@@ -67,6 +67,7 @@ exports[`placeholder containers load 1`] = `
 
 .c7 {
   background: #FFFFFF;
+  border: 1px solid #D2D9EE;
   border-radius: 16px;
   padding: 16px 20px;
   width: 100%;
@@ -119,6 +120,7 @@ exports[`placeholder containers load 1`] = `
   -ms-flex-negative: 0;
   flex-shrink: 0;
   background: #FFFFFF;
+  border: 1px solid #D2D9EE;
   border-radius: 16px;
   padding: 16px 20px;
   width: 100%;

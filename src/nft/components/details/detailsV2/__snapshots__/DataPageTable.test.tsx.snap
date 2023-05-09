@@ -6,7 +6,7 @@ exports[`data page listings table content loads with a given asset 1`] = `
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
-  padding: 6px 0px;
+  padding: 6px 6px 6px 0px;
 }
 
 .c1 {
@@ -24,7 +24,7 @@ exports[`data page listings table content loads with a given asset 1`] = `
   -webkit-justify-content: flex-start;
   -ms-flex-pack: start;
   justify-content: flex-start;
-  padding: 6px 0px;
+  padding: 6px 6px 6px 0px;
   gap: 12px;
 }
 
@@ -110,6 +110,10 @@ exports[`data page listings table content loads with a given asset 1`] = `
 
 }
 
+@media screen and (min-width:1024px) and (max-width:1280px) {
+
+}
+
 <div
     class="c0 c1"
   >
@@ -153,7 +157,7 @@ exports[`data page listings table content loads with a given asset 1`] = `
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
-  padding: 16px 0px;
+  padding: 16px 6px 16px 0px;
 }
 
 .c6 {
@@ -177,7 +181,7 @@ exports[`data page listings table content loads with a given asset 1`] = `
   -webkit-justify-content: flex-start;
   -ms-flex-pack: start;
   justify-content: flex-start;
-  padding: 16px 0px;
+  padding: 16px 6px 16px 0px;
   gap: 12px;
 }
 
@@ -356,6 +360,12 @@ exports[`data page listings table content loads with a given asset 1`] = `
 }
 
 @media screen and (max-width:640px) {
+  .c9 {
+    display: none;
+  }
+}
+
+@media screen and (min-width:1024px) and (max-width:1280px) {
   .c9 {
     display: none;
   }
@@ -708,7 +718,7 @@ exports[`data page offers table content loads with a given asset 1`] = `
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
-  padding: 6px 0px;
+  padding: 6px 6px 6px 0px;
 }
 
 .c1 {
@@ -726,7 +736,7 @@ exports[`data page offers table content loads with a given asset 1`] = `
   -webkit-justify-content: flex-start;
   -ms-flex-pack: start;
   justify-content: flex-start;
-  padding: 6px 0px;
+  padding: 6px 6px 6px 0px;
   gap: 12px;
 }
 
@@ -831,6 +841,10 @@ exports[`data page offers table content loads with a given asset 1`] = `
 
 }
 
+@media screen and (min-width:1024px) and (max-width:1280px) {
+
+}
+
 <div
     class="c0 c1"
   >
@@ -883,7 +897,7 @@ exports[`data page offers table content loads with a given asset 1`] = `
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
-  padding: 16px 0px;
+  padding: 16px 6px 16px 0px;
 }
 
 .c6 {
@@ -907,7 +921,7 @@ exports[`data page offers table content loads with a given asset 1`] = `
   -webkit-justify-content: flex-start;
   -ms-flex-pack: start;
   justify-content: flex-start;
-  padding: 16px 0px;
+  padding: 16px 6px 16px 0px;
   gap: 12px;
 }
 
@@ -1105,6 +1119,12 @@ exports[`data page offers table content loads with a given asset 1`] = `
 }
 
 @media screen and (max-width:640px) {
+  .c9 {
+    display: none;
+  }
+}
+
+@media screen and (min-width:1024px) and (max-width:1280px) {
   .c9 {
     display: none;
   }

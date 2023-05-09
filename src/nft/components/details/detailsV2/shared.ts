@@ -3,6 +3,7 @@ import { opacify } from 'theme/utils'
 
 export const containerStyles = css`
   background: ${({ theme }) => theme.backgroundSurface};
+  border: 1px solid ${({ theme }) => theme.backgroundOutline};
   border-radius: 16px;
   padding: 16px 20px;
   width: 100%;

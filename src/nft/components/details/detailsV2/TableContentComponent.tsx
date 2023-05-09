@@ -80,6 +80,10 @@ const USDPrice = styled(ThemedText.BodySmall)`
   @media screen and (max-width: ${BREAKPOINTS.sm}px) {
     display: none;
   }
+
+  @media screen and (min-width: ${BREAKPOINTS.lg}px) and (max-width: ${BREAKPOINTS.xl}px) {
+    display: none;
+  }
 `
 
 const Link = styled.a`
@@ -110,7 +114,7 @@ export const HeaderRow = ({ type, is1155 }: { type: TableTabsKeys; is1155?: bool
   const isMobile = useIsMobile()
 
   return (
-    <Row gap="12px" padding="6px 0px">
+    <Row gap="12px" padding="6px 6px 6px 0px">
       <HomeSearchIcon />
       <TableCell $flex={isMobile ? 1 : 1.75}>
         <ThemedText.SubHeaderSmall color="textSecondary">
@@ -156,7 +160,7 @@ export const ContentRow = ({
   const date = content.endAt && new Date(content.endAt)
   const isSellOrder = (content as SellOrder).type === OrderType.Listing
   return (
-    <Row gap="12px" padding="16px 0px">
+    <Row gap="12px" padding="16px 6px 16px 0px">
       <Link href={content.marketplaceUrl} target="_blank" rel="noopener noreferrer">
         {getMarketplaceIcon(content.marketplace, '20')}
       </Link>
