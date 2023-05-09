@@ -133,7 +133,7 @@ exports[`placeholder containers load 1`] = `
   height: 100vh;
   width: 100%;
   gap: 36px;
-  max-width: 1200px;
+  max-width: 1200px128;
   margin: 0 auto;
 }
 
@@ -255,7 +255,7 @@ exports[`placeholder containers load 1`] = `
               <div
                 class="c14 css-f8aq60"
               >
-                10+
+                3
               </div>
             </div>
           </div>

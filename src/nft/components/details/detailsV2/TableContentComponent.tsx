@@ -69,7 +69,6 @@ const TableCell = styled.div<{ $flex?: number; $justifyContent?: string; $color?
 
 const ActionButton = styled.div`
   cursor: pointer;
-  // width: min-content;
   white-space: nowrap;
   ${OpacityHoverState}
 `
