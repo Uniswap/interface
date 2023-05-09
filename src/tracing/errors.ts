@@ -9,32 +9,58 @@ declare global {
   }
 }
 
+export function beforeSend(event: ErrorEvent, hint: EventHint) {
+  updateRequestUrl(event)
+  addChunkResponseStatusTag(event, hint)
+  return filterKnownErrors(event, hint)
+}
+
 /** Identifies ethers request errors (as thrown by {@type import(@ethersproject/web).fetchJson}). */
 function isEthersRequestError(error: Error): error is Error & { requestBody: string } {
   return 'requestBody' in error && typeof (error as unknown as Record<'requestBody', unknown>).requestBody === 'string'
 }
 
-export function beforeSend(event: ErrorEvent, hint: EventHint) {
-  // Since the interface currently uses HashRouter, URLs will have a # before the path.
-  // This leads to issues when we send the URL into Sentry, as the path gets parsed as a "fragment".
-  // Instead, this logic removes the # part of the URL.
-  // See https://romain-clement.net/articles/sentry-url-fragments/#url-fragments
+// Since the interface currently uses HashRouter, URLs will have a # before the path.
+// This leads to issues when we send the URL into Sentry, as the path gets parsed as a "fragment".
+// Instead, this logic removes the # part of the URL.
+// See https://romain-clement.net/articles/sentry-url-fragments/#url-fragments
+function updateRequestUrl(event: ErrorEvent) {
   if (event.request?.url) {
     event.request.url = event.request.url.replace('/#', '')
   }
-
-  return filterKnownErrors(event, hint)
 }
 
-function shouldFilterChunkError(asset?: string) {
+// If a request fails due to a chunk error, this looks for that asset in the performance entries.
+// If found, it adds a tag to the event with the response status of the chunk request.
+function addChunkResponseStatusTag(event: ErrorEvent, hint: EventHint) {
+  const error = hint.originalException
+  if (error instanceof Error) {
+    let asset: string | undefined
+    if (error.message.match(/Loading chunk \d+ failed\. \(([a-zA-Z]+): .+\.chunk\.js\)/)) {
+      asset = error.message.match(/https?:\/\/.+?\.chunk\.js/)?.[0]
+    }
+
+    if (error.message.match(/Loading CSS chunk \d+ failed\. \(.+\.chunk\.css\)/)) {
+      const relativePath = error.message.match(/\/static\/css\/.*\.chunk\.css/)?.[0]
+      asset = `${window.origin}${relativePath}`
+    }
+
+    if (asset) {
+      const status = getChunkResponseStatus(asset)
+      if (status) {
+        if (!event.tags) {
+          event.tags = {}
+        }
+        event.tags.chunkResponseStatus = status
+      }
+    }
+  }
+}
+
+function getChunkResponseStatus(asset?: string): number | undefined {
   const entries = [...(performance?.getEntriesByType('resource') ?? [])]
   const resource = entries?.find(({ name }) => name === asset)
-  const status = resource?.responseStatus
-
-  // If the status if 499, then we ignore.
-  // If there's no status (meaning the browser doesn't support `responseStatus`) then we also ignore.
-  // These errors are likely also 499 errors, and we can catch any spikes in non-499 chunk errors via other browsers.
-  return !status || status === 499
+  return resource?.responseStatus
 }
 
 /**
@@ -56,20 +82,6 @@ export const filterKnownErrors: Required<ClientOptions>['beforeSend'] = (event: 
 
     // If the error is based on a user rejecting, it should not be considered an exception.
     if (didUserReject(error)) return null
-
-    // This ignores 499 errors, which are caused by Cloudflare when a request is cancelled.
-    // CF claims that some number of these is expected, and that they should be ignored.
-    // See https://groups.google.com/a/uniswap.org/g/cloudflare-eng/c/t3xvAiJFujY.
-    if (error.message.match(/Loading chunk \d+ failed\. \(([a-zA-Z]+): .+\.chunk\.js\)/)) {
-      const asset = error.message.match(/https?:\/\/.+?\.chunk\.js/)?.[0]
-      if (shouldFilterChunkError(asset)) return null
-    }
-
-    if (error.message.match(/Loading CSS chunk \d+ failed\. \(.+\.chunk\.css\)/)) {
-      const relativePath = error.message.match(/\/static\/css\/.*\.chunk\.css/)?.[0]
-      const asset = `https://app.uniswap.org${relativePath}`
-      if (shouldFilterChunkError(asset)) return null
-    }
 
     // This is caused by HTML being returned for a chunk from Cloudflare.
     // Usually, it's the result of a 499 exception right before it, which should be handled.
