@@ -712,6 +712,8 @@ export function Swap({
                   await switchChain(connector, chainId)
                 } catch (error) {
                   // Ignore error, which keeps the user on the previous chain.
+                  // TODO(WEB-3306): This UX could be improved to handle user rejected errors
+                  // differently compared to other failures.
                 }
               }}
             >
