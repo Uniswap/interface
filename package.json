@@ -190,7 +190,7 @@
     "@web3-react/types": "^8.2.0",
     "@web3-react/url": "^8.2.0",
     "@web3-react/walletconnect": "^8.2.0",
-    "ajv": "^8.11.0",
+    "ajv": "8.11.0",
     "ajv-formats": "^2.1.1",
     "array.prototype.flat": "^1.2.4",
     "array.prototype.flatmap": "^1.2.4",
