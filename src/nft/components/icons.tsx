@@ -702,21 +702,21 @@ export const CollectionSelectedAssetIcon = (props: SVGProps) => (
   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none" {...props}>
     <path
       d="M17.5 9.16667V6.52778C17.5 5.68401 16.7538 5 15.8333 5H4.16667C3.24619 5 2.5 5.68401 2.5 6.52778V17.2222C2.5 18.066 3.24619 18.75 4.16667 18.75H11.25"
-      stroke="#F5F6FC"
+      stroke="currentColor"
       strokeWidth="1.5"
       strokeLinecap="round"
       strokeLinejoin="round"
     />
     <path
       d="M12.5 14.6667L14.4048 16.6667L19.1667 11.6667"
-      stroke="#F5F6FC"
+      stroke="currentColor"
       strokeWidth="1.5"
       strokeLinecap="round"
       strokeLinejoin="round"
     />
     <path
       d="M6.66671 5L6.66671 4.16666C6.66671 3.28261 7.0179 2.43476 7.64302 1.80964C8.26814 1.18452 9.11599 0.833333 10 0.833333C10.8841 0.833333 11.7319 1.18452 12.3571 1.80964C12.9822 2.43476 13.3334 3.28261 13.3334 4.16667L13.3334 5"
-      stroke="#F5F6FC"
+      stroke="currentColor"
       strokeWidth="1.5"
       strokeLinecap="round"
       strokeLinejoin="round"

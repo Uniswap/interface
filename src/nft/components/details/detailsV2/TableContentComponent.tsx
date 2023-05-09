@@ -7,12 +7,12 @@ import { OrderType } from 'graphql/data/__generated__/types-and-hooks'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
-import { HomeSearchIcon } from 'nft/components/icons'
-import { useSubscribeScrollState } from 'nft/hooks'
+import { CollectionSelectedAssetIcon, HomeSearchIcon } from 'nft/components/icons'
+import { useIsMobile, useSubscribeScrollState } from 'nft/hooks'
 import { Offer, SellOrder } from 'nft/types'
 import { formatEth, getMarketplaceIcon, timeUntil } from 'nft/utils'
-import styled from 'styled-components/macro'
-import { ThemedText } from 'theme'
+import styled, { useTheme } from 'styled-components/macro'
+import { BREAKPOINTS, ThemedText } from 'theme'
 import { shortenAddress } from 'utils'
 
 import { TableTabsKeys } from './DataPageTable'
@@ -55,18 +55,30 @@ export const TableContentComponent = ({ headerRow, contentRows, type }: TableCon
   )
 }
 
-const TableCell = styled.div<{ $flex?: number; $textAlign?: string; $color?: string }>`
+const TableCell = styled.div<{ $flex?: number; $justifyContent?: string; $color?: string; hideOnSmall?: boolean }>`
   flex: ${({ $flex }) => $flex ?? 1};
-  text-align: ${({ $textAlign }) => $textAlign};
+  justify-content: ${({ $justifyContent }) => $justifyContent};
   color: ${({ $color }) => $color};
   flex-shrink: 0;
+
+  @media screen and (max-width: ${BREAKPOINTS.sm}px) {
+    display: ${({ hideOnSmall }) => (hideOnSmall ? 'none' : 'flex')};
+  }
 `
 
-const ButtonCell = styled.div`
+const ButtonCell = styled(TableCell)`
   cursor: pointer;
-  padding: 8px 12px;
   ${OpacityHoverState}
-  text-align: center;
+  justify-content: center;
+`
+
+const USDPrice = styled(ThemedText.BodySmall)`
+  color: ${({ theme }) => theme.textSecondary};
+  line-height: 20px;
+
+  @media screen and (max-width: ${BREAKPOINTS.sm}px) {
+    display: none;
+  }
 `
 
 const PriceCell = ({ price }: { price: number }) => {
@@ -79,18 +91,18 @@ const PriceCell = ({ price }: { price: number }) => {
       <ThemedText.LabelSmall color="textPrimary" lineHeight="16px">
         {formatEth(price)}
       </ThemedText.LabelSmall>
-      <ThemedText.BodySmall color="textSecondary" lineHeight="20px">
-        {formatCurrencyAmount(usdValue, NumberType.FiatTokenPrice)}
-      </ThemedText.BodySmall>
+      <USDPrice>{formatCurrencyAmount(usdValue, NumberType.FiatTokenPrice)}</USDPrice>
     </Row>
   )
 }
 
 export const HeaderRow = ({ type, is1155 }: { type: TableTabsKeys; is1155?: boolean }) => {
+  const isMobile = useIsMobile()
+
   return (
     <Row gap="12px" padding="6px 0px">
       <HomeSearchIcon />
-      <TableCell $flex={1.75}>
+      <TableCell $flex={isMobile ? 1 : 1.75}>
         <ThemedText.SubHeaderSmall color="textSecondary">
           <Trans>Price</Trans>
         </ThemedText.SubHeaderSmall>
@@ -103,23 +115,24 @@ export const HeaderRow = ({ type, is1155 }: { type: TableTabsKeys; is1155?: bool
         </TableCell>
       )}
       {(type === TableTabsKeys.Offers || is1155) && (
-        <TableCell>
+        <TableCell hideOnSmall={true}>
           <ThemedText.SubHeaderSmall color="textSecondary">
             {type === TableTabsKeys.Offers ? <Trans>From</Trans> : <Trans>Seller</Trans>}
           </ThemedText.SubHeaderSmall>
         </TableCell>
       )}
-      <TableCell $textAlign="right">
+      <TableCell $justifyContent="flex-end">
         <ThemedText.SubHeaderSmall color="textSecondary">
           <Trans>Expires in</Trans>
         </ThemedText.SubHeaderSmall>
       </TableCell>
       {/* An empty cell is needed in the headers for proper vertical alignment with the action buttons */}
-      <TableCell>&nbsp;</TableCell>
+      <TableCell $flex={isMobile ? 0.25 : 1}>&nbsp;</TableCell>
     </Row>
   )
 }
 
+// TODO hide all but ETH price, expiration, quantity, and button on small devices, use bag picture
 export const ContentRow = ({
   content,
   buttonCTA,
@@ -129,34 +142,38 @@ export const ContentRow = ({
   buttonCTA: React.ReactNode
   is1155?: boolean
 }) => {
+  const isMobile = useIsMobile()
+  const theme = useTheme()
   const date = content.endAt && new Date(content.endAt)
   const isSellOrder = (content as SellOrder).type === OrderType.Listing
   return (
     <Row gap="12px" padding="16px 0px">
       {getMarketplaceIcon(content.marketplace, '20')}
       {content.price && (
-        <TableCell $flex={1.75}>
+        <TableCell $flex={isMobile ? 1 : 1.75}>
           <PriceCell price={content.price.value} />
         </TableCell>
       )}
       {is1155 && (
-        <TableCell $flex={0.5} $textAlign="center">
+        <TableCell $flex={0.5} $justifyContent="center">
           <ThemedText.SubHeaderSmall color="textSecondary">{content.quantity}</ThemedText.SubHeaderSmall>
         </TableCell>
       )}
       {(!isSellOrder || is1155) && (
-        <TableCell>
+        <TableCell hideOnSmall={true}>
           <ThemedText.LabelSmall>{shortenAddress(content.maker)}</ThemedText.LabelSmall>
         </TableCell>
       )}
-      <TableCell $textAlign="right">
+      <TableCell $justifyContent="flex-end">
         <ThemedText.LabelSmall>{date ? timeUntil(date) : <Trans>Never</Trans>}</ThemedText.LabelSmall>
       </TableCell>
-      <TableCell>
-        <ButtonCell>
+      <ButtonCell $flex={isMobile ? 0.25 : 1}>
+        {isMobile ? (
+          <CollectionSelectedAssetIcon color={theme.textSecondary} />
+        ) : (
           <ThemedText.LabelSmall color="textSecondary">{buttonCTA}</ThemedText.LabelSmall>
-        </ButtonCell>
-      </TableCell>
+        )}
+      </ButtonCell>
     </Row>
   )
 }
