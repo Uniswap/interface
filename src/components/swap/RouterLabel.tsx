@@ -1,6 +1,5 @@
-import { Trans } from '@lingui/macro'
-import Row from 'components/Row'
-import useAutoRouterSupported from 'hooks/useAutoRouterSupported'
+import { RouterPreference } from 'state/routing/slice'
+import { useRouterPreference } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
@@ -41,23 +40,13 @@ const StyledAutoRouterLabel = styled(ThemedText.DeprecatedBlack)`
 `
 
 export default function RouterLabel() {
-  const autoRouterSupported = useAutoRouterSupported()
+  const [routerPreference] = useRouterPreference()
 
-  if (autoRouterSupported) {
-    return (
-      <Row gap="6px" width="auto">
-        <StyledAutoRouterIcon />
-        <StyledAutoRouterLabel fontSize={14}>Auto Router</StyledAutoRouterLabel>
-      </Row>
-    )
+  switch (routerPreference) {
+    case RouterPreference.AUTO:
+    case RouterPreference.API:
+      return <ThemedText.BodySmall>Uniswap API</ThemedText.BodySmall>
+    case RouterPreference.CLIENT:
+      return <ThemedText.BodySmall>Uniswap Client</ThemedText.BodySmall>
   }
-
-  return (
-    <Row gap="6px" width="auto">
-      <StyledStaticRouterIcon />
-      <ThemedText.DeprecatedBlack fontSize={14}>
-        <Trans>Trade Route</Trans>
-      </ThemedText.DeprecatedBlack>
-    </Row>
-  )
 }
