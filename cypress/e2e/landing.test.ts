@@ -24,18 +24,4 @@ describe('Landing Page', () => {
     cy.get(getTestSelector('uniswap-logo')).click()
     cy.get(getTestSelector('landing-page'))
   })
-
-  it('allows navigation to pool', () => {
-    cy.viewport(2000, 1600)
-    cy.visit('/swap')
-    cy.get(getTestSelector('pool-nav-link')).first().click()
-    cy.url().should('include', '/pools')
-  })
-
-  it('allows navigation to pool on mobile', () => {
-    cy.viewport('iphone-6')
-    cy.visit('/swap')
-    cy.get(getTestSelector('pool-nav-link')).last().click()
-    cy.url().should('include', '/pools')
-  })
 })

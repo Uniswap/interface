@@ -335,7 +335,7 @@ export default function App() {
               )}
             </Suspense>
           </BodyWrapper>
-          <MobileBottomBar>
+          <MobileBottomBar data-testid="mobile-navbar">
             <PageTabs />
           </MobileBottomBar>
         </StatsigProvider>
