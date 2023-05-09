@@ -38,7 +38,7 @@ export const ListingMarkets: ListingMarket[] = [
   },
   {
     name: 'OpenSea',
-    fee: 0,
+    fee: 2.5,
   },
 ]
 
@@ -59,7 +59,7 @@ const getConsiderationItems = (
   openSeaFee?: ConsiderationInputItem
 } => {
   const creatorFeeBasisPoints = asset?.basisPoints ?? 0
-  const openSeaBasisPoints = !asset?.basisPoints ? 50 : 0
+  const openSeaBasisPoints = (ListingMarkets.find((market) => market.name === 'OpenSea')?.fee ?? 0) * 100
   const sellerBasisPoints = INVERSE_BASIS_POINTS - creatorFeeBasisPoints - openSeaBasisPoints
 
   const creatorFee = price

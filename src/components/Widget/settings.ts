@@ -3,6 +3,7 @@ import { RouterPreference, Slippage, SwapController, SwapEventHandlers } from '@
 import { DEFAULT_DEADLINE_FROM_NOW } from 'constants/misc'
 import { useCallback, useMemo, useState } from 'react'
 import { useUserSlippageTolerance, useUserTransactionTTL } from 'state/user/hooks'
+import { SlippageTolerance } from 'state/user/types'
 
 /**
  * Integrates the Widget's settings, keeping the widget and app settings in sync.
@@ -23,13 +24,13 @@ export function useSyncWidgetSettings() {
 
   const [appSlippage, setAppSlippage] = useUserSlippageTolerance()
   const [widgetSlippage, setWidgetSlippage] = useState<string | undefined>(
-    appSlippage === 'auto' ? undefined : appSlippage.toFixed(2)
+    appSlippage === SlippageTolerance.Auto ? undefined : appSlippage.toFixed(2)
   )
   const onSlippageChange = useCallback(
     (widgetSlippage: Slippage) => {
       setWidgetSlippage(widgetSlippage.max)
       if (widgetSlippage.auto || !widgetSlippage.max) {
-        setAppSlippage('auto')
+        setAppSlippage(SlippageTolerance.Auto)
       } else {
         setAppSlippage(new Percent(Math.floor(Number(widgetSlippage.max) * 100), 10_000))
       }
@@ -43,11 +44,11 @@ export function useSyncWidgetSettings() {
     setWidgetTtl(undefined)
     setAppTtl(DEFAULT_DEADLINE_FROM_NOW)
     setWidgetSlippage(undefined)
-    setAppSlippage('auto')
+    setAppSlippage(SlippageTolerance.Auto)
   }, [setAppSlippage, setAppTtl])
 
   const settings: SwapController['settings'] = useMemo(() => {
-    const auto = appSlippage === 'auto'
+    const auto = appSlippage === SlippageTolerance.Auto
     return {
       slippage: { auto, max: widgetSlippage },
       transactionTtl: widgetTtl,
