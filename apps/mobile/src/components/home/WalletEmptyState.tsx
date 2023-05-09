@@ -73,7 +73,7 @@ export function WalletEmptyState(): JSX.Element {
         />
       )}
       <ActionCard
-        blurb={t('Transfer tokens from another crypto wallet or crypto exchange.')}
+        blurb={t('Transfer tokens from another wallet or crypto exchange.')}
         icon={
           <IconContainer
             backgroundColor={colors.gold300}
@@ -106,35 +106,33 @@ export function WalletEmptyState(): JSX.Element {
   )
 }
 
-const ActionCard = ({ title, blurb, onPress, icon, badgeText }: ActionCardItem): JSX.Element => {
-  return (
-    <TouchableArea backgroundColor="background2" borderRadius="rounded20" onPress={onPress}>
-      <Flex centered row p="spacing16">
-        {icon}
-        <Flex flexShrink={1} gap="spacing4">
-          <Flex row alignItems="center" gap="spacing8">
-            <Text variant="subheadSmall">{title}</Text>
-            {badgeText && (
-              <Flex
-                centered
-                backgroundColor="magentaDark"
-                borderRadius="rounded8"
-                px="spacing8"
-                py="spacing4">
-                <Text color="magentaVibrant" variant="buttonLabelMicro">
-                  {badgeText}
-                </Text>
-              </Flex>
-            )}
-          </Flex>
-          <Text color="textSecondary" variant="bodySmall">
-            {blurb}
-          </Text>
+const ActionCard = ({ title, blurb, onPress, icon, badgeText }: ActionCardItem): JSX.Element => (
+  <TouchableArea backgroundColor="background2" borderRadius="rounded20" onPress={onPress}>
+    <Flex centered row p="spacing16">
+      {icon}
+      <Flex flexShrink={1} gap="spacing4">
+        <Flex row alignItems="center" gap="spacing8">
+          <Text variant="subheadSmall">{title}</Text>
+          {badgeText && (
+            <Flex
+              centered
+              backgroundColor="magentaDark"
+              borderRadius="rounded8"
+              px="spacing8"
+              py="spacing4">
+              <Text color="magentaVibrant" variant="buttonLabelMicro">
+                {badgeText}
+              </Text>
+            </Flex>
+          )}
         </Flex>
+        <Text color="textSecondary" variant="bodySmall">
+          {blurb}
+        </Text>
       </Flex>
-    </TouchableArea>
-  )
-}
+    </Flex>
+  </TouchableArea>
+)
 
 const IconContainer = ({
   backgroundColor,
@@ -142,15 +140,13 @@ const IconContainer = ({
 }: {
   backgroundColor: string
   icon: JSX.Element
-}): JSX.Element => {
-  return (
-    <Flex
-      centered
-      borderRadius="roundedFull"
-      height={iconSizes.icon36}
-      style={{ backgroundColor: opacify(10, backgroundColor) }}
-      width={iconSizes.icon36}>
-      {icon}
-    </Flex>
-  )
-}
+}): JSX.Element => (
+  <Flex
+    centered
+    borderRadius="roundedFull"
+    height={iconSizes.icon36}
+    style={{ backgroundColor: opacify(10, backgroundColor) }}
+    width={iconSizes.icon36}>
+    {icon}
+  </Flex>
+)

@@ -125,7 +125,7 @@ function NftView({ owner, item }: { owner: Address; item: NFTItem }): JSX.Elemen
 }
 
 export const NftsTab = forwardRef<FlashList<unknown>, TabProps>(
-  ({ owner, containerProps, scrollHandler, headerHeight }, ref) => {
+  ({ owner, containerProps, scrollHandler, headerHeight, isExternalProfile = false }, ref) => {
     const { t } = useTranslation()
     const theme = useAppTheme()
     const dispatch = useAppDispatch()
@@ -237,8 +237,12 @@ export const NftsTab = forwardRef<FlashList<unknown>, TabProps>(
               // empty view
               <Box flexGrow={1} style={containerProps?.emptyContainerStyle}>
                 <BaseCard.EmptyState
-                  buttonLabel={t('Receive NFTs')}
-                  description={t('Transfer NFTs from another wallet to get started.')}
+                  buttonLabel={isExternalProfile ? undefined : t('Receive NFTs')}
+                  description={
+                    isExternalProfile
+                      ? t('When this wallet buys or receives NFTs, they’ll appear here.')
+                      : t('Transfer NFTs from another wallet to get started.')
+                  }
                   icon={<NoNFTsIcon color={theme.colors.textSecondary} />}
                   title={t('No NFTs yet')}
                   onPress={onPressScan}

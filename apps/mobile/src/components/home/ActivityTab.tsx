@@ -2,7 +2,7 @@ import { NetworkStatus } from '@apollo/client'
 import { FlashList } from '@shopify/flash-list'
 import React, { createElement, forwardRef, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useAppSelector } from 'src/app/hooks'
+import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { useAdaptiveFooterHeight } from 'src/components/home/hooks'
 import { NoTransactions } from 'src/components/icons/NoTransactions'
 import { Box, Flex } from 'src/components/layout'
@@ -10,10 +10,13 @@ import { AnimatedFlashList } from 'src/components/layout/AnimatedFlashList'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { TabProps, TAB_STYLES } from 'src/components/layout/TabHelpers'
 import { Loader } from 'src/components/loading'
+import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { Text } from 'src/components/Text'
 import { isNonPollingRequestInFlight } from 'src/data/utils'
 import { useTransactionListQuery } from 'src/data/__generated__/types-and-hooks'
 import { usePersistedError } from 'src/features/dataApi/utils'
+import { openModal } from 'src/features/modals/modalSlice'
+import { ModalName } from 'src/features/telemetry/constants'
 import {
   formatTransactionsByDate,
   parseDataResponseToTransactionDetails,
@@ -33,6 +36,7 @@ import WrapSummaryItem from 'src/features/transactions/SummaryCards/SummaryItems
 import { TransactionDetails, TransactionType } from 'src/features/transactions/types'
 import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
 import { makeSelectAccountHideSpamTokens } from 'src/features/wallet/selectors'
+import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
 import { EMPTY_ARRAY } from 'wallet/src/constants/misc'
 
 type LoadingItem = {
@@ -130,8 +134,9 @@ function getItemType(item: TransactionDetails | SectionHeader | LoadingItem): st
 }
 
 export const ActivityTab = forwardRef<FlashList<unknown>, TabProps>(
-  ({ owner, containerProps, scrollHandler, headerHeight }, ref) => {
+  ({ owner, containerProps, scrollHandler, headerHeight, isExternalProfile = false }, ref) => {
     const { t } = useTranslation()
+    const dispatch = useAppDispatch()
 
     const { onContentSizeChange, footerHeight } = useAdaptiveFooterHeight({
       headerHeight,
@@ -226,6 +231,14 @@ export const ActivityTab = forwardRef<FlashList<unknown>, TabProps>(
       })
     }, [owner, refetch])
 
+    const onPressReceive = (): void => {
+      // in case we received a pending session from a previous scan after closing modal
+      dispatch(removePendingSession())
+      dispatch(
+        openModal({ name: ModalName.WalletConnectScan, initialState: ScannerModalState.WalletQr })
+      )
+    }
+
     if (!hasData && isError) {
       return (
         <Flex grow style={containerProps?.emptyContainerStyle}>
@@ -257,9 +270,17 @@ export const ActivityTab = forwardRef<FlashList<unknown>, TabProps>(
               (!isLoading && (
                 <Box flexGrow={1} style={containerProps?.emptyContainerStyle}>
                   <BaseCard.EmptyState
-                    description={t('When this wallet makes transactions, they’ll appear here.')}
+                    buttonLabel={isExternalProfile ? undefined : 'Receive tokens or NFTs'}
+                    description={
+                      isExternalProfile
+                        ? t('When this wallet makes transactions, they’ll appear here.')
+                        : t(
+                            'When you approve, trade, or transfer tokens or NFTs, your transactions will appear here.'
+                          )
+                    }
                     icon={<NoTransactions />}
                     title={t('No activity yet')}
+                    onPress={onPressReceive}
                   />
                 </Box>
               )) ||

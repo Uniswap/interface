@@ -288,8 +288,10 @@ exports[`ActivityTab renders without error 2`] = `
           flexGrow={1}
         >
           <EmptyState
-            description="When this wallet makes transactions, they’ll appear here."
+            buttonLabel="Receive tokens or NFTs"
+            description="When you approve, trade, or transfer tokens or NFTs, your transactions will appear here."
             icon={<Memo />}
+            onPress={[Function]}
             title="No activity yet"
           />
         </ForwardRef>
@@ -454,8 +456,10 @@ exports[`ActivityTab renders without error 2`] = `
               flexGrow={1}
             >
               <EmptyState
-                description="When this wallet makes transactions, they’ll appear here."
+                buttonLabel="Receive tokens or NFTs"
+                description="When you approve, trade, or transfer tokens or NFTs, your transactions will appear here."
                 icon={<Memo />}
+                onPress={[Function]}
                 title="No activity yet"
               />
             </ForwardRef>,

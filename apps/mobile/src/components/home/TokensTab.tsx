@@ -52,10 +52,7 @@ export const TokensTab = forwardRef<FlashList<any>, TabProps & { isExternalProfi
             // Show different empty state on external profile pages
             isExternalProfile ? (
               <BaseCard.EmptyState
-                buttonLabel={t('Receive tokens')}
-                description={t(
-                  'Transfer tokens from a centralized exchange or another wallet to get started.'
-                )}
+                description={t('When this wallet buys or receives tokens, they’ll appear here.')}
                 icon={<NoTokens />}
                 title={t('No tokens yet')}
                 onPress={onPressAction}

@@ -52,13 +52,22 @@ export function ExternalProfileScreen({
     [insets.bottom]
   )
 
+  const emptyContainerStyle = useMemo<StyleProp<ViewStyle>>(
+    () => ({
+      paddingTop: theme.spacing.spacing60,
+      paddingHorizontal: theme.spacing.spacing36,
+      paddingBottom: insets.bottom,
+    }),
+    [insets.bottom, theme.spacing.spacing36, theme.spacing.spacing60]
+  )
+
   const sharedProps = useMemo<TabContentProps>(
     () => ({
       contentContainerStyle: containerStyle,
       loadingContainerStyle: containerStyle,
-      emptyContainerStyle: containerStyle,
+      emptyContainerStyle,
     }),
-    [containerStyle]
+    [containerStyle, emptyContainerStyle]
   )
 
   const renderTab = useCallback(
@@ -72,9 +81,9 @@ export function ExternalProfileScreen({
     }) => {
       switch (route?.key) {
         case SectionName.ProfileActivityTab:
-          return <ActivityTab containerProps={sharedProps} owner={address} />
+          return <ActivityTab isExternalProfile containerProps={sharedProps} owner={address} />
         case SectionName.ProfileNftsTab:
-          return <NftsTab containerProps={sharedProps} owner={address} />
+          return <NftsTab isExternalProfile containerProps={sharedProps} owner={address} />
         case SectionName.ProfileTokensTab:
           return <TokensTab isExternalProfile containerProps={sharedProps} owner={address} />
       }
