@@ -86,7 +86,7 @@ function Updater() {
 }
 
 function trace(event: any) {
-  if (event.action !== 'request') return
+  if (!event?.request) return
   const { method, id, params } = event.request
   console.groupCollapsed(method, id)
   console.debug(params)

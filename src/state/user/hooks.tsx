@@ -7,6 +7,7 @@ import { L2_DEADLINE_FROM_NOW } from 'constants/misc'
 import JSBI from 'jsbi'
 import { useCallback, useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
+import { RouterPreference } from 'state/routing/slice'
 import { UserAddedToken } from 'types/tokens'
 
 import { V2_FACTORY_ADDRESSES } from '../../constants/addresses'
@@ -19,13 +20,13 @@ import {
   updateHideClosedPositions,
   updateHideUniswapWalletBanner,
   updateUserBuyFiatFlowCompleted,
-  updateUserClientSideRouter,
   updateUserDeadline,
   updateUserExpertMode,
   updateUserLocale,
+  updateUserRouterPreference,
   updateUserSlippageTolerance,
 } from './reducer'
-import { SerializedPair, SerializedToken } from './types'
+import { SerializedPair, SerializedToken, SlippageTolerance } from './types'
 
 export function serializeToken(token: Token): SerializedToken {
   return {
@@ -92,42 +93,52 @@ export function useExpertModeManager(): [boolean, () => void] {
   return [expertMode, toggleSetExpertMode]
 }
 
-export function useClientSideRouter(): [boolean, (userClientSideRouter: boolean) => void] {
+export function useRouterPreference(): [RouterPreference, (routerPreference: RouterPreference) => void] {
   const dispatch = useAppDispatch()
 
-  const clientSideRouter = useAppSelector((state) => Boolean(state.user.userClientSideRouter))
+  const routerPreference = useAppSelector((state) => state.user.userRouterPreference)
 
-  const setClientSideRouter = useCallback(
-    (newClientSideRouter: boolean) => {
-      dispatch(updateUserClientSideRouter({ userClientSideRouter: newClientSideRouter }))
+  const setRouterPreference = useCallback(
+    (newRouterPreference: RouterPreference) => {
+      dispatch(updateUserRouterPreference({ userRouterPreference: newRouterPreference }))
     },
     [dispatch]
   )
 
-  return [clientSideRouter, setClientSideRouter]
+  return [routerPreference, setRouterPreference]
 }
 
 /**
  * Return the user's slippage tolerance, from the redux store, and a function to update the slippage tolerance
  */
-export function useUserSlippageTolerance(): [Percent | 'auto', (slippageTolerance: Percent | 'auto') => void] {
+export function useUserSlippageTolerance(): [
+  Percent | SlippageTolerance.Auto,
+  (slippageTolerance: Percent | SlippageTolerance.Auto) => void
+] {
   const userSlippageToleranceRaw = useAppSelector((state) => {
     return state.user.userSlippageTolerance
   })
+
+  // TODO(WEB-3291): Keep `userSlippageTolerance` as Percent in Redux store and remove this conversion
   const userSlippageTolerance = useMemo(
-    () => (userSlippageToleranceRaw === 'auto' ? 'auto' : new Percent(userSlippageToleranceRaw, 10_000)),
+    () =>
+      userSlippageToleranceRaw === SlippageTolerance.Auto
+        ? SlippageTolerance.Auto
+        : new Percent(userSlippageToleranceRaw, 10_000),
     [userSlippageToleranceRaw]
   )
 
   const dispatch = useAppDispatch()
   const setUserSlippageTolerance = useCallback(
-    (userSlippageTolerance: Percent | 'auto') => {
-      let value: 'auto' | number
+    (userSlippageTolerance: Percent | SlippageTolerance.Auto) => {
+      let value: SlippageTolerance.Auto | number
       try {
         value =
-          userSlippageTolerance === 'auto' ? 'auto' : JSBI.toNumber(userSlippageTolerance.multiply(10_000).quotient)
+          userSlippageTolerance === SlippageTolerance.Auto
+            ? SlippageTolerance.Auto
+            : JSBI.toNumber(userSlippageTolerance.multiply(10_000).quotient)
       } catch (error) {
-        value = 'auto'
+        value = SlippageTolerance.Auto
       }
       dispatch(
         updateUserSlippageTolerance({
@@ -166,7 +177,7 @@ export function useUserHideClosedPositions(): [boolean, (newHideClosedPositions:
 export function useUserSlippageToleranceWithDefault(defaultSlippageTolerance: Percent): Percent {
   const allowedSlippage = useUserSlippageTolerance()[0]
   return useMemo(
-    () => (allowedSlippage === 'auto' ? defaultSlippageTolerance : allowedSlippage),
+    () => (allowedSlippage === SlippageTolerance.Auto ? defaultSlippageTolerance : allowedSlippage),
     [allowedSlippage, defaultSlippageTolerance]
   )
 }
