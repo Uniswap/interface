@@ -9,8 +9,9 @@ import '@cypress/code-coverage/support'
 import './commands'
 import './setupTests'
 
-// Disable logging for fetches, as they clutter the logs so as to make them unusable.
+// Squelch logs from fetches, as they clutter the logs so much as to make them unusable.
 // See https://docs.cypress.io/api/commands/intercept#Disabling-logs-for-a-request.
+// TODO(https://github.com/cypress-io/cypress/issues/26069): Squelch only wildcard logs once Cypress allows it.
 const log = Cypress.log
 Cypress.log = function (options, ...args) {
   if (options.displayName === 'script' || options.name === 'request') return

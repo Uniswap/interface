@@ -317,6 +317,8 @@ describe('Swap', () => {
           cy.get(getTestSelector('currency-list-wrapper'))
             .contains(/^Uniswap$/)
             .first()
+            // Our scrolling library (react-window) seems to freeze when acted on by cypress, with this element set to
+            // `pointer-events: none`. This can be ignored using `{force: true}`.
             .click({ force: true })
 
           // Swap 2 times.
