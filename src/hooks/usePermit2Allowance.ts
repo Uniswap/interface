@@ -20,11 +20,16 @@ export enum AllowanceState {
   ALLOWED,
 }
 
+type ApproveAndPermitCallbacks = {
+  onApprovalRequested?: () => void
+  onSignatureRequested?: () => void
+}
+
 interface AllowanceRequired {
   state: AllowanceState.REQUIRED
   token: Token
   isApprovalLoading: boolean
-  approveAndPermit: (onApprovalRequested?: () => void) => Promise<void>
+  approveAndPermit: (callbacks?: ApproveAndPermitCallbacks) => Promise<void>
   needsPermit2Approval: boolean
   needsSignature: boolean
 }
@@ -94,14 +99,15 @@ export default function usePermit2Allowance(amount?: CurrencyAmount<Token>, spen
   const shouldRequestSignature = !(isPermitted || isSigned)
   const addTransaction = useTransactionAdder()
   const approveAndPermit = useCallback(
-    async (onApprovalRequested?: () => void) => {
+    async (callbacks?: ApproveAndPermitCallbacks) => {
       if (shouldRequestApproval) {
         const { response, info } = await updateTokenAllowance()
         addTransaction(response, info)
-        onApprovalRequested?.()
+        callbacks?.onApprovalRequested?.()
       }
       if (shouldRequestSignature) {
         await updatePermitAllowance()
+        callbacks?.onSignatureRequested?.()
       }
     },
     [addTransaction, shouldRequestApproval, shouldRequestSignature, updatePermitAllowance, updateTokenAllowance]
