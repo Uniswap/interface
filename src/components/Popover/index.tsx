@@ -1,7 +1,7 @@
 import { Options, Placement } from '@popperjs/core'
 import Portal from '@reach/portal'
 import useInterval from 'lib/hooks/useInterval'
-import React, { CSSProperties, useCallback, useMemo, useState } from 'react'
+import React, { CSSProperties, useCallback, useState } from 'react'
 import { usePopper } from 'react-popper'
 import styled from 'styled-components/macro'
 import { Z_INDEX } from 'theme/zIndex'
@@ -99,18 +99,14 @@ export default function Popover({
   const [popperElement, setPopperElement] = useState<HTMLDivElement | null>(null)
   const [arrowElement, setArrowElement] = useState<HTMLDivElement | null>(null)
 
-  const options = useMemo(
-    (): Options => ({
-      placement,
-      strategy: 'fixed',
-      modifiers: [
-        { name: 'offset', options: { offset: [offsetX, offsetY] } },
-        { name: 'arrow', options: { element: arrowElement } },
-        { name: 'preventOverflow', options: { padding: 8 } },
-      ],
-    }),
-    [arrowElement, offsetX, offsetY, placement]
-  )
+  const options: Options = {
+    placement,
+    strategy: 'fixed',
+    modifiers: [
+      { name: 'offset', options: { offset: [offsetX, offsetY] } },
+      { name: 'arrow', options: { element: arrowElement } },
+    ],
+  }
 
   const { styles, update, attributes } = usePopper(referenceElement, popperElement, options)
 
