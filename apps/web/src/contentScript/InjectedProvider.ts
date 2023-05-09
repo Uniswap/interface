@@ -4,7 +4,13 @@
 import { ethErrors } from 'eth-rpc-errors'
 import { ethers } from 'ethers'
 import EventEmitter from 'eventemitter3'
+import {
+  BaseExtensionRequest,
+  ExtensionChainChange,
+  ExtensionRequestType,
+} from 'src/types/requests'
 import { v4 as uuidv4 } from 'uuid'
+import { chainIdtoHexadecimalString } from 'wallet/src/features/chains/chainIdUtils'
 import { logger } from 'wallet/src/features/logger/logger'
 import {
   AccountResponse,
@@ -126,10 +132,33 @@ export class InjectedProvider extends EventEmitter {
       ...InjectedProvider._defaultState,
     })
 
+    this.isMetaMask = true
     this.isUniswapWallet = true
     this.publicKey = null
 
-    this.isMetaMask = true
+    this.initExtensionListener()
+  }
+
+  /**
+   * Initialize a listener for messages posted from the Uniswap Wallet extension.
+   */
+  initExtensionListener = () => {
+    const handleDappRequest = (event: MessageEvent<BaseExtensionRequest>) => {
+      const messageData = event.data
+      if (messageData?.type === ExtensionRequestType.SwitchChain) {
+        const request = messageData as ExtensionChainChange
+        const chainId = chainIdtoHexadecimalString(request.chainId)
+        this.chainId = chainId
+        this.provider = new ethers.providers.JsonRpcProvider(
+          request.providerUrl
+        )
+        this.emit('chainChanged', chainId)
+      }
+    }
+
+    // This listener isn't removed because it's needed for the lifetime of the app
+    // TODO: Check for active tab when listening to events
+    window.addEventListener('message', handleDappRequest)
   }
 
   setState = (updatedState: BaseProviderState) => {

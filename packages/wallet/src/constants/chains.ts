@@ -166,9 +166,9 @@ export function isPolygonChain(
 
 export const CHAIN_ID_TO_LOGO: Record<ChainId, ImageSourcePropType> = {
   [ChainId.Mainnet]: ETHEREUM_LOGO,
-  [ChainId.Goerli]: ETHEREUM_LOGO,
-  [ChainId.Optimism]: ETHEREUM_LOGO,
-  [ChainId.ArbitrumOne]: ETHEREUM_LOGO,
+  [ChainId.Goerli]: GOERLI_LOGO,
+  [ChainId.Optimism]: OPTIMISM_LOGO,
+  [ChainId.ArbitrumOne]: ARBITRUM_LOGO,
   [ChainId.Polygon]: POLYGON_LOGO,
   [ChainId.PolygonMumbai]: POLYGON_LOGO,
 }

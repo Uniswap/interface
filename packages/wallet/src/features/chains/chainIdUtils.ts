@@ -21,6 +21,10 @@ export function toSupportedChainId(chainId?: BigNumberish): ChainId | null {
   return parseInt(chainId.toString(), 10) as ChainId
 }
 
+export function chainIdtoHexadecimalString(chainId: ChainId): string {
+  return chainId.toString(16)
+}
+
 // variant on `toSupportedChain` with a narrower return type
 export function parseActiveChains(activeChainsString: string): ChainId[] {
   if (!activeChainsString) return []

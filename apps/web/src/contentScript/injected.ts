@@ -5,6 +5,7 @@ import {
   Message,
 } from 'src/features/dappRequests/dappRequestTypes'
 import { PortName } from 'src/types'
+import { ExtensionRequestType } from 'src/types/requests'
 import { logger } from 'wallet/src/features/logger/logger'
 
 /**
@@ -22,7 +23,8 @@ scriptTag.onload = () => {
     scriptTag.parentNode.removeChild(scriptTag)
   }
 }
-window.addEventListener('message', contentScriptListener)
+addDappRequestListener()
+addExtensionRequestListener()
 
 chrome.runtime.connect({ name: PortName.ContentScript })
 chrome.runtime.onMessage.addListener((req) => {
@@ -40,7 +42,7 @@ chrome.runtime.onMessage.addListener((req) => {
 
 /* Functions */
 
-function contentScriptListener(event: MessageEvent): void {
+function dappRequestListener(event: MessageEvent): void {
   // New request and response types should be added in [types/index.ts]
 
   // We only accept messages from ourselves
@@ -83,6 +85,30 @@ function contentScriptListener(event: MessageEvent): void {
       'Message sent to background'
     )
   }
+}
+
+function addDappRequestListener(): void {
+  window.addEventListener('message', dappRequestListener)
+}
+
+/**
+ * Pass on messages from the extension to the page
+ */
+function addExtensionRequestListener(): void {
+  chrome.runtime.onMessage.addListener(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (message: any, _sender, _sendResponse) => {
+      logger.info(
+        'provider.ts',
+        'extensionRequestListener',
+        'Message from background is: ',
+        message
+      )
+      if (Object.values(ExtensionRequestType).includes(message.data.type)) {
+        // TODO: Post message to target tab instead of whole window
+      }
+    }
+  )
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
