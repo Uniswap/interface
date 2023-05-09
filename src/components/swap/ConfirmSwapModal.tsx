@@ -72,11 +72,15 @@ export default function ConfirmSwapModal({
   const maximumAmountIn = useMaxAmountIn(trade, allowedSlippage)
 
   useEffect(() => {
-    if (confirmModalState === SummaryModalState.ALLOWING && allowance.state === AllowanceState.ALLOWED) {
+    if (
+      !showAcceptChanges &&
+      confirmModalState === SummaryModalState.ALLOWING &&
+      allowance.state === AllowanceState.ALLOWED
+    ) {
       onConfirm()
       setConfirmModalState(SummaryModalState.PENDING_CONFIRMATION)
     }
-  }, [allowance.state, confirmModalState, onConfirm])
+  }, [allowance.state, confirmModalState, onConfirm, showAcceptChanges])
 
   const updateAllowance = useCallback(async () => {
     invariant(allowance.state === AllowanceState.REQUIRED)
@@ -91,8 +95,7 @@ export default function ConfirmSwapModal({
       })
     } catch (e) {
       console.error(e)
-      // todo: if user rejected, just revert to summary view
-      // if there was another unknow error, render error content in modal
+      // TODO: show error modal for unknown errors instead of reverting to summary view every time.
       return false
     }
     return true
