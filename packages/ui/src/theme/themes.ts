@@ -65,6 +65,14 @@ const dark: BaseTheme = {
 //     backgroundFocus: 'rgba(240,240,240,0.7)',
 // })
 
+const light_branded: BaseTheme = {
+  ...light,
+  color: colorsLight.magentaVibrant,
+}
+const dark_branded: BaseTheme = {
+  ...dark,
+  color: colorsDark.magentaVibrant,
+}
 const light_primary: BaseTheme = {
   ...light,
 }
@@ -224,6 +232,8 @@ const dark_warning_ButtonText: BaseTheme = {
 const allThemes = {
   dark,
   light,
+  light_branded,
+  dark_branded,
   light_primary,
   dark_primary,
   light_secondary,

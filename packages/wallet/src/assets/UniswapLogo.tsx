@@ -1,6 +1,7 @@
 import { SVGProps } from 'react'
 import { iconSize } from 'ui/src/theme/tokens'
 
+// TODO(EXT-139): replace with reusable Icon component
 export const UniswapLogo = ({
   height = iconSize.icon36,
   width = iconSize.icon36,
