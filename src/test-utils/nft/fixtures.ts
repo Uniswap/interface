@@ -1,4 +1,4 @@
-import { NftActivityType, NftStandard, OrderStatus } from 'graphql/data/__generated__/types-and-hooks'
+import { MediaType, NftActivityType, NftStandard, OrderStatus } from 'graphql/data/__generated__/types-and-hooks'
 import { ActivityEvent, CollectionInfoForAsset, GenieAsset, Markets, WalletAsset } from 'nft/types'
 
 export const TEST_NFT_ASSET: GenieAsset = {
@@ -8,6 +8,7 @@ export const TEST_NFT_ASSET: GenieAsset = {
   collectionName: 'Azuki',
   imageUrl:
     'https://cdn.center.app/1/0xED5AF388653567Af2F388E6224dC7C4b3241C544/3318/50ed67ad647d0aa0cad0b830d136a677efc2fb72a44587bc35f2a5fb334a7fdf.png',
+  mediaType: MediaType.Image,
   marketplace: Markets.Opensea,
   name: 'Azuki #3318',
   priceInfo: {
@@ -31,6 +32,108 @@ export const TEST_NFT_ASSET: GenieAsset = {
     ],
   },
   creator: {},
+}
+
+export const TEST_VIDEO_NFT_ASSET: GenieAsset = {
+  id: 'TmZ0QXNzZXQ6MHg0ZTFmNDE2MTNjOTA4NGZkYjllMzRlMTFmYWU5NDEyNDI3NDgwZTU2XzcyMDI=',
+  address: '0x6c9369dc930fd794ad0af7511f483d936a2ef7f3',
+  notForSale: false,
+  collectionName: 'Terraforms by Mathcastles',
+  imageUrl:
+    'https://i.seadn.io/gae/tkDbNhjjBZV2PmYaJbJOOigywZCrlcyGRxeQFkZS1YZyihyG5GoWNWj3N9f1T7YVuaxOqdxhfJylC9ejtoCvdgBE932vd7jorVqA?w=500&auto=format',
+  animationUrl: 'https://openseauserdata.com/files/5af92728200027caa4f3f5ae87a486a7.mp4',
+  mediaType: MediaType.Video,
+  marketplace: Markets.Opensea,
+  name: 'Aku Chapter IV: Aku x Ady #884',
+  priceInfo: {
+    ETHPrice: '1295000000000000000',
+    baseAsset: 'ETH',
+    baseDecimals: '18',
+    basePrice: '1295000000000000000',
+  },
+  susFlag: false,
+  tokenId: '1455',
+  tokenType: NftStandard.Erc721,
+  collectionIsVerified: false,
+  totalCount: 9910,
+  rarity: {
+    primaryProvider: 'Rarity Sniper',
+    providers: [
+      {
+        rank: 7079,
+        provider: 'Rarity Sniper',
+      },
+    ],
+  },
+  creator: {},
+}
+
+export const TEST_AUDIO_NFT_ASSET: GenieAsset = {
+  id: 'TmZ0QXNzZXQ6MHg0ZTFmNDE2MTNjOTA4NGZkYjllMzRlMTFmYWU5NDEyNDI3NDgwZTU2XzcyMDI=',
+  address: '0x37a03d4af1d7046d1126987b20117a0fdcbf6535',
+  notForSale: false,
+  collectionName: 'Snoop Dogg on Sound XYZ',
+  imageUrl:
+    'https://i.seadn.io/gae/Kze9SBqn_6O0qrHKxspo1gRkkDV2A5EmTeWtvdS-dNxBsvi_wPXUYjc6De0sUC-DYzL093102mUftenWxwWuTelqsdw-ngoBC3o2XFU?w=500&auto=format',
+  animationUrl: 'https://openseauserdata.com/files/4a22253e44e10baa11484a2e43efefda.mp3',
+  mediaType: MediaType.Audio,
+  marketplace: Markets.Opensea,
+  name: 'Death Row Session: Vol. 2 (420 Edition) #320',
+  priceInfo: {
+    ETHPrice: '1295000000000000000',
+    baseAsset: 'ETH',
+    baseDecimals: '18',
+    basePrice: '1295000000000000000',
+  },
+  susFlag: false,
+  tokenId: '680564733841876926926749214863536423232',
+  tokenType: NftStandard.Erc721,
+  collectionIsVerified: false,
+  totalCount: 9910,
+  rarity: {
+    primaryProvider: 'Rarity Sniper',
+    providers: [
+      {
+        rank: 7079,
+        provider: 'Rarity Sniper',
+      },
+    ],
+  },
+  creator: {},
+}
+
+export const TEST_EMBEDDED_NFT_ASSET: GenieAsset = {
+  id: 'TmZ0QXNzZXQ6MHg0ZTFmNDE2MTNjOTA4NGZkYjllMzRlMTFmYWU5NDEyNDI3NDgwZTU2XzcyMDI=',
+  address: '0x4e1f41613c9084fdb9e34e11fae9412427480e56',
+  notForSale: false,
+  collectionName: 'Terraforms by Mathcastles',
+  imageUrl:
+    'https://cdn.center.app/v2/1/06ff92279474add6ce06176e2a65447396edf786d169d8ccc03fddfa45ce004f/bb01f8a2f093ea4619498dae58fc19e5ba3fa38a84cabf92948994609489d566.png',
+  animationUrl: 'https://tokens.mathcastles.xyz/terraforms/token-html/7202',
+  mediaType: MediaType.Raw,
+  marketplace: Markets.Opensea,
+  name: 'Level 13 at {28, 3}',
+  priceInfo: {
+    ETHPrice: '1295000000000000000',
+    baseAsset: 'ETH',
+    baseDecimals: '18',
+    basePrice: '1295000000000000000',
+  },
+  susFlag: false,
+  tokenId: '7202',
+  tokenType: NftStandard.Erc721,
+  collectionIsVerified: false,
+  totalCount: 9910,
+  rarity: {
+    primaryProvider: 'Rarity Sniper',
+    providers: [
+      {
+        rank: 7079,
+        provider: 'Rarity Sniper',
+      },
+    ],
+  },
+  creator: { address: '0xe72eb31b59f85b19499a0f3b3260011894fa0d65' },
 }
 
 export const TEST_NFT_WALLET_ASSET: WalletAsset = {
