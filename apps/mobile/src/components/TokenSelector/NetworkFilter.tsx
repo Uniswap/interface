@@ -87,14 +87,7 @@ export function NetworkFilter({ selectedChain, onPressChain }: NetworkFilterProp
           Keyboard.dismiss()
           setShowModal(true)
         }}>
-        <Flex
-          centered
-          row
-          bg="background2"
-          borderRadius="rounded20"
-          gap="spacing4"
-          p="spacing8"
-          pt="spacing16">
+        <Flex centered row bg="background2" borderRadius="rounded20" gap="spacing4" p="spacing8">
           {selectedChain && <NetworkLogo chainId={selectedChain} size={iconSizes.icon16} />}
           <Text color="textSecondary" pl="spacing2" textAlign="center" variant="buttonLabelSmall">
             {selectedChain ? CHAIN_INFO[selectedChain].label : t('All networks')}
