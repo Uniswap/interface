@@ -1,0 +1,21 @@
+name: "[monorepo] Sensitive Files Changed"
+description: "Ensures that sensitive files are not changed by a build process and exits if they are."
+runs:
+  using: "composite"
+  steps:
+    - name: Check for Sensitive File Changes
+      uses: tj-actions/verify-changed-files@9ed3155b72ba709881c967f75611fc5852f773b9
+      id: verify-changed-files
+      with:
+        files: |
+          yarn.lock
+          **/*/yarn.lock
+          apps/mobile/ios/Podfile.lock
+          apps/mobile/src/locales/*
+    - name: Exit if Sensitive Files Changed
+      if: steps.verify-changed-files.outputs.files_changed == ''
+      shell: bash
+      run: |
+        echo "!!! Sensitive files were changed during the build process !!!"
+        echo "Changed files: ${{ steps.verify-changed-files.outputs.changed_files }}"
+        exit 1

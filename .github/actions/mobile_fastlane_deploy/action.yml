@@ -145,6 +145,9 @@ runs:
         max_attempts: 3
         command: cd apps/mobile/ios && pod install && cd ..
 
+    - name: Check Sensitive File Changes
+      uses: ./.github/actions/sensitive_files_changed
+
     - name: 📲 Build + deploy iOS app
       working-directory: ./apps/mobile
       run: |
@@ -191,7 +194,6 @@ runs:
       shell: bash
       run: |
         yarn react-native bundle --platform ios --dev false --entry-file index.js --reset-cache --bundle-output main.jsbundle --sourcemap-output main.jsbundle.map --minify false
-
 
     - name: 🐞 Create Sentry release with sourcemaps
       working-directory: ./apps/mobile
