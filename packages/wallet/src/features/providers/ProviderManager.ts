@@ -1,5 +1,6 @@
 import { providers as ethersProviders } from 'ethers'
 import { Task } from 'redux-saga'
+import { config } from 'wallet/src/config'
 import {
   ChainId,
   CHAIN_INFO,
@@ -126,7 +127,7 @@ export class ProviderManager {
 
       const provider = new ethersProviders.InfuraProvider(
         getInfuraChainName(chainId),
-        process.env.INFURA_PROJECT_ID
+        config.infuraProjectId
       )
 
       return provider

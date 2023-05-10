@@ -1,15 +1,17 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { providers } from 'ethers'
+import { config } from 'wallet/src/config'
+
 import { GasFeeResponse } from './types'
 
 export const gasApi = createApi({
   reducerPath: 'gasApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: `${process.env.UNISWAP_API_BASE_URL}/v1/gas-fee`,
+    baseUrl: `${config.uniswapApiBaseUrl}/v1/gas-fee`,
     prepareHeaders: (headers) => {
       // TODO: [MOB-3883] remove once gas service supports mobile origin URL
-      headers.set('Origin', process.env.UNISWAP_APP_URL ?? '')
-      headers.set('X-API-KEY', process.env.UNISWAP_API_KEY ?? '')
+      headers.set('Origin', config.uniswapAppUrl ?? '')
+      headers.set('X-API-KEY', config.uniswapApiKey ?? '')
       return headers
     },
   }),

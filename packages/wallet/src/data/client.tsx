@@ -6,12 +6,13 @@ import {
   InMemoryCache,
 } from '@apollo/client'
 import { PropsWithChildren } from 'react'
+import { config } from 'wallet/src/config'
 
 const httpLink = createHttpLink({
-  uri: `${process.env.UNISWAP_API_BASE_URL}/v1/graphql`,
+  uri: `${config.uniswapApiBaseUrl}/v1/graphql`,
   headers: {
     'Content-Type': 'application/json',
-    'X-API-KEY': process.env.UNISWAP_API_KEY ?? '',
+    'X-API-KEY': config.uniswapApiKey ?? '',
   },
 })
 

@@ -6,8 +6,8 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const path = require('path')
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin')
 const fs = require('fs')
-const { shouldExclude } = require('tamagui-loader')
 const DotenvPlugin = require('dotenv-webpack')
+const NodePolyfillPlugin = require('node-polyfill-webpack-plugin')
 
 const NODE_ENV = process.env.NODE_ENV || 'development'
 const EXTENSION_NAME =
@@ -15,14 +15,6 @@ const EXTENSION_NAME =
 
 const isDevelopment = NODE_ENV === 'development'
 const appDirectory = path.resolve(__dirname)
-
-const tamaguiOptions = {
-  config: './tamagui.config.ts',
-  components: ['ui', 'tamagui'],
-  importsWhitelist: [],
-  logTimings: true,
-  disableExtraction: isDevelopment,
-}
 
 // This is needed for webpack to compile JavaScript.
 // Many OSS React Native packages are not compiled to ES5 before being
@@ -75,14 +67,6 @@ const swcLoaderConfiguration = {
         },
       },
     },
-  },
-}
-
-const tamaguiLoaderConfiguration = {
-  loader: 'tamagui-loader',
-  options: {
-    config: './tamagui.config.ts',
-    components: ['ui', 'tamagui'],
   },
 }
 
@@ -214,13 +198,14 @@ const options = {
       ...['.js', '.jsx', '.ts', '.tsx', '.css'],
     ],
     fallback: {
-      buffer: require.resolve('buffer/'), // trailing slash is intentional
-      crypto: require.resolve('crypto-browserify'),
-      stream: require.resolve('stream-browserify'),
+      fs: false,
     },
   },
   plugins: [
-    new DotenvPlugin(),
+    new DotenvPlugin({
+      path: '../../.env',
+      defaults: true,
+    }),
     new DefinePlugin({
       'process.env.__DEV__': NODE_ENV === 'development' ? 'true' : 'false',
       'process.env.IS_STATIC': '""',
@@ -229,6 +214,7 @@ const options = {
       'process.env.DEBUG': JSON.stringify(process.env.DEBUG || '0'),
     }),
     new CleanWebpackPlugin(),
+    new NodePolyfillPlugin(), // necessary to compile with reactnative-dotenv
     ...plugins,
     new MiniCssExtractPlugin(),
     new ProgressPlugin(),

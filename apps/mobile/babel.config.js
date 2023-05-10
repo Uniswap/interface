@@ -9,9 +9,9 @@ module.exports = function (api) {
     [
       'module:react-native-dotenv',
       {
-        envName: 'mobile',
+        // ideally use envName here to add a mobile namespace but this doesn't work when sharing with dotenv-webpack
         moduleName: 'react-native-dotenv',
-        path: '../../.env',
+        path: '../../.env.defaults', // must use this path so this file can be shared with web since dotenv-webpack is less flexible
         safe: true,
         allowUndefined: false,
       },
