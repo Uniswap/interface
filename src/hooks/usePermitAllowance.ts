@@ -8,6 +8,7 @@ import { useContract } from 'hooks/useContract'
 import { useSingleCallResult } from 'lib/hooks/multicall'
 import ms from 'ms.macro'
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 
 const PERMIT_EXPIRATION = ms`30d`
 const PERMIT_SIG_EXPIRATION = ms`30m`
@@ -55,7 +56,6 @@ export function useUpdatePermitAllowance(
   onPermitSignature: (signature: PermitSignature) => void
 ) {
   const { account, chainId, provider } = useWeb3React()
-
   return useCallback(async () => {
     try {
       if (!chainId) throw new Error('missing chainId')
@@ -81,8 +81,10 @@ export function useUpdatePermitAllowance(
       onPermitSignature?.({ ...permit, signature })
       return
     } catch (e: unknown) {
+      const message = didUserReject(e) ? 'User rejected signature' : e instanceof Error ? e.message : e
       const symbol = token?.symbol ?? 'Token'
-      throw new Error(`${symbol} permit allowance failed: ${e instanceof Error ? e.message : e}`)
+      const error = new Error(`${symbol} permit allowance failed: ${message}`)
+      throw error
     }
   }, [account, chainId, nonce, onPermitSignature, provider, spender, token])
 }

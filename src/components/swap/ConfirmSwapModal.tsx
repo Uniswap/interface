@@ -22,7 +22,7 @@ import { PendingModalContent, PendingModalStep } from './PendingModalContent'
 import SwapModalFooter from './SwapModalFooter'
 import SwapModalHeader from './SwapModalHeader'
 
-enum SummaryModalState {
+enum ConfirmModalState {
   REVIEWING,
   ALLOWING,
   PENDING_CONFIRMATION,
@@ -60,14 +60,14 @@ export default function ConfirmSwapModal({
   // shouldLogModalCloseEvent lets the child SwapModalHeader component know when modal has been closed
   // and an event triggered by modal closing should be logged.
   const [shouldLogModalCloseEvent, setShouldLogModalCloseEvent] = useState(false)
-  const [confirmModalState, setConfirmModalState] = useState<SummaryModalState>(SummaryModalState.REVIEWING)
+  const [confirmModalState, setConfirmModalState] = useState<ConfirmModalState>(ConfirmModalState.REVIEWING)
   const showAcceptChanges = useMemo(
     () =>
       Boolean(
         trade &&
           originalTrade &&
           tradeMeaningfullyDiffers(trade, originalTrade) &&
-          confirmModalState !== SummaryModalState.PENDING_CONFIRMATION
+          confirmModalState !== ConfirmModalState.PENDING_CONFIRMATION
       ),
     [confirmModalState, originalTrade, trade]
   )
@@ -86,12 +86,12 @@ export default function ConfirmSwapModal({
   useEffect(() => {
     if (
       !showAcceptChanges &&
-      confirmModalState === SummaryModalState.ALLOWING &&
+      confirmModalState === ConfirmModalState.ALLOWING &&
       allowance.state === AllowanceState.ALLOWED
     ) {
       setCurrentStep(pendingModalSteps.length - 1)
       onConfirm()
-      setConfirmModalState(SummaryModalState.PENDING_CONFIRMATION)
+      setConfirmModalState(ConfirmModalState.PENDING_CONFIRMATION)
     }
   }, [allowance, confirmModalState, currentStep, onConfirm, pendingModalSteps.length, showAcceptChanges])
 
@@ -105,7 +105,7 @@ export default function ConfirmSwapModal({
       try {
         allowance.state === AllowanceState.REQUIRED && (await allowance.permit())
       } catch (e) {
-        setConfirmModalState(SummaryModalState.REVIEWING)
+        setConfirmModalState(ConfirmModalState.REVIEWING)
         if (didUserReject(e)) {
           return
         }
@@ -126,7 +126,7 @@ export default function ConfirmSwapModal({
 
   const updateAllowance = useCallback(async () => {
     invariant(allowance.state === AllowanceState.REQUIRED)
-    setConfirmModalState(SummaryModalState.ALLOWING)
+    setConfirmModalState(ConfirmModalState.ALLOWING)
     try {
       if (allowance.needsPermit2Approval) {
         await allowance.approve()
@@ -140,7 +140,7 @@ export default function ConfirmSwapModal({
         ...trace,
       })
     } catch (e) {
-      setConfirmModalState(SummaryModalState.REVIEWING)
+      setConfirmModalState(ConfirmModalState.REVIEWING)
       if (didUserReject(e)) {
         return
       }
@@ -155,7 +155,7 @@ export default function ConfirmSwapModal({
     onDismiss()
     setTimeout(() => {
       // Reset local state after the modal dismiss animation finishes, to avoid UI flicker as it dismisses
-      setConfirmModalState(SummaryModalState.REVIEWING)
+      setConfirmModalState(ConfirmModalState.REVIEWING)
       setApprovalError(undefined)
     }, 200)
   }, [isOpen, onDismiss])
@@ -189,7 +189,7 @@ export default function ConfirmSwapModal({
   }, [allowance, trade?.inputAmount?.currency])
 
   const modalHeader = useCallback(() => {
-    if (confirmModalState !== SummaryModalState.REVIEWING && !showAcceptChanges) {
+    if (confirmModalState !== ConfirmModalState.REVIEWING && !showAcceptChanges) {
       return null
     }
     if (!trade) {
@@ -205,7 +205,7 @@ export default function ConfirmSwapModal({
       if (allowance.state === AllowanceState.REQUIRED) {
         await updateAllowance()
       } else {
-        setConfirmModalState(SummaryModalState.PENDING_CONFIRMATION)
+        setConfirmModalState(ConfirmModalState.PENDING_CONFIRMATION)
         onConfirm()
       }
     }
@@ -213,7 +213,7 @@ export default function ConfirmSwapModal({
   }, [allowance.state, onConfirm, prepareSwapFlow, updateAllowance])
 
   const modalBottom = useCallback(() => {
-    if (confirmModalState !== SummaryModalState.REVIEWING && !showAcceptChanges) {
+    if (confirmModalState !== ConfirmModalState.REVIEWING && !showAcceptChanges) {
       return (
         <PendingModalContent
           steps={pendingModalSteps}
@@ -241,7 +241,7 @@ export default function ConfirmSwapModal({
         setShouldLogModalCloseEvent={setShouldLogModalCloseEvent}
         showAcceptChanges={showAcceptChanges}
         onAcceptChanges={() => {
-          setConfirmModalState(SummaryModalState.REVIEWING)
+          setConfirmModalState(ConfirmModalState.REVIEWING)
           onAcceptChanges()
         }}
       />
@@ -295,7 +295,7 @@ export default function ConfirmSwapModal({
           <TransactionErrorContent onDismiss={onModalDismiss} message={swapErrorMessage} />
         ) : (
           <ConfirmationModalContent
-            title={confirmModalState === SummaryModalState.REVIEWING ? <Trans>Review Swap</Trans> : undefined}
+            title={confirmModalState === ConfirmModalState.REVIEWING ? <Trans>Review Swap</Trans> : undefined}
             onDismiss={onModalDismiss}
             topContent={modalHeader}
             bottomContent={modalBottom}
