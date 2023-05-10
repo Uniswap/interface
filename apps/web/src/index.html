@@ -1,12 +1,40 @@
+<!--
+-- UI entrypoint for web.
+--
+-- HTML document used to host any React content (popup, window, iframes, etc.)
+--
+-- Flow:
+--   1. Document is opened with url formatted for <Router />
+--   2. Document inserts index.js into a <script> tag
+--   3. index.js renders <App /> at #root
+--   4. react-router handles proper routing (e.g. onboarding, navigation, notifications, etc.)
+--
+-- ┌────────────────────────────┐
+-- │ content_window.html#/route │
+-- ├────────────────────────────┤
+-- │ <html>                     │
+-- │  <script src=content.js /> │
+-- └────┬───────────────────────┘
+--      │ {route}
+--      ▼
+-- ┌───────────────┐    ┌────────────────────┐
+-- │  content.js   │  ┌►│  <Router route>    │
+-- ├───────────────┤  │ ├────────────────────┤
+-- │ <Redux />     │  │ │ |<Onboarding/>     │
+-- │  <Tamagui />  │  │ │ |<WebNavigation /> │
+-- │   <GraphQl /> │  │ │ |<Notifications /> │
+-- │    <Router />─┼──┘ │ |...               │
+-- └───────────────┘    └────────────────────┘
+-->
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <style>
-      html,
-      body,
-      #root {
-        min-height: 100%;
-      }
+    html,
+    body,
+    #root {
+    min-height: 100%;
+    }
     </style>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/src/favicon.svg" />
@@ -15,6 +43,6 @@
   </head>
   <body>
     <div id="root"></div>
-    <script type="module" src="popup.js"></script>
+    <script type="module" src="index.js"></script>
   </body>
 </html>

@@ -7,22 +7,10 @@ import {
 import { PortName } from 'src/types'
 import { ExtensionRequestType } from 'src/types/requests'
 import { logger } from 'wallet/src/features/logger/logger'
+import { InjectedAssetsManager } from './InjectedAssetsManager'
 
-/**
- * Content script that is injected into any webpage while our extension is installed.
- */
-const container = document.head || document.documentElement
-const scriptTag = document.createElement('script')
+new InjectedAssetsManager().injectAll()
 
-// The script tag is inserted into the DOM and then removed.
-// injected.js sets up the injected provider for use at window.ethereum
-scriptTag.src = chrome.runtime.getURL('ethereum.js')
-container.appendChild(scriptTag)
-scriptTag.onload = () => {
-  if (scriptTag.parentNode) {
-    scriptTag.parentNode.removeChild(scriptTag)
-  }
-}
 addDappRequestListener()
 addExtensionRequestListener()
 

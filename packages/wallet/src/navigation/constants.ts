@@ -1,5 +1,6 @@
 export enum TopLevelRoutes {
   Onboarding = 'onboarding',
+  Notifications = 'notifications',
 }
 
 export enum OnboardingRoutes {

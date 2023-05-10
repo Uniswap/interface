@@ -37,6 +37,11 @@ const router = createHashRouter([
       },
     ],
   },
+  // TODO: flesh out notifications route
+  {
+    path: `/${TopLevelRoutes.Notifications}`,
+    element: <div>Notifications</div>,
+  },
   {
     path: '',
     element: <WebNavigation />,

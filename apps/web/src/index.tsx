@@ -5,18 +5,18 @@ import { Store } from 'webext-redux'
 import { WebState } from './background/store'
 import { PortName } from './types'
 
-logger.debug('popup', 'init', 'popup: initial load')
+logger.debug('content_window', 'init', 'initial load')
 
 const App = lazy(() => import('./app/App'))
 
 chrome.runtime.connect({ name: PortName.Popup })
 chrome.runtime.onMessage.addListener((req) => {
   if (req.type === 'STORE_INITIALIZED') {
-    initPopup()
+    initContentWindow()
   }
 })
 
-function initPopup(): void {
+function initContentWindow(): void {
   const store = new Store<WebState>({ portName: PortName.Store })
   // https://github.com/tshaddix/webext-redux/issues/286#issuecomment-1347985776
   Object.assign(store, {

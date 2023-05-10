@@ -24031,6 +24031,7 @@ __metadata:
     "@testing-library/jest-native": 5.4.2
     jest-svg-transformer: 1.0.0
     jest-transform-stub: 2.0.0
+    mem-storage-area: 1.0.3
     ts-jest: 29.0.5
   languageName: unknown
   linkType: soft
@@ -37179,7 +37180,6 @@ __metadata:
     jest: 29.5.0
     jest-chrome: 0.8.0
     jest-presets: "workspace:^"
-    mem-storage-area: 1.0.3
     prettier: latest
     react: 18.2.0
     react-i18next: 11.18.6
