@@ -110,16 +110,8 @@ const SwapSection = styled.div`
   }
 `
 
-const OutputSwapSection = styled(SwapSection)<{ showDetailsDropdown: boolean }>`
+const OutputSwapSection = styled(SwapSection)`
   border-bottom: ${({ theme }) => `1px solid ${theme.backgroundSurface}`};
-  border-bottom-left-radius: ${({ showDetailsDropdown }) => showDetailsDropdown && '0'};
-  border-bottom-right-radius: ${({ showDetailsDropdown }) => showDetailsDropdown && '0'};
-`
-
-const DetailsSwapSection = styled(SwapSection)`
-  padding: 0;
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
 `
 
 function getIsValidSwapQuote(
@@ -641,9 +633,9 @@ export function Swap({
           </TraceEvent>
         </ArrowWrapper>
       </div>
-      <AutoColumn gap="md">
+      <AutoColumn gap="xs">
         <div>
-          <OutputSwapSection showDetailsDropdown={showDetailsDropdown}>
+          <OutputSwapSection>
             <Trace section={InterfaceSectionName.CURRENCY_OUTPUT_PANEL}>
               <SwapCurrencyInputPanel
                 value={formattedAmounts[Field.OUTPUT]}
@@ -676,17 +668,15 @@ export function Swap({
               </>
             ) : null}
           </OutputSwapSection>
-          {showDetailsDropdown && (
-            <DetailsSwapSection>
-              <SwapDetailsDropdown
-                trade={trade}
-                syncing={routeIsSyncing}
-                loading={routeIsLoading}
-                allowedSlippage={allowedSlippage}
-              />
-            </DetailsSwapSection>
-          )}
         </div>
+        {showDetailsDropdown && (
+          <SwapDetailsDropdown
+            trade={trade}
+            syncing={routeIsSyncing}
+            loading={routeIsLoading}
+            allowedSlippage={allowedSlippage}
+          />
+        )}
         {showPriceImpactWarning && <PriceImpactWarning priceImpact={largerPriceImpact} />}
         <div>
           {swapIsUnsupported ? (

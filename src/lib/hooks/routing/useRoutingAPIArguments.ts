@@ -1,6 +1,6 @@
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
-import { RouterPreference } from 'state/routing/slice'
+import { INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference } from 'state/routing/slice'
 
 /**
  * Returns query arguments for the Routing API query or undefined if the
@@ -18,7 +18,7 @@ export function useRoutingAPIArguments({
   tokenOut: Currency | undefined
   amount: CurrencyAmount<Currency> | undefined
   tradeType: TradeType
-  routerPreference: RouterPreference
+  routerPreference: RouterPreference | typeof INTERNAL_ROUTER_PREFERENCE_PRICE
 }) {
   return useMemo(
     () =>
