@@ -1,0 +1,232 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SwapSkeleton.tsx renders a skeleton 1`] = `
+<DocumentFragment>
+  .c8 {
+  border-radius: 12px;
+  height: 40px;
+  width: 40px;
+  position: relative;
+  margin-top: -18px;
+  margin-bottom: -18px;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: #E8ECFB;
+  border: 4px solid;
+  border-color: #FFFFFF;
+  z-index: 2;
+}
+
+.c9 {
+  display: inline-block;
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  padding: 8px;
+  border: 1px solid #D2D9EE;
+  border-radius: 1rem;
+}
+
+.c2 {
+  background-color: #F5F6FC;
+  border-radius: 0.25rem;
+  height: 1rem;
+  width: 2.5rem;
+  margin-top: 0rem;
+}
+
+.c5 {
+  background-color: #F5F6FC;
+  border-radius: 0.25rem;
+  height: 2rem;
+  width: 3.75rem;
+  margin-top: 0rem;
+}
+
+.c7 {
+  background-color: #F5F6FC;
+  border-radius: 0.25rem;
+  height: 2rem;
+  width: 7.25rem;
+  margin-top: 0rem;
+}
+
+.c11 {
+  background-color: #F5F6FC;
+  border-radius: 0.75rem;
+  height: 3.5rem;
+  width: 100%;
+  margin-top: 0.55rem;
+}
+
+.c6 {
+  background-color: #D2D9EE;
+}
+
+.c1 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-flow: column;
+  -ms-flex-flow: column;
+  flex-flow: column;
+  padding: 0.5rem;
+  padding-bottom: 1.25rem;
+  width: 100%;
+}
+
+.c4 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c3 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-flow: column;
+  -ms-flex-flow: column;
+  flex-flow: column;
+  background-color: #F5F6FC;
+  border-radius: 1rem;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 1.875rem;
+  padding: 0.75rem;
+  padding-bottom: 3.25rem;
+  padding-top: 3.25rem;
+}
+
+.c10 {
+  padding-bottom: 3rem;
+  padding-top: 3.5rem;
+}
+
+<div
+    class="c0"
+  >
+    <div
+      class="c1"
+    >
+      <div
+        class="c2"
+        height="1rem"
+        width="2.5rem"
+      />
+    </div>
+    <div
+      class="c3"
+    >
+      <div
+        class="c4"
+      >
+        <div
+          class="c5 c6"
+          height="2rem"
+          width="3.75rem"
+        />
+        <div
+          class="c7 c6"
+          height="2rem"
+          width="7.25rem"
+        />
+      </div>
+    </div>
+    <div>
+      <div
+        class="c8"
+      >
+        <div
+          class="c9"
+          color="#0D111C"
+        >
+          <svg
+            fill="none"
+            height="16"
+            stroke="#98A1C0"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="16"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <line
+              x1="12"
+              x2="12"
+              y1="5"
+              y2="19"
+            />
+            <polyline
+              points="19 12 12 19 5 12"
+            />
+          </svg>
+        </div>
+      </div>
+      <div
+        class="c3 c10"
+      >
+        <div
+          class="c4"
+        >
+          <div
+            class="c5 c6"
+            height="2rem"
+            width="3.75rem"
+          />
+          <div
+            class="c7 c6"
+            height="2rem"
+            width="7.25rem"
+          />
+        </div>
+      </div>
+      <div
+        class="c11"
+        height="3.5rem"
+        radius="0.75"
+        width="100%"
+      />
+    </div>
+  </div>
+</DocumentFragment>
+`;
