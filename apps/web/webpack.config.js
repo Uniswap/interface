@@ -135,7 +135,7 @@ const options = {
   mode: NODE_ENV,
   entry: {
     background: './src/background/index.ts',
-    popup: './src/popup.tsx',
+    index: './src/index.tsx',
     injected: './src/contentScript/injected.ts',
     ethereum: './src/contentScript/ethereum.js',
   },
