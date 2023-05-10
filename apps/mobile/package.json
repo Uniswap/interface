@@ -6,7 +6,7 @@
   "scripts": {
     "android": "react-native run-android",
     "apollo:generate": "graphql-codegen --config codegen.ts",
-    "apollo:schema": "get-graphql-schema $(grep UNISWAP_API_BASE_URL ../../.env | cut -d '=' -f2)/v1/graphql -h X-API-KEY=$(grep UNISWAP_API_KEY ../../.env | cut -d '=' -f2) -h Origin=$(grep UNISWAP_APP_URL ../../.env | cut -d '=' -f2) > ./src/data/__generated__/schema.graphql",
+    "apollo:schema": "get-graphql-schema $(grep UNISWAP_API_BASE_URL ../../.env.defaults | cut -d '=' -f2)/v1/graphql -h X-API-KEY=$(grep UNISWAP_API_KEY ../../.env.defaults | cut -d '=' -f2) -h Origin=$(grep UNISWAP_APP_URL ../../.env.defaults | cut -d '=' -f2) > ./src/data/__generated__/schema.graphql",
     "clean": "react-native-clean-project",
     "contracts:compile": "yarn contracts:compile:abi",
     "contracts:compile:abi": "typechain --target ethers-v5 --out-dir src/abis/types './src/abis/**/*.json'",
