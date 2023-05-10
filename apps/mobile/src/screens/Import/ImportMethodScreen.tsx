@@ -1,9 +1,8 @@
-import { useFocusEffect } from '@react-navigation/core'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { useResponsiveProp } from '@shopify/restyle'
 import { SharedEventName } from '@uniswap/analytics-events'
 import { TFunction } from 'i18next'
-import React, { useRef } from 'react'
+import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert } from 'react-native'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
@@ -15,15 +14,11 @@ import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { isICloudAvailable } from 'src/features/CloudBackup/RNICloudBackupsManager'
-import { importAccountActions } from 'src/features/import/importAccountSaga'
-import { ImportAccountType } from 'src/features/import/types'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { ImportType, OnboardingEntryPoint } from 'src/features/onboarding/utils'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { ElementName } from 'src/features/telemetry/constants'
-import { Account, AccountType } from 'src/features/wallet/accounts/types'
 import { createAccountActions } from 'src/features/wallet/createAccountSaga'
-import { useAccounts, usePendingAccounts } from 'src/features/wallet/hooks'
 import {
   PendingAccountActions,
   pendingAccountActions,
@@ -82,41 +77,6 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props): JS
   const theme = useAppTheme()
   const dispatch = useAppDispatch()
   const entryPoint = params?.entryPoint
-
-  const accounts = useAccounts()
-  const pendingAccounts = usePendingAccounts()
-  const initialViewOnlyWallets = useRef<Account[]>( // Hold onto reference of view-only wallets before importing more wallets
-    Object.values(accounts).filter((a) => a.type === AccountType.Readonly)
-  )
-
-  useFocusEffect(() => {
-    if (params?.importType !== ImportType.SeedPhrase) return
-
-    /**
-     * When we go back and exit onboarding, we re-add any initial view-only wallets
-     * that were overwritten during the import flow. (Due to how our redux account store is setup,
-     * with the key being the address, when the mnemonic version of the wallet is imported,
-     * it overwrites the view-only wallet.)
-     */
-
-    const unmodifiedWalletCleanup = (): void => {
-      if (!initialViewOnlyWallets.current) return
-      const pendingAccountAddresses = Object.keys(pendingAccounts)
-      for (const viewOnlyWallet of initialViewOnlyWallets.current) {
-        if (pendingAccountAddresses.includes(viewOnlyWallet.address)) {
-          dispatch(
-            importAccountActions.trigger({
-              type: ImportAccountType.Address,
-              address: viewOnlyWallet.address,
-            })
-          )
-          dispatch(pendingAccountActions.trigger(PendingAccountActions.ACTIVATE))
-        }
-      }
-    }
-    navigation.addListener('beforeRemove', unmodifiedWalletCleanup)
-    return () => navigation.removeListener('beforeRemove', unmodifiedWalletCleanup)
-  })
 
   useAddBackButton(navigation)
 

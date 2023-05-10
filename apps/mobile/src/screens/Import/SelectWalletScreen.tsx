@@ -9,14 +9,15 @@ import { Box, Flex } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { Loader } from 'src/components/loading'
 import { useSelectWalletScreenQuery } from 'src/data/__generated__/types-and-hooks'
-import { IMPORT_WALLET_AMOUNT } from 'src/features/import/importAccountSaga'
+import { importAccountActions, IMPORT_WALLET_AMOUNT } from 'src/features/import/importAccountSaga'
+import { ImportAccountType } from 'src/features/import/types'
 import WalletPreviewCard from 'src/features/import/WalletPreviewCard'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { ImportType } from 'src/features/onboarding/utils'
 import { ElementName } from 'src/features/telemetry/constants'
-import { AccountType, SignerMnemonicAccount } from 'src/features/wallet/accounts/types'
+import { Account, AccountType, SignerMnemonicAccount } from 'src/features/wallet/accounts/types'
 import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
-import { usePendingAccounts } from 'src/features/wallet/hooks'
+import { useAccounts, usePendingAccounts } from 'src/features/wallet/hooks'
 import {
   PendingAccountActions,
   pendingAccountActions,
@@ -35,6 +36,11 @@ const FALLBACK_ID = 'fallback'
 export function SelectWalletScreen({ navigation, route: { params } }: Props): JSX.Element {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
+
+  const accounts = useAccounts()
+  const initialViewOnlyWallets = useRef<Account[]>( // Hold onto reference of view-only wallets before importing more wallets
+    Object.values(accounts).filter((a) => a.type === AccountType.Readonly)
+  )
 
   const pendingAccounts = usePendingAccounts()
   const addresses = Object.values(pendingAccounts)
@@ -99,13 +105,31 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props): JS
   )
 
   useEffect(() => {
-    // Remove all pending accounts when navigating back
     const beforeRemoveListener = (): void => {
+      // Remove all pending signer accounts when navigating back
       dispatch(pendingAccountActions.trigger(PendingAccountActions.DELETE))
+      /**
+       * When we go back and exit onboarding, we re-add any initial view-only wallets
+       * that were overwritten during the import flow. (Due to how our redux account store is setup,
+       * with the key being the address, when the mnemonic version of the wallet is imported,
+       * it overwrites the view-only wallet.)
+       */
+      for (const viewOnlyWallet of initialViewOnlyWallets.current) {
+        const pendingAccountAddresses = Object.keys(pendingAccounts)
+        if (pendingAccountAddresses.includes(viewOnlyWallet.address)) {
+          dispatch(
+            importAccountActions.trigger({
+              type: ImportAccountType.Address,
+              address: viewOnlyWallet.address,
+            })
+          )
+          dispatch(pendingAccountActions.trigger(PendingAccountActions.ACTIVATE))
+        }
+      }
     }
     navigation.addListener('beforeRemove', beforeRemoveListener)
     return () => navigation.removeListener('beforeRemove', beforeRemoveListener)
-  }, [dispatch, navigation])
+  }, [dispatch, navigation, pendingAccounts])
 
   useEffect(() => {
     /*
