@@ -18,6 +18,8 @@ interface PriceImpactWarningProps {
   priceImpact: Percent
 }
 
+const formatPriceImpact = (priceImpact: Percent) => `${priceImpact.multiply(-1).toFixed(2)}%`
+
 export default function PriceImpactWarning({ priceImpact }: PriceImpactWarningProps) {
   const theme = useTheme()
 
@@ -39,7 +41,7 @@ export default function PriceImpactWarning({ priceImpact }: PriceImpactWarningPr
               </ThemedText.DeprecatedSubHeader>
             </RowFixed>
             <ThemedText.DeprecatedLabel textAlign="right" fontSize={14} color={theme.accentFailure}>
-              {`-${priceImpact.toFixed(2)}%`}
+              {formatPriceImpact(priceImpact)}
             </ThemedText.DeprecatedLabel>
           </RowBetween>
         </MouseoverTooltip>
