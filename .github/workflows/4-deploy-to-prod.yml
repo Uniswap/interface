@@ -18,7 +18,7 @@ jobs:
         uses: mathieudutour/github-tag-action@v6.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          release_branches: .*
+          release_branches: releases/prod
           default_bump: patch
 
       - name: Pin to IPFS
@@ -75,6 +75,7 @@ jobs:
           projectName: ${{ secrets.CLOUDFLARE_PROJECT_NAME }}
           directory: build
           githubToken: ${{ secrets.GITHUB_TOKEN }}
+          branch: main
 
       - name: Upload source maps to Sentry
         uses: getsentry/action-release@4744f6a65149f441c5f396d5b0877307c0db52c7
