@@ -114,9 +114,9 @@ export function TokenDetailsScreen({
     () => ({
       address: currencyIdToAddress(_currencyId),
       chain: currencyIdToChain(_currencyId),
-      currencyName: data?.token?.name,
+      currencyName: data?.token?.project?.name,
     }),
-    [_currencyId, data?.token?.name]
+    [_currencyId, data?.token?.project?.name]
   )
 
   return (

@@ -115,9 +115,9 @@ export function TokenDetailsStats({
     <Flex gap="spacing24">
       {tokenProjectData?.description && (
         <Flex gap="spacing4">
-          {tokenData?.name && (
+          {tokenProjectData?.name && (
             <Text color="textTertiary" variant="subheadSmall">
-              {t('About {{ token }}', { token: tokenData.name })}
+              {t('About {{ token }}', { token: tokenProjectData.name })}
             </Text>
           )}
           <Flex gap="spacing16">

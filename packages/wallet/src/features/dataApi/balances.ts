@@ -70,35 +70,38 @@ export function usePortfolioBalances(
 
     const byId: Record<CurrencyId, PortfolioBalance> = {}
     balancesForAddress.forEach((balance) => {
-      const chainId = fromGraphQLChain(balance?.token?.chain)
+      const { denominatedValue, token, tokenProjectMarket, quantity } =
+        balance || {}
+      const {
+        address: tokenAddress,
+        chain,
+        decimals,
+        symbol,
+        project,
+      } = token || {}
+      const { name, logoUrl, isSpam, safetyLevel } = project || {}
+      const chainId = fromGraphQLChain(chain)
 
       // require all of these fields to be defined
-      if (
-        !chainId ||
-        !balance ||
-        !balance.quantity ||
-        !balance.token ||
-        !balance.token.decimals ||
-        !balance.token.symbol ||
-        !balance.token.name
-      )
+      if (!chainId || !balance || !quantity || !token || !decimals || !symbol)
         return
 
       if (
         hideSmallBalances &&
-        (!balance.denominatedValue ||
-          balance.denominatedValue?.value < HIDE_SMALL_USD_BALANCES_THRESHOLD)
+        (!denominatedValue ||
+          denominatedValue.value < HIDE_SMALL_USD_BALANCES_THRESHOLD)
       )
         return null
-      if (hideSpamTokens && balance.token?.project?.isSpam) return null
 
-      const currency = balance.token.address
+      if (hideSpamTokens && isSpam) return null
+
+      const currency = tokenAddress
         ? new Token(
             chainId,
-            balance.token.address,
-            balance.token.decimals,
-            balance.token.symbol,
-            balance.token.name,
+            tokenAddress,
+            decimals,
+            symbol,
+            name ?? undefined,
             /* bypassChecksum:*/ true
           )
         : NativeCurrency.onChain(chainId)
@@ -108,16 +111,16 @@ export function usePortfolioBalances(
       const currencyInfo: CurrencyInfo = {
         currency,
         currencyId: currencyId(currency),
-        logoUrl: balance.token?.project?.logoUrl,
-        isSpam: balance.token?.project?.isSpam,
-        safetyLevel: balance.token?.project?.safetyLevel,
+        logoUrl,
+        isSpam,
+        safetyLevel,
       }
 
       const portfolioBalance: PortfolioBalance = {
-        quantity: balance.quantity,
-        balanceUSD: balance.denominatedValue?.value,
+        quantity,
+        balanceUSD: denominatedValue?.value,
         currencyInfo,
-        relativeChange24: balance.tokenProjectMarket?.relativeChange24?.value,
+        relativeChange24: tokenProjectMarket?.relativeChange24?.value,
       }
 
       byId[id] = portfolioBalance

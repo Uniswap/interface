@@ -30,19 +30,20 @@ export function formatTokenSearchResults(
     (tokensMap, token) => {
       if (!token) return tokensMap
 
-      const { chain, address, symbol, name, project, market } = token
+      const { chain, address, symbol, project, market } = token
       const chainId = fromGraphQLChain(chain)
 
       if (!chainId || !project) return tokensMap
 
+      const { name, safetyLevel, logoUrl } = project
       const tokenResult = {
         type: SearchResultType.Token,
         chainId,
         address,
         name,
         symbol: symbol ?? '',
-        safetyLevel: project.safetyLevel,
-        logoUrl: project.logoUrl,
+        safetyLevel,
+        logoUrl,
         volume1Y: market?.volume?.value ?? 0,
       } as TokenSearchResult & { volume1Y: number }
 

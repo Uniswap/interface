@@ -37,7 +37,7 @@ export function TokenDetailsHeader({
           numberOfLines={1}
           style={flex.shrink}
           variant="subheadLarge">
-          {token?.name ?? '—'}
+          {tokenProject?.name ?? '—'}
         </Text>
         {/* Suppress warning icon on low warning level */}
         {(tokenProject?.safetyLevel === SafetyLevel.StrongWarning ||

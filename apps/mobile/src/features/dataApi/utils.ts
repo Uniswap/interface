@@ -48,14 +48,21 @@ export function tokenProjectToCurrencyInfos(
       (project) =>
         project?.tokens &&
         sortTokensWithinProject(project?.tokens).map((token) => {
-          const { logoUrl, safetyLevel } = project ?? {}
-          const { chain, address, name, decimals, symbol } = token ?? {}
+          const { logoUrl, safetyLevel, name } = project ?? {}
+          const { chain, address, decimals, symbol } = token ?? {}
           const chainId = fromGraphQLChain(chain)
-          if (!chainId || !decimals || !symbol || !name) return null
+          if (!chainId || !decimals || !symbol) return null
 
           if (chainFilter && chainFilter !== chainId) return null
           const currency = isNonNativeAddress(chainId, address)
-            ? new Token(chainId, address, decimals, symbol, name, /* bypassChecksum:*/ true)
+            ? new Token(
+                chainId,
+                address,
+                decimals,
+                symbol,
+                name ?? undefined,
+                /* bypassChecksum:*/ true
+              )
             : NativeCurrency.onChain(chainId)
 
           const currencyInfo: CurrencyInfo = {
@@ -80,13 +87,13 @@ export function gqlTokenToCurrencyInfo(
   token: NonNullable<NonNullable<TopTokensQuery['topTokens']>[0]>,
   chainFilter?: ChainId | null
 ): CurrencyInfo | null {
-  const { chain, address, decimals, name, symbol, project } = token
+  const { chain, address, decimals, symbol, project } = token
   const chainId = fromGraphQLChain(chain)
 
-  if (!chainId || !decimals || !symbol || !name || !project) return null
+  if (!chainId || !decimals || !symbol || !project || !project.name) return null
   if (chainFilter && chainFilter !== chainId) return null
 
-  const { logoUrl, safetyLevel, isSpam } = project
+  const { logoUrl, name, safetyLevel, isSpam } = project
 
   const currency = isNonNativeAddress(chainId, address)
     ? new Token(chainId, address, decimals, symbol, name, /* bypassChecksum:*/ true)

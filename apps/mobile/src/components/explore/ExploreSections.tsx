@@ -181,8 +181,8 @@ function gqlTokenToTokenItemData(
 ): TokenItemData | null {
   if (!token || !token.project) return null
 
-  const { name, symbol, address, chain, project, market } = token
-  const { logoUrl, markets } = project
+  const { symbol, address, chain, project, market } = token
+  const { logoUrl, markets, name } = project
   const tokenProjectMarket = markets?.[0]
 
   const chainId = fromGraphQLChain(chain)

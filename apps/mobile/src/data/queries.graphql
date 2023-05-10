@@ -307,11 +307,11 @@ query PortfolioBalances($ownerAddress: String!) {
         id
         chain
         address
-        name
         symbol
         decimals
         project {
           id
+          name
           logoUrl
           safetyLevel
           isSpam
@@ -356,13 +356,13 @@ query TransactionHistoryUpdater($addresses: [String!]!) {
 query Token($chain: Chain!, $address: String) {
   token(chain: $chain, address: $address) {
     id
-    name
     symbol
     decimals
     chain
     address
     project {
       id
+      name
       logoUrl
       safetyLevel
       isSpam
@@ -375,7 +375,6 @@ query TokenDetailsScreen($chain: Chain!, $address: String) {
     id
     address
     chain
-    name
     symbol
     market(currency: USD) {
       id
@@ -386,6 +385,7 @@ query TokenDetailsScreen($chain: Chain!, $address: String) {
     }
     project {
       id
+      name
       description
       homepageUrl
       twitterName
@@ -426,13 +426,13 @@ query TokenDetailsScreen($chain: Chain!, $address: String) {
 query TokenProjects($contracts: [ContractInput!]!) {
   tokenProjects(contracts: $contracts) {
     id
+    name
     logoUrl
     safetyLevel
     tokens {
       id
       chain
       address
-      name
       decimals
       symbol
     }
@@ -459,7 +459,6 @@ query TransactionList($address: String!) {
           id
           asset {
             id
-            name
             symbol
             address
             decimals
@@ -510,7 +509,6 @@ query TransactionList($address: String!) {
           id
           asset {
             id
-            name
             symbol
             decimals
             address
@@ -541,10 +539,10 @@ query TopTokens(
     address
     chain
     decimals
-    name
     symbol
     project {
       id
+      name
       isSpam
       logoUrl
       safetyLevel
@@ -558,10 +556,10 @@ query SearchTokens($searchQuery: String!) {
     chain
     address
     decimals
-    name
     symbol
     project {
       id
+      name
       logoUrl
       safetyLevel
     }
@@ -577,7 +575,6 @@ query ExploreSearch(
     chain
     address
     decimals
-    name
     symbol
     # Use 1Y volume to determine which token to show when results include the same token on multiple chains
     market {
@@ -588,6 +585,7 @@ query ExploreSearch(
     }
     project {
       id
+      name
       logoUrl
       safetyLevel
     }
@@ -632,7 +630,6 @@ query SpotPrices($contracts: [ContractInput!]!) {
 
 fragment TopTokenParts on Token {
   id
-  name
   symbol
   chain
   address
@@ -649,6 +646,7 @@ fragment TopTokenParts on Token {
   }
   project {
     id
+    name
     logoUrl
     markets(currencies: [USD]) {
       id
@@ -687,12 +685,12 @@ query ExploreTokensTab($topTokensOrderBy: TokenSortableField!) {
 query FavoriteTokenCard($chain: Chain!, $address: String) {
   token(chain: $chain, address: $address) {
     id
-    name
     symbol
     chain
     address
     project {
       id
+      name
       logoUrl
       markets(currencies: [USD]) {
         id

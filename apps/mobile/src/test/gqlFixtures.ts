@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 import { faker } from '@faker-js/faker'
 import {
   ActivityType,
@@ -22,7 +21,7 @@ import {
 } from 'src/data/__generated__/types-and-hooks'
 import { ACCOUNT_ADDRESS_ONE, ACCOUNT_ADDRESS_TWO } from 'src/test/fixtures'
 import { ChainId } from 'wallet/src/constants/chains'
-import { DAI, USDC, WBTC, WRAPPED_NATIVE_CURRENCY } from 'wallet/src/constants/tokens'
+import { DAI, USDC, WRAPPED_NATIVE_CURRENCY } from 'wallet/src/constants/tokens'
 
 const FAKER_SEED = 123
 faker.seed(FAKER_SEED)
@@ -282,11 +281,11 @@ export const SearchTokens: NonNullable<SearchTokensQuery['searchTokens']> = [
     chain: Chain.Arbitrum,
     decimals: 18,
     id: faker.datatype.uuid(),
-    name: 'Dai Stablecoin',
     project: {
       __typename: 'TokenProject',
       id: '1',
       logoUrl: faker.image.imageUrl(),
+      name: 'Dai Stablecoin',
       safetyLevel: SafetyLevel.Verified,
     },
     symbol: 'DAI',
@@ -297,11 +296,11 @@ export const SearchTokens: NonNullable<SearchTokensQuery['searchTokens']> = [
     chain: Chain.Ethereum,
     decimals: 18,
     id: faker.datatype.uuid(),
-    name: 'Dai Stablecoin',
     project: {
       __typename: 'TokenProject',
       id: '1',
       logoUrl: faker.image.imageUrl(),
+      name: 'Dai Stablecoin',
       safetyLevel: SafetyLevel.Verified,
     },
     symbol: 'DAI',
@@ -312,11 +311,11 @@ export const SearchTokens: NonNullable<SearchTokensQuery['searchTokens']> = [
     chain: Chain.Optimism,
     decimals: 18,
     id: faker.datatype.uuid(),
-    name: 'Dai Stablecoin',
     project: {
       __typename: 'TokenProject',
       id: '1',
       logoUrl: faker.image.imageUrl(),
+      name: 'Dai Stablecoin',
       safetyLevel: SafetyLevel.Verified,
     },
     symbol: 'DAI',
@@ -327,11 +326,11 @@ export const SearchTokens: NonNullable<SearchTokensQuery['searchTokens']> = [
     chain: Chain.Polygon,
     decimals: 18,
     id: faker.datatype.uuid(),
-    name: '(PoS) Dai Stablecoin',
     project: {
       __typename: 'TokenProject',
       id: '1',
       logoUrl: faker.image.imageUrl(),
+      name: 'Dai Stablecoin',
       safetyLevel: SafetyLevel.Verified,
     },
     symbol: 'DAI',
@@ -342,11 +341,11 @@ export const SearchTokens: NonNullable<SearchTokensQuery['searchTokens']> = [
     chain: Chain.Polygon,
     decimals: 18,
     id: faker.datatype.uuid(),
-    name: 'DIA',
     project: {
       __typename: 'TokenProject',
       id: '2',
       logoUrl: faker.image.imageUrl(),
+      name: 'DIA',
       safetyLevel: SafetyLevel.Verified,
     },
     symbol: 'DIA',
@@ -357,11 +356,11 @@ export const SearchTokens: NonNullable<SearchTokensQuery['searchTokens']> = [
     chain: Chain.Ethereum,
     decimals: 18,
     id: faker.datatype.uuid(),
-    name: 'DefiPulse Index',
     project: {
       __typename: 'TokenProject',
       id: '3',
       logoUrl: faker.image.imageUrl(),
+      name: 'DefiPulse Index',
       safetyLevel: SafetyLevel.Verified,
     },
     symbol: 'DPI',
@@ -372,11 +371,11 @@ export const SearchTokens: NonNullable<SearchTokensQuery['searchTokens']> = [
     chain: Chain.Arbitrum,
     decimals: 18,
     id: faker.datatype.uuid(),
-    name: 'DIA',
     project: {
       __typename: 'TokenProject',
       id: '2',
       logoUrl: faker.image.imageUrl(),
+      name: 'DIA',
       safetyLevel: SafetyLevel.Verified,
     },
     symbol: 'DIA',
@@ -387,11 +386,11 @@ export const SearchTokens: NonNullable<SearchTokensQuery['searchTokens']> = [
     chain: Chain.Polygon,
     decimals: 18,
     id: faker.datatype.uuid(),
-    name: 'DeFi Pulse Index',
     project: {
       __typename: 'TokenProject',
       id: '3',
       logoUrl: faker.image.imageUrl(),
+      name: 'DefiPulse Index',
       safetyLevel: SafetyLevel.Verified,
     },
     symbol: 'DPI',
@@ -402,11 +401,11 @@ export const SearchTokens: NonNullable<SearchTokensQuery['searchTokens']> = [
     chain: Chain.Optimism,
     decimals: 18,
     id: faker.datatype.uuid(),
-    name: 'Rai Reflex Index',
     project: {
       __typename: 'TokenProject',
       id: '4',
       logoUrl: faker.image.imageUrl(),
+      name: 'Rai Reflex Index',
       safetyLevel: SafetyLevel.Verified,
     },
     symbol: 'RAI',
@@ -418,11 +417,11 @@ export const EthToken: [Token] = [
     id: faker.datatype.uuid(),
     address: null,
     chain: Chain.Ethereum,
-    name: 'Ethereum',
     symbol: 'ETH',
     project: {
       id: faker.datatype.uuid(),
       logoUrl: 'ethlogo.png',
+      name: 'Ethereum',
       tokens: [],
     },
   },
@@ -465,28 +464,16 @@ export const TopNFTCollections: [NftCollection, NftCollection] = [
   },
 ]
 
-export const TopTokens: [Token, Token, Token] = [
+export const TopTokens: [Token, Token] = [
   {
     id: faker.datatype.uuid(),
     address: WRAPPED_NATIVE_CURRENCY[ChainId.Mainnet].address,
     chain: Chain.Ethereum,
-    name: 'Wrapped Ether',
     symbol: 'WETH',
     project: {
       id: faker.datatype.uuid(),
       logoUrl: 'wethlogo.png',
-      tokens: [],
-    },
-  },
-  {
-    id: faker.datatype.uuid(),
-    address: WBTC.address,
-    chain: Chain.Ethereum,
-    name: 'Wrapped Bitcoin',
-    symbol: 'WBTC',
-    project: {
-      id: faker.datatype.uuid(),
-      logoUrl: 'wbtclogo.png',
+      name: 'Wrapped Ether',
       tokens: [],
     },
   },
@@ -494,11 +481,11 @@ export const TopTokens: [Token, Token, Token] = [
     id: faker.datatype.uuid(),
     address: USDC.address,
     chain: Chain.Ethereum,
-    name: 'USD Coin',
     symbol: 'USDC',
     project: {
       id: faker.datatype.uuid(),
       logoUrl: 'usdclogo.png',
+      name: 'USD Coin',
       tokens: [],
     },
   },

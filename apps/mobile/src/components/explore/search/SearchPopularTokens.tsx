@@ -69,7 +69,8 @@ function gqlTokenToTokenSearchResult(
 ): TokenSearchResult | null {
   if (!token || !token.project) return null
 
-  const { chain, address, symbol, name, project } = token
+  const { chain, address, symbol, project } = token
+  const { name } = project
   const chainId = fromGraphQLChain(chain)
   if (!chainId || !symbol || !name) return null
 

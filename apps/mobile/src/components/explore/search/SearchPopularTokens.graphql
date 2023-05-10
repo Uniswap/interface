@@ -3,10 +3,10 @@ query SearchPopularTokens {
     id
     address
     chain
-    name
     symbol
     project {
       id
+      name
       logoUrl
     }
   }
@@ -16,10 +16,10 @@ query SearchPopularTokens {
     id
     address
     chain
-    name
     symbol
     project {
       id
+      name
       logoUrl
     }
   }

@@ -1,4 +1,7 @@
-query TokenPriceHistory($contract: ContractInput!, $duration:HistoryDuration = DAY ) {
+query TokenPriceHistory(
+  $contract: ContractInput!
+  $duration: HistoryDuration = DAY
+) {
   tokenProjects(contracts: [$contract]) {
     id
     name

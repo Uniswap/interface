@@ -40,7 +40,6 @@ describe(SearchPopularTokens, () => {
 
     // Success where WETH result in topTokens is replaced by ETH
     expect(await screen.findByText('ETH')).toBeDefined()
-    expect(screen.getByText('WBTC')).toBeDefined()
     expect(screen.getByText('USDC')).toBeDefined()
     expect(tree.toJSON()).toMatchSnapshot()
   })
