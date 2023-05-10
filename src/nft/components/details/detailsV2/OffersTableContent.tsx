@@ -7,7 +7,8 @@ import { useTheme } from 'styled-components/macro'
 import { TEST_OFFER } from 'test-utils/nft/fixtures'
 
 import { TableTabsKeys } from './DataPageTable'
-import { ContentRow, HeaderRow, TableContentComponent } from './TableContentComponent'
+import { TableContentComponent } from './TableContentComponent'
+import { ContentRow, HeaderRow } from './TableRowComponent'
 
 export const OffersTableContent = ({ asset }: { asset: GenieAsset }) => {
   // TODO(NFT-1189) Replace with real offer data when BE supports

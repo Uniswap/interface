@@ -2,13 +2,13 @@
 
 exports[`placeholder containers load 1`] = `
 <DocumentFragment>
-  .c3 {
+  .c4 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
 }
 
-.c4 {
+.c5 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -25,7 +25,7 @@ exports[`placeholder containers load 1`] = `
   justify-content: flex-start;
 }
 
-.c11 {
+.c12 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -43,11 +43,11 @@ exports[`placeholder containers load 1`] = `
   gap: 8px;
 }
 
-.c9 {
+.c10 {
   color: #0D111C;
 }
 
-.c0 {
+.c1 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -61,11 +61,11 @@ exports[`placeholder containers load 1`] = `
   justify-content: flex-start;
 }
 
-.c15 {
+.c16 {
   height: 568px;
 }
 
-.c7 {
+.c8 {
   background: #FFFFFF;
   border: 1px solid #D2D9EE;
   border-radius: 16px;
@@ -76,33 +76,33 @@ exports[`placeholder containers load 1`] = `
   align-self: flex-start;
 }
 
-.c8 {
+.c9 {
   gap: 32px;
   margin-bottom: 12px;
   width: 100;
 }
 
-.c10 {
+.c11 {
   color: #0D111C;
   line-height: 24px;
   cursor: pointer;
 }
 
-.c10:hover {
+.c11:hover {
   opacity: 0.6;
 }
 
-.c12 {
+.c13 {
   color: #98A1C0;
   line-height: 24px;
   cursor: pointer;
 }
 
-.c12:hover {
+.c13:hover {
   opacity: 0.6;
 }
 
-.c14 {
+.c15 {
   background: #D2D9EE;
   border-radius: 4px;
   padding: 2px 4px;
@@ -110,11 +110,11 @@ exports[`placeholder containers load 1`] = `
   line-height: 12px;
 }
 
-.c13 {
+.c14 {
   height: 252px;
 }
 
-.c2 {
+.c3 {
   height: 96px;
   -webkit-flex-shrink: 0;
   -ms-flex-negative: 0;
@@ -130,21 +130,26 @@ exports[`placeholder containers load 1`] = `
   padding-left: 0px;
 }
 
-.c1 {
+.c0 {
   padding: 24px 64px;
   height: 100vh;
   width: 100%;
+}
+
+.c2 {
+  height: 100%;
+  width: 100%;
   gap: 36px;
-  max-width: 1200px128;
+  max-width: 1200px;
   margin: 0 auto;
 }
 
-.c5 {
+.c6 {
   gap: 24px;
   padding-bottom: 45px;
 }
 
-.c6 {
+.c7 {
   gap: 24px;
   width: 100%;
   -webkit-align-self: flex-start;
@@ -153,25 +158,25 @@ exports[`placeholder containers load 1`] = `
 }
 
 @media screen and (max-width:768px) {
-  .c1 {
+  .c0 {
     height: 100%;
   }
 }
 
 @media screen and (max-width:640px) {
-  .c1 {
+  .c0 {
     padding: 24px 48px;
   }
 }
 
 @media screen and (max-width:396px) {
-  .c1 {
+  .c0 {
     padding: 24px 20px;
   }
 }
 
 @media screen and (max-width:1024px) {
-  .c5 {
+  .c6 {
     -webkit-flex-wrap: wrap;
     -ms-flex-wrap: wrap;
     flex-wrap: wrap;
@@ -179,94 +184,98 @@ exports[`placeholder containers load 1`] = `
 }
 
 <div
-    class="c0 c1"
+    class="c0"
   >
     <div
-      class="c2"
-    >
-      Header
-    </div>
-    <div
-      class="c3 c4 c5"
+      class="c1 c2"
     >
       <div
-        class="c0 c6"
+        class="c3"
       >
-        <div
-          class="c7"
-        >
-          <div
-            class="c3 c4 c8"
-          >
-            <div
-              class="c9 c10 css-rjqmed"
-            >
-              <div
-                class="c3 c11"
-              >
-                Description
-              </div>
-            </div>
-            <div
-              class="c9 c12 css-rjqmed"
-            >
-              <div
-                class="c3 c11"
-              >
-                Details
-              </div>
-            </div>
-          </div>
-          <div
-            class="c13"
-          >
-            Description Content
-          </div>
-        </div>
+        Header
       </div>
       <div
-        class="c7"
+        class="c4 c5 c6"
       >
         <div
-          class="c3 c4 c8"
+          class="c1 c7"
         >
           <div
-            class="c9 c10 css-rjqmed"
+            class="c8"
           >
             <div
-              class="c3 c11"
+              class="c4 c5 c9"
             >
-              Activity
-            </div>
-          </div>
-          <div
-            class="c9 c12 css-rjqmed"
-          >
-            <div
-              class="c3 c11"
-            >
-              Offers
               <div
-                class="c14 css-f8aq60"
+                class="c10 c11 css-rjqmed"
               >
-                10+
+                <div
+                  class="c4 c12"
+                >
+                  Description
+                </div>
+              </div>
+              <div
+                class="c10 c13 css-rjqmed"
+              >
+                <div
+                  class="c4 c12"
+                >
+                  Details
+                </div>
               </div>
             </div>
-          </div>
-          <div
-            class="c9 c12 css-rjqmed"
-          >
             <div
-              class="c3 c11"
+              class="c14"
             >
-              Listings
+              Description Content
             </div>
           </div>
         </div>
         <div
-          class="c15"
+          class="c8"
         >
-          Activity Content
+          <div
+            class="c4 c5 c9"
+          >
+            <div
+              class="c10 c11 css-rjqmed"
+            >
+              <div
+                class="c4 c12"
+              >
+                Activity
+              </div>
+            </div>
+            <div
+              class="c10 c13 css-rjqmed"
+            >
+              <div
+                class="c4 c12"
+              >
+                Offers
+                <div
+                  class="c15 css-f8aq60"
+                >
+                  10+
+                </div>
+              </div>
+            </div>
+            <div
+              class="c10 c13 css-rjqmed"
+            >
+              <div
+                class="c4 c12"
+              >
+                Listings
+              </div>
+            </div>
+          </div>
+          <div
+            class="c16"
+          >
+            Activity Content
+          </div>
         </div>
       </div>
     </div>

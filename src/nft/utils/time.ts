@@ -1,13 +1,70 @@
 import { plural, t } from '@lingui/macro'
+import ms from 'ms.macro'
 
 import { roundAndPluralize } from './roundAndPluralize'
 
-const SECOND = 1000
-const MINUTE = SECOND * 60
-const HOUR = MINUTE * 60
-const DAY = 24 * HOUR
-const WEEK = 7 * DAY
-const MONTH = 30 * DAY
+const SECOND = ms`1s`
+const MINUTE = ms`1m`
+const HOUR = ms`1h`
+const DAY = ms`1d`
+const WEEK = ms`7d`
+const MONTH = ms`30d`
+
+interface TimePeriod {
+  milliseconds: number
+  pluralLabel: (i: number) => string
+}
+
+const timePeriods: TimePeriod[] = [
+  {
+    milliseconds: MONTH,
+    pluralLabel: (i: number) =>
+      plural(i, {
+        one: 'month',
+        other: 'months',
+      }),
+  },
+  {
+    milliseconds: WEEK,
+    pluralLabel: (i: number) =>
+      plural(i, {
+        one: 'week',
+        other: 'weeks',
+      }),
+  },
+  {
+    milliseconds: DAY,
+    pluralLabel: (i: number) =>
+      plural(i, {
+        one: 'day',
+        other: 'days',
+      }),
+  },
+  {
+    milliseconds: HOUR,
+    pluralLabel: (i: number) =>
+      plural(i, {
+        one: 'hour',
+        other: 'hours',
+      }),
+  },
+  {
+    milliseconds: MINUTE,
+    pluralLabel: (i: number) =>
+      plural(i, {
+        one: 'minute',
+        other: 'minutes',
+      }),
+  },
+  {
+    milliseconds: SECOND,
+    pluralLabel: (i: number) =>
+      plural(i, {
+        one: 'second',
+        other: 'seconds',
+      }),
+  },
+]
 
 export function timeUntil(date: Date, originalDate?: Date): string | undefined {
   const referenceDate = originalDate ?? new Date()
@@ -16,48 +73,17 @@ export function timeUntil(date: Date, originalDate?: Date): string | undefined {
 
   if (milliseconds < 0) return undefined
 
-  let interval = milliseconds / MONTH
-  if (interval >= 100) return `99+ ${t`months`}`
-  if (interval > 1)
-    return `${Math.floor(interval)} ${plural(interval, {
-      one: 'month',
-      other: 'months',
-    })}`
+  const monthInterval = milliseconds / MONTH
+  if (monthInterval >= 100) return `99+ ${t`months`}`
 
-  interval = milliseconds / WEEK
-  if (interval > 1)
-    return `${Math.floor(interval)} ${plural(interval, {
-      one: 'week',
-      other: 'weeks',
-    })}`
+  for (const period of timePeriods) {
+    const interval = milliseconds / period.milliseconds
 
-  interval = milliseconds / DAY
-  if (interval > 1)
-    return `${Math.floor(interval)} ${plural(interval, {
-      one: 'day',
-      other: 'days',
-    })}`
-
-  interval = milliseconds / HOUR
-
-  if (interval > 1)
-    return `${Math.floor(interval)} ${plural(interval, {
-      one: 'hour',
-      other: 'hours',
-    })}`
-
-  interval = milliseconds / MINUTE
-  if (interval > 1)
-    return `${Math.floor(interval)} ${plural(interval, {
-      one: 'minute',
-      other: 'minutes',
-    })}`
-
-  interval = milliseconds / SECOND
-  return `${Math.floor(interval)} ${plural(interval, {
-    one: 'second',
-    other: 'seconds',
-  })}`
+    if (interval >= 1) {
+      return `${Math.floor(interval)} ${period.pluralLabel(interval)}`
+    }
+  }
+  return undefined
 }
 
 export const timeLeft = (targetDate: Date): string => {

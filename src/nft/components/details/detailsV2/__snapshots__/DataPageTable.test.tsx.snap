@@ -92,7 +92,7 @@ exports[`data page listings table content loads with a given asset 1`] = `
 
 }
 
-@media screen and (min-width:1024px) and (max-width:1280px) {
+@media screen and (min-width:1024px) and (max-width:1279px) {
 
 }
 
@@ -146,7 +146,7 @@ exports[`data page listings table content loads with a given asset 1`] = `
   padding: 16px 6px 16px 0px;
 }
 
-.c7 {
+.c8 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -171,7 +171,7 @@ exports[`data page listings table content loads with a given asset 1`] = `
   gap: 12px;
 }
 
-.c8 {
+.c9 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -189,12 +189,31 @@ exports[`data page listings table content loads with a given asset 1`] = `
   gap: 8px;
 }
 
-.c14 {
+.c15 {
   color: #7780A0;
 }
 
-.c9 {
+.c10 {
   color: #0D111C;
+}
+
+.c5 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  color: #FB118E;
+  stroke: #FB118E;
+  font-weight: 500;
+}
+
+.c5:hover {
+  opacity: 0.6;
+}
+
+.c5:active {
+  opacity: 0.4;
 }
 
 .c0 {
@@ -235,7 +254,7 @@ exports[`data page listings table content loads with a given asset 1`] = `
   border-bottom: none;
 }
 
-.c6 {
+.c7 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -248,7 +267,7 @@ exports[`data page listings table content loads with a given asset 1`] = `
   flex-shrink: 0;
 }
 
-.c11 {
+.c12 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -265,7 +284,7 @@ exports[`data page listings table content loads with a given asset 1`] = `
   flex-shrink: 0;
 }
 
-.c12 {
+.c13 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -282,57 +301,32 @@ exports[`data page listings table content loads with a given asset 1`] = `
   flex-shrink: 0;
 }
 
-.c13 {
+.c14 {
   cursor: pointer;
   white-space: nowrap;
   -webkit-transition: opacity 250ms ease;
   transition: opacity 250ms ease;
 }
 
-.c13:hover {
+.c14:hover {
   opacity: 0.6;
 }
 
-.c13:active {
+.c14:active {
   opacity: 0.4;
 }
 
-.c10 {
+.c11 {
   color: #7780A0;
   line-height: 20px;
 }
 
-.c5 {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  display: block;
+.c6 {
   height: 20px;
-  width: -webkit-min-content;
-  width: -moz-min-content;
-  width: min-content;
-  -webkit-transition: opacity 250ms ease;
-  transition: opacity 250ms ease;
-}
-
-.c5:hover {
-  opacity: 0.6;
-}
-
-.c5:active {
-  opacity: 0.4;
 }
 
 @media screen and (max-width:640px) {
-  .c6 {
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -ms-flexbox;
-    display: flex;
-  }
-}
-
-@media screen and (max-width:640px) {
-  .c11 {
+  .c7 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -350,13 +344,22 @@ exports[`data page listings table content loads with a given asset 1`] = `
 }
 
 @media screen and (max-width:640px) {
-  .c10 {
+  .c13 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+  }
+}
+
+@media screen and (max-width:640px) {
+  .c11 {
     display: none;
   }
 }
 
-@media screen and (min-width:1024px) and (max-width:1280px) {
-  .c10 {
+@media screen and (min-width:1024px) and (max-width:1279px) {
+  .c11 {
     display: none;
   }
 }
@@ -374,7 +377,7 @@ exports[`data page listings table content loads with a given asset 1`] = `
           class="c3 c4"
         >
           <a
-            class="c5"
+            class="c5 c6"
             href="https://opensea.io/assets/0x29d7ebca656665c1a52a92f830e413e394db6b4f/6815"
             rel="noopener noreferrer"
             target="_blank"
@@ -438,40 +441,40 @@ exports[`data page listings table content loads with a given asset 1`] = `
             </svg>
           </a>
           <div
-            class="c6"
+            class="c7"
           >
             <div
-              class="c7 c8"
+              class="c8 c9"
             >
               <div
-                class="c9 css-1adn0z6"
+                class="c10 css-1adn0z6"
               >
                 100M
               </div>
               <div
-                class="c9 c10 css-zhpkf8"
+                class="c10 c11 css-zhpkf8"
               >
                 -
               </div>
             </div>
           </div>
           <div
-            class="c11"
+            class="c12"
           >
             <div
-              class="c9 css-18hn7mq"
+              class="c10 css-18hn7mq"
             >
               6 months
             </div>
           </div>
           <div
-            class="c12"
+            class="c13"
           >
             <div
-              class="c13"
+              class="c14"
             >
               <div
-                class="c14 css-18hn7mq"
+                class="c15 css-18hn7mq"
               >
                 Add to Bag
               </div>
@@ -595,7 +598,7 @@ exports[`data page offers table content loads with a given asset 1`] = `
 
 }
 
-@media screen and (min-width:1024px) and (max-width:1280px) {
+@media screen and (min-width:1024px) and (max-width:1279px) {
 
 }
 
@@ -658,7 +661,7 @@ exports[`data page offers table content loads with a given asset 1`] = `
   padding: 16px 6px 16px 0px;
 }
 
-.c7 {
+.c8 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -683,7 +686,7 @@ exports[`data page offers table content loads with a given asset 1`] = `
   gap: 12px;
 }
 
-.c8 {
+.c9 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -701,12 +704,31 @@ exports[`data page offers table content loads with a given asset 1`] = `
   gap: 8px;
 }
 
-.c15 {
+.c16 {
   color: #7780A0;
 }
 
-.c9 {
+.c10 {
   color: #0D111C;
+}
+
+.c5 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  color: #FB118E;
+  stroke: #FB118E;
+  font-weight: 500;
+}
+
+.c5:hover {
+  opacity: 0.6;
+}
+
+.c5:active {
+  opacity: 0.4;
 }
 
 .c0 {
@@ -747,20 +769,7 @@ exports[`data page offers table content loads with a given asset 1`] = `
   border-bottom: none;
 }
 
-.c6 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex: 1;
-  -ms-flex: 1;
-  flex: 1;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-}
-
-.c11 {
+.c7 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -781,6 +790,19 @@ exports[`data page offers table content loads with a given asset 1`] = `
   -webkit-flex: 1;
   -ms-flex: 1;
   flex: 1;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+}
+
+.c13 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
   -webkit-box-pack: end;
   -webkit-justify-content: flex-end;
   -ms-flex-pack: end;
@@ -790,7 +812,7 @@ exports[`data page offers table content loads with a given asset 1`] = `
   flex-shrink: 0;
 }
 
-.c13 {
+.c14 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -807,67 +829,42 @@ exports[`data page offers table content loads with a given asset 1`] = `
   flex-shrink: 0;
 }
 
-.c14 {
+.c15 {
   cursor: pointer;
   white-space: nowrap;
   -webkit-transition: opacity 250ms ease;
   transition: opacity 250ms ease;
 }
 
-.c14:hover {
+.c15:hover {
   opacity: 0.6;
 }
 
-.c14:active {
+.c15:active {
   opacity: 0.4;
 }
 
-.c10 {
+.c11 {
   color: #7780A0;
   line-height: 20px;
 }
 
-.c5 {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  display: block;
+.c6 {
   height: 20px;
-  width: -webkit-min-content;
-  width: -moz-min-content;
-  width: min-content;
-  -webkit-transition: opacity 250ms ease;
-  transition: opacity 250ms ease;
-}
-
-.c5:hover {
-  opacity: 0.6;
-}
-
-.c5:active {
-  opacity: 0.4;
 }
 
 @media screen and (max-width:640px) {
-  .c6 {
+  .c7 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
     display: flex;
-  }
-}
-
-@media screen and (max-width:640px) {
-  .c11 {
-    display: none;
   }
 }
 
 @media screen and (max-width:640px) {
   .c12 {
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -ms-flexbox;
-    display: flex;
+    display: none;
   }
 }
 
@@ -881,13 +878,22 @@ exports[`data page offers table content loads with a given asset 1`] = `
 }
 
 @media screen and (max-width:640px) {
-  .c10 {
+  .c14 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+  }
+}
+
+@media screen and (max-width:640px) {
+  .c11 {
     display: none;
   }
 }
 
-@media screen and (min-width:1024px) and (max-width:1280px) {
-  .c10 {
+@media screen and (min-width:1024px) and (max-width:1279px) {
+  .c11 {
     display: none;
   }
 }
@@ -905,7 +911,7 @@ exports[`data page offers table content loads with a given asset 1`] = `
           class="c3 c4"
         >
           <a
-            class="c5"
+            class="c5 c6"
             href="https://opensea.io/assets/0x29d7ebca656665c1a52a92f830e413e394db6b4f/6815"
             rel="noopener noreferrer"
             target="_blank"
@@ -969,56 +975,56 @@ exports[`data page offers table content loads with a given asset 1`] = `
             </svg>
           </a>
           <div
-            class="c6"
+            class="c7"
           >
             <div
-              class="c7 c8"
+              class="c8 c9"
             >
               <div
-                class="c9 css-1adn0z6"
+                class="c10 css-1adn0z6"
               >
                 123.456
               </div>
               <div
-                class="c9 c10 css-zhpkf8"
+                class="c10 c11 css-zhpkf8"
               >
                 -
               </div>
             </div>
           </div>
           <div
-            class="c11"
+            class="c12"
           >
             <a
-              class="c5"
+              class="c5 c6"
               href="https://etherscan.io/address/0x79ea449c3375ed1a9d7d99f8068209ea748c6d42"
               rel="noopener noreferrer"
               target="_blank"
             >
               <div
-                class="c9 css-18hn7mq"
+                class="c10 css-18hn7mq"
               >
                 0x79ea...6D42
               </div>
             </a>
           </div>
           <div
-            class="c12"
+            class="c13"
           >
             <div
-              class="c9 css-18hn7mq"
+              class="c10 css-18hn7mq"
             >
               6 months
             </div>
           </div>
           <div
-            class="c13"
+            class="c14"
           >
             <div
-              class="c14"
+              class="c15"
             >
               <div
-                class="c15 css-18hn7mq"
+                class="c16 css-18hn7mq"
               >
                 Accept
               </div>
@@ -1033,7 +1039,7 @@ exports[`data page offers table content loads with a given asset 1`] = `
           class="c3 c4"
         >
           <a
-            class="c5"
+            class="c5 c6"
             href="https://opensea.io/assets/0x29d7ebca656665c1a52a92f830e413e394db6b4f/6815"
             rel="noopener noreferrer"
             target="_blank"
@@ -1097,56 +1103,56 @@ exports[`data page offers table content loads with a given asset 1`] = `
             </svg>
           </a>
           <div
-            class="c6"
+            class="c7"
           >
             <div
-              class="c7 c8"
+              class="c8 c9"
             >
               <div
-                class="c9 css-1adn0z6"
+                class="c10 css-1adn0z6"
               >
                 123.456
               </div>
               <div
-                class="c9 c10 css-zhpkf8"
+                class="c10 c11 css-zhpkf8"
               >
                 -
               </div>
             </div>
           </div>
           <div
-            class="c11"
+            class="c12"
           >
             <a
-              class="c5"
+              class="c5 c6"
               href="https://etherscan.io/address/0x79ea449c3375ed1a9d7d99f8068209ea748c6d42"
               rel="noopener noreferrer"
               target="_blank"
             >
               <div
-                class="c9 css-18hn7mq"
+                class="c10 css-18hn7mq"
               >
                 0x79ea...6D42
               </div>
             </a>
           </div>
           <div
-            class="c12"
+            class="c13"
           >
             <div
-              class="c9 css-18hn7mq"
+              class="c10 css-18hn7mq"
             >
               6 months
             </div>
           </div>
           <div
-            class="c13"
+            class="c14"
           >
             <div
-              class="c14"
+              class="c15"
             >
               <div
-                class="c15 css-18hn7mq"
+                class="c16 css-18hn7mq"
               >
                 Accept
               </div>
@@ -1161,7 +1167,7 @@ exports[`data page offers table content loads with a given asset 1`] = `
           class="c3 c4"
         >
           <a
-            class="c5"
+            class="c5 c6"
             href="https://opensea.io/assets/0x29d7ebca656665c1a52a92f830e413e394db6b4f/6815"
             rel="noopener noreferrer"
             target="_blank"
@@ -1225,56 +1231,56 @@ exports[`data page offers table content loads with a given asset 1`] = `
             </svg>
           </a>
           <div
-            class="c6"
+            class="c7"
           >
             <div
-              class="c7 c8"
+              class="c8 c9"
             >
               <div
-                class="c9 css-1adn0z6"
+                class="c10 css-1adn0z6"
               >
                 123.456
               </div>
               <div
-                class="c9 c10 css-zhpkf8"
+                class="c10 c11 css-zhpkf8"
               >
                 -
               </div>
             </div>
           </div>
           <div
-            class="c11"
+            class="c12"
           >
             <a
-              class="c5"
+              class="c5 c6"
               href="https://etherscan.io/address/0x79ea449c3375ed1a9d7d99f8068209ea748c6d42"
               rel="noopener noreferrer"
               target="_blank"
             >
               <div
-                class="c9 css-18hn7mq"
+                class="c10 css-18hn7mq"
               >
                 0x79ea...6D42
               </div>
             </a>
           </div>
           <div
-            class="c12"
+            class="c13"
           >
             <div
-              class="c9 css-18hn7mq"
+              class="c10 css-18hn7mq"
             >
               6 months
             </div>
           </div>
           <div
-            class="c13"
+            class="c14"
           >
             <div
-              class="c14"
+              class="c15"
             >
               <div
-                class="c15 css-18hn7mq"
+                class="c16 css-18hn7mq"
               >
                 Accept
               </div>
@@ -1289,7 +1295,7 @@ exports[`data page offers table content loads with a given asset 1`] = `
           class="c3 c4"
         >
           <a
-            class="c5"
+            class="c5 c6"
             href="https://opensea.io/assets/0x29d7ebca656665c1a52a92f830e413e394db6b4f/6815"
             rel="noopener noreferrer"
             target="_blank"
@@ -1353,56 +1359,56 @@ exports[`data page offers table content loads with a given asset 1`] = `
             </svg>
           </a>
           <div
-            class="c6"
+            class="c7"
           >
             <div
-              class="c7 c8"
+              class="c8 c9"
             >
               <div
-                class="c9 css-1adn0z6"
+                class="c10 css-1adn0z6"
               >
                 123.456
               </div>
               <div
-                class="c9 c10 css-zhpkf8"
+                class="c10 c11 css-zhpkf8"
               >
                 -
               </div>
             </div>
           </div>
           <div
-            class="c11"
+            class="c12"
           >
             <a
-              class="c5"
+              class="c5 c6"
               href="https://etherscan.io/address/0x79ea449c3375ed1a9d7d99f8068209ea748c6d42"
               rel="noopener noreferrer"
               target="_blank"
             >
               <div
-                class="c9 css-18hn7mq"
+                class="c10 css-18hn7mq"
               >
                 0x79ea...6D42
               </div>
             </a>
           </div>
           <div
-            class="c12"
+            class="c13"
           >
             <div
-              class="c9 css-18hn7mq"
+              class="c10 css-18hn7mq"
             >
               6 months
             </div>
           </div>
           <div
-            class="c13"
+            class="c14"
           >
             <div
-              class="c14"
+              class="c15"
             >
               <div
-                class="c15 css-18hn7mq"
+                class="c16 css-18hn7mq"
               >
                 Accept
               </div>
@@ -1417,7 +1423,7 @@ exports[`data page offers table content loads with a given asset 1`] = `
           class="c3 c4"
         >
           <a
-            class="c5"
+            class="c5 c6"
             href="https://opensea.io/assets/0x29d7ebca656665c1a52a92f830e413e394db6b4f/6815"
             rel="noopener noreferrer"
             target="_blank"
@@ -1481,56 +1487,56 @@ exports[`data page offers table content loads with a given asset 1`] = `
             </svg>
           </a>
           <div
-            class="c6"
+            class="c7"
           >
             <div
-              class="c7 c8"
+              class="c8 c9"
             >
               <div
-                class="c9 css-1adn0z6"
+                class="c10 css-1adn0z6"
               >
                 123.456
               </div>
               <div
-                class="c9 c10 css-zhpkf8"
+                class="c10 c11 css-zhpkf8"
               >
                 -
               </div>
             </div>
           </div>
           <div
-            class="c11"
+            class="c12"
           >
             <a
-              class="c5"
+              class="c5 c6"
               href="https://etherscan.io/address/0x79ea449c3375ed1a9d7d99f8068209ea748c6d42"
               rel="noopener noreferrer"
               target="_blank"
             >
               <div
-                class="c9 css-18hn7mq"
+                class="c10 css-18hn7mq"
               >
                 0x79ea...6D42
               </div>
             </a>
           </div>
           <div
-            class="c12"
+            class="c13"
           >
             <div
-              class="c9 css-18hn7mq"
+              class="c10 css-18hn7mq"
             >
               6 months
             </div>
           </div>
           <div
-            class="c13"
+            class="c14"
           >
             <div
-              class="c14"
+              class="c15"
             >
               <div
-                class="c15 css-18hn7mq"
+                class="c16 css-18hn7mq"
               >
                 Accept
               </div>
@@ -1545,7 +1551,7 @@ exports[`data page offers table content loads with a given asset 1`] = `
           class="c3 c4"
         >
           <a
-            class="c5"
+            class="c5 c6"
             href="https://opensea.io/assets/0x29d7ebca656665c1a52a92f830e413e394db6b4f/6815"
             rel="noopener noreferrer"
             target="_blank"
@@ -1609,56 +1615,56 @@ exports[`data page offers table content loads with a given asset 1`] = `
             </svg>
           </a>
           <div
-            class="c6"
+            class="c7"
           >
             <div
-              class="c7 c8"
+              class="c8 c9"
             >
               <div
-                class="c9 css-1adn0z6"
+                class="c10 css-1adn0z6"
               >
                 123.456
               </div>
               <div
-                class="c9 c10 css-zhpkf8"
+                class="c10 c11 css-zhpkf8"
               >
                 -
               </div>
             </div>
           </div>
           <div
-            class="c11"
+            class="c12"
           >
             <a
-              class="c5"
+              class="c5 c6"
               href="https://etherscan.io/address/0x79ea449c3375ed1a9d7d99f8068209ea748c6d42"
               rel="noopener noreferrer"
               target="_blank"
             >
               <div
-                class="c9 css-18hn7mq"
+                class="c10 css-18hn7mq"
               >
                 0x79ea...6D42
               </div>
             </a>
           </div>
           <div
-            class="c12"
+            class="c13"
           >
             <div
-              class="c9 css-18hn7mq"
+              class="c10 css-18hn7mq"
             >
               6 months
             </div>
           </div>
           <div
-            class="c13"
+            class="c14"
           >
             <div
-              class="c14"
+              class="c15"
             >
               <div
-                class="c15 css-18hn7mq"
+                class="c16 css-18hn7mq"
               >
                 Accept
               </div>
@@ -1673,7 +1679,7 @@ exports[`data page offers table content loads with a given asset 1`] = `
           class="c3 c4"
         >
           <a
-            class="c5"
+            class="c5 c6"
             href="https://opensea.io/assets/0x29d7ebca656665c1a52a92f830e413e394db6b4f/6815"
             rel="noopener noreferrer"
             target="_blank"
@@ -1737,56 +1743,56 @@ exports[`data page offers table content loads with a given asset 1`] = `
             </svg>
           </a>
           <div
-            class="c6"
+            class="c7"
           >
             <div
-              class="c7 c8"
+              class="c8 c9"
             >
               <div
-                class="c9 css-1adn0z6"
+                class="c10 css-1adn0z6"
               >
                 123.456
               </div>
               <div
-                class="c9 c10 css-zhpkf8"
+                class="c10 c11 css-zhpkf8"
               >
                 -
               </div>
             </div>
           </div>
           <div
-            class="c11"
+            class="c12"
           >
             <a
-              class="c5"
+              class="c5 c6"
               href="https://etherscan.io/address/0x79ea449c3375ed1a9d7d99f8068209ea748c6d42"
               rel="noopener noreferrer"
               target="_blank"
             >
               <div
-                class="c9 css-18hn7mq"
+                class="c10 css-18hn7mq"
               >
                 0x79ea...6D42
               </div>
             </a>
           </div>
           <div
-            class="c12"
+            class="c13"
           >
             <div
-              class="c9 css-18hn7mq"
+              class="c10 css-18hn7mq"
             >
               6 months
             </div>
           </div>
           <div
-            class="c13"
+            class="c14"
           >
             <div
-              class="c14"
+              class="c15"
             >
               <div
-                class="c15 css-18hn7mq"
+                class="c16 css-18hn7mq"
               >
                 Accept
               </div>
@@ -1801,7 +1807,7 @@ exports[`data page offers table content loads with a given asset 1`] = `
           class="c3 c4"
         >
           <a
-            class="c5"
+            class="c5 c6"
             href="https://opensea.io/assets/0x29d7ebca656665c1a52a92f830e413e394db6b4f/6815"
             rel="noopener noreferrer"
             target="_blank"
@@ -1865,56 +1871,56 @@ exports[`data page offers table content loads with a given asset 1`] = `
             </svg>
           </a>
           <div
-            class="c6"
+            class="c7"
           >
             <div
-              class="c7 c8"
+              class="c8 c9"
             >
               <div
-                class="c9 css-1adn0z6"
+                class="c10 css-1adn0z6"
               >
                 123.456
               </div>
               <div
-                class="c9 c10 css-zhpkf8"
+                class="c10 c11 css-zhpkf8"
               >
                 -
               </div>
             </div>
           </div>
           <div
-            class="c11"
+            class="c12"
           >
             <a
-              class="c5"
+              class="c5 c6"
               href="https://etherscan.io/address/0x79ea449c3375ed1a9d7d99f8068209ea748c6d42"
               rel="noopener noreferrer"
               target="_blank"
             >
               <div
-                class="c9 css-18hn7mq"
+                class="c10 css-18hn7mq"
               >
                 0x79ea...6D42
               </div>
             </a>
           </div>
           <div
-            class="c12"
+            class="c13"
           >
             <div
-              class="c9 css-18hn7mq"
+              class="c10 css-18hn7mq"
             >
               6 months
             </div>
           </div>
           <div
-            class="c13"
+            class="c14"
           >
             <div
-              class="c14"
+              class="c15"
             >
               <div
-                class="c15 css-18hn7mq"
+                class="c16 css-18hn7mq"
               >
                 Accept
               </div>
@@ -1929,7 +1935,7 @@ exports[`data page offers table content loads with a given asset 1`] = `
           class="c3 c4"
         >
           <a
-            class="c5"
+            class="c5 c6"
             href="https://opensea.io/assets/0x29d7ebca656665c1a52a92f830e413e394db6b4f/6815"
             rel="noopener noreferrer"
             target="_blank"
@@ -1993,56 +1999,56 @@ exports[`data page offers table content loads with a given asset 1`] = `
             </svg>
           </a>
           <div
-            class="c6"
+            class="c7"
           >
             <div
-              class="c7 c8"
+              class="c8 c9"
             >
               <div
-                class="c9 css-1adn0z6"
+                class="c10 css-1adn0z6"
               >
                 123.456
               </div>
               <div
-                class="c9 c10 css-zhpkf8"
+                class="c10 c11 css-zhpkf8"
               >
                 -
               </div>
             </div>
           </div>
           <div
-            class="c11"
+            class="c12"
           >
             <a
-              class="c5"
+              class="c5 c6"
               href="https://etherscan.io/address/0x79ea449c3375ed1a9d7d99f8068209ea748c6d42"
               rel="noopener noreferrer"
               target="_blank"
             >
               <div
-                class="c9 css-18hn7mq"
+                class="c10 css-18hn7mq"
               >
                 0x79ea...6D42
               </div>
             </a>
           </div>
           <div
-            class="c12"
+            class="c13"
           >
             <div
-              class="c9 css-18hn7mq"
+              class="c10 css-18hn7mq"
             >
               6 months
             </div>
           </div>
           <div
-            class="c13"
+            class="c14"
           >
             <div
-              class="c14"
+              class="c15"
             >
               <div
-                class="c15 css-18hn7mq"
+                class="c16 css-18hn7mq"
               >
                 Accept
               </div>
@@ -2057,7 +2063,7 @@ exports[`data page offers table content loads with a given asset 1`] = `
           class="c3 c4"
         >
           <a
-            class="c5"
+            class="c5 c6"
             href="https://opensea.io/assets/0x29d7ebca656665c1a52a92f830e413e394db6b4f/6815"
             rel="noopener noreferrer"
             target="_blank"
@@ -2121,56 +2127,56 @@ exports[`data page offers table content loads with a given asset 1`] = `
             </svg>
           </a>
           <div
-            class="c6"
+            class="c7"
           >
             <div
-              class="c7 c8"
+              class="c8 c9"
             >
               <div
-                class="c9 css-1adn0z6"
+                class="c10 css-1adn0z6"
               >
                 123.456
               </div>
               <div
-                class="c9 c10 css-zhpkf8"
+                class="c10 c11 css-zhpkf8"
               >
                 -
               </div>
             </div>
           </div>
           <div
-            class="c11"
+            class="c12"
           >
             <a
-              class="c5"
+              class="c5 c6"
               href="https://etherscan.io/address/0x79ea449c3375ed1a9d7d99f8068209ea748c6d42"
               rel="noopener noreferrer"
               target="_blank"
             >
               <div
-                class="c9 css-18hn7mq"
+                class="c10 css-18hn7mq"
               >
                 0x79ea...6D42
               </div>
             </a>
           </div>
           <div
-            class="c12"
+            class="c13"
           >
             <div
-              class="c9 css-18hn7mq"
+              class="c10 css-18hn7mq"
             >
               6 months
             </div>
           </div>
           <div
-            class="c13"
+            class="c14"
           >
             <div
-              class="c14"
+              class="c15"
             >
               <div
-                class="c15 css-18hn7mq"
+                class="c16 css-18hn7mq"
               >
                 Accept
               </div>
@@ -2185,7 +2191,7 @@ exports[`data page offers table content loads with a given asset 1`] = `
           class="c3 c4"
         >
           <a
-            class="c5"
+            class="c5 c6"
             href="https://opensea.io/assets/0x29d7ebca656665c1a52a92f830e413e394db6b4f/6815"
             rel="noopener noreferrer"
             target="_blank"
@@ -2249,56 +2255,56 @@ exports[`data page offers table content loads with a given asset 1`] = `
             </svg>
           </a>
           <div
-            class="c6"
+            class="c7"
           >
             <div
-              class="c7 c8"
+              class="c8 c9"
             >
               <div
-                class="c9 css-1adn0z6"
+                class="c10 css-1adn0z6"
               >
                 123.456
               </div>
               <div
-                class="c9 c10 css-zhpkf8"
+                class="c10 c11 css-zhpkf8"
               >
                 -
               </div>
             </div>
           </div>
           <div
-            class="c11"
+            class="c12"
           >
             <a
-              class="c5"
+              class="c5 c6"
               href="https://etherscan.io/address/0x79ea449c3375ed1a9d7d99f8068209ea748c6d42"
               rel="noopener noreferrer"
               target="_blank"
             >
               <div
-                class="c9 css-18hn7mq"
+                class="c10 css-18hn7mq"
               >
                 0x79ea...6D42
               </div>
             </a>
           </div>
           <div
-            class="c12"
+            class="c13"
           >
             <div
-              class="c9 css-18hn7mq"
+              class="c10 css-18hn7mq"
             >
               6 months
             </div>
           </div>
           <div
-            class="c13"
+            class="c14"
           >
             <div
-              class="c14"
+              class="c15"
             >
               <div
-                class="c15 css-18hn7mq"
+                class="c16 css-18hn7mq"
               >
                 Accept
               </div>

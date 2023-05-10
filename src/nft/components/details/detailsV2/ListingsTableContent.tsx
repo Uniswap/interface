@@ -6,7 +6,8 @@ import { GenieAsset } from 'nft/types'
 import { useTheme } from 'styled-components/macro'
 
 import { TableTabsKeys } from './DataPageTable'
-import { ContentRow, HeaderRow, TableContentComponent } from './TableContentComponent'
+import { TableContentComponent } from './TableContentComponent'
+import { ContentRow, HeaderRow } from './TableRowComponent'
 
 export const ListingsTableContent = ({ asset }: { asset: GenieAsset }) => {
   const isMobile = useIsMobile()
