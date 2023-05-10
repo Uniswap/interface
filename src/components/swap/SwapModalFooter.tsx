@@ -13,8 +13,9 @@ import {
 } from 'lib/utils/analytics'
 import { ReactNode } from 'react'
 import { Text } from 'rebass'
+import { RouterPreference } from 'state/routing/slice'
 import { InterfaceTrade } from 'state/routing/types'
-import { useClientSideRouter, useUserSlippageTolerance } from 'state/user/hooks'
+import { useRouterPreference, useUserSlippageTolerance } from 'state/user/hooks'
 import { computeRealizedPriceImpact } from 'utils/prices'
 
 import { ButtonError } from '../Button'
@@ -123,7 +124,7 @@ export default function SwapModalFooter({
 }) {
   const transactionDeadlineSecondsSinceEpoch = useTransactionDeadline()?.toNumber() // in seconds since epoch
   const isAutoSlippage = useUserSlippageTolerance()[0] === 'auto'
-  const [clientSideRouter] = useClientSideRouter()
+  const [routerPreference] = useRouterPreference()
   const routes = getTokenPath(trade)
 
   return (
@@ -139,7 +140,7 @@ export default function SwapModalFooter({
             allowedSlippage,
             transactionDeadlineSecondsSinceEpoch,
             isAutoSlippage,
-            isAutoRouterApi: !clientSideRouter,
+            isAutoRouterApi: routerPreference === RouterPreference.AUTO || routerPreference === RouterPreference.API,
             swapQuoteReceivedDate,
             routes,
             fiatValueInput: fiatValueInput.data,

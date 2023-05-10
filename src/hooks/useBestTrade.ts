@@ -2,10 +2,9 @@ import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { useMemo } from 'react'
-import { RouterPreference } from 'state/routing/slice'
 import { InterfaceTrade, TradeState } from 'state/routing/types'
 import { useRoutingAPITrade } from 'state/routing/useRoutingAPITrade'
-import { useClientSideRouter } from 'state/user/hooks'
+import { useRouterPreference } from 'state/user/hooks'
 
 import useAutoRouterSupported from './useAutoRouterSupported'
 import { useClientSideV3Trade } from './useClientSideV3Trade'
@@ -46,12 +45,12 @@ export function useBestTrade(
 
   const shouldGetTrade = !isAWrapTransaction && isWindowVisible
 
-  const [clientSideRouter] = useClientSideRouter()
+  const [routerPreference] = useRouterPreference()
   const routingAPITrade = useRoutingAPITrade(
     tradeType,
     autoRouterSupported && shouldGetTrade ? debouncedAmount : undefined,
     debouncedOtherCurrency,
-    clientSideRouter ? RouterPreference.CLIENT : RouterPreference.API
+    routerPreference
   )
 
   const isLoading = routingAPITrade.state === TradeState.LOADING

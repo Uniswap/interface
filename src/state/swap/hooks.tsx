@@ -85,6 +85,7 @@ export function useDerivedSwapInfo(
     state: TradeState
   }
   allowedSlippage: Percent
+  autoSlippage: Percent
 } {
   const { account } = useWeb3React()
 
@@ -135,8 +136,8 @@ export function useDerivedSwapInfo(
   )
 
   // allowed slippage is either auto slippage, or custom user defined slippage if auto slippage disabled
-  const autoSlippageTolerance = useAutoSlippageTolerance(trade.trade)
-  const allowedSlippage = useUserSlippageToleranceWithDefault(autoSlippageTolerance)
+  const autoSlippage = useAutoSlippageTolerance(trade.trade)
+  const allowedSlippage = useUserSlippageToleranceWithDefault(autoSlippage)
 
   const inputError = useMemo(() => {
     let inputError: ReactNode | undefined
@@ -179,9 +180,10 @@ export function useDerivedSwapInfo(
       parsedAmount,
       inputError,
       trade,
+      autoSlippage,
       allowedSlippage,
     }),
-    [allowedSlippage, currencies, currencyBalances, inputError, parsedAmount, trade]
+    [allowedSlippage, autoSlippage, currencies, currencyBalances, inputError, parsedAmount, trade]
   )
 }
 

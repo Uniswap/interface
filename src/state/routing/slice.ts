@@ -12,8 +12,11 @@ import { QuoteData, TradeResult } from './types'
 import { isExactInput, transformRoutesToTrade } from './utils'
 
 export enum RouterPreference {
+  AUTO = 'auto',
   API = 'api',
   CLIENT = 'client',
+
+  // Used internally for token -> USDC trades to get a USD value.
   PRICE = 'price',
 }
 
@@ -116,7 +119,8 @@ export const routingApi = createApi({
             data: {
               ...args,
               isPrice: args.routerPreference === RouterPreference.PRICE,
-              isAutoRouter: args.routerPreference === RouterPreference.API,
+              isAutoRouter:
+                args.routerPreference === RouterPreference.AUTO || args.routerPreference === RouterPreference.API,
             },
             tags: { is_widget: false },
           }
