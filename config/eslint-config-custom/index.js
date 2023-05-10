@@ -6,12 +6,9 @@ const complexityRules = {
   complexity: ['error', 20], // restrict cyclomatic complexity (number of linearly independent paths )
 }
 
-const nonSagaTs = '(?<!saga).ts'
-
 module.exports = {
   root: true,
   parser: '@typescript-eslint/parser',
-  ignorePatterns: ["!.storybook"],
   extends: [
     'eslint:recommended',
     '@react-native-community',
@@ -20,6 +17,7 @@ module.exports = {
     'plugin:@typescript-eslint/recommended',
   ],
   plugins: [
+    'detox',
     'jest',
     'react',
     'react-native',
@@ -96,7 +94,7 @@ module.exports = {
             importNames: ['logException'],
             message: 'Please use `logger.error` instead.',
           },
-          {
+         {
             name: '@tamagui/core',
             message: "Please import from 'tamagui' direcly to prevent mismatches.",
           }
@@ -151,20 +149,36 @@ module.exports = {
       {
         bracketSameLine: true,
         singleQuote: true,
-        printWidth: 80,
+        printWidth: 100,
         semi: false,
       },
     ],
   },
   overrides: [
     {
+      files: ['*.e2e.js'],
+      env: {
+        'detox/detox': true,
+        jest: true,
+        'jest/globals': true,
+      },
+    },
+    {
       // enable the rule specifically for TypeScript files
-      files: [nonSagaTs, '*.mts', '*.cts', '*.tsx'],
+      files: ['*.ts', '*.mts', '*.cts', '*.tsx'],
       rules: {
         '@typescript-eslint/explicit-function-return-type': [
           'error',
           { allowedNames: ['useEffect'] },
         ],
+      },
+    },
+    // ignore return type in saga files given return types are unwieldy and tied
+    // to implementation details.
+    {
+      files: ['*saga*.ts', '*Saga.ts', 'handleDeepLink.ts'],
+      rules: {
+        '@typescript-eslint/explicit-function-return-type': 'off',
       },
     },
     {
@@ -188,9 +202,10 @@ module.exports = {
               'Onboarding',
               'Uniswap',
               'We’ll',
-              'we’re',
               'What’s',
               'aren’t',
+              'cancelled',
+              'cancelling',
               'can’t',
               'dapp',
               'don’t',
@@ -201,15 +216,21 @@ module.exports = {
               'it’s',
               'num',
               'they’ll',
+              'unhidden',
+              'unhide',
               'usd',
               'wallet’s',
+              'we’re',
               'won’t',
+              'you’d',
               'you’ll',
               'you’re',
               'you’ve',
             ],
           },
+
         ],
+        'max-lines': ['off'], // cap file length
       },
     },
   ],

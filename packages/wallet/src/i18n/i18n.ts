@@ -1,4 +1,4 @@
-import i18n from 'i18next'
+import i18n, { TFunction } from 'i18next'
 import { initReactI18next } from 'react-i18next'
 
 import en from './locales/en.json'
@@ -50,7 +50,7 @@ type RecursiveKeyOfHandleValue<
 export const t = (key: TxKeyPath) => (key ? i18n.t(key) : undefined)
 */
 
-export const changeLanguage = (str: string) => {
+export const changeLanguage = (str: string): Promise<TFunction> => {
   return i18n.changeLanguage(str)
 }
 

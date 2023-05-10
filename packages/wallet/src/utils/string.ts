@@ -1,9 +1,7 @@
 export function trimToLength(value: string, maxLength: number): string {
   if (!value) return ''
   const trimmed = value.trim()
-  return trimmed.length > maxLength
-    ? `${trimmed.substring(0, maxLength)}...`
-    : trimmed
+  return trimmed.length > maxLength ? `${trimmed.substring(0, maxLength)}...` : trimmed
 }
 
 export function normalizeTextInput(input: string, toLowerCase = true): string {

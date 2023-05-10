@@ -13,8 +13,7 @@ export const SignTypedDataDetails = ({
   chainId: number
   request: RequestDisplayDetails
 }): JSX.Element => {
-  const rawTypedData = (request.request.dappRequest as SignTypedDataRequest)
-    .typedData
+  const rawTypedData = (request.request.dappRequest as SignTypedDataRequest).typedData
   const typedData = JSON.parse(rawTypedData)
 
   return (
@@ -83,10 +82,7 @@ const getParsedObjectDisplay = (
         if (typeof childValue === 'object') {
           return (
             <YStack key={objKey} gap="$spacing4">
-              <Text
-                color="textTertiary"
-                marginLeft={depth * 5}
-                variant="monospace">
+              <Text color="textTertiary" marginLeft={depth * 5} variant="monospace">
                 {objKey}
               </Text>
               {getParsedObjectDisplay(chainId, childValue, depth + 1)}
@@ -96,15 +92,8 @@ const getParsedObjectDisplay = (
 
         if (typeof childValue === 'string') {
           return (
-            <XStack
-              key={objKey}
-              alignItems="flex-start"
-              gap="$spacing8"
-              marginLeft={depth * 5}>
-              <Text
-                color="textTertiary"
-                paddingVertical="$spacing4"
-                variant="monospace">
+            <XStack key={objKey} alignItems="flex-start" gap="$spacing8" marginLeft={depth * 5}>
+              <Text color="textTertiary" paddingVertical="$spacing4" variant="monospace">
                 {objKey}
               </Text>
               <YStack flexShrink={1}>

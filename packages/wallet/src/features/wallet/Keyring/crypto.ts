@@ -9,8 +9,8 @@ const PBKDF2_PARAMS: Omit<Pbkdf2Params, 'salt'> & { hash: string } = {
 const AES_GCM_PARAMS: AesKeyGenParams = { name: 'AES-GCM', length: 256 }
 
 // TODO: improve encoding/decoding
-const encodeForStorage = (payload: ArrayBuffer) => payload.toString()
-const decodeFromStorage = (payload: string) =>
+const encodeForStorage = (payload: ArrayBuffer): string => payload.toString()
+const decodeFromStorage = (payload: string): Uint8Array =>
   new Uint8Array(payload.split(',').map((x) => Number(x)))
 
 // An encrypted secret with associated metadata required for decryption
@@ -23,10 +23,7 @@ export type SecretPayload = {
   hash: string
 }
 
-export async function encrypt(
-  plaintext: string,
-  password: string
-): Promise<SecretPayload> {
+export async function encrypt(plaintext: string, password: string): Promise<SecretPayload> {
   const iv = crypto.getRandomValues(new Uint8Array(12))
   const salt = crypto.getRandomValues(new Uint8Array(16))
 
@@ -87,14 +84,11 @@ export async function decrypt(
   }
 }
 
-function getKeyMaterial(password: string, algorithm = PBKDF2_PARAMS.name) {
-  return crypto.subtle.importKey(
-    'raw',
-    new TextEncoder().encode(password),
-    algorithm,
-    false,
-    ['deriveBits', 'deriveKey']
-  )
+function getKeyMaterial(password: string, algorithm = PBKDF2_PARAMS.name): Promise<CryptoKey> {
+  return crypto.subtle.importKey('raw', new TextEncoder().encode(password), algorithm, false, [
+    'deriveBits',
+    'deriveKey',
+  ])
 }
 
 function getKey(
@@ -103,7 +97,7 @@ function getKey(
   derivedKeyAlgorithm: AesKeyGenParams,
   extractable = true,
   keyUsages: KeyUsage[] = ['encrypt', 'decrypt']
-) {
+): Promise<CryptoKey> {
   // TODO: This should use Argon2 like ToB recommended for the mobile app
   // https://github.com/Uniswap/wallet-internal/blob/main/apps/mobile/ios/EncryptionHelper.swift
   return crypto.subtle.deriveKey(

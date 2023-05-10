@@ -34,9 +34,7 @@ export function parseActiveChains(activeChainsString: string): ChainId[] {
     .filter(Boolean)
 }
 
-export function chainListToStateMap(
-  chainIds: ChainId[]
-): Partial<Record<ChainId, ChainState>> {
+export function chainListToStateMap(chainIds: ChainId[]): Partial<Record<ChainId, ChainState>> {
   return chainIds.reduce<ChainIdTo<ChainState>>((memo, chainId) => {
     memo[chainId] = { isActive: true }
     return memo
@@ -82,10 +80,6 @@ export function toGraphQLChain(chainId: ChainId): Chain | null {
   return null
 }
 
-export function getPollingIntervalByBlocktime(
-  chainId?: ChainId
-): PollingInterval {
-  return isL2Chain(chainId)
-    ? PollingInterval.LightningMcQueen
-    : PollingInterval.Fast
+export function getPollingIntervalByBlocktime(chainId?: ChainId): PollingInterval {
+  return isL2Chain(chainId) ? PollingInterval.LightningMcQueen : PollingInterval.Fast
 }

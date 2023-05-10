@@ -35,10 +35,7 @@ export function Complete(): JSX.Element {
     // there's no way to listen to the extension pinning status,
     // so check every [PINNED_CHECK_FREQUENCY_IN_MS]ms during this step if it's pinned
     // TODO: use useInterval hook once migrated to wallet package
-    const intervalId = setInterval(
-      isExtensionPinned,
-      PINNED_CHECK_FREQUENCY_IN_MS
-    )
+    const intervalId = setInterval(isExtensionPinned, PINNED_CHECK_FREQUENCY_IN_MS)
     return () => {
       clearInterval(intervalId)
     }
@@ -64,10 +61,7 @@ export function Complete(): JSX.Element {
               All set! Don't forget to pin the extension in your browser.
             </Text>
           </XStack>
-          <Button
-            flexGrow={1}
-            theme="secondary"
-            onPress={(): void => window.close()}>
+          <Button flexGrow={1} theme="secondary" onPress={(): void => window.close()}>
             Close
           </Button>
         </YStack>
@@ -124,11 +118,7 @@ export function Complete(): JSX.Element {
               paddingHorizontal="$spacing12"
               paddingVertical="$spacing8">
               {/* mocked extension icon and name */}
-              <XStack
-                alignItems="center"
-                flexGrow={1}
-                gap="$spacing12"
-                justifyContent="flex-start">
+              <XStack alignItems="center" flexGrow={1} gap="$spacing12" justifyContent="flex-start">
                 {/* mocked extension icon */}
                 <Stack
                   alignItems="center"
@@ -151,11 +141,7 @@ export function Complete(): JSX.Element {
               <XStack alignItems="center" gap="$spacing12">
                 {/* mocked extension list item pin button */}
                 <Stack alignItems="center" justifyContent="center">
-                  <Circle
-                    backgroundColor="$accentBranded"
-                    opacity={0.25}
-                    size={40}
-                  />
+                  <Circle backgroundColor="$accentBranded" opacity={0.25} size={40} />
                   <Image
                     height={iconSize.icon20}
                     position="absolute"
@@ -189,9 +175,7 @@ export function Complete(): JSX.Element {
             opacity={0.9}
             paddingHorizontal="$spacing24"
             paddingVertical="$spacing12">
-            <Text variant="subheadSmall">
-              ✅ Awesome! It's safe to close this tab now.
-            </Text>
+            <Text variant="subheadSmall">✅ Awesome! It's safe to close this tab now.</Text>
           </Stack>
         </Stack>
       )}

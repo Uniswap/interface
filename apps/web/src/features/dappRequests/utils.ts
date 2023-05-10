@@ -20,7 +20,7 @@ const APPROVAL_WINDOW_PARAMS: WindowParams = {
 
 export async function openRequestsWindow(
   windowParams: WindowParams = APPROVAL_WINDOW_PARAMS
-) {
+): Promise<void> {
   // We need current window width to calculate the left position of the new window
   const currentWindowWidth = await chrome.windows
     .getCurrent()
@@ -37,7 +37,7 @@ export async function openRequestsWindow(
  * Loop through all open windows and see if there is a window whose first tab has the id of the requests window,
  * so we don't open too duplicate windows
  */
-export function openRequestsWindowIfNeeded() {
+export function openRequestsWindowIfNeeded(): void {
   chrome.windows.getAll((windows) => {
     const requestsWindow = windows.find((window) => {
       if (window.tabs && window.tabs.length > 0) {

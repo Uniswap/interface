@@ -25,8 +25,7 @@ export function* keepAliveSaga() {
       // could be any action type dispatched by store
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (action: any) =>
-        action.type === authActions.progress.type &&
-        action.payload === SagaStatus.Success
+        action.type === authActions.progress.type && action.payload === SagaStatus.Success
     )
   ) {
     // start keep alive task in the background
@@ -65,7 +64,7 @@ function* keepAliveLoop() {
   }
 }
 
-function stopKeepAliveLoop() {
+function stopKeepAliveLoop(): void {
   logger.debug('keepalive', 'stop', 'stopping keep alive')
   // no-op
 }
@@ -101,11 +100,7 @@ function doWork(): void {
           'expected disconnect -- server worker should still be running'
         )
       } else {
-        logger.error(
-          'background',
-          'doWork:onDisconnect',
-          'port disconnected unexpectedly'
-        )
+        logger.error('background', 'doWork:onDisconnect', 'port disconnected unexpectedly')
       }
 
       alivePort = null
@@ -117,23 +112,15 @@ function doWork(): void {
     alivePort.postMessage(KEEP_ALIVE_PING)
 
     if (chrome.runtime.lastError) {
-      logger.error(
-        'background',
-        'doWork:postmessage error',
-        `${chrome.runtime.lastError}`
-      )
+      logger.error('background', 'doWork:postmessage error', `${chrome.runtime.lastError}`)
     } else {
       // no-op.
-      logger.debug(
-        'background',
-        'doWork:postmessage',
-        `ping sent through ${alivePort.name}`
-      )
+      logger.debug('background', 'doWork:postmessage', `ping sent through ${alivePort.name}`)
     }
   }
 }
 
-function logTime() {
+function logTime(): void {
   const now = Date.now()
   logger.debug('keepalive', 'startKeepAlive', 'time elapsed: ', now - lastCall)
   lastCall = Date.now()

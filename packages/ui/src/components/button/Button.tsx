@@ -67,19 +67,14 @@ type CustomButtonProps = GetProps<typeof CustomButtonFrame>
 export type ButtonProps = TamaguiButtonProps & CustomButtonProps
 
 // TODO: investigate why styleable doesn't pass theme down to CustomButtonText through theme={props.theme}
-export const Button = CustomButtonFrame.styleable(
-  ({ children, ...props }: ButtonProps) => {
-    return (
-      <CustomButtonFrame
-        {...props}
-        opacity={props.disabled ? 0.4 : 1}
-        theme={props.theme}>
-        {/* TODO: improve styling button text based on size of button, e.g. derive weight and color from size / theme */}
-        <CustomButtonText fontWeight="600">{children}</CustomButtonText>
-      </CustomButtonFrame>
-    )
-  }
-)
+export const Button = CustomButtonFrame.styleable(({ children, ...props }: ButtonProps) => {
+  return (
+    <CustomButtonFrame {...props} opacity={props.disabled ? 0.4 : 1} theme={props.theme}>
+      {/* TODO: improve styling button text based on size of button, e.g. derive weight and color from size / theme */}
+      <CustomButtonText fontWeight="600">{children}</CustomButtonText>
+    </CustomButtonFrame>
+  )
+})
 
 // TODO: if we ever decide to not use React Router for navigation, we should remove this component as well since it won't be needed
 export const LinkButton = ({

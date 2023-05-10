@@ -23,9 +23,7 @@ const slice = createSlice({
     },
     remove: (state, action: PayloadAction<string>) => {
       const requestId = action.payload
-      const newState = state.pending.filter(
-        (tx) => tx.dappRequest.requestId !== requestId
-      )
+      const newState = state.pending.filter((tx) => tx.dappRequest.requestId !== requestId)
       state.pending = newState
     },
   },

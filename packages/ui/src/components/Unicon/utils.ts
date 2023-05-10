@@ -14,7 +14,7 @@ import {
 
 const NUM_CHARS_TO_USE_PER_ATTRIBUTE = 2
 
-export const isEthAddress = (address: string) => {
+export const isEthAddress = (address: string): boolean => {
   return address.startsWith('0x') && isAddress(address.toLowerCase())
 }
 
@@ -49,11 +49,8 @@ export const getUniconAttributeData = (
   return {
     [UniconAttributes.GradientStart]:
       gradientStarts[attributeIndices[UniconAttributes.GradientStart]],
-    [UniconAttributes.GradientEnd]:
-      gradientEnds[attributeIndices[UniconAttributes.GradientEnd]],
-    [UniconAttributes.Container]:
-      containerPaths[attributeIndices[UniconAttributes.Container]],
-    [UniconAttributes.Shape]:
-      emblemPaths[attributeIndices[UniconAttributes.Shape]],
+    [UniconAttributes.GradientEnd]: gradientEnds[attributeIndices[UniconAttributes.GradientEnd]],
+    [UniconAttributes.Container]: containerPaths[attributeIndices[UniconAttributes.Container]],
+    [UniconAttributes.Shape]: emblemPaths[attributeIndices[UniconAttributes.Shape]],
   } as UniconAttributeData
 }

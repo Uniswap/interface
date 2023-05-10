@@ -2,17 +2,8 @@
 
 import React, { memo, useMemo } from 'react'
 
-import {
-  blurs,
-  UniconAttributeData,
-  UniconAttributes,
-  UniconAttributesToIndices,
-} from './types'
-import {
-  deriveUniconAttributeIndices,
-  getUniconAttributeData,
-  isEthAddress,
-} from './utils'
+import { blurs, UniconAttributeData, UniconAttributes, UniconAttributesToIndices } from './types'
+import { deriveUniconAttributeIndices, getUniconAttributeData, isEthAddress } from './utils'
 
 const ORIGINAL_CONTAINER_SIZE = 36
 const EMBLEM_XY_SHIFT = 10
@@ -45,11 +36,7 @@ type UniconMaskProps = {
   attributeData: UniconAttributeData
   size: number
 }
-function UniconMask({
-  maskId,
-  attributeData,
-  size,
-}: UniconMaskProps): JSX.Element {
+function UniconMask({ maskId, attributeData, size }: UniconMaskProps): JSX.Element {
   const shapeMaskId = `shape-${maskId}`
   const containerMaskId = `container-${maskId}`
 
@@ -94,31 +81,16 @@ type UniconGradientProps = {
   gradientId: string
   attributeData: UniconAttributeData
 }
-function UniconGradient({
-  gradientId,
-  attributeData,
-}: UniconGradientProps): JSX.Element {
+function UniconGradient({ gradientId, attributeData }: UniconGradientProps): JSX.Element {
   return (
     <linearGradient id={gradientId}>
-      <stop
-        offset="0%"
-        stopColor={attributeData[UniconAttributes.GradientStart]}
-      />
-      <stop
-        offset="100%"
-        stopColor={attributeData[UniconAttributes.GradientEnd]}
-      />
+      <stop offset="0%" stopColor={attributeData[UniconAttributes.GradientStart]} />
+      <stop offset="100%" stopColor={attributeData[UniconAttributes.GradientEnd]} />
     </linearGradient>
   )
 }
 
-function UniconBlur({
-  blurId,
-  size,
-}: {
-  blurId: string
-  size: number
-}): JSX.Element {
+function UniconBlur({ blurId, size }: { blurId: string; size: number }): JSX.Element {
   return (
     <filter height="200%" id={blurId} width="200%" x="-50%" y="-50%">
       <feGaussianBlur in="SourceGraphic" stdDeviation={size / 3} />
@@ -138,10 +110,7 @@ function UniconSvg({
 }): JSX.Element | null {
   // const isDarkMode = useIsDarkMode()
   const isDarkMode = false
-  const attributeData = useMemo(
-    () => getUniconAttributeData(attributeIndices),
-    [attributeIndices]
-  )
+  const attributeData = useMemo(() => getUniconAttributeData(attributeIndices), [attributeIndices])
 
   const gradientId = `gradient${address + size}`
   const maskId = `mask${address + size}`
@@ -161,23 +130,8 @@ function UniconSvg({
       </defs>
 
       <g mask={`url(#${maskId})`}>
-        <rect
-          fill={`url(#${gradientId})`}
-          height="100%"
-          width="100%"
-          x="0"
-          y="0"
-        />
-        {!isDarkMode && (
-          <rect
-            fill="black"
-            height="100%"
-            opacity={0.08}
-            width="100%"
-            x="0"
-            y="0"
-          />
-        )}
+        <rect fill={`url(#${gradientId})`} height="100%" width="100%" x="0" y="0" />
+        {!isDarkMode && <rect fill="black" height="100%" opacity={0.08} width="100%" x="0" y="0" />}
         <ellipse
           cx={size / 2}
           cy={0}
@@ -199,12 +153,7 @@ interface Props {
   mobile?: boolean
 }
 
-function _Unicon({
-  address,
-  size = 24,
-  randomSeed = 0,
-  mobile,
-}: Props): JSX.Element | null {
+function _Unicon({ address, size = 24, randomSeed = 0, mobile }: Props): JSX.Element | null {
   const attributeIndices = useMemo(
     () => deriveUniconAttributeIndices(address, randomSeed),
     [address, randomSeed]

@@ -45,10 +45,7 @@ export function ImportMnemonic(): JSX.Element {
         onChangeText={setMnemonic}
       />
       <XStack gap="$spacing12" width="100%">
-        <Button
-          flexGrow={1}
-          theme="secondary"
-          onPress={(): void => navigate(-1)}>
+        <Button flexGrow={1} theme="secondary" onPress={(): void => navigate(-1)}>
           Back
         </Button>
         <LinkButton

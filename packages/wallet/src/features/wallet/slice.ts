@@ -30,10 +30,8 @@ const slice = createSlice({
     activateAccount: (state, action: PayloadAction<Address>) => {
       const address = action.payload
       const id = getValidAddress(address, true)
-      if (!id)
-        throw new Error('Cannot activate an account with an invalid address')
-      if (!state.accounts[id])
-        throw new Error(`Cannot activate missing account ${id}`)
+      if (!id) throw new Error('Cannot activate an account with an invalid address')
+      if (!state.accounts[id]) throw new Error(`Cannot activate missing account ${id}`)
       state.activeAccountAddress = id
     },
 

@@ -38,9 +38,7 @@ export const WalletContext = createContext<{
   version: 0,
 })
 
-export function WalletContextProvider({
-  children,
-}: PropsWithChildren<unknown>): JSX.Element {
+export function WalletContextProvider({ children }: PropsWithChildren<unknown>): JSX.Element {
   // This state allows the managers to trigger re-renders when relevant values change (i.e. new provider ready)
   // Probably not strictly necessary but more robust than relying on 'organic' re-renders
   const [contextVersion, updateContextVersion] = useState(0)
@@ -57,8 +55,7 @@ export function WalletContextProvider({
   }, [incrementContextVersion])
 
   return (
-    <WalletContext.Provider
-      value={{ value: walletContextValue, version: contextVersion }}>
+    <WalletContext.Provider value={{ value: walletContextValue, version: contextVersion }}>
       {children}
     </WalletContext.Provider>
   )
@@ -69,8 +66,7 @@ export function useWalletSigners(): SignerManager {
 }
 
 export function* getSignerManager() {
-  return yield* getContext<SignerManager>('signers') ??
-    walletContextValue.signers
+  return yield* getContext<SignerManager>('signers') ?? walletContextValue.signers
 }
 
 export function useProviderManager(): ProviderManager {
@@ -83,8 +79,7 @@ export function useProvider(chainId: ChainId) {
 
 export function* getProviderManager() {
   // TODO: is there a better way to handle when execution context is not react?
-  return yield* getContext<ProviderManager>('providers') ??
-    walletContextValue.providers
+  return yield* getContext<ProviderManager>('providers') ?? walletContextValue.providers
 }
 
 export function* getProvider(chainId: ChainId) {
@@ -94,9 +89,7 @@ export function* getProvider(chainId: ChainId) {
 }
 
 export function useContractManager(): ContractManager {
-  return (
-    useContext(WalletContext).value.contracts ?? walletContextValue.contracts
-  )
+  return useContext(WalletContext).value.contracts ?? walletContextValue.contracts
 }
 
 export function* getContractManager() {

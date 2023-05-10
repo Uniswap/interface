@@ -11,9 +11,7 @@ type PortfolioHeaderProps = {
   address: Address
 }
 
-export function PortfolioHeader({
-  address,
-}: PortfolioHeaderProps): JSX.Element {
+export function PortfolioHeader({ address }: PortfolioHeaderProps): JSX.Element {
   const dispatch = useDispatch()
 
   return (
@@ -22,15 +20,9 @@ export function PortfolioHeader({
       flexDirection="row"
       justifyContent="space-between"
       padding="$spacing12">
-      <Flex
-        alignItems="center"
-        flexDirection="row"
-        gap="$spacing8"
-        justifyContent="center">
+      <Flex alignItems="center" flexDirection="row" gap="$spacing8" justifyContent="center">
         <Unicon address={address} size={iconSize.icon36} />
-        <Text variant="subheadSmall">
-          {sanitizeAddressText(shortenAddress(address))}
-        </Text>
+        <Text variant="subheadSmall">{sanitizeAddressText(shortenAddress(address))}</Text>
       </Flex>
       <Button
         theme="tertiary"

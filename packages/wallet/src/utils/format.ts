@@ -9,15 +9,12 @@ const FIVE_DECIMALS_MAX_TWO_DECIMALS_MIN = new Intl.NumberFormat('en-US', {
   minimumFractionDigits: 2,
 })
 
-const FIVE_DECIMALS_MAX_TWO_DECIMALS_MIN_NO_COMMAS = new Intl.NumberFormat(
-  'en-US',
-  {
-    notation: 'standard',
-    maximumFractionDigits: 5,
-    minimumFractionDigits: 2,
-    useGrouping: false,
-  }
-)
+const FIVE_DECIMALS_MAX_TWO_DECIMALS_MIN_NO_COMMAS = new Intl.NumberFormat('en-US', {
+  notation: 'standard',
+  maximumFractionDigits: 5,
+  minimumFractionDigits: 2,
+  useGrouping: false,
+})
 
 const NO_DECIMALS = new Intl.NumberFormat('en-US', {
   notation: 'standard',
@@ -183,10 +180,7 @@ const fiatGasPriceFormatter: FormatterRule[] = [
   { upperBound: Infinity, formatter: SHORTHAND_USD_TWO_DECIMALS },
 ]
 
-const fiatTokenQuantityFormatter = [
-  { exact: 0, formatter: '$0.00' },
-  ...fiatGasPriceFormatter,
-]
+const fiatTokenQuantityFormatter = [{ exact: 0, formatter: '$0.00' }, ...fiatGasPriceFormatter]
 
 const portfolioBalanceFormatter: FormatterRule[] = [
   { exact: 0, formatter: '$0.00' },
@@ -295,11 +289,7 @@ export function formatCurrencyAmount(
   type: NumberType = NumberType.TokenNonTx,
   placeholder?: string
 ): string {
-  return formatNumber(
-    amount ? parseFloat(amount.toSignificant()) : undefined,
-    type,
-    placeholder
-  )
+  return formatNumber(amount ? parseFloat(amount.toSignificant()) : undefined, type, placeholder)
 }
 
 export function formatPriceImpact(priceImpact: Percent | undefined): string {
@@ -333,10 +323,7 @@ export function formatDate(date: Date): string {
   })
 }
 
-export function formatNumberOrString(
-  price: Maybe<number | string>,
-  type: NumberType
-): string {
+export function formatNumberOrString(price: Maybe<number | string>, type: NumberType): string {
   if (price === null || price === undefined) return '-'
   if (typeof price === 'string') return formatNumber(parseFloat(price), type)
   return formatNumber(price, type)
@@ -350,12 +337,7 @@ export function formatUSDPrice(
 }
 
 /** Formats USD and non-USD prices */
-export function formatFiatPrice(
-  price: Maybe<number>,
-  currency = 'USD'
-): string {
+export function formatFiatPrice(price: Maybe<number>, currency = 'USD'): string {
   if (price === null || price === undefined) return '-'
-  return new Intl.NumberFormat('en-US', { style: 'currency', currency }).format(
-    price
-  )
+  return new Intl.NumberFormat('en-US', { style: 'currency', currency }).format(price)
 }

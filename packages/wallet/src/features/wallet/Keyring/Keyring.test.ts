@@ -1,13 +1,9 @@
 import { WebKeyring } from 'wallet/src/features/wallet/Keyring/Keyring.web'
-import {
-  SAMPLE_PASSWORD,
-  SAMPLE_SEED,
-  SAMPLE_SEED_ADDRESS_1,
-} from 'wallet/src/test/__fixtures__'
+import { SAMPLE_PASSWORD, SAMPLE_SEED, SAMPLE_SEED_ADDRESS_1 } from 'wallet/src/test/__fixtures__'
 
 jest.mock('./crypto')
 
-const mockStore = async ({ data }: { data: Record<string, string> }) => {
+const mockStore = async ({ data }: { data: Record<string, string> }): Promise<void> => {
   await chrome.storage.local.set(data)
 }
 
@@ -37,10 +33,7 @@ describe(WebKeyring, () => {
     it('correctly imports valid mnemonics', async () => {
       const keyring = new WebKeyring()
 
-      const mnemonicId = await keyring.importMnemonic(
-        SAMPLE_SEED,
-        SAMPLE_PASSWORD
-      )
+      const mnemonicId = await keyring.importMnemonic(SAMPLE_SEED, SAMPLE_PASSWORD)
 
       expect(mnemonicId).toEqual(SAMPLE_SEED_ADDRESS_1)
     })
@@ -48,7 +41,7 @@ describe(WebKeyring, () => {
     it('fails when mnemonic is not valid', async () => {
       const keyring = new WebKeyring()
 
-      const action = async () => {
+      const action = async (): Promise<string> => {
         return keyring.importMnemonic('invalid seed', SAMPLE_PASSWORD)
       }
 
@@ -70,7 +63,7 @@ describe(WebKeyring, () => {
       const keyring = new WebKeyring()
       await keyring.importMnemonic(SAMPLE_SEED, SAMPLE_PASSWORD)
 
-      const action = () => keyring.unlock('fail')
+      const action = (): Promise<boolean> => keyring.unlock('fail')
 
       await expect(action()).rejects.toThrow()
     })
@@ -79,15 +72,13 @@ describe(WebKeyring, () => {
       const keyring = new WebKeyring()
       await mockStore({
         data: {
-          [`com.uniswap.web.mnemonic.${SAMPLE_SEED_ADDRESS_1}`]: JSON.stringify(
-            {
-              ciphertext: 'fail',
-            }
-          ),
+          [`com.uniswap.web.mnemonic.${SAMPLE_SEED_ADDRESS_1}`]: JSON.stringify({
+            ciphertext: 'fail',
+          }),
         },
       })
 
-      const action = () => keyring.unlock(SAMPLE_PASSWORD)
+      const action = (): Promise<boolean> => keyring.unlock(SAMPLE_PASSWORD)
 
       await expect(action()).rejects.toThrow()
     })
@@ -95,7 +86,7 @@ describe(WebKeyring, () => {
     it('fails when there are no saved mnemonics', async () => {
       const keyring = new WebKeyring()
 
-      const action = async () => {
+      const action = async (): Promise<boolean> => {
         return keyring.unlock(SAMPLE_PASSWORD)
       }
 

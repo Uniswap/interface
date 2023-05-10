@@ -71,20 +71,8 @@ export const WBTC = new Token(
 )
 
 export const UNI = {
-  [ChainId.Mainnet]: new Token(
-    ChainId.Mainnet,
-    UNI_ADDRESS[ChainId.Mainnet],
-    18,
-    'UNI',
-    'Uniswap'
-  ),
-  [ChainId.Goerli]: new Token(
-    ChainId.Goerli,
-    UNI_ADDRESS[ChainId.Goerli],
-    18,
-    'UNI',
-    'Uniswap'
-  ),
+  [ChainId.Mainnet]: new Token(ChainId.Mainnet, UNI_ADDRESS[ChainId.Mainnet], 18, 'UNI', 'Uniswap'),
+  [ChainId.Goerli]: new Token(ChainId.Goerli, UNI_ADDRESS[ChainId.Goerli], 18, 'UNI', 'Uniswap'),
 }
 
 export const WRAPPED_NATIVE_CURRENCY = {

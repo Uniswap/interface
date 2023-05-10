@@ -10,11 +10,7 @@ import {
 import { activateAccount, addAccounts } from '../slice'
 import { AccountType } from '../types'
 import { importAccount } from './importAccountSaga'
-import {
-  ImportAccountType,
-  ImportAddressAccountParams,
-  ImportMnemonicAccountParams,
-} from './types'
+import { ImportAccountType, ImportAddressAccountParams, ImportMnemonicAccountParams } from './types'
 
 // uses , () => ({__mocks__
 jest.mock('../Keyring/crypto')

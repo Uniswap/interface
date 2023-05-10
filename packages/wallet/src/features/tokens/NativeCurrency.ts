@@ -1,18 +1,7 @@
 // adapted from https://github.com/Uniswap/interface/src/constants/tokens.ts
-import {
-  Currency,
-  NativeCurrency as NativeCurrencyClass,
-  Token,
-} from '@uniswap/sdk-core'
-import {
-  NATIVE_ADDRESS,
-  NATIVE_ADDRESS_ALT,
-} from 'wallet/src/constants/addresses'
-import {
-  ChainId,
-  CHAIN_INFO,
-  isPolygonChain,
-} from 'wallet/src/constants/chains'
+import { Currency, NativeCurrency as NativeCurrencyClass, Token } from '@uniswap/sdk-core'
+import { NATIVE_ADDRESS, NATIVE_ADDRESS_ALT } from 'wallet/src/constants/addresses'
+import { ChainId, CHAIN_INFO, isPolygonChain } from 'wallet/src/constants/chains'
 import { WRAPPED_NATIVE_CURRENCY } from 'wallet/src/constants/tokens'
 
 export class NativeCurrency implements NativeCurrencyClass {
@@ -48,8 +37,7 @@ export class NativeCurrency implements NativeCurrencyClass {
     return wrapped
   }
 
-  private static _cachedNativeCurrency: { [chainId: number]: NativeCurrency } =
-    {}
+  private static _cachedNativeCurrency: { [chainId: number]: NativeCurrency } = {}
 
   public static onChain(chainId: number): NativeCurrency {
     return (

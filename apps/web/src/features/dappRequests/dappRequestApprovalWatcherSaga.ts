@@ -32,11 +32,7 @@ export function* dappRequestApprovalWatcher() {
 
     try {
       if (type === confirmRequest.type) {
-        logger.info(
-          'dappRequestApprovalWatcher',
-          'confirmRequest',
-          request.toString()
-        )
+        logger.info('dappRequestApprovalWatcher', 'confirmRequest', request.toString())
 
         switch (request.dappRequest.type) {
           case DappRequestType.SendTransaction:
@@ -49,11 +45,7 @@ export function* dappRequestApprovalWatcher() {
             )
             break
           case DappRequestType.GetAccount:
-            yield* call(
-              getAccount,
-              request.dappRequest.requestId,
-              request.senderTabId
-            )
+            yield* call(getAccount, request.dappRequest.requestId, request.senderTabId)
             break
           case DappRequestType.ChangeChain:
             yield* call(
@@ -92,11 +84,7 @@ export function* dappRequestApprovalWatcher() {
           // Add more request types here
         }
       } else if (type === rejectRequest.type) {
-        logger.info(
-          'dappRequestApprovalWatcher',
-          'rejectRequest',
-          request.toString()
-        )
+        logger.info('dappRequestApprovalWatcher', 'rejectRequest', request.toString())
         yield* call(
           sendRejectionToContentScript,
           request.dappRequest.requestId,

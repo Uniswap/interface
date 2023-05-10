@@ -31,18 +31,11 @@ class NativeKeyring implements IKeyring {
   }
 
   // returns the address of the generated key
-  generateAndStorePrivateKey(
-    mnemonicId: string,
-    derivationIndex: number
-  ): Promise<string> {
+  generateAndStorePrivateKey(mnemonicId: string, derivationIndex: number): Promise<string> {
     return RNEthersRS.generateAndStorePrivateKey(mnemonicId, derivationIndex)
   }
 
-  signTransactionHashForAddress(
-    address: string,
-    hash: string,
-    chainId: number
-  ): Promise<string> {
+  signTransactionHashForAddress(address: string, hash: string, chainId: number): Promise<string> {
     return RNEthersRS.signTransactionHashForAddress(address, hash, chainId)
   }
 
@@ -50,11 +43,7 @@ class NativeKeyring implements IKeyring {
     return RNEthersRS.signMessageForAddress(address, message)
   }
 
-  signHashForAddress(
-    address: string,
-    hash: string,
-    chainId: number
-  ): Promise<string> {
+  signHashForAddress(address: string, hash: string, chainId: number): Promise<string> {
     return RNEthersRS.signHashForAddress(address, hash, chainId)
   }
 }

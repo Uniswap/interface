@@ -16,12 +16,7 @@ export function* importAccount(params: ImportAccountParams) {
   logger.debug('importAccountSaga', 'importAccount', 'Importing type:', type)
 
   if (type === ImportAccountType.Address) {
-    yield* call(
-      importAddressAccount,
-      params.address,
-      name,
-      params.ignoreActivate
-    )
+    yield* call(importAddressAccount, params.address, name, params.ignoreActivate)
   } else if (type === ImportAccountType.Mnemonic) {
     yield* call(
       importMnemonicAccounts,
@@ -107,25 +102,22 @@ function* importMnemonicAccounts(
     })
   )
 
-  if (!addresses[0])
-    throw new Error('Cannot import account with undefined address')
+  if (!addresses[0]) throw new Error('Cannot import account with undefined address')
   if (indexes[0] === undefined)
     throw new Error('Cannot import account with undefined derivation index')
 
-  const accounts = addresses
-    .slice(1, addresses.length)
-    .map((address, index) => {
-      const account: Account = {
-        type: AccountType.SignerMnemonic,
-        address,
-        name,
-        pending: true,
-        timeImportedMs: dayjs().valueOf(),
-        derivationIndex: index + 1,
-        mnemonicId,
-      }
-      return account
-    })
+  const accounts = addresses.slice(1, addresses.length).map((address, index) => {
+    const account: Account = {
+      type: AccountType.SignerMnemonic,
+      address,
+      name,
+      pending: true,
+      timeImportedMs: dayjs().valueOf(),
+      derivationIndex: index + 1,
+      mnemonicId,
+    }
+    return account
+  })
   yield* put(addAccounts(accounts))
 
   const activeAccount: Account = {
@@ -179,11 +171,7 @@ function* onAccountImport(account: Account, ignoreActivate?: boolean) {
     yield* put(activateAccount(account.address))
   }
   // yield* put(unlockWallet())
-  logger.debug(
-    'importAccount',
-    '',
-    `New ${account.type} account imported: ${account.address}`
-  )
+  logger.debug('importAccount', '', `New ${account.type} account imported: ${account.address}`)
 }
 
 export const {

@@ -1,12 +1,7 @@
 import { providers as ethersProviders } from 'ethers'
 import { Task } from 'redux-saga'
 import { config } from 'wallet/src/config'
-import {
-  ChainId,
-  CHAIN_INFO,
-  L1ChainInfo,
-  L2ChainInfo,
-} from 'wallet/src/constants/chains'
+import { ChainId, CHAIN_INFO, L1ChainInfo, L2ChainInfo } from 'wallet/src/constants/chains'
 import { logger } from '../logger/logger'
 
 import { getInfuraChainName } from './utils'
@@ -28,9 +23,7 @@ type ChainIdToProvider = Partial<Record<ChainId, ProviderDetails>>
 const getChainDetails = (chainId: ChainId): L1ChainInfo | L2ChainInfo => {
   const chainDetails = CHAIN_INFO[chainId]
   if (!chainDetails) {
-    const error = new Error(
-      `Cannot create provider for invalid chain details for ${chainId}`
-    )
+    const error = new Error(`Cannot create provider for invalid chain details for ${chainId}`)
     logger.error('ProviderManager', 'getChainDetails', `${error}`)
     throw error
   }
@@ -115,9 +108,7 @@ export class ProviderManager {
     return this._providers
   }
 
-  private initProvider(
-    chainId: ChainId
-  ): Nullable<ethersProviders.JsonRpcProvider> {
+  private initProvider(chainId: ChainId): Nullable<ethersProviders.JsonRpcProvider> {
     try {
       logger.debug(
         'ProviderManager',
@@ -135,9 +126,7 @@ export class ProviderManager {
       logger.error(
         'ProviderManager',
         'initProvider',
-        `Failed to connect to infura rpc provider for: ${getInfuraChainName(
-          chainId
-        )}`,
+        `Failed to connect to infura rpc provider for: ${getInfuraChainName(chainId)}`,
         error
       )
       return null
@@ -155,15 +144,7 @@ export class ProviderManager {
 
     const chainDetails = getChainDetails(chainId)
     const staleTime = chainDetails.blockWaitMsBeforeWarning ?? 600_000 // 10 minutes
-    if (
-      !(
-        block &&
-        block.number &&
-        block.timestamp &&
-        network &&
-        network.chainId === chainId
-      )
-    ) {
+    if (!(block && block.number && block.timestamp && network && network.chainId === chainId)) {
       return false
     }
     if (isStale(block.timestamp * 1000, staleTime)) {

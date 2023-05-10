@@ -16,11 +16,7 @@ addExtensionRequestListener()
 
 chrome.runtime.connect({ name: PortName.ContentScript })
 chrome.runtime.onMessage.addListener((req) => {
-  logger.debug(
-    'contentScript',
-    'listener',
-    `Received ${req.action} from ${req.portName}`
-  )
+  logger.debug('contentScript', 'listener', `Received ${req.action} from ${req.portName}`)
 
   // We wait to inject the script until the background is ready to receive messages
   if (req.action === 'storeReady' && req.portName === 'store') {
@@ -67,11 +63,7 @@ function dappRequestListener(event: MessageEvent): void {
     )
 
     chrome.runtime.sendMessage<BaseDappRequest, BaseDappResponse>(request)
-    logger.info(
-      'provider.ts',
-      'contentScriptListener',
-      'Message sent to background'
-    )
+    logger.info('provider.ts', 'contentScriptListener', 'Message sent to background')
   }
 }
 

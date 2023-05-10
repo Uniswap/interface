@@ -61,19 +61,11 @@ export interface IKeyring {
     password?: string
   ): Promise<string>
 
-  signTransactionHashForAddress(
-    address: string,
-    hash: string,
-    chainId: number
-  ): Promise<string>
+  signTransactionHashForAddress(address: string, hash: string, chainId: number): Promise<string>
 
   signMessageForAddress(address: string, message: string): Promise<string>
 
-  signHashForAddress(
-    address: string,
-    hash: string,
-    chainId: number
-  ): Promise<string>
+  signHashForAddress(address: string, hash: string, chainId: number): Promise<string>
 }
 
 /** Dummy Keyring implementation.  */
@@ -117,20 +109,14 @@ class NullKeyring implements IKeyring {
     throw new NotImplementedError('signMessageForAddress')
   }
 
-  signHashForAddress(
-    _address: string,
-    _hash: string,
-    _chainId: number
-  ): Promise<string> {
+  signHashForAddress(_address: string, _hash: string, _chainId: number): Promise<string> {
     throw new NotImplementedError('signHashForAddress')
   }
 }
 
 class NotImplementedError extends Error {
   constructor(functionName: string) {
-    super(
-      `KeyManager.${functionName}() not implemented. Did you forget a platform override?`
-    )
+    super(`KeyManager.${functionName}() not implemented. Did you forget a platform override?`)
     this.name = this.constructor.name
   }
 }

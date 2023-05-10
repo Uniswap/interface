@@ -1,3 +1,6 @@
+.eslintrc.js
+babel.config.js
+jest.config.js
 metro.config.js
 node_modules
 
@@ -10,5 +13,3 @@ __generated__/
 storybook-static
 
 coverage
-
-monorepo/

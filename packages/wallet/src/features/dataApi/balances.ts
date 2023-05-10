@@ -4,11 +4,7 @@ import { useCallback, useMemo } from 'react'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import { usePortfolioTokenBalancesQuery } from 'wallet/src/data/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'wallet/src/features/chains/chainIdUtils'
-import {
-  CurrencyInfo,
-  GqlResult,
-  PortfolioBalance,
-} from 'wallet/src/features/dataApi/types'
+import { CurrencyInfo, GqlResult, PortfolioBalance } from 'wallet/src/features/dataApi/types'
 import { usePersistedError } from 'wallet/src/features/dataApi/utils'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
 import { HIDE_SMALL_USD_BALANCES_THRESHOLD } from 'wallet/src/features/wallet/slice'
@@ -70,26 +66,17 @@ export function usePortfolioBalances(
 
     const byId: Record<CurrencyId, PortfolioBalance> = {}
     balancesForAddress.forEach((balance) => {
-      const { denominatedValue, token, tokenProjectMarket, quantity } =
-        balance || {}
-      const {
-        address: tokenAddress,
-        chain,
-        decimals,
-        symbol,
-        project,
-      } = token || {}
+      const { denominatedValue, token, tokenProjectMarket, quantity } = balance || {}
+      const { address: tokenAddress, chain, decimals, symbol, project } = token || {}
       const { name, logoUrl, isSpam, safetyLevel } = project || {}
       const chainId = fromGraphQLChain(chain)
 
       // require all of these fields to be defined
-      if (!chainId || !balance || !quantity || !token || !decimals || !symbol)
-        return
+      if (!chainId || !balance || !quantity || !token || !decimals || !symbol) return
 
       if (
         hideSmallBalances &&
-        (!denominatedValue ||
-          denominatedValue.value < HIDE_SMALL_USD_BALANCES_THRESHOLD)
+        (!denominatedValue || denominatedValue.value < HIDE_SMALL_USD_BALANCES_THRESHOLD)
       )
         return null
 
@@ -129,10 +116,7 @@ export function usePortfolioBalances(
     return byId
   }, [balancesForAddress, hideSmallBalances, hideSpamTokens])
 
-  const retry = useCallback(
-    () => refetch({ ownerAddress: address }),
-    [address, refetch]
-  )
+  const retry = useCallback(() => refetch({ ownerAddress: address }), [address, refetch])
 
   return {
     data: formattedData,
@@ -150,13 +134,10 @@ export function usePortfolioBalances(
  * @returns CurrencyId of the NativeCurrency with highest balance
  *
  */
-export function useHighestBalanceNativeCurrencyId(
-  address: Address
-): CurrencyId | undefined {
+export function useHighestBalanceNativeCurrencyId(address: Address): CurrencyId | undefined {
   const { data } = useSortedPortfolioBalances(address, /*shouldPoll=*/ false)
-  return data?.balances.find(
-    (balance) => balance.currencyInfo.currency.isNative
-  )?.currencyInfo.currencyId
+  return data?.balances.find((balance) => balance.currencyInfo.currency.isNative)?.currencyInfo
+    .currencyId
 }
 
 /**
@@ -203,8 +184,7 @@ export function useSortedPortfolioBalances(
         } else if (
           // Small balances includes tokens that don't have a balanceUSD value
           hideSmallBalances &&
-          (!balance.balanceUSD ||
-            balance.balanceUSD < HIDE_SMALL_USD_BALANCES_THRESHOLD)
+          (!balance.balanceUSD || balance.balanceUSD < HIDE_SMALL_USD_BALANCES_THRESHOLD)
         ) {
           acc.smallBalances.push(balance)
         } else {
@@ -229,9 +209,7 @@ export function useSortedPortfolioBalances(
  * Helper function to stable sort balances by descending balanceUSD,
  * followed by balances with null balanceUSD values sorted alphabetically
  * */
-export function sortPortfolioBalances(
-  balances: PortfolioBalance[]
-): PortfolioBalance[] {
+export function sortPortfolioBalances(balances: PortfolioBalance[]): PortfolioBalance[] {
   const balancesWithUSDValue = balances.filter((b) => b.balanceUSD)
   const balancesWithoutUSDValue = balances.filter((b) => !b.balanceUSD)
 
@@ -244,9 +222,7 @@ export function sortPortfolioBalances(
     ...balancesWithoutUSDValue.sort((a, b) => {
       if (!a.currencyInfo.currency.name) return 1
       if (!b.currencyInfo.currency.name) return -1
-      return a.currencyInfo.currency.name?.localeCompare(
-        b.currencyInfo.currency.name
-      )
+      return a.currencyInfo.currency.name?.localeCompare(b.currencyInfo.currency.name)
     }),
   ]
 }

@@ -1,11 +1,7 @@
 import { BigNumber } from 'ethers'
 import { ChainId, TESTNET_CHAIN_IDS } from 'wallet/src/constants/chains'
 import { PollingInterval } from 'wallet/src/constants/misc'
-import {
-  isTestnet,
-  parseActiveChains,
-  toSupportedChainId,
-} from 'wallet/src/utils/chainId'
+import { isTestnet, parseActiveChains, toSupportedChainId } from 'wallet/src/utils/chainId'
 import { getPollingIntervalByBlocktime } from './chainIdUtils'
 
 describe(toSupportedChainId, () => {
@@ -52,14 +48,10 @@ describe(isTestnet, () => {
 
 describe(getPollingIntervalByBlocktime, () => {
   it('returns the correct value for L1', () => {
-    expect(getPollingIntervalByBlocktime(ChainId.Mainnet)).toEqual(
-      PollingInterval.Fast
-    )
+    expect(getPollingIntervalByBlocktime(ChainId.Mainnet)).toEqual(PollingInterval.Fast)
   })
 
   it('returns the correct value for L2', () => {
-    expect(getPollingIntervalByBlocktime(ChainId.Polygon)).toEqual(
-      PollingInterval.LightningMcQueen
-    )
+    expect(getPollingIntervalByBlocktime(ChainId.Polygon)).toEqual(PollingInterval.LightningMcQueen)
   })
 })

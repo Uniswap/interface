@@ -11,8 +11,7 @@ export const SendTransactionDetails = ({
   activeAccount: Account
   request: RequestDisplayDetails
 }): JSX.Element => {
-  const sendTransactionRequest = request.request
-    .dappRequest as SendTransactionRequest
+  const sendTransactionRequest = request.request.dappRequest as SendTransactionRequest
   const sending = sendTransactionRequest.transaction.value
 
   const toAddress = sendTransactionRequest.transaction.to

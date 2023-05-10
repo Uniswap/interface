@@ -1,14 +1,14 @@
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
 import { combineReducers } from 'redux'
 import { persistReducer, persistStore } from 'redux-persist'
-import { SelectEffect } from 'redux-saga/effects'
+import { ForkEffect, SelectEffect } from 'redux-saga/effects'
 import { SagaGenerator, select, spawn } from 'typed-redux-saga'
 import { logger } from 'wallet/src/features/logger/logger'
 import { createStore, RootState } from 'wallet/src/state'
 import { persistConfig, sharedReducers } from 'wallet/src/state/reducer'
 import { wrapStore } from 'webext-redux'
 import { dappReducer } from '../features/dapp/slice'
-import { dappRequestApprovalWatcher } from '../features/dappRequests/dappRequestApprovalWatcher'
+import { dappRequestApprovalWatcher } from '../features/dappRequests/dappRequestApprovalWatcherSaga'
 import { dappRequestWatcher } from '../features/dappRequests/saga'
 import { dappRequestReducer } from '../features/dappRequests/slice'
 import { PortName } from '../types'
@@ -21,7 +21,9 @@ export const webReducers = {
 
 const webReducer = persistReducer(persistConfig, combineReducers(webReducers))
 
-export function initializeStore(portName: PortName = PortName.Store) {
+export function initializeStore(
+  portName: PortName = PortName.Store
+): ReturnType<typeof createStore> | undefined {
   try {
     const store = createStore({
       reducer: webReducer,
@@ -55,19 +57,14 @@ export const useAppDispatch: () => AppDispatch = useDispatch
 export const useAppSelector: TypedUseSelectorHook<WebState> = useSelector
 
 // Use in sagas for better typing when selecting from redux state
-export function* appSelect<T>(
-  fn: (state: WebState) => T
-): SagaGenerator<T, SelectEffect> {
+export function* appSelect<T>(fn: (state: WebState) => T): SagaGenerator<T, SelectEffect> {
   const state = yield* select(fn)
   return state
 }
 
-const sagasInitializedOnStartup = [
-  dappRequestWatcher,
-  dappRequestApprovalWatcher,
-] as const
+const sagasInitializedOnStartup = [dappRequestWatcher, dappRequestApprovalWatcher] as const
 
-export function* webRootSaga() {
+export function* webRootSaga(): Generator<ForkEffect<void>> {
   for (const s of sagasInitializedOnStartup) {
     yield* spawn(s)
   }

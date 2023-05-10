@@ -1,7 +1,4 @@
-type AreaName = keyof Pick<
-  typeof chrome.storage,
-  'sync' | 'local' | 'managed' | 'session'
->
+type AreaName = keyof Pick<typeof chrome.storage, 'sync' | 'local' | 'managed' | 'session'>
 
 /**
  * Chrome storage wrapper

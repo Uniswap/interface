@@ -50,9 +50,7 @@ export const SignMessageDetails = ({
             <XStack alignItems="center" gap="$spacing8" maxWidth="100%">
               <Unicon address={activeAccount.address} />
               <Text textOverflow="ellipsis" variant="subheadSmall">
-                {activeAccount.name === undefined
-                  ? 'Wallet'
-                  : activeAccount.name}
+                {activeAccount.name === undefined ? 'Wallet' : activeAccount.name}
               </Text>
             </XStack>
             <Text

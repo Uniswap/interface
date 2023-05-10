@@ -1,8 +1,5 @@
 import { AnyAction, Dispatch } from 'redux'
-import {
-  BaseDappResponse,
-  DappRequestType,
-} from 'src/features/dappRequests/dappRequestTypes'
+import { BaseDappResponse, DappRequestType } from 'src/features/dappRequests/dappRequestTypes'
 import { addRequest } from 'src/features/dappRequests/saga'
 import { PortName } from 'src/types'
 import { isOnboardedSelector } from 'wallet/src/features/wallet/selectors'
@@ -13,7 +10,7 @@ import { initializeStore, WebState } from './store'
 let isInitialized = false
 
 /** Main entrypoint for intiializing the app. */
-const initApp = () => {
+const initApp = (): undefined => {
   if (isInitialized) {
     notifyStoreInitialized()
     return
@@ -47,10 +44,7 @@ chrome.runtime.onConnect.addListener((port) => {
   initApp()
 })
 
-function maybeOpenOnboarding(
-  state: WebState,
-  dispatch: Dispatch<AnyAction>
-): void {
+function maybeOpenOnboarding(state: WebState, dispatch: Dispatch<AnyAction>): void {
   const isOnboarded = isOnboardedSelector(state)
 
   if (!isOnboarded) {

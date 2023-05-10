@@ -3,16 +3,10 @@ import { createAction } from '@reduxjs/toolkit'
 import { ethers, providers } from 'ethers'
 import { call, put, select, take } from 'typed-redux-saga'
 import { ChainId, getChainIdFromString } from 'wallet/src/constants/chains'
-import {
-  getProvider,
-  getSignerManager,
-} from 'wallet/src/features/wallet/context'
+import { getProvider, getSignerManager } from 'wallet/src/features/wallet/context'
 import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
 import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
-import {
-  signMessage,
-  signTypedDataMessage,
-} from 'wallet/src/features/wallet/signing/signing'
+import { signMessage, signTypedDataMessage } from 'wallet/src/features/wallet/signing/signing'
 import { Account, AccountType } from 'wallet/src/features/wallet/types'
 import { hexlifyTransaction } from 'wallet/src/utils/transaction'
 import { appSelect, WebState } from '../../background/store'
@@ -39,15 +33,9 @@ const PENDING_IMAGE_PATH = 'assets/pending.png'
 
 export type DappRequestSagaParams = Omit<DappRequestStoreItem, 'account'>
 
-export const addRequest = createAction<DappRequestSagaParams>(
-  `dappRequest/handleRequest`
-)
-export const confirmRequest = createAction<DappRequestStoreItem>(
-  `dappRequest/confirmRequest`
-)
-export const rejectRequest = createAction<DappRequestStoreItem>(
-  `dappRequest/rejectRequest`
-)
+export const addRequest = createAction<DappRequestSagaParams>(`dappRequest/handleRequest`)
+export const confirmRequest = createAction<DappRequestStoreItem>(`dappRequest/confirmRequest`)
+export const rejectRequest = createAction<DappRequestStoreItem>(`dappRequest/rejectRequest`)
 
 export function* dappRequestWatcher() {
   while (true) {
@@ -94,8 +82,7 @@ export function* sendTransaction(
   const provider = yield* call(getProvider, chainId)
   const signerManager = yield* call(getSignerManager)
 
-  if (account.type !== AccountType.SignerMnemonic)
-    throw new Error('Account must support signing')
+  if (account.type !== AccountType.SignerMnemonic) throw new Error('Account must support signing')
 
   const transactionResponse = yield* call(
     signAndSendTransaction,
@@ -105,13 +92,7 @@ export function* sendTransaction(
     signerManager
   )
 
-  yield* call(
-    handleTransactionResponse,
-    transactionResponse,
-    provider,
-    requestId,
-    senderTabId
-  )
+  yield* call(handleTransactionResponse, transactionResponse, provider, requestId, senderTabId)
 
   return transactionResponse
 }
@@ -129,9 +110,7 @@ export function* getAccount(requestId: string, senderTabId: number) {
   const dappUrl = extractBaseUrl(tab.url)
   let chainForWalletAndDapp = ChainId.Mainnet // Default to mainnet
   if (dappUrl) {
-    chainForWalletAndDapp = yield* select(
-      selectChainByDappAndWallet(dappUrl, account.address)
-    )
+    chainForWalletAndDapp = yield* select(selectChainByDappAndWallet(dappUrl, account.address))
   }
   const provider = yield* call(getProvider, chainForWalletAndDapp)
 
@@ -174,9 +153,7 @@ export async function signAndSendTransaction(
   const connectedSigner = signer.connect(provider)
   const hexRequest = hexlifyTransaction(request)
   const populatedRequest = await connectedSigner.populateTransaction(hexRequest)
-  const signedTransaction = await connectedSigner.signTransaction(
-    populatedRequest
-  )
+  const signedTransaction = await connectedSigner.signTransaction(populatedRequest)
   const transactionResponse = await provider.sendTransaction(signedTransaction)
   return transactionResponse
 }
@@ -251,23 +228,14 @@ export function getCurrentAccount(accounts: Record<string, Account>): Account {
   return account
 }
 
-export function* getChainIdForDapp(
-  senderTabId: number,
-  walletAddress: Address
-) {
+export function* getChainIdForDapp(senderTabId: number, walletAddress: Address) {
   const tab = yield* call(chrome.tabs.get, senderTabId)
   const dappUrl = extractBaseUrl(tab.url) || DEFAULT_DAPP_URL
-  const chainId = yield* select(
-    selectChainByDappAndWallet(dappUrl, walletAddress)
-  )
+  const chainId = yield* select(selectChainByDappAndWallet(dappUrl, walletAddress))
   return chainId
 }
 
-export function* connect(
-  requestId: string,
-  chainId: string,
-  senderTabId: number
-) {
+export function* connect(requestId: string, chainId: string, senderTabId: number) {
   // get chain id enum
   const chainIdEnum = yield* call(getChainIdFromString, chainId)
   if (!chainIdEnum) {
@@ -287,11 +255,7 @@ export function* connect(
   yield* call(sendMessageToSpecificTab, response, senderTabId)
 }
 
-export function* changeChain(
-  requestId: string,
-  chainId: string,
-  senderTabId: number
-) {
+export function* changeChain(requestId: string, chainId: string, senderTabId: number) {
   const chainIdEnum = yield* call(getChainIdFromString, chainId)
   if (!chainIdEnum) {
     throw new Error(`Invalid chainId: ${chainId}`)
@@ -321,16 +285,9 @@ export function* handleSignMessage(
   const signerManager = yield* call(getSignerManager)
   const provider = yield* call(getProvider, chainId)
 
-  if (account.type !== AccountType.SignerMnemonic)
-    throw new Error('Account must support signing')
+  if (account.type !== AccountType.SignerMnemonic) throw new Error('Account must support signing')
 
-  const signature = yield* call(
-    signMessage,
-    messageHex,
-    account,
-    signerManager,
-    provider
-  )
+  const signature = yield* call(signMessage, messageHex, account, signerManager, provider)
 
   const response: SignMessageResponse = {
     type: DappResponseType.SignMessageResponse,
@@ -352,16 +309,9 @@ export function* handleSignTypedData(
   const signerManager = yield* call(getSignerManager)
   const provider = yield* call(getProvider, chainId)
 
-  if (account.type !== AccountType.SignerMnemonic)
-    throw new Error('Account must support signing')
+  if (account.type !== AccountType.SignerMnemonic) throw new Error('Account must support signing')
 
-  const signature = yield* call(
-    signTypedDataMessage,
-    typedData,
-    account,
-    signerManager,
-    provider
-  )
+  const signature = yield* call(signTypedDataMessage, typedData, account, signerManager, provider)
   const response: SignTypedDataResponse = {
     type: DappResponseType.SignTypedDataResponse,
     requestId,

@@ -4,11 +4,7 @@ import { UniswapLogo } from 'wallet/src/assets/UniswapLogo'
 
 export function OnboardingWrapper(): JSX.Element {
   return (
-    <Stack
-      alignItems="center"
-      backgroundColor="$background1"
-      minHeight="100vh"
-      width="100%">
+    <Stack alignItems="center" backgroundColor="$background1" minHeight="100vh" width="100%">
       <Stack padding="$spacing12" position="absolute" theme="primary">
         {/* TODO: make generic Icon component that can use `currentColor` in SVGs and be more easily reused */}
         <UniswapLogo />

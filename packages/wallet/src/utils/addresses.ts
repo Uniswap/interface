@@ -35,11 +35,7 @@ export function getValidAddress(
       return utils.getAddress(address)
     } catch (error) {
       if (log) {
-        logger.warn(
-          'utils/addresses',
-          'getValidAddress',
-          `Invalid address at checksum: ${address}`
-        )
+        logger.warn('utils/addresses', 'getValidAddress', `Invalid address at checksum: ${address}`)
       }
       return null
     }
@@ -47,11 +43,7 @@ export function getValidAddress(
 
   if (address.length !== 42 || !address.startsWith('0x')) {
     if (log) {
-      logger.warn(
-        'utils/addresses',
-        'getValidAddress',
-        `Address has an invalid format: ${address}`
-      )
+      logger.warn('utils/addresses', 'getValidAddress', `Address has an invalid format: ${address}`)
     }
     return null
   }
@@ -87,10 +79,7 @@ export function shortenAddress(address: string, chars = 4): string {
  * @param format One of AddressStringFormat
  * @returns the normalized address
  */
-export function normalizeAddress(
-  address: Address,
-  format: AddressStringFormat
-): Address {
+export function normalizeAddress(address: Address, format: AddressStringFormat): Address {
   switch (format) {
     case AddressStringFormat.Lowercase:
       return address.toLowerCase()
@@ -115,10 +104,7 @@ export function sanitizeAddressText(address?: string): Maybe<string> {
   return address?.replace('x', `x${zws}`)
 }
 
-export function areAddressesEqual(
-  a1: Maybe<Address>,
-  a2: Maybe<Address>
-): boolean {
+export function areAddressesEqual(a1: Maybe<Address>, a2: Maybe<Address>): boolean {
   const validA1 = getValidAddress(a1)
   const validA2 = getValidAddress(a2)
   return validA1 !== null && validA2 !== null && validA1 === validA2

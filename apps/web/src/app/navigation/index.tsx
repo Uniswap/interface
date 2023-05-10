@@ -10,11 +10,8 @@ import { useAppSelector } from '../../background/store'
 import { DappRequestContent } from '../../features/dappRequests/DappRequestContent'
 
 function WebNavigationInner(): JSX.Element {
-  const pendingDappRequests = useAppSelector(
-    (state) => state.dappRequests.pending
-  )
-  const isLoggedIn =
-    useSagaStatus(authSagaName, undefined, false).status === SagaStatus.Success
+  const pendingDappRequests = useAppSelector((state) => state.dappRequests.pending)
+  const isLoggedIn = useSagaStatus(authSagaName, undefined, false).status === SagaStatus.Success
 
   const areRequestsPending = pendingDappRequests.length > 0
   const isOnboarded = useAppSelector(isOnboardedSelector)

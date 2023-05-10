@@ -1,8 +1,5 @@
 import { Currency } from '@uniswap/sdk-core'
-import {
-  NATIVE_ADDRESS,
-  NATIVE_ADDRESS_ALT,
-} from 'wallet/src/constants/addresses'
+import { NATIVE_ADDRESS, NATIVE_ADDRESS_ALT } from 'wallet/src/constants/addresses'
 import { ChainId, isPolygonChain } from 'wallet/src/constants/chains'
 import { areAddressesEqual } from './addresses'
 import { toSupportedChainId } from './chainId'
@@ -67,10 +64,7 @@ export function getNativeCurrencyAddressForChain(chainId: ChainId): string {
   return NATIVE_ADDRESS
 }
 
-export const isNativeCurrencyAddress = (
-  chainId: ChainId,
-  address: Maybe<Address>
-): boolean => {
+export const isNativeCurrencyAddress = (chainId: ChainId, address: Maybe<Address>): boolean => {
   if (!address) return true
 
   return isPolygonChain(chainId)
@@ -81,15 +75,12 @@ export const isNativeCurrencyAddress = (
 // Currency ids are formatted as `chainId-tokenaddress`
 export function currencyIdToAddress(_currencyId: string): Address {
   const currencyIdParts = _currencyId.split('-')
-  if (!currencyIdParts[1])
-    throw new Error(`Invalid currencyId format: ${_currencyId}`)
+  if (!currencyIdParts[1]) throw new Error(`Invalid currencyId format: ${_currencyId}`)
   return currencyIdParts[1]
 }
 
 // Similar to `currencyIdToAddress`, except native addresses are `null`.
-export function currencyIdToGraphQLAddress(
-  _currencyId?: string
-): Address | null {
+export function currencyIdToGraphQLAddress(_currencyId?: string): Address | null {
   if (!_currencyId) return null
 
   const address = currencyIdToAddress(_currencyId)

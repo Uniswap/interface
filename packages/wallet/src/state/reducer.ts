@@ -23,7 +23,4 @@ export const persistConfig = {
 }
 
 // used to type RootState
-export const sharedRootReducer = persistReducer(
-  persistConfig,
-  combineReducers(sharedReducers)
-)
+export const sharedRootReducer = persistReducer(persistConfig, combineReducers(sharedReducers))

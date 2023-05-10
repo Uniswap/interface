@@ -1,11 +1,6 @@
 import { createStore, Store } from '@reduxjs/toolkit'
 import { ChainId } from 'wallet/src/constants/chains'
-import {
-  dappReducer,
-  DappState,
-  initialDappState,
-  saveDappChain,
-} from './slice'
+import { dappReducer, DappState, initialDappState, saveDappChain } from './slice'
 
 describe('dappSlice', () => {
   let store: Store<DappState>

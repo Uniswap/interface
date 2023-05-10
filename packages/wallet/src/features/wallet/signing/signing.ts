@@ -24,9 +24,7 @@ export async function signMessage(
   // Mobile code does not explicitly connect to provider,
   // Web needs to connect to provider to ensure correct chain
   const unconnectedSigner = await signerManager.getSignerForAccount(account)
-  const signer = provider
-    ? unconnectedSigner?.connect(provider)
-    : unconnectedSigner
+  const signer = provider ? unconnectedSigner?.connect(provider) : unconnectedSigner
 
   if (!signer) {
     logger.error('signers', 'signMessage', `no signer found for ${account}`)
@@ -54,9 +52,7 @@ export async function signTypedData(
   // Mobile code does not explicitly connect to provider,
   // Web needs to connect to provider to ensure correct chain
   const unconnectedSigner = await signerManager.getSignerForAccount(account)
-  const signer = provider
-    ? unconnectedSigner?.connect(provider)
-    : unconnectedSigner
+  const signer = provider ? unconnectedSigner?.connect(provider) : unconnectedSigner
 
   // https://github.com/LedgerHQ/ledgerjs/issues/86
   // Ledger does not support signTypedData yet

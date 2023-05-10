@@ -14,9 +14,7 @@ type TokenBalanceListProps = {
 
 const HIDDEN_TOKENS_ROW = 'HIDDEN_TOKENS_ROW'
 
-export const TokenBalanceList = ({
-  owner,
-}: TokenBalanceListProps): JSX.Element => {
+export const TokenBalanceList = ({ owner }: TokenBalanceListProps): JSX.Element => {
   const { data, loading } = useSortedPortfolioBalances(
     owner,
     /*shouldPoll=*/ true,
@@ -38,11 +36,7 @@ export const TokenBalanceList = ({
     }
 
     // No hidden tokens
-    if (
-      balances.length > 0 &&
-      smallBalances.length === 0 &&
-      spamBalances.length === 0
-    ) {
+    if (balances.length > 0 && smallBalances.length === 0 && spamBalances.length === 0) {
       return balances
     }
 

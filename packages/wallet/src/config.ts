@@ -32,13 +32,10 @@ export interface Config {
 }
 
 const _config: Config = {
-  activeChains: chainListToStateMap(
-    parseActiveChains(process.env.ACTIVE_CHAINS || ACTIVE_CHAINS)
-  ),
+  activeChains: chainListToStateMap(parseActiveChains(process.env.ACTIVE_CHAINS || ACTIVE_CHAINS)),
   moonpayApiKey: process.env.MOONPAY_API_KEY || MOONPAY_API_KEY,
   moonpayApiUrl: process.env.MOONPAY_API_URL || MOONPAY_API_URL,
-  moonpayWidgetApiUrl:
-    process.env.MOONPAY_WIDGET_API_URL || MOONPAY_WIDGET_API_URL,
+  moonpayWidgetApiUrl: process.env.MOONPAY_WIDGET_API_URL || MOONPAY_WIDGET_API_URL,
   uniswapApiBaseUrl: process.env.UNISWAP_API_BASE_URL || UNISWAP_API_BASE_URL,
   uniswapApiKey: process.env.UNISWAP_API_KEY || UNISWAP_API_KEY,
   uniswapAppUrl: process.env.UNISWAP_APP_URL || UNISWAP_APP_URL,
@@ -46,8 +43,7 @@ const _config: Config = {
   onesignalAppId: process.env.ONESIGNAL_APP_ID || ONESIGNAL_APP_ID,
   sentryDsn: process.env.SENTRY_DSN || SENTRY_DSN,
   statSigProxyUrl: process.env.STATSIG_PROXY_URL || STATSIG_PROXY_URL,
-  walletConnectProjectId:
-    process.env.WALLETCONNECT_PROJECT_ID || WALLETCONNECT_PROJECT_ID,
+  walletConnectProjectId: process.env.WALLETCONNECT_PROJECT_ID || WALLETCONNECT_PROJECT_ID,
 }
 
 export const config = Object.freeze(_config)

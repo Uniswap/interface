@@ -14,30 +14,14 @@ type LogLevel = 'debug' | 'info' | 'warn' | 'error'
  * @param args Additional values to log
  */
 export const logger = {
-  debug: (
-    fileName: string,
-    functionName: string,
-    message: string,
-    ...args: unknown[]
-  ): void => logMessage('debug', fileName, functionName, message, ...args),
-  info: (
-    fileName: string,
-    functionName: string,
-    message: string,
-    ...args: unknown[]
-  ): void => logMessage('info', fileName, functionName, message, ...args),
-  warn: (
-    fileName: string,
-    functionName: string,
-    message: string,
-    ...args: unknown[]
-  ): void => logMessage('warn', fileName, functionName, message, ...args),
-  error: (
-    fileName: string,
-    functionName: string,
-    message: string,
-    ...args: unknown[]
-  ): void => logMessage('error', fileName, functionName, message, ...args),
+  debug: (fileName: string, functionName: string, message: string, ...args: unknown[]): void =>
+    logMessage('debug', fileName, functionName, message, ...args),
+  info: (fileName: string, functionName: string, message: string, ...args: unknown[]): void =>
+    logMessage('info', fileName, functionName, message, ...args),
+  warn: (fileName: string, functionName: string, message: string, ...args: unknown[]): void =>
+    logMessage('warn', fileName, functionName, message, ...args),
+  error: (fileName: string, functionName: string, message: string, ...args: unknown[]): void =>
+    logMessage('error', fileName, functionName, message, ...args),
 }
 
 function logMessage(
@@ -57,11 +41,7 @@ function logMessage(
   console[level](formatted, ...args)
 }
 
-function formatMessage(
-  fileName: string,
-  functionName: string,
-  message: string
-): string {
+function formatMessage(fileName: string, functionName: string, message: string): string {
   const t = new Date()
   return `${t.getHours()}:${t.getMinutes()}:${t.getSeconds()}:${t.getMilliseconds()}::${fileName}#${functionName}:${message}`
 }

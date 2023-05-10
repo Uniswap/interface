@@ -77,9 +77,7 @@ function Locked(): JSX.Element {
         )}
         <Input
           secureTextEntry
-          borderColor={
-            isIncorrectPassword ? '$accentCritical' : '$backgroundOutline'
-          }
+          borderColor={isIncorrectPassword ? '$accentCritical' : '$backgroundOutline'}
           borderRadius={100}
           borderWidth={0.5}
           fontSize={16}
@@ -90,9 +88,7 @@ function Locked(): JSX.Element {
           placeholder="Enter password to unlock"
           placeholderTextColor="$textTertiary"
           {...passwordInputProps}
-          backgroundColor={
-            isIncorrectPassword ? '$accentCriticalSoft' : '$backgroundScrim'
-          }
+          backgroundColor={isIncorrectPassword ? '$accentCriticalSoft' : '$backgroundScrim'}
           color="$textPrimary"
         />
       </YStack>

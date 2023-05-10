@@ -3,11 +3,7 @@ import { providers } from 'ethers'
 import { useMemo } from 'react'
 import { getPollingIntervalByBlocktime } from 'wallet/src/features/chains/chainIdUtils'
 import { useGasFeeQuery } from 'wallet/src/features/gas/gasApi'
-import {
-  FeeType,
-  GasSpeed,
-  TransactionGasFeeInfo,
-} from 'wallet/src/features/gas/types'
+import { FeeType, GasSpeed, TransactionGasFeeInfo } from 'wallet/src/features/gas/types'
 
 export function useTransactionGasFee(
   tx: providers.TransactionRequest | undefined | null,

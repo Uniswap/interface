@@ -30,7 +30,7 @@ const injectedIFrames: InjectedAssets = {}
  */
 export class InjectedAssetsManager {
   /** Utility method to inject all scripts and all iframes */
-  injectAll() {
+  injectAll(): void {
     this.injectScripts()
     this.injectIFrames()
   }
@@ -38,7 +38,7 @@ export class InjectedAssetsManager {
   injectScripts(
     scripts = injectedScripts,
     container = document.head || document.documentElement
-  ) {
+  ): void {
     for (const [name, { unmountOnLoad }] of Object.entries(scripts)) {
       logger.debug('InjectedAssetsManager', 'injectScripts', `${name}`)
 
@@ -49,7 +49,7 @@ export class InjectedAssetsManager {
       container.appendChild(scriptTag)
 
       if (unmountOnLoad) {
-        scriptTag.onload = () => {
+        scriptTag.onload = (): void => {
           scriptTag.parentNode?.removeChild(scriptTag)
         }
       }
@@ -68,7 +68,7 @@ export class InjectedAssetsManager {
       zIndex: '9999999',
       border: 'none',
     }
-  ) {
+  ): void {
     const extensionOrigin = 'chrome-extension://' + chrome.runtime.id
     if (location.ancestorOrigins?.contains(extensionOrigin)) {
       logger.warn(
@@ -92,7 +92,7 @@ export class InjectedAssetsManager {
   }
 }
 
-function CSSObjectToString(obj: Record<string, string>) {
+function CSSObjectToString(obj: Record<string, string>): string {
   return Object.entries(obj)
     .map(([k, v]) => `${k}:${v}`)
     .join(';')

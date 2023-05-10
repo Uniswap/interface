@@ -28,7 +28,7 @@ export function createStore({
   middlewareBefore = [],
   preloadedState = {},
   reducer,
-}: CreateStoreProps) {
+}: CreateStoreProps): ReturnType<typeof configureStore> {
   const sagaMiddleware = createSagaMiddleware({
     context: {
       signers: walletContextValue.signers,
@@ -63,9 +63,7 @@ export const useAppDispatch: () => AppDispatch = useDispatch
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector
 
 // Use in sagas for better typing when selecting from redux state
-export function* appSelect<T>(
-  fn: (state: RootState) => T
-): SagaGenerator<T, SelectEffect> {
+export function* appSelect<T>(fn: (state: RootState) => T): SagaGenerator<T, SelectEffect> {
   const state = yield* select(fn)
   return state
 }

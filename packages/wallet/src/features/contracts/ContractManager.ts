@@ -14,10 +14,7 @@ export class ContractManager {
     provider: providers.Provider,
     ABI: ContractInterface
   ): Contract {
-    if (
-      isNativeCurrencyAddress(chainId, address) ||
-      !getValidAddress(address, true)
-    ) {
+    if (isNativeCurrencyAddress(chainId, address) || !getValidAddress(address, true)) {
       throw Error(`Invalid address for contract: ${address}`)
     }
     this._contracts[chainId] ??= {}
@@ -52,10 +49,7 @@ export class ContractManager {
   }
 
   // Returns contract or null
-  getContract<T extends Contract>(
-    chainId: ChainId,
-    address: Address
-  ): Nullable<T> {
+  getContract<T extends Contract>(chainId: ChainId, address: Address): Nullable<T> {
     return (this._contracts[chainId]?.[address] as Maybe<T>) ?? null
   }
 
@@ -66,7 +60,6 @@ export class ContractManager {
     ABI: ContractInterface
   ): T {
     const cachedContract = this.getContract<T>(chainId, address)
-    return (cachedContract ??
-      this.createContract(chainId, address, provider, ABI)) as T
+    return (cachedContract ?? this.createContract(chainId, address, provider, ABI)) as T
   }
 }

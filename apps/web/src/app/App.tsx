@@ -6,10 +6,7 @@ import { ImportMnemonic } from 'wallet/src/features/onboarding/ImportMnemonic'
 import { IntroScreen } from 'wallet/src/features/onboarding/IntroScreen'
 import { OnboardingWrapper } from 'wallet/src/features/onboarding/OnboardingWrapper'
 import { Password } from 'wallet/src/features/onboarding/Password'
-import {
-  OnboardingRoutes,
-  TopLevelRoutes,
-} from 'wallet/src/navigation/constants'
+import { OnboardingRoutes, TopLevelRoutes } from 'wallet/src/navigation/constants'
 import { Provider } from 'wallet/src/provider'
 import { Store } from 'webext-redux'
 import { WebNavigation } from './navigation'

@@ -59,28 +59,16 @@ export const TokenBalanceItem = memo(
               <Text ellipsizeMode="tail" numberOfLines={1} variant="bodyLarge">
                 {currency.name ?? currency.symbol}
               </Text>
-              <Flex
-                alignItems="center"
-                flexDirection="row"
-                gap="$spacing8"
-                minHeight={20}>
-                <Text
-                  color="$textTertiary"
-                  numberOfLines={1}
-                  variant="subheadSmall">
-                  {`${formatNumber(quantity, NumberType.TokenNonTx)}`}{' '}
-                  {currency.symbol}
+              <Flex alignItems="center" flexDirection="row" gap="$spacing8" minHeight={20}>
+                <Text color="$textTertiary" numberOfLines={1} variant="subheadSmall">
+                  {`${formatNumber(quantity, NumberType.TokenNonTx)}`} {currency.symbol}
                 </Text>
                 <Text
                   color={
-                    relativeChange24 && relativeChange24 > 0
-                      ? '$accentSuccess'
-                      : '$accentCritical'
+                    relativeChange24 && relativeChange24 > 0 ? '$accentSuccess' : '$accentCritical'
                   }
                   variant="subheadSmall">
-                  {relativeChange24
-                    ? `${Math.abs(relativeChange24).toFixed(2)}%`
-                    : ''}
+                  {relativeChange24 ? `${Math.abs(relativeChange24).toFixed(2)}%` : ''}
                 </Text>
               </Flex>
             </Flex>

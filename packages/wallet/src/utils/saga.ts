@@ -1,18 +1,5 @@
-import {
-  createAction,
-  createReducer,
-  PayloadActionCreator,
-} from '@reduxjs/toolkit'
-import {
-  call,
-  CallEffect,
-  delay,
-  Effect,
-  put,
-  race,
-  take,
-  TakeEffect,
-} from 'redux-saga/effects'
+import { createAction, createReducer, PayloadActionCreator } from '@reduxjs/toolkit'
+import { call, CallEffect, delay, Effect, put, race, take, TakeEffect } from 'redux-saga/effects'
 import { errorToString } from 'wallet/src/utils/validation'
 import { logger } from '../features/logger/logger'
 
@@ -94,22 +81,20 @@ export function createMonitoredSaga<SagaParams = void>(
   const errorAction = createAction<string>(`${name}/error`)
   const resetAction = createAction<void>(`${name}/reset`)
 
-  const reducer = createReducer<SagaState>(
-    { status: null, error: null },
-    (builder) =>
-      builder
-        .addCase(statusAction, (state, action) => {
-          state.status = action.payload
-          state.error = null
-        })
-        .addCase(errorAction, (state, action) => {
-          state.status = SagaStatus.Failure
-          state.error = action.payload
-        })
-        .addCase(resetAction, (state) => {
-          state.status = null
-          state.error = null
-        })
+  const reducer = createReducer<SagaState>({ status: null, error: null }, (builder) =>
+    builder
+      .addCase(statusAction, (state, action) => {
+        state.status = action.payload
+        state.error = null
+      })
+      .addCase(errorAction, (state, action) => {
+        state.status = SagaStatus.Failure
+        state.error = action.payload
+      })
+      .addCase(resetAction, (state) => {
+        state.status = null
+        state.error = null
+      })
   )
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -138,11 +123,7 @@ export function createMonitoredSaga<SagaParams = void>(
         }
 
         if (result === false) {
-          logger.warn(
-            'saga',
-            'monitoredSaga',
-            `${name} returned failure result`
-          )
+          logger.warn('saga', 'monitoredSaga', `${name} returned failure result`)
           throw new Error('Action returned failure result.')
         }
 

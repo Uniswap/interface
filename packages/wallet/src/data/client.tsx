@@ -1,10 +1,4 @@
-import {
-  ApolloClient,
-  ApolloProvider,
-  createHttpLink,
-  from,
-  InMemoryCache,
-} from '@apollo/client'
+import { ApolloClient, ApolloProvider, createHttpLink, from, InMemoryCache } from '@apollo/client'
 import { PropsWithChildren } from 'react'
 import { config } from 'wallet/src/config'
 
@@ -21,8 +15,6 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 })
 
-export function GraphqlProvider({
-  children,
-}: PropsWithChildren<unknown>): JSX.Element {
+export function GraphqlProvider({ children }: PropsWithChildren<unknown>): JSX.Element {
   return <ApolloProvider client={client}>{children}</ApolloProvider>
 }

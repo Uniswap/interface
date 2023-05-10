@@ -6,10 +6,7 @@ import { usePasswordInput } from 'wallet/src/features/auth/Locked'
 import { OnboardingRoutes } from 'wallet/src/navigation/constants'
 import { useAppDispatch } from 'wallet/src/state'
 import { useSagaStatus } from 'wallet/src/state/useSagaStatus'
-import {
-  importAccountActions,
-  importAccountSagaName,
-} from '../wallet/import/importAccountSaga'
+import { importAccountActions, importAccountSagaName } from '../wallet/import/importAccountSaga'
 import { ImportAccountType } from '../wallet/import/types'
 
 export function Password(): JSX.Element {
@@ -28,9 +25,7 @@ export function Password(): JSX.Element {
     // TODO(EXT-131): abstract into navigate util with consistent params and types
     navigate(
       `../${
-        from === OnboardingRoutes.Import
-          ? OnboardingRoutes.Complete
-          : OnboardingRoutes.Backup
+        from === OnboardingRoutes.Import ? OnboardingRoutes.Complete : OnboardingRoutes.Backup
       }`,
       { state: { data: { mnemonic, from: OnboardingRoutes.Import } } }
     )
@@ -40,9 +35,7 @@ export function Password(): JSX.Element {
     <Stack alignItems="center" gap="$spacing36" minWidth={450}>
       <YStack alignItems="center" gap="$spacing8">
         <Text variant="headlineMedium">Set a password</Text>
-        <Text variant="subheadSmall">
-          You'll need this to unlock your wallet
-        </Text>
+        <Text variant="subheadSmall">You'll need this to unlock your wallet</Text>
       </YStack>
       <Input
         secureTextEntry
@@ -62,10 +55,7 @@ export function Password(): JSX.Element {
         {...passwordInputProps}
       />
       <XStack gap="$spacing12" width="100%">
-        <Button
-          flexGrow={1}
-          theme="secondary"
-          onPress={(): void => navigate(-1)}>
+        <Button flexGrow={1} theme="secondary" onPress={(): void => navigate(-1)}>
           Back
         </Button>
         <Button

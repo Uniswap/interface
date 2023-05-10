@@ -1,9 +1,5 @@
 import { BigNumberish } from 'ethers'
-import {
-  ChainId,
-  isL2Chain,
-  TESTNET_CHAIN_IDS,
-} from 'wallet/src/constants/chains'
+import { ChainId, isL2Chain, TESTNET_CHAIN_IDS } from 'wallet/src/constants/chains'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import { Chain } from 'wallet/src/data/__generated__/types-and-hooks'
 
@@ -66,10 +62,6 @@ export function toGraphQLChain(chainId: ChainId): Chain | null {
   return null
 }
 
-export function getPollingIntervalByBlocktime(
-  chainId?: ChainId
-): PollingInterval {
-  return isL2Chain(chainId)
-    ? PollingInterval.LightningMcQueen
-    : PollingInterval.Fast
+export function getPollingIntervalByBlocktime(chainId?: ChainId): PollingInterval {
+  return isL2Chain(chainId) ? PollingInterval.LightningMcQueen : PollingInterval.Fast
 }

@@ -79,14 +79,10 @@ describe(toGraphQLChain, () => {
 
 describe(getPollingIntervalByBlocktime, () => {
   it('returns the correct value for L1', () => {
-    expect(getPollingIntervalByBlocktime(ChainId.Mainnet)).toEqual(
-      PollingInterval.Fast
-    )
+    expect(getPollingIntervalByBlocktime(ChainId.Mainnet)).toEqual(PollingInterval.Fast)
   })
 
   it('returns the correct value for L2', () => {
-    expect(getPollingIntervalByBlocktime(ChainId.Polygon)).toEqual(
-      PollingInterval.LightningMcQueen
-    )
+    expect(getPollingIntervalByBlocktime(ChainId.Polygon)).toEqual(PollingInterval.LightningMcQueen)
   })
 })

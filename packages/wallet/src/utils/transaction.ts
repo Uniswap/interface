@@ -7,14 +7,7 @@ const formatAsHexString = (input?: BigNumberish): string | undefined =>
 export function hexlifyTransaction(
   transferTxRequest: providers.TransactionRequest
 ): providers.TransactionRequest {
-  const {
-    value,
-    nonce,
-    gasLimit,
-    gasPrice,
-    maxPriorityFeePerGas,
-    maxFeePerGas,
-  } = transferTxRequest
+  const { value, nonce, gasLimit, gasPrice, maxPriorityFeePerGas, maxFeePerGas } = transferTxRequest
   return {
     ...transferTxRequest,
     nonce: formatAsHexString(nonce),

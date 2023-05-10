@@ -36,10 +36,7 @@ class MockKeyring implements IKeyring {
   }
 
   // returns the address of the generated key
-  generateAndStorePrivateKey(
-    mnemonicId: string,
-    derivationIndex: number
-  ): Promise<string> {
+  generateAndStorePrivateKey(mnemonicId: string, derivationIndex: number): Promise<string> {
     const mnemonic = mnemonics[mnemonicId]
     if (!mnemonic) return Promise.reject(`No mnemonic found for ${mnemonicId}`)
     const wallet = Wallet.fromMnemonic(mnemonic, pathFromIndex(derivationIndex))
@@ -52,20 +49,15 @@ class MockKeyring implements IKeyring {
     transaction: providers.TransactionRequest
   ): Promise<string> {
     const privateKey = privateKeys[address]
-    if (!privateKey)
-      return Promise.reject(`No private key found for ${address}`)
+    if (!privateKey) return Promise.reject(`No private key found for ${address}`)
     const wallet = new Wallet(privateKey)
     const signature = await wallet.signTransaction(transaction)
     return signature
   }
 
-  async signMessageForAddress(
-    address: string,
-    message: string | utils.Bytes
-  ): Promise<string> {
+  async signMessageForAddress(address: string, message: string | utils.Bytes): Promise<string> {
     const privateKey = privateKeys[address]
-    if (!privateKey)
-      return Promise.reject(`No private key found for ${address}`)
+    if (!privateKey) return Promise.reject(`No private key found for ${address}`)
     const wallet = new Wallet(privateKey)
     const signature = await wallet.signMessage(message)
     return signature

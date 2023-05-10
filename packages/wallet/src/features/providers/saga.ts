@@ -26,19 +26,9 @@ export function* initProviders() {
 
 function* initProvider(chainId: ChainId, manager: ProviderManager) {
   try {
-    logger.debug(
-      'providerSaga',
-      'initProvider',
-      'Creating a provider for:',
-      chainId
-    )
+    logger.debug('providerSaga', 'initProvider', 'Creating a provider for:', chainId)
     if (manager.hasProvider(chainId)) {
-      logger.debug(
-        'providerSaga',
-        'initProvider',
-        'Provider already exists for:',
-        chainId
-      )
+      logger.debug('providerSaga', 'initProvider', 'Provider already exists for:', chainId)
       return
     }
     yield* call(createProvider, chainId, manager)
@@ -56,12 +46,7 @@ async function createProvider(
   chainId: ChainId,
   manager: ProviderManager
 ): Promise<ethersProviders.Provider> {
-  logger.debug(
-    'providerSaga',
-    'createProvider',
-    'Creating a provider for:',
-    chainId
-  )
+  logger.debug('providerSaga', 'createProvider', 'Creating a provider for:', chainId)
   const provider = manager.createProvider(chainId)
   return provider
 }

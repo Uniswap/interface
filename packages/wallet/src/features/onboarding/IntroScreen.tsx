@@ -2,12 +2,7 @@ import { Circle, Image, Stack, Text, XStack, YStack } from 'ui/src'
 import { LinkButton } from 'ui/src/components/button/Button'
 import { opacify } from 'ui/src/theme/color/utils'
 import { iconSize } from 'ui/src/theme/tokens'
-import {
-  BOLT_ICON,
-  BOOK_ICON,
-  MULTICHAIN_ICON,
-  UNISWAP_LOGO,
-} from 'wallet/src/assets'
+import { BOLT_ICON, BOOK_ICON, MULTICHAIN_ICON, UNISWAP_LOGO } from 'wallet/src/assets'
 
 function InfoRow({
   primaryText,
@@ -45,10 +40,7 @@ export function IntroScreen(): JSX.Element {
   return (
     <XStack gap={100}>
       <YStack gap="$spacing12" maxWidth={320}>
-        <Stack
-          alignItems="center"
-          justifyContent="center"
-          paddingBottom="$spacing8">
+        <Stack alignItems="center" justifyContent="center" paddingBottom="$spacing8">
           <Stack
             alignItems="center"
             backgroundColor="$white"
@@ -64,10 +56,7 @@ export function IntroScreen(): JSX.Element {
             />
           </Stack>
         </Stack>
-        <Text
-          marginBottom="$spacing48"
-          textAlign="center"
-          variant="headlineMedium">
+        <Text marginBottom="$spacing48" textAlign="center" variant="headlineMedium">
           Get started with Uniswap Wallet
         </Text>
         <LinkButton flexGrow={1} theme="secondary" to="import">

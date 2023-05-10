@@ -33,11 +33,7 @@ export class NativeSigner extends Signer {
     }
 
     // chainID isn't available here, but is not needed for signing hashes so just default to Mainnet
-    return Keyring.signHashForAddress(
-      this.address,
-      hexlify(message).slice(2),
-      ChainId.Mainnet
-    )
+    return Keyring.signHashForAddress(this.address, hexlify(message).slice(2), ChainId.Mainnet)
   }
 
   // reference: https://github.com/ethers-io/ethers.js/blob/ce8f1e4015c0f27bf178238770b1325136e3351a/packages/wallet/src.ts/index.ts#L135
@@ -54,9 +50,7 @@ export class NativeSigner extends Signer {
     return signature
   }
 
-  async signTransaction(
-    transaction: providers.TransactionRequest
-  ): Promise<string> {
+  async signTransaction(transaction: providers.TransactionRequest): Promise<string> {
     const tx = await utils.resolveProperties(transaction)
 
     if (tx.chainId === undefined) {

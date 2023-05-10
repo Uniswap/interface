@@ -2,10 +2,7 @@ import { XStack, YStack } from 'ui/src'
 import { Button, ButtonSize } from 'ui/src/components/button/Button'
 import { Text } from 'ui/src/components/text/Text'
 import { ChainId } from 'wallet/src/constants/chains'
-import {
-  useAccounts,
-  useActiveAccountAddressWithThrow,
-} from 'wallet/src/features/wallet/hooks'
+import { useAccounts, useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 import { useAppDispatch, useAppSelector } from '../../background/store'
 import { DappRequestType } from './dappRequestTypes'
 import { SendTransactionDetails } from './requestContent/SendTransactionContent'
@@ -61,10 +58,7 @@ export function DappRequestContent(): JSX.Element {
   switch (requestWithDisplay.request.dappRequest.type) {
     case DappRequestType.SignMessage:
       displayDetails = (
-        <SignMessageDetails
-          activeAccount={activeAccount}
-          request={requestWithDisplay}
-        />
+        <SignMessageDetails activeAccount={activeAccount} request={requestWithDisplay} />
       )
       break
     case DappRequestType.SignTypedData:
@@ -78,10 +72,7 @@ export function DappRequestContent(): JSX.Element {
       break
     case DappRequestType.SendTransaction:
       displayDetails = (
-        <SendTransactionDetails
-          activeAccount={activeAccount}
-          request={requestWithDisplay}
-        />
+        <SendTransactionDetails activeAccount={activeAccount} request={requestWithDisplay} />
       )
       break
   }
@@ -105,9 +96,7 @@ export function DappRequestContent(): JSX.Element {
         ) : (
           <YStack gap="$spacing12">
             <Text variant="subheadLarge">{requestWithDisplay?.message}</Text>
-            <Text variant="bodySmall">
-              ID: {requestWithDisplay.request.dappRequest.requestId}
-            </Text>
+            <Text variant="bodySmall">ID: {requestWithDisplay.request.dappRequest.requestId}</Text>
           </YStack>
         )}
       </YStack>
@@ -131,9 +120,7 @@ export function DappRequestContent(): JSX.Element {
   )
 }
 
-const parseRequest = (
-  request?: DappRequestStoreItem
-): RequestDisplayDetails => {
+const parseRequest = (request?: DappRequestStoreItem): RequestDisplayDetails => {
   if (!request) {
     throw new Error('No request to parse')
   }

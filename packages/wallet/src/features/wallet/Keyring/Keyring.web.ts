@@ -91,9 +91,7 @@ export class WebKeyring implements IKeyring {
 
     const mnemonicId = await this.storeNewMnemonic(mnemonic, password, address)
     if (!mnemonicId) {
-      throw new Error(
-        `${ErrorType.StoreMnemonicError}: Failed to import mnemonic`
-      )
+      throw new Error(`${ErrorType.StoreMnemonicError}: Failed to import mnemonic`)
     }
 
     this.password = password
@@ -113,9 +111,7 @@ export class WebKeyring implements IKeyring {
     const address = newWallet.address
 
     if (!(await this.storeNewMnemonic(mnemonic, password, address))) {
-      throw new Error(
-        `${ErrorType.StoreMnemonicError}: Failed to generate and store mnemonic`
-      )
+      throw new Error(`${ErrorType.StoreMnemonicError}: Failed to generate and store mnemonic`)
     }
 
     this.password = password
@@ -197,10 +193,7 @@ export class WebKeyring implements IKeyring {
    * @param password the password to decrypt the private key
    * @returns public address associated with private key generated from the mnemonic at given derivation index
    */
-  async generateAndStorePrivateKey(
-    mnemonicId: string,
-    derivationIndex: number
-  ): Promise<string> {
+  async generateAndStorePrivateKey(mnemonicId: string, derivationIndex: number): Promise<string> {
     const mnemonic = await this.retrieveMnemonic(mnemonicId, this.password)
 
     if (!mnemonic) {
@@ -217,10 +210,7 @@ export class WebKeyring implements IKeyring {
   }
 
   /** @returns address is store call was successfull. */
-  private async storeNewPrivateKey(
-    address: string,
-    privateKey: string
-  ): Promise<string> {
+  private async storeNewPrivateKey(address: string, privateKey: string): Promise<string> {
     const checkStored = await this.retrievePrivateKey(address)
 
     if (checkStored !== undefined) {
@@ -245,9 +235,7 @@ export class WebKeyring implements IKeyring {
     }
   }
 
-  private async retrievePrivateKey(
-    address: string
-  ): Promise<string | undefined> {
+  private async retrievePrivateKey(address: string): Promise<string | undefined> {
     const key = this.keyForPrivateKey(address)
     const result = await this.storage.getItem(key)
 
@@ -287,10 +275,7 @@ export class WebKeyring implements IKeyring {
     return this.signHashForAddress(address, hash, chainId)
   }
 
-  async signMessageForAddress(
-    address: string,
-    message: string
-  ): Promise<string> {
+  async signMessageForAddress(address: string, message: string): Promise<string> {
     const privateKey = await this.retrievePrivateKey(address)
     if (!privateKey) throw Error('No private key found for address')
     const wallet = new Wallet(privateKey)
@@ -300,11 +285,7 @@ export class WebKeyring implements IKeyring {
   /**
    * @returns the Signature of the signed hash in string form.
    **/
-  async signHashForAddress(
-    address: string,
-    hash: string,
-    _chainId: number
-  ): Promise<string> {
+  async signHashForAddress(address: string, hash: string, _chainId: number): Promise<string> {
     const privateKey = await this.retrievePrivateKey(address)
     if (!privateKey) throw Error('No private key found for address')
     const signingKey = new SigningKey(privateKey)
@@ -322,11 +303,7 @@ export class WebKeyring implements IKeyring {
 
   private set password(password: string) {
     if (this._password) {
-      logger.warn(
-        'Keyring.web',
-        'setPassword',
-        'Attempted to set password again'
-      )
+      logger.warn('Keyring.web', 'setPassword', 'Attempted to set password again')
     }
 
     this._password = password

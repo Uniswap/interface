@@ -78,13 +78,11 @@ export interface JsonRpcResponse {
 
 const messages = {
   errors: {
-    disconnected: () =>
-      'Uniswap Wallet: Disconnected from chain. Attempting to connect.',
-    invalidRequestArgs: () =>
+    disconnected: (): string => 'Uniswap Wallet: Disconnected from chain. Attempting to connect.',
+    invalidRequestArgs: (): string =>
       `Uniswap Wallet: Expected a single, non-array, object argument.`,
-    invalidRequestMethod: () =>
-      `Uniswap Wallet: 'args.method' must be a non-empty string.`,
-    invalidRequestParams: () =>
+    invalidRequestMethod: (): string => `Uniswap Wallet: 'args.method' must be a non-empty string.`,
+    invalidRequestParams: (): string =>
       `Uniswap Wallet: 'args.params' must be an object or array if provided.`,
   },
 }
@@ -142,16 +140,14 @@ export class InjectedProvider extends EventEmitter {
   /**
    * Initialize a listener for messages posted from the Uniswap Wallet extension.
    */
-  initExtensionListener = () => {
-    const handleDappRequest = (event: MessageEvent<BaseExtensionRequest>) => {
+  initExtensionListener = (): void => {
+    const handleDappRequest = (event: MessageEvent<BaseExtensionRequest>): void => {
       const messageData = event.data
       if (messageData?.type === ExtensionRequestType.SwitchChain) {
         const request = messageData as ExtensionChainChange
         const chainId = chainIdtoHexadecimalString(request.chainId)
         this.chainId = chainId
-        this.provider = new ethers.providers.JsonRpcProvider(
-          request.providerUrl
-        )
+        this.provider = new ethers.providers.JsonRpcProvider(request.providerUrl)
         this.emit('chainChanged', chainId)
       }
     }
@@ -161,7 +157,7 @@ export class InjectedProvider extends EventEmitter {
     window.addEventListener('message', handleDappRequest)
   }
 
-  setState = (updatedState: BaseProviderState) => {
+  setState = (updatedState: BaseProviderState): void => {
     this.state = updatedState
     Object.freeze(this.state)
   }
@@ -187,18 +183,12 @@ export class InjectedProvider extends EventEmitter {
     methodOrRequest: string | RequestArguments,
     paramsOrCallback: Array<unknown> | EthersSendCallback
   ): Promise<unknown> | void => {
-    if (
-      typeof methodOrRequest === 'string' &&
-      typeof paramsOrCallback !== 'function'
-    ) {
+    if (typeof methodOrRequest === 'string' && typeof paramsOrCallback !== 'function') {
       return this.request({
         method: methodOrRequest,
         params: paramsOrCallback,
       })
-    } else if (
-      typeof methodOrRequest === 'object' &&
-      typeof paramsOrCallback === 'function'
-    ) {
+    } else if (typeof methodOrRequest === 'object' && typeof paramsOrCallback === 'function') {
       return this.sendAsync(methodOrRequest, paramsOrCallback)
     }
     return Promise.reject(new Error('Unsupported function parameters'))
@@ -260,35 +250,26 @@ export class InjectedProvider extends EventEmitter {
       eth_getCode: (address: string) => this.provider?.getCode(address),
       eth_getStorageAt: (address: string, position: string) =>
         this.provider?.getStorageAt(address, position),
-      eth_getTransactionCount: (address: string) =>
-        this.provider?.getTransactionCount(address),
+      eth_getTransactionCount: (address: string) => this.provider?.getTransactionCount(address),
       eth_blockNumber: () => this.provider?.getBlockNumber(),
       eth_getBlockByNumber: (block: number) => this.provider?.getBlock(block),
       eth_call: (transaction: any) => this.provider?.call(transaction),
       eth_gasPrice: () => this.provider?.getGasPrice(),
-      eth_estimateGas: (transaction: any) =>
-        this.provider?.estimateGas(transaction),
-      eth_getTransactionByHash: (hash: string) =>
-        this.provider?.getTransaction(hash),
-      eth_getTransactionReceipt: (hash: string) =>
-        this.provider?.getTransactionReceipt(hash),
+      eth_estimateGas: (transaction: any) => this.provider?.estimateGas(transaction),
+      eth_getTransactionByHash: (hash: string) => this.provider?.getTransaction(hash),
+      eth_getTransactionReceipt: (hash: string) => this.provider?.getTransactionReceipt(hash),
       eth_sign: (_address: string, _message: string) => {
         // Backpack mentioned this is a significant security risk because it can be used to
         // sign transactions.
         // TODO maybe enable this with a large warning in the UI?
-        throw new Error(
-          'Uniswap Wallet does not support eth_sign due to security concerns'
-        )
+        throw new Error('Uniswap Wallet does not support eth_sign due to security concerns')
       },
       personal_sign: (messageHex: string, _address: string) =>
         this.handleEthSignMessage(messageHex),
-      eth_signTransaction: (transaction: any) =>
-        this.handleEthSignTransaction(transaction),
-      eth_sendTransaction: (transaction: any) =>
-        this.handleEthSendTransaction(transaction),
-      wallet_switchEthereumChain: (
-        switchRequest: SwitchEthereumChainParameter
-      ) => this.handleWalletSwitchEthereumChain(switchRequest),
+      eth_signTransaction: (transaction: any) => this.handleEthSignTransaction(transaction),
+      eth_sendTransaction: (transaction: any) => this.handleEthSendTransaction(transaction),
+      wallet_switchEthereumChain: (switchRequest: SwitchEthereumChainParameter) =>
+        this.handleWalletSwitchEthereumChain(switchRequest),
       eth_signTypedData_v4: (address: string, typedData: any) =>
         this.handleEthSignTypedData(address, typedData),
     }
@@ -307,11 +288,7 @@ export class InjectedProvider extends EventEmitter {
       try {
         rpcResult = await func(...(<[]>(params ? params : [])))
       } catch (error) {
-        logger.error(
-          'UniswapInjectedProvider',
-          'rpc response error',
-          `${error}`
-        )
+        logger.error('UniswapInjectedProvider', 'rpc response error', `${error}`)
         return reject(error)
       }
       return resolve(rpcResult)
@@ -323,7 +300,7 @@ export class InjectedProvider extends EventEmitter {
    * Not used by Uniswap dApp
    * https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#connect
    */
-  handleConnect = async (chainId: string) => {
+  handleConnect = async (chainId: string): Promise<void> => {
     this.chainId = chainId
     if (!this.state.isConnected) {
       try {
@@ -349,18 +326,17 @@ export class InjectedProvider extends EventEmitter {
   /**
    * Update local state and emit required event for chain change.
    */
-  handleChainChanged = async (chainId: string) => {
+  handleChainChanged = async (chainId: string): Promise<void> => {
     const changeChainRequest: ChangeChainRequest = {
       type: DappRequestType.ChangeChain,
       requestId: uuidv4(),
       chainId,
     }
 
-    const { chainId: newChainId, providerUrl } =
-      await sendRequestAsync<ChangeChainResponse>(
-        changeChainRequest,
-        DappResponseType.ChainChangeResponse
-      )
+    const { chainId: newChainId, providerUrl } = await sendRequestAsync<ChangeChainResponse>(
+      changeChainRequest,
+      DappResponseType.ChainChangeResponse
+    )
 
     this.provider = new ethers.providers.JsonRpcProvider(providerUrl)
     this.chainId = newChainId
@@ -373,14 +349,14 @@ export class InjectedProvider extends EventEmitter {
   /**
    * Emit the required event for a change of accounts.
    */
-  handleAccountsChanged = async (accounts: unknown[]) => {
+  handleAccountsChanged = async (accounts: unknown[]): Promise<void> => {
     this.emit('accountsChanged', accounts)
   }
 
   /**
    * Handle eth_accounts requests
    */
-  handleEthAccounts = async () => {
+  handleEthAccounts = async (): Promise<string[]> => {
     if (this.isConnected() && this.publicKey) {
       return [this.publicKey]
     }
@@ -390,18 +366,17 @@ export class InjectedProvider extends EventEmitter {
   /**
    * Handle eth_requestAccounts requests
    */
-  handleEthRequestAccounts = async () => {
+  handleEthRequestAccounts = async (): Promise<string[]> => {
     // Send request to the RPC API.
     if (!this.publicKey) {
       const getAccountRequest: GetAccountRequest = {
         type: DappRequestType.GetAccount,
         requestId: uuidv4(),
       }
-      const { accountAddress, chainId, providerUrl } =
-        await sendRequestAsync<AccountResponse>(
-          getAccountRequest,
-          DappResponseType.AccountResponse
-        )
+      const { accountAddress, chainId, providerUrl } = await sendRequestAsync<AccountResponse>(
+        getAccountRequest,
+        DappResponseType.AccountResponse
+      )
       this.publicKey = accountAddress
 
       // TODO: Remove this once we have a better way to handle the connection state.
@@ -416,7 +391,7 @@ export class InjectedProvider extends EventEmitter {
   /**
    * Handle eth_sign, eth_signTypedData, personal_sign RPC requests.
    */
-  handleEthSignMessage = async (messageHex: string) => {
+  handleEthSignMessage = async (messageHex: string): Promise<string | undefined> => {
     if (!this.publicKey) {
       throw new Error('Wallet not connected')
     }
@@ -437,7 +412,7 @@ export class InjectedProvider extends EventEmitter {
   /**
    * Handle eth_signTransaction RPC requests.
    */
-  handleEthSignTransaction = async (transaction: unknown) => {
+  handleEthSignTransaction = async (transaction: unknown): Promise<string | undefined> => {
     if (!this.publicKey) {
       throw new Error('Wallet not connected')
     }
@@ -460,7 +435,7 @@ export class InjectedProvider extends EventEmitter {
    * // TODO: Unit tests for provider injection methods
    * @returns transaction hash
    */
-  handleEthSendTransaction = async (transaction: unknown) => {
+  handleEthSendTransaction = async (transaction: unknown): Promise<string | undefined> => {
     if (!this.publicKey) {
       throw new Error('Wallet not connected')
     }
@@ -471,9 +446,10 @@ export class InjectedProvider extends EventEmitter {
       transaction: adaptTransactionForEthers(transaction),
     }
 
-    const response = await sendRequestAsync<
-      SendTransactionResponse | TransactionRejectedResponse
-    >(request, DappResponseType.SendTransactionResponse)
+    const response = await sendRequestAsync<SendTransactionResponse | TransactionRejectedResponse>(
+      request,
+      DappResponseType.SendTransactionResponse
+    )
 
     if (response.type === DappResponseType.TransactionRejected) {
       throw new Error('Transaction rejected')
@@ -483,7 +459,7 @@ export class InjectedProvider extends EventEmitter {
 
   handleWalletSwitchEthereumChain = async (
     switchRequest: SwitchEthereumChainParameter
-  ) => {
+  ): Promise<null> => {
     if (!this.publicKey) {
       throw new Error('Wallet not connected')
     }
@@ -511,7 +487,7 @@ export class InjectedProvider extends EventEmitter {
    * @param typedData typed data to sign
    * @returns
    */
-  handleEthSignTypedData = async (_address: any, typedData: any) => {
+  handleEthSignTypedData = async (_address: any, typedData: any): Promise<string> => {
     if (!this.publicKey) {
       throw new Error('Wallet not connected')
     }
@@ -533,7 +509,7 @@ export class InjectedProvider extends EventEmitter {
   /**
    * Handle a disconnection notification from Uniswap Extension.
    */
-  _handleDisconnected = async () => {
+  _handleDisconnected = async (): Promise<void> => {
     if (this.isConnected()) {
       // Reset public state
       this.publicKey = null
@@ -554,7 +530,7 @@ export class InjectedProvider extends EventEmitter {
 /**
  * Adapt a transaction object to be compatible with ethers.js
  */
-function adaptTransactionForEthers(transaction: any) {
+function adaptTransactionForEthers(transaction: any): any {
   transaction.gasLimit = transaction.gas
   delete transaction.gas
   return transaction
@@ -576,7 +552,7 @@ function sendRequestAsync<T extends BaseDappResponse>(
       reject('Request timed out')
     }, TIMEOUT_MS)
 
-    const handleDappRequest = (event: MessageEvent<any>) => {
+    const handleDappRequest = (event: MessageEvent<any>): void => {
       const messageData = event.data
       if (
         (messageData?.type === responseType ||
