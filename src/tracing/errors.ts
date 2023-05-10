@@ -67,7 +67,7 @@ function getChunkResponseStatus(asset?: string): number | undefined {
  * Filters known (ignorable) errors out before sending them to Sentry.
  * Intended as a {@link ClientOptions.beforeSend} callback. Returning null filters the error from Sentry.
  */
-export const filterKnownErrors: Required<ClientOptions>['beforeSend'] = (event: ErrorEvent, hint: EventHint) => {
+const filterKnownErrors: Required<ClientOptions>['beforeSend'] = (event: ErrorEvent, hint: EventHint) => {
   const error = hint.originalException
   if (error instanceof Error) {
     // ethers aggressively polls for block number, and it sometimes fails (whether spuriously or through rate-limiting).
