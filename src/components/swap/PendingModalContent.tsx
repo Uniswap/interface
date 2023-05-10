@@ -70,7 +70,7 @@ export function PendingModalContent({
     <Container gap="lg">
       {confirmed ? (
         transactionSuccess ? (
-          <AnimatedConfirmation />
+          <AnimatedConfirmation size="48px" />
         ) : (
           <AlertTriangle strokeWidth={1} color={theme.accentFailure} size="48px" />
         )
