@@ -297,7 +297,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
           creating={false}
           adding={false}
           positionID={tokenId.toString()}
-          defaultSlippage={DEFAULT_REMOVE_V3_LIQUIDITY_SLIPPAGE_TOLERANCE}
+          autoSlippage={DEFAULT_REMOVE_V3_LIQUIDITY_SLIPPAGE_TOLERANCE}
         />
         <Wrapper>
           {position ? (

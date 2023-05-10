@@ -12,7 +12,15 @@ import React, {
   useRef,
   useState,
 } from 'react'
-import { ArrowLeft, CheckCircle, Copy, ExternalLink as ExternalLinkIconFeather, Icon, X } from 'react-feather'
+import {
+  AlertTriangle,
+  ArrowLeft,
+  CheckCircle,
+  Copy,
+  ExternalLink as ExternalLinkIconFeather,
+  Icon,
+  X,
+} from 'react-feather'
 import { Link } from 'react-router-dom'
 import styled, { css, keyframes } from 'styled-components/macro'
 import { Z_INDEX } from 'theme/zIndex'
@@ -510,4 +518,8 @@ export const Separator = styled.div`
 export const GlowEffect = styled.div`
   border-radius: 32px;
   box-shadow: ${({ theme }) => theme.networkDefaultShadow};
+`
+
+export const CautionTriangle = styled(AlertTriangle)`
+  color: ${({ theme }) => theme.accentWarning};
 `

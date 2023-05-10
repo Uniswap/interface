@@ -25,7 +25,7 @@ const TextHeader = styled.div`
   align-items: center;
 `
 
-export default function SwapHeader({ allowedSlippage }: { allowedSlippage: Percent }) {
+export default function SwapHeader({ autoSlippage }: { autoSlippage: Percent }) {
   const fiatOnRampButtonEnabled = useFiatOnRampButtonEnabled()
 
   return (
@@ -38,7 +38,7 @@ export default function SwapHeader({ allowedSlippage }: { allowedSlippage: Perce
           {fiatOnRampButtonEnabled && <SwapBuyFiatButton />}
         </RowFixed>
         <RowFixed>
-          <SettingsTab placeholderSlippage={allowedSlippage} />
+          <SettingsTab autoSlippage={autoSlippage} />
         </RowFixed>
       </RowBetween>
     </StyledSwapHeader>

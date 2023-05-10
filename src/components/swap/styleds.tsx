@@ -1,4 +1,3 @@
-import { TooltipContainer } from 'components/Tooltip'
 import { SupportedChainId } from 'constants/chains'
 import { transparentize } from 'polished'
 import { ReactNode } from 'react'
@@ -31,7 +30,7 @@ export const SwapWrapper = styled.main<{ chainId: number | undefined }>`
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
   padding: 8px;
   box-shadow: ${({ chainId }) => !!chainId && chainId === SupportedChainId.BNB && '0px 40px 120px 0px #f0b90b29'};
-  z-index: ${Z_INDEX.deprecated_content};
+  z-index: ${Z_INDEX.default};
   transition: transform 250ms ease;
 
   &:hover {
@@ -62,17 +61,6 @@ export const ArrowWrapper = styled.div<{ clickable: boolean }>`
           }
         `
       : null}
-`
-
-export const ErrorText = styled(Text)<{ severity?: 0 | 1 | 2 | 3 | 4 }>`
-  color: ${({ theme, severity }) =>
-    severity === 3 || severity === 4
-      ? theme.accentFailure
-      : severity === 2
-      ? theme.deprecated_yellow2
-      : severity === 1
-      ? theme.textPrimary
-      : theme.textSecondary};
 `
 
 export const TruncatedText = styled(Text)`
@@ -150,16 +138,4 @@ export const SwapShowAcceptChanges = styled(AutoColumn)`
   padding: 0.5rem;
   border-radius: 12px;
   margin-top: 8px;
-`
-
-export const ResponsiveTooltipContainer = styled(TooltipContainer)<{ origin?: string; width?: string }>`
-  background-color: ${({ theme }) => theme.backgroundSurface};
-  border: 1px solid ${({ theme }) => theme.backgroundInteractive};
-  padding: 1rem;
-  width: ${({ width }) => width ?? 'auto'};
-
-  ${({ theme, origin }) => theme.deprecated_mediaWidth.deprecated_upToExtraSmall`
-    transform: scale(0.8);
-    transform-origin: ${origin ?? 'top left'};
-  `}
 `
