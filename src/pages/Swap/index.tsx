@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { sendAnalyticsEvent, Trace, TraceEvent } from '@uniswap/analytics'
+import { sendAnalyticsEvent, Trace, TraceEvent, useTrace } from '@uniswap/analytics'
 import {
   BrowserEvent,
   InterfaceElementName,
@@ -110,16 +110,8 @@ const SwapSection = styled.div`
   }
 `
 
-const OutputSwapSection = styled(SwapSection)<{ showDetailsDropdown: boolean }>`
+const OutputSwapSection = styled(SwapSection)`
   border-bottom: ${({ theme }) => `1px solid ${theme.backgroundSurface}`};
-  border-bottom-left-radius: ${({ showDetailsDropdown }) => showDetailsDropdown && '0'};
-  border-bottom-right-radius: ${({ showDetailsDropdown }) => showDetailsDropdown && '0'};
-`
-
-const DetailsSwapSection = styled(SwapSection)`
-  padding: 0;
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
 `
 
 function getIsValidSwapQuote(
@@ -189,6 +181,7 @@ export function Swap({
   const { account, chainId: connectedChainId, connector } = useWeb3React()
   const [newSwapQuoteNeedsLogging, setNewSwapQuoteNeedsLogging] = useState(true)
   const [fetchingSwapQuoteStartTime, setFetchingSwapQuoteStartTime] = useState<Date | undefined>()
+  const trace = useTrace()
 
   // token warning stuff
   const prefilledInputCurrency = useCurrency(prefilledState?.[Field.INPUT]?.currencyId)
@@ -270,6 +263,7 @@ export function Swap({
   const {
     trade: { state: tradeState, trade },
     allowedSlippage,
+    autoSlippage,
     currencyBalances,
     parsedAmount,
     currencies,
@@ -392,13 +386,14 @@ export function Swap({
         chain_id: chainId,
         token_symbol: maximumAmountIn?.currency.symbol,
         token_address: maximumAmountIn?.currency.address,
+        ...trace,
       })
     } catch (e) {
       console.error(e)
     } finally {
       setIsAllowancePending(false)
     }
-  }, [allowance, chainId, maximumAmountIn?.currency.address, maximumAmountIn?.currency.symbol])
+  }, [allowance, chainId, maximumAmountIn?.currency.address, maximumAmountIn?.currency.symbol, trace])
 
   const maxInputAmount: CurrencyAmount<Currency> | undefined = useMemo(
     () => maxAmountSpend(currencyBalances[Field.INPUT]),
@@ -534,10 +529,14 @@ export function Swap({
       // Set the current datetime as the time of receipt of latest swap quote.
       setSwapQuoteReceivedDate(now)
       // Log swap quote.
-      sendAnalyticsEvent(
-        SwapEventName.SWAP_QUOTE_RECEIVED,
-        formatSwapQuoteReceivedEventProperties(trade, trade.gasUseEstimateUSD ?? undefined, fetchingSwapQuoteStartTime)
-      )
+      sendAnalyticsEvent(SwapEventName.SWAP_QUOTE_RECEIVED, {
+        ...formatSwapQuoteReceivedEventProperties(
+          trade,
+          trade.gasUseEstimateUSD ?? undefined,
+          fetchingSwapQuoteStartTime
+        ),
+        ...trace,
+      })
       // Latest swap quote has just been logged, so we don't need to log the current trade anymore
       // unless user inputs change again and a new trade is in the process of being generated.
       setNewSwapQuoteNeedsLogging(false)
@@ -556,6 +555,7 @@ export function Swap({
     fetchingSwapQuoteStartTime,
     trade,
     setSwapQuoteReceivedDate,
+    trace,
   ])
 
   const showDetailsDropdown = Boolean(
@@ -572,7 +572,7 @@ export function Swap({
         onCancel={handleDismissTokenWarning}
         showCancel={true}
       />
-      <SwapHeader allowedSlippage={allowedSlippage} />
+      <SwapHeader autoSlippage={autoSlippage} />
       <ConfirmSwapModal
         isOpen={showConfirm}
         trade={trade}
@@ -633,9 +633,9 @@ export function Swap({
           </TraceEvent>
         </ArrowWrapper>
       </div>
-      <AutoColumn gap="md">
+      <AutoColumn gap="xs">
         <div>
-          <OutputSwapSection showDetailsDropdown={showDetailsDropdown}>
+          <OutputSwapSection>
             <Trace section={InterfaceSectionName.CURRENCY_OUTPUT_PANEL}>
               <SwapCurrencyInputPanel
                 value={formattedAmounts[Field.OUTPUT]}
@@ -668,17 +668,15 @@ export function Swap({
               </>
             ) : null}
           </OutputSwapSection>
-          {showDetailsDropdown && (
-            <DetailsSwapSection>
-              <SwapDetailsDropdown
-                trade={trade}
-                syncing={routeIsSyncing}
-                loading={routeIsLoading}
-                allowedSlippage={allowedSlippage}
-              />
-            </DetailsSwapSection>
-          )}
         </div>
+        {showDetailsDropdown && (
+          <SwapDetailsDropdown
+            trade={trade}
+            syncing={routeIsSyncing}
+            loading={routeIsLoading}
+            allowedSlippage={allowedSlippage}
+          />
+        )}
         {showPriceImpactWarning && <PriceImpactWarning priceImpact={largerPriceImpact} />}
         <div>
           {swapIsUnsupported ? (
@@ -732,6 +730,7 @@ export function Swap({
               onClick={updateAllowance}
               disabled={isAllowancePending || isApprovalLoading}
               style={{ gap: 14 }}
+              data-testid="swap-approve-button"
             >
               {isAllowancePending ? (
                 <>
