@@ -127,7 +127,8 @@ const PriceCell = ({ price }: { price: number }) => {
 export const HeaderRow = ({ type, is1155 }: { type: TableTabsKeys; is1155?: boolean }) => {
   const screenSize = useScreenSize()
   const isMobile = !screenSize['sm']
-  const reducedPriceWidth = isMobile || (screenSize['lg'] && !screenSize['xl'])
+  const isLargeScreen = screenSize['lg'] && !screenSize['xl']
+  const reducedPriceWidth = isMobile || isLargeScreen
 
   return (
     <Row gap="12px" padding="6px 6px 6px 0px">
@@ -175,7 +176,7 @@ export const ContentRow = ({
   const isMobile = !screenSize['sm']
   const theme = useTheme()
   const date = content.endAt && new Date(content.endAt)
-  const isSellOrder = (content as SellOrder).type === OrderType.Listing
+  const isSellOrder = 'type' in content && content.type === OrderType.Listing
   const reducedPriceWidth = isMobile || (screenSize['lg'] && !screenSize['xl'])
 
   return (
