@@ -39,7 +39,7 @@ export default function PriceImpactWarning({ priceImpact }: PriceImpactWarningPr
               </ThemedText.DeprecatedSubHeader>
             </RowFixed>
             <ThemedText.DeprecatedLabel textAlign="right" fontSize={14} color={theme.accentFailure}>
-              {`${priceImpact.multiply(-1).toFixed(2)}%`}
+              {`-${priceImpact.toFixed(2)}%`}
             </ThemedText.DeprecatedLabel>
           </RowBetween>
         </MouseoverTooltip>

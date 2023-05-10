@@ -1,0 +1,41 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`getRoutingDiagramEntries returns entries for a trade 1`] = `
+Array [
+  Object {
+    "path": Array [
+      Array [
+        Token {
+          "address": "0x0000000000000000000000000000000000000001",
+          "chainId": 1,
+          "decimals": 18,
+          "isNative": false,
+          "isToken": true,
+          "name": "Abc",
+          "symbol": "ABC",
+        },
+        Token {
+          "address": "0x0000000000000000000000000000000000000002",
+          "chainId": 1,
+          "decimals": 18,
+          "isNative": false,
+          "isToken": true,
+          "name": "Def",
+          "symbol": "DEF",
+        },
+        10000,
+      ],
+    ],
+    "percent": Percent {
+      "denominator": JSBI [
+        1000,
+      ],
+      "isPercent": true,
+      "numerator": JSBI [
+        1000,
+      ],
+    },
+    "protocol": "V3",
+  },
+]
+`;

@@ -8,7 +8,7 @@ import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
 import useAutoRouterSupported from 'hooks/useAutoRouterSupported'
 import { InterfaceTrade } from 'state/routing/types'
 import { Separator, ThemedText } from 'theme'
-import getTokenPath from 'utils/getTokenPath'
+import getRoutingDiagramEntries from 'utils/getRoutingDiagramEntries'
 
 import RouterLabel from './RouterLabel'
 
@@ -22,7 +22,7 @@ export default function SwapRoute({
   const { chainId } = useWeb3React()
   const autoRouterSupported = useAutoRouterSupported()
 
-  const routes = getTokenPath(trade)
+  const routes = getRoutingDiagramEntries(trade)
 
   const gasPrice =
     // TODO(WEB-3303)
