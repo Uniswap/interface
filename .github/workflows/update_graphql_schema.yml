@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
   # TODO: [MOB-3861] consider using a dispatch from @uniswap/data-api-graphql
-    
+
 jobs:
   update-graphql-schema:
     runs-on: ubuntu-latest
@@ -22,7 +22,7 @@ jobs:
         uses: ./.github/actions/monorepo_yarn_install
 
       - name: 📈 Update GraphQL Schema
-        run: yarn apollo:schema
+        run: yarn mobile apollo:schema
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v3
@@ -35,5 +35,5 @@ jobs:
           branch: chore/update-graphql-schema
           branch-suffix: timestamp
           delete-branch: true
-          title: 'chore: [bot] Update GraphQL Schema'
+          title: 'chore(MOB): [bot] Update GraphQL Schema'
           body: GraphQL schema has been updated
