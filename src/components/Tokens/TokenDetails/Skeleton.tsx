@@ -1,4 +1,4 @@
-import { SwapSkeleton } from 'components/swap/Skeleton'
+import { SwapSkeleton } from 'components/swap/SwapSkeleton'
 import { ArrowLeft } from 'react-feather'
 import { useParams } from 'react-router-dom'
 import styled, { useTheme } from 'styled-components/macro'
