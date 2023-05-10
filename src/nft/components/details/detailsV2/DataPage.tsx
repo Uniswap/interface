@@ -9,12 +9,17 @@ import { DataPageHeader } from './DataPageHeader'
 import { DataPageTable } from './DataPageTable'
 import { DataPageTraits } from './DataPageTraits'
 
-const DataPageContainer = styled(Column)`
+const DataPagePaddingContainer = styled.div`
   padding: 24px 64px;
   height: 100vh;
   width: 100%;
+`
+
+const DataPageContainer = styled(Column)`
+  height: 100%;
+  width: 100%;
   gap: 36px;
-  max-width: ${({ theme }) => theme.maxWidth + 128};
+  max-width: ${({ theme }) => theme.maxWidth};
   margin: 0 auto;
 
   @media screen and (max-width: ${BREAKPOINTS.md}px) {
@@ -47,15 +52,17 @@ const LeftColumn = styled(Column)`
 
 export const DataPage = ({ asset }: { asset: GenieAsset }) => {
   return (
-    <DataPageContainer>
-      <DataPageHeader />
-      <ContentContainer>
-        <LeftColumn>
-          {!!asset.traits?.length && <DataPageTraits asset={asset} />}
-          <DataPageDescription />
-        </LeftColumn>
-        <DataPageTable asset={asset} />
-      </ContentContainer>
-    </DataPageContainer>
+    <DataPagePaddingContainer>
+      <DataPageContainer>
+        <DataPageHeader />
+        <ContentContainer>
+          <LeftColumn>
+            {!!asset.traits?.length && <DataPageTraits asset={asset} />}
+            <DataPageDescription />
+          </LeftColumn>
+          <DataPageTable asset={asset} />
+        </ContentContainer>
+      </DataPageContainer>
+    </DataPagePaddingContainer>
   )
 }
