@@ -4,6 +4,7 @@ import { InterfaceEventName, InterfaceModalName } from '@uniswap/analytics-event
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { ButtonPrimary } from 'components/Button'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import Modal from 'components/Modal'
 import { useMaxAmountIn } from 'hooks/useMaxAmountIn'
@@ -13,6 +14,7 @@ import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 import { useIsTransactionConfirmed, useTransaction } from 'state/transactions/hooks'
 import invariant from 'tiny-invariant'
+import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 import { tradeMeaningfullyDiffers } from 'utils/tradeMeaningFullyDiffer'
 
 import { ConfirmationModalContent, TransactionErrorContent } from '../TransactionConfirmationModal'
@@ -65,7 +67,6 @@ export default function ConfirmSwapModal({
         trade &&
           originalTrade &&
           tradeMeaningfullyDiffers(trade, originalTrade) &&
-          // no point in resetting the UI if the transaction is already sent.
           confirmModalState !== SummaryModalState.PENDING_CONFIRMATION
       ),
     [confirmModalState, originalTrade, trade]
@@ -74,9 +75,9 @@ export default function ConfirmSwapModal({
   const { chainId } = useWeb3React()
   const trace = useTrace()
   const maximumAmountIn = useMaxAmountIn(trade, allowedSlippage)
-  const [totalSteps, setTotalSteps] = useState(1)
   const [pendingModalSteps, setPendingModalSteps] = useState<PendingModalStep[]>([])
   const [currentStep, setCurrentStep] = useState(0)
+  const [approvalError, setApprovalError] = useState<'permit_approval' | 'token_approval' | undefined>(undefined)
 
   const transaction = useTransaction(txHash)
   const confirmed = useIsTransactionConfirmed(txHash)
@@ -88,26 +89,38 @@ export default function ConfirmSwapModal({
       confirmModalState === SummaryModalState.ALLOWING &&
       allowance.state === AllowanceState.ALLOWED
     ) {
-      setCurrentStep(totalSteps - 1)
+      setCurrentStep(pendingModalSteps.length - 1)
       onConfirm()
       setConfirmModalState(SummaryModalState.PENDING_CONFIRMATION)
     }
-  }, [allowance, confirmModalState, currentStep, onConfirm, showAcceptChanges, totalSteps])
+  }, [allowance, confirmModalState, currentStep, onConfirm, pendingModalSteps.length, showAcceptChanges])
 
   const previousPermitNeeded = usePrevious(
     allowance.state === AllowanceState.REQUIRED ? allowance.needsPermit2Approval : undefined
   )
-
   useEffect(() => {
-    if (
-      allowance.state === AllowanceState.REQUIRED &&
-      !allowance.needsPermit2Approval &&
-      previousPermitNeeded &&
-      allowance.needsSignature
-    ) {
+    async function requestSignature() {
       // We successfully requested Permit2 approval and need to move to the signature step.
       setCurrentStep(currentStep + 1)
-      allowance.permit()
+      try {
+        allowance.state === AllowanceState.REQUIRED && (await allowance.permit())
+      } catch (e) {
+        setConfirmModalState(SummaryModalState.REVIEWING)
+        if (didUserReject(e)) {
+          return
+        }
+        console.error(e)
+        setApprovalError('token_approval')
+      }
+    }
+    if (
+      allowance.state === AllowanceState.REQUIRED &&
+      allowance.needsSignature &&
+      // These two lines capture the state update that should trigger the signature request:
+      !allowance.needsPermit2Approval &&
+      previousPermitNeeded
+    ) {
+      requestSignature()
     }
   }, [allowance, currentStep, previousPermitNeeded])
 
@@ -115,7 +128,11 @@ export default function ConfirmSwapModal({
     invariant(allowance.state === AllowanceState.REQUIRED)
     setConfirmModalState(SummaryModalState.ALLOWING)
     try {
-      await allowance.approve()
+      if (allowance.needsPermit2Approval) {
+        await allowance.approve()
+      } else {
+        await allowance.permit()
+      }
       sendAnalyticsEvent(InterfaceEventName.APPROVE_TOKEN_TXN_SUBMITTED, {
         chain_id: chainId,
         token_symbol: maximumAmountIn?.currency.symbol,
@@ -123,9 +140,12 @@ export default function ConfirmSwapModal({
         ...trace,
       })
     } catch (e) {
+      setConfirmModalState(SummaryModalState.REVIEWING)
+      if (didUserReject(e)) {
+        return
+      }
       console.error(e)
-      // TODO: show error modal for unknown errors instead of reverting to summary view every time.
-      return false
+      setApprovalError('permit_approval')
     }
     return true
   }, [allowance, chainId, maximumAmountIn?.currency.address, maximumAmountIn?.currency.symbol, trace])
@@ -133,15 +153,14 @@ export default function ConfirmSwapModal({
   const onModalDismiss = useCallback(() => {
     if (isOpen) setShouldLogModalCloseEvent(true)
     onDismiss()
-    setConfirmModalState(SummaryModalState.REVIEWING)
+    setTimeout(() => {
+      // Reset local state after the modal dismiss animation finishes, to avoid UI flicker as it dismisses
+      setConfirmModalState(SummaryModalState.REVIEWING)
+      setApprovalError(undefined)
+    }, 200)
   }, [isOpen, onDismiss])
 
   const prepareSwapFlow = useCallback(() => {
-    setTotalSteps(
-      allowance.state === AllowanceState.REQUIRED
-        ? 1 + (allowance.needsSignature ? 1 : 0) + (allowance.needsPermit2Approval ? 1 : 0)
-        : 1
-    )
     setCurrentStep(0)
     const steps: PendingModalStep[] = []
     if (allowance.state === AllowanceState.REQUIRED && allowance.needsPermit2Approval) {
@@ -153,7 +172,6 @@ export default function ConfirmSwapModal({
         logo: <CurrencyLogo currency={trade?.inputAmount?.currency} size="48px" />,
       })
     }
-
     if (allowance.state === AllowanceState.REQUIRED && allowance.needsSignature) {
       steps.push({
         title: t`Approve ${trade?.inputAmount?.currency?.symbol}`,
@@ -177,6 +195,20 @@ export default function ConfirmSwapModal({
     return <SwapModalHeader trade={trade} allowedSlippage={allowedSlippage} />
   }, [allowedSlippage, confirmModalState, showAcceptChanges, trade])
 
+  const startApproveAndSwapFlow = useCallback(() => {
+    setApprovalError(undefined)
+    async function startFlow() {
+      prepareSwapFlow()
+      if (allowance.state === AllowanceState.REQUIRED) {
+        await updateAllowance()
+      } else {
+        setConfirmModalState(SummaryModalState.PENDING_CONFIRMATION)
+        onConfirm()
+      }
+    }
+    startFlow()
+  }, [allowance.state, onConfirm, prepareSwapFlow, updateAllowance])
+
   const modalBottom = useCallback(() => {
     if (confirmModalState !== SummaryModalState.REVIEWING && !showAcceptChanges) {
       return (
@@ -190,18 +222,7 @@ export default function ConfirmSwapModal({
     }
     return (
       <SwapModalFooter
-        onConfirm={async () => {
-          prepareSwapFlow()
-          if (allowance.state === AllowanceState.REQUIRED) {
-            const allowanceResult: boolean = await updateAllowance()
-            if (!allowanceResult) {
-              setConfirmModalState(SummaryModalState.REVIEWING)
-            }
-          } else {
-            setConfirmModalState(SummaryModalState.PENDING_CONFIRMATION)
-            onConfirm()
-          }
-        }}
+        onConfirm={startApproveAndSwapFlow}
         trade={trade}
         hash={txHash}
         allowedSlippage={allowedSlippage}
@@ -223,6 +244,7 @@ export default function ConfirmSwapModal({
     confirmModalState,
     showAcceptChanges,
     trade,
+    startApproveAndSwapFlow,
     txHash,
     allowedSlippage,
     swapErrorMessage,
@@ -234,32 +256,45 @@ export default function ConfirmSwapModal({
     currentStep,
     confirmed,
     transactionSuccess,
-    prepareSwapFlow,
-    allowance.state,
-    updateAllowance,
-    onConfirm,
     onAcceptChanges,
   ])
-
-  const confirmationContent = useCallback(
-    () =>
-      swapErrorMessage ? (
-        <TransactionErrorContent onDismiss={onModalDismiss} message={swapErrorMessage} />
-      ) : (
-        <ConfirmationModalContent
-          title={confirmModalState === SummaryModalState.REVIEWING ? <Trans>Review Swap</Trans> : undefined}
-          onDismiss={onModalDismiss}
-          topContent={modalHeader}
-          bottomContent={modalBottom}
-        />
-      ),
-    [swapErrorMessage, onModalDismiss, confirmModalState, modalHeader, modalBottom]
-  )
 
   return (
     <Trace modal={InterfaceModalName.CONFIRM_SWAP}>
       <Modal isOpen={isOpen} $scrollOverlay={true} onDismiss={onModalDismiss} maxHeight={90}>
-        {confirmationContent()}
+        {approvalError ? (
+          <PendingModalContent
+            hideStepIndicators
+            steps={[
+              {
+                title: approvalError === 'permit_approval' ? t`Permit approval failed` : t`Token approval failed`,
+                label:
+                  approvalError === 'permit_approval' ? t`Why are permits required?` : t`Why are approvals required?`,
+                tooltipText:
+                  approvalError === 'permit_approval'
+                    ? t`Permit2 allows token approvals to be shared and managed across different applications.`
+                    : t`This provides the Uniswap protocol access to your token for trading. For security, this will expire after 30 days.`,
+                button: (
+                  <ButtonPrimary marginX="24px" onClick={startApproveAndSwapFlow}>
+                    <Trans>Retry</Trans>
+                  </ButtonPrimary>
+                ),
+              },
+            ]}
+            activeStepIndex={0}
+            confirmed={true}
+            transactionSuccess={false}
+          />
+        ) : swapErrorMessage ? (
+          <TransactionErrorContent onDismiss={onModalDismiss} message={swapErrorMessage} />
+        ) : (
+          <ConfirmationModalContent
+            title={confirmModalState === SummaryModalState.REVIEWING ? <Trans>Review Swap</Trans> : undefined}
+            onDismiss={onModalDismiss}
+            topContent={modalHeader}
+            bottomContent={modalBottom}
+          />
+        )}
       </Modal>
     </Trace>
   )
