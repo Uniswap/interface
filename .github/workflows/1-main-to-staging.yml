@@ -18,6 +18,11 @@ jobs:
         with:
           token: ${{ secrets.RELEASE_SERVICE_ACCESS_TOKEN }}
           ref: main
+      - name: Add CODEOWNERS file
+        run: |
+          echo "@uniswap/web-reviewers" > CODEOWNERS
+          git add CODEOWNERS
+          git commit -m "ci: add CODEOWNERS file"
       - name: Git push
         run: |
           git config user.name "UL Service Account"
