@@ -67,9 +67,5 @@ export default function PrefetchBalancesWrapper({ children }: PropsWithChildren)
     if (hasUnfetchedBalances) fetchBalances()
   }, [fetchBalances, hasUnfetchedBalances])
 
-  return (
-    <div onMouseEnter={onHover} data-testid="prefetch-balances-wrapper">
-      {children}
-    </div>
-  )
+  return <div onMouseEnter={onHover}>{children}</div>
 }
