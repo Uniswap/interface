@@ -59,16 +59,21 @@ export default function Updater({ pendingTransactions, onCheck, onReceipt }: Upd
       const retryOptions = RETRY_OPTIONS_BY_CHAIN_ID[chainId] ?? DEFAULT_RETRY_OPTIONS
       return retry(
         () =>
-          provider.getTransactionReceipt(hash).then((receipt) => {
+          provider.getTransactionReceipt(hash).then(async (receipt) => {
             if (receipt === null) {
               if (account) {
-                provider.getTransactionCount(account).then((transactionCount) => {
+                try {
+                  const transactionCount = await provider.getTransactionCount(account)
                   const tx = pendingTransactions[hash]
+                  // We check for the presence of a nonce because we haven't always saved them,
+                  //   so this code may run against old store state where nonce is undefined.
                   if (tx.nonce && tx.nonce < transactionCount) {
                     // We remove pending transactions from redux if they are no longer the latest nonce.
                     removeTransaction(hash)
                   }
-                })
+                } catch (e) {
+                  console.warn('unable to get transaction count', e)
+                }
               }
               console.debug(`Retrying tranasaction receipt for ${hash}`)
               throw new RetryableError()
