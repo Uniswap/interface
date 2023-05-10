@@ -1,4 +1,4 @@
-import { NftMarketplace, NftStandard } from 'graphql/data/__generated__/types-and-hooks'
+import { MediaType, NftMarketplace, NftStandard } from 'graphql/data/__generated__/types-and-hooks'
 import { SortBy } from 'nft/hooks'
 
 import { SellOrder } from '../sell'
@@ -102,6 +102,7 @@ export interface GenieAsset {
   collectionSymbol?: string
   imageUrl?: string
   animationUrl?: string
+  mediaType?: MediaType
   marketplace?: Markets
   name?: string
   priceInfo: PriceInfo

@@ -25,7 +25,6 @@ const StyledPriceContainer = styled.button`
   flex-direction: row;
   text-align: left;
   flex-wrap: wrap;
-  padding: 8px 0;
   user-select: text;
 `
 
@@ -60,9 +59,9 @@ export default function TradePrice({ price }: TradePriceProps) {
     >
       <ThemedText.BodySmall>{text}</ThemedText.BodySmall>{' '}
       {usdPrice && (
-        <ThemedText.DeprecatedDarkGray>
+        <ThemedText.BodySmall color="textSecondary">
           <Trans>({formatNumber(usdPrice, NumberType.FiatTokenPrice)})</Trans>
-        </ThemedText.DeprecatedDarkGray>
+        </ThemedText.BodySmall>
       )}
     </StyledPriceContainer>
   )

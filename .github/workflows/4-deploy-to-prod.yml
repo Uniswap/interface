@@ -1,70 +1,34 @@
-name: Release
+name: 4 | Deploy to prod
 on:
-  schedule:
-    - cron: '0 12 * * 1-4' # every day 12:00 UTC Monday-Thursday
-  # manual trigger
-  workflow_dispatch:
+  push:
+    branches:
+      - 'releases/prod'
 
 jobs:
-  wait-on-tests:
-    runs-on: ubuntu-latest
-    steps:
-      - id: unit-tests
-        uses: fountainhead/action-wait-for-check@v1.0.0
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          checkName: unit-tests
-      - id: cypress-tests
-        uses: fountainhead/action-wait-for-check@v1.0.0
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          checkName: cypress-tests
-      - if: steps.unit-tests.outputs.conclusion != 'success' || steps.cypress-tests.outputs.conclusion != 'success'
-        run: exit 1
-
-  tag:
-    needs: wait-on-tests
-    runs-on: ubuntu-latest
-    outputs:
-      new_tag: ${{ steps.github-tag-action.outputs.new_tag }}
-      changelog: ${{ steps.github-tag-action.outputs.changelog }}
+  deploy-to-prod:
+    environment:
+      name: prod
     steps:
       - uses: actions/checkout@v3
+      - uses: ./.github/actions/setup
+      - run: yarn prepare
+      - run: yarn build
       - name: Bump and tag
         id: github-tag-action
         uses: mathieudutour/github-tag-action@v6.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          release_branches: .*
+          release_branches: releases/prod
           default_bump: patch
-
-  release:
-    needs: tag
-    if: ${{ needs.tag.outputs.new_tag != null }}
-    runs-on: ubuntu-latest
-    environment:
-        name: release
-    steps:
-      - uses: actions/checkout@v3
-      - uses: ./.github/actions/setup
-      - run: yarn build
 
       - name: Pin to IPFS
         id: pinata
         uses: anantaramdas/ipfs-pinata-deploy-action@39bbda1ce1fe24c69c6f57861b8038278d53688d
         with:
-          pin-name: Uniswap ${{ needs.tag.outputs.new_tag }}
+          pin-name: Uniswap ${{ steps.github-tag-action.outputs.new_tag }}
           path: './build'
           pinata-api-key: ${{ secrets.PINATA_API_KEY }}
           pinata-secret-api-key: ${{ secrets.PINATA_API_SECRET_KEY }}
-
-      - name: Pin to Crust
-        uses: crustio/ipfs-crust-action@v2.0.3
-        continue-on-error: true
-        timeout-minutes: 2
-        with:
-          cid: ${{ steps.pinata.outputs.hash }}
-          seeds: ${{ secrets.CRUST_SEEDS }}
 
       - name: Convert CIDv0 to CIDv1
         id: convert-cidv0
@@ -77,18 +41,18 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ needs.tag.outputs.new_tag }}
-          release_name: Release ${{ needs.tag.outputs.new_tag }}
+          tag_name: ${{ steps.github-tag-action.outputs.new_tag }}
+          release_name: Release ${{ steps.github-tag-action.outputs.new_tag }}
           body: |
             IPFS hash of the deployment:
             - CIDv0: `${{ steps.pinata.outputs.hash }}`
             - CIDv1: `${{ steps.convert-cidv0.outputs.cidv1 }}`
 
-            The latest release is always accessible via our alias to the Cloudflare IPFS gateway at [app.uniswap.org](https://app.uniswap.org).
+            The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
-            You can also access the Uniswap Interface directly from an IPFS gateway.
+            You can also access the Uniswap Interface from an IPFS gateway.
             **BEWARE**: The Uniswap interface uses [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) to remember your settings, such as which tokens you have imported.
-            **You should always use an IPFS gateway that enforces origin separation**, or our alias to the latest release at [app.uniswap.org](https://app.uniswap.org).
+            **You should always use an IPFS gateway that enforces origin separation**, or our hosted deployment of the latest release at [app.uniswap.org](https://app.uniswap.org).
             Your Uniswap settings are never remembered across different URLs.
 
             IPFS gateways:
@@ -96,7 +60,7 @@ jobs:
             - https://${{ steps.convert-cidv0.outputs.cidv1 }}.ipfs.cf-ipfs.com/
             - [ipfs://${{ steps.pinata.outputs.hash }}/](ipfs://${{ steps.pinata.outputs.hash }}/)
 
-            ${{ needs.tag.outputs.changelog }}
+            ${{ steps.github-tag-action.outputs.changelog }}
 
       - name: Setup node@16 (required by Cloudflare Pages)
         uses: actions/setup-node@v3
@@ -111,6 +75,7 @@ jobs:
           projectName: ${{ secrets.CLOUDFLARE_PROJECT_NAME }}
           directory: build
           githubToken: ${{ secrets.GITHUB_TOKEN }}
+          branch: main
 
       - name: Upload source maps to Sentry
         uses: getsentry/action-release@4744f6a65149f441c5f396d5b0877307c0db52c7
@@ -123,3 +88,4 @@ jobs:
           environment: production
           sourcemaps: './build/static/js'
           url_prefix: '~/static/js'
+
