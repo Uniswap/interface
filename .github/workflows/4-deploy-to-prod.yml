@@ -7,7 +7,7 @@ on:
 jobs:
   deploy-to-prod:
     environment:
-      name: prod
+      name: release
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
