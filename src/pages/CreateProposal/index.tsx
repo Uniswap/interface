@@ -290,7 +290,6 @@ ${bodyValue}
         data: interfaces[0].encodeFunctionData(methods[i], values[i]),
       }
     }
-    console.log(createProposalData.actions)
 
     const hash = await createProposalCallback(createProposalData ?? undefined)?.catch(() => {
       setAttempting(false)
