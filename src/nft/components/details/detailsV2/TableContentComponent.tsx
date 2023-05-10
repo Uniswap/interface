@@ -36,6 +36,14 @@ const TableHeaderRowContainer = styled.div<{ userCanScroll: boolean }>`
   margin-right: ${({ userCanScroll }) => (userCanScroll ? '11px' : '0')};
 `
 
+const TableRowContainer = styled.div`
+  border-bottom: 1px solid ${({ theme }) => theme.backgroundOutline};
+
+  &:last-child {
+    border-bottom: none;
+  }
+`
+
 interface TableContentComponentProps {
   headerRow: React.ReactNode
   contentRows: React.ReactNode[]
@@ -52,7 +60,7 @@ export const TableContentComponent = ({ headerRow, contentRows, type }: TableCon
         {scrollProgress > 0 && <Scrim />}
         <TableRowScrollableContainer ref={scrollRef} onScroll={scrollHandler}>
           {contentRows.map((row, index) => (
-            <div key={type + '_row_' + index}>{row}</div>
+            <TableRowContainer key={type + '_row_' + index}>{row}</TableRowContainer>
           ))}
         </TableRowScrollableContainer>
         {userCanScroll && scrollProgress !== 100 && <Scrim isBottom={true} />}
