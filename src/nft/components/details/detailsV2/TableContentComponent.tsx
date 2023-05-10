@@ -95,7 +95,7 @@ const USDPrice = styled(ThemedText.BodySmall)`
     display: none;
   }
 
-  @media screen and (min-width: ${BREAKPOINTS.lg}px) and (max-width: ${BREAKPOINTS.xl}px) {
+  @media screen and (min-width: ${BREAKPOINTS.lg}px) and (max-width: ${BREAKPOINTS.xl - 1}px) {
     display: none;
   }
 `
