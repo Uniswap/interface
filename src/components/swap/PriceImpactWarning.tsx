@@ -8,7 +8,6 @@ import { ThemedText } from '../../theme'
 import { AutoColumn } from '../Column'
 import { RowBetween, RowFixed } from '../Row'
 import { MouseoverTooltip } from '../Tooltip'
-import { formatPriceImpact } from './FormattedPriceImpact'
 
 const StyledCard = styled(OutlineCard)`
   padding: 12px;
@@ -18,6 +17,8 @@ const StyledCard = styled(OutlineCard)`
 interface PriceImpactWarningProps {
   priceImpact: Percent
 }
+
+const formatPriceImpact = (priceImpact: Percent) => `${priceImpact.multiply(-1).toFixed(2)}%`
 
 export default function PriceImpactWarning({ priceImpact }: PriceImpactWarningProps) {
   const theme = useTheme()

@@ -4,8 +4,8 @@ require('dotenv').config({ path: '.env.production' })
 const child_process = require('child_process')
 const fs = require('fs/promises')
 const { promisify } = require('util')
-const dataConfig = require('../graphql.config')
-const thegraphConfig = require('../graphql_thegraph.config')
+const dataConfig = require('../graphql.data.config')
+const thegraphConfig = require('../graphql.thegraph.config')
 
 const exec = promisify(child_process.exec)
 

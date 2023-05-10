@@ -20,20 +20,18 @@ describe('AdvancedSwapDetails.tsx', () => {
 
   it('renders correct copy on mouseover', async () => {
     render(<AdvancedSwapDetails trade={TEST_TRADE_EXACT_INPUT} allowedSlippage={TEST_ALLOWED_SLIPPAGE} />)
-    await act(() => userEvent.hover(screen.getByText('Price Impact')))
-    expect(await screen.getByText(/The impact your trade has on the market price of this pool./i)).toBeVisible()
-    await act(() => userEvent.hover(screen.getByText('Expected Output')))
+    await act(() => userEvent.hover(screen.getByText('Expected output')))
     expect(await screen.getByText(/The amount you expect to receive at the current market price./i)).toBeVisible()
-    await act(() => userEvent.hover(screen.getByText(/Minimum received/i)))
+    await act(() => userEvent.hover(screen.getByText(/Minimum output/i)))
     expect(await screen.getByText(/The minimum amount you are guaranteed to receive./i)).toBeVisible()
   })
 
   it('renders correct tooltips for test trade with exact output and gas use estimate USD', async () => {
     TEST_TRADE_EXACT_OUTPUT.gasUseEstimateUSD = toCurrencyAmount(TEST_TOKEN_1, 1)
     render(<AdvancedSwapDetails trade={TEST_TRADE_EXACT_OUTPUT} allowedSlippage={TEST_ALLOWED_SLIPPAGE} />)
-    await act(() => userEvent.hover(screen.getByText(/Maximum sent/i)))
+    await act(() => userEvent.hover(screen.getByText(/Minimum output/i)))
     expect(await screen.getByText(/The minimum amount you are guaranteed to receive./i)).toBeVisible()
-    await act(() => userEvent.hover(screen.getByText('Network Fee')))
+    await act(() => userEvent.hover(screen.getByText('Network fee')))
     expect(await screen.getByText(/The fee paid to miners who process your transaction./i)).toBeVisible()
   })
 

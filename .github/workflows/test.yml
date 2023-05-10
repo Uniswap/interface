@@ -2,6 +2,7 @@ name: Test
 
 # Many build steps have their own caches, so each job has its own cache to improve subsequent build times.
 # Build tools are configured to cache cache to node_modules/.cache, so this is cached independently of node_modules.
+# Caches are saved every run (by keying on github.run_id), and the most recent available cache is loaded.
 # See https://jongleberry.medium.com/speed-up-your-ci-and-dx-with-node-modules-cache-ac8df82b7bb0.
 
 on:
@@ -37,7 +38,6 @@ jobs:
           path: node_modules/.cache
           key: ${{ runner.os }}-tsc-${{ hashFiles('**/yarn.lock') }}-${{ github.run_id }}
           restore-keys: ${{ runner.os }}-tsc-${{ hashFiles('**/yarn.lock') }}-
-      - run: yarn prepare
       - run: yarn typecheck
 
   deps-tests:
@@ -58,7 +58,6 @@ jobs:
           path: node_modules/.cache
           key: ${{ runner.os }}-jest-${{ hashFiles('**/yarn.lock') }}-${{ github.run_id }}
           restore-keys: ${{ runner.os }}-jest-${{ hashFiles('**/yarn.lock') }}-
-      - run: yarn prepare
       - run: yarn test --coverage --maxWorkers=100%
       - uses: codecov/codecov-action@v3
         with:
@@ -66,37 +65,6 @@ jobs:
           fail_ci_if_error: false
           verbose: true
           flags: unit-tests
-
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: ./.github/actions/setup
-      - uses: actions/cache@v3
-        id: build-cache
-        with:
-          path: node_modules/.cache
-          key: ${{ runner.os }}-build-${{ hashFiles('**/yarn.lock') }}-${{ github.run_id }}
-          restore-keys: ${{ runner.os }}-build-${{ hashFiles('**/yarn.lock') }}-
-      - run: yarn prepare
-      - run: yarn build
-      - uses: actions/upload-artifact@v3
-        with:
-          name: build
-          path: build
-          if-no-files-found: error
-
-  size-tests:
-    needs: [build]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: ./.github/actions/setup
-      - uses: actions/download-artifact@v3
-        with:
-          name: build
-          path: build
-      - run: yarn test:size
 
   build-e2e:
     runs-on: ubuntu-latest
@@ -109,7 +77,6 @@ jobs:
           path: node_modules/.cache
           key: ${{ runner.os }}-build-e2e-${{ hashFiles('**/yarn.lock') }}-${{ github.run_id }}
           restore-keys: ${{ runner.os }}-build-e2e-${{ hashFiles('**/yarn.lock') }}-
-      - run: yarn prepare
       - run: yarn build:e2e
         env:
           NODE_OPTIONS: "--max_old_space_size=4096"

@@ -1,6 +1,5 @@
 import { useState } from 'react'
 
-// TODO(NFT-1190): update Bag component to use this hook
 export function useSubscribeScrollState() {
   const [userCanScroll, setUserCanScroll] = useState(false)
   const [scrollProgress, setScrollProgress] = useState(0)

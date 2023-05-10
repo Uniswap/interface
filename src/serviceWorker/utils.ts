@@ -16,6 +16,18 @@ export function isDevelopment() {
   )
 }
 
-export function toURL(entry: string | PrecacheEntry): string {
-  return typeof entry === 'string' ? entry : entry.url
+type GroupedEntries = { mediaURLs: string[]; precacheEntries: PrecacheEntry[] }
+export function groupEntries(entries: (string | PrecacheEntry)[]): GroupedEntries {
+  return entries.reduce<GroupedEntries>(
+    ({ mediaURLs, precacheEntries }, entry) => {
+      if (typeof entry === 'string') {
+        return { precacheEntries, mediaURLs: [...mediaURLs, entry] }
+      } else if (entry.url.includes('/media/')) {
+        return { precacheEntries, mediaURLs: [...mediaURLs, entry.url] }
+      } else {
+        return { precacheEntries: [...precacheEntries, entry], mediaURLs }
+      }
+    },
+    { mediaURLs: [], precacheEntries: [] }
+  )
 }

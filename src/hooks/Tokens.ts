@@ -5,17 +5,20 @@ import { SupportedChainId } from 'constants/chains'
 import { DEFAULT_INACTIVE_LIST_URLS, DEFAULT_LIST_OF_LISTS } from 'constants/lists'
 import { useCurrencyFromMap, useTokenFromMapOrNetwork } from 'lib/hooks/useCurrency'
 import { getTokenFilter } from 'lib/hooks/useTokenList/filtering'
+import { TokenAddressMap } from 'lib/hooks/useTokenList/utils'
 import { useMemo } from 'react'
+import { useAppSelector } from 'state/hooks'
 import { isL2ChainId } from 'utils/chains'
 
 import { useAllLists, useCombinedActiveList, useCombinedTokenMapFromUrls } from '../state/lists/hooks'
 import { WrappedTokenInfo } from '../state/lists/wrappedTokenInfo'
-import { useUserAddedTokens, useUserAddedTokensOnChain } from '../state/user/hooks'
-import { TokenAddressMap, useUnsupportedTokenList } from './../state/lists/hooks'
+import { deserializeToken, useUserAddedTokens, useUserAddedTokensOnChain } from '../state/user/hooks'
+import { useUnsupportedTokenList } from './../state/lists/hooks'
+
+type Maybe<T> = T | null | undefined
 
 // reduce token map into standard address <-> Token mapping, optionally include user added tokens
-function useTokensFromMap(tokenMap: TokenAddressMap): { [address: string]: Token } {
-  const { chainId } = useWeb3React()
+function useTokensFromMap(tokenMap: TokenAddressMap, chainId: Maybe<SupportedChainId>): { [address: string]: Token } {
   return useMemo(() => {
     if (!chainId) return {}
 
@@ -27,14 +30,44 @@ function useTokensFromMap(tokenMap: TokenAddressMap): { [address: string]: Token
   }, [chainId, tokenMap])
 }
 
-export function useAllTokensMultichain(): TokenAddressMap {
-  return useCombinedTokenMapFromUrls(DEFAULT_LIST_OF_LISTS)
+// TODO(INFRA-164): after disallowing unchecked index access, refactor ChainTokenMap to not use ?'s
+export type ChainTokenMap = { [chainId in number]?: { [address in string]?: Token } }
+/** Returns tokens from all token lists on all chains, combined with user added tokens */
+export function useAllTokensMultichain(): ChainTokenMap {
+  const allTokensFromLists = useCombinedTokenMapFromUrls(DEFAULT_LIST_OF_LISTS)
+  const userAddedTokensMap = useAppSelector(({ user: { tokens } }) => tokens)
+
+  return useMemo(() => {
+    const chainTokenMap: ChainTokenMap = {}
+
+    if (userAddedTokensMap) {
+      Object.keys(userAddedTokensMap).forEach((key) => {
+        const chainId = Number(key)
+        const tokenMap = {} as { [address in string]?: Token }
+        Object.values(userAddedTokensMap[chainId]).forEach((serializedToken) => {
+          tokenMap[serializedToken.address] = deserializeToken(serializedToken)
+        })
+        chainTokenMap[chainId] = tokenMap
+      })
+    }
+
+    Object.keys(allTokensFromLists).forEach((key) => {
+      const chainId = Number(key)
+      const tokenMap = chainTokenMap[chainId] ?? {}
+      Object.values(allTokensFromLists[chainId]).forEach(({ token }) => {
+        tokenMap[token.address] = token
+      })
+      chainTokenMap[chainId] = tokenMap
+    })
+
+    return chainTokenMap
+  }, [allTokensFromLists, userAddedTokensMap])
 }
 
-// Returns all tokens from the default list + user added tokens
-export function useDefaultActiveTokens(): { [address: string]: Token } {
+/** Returns all tokens from the default list + user added tokens */
+export function useDefaultActiveTokens(chainId: Maybe<SupportedChainId>): { [address: string]: Token } {
   const defaultListTokens = useCombinedActiveList()
-  const tokensFromMap = useTokensFromMap(defaultListTokens)
+  const tokensFromMap = useTokensFromMap(defaultListTokens, chainId)
   const userAddedTokens = useUserAddedTokens()
   return useMemo(() => {
     return (
@@ -66,7 +99,7 @@ export function useUnsupportedTokens(): { [address: string]: Token } {
   const { chainId } = useWeb3React()
   const listsByUrl = useAllLists()
   const unsupportedTokensMap = useUnsupportedTokenList()
-  const unsupportedTokens = useTokensFromMap(unsupportedTokensMap)
+  const unsupportedTokens = useTokensFromMap(unsupportedTokensMap, chainId)
 
   // checks the default L2 lists to see if `bridgeInfo` has an L1 address value that is unsupported
   const l2InferredBlockedTokens: typeof unsupportedTokens = useMemo(() => {
@@ -110,7 +143,7 @@ export function useSearchInactiveTokenLists(search: string | undefined, minResul
   const lists = useAllLists()
   const inactiveUrls = DEFAULT_INACTIVE_LIST_URLS
   const { chainId } = useWeb3React()
-  const activeTokens = useDefaultActiveTokens()
+  const activeTokens = useDefaultActiveTokens(chainId)
   return useMemo(() => {
     if (!search || search.trim().length === 0) return []
     const tokenFilter = getTokenFilter(search)
@@ -167,11 +200,13 @@ export function useIsUserAddedTokenOnChain(
 // null if loading or null was passed
 // otherwise returns the token
 export function useToken(tokenAddress?: string | null): Token | null | undefined {
-  const tokens = useDefaultActiveTokens()
+  const { chainId } = useWeb3React()
+  const tokens = useDefaultActiveTokens(chainId)
   return useTokenFromMapOrNetwork(tokens, tokenAddress)
 }
 
-export function useCurrency(currencyId?: string | null): Currency | null | undefined {
-  const tokens = useDefaultActiveTokens()
-  return useCurrencyFromMap(tokens, currencyId)
+export function useCurrency(currencyId: Maybe<string>, chainId?: SupportedChainId): Currency | null | undefined {
+  const { chainId: connectedChainId } = useWeb3React()
+  const tokens = useDefaultActiveTokens(chainId ?? connectedChainId)
+  return useCurrencyFromMap(tokens, chainId ?? connectedChainId, currencyId)
 }
