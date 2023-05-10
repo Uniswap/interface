@@ -30,13 +30,13 @@ import { useRouterPreference, useUserSlippageTolerance } from 'state/user/hooks'
 import styled, { useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { formatTransactionAmount, priceToPreciseFloat } from 'utils/formatNumbers'
+import getRoutingDiagramEntries, { RoutingDiagramEntry } from 'utils/getRoutingDiagramEntries'
 import { computeRealizedPriceImpact, getPriceImpactWarning } from 'utils/prices'
 
 import { ButtonError, SmallButtonPrimary } from '../Button'
 import { AutoRow, RowBetween, RowFixed } from '../Row'
 import { SwapCallbackError, SwapShowAcceptChanges } from './styleds'
 import { SwapModalDetailRow } from './SwapModalDetailRow'
-import { getTokenPath, RoutingDiagramEntry } from './SwapRoute'
 
 interface AnalyticsEventProps {
   trade: InterfaceTrade<Currency, Currency, TradeType>
@@ -179,7 +179,7 @@ export default function SwapModalFooter({
   const transactionDeadlineSecondsSinceEpoch = useTransactionDeadline()?.toNumber() // in seconds since epoch
   const isAutoSlippage = useUserSlippageTolerance()[0] === 'auto'
   const [routerPreference] = useRouterPreference()
-  const routes = getTokenPath(trade)
+  const routes = getRoutingDiagramEntries(trade)
   const [lastExecutionPrice, setLastExecutionPrice] = useState(trade.executionPrice)
   const [priceUpdate, setPriceUpdate] = useState<number | undefined>()
   const theme = useTheme()
