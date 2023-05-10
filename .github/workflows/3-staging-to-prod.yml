@@ -1,4 +1,4 @@
-name: 3 | Generate PR for releases/staging to releases/prod
+name: 3 | Push releases/staging to releases/prod
 
 # This CI job is responsible for force pushing the content of releases/staging to releases/prod. It
 # is restricted to web-reviewers through virtue of the GitHub environment protection rules for the
