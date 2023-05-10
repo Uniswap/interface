@@ -130,6 +130,31 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
     [dispatch, onClose]
   )
 
+  const onRemoveWallet = useCallback((): void => {
+    onClose()
+    // Need this timeout because AccountSwitcher takes a long time to trigger closeModal,
+    // which we want to happen before the remove logic
+    setTimeout(() => {
+      if (Object.keys(addressToAccount).length === associatedAccounts.length) {
+        // user has no accounts left, so we bring onboarding back
+        dispatch(setFinishedOnboarding({ finishedOnboarding: false }))
+        // setImmediate, because first we need onboarding stack to be mounted
+        setImmediate(navigateToImportSeedPhrase)
+      } else {
+        // user has view-only accounts left
+        navigate(Screens.OnboardingStack, {
+          screen: OnboardingScreens.SeedPhraseInput,
+          params: {
+            importType: ImportType.SeedPhrase,
+            entryPoint: OnboardingEntryPoint.Sidebar,
+          },
+        })
+      }
+      const accountsToRemove = removeAccounts(associatedAccounts.map((account) => account.address))
+      dispatch(accountsToRemove)
+    }, Delay.Short)
+  }, [addressToAccount, associatedAccounts, dispatch, onClose])
+
   const onPressAddWallet = (): void => {
     setShowAddWalletModal(true)
   }
@@ -311,32 +336,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
         <RemoveSeedPhraseWarningModal
           associatedAccounts={associatedAccounts}
           onClose={(): void => setShowReplaceSeedPhraseModal(false)}
-          onRemoveWallet={(): void => {
-            onClose()
-            // Need this timeout because AccountSwitcher is takes a long time to be closeModal
-            // and only then we want to proceed with the remove logic
-            setTimeout(() => {
-              if (Object.keys(addressToAccount).length === associatedAccounts.length) {
-                // user has no accounts left, so we bring onboarding back
-                dispatch(setFinishedOnboarding({ finishedOnboarding: false }))
-                // setImmediate, because first we need onboarding stack to be mounted
-                setImmediate(navigateToImportSeedPhrase)
-              } else {
-                // user has view-only accounts left
-                navigate(Screens.OnboardingStack, {
-                  screen: OnboardingScreens.SeedPhraseInput,
-                  params: {
-                    importType: ImportType.SeedPhrase,
-                    entryPoint: OnboardingEntryPoint.Sidebar,
-                  },
-                })
-              }
-              const accountsToRemove = removeAccounts(
-                associatedAccounts.map((account) => account.address)
-              )
-              dispatch(accountsToRemove)
-            }, Delay.Short)
-          }}
+          onRemoveWallet={onRemoveWallet}
         />
       )}
     </Flex>

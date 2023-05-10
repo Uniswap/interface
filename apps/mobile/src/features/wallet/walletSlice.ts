@@ -62,7 +62,7 @@ const slice = createSlice({
       const addresses = action.payload
       addresses.forEach((address) => {
         const id = getValidAddress(address, true)
-        if (!id) throw new Error('Cannot add an account with an invalid address')
+        if (!id) throw new Error('Cannot remove an account with an invalid address')
         if (!state.accounts[id]) throw new Error(`Cannot remove missing account ${id}`)
         delete state.accounts[id]
       })
