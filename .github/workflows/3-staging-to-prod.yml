@@ -1,0 +1,63 @@
+name: 3 | Generate PR for releases/staging to releases/prod
+
+# This CI job is responsible for generating PRs that bring the HEAD of `releases/staging` into `releases/prod`.
+# These PRs are meant to be the only (standard) way that code is merged into the `releases/prod` branch.
+
+on:
+  workflow_dispatch:
+
+# https://github.com/peter-evans/create-pull-request/blob/main/docs/examples.md#keep-a-branch-up-to-date-with-another
+jobs:
+  prod-gen-pr:
+    name: 'Generate PR for merging to releases/prod branch'
+    runs-on: ubuntu-latest
+    environment:
+      name: release
+    steps:
+      - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab
+        with:
+          token: ${{ secrets.RELEASE_SERVICE_ACCESS_TOKEN }}
+          ref: main
+      - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab
+        with:
+          token: ${{ secrets.RELEASE_SERVICE_ACCESS_TOKEN }}
+          ref: releases/prod
+      - name: Reset promotion branch
+        run: |
+          git fetch origin releases/staging:releases/staging
+          git reset --hard releases/staging
+      - name: Setup git
+        run: |
+          git config user.name "UL Mobile Service Account"
+          git config user.email "hello-happy-puppy@users.noreply.github.com"
+      - name: Add CODEOWNERS file
+        run: |
+          echo "@uniswap/web-reviewers" > CODEOWNERS
+          git add CODEOWNERS
+          git commit -m "ci: add CODEOWNERS file"
+      - uses: peter-evans/create-pull-request@ea54357f43e3d1cf1125471d0814f4d02cc0d364
+        id: create-pull-request
+        with:
+          token: ${{ secrets.RELEASE_SERVICE_ACCESS_TOKEN }}
+          base: 'releases/prod'
+          title: 'ci: promotes staging to prod'
+          delete-branch: 'true'
+          committer: 'UL Service Account <hello-happy-puppy@users.noreply.github.com>'
+          author: 'UL Service Account <hello-happy-puppy@users.noreply.github.com>'
+          branch: 'approvals/staging-to-prod'
+      - name: Update PR body
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          echo "### Description" > /tmp/pr_desc
+          echo "" >> /tmp/pr_desc
+          echo "This PR promotes the following commits from `releases/staging` to `releases/prod`." >> /tmp/pr_desc
+          echo "" >> /tmp/pr_desc
+          gh pr view ${{ steps.create-pull-request.outputs.pull-request-number }} --json commits | jq '.commits[] | [.oid, .messageHeadline] | @tsv' | sed 's/"//g' | sed 's/\\t/ - /g' >> /tmp/pr_desc
+          echo "" >> /tmp/pr_desc
+          echo "**Once approved this PR will be automatically merged via a merge commit.**" >> /tmp/pr_desc
+          gh pr edit ${{ steps.create-pull-request.outputs.pull-request-number }} -b "$(cat /tmp/pr_desc)"
+      - name: Enable PR automerge
+        env:
+          GH_TOKEN: ${{ secrets.RELEASE_SERVICE_ACCESS_TOKEN }}
+        run: gh pr merge --delete-branch --merge --auto "${{ steps.create-pull-request.outputs.pull-request-number }}"
