@@ -13,14 +13,14 @@ gql`
 
 export function useNftUniversalRouterAddress() {
   const { data, loading } = useNftUniversalRouterAddressQuery({
-    fetchPolicy: 'no-cache',
+    // no cache because a different version of nftRoute query is going to be called around the same time
+    fetchPolicy: 'no-cache', 
   })
 
-  return useMemo(
-    () => ({
+  return (
+    {
       universalRouterAddress: data?.nftRoute?.toAddress,
       universalRouterAddressIsLoading: loading,
-    }),
-    [data?.nftRoute?.toAddress, loading]
+    }
   )
 }
