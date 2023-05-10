@@ -4,24 +4,9 @@ import QuestionHelper from 'components/QuestionHelper'
 import Row from 'components/Row'
 import AnimatedConfirmation from 'components/TransactionConfirmationModal/AnimatedConfirmation'
 import { ReactNode } from 'react'
-import { AlertCircle } from 'react-feather'
+import { AlertTriangle } from 'react-feather'
 import styled, { useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme/components/text'
-
-export interface PendingModalStep {
-  title: ReactNode
-  subtitle: ReactNode
-  label?: ReactNode
-  tooltipText?: ReactNode
-  logo?: ReactNode
-}
-
-interface PendingModalContentProps {
-  steps: PendingModalStep[]
-  activeStepIndex: number
-  confirmed: boolean
-  transactionSuccess: boolean
-}
 
 const Container = styled(ColumnCenter)`
   margin: 48px 0 28px;
@@ -55,21 +40,39 @@ const LoadingIndicator = styled(Loader)`
   position: absolute;
 `
 
+export interface PendingModalStep {
+  title: ReactNode
+  subtitle?: ReactNode
+  label?: ReactNode
+  tooltipText?: ReactNode
+  logo?: ReactNode
+  button?: ReactNode
+}
+
+interface PendingModalContentProps {
+  steps: PendingModalStep[]
+  activeStepIndex: number
+  confirmed: boolean
+  transactionSuccess: boolean
+  hideStepIndicators?: boolean
+}
+
 export function PendingModalContent({
   activeStepIndex,
   steps,
   confirmed,
   transactionSuccess,
+  hideStepIndicators,
 }: PendingModalContentProps) {
   const theme = useTheme()
-  const { logo, title, subtitle, label, tooltipText } = steps[activeStepIndex]
+  const { logo, title, subtitle, label, tooltipText, button } = steps[activeStepIndex]
   return (
     <Container gap="lg">
       {confirmed ? (
         transactionSuccess ? (
           <AnimatedConfirmation />
         ) : (
-          <AlertCircle strokeWidth={1} size="48px" color={theme.accentFailure} />
+          <AlertTriangle strokeWidth={1} color={theme.accentFailure} size="48px" />
         )
       ) : logo ? (
         <LogoContainer>
@@ -79,19 +82,23 @@ export function PendingModalContent({
       ) : (
         <Loader stroke={theme.textTertiary} size="48px" />
       )}
+      {/* TODO: implement animations between title/subtitles of each step. */}
       <ColumnCenter gap="md">
         <ThemedText.HeadlineSmall>{title}</ThemedText.HeadlineSmall>
-        <ThemedText.LabelSmall>{subtitle}</ThemedText.LabelSmall>
+        {subtitle && <ThemedText.LabelSmall>{subtitle}</ThemedText.LabelSmall>}
         <Row justify="center">
           {label && <ThemedText.Caption color="textSecondary">{label}</ThemedText.Caption>}
           {tooltipText && <QuestionHelper text={tooltipText} />}
         </Row>
       </ColumnCenter>
-      <Row gap="14px" justify="center">
-        {steps.map((_, i) => {
-          return <StepCircle key={i} active={activeStepIndex === i} />
-        })}
-      </Row>
+      {button && <Row justify="center">{button}</Row>}
+      {!hideStepIndicators && (
+        <Row gap="14px" justify="center">
+          {steps.map((_, i) => {
+            return <StepCircle key={i} active={activeStepIndex === i} />
+          })}
+        </Row>
+      )}
     </Container>
   )
 }
