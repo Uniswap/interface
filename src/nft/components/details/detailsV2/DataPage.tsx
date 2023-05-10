@@ -13,14 +13,6 @@ const DataPagePaddingContainer = styled.div`
   padding: 24px 64px;
   height: 100vh;
   width: 100%;
-`
-
-const DataPageContainer = styled(Column)`
-  height: 100%;
-  width: 100%;
-  gap: 36px;
-  max-width: ${({ theme }) => theme.maxWidth};
-  margin: 0 auto;
 
   @media screen and (max-width: ${BREAKPOINTS.md}px) {
     height: 100%;
@@ -33,6 +25,14 @@ const DataPageContainer = styled(Column)`
   @media screen and (max-width: ${BREAKPOINTS.xs}px) {
     padding: 24px 20px;
   }
+`
+
+const DataPageContainer = styled(Column)`
+  height: 100%;
+  width: 100%;
+  gap: 36px;
+  max-width: ${({ theme }) => theme.maxWidth};
+  margin: 0 auto;
 `
 
 const ContentContainer = styled(Row)`

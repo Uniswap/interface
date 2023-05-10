@@ -8,12 +8,11 @@ import { useScreenSize } from 'hooks/useScreenSize'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
-import { AddToBagIcon, HomeSearchIcon } from 'nft/components/icons'
+import { HomeSearchIcon } from 'nft/components/icons'
 import { useSubscribeScrollState } from 'nft/hooks'
 import { Offer, SellOrder } from 'nft/types'
 import { formatEth, getMarketplaceIcon, timeUntil } from 'nft/utils'
-import { Check } from 'react-feather'
-import styled, { useTheme } from 'styled-components/macro'
+import styled from 'styled-components/macro'
 import { BREAKPOINTS, ExternalLink, ThemedText } from 'theme'
 import { shortenAddress } from 'utils'
 
@@ -169,16 +168,13 @@ export const ContentRow = ({
 }) => {
   const screenSize = useScreenSize()
   const isMobile = !screenSize['sm']
-  const theme = useTheme()
   const date = content.endAt && new Date(content.endAt)
   const isSellOrder = 'type' in content && content.type === OrderType.Listing
   const reducedPriceWidth = isMobile || (screenSize['lg'] && !screenSize['xl'])
 
   return (
     <Row gap="12px" padding="16px 6px 16px 0px">
-      <Link href={content.marketplaceUrl} target="_blank" rel="noopener noreferrer">
-        {getMarketplaceIcon(content.marketplace, '20')}
-      </Link>
+      <Link href={content.marketplaceUrl}>{getMarketplaceIcon(content.marketplace, '20')}</Link>
       {content.price && (
         <TableCell $flex={reducedPriceWidth ? 1 : 1.75}>
           <PriceCell price={content.price.value} />
@@ -191,7 +187,7 @@ export const ContentRow = ({
       )}
       {(!isSellOrder || is1155) && (
         <TableCell hideOnSmall={true}>
-          <Link href={`https://etherscan.io/address/${content.maker}`} target="_blank" rel="noopener noreferrer">
+          <Link href={`https://etherscan.io/address/${content.maker}`}>
             <ThemedText.LabelSmall color="textPrimary">{shortenAddress(content.maker)}</ThemedText.LabelSmall>
           </Link>
         </TableCell>
@@ -203,15 +199,7 @@ export const ContentRow = ({
       </TableCell>
       <TableCell $flex={isMobile ? 0.25 : 1} $justifyContent="center">
         <ActionButton>
-          {isMobile ? (
-            isSellOrder ? (
-              <AddToBagIcon color={theme.textSecondary} />
-            ) : (
-              <Check color={theme.textSecondary} height="20px" width="20px" />
-            )
-          ) : (
-            <ThemedText.LabelSmall color="textSecondary">{buttonCTA}</ThemedText.LabelSmall>
-          )}
+          <ThemedText.LabelSmall color="textSecondary">{buttonCTA}</ThemedText.LabelSmall>
         </ActionButton>
       </TableCell>
     </Row>
