@@ -14,7 +14,7 @@ import { Offer, SellOrder } from 'nft/types'
 import { formatEth, getMarketplaceIcon, timeUntil } from 'nft/utils'
 import { Check } from 'react-feather'
 import styled, { useTheme } from 'styled-components/macro'
-import { BREAKPOINTS, ThemedText } from 'theme'
+import { BREAKPOINTS, ExternalLink, ThemedText } from 'theme'
 import { shortenAddress } from 'utils'
 
 import { TableTabsKeys } from './DataPageTable'
@@ -100,13 +100,8 @@ const USDPrice = styled(ThemedText.BodySmall)`
   }
 `
 
-const Link = styled.a`
-  text-decoration: none;
-  display: block;
+const Link = styled(ExternalLink)`
   height: 20px;
-  width: min-content;
-
-  ${OpacityHoverState}
 `
 
 const PriceCell = ({ price }: { price: number }) => {
