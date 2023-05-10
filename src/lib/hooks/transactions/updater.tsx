@@ -62,17 +62,13 @@ export default function Updater({ pendingTransactions, onCheck, onReceipt }: Upd
           provider.getTransactionReceipt(hash).then(async (receipt) => {
             if (receipt === null) {
               if (account) {
-                try {
-                  const transactionCount = await provider.getTransactionCount(account)
-                  const tx = pendingTransactions[hash]
-                  // We check for the presence of a nonce because we haven't always saved them,
-                  //   so this code may run against old store state where nonce is undefined.
-                  if (tx.nonce && tx.nonce < transactionCount) {
-                    // We remove pending transactions from redux if they are no longer the latest nonce.
-                    removeTransaction(hash)
-                  }
-                } catch (e) {
-                  console.warn('unable to get transaction count', e)
+                const transactionCount = await provider.getTransactionCount(account)
+                const tx = pendingTransactions[hash]
+                // We check for the presence of a nonce because we haven't always saved them,
+                //   so this code may run against old store state where nonce is undefined.
+                if (tx.nonce && tx.nonce < transactionCount) {
+                  // We remove pending transactions from redux if they are no longer the latest nonce.
+                  removeTransaction(hash)
                 }
               }
               console.debug(`Retrying tranasaction receipt for ${hash}`)
