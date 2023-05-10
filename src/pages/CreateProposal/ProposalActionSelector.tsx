@@ -12,8 +12,11 @@ import { CloseIcon } from 'theme'
 export enum ProposalAction {
   TRANSFER_TOKEN = 'Transfer Token',
   APPROVE_TOKEN = 'Approve Token',
-  UPGRADE_IMPLEMENTATION = 'Upgrade Pool Implementation',
-  UPGRADE_GOVERNANCE = 'Upgrade Governance',
+  UPGRADE_IMPLEMENTATION = 'Protocol: Upgrade',
+  UPGRADE_GOVERNANCE = 'Governance: Upgrade',
+  UPGRADE_STAKING = 'Staking: Upgrade',
+  ADD_ADAPTER = 'Protocol: Add Adapter',
+  REMOVE_ADAPTER = 'Protocol: Remove Adapter',
 }
 
 interface ProposalActionSelectorModalProps {
@@ -111,36 +114,57 @@ export function ProposalActionSelectorModal({
           </RowBetween>
         </PaddedColumn>
         <Separator />
-        {/*
-        <MenuItem onClick={() => handleProposalActionSelect(ProposalAction.TRANSFER_TOKEN)}>
-          <Column>
-            <Text fontWeight={500}>
-              <Trans>Transfer Token</Trans>
-            </Text>
-          </Column>
-        </MenuItem>
-        <MenuItem onClick={() => handleProposalActionSelect(ProposalAction.APPROVE_TOKEN)}>
-          <Column>
-            <Text fontWeight={500}>
-              <Trans>Approve Token</Trans>
-            </Text>
-          </Column>
-        </MenuItem>
-        */}
         <MenuItem onClick={() => handleProposalActionSelect(ProposalAction.UPGRADE_IMPLEMENTATION)}>
           <Column>
             <Text fontWeight={500}>
-              <Trans>Upgrade Pool Implementation</Trans>
+              <Trans>Protocol: Upgrade</Trans>
+            </Text>
+          </Column>
+        </MenuItem>
+        <MenuItem onClick={() => handleProposalActionSelect(ProposalAction.ADD_ADAPTER)}>
+          <Column>
+            <Text fontWeight={500}>
+              <Trans>Protocol: Add Adapter</Trans>
+            </Text>
+          </Column>
+        </MenuItem>
+        <MenuItem onClick={() => handleProposalActionSelect(ProposalAction.REMOVE_ADAPTER)}>
+          <Column>
+            <Text fontWeight={500}>
+              <Trans>Protocol: Remove Adapter</Trans>
+            </Text>
+          </Column>
+        </MenuItem>
+        <MenuItem onClick={() => handleProposalActionSelect(ProposalAction.UPGRADE_STAKING)}>
+          <Column>
+            <Text fontWeight={500}>
+              <Trans>Staking: Upgrade</Trans>
             </Text>
           </Column>
         </MenuItem>
         <MenuItem onClick={() => handleProposalActionSelect(ProposalAction.UPGRADE_GOVERNANCE)}>
           <Column>
             <Text fontWeight={500}>
-              <Trans>Upgrade Governance</Trans>
+              <Trans>Governance: Upgrade</Trans>
             </Text>
           </Column>
         </MenuItem>
+        {/* The following lines are commented until governance holds tokens
+        <MenuItem onClick={() => handleProposalActionSelect(ProposalAction.TRANSFER_TOKEN)}>
+          <Column>
+            <Text fontWeight={500}>
+              <Trans>GRG: Transfer Token</Trans>
+            </Text>
+          </Column>
+        </MenuItem>
+        <MenuItem onClick={() => handleProposalActionSelect(ProposalAction.APPROVE_TOKEN)}>
+          <Column>
+            <Text fontWeight={500}>
+              <Trans>GRG: Approve Token</Trans>
+            </Text>
+          </Column>
+        </MenuItem>
+        */}
       </ContentWrapper>
     </Modal>
   )

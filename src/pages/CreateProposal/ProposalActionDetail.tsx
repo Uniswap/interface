@@ -69,6 +69,24 @@ export const ProposalActionDetail = ({
         label: <Trans>New Governance Implementation</Trans>,
       },
     ],
+    [ProposalAction.UPGRADE_STAKING]: [
+      {
+        type: ProposalActionDetailField.ADDRESS,
+        label: <Trans>New Staking Implementation</Trans>,
+      },
+    ],
+    [ProposalAction.ADD_ADAPTER]: [
+      {
+        type: ProposalActionDetailField.ADDRESS,
+        label: <Trans>New Application Adapter</Trans>,
+      },
+    ],
+    [ProposalAction.REMOVE_ADAPTER]: [
+      {
+        type: ProposalActionDetailField.ADDRESS,
+        label: <Trans>Existing Application Adapter</Trans>,
+      },
+    ],
   }
 
   return (

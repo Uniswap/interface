@@ -5,13 +5,20 @@ import { Trace } from '@uniswap/analytics'
 import { PageName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import AUTHORITY_ABI from 'abis/authority.json'
 import TOKEN_ABI from 'abis/erc20.json'
 import GOVERNANCE_RB_ABI from 'abis/governance.json'
 import RB_POOL_FACTORY_ABI from 'abis/rb-pool-factory.json'
+import STAKING_PROXY_ABI from 'abis/staking-proxy.json'
 import { ButtonError } from 'components/Button'
 import { BlueCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
-import { GOVERNANCE_PROXY_ADDRESSES, RB_FACTORY_ADDRESSES } from 'constants/addresses'
+import {
+  AUTHORITY_ADDRESSES,
+  GOVERNANCE_PROXY_ADDRESSES,
+  RB_FACTORY_ADDRESSES,
+  STAKING_PROXY_ADDRESSES,
+} from 'constants/addresses'
 import JSBI from 'jsbi'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { Wrapper } from 'pages/Pool/styleds'
@@ -198,7 +205,6 @@ export default function CreateProposal() {
 
     const tokenAmount = tryParseCurrencyAmount(amountValue, currencyValue)
 
-    createProposalData.actions = [{ target: currencyValue.address, value: '0', data: '' }]
     createProposalData.description = `# ${titleValue}
 
 ${bodyValue}
@@ -243,11 +249,46 @@ ${bodyValue}
         methods = ['upgradeImplementation']
         break
       }
+
+      case ProposalAction.UPGRADE_STAKING: {
+        values = [
+          [STAKING_PROXY_ADDRESSES[chainId ?? 1]],
+          [],
+          [getAddress(toAddressValue)],
+          [STAKING_PROXY_ADDRESSES[chainId ?? 1]],
+        ]
+        interfaces = [new Interface(STAKING_PROXY_ABI)]
+        targets = [STAKING_PROXY_ADDRESSES[chainId ?? 1]]
+        methods = ['addAuthorizedAddress', 'detachStakingContract', 'attachStakingContract', 'removeAuthorizedAddress']
+        break
+      }
+
+      // any non-empty string for the boolean value will result in adding an adapter
+      case ProposalAction.ADD_ADAPTER: {
+        values = [[getAddress(toAddressValue), 'true']]
+        interfaces = [new Interface(AUTHORITY_ABI)]
+        targets = [AUTHORITY_ADDRESSES[chainId ?? 1]]
+        methods = ['setAdapter']
+        break
+      }
+
+      // an empty string for the boolean value will result in removing an adapter
+      case ProposalAction.REMOVE_ADAPTER: {
+        values = [[getAddress(toAddressValue), '']]
+        interfaces = [new Interface(AUTHORITY_ABI)]
+        targets = [AUTHORITY_ADDRESSES[chainId ?? 1]]
+        methods = ['setAdapter']
+        break
+      }
     }
 
-    for (let i = 0; i < createProposalData.actions.length; i++) {
-      createProposalData.actions[i].target = targets[i]
-      createProposalData.actions[i].data = interfaces[i].encodeFunctionData(methods[i], values[i])
+    createProposalData.actions = []
+    for (let i = 0; i < values.length; i++) {
+      createProposalData.actions[i] = {
+        target: targets[0],
+        value: '0',
+        data: interfaces[0].encodeFunctionData(methods[i], values[i]),
+      }
     }
 
     const hash = await createProposalCallback(createProposalData ?? undefined)?.catch(() => {
