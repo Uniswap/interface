@@ -14,7 +14,7 @@ const LoadingWrapper = styled.div`
   border-radius: 1rem;
 `
 
-const Blob = styled.div<{ height: string; width: string; radius?: number; isModule?: boolean; marginTop?: number }>`
+const Blob = styled.div<{ height: string; width: string; radius?: number; marginTop?: number }>`
   background-color: ${({ theme }) => theme.backgroundModule};
   border-radius: ${({ radius }) => (radius ?? 0.25) + 'rem'};
   height: ${({ height }) => height};
@@ -24,13 +24,6 @@ const Blob = styled.div<{ height: string; width: string; radius?: number; isModu
 
 const ModuleBlob = styled(Blob)`
   background-color: ${({ theme }) => theme.backgroundOutline};
-`
-
-const WideColumn = styled.div`
-  display: flex;
-  flex-flow: column;
-  width: 100%;
-  gap: 0.75rem;
 `
 
 const TitleColumn = styled.div`
@@ -74,12 +67,10 @@ function FloatingTitle() {
 
 function FloatingInput() {
   return (
-    <WideColumn>
-      <Row>
-        <ModuleBlob height="2rem" width="3.75rem" />
-        <ModuleBlob height="2rem" width="7.25rem" />
-      </Row>
-    </WideColumn>
+    <Row>
+      <ModuleBlob height="2rem" width="3.75rem" />
+      <ModuleBlob height="2rem" width="7.25rem" />
+    </Row>
   )
 }
 
