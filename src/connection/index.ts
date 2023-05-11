@@ -20,7 +20,8 @@ import { RPC_URLS } from '../constants/networks'
 import { RPC_PROVIDERS } from '../constants/providers'
 import { Connection, ConnectionType } from './types'
 import { getIsCoinbaseWallet, getIsInjected, getIsMetaMaskWallet } from './utils'
-import { UniwalletConnect, WalletConnectPopup } from './WalletConnect'
+import { WalletConnectPopup } from './WalletConnect'
+import { UniwalletConnect, WalletConnectV1Popup } from './WalletConnectV1'
 
 function onError(error: Error) {
   console.debug(`web3-react error: ${error}`)
@@ -73,6 +74,18 @@ export const gnosisSafeConnection: Connection = {
   type: ConnectionType.GNOSIS_SAFE,
   getIcon: () => GNOSIS_ICON,
   shouldDisplay: () => false,
+}
+
+const [web3WalletConnectV1, web3WalletConnectV1Hooks] = initializeConnector<WalletConnectV1Popup>(
+  (actions) => new WalletConnectV1Popup({ actions, onError })
+)
+export const walletConnectV1Connection: Connection = {
+  getName: () => 'WalletConnectV1',
+  connector: web3WalletConnectV1,
+  hooks: web3WalletConnectV1Hooks,
+  type: ConnectionType.WALLET_CONNECT,
+  getIcon: () => WALLET_CONNECT_ICON,
+  shouldDisplay: () => !getIsInjectedMobileBrowser(),
 }
 
 const [web3WalletConnect, web3WalletConnectHooks] = initializeConnector<WalletConnectPopup>(
