@@ -28,14 +28,7 @@ runs:
                 "type": "section",
                 "text": {
                   "type": "mrkdwn",
-                  "text": "_This is blocking pull requests and branch promotions.\nPlease prioritize fixing the build._"
-                }
-              },
-              {
-                "type": "section",
-                "text": {
-                  "type": "plain_text",
-                  "text": "!oncall web"
+                  "text": "_This is blocking pull requests and branch promotions._\n_Please prioritize fixing the build._ !oncall web"
                 }
               }
             ]
