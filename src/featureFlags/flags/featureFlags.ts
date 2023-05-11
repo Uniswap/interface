@@ -6,5 +6,4 @@ export enum FeatureFlag {
   permit2 = 'permit2',
   fiatOnRampButtonOnSwap = 'fiat_on_ramp_button_on_swap_page',
   detailsV2 = 'details_v2',
-  removeWidget = 'remove_widget_tdp',
 }
