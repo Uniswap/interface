@@ -43,3 +43,6 @@ runs:
           {
             "text": "!oncall web",
           }
+      env:
+        SLACK_WEBHOOK_URL: ${{ inputs.SLACK_WEBHOOK_URL }}
+        SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
