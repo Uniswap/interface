@@ -65,14 +65,22 @@ export function PendingModalContent({
   hideStepIndicators,
 }: PendingModalContentProps) {
   const theme = useTheme()
+  if (steps.length === 0) {
+    return null
+  }
   const { logo, title, subtitle, label, tooltipText, button } = steps[activeStepIndex]
   return (
     <Container gap="lg">
       {confirmed ? (
         transactionSuccess ? (
-          <AnimatedConfirmation size="48px" />
+          <AnimatedConfirmation size="48px" data-testid="PendingModalContent-successIcon" />
         ) : (
-          <AlertTriangle strokeWidth={1} color={theme.accentFailure} size="48px" />
+          <AlertTriangle
+            strokeWidth={1}
+            color={theme.accentFailure}
+            size="48px"
+            data-testid="PendingModalContent-failureIcon"
+          />
         )
       ) : logo ? (
         <LogoContainer>
