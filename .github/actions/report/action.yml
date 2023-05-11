@@ -21,6 +21,13 @@ runs:
                 "type": "section",
                 "text": {
                   "type": "mrkdwn",
+                  "text": "!oncall web",
+                }
+              },
+              {
+                "type": "section",
+                "text": {
+                  "type": "mrkdwn",
                   "text": "*${{ inputs.name }} failing on `${{ github.ref_name }}`:* <https://github.com/${{ github.repository}}/actions/runs/${{ github.run_id }}|view failing action>"
                 }
               },
@@ -28,7 +35,7 @@ runs:
                 "type": "section",
                 "text": {
                   "type": "mrkdwn",
-                  "text": "_This is blocking pull requests and branch promotions._\n_Please prioritize fixing the build._ !oncall web"
+                  "text": "_This is blocking pull requests and branch promotions._\n_Please prioritize fixing the build._"
                 }
               }
             ]
