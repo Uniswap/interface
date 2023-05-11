@@ -20,7 +20,7 @@ jobs:
           ref: main
       - name: Add CODEOWNERS file
         run: |
-          echo "@uniswap/web-reviewers" > CODEOWNERS
+          echo "@uniswap/web-admins" > CODEOWNERS
           git add CODEOWNERS
           git commit -m "ci: add CODEOWNERS file"
       - name: Git push
