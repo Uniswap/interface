@@ -21,7 +21,7 @@ runs:
                 "type": "section",
                 "text": {
                   "type": "mrkdwn",
-                  "text": "!oncall web",
+                  "text": "!oncall web"
                 }
               },
               {
