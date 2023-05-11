@@ -84,14 +84,24 @@ export function PendingModalContent({
       )}
       {/* TODO: implement animations between title/subtitles of each step. */}
       <ColumnCenter gap="md">
-        <ThemedText.HeadlineSmall>{title}</ThemedText.HeadlineSmall>
-        {subtitle && <ThemedText.LabelSmall>{subtitle}</ThemedText.LabelSmall>}
+        <ThemedText.HeadlineSmall data-testid="PendingModalContent-title">{title}</ThemedText.HeadlineSmall>
+        {subtitle && (
+          <ThemedText.LabelSmall data-testid="PendingModalContent-subtitle">{subtitle}</ThemedText.LabelSmall>
+        )}
         <Row justify="center">
-          {label && <ThemedText.Caption color="textSecondary">{label}</ThemedText.Caption>}
+          {label && (
+            <ThemedText.Caption color="textSecondary" data-testid="PendingModalContent-label">
+              {label}
+            </ThemedText.Caption>
+          )}
           {tooltipText && <QuestionHelper text={tooltipText} />}
         </Row>
       </ColumnCenter>
-      {button && <Row justify="center">{button}</Row>}
+      {button && (
+        <Row justify="center" data-testid="PendingModalContent-button">
+          {button}
+        </Row>
+      )}
       {!hideStepIndicators && (
         <Row gap="14px" justify="center">
           {steps.map((_, i) => {

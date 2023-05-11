@@ -145,7 +145,7 @@ export default function ConfirmSwapModal({
         return
       }
       console.error(e)
-      setApprovalError('permit_approval')
+      setApprovalError(allowance.needsPermit2Approval ? 'permit_approval' : 'token_approval')
     }
     return true
   }, [allowance, chainId, maximumAmountIn?.currency.address, maximumAmountIn?.currency.symbol, trace])
@@ -281,7 +281,7 @@ export default function ConfirmSwapModal({
                     ? t`Permit2 allows token approvals to be shared and managed across different applications.`
                     : t`This provides the Uniswap protocol access to your token for trading. For security, this will expire after 30 days.`,
                 button: (
-                  <ButtonPrimary marginX="24px" onClick={startApproveAndSwapFlow}>
+                  <ButtonPrimary marginX="24px" onClick={startApproveAndSwapFlow} data-testid="ConfirmSwapModal-retry">
                     <Trans>Retry</Trans>
                   </ButtonPrimary>
                 ),
