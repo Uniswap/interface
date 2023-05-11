@@ -25,15 +25,16 @@ const LoadingWrapper = styled.div`
   background-color: ${({ theme }) => theme.backgroundSurface};
 `
 
-const Blob = styled.div<{ height: number; width?: number; radius?: number }>`
+const Blob = styled.div<{ width?: number; radius?: number }>`
   background-color: ${({ theme }) => theme.backgroundModule};
   border-radius: ${({ radius }) => (radius ?? 4) + 'px'};
-  height: ${({ height }) => (height ? height + 'px' : undefined)};
+  height: 56px;
   width: ${({ width }) => (width ? width + 'px' : '100%')};
 `
 
 const ModuleBlob = styled(Blob)`
   background-color: ${({ theme }) => theme.backgroundOutline};
+  height: 36px;
 `
 
 const TitleColumn = styled.div`
@@ -73,14 +74,14 @@ function Title() {
 function FloatingInput() {
   return (
     <Row>
-      <ModuleBlob height={36} width={60} />
-      <ModuleBlob height={36} width={100} radius={16} />
+      <ModuleBlob width={60} />
+      <ModuleBlob width={100} radius={16} />
     </Row>
   )
 }
 
 function FloatingButton() {
-  return <Blob height={56} radius={16} />
+  return <Blob radius={16} />
 }
 
 export function SwapSkeleton() {
