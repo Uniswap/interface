@@ -3,9 +3,9 @@ import { useMemo } from 'react'
 import { ScrollView } from 'tamagui'
 import { Flex } from 'ui/src/components/layout/Flex'
 import { Text } from 'ui/src/components/text/Text'
-import { EMPTY_ARRAY } from '../../constants/misc'
-import { useSortedPortfolioBalances } from '../dataApi/balances'
-import { PortfolioBalance } from '../dataApi/types'
+import { EMPTY_ARRAY } from 'wallet/src/constants/misc'
+import { useSortedPortfolioBalances } from 'wallet/src/features/dataApi/balances'
+import { PortfolioBalance } from 'wallet/src/features/dataApi/types'
 import { TokenBalanceItem } from './TokenBalanceItem'
 
 type TokenBalanceListProps = {

@@ -1,6 +1,6 @@
 import { combineReducers, Reducer } from '@reduxjs/toolkit'
 import { spawn } from 'typed-redux-saga'
-import { authActions, authReducer, authSaga, authSagaName } from '../features/auth/saga'
+import { authActions, authReducer, authSaga, authSagaName } from 'wallet/src/features/auth/saga'
 import { initProviders } from '../features/providers'
 import {
   importAccountActions,

@@ -1,13 +1,16 @@
 import { Text } from 'ui/src'
-
 import { Flex } from 'ui/src/components/layout/Flex'
-import { PortfolioBalance } from 'wallet/src/features/home/PortfolioBalance'
-import { PortfolioHeader } from 'wallet/src/features/home/PortfolioHeader'
-import { TokenBalanceList } from 'wallet/src/features/home/TokenBalanceList'
+import { authActions } from 'wallet/src/features/auth/saga'
+import { PortfolioBalance } from 'wallet/src/features/portfolio/PortfolioBalance'
+import { PortfolioHeader } from 'wallet/src/features/portfolio/PortfolioHeader'
+import { TokenBalanceList } from 'wallet/src/features/portfolio/TokenBalanceList'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
+import { useAppDispatch } from 'wallet/src/state'
 
 export function HomeScreen(): JSX.Element {
   const address = useActiveAccountAddressWithThrow()
+  const dispatch = useAppDispatch()
+
   return (
     <Flex alignItems="center" flexGrow={1} width="100%">
       {address ? (
@@ -18,7 +21,10 @@ export function HomeScreen(): JSX.Element {
           paddingBottom="$spacing24"
           paddingTop="$spacing8"
           width="100%">
-          <PortfolioHeader address={address} />
+          <PortfolioHeader
+            address={address}
+            onLockPress={(): void => dispatch(authActions.reset())}
+          />
           <PortfolioBalance address={address} />
           <TokenBalanceList owner={address} />
         </Flex>

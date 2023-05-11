@@ -1,7 +1,7 @@
 import { call } from 'typed-redux-saga'
+import { logger } from 'wallet/src/features/logger/logger'
+import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import { createMonitoredSaga } from 'wallet/src/utils/saga'
-import { logger } from '../logger/logger'
-import { Keyring } from '../wallet/Keyring/Keyring'
 import { AuthParams } from './types'
 
 function* auth({ password }: AuthParams) {

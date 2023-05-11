@@ -1,13 +1,16 @@
 import { useLocation, useNavigate } from 'react-router-dom'
+import { usePasswordInput } from 'src/app/features/auth/Locked'
 import { Input, Stack, XStack, YStack } from 'tamagui'
 import { Text } from 'ui/src'
 import { Button } from 'ui/src/components/button/Button'
-import { usePasswordInput } from 'wallet/src/features/auth/Locked'
+import {
+  importAccountActions,
+  importAccountSagaName,
+} from 'wallet/src/features/wallet/import/importAccountSaga'
+import { ImportAccountType } from 'wallet/src/features/wallet/import/types'
 import { OnboardingRoutes } from 'wallet/src/navigation/constants'
 import { useAppDispatch } from 'wallet/src/state'
 import { useSagaStatus } from 'wallet/src/state/useSagaStatus'
-import { importAccountActions, importAccountSagaName } from '../wallet/import/importAccountSaga'
-import { ImportAccountType } from '../wallet/import/types'
 
 export function Password(): JSX.Element {
   const dispatch = useAppDispatch()
