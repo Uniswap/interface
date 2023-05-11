@@ -56,7 +56,7 @@ const StyledTokenRow = styled.div<{
   background-color: transparent;
   display: grid;
   font-size: 16px;
-  grid-template-columns: 2.75fr 2fr 2fr 2fr 2fr 1fr;
+  grid-template-columns: 2.75fr 2fr 2fr 2fr 2fr 2fr 2fr;
   line-height: 24px;
   max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT};
   min-width: 390px;
@@ -89,15 +89,15 @@ const StyledTokenRow = styled.div<{
   }
 
   @media only screen and (max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT}) {
-    grid-template-columns: 2.75fr 2fr 2fr 2fr 2fr 2fr 1.5fr;
+    grid-template-columns: 2.75fr 2fr 2fr 2fr 2fr 2fr 2fr;
   }
 
   @media only screen and (max-width: ${LARGE_MEDIA_BREAKPOINT}) {
-    grid-template-columns: 2.75fr 2fr 2fr 2fr 2fr 2fr 1.5fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
   }
 
   @media only screen and (max-width: ${MEDIUM_MEDIA_BREAKPOINT}) {
-    grid-template-columns: 2.75fr 2fr 2fr 2fr 2fr 2fr 1.5fr;
+    grid-template-columns:  1fr 1fr 1fr 1fr 1fr 1fr 1fr;
   }
 
   @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
@@ -560,11 +560,11 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
                 <DoubleCurrencyLogo margin={true} size={40} currency0={token0 ?? undefined} currency1={token1 ?? undefined} />
                 <PositionInfo>
                   <ThemedText.BodyPrimary margin="0" padding="0">
-                    <GreenText> x{leverageFactor} Long </GreenText> {isToken0 ? token0?.symbol : token1?.symbol}
+                    <GreenText> x{formatNumber(leverageFactor)} Long </GreenText> {isToken0 ? token0?.symbol : token1?.symbol}
                   </ThemedText.BodyPrimary>
-                  <ThemedText.BodySmall margin="0" padding="0">
+                  {/* <ThemedText.BodySmall margin="0" padding="0">
                     ({token0?.symbol + "/" + token1?.symbol})
-                  </ThemedText.BodySmall>
+                  </ThemedText.BodySmall> */}
                 </PositionInfo>
               </RowBetween>
             </ClickableContent>
