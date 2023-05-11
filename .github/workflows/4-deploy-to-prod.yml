@@ -1,4 +1,4 @@
-name: 4 | Deploy to prod
+name: 4 | Deploy prod
 on:
   push:
     branches:
@@ -8,7 +8,7 @@ jobs:
   deploy-to-prod:
     runs-on: ubuntu-latest
     environment:
-      name: release
+      name: deploy/prod
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
@@ -89,4 +89,3 @@ jobs:
           environment: production
           sourcemaps: './build/static/js'
           url_prefix: '~/static/js'
-

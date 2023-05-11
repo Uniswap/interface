@@ -1,4 +1,4 @@
-name: 3 | Push releases/staging to releases/prod
+name: 3 | Push staging -> prod
 
 # This CI job is responsible for force pushing the content of releases/staging to releases/prod. It
 # is restricted to web-reviewers through virtue of the GitHub environment protection rules for the
@@ -12,7 +12,7 @@ jobs:
     name: 'Push to prod branch'
     runs-on: ubuntu-latest
     environment:
-      name: prod
+      name: push/prod
     steps:
       - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab
         with:
