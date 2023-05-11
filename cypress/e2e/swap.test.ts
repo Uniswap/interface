@@ -66,7 +66,7 @@ describe('Swap', () => {
               cy.get('#confirm-swap-or-send').click()
 
               // Dismiss the modal that appears when a transaction is broadcast to the network.
-              cy.get(getTestSelector('dismiss-tx-confirmation')).click()
+              cy.get('[data-cy="confirmation-close-icon"]').click()
 
               // The UI should show the transaction as pending.
               cy.contains('1 Pending').should('exist')
@@ -151,7 +151,7 @@ describe('Swap', () => {
             cy.get('#swap-currency-input .token-amount-input').should('not.equal', '')
             cy.get('#swap-button').click()
             cy.get('#confirm-swap-or-send').click()
-            cy.get(getTestSelector('dismiss-tx-confirmation')).click()
+            cy.get('[data-cy="confirmation-close-icon"]').click()
 
             // ui check
             cy.get('#swap-currency-output [data-testid="balance-text"]').should(
@@ -330,12 +330,12 @@ describe('Swap', () => {
           cy.get('#swap-currency-output .token-amount-input').should('not.equal', '')
           cy.get('#swap-button').click()
           cy.get('#confirm-swap-or-send').click()
-          cy.get(getTestSelector('dismiss-tx-confirmation')).click()
+          cy.get(getTestSelector('[data-cy="confirmation-close-icon"]')).click()
           cy.get('#swap-currency-input .token-amount-input').clear().type(INDIVIDUAL_SWAP_INPUT.toString())
           cy.get('#swap-currency-output .token-amount-input').should('not.equal', '')
           cy.get('#swap-button').click()
           cy.get('#confirm-swap-or-send').click()
-          cy.get(getTestSelector('dismiss-tx-confirmation')).click()
+          cy.get(getTestSelector('[data-cy="confirmation-close-icon"]')).click()
 
           // The pending transaction indicator should be visible.
           cy.contains('Pending').should('exist')
