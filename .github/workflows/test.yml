@@ -30,6 +30,7 @@ jobs:
         uses: ./.github/actions/report
         with:
           name: Lint
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_TEST_REPORTER_WEBHOOK }}
   
   typecheck:
     runs-on: ubuntu-latest
@@ -47,6 +48,7 @@ jobs:
         uses: ./.github/actions/report
         with:
           name: Typecheck
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_TEST_REPORTER_WEBHOOK }}
 
   deps-tests:
     runs-on: ubuntu-latest
@@ -58,6 +60,7 @@ jobs:
         uses: ./.github/actions/report
         with:
           name: Dependency checks
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_TEST_REPORTER_WEBHOOK }}
 
   unit-tests:
     runs-on: ubuntu-latest
@@ -81,6 +84,7 @@ jobs:
         uses: ./.github/actions/report
         with:
           name: Unit tests
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_TEST_REPORTER_WEBHOOK }}
 
   build-e2e:
     runs-on: ubuntu-latest
@@ -164,3 +168,4 @@ jobs:
         uses: ./.github/actions/report
         with:
           name: Cypress tests
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_TEST_REPORTER_WEBHOOK }}

@@ -2,7 +2,10 @@ name: Report
 description: Report test failures on `main` via Slack
 inputs:
   name:
-    description: The name of the failing tests to report
+    description: The name of the failing test to report
+    required: true
+  SLACK_WEBHOOK_URL:
+    description: The Slack webhook URL to use to report a test failure
     required: true
 
 runs:
@@ -14,13 +17,13 @@ runs:
       with:
         payload: |
           {
-            "text": "${{ name }} failing on `${{ github.ref_name }}`",
+            "text": "${{ inputs.name }} failing on `${{ github.ref_name }}`",
             "blocks": [
               {
                 "type": "section",
                 "text": {
                   "type": "mrkdwn",
-                  "text": "*${{ name }} failing on `${{ github.ref_name }}`:*"
+                  "text": "*${{ inputs.name }} failing on `${{ github.ref_name }}`:*"
                 }
               },
               {
@@ -40,5 +43,5 @@ runs:
             ]
           }
       env:
-        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_TEST_REPORTER_WEBHOOK }}
+        SLACK_WEBHOOK_URL: ${{ inputs.SLACK_WEBHOOK_URL }}
         SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
