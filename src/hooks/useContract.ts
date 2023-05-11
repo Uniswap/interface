@@ -21,6 +21,7 @@ import WETH_ABI from 'abis/weth.json'
 import {
   ARGENT_WALLET_DETECTOR_ADDRESS,
   ENS_REGISTRAR_ADDRESSES,
+  GlOBAL_STORAGE_ADDRESS,
   MULTICALL_ADDRESS,
   NONFUNGIBLE_POSITION_MANAGER_ADDRESSES,
   QUOTER_ADDRESSES,
@@ -36,6 +37,7 @@ import { abi as LeverageManagerAbi} from "../perpspotContracts/LeverageManager.j
 // import {abi as testTokenAbi} from "../perpspotContracts/testERC.json"
 import { abi as testTokenAbi } from "../perpspotContracts/TestToken.json"
 import { abi as PoolAbi } from "../perpspotContracts/UniswapV3Pool.json"
+import { abi as GlobalStorageAbi } from "../perpspotContracts/GlobalStorage.json"
 import { getContract } from '../utils'
 
 const { abi: IUniswapV2PairABI } = IUniswapV2PairJson
@@ -84,6 +86,10 @@ export function useLeverageManagerContract(leverageManagerAddress?: string, with
 
 export function usePoolContract(poolAddress?: string, withSignerIfPossible?: boolean) {
   return useContract(poolAddress, PoolAbi, withSignerIfPossible)
+}
+
+export function useGlobalStorageContract(withSignerIfPossible?:boolean) {
+  return useContract(GlOBAL_STORAGE_ADDRESS, GlobalStorageAbi, withSignerIfPossible)
 }
 
 export function useTestTokenContract(testTokenAd?: string, withSignerIfPossible?: boolean) {

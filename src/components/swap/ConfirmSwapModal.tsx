@@ -200,7 +200,7 @@ export function LeverageConfirmModal({
         leverageFactor={Number(leverageFactor)}
       />
     ) : null
-  }, [allowedSlippage, onAcceptChanges, recipient, showAcceptChanges, trade, shouldLogModalCloseEvent])
+  }, [leverageTrade, allowedSlippage, onAcceptChanges, recipient, showAcceptChanges, trade, shouldLogModalCloseEvent])
 
   const modalBottom = useCallback(() => {
     return trade ? (
@@ -218,6 +218,7 @@ export function LeverageConfirmModal({
     ) : null
   }, [
     onConfirm,
+    leverageTrade,
     showAcceptChanges,
     swapErrorMessage,
     trade,

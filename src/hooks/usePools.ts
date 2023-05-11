@@ -11,7 +11,7 @@ import { defaultAbiCoder } from '@ethersproject/abi'
 import { getCreate2Address } from '@ethersproject/address'
 import { keccak256 } from '@ethersproject/solidity'
 
-import { POOL_INIT_CODE_HASH, PS_ROUTER, PS_V3_POOL_FACTORY, V3_CORE_FACTORY_ADDRESSES, tokenA, tokenB } from '../constants/addresses'
+import { LEVERAGE_INIT_CODE_HASH, POOL_INIT_CODE_HASH, PS_ROUTER, PS_V3_POOL_FACTORY, V3_CORE_FACTORY_ADDRESSES, tokenA, tokenB } from '../constants/addresses'
 import { IUniswapV3PoolStateInterface } from '../types/v3/IUniswapV3PoolState'
 
 const POOL_STATE_INTERFACE = new Interface(IUniswapV3PoolStateABI) as IUniswapV3PoolStateInterface
@@ -183,5 +183,29 @@ export function computePoolAddress({
       [defaultAbiCoder.encode(['address', 'address', 'uint24'], [token0.address, token1.address, fee])]
     ),
     initCodeHashManualOverride ?? POOL_INIT_CODE_HASH
+  )
+}
+
+export function computeLeverageManagerAddress({
+  factoryAddress,
+  tokenA,
+  tokenB,
+  fee,
+  initCodeHashManualOverride
+}: {
+  factoryAddress: string
+  tokenA: string
+  tokenB: string
+  fee: FeeAmount
+  initCodeHashManualOverride?: string
+}): string {
+  const [token0, token1] = tokenA.toLowerCase() < tokenB.toLowerCase() ? [tokenA, tokenB] : [tokenB, tokenA] // does safety checks
+  return getCreate2Address(
+    factoryAddress,
+    keccak256(
+      ['bytes'],
+      [defaultAbiCoder.encode(['address', 'address', 'uint24'], [token0, token1, fee])]
+    ),
+    initCodeHashManualOverride ?? LEVERAGE_INIT_CODE_HASH
   )
 }

@@ -29,7 +29,7 @@ import { BigNumber } from 'ethers'
 import { input } from 'nft/components/layout/Checkbox.css'
 import { useAllV3Routes } from 'hooks/useAllV3Routes'
 import { POOL_INIT_CODE_HASH, V3_CORE_FACTORY_ADDRESSES } from 'constants/addresses'
-import { useLeveragePosition } from 'hooks/useV3Positions'
+// import { useLeveragePosition } from 'hooks/useV3Positions'
 
 export function useSwapState(): AppState['swap'] {
   return useAppSelector((state) => state.swap)
@@ -248,7 +248,11 @@ export function useDerivedLeverageCreationInfo()
         let input = new BN((debouncedAmount.toFixed()))
         let borrowAmount = input.multipliedBy((Number(leverageFactor) - 1))
 
-        console.log("createPositionresult", input.toString(), borrowAmount.toString())
+        console.log("createPositionresult",
+        input.shiftedBy(inputCurrency?.wrapped.decimals).toFixed(0),
+        allowedSlippage,
+        borrowAmount.shiftedBy(inputCurrency?.wrapped.decimals).toFixed(0),
+        isLong)
 
         const trade = await leverageManager.callStatic.createLevPosition(
           input.shiftedBy(inputCurrency?.wrapped.decimals).toFixed(0),

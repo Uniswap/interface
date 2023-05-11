@@ -18,6 +18,7 @@ import FormattedPriceImpact from './FormattedPriceImpact'
 import { LeverageTrade } from 'state/swap/hooks'
 import { LeveragePositionDetails } from 'types/leveragePosition'
 import { BigNumber as BN } from "bignumber.js"
+import { useToken } from 'hooks/Tokens'
 
 const StyledCard = styled(Card)`
   padding: 0;
@@ -177,7 +178,8 @@ export function CloseLeveragePositionDetails({
   const theme = useTheme()
   const { chainId } = useWeb3React()
   const nativeCurrency = useNativeCurrency()
-
+  const token0 = useToken(leverageTrade?.token0Address)
+  const token1 = useToken(leverageTrade?.token1Address)
   // console.log("leveragePositionClose", leverageTrade)
 
   const inputIsToken0 = !leverageTrade?.isToken0
@@ -202,8 +204,8 @@ export function CloseLeveragePositionDetails({
           </RowFixed>
           <TextWithLoadingPlaceholder syncing={false} width={65}>
             <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
-              {leverageTrade?.totalLiquidity
-                ? `${new BN(leverageTrade?.totalLiquidity ?? "").toString()}  ${inputIsToken0 ? leverageTrade?.token1?.symbol : leverageTrade?.token0?.symbol}`
+              {leverageTrade?.totalPosition
+                ? `${new BN(leverageTrade?.totalPosition ?? "").toString()}  ${inputIsToken0 ? token1?.symbol : token0?.symbol}`
                 : '-'}
             </ThemedText.DeprecatedBlack>
           </TextWithLoadingPlaceholder>
@@ -222,7 +224,7 @@ export function CloseLeveragePositionDetails({
           <TextWithLoadingPlaceholder syncing={false} width={50}>
             <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
               {leverageTrade?.totalDebtInput
-                ? `${new BN(leverageTrade?.totalDebtInput ?? "").toString()}  ${inputIsToken0 ? leverageTrade?.token0?.symbol : leverageTrade?.token1?.symbol}`
+                ? `${new BN(leverageTrade?.totalDebtInput ?? "").toString()}  ${inputIsToken0 ? token0?.symbol : token1?.symbol}`
                 : '-'}
             </ThemedText.DeprecatedBlack>
           </TextWithLoadingPlaceholder>
@@ -242,6 +244,8 @@ export function AddPremiumDetails({
   const theme = useTheme()
   const { chainId } = useWeb3React()
   const nativeCurrency = useNativeCurrency()
+  const token0 = useToken(leverageTrade?.token0Address)
+  const token1 = useToken(leverageTrade?.token1Address)
 
   // console.log("leveragePositionClose", leverageTrade)
 
@@ -267,8 +271,8 @@ export function AddPremiumDetails({
           </RowFixed>
           <TextWithLoadingPlaceholder syncing={false} width={65}>
             <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
-              {leverageTrade?.totalLiquidity
-                ? `${new BN(leverageTrade?.totalLiquidity ?? "").toString()}  ${inputIsToken0 ? leverageTrade?.token1?.symbol : leverageTrade?.token0?.symbol}`
+              {leverageTrade?.totalPosition
+                ? `${new BN(leverageTrade?.totalPosition ?? "").toString()}  ${inputIsToken0 ? token1?.symbol : token0?.symbol}`
                 : '-'}
             </ThemedText.DeprecatedBlack>
           </TextWithLoadingPlaceholder>
@@ -287,7 +291,7 @@ export function AddPremiumDetails({
           <TextWithLoadingPlaceholder syncing={false} width={50}>
             <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
               {leverageTrade?.totalDebtInput
-                ? `${new BN(leverageTrade?.totalDebtInput ?? "").toString()}  ${inputIsToken0 ? leverageTrade?.token0?.symbol : leverageTrade?.token1?.symbol}`
+                ? `${new BN(leverageTrade?.totalDebtInput ?? "").toString()}  ${inputIsToken0 ? token0?.symbol : token1?.symbol}`
                 : '-'}
             </ThemedText.DeprecatedBlack>
           </TextWithLoadingPlaceholder>

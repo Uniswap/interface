@@ -31,7 +31,7 @@ import moment from "moment"
 import { BigNumber as BN } from "bignumber.js"
 import ClosePositionModal, { AddPremiumModal } from 'components/swap/CloseLeveragePositionModal'
 import { useWeb3React } from '@web3-react/core'
-import { useLeveragePosition } from 'hooks/useV3Positions'
+import {  useLeveragePositionFromTokenId } from 'hooks/useV3Positions'
 
 const ResponsiveButtonPrimary = styled(SmallButtonPrimary)`
   border-radius: 12px;
@@ -162,8 +162,8 @@ interface LeveragePositionListItemProps {
   totalLiquidity: string // totalPosition
   totalDebt: string // total debt in output token
   totalDebtInput: string // total debt in input token
-  borrowedLiquidity: string
-  creationTick: string
+  // borrowedLiquidity: string
+  // creationTick: string
   isToken0: boolean
   openTime: string
   repayTime: string
@@ -233,13 +233,12 @@ export default function LeveragePositionItem({
   tickFinish,
   tickStart,
   totalLiquidity,
-  borrowedLiquidity,
+
   totalDebtInput,
   totalDebt, 
   isToken0,
   openTime,
-  repayTime,
-  creationTick, 
+  repayTime, 
   initialCollateral,
   recentPremium
 }: LeveragePositionListItemProps) {
@@ -275,15 +274,13 @@ export default function LeveragePositionItem({
     setShowAddPremium(false); 
   }
 
-  const [positionState, position] = useLeveragePosition(leverageManagerAddress ?? undefined, account, tokenId)
-
-  const pool = position?.pool;
-  // const [poolState, pool] = usePool(currency0 ?? undefined, currency1?? undefined, FeeAmount.LOW)
+  const { loading, error, position} = useLeveragePositionFromTokenId(tokenId)
+  const token0 = useCurrency(position?.token0Address ?? undefined)
+  const token1 = useCurrency(position?.token1Address ?? undefined)
+  const [poolState, pool] = usePool(token0 ?? undefined, token1 ?? undefined, position?.poolFee)
 
   // enter token0 price in token1
-  const enterPrice = currency0?.wrapped && currency1?.wrapped 
-  ? tickToPrice(currency0.wrapped, currency1.wrapped, Number(creationTick)) : undefined
-
+  const enterPrice = new BN(1)
   // token0 price.
   const currentPrice = pool?.token0Price.toSignificant(3)
   const totalValue = isToken0? (Number(totalLiquidity)*Number(currentPrice)).toFixed(3).toString() : 
@@ -315,7 +312,6 @@ export default function LeveragePositionItem({
                   </ExtentsText>
                   <Trans>
                     <span>
-                      {enterPrice?.toSignificant(3) ?? "-"}{' '}
                     </span>
                     <HoverInlineText text={currency0?.symbol} /> per <HoverInlineText text={currency1?.symbol ?? ''} />
                   </Trans>
@@ -377,26 +373,6 @@ export default function LeveragePositionItem({
           </ResponsiveButtonPrimary>
           </AutoColumn>
 
-       {/* <AutoColumn gap="8px" style={{marginRight: "150px"}}>
-            <ItemValueLabel label={"Total Position"} value={totalLiquidity + " " + (isToken0 ? currency0?.symbol : currency1?.symbol)}/>
-        </AutoColumn>
-        <AutoRow justify="flex-start" width="100%" marginBottom="16px">
-
-        <AutoColumn gap="8px" style={{marginRight: "150px"}}>
-            <ItemValueLabel label={"Total Position Value"} value={totalValue + " " + (!isToken0 ? currency0?.symbol : currency1?.symbol)}/>
-        </AutoColumn>
-
-          <AutoColumn gap="8px" style={{marginRight: "150px"}}>
-          <ItemValueLabel label={"My collateral"} value={new BN(initialCollateral).toString() + " " + (isToken0 ? currency1?.symbol : currency0?.symbol)}/>
-          <ItemValueLabel label={"What I Borrowed"} value={new BN(totalDebtInput).toString() + " " + (isToken0 ? currency1?.symbol : currency0?.symbol)}/>
-          </AutoColumn>
-          <AutoColumn gap="8px">
-          <ItemValueLabel label={"Open Time"} value={moment(new Date(Number(openTime) * 1000)).format("M/D/YYYY H:mm")}/>
-          <ItemValueLabel label={"Remaining Premium "} value={
-            (Number(remainingPremium)>0?remainingPremium.toString():"0" )+ " " + (isToken0 ? currency1?.symbol : currency0?.symbol)}/>
-          </AutoColumn>
-        </AutoRow> */}
-
       </RowBetween>
       <RowBetween>
         <AutoRow>
@@ -436,17 +412,7 @@ export default function LeveragePositionItem({
             onAcceptChanges={() => {}}
             onConfirm={() => {}}
             />
-          )
-          }
-
-          {/*<ResponsiveButtonPrimary 
-          //data-cy="join-pool-button" id="join-pool-button"
-           onClick={() => setShowClose(!showClose)}>
-            <Trans>Close Position</Trans>
-          </ResponsiveButtonPrimary>
-          <ResponsiveButtonPrimary onClick={() => setShowAddPremium(!showAddPremium)} >
-            <Trans>Add Premium</Trans>
-          </ResponsiveButtonPrimary>*/}
+          )}
         </AutoRow>
       </RowBetween>
     </ItemWrapper>

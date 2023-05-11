@@ -3,13 +3,15 @@ import { CallStateResult, useSingleCallResult, useSingleContractMultipleData } f
 import { useMemo } from 'react'
 import { PositionDetails } from 'types/position'
 
-import { useLeverageManagerContract, usePoolContract, useV3NFTPositionManagerContract } from './useContract'
+import { useGlobalStorageContract, useLeverageManagerContract, usePoolContract, useV3NFTPositionManagerContract } from './useContract'
 import { LeveragePositionDetails } from 'types/leveragePosition'
 import { BigNumber as BN } from "bignumber.js"
 import { Currency, Field } from '@uniswap/widgets'
 import { useCurrency, useToken } from './Tokens'
 import { FeeAmount } from '@uniswap/v3-sdk'
-import { usePool } from './usePools'
+import { computeLeverageManagerAddress, usePool } from './usePools'
+import { LEVERAGE_MANAGER_FACTORY_ADDRESSES } from 'constants/addresses'
+import { useWeb3React } from '@web3-react/core'
 
 
 interface UseV3PositionsResults {
@@ -18,95 +20,94 @@ interface UseV3PositionsResults {
 }
 
 // hacked
-export function useLeveragePositions(leverageManagerAddress: string | undefined, account: string | undefined, currencies: { [field in Field]?: Currency | null }): LeveragePositionDetails[] {
-  const leverageManager = useLeverageManagerContract(leverageManagerAddress)
-  const { result: positions, loading, error } = useSingleCallResult(leverageManager, 'getAllPositions', [account])
-  const { result: r0, loading: l0, error: e0 } = useSingleCallResult(leverageManager, 'token0', [])
-  const { result: r1, loading: l1, error: e1 } = useSingleCallResult(leverageManager, 'token1', [])
-  const { result: r2, loading: l2, error: e2 } = useSingleCallResult(leverageManager, 'pool', [])
-  const poolContract = usePoolContract(r2 ? r2[0] : undefined)
-  const { result: r3, loading: l3, error: e3 } = useSingleCallResult(poolContract, 'fee', [])
-  const token0 = useToken(r0?.[0])
-  const token1 = useToken(r1?.[0])
+export function useLeveragePositions(account: string | undefined): {loading: boolean, positions: LeveragePositionDetails[]} {
+  const {chainId} = useWeb3React()
+  const globalStorage = useGlobalStorageContract()
+  const { loading: balanceLoading, result: balanceResult } = useSingleCallResult(globalStorage, 'balanceOf', [
+    account ?? undefined,
+  ])
 
-  
+  // we don't expect any account balance to ever exceed the bounds of max safe int
+  const accountBalance: number | undefined = balanceResult?.[0]?.toNumber()
 
-  const inputCurrency = currencies[Field.INPUT]
-  const outputCurrency = currencies[Field.OUTPUT]
-
-  const [poolState, pool] = usePool(inputCurrency ?? undefined, outputCurrency ?? undefined, 
-    (!l3 && !e3) ? r3?.[0] : undefined
-    )
-
-  let args: any = []
-
-
-  if (positions) {
-    positions[0].forEach(
-      (pos: any, i: number) => {
-        console.log()
-        args.push([account, i])
+  const tokenIdsArgs = useMemo(() => {
+    if (accountBalance && account) {
+      const tokenRequests = []
+      for (let i = 0; i < accountBalance; i++) {
+        tokenRequests.push([account, i])
       }
-    )
-  }
-  // console.log("contractPositiosn: ", positions)
-
-  const multiResult= useSingleContractMultipleData(leverageManager, 'userpositions', args)
-
-  // console.log("multiResult1", args, leverageManager, multiResult, loading, error, positions)
-  let multiResultLoading = false
-  multiResult.forEach((data) => {
-    if (data.loading || data.error) {
-      multiResultLoading = true
+      return tokenRequests
     }
-  })
-
-  if (
-    multiResultLoading || args.length === 0 || !leverageManager || loading || 
-    error || !positions || !inputCurrency?.wrapped || !outputCurrency?.wrapped || 
-    !multiResult && ((multiResult as any).length > 0) ||
-    l2 || e2 || !r2 || l3 || e3 || !r3
-    ) {
     return []
-  }
+  }, [account, accountBalance])
 
-  // console.log("multiResult2", args, leverageManager, multiResult, loading, error, positions)
+  const tokenIdResults = useSingleContractMultipleData(globalStorage, 'tokenOfOwnerByIndex', tokenIdsArgs)
+  const someTokenIdsLoading = useMemo(() => tokenIdResults.some(({ loading }) => loading), [tokenIdResults])
 
-
-
-  const inputCurrencyIsToken0 = inputCurrency?.wrapped.sortsBefore(outputCurrency?.wrapped);
-
-
-  const formattedPositions = multiResult.map((data: any, i) => {
-    let position = positions[0][i]
-    // console.log("position:", position)
-    // output of trade position
-    let outputDecimals = position.isToken0 && inputCurrencyIsToken0 ? inputCurrency?.wrapped.decimals : outputCurrency?.wrapped.decimals
-    // input of trade position
-    let inputDecimals = position.isToken0 && inputCurrencyIsToken0 ? outputCurrency?.wrapped.decimals : inputCurrency?.wrapped.decimals
-    return {
-      leverageManagerAddress: leverageManagerAddress ?? undefined,
-      pool: pool ?? undefined,
-      token0: token0 ?? undefined,
-      token1: token1 ?? undefined,
-      tokenId: data.result.toString(),
-      totalLiquidity: new BN(position.totalPosition.toString()).shiftedBy(-outputDecimals).toFixed(6),
-      totalDebt: new BN(position.totalDebt.toString()).shiftedBy(-outputDecimals).toFixed(6),
-      totalDebtInput: new BN(position.totalDebtInput.toString()).shiftedBy(-inputDecimals).toFixed(6),
-      borrowedLiquidity: new BN(position.borrowedLiq.toString()).shiftedBy(-inputDecimals).toFixed(6),
-      creationTick: new BN(position.creationTick).toFixed(0),
-      recentPremium: new BN(position.recentPremium.toString()).shiftedBy(-inputDecimals).toFixed(6),
-      initialCollateral: new BN(position.initCollateral.toString()).shiftedBy(-inputDecimals).toFixed(6),
-      isToken0: position.isToken0,
-      openTime: new BN(position.openTime).toFixed(0),
-      repayTime: new BN(position.repayTime).toFixed(0),
-      tickStart: new BN(position.borrowStartTick).toFixed(0),
-      tickFinish: new BN(position.borrowFinishTick).toFixed(0),
+  const tokenIds = useMemo(() => {
+    if (account) {
+      return tokenIdResults
+        .map(({ result }) => result)
+        .filter((result): result is CallStateResult => !!result)
+        .map((result) => BigNumber.from(result[0]))
     }
-  })
+    return []
+  }, [account, tokenIdResults])
 
-  return formattedPositions.filter(position=> Number(position.totalLiquidity.toString())>0)
-  // return formattedPositions
+  const inputs = useMemo(() => (tokenIds ? tokenIds.map((tokenId) => [BigNumber.from(tokenId)]) : []), [tokenIds])
+  console.log("inputs: ", inputs)
+  
+  const results = useSingleContractMultipleData(globalStorage, 'positions', inputs)
+  console.log("calldataResults: ", results)
+
+  const loading = useMemo(() => results.some(({ loading }) => loading), [results])
+  const error = useMemo(() => results.some(({ error }) => error), [results])
+
+  const positions = useMemo(() => {
+    if (!loading && !error && tokenIds) {
+      return results.map((call, i) => {
+        const tokenId = tokenIds[i]
+        const result = call.result as CallStateResult
+        const key = result.key
+        const position = result.position
+
+        return {
+          tokenId: tokenId.toString(),
+          leverageManagerAddress: computeLeverageManagerAddress({
+            factoryAddress: LEVERAGE_MANAGER_FACTORY_ADDRESSES[chainId ?? 80001],
+            tokenA: key.token0,
+            tokenB: key.token1,
+            fee: (key.fee),
+          }),
+          token0Address: key.token0,
+          token1Address: key.token1,
+          poolFee: key.fee,
+          totalPosition: convertBNToStr(position.totalPosition, 18),
+          totalDebt: convertBNToStr(position.totalDebt, 18),
+          totalDebtInput: convertBNToStr(position.totalDebtInput, 18),
+          creationPrice: convertBNToStr(position.creationPrice, 18),
+          initialCollateral: convertBNToStr(position.initCollateral, 18),
+          recentPremium: convertBNToStr(position.recentPremium, 18),
+          unusedPremium: convertBNToStr(position.unusedPremium, 18),
+          totalPremium: convertBNToStr(position.totalPremium, 18),
+          isToken0: position.isToken0,
+          openTime: position.openTime.toString(),
+          repayTime: position.repayTime.toString(),
+          borrowInfo: position.borrowInfo.map((info: any) => ({ tick: info.tick, liquidity: convertBNToStr(info.liquidity, 18)})),
+        }
+      })
+    }
+    return undefined
+  }, [loading, error, results, tokenIds])
+  console.log("positions: ", positions)
+  return {
+    loading: false,
+    positions: positions ?? []
+  }
+}
+
+function convertBNToStr(num: BigNumber, decimals: number) {
+  return new BN(num.toString()).shiftedBy(-decimals).toFixed(6)
 }
 
 export enum PositionState {
@@ -116,72 +117,56 @@ export enum PositionState {
   INVALID
 }
 
-export function useLeveragePosition(leverageManagerAddress: string | undefined, account: string | undefined, tokenId: string | undefined): [PositionState, LeveragePositionDetails | undefined] {
-  if (!leverageManagerAddress || !account || !tokenId) {
-    return [PositionState.LOADING, undefined]
+export function useLeveragePositionFromTokenId(tokenId: string | undefined): { loading: boolean, error: any, position: LeveragePositionDetails | undefined} {
+  const globalStorage = useGlobalStorageContract()
+  const result = useSingleCallResult(globalStorage, 'positions', [tokenId]);
+  const loading = result.loading
+  const error = result.error
+  const { chainId } = useWeb3React()
+
+  const position = useMemo(() => {
+    if (!loading && !error && tokenId) {
+      const state = result.result
+      const key = state?.key
+      const position = state?.position
+      const _position = {
+        tokenId,
+        leverageManagerAddress: computeLeverageManagerAddress({
+          factoryAddress: LEVERAGE_MANAGER_FACTORY_ADDRESSES[chainId ?? 80001],
+          tokenA: key.token0,
+          tokenB: key.token1,
+          fee: (key.fee),
+        }),
+        token0Address: key.token0,
+        token1Address: key.token1,
+        poolFee: key.fee,
+        totalPosition: convertBNToStr(position.totalPosition, 18),
+        totalDebt: convertBNToStr(position.totalDebt, 18),
+        totalDebtInput: convertBNToStr(position.totalDebtInput, 18),
+        creationPrice: convertBNToStr(position.creationPrice, 18),
+        initialCollateral: convertBNToStr(position.initCollateral, 18),
+        recentPremium: convertBNToStr(position.recentPremium, 18),
+        totalPremium: convertBNToStr(position.totalPremium, 18),
+        unusedPremium: convertBNToStr(position.unusedPremium, 18),
+        isToken0: position.isToken0,
+        openTime: position.openTime.toString(),
+        repayTime: position.repayTime.toString(),
+        borrowInfo: position.borrowInfo.map((info: any) => convertBNToStr(info, 18)),
+      }
+      return _position
+    }
+    return undefined
+  },
+     [
+      loading,
+      error,
+      tokenId
+    ])
+  return {
+    loading,
+    error,
+    position: position ?? undefined
   }
-  const leverageManager = useLeverageManagerContract(leverageManagerAddress)
-  const { result: r1, loading: l1, error: e1 } = useSingleCallResult(leverageManager, 'token0', [])
-  const { result: r2, loading: l2, error: e2 } = useSingleCallResult(leverageManager, 'token1', [])
-  const { result: r0, loading: l0, error: e0 } = useSingleCallResult(leverageManager, 'getPosition', [account, tokenId])
-  const { result: r3, loading: l3, error: e3 } = useSingleCallResult(leverageManager, 'pool', [])
-
-  const poolContract = usePoolContract(r3 ? r3[0] : undefined)
-  const { result: r4, loading: l4, error: e4 } = useSingleCallResult(poolContract, 'fee', [])
-
-  const token0 = useToken(r1?.[0])
-  const token1 = useToken(r2?.[0])
-
-  const inputCurrency = useCurrency(r1?.[0])
-  const outputCurrency = useCurrency(r2?.[0])
-
-  const [poolState, pool] = usePool(inputCurrency ?? undefined, outputCurrency ?? undefined,
-    (!l4 && !e4) ? r4?.[0] : undefined
-  )
-
-
-  let info: [PositionState, LeveragePositionDetails | undefined] = useMemo(() => {
-    // fix hack.
-    if (l0 || l1 || l2 || l3  || e3|| e0 || e1 || e2 && !r0 && !r1 && !r2 && !r3) {
-      return [PositionState.LOADING, undefined]
-    }
-    const position = (r0 as any)[0]
-    const formattedPosition: LeveragePositionDetails =  {
-      leverageManagerAddress,
-      pool: pool ?? undefined,
-      token0: token0 ?? undefined,
-      token1: token1 ?? undefined,
-      tokenId: tokenId,
-      totalLiquidity: new BN(position.totalPosition.toString()).shiftedBy(-18).toFixed(6),
-      totalDebt: new BN(position.totalDebt.toString()).shiftedBy(-18).toFixed(6),
-      totalDebtInput: new BN(position.totalDebtInput.toString()).shiftedBy(-18).toFixed(6),
-      borrowedLiquidity: new BN(position.borrowedLiq.toString()).shiftedBy(-18).toFixed(6),
-      creationTick: new BN(position.creationTick).toFixed(0),
-      isToken0: position.isToken0,
-      openTime: new BN(position.openTime).toFixed(0),
-      repayTime: new BN(position.repayTime).toFixed(0),
-      tickStart: new BN(position.borrowStartTick).toFixed(0),
-      tickFinish: new BN(position.borrowFinishTick).toFixed(0),
-      recentPremium: new BN(position.recentPremium.toString()).shiftedBy(-18).toFixed(6),
-      initialCollateral: new BN(position.initCollateral.toString()).shiftedBy(-18).toFixed(6),
-    }
-    return [PositionState.LOADING, formattedPosition]
-  }, [leverageManagerAddress, account, tokenId, l1, l0, l2])
-
-  return info
-  // export interface LeveragePositionDetails {
-  //   tokenId: string
-  //   totalLiquidity: string // totalPosition
-  //   totalDebt: string // total debt in output token
-  //   totalDebtInput: string // total debt in input token
-  //   borrowedLiquidity: string
-  //   creationTick: string
-  //   isToken0: boolean
-  //   openTime: string
-  //   repayTime: string
-  //   tickStart: string // borrowStartTick
-  //   tickFinish: string // borrowFinishTick
-  // }
 }
 
 function useV3PositionsFromTokenIds(tokenIds: BigNumber[] | undefined): UseV3PositionsResults {
@@ -243,6 +228,8 @@ export function useV3Positions(account: string | null | undefined): UseV3Positio
   const { loading: balanceLoading, result: balanceResult } = useSingleCallResult(positionManager, 'balanceOf', [
     account ?? undefined,
   ])
+
+  console.log('balanceResult', balanceLoading, balanceResult)
 
   // we don't expect any account balance to ever exceed the bounds of max safe int
   const accountBalance: number | undefined = balanceResult?.[0]?.toNumber()

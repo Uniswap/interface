@@ -42,7 +42,7 @@ import TradePrice from './TradePrice'
 import { useCurrency, useToken } from 'hooks/Tokens'
 import { formatNumber, formatNumberOrString } from '@uniswap/conedison/format'
 import { NumberType } from '@uniswap/conedison/format'
-import { useLeveragePosition } from 'hooks/useV3Positions'
+import { useLeveragePositionFromTokenId } from 'hooks/useV3Positions'
 import { LoadingRows } from 'components/Loader/styled'
 import { Flash_OrderBy } from 'graphql/thegraph/__generated__/types-and-hooks'
 import { truncateSync } from 'fs'
@@ -511,7 +511,7 @@ export function CloseLeverageModalFooter({
   const [showDetails, setShowDetails] = useState(false)
   const theme = useTheme()
 
-  const [state, position] = useLeveragePosition(leverageManagerAddress, trader, tokenId)
+  const { error, position} = useLeveragePositionFromTokenId(tokenId)
 
   // what do we need for the simulation
 
@@ -802,18 +802,21 @@ export function AddPremiumModalFooter({
   const [showDetails, setShowDetails] = useState(false)
   const theme = useTheme()
 
-  const [state, position] = useLeveragePosition(leverageManagerAddress, trader, tokenId)
+  const { error, position} = useLeveragePositionFromTokenId(tokenId)
+  const token0 = useToken(position?.token0Address)
+  const token1 = useToken(position?.token1Address)
   const  {rate}  = useDerivedAddPremiumInfo(leverageManagerAddress, trader, tokenId, setDerivedState)
   const inputIsToken0 = !position?.isToken0
   console.log("rate: ", rate)
 
   const payment = position?.totalDebtInput && rate ? new BN(position.totalDebtInput).multipliedBy(new BN(rate)).div(100).toString() : "0"
-  const inputCurrency = useCurrency(position?.isToken0 ? position?.token0?.address : position?.token1?.address)
+  const inputCurrency = useCurrency(position?.isToken0 ? position?.token0Address : position?.token1Address)
   const [leverageApprovalState, approveLeverageManager] = useApproveCallback(
     inputCurrency ?
       CurrencyAmount.fromRawAmount(inputCurrency, "1000") : undefined,
     leverageManagerAddress ?? undefined)
   console.log("payment", leverageApprovalState)
+  
 
   const updateLeverageAllowance = useCallback(async () => {
     try {
@@ -949,7 +952,7 @@ export function AddPremiumModalFooter({
                   <Info size={20} />
                 </MouseoverTooltip>
               </div>
-              <Trans>Approve use of {inputIsToken0 ? position?.token0?.symbol : position?.token1?.symbol}</Trans>
+              <Trans>Approve use of {inputIsToken0 ? token0?.symbol : token1?.symbol}</Trans>
             </>
           )}
         </ButtonPrimary>

@@ -4,7 +4,7 @@ import React from 'react'
 import styled from 'styled-components/macro'
 import { MEDIA_WIDTHS } from 'theme'
 import { LeveragePositionDetails } from 'types/leveragePosition'
-import LeveragePositionItem from 'components/LeveragePositionItem'
+// import LeveragePositionItem from 'components/LeveragePositionItem'
 import { AutoColumn } from 'components/Column'
 import { ReactNode, useCallback, useMemo, useState } from 'react'
 import { Currency } from '@uniswap/sdk-core'
@@ -71,47 +71,47 @@ type LeveragePositionListProps = React.PropsWithChildren<{
   userHideClosedPositions: boolean
 }>
 
-export default function LeveragePositionsList({
-  positions,
-  setUserHideClosedPositions,
-  userHideClosedPositions
-}: LeveragePositionListProps) {
-  console.log('levpositions', positions)
-  return (
-    <>
-      <DesktopHeader>
-        <div>
-          <Trans>Your positions</Trans>
-          {positions && ' (' + positions.length + ')'}
-        </div>
+// export default function LeveragePositionsList({
+//   positions,
+//   setUserHideClosedPositions,
+//   userHideClosedPositions
+// }: LeveragePositionListProps) {
+//   console.log('levpositions', positions)
+//   return (
+//     <>
+//       <DesktopHeader>
+//         <div>
+//           <Trans>Your positions</Trans>
+//           {positions && ' (' + positions.length + ')'}
+//         </div>
 
-        <ToggleLabel
-          id="desktop-hide-closed-positions"
-          onClick={() => {
-            setUserHideClosedPositions(!userHideClosedPositions)
-          }}
-        >
-          {userHideClosedPositions ? <Trans>Show closed positions</Trans> : <Trans>Hide closed positions</Trans>}
-        </ToggleLabel>
-      </DesktopHeader>
-      <MobileHeader>
-        <Trans>Your positions</Trans>
-        <ToggleWrap>
-          <ToggleLabel
-            onClick={() => {
-              setUserHideClosedPositions(!userHideClosedPositions)
-            }}
-          >
-            {userHideClosedPositions ? <Trans>Show closed positions</Trans> : <Trans>Hide closed positions</Trans>}
-          </ToggleLabel>
-        </ToggleWrap>
-      </MobileHeader>
-      <AutoColumn gap="4px">
-      {positions.map((p) => (
-        <LeveragePositionItem key={p.tokenId} {...p} />
-      ))}
-      </AutoColumn>
+//         <ToggleLabel
+//           id="desktop-hide-closed-positions"
+//           onClick={() => {
+//             setUserHideClosedPositions(!userHideClosedPositions)
+//           }}
+//         >
+//           {userHideClosedPositions ? <Trans>Show closed positions</Trans> : <Trans>Hide closed positions</Trans>}
+//         </ToggleLabel>
+//       </DesktopHeader>
+//       <MobileHeader>
+//         <Trans>Your positions</Trans>
+//         <ToggleWrap>
+//           <ToggleLabel
+//             onClick={() => {
+//               setUserHideClosedPositions(!userHideClosedPositions)
+//             }}
+//           >
+//             {userHideClosedPositions ? <Trans>Show closed positions</Trans> : <Trans>Hide closed positions</Trans>}
+//           </ToggleLabel>
+//         </ToggleWrap>
+//       </MobileHeader>
+//       <AutoColumn gap="4px">
+//       {positions.map((p) => (
+//         <LeveragePositionItem key={p.tokenId} {...p} />
+//       ))}
+//       </AutoColumn>
 
-    </>
-  )
-}
+//     </>
+//   )
+// }

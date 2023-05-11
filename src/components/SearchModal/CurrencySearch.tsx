@@ -19,7 +19,7 @@ import { useAllTokenBalances } from 'state/connection/hooks'
 import styled, { useTheme } from 'styled-components/macro'
 import { UserAddedToken } from 'types/tokens'
 
-import { useDefaultActiveTokens, useIsUserAddedToken, useSearchInactiveTokenLists, useToken } from '../../hooks/Tokens'
+import { useCurrency, useDefaultActiveTokens, useIsUserAddedToken, useSearchInactiveTokenLists, useToken } from '../../hooks/Tokens'
 import { CloseIcon, ThemedText } from '../../theme'
 import { isAddress } from '../../utils'
 import Column from '../Column'
@@ -151,7 +151,7 @@ export function CurrencySearch({
     native,
   ])
 
-  // console.log('searchCurrencies', searchCurrencies)
+  console.log('searchCurrencies', searchCurrencies)
 
   const handleCurrencySelect = useCallback(
     (currency: Currency, hasWarning?: boolean) => {
