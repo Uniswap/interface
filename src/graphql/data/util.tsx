@@ -119,22 +119,23 @@ export function validateUrlChainParam(chainName: string | undefined) {
 }
 
 // TODO(cartcrom): refactor into safer lookup & replace usage
+// TODO verify this later
 export const CHAIN_NAME_TO_CHAIN_ID: { [key in Chain]: SupportedChainId } = {
-  // [Chain.Ethereum]: SupportedChainId.MAINNET,
-  // [Chain.EthereumGoerli]: SupportedChainId.GOERLI,
-  // [Chain.Polygon]: SupportedChainId.POLYGON,
-  // [Chain.Celo]: SupportedChainId.CELO,
+  [Chain.Ethereum]: SupportedChainId.OPTIMISM,
+  [Chain.EthereumGoerli]: SupportedChainId.OPTIMISM,
+  [Chain.Polygon]: SupportedChainId.OPTIMISM,
+  [Chain.Celo]: SupportedChainId.OPTIMISM,
   [Chain.Optimism]: SupportedChainId.OPTIMISM,
-  // [Chain.Arbitrum]: SupportedChainId.ARBITRUM_ONE,
+  [Chain.Arbitrum]: SupportedChainId.OPTIMISM,
   [Chain.UnknownChain]: SupportedChainId.OPTIMISM,
-  // [Chain.Bnb]: SupportedChainId.BNB,
+  [Chain.Bnb]: SupportedChainId.OPTIMISM,
 }
 
 export function fromGraphQLChain(chain: Chain): SupportedChainId {
   return CHAIN_NAME_TO_CHAIN_ID[chain]
 }
 
-export const BACKEND_CHAIN_NAMES: Chain[] = [ Chain.Optimism ]
+export const BACKEND_CHAIN_NAMES: Chain[] = [Chain.Optimism]
 
 export function getTokenDetailsURL({
   address,

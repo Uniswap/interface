@@ -61,11 +61,11 @@ export const V3_CORE_FACTORY_ADDRESSES: AddressMap = {
 }
 
 export const V3_MIGRATOR_ADDRESSES: AddressMap = {
-  ...constructSameAddressMap('0xA5644E29708357803b5A882D272c41cC0dF92B34', [
-    // SupportedChainId.ARBITRUM_ONE,
-    // SupportedChainId.POLYGON_MUMBAI,
-    // SupportedChainId.POLYGON,
-  ]),
+  // ...constructSameAddressMap('0xA5644E29708357803b5A882D272c41cC0dF92B34', [
+  // SupportedChainId.ARBITRUM_ONE,
+  // SupportedChainId.POLYGON_MUMBAI,
+  // SupportedChainId.POLYGON,
+  // ]),
   // [SupportedChainId.CELO]: CELO_V3_MIGRATOR_ADDRESSES,
   // [SupportedChainId.CELO_ALFAJORES]: CELO_V3_MIGRATOR_ADDRESSES,
   // [SupportedChainId.BNB]: BNB_V3_MIGRATOR_ADDRESSES,
