@@ -21,13 +21,6 @@ runs:
                 "type": "section",
                 "text": {
                   "type": "mrkdwn",
-                  "text": "!oncall web"
-                }
-              },
-              {
-                "type": "section",
-                "text": {
-                  "type": "mrkdwn",
                   "text": "*${{ inputs.name }} failing on `${{ github.ref_name }}`:* <https://github.com/${{ github.repository}}/actions/runs/${{ github.run_id }}|view failing action>"
                 }
               },
@@ -43,3 +36,10 @@ runs:
       env:
         SLACK_WEBHOOK_URL: ${{ inputs.SLACK_WEBHOOK_URL }}
         SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+    # The !oncall bot requires its own message:
+    - uses: slackapi/slack-github-action@007b2c3c751a190b6f0f040e47ed024deaa72844
+      with:
+        payload: |
+          {
+            "text": "!oncall web",
+          }
