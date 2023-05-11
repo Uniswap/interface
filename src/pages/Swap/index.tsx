@@ -67,7 +67,6 @@ import { computeRealizedPriceImpact, warningSeverity } from '../../utils/prices'
 import { supportedChainId } from '../../utils/supportedChainId'
 
 export const ArrowContainer = styled.div`
-  display: inline-block;
   display: inline-flex;
   align-items: center;
   justify-content: center;

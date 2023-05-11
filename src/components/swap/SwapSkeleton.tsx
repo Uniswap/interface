@@ -1,25 +1,35 @@
+import { Trans } from '@lingui/macro'
 import { ArrowContainer } from 'pages/Swap'
 import { ArrowDown } from 'react-feather'
 import styled, { useTheme } from 'styled-components/macro'
+import { ThemedText } from 'theme'
 
 import { ArrowWrapper } from './styleds'
+
+const StyledArrowWrapper = styled(ArrowWrapper)`
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin: 0;
+`
 
 const LoadingWrapper = styled.div`
   display: flex;
   flex-direction: column;
+  gap: 4px;
   justify-content: space-between;
 
   padding: 8px;
   border: ${({ theme }) => `1px solid ${theme.backgroundOutline}`};
-  border-radius: 1rem;
+  border-radius: 16px;
+  background-color: ${({ theme }) => theme.backgroundSurface};
 `
 
-const Blob = styled.div<{ height: string; width: string; radius?: number; marginTop?: number }>`
+const Blob = styled.div<{ height: number; width?: number; radius?: number }>`
   background-color: ${({ theme }) => theme.backgroundModule};
-  border-radius: ${({ radius }) => (radius ?? 0.25) + 'rem'};
-  height: ${({ height }) => height};
-  width: ${({ width }) => width};
-  margin-top: ${({ marginTop }) => (marginTop ?? 0) + 'rem'};
+  border-radius: ${({ radius }) => (radius ?? 4) + 'px'};
+  height: ${({ height }) => (height ? height + 'px' : undefined)};
+  width: ${({ width }) => (width ? width + 'px' : '100%')};
 `
 
 const ModuleBlob = styled(Blob)`
@@ -27,11 +37,7 @@ const ModuleBlob = styled(Blob)`
 `
 
 const TitleColumn = styled.div`
-  display: flex;
-  flex-flow: column;
-  padding: 0.5rem;
-  padding-bottom: 1.25rem;
-  width: 100%;
+  padding: 8px;
 `
 
 const Row = styled.div`
@@ -44,23 +50,22 @@ const InputColumn = styled.div`
   display: flex;
   flex-flow: column;
   background-color: ${({ theme }) => theme.backgroundModule};
-  border-radius: 1rem;
+  border-radius: 16px;
   display: flex;
-  gap: 1.875rem;
-  padding: 0.75rem;
-  padding-bottom: 3.25rem;
-  padding-top: 3.25rem;
+  gap: 30px;
+  padding: 48px 12px;
 `
 
-const OutputColumn = styled(InputColumn)`
-  padding-bottom: 3rem;
-  padding-top: 3.5rem;
+const OutputWrapper = styled.div`
+  position: relative;
 `
 
-function FloatingTitle() {
+function Title() {
   return (
     <TitleColumn>
-      <Blob height="1rem" width="2.5rem" />
+      <ThemedText.SubHeader>
+        <Trans>Swap</Trans>
+      </ThemedText.SubHeader>
     </TitleColumn>
   )
 }
@@ -68,14 +73,14 @@ function FloatingTitle() {
 function FloatingInput() {
   return (
     <Row>
-      <ModuleBlob height="2rem" width="3.75rem" />
-      <ModuleBlob height="2rem" width="7.25rem" />
+      <ModuleBlob height={36} width={60} />
+      <ModuleBlob height={36} width={100} radius={16} />
     </Row>
   )
 }
 
 function FloatingButton() {
-  return <Blob marginTop={0.55} height="3.5rem" width="100%" radius={0.75} />
+  return <Blob height={56} radius={16} />
 }
 
 export function SwapSkeleton() {
@@ -83,21 +88,21 @@ export function SwapSkeleton() {
 
   return (
     <LoadingWrapper>
-      <FloatingTitle />
+      <Title />
       <InputColumn>
         <FloatingInput />
       </InputColumn>
-      <div>
-        <ArrowWrapper clickable={false}>
-          <ArrowContainer color={theme.textPrimary}>
+      <OutputWrapper>
+        <StyledArrowWrapper clickable={false}>
+          <ArrowContainer>
             <ArrowDown size="16" color={theme.textTertiary} />
           </ArrowContainer>
-        </ArrowWrapper>
-        <OutputColumn>
+        </StyledArrowWrapper>
+        <InputColumn>
           <FloatingInput />
-        </OutputColumn>
-        <FloatingButton />
-      </div>
+        </InputColumn>
+      </OutputWrapper>
+      <FloatingButton />
     </LoadingWrapper>
   )
 }
