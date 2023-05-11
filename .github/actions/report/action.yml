@@ -41,7 +41,7 @@ runs:
       with:
         payload: |
           {
-            "text": "!oncall web",
+            "text": "!oncall web"
           }
       env:
         SLACK_WEBHOOK_URL: ${{ inputs.SLACK_WEBHOOK_URL }}
