@@ -1,8 +1,10 @@
 import Column, { ColumnCenter } from 'components/Column'
 import Row from 'components/Row'
+import { useScreenSize } from 'hooks/useScreenSize'
 import { VerifiedIcon } from 'nft/components/icons'
 import { CollectionInfoForAsset, GenieAsset } from 'nft/types'
-import { DollarSign } from 'react-feather'
+import { useState } from 'react'
+import { ChevronDown, ChevronUp, DollarSign } from 'react-feather'
 import styled from 'styled-components/macro'
 import { BREAKPOINTS, ThemedText } from 'theme'
 
@@ -103,7 +105,11 @@ const StyledBubble = styled(Row)`
   background-color: ${({ theme }) => theme.backgroundSurface};
   padding: 10px 12px 10px 8px;
   border-radius: 20px;
-  max-width: 169px;
+  max-width: 144px;
+
+  @media screen and (min-width: ${BREAKPOINTS.sm}px) {
+    max-width: 169px;
+  }
 `
 
 const StyledLabelMedium = styled.div`
@@ -113,6 +119,7 @@ const StyledLabelMedium = styled.div`
   color: ${({ theme }) => theme.textPrimary};
   text-overflow: ellipsis;
   overflow: hidden;
+  white-space: nowrap;
 `
 
 const StyledIcon = styled(Row)`
@@ -134,13 +141,35 @@ const InfoBubble = ({ title }: { title: string }) => {
         <StyledIcon>
           <DollarSign size={20} />
         </StyledIcon>
-        <StyledLabelMedium>calil.eth</StyledLabelMedium>
+        <StyledLabelMedium>really long trait name</StyledLabelMedium>
       </StyledBubble>
     </Column>
   )
 }
 
-const InfoBubbles = [
+const InfoChipDropdown = styled.button`
+  padding: 10px;
+  background-color: ${({ theme }) => theme.backgroundSurface};
+  color: ${({ theme }) => theme.textSecondary};
+  border-radius: 100%;
+  border: none;
+  cursor: pointer;
+`
+
+const InfoChipDropdownContainer = styled(Column)`
+  height: 100%;
+  justify-content: flex-end;
+
+  @media screen and (min-width: ${BREAKPOINTS.sm}px) {
+    display: none;
+  }
+`
+
+const InfoChipsContainer = styled(Row)`
+  height: 64px;
+`
+
+const InfoChips = [
   {
     title: 'Owner',
   },
@@ -158,6 +187,11 @@ interface LandingPageProps {
 }
 
 export const LandingPage = ({ asset, collection }: LandingPageProps) => {
+  const screenSize = useScreenSize()
+  const isMobile = !screenSize['sm']
+  const [showExtraInfoChips, setShowExtraInfoChips] = useState(false)
+  const shouldShowExtraInfoChips = isMobile && showExtraInfoChips
+
   return (
     <LandingPageContainer>
       <MediaContainer>
@@ -171,11 +205,27 @@ export const LandingPage = ({ asset, collection }: LandingPageProps) => {
           </Row>
           <StyledHeadlineText>{asset.name ?? `${asset.collectionName} #${asset.tokenId}`}</StyledHeadlineText>
         </InfoDetailsContainer>
-        <Row gap="md" justify="center">
-          {InfoBubbles.map((bubble) => (
-            <InfoBubble key={bubble.title} title={bubble.title} />
-          ))}
-        </Row>
+        <Column gap="sm">
+          <InfoChipsContainer gap="xs" justify="center">
+            <InfoBubble key="Owner" title="Owner" />
+            <InfoBubble key="Trait Floor" title="Trait Floor" />
+            {!isMobile && <InfoBubble key="Top Trait" title="Top Trait" />}
+            <InfoChipDropdownContainer>
+              <InfoChipDropdown onClick={() => setShowExtraInfoChips(!showExtraInfoChips)}>
+                {showExtraInfoChips ? (
+                  <ChevronUp size={20} display="block" />
+                ) : (
+                  <ChevronDown size={20} display="block" />
+                )}
+              </InfoChipDropdown>
+            </InfoChipDropdownContainer>
+          </InfoChipsContainer>
+          {shouldShowExtraInfoChips && (
+            <InfoChipsContainer gap="xs" justify="center">
+              <InfoBubble key="Top Trait" title="Top Trait" />
+            </InfoChipsContainer>
+          )}
+        </Column>
       </InfoContainer>
     </LandingPageContainer>
   )
