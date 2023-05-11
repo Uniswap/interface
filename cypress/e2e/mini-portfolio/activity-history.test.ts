@@ -12,7 +12,7 @@ describe('mini-portfolio activity history', () => {
     ).as('restoreOriginalBehavior')
   })
 
-  it('should deduplicate local and remote activity history by nonce', () => {
+  it('should deduplicate activity history by nonce', () => {
     cy.visit('/swap', { ethereum: 'hardhat' })
       .hardhat({ automine: false })
       .then((hardhat) => hardhat.wallet.getTransactionCount())
@@ -111,8 +111,10 @@ describe('mini-portfolio activity history', () => {
 
         // Set slippage to a high value.
         cy.get(getTestSelector('open-settings-dialog-button')).click()
+        cy.get(getTestSelector('max-slippage-settings')).click()
         cy.get(getTestSelector('slippage-input')).clear().type('5')
         cy.get('body').click('topRight')
+        cy.get(getTestSelector('slippage-input')).should('not.exist')
 
         // Click swap button.
         cy.contains('1 USDC = ').should('exist')
