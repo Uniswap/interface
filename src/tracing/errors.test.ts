@@ -16,10 +16,10 @@ describe('beforeSend', () => {
         request: {
           url: 'https://app.uniswap.org/#/example',
         },
-      }
+      } as ErrorEvent
 
-      beforeSend(event as ErrorEvent, null as any)
-      expect(event.request.url).toBe('https://app.uniswap.org/example')
+      beforeSend(event, null as any)
+      expect(event.request?.url).toBe('https://app.uniswap.org/example')
     })
 
     test('should remove trailing slash from the request URL', () => {
@@ -27,10 +27,10 @@ describe('beforeSend', () => {
         request: {
           url: 'https://app.uniswap.org/example/',
         },
-      }
+      } as ErrorEvent
 
-      beforeSend(event as ErrorEvent, null as any)
-      expect(event.request.url).toBe('https://app.uniswap.org/example')
+      beforeSend(event, null as any)
+      expect(event.request?.url).toBe('https://app.uniswap.org/example')
     })
 
     test('should not modify the request URL if no changes are required', () => {
@@ -38,10 +38,10 @@ describe('beforeSend', () => {
         request: {
           url: 'https://app.uniswap.org/example',
         },
-      }
+      } as ErrorEvent
 
-      beforeSend(event as ErrorEvent, null as any)
-      expect(event.request.url).toBe('https://app.uniswap.org/example')
+      beforeSend(event, null as any)
+      expect(event.request?.url).toBe('https://app.uniswap.org/example')
     })
   })
 
