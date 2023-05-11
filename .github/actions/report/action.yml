@@ -1,5 +1,9 @@
 name: Report
 description: Report test failures on `main` via Slack
+inputs:
+  name:
+    description: The name of the failing tests to report
+    required: true
 
 runs:
   using: composite
