@@ -1,17 +1,16 @@
 name: Report
-description: Report test failures on `main` via Slack
+description: Report test failures via Slack
 inputs:
   name:
-    description: The name of the failing test to report
+    description: The name of the failing test
     required: true
   SLACK_WEBHOOK_URL:
-    description: The Slack webhook URL to use to report a test failure
+    description: The webhook URL to send the report to
     required: true
 
 runs:
   using: composite
   steps:
-    # - if: github.ref_name == 'main'
     - uses: slackapi/slack-github-action@007b2c3c751a190b6f0f040e47ed024deaa72844
       with:
         payload: |
@@ -22,14 +21,14 @@ runs:
                 "type": "section",
                 "text": {
                   "type": "mrkdwn",
-                  "text": "*${{ inputs.name }} failing on `${{ github.ref_name }}`:* <https://github.com/${{ github.repository}}/actions/runs/${{ github.run_id }}/jobs/${{ GITHUB_RUN_ATTEMPT }}|view failing action>"
+                  "text": "*${{ inputs.name }} failing on `${{ github.ref_name }}`:* <https://github.com/${{ github.repository}}/actions/runs/${{ github.run_id }}|view failing action>"
                 }
               },
               {
                 "type": "section",
                 "text": {
                   "type": "mrkdwn",
-                  "text": "_This is blocking pull requests and promotions - please prioritize fixing the build._"
+                  "text": "_This is blocking pull requests and branch promotions - please prioritize fixing the build._"
                 }
               },
               {
