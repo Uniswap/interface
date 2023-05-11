@@ -11,37 +11,6 @@ inputs:
 runs:
   using: composite
   steps:
-    - run: echo ${{ github.ref_name }}
-      shell: bash
-    - run: |
-        echo \
-        { \
-          "text": "${{ inputs.name }} failing on `${{ github.ref_name }}`", \
-          "blocks": [ \
-            { \
-              "type": "section", \
-              "text": { \
-                "type": "mrkdwn", \
-                "text": "*${{ inputs.name }} failing on `${{ github.ref_name }}`:*" \
-              } \
-            }, \
-            { \
-              "type": "section", \
-              "text": { \
-                "type": "mrkdwn", \
-                "text": "<https://github.com/${{ github.repository}}/actions/runs/${{ github.run_id }}/jobs/${{ github.job }}|View failing action>" \
-              } \
-            }, \
-            { \
-              "type": "section", \
-              "text": { \
-                "type": "plain_text", \
-                "text": "!oncall web" \
-              } \
-            } \
-          ] \
-        }
-      shell: bash
     # - if: github.ref_name == 'main'
     - uses: slackapi/slack-github-action@007b2c3c751a190b6f0f040e47ed024deaa72844
       with:
@@ -53,14 +22,14 @@ runs:
                 "type": "section",
                 "text": {
                   "type": "mrkdwn",
-                  "text": "*${{ inputs.name }} failing on `${{ github.ref_name }}`:*"
+                  "text": "*${{ inputs.name }} failing on `${{ github.ref_name }}`:* <https://github.com/${{ github.repository}}/actions/runs/${{ github.run_id }}/jobs/${{ GITHUB_RUN_ATTEMPT }}|view failing action>"
                 }
               },
               {
                 "type": "section",
                 "text": {
                   "type": "mrkdwn",
-                  "text": "<https://github.com/${{ github.repository}}/actions/runs/${{ github.run_id }}/jobs/${{ github.job }}|View failing action>"
+                  "text": "_This is blocking pull requests and promotions - please prioritize fixing the build._"
                 }
               },
               {
