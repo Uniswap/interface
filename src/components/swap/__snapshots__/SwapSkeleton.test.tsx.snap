@@ -2,7 +2,11 @@
 
 exports[`SwapSkeleton.tsx renders a skeleton 1`] = `
 <DocumentFragment>
-  .c8 {
+  .c2 {
+  color: #0D111C;
+}
+
+.c9 {
   border-radius: 12px;
   height: 40px;
   width: 40px;
@@ -17,8 +21,7 @@ exports[`SwapSkeleton.tsx renders a skeleton 1`] = `
   z-index: 2;
 }
 
-.c9 {
-  display: inline-block;
+.c11 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -35,6 +38,15 @@ exports[`SwapSkeleton.tsx renders a skeleton 1`] = `
   height: 100%;
 }
 
+.c10 {
+  position: absolute;
+  left: 50%;
+  -webkit-transform: translate(-50%,-50%);
+  -ms-transform: translate(-50%,-50%);
+  transform: translate(-50%,-50%);
+  margin: 0;
+}
+
 .c0 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -43,62 +55,45 @@ exports[`SwapSkeleton.tsx renders a skeleton 1`] = `
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
   flex-direction: column;
+  gap: 4px;
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
   -ms-flex-pack: justify;
   justify-content: space-between;
   padding: 8px;
   border: 1px solid #D2D9EE;
-  border-radius: 1rem;
-}
-
-.c2 {
-  background-color: #F5F6FC;
-  border-radius: 0.25rem;
-  height: 1rem;
-  width: 2.5rem;
-  margin-top: 0rem;
+  border-radius: 16px;
+  background-color: #FFFFFF;
 }
 
 .c5 {
   background-color: #F5F6FC;
-  border-radius: 0.25rem;
-  height: 2rem;
-  width: 3.75rem;
-  margin-top: 0rem;
+  border-radius: 4px;
+  height: 56px;
+  width: 60px;
 }
 
 .c7 {
   background-color: #F5F6FC;
-  border-radius: 0.25rem;
-  height: 2rem;
-  width: 7.25rem;
-  margin-top: 0rem;
+  border-radius: 16px;
+  height: 56px;
+  width: 100px;
 }
 
-.c11 {
+.c12 {
   background-color: #F5F6FC;
-  border-radius: 0.75rem;
-  height: 3.5rem;
+  border-radius: 16px;
+  height: 56px;
   width: 100%;
-  margin-top: 0.55rem;
 }
 
 .c6 {
   background-color: #D2D9EE;
+  height: 36px;
 }
 
 .c1 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-flow: column;
-  -ms-flex-flow: column;
-  flex-flow: column;
-  padding: 0.5rem;
-  padding-bottom: 1.25rem;
-  width: 100%;
+  padding: 8px;
 }
 
 .c4 {
@@ -125,20 +120,17 @@ exports[`SwapSkeleton.tsx renders a skeleton 1`] = `
   -ms-flex-flow: column;
   flex-flow: column;
   background-color: #F5F6FC;
-  border-radius: 1rem;
+  border-radius: 16px;
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-  gap: 1.875rem;
-  padding: 0.75rem;
-  padding-bottom: 3.25rem;
-  padding-top: 3.25rem;
+  gap: 30px;
+  padding: 48px 12px;
 }
 
-.c10 {
-  padding-bottom: 3rem;
-  padding-top: 3.5rem;
+.c8 {
+  position: relative;
 }
 
 <div
@@ -148,10 +140,10 @@ exports[`SwapSkeleton.tsx renders a skeleton 1`] = `
       class="c1"
     >
       <div
-        class="c2"
-        height="1rem"
-        width="2.5rem"
-      />
+        class="c2 css-rjqmed"
+      >
+        Swap
+      </div>
     </div>
     <div
       class="c3"
@@ -161,23 +153,23 @@ exports[`SwapSkeleton.tsx renders a skeleton 1`] = `
       >
         <div
           class="c5 c6"
-          height="2rem"
-          width="3.75rem"
+          width="60"
         />
         <div
           class="c7 c6"
-          height="2rem"
-          width="7.25rem"
+          radius="16"
+          width="100"
         />
       </div>
     </div>
-    <div>
+    <div
+      class="c8"
+    >
       <div
-        class="c8"
+        class="c9 c10"
       >
         <div
-          class="c9"
-          color="#0D111C"
+          class="c11"
         >
           <svg
             fill="none"
@@ -203,30 +195,27 @@ exports[`SwapSkeleton.tsx renders a skeleton 1`] = `
         </div>
       </div>
       <div
-        class="c3 c10"
+        class="c3"
       >
         <div
           class="c4"
         >
           <div
             class="c5 c6"
-            height="2rem"
-            width="3.75rem"
+            width="60"
           />
           <div
             class="c7 c6"
-            height="2rem"
-            width="7.25rem"
+            radius="16"
+            width="100"
           />
         </div>
       </div>
-      <div
-        class="c11"
-        height="3.5rem"
-        radius="0.75"
-        width="100%"
-      />
     </div>
+    <div
+      class="c12"
+      radius="16"
+    />
   </div>
 </DocumentFragment>
 `;
