@@ -11,11 +11,9 @@ inputs:
 runs:
   using: composite
   steps:
-    # - if: github.ref_name == 'main'
     - run: echo ${{ github.ref_name }}
       shell: bash
-    - if: github.ref_name == 'report-test-failures'
-      run: |
+    - run: |
         echo \
         { \
           "text": "${{ inputs.name }} failing on `${{ github.ref_name }}`", \
@@ -44,8 +42,8 @@ runs:
           ] \
         }
       shell: bash
-    - if: github.ref_name == 'report-test-failures'
-      uses: slackapi/slack-github-action@007b2c3c751a190b6f0f040e47ed024deaa72844
+    # - if: github.ref_name == 'main'
+    - uses: slackapi/slack-github-action@007b2c3c751a190b6f0f040e47ed024deaa72844
       with:
         payload: |
           {
