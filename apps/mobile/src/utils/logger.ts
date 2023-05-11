@@ -31,7 +31,7 @@ function logMessage(
   fileName: string,
   functionName: string,
   message: string,
-  ...args: unknown[]
+  ...args: unknown[] // arbitrary extra data - ideally formatted as key value pairs
 ): void {
   if (!fileName || !message) {
     console.warn('Invalid log message format, skipping')
@@ -47,11 +47,11 @@ function logMessage(
 
   // Send error, warn, info logs to Sentry
   if (level === 'error') {
-    captureException(`${fileName}#${functionName}`, message)
+    captureException(`${fileName}#${functionName}`, message, ...args)
   } else if (level === 'warn') {
-    captureMessage('warning', `${fileName}#${functionName}`, message)
+    captureMessage('warning', `${fileName}#${functionName}`, message, ...args)
   } else if (level === 'info') {
-    captureMessage('info', `${fileName}#${functionName}`, message)
+    captureMessage('info', `${fileName}#${functionName}`, message, ...args)
   }
 }
 

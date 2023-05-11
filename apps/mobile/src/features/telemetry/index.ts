@@ -54,11 +54,14 @@ export async function initAnalytics(): Promise<void> {
  *
  * @param context Context from where this method is called
  * @param error Can be the full error object or a custom error message
- * @param extraTags Key/value pairs to enrich logging and allow filtering.
- *                  More info here: https://docs.sentry.io/platforms/react-native/enriching-events/tags/
+ * @param extraArgs Key/value pairs to enrich logging and allow filtering.
+ *                  More info here: https://docs.sentry.io/platforms/react-native/enriching-events/context/
  */
-export function captureException(context: string, error: unknown, extraTags?: LogTags): void {
-  Sentry.captureException(error, { tags: { ...(extraTags || {}), mobileContext: context } })
+export function captureException(context: string, error: unknown, ...extraArgs: unknown[]): void {
+  Sentry.captureException(error, {
+    ...(extraArgs ? { extra: { data: extraArgs } } : {}),
+    tags: { mobileContext: context },
+  })
 }
 
 /**
@@ -67,16 +70,20 @@ export function captureException(context: string, error: unknown, extraTags?: Lo
  * @param level Sentry severity level
  * @param context Context from where this method is called
  * @param message Message
- * @param extraTags Key/value pairs to enrich logging and allow filtering.
- *                  More info here: https://docs.sentry.io/platforms/react-native/enriching-events/tags/
+ * @param extraArgs Key/value pairs to enrich logging and allow filtering.
+ *                  More info here: https://docs.sentry.io/platforms/react-native/enriching-events/context/
  */
 export function captureMessage(
   level: SeverityLevel,
   context: string,
   message: string,
-  extraTags?: LogTags
+  ...extraArgs: unknown[]
 ): void {
-  Sentry.captureMessage(message, { level, tags: { ...(extraTags || {}), mobileContext: context } })
+  Sentry.captureMessage(message, {
+    level,
+    tags: { mobileContext: context },
+    ...(extraArgs ? { extra: { data: extraArgs } } : {}),
+  })
 }
 
 //#endregion
