@@ -2,8 +2,9 @@ import Column, { ColumnCenter } from 'components/Column'
 import Row from 'components/Row'
 import { VerifiedIcon } from 'nft/components/icons'
 import { CollectionInfoForAsset, GenieAsset } from 'nft/types'
+import { DollarSign } from 'react-feather'
 import styled from 'styled-components/macro'
-import { BREAKPOINTS } from 'theme'
+import { BREAKPOINTS, ThemedText } from 'theme'
 
 import { MediaRenderer } from './MediaRenderer'
 
@@ -98,6 +99,59 @@ const MediaContainer = styled.div`
   }
 `
 
+const StyledBubble = styled(Row)`
+  background-color: ${({ theme }) => theme.backgroundSurface};
+  padding: 10px 12px 10px 8px;
+  border-radius: 20px;
+  max-width: 169px;
+`
+
+const StyledLabelMedium = styled.div`
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 20px;
+  color: ${({ theme }) => theme.textPrimary};
+  text-overflow: ellipsis;
+  overflow: hidden;
+`
+
+const StyledIcon = styled(Row)`
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  color: ${({ theme }) => theme.accentAction};
+  border-radius: 100%;
+  overflow: hidden;
+  justify-content: center;
+  align-items: center;
+`
+
+const InfoBubble = ({ title }: { title: string }) => {
+  return (
+    <Column gap="sm">
+      <ThemedText.Caption color="textSecondary">{title}</ThemedText.Caption>
+      <StyledBubble gap="sm">
+        <StyledIcon>
+          <DollarSign size={20} />
+        </StyledIcon>
+        <StyledLabelMedium>calil.eth</StyledLabelMedium>
+      </StyledBubble>
+    </Column>
+  )
+}
+
+const InfoBubbles = [
+  {
+    title: 'Owner',
+  },
+  {
+    title: 'Trait Floor',
+  },
+  {
+    title: 'Top Trait',
+  },
+]
+
 interface LandingPageProps {
   asset: GenieAsset
   collection: CollectionInfoForAsset
@@ -117,6 +171,11 @@ export const LandingPage = ({ asset, collection }: LandingPageProps) => {
           </Row>
           <StyledHeadlineText>{asset.name ?? `${asset.collectionName} #${asset.tokenId}`}</StyledHeadlineText>
         </InfoDetailsContainer>
+        <Row gap="md" justify="center">
+          {InfoBubbles.map((bubble) => (
+            <InfoBubble key={bubble.title} title={bubble.title} />
+          ))}
+        </Row>
       </InfoContainer>
     </LandingPageContainer>
   )
