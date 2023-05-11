@@ -12,6 +12,8 @@ runs:
   using: composite
   steps:
     # - if: github.ref_name == 'main'
+    - run: echo ${{ github.ref_name }}
+      shell: bash
     - if: github.ref_name == 'report-test-failures'
       run: |
         echo \
