@@ -140,20 +140,18 @@ export default function SwapPage({ className }: { className?: string }) {
   const loadedUrlParams = useDefaultsFromURLSearch()
   return (
     <Trace page={InterfacePageName.SWAP_PAGE} shouldLogImpression>
-      <>
-        <PageWrapper>
-          <Swap
-            className={className}
-            chainId={connectedChainId}
-            prefilledState={{
-              [Field.INPUT]: { currencyId: loadedUrlParams?.[Field.INPUT]?.currencyId },
-              [Field.OUTPUT]: { currencyId: loadedUrlParams?.[Field.OUTPUT]?.currencyId },
-            }}
-          />
-          <NetworkAlert />
-        </PageWrapper>
-        <SwitchLocaleLink />
-      </>
+      <PageWrapper>
+        <Swap
+          className={className}
+          chainId={connectedChainId}
+          prefilledState={{
+            [Field.INPUT]: { currencyId: loadedUrlParams?.[Field.INPUT]?.currencyId },
+            [Field.OUTPUT]: { currencyId: loadedUrlParams?.[Field.OUTPUT]?.currencyId },
+          }}
+        />
+        <NetworkAlert />
+      </PageWrapper>
+      <SwitchLocaleLink />
     </Trace>
   )
 }
