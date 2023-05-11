@@ -18,7 +18,7 @@ describe('beforeSend', () => {
         },
       } as ErrorEvent
 
-      beforeSend(event, null as any)
+      beforeSend(event, {})
       expect(event.request?.url).toBe('https://app.uniswap.org/example')
     })
 
@@ -29,7 +29,7 @@ describe('beforeSend', () => {
         },
       } as ErrorEvent
 
-      beforeSend(event, null as any)
+      beforeSend(event, {})
       expect(event.request?.url).toBe('https://app.uniswap.org/example')
     })
 
@@ -40,7 +40,7 @@ describe('beforeSend', () => {
         },
       } as ErrorEvent
 
-      beforeSend(event, null as any)
+      beforeSend(event, {})
       expect(event.request?.url).toBe('https://app.uniswap.org/example')
     })
   })
