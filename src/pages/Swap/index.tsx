@@ -65,8 +65,8 @@ import { computeFiatValuePriceImpact } from '../../utils/computeFiatValuePriceIm
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { computeRealizedPriceImpact, warningSeverity } from '../../utils/prices'
 import { supportedChainId } from '../../utils/supportedChainId'
-const ArrowContainer = styled.div`
-  display: inline-block;
+
+export const ArrowContainer = styled.div`
   display: inline-flex;
   align-items: center;
   justify-content: center;
