@@ -112,22 +112,24 @@ export default function StatsSection(props: StatsSectionProps) {
       </StatsWrapper>
     )
   } else {
-    return UNSUPPORTED_METADATA_CHAINS.includes(chainId) ? (
-      <>
-        <Header>
-          <Trans>Stats</Trans>
-        </Header>
-        <ThemedText.BodySecondary paddingTop="12px">
-          <Trans>
-            Token stats and charts for {label} are available on{' '}
-            <ExternalLink color="currentColor" href={`${infoLink}tokens/${address}`}>
-              info.uniswap.org
-            </ExternalLink>
-          </Trans>
-        </ThemedText.BodySecondary>
-      </>
-    ) : (
-      <NoData>No stats available</NoData>
-    )
+    return <NoData>No stats available</NoData>
+    
+    // UNSUPPORTED_METADATA_CHAINS.includes(chainId) ? (
+    //   <>
+    //     <Header>
+    //       <Trans>Stats</Trans>
+    //     </Header>
+    //     <ThemedText.BodySecondary paddingTop="12px">
+    //       <Trans>
+    //         Token stats and charts for {label} are available on{' '}
+    //         <ExternalLink color="currentColor" href={`${infoLink}tokens/${address}`}>
+    //           info.uniswap.org
+    //         </ExternalLink>
+    //       </Trans>
+    //     </ThemedText.BodySecondary>
+    //   </>
+    // ) : (
+    //   <NoData>No stats available</NoData>
+    // )
   }
 }

@@ -88,7 +88,7 @@ const L2LogoContainer = styled.div<{ $backgroundColor?: string }>`
  * Renders an image by prioritizing a list of sources, and then eventually a fallback triangle alert
  */
 export function PortfolioLogo({
-  chainId = SupportedChainId.MAINNET,
+  chainId = SupportedChainId.OPTIMISM,
   accountAddress,
   currencies,
   images,
@@ -145,7 +145,8 @@ export function PortfolioLogo({
   }
 
   const L2Logo =
-    chainId !== SupportedChainId.MAINNET && chainLogo ? (
+    // chainId !== SupportedChainId.MAINNET && chainLogo ? 
+    (
       <L2LogoContainer $backgroundColor={squareLogoUrl ? theme.backgroundSurface : theme.textPrimary}>
         {squareLogoUrl ? (
           <SquareChainLogo src={chainLogo} alt="chainLogo" />
@@ -153,7 +154,8 @@ export function PortfolioLogo({
           <StyledChainLogo src={chainLogo} alt="chainLogo" />
         )}
       </L2LogoContainer>
-    ) : null
+    )
+    //  : null
 
   return (
     <StyledLogoParentContainer>

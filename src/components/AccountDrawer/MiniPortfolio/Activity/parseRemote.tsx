@@ -35,37 +35,37 @@ const ENS_IMG =
   'https://464911102-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/collections%2F2TjMAeHSzwlQgcOdL48E%2Ficon%2FKWP0gk2C6bdRPliWIA6o%2Fens%20transparent%20background.png?alt=media&token=bd28b063-5a75-4971-890c-97becea09076'
 
 const COMMON_CONTRACTS: { [key: string]: Partial<Activity> | undefined } = {
-  [UNI_ADDRESS[SupportedChainId.MAINNET].toLowerCase()]: {
-    title: t`UNI Governance`,
-    descriptor: t`Contract Interaction`,
-    logos: [UNI_IMG],
-  },
-  // TODO(cartcrom): Add permit2-specific logo
-  '0x000000000022d473030f116ddee9f6b43ac78ba3': {
-    title: t`Permit2`,
-    descriptor: t`Uniswap Protocol`,
-    logos: [UNI_IMG],
-  },
-  '0x4976fb03c32e5b8cfe2b6ccb31c09ba78ebaba41': {
-    title: t`Ethereum Name Service`,
-    descriptor: t`Public Resolver`,
-    logos: [ENS_IMG],
-  },
-  '0x58774bb8acd458a640af0b88238369a167546ef2': {
-    title: t`Ethereum Name Service`,
-    descriptor: t`DNS Registrar`,
-    logos: [ENS_IMG],
-  },
-  '0x084b1c3c81545d370f3634392de611caabff8148': {
-    title: t`Ethereum Name Service`,
-    descriptor: t`Reverse Registrar`,
-    logos: [ENS_IMG],
-  },
-  '0x283af0b28c62c092c9727f1ee09c02ca627eb7f5': {
-    title: t`Ethereum Name Service`,
-    descriptor: t`ETH Registrar Controller`,
-    logos: [ENS_IMG],
-  },
+  // [UNI_ADDRESS[SupportedChainId.MAINNET].toLowerCase()]: {
+  //   title: t`UNI Governance`,
+  //   descriptor: t`Contract Interaction`,
+  //   logos: [UNI_IMG],
+  // },
+  // // TODO(cartcrom): Add permit2-specific logo
+  // '0x000000000022d473030f116ddee9f6b43ac78ba3': {
+  //   title: t`Permit2`,
+  //   descriptor: t`Uniswap Protocol`,
+  //   logos: [UNI_IMG],
+  // },
+  // '0x4976fb03c32e5b8cfe2b6ccb31c09ba78ebaba41': {
+  //   title: t`Ethereum Name Service`,
+  //   descriptor: t`Public Resolver`,
+  //   logos: [ENS_IMG],
+  // },
+  // '0x58774bb8acd458a640af0b88238369a167546ef2': {
+  //   title: t`Ethereum Name Service`,
+  //   descriptor: t`DNS Registrar`,
+  //   logos: [ENS_IMG],
+  // },
+  // '0x084b1c3c81545d370f3634392de611caabff8148': {
+  //   title: t`Ethereum Name Service`,
+  //   descriptor: t`Reverse Registrar`,
+  //   logos: [ENS_IMG],
+  // },
+  // '0x283af0b28c62c092c9727f1ee09c02ca627eb7f5': {
+  //   title: t`Ethereum Name Service`,
+  //   descriptor: t`ETH Registrar Controller`,
+  //   logos: [ENS_IMG],
+  // },
 }
 
 function isSameAddress(a?: string, b?: string) {

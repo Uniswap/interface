@@ -1,15 +1,15 @@
 import { SupportedChainId } from 'constants/chains'
 
 const BLOCK_EXPLORER_PREFIXES: { [chainId: number]: string } = {
-  [SupportedChainId.MAINNET]: 'https://etherscan.io',
-  [SupportedChainId.GOERLI]: 'https://goerli.etherscan.io',
+  // [SupportedChainId.MAINNET]: 'https://etherscan.io',
+  // [SupportedChainId.GOERLI]: 'https://goerli.etherscan.io',
   [SupportedChainId.OPTIMISM]: 'https://optimistic.etherscan.io',
   [SupportedChainId.OPTIMISM_GOERLI]: 'https://goerli-optimism.etherscan.io',
-  [SupportedChainId.POLYGON]: 'https://polygonscan.com',
-  [SupportedChainId.POLYGON_MUMBAI]: 'https://mumbai.polygonscan.com',
-  [SupportedChainId.CELO]: 'https://celoscan.io',
-  [SupportedChainId.CELO_ALFAJORES]: 'https://alfajores-blockscout.celo-testnet.org',
-  [SupportedChainId.BNB]: 'https://bscscan.com',
+  // [SupportedChainId.POLYGON]: 'https://polygonscan.com',
+  // [SupportedChainId.POLYGON_MUMBAI]: 'https://mumbai.polygonscan.com',
+  // [SupportedChainId.CELO]: 'https://celoscan.io',
+  // [SupportedChainId.CELO_ALFAJORES]: 'https://alfajores-blockscout.celo-testnet.org',
+  // [SupportedChainId.BNB]: 'https://bscscan.com',
 }
 
 export enum ExplorerDataType {
@@ -26,33 +26,33 @@ export enum ExplorerDataType {
  * @param type the type of the data
  */
 export function getExplorerLink(chainId: number, data: string, type: ExplorerDataType): string {
-  if (chainId === SupportedChainId.ARBITRUM_ONE) {
-    switch (type) {
-      case ExplorerDataType.TRANSACTION:
-        return `https://arbiscan.io/tx/${data}`
-      case ExplorerDataType.ADDRESS:
-      case ExplorerDataType.TOKEN:
-        return `https://arbiscan.io/address/${data}`
-      case ExplorerDataType.BLOCK:
-        return `https://arbiscan.io/block/${data}`
-      default:
-        return `https://arbiscan.io/`
-    }
-  }
+  // if (chainId === SupportedChainId.ARBITRUM_ONE) {
+  //   switch (type) {
+  //     case ExplorerDataType.TRANSACTION:
+  //       return `https://arbiscan.io/tx/${data}`
+  //     case ExplorerDataType.ADDRESS:
+  //     case ExplorerDataType.TOKEN:
+  //       return `https://arbiscan.io/address/${data}`
+  //     case ExplorerDataType.BLOCK:
+  //       return `https://arbiscan.io/block/${data}`
+  //     default:
+  //       return `https://arbiscan.io/`
+  //   }
+  // }
 
-  if (chainId === SupportedChainId.ARBITRUM_GOERLI) {
-    switch (type) {
-      case ExplorerDataType.TRANSACTION:
-        return `https://goerli.arbiscan.io/tx/${data}`
-      case ExplorerDataType.ADDRESS:
-      case ExplorerDataType.TOKEN:
-        return `https://goerli.arbiscan.io/address/${data}`
-      case ExplorerDataType.BLOCK:
-        return `https://goerli.arbiscan.io/block/${data}`
-      default:
-        return `https://goerli.arbiscan.io/`
-    }
-  }
+  // if (chainId === SupportedChainId.ARBITRUM_GOERLI) {
+  //   switch (type) {
+  //     case ExplorerDataType.TRANSACTION:
+  //       return `https://goerli.arbiscan.io/tx/${data}`
+  //     case ExplorerDataType.ADDRESS:
+  //     case ExplorerDataType.TOKEN:
+  //       return `https://goerli.arbiscan.io/address/${data}`
+  //     case ExplorerDataType.BLOCK:
+  //       return `https://goerli.arbiscan.io/block/${data}`
+  //     default:
+  //       return `https://goerli.arbiscan.io/`
+  //   }
+  // }
 
   const prefix = BLOCK_EXPLORER_PREFIXES[chainId] ?? 'https://etherscan.io'
 

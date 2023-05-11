@@ -62,9 +62,11 @@ export function ChainConnectivityWarning() {
         </TitleText>
       </TitleRow>
       <BodyRow>
-        {chainId === SupportedChainId.MAINNET ? (
-          <Trans>You may have lost your network connection.</Trans>
-        ) : (
+        {
+        // chainId === SupportedChainId.MAINNET ? (
+        //   <Trans>You may have lost your network connection.</Trans>
+        // ) : 
+        (
           <Trans>{label} might be down right now, or you may have lost your network connection.</Trans>
         )}{' '}
         {(info as L2ChainInfo).statusPage !== undefined && (

@@ -360,20 +360,20 @@ export const SearchBarDropdown = ({
     searchHistory,
   ])
 
-  const showBNBComingSoonBadge = chainId === SupportedChainId.BNB && !isLoading
+  // const showBNBComingSoonBadge = chainId === SupportedChainId.BNB && !isLoading
 
   return (
     <Box className={styles.searchBarDropdownNft}>
       <Box opacity={isLoading ? '0.3' : '1'} transition="125">
         {resultsState}
-        {showBNBComingSoonBadge && (
+        {/* {showBNBComingSoonBadge && (
           <BNBComingSoonBadge>
             <BNBLogo src={BnbLogoURI} />
             <ThemedText.BodySmall color="textSecondary" fontSize="14px" fontWeight="400" lineHeight="20px">
               <Trans>Coming soon: search and explore tokens on BNB Chain</Trans>
             </ThemedText.BodySmall>
           </BNBComingSoonBadge>
-        )}
+        )} */}
       </Box>
     </Box>
   )

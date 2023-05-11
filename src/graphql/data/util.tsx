@@ -57,31 +57,31 @@ export function isPricePoint(p: PricePoint | null): p is PricePoint {
 }
 
 export const CHAIN_ID_TO_BACKEND_NAME: { [key: number]: Chain } = {
-  [SupportedChainId.MAINNET]: Chain.Ethereum,
-  [SupportedChainId.GOERLI]: Chain.EthereumGoerli,
-  [SupportedChainId.POLYGON]: Chain.Polygon,
-  [SupportedChainId.POLYGON_MUMBAI]: Chain.Polygon,
-  [SupportedChainId.CELO]: Chain.Celo,
-  [SupportedChainId.CELO_ALFAJORES]: Chain.Celo,
-  [SupportedChainId.ARBITRUM_ONE]: Chain.Arbitrum,
-  [SupportedChainId.ARBITRUM_GOERLI]: Chain.Arbitrum,
+  // [SupportedChainId.MAINNET]: Chain.Ethereum,
+  // [SupportedChainId.GOERLI]: Chain.EthereumGoerli,
+  // [SupportedChainId.POLYGON]: Chain.Polygon,
+  // [SupportedChainId.POLYGON_MUMBAI]: Chain.Polygon,
+  // [SupportedChainId.CELO]: Chain.Celo,
+  // [SupportedChainId.CELO_ALFAJORES]: Chain.Celo,
+  // [SupportedChainId.ARBITRUM_ONE]: Chain.Arbitrum,
+  // [SupportedChainId.ARBITRUM_GOERLI]: Chain.Arbitrum,
   [SupportedChainId.OPTIMISM]: Chain.Optimism,
   [SupportedChainId.OPTIMISM_GOERLI]: Chain.Optimism,
-  [SupportedChainId.BNB]: Chain.Bnb,
+  // [SupportedChainId.BNB]: Chain.Bnb,
 }
 
 export function chainIdToBackendName(chainId: number | undefined) {
   return chainId && CHAIN_ID_TO_BACKEND_NAME[chainId]
     ? CHAIN_ID_TO_BACKEND_NAME[chainId]
-    : CHAIN_ID_TO_BACKEND_NAME[SupportedChainId.MAINNET]
+    : CHAIN_ID_TO_BACKEND_NAME[SupportedChainId.OPTIMISM]
 }
 
 const GQL_CHAINS: number[] = [
-  SupportedChainId.MAINNET,
+  // SupportedChainId.MAINNET,
   SupportedChainId.OPTIMISM,
-  SupportedChainId.POLYGON,
-  SupportedChainId.ARBITRUM_ONE,
-  SupportedChainId.CELO,
+  // SupportedChainId.POLYGON,
+  // SupportedChainId.ARBITRUM_ONE,
+  // SupportedChainId.CELO,
 ]
 
 export function isGqlSupportedChain(chainId: number | undefined): chainId is SupportedChainId {
@@ -106,35 +106,35 @@ export function gqlToCurrency(token: {
 }
 
 const URL_CHAIN_PARAM_TO_BACKEND: { [key: string]: Chain } = {
-  ethereum: Chain.Ethereum,
-  polygon: Chain.Polygon,
-  celo: Chain.Celo,
-  arbitrum: Chain.Arbitrum,
+  // ethereum: Chain.Ethereum,
+  // polygon: Chain.Polygon,
+  // celo: Chain.Celo,
+  // arbitrum: Chain.Arbitrum,
   optimism: Chain.Optimism,
-  bnb: Chain.Bnb,
+  // bnb: Chain.Bnb,
 }
 
 export function validateUrlChainParam(chainName: string | undefined) {
-  return chainName && URL_CHAIN_PARAM_TO_BACKEND[chainName] ? URL_CHAIN_PARAM_TO_BACKEND[chainName] : Chain.Ethereum
+  return chainName && URL_CHAIN_PARAM_TO_BACKEND[chainName] ? URL_CHAIN_PARAM_TO_BACKEND[chainName] : Chain.Optimism
 }
 
 // TODO(cartcrom): refactor into safer lookup & replace usage
 export const CHAIN_NAME_TO_CHAIN_ID: { [key in Chain]: SupportedChainId } = {
-  [Chain.Ethereum]: SupportedChainId.MAINNET,
-  [Chain.EthereumGoerli]: SupportedChainId.GOERLI,
-  [Chain.Polygon]: SupportedChainId.POLYGON,
-  [Chain.Celo]: SupportedChainId.CELO,
+  // [Chain.Ethereum]: SupportedChainId.MAINNET,
+  // [Chain.EthereumGoerli]: SupportedChainId.GOERLI,
+  // [Chain.Polygon]: SupportedChainId.POLYGON,
+  // [Chain.Celo]: SupportedChainId.CELO,
   [Chain.Optimism]: SupportedChainId.OPTIMISM,
-  [Chain.Arbitrum]: SupportedChainId.ARBITRUM_ONE,
-  [Chain.UnknownChain]: SupportedChainId.MAINNET,
-  [Chain.Bnb]: SupportedChainId.BNB,
+  // [Chain.Arbitrum]: SupportedChainId.ARBITRUM_ONE,
+  [Chain.UnknownChain]: SupportedChainId.OPTIMISM,
+  // [Chain.Bnb]: SupportedChainId.BNB,
 }
 
 export function fromGraphQLChain(chain: Chain): SupportedChainId {
   return CHAIN_NAME_TO_CHAIN_ID[chain]
 }
 
-export const BACKEND_CHAIN_NAMES: Chain[] = [Chain.Ethereum, Chain.Polygon, Chain.Optimism, Chain.Arbitrum, Chain.Celo]
+export const BACKEND_CHAIN_NAMES: Chain[] = [ Chain.Optimism ]
 
 export function getTokenDetailsURL({
   address,

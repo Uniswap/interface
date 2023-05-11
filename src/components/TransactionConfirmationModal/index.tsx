@@ -160,7 +160,7 @@ function TransactionSubmittedContent({
           {chainId && hash && (
             <ExternalLink href={getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)}>
               <Text fontWeight={600} fontSize={14} color={theme.accentAction}>
-                <Trans>View on {chainId === SupportedChainId.MAINNET ? 'Etherscan' : 'Block Explorer'}</Trans>
+                <Trans>View on Block Explorer</Trans>
               </Text>
             </ExternalLink>
           )}

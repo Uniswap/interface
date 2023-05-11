@@ -27,12 +27,13 @@ const Label = styled.div`
 `
 
 const NETWORK_SELECTOR_CHAINS = [
-  SupportedChainId.MAINNET,
-  SupportedChainId.POLYGON,
+  // SupportedChainId.MAINNET,
+  // SupportedChainId.POLYGON,
   SupportedChainId.OPTIMISM,
-  SupportedChainId.ARBITRUM_ONE,
-  SupportedChainId.CELO,
-  SupportedChainId.BNB,
+  SupportedChainId.OPTIMISM_GOERLI,
+  // SupportedChainId.ARBITRUM_ONE,
+  // SupportedChainId.CELO,
+  // SupportedChainId.BNB,
 ]
 
 interface ChainSelectorProps {
@@ -82,7 +83,7 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
       <Column paddingX="8">
         {NETWORK_SELECTOR_CHAINS.map((chainId: SupportedChainId) => (
           <ChainSelectorRow
-            disabled={isUniWallet && chainId === SupportedChainId.CELO}
+            disabled={isUniWallet}
             onSelectChain={onSelectChain}
             targetChain={chainId}
             key={chainId}

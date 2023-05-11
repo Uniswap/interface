@@ -320,7 +320,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
   const [tokenSelectorOpen, setTokenSelectorOpen] = useState(false)
   const isPending = PENDING_BAG_STATUSES.includes(bagStatus)
   const activeCurrency = inputCurrency ?? defaultCurrency
-  const usingPayWithAnyToken = !!inputCurrency && shouldUsePayWithAnyToken && chainId === SupportedChainId.MAINNET
+  const usingPayWithAnyToken = false //!!inputCurrency && shouldUsePayWithAnyToken && chainId === SupportedChainId.MAINNET
 
   useSubscribeTransactionState(setModalIsOpen)
   const fetchAssets = useFetchAssets()
@@ -348,7 +348,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
 
   const { balance: balanceInEth } = useWalletBalance()
   const sufficientBalance = useMemo(() => {
-    if (!connected || chainId !== SupportedChainId.MAINNET) {
+    if (!connected || chainId !== SupportedChainId.OPTIMISM) {
       return undefined
     }
 
@@ -390,12 +390,13 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
     let buttonColor = theme.accentAction
     let buttonTextColor = theme.accentTextLightPrimary
 
-    if (connected && chainId !== SupportedChainId.MAINNET) {
-      handleClick = () => switchChain(connector, SupportedChainId.MAINNET)
-      buttonText = <Trans>Switch networks</Trans>
-      disabled = false
-      warningText = <Trans>Wrong network</Trans>
-    } else if (sufficientBalance === false) {
+    // if (connected && chainId !== SupportedChainId.MAINNET) {
+    //   handleClick = () => switchChain(connector, SupportedChainId.MAINNET)
+    //   buttonText = <Trans>Switch networks</Trans>
+    //   disabled = false
+    //   warningText = <Trans>Wrong network</Trans>
+    // } else 
+    if (sufficientBalance === false) {
       buttonText = <Trans>Pay</Trans>
       disabled = true
       warningText = <Trans>Insufficient funds</Trans>
