@@ -162,6 +162,7 @@ jobs:
     needs: [cypress-test-matrix]
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v3
       - if: needs.cypress-test-matrix.result != 'success'
         run: exit 1
       - if: failure()
