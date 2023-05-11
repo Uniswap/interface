@@ -13,6 +13,36 @@ runs:
   steps:
     # - if: github.ref_name == 'main'
     - if: github.ref_name == 'report-test-failures'
+      run: |
+        echo \
+        { \
+          "text": "${{ inputs.name }} failing on `${{ github.ref_name }}`", \
+          "blocks": [ \
+            { \
+              "type": "section", \
+              "text": { \
+                "type": "mrkdwn", \
+                "text": "*${{ inputs.name }} failing on `${{ github.ref_name }}`:*" \
+              } \
+            }, \
+            { \
+              "type": "section", \
+              "text": { \
+                "type": "mrkdwn", \
+                "text": "<https://github.com/${{ github.repository}}/actions/runs/${{ github.run_id }}/jobs/${{ github.job }}|View failing action>" \
+              } \
+            }, \
+            { \
+              "type": "section", \
+              "text": { \
+                "type": "plain_text", \
+                "text": "!oncall web" \
+              } \
+            } \
+          ] \
+        }
+      shell: bash
+    - if: github.ref_name == 'report-test-failures'
       uses: slackapi/slack-github-action@007b2c3c751a190b6f0f040e47ed024deaa72844
       with:
         payload: |
