@@ -3,7 +3,7 @@ import { formatCurrencyAmount } from '@uniswap/conedison/format'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { nativeOnChain } from '@uniswap/smart-order-router'
 import { SupportedChainId } from 'constants/chains'
-import { TransactionPartsFragment, TransactionStatus } from 'graphql/data/__generated__/types-and-hooks'
+import { TransactionStatus } from 'graphql/data/__generated__/types-and-hooks'
 import { ChainTokenMap, useAllTokensMultichain } from 'hooks/Tokens'
 import { useMemo } from 'react'
 import { useMultichainTransactions } from 'state/transactions/hooks'
@@ -141,7 +141,7 @@ export function parseLocalActivity(
       ? TransactionStatus.Confirmed
       : TransactionStatus.Failed
 
-    const receipt: TransactionPartsFragment | undefined = details.receipt
+    const receipt = details.receipt
       ? {
           id: details.receipt.transactionHash,
           ...details.receipt,
@@ -157,6 +157,7 @@ export function parseLocalActivity(
       status,
       timestamp: (details.confirmedTime ?? details.addedTime) / 1000,
       receipt,
+      nonce: details.nonce,
     }
 
     let additionalFields: Partial<Activity> = {}

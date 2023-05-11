@@ -36,7 +36,7 @@ import { useSyncWidgetSettings } from './settings'
 import { DARK_THEME, LIGHT_THEME } from './theme'
 import { useSyncWidgetTransactions } from './transactions'
 
-export const DEFAULT_WIDGET_WIDTH = 360
+const DEFAULT_WIDGET_WIDTH = 360
 
 const WIDGET_ROUTER_URL = 'https://api.uniswap.org/v1/'
 
@@ -198,7 +198,7 @@ export default function Widget({
   )
 }
 
-export function WidgetSkeleton({ width = DEFAULT_WIDGET_WIDTH }: { width?: number | string }) {
+function WidgetSkeleton({ width = DEFAULT_WIDGET_WIDTH }: { width?: number | string }) {
   const theme = useWidgetTheme()
   return <SwapWidgetSkeleton theme={theme} width={width} />
 }

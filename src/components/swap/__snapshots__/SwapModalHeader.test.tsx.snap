@@ -81,7 +81,7 @@ exports[`SwapModalHeader.tsx matches base snapshot for test trade with exact inp
   margin: -0px;
 }
 
-.c21 {
+.c22 {
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -91,11 +91,11 @@ exports[`SwapModalHeader.tsx matches base snapshot for test trade with exact inp
   color: #0D111C;
 }
 
-.c26 {
+.c24 {
   color: #7780A0;
 }
 
-.c24 {
+.c21 {
   width: 100%;
   height: 1px;
   background-color: #D2D9EE;
@@ -116,6 +116,21 @@ exports[`SwapModalHeader.tsx matches base snapshot for test trade with exact inp
 .c3 {
   border: 1px solid #E8ECFB;
   background-color: #F5F6FC;
+}
+
+.c20 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 12px;
 }
 
 .c0 {
@@ -152,7 +167,7 @@ exports[`SwapModalHeader.tsx matches base snapshot for test trade with exact inp
   background-size: 400%;
 }
 
-.c22 {
+.c23 {
   display: inline-block;
   height: inherit;
 }
@@ -205,15 +220,10 @@ exports[`SwapModalHeader.tsx matches base snapshot for test trade with exact inp
   -webkit-flex-wrap: wrap;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
-  padding: 8px 0;
   -webkit-user-select: text;
   -moz-user-select: text;
   -ms-user-select: text;
   user-select: text;
-}
-
-.c23 {
-  color: #7780A0;
 }
 
 .c10 {
@@ -221,10 +231,6 @@ exports[`SwapModalHeader.tsx matches base snapshot for test trade with exact inp
   max-width: 220px;
   overflow: hidden;
   text-align: right;
-}
-
-.c20 {
-  padding: 0;
 }
 
 .c15 {
@@ -415,89 +421,79 @@ exports[`SwapModalHeader.tsx matches base snapshot for test trade with exact inp
       style="padding: .75rem; margin-top: 0.5rem;"
     >
       <div
-        class="c5 c19 c20"
+        class="c20"
       >
         <div
-          class="c4"
+          class="c21"
+        />
+        <div
+          class="c5 c6 c7"
         >
           <div
-            class="c5 c6 c7"
+            class="c5 c6 c22"
           >
             <div
-              class="c5 c6 c21"
+              class="c23"
             >
-              <div
-                class="c22"
-              >
-                <div>
-                  <div
-                    class="css-zhpkf8"
-                  >
-                    Expected Output
-                  </div>
+              <div>
+                <div
+                  class="c24 css-zhpkf8"
+                >
+                  Minimum output
                 </div>
-              </div>
-            </div>
-            <div
-              class="c18 css-q4yjm0"
-            >
-              0.000000000000001  DEF
-            </div>
-          </div>
-          <div
-            class="c5 c6 c7"
-          >
-            <div
-              class="c5 c6 c21"
-            >
-              <div
-                class="c22"
-              >
-                <div>
-                  <div
-                    class="css-zhpkf8"
-                  >
-                    Price Impact
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div
-              class="c18 css-q4yjm0"
-            >
-              <div
-                class="c23 css-1aekuku"
-              >
-                105567.37%
               </div>
             </div>
           </div>
           <div
-            class="c24"
-          />
+            class="c18 css-zhpkf8"
+          >
+            0.00000000000000098 DEF
+          </div>
+        </div>
+        <div
+          class="c5 c6 c7"
+        >
           <div
-            class="c5 c6 c7"
+            class="c5 c6 c22"
           >
             <div
-              class="c5 c6 c21"
-              style="margin-right: 20px;"
+              class="c23"
             >
-              <div
-                class="c22"
-              >
-                <div>
-                  <div
-                    class="css-zhpkf8"
-                  >
-                    Minimum received after slippage (2.00%)
-                  </div>
+              <div>
+                <div
+                  class="c24 css-zhpkf8"
+                >
+                  Expected output
                 </div>
               </div>
             </div>
-            <div
-              class="css-q4yjm0"
-            >
-              0.00000000000000098 DEF
+          </div>
+          <div
+            class="c18 css-zhpkf8"
+          >
+            0.000000000000001 DEF
+          </div>
+        </div>
+        <div
+          class="c21"
+        />
+        <div
+          class="c5 c6 c7"
+        >
+          <div
+            class="c24 css-zhpkf8"
+          >
+            Order routing
+          </div>
+          <div
+            class="c23"
+          >
+            <div>
+              <div
+                class="c18 css-zhpkf8"
+              >
+                Uniswap API
+              </div>
             </div>
           </div>
         </div>
@@ -508,7 +504,7 @@ exports[`SwapModalHeader.tsx matches base snapshot for test trade with exact inp
       style="padding: .75rem 1rem;"
     >
       <div
-        class="c26 css-k51stg"
+        class="c24 css-k51stg"
         style="width: 100%;"
       >
         Output is estimated. You will receive at least 
@@ -524,7 +520,7 @@ exports[`SwapModalHeader.tsx matches base snapshot for test trade with exact inp
       style="padding: 12px 0px 0px 0px;"
     >
       <div
-        class="c26 css-8mokm4"
+        class="c24 css-8mokm4"
       >
         Output will be sent to 
         <b
