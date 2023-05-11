@@ -9,16 +9,13 @@ import { Label } from './SwapModalHeaderAmount'
 const Value = styled.span<{ color?: string }>`
   color: ${({ color, theme }) => color ?? theme.textPrimary};
   text-align: end;
-`
-
-const DetailValue = styled(Value)`
   max-width: 45%;
   overflow-wrap: break-word;
 `
 
 interface DetailProps {
-  label: string | ReactNode
-  value: string | ReactNode
+  label: ReactNode
+  value: ReactNode
   color?: string
   labelTooltipText?: string
 }
@@ -34,7 +31,7 @@ export function SwapModalDetailRow({ label, value, color, labelTooltipText }: De
         ) : (
           <Label>{label}</Label>
         )}
-        <DetailValue color={color}>{value}</DetailValue>
+        <Value color={color}>{value}</Value>
       </Row>
     </ThemedText.BodySmall>
   )

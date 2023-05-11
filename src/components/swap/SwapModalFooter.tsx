@@ -23,7 +23,6 @@ import {
 } from 'lib/utils/analytics'
 import { ReactNode, useEffect, useMemo, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
-import { Text } from 'rebass'
 import { RouterPreference } from 'state/routing/slice'
 import { InterfaceTrade } from 'state/routing/types'
 import { useRouterPreference, useUserSlippageTolerance } from 'state/user/hooks'
@@ -140,9 +139,13 @@ const StyledAlertTriangle = styled(AlertTriangle)`
   min-width: 24px;
 `
 
+const ConfirmButton = styled(ButtonError)`
+  margin-left: 10px;
+`
+
 type DetailItem = {
-  label: ReactNode | string
-  value: ReactNode | string
+  label: string
+  value: ReactNode
   labelTooltipText?: string
   color?: string
 }
@@ -181,7 +184,7 @@ export default function SwapModalFooter({
   const [routerPreference] = useRouterPreference()
   const routes = getRoutingDiagramEntries(trade)
   const [lastExecutionPrice, setLastExecutionPrice] = useState(trade.executionPrice)
-  const [priceUpdate, setPriceUpdate] = useState<number | undefined>()
+  const [priceUpdate, setPriceUpdate] = useState<number>()
   const theme = useTheme()
   const { chainId } = useWeb3React()
   const nativeCurrency = useNativeCurrency(chainId)
@@ -241,8 +244,14 @@ export default function SwapModalFooter({
   return (
     <>
       <DetailsContainer gap="md">
-        {details.map(({ label, value, color, labelTooltipText }, i) => (
-          <SwapModalDetailRow key={i} label={label} value={value} color={color} labelTooltipText={labelTooltipText} />
+        {details.map(({ label, value, color, labelTooltipText }) => (
+          <SwapModalDetailRow
+            key={label}
+            label={label}
+            value={value}
+            color={color}
+            labelTooltipText={labelTooltipText}
+          />
         ))}
       </DetailsContainer>
       {showAcceptChanges ? (
@@ -278,18 +287,17 @@ export default function SwapModalFooter({
               fiatValueOutput: fiatValueOutput.data,
             })}
           >
-            <ButtonError
+            <ConfirmButton
               data-testid="confirm-swap-button"
               onClick={onConfirm}
               disabled={disabledConfirm}
-              style={{ margin: '10px 0 0 0' }}
               $borderRadius="12px"
               id={InterfaceElementName.CONFIRM_SWAP_BUTTON}
             >
-              <Text fontSize={20} fontWeight={600}>
+              <ThemedText.HeadlineSmall>
                 <Trans>Swap</Trans>
-              </Text>
-            </ButtonError>
+              </ThemedText.HeadlineSmall>
+            </ConfirmButton>
           </TraceEvent>
 
           {swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}

@@ -51,11 +51,11 @@ const StyledLogo = styled.img`
 `
 
 const ConfirmationModalContentWrapper = styled(AutoColumn)`
-  padding: 0 0 12px 0;
+  padding-bottom: 12px;
 `
 
 const ConfirmationModalTopContentWrapper = styled(AutoColumn)`
-  padding: 8px 8px 0;
+  padding: 8px 8px 0 8px;
 `
 
 function ConfirmationPendingContent({

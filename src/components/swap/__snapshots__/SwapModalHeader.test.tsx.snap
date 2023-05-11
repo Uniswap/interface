@@ -103,11 +103,11 @@ exports[`SwapModalHeader.tsx matches base snapshot, test trade exact input 1`] =
 }
 
 .c13 {
-  margin: 16px 2px 24px;
+  margin: 16px 2px 24px 2px;
 }
 
 .c1 {
-  margin: 16px 0 0 0;
+  margin-top: 16px;
 }
 
 .c14 {
@@ -146,7 +146,7 @@ exports[`SwapModalHeader.tsx matches base snapshot, test trade exact input 1`] =
           >
             <div
               class="css-z2fexy"
-              data-testid="input-amount"
+              data-testid="INPUT-amount"
             >
               &lt;0.00001 ABC
             </div>
@@ -189,7 +189,7 @@ exports[`SwapModalHeader.tsx matches base snapshot, test trade exact input 1`] =
           >
             <div
               class="css-z2fexy"
-              data-testid="output-amount"
+              data-testid="OUTPUT-amount"
             >
               &lt;0.00001 DEF
             </div>
@@ -320,11 +320,11 @@ exports[`SwapModalHeader.tsx test trade exact output, no recipient 1`] = `
 }
 
 .c13 {
-  margin: 16px 2px 24px;
+  margin: 16px 2px 24px 2px;
 }
 
 .c1 {
-  margin: 16px 0 0 0;
+  margin-top: 16px;
 }
 
 .c14 {
@@ -363,7 +363,7 @@ exports[`SwapModalHeader.tsx test trade exact output, no recipient 1`] = `
           >
             <div
               class="css-z2fexy"
-              data-testid="input-amount"
+              data-testid="INPUT-amount"
             >
               &lt;0.00001 ABC
             </div>
@@ -406,7 +406,7 @@ exports[`SwapModalHeader.tsx test trade exact output, no recipient 1`] = `
           >
             <div
               class="css-z2fexy"
-              data-testid="output-amount"
+              data-testid="OUTPUT-amount"
             >
               &lt;0.00001 GHI
             </div>

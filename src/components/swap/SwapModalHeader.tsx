@@ -4,17 +4,18 @@ import Column, { AutoColumn } from 'components/Column'
 import { useUSDPrice } from 'hooks/useUSDPrice'
 import { useMemo } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
+import { Field } from 'state/swap/actions'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
 import { SwapModalHeaderAmount } from './SwapModalHeaderAmount'
 
 const RuleWrapper = styled.div`
-  margin: 16px 2px 24px;
+  margin: 16px 2px 24px 2px;
 `
 
 const HeaderContainer = styled(AutoColumn)`
-  margin: 16px 0 0 0;
+  margin-top: 16px;
 `
 
 const Rule = styled.hr<{ padded?: true; scrollingEdge?: 'top' | 'bottom' }>`
@@ -66,13 +67,13 @@ export default function SwapModalHeader({
     <HeaderContainer gap="sm">
       <Column gap="lg">
         <SwapModalHeaderAmount
-          field="input"
+          field={Field.INPUT}
           label={t`You pay`}
           amount={trade.inputAmount}
           usdAmount={fiatValueInput.data}
         />
         <SwapModalHeaderAmount
-          field="output"
+          field={Field.OUTPUT}
           label={t`You receive`}
           amount={trade.outputAmount}
           usdAmount={fiatValueOutput.data}

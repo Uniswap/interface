@@ -11,12 +11,12 @@ describe('SwapModalHeader.tsx', () => {
     )
     expect(asFragment()).toMatchSnapshot()
     expect(screen.getByText(/Output is estimated. You will receive at least /i)).toBeInTheDocument()
-    expect(screen.getByTestId('input-amount')).toHaveTextContent(
+    expect(screen.getByTestId('INPUT-amount')).toHaveTextContent(
       `${formatCurrencyAmount(TEST_TRADE_EXACT_INPUT.inputAmount, NumberType.TokenTx)} ${
         TEST_TRADE_EXACT_INPUT.inputAmount.currency.symbol ?? ''
       }`
     )
-    expect(screen.getByTestId('output-amount')).toHaveTextContent(
+    expect(screen.getByTestId('OUTPUT-amount')).toHaveTextContent(
       `${formatCurrencyAmount(TEST_TRADE_EXACT_INPUT.outputAmount, NumberType.TokenTx)} ${
         TEST_TRADE_EXACT_INPUT.outputAmount.currency.symbol ?? ''
       }`
@@ -30,12 +30,12 @@ describe('SwapModalHeader.tsx', () => {
     expect(asFragment()).toMatchSnapshot()
     expect(screen.getByText(/Input is estimated. You will sell at most/i)).toBeInTheDocument()
 
-    expect(screen.getByTestId('input-amount')).toHaveTextContent(
+    expect(screen.getByTestId('INPUT-amount')).toHaveTextContent(
       `${formatCurrencyAmount(TEST_TRADE_EXACT_OUTPUT.inputAmount, NumberType.TokenTx)} ${
         TEST_TRADE_EXACT_OUTPUT.inputAmount.currency.symbol ?? ''
       }`
     )
-    expect(screen.getByTestId('output-amount')).toHaveTextContent(
+    expect(screen.getByTestId('OUTPUT-amount')).toHaveTextContent(
       `${formatCurrencyAmount(TEST_TRADE_EXACT_OUTPUT.outputAmount, NumberType.TokenTx)} ${
         TEST_TRADE_EXACT_OUTPUT.outputAmount.currency.symbol ?? ''
       }`
