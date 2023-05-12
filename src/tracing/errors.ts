@@ -107,6 +107,13 @@ export const filterKnownErrors: Required<ClientOptions>['beforeSend'] = (event: 
 
     // These are caused by user navigation away from the page before a request has finished.
     if (error instanceof DOMException && error.name === 'AbortError') return null
+
+    // Filters out errors caused by checking for meta tags that may not exist.
+    if (
+      error.message.match(/null is not an object \(evaluating 'document\.querySelector\('meta\[[^\]]+\]'\)\.content'\)/)
+    ) {
+      return null
+    }
   }
 
   return event
