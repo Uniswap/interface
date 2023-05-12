@@ -3,12 +3,12 @@ import Row from 'components/Row'
 import { Unicon } from 'components/Unicon'
 import useENSAvatar from 'hooks/useENSAvatar'
 import useENSName from 'hooks/useENSName'
-import { useScreenSize } from 'hooks/useScreenSize'
+import { useIsMobile } from 'nft/hooks'
 import { GenieAsset } from 'nft/types'
-import { ReactNode, useReducer, useState } from 'react'
+import { ReactNode, useReducer } from 'react'
 import { ChevronDown, ChevronUp, DollarSign } from 'react-feather'
 import styled from 'styled-components/macro'
-import { BREAKPOINTS, ThemedText } from 'theme'
+import { BREAKPOINTS, EllipsisStyle, ThemedText } from 'theme'
 import { isAddress, shortenAddress } from 'utils'
 
 const StyledBubble = styled(Row)`
@@ -27,9 +27,8 @@ const StyledLabelMedium = styled.div`
   font-size: 16px;
   line-height: 20px;
   color: ${({ theme }) => theme.textPrimary};
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: nowrap;
+
+  ${EllipsisStyle}
 `
 
 const StyledIcon = styled(Row)`
@@ -80,20 +79,16 @@ const Break = styled(Column)`
 const InfoChipsContainer = styled(Row)`
   gap: 4px;
   width: 100%;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
 
   @media screen and (min-width: ${BREAKPOINTS.sm}px) {
     gap: 12px;
-  }
-
-  @media screen and (max-width: ${BREAKPOINTS.sm}px) {
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
   }
 `
 
 export const InfoChips = ({ asset }: { asset: GenieAsset }) => {
-  const screenSize = useScreenSize()
-  const isMobile = !screenSize['sm']
+  const isMobile = useIsMobile()
   const [showExtraInfoChips, toggleShowExtraInfoChips] = useReducer((s) => !s, false)
   const shouldShowExtraInfoChips = isMobile && showExtraInfoChips
 
@@ -124,13 +119,10 @@ export const InfoChips = ({ asset }: { asset: GenieAsset }) => {
           </InfoChipDropdownContainer>
         )}
         {shouldShowExtraInfoChips && <Break />}
-        {topTrait && (!isMobile || shouldShowExtraInfoChips) && <InfoBubble key="Top Trait" title="Top Trait" info={topTrait.trait_value} icon="" />}
-      </InfoChipsContainer>
-      {/* {shouldShowExtraInfoChips && topTrait && (
-        <InfoChipsContainer gap="xs" justify="center">
+        {topTrait && (!isMobile || shouldShowExtraInfoChips) && (
           <InfoBubble key="Top Trait" title="Top Trait" info={topTrait.trait_value} icon="" />
-        </InfoChipsContainer>
-      )} */}
+        )}
+      </InfoChipsContainer>
     </Column>
   )
 }
