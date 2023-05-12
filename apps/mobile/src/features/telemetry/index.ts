@@ -7,17 +7,13 @@ import {
   track,
 } from '@amplitude/analytics-react-native'
 import * as Sentry from '@sentry/react-native'
-import { Primitive, SeverityLevel } from '@sentry/types'
+import { SeverityLevel } from '@sentry/types'
 import { getUniqueId } from 'react-native-device-info'
 import { uniswapUrls } from 'src/constants/urls'
 import { ApplicationTransport } from 'src/features/telemetry/ApplicationTransport'
 import { UserPropertyName } from 'src/features/telemetry/constants'
 import { EventProperties } from 'src/features/telemetry/types'
 import { logger } from 'src/utils/logger'
-
-type LogTags = {
-  [key: string]: Primitive
-}
 
 const DUMMY_KEY = '00000000000000000000000000000000'
 

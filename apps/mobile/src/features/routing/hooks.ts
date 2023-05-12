@@ -7,7 +7,6 @@ import { useFeatureFlag } from 'src/features/experiments/hooks'
 import { useQuoteQuery } from 'src/features/routing/routingApi'
 import { PermitSignatureInfo } from 'src/features/transactions/swap/usePermit2Signature'
 import { useActiveAccount } from 'src/features/wallet/hooks'
-import { logger } from 'src/utils/logger'
 import { useDebounceWithStatus } from 'src/utils/timing'
 import { ChainId } from 'wallet/src/constants/chains'
 import { PollingInterval } from 'wallet/src/constants/misc'
@@ -77,28 +76,14 @@ export function useRouterQuote(params: UseQuoteProps) {
           fetchSimulatedGasLimit,
           permitSignatureInfo,
           slippageTolerance: customSlippageTolerance,
+          loggingProperties: {
+            isUSDQuote,
+          },
         },
     {
       pollingInterval,
     }
   )
-
-  if (result.error) {
-    // We expect the routing API to fail on USDC quotes for long tail tokens (no routes found for our high min threshold of USDC amount)
-    // To avoid crowding logs, only log errors for non-USDC quotes
-    !isUSDQuote &&
-      logger.error(
-        'routing/hooks',
-        'useRouterQuote',
-        `${result.error} - params:${JSON.stringify({
-          currencyIdIn: `${tokenInChainId}-${tokenInAddress}`,
-          currencyIdOut: `${tokenOutChainId}-${tokenOutAddress}`,
-          currencyNameIn: currencyIn?.name,
-          currencyNameOut: currencyOut?.name,
-          amount: amountSpecified?.quotient.toString(),
-        })}`
-      )
-  }
 
   return result
 }

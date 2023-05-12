@@ -7,6 +7,7 @@ import { QuoteResult, TradeQuoteResult } from 'src/features/routing/types'
 import { transformQuoteToTrade } from 'src/features/transactions/swap/routeUtils'
 import { PermitSignatureInfo } from 'src/features/transactions/swap/usePermit2Signature'
 import { serializeQueryParams } from 'src/features/transactions/swap/utils'
+import { logger } from 'src/utils/logger'
 import { config } from 'wallet/src/config'
 import { ChainId } from 'wallet/src/constants/chains'
 import { SwapRouterNativeAssets } from 'wallet/src/utils/currencyId'
@@ -56,6 +57,9 @@ export const routingApi = createApi({
         tokenOutChainId: ChainId
         type: 'exactIn' | 'exactOut'
         permitSignatureInfo?: PermitSignatureInfo | null
+        loggingProperties: {
+          isUSDQuote?: boolean
+        }
       }
     >({
       query: ({
@@ -108,6 +112,20 @@ export const routingApi = createApi({
               }
             : {}),
         })}`,
+      transformErrorResponse: (error, _, args) => {
+        if (!args.loggingProperties.isUSDQuote) {
+          logger.error(
+            'routingApi',
+            'quote',
+            JSON.stringify(error.data),
+            `params:${JSON.stringify({
+              currencyIdIn: `${args.tokenInChainId}-${args.tokenInAddress}`,
+              currencyIdOut: `${args.tokenOutChainId}-${args.tokenOutAddress}`,
+              amount: args.amount,
+            })}`
+          )
+        }
+      },
       transformResponse: (result: QuoteResult, _, arg): TradeQuoteResult => {
         // TODO: [MOB-3897] we shouldn't rely on any of the request arguments and transform the data with only response data
         // Must figure out how to determine whether requested assets are native given the router always returns
