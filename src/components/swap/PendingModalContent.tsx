@@ -1,12 +1,18 @@
+import { t, Trans } from '@lingui/macro'
+import { Currency } from '@uniswap/sdk-core'
+import { ButtonPrimary } from 'components/Button'
 import { ColumnCenter } from 'components/Column'
 import Loader from 'components/Icons/LoadingSpinner'
+import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import QuestionHelper from 'components/QuestionHelper'
 import Row from 'components/Row'
 import AnimatedConfirmation from 'components/TransactionConfirmationModal/AnimatedConfirmation'
 import { ReactNode } from 'react'
 import { AlertTriangle } from 'react-feather'
-import styled, { useTheme } from 'styled-components/macro'
+import styled, { DefaultTheme, useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme/components/text'
+
+import { ConfirmModalState } from './ConfirmSwapModal'
 
 const Container = styled(ColumnCenter)`
   margin: 48px 0 28px;
@@ -40,7 +46,13 @@ const LoadingIndicator = styled(Loader)`
   position: absolute;
 `
 
-export interface PendingModalStep {
+// This component is used for all steps after ConfirmModalState.REVIEWING
+export type PendingConfirmModalState = Extract<
+  ConfirmModalState,
+  ConfirmModalState.APPROVING_TOKEN | ConfirmModalState.PERMITTING | ConfirmModalState.PENDING_CONFIRMATION
+>
+
+interface PendingModalStep {
   title: ReactNode
   subtitle?: ReactNode
   label?: ReactNode
@@ -50,38 +62,74 @@ export interface PendingModalStep {
 }
 
 interface PendingModalContentProps {
-  steps: PendingModalStep[]
-  activeStepIndex: number
+  steps: PendingConfirmModalState[]
+  currentStep: PendingConfirmModalState
+  approvalCurrency?: Currency
   confirmed: boolean
-  transactionSuccess: boolean
   hideStepIndicators?: boolean
 }
 
+function CurrencyLoader({ currency }: { currency: Currency | undefined }) {
+  const theme = useTheme()
+  return (
+    <LogoContainer>
+      <LogoLayer>
+        <CurrencyLogo currency={currency} size="48px" />
+      </LogoLayer>
+      <LoadingIndicator stroke={theme.textTertiary} />
+    </LogoContainer>
+  )
+}
+
+function getContent(
+  step: PendingConfirmModalState,
+  approvalCurrency: Currency | undefined,
+  confirmed: boolean,
+  theme: DefaultTheme
+): PendingModalStep {
+  switch (step) {
+    case ConfirmModalState.APPROVING_TOKEN:
+      return {
+        title: t`Approve permit`,
+        subtitle: t`Proceed in wallet`,
+        label: t`Why are permits required?`,
+        tooltipText: t`Permit2 allows token approvals to be shared and managed across different applications.`,
+        logo: <CurrencyLoader currency={approvalCurrency} />,
+      }
+    case ConfirmModalState.PERMITTING:
+      return {
+        title: t`Approve ${approvalCurrency?.symbol}`,
+        subtitle: t`Proceed in wallet`,
+        label: t`Why are approvals required?`,
+        tooltipText: t`This provides the Uniswap protocol access to your token for trading. For security, this will expire after 30 days.`,
+        logo: <CurrencyLoader currency={approvalCurrency} />,
+      }
+    case ConfirmModalState.PENDING_CONFIRMATION:
+      return {
+        title: t`Confirm Swap`,
+        subtitle: t`Proceed in wallet`,
+        logo: confirmed ? <AnimatedConfirmation size="48px" /> : <Loader stroke={theme.textTertiary} size="48px" />,
+      }
+  }
+}
+
 export function PendingModalContent({
-  activeStepIndex,
   steps,
+  currentStep,
+  approvalCurrency,
   confirmed,
-  transactionSuccess,
   hideStepIndicators,
 }: PendingModalContentProps) {
   const theme = useTheme()
-  const { logo, title, subtitle, label, tooltipText, button } = steps[activeStepIndex]
+  const { logo, title, subtitle, label, tooltipText, button } = getContent(
+    currentStep,
+    approvalCurrency,
+    confirmed,
+    theme
+  )
   return (
     <Container gap="lg">
-      {confirmed ? (
-        transactionSuccess ? (
-          <AnimatedConfirmation size="48px" />
-        ) : (
-          <AlertTriangle strokeWidth={1} color={theme.accentFailure} size="48px" />
-        )
-      ) : logo ? (
-        <LogoContainer>
-          <LogoLayer>{logo}</LogoLayer>
-          <LoadingIndicator stroke={theme.textTertiary} />
-        </LogoContainer>
-      ) : (
-        <Loader stroke={theme.textTertiary} size="48px" />
-      )}
+      {logo}
       {/* TODO: implement animations between title/subtitles of each step. */}
       <ColumnCenter gap="md">
         <ThemedText.HeadlineSmall>{title}</ThemedText.HeadlineSmall>
@@ -95,10 +143,66 @@ export function PendingModalContent({
       {!hideStepIndicators && (
         <Row gap="14px" justify="center">
           {steps.map((_, i) => {
-            return <StepCircle key={i} active={activeStepIndex === i} />
+            return <StepCircle key={i} active={steps.indexOf(currentStep) === i} />
           })}
         </Row>
       )}
+    </Container>
+  )
+}
+
+export enum PendingModalError {
+  TOKEN_APPROVAL_ERROR,
+  PERMIT_ERROR,
+  CONFIRMATION_ERROR,
+}
+
+interface ErrorModalContentProps {
+  errorType: PendingModalError
+  onRetry: () => void
+}
+
+function getErrorContent(errorType: PendingModalError) {
+  switch (errorType) {
+    case PendingModalError.TOKEN_APPROVAL_ERROR:
+      return {
+        title: t`Token approval failed`,
+        label: t`Why are approvals required?`,
+        tooltipText: t`This provides the Uniswap protocol access to your token for trading. For security, this will expire after 30 days.`,
+      }
+    case PendingModalError.PERMIT_ERROR:
+      return {
+        title: t`Permit approval failed`,
+        label: t`Why are permits required?`,
+        tooltipText: t`Permit2 allows token approvals to be shared and managed across different applications.`,
+      }
+    case PendingModalError.CONFIRMATION_ERROR:
+      return {
+        title: t`Confirmation failed`,
+      }
+  }
+}
+
+export function ErrorModalContent({ errorType, onRetry }: ErrorModalContentProps) {
+  const theme = useTheme()
+
+  const { title, label, tooltipText } = getErrorContent(errorType)
+
+  return (
+    <Container gap="lg">
+      <AlertTriangle strokeWidth={1} color={theme.accentFailure} size="48px" />
+      <ColumnCenter gap="md">
+        <ThemedText.HeadlineSmall>{title}</ThemedText.HeadlineSmall>
+        <Row justify="center">
+          {label && <ThemedText.Caption color="textSecondary">{label}</ThemedText.Caption>}
+          {tooltipText && <QuestionHelper text={tooltipText} />}
+        </Row>
+      </ColumnCenter>
+      <Row justify="center">
+        <ButtonPrimary marginX="24px" onClick={onRetry}>
+          <Trans>Retry</Trans>
+        </ButtonPrimary>
+      </Row>
     </Container>
   )
 }
