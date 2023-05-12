@@ -12,7 +12,7 @@ import { isL2ChainId } from 'utils/chains'
 
 import { useAllLists, useCombinedActiveList, useCombinedTokenMapFromUrls } from '../state/lists/hooks'
 import { WrappedTokenInfo } from '../state/lists/wrappedTokenInfo'
-import { deserializeToken, useUserAddedTokens, useUserAddedTokensOnChain } from '../state/user/hooks'
+import { deserializeToken, useUserAddedTokens } from '../state/user/hooks'
 import { useUnsupportedTokenList } from './../state/lists/hooks'
 
 type Maybe<T> = T | null | undefined
@@ -180,20 +180,6 @@ export function useIsUserAddedToken(currency: Currency | undefined | null): bool
   }
 
   return !!userAddedTokens.find((token) => currency.equals(token))
-}
-
-// Check if currency on specific chain is included in custom list from user storage
-export function useIsUserAddedTokenOnChain(
-  address: string | undefined | null,
-  chain: number | undefined | null
-): boolean {
-  const userAddedTokens = useUserAddedTokensOnChain(chain)
-
-  if (!address || !chain) {
-    return false
-  }
-
-  return !!userAddedTokens.find((token) => token.address === address)
 }
 
 // undefined if invalid or does not exist

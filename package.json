@@ -98,8 +98,8 @@
     "@types/ua-parser-js": "^0.7.35",
     "@types/uuid": "^8.3.4",
     "@types/wcag-contrast": "^3.0.0",
-    "@uniswap/eslint-config": "^1.2.0",
     "@uniswap/default-token-list": "^9.4.0",
+    "@uniswap/eslint-config": "^1.2.0",
     "@vanilla-extract/babel-plugin": "^1.1.7",
     "@vanilla-extract/jest-transform": "^1.1.1",
     "@vanilla-extract/webpack-plugin": "^2.1.11",
@@ -169,7 +169,6 @@
     "@uniswap/v3-core": "1.0.0",
     "@uniswap/v3-periphery": "^1.1.1",
     "@uniswap/v3-sdk": "^3.9.0",
-    "@uniswap/widgets": "^2.49.0",
     "@vanilla-extract/css": "^1.7.2",
     "@vanilla-extract/css-utils": "^0.1.2",
     "@vanilla-extract/dynamic": "^2.0.2",
@@ -253,18 +252,6 @@
     "workbox-precaching": "^6.1.0",
     "workbox-routing": "^6.1.0",
     "zustand": "^4.3.6"
-  },
-  "resolutions": {
-    "@web3-react/coinbase-wallet": "^8.2.0",
-    "@web3-react/core": "^8.2.0",
-    "@web3-react/eip1193": "^8.2.0",
-    "@web3-react/empty": "^8.2.0",
-    "@web3-react/gnosis-safe": "^8.2.0",
-    "@web3-react/metamask": "^8.2.0",
-    "@web3-react/network": "^8.2.0",
-    "@web3-react/types": "^8.2.0",
-    "@web3-react/url": "^8.2.0",
-    "@web3-react/walletconnect": "^8.2.0"
   },
   "engines": {
     "npm": "please-use-yarn",
