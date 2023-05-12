@@ -43,7 +43,7 @@ exports[`LandingPage renders it correctly 1`] = `
   justify-content: center;
 }
 
-.c19 {
+.c20 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -61,7 +61,7 @@ exports[`LandingPage renders it correctly 1`] = `
   gap: 8px;
 }
 
-.c21 {
+.c22 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -78,8 +78,27 @@ exports[`LandingPage renders it correctly 1`] = `
   justify-content: flex-start;
 }
 
-.c18 {
+.c19 {
   color: #7780A0;
+}
+
+.c18 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  color: #FB118E;
+  stroke: #FB118E;
+  font-weight: 500;
+}
+
+.c18:hover {
+  opacity: 0.6;
+}
+
+.c18:active {
+  opacity: 0.4;
 }
 
 .c5 {
@@ -119,24 +138,24 @@ exports[`LandingPage renders it correctly 1`] = `
   align-items: center;
 }
 
-.c20 {
+.c21 {
   background-color: #FFFFFF;
   padding: 10px 12px 10px 8px;
   border-radius: 20px;
   max-width: 144px;
 }
 
-.c23 {
+.c24 {
   font-weight: 600;
   font-size: 16px;
   line-height: 20px;
   color: #0D111C;
-  text-overflow: ellipsis;
-  overflow: hidden;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.c22 {
+.c23 {
   width: 24px;
   height: 24px;
   -webkit-flex-shrink: 0;
@@ -157,7 +176,10 @@ exports[`LandingPage renders it correctly 1`] = `
 
 .c17 {
   gap: 4px;
-  height: 64px;
+  width: 100%;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
 }
 
 .c2 {
@@ -241,7 +263,7 @@ exports[`LandingPage renders it correctly 1`] = `
 }
 
 @media screen and (min-width:640px) {
-  .c20 {
+  .c21 {
     max-width: 169px;
   }
 }
@@ -249,6 +271,9 @@ exports[`LandingPage renders it correctly 1`] = `
 @media screen and (min-width:640px) {
   .c17 {
     gap: 12px;
+    -webkit-flex-wrap: nowrap;
+    -ms-flex-wrap: nowrap;
+    flex-wrap: nowrap;
   }
 }
 
@@ -389,68 +414,32 @@ exports[`LandingPage renders it correctly 1`] = `
         <div
           class="c9 c16 c17"
         >
-          <div
-            class="c15"
+          <a
+            class="c18"
+            href="https://etherscan.io/address/"
+            rel="noopener noreferrer"
+            target="_blank"
           >
             <div
-              class="c18 css-4u0e4f"
-            >
-              Owner
-            </div>
-            <div
-              class="c9 c19 c20"
+              class="c15"
             >
               <div
-                class="c9 c21 c22"
-              />
-              <div
-                class="c23"
-              />
-            </div>
-          </div>
-          <div
-            class="c15"
-          >
-            <div
-              class="c18 css-4u0e4f"
-            >
-              Trait Floor
-            </div>
-            <div
-              class="c9 c19 c20"
-            >
-              <div
-                class="c9 c21 c22"
+                class="c19 css-4u0e4f"
               >
-                <svg
-                  fill="none"
-                  height="20"
-                  stroke="currentColor"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  viewBox="0 0 24 24"
-                  width="20"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <line
-                    x1="12"
-                    x2="12"
-                    y1="1"
-                    y2="23"
-                  />
-                  <path
-                    d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"
-                  />
-                </svg>
+                Owner
               </div>
               <div
-                class="c23"
+                class="c9 c20 c21"
               >
-                5.3 ETH
+                <div
+                  class="c9 c22 c23"
+                />
+                <div
+                  class="c24"
+                />
               </div>
             </div>
-          </div>
+          </a>
         </div>
       </div>
     </div>
