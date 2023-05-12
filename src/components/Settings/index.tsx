@@ -3,20 +3,24 @@ import { t } from '@lingui/macro'
 import { Percent } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { AutoColumn } from 'components/Column'
+import Row from 'components/Row'
 import { L2_CHAIN_IDS } from 'constants/chains'
-import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { isSupportedChainId } from 'lib/hooks/routing/clientSideSmartOrderRouter'
 import { useRef } from 'react'
 import { Settings } from 'react-feather'
 import { useModalIsOpen, useToggleSettingsMenu } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
+import { useUserSlippageTolerance } from 'state/user/hooks'
+import { SlippageTolerance } from 'state/user/types'
 import styled from 'styled-components/macro'
+import { ThemedText } from 'theme'
+import validateUserSlippageTolerance, { SlippageValidationResponse } from 'utils/validateUserSlippageTolerance'
 
 import MaxSlippageSettings from './MaxSlippageSettings'
 import RouterPreferenceSettings from './RouterPreferenceSettings'
 import TransactionDeadlineSettings from './TransactionDeadlineSettings'
 
-const StyledMenuIcon = styled(Settings)`
+const MenuIcon = styled(Settings)`
   height: 20px;
   width: 20px;
   > * {
@@ -24,7 +28,7 @@ const StyledMenuIcon = styled(Settings)`
   }
 `
 
-const StyledMenuButton = styled.button<{ disabled: boolean }>`
+const MenuButton = styled.button<{ disabled: boolean }>`
   position: relative;
   width: 100%;
   height: 100%;
@@ -33,7 +37,6 @@ const StyledMenuButton = styled.button<{ disabled: boolean }>`
   margin: 0;
   padding: 0;
   border-radius: 0.5rem;
-  height: 20px;
   ${({ disabled }) =>
     !disabled &&
     `
@@ -46,7 +49,7 @@ const StyledMenuButton = styled.button<{ disabled: boolean }>`
   `}
 `
 
-const StyledMenu = styled.div`
+const Menu = styled.div`
   margin-left: 0.5rem;
   display: flex;
   justify-content: center;
@@ -67,8 +70,9 @@ const MenuFlyout = styled.span`
   flex-direction: column;
   font-size: 1rem;
   position: absolute;
-  top: 2rem;
-  right: 0rem;
+  top: 100%;
+  margin-top: 8px;
+  right: 0;
   z-index: 100;
   color: ${({ theme }) => theme.textPrimary};
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
@@ -85,6 +89,41 @@ const Divider = styled.div`
   background-color: ${({ theme }) => theme.backgroundOutline};
 `
 
+const MenuIconContainer = styled(Row)`
+  padding: 6px 12px;
+  border-radius: 16px;
+`
+
+const MenuIconContainerWithSlippage = styled(MenuIconContainer)<{ displayWarning?: boolean }>`
+  div {
+    color: ${({ theme, displayWarning }) => (displayWarning ? theme.accentWarning : theme.textSecondary)};
+  }
+
+  background-color: ${({ theme, displayWarning }) =>
+    displayWarning ? theme.accentWarningSoft : theme.backgroundModule};
+`
+
+const MenuButtonIcon = () => {
+  const [userSlippageTolerance] = useUserSlippageTolerance()
+
+  if (userSlippageTolerance === SlippageTolerance.Auto) {
+    return (
+      <MenuIconContainer>
+        <MenuIcon />
+      </MenuIconContainer>
+    )
+  }
+
+  const isInvalidSlippage = validateUserSlippageTolerance(userSlippageTolerance) !== SlippageValidationResponse.Valid
+
+  return (
+    <MenuIconContainerWithSlippage gap="sm" displayWarning={isInvalidSlippage}>
+      <ThemedText.Caption>{userSlippageTolerance.toFixed(2)}% slippage</ThemedText.Caption>
+      <MenuIcon />
+    </MenuIconContainerWithSlippage>
+  )
+}
+
 export default function SettingsTab({ autoSlippage }: { autoSlippage: Percent }) {
   const { chainId } = useWeb3React()
   const showDeadlineSettings = Boolean(chainId && !L2_CHAIN_IDS.includes(chainId))
@@ -93,19 +132,18 @@ export default function SettingsTab({ autoSlippage }: { autoSlippage: Percent })
   const open = useModalIsOpen(ApplicationModal.SETTINGS)
 
   const toggle = useToggleSettingsMenu()
-  useOnClickOutside(node, open ? toggle : undefined)
 
   return (
-    <StyledMenu ref={node}>
-      <StyledMenuButton
+    <Menu ref={node}>
+      <MenuButton
         disabled={!isSupportedChainId(chainId)}
         onClick={toggle}
         id="open-settings-dialog-button"
         data-testid="open-settings-dialog-button"
         aria-label={t`Transaction Settings`}
       >
-        <StyledMenuIcon data-testid="swap-settings-button" />
-      </StyledMenuButton>
+        <MenuButtonIcon />
+      </MenuButton>
       {open && (
         <MenuFlyout>
           <AutoColumn gap="16px" style={{ padding: '1rem' }}>
@@ -121,6 +159,6 @@ export default function SettingsTab({ autoSlippage }: { autoSlippage: Percent })
           </AutoColumn>
         </MenuFlyout>
       )}
-    </StyledMenu>
+    </Menu>
   )
 }
