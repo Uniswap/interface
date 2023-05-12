@@ -488,7 +488,7 @@ function QuickActions(): JSX.Element {
       />
       <ActionButton
         Icon={ScanIcon}
-        flex={fiatOnRampShown ? 4 : 3} // we need to make more room for Receive button if there are 3 buttons
+        flex={3}
         label={t('Scan')}
         name={ElementName.WalletConnectScan}
         onPress={onPressScan}
