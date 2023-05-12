@@ -189,7 +189,7 @@ export const SearchBarDropdown = ({
   const totalSuggestions = hasInput
     ? tokens.length + collections.length
     : Math.min(shortenedHistory.length, 2) +
-      (isNFTPage || !isTokenPage ? trendingCollections?.length ?? 0 : 0) +
+      // (isNFTPage || !isTokenPage ? trendingCollections?.length ?? 0 : 0) +
       (isTokenPage || !isNFTPage ? trendingTokens?.length ?? 0 : 0)
 
   // Navigate search results via arrow keys
@@ -249,23 +249,23 @@ export const SearchBarDropdown = ({
           </Box>
         )
 
-      const collectionSearchResults =
-        collections.length > 0 ? (
-          <SearchBarDropdownSection
-            hoveredIndex={hoveredIndex}
-            startingIndex={showCollectionsFirst ? 0 : tokens.length}
-            setHoveredIndex={setHoveredIndex}
-            toggleOpen={toggleOpen}
-            suggestions={collections}
-            eventProperties={{
-              suggestion_type: NavBarSearchTypes.COLLECTION_SUGGESTION,
-              ...eventProperties,
-            }}
-            header={<Trans>NFT Collections</Trans>}
-          />
-        ) : (
-          <Box className={styles.notFoundContainer}>No NFT collections found.</Box>
-        )
+      // const collectionSearchResults =
+      //   collections.length > 0 ? (
+      //     <SearchBarDropdownSection
+      //       hoveredIndex={hoveredIndex}
+      //       startingIndex={showCollectionsFirst ? 0 : tokens.length}
+      //       setHoveredIndex={setHoveredIndex}
+      //       toggleOpen={toggleOpen}
+      //       suggestions={collections}
+      //       eventProperties={{
+      //         suggestion_type: NavBarSearchTypes.COLLECTION_SUGGESTION,
+      //         ...eventProperties,
+      //       }}
+      //       header={<Trans>NFT Collections</Trans>}
+      //     />
+      //   ) : (
+      //     <Box className={styles.notFoundContainer}>No NFT collections found.</Box>
+      //   )
 
       const currentState = () =>
         hasInput ? (
@@ -273,13 +273,13 @@ export const SearchBarDropdown = ({
           <Column gap="20">
             {showCollectionsFirst ? (
               <>
-                {collectionSearchResults}
+                {/* {collectionSearchResults} */}
                 {tokenSearchResults}
               </>
             ) : (
               <>
                 {tokenSearchResults}
-                {collectionSearchResults}
+                {/* {collectionSearchResults} */}
               </>
             )}
           </Column>
@@ -318,7 +318,7 @@ export const SearchBarDropdown = ({
                 isLoading={!trendingTokenData}
               />
             )}
-            {!isTokenPage && (
+            {/* {!isTokenPage && (
               <SearchBarDropdownSection
                 hoveredIndex={hoveredIndex}
                 startingIndex={shortenedHistory.length + (isNFTPage ? 0 : trendingTokens?.length ?? 0)}
@@ -333,7 +333,7 @@ export const SearchBarDropdown = ({
                 headerIcon={<TrendingArrow />}
                 isLoading={trendingCollectionsAreLoading}
               />
-            )}
+            )} */}
           </Column>
         )
 

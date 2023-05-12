@@ -13,7 +13,7 @@ import { useCallback, useState } from 'react'
 import { Plus } from 'react-feather'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { Text } from 'rebass'
-import { useTheme } from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components/macro'
 
 import { ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
 import { BlueCard, LightCard } from '../../components/Card'
@@ -42,7 +42,6 @@ import { calculateGasMargin } from '../../utils/calculateGasMargin'
 import { calculateSlippageAmount } from '../../utils/calculateSlippageAmount'
 import { currencyId } from '../../utils/currencyId'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
-import AppBody from '../AppBody'
 import { Dots, Wrapper } from '../Pool/styleds'
 import { ConfirmAddModalBottom } from './ConfirmAddModalBottom'
 import { PoolPriceBar } from './PoolPriceBar'
@@ -320,9 +319,20 @@ export default function AddLiquidity() {
 
   const addIsUnsupported = useIsSwapUnsupported(currencies?.CURRENCY_A, currencies?.CURRENCY_B)
 
+  const BodyWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 420px;
+    background: ${({ theme }) => theme.backgroundScrolledSurface};
+    border-radius: 16px;
+    box-shadow: ${({ theme }) => theme.deepShadow};
+    margin-top: 72px;
+  `
+
   return (
     <>
-      <AppBody>
+      <BodyWrapper>
         <AddRemoveTabs creating={isCreate} adding={true} defaultSlippage={DEFAULT_ADD_V2_SLIPPAGE_TOLERANCE} />
         <Wrapper>
           <TransactionConfirmationModal
@@ -363,7 +373,7 @@ export default function AddLiquidity() {
                 <ColumnCenter>
                   <BlueCard>
                     <AutoColumn gap="10px">
-                      <ThemedText.DeprecatedLink fontWeight={400} color="accentAction">
+                      <ThemedText.DeprecatedLink fontWeight={400} color={theme.accentAction}>
                         <Trans>
                           <b>
                             <Trans>Tip:</Trans>
@@ -500,7 +510,7 @@ export default function AddLiquidity() {
             )}
           </AutoColumn>
         </Wrapper>
-      </AppBody>
+      </BodyWrapper>
       <SwitchLocaleLink />
 
       {!addIsUnsupported ? (

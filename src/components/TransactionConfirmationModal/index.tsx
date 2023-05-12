@@ -1,7 +1,10 @@
 import { Trans } from '@lingui/macro'
 import { Currency } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import LoadingGifLight from 'assets/images/lightLoading.gif'
+import LoadingGif from 'assets/images/loading.gif'
 import Badge from 'components/Badge'
+import { LoaderGif } from 'components/Icons/LoadingSpinner'
 import { getChainInfo } from 'constants/chainInfo'
 import { SupportedChainId, SupportedL2ChainId } from 'constants/chains'
 import useCurrencyLogoURIs from 'lib/hooks/useCurrencyLogoURIs'
@@ -10,6 +13,7 @@ import { AlertCircle, AlertTriangle, ArrowUpCircle, CheckCircle } from 'react-fe
 import { Text } from 'rebass'
 import { useIsTransactionConfirmed, useTransaction } from 'state/transactions/hooks'
 import styled, { useTheme } from 'styled-components/macro'
+import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { isL2ChainId } from 'utils/chains'
 
 import Circle from '../../assets/images/blue-loader.svg'
@@ -59,6 +63,7 @@ function ConfirmationPendingContent({
   inline?: boolean // not in modal
 }) {
   const theme = useTheme()
+  const isDarkMode = useIsDarkMode()
 
   return (
     <Wrapper>
@@ -70,7 +75,7 @@ function ConfirmationPendingContent({
           </RowBetween>
         )}
         <ConfirmedIcon inline={inline}>
-          <CustomLightSpinner src={Circle} alt="loader" size={inline ? '40px' : '90px'} />
+          <LoaderGif gif={isDarkMode ? LoadingGif : LoadingGifLight} size={inline ? '40px' : '90px'} />
         </ConfirmedIcon>
         <AutoColumn gap="md" justify="center">
           <Text fontWeight={500} fontSize={20} color={theme.textPrimary} textAlign="center">
