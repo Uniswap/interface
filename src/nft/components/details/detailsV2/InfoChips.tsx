@@ -67,11 +67,14 @@ const InfoChipDropdown = styled.button`
 const InfoChipDropdownContainer = styled(Column)`
   height: 100%;
   margin-top: auto;
-  maring-bottom: 0px;
 
   @media screen and (min-width: ${BREAKPOINTS.sm}px) {
     display: none;
   }
+`
+
+const Break = styled(Column)`
+  flex-basis: 100%;
 `
 
 const InfoChipsContainer = styled(Row)`
@@ -120,6 +123,7 @@ export const InfoChips = ({ asset }: { asset: GenieAsset }) => {
             </InfoChipDropdown>
           </InfoChipDropdownContainer>
         )}
+        {shouldShowExtraInfoChips && <Break />}
         {topTrait && (!isMobile || shouldShowExtraInfoChips) && <InfoBubble key="Top Trait" title="Top Trait" info={topTrait.trait_value} icon="" />}
       </InfoChipsContainer>
       {/* {shouldShowExtraInfoChips && topTrait && (
