@@ -116,6 +116,7 @@ export default function DelegateModal({ isOpen, poolInfo, onDismiss, title }: Vo
   // monitor call to help UI loading state
   const [hash, setHash] = useState<string | undefined>()
   const [attempting, setAttempting] = useState(false)
+  const [stakeAmount, setStakeAmount] = useState<CurrencyAmount<Currency>>()
 
   // wrapper to reset state on modal close
   function wrappedOnDismiss() {
@@ -130,6 +131,7 @@ export default function DelegateModal({ isOpen, poolInfo, onDismiss, title }: Vo
 
   async function onDelegate() {
     setAttempting(true)
+    setStakeAmount(parsedAmount)
 
     // if callback not returned properly ignore
     if (!delegateCallback || !grgBalance || !stakeData || !currencyValue.isToken) return
@@ -250,7 +252,7 @@ export default function DelegateModal({ isOpen, poolInfo, onDismiss, title }: Vo
             <ThemedText.DeprecatedLargeHeader>
               <Trans>Transaction Submitted</Trans>
             </ThemedText.DeprecatedLargeHeader>
-            <ThemedText.DeprecatedMain fontSize={36}>{formatCurrencyAmount(parsedAmount, 4)}</ThemedText.DeprecatedMain>
+            <ThemedText.DeprecatedMain fontSize={36}>{formatCurrencyAmount(stakeAmount, 4)}</ThemedText.DeprecatedMain>
           </AutoColumn>
         </SubmittedView>
       )}

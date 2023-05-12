@@ -106,6 +106,7 @@ export default function MoveStakeModal({ isOpen, poolInfo, onDismiss, title }: M
   // monitor call to help UI loading state
   const [hash, setHash] = useState<string | undefined>()
   const [attempting, setAttempting] = useState(false)
+  const [stakeAmount, setStakeAmount] = useState<CurrencyAmount<Currency>>()
 
   // wrapper to reset state on modal close
   function wrappedOnDismiss() {
@@ -120,6 +121,7 @@ export default function MoveStakeModal({ isOpen, poolInfo, onDismiss, title }: M
 
   async function onMoveStake() {
     setAttempting(true)
+    setStakeAmount(parsedAmount)
 
     // if callback not returned properly ignore
     if (!moveStakeCallback || !fromPoolStakeBalance || !moveStakeData || !currencyValue.isToken) return
@@ -210,7 +212,7 @@ export default function MoveStakeModal({ isOpen, poolInfo, onDismiss, title }: M
             <ThemedText.DeprecatedLargeHeader>
               <Trans>Transaction Submitted</Trans>
             </ThemedText.DeprecatedLargeHeader>
-            <ThemedText.DeprecatedMain fontSize={36}>{formatCurrencyAmount(parsedAmount, 4)}</ThemedText.DeprecatedMain>
+            <ThemedText.DeprecatedMain fontSize={36}>{formatCurrencyAmount(stakeAmount, 4)}</ThemedText.DeprecatedMain>
           </AutoColumn>
         </SubmittedView>
       )}
