@@ -10,20 +10,19 @@ jobs:
     environment:
       name: deploy/staging
     steps:
-      - uses: actions/checkout@v3
-      - uses: ./.github/actions/setup
-      - run: yarn prepare
-      - name: Send Slack message that build is starting
-        id: slack
+      - name: Send Slack message that deploy is starting
         uses: slackapi/slack-github-action@007b2c3c751a190b6f0f040e47ed024deaa72844
         with:
           payload: |
             {
-              "text": "Staging build started for branch: ${{ github.ref_name }}"
+              "text": "Staging deploy started for branch: ${{ github.ref_name }}"
             }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/setup
+      - run: yarn prepare
       - run: yarn build
         env:
           REACT_APP_STAGING: 1
@@ -31,18 +30,8 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16
-      - name: Send Slack message that deploy is starting
-        id: slack
-        uses: slackapi/slack-github-action@007b2c3c751a190b6f0f040e47ed024deaa72844
-        with:
-          payload: |
-            {
-              "text": "Starting staging Cloudflare pages deploy for branch: ${{ github.ref_name }}"
-            }
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
       - name: Update Cloudflare Pages deployment
+        id: pages-deployment
         uses: cloudflare/pages-action@364c7ca09a4b57837c5967871d64a2c31adb8c0d
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
@@ -50,8 +39,18 @@ jobs:
           projectName: interface-staging
           directory: build
           githubToken: ${{ secrets.GITHUB_TOKEN }}
+      - name: Send Slack message that deploy has failed
+        uses: slackapi/slack-github-action@007b2c3c751a190b6f0f040e47ed024deaa72844
+        if: always() && steps.pages-deployment.outcome == 'failure'
+        with:
+          payload: |
+            {
+              "text": "Staging Cloudflare pages deploy **FAILED** for: ${{ github.ref_name }}"
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
       - name: Send Slack message that deploy has completed
-        id: slack
         uses: slackapi/slack-github-action@007b2c3c751a190b6f0f040e47ed024deaa72844
         with:
           payload: |
