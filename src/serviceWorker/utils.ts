@@ -16,18 +16,16 @@ export function isDevelopment() {
   )
 }
 
-type GroupedEntries = { mediaURLs: string[]; precacheEntries: PrecacheEntry[] }
+type GroupedEntries = { onDemandEntries: (string | PrecacheEntry)[]; precacheEntries: PrecacheEntry[] }
 export function groupEntries(entries: (string | PrecacheEntry)[]): GroupedEntries {
   return entries.reduce<GroupedEntries>(
-    ({ mediaURLs, precacheEntries }, entry) => {
-      if (typeof entry === 'string') {
-        return { precacheEntries, mediaURLs: [...mediaURLs, entry] }
-      } else if (entry.url.includes('/media/')) {
-        return { precacheEntries, mediaURLs: [...mediaURLs, entry.url] }
+    ({ onDemandEntries, precacheEntries }, entry) => {
+      if (typeof entry === 'string' || entry.url.includes('/media/')) {
+        return { precacheEntries, onDemandEntries: [...onDemandEntries, entry] }
       } else {
-        return { precacheEntries: [...precacheEntries, entry], mediaURLs }
+        return { precacheEntries: [...precacheEntries, entry], onDemandEntries }
       }
     },
-    { mediaURLs: [], precacheEntries: [] }
+    { onDemandEntries: [], precacheEntries: [] }
   )
 }

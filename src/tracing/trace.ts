@@ -1,9 +1,8 @@
 import * as Sentry from '@sentry/react'
 import { Span, SpanStatusType } from '@sentry/tracing'
 
-type TraceTags = {
-  is_widget: boolean
-}
+// Modify this type if you want to add any Trace tags.
+type TraceTags = Record<string, never>
 
 interface TraceMetadata {
   /** Arbitrary data stored on a trace. */
