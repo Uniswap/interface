@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { ButtonPrimary } from 'components/Button'
+import { ButtonGray, ButtonPrimary } from 'components/Button'
 import Column from 'components/Column'
 import Row from 'components/Row'
 import { HandHoldingDollarIcon, VerifiedIcon } from 'nft/components/icons'
@@ -25,19 +25,25 @@ const BuyButton = styled(ButtonPrimary)`
   padding: 16px 24px;
   gap: 8px;
   line-height: 24px;
+  white-space: nowrap;
 `
 
 const Price = styled.div`
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.accentTextLightSecondary};
 `
 
-const MakeOfferButton = styled(ButtonPrimary)`
+const MakeOfferButtonSmall = styled(ButtonPrimary)`
   border-radius: 12px;
   width: min-content;
   flex-shrink: 0;
 `
 
+const MakeOfferButtonLarge = styled(ButtonGray)`
+  white-space: nowrap;
+`
+
 export const DataPageHeader = ({ asset }: { asset: GenieAsset }) => {
+  const price = asset.sellorders?.[0]?.price.value
   return (
     <Row gap="24px">
       <AssetImage src={asset.imageUrl} />
@@ -51,13 +57,21 @@ export const DataPageHeader = ({ asset }: { asset: GenieAsset }) => {
         </ThemedText.HeadlineMedium>
       </AssetText>
       <Row justifySelf="flex-end" width="min-content" gap="12px">
-        <BuyButton>
-          <Trans>Buy</Trans>
-          <Price>{formatEth(2.22)}</Price>
-        </BuyButton>
-        <MakeOfferButton>
-          <HandHoldingDollarIcon />
-        </MakeOfferButton>
+        {price ? (
+          <>
+            <BuyButton>
+              <Trans>Buy</Trans>
+              <Price>{formatEth(price)} ETH</Price>
+            </BuyButton>
+            <MakeOfferButtonSmall>
+              <HandHoldingDollarIcon />
+            </MakeOfferButtonSmall>
+          </>
+        ) : (
+          <MakeOfferButtonLarge>
+            <Trans>Make an offer</Trans>
+          </MakeOfferButtonLarge>
+        )}
       </Row>
     </Row>
   )
