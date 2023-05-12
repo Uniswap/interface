@@ -1,4 +1,5 @@
 import { Trans } from '@lingui/macro'
+import { useWeb3React } from '@web3-react/core'
 import Column from 'components/Column'
 import Row from 'components/Row'
 import { Unicon } from 'components/Unicon'
@@ -6,11 +7,15 @@ import useENSAvatar from 'hooks/useENSAvatar'
 import useENSName from 'hooks/useENSName'
 import { useIsMobile } from 'nft/hooks'
 import { GenieAsset } from 'nft/types'
+import qs from 'qs'
 import { ReactNode, useReducer } from 'react'
 import { ChevronDown, DollarSign } from 'react-feather'
+import { Link } from 'react-router-dom'
 import styled from 'styled-components/macro'
-import { BREAKPOINTS, EllipsisStyle, ThemedText } from 'theme'
+import { BREAKPOINTS, ClickableStyle, EllipsisStyle, ExternalLink, LinkStyle, ThemedText } from 'theme'
 import { isAddress, shortenAddress } from 'utils'
+import { ExplorerDataType } from 'utils/getExplorerLink'
+import { getExplorerLink } from 'utils/getExplorerLink'
 
 const StyledBubble = styled(Row)`
   background-color: ${({ theme }) => theme.backgroundSurface};
@@ -43,15 +48,50 @@ const StyledIcon = styled(Row)`
   align-items: center;
 `
 
-const InfoBubble = ({ title, info, icon }: { title: ReactNode; info: string; icon: ReactNode }) => {
+const StyledLink = styled(Link)`
+  ${ClickableStyle}
+  ${LinkStyle}
+`
+
+const ConditionalLinkWrapper = ({
+  isExternal,
+  href,
+  children,
+}: {
+  isExternal?: boolean
+  href: string
+  children: ReactNode
+}) => {
+  return isExternal ? (
+    <ExternalLink href={href}>{children}</ExternalLink>
+  ) : (
+    <StyledLink to={href}>{children}</StyledLink>
+  )
+}
+
+const InfoBubble = ({
+  title,
+  info,
+  icon,
+  href,
+  isExternal,
+}: {
+  title: ReactNode
+  info: string
+  icon: ReactNode
+  href: string
+  isExternal?: boolean
+}) => {
   return (
-    <Column gap="sm">
-      <ThemedText.Caption color="textSecondary">{title}</ThemedText.Caption>
-      <StyledBubble gap="sm">
-        <StyledIcon>{icon}</StyledIcon>
-        <StyledLabelMedium>{info}</StyledLabelMedium>
-      </StyledBubble>
-    </Column>
+    <ConditionalLinkWrapper isExternal={isExternal} href={href}>
+      <Column gap="sm">
+        <ThemedText.Caption color="textSecondary">{title}</ThemedText.Caption>
+        <StyledBubble gap="sm">
+          <StyledIcon>{icon}</StyledIcon>
+          <StyledLabelMedium>{info}</StyledLabelMedium>
+        </StyledBubble>
+      </Column>
+    </ConditionalLinkWrapper>
   )
 }
 
@@ -95,6 +135,7 @@ const StyledChevron = styled(ChevronDown)<{ $isOpen: boolean }>`
 `
 
 export const InfoChips = ({ asset }: { asset: GenieAsset }) => {
+  const { chainId } = useWeb3React()
   const isMobile = useIsMobile()
   const [showExtraInfoChips, toggleShowExtraInfoChips] = useReducer((s) => !s, false)
   const shouldShowExtraInfoChips = isMobile && showExtraInfoChips
@@ -113,21 +154,49 @@ export const InfoChips = ({ asset }: { asset: GenieAsset }) => {
     <Unicon size={24} address={asset.ownerAddress ?? ''} />
   )
 
+  const traitParams =
+    topTrait &&
+    qs.stringify(
+      { traits: [`("${topTrait.trait_type}","${topTrait.trait_value}")`] },
+      {
+        arrayFormat: 'comma',
+      }
+    )
+  const traitCollectionAddress = topTrait && `/nfts/collection/${asset.address}?${traitParams}`
+
   return (
     <Column gap="sm">
       <InfoChipsContainer justify="center">
-        <InfoBubble title={<Trans>Owner</Trans>} info={addressToDisplay} icon={avatarToDisplay} />
-        <InfoBubble title={<Trans>Trait Floor</Trans>} info="5.3 ETH" icon={<DollarSign size={20} />} />
-        {topTrait && (
-          <InfoChipDropdownContainer>
-            <InfoChipDropdown onClick={toggleShowExtraInfoChips}>
-              <StyledChevron $isOpen={showExtraInfoChips} size={20} display="block" />
-            </InfoChipDropdown>
-          </InfoChipDropdownContainer>
+        <InfoBubble
+          title={<Trans>Owner</Trans>}
+          info={addressToDisplay}
+          icon={avatarToDisplay}
+          href={getExplorerLink(chainId ?? 1, asset.ownerAddress ?? '', ExplorerDataType.ADDRESS)}
+          isExternal={true}
+        />
+        {traitCollectionAddress && (
+          <>
+            <InfoBubble
+              title={<Trans>Trait Floor</Trans>}
+              info="5.3 ETH"
+              icon={<DollarSign size={20} />}
+              href={traitCollectionAddress}
+            />
+            <InfoChipDropdownContainer>
+              <InfoChipDropdown onClick={toggleShowExtraInfoChips}>
+                <StyledChevron $isOpen={showExtraInfoChips} size={20} display="block" />
+              </InfoChipDropdown>
+            </InfoChipDropdownContainer>
+          </>
         )}
         {shouldShowExtraInfoChips && <Break />}
-        {topTrait && (!isMobile || shouldShowExtraInfoChips) && (
-          <InfoBubble title={<Trans>Top Trait</Trans>} info={topTrait.trait_value} icon="" />
+        {traitCollectionAddress && (!isMobile || shouldShowExtraInfoChips) && (
+          <InfoBubble
+            title={<Trans>Top Trait</Trans>}
+            info={topTrait.trait_value}
+            icon=""
+            href={traitCollectionAddress}
+          />
         )}
       </InfoChipsContainer>
     </Column>
