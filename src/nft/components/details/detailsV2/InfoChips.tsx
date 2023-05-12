@@ -7,7 +7,7 @@ import useENSAvatar from 'hooks/useENSAvatar'
 import useENSName from 'hooks/useENSName'
 import { useIsMobile } from 'nft/hooks'
 import { GenieAsset } from 'nft/types'
-import qs from 'qs'
+import { getLinkForTrait } from 'nft/utils'
 import { ReactNode, useReducer } from 'react'
 import { ChevronDown, DollarSign } from 'react-feather'
 import { Link } from 'react-router-dom'
@@ -141,6 +141,7 @@ export const InfoChips = ({ asset }: { asset: GenieAsset }) => {
   const shouldShowExtraInfoChips = isMobile && showExtraInfoChips
 
   const topTrait = asset?.traits?.[0]
+  const traitCollectionAddress = topTrait && getLinkForTrait(topTrait, asset.address)
 
   const isChecksummedAddress = isAddress(asset.ownerAddress)
   const checksummedAddress = isChecksummedAddress ? isChecksummedAddress : undefined
@@ -153,16 +154,6 @@ export const InfoChips = ({ asset }: { asset: GenieAsset }) => {
   ) : (
     <Unicon size={24} address={asset.ownerAddress ?? ''} />
   )
-
-  const traitParams =
-    topTrait &&
-    qs.stringify(
-      { traits: [`("${topTrait.trait_type}","${topTrait.trait_value}")`] },
-      {
-        arrayFormat: 'comma',
-      }
-    )
-  const traitCollectionAddress = topTrait && `/nfts/collection/${asset.address}?${traitParams}`
 
   return (
     <Column gap="sm">
