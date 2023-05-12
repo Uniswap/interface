@@ -3,14 +3,14 @@ import { render, screen } from 'test-utils/render'
 import { PendingModalContent } from './PendingModalContent'
 
 describe('PendingModalContent', () => {
-  it('should render null with invalid content', () => {
+  it('renders null for invalid content', () => {
     const result = render(
       <PendingModalContent steps={[]} activeStepIndex={0} confirmed={false} transactionSuccess={false} />
     )
     expect(result.container).toBeEmptyDOMElement()
   })
 
-  it('should render the only step', () => {
+  it('renders correctly with only one step', () => {
     render(
       <PendingModalContent
         steps={[{ title: 'title0', subtitle: 'subtitle0', label: 'label0', tooltipText: 'tooltipText0' }]}
@@ -25,8 +25,8 @@ describe('PendingModalContent', () => {
     expect(screen.getByText('tooltipText0')).toBeInTheDocument()
   })
 
-  describe('should render the correct step with more than one', () => {
-    it('first step', () => {
+  describe('renders the correct step when there are multiple', () => {
+    it('renders the first step with activeStepIndex=0', () => {
       render(
         <PendingModalContent
           steps={[
@@ -47,7 +47,7 @@ describe('PendingModalContent', () => {
       expect(screen.queryByText('label1')).toBeNull()
       expect(screen.queryByText('tooltipText1')).toBeNull()
     })
-    it('second step', () => {
+    it('renders the second step with activeStepIndex=1', () => {
       render(
         <PendingModalContent
           steps={[
@@ -70,8 +70,8 @@ describe('PendingModalContent', () => {
     })
   })
 
-  describe('should render the correct logo', () => {
-    it('logo prop, unconfirmed', () => {
+  describe('renders the correct logo', () => {
+    it('renders the given logo when not overridden with confirmed', () => {
       render(
         <PendingModalContent
           steps={[
@@ -92,7 +92,7 @@ describe('PendingModalContent', () => {
       expect(screen.queryByTestId('PendingModalContent-failureIcon')).toBeNull()
     })
 
-    it('confirmed, failure', () => {
+    it('renders the failure icon instead of the given logo when confirmed and unsuccessful', () => {
       render(
         <PendingModalContent
           steps={[
@@ -113,7 +113,7 @@ describe('PendingModalContent', () => {
       expect(screen.queryByTestId('test-logo')).toBeNull()
     })
 
-    it('confirmed, success', () => {
+    it('renders the success icon instead of the given logo when confirmed and successful', () => {
       render(
         <PendingModalContent
           steps={[
