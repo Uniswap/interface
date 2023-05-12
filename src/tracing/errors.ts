@@ -69,7 +69,7 @@ function getChunkResponseStatus(asset?: string): number | undefined {
   return resource?.responseStatus
 }
 
-function shouldRejectError(error: unknown) {
+function shouldRejectError(error: EventHint['originalException']) {
   if (error instanceof Error) {
     // ethers aggressively polls for block number, and it sometimes fails (whether spuriously or through rate-limiting).
     // If block number polling, it should not be considered an exception.
