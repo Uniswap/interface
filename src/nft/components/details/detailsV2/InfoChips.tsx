@@ -138,7 +138,7 @@ export const InfoChips = ({ asset }: { asset: GenieAsset }) => {
   const { chainId } = useWeb3React()
   const isMobile = useIsMobile()
   const [showExtraInfoChips, toggleShowExtraInfoChips] = useReducer((s) => !s, false)
-  const shouldShowExtraInfoChips = isMobile && showExtraInfoChips
+  const shouldShowExtraInfoChips = !isMobile || showExtraInfoChips
 
   const topTrait = asset?.traits?.[0]
   const traitCollectionAddress = topTrait && getLinkForTrait(topTrait, asset.address)
@@ -178,16 +178,18 @@ export const InfoChips = ({ asset }: { asset: GenieAsset }) => {
                 <StyledChevron isOpen={showExtraInfoChips} size={20} display="block" />
               </InfoChipDropdown>
             </InfoChipDropdownContainer>
+            {shouldShowExtraInfoChips && (
+              <>
+                {isMobile && <Break />}
+                <InfoBubble
+                  title={<Trans>Top Trait</Trans>}
+                  info={topTrait.trait_value}
+                  icon=""
+                  href={traitCollectionAddress}
+                />
+              </>
+            )}
           </>
-        )}
-        {shouldShowExtraInfoChips && <Break />}
-        {traitCollectionAddress && (!isMobile || shouldShowExtraInfoChips) && (
-          <InfoBubble
-            title={<Trans>Top Trait</Trans>}
-            info={topTrait.trait_value}
-            icon=""
-            href={traitCollectionAddress}
-          />
         )}
       </InfoChipsContainer>
     </Column>
