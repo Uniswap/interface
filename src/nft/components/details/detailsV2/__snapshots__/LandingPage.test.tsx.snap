@@ -41,7 +41,6 @@ exports[`LandingPage renders it correctly 1`] = `
   -webkit-justify-content: center;
   -ms-flex-pack: center;
   justify-content: center;
-  gap: 12px;
 }
 
 .c19 {
@@ -157,6 +156,7 @@ exports[`LandingPage renders it correctly 1`] = `
 }
 
 .c17 {
+  gap: 4px;
   height: 64px;
 }
 
@@ -243,6 +243,12 @@ exports[`LandingPage renders it correctly 1`] = `
 @media screen and (min-width:640px) {
   .c20 {
     max-width: 169px;
+  }
+}
+
+@media screen and (min-width:640px) {
+  .c17 {
+    gap: 12px;
   }
 }
 
