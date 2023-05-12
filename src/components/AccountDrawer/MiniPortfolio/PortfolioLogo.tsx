@@ -145,7 +145,7 @@ export function PortfolioLogo({
   }
 
   const L2Logo =
-    // chainId !== SupportedChainId.MAINNET && chainLogo ? 
+    chainId !== SupportedChainId.OPTIMISM && chainLogo ? 
     (
       <L2LogoContainer $backgroundColor={squareLogoUrl ? theme.backgroundSurface : theme.textPrimary}>
         {squareLogoUrl ? (
@@ -155,7 +155,7 @@ export function PortfolioLogo({
         )}
       </L2LogoContainer>
     )
-    //  : null
+     : null
 
   return (
     <StyledLogoParentContainer>
