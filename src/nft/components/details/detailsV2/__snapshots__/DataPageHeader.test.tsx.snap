@@ -217,11 +217,7 @@ exports[`Header loads with asset with a sell order 1`] = `
 
 .c5 {
   gap: 4px;
-  -webkit-box-flex: 1;
-  -webkit-flex-grow: 1;
-  -ms-flex-positive: 1;
-  flex-grow: 1;
-  max-width: 40%;
+  margin-right: auto;
 }
 
 .c14 {
@@ -236,6 +232,12 @@ exports[`Header loads with asset with a sell order 1`] = `
   gap: 8px;
   line-height: 24px;
   white-space: nowrap;
+  width: -webkit-min-content;
+  width: -moz-min-content;
+  width: min-content;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
 }
 
 .c15 {
@@ -254,6 +256,12 @@ exports[`Header loads with asset with a sell order 1`] = `
 
 @media screen and (max-width:768px) {
   .c2 {
+    display: none;
+  }
+}
+
+@media screen and (max-width:1024px) {
+  .c3 {
     display: none;
   }
 }
@@ -535,11 +543,7 @@ exports[`Header loads with asset with no sell orders 1`] = `
 
 .c5 {
   gap: 4px;
-  -webkit-box-flex: 1;
-  -webkit-flex-grow: 1;
-  -ms-flex-positive: 1;
-  flex-grow: 1;
-  max-width: 40%;
+  margin-right: auto;
 }
 
 .c14 {
@@ -548,6 +552,12 @@ exports[`Header loads with asset with no sell orders 1`] = `
 
 @media screen and (max-width:768px) {
   .c2 {
+    display: none;
+  }
+}
+
+@media screen and (max-width:1024px) {
+  .c3 {
     display: none;
   }
 }

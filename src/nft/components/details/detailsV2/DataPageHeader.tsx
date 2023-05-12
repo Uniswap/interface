@@ -19,12 +19,15 @@ const AssetImage = styled.img`
   width: 96px;
   height: 96px;
   border-radius: 20px;
+
+  @media screen and (max-width: ${BREAKPOINTS.lg}px) {
+    display: none;
+  }
 `
 
 const AssetText = styled(Column)`
   gap: 4px;
-  flex-grow: 1;
-  max-width: 40%;
+  margin-right: auto;
 `
 
 const BuyButton = styled(ButtonPrimary)`
@@ -34,6 +37,8 @@ const BuyButton = styled(ButtonPrimary)`
   gap: 8px;
   line-height: 24px;
   white-space: nowrap;
+  width: min-content;
+  flex-shrink: 0;
 `
 
 const Price = styled.div`
