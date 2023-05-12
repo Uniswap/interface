@@ -58,8 +58,11 @@ export default function PrefetchBalancesWrapper({ children }: PropsWithChildren)
   useEffect(() => {
     if (hasUpdatedTx || accountChanged) {
       // If the drawer is open, fetch balances immediately, else set a flag to fetch on next hover
-      if (drawerOpen) fetchBalances()
-      else setHasUnfetchedBalances(true)
+      if (drawerOpen) {
+        fetchBalances()
+      } else {
+        setHasUnfetchedBalances(true)
+      }
     }
   }, [accountChanged, drawerOpen, fetchBalances, hasUpdatedTx])
 

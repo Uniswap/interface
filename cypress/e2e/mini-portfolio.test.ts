@@ -44,6 +44,7 @@ describe('Mini Portfolio', () => {
         cy.get(getTestSelector('portfolio-total-balance'))
           .invoke('text')
           .then((originalBalance) => {
+            // TODO(INFRA-3) Replace window.ethereum access below with cypress-hardhat utility
             // Simulates the wallet changing accounts via eip-1193 event
             cy.window().then((win) => win.ethereum.emit('accountsChanged', [accountB]))
 
