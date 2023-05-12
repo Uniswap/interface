@@ -28,7 +28,7 @@ import { ReactComponent as TooltipTriangle } from '../../assets/svg/tooltip_tria
 
 // TODO: Break this file into a components folder
 
-export const CloseIcon = styled(X) <{ onClick: () => void }>`
+export const CloseIcon = styled(X)<{ onClick: () => void }>`
   color: ${({ theme }) => theme.textPrimary};
   cursor: pointer;
 `
@@ -454,7 +454,7 @@ export function BackArrow({ to }: { to: string }) {
   )
 }
 
-export const CustomLightSpinner = styled(Spinner) <{ size: string }>`
+export const CustomLightSpinner = styled(Spinner)<{ size: string }>`
   height: ${({ size }) => size};
   width: ${({ size }) => size};
 `
