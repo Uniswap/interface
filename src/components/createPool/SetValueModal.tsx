@@ -35,7 +35,6 @@ interface SetValueModalProps {
   title: ReactNode
 }
 
-// TODO: 'scrollOverlay' prop returns warning in console
 export default function SetValueModal({ isOpen, onDismiss, poolInfo, title }: SetValueModalProps) {
   const { account, chainId } = useWeb3React()
 

@@ -33,7 +33,6 @@ interface SetSpreadModalProps {
   title: ReactNode
 }
 
-// TODO: 'scrollOverlay' prop returns warning in console
 export default function SetSpreadModal({ isOpen, onDismiss, title }: SetSpreadModalProps) {
   const { account, chainId } = useWeb3React()
 

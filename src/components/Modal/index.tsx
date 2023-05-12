@@ -9,7 +9,7 @@ import { isMobile } from '../../utils/userAgent'
 
 const AnimatedDialogOverlay = animated(DialogOverlay)
 
-const StyledDialogOverlay = styled(AnimatedDialogOverlay)<{ scrollOverlay?: boolean }>`
+const StyledDialogOverlay = styled(AnimatedDialogOverlay)<{ $scrollOverlay?: boolean }>`
   &[data-reach-dialog-overlay] {
     z-index: ${Z_INDEX.modalBackdrop};
     background-color: transparent;
@@ -17,57 +17,58 @@ const StyledDialogOverlay = styled(AnimatedDialogOverlay)<{ scrollOverlay?: bool
 
     display: flex;
     align-items: center;
-    overflow-y: ${({ scrollOverlay }) => scrollOverlay && 'scroll'};
+    overflow-y: ${({ $scrollOverlay }) => $scrollOverlay && 'scroll'};
     justify-content: center;
 
     background-color: ${({ theme }) => theme.backgroundScrim};
   }
 `
 
+type StyledDialogProps = {
+  $minHeight?: number | false
+  $maxHeight?: number
+  $scrollOverlay?: boolean
+  $hideBorder?: boolean
+  $maxWidth?: number
+  $mobile?: boolean
+}
+
 const AnimatedDialogContent = animated(DialogContent)
-// destructure to not pass custom props to Dialog DOM element
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const StyledDialogContent = styled(
-  ({ hideBorder, maxWidth, minHeight, maxHeight, mobile, isOpen, scrollOverlay, ...rest }) => (
-    <AnimatedDialogContent {...rest} />
-  )
-).attrs({
-  'aria-label': 'dialog',
-})`
+const StyledDialogContent = styled(AnimatedDialogContent)<StyledDialogProps>`
   overflow-y: auto;
 
   &[data-reach-dialog-content] {
     margin: auto;
     background-color: ${({ theme }) => theme.deprecated_bg0};
-    border: ${({ theme, hideBorder }) => !hideBorder && `1px solid ${theme.deprecated_bg1}`};
+    border: ${({ theme, $hideBorder }) => !$hideBorder && `1px solid ${theme.deprecated_bg1}`};
     box-shadow: ${({ theme }) => theme.deepShadow};
     padding: 0px;
     width: 50vw;
     overflow-y: auto;
     overflow-x: hidden;
 
-    align-self: ${({ mobile }) => mobile && 'flex-end'};
-    max-width: ${({ maxWidth }) => maxWidth}px;
-    ${({ maxHeight }) =>
-      maxHeight &&
+    align-self: ${({ $mobile }) => $mobile && 'flex-end'};
+    max-width: ${({ $maxWidth }) => $maxWidth}px;
+    ${({ $maxHeight }) =>
+      $maxHeight &&
       css`
-        max-height: ${maxHeight}vh;
+        max-height: ${$maxHeight}vh;
       `}
-    ${({ minHeight }) =>
-      minHeight &&
+    ${({ $minHeight }) =>
+      $minHeight &&
       css`
-        min-height: ${minHeight}vh;
+        min-height: ${$minHeight}vh;
       `}
-    display: ${({ scrollOverlay }) => (scrollOverlay ? 'inline-table' : 'flex')};
+    display: ${({ $scrollOverlay }) => ($scrollOverlay ? 'inline-table' : 'flex')};
     border-radius: 20px;
     ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
       width: 65vw;
       margin: auto;
     `}
-    ${({ theme, mobile }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
+    ${({ theme, $mobile }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
       width:  85vw;
       ${
-        mobile &&
+        $mobile &&
         css`
           width: 100vw;
           border-radius: 20px;
@@ -87,7 +88,7 @@ interface ModalProps {
   maxWidth?: number
   initialFocusRef?: React.RefObject<any>
   children?: React.ReactNode
-  scrollOverlay?: boolean
+  $scrollOverlay?: boolean
   hideBorder?: boolean
 }
 
@@ -99,7 +100,7 @@ export default function Modal({
   maxWidth = 420,
   initialFocusRef,
   children,
-  scrollOverlay,
+  $scrollOverlay,
   hideBorder = false,
 }: ModalProps) {
   const fadeTransition = useTransition(isOpen, {
@@ -132,7 +133,7 @@ export default function Modal({
               onDismiss={onDismiss}
               initialFocusRef={initialFocusRef}
               unstable_lockFocusAcrossFrames={false}
-              scrollOverlay={scrollOverlay}
+              $scrollOverlay={$scrollOverlay}
             >
               <StyledDialogContent
                 {...(isMobile
@@ -142,12 +143,12 @@ export default function Modal({
                     }
                   : {})}
                 aria-label="dialog content"
-                minHeight={minHeight}
-                maxHeight={maxHeight}
-                mobile={isMobile}
-                scrollOverlay={scrollOverlay}
-                hideBorder={hideBorder}
-                maxWidth={maxWidth}
+                $minHeight={minHeight}
+                $maxHeight={maxHeight}
+                $mobile={isMobile}
+                $scrollOverlay={$scrollOverlay}
+                $hideBorder={hideBorder}
+                $maxWidth={maxWidth}
               >
                 {/* prevents the automatic focusing of inputs on mobile by the reach dialog */}
                 {!initialFocusRef && isMobile ? <div tabIndex={1} /> : null}
