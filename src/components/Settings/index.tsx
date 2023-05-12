@@ -14,13 +14,7 @@ import RouterPreferenceSettings from './RouterPreferenceSettings'
 import TransactionDeadlineSettings from './TransactionDeadlineSettings'
 
 const Menu = styled.div`
-  margin-left: 0.5rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   position: relative;
-  border: none;
-  text-align: left;
 `
 
 const MenuFlyout = styled.span`

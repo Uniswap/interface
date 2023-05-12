@@ -3,7 +3,8 @@ import { useWeb3React } from '@web3-react/core'
 import Row from 'components/Row'
 import { isSupportedChainId } from 'lib/hooks/routing/clientSideSmartOrderRouter'
 import { Settings } from 'react-feather'
-import { useToggleSettingsMenu } from 'state/application/hooks'
+import { useModalIsOpen, useToggleSettingsMenu } from 'state/application/hooks'
+import { ApplicationModal } from 'state/application/reducer'
 import { useUserSlippageTolerance } from 'state/user/hooks'
 import { SlippageTolerance } from 'state/user/types'
 import styled from 'styled-components/macro'
@@ -18,25 +19,19 @@ const Icon = styled(Settings)`
   }
 `
 
-const Button = styled.button<{ disabled: boolean }>`
-  position: relative;
-  width: 100%;
-  height: 100%;
+const Button = styled.button<{ isActive: boolean }>`
   border: none;
   background-color: transparent;
   margin: 0;
   padding: 0;
-  border-radius: 0.5rem;
-  ${({ disabled }) =>
-    !disabled &&
-    `
-    :hover,
-    :focus {
-      cursor: pointer;
-      outline: none;
-      opacity: 0.7;
-    }
-  `}
+  cursor: pointer;
+  outline: none;
+
+  :not([disabled]):hover {
+    opacity: 0.7;
+  }
+
+  ${({ isActive }) => isActive && `opacity: 0.7`}
 `
 
 const IconContainer = styled(Row)`
@@ -77,12 +72,14 @@ const ButtonIcon = () => {
 export default function MenuButton() {
   const { chainId } = useWeb3React()
 
-  const toggle = useToggleSettingsMenu()
+  const toggleMenu = useToggleSettingsMenu()
+  const isMenuOpen = useModalIsOpen(ApplicationModal.SETTINGS)
 
   return (
     <Button
       disabled={!isSupportedChainId(chainId)}
-      onClick={toggle}
+      onClick={toggleMenu}
+      isActive={isMenuOpen}
       id="open-settings-dialog-button"
       data-testid="open-settings-dialog-button"
       aria-label={t`Transaction Settings`}
