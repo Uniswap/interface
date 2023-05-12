@@ -74,7 +74,12 @@ const InfoChipDropdownContainer = styled(Column)`
 `
 
 const InfoChipsContainer = styled(Row)`
+  gap: 4px;
   height: 64px;
+
+  @media screen and (min-width: ${BREAKPOINTS.sm}px) {
+    gap: 12px;
+  }
 `
 
 export const InfoChips = ({ asset }: { asset: GenieAsset }) => {
@@ -92,14 +97,14 @@ export const InfoChips = ({ asset }: { asset: GenieAsset }) => {
   const shortenedAddress = asset.ownerAddress ? shortenAddress(asset.ownerAddress) : ''
   const addressToDisplay = ENSName ?? shortenedAddress
   const avatarToDisplay = avatar ? (
-    <img src={avatar ?? ''} width={24} height={24} />
+    <img src={avatar} width={24} height={24} />
   ) : (
     <Unicon size={24} address={asset.ownerAddress ?? ''} />
   )
 
   return (
     <Column gap="sm">
-      <InfoChipsContainer gap="md" justify="center">
+      <InfoChipsContainer justify="center">
         <InfoBubble key="Owner" title="Owner" info={addressToDisplay} icon={avatarToDisplay} />
         <InfoBubble key="Trait Floor" title="Trait Floor" info="5.3 ETH" icon={<DollarSign size={20} />} />
         {!isMobile && topTrait && <InfoBubble key="Top Trait" title="Top Trait" info={topTrait.trait_value} icon="" />}
