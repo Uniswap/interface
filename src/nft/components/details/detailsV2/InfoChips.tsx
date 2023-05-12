@@ -115,6 +115,10 @@ const InfoChipDropdownContainer = styled(Column)`
 
 const Break = styled(Column)`
   flex-basis: 100%;
+
+  @media screen and (min-width: ${BREAKPOINTS.sm}px) {
+    display: none;
+  }
 `
 
 const InfoChipsContainer = styled(Row)`
@@ -180,7 +184,7 @@ export const InfoChips = ({ asset }: { asset: GenieAsset }) => {
             </InfoChipDropdownContainer>
             {shouldShowExtraInfoChips && (
               <>
-                {isMobile && <Break />}
+                <Break />
                 <InfoBubble
                   title={<Trans>Top Trait</Trans>}
                   info={topTrait.trait_value}
