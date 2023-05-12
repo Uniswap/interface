@@ -6,7 +6,7 @@ import useENSName from 'hooks/useENSName'
 import { useIsMobile } from 'nft/hooks'
 import { GenieAsset } from 'nft/types'
 import { ReactNode, useReducer } from 'react'
-import { ChevronDown, ChevronUp, DollarSign } from 'react-feather'
+import { ChevronDown, DollarSign } from 'react-feather'
 import styled from 'styled-components/macro'
 import { BREAKPOINTS, EllipsisStyle, ThemedText } from 'theme'
 import { isAddress, shortenAddress } from 'utils'
@@ -87,6 +87,12 @@ const InfoChipsContainer = styled(Row)`
   }
 `
 
+const StyledChevron = styled(ChevronDown)<{ $isOpen: boolean }>`
+  transform: ${({ $isOpen }) => ($isOpen ? 'rotate(180deg)' : 'rotate(0deg)')};
+  will-change: transform;
+  transition: transform ${({ theme }) => theme.transition.duration.medium};
+`
+
 export const InfoChips = ({ asset }: { asset: GenieAsset }) => {
   const isMobile = useIsMobile()
   const [showExtraInfoChips, toggleShowExtraInfoChips] = useReducer((s) => !s, false)
@@ -114,7 +120,7 @@ export const InfoChips = ({ asset }: { asset: GenieAsset }) => {
         {topTrait && (
           <InfoChipDropdownContainer>
             <InfoChipDropdown onClick={toggleShowExtraInfoChips}>
-              {showExtraInfoChips ? <ChevronUp size={20} display="block" /> : <ChevronDown size={20} display="block" />}
+              <StyledChevron $isOpen={showExtraInfoChips} size={20} display="block" />
             </InfoChipDropdown>
           </InfoChipDropdownContainer>
         )}
