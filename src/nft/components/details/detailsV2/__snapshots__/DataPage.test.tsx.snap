@@ -8,7 +8,7 @@ exports[`placeholder containers load 1`] = `
   min-width: 0;
 }
 
-.c9 {
+.c10 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -18,7 +18,7 @@ exports[`placeholder containers load 1`] = `
   width: min-content;
 }
 
-.c11 {
+.c12 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -56,10 +56,9 @@ exports[`placeholder containers load 1`] = `
   -webkit-justify-content: flex-start;
   -ms-flex-pack: start;
   justify-content: flex-start;
-  gap: 24px;
 }
 
-.c6 {
+.c7 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -77,7 +76,7 @@ exports[`placeholder containers load 1`] = `
   gap: 4px;
 }
 
-.c10 {
+.c11 {
   width: -webkit-min-content;
   width: -moz-min-content;
   width: min-content;
@@ -95,23 +94,6 @@ exports[`placeholder containers load 1`] = `
   -ms-flex-pack: start;
   justify-content: flex-start;
   gap: 12px;
-}
-
-.c15 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
 }
 
 .c21 {
@@ -132,11 +114,11 @@ exports[`placeholder containers load 1`] = `
   gap: 8px;
 }
 
-.c7 {
+.c8 {
   color: #7780A0;
 }
 
-.c8 {
+.c9 {
   color: #0D111C;
 }
 
@@ -206,7 +188,7 @@ exports[`placeholder containers load 1`] = `
   height: 252px;
 }
 
-.c12 {
+.c13 {
   padding: 16px;
   width: 100%;
   font-weight: 500;
@@ -244,54 +226,59 @@ exports[`placeholder containers load 1`] = `
   transform: perspective(1px) translateZ(0);
 }
 
-.c12:disabled {
+.c13:disabled {
   opacity: 50%;
   cursor: auto;
   pointer-events: none;
 }
 
-.c12 > * {
+.c13 > * {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
 }
 
-.c12 > a {
+.c13 > a {
   -webkit-text-decoration: none;
   text-decoration: none;
 }
 
-.c13 {
+.c14 {
   background-color: #F5F6FC;
   color: #7780A0;
   font-size: 16px;
   font-weight: 500;
 }
 
-.c13:hover {
+.c14:hover {
   background-color: #d2daf7;
 }
 
-.c13:active {
+.c14:active {
   background-color: #bdc8f3;
 }
 
 .c4 {
+  gap: 24px;
+}
+
+.c5 {
   width: 96px;
   height: 96px;
   border-radius: 20px;
 }
 
-.c5 {
+.c6 {
   gap: 4px;
   -webkit-box-flex: 1;
   -webkit-flex-grow: 1;
   -ms-flex-positive: 1;
   flex-grow: 1;
+  max-width: 40%;
 }
 
-.c14 {
+.c15 {
   white-space: nowrap;
 }
 
@@ -315,6 +302,12 @@ exports[`placeholder containers load 1`] = `
   -webkit-align-self: flex-start;
   -ms-flex-item-align: start;
   align-self: flex-start;
+}
+
+@media screen and (max-width:768px) {
+  .c4 {
+    display: none;
+  }
 }
 
 @media screen and (max-width:640px) {
@@ -341,20 +334,20 @@ exports[`placeholder containers load 1`] = `
     class="c0 c1"
   >
     <div
-      class="c2 c3"
+      class="c2 c3 c4"
     >
       <img
-        class="c4"
+        class="c5"
         src="https://cdn.center.app/1/0xED5AF388653567Af2F388E6224dC7C4b3241C544/3318/50ed67ad647d0aa0cad0b830d136a677efc2fb72a44587bc35f2a5fb334a7fdf.png"
       />
       <div
-        class="c0 c5"
+        class="c0 c6"
       >
         <div
-          class="c2 c6"
+          class="c2 c7"
         >
           <div
-            class="c7 css-1aekuku"
+            class="c8 css-1aekuku"
           >
             Azuki
           </div>
@@ -376,24 +369,24 @@ exports[`placeholder containers load 1`] = `
           </svg>
         </div>
         <div
-          class="c8 css-1tiu9da"
+          class="c9 css-1tiu9da"
         >
           Azuki #3318
         </div>
       </div>
       <div
-        class="c9 c10"
+        class="c10 c11"
         width="min-content"
       >
         <button
-          class="c11 c12 c13 c14"
+          class="c12 c13 c14 c15"
         >
           Make an offer
         </button>
       </div>
     </div>
     <div
-      class="c2 c15 c16"
+      class="c2 c3 c16"
     >
       <div
         class="c0 c17"
@@ -402,10 +395,10 @@ exports[`placeholder containers load 1`] = `
           class="c18"
         >
           <div
-            class="c2 c15 c19"
+            class="c2 c3 c19"
           >
             <div
-              class="c8 c20 css-rjqmed"
+              class="c9 c20 css-rjqmed"
             >
               <div
                 class="c2 c21"
@@ -414,7 +407,7 @@ exports[`placeholder containers load 1`] = `
               </div>
             </div>
             <div
-              class="c8 c22 css-rjqmed"
+              class="c9 c22 css-rjqmed"
             >
               <div
                 class="c2 c21"
@@ -434,10 +427,10 @@ exports[`placeholder containers load 1`] = `
         class="c18"
       >
         <div
-          class="c2 c15 c19"
+          class="c2 c3 c19"
         >
           <div
-            class="c8 c20 css-rjqmed"
+            class="c9 c20 css-rjqmed"
           >
             <div
               class="c2 c21"
@@ -446,7 +439,7 @@ exports[`placeholder containers load 1`] = `
             </div>
           </div>
           <div
-            class="c8 c22 css-rjqmed"
+            class="c9 c22 css-rjqmed"
           >
             <div
               class="c2 c21"
@@ -460,7 +453,7 @@ exports[`placeholder containers load 1`] = `
             </div>
           </div>
           <div
-            class="c8 c22 css-rjqmed"
+            class="c9 c22 css-rjqmed"
           >
             <div
               class="c2 c21"

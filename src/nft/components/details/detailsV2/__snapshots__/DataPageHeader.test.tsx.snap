@@ -8,7 +8,7 @@ exports[`Header loads with asset with a sell order 1`] = `
   min-width: 0;
 }
 
-.c8 {
+.c9 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -18,7 +18,7 @@ exports[`Header loads with asset with a sell order 1`] = `
   width: min-content;
 }
 
-.c10 {
+.c11 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -56,10 +56,9 @@ exports[`Header loads with asset with a sell order 1`] = `
   -webkit-justify-content: flex-start;
   -ms-flex-pack: start;
   justify-content: flex-start;
-  gap: 24px;
 }
 
-.c5 {
+.c6 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -77,7 +76,7 @@ exports[`Header loads with asset with a sell order 1`] = `
   gap: 4px;
 }
 
-.c9 {
+.c10 {
   width: -webkit-min-content;
   width: -moz-min-content;
   width: min-content;
@@ -97,15 +96,15 @@ exports[`Header loads with asset with a sell order 1`] = `
   gap: 12px;
 }
 
-.c6 {
+.c7 {
   color: #7780A0;
 }
 
-.c7 {
+.c8 {
   color: #0D111C;
 }
 
-.c11 {
+.c12 {
   padding: 16px;
   width: 100%;
   font-weight: 500;
@@ -143,25 +142,25 @@ exports[`Header loads with asset with a sell order 1`] = `
   transform: perspective(1px) translateZ(0);
 }
 
-.c11:disabled {
+.c12:disabled {
   opacity: 50%;
   cursor: auto;
   pointer-events: none;
 }
 
-.c11 > * {
+.c12 > * {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
 }
 
-.c11 > a {
+.c12 > a {
   -webkit-text-decoration: none;
   text-decoration: none;
 }
 
-.c12 {
+.c13 {
   background-color: #FB118E;
   font-size: 20px;
   font-weight: 600;
@@ -169,21 +168,21 @@ exports[`Header loads with asset with a sell order 1`] = `
   color: #F5F6FC;
 }
 
-.c12:focus {
+.c13:focus {
   box-shadow: 0 0 0 1pt #ee0481;
   background-color: #ee0481;
 }
 
-.c12:hover {
+.c13:hover {
   background-color: #ee0481;
 }
 
-.c12:active {
+.c13:active {
   box-shadow: 0 0 0 1pt #d50474;
   background-color: #d50474;
 }
 
-.c12:disabled {
+.c13:disabled {
   background-color: #E8ECFB;
   color: #7780A0;
   cursor: auto;
@@ -192,7 +191,7 @@ exports[`Header loads with asset with a sell order 1`] = `
   outline: none;
 }
 
-.c3 {
+.c4 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -207,20 +206,25 @@ exports[`Header loads with asset with a sell order 1`] = `
 }
 
 .c2 {
+  gap: 24px;
+}
+
+.c3 {
   width: 96px;
   height: 96px;
   border-radius: 20px;
 }
 
-.c4 {
+.c5 {
   gap: 4px;
   -webkit-box-flex: 1;
   -webkit-flex-grow: 1;
   -ms-flex-positive: 1;
   flex-grow: 1;
+  max-width: 40%;
 }
 
-.c13 {
+.c14 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -234,11 +238,11 @@ exports[`Header loads with asset with a sell order 1`] = `
   white-space: nowrap;
 }
 
-.c14 {
+.c15 {
   color: #F5F6FCb8;
 }
 
-.c15 {
+.c16 {
   border-radius: 12px;
   width: -webkit-min-content;
   width: -moz-min-content;
@@ -248,21 +252,27 @@ exports[`Header loads with asset with a sell order 1`] = `
   flex-shrink: 0;
 }
 
+@media screen and (max-width:768px) {
+  .c2 {
+    display: none;
+  }
+}
+
 <div
-    class="c0 c1"
+    class="c0 c1 c2"
   >
     <img
-      class="c2"
+      class="c3"
       src="https://cdn.center.app/1/0xED5AF388653567Af2F388E6224dC7C4b3241C544/3318/50ed67ad647d0aa0cad0b830d136a677efc2fb72a44587bc35f2a5fb334a7fdf.png"
     />
     <div
-      class="c3 c4"
+      class="c4 c5"
     >
       <div
-        class="c0 c5"
+        class="c0 c6"
       >
         <div
-          class="c6 css-1aekuku"
+          class="c7 css-1aekuku"
         >
           Azuki
         </div>
@@ -284,27 +294,27 @@ exports[`Header loads with asset with a sell order 1`] = `
         </svg>
       </div>
       <div
-        class="c7 css-1tiu9da"
+        class="c8 css-1tiu9da"
       >
         Azuki #3318
       </div>
     </div>
     <div
-      class="c8 c9"
+      class="c9 c10"
       width="min-content"
     >
       <button
-        class="c10 c11 c12 c13"
+        class="c11 c12 c13 c14"
       >
         Buy
         <div
-          class="c14"
+          class="c15"
         >
           100M ETH
         </div>
       </button>
       <button
-        class="c10 c11 c12 c15"
+        class="c11 c12 c13 c16"
       >
         <svg
           fill="none"
@@ -332,7 +342,7 @@ exports[`Header loads with asset with no sell orders 1`] = `
   min-width: 0;
 }
 
-.c8 {
+.c9 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -342,7 +352,7 @@ exports[`Header loads with asset with no sell orders 1`] = `
   width: min-content;
 }
 
-.c10 {
+.c11 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -380,10 +390,9 @@ exports[`Header loads with asset with no sell orders 1`] = `
   -webkit-justify-content: flex-start;
   -ms-flex-pack: start;
   justify-content: flex-start;
-  gap: 24px;
 }
 
-.c5 {
+.c6 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -401,7 +410,7 @@ exports[`Header loads with asset with no sell orders 1`] = `
   gap: 4px;
 }
 
-.c9 {
+.c10 {
   width: -webkit-min-content;
   width: -moz-min-content;
   width: min-content;
@@ -421,15 +430,15 @@ exports[`Header loads with asset with no sell orders 1`] = `
   gap: 12px;
 }
 
-.c6 {
+.c7 {
   color: #7780A0;
 }
 
-.c7 {
+.c8 {
   color: #0D111C;
 }
 
-.c11 {
+.c12 {
   padding: 16px;
   width: 100%;
   font-weight: 500;
@@ -467,40 +476,40 @@ exports[`Header loads with asset with no sell orders 1`] = `
   transform: perspective(1px) translateZ(0);
 }
 
-.c11:disabled {
+.c12:disabled {
   opacity: 50%;
   cursor: auto;
   pointer-events: none;
 }
 
-.c11 > * {
+.c12 > * {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
 }
 
-.c11 > a {
+.c12 > a {
   -webkit-text-decoration: none;
   text-decoration: none;
 }
 
-.c12 {
+.c13 {
   background-color: #F5F6FC;
   color: #7780A0;
   font-size: 16px;
   font-weight: 500;
 }
 
-.c12:hover {
+.c13:hover {
   background-color: #d2daf7;
 }
 
-.c12:active {
+.c13:active {
   background-color: #bdc8f3;
 }
 
-.c3 {
+.c4 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -515,38 +524,49 @@ exports[`Header loads with asset with no sell orders 1`] = `
 }
 
 .c2 {
+  gap: 24px;
+}
+
+.c3 {
   width: 96px;
   height: 96px;
   border-radius: 20px;
 }
 
-.c4 {
+.c5 {
   gap: 4px;
   -webkit-box-flex: 1;
   -webkit-flex-grow: 1;
   -ms-flex-positive: 1;
   flex-grow: 1;
+  max-width: 40%;
 }
 
-.c13 {
+.c14 {
   white-space: nowrap;
 }
 
+@media screen and (max-width:768px) {
+  .c2 {
+    display: none;
+  }
+}
+
 <div
-    class="c0 c1"
+    class="c0 c1 c2"
   >
     <img
-      class="c2"
+      class="c3"
       src="https://cdn.center.app/1/0xED5AF388653567Af2F388E6224dC7C4b3241C544/3318/50ed67ad647d0aa0cad0b830d136a677efc2fb72a44587bc35f2a5fb334a7fdf.png"
     />
     <div
-      class="c3 c4"
+      class="c4 c5"
     >
       <div
-        class="c0 c5"
+        class="c0 c6"
       >
         <div
-          class="c6 css-1aekuku"
+          class="c7 css-1aekuku"
         >
           Azuki
         </div>
@@ -568,17 +588,17 @@ exports[`Header loads with asset with no sell orders 1`] = `
         </svg>
       </div>
       <div
-        class="c7 css-1tiu9da"
+        class="c8 css-1tiu9da"
       >
         Azuki #3318
       </div>
     </div>
     <div
-      class="c8 c9"
+      class="c9 c10"
       width="min-content"
     >
       <button
-        class="c10 c11 c12 c13"
+        class="c11 c12 c13 c14"
       >
         Make an offer
       </button>

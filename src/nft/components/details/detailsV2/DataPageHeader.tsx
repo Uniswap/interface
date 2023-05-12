@@ -6,7 +6,14 @@ import { HandHoldingDollarIcon, VerifiedIcon } from 'nft/components/icons'
 import { GenieAsset } from 'nft/types'
 import { formatEth } from 'nft/utils'
 import styled from 'styled-components/macro'
-import { ThemedText } from 'theme'
+import { BREAKPOINTS, ThemedText } from 'theme'
+
+const HeaderContainer = styled(Row)`
+  gap: 24px;
+  @media screen and (max-width: ${BREAKPOINTS.md}px) {
+    display: none;
+  }
+`
 
 const AssetImage = styled.img`
   width: 96px;
@@ -17,6 +24,7 @@ const AssetImage = styled.img`
 const AssetText = styled(Column)`
   gap: 4px;
   flex-grow: 1;
+  max-width: 40%;
 `
 
 const BuyButton = styled(ButtonPrimary)`
@@ -45,7 +53,7 @@ const MakeOfferButtonLarge = styled(ButtonGray)`
 export const DataPageHeader = ({ asset }: { asset: GenieAsset }) => {
   const price = asset.sellorders?.[0]?.price.value
   return (
-    <Row gap="24px">
+    <HeaderContainer>
       <AssetImage src={asset.imageUrl} />
       <AssetText>
         <Row gap="4px">
@@ -73,6 +81,6 @@ export const DataPageHeader = ({ asset }: { asset: GenieAsset }) => {
           </MakeOfferButtonLarge>
         )}
       </Row>
-    </Row>
+    </HeaderContainer>
   )
 }
