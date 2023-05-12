@@ -1,4 +1,4 @@
-import { getTestSelector } from '../utils'
+import { getTestSelector } from '../../utils'
 
 describe('Mini Portfolio', () => {
   describe('Swap on main page', () => {
