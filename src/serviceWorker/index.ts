@@ -18,14 +18,12 @@ self.skipWaiting()
 // This must be done before setting up workbox-precaching, so that it takes precedence.
 registerRoute(new DocumentRoute())
 
-// Splits entries into:
-// - mediaURLs: loaded on-demand
-// - precacheEntries
-const { mediaURLs, precacheEntries } = groupEntries(self.__WB_MANIFEST)
+const { onDemandEntries, precacheEntries } = groupEntries(self.__WB_MANIFEST)
+const onDemandURLs = onDemandEntries.map((entry) => (typeof entry === 'string' ? entry : entry.url))
 
 registerRoute(
   new Route(
-    ({ url }) => mediaURLs.includes('.' + url.pathname),
+    ({ url }) => onDemandURLs.includes('.' + url.pathname),
     new CacheFirst({
       cacheName: 'media',
       plugins: [new ExpirationPlugin({ maxEntries: 16 })],
@@ -33,5 +31,4 @@ registerRoute(
   )
 )
 
-// Precaches entries and registers a default route to serve them.
 precacheAndRoute(precacheEntries)

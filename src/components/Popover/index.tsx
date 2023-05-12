@@ -99,8 +99,8 @@ export default function Popover({
   const [popperElement, setPopperElement] = useState<HTMLDivElement | null>(null)
   const [arrowElement, setArrowElement] = useState<HTMLDivElement | null>(null)
 
-  const options = useMemo(
-    (): Options => ({
+  const options: Options = useMemo(
+    () => ({
       placement,
       strategy: 'fixed',
       modifiers: [
@@ -109,7 +109,7 @@ export default function Popover({
         { name: 'preventOverflow', options: { padding: 8 } },
       ],
     }),
-    [arrowElement, offsetX, offsetY, placement]
+    [placement, offsetX, offsetY, arrowElement]
   )
 
   const { styles, update, attributes } = usePopper(referenceElement, popperElement, options)

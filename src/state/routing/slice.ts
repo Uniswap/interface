@@ -10,10 +10,14 @@ import { trace } from 'tracing/trace'
 import { GetQuoteResult } from './types'
 
 export enum RouterPreference {
+  AUTO = 'auto',
   API = 'api',
   CLIENT = 'client',
-  PRICE = 'price',
 }
+
+// This is excluded from `RouterPreference` enum because it's only used
+// internally for token -> USDC trades to get a USD value.
+export const INTERNAL_ROUTER_PREFERENCE_PRICE = 'price' as const
 
 const routers = new Map<ChainId, AlphaRouter>()
 function getRouter(chainId: ChainId): AlphaRouter {
@@ -75,7 +79,7 @@ interface GetQuoteArgs {
   tokenOutDecimals: number
   tokenOutSymbol?: string
   amount: string
-  routerPreference: RouterPreference
+  routerPreference: RouterPreference | typeof INTERNAL_ROUTER_PREFERENCE_PRICE
   type: 'exactIn' | 'exactOut'
 }
 
@@ -107,10 +111,10 @@ export const routingApi = createApi({
           {
             data: {
               ...args,
-              isPrice: args.routerPreference === RouterPreference.PRICE,
-              isAutoRouter: args.routerPreference === RouterPreference.API,
+              isPrice: args.routerPreference === INTERNAL_ROUTER_PREFERENCE_PRICE,
+              isAutoRouter:
+                args.routerPreference === RouterPreference.AUTO || args.routerPreference === RouterPreference.API,
             },
-            tags: { is_widget: false },
           }
         )
       },
