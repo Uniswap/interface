@@ -1,6 +1,7 @@
 import '@testing-library/jest-dom' // jest custom assertions
 import 'jest-styled-components' // adds style diffs to snapshot tests
 
+import { ResizeObserver } from '@juggle/resize-observer'
 import type { createPopper } from '@popperjs/core'
 import { useWeb3React } from '@web3-react/core'
 import failOnConsole from 'jest-fail-on-console'
@@ -23,13 +24,15 @@ global.origin = 'https://app.uniswap.org'
 
 global.matchMedia =
   global.matchMedia ||
-  function () {
+  (() => {
     return {
       matches: false,
       addEventListener: jest.fn(),
       removeEventListener: jest.fn(),
     }
-  }
+  })
+
+global.ResizeObserver = ResizeObserver
 
 jest.mock('@popperjs/core', () => {
   const core = jest.requireActual('@popperjs/core')
