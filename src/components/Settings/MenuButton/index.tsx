@@ -5,7 +5,7 @@ import { useUserSlippageTolerance } from 'state/user/hooks'
 import { SlippageTolerance } from 'state/user/types'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
-import validateUserSlippageTolerance, { SlippageValidationResponse } from 'utils/validateUserSlippageTolerance'
+import validateUserSlippageTolerance, { SlippageValidationResult } from 'utils/validateUserSlippageTolerance'
 
 const Icon = styled(Settings)`
   height: 20px;
@@ -55,7 +55,7 @@ const ButtonIcon = () => {
     )
   }
 
-  const isInvalidSlippage = validateUserSlippageTolerance(userSlippageTolerance) !== SlippageValidationResponse.Valid
+  const isInvalidSlippage = validateUserSlippageTolerance(userSlippageTolerance) !== SlippageValidationResult.Valid
 
   return (
     <IconContainerWithSlippage gap="sm" displayWarning={isInvalidSlippage}>

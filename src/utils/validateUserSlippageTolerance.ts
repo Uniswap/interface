@@ -1,6 +1,6 @@
 import { Percent } from '@uniswap/sdk-core'
 
-export enum SlippageValidationResponse {
+export enum SlippageValidationResult {
   TooLow = 'TOO_LOW',
   TooHigh = 'TOO_HIGH',
   Valid = 'VALID',
@@ -12,10 +12,10 @@ const MAXIMUM_RECOMMENDED_SLIPPAGE = new Percent(1, 100)
 export default function validateUserSlippageTolerance(userSlippageTolerance: Percent) {
   switch (true) {
     case userSlippageTolerance.lessThan(MINIMUM_RECOMMENDED_SLIPPAGE):
-      return SlippageValidationResponse.TooLow
+      return SlippageValidationResult.TooLow
     case userSlippageTolerance.greaterThan(MAXIMUM_RECOMMENDED_SLIPPAGE):
-      return SlippageValidationResponse.TooHigh
+      return SlippageValidationResult.TooHigh
     default:
-      return SlippageValidationResponse.Valid
+      return SlippageValidationResult.Valid
   }
 }
