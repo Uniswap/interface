@@ -3,8 +3,10 @@ import { Percent } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { AutoColumn } from 'components/Column'
 import { L2_CHAIN_IDS } from 'constants/chains'
+import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { isSupportedChainId } from 'lib/hooks/routing/clientSideSmartOrderRouter'
-import { useModalIsOpen } from 'state/application/hooks'
+import { useRef } from 'react'
+import { useModalIsOpen, useToggleSettingsMenu } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import styled from 'styled-components/macro'
 
@@ -17,19 +19,16 @@ const Menu = styled.div`
   position: relative;
 `
 
-const MenuFlyout = styled.span`
+const MenuFlyout = styled(AutoColumn)`
   min-width: 20.125rem;
   background-color: ${({ theme }) => theme.backgroundSurface};
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.01);
   border-radius: 12px;
-  display: flex;
-  flex-direction: column;
-  font-size: 1rem;
   position: absolute;
   top: 100%;
-  margin-top: 8px;
+  margin-top: 10px;
   right: 0;
   z-index: 100;
   color: ${({ theme }) => theme.textPrimary};
@@ -37,6 +36,8 @@ const MenuFlyout = styled.span`
     min-width: 18.125rem;
   `};
   user-select: none;
+  gap: 16px;
+  padding: 1rem;
 `
 
 const Divider = styled.div`
@@ -51,24 +52,28 @@ export default function SettingsTab({ autoSlippage }: { autoSlippage: Percent })
   const { chainId } = useWeb3React()
   const showDeadlineSettings = Boolean(chainId && !L2_CHAIN_IDS.includes(chainId))
 
-  const open = useModalIsOpen(ApplicationModal.SETTINGS)
+  const node = useRef<HTMLDivElement | null>(null)
+  const isOpen = useModalIsOpen(ApplicationModal.SETTINGS)
+
+  const toggleMenu = useToggleSettingsMenu()
+  useOnClickOutside(node, isOpen ? toggleMenu : undefined)
+
+  const isSupportedChain = isSupportedChainId(chainId)
 
   return (
-    <Menu>
-      <MenuButton />
-      {open && (
+    <Menu ref={node}>
+      <MenuButton disabled={!isSupportedChain} isActive={isOpen} onClick={toggleMenu} />
+      {isOpen && (
         <MenuFlyout>
-          <AutoColumn gap="16px" style={{ padding: '1rem' }}>
-            {isSupportedChainId(chainId) && <RouterPreferenceSettings />}
-            <Divider />
-            <MaxSlippageSettings autoSlippage={autoSlippage} />
-            {showDeadlineSettings && (
-              <>
-                <Divider />
-                <TransactionDeadlineSettings />
-              </>
-            )}
-          </AutoColumn>
+          <RouterPreferenceSettings />
+          <Divider />
+          <MaxSlippageSettings autoSlippage={autoSlippage} />
+          {showDeadlineSettings && (
+            <>
+              <Divider />
+              <TransactionDeadlineSettings />
+            </>
+          )}
         </MenuFlyout>
       )}
     </Menu>

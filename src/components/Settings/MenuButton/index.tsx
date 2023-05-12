@@ -1,10 +1,6 @@
 import { t } from '@lingui/macro'
-import { useWeb3React } from '@web3-react/core'
 import Row from 'components/Row'
-import { isSupportedChainId } from 'lib/hooks/routing/clientSideSmartOrderRouter'
 import { Settings } from 'react-feather'
-import { useModalIsOpen, useToggleSettingsMenu } from 'state/application/hooks'
-import { ApplicationModal } from 'state/application/reducer'
 import { useUserSlippageTolerance } from 'state/user/hooks'
 import { SlippageTolerance } from 'state/user/types'
 import styled from 'styled-components/macro'
@@ -69,17 +65,20 @@ const ButtonIcon = () => {
   )
 }
 
-export default function MenuButton() {
-  const { chainId } = useWeb3React()
-
-  const toggleMenu = useToggleSettingsMenu()
-  const isMenuOpen = useModalIsOpen(ApplicationModal.SETTINGS)
-
+export default function MenuButton({
+  disabled,
+  onClick,
+  isActive,
+}: {
+  disabled: boolean
+  onClick: () => void
+  isActive: boolean
+}) {
   return (
     <Button
-      disabled={!isSupportedChainId(chainId)}
-      onClick={toggleMenu}
-      isActive={isMenuOpen}
+      disabled={disabled}
+      onClick={onClick}
+      isActive={isActive}
       id="open-settings-dialog-button"
       data-testid="open-settings-dialog-button"
       aria-label={t`Transaction Settings`}
