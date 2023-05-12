@@ -213,6 +213,7 @@ export default function ConfirmSwapModal({
     if (confirmModalState !== ConfirmModalState.REVIEWING && !showAcceptChanges) {
       return (
         <PendingModalContent
+          hideStepIndicators={pendingModalSteps.length === 1}
           steps={pendingModalSteps}
           activeStepIndex={currentStep}
           confirmed={confirmed}
