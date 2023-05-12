@@ -6,7 +6,7 @@ import { useSubscribeScrollState } from 'nft/hooks'
 import { GenieAsset } from 'nft/types'
 import { useMemo } from 'react'
 import styled from 'styled-components/macro'
-import { ThemedText } from 'theme'
+import { BREAKPOINTS, ThemedText } from 'theme'
 import { opacify } from 'theme/utils'
 
 import { Tab, TabbedComponent } from './TabbedComponent'
@@ -16,12 +16,20 @@ const TraitsHeaderContainer = styled(Row)`
   padding-right: 12px;
 `
 
-const TraitsHeader = styled(ThemedText.SubHeaderSmall)<{ $flex?: number; $justifyContent?: string }>`
+const TraitsHeader = styled(ThemedText.SubHeaderSmall)<{
+  $flex?: number
+  $justifyContent?: string
+  hideOnSmall?: boolean
+}>`
   display: flex;
   line-height: 20px;
   color: ${({ theme }) => theme.textSecondary};
   flex: ${({ $flex }) => $flex ?? 1};
   justify-content: ${({ $justifyContent }) => $justifyContent};
+
+  @media screen and (max-width: ${BREAKPOINTS.sm}px) {
+    display: ${({ hideOnSmall }) => (hideOnSmall ? 'none' : 'flex')};
+  }
 `
 
 const TraitRowContainer = styled.div`
@@ -76,7 +84,7 @@ const TraitsContent = ({ asset }: { asset: GenieAsset }) => {
         <TraitsHeader $flex={2}>
           <Trans>Floor price</Trans>
         </TraitsHeader>
-        <TraitsHeader>
+        <TraitsHeader hideOnSmall={true}>
           <Trans>Quantity</Trans>
         </TraitsHeader>
         <TraitsHeader $flex={1.5} $justifyContent="flex-end">

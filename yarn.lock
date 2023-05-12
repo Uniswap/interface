@@ -1158,7 +1158,7 @@
   dependencies:
     regenerator-runtime "^0.13.4"
 
-"@babel/runtime@>=7.17.0", "@babel/runtime@^7.0.0", "@babel/runtime@^7.10.1", "@babel/runtime@^7.10.2", "@babel/runtime@^7.11.2", "@babel/runtime@^7.12.1", "@babel/runtime@^7.12.13", "@babel/runtime@^7.12.5", "@babel/runtime@^7.17.2", "@babel/runtime@^7.18.3", "@babel/runtime@^7.5.5", "@babel/runtime@^7.6.2", "@babel/runtime@^7.7.2", "@babel/runtime@^7.7.6", "@babel/runtime@^7.8.4", "@babel/runtime@^7.9.2":
+"@babel/runtime@^7.0.0", "@babel/runtime@^7.10.1", "@babel/runtime@^7.10.2", "@babel/runtime@^7.11.2", "@babel/runtime@^7.12.1", "@babel/runtime@^7.12.13", "@babel/runtime@^7.12.5", "@babel/runtime@^7.17.2", "@babel/runtime@^7.18.3", "@babel/runtime@^7.5.5", "@babel/runtime@^7.6.2", "@babel/runtime@^7.7.2", "@babel/runtime@^7.7.6", "@babel/runtime@^7.8.4", "@babel/runtime@^7.9.2":
   version "7.21.0"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.21.0.tgz#5b55c9d394e5fcf304909a8b00c07dc217b56673"
   integrity sha512-xwII0//EObnq89Ji5AKYQaRYiW/nZ3llSv29d49IuxPhKbtJoLP+9QUUZ4nVragQVtaVGeZrpB+ZtG/Pdy/POw==
@@ -5157,7 +5157,7 @@
     react "^18.2.0"
     react-dom "^18.2.0"
 
-"@uniswap/conedison@^1.4.0", "@uniswap/conedison@^1.5.3":
+"@uniswap/conedison@^1.4.0":
   version "1.5.3"
   resolved "https://registry.yarnpkg.com/@uniswap/conedison/-/conedison-1.5.3.tgz#2a2fc9ca848644f21944a2d087de54032a6acf93"
   integrity sha512-b8j2/0FzqLU4Qq+M+QEPGzacnZxNrzAHp7yoAWRvNJiFyLjBvcgfaT9ORS8rw17M8XBLWjh83faj5Kymc+62qw==
@@ -5243,7 +5243,7 @@
     "@uniswap/v2-sdk" "^3.0.1"
     "@uniswap/v3-sdk" "^3.8.3"
 
-"@uniswap/sdk-core@^3.0.0-alpha.3", "@uniswap/sdk-core@^3.0.1", "@uniswap/sdk-core@^3.1.0", "@uniswap/sdk-core@^3.2.0", "@uniswap/sdk-core@^3.2.2":
+"@uniswap/sdk-core@^3.0.0-alpha.3", "@uniswap/sdk-core@^3.0.1", "@uniswap/sdk-core@^3.1.0", "@uniswap/sdk-core@^3.2.2":
   version "3.2.2"
   resolved "https://registry.yarnpkg.com/@uniswap/sdk-core/-/sdk-core-3.2.2.tgz#50dbc6f2543d088680f36fb61e01bb90d4d8fa71"
   integrity sha512-dPA34T8EVfFzKtw1NC1Mr7M0aXpY1UN+lUpdBv757JxKKMlGQTg96XTIfjYCflqEshxlBdz2+IVQgk6H+dMu5g==
@@ -5255,7 +5255,7 @@
     tiny-invariant "^1.1.0"
     toformat "^2.0.0"
 
-"@uniswap/smart-order-router@^3.6.0", "@uniswap/smart-order-router@^3.6.1":
+"@uniswap/smart-order-router@^3.6.1":
   version "3.6.1"
   resolved "https://registry.yarnpkg.com/@uniswap/smart-order-router/-/smart-order-router-3.6.1.tgz#658497b907b1033d68fe8b7f613d624d31e33d80"
   integrity sha512-UKCEeqzryu8kREOGEG2gomXApkGGJ301rp1j1sdDhTeMW2C6EiDo2jkfGjKYMb9CHJnb0YkXB7E6XIT8U4UYXA==
@@ -5305,7 +5305,7 @@
     dotenv "^14.2.0"
     hardhat-watcher "^2.1.1"
 
-"@uniswap/token-lists@^1.0.0-beta.25", "@uniswap/token-lists@^1.0.0-beta.30", "@uniswap/token-lists@^1.0.0-beta.31":
+"@uniswap/token-lists@^1.0.0-beta.25", "@uniswap/token-lists@^1.0.0-beta.31":
   version "1.0.0-beta.31"
   resolved "https://registry.yarnpkg.com/@uniswap/token-lists/-/token-lists-1.0.0-beta.31.tgz#ff3852bd505ec7b4c276625c762ea79a93a919ec"
   integrity sha512-BQVoelKCRf64IToPEs1wxiXOnhr/ukwPOF78XG11PrTAOL4F8umjYKFb8ZPv1/dIJsPaC7GhLSriEqyp94SasQ==
@@ -5400,7 +5400,7 @@
     base64-sol "1.0.1"
     hardhat-watcher "^2.1.1"
 
-"@uniswap/v3-sdk@^3.7.0", "@uniswap/v3-sdk@^3.8.2", "@uniswap/v3-sdk@^3.8.3", "@uniswap/v3-sdk@^3.9.0":
+"@uniswap/v3-sdk@^3.7.0", "@uniswap/v3-sdk@^3.8.3", "@uniswap/v3-sdk@^3.9.0":
   version "3.9.0"
   resolved "https://registry.yarnpkg.com/@uniswap/v3-sdk/-/v3-sdk-3.9.0.tgz#de93fa19f89c29d460996aa4d0b4bb6531641105"
   integrity sha512-LuoF3UcY1DxSAQKJ3E4/1Eq4HaNp+x+7q9mvbpiu+/PBj+O1DjLforAMrKxu+RsA0aarmZtz7yBnAPy+akgfgQ==
@@ -5422,69 +5422,6 @@
     "@openzeppelin/contracts" "3.4.1-solc-0.7-2"
     "@uniswap/v3-core" "1.0.0"
     "@uniswap/v3-periphery" "^1.0.1"
-
-"@uniswap/widgets@^2.49.0":
-  version "2.49.0"
-  resolved "https://registry.yarnpkg.com/@uniswap/widgets/-/widgets-2.49.0.tgz#a59ebb0b13b8e4501891c88e6f8dd03dcc8f04d5"
-  integrity sha512-w/UhOmhcmgwyP/iQVFQ4u3naOrykUlfxGBnqN2PbI9BY5fNjE6Y0+mnsNcBF+cVoY2vBfFrwIJH/Ug2Cts5skg==
-  dependencies:
-    "@babel/runtime" ">=7.17.0"
-    "@fontsource/ibm-plex-mono" "^4.5.1"
-    "@fontsource/inter" "^4.5.1"
-    "@popperjs/core" "^2.4.4"
-    "@reduxjs/toolkit" "^1.6.1"
-    "@uniswap/conedison" "^1.5.3"
-    "@uniswap/permit2-sdk" "^1.2.0"
-    "@uniswap/redux-multicall" "^1.1.8"
-    "@uniswap/router-sdk" "^1.3.0"
-    "@uniswap/sdk-core" "^3.2.0"
-    "@uniswap/smart-order-router" "^3.6.0"
-    "@uniswap/token-lists" "^1.0.0-beta.30"
-    "@uniswap/universal-router-sdk" "^1.3.8"
-    "@uniswap/v2-sdk" "^3.0.1"
-    "@uniswap/v3-sdk" "^3.8.2"
-    "@web3-react/core" "8.1.2-beta.0"
-    "@web3-react/eip1193" "8.1.2-beta.0"
-    "@web3-react/empty" "8.1.2-beta.0"
-    "@web3-react/metamask" "8.1.2-beta.0"
-    "@web3-react/network" "8.1.2-beta.0"
-    "@web3-react/types" "8.1.2-beta.0"
-    "@web3-react/url" "8.1.2-beta.0"
-    "@web3-react/walletconnect" "8.1.2-beta.0"
-    ajv "^8.11.0"
-    ajv-formats "^2.1.1"
-    cids "^1.0.0"
-    ethers "^5.7.2"
-    immer "^9.0.6"
-    jotai "1.4.0"
-    jsbi "^3.1.4"
-    make-plural "^7.0.0"
-    ms.macro "^2.0.0"
-    multicodec "^3.0.1"
-    multihashes "^4.0.2"
-    node-vibrant "^3.2.1-alpha.1"
-    polished "^3.3.2"
-    popper-max-size-modifier "^0.2.0"
-    qrcode "^1.5.0"
-    react ">=17.0.1"
-    react-dom ">=17.0.1"
-    react-feather "^2.0.8"
-    react-popper "^2.2.3"
-    react-redux ">=7.2.2"
-    react-virtualized-auto-sizer "^1.0.2"
-    react-window "^1.8.5"
-    rebass "^4.0.7"
-    redux ">=4.1.2"
-    resize-observer-polyfill "^1.5.1"
-    setimmediate "^1.0.5"
-    styled-components ">=5"
-    tiny-invariant "^1.2.0"
-    wcag-contrast "^3.0.0"
-    wicg-inert "^3.1.1"
-  optionalDependencies:
-    bufferutil "^4.0.6"
-    encoding "^0.1.13"
-    utf-8-validate "^5.0.8"
 
 "@vanilla-extract/babel-plugin-debug-ids@^1.0.2":
   version "1.0.2"
@@ -6013,7 +5950,7 @@
   dependencies:
     "@web3-react/types" "^8.2.0"
 
-"@web3-react/core@8.1.2-beta.0", "@web3-react/core@^8.2.0":
+"@web3-react/core@^8.2.0":
   version "8.2.0"
   resolved "https://registry.yarnpkg.com/@web3-react/core/-/core-8.2.0.tgz#95fb615bb283be520e6f61b5e48cfb0047943808"
   integrity sha512-r7dmK2E8Jrpvm/DF93hGMB+8lECHSI3Oo0NrHbhxkisK6in6rdgAXeYFhZtM48LBAm9py6fQvLzjCM6Qx9q0oQ==
@@ -6024,7 +5961,7 @@
   optionalDependencies:
     "@ethersproject/providers" "^5"
 
-"@web3-react/eip1193@8.1.2-beta.0", "@web3-react/eip1193@^8.2.0":
+"@web3-react/eip1193@^8.2.0":
   version "8.2.0"
   resolved "https://registry.yarnpkg.com/@web3-react/eip1193/-/eip1193-8.2.0.tgz#a7953769f9d0bec54472aceb01f72c889458378f"
   integrity sha512-Ugbt+FisHO8aLD5o5B4AZdtgSVpjrbmtC5MgHrOEBw+IwFqr20EJreh052u8ExI2OrPjARIVOkNcp50Xxs7oUw==
@@ -6032,7 +5969,7 @@
     "@web3-react/types" "^8.2.0"
     eventemitter3 "^4.0.7"
 
-"@web3-react/empty@8.1.2-beta.0", "@web3-react/empty@^8.2.0":
+"@web3-react/empty@^8.2.0":
   version "8.2.0"
   resolved "https://registry.yarnpkg.com/@web3-react/empty/-/empty-8.2.0.tgz#dac248ab22867700b5be716cd5a3f8f95308e8c5"
   integrity sha512-U8BIF56lW1GHXFz9cPAJnlmKM8VcsjpXr+LXNXGS+9mr5AEjNcjbn9T9EnQf4hY4YXUPHAnjsVcZoUfw3q6u7Q==
@@ -6048,7 +5985,7 @@
     "@safe-global/safe-apps-sdk" "^7.10.0"
     "@web3-react/types" "^8.2.0"
 
-"@web3-react/metamask@8.1.2-beta.0", "@web3-react/metamask@^8.2.0":
+"@web3-react/metamask@^8.2.0":
   version "8.2.0"
   resolved "https://registry.yarnpkg.com/@web3-react/metamask/-/metamask-8.2.0.tgz#4f822e36bcbc37bbbce6f97f55c10537eeb5014d"
   integrity sha512-nitDOHFZOUi9FWBmGAKlvExZDxZPWSJaXZn0lxl7LKaM6rPwBoEWKI2wJJvWCf+h5q9+p6ifiaFd7JKqucS6rQ==
@@ -6056,7 +5993,7 @@
     "@metamask/detect-provider" "^1.2.0"
     "@web3-react/types" "^8.2.0"
 
-"@web3-react/network@8.1.2-beta.0", "@web3-react/network@^8.2.0":
+"@web3-react/network@^8.2.0":
   version "8.2.0"
   resolved "https://registry.yarnpkg.com/@web3-react/network/-/network-8.2.0.tgz#225ae9e135711e8c64ab3123570abaa5b82b8145"
   integrity sha512-3OcJwuaot8A+VTSoCe17MZv/K/TNVw7DjtYoS7lBRS/CmzYIwP53Tosea4MkliOuXiUUKj7Ge1D2FpWohq6pHw==
@@ -6073,14 +6010,14 @@
     "@web3-react/types" "^8.2.0"
     zustand "^4.3.5"
 
-"@web3-react/types@8.1.2-beta.0", "@web3-react/types@^8.2.0":
+"@web3-react/types@^8.2.0":
   version "8.2.0"
   resolved "https://registry.yarnpkg.com/@web3-react/types/-/types-8.2.0.tgz#195464ebb94cb417e6dc3c16951573f9b6b3832a"
   integrity sha512-TBYTFlqJZaEpVbuAAKRJFX5PZc3lI1TqDZzY94zwCrCh4GBepwwK7+PxmRAppMFuNa5x0vFX/ghLEC44e6TCFg==
   dependencies:
     zustand "^4.3.5"
 
-"@web3-react/url@8.1.2-beta.0", "@web3-react/url@^8.2.0":
+"@web3-react/url@^8.2.0":
   version "8.2.0"
   resolved "https://registry.yarnpkg.com/@web3-react/url/-/url-8.2.0.tgz#5df80f213bf6b6f382aa842ae37ad0703d413a37"
   integrity sha512-dt1i8AgZso6y0sX67JSZ1DzsU511iFu4Gcxksbw/yJPlFybsHco+Fcg94WLjWj4ec26kVRUBySUVCyXrYlg0kQ==
@@ -6088,7 +6025,7 @@
     "@ethersproject/providers" "^5"
     "@web3-react/types" "^8.2.0"
 
-"@web3-react/walletconnect@8.1.2-beta.0", "@web3-react/walletconnect@^8.2.0":
+"@web3-react/walletconnect@^8.2.0":
   version "8.2.0"
   resolved "https://registry.yarnpkg.com/@web3-react/walletconnect/-/walletconnect-8.2.0.tgz#e4e325132f04f03a07a19cd193b4b97bfe6a9914"
   integrity sha512-Yl1C0beRnwohtFZ9c6xz6mOci2MqoES2hYKhJI4X7qKqcmQJC6TOeLjlYfzjdUTUvP8IDf0A7flYZVeBUvL/fg==
@@ -7682,7 +7619,7 @@ buffer@^6.0.3, buffer@~6.0.3:
     base64-js "^1.3.1"
     ieee754 "^1.2.1"
 
-bufferutil@^4.0.1, bufferutil@^4.0.6:
+bufferutil@^4.0.1:
   version "4.0.7"
   resolved "https://registry.yarnpkg.com/bufferutil/-/bufferutil-4.0.7.tgz#60c0d19ba2c992dd8273d3f73772ffc894c153ad"
   integrity sha512-kukuqc39WOHtdxtw4UScxF/WVnMFVSQVKhtx3AjZJzhd0RGZZldcrfSEbVsWWe6KNH253574cq5F+wpv0G9pJw==
@@ -10016,22 +9953,10 @@ emojis-list@^3.0.0:
   resolved "https://registry.yarnpkg.com/emojis-list/-/emojis-list-3.0.0.tgz#5570662046ad29e2e916e71aae260abdff4f6a78"
   integrity sha512-/kyM18EfinwXZbno9FyUGeFh87KC8HRQBQGildHZbEuRyWFOmv1U10o9BBp8XVZDVNNuQKyIGIu5ZYAAXJ0V2Q==
 
-encode-utf8@^1.0.3:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/encode-utf8/-/encode-utf8-1.0.3.tgz#f30fdd31da07fb596f281beb2f6b027851994cda"
-  integrity sha512-ucAnuBEhUK4boH2HjVYG5Q2mQyPorvv0u/ocS+zhdw0S8AlHYY+GOFhP1Gio5z4icpP2ivFSvhtFjQi8+T9ppw==
-
 encodeurl@~1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/encodeurl/-/encodeurl-1.0.2.tgz#ad3ff4c86ec2d029322f5a02c3a9a606c95b3f59"
   integrity sha1-rT/0yG7C0CkyL1oCw6mmBslbP1k=
-
-encoding@^0.1.13:
-  version "0.1.13"
-  resolved "https://registry.yarnpkg.com/encoding/-/encoding-0.1.13.tgz#56574afdd791f54a8e9b2785c0582a2d26210fa9"
-  integrity sha512-ETBauow1T35Y/WZMkio9jiM0Z5xjHHmJ4XmjZOq1l/dXz3lr2sRn87nJy20RupqSh1F2m3HHPSp8ShIPQJrJ3A==
-  dependencies:
-    iconv-lite "^0.6.2"
 
 end-of-stream@^1.0.0, end-of-stream@^1.1.0:
   version "1.4.4"
@@ -12326,7 +12251,7 @@ iconv-lite@0.4.24, iconv-lite@^0.4.24:
   dependencies:
     safer-buffer ">= 2.1.2 < 3"
 
-iconv-lite@0.6, iconv-lite@^0.6.2:
+iconv-lite@0.6:
   version "0.6.3"
   resolved "https://registry.yarnpkg.com/iconv-lite/-/iconv-lite-0.6.3.tgz#a52f80bf38da1952eb5c681790719871a1a72501"
   integrity sha512-4fCk79wshMdzMp2rH06qWrJE4iolqLhCUH+OiuIgU++RB0+94NlDL81atO7GX55uUKueo0txHNtvEyI6D7WdMw==
@@ -13735,7 +13660,7 @@ jest@26.6.0:
     import-local "^3.0.2"
     jest-cli "^26.6.0"
 
-jotai@1.4.0, jotai@^1.3.7:
+jotai@^1.3.7:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/jotai/-/jotai-1.4.0.tgz#0f350f65a968dd3ee2f9ad3618a3af635cd10220"
   integrity sha512-CUB+A3N+WjtimZvtDnMXvVRognzKh86KB3rKnQlbRvpnmGYU+O9aOZMWSgTaxstXc4Y5GYy02LBEjiv4Rs8MAg==
@@ -16050,11 +15975,6 @@ pngjs@^3.0.0, pngjs@^3.3.0, pngjs@^3.3.3:
   resolved "https://registry.npmjs.org/pngjs/-/pngjs-3.4.0.tgz"
   integrity sha512-NCrCHhWmnQklfH4MtJMRjZ2a8c80qXeMlQMv2uVp9ISJMTt562SbGd6n2oq0PaPgKm7Z6pL9E2UlLIhC+SHL3w==
 
-pngjs@^5.0.0:
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/pngjs/-/pngjs-5.0.0.tgz#e79dd2b215767fd9c04561c01236df960bce7fbb"
-  integrity sha512-40QW5YalBNfQo5yRYmiw7Yz6TKKVr3h6970B2YE+3fQpsWcrbj1PzJgxeJ19DRQjhMbKPIuMY8rFaXc8moolVw==
-
 pnp-webpack-plugin@1.6.4:
   version "1.6.4"
   resolved "https://registry.yarnpkg.com/pnp-webpack-plugin/-/pnp-webpack-plugin-1.6.4.tgz#c9711ac4dc48a685dabafc86f8b6dd9f8df84149"
@@ -16078,11 +15998,6 @@ polyfill-object.fromentries@^1.0.1:
   version "1.0.1"
   resolved "https://registry.nlark.com/polyfill-object.fromentries/download/polyfill-object.fromentries-1.0.1.tgz#1a5d89e3777684a852c9b6a6a1d2c3f9c262fc86"
   integrity sha1-Gl2J43d2hKhSybamodLD+cJi/IY=
-
-popper-max-size-modifier@^0.2.0:
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/popper-max-size-modifier/-/popper-max-size-modifier-0.2.0.tgz#1574744401296a488b4974909d130a85db94256f"
-  integrity sha512-UerPt9pZfTFnpSpIBVJrR3ibHMuU1k5K01AyNLfMUWCr4z1MFH+dsayPlAF9ZeYExa02HPiQn5OIMqUSVtJEbg==
 
 portfinder@^1.0.26:
   version "1.0.28"
@@ -17016,16 +16931,6 @@ qrcode@1.4.4:
     pngjs "^3.3.0"
     yargs "^13.2.4"
 
-qrcode@^1.5.0:
-  version "1.5.1"
-  resolved "https://registry.yarnpkg.com/qrcode/-/qrcode-1.5.1.tgz#0103f97317409f7bc91772ef30793a54cd59f0cb"
-  integrity sha512-nS8NJ1Z3md8uTjKtP+SGGhfqmTCs5flU/xR623oI0JX+Wepz9R8UrRVCTBTJm3qGw3rH6jJ6MUHjkDx15cxSSg==
-  dependencies:
-    dijkstrajs "^1.0.1"
-    encode-utf8 "^1.0.3"
-    pngjs "^5.0.0"
-    yargs "^15.3.1"
-
 qs@6.7.0:
   version "6.7.0"
   resolved "https://registry.yarnpkg.com/qs/-/qs-6.7.0.tgz#41dc1a015e3d581f1621776be31afb2876a9b1bc"
@@ -17215,7 +17120,7 @@ react-dev-utils@^11.0.3:
     strip-ansi "6.0.0"
     text-table "0.2.0"
 
-react-dom@>=17.0.1, react-dom@^18.2.0:
+react-dom@^18.2.0:
   version "18.2.0"
   resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-18.2.0.tgz#22aaf38708db2674ed9ada224ca4aa708d821e3d"
   integrity sha512-6IMTriUmvsjHUjNtEDudZfuDQUoWXVxKHhlEGSk81n4YFS+r/Kl99wXiwlVXtPBtJenozv2P+hxDsw9eA7Xo6g==
@@ -17310,7 +17215,7 @@ react-query@^3.39.1:
     broadcast-channel "^3.4.1"
     match-sorter "^6.0.2"
 
-react-redux@>=7.2.2, react-redux@^8.0.2:
+react-redux@^8.0.2:
   version "8.0.2"
   resolved "https://registry.yarnpkg.com/react-redux/-/react-redux-8.0.2.tgz#bc2a304bb21e79c6808e3e47c50fe1caf62f7aad"
   integrity sha512-nBwiscMw3NoP59NFCXFf02f8xdo+vSHT/uZ1ldDwF7XaTpzm+Phk97VT4urYBl5TYAPNVaFm12UHAEyzkpNzRA==
@@ -17476,7 +17381,7 @@ react-window@^1.8.5:
     "@babel/runtime" "^7.0.0"
     memoize-one ">=3.1.1 <6"
 
-react@>=17.0.1, react@^18.2.0:
+react@^18.2.0:
   version "18.2.0"
   resolved "https://registry.yarnpkg.com/react/-/react-18.2.0.tgz#555bd98592883255fa00de14f1151a917b5d77d5"
   integrity sha512-/3IjMdb2L9QbBdWiW5e3P2/npwMBaU9mHCSCUzNln0ZCYbcfTsGbTJrU/kGemdH2IWmB2ioZ+zkxtmq6g09fGQ==
@@ -17597,7 +17502,7 @@ redux-thunk@^2.4.1:
   resolved "https://registry.yarnpkg.com/redux-thunk/-/redux-thunk-2.4.1.tgz#0dd8042cf47868f4b29699941de03c9301a75714"
   integrity sha512-OOYGNY5Jy2TWvTL1KgAlVy6dcx3siPJ1wTq741EPyUKfn6W6nChdICjZwCd0p8AZBs5kWpZlbkXW2nE/zjUa+Q==
 
-redux@>=4.1.2, redux@^4.0.0, redux@^4.1.2:
+redux@^4.0.0, redux@^4.1.2:
   version "4.1.2"
   resolved "https://registry.yarnpkg.com/redux/-/redux-4.1.2.tgz#140f35426d99bb4729af760afcf79eaaac407104"
   integrity sha512-SH8PglcebESbd/shgf6mii6EIoRM0zrQyjcuQ+ojmfxjTtE0z9Y8pa62iA/OJ58qjP6j27uyW4kUF4jl/jd6sw==
@@ -19170,7 +19075,7 @@ style-loader@1.3.0:
     loader-utils "^2.0.0"
     schema-utils "^2.7.0"
 
-styled-components@>=5, styled-components@^5.3.5:
+styled-components@^5.3.5:
   version "5.3.5"
   resolved "https://registry.yarnpkg.com/styled-components/-/styled-components-5.3.5.tgz#a750a398d01f1ca73af16a241dec3da6deae5ec4"
   integrity sha512-ndETJ9RKaaL6q41B69WudeqLzOpY1A/ET/glXkNZ2T7dPjPqpPCXXQjDFYZWwNnE5co0wX+gTCqx9mfxTmSIPg==
@@ -20201,7 +20106,7 @@ use@^3.1.0:
   resolved "https://registry.yarnpkg.com/use/-/use-3.1.1.tgz#d50c8cac79a19fbc20f2911f56eb973f4e10070f"
   integrity sha512-cwESVXlO3url9YWlFW/TA9cshCEhtu7IKJ/p5soJ/gGpj7vbvFrAY/eIioQ6Dw23KjZhYgiIo8HOs1nQ2vr/oQ==
 
-utf-8-validate@^5.0.2, utf-8-validate@^5.0.8:
+utf-8-validate@^5.0.2:
   version "5.0.10"
   resolved "https://registry.yarnpkg.com/utf-8-validate/-/utf-8-validate-5.0.10.tgz#d7d10ea39318171ca982718b6b96a8d2442571a2"
   integrity sha512-Z6czzLq4u8fPOyx7TU6X3dvUZVvoJmxSQ+IcrlmagKhilxlhZgxPK6C5Jqbkw1IDUmFTM+cz9QDnnLTwDz/2gQ==
@@ -20714,11 +20619,6 @@ which@^2.0.1, which@^2.0.2:
   integrity sha512-BLI3Tl1TW3Pvl70l3yq3Y64i+awpwXqsGBYWkkqMtnbXgrMD+yj7rhW0kuEDxzJaYXGjEW5ogapKNMEKNMjibA==
   dependencies:
     isexe "^2.0.0"
-
-wicg-inert@^3.1.1:
-  version "3.1.2"
-  resolved "https://registry.yarnpkg.com/wicg-inert/-/wicg-inert-3.1.2.tgz#df10cf756b773a96fce107c3ddcd43be5d1e3944"
-  integrity sha512-Ba9tGNYxXwaqKEi9sJJvPMKuo063umUPsHN0JJsjrs2j8KDSzkWLMZGZ+MH1Jf1Fq4OWZ5HsESJID6nRza2ang==
 
 widest-line@^2.0.0:
   version "2.0.1"

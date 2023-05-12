@@ -1,7 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { SupportedChainId } from 'constants/chains'
 
 import { updateVersion } from '../global/actions'
-import { TransactionDetails } from './types'
+import { TransactionDetails, TransactionInfo } from './types'
 
 const now = () => new Date().getTime()
 
@@ -11,23 +12,39 @@ export interface TransactionState {
   }
 }
 
+interface AddTransactionPayload {
+  chainId: SupportedChainId
+  from: string
+  hash: string
+  info: TransactionInfo
+  nonce: number
+}
+
 export const initialState: TransactionState = {}
 
 const transactionSlice = createSlice({
   name: 'transactions',
   initialState,
   reducers: {
-    addTransaction(transactions, { payload: { chainId, from, hash, info } }) {
+    addTransaction(
+      transactions,
+      { payload: { chainId, from, hash, info, nonce } }: { payload: AddTransactionPayload }
+    ) {
       if (transactions[chainId]?.[hash]) {
         throw Error('Attempted to add existing transaction.')
       }
       const txs = transactions[chainId] ?? {}
-      txs[hash] = { hash, info, from, addedTime: now() }
+      txs[hash] = { hash, info, from, addedTime: now(), nonce }
       transactions[chainId] = txs
     },
     clearAllTransactions(transactions, { payload: { chainId } }) {
       if (!transactions[chainId]) return
       transactions[chainId] = {}
+    },
+    removeTransaction(transactions, { payload: { chainId, hash } }) {
+      if (transactions[chainId][hash]) {
+        delete transactions[chainId][hash]
+      }
     },
     checkedTransaction(transactions, { payload: { chainId, hash, blockNumber } }) {
       const tx = transactions[chainId]?.[hash]
@@ -65,6 +82,6 @@ const transactionSlice = createSlice({
   },
 })
 
-export const { addTransaction, clearAllTransactions, checkedTransaction, finalizeTransaction } =
+export const { addTransaction, clearAllTransactions, checkedTransaction, finalizeTransaction, removeTransaction } =
   transactionSlice.actions
 export default transactionSlice.reducer

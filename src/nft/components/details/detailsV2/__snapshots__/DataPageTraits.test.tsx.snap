@@ -174,6 +174,39 @@ exports[`data page trait component does not load with asset with no traits 1`] =
   border-radius: 8px;
 }
 
+@media screen and (max-width:640px) {
+  .c10 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+  }
+}
+
+@media screen and (max-width:640px) {
+  .c11 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+  }
+}
+
+@media screen and (max-width:640px) {
+  .c12 {
+    display: none;
+  }
+}
+
+@media screen and (max-width:640px) {
+  .c13 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+  }
+}
+
 <div
     class="c0"
   >
