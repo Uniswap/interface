@@ -60,7 +60,6 @@ interface VoteModalProps {
   title: ReactNode
 }
 
-// TODO: 'scrollOverlay' prop returns warning in console
 export default function DelegateModal({ isOpen, poolInfo, onDismiss, title }: VoteModalProps) {
   const { account, chainId } = useWeb3React()
 

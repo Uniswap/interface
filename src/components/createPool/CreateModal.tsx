@@ -97,7 +97,6 @@ interface CreateModalProps {
   title: ReactNode
 }
 
-// TODO: 'scrollOverlay' prop returns warning in console
 export default function CreateModal({ isOpen, onDismiss, title }: CreateModalProps) {
   const { account, chainId } = useWeb3React()
 

@@ -33,7 +33,6 @@ interface SetLockupModalProps {
   title: ReactNode
 }
 
-// TODO: 'scrollOverlay' prop returns warning in console
 export default function SetLockupModal({ isOpen, onDismiss, title }: SetLockupModalProps) {
   const { account, chainId } = useWeb3React()
 
