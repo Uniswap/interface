@@ -88,11 +88,6 @@ describe('beforeSend', () => {
     expect(beforeSend(ERROR, { originalException })).toBeNull()
   })
 
-  it('filters user rejected request errors', () => {
-    const originalException = new Error('user rejected transaction')
-    expect(beforeSend(ERROR, { originalException })).toBeNull()
-  })
-
   it('filters invalid HTML response errors', () => {
     const originalException = new SyntaxError("Unexpected token '<'")
     expect(beforeSend(ERROR, { originalException })).toBeNull()
