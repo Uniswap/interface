@@ -15,7 +15,6 @@ const StyledSwapHeader = styled(RowBetween)`
 
 const HeaderButtonContainer = styled(RowFixed)`
   padding: 0 12px;
-  gap: 20px;
 `
 
 export default function SwapHeader({ autoSlippage }: { autoSlippage: Percent }) {
@@ -23,7 +22,7 @@ export default function SwapHeader({ autoSlippage }: { autoSlippage: Percent }) 
 
   return (
     <StyledSwapHeader>
-      <HeaderButtonContainer>
+      <HeaderButtonContainer gap="lg">
         <ThemedText.SubHeader>
           <Trans>Swap</Trans>
         </ThemedText.SubHeader>
