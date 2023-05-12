@@ -1,3 +1,4 @@
+import { Trans } from '@lingui/macro'
 import Column from 'components/Column'
 import Row from 'components/Row'
 import { Unicon } from 'components/Unicon'
@@ -42,7 +43,7 @@ const StyledIcon = styled(Row)`
   align-items: center;
 `
 
-const InfoBubble = ({ title, info, icon }: { title: string; info: string; icon: ReactNode }) => {
+const InfoBubble = ({ title, info, icon }: { title: ReactNode; info: string; icon: ReactNode }) => {
   return (
     <Column gap="sm">
       <ThemedText.Caption color="textSecondary">{title}</ThemedText.Caption>
@@ -115,8 +116,8 @@ export const InfoChips = ({ asset }: { asset: GenieAsset }) => {
   return (
     <Column gap="sm">
       <InfoChipsContainer justify="center">
-        <InfoBubble key="Owner" title="Owner" info={addressToDisplay} icon={avatarToDisplay} />
-        <InfoBubble key="Trait Floor" title="Trait Floor" info="5.3 ETH" icon={<DollarSign size={20} />} />
+        <InfoBubble title={<Trans>Owner</Trans>} info={addressToDisplay} icon={avatarToDisplay} />
+        <InfoBubble title={<Trans>Trait Floor</Trans>} info="5.3 ETH" icon={<DollarSign size={20} />} />
         {topTrait && (
           <InfoChipDropdownContainer>
             <InfoChipDropdown onClick={toggleShowExtraInfoChips}>
@@ -126,7 +127,7 @@ export const InfoChips = ({ asset }: { asset: GenieAsset }) => {
         )}
         {shouldShowExtraInfoChips && <Break />}
         {topTrait && (!isMobile || shouldShowExtraInfoChips) && (
-          <InfoBubble key="Top Trait" title="Top Trait" info={topTrait.trait_value} icon="" />
+          <InfoBubble title={<Trans>Top Trait</Trans>} info={topTrait.trait_value} icon="" />
         )}
       </InfoChipsContainer>
     </Column>
