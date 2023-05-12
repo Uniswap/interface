@@ -35,7 +35,7 @@ interface AmountProps {
   field: Field
   tooltipText?: ReactNode
   label: string
-  amount: CurrencyAmount<Currency>
+  amount: CurrencyAmount<Currency> | undefined
   usdAmount?: number
 }
 
@@ -59,12 +59,12 @@ export function SwapModalHeaderAmount({ tooltipText, label, amount, usdAmount, f
         </ThemedText.BodySecondary>
         <Column gap="xs">
           <ResponsiveHeadline color="primary" data-testid={`${field}-amount`}>
-            {formattedAmount} {amount.currency.symbol}
+            {formattedAmount} {amount?.currency.symbol}
           </ResponsiveHeadline>
           {usdAmount && <ThemedText.BodySmall color="textTertiary">${usdAmount.toFixed(2)}</ThemedText.BodySmall>}
         </Column>
       </Column>
-      <CurrencyLogo currency={amount.currency} size="36px" />
+      <CurrencyLogo currency={amount?.currency} size="36px" />
     </Row>
   )
 }

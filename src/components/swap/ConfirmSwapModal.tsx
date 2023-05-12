@@ -57,11 +57,11 @@ export default function ConfirmSwapModal({
   }, [isOpen, onDismiss])
 
   const modalHeader = useCallback(() => {
-    return trade ? <SwapModalHeader trade={trade} allowedSlippage={allowedSlippage} /> : null
+    return <SwapModalHeader trade={trade} allowedSlippage={allowedSlippage} />
   }, [allowedSlippage, trade])
 
   const modalBottom = useCallback(() => {
-    return trade ? (
+    return (
       <SwapModalFooter
         onConfirm={onConfirm}
         trade={trade}
@@ -77,7 +77,7 @@ export default function ConfirmSwapModal({
         showAcceptChanges={showAcceptChanges}
         onAcceptChanges={onAcceptChanges}
       />
-    ) : null
+    )
   }, [
     trade,
     onConfirm,
