@@ -38,7 +38,7 @@ import { SwapCallbackError, SwapShowAcceptChanges } from './styleds'
 import { SwapModalDetailRow } from './SwapModalDetailRow'
 
 interface AnalyticsEventProps {
-  trade: InterfaceTrade<Currency, Currency, TradeType>
+  trade: InterfaceTrade<Currency, Currency, TradeType> | undefined
   hash: string | undefined
   allowedSlippage: Percent
   transactionDeadlineSecondsSinceEpoch: number | undefined
@@ -104,29 +104,29 @@ const formatSwapButtonClickEventProperties = ({
   fiatValueInput,
   fiatValueOutput,
 }: AnalyticsEventProps) => ({
-  estimated_network_fee_usd: trade.gasUseEstimateUSD ? formatToDecimal(trade.gasUseEstimateUSD, 2) : undefined,
+  estimated_network_fee_usd: trade?.gasUseEstimateUSD ? formatToDecimal(trade?.gasUseEstimateUSD, 2) : undefined,
   transaction_hash: hash,
   transaction_deadline_seconds: getDurationUntilTimestampSeconds(transactionDeadlineSecondsSinceEpoch),
-  token_in_address: getTokenAddress(trade.inputAmount.currency),
-  token_out_address: getTokenAddress(trade.outputAmount.currency),
-  token_in_symbol: trade.inputAmount.currency.symbol,
-  token_out_symbol: trade.outputAmount.currency.symbol,
-  token_in_amount: formatToDecimal(trade.inputAmount, trade.inputAmount.currency.decimals),
-  token_out_amount: formatToDecimal(trade.outputAmount, trade.outputAmount.currency.decimals),
+  token_in_address: trade ? getTokenAddress(trade?.inputAmount.currency) : undefined,
+  token_out_address: trade ? getTokenAddress(trade?.outputAmount.currency) : undefined,
+  token_in_symbol: trade?.inputAmount.currency.symbol,
+  token_out_symbol: trade?.outputAmount.currency.symbol,
+  token_in_amount: trade ? formatToDecimal(trade?.inputAmount, trade?.inputAmount.currency.decimals) : undefined,
+  token_out_amount: trade ? formatToDecimal(trade?.outputAmount, trade?.outputAmount.currency.decimals) : undefined,
   token_in_amount_usd: fiatValueInput,
   token_out_amount_usd: fiatValueOutput,
-  price_impact_basis_points: formatPercentInBasisPointsNumber(computeRealizedPriceImpact(trade)),
+  price_impact_basis_points: trade ? formatPercentInBasisPointsNumber(computeRealizedPriceImpact(trade)) : undefined,
   allowed_slippage_basis_points: formatPercentInBasisPointsNumber(allowedSlippage),
   is_auto_router_api: isAutoRouterApi,
   is_auto_slippage: isAutoSlippage,
   chain_id:
-    trade.inputAmount.currency.chainId === trade.outputAmount.currency.chainId
-      ? trade.inputAmount.currency.chainId
+    trade?.inputAmount.currency.chainId === trade?.outputAmount.currency.chainId
+      ? trade?.inputAmount.currency.chainId
       : undefined,
   duration_from_first_quote_to_swap_submission_milliseconds: swapQuoteReceivedDate
     ? getDurationFromDateMilliseconds(swapQuoteReceivedDate)
     : undefined,
-  swap_quote_block_number: trade.blockNumber,
+  swap_quote_block_number: trade?.blockNumber,
   ...formatRoutesEventProperties(routes),
 })
 
@@ -141,7 +141,7 @@ const StyledAlertTriangle = styled(AlertTriangle)`
 
 const ConfirmButton = styled(ButtonError)`
   height: 56px;
-  margin-left: 10px;
+  margin-top: 10px;
 `
 
 type DetailItem = {
@@ -166,7 +166,7 @@ export default function SwapModalFooter({
   showAcceptChanges,
   onAcceptChanges,
 }: {
-  trade: InterfaceTrade<Currency, Currency, TradeType>
+  trade: InterfaceTrade<Currency, Currency, TradeType> | undefined
   hash: string | undefined
   allowedSlippage: Percent
   onConfirm: () => void
@@ -183,22 +183,22 @@ export default function SwapModalFooter({
   const transactionDeadlineSecondsSinceEpoch = useTransactionDeadline()?.toNumber() // in seconds since epoch
   const isAutoSlippage = useUserSlippageTolerance()[0] === 'auto'
   const [routerPreference] = useRouterPreference()
-  const routes = getRoutingDiagramEntries(trade)
-  const [lastExecutionPrice, setLastExecutionPrice] = useState(trade.executionPrice)
+  const routes = trade ? getRoutingDiagramEntries(trade) : []
+  const [lastExecutionPrice, setLastExecutionPrice] = useState(trade?.executionPrice)
   const [priceUpdate, setPriceUpdate] = useState<number>()
   const theme = useTheme()
   const { chainId } = useWeb3React()
   const nativeCurrency = useNativeCurrency(chainId)
 
   useEffect(() => {
-    if (!trade.executionPrice.equalTo(lastExecutionPrice)) {
-      setPriceUpdate(getPriceUpdateBasisPoints(lastExecutionPrice, trade.executionPrice))
-      setLastExecutionPrice(trade.executionPrice)
+    if (trade && lastExecutionPrice && !trade?.executionPrice.equalTo(lastExecutionPrice)) {
+      setPriceUpdate(getPriceUpdateBasisPoints(lastExecutionPrice, trade?.executionPrice))
+      setLastExecutionPrice(trade?.executionPrice)
     }
-  }, [lastExecutionPrice, setLastExecutionPrice, trade.executionPrice])
+  }, [lastExecutionPrice, setLastExecutionPrice, trade])
 
   useEffect(() => {
-    if (shouldLogModalCloseEvent && showAcceptChanges) {
+    if (trade && shouldLogModalCloseEvent && showAcceptChanges) {
       sendAnalyticsEvent(
         SwapEventName.SWAP_PRICE_UPDATE_ACKNOWLEDGED,
         formatSwapPriceUpdatedEventProperties(trade, priceUpdate, SwapPriceUpdateUserResponse.REJECTED)
@@ -208,24 +208,24 @@ export default function SwapModalFooter({
   }, [shouldLogModalCloseEvent, showAcceptChanges, setShouldLogModalCloseEvent, trade, priceUpdate])
 
   const details = useMemo(() => {
-    const label = `${trade.executionPrice.baseCurrency?.symbol} `
-    const labelInverted = `${trade.executionPrice.quoteCurrency?.symbol}`
-    const formattedPrice = formatTransactionAmount(priceToPreciseFloat(trade.executionPrice))
+    const label = `${trade?.executionPrice.baseCurrency?.symbol} `
+    const labelInverted = `${trade?.executionPrice.quoteCurrency?.symbol}`
+    const formattedPrice = formatTransactionAmount(priceToPreciseFloat(trade?.executionPrice))
     const details: Array<DetailItem> = [
       { label: t`Exchange rate`, value: `${'1 ' + labelInverted + ' = ' + formattedPrice ?? '-'} ${label}` },
       {
         label: t`Network fee`,
-        value: `~${formatCurrencyAmount(trade.gasUseEstimateUSD, NumberType.FiatGasPrice)}`,
+        value: `~${formatCurrencyAmount(trade?.gasUseEstimateUSD, NumberType.FiatGasPrice)}`,
         labelTooltipText: t`The fee paid to miners who process your transaction. This must be paid in ${nativeCurrency.symbol}.`,
       },
       {
         label: t`Price impact`,
-        value: trade.priceImpact ? formatPriceImpact(trade.priceImpact) : '-',
-        color: getPriceImpactWarning(trade.priceImpact),
+        value: trade?.priceImpact ? formatPriceImpact(trade?.priceImpact) : '-',
+        color: trade ? getPriceImpactWarning(trade?.priceImpact) : undefined,
         labelTooltipText: t`The impact your trade has on the market price of this pool.`,
       },
     ]
-    if (trade.tradeType === TradeType.EXACT_INPUT) {
+    if (trade?.tradeType === TradeType.EXACT_INPUT) {
       details.push({
         label: t`Minimum received`,
         value: `${trade.minimumAmountOut(allowedSlippage).toSignificant(6)} ${trade.outputAmount.currency.symbol}`,
@@ -234,7 +234,7 @@ export default function SwapModalFooter({
     } else {
       details.push({
         label: t`Maximum sent`,
-        value: `${trade.maximumAmountIn(allowedSlippage).toSignificant(6)} ${trade.inputAmount.currency.symbol}`,
+        value: `${trade?.maximumAmountIn(allowedSlippage).toSignificant(6)} ${trade?.inputAmount.currency.symbol}`,
         labelTooltipText: t`The maximum amount you are guaranteed to spend. If the price slips any further, your transaction will revert.`,
       })
     }
@@ -295,7 +295,7 @@ export default function SwapModalFooter({
               $borderRadius="12px"
               id={InterfaceElementName.CONFIRM_SWAP_BUTTON}
             >
-              <ThemedText.HeadlineSmall>
+              <ThemedText.HeadlineSmall color="accentTextLightPrimary">
                 <Trans>Swap</Trans>
               </ThemedText.HeadlineSmall>
             </ConfirmButton>

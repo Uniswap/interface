@@ -188,6 +188,13 @@ export default function ConfirmSwapModal({
     setPendingModalSteps(steps)
   }, [allowance, trade?.inputAmount?.currency])
 
+  const modalHeader = useCallback(() => {
+    if (confirmModalState !== ConfirmModalState.REVIEWING && !showAcceptChanges) {
+      return null
+    }
+    return <SwapModalHeader trade={trade} allowedSlippage={allowedSlippage} />
+  }, [allowedSlippage, confirmModalState, showAcceptChanges, trade])
+
   const startApproveAndSwapFlow = useCallback(() => {
     setApprovalError(undefined)
     async function startFlow() {
@@ -202,29 +209,17 @@ export default function ConfirmSwapModal({
     startFlow()
   }, [allowance.state, onConfirm, prepareSwapFlow, updateAllowance])
 
-  const modalHeader = useCallback(() => {
-    if (confirmModalState !== ConfirmModalState.REVIEWING && !showAcceptChanges) {
-      return null
-    }
-    if (!trade) {
-      return null
-    }
-    return <SwapModalHeader trade={trade} allowedSlippage={allowedSlippage} />
-  }, [allowedSlippage, confirmModalState, showAcceptChanges, trade])
-
   const modalBottom = useCallback(() => {
     if (confirmModalState !== ConfirmModalState.REVIEWING && !showAcceptChanges) {
       return (
         <PendingModalContent
+          hideStepIndicators={pendingModalSteps.length === 1}
           steps={pendingModalSteps}
           activeStepIndex={currentStep}
           confirmed={confirmed}
           transactionSuccess={transactionSuccess}
         />
       )
-    }
-    if (!trade) {
-      return null
     }
     return (
       <SwapModalFooter
