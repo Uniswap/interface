@@ -13,6 +13,17 @@ jobs:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
       - run: yarn prepare
+      - name: Send Slack message that build is starting
+        id: slack
+        uses: slackapi/slack-github-action@007b2c3c751a190b6f0f040e47ed024deaa72844
+        with:
+          payload: |
+            {
+              "text": "Staging build started for branch: ${{ github.ref_name }}"
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
       - run: yarn build
         env:
           REACT_APP_STAGING: 1
@@ -20,6 +31,17 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16
+      - name: Send Slack message that deploy is starting
+        id: slack
+        uses: slackapi/slack-github-action@007b2c3c751a190b6f0f040e47ed024deaa72844
+        with:
+          payload: |
+            {
+              "text": "Starting staging Cloudflare pages deploy for branch: ${{ github.ref_name }}"
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
       - name: Update Cloudflare Pages deployment
         uses: cloudflare/pages-action@364c7ca09a4b57837c5967871d64a2c31adb8c0d
         with:
@@ -28,6 +50,17 @@ jobs:
           projectName: interface-staging
           directory: build
           githubToken: ${{ secrets.GITHUB_TOKEN }}
+      - name: Send Slack message that deploy has completed
+        id: slack
+        uses: slackapi/slack-github-action@007b2c3c751a190b6f0f040e47ed024deaa72844
+        with:
+          payload: |
+            {
+              "text": "Staging Cloudflare pages deploy completed for: ${{ github.ref_name }}"
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
       - name: Upload source maps to Sentry
         uses: getsentry/action-release@bd5f874fcda966ba48139b0140fb3ec0cb3aabdd
         continue-on-error: true
