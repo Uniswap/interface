@@ -1,4 +1,4 @@
-name: 1 | Push main to releases/staging
+name: 1 | Push main -> staging
 
 # This CI job is responsible for pushing the current contents of the `main` branch to the
 # `releases/staging` branch, which will in turn kick off a deploy to the staging environment.
@@ -12,12 +12,17 @@ jobs:
     name: 'Push to staging branch'
     runs-on: ubuntu-latest
     environment:
-      name: release
+      name: push/staging
     steps:
       - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab
         with:
           token: ${{ secrets.RELEASE_SERVICE_ACCESS_TOKEN }}
           ref: main
+      - name: Add CODEOWNERS file
+        run: |
+          echo "@uniswap/web-admins" > CODEOWNERS
+          git add CODEOWNERS
+          git commit -m "ci: add global CODEOWNERS"
       - name: Git push
         run: |
           git config user.name "UL Service Account"

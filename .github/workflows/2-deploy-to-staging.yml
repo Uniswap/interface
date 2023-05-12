@@ -1,4 +1,4 @@
-name: 2 | Deploy to staging
+name: 2 | Deploy staging
 on:
   push:
     branches:
@@ -8,7 +8,7 @@ jobs:
   deploy-to-staging:
     runs-on: ubuntu-latest
     environment:
-      name: staging
+      name: deploy/staging
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
