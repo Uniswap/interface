@@ -254,6 +254,7 @@ function parseRemoteActivity(assetActivity: AssetActivityPartsFragment): Activit
       title: assetActivity.type,
       descriptor: assetActivity.transaction.to,
       receipt: assetActivity.transaction,
+      nonce: assetActivity.transaction.nonce,
     }
     const parsedFields = ActivityParserByType[assetActivity.type]?.(changes, assetActivity)
 
