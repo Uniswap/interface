@@ -23,7 +23,7 @@ global.origin = 'https://app.uniswap.org'
 
 global.matchMedia =
   global.matchMedia ||
-  function() {
+  function () {
     return {
       matches: false,
       addEventListener: jest.fn(),
