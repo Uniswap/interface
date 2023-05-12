@@ -38,12 +38,13 @@ describe('trace', () => {
   })
 
   it('records transaction', async () => {
-    const metadata = { data: { a: 'a', b: 2 }, tags: { is_widget: true } }
+    const metadata = { data: { a: 'a', b: 2 }, tags: { test_tag: true } }
+    // @ts-ignore test_tag is not an expected key for `tags` but force it for testing purposes
     await trace('test', () => Promise.resolve(), metadata)
     const transaction = getTransaction()
     expect(transaction.name).toBe('test')
     expect(transaction.data).toEqual({ a: 'a', b: 2 })
-    expect(transaction.tags).toEqual({ is_widget: true })
+    expect(transaction.tags).toEqual({ test_tag: true })
   })
 
   describe('defaults status', () => {
@@ -77,11 +78,12 @@ describe('trace', () => {
   describe('setTraceTag', () => {
     it('sets a transaction tag', async () => {
       await trace('test', ({ setTraceTag }) => {
-        setTraceTag('is_widget', true)
+        // @ts-ignore test_tag is not an expected key for `tags` but force it for testing purposes
+        setTraceTag('test_tag', true)
         return Promise.resolve()
       })
       const transaction = getTransaction()
-      expect(transaction.tags).toEqual({ is_widget: true })
+      expect(transaction.tags).toEqual({ test_tag: true })
     })
   })
 
@@ -166,7 +168,8 @@ describe('trace', () => {
   describe('traceChild', () => {
     it('starts a span under a transaction', async () => {
       await trace('test', ({ traceChild }) => {
-        traceChild('child', () => Promise.resolve(), { data: { e: 'e' }, tags: { is_widget: true } })
+        // @ts-ignore test_tag is not an expected key for `tags` but force it for testing purposes
+        traceChild('child', () => Promise.resolve(), { data: { e: 'e' }, tags: { test_tag: true } })
         return Promise.resolve()
       })
       const transaction = getTransaction()
@@ -174,7 +177,7 @@ describe('trace', () => {
       assert(span)
       expect(span.op).toBe('child')
       expect(span.data).toEqual({ e: 'e' })
-      expect(span.tags).toEqual({ is_widget: true })
+      expect(span.tags).toEqual({ test_tag: true })
     })
   })
 })

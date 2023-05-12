@@ -115,7 +115,6 @@ export const routingApi = createApi({
               isAutoRouter:
                 args.routerPreference === RouterPreference.AUTO || args.routerPreference === RouterPreference.API,
             },
-            tags: { is_widget: false },
           }
         )
       },
