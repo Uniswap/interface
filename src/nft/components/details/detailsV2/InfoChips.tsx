@@ -5,7 +5,7 @@ import useENSAvatar from 'hooks/useENSAvatar'
 import useENSName from 'hooks/useENSName'
 import { useScreenSize } from 'hooks/useScreenSize'
 import { GenieAsset } from 'nft/types'
-import { ReactNode, useState } from 'react'
+import { ReactNode, useReducer, useState } from 'react'
 import { ChevronDown, ChevronUp, DollarSign } from 'react-feather'
 import styled from 'styled-components/macro'
 import { BREAKPOINTS, ThemedText } from 'theme'
@@ -66,29 +66,38 @@ const InfoChipDropdown = styled.button`
 
 const InfoChipDropdownContainer = styled(Column)`
   height: 100%;
-  justify-content: flex-end;
+  margin-top: auto;
 
   @media screen and (min-width: ${BREAKPOINTS.sm}px) {
     display: none;
   }
 `
 
+const Break = styled(Column)`
+  flex-basis: 100%;
+`
+
 const InfoChipsContainer = styled(Row)`
   gap: 4px;
-  height: 64px;
+  width: 100%;
+  flex-wrap: nowrap;
 
   @media screen and (min-width: ${BREAKPOINTS.sm}px) {
     gap: 12px;
+  }
+
+  @media screen and (max-width: ${BREAKPOINTS.sm}px) {
+    flex-wrap: wrap;
   }
 `
 
 export const InfoChips = ({ asset }: { asset: GenieAsset }) => {
   const screenSize = useScreenSize()
   const isMobile = !screenSize['sm']
-  const [showExtraInfoChips, setShowExtraInfoChips] = useState(false)
+  const [showExtraInfoChips, toggleShowExtraInfoChips] = useReducer((s) => !s, false)
   const shouldShowExtraInfoChips = isMobile && showExtraInfoChips
 
-  const topTrait = asset.traits && asset.traits.length ? asset.traits[0] : undefined
+  const topTrait = asset?.traits?.[0]
 
   const isChecksummedAddress = isAddress(asset.ownerAddress)
   const checksummedAddress = isChecksummedAddress ? isChecksummedAddress : undefined
@@ -107,20 +116,21 @@ export const InfoChips = ({ asset }: { asset: GenieAsset }) => {
       <InfoChipsContainer justify="center">
         <InfoBubble key="Owner" title="Owner" info={addressToDisplay} icon={avatarToDisplay} />
         <InfoBubble key="Trait Floor" title="Trait Floor" info="5.3 ETH" icon={<DollarSign size={20} />} />
-        {!isMobile && topTrait && <InfoBubble key="Top Trait" title="Top Trait" info={topTrait.trait_value} icon="" />}
         {topTrait && (
           <InfoChipDropdownContainer>
-            <InfoChipDropdown onClick={() => setShowExtraInfoChips(!showExtraInfoChips)}>
+            <InfoChipDropdown onClick={toggleShowExtraInfoChips}>
               {showExtraInfoChips ? <ChevronUp size={20} display="block" /> : <ChevronDown size={20} display="block" />}
             </InfoChipDropdown>
           </InfoChipDropdownContainer>
         )}
+        {shouldShowExtraInfoChips && <Break />}
+        {topTrait && (!isMobile || shouldShowExtraInfoChips) && <InfoBubble key="Top Trait" title="Top Trait" info={topTrait.trait_value} icon="" />}
       </InfoChipsContainer>
-      {shouldShowExtraInfoChips && topTrait && (
+      {/* {shouldShowExtraInfoChips && topTrait && (
         <InfoChipsContainer gap="xs" justify="center">
           <InfoBubble key="Top Trait" title="Top Trait" info={topTrait.trait_value} icon="" />
         </InfoChipsContainer>
-      )}
+      )} */}
     </Column>
   )
 }
