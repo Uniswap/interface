@@ -113,7 +113,11 @@ export const renderTabLabel = ({
       <Text color={focused ? 'textPrimary' : 'textTertiary'} fontSize={18} variant="bodyLarge">
         {route.title}
       </Text>
-      {!isExternalProfile && route.title === 'Activity' ? <PendingNotificationBadge /> : null}
+      {/* Streamline UI by hiding the Activity tab spinner when focused
+      and showing it only on the specific pending transactions. */}
+      {route.title === 'Activity' && !isExternalProfile && !focused ? (
+        <PendingNotificationBadge />
+      ) : null}
     </Flex>
   )
 }
