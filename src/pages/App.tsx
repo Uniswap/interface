@@ -18,7 +18,7 @@ import { flexRowNoWrap } from 'theme/styles'
 import { Z_INDEX } from 'theme/zIndex'
 import { STATSIG_DUMMY_KEY } from 'tracing'
 import { getEnvName } from 'utils/env'
-import { retry } from 'utils/lazy'
+import { retry } from 'utils/retry'
 import { getCLS, getFCP, getFID, getLCP, Metric } from 'web-vitals'
 
 import { useAnalyticsReporter } from '../components/analytics'

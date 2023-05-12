@@ -8,7 +8,7 @@ import useAccountRiskCheck from 'hooks/useAccountRiskCheck'
 import { lazy } from 'react'
 import { useModalIsOpen, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
-import { retry } from 'utils/lazy'
+import { retry } from 'utils/retry'
 
 const Bag = lazy(retry(() => import('nft/components/bag/Bag')))
 const TransactionCompleteModal = lazy(retry(() => import('nft/components/collection/TransactionCompleteModal')))
