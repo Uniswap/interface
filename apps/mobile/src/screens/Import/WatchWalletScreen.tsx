@@ -121,11 +121,6 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX
     sm: 'buttonLabelSmall',
   })
 
-  const entryPadding = useResponsiveProp({
-    xs: 'none',
-    sm: 'spacing24',
-  })
-
   const itemSpacing = useResponsiveProp({
     xs: 'none',
     sm: 'spacing8',
@@ -137,7 +132,7 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX
         'Enter an Ethereum wallet address (starting with 0x) or ENS name (ending in .eth).'
       )}
       title={t('Enter a wallet address')}>
-      <Flex gap={itemSpacing} pt={entryPadding}>
+      <Flex gap={itemSpacing}>
         <GenericImportForm
           blurOnSubmit
           errorMessage={errorText}

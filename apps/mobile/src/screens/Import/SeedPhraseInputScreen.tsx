@@ -1,4 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
+import { useResponsiveProp } from '@shopify/restyle'
 import { SharedEventName } from '@uniswap/analytics-events'
 import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -102,11 +103,21 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props):
 
   const onPressRecoveryHelpButton = (): Promise<void> => openUri(RECOVERY_PHRASE_HELP_URL)
 
+  const subtitleSize = useResponsiveProp({
+    xs: 'bodyMicro',
+    sm: 'subheadSmall',
+  })
+
+  const itemSpacing = useResponsiveProp({
+    xs: 'none',
+    sm: 'spacing8',
+  })
+
   return (
     <SafeKeyboardOnboardingScreen
       subtitle={t('Your recovery phrase will only be stored locally on your device.')}
       title={t('Enter your recovery phrase')}>
-      <Flex>
+      <Flex gap={itemSpacing}>
         <GenericImportForm
           autoCorrect
           blurOnSubmit
@@ -120,23 +131,23 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props):
           onBlur={onBlur}
           onChange={onChange}
         />
+        <Flex centered>
+          <TouchableArea
+            eventName={SharedEventName.ELEMENT_CLICKED}
+            name={ElementName.RecoveryHelpButton}
+            onPress={onPressRecoveryHelpButton}>
+            <Text color="accentAction" variant={subtitleSize}>
+              {t('How do I find my recovery phrase?')}
+            </Text>
+          </TouchableArea>
+        </Flex>
       </Flex>
-      <Flex centered gap="spacing36" pb="spacing4">
-        <TouchableArea
-          eventName={SharedEventName.ELEMENT_CLICKED}
-          name={ElementName.RecoveryHelpButton}
-          onPress={onPressRecoveryHelpButton}>
-          <Text color="accentAction" variant="bodySmall">
-            {t('How do I find my recovery phrase?')}
-          </Text>
-        </TouchableArea>
-        <Button
-          disabled={!!errorMessage}
-          label={t('Continue')}
-          name={ElementName.Next}
-          onPress={onSubmit}
-        />
-      </Flex>
+      <Button
+        disabled={!!errorMessage || !value}
+        label={t('Continue')}
+        name={ElementName.Next}
+        onPress={onSubmit}
+      />
     </SafeKeyboardOnboardingScreen>
   )
 }

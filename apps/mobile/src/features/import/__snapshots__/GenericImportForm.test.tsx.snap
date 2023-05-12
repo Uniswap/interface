@@ -188,10 +188,10 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
           style={
             [
               {
-                "alignItems": "center",
+                "alignItems": "stretch",
                 "display": "flex",
                 "flexDirection": "row",
-                "justifyContent": "center",
+                "justifyContent": "flex-start",
                 "paddingHorizontal": 8,
                 "paddingVertical": 8,
               },

@@ -664,94 +664,9 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                   [
                     {
                       "alignItems": "stretch",
-                      "borderRadius": 16,
-                      "display": "flex",
-                      "flexDirection": "column",
-                      "height": "100%",
-                      "justifyContent": "flex-start",
-                      "overflow": "hidden",
-                      "position": "absolute",
-                      "width": "100%",
-                    },
-                  ]
-                }
-              >
-                <RNSVGSvgView
-                  bbHeight="100%"
-                  bbWidth="100%"
-                  focusable={false}
-                  height="100%"
-                  style={
-                    [
-                      {
-                        "backgroundColor": "transparent",
-                        "borderWidth": 0,
-                      },
-                      {
-                        "flex": 0,
-                        "height": "100%",
-                        "width": "100%",
-                      },
-                    ]
-                  }
-                  width="100%"
-                >
-                  <RNSVGGroup
-                    fill={
-                      {
-                        "payload": 4278190080,
-                        "type": 0,
-                      }
-                    }
-                  >
-                    <RNSVGDefs>
-                      <RNSVGLinearGradient
-                        gradient={
-                          [
-                            0,
-                            -958215,
-                            1,
-                            -2011415,
-                          ]
-                        }
-                        gradientTransform={null}
-                        gradientUnits={0}
-                        name="background"
-                        x1="0%"
-                        x2="0%"
-                        y1="0%"
-                        y2="100%"
-                      />
-                    </RNSVGDefs>
-                    <RNSVGRect
-                      fill={
-                        {
-                          "brushRef": "background",
-                          "type": 1,
-                        }
-                      }
-                      height="150%"
-                      opacity={1}
-                      propList={
-                        [
-                          "fill",
-                        ]
-                      }
-                      width="100%"
-                      x="0"
-                      y="0"
-                    />
-                  </RNSVGGroup>
-                </RNSVGSvgView>
-              </View>
-              <View
-                style={
-                  [
-                    {
-                      "alignItems": "center",
                       "display": "flex",
                       "flexDirection": "row",
-                      "justifyContent": "center",
+                      "justifyContent": "flex-start",
                       "paddingHorizontal": 12,
                       "paddingVertical": 12,
                     },
@@ -1438,94 +1353,9 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                   [
                     {
                       "alignItems": "stretch",
-                      "borderRadius": 16,
-                      "display": "flex",
-                      "flexDirection": "column",
-                      "height": "100%",
-                      "justifyContent": "flex-start",
-                      "overflow": "hidden",
-                      "position": "absolute",
-                      "width": "100%",
-                    },
-                  ]
-                }
-              >
-                <RNSVGSvgView
-                  bbHeight="100%"
-                  bbWidth="100%"
-                  focusable={false}
-                  height="100%"
-                  style={
-                    [
-                      {
-                        "backgroundColor": "transparent",
-                        "borderWidth": 0,
-                      },
-                      {
-                        "flex": 0,
-                        "height": "100%",
-                        "width": "100%",
-                      },
-                    ]
-                  }
-                  width="100%"
-                >
-                  <RNSVGGroup
-                    fill={
-                      {
-                        "payload": 4278190080,
-                        "type": 0,
-                      }
-                    }
-                  >
-                    <RNSVGDefs>
-                      <RNSVGLinearGradient
-                        gradient={
-                          [
-                            0,
-                            -958215,
-                            1,
-                            -2011415,
-                          ]
-                        }
-                        gradientTransform={null}
-                        gradientUnits={0}
-                        name="background"
-                        x1="0%"
-                        x2="0%"
-                        y1="0%"
-                        y2="100%"
-                      />
-                    </RNSVGDefs>
-                    <RNSVGRect
-                      fill={
-                        {
-                          "brushRef": "background",
-                          "type": 1,
-                        }
-                      }
-                      height="150%"
-                      opacity={1}
-                      propList={
-                        [
-                          "fill",
-                        ]
-                      }
-                      width="100%"
-                      x="0"
-                      y="0"
-                    />
-                  </RNSVGGroup>
-                </RNSVGSvgView>
-              </View>
-              <View
-                style={
-                  [
-                    {
-                      "alignItems": "center",
                       "display": "flex",
                       "flexDirection": "row",
-                      "justifyContent": "center",
+                      "justifyContent": "flex-start",
                       "paddingHorizontal": 12,
                       "paddingVertical": 12,
                     },
