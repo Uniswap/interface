@@ -128,8 +128,8 @@ const InfoChipsContainer = styled(Row)`
   }
 `
 
-const StyledChevron = styled(ChevronDown)<{ $isOpen: boolean }>`
-  transform: ${({ $isOpen }) => ($isOpen ? 'rotate(180deg)' : 'rotate(0deg)')};
+const StyledChevron = styled(ChevronDown)<{ isOpen: boolean }>`
+  transform: ${({ isOpen }) => (isOpen ? 'rotate(180deg)' : 'rotate(0deg)')};
   will-change: transform;
   transition: transform ${({ theme }) => theme.transition.duration.medium};
 `
@@ -184,7 +184,7 @@ export const InfoChips = ({ asset }: { asset: GenieAsset }) => {
             />
             <InfoChipDropdownContainer>
               <InfoChipDropdown onClick={toggleShowExtraInfoChips}>
-                <StyledChevron $isOpen={showExtraInfoChips} size={20} display="block" />
+                <StyledChevron isOpen={showExtraInfoChips} size={20} display="block" />
               </InfoChipDropdown>
             </InfoChipDropdownContainer>
           </>
