@@ -5,7 +5,7 @@ import Row from 'components/Row'
 import { HandHoldingDollarIcon, VerifiedIcon } from 'nft/components/icons'
 import { GenieAsset } from 'nft/types'
 import { formatEth } from 'nft/utils'
-import styled from 'styled-components/macro'
+import styled, { css } from 'styled-components/macro'
 import { BREAKPOINTS, ThemedText } from 'theme'
 
 const HeaderContainer = styled(Row)`
@@ -19,6 +19,7 @@ const AssetImage = styled.img`
   width: 96px;
   height: 96px;
   border-radius: 20px;
+  object-fit: cover;
 
   @media screen and (max-width: ${BREAKPOINTS.lg}px) {
     display: none;
@@ -30,6 +31,12 @@ const AssetText = styled(Column)`
   margin-right: auto;
 `
 
+const ButtonStyles = css`
+  width: min-content;
+  flex-shrink: 0;
+  border-radius: 16px;
+`
+
 const BuyButton = styled(ButtonPrimary)`
   display: flex;
   flex-direction: row;
@@ -37,8 +44,7 @@ const BuyButton = styled(ButtonPrimary)`
   gap: 8px;
   line-height: 24px;
   white-space: nowrap;
-  width: min-content;
-  flex-shrink: 0;
+  ${ButtonStyles}
 `
 
 const Price = styled.div`
@@ -46,13 +52,13 @@ const Price = styled.div`
 `
 
 const MakeOfferButtonSmall = styled(ButtonPrimary)`
-  border-radius: 12px;
-  width: min-content;
-  flex-shrink: 0;
+  padding: 16px;
+  ${ButtonStyles}
 `
 
 const MakeOfferButtonLarge = styled(ButtonGray)`
   white-space: nowrap;
+  ${ButtonStyles}
 `
 
 export const DataPageHeader = ({ asset }: { asset: GenieAsset }) => {

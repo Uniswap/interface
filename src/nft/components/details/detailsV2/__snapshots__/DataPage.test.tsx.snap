@@ -267,6 +267,7 @@ exports[`placeholder containers load 1`] = `
   width: 96px;
   height: 96px;
   border-radius: 20px;
+  object-fit: cover;
 }
 
 .c6 {
@@ -276,6 +277,13 @@ exports[`placeholder containers load 1`] = `
 
 .c15 {
   white-space: nowrap;
+  width: -webkit-min-content;
+  width: -moz-min-content;
+  width: min-content;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  border-radius: 16px;
 }
 
 .c1 {

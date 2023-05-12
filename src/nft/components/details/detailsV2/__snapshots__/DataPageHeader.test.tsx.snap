@@ -213,6 +213,7 @@ exports[`Header loads with asset with a sell order 1`] = `
   width: 96px;
   height: 96px;
   border-radius: 20px;
+  object-fit: cover;
 }
 
 .c5 {
@@ -238,6 +239,7 @@ exports[`Header loads with asset with a sell order 1`] = `
   -webkit-flex-shrink: 0;
   -ms-flex-negative: 0;
   flex-shrink: 0;
+  border-radius: 16px;
 }
 
 .c15 {
@@ -245,13 +247,14 @@ exports[`Header loads with asset with a sell order 1`] = `
 }
 
 .c16 {
-  border-radius: 12px;
+  padding: 16px;
   width: -webkit-min-content;
   width: -moz-min-content;
   width: min-content;
   -webkit-flex-shrink: 0;
   -ms-flex-negative: 0;
   flex-shrink: 0;
+  border-radius: 16px;
 }
 
 @media screen and (max-width:768px) {
@@ -539,6 +542,7 @@ exports[`Header loads with asset with no sell orders 1`] = `
   width: 96px;
   height: 96px;
   border-radius: 20px;
+  object-fit: cover;
 }
 
 .c5 {
@@ -548,6 +552,13 @@ exports[`Header loads with asset with no sell orders 1`] = `
 
 .c14 {
   white-space: nowrap;
+  width: -webkit-min-content;
+  width: -moz-min-content;
+  width: min-content;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  border-radius: 16px;
 }
 
 @media screen and (max-width:768px) {
