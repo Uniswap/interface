@@ -68,6 +68,7 @@ module.exports = {
     configure(jestConfig) {
       return Object.assign(jestConfig, {
         cacheDirectory: getCacheDirectory('jest'),
+        testTimeout: 300,
         transform: Object.assign(jestConfig.transform, {
           // Transform vanilla-extract using its own transformer.
           // See https://sandroroth.com/blog/vanilla-extract-cra#jest-transform.
