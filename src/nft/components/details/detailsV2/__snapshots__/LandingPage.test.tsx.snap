@@ -26,6 +26,63 @@ exports[`LandingPage renders it correctly 1`] = `
   gap: 4px;
 }
 
+.c16 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.c19 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 8px;
+}
+
+.c21 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c18 {
+  color: #7780A0;
+}
+
 .c5 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -40,12 +97,67 @@ exports[`LandingPage renders it correctly 1`] = `
   justify-content: flex-start;
 }
 
+.c15 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 8px;
+}
+
 .c6 {
   width: 100%;
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
+}
+
+.c20 {
+  background-color: #FFFFFF;
+  padding: 10px 12px 10px 8px;
+  border-radius: 20px;
+  max-width: 144px;
+}
+
+.c23 {
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 20px;
+  color: #0D111C;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.c22 {
+  width: 24px;
+  height: 24px;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  color: #FB118E;
+  border-radius: 100%;
+  overflow: hidden;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.c17 {
+  height: 64px;
 }
 
 .c2 {
@@ -126,6 +238,12 @@ exports[`LandingPage renders it correctly 1`] = `
   height: 100%;
   -webkit-filter: drop-shadow(0px 12px 20px rgba(0,0,0,0.1));
   filter: drop-shadow(0px 12px 20px rgba(0,0,0,0.1));
+}
+
+@media screen and (min-width:640px) {
+  .c20 {
+    max-width: 169px;
+  }
 }
 
 @media screen and (min-width:1280px) {
@@ -257,6 +375,76 @@ exports[`LandingPage renders it correctly 1`] = `
           class="c13 c14"
         >
           Azuki #3318
+        </div>
+      </div>
+      <div
+        class="c15"
+      >
+        <div
+          class="c9 c16 c17"
+        >
+          <div
+            class="c15"
+          >
+            <div
+              class="c18 css-4u0e4f"
+            >
+              Owner
+            </div>
+            <div
+              class="c9 c19 c20"
+            >
+              <div
+                class="c9 c21 c22"
+              />
+              <div
+                class="c23"
+              />
+            </div>
+          </div>
+          <div
+            class="c15"
+          >
+            <div
+              class="c18 css-4u0e4f"
+            >
+              Trait Floor
+            </div>
+            <div
+              class="c9 c19 c20"
+            >
+              <div
+                class="c9 c21 c22"
+              >
+                <svg
+                  fill="none"
+                  height="20"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="20"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <line
+                    x1="12"
+                    x2="12"
+                    y1="1"
+                    y2="23"
+                  />
+                  <path
+                    d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"
+                  />
+                </svg>
+              </div>
+              <div
+                class="c23"
+              >
+                5.3 ETH
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

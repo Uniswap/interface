@@ -137,7 +137,7 @@ const RenderMediaShadow = ({ imageUrl }: { imageUrl: string | undefined }) => {
 
   return (
     <MediaShadowContainer>
-      <MediaShadow src={imageUrl} onLoad={(e) => console.log(e)} onError={() => setContentNotAvailable(true)} />
+      <MediaShadow src={imageUrl} onError={() => setContentNotAvailable(true)} />
     </MediaShadowContainer>
   )
 }
