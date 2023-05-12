@@ -95,7 +95,7 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
 
   return (
     <Box position="relative" ref={ref}>
-      <MouseoverTooltip text={t`Your wallet's current network is unsupported.`} disableHover={isSupported}>
+      <MouseoverTooltip text={t`Your wallet's current network is unsupported.`} disabled={isSupported}>
         <Row
           as="button"
           gap="8"
