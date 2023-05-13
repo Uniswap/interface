@@ -43,7 +43,11 @@ const MenuItem = ({ href, dataTestId, id, isActive, children }: MenuItemProps) =
       to={href}
       className={isActive ? styles.activeMenuItem : styles.menuItem}
       id={id}
-      style={{ textDecoration: 'none' }}
+      style={{
+        textDecoration: 'none',
+        padding: '5px 15px',
+        width: 'auto',
+      }}
       data-testid={dataTestId}
     >
       {children}
@@ -74,14 +78,10 @@ export const PageTabs = () => {
           <Trans>NFTs</Trans>
         </MenuItem>
       )}
-      <Box display={{ sm: 'flex', lg: 'none', xxl: 'flex' }} width="full">
-        <MenuItem href="/pools" dataTestId="pool-nav-link" isActive={isPoolActive}>
-          <Trans>Pools</Trans>
-        </MenuItem>
-      </Box>
-      <Box marginY={{ sm: '4', md: 'unset' }}>
-        <MenuDropdown />
-      </Box>
+      <MenuItem href="/pools" dataTestId="pool-nav-link" isActive={isPoolActive}>
+        <Trans>Pools</Trans>
+      </MenuItem>
+      <MenuDropdown />
     </>
   )
 }
