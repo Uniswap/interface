@@ -78,11 +78,11 @@ exports[`LandingPage renders it correctly 1`] = `
   justify-content: flex-start;
 }
 
-.c19 {
+.c18 {
   color: #7780A0;
 }
 
-.c18 {
+.c19 {
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -93,11 +93,11 @@ exports[`LandingPage renders it correctly 1`] = `
   font-weight: 500;
 }
 
-.c18:hover {
+.c19:hover {
   opacity: 0.6;
 }
 
-.c18:active {
+.c19:active {
   opacity: 0.4;
 }
 
@@ -414,20 +414,20 @@ exports[`LandingPage renders it correctly 1`] = `
         <div
           class="c9 c16 c17"
         >
-          <a
-            class="c18"
-            href="https://etherscan.io/address/"
-            rel="noopener noreferrer"
-            target="_blank"
+          <div
+            class="c15"
           >
             <div
-              class="c15"
+              class="c18 css-4u0e4f"
             >
-              <div
-                class="c19 css-4u0e4f"
-              >
-                Owner
-              </div>
+              Owner
+            </div>
+            <a
+              class="c19"
+              href="https://etherscan.io/address/"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
               <div
                 class="c9 c20 c21"
               >
@@ -438,8 +438,8 @@ exports[`LandingPage renders it correctly 1`] = `
                   class="c24"
                 />
               </div>
-            </div>
-          </a>
+            </a>
+          </div>
         </div>
       </div>
     </div>
