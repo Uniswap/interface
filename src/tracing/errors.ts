@@ -1,5 +1,4 @@
 import { ClientOptions, ErrorEvent, EventHint } from '@sentry/types'
-import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 
 // `responseStatus` is only currently supported on certain browsers.
 // see: https://caniuse.com/mdn-api_performanceresourcetiming_responsestatus
@@ -79,9 +78,6 @@ export const filterKnownErrors: Required<ClientOptions>['beforeSend'] = (event: 
 
     // If the error is a network change, it should not be considered an exception.
     if (error.message.match(/underlying network changed/)) return null
-
-    // If the error is based on a user rejecting, it should not be considered an exception.
-    if (didUserReject(error)) return null
 
     // This is caused by HTML being returned for a chunk from Cloudflare.
     // Usually, it's the result of a 499 exception right before it, which should be handled.

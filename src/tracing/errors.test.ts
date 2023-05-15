@@ -74,6 +74,11 @@ describe('filterKnownErrors', () => {
     expect(filterKnownErrors(ERROR, { originalException })).toBe(ERROR)
   })
 
+  it('propagates user rejected request errors', () => {
+    const originalException = new Error('user rejected transaction')
+    expect(filterKnownErrors(ERROR, { originalException })).toBe(ERROR)
+  })
+
   it('filters block number polling errors', () => {
     const originalException = new (class extends Error {
       requestBody = JSON.stringify({ method: 'eth_blockNumber' })
@@ -83,11 +88,6 @@ describe('filterKnownErrors', () => {
 
   it('filters network change errors', () => {
     const originalException = new Error('underlying network changed')
-    expect(filterKnownErrors(ERROR, { originalException })).toBeNull()
-  })
-
-  it('filters user rejected request errors', () => {
-    const originalException = new Error('user rejected transaction')
     expect(filterKnownErrors(ERROR, { originalException })).toBeNull()
   })
 

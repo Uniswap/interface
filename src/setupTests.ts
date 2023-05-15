@@ -1,10 +1,10 @@
 import '@testing-library/jest-dom' // jest custom assertions
 import 'jest-styled-components' // adds style diffs to snapshot tests
 
+import { ResizeObserver } from '@juggle/resize-observer'
 import type { createPopper } from '@popperjs/core'
 import { useWeb3React } from '@web3-react/core'
 import failOnConsole from 'jest-fail-on-console'
-import ResizeObserver from 'resize-observer-polyfill'
 import { Readable } from 'stream'
 import { mocked } from 'test-utils/mocked'
 import { TextDecoder, TextEncoder } from 'util'
@@ -18,21 +18,21 @@ if (typeof global.TextEncoder === 'undefined') {
   global.TextDecoder = TextDecoder as typeof global.TextDecoder
 }
 
-global.ResizeObserver = ResizeObserver
-
 // Sets origin to the production origin, because some tests depend on this.
 // This prevents each test file from needing to set this manually.
 global.origin = 'https://app.uniswap.org'
 
 global.matchMedia =
   global.matchMedia ||
-  function () {
+  (() => {
     return {
       matches: false,
       addEventListener: jest.fn(),
       removeEventListener: jest.fn(),
     }
-  }
+  })
+
+global.ResizeObserver = ResizeObserver
 
 jest.mock('@popperjs/core', () => {
   const core = jest.requireActual('@popperjs/core')

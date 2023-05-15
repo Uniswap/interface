@@ -42,7 +42,7 @@ export default function AnimatedConfirmation({ size, ...rest }: { size?: string 
   const theme = useTheme()
 
   return (
-    <Wrapper className="w4rAnimated_checkmark" size={size} {...rest}>
+    <Wrapper size={size} {...rest}>
       <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130.2 130.2">
         <Circle
           className="path circle"
