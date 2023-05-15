@@ -295,6 +295,24 @@ query NftsTab($ownerAddress: String!, $first: Int, $after: String) {
 query PortfolioBalances($ownerAddress: String!) {
   portfolios(ownerAddresses: [$ownerAddress]) {
     id
+
+    # Total portfolio balance for header
+    tokensTotalDenominatedValue {
+      id
+      value
+    }
+    tokensTotalDenominatedValueChange(duration: DAY) {
+      absolute {
+        id
+        value
+      }
+      percentage {
+        id
+        value
+      }
+    }
+
+    # Individual portfolio token balances
     tokenBalances {
       id
       quantity

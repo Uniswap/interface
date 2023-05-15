@@ -109,6 +109,13 @@ export type Dimensions = {
   width?: Maybe<Scalars['Float']>;
 };
 
+export type EnsEntry = {
+  __typename?: 'EnsEntry';
+  address: Scalars['String'];
+  ensDomainName: Scalars['String'];
+  id: Scalars['ID'];
+};
+
 export enum HighLow {
   High = 'HIGH',
   Low = 'LOW'
@@ -144,6 +151,13 @@ export type Image = {
 export enum MarketSortableField {
   MarketCap = 'MARKET_CAP',
   Volume = 'VOLUME'
+}
+
+export enum MediaType {
+  Audio = 'AUDIO',
+  Image = 'IMAGE',
+  Raw = 'RAW',
+  Video = 'VIDEO'
 }
 
 export type NftActivity = {
@@ -219,6 +233,7 @@ export type NftAsset = {
   image?: Maybe<Image>;
   imageUrl?: Maybe<Scalars['String']>;
   listings?: Maybe<NftOrderConnection>;
+  mediaType?: Maybe<MediaType>;
   metadataUrl?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   nftContract?: Maybe<NftContract>;
@@ -397,6 +412,7 @@ export type NftCollectionMarketFloorPriceArgs = {
 
 
 export type NftCollectionMarketFloorPricePercentChangeArgs = {
+  _fs?: InputMaybe<Scalars['String']>;
   duration?: InputMaybe<HistoryDuration>;
 };
 
@@ -412,11 +428,13 @@ export type NftCollectionMarketSalesArgs = {
 
 
 export type NftCollectionMarketVolumeArgs = {
+  _fs?: InputMaybe<Scalars['String']>;
   duration?: InputMaybe<HistoryDuration>;
 };
 
 
 export type NftCollectionMarketVolumePercentChangeArgs = {
+  _fs?: InputMaybe<Scalars['String']>;
   duration?: InputMaybe<HistoryDuration>;
 };
 
@@ -656,6 +674,7 @@ export type PortfolioTokensTotalDenominatedValueChangeArgs = {
 
 export type Query = {
   __typename?: 'Query';
+  ensEntry?: Maybe<EnsEntry>;
   nftActivity?: Maybe<NftActivityConnection>;
   nftAssets?: Maybe<NftAssetConnection>;
   nftBalances?: Maybe<NftBalanceConnection>;
@@ -671,6 +690,12 @@ export type Query = {
   tokens?: Maybe<Array<Maybe<Token>>>;
   topCollections?: Maybe<NftCollectionConnection>;
   topTokens?: Maybe<Array<Maybe<Token>>>;
+};
+
+
+export type QueryEnsEntryArgs = {
+  chain: Chain;
+  ensDomainName: Scalars['String'];
 };
 
 
@@ -732,6 +757,7 @@ export type QueryNftRouteArgs = {
 
 
 export type QueryPortfoliosArgs = {
+  _fs?: InputMaybe<Scalars['String']>;
   chains?: InputMaybe<Array<Chain>>;
   ownerAddresses: Array<Scalars['String']>;
 };
@@ -768,6 +794,7 @@ export type QueryTokensArgs = {
 
 
 export type QueryTopCollectionsArgs = {
+  _fs?: InputMaybe<Scalars['String']>;
   after?: InputMaybe<Scalars['String']>;
   chains?: InputMaybe<Array<Chain>>;
   cursor?: InputMaybe<Scalars['String']>;
@@ -1105,7 +1132,7 @@ export type PortfolioBalancesQueryVariables = Exact<{
 }>;
 
 
-export type PortfolioBalancesQuery = { __typename?: 'Query', portfolios?: Array<{ __typename?: 'Portfolio', id: string, tokenBalances?: Array<{ __typename?: 'TokenBalance', id: string, quantity?: number | null, denominatedValue?: { __typename?: 'Amount', id: string, currency?: Currency | null, value: number } | null, token?: { __typename?: 'Token', id: string, chain: Chain, address?: string | null, symbol?: string | null, decimals?: number | null, project?: { __typename?: 'TokenProject', id: string, name?: string | null, logoUrl?: string | null, safetyLevel?: SafetyLevel | null, isSpam?: boolean | null } | null } | null, tokenProjectMarket?: { __typename?: 'TokenProjectMarket', relativeChange24?: { __typename?: 'Amount', id: string, value: number } | null } | null } | null> | null } | null> | null };
+export type PortfolioBalancesQuery = { __typename?: 'Query', portfolios?: Array<{ __typename?: 'Portfolio', id: string, tokensTotalDenominatedValue?: { __typename?: 'Amount', id: string, value: number } | null, tokensTotalDenominatedValueChange?: { __typename?: 'AmountChange', absolute?: { __typename?: 'Amount', id: string, value: number } | null, percentage?: { __typename?: 'Amount', id: string, value: number } | null } | null, tokenBalances?: Array<{ __typename?: 'TokenBalance', id: string, quantity?: number | null, denominatedValue?: { __typename?: 'Amount', id: string, currency?: Currency | null, value: number } | null, token?: { __typename?: 'Token', id: string, chain: Chain, address?: string | null, symbol?: string | null, decimals?: number | null, project?: { __typename?: 'TokenProject', id: string, name?: string | null, logoUrl?: string | null, safetyLevel?: SafetyLevel | null, isSpam?: boolean | null } | null } | null, tokenProjectMarket?: { __typename?: 'TokenProjectMarket', relativeChange24?: { __typename?: 'Amount', id: string, value: number } | null } | null } | null> | null } | null> | null };
 
 export type SelectWalletScreenQueryVariables = Exact<{
   ownerAddresses: Array<Scalars['String']> | Scalars['String'];
@@ -1199,13 +1226,6 @@ export type FavoriteTokenCardQueryVariables = Exact<{
 
 
 export type FavoriteTokenCardQuery = { __typename?: 'Query', token?: { __typename?: 'Token', id: string, symbol?: string | null, chain: Chain, address?: string | null, project?: { __typename?: 'TokenProject', id: string, name?: string | null, logoUrl?: string | null, markets?: Array<{ __typename?: 'TokenProjectMarket', id: string, price?: { __typename?: 'Amount', id: string, value: number } | null, pricePercentChange24h?: { __typename?: 'Amount', id: string, value: number } | null } | null> | null } | null } | null };
-
-export type PortfolioBalanceQueryVariables = Exact<{
-  owner: Scalars['String'];
-}>;
-
-
-export type PortfolioBalanceQuery = { __typename?: 'Query', portfolios?: Array<{ __typename?: 'Portfolio', id: string, tokensTotalDenominatedValue?: { __typename?: 'Amount', id: string, value: number } | null, tokensTotalDenominatedValueChange?: { __typename?: 'AmountChange', absolute?: { __typename?: 'Amount', id: string, value: number } | null, percentage?: { __typename?: 'Amount', id: string, value: number } | null } | null } | null> | null };
 
 export const TopTokenPartsFragmentDoc = gql`
     fragment TopTokenParts on Token {
@@ -1860,6 +1880,20 @@ export const PortfolioBalancesDocument = gql`
     query PortfolioBalances($ownerAddress: String!) {
   portfolios(ownerAddresses: [$ownerAddress]) {
     id
+    tokensTotalDenominatedValue {
+      id
+      value
+    }
+    tokensTotalDenominatedValueChange(duration: DAY) {
+      absolute {
+        id
+        value
+      }
+      percentage {
+        id
+        value
+      }
+    }
     tokenBalances {
       id
       quantity
@@ -2596,52 +2630,3 @@ export function useFavoriteTokenCardLazyQuery(baseOptions?: Apollo.LazyQueryHook
 export type FavoriteTokenCardQueryHookResult = ReturnType<typeof useFavoriteTokenCardQuery>;
 export type FavoriteTokenCardLazyQueryHookResult = ReturnType<typeof useFavoriteTokenCardLazyQuery>;
 export type FavoriteTokenCardQueryResult = Apollo.QueryResult<FavoriteTokenCardQuery, FavoriteTokenCardQueryVariables>;
-export const PortfolioBalanceDocument = gql`
-    query PortfolioBalance($owner: String!) {
-  portfolios(ownerAddresses: [$owner]) {
-    id
-    tokensTotalDenominatedValue {
-      id
-      value
-    }
-    tokensTotalDenominatedValueChange(duration: DAY) {
-      absolute {
-        id
-        value
-      }
-      percentage {
-        id
-        value
-      }
-    }
-  }
-}
-    `;
-
-/**
- * __usePortfolioBalanceQuery__
- *
- * To run a query within a React component, call `usePortfolioBalanceQuery` and pass it any options that fit your needs.
- * When your component renders, `usePortfolioBalanceQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = usePortfolioBalanceQuery({
- *   variables: {
- *      owner: // value for 'owner'
- *   },
- * });
- */
-export function usePortfolioBalanceQuery(baseOptions: Apollo.QueryHookOptions<PortfolioBalanceQuery, PortfolioBalanceQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<PortfolioBalanceQuery, PortfolioBalanceQueryVariables>(PortfolioBalanceDocument, options);
-      }
-export function usePortfolioBalanceLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PortfolioBalanceQuery, PortfolioBalanceQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<PortfolioBalanceQuery, PortfolioBalanceQueryVariables>(PortfolioBalanceDocument, options);
-        }
-export type PortfolioBalanceQueryHookResult = ReturnType<typeof usePortfolioBalanceQuery>;
-export type PortfolioBalanceLazyQueryHookResult = ReturnType<typeof usePortfolioBalanceLazyQuery>;
-export type PortfolioBalanceQueryResult = Apollo.QueryResult<PortfolioBalanceQuery, PortfolioBalanceQueryVariables>;

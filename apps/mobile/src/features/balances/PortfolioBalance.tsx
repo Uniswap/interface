@@ -4,7 +4,7 @@ import { WarmLoadingShimmer } from 'src/components/loading/WarmLoadingShimmer'
 import { DecimalNumber } from 'src/components/text/DecimalNumber'
 import { RelativeChange } from 'src/components/text/RelativeChange'
 import { isWarmLoadingStatus } from 'src/data/utils'
-import { usePortfolioBalanceQuery } from 'src/data/__generated__/types-and-hooks'
+import { usePortfolioBalancesQuery } from 'src/data/__generated__/types-and-hooks'
 import { theme } from 'src/styles/theme'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import { formatUSDPrice, NumberType } from 'wallet/src/utils/format'
@@ -14,8 +14,8 @@ interface PortfolioBalanceProps {
 }
 
 export function PortfolioBalance({ owner }: PortfolioBalanceProps): JSX.Element {
-  const { data, loading, networkStatus } = usePortfolioBalanceQuery({
-    variables: { owner },
+  const { data, loading, networkStatus } = usePortfolioBalancesQuery({
+    variables: { ownerAddress: owner },
     // TransactionHistoryUpdater will refetch this query on new transaction.
     // No need to be super aggressive with polling here.
     pollInterval: PollingInterval.Normal,

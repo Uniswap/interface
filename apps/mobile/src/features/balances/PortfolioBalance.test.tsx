@@ -1,19 +1,19 @@
 import { MockedResponse } from '@apollo/client/testing'
 import React from 'react'
 import {
-  PortfolioBalanceDocument,
-  PortfolioBalanceQuery,
+  PortfolioBalancesDocument,
+  PortfolioBalancesQuery,
 } from 'src/data/__generated__/types-and-hooks'
 import { PortfolioBalance } from 'src/features/balances/PortfolioBalance'
 import { Portfolios } from 'src/test/gqlFixtures'
 import { render, screen } from 'src/test/test-utils'
 import { formatUSDPrice, NumberType } from 'wallet/src/utils/format'
 
-const mock: MockedResponse<PortfolioBalanceQuery> = {
+const mock: MockedResponse<PortfolioBalancesQuery> = {
   request: {
-    query: PortfolioBalanceDocument,
+    query: PortfolioBalancesDocument,
     variables: {
-      owner: Portfolios[0].ownerAddress,
+      ownerAddress: Portfolios[0].ownerAddress,
     },
   },
   result: {
