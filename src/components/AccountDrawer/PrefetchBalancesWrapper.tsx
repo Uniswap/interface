@@ -64,7 +64,7 @@ export default function PrefetchBalancesWrapper({ children }: PropsWithChildren)
         setHasUnfetchedBalances(true)
       }
     }
-  }, [accountChanged, drawerOpen, fetchBalances, hasUpdatedTx])
+  }, [account, accountChanged, drawerOpen, fetchBalances, hasUpdatedTx])
 
   const onHover = useCallback(() => {
     if (hasUnfetchedBalances) fetchBalances()
