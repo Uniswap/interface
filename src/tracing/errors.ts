@@ -1,4 +1,4 @@
-import { ErrorEvent, EventHint } from '@sentry/types'
+import { ClientOptions, ErrorEvent, EventHint } from '@sentry/types'
 
 // `responseStatus` is only currently supported on certain browsers.
 // see: https://caniuse.com/mdn-api_performanceresourcetiming_responsestatus
@@ -8,9 +8,11 @@ declare global {
   }
 }
 
-export function beforeSend(event: ErrorEvent, hint: EventHint) {
-  // If the error is a known error, it should not be sent to Sentry.
-  // null is returned to indicate that the event should be dropped.
+/**
+ * Filters known (ignorable) errors out before sending them to Sentry. Also, adds tags to the event.
+ * Intended as a {@link ClientOptions.beforeSend} callback. Returning null filters the error from Sentry.
+ */
+export const beforeSend: Required<ClientOptions>['beforeSend'] = (event: ErrorEvent, hint: EventHint) => {
   if (shouldRejectError(hint.originalException)) {
     return null
   }
