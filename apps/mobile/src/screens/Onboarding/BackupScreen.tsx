@@ -14,10 +14,6 @@ import {
   OnboardingStackParamList,
   useOnboardingStackNavigation,
 } from 'src/app/navigation/types'
-import Check from 'src/assets/icons/check.svg'
-import CloudIcon from 'src/assets/icons/cloud.svg'
-import InfoCircle from 'src/assets/icons/info-circle.svg'
-import PencilIcon from 'src/assets/icons/pencil.svg'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
@@ -33,6 +29,10 @@ import { BackupType } from 'src/features/wallet/accounts/types'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { OnboardingScreens, Screens } from 'src/screens/Screens'
 import { openSettings } from 'src/utils/linking'
+import Check from 'ui/src/assets/icons/check.svg'
+import CloudIcon from 'ui/src/assets/icons/cloud.svg'
+import InfoCircle from 'ui/src/assets/icons/info-circle.svg'
+import PencilIcon from 'ui/src/assets/icons/pencil.svg'
 
 type Props = CompositeScreenProps<
   StackScreenProps<OnboardingStackParamList, OnboardingScreens.Backup>,

@@ -13,8 +13,6 @@ import {
   withTiming,
 } from 'react-native-reanimated'
 import { useAppTheme } from 'src/app/hooks'
-import AlertTriangleIcon from 'src/assets/icons/alert-triangle.svg'
-import SettingsIcon from 'src/assets/icons/settings.svg'
 import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import PlusMinusButton, { PlusMinusButtonType } from 'src/components/buttons/PlusMinusButton'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
@@ -31,6 +29,8 @@ import { DerivedSwapInfo } from 'src/features/transactions/swap/hooks'
 import { slippageToleranceToPercent } from 'src/features/transactions/swap/utils'
 import { transactionStateActions } from 'src/features/transactions/transactionState/transactionState'
 import { openUri } from 'src/utils/linking'
+import AlertTriangleIcon from 'ui/src/assets/icons/alert-triangle.svg'
+import SettingsIcon from 'ui/src/assets/icons/settings.svg'
 import { opacify } from 'ui/src/theme/color/utils'
 import { formatCurrencyAmount, NumberType } from 'wallet/src/utils/format'
 

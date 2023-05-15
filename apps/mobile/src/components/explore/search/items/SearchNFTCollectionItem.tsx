@@ -2,7 +2,6 @@ import { ImpactFeedbackStyle } from 'expo-haptics'
 import { default as React } from 'react'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { useAppStackNavigation } from 'src/app/navigation/types'
-import VerifiedIcon from 'src/assets/icons/verified.svg'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { SearchContext } from 'src/components/explore/search/SearchResultsSection'
 import { NFTViewer } from 'src/components/images/NFTViewer'
@@ -17,6 +16,7 @@ import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { ElementName, MobileEventName } from 'src/features/telemetry/constants'
 import { Screens } from 'src/screens/Screens'
 import { iconSizes } from 'src/styles/sizing'
+import VerifiedIcon from 'ui/src/assets/icons/verified.svg'
 
 type NFTCollectionItemProps = {
   collection: NFTCollectionSearchResult

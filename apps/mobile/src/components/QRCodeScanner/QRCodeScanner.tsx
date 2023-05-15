@@ -11,8 +11,6 @@ import {
   useFrameProcessor,
 } from 'react-native-vision-camera'
 import { useAppTheme } from 'src/app/hooks'
-import CameraScan from 'src/assets/icons/camera-scan.svg'
-import GlobalIcon from 'src/assets/icons/global.svg'
 import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import PasteButton from 'src/components/buttons/PasteButton'
 import { DevelopmentOnly } from 'src/components/DevelopmentOnly/DevelopmentOnly'
@@ -22,6 +20,8 @@ import { SpinningLoader } from 'src/components/loading/SpinningLoader'
 import { Text } from 'src/components/Text'
 import { dimensions } from 'src/styles/sizing'
 import { openSettings } from 'src/utils/linking'
+import CameraScan from 'ui/src/assets/icons/camera-scan.svg'
+import GlobalIcon from 'ui/src/assets/icons/global.svg'
 import { Barcode, BarcodeFormat, scanBarcodes } from 'vision-camera-code-scanner'
 
 type QRCodeScannerProps = {

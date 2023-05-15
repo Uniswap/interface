@@ -4,8 +4,6 @@ import { useTranslation } from 'react-i18next'
 import { Alert } from 'react-native'
 import 'react-native-reanimated'
 import { useAppSelector, useAppTheme } from 'src/app/hooks'
-import Scan from 'src/assets/icons/receive.svg'
-import ScanQRIcon from 'src/assets/icons/scan.svg'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Flex } from 'src/components/layout'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
@@ -17,6 +15,8 @@ import { getSupportedURI, URIType } from 'src/components/WalletConnect/ScanSheet
 import { useIsDarkMode } from 'src/features/appearance/hooks'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { selectActiveAccountAddress } from 'src/features/wallet/selectors'
+import Scan from 'ui/src/assets/icons/receive.svg'
+import ScanQRIcon from 'ui/src/assets/icons/scan.svg'
 
 type Props = {
   onClose: () => void

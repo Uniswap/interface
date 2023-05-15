@@ -23,7 +23,6 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated'
 import { useAppTheme } from 'src/app/hooks'
-import { ONBOARDING_QR_ETCHING_VIDEO_DARK, ONBOARDING_QR_ETCHING_VIDEO_LIGHT } from 'src/assets'
 import { Button } from 'src/components/buttons/Button'
 import { GradientBackground } from 'src/components/gradients/GradientBackground'
 import { UniconThemedGradient } from 'src/components/gradients/UniconThemedGradient'
@@ -46,6 +45,7 @@ import {
   videoFadeOut,
 } from 'src/screens/Onboarding/OnboardingCompleteAnimation/animations'
 import { flex } from 'src/styles/flex'
+import { ONBOARDING_QR_ETCHING_VIDEO_DARK, ONBOARDING_QR_ETCHING_VIDEO_LIGHT } from 'ui/src/assets'
 
 export function OnboardingCompleteAnimation({
   activeAddress,

@@ -1,7 +1,6 @@
 import { default as React, PropsWithChildren, useMemo } from 'react'
 import { FlexAlignType } from 'react-native'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
-import CopyIcon from 'src/assets/icons/copy-sheets.svg'
 import { AccountIcon } from 'src/components/AccountIcon'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Box, Flex } from 'src/components/layout'
@@ -13,6 +12,7 @@ import { ElementName } from 'src/features/telemetry/constants'
 import { useDisplayName } from 'src/features/wallet/hooks'
 import { Theme } from 'src/styles/theme'
 import { setClipboard } from 'src/utils/clipboard'
+import CopyIcon from 'ui/src/assets/icons/copy-sheets.svg'
 import { sanitizeAddressText, shortenAddress } from 'wallet/src/utils/addresses'
 
 type AddressDisplayProps = {

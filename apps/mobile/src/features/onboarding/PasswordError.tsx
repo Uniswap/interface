@@ -1,9 +1,9 @@
 import React from 'react'
 import { StyleProp, ViewStyle } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
-import AlertTriangle from 'src/assets/icons/alert-triangle.svg'
 import { AnimatedFlex, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
+import AlertTriangle from 'ui/src/assets/icons/alert-triangle.svg'
 
 interface PasswordErrorProps {
   errorText: string

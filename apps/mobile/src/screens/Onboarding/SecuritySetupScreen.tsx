@@ -5,8 +5,6 @@ import { useTranslation } from 'react-i18next'
 import { Alert, StyleSheet } from 'react-native'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
-import FaceIcon from 'src/assets/icons/faceid.svg'
-import FingerprintIcon from 'src/assets/icons/fingerprint.svg'
 import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import { Box, Flex } from 'src/components/layout'
 import { BiometricAuthWarningModal } from 'src/components/Settings/BiometricAuthWarningModal'
@@ -22,6 +20,8 @@ import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { ElementName } from 'src/features/telemetry/constants'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { openSettings } from 'src/utils/linking'
+import FaceIcon from 'ui/src/assets/icons/faceid.svg'
+import FingerprintIcon from 'ui/src/assets/icons/fingerprint.svg'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.Security>
 

@@ -1,9 +1,9 @@
 import { ComponentMeta, ComponentStory } from '@storybook/react'
 import React from 'react'
-import HeartIcon from 'src/assets/icons/heart.svg'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
 import { Text } from 'src/components/Text'
 import { theme } from 'src/styles/theme'
+import HeartIcon from 'ui/src/assets/icons/heart.svg'
 import { Box, Flex } from '../index'
 
 const CenterElement = <Text variant="headlineLarge">Screen Title</Text>

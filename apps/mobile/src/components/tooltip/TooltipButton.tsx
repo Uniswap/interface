@@ -1,12 +1,12 @@
 import { SpacingProps, SpacingShorthandProps } from '@shopify/restyle'
 import React, { useState } from 'react'
 import { useAppTheme } from 'src/app/hooks'
-import InfoCircle from 'src/assets/icons/info-circle.svg'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { BottomSheetDetachedModal } from 'src/components/modals/BottomSheetModal'
 import { Text } from 'src/components/Text'
 import { ModalName } from 'src/features/telemetry/constants'
 import { Theme } from 'src/styles/theme'
+import InfoCircle from 'ui/src/assets/icons/info-circle.svg'
 
 const DEFAULT_ICON_SIZE = 20
 

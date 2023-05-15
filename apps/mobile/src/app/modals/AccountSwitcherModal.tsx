@@ -6,7 +6,6 @@ import 'react-native-gesture-handler'
 import { Action } from 'redux'
 import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
 import { dispatchNavigationAction, navigate } from 'src/app/navigation/rootNavigation'
-import PlusIcon from 'src/assets/icons/plus.svg'
 import { AccountList } from 'src/components/accounts/AccountList'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Box, Flex } from 'src/components/layout'
@@ -35,6 +34,7 @@ import {
 import { OnboardingScreens, Screens } from 'src/screens/Screens'
 import { dimensions } from 'src/styles/sizing'
 import { openSettings } from 'src/utils/linking'
+import PlusIcon from 'ui/src/assets/icons/plus.svg'
 
 // This fast-forwards user to the same app state as if
 // they have pressed "Get Started" on Landing and then "Import my wallet" on the next screen

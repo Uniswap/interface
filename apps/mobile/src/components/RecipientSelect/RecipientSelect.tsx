@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next'
 import { Keyboard } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useAppTheme } from 'src/app/hooks'
-import ScanQRIcon from 'src/assets/icons/scan.svg'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { AnimatedFlex, Flex } from 'src/components/layout'
 import { filterRecipientByNameAndAddress } from 'src/components/RecipientSelect/filter'
@@ -14,6 +13,7 @@ import { filterSections } from 'src/components/RecipientSelect/utils'
 import { Text } from 'src/components/Text'
 import { SearchBar } from 'src/components/TokenSelector/SearchBar'
 import { ElementName } from 'src/features/telemetry/constants'
+import ScanQRIcon from 'ui/src/assets/icons/scan.svg'
 
 interface RecipientSelectProps {
   onSelectRecipient: (newRecipientAddress: string) => void

@@ -8,10 +8,10 @@ import {
   withTiming,
 } from 'react-native-reanimated'
 import { useAppTheme } from 'src/app/hooks'
-import Loader from 'src/assets/icons/circle-spinner.svg'
-import EmptySpinner from 'src/assets/icons/empty-spinner.svg'
 import { AnimatedBox } from 'src/components/layout'
 import { Theme } from 'src/styles/theme'
+import Loader from 'ui/src/assets/icons/circle-spinner.svg'
+import EmptySpinner from 'ui/src/assets/icons/empty-spinner.svg'
 
 export function SpinningLoader({
   size = 20,

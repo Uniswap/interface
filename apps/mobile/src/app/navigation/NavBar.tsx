@@ -32,7 +32,7 @@ import { prepareSwapFormState } from 'src/features/transactions/swap/utils'
 import { useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
 import { Theme } from 'src/styles/theme'
-import SearchIcon from '../../assets/icons/search.svg'
+import SearchIcon from 'ui/src/assets/icons/search.svg'
 
 export const NAV_BAR_HEIGHT_XS = 52
 export const NAV_BAR_HEIGHT_SM = 72

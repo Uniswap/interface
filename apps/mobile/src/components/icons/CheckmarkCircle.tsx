@@ -7,9 +7,9 @@ import {
 } from '@shopify/restyle'
 import React, { memo } from 'react'
 import { useAppTheme } from 'src/app/hooks'
-import Checkmark from 'src/assets/icons/checkmark.svg'
 import { Box } from 'src/components/layout/Box'
 import { Theme } from 'src/styles/theme'
+import Checkmark from 'ui/src/assets/icons/checkmark.svg'
 
 type Props = {
   size: number

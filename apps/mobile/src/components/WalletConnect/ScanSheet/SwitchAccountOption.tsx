@@ -1,12 +1,12 @@
 import React from 'react'
 import { useAppTheme } from 'src/app/hooks'
-import Check from 'src/assets/icons/check.svg'
 import { Box, Flex } from 'src/components/layout'
 import { Separator } from 'src/components/layout/Separator'
 import { Text } from 'src/components/Text'
 import { Unicon } from 'src/components/unicons/Unicon'
 import { Account } from 'src/features/wallet/accounts/types'
 import { useDisplayName } from 'src/features/wallet/hooks'
+import Check from 'ui/src/assets/icons/check.svg'
 import { shortenAddress } from 'wallet/src/utils/addresses'
 
 type Props = {

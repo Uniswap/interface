@@ -1,7 +1,6 @@
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppTheme } from 'src/app/hooks'
-import Check from 'src/assets/icons/check.svg'
 import { NetworkLogo } from 'src/components/CurrencyLogo/NetworkLogo'
 import { Box, Flex } from 'src/components/layout'
 import { Separator } from 'src/components/layout/Separator'
@@ -10,6 +9,7 @@ import { Text } from 'src/components/Text'
 import { useActiveChainIds } from 'src/features/chains/utils'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { iconSizes } from 'src/styles/sizing'
+import Check from 'ui/src/assets/icons/check.svg'
 import { ChainId, CHAIN_INFO } from 'wallet/src/constants/chains'
 
 type Props = {

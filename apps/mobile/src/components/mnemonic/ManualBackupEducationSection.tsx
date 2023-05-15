@@ -2,11 +2,11 @@ import { useResponsiveProp } from '@shopify/restyle'
 import React, { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppTheme } from 'src/app/hooks'
-import ClipboardIcon from 'src/assets/icons/clipboard.svg'
-import EyeIcon from 'src/assets/icons/eye.svg'
-import LockIcon from 'src/assets/icons/lock.svg'
 import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
+import ClipboardIcon from 'ui/src/assets/icons/clipboard.svg'
+import EyeIcon from 'ui/src/assets/icons/eye.svg'
+import LockIcon from 'ui/src/assets/icons/lock.svg'
 
 export function ManualBackupEducationSection(): JSX.Element {
   const { t } = useTranslation()

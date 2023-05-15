@@ -7,7 +7,6 @@ import { ActivityIndicator, TextInput as NativeTextInput } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
-import PencilIcon from 'src/assets/icons/pencil-detailed.svg'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { AnimatedButton, Button, ButtonEmphasis, ButtonSize } from 'src/components/buttons/Button'
 import { TextInput } from 'src/components/input/TextInput'
@@ -26,6 +25,7 @@ import {
   pendingAccountActions,
 } from 'src/features/wallet/pendingAccountsSaga'
 import { OnboardingScreens } from 'src/screens/Screens'
+import PencilIcon from 'ui/src/assets/icons/pencil-detailed.svg'
 import { shortenAddress } from 'wallet/src/utils/addresses'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.EditName>

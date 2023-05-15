@@ -2,11 +2,11 @@ import { BlurView } from 'expo-blur'
 import React from 'react'
 import { StyleSheet } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
-import EthereumLogo from 'src/assets/logos/ethereum.svg'
 import { Box, BoxProps, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { Amount } from 'src/data/__generated__/types-and-hooks'
 import { theme as FixedTheme, Theme } from 'src/styles/theme'
+import EthereumLogo from 'ui/src/assets/logos/ethereum.svg'
 import { formatNumber, NumberType } from 'wallet/src/utils/format'
 
 const BLUR_INTENSITY = 35

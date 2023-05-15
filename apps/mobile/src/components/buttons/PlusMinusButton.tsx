@@ -1,8 +1,8 @@
 import React from 'react'
 import { useAppTheme } from 'src/app/hooks'
-import PlusIcon from 'src/assets/icons/plus.svg'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Box } from 'src/components/layout'
+import PlusIcon from 'ui/src/assets/icons/plus.svg'
 
 export enum PlusMinusButtonType {
   Plus,

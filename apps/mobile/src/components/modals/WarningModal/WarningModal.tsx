@@ -1,7 +1,6 @@
 import React, { PropsWithChildren, ReactNode } from 'react'
 import { useAppTheme } from 'src/app/hooks'
 import { AppTFunction } from 'src/app/i18n'
-import AlertTriangleIcon from 'src/assets/icons/alert-triangle.svg'
 import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import { Flex } from 'src/components/layout'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
@@ -10,6 +9,7 @@ import { Text } from 'src/components/Text'
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { AccountType } from 'src/features/wallet/accounts/types'
+import AlertTriangleIcon from 'ui/src/assets/icons/alert-triangle.svg'
 import { opacify } from 'ui/src/theme/color/utils'
 
 export type WarningModalProps = {

@@ -2,13 +2,13 @@ import React from 'react'
 import { StyleSheet } from 'react-native'
 import Svg, { Defs, RadialGradient as RadialGradientSVG, Rect, Stop } from 'react-native-svg'
 import { useAppTheme } from 'src/app/hooks'
-import Eye from 'src/assets/icons/eye.svg'
 import { RemoteImage } from 'src/components/images/RemoteImage'
 import { Box } from 'src/components/layout'
 import { Unicon } from 'src/components/unicons/Unicon'
 import { useUniconColors } from 'src/components/unicons/utils'
 import { useIsDarkMode } from 'src/features/appearance/hooks'
 import { theme as FixedTheme } from 'src/styles/theme'
+import Eye from 'ui/src/assets/icons/eye.svg'
 
 interface Props {
   size: number

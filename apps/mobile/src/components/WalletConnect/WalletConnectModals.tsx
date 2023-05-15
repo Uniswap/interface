@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
-import EyeIcon from 'src/assets/icons/eye.svg'
 import { AccountDetails } from 'src/components/accounts/AccountDetails'
 import { Box } from 'src/components/layout'
 import { WarningSeverity } from 'src/components/modals/WarningModal/types'
@@ -27,6 +26,7 @@ import {
   WalletConnectRequest,
 } from 'src/features/walletConnect/walletConnectSlice'
 import { useAppStateTrigger } from 'src/utils/useAppStateTrigger'
+import EyeIcon from 'ui/src/assets/icons/eye.svg'
 import { areAddressesEqual } from 'wallet/src/utils/addresses'
 
 export function WalletConnectModals(): JSX.Element {

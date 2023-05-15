@@ -1,8 +1,8 @@
 import React from 'react'
-import SendIcon from 'src/assets/icons/send-action.svg'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { ElementName } from 'src/features/telemetry/constants'
 import { iconSizes } from 'src/styles/sizing'
+import SendIcon from 'ui/src/assets/icons/send-action.svg'
 import { Flex } from '../layout'
 
 type Props = {

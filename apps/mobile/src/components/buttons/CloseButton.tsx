@@ -1,9 +1,9 @@
 import { SpacingProps, SpacingShorthandProps } from '@shopify/restyle'
 import React from 'react'
 import { useAppTheme } from 'src/app/hooks'
-import XIcon from 'src/assets/icons/x.svg'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Theme } from 'src/styles/theme'
+import XIcon from 'ui/src/assets/icons/x.svg'
 
 type Props = {
   onPress: () => void

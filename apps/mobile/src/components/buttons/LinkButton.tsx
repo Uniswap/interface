@@ -1,12 +1,12 @@
 import React, { useMemo } from 'react'
 import { useAppTheme } from 'src/app/hooks'
-import ExternalLinkIcon from 'src/assets/icons/external-link.svg'
 import { BaseButtonProps, TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { iconSizes } from 'src/styles/sizing'
 import { Theme } from 'src/styles/theme'
 import { openUri } from 'src/utils/linking'
+import ExternalLinkIcon from 'ui/src/assets/icons/external-link.svg'
 
 interface LinkButtonProps extends Omit<BaseButtonProps, 'onPress'> {
   label: string

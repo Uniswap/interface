@@ -2,10 +2,10 @@ import { useNetInfo } from '@react-native-community/netinfo'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppSelector, useAppTheme } from 'src/app/hooks'
-import InfoCircle from 'src/assets/icons/info-circle.svg'
 import { TabsAwareBottomBanner } from 'src/components/banners/TabsAwareBottomBanner'
 import { selectSomeModalOpen } from 'src/features/modals/modalSlice'
 import { selectFinishedOnboarding } from 'src/features/wallet/selectors'
+import InfoCircle from 'ui/src/assets/icons/info-circle.svg'
 
 export function OfflineBanner(): JSX.Element | null {
   const { t } = useTranslation()

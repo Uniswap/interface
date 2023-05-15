@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next'
 import { Alert, ScrollView } from 'react-native'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { SettingsStackParamList } from 'src/app/navigation/types'
-import CloudIcon from 'src/assets/icons/cloud.svg'
 import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { Box } from 'src/components/layout/Box'
@@ -20,6 +19,7 @@ import { EditAccountAction, editAccountActions } from 'src/features/wallet/editA
 import { useAccounts } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
 import { logger } from 'src/utils/logger'
+import CloudIcon from 'ui/src/assets/icons/cloud.svg'
 
 type Props = NativeStackScreenProps<SettingsStackParamList, Screens.SettingsCloudBackupScreen>
 

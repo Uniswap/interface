@@ -1,12 +1,12 @@
 import React, { ErrorInfo, PropsWithChildren } from 'react'
 import { useTranslation } from 'react-i18next'
 import RNRestart from 'react-native-restart'
-import DeadLuni from 'src/assets/graphics/dead-luni.svg'
 import { Button } from 'src/components/buttons/Button'
 import { Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
 import { Text } from 'src/components/Text'
 import { logger } from 'src/utils/logger'
+import DeadLuni from 'ui/src/assets/graphics/dead-luni.svg'
 
 interface ErrorBoundaryState {
   error: Error | null

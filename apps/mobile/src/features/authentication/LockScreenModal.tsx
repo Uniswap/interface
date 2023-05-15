@@ -1,12 +1,12 @@
 import React from 'react'
 import { Image, StyleSheet } from 'react-native'
-import { UNISWAP_LOGO_LARGE } from 'src/assets'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Flex } from 'src/components/layout'
 import { Modal } from 'src/components/modals/Modal'
 import { useLockScreenContext } from 'src/features/authentication/lockScreenContext'
 import { useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { dimensions } from 'src/styles/sizing'
+import { UNISWAP_LOGO_LARGE } from 'ui/src/assets'
 
 export function LockScreenModal(): JSX.Element | null {
   const { isLockScreenVisible, animationType, setIsLockScreenVisible } = useLockScreenContext()

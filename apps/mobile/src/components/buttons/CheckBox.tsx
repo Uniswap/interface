@@ -1,11 +1,11 @@
 import { useResponsiveProp } from '@shopify/restyle'
 import React from 'react'
 import { useAppTheme } from 'src/app/hooks'
-import Check from 'src/assets/icons/check.svg'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { useIsDarkMode } from 'src/features/appearance/hooks'
+import Check from 'ui/src/assets/icons/check.svg'
 
 export type CheckBoxProps = {
   checked: boolean

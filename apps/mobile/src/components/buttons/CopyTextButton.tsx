@@ -1,11 +1,11 @@
 import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppTheme } from 'src/app/hooks'
-import CheckCircle from 'src/assets/icons/check-circle.svg'
-import CopySheets from 'src/assets/icons/copy-sheets.svg'
 import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import { setClipboard } from 'src/utils/clipboard'
 import { useTimeout } from 'src/utils/timing'
+import CheckCircle from 'ui/src/assets/icons/check-circle.svg'
+import CopySheets from 'ui/src/assets/icons/copy-sheets.svg'
 
 interface Props {
   copyText?: string

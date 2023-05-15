@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next'
 import { Keyboard, LayoutChangeEvent, TextInput as NativeTextInput, ViewStyle } from 'react-native'
 import { useAnimatedStyle, useSharedValue, withSpring, withTiming } from 'react-native-reanimated'
 import { useAppTheme } from 'src/app/hooks'
-import X from 'src/assets/icons/x.svg'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { TextInput, TextInputProps } from 'src/components/input/TextInput'
 import { AnimatedBox, AnimatedFlex, Box } from 'src/components/layout'
@@ -13,7 +12,8 @@ import { useIsDarkMode } from 'src/features/appearance/hooks'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
 import { dimensions } from 'src/styles/sizing'
-import SearchIcon from '../../assets/icons/search.svg'
+import SearchIcon from 'ui/src/assets/icons/search.svg'
+import X from 'ui/src/assets/icons/x.svg'
 
 export const springConfig = {
   stiffness: 1000,

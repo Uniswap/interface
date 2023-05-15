@@ -9,13 +9,13 @@ import {
   View,
 } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
-import AlertTriangle from 'src/assets/icons/alert-triangle.svg'
 import PasteButton from 'src/components/buttons/PasteButton'
 import { TextInput } from 'src/components/input/TextInput'
 import { Box, Flex } from 'src/components/layout'
 import { Trace } from 'src/components/telemetry/Trace'
 import { Text } from 'src/components/Text'
 import { Theme } from 'src/styles/theme'
+import AlertTriangle from 'ui/src/assets/icons/alert-triangle.svg'
 import { SectionName } from '../telemetry/constants'
 
 interface Props {

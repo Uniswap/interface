@@ -8,8 +8,6 @@ import { TouchableOpacity } from 'react-native'
 import ContextMenu from 'react-native-context-menu-view'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { AppStackScreenProp, useAppStackNavigation } from 'src/app/navigation/types'
-import EllipsisIcon from 'src/assets/icons/ellipsis.svg'
-import ShareIcon from 'src/assets/icons/share.svg'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { NFTViewer } from 'src/components/images/NFTViewer'
@@ -45,6 +43,8 @@ import {
   passesContrast,
   useNearestThemeColorFromImageUri,
 } from 'src/utils/colors'
+import EllipsisIcon from 'ui/src/assets/icons/ellipsis.svg'
+import ShareIcon from 'ui/src/assets/icons/share.svg'
 import { colorsDark } from 'ui/src/theme/color'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import { areAddressesEqual } from 'wallet/src/utils/addresses'

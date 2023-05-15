@@ -8,9 +8,9 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated'
 import { useAppTheme } from 'src/app/hooks'
-import Wave from 'src/assets/backgrounds/wave.svg'
 import { Flex } from 'src/components/layout'
 import { CHART_HEIGHT } from 'src/components/PriceExplorer/constants'
+import Wave from 'ui/src/assets/backgrounds/wave.svg'
 
 const WAVE_WIDTH = 416
 const WAVE_DURATION = 2000

@@ -1,20 +1,19 @@
 import React from 'react'
+import { useTranslation } from 'react-i18next'
 import { Image, ImageBackground, StyleSheet } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { Box } from 'src/components/layout'
 import { AnimatedFlex, Flex } from 'src/components/layout/Flex'
 import { Text } from 'src/components/Text'
-
-import { useTranslation } from 'react-i18next'
+import { useIsDarkMode } from 'src/features/appearance/hooks'
+import { theme } from 'src/styles/theme'
 import {
   FOR_CONNECTING_BACKGROUND_DARK,
   FOR_CONNECTING_BACKGROUND_LIGHT,
   UNISWAP_LOGO_LARGE,
-} from 'src/assets'
-import MoonpayLogo from 'src/assets/logos/moonpay.svg'
-import { Box } from 'src/components/layout'
-import { useIsDarkMode } from 'src/features/appearance/hooks'
-import { theme } from 'src/styles/theme'
+} from 'ui/src/assets'
+import MoonpayLogo from 'ui/src/assets/logos/moonpay.svg'
 
 const ICON_SIZE = 90
 

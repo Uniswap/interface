@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next'
 import { Alert } from 'react-native'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { SettingsStackParamList } from 'src/app/navigation/types'
-import Checkmark from 'src/assets/icons/check.svg'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import { Flex } from 'src/components/layout'
@@ -20,6 +19,7 @@ import { EditAccountAction, editAccountActions } from 'src/features/wallet/editA
 import { useAccounts } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
 import { logger } from 'src/utils/logger'
+import Checkmark from 'ui/src/assets/icons/check.svg'
 
 type Props = NativeStackScreenProps<SettingsStackParamList, Screens.SettingsCloudBackupStatus>
 

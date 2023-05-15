@@ -1,8 +1,8 @@
 import { ComponentMeta, ComponentStory } from '@storybook/react'
 import React from 'react'
-import Check from 'src/assets/icons/check.svg'
 import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
+import Check from 'ui/src/assets/icons/check.svg'
 import { ActionSheetModalContent } from './ActionSheetModal'
 
 const options = [

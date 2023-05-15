@@ -3,8 +3,6 @@ import { useTranslation } from 'react-i18next'
 import { ImageStyle } from 'react-native-fast-image'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAppTheme } from 'src/app/hooks'
-import VerifiedIcon from 'src/assets/icons/verified.svg'
-import EthereumLogo from 'src/assets/logos/ethereum.svg'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { ImageUri } from 'src/components/images/ImageUri'
@@ -18,6 +16,8 @@ import { NFTCollectionContextMenu } from 'src/features/nfts/collection/NFTCollec
 import { iconSizes } from 'src/styles/sizing'
 import { theme as FixedTheme } from 'src/styles/theme'
 import { useExtractedColors } from 'src/utils/colors'
+import VerifiedIcon from 'ui/src/assets/icons/verified.svg'
+import EthereumLogo from 'ui/src/assets/logos/ethereum.svg'
 import { formatNumber, NumberType } from 'wallet/src/utils/format'
 
 const PROFILE_IMAGE_SIZE = 72
