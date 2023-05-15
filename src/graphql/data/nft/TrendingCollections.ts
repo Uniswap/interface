@@ -6,7 +6,7 @@ import { HistoryDuration, useTrendingCollectionsQuery } from '../__generated__/t
 
 gql`
   query TrendingCollections($size: Int, $timePeriod: HistoryDuration) {
-    topCollections(first: $size, duration: $timePeriod) {
+    topCollections(first: $size, duration: $timePeriod, _fs: "DATASOURCE:ALTERNATE") {
       edges {
         node {
           name
@@ -21,21 +21,21 @@ gql`
             url
           }
           isVerified
-          markets(currencies: ETH) {
-            floorPrice {
+          markets(currencies: ETH, _fs: "DATASOURCE:ALTERNATE") {
+            floorPrice(_fs: "DATASOURCE:ALTERNATE") {
               value
             }
             owners
             totalVolume {
               value
             }
-            volume(duration: $timePeriod) {
+            volume(duration: $timePeriod, _fs: "DATASOURCE:ALTERNATE") {
               value
             }
-            volumePercentChange(duration: $timePeriod) {
+            volumePercentChange(duration: $timePeriod, _fs: "DATASOURCE:ALTERNATE") {
               value
             }
-            floorPricePercentChange(duration: $timePeriod) {
+            floorPricePercentChange(duration: $timePeriod, _fs: "DATASOURCE:ALTERNATE") {
               value
             }
             sales {

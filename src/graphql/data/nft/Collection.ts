@@ -6,7 +6,7 @@ import { NftCollection, useCollectionQuery } from '../__generated__/types-and-ho
 
 gql`
   query Collection($addresses: [String!]!) {
-    nftCollections(filter: { addresses: $addresses }) {
+    nftCollections(filter: { addresses: $addresses }, _fs: "DATASOURCE:ALTERNATE") {
       edges {
         cursor
         node {
@@ -33,7 +33,7 @@ gql`
             symbol
             totalSupply
           }
-          traits {
+          traits(_fs: "DATASOURCE:ALTERNATE") {
             name
             values
             stats {
@@ -43,8 +43,8 @@ gql`
               listings
             }
           }
-          markets(currencies: ETH) {
-            floorPrice {
+          markets(currencies: ETH, _fs: "DATASOURCE:ALTERNATE") {
+            floorPrice(_fs: "DATASOURCE:ALTERNATE") {
               currency
               value
             }
@@ -56,19 +56,19 @@ gql`
             listings {
               value
             }
-            volume(duration: DAY) {
+            volume(duration: DAY, _fs: "DATASOURCE:ALTERNATE") {
               value
               currency
             }
-            volumePercentChange(duration: DAY) {
+            volumePercentChange(duration: DAY, _fs: "DATASOURCE:ALTERNATE") {
               value
               currency
             }
-            floorPricePercentChange(duration: DAY) {
+            floorPricePercentChange(duration: DAY, _fs: "DATASOURCE:ALTERNATE") {
               value
               currency
             }
-            marketplaces {
+            marketplaces(_fs: "DATASOURCE:ALTERNATE") {
               marketplace
               listings
               floorPrice
