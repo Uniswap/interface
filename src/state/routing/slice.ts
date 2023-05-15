@@ -167,14 +167,13 @@ export const routingApi = createApi({
           const router = getRouter(args.tokenInChainId)
           const quoteResult = await getClientSideQuote(args, router, CLIENT_PARAMS)
           if (quoteResult.state === QuoteState.SUCCESS) {
-            const tradeResult = transformRoutesToTrade(args, quoteResult.data)
-            return { data: tradeResult }
+            return { data: transformRoutesToTrade(args, quoteResult.data) }
           } else {
             return { data: quoteResult }
           }
         } catch (error: any) {
           console.warn(`GetQuote failed on client: ${error}`)
-          return { error: { status: 'CUSTOM_ERROR', error: error?.message ?? error?.detail ?? error } }
+          return { error: { status: 'CUSTOM_ERROR', error: error?.detail ?? error?.message ?? error } }
         }
       },
       keepUnusedDataFor: ms`10s`,

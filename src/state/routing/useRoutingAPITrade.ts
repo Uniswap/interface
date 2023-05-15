@@ -10,9 +10,9 @@ import { INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference, useGetQuoteQuery } 
 
 import { InterfaceTrade, QuoteState, TradeState } from './types'
 
-const TRADE_INVALID = { state: TradeState.INVALID, trade: undefined }
-const TRADE_NOT_FOUND = { state: TradeState.NO_ROUTE_FOUND, trade: undefined }
-const TRADE_LOADING = { state: TradeState.LOADING, trade: undefined }
+const TRADE_INVALID = { state: TradeState.INVALID, trade: undefined } as const
+const TRADE_NOT_FOUND = { state: TradeState.NO_ROUTE_FOUND, trade: undefined } as const
+const TRADE_LOADING = { state: TradeState.LOADING, trade: undefined } as const
 
 /**
  * Returns the best trade by invoking the routing api or the smart order router on the client
@@ -27,7 +27,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
   routerPreference: RouterPreference | typeof INTERNAL_ROUTER_PREFERENCE_PRICE
 ): {
   state: TradeState
-  trade: InterfaceTrade | undefined
+  trade?: InterfaceTrade
 } {
   const [currencyIn, currencyOut]: [Currency | undefined, Currency | undefined] = useMemo(
     () =>

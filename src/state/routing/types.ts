@@ -80,8 +80,8 @@ export class ClassicTrade<
     blockNumber,
     ...routes
   }: {
-    gasUseEstimateUSD?: string | undefined | null
-    blockNumber?: string | null | undefined
+    gasUseEstimateUSD?: string | null
+    blockNumber?: string | null
     v2Routes: {
       routev2: V2Route<TInput, TOutput>
       inputAmount: CurrencyAmount<TInput>
