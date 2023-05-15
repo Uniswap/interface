@@ -184,16 +184,27 @@ export function ConfirmationModalContent({
   bottomContent,
   onDismiss,
   topContent,
+  chainId,
 }: {
   title: ReactNode
   onDismiss: () => void
   topContent: () => ReactNode
   bottomContent?: () => ReactNode | undefined
+  chainId?: SupportedL2ChainId | undefined
 }) {
+  const info = getChainInfo(chainId)
   return (
     <ConfirmationModalWrapper>
       <ConfirmationModalTopContentWrapper gap="sm">
         <Row>
+          {chainId && (
+            <Badge>
+              <RowFixed>
+                <StyledLogo src={info?.logoUrl} style={{ margin: '0 8px 0 0' }} />
+                {info?.label}
+              </RowFixed>
+            </Badge>
+          )}
           <Row justify="center" marginLeft="24px">
             <ThemedText.SubHeader>{title}</ThemedText.SubHeader>
           </Row>

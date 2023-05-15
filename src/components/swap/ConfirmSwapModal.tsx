@@ -12,6 +12,7 @@ import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 import { useIsTransactionConfirmed } from 'state/transactions/hooks'
 import invariant from 'tiny-invariant'
+import { isL2ChainId } from 'utils/chains'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 import { tradeMeaningfullyDiffers } from 'utils/tradeMeaningFullyDiffer'
 
@@ -253,6 +254,7 @@ export default function ConfirmSwapModal({
             onDismiss={onModalDismiss}
             topContent={modalHeader}
             bottomContent={modalBottom}
+            chainId={isL2ChainId(chainId) && confirmModalState !== ConfirmModalState.REVIEWING ? chainId : undefined}
           />
         )}
       </Modal>
