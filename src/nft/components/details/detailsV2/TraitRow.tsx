@@ -25,7 +25,7 @@ const SubheaderTinyHidden = styled(SubheaderTiny)`
 `
 
 const TraitRowContainer = styled(Row)`
-  padding: 12px 18px 12px 0px;
+  padding: 12px 18px 12px 12px;
   border-radius: 12px;
   cursor: pointer;
   text-decoration: none;
