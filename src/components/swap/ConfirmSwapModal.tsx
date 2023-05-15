@@ -146,7 +146,9 @@ export default function ConfirmSwapModal({
         return
       }
       console.error(e)
-      setApprovalError(PendingModalError.PERMIT_ERROR)
+      setApprovalError(
+        allowance.needsPermit2Approval ? PendingModalError.TOKEN_APPROVAL_ERROR : PendingModalError.PERMIT_ERROR
+      )
     }
   }, [allowance, chainId, maximumAmountIn?.currency.address, maximumAmountIn?.currency.symbol, trace])
 

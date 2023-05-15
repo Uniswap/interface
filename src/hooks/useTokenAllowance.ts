@@ -61,8 +61,7 @@ export function useUpdateTokenAllowance(
     } catch (e: unknown) {
       const message = didUserReject(e) ? 'User rejected' : e instanceof Error ? e.message : e
       const symbol = amount?.currency.symbol ?? 'Token'
-      const error = new Error(`${symbol} token allowance failed: ${message}`)
-      throw error
+      throw new Error(`${symbol} token allowance failed: ${message}`)
     }
   }, [amount, contract, spender])
 }

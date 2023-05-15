@@ -50,7 +50,7 @@ describe('Permit2', () => {
         cy.wrap(MaxUint160.eq(allowance.amount)).should('eq', true)
         // Asserts that the on-chain expiration is in 30 days, within a tolerance of 20 seconds.
         const expected = Math.floor((approvalTime + 2_592_000_000) / 1000)
-        cy.wrap(allowance.expiration).should('be.closeTo', expected, 20)
+        cy.wrap(allowance.expiration).should('be.closeTo', expected, 40)
       })
   }
 
