@@ -154,6 +154,7 @@ const parsePair = ({ reserve0, reserve1 }: V2PoolInRoute): Pair =>
     CurrencyAmount.fromRawAmount(parseToken(reserve1.token), reserve1.quotient)
   )
 
+// TODO(WEB-2050): Convert other instances of tradeType comparison to use this utility function
 export function isExactInput(tradeType: TradeType): boolean {
   return tradeType === TradeType.EXACT_INPUT
 }
