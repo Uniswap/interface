@@ -75,7 +75,7 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
             }
           >
             <ThemedText.BodySmall color="textSecondary">
-              <Trans>Minimum output</Trans>
+              {trade.tradeType === TradeType.EXACT_INPUT ? <Trans>Minimum output</Trans> : <Trans>Maximum input</Trans>}
             </ThemedText.BodySmall>
           </MouseoverTooltip>
         </RowFixed>
