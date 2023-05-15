@@ -8,21 +8,21 @@ module.exports = {
           category: 'Best Practices',
           recommended: false,
         },
-        schema: [],  // no options
+        schema: [],
       },
-      create: function(context) {
+      create(context) {
         return {
-          'ImportExpression': function(node) {
-            const parent = node.parent;
+          ImportExpression(node) {
+            const parent = node.parent
             if (parent.type !== 'CallExpression' || parent.callee.name !== 'retry') {
               context.report({
-                node: node,
+                node,
                 message: 'Dynamic import should be wrapped in a retry() call',
-              });
+              })
             }
           },
-        };
+        }
       },
     },
   },
-};
+}
