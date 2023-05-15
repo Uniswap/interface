@@ -5,7 +5,7 @@ import { formatEth } from 'nft/utils'
 import qs from 'qs'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components/macro'
-import { ThemedText } from 'theme'
+import { BREAKPOINTS, ThemedText } from 'theme'
 
 import { getRarityLevel, RarityGraph } from './RarityGraph'
 
@@ -25,7 +25,7 @@ const SubheaderTinyHidden = styled(SubheaderTiny)`
 `
 
 const TraitRowContainer = styled(Row)`
-  padding: 12px 18px 12px 0px;
+  padding: 12px 18px 12px 12px;
   border-radius: 12px;
   cursor: pointer;
   text-decoration: none;
@@ -43,12 +43,16 @@ const TraitColumnValue = styled(Column)<{ $flex?: number; $alignItems?: string }
   align-items: ${({ $alignItems }) => $alignItems};
 `
 
-const TraitRowValue = styled(ThemedText.BodySmall)<{ $flex?: number; $justifyContent?: string }>`
+const TraitRowValue = styled(ThemedText.BodySmall)<{ $flex?: number; $justifyContent?: string; hideOnSmall?: boolean }>`
   display: flex;
   line-height: 20px;
   padding-top: 20px;
   flex: ${({ $flex }) => $flex ?? 1};
   justify-content: ${({ $justifyContent }) => $justifyContent};
+
+  @media screen and (max-width: ${BREAKPOINTS.sm}px) {
+    display: ${({ hideOnSmall }) => (hideOnSmall ? 'none' : 'flex')};
+  }
 `
 
 export const TraitRow = ({ trait, collectionAddress }: { trait: Trait; collectionAddress: string }) => {
@@ -70,7 +74,7 @@ export const TraitRow = ({ trait, collectionAddress }: { trait: Trait; collectio
           <ThemedText.BodyPrimary lineHeight="20px">{trait.trait_value}</ThemedText.BodyPrimary>
         </TraitColumnValue>
         <TraitRowValue $flex={2}>{formatEth(randomRarity * 1000)} ETH</TraitRowValue>
-        <TraitRowValue>{Math.round(randomRarity * 10000)}</TraitRowValue>
+        <TraitRowValue hideOnSmall={true}>{Math.round(randomRarity * 10000)}</TraitRowValue>
         <TraitColumnValue $flex={1.5} $alignItems="flex-end">
           <SubheaderTinyHidden $color={rarityLevel.color}>{rarityLevel.caption}</SubheaderTinyHidden>
           <RarityGraph trait={trait} rarity={randomRarity} />

@@ -38,6 +38,5 @@ describe('SwapDetailsDropdown.tsx', () => {
     expect(screen.getByTestId('trade-price-container')).toBeInTheDocument()
     await act(() => userEvent.click(screen.getByTestId('swap-details-header-row')))
     expect(screen.getByTestId('advanced-swap-details')).toBeInTheDocument()
-    expect(screen.getByTestId('swap-route-info')).toBeInTheDocument()
   })
 })

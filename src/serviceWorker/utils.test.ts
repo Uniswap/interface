@@ -1,7 +1,7 @@
 import { groupEntries } from './utils'
 
 describe('groupEntries', () => {
-  test('splits resources into mediaURLs and precacheEntries', () => {
+  test('splits resources into onDemandEntries and precacheEntries', () => {
     const resources = [
       './static/whitepaper.pdf',
       { url: './static/js/main.js', revision: 'abc123' },
@@ -12,7 +12,7 @@ describe('groupEntries', () => {
     const result = groupEntries(resources)
 
     expect(result).toEqual({
-      mediaURLs: ['./static/whitepaper.pdf', './static/media/image.jpg'],
+      onDemandEntries: ['./static/whitepaper.pdf', { url: './static/media/image.jpg', revision: 'ghi789' }],
       precacheEntries: [
         { url: './static/js/main.js', revision: 'abc123' },
         { url: './static/css/styles.css', revision: 'def456' },

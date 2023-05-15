@@ -6,7 +6,7 @@ import { AVERAGE_L1_BLOCK_TIME } from 'constants/chainInfo'
 import { useRoutingAPIArguments } from 'lib/hooks/routing/useRoutingAPIArguments'
 import ms from 'ms.macro'
 import { useMemo } from 'react'
-import { RouterPreference, useGetQuoteQuery } from 'state/routing/slice'
+import { INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference, useGetQuoteQuery } from 'state/routing/slice'
 
 import { InterfaceTrade, QuoteState, TradeState } from './types'
 
@@ -24,7 +24,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
   tradeType: TTradeType,
   amountSpecified: CurrencyAmount<Currency> | undefined,
   otherCurrency: Currency | undefined,
-  routerPreference: RouterPreference
+  routerPreference: RouterPreference | typeof INTERNAL_ROUTER_PREFERENCE_PRICE
 ): {
   state: TradeState
   trade: InterfaceTrade | undefined
@@ -51,7 +51,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
     currentData: currentTradeResult,
   } = useGetQuoteQuery(queryArgs ?? skipToken, {
     // Price-fetching is informational and costly, so it's done less frequently.
-    pollingInterval: routerPreference === RouterPreference.PRICE ? ms`1m` : AVERAGE_L1_BLOCK_TIME,
+    pollingInterval: routerPreference === INTERNAL_ROUTER_PREFERENCE_PRICE ? ms`1m` : AVERAGE_L1_BLOCK_TIME,
     // If latest quote from cache was fetched > 2m ago, instantly repoll for another instead of waiting for next poll period
     refetchOnMountOrArgChange: 2 * 60,
   })

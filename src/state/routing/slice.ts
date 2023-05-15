@@ -15,10 +15,11 @@ export enum RouterPreference {
   AUTO = 'auto',
   API = 'api',
   CLIENT = 'client',
-
-  // Used internally for token -> USDC trades to get a USD value.
-  PRICE = 'price',
 }
+
+// This is excluded from `RouterPreference` enum because it's only used
+// internally for token -> USDC trades to get a USD value.
+export const INTERNAL_ROUTER_PREFERENCE_PRICE = 'price' as const
 
 const routers = new Map<ChainId, AlphaRouter>()
 function getRouter(chainId: ChainId): AlphaRouter {
@@ -80,7 +81,7 @@ export interface GetQuoteArgs {
   tokenOutDecimals: number
   tokenOutSymbol?: string
   amount: string
-  routerPreference: RouterPreference
+  routerPreference: RouterPreference | typeof INTERNAL_ROUTER_PREFERENCE_PRICE
   tradeType: TradeType
 }
 
@@ -118,16 +119,15 @@ export const routingApi = createApi({
           {
             data: {
               ...args,
-              isPrice: args.routerPreference === RouterPreference.PRICE,
+              isPrice: args.routerPreference === INTERNAL_ROUTER_PREFERENCE_PRICE,
               isAutoRouter:
                 args.routerPreference === RouterPreference.AUTO || args.routerPreference === RouterPreference.API,
             },
-            tags: { is_widget: false },
           }
         )
       },
-      async queryFn(args: GetQuoteArgs, _api, _extraOptions, fetch) {
-        if (args.routerPreference === RouterPreference.API || args.routerPreference === RouterPreference.PRICE) {
+      async queryFn(args, _api, _extraOptions, fetch) {
+        if (args.routerPreference === RouterPreference.API || args.routerPreference === RouterPreference.AUTO) {
           try {
             const { tokenInAddress, tokenInChainId, tokenOutAddress, tokenOutChainId, amount, tradeType } = args
             const type = isExactInput(tradeType) ? 'exactIn' : 'exactOut'

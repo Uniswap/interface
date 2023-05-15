@@ -64,8 +64,8 @@ import { computeFiatValuePriceImpact } from '../../utils/computeFiatValuePriceIm
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { computeRealizedPriceImpact, warningSeverity } from '../../utils/prices'
 import { supportedChainId } from '../../utils/supportedChainId'
-const ArrowContainer = styled.div`
-  display: inline-block;
+
+export const ArrowContainer = styled.div`
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -109,16 +109,8 @@ const SwapSection = styled.div`
   }
 `
 
-const OutputSwapSection = styled(SwapSection)<{ showDetailsDropdown: boolean }>`
+const OutputSwapSection = styled(SwapSection)`
   border-bottom: ${({ theme }) => `1px solid ${theme.backgroundSurface}`};
-  border-bottom-left-radius: ${({ showDetailsDropdown }) => showDetailsDropdown && '0'};
-  border-bottom-right-radius: ${({ showDetailsDropdown }) => showDetailsDropdown && '0'};
-`
-
-const DetailsSwapSection = styled(SwapSection)`
-  padding: 0;
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
 `
 
 function getIsValidSwapQuote(
@@ -147,20 +139,18 @@ export default function SwapPage({ className }: { className?: string }) {
   const loadedUrlParams = useDefaultsFromURLSearch()
   return (
     <Trace page={InterfacePageName.SWAP_PAGE} shouldLogImpression>
-      <>
-        <PageWrapper>
-          <Swap
-            className={className}
-            chainId={connectedChainId}
-            prefilledState={{
-              [Field.INPUT]: { currencyId: loadedUrlParams?.[Field.INPUT]?.currencyId },
-              [Field.OUTPUT]: { currencyId: loadedUrlParams?.[Field.OUTPUT]?.currencyId },
-            }}
-          />
-          <NetworkAlert />
-        </PageWrapper>
-        <SwitchLocaleLink />
-      </>
+      <PageWrapper>
+        <Swap
+          className={className}
+          chainId={connectedChainId}
+          prefilledState={{
+            [Field.INPUT]: { currencyId: loadedUrlParams?.[Field.INPUT]?.currencyId },
+            [Field.OUTPUT]: { currencyId: loadedUrlParams?.[Field.OUTPUT]?.currencyId },
+          }}
+        />
+        <NetworkAlert />
+      </PageWrapper>
+      <SwitchLocaleLink />
     </Trace>
   )
 }
@@ -640,9 +630,9 @@ export function Swap({
           </TraceEvent>
         </ArrowWrapper>
       </div>
-      <AutoColumn gap="md">
+      <AutoColumn gap="xs">
         <div>
-          <OutputSwapSection showDetailsDropdown={showDetailsDropdown}>
+          <OutputSwapSection>
             <Trace section={InterfaceSectionName.CURRENCY_OUTPUT_PANEL}>
               <SwapCurrencyInputPanel
                 value={formattedAmounts[Field.OUTPUT]}
@@ -675,17 +665,15 @@ export function Swap({
               </>
             ) : null}
           </OutputSwapSection>
-          {showDetailsDropdown && (
-            <DetailsSwapSection>
-              <SwapDetailsDropdown
-                trade={trade}
-                syncing={routeIsSyncing}
-                loading={routeIsLoading}
-                allowedSlippage={allowedSlippage}
-              />
-            </DetailsSwapSection>
-          )}
         </div>
+        {showDetailsDropdown && (
+          <SwapDetailsDropdown
+            trade={trade}
+            syncing={routeIsSyncing}
+            loading={routeIsLoading}
+            allowedSlippage={allowedSlippage}
+          />
+        )}
         {showPriceImpactWarning && <PriceImpactWarning priceImpact={largerPriceImpact} />}
         <div>
           {swapIsUnsupported ? (

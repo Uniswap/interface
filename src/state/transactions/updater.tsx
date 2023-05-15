@@ -7,7 +7,7 @@ import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { L2_CHAIN_IDS } from '../../constants/chains'
 import { useAddPopup } from '../application/hooks'
 import { checkedTransaction, finalizeTransaction } from './reducer'
-import { SerializableTransactionReceipt } from './types'
+import { SerializableTransactionReceipt, TransactionDetails } from './types'
 
 export default function Updater() {
   const { chainId } = useWeb3React()
@@ -15,6 +15,13 @@ export default function Updater() {
   // speed up popup dismisall time if on L2
   const isL2 = Boolean(chainId && L2_CHAIN_IDS.includes(chainId))
   const transactions = useAppSelector((state) => state.transactions)
+  const pendingTransactions = useMemo(() => {
+    if (!chainId || !transactions[chainId]) return {}
+    return Object.values(transactions[chainId]).reduce((acc, tx) => {
+      if (!tx.receipt) acc[tx.hash] = tx
+      return acc
+    }, {} as Record<string, TransactionDetails>)
+  }, [chainId, transactions])
 
   const dispatch = useAppDispatch()
   const onCheck = useCallback(
@@ -51,8 +58,6 @@ export default function Updater() {
     },
     [addPopup, dispatch, isL2]
   )
-
-  const pendingTransactions = useMemo(() => (chainId ? transactions[chainId] ?? {} : {}), [chainId, transactions])
 
   return <LibUpdater pendingTransactions={pendingTransactions} onCheck={onCheck} onReceipt={onReceipt} />
 }
