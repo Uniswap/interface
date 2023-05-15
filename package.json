@@ -104,6 +104,7 @@
     "@vanilla-extract/jest-transform": "^1.1.1",
     "@vanilla-extract/webpack-plugin": "^2.1.11",
     "babel-plugin-istanbul": "^6.1.1",
+    "buffer": "^6.0.3",
     "cypress": "10.3.1",
     "cypress-hardhat": "^2.3.0",
     "env-cmd": "^10.1.0",

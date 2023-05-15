@@ -84,8 +84,11 @@ module.exports = {
   },
   webpack: {
     plugins: [
-      // react-markdown requires path to be global, and Webpack 5 does polyfill node globals, so we polyfill it.
-      new ProvidePlugin({ process: 'process/browser' }),
+      // Webpack 5 does not polyfill node globals, so we do so for those necessary:
+      new ProvidePlugin({
+        // - react-markdown requires process.cwd
+        process: 'process/browser',
+      }),
       // vanilla-extract has poor performance on M1 machines with 'debug' identifiers, so we use 'short' instead.
       // See https://vanilla-extract.style/documentation/integrations/webpack/#identifiers for docs.
       // See https://github.com/vanilla-extract-css/vanilla-extract/issues/771#issuecomment-1249524366.
@@ -140,8 +143,11 @@ module.exports = {
 
           return plugin
         }),
-        // react-markdown requires path to be importable, and Webpack 5 does resolve node globals, so we resolve it.
-        fallback: { path: require.resolve('path-browserify') },
+        // Webpack 5 does resolve node modules, so we do so for those necessary:
+        fallback: {
+          // - react-markdown requires path
+          path: require.resolve('path-browserify'),
+        },
       })
 
       // Configure webpack transpilation (create-react-app specifies transpilation rules in a oneOf):
