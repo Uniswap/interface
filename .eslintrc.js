@@ -4,11 +4,13 @@ require('@uniswap/eslint-config/load')
 
 module.exports = {
   extends: '@uniswap/eslint-config/react',
+  plugins: ['rules'],
   overrides: [
     {
       files: ['**/*'],
       rules: {
         'multiline-comment-style': ['error', 'separate-lines'],
+        'enforce-retry-on-import': 'warn',
       },
     },
     {
