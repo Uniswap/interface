@@ -63,8 +63,8 @@ import { computeFiatValuePriceImpact } from '../../utils/computeFiatValuePriceIm
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { computeRealizedPriceImpact, warningSeverity } from '../../utils/prices'
 import { supportedChainId } from '../../utils/supportedChainId'
-const ArrowContainer = styled.div`
-  display: inline-block;
+
+export const ArrowContainer = styled.div`
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -138,20 +138,18 @@ export default function SwapPage({ className }: { className?: string }) {
   const loadedUrlParams = useDefaultsFromURLSearch()
   return (
     <Trace page={InterfacePageName.SWAP_PAGE} shouldLogImpression>
-      <>
-        <PageWrapper>
-          <Swap
-            className={className}
-            chainId={connectedChainId}
-            prefilledState={{
-              [Field.INPUT]: { currencyId: loadedUrlParams?.[Field.INPUT]?.currencyId },
-              [Field.OUTPUT]: { currencyId: loadedUrlParams?.[Field.OUTPUT]?.currencyId },
-            }}
-          />
-          <NetworkAlert />
-        </PageWrapper>
-        <SwitchLocaleLink />
-      </>
+      <PageWrapper>
+        <Swap
+          className={className}
+          chainId={connectedChainId}
+          prefilledState={{
+            [Field.INPUT]: { currencyId: loadedUrlParams?.[Field.INPUT]?.currencyId },
+            [Field.OUTPUT]: { currencyId: loadedUrlParams?.[Field.OUTPUT]?.currencyId },
+          }}
+        />
+        <NetworkAlert />
+      </PageWrapper>
+      <SwitchLocaleLink />
     </Trace>
   )
 }

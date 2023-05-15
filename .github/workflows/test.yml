@@ -26,6 +26,11 @@ jobs:
           key: ${{ runner.os }}-eslint-${{ hashFiles('**/yarn.lock') }}-${{ github.run_id }}
           restore-keys: ${{ runner.os }}-eslint-${{ hashFiles('**/yarn.lock') }}-
       - run: yarn lint
+      - if: failure() && github.ref_name == 'main'
+        uses: ./.github/actions/report
+        with:
+          name: Lint
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_TEST_REPORTER_WEBHOOK }}
   
   typecheck:
     runs-on: ubuntu-latest
@@ -39,6 +44,11 @@ jobs:
           key: ${{ runner.os }}-tsc-${{ hashFiles('**/yarn.lock') }}-${{ github.run_id }}
           restore-keys: ${{ runner.os }}-tsc-${{ hashFiles('**/yarn.lock') }}-
       - run: yarn typecheck
+      - if: failure() && github.ref_name == 'main'
+        uses: ./.github/actions/report
+        with:
+          name: Typecheck
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_TEST_REPORTER_WEBHOOK }}
 
   deps-tests:
     runs-on: ubuntu-latest
@@ -46,6 +56,11 @@ jobs:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
       - run: yarn yarn-deduplicate --strategy=highest --list --fail
+      - if: failure() && github.ref_name == 'main'
+        uses: ./.github/actions/report
+        with:
+          name: Dependency checks
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_TEST_REPORTER_WEBHOOK }}
 
   unit-tests:
     runs-on: ubuntu-latest
@@ -65,6 +80,11 @@ jobs:
           fail_ci_if_error: false
           verbose: true
           flags: unit-tests
+      - if: failure() && github.ref_name == 'main'
+        uses: ./.github/actions/report
+        with:
+          name: Unit tests
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_TEST_REPORTER_WEBHOOK }}
 
   build-e2e:
     runs-on: ubuntu-latest
@@ -138,9 +158,15 @@ jobs:
 
   # Included as a single job to check for cypress-test-matrix success, as a matrix cannot be checked.
   cypress-tests:
-    if: ${{ always() }}
+    if: always()
     needs: [cypress-test-matrix]
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v3
       - if: needs.cypress-test-matrix.result != 'success'
         run: exit 1
+      - if: failure() && github.ref_name == 'main'
+        uses: ./.github/actions/report
+        with:
+          name: Cypress tests
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_TEST_REPORTER_WEBHOOK }}
