@@ -14,7 +14,8 @@
  * const fetchWithRetry = retry(fetchData, 5, 2000);
  * fetchWithRetry().then(data => console.log(data)).catch(error => console.error(error));
  * ```
- */ export function retry<T>(fn: () => Promise<T>, retries = 3, delay = 1000): () => Promise<T> {
+ */
+export function retry<T>(fn: () => Promise<T>, retries = 3, delay = 1000): () => Promise<T> {
   return (): Promise<T> =>
     new Promise((resolve, reject) => {
       const attempt = async (attempts: number, currentDelay: number) => {
