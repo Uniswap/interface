@@ -10,7 +10,6 @@ import { Allowance, AllowanceState } from 'hooks/usePermit2Allowance'
 import usePrevious from 'hooks/usePrevious'
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
-import { useIsTransactionConfirmed } from 'state/transactions/hooks'
 import invariant from 'tiny-invariant'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 import { tradeMeaningfullyDiffers } from 'utils/tradeMeaningFullyDiffer'
@@ -87,8 +86,6 @@ export default function ConfirmSwapModal({
   const maximumAmountIn = useMaxAmountIn(trade, allowedSlippage)
   const [approvalError, setApprovalError] = useState<PendingModalError>()
 
-  const confirmed = useIsTransactionConfirmed(txHash)
-
   useEffect(() => {
     if (!showAcceptChanges && isAllowing(confirmModalState) && allowance.state === AllowanceState.ALLOWED) {
       onConfirm()
@@ -103,7 +100,10 @@ export default function ConfirmSwapModal({
     async function requestSignature() {
       // We successfully requested Permit2 approval and need to move to the signature step.
       try {
-        allowance.state === AllowanceState.REQUIRED && (await allowance.permit())
+        if (allowance.state === AllowanceState.REQUIRED) {
+          setConfirmModalState(ConfirmModalState.PERMITTING)
+          await allowance.permit()
+        }
       } catch (e) {
         setConfirmModalState(ConfirmModalState.REVIEWING)
         if (didUserReject(e)) {
@@ -218,24 +218,25 @@ export default function ConfirmSwapModal({
         hideStepIndicators={pendingModalSteps.length === 1}
         steps={pendingModalSteps}
         currentStep={confirmModalState}
-        approvalCurrency={trade?.inputAmount?.currency}
-        confirmed={confirmed}
+        trade={trade}
+        swapHash={txHash}
+        tokenApprovalPending={allowance.state === AllowanceState.REQUIRED && allowance.isApprovalPending}
       />
     )
   }, [
     confirmModalState,
     showAcceptChanges,
+    pendingModalSteps,
     trade,
-    startApproveAndSwapFlow,
     txHash,
+    allowance,
+    startApproveAndSwapFlow,
     allowedSlippage,
     swapErrorMessage,
     swapQuoteReceivedDate,
     fiatValueInput,
     fiatValueOutput,
     shouldLogModalCloseEvent,
-    pendingModalSteps,
-    confirmed,
     onAcceptChanges,
   ])
 
