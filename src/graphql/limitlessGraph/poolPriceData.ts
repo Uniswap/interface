@@ -11,7 +11,6 @@ import { useSingleCallResult } from 'lib/hooks/multicall'
 import { useContract } from 'hooks/useContract'
 import { abi as IUniswapV3PoolStateABI } from '@uniswap/v3-core/artifacts/contracts/interfaces/pool/IUniswapV3PoolState.sol/IUniswapV3PoolState.json'
 import { Interface } from '@ethersproject/abi'
-import { useUniswapSubgraph } from './uniswapClients'
 import { useLimitlessSubgraph } from './limitlessClients'
 import dayjs, { OpUnitType }from 'dayjs'
 import utc from 'dayjs/plugin/utc'
@@ -49,12 +48,12 @@ const PRICE_CHART = gql`
 `
 
 const POOL_PRICE_CHART = gql`
-  query poolHourDatas($startTime: Int!, $address: String!, $amount: Int!) {
+  query poolHourDatas($startTime: Int!, $endTime: Int!, $address: String!, $amount: Int!) {
     poolHourDatas(
-      first: $amount
-      where: { pool: $address, periodStartUnix_gt: $startTime }
+      where: { pool: $address, periodStartUnix_gt: $startTime, periodStartUnix_lt: $endTime }
       orderBy: periodStartUnix
       orderDirection: asc
+      first: $amount
     ) {
       periodStartUnix
       high
@@ -77,8 +76,10 @@ interface PriceResults {
 
 export async function fetchPoolPriceData(
   address: string,
-  interval: number,
   startTimestamp: number,
+  endTimestamp: number,
+  countBack: number,
+  invertPrice: boolean,
   dataClient: ApolloClient<NormalizedCacheObject>,
 ): Promise<{
   data: PriceChartEntry[]
@@ -87,27 +88,10 @@ export async function fetchPoolPriceData(
   // start and end bounds
 
   try {
-    const endTimestamp = dayjs.utc().unix()
-
+    // const endTimestamp = dayjs.utc().unix()
 
     if (!startTimestamp) {
       console.log('Error constructing price start timestamp')
-      return {
-        data: [],
-        error: false,
-      }
-    }
-
-    // create an array of hour start times until we reach current hour
-    const timestamps = []
-    let time = startTimestamp
-    while (time <= endTimestamp) {
-      timestamps.push(time)
-      time += interval
-    }
-
-    // backout if invalid timestamp format
-    if (timestamps.length === 0) {
       return {
         data: [],
         error: false,
@@ -121,37 +105,60 @@ export async function fetchPoolPriceData(
     //   open: string
     //   close: string
     // }[] = []
+    console.log("subgraphquery: ", address, startTimestamp, endTimestamp, countBack)
     const { data: result, errors, loading } = await dataClient.query<PriceResults>({
       query: POOL_PRICE_CHART,
       variables: {
-        address: address,
+        address: address.toLowerCase(),
         startTime: startTimestamp,
-        amount: 100,
+        endTime: endTimestamp,
+        amount: countBack > 950 ? 950 : countBack,
       },
-      fetchPolicy: 'no-cache',
+      fetchPolicy: 'cache-first',
     })
-    console.log("subgraphresult: ", result, errors, loading)
+    // console.log("subgraphresult: ", result, errors, loading)
 
     const formattedHistory = result.poolHourDatas.map((d) => {
       return {
-        time: d.periodStartUnix,
-        open: parseFloat(d.open),
-        close: parseFloat(d.close),
-        high: parseFloat(d.high),
-        low: parseFloat(d.low),
+        time: d.periodStartUnix * 1000,
+        open: invertPrice ? 1 / parseFloat(d.open) : parseFloat(d.open),
+        close: invertPrice ? 1 / parseFloat(d.close) : parseFloat(d.close),
+        high: invertPrice ? 1 / parseFloat(d.high) : parseFloat(d.high),
+        low: invertPrice ? 1 / parseFloat(d.low) : parseFloat(d.low),
       }
     })
 
-    return {
-      data: formattedHistory,
-      error: false,
+    if (formattedHistory.length === 0) {
+      return {
+        data: [],
+        error: false,
+      }
+    }
+
+    if (formattedHistory.length <= countBack) {
+      return {
+        data: formattedHistory,
+        error: false,
+      }
+    }
+
+    if (formattedHistory.length > countBack) { 
+      return {  
+        data: formattedHistory.slice(formattedHistory.length - countBack, formattedHistory.length),
+        error: false,
+      }
     }
   } catch (e) {
-    console.log(e)
+    console.log("subgraph error:", e)
     return {
       data: [],
       error: true,
     }
+  }
+
+  return {
+    data: [],
+    error: true,
   }
 }
 
@@ -177,9 +184,6 @@ export function usePoolPriceData(
 
   const [priceData, setPriceData] = useState<PoolPrice>()
   const [error, setError] = useState(false)
-
-  const uniswapClient = useUniswapSubgraph()
-  const limitlessClient = useLimitlessSubgraph()
 
   const uniswapPoolAddress = useMemo(() => {
     if (chainId && token0 && token1 && fee) {
@@ -234,28 +238,27 @@ export function usePoolPriceData(
   const utcCurrentTime = dayjs()
   const startTimestamp = utcCurrentTime.subtract(1, timeWindow).startOf('hour').unix()
 
-  // console.log("startTimestamp: ", startTimestamp)
-
   useEffect(() => {
     async function fetch() {
-      if (uniswapPoolAddress && limitlessPoolAddress) {
-        const { data, error: fetchingError } = await fetchPoolPriceData(
-          uniswapPoolExists ? uniswapPoolAddress : limitlessPoolAddress,
-          interval,
-          startTimestamp,
-          uniswapPoolExists ? uniswapClient : limitlessClient
-        )
-        if (data) {
-          setPriceData({
-            priceData: data,
-            oldestFetchedTimestamp: startTimestamp,
-          })
-        }
-        if (fetchingError) {
-          console.log('Error fetching pool price data', fetchingError)
-          setError(true)
-        }
-      }
+      // if (uniswapPoolAddress && limitlessPoolAddress) {
+      //   const { data, error: fetchingError } = await fetchPoolPriceData(
+      //     uniswapPoolExists ? uniswapPoolAddress : limitlessPoolAddress,
+      //     interval,
+      //     startTimestamp,
+      //     uniswapPoolExists ? uniswapClient : limitlessClient
+      //   )
+
+      //   if (data) {
+      //     setPriceData({
+      //       priceData: data,
+      //       oldestFetchedTimestamp: startTimestamp,
+      //     })
+      //   }
+      //   if (fetchingError) {
+      //     console.log('Error fetching pool price data', fetchingError)
+      //     setError(true)
+      //   }
+      // }
       // const { data, error: fetchingError } = await fetchPoolPriceData(
       //   address,
       //   interval,

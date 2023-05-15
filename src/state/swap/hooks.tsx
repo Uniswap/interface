@@ -276,10 +276,10 @@ export function useDerivedLeverageCreationInfo()
   useEffect(() => {
     simulateTrade()
   }, [currencies, leverageManager, leverage, leverageFactor, debouncedAmount])
-  console.log("contractResult", pool, contractResult, initialPrice, debouncedAmount)
+  // console.log("contractResult", pool, contractResult, initialPrice, debouncedAmount)
   const trade: LeverageTrade = useMemo(() => {
     if (initialPrice && contractResult && outputCurrency?.wrapped && inputCurrency?.wrapped && debouncedAmount) {
-      console.log("herestuff")
+      // console.log("herestuff")
       const position: any = contractResult[0]
       const expectedOutput = new BN(position.totalPosition.toString()).shiftedBy(-outputCurrency?.wrapped.decimals).toFixed(6)
       const borrowedAmount = new BN(position.totalDebtInput.toString()).shiftedBy(-inputCurrency?.wrapped.decimals).toFixed(6)

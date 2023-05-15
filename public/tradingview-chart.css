@@ -1,0 +1,155 @@
+.theme-dark:root {
+  --dark-blue-bg: #16182e;
+
+  --tv-color-pane-background: var(--dark-blue-bg);
+  --tv-color-platform-background: var(--dark-blue-bg);
+  --tv-color-pane-background-secondary: var(--dark-blue-bg);
+  --tv-color-toolbar-button-text-hover: #b2b5be;
+  --tv-color-toolbar-button-background-hover: #1e223de6;
+  --tv-color-toolbar-button-text-active: #2962ff;
+  --tv-color-toolbar-toggle-button-background-active: #3a3e5e;
+  --tv-color-toolbar-toggle-button-background-active-hover: #3a3e5e;
+  --tv-color-toolbar-button-background-expanded: var(--dark-blue-bg);
+  /* --tv-list-item-button-background-color: #20243f; */
+}
+
+html.theme-dark .chart-page {
+  background-color: transparent;
+  font-family: "Relative", sans-serif;
+  /* border: 1px solid #20243f;
+  border-radius: 10px; */
+}
+html.theme-dark .chart-container {
+  border: none;
+  /* border-radius: 5px;
+  border: 1px solid #20243f; */
+  /* border: 1px solid #20243f;
+  border-radius: 10px; */
+}
+
+html.theme-dark .chart-controls-bar {
+  display: none;
+  height: 0;
+  /* border: 1px solid #20243f;
+  border-radius: 10px; */
+}
+html.theme-dark .toggleButton-3zv4iS2j {
+  cursor: pointer;
+}
+html.theme-dark .toggleButton-3zv4iS2j .background-3zv4iS2j:hover {
+  fill: #464a6e;
+  stroke: #464a6e;
+}
+
+html.theme-dark .menuWrap-g78rwseC {
+  background-color: #20243f !important;
+}
+
+html.theme-dark .item-2IihgTnv:not(.isActive-2IihgTnv) {
+  cursor: pointer;
+  background-color: #20243f !important;
+  color: #b2b5be !important;
+}
+
+html.theme-dark .item-2IihgTnv:not(.isActive-2IihgTnv):hover,
+html.theme-dark .container-3Ywm3-oo.selected-3Ywm3-oo {
+  background-color: var(--dark-blue-bg) !important;
+}
+
+html.theme-dark .container-3Ywm3-oo.selected-3Ywm3-oo {
+  background-color: #2962ff !important;
+}
+
+html.theme-dark .dialog-2AogBbC7 {
+  background-color: #20243f !important;
+}
+
+html.theme-dark .close-2sL5JydP {
+  color: #6f6e84 !important;
+}
+
+html.theme-dark .close-2sL5JydP:hover {
+  background-color: transparent !important;
+  color: #f7f7f7 !important;
+  cursor: pointer;
+}
+
+html.theme-dark .shortcut-2IihgTnv,
+html.theme-dark .shortcut-f5BaKrKq {
+  color: #737682 !important;
+}
+
+html.theme-dark .item-f5BaKrKq.interactive-f5BaKrKq {
+  cursor: pointer;
+}
+
+html.theme-dark .tab-DggvOZTm:not(.active-DggvOZTm):hover,
+html.theme-dark .item-f5BaKrKq.interactive-f5BaKrKq:hover {
+  background-color: var(--dark-blue-bg) !important;
+}
+
+html.theme-dark .item-f5BaKrKq.interactive-f5BaKrKq.hovered-f5BaKrKq,
+html.theme-dark .item-f5BaKrKq.interactive-f5BaKrKq:active {
+  background-color: var(--dark-blue-bg) !important;
+}
+
+html.theme-dark .wrap-3jbioG5e,
+.button-i5o9yNmy,
+.isInteractive-2Vpz_LXc,
+.iconButton-i5o9yNmy,
+.bg-5-QHyx-s,
+.tab-DggvOZTm,
+.row-NcPpqR9x,
+.colorPicker-3gSLMlhu,
+.title-DggvOZTm {
+  cursor: pointer;
+}
+
+html.theme-dark .common-tooltip__body-36YLR71G {
+  background-color: #20243f !important;
+}
+html.theme-dark .common-tooltip__ear-holder-36YLR71G:after {
+  display: none;
+}
+
+html.theme-dark .color-green-xRobF0EE.variant-primary-xRobF0EE {
+  --ui-lib-button-default-color-content: #fff;
+  --ui-lib-button-default-color-border: var(--accent);
+  --ui-lib-button-default-color-bg: var(--accent);
+  cursor: pointer;
+}
+html.theme-dark .color-green-xRobF0EE.variant-primary-xRobF0EE:hover {
+  background: #4f60fc;
+}
+
+html.theme-dark .color-gray-xRobF0EE.variant-secondary-xRobF0EE {
+  cursor: pointer;
+}
+html.theme-dark .color-gray-xRobF0EE.variant-secondary-xRobF0EE:hover {
+  background: var(--dark-blue-bg);
+  border-color: var(--dark-blue-bg);
+}
+
+html.theme-dark .drawer-164vy-kj .smallTabletSectionTitle-2R6OKuTS {
+  color: #b2b5be !important;
+}
+html.theme-dark .drawer-164vy-kj .normal-eqcGT_ow {
+  display: none;
+}
+
+html.theme-dark .tv-floating-toolbar,
+html.theme-dark .drawer-164vy-kj {
+  background-color: var(--dark-blue-bg) !important;
+}
+
+html.theme-dark .summary-3UYGeClB {
+  color: #b2b5be !important;
+  padding-top: 4px;
+  margin-top: 0;
+}
+html.theme-dark .summary-3UYGeClB:hover,
+html.theme-dark .itemRow-1SBAfF8E:not(.active-1SBAfF8E):hover,
+html.theme-dark .container-3Ywm3-oo:not(.disabled-3Ywm3-oo):not(.selected-3Ywm3-oo):hover {
+  background-color: var(--dark-blue-bg) !important;
+  cursor: pointer;
+}

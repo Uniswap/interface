@@ -55,10 +55,10 @@ export function useLeveragePositions(account: string | undefined): {loading: boo
   }, [account, tokenIdResults])
 
   const inputs = useMemo(() => (tokenIds ? tokenIds.map((tokenId) => [BigNumber.from(tokenId)]) : []), [tokenIds])
-  console.log("inputs: ", inputs)
+  //console.log("inputs: ", inputs)
   
   const results = useSingleContractMultipleData(globalStorage, 'positions', inputs)
-  console.log("calldataResults: ", results)
+  //console.log("calldataResults: ", results)
 
   const loading = useMemo(() => results.some(({ loading }) => loading), [results])
   const error = useMemo(() => results.some(({ error }) => error), [results])
@@ -99,14 +99,14 @@ export function useLeveragePositions(account: string | undefined): {loading: boo
     }
     return undefined
   }, [loading, error, results, tokenIds])
-  console.log("positions: ", positions)
+  // console.log("positions: ", positions)
   return {
     loading: false,
     positions: positions ?? []
   }
 }
 
-function convertBNToStr(num: BigNumber, decimals: number) {
+export function convertBNToStr(num: BigNumber, decimals: number) {
   return new BN(num.toString()).shiftedBy(-decimals).toFixed(6)
 }
 

@@ -116,6 +116,7 @@ import { usePoolPriceData } from 'graphql/limitlessGraph/poolPriceData'
 import dayjs from 'dayjs'
 import CandleChart from 'components/CandleChart'
 import PositionsTable from 'components/LimitlessPositionTable/TokenTable'
+import { TVChartContainer } from 'components/ExchangeChart'
 
 
 const StyledNumericalInput = styled(NumericalInput)`
@@ -220,7 +221,10 @@ const ErrorContainer = styled.div`
 export const MonoSpace = styled.span`
   font-variant-numeric: tabular-nums;
 `
-
+const ChartContainer = styled(AutoColumn)`
+  width: 100%;
+  margin-right: 20px;
+`
 
 
 
@@ -800,11 +804,11 @@ export default function Swap({ className }: { className?: string }) {
     errorPolicy: 'all',
   })
 
-  const { loading: leveragePositionsLoading, positions: leveragePositions} = useLeveragePositions(account)
+  const { loading: leveragePositionsLoading, positions: leveragePositions } = useLeveragePositions(account)
 
 
   // console.log("leverageTrade: ", leverageTrade)
-  console.log("leveragePositions", poolAddress, leverageManagerAddress, leveragePositions)
+  //console.log("leveragePositions", poolAddress, leverageManagerAddress, leveragePositions)
 
   const [debouncedLeverageFactor, onDebouncedLeverageFactor] = useDebouncedChangeHandler(leverageFactor ?? "1", onLeverageFactorChange);
 
@@ -816,47 +820,15 @@ export default function Swap({ className }: { className?: string }) {
 
   //graph data
   // graph data
-  const [latestValue, setLatestValue] = useState<number | undefined>()
-  const [valueLabel, setValueLabel] = useState<string | undefined>()
-  const [timeWindow] = useState(TimeWindow.WEEK)
-  const priceData = usePoolPriceData(pool?.token0, pool?.token1, pool?.fee, ONE_HOUR_SECONDS, timeWindow)
-  console.log("priceData: ", priceData)
-  // const adjustedToCurrent = useMemo(() => {
-  //   if (priceData && tokenData && priceData.length > 0) {
-  //     const adjusted = Object.assign([], priceData)
-  //     adjusted.push({
-  //       time: currentTimestamp() / 1000,
-  //       open: priceData[priceData.length - 1].close,
-  //       close: tokenData?.priceUSD,
-  //       high: tokenData?.priceUSD,
-  //       low: priceData[priceData.length - 1].close,
-  //     })
-  //     return adjusted
-  //   } else {
-  //     return undefined
-  //   }
-  // }, [priceData, tokenData])
-
-  // close
-  // : 
-  // 16.0465835688061
-  // high
-  // : 
-  // 16.0465835688061
-  // low
-  // : 
-  // 16.0465835688061
-  // open
-  // : 
-  // 16.0465835688061
-  // time
-  // : 
-  // 1682377200
+  // const [latestValue, setLatestValue] = useState<number | undefined>()
+  // const [valueLabel, setValueLabel] = useState<string | undefined>()
+  // const [timeWindow] = useState(TimeWindow.WEEK)
+  // const priceData = usePoolPriceData(pool?.token0, pool?.token1, pool?.fee, ONE_HOUR_SECONDS, timeWindow)
 
   // // token0 price.
-  const enoughAllowance = (!leverage && allowance.state === AllowanceState.REQUIRED) || (leverage && (leverageApprovalState === ApprovalState.NOT_APPROVED))
-  const currentPrice = pool?.token0 != currencies.INPUT ? pool?.token0Price.toSignificant(3)
-    : (1 / Number(pool?.token0Price.toSignificant(3))).toFixed(3)
+  // const enoughAllowance = (!leverage && allowance.state === AllowanceState.REQUIRED) || (leverage && (leverageApprovalState === ApprovalState.NOT_APPROVED))
+  // const currentPrice = pool?.token0 != currencies.INPUT ? pool?.token0Price.toSignificant(3)
+  //   : (1 / Number(pool?.token0Price.toSignificant(3))).toFixed(3)
   return (
     <Trace page={InterfacePageName.SWAP_PAGE} shouldLogImpression>
       <>
@@ -869,20 +841,6 @@ export default function Swap({ className }: { className?: string }) {
           showCancel={true}
         />
         <PageWrapper>
-          {
-            inputCurrency && (
-              <SmallMaxButton onClick={() => faucetIn()} width="20%">
-                <Trans>Faucet {inputCurrency.symbol}</Trans>
-              </SmallMaxButton>
-            )
-          }
-          {
-            outputCurrency && (
-              <SmallMaxButton onClick={() => faucetOut()} width="20%">
-                <Trans>Faucet {outputCurrency.symbol}</Trans>
-              </SmallMaxButton>
-            )
-          }
           {swapWidgetEnabled ? (
             <Widget
               defaultTokens={{
@@ -894,44 +852,43 @@ export default function Swap({ className }: { className?: string }) {
           ) : (
             <AutoColumn>
               <RowBetween align="flex-start">
-                <AutoRow marginRight="20px" marginLeft="20px" marginBottom="10px">
+                <ChartContainer>
                   <TokenInfoContainer data-testid="token-info-container">
                     <TokenNameCell>
                       {inputCurrency && outputCurrency && <DoubleCurrencyLogo currency0={inputCurrency as Currency} currency1={outputCurrency as Currency} size={18} margin />}
-                      {inputCurrency && outputCurrency && currentPrice
-                        ? `${(outputCurrency.symbol)}/${(inputCurrency.symbol) + " Price: " + currentPrice.toString()}`
+                      {inputCurrency && outputCurrency
+                        ? `${(outputCurrency.symbol)}/${(inputCurrency.symbol)}`
                         : <Trans>Pair not found</Trans>}
+                      {
+                        inputCurrency && (
+                          <SmallMaxButton onClick={() => faucetIn()} width="10%">
+                            <Trans>Faucet {inputCurrency.symbol}</Trans>
+                          </SmallMaxButton>
+                        )
+                      }
+                      {
+                        outputCurrency && (
+                          <SmallMaxButton onClick={() => faucetOut()} width="10%">
+                            <Trans>Faucet {outputCurrency.symbol}</Trans>
+                          </SmallMaxButton>
+                        )
+                      }
                     </TokenNameCell>
                   </TokenInfoContainer>
-                  <AutoRow>
-                    <AutoColumn>
-                      <RowFixed>
-                        <ThemedText.BodySecondary>
-                          <MonoSpace>
-                            {latestValue
-                              ? formatDollarAmount(latestValue, 2)
-                              : formatDollarAmount(0, 2)
-                            }
-                          </MonoSpace>
-                        </ThemedText.BodySecondary>
-                      </RowFixed>
-                      <ThemedText.DeprecatedMain>
-                        {valueLabel ? (
-                          <MonoSpace>{valueLabel} (UTC)</MonoSpace>
-                        ) : (
-                          <MonoSpace>{dayjs.utc().format('MMM D, YYYY')}</MonoSpace>
-                        )}
-                      </ThemedText.DeprecatedMain>
-                    </AutoColumn>
-                    <CandleChart
+
+                  {/* <CandleChart
                       data={priceData ?? []}
                       setValue={setLatestValue}
                       setLabel={setValueLabel}
-                    // color={"#2172E5"}
-                    />
-                  </AutoRow>
+                    /> */}
+                  <TVChartContainer
+                    chainId={chainId ?? 80001}
+                    token0={pool?.token0}
+                    token1={pool?.token1}
+                    fee={pool?.fee}
+                  />
                   {/* <PairChartSection token0PriceQuery={token0PriceQuery} token1PriceQuery={token1PriceQuery} token0symbol={inputCurrency?.symbol} token1symbol={outputCurrency?.symbol} onChangeTimePeriod={setTimePeriod} /> */}
-                </AutoRow>
+                </ChartContainer>
 
                 <SwapWrapper chainId={chainId} className={className} id="swap-page">
                   <SwapHeader allowedSlippage={allowedSlippage} />
@@ -1364,7 +1321,7 @@ export default function Swap({ className }: { className?: string }) {
 
               </RowBetween>
 
-              <PositionsTable positions={leveragePositions} loading={leveragePositionsLoading}/>
+              <PositionsTable positions={leveragePositions} loading={leveragePositionsLoading} />
             </AutoColumn>
           )}
           <NetworkAlert />

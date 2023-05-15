@@ -265,7 +265,7 @@ export const celoBlockClient = new ApolloClient({
     },
   },
 })
-supportedChainId
+
 export function useUniswapSubgraph(): ApolloClient<NormalizedCacheObject> {
   // const [activeNetwork] = useActiveNetworkVersion()
   const { chainId } = useWeb3React()

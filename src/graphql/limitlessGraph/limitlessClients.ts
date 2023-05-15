@@ -26,7 +26,7 @@ const authMiddleware = new ApolloLink((operation, forward) => {
   return forward(operation)
 })
 
-export const apolloClient = new ApolloClient({
+export const limitlessClient = new ApolloClient({
   cache: new InMemoryCache(),
   link: concat(authMiddleware, httpLink),
 })
@@ -45,6 +45,6 @@ export function useLimitlessSubgraph(): ApolloClient<NormalizedCacheObject> {
     case SupportedChainId.BNB://SupportedNetwork.BNB:
 
     default:
-      return apolloClient
+      return limitlessClient
   }
 }

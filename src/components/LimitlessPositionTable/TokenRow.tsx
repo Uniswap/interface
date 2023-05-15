@@ -557,14 +557,11 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
           positionInfo={
             <ClickableContent>
               <RowBetween>
-                <DoubleCurrencyLogo margin={true} size={40} currency0={token0 ?? undefined} currency1={token1 ?? undefined} />
+                <DoubleCurrencyLogo margin={true} size={30} currency0={token0 ?? undefined} currency1={token1 ?? undefined} />
                 <PositionInfo>
                   <ThemedText.BodyPrimary margin="0" padding="0">
                     <GreenText> x{formatNumber(leverageFactor)} Long </GreenText> {isToken0 ? token0?.symbol : token1?.symbol}
                   </ThemedText.BodyPrimary>
-                  {/* <ThemedText.BodySmall margin="0" padding="0">
-                    ({token0?.symbol + "/" + token1?.symbol})
-                  </ThemedText.BodySmall> */}
                 </PositionInfo>
               </RowBetween>
             </ClickableContent>
