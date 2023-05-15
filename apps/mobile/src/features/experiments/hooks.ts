@@ -8,7 +8,3 @@ export function useFeatureFlag(flagName: FEATURE_FLAGS): boolean {
   const { value } = useGate(flagName)
   return value
 }
-
-export function useFiatOnRampEnabled(): boolean {
-  return useFeatureFlag(FEATURE_FLAGS.FiatOnRamp)
-}

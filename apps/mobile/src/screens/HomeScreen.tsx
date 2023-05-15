@@ -46,7 +46,6 @@ import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import TraceTabView from 'src/components/telemetry/TraceTabView'
 import { Text } from 'src/components/Text'
 import { PortfolioBalance } from 'src/features/balances/PortfolioBalance'
-import { useFiatOnRampEnabled } from 'src/features/experiments/hooks'
 import { openModal } from 'src/features/modals/modalSlice'
 import { useSelectAddressHasNotifications } from 'src/features/notifications/hooks'
 import { setNotificationStatus } from 'src/features/notifications/notificationSlice'
@@ -464,16 +463,15 @@ function QuickActions(): JSX.Element {
   }
 
   // hide fiat onramp banner when active account isn't a signer account.
-  const fiatOnRampShown =
-    useFiatOnRampEnabled() && activeAccount.type === AccountType.SignerMnemonic
+  const showFiatOnRamp = activeAccount.type === AccountType.SignerMnemonic
 
   return (
     <Flex centered row gap="spacing8">
-      {fiatOnRampShown ? (
+      {showFiatOnRamp ? (
         <ActionButton
           Icon={BuyIcon}
           eventName={MobileEventName.FiatOnRampQuickActionButtonPressed}
-          flex={3}
+          flex={1}
           label={t('Buy')}
           name={ElementName.Buy}
           onPress={onPressBuy}
@@ -481,14 +479,14 @@ function QuickActions(): JSX.Element {
       ) : null}
       <ActionButton
         Icon={SendIcon}
-        flex={3}
+        flex={1}
         label={t('Send')}
         name={ElementName.Send}
         onPress={onPressSend}
       />
       <ActionButton
         Icon={ScanIcon}
-        flex={3}
+        flex={1}
         label={t('Scan')}
         name={ElementName.WalletConnectScan}
         onPress={onPressScan}

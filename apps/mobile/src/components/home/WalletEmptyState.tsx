@@ -10,7 +10,6 @@ import { Flex } from 'src/components/layout'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { Text } from 'src/components/Text'
 import { UNISWAP_HELP_CENTER_WALLET_URL } from 'src/constants/urls'
-import { useFiatOnRampEnabled } from 'src/features/experiments/hooks'
 import { openModal } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
 import { AccountType } from 'src/features/wallet/accounts/types'
@@ -42,9 +41,6 @@ export function WalletEmptyState(): JSX.Element {
 
   const activeAccount = useActiveAccount()
   const isViewOnly = activeAccount?.type === AccountType.Readonly
-
-  const isFiatOnRampEnabled =
-    useFiatOnRampEnabled() && activeAccount?.type === AccountType.SignerMnemonic
 
   const options: { [key in ActionOption]: ActionCardItem } = useMemo(
     () => ({
@@ -142,7 +138,7 @@ export function WalletEmptyState(): JSX.Element {
   // Order options based on view only status
   const sortedOptions = isViewOnly
     ? [options.Learn, options.Scan, options.Import]
-    : [...(isFiatOnRampEnabled ? [options.Buy] : []), options.Scan, options.Learn]
+    : [...(!isViewOnly ? [options.Buy] : []), options.Scan, options.Learn]
 
   return (
     <Flex gap="spacing8">
