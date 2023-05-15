@@ -81,7 +81,7 @@ export function useDerivedSwapInfo(
   parsedAmount: CurrencyAmount<Currency> | undefined
   inputError?: ReactNode
   trade: {
-    trade: InterfaceTrade | undefined
+    trade?: InterfaceTrade
     state: TradeState
   }
   allowedSlippage: Percent
