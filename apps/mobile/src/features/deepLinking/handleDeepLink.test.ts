@@ -1,6 +1,7 @@
 import { expectSaga } from 'redux-saga-test-plan'
 import {
   handleDeepLink,
+  handleWalletConnectDeepLink,
   parseAndValidateUserAddress,
 } from 'src/features/deepLinking/handleDeepLink'
 import { handleTransactionLink } from 'src/features/deepLinking/handleTransactionLink'
@@ -18,6 +19,10 @@ const unsupportedScreenDeepLinkPayload = {
   url: `https://uniswap.org/app?screen=send&userAddress=${account.address}`,
   coldStart: false,
 }
+
+const wcUniversalLinkUrl = `https://uniswap.org/app/wc?uri=wc:123`
+const wcUrlSchemeUrl = `uniswap://wc?uri=wc:123`
+const invalidUrlSchemeUrl = `uniswap://invalid?param=pepe`
 
 describe(handleDeepLink, () => {
   it('Routes to the swap deep link handler if screen=swap and userAddress is valid', () => {
@@ -86,6 +91,61 @@ describe(handleDeepLink, () => {
           activeAccountAddress: null,
         },
       })
+      .returns(undefined)
+      .silentRun()
+  })
+
+  it('Handles WalletConnect Universal Link connection', () => {
+    return expectSaga(handleDeepLink, {
+      payload: { url: wcUniversalLinkUrl, coldStart: false },
+      type: '',
+    })
+      .withState({
+        wallet: {
+          accounts: {
+            [account.address]: account,
+          },
+          activeAccountAddress: account.address,
+        },
+      })
+      .call(handleWalletConnectDeepLink, 'wc:123')
+      .returns(undefined)
+
+      .silentRun()
+  })
+
+  it('Handles WalletConnect URL scheme connection', () => {
+    return expectSaga(handleDeepLink, {
+      payload: { url: wcUrlSchemeUrl, coldStart: false },
+      type: '',
+    })
+      .withState({
+        wallet: {
+          accounts: {
+            [account.address]: account,
+          },
+          activeAccountAddress: account.address,
+        },
+      })
+      .call(handleWalletConnectDeepLink, 'wc:123')
+      .returns(undefined)
+      .silentRun()
+  })
+
+  it('Fails arbitrary URL scheme deep link', () => {
+    return expectSaga(handleDeepLink, {
+      payload: { url: invalidUrlSchemeUrl, coldStart: false },
+      type: '',
+    })
+      .withState({
+        wallet: {
+          accounts: {
+            [account.address]: account,
+          },
+          activeAccountAddress: account.address,
+        },
+      })
+
       .returns(undefined)
       .silentRun()
   })

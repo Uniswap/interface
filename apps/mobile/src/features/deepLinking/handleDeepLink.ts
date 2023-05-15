@@ -25,6 +25,9 @@ export interface DeepLink {
   coldStart: boolean
 }
 
+const UNISWAP_URL_SCHEME = 'uniswap://'
+const UNISWAP_URL_SCHEME_WALLETCONNECT = 'uniswap://wc?uri='
+
 export const openDeepLink = createAction<DeepLink>('deeplink/open')
 
 export function* deepLinkWatcher(): Generator<ForkEffect<never>, void, unknown> {
@@ -40,17 +43,27 @@ export function* handleDeepLink(action: ReturnType<typeof openDeepLink>) {
       return
     }
 
-    // Skip handling any uniswap:// deep links for now for security reasons
-    // currently only used for WalletConnect flow fallback
-    if (action.payload.url.startsWith('uniswap://')) {
+    const url = new URL(action.payload.url)
+
+    // Handle WC deep link via URL scheme connections (ex. uniswap://wc?uri=123))
+    if (action.payload.url.startsWith(UNISWAP_URL_SCHEME_WALLETCONNECT)) {
+      let wcUri = action.payload.url.split(UNISWAP_URL_SCHEME_WALLETCONNECT)[1]
+      if (!wcUri) return
+      // Decode URI to handle special characters like %3A => :
+      wcUri = decodeURIComponent(wcUri)
+      yield* call(handleWalletConnectDeepLink, wcUri)
+      return
+    }
+
+    // Skip handling any non-WalletConnect uniswap:// URL scheme deep links for now for security reasons
+    // Currently only used on WalletConnect Universal Link web page fallback button (https://uniswap.org/app/wc)
+    if (action.payload.url.startsWith(UNISWAP_URL_SCHEME)) {
       // Set didOpenFromDeepLink so that `returnToPreviousApp()` is enabled during WalletConnect flows
       yield* put(setDidOpenFromDeepLink(true))
       return
     }
 
-    const url = new URL(action.payload.url)
-
-    // Handle WC deeplink connections
+    // Handle WC universal links connections (ex. https://uniswap.org/app/wc?uri=123)
     if (url.pathname.includes('/wc')) {
       // Only initial session connections include `uri` param, signing requests only link to /wc
       const wcUri = url.searchParams.get('uri')
@@ -98,7 +111,7 @@ export function* handleDeepLink(action: ReturnType<typeof openDeepLink>) {
   }
 }
 
-function* handleWalletConnectDeepLink(wcUri: string) {
+export function* handleWalletConnectDeepLink(wcUri: string) {
   const isValidWcUri = yield* call(isValidWCUrl, wcUri)
   if (isValidWcUri) {
     yield* fork(connectToApp, wcUri)
