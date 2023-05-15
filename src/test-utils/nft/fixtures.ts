@@ -6,7 +6,7 @@ import {
   OrderStatus,
   OrderType,
 } from 'graphql/data/__generated__/types-and-hooks'
-import { ActivityEvent, CollectionInfoForAsset, GenieAsset, Markets, SellOrder, WalletAsset } from 'nft/types'
+import { ActivityEvent, CollectionInfoForAsset, GenieAsset, Markets, Offer, SellOrder, WalletAsset } from 'nft/types'
 
 export const TEST_NFT_ASSET: GenieAsset = {
   id: 'TmZ0QXNzZXQ6MHhlZDVhZjM4ODY1MzU2N2FmMmYzODhlNjIyNGRjN2M0YjMyNDFjNTQ0XzMzMTg=',
@@ -237,4 +237,18 @@ export const TEST_SELL_ORDER: SellOrder = {
   status: OrderStatus.Valid,
   type: OrderType.Listing,
   protocolParameters: {},
+}
+
+export const TEST_OFFER: Offer = {
+  createdAt: 1683561510000,
+  endAt: 1699528045000,
+  id: 'TmZ0T3JkZXI6MHgyOWQ3ZWJjYTY1NjY2NWMxYTUyYTkyZjgzMGU0MTNlMzk0ZGI2YjRmXzY4MTVfMHg3OWVhNDQ5YzMzNzVlZDFhOWQ3ZDk5ZjgwNjgyMDllYTc0OGM2ZDQyXzQ5NzAwMDAwMDAwMDAwMDAwMDAwMF9vcGVuc2VhX01vbiBNYXkgMDggMjAyMyAxNTo1ODozMCBHTVQrMDAwMCAoQ29vcmRpbmF0ZWQgVW5pdmVyc2FsIFRpbWUp',
+  maker: '0x79ea449c3375ed1a9d7d99f8068209ea748c6d42',
+  marketplace: NftMarketplace.Opensea,
+  marketplaceUrl: 'https://opensea.io/assets/0x29d7ebca656665c1a52a92f830e413e394db6b4f/6815',
+  price: {
+    currency: 'ETH',
+    value: 123.456,
+  },
+  quantity: 1,
 }

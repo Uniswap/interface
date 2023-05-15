@@ -142,6 +142,7 @@ exports[`placeholder containers load 1`] = `
 
 .c18 {
   background: #FFFFFF;
+  border: 1px solid #D2D9EE;
   border-radius: 16px;
   padding: 16px 20px;
   width: 100%;
@@ -287,8 +288,7 @@ exports[`placeholder containers load 1`] = `
 }
 
 .c1 {
-  padding: 24px 64px;
-  height: 100vh;
+  height: 100%;
   width: 100%;
   gap: 36px;
   max-width: 1200px;
@@ -317,18 +317,6 @@ exports[`placeholder containers load 1`] = `
 @media screen and (max-width:1024px) {
   .c5 {
     display: none;
-  }
-}
-
-@media screen and (max-width:640px) {
-  .c1 {
-    padding: 24px 48px;
-  }
-}
-
-@media screen and (max-width:396px) {
-  .c1 {
-    padding: 24px 20px;
   }
 }
 
@@ -469,11 +457,6 @@ exports[`placeholder containers load 1`] = `
               class="c2 c21"
             >
               Listings
-              <div
-                class="c24 css-f8aq60"
-              >
-                10+
-              </div>
             </div>
           </div>
         </div>
