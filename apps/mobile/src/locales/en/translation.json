@@ -543,5 +543,12 @@
   "Unknown token": "Unknown token",
   "Invalid phrase": "Invalid phrase",
   "Invalid word: {{word}}": "Invalid word: {{word}}",
-  "Recovery phrase must be 12-24 words": "Recovery phrase must be 12-24 words"
+  "Recovery phrase must be 12-24 words": "Recovery phrase must be 12-24 words",
+  "${{amount}} minimum": "${{amount}} minimum",
+  "${{amount}} maximum": "${{amount}} maximum",
+  "Continue to checkout": "Continue to checkout",
+  "Select a token to buy": "Select a token to buy",
+  "Couldn't load tokens to buy": "Couldn't load tokens to buy",
+  "Connecting you to Moonpay": "Connecting you to Moonpay...",
+  "Buying {{amount}} worth of {{quoteCurrencyCode}}": "Buying {{amount}} worth of {{quoteCurrencyCode}}"
 }

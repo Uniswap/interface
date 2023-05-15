@@ -4,6 +4,7 @@ import { PollingInterval } from 'wallet/src/constants/misc'
 import { Chain } from 'wallet/src/data/__generated__/types-and-hooks'
 import {
   fromGraphQLChain,
+  fromMoonpayNetwork,
   getPollingIntervalByBlocktime,
   isTestnet,
   parseActiveChains,
@@ -74,6 +75,21 @@ describe(toGraphQLChain, () => {
 
   it('handle unsupported chain', () => {
     expect(toGraphQLChain(ChainId.PolygonMumbai)).toEqual(null)
+  })
+})
+
+describe(fromMoonpayNetwork, () => {
+  it('handles supported chain', () => {
+    expect(fromMoonpayNetwork(undefined)).toEqual(ChainId.Mainnet)
+    expect(fromMoonpayNetwork(Chain.Arbitrum.toLowerCase())).toEqual(ChainId.ArbitrumOne)
+    expect(fromMoonpayNetwork(Chain.Optimism.toLowerCase())).toEqual(ChainId.Optimism)
+    expect(fromMoonpayNetwork(Chain.Polygon.toLowerCase())).toEqual(ChainId.Polygon)
+  })
+
+  it('handle unsupported chain', () => {
+    expect(() => fromMoonpayNetwork('unkwnown')).toThrow(
+      'Moonpay network "unkwnown" can not be mapped'
+    )
   })
 })
 

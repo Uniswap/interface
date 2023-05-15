@@ -65,3 +65,18 @@ export function toGraphQLChain(chainId: ChainId): Chain | null {
 export function getPollingIntervalByBlocktime(chainId?: ChainId): PollingInterval {
   return isL2Chain(chainId) ? PollingInterval.LightningMcQueen : PollingInterval.Fast
 }
+
+export function fromMoonpayNetwork(moonpayNetwork: string | undefined): ChainId {
+  switch (moonpayNetwork) {
+    case Chain.Arbitrum.toLowerCase():
+      return ChainId.ArbitrumOne
+    case Chain.Optimism.toLowerCase():
+      return ChainId.Optimism
+    case Chain.Polygon.toLowerCase():
+      return ChainId.Polygon
+    case undefined:
+      return ChainId.Mainnet
+    default:
+      throw new Error(`Moonpay network "${moonpayNetwork}" can not be mapped`)
+  }
+}

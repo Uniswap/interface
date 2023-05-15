@@ -12,3 +12,5 @@ export const AVATARS_DARK = require('./misc/avatars-dark.png')
 
 export const ONBOARDING_NOTIFICATIONS_DARK = require('./backgrounds/notifications-dark.png')
 export const ONBOARDING_NOTIFICATIONS_LIGHT = require('./backgrounds/notifications-light.png')
+export const FOR_CONNECTING_BACKGROUND_DARK = require('./backgrounds/for-connecting-dark.png')
+export const FOR_CONNECTING_BACKGROUND_LIGHT = require('./backgrounds/for-connecting-light.png')

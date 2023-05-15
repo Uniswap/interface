@@ -18,6 +18,7 @@ export enum MobileEventName {
   // General fiat onramp events like in-app buttons and modals
   FiatOnRampBannerPressed = 'Fiat OnRamp Banner Pressed',
   FiatOnRampQuickActionButtonPressed = 'Fiat OnRamp QuickAction Button Pressed',
+  FiatOnRampAmountEntered = 'Fiat OnRamp Amount Entered',
   FiatOnRampWidgetOpened = 'Fiat OnRamp Widget Opened',
   NetworkFilterSelected = 'Network Filter Selected',
   OnboardingCompleted = 'Onboarding Completed',
@@ -132,6 +133,7 @@ export const enum ElementName {
   Enable = 'enable',
   EtherscanView = 'etherscan-view',
   Favorite = 'favorite',
+  FiatOnRampTokenSelector = 'fiat-on-ramp-token-selector',
   FiatOnRampWidgetButton = 'fiat-on-ramp-widget-button',
   GetHelp = 'get-help',
   GetStarted = 'get-started',

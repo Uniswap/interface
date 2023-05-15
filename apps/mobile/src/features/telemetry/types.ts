@@ -73,6 +73,7 @@ export type EventProperties = {
   }
   [MobileEventName.FiatOnRampQuickActionButtonPressed]: BaseEventProperty
   [MobileEventName.FiatOnRampBannerPressed]: BaseEventProperty
+  [MobileEventName.FiatOnRampAmountEntered]: BaseEventProperty & { source: 'chip' | 'textInput' }
   [MobileEventName.FiatOnRampWidgetOpened]: BaseEventProperty & { externalTransactionId: string }
   [MobileEventName.NetworkFilterSelected]: BaseEventProperty & {
     chain: ChainId | 'All'

@@ -19,10 +19,32 @@ export type MoonpayCurrency = {
   type: 'crypto' | 'fiat'
   name?: string
   code: string
+  supportsTestMode: boolean
+  supportsLiveMode: boolean
   metadata?: {
     contractAddress: string
     chainId: string
   }
+}
+
+/** @ref https://dashboard.moonpay.com/api_reference/client_side_api#list_currencies */
+export type MoonpayListCurrenciesResponse = MoonpayCurrency[]
+
+/** @ref https://dashboard.moonpay.com/api_reference/client_side_api#get_currency_buy_quote */
+export type MoonpayBuyQuoteResponse = MoonpayQuote
+
+type CurrencyLimit = {
+  code: string
+  minBuyAmount: number
+  maxBuyAmount: number
+}
+
+/** @ref https://dashboard.moonpay.com/api_reference/client_side_api#get_currency_limits */
+export type MoonpayLimitsResponse = {
+  paymentMethod: string
+  quoteCurrency: CurrencyLimit
+  baseCurrency: CurrencyLimit
+  areFeesIncluded: boolean
 }
 
 /** @ref https://dashboard.moonpay.com/api_reference/client_side_api#transactions */

@@ -199,6 +199,7 @@ module.exports = {
               'Couldn’t',
               'Ethereum',
               'Let’s',
+              'Moonpay',
               'Onboarding',
               'Uniswap',
               'We’ll',

@@ -5,7 +5,11 @@ import { uniswapUrls } from 'src/constants/urls'
 import {
   FiatOnRampWidgetUrlQueryParameters,
   FiatOnRampWidgetUrlQueryResponse,
+  MoonpayBuyQuoteResponse,
+  MoonpayCurrency,
   MoonpayIPAddressesResponse,
+  MoonpayLimitsResponse,
+  MoonpayListCurrenciesResponse,
   MoonpayTransactionsResponse,
 } from 'src/features/fiatOnRamp/types'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
@@ -61,19 +65,94 @@ export const fiatOnRampApi = createApi({
             return { data: undefined, error: e }
           }),
     }),
+    fiatOnRampSupportedTokens: builder.query<MoonpayCurrency[], void>({
+      queryFn: () =>
+        // TODO: [MOB-3888] consider a reverse proxy for privacy reasons
+        fetch(`${config.moonpayApiUrl}/v3/currencies?${COMMON_QUERY_PARAMS}`)
+          .then((response) => response.json())
+          .then((response: MoonpayListCurrenciesResponse) => {
+            return { data: response.filter((c) => c.type === 'crypto' && c.supportsLiveMode) }
+          })
+          .catch((e) => {
+            return { data: undefined, error: e }
+          }),
+    }),
+    fiatOnRampBuyQuote: builder.query<
+      MoonpayBuyQuoteResponse,
+      {
+        quoteCurrencyCode: string
+        baseCurrencyCode: string
+        baseCurrencyAmount: string
+        areFeesIncluded: boolean
+      }
+    >({
+      queryFn: ({ quoteCurrencyCode, baseCurrencyCode, baseCurrencyAmount, areFeesIncluded }) =>
+        // TODO: [MOB-3888] consider a reverse proxy for privacy reasons
+        fetch(
+          `${
+            config.moonpayApiUrl
+          }/v3/currencies/${quoteCurrencyCode}/buy_quote?${serializeQueryParams({
+            baseCurrencyCode,
+            baseCurrencyAmount,
+            areFeesIncluded,
+            apiKey: config.moonpayApiKey,
+          })}`
+        )
+          .then((response) => response.json())
+          .then((response: MoonpayBuyQuoteResponse) => {
+            return { data: response }
+          })
+          .catch((e) => {
+            return { data: undefined, error: e }
+          }),
+    }),
+    fiatOnRampLimits: builder.query<
+      MoonpayLimitsResponse,
+      {
+        quoteCurrencyCode: string
+        baseCurrencyCode: string
+        areFeesIncluded: boolean
+      }
+    >({
+      queryFn: ({ quoteCurrencyCode, baseCurrencyCode, areFeesIncluded }) =>
+        // TODO: [MOB-3888] consider a reverse proxy for privacy reasons
+        fetch(
+          `${config.moonpayApiUrl}/v3/currencies/${quoteCurrencyCode}/limits?${serializeQueryParams(
+            {
+              baseCurrencyCode,
+              areFeesIncluded,
+              apiKey: config.moonpayApiKey,
+            }
+          )}`
+        )
+          .then((response) => response.json())
+          .then((response: MoonpayLimitsResponse) => {
+            return { data: response }
+          })
+          .catch((e) => {
+            return { data: undefined, error: e }
+          }),
+    }),
+
     fiatOnRampWidgetUrl: builder.query<
       string,
-      FiatOnRampWidgetUrlQueryParameters & { ownerAddress: Address }
+      FiatOnRampWidgetUrlQueryParameters & {
+        ownerAddress: Address
+        amount: string
+        currencyCode: string
+      }
     >({
-      query: ({ ownerAddress, ...rest }) => ({
+      query: ({ ownerAddress, amount, currencyCode, ...rest }) => ({
         url: config.moonpayWidgetApiUrl,
         body: {
           ...rest,
           defaultCurrencyCode: 'eth',
+          currencyCode,
+          baseCurrencyAmount: amount,
           redirectURL: `${uniswapUrls.appBaseUrl}/?screen=transaction&fiatOnRamp=true&userAddress=${ownerAddress}`,
           walletAddresses: JSON.stringify(
-            supportedCurrencyCodes.reduce<Record<string, Address>>((acc, currencyCode: string) => {
-              acc[currencyCode] = ownerAddress
+            supportedCurrencyCodes.reduce<Record<string, Address>>((acc, code: string) => {
+              acc[code] = ownerAddress
               return acc
             }, {})
           ),
@@ -85,7 +164,13 @@ export const fiatOnRampApi = createApi({
   }),
 })
 
-export const { useIsFiatOnRampBuyAllowedQuery, useFiatOnRampWidgetUrlQuery } = fiatOnRampApi
+export const {
+  useIsFiatOnRampBuyAllowedQuery,
+  useFiatOnRampWidgetUrlQuery,
+  useFiatOnRampSupportedTokensQuery,
+  useFiatOnRampBuyQuoteQuery,
+  useFiatOnRampLimitsQuery,
+} = fiatOnRampApi
 
 /**
  * Utility to fetch fiat onramp transactions from moonpay
