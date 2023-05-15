@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom' // jest custom assertions
+import 'polyfills'
 import 'jest-styled-components' // adds style diffs to snapshot tests
 
-import { ResizeObserver } from '@juggle/resize-observer'
 import type { createPopper } from '@popperjs/core'
 import { useWeb3React } from '@web3-react/core'
 import failOnConsole from 'jest-fail-on-console'
