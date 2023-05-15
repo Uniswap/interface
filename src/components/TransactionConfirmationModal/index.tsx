@@ -199,7 +199,7 @@ export function ConfirmationModalContent({
         <Row>
           {chainId && (
             <Badge>
-              <RowFixed>
+              <RowFixed data-testid="confirmation-modal-chain-icon">
                 <StyledLogo src={info?.logoUrl} style={{ margin: '0 8px 0 0' }} />
                 {info?.label}
               </RowFixed>
