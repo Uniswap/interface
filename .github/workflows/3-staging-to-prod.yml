@@ -18,8 +18,10 @@ jobs:
         with:
           token: ${{ secrets.RELEASE_SERVICE_ACCESS_TOKEN }}
           ref: releases/staging
-      - name: Git push
+      - name: Git config
         run: |
           git config user.name "UL Service Account"
           git config user.email "hello-happy-puppy@users.noreply.github.com"
+      - name: Git push
+        run: |
           git push origin releases/staging:releases/prod --force

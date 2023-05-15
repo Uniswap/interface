@@ -46,15 +46,15 @@ function useTryActivation() {
 
         onSuccess()
       } catch (error) {
-        // TODO(WEB-3162): re-add special treatment for already-pending injected errors & move debug to after didUserReject() check
-        console.debug(`Connection failed: ${connection.getName()}`)
-        console.error(error)
-
         // Gracefully handles errors from the user rejecting a connection attempt
         if (didUserReject(connection, error)) {
           setActivationState(IDLE_ACTIVATION_STATE)
           return
         }
+
+        // TODO(WEB-3162): re-add special treatment for already-pending injected errors & move debug to after didUserReject() check
+        console.debug(`Connection failed: ${connection.getName()}`)
+        console.error(error)
 
         // Failed Connection events are logged here, while successful ones are logged by Web3Provider
         sendAnalyticsEvent(InterfaceEventName.WALLET_CONNECT_TXN_COMPLETED, {
