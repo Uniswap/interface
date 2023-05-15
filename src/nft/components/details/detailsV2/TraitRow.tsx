@@ -1,8 +1,7 @@
 import Column from 'components/Column'
 import Row from 'components/Row'
 import { Trait } from 'nft/types'
-import { formatEth } from 'nft/utils'
-import qs from 'qs'
+import { formatEth, getLinkForTrait } from 'nft/utils'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { BREAKPOINTS, ThemedText } from 'theme'
@@ -60,14 +59,9 @@ export const TraitRow = ({ trait, collectionAddress }: { trait: Trait; collectio
   // rarity eventually should be number of items with this trait / total number of items, smaller rarity means more rare
   const randomRarity = Math.random()
   const rarityLevel = getRarityLevel(randomRarity)
-  const params = qs.stringify(
-    { traits: [`("${trait.trait_type}","${trait.trait_value}")`] },
-    {
-      arrayFormat: 'comma',
-    }
-  )
+
   return (
-    <TraitRowLink to={`/nfts/collection/${collectionAddress}?${params}`}>
+    <TraitRowLink to={getLinkForTrait(trait, collectionAddress)}>
       <TraitRowContainer>
         <TraitColumnValue>
           <SubheaderTiny>{trait.trait_type}</SubheaderTiny>
