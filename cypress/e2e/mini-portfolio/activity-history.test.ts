@@ -120,7 +120,7 @@ describe('mini-portfolio activity history', () => {
         cy.contains('1 USDC = ').should('exist')
         cy.get('#swap-button').should('not.be', 'disabled').click()
         cy.get('#confirm-swap-or-send').click()
-        cy.get(getTestSelector('dismiss-tx-confirmation')).click()
+        cy.get(getTestSelector('confirmation-close-icon')).click()
 
         // Check activity history tab.
         cy.get(getTestSelector('web3-status-connected')).click()

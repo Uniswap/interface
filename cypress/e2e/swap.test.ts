@@ -287,9 +287,9 @@ describe('Swap', () => {
         cy.get('#swap-currency-input .token-amount-input').should('not.equal', '')
         cy.get('#swap-button').click()
         cy.get('#confirm-swap-or-send').click()
-        cy.contains('Transaction rejected').should('exist')
-        cy.contains('Dismiss').click()
-        cy.contains('Transaction rejected').should('not.exist')
+        cy.contains('Confirmation failed').should('exist')
+        cy.get('body').click(100, 100) // click outside
+        cy.contains('Confirmation failed').should('not.exist')
       })
   })
 
@@ -330,12 +330,12 @@ describe('Swap', () => {
           cy.get('#swap-currency-output .token-amount-input').should('not.equal', '')
           cy.get('#swap-button').click()
           cy.get('#confirm-swap-or-send').click()
-          cy.get(getTestSelector(getTestSelector('confirmation-close-icon'))).click()
+          cy.get(getTestSelector('confirmation-close-icon')).click()
           cy.get('#swap-currency-input .token-amount-input').clear().type(INDIVIDUAL_SWAP_INPUT.toString())
           cy.get('#swap-currency-output .token-amount-input').should('not.equal', '')
           cy.get('#swap-button').click()
           cy.get('#confirm-swap-or-send').click()
-          cy.get(getTestSelector(getTestSelector('confirmation-close-icon'))).click()
+          cy.get(getTestSelector('confirmation-close-icon')).click()
 
           // The pending transaction indicator should be visible.
           cy.contains('Pending').should('exist')
