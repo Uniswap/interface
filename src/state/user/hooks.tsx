@@ -153,7 +153,7 @@ export function useUserSlippageTolerance(): [
 }
 
 /**
- * Same as above but replaces the auto with a default value
+ *Returns user slippage tolerance, replacing the auto with a default value
  * @param defaultSlippageTolerance the value to replace auto with
  */
 export function useUserSlippageToleranceWithDefault(defaultSlippageTolerance: Percent): Percent {

@@ -1,4 +1,4 @@
-import { t } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 import Row from 'components/Row'
 import { Settings } from 'react-feather'
 import { useUserSlippageTolerance } from 'state/user/hooks'
@@ -44,7 +44,7 @@ const IconContainerWithSlippage = styled(IconContainer)<{ displayWarning?: boole
     displayWarning ? theme.accentWarningSoft : theme.backgroundModule};
 `
 
-const ButtonIcon = () => {
+const ButtonContent = () => {
   const [userSlippageTolerance] = useUserSlippageTolerance()
 
   if (userSlippageTolerance === SlippageTolerance.Auto) {
@@ -58,8 +58,10 @@ const ButtonIcon = () => {
   const isInvalidSlippage = validateUserSlippageTolerance(userSlippageTolerance) !== SlippageValidationResult.Valid
 
   return (
-    <IconContainerWithSlippage gap="sm" displayWarning={isInvalidSlippage}>
-      <ThemedText.Caption>{userSlippageTolerance.toFixed(2)}% slippage</ThemedText.Caption>
+    <IconContainerWithSlippage data-testid="settings-icon-with-slippage" gap="sm" displayWarning={isInvalidSlippage}>
+      <ThemedText.Caption>
+        <Trans>{userSlippageTolerance.toFixed(2)}% slippage</Trans>
+      </ThemedText.Caption>
       <Icon />
     </IconContainerWithSlippage>
   )
@@ -83,7 +85,7 @@ export default function MenuButton({
       data-testid="open-settings-dialog-button"
       aria-label={t`Transaction Settings`}
     >
-      <ButtonIcon />
+      <ButtonContent />
     </Button>
   )
 }
