@@ -1,5 +1,7 @@
 import { retry } from './retry'
 
+jest.useFakeTimers()
+
 describe('retry', () => {
   it('should successfully retry on failure and resolve the value', async () => {
     let attempts = 0
@@ -12,7 +14,12 @@ describe('retry', () => {
       return 'Success'
     }
 
-    const result = await retry(fn, 3, 100)()
+    const promise = retry(fn, 3, 100)()
+
+    // Fast-forward until all timers have been executed
+    jest.runAllTimers()
+
+    const result = await promise
     expect(attempts).toEqual(3)
     expect(result).toEqual('Success')
   })
@@ -25,8 +32,13 @@ describe('retry', () => {
       throw new Error('Failure')
     }
 
+    const promise = retry(fn, 3, 100)()
+
+    // Fast-forward until all timers have been executed
+    jest.runAllTimers()
+
     try {
-      await retry(fn, 3, 100)()
+      await promise
     } catch (error) {
       // Skip
     }
