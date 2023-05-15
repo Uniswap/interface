@@ -3,7 +3,9 @@ import Row from 'components/Row'
 import { VerifiedIcon } from 'nft/components/icons'
 import { CollectionInfoForAsset, GenieAsset } from 'nft/types'
 import styled from 'styled-components/macro'
-import { BREAKPOINTS, ThemedText } from 'theme'
+import { BREAKPOINTS } from 'theme'
+
+import { MediaRenderer } from './MediaRenderer'
 
 const MAX_WIDTH = 560
 
@@ -14,6 +16,7 @@ const LandingPageContainer = styled.div`
   align-items: center;
   padding: 22px 20px 0px;
   gap: 26px;
+  width: 100%;
 
   @media screen and (min-width: ${BREAKPOINTS.sm}px) {
     gap: 64px;
@@ -29,6 +32,7 @@ const LandingPageContainer = styled.div`
     padding-top: 0px;
     padding-bottom: ${({ theme }) => `${theme.navHeight}px`};
     gap: 80px;
+    justify-content: center;
   }
 `
 
@@ -40,40 +44,57 @@ const InfoContainer = styled(ColumnCenter)`
   }
 `
 
+const StyledHeadlineText = styled.div`
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 28px;
+  text-align: center;
+  color: ${({ theme }) => theme.textPrimary};
+
+  @media screen and (min-width: ${BREAKPOINTS.sm}px) {
+    line-height: 44px;
+    font-size: 36px;
+  }
+`
+const StyledSubheaderText = styled.div`
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  text-align: center;
+  color: ${({ theme }) => theme.textSecondary};
+
+  @media screen and (min-width: ${BREAKPOINTS.sm}px) {
+    line-height: 24px;
+    font-size: 16px;
+  }
+`
+
 const InfoDetailsContainer = styled(Column)`
   gap: 4px;
   align-items: center;
+
+  @media screen and (min-width: ${BREAKPOINTS.sm}px) {
+    ${StyledHeadlineText} {
+      line-height: 44px;
+      font-size: 36px;
+    }
+
+    ${StyledSubheaderText} {
+      line-height: 24px;
+      font-size: 16px;
+    }
+  }
 `
 
 const MediaContainer = styled.div`
+  position: relative;
   width: 100%;
   height: 100%;
+  filter: drop-shadow(0px 12px 20px rgba(0, 0, 0, 0.1));
 
   @media screen and (min-width: ${BREAKPOINTS.sm}px) {
     width: ${MAX_WIDTH}px;
     height: ${MAX_WIDTH}px;
-  }
-`
-
-const StyledMedia = styled.img`
-  object-fit: contain;
-  height: 100%;
-  width: 100%;
-`
-
-const StyledSubheaderText = styled(ThemedText.SubHeaderSmall)`
-  line-height: 20px;
-
-  @media screen and (min-width: ${BREAKPOINTS.sm}px) {
-    line-height: 24px !important;
-    font-size: 16px !important;
-  }
-`
-
-const StyledHeadlineText = styled(ThemedText.HeadlineSmall)`
-  @media screen and (min-width: ${BREAKPOINTS.sm}px) {
-    line-height: 44px !important;
-    font-size: 36px !important;
   }
 `
 
@@ -86,7 +107,7 @@ export const LandingPage = ({ asset, collection }: LandingPageProps) => {
   return (
     <LandingPageContainer>
       <MediaContainer>
-        <StyledMedia src={asset.imageUrl} />
+        <MediaRenderer asset={asset} />
       </MediaContainer>
       <InfoContainer>
         <InfoDetailsContainer>

@@ -49,7 +49,7 @@ gql`
             }
             description
           }
-          listings(first: 1) {
+          listings(first: 25) {
             edges {
               node {
                 address

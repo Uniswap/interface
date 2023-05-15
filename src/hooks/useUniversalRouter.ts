@@ -52,77 +52,73 @@ export function useUniversalRouterSwapCallback(
   const analyticsContext = useTrace()
 
   return useCallback(async (): Promise<TransactionResponse> => {
-    return trace(
-      'swap.send',
-      async ({ setTraceData, setTraceStatus, setTraceError }) => {
+    return trace('swap.send', async ({ setTraceData, setTraceStatus, setTraceError }) => {
+      try {
+        if (!account) throw new Error('missing account')
+        if (!chainId) throw new Error('missing chainId')
+        if (!provider) throw new Error('missing provider')
+        if (!trade) throw new Error('missing trade')
+
+        setTraceData('slippageTolerance', options.slippageTolerance.toFixed(2))
+        const { calldata: data, value } = SwapRouter.swapERC20CallParameters(trade, {
+          slippageTolerance: options.slippageTolerance,
+          deadlineOrPreviousBlockhash: options.deadline?.toString(),
+          inputTokenPermit: options.permit,
+          fee: options.feeOptions,
+        })
+        const tx = {
+          from: account,
+          to: UNIVERSAL_ROUTER_ADDRESS(chainId),
+          data,
+          // TODO(https://github.com/Uniswap/universal-router-sdk/issues/113): universal-router-sdk returns a non-hexlified value.
+          ...(value && !isZero(value) ? { value: toHex(value) } : {}),
+        }
+
+        let gasEstimate: BigNumber
         try {
-          if (!account) throw new Error('missing account')
-          if (!chainId) throw new Error('missing chainId')
-          if (!provider) throw new Error('missing provider')
-          if (!trade) throw new Error('missing trade')
-
-          setTraceData('slippageTolerance', options.slippageTolerance.toFixed(2))
-          const { calldata: data, value } = SwapRouter.swapERC20CallParameters(trade, {
-            slippageTolerance: options.slippageTolerance,
-            deadlineOrPreviousBlockhash: options.deadline?.toString(),
-            inputTokenPermit: options.permit,
-            fee: options.feeOptions,
-          })
-          const tx = {
-            from: account,
-            to: UNIVERSAL_ROUTER_ADDRESS(chainId),
-            data,
-            // TODO(https://github.com/Uniswap/universal-router-sdk/issues/113): universal-router-sdk returns a non-hexlified value.
-            ...(value && !isZero(value) ? { value: toHex(value) } : {}),
-          }
-
-          let gasEstimate: BigNumber
-          try {
-            gasEstimate = await provider.estimateGas(tx)
-          } catch (gasError) {
-            setTraceStatus('failed_precondition')
-            setTraceError(gasError)
-            console.warn(gasError)
-            throw new GasEstimationError()
-          }
-          const gasLimit = calculateGasMargin(gasEstimate)
-          setTraceData('gasLimit', gasLimit.toNumber())
-          const response = await provider
-            .getSigner()
-            .sendTransaction({ ...tx, gasLimit })
-            .then((response) => {
-              sendAnalyticsEvent(SwapEventName.SWAP_SIGNED, {
-                ...formatSwapSignedAnalyticsEventProperties({
-                  trade,
-                  fiatValues,
-                  txHash: response.hash,
-                }),
+          gasEstimate = await provider.estimateGas(tx)
+        } catch (gasError) {
+          setTraceStatus('failed_precondition')
+          setTraceError(gasError)
+          console.warn(gasError)
+          throw new GasEstimationError()
+        }
+        const gasLimit = calculateGasMargin(gasEstimate)
+        setTraceData('gasLimit', gasLimit.toNumber())
+        const response = await provider
+          .getSigner()
+          .sendTransaction({ ...tx, gasLimit })
+          .then((response) => {
+            sendAnalyticsEvent(SwapEventName.SWAP_SIGNED, {
+              ...formatSwapSignedAnalyticsEventProperties({
+                trade,
+                fiatValues,
+                txHash: response.hash,
+              }),
+              ...analyticsContext,
+            })
+            if (tx.data !== response.data) {
+              sendAnalyticsEvent(SwapEventName.SWAP_MODIFIED_IN_WALLET, {
+                txHash: response.hash,
                 ...analyticsContext,
               })
-              if (tx.data !== response.data) {
-                sendAnalyticsEvent(SwapEventName.SWAP_MODIFIED_IN_WALLET, {
-                  txHash: response.hash,
-                  ...analyticsContext,
-                })
-                throw new ModifiedSwapError()
-              }
-              return response
-            })
-          return response
-        } catch (swapError: unknown) {
-          if (swapError instanceof ModifiedSwapError) throw swapError
+              throw new ModifiedSwapError()
+            }
+            return response
+          })
+        return response
+      } catch (swapError: unknown) {
+        if (swapError instanceof ModifiedSwapError) throw swapError
 
-          // Cancellations are not failures, and must be accounted for as 'cancelled'.
-          if (didUserReject(swapError)) setTraceStatus('cancelled')
+        // Cancellations are not failures, and must be accounted for as 'cancelled'.
+        if (didUserReject(swapError)) setTraceStatus('cancelled')
 
-          // GasEstimationErrors are already traced when they are thrown.
-          if (!(swapError instanceof GasEstimationError)) setTraceError(swapError)
+        // GasEstimationErrors are already traced when they are thrown.
+        if (!(swapError instanceof GasEstimationError)) setTraceError(swapError)
 
-          throw new Error(swapErrorToUserReadableMessage(swapError))
-        }
-      },
-      { tags: { is_widget: false } }
-    )
+        throw new Error(swapErrorToUserReadableMessage(swapError))
+      }
+    })
   }, [
     account,
     analyticsContext,

@@ -1,7 +1,6 @@
 import { SupportedChainId, WETH9 } from '@uniswap/sdk-core'
 
 import { UNI } from '../../src/constants/tokens'
-import { FeatureFlag } from '../../src/featureFlags/flags/featureFlags'
 import { getTestSelector } from '../utils'
 
 const UNI_MAINNET = UNI[SupportedChainId.MAINNET]
@@ -96,7 +95,6 @@ describe('Token details', () => {
       cy.viewport(1200, 800)
       cy.visit(`/tokens/ethereum/${UNI_MAINNET.address}`, {
         ethereum: 'hardhat',
-        featureFlags: [FeatureFlag.removeWidget],
       }).then(() => {
         cy.wait('@eth_blockNumber')
         cy.scrollTo('top')
@@ -121,7 +119,7 @@ describe('Token details', () => {
       cy.get(`#swap-currency-output .token-symbol-container`).should('contain.text', 'UNI')
       cy.get(`#swap-currency-input .open-currency-select-button`).click()
       cy.contains('WETH').click()
-      cy.visit('/swap', { featureFlags: [FeatureFlag.removeWidget] })
+      cy.visit('/swap')
       cy.contains('UNI').should('not.exist')
       cy.contains('WETH').should('not.exist')
     })
@@ -147,7 +145,7 @@ describe('Token details', () => {
     })
 
     it('should show a L2 token even if the user is connected to a different network', () => {
-      cy.visit('/tokens', { ethereum: 'hardhat', featureFlags: [FeatureFlag.removeWidget] })
+      cy.visit('/tokens', { ethereum: 'hardhat' })
       cy.get(getTestSelector('tokens-network-filter-selected')).click()
       cy.get(getTestSelector('tokens-network-filter-option-arbitrum')).click()
       cy.get(getTestSelector('tokens-network-filter-selected')).should('contain', 'Arbitrum')
