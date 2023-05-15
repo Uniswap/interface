@@ -3,8 +3,7 @@
 require('@uniswap/eslint-config/load')
 
 module.exports = {
-  extends: ['@uniswap/eslint-config/react', require.resolve('./eslint-plugin-retry-import')],
-  plugins: ['retry-import'],
+  extends: ['@uniswap/eslint-config/react'],
   overrides: [
     {
       files: ['**/*'],
