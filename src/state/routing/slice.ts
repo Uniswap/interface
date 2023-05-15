@@ -123,7 +123,7 @@ export const routingApi = createApi({
           args
 
         try {
-          if (routerPreference === RouterPreference.API) {
+          if (routerPreference === RouterPreference.API || routerPreference === RouterPreference.AUTO) {
             const query = qs.stringify({
               ...API_QUERY_PARAMS,
               tokenInAddress,
