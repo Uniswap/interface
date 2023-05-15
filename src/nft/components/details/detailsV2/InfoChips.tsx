@@ -83,15 +83,15 @@ const InfoBubble = ({
   isExternal?: boolean
 }) => {
   return (
-    <ConditionalLinkWrapper isExternal={isExternal} href={href}>
-      <Column gap="sm">
-        <ThemedText.Caption color="textSecondary">{title}</ThemedText.Caption>
+    <Column gap="sm">
+      <ThemedText.Caption color="textSecondary">{title}</ThemedText.Caption>
+      <ConditionalLinkWrapper isExternal={isExternal} href={href}>
         <StyledBubble gap="sm">
           <StyledIcon>{icon}</StyledIcon>
           <StyledLabelMedium>{info}</StyledLabelMedium>
         </StyledBubble>
-      </Column>
-    </ConditionalLinkWrapper>
+      </ConditionalLinkWrapper>
+    </Column>
   )
 }
 
