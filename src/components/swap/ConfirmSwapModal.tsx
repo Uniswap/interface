@@ -103,7 +103,10 @@ export default function ConfirmSwapModal({
     async function requestSignature() {
       // We successfully requested Permit2 approval and need to move to the signature step.
       try {
-        allowance.state === AllowanceState.REQUIRED && (await allowance.permit())
+        if (allowance.state === AllowanceState.REQUIRED) {
+          setConfirmModalState(ConfirmModalState.PERMITTING)
+          await allowance.permit()
+        }
       } catch (e) {
         setConfirmModalState(ConfirmModalState.REVIEWING)
         if (didUserReject(e)) {
