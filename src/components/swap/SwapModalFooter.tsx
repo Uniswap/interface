@@ -34,7 +34,7 @@ import { computeRealizedPriceImpact, getPriceImpactWarning } from 'utils/prices'
 
 import { ButtonError, SmallButtonPrimary } from '../Button'
 import { AutoRow, RowBetween, RowFixed } from '../Row'
-import { SwapCallbackError, SwapShowAcceptChanges } from './styleds'
+import { SwapShowAcceptChanges } from './styleds'
 import { SwapModalDetailRow } from './SwapModalDetailRow'
 
 interface AnalyticsEventProps {
@@ -156,7 +156,6 @@ export default function SwapModalFooter({
   allowedSlippage,
   hash,
   onConfirm,
-  swapErrorMessage,
   disabledConfirm,
   swapQuoteReceivedDate,
   fiatValueInput,
@@ -170,7 +169,6 @@ export default function SwapModalFooter({
   hash: string | undefined
   allowedSlippage: Percent
   onConfirm: () => void
-  swapErrorMessage: ReactNode | undefined
   disabledConfirm: boolean
   swapQuoteReceivedDate: Date | undefined
   fiatValueInput: { data?: number; isLoading: boolean }
@@ -300,8 +298,6 @@ export default function SwapModalFooter({
               </ThemedText.HeadlineSmall>
             </ConfirmButton>
           </TraceEvent>
-
-          {swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}
         </AutoRow>
       )}
     </>

@@ -116,7 +116,10 @@ export function useUniversalRouterSwapCallback(
         // GasEstimationErrors are already traced when they are thrown.
         if (!(swapError instanceof GasEstimationError)) setTraceError(swapError)
 
-        throw new Error(swapErrorToUserReadableMessage(swapError))
+        const rejectError = new Error(swapErrorToUserReadableMessage(swapError))
+        // This allows us to distinguish between user rejections and other errors later too.
+        ;(rejectError as any).code = 4001
+        throw rejectError
       }
     })
   }, [
