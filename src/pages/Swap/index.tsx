@@ -420,7 +420,7 @@ export function Swap({
           attemptingTxn: false,
           tradeToConfirm,
           showConfirm,
-          swapError: error.message,
+          swapError: error,
           txHash: undefined,
         })
       })

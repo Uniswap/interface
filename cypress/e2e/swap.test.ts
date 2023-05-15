@@ -274,7 +274,7 @@ describe('Swap', () => {
       })
   })
 
-  it('should render and dismiss the wallet rejection modal', () => {
+  it('should render the summary view after wallet rejection', () => {
     cy.visit('/swap', { ethereum: 'hardhat' })
       .hardhat()
       .then((hardhat) => {
@@ -287,9 +287,10 @@ describe('Swap', () => {
         cy.get('#swap-currency-input .token-amount-input').should('not.equal', '')
         cy.get('#swap-button').click()
         cy.get('#confirm-swap-or-send').click()
-        cy.contains('Confirmation failed').should('exist')
-        cy.get('body').click(100, 100) // click outside
         cy.contains('Confirmation failed').should('not.exist')
+        cy.contains('Review Swap').should('exist')
+        cy.get('body').click(100, 100) // click outside to dismiss
+        cy.contains('Review Swap').should('not.exist')
       })
   })
 
