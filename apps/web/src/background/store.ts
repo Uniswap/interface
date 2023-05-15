@@ -3,7 +3,6 @@ import { combineReducers } from 'redux'
 import { persistReducer, persistStore } from 'redux-persist'
 import { ForkEffect, SelectEffect } from 'redux-saga/effects'
 import { SagaGenerator, select, spawn } from 'typed-redux-saga'
-import { logger } from 'wallet/src/features/logger/logger'
 import { createStore, RootState } from 'wallet/src/state'
 import { persistConfig, sharedReducers } from 'wallet/src/state/reducer'
 import { wrapStore } from 'webext-redux'
@@ -23,8 +22,8 @@ const webReducer = persistReducer(persistConfig, combineReducers(webReducers))
 
 export function initializeStore(
   portName: PortName = PortName.Store
-): ReturnType<typeof createStore> | undefined {
-  try {
+): Promise<ReturnType<typeof createStore> | undefined> {
+  return new Promise((resolve) => {
     const store = createStore({
       reducer: webReducer,
       additionalSagas: [webRootSaga],
@@ -37,15 +36,11 @@ export function initializeStore(
       subscribe: store.subscribe.bind(store),
     })
 
-    persistStore(store, null)
+    persistStore(store, null, () => resolve(store))
 
     // proxy store with webext-redux to simplify cross-thread communication
     wrapStore(store, { portName })
-
-    return store
-  } catch (e) {
-    logger.error('store', 'initializeStore', `Failed to configure store ${e}`)
-  }
+  })
 }
 
 // TODO: set up lint rule to prevent imports from packages/wallet

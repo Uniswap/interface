@@ -10,7 +10,7 @@ import { initializeStore, WebState } from './store'
 let isInitialized = false
 
 /** Main entrypoint for intiializing the app. */
-const initApp = (): undefined => {
+const initApp = async (): Promise<undefined> => {
   if (isInitialized) {
     notifyStoreInitialized()
     return
@@ -18,7 +18,7 @@ const initApp = (): undefined => {
 
   isInitialized = true
 
-  const store = initializeStore()
+  const store = await initializeStore()
 
   if (store) {
     maybeOpenOnboarding(store.getState() as unknown as WebState, store.dispatch)
