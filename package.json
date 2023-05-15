@@ -67,7 +67,7 @@
     ]
   },
   "devDependencies": {
-    "@craco/craco": "^7.1.0",
+    "@craco/craco": "6.4.3",
     "@ethersproject/experimental": "^5.4.0",
     "@lingui/cli": "^3.9.0",
     "@testing-library/jest-dom": "^5.16.4",
@@ -114,10 +114,8 @@
     "jest-fetch-mock": "^3.0.3",
     "jest-styled-components": "^7.0.8",
     "ms.macro": "^2.0.0",
-    "path-browserify": "^1.0.1",
     "prettier": "^2.7.1",
-    "process": "^0.11.10",
-    "react-scripts": "^5.0.1",
+    "react-scripts": "^4.0.3",
     "resize-observer-polyfill": "^1.5.1",
     "serve": "^11.3.2",
     "source-map-explorer": "^2.5.3",
