@@ -50,12 +50,12 @@ export default function PrefetchBalancesWrapper({ children }: PropsWithChildren)
   }, [account, prefetchPortfolioBalances])
 
   const prevAccount = usePrevious(account)
-  const accountChanged = prevAccount !== undefined && prevAccount !== account
 
   // TODO(cartcrom): add delay for refetching on optimism, as there is high latency in new balances being available
   const hasUpdatedTx = useHasUpdatedTx(account)
   // Listens for account changes & recently updated transactions to keep portfolio balances fresh in apollo cache
   useEffect(() => {
+    const accountChanged = prevAccount !== undefined && prevAccount !== account
     if (hasUpdatedTx || accountChanged) {
       // If the drawer is open, fetch balances immediately, else set a flag to fetch on next hover
       if (drawerOpen) {
@@ -64,7 +64,7 @@ export default function PrefetchBalancesWrapper({ children }: PropsWithChildren)
         setHasUnfetchedBalances(true)
       }
     }
-  }, [account, accountChanged, drawerOpen, fetchBalances, hasUpdatedTx])
+  }, [account, prevAccount, drawerOpen, fetchBalances, hasUpdatedTx])
 
   const onHover = useCallback(() => {
     if (hasUnfetchedBalances) fetchBalances()
