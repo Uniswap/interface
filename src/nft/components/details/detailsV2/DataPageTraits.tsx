@@ -7,8 +7,8 @@ import { GenieAsset } from 'nft/types'
 import { useMemo } from 'react'
 import styled from 'styled-components/macro'
 import { BREAKPOINTS, ThemedText } from 'theme'
-import { opacify } from 'theme/utils'
 
+import { Scrim } from './shared'
 import { Tab, TabbedComponent } from './TabbedComponent'
 import { TraitRow } from './TraitRow'
 
@@ -43,26 +43,6 @@ const TraitRowScrollableContainer = styled.div`
   width: calc(100% + 6px);
 
   ${ScrollBarStyles}
-`
-
-// Scrim that fades out the top and bottom of the scrollable container, isBottom changes the direction and placement of the fade
-const Scrim = styled.div<{ isBottom?: boolean }>`
-  position: absolute;
-  height: 88px;
-  left: 0px;
-  right: 6px;
-
-  ${({ isBottom }) =>
-    isBottom
-      ? 'bottom: 0px'
-      : `
-        top: 0px;
-        transform: matrix(1, 0, 0, -1, 0, 0);
-      `};
-
-  background: ${({ theme }) =>
-    `linear-gradient(180deg, ${opacify(0, theme.backgroundSurface)} 0%, ${theme.backgroundSurface} 100%)`};
-  display: flex;
 `
 
 const TraitsContent = ({ asset }: { asset: GenieAsset }) => {

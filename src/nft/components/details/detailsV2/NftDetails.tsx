@@ -23,6 +23,7 @@ const DetailsBackground = styled.div<{ backgroundImage: string }>`
 
 const DetailsContentContainer = styled.div`
   z-index: ${Z_INDEX.hover};
+  width: 100%;
 `
 
 export const NftDetails = ({ asset, collection }: NftDetailsProps) => {

@@ -67,6 +67,7 @@ exports[`data page trait component does not load with asset with no traits 1`] =
 
 .c0 {
   background: #FFFFFF;
+  border: 1px solid #D2D9EE;
   border-radius: 16px;
   padding: 16px 20px;
   width: 100%;
