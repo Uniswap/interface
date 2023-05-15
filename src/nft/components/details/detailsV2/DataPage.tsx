@@ -9,24 +9,6 @@ import { DataPageHeader } from './DataPageHeader'
 import { DataPageTable } from './DataPageTable'
 import { DataPageTraits } from './DataPageTraits'
 
-const DataPagePaddingContainer = styled.div`
-  padding: 24px 64px;
-  height: 100vh;
-  width: 100%;
-
-  @media screen and (max-width: ${BREAKPOINTS.md}px) {
-    height: 100%;
-  }
-
-  @media screen and (max-width: ${BREAKPOINTS.sm}px) {
-    padding: 24px 48px;
-  }
-
-  @media screen and (max-width: ${BREAKPOINTS.xs}px) {
-    padding: 24px 20px;
-  }
-`
-
 const DataPageContainer = styled(Column)`
   height: 100%;
   width: 100%;
