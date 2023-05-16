@@ -1,6 +1,5 @@
 import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
-import { Currency, TradeType } from '@uniswap/sdk-core'
 import { LoadingOpacityContainer } from 'components/Loader/styled'
 import { RowFixed } from 'components/Row'
 import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
@@ -26,14 +25,14 @@ export default function GasEstimateTooltip({
   loading,
   disabled,
 }: {
-  trade: InterfaceTrade<Currency, Currency, TradeType> // dollar amount in active chain's stablecoin
+  trade: InterfaceTrade // dollar amount in active chain's stablecoin
   loading: boolean
   disabled?: boolean
 }) {
   const formattedGasPriceString = trade?.gasUseEstimateUSD
-    ? trade.gasUseEstimateUSD.toFixed(2) === '0.00'
+    ? trade.gasUseEstimateUSD === '0.00'
       ? '<$0.01'
-      : '$' + trade.gasUseEstimateUSD.toFixed(2)
+      : '$' + trade.gasUseEstimateUSD
     : undefined
 
   return (

@@ -1,8 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { sendAnalyticsEvent, Trace } from '@uniswap/analytics'
 import { InterfaceModalName, SwapEventName, SwapPriceUpdateUserResponse } from '@uniswap/analytics-events'
-import { Trade } from '@uniswap/router-sdk'
-import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
+import { Percent } from '@uniswap/sdk-core'
 import { getPriceUpdateBasisPoints } from 'lib/utils/analytics'
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
@@ -32,8 +31,8 @@ export default function ConfirmSwapModal({
   fiatValueOutput,
 }: {
   isOpen: boolean
-  trade: InterfaceTrade<Currency, Currency, TradeType>
-  originalTrade: Trade<Currency, Currency, TradeType> | undefined
+  trade: InterfaceTrade
+  originalTrade: InterfaceTrade | undefined
   attemptingTxn: boolean
   txHash: string | undefined
   allowedSlippage: Percent

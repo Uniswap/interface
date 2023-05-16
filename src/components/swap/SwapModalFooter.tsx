@@ -1,8 +1,8 @@
 import { Trans } from '@lingui/macro'
 import { TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
-import { formatCurrencyAmount, formatPriceImpact, NumberType } from '@uniswap/conedison/format'
-import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
+import { formatPriceImpact } from '@uniswap/conedison/format'
+import { Percent, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import Column from 'components/Column'
 import { MouseoverTooltip } from 'components/Tooltip'
@@ -58,7 +58,7 @@ export default function SwapModalFooter({
   showAcceptChanges,
   onAcceptChanges,
 }: {
-  trade: InterfaceTrade<Currency, Currency, TradeType>
+  trade: InterfaceTrade
   hash: string | undefined
   allowedSlippage: Percent
   onConfirm: () => void
@@ -106,11 +106,7 @@ export default function SwapModalFooter({
                 <Trans>Network fee</Trans>
               </Label>
             </MouseoverTooltip>
-            <DetailRowValue>
-              {trade.gasUseEstimateUSD
-                ? `~${formatCurrencyAmount(trade.gasUseEstimateUSD, NumberType.FiatGasPrice)}`
-                : '-'}
-            </DetailRowValue>
+            <DetailRowValue>{trade.gasUseEstimateUSD ? `~${trade.gasUseEstimateUSD}` : '-'}</DetailRowValue>
           </Row>
         </ThemedText.BodySmall>
         <ThemedText.BodySmall>
