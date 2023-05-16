@@ -19,17 +19,17 @@ async function validate(schema: ValidationSchema, data: unknown): Promise<unknow
   let validatorImport
   switch (schema) {
     case ValidationSchema.LIST:
-      validatorImport = retry(() => import('utils/__generated__/validateTokenList'))
+      validatorImport = await retry(() => import('utils/__generated__/validateTokenList'))
       break
     case ValidationSchema.TOKENS:
-      validatorImport = retry(() => import('utils/__generated__/validateTokens'))
+      validatorImport = await retry(() => import('utils/__generated__/validateTokens'))
       break
     default:
       throw new Error('No validation function specified for token list schema')
   }
 
-  const [, validatorModule] = await Promise.all([retry(() => import('ajv'))(), validatorImport])
-  const validator = (await validatorModule()).default as ValidateFunction
+  const [, validatorModule] = await Promise.all([retry(() => import('ajv')), validatorImport])
+  const validator = validatorModule.default as ValidateFunction
   if (validator?.(data)) {
     return data
   }
