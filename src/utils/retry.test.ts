@@ -16,8 +16,8 @@ describe('retry', () => {
 
     const promise = retry(fn, 3, 100)()
 
-    // Fast-forward until all timers have been executed
-    jest.runAllTimers()
+    // Advance timers by total time
+    jest.advanceTimersByTime(300)
 
     const result = await promise
     expect(attempts).toEqual(3)
@@ -34,15 +34,10 @@ describe('retry', () => {
 
     const promise = retry(fn, 3, 100)()
 
-    // Fast-forward until all timers have been executed
-    jest.runAllTimers()
+    // Advance timers by total time
+    jest.advanceTimersByTime(300)
 
-    try {
-      await promise
-    } catch (error) {
-      // Skip
-    }
-
+    await expect(promise).rejects.toThrow('Failure')
     expect(attempts).toEqual(3)
   })
 })
