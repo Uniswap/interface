@@ -9,7 +9,7 @@ module.exports = {
       files: ['**/*'],
       rules: {
         'multiline-comment-style': ['error', 'separate-lines'],
-        'enforce-retry-on-import': 'warn',
+        'enforce-retry-on-import': 'error',
       },
     },
     {
