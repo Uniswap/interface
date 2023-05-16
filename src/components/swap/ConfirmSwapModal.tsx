@@ -6,8 +6,7 @@ import {
   SwapEventName,
   SwapPriceUpdateUserResponse,
 } from '@uniswap/analytics-events'
-import { Trade } from '@uniswap/router-sdk'
-import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
+import { Percent } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import Modal from 'components/Modal'
 import { useMaxAmountIn } from 'hooks/useMaxAmountIn'
@@ -166,7 +165,7 @@ export default function ConfirmSwapModal({
   fiatValueOutput,
 }: {
   trade: InterfaceTrade
-  originalTrade: Trade<Currency, Currency, TradeType> | undefined
+  originalTrade: InterfaceTrade | undefined
   txHash: string | undefined
   allowedSlippage: Percent
   allowance: Allowance
