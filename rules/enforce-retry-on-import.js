@@ -1,3 +1,5 @@
+/* eslint-env node */
+
 module.exports = {
   meta: {
     type: 'problem',
@@ -11,18 +13,21 @@ module.exports = {
   create(context) {
     return {
       ImportExpression(node) {
-        let currentNode = node
-        while (currentNode) {
-          if (currentNode.type === 'CallExpression' && currentNode.callee.name === 'retry') {
-            return // Found a retry() call, so no problem
-          }
-          currentNode = currentNode.parent
+        const grandParent = node.parent.parent
+        if (
+          !(
+            grandParent &&
+            grandParent.type === 'CallExpression' &&
+            grandParent.callee.name === 'retry' &&
+            grandParent.arguments.length === 1 &&
+            grandParent.arguments[0].type === 'ArrowFunctionExpression'
+          )
+        ) {
+          context.report({
+            node,
+            message: 'Dynamic import should be wrapped in the pattern retry(() => import(...))',
+          })
         }
-        // If we got here, no retry() call was found
-        context.report({
-          node,
-          message: 'Dynamic import should be wrapped in a retry() call',
-        })
       },
     }
   },
