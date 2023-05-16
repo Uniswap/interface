@@ -21,9 +21,11 @@ export const Label = styled(ThemedText.BodySmall)<{ cursor?: string }>`
 
 const ResponsiveHeadline = ({ children, ...textProps }: PropsWithChildren<TextProps>) => {
   const { width } = useWindowSize()
+
   if (width && width < BREAKPOINTS.xs) {
     return <ThemedText.HeadlineMedium {...textProps}>{children}</ThemedText.HeadlineMedium>
   }
+
   return (
     <ThemedText.HeadlineLarge fontWeight={500} {...textProps}>
       {children}

@@ -6,7 +6,7 @@ import { ThemedText } from 'theme'
 
 import { Label } from './SwapModalHeaderAmount'
 
-const Value = styled.span<{ color?: string }>`
+const Value = styled.div<{ color?: string }>`
   color: ${({ color, theme }) => color ?? theme.textPrimary};
   text-align: end;
   max-width: 45%;

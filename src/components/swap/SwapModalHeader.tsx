@@ -2,7 +2,6 @@ import { t, Trans } from '@lingui/macro'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import Column, { AutoColumn } from 'components/Column'
 import { useUSDPrice } from 'hooks/useUSDPrice'
-import { useMemo } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 import { Field } from 'state/swap/actions'
 import styled from 'styled-components/macro'
@@ -39,30 +38,6 @@ export default function SwapModalHeader({
   const fiatValueInput = useUSDPrice(trade?.inputAmount)
   const fiatValueOutput = useUSDPrice(trade?.outputAmount)
 
-  const estimateMessage = useMemo(() => {
-    return trade?.tradeType === TradeType.EXACT_INPUT ? (
-      <ThemedText.Caption textAlign="left" style={{ width: '100%' }}>
-        <Trans>
-          Output is estimated. You will receive at least{' '}
-          <b>
-            {trade?.minimumAmountOut(allowedSlippage).toSignificant(6)} {trade.outputAmount.currency.symbol}
-          </b>{' '}
-          or the transaction will revert.
-        </Trans>
-      </ThemedText.Caption>
-    ) : (
-      <ThemedText.Caption textAlign="left" style={{ width: '100%' }}>
-        <Trans>
-          Input is estimated. You will sell at most{' '}
-          <b>
-            {trade?.maximumAmountIn(allowedSlippage).toSignificant(6)} {trade?.inputAmount.currency.symbol}
-          </b>{' '}
-          or the transaction will revert.
-        </Trans>
-      </ThemedText.Caption>
-    )
-  }, [allowedSlippage, trade])
-
   return (
     <HeaderContainer gap="sm">
       <Column gap="lg">
@@ -77,7 +52,29 @@ export default function SwapModalHeader({
           label={t`You receive`}
           amount={trade?.outputAmount}
           usdAmount={fiatValueOutput.data}
-          tooltipText={estimateMessage}
+          tooltipText={
+            trade?.tradeType === TradeType.EXACT_INPUT ? (
+              <ThemedText.Caption textAlign="left" style={{ width: '100%' }}>
+                <Trans>
+                  Output is estimated. You will receive at least{' '}
+                  <b>
+                    {trade?.minimumAmountOut(allowedSlippage).toSignificant(6)} {trade.outputAmount.currency.symbol}
+                  </b>{' '}
+                  or the transaction will revert.
+                </Trans>
+              </ThemedText.Caption>
+            ) : (
+              <ThemedText.Caption textAlign="left" style={{ width: '100%' }}>
+                <Trans>
+                  Input is estimated. You will sell at most{' '}
+                  <b>
+                    {trade?.maximumAmountIn(allowedSlippage).toSignificant(6)} {trade?.inputAmount.currency.symbol}
+                  </b>{' '}
+                  or the transaction will revert.
+                </Trans>
+              </ThemedText.Caption>
+            )
+          }
         />
       </Column>
       <RuleWrapper>
