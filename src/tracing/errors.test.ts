@@ -1,4 +1,4 @@
-import { ErrorEvent, Event } from '@sentry/types'
+import { ErrorEvent } from '@sentry/types'
 
 import { beforeSend } from './errors'
 
