@@ -11,7 +11,7 @@ describe('retry function', () => {
 
   it('should retry the specified number of times before rejecting', async () => {
     const error = new Error('Failure')
-    const mockFn = jest.fn().mockResolvedValue(error)
+    const mockFn = jest.fn().mockRejectedValue(error)
     await expect(retry(mockFn, 3, 1)).rejects.toEqual(error)
     expect(mockFn).toHaveBeenCalledTimes(3)
   })
