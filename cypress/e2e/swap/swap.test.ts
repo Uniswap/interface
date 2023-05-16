@@ -2,8 +2,8 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { parseEther } from '@ethersproject/units'
 import { SupportedChainId, WETH9 } from '@uniswap/sdk-core'
 
-import { UNI, USDC_MAINNET } from '../../src/constants/tokens'
-import { getTestSelector } from '../utils'
+import { UNI, USDC_MAINNET } from '../../../src/constants/tokens'
+import { getTestSelector } from '../../utils'
 
 const UNI_MAINNET = UNI[SupportedChainId.MAINNET]
 
