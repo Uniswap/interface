@@ -70,7 +70,7 @@ describe('Service Worker', () => {
         const key = keys.find((key) => key.url.match(/index/))
         assert(key)
 
-        await cache.delete(key)
+        await cache.put(key, new Response())
       })
       .visit('/', { serviceWorker: true })
     cy.wait('@ServiceWorker:Miss')
