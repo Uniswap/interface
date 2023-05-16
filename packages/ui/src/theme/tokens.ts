@@ -1,4 +1,5 @@
 import { createTokens } from 'tamagui'
+import { borderRadii } from 'ui/src/theme/borderRadii'
 import { colors as color } from 'ui/src/theme/color'
 
 const space = {
@@ -60,18 +61,8 @@ const fontSize = {
   true: 'bodySmall',
 }
 
-const radius = {
-  none: 0,
-  rounded4: 4,
-  rounded8: 8,
-  rounded12: 12,
-  rounded16: 16,
-  rounded20: 20,
-  rounded24: 24,
-  rounded32: 32,
-  roundedFull: 999999,
-  true: 'none',
-}
+// remove true (default) when migrating from restyle to tamagui
+const radius = { ...borderRadii, true: 'none' }
 
 // Standard z-index system https://getbootstrap.com/docs/5.0/layout/z-index/
 const zIndex = space

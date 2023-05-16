@@ -42,18 +42,6 @@ export const imageSizes = {
   image48: 48,
 }
 
-export const borderRadii = {
-  none: 0,
-  rounded4: 4,
-  rounded8: 8,
-  rounded12: 12,
-  rounded16: 16,
-  rounded20: 20,
-  rounded24: 24,
-  rounded32: 32,
-  roundedFull: 999999,
-}
-
 // HitSlop allows users to slightly miss button
 // To work, requires some padding in parent of button
 export const defaultHitslop = 5
