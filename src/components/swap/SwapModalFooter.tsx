@@ -66,7 +66,7 @@ export default function SwapModalFooter({
   showAcceptChanges,
   onAcceptChanges,
 }: {
-  trade: InterfaceTrade<Currency, Currency, TradeType> | undefined
+  trade: InterfaceTrade<Currency, Currency, TradeType>
   hash: string | undefined
   allowedSlippage: Percent
   onConfirm: () => void
@@ -91,9 +91,9 @@ export default function SwapModalFooter({
   const nativeCurrency = useNativeCurrency(chainId)
 
   useEffect(() => {
-    if (trade && lastExecutionPrice && !trade?.executionPrice.equalTo(lastExecutionPrice)) {
-      setPriceUpdate(getPriceUpdateBasisPoints(lastExecutionPrice, trade?.executionPrice))
-      setLastExecutionPrice(trade?.executionPrice)
+    if (trade && lastExecutionPrice && !trade.executionPrice.equalTo(lastExecutionPrice)) {
+      setPriceUpdate(getPriceUpdateBasisPoints(lastExecutionPrice, trade.executionPrice))
+      setLastExecutionPrice(trade.executionPrice)
     }
   }, [lastExecutionPrice, setLastExecutionPrice, trade])
 
@@ -107,9 +107,9 @@ export default function SwapModalFooter({
     setShouldLogModalCloseEvent(false)
   }, [shouldLogModalCloseEvent, showAcceptChanges, setShouldLogModalCloseEvent, trade, priceUpdate])
 
-  const label = `${trade?.executionPrice.baseCurrency?.symbol} `
-  const labelInverted = `${trade?.executionPrice.quoteCurrency?.symbol}`
-  const formattedPrice = formatTransactionAmount(priceToPreciseFloat(trade?.executionPrice))
+  const label = `${trade.executionPrice.baseCurrency?.symbol} `
+  const labelInverted = `${trade.executionPrice.quoteCurrency?.symbol}`
+  const formattedPrice = formatTransactionAmount(priceToPreciseFloat(trade.executionPrice))
 
   return (
     <>
@@ -132,8 +132,8 @@ export default function SwapModalFooter({
               </Label>
             </MouseoverTooltip>
             <DetailRowValue>
-              {trade?.gasUseEstimateUSD
-                ? `~${formatCurrencyAmount(trade?.gasUseEstimateUSD, NumberType.FiatGasPrice)}`
+              {trade.gasUseEstimateUSD
+                ? `~${formatCurrencyAmount(trade.gasUseEstimateUSD, NumberType.FiatGasPrice)}`
                 : '-'}
             </DetailRowValue>
           </Row>
@@ -145,8 +145,8 @@ export default function SwapModalFooter({
                 <Trans>Price impact</Trans>
               </Label>
             </MouseoverTooltip>
-            <DetailRowValue color={trade ? getPriceImpactWarning(trade?.priceImpact) : undefined}>
-              {trade?.priceImpact ? formatPriceImpact(trade?.priceImpact) : '-'}
+            <DetailRowValue color={trade ? getPriceImpactWarning(trade.priceImpact) : undefined}>
+              {trade.priceImpact ? formatPriceImpact(trade.priceImpact) : '-'}
             </DetailRowValue>
           </Row>
         </ThemedText.BodySmall>
@@ -154,13 +154,13 @@ export default function SwapModalFooter({
           <Row align="flex-start" justify="space-between">
             <MouseoverTooltip
               text={
-                trade?.tradeType === TradeType.EXACT_INPUT
+                trade.tradeType === TradeType.EXACT_INPUT
                   ? t`The minimum amount you are guaranteed to receive. If the price slips any further, your transaction will revert.`
                   : t`The maximum amount you are guaranteed to spend. If the price slips any further, your transaction will revert.`
               }
             >
               <Label cursor="help">
-                {trade?.tradeType === TradeType.EXACT_INPUT ? (
+                {trade.tradeType === TradeType.EXACT_INPUT ? (
                   <Trans>Minimum received</Trans>
                 ) : (
                   <Trans>Maximum sent</Trans>
@@ -168,9 +168,9 @@ export default function SwapModalFooter({
               </Label>
             </MouseoverTooltip>
             <DetailRowValue>
-              {trade?.tradeType === TradeType.EXACT_INPUT
+              {trade.tradeType === TradeType.EXACT_INPUT
                 ? `${trade.minimumAmountOut(allowedSlippage).toSignificant(6)} ${trade.outputAmount.currency.symbol}`
-                : `${trade?.maximumAmountIn(allowedSlippage).toSignificant(6)} ${trade?.inputAmount.currency.symbol}`}
+                : `${trade.maximumAmountIn(allowedSlippage).toSignificant(6)} ${trade.inputAmount.currency.symbol}`}
             </DetailRowValue>
           </Row>
         </ThemedText.BodySmall>

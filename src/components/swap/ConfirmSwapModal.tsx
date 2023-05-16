@@ -30,7 +30,7 @@ export default function ConfirmSwapModal({
   fiatValueOutput,
 }: {
   isOpen: boolean
-  trade: InterfaceTrade<Currency, Currency, TradeType> | undefined
+  trade: InterfaceTrade<Currency, Currency, TradeType>
   originalTrade: Trade<Currency, Currency, TradeType> | undefined
   attemptingTxn: boolean
   txHash: string | undefined
@@ -95,8 +95,8 @@ export default function ConfirmSwapModal({
   // text to show while loading
   const pendingText = (
     <Trans>
-      Swapping {trade?.inputAmount?.toSignificant(6)} {trade?.inputAmount?.currency?.symbol} for{' '}
-      {trade?.outputAmount?.toSignificant(6)} {trade?.outputAmount?.currency?.symbol}
+      Swapping {trade.inputAmount?.toSignificant(6)} {trade.inputAmount?.currency?.symbol} for{' '}
+      {trade.outputAmount?.toSignificant(6)} {trade.outputAmount?.currency?.symbol}
     </Trans>
   )
 
@@ -124,7 +124,7 @@ export default function ConfirmSwapModal({
         hash={txHash}
         content={confirmationContent}
         pendingText={pendingText}
-        currencyToAdd={trade?.outputAmount.currency}
+        currencyToAdd={trade.outputAmount.currency}
       />
     </Trace>
   )

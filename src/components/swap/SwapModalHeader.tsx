@@ -21,11 +21,11 @@ export default function SwapModalHeader({
   trade,
   allowedSlippage,
 }: {
-  trade: InterfaceTrade<Currency, Currency, TradeType> | undefined
+  trade: InterfaceTrade<Currency, Currency, TradeType>
   allowedSlippage: Percent
 }) {
-  const fiatValueInput = useUSDPrice(trade?.inputAmount)
-  const fiatValueOutput = useUSDPrice(trade?.outputAmount)
+  const fiatValueInput = useUSDPrice(trade.inputAmount)
+  const fiatValueOutput = useUSDPrice(trade.outputAmount)
 
   return (
     <HeaderContainer gap="sm">
@@ -33,21 +33,21 @@ export default function SwapModalHeader({
         <SwapModalHeaderAmount
           field={Field.INPUT}
           label={t`You pay`}
-          amount={trade?.inputAmount}
+          amount={trade.inputAmount}
           usdAmount={fiatValueInput.data}
         />
         <SwapModalHeaderAmount
           field={Field.OUTPUT}
           label={<Trans>You receive</Trans>}
-          amount={trade?.outputAmount}
+          amount={trade.outputAmount}
           usdAmount={fiatValueOutput.data}
           tooltipText={
-            trade?.tradeType === TradeType.EXACT_INPUT ? (
+            trade.tradeType === TradeType.EXACT_INPUT ? (
               <ThemedText.Caption textAlign="left" style={{ width: '100%' }}>
                 <Trans>
                   Output is estimated. You will receive at least{' '}
                   <b>
-                    {trade?.minimumAmountOut(allowedSlippage).toSignificant(6)} {trade.outputAmount.currency.symbol}
+                    {trade.minimumAmountOut(allowedSlippage).toSignificant(6)} {trade.outputAmount.currency.symbol}
                   </b>{' '}
                   or the transaction will revert.
                 </Trans>
@@ -57,7 +57,7 @@ export default function SwapModalHeader({
                 <Trans>
                   Input is estimated. You will sell at most{' '}
                   <b>
-                    {trade?.maximumAmountIn(allowedSlippage).toSignificant(6)} {trade?.inputAmount.currency.symbol}
+                    {trade.maximumAmountIn(allowedSlippage).toSignificant(6)} {trade.inputAmount.currency.symbol}
                   </b>{' '}
                   or the transaction will revert.
                 </Trans>
