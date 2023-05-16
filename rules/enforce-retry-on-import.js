@@ -27,7 +27,7 @@ module.exports = {
         ) {
           context.report({
             node,
-            message: 'Dynamic import should be wrapped in the pattern retry(() => import(...))',
+            message: 'Dynamic import should be wrapped in retry (see `utils/retry.ts`): `retry(() => import(...))`',
           })
         }
       },
