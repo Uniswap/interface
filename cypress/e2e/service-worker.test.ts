@@ -32,9 +32,7 @@ describe('Service Worker', () => {
       const body = JSON.stringify(req.body)
       const serviceWorkerStatus = body.match(/"service_worker":"(\w+)"/)?.[1]
       if (serviceWorkerStatus) {
-        const alias = `ServiceWorker:${serviceWorkerStatus}`
-        console.log(alias)
-        req.alias = alias
+        req.alias = `ServiceWorker:${serviceWorkerStatus}`
       }
     })
   })
