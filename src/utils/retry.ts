@@ -1,13 +1,6 @@
 /**
- * Executes a Promise-based function multiple times with retries.
- * If the function fails, it will retry a specified number of times, with an increasing delay between each attempt.
- *
- * @typeParam T - The type of the Promise's resolved value.
- * @param fn - The Promise-based function that should be retried upon failure.
- * @param retries - The maximum number of retry attempts. Defaults to 3 if not specified.
- * @param delay - The initial delay between retry attempts in milliseconds. This delay doubles after each failed attempt. Defaults to 1000 if not specified.
- *
- * @returns A Promise that resolves with the result of the original function if it succeeds within the specified number of retries, and rejects with the error from the last attempt otherwise.
+ * Executes a Promise-based function multiple times with exponential backoff (doubling).
+ * @returns the result of the original function's final attempt.
  *
  * @example
  * ```ts
