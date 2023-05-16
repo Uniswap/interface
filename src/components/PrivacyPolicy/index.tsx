@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import Card, { DarkGrayCard } from 'components/Card'
 import Row, { AutoRow, RowBetween } from 'components/Row'
-import { useEffect, useRef } from 'react'
+import { useRef } from 'react'
 import { ArrowDown, Info, X } from 'react-feather'
 import styled from 'styled-components/macro'
 import { ExternalLink, ThemedText } from 'theme'

@@ -62,8 +62,8 @@ export default function AddLiquidity() {
 
   const oneCurrencyIsWETH = Boolean(
     chainId &&
-    wrappedNativeCurrency &&
-    ((currencyA && currencyA.equals(wrappedNativeCurrency)) || (currencyB && currencyB.equals(wrappedNativeCurrency)))
+      wrappedNativeCurrency &&
+      ((currencyA && currencyA.equals(wrappedNativeCurrency)) || (currencyB && currencyB.equals(wrappedNativeCurrency)))
   )
 
   const toggleWalletDrawer = useToggleAccountDrawer() // toggle wallet when disconnected

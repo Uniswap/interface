@@ -20,11 +20,11 @@ export function useLocationLinkProps(locale: SupportedLocale | null): {
       !locale
         ? {}
         : {
-          to: {
-            ...location,
-            search: stringify({ ...qs, lng: locale }),
+            to: {
+              ...location,
+              search: stringify({ ...qs, lng: locale }),
+            },
           },
-        },
     [location, qs, activeLocale, locale]
   )
 }

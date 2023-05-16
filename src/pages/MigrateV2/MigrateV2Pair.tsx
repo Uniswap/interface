@@ -205,13 +205,13 @@ function V2PairMigration({
   const position =
     typeof tickLower === 'number' && typeof tickUpper === 'number' && !invalidRange
       ? Position.fromAmounts({
-        pool: pool ?? new Pool(token0, token1, feeAmount, sqrtPrice, 0, tick, []),
-        tickLower,
-        tickUpper,
-        amount0: token0Value.quotient,
-        amount1: token1Value.quotient,
-        useFullPrecision: true, // we want full precision for the theoretical position
-      })
+          pool: pool ?? new Pool(token0, token1, feeAmount, sqrtPrice, 0, tick, []),
+          tickLower,
+          tickUpper,
+          amount0: token0Value.quotient,
+          amount1: token1Value.quotient,
+          useFullPrecision: true, // we want full precision for the theoretical position
+        })
       : undefined
 
   const { amount0: v3Amount0Min, amount1: v3Amount1Min } = useMemo(

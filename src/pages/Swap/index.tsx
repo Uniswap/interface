@@ -279,13 +279,13 @@ export function Swap({
     () =>
       showWrap
         ? {
-          [Field.INPUT]: parsedAmount,
-          [Field.OUTPUT]: parsedAmount,
-        }
+            [Field.INPUT]: parsedAmount,
+            [Field.OUTPUT]: parsedAmount,
+          }
         : {
-          [Field.INPUT]: independentField === Field.INPUT ? parsedAmount : trade?.inputAmount,
-          [Field.OUTPUT]: independentField === Field.OUTPUT ? parsedAmount : trade?.outputAmount,
-        },
+            [Field.INPUT]: independentField === Field.INPUT ? parsedAmount : trade?.inputAmount,
+            [Field.OUTPUT]: independentField === Field.OUTPUT ? parsedAmount : trade?.outputAmount,
+          },
     [independentField, parsedAmount, showWrap, trade]
   )
   const fiatValueInput = useUSDPrice(parsedAmounts[Field.INPUT])
@@ -367,9 +367,9 @@ export function Swap({
   }, [allowedSlippage, trade])
   const allowance = usePermit2Allowance(
     maximumAmountIn ??
-    (parsedAmounts[Field.INPUT]?.currency.isToken
-      ? (parsedAmounts[Field.INPUT] as CurrencyAmount<Token>)
-      : undefined),
+      (parsedAmounts[Field.INPUT]?.currency.isToken
+        ? (parsedAmounts[Field.INPUT] as CurrencyAmount<Token>)
+        : undefined),
     isSupportedChain(chainId) ? UNIVERSAL_ROUTER_ADDRESS(chainId) : undefined
   )
   const isApprovalLoading = allowance.state === AllowanceState.REQUIRED && allowance.isApprovalLoading
