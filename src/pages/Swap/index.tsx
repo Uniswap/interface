@@ -21,7 +21,6 @@ import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { getChainInfo } from 'constants/chainInfo'
 import { isSupportedChain, SupportedChainId } from 'constants/chains'
-import useENSAddress from 'hooks/useENSAddress'
 import usePermit2Allowance, { AllowanceState } from 'hooks/usePermit2Allowance'
 import usePrevious from 'hooks/usePrevious'
 import { useSwapCallback } from 'hooks/useSwapCallback'
@@ -131,8 +130,6 @@ function largerPercentValue(a?: Percent, b?: Percent) {
   }
   return undefined
 }
-
-const TRADE_STRING = 'SwapRouter'
 
 export default function SwapPage({ className }: { className?: string }) {
   const { chainId: connectedChainId } = useWeb3React()
@@ -273,7 +270,6 @@ export function Swap({
     inputError: wrapInputError,
   } = useWrapCallback(currencies[Field.INPUT], currencies[Field.OUTPUT], typedValue)
   const showWrap: boolean = wrapType !== WrapType.NOT_APPLICABLE
-  const { address: recipientAddress } = useENSAddress(recipient)
 
   const parsedAmounts = useMemo(
     () =>
