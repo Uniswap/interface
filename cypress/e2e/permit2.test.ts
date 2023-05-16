@@ -12,7 +12,7 @@ function swaps() {
   // Completes the swap.
   cy.get('#swap-button').click()
   cy.get('#confirm-swap-or-send').click()
-  cy.get('[data-cy="confirmation-close-icon"]').click()
+  cy.get(getTestSelector('confirmation-close-icon')).click()
 
   // Verifies that there is a successful swap notification.
   cy.contains('Swapped').should('exist')
