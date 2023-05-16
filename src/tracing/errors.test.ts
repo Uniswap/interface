@@ -193,14 +193,14 @@ describe('beforeSend', () => {
       const originalException = new TypeError(
         "null is not an object (evaluating 'document.querySelector('meta[name=\"apple-mobile-web-app-title\"]').content')"
       )
-      expect(filterKnownErrors(ERROR, { originalException })).toBeNull()
+      expect(beforeSend(ERROR, { originalException })).toBeNull()
     })
 
     it('filters og:site_name errors', () => {
       const originalException = new TypeError(
         "null is not an object (evaluating 'document.querySelector('meta[name=\"og:site_name\"]').content')"
       )
-      expect(filterKnownErrors(ERROR, { originalException })).toBeNull()
+      expect(beforeSend(ERROR, { originalException })).toBeNull()
     })
   })
 })
