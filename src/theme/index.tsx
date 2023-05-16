@@ -1,11 +1,6 @@
 import { rootCssString } from 'nft/css/cssStringFromTheme'
 import React, { useMemo } from 'react'
-import {
-  createGlobalStyle,
-  css,
-  DefaultTheme,
-  ThemeProvider as StyledComponentsThemeProvider,
-} from 'styled-components/macro'
+import { createGlobalStyle, css, ThemeProvider as StyledComponentsThemeProvider } from 'styled-components/macro'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 
 import { darkTheme, lightTheme } from './colors'
@@ -72,17 +67,18 @@ const fonts = {
   code: 'courier, courier new, serif',
 }
 
-export type Gap = keyof DefaultTheme['grids']
+const gapValues = {
+  xs: '4px',
+  sm: '8px',
+  md: '12px',
+  lg: '24px',
+  xl: '32px',
+}
+export type Gap = keyof typeof gapValues
 
 function getSettings(darkMode: boolean) {
   return {
-    grids: {
-      xs: '4px',
-      sm: '8px',
-      md: '12px',
-      lg: '24px',
-      xl: '32px',
-    },
+    grids: gapValues,
     fonts,
 
     // shadows
@@ -125,7 +121,7 @@ export const ThemedGlobalStyle = createGlobalStyle`
     background-color: ${({ theme }) => theme.background} !important;
   }
 
-  summary::-webkit-details-marker {
+ summary::-webkit-details-marker {
     display:none;
   }
 

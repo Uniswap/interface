@@ -39,7 +39,7 @@ export const formatSwapSignedAnalyticsEventProperties = ({
   fiatValues,
   txHash,
 }: {
-  trade: InterfaceTrade<Currency, Currency, TradeType> | Trade<Currency, Currency, TradeType>
+  trade: InterfaceTrade | Trade<Currency, Currency, TradeType>
   fiatValues: { amountIn: number | undefined; amountOut: number | undefined }
   txHash: string
 }) => ({
@@ -61,7 +61,7 @@ export const formatSwapSignedAnalyticsEventProperties = ({
 
 export const formatSwapQuoteReceivedEventProperties = (
   trade: Trade<Currency, Currency, TradeType>,
-  gasUseEstimateUSD?: CurrencyAmount<Token>,
+  gasUseEstimateUSD?: string,
   fetchingSwapQuoteStartTime?: Date
 ) => {
   return {
@@ -70,7 +70,7 @@ export const formatSwapQuoteReceivedEventProperties = (
     token_in_address: getTokenAddress(trade.inputAmount.currency),
     token_out_address: getTokenAddress(trade.outputAmount.currency),
     price_impact_basis_points: trade ? formatPercentInBasisPointsNumber(computeRealizedPriceImpact(trade)) : undefined,
-    estimated_network_fee_usd: gasUseEstimateUSD ? formatToDecimal(gasUseEstimateUSD, 2) : undefined,
+    estimated_network_fee_usd: gasUseEstimateUSD,
     chain_id:
       trade.inputAmount.currency.chainId === trade.outputAmount.currency.chainId
         ? trade.inputAmount.currency.chainId

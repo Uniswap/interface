@@ -1,6 +1,7 @@
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference } from 'state/routing/slice'
+import { currencyAddressForSwapQuote } from 'state/routing/utils'
 
 /**
  * Returns query arguments for the Routing API query or undefined if the
@@ -26,16 +27,16 @@ export function useRoutingAPIArguments({
         ? undefined
         : {
             amount: amount.quotient.toString(),
-            tokenInAddress: tokenIn.wrapped.address,
+            tokenInAddress: currencyAddressForSwapQuote(tokenIn),
             tokenInChainId: tokenIn.wrapped.chainId,
             tokenInDecimals: tokenIn.wrapped.decimals,
             tokenInSymbol: tokenIn.wrapped.symbol,
-            tokenOutAddress: tokenOut.wrapped.address,
+            tokenOutAddress: currencyAddressForSwapQuote(tokenOut),
             tokenOutChainId: tokenOut.wrapped.chainId,
             tokenOutDecimals: tokenOut.wrapped.decimals,
             tokenOutSymbol: tokenOut.wrapped.symbol,
             routerPreference,
-            type: (tradeType === TradeType.EXACT_INPUT ? 'exactIn' : 'exactOut') as 'exactIn' | 'exactOut',
+            tradeType,
           },
     [amount, routerPreference, tokenIn, tokenOut, tradeType]
   )
