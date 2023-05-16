@@ -46,12 +46,12 @@ import Swap from './Swap'
 import { RedirectPathToSwapOnly } from './Swap/redirects'
 import Tokens from './Tokens'
 
-const TokenDetails = lazy(retry(() => import('./TokenDetails')))
-const Vote = lazy(retry(() => import('./Vote')))
-const NftExplore = lazy(retry(() => import('nft/pages/explore')))
-const Collection = lazy(retry(() => import('nft/pages/collection')))
-const Profile = lazy(retry(() => import('nft/pages/profile/profile')))
-const Asset = lazy(retry(() => import('nft/pages/asset/Asset')))
+const TokenDetails = lazy(() => retry(() => import('./TokenDetails')))
+const Vote = lazy(() => retry(() => import('./Vote')))
+const NftExplore = lazy(() => retry(() => import('nft/pages/explore')))
+const Collection = lazy(() => retry(() => import('nft/pages/collection')))
+const Profile = lazy(() => retry(() => import('nft/pages/profile/profile')))
+const Asset = lazy(() => retry(() => import('nft/pages/asset/Asset')))
 
 const BodyWrapper = styled.div`
   display: flex;

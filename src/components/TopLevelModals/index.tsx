@@ -10,9 +10,9 @@ import { useModalIsOpen, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import { retry } from 'utils/retry'
 
-const Bag = lazy(retry(() => import('nft/components/bag/Bag')))
-const TransactionCompleteModal = lazy(retry(() => import('nft/components/collection/TransactionCompleteModal')))
-const AirdropModal = lazy(retry(() => import('components/AirdropModal')))
+const Bag = lazy(() => retry(() => import('nft/components/bag/Bag')))
+const TransactionCompleteModal = lazy(() => retry(() => import('nft/components/collection/TransactionCompleteModal')))
+const AirdropModal = lazy(() => retry(() => import('components/AirdropModal')))
 
 export default function TopLevelModals() {
   const addressClaimOpen = useModalIsOpen(ApplicationModal.ADDRESS_CLAIM)
