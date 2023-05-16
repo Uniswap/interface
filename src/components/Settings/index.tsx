@@ -9,6 +9,7 @@ import { useRef } from 'react'
 import { useModalIsOpen, useToggleSettingsMenu } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import styled from 'styled-components/macro'
+import { Divider } from 'theme'
 
 import MaxSlippageSettings from './MaxSlippageSettings'
 import MenuButton from './MenuButton'
@@ -38,14 +39,6 @@ const MenuFlyout = styled(AutoColumn)`
   user-select: none;
   gap: 16px;
   padding: 1rem;
-`
-
-const Divider = styled.div`
-  width: 100%;
-  height: 1px;
-  border-width: 0;
-  margin: 0;
-  background-color: ${({ theme }) => theme.backgroundOutline};
 `
 
 export default function SettingsTab({ autoSlippage }: { autoSlippage: Percent }) {
