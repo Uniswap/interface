@@ -5,11 +5,11 @@ import {
   Message,
 } from 'src/features/dappRequests/dappRequestTypes'
 import { PortName } from 'src/types'
-import { ExtensionRequestType } from 'src/types/requests'
+import { ExtensionToContentScriptRequestType } from 'src/types/requests'
 import { logger } from 'wallet/src/features/logger/logger'
 import { InjectedAssetsManager } from './InjectedAssetsManager'
 
-new InjectedAssetsManager().injectAll()
+InjectedAssetsManager.init()
 
 addDappRequestListener()
 addExtensionRequestListener()
@@ -84,8 +84,17 @@ function addExtensionRequestListener(): void {
         'Message from background is: ',
         message
       )
-      if (Object.values(ExtensionRequestType).includes(message.data.type)) {
-        // TODO: Post message to target tab instead of whole window
+      if (Object.values(ExtensionToContentScriptRequestType).includes(message.data.type)) {
+        switch (message.data.type) {
+          case ExtensionToContentScriptRequestType.InjectAsset:
+            InjectedAssetsManager.injectFrame(message.data.filename)
+            break
+          case ExtensionToContentScriptRequestType.InjectedAssetRemove:
+            InjectedAssetsManager.removeFrame(message.data.filename)
+            break
+          default:
+            throw new Error('Unhandled extension request type ' + message.data.type)
+        }
       }
     }
   )

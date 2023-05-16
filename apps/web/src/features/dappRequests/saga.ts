@@ -24,7 +24,7 @@ import {
   SignTypedDataResponse,
 } from './dappRequestTypes'
 import { dappRequestActions, DappRequestStoreItem } from './slice'
-import { extractBaseUrl, openRequestsWindowIfNeeded } from './utils'
+import { extractBaseUrl, maybeOpenRequestsWindow } from './utils'
 
 const DEFAULT_IMAGE_PATH = 'assets/default.png'
 const SUCCESS_IMAGE_PATH = 'assets/success.png'
@@ -67,7 +67,7 @@ export function* handleRequest(requestParams: DappRequestSagaParams) {
     yield* put(confirmRequest(requestForStore))
   } else {
     yield* put(dappRequestActions.add(requestForStore))
-    yield* call(openRequestsWindowIfNeeded)
+    yield* call(maybeOpenRequestsWindow, requestParams.senderTabId)
   }
 }
 

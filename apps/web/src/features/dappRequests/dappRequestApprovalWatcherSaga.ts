@@ -20,6 +20,7 @@ import {
   sendTransaction,
 } from './saga'
 import { dappRequestActions } from './slice'
+import { closeDockedWindow } from './utils'
 
 /**
  * Watch for pending requests to be confirmed or rejected and dispatch action
@@ -32,7 +33,7 @@ export function* dappRequestApprovalWatcher() {
 
     try {
       if (type === confirmRequest.type) {
-        logger.info('dappRequestApprovalWatcher', 'confirmRequest', request.toString())
+        logger.info('dappRequestApprovalWatcher', 'confirmRequest', JSON.stringify(request))
 
         switch (request.dappRequest.type) {
           case DappRequestType.SendTransaction:
@@ -84,7 +85,7 @@ export function* dappRequestApprovalWatcher() {
           // Add more request types here
         }
       } else if (type === rejectRequest.type) {
-        logger.info('dappRequestApprovalWatcher', 'rejectRequest', request.toString())
+        logger.info('dappRequestApprovalWatcher', 'rejectRequest', JSON.stringify(request))
         yield* call(
           sendRejectionToContentScript,
           request.dappRequest.requestId,
@@ -101,6 +102,7 @@ export function* dappRequestApprovalWatcher() {
       )
     } finally {
       yield* put(dappRequestActions.remove(request.dappRequest.requestId))
+      yield* call(closeDockedWindow)
     }
   }
 }

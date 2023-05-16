@@ -2,98 +2,126 @@ import { logger } from 'wallet/src/features/logger/logger'
 
 const TAG_ID_PREFIX = 'uniswap-wallet'
 
-// Object of assets to inject, where key is the bundled file name
-type InjectedAssets = Record<string, InjectedAssetOptions>
+// SCRIPTS
 
-interface InjectedAssetOptions {
+interface InjectedScriptOptions {
+  // whether to load on app startup
+  lazy?: boolean
   // whether to unmount dom element after load
   unmountOnLoad?: boolean
 }
 
 // List of scripts to inject on app startup
-const injectedScripts: InjectedAssets = {
+const INJECTED_SCRIPTS = {
   'ethereum.js': {
+    // load on app startup
+    lazy: false,
     // once window.ethereum has been injected, it is safe to remove the script node
     unmountOnLoad: true,
   },
+  // add more scripts here as needed
+} as const
+
+function injectScript<T extends string = keyof typeof INJECTED_SCRIPTS>(
+  filename: T,
+  options: InjectedScriptOptions,
+  container = document.head || document.documentElement
+): void {
+  logger.debug('InjectedAssetsManager', 'injectScript', `${filename}`)
+
+  const scriptTag = document.createElement('script')
+  scriptTag.src = chrome.runtime.getURL(filename)
+  scriptTag.id = `${TAG_ID_PREFIX}-${filename}`
+
+  if (document.getElementById(scriptTag.id)) {
+    logger.debug('InjectedAssetsManager', 'injectScript', 'Script tag already in DOM')
+    return
+  }
+
+  container.appendChild(scriptTag)
+
+  if (options.unmountOnLoad) {
+    scriptTag.onload = (): void => {
+      scriptTag.parentNode?.removeChild(scriptTag)
+    }
+  }
 }
 
-// List of pages to inject in iframes on app startup
+// FRAMES
+
 // iframes are useful when context isolation is necessary (e.g. security)
-// ensure html is exported via webpack
-// To render <App /> at a specific route
-// { `index.html#/${route}`: {} }
-const injectedIFrames: InjectedAssets = {}
+// NOTE: ensure html is exported via webpack
+//
+// @example To render <App /> at a specific route
+//   { `index.html#/${route}`: { lazy: true } }
+const INJECTED_FRAMES = {
+  'index.html': {
+    lazy: true,
+  },
+} as const
+
+function injectFrame<T extends string = keyof typeof INJECTED_FRAMES>(
+  filename: T,
+  container = document.body || document.documentElement,
+  css = 'position:absolute; bottom:0;right:50px;display:block;z-index:99999999;border:none;width:350px;height:600px;'
+): void {
+  const extensionOrigin = 'chrome-extension://' + chrome.runtime.id
+  if (location.ancestorOrigins?.contains(extensionOrigin)) {
+    logger.warn(
+      'InjectedAssetsManager',
+      'injectIFrames',
+      'Skipping iFrame injection in extension context'
+    )
+    return
+  }
+
+  logger.debug('InjectedAssetsManager', 'injectFrame', `${filename}`)
+
+  const iframeTag = document.createElement('iframe')
+  iframeTag.src = chrome.runtime.getURL(filename)
+  iframeTag.id = `${TAG_ID_PREFIX}-${filename}`
+  iframeTag.style.cssText = css
+
+  if (document.getElementById(iframeTag.id)) {
+    logger.debug('InjectedAssetsManager', 'injectFrame', 'Frame already in DOM')
+    return
+  }
+
+  container.appendChild(iframeTag)
+}
+
+function removeFrame<T extends string = keyof typeof INJECTED_FRAMES>(filename: T): void {
+  const iframeTagId = `${TAG_ID_PREFIX}-${filename}`
+
+  const tag = document.getElementById(iframeTagId)
+
+  if (!tag) {
+    logger.debug('InjectedAssetsManager', 'injectFrame', 'Frame not found in DOM')
+    return
+  }
+
+  tag.remove()
+}
+function init(scripts = INJECTED_SCRIPTS, frames = INJECTED_FRAMES): void {
+  for (const name of Object.keys(scripts) as Array<keyof typeof scripts>) {
+    if (!scripts[name].lazy) {
+      injectScript(name, scripts[name])
+    }
+  }
+
+  for (const name of Object.keys(frames) as Array<keyof typeof frames>) {
+    if (!frames[name].lazy) {
+      injectFrame(name)
+    }
+  }
+}
 
 /**
  * Handles injecting scripts and pages (iframes) onto tab as content script loads
  */
-export class InjectedAssetsManager {
-  /** Utility method to inject all scripts and all iframes */
-  injectAll(): void {
-    this.injectScripts()
-    this.injectIFrames()
-  }
-
-  injectScripts(
-    scripts = injectedScripts,
-    container = document.head || document.documentElement
-  ): void {
-    for (const [name, { unmountOnLoad }] of Object.entries(scripts)) {
-      logger.debug('InjectedAssetsManager', 'injectScripts', `${name}`)
-
-      const scriptTag = document.createElement('script')
-      scriptTag.src = chrome.runtime.getURL(name)
-      scriptTag.id = `${TAG_ID_PREFIX}-${name}`
-
-      container.appendChild(scriptTag)
-
-      if (unmountOnLoad) {
-        scriptTag.onload = (): void => {
-          scriptTag.parentNode?.removeChild(scriptTag)
-        }
-      }
-    }
-  }
-
-  injectIFrames(
-    iframes = injectedIFrames,
-    container = document.body || document.documentElement,
-    css = {
-      position: 'absolute',
-      bottom: '0',
-      right: '0',
-      display: 'block',
-      // TODO: figure out a better way to keep on top
-      zIndex: '9999999',
-      border: 'none',
-    }
-  ): void {
-    const extensionOrigin = 'chrome-extension://' + chrome.runtime.id
-    if (location.ancestorOrigins?.contains(extensionOrigin)) {
-      logger.warn(
-        'InjectedAssetsManager',
-        'injectIFrames',
-        'Skipping iFrame injection in extension context'
-      )
-      return
-    }
-
-    for (const [name] of Object.entries(iframes)) {
-      logger.debug('InjectedAssetsManager', 'injectIFrames', `${name}`)
-
-      const iframeTag = document.createElement('iframe')
-      iframeTag.src = chrome.runtime.getURL(name)
-      iframeTag.id = `${TAG_ID_PREFIX}-${name}`
-      iframeTag.style.cssText = CSSObjectToString(css)
-
-      container.appendChild(iframeTag)
-    }
-  }
-}
-
-function CSSObjectToString(obj: Record<string, string>): string {
-  return Object.entries(obj)
-    .map(([k, v]) => `${k}:${v}`)
-    .join(';')
+export const InjectedAssetsManager = {
+  init,
+  injectScript,
+  injectFrame,
+  removeFrame,
 }

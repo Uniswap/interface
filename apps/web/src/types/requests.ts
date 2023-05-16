@@ -6,8 +6,14 @@ export enum ExtensionRequestType {
   SwitchChain = 'SwitchChain',
 }
 
+// Request from extension background script to content script
+export enum ExtensionToContentScriptRequestType {
+  InjectAsset = 'InjectAsset',
+  InjectedAssetRemove = 'InjectedAssetRemove',
+}
+
 export interface BaseExtensionRequest {
-  type: ExtensionRequestType
+  type: ExtensionRequestType | ExtensionToContentScriptRequestType
 }
 
 export interface ExtensionChainChange extends BaseExtensionRequest {
@@ -18,4 +24,17 @@ export interface ExtensionChainChange extends BaseExtensionRequest {
 
 export interface DisconnectResponse extends BaseExtensionRequest {
   type: ExtensionRequestType.Disconnect
+}
+
+export interface InjectAssetRequest extends BaseExtensionRequest {
+  assetType: 'frame'
+  filename: string
+}
+
+export interface InjectFrameRequest extends InjectAssetRequest {
+  type: ExtensionToContentScriptRequestType.InjectAsset
+}
+
+export interface InjectedAssetRemoveRequest extends InjectAssetRequest {
+  type: ExtensionToContentScriptRequestType.InjectedAssetRemove
 }
