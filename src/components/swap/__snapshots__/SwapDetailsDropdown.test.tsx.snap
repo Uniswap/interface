@@ -42,11 +42,11 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
   color: #0D111C;
 }
 
-.c15 {
+.c12 {
   color: #7780A0;
 }
 
-.c13 {
+.c16 {
   width: 100%;
   height: 1px;
   background-color: #D2D9EE;
@@ -66,7 +66,7 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
   justify-content: flex-start;
 }
 
-.c12 {
+.c15 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -89,9 +89,18 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
   transition: opacity 0.2s ease-in-out;
 }
 
-.c14 {
+.c10 {
   display: inline-block;
   height: inherit;
+}
+
+.c11 {
+  margin-right: 4px;
+  height: 18px;
+}
+
+.c11 > * {
+  stroke: #98A1C0;
 }
 
 .c8 {
@@ -135,7 +144,7 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
   cursor: pointer;
 }
 
-.c10 {
+.c13 {
   -webkit-transform: none;
   -ms-transform: none;
   transform: none;
@@ -144,7 +153,7 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
   transition: transform 0.1s linear;
 }
 
-.c11 {
+.c14 {
   padding-top: 12px;
 }
 
@@ -184,8 +193,32 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
       <div
         class="c2 c3 c6"
       >
-        <svg
+        <div
           class="c10"
+        >
+          <div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c2 c3 c6"
+              >
+                <svg
+                  class="c11"
+                >
+                  gas-icon.svg
+                </svg>
+                <div
+                  class="c12 css-zhpkf8"
+                >
+                  $1.00
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <svg
+          class="c13"
           fill="none"
           height="24"
           stroke="#98A1C0"
@@ -207,15 +240,35 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
     >
       <div>
         <div
-          class="c11"
+          class="c14"
           data-testid="advanced-swap-details"
         >
           <div
-            class="c12"
+            class="c15"
           >
             <div
-              class="c13"
+              class="c16"
             />
+            <div
+              class="c2 c3 c4"
+            >
+              <div
+                class="c10"
+              >
+                <div>
+                  <div
+                    class="c12 css-zhpkf8"
+                  >
+                    Network fee
+                  </div>
+                </div>
+              </div>
+              <div
+                class="c9 css-zhpkf8"
+              >
+                ~$1.00
+              </div>
+            </div>
             <div
               class="c2 c3 c4"
             >
@@ -223,11 +276,11 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
                 class="c2 c3 c6"
               >
                 <div
-                  class="c14"
+                  class="c10"
                 >
                   <div>
                     <div
-                      class="c15 css-zhpkf8"
+                      class="c12 css-zhpkf8"
                     >
                       Minimum output
                     </div>
@@ -247,11 +300,11 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
                 class="c2 c3 c6"
               >
                 <div
-                  class="c14"
+                  class="c10"
                 >
                   <div>
                     <div
-                      class="c15 css-zhpkf8"
+                      class="c12 css-zhpkf8"
                     >
                       Expected output
                     </div>
@@ -265,18 +318,18 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
               </div>
             </div>
             <div
-              class="c13"
+              class="c16"
             />
             <div
               class="c2 c3 c4"
             >
               <div
-                class="c15 css-zhpkf8"
+                class="c12 css-zhpkf8"
               >
                 Order routing
               </div>
               <div
-                class="c14"
+                class="c10"
               >
                 <div>
                   <div

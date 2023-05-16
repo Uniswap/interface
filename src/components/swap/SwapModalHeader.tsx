@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { SwapEventName, SwapPriceUpdateUserResponse } from '@uniswap/analytics-events'
-import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
+import { Percent, TradeType } from '@uniswap/sdk-core'
 import { useUSDPrice } from 'hooks/useUSDPrice'
 import { getPriceUpdateBasisPoints } from 'lib/utils/analytics'
 import { useEffect, useState } from 'react'
@@ -42,7 +42,7 @@ const ArrowWrapper = styled.div`
 `
 
 const formatAnalyticsEventProperties = (
-  trade: InterfaceTrade<Currency, Currency, TradeType>,
+  trade: InterfaceTrade,
   priceUpdate: number | undefined,
   response: SwapPriceUpdateUserResponse
 ) => ({
@@ -65,7 +65,7 @@ export default function SwapModalHeader({
   showAcceptChanges,
   onAcceptChanges,
 }: {
-  trade: InterfaceTrade<Currency, Currency, TradeType>
+  trade: InterfaceTrade
   shouldLogModalCloseEvent: boolean
   setShouldLogModalCloseEvent: (shouldLog: boolean) => void
   allowedSlippage: Percent
