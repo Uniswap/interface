@@ -43,7 +43,7 @@ export default function SwapModalHeader({
           usdAmount={fiatValueOutput.data}
           tooltipText={
             trade.tradeType === TradeType.EXACT_INPUT ? (
-              <ThemedText.Caption textAlign="left" style={{ width: '100%' }}>
+              <ThemedText.Caption>
                 <Trans>
                   Output is estimated. You will receive at least{' '}
                   <b>
@@ -53,7 +53,7 @@ export default function SwapModalHeader({
                 </Trans>
               </ThemedText.Caption>
             ) : (
-              <ThemedText.Caption textAlign="left" style={{ width: '100%' }}>
+              <ThemedText.Caption>
                 <Trans>
                   Input is estimated. You will sell at most{' '}
                   <b>
