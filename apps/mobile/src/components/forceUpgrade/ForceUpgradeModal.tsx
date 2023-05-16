@@ -10,6 +10,7 @@ import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { WarningSeverity } from 'src/components/modals/WarningModal/types'
 import WarningModal from 'src/components/modals/WarningModal/WarningModal'
 import { Text } from 'src/components/Text'
+import { APP_STORE_LINK } from 'src/constants/urls'
 import { DYNAMIC_CONFIGS } from 'src/features/experiments/constants'
 import { UpgradeStatus } from 'src/features/forceUpgrade/types'
 import { ModalName } from 'src/features/telemetry/constants'
@@ -17,9 +18,6 @@ import { SignerMnemonicAccount } from 'src/features/wallet/accounts/types'
 import { useNonPendingSignerAccounts } from 'src/features/wallet/hooks'
 import { openUri } from 'src/utils/linking'
 import { Statsig } from 'statsig-react-native'
-
-const APP_STORE_LINK = 'https://apps.apple.com/us/app/uniswap-wallet/id6443944476'
-const TESTFLIGHT_LINK = 'itms-beta://testflight.apple.com/v1/app/'
 
 export function ForceUpgradeModal(): JSX.Element {
   const { t } = useTranslation()
@@ -36,13 +34,10 @@ export function ForceUpgradeModal(): JSX.Element {
       : undefined
 
   const [showSeedPhrase, setShowSeedPhrase] = useState(false)
-  const [isTestFlightLink, setIsTestFlightLink] = useState<boolean>(false)
 
   useEffect(() => {
     const config = Statsig.getConfig(DYNAMIC_CONFIGS.ForceUpgrade)
     const statusString = config.getValue('status')?.toString()
-    const shouldUseTestFlightLink = config.getValue('isTestFlightLink', false)
-    setIsTestFlightLink(shouldUseTestFlightLink === true)
 
     let status = UpgradeStatus.NotRequired
     if (statusString === 'recommended') {
@@ -55,8 +50,7 @@ export function ForceUpgradeModal(): JSX.Element {
   }, [])
 
   const onPressConfirm = (): void => {
-    const upgradeLink = isTestFlightLink ? TESTFLIGHT_LINK : APP_STORE_LINK
-    openUri(upgradeLink, /*openExternalBrowser=*/ true, /*isSafeUri=*/ true)
+    openUri(APP_STORE_LINK, /*openExternalBrowser=*/ true, /*isSafeUri=*/ true)
   }
 
   const onClose = (): void => {

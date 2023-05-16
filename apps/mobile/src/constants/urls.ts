@@ -42,7 +42,7 @@ export const TOKEN_WARNING_HELP_PAGE_URL = `${uniswapUrls.helpUrl}/hc/en-us/arti
 
 export const SWAP_SLIPPAGE_HELP_PAGE_URL = `${uniswapUrls.helpUrl}/hc/en-us/articles/8643879653261-What-is-Price-Slippage-`
 
-export const APP_STORE_LINK = 'https://apps.apple.com/us/app/uniswap-wallet-defi-nfts/id6443944476'
+export const APP_STORE_LINK = 'https://apps.apple.com/us/app/uniswap-wallet/id6443944476'
 
 export const APP_FEEDBACK_LINK =
   'https://docs.google.com/forms/d/e/1FAIpQLSepzL5aMuSfRhSgw0zDw_gVmc2aeVevfrb1UbOwn6WGJ--46w/viewform'
