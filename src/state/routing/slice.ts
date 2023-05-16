@@ -87,7 +87,6 @@ export interface GetQuoteArgs {
 
 enum QuoteState {
   SUCCESS = 'Success',
-  INITIALIZED = 'Initialized',
   NOT_FOUND = 'Not found',
 }
 

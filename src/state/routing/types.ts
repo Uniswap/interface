@@ -109,13 +109,12 @@ export type InterfaceTrade = ClassicTrade<Currency, Currency, TradeType>
 
 export enum QuoteState {
   SUCCESS = 'Success',
-  INITIALIZED = 'Initialized',
   NOT_FOUND = 'Not found',
 }
 
 export type QuoteResult =
   | {
-      state: QuoteState.INITIALIZED | QuoteState.NOT_FOUND
+      state: QuoteState.NOT_FOUND
       data?: undefined
     }
   | {
@@ -125,7 +124,7 @@ export type QuoteResult =
 
 export type TradeResult =
   | {
-      state: QuoteState.INITIALIZED | QuoteState.NOT_FOUND
+      state: QuoteState.NOT_FOUND
       trade?: undefined
     }
   | {
