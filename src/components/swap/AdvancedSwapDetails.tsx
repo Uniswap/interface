@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
-import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
+import { Percent, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { LoadingRows } from 'components/Loader/styled'
 import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
@@ -16,7 +16,7 @@ import RouterLabel from './RouterLabel'
 import SwapRoute from './SwapRoute'
 
 interface AdvancedSwapDetailsProps {
-  trade: InterfaceTrade<Currency, Currency, TradeType>
+  trade: InterfaceTrade
   allowedSlippage: Percent
   syncing?: boolean
 }
@@ -60,7 +60,7 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
             </ThemedText.BodySmall>
           </MouseoverTooltip>
           <TextWithLoadingPlaceholder syncing={syncing} width={50}>
-            <ThemedText.BodySmall>~${trade.gasUseEstimateUSD.toFixed(2)}</ThemedText.BodySmall>
+            <ThemedText.BodySmall>~${trade.gasUseEstimateUSD}</ThemedText.BodySmall>
           </TextWithLoadingPlaceholder>
         </RowBetween>
       )}

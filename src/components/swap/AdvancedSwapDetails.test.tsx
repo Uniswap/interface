@@ -1,11 +1,5 @@
 import userEvent from '@testing-library/user-event'
-import {
-  TEST_ALLOWED_SLIPPAGE,
-  TEST_TOKEN_1,
-  TEST_TRADE_EXACT_INPUT,
-  TEST_TRADE_EXACT_OUTPUT,
-  toCurrencyAmount,
-} from 'test-utils/constants'
+import { TEST_ALLOWED_SLIPPAGE, TEST_TRADE_EXACT_INPUT, TEST_TRADE_EXACT_OUTPUT } from 'test-utils/constants'
 import { act, render, screen } from 'test-utils/render'
 
 import { AdvancedSwapDetails } from './AdvancedSwapDetails'
@@ -27,7 +21,7 @@ describe('AdvancedSwapDetails.tsx', () => {
   })
 
   it('renders correct tooltips for test trade with exact output and gas use estimate USD', async () => {
-    TEST_TRADE_EXACT_OUTPUT.gasUseEstimateUSD = toCurrencyAmount(TEST_TOKEN_1, 1)
+    TEST_TRADE_EXACT_OUTPUT.gasUseEstimateUSD = '1.00'
     render(<AdvancedSwapDetails trade={TEST_TRADE_EXACT_OUTPUT} allowedSlippage={TEST_ALLOWED_SLIPPAGE} />)
     await act(() => userEvent.hover(screen.getByText(/Maximum input/i)))
     expect(await screen.getByText(/The minimum amount you are guaranteed to receive./i)).toBeVisible()

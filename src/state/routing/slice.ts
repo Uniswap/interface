@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery, FetchBaseQueryError } from '@reduxjs/toolkit/query/react'
 import { Protocol } from '@uniswap/router-sdk'
+import { TradeType } from '@uniswap/sdk-core'
 import { AlphaRouter, ChainId } from '@uniswap/smart-order-router'
 import { RPC_PROVIDERS } from 'constants/providers'
 import { getClientSideQuote, toSupportedChainId } from 'lib/hooks/routing/clientSideSmartOrderRouter'
@@ -7,7 +8,8 @@ import ms from 'ms.macro'
 import qs from 'qs'
 import { trace } from 'tracing/trace'
 
-import { GetQuoteResult } from './types'
+import { QuoteData, TradeResult } from './types'
+import { isExactInput, transformRoutesToTrade } from './utils'
 
 export enum RouterPreference {
   AUTO = 'auto',
@@ -69,7 +71,7 @@ const PRICE_PARAMS = {
   distributionPercent: 100,
 }
 
-interface GetQuoteArgs {
+export interface GetQuoteArgs {
   tokenInAddress: string
   tokenInChainId: ChainId
   tokenInDecimals: number
@@ -80,7 +82,12 @@ interface GetQuoteArgs {
   tokenOutSymbol?: string
   amount: string
   routerPreference: RouterPreference | typeof INTERNAL_ROUTER_PREFERENCE_PRICE
-  type: 'exactIn' | 'exactOut'
+  tradeType: TradeType
+}
+
+enum QuoteState {
+  SUCCESS = 'Success',
+  NOT_FOUND = 'Not found',
 }
 
 export const routingApi = createApi({
@@ -89,7 +96,7 @@ export const routingApi = createApi({
     baseUrl: 'https://api.uniswap.org/v1/',
   }),
   endpoints: (build) => ({
-    getQuote: build.query<GetQuoteResult, GetQuoteArgs>({
+    getQuote: build.query<TradeResult, GetQuoteArgs>({
       async onQueryStarted(args: GetQuoteArgs, { queryFulfilled }) {
         trace(
           'quote',
@@ -119,11 +126,14 @@ export const routingApi = createApi({
         )
       },
       async queryFn(args, _api, _extraOptions, fetch) {
-        const { tokenInAddress, tokenInChainId, tokenOutAddress, tokenOutChainId, amount, routerPreference, type } =
-          args
-
-        try {
-          if (routerPreference === RouterPreference.API || routerPreference === RouterPreference.AUTO) {
+        if (
+          args.routerPreference === RouterPreference.API ||
+          args.routerPreference === RouterPreference.AUTO ||
+          args.routerPreference === INTERNAL_ROUTER_PREFERENCE_PRICE
+        ) {
+          try {
+            const { tokenInAddress, tokenInChainId, tokenOutAddress, tokenOutChainId, amount, tradeType } = args
+            const type = isExactInput(tradeType) ? 'exactIn' : 'exactOut'
             const query = qs.stringify({
               ...API_QUERY_PARAMS,
               tokenInAddress,
@@ -133,21 +143,40 @@ export const routingApi = createApi({
               amount,
               type,
             })
-            return (await fetch(`quote?${query}`)) as { data: GetQuoteResult } | { error: FetchBaseQueryError }
-          } else {
-            const router = getRouter(args.tokenInChainId)
-            return await getClientSideQuote(
-              args,
-              router,
-              // TODO(zzmp): Use PRICE_PARAMS for RouterPreference.PRICE.
-              // This change is intentionally being deferred to first see what effect router caching has.
-              CLIENT_PARAMS
+            const response = await fetch(`quote?${query}`)
+            if (response.error) {
+              try {
+                // cast as any here because we do a runtime check on it being an object before indexing into .errorCode
+                const errorData = response.error.data as any
+                // NO_ROUTE should be treated as a valid response to prevent retries.
+                if (typeof errorData === 'object' && errorData?.errorCode === 'NO_ROUTE') {
+                  return { data: { state: QuoteState.NOT_FOUND } }
+                }
+              } catch {
+                throw response.error
+              }
+            }
+
+            const quoteData = response.data as QuoteData
+            const tradeResult = transformRoutesToTrade(args, quoteData)
+            return { data: tradeResult }
+          } catch (error: any) {
+            console.warn(
+              `GetQuote failed on routing API, falling back to client: ${error?.message ?? error?.detail ?? error}`
             )
           }
-        } catch (error) {
-          // TODO: fall back to client-side quoter when auto router fails.
-          // deprecate 'legacy' v2/v3 routers first.
-          return { error: { status: 'CUSTOM_ERROR', error: error.toString() } }
+        }
+        try {
+          const router = getRouter(args.tokenInChainId)
+          const quoteResult = await getClientSideQuote(args, router, CLIENT_PARAMS)
+          if (quoteResult.state === QuoteState.SUCCESS) {
+            return { data: transformRoutesToTrade(args, quoteResult.data) }
+          } else {
+            return { data: quoteResult }
+          }
+        } catch (error: any) {
+          console.warn(`GetQuote failed on client: ${error}`)
+          return { error: { status: 'CUSTOM_ERROR', error: error?.detail ?? error?.message ?? error } }
         }
       },
       keepUnusedDataFor: ms`10s`,

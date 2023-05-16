@@ -81,7 +81,7 @@ exports[`SwapModalHeader.tsx matches base snapshot for test trade with exact inp
   margin: -0px;
 }
 
-.c22 {
+.c24 {
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -91,7 +91,7 @@ exports[`SwapModalHeader.tsx matches base snapshot for test trade with exact inp
   color: #0D111C;
 }
 
-.c24 {
+.c23 {
   color: #7780A0;
 }
 
@@ -167,7 +167,7 @@ exports[`SwapModalHeader.tsx matches base snapshot for test trade with exact inp
   background-size: 400%;
 }
 
-.c23 {
+.c22 {
   display: inline-block;
   height: inherit;
 }
@@ -430,14 +430,34 @@ exports[`SwapModalHeader.tsx matches base snapshot for test trade with exact inp
           class="c5 c6 c7"
         >
           <div
-            class="c5 c6 c22"
+            class="c22"
+          >
+            <div>
+              <div
+                class="c23 css-zhpkf8"
+              >
+                Network fee
+              </div>
+            </div>
+          </div>
+          <div
+            class="c18 css-zhpkf8"
+          >
+            ~$1.00
+          </div>
+        </div>
+        <div
+          class="c5 c6 c7"
+        >
+          <div
+            class="c5 c6 c24"
           >
             <div
-              class="c23"
+              class="c22"
             >
               <div>
                 <div
-                  class="c24 css-zhpkf8"
+                  class="c23 css-zhpkf8"
                 >
                   Minimum output
                 </div>
@@ -454,14 +474,14 @@ exports[`SwapModalHeader.tsx matches base snapshot for test trade with exact inp
           class="c5 c6 c7"
         >
           <div
-            class="c5 c6 c22"
+            class="c5 c6 c24"
           >
             <div
-              class="c23"
+              class="c22"
             >
               <div>
                 <div
-                  class="c24 css-zhpkf8"
+                  class="c23 css-zhpkf8"
                 >
                   Expected output
                 </div>
@@ -481,12 +501,12 @@ exports[`SwapModalHeader.tsx matches base snapshot for test trade with exact inp
           class="c5 c6 c7"
         >
           <div
-            class="c24 css-zhpkf8"
+            class="c23 css-zhpkf8"
           >
             Order routing
           </div>
           <div
-            class="c23"
+            class="c22"
           >
             <div>
               <div
@@ -504,7 +524,7 @@ exports[`SwapModalHeader.tsx matches base snapshot for test trade with exact inp
       style="padding: .75rem 1rem;"
     >
       <div
-        class="c24 css-k51stg"
+        class="c23 css-k51stg"
         style="width: 100%;"
       >
         Output is estimated. You will receive at least 
@@ -520,7 +540,7 @@ exports[`SwapModalHeader.tsx matches base snapshot for test trade with exact inp
       style="padding: 12px 0px 0px 0px;"
     >
       <div
-        class="c24 css-8mokm4"
+        class="c23 css-8mokm4"
       >
         Output will be sent to 
         <b

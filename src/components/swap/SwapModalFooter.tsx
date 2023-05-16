@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
-import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
+import { Percent } from '@uniswap/sdk-core'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import {
   formatPercentInBasisPointsNumber,
@@ -24,7 +24,7 @@ import { AutoRow } from '../Row'
 import { SwapCallbackError } from './styleds'
 
 interface AnalyticsEventProps {
-  trade: InterfaceTrade<Currency, Currency, TradeType>
+  trade: InterfaceTrade
   hash: string | undefined
   allowedSlippage: Percent
   transactionDeadlineSecondsSinceEpoch: number | undefined
@@ -75,7 +75,7 @@ const formatAnalyticsEventProperties = ({
   fiatValueInput,
   fiatValueOutput,
 }: AnalyticsEventProps) => ({
-  estimated_network_fee_usd: trade.gasUseEstimateUSD ? formatToDecimal(trade.gasUseEstimateUSD, 2) : undefined,
+  estimated_network_fee_usd: trade.gasUseEstimateUSD ?? undefined,
   transaction_hash: hash,
   transaction_deadline_seconds: getDurationUntilTimestampSeconds(transactionDeadlineSecondsSinceEpoch),
   token_in_address: getTokenAddress(trade.inputAmount.currency),
@@ -112,7 +112,7 @@ export default function SwapModalFooter({
   fiatValueInput,
   fiatValueOutput,
 }: {
-  trade: InterfaceTrade<Currency, Currency, TradeType>
+  trade: InterfaceTrade
   hash: string | undefined
   allowedSlippage: Percent
   onConfirm: () => void

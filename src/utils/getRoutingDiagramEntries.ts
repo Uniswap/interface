@@ -15,9 +15,7 @@ const V2_DEFAULT_FEE_TIER = 3000
 /**
  * Loops through all routes on a trade and returns an array of diagram entries.
  */
-export default function getRoutingDiagramEntries(
-  trade: InterfaceTrade<Currency, Currency, TradeType>
-): RoutingDiagramEntry[] {
+export default function getRoutingDiagramEntries(trade: InterfaceTrade): RoutingDiagramEntry[] {
   return trade.swaps.map(({ route: { path: tokenPath, pools, protocol }, inputAmount, outputAmount }) => {
     const portion =
       trade.tradeType === TradeType.EXACT_INPUT

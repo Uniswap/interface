@@ -9,7 +9,7 @@ export default function useDerivedPayWithAnyTokenSwapInfo(
   parsedOutputAmount?: CurrencyAmount<NativeCurrency | Token>
 ): {
   state: TradeState
-  trade: InterfaceTrade<Currency, Currency, TradeType> | undefined
+  trade: InterfaceTrade | undefined
   maximumAmountIn: CurrencyAmount<Token> | undefined
   allowedSlippage: Percent
 } {
