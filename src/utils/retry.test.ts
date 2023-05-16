@@ -1,43 +1,48 @@
 import { retry } from './retry'
 
-jest.useFakeTimers()
+describe('retry function', () => {
+  let mockFn: jest.Mock
 
-describe('retry', () => {
-  it('should successfully retry on failure and resolve the value', async () => {
-    let attempts = 0
-
-    const fn = async () => {
-      attempts++
-      if (attempts < 3) {
-        throw new Error('Failure')
-      }
-      return 'Success'
-    }
-
-    const promise = retry(fn, 3, 100)()
-
-    // Advance timers by total time
-    jest.advanceTimersByTime(300)
-
-    const result = await promise
-    expect(attempts).toEqual(3)
-    expect(result).toEqual('Success')
+  beforeEach(() => {
+    jest.useFakeTimers()
+    mockFn = jest.fn()
   })
 
-  it('should fail after reaching the maximum number of retries', async () => {
-    let attempts = 0
+  afterEach(() => {
+    jest.useRealTimers()
+  })
 
-    const fn = async () => {
-      attempts++
-      throw new Error('Failure')
-    }
+  it('should resolve when function is successful', async () => {
+    const expectedResult = 'Success'
+    mockFn.mockImplementation(() => Promise.resolve(expectedResult))
+    const retryFn = retry(mockFn)
+    const result = retryFn()
+    jest.runOnlyPendingTimers()
+    await expect(result).resolves.toEqual(expectedResult)
+    expect(mockFn).toHaveBeenCalledTimes(1)
+  })
 
-    const promise = retry(fn, 3, 100)()
+  it('should retry the specified number of times before rejecting', async () => {
+    const error = new Error('Failure')
+    mockFn.mockImplementation(() => Promise.reject(error))
+    const retryFn = retry(mockFn, 2)
+    const result = retryFn()
+    jest.runOnlyPendingTimers()
+    await expect(result).rejects.toEqual(error)
+    expect(mockFn).toHaveBeenCalledTimes(3)
+  })
 
-    // Advance timers by total time
-    jest.advanceTimersByTime(300)
-
-    await expect(promise).rejects.toThrow('Failure')
-    expect(attempts).toEqual(3)
+  it('should respect the delay between retries', () => {
+    mockFn.mockImplementation(() => Promise.reject(new Error('Failure')))
+    const retryFn = retry(mockFn, 2, 2000)
+    retryFn()
+    jest.advanceTimersByTime(1999)
+    expect(mockFn).toHaveBeenCalledTimes(1)
+    jest.advanceTimersByTime(1)
+    expect(mockFn).toHaveBeenCalledTimes(2)
+    jest.advanceTimersByTime(3999)
+    expect(mockFn).toHaveBeenCalledTimes(2)
+    jest.advanceTimersByTime(1)
+    expect(mockFn).toHaveBeenCalledTimes(3)
   })
 })
