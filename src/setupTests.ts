@@ -1,7 +1,8 @@
 import '@testing-library/jest-dom' // jest custom assertions
+import 'polyfills'
 import 'jest-styled-components' // adds style diffs to snapshot tests
+import 'polyfills'
 
-import { ResizeObserver } from '@juggle/resize-observer'
 import type { createPopper } from '@popperjs/core'
 import { useWeb3React } from '@web3-react/core'
 import failOnConsole from 'jest-fail-on-console'
@@ -31,8 +32,6 @@ global.matchMedia =
       removeEventListener: jest.fn(),
     }
   })
-
-global.ResizeObserver = ResizeObserver
 
 jest.mock('@popperjs/core', () => {
   const core = jest.requireActual('@popperjs/core')
