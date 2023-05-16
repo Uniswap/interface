@@ -18,8 +18,8 @@ export function retry<T>(fn: () => Promise<T>, retries = 3, delay = 1000): Promi
         if (attempts === retries) {
           reject(error)
         } else {
-          const exponentialBackoff = currentDelay * 2
-          setTimeout(() => attempt(attempts + 1, exponentialBackoff), currentDelay)
+          const exponentialBackoffDelay = currentDelay * 2
+          setTimeout(() => attempt(attempts + 1, exponentialBackoffDelay), currentDelay)
         }
       }
     }
