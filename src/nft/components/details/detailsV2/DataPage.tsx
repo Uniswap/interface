@@ -52,15 +52,17 @@ const LeftColumn = styled(Column)`
 
 export const DataPage = ({ asset }: { asset: GenieAsset }) => {
   return (
-    <DataPageContainer>
-      <DataPageHeader asset={asset} />
-      <ContentContainer>
-        <LeftColumn>
-          {!!asset.traits?.length && <DataPageTraits asset={asset} />}
-          <DataPageDescription />
-        </LeftColumn>
-        <DataPageTable asset={asset} />
-      </ContentContainer>
-    </DataPageContainer>
+    <DataPagePaddingContainer>
+      <DataPageContainer>
+        <DataPageHeader asset={asset} />
+        <ContentContainer>
+          <LeftColumn>
+            {!!asset.traits?.length && <DataPageTraits asset={asset} />}
+            <DataPageDescription />
+          </LeftColumn>
+          <DataPageTable asset={asset} />
+        </ContentContainer>
+      </DataPageContainer>
+    </DataPagePaddingContainer>
   )
 }
