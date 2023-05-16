@@ -23,14 +23,12 @@ export default function ConfirmSwapModal({
   onConfirm,
   onDismiss,
   swapErrorMessage,
-  isOpen,
   attemptingTxn,
   txHash,
   swapQuoteReceivedDate,
   fiatValueInput,
   fiatValueOutput,
 }: {
-  isOpen: boolean
   trade: InterfaceTrade
   originalTrade: InterfaceTrade | undefined
   attemptingTxn: boolean
@@ -59,14 +57,12 @@ export default function ConfirmSwapModal({
   }, [lastExecutionPrice, setLastExecutionPrice, trade])
 
   const onModalDismiss = useCallback(() => {
-    if (isOpen) {
-      sendAnalyticsEvent(
-        SwapEventName.SWAP_PRICE_UPDATE_ACKNOWLEDGED,
-        formatSwapPriceUpdatedEventProperties(trade, priceUpdate, SwapPriceUpdateUserResponse.REJECTED)
-      )
-    }
+    sendAnalyticsEvent(
+      SwapEventName.SWAP_PRICE_UPDATE_ACKNOWLEDGED,
+      formatSwapPriceUpdatedEventProperties(trade, priceUpdate, SwapPriceUpdateUserResponse.REJECTED)
+    )
     onDismiss()
-  }, [isOpen, onDismiss, priceUpdate, trade])
+  }, [onDismiss, priceUpdate, trade])
 
   const modalHeader = useCallback(() => {
     return <SwapModalHeader trade={trade} allowedSlippage={allowedSlippage} />
@@ -127,7 +123,7 @@ export default function ConfirmSwapModal({
   return (
     <Trace modal={InterfaceModalName.CONFIRM_SWAP}>
       <TransactionConfirmationModal
-        isOpen={isOpen}
+        isOpen={true}
         onDismiss={onModalDismiss}
         attemptingTxn={attemptingTxn}
         hash={txHash}
