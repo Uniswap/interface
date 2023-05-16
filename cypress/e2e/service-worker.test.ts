@@ -9,7 +9,7 @@ describe('Service Worker', () => {
         throw new Error(
           '\n' +
             'Service Worker tests must be run on a production-like build\n' +
-            'To test, build with `yarn build:e2e` and serve with `yarn serve`'
+            'To test, build with `yarn build` and serve with `yarn serve`'
         )
       }
     })
@@ -20,66 +20,59 @@ describe('Service Worker', () => {
     }
   })
 
-  function unregister() {
-    return cy.log('unregister service worker').then(async () => {
-      const cacheKeys = await window.caches.keys()
-      const cacheKey = cacheKeys.find((key) => key.match(/precache/))
-      if (cacheKey) {
-        await window.caches.delete(cacheKey)
-      }
-
+  after(() => {
+    return cy.log('unregisters service worker').then(async () => {
       const sw = await window.navigator.serviceWorker.getRegistration(Cypress.config().baseUrl ?? undefined)
       await sw?.unregister()
     })
-  }
-  before(unregister)
-  after(unregister)
+  })
 
   beforeEach(() => {
-    cy.intercept({ hostname: 'www.google-analytics.com' }, (req) => {
-      const body = req.body.toString()
-      if (req.query['ep.event_category'] === 'Service Worker' || body.includes('Service%20Worker')) {
-        if (req.query['en'] === 'Not Installed' || body.includes('Not%20Installed')) {
-          req.alias = 'NotInstalled'
-        } else if (req.query['en'] === 'Cache Hit' || body.includes('Cache%20Hit')) {
-          req.alias = 'CacheHit'
-        } else if (req.query['en'] === 'Cache Miss' || body.includes('Cache%20Miss')) {
-          req.alias = 'CacheMiss'
-        }
+    cy.intercept('https://api.uniswap.org/v1/amplitude-proxy', (req) => {
+      const body = JSON.stringify(req.body)
+      if (body.match(/"service_worker":"uninstalled"/)) {
+        req.alias = 'ServiceWorker:Uninstalled'
+      } else if (body.match(/"service_worker":"hit"/)) {
+        req.alias = 'ServiceWorker:Hit'
+      } else if (body.match(/"service_worker":"miss"/)) {
+        req.alias = 'ServiceWorker:Miss'
       }
     })
   })
 
-  it('installs a ServiceWorker', () => {
+  it('installs a ServiceWorker and reports the uninstalled status to analytics', () => {
     cy.visit('/', { serviceWorker: true })
-      .get('#swap-page')
-      // This is emitted after caching the entry file, which takes some time to load.
-      .wait('@NotInstalled', { timeout: 60000 })
-      .window()
-      .and((win) => {
-        expect(win.navigator.serviceWorker.controller?.state).to.equal('activated')
+    cy.wait('@ServiceWorker:Uninstalled')
+    cy.window().should(
+      'have.nested.property',
+      // The parent is checked instead of the AUT because it is on the same origin,
+      // and the AUT will not be considered "activated" until the parent is idle.
+      'parent.navigator.serviceWorker.controller.state',
+      'activated'
+    )
+  })
+
+  it('records a cache hit and reports the hit to analytics', () => {
+    cy.visit('/', { serviceWorker: true })
+    cy.wait('@ServiceWorker:Hit')
+  })
+
+  it('records a cache miss and reports the miss to analytics', () => {
+    // Deletes the index.html from the cache to force a cache miss.
+    cy.visit('/', { serviceWorker: true })
+      .then(async () => {
+        const cacheKeys = await window.caches.keys()
+        const cacheKey = cacheKeys.find((key) => key.match(/precache/))
+        assert(cacheKey)
+
+        const cache = await window.caches.open(cacheKey)
+        const keys = await cache.keys()
+        const key = keys.find((key) => key.url.match(/index/))
+        assert(key)
+
+        await cache.delete(key)
       })
-  })
-
-  it('records a cache hit', () => {
-    cy.visit('/', { serviceWorker: true }).get('#swap-page').wait('@CacheHit', { timeout: 20000 })
-  })
-
-  it('records a cache miss', () => {
-    cy.then(async () => {
-      const cacheKeys = await window.caches.keys()
-      const cacheKey = cacheKeys.find((key) => key.match(/precache/))
-      assert(cacheKey)
-
-      const cache = await window.caches.open(cacheKey)
-      const keys = await cache.keys()
-      const key = keys.find((key) => key.url.match(/index/))
-      assert(key)
-
-      await cache.put(key, new Response())
-    })
       .visit('/', { serviceWorker: true })
-      .get('#swap-page')
-      .wait('@CacheMiss', { timeout: 20000 })
+    cy.wait('@ServiceWorker:Miss')
   })
 })

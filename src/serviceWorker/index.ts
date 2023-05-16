@@ -25,8 +25,8 @@ registerRoute(
   new Route(
     ({ url }) => onDemandURLs.includes('.' + url.pathname),
     new CacheFirst({
-      cacheName: 'media',
-      plugins: [new ExpirationPlugin({ maxEntries: 16 })],
+      cacheName: 'on-demand',
+      plugins: [new ExpirationPlugin({ maxEntries: 64 })],
     })
   )
 )
