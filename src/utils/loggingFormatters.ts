@@ -1,5 +1,5 @@
 import { SwapPriceUpdateUserResponse } from '@uniswap/analytics-events'
-import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
+import { Percent } from '@uniswap/sdk-core'
 import {
   formatPercentInBasisPointsNumber,
   formatPercentNumber,
@@ -41,7 +41,7 @@ const formatRoutesEventProperties = (routes: RoutingDiagramEntry[]) => {
 }
 
 export const formatSwapPriceUpdatedEventProperties = (
-  trade: InterfaceTrade<Currency, Currency, TradeType>,
+  trade: InterfaceTrade,
   priceUpdate: number | undefined,
   response: SwapPriceUpdateUserResponse
 ) => ({
@@ -56,7 +56,7 @@ export const formatSwapPriceUpdatedEventProperties = (
 })
 
 interface AnalyticsEventProps {
-  trade: InterfaceTrade<Currency, Currency, TradeType> | undefined
+  trade: InterfaceTrade
   hash: string | undefined
   allowedSlippage: Percent
   transactionDeadlineSecondsSinceEpoch: number | undefined
@@ -80,15 +80,15 @@ export const formatSwapButtonClickEventProperties = ({
   fiatValueInput,
   fiatValueOutput,
 }: AnalyticsEventProps) => ({
-  estimated_network_fee_usd: trade?.gasUseEstimateUSD ? formatToDecimal(trade?.gasUseEstimateUSD, 2) : undefined,
+  estimated_network_fee_usd: trade.gasUseEstimateUSD,
   transaction_hash: hash,
   transaction_deadline_seconds: getDurationUntilTimestampSeconds(transactionDeadlineSecondsSinceEpoch),
-  token_in_address: trade ? getTokenAddress(trade?.inputAmount.currency) : undefined,
-  token_out_address: trade ? getTokenAddress(trade?.outputAmount.currency) : undefined,
-  token_in_symbol: trade?.inputAmount.currency.symbol,
-  token_out_symbol: trade?.outputAmount.currency.symbol,
-  token_in_amount: trade ? formatToDecimal(trade?.inputAmount, trade?.inputAmount.currency.decimals) : undefined,
-  token_out_amount: trade ? formatToDecimal(trade?.outputAmount, trade?.outputAmount.currency.decimals) : undefined,
+  token_in_address: trade ? getTokenAddress(trade.inputAmount.currency) : undefined,
+  token_out_address: trade ? getTokenAddress(trade.outputAmount.currency) : undefined,
+  token_in_symbol: trade.inputAmount.currency.symbol,
+  token_out_symbol: trade.outputAmount.currency.symbol,
+  token_in_amount: trade ? formatToDecimal(trade.inputAmount, trade.inputAmount.currency.decimals) : undefined,
+  token_out_amount: trade ? formatToDecimal(trade.outputAmount, trade.outputAmount.currency.decimals) : undefined,
   token_in_amount_usd: fiatValueInput,
   token_out_amount_usd: fiatValueOutput,
   price_impact_basis_points: trade ? formatPercentInBasisPointsNumber(computeRealizedPriceImpact(trade)) : undefined,
@@ -96,12 +96,12 @@ export const formatSwapButtonClickEventProperties = ({
   is_auto_router_api: isAutoRouterApi,
   is_auto_slippage: isAutoSlippage,
   chain_id:
-    trade?.inputAmount.currency.chainId === trade?.outputAmount.currency.chainId
-      ? trade?.inputAmount.currency.chainId
+    trade.inputAmount.currency.chainId === trade.outputAmount.currency.chainId
+      ? trade.inputAmount.currency.chainId
       : undefined,
   duration_from_first_quote_to_swap_submission_milliseconds: swapQuoteReceivedDate
     ? getDurationFromDateMilliseconds(swapQuoteReceivedDate)
     : undefined,
-  swap_quote_block_number: trade?.blockNumber,
+  swap_quote_block_number: trade.blockNumber,
   ...formatRoutesEventProperties(routes),
 })

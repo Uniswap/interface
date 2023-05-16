@@ -1,6 +1,11 @@
 import { Trans } from '@lingui/macro'
 import { sendAnalyticsEvent, Trace, useTrace } from '@uniswap/analytics'
-import { InterfaceEventName, InterfaceModalName } from '@uniswap/analytics-events'
+import {
+  InterfaceEventName,
+  InterfaceModalName,
+  SwapEventName,
+  SwapPriceUpdateUserResponse,
+} from '@uniswap/analytics-events'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
@@ -8,10 +13,12 @@ import Modal from 'components/Modal'
 import { useMaxAmountIn } from 'hooks/useMaxAmountIn'
 import { Allowance, AllowanceState } from 'hooks/usePermit2Allowance'
 import usePrevious from 'hooks/usePrevious'
+import { getPriceUpdateBasisPoints } from 'lib/utils/analytics'
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 import { useIsTransactionConfirmed } from 'state/transactions/hooks'
 import invariant from 'tiny-invariant'
+import { formatSwapPriceUpdatedEventProperties } from 'utils/loggingFormatters'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 import { tradeMeaningfullyDiffers } from 'utils/tradeMeaningFullyDiffer'
 
@@ -52,7 +59,7 @@ export default function ConfirmSwapModal({
   fiatValueOutput,
 }: {
   isOpen: boolean
-  trade: InterfaceTrade<Currency, Currency, TradeType>
+  trade: InterfaceTrade
   originalTrade: Trade<Currency, Currency, TradeType> | undefined
   txHash: string | undefined
   allowedSlippage: Percent
@@ -65,9 +72,6 @@ export default function ConfirmSwapModal({
   fiatValueInput: { data?: number; isLoading: boolean }
   fiatValueOutput: { data?: number; isLoading: boolean }
 }) {
-  // shouldLogModalCloseEvent lets the child SwapModalHeader component know when modal has been closed
-  // and an event triggered by modal closing should be logged.
-  const [shouldLogModalCloseEvent, setShouldLogModalCloseEvent] = useState(false)
   const [confirmModalState, setConfirmModalState] = useState<ConfirmModalState>(ConfirmModalState.REVIEWING)
   const [pendingModalSteps, setPendingModalSteps] = useState<PendingConfirmModalState[]>([])
 
@@ -99,33 +103,6 @@ export default function ConfirmSwapModal({
   const previousPermitNeeded = usePrevious(
     allowance.state === AllowanceState.REQUIRED ? allowance.needsPermit2Approval : undefined
   )
-  useEffect(() => {
-    async function requestSignature() {
-      // We successfully requested Permit2 approval and need to move to the signature step.
-      try {
-        if (allowance.state === AllowanceState.REQUIRED) {
-          setConfirmModalState(ConfirmModalState.PERMITTING)
-          await allowance.permit()
-        }
-      } catch (e) {
-        setConfirmModalState(ConfirmModalState.REVIEWING)
-        if (didUserReject(e)) {
-          return
-        }
-        console.error(e)
-        setApprovalError(PendingModalError.TOKEN_APPROVAL_ERROR)
-      }
-    }
-    if (
-      allowance.state === AllowanceState.REQUIRED &&
-      allowance.needsSignature &&
-      // These two lines capture the state update that should trigger the signature request:
-      !allowance.needsPermit2Approval &&
-      previousPermitNeeded
-    ) {
-      requestSignature()
-    }
-  }, [allowance, previousPermitNeeded])
 
   const updateAllowance = useCallback(async () => {
     invariant(allowance.state === AllowanceState.REQUIRED)
@@ -153,8 +130,34 @@ export default function ConfirmSwapModal({
     }
   }, [allowance, chainId, maximumAmountIn?.currency.address, maximumAmountIn?.currency.symbol, trace])
 
+  useEffect(() => {
+    if (
+      allowance.state === AllowanceState.REQUIRED &&
+      allowance.needsSignature &&
+      // These two lines capture the state update that should trigger the signature request:
+      !allowance.needsPermit2Approval &&
+      previousPermitNeeded
+    ) {
+      updateAllowance()
+    }
+  }, [allowance, previousPermitNeeded, updateAllowance])
+
+  const [lastExecutionPrice, setLastExecutionPrice] = useState(trade?.executionPrice)
+  const [priceUpdate, setPriceUpdate] = useState<number>()
+  useEffect(() => {
+    if (lastExecutionPrice && !trade.executionPrice.equalTo(lastExecutionPrice)) {
+      setPriceUpdate(getPriceUpdateBasisPoints(lastExecutionPrice, trade.executionPrice))
+      setLastExecutionPrice(trade.executionPrice)
+    }
+  }, [lastExecutionPrice, setLastExecutionPrice, trade])
+
   const onModalDismiss = useCallback(() => {
-    if (isOpen) setShouldLogModalCloseEvent(true)
+    if (isOpen) {
+      sendAnalyticsEvent(
+        SwapEventName.SWAP_PRICE_UPDATE_ACKNOWLEDGED,
+        formatSwapPriceUpdatedEventProperties(trade, priceUpdate, SwapPriceUpdateUserResponse.REJECTED)
+      )
+    }
     onDismiss()
     setTimeout(() => {
       // Reset local state after the modal dismiss animation finishes, to avoid UI flicker as it dismisses
@@ -206,8 +209,6 @@ export default function ConfirmSwapModal({
           swapQuoteReceivedDate={swapQuoteReceivedDate}
           fiatValueInput={fiatValueInput}
           fiatValueOutput={fiatValueOutput}
-          shouldLogModalCloseEvent={shouldLogModalCloseEvent}
-          setShouldLogModalCloseEvent={setShouldLogModalCloseEvent}
           showAcceptChanges={showAcceptChanges}
           onAcceptChanges={() => {
             setConfirmModalState(ConfirmModalState.REVIEWING)
@@ -236,7 +237,6 @@ export default function ConfirmSwapModal({
     swapQuoteReceivedDate,
     fiatValueInput,
     fiatValueOutput,
-    shouldLogModalCloseEvent,
     pendingModalSteps,
     confirmed,
     onAcceptChanges,

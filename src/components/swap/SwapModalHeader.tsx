@@ -1,5 +1,5 @@
-import { t, Trans } from '@lingui/macro'
-import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
+import { Trans } from '@lingui/macro'
+import { Percent, TradeType } from '@uniswap/sdk-core'
 import Column, { AutoColumn } from 'components/Column'
 import { useUSDPrice } from 'hooks/useUSDPrice'
 import { InterfaceTrade } from 'state/routing/types'
@@ -21,7 +21,7 @@ export default function SwapModalHeader({
   trade,
   allowedSlippage,
 }: {
-  trade: InterfaceTrade<Currency, Currency, TradeType>
+  trade: InterfaceTrade
   allowedSlippage: Percent
 }) {
   const fiatValueInput = useUSDPrice(trade.inputAmount)
@@ -32,7 +32,7 @@ export default function SwapModalHeader({
       <Column gap="lg">
         <SwapModalHeaderAmount
           field={Field.INPUT}
-          label={t`You pay`}
+          label={<Trans>You pay</Trans>}
           amount={trade.inputAmount}
           usdAmount={fiatValueInput.data}
         />
@@ -43,7 +43,7 @@ export default function SwapModalHeader({
           usdAmount={fiatValueOutput.data}
           tooltipText={
             trade.tradeType === TradeType.EXACT_INPUT ? (
-              <ThemedText.Caption textAlign="left" style={{ width: '100%' }}>
+              <ThemedText.Caption>
                 <Trans>
                   Output is estimated. You will receive at least{' '}
                   <b>
@@ -53,7 +53,7 @@ export default function SwapModalHeader({
                 </Trans>
               </ThemedText.Caption>
             ) : (
-              <ThemedText.Caption textAlign="left" style={{ width: '100%' }}>
+              <ThemedText.Caption>
                 <Trans>
                   Input is estimated. You will sell at most{' '}
                   <b>

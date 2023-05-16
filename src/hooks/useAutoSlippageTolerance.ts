@@ -11,7 +11,7 @@ import { useMemo } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 
 import useGasPrice from './useGasPrice'
-import useStablecoinPrice, { useStablecoinValue } from './useStablecoinPrice'
+import useStablecoinPrice, { useStablecoinAmountFromFiatValue, useStablecoinValue } from './useStablecoinPrice'
 
 const DEFAULT_AUTO_SLIPPAGE = new Percent(1, 1000) // .10%
 
@@ -72,15 +72,14 @@ const MAX_AUTO_SLIPPAGE_TOLERANCE = new Percent(5, 100) // 5%
 /**
  * Returns slippage tolerance based on values from current trade, gas estimates from api, and active network.
  */
-export default function useAutoSlippageTolerance(
-  trade: InterfaceTrade<Currency, Currency, TradeType> | undefined
-): Percent {
+export default function useAutoSlippageTolerance(trade?: InterfaceTrade): Percent {
   const { chainId } = useWeb3React()
   const onL2 = chainId && L2_CHAIN_IDS.includes(chainId)
   const outputDollarValue = useStablecoinValue(trade?.outputAmount)
   const nativeGasPrice = useGasPrice()
 
   const gasEstimate = guesstimateGas(trade)
+  const gasEstimateUSD = useStablecoinAmountFromFiatValue(trade?.gasUseEstimateUSD) ?? null
   const nativeCurrency = useNativeCurrency(chainId)
   const nativeCurrencyPrice = useStablecoinPrice((trade && nativeCurrency) ?? undefined)
 
@@ -100,9 +99,7 @@ export default function useAutoSlippageTolerance(
     // NOTE - dont use gas estimate for L2s yet - need to verify accuracy
     // if not, use local heuristic
     const dollarCostToUse =
-      chainId && SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId) && trade?.gasUseEstimateUSD
-        ? trade.gasUseEstimateUSD
-        : dollarGasCost
+      chainId && SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId) && gasEstimateUSD ? gasEstimateUSD : dollarGasCost
 
     if (outputDollarValue && dollarCostToUse) {
       // optimize for highest possible slippage without getting MEV'd
@@ -121,5 +118,15 @@ export default function useAutoSlippageTolerance(
     }
 
     return DEFAULT_AUTO_SLIPPAGE
-  }, [trade, onL2, nativeGasPrice, gasEstimate, nativeCurrency, nativeCurrencyPrice, chainId, outputDollarValue])
+  }, [
+    trade,
+    onL2,
+    nativeGasPrice,
+    gasEstimate,
+    nativeCurrency,
+    nativeCurrencyPrice,
+    chainId,
+    gasEstimateUSD,
+    outputDollarValue,
+  ])
 }

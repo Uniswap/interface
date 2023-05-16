@@ -467,6 +467,10 @@ export const SpinnerSVG = styled.svg`
   ${SpinnerCss}
 `
 
+const BackArrowIcon = styled(ArrowLeft)`
+  color: ${({ theme }) => theme.textPrimary};
+`
+
 export function BackArrowLink({ to }: { to: string }) {
   return (
     <StyledInternalLink to={to}>
@@ -474,10 +478,6 @@ export function BackArrowLink({ to }: { to: string }) {
     </StyledInternalLink>
   )
 }
-
-export const BackArrowIcon = styled(ArrowLeft)`
-  color: ${({ theme }) => theme.textPrimary};
-`
 
 export const CustomLightSpinner = styled(Spinner)<{ size: string }>`
   height: ${({ size }) => size};

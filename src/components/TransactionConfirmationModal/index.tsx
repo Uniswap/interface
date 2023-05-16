@@ -152,13 +152,13 @@ function TransactionSubmittedContent({
             </ButtonLight>
           )}
           <ButtonPrimary onClick={onDismiss} style={{ margin: '20px 0 0 0' }} data-testid="dismiss-tx-confirmation">
-            <ThemedText.HeadlineSmall fontWeight={600} fontSize={20} color={theme.accentTextLightPrimary}>
+            <ThemedText.HeadlineSmall color={theme.accentTextLightPrimary}>
               {inline ? <Trans>Return</Trans> : <Trans>Close</Trans>}
             </ThemedText.HeadlineSmall>
           </ButtonPrimary>
           {chainId && hash && (
             <ExternalLink href={getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)}>
-              <ThemedText.Link fontWeight={600} fontSize={14} color={theme.accentAction}>
+              <ThemedText.Link color={theme.accentAction}>
                 <Trans>View on {chainId === SupportedChainId.MAINNET ? 'Etherscan' : 'Block Explorer'}</Trans>
               </ThemedText.Link>
             </ExternalLink>
@@ -261,12 +261,12 @@ function L2Content({
               <Trans>Error</Trans>
             )}
           </ThemedText.SubHeaderLarge>
-          <ThemedText.BodySecondary fontWeight={400} fontSize={16} textAlign="center">
+          <ThemedText.BodySecondary textAlign="center">
             {transaction ? <TransactionSummary info={transaction.info} /> : pendingText}
           </ThemedText.BodySecondary>
           {chainId && hash ? (
             <ExternalLink href={getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)}>
-              <ThemedText.SubHeaderSmall fontWeight={500} fontSize={14} color={theme.accentAction}>
+              <ThemedText.SubHeaderSmall color={theme.accentAction}>
                 <Trans>View on Explorer</Trans>
               </ThemedText.SubHeaderSmall>
             </ExternalLink>
