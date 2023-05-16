@@ -18,6 +18,8 @@ module.exports = {
           !(
             grandParent &&
             grandParent.type === 'CallExpression' &&
+            // Technically, we are only checking that a function named `retry` wraps the dynamic import.
+            // We do not go as far as enforcing that it is import('utils/retry').retry
             grandParent.callee.name === 'retry' &&
             grandParent.arguments.length === 1 &&
             grandParent.arguments[0].type === 'ArrowFunctionExpression'
