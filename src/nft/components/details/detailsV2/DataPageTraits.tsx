@@ -13,7 +13,7 @@ import { Tab, TabbedComponent } from './TabbedComponent'
 import { TraitRow } from './TraitRow'
 
 const TraitsHeaderContainer = styled(Row)`
-  padding-right: 12px;
+  padding: 0px 12px;
 `
 
 const TraitsHeader = styled(ThemedText.SubHeaderSmall)<{

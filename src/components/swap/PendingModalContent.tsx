@@ -1,7 +1,7 @@
 import { t, Trans } from '@lingui/macro'
 import { formatCurrencyAmount } from '@uniswap/conedison/format'
 import { NumberType } from '@uniswap/conedison/format'
-import { Currency, TradeType } from '@uniswap/sdk-core'
+import { Currency } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { ButtonPrimary } from 'components/Button'
 import { ColumnCenter } from 'components/Column'
@@ -125,7 +125,7 @@ function SubtitleWithTooltip({ mainText, tooltipText }: { mainText: string; tool
   )
 }
 
-function TradeSummary({ trade }: { trade: InterfaceTrade<Currency, Currency, TradeType> }) {
+function TradeSummary({ trade }: { trade: InterfaceTrade }) {
   return (
     <Row gap="sm">
       <CurrencyLogo currency={trade.inputAmount.currency} size="16px" />
@@ -161,7 +161,7 @@ interface PendingModalStep {
 interface PendingModalContentProps {
   steps: PendingConfirmModalState[]
   currentStep: PendingConfirmModalState
-  trade: InterfaceTrade<Currency, Currency, TradeType> | undefined
+  trade: InterfaceTrade | undefined
   swapHash: string | undefined
   hideStepIndicators?: boolean
   tokenApprovalPending?: boolean
@@ -171,7 +171,7 @@ interface ContentArgs {
   chainId: number | undefined
   step: PendingConfirmModalState
   approvalCurrency: Currency | undefined
-  trade: InterfaceTrade<Currency, Currency, TradeType> | undefined
+  trade: InterfaceTrade | undefined
   swapConfirmed: boolean
   swapPending: boolean
   tokenApprovalPending: boolean
