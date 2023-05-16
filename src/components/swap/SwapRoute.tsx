@@ -1,5 +1,4 @@
 import { Trans } from '@lingui/macro'
-import { Currency, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import Column from 'components/Column'
 import { LoadingRows } from 'components/Loader/styled'
@@ -12,13 +11,7 @@ import getRoutingDiagramEntries from 'utils/getRoutingDiagramEntries'
 
 import RouterLabel from './RouterLabel'
 
-export default function SwapRoute({
-  trade,
-  syncing,
-}: {
-  trade: InterfaceTrade<Currency, Currency, TradeType>
-  syncing: boolean
-}) {
+export default function SwapRoute({ trade, syncing }: { trade: InterfaceTrade; syncing: boolean }) {
   const { chainId } = useWeb3React()
   const autoRouterSupported = useAutoRouterSupported()
 
@@ -28,9 +21,9 @@ export default function SwapRoute({
     // TODO(WEB-3303)
     // Can `trade.gasUseEstimateUSD` be defined when `chainId` is not in `SUPPORTED_GAS_ESTIMATE_CHAIN_IDS`?
     trade.gasUseEstimateUSD && chainId && SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId)
-      ? trade.gasUseEstimateUSD.toFixed(2) === '0.00'
+      ? trade.gasUseEstimateUSD === '0.00'
         ? '<$0.01'
-        : '$' + trade.gasUseEstimateUSD.toFixed(2)
+        : '$' + trade.gasUseEstimateUSD
       : undefined
 
   return (

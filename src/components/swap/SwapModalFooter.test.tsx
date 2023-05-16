@@ -1,19 +1,9 @@
-import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { TEST_ALLOWED_SLIPPAGE, TEST_TRADE_EXACT_INPUT, TEST_TRADE_EXACT_OUTPUT } from 'test-utils/constants'
 import { render, screen, within } from 'test-utils/render'
 
 import SwapModalFooter from './SwapModalFooter'
 
-jest.mock('@uniswap/analytics')
-const mockSendAnalyticsEvent = sendAnalyticsEvent as jest.MockedFunction<typeof sendAnalyticsEvent>
-
 describe('SwapModalFooter.tsx', () => {
-  let sendAnalyticsEventMock: jest.Mock<any, any>
-
-  beforeAll(() => {
-    sendAnalyticsEventMock = jest.fn()
-  })
-
   it('matches base snapshot, test trade exact input', () => {
     const { asFragment } = render(
       <SwapModalFooter
@@ -32,8 +22,6 @@ describe('SwapModalFooter.tsx', () => {
           data: undefined,
           isLoading: false,
         }}
-        shouldLogModalCloseEvent={false}
-        setShouldLogModalCloseEvent={jest.fn()}
         showAcceptChanges={false}
         onAcceptChanges={jest.fn()}
       />
@@ -46,15 +34,13 @@ describe('SwapModalFooter.tsx', () => {
       )
     ).toBeInTheDocument()
     expect(
-      screen.getByText('The fee paid to miners who process your transaction. This must be paid in ETH.')
+      screen.getByText('The fee paid to miners who process your transaction. This must be paid in $ETH.')
     ).toBeInTheDocument()
     expect(screen.getByText('The impact your trade has on the market price of this pool.')).toBeInTheDocument()
   })
 
-  it('shows accept changes section when available, and logs amplitude event when accept clicked', () => {
-    const setShouldLogModalCloseEventFn = jest.fn()
+  it('shows accept changes section when available', () => {
     const mockAcceptChanges = jest.fn()
-    mockSendAnalyticsEvent.mockImplementation(sendAnalyticsEventMock)
     render(
       <SwapModalFooter
         trade={TEST_TRADE_EXACT_INPUT}
@@ -72,18 +58,14 @@ describe('SwapModalFooter.tsx', () => {
           data: undefined,
           isLoading: false,
         }}
-        shouldLogModalCloseEvent={true}
-        setShouldLogModalCloseEvent={setShouldLogModalCloseEventFn}
         showAcceptChanges={true}
         onAcceptChanges={mockAcceptChanges}
       />
     )
-    expect(setShouldLogModalCloseEventFn).toHaveBeenCalledWith(false)
     const showAcceptChanges = screen.getByTestId('show-accept-changes')
     expect(showAcceptChanges).toBeInTheDocument()
     expect(within(showAcceptChanges).getByText('Price updated')).toBeVisible()
     expect(within(showAcceptChanges).getByText('Accept')).toBeVisible()
-    expect(sendAnalyticsEventMock).toHaveBeenCalledTimes(1)
   })
 
   it('test trade exact output, no recipient', () => {
@@ -104,8 +86,6 @@ describe('SwapModalFooter.tsx', () => {
           data: undefined,
           isLoading: false,
         }}
-        shouldLogModalCloseEvent={true}
-        setShouldLogModalCloseEvent={jest.fn()}
         showAcceptChanges={true}
         onAcceptChanges={jest.fn()}
       />
@@ -116,7 +96,7 @@ describe('SwapModalFooter.tsx', () => {
       )
     ).toBeInTheDocument()
     expect(
-      screen.getByText('The fee paid to miners who process your transaction. This must be paid in ETH.')
+      screen.getByText('The fee paid to miners who process your transaction. This must be paid in $ETH.')
     ).toBeInTheDocument()
     expect(screen.getByText('The impact your trade has on the market price of this pool.')).toBeInTheDocument()
   })

@@ -5,6 +5,7 @@ import { CollectionInfoForAsset, GenieAsset } from 'nft/types'
 import styled from 'styled-components/macro'
 import { BREAKPOINTS } from 'theme'
 
+import { InfoChips } from './InfoChips'
 import { MediaRenderer } from './MediaRenderer'
 
 const MAX_WIDTH = 560
@@ -117,6 +118,7 @@ export const LandingPage = ({ asset, collection }: LandingPageProps) => {
           </Row>
           <StyledHeadlineText>{asset.name ?? `${asset.collectionName} #${asset.tokenId}`}</StyledHeadlineText>
         </InfoDetailsContainer>
+        <InfoChips asset={asset} />
       </InfoContainer>
     </LandingPageContainer>
   )
