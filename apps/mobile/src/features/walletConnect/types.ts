@@ -9,6 +9,11 @@ export enum EthMethod {
   PersonalSign = 'personal_sign',
 }
 
+export enum EthEvent {
+  AccountsChanged = 'accountsChanged',
+  ChainChanged = 'chainChanged',
+}
+
 export enum WCErrorType {
   InvalidURL = 'wc_invalid_url',
   DisconnectError = 'wc_disconnect_error',

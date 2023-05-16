@@ -2,19 +2,19 @@ import { Action } from '@reduxjs/toolkit'
 import { Core } from '@walletconnect/core'
 import '@walletconnect/react-native-compat'
 import { ProposalTypes } from '@walletconnect/types'
-import { getSdkError } from '@walletconnect/utils'
+import { buildApprovedNamespaces, getSdkError } from '@walletconnect/utils'
 import { IWeb3Wallet, Web3Wallet, Web3WalletTypes } from '@walletconnect/web3wallet'
 import { Alert } from 'react-native'
 import { EventChannel, eventChannel } from 'redux-saga'
-import { CallEffect, ChannelTakeEffect, PutEffect } from 'redux-saga/effects'
+import { CallEffect, ChannelTakeEffect, PutEffect, SelectEffect } from 'redux-saga/effects'
 import { appSelect } from 'src/app/hooks'
 import { i18n } from 'src/app/i18n'
 import { pushNotification } from 'src/features/notifications/notificationSlice'
 import { AppNotificationType } from 'src/features/notifications/types'
-import { selectAccounts } from 'src/features/wallet/selectors'
+import { selectAccounts, selectActiveAccountAddress } from 'src/features/wallet/selectors'
 import { registerWCv2ClientForPushNotifications } from 'src/features/walletConnect/api'
 import { WalletConnectEvent } from 'src/features/walletConnect/saga'
-import { EthMethod } from 'src/features/walletConnect/types'
+import { EthEvent, EthMethod } from 'src/features/walletConnect/types'
 import {
   addPendingSession,
   addRequest,
@@ -26,7 +26,6 @@ import {
   getAccountAddressFromEIP155String,
   getChainIdFromEIP155String,
   getSupportedWalletConnectChains,
-  parseProposalNamespaces,
   parseSignRequest,
   parseTransactionRequest,
 } from 'src/features/walletConnectV2/utils'
@@ -58,7 +57,18 @@ async function initializeWeb3Wallet(): Promise<void> {
   registerWCv2ClientForPushNotifications(clientId)
 }
 
-function createWalletConnectV2Channel(): EventChannel<Action<unknown>> {
+function* createWalletConnectV2Channel(): Generator<
+  SelectEffect,
+  EventChannel<Action<any>>,
+  unknown
+> {
+  /*
+   * Note that activeAccountAddress is only used below in `buildApprovedNamespaces`
+   * and does not need to be updated in the event channel.
+   * When a user confirms a new connection, we call `getSessionNamespaces()` with the current active address.
+   */
+  const activeAccountAddress = yield* appSelect(selectActiveAccountAddress)
+
   return eventChannel<Action>((emit) => {
     /*
      * Handle incoming `session_proposal` events that contain the dapp attempting to pair
@@ -67,26 +77,48 @@ function createWalletConnectV2Channel(): EventChannel<Action<unknown>> {
     const sessionProposalHandler = async (
       proposal: Omit<Web3WalletTypes.BaseEventArgs<ProposalTypes.Struct>, 'topic'>
     ): Promise<void> => {
+      const { params, id } = proposal
       const {
-        params: {
-          requiredNamespaces,
-          optionalNamespaces,
-          proposer: { metadata: dapp },
-        },
-        id,
-      } = proposal
+        proposer: { metadata: dapp },
+      } = params
 
       try {
-        const { chains, proposalNamespaces } = parseProposalNamespaces(
-          requiredNamespaces,
-          optionalNamespaces
-        )
+        const supportedEip155Chains = ALL_SUPPORTED_CHAIN_IDS.map((chainId) => `eip155:${chainId}`)
+        const accounts = supportedEip155Chains.map((chain) => `${chain}:${activeAccountAddress}`)
+
+        const namespaces = buildApprovedNamespaces({
+          proposal: params,
+          supportedNamespaces: {
+            eip155: {
+              chains: supportedEip155Chains,
+              methods: [
+                EthMethod.EthSign,
+                EthMethod.EthSendTransaction,
+                EthMethod.PersonalSign,
+                EthMethod.SignTypedData,
+                EthMethod.SignTypedDataV4,
+              ],
+              events: [EthEvent.AccountsChanged, EthEvent.ChainChanged],
+              accounts,
+            },
+          },
+        })
+
+        // Extract chains from approved namespaces to show in UI for pending session
+        const proposalChainIds: ChainId[] = []
+        Object.entries(namespaces).forEach(([key, namespace]) => {
+          const { chains } = namespace
+          // EVM chain(s) are specified in either `eip155:CHAIN` or chains array
+          const eip155Chains = key.includes(':') ? [key] : chains
+          proposalChainIds.push(...getSupportedWalletConnectChains(eip155Chains))
+        })
+
         emit(
           addPendingSession({
             wcSession: {
               id: id.toString(),
-              proposalNamespaces,
-              chains,
+              proposalNamespaces: namespaces,
+              chains: proposalChainIds,
               version: '2',
               dapp: {
                 name: dapp.name,
