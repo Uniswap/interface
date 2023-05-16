@@ -1,5 +1,5 @@
 import userEvent from '@testing-library/user-event'
-import { TEST_ALLOWED_SLIPPAGE, TEST_TOKEN_1, TEST_TRADE_EXACT_INPUT, toCurrencyAmount } from 'test-utils/constants'
+import { TEST_ALLOWED_SLIPPAGE, TEST_TRADE_EXACT_INPUT } from 'test-utils/constants'
 import { act, render, screen } from 'test-utils/render'
 
 import SwapDetailsDropdown from './SwapDetailsDropdown'
@@ -25,7 +25,7 @@ describe('SwapDetailsDropdown.tsx', () => {
   })
 
   it('is interactive once loaded', async () => {
-    TEST_TRADE_EXACT_INPUT.gasUseEstimateUSD = toCurrencyAmount(TEST_TOKEN_1, 1)
+    TEST_TRADE_EXACT_INPUT.gasUseEstimateUSD = '1.00'
     render(
       <SwapDetailsDropdown
         trade={TEST_TRADE_EXACT_INPUT}

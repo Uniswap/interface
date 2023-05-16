@@ -1,4 +1,4 @@
-import { formatCurrencyAmount, NumberType } from '@uniswap/conedison/format'
+import { formatCurrencyAmount, formatNumber, NumberType } from '@uniswap/conedison/format'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import Column from 'components/Column'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
@@ -21,20 +21,18 @@ export const Label = styled(ThemedText.BodySmall)<{ cursor?: string }>`
 
 const ResponsiveHeadline = ({ children, ...textProps }: PropsWithChildren<TextProps>) => {
   const { width } = useWindowSize()
+
   if (width && width < BREAKPOINTS.xs) {
     return <ThemedText.HeadlineMedium {...textProps}>{children}</ThemedText.HeadlineMedium>
   }
-  return (
-    <ThemedText.HeadlineLarge fontWeight={500} {...textProps}>
-      {children}
-    </ThemedText.HeadlineLarge>
-  )
+
+  return <ThemedText.HeadlineLarge {...textProps}>{children}</ThemedText.HeadlineLarge>
 }
 
 interface AmountProps {
   field: Field
   tooltipText?: ReactNode
-  label: string
+  label: ReactNode
   amount: CurrencyAmount<Currency> | undefined
   usdAmount?: number
 }
@@ -49,22 +47,22 @@ export function SwapModalHeaderAmount({ tooltipText, label, amount, usdAmount, f
     <Row align="center" justify="space-between" gap="md">
       <Column gap="xs">
         <ThemedText.BodySecondary>
-          {tooltipText ? (
-            <MouseoverTooltip text={tooltipText}>
-              <Label cursor="help">{label}</Label>
-            </MouseoverTooltip>
-          ) : (
-            <Label>{label}</Label>
-          )}
+          <MouseoverTooltip text={tooltipText} disabled={!tooltipText}>
+            <Label cursor="help">{label}</Label>
+          </MouseoverTooltip>
         </ThemedText.BodySecondary>
         <Column gap="xs">
-          <ResponsiveHeadline color="primary" data-testid={`${field}-amount`}>
+          <ResponsiveHeadline data-testid={`${field}-amount`}>
             {formattedAmount} {amount?.currency.symbol}
           </ResponsiveHeadline>
-          {usdAmount && <ThemedText.BodySmall color="textTertiary">${usdAmount.toFixed(2)}</ThemedText.BodySmall>}
+          {usdAmount && (
+            <ThemedText.BodySmall color="textTertiary">
+              {formatNumber(usdAmount, NumberType.FiatTokenQuantity)}
+            </ThemedText.BodySmall>
+          )}
         </Column>
       </Column>
-      <CurrencyLogo currency={amount?.currency} size="36px" />
+      {amount?.currency && <CurrencyLogo currency={amount.currency} size="36px" />}
     </Row>
   )
 }
