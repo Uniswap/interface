@@ -52,13 +52,11 @@ export default function ConfirmSwapModal({
   onConfirm,
   onDismiss,
   swapErrorMessage,
-  isOpen,
   txHash,
   swapQuoteReceivedDate,
   fiatValueInput,
   fiatValueOutput,
 }: {
-  isOpen: boolean
   trade: InterfaceTrade
   originalTrade: Trade<Currency, Currency, TradeType> | undefined
   txHash: string | undefined
@@ -152,19 +150,17 @@ export default function ConfirmSwapModal({
   }, [lastExecutionPrice, setLastExecutionPrice, trade])
 
   const onModalDismiss = useCallback(() => {
-    if (isOpen) {
-      sendAnalyticsEvent(
-        SwapEventName.SWAP_PRICE_UPDATE_ACKNOWLEDGED,
-        formatSwapPriceUpdatedEventProperties(trade, priceUpdate, SwapPriceUpdateUserResponse.REJECTED)
-      )
-    }
+    sendAnalyticsEvent(
+      SwapEventName.SWAP_PRICE_UPDATE_ACKNOWLEDGED,
+      formatSwapPriceUpdatedEventProperties(trade, priceUpdate, SwapPriceUpdateUserResponse.REJECTED)
+    )
     onDismiss()
     setTimeout(() => {
       // Reset local state after the modal dismiss animation finishes, to avoid UI flicker as it dismisses
       setConfirmModalState(ConfirmModalState.REVIEWING)
       setApprovalError(undefined)
     }, 200)
-  }, [isOpen, onDismiss])
+  }, [onDismiss])
 
   const prepareSwapFlow = useCallback(() => {
     const steps: PendingConfirmModalState[] = []
@@ -244,7 +240,7 @@ export default function ConfirmSwapModal({
 
   return (
     <Trace modal={InterfaceModalName.CONFIRM_SWAP}>
-      <Modal isOpen={isOpen} $scrollOverlay={true} onDismiss={onModalDismiss} maxHeight={90}>
+      <Modal isOpen $scrollOverlay={true} onDismiss={onModalDismiss} maxHeight={90}>
         {approvalError || swapErrorMessage ? (
           <ErrorModalContent
             errorType={approvalError ?? PendingModalError.CONFIRMATION_ERROR}

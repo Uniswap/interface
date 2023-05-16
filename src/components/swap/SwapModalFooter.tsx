@@ -41,7 +41,6 @@ const ConfirmButton = styled(ButtonError)`
 
 const DetailRowValue = styled(ThemedText.BodySmall)`
   text-align: right;
-  max-width: 45%;
   overflow-wrap: break-word;
 `
 
@@ -86,7 +85,7 @@ export default function SwapModalFooter({
     <>
       <DetailsContainer gap="md">
         <ThemedText.BodySmall>
-          <Row align="flex-start" justify="space-between">
+          <Row align="flex-start" justify="space-between" gap="sm">
             <Label>
               <Trans>Exchange rate</Trans>
             </Label>
@@ -94,7 +93,7 @@ export default function SwapModalFooter({
           </Row>
         </ThemedText.BodySmall>
         <ThemedText.BodySmall>
-          <Row align="flex-start" justify="space-between">
+          <Row align="flex-start" justify="space-between" gap="sm">
             <MouseoverTooltip
               text={
                 <Trans>
@@ -110,7 +109,7 @@ export default function SwapModalFooter({
           </Row>
         </ThemedText.BodySmall>
         <ThemedText.BodySmall>
-          <Row align="flex-start" justify="space-between">
+          <Row align="flex-start" justify="space-between" gap="sm">
             <MouseoverTooltip text={<Trans>The impact your trade has on the market price of this pool.</Trans>}>
               <Label cursor="help">
                 <Trans>Price impact</Trans>
@@ -122,7 +121,7 @@ export default function SwapModalFooter({
           </Row>
         </ThemedText.BodySmall>
         <ThemedText.BodySmall>
-          <Row align="flex-start" justify="space-between">
+          <Row align="flex-start" justify="space-between" gap="sm">
             <MouseoverTooltip
               text={
                 trade.tradeType === TradeType.EXACT_INPUT ? (

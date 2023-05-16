@@ -23,6 +23,7 @@ exports[`SwapModalFooter.tsx matches base snapshot, test trade exact input 1`] =
   -webkit-justify-content: space-between;
   -ms-flex-pack: justify;
   justify-content: space-between;
+  gap: 8px;
 }
 
 .c2 {
@@ -66,7 +67,6 @@ exports[`SwapModalFooter.tsx matches base snapshot, test trade exact input 1`] =
 
 .c6 {
   text-align: right;
-  max-width: 45%;
   overflow-wrap: break-word;
 }
 
@@ -112,7 +112,7 @@ exports[`SwapModalFooter.tsx matches base snapshot, test trade exact input 1`] =
         <div
           class="c2 c6 css-zhpkf8"
         >
-          ~1.00
+          ~$1.00
         </div>
       </div>
     </div>

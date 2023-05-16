@@ -546,9 +546,8 @@ export function Swap({
         showCancel={true}
       />
       <SwapHeader autoSlippage={autoSlippage} />
-      {trade && (
+      {trade && showConfirm && (
         <ConfirmSwapModal
-          isOpen={showConfirm}
           trade={trade}
           originalTrade={tradeToConfirm}
           onAcceptChanges={handleAcceptChanges}
