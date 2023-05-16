@@ -1,4 +1,4 @@
-import { t, Trans } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import Column, { AutoColumn } from 'components/Column'
 import { useUSDPrice } from 'hooks/useUSDPrice'
@@ -32,7 +32,7 @@ export default function SwapModalHeader({
       <Column gap="lg">
         <SwapModalHeaderAmount
           field={Field.INPUT}
-          label={t`You pay`}
+          label={<Trans>You pay</Trans>}
           amount={trade.inputAmount}
           usdAmount={fiatValueInput.data}
         />
