@@ -48,13 +48,9 @@ async function getQuote(
   const quoteCurrency = tradeType === TradeType.EXACT_INPUT ? currencyOut : currencyIn
 
   const amount = CurrencyAmount.fromRawAmount(baseCurrency, JSBI.BigInt(amountRaw))
+  // TODO (WEB-2055): explore initializing client side routing on first load (when amountRaw is null) if there are enough users using client-side router preference.
   const swapRoute = await router.route(amount, quoteCurrency, tradeType, /*swapConfig=*/ undefined, routerConfig)
 
-  // this check is intentionally left delayed until after the `router.route` call so that on empty input, the
-  // client side routing will begin initialization
-  if (!amountRaw) {
-    return { state: QuoteState.INITIALIZED }
-  }
   if (!swapRoute) {
     return { state: QuoteState.NOT_FOUND }
   }
