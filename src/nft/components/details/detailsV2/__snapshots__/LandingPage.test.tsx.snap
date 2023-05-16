@@ -26,6 +26,81 @@ exports[`LandingPage renders it correctly 1`] = `
   gap: 4px;
 }
 
+.c16 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+
+.c20 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 8px;
+}
+
+.c22 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c18 {
+  color: #7780A0;
+}
+
+.c19 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  color: #FB118E;
+  stroke: #FB118E;
+  font-weight: 500;
+}
+
+.c19:hover {
+  opacity: 0.6;
+}
+
+.c19:active {
+  opacity: 0.4;
+}
+
 .c5 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -40,12 +115,71 @@ exports[`LandingPage renders it correctly 1`] = `
   justify-content: flex-start;
 }
 
+.c15 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 8px;
+}
+
 .c6 {
   width: 100%;
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
+}
+
+.c21 {
+  background-color: #FFFFFF;
+  padding: 10px 12px 10px 8px;
+  border-radius: 20px;
+  max-width: 144px;
+}
+
+.c24 {
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 20px;
+  color: #0D111C;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.c23 {
+  width: 24px;
+  height: 24px;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  color: #FB118E;
+  border-radius: 100%;
+  overflow: hidden;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.c17 {
+  gap: 4px;
+  width: 100%;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
 }
 
 .c2 {
@@ -126,6 +260,21 @@ exports[`LandingPage renders it correctly 1`] = `
   height: 100%;
   -webkit-filter: drop-shadow(0px 12px 20px rgba(0,0,0,0.1));
   filter: drop-shadow(0px 12px 20px rgba(0,0,0,0.1));
+}
+
+@media screen and (min-width:640px) {
+  .c21 {
+    max-width: 169px;
+  }
+}
+
+@media screen and (min-width:640px) {
+  .c17 {
+    gap: 12px;
+    -webkit-flex-wrap: nowrap;
+    -ms-flex-wrap: nowrap;
+    flex-wrap: nowrap;
+  }
 }
 
 @media screen and (min-width:1280px) {
@@ -257,6 +406,40 @@ exports[`LandingPage renders it correctly 1`] = `
           class="c13 c14"
         >
           Azuki #3318
+        </div>
+      </div>
+      <div
+        class="c15"
+      >
+        <div
+          class="c9 c16 c17"
+        >
+          <div
+            class="c15"
+          >
+            <div
+              class="c18 css-4u0e4f"
+            >
+              Owner
+            </div>
+            <a
+              class="c19"
+              href="https://etherscan.io/address/"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              <div
+                class="c9 c20 c21"
+              >
+                <div
+                  class="c9 c22 c23"
+                />
+                <div
+                  class="c24"
+                />
+              </div>
+            </a>
+          </div>
         </div>
       </div>
     </div>

@@ -29,7 +29,7 @@ describe('AdvancedSwapDetails.tsx', () => {
   it('renders correct tooltips for test trade with exact output and gas use estimate USD', async () => {
     TEST_TRADE_EXACT_OUTPUT.gasUseEstimateUSD = toCurrencyAmount(TEST_TOKEN_1, 1)
     render(<AdvancedSwapDetails trade={TEST_TRADE_EXACT_OUTPUT} allowedSlippage={TEST_ALLOWED_SLIPPAGE} />)
-    await act(() => userEvent.hover(screen.getByText(/Minimum output/i)))
+    await act(() => userEvent.hover(screen.getByText(/Maximum input/i)))
     expect(await screen.getByText(/The minimum amount you are guaranteed to receive./i)).toBeVisible()
     await act(() => userEvent.hover(screen.getByText('Network fee')))
     expect(await screen.getByText(/The fee paid to miners who process your transaction./i)).toBeVisible()

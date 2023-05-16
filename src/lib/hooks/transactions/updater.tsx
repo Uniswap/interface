@@ -6,7 +6,8 @@ import ms from 'ms.macro'
 import { useCallback, useEffect } from 'react'
 import { useTransactionRemover } from 'state/transactions/hooks'
 import { TransactionDetails } from 'state/transactions/types'
-import { retry, RetryableError, RetryOptions } from 'utils/retry'
+
+import { retry, RetryableError, RetryOptions } from './retry'
 
 interface Transaction {
   addedTime: number

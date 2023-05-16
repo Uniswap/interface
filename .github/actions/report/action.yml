@@ -1,0 +1,48 @@
+name: Report
+description: Report test failures via Slack
+inputs:
+  name:
+    description: The name of the failing test
+    required: true
+  SLACK_WEBHOOK_URL:
+    description: The webhook URL to send the report to
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - uses: slackapi/slack-github-action@007b2c3c751a190b6f0f040e47ed024deaa72844
+      with:
+        payload: |
+          {
+            "text": "${{ inputs.name }} failing on `${{ github.ref_name }}`",
+            "blocks": [
+              {
+                "type": "section",
+                "text": {
+                  "type": "mrkdwn",
+                  "text": "*${{ inputs.name }} failing on `${{ github.ref_name }}`:* <https://github.com/${{ github.repository}}/actions/runs/${{ github.run_id }}|view failing action>"
+                }
+              },
+              {
+                "type": "section",
+                "text": {
+                  "type": "mrkdwn",
+                  "text": "_This is blocking pull requests and branch promotions._\n_Please prioritize fixing the build._"
+                }
+              }
+            ]
+          }
+      env:
+        SLACK_WEBHOOK_URL: ${{ inputs.SLACK_WEBHOOK_URL }}
+        SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+    # The !oncall bot requires its own message:
+    - uses: slackapi/slack-github-action@007b2c3c751a190b6f0f040e47ed024deaa72844
+      with:
+        payload: |
+          {
+            "text": "!oncall web"
+          }
+      env:
+        SLACK_WEBHOOK_URL: ${{ inputs.SLACK_WEBHOOK_URL }}
+        SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
