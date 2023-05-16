@@ -6,6 +6,12 @@ module.exports = {
   extends: '@uniswap/eslint-config/react',
   overrides: [
     {
+      files: ['**/*'],
+      rules: {
+        'multiline-comment-style': ['error', 'separate-lines'],
+      },
+    },
+    {
       // Configuration/typings typically export objects/definitions that are used outside of the transpiled package
       // (eg not captured by the tsconfig). Because it's typical and not exceptional, this is turned off entirely.
       files: ['**/*.config.*', '**/*.d.ts'],

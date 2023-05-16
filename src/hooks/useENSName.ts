@@ -28,10 +28,9 @@ export default function useENSName(address?: string): { ENSName: string | null; 
   const nameCallRes = useSingleCallResult(resolverContract, 'name', ensNodeArgument)
   const name = nameCallRes.result?.[0]
 
-  /* ENS does not enforce that an address owns a .eth domain before setting it as a reverse proxy 
-     and recommends that you perform a match on the forward resolution
-     see: https://docs.ens.domains/dapp-developer-guide/resolving-names#reverse-resolution
-  */
+  // ENS does not enforce that an address owns a .eth domain before setting it as a reverse proxy
+  // and recommends that you perform a match on the forward resolution
+  // see: https://docs.ens.domains/dapp-developer-guide/resolving-names#reverse-resolution
   const fwdAddr = useENSAddress(name)
   const checkedName = address === fwdAddr?.address ? name : null
 

@@ -6,7 +6,6 @@ import { InterfacePageName } from '@uniswap/analytics-events'
 import { formatPrice, NumberType } from '@uniswap/conedison/format'
 import { Currency, CurrencyAmount, Fraction, Percent, Price, Token } from '@uniswap/sdk-core'
 import { NonfungiblePositionManager, Pool, Position } from '@uniswap/v3-sdk'
-import { SupportedChainId } from '@uniswap/widgets'
 import { useWeb3React } from '@web3-react/core'
 import { sendEvent } from 'components/analytics'
 import Badge from 'components/Badge'
@@ -20,7 +19,7 @@ import { RowBetween, RowFixed } from 'components/Row'
 import { Dots } from 'components/swap/styleds'
 import Toggle from 'components/Toggle'
 import TransactionConfirmationModal, { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
-import { CHAIN_IDS_TO_NAMES, isSupportedChain } from 'constants/chains'
+import { CHAIN_IDS_TO_NAMES, isSupportedChain, SupportedChainId } from 'constants/chains'
 import { isGqlSupportedChain } from 'graphql/data/util'
 import { useToken } from 'hooks/Tokens'
 import { useV3NFTPositionManagerContract } from 'hooks/useContract'
@@ -403,7 +402,7 @@ function PositionPageContent() {
 
   // flag for receiving WETH
   const [receiveWETH, setReceiveWETH] = useState(false)
-  const nativeCurrency = useNativeCurrency()
+  const nativeCurrency = useNativeCurrency(chainId)
   const nativeWrappedSymbol = nativeCurrency.wrapped.symbol
 
   // construct Position from details returned

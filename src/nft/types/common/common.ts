@@ -1,4 +1,4 @@
-import { NftStandard } from 'graphql/data/__generated__/types-and-hooks'
+import { MediaType, NftMarketplace, NftStandard } from 'graphql/data/__generated__/types-and-hooks'
 import { SortBy } from 'nft/hooks'
 
 import { SellOrder } from '../sell'
@@ -79,6 +79,21 @@ export interface Trait {
   trait_count?: number
   order?: any
 }
+
+export interface Offer {
+  createdAt: number
+  endAt?: number
+  id: string
+  maker: string
+  marketplace: NftMarketplace
+  marketplaceUrl: string
+  price: {
+    currency?: string
+    value: number
+  }
+  quantity?: number
+}
+
 export interface GenieAsset {
   id?: string // This would be a random id created and assigned by front end
   address: string
@@ -87,6 +102,7 @@ export interface GenieAsset {
   collectionSymbol?: string
   imageUrl?: string
   animationUrl?: string
+  mediaType?: MediaType
   marketplace?: Markets
   name?: string
   priceInfo: PriceInfo
@@ -143,15 +159,13 @@ export enum Markets {
   NFTX = 'nftx',
   Opensea = 'opensea',
   Rarible = 'rarible',
-  Uniswap = 'Uniswap',
-  Uniswap_V2 = 'Uniswap_V2',
-  SushiSwap = 'SushiSwap',
-  SuperRare = 'superrare',
   Sudoswap = 'sudoswap',
-  KnownOrigin = 'knownorigin',
-  WETH = 'weth',
   Cryptopunks = 'cryptopunks',
-  CryptoPhunks = 'cryptophunks',
+  Gem = 'gem',
+  Foundation = 'foundation',
+  Zora = 'zora',
+  Blur = 'blur',
+  Ensvision = 'ensvision',
 }
 
 export const isPooledMarket = (market?: Markets): boolean => {

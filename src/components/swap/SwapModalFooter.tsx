@@ -13,14 +13,15 @@ import {
 } from 'lib/utils/analytics'
 import { ReactNode } from 'react'
 import { Text } from 'rebass'
+import { RouterPreference } from 'state/routing/slice'
 import { InterfaceTrade } from 'state/routing/types'
-import { useClientSideRouter, useUserSlippageTolerance } from 'state/user/hooks'
+import { useRouterPreference, useUserSlippageTolerance } from 'state/user/hooks'
+import getRoutingDiagramEntries, { RoutingDiagramEntry } from 'utils/getRoutingDiagramEntries'
 import { computeRealizedPriceImpact } from 'utils/prices'
 
 import { ButtonError } from '../Button'
 import { AutoRow } from '../Row'
 import { SwapCallbackError } from './styleds'
-import { getTokenPath, RoutingDiagramEntry } from './SwapRoute'
 
 interface AnalyticsEventProps {
   trade: InterfaceTrade<Currency, Currency, TradeType>
@@ -123,8 +124,8 @@ export default function SwapModalFooter({
 }) {
   const transactionDeadlineSecondsSinceEpoch = useTransactionDeadline()?.toNumber() // in seconds since epoch
   const isAutoSlippage = useUserSlippageTolerance()[0] === 'auto'
-  const [clientSideRouter] = useClientSideRouter()
-  const routes = getTokenPath(trade)
+  const [routerPreference] = useRouterPreference()
+  const routes = getRoutingDiagramEntries(trade)
 
   return (
     <>
@@ -139,7 +140,7 @@ export default function SwapModalFooter({
             allowedSlippage,
             transactionDeadlineSecondsSinceEpoch,
             isAutoSlippage,
-            isAutoRouterApi: !clientSideRouter,
+            isAutoRouterApi: routerPreference === RouterPreference.AUTO || routerPreference === RouterPreference.API,
             swapQuoteReceivedDate,
             routes,
             fiatValueInput: fiatValueInput.data,
@@ -147,6 +148,7 @@ export default function SwapModalFooter({
           })}
         >
           <ButtonError
+            data-testid="confirm-swap-button"
             onClick={onConfirm}
             disabled={disabledConfirm}
             style={{ margin: '10px 0 0 0' }}
@@ -157,7 +159,6 @@ export default function SwapModalFooter({
             </Text>
           </ButtonError>
         </TraceEvent>
-
         {swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}
       </AutoRow>
     </>

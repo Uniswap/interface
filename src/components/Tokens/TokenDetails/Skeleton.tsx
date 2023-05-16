@@ -1,5 +1,4 @@
-import { WidgetSkeleton } from 'components/Widget'
-import { DEFAULT_WIDGET_WIDTH } from 'components/Widget'
+import { SwapSkeleton } from 'components/swap/SwapSkeleton'
 import { ArrowLeft } from 'react-feather'
 import { useParams } from 'react-router-dom'
 import styled, { useTheme } from 'styled-components/macro'
@@ -10,6 +9,8 @@ import { AboutContainer, AboutHeader } from './About'
 import { BreadcrumbNavLink } from './BreadcrumbNavLink'
 import { TokenPrice } from './PriceChart'
 import { StatPair, StatsWrapper, StatWrapper } from './StatsSection'
+
+const SWAP_COMPONENT_WIDTH = 360
 
 export const Hr = styled.hr`
   background-color: ${({ theme }) => theme.backgroundOutline};
@@ -43,7 +44,7 @@ export const RightPanel = styled.div`
   display: none;
   flex-direction: column;
   gap: 20px;
-  width: ${DEFAULT_WIDGET_WIDTH}px;
+  width: ${SWAP_COMPONENT_WIDTH}px;
 
   @media screen and (min-width: ${({ theme }) => theme.breakpoint.lg}px) {
     display: flex;
@@ -260,7 +261,7 @@ export function TokenDetailsPageSkeleton() {
     <TokenDetailsLayout>
       <TokenDetailsSkeleton />
       <RightPanel>
-        <WidgetSkeleton />
+        <SwapSkeleton />
       </RightPanel>
     </TokenDetailsLayout>
   )

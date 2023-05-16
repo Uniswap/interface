@@ -1,5 +1,4 @@
 import { WatchQueryFetchPolicy } from '@apollo/client'
-import { useNftGraphqlEnabled } from 'featureFlags/flags/nftlGraphql'
 import gql from 'graphql-tag'
 import { ActivityEvent } from 'nft/types'
 import { useCallback, useMemo } from 'react'
@@ -71,13 +70,11 @@ gql`
 `
 
 export function useNftActivity(filter: NftActivityFilterInput, first?: number, fetchPolicy?: WatchQueryFetchPolicy) {
-  const isNftGraphqlEnabled = useNftGraphqlEnabled()
   const { data, loading, fetchMore, error } = useNftActivityQuery({
     variables: {
       filter,
       first,
     },
-    skip: !isNftGraphqlEnabled,
     fetchPolicy,
   })
 

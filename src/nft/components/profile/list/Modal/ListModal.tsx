@@ -45,7 +45,7 @@ const ListModalWrapper = styled.div`
 `
 
 export const ListModal = ({ overlayClick }: { overlayClick: () => void }) => {
-  const { provider } = useWeb3React()
+  const { provider, chainId } = useWeb3React()
   const signer = provider?.getSigner()
   const trace = useTrace({ modal: InterfaceModalName.NFT_LISTING })
   const sellAssets = useSellAsset((state) => state.sellAssets)
@@ -72,7 +72,7 @@ export const ListModal = ({ overlayClick }: { overlayClick: () => void }) => {
     (s) => (s === Section.APPROVE ? Section.SIGN : Section.APPROVE),
     Section.APPROVE
   )
-  const nativeCurrency = useNativeCurrency()
+  const nativeCurrency = useNativeCurrency(chainId)
   const parsedAmount = tryParseCurrencyAmount(totalEthListingValue.toString(), nativeCurrency)
   const usdcValue = useStablecoinValue(parsedAmount)
   const usdcAmount = formatCurrencyAmount(usdcValue, NumberType.FiatTokenPrice)

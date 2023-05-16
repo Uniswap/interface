@@ -123,7 +123,7 @@ const FloatingConfirmationBar = styled(Row)<{ issues: boolean }>`
   width: calc(100vw - ${LIST_PAGE_MARGIN * 2}px);
   left: 50%;
   transform: translateX(-50%);
-  max-width: 1200px;
+  max-width: ${({ theme }) => theme.maxWidth};
   z-index: ${Z_INDEX.under_dropdown};
   box-shadow: ${({ theme }) => theme.shallowShadow};
 
@@ -183,7 +183,7 @@ const EthValueWrapper = styled.span<{ totalEthListingValue: boolean }>`
 
 export const ListPage = () => {
   const { setProfilePageState: setSellPageState } = useProfilePageState()
-  const { provider } = useWeb3React()
+  const { provider, chainId } = useWeb3React()
   const isMobile = useIsMobile()
   const trace = useTrace({ modal: InterfaceModalName.NFT_LISTING })
   const { setGlobalMarketplaces, sellAssets, issues } = useSellAsset(
@@ -205,7 +205,7 @@ export const ListPage = () => {
   )
 
   const totalEthListingValue = useMemo(() => getTotalEthValue(sellAssets), [sellAssets])
-  const nativeCurrency = useNativeCurrency()
+  const nativeCurrency = useNativeCurrency(chainId)
   const parsedAmount = tryParseCurrencyAmount(totalEthListingValue.toString(), nativeCurrency)
   const usdcValue = useStablecoinValue(parsedAmount)
   const usdcAmount = formatCurrencyAmount(usdcValue, NumberType.FiatTokenPrice)
@@ -251,7 +251,7 @@ export const ListPage = () => {
   }
 
   const BannerText = isMobile ? (
-    <ThemedText.SubHeader lineHeight="24px">
+    <ThemedText.SubHeader>
       <Trans>Receive</Trans>
     </ThemedText.SubHeader>
   ) : (

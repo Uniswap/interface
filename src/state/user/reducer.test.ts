@@ -1,4 +1,5 @@
 import { createStore, Store } from 'redux'
+import { RouterPreference } from 'state/routing/slice'
 
 import { DEFAULT_DEADLINE_FROM_NOW } from '../../constants/misc'
 import { updateVersion } from '../global/actions'
@@ -9,13 +10,14 @@ import reducer, {
   updateHideClosedPositions,
   updateHideUniswapWalletBanner,
   updateSelectedWallet,
-  updateUserClientSideRouter,
   updateUserDeadline,
   updateUserExpertMode,
   updateUserLocale,
+  updateUserRouterPreference,
   updateUserSlippageTolerance,
   UserState,
 } from './reducer'
+import { SlippageTolerance } from './types'
 
 function buildSerializedPair(token0Address: string, token1Address: string, chainId: number) {
   return {
@@ -54,7 +56,7 @@ describe('swap reducer', () => {
       } as any)
       store.dispatch(updateVersion())
       expect(store.getState().userDeadline).toEqual(DEFAULT_DEADLINE_FROM_NOW)
-      expect(store.getState().userSlippageTolerance).toEqual('auto')
+      expect(store.getState().userSlippageTolerance).toEqual(SlippageTolerance.Auto)
     })
     it('sets allowed slippage and deadline to auto', () => {
       store = createStore(reducer, {
@@ -102,10 +104,10 @@ describe('swap reducer', () => {
     })
   })
 
-  describe('updateUserClientSideRouter', () => {
-    it('updates the userClientSideRouter', () => {
-      store.dispatch(updateUserClientSideRouter({ userClientSideRouter: true }))
-      expect(store.getState().userClientSideRouter).toEqual(true)
+  describe('updateRouterPreference', () => {
+    it('updates the routerPreference', () => {
+      store.dispatch(updateUserRouterPreference({ userRouterPreference: RouterPreference.API }))
+      expect(store.getState().userRouterPreference).toEqual(RouterPreference.API)
     })
   })
 

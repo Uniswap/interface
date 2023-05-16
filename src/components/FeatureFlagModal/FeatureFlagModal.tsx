@@ -1,8 +1,5 @@
 import { BaseVariant, FeatureFlag, featureFlagSettings, useUpdateFlag } from 'featureFlags'
 import { DetailsV2Variant, useDetailsV2Flag } from 'featureFlags/flags/nftDetails'
-import { NftGraphqlVariant, useNftGraphqlFlag } from 'featureFlags/flags/nftlGraphql'
-import { PayWithAnyTokenVariant, usePayWithAnyTokenFlag } from 'featureFlags/flags/payWithAnyToken'
-import { SwapWidgetVariant, useSwapWidgetFlag } from 'featureFlags/flags/swapWidget'
 import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
 import { useUpdateAtom } from 'jotai/utils'
 import { Children, PropsWithChildren, ReactElement, ReactNode, useCallback, useState } from 'react'
@@ -204,24 +201,6 @@ export default function FeatureFlagModal() {
           <X size={24} />
         </CloseButton>
       </Header>
-      <FeatureFlagOption
-        variant={PayWithAnyTokenVariant}
-        value={usePayWithAnyTokenFlag()}
-        featureFlag={FeatureFlag.payWithAnyToken}
-        label="Pay With Any Token"
-      />
-      <FeatureFlagOption
-        variant={SwapWidgetVariant}
-        value={useSwapWidgetFlag()}
-        featureFlag={FeatureFlag.swapWidget}
-        label="Swap Widget"
-      />
-      <FeatureFlagOption
-        variant={NftGraphqlVariant}
-        value={useNftGraphqlFlag()}
-        featureFlag={FeatureFlag.nftGraphql}
-        label="Migrate NFT read endpoints to GQL"
-      />
       <FeatureFlagOption
         variant={DetailsV2Variant}
         value={useDetailsV2Flag()}

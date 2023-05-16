@@ -87,10 +87,20 @@ function combineActivities(localMap: ActivityMap = {}, remoteMap: ActivityMap = 
 
   // Merges local and remote activities w/ same hash, preferring remote data
   return txHashes.reduce((acc: Array<Activity>, hash) => {
-    const localActivity = localMap?.[hash] ?? {}
-    const remoteActivity = remoteMap?.[hash] ?? {}
-    // TODO(cartcrom): determine best logic for which fields to prefer from which sources, i.e. prefer remote exact swap output instead of local estimated output
-    acc.push({ ...remoteActivity, ...localActivity } as Activity)
+    const localActivity = (localMap?.[hash] ?? {}) as Activity
+    const remoteActivity = (remoteMap?.[hash] ?? {}) as Activity
+
+    // Check for nonce collision
+    const isNonceCollision =
+      localActivity.nonce !== undefined &&
+      Object.keys(remoteMap).some((remoteHash) => remoteMap[remoteHash]?.nonce === localActivity.nonce)
+
+    if (!isNonceCollision) {
+      // TODO(cartcrom): determine best logic for which fields to prefer from which sources
+      // i.e.prefer remote exact swap output instead of local estimated output
+      acc.push({ ...localActivity, ...remoteActivity } as Activity)
+    }
+
     return acc
   }, [])
 }
@@ -140,7 +150,7 @@ export function ActivityTab({ account }: { account: string }) {
       <PortfolioTabWrapper>
         {activityGroups.map((activityGroup) => (
           <ActivityGroupWrapper key={activityGroup.title}>
-            <ThemedText.SubHeader color="textSecondary" fontWeight={500} marginLeft="16px">
+            <ThemedText.SubHeader color="textSecondary" marginLeft="16px">
               {activityGroup.title}
             </ThemedText.SubHeader>
             <Column>

@@ -3,7 +3,7 @@ import { CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { DAI, USDC_MAINNET } from 'constants/tokens'
 import { RouterPreference } from 'state/routing/slice'
 import { TradeState } from 'state/routing/types'
-import { useClientSideRouter } from 'state/user/hooks'
+import { useRouterPreference } from 'state/user/hooks'
 import { mocked } from 'test-utils/mocked'
 
 import { useRoutingAPITrade } from '../state/routing/useRoutingAPITrade'
@@ -16,13 +16,6 @@ import useIsWindowVisible from './useIsWindowVisible'
 const USDCAmount = CurrencyAmount.fromRawAmount(USDC_MAINNET, '10000')
 const DAIAmount = CurrencyAmount.fromRawAmount(DAI, '10000')
 
-jest.mock('@web3-react/core', () => {
-  return {
-    useWeb3React: () => ({
-      chainId: 1,
-    }),
-  }
-})
 jest.mock('./useAutoRouterSupported')
 jest.mock('./useClientSideV3Trade')
 jest.mock('./useDebounce')
@@ -45,7 +38,7 @@ beforeEach(() => {
 
   mocked(useIsWindowVisible).mockReturnValue(true)
   mocked(useAutoRouterSupported).mockReturnValue(true)
-  mocked(useClientSideRouter).mockReturnValue([true, () => undefined])
+  mocked(useRouterPreference).mockReturnValue([RouterPreference.CLIENT, () => undefined])
 })
 
 describe('#useBestV3Trade ExactIn', () => {
