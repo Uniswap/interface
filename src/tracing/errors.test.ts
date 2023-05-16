@@ -10,6 +10,41 @@ Object.defineProperty(window.performance, 'getEntriesByType', {
 describe('beforeSend', () => {
   const ERROR = {} as ErrorEvent
 
+  describe('updateRequestUrl', () => {
+    test('should remove "/#" from the request URL', () => {
+      const event = {
+        request: {
+          url: 'https://app.uniswap.org/#/example',
+        },
+      } as ErrorEvent
+
+      beforeSend(event, {})
+      expect(event.request?.url).toBe('https://app.uniswap.org/example')
+    })
+
+    test('should remove trailing slash from the request URL', () => {
+      const event = {
+        request: {
+          url: 'https://app.uniswap.org/example/',
+        },
+      } as ErrorEvent
+
+      beforeSend(event, {})
+      expect(event.request?.url).toBe('https://app.uniswap.org/example')
+    })
+
+    test('should not modify the request URL if no changes are required', () => {
+      const event = {
+        request: {
+          url: 'https://app.uniswap.org/example',
+        },
+      } as ErrorEvent
+
+      beforeSend(event, {})
+      expect(event.request?.url).toBe('https://app.uniswap.org/example')
+    })
+  })
+
   describe('chunkResponseStatus', () => {
     afterEach(() => {
       jest.restoreAllMocks()
