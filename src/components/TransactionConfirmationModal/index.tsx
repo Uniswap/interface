@@ -31,10 +31,6 @@ const Wrapper = styled.div`
   padding: 16px;
 `
 
-const ConfirmationModalWrapper = styled(Wrapper)`
-  padding: 8px;
-`
-
 const BottomSection = styled(AutoColumn)`
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
@@ -54,10 +50,6 @@ const ConfirmationModalContentWrapper = styled(AutoColumn)`
   padding-bottom: 12px;
 `
 
-const ConfirmationModalTopContentWrapper = styled(AutoColumn)`
-  padding: 8px 8px 0 8px;
-`
-
 function ConfirmationPendingContent({
   onDismiss,
   pendingText,
@@ -67,8 +59,6 @@ function ConfirmationPendingContent({
   pendingText: ReactNode
   inline?: boolean // not in modal
 }) {
-  const theme = useTheme()
-
   return (
     <Wrapper>
       <AutoColumn gap="md">
@@ -82,13 +72,13 @@ function ConfirmationPendingContent({
           <CustomLightSpinner src={Circle} alt="loader" size={inline ? '40px' : '90px'} />
         </ConfirmedIcon>
         <AutoColumn gap="md" justify="center">
-          <ThemedText.SubHeaderLarge color={theme.textPrimary} textAlign="center">
+          <ThemedText.SubHeaderLarge color="textPrimary" textAlign="center">
             <Trans>Waiting for confirmation</Trans>
           </ThemedText.SubHeaderLarge>
-          <ThemedText.SubHeader color={theme.textPrimary} textAlign="center">
+          <ThemedText.SubHeader color="textPrimary" textAlign="center">
             {pendingText}
           </ThemedText.SubHeader>
-          <ThemedText.SubHeaderSmall color={theme.textSecondary} textAlign="center" marginBottom="12px">
+          <ThemedText.SubHeaderSmall color="textSecondary" textAlign="center" marginBottom="12px">
             <Trans>Confirm this transaction in your wallet</Trans>
           </ThemedText.SubHeaderSmall>
         </AutoColumn>
@@ -162,15 +152,15 @@ function TransactionSubmittedContent({
             </ButtonLight>
           )}
           <ButtonPrimary onClick={onDismiss} style={{ margin: '20px 0 0 0' }} data-testid="dismiss-tx-confirmation">
-            <Text fontWeight={600} fontSize={20} color={theme.accentTextLightPrimary}>
+            <ThemedText.HeadlineSmall fontWeight={600} fontSize={20} color={theme.accentTextLightPrimary}>
               {inline ? <Trans>Return</Trans> : <Trans>Close</Trans>}
-            </Text>
+            </ThemedText.HeadlineSmall>
           </ButtonPrimary>
           {chainId && hash && (
             <ExternalLink href={getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)}>
-              <Text fontWeight={600} fontSize={14} color={theme.accentAction}>
+              <ThemedText.Link fontWeight={600} fontSize={14} color={theme.accentAction}>
                 <Trans>View on {chainId === SupportedChainId.MAINNET ? 'Etherscan' : 'Block Explorer'}</Trans>
-              </Text>
+              </ThemedText.Link>
             </ExternalLink>
           )}
         </ConfirmationModalContentWrapper>
@@ -191,8 +181,8 @@ export function ConfirmationModalContent({
   bottomContent?: () => ReactNode | undefined
 }) {
   return (
-    <ConfirmationModalWrapper>
-      <ConfirmationModalTopContentWrapper gap="sm">
+    <Wrapper>
+      <AutoColumn gap="sm">
         <Row>
           <Row justify="center" marginLeft="24px">
             <ThemedText.SubHeader>{title}</ThemedText.SubHeader>
@@ -200,9 +190,9 @@ export function ConfirmationModalContent({
           <CloseIcon onClick={onDismiss} data-cy="confirmation-close-icon" />
         </Row>
         {topContent()}
-      </ConfirmationModalTopContentWrapper>
+      </AutoColumn>
       {bottomContent && <BottomSection gap="12px">{bottomContent()}</BottomSection>}
-    </ConfirmationModalWrapper>
+    </Wrapper>
   )
 }
 
@@ -296,14 +286,14 @@ function L2Content({
               <Trans>Error</Trans>
             )}
           </ThemedText.SubHeaderLarge>
-          <Text fontWeight={400} fontSize={16} textAlign="center">
+          <ThemedText.BodySecondary fontWeight={400} fontSize={16} textAlign="center">
             {transaction ? <TransactionSummary info={transaction.info} /> : pendingText}
-          </Text>
+          </ThemedText.BodySecondary>
           {chainId && hash ? (
             <ExternalLink href={getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)}>
-              <Text fontWeight={500} fontSize={14} color={theme.accentAction}>
+              <ThemedText.SubHeaderSmall fontWeight={500} fontSize={14} color={theme.accentAction}>
                 <Trans>View on Explorer</Trans>
-              </Text>
+              </ThemedText.SubHeaderSmall>
             </ExternalLink>
           ) : (
             <div style={{ height: '17px' }} />
@@ -321,7 +311,7 @@ function L2Content({
             )}
           </ThemedText.SubHeaderSmall>
           <ButtonPrimary onClick={onDismiss} style={{ margin: '4px 0 0 0' }}>
-            <ThemedText.SubHeaderLarge fontWeight={500} fontSize={20}>
+            <ThemedText.SubHeaderLarge>
               {inline ? <Trans>Return</Trans> : <Trans>Close</Trans>}
             </ThemedText.SubHeaderLarge>
           </ButtonPrimary>

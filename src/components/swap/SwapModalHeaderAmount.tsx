@@ -1,4 +1,4 @@
-import { formatCurrencyAmount, NumberType } from '@uniswap/conedison/format'
+import { formatCurrencyAmount, formatNumber, NumberType } from '@uniswap/conedison/format'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import Column from 'components/Column'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
@@ -36,7 +36,7 @@ const ResponsiveHeadline = ({ children, ...textProps }: PropsWithChildren<TextPr
 interface AmountProps {
   field: Field
   tooltipText?: ReactNode
-  label: string
+  label: ReactNode
   amount: CurrencyAmount<Currency> | undefined
   usdAmount?: number
 }
@@ -63,10 +63,14 @@ export function SwapModalHeaderAmount({ tooltipText, label, amount, usdAmount, f
           <ResponsiveHeadline color="primary" data-testid={`${field}-amount`}>
             {formattedAmount} {amount?.currency.symbol}
           </ResponsiveHeadline>
-          {usdAmount && <ThemedText.BodySmall color="textTertiary">${usdAmount.toFixed(2)}</ThemedText.BodySmall>}
+          {usdAmount && (
+            <ThemedText.BodySmall color="textTertiary">
+              {formatNumber(usdAmount, NumberType.FiatTokenQuantity)}
+            </ThemedText.BodySmall>
+          )}
         </Column>
       </Column>
-      <CurrencyLogo currency={amount?.currency} size="36px" />
+      {amount?.currency && <CurrencyLogo currency={amount.currency} size="36px" />}
     </Row>
   )
 }

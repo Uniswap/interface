@@ -5,27 +5,16 @@ import { useUSDPrice } from 'hooks/useUSDPrice'
 import { InterfaceTrade } from 'state/routing/types'
 import { Field } from 'state/swap/actions'
 import styled from 'styled-components/macro'
-import { ThemedText } from 'theme'
+import { Divider, ThemedText } from 'theme'
 
 import { SwapModalHeaderAmount } from './SwapModalHeaderAmount'
 
-const RuleWrapper = styled.div`
+const Rule = styled(Divider)`
   margin: 16px 2px 24px 2px;
 `
 
 const HeaderContainer = styled(AutoColumn)`
   margin-top: 16px;
-`
-
-const Rule = styled.hr<{ padded?: true; scrollingEdge?: 'top' | 'bottom' }>`
-  border: none;
-  border-bottom: 1px solid ${({ theme }) => theme.backgroundOutline};
-  margin: 0 ${({ padded }) => (padded ? '12px' : 0)};
-  margin-bottom: ${({ scrollingEdge }) => (scrollingEdge === 'bottom' ? -1 : 0)}px;
-  margin-top: ${({ scrollingEdge }) => (scrollingEdge !== 'bottom' ? -1 : 0)}px;
-
-  max-width: auto;
-  width: auto;
 `
 
 export default function SwapModalHeader({
@@ -49,7 +38,7 @@ export default function SwapModalHeader({
         />
         <SwapModalHeaderAmount
           field={Field.OUTPUT}
-          label={t`You receive`}
+          label={<Trans>You receive</Trans>}
           amount={trade?.outputAmount}
           usdAmount={fiatValueOutput.data}
           tooltipText={
@@ -77,9 +66,7 @@ export default function SwapModalHeader({
           }
         />
       </Column>
-      <RuleWrapper>
-        <Rule />
-      </RuleWrapper>
+      <Rule />
     </HeaderContainer>
   )
 }
