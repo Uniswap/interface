@@ -20,7 +20,6 @@ import { STATSIG_DUMMY_KEY } from 'tracing'
 import { getEnvName } from 'utils/env'
 import { getCLS, getFCP, getFID, getLCP, Metric } from 'web-vitals'
 
-import { useAnalyticsReporter } from '../components/analytics'
 import ErrorBoundary from '../components/ErrorBoundary'
 import { PageTabs } from '../components/NavBar'
 import NavBar from '../components/NavBar'
@@ -139,8 +138,6 @@ export default function App() {
   const isDarkMode = useIsDarkMode()
   const isExpertMode = useIsExpertMode()
   const [scrolledState, setScrolledState] = useState(false)
-
-  useAnalyticsReporter()
 
   useEffect(() => {
     window.scrollTo(0, 0)

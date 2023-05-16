@@ -1,5 +1,3 @@
-import 'components/analytics'
-
 import * as Sentry from '@sentry/react'
 import { BrowserTracing } from '@sentry/tracing'
 import { initializeAnalytics, OriginApplication } from '@uniswap/analytics'

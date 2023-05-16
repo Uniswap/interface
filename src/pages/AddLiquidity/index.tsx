@@ -8,7 +8,6 @@ import { FeeAmount, NonfungiblePositionManager } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { useToggleAccountDrawer } from 'components/AccountDrawer'
 import OwnershipWarning from 'components/addLiquidity/OwnershipWarning'
-import { sendEvent } from 'components/analytics'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { isSupportedChain } from 'constants/chains'
 import usePrevious from 'hooks/usePrevious'
@@ -231,18 +230,18 @@ function AddLiquidity() {
       const { calldata, value } =
         hasExistingPosition && tokenId
           ? NonfungiblePositionManager.addCallParameters(position, {
-              tokenId,
-              slippageTolerance: allowedSlippage,
-              deadline: deadline.toString(),
-              useNative,
-            })
+            tokenId,
+            slippageTolerance: allowedSlippage,
+            deadline: deadline.toString(),
+            useNative,
+          })
           : NonfungiblePositionManager.addCallParameters(position, {
-              slippageTolerance: allowedSlippage,
-              recipient: account,
-              deadline: deadline.toString(),
-              useNative,
-              createPool: noLiquidity,
-            })
+            slippageTolerance: allowedSlippage,
+            recipient: account,
+            deadline: deadline.toString(),
+            useNative,
+            createPool: noLiquidity,
+          })
 
       let txn: { to: string; data: string; value: string } = {
         to: NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[chainId],
@@ -300,11 +299,6 @@ function AddLiquidity() {
                 feeAmount: position.pool.fee,
               })
               setTxHash(response.hash)
-              sendEvent({
-                category: 'Liquidity',
-                action: 'Add',
-                label: [currencies[Field.CURRENCY_A]?.symbol, currencies[Field.CURRENCY_B]?.symbol].join('/'),
-              })
             })
         })
         .catch((error) => {
@@ -414,11 +408,9 @@ function AddLiquidity() {
   const showApprovalB =
     !argentWalletContract && approvalB !== ApprovalState.APPROVED && !!parsedAmounts[Field.CURRENCY_B]
 
-  const pendingText = `Supplying ${!depositADisabled ? parsedAmounts[Field.CURRENCY_A]?.toSignificant(6) : ''} ${
-    !depositADisabled ? currencies[Field.CURRENCY_A]?.symbol : ''
-  } ${!outOfRange ? 'and' : ''} ${!depositBDisabled ? parsedAmounts[Field.CURRENCY_B]?.toSignificant(6) : ''} ${
-    !depositBDisabled ? currencies[Field.CURRENCY_B]?.symbol : ''
-  }`
+  const pendingText = `Supplying ${!depositADisabled ? parsedAmounts[Field.CURRENCY_A]?.toSignificant(6) : ''} ${!depositADisabled ? currencies[Field.CURRENCY_A]?.symbol : ''
+    } ${!outOfRange ? 'and' : ''} ${!depositBDisabled ? parsedAmounts[Field.CURRENCY_B]?.toSignificant(6) : ''} ${!depositBDisabled ? currencies[Field.CURRENCY_B]?.symbol : ''
+    }`
 
   const [searchParams, setSearchParams] = useSearchParams()
 
@@ -430,11 +422,6 @@ function AddLiquidity() {
     const maxPrice = pricesAtLimit[Bound.UPPER]
     if (maxPrice) searchParams.set('maxPrice', maxPrice.toSignificant(5))
     setSearchParams(searchParams)
-
-    sendEvent({
-      category: 'Liquidity',
-      action: 'Full Range Clicked',
-    })
   }, [getSetFullRange, pricesAtLimit, searchParams, setSearchParams])
 
   // START: sync values with query string

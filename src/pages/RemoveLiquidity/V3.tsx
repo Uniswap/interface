@@ -4,7 +4,6 @@ import { Trans } from '@lingui/macro'
 import { CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { NonfungiblePositionManager } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
-import { sendEvent } from 'components/analytics'
 import RangeBadge from 'components/Badge/RangeBadge'
 import { ButtonConfirmed, ButtonPrimary } from 'components/Button'
 import { LightCard } from 'components/Card'
@@ -153,11 +152,6 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
           .getSigner()
           .sendTransaction(newTxn)
           .then((response: TransactionResponse) => {
-            sendEvent({
-              category: 'Liquidity',
-              action: 'RemoveV3',
-              label: [liquidityValue0.currency.symbol, liquidityValue1.currency.symbol].join('/'),
-            })
             setTxnHash(response.hash)
             setAttemptingTxn(false)
             addTransaction(response, {
@@ -270,11 +264,11 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
 
   const showCollectAsWeth = Boolean(
     liquidityValue0?.currency &&
-      liquidityValue1?.currency &&
-      (liquidityValue0.currency.isNative ||
-        liquidityValue1.currency.isNative ||
-        WRAPPED_NATIVE_CURRENCY[liquidityValue0.currency.chainId]?.equals(liquidityValue0.currency.wrapped) ||
-        WRAPPED_NATIVE_CURRENCY[liquidityValue1.currency.chainId]?.equals(liquidityValue1.currency.wrapped))
+    liquidityValue1?.currency &&
+    (liquidityValue0.currency.isNative ||
+      liquidityValue1.currency.isNative ||
+      WRAPPED_NATIVE_CURRENCY[liquidityValue0.currency.chainId]?.equals(liquidityValue0.currency.wrapped) ||
+      WRAPPED_NATIVE_CURRENCY[liquidityValue1.currency.chainId]?.equals(liquidityValue1.currency.wrapped))
   )
   return (
     <AutoColumn>

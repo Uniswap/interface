@@ -6,7 +6,6 @@ import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { useToggleAccountDrawer } from 'components/AccountDrawer'
-import { sendEvent } from 'components/analytics'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import { useCallback, useState } from 'react'
@@ -63,8 +62,8 @@ export default function AddLiquidity() {
 
   const oneCurrencyIsWETH = Boolean(
     chainId &&
-      wrappedNativeCurrency &&
-      ((currencyA && currencyA.equals(wrappedNativeCurrency)) || (currencyB && currencyB.equals(wrappedNativeCurrency)))
+    wrappedNativeCurrency &&
+    ((currencyA && currencyA.equals(wrappedNativeCurrency)) || (currencyB && currencyB.equals(wrappedNativeCurrency)))
   )
 
   const toggleWalletDrawer = useToggleAccountDrawer() // toggle wallet when disconnected
@@ -199,12 +198,6 @@ export default function AddLiquidity() {
           })
 
           setTxHash(response.hash)
-
-          sendEvent({
-            category: 'Liquidity',
-            action: 'Add',
-            label: [currencies[Field.CURRENCY_A]?.symbol, currencies[Field.CURRENCY_B]?.symbol].join('/'),
-          })
         })
       )
       .catch((error) => {

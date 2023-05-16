@@ -7,7 +7,6 @@ import { formatPrice, NumberType } from '@uniswap/conedison/format'
 import { Currency, CurrencyAmount, Fraction, Percent, Price, Token } from '@uniswap/sdk-core'
 import { NonfungiblePositionManager, Pool, Position } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
-import { sendEvent } from 'components/analytics'
 import Badge from 'components/Badge'
 import { ButtonConfirmed, ButtonGray, ButtonPrimary } from 'components/Button'
 import { DarkCard, LightCard } from 'components/Card'
@@ -94,7 +93,7 @@ const BadgeText = styled.div`
 // responsive text
 // disable the warning because we don't use the end prop, we just want to filter it out
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const Label = styled(({ end, ...props }) => <ThemedText.DeprecatedLabel {...props} />)<{ end?: boolean }>`
+const Label = styled(({ end, ...props }) => <ThemedText.DeprecatedLabel {...props} />) <{ end?: boolean }>`
   display: flex;
   font-size: 16px;
   justify-content: ${({ end }) => (end ? 'flex-end' : 'flex-start')};
@@ -435,10 +434,10 @@ function PositionPageContent() {
   const ratio = useMemo(() => {
     return priceLower && pool && priceUpper
       ? getRatio(
-          inverted ? priceUpper.invert() : priceLower,
-          pool.token0Price,
-          inverted ? priceLower.invert() : priceUpper
-        )
+        inverted ? priceUpper.invert() : priceLower,
+        pool.token0Price,
+        inverted ? priceLower.invert() : priceUpper
+      )
       : undefined
   }, [inverted, pool, priceLower, priceUpper])
 
@@ -526,12 +525,6 @@ function PositionPageContent() {
             setCollectMigrationHash(response.hash)
             setCollecting(false)
 
-            sendEvent({
-              category: 'Liquidity',
-              action: 'CollectV3',
-              label: [currency0ForFeeCollectionPurposes.symbol, currency1ForFeeCollectionPurposes.symbol].join('/'),
-            })
-
             addTransaction(response, {
               type: TransactionType.COLLECT_FEES,
               currencyId0: currencyId(currency0ForFeeCollectionPurposes),
@@ -606,11 +599,11 @@ function PositionPageContent() {
 
   const showCollectAsWeth = Boolean(
     ownsNFT &&
-      (feeValue0?.greaterThan(0) || feeValue1?.greaterThan(0)) &&
-      currency0 &&
-      currency1 &&
-      (currency0.isNative || currency1.isNative) &&
-      !collectMigrationHash
+    (feeValue0?.greaterThan(0) || feeValue1?.greaterThan(0)) &&
+    currency0 &&
+    currency1 &&
+    (currency0.isNative || currency1.isNative) &&
+    !collectMigrationHash
   )
 
   if (!positionDetails && !loading) {
@@ -821,7 +814,7 @@ function PositionPageContent() {
                           )}
                         </AutoColumn>
                         {ownsNFT &&
-                        (feeValue0?.greaterThan(0) || feeValue1?.greaterThan(0) || !!collectMigrationHash) ? (
+                          (feeValue0?.greaterThan(0) || feeValue1?.greaterThan(0) || !!collectMigrationHash) ? (
                           <ResponsiveButtonConfirmed
                             disabled={collecting || !!collectMigrationHash}
                             confirmed={!!collectMigrationHash && !isCollectPending}

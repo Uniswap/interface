@@ -4,7 +4,6 @@ import { Trans } from '@lingui/macro'
 import { CurrencyAmount, Fraction, Percent, Price, Token } from '@uniswap/sdk-core'
 import { FeeAmount, Pool, Position, priceToClosestTick, TickMath } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
-import { sendEvent } from 'components/analytics'
 import Badge, { BadgeVariant } from 'components/Badge'
 import { ButtonConfirmed } from 'components/Button'
 import { BlueCard, DarkGrayCard, LightCard, YellowCard } from 'components/Card'
@@ -206,13 +205,13 @@ function V2PairMigration({
   const position =
     typeof tickLower === 'number' && typeof tickUpper === 'number' && !invalidRange
       ? Position.fromAmounts({
-          pool: pool ?? new Pool(token0, token1, feeAmount, sqrtPrice, 0, tick, []),
-          tickLower,
-          tickUpper,
-          amount0: token0Value.quotient,
-          amount1: token1Value.quotient,
-          useFullPrecision: true, // we want full precision for the theoretical position
-        })
+        pool: pool ?? new Pool(token0, token1, feeAmount, sqrtPrice, 0, tick, []),
+        tickLower,
+        tickUpper,
+        amount0: token0Value.quotient,
+        amount1: token1Value.quotient,
+        useFullPrecision: true, // we want full precision for the theoretical position
+      })
       : undefined
 
   const { amount0: v3Amount0Min, amount1: v3Amount1Min } = useMemo(
@@ -336,12 +335,6 @@ function V2PairMigration({
         return migrator
           .multicall(data, { gasLimit: calculateGasMargin(gasEstimate) })
           .then((response: TransactionResponse) => {
-            sendEvent({
-              category: 'Migrate',
-              action: `${isNotUniswap ? 'SushiSwap' : 'V2'}->V3`,
-              label: `${currency0.symbol}/${currency1.symbol}`,
-            })
-
             addTransaction(response, {
               type: TransactionType.MIGRATE_LIQUIDITY_V3,
               baseCurrencyId: currencyId(currency0),
