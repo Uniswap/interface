@@ -123,7 +123,7 @@ export default function ConfirmSwapModal({
   return (
     <Trace modal={InterfaceModalName.CONFIRM_SWAP}>
       <TransactionConfirmationModal
-        isOpen={true}
+        isOpen
         onDismiss={onModalDismiss}
         attemptingTxn={attemptingTxn}
         hash={txHash}
