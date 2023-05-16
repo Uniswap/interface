@@ -547,21 +547,23 @@ export function Swap({
         showCancel={true}
       />
       <SwapHeader autoSlippage={autoSlippage} />
-      <ConfirmSwapModal
-        isOpen={showConfirm}
-        trade={trade}
-        originalTrade={tradeToConfirm}
-        onAcceptChanges={handleAcceptChanges}
-        txHash={txHash}
-        allowedSlippage={allowedSlippage}
-        onConfirm={handleSwap}
-        allowance={allowance}
-        swapErrorMessage={swapErrorMessage}
-        onDismiss={handleConfirmDismiss}
-        swapQuoteReceivedDate={swapQuoteReceivedDate}
-        fiatValueInput={fiatValueTradeInput}
-        fiatValueOutput={fiatValueTradeOutput}
-      />
+      {trade && (
+        <ConfirmSwapModal
+          isOpen={showConfirm}
+          trade={trade}
+          originalTrade={tradeToConfirm}
+          onAcceptChanges={handleAcceptChanges}
+          txHash={txHash}
+          allowedSlippage={allowedSlippage}
+          onConfirm={handleSwap}
+          allowance={allowance}
+          swapErrorMessage={swapErrorMessage}
+          onDismiss={handleConfirmDismiss}
+          swapQuoteReceivedDate={swapQuoteReceivedDate}
+          fiatValueInput={fiatValueTradeInput}
+          fiatValueOutput={fiatValueTradeOutput}
+        />
+      )}
 
       <div style={{ display: 'relative' }}>
         <SwapSection>

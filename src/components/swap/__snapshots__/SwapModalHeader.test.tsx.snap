@@ -34,6 +34,14 @@ exports[`SwapModalHeader.tsx matches base snapshot, test trade exact input 1`] =
   color: #0D111C;
 }
 
+.c13 {
+  width: 100%;
+  height: 1px;
+  border-width: 0;
+  margin: 0;
+  background-color: #D2D9EE;
+}
+
 .c2 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -102,22 +110,12 @@ exports[`SwapModalHeader.tsx matches base snapshot, test trade exact input 1`] =
   margin-right: 8px;
 }
 
-.c13 {
+.c14 {
   margin: 16px 2px 24px 2px;
 }
 
 .c1 {
   margin-top: 16px;
-}
-
-.c14 {
-  border: none;
-  border-bottom: 1px solid #D2D9EE;
-  margin: 0 0;
-  margin-bottom: 0px;
-  margin-top: -1px;
-  max-width: auto;
-  width: auto;
 }
 
 <div
@@ -207,12 +205,8 @@ exports[`SwapModalHeader.tsx matches base snapshot, test trade exact input 1`] =
       </div>
     </div>
     <div
-      class="c13"
-    >
-      <hr
-        class="c14"
-      />
-    </div>
+      class="c13 c14"
+    />
   </div>
 </DocumentFragment>
 `;
@@ -249,6 +243,14 @@ exports[`SwapModalHeader.tsx test trade exact output, no recipient 1`] = `
 
 .c7 {
   color: #0D111C;
+}
+
+.c13 {
+  width: 100%;
+  height: 1px;
+  border-width: 0;
+  margin: 0;
+  background-color: #D2D9EE;
 }
 
 .c2 {
@@ -319,22 +321,12 @@ exports[`SwapModalHeader.tsx test trade exact output, no recipient 1`] = `
   margin-right: 8px;
 }
 
-.c13 {
+.c14 {
   margin: 16px 2px 24px 2px;
 }
 
 .c1 {
   margin-top: 16px;
-}
-
-.c14 {
-  border: none;
-  border-bottom: 1px solid #D2D9EE;
-  margin: 0 0;
-  margin-bottom: 0px;
-  margin-top: -1px;
-  max-width: auto;
-  width: auto;
 }
 
 <div
@@ -424,12 +416,8 @@ exports[`SwapModalHeader.tsx test trade exact output, no recipient 1`] = `
       </div>
     </div>
     <div
-      class="c13"
-    >
-      <hr
-        class="c14"
-      />
-    </div>
+      class="c13 c14"
+    />
   </div>
 </DocumentFragment>
 `;

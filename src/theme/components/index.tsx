@@ -477,7 +477,6 @@ export function BackArrowLink({ to }: { to: string }) {
 
 export const BackArrowIcon = styled(ArrowLeft)`
   color: ${({ theme }) => theme.textPrimary};
-  cursor: pointer;
 `
 
 export const CustomLightSpinner = styled(Spinner)<{ size: string }>`
@@ -524,4 +523,12 @@ export const GlowEffect = styled.div`
 
 export const CautionTriangle = styled(AlertTriangle)`
   color: ${({ theme }) => theme.accentWarning};
+`
+
+export const Divider = styled.div`
+  width: 100%;
+  height: 1px;
+  border-width: 0;
+  margin: 0;
+  background-color: ${({ theme }) => theme.backgroundOutline};
 `

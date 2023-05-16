@@ -52,7 +52,7 @@ export default function ConfirmSwapModal({
   fiatValueOutput,
 }: {
   isOpen: boolean
-  trade: InterfaceTrade<Currency, Currency, TradeType> | undefined
+  trade: InterfaceTrade<Currency, Currency, TradeType>
   originalTrade: Trade<Currency, Currency, TradeType> | undefined
   txHash: string | undefined
   allowedSlippage: Percent

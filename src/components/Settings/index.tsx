@@ -11,6 +11,7 @@ import { Settings } from 'react-feather'
 import { useModalIsOpen, useToggleSettingsMenu } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import styled from 'styled-components/macro'
+import { Divider } from 'theme'
 
 import MaxSlippageSettings from './MaxSlippageSettings'
 import RouterPreferenceSettings from './RouterPreferenceSettings'
@@ -75,14 +76,6 @@ const MenuFlyout = styled.span`
     min-width: 18.125rem;
   `};
   user-select: none;
-`
-
-const Divider = styled.div`
-  width: 100%;
-  height: 1px;
-  border-width: 0;
-  margin: 0;
-  background-color: ${({ theme }) => theme.backgroundOutline};
 `
 
 export default function SettingsTab({ autoSlippage }: { autoSlippage: Percent }) {
