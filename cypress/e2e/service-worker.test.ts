@@ -30,19 +30,18 @@ describe('Service Worker', () => {
   beforeEach(() => {
     cy.intercept('https://api.uniswap.org/v1/amplitude-proxy', (req) => {
       const body = JSON.stringify(req.body)
-      if (body.match(/"service_worker":"uninstalled"/)) {
-        req.alias = 'ServiceWorker:Uninstalled'
-      } else if (body.match(/"service_worker":"hit"/)) {
-        req.alias = 'ServiceWorker:Hit'
-      } else if (body.match(/"service_worker":"miss"/)) {
-        req.alias = 'ServiceWorker:Miss'
+      const serviceWorkerStatus = body.match(/"service_worker":"(\w+)"/)?.[1]
+      if (serviceWorkerStatus) {
+        const alias = `ServiceWorker:${serviceWorkerStatus}`
+        cy.log(alias)
+        req.alias = alias
       }
     })
   })
 
   it('installs a ServiceWorker and reports the uninstalled status to analytics', () => {
     cy.visit('/', { serviceWorker: true })
-    cy.wait('@ServiceWorker:Uninstalled')
+    cy.wait('@ServiceWorker:uninstalled')
     cy.window().should(
       'have.nested.property',
       // The parent is checked instead of the AUT because it is on the same origin,
@@ -54,7 +53,7 @@ describe('Service Worker', () => {
 
   it('records a cache hit and reports the hit to analytics', () => {
     cy.visit('/', { serviceWorker: true })
-    cy.wait('@ServiceWorker:Hit')
+    cy.wait('@ServiceWorker:hit')
   })
 
   it('records a cache miss and reports the miss to analytics', () => {
@@ -73,6 +72,6 @@ describe('Service Worker', () => {
         await cache.put(key, new Response())
       })
       .visit('/', { serviceWorker: true })
-    cy.wait('@ServiceWorker:Miss')
+    cy.wait('@ServiceWorker:miss')
   })
 })

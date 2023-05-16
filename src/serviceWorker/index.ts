@@ -21,10 +21,14 @@ registerRoute(new DocumentRoute())
 const { onDemandEntries, precacheEntries } = groupEntries(self.__WB_MANIFEST)
 const onDemandURLs = onDemandEntries.map((entry) => (typeof entry === 'string' ? entry : entry.url))
 
+const onDemandCacheName = `${cacheNames.prefix}-on-demand-${cacheNames.suffix}`
 registerRoute(
   new Route(
     ({ url }) => onDemandURLs.includes('.' + url.pathname),
-    new CacheFirst({ plugins: [new ExpirationPlugin({ maxEntries: 64 })] }) // runtime cache
+    new CacheFirst({
+      cacheName: onDemandCacheName,
+      plugins: [new ExpirationPlugin({ maxEntries: 64 })],
+    })
   )
 )
 
@@ -33,5 +37,5 @@ precacheAndRoute(precacheEntries) // precache cache
 // We only use the precache and runtime caches, so we delete the rest to avoid taking space.
 // Wait to do so until 'activate' in case activation fails.
 self.addEventListener('activate', () =>
-  deleteUnusedCaches(self.caches, { usedCaches: [cacheNames.runtime, cacheNames.precache] })
+  deleteUnusedCaches(self.caches, { usedCaches: [cacheNames.precache, onDemandCacheName] })
 )
