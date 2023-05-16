@@ -10,9 +10,6 @@ import { BREAKPOINTS, ThemedText } from 'theme'
 
 const HeaderContainer = styled(Row)`
   gap: 24px;
-  @media screen and (max-width: ${BREAKPOINTS.md}px) {
-    display: none;
-  }
 `
 
 const AssetImage = styled.img`

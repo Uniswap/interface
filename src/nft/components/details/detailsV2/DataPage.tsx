@@ -35,6 +35,20 @@ const DataPageContainer = styled(Column)`
   margin: 0 auto;
 `
 
+const HeaderContainer = styled.div<{ showDataHeader?: boolean }>`
+  position: sticky;
+  top: ${({ theme }) => `${theme.navHeight}px`};
+  padding-top: 16px;
+  backdrop-filter: blur(12px);
+  z-index: 1;
+  transition: ${({ theme }) => `opacity ${theme.transition.duration.fast}`};
+  opacity: ${({ showDataHeader }) => (showDataHeader ? '1' : '0')};
+
+  @media screen and (max-width: ${BREAKPOINTS.md}px) {
+    display: none;
+  }
+`
+
 const ContentContainer = styled(Row)`
   gap: 24px;
   padding-bottom: 45px;
@@ -50,11 +64,13 @@ const LeftColumn = styled(Column)`
   align-self: flex-start;
 `
 
-export const DataPage = ({ asset }: { asset: GenieAsset }) => {
+export const DataPage = ({ asset, showDataHeader }: { asset: GenieAsset; showDataHeader: boolean }) => {
   return (
     <DataPagePaddingContainer>
       <DataPageContainer>
-        <DataPageHeader asset={asset} />
+        <HeaderContainer showDataHeader={showDataHeader}>
+          <DataPageHeader asset={asset} />
+        </HeaderContainer>
         <ContentContainer>
           <LeftColumn>
             {!!asset.traits?.length && <DataPageTraits asset={asset} />}

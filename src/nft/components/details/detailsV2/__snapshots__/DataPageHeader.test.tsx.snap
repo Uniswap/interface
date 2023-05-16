@@ -257,12 +257,6 @@ exports[`Header loads with asset with a sell order 1`] = `
   border-radius: 16px;
 }
 
-@media screen and (max-width:768px) {
-  .c2 {
-    display: none;
-  }
-}
-
 @media screen and (max-width:1024px) {
   .c3 {
     display: none;
@@ -559,12 +553,6 @@ exports[`Header loads with asset with no sell orders 1`] = `
   -ms-flex-negative: 0;
   flex-shrink: 0;
   border-radius: 16px;
-}
-
-@media screen and (max-width:768px) {
-  .c2 {
-    display: none;
-  }
 }
 
 @media screen and (max-width:1024px) {
