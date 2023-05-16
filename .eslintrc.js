@@ -3,7 +3,7 @@
 require('@uniswap/eslint-config/load')
 
 const rulesDirPlugin = require('eslint-plugin-rulesdir')
-rulesDirPlugin.RULES_DIR = 'rules'
+rulesDirPlugin.RULES_DIR = 'eslint_rules'
 
 module.exports = {
   extends: ['@uniswap/eslint-config/react'],
