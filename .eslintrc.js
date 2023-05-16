@@ -2,14 +2,18 @@
 
 require('@uniswap/eslint-config/load')
 
+const rulesDirPlugin = require('eslint-plugin-rulesdir')
+rulesDirPlugin.RULES_DIR = 'rules'
+
 module.exports = {
   extends: ['@uniswap/eslint-config/react'],
+  plugins: ['rulesdir'],
   overrides: [
     {
       files: ['**/*'],
       rules: {
         'multiline-comment-style': ['error', 'separate-lines'],
-        'enforce-retry-on-import': 'error',
+        'rulesdir/enforce-retry-on-import': 'error',
       },
     },
     {

@@ -46,7 +46,7 @@ import Swap from './Swap'
 import { RedirectPathToSwapOnly } from './Swap/redirects'
 import Tokens from './Tokens'
 
-const TokenDetails = lazy(() => retry(() => import('./TokenDetails')))
+const TokenDetails = lazy(() => import('./TokenDetails'))
 const Vote = lazy(() => retry(() => import('./Vote')))
 const NftExplore = lazy(() => retry(() => import('nft/pages/explore')))
 const Collection = lazy(() => retry(() => import('nft/pages/collection')))
