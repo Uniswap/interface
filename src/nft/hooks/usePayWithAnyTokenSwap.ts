@@ -1,4 +1,4 @@
-import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
+import { Percent } from '@uniswap/sdk-core'
 import { PermitInput, TokenTradeRoutesInput, TokenTradeType } from 'graphql/data/__generated__/types-and-hooks'
 import { Allowance } from 'hooks/usePermit2Allowance'
 import { buildAllTradeRouteInputs } from 'nft/utils/tokenRoutes'
@@ -8,7 +8,7 @@ import { InterfaceTrade } from 'state/routing/types'
 import { useTokenInput } from './useTokenInput'
 
 export default function usePayWithAnyTokenSwap(
-  trade?: InterfaceTrade<Currency, Currency, TradeType> | undefined,
+  trade?: InterfaceTrade | undefined,
   allowance?: Allowance,
   allowedSlippage?: Percent
 ) {
