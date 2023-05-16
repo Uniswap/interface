@@ -126,19 +126,20 @@ function SubtitleWithTooltip({ mainText, tooltipText }: { mainText: string; tool
 }
 
 function TradeSummary({ trade }: { trade: InterfaceTrade }) {
+  const theme = useTheme()
   return (
     <Row gap="sm">
       <CurrencyLogo currency={trade.inputAmount.currency} size="16px" />
-      <ThemedText.LabelSmall>
+      <ThemedText.LabelSmall color="textPrimary">
         {formatCurrencyAmount(trade.inputAmount, NumberType.SwapTradeAmount)}
       </ThemedText.LabelSmall>
-      <ThemedText.LabelSmall>{trade.inputAmount.currency.symbol}</ThemedText.LabelSmall>
-      <ArrowRight />
+      <ThemedText.LabelSmall color="textPrimary">{trade.inputAmount.currency.symbol}</ThemedText.LabelSmall>
+      <ArrowRight color={theme.textPrimary} size="12px" />
       <CurrencyLogo currency={trade.outputAmount.currency} size="16px" />
-      <ThemedText.LabelSmall>
+      <ThemedText.LabelSmall color="textPrimary">
         {formatCurrencyAmount(trade.outputAmount, NumberType.SwapTradeAmount)}
       </ThemedText.LabelSmall>
-      <ThemedText.LabelSmall>{trade.outputAmount.currency.symbol}</ThemedText.LabelSmall>
+      <ThemedText.LabelSmall color="textPrimary">{trade.outputAmount.currency.symbol}</ThemedText.LabelSmall>
     </Row>
   )
 }

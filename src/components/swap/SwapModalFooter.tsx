@@ -49,8 +49,8 @@ export default function SwapModalFooter({
   allowedSlippage,
   hash,
   onConfirm,
-  disabledConfirm,
   swapErrorMessage,
+  disabledConfirm,
   swapQuoteReceivedDate,
   fiatValueInput,
   fiatValueOutput,
@@ -61,8 +61,8 @@ export default function SwapModalFooter({
   hash: string | undefined
   allowedSlippage: Percent
   onConfirm: () => void
-  disabledConfirm: boolean
   swapErrorMessage: ReactNode | undefined
+  disabledConfirm: boolean
   swapQuoteReceivedDate: Date | undefined
   fiatValueInput: { data?: number; isLoading: boolean }
   fiatValueOutput: { data?: number; isLoading: boolean }
