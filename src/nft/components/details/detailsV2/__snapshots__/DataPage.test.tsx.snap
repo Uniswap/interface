@@ -2,13 +2,13 @@
 
 exports[`placeholder containers load 1`] = `
 <DocumentFragment>
-  .c2 {
+  .c3 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
 }
 
-.c10 {
+.c11 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -18,7 +18,7 @@ exports[`placeholder containers load 1`] = `
   width: min-content;
 }
 
-.c12 {
+.c13 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -41,7 +41,7 @@ exports[`placeholder containers load 1`] = `
   border-radius: 4px;
 }
 
-.c3 {
+.c4 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -58,7 +58,7 @@ exports[`placeholder containers load 1`] = `
   justify-content: flex-start;
 }
 
-.c7 {
+.c8 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -76,7 +76,7 @@ exports[`placeholder containers load 1`] = `
   gap: 4px;
 }
 
-.c11 {
+.c12 {
   width: -webkit-min-content;
   width: -moz-min-content;
   width: min-content;
@@ -96,7 +96,7 @@ exports[`placeholder containers load 1`] = `
   gap: 12px;
 }
 
-.c21 {
+.c22 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -114,15 +114,15 @@ exports[`placeholder containers load 1`] = `
   gap: 8px;
 }
 
-.c8 {
+.c9 {
   color: #7780A0;
 }
 
-.c9 {
+.c10 {
   color: #0D111C;
 }
 
-.c0 {
+.c1 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -136,11 +136,11 @@ exports[`placeholder containers load 1`] = `
   justify-content: flex-start;
 }
 
-.c25 {
+.c26 {
   height: 568px;
 }
 
-.c18 {
+.c19 {
   background: #FFFFFF;
   border: 1px solid #D2D9EE;
   border-radius: 16px;
@@ -151,33 +151,33 @@ exports[`placeholder containers load 1`] = `
   align-self: flex-start;
 }
 
-.c19 {
+.c20 {
   gap: 32px;
   margin-bottom: 12px;
   width: 100;
 }
 
-.c20 {
+.c21 {
   color: #0D111C;
   line-height: 24px;
   cursor: pointer;
 }
 
-.c20:hover {
+.c21:hover {
   opacity: 0.6;
 }
 
-.c22 {
+.c23 {
   color: #98A1C0;
   line-height: 24px;
   cursor: pointer;
 }
 
-.c22:hover {
+.c23:hover {
   opacity: 0.6;
 }
 
-.c24 {
+.c25 {
   background: #D2D9EE;
   border-radius: 4px;
   padding: 2px 4px;
@@ -185,11 +185,11 @@ exports[`placeholder containers load 1`] = `
   line-height: 12px;
 }
 
-.c23 {
+.c24 {
   height: 252px;
 }
 
-.c13 {
+.c14 {
   padding: 16px;
   width: 100%;
   font-weight: 500;
@@ -227,56 +227,56 @@ exports[`placeholder containers load 1`] = `
   transform: perspective(1px) translateZ(0);
 }
 
-.c13:disabled {
+.c14:disabled {
   opacity: 50%;
   cursor: auto;
   pointer-events: none;
 }
 
-.c13 > * {
+.c14 > * {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
 }
 
-.c13 > a {
+.c14 > a {
   -webkit-text-decoration: none;
   text-decoration: none;
 }
 
-.c14 {
+.c15 {
   background-color: #F5F6FC;
   color: #7780A0;
   font-size: 16px;
   font-weight: 500;
 }
 
-.c14:hover {
+.c15:hover {
   background-color: #d2daf7;
 }
 
-.c14:active {
+.c15:active {
   background-color: #bdc8f3;
 }
 
-.c4 {
+.c5 {
   gap: 24px;
 }
 
-.c5 {
+.c6 {
   width: 96px;
   height: 96px;
   border-radius: 20px;
   object-fit: cover;
 }
 
-.c6 {
+.c7 {
   gap: 4px;
   margin-right: auto;
 }
 
-.c15 {
+.c16 {
   white-space: nowrap;
   width: -webkit-min-content;
   width: -moz-min-content;
@@ -287,7 +287,13 @@ exports[`placeholder containers load 1`] = `
   border-radius: 16px;
 }
 
-.c1 {
+.c0 {
+  padding: 24px 64px;
+  height: 100vh;
+  width: 100%;
+}
+
+.c2 {
   height: 100%;
   width: 100%;
   gap: 36px;
@@ -295,12 +301,12 @@ exports[`placeholder containers load 1`] = `
   margin: 0 auto;
 }
 
-.c16 {
+.c17 {
   gap: 24px;
   padding-bottom: 45px;
 }
 
-.c17 {
+.c18 {
   gap: 24px;
   width: 100%;
   -webkit-align-self: flex-start;
@@ -309,19 +315,37 @@ exports[`placeholder containers load 1`] = `
 }
 
 @media screen and (max-width:768px) {
-  .c4 {
-    display: none;
-  }
-}
-
-@media screen and (max-width:1024px) {
   .c5 {
     display: none;
   }
 }
 
 @media screen and (max-width:1024px) {
-  .c16 {
+  .c6 {
+    display: none;
+  }
+}
+
+@media screen and (max-width:768px) {
+  .c0 {
+    height: 100%;
+  }
+}
+
+@media screen and (max-width:640px) {
+  .c0 {
+    padding: 24px 48px;
+  }
+}
+
+@media screen and (max-width:396px) {
+  .c0 {
+    padding: 24px 20px;
+  }
+}
+
+@media screen and (max-width:1024px) {
+  .c17 {
     -webkit-flex-wrap: wrap;
     -ms-flex-wrap: wrap;
     flex-wrap: wrap;
@@ -329,141 +353,145 @@ exports[`placeholder containers load 1`] = `
 }
 
 <div
-    class="c0 c1"
+    class="c0"
   >
     <div
-      class="c2 c3 c4"
-    >
-      <img
-        class="c5"
-        src="https://cdn.center.app/1/0xED5AF388653567Af2F388E6224dC7C4b3241C544/3318/50ed67ad647d0aa0cad0b830d136a677efc2fb72a44587bc35f2a5fb334a7fdf.png"
-      />
-      <div
-        class="c0 c6"
-      >
-        <div
-          class="c2 c7"
-        >
-          <div
-            class="c8 css-1aekuku"
-          >
-            Azuki
-          </div>
-          <svg
-            fill="none"
-            height="16px"
-            viewBox="0 0 20 20"
-            width="16px"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M4.52795 13.8056C4.52719 14.4043 4.6712 14.8474 4.95997 15.135C5.24798 15.4233 5.68496 15.5651 6.27091 15.5605H7.57497C7.62945 15.5585 7.68379 15.5676 7.73463 15.5873C7.78547 15.607 7.83176 15.6369 7.87062 15.6752L8.79884 16.5928C9.22054 17.0142 9.63382 17.2237 10.0387 17.2214C10.4436 17.2191 10.8569 17.0096 11.2786 16.5928L12.1954 15.6752C12.2356 15.6365 12.2832 15.6063 12.3354 15.5866C12.3876 15.5669 12.4433 15.558 12.499 15.5605H13.7951C14.3871 15.5613 14.8283 15.4171 15.1186 15.1281C15.4089 14.839 15.5541 14.3959 15.5541 13.7987V12.5014C15.5511 12.389 15.5923 12.2799 15.6687 12.1974L16.5854 11.2798C17.0125 10.86 17.2245 10.4467 17.2214 10.0399C17.2184 9.63305 17.0064 9.21935 16.5854 8.79878L15.6687 7.88115C15.592 7.79886 15.5509 7.68965 15.5541 7.57719V6.2799C15.5533 5.68191 15.4093 5.23878 15.1221 4.95049C14.8348 4.66221 14.3925 4.51806 13.7951 4.51806H12.499C12.4433 4.52036 12.3877 4.51138 12.3355 4.49168C12.2834 4.47197 12.2357 4.44193 12.1954 4.40336L11.2786 3.48574C10.8569 3.06439 10.4436 2.85487 10.0387 2.85717C9.63382 2.85946 9.22054 3.06898 8.79884 3.48574L7.87062 4.40336C7.83164 4.44148 7.78536 4.4713 7.73454 4.49101C7.68373 4.51072 7.62943 4.51993 7.57497 4.51806H6.27091C5.67961 4.51883 5.23995 4.66182 4.95194 4.94705C4.66393 5.23228 4.51992 5.67656 4.51992 6.2799V7.58063C4.52314 7.69309 4.48197 7.80229 4.40533 7.88459L3.48859 8.80222C3.06765 9.22203 2.85718 9.63572 2.85718 10.0433C2.85718 10.4509 3.07033 10.8653 3.49662 11.2867L4.41336 12.2043C4.48979 12.2867 4.53092 12.3958 4.52795 12.5083V13.8056Z"
-              fill="#FB118E"
-            />
-            <path
-              d="M9.99737 12.4943C9.86205 12.7005 9.6623 12.8164 9.43032 12.8164C9.19191 12.8164 9.00504 12.7198 8.83106 12.4943L7.31036 10.6385C7.20082 10.5032 7.14282 10.3614 7.14282 10.2068C7.14282 9.88458 7.38768 9.63327 7.70342 9.63327C7.89673 9.63327 8.05138 9.70415 8.20603 9.90391L9.40455 11.4311L11.9498 7.34577C12.0851 7.12669 12.2591 7.02359 12.4524 7.02359C12.7553 7.02359 13.0388 7.23623 13.0388 7.55197C13.0388 7.70017 12.9615 7.85482 12.8777 7.99014L9.99737 12.4943Z"
-              fill="white"
-            />
-          </svg>
-        </div>
-        <div
-          class="c9 css-1tiu9da"
-        >
-          Azuki #3318
-        </div>
-      </div>
-      <div
-        class="c10 c11"
-        width="min-content"
-      >
-        <button
-          class="c12 c13 c14 c15"
-        >
-          Make an offer
-        </button>
-      </div>
-    </div>
-    <div
-      class="c2 c3 c16"
+      class="c1 c2"
     >
       <div
-        class="c0 c17"
+        class="c3 c4 c5"
       >
+        <img
+          class="c6"
+          src="https://cdn.center.app/1/0xED5AF388653567Af2F388E6224dC7C4b3241C544/3318/50ed67ad647d0aa0cad0b830d136a677efc2fb72a44587bc35f2a5fb334a7fdf.png"
+        />
         <div
-          class="c18"
+          class="c1 c7"
         >
           <div
-            class="c2 c3 c19"
+            class="c3 c8"
           >
             <div
-              class="c9 c20 css-rjqmed"
+              class="c9 css-1aekuku"
             >
-              <div
-                class="c2 c21"
-              >
-                Description
-              </div>
+              Azuki
             </div>
-            <div
-              class="c9 c22 css-rjqmed"
+            <svg
+              fill="none"
+              height="16px"
+              viewBox="0 0 20 20"
+              width="16px"
+              xmlns="http://www.w3.org/2000/svg"
             >
-              <div
-                class="c2 c21"
-              >
-                Details
-              </div>
-            </div>
+              <path
+                d="M4.52795 13.8056C4.52719 14.4043 4.6712 14.8474 4.95997 15.135C5.24798 15.4233 5.68496 15.5651 6.27091 15.5605H7.57497C7.62945 15.5585 7.68379 15.5676 7.73463 15.5873C7.78547 15.607 7.83176 15.6369 7.87062 15.6752L8.79884 16.5928C9.22054 17.0142 9.63382 17.2237 10.0387 17.2214C10.4436 17.2191 10.8569 17.0096 11.2786 16.5928L12.1954 15.6752C12.2356 15.6365 12.2832 15.6063 12.3354 15.5866C12.3876 15.5669 12.4433 15.558 12.499 15.5605H13.7951C14.3871 15.5613 14.8283 15.4171 15.1186 15.1281C15.4089 14.839 15.5541 14.3959 15.5541 13.7987V12.5014C15.5511 12.389 15.5923 12.2799 15.6687 12.1974L16.5854 11.2798C17.0125 10.86 17.2245 10.4467 17.2214 10.0399C17.2184 9.63305 17.0064 9.21935 16.5854 8.79878L15.6687 7.88115C15.592 7.79886 15.5509 7.68965 15.5541 7.57719V6.2799C15.5533 5.68191 15.4093 5.23878 15.1221 4.95049C14.8348 4.66221 14.3925 4.51806 13.7951 4.51806H12.499C12.4433 4.52036 12.3877 4.51138 12.3355 4.49168C12.2834 4.47197 12.2357 4.44193 12.1954 4.40336L11.2786 3.48574C10.8569 3.06439 10.4436 2.85487 10.0387 2.85717C9.63382 2.85946 9.22054 3.06898 8.79884 3.48574L7.87062 4.40336C7.83164 4.44148 7.78536 4.4713 7.73454 4.49101C7.68373 4.51072 7.62943 4.51993 7.57497 4.51806H6.27091C5.67961 4.51883 5.23995 4.66182 4.95194 4.94705C4.66393 5.23228 4.51992 5.67656 4.51992 6.2799V7.58063C4.52314 7.69309 4.48197 7.80229 4.40533 7.88459L3.48859 8.80222C3.06765 9.22203 2.85718 9.63572 2.85718 10.0433C2.85718 10.4509 3.07033 10.8653 3.49662 11.2867L4.41336 12.2043C4.48979 12.2867 4.53092 12.3958 4.52795 12.5083V13.8056Z"
+                fill="#FB118E"
+              />
+              <path
+                d="M9.99737 12.4943C9.86205 12.7005 9.6623 12.8164 9.43032 12.8164C9.19191 12.8164 9.00504 12.7198 8.83106 12.4943L7.31036 10.6385C7.20082 10.5032 7.14282 10.3614 7.14282 10.2068C7.14282 9.88458 7.38768 9.63327 7.70342 9.63327C7.89673 9.63327 8.05138 9.70415 8.20603 9.90391L9.40455 11.4311L11.9498 7.34577C12.0851 7.12669 12.2591 7.02359 12.4524 7.02359C12.7553 7.02359 13.0388 7.23623 13.0388 7.55197C13.0388 7.70017 12.9615 7.85482 12.8777 7.99014L9.99737 12.4943Z"
+                fill="white"
+              />
+            </svg>
           </div>
           <div
-            class="c23"
+            class="c10 css-1tiu9da"
           >
-            Description Content
+            Azuki #3318
           </div>
+        </div>
+        <div
+          class="c11 c12"
+          width="min-content"
+        >
+          <button
+            class="c13 c14 c15 c16"
+          >
+            Make an offer
+          </button>
         </div>
       </div>
       <div
-        class="c18"
+        class="c3 c4 c17"
       >
         <div
-          class="c2 c3 c19"
+          class="c1 c18"
         >
           <div
-            class="c9 c20 css-rjqmed"
+            class="c19"
           >
             <div
-              class="c2 c21"
+              class="c3 c4 c20"
             >
-              Activity
-            </div>
-          </div>
-          <div
-            class="c9 c22 css-rjqmed"
-          >
-            <div
-              class="c2 c21"
-            >
-              Offers
               <div
-                class="c24 css-f8aq60"
+                class="c10 c21 css-rjqmed"
               >
-                10+
+                <div
+                  class="c3 c22"
+                >
+                  Description
+                </div>
+              </div>
+              <div
+                class="c10 c23 css-rjqmed"
+              >
+                <div
+                  class="c3 c22"
+                >
+                  Details
+                </div>
               </div>
             </div>
-          </div>
-          <div
-            class="c9 c22 css-rjqmed"
-          >
             <div
-              class="c2 c21"
+              class="c24"
             >
-              Listings
+              Description Content
             </div>
           </div>
         </div>
         <div
-          class="c25"
+          class="c19"
         >
-          Activity Content
+          <div
+            class="c3 c4 c20"
+          >
+            <div
+              class="c10 c21 css-rjqmed"
+            >
+              <div
+                class="c3 c22"
+              >
+                Activity
+              </div>
+            </div>
+            <div
+              class="c10 c23 css-rjqmed"
+            >
+              <div
+                class="c3 c22"
+              >
+                Offers
+                <div
+                  class="c25 css-f8aq60"
+                >
+                  10+
+                </div>
+              </div>
+            </div>
+            <div
+              class="c10 c23 css-rjqmed"
+            >
+              <div
+                class="c3 c22"
+              >
+                Listings
+              </div>
+            </div>
+          </div>
+          <div
+            class="c26"
+          >
+            Activity Content
+          </div>
         </div>
       </div>
     </div>
