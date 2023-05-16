@@ -188,6 +188,13 @@ export default function ConfirmSwapModal({
   })
 
   const swapFailed = Boolean(swapError) && !didUserReject(swapError)
+  console.log({ confirmModalState, swapError, swapFailed })
+  useEffect(() => {
+    // Reset the modal state if the user rejected the swap.
+    if (swapError && !swapFailed) {
+      onCancel()
+    }
+  }, [onCancel, swapError, swapFailed])
 
   const showAcceptChanges = Boolean(
     trade && doesTradeDiffer && confirmModalState !== ConfirmModalState.PENDING_CONFIRMATION
@@ -274,7 +281,10 @@ export default function ConfirmSwapModal({
     <Trace modal={InterfaceModalName.CONFIRM_SWAP}>
       <Modal isOpen $scrollOverlay={true} onDismiss={onModalDismiss} maxHeight={90}>
         {approvalError || swapFailed ? (
-          <ErrorModalContent errorType={approvalError ?? PendingModalError.CONFIRMATION_ERROR} onRetry={onCancel} />
+          <ErrorModalContent
+            errorType={approvalError ?? PendingModalError.CONFIRMATION_ERROR}
+            onRetry={onStartSwapFlow}
+          />
         ) : (
           <ConfirmationModalContent
             title={confirmModalState === ConfirmModalState.REVIEWING ? <Trans>Review Swap</Trans> : undefined}

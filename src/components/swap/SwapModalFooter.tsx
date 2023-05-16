@@ -198,6 +198,7 @@ export default function SwapModalFooter({
               </ThemedText.HeadlineSmall>
             </ConfirmButton>
           </TraceEvent>
+
           {swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}
         </AutoRow>
       )}
