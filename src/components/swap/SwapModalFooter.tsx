@@ -106,7 +106,7 @@ export default function SwapModalFooter({
                 <Trans>Network fee</Trans>
               </Label>
             </MouseoverTooltip>
-            <DetailRowValue>{trade.gasUseEstimateUSD ? `~${trade.gasUseEstimateUSD}` : '-'}</DetailRowValue>
+            <DetailRowValue>{trade.gasUseEstimateUSD ? `~$${trade.gasUseEstimateUSD}` : '-'}</DetailRowValue>
           </Row>
         </ThemedText.BodySmall>
         <ThemedText.BodySmall>
