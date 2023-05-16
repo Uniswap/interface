@@ -469,10 +469,6 @@ export function Swap({
 
   const handleMaxInput = useCallback(() => {
     maxInputAmount && onUserInput(Field.INPUT, maxInputAmount.toExact())
-    sendEvent({
-      category: 'Swap',
-      action: 'Max',
-    })
   }, [maxInputAmount, onUserInput])
 
   const handleOutputSelect = useCallback(
