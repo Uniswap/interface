@@ -85,7 +85,7 @@ function getSettings(darkMode: boolean) {
     deprecated_mediaWidth: deprecated_mediaWidthTemplates,
 
     navHeight: 72,
-    mobileBottomBarHeight: 52,
+    mobileBottomBarHeight: window.matchMedia('(display-mode: standalone)').matches ? 76 : 52,
     maxWidth: MAX_CONTENT_WIDTH,
 
     // deprecated - please use hardcoded exported values instead of
