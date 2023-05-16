@@ -188,7 +188,6 @@ export default function ConfirmSwapModal({
   })
 
   const swapFailed = Boolean(swapError) && !didUserReject(swapError)
-  console.log({ confirmModalState, swapError, swapFailed })
   useEffect(() => {
     // Reset the modal state if the user rejected the swap.
     if (swapError && !swapFailed) {
