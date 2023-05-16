@@ -28,7 +28,7 @@ async function validate(schema: ValidationSchema, data: unknown): Promise<unknow
       throw new Error('No validation function specified for token list schema')
   }
 
-  const [, validatorModule] = await Promise.all([import('ajv'), validatorImport])
+  const [, validatorModule] = await Promise.all([retry(() => import('ajv'))(), validatorImport])
   const validator = (await validatorModule()).default as ValidateFunction
   if (validator?.(data)) {
     return data
