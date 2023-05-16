@@ -33,7 +33,7 @@ describe('Service Worker', () => {
       const serviceWorkerStatus = body.match(/"service_worker":"(\w+)"/)?.[1]
       if (serviceWorkerStatus) {
         const alias = `ServiceWorker:${serviceWorkerStatus}`
-        cy.log(alias)
+        console.log(alias)
         req.alias = alias
       }
     })
