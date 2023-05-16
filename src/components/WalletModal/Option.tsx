@@ -1,12 +1,17 @@
 import { TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
-import { useCloseAccountDrawer } from 'components/AccountDrawer'
+import { useAccountDrawer, useCloseAccountDrawer } from 'components/AccountDrawer'
 import Loader from 'components/Icons/LoadingSpinner'
 import { ActivationStatus, useActivationState } from 'connection/activate'
-import { Connection } from 'connection/types'
+import { Connection, ConnectionType } from 'connection/types'
+import { useOnClickOutside } from 'hooks/useOnClickOutside'
+import { MouseEvent, useEffect, useRef, useState } from 'react'
+import { MoreHorizontal } from 'react-feather'
 import styled from 'styled-components/macro'
+import { ThemedText } from 'theme'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { flexColumnNoWrap, flexRowNoWrap } from 'theme/styles'
+import { Z_INDEX } from 'theme/zIndex'
 
 import NewBadge from './NewBadge'
 
@@ -17,18 +22,16 @@ const OptionCardLeft = styled.div`
 `
 
 const OptionCardClickable = styled.button<{ selected: boolean }>`
+  align-items: center;
   background-color: ${({ theme }) => theme.backgroundModule};
   border: none;
-  width: 100% !important;
-
   display: flex;
+  flex: 1 1 auto;
   flex-direction: row;
-  align-items: center;
   justify-content: space-between;
-  padding: 18px;
-
-  transition: ${({ theme }) => theme.transition.duration.fast};
   opacity: ${({ disabled, selected }) => (disabled && !selected ? '0.5' : '1')};
+  padding: 18px;
+  transition: ${({ theme }) => theme.transition.duration.fast};
 
   &:hover {
     cursor: ${({ disabled }) => !disabled && 'pointer'};
@@ -62,38 +65,147 @@ const IconWrapper = styled.div`
     align-items: flex-end;
   `};
 `
+const WCv2PopoverContent = styled.button`
+  background: ${({ theme }) => theme.backgroundSurface};
+  border: 1px solid ${({ theme }) => theme.backgroundOutline};
+  border-radius: 12px;
+  cursor: pointer;
+  display: flex;
+  max-width: 240px;
+  padding: 16px;
+  position: absolute;
+  z-index: ${Z_INDEX.popover};
+`
+const WCv2PopoverToggle = styled.button`
+  align-items: center;
+  background-color: ${({ theme }) => theme.backgroundModule};
+  border: none;
+  color: ${({ theme }) => theme.textTertiary};
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  padding: 0;
 
-export default function Option({ connection }: { connection: Connection }) {
+  &:hover {
+    background-color: ${({ theme }) => theme.hoverState};
+  }
+
+  svg {
+    border-color: ${({ theme }) => theme.textTertiary};
+    border-width: 0px 0px 0px 1px;
+    border-style: solid;
+    padding: 0 16px;
+    width: 100%;
+  }
+`
+const Wrapper = styled.div`
+  align-items: stretch;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  position: relative;
+`
+
+interface PopupButtonContentProps {
+  children: JSX.Element
+  connection: Connection
+  isDarkMode: boolean
+  show: boolean
+  onClick: (e: MouseEvent<HTMLButtonElement>) => void
+  onClose: () => void
+}
+function PopupButtonContent({ connection, isDarkMode, show, children, onClick, onClose }: PopupButtonContentProps) {
+  const popoverElement = useRef<HTMLButtonElement>(null)
+  useOnClickOutside(popoverElement, onClose)
+  return (
+    <>
+      {children}
+      {show && (
+        <WCv2PopoverContent onClick={onClick} style={{ top: 60, right: 10 }} ref={popoverElement}>
+          <IconWrapper style={{ marginRight: '12px' }}>
+            <img src={connection.getIcon?.(isDarkMode)} alt="Icon" style={{ height: '20px', width: '20px' }} />
+          </IconWrapper>
+          <div>
+            <ThemedText.BodyPrimary style={{ marginBottom: '4px', textAlign: 'left' }}>
+              Connect with v2
+            </ThemedText.BodyPrimary>
+            <ThemedText.Caption color="textSecondary" style={{ textAlign: 'left' }}>
+              Under development and unsupported by most wallets
+            </ThemedText.Caption>
+          </div>
+        </WCv2PopoverContent>
+      )}
+    </>
+  )
+}
+
+interface OptionProps {
+  connection: Connection
+}
+export default function Option({ connection }: OptionProps) {
   const { activationState, tryActivation } = useActivationState()
+  const [WC2PromptOpen, setWC2PromptOpen] = useState(false)
   const closeDrawer = useCloseAccountDrawer()
   const activate = () => tryActivation(connection, closeDrawer)
+  const [accountDrawerOpen] = useAccountDrawer()
+
+  useEffect(() => {
+    if (!accountDrawerOpen) setWC2PromptOpen(false)
+  }, [accountDrawerOpen])
 
   const isSomeOptionPending = activationState.status === ActivationStatus.PENDING
   const isCurrentOptionPending = isSomeOptionPending && activationState.connection.type === connection.type
   const isDarkMode = useIsDarkMode()
 
+  const handleClickConnectViaWCv2 = (e: MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation()
+    console.log('connect via wallet connect v2')
+  }
+  const handleClickOpenWCv2Tooltip = (e: MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation()
+    setWC2PromptOpen(!WC2PromptOpen)
+  }
+
+  const handlePopoverClose = () => (WC2PromptOpen ? setWC2PromptOpen(false) : null)
+
   return (
-    <TraceEvent
-      events={[BrowserEvent.onClick]}
-      name={InterfaceEventName.WALLET_SELECTED}
-      properties={{ wallet_type: connection.getName() }}
-      element={InterfaceElementName.WALLET_TYPE_OPTION}
-    >
-      <OptionCardClickable
-        onClick={activate}
-        disabled={isSomeOptionPending}
-        selected={isCurrentOptionPending}
-        data-testid={`wallet-option-${connection.type}`}
+    <Wrapper>
+      <TraceEvent
+        events={[BrowserEvent.onClick]}
+        name={InterfaceEventName.WALLET_SELECTED}
+        properties={{ wallet_type: connection.getName() }}
+        element={InterfaceElementName.WALLET_TYPE_OPTION}
       >
-        <OptionCardLeft>
-          <IconWrapper>
-            <img src={connection.getIcon?.(isDarkMode)} alt="Icon" />
-          </IconWrapper>
-          <HeaderText>{connection.getName()}</HeaderText>
-          {connection.isNew && <NewBadge />}
-        </OptionCardLeft>
-        {isCurrentOptionPending && <Loader />}
-      </OptionCardClickable>
-    </TraceEvent>
+        <OptionCardClickable
+          onClick={activate}
+          disabled={isSomeOptionPending}
+          selected={isCurrentOptionPending}
+          data-testid={`wallet-option-${connection.type}`}
+        >
+          <OptionCardLeft>
+            <IconWrapper>
+              <img src={connection.getIcon?.(isDarkMode)} alt="Icon" />
+            </IconWrapper>
+            <HeaderText>{connection.getName()}</HeaderText>
+            {connection.isNew && <NewBadge />}
+          </OptionCardLeft>
+          {isCurrentOptionPending && <Loader />}
+        </OptionCardClickable>
+      </TraceEvent>
+
+      {connection.type === ConnectionType.WALLET_CONNECT && (
+        <PopupButtonContent
+          connection={connection}
+          isDarkMode={isDarkMode}
+          show={WC2PromptOpen}
+          onClick={handleClickConnectViaWCv2}
+          onClose={handlePopoverClose}
+        >
+          <WCv2PopoverToggle onClick={handleClickOpenWCv2Tooltip}>
+            <MoreHorizontal />
+          </WCv2PopoverToggle>
+        </PopupButtonContent>
+      )}
+    </Wrapper>
   )
 }
