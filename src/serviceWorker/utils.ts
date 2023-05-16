@@ -37,3 +37,8 @@ export function groupEntries(entries: (string | PrecacheEntry)[]): GroupedEntrie
     { onDemandEntries: [], precacheEntries: [] }
   )
 }
+
+export async function deleteUnusedCaches(caches: CacheStorage, { usedCaches }: { usedCaches: string[] }) {
+  const cacheKeys = await caches.keys()
+  cacheKeys.filter((key) => !usedCaches.includes(key)).forEach((key) => caches.delete(key))
+}
