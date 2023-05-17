@@ -55,8 +55,6 @@ function useConfirmModalState({
   doesTradeDiffer: boolean
 }) {
   const [confirmModalState, setConfirmModalState] = useState<ConfirmModalState>(ConfirmModalState.REVIEWING)
-  // todo: remove this
-  // const [confirmModalState, setConfirmModalState] = useState<ConfirmModalState>(ConfirmModalState.APPROVING_TOKEN)
   const [approvalError, setApprovalError] = useState<PendingModalError>()
   const [pendingModalSteps, setPendingModalSteps] = useState<PendingConfirmModalState[]>([])
 

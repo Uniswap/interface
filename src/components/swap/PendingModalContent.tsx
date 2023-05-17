@@ -6,7 +6,7 @@ import { useWeb3React } from '@web3-react/core'
 import { ButtonPrimary } from 'components/Button'
 import { ColumnCenter } from 'components/Column'
 import Column from 'components/Column'
-import Loader from 'components/Icons/LoadingSpinner'
+import { LoaderV3 } from 'components/Icons/LoadingSpinner'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import QuestionHelper from 'components/QuestionHelper'
 import Row from 'components/Row'
@@ -56,8 +56,9 @@ const TooltipLink = styled(ThemedText.Link)`
   cursor: help;
 `
 
-// TODO: switch to LoaderV2 with updated API to support changing color and size.
-const LoadingIndicator = styled(Loader)`
+const LoadingIndicatorOverlay = styled(LoaderV3)`
+  stroke: ${({ theme }) => theme.textTertiary};
+  fill: ${({ theme }) => theme.textTertiary};
   width: calc(100% + 8px);
   height: calc(100% + 8px);
   top: -4px;
@@ -114,11 +115,12 @@ const AnimatedEntranceConfirmation = styled(AnimatedConfirmation)`
   ${scaleInAnimation}
 `
 
-const CurrencyLoaderContainer = styled.div<{ asBadge: boolean }>`
+const CurrencyLoaderContainer = styled.div<{ $visible: boolean; asBadge: boolean }>`
   z-index: 2;
   border-radius: 50%;
   transition: all ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.inOut}`};
   position: absolute;
+  opacity: ${({ $visible }) => ($visible ? 1 : 0)};
   height: ${({ asBadge }) => (asBadge ? '20px' : '100%')};
   width: ${({ asBadge }) => (asBadge ? '20px' : '100%')};
   bottom: ${({ asBadge }) => (asBadge ? '-4px' : 0)};
@@ -131,18 +133,16 @@ const RaisedCurrencyLogo = styled(CurrencyLogo)`
 `
 
 function CurrencyLoader({
+  visible,
   currency,
-  loading,
   asBadge = false,
 }: {
+  visible: boolean
   currency: Currency | undefined
-  loading: boolean
   asBadge?: boolean
 }) {
-  const theme = useTheme()
   return (
-    <CurrencyLoaderContainer asBadge={asBadge}>
-      {loading && <LoadingIndicator stroke={theme.textTertiary} />}
+    <CurrencyLoaderContainer asBadge={asBadge} $visible={visible}>
       <RaisedCurrencyLogo currency={currency} size="100%" />
     </CurrencyLoaderContainer>
   )
@@ -162,14 +162,12 @@ const PinkCircle = styled.div<{ $visible: boolean }>`
   transition: opacity ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.inOut}`};
 `
 
-function PaperIcon({ visible, loading }: { visible: boolean; loading: boolean }) {
-  const theme = useTheme()
+function PaperIcon({ visible }: { visible: boolean }) {
   return (
     <>
       <PinkCircle $visible={visible}>
         <PapersIcon />
       </PinkCircle>
-      {loading && <LoadingIndicator stroke={theme.textTertiary} />}
     </>
   )
 }
@@ -334,7 +332,6 @@ export function PendingModalContent({
   hideStepIndicators,
   tokenApprovalPending = false,
 }: PendingModalContentProps) {
-  const theme = useTheme()
   const { chainId } = useWeb3React()
   const swapConfirmed = useIsTransactionConfirmed(swapHash)
   const swapPending = swapHash !== undefined && !swapConfirmed
@@ -352,19 +349,18 @@ export function PendingModalContent({
   return (
     <Container gap="lg">
       <LogoContainer>
-        <PaperIcon visible={currentStep === ConfirmModalState.APPROVING_TOKEN} loading={tokenApprovalPending} />
+        <PaperIcon visible={currentStep === ConfirmModalState.APPROVING_TOKEN} />
         <CurrencyLoader
+          visible={currentStep !== ConfirmModalState.PENDING_CONFIRMATION}
           currency={trade?.inputAmount.currency}
-          loading={currentStep === ConfirmModalState.PERMITTING}
           asBadge={currentStep === ConfirmModalState.APPROVING_TOKEN}
         />
-        {currentStep === ConfirmModalState.PENDING_CONFIRMATION ? (
-          swapConfirmed || (swapPending && chainId === SupportedChainId.MAINNET) ? (
-            <AnimatedEntranceConfirmation size="48px" />
-          ) : (
-            <Loader stroke={theme.textTertiary} size="48px" />
-          )
-        ) : null}
+        {currentStep === ConfirmModalState.PENDING_CONFIRMATION &&
+        (swapConfirmed || (swapPending && chainId === SupportedChainId.MAINNET)) ? (
+          <AnimatedEntranceConfirmation size="48px" />
+        ) : (
+          <LoadingIndicatorOverlay />
+        )}
       </LogoContainer>
       <HeaderContainer gap="md" $disabled={tokenApprovalPending || swapPending}>
         <AnimationWrapper>
