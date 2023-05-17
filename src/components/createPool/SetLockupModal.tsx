@@ -29,11 +29,12 @@ const StyledClosed = styled(X)`
 
 interface SetLockupModalProps {
   isOpen: boolean
+  currentLockup: string
   onDismiss: () => void
   title: ReactNode
 }
 
-export default function SetLockupModal({ isOpen, onDismiss, title }: SetLockupModalProps) {
+export default function SetLockupModal({ isOpen, currentLockup, onDismiss, title }: SetLockupModalProps) {
   const { account, chainId } = useWeb3React()
 
   const [typed, setTyped] = useState('')
@@ -61,7 +62,7 @@ export default function SetLockupModal({ isOpen, onDismiss, title }: SetLockupMo
 
   let parsedLockup = ''
   try {
-    parsedLockup = parseUnits(typed, 0).toString()
+    parsedLockup = (Number(parseUnits(typed, 0)) * 86400).toString()
   } catch (error) {
     console.debug(`Failed to parse input amount: "${typed}"`, error)
   }
@@ -71,6 +72,11 @@ export default function SetLockupModal({ isOpen, onDismiss, title }: SetLockupMo
 
     // if callback not returned properly ignore
     if (!account || !chainId || !setLockupCallback || !parsedLockup) return
+
+    // the minimum acceptable value is 2 seconds
+    if (parsedLockup === '0') {
+      parsedLockup = '2'
+    }
 
     // try set lockup and store hash
     const hash = await setLockupCallback(parsedLockup)?.catch((error) => {
@@ -96,15 +102,15 @@ export default function SetLockupModal({ isOpen, onDismiss, title }: SetLockupMo
               <Trans>The minimum holder lockup.</Trans>
             </ThemedText.DeprecatedBody>
             <NameInputPanel
-              value={parsedLockup}
+              value={(typed ? Number(parsedLockup) / 86400 : '').toString()}
               onChange={onUserInput}
-              label="Lockup"
-              placeholder="max 2592000 seconds (30 days)"
+              label="Lockup (days)"
+              placeholder="max 30 days"
             />
             <ButtonPrimary
               disabled={
                 parsedLockup === '' ||
-                JSBI.lessThan(JSBI.BigInt(parsedLockup), JSBI.BigInt(2)) ||
+                (parsedLockup !== '0' ? parsedLockup : '2').toString() === currentLockup ||
                 JSBI.greaterThan(JSBI.BigInt(parsedLockup), JSBI.BigInt(2592000))
               }
               onClick={onSetLockup}
