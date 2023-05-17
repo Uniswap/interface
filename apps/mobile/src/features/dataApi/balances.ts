@@ -6,10 +6,10 @@ import { CurrencyInfo, GqlResult, PortfolioBalance } from 'src/features/dataApi/
 import { usePersistedError } from 'src/features/dataApi/utils'
 import { useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
 import { HIDE_SMALL_USD_BALANCES_THRESHOLD } from 'src/features/wallet/walletSlice'
-import { PollingInterval } from 'wallet/src/constants/misc'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
 import { fromGraphQLChain } from 'wallet/src/utils/chainId'
 import { currencyId, CurrencyId } from 'wallet/src/utils/currencyId'
+import { ONE_SECOND_MS } from 'wallet/src/utils/time'
 
 type SortedPortfolioBalances = {
   balances: PortfolioBalance[]
@@ -53,7 +53,7 @@ export function usePortfolioBalances(
     fetchPolicy: 'cache-and-network',
     notifyOnNetworkStatusChange: true,
     onCompleted,
-    pollInterval: shouldPoll ? PollingInterval.Fast : undefined,
+    pollInterval: shouldPoll ? ONE_SECOND_MS * 30 : undefined,
     variables: { ownerAddress: address },
     skip: !address,
   })

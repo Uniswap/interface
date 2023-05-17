@@ -127,10 +127,6 @@ function AddressTransactionHistoryUpdater({
       })
 
       if (newTransactionsFound) {
-        // NOTE: every wallet may call this on new transaction.
-        // It may be better to batch this action, or target specific queries.
-        refetchQueries()
-
         // Fetch full recent txn history and dispatch receive notification if needed.
         if (address === activeAccountAddress) {
           await fetchAndDispatchReceiveNotification(
@@ -139,6 +135,15 @@ function AddressTransactionHistoryUpdater({
             hideSpamTokens
           )
         }
+
+        // Delay 1s to ensure NXYZ balances sync after we detect this new txn. (As balances pulled
+        // from different data source)
+        setTimeout(
+          // NOTE: every wallet may call this on new transaction.
+          // It may be better to batch this action, or target specific queries.
+          refetchQueries,
+          ONE_SECOND_MS
+        )
       }
     })
   }, [
