@@ -17,7 +17,7 @@ import { ReactNode, RefObject, useCallback, useEffect, useRef, useState } from '
 import { AlertTriangle, ArrowRight } from 'react-feather'
 import { InterfaceTrade } from 'state/routing/types'
 import { useIsTransactionConfirmed } from 'state/transactions/hooks'
-import styled, { css, DefaultTheme, keyframes, useTheme } from 'styled-components/macro'
+import styled, { css, keyframes, useTheme } from 'styled-components/macro'
 import { ExternalLink } from 'theme'
 import { ThemedText } from 'theme/components/text'
 
@@ -35,14 +35,12 @@ const HeaderContainer = styled(ColumnCenter)<{ $disabled?: boolean }>`
 `
 
 const LogoContainer = styled.div`
+  height: 48px;
+  width: 48px;
   position: relative;
   display: flex;
   border-radius: 50%;
   overflow: visible;
-`
-
-const LogoLayer = styled.div`
-  z-index: 2;
 `
 
 const StepCircle = styled.div<{ active: boolean }>`
@@ -116,48 +114,63 @@ const AnimatedEntranceConfirmation = styled(AnimatedConfirmation)`
   ${scaleInAnimation}
 `
 
-function CurrencyLoader({ currency }: { currency: Currency | undefined }) {
+const CurrencyLoaderContainer = styled.div<{ asBadge: boolean }>`
+  z-index: 2;
+  border-radius: 50%;
+  transition: all ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.inOut}`};
+  position: absolute;
+  height: ${({ asBadge }) => (asBadge ? '20px' : '100%')};
+  width: ${({ asBadge }) => (asBadge ? '20px' : '100%')};
+  bottom: ${({ asBadge }) => (asBadge ? '-4px' : 0)};
+  right: ${({ asBadge }) => (asBadge ? '-4px' : 0)};
+  outline: ${({ theme, asBadge }) => (asBadge ? `2px solid ${theme.background}` : '')};
+`
+
+const RaisedCurrencyLogo = styled(CurrencyLogo)`
+  z-index: 1;
+`
+
+function CurrencyLoader({
+  currency,
+  loading,
+  asBadge = false,
+}: {
+  currency: Currency | undefined
+  loading: boolean
+  asBadge?: boolean
+}) {
   const theme = useTheme()
   return (
-    <LogoContainer>
-      <LogoLayer>
-        <CurrencyLogo currency={currency} size="48px" />
-      </LogoLayer>
-      <LoadingIndicator stroke={theme.textTertiary} />
-    </LogoContainer>
+    <CurrencyLoaderContainer asBadge={asBadge}>
+      {loading && <LoadingIndicator stroke={theme.textTertiary} />}
+      <RaisedCurrencyLogo currency={currency} size="100%" />
+    </CurrencyLoaderContainer>
   )
 }
 
-const PinkCircle = styled(LogoContainer)`
+const PinkCircle = styled.div<{ $visible: boolean }>`
+  position: absolute;
   display: flex;
-  height: 48px;
-  width: 48px;
+  height: 100%;
+  width: 100%;
+  border-radius: 50%;
   align-items: center;
   justify-content: center;
   background-color: ${({ theme }) => theme.userThemeColor};
   z-index: 1;
+  opacity: ${({ $visible }) => ($visible ? 1 : 0)};
+  transition: opacity ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.inOut}`};
 `
 
-function PaperIcon({ currency, loading }: { currency: Currency | undefined; loading: boolean }) {
+function PaperIcon({ visible, loading }: { visible: boolean; loading: boolean }) {
   const theme = useTheme()
   return (
-    <LogoContainer>
-      <PinkCircle>
+    <>
+      <PinkCircle $visible={visible}>
         <PapersIcon />
-        <CurrencyLogo
-          currency={currency}
-          size="20px"
-          style={{
-            position: 'absolute',
-            bottom: '-4px',
-            right: '-4px',
-            outline: `2px solid ${theme.background}`,
-            borderRadius: '50%',
-          }}
-        />
       </PinkCircle>
       {loading && <LoadingIndicator stroke={theme.textTertiary} />}
-    </LogoContainer>
+    </>
   )
 }
 
@@ -222,19 +235,17 @@ interface PendingModalContentProps {
 }
 
 interface ContentArgs {
-  chainId: number | undefined
   step: PendingConfirmModalState
   approvalCurrency: Currency | undefined
   trade: InterfaceTrade | undefined
   swapConfirmed: boolean
   swapPending: boolean
   tokenApprovalPending: boolean
-  theme: DefaultTheme
   swapHash: string | undefined
 }
 
 function getContent(args: ContentArgs): PendingModalStep {
-  const { chainId, step, approvalCurrency, swapConfirmed, swapPending, tokenApprovalPending, theme, trade } = args
+  const { step, approvalCurrency, swapConfirmed, swapPending, tokenApprovalPending, trade } = args
   switch (step) {
     case ConfirmModalState.APPROVING_TOKEN:
       return {
@@ -246,7 +257,6 @@ function getContent(args: ContentArgs): PendingModalStep {
           />
         ),
         label: tokenApprovalPending ? t`Pending...` : t`Proceed in your wallet`,
-        logo: <PaperIcon currency={approvalCurrency} loading={tokenApprovalPending} />,
       }
     case ConfirmModalState.PERMITTING:
       return {
@@ -258,7 +268,6 @@ function getContent(args: ContentArgs): PendingModalStep {
           />
         ),
         label: t`Proceed in your wallet`,
-        logo: <CurrencyLoader currency={approvalCurrency} />,
       }
     case ConfirmModalState.PENDING_CONFIRMATION:
       return {
@@ -271,12 +280,6 @@ function getContent(args: ContentArgs): PendingModalStep {
           <TradeSummary trade={trade} />
         ) : null,
         label: !swapPending && !swapConfirmed ? t`Proceed in your wallet` : null,
-        logo:
-          swapConfirmed || (swapPending && chainId === SupportedChainId.MAINNET) ? (
-            <AnimatedEntranceConfirmation size="48px" />
-          ) : (
-            <Loader stroke={theme.textTertiary} size="48px" />
-          ),
       }
   }
 }
@@ -335,14 +338,12 @@ export function PendingModalContent({
   const { chainId } = useWeb3React()
   const swapConfirmed = useIsTransactionConfirmed(swapHash)
   const swapPending = swapHash !== undefined && !swapConfirmed
-  const { logo, label, button } = getContent({
-    chainId,
+  const { label, button } = getContent({
     step: currentStep,
     approvalCurrency: trade?.inputAmount.currency,
     swapConfirmed,
     swapPending,
     tokenApprovalPending,
-    theme,
     swapHash,
     trade,
   })
@@ -350,18 +351,30 @@ export function PendingModalContent({
   useUnmountingAnimation(currentStepContainerRef, () => AnimationType.EXITING)
   return (
     <Container gap="lg">
-      {logo}
+      <LogoContainer>
+        <PaperIcon visible={currentStep === ConfirmModalState.APPROVING_TOKEN} loading={tokenApprovalPending} />
+        <CurrencyLoader
+          currency={trade?.inputAmount.currency}
+          loading={currentStep === ConfirmModalState.PERMITTING}
+          asBadge={currentStep === ConfirmModalState.APPROVING_TOKEN}
+        />
+        {currentStep === ConfirmModalState.PENDING_CONFIRMATION ? (
+          swapConfirmed || (swapPending && chainId === SupportedChainId.MAINNET) ? (
+            <AnimatedEntranceConfirmation size="48px" />
+          ) : (
+            <Loader stroke={theme.textTertiary} size="48px" />
+          )
+        ) : null}
+      </LogoContainer>
       <HeaderContainer gap="md" $disabled={tokenApprovalPending || swapPending}>
         <AnimationWrapper>
           {steps.map((step) => {
             const { title, subtitle } = getContent({
-              chainId,
               step,
               approvalCurrency: trade?.inputAmount.currency,
               swapConfirmed,
               swapPending,
               tokenApprovalPending,
-              theme,
               swapHash,
               trade,
             })
