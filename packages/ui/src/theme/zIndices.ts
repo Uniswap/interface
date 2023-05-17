@@ -2,6 +2,7 @@
 export const zIndices = {
   negative: -1,
   background: 0,
+  default: 1,
   dropdown: 1000,
   sticky: 1020,
   fixed: 1030,

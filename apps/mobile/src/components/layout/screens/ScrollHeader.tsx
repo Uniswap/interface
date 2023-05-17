@@ -12,7 +12,7 @@ import { BackButton } from 'src/components/buttons/BackButton'
 import { AnimatedBox, Box, Flex } from 'src/components/layout'
 import { WithScrollToTop } from 'src/components/layout/screens/WithScrollToTop'
 import { Theme, theme } from 'src/styles/theme'
-import { zIndices } from 'src/styles/zIndices'
+import { zIndices } from 'ui/src/theme/zIndices'
 
 type ScrollHeaderProps = {
   scrollY: SharedValue<number>

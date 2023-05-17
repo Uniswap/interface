@@ -2,10 +2,10 @@
 import { createTheme } from '@shopify/restyle'
 import { textVariants } from 'src/styles/font'
 import { iconSizes, imageSizes, spacing } from 'src/styles/sizing'
-import { zIndices } from 'src/styles/zIndices'
 import { borderRadii } from 'ui/src/theme/borderRadii'
 import { colorsDark, colorsLight } from 'ui/src/theme/color'
 import { opacify } from 'ui/src/theme/color/utils'
+import { zIndices } from 'ui/src/theme/zIndices'
 
 // TODO: move all of these tokens to shared theme files
 export const theme = createTheme({
