@@ -43,21 +43,11 @@ jobs:
           branch: main
       - name: Send Slack message that deploy has failed
         uses: slackapi/slack-github-action@007b2c3c751a190b6f0f040e47ed024deaa72844
-        if: always() && steps.pages-deployment.outcome == 'failure'
+        if: always()
         with:
           payload: |
             {
-              "text": "Staging Cloudflare pages deploy **FAILED** for: ${{ github.ref_name }}"
-            }
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
-      - name: Send Slack message that deploy has completed
-        uses: slackapi/slack-github-action@007b2c3c751a190b6f0f040e47ed024deaa72844
-        with:
-          payload: |
-            {
-              "text": "Staging Cloudflare pages deploy completed for: ${{ github.ref_name }}"
+              "text": "Staging deploy **${{ steps.pages-deployment.outcome }}** for: ${{ github.ref_name }}"
             }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
