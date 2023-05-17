@@ -132,7 +132,7 @@ jobs:
         id: cypress-cache
         with:
           path: /root/.cache/Cypress
-          key: ${{ runner.os }}-cypress
+          key: ${{ runner.os }}-cypress-12-12-0
       - run: |
           yarn cypress install
           yarn cypress info
@@ -159,6 +159,8 @@ jobs:
           # - if the event is pull_request, then we set the commit message to the pull request title
           COMMIT_INFO_MESSAGE: ${{ github.event.pull_request.title }}
           COMMIT_INFO_SHA: ${{ github.event.pull_request.head.sha }}
+          CYPRESS_PULL_REQUEST_ID: ${{ github.event.pull_request.number }}
+          CYPRESS_PULL_REQUEST_URL: ${{ github.event.pull_request.html_url }}
 
       - uses: codecov/codecov-action@v3
         with:
