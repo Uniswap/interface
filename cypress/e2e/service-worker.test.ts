@@ -51,27 +51,47 @@ describe('Service Worker', () => {
     )
   })
 
-  it('records a cache hit and reports the hit to analytics', () => {
-    cy.visit('/', { serviceWorker: true })
-    cy.wait('@ServiceWorker:hit')
+  describe('cache hit', () => {
+    it('reports the hit to analytics', () => {
+      cy.visit('/', { serviceWorker: true })
+      cy.wait('@ServiceWorker:hit')
+    })
   })
 
-  it('records a cache miss and reports the miss to analytics', () => {
-    // Deletes the index.html from the cache to force a cache miss.
-    cy.visit('/', { serviceWorker: true })
-      .then(async () => {
+  describe('cache miss', () => {
+    let cache: Cache | undefined
+    let request: Request | undefined
+    let response: Response | undefined
+    before(() => {
+      // Mocks the index.html in the cache to force a cache miss.
+      cy.visit('/', { serviceWorker: true }).then(async () => {
         const cacheKeys = await window.caches.keys()
         const cacheKey = cacheKeys.find((key) => key.match(/precache/))
         assert(cacheKey)
 
-        const cache = await window.caches.open(cacheKey)
+        cache = await window.caches.open(cacheKey)
         const keys = await cache.keys()
-        const key = keys.find((key) => key.url.match(/index/))
-        assert(key)
+        request = keys.find((key) => key.url.match(/index/))
+        assert(request)
 
-        await cache.put(key, new Response())
+        response = await cache.match(request)
+        assert(response)
+
+        await cache.put(request, new Response())
       })
-      .visit('/', { serviceWorker: true })
-    cy.wait('@ServiceWorker:miss')
+    })
+    after(() => {
+      // Restores the index.html in the cache so that re-runs behave as expected.
+      // This is necessary because the Service Worker will not re-populate the cache.
+      cy.then(async () => {
+        if (cache && request && response) {
+          await cache.put(request, response)
+        }
+      })
+    })
+    it('reports the miss to analytics', () => {
+      cy.visit('/', { serviceWorker: true })
+      cy.wait('@ServiceWorker:miss')
+    })
   })
 })
