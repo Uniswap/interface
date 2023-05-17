@@ -32,7 +32,7 @@ function getDeprecatedTheme(darkMode: boolean) {
     deprecated_primary2: darkMode ? colors.blue400 : colors.gold400,
     deprecated_primary3: darkMode ? colors.blue300 : colors.gold200,
     deprecated_primary4: darkMode ? '#376bad70' : '#F6DDE8',
-    deprecated_primary5: darkMode ? '#153d6f70' : '#FDEAF1',
+    deprecated_primary5: darkMode ? '#153d6f70' : '#fdfaea',
 
     // color text
     deprecated_primaryText1: darkMode ? darkTheme.accentAction : lightTheme.accentAction,
