@@ -5,10 +5,12 @@ import { Delay } from 'src/components/layout/Delayed'
 
 import {
   useFiatOnRampBuyQuoteQuery,
+  useFiatOnRampIpAddressQuery,
   useFiatOnRampLimitsQuery,
+  useFiatOnRampSupportedTokensQuery,
   useFiatOnRampWidgetUrlQuery,
-  useIsFiatOnRampBuyAllowedQuery,
 } from 'src/features/fiatOnRamp/api'
+import { MoonpayCurrency } from 'src/features/fiatOnRamp/types'
 import { addTransaction } from 'src/features/transactions/slice'
 import {
   TransactionDetails,
@@ -64,9 +66,10 @@ export function useMoonpayFiatOnRamp({
   baseCurrencyAmount: string
   quoteCurrencyCode: string
 }): {
-  eligible?: boolean
+  eligible: boolean
   quoteAmount: number
   quoteCurrencyAmountReady: boolean
+  quoteCurrencyAmountLoading: boolean
   isLoading: boolean
   externalTransactionId: string
   dispatchAddTransaction: () => void
@@ -78,7 +81,7 @@ export function useMoonpayFiatOnRamp({
   const theme = useAppTheme()
   const { t } = useTranslation()
 
-  const debouncedBaseCurrencyAmount = useDebounce(baseCurrencyAmount, Delay.Long)
+  const debouncedBaseCurrencyAmount = useDebounce(baseCurrencyAmount, Delay.Short)
 
   // we can consider adding `ownerAddress` as a prop to this modal in the future
   // for now, always assume the user wants to fund the current account
@@ -97,10 +100,15 @@ export function useMoonpayFiatOnRamp({
     areFeesIncluded: MOONPAY_FEES_INCLUDED,
   })
 
-  const { minBuyAmount, maxBuyAmount } = limitsData?.baseCurrency ?? {
-    minBuyAmount: 0,
+  const { maxBuyAmount } = limitsData?.baseCurrency ?? {
     maxBuyAmount: Infinity,
   }
+
+  // we're adding +1 here because MoonPay API is not precise with limits
+  // and an actual lower limit is a bit above the number, they provide in limits api
+  const minBuyAmount = limitsData?.baseCurrency?.minBuyAmount
+    ? limitsData.baseCurrency.minBuyAmount + 1
+    : 0
 
   const parsedBaseCurrencyAmount = parseFloat(baseCurrencyAmount)
   const amountIsTooSmall = parsedBaseCurrencyAmount < minBuyAmount
@@ -146,10 +154,12 @@ export function useMoonpayFiatOnRamp({
   const quoteAmount = buyQuote?.quoteCurrencyAmount ?? 0
 
   const {
-    data: eligible,
+    data: ipAddressData,
     isLoading: isEligibleLoading,
     isError: isFiatBuyAllowedQueryError,
-  } = useIsFiatOnRampBuyAllowedQuery()
+  } = useFiatOnRampIpAddressQuery()
+
+  const eligible = Boolean(ipAddressData?.isBuyAllowed)
 
   const isLoading = isEligibleLoading || isWidgetUrlLoading
   const isError =
@@ -158,11 +168,10 @@ export function useMoonpayFiatOnRamp({
     buyQuoteLoadingQueryError ||
     limitsLoadingQueryError
 
-  const quoteCurrencyAmountReady =
-    isBaseCurrencyAmountValid &&
-    !buyQuoteLoading &&
-    !limitsLoading &&
-    debouncedBaseCurrencyAmount === baseCurrencyAmount
+  const quoteCurrencyAmountLoading =
+    buyQuoteLoading || limitsLoading || debouncedBaseCurrencyAmount !== baseCurrencyAmount
+
+  const quoteCurrencyAmountReady = isBaseCurrencyAmountValid && !quoteCurrencyAmountLoading
 
   let errorText, errorColor: keyof Theme['colors'] | undefined
   if (isError) {
@@ -180,6 +189,7 @@ export function useMoonpayFiatOnRamp({
     eligible,
     quoteAmount,
     quoteCurrencyAmountReady,
+    quoteCurrencyAmountLoading,
     isLoading,
     externalTransactionId,
     dispatchAddTransaction,
@@ -187,5 +197,44 @@ export function useMoonpayFiatOnRamp({
     isError,
     errorText,
     errorColor,
+  }
+}
+
+// Wrapper hook for useFiatOnRampSupportedTokensQuery with filtering by country and/or state in US
+export function useFiatOnRampSupportedTokens(): {
+  data: MoonpayCurrency[] | undefined
+  isLoading: boolean
+  isError: boolean
+  refetch: () => void
+} {
+  // this should be already cached by the time we need it
+  const {
+    data: ipAddressData,
+    isLoading: isEligibleLoading,
+    isError: isFiatBuyAllowedQueryError,
+    refetch: isFiatBuyAllowedQueryRefetch,
+  } = useFiatOnRampIpAddressQuery()
+
+  const {
+    data: supportedTokens,
+    isLoading: supportedTokensLoading,
+    isError: supportedTokensQueryError,
+    refetch: supportedTokensQueryRefetch,
+  } = useFiatOnRampSupportedTokensQuery(
+    {
+      isUserInUS: ipAddressData?.alpha3 === 'USA' ?? false,
+      stateInUS: ipAddressData?.state,
+    },
+    { skip: !ipAddressData }
+  )
+
+  return {
+    data: supportedTokens,
+    isLoading: isEligibleLoading || supportedTokensLoading,
+    isError: isFiatBuyAllowedQueryError || supportedTokensQueryError,
+    refetch: (): void => {
+      isFiatBuyAllowedQueryRefetch()
+      supportedTokensQueryRefetch()
+    },
   }
 }

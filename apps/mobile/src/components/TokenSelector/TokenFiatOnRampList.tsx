@@ -12,8 +12,8 @@ import { Text } from 'src/components/Text'
 import { useAllCommonBaseCurrencies } from 'src/components/TokenSelector/hooks'
 import { TokenOptionItem } from 'src/components/TokenSelector/TokenOptionItem'
 import { CurrencyInfo, GqlResult } from 'src/features/dataApi/types'
-import { useFiatOnRampSupportedTokensQuery } from 'src/features/fiatOnRamp/api'
 import { FiatOnRampCurrency } from 'src/features/fiatOnRamp/FiatOnRampModal'
+import { useFiatOnRampSupportedTokens } from 'src/features/fiatOnRamp/hooks'
 import { MoonpayCurrency } from 'src/features/fiatOnRamp/types'
 import { ElementName } from 'src/features/telemetry/constants'
 import { ChainId } from 'wallet/src/constants/chains'
@@ -50,7 +50,7 @@ const findTokenOptionForMoonpayCurrency = (
   )
 }
 
-function useFiatOnRampTokenSection(
+function useFiatOnRampTokenList(
   supportedTokens: MoonpayCurrency[] | undefined
 ): GqlResult<FiatOnRampCurrency[]> {
   const {
@@ -92,9 +92,9 @@ function _TokenFiatOnRampList({ onSelectCurrency, onBack }: Props): JSX.Element 
     isLoading: supportedTokensLoading,
     isError: supportedTokensQueryError,
     refetch: supportedTokensQueryRefetch,
-  } = useFiatOnRampSupportedTokensQuery()
+  } = useFiatOnRampSupportedTokens()
 
-  const { data, loading, error, refetch } = useFiatOnRampTokenSection(supportedTokens)
+  const { data, loading, error, refetch } = useFiatOnRampTokenList(supportedTokens)
 
   const renderItem = useCallback(
     ({ item: currency }: ListRenderItemInfo<FiatOnRampCurrency>) => {

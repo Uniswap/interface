@@ -1,12 +1,7 @@
 import { useTheme } from '@shopify/restyle'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import {
-  NativeSyntheticEvent,
-  TextInput,
-  TextInputSelectionChangeEventData,
-  ViewProps,
-} from 'react-native'
+import { NativeSyntheticEvent, TextInput, TextInputSelectionChangeEventData } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import {
   FadeIn,
@@ -51,6 +46,7 @@ import InformationIcon from 'ui/src/assets/icons/i-icon.svg'
 import { NATIVE_ADDRESS } from 'wallet/src/constants/addresses'
 import { ChainId } from 'wallet/src/constants/chains'
 import { buildCurrencyId } from 'wallet/src/utils/currencyId'
+import { formatUSDPrice } from 'wallet/src/utils/format'
 
 export type FiatOnRampCurrency = {
   currencyInfo: NullUndefined<CurrencyInfo>
@@ -101,18 +97,21 @@ export function FiatOnRampModal(): JSX.Element {
       id: '',
       supportsLiveMode: true,
       supportsTestMode: true,
+      isSupportedInUS: true,
+      notAllowedUSStates: [],
     },
   })
 
   const {
-    quoteAmount,
     eligible,
+    quoteAmount,
     isLoading,
     isError,
     externalTransactionId,
     dispatchAddTransaction,
     fiatOnRampHostUrl,
     quoteCurrencyAmountReady,
+    quoteCurrencyAmountLoading,
     errorText,
     errorColor,
   } = useMoonpayFiatOnRamp({
@@ -132,7 +131,8 @@ export function FiatOnRampModal(): JSX.Element {
     showConnectingToMoonpayScreen ? CONNECTING_TIMEOUT : -1
   )
 
-  const buttonEnabled = eligible && !isError && fiatOnRampHostUrl && quoteCurrencyAmountReady
+  const buttonEnabled =
+    !isLoading && (!eligible || (!isError && fiatOnRampHostUrl && quoteCurrencyAmountReady))
 
   const {
     onLayout: onInputLayout,
@@ -140,38 +140,34 @@ export function FiatOnRampModal(): JSX.Element {
     onSetFontSize,
   } = useDynamicFontSizing(MAX_CHAR_PIXEL_WIDTH, MAX_INPUT_FONT_SIZE, MIN_INPUT_FONT_SIZE)
 
-  const onLayout = useCallback<NonNullable<ViewProps['onLayout']>>(
-    (event) => {
-      onInputLayout(event)
-      onInputPanelLayout(event)
+  const showSoftInputOnFocus = showNativeKeyboard && eligible
+
+  const onSelectionChange = ({
+    nativeEvent: {
+      selection: { start, end },
     },
-    [onInputLayout, onInputPanelLayout]
-  )
+  }: NativeSyntheticEvent<TextInputSelectionChangeEventData>): void => {
+    setSelection({ start, end })
+  }
 
-  const showSoftInputOnFocus = showNativeKeyboard
-
-  const onSelectionChange = useCallback(
-    ({
-      nativeEvent: {
-        selection: { start, end },
-      },
-    }: NativeSyntheticEvent<TextInputSelectionChangeEventData>) => setSelection({ start, end }),
-    [setSelection]
-  )
-
-  const onChangeValue = useCallback(
+  const onChangeValue =
     (source: EventProperties[MobileEventName.FiatOnRampAmountEntered]['source']) =>
-      (newAmount: string) => {
-        sendAnalyticsEvent(MobileEventName.FiatOnRampAmountEntered, { source })
-        onSetFontSize(newAmount)
-        setValue(newAmount)
-      },
-    [onSetFontSize]
-  )
-
-  const showCurrencySign = value !== ''
+    (newAmount: string): void => {
+      sendAnalyticsEvent(MobileEventName.FiatOnRampAmountEntered, { source })
+      onSetFontSize(newAmount)
+      setValue(newAmount)
+    }
 
   const [showTokenSelector, setShowTokenSelector] = useState(false)
+
+  // hide keyboard when user goes to token selector screen
+  useEffect(() => {
+    if (showTokenSelector) {
+      inputRef.current?.blur()
+    } else if (showSoftInputOnFocus) {
+      inputRef.current?.focus()
+    }
+  }, [showSoftInputOnFocus, showTokenSelector])
 
   const hideInnerContentRouter = showTokenSelector
   const screenXOffset = useSharedValue(hideInnerContentRouter ? -dimensions.fullWidth : 0)
@@ -186,6 +182,9 @@ export function FiatOnRampModal(): JSX.Element {
   }))
 
   const insets = useSafeAreaInsets()
+
+  // we only show loading when there is no error text and value is not empty
+  const selectTokenLoading = quoteCurrencyAmountLoading && !errorText && !!value
 
   return (
     <BottomSheetModal
@@ -207,72 +206,80 @@ export function FiatOnRampModal(): JSX.Element {
             <Text color="textPrimary" variant="subheadLarge">
               {t('Buy')}
             </Text>
-            <AnimatedFlex
-              grow
-              alignItems="center"
-              gap="spacing16"
-              justifyContent="center"
-              onLayout={onLayout}>
-              <AmountInput
-                ref={inputRef}
-                alignSelf="stretch"
-                autoFocus={true}
-                backgroundColor="none"
-                borderWidth={0}
-                caretHidden={true}
-                fontFamily={theme.textVariants.headlineMedium.fontFamily}
-                fontSize={fontSize}
-                height={MAX_INPUT_FONT_SIZE}
-                maxFontSizeMultiplier={theme.textVariants.headlineMedium.maxFontSizeMultiplier}
-                mt="spacing48"
-                overflow="visible"
-                placeholder="$0"
-                placeholderTextColor={theme.colors.background3}
-                px="none"
-                py="none"
-                returnKeyType={showSoftInputOnFocus ? 'done' : undefined}
-                showCurrencySign={showCurrencySign}
-                showSoftInputOnFocus={showSoftInputOnFocus}
-                textAlign="center"
-                value={value}
-                onChangeText={onChangeValue('textInput')}
-                onSelectionChange={onSelectionChange}
-              />
-              {currency.currencyInfo && (
-                <SelectTokenButton
-                  amount={quoteAmount}
-                  disabled={!quoteCurrencyAmountReady}
-                  selectedCurrencyInfo={currency.currencyInfo}
-                  onPress={(): void => {
-                    setShowTokenSelector(true)
-                  }}
+            <Flex onLayout={onInputPanelLayout}>
+              <AnimatedFlex
+                grow
+                alignItems="center"
+                gap="spacing16"
+                justifyContent="center"
+                onLayout={onInputLayout}>
+                <AmountInput
+                  ref={inputRef}
+                  autoFocus
+                  alignSelf="stretch"
+                  backgroundColor="none"
+                  borderWidth={0}
+                  caretHidden={!showNativeKeyboard}
+                  fontFamily={theme.textVariants.headlineMedium.fontFamily}
+                  fontSize={fontSize}
+                  height={MAX_INPUT_FONT_SIZE}
+                  maxFontSizeMultiplier={theme.textVariants.headlineMedium.maxFontSizeMultiplier}
+                  mt="spacing48"
+                  overflow="visible"
+                  placeholder="$0"
+                  placeholderTextColor={theme.colors.background3}
+                  px="none"
+                  py="none"
+                  returnKeyType={showSoftInputOnFocus ? 'done' : undefined}
+                  showCurrencySign={value !== ''}
+                  showSoftInputOnFocus={showSoftInputOnFocus}
+                  textAlign="center"
+                  value={value}
+                  onChangeText={onChangeValue('textInput')}
+                  onSelectionChange={onSelectionChange}
                 />
-              )}
-              <Box
-                /* We want reserve the space here, so when error occurs - layout does not jump */
-                height={spacing.spacing24}>
-                {errorText && errorColor && (
-                  <Text color={errorColor} textAlign="center" variant="buttonLabelMicro">
-                    {errorText}
-                  </Text>
+                {currency.currencyInfo && (
+                  <SelectTokenButton
+                    amount={quoteAmount}
+                    disabled={!quoteCurrencyAmountReady}
+                    loading={selectTokenLoading}
+                    selectedCurrencyInfo={currency.currencyInfo}
+                    onPress={(): void => {
+                      setShowTokenSelector(true)
+                    }}
+                  />
                 )}
-              </Box>
-            </AnimatedFlex>
-            <Flex centered row>
-              {['100', '300', '1000'].map((amount) => (
-                <PredefinedAmount
-                  key={amount}
-                  amount={amount}
-                  currentAmount={value}
-                  onPress={onChangeValue('chip')}
-                />
-              ))}
+                <Box
+                  /* We want to reserve the space here, so when error occurs - layout does not jump */
+                  height={spacing.spacing24}>
+                  {errorText && errorColor && (
+                    <Text color={errorColor} textAlign="center" variant="buttonLabelMicro">
+                      {errorText}
+                    </Text>
+                  )}
+                </Box>
+              </AnimatedFlex>
+              <Flex centered row>
+                {['100', '300', '1000'].map((amount) => (
+                  <PredefinedAmount
+                    key={amount}
+                    amount={amount}
+                    currentAmount={value}
+                    onPress={onChangeValue('chip')}
+                  />
+                ))}
+              </Flex>
             </Flex>
             <AnimatedFlex
+              bottom={0}
               exiting={FadeOutDown}
               gap="spacing8"
+              left={0}
               opacity={isLayoutPending ? 0 : 1}
               pb="spacing24"
+              position="absolute"
+              px="spacing24"
+              right={0}
               onLayout={onDecimalPadLayout}>
               {!showNativeKeyboard && (
                 <DecimalPad
@@ -282,33 +289,20 @@ export function FiatOnRampModal(): JSX.Element {
                   value={value}
                 />
               )}
+              <MoonpayCtaButton
+                disabled={!buttonEnabled}
+                eligible={eligible}
+                isLoading={isLoading}
+                properties={{ externalTransactionId }}
+                onPress={(): void => {
+                  if (eligible) {
+                    setShowConnectingToMoonpayScreen(true)
+                  } else {
+                    openUri(MOONPAY_UNSUPPORTED_REGION_HELP_URL)
+                  }
+                }}
+              />
             </AnimatedFlex>
-            <Button
-              CustomIcon={
-                isLoading ? (
-                  <SpinningLoader color="textOnBrightPrimary" />
-                ) : eligible === false ? (
-                  <TouchableArea
-                    onPress={(): Promise<void> => openUri(MOONPAY_UNSUPPORTED_REGION_HELP_URL)}>
-                    <InformationIcon color={theme.colors.white} width={theme.iconSizes.icon20} />
-                  </TouchableArea>
-                ) : undefined
-              }
-              disabled={!buttonEnabled}
-              emphasis={ButtonEmphasis.Primary}
-              eventName={MobileEventName.FiatOnRampWidgetOpened}
-              label={
-                isLoading
-                  ? undefined
-                  : eligible === false
-                  ? t('Not supported in your region')
-                  : t('Continue to checkout')
-              }
-              name={ElementName.FiatOnRampWidgetButton}
-              properties={{ externalTransactionId }}
-              size={ButtonSize.Large}
-              onPress={(): void => setShowConnectingToMoonpayScreen(true)}
-            />
           </AnimatedFlex>
           {showTokenSelector && (
             <FiatOnRampTokenSelector
@@ -323,11 +317,51 @@ export function FiatOnRampModal(): JSX.Element {
       )}
       {showConnectingToMoonpayScreen && (
         <FiatOnRampConnectingView
-          amount={value}
+          amount={formatUSDPrice(value)}
           quoteCurrencyCode={currency.currencyInfo?.currency.symbol}
         />
       )}
     </BottomSheetModal>
+  )
+}
+
+interface MoonpayCtaButtonProps {
+  onPress: () => void
+  isLoading: boolean
+  eligible: boolean
+  disabled: boolean
+  properties: Record<string, unknown>
+}
+
+function MoonpayCtaButton({
+  isLoading,
+  eligible,
+  disabled,
+  properties,
+  onPress,
+}: MoonpayCtaButtonProps): JSX.Element {
+  const theme = useAppTheme()
+  const { t } = useTranslation()
+  return (
+    <Button
+      CustomIcon={
+        isLoading ? (
+          <SpinningLoader color="textOnBrightPrimary" />
+        ) : !eligible ? (
+          <InformationIcon color={theme.colors.textPrimary} width={theme.iconSizes.icon20} />
+        ) : undefined
+      }
+      disabled={disabled}
+      emphasis={!isLoading && !eligible ? ButtonEmphasis.Secondary : ButtonEmphasis.Primary}
+      eventName={MobileEventName.FiatOnRampWidgetOpened}
+      label={
+        isLoading ? undefined : eligible ? t('Continue to checkout') : t('Not supported in region')
+      }
+      name={ElementName.FiatOnRampWidgetButton}
+      properties={properties}
+      size={ButtonSize.Large}
+      onPress={onPress}
+    />
   )
 }
 
@@ -360,6 +394,7 @@ interface SelectTokenButtonProps {
   selectedCurrencyInfo: CurrencyInfo
   amount: number
   disabled?: boolean
+  loading?: boolean
 }
 
 function SelectTokenButton({
@@ -367,6 +402,7 @@ function SelectTokenButton({
   onPress,
   amount,
   disabled,
+  loading,
 }: SelectTokenButtonProps): JSX.Element {
   const theme = useTheme<Theme>()
 
@@ -379,7 +415,11 @@ function SelectTokenButton({
       name={ElementName.TokenSelectorToggle}
       onPress={onPress}>
       <Flex centered row flexDirection="row" gap="spacing4" p="spacing4">
-        <CurrencyLogo currencyInfo={selectedCurrencyInfo} size={iconSizes.icon24} />
+        {loading ? (
+          <SpinningLoader />
+        ) : (
+          <CurrencyLogo currencyInfo={selectedCurrencyInfo} size={iconSizes.icon24} />
+        )}
         <Text color={textColor} pl="spacing4" variant="bodyLarge">
           {amount}
         </Text>

@@ -44,7 +44,7 @@ export const fiatOnRampApi = createApi({
   reducerPath: 'fiatOnRampApi',
   baseQuery: fetchBaseQuery({ baseUrl: config.moonpayApiUrl }),
   endpoints: (builder) => ({
-    isFiatOnRampBuyAllowed: builder.query<boolean, void>({
+    fiatOnRampIpAddress: builder.query<MoonpayIPAddressesResponse, void>({
       queryFn: () =>
         // TODO: [MOB-3888] consider a reverse proxy for privacy reasons
         fetch(`${config.moonpayApiUrl}/v4/ip_address?${COMMON_QUERY_PARAMS}`)
@@ -54,7 +54,7 @@ export const fiatOnRampApi = createApi({
               success: response.isBuyAllowed ?? false,
               networkError: false,
             })
-            return { data: response.isBuyAllowed ?? false }
+            return { data: response }
           })
           .catch((e) => {
             sendAnalyticsEvent(MoonpayEventName.MOONPAY_GEOCHECK_COMPLETED, {
@@ -65,13 +65,29 @@ export const fiatOnRampApi = createApi({
             return { data: undefined, error: e }
           }),
     }),
-    fiatOnRampSupportedTokens: builder.query<MoonpayCurrency[], void>({
-      queryFn: () =>
+    fiatOnRampSupportedTokens: builder.query<
+      MoonpayCurrency[],
+      {
+        isUserInUS: boolean
+        stateInUS?: string
+      }
+    >({
+      queryFn: ({ isUserInUS, stateInUS }) =>
         // TODO: [MOB-3888] consider a reverse proxy for privacy reasons
         fetch(`${config.moonpayApiUrl}/v3/currencies?${COMMON_QUERY_PARAMS}`)
           .then((response) => response.json())
           .then((response: MoonpayListCurrenciesResponse) => {
-            return { data: response.filter((c) => c.type === 'crypto' && c.supportsLiveMode) }
+            const moonpaySupportField = __DEV__ ? 'supportsTestMode' : 'supportsLiveMode'
+            return {
+              data: response.filter(
+                (c) =>
+                  c.type === 'crypto' &&
+                  c[moonpaySupportField] &&
+                  (!isUserInUS ||
+                    (c.isSupportedInUS &&
+                      (!stateInUS || c.notAllowedUSStates.indexOf(stateInUS) === -1)))
+              ),
+            }
           })
           .catch((e) => {
             return { data: undefined, error: e }
@@ -165,7 +181,7 @@ export const fiatOnRampApi = createApi({
 })
 
 export const {
-  useIsFiatOnRampBuyAllowedQuery,
+  useFiatOnRampIpAddressQuery,
   useFiatOnRampWidgetUrlQuery,
   useFiatOnRampSupportedTokensQuery,
   useFiatOnRampBuyQuoteQuery,
