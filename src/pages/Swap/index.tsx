@@ -732,7 +732,7 @@ export function Swap({
               </Text>
             </ButtonError>
           )}
-          {isExpertMode && swapError ? <SwapCallbackError error={swapError.message} /> : null}
+          {Boolean(isExpertMode && swapError) && <SwapCallbackError error={swapError?.message} />}
         </div>
       </AutoColumn>
     </SwapWrapper>
