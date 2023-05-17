@@ -29,11 +29,12 @@ const StyledClosed = styled(X)`
 
 interface SetLockupModalProps {
   isOpen: boolean
+  currentLockup: string
   onDismiss: () => void
   title: ReactNode
 }
 
-export default function SetLockupModal({ isOpen, onDismiss, title }: SetLockupModalProps) {
+export default function SetLockupModal({ isOpen, currentLockup, onDismiss, title }: SetLockupModalProps) {
   const { account, chainId } = useWeb3React()
 
   const [typed, setTyped] = useState('')
@@ -107,7 +108,11 @@ export default function SetLockupModal({ isOpen, onDismiss, title }: SetLockupMo
               placeholder="max 30 days"
             />
             <ButtonPrimary
-              disabled={parsedLockup === '' || JSBI.greaterThan(JSBI.BigInt(parsedLockup), JSBI.BigInt(2592000))}
+              disabled={
+                parsedLockup === '' ||
+                JSBI.greaterThan(JSBI.BigInt(parsedLockup), JSBI.BigInt(2592000)) ||
+                (parsedLockup !== '0' ? parsedLockup : '2').toString() === currentLockup
+              }
               onClick={onSetLockup}
             >
               <ThemedText.DeprecatedMediumHeader color="white">

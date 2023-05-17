@@ -399,6 +399,7 @@ export function PoolPositionPage() {
             />
             <SetLockupModal
               isOpen={showSetLockupModal}
+              currentLockup={Number(minPeriod).toString()}
               onDismiss={() => setShowSetLockupModal(false)}
               title={<Trans>Set Lockup</Trans>}
             />
