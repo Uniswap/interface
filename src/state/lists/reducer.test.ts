@@ -306,13 +306,13 @@ describe('list reducer', () => {
       beforeEach(() => {
         store = createStore(reducer, {
           byUrl: {
-            'https://unpkg.com/@uniswap/default-token-list@latest/uniswap-default.tokenlist.json': {
+            'https://unpkg.com/@pollum-io/default-token-list@latest/rollux-default.tokenlist.json': {
               error: null,
               current: STUB_TOKEN_LIST,
               loadingRequestId: null,
               pendingUpdate: null,
             },
-            'https://unpkg.com/@uniswap/default-token-list@latest': {
+            'https://unpkg.com/@pollum-io/default-token-list@latest': {
               error: null,
               current: STUB_TOKEN_LIST,
               loadingRequestId: null,
@@ -325,9 +325,9 @@ describe('list reducer', () => {
 
       it('clears the current lists', () => {
         expect(
-          store.getState().byUrl['https://unpkg.com/@uniswap/default-token-list@latest/uniswap-default.tokenlist.json']
+          store.getState().byUrl['https://unpkg.com/@pollum-io/default-token-list@latest/rollux-default.tokenlist.json']
         ).toBeUndefined()
-        expect(store.getState().byUrl['https://unpkg.com/@uniswap/default-token-list@latest']).toBeUndefined()
+        expect(store.getState().byUrl['https://unpkg.com/@pollum-io/default-token-list@latest']).toBeUndefined()
       })
 
       it('puts in all the new lists', () => {
@@ -352,27 +352,27 @@ describe('list reducer', () => {
       beforeEach(() => {
         store = createStore(reducer, {
           byUrl: {
-            'https://unpkg.com/@uniswap/default-token-list@latest/uniswap-default.tokenlist.json': {
+            'https://unpkg.com/@pollum-io/default-token-list@latest/rollux-default.tokenlist.json': {
               error: null,
               current: STUB_TOKEN_LIST,
               loadingRequestId: null,
               pendingUpdate: null,
             },
-            'https://unpkg.com/@uniswap/default-token-list@latest': {
+            'https://unpkg.com/@pollum-io/default-token-list@latest': {
               error: null,
               current: STUB_TOKEN_LIST,
               loadingRequestId: null,
               pendingUpdate: null,
             },
           },
-          lastInitializedDefaultListOfLists: ['https://unpkg.com/@uniswap/default-token-list@latest'],
+          lastInitializedDefaultListOfLists: ['https://unpkg.com/@pollum-io/default-token-list@latest'],
         })
         store.dispatch(updateVersion())
       })
 
       it('does not remove lists not in last initialized list of lists', () => {
         expect(
-          store.getState().byUrl['https://unpkg.com/@uniswap/default-token-list@latest/uniswap-default.tokenlist.json']
+          store.getState().byUrl['https://unpkg.com/@pollum-io/default-token-list@latest/rollux-default.tokenlist.json']
         ).toEqual({
           error: null,
           current: STUB_TOKEN_LIST,
@@ -381,7 +381,7 @@ describe('list reducer', () => {
         })
       })
       it('removes lists in the last initialized list of lists', () => {
-        expect(store.getState().byUrl['https://unpkg.com/@uniswap/default-token-list@latest']).toBeUndefined()
+        expect(store.getState().byUrl['https://unpkg.com/@pollum-io/default-token-list@latest']).toBeUndefined()
       })
 
       it('each of those initialized lists is empty', () => {
@@ -389,7 +389,7 @@ describe('list reducer', () => {
         Object.entries(byUrl)
           // We don't expect the Uniswap default list to be prepopulated
           .filter(
-            ([url]) => url !== 'https://unpkg.com/@uniswap/default-token-list@latest/uniswap-default.tokenlist.json'
+            ([url]) => url !== 'https://unpkg.com/@pollum-io/default-token-list@latest/rollux-default.tokenlist.json'
           )
           .forEach(([, state]) => {
             expect(state).toEqual({

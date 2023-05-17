@@ -1,5 +1,5 @@
 import { NetworkStatus } from '@apollo/client'
-import { Currency, CurrencyAmount, Price, SupportedChainId, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Price, SupportedChainId, TradeType } from '@pollum-io/sdk-core'
 import { nativeOnChain } from 'constants/tokens'
 import { Chain, useTokenSpotPriceQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { chainIdToBackendName, isGqlSupportedChain, PollingInterval } from 'graphql/data/util'

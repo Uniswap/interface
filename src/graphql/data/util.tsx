@@ -1,5 +1,5 @@
 import { QueryResult } from '@apollo/client'
-import { Currency, Token } from '@uniswap/sdk-core'
+import { Currency, Token } from '@pollum-io/sdk-core'
 import { SupportedChainId } from 'constants/chains'
 import { NATIVE_CHAIN_ID, nativeOnChain, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import ms from 'ms.macro'

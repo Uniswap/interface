@@ -1,6 +1,6 @@
-import { CurrencyAmount, Token } from '@uniswap/sdk-core'
-import { abi as IUniswapV3PoolStateABI } from '@uniswap/v3-core/artifacts/contracts/interfaces/pool/IUniswapV3PoolState.sol/IUniswapV3PoolState.json'
-import { computePoolAddress, Pool, Position } from '@uniswap/v3-sdk'
+import { CurrencyAmount, Token } from '@pollum-io/sdk-core'
+import { abi as IPegasysV2PoolStateABI } from '@pollum-io/v2-core/artifacts/contracts/interfaces/pool/IPegasysV2PoolState.sol/IPegasysV2PoolState.json'
+import { computePoolAddress, Pool, Position } from '@pollum-io/v2-sdk'
 import { V3_CORE_FACTORY_ADDRESSES } from 'constants/addresses'
 import { SupportedChainId } from 'constants/chains'
 import { DEFAULT_ERC20_DECIMALS } from 'constants/tokens'
@@ -8,8 +8,8 @@ import { BigNumber } from 'ethers/lib/ethers'
 import { Interface } from 'ethers/lib/utils'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { PositionDetails } from 'types/position'
-import { NonfungiblePositionManager, UniswapInterfaceMulticall } from 'types/v3'
-import { UniswapV3PoolInterface } from 'types/v3/UniswapV3Pool'
+import { NonfungiblePositionManager, PegasysInterfaceMulticall } from 'types/v3'
+import { PegasysV2PoolInterface } from 'types/v3/PegasysV2Pool'
 import { currencyKey } from 'utils/currencyKey'
 
 import { PositionInfo, useCachedPositions, useGetCachedTokens, usePoolAddressCache } from './cache'
@@ -118,8 +118,8 @@ export default function useMultiChainPositions(account: string, chains = DEFAULT
 
   // Combines PositionDetails with Pool data to build our return type
   const fetchPositionInfo = useCallback(
-    async (positionDetails: PositionDetails[], chainId: SupportedChainId, multicall: UniswapInterfaceMulticall) => {
-      const poolInterface = new Interface(IUniswapV3PoolStateABI) as UniswapV3PoolInterface
+    async (positionDetails: PositionDetails[], chainId: SupportedChainId, multicall: PegasysInterfaceMulticall) => {
+      const poolInterface = new Interface(IPegasysV2PoolStateABI) as PegasysV2PoolInterface
       const tokens = await getTokens(
         positionDetails.flatMap((details) => [details.token0, details.token1]),
         chainId

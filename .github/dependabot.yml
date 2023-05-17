@@ -6,8 +6,8 @@ updates:
     schedule:
       interval: 'daily'
     allow:
-      - dependency-name: '@uniswap/default-token-list'
+      - dependency-name: '@pollum-io/default-token-list'
       - dependency-name: '@uniswap/token-lists'
-      - dependency-name: '@uniswap/widgets'
+      - dependency-name: '@pollum-io/widgets'
     reviewers:
       - 'Uniswap/dependabot-reviewers'

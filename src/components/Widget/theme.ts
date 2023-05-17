@@ -1,4 +1,4 @@
-import { Theme } from '@uniswap/widgets'
+import { Theme } from '@pollum-io/widgets'
 import { darkTheme, lightTheme } from 'theme/colors'
 import { Z_INDEX } from 'theme/zIndex'
 

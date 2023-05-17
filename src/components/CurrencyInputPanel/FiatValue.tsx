@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 // eslint-disable-next-line no-restricted-imports
 import { t } from '@lingui/macro'
 import { formatNumber, formatPriceImpact, NumberType } from '@uniswap/conedison/format'
-import { Percent } from '@uniswap/sdk-core'
+import { Percent } from '@pollum-io/sdk-core'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { useMemo } from 'react'
