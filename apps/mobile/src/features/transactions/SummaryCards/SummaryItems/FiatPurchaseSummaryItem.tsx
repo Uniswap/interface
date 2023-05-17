@@ -35,10 +35,14 @@ export default function FiatPurchaseSummaryItem({
 
   return (
     <TransactionSummaryLayout
-      caption={t('{{cryptoAmount}} for {{fiatAmount}}', {
-        cryptoAmount: outputCurrencyAmount + ' ' + symbol,
-        fiatAmount: fiatPurchaseAmount,
-      })}
+      caption={
+        outputCurrencyAmount !== undefined && outputCurrencyAmount !== null
+          ? t('{{cryptoAmount}} for {{fiatAmount}}', {
+              cryptoAmount: outputCurrencyAmount + ' ' + symbol,
+              fiatAmount: fiatPurchaseAmount,
+            })
+          : fiatPurchaseAmount
+      }
       icon={
         <LogoWithTxStatus
           assetType={AssetType.Currency}

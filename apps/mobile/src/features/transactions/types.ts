@@ -191,7 +191,10 @@ export interface FiatPurchaseTransactionInfo extends BaseTransactionInfo {
   inputCurrencyAmount?: number
   // metadata will be used to get the output currency
   outputCurrency?: Required<Pick<MoonpayCurrency, 'type' | 'metadata'>>
-  outputCurrencyAmount?: number
+  // outputCurrencyAmount can be null for failed transactions,
+  // cause it's supposed to be set once transaction is complete
+  // https://docs.moonpay.com/moonpay/developer-resources/api/client-side-apis/transactions
+  outputCurrencyAmount?: number | null
   syncedWithBackend: boolean
 }
 
