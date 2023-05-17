@@ -55,6 +55,8 @@ function useConfirmModalState({
   doesTradeDiffer: boolean
 }) {
   const [confirmModalState, setConfirmModalState] = useState<ConfirmModalState>(ConfirmModalState.REVIEWING)
+  // todo: remove this
+  // const [confirmModalState, setConfirmModalState] = useState<ConfirmModalState>(ConfirmModalState.APPROVING_TOKEN)
   const [approvalError, setApprovalError] = useState<PendingModalError>()
   const [pendingModalSteps, setPendingModalSteps] = useState<PendingConfirmModalState[]>([])
 
@@ -104,15 +106,13 @@ function useConfirmModalState({
 
   const onStartSwapFlow = useCallback(async () => {
     setApprovalError(undefined)
-    // Calculate the necessary steps once, before starting the flow.
-    prepareSwapFlow()
     if (allowance.state === AllowanceState.REQUIRED) {
       await updateAllowance()
     } else {
       setConfirmModalState(ConfirmModalState.PENDING_CONFIRMATION)
       onSwap()
     }
-  }, [allowance.state, onSwap, prepareSwapFlow, updateAllowance])
+  }, [allowance.state, onSwap, updateAllowance])
 
   const previousPermitNeeded = usePrevious(
     allowance.state === AllowanceState.REQUIRED ? allowance.needsPermit2Approval : undefined
@@ -146,7 +146,7 @@ function useConfirmModalState({
     setConfirmModalState(ConfirmModalState.REVIEWING)
     setApprovalError(undefined)
   }, [])
-  return { onStartSwapFlow, onCancel, confirmModalState, approvalError, pendingModalSteps }
+  return { onStartSwapFlow, prepareSwapFlow, onCancel, confirmModalState, approvalError, pendingModalSteps }
 }
 
 export default function ConfirmSwapModal({
@@ -177,17 +177,16 @@ export default function ConfirmSwapModal({
   fiatValueOutput: { data?: number; isLoading: boolean }
 }) {
   const doesTradeDiffer = originalTrade && tradeMeaningfullyDiffers(trade, originalTrade)
-  const { onStartSwapFlow, onCancel, confirmModalState, approvalError, pendingModalSteps } = useConfirmModalState({
-    trade,
-    allowedSlippage,
-    onSwap: onConfirm,
-    allowance,
-    doesTradeDiffer: Boolean(doesTradeDiffer),
-  })
+  const { onStartSwapFlow, prepareSwapFlow, onCancel, confirmModalState, approvalError, pendingModalSteps } =
+    useConfirmModalState({
+      trade,
+      allowedSlippage,
+      onSwap: onConfirm,
+      allowance,
+      doesTradeDiffer: Boolean(doesTradeDiffer),
+    })
 
-  const showAcceptChanges = Boolean(
-    trade && doesTradeDiffer && confirmModalState !== ConfirmModalState.PENDING_CONFIRMATION
-  )
+  const showAcceptChanges = Boolean(trade && doesTradeDiffer && confirmModalState === ConfirmModalState.REVIEWING)
 
   const [lastExecutionPrice, setLastExecutionPrice] = useState(trade?.executionPrice)
   const [priceUpdate, setPriceUpdate] = useState<number>()
@@ -224,7 +223,11 @@ export default function ConfirmSwapModal({
     if (confirmModalState === ConfirmModalState.REVIEWING || showAcceptChanges) {
       return (
         <SwapModalFooter
-          onConfirm={onStartSwapFlow}
+          onConfirm={() => {
+            // Calculate the necessary steps once, before starting the flow.
+            prepareSwapFlow()
+            onStartSwapFlow()
+          }}
           trade={trade}
           hash={txHash}
           allowedSlippage={allowedSlippage}
@@ -255,13 +258,14 @@ export default function ConfirmSwapModal({
     trade,
     txHash,
     allowance,
-    onStartSwapFlow,
     allowedSlippage,
     swapErrorMessage,
     swapQuoteReceivedDate,
     fiatValueInput,
     fiatValueOutput,
     onAcceptChanges,
+    prepareSwapFlow,
+    onStartSwapFlow,
   ])
 
   return (

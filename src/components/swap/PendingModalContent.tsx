@@ -5,6 +5,7 @@ import { Currency } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { ButtonPrimary } from 'components/Button'
 import { ColumnCenter } from 'components/Column'
+import Column from 'components/Column'
 import Loader from 'components/Icons/LoadingSpinner'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import QuestionHelper from 'components/QuestionHelper'
@@ -12,11 +13,11 @@ import Row from 'components/Row'
 import Tooltip from 'components/Tooltip'
 import AnimatedConfirmation from 'components/TransactionConfirmationModal/AnimatedConfirmation'
 import { SupportedChainId } from 'constants/chains'
-import { ReactNode, useCallback, useState } from 'react'
+import { ReactNode, RefObject, useCallback, useEffect, useRef, useState } from 'react'
 import { AlertTriangle, ArrowRight } from 'react-feather'
 import { InterfaceTrade } from 'state/routing/types'
 import { useIsTransactionConfirmed } from 'state/transactions/hooks'
-import styled, { DefaultTheme, useTheme } from 'styled-components/macro'
+import styled, { css, DefaultTheme, keyframes, useTheme } from 'styled-components/macro'
 import { ExternalLink } from 'theme'
 import { ThemedText } from 'theme/components/text'
 
@@ -29,6 +30,7 @@ const Container = styled(ColumnCenter)`
 
 const HeaderContainer = styled(ColumnCenter)<{ $disabled?: boolean }>`
   ${({ $disabled }) => $disabled && `opacity: 0.5;`}
+  padding: 0 32px;
 `
 
 const LogoContainer = styled.div`
@@ -61,6 +63,44 @@ const LoadingIndicator = styled(Loader)`
   top: -4px;
   left: -4px;
   position: absolute;
+`
+
+enum AnimationType {
+  EXITING = 'exiting',
+}
+
+const fadeIn = keyframes`
+  from { opacity: 0; transform: translateX(40px) }
+  to { opacity: 1; transform: translateX(0px) }
+`
+const fadeInAnimation = css`
+  animation: ${fadeIn} ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.inOut}`};
+`
+const fadeOut = keyframes`
+  from { opacity: 1; transform: translateX(0px) }
+  to { opacity: 0; transform: translateX(-40px) }
+`
+const fadeOutAnimation = css`
+  animation: ${fadeOut} ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.inOut}`};
+`
+
+const AnimationWrapper = styled.div`
+  position: relative;
+  width: 100%;
+  min-height: 72px;
+  display: flex;
+  flex-grow: 1;
+`
+
+const StepTitleAnimationContainer = styled(Column)`
+  position: absolute;
+  width: 100%;
+  align-items: center;
+  transition: display ${({ theme }) => theme.transition.duration.medium} ${({ theme }) => theme.transition.timing.inOut};
+  animation: ${fadeInAnimation};
+  &.${AnimationType.EXITING} {
+    ${fadeOutAnimation}
+  }
 `
 
 function CurrencyLoader({ currency }: { currency: Currency | undefined }) {
@@ -128,7 +168,7 @@ function SubtitleWithTooltip({ mainText, tooltipText }: { mainText: string; tool
 function TradeSummary({ trade }: { trade: InterfaceTrade }) {
   const theme = useTheme()
   return (
-    <Row gap="sm">
+    <Row gap="sm" justify="center" align="center">
       <CurrencyLogo currency={trade.inputAmount.currency} size="16px" />
       <ThemedText.LabelSmall color="textPrimary">
         {formatCurrencyAmount(trade.inputAmount, NumberType.SwapTradeAmount)}
@@ -228,6 +268,48 @@ function getContent(args: ContentArgs): PendingModalStep {
   }
 }
 
+function isAnimating(node?: Animatable | Document) {
+  return (node?.getAnimations?.().length ?? 0) > 0
+}
+function useUnmountingAnimation(
+  node: RefObject<HTMLElement>,
+  getAnimatingClass: () => string,
+  animatedElements?: RefObject<HTMLElement>[],
+  skip = false
+) {
+  useEffect(() => {
+    const current = node.current
+    const animated = animatedElements?.map((element) => element.current) ?? [current]
+    const parent = current?.parentElement
+    const removeChild = parent?.removeChild
+    if (!(parent && removeChild) || skip) return
+
+    parent.removeChild = function <T extends Node>(child: T) {
+      if ((child as Node) === current && animated) {
+        animated.forEach((element) => element?.classList.add(getAnimatingClass()))
+        const animating = animated.find((element) => isAnimating(element ?? undefined))
+        if (animating) {
+          animating?.addEventListener('animationend', (x) => {
+            // This check is needed because the animationend event will fire for all animations on the
+            // element or its children.
+            if (x.target === animating) {
+              removeChild.call(parent, child)
+            }
+          })
+        } else {
+          removeChild.call(parent, child)
+        }
+        return child
+      } else {
+        return removeChild.call(parent, child) as T
+      }
+    }
+    return () => {
+      parent.removeChild = removeChild
+    }
+  }, [animatedElements, getAnimatingClass, node, skip])
+}
+
 export function PendingModalContent({
   steps,
   currentStep,
@@ -240,7 +322,7 @@ export function PendingModalContent({
   const { chainId } = useWeb3React()
   const swapConfirmed = useIsTransactionConfirmed(swapHash)
   const swapPending = swapHash !== undefined && !swapConfirmed
-  const { logo, title, subtitle, label, button } = getContent({
+  const { logo, label, button } = getContent({
     chainId,
     step: currentStep,
     approvalCurrency: trade?.inputAmount.currency,
@@ -251,13 +333,41 @@ export function PendingModalContent({
     swapHash,
     trade,
   })
+  const currentStepContainerRef = useRef<HTMLDivElement>(null)
+  useUnmountingAnimation(currentStepContainerRef, () => AnimationType.EXITING)
   return (
     <Container gap="lg">
       {logo}
-      {/* TODO: implement animations between title/subtitles of each step. */}
       <HeaderContainer gap="md" $disabled={tokenApprovalPending || swapPending}>
-        <ThemedText.HeadlineSmall>{title}</ThemedText.HeadlineSmall>
-        {subtitle && <ThemedText.LabelSmall textAlign="center">{subtitle}</ThemedText.LabelSmall>}
+        <AnimationWrapper>
+          {steps.map((step) => {
+            const { title, subtitle } = getContent({
+              chainId,
+              step,
+              approvalCurrency: trade?.inputAmount.currency,
+              swapConfirmed,
+              swapPending,
+              tokenApprovalPending,
+              theme,
+              swapHash,
+              trade,
+            })
+            // We only render one step at a time, but looping through the array allows us to keep
+            // the exiting step in the DOM during its animation.
+            return (
+              Boolean(step === currentStep) && (
+                <StepTitleAnimationContainer
+                  gap="md"
+                  key={step}
+                  ref={step === currentStep ? currentStepContainerRef : undefined}
+                >
+                  <ThemedText.SubHeaderLarge textAlign="center">{title}</ThemedText.SubHeaderLarge>
+                  {subtitle && <ThemedText.LabelSmall textAlign="center">{subtitle}</ThemedText.LabelSmall>}
+                </StepTitleAnimationContainer>
+              )
+            )
+          })}
+        </AnimationWrapper>
         <Row justify="center" marginTop="32px">
           {label && <ThemedText.Caption color="textSecondary">{label}</ThemedText.Caption>}
         </Row>
