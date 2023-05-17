@@ -16,7 +16,12 @@ import { ResponsiveHeaderText, SmallMaxButton } from '../../pages/RemoveLiquidit
 // TODO: check if should write into state stake hooks
 import { useBurnV3ActionHandlers, useBurnV3State } from '../../state/burn/v3/hooks'
 import { PoolInfo /*,useDerivedPoolInfo*/ } from '../../state/buy/hooks'
-import { useMoveStakeCallback, usePoolIdByAddress, useStakeBalance } from '../../state/governance/hooks'
+import {
+  useDeactivateStakeCallback,
+  useMoveStakeCallback,
+  usePoolIdByAddress,
+  useStakeBalance,
+} from '../../state/governance/hooks'
 import { ThemedText } from '../../theme'
 import AddressInputPanel from '../AddressInputPanel'
 import { /*ButtonConfirmed,*/ ButtonPrimary } from '../Button'
@@ -50,11 +55,12 @@ const TextButton = styled.div`
 interface MoveStakeModalProps {
   isOpen: boolean
   poolInfo: PoolInfo
+  isDeactivate?: boolean
   onDismiss: () => void
   title: ReactNode
 }
 
-export default function MoveStakeModal({ isOpen, poolInfo, onDismiss, title }: MoveStakeModalProps) {
+export default function MoveStakeModal({ isOpen, poolInfo, isDeactivate, onDismiss, title }: MoveStakeModalProps) {
   const { chainId } = useWeb3React()
 
   // state for delegate input
@@ -76,7 +82,7 @@ export default function MoveStakeModal({ isOpen, poolInfo, onDismiss, title }: M
   const { poolId, stakingPoolExists } = usePoolIdByAddress(poolInfo.pool?.address)
   // hack to allow moving stake from deprecated pool
   const defaultPoolId = '0x0000000000000000000000000000000000000000000000000000000000000021'
-  const fromPoolStakeBalance = useStakeBalance(fromPoolId ?? defaultPoolId)
+  const fromPoolStakeBalance = useStakeBalance(isDeactivate ? poolId : fromPoolId ?? defaultPoolId)
 
   // boilerplate for the slider
   const [percentForSlider, onPercentSelectForSlider] = useDebouncedChangeHandler(percent, onPercentSelect)
@@ -102,6 +108,7 @@ export default function MoveStakeModal({ isOpen, poolInfo, onDismiss, title }: M
   }
 
   const moveStakeCallback = useMoveStakeCallback()
+  const deactivateStakeCallback = useDeactivateStakeCallback()
 
   // monitor call to help UI loading state
   const [hash, setHash] = useState<string | undefined>()
@@ -125,9 +132,10 @@ export default function MoveStakeModal({ isOpen, poolInfo, onDismiss, title }: M
 
     // if callback not returned properly ignore
     if (!moveStakeCallback || !fromPoolStakeBalance || !moveStakeData || !currencyValue.isToken) return
+    const moveCallback = !isDeactivate ? moveStakeCallback : deactivateStakeCallback
 
     // try delegation and store hash
-    const hash = await moveStakeCallback(moveStakeData ?? undefined)?.catch((error) => {
+    const hash = await moveCallback(moveStakeData ?? undefined)?.catch((error) => {
       setAttempting(false)
       console.log(error)
     })
@@ -146,14 +154,17 @@ export default function MoveStakeModal({ isOpen, poolInfo, onDismiss, title }: M
               <ThemedText.DeprecatedMediumHeader fontWeight={500}>{title}</ThemedText.DeprecatedMediumHeader>
               <StyledClosed stroke="black" onClick={wrappedOnDismiss} />
             </RowBetween>
-            <ThemedText.DeprecatedBody>
-              <Trans>Move stake to the pools that maximize your APR, Your voting power will be unaffected.</Trans>
-            </ThemedText.DeprecatedBody>
-            <ThemedText.DeprecatedBody>
-              <Trans>Please input the pool you want to move your stake from.</Trans>
-            </ThemedText.DeprecatedBody>
-            {/* we must append deprecated staked pools to the pools array */}
-            <AddressInputPanel value={typed} onChange={handleFromPoolType} />
+            {!isDeactivate && (
+              <>
+                <ThemedText.DeprecatedBody>
+                  <Trans>Move stake to the pools that maximize your APR, Your voting power will be unaffected.</Trans>
+                </ThemedText.DeprecatedBody>
+                <ThemedText.DeprecatedBody>
+                  <Trans>Please input the pool you want to move your stake from.</Trans>
+                </ThemedText.DeprecatedBody>
+                <AddressInputPanel value={typed} onChange={handleFromPoolType} />
+              </>
+            )}
             <RowBetween>
               <ResponsiveHeaderText>
                 <Trans>{percentForSlider}%</Trans>

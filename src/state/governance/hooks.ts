@@ -598,6 +598,42 @@ export function useMoveStakeCallback(): (stakeData: StakeData | undefined) => un
   )
 }
 
+export function useDeactivateStakeCallback(): (stakeData: StakeData | undefined) => undefined | Promise<string> {
+  const { account, chainId, provider } = useWeb3React()
+  const addTransaction = useTransactionAdder()
+  const stakingContract = useStakingContract()
+  const stakingProxy = useStakingProxyContract()
+
+  return useCallback(
+    (stakeData: StakeData | undefined) => {
+      if (!provider || !chainId || !account || !stakeData || !isAddress(stakeData.pool ?? '')) return undefined
+      //if (!stakeData.amount) return
+      // in unstake, we use the same StakeData struct but use stakeData.poolId instead of stakeData.fromPoolId
+      const deactivateCall = stakingContract?.interface.encodeFunctionData('moveStake', [
+        { status: '1', poolId: stakeData.poolId },
+        { status: '0', poolId: stakeData.poolId },
+        stakeData.amount,
+      ])
+      const delegatee = stakeData.pool
+      if (!delegatee) return
+      const args = [[deactivateCall]]
+      if (!stakingProxy) throw new Error('No Staking Contract!')
+      return stakingProxy.estimateGas.batchExecute(...args, {}).then((estimatedGasLimit) => {
+        return stakingProxy
+          .batchExecute(...args, { value: null, gasLimit: calculateGasMargin(estimatedGasLimit) })
+          .then((response: TransactionResponse) => {
+            addTransaction(response, {
+              type: TransactionType.DELEGATE,
+              delegatee,
+            })
+            return response.hash
+          })
+      })
+    },
+    [account, addTransaction, chainId, provider, stakingContract, stakingProxy]
+  )
+}
+
 export function useVoteCallback(): (
   proposalId: string | undefined,
   voteOption: VoteOption

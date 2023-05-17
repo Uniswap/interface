@@ -245,6 +245,7 @@ export function PoolPositionPage() {
   const [showSetValueModal, setShowSetValueModal] = useState(false)
   const [showStakeModal, setShowStakeModal] = useState(false)
   const [showMoveStakeModal, setShowMoveStakeModal] = useState(false)
+  const [deactivate, setDeactivate] = useState(false)
 
   // TODO: check how can reduce number of calls by limit update of poolStorage
   //  id is stored in registry so we could save rpc call by using storing in state?
@@ -338,6 +339,18 @@ export function PoolPositionPage() {
   const handleMoveStakeClick = useCallback(() => {
     if (account) {
       setShowMoveStakeModal(true)
+      if (deactivate) {
+        setDeactivate(false)
+      }
+    } else {
+      toggleWalletModal()
+    }
+  }, [account, deactivate, toggleWalletModal])
+
+  const handleDeactivateStakeClick = useCallback(() => {
+    if (account) {
+      setShowMoveStakeModal(true)
+      setDeactivate(true)
     } else {
       toggleWalletModal()
     }
@@ -409,6 +422,7 @@ export function PoolPositionPage() {
             <MoveStakeModal
               isOpen={showMoveStakeModal}
               poolInfo={poolInfo}
+              isDeactivate={deactivate}
               onDismiss={() => setShowMoveStakeModal(false)}
               title={<Trans>Move Stake</Trans>}
             />
@@ -716,6 +730,15 @@ export function PoolPositionPage() {
                   style={{ marginRight: '8px' }}
                 >
                   <Trans>Switch</Trans>
+                </ResponsiveButtonPrimary>
+                <ResponsiveButtonPrimary
+                  onClick={handleDeactivateStakeClick}
+                  width="fit-content"
+                  padding="6px 8px"
+                  $borderRadius="12px"
+                  style={{ marginRight: '8px' }}
+                >
+                  <Trans>Disable</Trans>
                 </ResponsiveButtonPrimary>
               </RowFixed>
             </ResponsiveRow>
