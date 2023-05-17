@@ -21,12 +21,8 @@ import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 import { tradeMeaningfullyDiffers } from 'utils/tradeMeaningFullyDiffer'
 
 import { ConfirmationModalContent } from '../TransactionConfirmationModal'
-import {
-  ErrorModalContent,
-  PendingConfirmModalState,
-  PendingModalContent,
-  PendingModalError,
-} from './PendingModalContent'
+import { PendingConfirmModalState, PendingModalContent } from './PendingModalContent'
+import { ErrorModalContent, PendingModalError } from './PendingModalContent/ErrorModalContent'
 import SwapModalFooter from './SwapModalFooter'
 import SwapModalHeader from './SwapModalHeader'
 
