@@ -1,6 +1,7 @@
 name: '[mobile] Fastlane deploy prod (iOS)'
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - releases/prod
