@@ -26,6 +26,7 @@ import { NotificationToastWrapper } from 'src/features/notifications/Notificatio
 import { initOneSignal } from 'src/features/notifications/Onesignal'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
+import { LocalTransactionUpdater } from 'src/features/transactions/LocalTransactionUpdater'
 import { TransactionHistoryUpdater } from 'src/features/transactions/TransactionHistoryUpdater'
 import { useTrmPrefetch } from 'src/features/trm/api'
 import { useSignerAccounts } from 'src/features/wallet/hooks'
@@ -165,6 +166,7 @@ function DataUpdaters(): JSX.Element {
     <>
       <TraceUserProperties />
       <TransactionHistoryUpdater />
+      <LocalTransactionUpdater />
     </>
   )
 }
