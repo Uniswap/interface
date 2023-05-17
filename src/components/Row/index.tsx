@@ -1,7 +1,6 @@
 import { Box } from 'rebass/styled-components'
-import styled, { DefaultTheme } from 'styled-components/macro'
-
-type Gap = keyof DefaultTheme['grids']
+import styled from 'styled-components/macro'
+import { Gap } from 'theme'
 
 // TODO(WEB-3289):
 // Setting `width: 100%` by default prevents composability in complex flex layouts.
@@ -14,7 +13,7 @@ const Row = styled(Box)<{
   padding?: string
   border?: string
   borderRadius?: string
-  gap?: string
+  gap?: Gap | string
 }>`
   width: ${({ width }) => width ?? '100%'};
   display: flex;
