@@ -279,7 +279,7 @@ export function PoolPositionPage() {
     JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(decimals ?? 18))
   )
 
-  const lockup = JSBI.BigInt(minPeriod ?? 0).toLocaleString()
+  const lockup = (Number(minPeriod) / 86400).toLocaleString()
 
   // TODO: check if should move definitions in custom hook
   //const poolInfo= usePoolInfo(poolAddressFromUrl)
@@ -652,11 +652,11 @@ export function PoolPositionPage() {
                                   padding="6px 8px"
                                   $borderRadius="12px"
                                 >
-                                  <Trans>{lockup} seconds</Trans>
+                                  <Trans>{lockup} days</Trans>
                                 </ResponsiveButtonPrimary>
                               ) : (
                                 <ThemedText.DeprecatedMain>
-                                  <Trans>{lockup} seconds</Trans>
+                                  <Trans>{lockup} days</Trans>
                                 </ThemedText.DeprecatedMain>
                               )}
                             </RowFixed>
