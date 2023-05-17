@@ -122,6 +122,11 @@ jobs:
         containers: [1, 2, 3, 4]
     steps:
       - uses: actions/checkout@v3
+
+      # Sets ownership, which is misconfigured when checking out a new container.
+      # See https://github.com/actions/runner/issues/2033#issuecomment-1204205989.
+      - run: chown -R $(id -u):$(id -g) $PWD
+
       - uses: ./.github/actions/setup
       - uses: actions/cache@v3
         id: cypress-cache
@@ -145,10 +150,15 @@ jobs:
           start: yarn serve
           wait-on: 'http://localhost:3000'
           browser: chrome
-          group: 4x-chrome
+          group: e2e
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Additional information is required for Cypress to post status updates to the PR:
+          # - if the event is push, the title will be undefined and Cypress will get the commit message from git 
+          # - if the event is pull_request, then we set the commit message to the pull request title
+          COMMIT_INFO_MESSAGE: ${{ github.event.pull_request.title }}
+          COMMIT_INFO_SHA: ${{ github.event.pull_request.head.sha }}
 
       - uses: codecov/codecov-action@v3
         with:
