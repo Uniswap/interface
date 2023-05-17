@@ -140,11 +140,12 @@ jobs:
       - uses: cypress-io/github-action@v4
         with:
           install: false
+          record: true
+          parallel: true
           start: yarn serve
           wait-on: 'http://localhost:3000'
           browser: chrome
-          record: true
-          parallel: true
+          group: 4x-chrome
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
