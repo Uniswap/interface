@@ -530,6 +530,7 @@ export const ThemeButton = forwardRef<ThemeButtonRef, ThemeButtonProps>(({ child
     </BaseThemeButton>
   )
 })
+ThemeButton.displayName = 'ThemeButton'
 
 export const ButtonLight = ({ children, ...rest }: BaseButtonProps) => {
   return (

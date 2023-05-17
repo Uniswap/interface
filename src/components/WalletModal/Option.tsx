@@ -129,7 +129,7 @@ function PopupButtonContent({ connection, isDarkMode, show, children, onClick, o
           size={ButtonSize.small}
           emphasis={ButtonEmphasis.medium}
         >
-          <IconWrapper style={{ marginRight: '12px' }}>
+          <IconWrapper>
             <img src={connection.getIcon?.(isDarkMode)} alt="Icon" style={{ height: '20px', width: '20px' }} />
           </IconWrapper>
           <div>
