@@ -39,6 +39,8 @@ jobs:
           projectName: interface-staging
           directory: build
           githubToken: ${{ secrets.GITHUB_TOKEN }}
+          # Cloudflare uses `main` as the default production branch, so we push using the `main` branch so that it can be aliased by a custom domain.
+          branch: main
       - name: Send Slack message that deploy has failed
         uses: slackapi/slack-github-action@007b2c3c751a190b6f0f040e47ed024deaa72844
         if: always() && steps.pages-deployment.outcome == 'failure'
