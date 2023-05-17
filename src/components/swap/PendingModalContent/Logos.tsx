@@ -4,7 +4,7 @@ import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import AnimatedConfirmation from 'components/TransactionConfirmationModal/AnimatedConfirmation'
 import styled, { css, keyframes } from 'styled-components/macro'
 
-import { ReactComponent as PapersIcon } from '../../assets/svg/papers-text.svg'
+import { ReactComponent as PapersIcon } from '../../../assets/svg/papers-text.svg'
 
 export const LogoContainer = styled.div`
   height: 48px;
