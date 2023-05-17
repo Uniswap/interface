@@ -110,8 +110,8 @@ export default function SetLockupModal({ isOpen, currentLockup, onDismiss, title
             <ButtonPrimary
               disabled={
                 parsedLockup === '' ||
-                JSBI.greaterThan(JSBI.BigInt(parsedLockup), JSBI.BigInt(2592000)) ||
-                (parsedLockup !== '0' ? parsedLockup : '2').toString() === currentLockup
+                (parsedLockup !== '0' ? parsedLockup : '2').toString() === currentLockup ||
+                JSBI.greaterThan(JSBI.BigInt(parsedLockup), JSBI.BigInt(2592000))
               }
               onClick={onSetLockup}
             >
