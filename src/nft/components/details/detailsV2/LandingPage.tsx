@@ -108,25 +108,27 @@ interface LandingPageProps {
 
 export const LandingPage = ({ asset, collection, setShowDataHeader }: LandingPageProps) => {
   const intersectionRef = useRef<HTMLDivElement>(null)
-
-  // Checks if the intersectionRef is in the viewport
-  // If it is not in the viewport, the data page header becomes visible
-  useEffect(() => {
-    const intersectionHandler = (entries: IntersectionObserverEntry[]) => {
+  const observableRef = useRef(
+    new IntersectionObserver((entries) => {
       if (!entries[0].isIntersecting) {
         setShowDataHeader(true)
       } else {
         setShowDataHeader(false)
       }
-    }
+    })
+  )
+
+  // Checks if the intersectionRef is in the viewport
+  // If it is not in the viewport, the data page header becomes visible
+  useEffect(() => {
     const cachedRef = intersectionRef.current
-    if (cachedRef) {
-      const observer = new IntersectionObserver(intersectionHandler)
+    const observer = observableRef.current
+    if (cachedRef && observer) {
       observer.observe(cachedRef)
       return () => observer.unobserve(cachedRef)
     }
     return
-  }, [intersectionRef, setShowDataHeader])
+  }, [intersectionRef, observableRef, setShowDataHeader])
 
   return (
     <LandingPageContainer>
