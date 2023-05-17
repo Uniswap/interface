@@ -1,6 +1,7 @@
 import { TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import { useAccountDrawer, useCloseAccountDrawer } from 'components/AccountDrawer'
+import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button'
 import Loader from 'components/Icons/LoadingSpinner'
 import { ActivationStatus, useActivationState } from 'connection/activate'
 import { Connection, ConnectionType } from 'connection/types'
@@ -65,7 +66,7 @@ const IconWrapper = styled.div`
     align-items: flex-end;
   `};
 `
-const WCv2PopoverContent = styled.button`
+const WCv2PopoverContent = styled(ThemeButton)`
   background: ${({ theme }) => theme.backgroundSurface};
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
   border-radius: 12px;
@@ -121,7 +122,13 @@ function PopupButtonContent({ connection, isDarkMode, show, children, onClick, o
     <>
       {children}
       {show && (
-        <WCv2PopoverContent onClick={onClick} style={{ top: 60, right: 10 }} ref={popoverElement}>
+        <WCv2PopoverContent
+          onClick={onClick}
+          style={{ top: 52, right: 10 }}
+          ref={popoverElement}
+          size={ButtonSize.small}
+          emphasis={ButtonEmphasis.medium}
+        >
           <IconWrapper style={{ marginRight: '12px' }}>
             <img src={connection.getIcon?.(isDarkMode)} alt="Icon" style={{ height: '20px', width: '20px' }} />
           </IconWrapper>
