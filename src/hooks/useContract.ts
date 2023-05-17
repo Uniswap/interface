@@ -1,5 +1,5 @@
 import { Contract } from '@ethersproject/contracts'
-import QuoterV2Json from '@uniswap/swap-router-contracts/artifacts/contracts/lens/QuoterV2.sol/QuoterV2.json'
+import QuoterV2Json from '@pollum-io/swap-router-contracts/artifacts/contracts/lens/QuoterV2.sol/QuoterV2.json'
 import IPegasysPairJson from '@pollum-io/pegasys-protocol/artifacts/contracts/pegasys-core/interfaces/IPegasysPair.sol/IPegasysPair.json'
 import IPegasysRouterJson from '@pollum-io/pegasys-protocol/artifacts/contracts/pegasys-periphery/interfaces/IPegasysRouter.sol/IPegasysRouter.json'
 import QuoterJson from '@pollum-io/v2-periphery/artifacts/contracts/lens/Quoter.sol/Quoter.json'

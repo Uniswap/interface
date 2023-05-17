@@ -125,6 +125,9 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
 
 // only want to enable this when app hook called
 class GAMetric extends IMetric {
+  setProperty(key: string, value: unknown): void {
+    return
+  }
   putDimensions() {
     return
   }

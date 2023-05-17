@@ -38,7 +38,7 @@ const EmptyState = ({ HeaderContent, SubHeaderContent }: EmptyStateProps) => (
 
 export default function ProposalEmptyState() {
   const { chainId } = useWeb3React()
-  if (chainId && chainId !== SupportedChainId.OPTIMISM) { //TODO: verify this later
+  if (chainId && chainId !== SupportedChainId.ROLLUX) { //TODO: verify this later
     return (
       <EmptyState
         HeaderContent={() => <Trans>Please connect to Layer 1 Ethereum</Trans>}

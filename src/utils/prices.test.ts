@@ -42,14 +42,14 @@ describe('prices', () => {
       expect(
         computeRealizedLPFeeAmount(
           new Trade({
-            v2Routes: [
+            v1Routes: [
               {
-                routev2: new V2Route([pair12], token1, token2),
+                routev1: new V2Route([pair12], token1, token2),
                 inputAmount: currencyAmount(token1, 1000),
                 outputAmount: currencyAmount(token2, 1000),
               },
             ],
-            v3Routes: [],
+            v2Routes: [],
             tradeType: TradeType.EXACT_INPUT,
           })
         )
@@ -61,14 +61,14 @@ describe('prices', () => {
       expect(
         computeRealizedLPFeeAmount(
           new Trade({
-            v3Routes: [
+            v2Routes: [
               {
-                routev3: new V3Route([pool12], token1, token2),
+                routev2: new V3Route([pool12], token1, token2),
                 inputAmount: currencyAmount(token1, 1000),
                 outputAmount: currencyAmount(token2, 1000),
               },
             ],
-            v2Routes: [],
+            v1Routes: [],
             tradeType: TradeType.EXACT_INPUT,
           })
         )
@@ -79,14 +79,14 @@ describe('prices', () => {
       expect(
         computeRealizedLPFeeAmount(
           new Trade({
-            v2Routes: [
+            v1Routes: [
               {
-                routev2: new V2Route([pair12, pair23], token1, token3),
+                routev1: new V2Route([pair12, pair23], token1, token3),
                 inputAmount: currencyAmount(token1, 1000),
                 outputAmount: currencyAmount(token3, 1000),
               },
             ],
-            v3Routes: [],
+            v2Routes: [],
             tradeType: TradeType.EXACT_INPUT,
           })
         )
@@ -97,16 +97,16 @@ describe('prices', () => {
       expect(
         computeRealizedLPFeeAmount(
           new Trade({
-            v2Routes: [
+            v1Routes: [
               {
-                routev2: new V2Route([pair12, pair23], token1, token3),
+                routev1: new V2Route([pair12, pair23], token1, token3),
                 inputAmount: currencyAmount(token1, 1000),
                 outputAmount: currencyAmount(token3, 1000),
               },
             ],
-            v3Routes: [
+            v2Routes: [
               {
-                routev3: new V3Route([pool13], token1, token3),
+                routev2: new V3Route([pool13], token1, token3),
                 inputAmount: currencyAmount(token1, 1000),
                 outputAmount: currencyAmount(token3, 1000),
               },

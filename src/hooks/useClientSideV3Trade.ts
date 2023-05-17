@@ -136,10 +136,10 @@ export function useClientSideV3Trade<TTradeType extends TradeType>(
     return {
       state: TradeState.VALID,
       trade: new InterfaceTrade({
-        v2Routes: [],
-        v3Routes: [
+        v1Routes: [],
+        v2Routes: [
           {
-            routev3: bestRoute,
+            routev2: bestRoute,
             inputAmount: amountIn,
             outputAmount: amountOut,
           },

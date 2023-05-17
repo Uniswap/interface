@@ -9,26 +9,27 @@ import CeloLogo from '../../assets/svg/celo_logo.svg'
 import MaticLogo from '../../assets/svg/matic-token-icon.svg'
 import {  NATIVE_CHAIN_ID, nativeOnChain } from '../../constants/tokens'
 
-type Network = 'optimism' 
-
+type Network = 'rollux' | 'rollux_tanenbaum' 
 export function chainIdToNetworkName(networkId: SupportedChainId): Network {
   switch (networkId) {
     // case SupportedChainId.MAINNET:
       // return 'ethereum'
     // case SupportedChainId.ARBITRUM_ONE:
       // return 'arbitrum'
-    case SupportedChainId.OPTIMISM:
-      return 'optimism'
+    case SupportedChainId.ROLLUX:
+      return 'rollux'
+    case SupportedChainId.ROLLUX_TANENBAUM:
+      return 'rollux_tanenbaum'
     // case SupportedChainId.POLYGON:
       // return 'polygon'
     // case SupportedChainId.BNB:
       // return 'smartchain'
     default:
-      return 'optimism'
+      return 'rollux'
   }
 }
 
-export function getNativeLogoURI(chainId: SupportedChainId = SupportedChainId.OPTIMISM): string {
+export function getNativeLogoURI(chainId: SupportedChainId = SupportedChainId.ROLLUX): string {
   switch (chainId) {
     // case SupportedChainId.POLYGON:
     // case SupportedChainId.POLYGON_MUMBAI:
@@ -43,12 +44,12 @@ export function getNativeLogoURI(chainId: SupportedChainId = SupportedChainId.OP
   }
 }
 
-function getTokenLogoURI(address: string, chainId: SupportedChainId = SupportedChainId.OPTIMISM): string | void {
+function getTokenLogoURI(address: string, chainId: SupportedChainId = SupportedChainId.ROLLUX): string | void {
   const networkName = chainIdToNetworkName(chainId)
   const networksWithUrls = [
     // SupportedChainId.ARBITRUM_ONE,
     // SupportedChainId.MAINNET,
-    SupportedChainId.OPTIMISM,
+    SupportedChainId.ROLLUX,
     // SupportedChainId.BNB,
   ]
   if (networksWithUrls.includes(chainId)) {

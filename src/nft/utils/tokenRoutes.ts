@@ -122,7 +122,7 @@ export function buildAllTradeRouteInputs(trade: InterfaceTrade<Currency, Currenc
   for (const swap of swaps) {
     if (swap.route.protocol === Protocol.MIXED) {
       mixedTokenTradeRouteInputs.push(buildTradeRouteInput(swap))
-    } else if (swap.route.protocol === Protocol.V2) {
+    } else if (swap.route.protocol === Protocol.V1) {
       v2TokenTradeRouteInputs.push(buildTradeRouteInput(swap))
     } else {
       v3TokenTradeRouteInputs.push(buildTradeRouteInput(swap))

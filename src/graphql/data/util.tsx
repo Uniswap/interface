@@ -65,20 +65,20 @@ export const CHAIN_ID_TO_BACKEND_NAME: { [key: number]: Chain } = {
   // [SupportedChainId.CELO_ALFAJORES]: Chain.Celo,
   // [SupportedChainId.ARBITRUM_ONE]: Chain.Arbitrum,
   // [SupportedChainId.ARBITRUM_GOERLI]: Chain.Arbitrum,
-  [SupportedChainId.OPTIMISM]: Chain.Optimism,
-  [SupportedChainId.OPTIMISM_GOERLI]: Chain.Optimism,
+  [SupportedChainId.ROLLUX]: Chain.Optimism,
+  [SupportedChainId.ROLLUX_TANENBAUM]: Chain.Optimism,
   // [SupportedChainId.BNB]: Chain.Bnb,
 }
 
 export function chainIdToBackendName(chainId: number | undefined) {
   return chainId && CHAIN_ID_TO_BACKEND_NAME[chainId]
     ? CHAIN_ID_TO_BACKEND_NAME[chainId]
-    : CHAIN_ID_TO_BACKEND_NAME[SupportedChainId.OPTIMISM]
+    : CHAIN_ID_TO_BACKEND_NAME[SupportedChainId.ROLLUX]
 }
 
 const GQL_CHAINS: number[] = [
   // SupportedChainId.MAINNET,
-  SupportedChainId.OPTIMISM,
+  SupportedChainId.ROLLUX,
   // SupportedChainId.POLYGON,
   // SupportedChainId.ARBITRUM_ONE,
   // SupportedChainId.CELO,
@@ -121,14 +121,14 @@ export function validateUrlChainParam(chainName: string | undefined) {
 // TODO(cartcrom): refactor into safer lookup & replace usage
 // TODO verify this later
 export const CHAIN_NAME_TO_CHAIN_ID: { [key in Chain]: SupportedChainId } = {
-  [Chain.Ethereum]: SupportedChainId.OPTIMISM,
-  [Chain.EthereumGoerli]: SupportedChainId.OPTIMISM,
-  [Chain.Polygon]: SupportedChainId.OPTIMISM,
-  [Chain.Celo]: SupportedChainId.OPTIMISM,
-  [Chain.Optimism]: SupportedChainId.OPTIMISM,
-  [Chain.Arbitrum]: SupportedChainId.OPTIMISM,
-  [Chain.UnknownChain]: SupportedChainId.OPTIMISM,
-  [Chain.Bnb]: SupportedChainId.OPTIMISM,
+  [Chain.Ethereum]: SupportedChainId.ROLLUX,
+  [Chain.EthereumGoerli]: SupportedChainId.ROLLUX,
+  [Chain.Polygon]: SupportedChainId.ROLLUX,
+  [Chain.Celo]: SupportedChainId.ROLLUX,
+  [Chain.Optimism]: SupportedChainId.ROLLUX,
+  [Chain.Arbitrum]: SupportedChainId.ROLLUX,
+  [Chain.UnknownChain]: SupportedChainId.ROLLUX,
+  [Chain.Bnb]: SupportedChainId.ROLLUX,
 }
 
 export function fromGraphQLChain(chain: Chain): SupportedChainId {

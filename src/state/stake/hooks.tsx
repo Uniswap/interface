@@ -1,5 +1,5 @@
 import { Interface } from '@ethersproject/abi'
-import { abi as STAKING_REWARDS_ABI } from '@uniswap/liquidity-staker/build/StakingRewards.json'
+import { abi as STAKING_REWARDS_ABI } from '@pollum-io/pegasys-protocol/artifacts/contracts/earn/StakingRewards.sol/StakingRewards.json'
 import { CurrencyAmount, Token } from '@pollum-io/sdk-core'
 import { Pair } from '@pollum-io/v1-sdk'
 import { useWeb3React } from '@web3-react/core'

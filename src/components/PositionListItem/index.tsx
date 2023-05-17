@@ -21,8 +21,7 @@ import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { formatTickPrice } from 'utils/formatTickPrice'
 import { unwrappedToken } from 'utils/unwrappedToken'
 import { hasURL } from 'utils/urlChecks'
-
-import { DAI_OPTIMISM, USDC_OPTIMISM, USDT_OPTIMISM, WBTC_OPTIMISM, WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
+import { DAI_ROLLUX, USDC_ROLLUX, USDT_ROLLUX, WBTC_ROLLUX, WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
 
 const LinkRow = styled(Link)`
   align-items: center;
@@ -126,7 +125,7 @@ export function getPriceOrderingFromPositionForUI(position?: Position): {
   const token1 = position.amount1.currency
 
   // if token0 is a dollar-stable asset, set it as the quote token
-  const stables = [DAI_OPTIMISM, USDC_OPTIMISM, USDT_OPTIMISM]
+  const stables = [DAI_ROLLUX, USDC_ROLLUX, USDT_ROLLUX]
   if (stables.some((stable) => stable.equals(token0))) {
     return {
       priceLower: position.token0PriceUpper.invert(),
@@ -137,7 +136,7 @@ export function getPriceOrderingFromPositionForUI(position?: Position): {
   }
 
   // if token1 is an ETH-/BTC-stable asset, set it as the base token
-  const bases = [...Object.values(WRAPPED_NATIVE_CURRENCY), WBTC_OPTIMISM]
+  const bases = [...Object.values(WRAPPED_NATIVE_CURRENCY), WBTC_ROLLUX]
   if (bases.some((base) => base && base.equals(token1))) {
     return {
       priceLower: position.token0PriceUpper.invert(),

@@ -40,12 +40,12 @@ export function computeRoutes(
       const routeProtocol = getRouteProtocol(route)
 
       return {
-        routev3:
-          routeProtocol === Protocol.V3
-            ? new V3Route(route.map(genericPoolPairParser) as Pool[], currencyIn, currencyOut)
-            : null,
         routev2:
           routeProtocol === Protocol.V2
+            ? new V3Route(route.map(genericPoolPairParser) as Pool[], currencyIn, currencyOut)
+            : null,
+        routev1:
+          routeProtocol === Protocol.V1
             ? new V2Route(route.map(genericPoolPairParser) as Pair[], currencyIn, currencyOut)
             : null,
         mixedRoute:
@@ -72,14 +72,14 @@ export function transformRoutesToTrade<TTradeType extends TradeType>(
   gasUseEstimateUSD?: CurrencyAmount<Token> | null
 ): InterfaceTrade<Currency, Currency, TTradeType> {
   return new InterfaceTrade({
+    v1Routes:
+      route
+        ?.filter((r): r is typeof route[0] & { routev1: NonNullable<typeof route[0]['routev1']> } => r.routev1 !== null)
+        .map(({ routev1, inputAmount, outputAmount }) => ({ routev1, inputAmount, outputAmount })) ?? [],
     v2Routes:
       route
         ?.filter((r): r is typeof route[0] & { routev2: NonNullable<typeof route[0]['routev2']> } => r.routev2 !== null)
         .map(({ routev2, inputAmount, outputAmount }) => ({ routev2, inputAmount, outputAmount })) ?? [],
-    v3Routes:
-      route
-        ?.filter((r): r is typeof route[0] & { routev3: NonNullable<typeof route[0]['routev3']> } => r.routev3 !== null)
-        .map(({ routev3, inputAmount, outputAmount }) => ({ routev3, inputAmount, outputAmount })) ?? [],
     mixedRoutes:
       route
         ?.filter(
@@ -118,7 +118,7 @@ const genericPoolPairParser = (pool: V3PoolInRoute | V2PoolInRoute): Pool | Pair
 }
 
 function getRouteProtocol(route: (V3PoolInRoute | V2PoolInRoute)[]): Protocol {
-  if (route.every((pool) => pool.type === 'v2-pool')) return Protocol.V2
-  if (route.every((pool) => pool.type === 'v3-pool')) return Protocol.V3
+  if (route.every((pool) => pool.type === 'v2-pool')) return Protocol.V1
+  if (route.every((pool) => pool.type === 'v3-pool')) return Protocol.V2
   return Protocol.MIXED
 }

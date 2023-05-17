@@ -63,7 +63,7 @@ const L2NetworkLogo = styled.div<{ networkUrl?: string; parentSize: string }>`
 export default function AssetLogo({
   isNative,
   address,
-  chainId = SupportedChainId.OPTIMISM,
+  chainId = SupportedChainId.ROLLUX,
   symbol,
   backupImg,
   size = '24px',

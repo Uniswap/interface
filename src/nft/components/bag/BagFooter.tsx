@@ -348,7 +348,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
 
   const { balance: balanceInEth } = useWalletBalance()
   const sufficientBalance = useMemo(() => {
-    if (!connected || chainId !== SupportedChainId.OPTIMISM) {
+    if (!connected || chainId !== SupportedChainId.ROLLUX) {
       return undefined
     }
 

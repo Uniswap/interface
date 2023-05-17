@@ -48,7 +48,7 @@ function onError(error: Error) {
 }
 
 const [web3Network, web3NetworkHooks] = initializeConnector<Network>(
-  (actions) => new Network({ actions, urlMap: RPC_PROVIDERS, defaultChainId: SupportedChainId.OPTIMISM })
+  (actions) => new Network({ actions, urlMap: RPC_PROVIDERS, defaultChainId: SupportedChainId.ROLLUX })
 )
 export const networkConnection: Connection = {
   getName: () => 'Network',
@@ -137,7 +137,7 @@ const [web3CoinbaseWallet, web3CoinbaseWalletHooks] = initializeConnector<Coinba
     new CoinbaseWallet({
       actions,
       options: {
-        url: RPC_URLS[SupportedChainId.OPTIMISM][0],
+        url: RPC_URLS[SupportedChainId.ROLLUX][0],
         appName: 'Uniswap',
         appLogoUrl: UNISWAP_LOGO,
         reloadOnDisconnect: false,

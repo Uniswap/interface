@@ -3035,17 +3035,6 @@
   dependencies:
     web3 "^1.7.3"
 
-"@pollum-io/router-sdk@0.0.1":
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/@pollum-io/router-sdk/-/router-sdk-0.0.1.tgz#4028db5f1fef6e9bff0b1838aaea5135434cf157"
-  integrity sha512-tgl/kQ2e601Aj+cWbVFQcsDISd/SCwQvWdYjuFmwUX4IuODvunoHC0ZhtR5eb/usuzNKfiRernf++QlVWYBzpg==
-  dependencies:
-    "@ethersproject/abi" "^5.5.0"
-    "@pollum-io/sdk-core" "0.0.2"
-    "@pollum-io/swap-router-contracts" "0.0.1"
-    "@pollum-io/v1-sdk" "0.0.1"
-    "@pollum-io/v2-sdk" "0.0.1"
-
 "@pollum-io/router-sdk@0.0.2":
   version "0.0.2"
   resolved "https://registry.yarnpkg.com/@pollum-io/router-sdk/-/router-sdk-0.0.2.tgz#85f9c3b7e8b69d45dd4d02e60086beaf338f0d83"
@@ -3056,18 +3045,6 @@
     "@pollum-io/swap-router-contracts" "0.0.4"
     "@pollum-io/v1-sdk" "0.0.2"
     "@pollum-io/v2-sdk" "0.0.2"
-
-"@pollum-io/sdk-core@0.0.2":
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/@pollum-io/sdk-core/-/sdk-core-0.0.2.tgz#4370ad14647ad7841e7f3a6bd36b726c791d83e5"
-  integrity sha512-2jg2jYuDeBLqO+MGaXTrvLS40WNFLKPsg8TQgO6V2wXXUWI187/KOJYUw7EDrXaJgvdk+XIwwRqc0FEuDhLr1A==
-  dependencies:
-    "@ethersproject/address" "^5.0.2"
-    big.js "^5.2.2"
-    decimal.js-light "^2.5.0"
-    jsbi "^3.1.4"
-    tiny-invariant "^1.1.0"
-    toformat "^2.0.0"
 
 "@pollum-io/sdk-core@0.0.3", "@pollum-io/sdk-core@^0.0.3":
   version "0.0.3"
@@ -3080,34 +3057,6 @@
     jsbi "^3.1.4"
     tiny-invariant "^1.1.0"
     toformat "^2.0.0"
-
-"@pollum-io/smart-order-router@0.0.1":
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/@pollum-io/smart-order-router/-/smart-order-router-0.0.1.tgz#c78f5e704b0645d8321e3646ef9b8e9fbbc11b64"
-  integrity sha512-lulMe5mrYSuVwYqf0i99CvaXLuL6kILi1+nuO9UGIvqaOZOkhQy7FOZztNjmQJAV6xtNdsiSkfaAYQyFDjOT0Q==
-  dependencies:
-    "@pollum-io/default-token-list" "0.0.1"
-    "@pollum-io/router-sdk" "0.0.1"
-    "@pollum-io/swap-router-contracts" "0.0.4"
-    "@pollum-io/universal-router" "0.0.1"
-    "@pollum-io/universal-router-sdk" "0.0.1"
-    "@pollum-io/v1-sdk" "0.0.1"
-    "@pollum-io/v2-sdk" "0.0.1"
-    "@uniswap/permit2-sdk" "^1.2.0"
-    "@uniswap/swap-router-contracts" "^1.3.0"
-    "@uniswap/token-lists" "^1.0.0-beta.25"
-    async-retry "^1.3.1"
-    await-timeout "^1.1.1"
-    axios "^0.21.1"
-    bunyan "^1.8.15"
-    bunyan-blackhole "^1.1.1"
-    ethers "^5.7.2"
-    graphql "^15.5.0"
-    graphql-request "^3.4.0"
-    lodash "^4.17.21"
-    mnemonist "^0.38.3"
-    node-cache "^5.1.2"
-    stats-lite "^2.2.0"
 
 "@pollum-io/smart-order-router@0.0.6":
   version "0.0.6"
@@ -3136,18 +3085,6 @@
     node-cache "^5.1.2"
     stats-lite "^2.2.0"
 
-"@pollum-io/swap-router-contracts@0.0.1":
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/@pollum-io/swap-router-contracts/-/swap-router-contracts-0.0.1.tgz#5852e359a3cd6173c79ed28b4f4a0863ef4a97c2"
-  integrity sha512-ANHo+qR4o5W5COaKkxqsihqVym1do4/GdkRM3nWlvTnF5bd6WvmZN8EQUnBl7xId+Tz6BvE4R37XtfHpFQDt+g==
-  dependencies:
-    "@openzeppelin/contracts" "3.4.2-solc-0.7"
-    "@pollum-io/pegasys-protocol" "0.0.17"
-    "@pollum-io/v2-core" "0.0.1"
-    "@pollum-io/v2-periphery" "0.0.1"
-    dotenv "^14.2.0"
-    hardhat-watcher "^2.1.1"
-
 "@pollum-io/swap-router-contracts@0.0.4":
   version "0.0.4"
   resolved "https://registry.yarnpkg.com/@pollum-io/swap-router-contracts/-/swap-router-contracts-0.0.4.tgz#d3af8a34a472ba3c04b989d60c0b63734d67a849"
@@ -3159,20 +3096,6 @@
     "@pollum-io/v2-periphery" "0.0.1"
     dotenv "^14.2.0"
     hardhat-watcher "^2.1.1"
-
-"@pollum-io/universal-router-sdk@0.0.1":
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/@pollum-io/universal-router-sdk/-/universal-router-sdk-0.0.1.tgz#ff52905f0ef06b4ae735351042d696de3f9d937b"
-  integrity sha512-pdNNaxINnlM08ForvXaldPoWqgVwJbG8Neu8knOfv8MeYm4Nu/8ZVAKDvhrXWm+6hiWRCIjOKx+BaBSMfK8RKA==
-  dependencies:
-    "@pollum-io/router-sdk" "0.0.1"
-    "@pollum-io/sdk-core" "0.0.2"
-    "@pollum-io/universal-router" "0.0.1"
-    "@pollum-io/v1-sdk" "0.0.1"
-    "@pollum-io/v2-sdk" "0.0.1"
-    "@uniswap/permit2-sdk" "^1.2.0"
-    bignumber.js "^9.0.2"
-    ethers "^5.3.1"
 
 "@pollum-io/universal-router-sdk@0.0.2":
   version "0.0.2"
@@ -3188,15 +3111,6 @@
     bignumber.js "^9.0.2"
     ethers "^5.3.1"
 
-"@pollum-io/universal-router@0.0.1":
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/@pollum-io/universal-router/-/universal-router-0.0.1.tgz#3aeb043ae1d1abdd416f4e0a3fd0c25de7cdbf2a"
-  integrity sha512-sNDO3gUcirh5Cr2qTN6CS2oTMnn2dayFNJxyeVCEtpfL3CGMEyjVJo3mz+LeHpgUsxpx2HGv/bWZIFTEVw0s/w==
-  dependencies:
-    "@openzeppelin/contracts" "4.7.0"
-    "@pollum-io/pegasys-protocol" "0.0.17"
-    "@pollum-io/v2-core" "0.0.1"
-
 "@pollum-io/universal-router@0.0.3":
   version "0.0.3"
   resolved "https://registry.yarnpkg.com/@pollum-io/universal-router/-/universal-router-0.0.3.tgz#57398d53d0308524251b9f6a1403b9e504983c73"
@@ -3205,17 +3119,6 @@
     "@openzeppelin/contracts" "4.7.0"
     "@pollum-io/pegasys-protocol" "0.0.17"
     "@pollum-io/v2-core" "0.0.3"
-
-"@pollum-io/v1-sdk@0.0.1":
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/@pollum-io/v1-sdk/-/v1-sdk-0.0.1.tgz#02774c9adbe7a5147d77cc1f048a446362f6734c"
-  integrity sha512-A2FXfwL08Wy+aDg25Jq+9bifPg4Ng/CAPUnIwnU1qT+AK++nN89Nd9g95AiQUroYMmThFxhyDhLPvestOukepw==
-  dependencies:
-    "@ethersproject/address" "^5.0.0"
-    "@ethersproject/solidity" "^5.0.0"
-    "@pollum-io/sdk-core" "0.0.2"
-    tiny-invariant "^1.1.0"
-    tiny-warning "^1.0.3"
 
 "@pollum-io/v1-sdk@0.0.2":
   version "0.0.2"
@@ -3271,20 +3174,6 @@
     "@uniswap/lib" "^4.0.1-alpha"
     base64-sol "1.0.1"
 
-"@pollum-io/v2-sdk@0.0.1":
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/@pollum-io/v2-sdk/-/v2-sdk-0.0.1.tgz#ce978364b516ee81932e24bfb3fa6da5e98b9afe"
-  integrity sha512-eR2NfLfz/Z+GNZ2AmVRrCBu0zmNdjqXoBtxpXB92UZiNBbFSxxCJoJVYBRL8Oz2ZiPvLjkdjsSsgccJAdlhlaQ==
-  dependencies:
-    "@ethersproject/abi" "^5.0.12"
-    "@ethersproject/solidity" "^5.0.9"
-    "@pollum-io/sdk-core" "0.0.2"
-    "@pollum-io/swap-router-contracts" "0.0.1"
-    "@pollum-io/v2-periphery" "0.0.1"
-    "@pollum-io/v2-staker" "0.0.1"
-    tiny-invariant "^1.1.0"
-    tiny-warning "^1.0.3"
-
 "@pollum-io/v2-sdk@0.0.2":
   version "0.0.2"
   resolved "https://registry.yarnpkg.com/@pollum-io/v2-sdk/-/v2-sdk-0.0.2.tgz#adb85162db1749b8f50f97799d157b8bfa9fe59b"
@@ -3308,20 +3197,20 @@
     "@pollum-io/v2-core" "0.0.1"
     "@pollum-io/v2-periphery" "0.0.1"
 
-"@pollum-io/widgets@0.0.2":
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/@pollum-io/widgets/-/widgets-0.0.2.tgz#b043128c7cd39bc48c1cd00ed2d2a9e360d810a3"
-  integrity sha512-l/C4kjVln/xHOGP99WCBkfmN0iqyzpap3VcSg+Aj5qjjFRufXyiQ3f8CMzumtm/ld5lwcMoEgVtDiFcnZyG2xw==
+"@pollum-io/widgets@0.0.3":
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/@pollum-io/widgets/-/widgets-0.0.3.tgz#7162110f2a16ae80912f5a0d22bf1f42bb216ead"
+  integrity sha512-3d2fFoI5wv/xm3HsoGYoVcYnF5KucNemwxnp8sKlH6naJVtWe0p9gwD2uDF/RPW/izq0ee8On4AF48jO6UqnAA==
   dependencies:
     "@babel/runtime" ">=7.17.0"
     "@fontsource/ibm-plex-mono" "^4.5.1"
     "@fontsource/inter" "^4.5.1"
-    "@pollum-io/router-sdk" "0.0.1"
-    "@pollum-io/sdk-core" "0.0.2"
-    "@pollum-io/smart-order-router" "0.0.1"
-    "@pollum-io/universal-router-sdk" "0.0.1"
-    "@pollum-io/v1-sdk" "0.0.1"
-    "@pollum-io/v2-sdk" "0.0.1"
+    "@pollum-io/router-sdk" "0.0.2"
+    "@pollum-io/sdk-core" "0.0.3"
+    "@pollum-io/smart-order-router" "0.0.6"
+    "@pollum-io/universal-router-sdk" "0.0.2"
+    "@pollum-io/v1-sdk" "0.0.2"
+    "@pollum-io/v2-sdk" "0.0.2"
     "@popperjs/core" "^2.4.4"
     "@reduxjs/toolkit" "^1.6.1"
     "@uniswap/conedison" "^1.5.3"
@@ -5068,44 +4957,10 @@
   resolved "https://registry.yarnpkg.com/@uniswap/redux-multicall/-/redux-multicall-1.1.8.tgz#9cc5090305b10df68fb6162eb1ba7c2c762f5e7f"
   integrity sha512-LttOBVJuoRNC6N4MHsb5dF2GszLsj1ddPKKccEw1XOX17bGrFdm2A6GwKgES+v+Hj3lluDbQL6atcQtymP21iw==
 
-"@uniswap/swap-router-contracts@^1.3.0":
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/@uniswap/swap-router-contracts/-/swap-router-contracts-1.3.0.tgz#8d555ca6d74b888d6e02a26ebb806ce315605f1f"
-  integrity sha512-iKvCuRkHXEe0EMjOf8HFUISTIhlxI57kKFllf3C3PUIE0HmwxrayyoflwAz5u/TRsFGYqJ9IjX2UgzLCsrNa5A==
-  dependencies:
-    "@openzeppelin/contracts" "3.4.2-solc-0.7"
-    "@uniswap/v2-core" "1.0.1"
-    "@uniswap/v3-core" "1.0.0"
-    "@uniswap/v3-periphery" "1.4.1"
-    dotenv "^14.2.0"
-    hardhat-watcher "^2.1.1"
-
 "@uniswap/token-lists@^1.0.0-beta.25", "@uniswap/token-lists@^1.0.0-beta.30":
   version "1.0.0-beta.30"
   resolved "https://registry.yarnpkg.com/@uniswap/token-lists/-/token-lists-1.0.0-beta.30.tgz#2103ca23b8007c59ec71718d34cdc97861c409e5"
   integrity sha512-HwY2VvkQ8lNR6ks5NqQfAtg+4IZqz3KV1T8d2DlI8emIn9uMmaoFbIOg0nzjqAVKKnZSbMTRRtUoAh6mmjRvog==
-
-"@uniswap/v2-core@1.0.1":
-  version "1.0.1"
-  resolved "https://registry.npmjs.org/@uniswap/v2-core/-/v2-core-1.0.1.tgz"
-  integrity sha512-MtybtkUPSyysqLY2U210NBDeCHX+ltHt3oADGdjqoThZaFRDKwM6k1Nb3F0A3hk5hwuQvytFWhrWHOEq6nVJ8Q==
-
-"@uniswap/v3-core@1.0.0":
-  version "1.0.0"
-  resolved "https://registry.npmjs.org/@uniswap/v3-core/-/v3-core-1.0.0.tgz"
-  integrity sha512-kSC4djMGKMHj7sLMYVnn61k9nu+lHjMIxgg9CDQT+s2QYLoA56GbSK9Oxr+qJXzzygbkrmuY6cwgP6cW2JXPFA==
-
-"@uniswap/v3-periphery@1.4.1":
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/@uniswap/v3-periphery/-/v3-periphery-1.4.1.tgz#b90f08b7386163c0abfd7258831caef6339c7862"
-  integrity sha512-Ab0ZCKOQrQMKIcpBTezTsEhWfQjItd0TtkCG8mPhoQu+wC67nPaf4hYUhM6wGHeFUmDiYY5MpEQuokB0ENvoTg==
-  dependencies:
-    "@openzeppelin/contracts" "3.4.2-solc-0.7"
-    "@uniswap/lib" "^4.0.1-alpha"
-    "@uniswap/v2-core" "1.0.1"
-    "@uniswap/v3-core" "1.0.0"
-    base64-sol "1.0.1"
-    hardhat-watcher "^2.1.1"
 
 "@vanilla-extract/babel-plugin@^1.1.7":
   version "1.1.7"

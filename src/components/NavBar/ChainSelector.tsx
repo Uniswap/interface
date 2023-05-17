@@ -29,8 +29,8 @@ const Label = styled.div`
 const NETWORK_SELECTOR_CHAINS = [
   // SupportedChainId.MAINNET,
   // SupportedChainId.POLYGON,
-  SupportedChainId.OPTIMISM,
-  SupportedChainId.OPTIMISM_GOERLI,
+  SupportedChainId.ROLLUX,
+  SupportedChainId.ROLLUX_TANENBAUM,
   // SupportedChainId.ARBITRUM_ONE,
   // SupportedChainId.CELO,
   // SupportedChainId.BNB,

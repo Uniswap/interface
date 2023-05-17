@@ -36,13 +36,13 @@ const API_QUERY_PARAMS = {
   protocols: 'v2,v3,mixed',
 }
 const CLIENT_PARAMS = {
-  protocols: [Protocol.V2, Protocol.V3, Protocol.MIXED],
+  protocols: [Protocol.V1, Protocol.V2, Protocol.MIXED],
 }
 // Price queries are tuned down to minimize the required RPCs to respond to them.
 // TODO(zzmp): This will be used after testing router caching.
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const PRICE_PARAMS = {
-  protocols: [Protocol.V2, Protocol.V3],
+  protocols: [Protocol.V1, Protocol.V2],
   v2PoolSelection: {
     topN: 2,
     topNDirectSwaps: 1,
@@ -82,7 +82,7 @@ interface GetQuoteArgs {
 export const routingApi = createApi({
   reducerPath: 'routingApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'https://api.uniswap.org/v1/',
+    baseUrl: 'east-2.amazonaws.com/prod/https://',
   }),
   endpoints: (build) => ({
     getQuote: build.query<GetQuoteResult, GetQuoteArgs>({

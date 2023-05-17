@@ -16,7 +16,7 @@ export const FEE_AMOUNT_DETAIL: Record<
       // SupportedChainId.CELO,
       // SupportedChainId.CELO_ALFAJORES,
       // SupportedChainId.MAINNET,
-      SupportedChainId.OPTIMISM,
+      SupportedChainId.ROLLUX,
       // SupportedChainId.POLYGON,
       // SupportedChainId.POLYGON_MUMBAI,
     ],

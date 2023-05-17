@@ -66,7 +66,7 @@ const StyledNetworkLabel = styled.div`
 export default function BalanceSummary({ token }: { token: Currency }) {
   const { account, chainId } = useWeb3React()
   const theme = useTheme()
-  const { label, color } = getChainInfo(isSupportedChain(chainId) ? chainId : SupportedChainId.OPTIMISM)
+  const { label, color } = getChainInfo(isSupportedChain(chainId) ? chainId : SupportedChainId.ROLLUX)
   const balance = useCurrencyBalance(account, token)
   const formattedBalance = formatCurrencyAmount(balance, NumberType.TokenNonTx)
   const formattedUsdValue = formatCurrencyAmount(useStablecoinValue(balance), NumberType.FiatTokenStats)

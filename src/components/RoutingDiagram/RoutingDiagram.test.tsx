@@ -12,18 +12,18 @@ const percent = (strings: TemplateStringsArray) => new Percent(parseInt(strings[
 const singleRoute: RoutingDiagramEntry = {
   percent: percent`100`,
   path: [[USDC_MAINNET, DAI, FeeAmount.LOW]],
-  protocol: Protocol.V3,
+  protocol: Protocol.V2,
 }
 
 const multiRoute: RoutingDiagramEntry[] = [
-  { percent: percent`75`, path: [[USDC_MAINNET, DAI, FeeAmount.LOWEST]], protocol: Protocol.V2 },
+  { percent: percent`75`, path: [[USDC_MAINNET, DAI, FeeAmount.LOWEST]], protocol: Protocol.V1 },
   {
     percent: percent`25`,
     path: [
       [USDC_MAINNET, WBTC, FeeAmount.MEDIUM],
       [WBTC, DAI, FeeAmount.HIGH],
     ],
-    protocol: Protocol.V3,
+    protocol: Protocol.V2,
   },
 ]
 

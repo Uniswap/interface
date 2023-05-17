@@ -3,8 +3,8 @@ import { SupportedChainId } from 'constants/chains'
 const BLOCK_EXPLORER_PREFIXES: { [chainId: number]: string } = {
   // [SupportedChainId.MAINNET]: 'https://etherscan.io',
   // [SupportedChainId.GOERLI]: 'https://goerli.etherscan.io',
-  [SupportedChainId.OPTIMISM]: 'https://optimistic.etherscan.io',
-  [SupportedChainId.OPTIMISM_GOERLI]: 'https://goerli-optimism.etherscan.io',
+  [SupportedChainId.ROLLUX]: 'https://explorer.rollux.com',
+  [SupportedChainId.ROLLUX_TANENBAUM]: 'https://rollux.tanenbaum.io',
   // [SupportedChainId.POLYGON]: 'https://polygonscan.com',
   // [SupportedChainId.POLYGON_MUMBAI]: 'https://mumbai.polygonscan.com',
   // [SupportedChainId.CELO]: 'https://celoscan.io',
@@ -54,7 +54,7 @@ export function getExplorerLink(chainId: number, data: string, type: ExplorerDat
   //   }
   // }
 
-  const prefix = BLOCK_EXPLORER_PREFIXES[chainId] ?? 'https://etherscan.io'
+  const prefix = BLOCK_EXPLORER_PREFIXES[chainId] ?? 'https://explorer.rollux.com'
 
   switch (type) {
     case ExplorerDataType.TRANSACTION:
@@ -64,7 +64,7 @@ export function getExplorerLink(chainId: number, data: string, type: ExplorerDat
       return `${prefix}/token/${data}`
 
     case ExplorerDataType.BLOCK:
-      if (chainId === SupportedChainId.OPTIMISM || chainId === SupportedChainId.OPTIMISM_GOERLI) {
+      if (chainId === SupportedChainId.ROLLUX || chainId === SupportedChainId.ROLLUX_TANENBAUM) {
         return `${prefix}/tx/${data}`
       }
       return `${prefix}/block/${data}`
