@@ -20,12 +20,14 @@ describe('Service Worker', () => {
     }
   })
 
-  after(() => {
+  function unregisterServiceWorker() {
     return cy.log('unregisters service worker').then(async () => {
       const sw = await window.navigator.serviceWorker.getRegistration(Cypress.config().baseUrl ?? undefined)
       await sw?.unregister()
     })
-  })
+  }
+  before(unregisterServiceWorker)
+  after(unregisterServiceWorker)
 
   beforeEach(() => {
     cy.intercept('https://api.uniswap.org/v1/amplitude-proxy', (req) => {
