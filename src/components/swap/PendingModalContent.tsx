@@ -97,7 +97,7 @@ const StepTitleAnimationContainer = styled(Column)`
   width: 100%;
   align-items: center;
   transition: display ${({ theme }) => theme.transition.duration.medium} ${({ theme }) => theme.transition.timing.inOut};
-  animation: ${fadeInAnimation};
+  ${fadeInAnimation}
   &.${AnimationType.EXITING} {
     ${fadeOutAnimation}
   }
