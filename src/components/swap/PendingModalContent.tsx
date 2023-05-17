@@ -31,6 +31,7 @@ const Container = styled(ColumnCenter)`
 const HeaderContainer = styled(ColumnCenter)<{ $disabled?: boolean }>`
   ${({ $disabled }) => $disabled && `opacity: 0.5;`}
   padding: 0 32px;
+  overflow: visible;
 `
 
 const LogoContainer = styled.div`
@@ -50,6 +51,7 @@ const StepCircle = styled.div<{ active: boolean }>`
   border-radius: 50%;
   background-color: ${({ theme, active }) => (active ? theme.accentAction : theme.textTertiary)};
   outline: 3px solid ${({ theme, active }) => (active ? theme.accentActionSoft : theme.accentTextLightTertiary)};
+  transition: background-color ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.inOut}`};
 `
 
 const TooltipLink = styled(ThemedText.Link)`
@@ -101,6 +103,17 @@ const StepTitleAnimationContainer = styled(Column)`
   &.${AnimationType.EXITING} {
     ${fadeOutAnimation}
   }
+`
+const scaleIn = keyframes`
+  from { transform: scale(0); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+`
+const scaleInAnimation = css`
+  animation: ${scaleIn} ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.inOut}`};
+`
+
+const AnimatedEntranceConfirmation = styled(AnimatedConfirmation)`
+  ${scaleInAnimation}
 `
 
 function CurrencyLoader({ currency }: { currency: Currency | undefined }) {
@@ -260,7 +273,7 @@ function getContent(args: ContentArgs): PendingModalStep {
         label: !swapPending && !swapConfirmed ? t`Proceed in your wallet` : null,
         logo:
           swapConfirmed || (swapPending && chainId === SupportedChainId.MAINNET) ? (
-            <AnimatedConfirmation size="48px" />
+            <AnimatedEntranceConfirmation size="48px" />
           ) : (
             <Loader stroke={theme.textTertiary} size="48px" />
           ),

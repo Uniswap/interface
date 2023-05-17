@@ -176,7 +176,7 @@ export default function ConfirmSwapModal({
   fiatValueInput: { data?: number; isLoading: boolean }
   fiatValueOutput: { data?: number; isLoading: boolean }
 }) {
-  const doesTradeDiffer = originalTrade && tradeMeaningfullyDiffers(trade, originalTrade)
+  const doesTradeDiffer = originalTrade && tradeMeaningfullyDiffers(trade, originalTrade, allowedSlippage)
   const { onStartSwapFlow, prepareSwapFlow, onCancel, confirmModalState, approvalError, pendingModalSteps } =
     useConfirmModalState({
       trade,
