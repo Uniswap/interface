@@ -6,6 +6,8 @@ name: 3 | Push staging -> prod
 
 on:
   workflow_dispatch:
+    branches:
+      - releases/staging
 
 jobs:
   push-prod:
