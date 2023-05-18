@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { SagaState, SagaStatus } from '../utils/saga'
+import { SagaState, SagaStatus } from 'wallet/src/utils/saga'
 import { useAppDispatch, useAppSelector } from './index'
 import { monitoredSagas } from './saga'
 

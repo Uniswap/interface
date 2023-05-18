@@ -6,14 +6,15 @@ import ERC721_ABI from 'src/abis/erc721.json'
 import { Erc1155, Erc20, Erc721 } from 'src/abis/types'
 import { getContractManager, getProvider } from 'src/app/walletContext'
 import { AssetType } from 'src/entities/assets'
+import { getNotificationErrorAction } from 'src/features/notifications/utils'
 import { sendTransaction } from 'src/features/transactions/sendTransaction'
 import { TransferTokenParams } from 'src/features/transactions/transfer/useTransferTransactionRequest'
 import { SendTokenTransactionInfo, TransactionType } from 'src/features/transactions/types'
-import { createMonitoredSaga } from 'src/utils/saga'
 import { call } from 'typed-redux-saga'
 import { ContractManager } from 'wallet/src/features/contracts/ContractManager'
 import { logger } from 'wallet/src/features/logger/logger'
 import { isNativeCurrencyAddress } from 'wallet/src/utils/currencyId'
+import { createMonitoredSaga } from 'wallet/src/utils/saga'
 
 type Params = {
   transferTokenParams: TransferTokenParams
@@ -137,4 +138,6 @@ export const {
   wrappedSaga: transferTokenSaga,
   reducer: transferTokenReducer,
   actions: transferTokenActions,
-} = createMonitoredSaga<Params>(transferToken, 'transferToken')
+} = createMonitoredSaga<Params>(transferToken, 'transferToken', {
+  onErrorAction: getNotificationErrorAction,
+})

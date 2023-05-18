@@ -1,9 +1,11 @@
+import { Action } from '@reduxjs/toolkit'
 import { BigintIsh, Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import JSBI from 'jsbi'
 import { i18n } from 'src/app/i18n'
 import { AssetType } from 'src/entities/assets'
 import { SpotPrice } from 'src/features/dataApi/spotPricesQuery'
 import { GQLNftAsset } from 'src/features/nfts/hooks'
+import { pushNotification } from 'src/features/notifications/notificationSlice'
 import {
   AppNotificationType,
   ReceiveCurrencyTxNotification,
@@ -423,4 +425,11 @@ export function buildReceiveNotification(
   }
 
   return undefined
+}
+
+export function getNotificationErrorAction(errorMessage: string): Action {
+  return pushNotification({
+    type: AppNotificationType.Error,
+    errorMessage,
+  })
 }

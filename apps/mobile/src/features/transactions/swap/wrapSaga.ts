@@ -3,6 +3,7 @@ import { Contract, providers } from 'ethers'
 import { CallEffect } from 'redux-saga/effects'
 import { Weth } from 'src/abis/types'
 import WETH_ABI from 'src/abis/weth.json'
+import { getNotificationErrorAction } from 'src/features/notifications/utils'
 import { sendTransaction } from 'src/features/transactions/sendTransaction'
 import {
   TransactionOptions,
@@ -10,10 +11,10 @@ import {
   TransactionTypeInfo,
 } from 'src/features/transactions/types'
 import { Account } from 'src/features/wallet/accounts/types'
-import { createMonitoredSaga } from 'src/utils/saga'
 import { call } from 'typed-redux-saga'
 import { ChainId } from 'wallet/src/constants/chains'
 import { WRAPPED_NATIVE_CURRENCY } from 'wallet/src/constants/tokens'
+import { createMonitoredSaga } from 'wallet/src/utils/saga'
 
 export enum WrapType {
   NotApplicable,
@@ -77,4 +78,6 @@ export const {
   wrappedSaga: tokenWrapSaga,
   reducer: tokenWrapReducer,
   actions: tokenWrapActions,
-} = createMonitoredSaga<Params>(wrap, 'wrap')
+} = createMonitoredSaga<Params>(wrap, 'wrap', {
+  onErrorAction: getNotificationErrorAction,
+})

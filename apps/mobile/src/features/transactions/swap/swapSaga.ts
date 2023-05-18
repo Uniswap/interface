@@ -1,13 +1,14 @@
 import { providers } from 'ethers'
 import { getProvider } from 'src/app/walletContext'
+import { getNotificationErrorAction } from 'src/features/notifications/utils'
 import { sendTransaction } from 'src/features/transactions/sendTransaction'
 import { Trade } from 'src/features/transactions/swap/useTrade'
 import { tradeToTransactionInfo } from 'src/features/transactions/swap/utils'
 import { TransactionType, TransactionTypeInfo } from 'src/features/transactions/types'
 import { Account } from 'src/features/wallet/accounts/types'
-import { createMonitoredSaga } from 'src/utils/saga'
 import { call } from 'typed-redux-saga'
 import { logger } from 'wallet/src/features/logger/logger'
+import { createMonitoredSaga } from 'wallet/src/utils/saga'
 
 export type SwapParams = {
   txId?: string
@@ -68,4 +69,6 @@ export const {
   wrappedSaga: swapSaga,
   reducer: swapReducer,
   actions: swapActions,
-} = createMonitoredSaga<SwapParams>(approveAndSwap, 'swap')
+} = createMonitoredSaga<SwapParams>(approveAndSwap, 'swap', {
+  onErrorAction: getNotificationErrorAction,
+})

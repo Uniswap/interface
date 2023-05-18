@@ -1,7 +1,7 @@
-import { createAction, createReducer, PayloadActionCreator } from '@reduxjs/toolkit'
+import { Action, createAction, createReducer, PayloadActionCreator } from '@reduxjs/toolkit'
 import { call, CallEffect, delay, Effect, put, race, take, TakeEffect } from 'redux-saga/effects'
+import { logger } from 'wallet/src/features/logger/logger'
 import { errorToString } from 'wallet/src/utils/validation'
-import { logger } from '../features/logger/logger'
 
 /**
  * A convenience utility to create a saga and trigger action
@@ -58,6 +58,9 @@ export interface SagaState {
 
 interface MonitoredSagaOptions {
   timeoutDuration?: number // in milliseconds
+  // TODO(EXT-152): Once notifications utils are shared then this won't need to be passed. The error should just be dispatched for both web + mobile.
+  onErrorAction?: (errorMessage: string) => Action // action to dispatch if there is an error
+  // If retry / or other options are ever needed, they can go here
 }
 
 /**
@@ -134,6 +137,9 @@ export function createMonitoredSaga<SagaParams = void>(
         logger.error('saga', 'monitoredSaga', `${name} error`, error)
         const errorMessage = errorToString(error)
         yield put(errorAction(errorMessage))
+        if (options?.onErrorAction) {
+          yield put(options.onErrorAction(errorMessage))
+        }
       }
     }
   }

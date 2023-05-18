@@ -13,8 +13,14 @@ import { SagaState } from '../utils/saga'
 // Sagas that are spawned at startup
 const sagas = [initProviders] as const
 
+interface MonitoredSaga {
+  // TODO(MOB-3857): Add more specific types
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [key: string]: any
+}
+
 // Stateful sagas that are registered with teh store on startup
-export const monitoredSagas = {
+export const monitoredSagas: Record<string, MonitoredSaga> = {
   [importAccountSagaName]: {
     name: importAccountSagaName,
     wrappedSaga: importAccountSaga,

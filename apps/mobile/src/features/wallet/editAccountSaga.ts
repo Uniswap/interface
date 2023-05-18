@@ -1,6 +1,7 @@
 import { Action } from '@reduxjs/toolkit'
 import { AllEffect, CallEffect, PutEffect, SelectEffect } from 'redux-saga/effects'
 import { appSelect } from 'src/app/hooks'
+import { getNotificationErrorAction } from 'src/features/notifications/utils'
 import { Account, AccountType, BackupType } from 'src/features/wallet/accounts/types'
 import { selectAccounts } from 'src/features/wallet/selectors'
 import {
@@ -9,9 +10,9 @@ import {
 } from 'src/features/wallet/walletSlice'
 import { disconnectWCForAccount } from 'src/features/walletConnect/WalletConnect'
 import { unique } from 'src/utils/array'
-import { createMonitoredSaga } from 'src/utils/saga'
 import { all, call, put, SagaGenerator } from 'typed-redux-saga'
 import { logger } from 'wallet/src/features/logger/logger'
+import { createMonitoredSaga } from 'wallet/src/utils/saga'
 
 export enum EditAccountAction {
   AddBackupMethod = 'AddBackupMethod',
@@ -356,4 +357,6 @@ export const {
   wrappedSaga: editAccountSaga,
   reducer: editAccountReducer,
   actions: editAccountActions,
-} = createMonitoredSaga<EditAccountParams>(editAccount, 'editAccount')
+} = createMonitoredSaga<EditAccountParams>(editAccount, 'editAccount', {
+  onErrorAction: getNotificationErrorAction,
+})
