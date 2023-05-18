@@ -3,19 +3,15 @@ import { MaxUint160, MaxUint256 } from '@uniswap/permit2-sdk'
 import { DAI, USDC_MAINNET } from '../../src/constants/tokens'
 import { getTestSelector } from '../utils'
 
-/** Initiates a swap and confirms its success. */
-function swaps() {
+/** Initiates a swap. */
+function initiateSwap() {
   // The swap-button can be temporarily disabled following approval, & Cypress will retry clicking the disabled version.
   // This ensures that we don't click until the button is enabled.
   cy.get('#swap-button').should('not.have.attr', 'disabled')
 
   // Completes the swap.
   cy.get('#swap-button').click()
-  cy.get('#confirm-swap-or-send').click()
-  cy.get(getTestSelector('confirmation-close-icon')).click()
-
-  // Verifies that there is a successful swap notification.
-  cy.contains('Swapped').should('exist')
+  cy.get(getTestSelector('confirm-swap-button')).click()
 }
 
 describe('Permit2', () => {
@@ -60,13 +56,16 @@ describe('Permit2', () => {
         approval.setTokenAllowanceForPermit2({ owner: wallet, token: INPUT_TOKEN })
         approval.setPermit2Allowance({ owner: wallet, token: INPUT_TOKEN })
       })
-      .then(swaps)
+      .then(initiateSwap)
+      .then(() => {
+        cy.get(getTestSelector('confirmation-close-icon')).click()
+        // Verifies that there is a successful swap notification.
+        cy.contains('Swapped').should('exist')
+      })
   })
 
   it('swaps after completing full permit2 approval process', () => {
-    cy.get('#swap-button').should('not.have.attr', 'disabled')
-    cy.get('#swap-button').click()
-    cy.get(getTestSelector('confirm-swap-button')).click()
+    initiateSwap()
     cy.get(getTestSelector('PendingModalContent-title')).should('have.text', 'Approve permit')
     cy.contains('Approved').should('exist')
 
@@ -74,7 +73,6 @@ describe('Permit2', () => {
     cy.get(getTestSelector('PendingModalContent-title')).should('have.text', 'Confirm Swap')
 
     const approvalTime = Date.now()
-    // There should be a successful Approved notification.
 
     cy.contains('Swapped').should('exist')
 
@@ -91,11 +89,7 @@ describe('Permit2', () => {
       permitApprovalStub.withArgs('eth_signTypedData_v4').rejects(USER_REJECTION) // reject permit approval
       permitApprovalStub.callThrough() // allows non-eth_signTypedData_v4 send calls to return non-stubbed values
 
-      // Start the approve and swap flow.
-      cy.get('#swap-button').should('not.have.attr', 'disabled')
-      cy.get('#swap-button').click()
-      // Clicking the confirm button should trigger a token approval that will be rejected by the user (tokenApprovalStub).
-      cy.get(getTestSelector('confirm-swap-button')).click()
+      initiateSwap()
 
       // tokenApprovalStub should reject here, and the modal should revert to the review state.
       cy.contains('Review Swap')
@@ -105,7 +99,6 @@ describe('Permit2', () => {
           tokenApprovalStub.restore() // allow token approval
           cy.get(getTestSelector('confirm-swap-button')).click()
           cy.get(getTestSelector('PendingModalContent-title')).should('have.text', 'Approve permit')
-          // There should be a successful Approved notification.
           cy.contains('Approved').should('exist')
           // permitApprovalStub should reject here, and the modal should revert to the review state.
           cy.contains('Review Swap')
@@ -131,12 +124,8 @@ describe('Permit2', () => {
     cy.hardhat().then(({ approval, wallet, provider }) => {
       approval.setTokenAllowanceForPermit2({ owner: wallet, token: INPUT_TOKEN })
       cy.spy(provider, 'send').as('permitApprovalSpy')
-      cy.get('#swap-button').should('not.have.attr', 'disabled')
-      cy.get('#swap-button').click()
-      cy.get(getTestSelector('confirm-swap-button')).click()
+      initiateSwap()
       const approvalTime = Date.now()
-      // This step should appear, but cypress may sign the request too quickly.
-      // cy.get(getTestSelector('PendingModalContent-title')).should('have.text', 'Approve DAI')
 
       cy.get(getTestSelector('PendingModalContent-title')).should('have.text', 'Confirm Swap')
       cy.contains('Swapped').should('exist')
@@ -150,9 +139,7 @@ describe('Permit2', () => {
     cy.hardhat()
       .then(({ approval, wallet }) => approval.setPermit2Allowance({ owner: wallet, token: INPUT_TOKEN }))
       .then(() => {
-        cy.get('#swap-button').should('not.have.attr', 'disabled')
-        cy.get('#swap-button').click()
-        cy.get(getTestSelector('confirm-swap-button')).click()
+        initiateSwap()
         const approvalTime = Date.now()
         cy.get(getTestSelector('PendingModalContent-title')).should('have.text', 'Approve permit')
 
@@ -170,12 +157,8 @@ describe('Permit2', () => {
       approval.setTokenAllowanceForPermit2({ owner: wallet, token: INPUT_TOKEN })
       approval.setPermit2Allowance({ owner: wallet, token: INPUT_TOKEN }, expiredAllowance)
       cy.spy(provider, 'send').as('permitApprovalSpy')
-      cy.get('#swap-button').should('not.have.attr', 'disabled')
-      cy.get('#swap-button').click()
-      cy.get(getTestSelector('confirm-swap-button')).click()
+      initiateSwap()
       const approvalTime = Date.now()
-      // This step should appear, but cypress may sign the request too quickly.
-      // cy.get(getTestSelector('PendingModalContent-title')).should('have.text', 'Approve DAI')
 
       cy.get(getTestSelector('PendingModalContent-title')).should('have.text', 'Confirm Swap')
       cy.contains('Swapped').should('exist')
@@ -192,12 +175,8 @@ describe('Permit2', () => {
       approval.setTokenAllowanceForPermit2({ owner: wallet, token: INPUT_TOKEN })
       approval.setPermit2Allowance({ owner: wallet, token: INPUT_TOKEN }, smallAllowance)
       cy.spy(provider, 'send').as('permitApprovalSpy')
-      cy.get('#swap-button').should('not.have.attr', 'disabled')
-      cy.get('#swap-button').click()
-      cy.get(getTestSelector('confirm-swap-button')).click()
+      initiateSwap()
       const approvalTime = Date.now()
-      // This step should appear, but cypress may sign the request too quickly.
-      // cy.get(getTestSelector('PendingModalContent-title')).should('have.text', 'Approve DAI')
 
       cy.get(getTestSelector('PendingModalContent-title')).should('have.text', 'Confirm Swap')
       cy.contains('Swapped').should('exist')
@@ -214,9 +193,7 @@ describe('Permit2', () => {
         approval.setTokenAllowanceForPermit2({ owner: wallet, token: INPUT_TOKEN }, 1)
       })
       .then(() => {
-        cy.get('#swap-button').should('not.have.attr', 'disabled')
-        cy.get('#swap-button').click()
-        cy.get(getTestSelector('confirm-swap-button')).click()
+        initiateSwap()
         const approvalTime = Date.now()
         cy.get(getTestSelector('PendingModalContent-title')).should('have.text', 'Approve permit')
 
