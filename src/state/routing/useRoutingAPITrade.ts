@@ -38,7 +38,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
     [amountSpecified, otherCurrency, tradeType]
   )
 
-  const useURA = true
+  const useURA = false
 
   const queryArgs = useRoutingAPIArguments({
     tokenIn: currencyIn,
@@ -49,9 +49,9 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
   })
 
   const {
-    isError: isLegacyError,
-    data: legacyTradeResult,
-    currentData: currentLegacyTradeResult,
+    isError: isLegacyAPIError,
+    data: legacyAPITradeResult,
+    currentData: currentLegacyAPITradeResult,
   } = useGetQuoteQuery(!useURA ? queryArgs ?? skipToken : skipToken, {
     // Price-fetching is informational and costly, so it's done less frequently.
     pollingInterval: routerPreference === INTERNAL_ROUTER_PREFERENCE_PRICE ? ms`1m` : AVERAGE_L1_BLOCK_TIME,
@@ -70,9 +70,9 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
     refetchOnMountOrArgChange: 2 * 60,
   })
 
-  const tradeResult = uraTradeResult ?? legacyTradeResult
-  const currentTradeResult = currentLegacyTradeResult ?? currentURATradeResult
-  const isError = isLegacyError || isURAError
+  const tradeResult = uraTradeResult ?? legacyAPITradeResult
+  const currentTradeResult = currentLegacyAPITradeResult ?? currentURATradeResult
+  const isError = isLegacyAPIError || isURAError
 
   const isCurrent = currentTradeResult === tradeResult
 
