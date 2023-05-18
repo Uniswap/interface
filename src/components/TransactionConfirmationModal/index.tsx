@@ -39,7 +39,7 @@ const ConfirmedIcon = styled(ColumnCenter)<{ inline?: boolean }>`
   padding: ${({ inline }) => (inline ? '20px 0' : '32px 0;')};
 `
 
-const StyledLogo = styled.img`
+export const StyledLogo = styled.img`
   height: 16px;
   width: 16px;
   margin-left: 6px;
@@ -173,27 +173,19 @@ export function ConfirmationModalContent({
   bottomContent,
   onDismiss,
   topContent,
-  chainId,
+  headerContent,
 }: {
   title: ReactNode
   onDismiss: () => void
   topContent: () => ReactNode
   bottomContent?: () => ReactNode | undefined
-  chainId?: SupportedL2ChainId | undefined
+  headerContent?: () => ReactNode
 }) {
-  const info = getChainInfo(chainId)
   return (
     <Wrapper>
       <AutoColumn gap="sm">
         <Row>
-          {chainId && (
-            <Badge>
-              <RowFixed data-testid="confirmation-modal-chain-icon">
-                <StyledLogo src={info?.logoUrl} style={{ margin: '0 8px 0 0' }} />
-                {info?.label}
-              </RowFixed>
-            </Badge>
-          )}
+          {headerContent && headerContent()}
           <Row justify="center" marginLeft="24px">
             <ThemedText.SubHeader>{title}</ThemedText.SubHeader>
           </Row>

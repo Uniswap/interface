@@ -1,5 +1,5 @@
-import { SupportedChainId } from 'constants/chains'
 import { render, screen } from 'test-utils/render'
+import noop from 'utils/noop'
 
 import { ConfirmationModalContent } from '.'
 
@@ -8,10 +8,10 @@ describe('ConfirmationModalContent', () => {
     render(
       <ConfirmationModalContent
         title="title"
-        onDismiss={jest.fn()}
+        onDismiss={noop}
         topContent={() => <div>topContent</div>}
         bottomContent={() => <div>bottomContent</div>}
-        chainId={SupportedChainId.OPTIMISM}
+        headerContent={() => <div data-testid="confirmation-modal-chain-icon">headerContent</div>}
       />
     )
     expect(screen.getByTestId('confirmation-modal-chain-icon')).toBeInTheDocument()
@@ -26,6 +26,6 @@ describe('ConfirmationModalContent', () => {
         bottomContent={() => <div>bottomContent</div>}
       />
     )
-    expect(screen.queryByTestId('confirmation-modal-chain-icon')).toBeNull()
+    expect(screen.queryByTestId('confirmation-modal-chain-icon')).not.toBeInTheDocument()
   })
 })
