@@ -151,8 +151,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           COMMIT_INFO_BRANCH: ${{ github.event.pull_request.head.ref || github.ref_name }}
           COMMIT_INFO_MESSAGE: ${{ github.event.pull_request.title || github.event.head_commit.message }}
-          COMMIT_INFO_EMAIL: ${{ github.event.sender.user.email || github.event.pusher.email }}
-          COMMIT_INFO_AUTHOR: ${{ github.event.sender.user.name || github.event.pusher.name }}
+          COMMIT_INFO_EMAIL: ${{ github.event.sender.email || github.event.pusher.email }}
+          COMMIT_INFO_AUTHOR: ${{ github.event.sender.name || github.event.pusher.name }}
           COMMIT_INFO_SHA: ${{ github.event.pull_request.head.sha || github.event.head_commit.sha }}
           COMMIT_INFO_TIMESTAMP: ${{ github.event.pull_request.updated_at || github.event.head_commit.timestamp }}
           CYPRESS_PULL_REQUEST_ID: ${{ github.event.pull_request.number }}
