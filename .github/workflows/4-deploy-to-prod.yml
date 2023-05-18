@@ -26,7 +26,7 @@ jobs:
       - run: yarn build
       - name: Bump and tag
         id: github-tag-action
-        uses: mathieudutour/github-tag-action@v6.0
+        uses: mathieudutour/github-tag-action@d745f2e74aaf1ee82e747b181f7a0967978abee0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           release_branches: releases/prod
