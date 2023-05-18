@@ -21,7 +21,6 @@ import {
   LogoContainer,
   PaperIcon,
 } from './Logos'
-import { SubtitleWithTooltip } from './SubtitleWithTooltip'
 import { TradeSummary } from './TradeSummary'
 
 export const PendingModalContainer = styled(ColumnCenter)`
@@ -96,7 +95,6 @@ interface PendingModalStep {
   title: ReactNode
   subtitle?: ReactNode
   label?: ReactNode
-  tooltipText?: ReactNode
   logo?: ReactNode
   button?: ReactNode
 }
@@ -127,10 +125,12 @@ function getContent(args: ContentArgs): PendingModalStep {
       return {
         title: t`Allow trading ${approvalCurrency?.symbol} on Uniswap`,
         subtitle: (
-          <SubtitleWithTooltip
-            mainText={t`First, we need your permission to use your DAI for swapping.`}
-            tooltipText={t`Permit2 allows token approvals to be shared and managed across different applications.`}
-          />
+          <>
+            <Trans>First, we need your permission to use your DAI for swapping.</Trans>{' '}
+            <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/8120520483085">
+              <Trans>Why is this required?</Trans>
+            </ExternalLink>
+          </>
         ),
         label: tokenApprovalPending ? t`Pending...` : t`Proceed in your wallet`,
       }
@@ -138,10 +138,12 @@ function getContent(args: ContentArgs): PendingModalStep {
       return {
         title: t`Unlock ${approvalCurrency?.symbol} for swapping`,
         subtitle: (
-          <SubtitleWithTooltip
-            mainText={t`This will expire after 30 days for your security.`}
-            tooltipText={t`This provides the Uniswap protocol access to your token for trading. For security, this will expire after 30 days.`}
-          />
+          <>
+            <Trans>This will expire after 30 days for your security.</Trans>{' '}
+            <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/360056642192">
+              <Trans>Why is this required?</Trans>
+            </ExternalLink>
+          </>
         ),
         label: t`Proceed in your wallet`,
       }
@@ -193,7 +195,7 @@ export function PendingModalContent({
         />
         {currentStep === ConfirmModalState.PENDING_CONFIRMATION &&
         (swapConfirmed || (swapPending && chainId === SupportedChainId.MAINNET)) ? (
-          <AnimatedEntranceConfirmationIcon size="48px" />
+          <AnimatedEntranceConfirmationIcon  />
         ) : (
           <LoadingIndicatorOverlay />
         )}

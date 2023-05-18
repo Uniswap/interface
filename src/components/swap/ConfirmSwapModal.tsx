@@ -15,7 +15,6 @@ import usePrevious from 'hooks/usePrevious'
 import { getPriceUpdateBasisPoints } from 'lib/utils/analytics'
 import { ReactNode, useCallback, useEffect, useState } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
-import invariant from 'tiny-invariant'
 import { formatSwapPriceUpdatedEventProperties } from 'utils/loggingFormatters'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 import { tradeMeaningfullyDiffers } from 'utils/tradeMeaningFullyDiffer'
@@ -33,7 +32,7 @@ export enum ConfirmModalState {
   PENDING_CONFIRMATION,
 }
 
-function isAllowing(confirmModalState: ConfirmModalState) {
+function isInApprovalPhase(confirmModalState: ConfirmModalState) {
   return confirmModalState === ConfirmModalState.APPROVING_TOKEN || confirmModalState === ConfirmModalState.PERMITTING
 }
 
@@ -69,44 +68,40 @@ function useConfirmModalState({
   const { chainId } = useWeb3React()
   const trace = useTrace()
   const maximumAmountIn = useMaxAmountIn(trade, allowedSlippage)
-  // Starts the approval process, by triggering either the Token Approval or the Permit signature.
-  const updateAllowance = useCallback(async () => {
-    invariant(allowance.state === AllowanceState.REQUIRED)
-    try {
-      if (allowance.needsPermit2Approval) {
-        setConfirmModalState(ConfirmModalState.APPROVING_TOKEN)
-        await allowance.approve()
-        sendAnalyticsEvent(InterfaceEventName.APPROVE_TOKEN_TXN_SUBMITTED, {
-          chain_id: chainId,
-          token_symbol: maximumAmountIn?.currency.symbol,
-          token_address: maximumAmountIn?.currency.address,
-          ...trace,
-        })
-      } else {
-        setConfirmModalState(ConfirmModalState.PERMITTING)
-        await allowance.permit()
-      }
-    } catch (e) {
-      setConfirmModalState(ConfirmModalState.REVIEWING)
-      if (didUserReject(e)) {
-        return
-      }
-      console.error(e)
-      setApprovalError(
-        allowance.needsPermit2Approval ? PendingModalError.TOKEN_APPROVAL_ERROR : PendingModalError.PERMIT_ERROR
-      )
-    }
-  }, [allowance, chainId, maximumAmountIn?.currency.address, maximumAmountIn?.currency.symbol, trace])
 
-  const onStartSwapFlow = useCallback(async () => {
+  const startSwapFlow = useCallback(async () => {
     setApprovalError(undefined)
     if (allowance.state === AllowanceState.REQUIRED) {
-      await updateAllowance()
+      // Starts the approval process, by triggering either the Token Approval or the Permit signature.
+      try {
+        if (allowance.needsPermit2Approval) {
+          setConfirmModalState(ConfirmModalState.APPROVING_TOKEN)
+          await allowance.approve()
+          sendAnalyticsEvent(InterfaceEventName.APPROVE_TOKEN_TXN_SUBMITTED, {
+            chain_id: chainId,
+            token_symbol: maximumAmountIn?.currency.symbol,
+            token_address: maximumAmountIn?.currency.address,
+            ...trace,
+          })
+        } else {
+          setConfirmModalState(ConfirmModalState.PERMITTING)
+          await allowance.permit()
+        }
+      } catch (e) {
+        setConfirmModalState(ConfirmModalState.REVIEWING)
+        if (didUserReject(e)) {
+          return
+        }
+        console.error(e)
+        setApprovalError(
+          allowance.needsPermit2Approval ? PendingModalError.TOKEN_APPROVAL_ERROR : PendingModalError.PERMIT_ERROR
+        )
+      }
     } else {
       setConfirmModalState(ConfirmModalState.PENDING_CONFIRMATION)
       onSwap()
     }
-  }, [allowance.state, onSwap, updateAllowance])
+  }, [allowance, chainId, maximumAmountIn?.currency.address, maximumAmountIn?.currency.symbol, onSwap, trace])
 
   const previousPermitNeeded = usePrevious(
     allowance.state === AllowanceState.REQUIRED ? allowance.needsPermit2Approval : undefined
@@ -119,28 +114,28 @@ function useConfirmModalState({
       !allowance.needsPermit2Approval &&
       previousPermitNeeded
     ) {
-      updateAllowance()
+      startSwapFlow()
     }
-  }, [allowance, previousPermitNeeded, updateAllowance])
+  }, [allowance, previousPermitNeeded, startSwapFlow])
 
   // Automatically triggers signing swap tx if allowance requirements are met
   useEffect(() => {
-    if (isAllowing(confirmModalState) && allowance.state === AllowanceState.ALLOWED) {
+    if (isInApprovalPhase(confirmModalState) && allowance.state === AllowanceState.ALLOWED) {
       // Prevents immediate swap if trade has updated mid approval flow
       if (doesTradeDiffer) {
         setConfirmModalState(ConfirmModalState.REVIEWING)
         return
       } else {
-        onStartSwapFlow()
+        startSwapFlow()
       }
     }
-  }, [allowance, confirmModalState, doesTradeDiffer, onStartSwapFlow])
+  }, [allowance, confirmModalState, doesTradeDiffer, startSwapFlow])
 
   const onCancel = useCallback(() => {
     setConfirmModalState(ConfirmModalState.REVIEWING)
     setApprovalError(undefined)
   }, [])
-  return { onStartSwapFlow, prepareSwapFlow, onCancel, confirmModalState, approvalError, pendingModalSteps }
+  return { startSwapFlow, prepareSwapFlow, onCancel, confirmModalState, approvalError, pendingModalSteps }
 }
 
 export default function ConfirmSwapModal({
@@ -171,7 +166,7 @@ export default function ConfirmSwapModal({
   fiatValueOutput: { data?: number; isLoading: boolean }
 }) {
   const doesTradeDiffer = originalTrade && tradeMeaningfullyDiffers(trade, originalTrade, allowedSlippage)
-  const { onStartSwapFlow, prepareSwapFlow, onCancel, confirmModalState, approvalError, pendingModalSteps } =
+  const { startSwapFlow, onCancel, confirmModalState, approvalError, pendingModalSteps, prepareSwapFlow } =
     useConfirmModalState({
       trade,
       allowedSlippage,
@@ -220,7 +215,7 @@ export default function ConfirmSwapModal({
           onConfirm={() => {
             // Calculate the necessary steps once, before starting the flow.
             prepareSwapFlow()
-            onStartSwapFlow()
+            startSwapFlow()
           }}
           trade={trade}
           hash={txHash}
@@ -259,7 +254,7 @@ export default function ConfirmSwapModal({
     fiatValueOutput,
     onAcceptChanges,
     prepareSwapFlow,
-    onStartSwapFlow,
+    startSwapFlow,
   ])
 
   return (
@@ -268,7 +263,7 @@ export default function ConfirmSwapModal({
         {approvalError || swapErrorMessage ? (
           <ErrorModalContent
             errorType={approvalError ?? PendingModalError.CONFIRMATION_ERROR}
-            onRetry={onStartSwapFlow}
+            onRetry={startSwapFlow}
           />
         ) : (
           <ConfirmationModalContent

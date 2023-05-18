@@ -92,4 +92,6 @@ const scaleInAnimation = css`
 
 export const AnimatedEntranceConfirmationIcon = styled(AnimatedConfirmation)`
   ${scaleInAnimation}
+  height: 48px;
+  width: 48px;
 `
