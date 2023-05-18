@@ -9,10 +9,9 @@ import Loader from 'components/Icons/LoadingSpinner'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import QuestionHelper from 'components/QuestionHelper'
 import Row from 'components/Row'
-import Tooltip from 'components/Tooltip'
 import AnimatedConfirmation from 'components/TransactionConfirmationModal/AnimatedConfirmation'
 import { SupportedChainId } from 'constants/chains'
-import { ReactNode, useCallback, useState } from 'react'
+import { ReactNode } from 'react'
 import { AlertTriangle, ArrowRight } from 'react-feather'
 import { InterfaceTrade } from 'state/routing/types'
 import { useIsTransactionConfirmed } from 'state/transactions/hooks'
@@ -48,10 +47,6 @@ const StepCircle = styled.div<{ active: boolean }>`
   border-radius: 50%;
   background-color: ${({ theme, active }) => (active ? theme.accentAction : theme.textTertiary)};
   outline: 3px solid ${({ theme, active }) => (active ? theme.accentActionSoft : theme.accentTextLightTertiary)};
-`
-
-const TooltipLink = styled(ThemedText.Link)`
-  cursor: help;
 `
 
 // TODO: switch to LoaderV2 with updated API to support changing color and size.
@@ -105,23 +100,6 @@ function PaperIcon({ currency, loading }: { currency: Currency | undefined; load
       </PinkCircle>
       {loading && <LoadingIndicator stroke={theme.textTertiary} />}
     </LogoContainer>
-  )
-}
-
-function SubtitleWithTooltip({ mainText, tooltipText }: { mainText: string; tooltipText: string }) {
-  const [show, setShow] = useState<boolean>(false)
-
-  const open = useCallback(() => setShow(true), [setShow])
-  const close = useCallback(() => setShow(false), [setShow])
-  return (
-    <>
-      {mainText}{' '}
-      <Tooltip text={tooltipText} show={show}>
-        <TooltipLink onClick={open} onMouseEnter={open} onMouseLeave={close}>
-          <Trans>Why is this required?</Trans>
-        </TooltipLink>
-      </Tooltip>
-    </>
   )
 }
 
@@ -187,10 +165,12 @@ function getContent(args: ContentArgs): PendingModalStep {
       return {
         title: t`Allow trading ${approvalCurrency?.symbol} on Uniswap`,
         subtitle: (
-          <SubtitleWithTooltip
-            mainText={t`First, we need your permission to use your DAI for swapping.`}
-            tooltipText={t`Permit2 allows token approvals to be shared and managed across different applications.`}
-          />
+          <>
+            <Trans>First, we need your permission to use your DAI for swapping.</Trans>{' '}
+            <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/8120520483085">
+              <Trans>Why is this required?</Trans>
+            </ExternalLink>
+          </>
         ),
         label: tokenApprovalPending ? t`Pending...` : t`Proceed in your wallet`,
         logo: <PaperIcon currency={approvalCurrency} loading={tokenApprovalPending} />,
@@ -199,10 +179,12 @@ function getContent(args: ContentArgs): PendingModalStep {
       return {
         title: t`Unlock ${approvalCurrency?.symbol} for swapping`,
         subtitle: (
-          <SubtitleWithTooltip
-            mainText={t`This will expire after 30 days for your security.`}
-            tooltipText={t`This provides the Uniswap protocol access to your token for trading. For security, this will expire after 30 days.`}
-          />
+          <>
+            <Trans>This will expire after 30 days for your security.</Trans>{' '}
+            <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/360056642192">
+              <Trans>Why is this required?</Trans>
+            </ExternalLink>
+          </>
         ),
         label: t`Proceed in your wallet`,
         logo: <CurrencyLoader currency={approvalCurrency} />,
