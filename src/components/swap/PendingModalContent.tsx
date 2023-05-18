@@ -49,6 +49,11 @@ const StepCircle = styled.div<{ active: boolean }>`
   outline: 3px solid ${({ theme, active }) => (active ? theme.accentActionSoft : theme.accentTextLightTertiary)};
 `
 
+const SizedAnimatedConfirmation = styled(AnimatedConfirmation)`
+  height: 48px;
+  width: 48px;
+`
+
 // TODO: switch to LoaderV2 with updated API to support changing color and size.
 const LoadingIndicator = styled(Loader)`
   width: calc(100% + 8px);
@@ -202,7 +207,7 @@ function getContent(args: ContentArgs): PendingModalStep {
         label: !swapPending && !swapConfirmed ? t`Proceed in your wallet` : null,
         logo:
           swapConfirmed || (swapPending && chainId === SupportedChainId.MAINNET) ? (
-            <AnimatedConfirmation size="48px" />
+            <SizedAnimatedConfirmation />
           ) : (
             <Loader stroke={theme.textTertiary} size="48px" />
           ),
