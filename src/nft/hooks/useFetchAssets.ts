@@ -113,7 +113,9 @@ export const useFetchSingleAsset = () => {
   const purchaseAssets = usePurchaseAssets()
 
   return useCallback(
-    async (asset: GenieAsset) => {
+    async (asset: GenieAsset, setIsLoading: (b: boolean) => void) => {
+      setIsLoading(true)
+
       fetchGqlRoute({
         variables: {
           senderAddress: account ? account : '',
@@ -123,6 +125,8 @@ export const useFetchSingleAsset = () => {
         pollInterval: 0,
         fetchPolicy: 'no-cache',
         onCompleted: (data) => {
+          setIsLoading(false)
+
           if (!data.nftRoute || !data.nftRoute.route) {
             return
           }

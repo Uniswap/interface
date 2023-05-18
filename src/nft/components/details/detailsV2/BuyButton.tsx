@@ -1,9 +1,11 @@
 import { Trans } from '@lingui/macro'
 import { formatNumber } from '@uniswap/conedison/format'
 import { ButtonGray, ButtonPrimary } from 'components/Button'
+import Loader from 'components/Icons/LoadingSpinner'
 import { HandHoldingDollarIcon } from 'nft/components/icons'
 import { useFetchSingleAsset } from 'nft/hooks/useFetchAssets'
 import { GenieAsset } from 'nft/types'
+import { useState } from 'react'
 import styled, { css } from 'styled-components/macro'
 
 const ButtonStyles = css`
@@ -39,15 +41,25 @@ const Price = styled.div`
 
 export const BuyButton = ({ asset, onDataPage }: { asset: GenieAsset; onDataPage?: boolean }) => {
   const fetchAndPurchaseAsset = useFetchSingleAsset()
+  const [isLoading, setIsLoading] = useState(false)
   const price = asset.sellorders?.[0]?.price.value
 
   return (
     <>
       {price ? (
         <>
-          <StyledBuyButton onClick={() => fetchAndPurchaseAsset(asset)}>
-            <Trans>Buy</Trans>
-            <Price>{formatNumber(price)} ETH</Price>
+          <StyledBuyButton onClick={() => fetchAndPurchaseAsset(asset, setIsLoading)}>
+            {isLoading ? (
+              <>
+                <Trans>Fetching Route</Trans>
+                <Loader size="24px" stroke="white" />
+              </>
+            ) : (
+              <>
+                <Trans>Buy</Trans>
+                <Price>{formatNumber(price)} ETH</Price>
+              </>
+            )}
           </StyledBuyButton>
           {onDataPage && (
             <MakeOfferButtonSmall>
