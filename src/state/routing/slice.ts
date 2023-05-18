@@ -8,7 +8,7 @@ import qs from 'qs'
 import { trace } from 'tracing/trace'
 
 import { QuoteData, TradeResult } from './types'
-import { getRouter, isExactInput, transformRoutesToTrade } from './utils'
+import { getRouter, isAPIAcceptedRouterPreference, isExactInput, transformRoutesToTrade } from './utils'
 
 export enum RouterPreference {
   AUTO = 'auto',
@@ -83,11 +83,7 @@ export const routingApi = createApi({
         )
       },
       async queryFn(args, _api, _extraOptions, fetch) {
-        if (
-          args.routerPreference === RouterPreference.API ||
-          args.routerPreference === RouterPreference.AUTO ||
-          args.routerPreference === INTERNAL_ROUTER_PREFERENCE_PRICE
-        ) {
+        if (isAPIAcceptedRouterPreference(args.routerPreference)) {
           try {
             const { tokenInAddress, tokenInChainId, tokenOutAddress, tokenOutChainId, amount, tradeType } = args
             const type = isExactInput(tradeType) ? 'exactIn' : 'exactOut'

@@ -8,7 +8,7 @@ import { RPC_PROVIDERS } from 'constants/providers'
 import { nativeOnChain } from 'constants/tokens'
 import { toSupportedChainId } from 'lib/hooks/routing/clientSideSmartOrderRouter'
 
-import { GetQuoteArgs } from './slice'
+import { GetQuoteArgs, INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference } from './slice'
 import {
   ClassicTrade,
   PoolType,
@@ -184,4 +184,14 @@ export function currencyAddressForSwapQuote(currency: Currency): string {
   }
 
   return currency.address
+}
+
+export function isAPIAcceptedRouterPreference(
+  routerPreference?: RouterPreference | typeof INTERNAL_ROUTER_PREFERENCE_PRICE
+): boolean {
+  return (
+    routerPreference === RouterPreference.API ||
+    routerPreference === RouterPreference.AUTO ||
+    routerPreference === INTERNAL_ROUTER_PREFERENCE_PRICE
+  )
 }

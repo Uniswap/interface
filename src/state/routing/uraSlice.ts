@@ -6,7 +6,7 @@ import { trace } from 'tracing/trace'
 
 import { GetQuoteArgs, INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference } from './slice'
 import { QuoteState, TradeResult, URAQuoteData } from './types'
-import { getRouter, isExactInput, transformRoutesToTrade } from './utils'
+import { getRouter, isAPIAcceptedRouterPreference, isExactInput, transformRoutesToTrade } from './utils'
 
 const CLIENT_PARAMS = {
   protocols: [Protocol.V2, Protocol.V3, Protocol.MIXED],
@@ -16,12 +16,6 @@ const CLIENT_PARAMS = {
 const CLASSIC_SWAP_QUERY_PARAMS = {
   ...CLIENT_PARAMS,
   routingType: 'CLASSIC',
-}
-
-function isAPIAcceptedRouterPreference(
-  routerPreference?: RouterPreference | typeof INTERNAL_ROUTER_PREFERENCE_PRICE
-): boolean {
-  return routerPreference === RouterPreference.API || routerPreference === RouterPreference.AUTO
 }
 
 export const uraRoutingApi = createApi({
@@ -62,10 +56,7 @@ export const uraRoutingApi = createApi({
       // Explicitly typing the return type enables typechecking of return values.
       async queryFn(args, _api, _extraOptions, fetch) {
         const routerPreference = args.routerPreference
-        if (
-          // If enabled, try the routing API, falling back to client-side routing.
-          isAPIAcceptedRouterPreference(routerPreference)
-        ) {
+        if (isAPIAcceptedRouterPreference(routerPreference)) {
           try {
             const { tokenInAddress, tokenInChainId, tokenOutAddress, tokenOutChainId, amount, tradeType } = args
             const type = isExactInput(tradeType) ? 'EXACT_INPUT' : 'EXACT_OUTPUT'
@@ -105,7 +96,9 @@ export const uraRoutingApi = createApi({
             return { data: tradeResult }
           } catch (error: any) {
             console.warn(
-              `GetQuote failed on routing API, falling back to client: ${error?.message ?? error?.detail ?? error}`
+              `GetQuote failed on Unified Routing API, falling back to client: ${
+                error?.message ?? error?.detail ?? error
+              }`
             )
           }
         }
