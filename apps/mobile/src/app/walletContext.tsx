@@ -7,11 +7,11 @@ import React, {
   useEffect,
   useState,
 } from 'react'
-import { ContractManager } from 'src/features/contracts/ContractManager'
 import { ProviderManager } from 'src/features/providers/ProviderManager'
 import { SignerManager } from 'src/features/wallet/signing/SignerManager'
 import { call, getContext } from 'typed-redux-saga'
 import { ChainId } from 'wallet/src/constants/chains'
+import { ContractManager } from 'wallet/src/features/contracts/ContractManager'
 import { logger } from 'wallet/src/features/logger/logger'
 
 export interface WalletContextValue {

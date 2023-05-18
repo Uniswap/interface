@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { Contract, ContractInterface, providers } from 'ethers'
 import { ChainId } from 'wallet/src/constants/chains'
+import { logger } from 'wallet/src/features/logger/logger'
 import { getValidAddress } from 'wallet/src/utils/addresses'
 import { isNativeCurrencyAddress } from 'wallet/src/utils/currencyId'
-import { logger } from '../logger/logger'
 
 export class ContractManager {
   private _contracts: Partial<Record<ChainId, Record<string, Contract>>> = {}
@@ -50,7 +50,7 @@ export class ContractManager {
 
   // Returns contract or null
   getContract<T extends Contract>(chainId: ChainId, address: Address): Nullable<T> {
-    return (this._contracts[chainId]?.[address] as Maybe<T>) ?? null
+    return (this._contracts[chainId]?.[address] as T | undefined) ?? null
   }
 
   getOrCreateContract<T extends Contract = Contract>(

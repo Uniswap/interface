@@ -22,10 +22,3 @@ export function* selectActiveChainIds(): Generator<SelectEffect, ChainId[], unkn
 export function getSortedActiveChainIds(chains: ChainIdTo<ChainState>): ChainId[] {
   return ALL_SUPPORTED_CHAIN_IDS.filter((n: ChainId) => !!chains[n]?.isActive)
 }
-
-export function chainListToStateMap(chainIds: ChainId[]): Partial<Record<ChainId, ChainState>> {
-  return chainIds.reduce<ChainIdTo<ChainState>>((memo, chainId) => {
-    memo[chainId] = { isActive: true }
-    return memo
-  }, {})
-}
