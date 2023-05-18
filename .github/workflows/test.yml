@@ -112,7 +112,7 @@ jobs:
     steps:
       - run: exit 0
         env:
-          GITHUB_EVENT: ${{ toJSON(github.event }}
+          GITHUB_EVENT: ${{ toJSON(github.event) }}
 
   cypress-test-matrix:
     needs: [build-e2e, cypress-rerun]
