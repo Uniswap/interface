@@ -8,13 +8,14 @@ import { GetQuoteArgs, INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference } from
 import { QuoteState, TradeResult, URAQuoteData } from './types'
 import { getRouter, isExactInput, transformRoutesToTrade } from './utils'
 
-// routing API quote query params: https://github.com/Uniswap/routing-api/blob/main/lib/handlers/quote/schema/quote-schema.ts
-const CLASSIC_SWAP_QUERY_PARAMS = {
-  protocols: [Protocol.V2, Protocol.V3, Protocol.MIXED],
-  routingType: 'CLASSIC',
-}
 const CLIENT_PARAMS = {
   protocols: [Protocol.V2, Protocol.V3, Protocol.MIXED],
+}
+
+// routing API quote query params: https://github.com/Uniswap/routing-api/blob/main/lib/handlers/quote/schema/quote-schema.ts
+const CLASSIC_SWAP_QUERY_PARAMS = {
+  ...CLIENT_PARAMS,
+  routingType: 'CLASSIC',
 }
 
 function isAPIAcceptedRouterPreference(
