@@ -1,5 +1,5 @@
 import * as Clipboard from 'expo-clipboard'
-import { logger } from 'src/utils/logger'
+import { logger } from 'wallet/src/features/logger/logger'
 
 export function setClipboard(value: string): void {
   try {

@@ -2,7 +2,7 @@ import { ApolloLink, NetworkStatus } from '@apollo/client'
 import { onError } from '@apollo/client/link/error'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
-import { logger } from 'src/utils/logger'
+import { logger } from 'wallet/src/features/logger/logger'
 
 export function isNonPollingRequestInFlight(networkStatus: NetworkStatus): boolean {
   return (

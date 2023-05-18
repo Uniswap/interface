@@ -16,9 +16,9 @@ import { activateAccount } from 'src/features/wallet/walletSlice'
 import { connectToApp, isValidWCUrl } from 'src/features/walletConnect/WalletConnect'
 import { setDidOpenFromDeepLink } from 'src/features/walletConnect/walletConnectSlice'
 import { pairWithWalletConnectURI } from 'src/features/walletConnectV2/utils'
-import { logger } from 'src/utils/logger'
 import { Statsig } from 'statsig-react-native'
 import { call, fork, put, takeLatest } from 'typed-redux-saga'
+import { logger } from 'wallet/src/features/logger/logger'
 
 export interface DeepLink {
   url: string

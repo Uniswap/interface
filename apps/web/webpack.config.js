@@ -207,7 +207,7 @@ const options = {
       defaults: true,
     }),
     new DefinePlugin({
-      'process.env.__DEV__': NODE_ENV === 'development' ? 'true' : 'false',
+      '__DEV__': NODE_ENV === 'development' ? 'true' : 'false',
       'process.env.IS_STATIC': '""',
       'process.env.NODE_ENV': JSON.stringify(NODE_ENV),
       'process.env.TAMAGUI_TARGET': JSON.stringify('web'),

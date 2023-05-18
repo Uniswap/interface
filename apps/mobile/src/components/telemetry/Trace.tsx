@@ -12,7 +12,7 @@ import {
 } from 'src/features/telemetry/constants'
 import { useTrace } from 'src/features/telemetry/hooks'
 import { AppScreen, Screens } from 'src/screens/Screens'
-import { logger } from 'src/utils/logger'
+import { logger } from 'wallet/src/features/logger/logger'
 
 export interface ITraceContext {
   screen?: AppScreen | ManualPageViewScreen

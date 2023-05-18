@@ -9,7 +9,7 @@ import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
 import { activateAccount } from 'src/features/wallet/walletSlice'
 import { account } from 'src/test/fixtures'
-import { logger } from 'src/utils/logger'
+import { logger } from 'wallet/src/features/logger/logger'
 
 const swapUrl = `https://uniswap.org/app?screen=swap&userAddress=${account.address}`
 const transactionUrl = `https://uniswap.org/app?screen=transaction&userAddress=${account.address}`

@@ -4,9 +4,9 @@ import { AccountType, BackupType, SignerMnemonicAccount } from 'src/features/wal
 import { selectSortedSignerMnemonicAccounts } from 'src/features/wallet/selectors'
 import { activateAccount, addAccount } from 'src/features/wallet/walletSlice'
 import { generateAndStoreMnemonic, generateAndStorePrivateKey } from 'src/lib/RNEthersRs'
-import { logger } from 'src/utils/logger'
 import { createMonitoredSaga } from 'src/utils/saga'
 import { call, put } from 'typed-redux-saga'
+import { logger } from 'wallet/src/features/logger/logger'
 
 export function* createAccount() {
   const sortedMnemonicAccounts: SignerMnemonicAccount[] = yield* appSelect(

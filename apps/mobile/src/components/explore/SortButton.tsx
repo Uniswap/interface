@@ -15,7 +15,7 @@ import {
 import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
 import { setTokensOrderBy } from 'src/features/wallet/walletSlice'
-import { logger } from 'src/utils/logger'
+import { logger } from 'wallet/src/features/logger/logger'
 interface FilterGroupProps {
   orderBy: TokensOrderBy
 }

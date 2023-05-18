@@ -5,9 +5,9 @@ import { Trade } from 'src/features/transactions/swap/useTrade'
 import { tradeToTransactionInfo } from 'src/features/transactions/swap/utils'
 import { TransactionType, TransactionTypeInfo } from 'src/features/transactions/types'
 import { Account } from 'src/features/wallet/accounts/types'
-import { logger } from 'src/utils/logger'
 import { createMonitoredSaga } from 'src/utils/saga'
 import { call } from 'typed-redux-saga'
+import { logger } from 'wallet/src/features/logger/logger'
 
 export type SwapParams = {
   txId?: string

@@ -27,9 +27,9 @@ import {
   WalletSearchResult,
 } from 'src/features/explore/searchHistorySlice'
 import { useIsSmartContractAddress } from 'src/features/transactions/transfer/hooks'
-import { logger } from 'src/utils/logger'
 import { ChainId } from 'wallet/src/constants/chains'
 import { EMPTY_ARRAY } from 'wallet/src/constants/misc'
+import { logger } from 'wallet/src/features/logger/logger'
 import { getValidAddress } from 'wallet/src/utils/addresses'
 
 export const SEARCH_RESULT_HEADER_KEY = 'header'

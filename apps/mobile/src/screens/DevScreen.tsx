@@ -19,8 +19,8 @@ import { useActiveAccount } from 'src/features/wallet/hooks'
 import { selectFlashbotsEnabled } from 'src/features/wallet/selectors'
 import { resetWallet, toggleFlashbots } from 'src/features/wallet/walletSlice'
 import { Screens } from 'src/screens/Screens'
-import { logger } from 'src/utils/logger'
 import { ChainId } from 'wallet/src/constants/chains'
+import { logger } from 'wallet/src/features/logger/logger'
 
 export function DevScreen(): JSX.Element {
   const dispatch = useAppDispatch()

@@ -2,7 +2,7 @@ import { Signer } from 'ethers'
 import { Account, AccountType } from 'src/features/wallet/accounts/types'
 import { NativeSigner } from 'src/features/wallet/signing/NativeSigner'
 import { getAddressesForStoredPrivateKeys } from 'src/lib/RNEthersRs'
-import { logger } from 'src/utils/logger'
+import { logger } from 'wallet/src/features/logger/logger'
 
 export class SignerManager {
   private readonly _signers: Record<Address, Signer> = {}

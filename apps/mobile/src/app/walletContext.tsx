@@ -10,9 +10,9 @@ import React, {
 import { ContractManager } from 'src/features/contracts/ContractManager'
 import { ProviderManager } from 'src/features/providers/ProviderManager'
 import { SignerManager } from 'src/features/wallet/signing/SignerManager'
-import { logger } from 'src/utils/logger'
 import { call, getContext } from 'typed-redux-saga'
 import { ChainId } from 'wallet/src/constants/chains'
+import { logger } from 'wallet/src/features/logger/logger'
 
 export interface WalletContextValue {
   signers: SignerManager

@@ -1,7 +1,7 @@
 import { Linking } from 'react-native'
 import OneSignal, { NotificationReceivedEvent, OpenedEvent } from 'react-native-onesignal'
-import { logger } from 'src/utils/logger'
 import { config } from 'wallet/src/config'
+import { logger } from 'wallet/src/features/logger/logger'
 
 export const initOneSignal = (): void => {
   OneSignal.setLogLevel(6, 0)

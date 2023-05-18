@@ -15,7 +15,7 @@ import { gasApi } from 'src/features/gas/api'
 import { routingApi } from 'src/features/routing/routingApi'
 import { trmApi } from 'src/features/trm/api'
 import { isNonJestDev } from 'src/utils/environment'
-import { logger } from 'src/utils/logger'
+import { logger } from 'wallet/src/features/logger/logger'
 
 const storage = new MMKV()
 

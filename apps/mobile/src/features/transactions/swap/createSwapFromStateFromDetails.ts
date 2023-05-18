@@ -5,8 +5,8 @@ import {
   TransactionState,
 } from 'src/features/transactions/transactionState/transactionState'
 import { TransactionDetails, TransactionType } from 'src/features/transactions/types'
-import { logger } from 'src/utils/logger'
 import { tryParseRawAmount } from 'src/utils/tryParseAmount'
+import { logger } from 'wallet/src/features/logger/logger'
 import { currencyAddress, currencyIdToAddress } from 'wallet/src/utils/currencyId'
 
 interface Props {

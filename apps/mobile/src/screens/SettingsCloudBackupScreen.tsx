@@ -18,8 +18,8 @@ import { BackupType, SignerMnemonicAccount } from 'src/features/wallet/accounts/
 import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
 import { useAccounts } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
-import { logger } from 'src/utils/logger'
 import CloudIcon from 'ui/src/assets/icons/cloud.svg'
+import { logger } from 'wallet/src/features/logger/logger'
 
 type Props = NativeStackScreenProps<SettingsStackParamList, Screens.SettingsCloudBackupScreen>
 

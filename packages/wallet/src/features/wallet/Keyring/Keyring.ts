@@ -1,4 +1,5 @@
 // Based on https://github.com/Uniswap/wallet-internal/blob/main/apps/mobile/src/lib/RNEthersRs.ts
+import { NotImplementedError } from 'wallet/src/utils/errors'
 
 /**
  * Provides the generation, storage, and signing logic for mnemonics and private keys.
@@ -111,13 +112,6 @@ class NullKeyring implements IKeyring {
 
   signHashForAddress(_address: string, _hash: string, _chainId: number): Promise<string> {
     throw new NotImplementedError('signHashForAddress')
-  }
-}
-
-class NotImplementedError extends Error {
-  constructor(functionName: string) {
-    super(`KeyManager.${functionName}() not implemented. Did you forget a platform override?`)
-    this.name = this.constructor.name
   }
 }
 

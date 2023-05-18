@@ -20,8 +20,8 @@ import {
   WalletConnectSessionV2,
 } from 'src/features/walletConnect/walletConnectSlice'
 import { wcWeb3Wallet } from 'src/features/walletConnectV2/saga'
-import { logger } from 'src/utils/logger'
 import { CHAIN_INFO } from 'wallet/src/constants/chains'
+import { logger } from 'wallet/src/features/logger/logger'
 import { ONE_SECOND_MS } from 'wallet/src/utils/time'
 interface DappConnectedNetworkModalProps {
   session: WalletConnectSessionV2

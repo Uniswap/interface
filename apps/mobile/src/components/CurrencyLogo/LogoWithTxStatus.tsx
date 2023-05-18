@@ -13,7 +13,6 @@ import { AssetType } from 'src/entities/assets'
 import { CurrencyInfo } from 'src/features/dataApi/types'
 import { NFTTradeType, TransactionStatus, TransactionType } from 'src/features/transactions/types'
 import { WalletConnectEvent } from 'src/features/walletConnect/saga'
-import { logger } from 'src/utils/logger'
 import AlertTriangle from 'ui/src/assets/icons/alert-triangle.svg'
 import Approve from 'ui/src/assets/icons/approve.svg'
 import IncomingArrow from 'ui/src/assets/icons/arrow-down-in-circle.svg'
@@ -22,6 +21,7 @@ import UnknownStatus from 'ui/src/assets/icons/question-in-circle.svg'
 import WalletConnectLogo from 'ui/src/assets/icons/walletconnect.svg'
 import MoonpayLogo from 'ui/src/assets/logos/moonpay.svg'
 import { ChainId } from 'wallet/src/constants/chains'
+import { logger } from 'wallet/src/features/logger/logger'
 
 interface LogoWithTxStatusProps {
   assetType: AssetType

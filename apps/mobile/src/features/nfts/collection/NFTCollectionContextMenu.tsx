@@ -9,7 +9,7 @@ import { Flex } from 'src/components/layout/Flex'
 import { NFTCollectionData } from 'src/features/nfts/collection/NFTCollectionHeader'
 import { theme as FixedTheme, Theme } from 'src/styles/theme'
 import { getTwitterLink, getUniswapCollectionUrl, openUri } from 'src/utils/linking'
-import { logger } from 'src/utils/logger'
+import { logger } from 'wallet/src/features/logger/logger'
 
 type MenuOption = {
   title: string

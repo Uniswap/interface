@@ -5,8 +5,8 @@ import { useMemo } from 'react'
 import ERC20_ABI from 'src/abis/erc20.json'
 import { Erc20 } from 'src/abis/types'
 import { useContractManager, useProviderManager } from 'src/app/walletContext'
-import { logger } from 'src/utils/logger'
 import { ChainId } from 'wallet/src/constants/chains'
+import { logger } from 'wallet/src/features/logger/logger'
 
 export function useContract<T extends Contract = Contract>(
   chainId: ChainId,

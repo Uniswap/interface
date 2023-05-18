@@ -5,7 +5,7 @@ import { arrayify, isHexString } from 'ethers/lib/utils'
 import { Account } from 'src/features/wallet/accounts/types'
 import { NativeSigner } from 'src/features/wallet/signing/NativeSigner'
 import { SignerManager } from 'src/features/wallet/signing/SignerManager'
-import { logger } from 'src/utils/logger'
+import { logger } from 'wallet/src/features/logger/logger'
 import { ensureLeading0x } from 'wallet/src/utils/addresses'
 
 type EthTypedMessage = {

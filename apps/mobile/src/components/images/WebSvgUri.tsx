@@ -3,7 +3,7 @@ import { Platform, StyleSheet } from 'react-native'
 import WebView from 'react-native-webview'
 import { fetchSVG } from 'src/components/images/utils'
 import { Loader } from 'src/components/loading'
-import { logger } from 'src/utils/logger'
+import { logger } from 'wallet/src/features/logger/logger'
 
 const heightUnits = Platform.OS === 'ios' ? 'vh' : '%'
 

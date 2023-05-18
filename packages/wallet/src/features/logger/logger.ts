@@ -1,5 +1,7 @@
 /* eslint-disable no-console */
 
+import { Sentry } from './Sentry'
+
 type LogLevel = 'debug' | 'info' | 'warn' | 'error'
 
 /**
@@ -29,7 +31,7 @@ function logMessage(
   fileName: string,
   functionName: string,
   message: string,
-  ...args: unknown[]
+  ...args: unknown[] // arbitrary extra data - ideally formatted as key value pairs
 ): void {
   if (!fileName || !message) {
     console.warn('Invalid log message format, skipping')
@@ -38,7 +40,19 @@ function logMessage(
   functionName ||= fileName // To allow omitting function when it's same as file
   const formatted = formatMessage(fileName, functionName, message)
 
-  console[level](formatted, ...args)
+  if (__DEV__) {
+    console[level](formatted, ...args)
+    return
+  }
+
+  // Send error, warn, info logs to Sentry
+  if (level === 'error') {
+    Sentry.captureException(`${fileName}#${functionName}`, message, ...args)
+  } else if (level === 'warn') {
+    Sentry.captureMessage('warning', `${fileName}#${functionName}`, message, ...args)
+  } else if (level === 'info') {
+    Sentry.captureMessage('info', `${fileName}#${functionName}`, message, ...args)
+  }
 }
 
 function formatMessage(fileName: string, functionName: string, message: string): string {

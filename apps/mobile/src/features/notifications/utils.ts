@@ -17,8 +17,8 @@ import {
   TransactionType,
 } from 'src/features/transactions/types'
 import { WalletConnectEvent } from 'src/features/walletConnect/saga'
-import { logger } from 'src/utils/logger'
 import { CHAIN_INFO } from 'wallet/src/constants/chains'
+import { logger } from 'wallet/src/features/logger/logger'
 import { getValidAddress, shortenAddress } from 'wallet/src/utils/addresses'
 import { currencyIdToAddress } from 'wallet/src/utils/currencyId'
 import { formatCurrencyAmount, formatUSDPrice, NumberType } from 'wallet/src/utils/format'

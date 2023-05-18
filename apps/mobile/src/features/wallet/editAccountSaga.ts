@@ -9,9 +9,9 @@ import {
 } from 'src/features/wallet/walletSlice'
 import { disconnectWCForAccount } from 'src/features/walletConnect/WalletConnect'
 import { unique } from 'src/utils/array'
-import { logger } from 'src/utils/logger'
 import { createMonitoredSaga } from 'src/utils/saga'
 import { all, call, put, SagaGenerator } from 'typed-redux-saga'
+import { logger } from 'wallet/src/features/logger/logger'
 
 export enum EditAccountAction {
   AddBackupMethod = 'AddBackupMethod',

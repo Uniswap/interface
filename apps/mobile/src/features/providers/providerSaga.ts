@@ -8,10 +8,10 @@ import { setChainActiveStatus } from 'src/features/chains/chainsSlice'
 import { getSortedActiveChainIds } from 'src/features/chains/utils'
 import { ProviderManager } from 'src/features/providers/ProviderManager'
 import { initialized } from 'src/features/providers/providerSlice'
-import { logger } from 'src/utils/logger'
 import { call, fork, join, put, take, takeEvery } from 'typed-redux-saga'
 import { config } from 'wallet/src/config'
 import { ChainId } from 'wallet/src/constants/chains'
+import { logger } from 'wallet/src/features/logger/logger'
 
 // Initialize Ethers providers for the chains the wallet interacts with
 export function* initProviders() {

@@ -1,7 +1,7 @@
 import { parseUnits } from '@ethersproject/units'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import JSBI from 'jsbi'
-import { logger } from 'src/utils/logger'
+import { logger } from 'wallet/src/features/logger/logger'
 
 // try to parse a user entered amount for a given token
 export function tryParseExactAmount<T extends Currency>(

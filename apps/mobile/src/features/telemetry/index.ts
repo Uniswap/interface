@@ -6,14 +6,12 @@ import {
   setDeviceId,
   track,
 } from '@amplitude/analytics-react-native'
-import * as Sentry from '@sentry/react-native'
-import { SeverityLevel } from '@sentry/types'
 import { getUniqueId } from 'react-native-device-info'
 import { uniswapUrls } from 'src/constants/urls'
 import { ApplicationTransport } from 'src/features/telemetry/ApplicationTransport'
 import { UserPropertyName } from 'src/features/telemetry/constants'
 import { EventProperties } from 'src/features/telemetry/types'
-import { logger } from 'src/utils/logger'
+import { logger } from 'wallet/src/features/logger/logger'
 
 const DUMMY_KEY = '00000000000000000000000000000000'
 
@@ -42,47 +40,6 @@ export async function initAnalytics(): Promise<void> {
     logger.error('telemetry/index', 'initiAnalytics', `${err}`)
   }
 }
-
-//#region ------------------------------ Sentry ------------------------------
-
-/**
- * Logs an exception to our Sentry Dashboard
- *
- * @param context Context from where this method is called
- * @param error Can be the full error object or a custom error message
- * @param extraArgs Key/value pairs to enrich logging and allow filtering.
- *                  More info here: https://docs.sentry.io/platforms/react-native/enriching-events/context/
- */
-export function captureException(context: string, error: unknown, ...extraArgs: unknown[]): void {
-  Sentry.captureException(error, {
-    ...(extraArgs ? { extra: { data: extraArgs } } : {}),
-    tags: { mobileContext: context },
-  })
-}
-
-/**
- * Sends a message to our Sentry Dashboard
- *
- * @param level Sentry severity level
- * @param context Context from where this method is called
- * @param message Message
- * @param extraArgs Key/value pairs to enrich logging and allow filtering.
- *                  More info here: https://docs.sentry.io/platforms/react-native/enriching-events/context/
- */
-export function captureMessage(
-  level: SeverityLevel,
-  context: string,
-  message: string,
-  ...extraArgs: unknown[]
-): void {
-  Sentry.captureMessage(message, {
-    level,
-    tags: { mobileContext: context },
-    ...(extraArgs ? { extra: { data: extraArgs } } : {}),
-  })
-}
-
-//#endregion
 
 //#region ------------------------------ Amplitude ------------------------------
 

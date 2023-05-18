@@ -16,8 +16,8 @@ import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { extractFiatOnRampTransactionDetails } from 'src/features/transactions/history/conversion/extractFiatPurchaseTransactionDetails'
 import { serializeQueryParams } from 'src/features/transactions/swap/utils'
 import { TransactionDetails, TransactionStatus } from 'src/features/transactions/types'
-import { logger } from 'src/utils/logger'
 import { config } from 'wallet/src/config'
+import { logger } from 'wallet/src/features/logger/logger'
 import { ONE_MINUTE_MS } from 'wallet/src/utils/time'
 
 const COMMON_QUERY_PARAMS = serializeQueryParams({ apiKey: config.moonpayApiKey })

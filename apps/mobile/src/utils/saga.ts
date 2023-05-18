@@ -2,7 +2,7 @@ import { createAction, createReducer, PayloadActionCreator } from '@reduxjs/tool
 import { call, CallEffect, delay, Effect, put, race, take, TakeEffect } from 'redux-saga/effects'
 import { pushNotification } from 'src/features/notifications/notificationSlice'
 import { AppNotificationType } from 'src/features/notifications/types'
-import { logger } from 'src/utils/logger'
+import { logger } from 'wallet/src/features/logger/logger'
 import { errorToString } from 'wallet/src/utils/validation'
 
 /**

@@ -13,8 +13,8 @@ import { BackupType } from 'src/features/wallet/accounts/types'
 import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { OnboardingScreens } from 'src/screens/Screens'
-import { logger } from 'src/utils/logger'
 import { promiseMinDelay } from 'src/utils/timing'
+import { logger } from 'wallet/src/features/logger/logger'
 import { ONE_SECOND_MS } from 'wallet/src/utils/time'
 
 type Props = NativeStackScreenProps<

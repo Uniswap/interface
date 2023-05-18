@@ -1,7 +1,7 @@
 import { InMemoryCache } from '@apollo/client'
 import { Reference, relayStylePagination } from '@apollo/client/utilities'
 import { MMKVWrapper, persistCache } from 'apollo3-cache-persist'
-import { logger } from 'src/utils/logger'
+import { logger } from 'wallet/src/features/logger/logger'
 
 /**
  * Initializes and persists/rehydrates cache

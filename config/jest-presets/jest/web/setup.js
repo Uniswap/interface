@@ -8,3 +8,5 @@ global.chrome = {
     getURL: (path) => `chrome/path/to/${path}`
   }
 }
+
+global.__DEV__ = true

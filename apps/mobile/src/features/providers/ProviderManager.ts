@@ -6,10 +6,10 @@ import { FLASHBOTS_URLS } from 'src/features/providers/constants'
 import { FLASHBOTS_SUPPORTED_CHAINS } from 'src/features/providers/flashbotsProvider'
 import { getEthersProvider } from 'src/features/providers/getEthersProvider'
 import { getInfuraChainName } from 'src/features/providers/utils'
-import { logger } from 'src/utils/logger'
 import { promiseTimeout, sleep } from 'src/utils/timing'
 import { config } from 'wallet/src/config'
 import { ChainId, CHAIN_INFO, L1ChainInfo, L2ChainInfo } from 'wallet/src/constants/chains'
+import { logger } from 'wallet/src/features/logger/logger'
 import { isStale } from 'wallet/src/utils/time'
 
 enum ProviderStatus {

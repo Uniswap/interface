@@ -17,9 +17,9 @@ import {
 } from 'src/features/wallet/editAccountSaga'
 import { makeSelectAccountNotificationSetting, selectAccounts } from 'src/features/wallet/selectors'
 import { editAccount } from 'src/features/wallet/walletSlice'
-import { logger } from 'src/utils/logger'
 import { getKeys } from 'src/utils/objects'
 import { call, put, select, takeEvery } from 'typed-redux-saga'
+import { logger } from 'wallet/src/features/logger/logger'
 
 interface AccountMetadata {
   name?: string

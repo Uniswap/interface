@@ -29,10 +29,10 @@ import {
   parseSignRequest,
   parseTransactionRequest,
 } from 'src/features/walletConnectV2/utils'
-import { logger } from 'src/utils/logger'
 import { call, put, take } from 'typed-redux-saga'
 import { config } from 'wallet/src/config'
 import { ALL_SUPPORTED_CHAIN_IDS, ChainId, CHAIN_INFO } from 'wallet/src/constants/chains'
+import { logger } from 'wallet/src/features/logger/logger'
 import { ONE_SECOND_MS } from 'wallet/src/utils/time'
 
 export let wcWeb3Wallet: IWeb3Wallet

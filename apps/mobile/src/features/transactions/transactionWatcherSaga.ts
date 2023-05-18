@@ -32,11 +32,11 @@ import {
   TransactionType,
 } from 'src/features/transactions/types'
 import { getFinalizedTransactionStatus } from 'src/features/transactions/utils'
-import { logger } from 'src/utils/logger'
 import { sleep } from 'src/utils/timing'
 import { call, delay, fork, put, race, take } from 'typed-redux-saga'
 import { ChainId } from 'wallet/src/constants/chains'
 import { PollingInterval } from 'wallet/src/constants/misc'
+import { logger } from 'wallet/src/features/logger/logger'
 import { ONE_SECOND_MS } from 'wallet/src/utils/time'
 
 const FLASHBOTS_POLLING_INTERVAL = ONE_SECOND_MS * 5

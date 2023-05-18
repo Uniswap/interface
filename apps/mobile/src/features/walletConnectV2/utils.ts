@@ -4,9 +4,9 @@ import { utils } from 'ethers'
 import { EthMethod, EthSignMethod } from 'src/features/walletConnect/types'
 import { SignRequest, TransactionRequest } from 'src/features/walletConnect/walletConnectSlice'
 import { wcWeb3Wallet } from 'src/features/walletConnectV2/saga'
-import { logger } from 'src/utils/logger'
 import { ChainId } from 'wallet/src/constants/chains'
 import { EMPTY_ARRAY } from 'wallet/src/constants/misc'
+import { logger } from 'wallet/src/features/logger/logger'
 import { toSupportedChainId } from 'wallet/src/utils/chainId'
 
 /**

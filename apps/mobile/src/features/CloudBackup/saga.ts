@@ -4,8 +4,8 @@ import { EventChannel, eventChannel } from 'redux-saga'
 import { CallEffect, ChannelTakeEffect, ForkEffect, PutEffect } from 'redux-saga/effects'
 import { foundCloudBackup } from 'src/features/CloudBackup/cloudBackupSlice'
 import { ICloudBackupsManagerEventType, ICloudMnemonicBackup } from 'src/features/CloudBackup/types'
-import { logger } from 'src/utils/logger'
 import { call, fork, put, take } from 'typed-redux-saga'
+import { logger } from 'wallet/src/features/logger/logger'
 
 function createICloudBackupManagerChannel(eventEmitter: NativeEventEmitter) {
   return eventChannel<Action>((emit) => {

@@ -17,6 +17,8 @@ const watchFolders = [
   `${workspaceRoot}/packages`
 ]
 
+const iosExtensions = ['ios.js', 'ios.jsx', 'ios.ts', 'ios.tsx']
+
 module.exports = (async () => {
   const {
     resolver: { sourceExts, assetExts },
@@ -27,6 +29,7 @@ module.exports = (async () => {
       // allows replacing .js|ts files with their .e2e.js|ts equivalent in Detox
       sourceExts: (process.env.RN_SRC_EXT || '')
         .split(',')
+        .concat(iosExtensions)
         .concat(sourceExts)
         .concat(['svg', 'cjs']),
       nodeModulesPaths: [`${workspaceRoot}/node_modules`],

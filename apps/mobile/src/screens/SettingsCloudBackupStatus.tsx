@@ -18,8 +18,8 @@ import { AccountType, BackupType, SignerMnemonicAccount } from 'src/features/wal
 import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
 import { useAccounts } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
-import { logger } from 'src/utils/logger'
 import Checkmark from 'ui/src/assets/icons/check.svg'
+import { logger } from 'wallet/src/features/logger/logger'
 
 type Props = NativeStackScreenProps<SettingsStackParamList, Screens.SettingsCloudBackupStatus>
 

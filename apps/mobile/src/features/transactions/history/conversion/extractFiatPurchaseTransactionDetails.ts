@@ -5,8 +5,8 @@ import {
   TransactionStatus,
   TransactionType,
 } from 'src/features/transactions/types'
-import { logger } from 'src/utils/logger'
 import { ChainId } from 'wallet/src/constants/chains'
+import { logger } from 'wallet/src/features/logger/logger'
 import { toSupportedChainId } from 'wallet/src/utils/chainId'
 import { getNativeCurrencyAddressForChain } from 'wallet/src/utils/currencyId'
 

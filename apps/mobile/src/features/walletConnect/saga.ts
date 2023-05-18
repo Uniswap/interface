@@ -44,10 +44,10 @@ import {
   updateSession,
 } from 'src/features/walletConnect/walletConnectSlice'
 import { wcWeb3Wallet } from 'src/features/walletConnectV2/saga'
-import { logger } from 'src/utils/logger'
 import { createSaga } from 'src/utils/saga'
 import { call, fork, put, take } from 'typed-redux-saga'
 import { ChainId } from 'wallet/src/constants/chains'
+import { logger } from 'wallet/src/features/logger/logger'
 import { ONE_SECOND_MS } from 'wallet/src/utils/time'
 
 export enum WalletConnectEvent {
