@@ -42,33 +42,35 @@ export const BuyButton = ({ asset, onDataPage }: { asset: GenieAsset; onDataPage
   const { fetchAndPurchaseSingleAsset, isLoading: isLoadingRoute } = useFetchSingleAsset()
   const price = asset.sellorders?.[0]?.price.value
 
-  return (
-    <>
-      {price ? (
-        <>
-          <StyledBuyButton disabled={isLoadingRoute} onClick={() => fetchAndPurchaseSingleAsset(asset)}>
-            {isLoadingRoute ? (
-              <>
-                <Trans>Fetching Route</Trans>
-                <Loader size="24px" stroke="white" />
-              </>
-            ) : (
-              <>
-                <Trans>Buy</Trans>
-                <Price>{formatNumber(price)} ETH</Price>
-              </>
-            )}
-          </StyledBuyButton>
-          {onDataPage && (
-            <MakeOfferButtonSmall>
-              <HandHoldingDollarIcon />
-            </MakeOfferButtonSmall>
-          )}
-        </>
-      ) : (
+  if (!price) {
+    return (
+      <>
         <MakeOfferButtonLarge>
           <Trans>Make an offer</Trans>
         </MakeOfferButtonLarge>
+      </>
+    )
+  }
+
+  return (
+    <>
+      <StyledBuyButton disabled={isLoadingRoute} onClick={() => fetchAndPurchaseSingleAsset(asset)}>
+        {isLoadingRoute ? (
+          <>
+            <Trans>Fetching Route</Trans>
+            <Loader size="24px" stroke="white" />
+          </>
+        ) : (
+          <>
+            <Trans>Buy</Trans>
+            <Price>{formatNumber(price)} ETH</Price>
+          </>
+        )}
+      </StyledBuyButton>
+      {onDataPage && (
+        <MakeOfferButtonSmall>
+          <HandHoldingDollarIcon />
+        </MakeOfferButtonSmall>
       )}
     </>
   )
