@@ -1,4 +1,4 @@
-import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
+import { Percent } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 import { useTheme } from 'styled-components/macro'
@@ -14,7 +14,7 @@ interface PriceImpactSeverity {
   color: string
 }
 
-export function usePriceImpact(trade?: InterfaceTrade<Currency, Currency, TradeType>): PriceImpact | undefined {
+export function usePriceImpact(trade?: InterfaceTrade): PriceImpact | undefined {
   const theme = useTheme()
 
   return useMemo(() => {

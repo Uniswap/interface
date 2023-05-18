@@ -32,17 +32,17 @@ exports[`AdvancedSwapDetails.tsx matches base snapshot 1`] = `
   justify-content: space-between;
 }
 
-.c5 {
+.c8 {
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
 }
 
-.c7 {
+.c6 {
   color: #7780A0;
 }
 
-.c8 {
+.c7 {
   color: #0D111C;
 }
 
@@ -67,7 +67,7 @@ exports[`AdvancedSwapDetails.tsx matches base snapshot 1`] = `
   gap: 12px;
 }
 
-.c6 {
+.c5 {
   display: inline-block;
   height: inherit;
 }
@@ -82,14 +82,34 @@ exports[`AdvancedSwapDetails.tsx matches base snapshot 1`] = `
       class="c2 c3 c4"
     >
       <div
-        class="c2 c3 c5"
+        class="c5"
+      >
+        <div>
+          <div
+            class="c6 css-zhpkf8"
+          >
+            Network fee
+          </div>
+        </div>
+      </div>
+      <div
+        class="c7 css-zhpkf8"
+      >
+        ~$1.00
+      </div>
+    </div>
+    <div
+      class="c2 c3 c4"
+    >
+      <div
+        class="c2 c3 c8"
       >
         <div
-          class="c6"
+          class="c5"
         >
           <div>
             <div
-              class="c7 css-zhpkf8"
+              class="c6 css-zhpkf8"
             >
               Minimum output
             </div>
@@ -97,7 +117,7 @@ exports[`AdvancedSwapDetails.tsx matches base snapshot 1`] = `
         </div>
       </div>
       <div
-        class="c8 css-zhpkf8"
+        class="c7 css-zhpkf8"
       >
         0.00000000000000098 DEF
       </div>
@@ -106,14 +126,14 @@ exports[`AdvancedSwapDetails.tsx matches base snapshot 1`] = `
       class="c2 c3 c4"
     >
       <div
-        class="c2 c3 c5"
+        class="c2 c3 c8"
       >
         <div
-          class="c6"
+          class="c5"
         >
           <div>
             <div
-              class="c7 css-zhpkf8"
+              class="c6 css-zhpkf8"
             >
               Expected output
             </div>
@@ -121,7 +141,7 @@ exports[`AdvancedSwapDetails.tsx matches base snapshot 1`] = `
         </div>
       </div>
       <div
-        class="c8 css-zhpkf8"
+        class="c7 css-zhpkf8"
       >
         0.000000000000001 DEF
       </div>
@@ -133,16 +153,16 @@ exports[`AdvancedSwapDetails.tsx matches base snapshot 1`] = `
       class="c2 c3 c4"
     >
       <div
-        class="c7 css-zhpkf8"
+        class="c6 css-zhpkf8"
       >
         Order routing
       </div>
       <div
-        class="c6"
+        class="c5"
       >
         <div>
           <div
-            class="c8 css-zhpkf8"
+            class="c7 css-zhpkf8"
           >
             Uniswap API
           </div>

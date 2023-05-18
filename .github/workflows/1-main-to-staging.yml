@@ -18,6 +18,10 @@ jobs:
         with:
           token: ${{ secrets.RELEASE_SERVICE_ACCESS_TOKEN }}
           ref: main
+      - name: Git config
+        run: |
+          git config user.name "UL Service Account"
+          git config user.email "hello-happy-puppy@users.noreply.github.com"
       - name: Add CODEOWNERS file
         run: |
           echo "@uniswap/web-admins" > CODEOWNERS
@@ -25,6 +29,4 @@ jobs:
           git commit -m "ci: add global CODEOWNERS"
       - name: Git push
         run: |
-          git config user.name "UL Service Account"
-          git config user.email "hello-happy-puppy@users.noreply.github.com"
           git push origin main:releases/staging --force

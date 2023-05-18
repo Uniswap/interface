@@ -14,7 +14,15 @@ const store = configureStore({
   reducer,
   enhancers: (defaultEnhancers) => defaultEnhancers.concat(sentryEnhancer),
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({ thunk: true })
+    getDefaultMiddleware({
+      thunk: true,
+      serializableCheck: {
+        // meta.arg and meta.baseQueryMeta are defaults. payload.trade is a nonserializable return value, but that's ok
+        // because we are not adding it into any persisted store that requires serialization (e.g. localStorage)
+        ignoredActionPaths: ['meta.arg', 'meta.baseQueryMeta', 'payload.trade'],
+        ignoredPaths: [routingApi.reducerPath],
+      },
+    })
       .concat(routingApi.middleware)
       .concat(save({ states: PERSISTED_KEYS, debounce: 1000 })),
   preloadedState: load({ states: PERSISTED_KEYS, disableWarnings: isTestEnv() }),

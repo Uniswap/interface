@@ -3,7 +3,7 @@ import { formatEther, parseEther } from '@ethersproject/units'
 import { t, Trans } from '@lingui/macro'
 import { sendAnalyticsEvent, TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, NFTEventName } from '@uniswap/analytics-events'
-import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { useToggleAccountDrawer } from 'components/AccountDrawer'
 import Column from 'components/Column'
@@ -208,7 +208,7 @@ const InputCurrencyValue = ({
   totalEthPrice: BigNumber
   activeCurrency: Currency | undefined | null
   tradeState: TradeState
-  trade: InterfaceTrade<Currency, Currency, TradeType> | undefined
+  trade: InterfaceTrade | undefined
 }) => {
   if (!usingPayWithAnyToken) {
     return (
@@ -219,7 +219,7 @@ const InputCurrencyValue = ({
     )
   }
 
-  if (tradeState === TradeState.LOADING) {
+  if (tradeState === TradeState.LOADING && !trade) {
     return (
       <ThemedText.BodyPrimary color="textTertiary" lineHeight="20px" fontWeight="500">
         <Trans>Fetching price...</Trans>
@@ -228,7 +228,7 @@ const InputCurrencyValue = ({
   }
 
   return (
-    <ValueText color={tradeState === TradeState.SYNCING ? 'textTertiary' : 'textPrimary'}>
+    <ValueText color={tradeState === TradeState.LOADING ? 'textTertiary' : 'textPrimary'}>
       {ethNumberStandardFormatter(trade?.inputAmount.toExact())}
     </ValueText>
   )
