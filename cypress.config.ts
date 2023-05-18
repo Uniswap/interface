@@ -3,7 +3,7 @@ import { defineConfig } from 'cypress'
 import { setupHardhatEvents } from 'cypress-hardhat'
 import * as dotenv from 'dotenv'
 
-const env = dotenv.config().parsed
+dotenv.config()
 
 export default defineConfig({
   projectId: 'yp82ef',
@@ -25,5 +25,5 @@ export default defineConfig({
     baseUrl: 'http://localhost:3000',
     specPattern: 'cypress/e2e/**/*.{js,jsx,ts,tsx}',
   },
-  env,
+  env: process.env,
 })
