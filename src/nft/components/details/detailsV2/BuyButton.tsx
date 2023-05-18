@@ -41,15 +41,15 @@ const Price = styled.div`
 
 export const BuyButton = ({ asset, onDataPage }: { asset: GenieAsset; onDataPage?: boolean }) => {
   const fetchAndPurchaseAsset = useFetchSingleAsset()
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoadingRoute, setIsLoadingRoute] = useState(false)
   const price = asset.sellorders?.[0]?.price.value
 
   return (
     <>
       {price ? (
         <>
-          <StyledBuyButton onClick={() => fetchAndPurchaseAsset(asset, setIsLoading)}>
-            {isLoading ? (
+          <StyledBuyButton disabled={isLoadingRoute} onClick={() => fetchAndPurchaseAsset(asset, setIsLoadingRoute)}>
+            {isLoadingRoute ? (
               <>
                 <Trans>Fetching Route</Trans>
                 <Loader size="24px" stroke="white" />
