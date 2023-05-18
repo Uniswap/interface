@@ -1,9 +1,15 @@
 import { useWeb3React } from '@web3-react/core'
 import { useNftRouteLazyQuery } from 'graphql/data/__generated__/types-and-hooks'
-import { BagStatus } from 'nft/types'
-import { buildNftTradeInputFromBagItems, recalculateBagUsingPooledAssets } from 'nft/utils'
+import { BagStatus, GenieAsset } from 'nft/types'
+import {
+  buildNftTradeInput,
+  buildNftTradeInputFromBagItems,
+  filterUpdatedAssetsByState,
+  recalculateBagUsingPooledAssets,
+} from 'nft/utils'
 import { getNextBagState, getPurchasableAssets } from 'nft/utils/bag'
 import { buildRouteResponse } from 'nft/utils/nftRoute'
+import { compareAssetsWithTransactionRoute } from 'nft/utils/txRoute/combineItemsWithTxRoute'
 import { useCallback, useMemo } from 'react'
 import { shallow } from 'zustand/shallow'
 
@@ -99,4 +105,41 @@ export function useFetchAssets(): () => Promise<void> {
     setItemsInBag,
     tokenTradeInput,
   ])
+}
+
+// eslint-disable-next-line import/no-unused-modules
+export const useFetchSingleAsset = () => {
+  const { account } = useWeb3React()
+  const [fetchGqlRoute] = useNftRouteLazyQuery()
+  const purchaseAssets = usePurchaseAssets()
+
+  return useCallback(
+    async (asset: GenieAsset) => {
+      fetchGqlRoute({
+        variables: {
+          senderAddress: account ? account : '',
+          nftTrades: buildNftTradeInput([asset]),
+          tokenTrades: undefined,
+        },
+        pollInterval: 0,
+        onCompleted: (data) => {
+          if (!data.nftRoute || !data.nftRoute.route) {
+            return
+          }
+
+          const { route, routeResponse } = buildRouteResponse(data.nftRoute, false)
+          const { hasPriceAdjustment, updatedAssets } = compareAssetsWithTransactionRoute([asset], route)
+          const { unavailable } = filterUpdatedAssetsByState(updatedAssets)
+          const invalidData = hasPriceAdjustment || unavailable.length > 0
+
+          if (invalidData) {
+            return
+          }
+
+          purchaseAssets(routeResponse, updatedAssets, false)
+        },
+      })
+    },
+    [account, fetchGqlRoute, purchaseAssets]
+  )
 }

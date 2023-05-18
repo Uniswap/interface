@@ -1,6 +1,7 @@
 import Column, { ColumnCenter } from 'components/Column'
 import Row from 'components/Row'
 import { VerifiedIcon } from 'nft/components/icons'
+import { useFetchSingleAsset } from 'nft/hooks/useFetchAssets'
 import { CollectionInfoForAsset, GenieAsset } from 'nft/types'
 import { useEffect, useRef } from 'react'
 import styled from 'styled-components/macro'
@@ -107,6 +108,8 @@ interface LandingPageProps {
 }
 
 export const LandingPage = ({ asset, collection, setShowDataHeader }: LandingPageProps) => {
+  const fetchAndPurchaseAsset = useFetchSingleAsset()
+
   const intersectionRef = useRef<HTMLDivElement>(null)
   const observableRef = useRef(
     new IntersectionObserver((entries) => {
@@ -144,6 +147,7 @@ export const LandingPage = ({ asset, collection, setShowDataHeader }: LandingPag
           <StyledHeadlineText>{asset.name ?? `${asset.collectionName} #${asset.tokenId}`}</StyledHeadlineText>
         </InfoDetailsContainer>
         <InfoChips asset={asset} />
+        <button onClick={() => fetchAndPurchaseAsset(asset)}>Buy now</button>
       </InfoContainer>
     </LandingPageContainer>
   )
