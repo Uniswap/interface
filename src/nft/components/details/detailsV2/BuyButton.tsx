@@ -5,7 +5,6 @@ import Loader from 'components/Icons/LoadingSpinner'
 import { HandHoldingDollarIcon } from 'nft/components/icons'
 import { useFetchSingleAsset } from 'nft/hooks/useFetchAssets'
 import { GenieAsset } from 'nft/types'
-import { useState } from 'react'
 import styled, { css } from 'styled-components/macro'
 
 const ButtonStyles = css`
@@ -40,15 +39,14 @@ const Price = styled.div`
 `
 
 export const BuyButton = ({ asset, onDataPage }: { asset: GenieAsset; onDataPage?: boolean }) => {
-  const fetchAndPurchaseAsset = useFetchSingleAsset()
-  const [isLoadingRoute, setIsLoadingRoute] = useState(false)
+  const { fetchAndPurchaseSingleAsset, isLoading: isLoadingRoute } = useFetchSingleAsset()
   const price = asset.sellorders?.[0]?.price.value
 
   return (
     <>
       {price ? (
         <>
-          <StyledBuyButton disabled={isLoadingRoute} onClick={() => fetchAndPurchaseAsset(asset, setIsLoadingRoute)}>
+          <StyledBuyButton disabled={isLoadingRoute} onClick={() => fetchAndPurchaseSingleAsset(asset)}>
             {isLoadingRoute ? (
               <>
                 <Trans>Fetching Route</Trans>

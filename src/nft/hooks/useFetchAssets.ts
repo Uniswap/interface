@@ -10,7 +10,7 @@ import {
 import { getNextBagState, getPurchasableAssets } from 'nft/utils/bag'
 import { buildRouteResponse } from 'nft/utils/nftRoute'
 import { compareAssetsWithTransactionRoute } from 'nft/utils/txRoute/combineItemsWithTxRoute'
-import { useCallback, useMemo } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { shallow } from 'zustand/shallow'
 
 import { useBag } from './useBag'
@@ -112,8 +112,10 @@ export const useFetchSingleAsset = () => {
   const [fetchGqlRoute] = useNftRouteLazyQuery()
   const purchaseAssets = usePurchaseAssets()
 
-  return useCallback(
-    async (asset: GenieAsset, setIsLoading: (b: boolean) => void) => {
+  const [isLoading, setIsLoading] = useState(false)
+
+  const fetchAndPurchaseSingleAsset = useCallback(
+    async (asset: GenieAsset) => {
       setIsLoading(true)
 
       fetchGqlRoute({
@@ -146,4 +148,6 @@ export const useFetchSingleAsset = () => {
     },
     [account, fetchGqlRoute, purchaseAssets]
   )
+
+  return useMemo(() => ({ fetchAndPurchaseSingleAsset, isLoading }), [fetchAndPurchaseSingleAsset, isLoading])
 }
