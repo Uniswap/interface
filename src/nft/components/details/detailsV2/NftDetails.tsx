@@ -1,4 +1,5 @@
 import { CollectionInfoForAsset, GenieAsset } from 'nft/types'
+import { useState } from 'react'
 import styled from 'styled-components/macro'
 import { Z_INDEX } from 'theme/zIndex'
 
@@ -27,12 +28,13 @@ const DetailsContentContainer = styled.div`
 `
 
 export const NftDetails = ({ asset, collection }: NftDetailsProps) => {
+  const [showDataHeader, setShowDataHeader] = useState(false)
   return (
     <>
       {asset.imageUrl && <DetailsBackground backgroundImage={asset.imageUrl} />}
       <DetailsContentContainer>
-        <LandingPage asset={asset} collection={collection} />
-        <DataPage asset={asset} />
+        <LandingPage asset={asset} collection={collection} setShowDataHeader={setShowDataHeader} />
+        <DataPage asset={asset} showDataHeader={showDataHeader} />
       </DetailsContentContainer>
     </>
   )
