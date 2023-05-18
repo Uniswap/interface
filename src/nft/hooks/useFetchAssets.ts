@@ -107,7 +107,6 @@ export function useFetchAssets(): () => Promise<void> {
   ])
 }
 
-// eslint-disable-next-line import/no-unused-modules
 export const useFetchSingleAsset = () => {
   const { account } = useWeb3React()
   const [fetchGqlRoute] = useNftRouteLazyQuery()
@@ -122,6 +121,7 @@ export const useFetchSingleAsset = () => {
           tokenTrades: undefined,
         },
         pollInterval: 0,
+        fetchPolicy: 'no-cache',
         onCompleted: (data) => {
           if (!data.nftRoute || !data.nftRoute.route) {
             return
