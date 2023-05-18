@@ -57,6 +57,9 @@ function useConfirmModalState({
   const [approvalError, setApprovalError] = useState<PendingModalError>()
   const [pendingModalSteps, setPendingModalSteps] = useState<PendingConfirmModalState[]>([])
 
+  // This is a function instead of a memoized value because we do _not_ want it to update as the allowance changes.
+  // For example, if the user needs to complete 3 steps initially, we should always show 3 step indicators
+  // at the bottom of the modal, even after they complete steps 1 and 2.
   const prepareSwapFlow = useCallback(() => {
     const steps: PendingConfirmModalState[] = []
     if (allowance.state === AllowanceState.REQUIRED && allowance.needsPermit2Approval) {
@@ -122,10 +125,11 @@ function useConfirmModalState({
     }
   }, [allowance, previousPermitNeeded, startSwapFlow])
 
-  // Automatically triggers signing swap tx if allowance requirements are met
   useEffect(() => {
+    // Automatically triggers the next phase if the local modal state still thinks we're in the approval phase,
+    // but the allowance has been set. This will automaticaly trigger the swap.
     if (isInApprovalPhase(confirmModalState) && allowance.state === AllowanceState.ALLOWED) {
-      // Prevents immediate swap if trade has updated mid approval flow
+      // Caveat: prevents swap if trade has updated mid approval flow.
       if (doesTradeDiffer) {
         setConfirmModalState(ConfirmModalState.REVIEWING)
         return
