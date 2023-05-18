@@ -2,7 +2,7 @@ import { getTestSelector } from '../../utils'
 
 describe('Mini Portfolio account drawer', () => {
   beforeEach(() => {
-    cy.intercept(Cypress.env('REACT_APP_AWS_API_ENDPOINT'), cy.spy().as('gqlSpy'))
+    cy.intercept(/api.uniswap.org\/v1\/graphql/, cy.spy().as('gqlSpy'))
     cy.visit('/swap', { ethereum: 'hardhat' })
   })
 

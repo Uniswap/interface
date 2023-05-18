@@ -1,9 +1,6 @@
 import codeCoverageTask from '@cypress/code-coverage/task'
 import { defineConfig } from 'cypress'
 import { setupHardhatEvents } from 'cypress-hardhat'
-import * as dotenv from 'dotenv'
-
-dotenv.config()
 
 export default defineConfig({
   projectId: 'yp82ef',
@@ -25,5 +22,4 @@ export default defineConfig({
     baseUrl: 'http://localhost:3000',
     specPattern: 'cypress/e2e/**/*.{js,jsx,ts,tsx}',
   },
-  env: process.env,
 })
