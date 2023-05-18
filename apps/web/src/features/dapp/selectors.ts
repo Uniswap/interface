@@ -4,11 +4,11 @@ import { ChainId } from 'wallet/src/constants/chains'
 import { WebState } from '../../background/store'
 
 export const selectChainByDappAndWallet = (
-  dappUrl: string,
-  wallet: Address
+  wallet: Address,
+  dappUrl?: string
 ): Selector<WebState, ChainId> =>
   createSelector(
-    (state: WebState) => state.dapp[dappUrl],
+    (state: WebState) => state.dapp[dappUrl ?? ''],
     (dappPreferences) => {
       if (!dappPreferences) {
         return ChainId.Mainnet

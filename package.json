@@ -39,7 +39,6 @@
   "resolutions": {
     "@sideway/formula": "3.0.1",
     "@xmldom/xmldom": "0.7.7",
-    "xml2js": "0.5.0",
     "esbuild": "0.17.5",
     "jpeg-js": "0.4.4",
     "json5": "2.2.2",
@@ -54,6 +53,7 @@
     "typescript": "4.9.4",
     "ua-parser-js": "0.7.33",
     "webpack": "^5.74.0",
+    "xml2js": "0.5.0",
     "yaml": "2.2.2"
   },
   "scripts": {

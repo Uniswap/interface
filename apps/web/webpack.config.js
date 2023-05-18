@@ -77,7 +77,6 @@ const fileExtensions = [
   'jpg',
   'otf',
   'png',
-  'svg',
   'ttf',
   'woff',
   'woff2',
@@ -172,6 +171,11 @@ const options = {
         test: /\.json$/,
         use: ['file-loader'],
         include: /tokenlist/,
+      },
+      // Used for creating SVG React components (similar to react=native-svg-transformer on mobile)
+      {
+        test: /\.svg$/,
+        use: ['@svgr/webpack'],
       },
       {
         test: new RegExp('.(' + fileExtensions.join('|') + ')$'),

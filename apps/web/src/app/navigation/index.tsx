@@ -1,5 +1,5 @@
-import Locked from 'src/app/features/auth/Locked'
-import { HomeScreen } from 'src/app/features/home/HomeScreen'
+import Locked from 'src/features/auth/Locked'
+import { HomeScreen } from 'src/features/home/HomeScreen'
 import { YStack } from 'ui/src'
 import { Flex } from 'ui/src/components/layout/Flex'
 import { authSagaName } from 'wallet/src/features/auth/saga'

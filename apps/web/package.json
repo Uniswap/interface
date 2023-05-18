@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "browserslist": "last 2 chrome versions",
   "dependencies": {
+    "@svgr/webpack": "8.0.1",
     "@types/uuid": "9.0.1",
     "dotenv-webpack": "8.0.1",
     "eth-rpc-errors": "4.0.3",

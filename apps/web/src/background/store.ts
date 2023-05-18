@@ -8,7 +8,7 @@ import { persistConfig, sharedReducers } from 'wallet/src/state/reducer'
 import { wrapStore } from 'webext-redux'
 import { dappReducer } from '../features/dapp/slice'
 import { dappRequestApprovalWatcher } from '../features/dappRequests/dappRequestApprovalWatcherSaga'
-import { dappRequestWatcher } from '../features/dappRequests/saga'
+import { dappRequestWatcher, extensionRequestWatcher } from '../features/dappRequests/saga'
 import { dappRequestReducer } from '../features/dappRequests/slice'
 import { PortName } from '../types'
 
@@ -57,7 +57,11 @@ export function* appSelect<T>(fn: (state: WebState) => T): SagaGenerator<T, Sele
   return state
 }
 
-const sagasInitializedOnStartup = [dappRequestWatcher, dappRequestApprovalWatcher] as const
+const sagasInitializedOnStartup = [
+  dappRequestWatcher,
+  dappRequestApprovalWatcher,
+  extensionRequestWatcher,
+] as const
 
 export function* webRootSaga(): Generator<ForkEffect<void>> {
   for (const s of sagasInitializedOnStartup) {

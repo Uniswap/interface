@@ -1,8 +1,10 @@
 import { Provider, TransactionResponse } from '@ethersproject/providers'
 import { createAction } from '@reduxjs/toolkit'
 import { ethers, providers } from 'ethers'
+import { ExtensionChainChange, ExtensionRequestType } from 'src/types/requests'
 import { call, put, select, take } from 'typed-redux-saga'
 import { ChainId, getChainIdFromString } from 'wallet/src/constants/chains'
+import { logger } from 'wallet/src/features/logger/logger'
 import { getProvider, getSignerManager } from 'wallet/src/features/wallet/context'
 import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
 import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
@@ -10,7 +12,10 @@ import { signMessage, signTypedDataMessage } from 'wallet/src/features/wallet/si
 import { Account, AccountType } from 'wallet/src/features/wallet/types'
 import { hexlifyTransaction } from 'wallet/src/utils/transaction'
 import { appSelect, WebState } from '../../background/store'
-import { sendMessageToSpecificTab } from '../../background/utils/messageUtils'
+import {
+  sendMessageToActiveTab,
+  sendMessageToSpecificTab,
+} from '../../background/utils/messageUtils'
 import { selectChainByDappAndWallet } from '../dapp/selectors'
 import { DEFAULT_DAPP_URL, saveDappChain } from '../dapp/slice'
 import {
@@ -110,7 +115,7 @@ export function* getAccount(requestId: string, senderTabId: number) {
   const dappUrl = extractBaseUrl(tab.url)
   let chainForWalletAndDapp = ChainId.Mainnet // Default to mainnet
   if (dappUrl) {
-    chainForWalletAndDapp = yield* select(selectChainByDappAndWallet(dappUrl, account.address))
+    chainForWalletAndDapp = yield* select(selectChainByDappAndWallet(account.address, dappUrl))
   }
   const provider = yield* call(getProvider, chainForWalletAndDapp)
 
@@ -231,7 +236,7 @@ export function getCurrentAccount(accounts: Record<string, Account>): Account {
 export function* getChainIdForDapp(senderTabId: number, walletAddress: Address) {
   const tab = yield* call(chrome.tabs.get, senderTabId)
   const dappUrl = extractBaseUrl(tab.url) || DEFAULT_DAPP_URL
-  const chainId = yield* select(selectChainByDappAndWallet(dappUrl, walletAddress))
+  const chainId = yield* select(selectChainByDappAndWallet(walletAddress, dappUrl))
   return chainId
 }
 
@@ -244,7 +249,7 @@ export function* connect(requestId: string, chainId: string, senderTabId: number
 
   // get provider
   const provider = yield* call(getProvider, chainIdEnum)
-  yield* call(saveLastChainForDapp, senderTabId, chainIdEnum)
+  yield* call(saveLastChainForDapp, chainIdEnum, senderTabId)
 
   // prepare dapp response
   const response: ConnectResponse = {
@@ -262,7 +267,7 @@ export function* changeChain(requestId: string, chainId: string, senderTabId: nu
   }
 
   const provider = yield* call(getProvider, chainIdEnum)
-  yield* call(saveLastChainForDapp, senderTabId, chainIdEnum)
+  yield* call(saveLastChainForDapp, chainIdEnum, senderTabId)
 
   const response: ChangeChainResponse = {
     type: DappResponseType.ChainChangeResponse,
@@ -321,8 +326,13 @@ export function* handleSignTypedData(
   yield* call(sendMessageToSpecificTab, response, senderTabId)
 }
 
-function* saveLastChainForDapp(senderTabId: number, chainId: ChainId) {
-  const tab = yield* call(chrome.tabs.get, senderTabId)
+/**
+ * Saves the last chain used for a dapp.
+ * Sender tab id is not passed if we call it from a context that is not page-specific (such as from within extension)
+ */
+function* saveLastChainForDapp(chainId: ChainId, senderTabId?: number) {
+  const tabId = senderTabId ?? (yield* call(getCurrentTabId))
+  const tab = yield* call(chrome.tabs.get, tabId)
   const dappUrl = extractBaseUrl(tab.url)
   const activeWalletAddress = yield* appSelect(selectActiveAccountAddress)
   if (!activeWalletAddress) throw new Error('No active wallet address')
@@ -336,4 +346,44 @@ function* saveLastChainForDapp(senderTabId: number, chainId: ChainId) {
       })
     )
   }
+}
+
+export const saveChainAction = createAction<{ chainId: ChainId }>(`dappRequest/saveChainAction`)
+
+export function* extensionRequestWatcher() {
+  while (true) {
+    const { payload, type } = yield* take(saveChainAction)
+
+    if (type === saveChainAction.type) {
+      yield* call(changeChainFromExtension, payload.chainId)
+    }
+  }
+}
+
+export function* changeChainFromExtension(chainId: ChainId) {
+  const provider = yield* call(getProvider, chainId)
+  yield* call(saveLastChainForDapp, chainId)
+
+  const response: ExtensionChainChange = {
+    type: ExtensionRequestType.SwitchChain,
+    providerUrl: provider.connection.url,
+    chainId,
+  }
+  yield* call(sendMessageToActiveTab, response)
+}
+
+export function* getCurrentTabId() {
+  // Default to first tab
+  let tabId = 0
+  const tabs = yield* call(chrome.tabs.query, {
+    currentWindow: true,
+    active: true,
+  })
+  const potentialTabId = tabs?.[0]?.id
+  if (!potentialTabId) {
+    logger.error('dappRequestSaga', 'getCurrentTabId', 'no tabId')
+  } else {
+    tabId = potentialTabId
+  }
+  return tabId
 }
