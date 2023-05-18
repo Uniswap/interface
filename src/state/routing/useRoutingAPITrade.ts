@@ -7,6 +7,7 @@ import { useRoutingAPIArguments } from 'lib/hooks/routing/useRoutingAPIArguments
 import ms from 'ms.macro'
 import { useMemo } from 'react'
 import { INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference, useGetQuoteQuery } from 'state/routing/slice'
+import { useGetQuoteQuery as useGetURAQuoteQuery } from 'state/routing/uraSlice'
 
 import { InterfaceTrade, QuoteState, TradeState } from './types'
 
@@ -37,6 +38,8 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
     [amountSpecified, otherCurrency, tradeType]
   )
 
+  const useURA = true
+
   const queryArgs = useRoutingAPIArguments({
     tokenIn: currencyIn,
     tokenOut: currencyOut,
@@ -46,15 +49,30 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
   })
 
   const {
-    isError,
-    data: tradeResult,
-    currentData: currentTradeResult,
-  } = useGetQuoteQuery(queryArgs ?? skipToken, {
+    isError: isLegacyError,
+    data: legacyTradeResult,
+    currentData: currentLegacyTradeResult,
+  } = useGetQuoteQuery(!useURA ? queryArgs ?? skipToken : skipToken, {
     // Price-fetching is informational and costly, so it's done less frequently.
     pollingInterval: routerPreference === INTERNAL_ROUTER_PREFERENCE_PRICE ? ms`1m` : AVERAGE_L1_BLOCK_TIME,
     // If latest quote from cache was fetched > 2m ago, instantly repoll for another instead of waiting for next poll period
     refetchOnMountOrArgChange: 2 * 60,
   })
+
+  const {
+    isError: isURAError,
+    data: uraTradeResult,
+    currentData: currentURATradeResult,
+  } = useGetURAQuoteQuery(useURA ? queryArgs ?? skipToken : skipToken, {
+    // Price-fetching is informational and costly, so it's done less frequently.
+    pollingInterval: routerPreference === INTERNAL_ROUTER_PREFERENCE_PRICE ? ms`1m` : AVERAGE_L1_BLOCK_TIME,
+    // If latest quote from cache was fetched > 2m ago, instantly repoll for another instead of waiting for next poll period
+    refetchOnMountOrArgChange: 2 * 60,
+  })
+
+  const tradeResult = uraTradeResult ?? legacyTradeResult
+  const currentTradeResult = currentLegacyTradeResult ?? currentURATradeResult
+  const isError = isLegacyError || isURAError
 
   const isCurrent = currentTradeResult === tradeResult
 

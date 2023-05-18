@@ -1,56 +1,32 @@
 import { createApi, fetchBaseQuery, FetchBaseQueryError } from '@reduxjs/toolkit/query/react'
 import { Protocol } from '@uniswap/router-sdk'
-import { TradeType } from '@uniswap/sdk-core'
-import { ChainId } from '@uniswap/smart-order-router'
 import { getClientSideQuote } from 'lib/hooks/routing/clientSideSmartOrderRouter'
 import ms from 'ms.macro'
-import qs from 'qs'
 import { trace } from 'tracing/trace'
 
-import { QuoteData, TradeResult } from './types'
+import { GetQuoteArgs, INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference } from './slice'
+import { QuoteState, TradeResult, URAQuoteData } from './types'
 import { getRouter, isExactInput, transformRoutesToTrade } from './utils'
 
-export enum RouterPreference {
-  AUTO = 'auto',
-  API = 'api',
-  CLIENT = 'client',
-}
-
-// This is excluded from `RouterPreference` enum because it's only used
-// internally for token -> USDC trades to get a USD value.
-export const INTERNAL_ROUTER_PREFERENCE_PRICE = 'price' as const
-
-// routing API quote params: https://github.com/Uniswap/routing-api/blob/main/lib/handlers/quote/schema/quote-schema.ts
-const API_QUERY_PARAMS = {
-  protocols: 'v2,v3,mixed',
+// routing API quote query params: https://github.com/Uniswap/routing-api/blob/main/lib/handlers/quote/schema/quote-schema.ts
+const CLASSIC_SWAP_QUERY_PARAMS = {
+  protocols: [Protocol.V2, Protocol.V3, Protocol.MIXED],
+  routingType: 'CLASSIC',
 }
 const CLIENT_PARAMS = {
   protocols: [Protocol.V2, Protocol.V3, Protocol.MIXED],
 }
 
-export interface GetQuoteArgs {
-  tokenInAddress: string
-  tokenInChainId: ChainId
-  tokenInDecimals: number
-  tokenInSymbol?: string
-  tokenOutAddress: string
-  tokenOutChainId: ChainId
-  tokenOutDecimals: number
-  tokenOutSymbol?: string
-  amount: string
-  routerPreference: RouterPreference | typeof INTERNAL_ROUTER_PREFERENCE_PRICE
-  tradeType: TradeType
+function isAPIAcceptedRouterPreference(
+  routerPreference?: RouterPreference | typeof INTERNAL_ROUTER_PREFERENCE_PRICE
+): boolean {
+  return routerPreference === RouterPreference.API || routerPreference === RouterPreference.AUTO
 }
 
-enum QuoteState {
-  SUCCESS = 'Success',
-  NOT_FOUND = 'Not found',
-}
-
-export const routingApi = createApi({
-  reducerPath: 'routingApi',
+export const uraRoutingApi = createApi({
+  reducerPath: 'ura-routing',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'https://api.uniswap.org/v1/',
+    baseUrl: 'https://4uemel8n4g.execute-api.us-east-2.amazonaws.com/prod',
   }),
   endpoints: (build) => ({
     getQuote: build.query<TradeResult, GetQuoteArgs>({
@@ -82,25 +58,33 @@ export const routingApi = createApi({
           }
         )
       },
+      // Explicitly typing the return type enables typechecking of return values.
       async queryFn(args, _api, _extraOptions, fetch) {
+        const routerPreference = args.routerPreference
         if (
-          args.routerPreference === RouterPreference.API ||
-          args.routerPreference === RouterPreference.AUTO ||
-          args.routerPreference === INTERNAL_ROUTER_PREFERENCE_PRICE
+          // If enabled, try the routing API, falling back to client-side routing.
+          isAPIAcceptedRouterPreference(routerPreference)
         ) {
           try {
             const { tokenInAddress, tokenInChainId, tokenOutAddress, tokenOutChainId, amount, tradeType } = args
-            const type = isExactInput(tradeType) ? 'exactIn' : 'exactOut'
-            const query = qs.stringify({
-              ...API_QUERY_PARAMS,
-              tokenInAddress,
+            const type = isExactInput(tradeType) ? 'EXACT_INPUT' : 'EXACT_OUTPUT'
+
+            const requestBody = {
               tokenInChainId,
-              tokenOutAddress,
+              tokenIn: tokenInAddress,
               tokenOutChainId,
+              tokenOut: tokenOutAddress,
               amount,
               type,
+              configs: [CLASSIC_SWAP_QUERY_PARAMS],
+            }
+
+            const response = await fetch({
+              method: 'POST',
+              url: '/quote',
+              body: JSON.stringify(requestBody),
             })
-            const response = await fetch(`quote?${query}`)
+
             if (response.error) {
               try {
                 // cast as any here because we do a runtime check on it being an object before indexing into .errorCode
@@ -114,8 +98,9 @@ export const routingApi = createApi({
               }
             }
 
-            const quoteData = response.data as QuoteData
-            const tradeResult = transformRoutesToTrade(args, quoteData)
+            const uraQuoteData = response.data as URAQuoteData
+            const tradeResult = transformRoutesToTrade(args, uraQuoteData.quote)
+
             return { data: tradeResult }
           } catch (error: any) {
             console.warn(
@@ -137,11 +122,8 @@ export const routingApi = createApi({
         }
       },
       keepUnusedDataFor: ms`10s`,
-      extraOptions: {
-        maxRetries: 0,
-      },
     }),
   }),
 })
 
-export const { useGetQuoteQuery } = routingApi
+export const { useGetQuoteQuery } = uraRoutingApi

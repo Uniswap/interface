@@ -1,9 +1,12 @@
 import { MixedRouteSDK } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
+import { AlphaRouter, ChainId } from '@uniswap/smart-order-router'
 import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
 import { FeeAmount, Pool, Route as V3Route } from '@uniswap/v3-sdk'
 import { isPolygonChain } from 'constants/chains'
+import { RPC_PROVIDERS } from 'constants/providers'
 import { nativeOnChain } from 'constants/tokens'
+import { toSupportedChainId } from 'lib/hooks/routing/clientSideSmartOrderRouter'
 
 import { GetQuoteArgs } from './slice'
 import {
@@ -16,6 +19,22 @@ import {
   V2PoolInRoute,
   V3PoolInRoute,
 } from './types'
+
+const routers = new Map<ChainId, AlphaRouter>()
+export function getRouter(chainId: ChainId): AlphaRouter {
+  const router = routers.get(chainId)
+  if (router) return router
+
+  const supportedChainId = toSupportedChainId(chainId)
+  if (supportedChainId) {
+    const provider = RPC_PROVIDERS[supportedChainId]
+    const router = new AlphaRouter({ chainId, provider })
+    routers.set(chainId, router)
+    return router
+  }
+
+  throw new Error(`Router does not support this chain (chainId: ${chainId}).`)
+}
 
 /**
  * Transforms a Routing API quote into an array of routes that can be used to
