@@ -12,6 +12,7 @@ jobs:
     steps:
       - name: Send Slack message that deploy is starting
         uses: slackapi/slack-github-action@007b2c3c751a190b6f0f040e47ed024deaa72844
+        continue-on-error: true
         with:
           payload: |
             {
@@ -43,6 +44,7 @@ jobs:
           branch: main
       - name: Send Slack message about deployment outcome
         uses: slackapi/slack-github-action@007b2c3c751a190b6f0f040e47ed024deaa72844
+        continue-on-error: true
         if: always()
         with:
           payload: |
