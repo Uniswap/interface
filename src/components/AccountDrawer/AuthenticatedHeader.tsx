@@ -266,7 +266,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
       <PortfolioDrawerContainer>
         {totalBalance !== undefined ? (
           <FadeInColumn gap="xs">
-            <ThemedText.HeadlineLarge fontWeight={500}>
+            <ThemedText.HeadlineLarge fontWeight={500} data-testid="portfolio-total-balance">
               {formatNumber(totalBalance, NumberType.PortfolioBalance)}
             </ThemedText.HeadlineLarge>
             <AutoRow marginBottom="20px">

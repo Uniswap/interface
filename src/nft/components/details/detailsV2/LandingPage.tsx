@@ -2,6 +2,7 @@ import Column, { ColumnCenter } from 'components/Column'
 import Row from 'components/Row'
 import { VerifiedIcon } from 'nft/components/icons'
 import { CollectionInfoForAsset, GenieAsset } from 'nft/types'
+import { useEffect, useRef } from 'react'
 import styled from 'styled-components/macro'
 import { BREAKPOINTS } from 'theme'
 
@@ -102,12 +103,36 @@ const MediaContainer = styled.div`
 interface LandingPageProps {
   asset: GenieAsset
   collection: CollectionInfoForAsset
+  setShowDataHeader: (showDataHeader: boolean) => void
 }
 
-export const LandingPage = ({ asset, collection }: LandingPageProps) => {
+export const LandingPage = ({ asset, collection, setShowDataHeader }: LandingPageProps) => {
+  const intersectionRef = useRef<HTMLDivElement>(null)
+  const observableRef = useRef(
+    new IntersectionObserver((entries) => {
+      if (!entries[0].isIntersecting) {
+        setShowDataHeader(true)
+      } else {
+        setShowDataHeader(false)
+      }
+    })
+  )
+
+  // Checks if the intersectionRef is in the viewport
+  // If it is not in the viewport, the data page header becomes visible
+  useEffect(() => {
+    const cachedRef = intersectionRef.current
+    const observer = observableRef.current
+    if (cachedRef && observer) {
+      observer.observe(cachedRef)
+      return () => observer.unobserve(cachedRef)
+    }
+    return
+  }, [intersectionRef, observableRef, setShowDataHeader])
+
   return (
     <LandingPageContainer>
-      <MediaContainer>
+      <MediaContainer ref={intersectionRef}>
         <MediaRenderer asset={asset} />
       </MediaContainer>
       <InfoContainer>
