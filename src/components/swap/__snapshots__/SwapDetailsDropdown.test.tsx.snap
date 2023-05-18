@@ -273,6 +273,26 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
               class="c2 c3 c4"
             >
               <div
+                class="c10"
+              >
+                <div>
+                  <div
+                    class="c12 css-zhpkf8"
+                  >
+                    Price Impact
+                  </div>
+                </div>
+              </div>
+              <div
+                class="c9 css-zhpkf8"
+              >
+                105566.37%
+              </div>
+            </div>
+            <div
+              class="c2 c3 c4"
+            >
+              <div
                 class="c2 c3 c6"
               >
                 <div
