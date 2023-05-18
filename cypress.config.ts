@@ -19,7 +19,7 @@ export default defineConfig({
         ...config,
         // Only enable Chrome.
         // Electron (the default) has issues injecting window.ethereum before pageload, so it is not viable.
-        //browsers: config.browsers.filter(({ name }) => name === 'chrome'),
+        browsers: config.browsers.filter(({ name }) => name === 'chrome'),
       }
     },
     baseUrl: 'http://localhost:3000',
