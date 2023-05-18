@@ -3,6 +3,7 @@ import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { IMetric, MetricLoggerUnit, setGlobalMetric } from '@uniswap/smart-order-router'
 import { sendTiming } from 'components/analytics'
 import { AVERAGE_L1_BLOCK_TIME } from 'constants/chainInfo'
+import { useUnifiedRoutingAPIEnabled } from 'featureFlags/flags/unifiedRouter'
 import { useRoutingAPIArguments } from 'lib/hooks/routing/useRoutingAPIArguments'
 import ms from 'ms.macro'
 import { useMemo } from 'react'
@@ -38,8 +39,6 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
     [amountSpecified, otherCurrency, tradeType]
   )
 
-  const useURA = false
-
   const queryArgs = useRoutingAPIArguments({
     tokenIn: currencyIn,
     tokenOut: currencyOut,
@@ -48,11 +47,13 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
     routerPreference,
   })
 
+  const shouldUseURA = useUnifiedRoutingAPIEnabled()
+
   const {
     isError: isLegacyAPIError,
     data: legacyAPITradeResult,
     currentData: currentLegacyAPITradeResult,
-  } = useGetQuoteQuery(!useURA ? queryArgs ?? skipToken : skipToken, {
+  } = useGetQuoteQuery(!shouldUseURA ? queryArgs ?? skipToken : skipToken, {
     // Price-fetching is informational and costly, so it's done less frequently.
     pollingInterval: routerPreference === INTERNAL_ROUTER_PREFERENCE_PRICE ? ms`1m` : AVERAGE_L1_BLOCK_TIME,
     // If latest quote from cache was fetched > 2m ago, instantly repoll for another instead of waiting for next poll period
@@ -63,7 +64,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
     isError: isURAError,
     data: uraTradeResult,
     currentData: currentURATradeResult,
-  } = useGetURAQuoteQuery(useURA ? queryArgs ?? skipToken : skipToken, {
+  } = useGetURAQuoteQuery(shouldUseURA ? queryArgs ?? skipToken : skipToken, {
     // Price-fetching is informational and costly, so it's done less frequently.
     pollingInterval: routerPreference === INTERNAL_ROUTER_PREFERENCE_PRICE ? ms`1m` : AVERAGE_L1_BLOCK_TIME,
     // If latest quote from cache was fetched > 2m ago, instantly repoll for another instead of waiting for next poll period
