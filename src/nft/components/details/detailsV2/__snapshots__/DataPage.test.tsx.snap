@@ -260,6 +260,17 @@ exports[`data page loads with header showing 1`] = `
   background-color: #bdc8f3;
 }
 
+.c17 {
+  white-space: nowrap;
+  width: -webkit-min-content;
+  width: -moz-min-content;
+  width: min-content;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  border-radius: 16px;
+}
+
 .c6 {
   gap: 24px;
 }
@@ -274,17 +285,6 @@ exports[`data page loads with header showing 1`] = `
 .c8 {
   gap: 4px;
   margin-right: auto;
-}
-
-.c17 {
-  white-space: nowrap;
-  width: -webkit-min-content;
-  width: -moz-min-content;
-  width: min-content;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-  border-radius: 16px;
 }
 
 .c0 {
@@ -776,6 +776,17 @@ exports[`data page loads without header showing 1`] = `
   background-color: #bdc8f3;
 }
 
+.c17 {
+  white-space: nowrap;
+  width: -webkit-min-content;
+  width: -moz-min-content;
+  width: min-content;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  border-radius: 16px;
+}
+
 .c6 {
   gap: 24px;
 }
@@ -790,17 +801,6 @@ exports[`data page loads without header showing 1`] = `
 .c8 {
   gap: 4px;
   margin-right: auto;
-}
-
-.c17 {
-  white-space: nowrap;
-  width: -webkit-min-content;
-  width: -moz-min-content;
-  width: min-content;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-  border-radius: 16px;
 }
 
 .c0 {
