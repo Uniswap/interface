@@ -187,4 +187,20 @@ describe('beforeSend', () => {
     const originalException = new DOMException('The user aborted a request.', 'AbortError')
     expect(beforeSend(ERROR, { originalException })).toBeNull()
   })
+
+  describe('meta tags', () => {
+    it('filters apple-mobile-web-app-title errors', () => {
+      const originalException = new TypeError(
+        "null is not an object (evaluating 'document.querySelector('meta[name=\"apple-mobile-web-app-title\"]').content')"
+      )
+      expect(beforeSend(ERROR, { originalException })).toBeNull()
+    })
+
+    it('filters og:site_name errors', () => {
+      const originalException = new TypeError(
+        "null is not an object (evaluating 'document.querySelector('meta[name=\"og:site_name\"]').content')"
+      )
+      expect(beforeSend(ERROR, { originalException })).toBeNull()
+    })
+  })
 })

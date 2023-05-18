@@ -1,19 +1,15 @@
-import { Trade } from '@uniswap/router-sdk'
-import { Currency, TradeType } from '@uniswap/sdk-core'
+import { Percent } from '@uniswap/sdk-core'
+import { InterfaceTrade } from 'state/routing/types'
 
 /**
  * Returns true if the trade requires a confirmation of details before we can submit it
  * @param args either a pair of V2 trades or a pair of V3 trades
  */
-export function tradeMeaningfullyDiffers(
-  ...args: [Trade<Currency, Currency, TradeType>, Trade<Currency, Currency, TradeType>]
-): boolean {
-  const [tradeA, tradeB] = args
+export function tradeMeaningfullyDiffers(tradeA: InterfaceTrade, tradeB: InterfaceTrade, slippage: Percent): boolean {
   return (
     tradeA.tradeType !== tradeB.tradeType ||
     !tradeA.inputAmount.currency.equals(tradeB.inputAmount.currency) ||
-    !tradeA.inputAmount.equalTo(tradeB.inputAmount) ||
     !tradeA.outputAmount.currency.equals(tradeB.outputAmount.currency) ||
-    !tradeA.outputAmount.equalTo(tradeB.outputAmount)
+    tradeB.executionPrice.lessThan(tradeA.worstExecutionPrice(slippage))
   )
 }
