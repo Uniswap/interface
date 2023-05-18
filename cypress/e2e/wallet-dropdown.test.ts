@@ -52,14 +52,14 @@ describe('Wallet Dropdown', () => {
     itShouldChangeTheLanguage()
   })
 
-  describe('system dark mode', () => {
-    function visitWithSystemDarkMode(darkMode: boolean) {
+  describe('with color theme', () => {
+    function visitSwapWithColorTheme({ dark }: { dark: boolean }) {
       cy.visit('/swap', {
         onBeforeLoad(win) {
           cy.stub(win, 'matchMedia')
             .withArgs('(prefers-color-scheme: dark)')
             .returns({
-              matches: darkMode,
+              matches: dark,
               addEventListener() {
                 /* noop */
               },
@@ -72,7 +72,7 @@ describe('Wallet Dropdown', () => {
     }
 
     it('should properly use dark system theme when auto theme setting is selected', () => {
-      visitWithSystemDarkMode(true)
+      visitSwapWithColorTheme({ dark: true })
       cy.get(getTestSelector('web3-status-connected')).click()
       cy.get(getTestSelector('wallet-settings')).click()
       cy.get(getTestSelector('theme-auto')).click()
@@ -80,7 +80,7 @@ describe('Wallet Dropdown', () => {
     })
 
     it('should properly use light system theme when auto theme setting is selected', () => {
-      visitWithSystemDarkMode(false)
+      visitSwapWithColorTheme({ dark: false })
       cy.get(getTestSelector('web3-status-connected')).click()
       cy.get(getTestSelector('wallet-settings')).click()
       cy.get(getTestSelector('theme-auto')).click()
