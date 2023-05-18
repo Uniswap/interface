@@ -14,7 +14,7 @@ import styled, { useTheme } from 'styled-components/macro'
 import { ButtonOutlined, ButtonPrimary, ButtonSecondary } from '../../components/Button'
 import Card from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
-import { CardBGImage, CardNoise, CardSection, DataCard } from '../../components/earn/styled'
+import { DataCard } from '../../components/earn/styled'
 import FullPositionCard from '../../components/PositionCard'
 import { RowBetween, RowFixed } from '../../components/Row'
 import { Dots } from '../../components/swap/styleds'
@@ -61,7 +61,7 @@ const ButtonRow = styled(RowFixed)`
 const ResponsiveButtonPrimary = styled(ButtonPrimary)`
   height: 40px;
   width: fit-content;
-  border-radius: 12px;
+  border-radius: 30px;
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
     width: 48%;
   `};
@@ -145,39 +145,6 @@ export default function Pool() {
     <Trace page={InterfacePageName.POOL_PAGE} shouldLogImpression>
       <>
         <PageWrapper>
-          <VoteCard>
-            <CardBGImage />
-            <CardNoise />
-            <CardSection>
-              <AutoColumn gap="md">
-                <RowBetween>
-                  <ThemedText.DeprecatedWhite fontWeight={600}>
-                    <Trans>Liquidity provider rewards</Trans>
-                  </ThemedText.DeprecatedWhite>
-                </RowBetween>
-                <RowBetween>
-                  <ThemedText.DeprecatedWhite fontSize={14}>
-                    <Trans>
-                      Liquidity providers earn a 0.3% fee on all trades proportional to their share of the pool. Fees
-                      are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity.
-                    </Trans>
-                  </ThemedText.DeprecatedWhite>
-                </RowBetween>
-                <ExternalLink
-                  style={{ color: theme.white, textDecoration: 'underline' }}
-                  target="_blank"
-                  href="https://docs.uniswap.org/protocol/V2/concepts/core-concepts/pools"
-                >
-                  <ThemedText.DeprecatedWhite fontSize={14}>
-                    <Trans>Read more about providing liquidity</Trans>
-                  </ThemedText.DeprecatedWhite>
-                </ExternalLink>
-              </AutoColumn>
-            </CardSection>
-            <CardBGImage />
-            <CardNoise />
-          </VoteCard>
-
           {unsupportedV2Network ? (
             <AutoColumn gap="lg" justify="center">
               <AutoColumn gap="md" style={{ width: '100%' }}>
@@ -189,7 +156,7 @@ export default function Pool() {
               </AutoColumn>
             </AutoColumn>
           ) : (
-            <AutoColumn gap="lg" justify="center">
+            <AutoColumn gap="lg" justify="center" style={{ paddingTop: '50px' }}>
               <AutoColumn gap="md" style={{ width: '100%' }}>
                 <TitleRow style={{ marginTop: '1rem' }} padding="0">
                   <HideSmall>

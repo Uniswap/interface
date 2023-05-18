@@ -161,13 +161,11 @@ export const ButtonGray = styled(BaseButton)`
 `
 
 export const ButtonSecondary = styled(BaseButton)`
-  border: 1px solid ${({ theme }) => theme.accentActiveSoft};
-  color: ${({ theme }) => theme.accentActive};
-  background-color: transparent;
+  color: ${({ theme }) => theme.white};
+  background-color: ${({ theme }) => theme.accentActionSoft};
   font-size: 16px;
-  border-radius: 16px;
+  border-radius: 30px;
   padding: ${({ padding }) => (padding ? padding : '10px')};
-  box-shadow: ${({ theme }) => theme.deepShadow};
 
   &:focus {
     border: 1px solid ${({ theme }) => theme.deprecated_primary3};

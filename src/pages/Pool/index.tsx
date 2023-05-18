@@ -3,7 +3,7 @@ import { Trace, TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName, InterfacePageName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { useToggleAccountDrawer } from 'components/AccountDrawer'
-import { ButtonGray, ButtonPrimary, ButtonText } from 'components/Button'
+import { ButtonPrimary, ButtonText } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import { FlyoutAlignment, Menu } from 'components/Menu'
 import PositionList from 'components/PositionList'
@@ -83,17 +83,17 @@ const PoolMenuItem = styled.div`
   width: 100%;
   font-weight: 500;
 `
-const MoreOptionsButton = styled(ButtonGray)`
+const MoreOptionsButton = styled(ButtonPrimary)`
   border-radius: 30px;
   flex: 1 1 auto;
   padding: 6px 8px;
   width: 100%;
-  background-color: ${({ theme }) => theme.accentActionSoft};
+  background: ${({ theme }) => theme.accentActionSoft};
   margin-right: 8px;
 `
 
 const MoreOptionsText = styled(ThemedText.DeprecatedBody)`
-  color: ${({ theme }) => theme.accentActive};
+  color: ${({ theme }) => theme.white};
   align-items: center;
   display: flex;
 `
