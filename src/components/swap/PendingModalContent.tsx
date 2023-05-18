@@ -9,6 +9,7 @@ import Row from 'components/Row'
 import AnimatedConfirmation from 'components/TransactionConfirmationModal/AnimatedConfirmation'
 import { ReactNode } from 'react'
 import { AlertTriangle } from 'react-feather'
+import { useIsTransactionConfirmed } from 'state/transactions/hooks'
 import styled, { DefaultTheme, useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme/components/text'
 
@@ -35,6 +36,11 @@ const StepCircle = styled.div<{ active: boolean }>`
   border-radius: 50%;
   background-color: ${({ theme, active }) => (active ? theme.accentAction : theme.textTertiary)};
   outline: 3px solid ${({ theme, active }) => (active ? theme.accentActionSoft : theme.accentTextLightTertiary)};
+`
+
+const SizedAnimatedConfirmation = styled(AnimatedConfirmation)`
+  height: 48px;
+  width: 48px;
 `
 
 // TODO: switch to LoaderV2 with updated API to support changing color and size.
@@ -65,8 +71,8 @@ interface PendingModalContentProps {
   steps: PendingConfirmModalState[]
   currentStep: PendingConfirmModalState
   approvalCurrency?: Currency
-  confirmed: boolean
   hideStepIndicators?: boolean
+  txHash: string | undefined
 }
 
 function CurrencyLoader({ currency }: { currency: Currency | undefined }) {
@@ -109,7 +115,7 @@ function getContent(
         title: t`Confirm Swap`,
         subtitle: t`Proceed in wallet`,
         logo: confirmed ? (
-          <AnimatedConfirmation size="48px" data-testid="pending-modal-success-icon" />
+          <SizedAnimatedConfirmation data-testid="pending-modal-success-icon" />
         ) : (
           <Loader stroke={theme.textTertiary} size="48px" />
         ),
@@ -121,10 +127,11 @@ export function PendingModalContent({
   steps,
   currentStep,
   approvalCurrency,
-  confirmed,
+  txHash,
   hideStepIndicators,
 }: PendingModalContentProps) {
   const theme = useTheme()
+  const confirmed = useIsTransactionConfirmed(txHash)
   const { logo, title, subtitle, label, tooltipText, button } = getContent(
     currentStep,
     approvalCurrency,
