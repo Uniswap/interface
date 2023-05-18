@@ -5,6 +5,8 @@ name: 1 | Push main -> staging
 
 on:
   workflow_dispatch:
+    branches:
+      - main
 
 # https://stackoverflow.com/questions/57921401/push-to-origin-from-github-action
 jobs:
