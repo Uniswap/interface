@@ -53,8 +53,7 @@ export const uraRoutingApi = createApi({
           }
         )
       },
-      // Explicitly typing the return type enables typechecking of return values.
-      async queryFn(args, _api, _extraOptions, fetch) {
+      async queryFn(args: GetQuoteArgs, _api, _extraOptions, fetch) {
         const routerPreference = args.routerPreference
         if (isAPIAcceptedRouterPreference(routerPreference)) {
           try {
