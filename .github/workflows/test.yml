@@ -132,7 +132,7 @@ jobs:
         id: cypress-cache
         with:
           path: /root/.cache/Cypress
-          key: ${{ runner.os }}-cypress-12-12-0
+          key: ${{ runner.os }}-cypress-${{ hashFiles('**/node_modules/cypress/package.json') }}
       - run: |
           yarn cypress install
           yarn cypress info
