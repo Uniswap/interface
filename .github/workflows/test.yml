@@ -122,11 +122,6 @@ jobs:
         containers: [1, 2, 3, 4]
     steps:
       - uses: actions/checkout@v3
-
-      # Sets ownership, which is misconfigured when checking out a new container.
-      # See https://github.com/actions/runner/issues/2033#issuecomment-1204205989.
-      - run: chown -R $(id -u):$(id -g) $PWD
-
       - uses: ./.github/actions/setup
       - uses: actions/cache@v3
         id: cypress-cache
@@ -154,13 +149,15 @@ jobs:
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # Additional information is required for Cypress to post status updates to the PR:
-          # - if the event is push, the title will be undefined and Cypress will get the commit message from git 
-          # - if the event is pull_request, then we set the commit message to the pull request title
-          COMMIT_INFO_MESSAGE: ${{ github.event.pull_request.title }}
-          COMMIT_INFO_SHA: ${{ github.event.pull_request.head.sha }}
+          COMMIT_INFO_BRANCH: ${{ github.event.pull_request.head.ref || github.ref_name }}
+          COMMIT_INFO_MESSAGE: ${{ github.event.pull_request.title || github.event.head_commit.message }}
+          COMMIT_INFO_EMAIL: ${{ github.event.sender.user.email || github.event.pusher.email }}
+          COMMIT_INFO_AUTHOR: ${{ github.event.sender.user.name || github.event.pusher.name }}
+          COMMIT_INFO_SHA: ${{ github.event.pull_request.head.sha || github.event.head_commit.sha }}
+          COMMIT_INFO_TIMESTAMP: ${{ github.event.pull_request.updated_at || github.event.head_commit.timestamp }}
           CYPRESS_PULL_REQUEST_ID: ${{ github.event.pull_request.number }}
           CYPRESS_PULL_REQUEST_URL: ${{ github.event.pull_request.html_url }}
+          DEBUG: commit-info,cypress:server:record
 
       - uses: codecov/codecov-action@v3
         with:
