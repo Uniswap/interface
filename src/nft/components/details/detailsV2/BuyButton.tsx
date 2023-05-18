@@ -44,11 +44,9 @@ export const BuyButton = ({ asset, onDataPage }: { asset: GenieAsset; onDataPage
 
   if (!price) {
     return (
-      <>
-        <MakeOfferButtonLarge>
-          <Trans>Make an offer</Trans>
-        </MakeOfferButtonLarge>
-      </>
+      <MakeOfferButtonLarge>
+        <Trans>Make an offer</Trans>
+      </MakeOfferButtonLarge>
     )
   }
 
