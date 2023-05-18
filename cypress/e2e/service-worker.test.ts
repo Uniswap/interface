@@ -9,7 +9,7 @@ describe('Service Worker', () => {
         throw new Error(
           '\n' +
             'Service Worker tests must be run on a production-like build\n' +
-            'To test, build with `yarn build:e2e` and serve with `yarn serve`'
+            'To test, build with `yarn build` and serve with `yarn serve`'
         )
       }
     })
@@ -20,66 +20,78 @@ describe('Service Worker', () => {
     }
   })
 
-  function unregister() {
-    return cy.log('unregister service worker').then(async () => {
-      const cacheKeys = await window.caches.keys()
-      const cacheKey = cacheKeys.find((key) => key.match(/precache/))
-      if (cacheKey) {
-        await window.caches.delete(cacheKey)
-      }
-
+  function unregisterServiceWorker() {
+    return cy.log('unregisters service worker').then(async () => {
       const sw = await window.navigator.serviceWorker.getRegistration(Cypress.config().baseUrl ?? undefined)
       await sw?.unregister()
     })
   }
-  before(unregister)
-  after(unregister)
+  before(unregisterServiceWorker)
+  after(unregisterServiceWorker)
 
   beforeEach(() => {
-    cy.intercept({ hostname: 'www.google-analytics.com' }, (req) => {
-      const body = req.body.toString()
-      if (req.query['ep.event_category'] === 'Service Worker' || body.includes('Service%20Worker')) {
-        if (req.query['en'] === 'Not Installed' || body.includes('Not%20Installed')) {
-          req.alias = 'NotInstalled'
-        } else if (req.query['en'] === 'Cache Hit' || body.includes('Cache%20Hit')) {
-          req.alias = 'CacheHit'
-        } else if (req.query['en'] === 'Cache Miss' || body.includes('Cache%20Miss')) {
-          req.alias = 'CacheMiss'
-        }
+    cy.intercept('https://api.uniswap.org/v1/amplitude-proxy', (req) => {
+      const body = JSON.stringify(req.body)
+      const serviceWorkerStatus = body.match(/"service_worker":"(\w+)"/)?.[1]
+      if (serviceWorkerStatus) {
+        req.alias = `ServiceWorker:${serviceWorkerStatus}`
       }
     })
   })
 
-  it('installs a ServiceWorker', () => {
+  it('installs a ServiceWorker and reports the uninstalled status to analytics', () => {
     cy.visit('/', { serviceWorker: true })
-      .get('#swap-page')
-      // This is emitted after caching the entry file, which takes some time to load.
-      .wait('@NotInstalled', { timeout: 60000 })
-      .window()
-      .and((win) => {
-        expect(win.navigator.serviceWorker.controller?.state).to.equal('activated')
-      })
+    cy.wait('@ServiceWorker:uninstalled')
+    cy.window().should(
+      'have.nested.property',
+      // The parent is checked instead of the AUT because it is on the same origin,
+      // and the AUT will not be considered "activated" until the parent is idle.
+      'parent.navigator.serviceWorker.controller.state',
+      'activated'
+    )
   })
 
-  it('records a cache hit', () => {
-    cy.visit('/', { serviceWorker: true }).get('#swap-page').wait('@CacheHit', { timeout: 20000 })
-  })
-
-  it('records a cache miss', () => {
-    cy.then(async () => {
-      const cacheKeys = await window.caches.keys()
-      const cacheKey = cacheKeys.find((key) => key.match(/precache/))
-      assert(cacheKey)
-
-      const cache = await window.caches.open(cacheKey)
-      const keys = await cache.keys()
-      const key = keys.find((key) => key.url.match(/index/))
-      assert(key)
-
-      await cache.put(key, new Response())
+  describe('cache hit', () => {
+    it('reports the hit to analytics', () => {
+      cy.visit('/', { serviceWorker: true })
+      cy.wait('@ServiceWorker:hit')
     })
-      .visit('/', { serviceWorker: true })
-      .get('#swap-page')
-      .wait('@CacheMiss', { timeout: 20000 })
+  })
+
+  describe('cache miss', () => {
+    let cache: Cache | undefined
+    let request: Request | undefined
+    let response: Response | undefined
+    before(() => {
+      // Mocks the index.html in the cache to force a cache miss.
+      cy.visit('/', { serviceWorker: true }).then(async () => {
+        const cacheKeys = await window.caches.keys()
+        const cacheKey = cacheKeys.find((key) => key.match(/precache/))
+        assert(cacheKey)
+
+        cache = await window.caches.open(cacheKey)
+        const keys = await cache.keys()
+        request = keys.find((key) => key.url.match(/index/))
+        assert(request)
+
+        response = await cache.match(request)
+        assert(response)
+
+        await cache.put(request, new Response())
+      })
+    })
+    after(() => {
+      // Restores the index.html in the cache so that re-runs behave as expected.
+      // This is necessary because the Service Worker will not re-populate the cache.
+      cy.then(async () => {
+        if (cache && request && response) {
+          await cache.put(request, response)
+        }
+      })
+    })
+    it('reports the miss to analytics', () => {
+      cy.visit('/', { serviceWorker: true })
+      cy.wait('@ServiceWorker:miss')
+    })
   })
 })

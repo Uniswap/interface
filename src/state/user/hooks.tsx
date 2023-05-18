@@ -149,10 +149,16 @@ export function useUserSlippageTolerance(): [
     [dispatch]
   )
 
-  return useMemo(
-    () => [userSlippageTolerance, setUserSlippageTolerance],
-    [setUserSlippageTolerance, userSlippageTolerance]
-  )
+  return [userSlippageTolerance, setUserSlippageTolerance]
+}
+
+/**
+ *Returns user slippage tolerance, replacing the auto with a default value
+ * @param defaultSlippageTolerance the value to replace auto with
+ */
+export function useUserSlippageToleranceWithDefault(defaultSlippageTolerance: Percent): Percent {
+  const [allowedSlippage] = useUserSlippageTolerance()
+  return allowedSlippage === SlippageTolerance.Auto ? defaultSlippageTolerance : allowedSlippage
 }
 
 export function useUserHideClosedPositions(): [boolean, (newHideClosedPositions: boolean) => void] {
@@ -168,18 +174,6 @@ export function useUserHideClosedPositions(): [boolean, (newHideClosedPositions:
   )
 
   return [hideClosedPositions, setHideClosedPositions]
-}
-
-/**
- * Same as above but replaces the auto with a default value
- * @param defaultSlippageTolerance the default value to replace auto with
- */
-export function useUserSlippageToleranceWithDefault(defaultSlippageTolerance: Percent): Percent {
-  const allowedSlippage = useUserSlippageTolerance()[0]
-  return useMemo(
-    () => (allowedSlippage === SlippageTolerance.Auto ? defaultSlippageTolerance : allowedSlippage),
-    [allowedSlippage, defaultSlippageTolerance]
-  )
 }
 
 export function useUserTransactionTTL(): [number, (slippage: number) => void] {

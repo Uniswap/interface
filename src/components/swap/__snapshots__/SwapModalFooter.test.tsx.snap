@@ -1,7 +1,172 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`SwapModalFooter.tsx renders with a disabled button with no account 1`] = `
+exports[`SwapModalFooter.tsx matches base snapshot, test trade exact input 1`] = `
 <DocumentFragment>
+  .c3 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c4 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: flex-start;
+  -webkit-box-align: flex-start;
+  -ms-flex-align: flex-start;
+  align-items: flex-start;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.c2 {
+  color: #0D111C;
+}
+
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 12px;
+}
+
+.c7 {
+  display: inline-block;
+  height: inherit;
+}
+
+.c5 {
+  color: #7780A0;
+  margin-right: 8px;
+}
+
+.c8 {
+  cursor: help;
+  color: #7780A0;
+  margin-right: 8px;
+}
+
+.c1 {
+  padding: 0 8px;
+}
+
+.c6 {
+  text-align: right;
+  overflow-wrap: break-word;
+}
+
+<div
+    class="c0 c1"
+  >
+    <div
+      class="c2 css-zhpkf8"
+    >
+      <div
+        class="c3 c4"
+      >
+        <div
+          class="c2 c5 css-zhpkf8"
+        >
+          Exchange rate
+        </div>
+        <div
+          class="c2 c6 css-zhpkf8"
+        >
+          1 DEF = 1.00 ABC 
+        </div>
+      </div>
+    </div>
+    <div
+      class="c2 css-zhpkf8"
+    >
+      <div
+        class="c3 c4"
+      >
+        <div
+          class="c7"
+        >
+          <div>
+            <div
+              class="c2 c8 css-zhpkf8"
+              cursor="help"
+            >
+              Network fee
+            </div>
+          </div>
+        </div>
+        <div
+          class="c2 c6 css-zhpkf8"
+        >
+          ~$1.00
+        </div>
+      </div>
+    </div>
+    <div
+      class="c2 css-zhpkf8"
+    >
+      <div
+        class="c3 c4"
+      >
+        <div
+          class="c7"
+        >
+          <div>
+            <div
+              class="c2 c8 css-zhpkf8"
+              cursor="help"
+            >
+              Price impact
+            </div>
+          </div>
+        </div>
+        <div
+          class="c6 css-zhpkf8"
+        >
+          105566.373%
+        </div>
+      </div>
+    </div>
+    <div
+      class="c2 css-zhpkf8"
+    >
+      <div
+        class="c3 c4"
+      >
+        <div
+          class="c7"
+        >
+          <div>
+            <div
+              class="c2 c8 css-zhpkf8"
+              cursor="help"
+            >
+              Minimum received
+            </div>
+          </div>
+        </div>
+        <div
+          class="c2 c6 css-zhpkf8"
+        >
+          0.00000000000000098 DEF
+        </div>
+      </div>
+    </div>
+  </div>
   .c0 {
   box-sizing: border-box;
   margin: 0;
@@ -56,6 +221,10 @@ exports[`SwapModalFooter.tsx renders with a disabled button with no account 1`] 
 
 .c2 > * {
   margin: !important;
+}
+
+.c7 {
+  color: #F5F6FC;
 }
 
 .c4 {
@@ -146,106 +315,24 @@ exports[`SwapModalFooter.tsx renders with a disabled button with no account 1`] 
 }
 
 .c6 {
-  background-color: rgba(250,43,57,0.1);
-  border-radius: 1rem;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  font-size: 0.825rem;
-  width: 100%;
-  padding: 3rem 1.25rem 1rem 1rem;
-  margin-top: -2rem;
-  color: #FA2B39;
-  z-index: -1;
-}
-
-.c6 p {
-  padding: 0;
-  margin: 0;
-  font-weight: 500;
-}
-
-.c7 {
-  background-color: rgba(250,43,57,0.1);
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  margin-right: 12px;
-  border-radius: 12px;
-  min-width: 48px;
-  height: 48px;
+  height: 56px;
+  margin-top: 10px;
 }
 
 <div
     class="c0 c1 c2"
   >
     <button
-      class="c3 c4 c5"
+      class="c3 c4 c5 c6"
       data-testid="confirm-swap-button"
-      disabled=""
       id="confirm-swap-or-send"
-      style="margin: 10px 0px 0px 0px;"
     >
       <div
-        class="css-10ob8xa"
+        class="c7 css-iapcxi"
       >
-        Confirm Swap
+        Swap
       </div>
     </button>
-    <div
-      class="c6"
-    >
-      <div
-        class="c7"
-      >
-        <svg
-          fill="none"
-          height="24"
-          stroke="currentColor"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          viewBox="0 0 24 24"
-          width="24"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"
-          />
-          <line
-            x1="12"
-            x2="12"
-            y1="9"
-            y2="13"
-          />
-          <line
-            x1="12"
-            x2="12.01"
-            y1="17"
-            y2="17"
-          />
-        </svg>
-      </div>
-      <p
-        style="word-break: break-word;"
-      >
-        swap error
-      </p>
-    </div>
   </div>
 </DocumentFragment>
 `;

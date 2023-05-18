@@ -20,7 +20,7 @@ import { TransactionSummary } from '../AccountDetails/TransactionSummary'
 import { ButtonLight, ButtonPrimary } from '../Button'
 import { AutoColumn, ColumnCenter } from '../Column'
 import Modal from '../Modal'
-import { RowBetween, RowFixed } from '../Row'
+import Row, { RowBetween, RowFixed } from '../Row'
 import AnimatedConfirmation from './AnimatedConfirmation'
 
 const Wrapper = styled.div`
@@ -28,16 +28,12 @@ const Wrapper = styled.div`
   border-radius: 20px;
   outline: 1px solid ${({ theme }) => theme.backgroundOutline};
   width: 100%;
-  padding: 1rem;
-`
-const Section = styled(AutoColumn)<{ inline?: boolean }>`
-  padding: ${({ inline }) => (inline ? '0' : '0')};
+  padding: 16px;
 `
 
-const BottomSection = styled(Section)`
+const BottomSection = styled(AutoColumn)`
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
-  padding-bottom: 10px;
 `
 
 const ConfirmedIcon = styled(ColumnCenter)<{ inline?: boolean }>`
@@ -50,6 +46,10 @@ const StyledLogo = styled.img`
   margin-left: 6px;
 `
 
+const ConfirmationModalContentWrapper = styled(AutoColumn)`
+  padding-bottom: 12px;
+`
+
 function ConfirmationPendingContent({
   onDismiss,
   pendingText,
@@ -59,8 +59,6 @@ function ConfirmationPendingContent({
   pendingText: ReactNode
   inline?: boolean // not in modal
 }) {
-  const theme = useTheme()
-
   return (
     <Wrapper>
       <AutoColumn gap="md">
@@ -74,15 +72,15 @@ function ConfirmationPendingContent({
           <CustomLightSpinner src={Circle} alt="loader" size={inline ? '40px' : '90px'} />
         </ConfirmedIcon>
         <AutoColumn gap="md" justify="center">
-          <Text fontWeight={500} fontSize={20} color={theme.textPrimary} textAlign="center">
+          <ThemedText.SubHeaderLarge color="textPrimary" textAlign="center">
             <Trans>Waiting for confirmation</Trans>
-          </Text>
-          <Text fontWeight={600} fontSize={16} color={theme.textPrimary} textAlign="center">
+          </ThemedText.SubHeaderLarge>
+          <ThemedText.SubHeader color="textPrimary" textAlign="center">
             {pendingText}
-          </Text>
-          <Text fontWeight={400} fontSize={12} color={theme.textSecondary} textAlign="center" marginBottom="12px">
+          </ThemedText.SubHeader>
+          <ThemedText.SubHeaderSmall color="textSecondary" textAlign="center" marginBottom="12px">
             <Trans>Confirm this transaction in your wallet</Trans>
-          </Text>
+          </ThemedText.SubHeaderSmall>
         </AutoColumn>
       </AutoColumn>
     </Wrapper>
@@ -125,7 +123,7 @@ function TransactionSubmittedContent({
 
   return (
     <Wrapper>
-      <Section inline={inline}>
+      <AutoColumn>
         {!inline && (
           <RowBetween>
             <div />
@@ -135,7 +133,7 @@ function TransactionSubmittedContent({
         <ConfirmedIcon inline={inline}>
           <ArrowUpCircle strokeWidth={1} size={inline ? '40px' : '75px'} color={theme.accentActive} />
         </ConfirmedIcon>
-        <AutoColumn gap="md" justify="center" style={{ paddingBottom: '12px' }}>
+        <ConfirmationModalContentWrapper gap="md" justify="center">
           <ThemedText.MediumHeader textAlign="center">
             <Trans>Transaction submitted</Trans>
           </ThemedText.MediumHeader>
@@ -154,19 +152,19 @@ function TransactionSubmittedContent({
             </ButtonLight>
           )}
           <ButtonPrimary onClick={onDismiss} style={{ margin: '20px 0 0 0' }} data-testid="dismiss-tx-confirmation">
-            <Text fontWeight={600} fontSize={20} color={theme.accentTextLightPrimary}>
+            <ThemedText.HeadlineSmall color={theme.accentTextLightPrimary}>
               {inline ? <Trans>Return</Trans> : <Trans>Close</Trans>}
-            </Text>
+            </ThemedText.HeadlineSmall>
           </ButtonPrimary>
           {chainId && hash && (
             <ExternalLink href={getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)}>
-              <Text fontWeight={600} fontSize={14} color={theme.accentAction}>
+              <ThemedText.Link color={theme.accentAction}>
                 <Trans>View on {chainId === SupportedChainId.MAINNET ? 'Etherscan' : 'Block Explorer'}</Trans>
-              </Text>
+              </ThemedText.Link>
             </ExternalLink>
           )}
-        </AutoColumn>
-      </Section>
+        </ConfirmationModalContentWrapper>
+      </AutoColumn>
     </Wrapper>
   )
 }
@@ -184,15 +182,15 @@ export function ConfirmationModalContent({
 }) {
   return (
     <Wrapper>
-      <Section>
-        <RowBetween>
-          <Text fontWeight={500} fontSize={16}>
-            {title}
-          </Text>
+      <AutoColumn gap="sm">
+        <Row>
+          <Row justify="center" marginLeft="24px">
+            <ThemedText.SubHeader>{title}</ThemedText.SubHeader>
+          </Row>
           <CloseIcon onClick={onDismiss} data-cy="confirmation-close-icon" />
-        </RowBetween>
+        </Row>
         {topContent()}
-      </Section>
+      </AutoColumn>
       {bottomContent && <BottomSection gap="12px">{bottomContent()}</BottomSection>}
     </Wrapper>
   )
@@ -202,7 +200,7 @@ export function TransactionErrorContent({ message, onDismiss }: { message: React
   const theme = useTheme()
   return (
     <Wrapper>
-      <Section>
+      <AutoColumn>
         <RowBetween>
           <Text fontWeight={600} fontSize={16}>
             <Trans>Error</Trans>
@@ -213,7 +211,7 @@ export function TransactionErrorContent({ message, onDismiss }: { message: React
           <AlertTriangle color={theme.accentCritical} style={{ strokeWidth: 1 }} size={90} />
           <ThemedText.MediumHeader textAlign="center">{message}</ThemedText.MediumHeader>
         </AutoColumn>
-      </Section>
+      </AutoColumn>
       <BottomSection gap="12px">
         <ButtonPrimary onClick={onDismiss}>
           <Trans>Dismiss</Trans>
@@ -252,7 +250,7 @@ function L2Content({
 
   return (
     <Wrapper>
-      <Section inline={inline}>
+      <AutoColumn>
         {!inline && (
           <RowBetween mb="16px">
             <Badge>
@@ -277,7 +275,7 @@ function L2Content({
           )}
         </ConfirmedIcon>
         <AutoColumn gap="md" justify="center">
-          <Text fontWeight={500} fontSize={20} textAlign="center">
+          <ThemedText.SubHeaderLarge textAlign="center">
             {!hash ? (
               <Trans>Confirm transaction in wallet</Trans>
             ) : !confirmed ? (
@@ -287,20 +285,20 @@ function L2Content({
             ) : (
               <Trans>Error</Trans>
             )}
-          </Text>
-          <Text fontWeight={400} fontSize={16} textAlign="center">
+          </ThemedText.SubHeaderLarge>
+          <ThemedText.BodySecondary textAlign="center">
             {transaction ? <TransactionSummary info={transaction.info} /> : pendingText}
-          </Text>
+          </ThemedText.BodySecondary>
           {chainId && hash ? (
             <ExternalLink href={getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)}>
-              <Text fontWeight={500} fontSize={14} color={theme.accentAction}>
+              <ThemedText.SubHeaderSmall color={theme.accentAction}>
                 <Trans>View on Explorer</Trans>
-              </Text>
+              </ThemedText.SubHeaderSmall>
             </ExternalLink>
           ) : (
             <div style={{ height: '17px' }} />
           )}
-          <Text color={theme.textTertiary} style={{ margin: '20px 0 0 0' }} fontSize="14px">
+          <ThemedText.SubHeaderSmall color={theme.textTertiary} marginTop="20px">
             {!secondsToConfirm ? (
               <div style={{ height: '24px' }} />
             ) : (
@@ -311,14 +309,14 @@ function L2Content({
                 </span>
               </div>
             )}
-          </Text>
+          </ThemedText.SubHeaderSmall>
           <ButtonPrimary onClick={onDismiss} style={{ margin: '4px 0 0 0' }}>
-            <Text fontWeight={500} fontSize={20}>
+            <ThemedText.SubHeaderLarge>
               {inline ? <Trans>Return</Trans> : <Trans>Close</Trans>}
-            </Text>
+            </ThemedText.SubHeaderLarge>
           </ButtonPrimary>
         </AutoColumn>
-      </Section>
+      </AutoColumn>
     </Wrapper>
   )
 }

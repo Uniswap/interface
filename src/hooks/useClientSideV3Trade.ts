@@ -5,7 +5,7 @@ import { SupportedChainId } from 'constants/chains'
 import JSBI from 'jsbi'
 import { useSingleContractWithCallData } from 'lib/hooks/multicall'
 import { useMemo } from 'react'
-import { InterfaceTrade, TradeState } from 'state/routing/types'
+import { ClassicTrade, InterfaceTrade, TradeState } from 'state/routing/types'
 
 import { isCelo } from '../constants/tokens'
 import { useAllV3Routes } from './useAllV3Routes'
@@ -33,7 +33,7 @@ export function useClientSideV3Trade<TTradeType extends TradeType>(
   tradeType: TTradeType,
   amountSpecified?: CurrencyAmount<Currency>,
   otherCurrency?: Currency
-): { state: TradeState; trade: InterfaceTrade<Currency, Currency, TTradeType> | undefined } {
+): { state: TradeState; trade: InterfaceTrade | undefined } {
   const [currencyIn, currencyOut] =
     tradeType === TradeType.EXACT_INPUT
       ? [amountSpecified?.currency, otherCurrency]
@@ -135,7 +135,7 @@ export function useClientSideV3Trade<TTradeType extends TradeType>(
 
     return {
       state: TradeState.VALID,
-      trade: new InterfaceTrade({
+      trade: new ClassicTrade({
         v2Routes: [],
         v3Routes: [
           {

@@ -1,12 +1,13 @@
 import { Protocol } from '@uniswap/router-sdk'
-import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { routeAmountsToString, SwapRoute } from '@uniswap/smart-order-router'
 import { Pool } from '@uniswap/v3-sdk'
-import { GetQuoteResult, V2PoolInRoute, V3PoolInRoute } from 'state/routing/types'
+import { QuoteResult, QuoteState } from 'state/routing/types'
+import { QuoteData, V2PoolInRoute, V3PoolInRoute } from 'state/routing/types'
 
 // from routing-api (https://github.com/Uniswap/routing-api/blob/main/lib/handlers/quote/quote.ts#L243-L311)
 export function transformSwapRouteToGetQuoteResult(
-  type: 'exactIn' | 'exactOut',
+  tradeType: TradeType,
   amount: CurrencyAmount<Currency>,
   {
     quote,
@@ -19,7 +20,7 @@ export function transformSwapRouteToGetQuoteResult(
     methodParameters,
     blockNumber,
   }: SwapRoute
-): GetQuoteResult {
+): QuoteResult {
   const routeResponse: Array<(V3PoolInRoute | V2PoolInRoute)[]> = []
 
   for (const subRoute of route) {
@@ -34,12 +35,12 @@ export function transformSwapRouteToGetQuoteResult(
 
       let edgeAmountIn = undefined
       if (i === 0) {
-        edgeAmountIn = type === 'exactIn' ? amount.quotient.toString() : quote.quotient.toString()
+        edgeAmountIn = tradeType === TradeType.EXACT_INPUT ? amount.quotient.toString() : quote.quotient.toString()
       }
 
       let edgeAmountOut = undefined
       if (i === pools.length - 1) {
-        edgeAmountOut = type === 'exactIn' ? quote.quotient.toString() : amount.quotient.toString()
+        edgeAmountOut = tradeType === TradeType.EXACT_INPUT ? quote.quotient.toString() : amount.quotient.toString()
       }
 
       if (nextPool instanceof Pool) {
@@ -109,7 +110,7 @@ export function transformSwapRouteToGetQuoteResult(
     routeResponse.push(curRoute)
   }
 
-  const result: GetQuoteResult = {
+  const result: QuoteData = {
     methodParameters,
     blockNumber: blockNumber.toString(),
     amount: amount.quotient.toString(),
@@ -127,5 +128,5 @@ export function transformSwapRouteToGetQuoteResult(
     routeString: routeAmountsToString(route),
   }
 
-  return result
+  return { state: QuoteState.SUCCESS, data: result }
 }

@@ -11,8 +11,10 @@ name: Slack notifications for releases/* merges
 #  | sed 's/"//g' | sed 's/\\t/;/g' | sed 's/\\n/;/g' | sed 's/\\//g' \
 # We then use awk to format the TSV into a Slack message
 #  | awk -F';' '{print "• <"$1"|"$2"> (<https://github.com/"$3"|"$3">, "$4") - "$5}' \
-# Finally, we need to deal with some escaping issues with newlines so that we don't break the Slack message format
+# We need to deal with some escaping issues with newlines so that we don't break the Slack message format
 #  | sed 's/$/\\n/g' | tr -d '\n' \
+# Finally we have to truncate the message to 3,000 characters max, otherwise Slack will reject it
+#  | awk '{print substr($0,0,3000);}' \
 # Then shove the bytes into a file to store them in their exact format
 #  > /tmp/parsed_github_context
 
@@ -38,6 +40,7 @@ jobs:
           | sed 's/"//g' | sed 's/\\t/;/g' | sed 's/\\n/;/g' | sed 's/\\//g' \
           | awk -F';' '{print "• <"$1"|"$2"> (<https://github.com/"$3"|"$3">, "$4") - "$5}' \
           | sed 's/$/\\n/g' | tr -d '\n' \
+          | awk '{print substr($0,0,3000);}' \
           > /tmp/parsed_github_context
           echo "SLACK_COMMITS=$(cat /tmp/parsed_github_context)" >> "$GITHUB_OUTPUT"
       - name: Send custom JSON data to Slack workflow
