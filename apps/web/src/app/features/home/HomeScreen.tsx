@@ -1,4 +1,4 @@
-import { PortfolioHeader } from 'src/features/home/PortfolioHeader'
+import { PortfolioHeader } from 'src/app/features/home/PortfolioHeader'
 import { Text } from 'ui/src'
 import { Flex } from 'ui/src/components/layout/Flex'
 import { authActions } from 'wallet/src/features/auth/saga'

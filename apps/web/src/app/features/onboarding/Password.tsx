@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from 'react-router-dom'
-import { usePasswordInput } from 'src/features/auth/Locked'
+import { usePasswordInput } from 'src/app/features/lockScreen/Locked'
 import { Input, Stack, XStack, YStack } from 'tamagui'
 import { Text } from 'ui/src'
 import { Button } from 'ui/src/components/button/Button'

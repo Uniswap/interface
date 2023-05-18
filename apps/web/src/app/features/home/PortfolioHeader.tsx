@@ -1,4 +1,4 @@
-import { SwitchNetworksModal } from 'src/features/home/SwitchNetworksModal'
+import { SwitchNetworksModal } from 'src/app/features/home/SwitchNetworksModal'
 import { Popover, XStack } from 'ui/src'
 import GlobeIcon from 'ui/src/assets/icons/globe.svg'
 import SettingsIcon from 'ui/src/assets/icons/settings.svg'

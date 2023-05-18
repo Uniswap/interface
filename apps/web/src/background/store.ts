@@ -6,11 +6,11 @@ import { SagaGenerator, select, spawn } from 'typed-redux-saga'
 import { createStore, RootState } from 'wallet/src/state'
 import { persistConfig, sharedReducers } from 'wallet/src/state/reducer'
 import { wrapStore } from 'webext-redux'
-import { dappReducer } from '../features/dapp/slice'
-import { dappRequestApprovalWatcher } from '../features/dappRequests/dappRequestApprovalWatcherSaga'
-import { dappRequestWatcher, extensionRequestWatcher } from '../features/dappRequests/saga'
-import { dappRequestReducer } from '../features/dappRequests/slice'
 import { PortName } from '../types'
+import { dappReducer } from './features/dapp/slice'
+import { dappRequestApprovalWatcher } from './features/dappRequests/dappRequestApprovalWatcherSaga'
+import { dappRequestWatcher, extensionRequestWatcher } from './features/dappRequests/saga'
+import { dappRequestReducer } from './features/dappRequests/slice'
 
 export const webReducers = {
   ...sharedReducers,

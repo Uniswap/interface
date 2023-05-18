@@ -11,11 +11,8 @@ import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
 import { signMessage, signTypedDataMessage } from 'wallet/src/features/wallet/signing/signing'
 import { Account, AccountType } from 'wallet/src/features/wallet/types'
 import { hexlifyTransaction } from 'wallet/src/utils/transaction'
-import { appSelect, WebState } from '../../background/store'
-import {
-  sendMessageToActiveTab,
-  sendMessageToSpecificTab,
-} from '../../background/utils/messageUtils'
+import { appSelect, WebState } from '../../store'
+import { sendMessageToActiveTab, sendMessageToSpecificTab } from '../../utils/messageUtils'
 import { selectChainByDappAndWallet } from '../dapp/selectors'
 import { DEFAULT_DAPP_URL, saveDappChain } from '../dapp/slice'
 import {

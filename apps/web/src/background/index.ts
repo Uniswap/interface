@@ -1,6 +1,9 @@
 import { AnyAction, Dispatch } from 'redux'
-import { BaseDappResponse, DappRequestType } from 'src/features/dappRequests/dappRequestTypes'
-import { addRequest } from 'src/features/dappRequests/saga'
+import {
+  BaseDappResponse,
+  DappRequestType,
+} from 'src/background/features/dappRequests/dappRequestTypes'
+import { addRequest } from 'src/background/features/dappRequests/saga'
 import { PortName } from 'src/types'
 import { isOnboardedSelector } from 'wallet/src/features/wallet/selectors'
 import { initializeStore, WebState } from './store'

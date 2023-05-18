@@ -32,7 +32,7 @@ import {
   SignTypedDataRequest,
   SignTypedDataResponse,
   TransactionRejectedResponse,
-} from '../features/dappRequests/dappRequestTypes'
+} from '../background/features/dappRequests/dappRequestTypes'
 
 export type EthersSendCallback = (error: unknown, response: unknown) => void
 const TIMEOUT_MS = 30000

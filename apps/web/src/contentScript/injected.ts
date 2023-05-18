@@ -3,7 +3,7 @@ import {
   BaseDappResponse,
   DappRequestType,
   Message,
-} from 'src/features/dappRequests/dappRequestTypes'
+} from 'src/background/features/dappRequests/dappRequestTypes'
 import { PortName } from 'src/types'
 import { ExtensionToContentScriptRequestType } from 'src/types/requests'
 import { logger } from 'wallet/src/features/logger/logger'
