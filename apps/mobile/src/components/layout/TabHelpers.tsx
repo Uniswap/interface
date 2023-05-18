@@ -109,7 +109,7 @@ export const renderTabLabel = ({
   isExternalProfile?: boolean
 }): JSX.Element => {
   return (
-    <Flex centered flexDirection="row" gap="spacing4">
+    <Flex row alignItems="center" gap="spacing4">
       <Text color={focused ? 'textPrimary' : 'textTertiary'} fontSize={18} variant="bodyLarge">
         {route.title}
       </Text>
