@@ -8,6 +8,8 @@ it('data page loads with header showing', () => {
   expect(asFragment()).toMatchSnapshot()
 })
 
+// The header is hidden via opacity: 0 to maintain its spacing, so it still exists in the DOM
+// Therefore we can not check for its non-existence and instead rely on comparing the full generated snapshots
 it('data page loads without header showing', () => {
   const { asFragment } = render(<DataPage asset={TEST_NFT_ASSET} showDataHeader={false} />)
   expect(asFragment()).toMatchSnapshot()
