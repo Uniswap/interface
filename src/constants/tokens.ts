@@ -84,9 +84,9 @@ export const USDC_MAINNET = new Token(
 // )
 export const USDC_SCROLL_ALPHA = new Token(
   SupportedChainId.SCROLL_ALPHA,
-  '0xA501d054Cd417a656eeF60C455757CAC1dA741c1',
+  '0x67aE69Fd63b4fc8809ADc224A9b82Be976039509',
   18,
-  'SUSD',
+  'USDC',
   'Scroll USDC'
 )
 
