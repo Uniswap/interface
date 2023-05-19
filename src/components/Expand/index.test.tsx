@@ -1,37 +1,38 @@
-import { Globals } from 'react-spring'
 import { fireEvent, render, screen } from 'test-utils/render'
+import noop from 'utils/noop'
 
 import Expand from './index'
 
 describe('Expand', () => {
-  beforeAll(() => {
-    Globals.assign({
-      skipAnimation: true,
-    })
-  })
-  it('renders correctly', () => {
-    const { asFragment } = render(
-      <Expand header={<span>Header</span>} button={<span>Button</span>}>
+  it('does not render children when closed', () => {
+    render(
+      <Expand header={<span>Header</span>} isOpen={false} onToggle={noop} button={<span>Button</span>}>
         Body
       </Expand>
     )
-    expect(asFragment()).toMatchSnapshot()
+    expect(screen.queryByText('Body')).not.toBeInTheDocument()
   })
-  it('toggles children on button press', () => {
+
+  it('renders children when open', () => {
     render(
-      <Expand testId="expand-component" header={<span>Header</span>} button={<span>Button</span>}>
+      <Expand header={<span>Header</span>} isOpen={true} onToggle={noop} button={<span>Button</span>}>
+        Body
+      </Expand>
+    )
+    expect(screen.queryByText('Body')).toBeInTheDocument()
+  })
+
+  it('calls `onToggle` when button is pressed', () => {
+    const onToggle = jest.fn()
+    render(
+      <Expand header={<span>Header</span>} isOpen={false} onToggle={onToggle} button={<span>Button</span>}>
         Body
       </Expand>
     )
 
     const button = screen.getByText('Button')
-    const content = screen.getByTestId('animated-dropdown-container')
 
     fireEvent.click(button)
-    expect(content).not.toHaveStyleRule('height', '0px')
-
-    fireEvent.click(button)
-
-    expect(content).toHaveStyleRule('height', '0px')
+    expect(onToggle).toHaveBeenCalled()
   })
 })

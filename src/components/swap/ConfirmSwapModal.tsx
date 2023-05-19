@@ -1,9 +1,11 @@
 import { Trans } from '@lingui/macro'
-import { Trace } from '@uniswap/analytics'
-import { InterfaceModalName } from '@uniswap/analytics-events'
+import { sendAnalyticsEvent, Trace } from '@uniswap/analytics'
+import { InterfaceModalName, SwapEventName, SwapPriceUpdateUserResponse } from '@uniswap/analytics-events'
 import { Percent } from '@uniswap/sdk-core'
-import { ReactNode, useCallback, useMemo, useState } from 'react'
+import { getPriceUpdateBasisPoints } from 'lib/utils/analytics'
+import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
+import { formatSwapPriceUpdatedEventProperties } from 'utils/loggingFormatters'
 import { tradeMeaningfullyDiffers } from 'utils/tradeMeaningFullyDiffer'
 
 import TransactionConfirmationModal, {
@@ -20,21 +22,17 @@ export default function ConfirmSwapModal({
   allowedSlippage,
   onConfirm,
   onDismiss,
-  recipient,
   swapErrorMessage,
-  isOpen,
   attemptingTxn,
   txHash,
   swapQuoteReceivedDate,
   fiatValueInput,
   fiatValueOutput,
 }: {
-  isOpen: boolean
-  trade: InterfaceTrade | undefined
+  trade: InterfaceTrade
   originalTrade: InterfaceTrade | undefined
   attemptingTxn: boolean
   txHash: string | undefined
-  recipient: string | null
   allowedSlippage: Percent
   onAcceptChanges: () => void
   onConfirm: () => void
@@ -44,35 +42,34 @@ export default function ConfirmSwapModal({
   fiatValueInput: { data?: number; isLoading: boolean }
   fiatValueOutput: { data?: number; isLoading: boolean }
 }) {
-  // shouldLogModalCloseEvent lets the child SwapModalHeader component know when modal has been closed
-  // and an event triggered by modal closing should be logged.
-  const [shouldLogModalCloseEvent, setShouldLogModalCloseEvent] = useState(false)
   const showAcceptChanges = useMemo(
-    () => Boolean(trade && originalTrade && tradeMeaningfullyDiffers(trade, originalTrade)),
+    () => Boolean(originalTrade && tradeMeaningfullyDiffers(trade, originalTrade)),
     [originalTrade, trade]
   )
 
+  const [lastExecutionPrice, setLastExecutionPrice] = useState(trade?.executionPrice)
+  const [priceUpdate, setPriceUpdate] = useState<number>()
+  useEffect(() => {
+    if (lastExecutionPrice && !trade.executionPrice.equalTo(lastExecutionPrice)) {
+      setPriceUpdate(getPriceUpdateBasisPoints(lastExecutionPrice, trade.executionPrice))
+      setLastExecutionPrice(trade.executionPrice)
+    }
+  }, [lastExecutionPrice, setLastExecutionPrice, trade])
+
   const onModalDismiss = useCallback(() => {
-    if (isOpen) setShouldLogModalCloseEvent(true)
+    sendAnalyticsEvent(
+      SwapEventName.SWAP_PRICE_UPDATE_ACKNOWLEDGED,
+      formatSwapPriceUpdatedEventProperties(trade, priceUpdate, SwapPriceUpdateUserResponse.REJECTED)
+    )
     onDismiss()
-  }, [isOpen, onDismiss])
+  }, [onDismiss, priceUpdate, trade])
 
   const modalHeader = useCallback(() => {
-    return trade ? (
-      <SwapModalHeader
-        trade={trade}
-        shouldLogModalCloseEvent={shouldLogModalCloseEvent}
-        setShouldLogModalCloseEvent={setShouldLogModalCloseEvent}
-        allowedSlippage={allowedSlippage}
-        recipient={recipient}
-        showAcceptChanges={showAcceptChanges}
-        onAcceptChanges={onAcceptChanges}
-      />
-    ) : null
-  }, [allowedSlippage, onAcceptChanges, recipient, showAcceptChanges, trade, shouldLogModalCloseEvent])
+    return <SwapModalHeader trade={trade} allowedSlippage={allowedSlippage} />
+  }, [allowedSlippage, trade])
 
   const modalBottom = useCallback(() => {
-    return trade ? (
+    return (
       <SwapModalFooter
         onConfirm={onConfirm}
         trade={trade}
@@ -83,25 +80,28 @@ export default function ConfirmSwapModal({
         swapQuoteReceivedDate={swapQuoteReceivedDate}
         fiatValueInput={fiatValueInput}
         fiatValueOutput={fiatValueOutput}
+        showAcceptChanges={showAcceptChanges}
+        onAcceptChanges={onAcceptChanges}
       />
-    ) : null
+    )
   }, [
+    trade,
     onConfirm,
+    txHash,
+    allowedSlippage,
     showAcceptChanges,
     swapErrorMessage,
-    trade,
-    allowedSlippage,
-    txHash,
     swapQuoteReceivedDate,
     fiatValueInput,
     fiatValueOutput,
+    onAcceptChanges,
   ])
 
   // text to show while loading
   const pendingText = (
     <Trans>
-      Swapping {trade?.inputAmount?.toSignificant(6)} {trade?.inputAmount?.currency?.symbol} for{' '}
-      {trade?.outputAmount?.toSignificant(6)} {trade?.outputAmount?.currency?.symbol}
+      Swapping {trade.inputAmount.toSignificant(6)} {trade.inputAmount.currency?.symbol} for{' '}
+      {trade.outputAmount.toSignificant(6)} {trade.outputAmount.currency?.symbol}
     </Trans>
   )
 
@@ -111,7 +111,7 @@ export default function ConfirmSwapModal({
         <TransactionErrorContent onDismiss={onModalDismiss} message={swapErrorMessage} />
       ) : (
         <ConfirmationModalContent
-          title={<Trans>Confirm Swap</Trans>}
+          title={<Trans>Review Swap</Trans>}
           onDismiss={onModalDismiss}
           topContent={modalHeader}
           bottomContent={modalBottom}
@@ -123,13 +123,13 @@ export default function ConfirmSwapModal({
   return (
     <Trace modal={InterfaceModalName.CONFIRM_SWAP}>
       <TransactionConfirmationModal
-        isOpen={isOpen}
+        isOpen
         onDismiss={onModalDismiss}
         attemptingTxn={attemptingTxn}
         hash={txHash}
         content={confirmationContent}
         pendingText={pendingText}
-        currencyToAdd={trade?.outputAmount.currency}
+        currencyToAdd={trade.outputAmount.currency}
       />
     </Trace>
   )

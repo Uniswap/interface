@@ -21,6 +21,7 @@ describe('Landing Page', () => {
   })
 
   it('shows landing page when the unicorn icon in nav is selected', () => {
+    cy.visit('/swap')
     cy.get(getTestSelector('uniswap-logo')).click()
     cy.get(getTestSelector('landing-page'))
   })

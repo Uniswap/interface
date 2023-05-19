@@ -5,20 +5,33 @@ import { fireEvent, render, screen } from 'test-utils/render'
 
 import TransactionDeadlineSettings from '.'
 
-const renderAndExpandTransactionDeadlineSettings = () => {
+const renderTransactionDeadlineSettings = () => {
   render(<TransactionDeadlineSettings />)
+}
+
+const renderAndExpandTransactionDeadlineSettings = () => {
+  renderTransactionDeadlineSettings()
 
   // By default, the button to expand Slippage component and show `input` will have `<deadline>m` label
   fireEvent.click(screen.getByText(`${DEFAULT_DEADLINE_FROM_NOW / 60}m`))
 }
 
-const getDeadlineInput = () => screen.getByTestId('deadline-input') as HTMLInputElement
+const getDeadlineInput = () => screen.queryByTestId('deadline-input') as HTMLInputElement
 
 describe('TransactionDeadlineSettings', () => {
   describe('input', () => {
     // Restore to default transaction deadline before each unit test
     beforeEach(() => {
       store.dispatch(updateUserDeadline({ userDeadline: DEFAULT_DEADLINE_FROM_NOW }))
+    })
+    it('is not expanded by default', () => {
+      renderTransactionDeadlineSettings()
+      expect(getDeadlineInput()).not.toBeInTheDocument()
+    })
+    it('is expanded by default when custom deadline is set', () => {
+      store.dispatch(updateUserDeadline({ userDeadline: DEFAULT_DEADLINE_FROM_NOW * 2 }))
+      renderTransactionDeadlineSettings()
+      expect(getDeadlineInput()).toBeInTheDocument()
     })
     it('does not render default deadline as a value, but a placeholder', () => {
       renderAndExpandTransactionDeadlineSettings()

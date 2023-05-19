@@ -467,14 +467,15 @@ export const SpinnerSVG = styled.svg`
   ${SpinnerCss}
 `
 
-const BackArrowLink = styled(StyledInternalLink)`
+const BackArrowIcon = styled(ArrowLeft)`
   color: ${({ theme }) => theme.textPrimary};
 `
-export function BackArrow({ to }: { to: string }) {
+
+export function BackArrowLink({ to }: { to: string }) {
   return (
-    <BackArrowLink to={to}>
-      <ArrowLeft />
-    </BackArrowLink>
+    <StyledInternalLink to={to}>
+      <BackArrowIcon />
+    </StyledInternalLink>
   )
 }
 
@@ -522,4 +523,12 @@ export const GlowEffect = styled.div`
 
 export const CautionTriangle = styled(AlertTriangle)`
   color: ${({ theme }) => theme.accentWarning};
+`
+
+export const Divider = styled.div`
+  width: 100%;
+  height: 1px;
+  border-width: 0;
+  margin: 0;
+  background-color: ${({ theme }) => theme.backgroundOutline};
 `
