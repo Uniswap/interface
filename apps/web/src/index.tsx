@@ -7,7 +7,7 @@ import { PortName } from './types'
 
 logger.debug('content_window', 'init', 'initial load')
 
-const App = lazy(() => import('./app/App'))
+const App = lazy(() => import('src/app/App'))
 
 chrome.runtime.connect({ name: PortName.Popup })
 chrome.runtime.onMessage.addListener((req) => {

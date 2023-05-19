@@ -1,7 +1,7 @@
 import { createSelector } from '@reduxjs/toolkit'
 import { Selector } from 'react-redux'
+import { WebState } from 'src/background/store'
 import { ChainId } from 'wallet/src/constants/chains'
-import { WebState } from '../../store'
 
 export const selectChainByDappAndWallet = (
   wallet: Address,

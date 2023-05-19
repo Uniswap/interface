@@ -1,7 +1,7 @@
 import { Signature, Wallet } from 'ethers'
 import { defaultPath, joinSignature, SigningKey } from 'ethers/lib/utils'
+import { logger } from 'wallet/src/features/logger/logger'
 import { PersistedStorage } from 'wallet/src/utils/persistedStorage'
-import { logger } from '../../logger/logger'
 import { decrypt, encrypt } from './crypto'
 import { IKeyring } from './Keyring'
 

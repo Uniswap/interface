@@ -1,6 +1,6 @@
 import { useColorScheme } from 'react-native'
 import { TamaguiProvider, TamaguiProviderProps } from 'ui/src'
-import config from '../tamagui.config'
+import config from 'wallet/src/tamagui.config'
 
 // without <NavigationProvider>
 // this exported Provider is useful for tests

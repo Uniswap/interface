@@ -19,13 +19,13 @@ import {
   TransactionState,
   transactionStateReducer,
 } from 'src/features/transactions/transactionState/transactionState'
+import { useTransactionGasWarning } from 'src/features/transactions/useTransactionGasWarning'
 import {
   useDerivedTransferInfo,
   useOnSelectRecipient,
   useOnToggleShowRecipientSelector,
-} from 'src/features/transactions/transfer/hooks'
-import { useTransferTransactionRequest } from 'src/features/transactions/transfer/useTransferTransactionRequest'
-import { useTransactionGasWarning } from 'src/features/transactions/useTransactionGasWarning'
+} from './hooks'
+import { useTransferTransactionRequest } from './useTransferTransactionRequest'
 import { useTransferWarnings } from './useTransferWarnings'
 
 interface TransferFormProps {

@@ -1,6 +1,6 @@
 import { ComponentMeta, ComponentStory } from '@storybook/react'
 import React from 'react'
-import { Box } from '../layout'
+import { Box } from 'src/components/layout'
 import { DecimalPad } from './DecimalPad'
 
 export default {

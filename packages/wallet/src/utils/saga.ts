@@ -1,7 +1,7 @@
 import { Action, createAction, createReducer, PayloadActionCreator } from '@reduxjs/toolkit'
 import { call, CallEffect, delay, Effect, put, race, take, TakeEffect } from 'redux-saga/effects'
 import { logger } from 'wallet/src/features/logger/logger'
-import { errorToString } from 'wallet/src/utils/validation'
+import { errorToString } from './validation'
 
 /**
  * A convenience utility to create a saga and trigger action

@@ -1,6 +1,10 @@
 import { Provider, TransactionResponse } from '@ethersproject/providers'
 import { createAction } from '@reduxjs/toolkit'
 import { ethers, providers } from 'ethers'
+import { selectChainByDappAndWallet } from 'src/background/features/dapp/selectors'
+import { DEFAULT_DAPP_URL, saveDappChain } from 'src/background/features/dapp/slice'
+import { appSelect, WebState } from 'src/background/store'
+import { sendMessageToActiveTab, sendMessageToSpecificTab } from 'src/background/utils/messageUtils'
 import { ExtensionChainChange, ExtensionRequestType } from 'src/types/requests'
 import { call, put, select, take } from 'typed-redux-saga'
 import { ChainId, getChainIdFromString } from 'wallet/src/constants/chains'
@@ -11,10 +15,6 @@ import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
 import { signMessage, signTypedDataMessage } from 'wallet/src/features/wallet/signing/signing'
 import { Account, AccountType } from 'wallet/src/features/wallet/types'
 import { hexlifyTransaction } from 'wallet/src/utils/transaction'
-import { appSelect, WebState } from '../../store'
-import { sendMessageToActiveTab, sendMessageToSpecificTab } from '../../utils/messageUtils'
-import { selectChainByDappAndWallet } from '../dapp/selectors'
-import { DEFAULT_DAPP_URL, saveDappChain } from '../dapp/slice'
 import {
   AccountResponse,
   ChangeChainResponse,

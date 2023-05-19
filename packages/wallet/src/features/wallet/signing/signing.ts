@@ -2,10 +2,10 @@
 
 import { ethers, TypedDataDomain, TypedDataField, Wallet } from 'ethers'
 import { arrayify, isHexString } from 'ethers/lib/utils'
-import { NativeSigner } from 'wallet/src/features/wallet/signing/NativeSigner'
+import { logger } from 'wallet/src/features/logger/logger'
+import { Account } from 'wallet/src/features/wallet/types'
 import { ensureLeading0x } from 'wallet/src/utils/addresses'
-import { logger } from '../../logger/logger'
-import { Account } from '../types'
+import { NativeSigner } from './NativeSigner'
 import { SignerManager } from './SignerManager'
 
 type EthTypedMessage = {

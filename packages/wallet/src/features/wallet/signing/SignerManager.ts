@@ -1,7 +1,7 @@
 import { Signer } from 'ethers'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 
-import { Account, AccountType } from '../types'
+import { Account, AccountType } from 'wallet/src/features/wallet/types'
 import { NativeSigner } from './NativeSigner'
 
 /** Manages initialized ethers.Signers across the app */

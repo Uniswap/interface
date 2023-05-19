@@ -14,9 +14,9 @@ import { TextInput } from 'src/components/input/TextInput'
 import { Box, Flex } from 'src/components/layout'
 import { Trace } from 'src/components/telemetry/Trace'
 import { Text } from 'src/components/Text'
+import { SectionName } from 'src/features/telemetry/constants'
 import { Theme } from 'src/styles/theme'
 import AlertTriangle from 'ui/src/assets/icons/alert-triangle.svg'
-import { SectionName } from '../telemetry/constants'
 
 interface Props {
   value: string | undefined

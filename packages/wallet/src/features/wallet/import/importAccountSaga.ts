@@ -1,12 +1,12 @@
 import dayjs from 'dayjs'
 import { CallEffect } from 'redux-saga/effects'
 import { all, call, put } from 'typed-redux-saga'
+import { logger } from 'wallet/src/features/logger/logger'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import { activateAccount, addAccounts } from 'wallet/src/features/wallet/slice'
 import { Account, AccountType } from 'wallet/src/features/wallet/types'
 import { getValidAddress } from 'wallet/src/utils/addresses'
 import { createMonitoredSaga } from 'wallet/src/utils/saga'
-import { logger } from '../../logger/logger'
 import { ImportAccountParams, ImportAccountType } from './types'
 
 export const IMPORT_WALLET_AMOUNT = 10

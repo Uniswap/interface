@@ -13,6 +13,10 @@ import { PermitSignatureInfo } from 'src/features/transactions/swap/usePermit2Si
 import { Trade } from 'src/features/transactions/swap/useTrade'
 import { WrapType } from 'src/features/transactions/swap/wrapSaga'
 import {
+  CurrencyField,
+  TransactionState,
+} from 'src/features/transactions/transactionState/transactionState'
+import {
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,
   TransactionType,
@@ -28,7 +32,6 @@ import {
   currencyIdToChain,
 } from 'wallet/src/utils/currencyId'
 import { formatPrice, NumberType } from 'wallet/src/utils/format'
-import { CurrencyField, TransactionState } from '../transactionState/transactionState'
 
 export function serializeQueryParams(
   params: Record<string, Parameters<typeof encodeURIComponent>[0]>

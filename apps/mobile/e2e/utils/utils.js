@@ -1,7 +1,7 @@
 import { by, device, element } from 'detox'
-import { ElementName } from '../../src/features/telemetry/constants'
-import { sleep } from '../../src/utils/timing'
-import { Accounts } from '../utils/fixtures'
+import { Accounts } from 'src/e2e/utils/fixtures'
+import { ElementName } from 'src/features/telemetry/constants'
+import { sleep } from 'src/utils/timing'
 
 /** Opens Account page and imports a managed account */
 export async function quickOnboarding() {

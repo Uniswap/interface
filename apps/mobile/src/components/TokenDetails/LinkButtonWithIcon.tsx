@@ -3,13 +3,13 @@ import { SharedEventName } from '@uniswap/analytics-events'
 import React from 'react'
 import { SvgProps } from 'react-native-svg'
 import { useAppTheme } from 'src/app/hooks'
+import { TouchableArea } from 'src/components/buttons/TouchableArea'
+import { Flex } from 'src/components/layout'
+import { Text } from 'src/components/Text'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { ElementName } from 'src/features/telemetry/constants'
 import { Screens } from 'src/screens/Screens'
 import { openUri } from 'src/utils/linking'
-import { TouchableArea } from '../buttons/TouchableArea'
-import { Flex } from '../layout'
-import { Text } from '../Text'
 
 export function LinkButtonWithIcon({
   label,

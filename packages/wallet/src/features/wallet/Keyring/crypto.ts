@@ -1,4 +1,4 @@
-import { logger } from '../../logger/logger'
+import { logger } from 'wallet/src/features/logger/logger'
 
 const PBKDF2_PARAMS: Omit<Pbkdf2Params, 'salt'> & { hash: string } = {
   name: 'PBKDF2',

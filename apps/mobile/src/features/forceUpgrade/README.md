@@ -14,10 +14,10 @@ force_upgrade: {
 }
 ```
 
-
 - `status`:
   - A `recommended` status will display a dismissable dialog suggesting an upgrade
   - A `required` status will display a fixed dialog asking for an upgrade. The user's only option will be to navigate out to the app store to upgrade the app. In the case the user doesn't want to continue using the app they can retrieve their seed phrase to get their funds back.
+
 ## Flow
 
 1. At app start we first check if the `status` is either `recommended` or `required`. If it's not we stop the process.

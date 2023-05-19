@@ -2,8 +2,8 @@ import { providers as ethersProviders } from 'ethers'
 import { call, fork, join, put } from 'typed-redux-saga'
 import { ALL_SUPPORTED_CHAIN_IDS, ChainId } from 'wallet/src/constants/chains'
 
-import { logger } from '../logger/logger'
-import { getProviderManager } from '../wallet/context'
+import { logger } from 'wallet/src/features/logger/logger'
+import { getProviderManager } from 'wallet/src/features/wallet/context'
 import { ProviderManager } from './ProviderManager'
 import { initialized } from './slice'
 

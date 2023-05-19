@@ -1,6 +1,6 @@
+import { sendRejectionToContentScript } from 'src/background/utils/messageUtils'
 import { call, put, take } from 'typed-redux-saga'
 import { logger } from 'wallet/src/features/logger/logger'
-import { sendRejectionToContentScript } from '../../utils/messageUtils'
 import {
   ChangeChainRequest,
   ConnectRequest,

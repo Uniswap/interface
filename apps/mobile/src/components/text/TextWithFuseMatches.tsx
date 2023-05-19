@@ -1,9 +1,9 @@
 import Fuse from 'fuse.js'
 import React from 'react'
 import { TextProps } from 'react-native'
+import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { Theme } from 'src/styles/theme'
-import { Flex } from '../layout'
 
 interface TextWithFuseMatchesProps {
   text: string

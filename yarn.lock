@@ -18570,6 +18570,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"eslint-plugin-no-relative-import-paths@npm:1.5.2":
+  version: 1.5.2
+  resolution: "eslint-plugin-no-relative-import-paths@npm:1.5.2"
+  checksum: 194e72f21a8ec3796b6281d33d4a0f68b637da080fdd6a2d9abe8a3d7cf9b616067d7d63a9770c673e2843d03724b91d5f4ed720faff1db9bde0b322eb31b17b
+  languageName: node
+  linkType: hard
+
 "eslint-plugin-no-unsanitized@npm:4.0.1":
   version: 4.0.1
   resolution: "eslint-plugin-no-unsanitized@npm:4.0.1"
@@ -36898,6 +36905,7 @@ __metadata:
     dotenv-cli: ^7.0.0
     eslint: 8.21.0
     eslint-plugin-jest: 27.2.1
+    eslint-plugin-no-relative-import-paths: 1.5.2
     husky: 8.0.3
     is-ci: ^3.0.1
     lint-staged: ^13.1.0

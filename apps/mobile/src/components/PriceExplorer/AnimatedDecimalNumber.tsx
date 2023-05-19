@@ -1,10 +1,10 @@
 import React, { useMemo } from 'react'
 import { useAnimatedStyle, useDerivedValue } from 'react-native-reanimated'
 import { useAppTheme } from 'src/app/hooks'
+import { Box } from 'src/components/layout'
 import { TextProps } from 'src/components/Text'
 import { AnimatedText } from 'src/components/text/AnimatedText'
 import { Theme } from 'src/styles/theme'
-import { Box } from '../layout'
 import { ValueAndFormatted } from './usePrice'
 
 type AnimatedDecimalNumberProps = TextProps & {

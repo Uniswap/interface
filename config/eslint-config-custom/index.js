@@ -1,3 +1,6 @@
+// this allows us to use es6, es2017, es2018 syntax (const, spread operators outside of array literals, etc.)
+/* eslint-env es6, es2017, es2018 */
+
 // reduces code complexity
 const complexityRules = {
   'max-depth': ['error', 4], // prevent deeply nested code paths which are hard to read
@@ -9,6 +12,14 @@ const complexityRules = {
 module.exports = {
   root: true,
   parser: '@typescript-eslint/parser',
+  parserOptions: {
+    "ecmaFeatures": {
+      "jsx": true,
+      "modules": true,
+      "experimentalObjectRestSpread": true
+    }
+  },
+
   extends: [
     'eslint:recommended',
     '@react-native-community',
@@ -19,12 +30,13 @@ module.exports = {
   plugins: [
     'detox',
     'jest',
+    'no-relative-import-paths',
+    'no-unsanitized',
     'react',
     'react-native',
-    'no-unsanitized',
     'security',
-    '@typescript-eslint',
     'spellcheck',
+    '@typescript-eslint',
   ],
   rules: {
     ...complexityRules,
@@ -33,6 +45,12 @@ module.exports = {
     'no-extra-boolean-cast': 'error',
     'no-ex-assign': 'error',
     'no-console': 'warn',
+    "no-relative-import-paths/no-relative-import-paths": [
+      2,
+      {
+        "allowSameFolder": true
+      }
+    ],
     'object-shorthand': 'error',
     // https://stackoverflow.com/questions/63961803/eslint-says-all-enums-in-typescript-app-are-already-declared-in-the-upper-scope
     'no-shadow': 'off',

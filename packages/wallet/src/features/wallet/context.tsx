@@ -10,9 +10,9 @@ import {
 import { call, getContext } from 'typed-redux-saga'
 import { ChainId } from 'wallet/src/constants/chains'
 
-import { ContractManager } from '../contracts/ContractManager'
-import { logger } from '../logger/logger'
-import { ProviderManager } from '../providers/ProviderManager'
+import { ContractManager } from 'wallet/src/features/contracts/ContractManager'
+import { logger } from 'wallet/src/features/logger/logger'
+import { ProviderManager } from 'wallet/src/features/providers/ProviderManager'
 import { SignerManager } from './signing/SignerManager'
 
 export interface WalletContextValue {

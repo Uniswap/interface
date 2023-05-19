@@ -1,7 +1,7 @@
 import { Store } from '@reduxjs/toolkit'
 import { Provider as ReduxProvider } from 'react-redux'
 import { TamaguiProviderProps } from 'ui/src'
-import { GraphqlProvider } from '../data/client'
+import { GraphqlProvider } from 'wallet/src/data/client'
 import { Provider as TamaguiProvider } from './tamagui-provider'
 
 export function Provider({

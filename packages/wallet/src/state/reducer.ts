@@ -1,9 +1,9 @@
 import { combineReducers } from 'redux'
 import { persistReducer } from 'redux-persist'
-import { monitoredSagaReducers } from 'wallet/src/state/saga'
-import { providersReducer } from '../features/providers'
-import { walletReducer } from '../features/wallet/slice'
-import { PersistedStorage } from '../utils/persistedStorage'
+import { providersReducer } from 'wallet/src/features/providers'
+import { walletReducer } from 'wallet/src/features/wallet/slice'
+import { PersistedStorage } from 'wallet/src/utils/persistedStorage'
+import { monitoredSagaReducers } from './saga'
 
 export const sharedReducers = {
   providers: providersReducer,

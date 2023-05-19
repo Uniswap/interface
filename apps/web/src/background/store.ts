@@ -2,15 +2,18 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
 import { combineReducers } from 'redux'
 import { persistReducer, persistStore } from 'redux-persist'
 import { ForkEffect, SelectEffect } from 'redux-saga/effects'
+import { dappReducer } from 'src/background/features/dapp/slice'
+import { dappRequestApprovalWatcher } from 'src/background/features/dappRequests/dappRequestApprovalWatcherSaga'
+import {
+  dappRequestWatcher,
+  extensionRequestWatcher,
+} from 'src/background/features/dappRequests/saga'
+import { dappRequestReducer } from 'src/background/features/dappRequests/slice'
+import { PortName } from 'src/types'
 import { SagaGenerator, select, spawn } from 'typed-redux-saga'
 import { createStore, RootState } from 'wallet/src/state'
 import { persistConfig, sharedReducers } from 'wallet/src/state/reducer'
 import { wrapStore } from 'webext-redux'
-import { PortName } from '../types'
-import { dappReducer } from './features/dapp/slice'
-import { dappRequestApprovalWatcher } from './features/dappRequests/dappRequestApprovalWatcherSaga'
-import { dappRequestWatcher, extensionRequestWatcher } from './features/dappRequests/saga'
-import { dappRequestReducer } from './features/dappRequests/slice'
 
 export const webReducers = {
   ...sharedReducers,
