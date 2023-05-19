@@ -9,7 +9,10 @@ export default function AnimatedDropdown({ open, children }: React.PropsWithChil
   const { ref, height } = useResizeObserver()
 
   const props = useSpring({
-    height: open ? height ?? 0 : 0,
+    // On initial render, `height` will be undefined as ref has not been set yet.
+    // If the dropdown should be open, we fallback to `auto` to avoid flickering.
+    // Otherwise, we just animate between actual height (when open) and 0 (when closed).
+    height: open ? height ?? 'auto' : 0,
     config: {
       mass: 1.2,
       tension: 300,
@@ -21,6 +24,9 @@ export default function AnimatedDropdown({ open, children }: React.PropsWithChil
 
   return (
     <animated.div
+      // We need to set `testId` on the wrapper div in order to perform `toBeVisible()` assertions
+      // in the unit tests.
+      data-testid="animated-dropdown-container"
       style={{
         ...props,
         overflow: 'hidden',

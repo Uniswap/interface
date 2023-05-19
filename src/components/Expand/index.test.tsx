@@ -1,8 +1,14 @@
+import { Globals } from 'react-spring'
 import { fireEvent, render, screen } from 'test-utils/render'
 
 import Expand from './index'
 
 describe('Expand', () => {
+  beforeAll(() => {
+    Globals.assign({
+      skipAnimation: true,
+    })
+  })
   it('renders correctly', () => {
     const { asFragment } = render(
       <Expand header={<span>Header</span>} button={<span>Button</span>}>
@@ -11,20 +17,21 @@ describe('Expand', () => {
     )
     expect(asFragment()).toMatchSnapshot()
   })
-
   it('toggles children on button press', () => {
     render(
-      <Expand header={<span>Header</span>} button={<span>Button</span>}>
+      <Expand testId="expand-component" header={<span>Header</span>} button={<span>Button</span>}>
         Body
       </Expand>
     )
 
     const button = screen.getByText('Button')
+    const content = screen.getByTestId('animated-dropdown-container')
 
     fireEvent.click(button)
-    expect(screen.queryByText('Body')).not.toBeNull()
+    expect(content).not.toHaveStyleRule('height', '0px')
 
     fireEvent.click(button)
-    expect(screen.queryByText('Body')).toBeNull()
+
+    expect(content).toHaveStyleRule('height', '0px')
   })
 })

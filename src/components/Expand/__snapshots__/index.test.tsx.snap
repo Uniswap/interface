@@ -44,6 +44,20 @@ exports[`Expand renders correctly 1`] = `
   -webkit-justify-content: flex-start;
   -ms-flex-pack: start;
   justify-content: flex-start;
+}
+
+.c6 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
   gap: 12px;
 }
 
@@ -64,6 +78,10 @@ exports[`Expand renders correctly 1`] = `
   -webkit-transition: -webkit-transform 250ms;
   -webkit-transition: transform 250ms;
   transition: transform 250ms;
+}
+
+.c7 {
+  padding-top: 12px;
 }
 
 <div
@@ -98,6 +116,17 @@ exports[`Expand renders correctly 1`] = `
             points="6 9 12 15 18 9"
           />
         </svg>
+      </div>
+    </div>
+    <div
+      style="height: 0px; opacity: 0; overflow: hidden; width: 100%; will-change: height;"
+    >
+      <div>
+        <div
+          class="c6 c7"
+        >
+          Body
+        </div>
       </div>
     </div>
   </div>

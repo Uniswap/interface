@@ -1,3 +1,4 @@
+import AnimatedDropdown from 'components/AnimatedDropdown'
 import Column from 'components/Column'
 import React, { PropsWithChildren, ReactElement, useState } from 'react'
 import { ChevronDown } from 'react-feather'
@@ -17,6 +18,10 @@ const ExpandIcon = styled(ChevronDown)<{ $isExpanded: boolean }>`
   transition: transform ${({ theme }) => theme.transition.duration.medium};
 `
 
+const Content = styled(Column)`
+  padding-top: ${({ theme }) => theme.grids.md};
+`
+
 export default function Expand({
   header,
   button,
@@ -27,9 +32,9 @@ export default function Expand({
   button: ReactElement
   testId?: string
 }>) {
-  const [isExpanded, setExpanded] = useState(false)
+  const [isExpanded, setExpanded] = useState(true)
   return (
-    <Column gap="md">
+    <Column>
       <RowBetween>
         {header}
         <ButtonContainer data-testid={testId} onClick={() => setExpanded(!isExpanded)} aria-expanded={isExpanded}>
@@ -37,7 +42,9 @@ export default function Expand({
           <ExpandIcon $isExpanded={isExpanded} />
         </ButtonContainer>
       </RowBetween>
-      {isExpanded && children}
+      <AnimatedDropdown open={isExpanded}>
+        <Content gap="md">{children}</Content>
+      </AnimatedDropdown>
     </Column>
   )
 }
