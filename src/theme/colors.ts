@@ -213,6 +213,7 @@ export const colors = {
   networkPolygonSoft: 'rgba(164, 87, 255, 0.16)',
   networkEthereumSoft: 'rgba(98, 126, 234, 0.16)',
   networkSyscoin: '#377DF5',
+  networkRollux: 'rgb(219, 239, 136)',
 }
 
 type Theme = typeof darkTheme
@@ -237,6 +238,8 @@ const commonTheme = {
   chain_10_background: colors.red900,
   chain_42161_background: colors.blue900,
   chain_56_background: colors.networkBsc,
+  chain_57000_background: colors.networkRollux,
+  chain_570_background: colors.networkRollux,
   promotional: colors.magenta300,
 
   brandedGradient: 'linear-gradient(139.57deg, #FF79C9 4.35%, #FFB8E2 96.44%);',

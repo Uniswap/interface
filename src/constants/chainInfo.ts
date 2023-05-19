@@ -1,6 +1,5 @@
-
-import optimismSquareLogoUrl from 'assets/svg/optimism_square_logo.svg'
-import optimismLogoUrl from 'assets/svg/optimistic_ethereum.svg'
+import rolluxTennenbalLogoUrl from 'assets/svg/rollux_inverted_logo.svg'
+import rolluxLogoUrl from 'assets/svg/Rollux-1.svg'
 import { SupportedChainId } from 'constants/chains'
 import ms from 'ms.macro'
 import { darkTheme } from 'theme/colors'
@@ -52,40 +51,38 @@ type ChainInfoMap = { readonly [chainId: number]: L1ChainInfo | L2ChainInfo } & 
 } & { readonly [chainId in SupportedL1ChainId]: L1ChainInfo }
 
 const CHAIN_INFO: ChainInfoMap = {
-
   [SupportedChainId.ROLLUX]: {
     networkType: NetworkType.L2,
     blockWaitMsBeforeWarning: ms`25m`,
-    bridge: 'https://app.optimism.io/bridge',
+    bridge: 'https://rollux.com/',
     defaultListUrl: ROLLUX_LIST,
     docs: 'https://rollux.com/',
     explorer: 'https://explorer.rollux.com/',
     infoLink: 'https://info.pegasys.fi/#/rollux/',
     label: 'Rollux',
-    logoUrl: optimismLogoUrl,
+    logoUrl: rolluxLogoUrl,
     // Optimism perfers same icon for both
-    circleLogoUrl: optimismLogoUrl,
-    squareLogoUrl: optimismSquareLogoUrl,
+    circleLogoUrl: rolluxLogoUrl,
     statusPage: 'https://rollux.com/',
     helpCenterUrl: 'https://pegasys.fi/',
     nativeCurrency: { name: 'Syscoin', symbol: 'SYS', decimals: 18 },
     color: darkTheme.chain_10,
-    backgroundColor: darkTheme.chain_10_background,
+    backgroundColor: darkTheme.chain_570_background,
   },
   [SupportedChainId.ROLLUX_TANENBAUM]: {
     networkType: NetworkType.L2,
     blockWaitMsBeforeWarning: ms`25m`,
-    bridge: 'https://app.optimism.io/bridge',
+    bridge: 'https://rollux.com/',
     defaultListUrl: ROLLUX_TANENBAUM_LIST,
     docs: 'https://rollux.com/',
     explorer: 'https://rollux.tanenbaum.io/',
     infoLink: 'https://info.pegasys.fi/#/rollux/',
     label: 'Rollux Tanenbaum',
-    logoUrl: optimismLogoUrl,
+    logoUrl: rolluxTennenbalLogoUrl,
     statusPage: 'https://rollux.com/',
     helpCenterUrl: 'https://pegasys.fi/',
     nativeCurrency: { name: 'Tanenbaum Syscoin', symbol: 'TSYS', decimals: 18 },
-    color: darkTheme.chain_420,
+    color: darkTheme.chain_57000_background,
   },
 }
 
