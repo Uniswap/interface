@@ -7,7 +7,7 @@ import { useState } from 'react'
 import { ChevronDown, ChevronUp } from 'react-feather'
 import { Link } from 'react-router-dom'
 import { Text } from 'rebass'
-import styled from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components/macro'
 
 import { BIG_INT_ZERO } from '../../constants/misc'
 import { useTotalSupply } from '../../hooks/useTotalSupply'
@@ -26,7 +26,7 @@ import { FixedHeightRow } from '.'
 
 const StyledPositionCard = styled(LightCard)`
   border: none;
-  background: ${({ theme }) => theme.backgroundInteractive};
+  /* background: ${({ theme }) => theme.backgroundInteractive}; */
   position: relative;
   overflow: hidden;
 `
@@ -40,7 +40,7 @@ interface PositionCardProps {
 
 export default function V2PositionCard({ pair, border, stakedBalance }: PositionCardProps) {
   const { account } = useWeb3React()
-
+  const theme = useTheme()
   const currency0 = unwrappedToken(pair.token0)
   const currency1 = unwrappedToken(pair.token1)
 
@@ -72,7 +72,7 @@ export default function V2PositionCard({ pair, border, stakedBalance }: Position
       : [undefined, undefined]
 
   return (
-    <StyledPositionCard border={border}>
+    <StyledPositionCard border={border} style={{ backgroundColor: theme.backgroundInteractive }}>
       <CardNoise />
       <AutoColumn gap="md">
         <FixedHeightRow>
@@ -178,21 +178,13 @@ export default function V2PositionCard({ pair, border, stakedBalance }: Position
             </FixedHeightRow>
 
             {userDefaultPoolBalance && JSBI.greaterThan(userDefaultPoolBalance.quotient, BIG_INT_ZERO) && (
-              <RowBetween marginTop="10px">
-                <ButtonPrimary
-                  padding="8px"
-                  $borderRadius="8px"
-                  as={Link}
-                  to={`/migrate/v2/${pair.liquidityToken.address}`}
-                  width="64%"
-                >
+              <RowBetween marginTop="10px" gap="10px">
+                <ButtonPrimary padding="8px !important" as={Link} to={`/migrate/v2/${pair.liquidityToken.address}`}>
                   <Trans>Migrate</Trans>
                 </ButtonPrimary>
                 <ButtonSecondary
                   padding="8px"
-                  $borderRadius="8px"
                   as={Link}
-                  width="32%"
                   to={`/remove/v2/${currencyId(currency0)}/${currencyId(currency1)}`}
                 >
                   <Trans>Remove</Trans>

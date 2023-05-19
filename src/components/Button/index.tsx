@@ -5,8 +5,6 @@ import styled, { DefaultTheme, useTheme } from 'styled-components/macro'
 
 import { RowBetween } from '../Row'
 
-export { default as LoadingButtonSpinner } from './LoadingButtonSpinner'
-
 type ButtonProps = Omit<ButtonPropsOriginal, 'css'>
 
 const ButtonOverlay = styled.div`
@@ -150,7 +148,7 @@ export const ButtonGray = styled(BaseButton)`
   font-size: 16px;
   font-weight: 500;
   box-shadow: ${({ theme }) => theme.deepShadow};
-  border-radius: 16px;
+  border-radius: 30px;
 
   &:hover {
     background-color: ${({ theme, disabled }) => !disabled && darken(0.05, theme.backgroundInteractive)};
@@ -163,7 +161,7 @@ export const ButtonGray = styled(BaseButton)`
 export const ButtonSecondary = styled(BaseButton)`
   color: ${({ theme }) => theme.white};
   background-color: ${({ theme }) => theme.accentActionSoft};
-  font-size: 16px;
+  font-size: 20px;
   border-radius: 30px;
   padding: ${({ padding }) => (padding ? padding : '10px')};
 

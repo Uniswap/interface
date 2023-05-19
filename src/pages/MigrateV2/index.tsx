@@ -114,14 +114,22 @@ export default function MigrateV2() {
   return (
     <>
       <BodyWrapper>
-        <AutoColumn gap="16px" style={{ background: theme.backgroundModule, borderRadius: '16px', padding: '24px' }}>
+        <AutoColumn
+          gap="16px"
+          style={{
+            background: theme.backgroundSurface,
+            borderRadius: '16px',
+            padding: '24px',
+            boxShadow: theme.deepShadow,
+          }}
+        >
           <AutoRow style={{ alignItems: 'center', justifyContent: 'space-between' }} gap="8px">
             <BackArrow to="/pools" />
             <ThemedText.DeprecatedMediumHeader>
               <Trans>Migrate V2 Liquidity</Trans>
             </ThemedText.DeprecatedMediumHeader>
             <div>
-              <QuestionHelper text={<Trans>Migrate your liquidity tokens from Uniswap V2 to Uniswap V3.</Trans>} />
+              <QuestionHelper text={<Trans>Migrate your liquidity tokens from Pegasys V2 to Uniswap V3.</Trans>} />
             </div>
           </AutoRow>
 
