@@ -1,12 +1,15 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
+import LoadingGifLight from 'assets/images/lightLoading.gif'
+import LoadingGif from 'assets/images/loading.gif'
+import { LoaderGif } from 'components/Icons/LoadingSpinner'
 import { useState } from 'react'
 import { ArrowUpCircle, X } from 'react-feather'
 import styled, { useTheme } from 'styled-components/macro'
+import { useIsDarkMode } from 'theme/components/ThemeToggle'
 
-import Circle from '../../assets/images/blue-loader.svg'
 import { useExecuteCallback } from '../../state/governance/hooks'
-import { CustomLightSpinner, ThemedText } from '../../theme'
+import { ThemedText } from '../../theme'
 import { ExternalLink } from '../../theme'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import { ButtonPrimary } from '../Button'
@@ -43,6 +46,7 @@ interface ExecuteModalProps {
 export default function ExecuteModal({ isOpen, onDismiss, proposalId }: ExecuteModalProps) {
   const { chainId } = useWeb3React()
   const executeCallback = useExecuteCallback()
+  const isDarkMode = useIsDarkMode()
 
   // monitor call to help UI loading state
   const [hash, setHash] = useState<string | undefined>()
@@ -106,7 +110,7 @@ export default function ExecuteModal({ isOpen, onDismiss, proposalId }: ExecuteM
             <StyledClosed onClick={wrappedOnDismiss} />
           </RowBetween>
           <ConfirmedIcon>
-            <CustomLightSpinner src={Circle} alt="loader" size="90px" />
+            <LoaderGif gif={isDarkMode ? LoadingGif : LoadingGifLight} size="90px" />
           </ConfirmedIcon>
           <AutoColumn gap="100px" justify="center">
             <AutoColumn gap="md" justify="center">

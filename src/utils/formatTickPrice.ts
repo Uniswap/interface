@@ -1,5 +1,5 @@
-import { formatPrice, NumberType } from '@uniswap/conedison/format'
 import { Price, Token } from '@pollum-io/sdk-core'
+import { formatPrice, NumberType } from '@uniswap/conedison/format'
 
 import { Bound } from '../state/mint/v3/actions'
 

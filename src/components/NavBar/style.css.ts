@@ -87,7 +87,7 @@ export const menuItem = style([
   }),
   {
     ':hover': {
-      color: 'white',
+      color: 'textSecondary',
       background: vars.color.input,
     },
   },

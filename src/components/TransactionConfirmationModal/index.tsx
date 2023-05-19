@@ -16,16 +16,14 @@ import styled, { useTheme } from 'styled-components/macro'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { isL2ChainId } from 'utils/chains'
 
-import Circle from '../../assets/images/blue-loader.svg'
 import { ExternalLink, ThemedText } from '../../theme'
-import { CloseIcon, CustomLightSpinner } from '../../theme'
+import { CloseIcon } from '../../theme'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import { TransactionSummary } from '../AccountDetails/TransactionSummary'
 import { ButtonLight, ButtonPrimary } from '../Button'
 import { AutoColumn, ColumnCenter } from '../Column'
 import Modal from '../Modal'
 import { RowBetween, RowFixed } from '../Row'
-import AnimatedConfirmation from './AnimatedConfirmation'
 
 const Wrapper = styled.div`
   background-color: ${({ theme }) => theme.backgroundSurface};
@@ -242,7 +240,7 @@ function L2Content({
   inline?: boolean // not in modal
 }) {
   const theme = useTheme()
-
+  const isDarkMode = useIsDarkMode()
   const transaction = useTransaction(hash)
   const confirmed = useIsTransactionConfirmed(hash)
   const transactionSuccess = transaction?.receipt?.status === 1
@@ -271,13 +269,12 @@ function L2Content({
         <ConfirmedIcon inline={inline}>
           {confirmed ? (
             transactionSuccess ? (
-              // <CheckCircle strokeWidth={1} size={inline ? '40px' : '90px'} color={theme.accentSuccess} />
-              <AnimatedConfirmation />
+              <LoaderGif gif={isDarkMode ? LoadingGif : LoadingGifLight} size={inline ? '40px' : '90px'} />
             ) : (
               <AlertCircle strokeWidth={1} size={inline ? '40px' : '90px'} color={theme.accentFailure} />
             )
           ) : (
-            <CustomLightSpinner src={Circle} alt="loader" size={inline ? '40px' : '90px'} />
+            <LoaderGif gif={isDarkMode ? LoadingGif : LoadingGifLight} size={inline ? '40px' : '90px'} />
           )}
         </ConfirmedIcon>
         <AutoColumn gap="md" justify="center">

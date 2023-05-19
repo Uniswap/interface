@@ -255,7 +255,7 @@ export const darkTheme = {
   userThemeColor: colors.magentaVibrant,
 
   background: colors.bgDark,
-  backgroundImage: `radial-gradient(50% 50% at 50% 50% , #56BED8, ${colors.bgDark})`,
+  backgroundImage: `radial-gradient(60% 50% at 50% 45% , #56BED8, ${colors.bgDark})`,
   backgroundBackdrop: colors.gray950,
   backgroundSurface: colors.deep,
   backgroundModule: colors.input,
@@ -292,8 +292,8 @@ export const darkTheme = {
   accentTextDarkTertiary: opacify(24, colors.deep),
   accentTextButton: colors.cyanText,
   accentTextLightPrimary: colors.gray50,
-  accentTextLightSecondary: opacify(72, colors.gray50),
-  accentTextLightTertiary: opacify(12, colors.gray50),
+  accentTextLightSecondary: opacify(72, colors.gray100),
+  accentTextLightTertiary: opacify(12, colors.gray100),
 
   deepShadow: `0px 10px 24px ${opacify(24, colors.cyanText)}, 10px 0px 24px ${opacify(24, colors.purpleVibrantMain)}`,
   shallowShadow: '4px 4px 10px rgba(0, 0, 0, 0.24), 2px 2px 4px rgba(0, 0, 0, 0.12), 1px 2px 2px rgba(0, 0, 0, 0.12);',
@@ -316,7 +316,7 @@ export const lightTheme: Theme = {
   backgroundImage: 'radial-gradient(50% 50% at 50% 50% , #68e1ffbe, #e6faff)',
   backgroundBackdrop: colors.white,
   backgroundSurface: colors.white,
-  backgroundModule: colors.gray50,
+  backgroundModule: colors.gray100,
   backgroundInteractive: colors.gray100,
   backgroundFloating: opacify(8, colors.gray700),
   backgroundOutline: colors.gray150,
@@ -329,8 +329,8 @@ export const lightTheme: Theme = {
   backgroundConnectButton: 'linear-gradient(90deg, #665EE1 9.38%, rgba(0, 184, 255, 0.3) 128.42%)',
 
   textPrimary: colors.gray900,
-  textSecondary: colors.gray400,
-  textTertiary: colors.gray300,
+  textSecondary: colors.gray500,
+  textTertiary: colors.gray400,
 
   accentAction: colors.purpleMain,
   accentActive: colors.purpleMain,
@@ -349,9 +349,9 @@ export const lightTheme: Theme = {
   accentTextDarkSecondary: opacify(60, colors.gray900),
   accentTextDarkTertiary: opacify(24, colors.gray900),
   accentTextButton: colors.white,
-  accentTextLightPrimary: colors.gray50,
-  accentTextLightSecondary: opacify(72, colors.gray50),
-  accentTextLightTertiary: opacify(12, colors.gray50),
+  accentTextLightPrimary: colors.gray100,
+  accentTextLightSecondary: opacify(72, colors.gray100),
+  accentTextLightTertiary: opacify(12, colors.gray100),
 
   deepShadow: `0px 10px 24px ${opacify(24, colors.cyanText)}, 10px 0px 24px ${opacify(24, colors.purpleVibrantMain)}`,
   shallowShadow:
@@ -359,8 +359,8 @@ export const lightTheme: Theme = {
 
   networkDefaultShadow: `0px 40px 120px ${opacify(12, colors.pink400)}`,
 
-  stateOverlayHover: opacify(8, colors.gray300),
-  stateOverlayPressed: opacify(24, colors.gray200),
+  stateOverlayHover: opacify(8, colors.gray500),
+  stateOverlayPressed: opacify(24, colors.gray400),
 
   searchBackground: opacify(4, colors.white),
   searchOutline: opacify(1, colors.black),

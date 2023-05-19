@@ -1,13 +1,15 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
+import LoadingGifLight from 'assets/images/lightLoading.gif'
+import LoadingGif from 'assets/images/loading.gif'
+import { LoaderGif } from 'components/Icons/LoadingSpinner'
 import { useCallback, useEffect, useState } from 'react'
 import { useCloseModal, useModalIsOpen } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import styled, { useTheme } from 'styled-components/macro'
-import { CustomLightSpinner, ThemedText } from 'theme'
+import { ThemedText } from 'theme'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 
-import Circle from '../../assets/images/blue-loader.svg'
 import Modal from '../Modal'
 
 const MOONPAY_DARK_BACKGROUND = '#1c1c1e'
@@ -44,14 +46,6 @@ const StyledIframe = styled.iframe<{ isDarkMode: boolean }>`
   right: 0;
   top: 0;
   width: calc(100% - 16px);
-`
-const StyledSpinner = styled(CustomLightSpinner)`
-  bottom: 0;
-  left: 0;
-  margin: auto;
-  position: absolute;
-  right: 0;
-  top: 0;
 `
 
 const MOONPAY_SUPPORTED_CURRENCY_CODES = [
@@ -139,7 +133,7 @@ export default function FiatOnrampModal() {
             </ErrorText>
           </>
         ) : loading ? (
-          <StyledSpinner src={Circle} alt="loading spinner" size="90px" />
+          <LoaderGif gif={isDarkMode ? LoadingGif : LoadingGifLight} size="90px" />
         ) : (
           <StyledIframe
             src={signedIframeUrl ?? ''}
