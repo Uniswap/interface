@@ -5,6 +5,7 @@ import { SupportedChainId } from './chains'
 
 type AddressMap = { [chainId: number]: string }
 
+// TODO: will Sepolia be supported as a default network?
 const DEFAULT_NETWORKS = [SupportedChainId.MAINNET, SupportedChainId.GOERLI, SupportedChainId.SEPOLIA]
 
 function constructSameAddressMap(address: string, additionalNetworks: SupportedChainId[] = []): AddressMap {
@@ -52,6 +53,15 @@ const ARBITRUM_GOERLI_MULTICALL_ADDRESS = '0x8260CB40247290317a4c062F3542622367F
 const ARBITRUM_GOERLI_QUOTER_ADDRESSES = '0x1dd92b83591781D0C6d98d07391eea4b9a6008FA'
 const ARBITRUM_GOERLI_NONFUNGIBLE_POSITION_MANAGER_ADDRESSES = '0x622e4726a167799826d1E1D150b076A7725f5D81'
 const ARBITRUM_GOERLI_TICK_LENS_ADDRESSES = '0xb52429333da969a0C79a60930a4Bf0020E5D1DE8'
+
+// TODO: Do these need to be added or will Sepolia be a default?
+// sepolia v3 addresses
+const SEPOLIA_V3_CORE_FACTORY_ADDRESSES = '0x0227628f3F023bb0B980b67D528571c95c6DaC1c'
+const SEPOLIA_V3_MIGRATOR_ADDRESSES = ''
+const SEPOLIA_MULTICALL_ADDRESS = ''
+const SEPOLIA_QUOTER_ADDRESSES = ''
+const SEPOLIA_NONFUNGIBLE_POSITION_MANAGER_ADDRESSES = '0x1238536071E1c677A632429e3655c799b22cDA52'
+const SEPOLIA_TICK_LENS_ADDRESSES = ''
 
 /* V3 Contract Addresses */
 export const V3_CORE_FACTORY_ADDRESSES: AddressMap = {

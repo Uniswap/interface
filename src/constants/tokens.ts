@@ -403,6 +403,14 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token | undefined } =
     'WETH',
     'Wrapped Ether'
   ),
+  // TODO: why do we need to add this? Shouldn't it be handled like goerli?
+  [SupportedChainId.SEPOLIA]: new Token(
+    SupportedChainId.SEPOLIA,
+    '0xfff9976782d46cc05630d1f6ebab18b2324d6b14',
+    18,
+    'WETH',
+    'Wrapped Ether'
+  ),
   [SupportedChainId.POLYGON]: new Token(
     SupportedChainId.POLYGON,
     '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270',
