@@ -25,6 +25,13 @@ const USDC_GOERLI = new Token(
   'USDC',
   'USD//C'
 )
+const USDC_SEPOLIA = new Token(
+  SupportedChainId.SEPOLIA,
+  '0x6f14c02fc1f78322cfd7d707ab90f18bad3b54f5',
+  6,
+  'USDC',
+  'USD//C'
+)
 export const USDC_OPTIMISM = new Token(
   SupportedChainId.OPTIMISM,
   '0x7F5c764cBc14f9669B88837ca1490cCa17c31607',
@@ -357,6 +364,14 @@ export const DAI_BSC = new Token(SupportedChainId.BNB, '0x1AF3F329e8BE154074D876
 export const UNI: { [chainId: number]: Token } = {
   [SupportedChainId.MAINNET]: new Token(SupportedChainId.MAINNET, UNI_ADDRESS[1], 18, 'UNI', 'Uniswap'),
   [SupportedChainId.GOERLI]: new Token(SupportedChainId.GOERLI, UNI_ADDRESS[5], 18, 'UNI', 'Uniswap'),
+  // TODO add uni support for sepolia
+  // [SupportedChainId.SEPOLIA]: new Token(
+  //   SupportedChainId.SEPOLIA,
+  //   UNI_ADDRESS[SupportedChainId.SEPOLIA],
+  //   18,
+  //   'UNI',
+  //   'Uniswap'
+  // ),
 }
 
 export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token | undefined } = {
@@ -535,5 +550,6 @@ export const TOKEN_SHORTHANDS: { [shorthand: string]: { [chainId in SupportedCha
     [SupportedChainId.CELO]: PORTAL_USDC_CELO.address,
     [SupportedChainId.CELO_ALFAJORES]: PORTAL_USDC_CELO.address,
     [SupportedChainId.GOERLI]: USDC_GOERLI.address,
+    [SupportedChainId.SEPOLIA]: USDC_SEPOLIA.address,
   },
 }
