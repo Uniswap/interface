@@ -3,7 +3,7 @@ import { useWeb3React } from '@web3-react/core'
 import { SupportedChainId } from 'constants/chains'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useMemo, useRef } from 'react'
-import { RouterPreference } from 'state/routing/slice'
+import { INTERNAL_ROUTER_PREFERENCE_PRICE } from 'state/routing/slice'
 import { useRoutingAPITrade } from 'state/routing/useRoutingAPITrade'
 
 import { CUSD_CELO, DAI_OPTIMISM, USDC_ARBITRUM, USDC_MAINNET, USDC_POLYGON, USDT_BSC } from '../constants/tokens'
@@ -28,7 +28,7 @@ export default function useStablecoinPrice(currency?: Currency): Price<Currency,
   const amountOut = chainId ? STABLECOIN_AMOUNT_OUT[chainId] : undefined
   const stablecoin = amountOut?.currency
 
-  const { trade } = useRoutingAPITrade(TradeType.EXACT_OUTPUT, amountOut, currency, RouterPreference.PRICE)
+  const { trade } = useRoutingAPITrade(TradeType.EXACT_OUTPUT, amountOut, currency, INTERNAL_ROUTER_PREFERENCE_PRICE)
   const price = useMemo(() => {
     if (!currency || !stablecoin) {
       return undefined

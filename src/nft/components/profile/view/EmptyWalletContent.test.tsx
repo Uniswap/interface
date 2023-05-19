@@ -1,4 +1,4 @@
-import { render } from 'test-utils'
+import { render } from 'test-utils/render'
 
 import { EmptyWalletModule } from './EmptyWalletContent'
 

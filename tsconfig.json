@@ -4,12 +4,14 @@
     "allowSyntheticDefaultImports": true,
     "alwaysStrict": true,
     "baseUrl": "src",
+    "composite": true,
+    "declarationMap": false,
     "downlevelIteration": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
     "jsx": "react-jsx",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "module": "esnext",
     "moduleResolution": "node",
     "noEmit": true,
@@ -20,12 +22,17 @@
     "noUnusedLocals": false,
     "resolveJsonModule": true,
     "skipLibCheck": true,
+    "sourceMap": true,
     "strict": true,
     "strictNullChecks": true,
-    "target": "es5",
+    "target": "ESNext",
+    "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo/build", // avoid clobbering the cypress tsbuildinfo
     "types": ["jest"],
     "useUnknownInCatchVariables": false
   },
-  "exclude": ["node_modules", "cypress"],
-  "include": ["src/**/*"]
+  "exclude": ["node_modules"],
+  "include": ["src/**/*", "src/**/*.json"],
+  "watchOptions": {
+    "excludeDirectories": ["node_modules"]
+  }
 }

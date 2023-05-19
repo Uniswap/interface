@@ -1,8 +1,8 @@
 import { Currency, Ether, NativeCurrency, Token, WETH9 } from '@uniswap/sdk-core'
-import { SupportedChainId } from 'constants/chains'
 import invariant from 'tiny-invariant'
 
 import { UNI_ADDRESS } from './addresses'
+import { SupportedChainId } from './chains'
 
 export const NATIVE_CHAIN_ID = 'NATIVE'
 
@@ -513,6 +513,13 @@ export function nativeOnChain(chainId: number): NativeCurrency | Token {
     nativeCurrency = ExtendedEther.onChain(chainId)
   }
   return (cachedNativeCurrency[chainId] = nativeCurrency)
+}
+
+export function getSwapCurrencyId(currency: Currency): string {
+  if (currency.isToken) {
+    return currency.address
+  }
+  return NATIVE_CHAIN_ID
 }
 
 export const TOKEN_SHORTHANDS: { [shorthand: string]: { [chainId in SupportedChainId]?: string } } = {

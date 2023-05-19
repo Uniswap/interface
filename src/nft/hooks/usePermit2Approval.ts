@@ -1,23 +1,33 @@
 import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { InterfaceEventName } from '@uniswap/analytics-events'
-import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { CurrencyAmount, SupportedChainId, Token } from '@uniswap/sdk-core'
 import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import { useWeb3React } from '@web3-react/core'
 import usePermit2Allowance, { AllowanceState } from 'hooks/usePermit2Allowance'
 import { useCallback, useMemo, useState } from 'react'
 import invariant from 'tiny-invariant'
 
+function getURAddress(chainId?: number, nftURAddress?: string) {
+  if (!chainId) return
+
+  // if mainnet and on NFT flow, use the contract address returned by GQL
+  if (chainId === SupportedChainId.MAINNET) {
+    return nftURAddress ?? UNIVERSAL_ROUTER_ADDRESS(chainId)
+  }
+
+  return UNIVERSAL_ROUTER_ADDRESS(chainId)
+}
+
 export default function usePermit2Approval(
-  amount?: CurrencyAmount<Token>,
-  maximumAmount?: CurrencyAmount<Token>,
-  enabled?: boolean
+  amount: CurrencyAmount<Token> | undefined,
+  maximumAmount: CurrencyAmount<Token> | undefined,
+  nftUniversalRouterContractAddress?: string
 ) {
   const { chainId } = useWeb3React()
 
-  const allowance = usePermit2Allowance(
-    enabled ? maximumAmount ?? (amount?.currency.isToken ? (amount as CurrencyAmount<Token>) : undefined) : undefined,
-    enabled && chainId ? UNIVERSAL_ROUTER_ADDRESS(chainId) : undefined
-  )
+  const universalRouterAddress = getURAddress(chainId, nftUniversalRouterContractAddress)
+  const allowanceAmount = maximumAmount ?? (amount?.currency.isToken ? (amount as CurrencyAmount<Token>) : undefined)
+  const allowance = usePermit2Allowance(allowanceAmount, universalRouterAddress)
   const isApprovalLoading = allowance.state === AllowanceState.REQUIRED && allowance.isApprovalLoading
   const [isAllowancePending, setIsAllowancePending] = useState(false)
   const updateAllowance = useCallback(async () => {

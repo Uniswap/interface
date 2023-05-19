@@ -1,4 +1,4 @@
-/*
+/**
  * SupportedChainId must be defined inline, without using @uniswap/sdk-core, so that its members are their own types
  * {@see https://www.typescriptlang.org/docs/handbook/enums.html#union-enums-and-enum-member-types}. This allows the
  * derived const arrays and their types (eg {@link L1_CHAIN_IDS}, {@link SupportedL1ChainId}) to be narrowed and used
@@ -24,6 +24,13 @@ export enum SupportedChainId {
 
   BNB = 56,
 }
+
+export const UniWalletSupportedChains = [
+  SupportedChainId.MAINNET,
+  SupportedChainId.ARBITRUM_ONE,
+  SupportedChainId.OPTIMISM,
+  SupportedChainId.POLYGON,
+]
 
 export const CHAIN_IDS_TO_NAMES = {
   [SupportedChainId.MAINNET]: 'mainnet',
@@ -106,3 +113,7 @@ export const L2_CHAIN_IDS = [
 ] as const
 
 export type SupportedL2ChainId = typeof L2_CHAIN_IDS[number]
+
+export function isPolygonChain(chainId: number): chainId is SupportedChainId.POLYGON | SupportedChainId.POLYGON_MUMBAI {
+  return chainId === SupportedChainId.POLYGON || chainId === SupportedChainId.POLYGON_MUMBAI
+}

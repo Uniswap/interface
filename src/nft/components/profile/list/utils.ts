@@ -93,7 +93,7 @@ const getListings = (sellAssets: WalletAsset[]): [CollectionRow[], ListingRow[]]
   sellAssets.forEach((asset) => {
     asset.marketplaces?.forEach((marketplace: ListingMarket) => {
       const newListing = {
-        images: [asset.smallImageUrl, marketplace.icon],
+        image: asset.smallImageUrl,
         name: asset.name || `#${asset.tokenId}`,
         status: ListingStatus.DEFINED,
         asset,
@@ -109,7 +109,7 @@ const getListings = (sellAssets: WalletAsset[]): [CollectionRow[], ListingRow[]]
         )
       ) {
         const newCollectionRow = {
-          images: [asset.asset_contract.image_url, marketplace.icon],
+          image: asset.asset_contract.image_url,
           name: asset.asset_contract.name,
           status: ListingStatus.DEFINED,
           collectionAddress: asset.asset_contract.address,
@@ -225,11 +225,6 @@ export const getRoyalty = (listingMarket: ListingMarket, asset: WalletAsset) => 
       : asset.basisPoints ?? 0
 
   return baseFee * 0.01
-}
-
-// OpenSea has a 0.5% fee for all assets that do not have a royalty set
-export const getMarketplaceFee = (listingMarket: ListingMarket, asset: WalletAsset) => {
-  return listingMarket.name === 'OpenSea' && !asset.basisPoints ? 0.5 : listingMarket.fee
 }
 
 const BELOW_FLOOR_PRICE_THRESHOLD = 0.8

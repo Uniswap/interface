@@ -6,7 +6,6 @@ import { InterfacePageName } from '@uniswap/analytics-events'
 import { formatPrice, NumberType } from '@uniswap/conedison/format'
 import { Currency, CurrencyAmount, Fraction, Percent, Price, Token } from '@uniswap/sdk-core'
 import { NonfungiblePositionManager, Pool, Position } from '@uniswap/v3-sdk'
-import { SupportedChainId } from '@uniswap/widgets'
 import { useWeb3React } from '@web3-react/core'
 import { sendEvent } from 'components/analytics'
 import Badge from 'components/Badge'
@@ -20,7 +19,7 @@ import { RowBetween, RowFixed } from 'components/Row'
 import { Dots } from 'components/swap/styleds'
 import Toggle from 'components/Toggle'
 import TransactionConfirmationModal, { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
-import { CHAIN_IDS_TO_NAMES } from 'constants/chains'
+import { CHAIN_IDS_TO_NAMES, isSupportedChain, SupportedChainId } from 'constants/chains'
 import { isGqlSupportedChain } from 'graphql/data/util'
 import { useToken } from 'hooks/Tokens'
 import { useV3NFTPositionManagerContract } from 'hooks/useContract'
@@ -346,7 +345,34 @@ const useInverter = ({
   }
 }
 
-export function PositionPage() {
+export function PositionPageUnsupportedContent() {
+  return (
+    <PageWrapper>
+      <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+        <ThemedText.HeadlineLarge style={{ marginBottom: '8px' }}>
+          <Trans>Position unavailable</Trans>
+        </ThemedText.HeadlineLarge>
+        <ThemedText.BodyPrimary style={{ marginBottom: '32px' }}>
+          <Trans>To view a position, you must be connected to the network it belongs to.</Trans>
+        </ThemedText.BodyPrimary>
+        <PositionPageButtonPrimary as={Link} to="/pools" width="fit-content">
+          <Trans>Back to Pools</Trans>
+        </PositionPageButtonPrimary>
+      </div>
+    </PageWrapper>
+  )
+}
+
+export default function PositionPage() {
+  const { chainId } = useWeb3React()
+  if (isSupportedChain(chainId)) {
+    return <PositionPageContent />
+  } else {
+    return <PositionPageUnsupportedContent />
+  }
+}
+
+function PositionPageContent() {
   const { tokenId: tokenIdFromUrl } = useParams<{ tokenId?: string }>()
   const { chainId, account, provider } = useWeb3React()
   const theme = useTheme()
@@ -376,7 +402,7 @@ export function PositionPage() {
 
   // flag for receiving WETH
   const [receiveWETH, setReceiveWETH] = useState(false)
-  const nativeCurrency = useNativeCurrency()
+  const nativeCurrency = useNativeCurrency(chainId)
   const nativeWrappedSymbol = nativeCurrency.wrapped.symbol
 
   // construct Position from details returned
@@ -588,21 +614,7 @@ export function PositionPage() {
   )
 
   if (!positionDetails && !loading) {
-    return (
-      <PageWrapper>
-        <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-          <ThemedText.HeadlineLarge style={{ marginBottom: '8px' }}>
-            <Trans>Position unavailable</Trans>
-          </ThemedText.HeadlineLarge>
-          <ThemedText.BodyPrimary style={{ marginBottom: '32px' }}>
-            <Trans>To view a position, you must be connected to the network it belongs to.</Trans>
-          </ThemedText.BodyPrimary>
-          <PositionPageButtonPrimary as={Link} to="/pools" width="fit-content">
-            <Trans>Back to Pools</Trans>
-          </PositionPageButtonPrimary>
-        </div>
-      </PageWrapper>
-    )
+    return <PositionPageUnsupportedContent />
   }
 
   return loading || poolState === PoolState.LOADING || !feeAmount ? (

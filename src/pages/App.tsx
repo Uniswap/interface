@@ -4,7 +4,6 @@ import { useWeb3React } from '@web3-react/core'
 import Loader from 'components/Icons/LoadingSpinner'
 import TopLevelModals from 'components/TopLevelModals'
 import { useFeatureFlagsIsLoaded } from 'featureFlags'
-import { useMGTMMicrositeEnabled } from 'featureFlags/flags/mgtm'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
 import { useAtom } from 'jotai'
 import { useBag } from 'nft/hooks/useBag'
@@ -19,6 +18,7 @@ import { flexRowNoWrap } from 'theme/styles'
 import { Z_INDEX } from 'theme/zIndex'
 import { STATSIG_DUMMY_KEY } from 'tracing'
 import { getEnvName } from 'utils/env'
+import { retry } from 'utils/retry'
 import { getCLS, getFCP, getFID, getLCP, Metric } from 'web-vitals'
 
 import { useAnalyticsReporter } from '../components/analytics'
@@ -37,7 +37,7 @@ import MigrateV2 from './MigrateV2'
 import MigrateV2Pair from './MigrateV2/MigrateV2Pair'
 import NotFound from './NotFound'
 import Pool from './Pool'
-import { PositionPage } from './Pool/PositionPage'
+import PositionPage from './Pool/PositionPage'
 import PoolV2 from './Pool/v2'
 import PoolFinder from './PoolFinder'
 import RemoveLiquidity from './RemoveLiquidity'
@@ -46,13 +46,12 @@ import Swap from './Swap'
 import { RedirectPathToSwapOnly } from './Swap/redirects'
 import Tokens from './Tokens'
 
-const TokenDetails = lazy(() => import('./TokenDetails'))
-const Vote = lazy(() => import('./Vote'))
-const Wallet = lazy(() => import('./Wallet'))
-const NftExplore = lazy(() => import('nft/pages/explore'))
-const Collection = lazy(() => import('nft/pages/collection'))
-const Profile = lazy(() => import('nft/pages/profile/profile'))
-const Asset = lazy(() => import('nft/pages/asset/Asset'))
+const TokenDetails = lazy(() => retry(() => import('./TokenDetails')))
+const Vote = lazy(() => retry(() => import('./Vote')))
+const NftExplore = lazy(() => retry(() => import('nft/pages/explore')))
+const Collection = lazy(() => retry(() => import('nft/pages/collection')))
+const Profile = lazy(() => retry(() => import('nft/pages/profile/profile')))
+const Asset = lazy(() => retry(() => import('nft/pages/asset/Asset')))
 
 const BodyWrapper = styled.div`
   display: flex;
@@ -166,7 +165,12 @@ export default function App() {
     user.set(CustomUserProperties.SCREEN_RESOLUTION_HEIGHT, window.screen.height)
     user.set(CustomUserProperties.SCREEN_RESOLUTION_WIDTH, window.screen.width)
 
-    sendAnalyticsEvent(SharedEventName.APP_LOADED)
+    // Service Worker analytics
+    const isServiceWorkerInstalled = Boolean(window.navigator.serviceWorker?.controller)
+    const isServiceWorkerHit = Boolean((window as any).__isDocumentCached)
+    const serviceWorkerProperty = isServiceWorkerInstalled ? (isServiceWorkerHit ? 'hit' : 'miss') : 'uninstalled'
+
+    sendAnalyticsEvent(SharedEventName.APP_LOADED, { service_worker: serviceWorkerProperty })
     getCLS(({ delta }: Metric) => sendAnalyticsEvent(SharedEventName.WEB_VITALS, { cumulative_layout_shift: delta }))
     getFCP(({ delta }: Metric) => sendAnalyticsEvent(SharedEventName.WEB_VITALS, { first_contentful_paint_ms: delta }))
     getFID(({ delta }: Metric) => sendAnalyticsEvent(SharedEventName.WEB_VITALS, { first_input_delay_ms: delta }))
@@ -192,9 +196,7 @@ export default function App() {
   }, [])
 
   const isBagExpanded = useBag((state) => state.bagExpanded)
-  const isOnWalletPage = useLocation().pathname === '/wallet'
-  const micrositeEnabled = useMGTMMicrositeEnabled()
-  const isHeaderTransparent = (!scrolledState && !isBagExpanded) || isOnWalletPage
+  const isHeaderTransparent = !scrolledState && !isBagExpanded
 
   const { account } = useWeb3React()
   const statsigUser: StatsigUser = useMemo(
@@ -245,7 +247,6 @@ export default function App() {
                     }
                   />
                   <Route path="create-proposal" element={<Navigate to="/vote/create-proposal" replace />} />
-                  {micrositeEnabled && <Route path="wallet" element={<Wallet />} />}
                   <Route path="send" element={<RedirectPathToSwapOnly />} />
                   <Route path="swap" element={<Swap />} />
 

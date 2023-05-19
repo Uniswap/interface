@@ -7,7 +7,7 @@ import { Box } from 'nft/components/Box'
 import { Portal } from 'nft/components/common/Portal'
 import { Column } from 'nft/components/Flex'
 import { Overlay } from 'nft/components/modals/Overlay'
-import { useBag, useIsMobile, useProfilePageState, useSellAsset } from 'nft/hooks'
+import { useBag, useIsMobile, useProfilePageState, useSellAsset, useSubscribeScrollState } from 'nft/hooks'
 import { BagStatus, ProfilePageStateType } from 'nft/types'
 import { formatAssetEventProperties, recalculateBagUsingPooledAssets } from 'nft/utils'
 import { useCallback, useEffect, useMemo, useState } from 'react'
@@ -122,14 +122,7 @@ const Bag = () => {
   const itemsInBag = useMemo(() => recalculateBagUsingPooledAssets(uncheckedItemsInBag), [uncheckedItemsInBag])
 
   const [isModalOpen, setModalIsOpen] = useState(false)
-  const [userCanScroll, setUserCanScroll] = useState(false)
-  const [scrollProgress, setScrollProgress] = useState(0)
-  const scrollRef = (node: HTMLDivElement) => {
-    if (node !== null) {
-      const canScroll = node.scrollHeight > node.clientHeight
-      canScroll !== userCanScroll && setUserCanScroll(canScroll)
-    }
-  }
+  const { userCanScroll, scrollRef, scrollProgress, scrollHandler } = useSubscribeScrollState()
 
   const handleCloseBag = useCallback(() => {
     setBagExpanded({ bagExpanded: false, manualClose: true })
@@ -140,15 +133,6 @@ const Bag = () => {
   }, [bagIsLocked, isModalOpen])
 
   const hasAssetsToShow = itemsInBag.length > 0
-
-  const scrollHandler = (event: React.UIEvent<HTMLDivElement>) => {
-    const scrollTop = event.currentTarget.scrollTop
-    const containerHeight = event.currentTarget.clientHeight
-    const scrollHeight = event.currentTarget.scrollHeight
-
-    setScrollProgress(scrollTop ? ((scrollTop + containerHeight) / scrollHeight) * 100 : 0)
-  }
-
   const isBuyingAssets = itemsInBag.length > 0
   const isSellingAssets = sellAssets.length > 0
 

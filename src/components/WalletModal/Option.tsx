@@ -1,8 +1,11 @@
 import { TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
+import { useCloseAccountDrawer } from 'components/AccountDrawer'
 import Loader from 'components/Icons/LoadingSpinner'
-import { Connection, ConnectionType } from 'connection'
+import { ActivationStatus, useActivationState } from 'connection/activate'
+import { Connection } from 'connection/types'
 import styled from 'styled-components/macro'
+import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { flexColumnNoWrap, flexRowNoWrap } from 'theme/styles'
 
 import NewBadge from './NewBadge'
@@ -13,27 +16,26 @@ const OptionCardLeft = styled.div`
   align-items: center;
 `
 
-const OptionCardClickable = styled.button<{ isActive?: boolean; clickable?: boolean }>`
+const OptionCardClickable = styled.button<{ selected: boolean }>`
   background-color: ${({ theme }) => theme.backgroundModule};
+  border: none;
   width: 100% !important;
-  border-color: ${({ theme, isActive }) => (isActive ? theme.accentActive : 'transparent')};
 
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  margin-top: 2rem;
-  padding: 1rem;
+  padding: 18px;
 
-  margin-top: 0;
   transition: ${({ theme }) => theme.transition.duration.fast};
-  opacity: ${({ disabled }) => (disabled ? '0.5' : '1')};
+  opacity: ${({ disabled, selected }) => (disabled && !selected ? '0.5' : '1')};
+
   &:hover {
-    cursor: ${({ clickable }) => clickable && 'pointer'};
-    background-color: ${({ theme, clickable }) => clickable && theme.hoverState};
+    cursor: ${({ disabled }) => !disabled && 'pointer'};
+    background-color: ${({ theme, disabled }) => !disabled && theme.hoverState};
   }
   &:focus {
-    background-color: ${({ theme, clickable }) => clickable && theme.hoverState};
+    background-color: ${({ theme, disabled }) => !disabled && theme.hoverState};
   }
 `
 
@@ -61,14 +63,16 @@ const IconWrapper = styled.div`
   `};
 `
 
-type OptionProps = {
-  connection: Connection
-  activate: () => void
-  pendingConnectionType?: ConnectionType
-}
-export default function Option({ connection, pendingConnectionType, activate }: OptionProps) {
-  const isPending = pendingConnectionType === connection.type
-  const content = (
+export default function Option({ connection }: { connection: Connection }) {
+  const { activationState, tryActivation } = useActivationState()
+  const closeDrawer = useCloseAccountDrawer()
+  const activate = () => tryActivation(connection, closeDrawer)
+
+  const isSomeOptionPending = activationState.status === ActivationStatus.PENDING
+  const isCurrentOptionPending = isSomeOptionPending && activationState.connection.type === connection.type
+  const isDarkMode = useIsDarkMode()
+
+  return (
     <TraceEvent
       events={[BrowserEvent.onClick]}
       name={InterfaceEventName.WALLET_SELECTED}
@@ -76,22 +80,20 @@ export default function Option({ connection, pendingConnectionType, activate }: 
       element={InterfaceElementName.WALLET_TYPE_OPTION}
     >
       <OptionCardClickable
-        onClick={!pendingConnectionType ? activate : undefined}
-        clickable={!pendingConnectionType}
-        disabled={Boolean(!isPending && !!pendingConnectionType)}
-        data-testid="wallet-modal-option"
+        onClick={activate}
+        disabled={isSomeOptionPending}
+        selected={isCurrentOptionPending}
+        data-testid={`wallet-option-${connection.type}`}
       >
         <OptionCardLeft>
           <IconWrapper>
-            <img src={connection.getIcon?.()} alt="Icon" />
+            <img src={connection.getIcon?.(isDarkMode)} alt="Icon" />
           </IconWrapper>
           <HeaderText>{connection.getName()}</HeaderText>
           {connection.isNew && <NewBadge />}
         </OptionCardLeft>
-        {isPending && <Loader />}
+        {isCurrentOptionPending && <Loader />}
       </OptionCardClickable>
     </TraceEvent>
   )
-
-  return content
 }

@@ -52,9 +52,11 @@ export const ThemedText = {
   MediumHeader(props: TextProps) {
     return <TextWrapper fontWeight={400} fontSize={20} color="textPrimary" {...props} />
   },
+  SubHeaderLarge(props: TextProps) {
+    return <TextWrapper fontWeight={500} fontSize={20} color="textPrimary" {...props} />
+  },
   SubHeader(props: TextProps) {
-    // @todo designs use `fontWeight: 500` and we currently have a mix of 600 and 500
-    return <TextWrapper fontWeight={600} fontSize={16} color="textPrimary" {...props} />
+    return <TextWrapper fontWeight={500} fontSize={16} color="textPrimary" lineHeight="24px" {...props} />
   },
   SubHeaderSmall(props: TextProps) {
     return <TextWrapper fontWeight={500} fontSize={14} color="textSecondary" {...props} />

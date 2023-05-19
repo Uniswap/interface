@@ -1,40 +1,26 @@
 import walletsReducer from './reducer'
 import { Wallet } from './types'
 
+const WALLET: Wallet = { account: '0x123', walletType: 'test' }
+
 describe('walletsSlice reducers', () => {
   it('should add a connected wallet', () => {
-    const initialState = {
-      connectedWallets: [],
-    }
-    const wallet = {
-      address: '0x123',
-      chainId: 1,
-    }
+    const initialState = { connectedWallets: [] }
     const action = {
       type: 'wallets/addConnectedWallet',
-      payload: wallet,
+      payload: WALLET,
     }
-    const expectedState = {
-      connectedWallets: [wallet],
-    }
+    const expectedState = { connectedWallets: [WALLET] }
     expect(walletsReducer(initialState, action)).toEqual(expectedState)
   })
 
-  it('should remove a connected wallet', () => {
-    const wallet: Wallet = {
-      walletType: 'metamask',
-      account: '0x123',
-    }
-    const initialState = {
-      connectedWallets: [wallet],
-    }
+  it('should not duplicate a connected wallet', () => {
+    const initialState = { connectedWallets: [WALLET] }
     const action = {
-      type: 'wallets/removeConnectedWallet',
-      payload: wallet,
+      type: 'wallets/addConnectedWallet',
+      payload: WALLET,
     }
-    const expectedState = {
-      connectedWallets: [],
-    }
+    const expectedState = { connectedWallets: [WALLET] }
     expect(walletsReducer(initialState, action)).toEqual(expectedState)
   })
 })

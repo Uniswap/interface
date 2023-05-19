@@ -18,11 +18,13 @@ import { AddRemoveTabs } from 'components/NavigationTabs'
 import { AutoRow, RowBetween, RowFixed } from 'components/Row'
 import Slider from 'components/Slider'
 import Toggle from 'components/Toggle'
+import { isSupportedChain } from 'constants/chains'
 import { useV3NFTPositionManagerContract } from 'hooks/useContract'
 import useDebouncedChangeHandler from 'hooks/useDebouncedChangeHandler'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import { useV3PositionFromTokenId } from 'hooks/useV3Positions'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
+import { PositionPageUnsupportedContent } from 'pages/Pool/PositionPage'
 import { useCallback, useMemo, useState } from 'react'
 import { Navigate, useLocation, useParams } from 'react-router-dom'
 import { Text } from 'rebass'
@@ -44,6 +46,7 @@ const DEFAULT_REMOVE_V3_LIQUIDITY_SLIPPAGE_TOLERANCE = new Percent(5, 100)
 
 // redirect invalid tokenIds
 export default function RemoveLiquidityV3() {
+  const { chainId } = useWeb3React()
   const { tokenId } = useParams<{ tokenId: string }>()
   const location = useLocation()
   const parsedTokenId = useMemo(() => {
@@ -58,7 +61,11 @@ export default function RemoveLiquidityV3() {
     return <Navigate to={{ ...location, pathname: '/pools' }} replace />
   }
 
-  return <Remove tokenId={parsedTokenId} />
+  if (isSupportedChain(chainId)) {
+    return <Remove tokenId={parsedTokenId} />
+  } else {
+    return <PositionPageUnsupportedContent />
+  }
 }
 function Remove({ tokenId }: { tokenId: BigNumber }) {
   const { position } = useV3PositionFromTokenId(tokenId)
@@ -67,7 +74,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
 
   // flag for receiving WETH
   const [receiveWETH, setReceiveWETH] = useState(false)
-  const nativeCurrency = useNativeCurrency()
+  const nativeCurrency = useNativeCurrency(chainId)
   const nativeWrappedSymbol = nativeCurrency.wrapped.symbol
 
   // burn state
@@ -290,7 +297,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
           creating={false}
           adding={false}
           positionID={tokenId.toString()}
-          defaultSlippage={DEFAULT_REMOVE_V3_LIQUIDITY_SLIPPAGE_TOLERANCE}
+          autoSlippage={DEFAULT_REMOVE_V3_LIQUIDITY_SLIPPAGE_TOLERANCE}
         />
         <Wrapper>
           {position ? (

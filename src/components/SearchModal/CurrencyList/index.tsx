@@ -294,7 +294,7 @@ export default function CurrencyList({
   }, [])
 
   return (
-    <ListWrapper>
+    <ListWrapper data-testid="currency-list-wrapper">
       {isLoading ? (
         <FixedSizeList
           className={scrollbarStyle}

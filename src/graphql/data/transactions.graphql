@@ -99,6 +99,7 @@ fragment TransactionParts on Transaction {
   status
   to
   from
+  nonce
 }
 
 fragment AssetActivityParts on AssetActivity {

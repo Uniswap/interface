@@ -3,12 +3,12 @@ import { Percent } from '@uniswap/sdk-core'
 import { OutlineCard } from 'components/Card'
 import styled, { useTheme } from 'styled-components/macro'
 import { opacify } from 'theme/utils'
+import formatPriceImpact from 'utils/formatPriceImpact'
 
 import { ThemedText } from '../../theme'
 import { AutoColumn } from '../Column'
 import { RowBetween, RowFixed } from '../Row'
 import { MouseoverTooltip } from '../Tooltip'
-import { formatPriceImpact } from './FormattedPriceImpact'
 
 const StyledCard = styled(OutlineCard)`
   padding: 12px;

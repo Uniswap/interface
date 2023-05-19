@@ -27,6 +27,11 @@ export function useToggleAccountDrawer() {
   }, [updateAccountDrawerOpen])
 }
 
+export function useCloseAccountDrawer() {
+  const updateAccountDrawerOpen = useUpdateAtom(accountDrawerOpenAtom)
+  return useCallback(() => updateAccountDrawerOpen(false), [updateAccountDrawerOpen])
+}
+
 export function useAccountDrawer(): [boolean, () => void] {
   const accountDrawerOpen = useAtomValue(accountDrawerOpenAtom)
   return [accountDrawerOpen, useToggleAccountDrawer()]
@@ -200,7 +205,7 @@ function AccountDrawer() {
           name={InterfaceEventName.MINI_PORTFOLIO_TOGGLED}
           properties={{ type: 'close' }}
         >
-          <CloseDrawer onClick={toggleWalletDrawer}>
+          <CloseDrawer onClick={toggleWalletDrawer} data-testid="close-account-drawer">
             <CloseIcon />
           </CloseDrawer>
         </TraceEvent>

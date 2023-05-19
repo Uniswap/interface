@@ -35,6 +35,7 @@ import {
 } from 'make-plural/plurals'
 import { PluralCategory } from 'make-plural/plurals'
 import { ReactNode, useEffect } from 'react'
+import { retry } from 'utils/retry'
 
 type LocalePlural = {
   [key in SupportedLocale]: (n: number | string, ord?: boolean) => PluralCategory
@@ -79,7 +80,7 @@ const plurals: LocalePlural = {
 export async function dynamicActivate(locale: SupportedLocale) {
   i18n.loadLocaleData(locale, { plurals: () => plurals[locale] })
   try {
-    const catalog = await import(`locales/${locale}.js`)
+    const catalog = await retry(() => import(`locales/${locale}.js`))
     // Bundlers will either export it as default or as a named export named default.
     i18n.load(locale, catalog.messages || catalog.default.messages)
   } catch (error: unknown) {

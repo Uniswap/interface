@@ -1,12 +1,14 @@
 import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { SupportedChainId } from 'constants/chains'
 import useAutoSlippageTolerance from 'hooks/useAutoSlippageTolerance'
 import { useBestTrade } from 'hooks/useBestTrade'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { ParsedQs } from 'qs'
 import { ReactNode, useCallback, useEffect, useMemo } from 'react'
-import { useAppDispatch, useAppSelector } from 'state/hooks'
+import { AnyAction } from 'redux'
+import { useAppDispatch } from 'state/hooks'
 import { InterfaceTrade, TradeState } from 'state/routing/types'
 import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
 
@@ -16,21 +18,15 @@ import useENS from '../../hooks/useENS'
 import useParsedQueryString from '../../hooks/useParsedQueryString'
 import { isAddress } from '../../utils'
 import { useCurrencyBalances } from '../connection/hooks'
-import { AppState } from '../types'
 import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies, typeInput } from './actions'
 import { SwapState } from './reducer'
 
-export function useSwapState(): AppState['swap'] {
-  return useAppSelector((state) => state.swap)
-}
-
-export function useSwapActionHandlers(): {
+export function useSwapActionHandlers(dispatch: React.Dispatch<AnyAction>): {
   onCurrencySelection: (field: Field, currency: Currency) => void
   onSwitchTokens: () => void
   onUserInput: (field: Field, typedValue: string) => void
   onChangeRecipient: (recipient: string | null) => void
 } {
-  const dispatch = useAppDispatch()
   const onCurrencySelection = useCallback(
     (field: Field, currency: Currency) => {
       dispatch(
@@ -76,16 +72,20 @@ const BAD_RECIPIENT_ADDRESSES: { [address: string]: true } = {
 }
 
 // from the current swap inputs, compute the best trade and return it.
-export function useDerivedSwapInfo(): {
+export function useDerivedSwapInfo(
+  state: SwapState,
+  chainId: SupportedChainId | undefined
+): {
   currencies: { [field in Field]?: Currency | null }
   currencyBalances: { [field in Field]?: CurrencyAmount<Currency> }
   parsedAmount: CurrencyAmount<Currency> | undefined
   inputError?: ReactNode
   trade: {
-    trade: InterfaceTrade<Currency, Currency, TradeType> | undefined
+    trade?: InterfaceTrade
     state: TradeState
   }
   allowedSlippage: Percent
+  autoSlippage: Percent
 } {
   const { account } = useWeb3React()
 
@@ -95,10 +95,10 @@ export function useDerivedSwapInfo(): {
     [Field.INPUT]: { currencyId: inputCurrencyId },
     [Field.OUTPUT]: { currencyId: outputCurrencyId },
     recipient,
-  } = useSwapState()
+  } = state
 
-  const inputCurrency = useCurrency(inputCurrencyId)
-  const outputCurrency = useCurrency(outputCurrencyId)
+  const inputCurrency = useCurrency(inputCurrencyId, chainId)
+  const outputCurrency = useCurrency(outputCurrencyId, chainId)
   const recipientLookup = useENS(recipient ?? undefined)
   const to: string | null = (recipient === null ? account : recipientLookup.address) ?? null
 
@@ -136,8 +136,8 @@ export function useDerivedSwapInfo(): {
   )
 
   // allowed slippage is either auto slippage, or custom user defined slippage if auto slippage disabled
-  const autoSlippageTolerance = useAutoSlippageTolerance(trade.trade)
-  const allowedSlippage = useUserSlippageToleranceWithDefault(autoSlippageTolerance)
+  const autoSlippage = useAutoSlippageTolerance(trade.trade)
+  const allowedSlippage = useUserSlippageToleranceWithDefault(autoSlippage)
 
   const inputError = useMemo(() => {
     let inputError: ReactNode | undefined
@@ -180,9 +180,10 @@ export function useDerivedSwapInfo(): {
       parsedAmount,
       inputError,
       trade,
+      autoSlippage,
       allowedSlippage,
     }),
-    [allowedSlippage, currencies, currencyBalances, inputError, parsedAmount, trade]
+    [allowedSlippage, autoSlippage, currencies, currencyBalances, inputError, parsedAmount, trade]
   )
 }
 
