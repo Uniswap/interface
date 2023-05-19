@@ -22,6 +22,14 @@
       "decimals": 18,
       "chainId": 534353,
       "logoURI": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+    },
+    {
+      "name": "Uniswap Token",
+      "address": "0x0CDEA04b370C1FA4bC2032b4ef23dB3EBCbA258a",
+      "symbol": "UNI",
+      "decimals": 18,
+      "chainId": 534353,
+      "logoURI": "https://assets.coingecko.com/coins/images/12504/thumb/uniswap-uni.png?1600306604"
     }
   ],
   "logoURI": "ipfs://"
