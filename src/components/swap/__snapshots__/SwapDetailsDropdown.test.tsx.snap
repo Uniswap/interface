@@ -1,0 +1,369 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
+<DocumentFragment>
+  .c2 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c3 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c4 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c6 {
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+}
+
+.c9 {
+  color: #0D111C;
+}
+
+.c12 {
+  color: #7780A0;
+}
+
+.c16 {
+  width: 100%;
+  height: 1px;
+  background-color: #D2D9EE;
+}
+
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c15 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 12px;
+}
+
+.c7 {
+  -webkit-filter: none;
+  filter: none;
+  opacity: 1;
+  -webkit-transition: opacity 0.2s ease-in-out;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.c10 {
+  display: inline-block;
+  height: inherit;
+}
+
+.c11 {
+  margin-right: 4px;
+  height: 18px;
+}
+
+.c11 > * {
+  stroke: #98A1C0;
+}
+
+.c8 {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  padding: 0;
+  grid-template-columns: 1fr auto;
+  grid-gap: 0.25rem;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  text-align: left;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+
+.c5 {
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.c13 {
+  -webkit-transform: none;
+  -ms-transform: none;
+  transform: none;
+  -webkit-transition: -webkit-transform 0.1s linear;
+  -webkit-transition: transform 0.1s linear;
+  transition: transform 0.1s linear;
+}
+
+.c14 {
+  padding-top: 12px;
+}
+
+.c1 {
+  border: 1px solid #D2D9EE;
+  border-radius: 16px;
+  padding: 12px 16px;
+}
+
+<div
+    class="c0 c1"
+  >
+    <div
+      class="c2 c3 c4 c5"
+      data-testid="swap-details-header-row"
+    >
+      <div
+        class="c2 c3 c6"
+      >
+        <div
+          class="c7"
+          data-testid="trade-price-container"
+        >
+          <button
+            class="c8"
+            title="1 DEF = 1.00 ABC "
+          >
+            <div
+              class="c9 css-zhpkf8"
+            >
+              1 DEF = 1.00 ABC 
+            </div>
+             
+          </button>
+        </div>
+      </div>
+      <div
+        class="c2 c3 c6"
+      >
+        <div
+          class="c10"
+        >
+          <div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c2 c3 c6"
+              >
+                <svg
+                  class="c11"
+                >
+                  gas-icon.svg
+                </svg>
+                <div
+                  class="c12 css-zhpkf8"
+                >
+                  $1.00
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <svg
+          class="c13"
+          fill="none"
+          height="24"
+          stroke="#98A1C0"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+          width="24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <polyline
+            points="6 9 12 15 18 9"
+          />
+        </svg>
+      </div>
+    </div>
+    <div
+      style="height: 0px; overflow: hidden; width: 100%; will-change: height;"
+    >
+      <div>
+        <div
+          class="c14"
+          data-testid="advanced-swap-details"
+        >
+          <div
+            class="c15"
+          >
+            <div
+              class="c16"
+            />
+            <div
+              class="c2 c3 c4"
+            >
+              <div
+                class="c10"
+              >
+                <div>
+                  <div
+                    class="c12 css-zhpkf8"
+                  >
+                    Network fee
+                  </div>
+                </div>
+              </div>
+              <div
+                class="c9 css-zhpkf8"
+              >
+                ~$1.00
+              </div>
+            </div>
+            <div
+              class="c2 c3 c4"
+            >
+              <div
+                class="c10"
+              >
+                <div>
+                  <div
+                    class="c12 css-zhpkf8"
+                  >
+                    Price Impact
+                  </div>
+                </div>
+              </div>
+              <div
+                class="c9 css-zhpkf8"
+              >
+                105566.37%
+              </div>
+            </div>
+            <div
+              class="c2 c3 c4"
+            >
+              <div
+                class="c2 c3 c6"
+              >
+                <div
+                  class="c10"
+                >
+                  <div>
+                    <div
+                      class="c12 css-zhpkf8"
+                    >
+                      Minimum output
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="c9 css-zhpkf8"
+              >
+                0.00000000000000098 DEF
+              </div>
+            </div>
+            <div
+              class="c2 c3 c4"
+            >
+              <div
+                class="c2 c3 c6"
+              >
+                <div
+                  class="c10"
+                >
+                  <div>
+                    <div
+                      class="c12 css-zhpkf8"
+                    >
+                      Expected output
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="c9 css-zhpkf8"
+              >
+                0.000000000000001 DEF
+              </div>
+            </div>
+            <div
+              class="c16"
+            />
+            <div
+              class="c2 c3 c4"
+            >
+              <div
+                class="c12 css-zhpkf8"
+              >
+                Order routing
+              </div>
+              <div
+                class="c10"
+              >
+                <div>
+                  <div
+                    class="c9 css-zhpkf8"
+                  >
+                    Uniswap API
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;

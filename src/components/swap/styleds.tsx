@@ -1,9 +1,7 @@
-import { TooltipContainer } from 'components/Tooltip'
 import { SupportedChainId } from 'constants/chains'
 import { transparentize } from 'polished'
 import { ReactNode } from 'react'
 import { AlertTriangle } from 'react-feather'
-import { Text } from 'rebass'
 import styled, { css } from 'styled-components/macro'
 import { Z_INDEX } from 'theme/zIndex'
 
@@ -30,8 +28,9 @@ export const SwapWrapper = styled.main<{ chainId: number | undefined }>`
   border-radius: 16px;
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
   padding: 8px;
+  padding-top: 12px;
   box-shadow: ${({ chainId }) => !!chainId && chainId === SupportedChainId.BNB && '0px 40px 120px 0px #f0b90b29'};
-  z-index: ${Z_INDEX.deprecated_content};
+  z-index: ${Z_INDEX.default};
   transition: transform 250ms ease;
 
   &:hover {
@@ -62,24 +61,6 @@ export const ArrowWrapper = styled.div<{ clickable: boolean }>`
           }
         `
       : null}
-`
-
-export const ErrorText = styled(Text)<{ severity?: 0 | 1 | 2 | 3 | 4 }>`
-  color: ${({ theme, severity }) =>
-    severity === 3 || severity === 4
-      ? theme.accentFailure
-      : severity === 2
-      ? theme.deprecated_yellow2
-      : severity === 1
-      ? theme.textPrimary
-      : theme.textSecondary};
-`
-
-export const TruncatedText = styled(Text)`
-  text-overflow: ellipsis;
-  max-width: 220px;
-  overflow: hidden;
-  text-align: right;
 `
 
 // styles
@@ -147,19 +128,7 @@ export function SwapCallbackError({ error }: { error: ReactNode }) {
 export const SwapShowAcceptChanges = styled(AutoColumn)`
   background-color: ${({ theme }) => transparentize(0.95, theme.deprecated_primary3)};
   color: ${({ theme }) => theme.accentAction};
-  padding: 0.5rem;
+  padding: 12px;
   border-radius: 12px;
   margin-top: 8px;
-`
-
-export const ResponsiveTooltipContainer = styled(TooltipContainer)<{ origin?: string; width?: string }>`
-  background-color: ${({ theme }) => theme.backgroundSurface};
-  border: 1px solid ${({ theme }) => theme.backgroundInteractive};
-  padding: 1rem;
-  width: ${({ width }) => width ?? 'auto'};
-
-  ${({ theme, origin }) => theme.deprecated_mediaWidth.deprecated_upToExtraSmall`
-    transform: scale(0.8);
-    transform-origin: ${origin ?? 'top left'};
-  `}
 `

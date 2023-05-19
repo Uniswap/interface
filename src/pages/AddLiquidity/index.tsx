@@ -607,7 +607,7 @@ function AddLiquidity() {
             creating={false}
             adding={true}
             positionID={tokenId}
-            defaultSlippage={DEFAULT_ADD_IN_RANGE_SLIPPAGE_TOLERANCE}
+            autoSlippage={DEFAULT_ADD_IN_RANGE_SLIPPAGE_TOLERANCE}
             showBackLink={!hasExistingPosition}
           >
             {!hasExistingPosition && (

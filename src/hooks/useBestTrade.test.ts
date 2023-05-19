@@ -3,7 +3,7 @@ import { CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { DAI, USDC_MAINNET } from 'constants/tokens'
 import { RouterPreference } from 'state/routing/slice'
 import { TradeState } from 'state/routing/types'
-import { useClientSideRouter } from 'state/user/hooks'
+import { useRouterPreference } from 'state/user/hooks'
 import { mocked } from 'test-utils/mocked'
 
 import { useRoutingAPITrade } from '../state/routing/useRoutingAPITrade'
@@ -38,7 +38,7 @@ beforeEach(() => {
 
   mocked(useIsWindowVisible).mockReturnValue(true)
   mocked(useAutoRouterSupported).mockReturnValue(true)
-  mocked(useClientSideRouter).mockReturnValue([true, () => undefined])
+  mocked(useRouterPreference).mockReturnValue([RouterPreference.CLIENT, () => undefined])
 })
 
 describe('#useBestV3Trade ExactIn', () => {
@@ -82,15 +82,6 @@ describe('#useBestV3Trade ExactIn', () => {
 
       expect(useClientSideV3Trade).toHaveBeenCalledWith(TradeType.EXACT_INPUT, undefined, undefined)
       expect(result.current).toEqual({ state: TradeState.VALID, trade: undefined })
-    })
-
-    it('does not compute client side v3 trade if routing api is SYNCING', () => {
-      expectRouterMock(TradeState.SYNCING)
-
-      const { result } = renderHook(() => useBestTrade(TradeType.EXACT_INPUT, USDCAmount, DAI))
-
-      expect(useClientSideV3Trade).toHaveBeenCalledWith(TradeType.EXACT_INPUT, undefined, undefined)
-      expect(result.current).toEqual({ state: TradeState.SYNCING, trade: undefined })
     })
   })
 
@@ -166,15 +157,6 @@ describe('#useBestV3Trade ExactOut', () => {
 
       expect(useClientSideV3Trade).toHaveBeenCalledWith(TradeType.EXACT_OUTPUT, undefined, undefined)
       expect(result.current).toEqual({ state: TradeState.VALID, trade: undefined })
-    })
-
-    it('does not compute client side v3 trade if routing api is SYNCING', () => {
-      expectRouterMock(TradeState.SYNCING)
-
-      const { result } = renderHook(() => useBestTrade(TradeType.EXACT_OUTPUT, DAIAmount, USDC_MAINNET))
-
-      expect(useClientSideV3Trade).toHaveBeenCalledWith(TradeType.EXACT_OUTPUT, undefined, undefined)
-      expect(result.current).toEqual({ state: TradeState.SYNCING, trade: undefined })
     })
   })
 

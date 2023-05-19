@@ -67,15 +67,18 @@ const fonts = {
   code: 'courier, courier new, serif',
 }
 
+const gapValues = {
+  xs: '4px',
+  sm: '8px',
+  md: '12px',
+  lg: '24px',
+  xl: '32px',
+}
+export type Gap = keyof typeof gapValues
+
 function getSettings(darkMode: boolean) {
   return {
-    grids: {
-      xs: '4px',
-      sm: '8px',
-      md: '12px',
-      lg: '24px',
-      xl: '32px',
-    },
+    grids: gapValues,
     fonts,
 
     // shadows
@@ -118,7 +121,7 @@ export const ThemedGlobalStyle = createGlobalStyle`
     background-color: ${({ theme }) => theme.background} !important;
   }
 
-  summary::-webkit-details-marker {
+ summary::-webkit-details-marker {
     display:none;
   }
 

@@ -1,5 +1,5 @@
 import { CoinbaseWallet } from '@web3-react/coinbase-wallet'
-import { initializeConnector, Web3ReactHooks } from '@web3-react/core'
+import { initializeConnector } from '@web3-react/core'
 import { GnosisSafe } from '@web3-react/gnosis-safe'
 import { MetaMask } from '@web3-react/metamask'
 import { Network } from '@web3-react/network'
@@ -18,28 +18,9 @@ import { isMobile, isNonIOSPhone } from 'utils/userAgent'
 
 import { RPC_URLS } from '../constants/networks'
 import { RPC_PROVIDERS } from '../constants/providers'
+import { Connection, ConnectionType } from './types'
 import { getIsCoinbaseWallet, getIsInjected, getIsMetaMaskWallet } from './utils'
 import { UniwalletConnect, WalletConnectPopup } from './WalletConnect'
-
-export enum ConnectionType {
-  UNIWALLET = 'UNIWALLET',
-  INJECTED = 'INJECTED',
-  COINBASE_WALLET = 'COINBASE_WALLET',
-  WALLET_CONNECT = 'WALLET_CONNECT',
-  NETWORK = 'NETWORK',
-  GNOSIS_SAFE = 'GNOSIS_SAFE',
-}
-
-export interface Connection {
-  getName(): string
-  connector: Connector
-  hooks: Web3ReactHooks
-  type: ConnectionType
-  getIcon?(isDarkMode: boolean): string
-  shouldDisplay(): boolean
-  overrideActivate?: () => boolean
-  isNew?: boolean
-}
 
 function onError(error: Error) {
   console.debug(`web3-react error: ${error}`)

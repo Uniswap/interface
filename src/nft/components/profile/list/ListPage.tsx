@@ -183,7 +183,7 @@ const EthValueWrapper = styled.span<{ totalEthListingValue: boolean }>`
 
 export const ListPage = () => {
   const { setProfilePageState: setSellPageState } = useProfilePageState()
-  const { provider } = useWeb3React()
+  const { provider, chainId } = useWeb3React()
   const isMobile = useIsMobile()
   const trace = useTrace({ modal: InterfaceModalName.NFT_LISTING })
   const { setGlobalMarketplaces, sellAssets, issues } = useSellAsset(
@@ -205,7 +205,7 @@ export const ListPage = () => {
   )
 
   const totalEthListingValue = useMemo(() => getTotalEthValue(sellAssets), [sellAssets])
-  const nativeCurrency = useNativeCurrency()
+  const nativeCurrency = useNativeCurrency(chainId)
   const parsedAmount = tryParseCurrencyAmount(totalEthListingValue.toString(), nativeCurrency)
   const usdcValue = useStablecoinValue(parsedAmount)
   const usdcAmount = formatCurrencyAmount(usdcValue, NumberType.FiatTokenPrice)

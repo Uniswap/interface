@@ -9,13 +9,14 @@ import { DataPageHeader } from './DataPageHeader'
 import { DataPageTable } from './DataPageTable'
 import { DataPageTraits } from './DataPageTraits'
 
-const DataPageContainer = styled(Column)`
+const DataPagePaddingContainer = styled.div`
   padding: 24px 64px;
   height: 100vh;
   width: 100%;
-  gap: 36px;
-  max-width: ${({ theme }) => theme.maxWidth};
-  margin: 0 auto;
+
+  @media screen and (max-width: ${BREAKPOINTS.md}px) {
+    height: 100%;
+  }
 
   @media screen and (max-width: ${BREAKPOINTS.sm}px) {
     padding: 24px 48px;
@@ -23,6 +24,28 @@ const DataPageContainer = styled(Column)`
 
   @media screen and (max-width: ${BREAKPOINTS.xs}px) {
     padding: 24px 20px;
+  }
+`
+
+const DataPageContainer = styled(Column)`
+  height: 100%;
+  width: 100%;
+  gap: 36px;
+  max-width: ${({ theme }) => theme.maxWidth};
+  margin: 0 auto;
+`
+
+const HeaderContainer = styled.div<{ showDataHeader?: boolean }>`
+  position: sticky;
+  top: ${({ theme }) => `${theme.navHeight}px`};
+  padding-top: 16px;
+  backdrop-filter: blur(12px);
+  z-index: 1;
+  transition: ${({ theme }) => `opacity ${theme.transition.duration.fast}`};
+  opacity: ${({ showDataHeader }) => (showDataHeader ? '1' : '0')};
+
+  @media screen and (max-width: ${BREAKPOINTS.md}px) {
+    display: none;
   }
 `
 
@@ -41,17 +64,21 @@ const LeftColumn = styled(Column)`
   align-self: flex-start;
 `
 
-export const DataPage = ({ asset }: { asset: GenieAsset }) => {
+export const DataPage = ({ asset, showDataHeader }: { asset: GenieAsset; showDataHeader: boolean }) => {
   return (
-    <DataPageContainer>
-      <DataPageHeader />
-      <ContentContainer>
-        <LeftColumn>
-          <DataPageTraits asset={asset} />
-          <DataPageDescription />
-        </LeftColumn>
-        <DataPageTable />
-      </ContentContainer>
-    </DataPageContainer>
+    <DataPagePaddingContainer>
+      <DataPageContainer>
+        <HeaderContainer showDataHeader={showDataHeader}>
+          <DataPageHeader asset={asset} />
+        </HeaderContainer>
+        <ContentContainer>
+          <LeftColumn>
+            {!!asset.traits?.length && <DataPageTraits asset={asset} />}
+            <DataPageDescription />
+          </LeftColumn>
+          <DataPageTable asset={asset} />
+        </ContentContainer>
+      </DataPageContainer>
+    </DataPagePaddingContainer>
   )
 }

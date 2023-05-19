@@ -1,7 +1,7 @@
 name: Release
 on:
   schedule:
-    - cron: '0 12 * * 1-4' # every day 12:00 UTC Monday-Thursday
+    - cron: '0 16 * * 1-4' # every day 16:00 UTC Monday-Thursday
   # manual trigger
   workflow_dispatch:
 
@@ -47,7 +47,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
-      - run: yarn prepare
       - run: yarn build
 
       - name: Pin to IPFS
@@ -114,7 +113,7 @@ jobs:
           githubToken: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload source maps to Sentry
-        uses: getsentry/action-release@bd5f874fcda966ba48139b0140fb3ec0cb3aabdd
+        uses: getsentry/action-release@4744f6a65149f441c5f396d5b0877307c0db52c7
         continue-on-error: true
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}

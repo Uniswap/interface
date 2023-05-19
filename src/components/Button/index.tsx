@@ -296,7 +296,7 @@ export function ButtonConfirmed({
   }
 }
 
-export function ButtonError({ error, ...rest }: { error?: boolean } & ButtonProps) {
+export function ButtonError({ error, ...rest }: { error?: boolean } & BaseButtonProps) {
   if (error) {
     return <ButtonErrorStyle {...rest} />
   } else {

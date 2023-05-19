@@ -1,8 +1,11 @@
 import '@testing-library/jest-dom' // jest custom assertions
+import 'polyfills'
 import 'jest-styled-components' // adds style diffs to snapshot tests
+import 'polyfills'
 
 import type { createPopper } from '@popperjs/core'
 import { useWeb3React } from '@web3-react/core'
+import failOnConsole from 'jest-fail-on-console'
 import { Readable } from 'stream'
 import { mocked } from 'test-utils/mocked'
 import { TextDecoder, TextEncoder } from 'util'
@@ -16,15 +19,19 @@ if (typeof global.TextEncoder === 'undefined') {
   global.TextDecoder = TextDecoder as typeof global.TextDecoder
 }
 
+// Sets origin to the production origin, because some tests depend on this.
+// This prevents each test file from needing to set this manually.
+global.origin = 'https://app.uniswap.org'
+
 global.matchMedia =
   global.matchMedia ||
-  function () {
+  (() => {
     return {
       matches: false,
       addEventListener: jest.fn(),
       removeEventListener: jest.fn(),
     }
-  }
+  })
 
 jest.mock('@popperjs/core', () => {
   const core = jest.requireActual('@popperjs/core')
@@ -73,4 +80,23 @@ beforeEach(() => {
 
   // Mock useWeb3React to return a chainId of 1 by default.
   mocked(useWeb3React).mockReturnValue({ chainId: 1 } as ReturnType<typeof useWeb3React>)
+})
+
+/**
+ * Fail tests if anything is logged to the console. This keeps the console clean and ensures test output stays readable.
+ * If something should log to the console, it should be stubbed and asserted:
+ * @example
+ * beforeEach(() => jest.spyOn(console, 'error').mockReturnsValue())
+ * it('should log an error', () => {
+ *   example()
+ *   expect(console.error).toHaveBeenCalledWith(expect.any(Error))
+ * })
+ */
+failOnConsole({
+  shouldFailOnAssert: true,
+  shouldFailOnDebug: true,
+  shouldFailOnError: true,
+  shouldFailOnInfo: true,
+  shouldFailOnLog: true,
+  shouldFailOnWarn: true,
 })

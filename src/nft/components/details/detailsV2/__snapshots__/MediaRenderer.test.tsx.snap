@@ -1,0 +1,260 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Media renderer renders a video nft correctly 1`] = `
+<DocumentFragment>
+  .c0 {
+  position: relative;
+  object-fit: contain;
+  height: 100%;
+  width: 100%;
+  aspect-ratio: 1;
+  z-index: 1;
+}
+
+@media screen and (min-width:1280px) {
+
+}
+
+<video
+    autoplay=""
+    class="c0"
+    controls=""
+    loop=""
+    src="https://openseauserdata.com/files/5af92728200027caa4f3f5ae87a486a7.mp4"
+  />
+  .c1 {
+  object-fit: contain;
+  height: 100%;
+  aspect-ratio: 1;
+  border-radius: 20px;
+  -webkit-filter: blur(25px);
+  filter: blur(25px);
+}
+
+.c0 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+
+@media screen and (min-width:1280px) {
+  .c1 {
+    -webkit-filter: blur(50px);
+    filter: blur(50px);
+  }
+}
+
+<div
+    class="c0"
+  >
+    <img
+      class="c1"
+      src="https://i.seadn.io/gae/tkDbNhjjBZV2PmYaJbJOOigywZCrlcyGRxeQFkZS1YZyihyG5GoWNWj3N9f1T7YVuaxOqdxhfJylC9ejtoCvdgBE932vd7jorVqA?w=500&auto=format"
+    />
+  </div>
+</DocumentFragment>
+`;
+
+exports[`Media renderer renders an audio nft correctly 1`] = `
+<DocumentFragment>
+  .c1 {
+  position: relative;
+  object-fit: contain;
+  height: 100%;
+  width: 100%;
+  aspect-ratio: 1;
+  z-index: 1;
+}
+
+.c0 {
+  position: relative;
+}
+
+.c2 {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  z-index: 2;
+  width: 100%;
+}
+
+@media screen and (min-width:1280px) {
+
+}
+
+<div
+    class="c0"
+  >
+    <img
+      alt="Death Row Session: Vol. 2 (420 Edition) #320"
+      class="c1"
+      src="https://i.seadn.io/gae/Kze9SBqn_6O0qrHKxspo1gRkkDV2A5EmTeWtvdS-dNxBsvi_wPXUYjc6De0sUC-DYzL093102mUftenWxwWuTelqsdw-ngoBC3o2XFU?w=500&auto=format"
+    />
+    <audio
+      class="c2"
+      controls=""
+      src="https://openseauserdata.com/files/4a22253e44e10baa11484a2e43efefda.mp3"
+    />
+  </div>
+  .c1 {
+  object-fit: contain;
+  height: 100%;
+  aspect-ratio: 1;
+  border-radius: 20px;
+  -webkit-filter: blur(25px);
+  filter: blur(25px);
+}
+
+.c0 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+
+@media screen and (min-width:1280px) {
+  .c1 {
+    -webkit-filter: blur(50px);
+    filter: blur(50px);
+  }
+}
+
+<div
+    class="c0"
+  >
+    <img
+      class="c1"
+      src="https://i.seadn.io/gae/Kze9SBqn_6O0qrHKxspo1gRkkDV2A5EmTeWtvdS-dNxBsvi_wPXUYjc6De0sUC-DYzL093102mUftenWxwWuTelqsdw-ngoBC3o2XFU?w=500&auto=format"
+    />
+  </div>
+</DocumentFragment>
+`;
+
+exports[`Media renderer renders an embedded nft correctly 1`] = `
+<DocumentFragment>
+  .c0 {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  padding-top: 100%;
+  z-index: 1;
+}
+
+.c1 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+}
+
+@media screen and (min-width:1280px) {
+
+}
+
+<div
+    class="c0"
+  >
+    <iframe
+      allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+      class="c1"
+      frameborder="0"
+      sandbox="allow-scripts"
+      src="https://tokens.mathcastles.xyz/terraforms/token-html/7202"
+      title="Level 13 at {28, 3}"
+    />
+  </div>
+  .c1 {
+  object-fit: contain;
+  height: 100%;
+  aspect-ratio: 1;
+  border-radius: 20px;
+  -webkit-filter: blur(25px);
+  filter: blur(25px);
+}
+
+.c0 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+
+@media screen and (min-width:1280px) {
+  .c1 {
+    -webkit-filter: blur(50px);
+    filter: blur(50px);
+  }
+}
+
+<div
+    class="c0"
+  >
+    <img
+      class="c1"
+      src="https://cdn.center.app/v2/1/06ff92279474add6ce06176e2a65447396edf786d169d8ccc03fddfa45ce004f/bb01f8a2f093ea4619498dae58fc19e5ba3fa38a84cabf92948994609489d566.png"
+    />
+  </div>
+</DocumentFragment>
+`;
+
+exports[`Media renderer renders image nft correctly 1`] = `
+<DocumentFragment>
+  .c0 {
+  position: relative;
+  object-fit: contain;
+  height: 100%;
+  width: 100%;
+  aspect-ratio: 1;
+  z-index: 1;
+}
+
+@media screen and (min-width:1280px) {
+
+}
+
+<img
+    alt="Azuki #3318"
+    class="c0"
+    src="https://cdn.center.app/1/0xED5AF388653567Af2F388E6224dC7C4b3241C544/3318/50ed67ad647d0aa0cad0b830d136a677efc2fb72a44587bc35f2a5fb334a7fdf.png"
+  />
+  .c1 {
+  object-fit: contain;
+  height: 100%;
+  aspect-ratio: 1;
+  border-radius: 20px;
+  -webkit-filter: blur(25px);
+  filter: blur(25px);
+}
+
+.c0 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+
+@media screen and (min-width:1280px) {
+  .c1 {
+    -webkit-filter: blur(50px);
+    filter: blur(50px);
+  }
+}
+
+<div
+    class="c0"
+  >
+    <img
+      class="c1"
+      src="https://cdn.center.app/1/0xED5AF388653567Af2F388E6224dC7C4b3241C544/3318/50ed67ad647d0aa0cad0b830d136a677efc2fb72a44587bc35f2a5fb334a7fdf.png"
+    />
+  </div>
+</DocumentFragment>
+`;

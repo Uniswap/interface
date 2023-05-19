@@ -1,7 +1,9 @@
 import INJECTED_DARK_ICON from 'assets/svg/browser-wallet-dark.svg'
 import INJECTED_LIGHT_ICON from 'assets/svg/browser-wallet-light.svg'
-import { ConnectionType, getConnections, useGetConnection } from 'connection'
+import { getConnections, useGetConnection } from 'connection'
 import { renderHook } from 'test-utils/render'
+
+import { ConnectionType } from './types'
 
 const UserAgentMock = jest.requireMock('utils/userAgent')
 jest.mock('utils/userAgent', () => ({

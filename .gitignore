@@ -8,8 +8,10 @@
 /src/locales/**/en-US.po
 /src/locales/**/pseudo.po
 
-# generated graphql types
-/src/graphql/**/__generated__
+# generated files
+/src/**/__generated__
+
+# schema
 schema.graphql
 
 # dependencies

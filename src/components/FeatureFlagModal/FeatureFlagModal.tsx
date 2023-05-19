@@ -1,8 +1,7 @@
 import { BaseVariant, FeatureFlag, featureFlagSettings, useUpdateFlag } from 'featureFlags'
 import { DetailsV2Variant, useDetailsV2Flag } from 'featureFlags/flags/nftDetails'
-import { PayWithAnyTokenVariant, usePayWithAnyTokenFlag } from 'featureFlags/flags/payWithAnyToken'
-import { SwapWidgetVariant, useSwapWidgetFlag } from 'featureFlags/flags/swapWidget'
 import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
+import { UnifiedRouterVariant, useUnifiedRoutingAPIFlag } from 'featureFlags/flags/unifiedRouter'
 import { useUpdateAtom } from 'jotai/utils'
 import { Children, PropsWithChildren, ReactElement, ReactNode, useCallback, useState } from 'react'
 import { X } from 'react-feather'
@@ -204,22 +203,16 @@ export default function FeatureFlagModal() {
         </CloseButton>
       </Header>
       <FeatureFlagOption
-        variant={PayWithAnyTokenVariant}
-        value={usePayWithAnyTokenFlag()}
-        featureFlag={FeatureFlag.payWithAnyToken}
-        label="Pay With Any Token"
-      />
-      <FeatureFlagOption
-        variant={SwapWidgetVariant}
-        value={useSwapWidgetFlag()}
-        featureFlag={FeatureFlag.swapWidget}
-        label="Swap Widget"
-      />
-      <FeatureFlagOption
         variant={DetailsV2Variant}
         value={useDetailsV2Flag()}
         featureFlag={FeatureFlag.detailsV2}
         label="Use the new details page for nfts"
+      />
+      <FeatureFlagOption
+        variant={UnifiedRouterVariant}
+        value={useUnifiedRoutingAPIFlag()}
+        featureFlag={FeatureFlag.uraEnabled}
+        label="Enable the Unified Routing API"
       />
       <FeatureFlagGroup name="Debug">
         <FeatureFlagOption
