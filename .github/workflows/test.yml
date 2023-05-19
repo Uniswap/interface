@@ -26,11 +26,6 @@ jobs:
           key: ${{ runner.os }}-eslint-${{ hashFiles('**/yarn.lock') }}-${{ github.run_id }}
           restore-keys: ${{ runner.os }}-eslint-${{ hashFiles('**/yarn.lock') }}-
       - run: yarn lint
-      - if: failure() && github.ref_name == 'main'
-        uses: ./.github/actions/report
-        with:
-          name: Lint
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_TEST_REPORTER_WEBHOOK }}
   
   typecheck:
     runs-on: ubuntu-latest
@@ -44,11 +39,6 @@ jobs:
           key: ${{ runner.os }}-tsc-${{ hashFiles('**/yarn.lock') }}-${{ github.run_id }}
           restore-keys: ${{ runner.os }}-tsc-${{ hashFiles('**/yarn.lock') }}-
       - run: yarn typecheck
-      - if: failure() && github.ref_name == 'main'
-        uses: ./.github/actions/report
-        with:
-          name: Typecheck
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_TEST_REPORTER_WEBHOOK }}
 
   deps-tests:
     runs-on: ubuntu-latest
@@ -56,11 +46,6 @@ jobs:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
       - run: yarn yarn-deduplicate --strategy=highest --list --fail
-      - if: failure() && github.ref_name == 'main'
-        uses: ./.github/actions/report
-        with:
-          name: Dependency checks
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_TEST_REPORTER_WEBHOOK }}
 
   unit-tests:
     runs-on: ubuntu-latest
@@ -80,11 +65,6 @@ jobs:
           fail_ci_if_error: false
           verbose: true
           flags: unit-tests
-      - if: failure() && github.ref_name == 'main'
-        uses: ./.github/actions/report
-        with:
-          name: Unit tests
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_TEST_REPORTER_WEBHOOK }}
 
   build-e2e:
     runs-on: ubuntu-latest
@@ -176,8 +156,38 @@ jobs:
       - uses: actions/checkout@v3
       - if: needs.cypress-test-matrix.result != 'success'
         run: exit 1
-      - if: failure() && github.ref_name == 'main'
+
+
+  # Report any failures for any jobs when pushing to main (PR is already approved)
+  failure-notification:
+    if: always() && github.ref == 'refs/heads/main'
+    needs: [lint, typecheck, deps-tests, unit-tests, cypress-tests] # Include all the jobs here we want to report on
+    runs-on: ubuntu-latest
+    environment:
+      name: 'notify/test'
+    steps:
+      - name: Identify Failed Job 
+        id: failed_job
+        # This will look through the jobToReportName to find the more human readable name of the failed job, if not found will use the job name
+        run: |
+          jobToReportName='{
+            "lint": "Lint",
+            "typecheck": "Typecheck",
+            "deps-tests": "Dependency checks",
+            "unit-tests": "Unit tests",
+            "cypress-tests": "Cypress tests"
+          }'
+          for job in $(echo "${jobToReportName}" | jq -r 'keys[]'); do
+            if [[ "${{ needs[job].result }}" != "success" ]]; then
+              reportName=$(echo "${jobToReportName}" | jq -r --arg job "$job" '.[$job]')
+              echo "::set-output name=FAILED_JOB::${reportName:-$job}"
+              break
+            fi
+          done
+        shell: bash
+      - name: Notify on Failure
+        if: steps.failed_job.outputs.FAILED_JOB != ''
         uses: ./.github/actions/report
         with:
-          name: Cypress tests
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_TEST_REPORTER_WEBHOOK }}
+          name: ${{ steps.failed_job.outputs.FAILED_JOB }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
