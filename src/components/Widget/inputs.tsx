@@ -1,6 +1,6 @@
+import { Currency, Field, SwapController, SwapEventHandlers, TradeType } from '@pollum-io/widgets'
 import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
 import { InterfaceSectionName, SwapEventName } from '@uniswap/analytics-events'
-import { Currency, Field, SwapController, SwapEventHandlers, TradeType } from '@pollum-io/widgets'
 import { useWeb3React } from '@web3-react/core'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
 import { isSupportedChain } from 'constants/chains'

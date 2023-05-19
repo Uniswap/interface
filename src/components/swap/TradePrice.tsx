@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
-import { formatNumber, NumberType } from '@uniswap/conedison/format'
 import { Currency, Price } from '@pollum-io/sdk-core'
+import { formatNumber, NumberType } from '@uniswap/conedison/format'
 import { useUSDPrice } from 'hooks/useUSDPrice'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useCallback, useState } from 'react'

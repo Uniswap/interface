@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
-import { formatCurrencyAmount, NumberType } from '@uniswap/conedison/format'
 import { Currency } from '@pollum-io/sdk-core'
+import { formatCurrencyAmount, NumberType } from '@uniswap/conedison/format'
 import { useWeb3React } from '@web3-react/core'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { useDummyGateEnabled } from 'featureFlags/flags/dummyFeatureGate'

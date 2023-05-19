@@ -3,13 +3,12 @@ import { abi as STAKING_REWARDS_ABI } from '@pollum-io/pegasys-protocol/artifact
 import { CurrencyAmount, Token } from '@pollum-io/sdk-core'
 import { Pair } from '@pollum-io/v1-sdk'
 import { useWeb3React } from '@web3-react/core'
-import { SupportedChainId } from 'constants/chains'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import JSBI from 'jsbi'
 import { NEVER_RELOAD, useMultipleContractSingleData } from 'lib/hooks/multicall'
 import { useMemo } from 'react'
 
-import {  UNI } from '../../constants/tokens'
+import { UNI } from '../../constants/tokens'
 
 const STAKING_REWARDS_INTERFACE = new Interface(STAKING_REWARDS_ABI)
 

@@ -1,3 +1,6 @@
+import { Trade } from '@pollum-io/router-sdk'
+import { Currency, TradeType } from '@pollum-io/sdk-core'
+import { AddEthereumChainParameter, OnReviewSwapClick, SwapWidgetSkeleton } from '@pollum-io/widgets'
 import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
 import {
   InterfaceEventName,
@@ -5,16 +8,6 @@ import {
   SwapEventName,
   SwapPriceUpdateUserResponse,
 } from '@uniswap/analytics-events'
-import { Trade } from '@pollum-io/router-sdk'
-import { Currency, TradeType } from '@pollum-io/sdk-core'
-import {
-  AddEthereumChainParameter,
-  DialogAnimationType,
-  EMPTY_TOKEN_LIST,
-  OnReviewSwapClick,
-  SwapWidget,
-  SwapWidgetSkeleton,
-} from '@pollum-io/widgets'
 import { useWeb3React } from '@web3-react/core'
 import { useToggleAccountDrawer } from 'components/AccountDrawer'
 import { useActiveLocale } from 'hooks/useActiveLocale'

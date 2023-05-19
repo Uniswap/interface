@@ -21,6 +21,7 @@ import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { formatTickPrice } from 'utils/formatTickPrice'
 import { unwrappedToken } from 'utils/unwrappedToken'
 import { hasURL } from 'utils/urlChecks'
+
 import { DAI_ROLLUX, USDC_ROLLUX, USDT_ROLLUX, WBTC_ROLLUX, WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
 
 const LinkRow = styled(Link)`

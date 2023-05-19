@@ -1,5 +1,3 @@
-import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
-import { InterfaceEventName, InterfaceSectionName, SwapEventName } from '@uniswap/analytics-events'
 import { Trade } from '@pollum-io/router-sdk'
 import { Currency, Percent } from '@pollum-io/sdk-core'
 import {
@@ -11,6 +9,8 @@ import {
   TransactionType,
   TransactionType as WidgetTransactionType,
 } from '@pollum-io/widgets'
+import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
+import { InterfaceEventName, InterfaceSectionName, SwapEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import {
   formatPercentInBasisPointsNumber,

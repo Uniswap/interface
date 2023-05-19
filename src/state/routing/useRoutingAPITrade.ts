@@ -1,6 +1,6 @@
-import { skipToken } from '@reduxjs/toolkit/query/react'
 import { Currency, CurrencyAmount, TradeType } from '@pollum-io/sdk-core'
 import { IMetric, MetricLoggerUnit, setGlobalMetric } from '@pollum-io/smart-order-router'
+import { skipToken } from '@reduxjs/toolkit/query/react'
 import { sendTiming } from 'components/analytics'
 import { AVERAGE_L1_BLOCK_TIME } from 'constants/chainInfo'
 import { useStablecoinAmountFromFiatValue } from 'hooks/useStablecoinPrice'

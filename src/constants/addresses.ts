@@ -14,26 +14,27 @@ export const V2_FACTORY_ADDRESSES: AddressMap = {
   [SupportedChainId.ROLLUX_TANENBAUM]: V2_FACTORY_ADDRESS,
 }
 export const V2_ROUTER_ADDRESS: AddressMap = {
-  [SupportedChainId.ROLLUX_TANENBAUM]: '0x29f7Ad37EC018a9eA97D4b3fEebc573b5635fA84'}
+  [SupportedChainId.ROLLUX_TANENBAUM]: '0x29f7Ad37EC018a9eA97D4b3fEebc573b5635fA84',
+}
 
 /* V3 Contract Addresses */
 export const V3_CORE_FACTORY_ADDRESSES: AddressMap = {
-  ...constructSameAddressMap(V3_FACTORY_ADDRESS)
+  ...constructSameAddressMap(V3_FACTORY_ADDRESS),
 }
 
 export const V3_MIGRATOR_ADDRESSES: AddressMap = {
-  ...constructSameAddressMap("0x8C2d6B3651989385D93b66cE61db6602457b257b")
+  ...constructSameAddressMap('0x8C2d6B3651989385D93b66cE61db6602457b257b'),
 }
 
 export const MULTICALL_ADDRESS: AddressMap = {
-  ...constructSameAddressMap('0xCbA1683e1f0BA5061573CCE7C1A73a80C3827cef')
+  ...constructSameAddressMap('0xCbA1683e1f0BA5061573CCE7C1A73a80C3827cef'),
 }
 
 /**
  * The oldest V0 governance address
  */
 export const GOVERNANCE_ALPHA_V0_ADDRESSES: AddressMap = {
-  [SupportedChainId.ROLLUX]:'0x5e4be8Bc9637f0EAA1A755019e06A68ce081D58F' //TODO: deploy this contract to Rollux
+  [SupportedChainId.ROLLUX]: '0x5e4be8Bc9637f0EAA1A755019e06A68ce081D58F', //TODO: deploy this contract to Rollux
 }
 /**
  * The older V1 governance address
@@ -61,19 +62,17 @@ export const ARGENT_WALLET_DETECTOR_ADDRESS: AddressMap = {
 }
 
 export const QUOTER_ADDRESSES: AddressMap = {
-  ...constructSameAddressMap('0xC3d7521CD0Dbde97d9607C4e6389B806B36e8f66')
+  ...constructSameAddressMap('0xC3d7521CD0Dbde97d9607C4e6389B806B36e8f66'),
 }
 
 export const NONFUNGIBLE_POSITION_MANAGER_ADDRESSES: AddressMap = {
-  ...constructSameAddressMap('0xc224d913A70c2AaF34B6f72479995B114020ad8b')
+  ...constructSameAddressMap('0xc224d913A70c2AaF34B6f72479995B114020ad8b'),
 }
 
-export const ENS_REGISTRAR_ADDRESSES: AddressMap = {
-}
+export const ENS_REGISTRAR_ADDRESSES: AddressMap = {}
 
-export const SOCKS_CONTROLLER_ADDRESSES: AddressMap = {
-}
+export const SOCKS_CONTROLLER_ADDRESSES: AddressMap = {}
 
 export const TICK_LENS_ADDRESSES: AddressMap = {
-  ...constructSameAddressMap('0x36975dfB9B2b1c858f77c6797cf7454ACC57816f')
+  ...constructSameAddressMap('0x36975dfB9B2b1c858f77c6797cf7454ACC57816f'),
 }

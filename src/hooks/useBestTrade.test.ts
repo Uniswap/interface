@@ -1,5 +1,5 @@
-import { renderHook } from '@testing-library/react'
 import { CurrencyAmount, TradeType } from '@pollum-io/sdk-core'
+import { renderHook } from '@testing-library/react'
 import { DAI, USDC_MAINNET } from 'constants/tokens'
 import { RouterPreference } from 'state/routing/slice'
 import { TradeState } from 'state/routing/types'

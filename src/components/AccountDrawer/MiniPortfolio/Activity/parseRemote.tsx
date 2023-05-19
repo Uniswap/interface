@@ -1,7 +1,6 @@
 import { t } from '@lingui/macro'
 import { formatNumberOrString, NumberType } from '@uniswap/conedison/format'
-import { SupportedChainId } from '@pollum-io/sdk-core'
-import { NONFUNGIBLE_POSITION_MANAGER_ADDRESSES, UNI_ADDRESS } from 'constants/addresses'
+import { NONFUNGIBLE_POSITION_MANAGER_ADDRESSES } from 'constants/addresses'
 import { nativeOnChain } from 'constants/tokens'
 import {
   ActivityType,

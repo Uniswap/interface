@@ -104,10 +104,7 @@ export function AboutSection({ address, chainId, description, homepageUrl, twitt
         <Trans>Links</Trans>
       </ThemedText.SubHeaderSmall>
       <ResourcesContainer data-cy="resources-container">
-        <Resource
-          name={'Block Explorer'}
-          link={`${explorer}${address === 'NATIVE' ? '' : 'address/' + address}`}
-        />
+        <Resource name="Block Explorer" link={`${explorer}${address === 'NATIVE' ? '' : 'address/' + address}`} />
         <Resource name="More analytics" link={`${infoLink}tokens/${address}`} />
         {homepageUrl && <Resource name="Website" link={homepageUrl} />}
         {twitterName && <Resource name="Twitter" link={`https://twitter.com/${twitterName}`} />}

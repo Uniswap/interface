@@ -1,5 +1,4 @@
 import { Token } from '@pollum-io/sdk-core'
-import { SupportedChainId } from 'constants/chains'
 import uriToHttp from 'lib/utils/uriToHttp'
 import Vibrant from 'node-vibrant/lib/bundle.js'
 import { shade } from 'polished'
@@ -22,7 +21,7 @@ async function getColorFromToken(token: Token): Promise<string | null> {
   let { logoURI } = wrappedToken
   if (!logoURI) {
     // if (token.chainId !== SupportedChainId.MAINNET) {
-      return null
+    return null
     // } else {
     //   logoURI = URIForEthToken(address)
     // }

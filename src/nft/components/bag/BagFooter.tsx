@@ -1,9 +1,9 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { formatEther, parseEther } from '@ethersproject/units'
 import { t, Trans } from '@lingui/macro'
+import { Currency, CurrencyAmount, Token, TradeType } from '@pollum-io/sdk-core'
 import { sendAnalyticsEvent, TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, NFTEventName } from '@uniswap/analytics-events'
-import { Currency, CurrencyAmount, Token, TradeType } from '@pollum-io/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import LoadingGifLight from 'assets/images/lightLoading.gif'
 import LoadingGif from 'assets/images/loading.gif'
@@ -40,7 +40,6 @@ import { InterfaceTrade, TradeState } from 'state/routing/types'
 import styled, { useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
-import { switchChain } from 'utils/switchChain'
 import { shallow } from 'zustand/shallow'
 const FooterContainer = styled.div`
   padding: 0px 12px;
@@ -395,7 +394,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
     //   buttonText = <Trans>Switch networks</Trans>
     //   disabled = false
     //   warningText = <Trans>Wrong network</Trans>
-    // } else 
+    // } else
     if (sufficientBalance === false) {
       buttonText = <Trans>Pay</Trans>
       disabled = true

@@ -64,7 +64,7 @@ export function useUSDPrice(currencyAmount?: CurrencyAmount<Currency>): {
     pollInterval: PollingInterval.Normal,
     notifyOnNetworkStatusChange: true,
     fetchPolicy: 'cache-first',
-  })   // TODO: verify this later
+  }) // TODO: verify this later
 
   // Use USDC price for chains not supported by backend yet
   const stablecoinPrice = useStablecoinPrice(!isGqlSupportedChain(currency?.chainId) ? currency : undefined)

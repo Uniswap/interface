@@ -1,5 +1,5 @@
-import { screen } from '@testing-library/react'
 import { Currency, CurrencyAmount as mockCurrencyAmount, Token as mockToken } from '@pollum-io/sdk-core'
+import { screen } from '@testing-library/react'
 import { DAI, USDC_MAINNET, WBTC } from 'constants/tokens'
 import * as mockJSBI from 'jsbi'
 import { render } from 'test-utils/render'

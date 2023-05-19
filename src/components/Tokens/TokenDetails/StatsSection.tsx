@@ -5,10 +5,9 @@ import { getChainInfo } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
 import { ReactNode } from 'react'
 import styled from 'styled-components/macro'
-import { ExternalLink, ThemedText } from 'theme'
+import { ThemedText } from 'theme'
 import { textFadeIn } from 'theme/styles'
 
-import { UNSUPPORTED_METADATA_CHAINS } from '../constants'
 import { TokenSortMethod } from '../state'
 import { HEADER_DESCRIPTIONS } from '../TokenTable/TokenRow'
 
@@ -113,7 +112,7 @@ export default function StatsSection(props: StatsSectionProps) {
     )
   } else {
     return <NoData>No stats available</NoData>
-    
+
     // UNSUPPORTED_METADATA_CHAINS.includes(chainId) ? (
     //   <>
     //     <Header>

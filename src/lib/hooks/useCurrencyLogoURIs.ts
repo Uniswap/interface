@@ -4,26 +4,23 @@ import { useMemo } from 'react'
 import { isAddress } from 'utils'
 
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
-import BnbLogo from '../../assets/svg/bnb-logo.svg'
-import CeloLogo from '../../assets/svg/celo_logo.svg'
-import MaticLogo from '../../assets/svg/matic-token-icon.svg'
-import {  NATIVE_CHAIN_ID, nativeOnChain } from '../../constants/tokens'
+import { NATIVE_CHAIN_ID } from '../../constants/tokens'
 
-type Network = 'rollux' | 'rollux_tanenbaum' 
+type Network = 'rollux' | 'rollux_tanenbaum'
 export function chainIdToNetworkName(networkId: SupportedChainId): Network {
   switch (networkId) {
     // case SupportedChainId.MAINNET:
-      // return 'ethereum'
+    // return 'ethereum'
     // case SupportedChainId.ARBITRUM_ONE:
-      // return 'arbitrum'
+    // return 'arbitrum'
     case SupportedChainId.ROLLUX:
       return 'rollux'
     case SupportedChainId.ROLLUX_TANENBAUM:
       return 'rollux_tanenbaum'
     // case SupportedChainId.POLYGON:
-      // return 'polygon'
+    // return 'polygon'
     // case SupportedChainId.BNB:
-      // return 'smartchain'
+    // return 'smartchain'
     default:
       return 'rollux'
   }
@@ -33,12 +30,12 @@ export function getNativeLogoURI(chainId: SupportedChainId = SupportedChainId.RO
   switch (chainId) {
     // case SupportedChainId.POLYGON:
     // case SupportedChainId.POLYGON_MUMBAI:
-      // return MaticLogo
+    // return MaticLogo
     // case SupportedChainId.BNB:
-      // return BnbLogo
+    // return BnbLogo
     // case SupportedChainId.CELO:
     // case SupportedChainId.CELO_ALFAJORES:
-      // return CeloLogo
+    // return CeloLogo
     default:
       return EthereumLogo
   }

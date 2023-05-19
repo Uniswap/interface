@@ -1,5 +1,3 @@
-import { SupportedChainId } from 'constants/chains'
-
 export const MAX_WIDTH_MEDIA_BREAKPOINT = '1200px'
 export const XLARGE_MEDIA_BREAKPOINT = '960px'
 export const LARGE_MEDIA_BREAKPOINT = '840px'

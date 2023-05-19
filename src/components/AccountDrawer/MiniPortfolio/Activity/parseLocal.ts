@@ -1,7 +1,7 @@
 import { t } from '@lingui/macro'
-import { formatCurrencyAmount } from '@uniswap/conedison/format'
 import { Currency, CurrencyAmount, TradeType } from '@pollum-io/sdk-core'
 import { nativeOnChain } from '@pollum-io/smart-order-router'
+import { formatCurrencyAmount } from '@uniswap/conedison/format'
 import { SupportedChainId } from 'constants/chains'
 import { TransactionPartsFragment, TransactionStatus } from 'graphql/data/__generated__/types-and-hooks'
 import { useMemo } from 'react'

@@ -2,14 +2,7 @@
 import { Currency, Token } from '@pollum-io/sdk-core'
 import { SupportedChainId } from 'constants/chains'
 
-import {
-  DAI_ROLLUX,
-  nativeOnChain,
-  USDC_ROLLUX,
-  USDT_ROLLUX,
-  WBTC_ROLLUX,
-  WRAPPED_NATIVE_CURRENCY,
-} from './tokens'
+import { DAI_ROLLUX, nativeOnChain, USDC_ROLLUX, USDT_ROLLUX, WBTC_ROLLUX, WRAPPED_NATIVE_CURRENCY } from './tokens'
 
 type ChainTokenList = {
   readonly [chainId: number]: Token[]
@@ -34,24 +27,18 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
     USDC_ROLLUX,
     WBTC_ROLLUX,
   ],
- 
 }
-export const ADDITIONAL_BASES: { [chainId: number]: { [tokenAddress: string]: Token[] } } = {
-
-}
+export const ADDITIONAL_BASES: { [chainId: number]: { [tokenAddress: string]: Token[] } } = {}
 /**
  * Some tokens can only be swapped via certain pairs, so we override the list of bases that are considered for these
  * tokens.
  */
-export const CUSTOM_BASES: { [chainId: number]: { [tokenAddress: string]: Token[] } } = {
-
-}
+export const CUSTOM_BASES: { [chainId: number]: { [tokenAddress: string]: Token[] } } = {}
 
 /**
  * Shows up in the currency select for swap and add liquidity
  */
 export const COMMON_BASES: ChainCurrencyList = {
- 
   [SupportedChainId.ROLLUX]: [
     nativeOnChain(SupportedChainId.ROLLUX),
     DAI_ROLLUX,
@@ -66,6 +53,4 @@ export const COMMON_BASES: ChainCurrencyList = {
 export const BASES_TO_TRACK_LIQUIDITY_FOR: ChainTokenList = {
   ...WRAPPED_NATIVE_CURRENCIES_ONLY,
 }
-export const PINNED_PAIRS: { readonly [chainId: number]: [Token, Token][] } = {
- 
-}
+export const PINNED_PAIRS: { readonly [chainId: number]: [Token, Token][] } = {}

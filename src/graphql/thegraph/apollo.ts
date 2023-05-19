@@ -4,8 +4,6 @@ import { SupportedChainId } from 'constants/chains'
 import store from '../../state/index'
 
 const CHAIN_SUBGRAPH_URL: Record<number, string> = {
-
-
   [SupportedChainId.ROLLUX]: 'https://api.thegraph.com/subgraphs/name/ianlapham/optimism-post-regenesis',
 }
 

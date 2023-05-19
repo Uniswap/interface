@@ -11,7 +11,6 @@ import { SupportedChainId } from 'constants/chains'
  * These "Safe" URLs are listed first, followed by other fallback URLs, which are taken from chainlist.org.
  */
 export const FALLBACK_URLS = {
-  
   [SupportedChainId.ROLLUX]: [
     // "Safe" URLs
     'https://rpc.rollux.com/',
@@ -20,7 +19,6 @@ export const FALLBACK_URLS = {
     // "Safe" URLs
     'https://rpc-tanenbaum.rollux.com/',
   ],
-  
 }
 
 /**
@@ -28,14 +26,9 @@ export const FALLBACK_URLS = {
  * These are the URLs used by the interface when there is not another available source of chain data.
  */
 export const RPC_URLS = {
-
-  [SupportedChainId.ROLLUX]: [
-    `https://rpc.rollux.com/`,
-    ...FALLBACK_URLS[SupportedChainId.ROLLUX],
-  ],
+  [SupportedChainId.ROLLUX]: [`https://rpc.rollux.com/`, ...FALLBACK_URLS[SupportedChainId.ROLLUX]],
   [SupportedChainId.ROLLUX_TANENBAUM]: [
     `https://rpc-tanenbaum.rollux.com/`,
     ...FALLBACK_URLS[SupportedChainId.ROLLUX_TANENBAUM],
   ],
-  
 }

@@ -1,4 +1,7 @@
 import { Trans } from '@lingui/macro'
+import { Trade } from '@pollum-io/router-sdk'
+import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@pollum-io/sdk-core'
+import { UNIVERSAL_ROUTER_ADDRESS } from '@pollum-io/universal-router-sdk'
 import { sendAnalyticsEvent, Trace, TraceEvent } from '@uniswap/analytics'
 import {
   BrowserEvent,
@@ -8,9 +11,6 @@ import {
   InterfaceSectionName,
   SwapEventName,
 } from '@uniswap/analytics-events'
-import { Trade } from '@pollum-io/router-sdk'
-import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@pollum-io/sdk-core'
-import { UNIVERSAL_ROUTER_ADDRESS } from '@pollum-io/universal-router-sdk'
 import { useWeb3React } from '@web3-react/core'
 import LoadingGifLight from 'assets/images/lightLoading.gif'
 import LoadingGif from 'assets/images/loading.gif'

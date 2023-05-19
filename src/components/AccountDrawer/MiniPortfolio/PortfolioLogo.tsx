@@ -145,8 +145,7 @@ export function PortfolioLogo({
   }
 
   const L2Logo =
-    chainId !== SupportedChainId.ROLLUX && chainLogo ? 
-    (
+    chainId !== SupportedChainId.ROLLUX && chainLogo ? (
       <L2LogoContainer $backgroundColor={squareLogoUrl ? theme.backgroundSurface : theme.textPrimary}>
         {squareLogoUrl ? (
           <SquareChainLogo src={chainLogo} alt="chainLogo" />
@@ -154,8 +153,7 @@ export function PortfolioLogo({
           <StyledChainLogo src={chainLogo} alt="chainLogo" />
         )}
       </L2LogoContainer>
-    )
-     : null
+    ) : null
 
   return (
     <StyledLogoParentContainer>

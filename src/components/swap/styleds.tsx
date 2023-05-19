@@ -1,5 +1,4 @@
 import { TooltipContainer } from 'components/Tooltip'
-import { SupportedChainId } from 'constants/chains'
 import { transparentize } from 'polished'
 import { ReactNode } from 'react'
 import { AlertTriangle } from 'react-feather'

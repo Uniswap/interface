@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
+import { Currency, Percent, TradeType } from '@pollum-io/sdk-core'
 import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { SwapEventName, SwapPriceUpdateUserResponse } from '@uniswap/analytics-events'
-import { Currency, Percent, TradeType } from '@pollum-io/sdk-core'
 import { useUSDPrice } from 'hooks/useUSDPrice'
 import { getPriceUpdateBasisPoints } from 'lib/utils/analytics'
 import { useEffect, useState } from 'react'
