@@ -10,14 +10,14 @@ export enum CardType {
   Secondary = 'Secondary',
 }
 
-const StyledCard = styled.div<{ isDarkMode: boolean; backgroundImgSrc?: string; type: CardType }>`
+const StyledCard = styled.div<{ $isDarkMode: boolean; $backgroundImgSrc?: string; type: CardType }>`
   display: flex;
-  background: ${({ isDarkMode, backgroundImgSrc, type, theme }) =>
-    isDarkMode
+  background: ${({ $isDarkMode, $backgroundImgSrc, type, theme }) =>
+    $isDarkMode
       ? `${type === CardType.Primary ? theme.backgroundModule : theme.backgroundSurface} ${
-          backgroundImgSrc ? ` url(${backgroundImgSrc})` : ''
+          $backgroundImgSrc ? ` url(${$backgroundImgSrc})` : ''
         }`
-      : `${type === CardType.Primary ? 'white' : theme.backgroundModule} url(${backgroundImgSrc})`};
+      : `${type === CardType.Primary ? 'white' : theme.backgroundModule} url(${$backgroundImgSrc})`};
   background-size: auto 100%;
   background-position: right;
   background-repeat: no-repeat;
@@ -35,10 +35,10 @@ const StyledCard = styled.div<{ isDarkMode: boolean; backgroundImgSrc?: string; 
   transition: ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.ease} border`};
 
   &:hover {
-    border: 1px solid ${({ theme, isDarkMode }) => (isDarkMode ? theme.backgroundInteractive : theme.textTertiary)};
+    border: 1px solid ${({ theme, $isDarkMode }) => ($isDarkMode ? theme.backgroundInteractive : theme.textTertiary)};
   }
   @media screen and (min-width: ${BREAKPOINTS.sm}px) {
-    height: ${({ backgroundImgSrc }) => (backgroundImgSrc ? 360 : 260)}px;
+    height: ${({ $backgroundImgSrc }) => ($backgroundImgSrc ? 360 : 260)}px;
   }
   @media screen and (min-width: ${BREAKPOINTS.xl}px) {
     padding: 32px;
@@ -131,8 +131,8 @@ const Card = ({
         href={external ? to : undefined}
         target={external ? '_blank' : undefined}
         rel={external ? 'noopenener noreferrer' : undefined}
-        isDarkMode={isDarkMode}
-        backgroundImgSrc={backgroundImgSrc}
+        $isDarkMode={isDarkMode}
+        $backgroundImgSrc={backgroundImgSrc}
       >
         <TitleRow>
           <CardTitle>{title}</CardTitle>
