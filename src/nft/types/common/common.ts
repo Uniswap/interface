@@ -1,4 +1,4 @@
-import { MediaType, NftStandard } from 'graphql/data/__generated__/types-and-hooks'
+import { MediaType, NftMarketplace, NftStandard } from 'graphql/data/__generated__/types-and-hooks'
 import { SortBy } from 'nft/hooks'
 
 import { SellOrder } from '../sell'
@@ -79,6 +79,21 @@ export interface Trait {
   trait_count?: number
   order?: any
 }
+
+export interface Offer {
+  createdAt: number
+  endAt?: number
+  id: string
+  maker: string
+  marketplace: NftMarketplace
+  marketplaceUrl: string
+  price: {
+    currency?: string
+    value: number
+  }
+  quantity?: number
+}
+
 export interface GenieAsset {
   id?: string // This would be a random id created and assigned by front end
   address: string

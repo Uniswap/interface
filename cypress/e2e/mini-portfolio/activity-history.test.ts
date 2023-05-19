@@ -1,24 +1,11 @@
 import { getTestSelector } from '../../utils'
 
 describe('mini-portfolio activity history', () => {
-  afterEach(() => {
-    cy.intercept(
-      {
-        method: 'POST',
-        url: 'https://beta.api.uniswap.org/v1/graphql',
-      },
-      // Pass an empty object to allow the original behavior
-      {}
-    ).as('restoreOriginalBehavior')
-  })
-
-  it('should deduplicate activity history by nonce', () => {
-    cy.visit('/swap', { ethereum: 'hardhat' })
-      .hardhat({ automine: false })
+  beforeEach(() => {
+    cy.hardhat()
       .then((hardhat) => hardhat.wallet.getTransactionCount())
-      .then((currentNonce) => {
-        const nextNonce = currentNonce + 1
-        // Mock graphql response to include a specific nonce.
+      .then((nonce) => {
+        // Mock graphql response to include specific nonces.
         cy.intercept(
           {
             method: 'POST',
@@ -43,7 +30,7 @@ describe('mini-portfolio activity history', () => {
                           status: 'CONFIRMED',
                           to: '0x034a40764485f7e08ca16366e503491a6af7850d',
                           from: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
-                          nonce: currentNonce,
+                          nonce,
                           __typename: 'Transaction',
                         },
                         assetChanges: [],
@@ -61,7 +48,7 @@ describe('mini-portfolio activity history', () => {
                           status: 'CONFIRMED',
                           to: '0x1b5154aa4b8f027b9fd19341132fc9dae10f7359',
                           from: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
-                          nonce: nextNonce,
+                          nonce: nonce + 1,
                           __typename: 'Transaction',
                         },
                         assetChanges: [
@@ -101,33 +88,37 @@ describe('mini-portfolio activity history', () => {
               },
             },
           }
-        ).as('graphqlMock')
-
-        // Input swap info.
-        cy.get('#swap-currency-input .token-amount-input').clear().type('1')
-        cy.get('#swap-currency-output .open-currency-select-button').click()
-        cy.contains('USDC').click()
-        cy.get('#swap-currency-output .token-amount-input').should('not.equal', '')
-
-        // Set slippage to a high value.
-        cy.get(getTestSelector('open-settings-dialog-button')).click()
-        cy.get(getTestSelector('max-slippage-settings')).click()
-        cy.get(getTestSelector('slippage-input')).clear().type('5')
-        cy.get('body').click('topRight')
-        cy.get(getTestSelector('slippage-input')).should('not.exist')
-
-        // Click swap button.
-        cy.contains('1 USDC = ').should('exist')
-        cy.get('#swap-button').should('not.be', 'disabled').click()
-        cy.get('#confirm-swap-or-send').click()
-        cy.get(getTestSelector('dismiss-tx-confirmation')).click()
-
-        // Check activity history tab.
-        cy.get(getTestSelector('web3-status-connected')).click()
-        cy.get(getTestSelector('mini-portfolio-nav-activity')).click()
-
-        // Assert that the local pending transaction is replaced by a remote transaction with the same nonce.
-        cy.contains('Swapping').should('not.exist')
+        ).as('graphql')
       })
+  })
+
+  it('should deduplicate activity history by nonce', () => {
+    cy.visit('/swap', { ethereum: 'hardhat' }).hardhat({ automine: false })
+
+    // Input swap info.
+    cy.get('#swap-currency-input .token-amount-input').clear().type('1')
+    cy.get('#swap-currency-output .open-currency-select-button').click()
+    cy.contains('USDC').click()
+    cy.get('#swap-currency-output .token-amount-input').should('not.equal', '')
+
+    // Set slippage to a high value.
+    cy.get(getTestSelector('open-settings-dialog-button')).click()
+    cy.get(getTestSelector('max-slippage-settings')).click()
+    cy.get(getTestSelector('slippage-input')).clear().type('5')
+    cy.get('body').click('topRight')
+    cy.get(getTestSelector('slippage-input')).should('not.exist')
+
+    // Click swap button.
+    cy.contains('1 USDC = ').should('exist')
+    cy.get('#swap-button').should('not.be', 'disabled').click()
+    cy.get('#confirm-swap-or-send').click()
+    cy.get(getTestSelector('dismiss-tx-confirmation')).click()
+
+    // Check activity history tab.
+    cy.get(getTestSelector('web3-status-connected')).click()
+    cy.get(getTestSelector('mini-portfolio-nav-activity')).click()
+
+    // Assert that the local pending transaction is replaced by a remote transaction with the same nonce.
+    cy.contains('Swapping').should('not.exist')
   })
 })

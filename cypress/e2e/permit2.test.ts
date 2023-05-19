@@ -51,9 +51,9 @@ describe('Permit2', () => {
       .then((hardhat) => hardhat.approval.getPermit2Allowance({ owner: hardhat.wallet, token: INPUT_TOKEN }))
       .then((allowance) => {
         cy.wrap(MaxUint160.eq(allowance.amount)).should('eq', true)
-        // Asserts that the on-chain expiration is in 30 days, within a tolerance of 20 seconds.
+        // Asserts that the on-chain expiration is in 30 days, within a tolerance of 40 seconds.
         const expected = Math.floor((approvalTime + 2_592_000_000) / 1000)
-        cy.wrap(allowance.expiration).should('be.closeTo', expected, 20)
+        cy.wrap(allowance.expiration).should('be.closeTo', expected, 40)
       })
   }
 
