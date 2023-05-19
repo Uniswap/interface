@@ -150,14 +150,14 @@ function getContent(args: ContentArgs): PendingModalStep {
     case ConfirmModalState.PENDING_CONFIRMATION:
       return {
         title: swapPending ? t`Transaction submitted` : swapConfirmed ? t`Success` : t`Confirm Swap`,
-        subtitle: swapConfirmed ? (
+        subtitle: trade ? <TradeSummary trade={trade} /> : null,
+        label: swapConfirmed ? (
           <ExternalLink href={`https://etherscan.io/tx/${swapConfirmed}`} color="textSecondary">
             <Trans>View on Explorer</Trans>
           </ExternalLink>
-        ) : trade ? (
-          <TradeSummary trade={trade} />
+        ) : !swapPending ? (
+          t`Proceed in your wallet`
         ) : null,
-        label: !swapPending && !swapConfirmed ? t`Proceed in your wallet` : null,
       }
   }
 }
@@ -195,7 +195,7 @@ export function PendingModalContent({
         />
         {currentStep === ConfirmModalState.PENDING_CONFIRMATION &&
         (swapConfirmed || (swapPending && chainId === SupportedChainId.MAINNET)) ? (
-          <AnimatedEntranceConfirmationIcon  />
+          <AnimatedEntranceConfirmationIcon />
         ) : (
           <LoadingIndicatorOverlay />
         )}

@@ -12,15 +12,13 @@ export function TradeSummary({ trade }: { trade: InterfaceTrade }) {
     <Row gap="sm" justify="center" align="center">
       <CurrencyLogo currency={trade.inputAmount.currency} size="16px" />
       <ThemedText.LabelSmall color="textPrimary">
-        {formatCurrencyAmount(trade.inputAmount, NumberType.SwapTradeAmount)}
+        {formatCurrencyAmount(trade.inputAmount, NumberType.SwapTradeAmount)} {trade.inputAmount.currency.symbol}
       </ThemedText.LabelSmall>
-      <ThemedText.LabelSmall color="textPrimary">{trade.inputAmount.currency.symbol}</ThemedText.LabelSmall>
       <ArrowRight color={theme.textPrimary} size="12px" />
       <CurrencyLogo currency={trade.outputAmount.currency} size="16px" />
       <ThemedText.LabelSmall color="textPrimary">
-        {formatCurrencyAmount(trade.outputAmount, NumberType.SwapTradeAmount)}
+        {formatCurrencyAmount(trade.outputAmount, NumberType.SwapTradeAmount)} {trade.outputAmount.currency.symbol}
       </ThemedText.LabelSmall>
-      <ThemedText.LabelSmall color="textPrimary">{trade.outputAmount.currency.symbol}</ThemedText.LabelSmall>
     </Row>
   )
 }
