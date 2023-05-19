@@ -69,11 +69,13 @@ export function SearchTokenItem({ token, searchContext }: SearchTokenItemProps):
       onPress={onPress}>
       <Flex row alignItems="center" gap="spacing12" px="spacing8" py="spacing12">
         <TokenLogo chainId={chainId} symbol={symbol} url={logoUrl ?? undefined} />
-        <Flex gap="none">
-          <Flex row alignItems="center" gap="spacing4">
-            <Text color="textPrimary" variant="bodyLarge">
-              {name}
-            </Text>
+        <Flex shrink alignItems="flex-start" gap="none">
+          <Flex centered row gap="spacing8">
+            <Flex shrink>
+              <Text color="textPrimary" numberOfLines={1} variant="bodyLarge">
+                {name}
+              </Text>
+            </Flex>
             {(safetyLevel === SafetyLevel.Blocked || safetyLevel === SafetyLevel.StrongWarning) && (
               <WarningIcon
                 height={theme.iconSizes.icon16}
@@ -83,9 +85,11 @@ export function SearchTokenItem({ token, searchContext }: SearchTokenItemProps):
               />
             )}
           </Flex>
-          <Text color="textSecondary" variant="subheadSmall">
-            {symbol.toUpperCase() ?? ''}
-          </Text>
+          <Flex centered row gap="spacing8">
+            <Text color="textSecondary" numberOfLines={1} variant="subheadSmall">
+              {symbol.toUpperCase() ?? ''}
+            </Text>
+          </Flex>
         </Flex>
       </Flex>
     </TouchableArea>

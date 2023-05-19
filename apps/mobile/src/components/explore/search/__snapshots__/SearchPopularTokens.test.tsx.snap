@@ -636,9 +636,10 @@ exports[`SearchPopularTokens renders without error 2`] = `
             style={
               [
                 {
-                  "alignItems": "stretch",
+                  "alignItems": "flex-start",
                   "display": "flex",
                   "flexDirection": "column",
+                  "flexShrink": 1,
                   "justifyContent": "flex-start",
                 },
               ]
@@ -651,28 +652,43 @@ exports[`SearchPopularTokens renders without error 2`] = `
                     "alignItems": "center",
                     "display": "flex",
                     "flexDirection": "row",
-                    "justifyContent": "flex-start",
+                    "justifyContent": "center",
                   },
                 ]
               }
             >
-              <Text
-                allowFontScaling={true}
-                maxFontSizeMultiplier={1.4}
+              <View
                 style={
                   [
                     {
-                      "color": "#0E1524",
+                      "alignItems": "stretch",
                       "display": "flex",
-                      "fontFamily": "Inter-Medium",
-                      "fontSize": 17,
-                      "lineHeight": 24,
+                      "flexDirection": "column",
+                      "flexShrink": 1,
+                      "justifyContent": "flex-start",
                     },
                   ]
                 }
               >
-                Ethereum
-              </Text>
+                <Text
+                  allowFontScaling={true}
+                  maxFontSizeMultiplier={1.4}
+                  numberOfLines={1}
+                  style={
+                    [
+                      {
+                        "color": "#0E1524",
+                        "display": "flex",
+                        "fontFamily": "Inter-Medium",
+                        "fontSize": 17,
+                        "lineHeight": 24,
+                      },
+                    ]
+                  }
+                >
+                  Ethereum
+                </Text>
+              </View>
             </View>
             <View
               style={
@@ -686,23 +702,37 @@ exports[`SearchPopularTokens renders without error 2`] = `
                 ]
               }
             />
-            <Text
-              allowFontScaling={true}
-              maxFontSizeMultiplier={1.4}
+            <View
               style={
                 [
                   {
-                    "color": "#5D6785",
+                    "alignItems": "center",
                     "display": "flex",
-                    "fontFamily": "Inter-Medium",
-                    "fontSize": 15,
-                    "lineHeight": 20,
+                    "flexDirection": "row",
+                    "justifyContent": "center",
                   },
                 ]
               }
             >
-              ETH
-            </Text>
+              <Text
+                allowFontScaling={true}
+                maxFontSizeMultiplier={1.4}
+                numberOfLines={1}
+                style={
+                  [
+                    {
+                      "color": "#5D6785",
+                      "display": "flex",
+                      "fontFamily": "Inter-Medium",
+                      "fontSize": 15,
+                      "lineHeight": 20,
+                    },
+                  ]
+                }
+              >
+                ETH
+              </Text>
+            </View>
           </View>
         </View>
       </View>
@@ -805,9 +835,10 @@ exports[`SearchPopularTokens renders without error 2`] = `
             style={
               [
                 {
-                  "alignItems": "stretch",
+                  "alignItems": "flex-start",
                   "display": "flex",
                   "flexDirection": "column",
+                  "flexShrink": 1,
                   "justifyContent": "flex-start",
                 },
               ]
@@ -820,28 +851,43 @@ exports[`SearchPopularTokens renders without error 2`] = `
                     "alignItems": "center",
                     "display": "flex",
                     "flexDirection": "row",
-                    "justifyContent": "flex-start",
+                    "justifyContent": "center",
                   },
                 ]
               }
             >
-              <Text
-                allowFontScaling={true}
-                maxFontSizeMultiplier={1.4}
+              <View
                 style={
                   [
                     {
-                      "color": "#0E1524",
+                      "alignItems": "stretch",
                       "display": "flex",
-                      "fontFamily": "Inter-Medium",
-                      "fontSize": 17,
-                      "lineHeight": 24,
+                      "flexDirection": "column",
+                      "flexShrink": 1,
+                      "justifyContent": "flex-start",
                     },
                   ]
                 }
               >
-                USD Coin
-              </Text>
+                <Text
+                  allowFontScaling={true}
+                  maxFontSizeMultiplier={1.4}
+                  numberOfLines={1}
+                  style={
+                    [
+                      {
+                        "color": "#0E1524",
+                        "display": "flex",
+                        "fontFamily": "Inter-Medium",
+                        "fontSize": 17,
+                        "lineHeight": 24,
+                      },
+                    ]
+                  }
+                >
+                  USD Coin
+                </Text>
+              </View>
             </View>
             <View
               style={
@@ -855,23 +901,37 @@ exports[`SearchPopularTokens renders without error 2`] = `
                 ]
               }
             />
-            <Text
-              allowFontScaling={true}
-              maxFontSizeMultiplier={1.4}
+            <View
               style={
                 [
                   {
-                    "color": "#5D6785",
+                    "alignItems": "center",
                     "display": "flex",
-                    "fontFamily": "Inter-Medium",
-                    "fontSize": 15,
-                    "lineHeight": 20,
+                    "flexDirection": "row",
+                    "justifyContent": "center",
                   },
                 ]
               }
             >
-              USDC
-            </Text>
+              <Text
+                allowFontScaling={true}
+                maxFontSizeMultiplier={1.4}
+                numberOfLines={1}
+                style={
+                  [
+                    {
+                      "color": "#5D6785",
+                      "display": "flex",
+                      "fontFamily": "Inter-Medium",
+                      "fontSize": 15,
+                      "lineHeight": 20,
+                    },
+                  ]
+                }
+              >
+                USDC
+              </Text>
+            </View>
           </View>
         </View>
       </View>
