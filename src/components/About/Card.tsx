@@ -18,7 +18,7 @@ const StyledCard = styled.div<{ isDarkMode: boolean; backgroundImgSrc?: string; 
           backgroundImgSrc ? ` url(${backgroundImgSrc})` : ''
         }`
       : `${type === CardType.Primary ? 'white' : theme.backgroundModule} url(${backgroundImgSrc})`};
-  background-size: auto 100%;
+  background-size: cover;
   background-position: right;
   background-repeat: no-repeat;
   background-origin: border-box;
@@ -26,7 +26,7 @@ const StyledCard = styled.div<{ isDarkMode: boolean; backgroundImgSrc?: string; 
   flex-direction: column;
   justify-content: space-between;
   text-decoration: none;
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.white};
   padding: 24px;
   height: 212px;
   border-radius: 24px;
@@ -68,7 +68,7 @@ const getCardDescriptionColor = (type: CardType, theme: DefaultTheme) => {
     case CardType.Secondary:
       return theme.textSecondary
     default:
-      return theme.textPrimary
+      return theme.white
   }
 }
 
