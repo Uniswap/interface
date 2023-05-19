@@ -72,7 +72,12 @@ const LoadingChartContainer = styled.div`
   height: 100%;
   margin-bottom: 44px;
   padding-bottom: 66px;
+  max-width: 732px;
   overflow: hidden;
+
+  @media screen and (max-width: ${({ theme }) => theme.breakpoint.md}px) {
+    max-width: 326px;
+  }
 `
 export const TokenInfoContainer = styled.div`
   display: flex;

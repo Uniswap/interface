@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
+import { Currency, Field } from '@pollum-io/widgets'
 import { Trace } from '@uniswap/analytics'
 import { InterfacePageName } from '@uniswap/analytics-events'
-import { Currency, Field } from '@pollum-io/widgets'
 import { useWeb3React } from '@web3-react/core'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { AboutSection } from 'components/Tokens/TokenDetails/About'

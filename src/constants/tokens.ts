@@ -1,6 +1,5 @@
-import { Currency, Ether, NativeCurrency, Token, WETH9 } from '@pollum-io/sdk-core'
+import { Ether, NativeCurrency, Token, WETH9 } from '@pollum-io/sdk-core'
 import { SupportedChainId } from 'constants/chains'
-import invariant from 'tiny-invariant'
 
 import { UNI_ADDRESS } from './addresses'
 
@@ -47,11 +46,21 @@ export const WBTC_ROLLUX = new Token(
   'Wrapped BTC'
 ) // TODO: add WBTC to rollux
 
-
-
 export const UNI: { [chainId: number]: Token } = {
-  [SupportedChainId.ROLLUX]: new Token(SupportedChainId.ROLLUX, UNI_ADDRESS[SupportedChainId.ROLLUX], 18, 'PSYS', 'Pegasys'),
-  [SupportedChainId.ROLLUX_TANENBAUM]: new Token(SupportedChainId.ROLLUX_TANENBAUM, UNI_ADDRESS[SupportedChainId.ROLLUX_TANENBAUM], 18, 'PSYS', 'Pegasys'),
+  [SupportedChainId.ROLLUX]: new Token(
+    SupportedChainId.ROLLUX,
+    UNI_ADDRESS[SupportedChainId.ROLLUX],
+    18,
+    'PSYS',
+    'Pegasys'
+  ),
+  [SupportedChainId.ROLLUX_TANENBAUM]: new Token(
+    SupportedChainId.ROLLUX_TANENBAUM,
+    UNI_ADDRESS[SupportedChainId.ROLLUX_TANENBAUM],
+    18,
+    'PSYS',
+    'Pegasys'
+  ),
 }
 
 export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token | undefined } = {
@@ -89,8 +98,8 @@ class ExtendedEther extends Ether {
 const cachedNativeCurrency: { [chainId: number]: NativeCurrency | Token } = {}
 export function nativeOnChain(chainId: number): NativeCurrency | Token {
   if (cachedNativeCurrency[chainId]) return cachedNativeCurrency[chainId]
- 
-    let nativeCurrency: NativeCurrency | Token = ExtendedEther.onChain(chainId)
+
+  const nativeCurrency: NativeCurrency | Token = ExtendedEther.onChain(chainId)
   return (cachedNativeCurrency[chainId] = nativeCurrency)
 }
 

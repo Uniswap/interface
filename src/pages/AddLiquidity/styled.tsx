@@ -75,10 +75,6 @@ export const ResponsiveTwoColumns = styled.div<{ wide: boolean }>`
   grid-template-rows: max-content;
   grid-auto-flow: row;
 
-  padding-top: 20px;
-
-  border-top: 1px solid ${({ theme }) => theme.accentActive};
-
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
     grid-template-columns: 1fr;
 
