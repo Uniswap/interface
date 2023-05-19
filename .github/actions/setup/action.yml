@@ -21,7 +21,9 @@ runs:
           !node_modules/.cache
         key: ${{ runner.os }}-install-${{ hashFiles('**/yarn.lock') }}
     - if: steps.install-cache.outputs.cache-hit != 'true'
-      run: yarn install --frozen-lockfile --ignore-scripts
+      run: |
+          npm config set '//registry.npmjs.org/:_authToken' "${{ env.NPM_AUTH_TOKEN }}" \
+          && yarn install --frozen-lockfile --ignore-scripts
       shell: bash
 
     # Validators compile quickly, so caching can be omitted.
