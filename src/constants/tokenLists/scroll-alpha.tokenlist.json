@@ -14,6 +14,14 @@
       "name": "Wrapped Ether",
       "symbol": "WETH",
       "decimals": 18
+    },
+    {
+      "name": "Scroll USD",
+      "address": "0xA501d054Cd417a656eeF60C455757CAC1dA741c1",
+      "symbol": "SUSD",
+      "decimals": 18,
+      "chainId": 534353,
+      "logoURI": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
     }
   ],
   "logoURI": "ipfs://"
