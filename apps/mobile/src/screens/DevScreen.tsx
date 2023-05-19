@@ -1,11 +1,9 @@
 import React, { useState } from 'react'
 import { ScrollView } from 'react-native'
-import { useAppDispatch, useAppSelector } from 'src/app/hooks'
+import { useAppDispatch } from 'src/app/hooks'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { BackButton } from 'src/components/buttons/BackButton'
-import { Switch } from 'src/components/buttons/Switch'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
 import { SheetScreen } from 'src/components/layout/SheetScreen'
 import { Text } from 'src/components/Text'
@@ -16,8 +14,7 @@ import { AppNotificationType } from 'src/features/notifications/types'
 import { resetDismissedWarnings } from 'src/features/tokens/tokensSlice'
 import { createAccountActions } from 'src/features/wallet/createAccountSaga'
 import { useActiveAccount } from 'src/features/wallet/hooks'
-import { selectFlashbotsEnabled } from 'src/features/wallet/selectors'
-import { resetWallet, toggleFlashbots } from 'src/features/wallet/walletSlice'
+import { resetWallet } from 'src/features/wallet/walletSlice'
 import { Screens } from 'src/screens/Screens'
 import { ChainId } from 'wallet/src/constants/chains'
 import { logger } from 'wallet/src/features/logger/logger'
@@ -26,7 +23,6 @@ export function DevScreen(): JSX.Element {
   const dispatch = useAppDispatch()
   const activeAccount = useActiveAccount()
   const [currentChain] = useState(ChainId.Goerli)
-  const flashbotsEnabled = useAppSelector(selectFlashbotsEnabled)
 
   const onPressResetTokenWarnings = (): void => {
     dispatch(resetDismissedWarnings())
@@ -45,10 +41,6 @@ export function DevScreen(): JSX.Element {
     // always rely on the state of goerli
     const isGoerliActive = activeChains.includes(ChainId.Goerli)
     dispatch(setChainActiveStatus({ chainId: ChainId.Goerli, isActive: !isGoerliActive }))
-  }
-
-  const onToggleFlashbots = (enabled: boolean): void => {
-    dispatch(toggleFlashbots(enabled))
   }
 
   const onPressShowError = (): void => {
@@ -109,13 +101,6 @@ export function DevScreen(): JSX.Element {
           <Text mt="spacing12" textAlign="center" variant="bodyLarge">
             🌀🌀🌀🌀🌀🌀🌀🌀🌀🌀🌀
           </Text>
-          <Flex row alignItems="center" justifyContent="space-between">
-            <Text variant="bodyLarge">Use flashbots for transactions</Text>
-            <Switch
-              value={flashbotsEnabled}
-              onValueChange={(): void => onToggleFlashbots(!flashbotsEnabled)}
-            />
-          </Flex>
           <TouchableArea mt="spacing16" onPress={onPressCreate}>
             <Text color="textPrimary">Create account</Text>
           </TouchableArea>

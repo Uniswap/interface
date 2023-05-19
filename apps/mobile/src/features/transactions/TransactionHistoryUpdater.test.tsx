@@ -40,7 +40,6 @@ const accounts: Record<Address, Account> = {
 const walletSlice = {
   accounts,
   activeAccountAddress: null,
-  flashbotsEnabled: false,
   isUnlocked: false,
   settings: {},
   replaceAccountOptions: {

@@ -14,12 +14,9 @@ import {
 } from 'src/features/transactions/slice'
 import {
   deleteTransaction,
-  getFlashbotsTxConfirmation,
   transactionWatcher,
-  waitForReceipt,
   waitForTxnInvalidated,
   watchFiatOnRampTransaction,
-  watchFlashbotsTransaction,
   watchTransaction,
 } from 'src/features/transactions/transactionWatcherSaga'
 import { TransactionDetails, TransactionStatus } from 'src/features/transactions/types'
@@ -28,7 +25,6 @@ import {
   finalizedTxAction,
   mockProvider,
   mockProviderManager,
-  provider,
   txDetailsPending,
   txReceipt,
 } from 'src/test/fixtures'
@@ -58,48 +54,6 @@ describe(transactionWatcher, () => {
       .fork(watchTransaction, txDetailsPending)
       .dispatch(updateTransaction(txDetailsPending))
       .fork(watchTransaction, txDetailsPending)
-      .silentRun()
-  })
-})
-
-describe(watchFlashbotsTransaction, () => {
-  let dateNowSpy: jest.SpyInstance
-  beforeAll(() => {
-    dateNowSpy = jest.spyOn(Date, 'now').mockImplementation(() => 1400000000000)
-  })
-  afterAll(() => {
-    dateNowSpy?.mockRestore()
-  })
-
-  const { chainId, hash } = txDetailsPending
-
-  it('Finalizes successful transactions', () => {
-    return expectSaga(watchFlashbotsTransaction, txDetailsPending)
-      .withState({ wallet: { flashbotsEnabled: true } })
-      .provide([
-        [call(getProvider, chainId), provider],
-        [call(waitForReceipt, hash, provider), txReceipt],
-        [call(getFlashbotsTxConfirmation, hash, chainId), TransactionStatus.Success],
-      ])
-      .put(finalizeTransaction(finalizedTxAction.payload))
-      .silentRun()
-  })
-
-  it('Handles failed transactions', () => {
-    return expectSaga(watchFlashbotsTransaction, txDetailsPending)
-      .withState({ wallet: { flashbotsEnabled: true } })
-      .provide([
-        [call(getProvider, chainId, true), provider],
-        [call(waitForReceipt, hash, provider), txReceipt],
-        [call(getFlashbotsTxConfirmation, hash, chainId), TransactionStatus.Failed],
-      ])
-      .put(
-        finalizeTransaction({
-          ...finalizedTxAction.payload,
-          status: TransactionStatus.Failed,
-          receipt: undefined,
-        })
-      )
       .silentRun()
   })
 })

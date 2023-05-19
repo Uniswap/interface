@@ -14,7 +14,6 @@ const store = setupStore({
   wallet: {
     activeAccountAddress: account.address,
     accounts: { [account.address]: account },
-    flashbotsEnabled: false,
     isUnlocked: true,
     settings: {},
   },

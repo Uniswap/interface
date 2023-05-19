@@ -28,6 +28,7 @@
     "ios:beta": "react-native run-ios --configuration Beta",
     "ios:release": "react-native run-ios --configuration Release",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx && eslint src/locales/en/translation.json",
+    "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix && eslint src/locales/en/translation.json --fix",
     "lmu": "yarn prepare-for-pr",
     "prepare-for-pr": "yarn && yarn pod && yarn-deduplicate && yarn lint --fix && yarn typecheck && yarn test -u && yarn apollo:generate && yarn i18n:extract",
     "start": "NODE_ENV=development react-native start",

@@ -59,7 +59,7 @@ async function initializeWeb3Wallet(): Promise<void> {
 
 function* createWalletConnectV2Channel(): Generator<
   SelectEffect,
-  EventChannel<Action<any>>,
+  EventChannel<Action<unknown>>,
   unknown
 > {
   /*

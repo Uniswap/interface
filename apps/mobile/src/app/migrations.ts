@@ -567,4 +567,12 @@ export const migrations = {
     }
     return newState
   },
+
+  42: function removeFlashbotsEnabledFromWalletSlice(state: any) {
+    const newState = { ...state }
+
+    delete newState.wallet.flashbotsEnabled
+
+    return newState
+  },
 }

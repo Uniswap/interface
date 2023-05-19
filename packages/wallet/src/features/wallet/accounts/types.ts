@@ -15,7 +15,6 @@ export interface AccountBase {
   name?: string
   customizations?: AccountCustomizations
   backups?: BackupType[]
-  flashbotsEnabled?: boolean
   pending?: boolean
   timeImportedMs: number
   pushNotificationsEnabled?: boolean

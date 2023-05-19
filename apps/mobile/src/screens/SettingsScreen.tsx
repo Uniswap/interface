@@ -32,10 +32,10 @@ import BookOpenIcon from 'ui/src/assets/icons/book-open.svg'
 import ContrastIcon from 'ui/src/assets/icons/contrast.svg'
 import FaceIdIcon from 'ui/src/assets/icons/faceid.svg'
 import FingerprintIcon from 'ui/src/assets/icons/fingerprint.svg'
-import FlashbotsIcon from 'ui/src/assets/icons/flashbots.svg'
 import LikeSquare from 'ui/src/assets/icons/like-square.svg'
 import LockIcon from 'ui/src/assets/icons/lock.svg'
 import MessageQuestion from 'ui/src/assets/icons/message-question.svg'
+import UniswapIcon from 'ui/src/assets/icons/uniswap-logo.svg'
 import { ONE_SECOND_MS } from 'wallet/src/utils/time'
 
 export function SettingsScreen(): JSX.Element {
@@ -143,12 +143,12 @@ export function SettingsScreen(): JSX.Element {
             screen: Screens.SettingsChains,
             text: t('Chains'),
             // TODO [MOB-3921] use chains icon when available
-            icon: <FlashbotsIcon {...iconProps} />,
+            icon: <UniswapIcon {...iconProps} />,
           },
           {
             screen: Screens.Dev,
             text: t('Dev Options'),
-            icon: <FlashbotsIcon {...iconProps} />,
+            icon: <UniswapIcon {...iconProps} />,
           },
           { component: <OnboardingRow iconProps={iconProps} /> },
         ],
@@ -218,7 +218,7 @@ function OnboardingRow({ iconProps }: { iconProps: SvgProps }): JSX.Element {
       <Box alignItems="center" flexDirection="row" justifyContent="space-between" py="spacing4">
         <Box alignItems="center" flexDirection="row">
           <Flex centered height={32} width={32}>
-            <FlashbotsIcon {...iconProps} />
+            <UniswapIcon {...iconProps} />
           </Flex>
           <Text ml="spacing12" variant="bodyLarge">
             {t('Onboarding')}

@@ -31,7 +31,6 @@ describe(walletReducer, () => {
     store = createStore(walletReducer, {
       accounts: {},
       activeAccountAddress: null,
-      flashbotsEnabled: false,
       isUnlocked: false,
       settings: {},
     })

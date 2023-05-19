@@ -76,10 +76,10 @@ export function* getProviderManager() {
   return providerManager
 }
 
-export function* getProvider(chainId: ChainId, isFlashbots?: boolean) {
+export function* getProvider(chainId: ChainId) {
   const providerManager = yield* call(getProviderManager)
   // Note, unlike useWalletProvider above, this throws on missing provider
-  return providerManager.getProvider(chainId, isFlashbots)
+  return providerManager.getProvider(chainId)
 }
 
 export function useContractManager(): ContractManager {

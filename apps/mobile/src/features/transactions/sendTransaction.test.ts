@@ -63,7 +63,6 @@ describe(sendTransaction, () => {
           id: '0',
           hash: txResponse.hash,
           typeInfo: txTypeInfo,
-          isFlashbots: undefined,
           from: sendParams.account.address,
           status: TransactionStatus.Pending,
           addedTime: Date.now(),

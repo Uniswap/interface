@@ -9,7 +9,6 @@ import {
   setNotificationStatus,
 } from 'src/features/notifications/notificationSlice'
 import { AppNotificationType } from 'src/features/notifications/types'
-import { fetchTransactionStatus } from 'src/features/providers/flashbotsProvider'
 import { waitForProvidersInitialized } from 'src/features/providers/providerSaga'
 import { attemptCancelTransaction } from 'src/features/transactions/cancelTransaction'
 import { attemptReplaceTransaction } from 'src/features/transactions/replaceTransaction'
@@ -32,14 +31,10 @@ import {
   TransactionType,
 } from 'src/features/transactions/types'
 import { getFinalizedTransactionStatus } from 'src/features/transactions/utils'
-import { sleep } from 'src/utils/timing'
 import { call, delay, fork, put, race, take } from 'typed-redux-saga'
 import { ChainId } from 'wallet/src/constants/chains'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import { logger } from 'wallet/src/features/logger/logger'
-import { ONE_SECOND_MS } from 'wallet/src/utils/time'
-
-const FLASHBOTS_POLLING_INTERVAL = ONE_SECOND_MS * 5
 
 export function* transactionWatcher() {
   // Delay execution until providers are ready
@@ -66,8 +61,6 @@ export function* transactionWatcher() {
     try {
       if (transaction.typeInfo.type === TransactionType.FiatPurchase) {
         yield* fork(watchFiatOnRampTransaction, transaction)
-      } else if (transaction.isFlashbots) {
-        yield* fork(watchFlashbotsTransaction, transaction)
       } else {
         yield* fork(watchTransaction, transaction)
       }
@@ -89,40 +82,6 @@ export function* transactionWatcher() {
       )
     }
   }
-}
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function* getFlashbotsTxConfirmation(txHash: string, chainId: ChainId): Generator<any> {
-  while (true) {
-    const status = yield* call(fetchTransactionStatus, txHash, chainId)
-    if (status !== TransactionStatus.Pending) {
-      return status
-    }
-
-    yield* call(sleep, FLASHBOTS_POLLING_INTERVAL)
-  }
-}
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function* watchFlashbotsTransaction(transaction: TransactionDetails): Generator<any> {
-  const { chainId, hash, from } = transaction
-
-  const txStatus = yield* call(getFlashbotsTxConfirmation, hash, chainId)
-  if (txStatus === TransactionStatus.Failed || txStatus === TransactionStatus.Unknown) {
-    yield* call(finalizeTransaction, transaction, null, TransactionStatus.Failed as StatusOverride)
-    yield* put(
-      pushNotification({
-        type: AppNotificationType.Error,
-        address: from,
-        errorMessage: i18n.t('Your transaction has failed.'),
-      })
-    )
-    return
-  }
-
-  const provider = yield* call(getProvider, chainId)
-  const receipt = yield* call(waitForReceipt, hash, provider)
-  yield* call(finalizeTransaction, transaction, receipt, txStatus)
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

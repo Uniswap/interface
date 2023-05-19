@@ -10,7 +10,6 @@ export interface WalletState {
   accounts: Record<Address, Account>
   activeAccountAddress: Address | null
   finishedOnboarding?: boolean
-  flashbotsEnabled: boolean
   isUnlocked: boolean
   // Persisted UI configs set by the user through interaction with filters and settings
   settings: {
@@ -23,7 +22,6 @@ export interface WalletState {
 export const initialWalletState: WalletState = {
   accounts: {},
   activeAccountAddress: null,
-  flashbotsEnabled: false,
   isUnlocked: false,
   settings: {},
 }
@@ -97,9 +95,6 @@ const slice = createSlice({
     unlockWallet: (state) => {
       state.isUnlocked = true
     },
-    toggleFlashbots: (state, action: PayloadAction<boolean>) => {
-      state.flashbotsEnabled = action.payload
-    },
     setFinishedOnboarding: (
       state,
       { payload: { finishedOnboarding } }: PayloadAction<{ finishedOnboarding: boolean }>
@@ -131,7 +126,6 @@ export const {
   unlockWallet,
   resetWallet,
   setFinishedOnboarding,
-  toggleFlashbots,
   setNFTViewType,
   setTokensOrderBy,
 } = slice.actions

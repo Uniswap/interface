@@ -2,8 +2,6 @@
 import { Mutex } from 'async-mutex'
 import { providers as ethersProviders } from 'ethers'
 import { Task } from 'redux-saga'
-import { FLASHBOTS_URLS } from 'src/features/providers/constants'
-import { FLASHBOTS_SUPPORTED_CHAINS } from 'src/features/providers/flashbotsProvider'
 import { getEthersProvider } from 'src/features/providers/getEthersProvider'
 import { getInfuraChainName } from 'src/features/providers/utils'
 import { promiseTimeout, sleep } from 'src/utils/timing'
@@ -80,15 +78,6 @@ export class ProviderManager {
     return provider
   }
 
-  private getFlashbotsProvider(chainId: ChainId): ethersProviders.JsonRpcProvider {
-    if (!FLASHBOTS_SUPPORTED_CHAINS.includes(chainId.toString())) {
-      throw new Error(`${chainId} is not supported by flashbots`)
-    }
-
-    const flashbotsUrl = FLASHBOTS_URLS[chainId]?.rpcUrl
-    return new ethersProviders.JsonRpcProvider(flashbotsUrl)
-  }
-
   removeProvider(chainId: ChainId): void {
     if (!this._providers[chainId]) {
       logger.warn(
@@ -114,9 +103,7 @@ export class ProviderManager {
     return provider.provider
   }
 
-  getProvider(chainId: ChainId, isFlashbots?: boolean): ethersProviders.JsonRpcProvider {
-    if (isFlashbots) return this.getFlashbotsProvider(chainId)
-
+  getProvider(chainId: ChainId): ethersProviders.JsonRpcProvider {
     if (!this._providers[chainId]) {
       throw new Error(`No provider initialized for chain: ${chainId}`)
     }

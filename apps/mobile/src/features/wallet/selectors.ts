@@ -61,8 +61,6 @@ export const selectUserPalette = createSelector(
 export const selectFinishedOnboarding = (state: RootState): boolean | undefined =>
   state.wallet.finishedOnboarding
 
-export const selectFlashbotsEnabled = (state: RootState): boolean => state.wallet.flashbotsEnabled
-
 export const selectTokensOrderBy = (state: RootState): TokensOrderBy =>
   state.wallet.settings.tokensOrderBy ?? DEFAULT_TOKENS_ORDER_BY
 

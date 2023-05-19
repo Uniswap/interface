@@ -40,6 +40,7 @@ import {
   v39Schema,
   v3Schema,
   v40Schema,
+  v41Schema,
   v4Schema,
   v5Schema,
   v6Schema,
@@ -1072,15 +1073,26 @@ describe('Redux state migrations', () => {
 
   it('migrates from v39 to 40', () => {
     const v39Stub = { ...v39Schema }
+
     const v40 = migrations[40](v39Stub)
+
     // walletConnect slice still exists but should not be persisted
     expect(v40.walletConnect).toBeUndefined()
   })
 
   it('migrates from v40 to 41', () => {
     const v40Stub = { ...v40Schema }
+
     const v41 = migrations[41](v40Stub)
-    // walletConnect slice still exists but should not be persisted
+
     expect(v41.telemetry.lastBalancesReportValue).toBe(0)
+  })
+
+  it('migrates from v41 to 42', () => {
+    const v41Stub = { ...v41Schema }
+
+    const v42 = migrations[42](v41Stub)
+
+    expect(v42.wallet.flashbotsenabled).toBeUndefined()
   })
 })
