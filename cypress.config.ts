@@ -7,6 +7,7 @@ export default defineConfig({
   videoUploadOnPasses: false,
   defaultCommandTimeout: 24000, // 2x average block time
   chromeWebSecurity: false,
+  experimentalMemoryManagement: true, // better memory management, see https://github.com/cypress-io/cypress/pull/25462
   retries: { runMode: 2 },
   e2e: {
     async setupNodeEvents(on, config) {
