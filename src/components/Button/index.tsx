@@ -168,13 +168,13 @@ export const ButtonSecondary = styled(BaseButton)`
   padding: ${({ padding }) => (padding ? padding : '10px')};
 
   &:focus {
-    border: 1px solid ${({ theme }) => theme.deprecated_primary3};
+    border: 1px solid ${({ theme }) => theme.accentActive};
   }
   &:hover {
-    border: 1px solid ${({ theme }) => theme.deprecated_primary3};
+    border: 1px solid ${({ theme }) => theme.accentActive};
   }
   &:active {
-    border: 1px solid ${({ theme }) => theme.deprecated_primary3};
+    border: 1px solid ${({ theme }) => theme.accentActive};
   }
   &:disabled {
     opacity: 50%;
@@ -190,13 +190,13 @@ export const ButtonOutlined = styled(BaseButton)`
   background-color: transparent;
   color: ${({ theme }) => theme.textPrimary};
   &:focus {
-    box-shadow: 0 0 0 1px ${({ theme }) => theme.deprecated_bg4};
+    box-shadow: 0 0 0 1px ${({ theme }) => theme.accentActive};
   }
   &:hover {
-    box-shadow: 0 0 0 1px ${({ theme }) => theme.textTertiary};
+    box-shadow: 0 0 0 1px ${({ theme }) => theme.accentActive};
   }
   &:active {
-    box-shadow: 0 0 0 1px ${({ theme }) => theme.deprecated_bg4};
+    box-shadow: 0 0 0 1px ${({ theme }) => theme.accentActive};
   }
   &:disabled {
     opacity: 50%;
@@ -206,7 +206,7 @@ export const ButtonOutlined = styled(BaseButton)`
 
 export const ButtonEmpty = styled(BaseButton)`
   background-color: transparent;
-  color: ${({ theme }) => theme.accentAction};
+  color: ${({ theme }) => theme.accentActive};
   display: flex;
   justify-content: center;
   align-items: center;

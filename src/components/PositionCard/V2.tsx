@@ -3,7 +3,6 @@ import { CurrencyAmount, Percent, Token } from '@pollum-io/sdk-core'
 import { Pair } from '@pollum-io/v1-sdk'
 import { useWeb3React } from '@web3-react/core'
 import JSBI from 'jsbi'
-import { transparentize } from 'polished'
 import { useState } from 'react'
 import { ChevronDown, ChevronUp } from 'react-feather'
 import { Link } from 'react-router-dom'
@@ -11,7 +10,6 @@ import { Text } from 'rebass'
 import styled from 'styled-components/macro'
 
 import { BIG_INT_ZERO } from '../../constants/misc'
-import { useColor } from '../../hooks/useColor'
 import { useTotalSupply } from '../../hooks/useTotalSupply'
 import { useTokenBalance } from '../../state/connection/hooks'
 import { currencyId } from '../../utils/currencyId'
@@ -26,10 +24,9 @@ import { AutoRow, RowBetween, RowFixed } from '../Row'
 import { Dots } from '../swap/styleds'
 import { FixedHeightRow } from '.'
 
-const StyledPositionCard = styled(LightCard)<{ bgColor: any }>`
+const StyledPositionCard = styled(LightCard)`
   border: none;
-  background: ${({ theme, bgColor }) =>
-    `radial-gradient(91.85% 100% at 1.84% 0%, ${transparentize(0.8, bgColor)} 0%, ${theme.deprecated_bg3} 100%) `};
+  background: ${({ theme }) => theme.backgroundInteractive};
   position: relative;
   overflow: hidden;
 `
@@ -74,10 +71,8 @@ export default function V2PositionCard({ pair, border, stakedBalance }: Position
         ]
       : [undefined, undefined]
 
-  const backgroundColor = useColor(pair?.token0)
-
   return (
-    <StyledPositionCard border={border} bgColor={backgroundColor}>
+    <StyledPositionCard border={border}>
       <CardNoise />
       <AutoColumn gap="md">
         <FixedHeightRow>

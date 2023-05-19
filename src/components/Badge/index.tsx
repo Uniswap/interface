@@ -64,7 +64,7 @@ function pickFontColor(variant: BadgeVariant | undefined, theme: DefaultTheme): 
     case BadgeVariant.WARNING:
       return readableColor(theme.accentWarning)
     case BadgeVariant.WARNING_OUTLINE:
-      return theme.accentWarning
+      return '#8C15E8'
     default:
       return readableColor(theme.backgroundInteractive)
   }
