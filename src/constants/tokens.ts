@@ -97,6 +97,14 @@ export const UNI_SCROLL_ALPHA = new Token(
   'UNI',
   'Uniswap Token'
 )
+
+export const DAI_SCROLL_ALPHA = new Token(
+  SupportedChainId.SCROLL_ALPHA,
+  '0x4702E5AEb70BdC05B11F8d8E701ad000dc85bD44',
+  18,
+  'DAI',
+  'DAI Stablecoin'
+)
 // export const PORTAL_USDC_CELO = new Token(
 //   SupportedChainId.CELO,
 //   '0x37f750B7cC259A2f741AF45294f6a16572CF5cAd',

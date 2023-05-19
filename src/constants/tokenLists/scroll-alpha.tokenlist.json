@@ -24,6 +24,14 @@
       "logoURI": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
     },
     {
+      "name": "DAI Stablecoin",
+      "address": "0x4702E5AEb70BdC05B11F8d8E701ad000dc85bD44",
+      "symbol": "DAI",
+      "decimals": 18,
+      "chainId": 534353,
+      "logoURI": "https://assets.coingecko.com/coins/images/29052/thumb/fDAI_200x200.png?1676335235"
+    },
+    {
       "name": "Uniswap Token",
       "address": "0x0CDEA04b370C1FA4bC2032b4ef23dB3EBCbA258a",
       "symbol": "UNI",
