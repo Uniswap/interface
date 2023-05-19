@@ -27,6 +27,8 @@ jobs:
   notify-slack:
     name: 'Emit Slack notification(s)'
     runs-on: ubuntu-latest
+    environment:
+      name: notify/releases
     steps:
       - name: Parse event to slug
         id: parse-slug

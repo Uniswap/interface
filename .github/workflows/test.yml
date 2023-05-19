@@ -127,7 +127,7 @@ jobs:
         id: cypress-cache
         with:
           path: /root/.cache/Cypress
-          key: ${{ runner.os }}-cypress
+          key: ${{ runner.os }}-cypress-${{ hashFiles('**/node_modules/cypress/package.json') }}
       - run: |
           yarn cypress install
           yarn cypress info
@@ -140,14 +140,25 @@ jobs:
       - uses: cypress-io/github-action@v4
         with:
           install: false
+          record: true
+          parallel: true
           start: yarn serve
           wait-on: 'http://localhost:3000'
           browser: chrome
-          record: true
-          parallel: true
+          group: e2e
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          COMMIT_INFO_BRANCH: ${{ github.event.pull_request.head.ref || github.ref_name }}
+          COMMIT_INFO_MESSAGE: ${{ github.event.pull_request.title || github.event.head_commit.message }}
+          COMMIT_INFO_AUTHOR: ${{ github.event.sender.login || github.event.head_commit.author.login }}
+          # Cypress requires an email for filtering by author, but GitHub does not expose one.
+          # GitHub's public profile email can be deterministically produced from user id/login.
+          COMMIT_INFO_EMAIL: ${{ github.event.sender.id || github.event.head_commit.author.id }}+${{ github.event.sender.login || github.event.head_commit.author.login }}@users.noreply.github.com
+          COMMIT_INFO_SHA: ${{ github.event.pull_request.head.sha || github.event.head_commit.sha }}
+          COMMIT_INFO_TIMESTAMP: ${{ github.event.pull_request.updated_at || github.event.head_commit.timestamp }}
+          CYPRESS_PULL_REQUEST_ID: ${{ github.event.pull_request.number }}
+          CYPRESS_PULL_REQUEST_URL: ${{ github.event.pull_request.html_url }}
 
       - uses: codecov/codecov-action@v3
         with:

@@ -3,6 +3,7 @@ import { Percent } from '@uniswap/sdk-core'
 import { OutlineCard } from 'components/Card'
 import styled, { useTheme } from 'styled-components/macro'
 import { opacify } from 'theme/utils'
+import formatPriceImpact from 'utils/formatPriceImpact'
 
 import { ThemedText } from '../../theme'
 import { AutoColumn } from '../Column'
@@ -17,8 +18,6 @@ const StyledCard = styled(OutlineCard)`
 interface PriceImpactWarningProps {
   priceImpact: Percent
 }
-
-const formatPriceImpact = (priceImpact: Percent) => `${priceImpact.multiply(-1).toFixed(2)}%`
 
 export default function PriceImpactWarning({ priceImpact }: PriceImpactWarningProps) {
   const theme = useTheme()
