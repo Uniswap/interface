@@ -13,6 +13,7 @@ import {
   // DAI_ARBITRUM_ONE,
   // DAI_OPTIMISM,
   // DAI_POLYGON,
+  DAI_SCROLL_ALPHA,
   ETH2X_FLI,
   FEI,
   FRAX,
@@ -189,6 +190,7 @@ export const COMMON_BASES: ChainCurrencyList = {
   // ],
   [SupportedChainId.SCROLL_ALPHA]: [
     nativeOnChain(SupportedChainId.SCROLL_ALPHA),
+    DAI_SCROLL_ALPHA,
     USDC_SCROLL_ALPHA,
     UNI_SCROLL_ALPHA,
     WRAPPED_NATIVE_CURRENCY[SupportedChainId.SCROLL_ALPHA] as Token,

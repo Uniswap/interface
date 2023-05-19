@@ -17,11 +17,19 @@
     },
     {
       "name": "Scroll USD",
-      "address": "0xA501d054Cd417a656eeF60C455757CAC1dA741c1",
-      "symbol": "SUSD",
+      "address": "0x67aE69Fd63b4fc8809ADc224A9b82Be976039509",
+      "symbol": "USDC",
       "decimals": 18,
       "chainId": 534353,
       "logoURI": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+    },
+    {
+      "name": "DAI Stablecoin",
+      "address": "0x4702E5AEb70BdC05B11F8d8E701ad000dc85bD44",
+      "symbol": "DAI",
+      "decimals": 18,
+      "chainId": 534353,
+      "logoURI": "https://assets.coingecko.com/coins/images/29052/thumb/fDAI_200x200.png?1676335235"
     },
     {
       "name": "Uniswap Token",
