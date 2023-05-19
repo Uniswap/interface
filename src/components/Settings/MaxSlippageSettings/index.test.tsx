@@ -8,8 +8,12 @@ import MaxSlippageSettings from '.'
 
 const AUTO_SLIPPAGE = new Percent(5, 10_000)
 
-const renderAndExpandSlippageSettings = () => {
+const renderSlippageSettings = () => {
   render(<MaxSlippageSettings autoSlippage={AUTO_SLIPPAGE} />)
+}
+
+const renderAndExpandSlippageSettings = () => {
+  renderSlippageSettings()
 
   // By default, the button to expand Slippage component and show `input` will have `Auto` label
   fireEvent.click(screen.getByText('Auto'))
@@ -20,13 +24,22 @@ const switchToCustomSlippage = () => {
   fireEvent.click(screen.getByText('Custom'))
 }
 
-const getSlippageInput = () => screen.getByTestId('slippage-input') as HTMLInputElement
+const getSlippageInput = () => screen.queryByTestId('slippage-input') as HTMLInputElement
 
 describe('MaxSlippageSettings', () => {
   describe('input', () => {
     // Restore to default slippage before each unit test
     beforeEach(() => {
       store.dispatch(updateUserSlippageTolerance({ userSlippageTolerance: SlippageTolerance.Auto }))
+    })
+    it('is not expanded by default', () => {
+      renderSlippageSettings()
+      expect(getSlippageInput()).not.toBeInTheDocument()
+    })
+    it('is expanded by default when custom slippage is set', () => {
+      store.dispatch(updateUserSlippageTolerance({ userSlippageTolerance: 10 }))
+      renderSlippageSettings()
+      expect(getSlippageInput()).toBeInTheDocument()
     })
     it('does not render auto slippage as a value, but a placeholder', () => {
       renderAndExpandSlippageSettings()

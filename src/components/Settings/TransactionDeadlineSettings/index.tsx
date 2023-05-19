@@ -26,6 +26,9 @@ export default function TransactionDeadlineSettings() {
   const [deadlineInput, setDeadlineInput] = useState(defaultInputValue)
   const [deadlineError, setDeadlineError] = useState<DeadlineError | false>(false)
 
+  // If user has previously entered a custom deadline, we want to show the settings expanded by default.
+  const [isOpen, setIsOpen] = useState(defaultInputValue.length > 0)
+
   function parseCustomDeadline(value: string) {
     // Do not allow non-numerical characters in the input field
     if (value.length > 0 && !NUMBERS_ONLY.test(value)) {
@@ -56,6 +59,8 @@ export default function TransactionDeadlineSettings() {
 
   return (
     <Expand
+      isOpen={isOpen}
+      onToggle={() => setIsOpen(!isOpen)}
       testId="transaction-deadline-settings"
       header={
         <Row width="auto">
