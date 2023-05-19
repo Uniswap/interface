@@ -96,19 +96,19 @@ export function CurrencySearch({
     () =>
       !balancesAreLoading
         ? filteredTokens
-          .filter((token) => {
-            if (onlyShowCurrenciesWithBalance) {
-              return balances[token.address]?.greaterThan(0)
-            }
+            .filter((token) => {
+              if (onlyShowCurrenciesWithBalance) {
+                return balances[token.address]?.greaterThan(0)
+              }
 
-            // If there is no query, filter out unselected user-added tokens with no balance.
-            if (!debouncedQuery && token instanceof UserAddedToken) {
-              if (selectedCurrency?.equals(token) || otherSelectedCurrency?.equals(token)) return true
-              return balances[token.address]?.greaterThan(0)
-            }
-            return true
-          })
-          .sort(tokenComparator.bind(null, balances))
+              // If there is no query, filter out unselected user-added tokens with no balance.
+              if (!debouncedQuery && token instanceof UserAddedToken) {
+                if (selectedCurrency?.equals(token) || otherSelectedCurrency?.equals(token)) return true
+                return balances[token.address]?.greaterThan(0)
+              }
+              return true
+            })
+            .sort(tokenComparator.bind(null, balances))
         : [],
     [
       balances,
@@ -138,11 +138,11 @@ export function CurrencySearch({
       (!onlyShowCurrenciesWithBalance || (!balancesAreLoading && balances[wrapped.address]?.greaterThan(0)))
     const natives = wrapped
       ? (disableNonToken || native.equals(wrapped)
-        ? [wrapped]
-        : shouldShowWrapped
+          ? [wrapped]
+          : shouldShowWrapped
           ? [native, wrapped]
           : [native]
-      ).filter((n) => n.symbol?.toLowerCase()?.indexOf(s) !== -1 || n.name?.toLowerCase()?.indexOf(s) !== -1)
+        ).filter((n) => n.symbol?.toLowerCase()?.indexOf(s) !== -1 || n.name?.toLowerCase()?.indexOf(s) !== -1)
       : []
 
     return [...natives, ...tokens]
