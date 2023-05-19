@@ -137,7 +137,7 @@ export function WalletEmptyState(): JSX.Element {
 
   // Order options based on view only status
   const sortedOptions = isViewOnly
-    ? [options.Learn, options.Scan, options.Import]
+    ? [options.Import, options.Learn, options.Scan]
     : [...(!isViewOnly ? [options.Buy] : []), options.Scan, options.Learn]
 
   return (
