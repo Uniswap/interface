@@ -82,12 +82,20 @@ export const USDC_MAINNET = new Token(
 //   'USDC',
 //   'USD//C'
 // )
-const USDC_SCROLL_ALPHA = new Token(
+export const USDC_SCROLL_ALPHA = new Token(
   SupportedChainId.SCROLL_ALPHA,
-  '0x38BA9a208F34Ddc9332f6DfC0E9d567f098958A4',
-  6,
-  'USDC',
-  'USD//C'
+  '0xA501d054Cd417a656eeF60C455757CAC1dA741c1',
+  18,
+  'SUSD',
+  'Scroll USDC'
+)
+
+export const UNI_SCROLL_ALPHA = new Token(
+  SupportedChainId.SCROLL_ALPHA,
+  '0x0CDEA04b370C1FA4bC2032b4ef23dB3EBCbA258a',
+  18,
+  'UNI',
+  'Uniswap Token'
 )
 // export const PORTAL_USDC_CELO = new Token(
 //   SupportedChainId.CELO,
