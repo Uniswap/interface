@@ -17,9 +17,8 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     environment:
-      name: ${{ github.ref_name == '6597/merge' && 'notify/test' }}
+      name: ${{ github.ref_name == 'main' && 'notify/test' }}
     steps:
-      - run: echo ${{ github.ref_name }}
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
       - uses: actions/cache@v3
