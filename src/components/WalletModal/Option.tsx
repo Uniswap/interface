@@ -3,6 +3,7 @@ import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap
 import { useAccountDrawer, useCloseAccountDrawer } from 'components/AccountDrawer'
 import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button'
 import Loader from 'components/Icons/LoadingSpinner'
+import { walletConnectV2Connection } from 'connection'
 import { ActivationStatus, useActivationState } from 'connection/activate'
 import { Connection, ConnectionType } from 'connection/types'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
@@ -166,14 +167,15 @@ export default function Option({ connection }: OptionProps) {
 
   const handleClickConnectViaWCv2 = (e: MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation()
-    console.log('connect via wallet connect v2')
+    tryActivation(walletConnectV2Connection, () => {
+      setWC2PromptOpen(false)
+      closeDrawer()
+    })
   }
   const handleClickOpenWCv2Tooltip = (e: MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation()
-    setWC2PromptOpen(!WC2PromptOpen)
+    setWC2PromptOpen(true)
   }
-
-  const handlePopoverClose = () => (WC2PromptOpen ? setWC2PromptOpen(false) : null)
 
   return (
     <Wrapper>
@@ -206,7 +208,7 @@ export default function Option({ connection }: OptionProps) {
           isDarkMode={isDarkMode}
           show={WC2PromptOpen}
           onClick={handleClickConnectViaWCv2}
-          onClose={handlePopoverClose}
+          onClose={() => setWC2PromptOpen(false)}
         >
           <WCv2PopoverToggle onClick={handleClickOpenWCv2Tooltip}>
             <MoreHorizontal />
