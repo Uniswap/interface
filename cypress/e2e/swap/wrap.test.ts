@@ -25,6 +25,7 @@ describe('Swap wrap', () => {
 
       // Enter the amount to wrap.
       cy.get('#swap-currency-output .token-amount-input').click().type('1').should('have.value', 1)
+      // This also ensures we don't click "Wrap" before the UI has caught up.
       cy.get('#swap-currency-input .token-amount-input').should('have.value', 1)
 
       // Click the wrap button.
@@ -60,6 +61,7 @@ describe('Swap wrap', () => {
 
       // Enter the amount to unwrap.
       cy.get('#swap-currency-output .token-amount-input').click().type('1').should('have.value', 1)
+      // This also ensures we don't click "Wrap" before the UI has caught up.
       cy.get('#swap-currency-input .token-amount-input').should('have.value', 1)
 
       // Click the unwrap button.

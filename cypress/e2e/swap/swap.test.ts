@@ -45,6 +45,7 @@ describe('Swap', () => {
         cy.get(getTestSelector('token-search-input')).clear().type(USDC_MAINNET.address)
         cy.contains('USDC').click()
         cy.get('#swap-currency-output .token-amount-input').clear().type('1').should('have.value', '1')
+        cy.get('#swap-currency-input .token-amount-input').should('not.have.value', '')
         cy.get('#swap-button').click()
         cy.get('#confirm-swap-or-send').click()
         cy.get(getTestSelector('dismiss-tx-confirmation')).click()

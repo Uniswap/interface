@@ -15,6 +15,7 @@ describe('Swap errors', () => {
 
       // Attempt to swap.
       cy.get('#swap-currency-output .token-amount-input').clear().type('1').should('have.value', '1')
+      cy.get('#swap-currency-input .token-amount-input').should('not.have.value', '')
       cy.get('#swap-button').click()
       cy.get('#confirm-swap-or-send').click()
 
@@ -39,6 +40,7 @@ describe('Swap errors', () => {
 
       // Attempt to swap.
       cy.get('#swap-currency-output .token-amount-input').clear().type('1').should('have.value', '1')
+      cy.get('#swap-currency-input .token-amount-input').should('not.have.value', '')
       cy.get('#swap-button').click()
       cy.get('#confirm-swap-or-send').click()
       cy.get(getTestSelector('dismiss-tx-confirmation')).click()
@@ -83,6 +85,7 @@ describe('Swap errors', () => {
         .clear()
         .type(AMOUNT_TO_SWAP.toString())
         .should('have.value', AMOUNT_TO_SWAP.toString())
+      cy.get('#swap-currency-output .token-amount-input').should('not.have.value', '')
       cy.get('#swap-button').click()
       cy.get('#confirm-swap-or-send').click()
       cy.get(getTestSelector('dismiss-tx-confirmation')).click()
@@ -91,6 +94,7 @@ describe('Swap errors', () => {
         .clear()
         .type(AMOUNT_TO_SWAP.toString())
         .should('have.value', AMOUNT_TO_SWAP.toString())
+      cy.get('#swap-currency-output .token-amount-input').should('not.have.value', '')
       cy.get('#swap-button').click()
       cy.get('#confirm-swap-or-send').click()
       cy.get(getTestSelector('dismiss-tx-confirmation')).click()
