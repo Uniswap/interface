@@ -1,23 +1,16 @@
 import { CurrencyAmount, SupportedChainId, WETH9 } from '@uniswap/sdk-core'
 
-import { getTestSelector } from '../../utils'
+import { getBalance, getTestSelector } from '../../utils'
 
 const WETH = WETH9[SupportedChainId.MAINNET]
 
-function getWethBalance() {
-  return cy
-    .hardhat()
-    .then((hardhat) => hardhat.getBalance(hardhat.wallet, WETH))
-    .then((balance) => Number(balance.toFixed(1)))
-}
-
-describe('Swap', () => {
+describe('Swap wrap', () => {
   beforeEach(() => {
     cy.visit('/swap', { ethereum: 'hardhat' }).hardhat({ automine: false })
   })
 
   it('should be able to wrap ETH', () => {
-    getWethBalance().then((initialWethBalance) => {
+    getBalance(WETH).then((initialWethBalance) => {
       // Select WETH for the token output.
       cy.get('#swap-currency-output').contains('Select token').click()
       cy.contains('WETH').click()
@@ -30,20 +23,18 @@ describe('Swap', () => {
       // Click the wrap button.
       cy.contains('Wrap').click()
 
-      // The pending transaction indicator should reflect the state.
+      // Assert UI state.
       cy.get(getTestSelector('web3-status-connected')).should('contain', '1 Pending')
       cy.hardhat().then((hardhat) => hardhat.mine())
-      cy.get(getTestSelector('web3-status-connected')).should('not.contain', 'Pending')
-
-      // There should be a successful wrap notification.
       cy.get(getTestSelector('transaction-popup')).contains('Wrapped')
       cy.get(getTestSelector('transaction-popup')).contains('1.00 ETH for 1.00 WETH')
+      cy.get(getTestSelector('web3-status-connected')).should('not.contain', 'Pending')
 
       // The UI balance should have increased.
       cy.get('#swap-currency-output').should('contain', `Balance: ${initialWethBalance + 1}`)
 
       // The user's WETH account balance should have increased
-      getWethBalance().should('equal', initialWethBalance + 1)
+      getBalance(WETH).should('equal', initialWethBalance + 1)
     })
   })
 
@@ -53,7 +44,7 @@ describe('Swap', () => {
       await hardhat.mine()
     })
 
-    getWethBalance().then((initialWethBalance) => {
+    getBalance(WETH).then((initialWethBalance) => {
       // Select WETH for the token output.
       cy.get('#swap-currency-output').contains('Select token').click()
       cy.contains('WETH').click()
@@ -69,20 +60,18 @@ describe('Swap', () => {
       // Click the unwrap button.
       cy.contains('Unwrap').click()
 
-      // The pending transaction indicator should reflect the state.
+      // Assert UI state.
       cy.get(getTestSelector('web3-status-connected')).should('contain', '1 Pending')
       cy.hardhat().then((hardhat) => hardhat.mine())
-      cy.get(getTestSelector('web3-status-connected')).should('not.contain', 'Pending')
-
-      // There should be a successful wrap notification.
       cy.get(getTestSelector('transaction-popup')).contains('Unwrapped')
       cy.get(getTestSelector('transaction-popup')).contains('1.00 WETH for 1.00 ETH')
+      cy.get(getTestSelector('web3-status-connected')).should('not.contain', 'Pending')
 
       // The UI balance should have increased.
       cy.get('#swap-currency-input').should('contain', `Balance: ${initialWethBalance - 1}`)
 
       // The user's WETH account balance should have increased
-      getWethBalance().should('equal', initialWethBalance - 1)
+      getBalance(WETH).should('equal', initialWethBalance - 1)
     })
   })
 })

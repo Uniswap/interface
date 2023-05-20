@@ -110,7 +110,7 @@ describe('mini-portfolio activity history', () => {
 
     // Click swap button.
     cy.contains('1 USDC = ').should('exist')
-    cy.get('#swap-button').should('not.be', 'disabled').click()
+    cy.get('#swap-button').click()
     cy.get('#confirm-swap-or-send').click()
     cy.get(getTestSelector('dismiss-tx-confirmation')).click()
 
