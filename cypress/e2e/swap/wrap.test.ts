@@ -17,8 +17,7 @@ describe('Swap wrap', () => {
       cy.contains('Enter ETH amount')
 
       // Enter the amount to wrap.
-      cy.get('#swap-currency-output .token-amount-input').click().type('1')
-      cy.get('#swap-currency-input .token-amount-input').should('have.value', 1)
+      cy.get('#swap-currency-output .token-amount-input').click().type('1').should('have.value', 1)
 
       // Click the wrap button.
       cy.contains('Wrap').click()
@@ -54,8 +53,7 @@ describe('Swap wrap', () => {
       cy.contains('Enter WETH amount')
 
       // Enter the amount to unwrap.
-      cy.get('#swap-currency-output .token-amount-input').click().type('1')
-      cy.get('#swap-currency-input .token-amount-input').should('have.value', 1)
+      cy.get('#swap-currency-output .token-amount-input').click().type('1').should('have.value', 1)
 
       // Click the unwrap button.
       cy.contains('Unwrap').click()
