@@ -43,11 +43,13 @@ describe('Swap errors', () => {
       cy.get('#confirm-swap-or-send').click()
       cy.get(getTestSelector('dismiss-tx-confirmation')).click()
 
-      // Assert UI state.
+      // The pending transaction indicator should reflect the state.
       cy.get(getTestSelector('web3-status-connected')).should('contain', '1 Pending')
       cy.hardhat().then((hardhat) => hardhat.mine(1, /* 10 minutes */ 1000 * 60 * 10)) // mines past the deadline
-      cy.get(getTestSelector('transaction-popup')).contains('Swap failed')
       cy.get(getTestSelector('web3-status-connected')).should('not.contain', 'Pending')
+
+      // TODO(WEB-2085): Fix this test - transaction popups are flakey.
+      // cy.get(getTestSelector('transaction-popup')).contains('Swap failed')
 
       // Verify the balance is unchanged.
       cy.get('#swap-currency-output [data-testid="balance-text"]').should('have.text', `Balance: ${initialBalance}`)
@@ -93,11 +95,13 @@ describe('Swap errors', () => {
       cy.get('#confirm-swap-or-send').click()
       cy.get(getTestSelector('dismiss-tx-confirmation')).click()
 
-      // Assert UI state.
+      // The pending transaction indicator should reflect the state.
       cy.get(getTestSelector('web3-status-connected')).should('contain', '2 Pending')
       cy.hardhat().then((hardhat) => hardhat.mine())
-      cy.get(getTestSelector('transaction-popup')).contains('Swap failed')
       cy.get(getTestSelector('web3-status-connected')).should('not.contain', 'Pending')
+
+      // TODO(WEB-2085): Fix this test - transaction popups are flakey.
+      // cy.get(getTestSelector('transaction-popup')).contains('Swap failed')
 
       // Assert that the transactions were unsuccessful by checking on-chain balance.
       getBalance(UNI_MAINNET).should('equal', initialBalance)

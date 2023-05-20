@@ -56,10 +56,13 @@ describe('Swap', () => {
         cy.get('#confirm-swap-or-send').click()
         cy.get(getTestSelector('dismiss-tx-confirmation')).click()
 
-        // Assert UI state.
+        // The pending transaction indicator should reflect the state.
         cy.get(getTestSelector('web3-status-connected')).should('contain', '1 Pending')
         cy.hardhat().then((hardhat) => hardhat.mine())
         cy.get(getTestSelector('web3-status-connected')).should('not.contain', 'Pending')
+
+        // TODO(WEB-2085): Fix this test - transaction popups are flakey.
+        // cy.get(getTestSelector('transaction-popup')).contains('Swapped')
 
         // Verify the balance is updated.
         cy.get('#swap-currency-output [data-testid="balance-text"]').should(
