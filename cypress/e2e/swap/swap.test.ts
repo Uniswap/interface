@@ -29,13 +29,6 @@ describe('Swap', () => {
       cy.get(`#swap-currency-output .token-symbol-container`).should('contain.text', 'UNI')
     })
 
-    it('ETH to wETH is same value (wrapped swaps have no price impact)', () => {
-      cy.visit('/swap')
-      cy.get(`#swap-currency-output .open-currency-select-button`).click()
-      cy.contains('WETH').click()
-      cy.get('#swap-currency-input .token-amount-input').clear().type('0.01').should('have.value', '0.01')
-    })
-
     it('inputs reset when navigating between pages', () => {
       cy.visit('/swap')
       cy.get('#swap-currency-input .token-amount-input').should('have.value', '')

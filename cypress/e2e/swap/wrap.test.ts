@@ -6,18 +6,26 @@ const WETH = WETH9[SupportedChainId.MAINNET]
 
 describe('Swap wrap', () => {
   beforeEach(() => {
-    cy.visit('/swap', { ethereum: 'hardhat' }).hardhat({ automine: false })
+    cy.visit(`/swap?inputCurrency=ETH&outputCurrency=${WETH.address}`, { ethereum: 'hardhat' }).hardhat({
+      automine: false,
+    })
+  })
+
+  it('ETH to wETH is same value (wrapped swaps have no price impact)', () => {
+    cy.get('#swap-currency-input .token-amount-input').clear().type('0.01').should('have.value', '0.01')
+    cy.get('#swap-currency-output .token-amount-input').should('have.value', '0.01')
+
+    cy.get('#swap-currency-output .token-amount-input').clear().type('0.02').should('have.value', '0.02')
+    cy.get('#swap-currency-input .token-amount-input').should('have.value', '0.02')
   })
 
   it('should be able to wrap ETH', () => {
     getBalance(WETH).then((initialWethBalance) => {
-      // Select WETH for the token output.
-      cy.get('#swap-currency-output').contains('Select token').click()
-      cy.contains('WETH').click()
       cy.contains('Enter ETH amount')
 
       // Enter the amount to wrap.
       cy.get('#swap-currency-output .token-amount-input').click().type('1').should('have.value', 1)
+      cy.get('#swap-currency-input .token-amount-input').should('have.value', 1)
 
       // Click the wrap button.
       cy.contains('Wrap').click()
@@ -46,16 +54,13 @@ describe('Swap wrap', () => {
     })
 
     getBalance(WETH).then((initialWethBalance) => {
-      // Select WETH for the token output.
-      cy.get('#swap-currency-output').contains('Select token').click()
-      cy.contains('WETH').click()
-
       // Swap input/output to unwrap WETH.
       cy.get(getTestSelector('swap-currency-button')).click()
       cy.contains('Enter WETH amount')
 
       // Enter the amount to unwrap.
       cy.get('#swap-currency-output .token-amount-input').click().type('1').should('have.value', 1)
+      cy.get('#swap-currency-input .token-amount-input').should('have.value', 1)
 
       // Click the unwrap button.
       cy.contains('Unwrap').click()
