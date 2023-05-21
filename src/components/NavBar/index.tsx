@@ -59,11 +59,11 @@ export const PageTabs = () => {
         <Trans>Pools</Trans>
       </MenuItem>
       <MenuItem href="/pool" id="pool-nav-link" isActive={isPoolActive}>
-        <Trans>Add Liquidity</Trans>
+        <Trans>Manage Positions</Trans>
       </MenuItem>
       {!isMobile && (
         <a
-          href="https://app.stride.zone"
+          href="https://app.stride.zone/?chain=EVMOS"
           target="_blank"
           rel="noopener noreferrer"
           id="pool-nav-link"

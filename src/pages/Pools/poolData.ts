@@ -63,6 +63,7 @@ function useBlocksFromTimestamps(): {
       const results = await fetch('https://subgraph.satsuma-prod.com/09c9cf3574cc/orbital-apes/v3-subgraph/status')
       const data = await results.json()
       let latestBlock = data.data.indexingStatusForCurrentVersion.chains[0]?.latestBlock?.number
+      console.log(latestBlock)
 
       if (latestBlock) {
         latestBlock = parseInt(latestBlock)
@@ -208,6 +209,10 @@ export function usePoolDatas(): {
   const { loading, error, data } = useQuery<PoolDataResponse>(POOLS_BULK(undefined), {
     client: dataClient,
   })
+
+  console.log(block24?.number)
+  console.log(block48?.number)
+  console.log(blockWeek?.number)
 
   const {
     loading: loading24,
