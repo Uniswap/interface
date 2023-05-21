@@ -42,6 +42,7 @@ import ClosePositionModal, { AddPremiumModal } from 'components/swap/CloseLevera
 import { useWeb3React } from '@web3-react/core'
 import { SmallButtonPrimary } from 'components/Button'
 import { SmallMaxButton } from 'pages/RemoveLiquidity/styled'
+import { MaxButton } from 'pages/Pool/styleds'
 
 const Cell = styled.div`
   display: flex;
@@ -176,6 +177,7 @@ const NameCell = styled(Cell)`
   gap: 8px;
 `
 const PriceCell = styled(DataCell)`
+  width: 100%;
   padding-right: 8px;
   justify-content: flex-start;
 `
@@ -416,16 +418,11 @@ function PositionRow({
     setShowAddPremium(false);
   }
   const actions = (
-    <>
-      <ResponsiveButtonPrimary width="200px"
-          onClick={() => setShowClose(!showClose)}>
-          <Trans>Close</Trans>
-        </ResponsiveButtonPrimary>
-        <ResponsiveButtonPrimary width="200px" onClick={() => setShowAddPremium(!showAddPremium)} >
-          <Trans>Add</Trans>
-        </ResponsiveButtonPrimary>
-
-    </>
+    <AutoRow>
+      <SmallMaxButton width="auto" onClick={() => setShowClose(!showClose)} >
+        <Trans>reduce</Trans>
+      </SmallMaxButton>
+    </AutoRow>
   )
   const rowCells = (
     <>

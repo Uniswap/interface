@@ -169,11 +169,9 @@ export function useDerivedLeverageCreationInfo()
   const [contractResult, setContractResult] = useState()
 
   const {
-    independentField,
     typedValue,
     [Field.INPUT]: { currencyId: inputCurrencyId },
     [Field.OUTPUT]: { currencyId: outputCurrencyId },
-    recipient,
     leverage,
     leverageFactor,
     leverageManagerAddress,
@@ -249,18 +247,20 @@ export function useDerivedLeverageCreationInfo()
         let borrowAmount = input.multipliedBy((Number(leverageFactor) - 1))
 
         console.log("createPositionresult",
-        input.shiftedBy(inputCurrency?.wrapped.decimals).toFixed(0),
-        allowedSlippage,
-        borrowAmount.shiftedBy(inputCurrency?.wrapped.decimals).toFixed(0),
-        isLong)
+          input.shiftedBy(inputCurrency?.wrapped.decimals).toFixed(0),
+          allowedSlippage,
+          borrowAmount.shiftedBy(inputCurrency?.wrapped.decimals).toFixed(0),
+          isLong,
+          leverageManagerAddress
+        )
 
-        const trade = await leverageManager.callStatic.createLevPosition(
+        const trade = await leverageManager.callStatic.addPosition(
           input.shiftedBy(inputCurrency?.wrapped.decimals).toFixed(0),
           allowedSlippage,
           borrowAmount.shiftedBy(inputCurrency?.wrapped.decimals).toFixed(0),
           isLong
         )
-        console.log("createPositionresultTrade", trade)
+        console.log("addPosition", trade)
         setContractResult(trade)
         setTradeState(LeverageTradeState.VALID)
       } catch (err) {

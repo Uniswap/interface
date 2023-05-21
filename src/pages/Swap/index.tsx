@@ -521,8 +521,7 @@ export default function Swap({ className }: { className?: string }) {
     } catch (err) {
       console.log('err', err)
     }
-
-
+    
     // loadedInputCurrency, loadedOutputCurrency
   }, [currencies])
   const faucetOut = useCallback(async () => {
@@ -795,14 +794,14 @@ export default function Swap({ className }: { className?: string }) {
 
   // console.log("poolAddress: ", poolAddress)
 
-  const { data: token1PriceQuery } = useTokenPriceQuery({
-    variables: {
-      address: outputAddress,
-      chain,
-      duration,
-    },
-    errorPolicy: 'all',
-  })
+  // const { data: token1PriceQuery } = useTokenPriceQuery({
+  //   variables: {
+  //     address: outputAddress,
+  //     chain,
+  //     duration,
+  //   },
+  //   errorPolicy: 'all',
+  // })
 
   const { loading: leveragePositionsLoading, positions: leveragePositions } = useLeveragePositions(account)
 
@@ -1005,7 +1004,7 @@ export default function Swap({ className }: { className?: string }) {
                       </TraceEvent>
                     </ArrowWrapper>
                   </div>
-                  <AutoColumn gap="md">
+                  <div>
                     <div>
                       <OutputSwapSection showDetailsDropdown={showDetailsDropdown}>
                         <Trace section={InterfaceSectionName.CURRENCY_OUTPUT_PANEL}>
@@ -1094,7 +1093,6 @@ export default function Swap({ className }: { className?: string }) {
                                       disabled={false}
                                     />
                                   </LeverageInputSection>
-
                                   <AutoRow gap="4px" justify="flex-end">
                                     <SmallMaxButton onClick={() => onLeverageFactorChange("10")} width="20%">
                                       <Trans>10</Trans>
@@ -1123,7 +1121,6 @@ export default function Swap({ className }: { className?: string }) {
                           </AutoColumn>
                         </LightCard>
                       </LeverageGaugeSection>
-                      {
                         <DetailsSwapSection>
                           <SwapDetailsDropdown
                             trade={trade}
@@ -1133,7 +1130,7 @@ export default function Swap({ className }: { className?: string }) {
                             leverageTrade={leverageTrade}
                           />
                         </DetailsSwapSection>
-                      }
+                      
                     </div>
                     {showPriceImpactWarning && <PriceImpactWarning priceImpact={largerPriceImpact} />}
                     <div>
@@ -1315,7 +1312,7 @@ export default function Swap({ className }: { className?: string }) {
                       )}
                       {isExpertMode && swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}
                     </div>
-                  </AutoColumn>
+                  </div>
 
                 </SwapWrapper>
 

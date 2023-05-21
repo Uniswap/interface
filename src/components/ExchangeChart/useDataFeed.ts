@@ -33,11 +33,11 @@ type SymbolInfo = LibrarySymbolInfo & {
 export default function useDatafeed(
   {
     chainId,
-    symbol
-  } : 
+    // symbol
+  } :
   { 
     chainId: number,
-    symbol: string
+    // symbol: string
   }
   ) {
 
@@ -131,5 +131,5 @@ export default function useDatafeed(
         },
       }
     }
-  }, [chainId, symbol]);
+  }, [chainId]);
 }

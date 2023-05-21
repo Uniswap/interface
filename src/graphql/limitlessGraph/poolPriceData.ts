@@ -105,7 +105,7 @@ export async function fetchPoolPriceData(
     //   open: string
     //   close: string
     // }[] = []
-    console.log("subgraphquery: ", address, startTimestamp, endTimestamp, countBack)
+    console.log("subgraph1: ", address, startTimestamp, endTimestamp, countBack)
     const { data: result, errors, loading } = await dataClient.query<PriceResults>({
       query: POOL_PRICE_CHART,
       variables: {
@@ -116,7 +116,7 @@ export async function fetchPoolPriceData(
       },
       fetchPolicy: 'cache-first',
     })
-    // console.log("subgraphresult: ", result, errors, loading)
+    console.log("subgraph2: ", result, errors, loading)
 
     const formattedHistory = result.poolHourDatas.map((d) => {
       return {

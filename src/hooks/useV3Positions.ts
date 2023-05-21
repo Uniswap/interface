@@ -23,6 +23,7 @@ interface UseV3PositionsResults {
 export function useLeveragePositions(account: string | undefined): {loading: boolean, positions: LeveragePositionDetails[]} {
   const {chainId} = useWeb3React()
   const globalStorage = useGlobalStorageContract()
+
   const { loading: balanceLoading, result: balanceResult } = useSingleCallResult(globalStorage, 'balanceOf', [
     account ?? undefined,
   ])
@@ -57,8 +58,8 @@ export function useLeveragePositions(account: string | undefined): {loading: boo
   const inputs = useMemo(() => (tokenIds ? tokenIds.map((tokenId) => [BigNumber.from(tokenId)]) : []), [tokenIds])
   //console.log("inputs: ", inputs)
   
-  const results = useSingleContractMultipleData(globalStorage, 'positions', inputs)
-  //console.log("calldataResults: ", results)
+  const results = useSingleContractMultipleData(globalStorage, 'getPosition', inputs)
+  console.log("calldataResults: ", results)
 
   const loading = useMemo(() => results.some(({ loading }) => loading), [results])
   const error = useMemo(() => results.some(({ error }) => error), [results])
@@ -119,7 +120,7 @@ export enum PositionState {
 
 export function useLeveragePositionFromTokenId(tokenId: string | undefined): { loading: boolean, error: any, position: LeveragePositionDetails | undefined} {
   const globalStorage = useGlobalStorageContract()
-  const result = useSingleCallResult(globalStorage, 'positions', [tokenId]);
+  const result = useSingleCallResult(globalStorage, 'getPosition', [tokenId]);
   const loading = result.loading
   const error = result.error
   const { chainId } = useWeb3React()

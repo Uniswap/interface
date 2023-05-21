@@ -111,7 +111,7 @@ export function useLeverageBorrowCallback(
   let slippage = new BN(1 + Number(allowedSlippage.toFixed(6)) / 100).shiftedBy(decimals).toFixed(0)
   console.log("arguments: ", input, allowedSlippage.toFixed(6), slippage, borrowedAmount, isLong)
   return (): any => {
-    return leverageManagerContract.createLevPosition(
+    return leverageManagerContract.addPosition(
       input,
       slippage,
       borrowedAmount,

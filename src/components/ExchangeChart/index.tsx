@@ -61,7 +61,7 @@ export const TVChartContainer = ({
 	fee: FeeAmount | undefined,
 }) => {
 	const chartContainerRef = useRef<HTMLDivElement>() as React.MutableRefObject<HTMLInputElement>;
-	const { datafeed } = useDatafeed({ chainId, symbol: "" });
+	const { datafeed } = useDatafeed({ chainId });
 	const tvWidgetRef = useRef<IChartingLibraryWidget | null>(null);
 	const [chartReady, setChartReady] = useState(false);
 	const [chartDataLoading, setChartDataLoading] = useState(true);
@@ -164,7 +164,7 @@ export const TVChartContainer = ({
 	}, [token0, token1])
 
 	useEffect(() => {
-		console.log("symbol: ", symbol)
+		// console.log("symbolExchangeChart: ", symbol)
 		const widgetOptions = {
 			debug: true,
 			symbol: !symbol ? "missing pool" : symbol,

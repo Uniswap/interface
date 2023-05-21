@@ -1,32 +1,17 @@
 import { Trans } from '@lingui/macro'
 import { Trace } from '@uniswap/analytics'
 import { InterfaceModalName } from '@uniswap/analytics-events'
-import { Trade } from '@uniswap/router-sdk'
-import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
-import { InterfaceTrade } from 'state/routing/types'
-import { tradeMeaningfullyDiffers } from 'utils/tradeMeaningFullyDiffer'
+
 
 import TransactionConfirmationModal, {
   ConfirmationModalContent,
-  TransactionErrorContent,
 } from '../TransactionConfirmationModal'
-import SwapModalFooter, { AddPremiumModalFooter, CloseLeverageModalFooter, LeverageModalFooter } from './SwapModalFooter'
-import SwapModalHeader, { LeverageModalHeader } from './SwapModalHeader'
-import { LeverageTrade } from 'state/swap/hooks'
+import { AddPremiumModalFooter, CloseLeverageModalFooter } from './SwapModalFooter'
+
 import { useLeveragePositionFromTokenId } from 'hooks/useV3Positions'
 import { CloseLeveragePositionDetails } from './AdvancedSwapDetails'
-import useDebounce from 'hooks/useDebounce'
-import { useLeverageManagerAddress } from 'hooks/useGetLeverageManager'
 import { useLeverageManagerContract } from 'hooks/useContract'
-import {BigNumber as BN} from "bignumber.js"
-import useDebouncedChangeHandler from 'hooks/useDebouncedChangeHandler'
-import { LightCard } from 'components/Card'
-import { AutoColumn } from 'components/Column'
-import { AutoRow, RowBetween } from 'components/Row'
-import { ThemedText } from 'theme'
-import { ResponsiveHeaderText, SmallMaxButton } from 'pages/RemoveLiquidity/styled'
-import Slider from 'components/Slider'
 
 
 export default function ClosePositionModal({
@@ -89,7 +74,7 @@ export default function ClosePositionModal({
     () =>
       (
         <ConfirmationModalContent
-          title={<Trans>Reduce Position</Trans>}
+          title={<Trans>Close Position</Trans>}
           onDismiss={onModalDismiss}
           topContent={modalHeader}
           bottomContent={modalBottom}

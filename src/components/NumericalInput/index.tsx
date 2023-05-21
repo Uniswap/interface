@@ -3,9 +3,9 @@ import styled from 'styled-components/macro'
 
 import { escapeRegExp } from '../../utils'
 
-const StyledInput = styled.input<{ error?: boolean; fontSize?: string; align?: string}>`
+const StyledInput = styled.input<{ error?: boolean; fontSize?: string; align?: string, width?: string}>`
   color: ${({ error, theme }) => (error ? theme.accentFailure : theme.textPrimary)};
-  width: 0;
+  width: ${({ width }) => width ?? '0'};
   position: relative;
   font-weight: 400;
   outline: none;
@@ -91,6 +91,7 @@ export const Input = React.memo(function InnerInput({
       minLength={1}
       maxLength={79}
       spellCheck="false"
+      width="0"
     />
   )
 })

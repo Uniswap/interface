@@ -183,9 +183,9 @@ export function CloseLeveragePositionDetails({
   // console.log("leveragePositionClose", leverageTrade)
 
   const inputIsToken0 = !leverageTrade?.isToken0
-  
+
   return (
-    <StyledCard>
+    <Card padding="0" marginTop={"10px"}>
       <AutoColumn gap="sm">
         <RowBetween>
           <RowFixed>
@@ -195,7 +195,6 @@ export function CloseLeveragePositionDetails({
                   Total position size in the output token of the leverage trade
                 </Trans>
               }
-              // disableHover={hideInfoTooltips}
             >
               <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
                 <Trans>Total Position</Trans>
@@ -214,7 +213,7 @@ export function CloseLeveragePositionDetails({
           <RowFixed>
             <MouseoverTooltip
               text={<Trans>Total debt of the position</Trans>}
-              // disableHover={hideInfoTooltips}
+            // disableHover={hideInfoTooltips}
             >
               <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
                 <Trans>Total Debt</Trans>
@@ -229,9 +228,31 @@ export function CloseLeveragePositionDetails({
             </ThemedText.DeprecatedBlack>
           </TextWithLoadingPlaceholder>
         </RowBetween>
+        <RowBetween>
+          <RowFixed>
+            <MouseoverTooltip
+              text={
+                <Trans>
+                  Leverage Factor
+                </Trans>
+              }
+            >
+              <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
+                <Trans>Effective Leverage</Trans>
+              </ThemedText.DeprecatedSubHeader>
+            </MouseoverTooltip>
+          </RowFixed>
+          <TextWithLoadingPlaceholder syncing={false} width={65}>
+            <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
+              {leverageTrade?.totalDebtInput
+                ? `${new BN((Number(leverageTrade?.totalDebtInput) + Number(leverageTrade.initialCollateral) ) / Number(leverageTrade?.initialCollateral) ?? "").toString()}`
+                : '-'}
+            </ThemedText.DeprecatedBlack>
+          </TextWithLoadingPlaceholder>
+        </RowBetween>
         <Separator />
       </AutoColumn>
-    </StyledCard>
+    </Card>
   )
 }
 
@@ -250,7 +271,7 @@ export function AddPremiumDetails({
   // console.log("leveragePositionClose", leverageTrade)
 
   const inputIsToken0 = !leverageTrade?.isToken0
-  
+
   return (
     <StyledCard>
       <AutoColumn gap="sm">
@@ -262,7 +283,7 @@ export function AddPremiumDetails({
                   Total position size in the output token of the leverage trade
                 </Trans>
               }
-              // disableHover={hideInfoTooltips}
+            // disableHover={hideInfoTooltips}
             >
               <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
                 <Trans>Total Position</Trans>
@@ -281,7 +302,7 @@ export function AddPremiumDetails({
           <RowFixed>
             <MouseoverTooltip
               text={<Trans>Total debt of the position</Trans>}
-              // disableHover={hideInfoTooltips}
+            // disableHover={hideInfoTooltips}
             >
               <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
                 <Trans>Total Debt</Trans>
@@ -343,7 +364,7 @@ export function AdvancedLeverageSwapDetails({
           <TextWithLoadingPlaceholder syncing={syncing} width={65}>
             <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
               {leverageTrade?.expectedOutput
-                ? `${Number(leverageTrade?.expectedOutput ?? "-") }  ${trade.outputAmount.currency.symbol}`
+                ? `${Number(leverageTrade?.expectedOutput ?? "-")}  ${trade.outputAmount.currency.symbol}`
                 : '-'}
             </ThemedText.DeprecatedBlack>
           </TextWithLoadingPlaceholder>
@@ -353,7 +374,7 @@ export function AdvancedLeverageSwapDetails({
             <MouseoverTooltip
               text={
                 <Trans>
-                  Price around which your premium gets expensive. 
+                  Price around which your premium gets expensive.
                 </Trans>
               }
               disableHover={hideInfoTooltips}
@@ -367,7 +388,7 @@ export function AdvancedLeverageSwapDetails({
             <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
               {
                 leverageTrade?.strikePrice ? `${leverageTrade?.strikePrice}  ${trade.inputAmount.currency.symbol} / ${trade.outputAmount.currency.symbol}`
-                : '-'}
+                  : '-'}
             </ThemedText.DeprecatedBlack>
           </TextWithLoadingPlaceholder>
         </RowBetween>
@@ -392,7 +413,7 @@ export function AdvancedLeverageSwapDetails({
             <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
               {
                 leverageTrade?.quotedPremium ? `${leverageTrade?.quotedPremium}  ${trade.inputAmount.currency.symbol}`
-                : '-'}
+                  : '-'}
             </ThemedText.DeprecatedBlack>
           </TextWithLoadingPlaceholder>
         </RowBetween>
@@ -412,7 +433,7 @@ export function AdvancedLeverageSwapDetails({
             <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
               {
                 leverageTrade?.quotedPremium ? `${leverageTrade?.quotedPremium}  ${trade.inputAmount.currency.symbol}`
-                : '-'}            </ThemedText.DeprecatedBlack>
+                  : '-'}            </ThemedText.DeprecatedBlack>
           </TextWithLoadingPlaceholder>
         </RowBetween>
 
@@ -435,11 +456,11 @@ export function AdvancedLeverageSwapDetails({
             <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
               {
                 leverageTrade?.effectiveLeverage ? `${leverageTrade?.effectiveLeverage}`
-                : '-'}
+                  : '-'}
             </ThemedText.DeprecatedBlack>
           </TextWithLoadingPlaceholder>
         </RowBetween>
-        
+
         <RowBetween>
           <RowFixed>
             <MouseoverTooltip
@@ -482,7 +503,7 @@ export function AdvancedLeverageSwapDetails({
           <TextWithLoadingPlaceholder syncing={syncing} width={70}>
             <ThemedText.DeprecatedBlack textAlign="right" fontSize={14} color={theme.textTertiary}>
               {trade.tradeType === TradeType.EXACT_INPUT
-                ? `${Number(leverageTrade?.expectedOutput ?? "-") }  ${trade.outputAmount.currency.symbol}`
+                ? `${Number(leverageTrade?.expectedOutput ?? "-")}  ${trade.outputAmount.currency.symbol}`
                 : '-'
 
                 // ? `${Number(leverageFactor) * Number(trade.minimumAmountOut(allowedSlippage).toSignificant(6))} ${trade.outputAmount.currency.symbol}`

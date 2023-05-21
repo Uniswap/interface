@@ -86,7 +86,7 @@ export function CurrencySearch({
   }, [isAddressSearch])
 
   const defaultTokens = useDefaultActiveTokens()
-  // console.log('defaultTokens', defaultTokens)
+  console.log('defaultTokens', defaultTokens)
   const filteredTokens: Token[] = useMemo(() => {
     return Object.values(defaultTokens).filter(getTokenFilter(debouncedQuery))
   }, [defaultTokens, debouncedQuery])

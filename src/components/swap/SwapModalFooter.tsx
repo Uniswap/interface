@@ -37,7 +37,6 @@ import useDebounce from 'hooks/useDebounce'
 import { useLeverageManagerContract } from 'hooks/useContract'
 import { useSingleCallResult } from 'lib/hooks/multicall'
 import { BigNumber as BN } from "bignumber.js"
-import { LoadingOpacityContainer } from 'components/Loader/styled'
 import TradePrice from './TradePrice'
 import { useCurrency, useToken } from 'hooks/Tokens'
 import { formatNumber, formatNumberOrString } from '@uniswap/conedison/format'
@@ -50,6 +49,17 @@ import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
 import Loader from 'components/Icons/LoadingSpinner'
 import useDebouncedChangeHandler from 'hooks/useDebouncedChangeHandler'
 import Input from 'components/NumericalInput'
+import { LeveragePositionDetails } from 'types/leveragePosition'
+import { LoadingOpacityContainer, loadingOpacityMixin } from 'components/Loader/styled'
+import CurrencyLogo from 'components/Logo/CurrencyLogo'
+
+const StyledNumericalInput = styled(Input)<{ $loading: boolean }>`
+  ${loadingOpacityMixin};
+  text-align: left;
+  font-size: 36px;
+  line-height: 44px;
+  font-variant: small-caps;
+`
 
 
 
@@ -65,12 +75,6 @@ interface AnalyticsEventProps {
   fiatValueInput?: number
   fiatValueOutput?: number
 }
-
-const StyledNumericalInput = styled(Input)`
-  width: 100px;
-  text-align:left;
-  margin-left:10px;
-`
 
 const formatRoutesEventProperties = (routes: RoutingDiagramEntry[]) => {
   const routesEventProperties: Record<string, any[]> = {
@@ -238,6 +242,26 @@ const RotatingArrow = styled(ChevronDown) <{ open?: boolean }>`
   transition: transform 0.1s linear;
 `
 
+const StyledBalanceMax = styled.button<{ disabled?: boolean }>`
+  background-color: transparent;
+  border: none;
+  color: ${({ theme }) => theme.accentAction};
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  opacity: ${({ disabled }) => (!disabled ? 1 : 0.4)};
+  padding: 4px 6px;
+  pointer-events: ${({ disabled }) => (!disabled ? 'initial' : 'none')};
+
+  :hover {
+    opacity: ${({ disabled }) => (!disabled ? 0.8 : 0.4)};
+  }
+
+  :focus {
+    outline: none;
+  }
+`
+
 const StyledPolling = styled.div`
   display: flex;
   height: 16px;
@@ -319,41 +343,42 @@ function useDerivedLeverageCloseInfo(
   trader: string | undefined,
   tokenId: string | undefined,
   allowedSlippage: string,
+  position: LeveragePositionDetails | undefined,
+  newTotalPosition: string | undefined,
   setState: (state: DerivedInfoState) => void,
 ): {
-  token0: string | undefined
-  token1: string | undefined
+  // token0: string | undefined
+  // token1: string | undefined
   token0Amount: string | undefined
   token1Amount: string | undefined
 } {
   const leverageManagerContract = useLeverageManagerContract(leverageManager)
   const [contractResult, setContractResult] = useState<{
-    closePositionResult: any,
-    token0: any,
-    token1: any
+    reducePositionResult: any,
+    // token0: any,
+    // token1: any
   }>()
 
   useEffect(() => {
     const laggedfxn = async () => {
-      if (!leverageManagerContract || !tokenId || !trader || parseFloat(allowedSlippage) <= 0) {
+      if (!leverageManagerContract || !tokenId || !trader || parseFloat(allowedSlippage) <= 0 && !position || !newTotalPosition || !position?.totalPosition) {
         setState(DerivedInfoState.INVALID)
         return
       }
 
       const formattedSlippage = new BN(allowedSlippage).plus(100).shiftedBy(16).toFixed(0)
+      const formattedReduceAmount = new BN(position?.totalPosition).minus(new BN(newTotalPosition)).shiftedBy(18).toFixed(0)
       setState(DerivedInfoState.LOADING)
 
       try {
 
-        const closePositionResult = await leverageManagerContract.callStatic.closePosition(tokenId, trader, formattedSlippage)
+        const reducePositionResult = await leverageManagerContract.callStatic.reducePosition(position?.isToken0, formattedSlippage, formattedReduceAmount)
         // const position = await leverageManagerContract.callStatic.getPosition(trader, tokenId)
-        const token0 = await leverageManagerContract.callStatic.token0()
-        const token1 = await leverageManagerContract.callStatic.token1()
-        console.log('closeresult', closePositionResult, tokenId, formattedSlippage);
+        // const token0 = await leverageManagerContract.callStatic.token0()
+        // const token1 = await leverageManagerContract.callStatic.token1()
+        console.log('reducePosition', reducePositionResult, tokenId, formattedSlippage);
         setContractResult({
-          closePositionResult,
-          token0,
-          token1
+          reducePositionResult
         })
         setState(DerivedInfoState.VALID)
 
@@ -364,25 +389,21 @@ function useDerivedLeverageCloseInfo(
     }
 
     laggedfxn()
-  }, [leverageManager, trader, tokenId, allowedSlippage])
+  }, [leverageManager, trader, tokenId, allowedSlippage, newTotalPosition])
 
   const info = useMemo(() => {
     if (contractResult) {
-      const { closePositionResult, token0, token1 } = contractResult
-      let token0Amount = new BN(closePositionResult[0].toString()).shiftedBy(-18).toFixed(6)
-      let token1Amount = new BN(closePositionResult[1].toString()).shiftedBy(-18).toFixed(6)
+      const { reducePositionResult } = contractResult
+      let token0Amount = new BN(reducePositionResult[0].toString()).shiftedBy(-18).toFixed(6)
+      let token1Amount = new BN(reducePositionResult[1].toString()).shiftedBy(-18).toFixed(6)
       return {
         token0Amount,
-        token1Amount,
-        token0,
-        token1
+        token1Amount
       }
     } else {
       return {
         token0Amount: undefined,
         token1Amount: undefined,
-        token0: undefined,
-        token1: undefined
       }
     }
   }, [
@@ -439,7 +460,7 @@ function useDerivedAddPremiumInfo(
           addPremiumResult
         })
         setState(DerivedInfoState.VALID)
-    console.log("addPosition:", addPremiumResult)
+        // console.log("addPosition:", addPremiumResult)
 
       } catch (error) {
         console.error('Failed to get addPremium info', error)
@@ -451,11 +472,11 @@ function useDerivedAddPremiumInfo(
   }, [leverageManager, trader, tokenId])
 
   const info = useMemo(() => {
-    console.log("addPosition2:", contractResult)
+    // console.log("addPosition2:", contractResult)
 
     if (contractResult) {
       return {
-        rate: (Number(contractResult.addPremiumResult)/(1e16)).toString()//.shiftedBy(-18).toFixed(12)
+        rate: (Number(contractResult.addPremiumResult) / (1e16)).toString()//.shiftedBy(-18).toFixed(12)
       }
     } else {
       return {
@@ -484,18 +505,21 @@ export function CloseLeverageModalFooter({
 }) {
   // const [nonce, setNonce] = useState(0)
   const [slippage, setSlippage] = useState("1")
+  const [newPosition, setNewPosition] = useState("")
 
   const leverageManagerContract = useLeverageManagerContract(leverageManagerAddress, true)
+  const { error, position } = useLeveragePositionFromTokenId(tokenId)
 
-  const handleClosePosition = useMemo(() => {
-    if (leverageManagerContract) {
+  const handleReducePosition = useMemo(() => {
+    if (leverageManagerContract && position) {
       const formattedSlippage = new BN(slippage).plus(100).shiftedBy(16).toFixed(0)
+      const formattedReduceAmount = new BN(position?.totalPosition).minus(new BN(newPosition)).shiftedBy(18).toFixed(0)
       return () => {
         setAttemptingTxn(true)
-        leverageManagerContract.closePosition(
-          tokenId,
-          trader,
-          formattedSlippage
+        leverageManagerContract.reducePosition(
+          position?.isToken0,
+          formattedSlippage,
+          formattedReduceAmount
         ).then((hash: any) => {
           setTxHash(hash)
           setAttemptingTxn(false)
@@ -505,43 +529,35 @@ export function CloseLeverageModalFooter({
         })
       }
     }
-    return () =>{}
-  }, [leverageManagerAddress, slippage, tokenId, trader])
+    return () => { }
+  }, [leverageManagerAddress, slippage, tokenId, trader, position, newPosition])
   const [derivedState, setDerivedState] = useState<DerivedInfoState>(DerivedInfoState.INVALID)
   const [showDetails, setShowDetails] = useState(false)
   const theme = useTheme()
-
-  const { error, position} = useLeveragePositionFromTokenId(tokenId)
 
   // what do we need for the simulation
 
   const [debouncedSlippage, setDebouncedSlippage] = useDebouncedChangeHandler(slippage, setSlippage)
   // console.log("nonce: ", nonce, slippage)
 
-  // useEffect(() => {
-  //   setNonce(nonce + 1)
-  // })
-
   const {
     token0Amount,
-    token1Amount,
-    token0: token0Address,
-    token1: token1Address
-  } = useDerivedLeverageCloseInfo(leverageManagerAddress, trader, tokenId, debouncedSlippage, setDerivedState)
+    token1Amount
+  } = useDerivedLeverageCloseInfo(leverageManagerAddress, trader, tokenId, debouncedSlippage, position, newPosition, setDerivedState)
 
-  const token0 = useToken(token0Address)
-  const token1 = useToken(token1Address)
+  const token0 = useCurrency(position?.token0Address)
+  const token1 = useCurrency(position?.token1Address)
 
   const loading = useMemo(() => derivedState === DerivedInfoState.LOADING, [derivedState])
-  console.log("here: ", token0Amount, token1Amount)
+  // console.log("here: ", token0Amount, token1Amount)
 
   const inputIsToken0 = !position?.isToken0
 
-  const debt = position?.totalDebtInput; 
-  const initCollateral = position?.initialCollateral; 
+  const debt = position?.totalDebtInput;
+  const initCollateral = position?.initialCollateral;
   const received = inputIsToken0 ? (Math.abs(Number(token0Amount)) - Number(debt)).toFixed(5)
-                                    : (Math.abs(Number(token1Amount)) - Number(debt)).toFixed(5)
-  console.log("here: ", token0Amount, token1Amount,position,  initCollateral, received)
+    : (Math.abs(Number(token1Amount)) - Number(debt)).toFixed(5)
+
   return (
     <AutoRow>
       <LightCard marginTop="10px">
@@ -583,10 +599,49 @@ export function CloseLeverageModalFooter({
           </>
         </AutoColumn>
       </LightCard>
+      <LightCard marginTop="10px">
+        <AutoColumn gap="md">
+          <>
+            <RowBetween>
+              <ThemedText.DeprecatedMain fontWeight={400}>
+                <Trans>New Reduced Position</Trans>
+              </ThemedText.DeprecatedMain>
+            </RowBetween>
+            <RowBetween>
+              <div>
+              <ResponsiveHeaderText>
+                <StyledNumericalInput
+                  className="token-amount-input"
+                  value={newPosition}
+                  placeholder="0"
+                  onUserInput={(str: string) => {
+                    if (position?.totalPosition) {
+                      if (new BN(str).isGreaterThan(new BN(position?.totalPosition))) {
+                        return
+                      } else {
+                        setNewPosition(str)
+                      }
+                    }
+                  }  
+                  }
+                  $loading={false}
+                  disabled={false}
+                  style={{ width: "100%"}}
+                />
+                {/* <SmallMaxButton width={"100px"} onClick={() => {position?.totalPosition ? setNewPosition(position?.totalPosition) : null}}>
+                  Reset
+                </SmallMaxButton> */}
+              </ResponsiveHeaderText>
+              </div>
+              <CurrencyLogo currency={token0} size={'50px'} />
+            </RowBetween>
+          </>
+        </AutoColumn>
+      </LightCard>
       <TransactionDetails>
         <Wrapper style={{ marginTop: '0' }}>
           <AutoColumn gap="sm" style={{ width: '100%', marginBottom: '-8px' }}>
-            <StyledHeaderRow onClick={() => setShowDetails(!showDetails)} disabled={!token0Address} open={showDetails}>
+            <StyledHeaderRow onClick={() => setShowDetails(!showDetails)} disabled={!position?.token0Address} open={showDetails}>
               <RowFixed style={{ position: 'relative' }}>
                 {(loading ? (
                   <StyledPolling>
@@ -615,8 +670,8 @@ export function CloseLeverageModalFooter({
               </RowFixed>
               <RowFixed>
                 <RotatingArrow
-                  stroke={token0Address ? theme.textTertiary : theme.deprecated_bg3}
-                  open={Boolean(token0Address && showDetails)}
+                  stroke={position?.token0Address ? theme.textTertiary : theme.deprecated_bg3}
+                  open={Boolean(position?.token0Address && showDetails)}
                 />
               </RowFixed>
 
@@ -631,7 +686,7 @@ export function CloseLeverageModalFooter({
                           <MouseoverTooltip
                             text={
                               <Trans>
-                                The amount of position you are closing 
+                                The amount of position you are closing
                               </Trans>
                             }
                           >
@@ -665,7 +720,7 @@ export function CloseLeverageModalFooter({
                         <TextWithLoadingPlaceholder syncing={loading} width={65}>
                           <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
                             {
-                              debt&&`${debt.toString() }  ${inputIsToken0 ? token0?.symbol : token1?.symbol}`
+                              debt && `${debt.toString()}  ${inputIsToken0 ? token0?.symbol : token1?.symbol}`
                             }
                           </ThemedText.DeprecatedBlack>
                         </TextWithLoadingPlaceholder>
@@ -694,35 +749,12 @@ export function CloseLeverageModalFooter({
                           </ThemedText.DeprecatedBlack>
                         </TextWithLoadingPlaceholder>
                       </RowBetween>
-                      {/*<RowBetween>
-                        <RowFixed>
-                          <MouseoverTooltip
-                            text={
-                              <Trans>
-                                The amount you expect to receive at the current market price. You may receive less or more if the
-                                market price changes while your transaction is pending.
-                              </Trans>
-                            }
-                          >
-                            <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
-                              <Trans>Price Impact</Trans>
-                            </ThemedText.DeprecatedSubHeader>
-                          </MouseoverTooltip>
-                        </RowFixed>
-                        <TextWithLoadingPlaceholder syncing={loading} width={65}>
-                          <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
-                            {
-                              `${inputIsToken0 ? new BN(token1Amount).abs().toString() : new BN(token0Amount).abs().toString()}  ${inputIsToken0 ? token1?.symbol : token0?.symbol}`
-                            }
-                          </ThemedText.DeprecatedBlack>
-                        </TextWithLoadingPlaceholder>
-                      </RowBetween>*/}
                       <RowBetween>
                         <RowFixed>
                           <MouseoverTooltip
                             text={
                               <Trans>
-                                The total amount you get after closing position and repaying debt.  
+                                The total amount you get after closing position and repaying debt.
                               </Trans>
                             }
                           >
@@ -733,7 +765,7 @@ export function CloseLeverageModalFooter({
                         </RowFixed>
                         <TextWithLoadingPlaceholder syncing={loading} width={65}>
                           <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
-                            { 
+                            {
                               `${received}  ${inputIsToken0 ? token0?.symbol : token1?.symbol}`
                             }
                           </ThemedText.DeprecatedBlack>
@@ -757,8 +789,8 @@ export function CloseLeverageModalFooter({
                       <TextWithLoadingPlaceholder syncing={loading} width={65}>
                         <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
                           {
-                            
-                            `${(Number(received)-Number(initCollateral)).toFixed(5)}  ${inputIsToken0 ? token0?.symbol : token1?.symbol}`
+
+                            `${(Number(received) - Number(initCollateral)).toFixed(5)}  ${inputIsToken0 ? token0?.symbol : token1?.symbol}`
                           }
                         </ThemedText.DeprecatedBlack>
                       </TextWithLoadingPlaceholder>
@@ -772,13 +804,13 @@ export function CloseLeverageModalFooter({
         </Wrapper>
       </TransactionDetails>
       <ButtonError
-        onClick={handleClosePosition}
+        onClick={handleReducePosition}
         disabled={false}
         style={{ margin: '10px 0 0 0' }}
         id={InterfaceElementName.CONFIRM_SWAP_BUTTON}
       >
         <Text fontSize={20} fontWeight={500}>
-          <Trans>Close Position</Trans>
+          <Trans>Reduce Position</Trans>
         </Text>
       </ButtonError>
     </AutoRow>
@@ -802,10 +834,10 @@ export function AddPremiumModalFooter({
   const [showDetails, setShowDetails] = useState(false)
   const theme = useTheme()
 
-  const { error, position} = useLeveragePositionFromTokenId(tokenId)
+  const { error, position } = useLeveragePositionFromTokenId(tokenId)
   const token0 = useToken(position?.token0Address)
   const token1 = useToken(position?.token1Address)
-  const  {rate}  = useDerivedAddPremiumInfo(leverageManagerAddress, trader, tokenId, setDerivedState)
+  const { rate } = useDerivedAddPremiumInfo(leverageManagerAddress, trader, tokenId, setDerivedState)
   const inputIsToken0 = !position?.isToken0
   console.log("rate: ", rate)
 
@@ -816,7 +848,7 @@ export function AddPremiumModalFooter({
       CurrencyAmount.fromRawAmount(inputCurrency, "1000") : undefined,
     leverageManagerAddress ?? undefined)
   console.log("payment", leverageApprovalState)
-  
+
 
   const updateLeverageAllowance = useCallback(async () => {
     try {
@@ -902,7 +934,7 @@ export function AddPremiumModalFooter({
                           <MouseoverTooltip
                             text={
                               <Trans>
-                                Rate x Debt 
+                                Rate x Debt
                               </Trans>
                             }
                           >

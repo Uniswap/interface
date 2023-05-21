@@ -36,7 +36,7 @@ export function useDefaultActiveTokens(): { [address: string]: Token } {
   const defaultListTokens = useCombinedActiveList()
   const tokensFromMap = useTokensFromMap(defaultListTokens)
   const userAddedTokens = useUserAddedTokens()
-  // console.log("userAddedTokens", userAddedTokens)
+  console.log("defaultListTokens", defaultListTokens)
   return useMemo(() => {
     return (
       userAddedTokens
