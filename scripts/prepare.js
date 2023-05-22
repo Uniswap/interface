@@ -1,36 +1,51 @@
+/* eslint-env node */
 const { spawn } = require('child_process')
 
-function runCommand(command, args) {
+// Add yarn setup commands to this array
+const commands = ['ajv', 'contracts', 'graphql', 'i18n']
+
+// Check if --verbose flag is set
+const verbose = process.argv.includes('--verbose')
+
+/**
+ * Run a single command using the yarn package manager.
+ * @param {string} command - The yarn command to run.
+ * @returns {Promise<void>} A promise that resolves when the command completes successfully, and rejects when the command fails.
+ */
+function runCommand(command) {
   return new Promise((resolve, reject) => {
-    const process = spawn(command, args)
+    const childProcess = spawn('yarn', [command])
 
-    // Log when the process starts
-    console.log(`${command} ${args} initiated`)
+    // Log when the childProcess starts
+    console.log(`yarn ${command} initiated`)
 
-    // Uncomment to see output of each command
-    // process.stdout.on('data', (data) => {
-    //   console.log(`${command}: ${data}`)
-    // })
+    // Uncomment to see output of each yarn
+    if (verbose) {
+      childProcess.stdout.on('data', (data) => {
+        console.log(`Output from yarn ${command}:\n${data}`)
+      })
+    }
 
     // Log errors
-    process.stderr.on('data', (data) => {
-      console.error(`${command} ${args} error: ${data}`)
+    childProcess.stderr.on('data', (data) => {
+      console.error(`Error during execution of yarn ${command}:\n${data}`)
     })
 
-    // Log when and how the command exited
-    process.on('close', (code) => {
+    // Log when and how the yarn exited
+    childProcess.on('close', (code) => {
       if (code !== 0) {
-        return reject(new Error(`${command} ${args} exited with code ${code}`))
+        return reject(new Error(`Command "yarn ${command}" exited with non-zero code: ${code}`))
       }
-      console.log(`${command} ${args} completed successfully`)
+      console.timeLog('prepare-commands', `yarn ${command} completed`)
       resolve()
     })
   })
 }
 
-// Add setup commands to this array
-const commands = ['ajv', 'contracts', 'graphql', 'i18n']
-
-Promise.all(commands.map((command) => runCommand('yarn', [command])))
-  .then(() => console.log('All commands finished'))
+console.time('prepare-commands')
+Promise.all(commands.map(runCommand))
+  .then(() => {
+    console.log('All commands finished')
+    console.timeEnd('prepare-commands')
+  })
   .catch(console.error)
