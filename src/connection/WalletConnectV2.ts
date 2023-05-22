@@ -1,5 +1,6 @@
 import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { WalletConnect, WalletConnectConstructorArgs } from '@web3-react/walletconnect-v2'
+import { SupportedChainId } from 'constants/chains'
 
 import { RPC_URLS } from '../constants/networks'
 
@@ -37,7 +38,7 @@ export class WalletConnectV2Popup extends WalletConnect {
       options: {
         projectId: process.env.REACT_APP_WALLET_CONNECT_PROJECT_ID as string,
         optionalChains: Object.keys(RPC_URLS_WITHOUT_FALLBACKS).map((key) => Number(key)),
-        chains: [],
+        chains: [SupportedChainId.MAINNET],
         showQrModal: qrcode,
         rpcMap: RPC_URLS_WITHOUT_FALLBACKS,
       },
