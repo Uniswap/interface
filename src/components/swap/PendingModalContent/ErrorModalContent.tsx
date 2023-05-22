@@ -55,7 +55,7 @@ export function ErrorModalContent({ errorType, onRetry }: ErrorModalContentProps
 
   return (
     <PendingModalContainer gap="lg">
-      <AlertTriangle strokeWidth={1} color={theme.accentFailure} size="48px" />
+      <AlertTriangle data-testid="pending-modal-failure-icon" strokeWidth={1} color={theme.accentFailure} size="48px" />
       <ColumnCenter gap="md">
         <ThemedText.HeadlineSmall>{title}</ThemedText.HeadlineSmall>
         <Row justify="center">

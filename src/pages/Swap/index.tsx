@@ -332,17 +332,17 @@ export function Swap({
   }, [navigate])
 
   // modal and loading
-  const [{ showConfirm, tradeToConfirm, swapErrorMessage, attemptingTxn, txHash }, setSwapState] = useState<{
+  const [{ showConfirm, tradeToConfirm, swapError, attemptingTxn, txHash }, setSwapState] = useState<{
     showConfirm: boolean
     tradeToConfirm: InterfaceTrade | undefined
     attemptingTxn: boolean
-    swapErrorMessage: string | undefined
+    swapError: Error | undefined
     txHash: string | undefined
   }>({
     showConfirm: false,
     tradeToConfirm: undefined,
     attemptingTxn: false,
-    swapErrorMessage: undefined,
+    swapError: undefined,
     txHash: undefined,
   })
 
@@ -393,10 +393,10 @@ export function Swap({
     if (stablecoinPriceImpact && !confirmPriceImpactWithoutFee(stablecoinPriceImpact)) {
       return
     }
-    setSwapState({ attemptingTxn: true, tradeToConfirm, showConfirm, swapErrorMessage: undefined, txHash: undefined })
+    setSwapState({ attemptingTxn: true, tradeToConfirm, showConfirm, swapError: undefined, txHash: undefined })
     swapCallback()
       .then((hash) => {
-        setSwapState({ attemptingTxn: false, tradeToConfirm, showConfirm, swapErrorMessage: undefined, txHash: hash })
+        setSwapState({ attemptingTxn: false, tradeToConfirm, showConfirm, swapError: undefined, txHash: hash })
         sendEvent({
           category: 'Swap',
           action: 'transaction hash',
@@ -420,7 +420,7 @@ export function Swap({
           attemptingTxn: false,
           tradeToConfirm,
           showConfirm,
-          swapErrorMessage: error.message,
+          swapError: error,
           txHash: undefined,
         })
       })
@@ -447,16 +447,16 @@ export function Swap({
   }, [stablecoinPriceImpact, trade])
 
   const handleConfirmDismiss = useCallback(() => {
-    setSwapState({ showConfirm: false, tradeToConfirm, attemptingTxn, swapErrorMessage, txHash })
+    setSwapState({ showConfirm: false, tradeToConfirm, attemptingTxn, swapError, txHash })
     // if there was a tx hash, we want to clear the input
     if (txHash) {
       onUserInput(Field.INPUT, '')
     }
-  }, [attemptingTxn, onUserInput, swapErrorMessage, tradeToConfirm, txHash])
+  }, [attemptingTxn, onUserInput, swapError, tradeToConfirm, txHash])
 
   const handleAcceptChanges = useCallback(() => {
-    setSwapState({ tradeToConfirm: trade, swapErrorMessage, txHash, attemptingTxn, showConfirm })
-  }, [attemptingTxn, showConfirm, swapErrorMessage, trade, txHash])
+    setSwapState({ tradeToConfirm: trade, swapError, txHash, attemptingTxn, showConfirm })
+  }, [attemptingTxn, showConfirm, swapError, trade, txHash])
 
   const handleInputSelect = useCallback(
     (inputCurrency: Currency) => {
@@ -556,7 +556,7 @@ export function Swap({
           allowedSlippage={allowedSlippage}
           onConfirm={handleSwap}
           allowance={allowance}
-          swapErrorMessage={swapErrorMessage}
+          swapError={swapError}
           onDismiss={handleConfirmDismiss}
           swapQuoteReceivedDate={swapQuoteReceivedDate}
           fiatValueInput={fiatValueTradeInput}
@@ -717,13 +717,14 @@ export function Swap({
                   setSwapState({
                     tradeToConfirm: trade,
                     attemptingTxn: false,
-                    swapErrorMessage: undefined,
+                    swapError: undefined,
                     showConfirm: true,
                     txHash: undefined,
                   })
                 }
               }}
               id="swap-button"
+              data-testid="swap-button"
               disabled={!isValid || routeIsSyncing || routeIsLoading || priceImpactTooHigh}
               error={isValid && priceImpactSeverity > 2 && allowance.state === AllowanceState.ALLOWED}
             >
@@ -742,7 +743,7 @@ export function Swap({
               </Text>
             </ButtonError>
           )}
-          {isExpertMode && swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}
+          {Boolean(isExpertMode && swapError) && <SwapCallbackError error={swapError?.message} />}
         </div>
       </AutoColumn>
     </SwapWrapper>

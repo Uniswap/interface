@@ -42,7 +42,11 @@ export function CurrencyLoader({
   asBadge?: boolean
 }) {
   return (
-    <CurrencyLoaderContainer asBadge={asBadge} $visible={visible}>
+    <CurrencyLoaderContainer
+      asBadge={asBadge}
+      $visible={visible}
+      data-testid={`pending-modal-currency-logo-${currency?.symbol}`}
+    >
       <RaisedCurrencyLogo currency={currency} size="100%" />
     </CurrencyLoaderContainer>
   )

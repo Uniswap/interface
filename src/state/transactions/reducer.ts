@@ -6,6 +6,8 @@ import { TransactionDetails, TransactionInfo } from './types'
 
 const now = () => new Date().getTime()
 
+// TODO(WEB-2053): update this to be a map of account -> chainId -> txHash -> TransactionDetails
+// to simplify usage, once we're able to invalidate localstorage
 export interface TransactionState {
   [chainId: number]: {
     [txHash: string]: TransactionDetails

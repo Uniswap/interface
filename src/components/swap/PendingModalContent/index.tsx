@@ -102,20 +102,20 @@ interface PendingModalStep {
 interface PendingModalContentProps {
   steps: PendingConfirmModalState[]
   currentStep: PendingConfirmModalState
-  trade: InterfaceTrade | undefined
-  swapHash: string | undefined
+  trade?: InterfaceTrade
+  swapTxHash?: string
   hideStepIndicators?: boolean
   tokenApprovalPending?: boolean
 }
 
 interface ContentArgs {
   step: PendingConfirmModalState
-  approvalCurrency: Currency | undefined
-  trade: InterfaceTrade | undefined
+  approvalCurrency?: Currency
+  trade?: InterfaceTrade
   swapConfirmed: boolean
   swapPending: boolean
   tokenApprovalPending: boolean
-  swapHash: string | undefined
+  swapTxHash?: string
 }
 
 function getContent(args: ContentArgs): PendingModalStep {
@@ -123,7 +123,7 @@ function getContent(args: ContentArgs): PendingModalStep {
   switch (step) {
     case ConfirmModalState.APPROVING_TOKEN:
       return {
-        title: t`Allow trading ${approvalCurrency?.symbol} on Uniswap`,
+        title: t`Allow trading ${approvalCurrency?.symbol ?? 'token'} on Uniswap`,
         subtitle: (
           <>
             <Trans>First, we need your permission to use your DAI for swapping.</Trans>{' '}
@@ -136,7 +136,7 @@ function getContent(args: ContentArgs): PendingModalStep {
       }
     case ConfirmModalState.PERMITTING:
       return {
-        title: t`Unlock ${approvalCurrency?.symbol} for swapping`,
+        title: t`Unlock ${approvalCurrency?.symbol ?? 'token'} for swapping`,
         subtitle: (
           <>
             <Trans>This will expire after 30 days for your security.</Trans>{' '}
@@ -166,24 +166,29 @@ export function PendingModalContent({
   steps,
   currentStep,
   trade,
-  swapHash,
+  swapTxHash,
   hideStepIndicators,
   tokenApprovalPending = false,
 }: PendingModalContentProps) {
   const { chainId } = useWeb3React()
-  const swapConfirmed = useIsTransactionConfirmed(swapHash)
-  const swapPending = swapHash !== undefined && !swapConfirmed
+  const swapConfirmed = useIsTransactionConfirmed(swapTxHash)
+  const swapPending = swapTxHash !== undefined && !swapConfirmed
   const { label, button } = getContent({
     step: currentStep,
     approvalCurrency: trade?.inputAmount.currency,
     swapConfirmed,
     swapPending,
     tokenApprovalPending,
-    swapHash,
+    swapTxHash,
     trade,
   })
   const currentStepContainerRef = useRef<HTMLDivElement>(null)
   useUnmountingAnimation(currentStepContainerRef, () => AnimationType.EXITING)
+
+  if (steps.length === 0) {
+    return null
+  }
+
   return (
     <PendingModalContainer gap="lg">
       <LogoContainer>
@@ -194,6 +199,7 @@ export function PendingModalContent({
           asBadge={currentStep === ConfirmModalState.APPROVING_TOKEN}
         />
         {currentStep === ConfirmModalState.PENDING_CONFIRMATION &&
+        // On mainnet, we show the success icon once the tx is sent, since it takes longer to confirm than on L2s.
         (swapConfirmed || (swapPending && chainId === SupportedChainId.MAINNET)) ? (
           <AnimatedEntranceConfirmationIcon />
         ) : (
@@ -209,7 +215,7 @@ export function PendingModalContent({
               swapConfirmed,
               swapPending,
               tokenApprovalPending,
-              swapHash,
+              swapTxHash,
               trade,
             })
             // We only render one step at a time, but looping through the array allows us to keep
