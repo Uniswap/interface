@@ -123,7 +123,7 @@ export default function usePermit2Allowance(amount?: CurrencyAmount<Token>, spen
     if (token) {
       if (!tokenAllowance || !permitAllowance) {
         return { state: AllowanceState.LOADING }
-      } else if (!(isPermitted || isSigned)) {
+      } else if (shouldRequestSignature) {
         return {
           token,
           state: AllowanceState.REQUIRED,

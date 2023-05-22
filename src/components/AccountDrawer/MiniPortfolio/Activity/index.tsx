@@ -82,7 +82,24 @@ const ActivityGroupWrapper = styled(Column)`
   gap: 8px;
 `
 
-function combineActivities(localMap: ActivityMap = {}, remoteMap: ActivityMap = {}): Array<Activity> {
+/* Detects transactions from same account with the same nonce and different hash */
+function wasTxCancelled(localActivity: Activity, remoteMap: ActivityMap, account: string): boolean {
+  // handles locally cached tx's that were stored before we started tracking nonces
+  if (!localActivity.nonce || localActivity.status !== TransactionStatus.Pending) return false
+
+  return Object.values(remoteMap).some((remoteTx) => {
+    if (!remoteTx) return false
+
+    // Cancellations are only possible when both nonce and tx.from are the same
+    if (remoteTx.nonce === localActivity.nonce && remoteTx.receipt?.from.toLowerCase() === account.toLowerCase()) {
+      // If the remote tx has a different hash than the local tx, the local tx was cancelled
+      return remoteTx.hash.toLowerCase() !== localActivity.hash.toLowerCase()
+    }
+    return false
+  })
+}
+
+function combineActivities(localMap: ActivityMap = {}, remoteMap: ActivityMap = {}, account: string): Array<Activity> {
   const txHashes = [...new Set([...Object.keys(localMap), ...Object.keys(remoteMap)])]
 
   // Merges local and remote activities w/ same hash, preferring remote data
@@ -90,16 +107,12 @@ function combineActivities(localMap: ActivityMap = {}, remoteMap: ActivityMap = 
     const localActivity = (localMap?.[hash] ?? {}) as Activity
     const remoteActivity = (remoteMap?.[hash] ?? {}) as Activity
 
-    // Check for nonce collision
-    const isNonceCollision =
-      localActivity.nonce !== undefined &&
-      Object.keys(remoteMap).some((remoteHash) => remoteMap[remoteHash]?.nonce === localActivity.nonce)
+    // TODO(WEB-2064): Display cancelled status in UI rather than completely hiding cancelled TXs
+    if (wasTxCancelled(localActivity, remoteMap, account)) return acc
 
-    if (!isNonceCollision) {
-      // TODO(cartcrom): determine best logic for which fields to prefer from which sources
-      // i.e.prefer remote exact swap output instead of local estimated output
-      acc.push({ ...localActivity, ...remoteActivity } as Activity)
-    }
+    // TODO(cartcrom): determine best logic for which fields to prefer from which sources
+    // i.e.prefer remote exact swap output instead of local estimated output
+    acc.push({ ...localActivity, ...remoteActivity } as Activity)
 
     return acc
   }, [])
@@ -132,9 +145,9 @@ export function ActivityTab({ account }: { account: string }) {
 
   const activityGroups = useMemo(() => {
     const remoteMap = parseRemoteActivities(data?.portfolios?.[0].assetActivities)
-    const allActivities = combineActivities(localMap, remoteMap)
+    const allActivities = combineActivities(localMap, remoteMap, account)
     return createGroups(allActivities)
-  }, [data?.portfolios, localMap])
+  }, [data?.portfolios, localMap, account])
 
   if (!data && loading)
     return (

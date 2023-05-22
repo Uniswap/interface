@@ -102,6 +102,26 @@ exports[`AdvancedSwapDetails.tsx matches base snapshot 1`] = `
       class="c2 c3 c4"
     >
       <div
+        class="c5"
+      >
+        <div>
+          <div
+            class="c6 css-zhpkf8"
+          >
+            Price Impact
+          </div>
+        </div>
+      </div>
+      <div
+        class="c7 css-zhpkf8"
+      >
+        105566.37%
+      </div>
+    </div>
+    <div
+      class="c2 c3 c4"
+    >
+      <div
         class="c2 c3 c8"
       >
         <div

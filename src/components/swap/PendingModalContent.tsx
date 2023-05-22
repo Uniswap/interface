@@ -63,10 +63,10 @@ const LoadingIndicator = styled(Loader)`
   position: absolute;
 `
 
-function CurrencyLoader({ currency }: { currency: Currency | undefined }) {
+function CurrencyLoader({ currency }: { currency?: Currency }) {
   const theme = useTheme()
   return (
-    <LogoContainer>
+    <LogoContainer data-testid={`pending-modal-currency-logo-loader-${currency?.symbol}`}>
       <LogoLayer>
         <CurrencyLogo currency={currency} size="48px" />
       </LogoLayer>
@@ -182,7 +182,7 @@ function getContent(args: ContentArgs): PendingModalStep {
       }
     case ConfirmModalState.PERMITTING:
       return {
-        title: t`Unlock ${approvalCurrency?.symbol} for swapping`,
+        title: t`Unlock ${approvalCurrency?.symbol ?? 'token'} for swapping`,
         subtitle: (
           <>
             <Trans>This will expire after 30 days for your security.</Trans>{' '}
@@ -243,13 +243,25 @@ export function PendingModalContent({
       {logo}
       {/* TODO: implement animations between title/subtitles of each step. */}
       <HeaderContainer gap="md" $disabled={tokenApprovalPending || swapPending}>
-        <ThemedText.HeadlineSmall>{title}</ThemedText.HeadlineSmall>
-        {subtitle && <ThemedText.LabelSmall textAlign="center">{subtitle}</ThemedText.LabelSmall>}
+        <ThemedText.HeadlineSmall data-testid="PendingModalContent-title">{title}</ThemedText.HeadlineSmall>
+        {subtitle && (
+          <ThemedText.LabelSmall textAlign="center" data-testid="PendingModalContent-subtitle">
+            {subtitle}
+          </ThemedText.LabelSmall>
+        )}
         <Row justify="center" marginTop="32px">
-          {label && <ThemedText.Caption color="textSecondary">{label}</ThemedText.Caption>}
+          {label && (
+            <ThemedText.Caption color="textSecondary" data-testid="PendingModalContent-label">
+              {label}
+            </ThemedText.Caption>
+          )}
         </Row>
       </HeaderContainer>
-      {button && <Row justify="center">{button}</Row>}
+      {button && (
+        <Row justify="center" data-testid="PendingModalContent-button">
+          {button}
+        </Row>
+      )}
       {!hideStepIndicators && (
         <Row gap="14px" justify="center">
           {steps.map((_, i) => {
@@ -300,7 +312,7 @@ export function ErrorModalContent({ errorType, onRetry }: ErrorModalContentProps
 
   return (
     <Container gap="lg">
-      <AlertTriangle strokeWidth={1} color={theme.accentFailure} size="48px" />
+      <AlertTriangle strokeWidth={1} color={theme.accentFailure} size="48px" data-testid="pending-modal-failure-icon" />
       <ColumnCenter gap="md">
         <ThemedText.HeadlineSmall>{title}</ThemedText.HeadlineSmall>
         <Row justify="center">
@@ -309,7 +321,7 @@ export function ErrorModalContent({ errorType, onRetry }: ErrorModalContentProps
         </Row>
       </ColumnCenter>
       <Row justify="center">
-        <ButtonPrimary marginX="24px" onClick={onRetry}>
+        <ButtonPrimary marginX="24px" onClick={onRetry} data-testid="pending-modal-content-retry">
           <Trans>Retry</Trans>
         </ButtonPrimary>
       </Row>
