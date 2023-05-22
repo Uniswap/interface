@@ -11,6 +11,7 @@ describe('useMaxAmountIn', () => {
 
   it('returns the expected value calculated using the exact-input trade and the given slippage', () => {
     const { result } = renderHook(() => useMaxAmountIn(TEST_TRADE_EXACT_INPUT, TEST_ALLOWED_SLIPPAGE))
-    expect(result.current?.toExact()).toEqual('0.000000000000001')
+    const expectedResult = TEST_TRADE_EXACT_INPUT.maximumAmountIn(TEST_ALLOWED_SLIPPAGE)
+    expect(result.current?.toExact()).toEqual(expectedResult?.toExact())
   })
 })

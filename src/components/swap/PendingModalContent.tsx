@@ -78,7 +78,7 @@ interface PendingModalContentProps {
 function CurrencyLoader({ currency }: { currency?: Currency }) {
   const theme = useTheme()
   return (
-    <LogoContainer data-testid="pending-modal-currency-logo-loader">
+    <LogoContainer data-testid={`pending-modal-currency-logo-loader-${currency?.symbol}`}>
       <LogoLayer>
         <CurrencyLogo currency={currency} size="48px" />
       </LogoLayer>

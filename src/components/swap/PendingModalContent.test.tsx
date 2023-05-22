@@ -104,7 +104,7 @@ describe('PendingModalContent', () => {
           approvalCurrency={DAI_MAINNET}
         />
       )
-      expect(screen.getByTestId('pending-modal-currency-logo-loader')).toBeInTheDocument()
+      expect(screen.getByTestId('pending-modal-currency-logo-loader-DAI')).toBeInTheDocument()
       expect(screen.queryByTestId('pending-modal-failure-icon')).toBeNull()
     })
 
