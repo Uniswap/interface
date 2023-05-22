@@ -1,3 +1,4 @@
+import { USDC_MAINNET } from '../../../src/constants/tokens'
 import { getTestSelector } from '../../utils'
 
 describe('mini-portfolio activity history', () => {
@@ -93,24 +94,15 @@ describe('mini-portfolio activity history', () => {
   })
 
   it('should deduplicate activity history by nonce', () => {
-    cy.visit('/swap', { ethereum: 'hardhat' }).hardhat({ automine: false })
+    cy.visit(`/swap?inputCurrency=ETH&outputCurrency=${USDC_MAINNET.address}`, { ethereum: 'hardhat' }).hardhat({
+      automine: false,
+    })
 
     // Input swap info.
-    cy.get('#swap-currency-input .token-amount-input').clear().type('1')
-    cy.get('#swap-currency-output .open-currency-select-button').click()
-    cy.contains('USDC').click()
-    cy.get('#swap-currency-output .token-amount-input').should('not.equal', '')
+    cy.get('#swap-currency-input .token-amount-input').clear().type('1').should('have.value', '1')
+    cy.get('#swap-currency-output .token-amount-input').should('not.have.value', '')
 
-    // Set slippage to a high value.
-    cy.get(getTestSelector('open-settings-dialog-button')).click()
-    cy.get(getTestSelector('max-slippage-settings')).click()
-    cy.get(getTestSelector('slippage-input')).clear().type('5')
-    cy.get('body').click('topRight')
-    cy.get(getTestSelector('slippage-input')).should('not.exist')
-
-    // Click swap button.
-    cy.contains('1 USDC = ').should('exist')
-    cy.get('#swap-button').should('not.be', 'disabled').click()
+    cy.get('#swap-button').click()
     cy.get('#confirm-swap-or-send').click()
     cy.get(getTestSelector('dismiss-tx-confirmation')).click()
 
