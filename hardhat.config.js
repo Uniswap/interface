@@ -19,7 +19,7 @@ module.exports = {
       chainId: 1,
       forking: mainnetFork,
       accounts: {
-        count: 1,
+        count: 2,
       },
       mining: {
         auto: true, // automine to make tests easier to write.

@@ -19,7 +19,7 @@ export function isAppUniswapOrg({ hostname }: { hostname: string }): boolean {
   return hostname === 'app.uniswap.org'
 }
 
-function isAppUniswapStagingOrg({ hostname }: { hostname: string }): boolean {
+export function isAppUniswapStagingOrg({ hostname }: { hostname: string }): boolean {
   return hostname === 'app.uniswap-staging.org'
 }
 

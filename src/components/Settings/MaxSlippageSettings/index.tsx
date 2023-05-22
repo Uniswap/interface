@@ -53,6 +53,9 @@ export default function MaxSlippageSettings({ autoSlippage }: { autoSlippage: Pe
   const [slippageInput, setSlippageInput] = useState(defaultSlippageInputValue)
   const [slippageError, setSlippageError] = useState<SlippageError | false>(false)
 
+  // If user has previously entered a custom slippage, we want to show the settings expanded by default.
+  const [isOpen, setIsOpen] = useState(defaultSlippageInputValue.length > 0)
+
   const parseSlippageInput = (value: string) => {
     // Do not allow non-numerical characters in the input field or more than two decimals
     if (value.length > 0 && !NUMBER_WITH_MAX_TWO_DECIMAL_PLACES.test(value)) {
@@ -93,6 +96,8 @@ export default function MaxSlippageSettings({ autoSlippage }: { autoSlippage: Pe
   return (
     <Expand
       testId="max-slippage-settings"
+      isOpen={isOpen}
+      onToggle={() => setIsOpen(!isOpen)}
       header={
         <Row width="auto">
           <ThemedText.BodySecondary>

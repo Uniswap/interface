@@ -1,13 +1,13 @@
 import 'workbox-precaching' // defines __WB_MANIFEST
 
-import { clientsClaim } from 'workbox-core'
+import { cacheNames, clientsClaim } from 'workbox-core'
 import { ExpirationPlugin } from 'workbox-expiration'
 import { precacheAndRoute } from 'workbox-precaching'
 import { registerRoute, Route } from 'workbox-routing'
 import { CacheFirst } from 'workbox-strategies'
 
 import { DocumentRoute } from './document'
-import { groupEntries } from './utils'
+import { deleteUnusedCaches, groupEntries } from './utils'
 
 declare const self: ServiceWorkerGlobalScope
 
@@ -21,14 +21,21 @@ registerRoute(new DocumentRoute())
 const { onDemandEntries, precacheEntries } = groupEntries(self.__WB_MANIFEST)
 const onDemandURLs = onDemandEntries.map((entry) => (typeof entry === 'string' ? entry : entry.url))
 
+const onDemandCacheName = `${cacheNames.prefix}-on-demand-${cacheNames.suffix}`
 registerRoute(
   new Route(
     ({ url }) => onDemandURLs.includes('.' + url.pathname),
     new CacheFirst({
-      cacheName: 'media',
-      plugins: [new ExpirationPlugin({ maxEntries: 16 })],
+      cacheName: onDemandCacheName,
+      plugins: [new ExpirationPlugin({ maxEntries: 64 })],
     })
   )
 )
 
-precacheAndRoute(precacheEntries)
+precacheAndRoute(precacheEntries) // precache cache
+
+// We only use the precache and runtime caches, so we delete the rest to avoid taking space.
+// Wait to do so until 'activate' in case activation fails.
+self.addEventListener('activate', () =>
+  deleteUnusedCaches(self.caches, { usedCaches: [cacheNames.precache, onDemandCacheName] })
+)
