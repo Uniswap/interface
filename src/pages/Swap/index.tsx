@@ -724,6 +724,7 @@ export function Swap({
                 }
               }}
               id="swap-button"
+              data-testid="swap-button"
               disabled={!isValid || routeIsSyncing || routeIsLoading || priceImpactTooHigh}
               error={isValid && priceImpactSeverity > 2 && allowance.state === AllowanceState.ALLOWED}
             >
