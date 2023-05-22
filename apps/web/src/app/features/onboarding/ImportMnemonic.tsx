@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { OnboardingRoutes } from 'src/app/navigation/constants'
 import { Input, Stack, XStack, YStack } from 'tamagui'
 import { Text } from 'ui/src'
 import { Button, LinkButton } from 'ui/src/components/button/Button'
-import { OnboardingRoutes } from 'wallet/src/navigation/constants'
 
 export function ImportMnemonic(): JSX.Element {
   const navigate = useNavigate()

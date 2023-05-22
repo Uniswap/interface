@@ -1,5 +1,6 @@
 import { useLocation, useNavigate } from 'react-router-dom'
 import { usePasswordInput } from 'src/app/features/lockScreen/Locked'
+import { OnboardingRoutes } from 'src/app/navigation/constants'
 import { Input, Stack, XStack, YStack } from 'tamagui'
 import { Text } from 'ui/src'
 import { Button } from 'ui/src/components/button/Button'
@@ -8,7 +9,6 @@ import {
   importAccountSagaName,
 } from 'wallet/src/features/wallet/import/importAccountSaga'
 import { ImportAccountType } from 'wallet/src/features/wallet/import/types'
-import { OnboardingRoutes } from 'wallet/src/navigation/constants'
 import { useAppDispatch } from 'wallet/src/state'
 import { useSagaStatus } from 'wallet/src/state/useSagaStatus'
 
