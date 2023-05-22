@@ -22,7 +22,7 @@ function runCommand(command) {
     // Uncomment to see output of each yarn
     if (verbose) {
       childProcess.stdout.on('data', (data) => {
-        console.log(`Output from yarn ${command}:\n${data}`)
+        data.split('\n').map((line) => `[${command}] ${line}`).forEach(console.log)
       })
     }
 
