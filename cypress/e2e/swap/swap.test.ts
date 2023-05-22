@@ -48,7 +48,7 @@ describe('Swap', () => {
         cy.get('#swap-currency-input .token-amount-input').should('not.have.value', '')
         cy.get('#swap-button').click()
         cy.get('#confirm-swap-or-send').click()
-        cy.get(getTestSelector('dismiss-tx-confirmation')).click()
+        cy.get(getTestSelector('confirmation-close-icon')).click()
 
         // The pending transaction indicator should reflect the state.
         cy.get(getTestSelector('web3-status-connected')).should('contain', '1 Pending')
