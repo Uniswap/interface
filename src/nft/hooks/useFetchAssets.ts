@@ -134,9 +134,9 @@ export const useFetchSingleAsset = () => {
           }
 
           const { route, routeResponse } = buildRouteResponse(data.nftRoute, false)
-          const { hasPriceAdjustment, updatedAssets } = compareAssetsWithTransactionRoute([asset], route)
-          const { unavailable } = filterUpdatedAssetsByState(updatedAssets)
-          const invalidData = hasPriceAdjustment || unavailable.length > 0
+          const { updatedAssets } = compareAssetsWithTransactionRoute([asset], route)
+          const { priceChanged, unavailable } = filterUpdatedAssetsByState(updatedAssets)
+          const invalidData = priceChanged.length > 0 || unavailable.length > 0
 
           if (invalidData) {
             return

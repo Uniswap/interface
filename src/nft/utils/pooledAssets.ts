@@ -191,7 +191,7 @@ export const calcAvgGroupPoolPrice = (asset: GenieAsset, numberOfAssets: number)
   return total.div(numberOfAssets).toString()
 }
 
-const recalculatePooledAssetPrice = (asset: GenieAsset, position: number): string => {
+export const recalculatePooledAssetPrice = (asset: GenieAsset, position: number): string => {
   return asset.marketplace === Markets.Sudoswap
     ? calcSudoSwapPrice(asset, position) ?? ''
     : calcPoolPrice(asset, position)
