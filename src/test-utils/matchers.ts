@@ -11,6 +11,10 @@ const isElementVisible = (element: HTMLElement): boolean => {
 // https://github.com/testing-library/jest-dom/issues/450
 // - original `toBeVisible()` and `toHaveStyle()` does not work at all in some cases
 // https://github.com/testing-library/jest-dom/issues/209
+// - `getComputedStyles()` returns empty object, making it impossible to check for Styled Components styles
+// https://github.com/styled-components/styled-components/issues/3262
+// https://github.com/jsdom/jsdom/issues/2986
+// For the reasons above, this matcher only works for inline styles.
 export const toBeVisible: MatcherFunction = function (element: HTMLElement) {
   const isVisible = isElementVisible(element)
   return {
