@@ -11,8 +11,8 @@ import { MMKV } from 'react-native-mmkv'
 import { uniswapUrls } from 'src/constants/urls'
 import { initAndPersistCache } from 'src/data/cache'
 import { setupErrorLink, setupPerformanceLink } from 'src/data/utils'
-import { isNonJestDev } from 'src/utils/environment'
 import { config } from 'wallet/src/config'
+import { isNonJestDev } from 'wallet/src/utils/environment'
 
 const mmkv = new MMKV()
 if (isNonJestDev()) {
