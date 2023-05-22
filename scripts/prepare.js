@@ -17,7 +17,7 @@ function runCommand(command) {
     const childProcess = spawn('yarn', [command])
 
     // Log when the childProcess starts
-    console.log(`yarn ${command} initiated`)
+    console.log(`[${command}] initiated`)
 
     // Uncomment to see output of each yarn
     if (verbose) {
