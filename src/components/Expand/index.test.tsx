@@ -4,13 +4,13 @@ import noop from 'utils/noop'
 import Expand from './index'
 
 describe('Expand', () => {
-  it('does not render children when closed', () => {
+  it('does not render children when closed', async () => {
     render(
       <Expand header={<span>Header</span>} isOpen={false} onToggle={noop} button={<span>Button</span>}>
         Body
       </Expand>
     )
-    expect(screen.queryByText('Body')).not.toBeInTheDocument()
+    expect(screen.queryByText('Body')).not.toBeVisible()
   })
 
   it('renders children when open', () => {
@@ -19,7 +19,7 @@ describe('Expand', () => {
         Body
       </Expand>
     )
-    expect(screen.queryByText('Body')).toBeInTheDocument()
+    expect(screen.queryByText('Body')).toBeVisible()
   })
 
   it('calls `onToggle` when button is pressed', () => {
