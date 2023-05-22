@@ -107,7 +107,7 @@ export function useFetchAssets(): () => Promise<void> {
   ])
 }
 
-export const useFetchSingleAsset = () => {
+export const useBuyAssetCallback = () => {
   const { account } = useWeb3React()
   const [fetchGqlRoute] = useNftRouteLazyQuery()
   const purchaseAssets = usePurchaseAssets()

@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 import { formatNumber } from '@uniswap/conedison/format'
 import { ButtonPrimary } from 'components/Button'
 import Loader from 'components/Icons/LoadingSpinner'
-import { useFetchSingleAsset } from 'nft/hooks/useFetchAssets'
+import { useBuyAssetCallback } from 'nft/hooks/useFetchAssets'
 import { GenieAsset } from 'nft/types'
 import styled from 'styled-components/macro'
 
@@ -25,7 +25,7 @@ const Price = styled.div`
 `
 
 export const BuyButton = ({ asset, onDataPage }: { asset: GenieAsset; onDataPage?: boolean }) => {
-  const { fetchAndPurchaseSingleAsset, isLoading: isLoadingRoute } = useFetchSingleAsset()
+  const { fetchAndPurchaseSingleAsset, isLoading: isLoadingRoute } = useBuyAssetCallback()
   const price = asset.sellorders?.[0]?.price.value
 
   if (!price) {
