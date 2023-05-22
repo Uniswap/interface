@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Platform, StyleSheet } from 'react-native'
 import WebView from 'react-native-webview'
 import { fetchSVG } from 'src/components/images/utils'
+import { Box } from 'src/components/layout'
 import { Loader } from 'src/components/loading'
 import { logger } from 'wallet/src/features/logger/logger'
 
@@ -81,24 +82,25 @@ export function WebSvgUri({ autoplay, maxHeight, uri }: SvgUriProps): JSX.Elemen
     const html = getHTML(svgContent)
 
     return (
-      <WebView
-        scalesPageToFit
-        javaScriptEnabled={false}
-        originWhitelist={['*']}
-        pointerEvents="none"
-        scrollEnabled={false}
-        showsHorizontalScrollIndicator={false}
-        showsVerticalScrollIndicator={false}
-        source={{ html }}
-        style={[
-          webviewStyle.fullWidth,
-          {
-            aspectRatio,
-            maxHeight: maxHeight ?? '100%',
-          },
-        ]}
-        useWebKit={false}
-      />
+      <Box maxHeight={maxHeight ?? '100%'}>
+        <WebView
+          scalesPageToFit
+          javaScriptEnabled={false}
+          originWhitelist={['*']}
+          pointerEvents="none"
+          scrollEnabled={false}
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
+          source={{ html }}
+          style={[
+            webviewStyle.fullSize,
+            {
+              aspectRatio,
+            },
+          ]}
+          useWebKit={false}
+        />
+      </Box>
     )
   } else {
     return <Loader.Image />
@@ -106,9 +108,9 @@ export function WebSvgUri({ autoplay, maxHeight, uri }: SvgUriProps): JSX.Elemen
 }
 
 const webviewStyle = StyleSheet.create({
-  fullWidth: {
+  fullSize: {
     backgroundColor: 'transparent',
-    maxHeight: 350,
+    height: '100%',
     width: '100%',
   },
 })
