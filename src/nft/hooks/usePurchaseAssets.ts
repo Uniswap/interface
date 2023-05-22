@@ -1,7 +1,7 @@
 import { useWeb3React } from '@web3-react/core'
 import { RouteResponse, UpdatedGenieAsset } from 'nft/types'
 import { useCallback } from 'react'
-import shallow from 'zustand/shallow'
+import { shallow } from 'zustand/shallow'
 
 import { useBag } from './useBag'
 import { useSendTransaction } from './useSendTransaction'
