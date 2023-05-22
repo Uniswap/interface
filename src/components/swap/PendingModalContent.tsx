@@ -9,6 +9,7 @@ import Row from 'components/Row'
 import AnimatedConfirmation from 'components/TransactionConfirmationModal/AnimatedConfirmation'
 import { ReactNode } from 'react'
 import { AlertTriangle } from 'react-feather'
+import { useIsTransactionConfirmed } from 'state/transactions/hooks'
 import styled, { DefaultTheme, useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme/components/text'
 
@@ -35,6 +36,11 @@ const StepCircle = styled.div<{ active: boolean }>`
   border-radius: 50%;
   background-color: ${({ theme, active }) => (active ? theme.accentAction : theme.textTertiary)};
   outline: 3px solid ${({ theme, active }) => (active ? theme.accentActionSoft : theme.accentTextLightTertiary)};
+`
+
+const SizedAnimatedConfirmation = styled(AnimatedConfirmation)`
+  height: 48px;
+  width: 48px;
 `
 
 // TODO: switch to LoaderV2 with updated API to support changing color and size.
@@ -65,14 +71,14 @@ interface PendingModalContentProps {
   steps: PendingConfirmModalState[]
   currentStep: PendingConfirmModalState
   approvalCurrency?: Currency
-  confirmed: boolean
   hideStepIndicators?: boolean
+  txHash?: string
 }
 
-function CurrencyLoader({ currency }: { currency: Currency | undefined }) {
+function CurrencyLoader({ currency }: { currency?: Currency }) {
   const theme = useTheme()
   return (
-    <LogoContainer>
+    <LogoContainer data-testid={`pending-modal-currency-logo-loader-${currency?.symbol}`}>
       <LogoLayer>
         <CurrencyLogo currency={currency} size="48px" />
       </LogoLayer>
@@ -98,7 +104,7 @@ function getContent(
       }
     case ConfirmModalState.PERMITTING:
       return {
-        title: t`Approve ${approvalCurrency?.symbol}`,
+        title: t`Approve ${approvalCurrency?.symbol ?? 'token'}`,
         subtitle: t`Proceed in wallet`,
         label: t`Why are approvals required?`,
         tooltipText: t`This provides the Uniswap protocol access to your token for trading. For security, this will expire after 30 days.`,
@@ -108,7 +114,7 @@ function getContent(
       return {
         title: t`Confirm Swap`,
         subtitle: t`Proceed in wallet`,
-        logo: confirmed ? <AnimatedConfirmation size="48px" /> : <Loader stroke={theme.textTertiary} size="48px" />,
+        logo: confirmed ? <SizedAnimatedConfirmation /> : <Loader stroke={theme.textTertiary} size="48px" />,
       }
   }
 }
@@ -117,16 +123,20 @@ export function PendingModalContent({
   steps,
   currentStep,
   approvalCurrency,
-  confirmed,
+  txHash,
   hideStepIndicators,
 }: PendingModalContentProps) {
   const theme = useTheme()
+  const confirmed = useIsTransactionConfirmed(txHash)
   const { logo, title, subtitle, label, tooltipText, button } = getContent(
     currentStep,
     approvalCurrency,
     confirmed,
     theme
   )
+  if (steps.length === 0) {
+    return null
+  }
   return (
     <Container gap="lg">
       {logo}
@@ -200,7 +210,7 @@ export function ErrorModalContent({ errorType, onRetry }: ErrorModalContentProps
 
   return (
     <Container gap="lg">
-      <AlertTriangle strokeWidth={1} color={theme.accentFailure} size="48px" />
+      <AlertTriangle strokeWidth={1} color={theme.accentFailure} size="48px" data-testid="pending-modal-failure-icon" />
       <ColumnCenter gap="md">
         <ThemedText.HeadlineSmall>{title}</ThemedText.HeadlineSmall>
         <Row justify="center">

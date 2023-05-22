@@ -18,7 +18,6 @@ export const beforeSend: Required<ClientOptions>['beforeSend'] = (event: ErrorEv
   }
 
   updateRequestUrl(event)
-  addChunkResponseStatusTag(event, hint)
 
   return event
 }
@@ -40,39 +39,6 @@ function updateRequestUrl(event: ErrorEvent) {
       event.request.url = event.request.url.slice(0, -1)
     }
   }
-}
-
-// If a request fails due to a chunk error, this looks for that asset in the performance entries.
-// If found, it adds a tag to the event with the response status of the chunk request.
-function addChunkResponseStatusTag(event: ErrorEvent, hint: EventHint) {
-  const error = hint.originalException
-  if (error instanceof Error) {
-    let asset: string | undefined
-    if (error.message.match(/Loading chunk \d+ failed\. \(([a-zA-Z]+): .+\.chunk\.js\)/)) {
-      asset = error.message.match(/https?:\/\/.+?\.chunk\.js/)?.[0]
-    }
-
-    if (error.message.match(/Loading CSS chunk \d+ failed\. \(.+\.chunk\.css\)/)) {
-      const relativePath = error.message.match(/\/static\/css\/.*\.chunk\.css/)?.[0]
-      asset = `${window.origin}${relativePath}`
-    }
-
-    if (asset) {
-      const status = getChunkResponseStatus(asset)
-      if (status) {
-        if (!event.tags) {
-          event.tags = {}
-        }
-        event.tags.chunkResponseStatus = status
-      }
-    }
-  }
-}
-
-function getChunkResponseStatus(asset?: string): number | undefined {
-  const entries = [...(performance?.getEntriesByType('resource') ?? [])]
-  const resource = entries?.find(({ name }) => name === asset)
-  return resource?.responseStatus
 }
 
 function shouldRejectError(error: EventHint['originalException']) {
@@ -110,6 +76,13 @@ function shouldRejectError(error: EventHint['originalException']) {
     // WebAssembly compilation fails because we do not allow 'unsafe-eval' in our CSP.
     // Any thrown errors are due to 3P extensions/applications, so we do not need to handle them.
     if (error.message.match(/WebAssembly.instantiate\(\): Wasm code generation disallowed by embedder/)) {
+      return true
+    }
+
+    // Filters out errors caused by checking for meta tags that may not exist.
+    if (
+      error.message.match(/null is not an object \(evaluating 'document\.querySelector\('meta\[[^\]]+\]'\)\.content'\)/)
+    ) {
       return true
     }
 

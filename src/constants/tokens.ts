@@ -359,6 +359,14 @@ export const UNI: { [chainId: number]: Token } = {
   [SupportedChainId.GOERLI]: new Token(SupportedChainId.GOERLI, UNI_ADDRESS[5], 18, 'UNI', 'Uniswap'),
 }
 
+export const ARB = new Token(
+  SupportedChainId.ARBITRUM_ONE,
+  '0x912CE59144191C1204E64559FE8253a0e49E6548',
+  18,
+  'ARB',
+  'Arbitrum'
+)
+
 export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token | undefined } = {
   ...(WETH9 as Record<SupportedChainId, Token>),
   [SupportedChainId.OPTIMISM]: new Token(

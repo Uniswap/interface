@@ -1,8 +1,8 @@
 import styled, { keyframes, useTheme } from 'styled-components/macro'
 
 const Wrapper = styled.div<{ size?: string }>`
-  height: ${({ size }) => size ?? '90px'};
-  width: ${({ size }) => size ?? '90px'};
+  height: 90px;
+  width: 90px;
 `
 
 const dash = keyframes`
@@ -38,11 +38,11 @@ const PolyLine = styled.polyline`
   animation: ${dashCheck} 0.9s 0.35s ease-in-out forwards;
 `
 
-export default function AnimatedConfirmation({ size }: { size?: string }) {
+export default function AnimatedConfirmation({ className }: { className?: string }) {
   const theme = useTheme()
 
   return (
-    <Wrapper size={size}>
+    <Wrapper className={className} data-testid="animated-confirmation">
       <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130.2 130.2">
         <Circle
           className="path circle"
