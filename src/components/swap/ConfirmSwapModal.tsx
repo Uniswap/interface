@@ -267,7 +267,7 @@ export default function ConfirmSwapModal({
 
   return (
     <Trace modal={InterfaceModalName.CONFIRM_SWAP}>
-      <Modal isOpen $scrollOverlay={true} onDismiss={onModalDismiss} maxHeight={90}>
+      <Modal isOpen $scrollOverlay onDismiss={onModalDismiss} maxHeight={90}>
         {approvalError || swapErrorMessage ? (
           <ErrorModalContent
             errorType={approvalError ?? PendingModalError.CONFIRMATION_ERROR}
