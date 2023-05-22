@@ -32,6 +32,7 @@ const themeContractValues = {
     textSecondary: '',
     textTertiary: '',
     placeHolderSearch: '',
+    headerItems: '',
 
     dropShadow: '',
   },

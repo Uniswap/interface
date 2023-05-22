@@ -83,11 +83,11 @@ const baseMenuItem = style([
 export const menuItem = style([
   baseMenuItem,
   sprinkles({
-    color: 'textSecondary',
+    color: 'headerItems',
   }),
   {
     ':hover': {
-      color: 'textSecondary',
+      color: 'headerItems',
       background: vars.color.input,
     },
   },

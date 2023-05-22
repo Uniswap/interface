@@ -30,6 +30,7 @@ function prioritizeLogoSources(uris: string[]) {
       preferredUris.push(uri)
     }
   })
+  console.log('coingeckoUrl', coingeckoUrl, preferredUris)
   // Places coingecko urls in the back of the source array
   return coingeckoUrl ? [...preferredUris, coingeckoUrl] : preferredUris
 }
@@ -38,7 +39,10 @@ function getInitialUrl(address?: string | null, chainId?: number | null, isNativ
   if (chainId && isNative) return getNativeLogoURI(chainId)
 
   const networkName = chainId ? chainIdToNetworkName(chainId) : 'ethereum'
+  console.log('networkName', networkName)
+
   const checksummedAddress = isAddress(address)
+  console.log('checksummedAddress', checksummedAddress)
   if (checksummedAddress) {
     return `https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/${networkName}/assets/${checksummedAddress}/logo.png`
   } else {
