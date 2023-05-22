@@ -23,6 +23,7 @@ describe('AnimatedDropdown', () => {
     rerender(<AnimatedDropdown open={true}>Body</AnimatedDropdown>)
     expect(body).not.toBeVisible()
 
+    // wait for React Spring animation to finish
     await waitFor(() => {
       expect(body).toBeVisible()
     })
