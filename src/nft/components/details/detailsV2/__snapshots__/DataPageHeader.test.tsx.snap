@@ -104,6 +104,20 @@ exports[`Header loads with asset with a sell order 1`] = `
   color: #0D111C;
 }
 
+.c4 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
 .c12 {
   padding: 16px;
   width: 100%;
@@ -191,34 +205,15 @@ exports[`Header loads with asset with a sell order 1`] = `
   outline: none;
 }
 
-.c4 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-}
-
-.c2 {
-  gap: 24px;
-}
-
-.c3 {
-  width: 96px;
-  height: 96px;
-  border-radius: 20px;
-  object-fit: cover;
-}
-
-.c5 {
-  gap: 4px;
-  margin-right: auto;
+.c16 {
+  padding: 16px;
+  width: -webkit-min-content;
+  width: -moz-min-content;
+  width: min-content;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  border-radius: 16px;
 }
 
 .c14 {
@@ -246,15 +241,20 @@ exports[`Header loads with asset with a sell order 1`] = `
   color: #F5F6FCb8;
 }
 
-.c16 {
-  padding: 16px;
-  width: -webkit-min-content;
-  width: -moz-min-content;
-  width: min-content;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-  border-radius: 16px;
+.c2 {
+  gap: 24px;
+}
+
+.c3 {
+  width: 96px;
+  height: 96px;
+  border-radius: 20px;
+  object-fit: cover;
+}
+
+.c5 {
+  gap: 4px;
+  margin-right: auto;
 }
 
 @media screen and (max-width:1024px) {
@@ -315,7 +315,7 @@ exports[`Header loads with asset with a sell order 1`] = `
         <div
           class="c15"
         >
-          100M ETH
+          100.00M ETH
         </div>
       </button>
       <button
@@ -443,6 +443,20 @@ exports[`Header loads with asset with no sell orders 1`] = `
   color: #0D111C;
 }
 
+.c4 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
 .c12 {
   padding: 16px;
   width: 100%;
@@ -514,18 +528,15 @@ exports[`Header loads with asset with no sell orders 1`] = `
   background-color: #bdc8f3;
 }
 
-.c4 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
+.c14 {
+  white-space: nowrap;
+  width: -webkit-min-content;
+  width: -moz-min-content;
+  width: min-content;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  border-radius: 16px;
 }
 
 .c2 {
@@ -542,17 +553,6 @@ exports[`Header loads with asset with no sell orders 1`] = `
 .c5 {
   gap: 4px;
   margin-right: auto;
-}
-
-.c14 {
-  white-space: nowrap;
-  width: -webkit-min-content;
-  width: -moz-min-content;
-  width: min-content;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-  border-radius: 16px;
 }
 
 @media screen and (max-width:1024px) {
