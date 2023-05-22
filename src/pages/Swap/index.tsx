@@ -334,18 +334,18 @@ export function Swap({
   }, [navigate])
 
   // modal and loading
-  const [{ showConfirm, tradeToConfirm, swapErrorMessage, attemptingTxn, txHash }, setSwapState] = useState<{
-    showConfirm: boolean
-    tradeToConfirm: InterfaceTrade | undefined
-    attemptingTxn: boolean
-    swapErrorMessage: string | undefined
+  const [{ showConfirmSwapModal, originalTrade, swapErrorMessage, txPending, txHash }, setSwapState] = useState<{
+    showConfirmSwapModal: boolean
+    originalTrade: InterfaceTrade | undefined
+    txPending: boolean
     txHash: string | undefined
+    swapErrorMessage: string | undefined
   }>({
-    showConfirm: false,
-    tradeToConfirm: undefined,
-    attemptingTxn: false,
-    swapErrorMessage: undefined,
+    showConfirmSwapModal: false,
+    originalTrade: undefined,
+    txPending: false,
     txHash: undefined,
+    swapErrorMessage: undefined,
   })
 
   const formattedAmounts = useMemo(
@@ -419,17 +419,17 @@ export function Swap({
     }
     setSwapState((currentState) => ({
       ...currentState,
-      attemptingTxn: true,
-      swapErrorMessage: undefined,
+      txPending: true,
       txHash: undefined,
+      swapErrorMessage: undefined,
     }))
     swapCallback()
       .then((hash) => {
         setSwapState((currentState) => ({
           ...currentState,
-          attemptingTxn: false,
-          swapErrorMessage: undefined,
+          txPending: false,
           txHash: hash,
+          swapErrorMessage: undefined,
         }))
         sendEvent({
           category: 'Swap',
@@ -452,9 +452,9 @@ export function Swap({
       .catch((error) => {
         setSwapState((currentState) => ({
           ...currentState,
-          attemptingTxn: false,
-          swapErrorMessage: error.message,
+          txPending: false,
           txHash: undefined,
+          swapErrorMessage: error.message,
         }))
       })
   }, [
@@ -478,7 +478,7 @@ export function Swap({
   }, [stablecoinPriceImpact, trade])
 
   const handleConfirmDismiss = useCallback(() => {
-    setSwapState((currentState) => ({ ...currentState, showConfirm: false }))
+    setSwapState((currentState) => ({ ...currentState, showConfirmSwapModal: false }))
     // if there was a tx hash, we want to clear the input
     if (txHash) {
       onUserInput(Field.INPUT, '')
@@ -486,7 +486,7 @@ export function Swap({
   }, [onUserInput, txHash])
 
   const handleAcceptChanges = useCallback(() => {
-    setSwapState((currentState) => ({ ...currentState, tradeToConfirm: trade }))
+    setSwapState((currentState) => ({ ...currentState, originalTrade: trade }))
   }, [trade])
 
   const handleInputSelect = useCallback(
@@ -578,12 +578,12 @@ export function Swap({
         showCancel={true}
       />
       <SwapHeader autoSlippage={autoSlippage} />
-      {trade && showConfirm && (
+      {trade && showConfirmSwapModal && (
         <ConfirmSwapModal
           trade={trade}
-          originalTrade={tradeToConfirm}
+          originalTrade={originalTrade}
           onAcceptChanges={handleAcceptChanges}
-          attemptingTxn={attemptingTxn}
+          txPending={txPending}
           txHash={txHash}
           allowedSlippage={allowedSlippage}
           onConfirm={handleSwap}
@@ -781,11 +781,11 @@ export function Swap({
                   handleSwap()
                 } else {
                   setSwapState({
-                    tradeToConfirm: trade,
-                    attemptingTxn: false,
-                    swapErrorMessage: undefined,
-                    showConfirm: true,
+                    showConfirmSwapModal: true,
+                    originalTrade: trade,
+                    txPending: false,
                     txHash: undefined,
+                    swapErrorMessage: undefined,
                   })
                 }
               }}

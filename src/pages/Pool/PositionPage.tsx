@@ -639,7 +639,7 @@ function PositionPageContent() {
           <TransactionConfirmationModal
             isOpen={showConfirm}
             onDismiss={() => setShowConfirm(false)}
-            attemptingTxn={collecting}
+            pending={collecting}
             hash={collectMigrationHash ?? ''}
             content={() => (
               <ConfirmationModalContent

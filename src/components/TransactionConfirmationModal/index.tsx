@@ -325,17 +325,17 @@ interface ConfirmationModalProps {
   isOpen: boolean
   onDismiss: () => void
   hash: string | undefined
-  content: () => ReactNode
-  attemptingTxn: boolean
+  pending: boolean
   pendingText: ReactNode
   currencyToAdd?: Currency | undefined
+  content: () => ReactNode
 }
 
 export default function TransactionConfirmationModal({
   isOpen,
   onDismiss,
-  attemptingTxn,
   hash,
+  pending,
   pendingText,
   content,
   currencyToAdd,
@@ -347,9 +347,9 @@ export default function TransactionConfirmationModal({
   // confirmation screen
   return (
     <Modal isOpen={isOpen} $scrollOverlay={true} onDismiss={onDismiss} maxHeight={90}>
-      {isL2ChainId(chainId) && (hash || attemptingTxn) ? (
+      {isL2ChainId(chainId) && (hash || pending) ? (
         <L2Content chainId={chainId} hash={hash} onDismiss={onDismiss} pendingText={pendingText} />
-      ) : attemptingTxn ? (
+      ) : pending ? (
         <ConfirmationPendingContent onDismiss={onDismiss} pendingText={pendingText} />
       ) : hash ? (
         <TransactionSubmittedContent

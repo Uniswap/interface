@@ -100,12 +100,12 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
   const allowedSlippage = useUserSlippageToleranceWithDefault(DEFAULT_REMOVE_V3_LIQUIDITY_SLIPPAGE_TOLERANCE) // custom from users
 
   const [showConfirm, setShowConfirm] = useState(false)
-  const [attemptingTxn, setAttemptingTxn] = useState(false)
-  const [txnHash, setTxnHash] = useState<string | undefined>()
+  const [txPending, setTxPending] = useState(false)
+  const [txHash, setTxHash] = useState<string | undefined>()
   const addTransaction = useTransactionAdder()
   const positionManager = useV3NFTPositionManagerContract()
   const burn = useCallback(async () => {
-    setAttemptingTxn(true)
+    setTxPending(true)
     if (
       !positionManager ||
       !liquidityValue0 ||
@@ -158,8 +158,8 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
               action: 'RemoveV3',
               label: [liquidityValue0.currency.symbol, liquidityValue1.currency.symbol].join('/'),
             })
-            setTxnHash(response.hash)
-            setAttemptingTxn(false)
+            setTxHash(response.hash)
+            setTxPending(false)
             addTransaction(response, {
               type: TransactionType.REMOVE_LIQUIDITY_V3,
               baseCurrencyId: currencyId(liquidityValue0.currency),
@@ -170,7 +170,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
           })
       })
       .catch((error) => {
-        setAttemptingTxn(false)
+        setTxPending(false)
         console.error(error)
       })
   }, [
@@ -193,12 +193,12 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
   const handleDismissConfirmation = useCallback(() => {
     setShowConfirm(false)
     // if there was a tx hash, we want to clear the input
-    if (txnHash) {
+    if (txHash) {
       onPercentSelectForSlider(0)
     }
-    setAttemptingTxn(false)
-    setTxnHash('')
-  }, [onPercentSelectForSlider, txnHash])
+    setTxPending(false)
+    setTxHash('')
+  }, [onPercentSelectForSlider, txHash])
 
   const pendingText = (
     <Trans>
@@ -281,8 +281,8 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
       <TransactionConfirmationModal
         isOpen={showConfirm}
         onDismiss={handleDismissConfirmation}
-        attemptingTxn={attemptingTxn}
-        hash={txnHash ?? ''}
+        pending={txPending}
+        hash={txHash ?? ''}
         content={() => (
           <ConfirmationModalContent
             title={<Trans>Remove Liquidity</Trans>}

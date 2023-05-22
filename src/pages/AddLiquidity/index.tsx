@@ -164,7 +164,7 @@ function AddLiquidity() {
 
   // modal and loading
   const [showConfirm, setShowConfirm] = useState<boolean>(false)
-  const [attemptingTxn, setAttemptingTxn] = useState<boolean>(false) // clicked confirm
+  const [txPending, setTxPending] = useState<boolean>(false) // clicked confirm
 
   // txn values
   const deadline = useTransactionDeadline() // custom from users settings
@@ -274,7 +274,7 @@ function AddLiquidity() {
         }
       }
 
-      setAttemptingTxn(true)
+      setTxPending(true)
 
       provider
         .getSigner()
@@ -289,7 +289,7 @@ function AddLiquidity() {
             .getSigner()
             .sendTransaction(newTxn)
             .then((response: TransactionResponse) => {
-              setAttemptingTxn(false)
+              setTxPending(false)
               addTransaction(response, {
                 type: TransactionType.ADD_LIQUIDITY_V3_POOL,
                 baseCurrencyId: currencyId(baseCurrency),
@@ -309,7 +309,7 @@ function AddLiquidity() {
         })
         .catch((error) => {
           console.error('Failed to send transaction', error)
-          setAttemptingTxn(false)
+          setTxPending(false)
           // we only care if the error is something _other_ than the user rejected the tx
           if (error?.code !== 4001) {
             console.error(error)
@@ -574,7 +574,7 @@ function AddLiquidity() {
         <TransactionConfirmationModal
           isOpen={showConfirm}
           onDismiss={handleDismissConfirmation}
-          attemptingTxn={attemptingTxn}
+          pending={txPending}
           hash={txHash}
           content={() => (
             <ConfirmationModalContent

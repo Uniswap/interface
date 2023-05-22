@@ -79,7 +79,7 @@ function RemoveLiquidity() {
   // modal and loading
   const [showConfirm, setShowConfirm] = useState<boolean>(false)
   const [showDetailed, setShowDetailed] = useState<boolean>(false)
-  const [attemptingTxn, setAttemptingTxn] = useState(false) // clicked confirm
+  const [txPending, setTxPending] = useState(false) // clicked confirm
 
   // txn values
   const [txHash, setTxHash] = useState<string>('')
@@ -268,12 +268,12 @@ function RemoveLiquidity() {
       const methodName = methodNames[indexOfSuccessfulEstimation]
       const safeGasEstimate = safeGasEstimates[indexOfSuccessfulEstimation]
 
-      setAttemptingTxn(true)
+      setTxPending(true)
       await router[methodName](...args, {
         gasLimit: safeGasEstimate,
       })
         .then((response: TransactionResponse) => {
-          setAttemptingTxn(false)
+          setTxPending(false)
 
           addTransaction(response, {
             type: TransactionType.REMOVE_LIQUIDITY_V3,
@@ -292,7 +292,7 @@ function RemoveLiquidity() {
           })
         })
         .catch((error: Error) => {
-          setAttemptingTxn(false)
+          setTxPending(false)
           // we only care if the error is something _other_ than the user rejected the tx
           console.error(error)
         })
@@ -447,7 +447,7 @@ function RemoveLiquidity() {
           <TransactionConfirmationModal
             isOpen={showConfirm}
             onDismiss={handleDismissConfirmation}
-            attemptingTxn={attemptingTxn}
+            pending={txPending}
             hash={txHash ? txHash : ''}
             content={() => (
               <ConfirmationModalContent

@@ -93,7 +93,7 @@ export default function AddLiquidity() {
 
   // modal and loading
   const [showConfirm, setShowConfirm] = useState<boolean>(false)
-  const [attemptingTxn, setAttemptingTxn] = useState<boolean>(false) // clicked confirm
+  const [txPending, setTxPending] = useState<boolean>(false) // clicked confirm
 
   // txn values
   const deadline = useTransactionDeadline() // custom from users settings
@@ -181,14 +181,14 @@ export default function AddLiquidity() {
       value = null
     }
 
-    setAttemptingTxn(true)
+    setTxPending(true)
     await estimate(...args, value ? { value } : {})
       .then((estimatedGasLimit) =>
         method(...args, {
           ...(value ? { value } : {}),
           gasLimit: calculateGasMargin(estimatedGasLimit),
         }).then((response) => {
-          setAttemptingTxn(false)
+          setTxPending(false)
 
           addTransaction(response, {
             type: TransactionType.ADD_LIQUIDITY_V2_POOL,
@@ -208,7 +208,7 @@ export default function AddLiquidity() {
         })
       )
       .catch((error) => {
-        setAttemptingTxn(false)
+        setTxPending(false)
         // we only care if the error is something _other_ than the user rejected the tx
         if (error?.code !== 4001) {
           console.error(error)
@@ -328,7 +328,7 @@ export default function AddLiquidity() {
           <TransactionConfirmationModal
             isOpen={showConfirm}
             onDismiss={handleDismissConfirmation}
-            attemptingTxn={attemptingTxn}
+            pending={txPending}
             hash={txHash}
             content={() => (
               <ConfirmationModalContent

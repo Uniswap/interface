@@ -23,7 +23,7 @@ export default function ConfirmSwapModal({
   onConfirm,
   onDismiss,
   swapErrorMessage,
-  attemptingTxn,
+  txPending,
   txHash,
   swapQuoteReceivedDate,
   fiatValueInput,
@@ -31,7 +31,7 @@ export default function ConfirmSwapModal({
 }: {
   trade: InterfaceTrade
   originalTrade: InterfaceTrade | undefined
-  attemptingTxn: boolean
+  txPending: boolean
   txHash: string | undefined
   allowedSlippage: Percent
   onAcceptChanges: () => void
@@ -125,7 +125,7 @@ export default function ConfirmSwapModal({
       <TransactionConfirmationModal
         isOpen
         onDismiss={onModalDismiss}
-        attemptingTxn={attemptingTxn}
+        pending={txPending}
         hash={txHash}
         content={confirmationContent}
         pendingText={pendingText}
