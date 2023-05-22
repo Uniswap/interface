@@ -88,7 +88,7 @@ const PinkCircle = styled(LogoContainer)`
 function PaperIcon({ currency, loading }: { currency?: Currency; loading: boolean }) {
   const theme = useTheme()
   return (
-    <LogoContainer>
+    <LogoContainer data-testid={`papers-icon-container-${currency?.symbol}`}>
       <PinkCircle>
         <PapersIcon />
         <CurrencyLogo
@@ -239,6 +239,11 @@ export function PendingModalContent({
     swapTxHash,
     trade,
   })
+
+  if (steps.length === 0) {
+    return null
+  }
+
   return (
     <Container gap="lg">
       {logo}

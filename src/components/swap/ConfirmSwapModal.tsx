@@ -259,7 +259,7 @@ export default function ConfirmSwapModal({
         steps={pendingModalSteps}
         currentStep={confirmModalState}
         trade={trade}
-        swapHash={txHash}
+        swapTxHash={txHash}
         tokenApprovalPending={allowance.state === AllowanceState.REQUIRED && allowance.isApprovalPending}
       />
     )
