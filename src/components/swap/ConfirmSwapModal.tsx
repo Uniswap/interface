@@ -270,7 +270,7 @@ export default function ConfirmSwapModal({
     startSwapFlow,
   ])
 
-  const l2Badge = useCallback(() => {
+  const l2Badge = () => {
     if (isL2ChainId(chainId) && confirmModalState !== ConfirmModalState.REVIEWING) {
       const info = getChainInfo(chainId)
       return (
@@ -283,7 +283,7 @@ export default function ConfirmSwapModal({
       )
     }
     return undefined
-  }, [chainId, confirmModalState])
+  }
 
   return (
     <Trace modal={InterfaceModalName.CONFIRM_SWAP}>

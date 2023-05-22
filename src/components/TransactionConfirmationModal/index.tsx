@@ -178,14 +178,14 @@ export function ConfirmationModalContent({
   title: ReactNode
   onDismiss: () => void
   topContent: () => ReactNode
-  bottomContent?: () => ReactNode | undefined
+  bottomContent?: () => ReactNode
   headerContent?: () => ReactNode
 }) {
   return (
     <Wrapper>
       <AutoColumn gap="sm">
         <Row>
-          {headerContent && headerContent()}
+          {headerContent?.()}
           <Row justify="center" marginLeft="24px">
             <ThemedText.SubHeader>{title}</ThemedText.SubHeader>
           </Row>
