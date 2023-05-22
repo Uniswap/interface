@@ -79,7 +79,7 @@ export function tokenProjectToCurrencyInfos(
 }
 
 // use inverse check here (instead of isNativeAddress) so we can typeguard address as must be string if this is true
-function isNonNativeAddress(chainId: ChainId, address: NullUndefined<string>): address is string {
+function isNonNativeAddress(chainId: ChainId, address: Maybe<string>): address is string {
   return !isNativeCurrencyAddress(chainId, address)
 }
 

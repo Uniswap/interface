@@ -6,7 +6,7 @@ import { useGasFeeQuery } from 'wallet/src/features/gas/gasApi'
 import { FeeType, GasSpeed, TransactionGasFeeInfo } from 'wallet/src/features/gas/types'
 
 export function useTransactionGasFee(
-  tx: providers.TransactionRequest | undefined | null,
+  tx: Maybe<providers.TransactionRequest>,
   speed: GasSpeed = GasSpeed.Urgent,
   skip?: boolean
 ): TransactionGasFeeInfo | undefined {

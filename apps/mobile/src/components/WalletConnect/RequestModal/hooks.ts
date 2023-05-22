@@ -1,9 +1,9 @@
 import { CurrencyAmount } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { useOnChainNativeCurrencyBalance } from 'src/features/balances/api'
-import { TransactionGasFeeInfo } from 'src/features/gas/types'
 import { hasSufficientFundsIncludingGas } from 'src/features/transactions/utils'
 import { ChainId } from 'wallet/src/constants/chains'
+import { TransactionGasFeeInfo } from 'wallet/src/features/gas/types'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
 
 export function useHasSufficientFunds({

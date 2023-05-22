@@ -18,7 +18,7 @@ import {
   SettingsSectionItemComponent,
 } from 'src/components/Settings/SettingsRow'
 import { Text } from 'src/components/Text'
-import { APP_FEEDBACK_LINK, GET_HELP_LINK, uniswapUrls } from 'src/constants/urls'
+import { APP_FEEDBACK_LINK, GET_HELP_LINK } from 'src/constants/urls'
 import { useCurrentAppearanceSetting, useIsDarkMode } from 'src/features/appearance/hooks'
 import { useDeviceSupportsBiometricAuth } from 'src/features/biometrics/hooks'
 import { AccountType, SignerMnemonicAccount } from 'src/features/wallet/accounts/types'
@@ -36,6 +36,7 @@ import LikeSquare from 'ui/src/assets/icons/like-square.svg'
 import LockIcon from 'ui/src/assets/icons/lock.svg'
 import MessageQuestion from 'ui/src/assets/icons/message-question.svg'
 import UniswapIcon from 'ui/src/assets/icons/uniswap-logo.svg'
+import { uniswapUrls } from 'wallet/src/constants/urls'
 import { ONE_SECOND_MS } from 'wallet/src/utils/time'
 
 export function SettingsScreen(): JSX.Element {

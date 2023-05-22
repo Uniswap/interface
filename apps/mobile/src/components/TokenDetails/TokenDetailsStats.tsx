@@ -96,7 +96,7 @@ export function TokenDetailsStats({
 }: {
   currencyId: string
   data: TokenDetailsScreenQuery | undefined
-  tokenColor?: NullUndefined<string>
+  tokenColor?: Maybe<string>
 }): JSX.Element {
   const { t } = useTranslation()
   const theme = useAppTheme()

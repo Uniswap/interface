@@ -8,10 +8,7 @@ export type SpotPrice = NonNullable<
 >[0]
 
 /** Fetches spot price of a single currency. */
-export function useSpotPrice(
-  currencyId: NullUndefined<string>,
-  skip?: boolean
-): GqlResult<SpotPrice> {
+export function useSpotPrice(currencyId: Maybe<string>, skip?: boolean): GqlResult<SpotPrice> {
   const { data, loading } = useSpotPricesQuery({
     // query is re-used by multiple components
     // attempt to load from cache instead of always sending a request (default)

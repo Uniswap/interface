@@ -9,8 +9,6 @@ import {
   TokenSelectorFlow,
   TokenSelectorVariation,
 } from 'src/components/TokenSelector/TokenSelector'
-import { useTransactionGasFee } from 'src/features/gas/hooks'
-import { GasSpeed } from 'src/features/gas/types'
 import { useTokenSelectorActionHandlers } from 'src/features/transactions/hooks'
 import { TransactionFlow, TransactionStep } from 'src/features/transactions/TransactionFlow'
 import {
@@ -20,6 +18,8 @@ import {
   transactionStateReducer,
 } from 'src/features/transactions/transactionState/transactionState'
 import { useTransactionGasWarning } from 'src/features/transactions/useTransactionGasWarning'
+import { useTransactionGasFee } from 'wallet/src/features/gas/hooks'
+import { GasSpeed } from 'wallet/src/features/gas/types'
 import {
   useDerivedTransferInfo,
   useOnSelectRecipient,

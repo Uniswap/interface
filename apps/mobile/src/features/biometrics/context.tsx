@@ -2,8 +2,8 @@ import React, { createContext, PropsWithChildren, useContext, useState } from 'r
 import { BiometricAuthenticationStatus } from 'src/features/biometrics'
 
 export interface BiometricContextValue {
-  authenticationStatus: NullUndefined<BiometricAuthenticationStatus>
-  setAuthenticationStatus: (value: NullUndefined<BiometricAuthenticationStatus>) => void
+  authenticationStatus: Maybe<BiometricAuthenticationStatus>
+  setAuthenticationStatus: (value: Maybe<BiometricAuthenticationStatus>) => void
 }
 
 const biomericContextValue: BiometricContextValue = {
@@ -15,8 +15,8 @@ const BiometricContext = createContext<BiometricContextValue>(biomericContextVal
 
 export const BiometricContextProvider = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
   // global authenticationStatus
-  const [status, setStatus] = useState<NullUndefined<BiometricAuthenticationStatus>>()
-  const setAuthenticationStatus = (value: NullUndefined<BiometricAuthenticationStatus>): void => {
+  const [status, setStatus] = useState<Maybe<BiometricAuthenticationStatus>>()
+  const setAuthenticationStatus = (value: Maybe<BiometricAuthenticationStatus>): void => {
     setStatus(value)
   }
 

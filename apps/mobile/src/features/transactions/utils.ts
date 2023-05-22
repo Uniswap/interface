@@ -36,7 +36,7 @@ function getNativeCurrencyTotalSpend(
   value?: CurrencyAmount<NativeCurrency>,
   gasFee?: string,
   nativeCurrency?: NativeCurrency
-): NullUndefined<CurrencyAmount<NativeCurrency>> {
+): Maybe<CurrencyAmount<NativeCurrency>> {
   if (!gasFee || !nativeCurrency) return value
 
   const gasFeeAmount = CurrencyAmount.fromRawAmount(nativeCurrency, gasFee)

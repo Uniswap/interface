@@ -2,7 +2,7 @@ import { TFunction } from 'i18next'
 import { SafetyLevel } from 'src/data/__generated__/types-and-hooks'
 
 export function getTokenSafetyHeaderText(
-  safetyLevel: NullUndefined<SafetyLevel>,
+  safetyLevel: Maybe<SafetyLevel>,
   t: TFunction
 ): string | undefined {
   switch (safetyLevel) {

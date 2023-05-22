@@ -86,7 +86,7 @@ export function useTransferWarnings(
 }
 
 const checkIsMissingRequiredParams = (
-  currencyInInfo: NullUndefined<CurrencyInfo>,
+  currencyInInfo: Maybe<CurrencyInfo>,
   nftIn: GQLNftAsset | undefined,
   chainId: ChainId | undefined,
   recipient: Address | undefined,

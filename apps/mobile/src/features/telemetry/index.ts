@@ -7,10 +7,10 @@ import {
   track,
 } from '@amplitude/analytics-react-native'
 import { getUniqueId } from 'react-native-device-info'
-import { uniswapUrls } from 'src/constants/urls'
 import { ApplicationTransport } from 'src/features/telemetry/ApplicationTransport'
 import { UserPropertyName } from 'src/features/telemetry/constants'
 import { EventProperties } from 'src/features/telemetry/types'
+import { uniswapUrls } from 'wallet/src/constants/urls'
 import { logger } from 'wallet/src/features/logger/logger'
 
 const DUMMY_KEY = '00000000000000000000000000000000'

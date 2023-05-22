@@ -111,8 +111,8 @@ export function useCreateWrapFormState(
   address: Address | undefined,
   chainId: ChainId | undefined,
   txId: string | undefined,
-  inputCurrency: NullUndefined<Currency>,
-  outputCurrency: NullUndefined<Currency>
+  inputCurrency: Maybe<Currency>,
+  outputCurrency: Maybe<Currency>
 ): TransactionState | undefined {
   const transaction = useSelectTransaction(address, chainId, txId)
 

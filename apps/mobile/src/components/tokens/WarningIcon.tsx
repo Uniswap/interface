@@ -7,7 +7,7 @@ import AlertTriangle from 'ui/src/assets/icons/alert-triangle.svg'
 import XOctagon from 'ui/src/assets/icons/x-octagon.svg'
 
 interface Props {
-  safetyLevel: NullUndefined<SafetyLevel>
+  safetyLevel: Maybe<SafetyLevel>
   // To override the normally associated safetyLevel<->color mapping
   strokeColorOverride?: 'accentWarning' | 'accentCritical' | 'textSecondary'
 }

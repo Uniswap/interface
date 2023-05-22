@@ -1,50 +1,14 @@
-import { skipToken } from '@reduxjs/toolkit/dist/query'
 import { CurrencyAmount } from '@uniswap/sdk-core'
 import { BigNumber, providers } from 'ethers'
 import { useMemo } from 'react'
 import { TRANSACTION_CANCELLATION_GAS_FACTOR } from 'src/constants/transactions'
 import { FeeDetails, getAdjustedGasFeeDetails } from 'src/features/gas/adjustGasFee'
-import { useGasFeeQuery } from 'src/features/gas/api'
-import { FeeType, GasSpeed, TransactionGasFeeInfo } from 'src/features/gas/types'
 import { useUSDCValue } from 'src/features/routing/useUSDCPrice'
 import { TransactionDetails } from 'src/features/transactions/types'
 import { ChainId } from 'wallet/src/constants/chains'
+import { useTransactionGasFee } from 'wallet/src/features/gas/hooks'
+import { FeeType, GasSpeed } from 'wallet/src/features/gas/types'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
-import { getPollingIntervalByBlocktime } from 'wallet/src/utils/chainId'
-
-export function useTransactionGasFee(
-  tx: NullUndefined<providers.TransactionRequest>,
-  speed: GasSpeed = GasSpeed.Urgent,
-  skip?: boolean
-): TransactionGasFeeInfo | undefined {
-  // TODO: [MOB-3889] Handle error responses from gas endpoint
-  const { data } = useGasFeeQuery((!skip && tx) || skipToken, {
-    pollingInterval: getPollingIntervalByBlocktime(tx?.chainId),
-  })
-
-  return useMemo(() => {
-    if (!data) return undefined
-
-    const params =
-      data.type === FeeType.Eip1559
-        ? {
-            maxPriorityFeePerGas: data.maxPriorityFeePerGas[speed],
-            maxFeePerGas: data.maxFeePerGas[speed],
-            gasLimit: data.gasLimit,
-          }
-        : {
-            gasPrice: data.gasPrice[speed],
-            gasLimit: data.gasLimit,
-          }
-
-    return {
-      type: data.type,
-      speed,
-      gasFee: data.gasFee[speed],
-      params,
-    }
-  }, [data, speed])
-}
 
 export function useUSDValue(chainId?: ChainId, ethValueInWei?: string): string | undefined {
   const currencyAmount =

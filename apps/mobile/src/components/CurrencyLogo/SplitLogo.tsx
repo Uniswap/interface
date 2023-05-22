@@ -6,8 +6,8 @@ import { CurrencyInfo } from 'src/features/dataApi/types'
 import { ChainId } from 'wallet/src/constants/chains'
 
 interface Props {
-  inputCurrencyInfo: NullUndefined<CurrencyInfo>
-  outputCurrencyInfo: NullUndefined<CurrencyInfo>
+  inputCurrencyInfo: Maybe<CurrencyInfo>
+  outputCurrencyInfo: Maybe<CurrencyInfo>
   size: number
   chainId: ChainId | null
 }

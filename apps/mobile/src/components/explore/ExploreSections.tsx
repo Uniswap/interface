@@ -177,7 +177,7 @@ const tokenKey = (token: TokenItemData): string => {
 }
 
 function gqlTokenToTokenItemData(
-  token: NullUndefined<NonNullable<NonNullable<ExploreTokensTabQuery['topTokens']>[0]>>
+  token: Maybe<NonNullable<NonNullable<ExploreTokensTabQuery['topTokens']>[0]>>
 ): TokenItemData | null {
   if (!token || !token.project) return null
 

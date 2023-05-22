@@ -24,7 +24,7 @@ const PROFILE_IMAGE_SIZE = 72
 const PROFILE_IMAGE_WRAPPER_SIZE = PROFILE_IMAGE_SIZE + FixedTheme.spacing.spacing4
 export const NFT_BANNER_HEIGHT = 102
 
-export type NFTCollectionData = NullUndefined<
+export type NFTCollectionData = Maybe<
   NonNullable<NonNullable<NftCollectionScreenQuery['nftCollections']>['edges']>[0]['node']
 >
 
@@ -34,8 +34,8 @@ export function NFTCollectionHeader({
   collectionAddress,
 }: {
   loading: boolean
-  data: NullUndefined<NFTCollectionData>
-  collectionAddress?: NullUndefined<string>
+  data: Maybe<NFTCollectionData>
+  collectionAddress?: Maybe<string>
 }): ReactElement {
   const theme = useAppTheme()
   const { t } = useTranslation()

@@ -1,7 +1,7 @@
 import { BaseTransport } from '@amplitude/analytics-core'
 import { Payload, Response, Transport } from '@amplitude/analytics-types'
 import DeviceInfo from 'react-native-device-info'
-import { uniswapUrls } from 'src/constants/urls'
+import { uniswapUrls } from 'wallet/src/constants/urls'
 
 const MOBILE_ORIGIN_APPLICATION = 'mobile-analytics-uniswap'
 

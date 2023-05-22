@@ -72,7 +72,7 @@ export function useSelectAccountNotificationSetting(address: Address): boolean {
  * Displays the ENS name if one is available otherwise displays the local name and if neither are available it shows the address.
  */
 export function useDisplayName(
-  address: NullUndefined<string>,
+  address: Maybe<string>,
   showShortenedEns = false
 ):
   | {

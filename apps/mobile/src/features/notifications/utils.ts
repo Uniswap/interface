@@ -49,7 +49,7 @@ export const formWCNotificationTitle = (appNotification: WalletConnectNotificati
 
 export const formApproveNotificationTitle = (
   txStatus: TransactionStatus,
-  currency: NullUndefined<Currency>,
+  currency: Maybe<Currency>,
   tokenAddress: Address,
   spender: Address
 ): string => {
@@ -74,8 +74,8 @@ export const formApproveNotificationTitle = (
 export const formSwapNotificationTitle = (
   txStatus: TransactionStatus,
   tradeType: TradeType,
-  inputCurrency: NullUndefined<Currency>,
-  outputCurrency: NullUndefined<Currency>,
+  inputCurrency: Maybe<Currency>,
+  outputCurrency: Maybe<Currency>,
   inputCurrencyId: string,
   outputCurrencyId: string,
   inputCurrencyAmountRaw: string,
@@ -119,8 +119,8 @@ export const formSwapNotificationTitle = (
 
 export const formWrapNotificationTitle = (
   txStatus: TransactionStatus,
-  inputCurrency: NullUndefined<Currency>,
-  outputCurrency: NullUndefined<Currency>,
+  inputCurrency: Maybe<Currency>,
+  outputCurrency: Maybe<Currency>,
   currencyAmountRaw: string,
   unwrapped: boolean
 ): string => {
@@ -164,7 +164,7 @@ export const formWrapNotificationTitle = (
 export const formTransferCurrencyNotificationTitle = (
   txType: TransactionType,
   txStatus: TransactionStatus,
-  currency: NullUndefined<Currency>,
+  currency: Maybe<Currency>,
   tokenAddress: string,
   currencyAmountRaw: string,
   senderOrRecipient: string
@@ -239,7 +239,7 @@ export interface BalanceUpdate {
 interface BalanceUpdateProps {
   transactionType: TransactionType
   transactionStatus: TransactionStatus
-  currency: NullUndefined<Currency>
+  currency: Maybe<Currency>
   currencyAmountRaw: string
   spotPrice?: SpotPrice
   nftTradeType?: NFTTradeType
@@ -318,7 +318,7 @@ export function convertScientificNotationToNumber(value: string): string | JSBI 
 }
 
 export const getFormattedCurrencyAmount = (
-  currency: NullUndefined<Currency>,
+  currency: Maybe<Currency>,
   currencyAmountRaw: string,
   isApproximateAmount = false
 ): string => {
@@ -341,7 +341,7 @@ export const getFormattedCurrencyAmount = (
 const getUSDValue = (
   spotPrice: SpotPrice | undefined,
   currencyAmountRaw: string,
-  currency: NullUndefined<Currency>
+  currency: Maybe<Currency>
 ): string | undefined => {
   const price = spotPrice?.price?.value
   if (!currency || !price) return undefined
@@ -351,7 +351,7 @@ const getUSDValue = (
 }
 
 export const getCurrencySymbol = (
-  currency: NullUndefined<Currency>,
+  currency: Maybe<Currency>,
   tokenAddressString: Address | undefined
 ): string | undefined => {
   return currency?.symbol

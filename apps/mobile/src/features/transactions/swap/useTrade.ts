@@ -69,8 +69,8 @@ interface TradeWithStatus {
 }
 
 interface UseTradeArgs {
-  amountSpecified: NullUndefined<CurrencyAmount<Currency>>
-  otherCurrency: NullUndefined<Currency>
+  amountSpecified: Maybe<CurrencyAmount<Currency>>
+  otherCurrency: Maybe<Currency>
   tradeType: TradeType
   pollingInterval?: PollingInterval
   customSlippageTolerance?: number
@@ -184,7 +184,7 @@ export function useSetTradeSlippage(
   Note: not using BigNumber because it sucks at decimals and we're dealing with USD values anyways
  */
 // TODO: move logic to `transformResponse` method of routingApi when endpoint returns output USD value
-function useCalculateAutoSlippage(trade: NullUndefined<Trade>): number {
+function useCalculateAutoSlippage(trade: Maybe<Trade>): number {
   const chainId = trade?.quote?.route?.[0]?.[0]?.tokenIn.chainId
   const gasCostUSD = trade?.quote?.gasUseEstimateUSD
   const outputAmountUSD = useUSDCValue(trade?.outputAmount)?.toExact()

@@ -1,11 +1,11 @@
 import { BigNumber, BigNumberish, providers } from 'ethers'
+import { BigNumberMax } from 'src/utils/number'
 import {
   FeeType,
   TransactionEip1559FeeParams,
   TransactionGasFeeInfo,
   TransactionLegacyFeeParams,
-} from 'src/features/gas/types'
-import { BigNumberMax } from 'src/utils/number'
+} from 'wallet/src/features/gas/types'
 
 export type FeeDetails =
   | { type: FeeType.Legacy; params: { gasPrice: string } }

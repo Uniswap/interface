@@ -49,7 +49,7 @@ import { buildCurrencyId } from 'wallet/src/utils/currencyId'
 import { formatUSDPrice } from 'wallet/src/utils/format'
 
 export type FiatOnRampCurrency = {
-  currencyInfo: NullUndefined<CurrencyInfo>
+  currencyInfo: Maybe<CurrencyInfo>
   moonpayCurrency: MoonpayCurrency
 }
 

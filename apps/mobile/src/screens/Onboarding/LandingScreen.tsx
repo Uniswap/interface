@@ -9,7 +9,6 @@ import { LandingBackground } from 'src/components/gradients/LandingBackground'
 import { Box, Flex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
 import { Text } from 'src/components/Text'
-import { uniswapUrls } from 'src/constants/urls'
 import { useIsDarkMode } from 'src/features/appearance/hooks'
 import { ImportType, OnboardingEntryPoint } from 'src/features/onboarding/utils'
 import { ElementName } from 'src/features/telemetry/constants'
@@ -21,6 +20,7 @@ import { OnboardingScreens } from 'src/screens/Screens'
 import { openUri } from 'src/utils/linking'
 import { hideSplashScreen } from 'src/utils/splashScreen'
 import { useTimeout } from 'src/utils/timing'
+import { uniswapUrls } from 'wallet/src/constants/urls'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.Landing>
 

@@ -6,17 +6,17 @@ import { CurrencyId } from 'wallet/src/utils/currencyId'
 export type CurrencyInfo = {
   currency: Currency
   currencyId: CurrencyId
-  safetyLevel: NullUndefined<SafetyLevel>
-  logoUrl: NullUndefined<string>
-  isSpam?: NullUndefined<boolean>
+  safetyLevel: Maybe<SafetyLevel>
+  logoUrl: Maybe<string>
+  isSpam?: Maybe<boolean>
 }
 
 // Portfolio balance as exposed to the app
 export type PortfolioBalance = {
   quantity: number // float representation of balance
-  balanceUSD: NullUndefined<number>
+  balanceUSD: Maybe<number>
   currencyInfo: CurrencyInfo
-  relativeChange24: NullUndefined<number>
+  relativeChange24: Maybe<number>
 }
 
 // Query result does not have a refetch property so add it here in case it needs to get returned

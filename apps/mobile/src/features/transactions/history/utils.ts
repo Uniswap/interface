@@ -124,7 +124,7 @@ export function parseDataResponseToTransactionDetails(
 export function deriveCurrencyAmountFromAssetResponse(
   tokenStandard: TokenStandard,
   quantity: string,
-  decimals: NullUndefined<number>
+  decimals: Maybe<number>
 ): string {
   return parseUnits(
     quantity,
@@ -148,8 +148,8 @@ export function getAddressFromAsset({
 }: {
   tokenStandard: TokenStandard
   chain: Chain | undefined
-  address: NullUndefined<string>
-}): NullUndefined<string> {
+  address: Maybe<string>
+}): Maybe<string> {
   const supportedChainId = fromGraphQLChain(chain)
   if (!supportedChainId) {
     return null
@@ -166,7 +166,7 @@ export function getAddressFromAsset({
  * @returns parsed USD value as a number if currency is of type USD
  */
 export function parseUSDValueFromAssetChange(
-  transactedValue: NullUndefined<Partial<Amount>>
+  transactedValue: Maybe<Partial<Amount>>
 ): number | undefined {
   return transactedValue?.currency === Currency.Usd ? transactedValue.value ?? undefined : undefined
 }

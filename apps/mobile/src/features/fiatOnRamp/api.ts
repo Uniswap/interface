@@ -1,7 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { MoonpayEventName } from '@uniswap/analytics-events'
 import dayjs from 'dayjs'
-import { uniswapUrls } from 'src/constants/urls'
 import {
   FiatOnRampWidgetUrlQueryParameters,
   FiatOnRampWidgetUrlQueryResponse,
@@ -17,6 +16,7 @@ import { extractFiatOnRampTransactionDetails } from 'src/features/transactions/h
 import { serializeQueryParams } from 'src/features/transactions/swap/utils'
 import { TransactionDetails, TransactionStatus } from 'src/features/transactions/types'
 import { config } from 'wallet/src/config'
+import { uniswapUrls } from 'wallet/src/constants/urls'
 import { logger } from 'wallet/src/features/logger/logger'
 import { ONE_MINUTE_MS } from 'wallet/src/utils/time'
 

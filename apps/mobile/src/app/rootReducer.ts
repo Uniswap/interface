@@ -10,7 +10,6 @@ import { ensApi } from 'src/features/ens/api'
 import { searchHistoryReducer } from 'src/features/explore/searchHistorySlice'
 import { favoritesReducer } from 'src/features/favorites/slice'
 import { fiatOnRampApi } from 'src/features/fiatOnRamp/api'
-import { gasApi } from 'src/features/gas/api'
 import { modalsReducer } from 'src/features/modals/modalSlice'
 import { notificationReducer } from 'src/features/notifications/notificationSlice'
 import { providersReducer } from 'src/features/providers/providerSlice'
@@ -21,6 +20,7 @@ import { transactionReducer } from 'src/features/transactions/slice'
 import { trmApi } from 'src/features/trm/api'
 import { walletReducer } from 'src/features/wallet/walletSlice'
 import { walletConnectReducer } from 'src/features/walletConnect/walletConnectSlice'
+import { gasApi } from 'wallet/src/features/gas/gasApi'
 
 const reducers = {
   [ensApi.reducerPath]: ensApi.reducer,

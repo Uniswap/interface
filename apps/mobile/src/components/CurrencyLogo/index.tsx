@@ -4,7 +4,7 @@ import { CurrencyInfo } from 'src/features/dataApi/types'
 import { iconSizes } from 'src/styles/sizing'
 
 interface CurrencyLogoProps {
-  currencyInfo: NullUndefined<CurrencyInfo>
+  currencyInfo: Maybe<CurrencyInfo>
   size?: number
   hideNetworkLogo?: boolean
 }

@@ -65,7 +65,7 @@ export function SearchPopularTokens(): JSX.Element {
 }
 
 function gqlTokenToTokenSearchResult(
-  token: NullUndefined<NonNullable<NonNullable<SearchPopularTokensQuery['topTokens']>[0]>>
+  token: Maybe<NonNullable<NonNullable<SearchPopularTokensQuery['topTokens']>[0]>>
 ): TokenSearchResult | null {
   if (!token || !token.project) return null
 

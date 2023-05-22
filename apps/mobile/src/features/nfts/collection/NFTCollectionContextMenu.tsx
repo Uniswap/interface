@@ -27,7 +27,7 @@ export function NFTCollectionContextMenu({
   iconColor = 'textSecondary',
 }: {
   data: NFTCollectionData
-  collectionAddress?: NullUndefined<string>
+  collectionAddress?: Maybe<string>
   showButtonOutline?: boolean
   iconColor?: keyof Theme['colors']
 }): Nullable<JSX.Element> {

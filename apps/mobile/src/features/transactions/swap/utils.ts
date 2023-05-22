@@ -96,10 +96,7 @@ export function tradeToTransactionInfo(
       }
 }
 
-export function requireAcceptNewTrade(
-  oldTrade: NullUndefined<Trade>,
-  newTrade: NullUndefined<Trade>
-): boolean {
+export function requireAcceptNewTrade(oldTrade: Maybe<Trade>, newTrade: Maybe<Trade>): boolean {
   return oldTrade?.quote?.methodParameters?.calldata !== newTrade?.quote?.methodParameters?.calldata
 }
 
@@ -153,8 +150,8 @@ export function sumGasFees(gasFee1?: string | undefined, gasFee2?: string): stri
 
 export const clearStaleTrades = (
   trade: Trade,
-  currencyIn: NullUndefined<Currency>,
-  currencyOut: NullUndefined<Currency>
+  currencyIn: Maybe<Currency>,
+  currencyOut: Maybe<Currency>
 ): Trade | null => {
   const currencyInAddress = currencyIn?.wrapped.address
   const currencyOutAddress = currencyOut?.wrapped.address
@@ -198,7 +195,7 @@ export const slippageToleranceToPercent = (slippage: number): Percent => {
 
 interface MethodParameterArgs {
   permit2Signature?: PermitSignatureInfo
-  permitInfo: NullUndefined<PermitOptions>
+  permitInfo: Maybe<PermitOptions>
   trade: Trade
   address: string
   universalRouterEnabled: boolean

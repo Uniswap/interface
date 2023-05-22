@@ -80,7 +80,7 @@ const specialCaseTokenColors: { [key: string]: string } = {
 }
 
 export function useExtractedColors(
-  imageUrl: NullUndefined<string>,
+  imageUrl: Maybe<string>,
   fallback: keyof Theme['colors'] = 'magentaVibrant',
   cache = true
 ): { colors: Nullable<ExtractedColors>; colorsLoading: boolean } {
@@ -111,7 +111,7 @@ export function useExtractedColors(
   return { colors, colorsLoading }
 }
 
-function getSpecialCaseTokenColor(imageUrl: NullUndefined<string>): Nullable<string> {
+function getSpecialCaseTokenColor(imageUrl: Maybe<string>): Nullable<string> {
   if (!imageUrl || !specialCaseTokenColors[imageUrl]) {
     return null
   }
@@ -138,7 +138,7 @@ function getSpecialCaseTokenColor(imageUrl: NullUndefined<string>): Nullable<str
  * @returns The extracted color as a hex code string
  */
 export function useExtractedTokenColor(
-  imageUrl: NullUndefined<string>,
+  imageUrl: Maybe<string>,
   backgroundColor: string,
   defaultColor: string
 ): { tokenColor: Nullable<string>; tokenColorLoading: boolean } {

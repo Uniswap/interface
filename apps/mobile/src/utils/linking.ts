@@ -1,9 +1,9 @@
 import * as WebBrowser from 'expo-web-browser'
 import { Linking } from 'react-native'
-import { uniswapUrls } from 'src/constants/urls'
 import { FiatPurchaseTransactionInfo } from 'src/features/transactions/types'
 import { theme } from 'src/styles/theme'
 import { ChainId, CHAIN_INFO } from 'wallet/src/constants/chains'
+import { uniswapUrls } from 'wallet/src/constants/urls'
 import { logger } from 'wallet/src/features/logger/logger'
 
 const ALLOWED_EXTERNAL_URI_SCHEMES = ['http://', 'https://']
@@ -131,9 +131,7 @@ export function getExplorerLink(
   }
 }
 
-export function getUniswapCollectionUrl(
-  contractAddress: NullUndefined<string>
-): string | undefined {
+export function getUniswapCollectionUrl(contractAddress: Maybe<string>): string | undefined {
   if (!contractAddress) return undefined
   return `${uniswapUrls.nftUrl}/collection/${contractAddress}`
 }

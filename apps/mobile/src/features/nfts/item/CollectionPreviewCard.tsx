@@ -17,7 +17,7 @@ export type Collection = NonNullable<
 >['node']['collection']
 
 interface CollectionPreviewcardProps {
-  collection: NullUndefined<Collection>
+  collection: Maybe<Collection>
   onPress: () => void
   loading: boolean
 }

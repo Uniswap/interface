@@ -30,7 +30,7 @@ interface Props {
 const findTokenOptionForMoonpayCurrency = (
   commonBaseCurrencies: CurrencyInfo[] | undefined,
   moonpayCurrency: MoonpayCurrency
-): NullUndefined<CurrencyInfo> => {
+): Maybe<CurrencyInfo> => {
   return (
     (commonBaseCurrencies || []).find((item) => {
       const [code, network] = moonpayCurrency.code.split('_') ?? [undefined, undefined]

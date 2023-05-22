@@ -23,7 +23,7 @@ interface WalletConnect {
   hasPendingSessionError: boolean
 }
 
-export function useWalletConnect(address: NullUndefined<string>): WalletConnect {
+export function useWalletConnect(address: Maybe<string>): WalletConnect {
   const sessionSelector = useMemo(() => selectSessions(address), [address])
   const sessions = useAppSelector(sessionSelector)
   const pendingRequests = useAppSelector(selectPendingRequests)

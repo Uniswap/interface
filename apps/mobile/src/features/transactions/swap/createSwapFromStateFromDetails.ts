@@ -11,8 +11,8 @@ import { currencyAddress, currencyIdToAddress } from 'wallet/src/utils/currencyI
 
 interface Props {
   transactionDetails: TransactionDetails
-  inputCurrency: NullUndefined<Currency>
-  outputCurrency: NullUndefined<Currency>
+  inputCurrency: Maybe<Currency>
+  outputCurrency: Maybe<Currency>
 }
 
 /**

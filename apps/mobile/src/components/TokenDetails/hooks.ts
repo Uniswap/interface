@@ -16,7 +16,7 @@ import {
 /** Helper hook to retrieve balances across chains for a given currency, for the active account. */
 export function useCrossChainBalances(
   currencyId: string,
-  bridgeInfo: NullUndefined<{ chain: Chain; address?: NullUndefined<string> }[]>
+  bridgeInfo: Maybe<{ chain: Chain; address?: Maybe<string> }[]>
 ): {
   currentChainBalance: PortfolioBalance | null
   otherChainBalances: PortfolioBalance[] | null

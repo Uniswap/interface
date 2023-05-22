@@ -27,7 +27,7 @@ interface BaseReviewProps {
   isUSDInput?: boolean
   transactionDetails?: ReactNode
   nftIn?: GQLNftAsset
-  currencyInInfo: NullUndefined<CurrencyInfo>
+  currencyInInfo: Maybe<CurrencyInfo>
   currencyOutInfo?: CurrencyInfo
   formattedAmountIn?: string
   formattedAmountOut?: string

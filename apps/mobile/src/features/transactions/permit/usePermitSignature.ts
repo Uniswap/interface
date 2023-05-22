@@ -65,7 +65,7 @@ const PERMIT_ALLOWED_TYPE = [
 
 export function usePermitSignature(
   chainId: ChainId,
-  currencyInAmount: NullUndefined<CurrencyAmount<Currency>>,
+  currencyInAmount: Maybe<CurrencyAmount<Currency>>,
   wrapType: WrapType,
   approvalAction?: ApprovalAction
 ): {

@@ -94,7 +94,7 @@ async function getPermit2PermitSignature(
 }
 
 export function usePermit2Signature(
-  currencyInAmount: NullUndefined<CurrencyAmount<Currency>>,
+  currencyInAmount: Maybe<CurrencyAmount<Currency>>,
   skip: boolean
 ): {
   isLoading: boolean

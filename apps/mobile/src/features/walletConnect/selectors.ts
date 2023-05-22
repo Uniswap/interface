@@ -7,7 +7,7 @@ import {
 import { EMPTY_ARRAY } from 'wallet/src/constants/misc'
 
 export const selectSessions =
-  (address: NullUndefined<string>) =>
+  (address: Maybe<string>) =>
   (state: RootState): WalletConnectSession[] => {
     if (!address) return EMPTY_ARRAY
 

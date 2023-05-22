@@ -15,7 +15,7 @@ export function TokenDetailsActionButtons({
   tokenColor,
 }: {
   onPressSwap?: () => void
-  tokenColor?: NullUndefined<string>
+  tokenColor?: Maybe<string>
 }): JSX.Element {
   const { t } = useTranslation()
   const theme = useAppTheme()

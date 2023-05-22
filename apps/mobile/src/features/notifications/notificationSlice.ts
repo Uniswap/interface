@@ -22,7 +22,7 @@ const slice = createSlice({
     pushNotification: (state, action: PayloadAction<AppNotification>) => {
       state.notificationQueue.push(action.payload)
     },
-    popNotification: (state, action: PayloadAction<{ address: NullUndefined<Address> }>) => {
+    popNotification: (state, action: PayloadAction<{ address: Maybe<Address> }>) => {
       const { address } = action.payload
       if (!address) {
         state.notificationQueue.shift()
