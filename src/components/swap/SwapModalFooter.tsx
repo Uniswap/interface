@@ -194,7 +194,7 @@ export default function SwapModalFooter({
               id={InterfaceElementName.CONFIRM_SWAP_BUTTON}
             >
               <ThemedText.HeadlineSmall color="accentTextLightPrimary">
-                <Trans>Swap</Trans>
+                <Trans>Confirm swap</Trans>
               </ThemedText.HeadlineSmall>
             </ConfirmButton>
           </TraceEvent>

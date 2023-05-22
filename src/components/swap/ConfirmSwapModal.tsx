@@ -302,7 +302,7 @@ export default function ConfirmSwapModal({
           />
         ) : (
           <ConfirmationModalContent
-            title={confirmModalState === ConfirmModalState.REVIEWING ? <Trans>Review Swap</Trans> : undefined}
+            title={confirmModalState === ConfirmModalState.REVIEWING ? <Trans>Review swap</Trans> : undefined}
             onDismiss={onModalDismiss}
             topContent={modalHeader}
             bottomContent={modalBottom}
