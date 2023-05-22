@@ -1,14 +1,21 @@
 import { DAI_MAINNET } from '@uniswap/smart-order-router'
+import { useIsTransactionConfirmed } from 'state/transactions/hooks'
+import { mocked } from 'test-utils/mocked'
 import { render, screen } from 'test-utils/render'
 
 import { ConfirmModalState } from './ConfirmSwapModal'
 import { ErrorModalContent, PendingModalContent, PendingModalError } from './PendingModalContent'
 
+jest.mock('state/transactions/hooks')
+
 describe('PendingModalContent', () => {
+  beforeEach(() => {
+    jest.clearAllMocks()
+    mocked(useIsTransactionConfirmed).mockReturnValue(false)
+  })
+
   it('renders null for invalid content', () => {
-    const result = render(
-      <PendingModalContent steps={[]} confirmed={false} currentStep={ConfirmModalState.APPROVING_TOKEN} />
-    )
+    const result = render(<PendingModalContent steps={[]} currentStep={ConfirmModalState.APPROVING_TOKEN} />)
     expect(result.container).toBeEmptyDOMElement()
   })
 
@@ -17,7 +24,6 @@ describe('PendingModalContent', () => {
       <PendingModalContent
         steps={[ConfirmModalState.APPROVING_TOKEN]}
         currentStep={ConfirmModalState.APPROVING_TOKEN}
-        confirmed={false}
         approvalCurrency={DAI_MAINNET}
       />
     )
@@ -39,7 +45,6 @@ describe('PendingModalContent', () => {
             ConfirmModalState.PENDING_CONFIRMATION,
           ]}
           currentStep={ConfirmModalState.APPROVING_TOKEN}
-          confirmed={false}
           approvalCurrency={DAI_MAINNET}
         />
       )
@@ -67,7 +72,6 @@ describe('PendingModalContent', () => {
             ConfirmModalState.PENDING_CONFIRMATION,
           ]}
           currentStep={ConfirmModalState.PERMITTING}
-          confirmed={false}
           approvalCurrency={DAI_MAINNET}
         />
       )
@@ -97,7 +101,6 @@ describe('PendingModalContent', () => {
             ConfirmModalState.PENDING_CONFIRMATION,
           ]}
           currentStep={ConfirmModalState.APPROVING_TOKEN}
-          confirmed={false}
           approvalCurrency={DAI_MAINNET}
         />
       )
@@ -112,6 +115,8 @@ describe('PendingModalContent', () => {
     })
 
     it('renders the success icon instead of the given logo when confirmed and successful', () => {
+      mocked(useIsTransactionConfirmed).mockReturnValue(true)
+
       render(
         <PendingModalContent
           steps={[
@@ -120,13 +125,12 @@ describe('PendingModalContent', () => {
             ConfirmModalState.PENDING_CONFIRMATION,
           ]}
           currentStep={ConfirmModalState.PENDING_CONFIRMATION}
-          confirmed={true}
           approvalCurrency={DAI_MAINNET}
         />
       )
       expect(screen.queryByTestId('pending-modal-failure-icon')).toBeNull()
       expect(screen.queryByTestId('pending-modal-currency-logo-loader')).toBeNull()
-      expect(screen.getByTestId('pending-modal-success-icon')).toBeInTheDocument()
+      expect(screen.getByTestId('animated-confirmation')).toBeInTheDocument()
     })
   })
 })

@@ -8,7 +8,7 @@ import {
 } from '@uniswap/analytics-events'
 import { Percent } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import Modal from 'components/Modal'
+import Modal, { MODAL_TRANSITION_DURATION } from 'components/Modal'
 import { useMaxAmountIn } from 'hooks/useMaxAmountIn'
 import { Allowance, AllowanceState } from 'hooks/usePermit2Allowance'
 import usePrevious from 'hooks/usePrevious'
@@ -117,7 +117,7 @@ function useConfirmModalState({
     if (
       allowance.state === AllowanceState.REQUIRED &&
       allowance.needsSignature &&
-      // These two lines capture the state update that should trigger the signature request:
+      // If the token approval switched from missing to fulfilled, trigger the next step (permit2 signature).
       !allowance.needsPermit2Approval &&
       previousPermitNeeded
     ) {
@@ -133,16 +133,16 @@ function useConfirmModalState({
       if (doesTradeDiffer) {
         setConfirmModalState(ConfirmModalState.REVIEWING)
         return
-      } else {
-        startSwapFlow()
       }
+      startSwapFlow()
     }
   }, [allowance, confirmModalState, doesTradeDiffer, startSwapFlow])
 
-  const onCancel = useCallback(() => {
+  const onCancel = () => {
     setConfirmModalState(ConfirmModalState.REVIEWING)
     setApprovalError(undefined)
-  }, [])
+  }
+
   return { startSwapFlow, prepareSwapFlow, onCancel, confirmModalState, approvalError, pendingModalSteps }
 }
 
@@ -208,7 +208,7 @@ export default function ConfirmSwapModal({
     setTimeout(() => {
       // Reset local state after the modal dismiss animation finishes, to avoid UI flicker as it dismisses
       onCancel()
-    }, 200)
+    }, MODAL_TRANSITION_DURATION)
   }, [onCancel, onDismiss, priceUpdate, showAcceptChanges, trade])
 
   const modalHeader = useCallback(() => {
@@ -267,7 +267,7 @@ export default function ConfirmSwapModal({
 
   return (
     <Trace modal={InterfaceModalName.CONFIRM_SWAP}>
-      <Modal isOpen $scrollOverlay={true} onDismiss={onModalDismiss} maxHeight={90}>
+      <Modal isOpen $scrollOverlay onDismiss={onModalDismiss} maxHeight={90}>
         {approvalError || swapErrorMessage ? (
           <ErrorModalContent
             errorType={approvalError ?? PendingModalError.CONFIRMATION_ERROR}

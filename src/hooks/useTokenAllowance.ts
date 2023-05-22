@@ -5,6 +5,7 @@ import { useTokenContract } from 'hooks/useContract'
 import { useSingleCallResult } from 'lib/hooks/multicall'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ApproveTransactionInfo, TransactionType } from 'state/transactions/types'
+import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 
 export function useTokenAllowance(
   token?: Token,
@@ -58,8 +59,9 @@ export function useUpdateTokenAllowance(
         },
       }
     } catch (e: unknown) {
+      const message = didUserReject(e) ? 'User rejected' : e instanceof Error ? e.message : e
       const symbol = amount?.currency.symbol ?? 'Token'
-      throw new Error(`${symbol} token allowance failed: ${e instanceof Error ? e.message : e}`)
+      throw new Error(`${symbol} token allowance failed: ${message}`)
     }
   }, [amount, contract, spender])
 }

@@ -72,10 +72,10 @@ interface PendingModalContentProps {
   currentStep: PendingConfirmModalState
   approvalCurrency?: Currency
   hideStepIndicators?: boolean
-  txHash: string | undefined
+  txHash?: string
 }
 
-function CurrencyLoader({ currency }: { currency: Currency | undefined }) {
+function CurrencyLoader({ currency }: { currency?: Currency }) {
   const theme = useTheme()
   return (
     <LogoContainer data-testid="pending-modal-currency-logo-loader">
@@ -104,7 +104,7 @@ function getContent(
       }
     case ConfirmModalState.PERMITTING:
       return {
-        title: t`Approve ${approvalCurrency?.symbol}`,
+        title: t`Approve ${approvalCurrency?.symbol ?? 'token'}`,
         subtitle: t`Proceed in wallet`,
         label: t`Why are approvals required?`,
         tooltipText: t`This provides the Uniswap protocol access to your token for trading. For security, this will expire after 30 days.`,
@@ -114,11 +114,7 @@ function getContent(
       return {
         title: t`Confirm Swap`,
         subtitle: t`Proceed in wallet`,
-        logo: confirmed ? (
-          <SizedAnimatedConfirmation data-testid="pending-modal-success-icon" />
-        ) : (
-          <Loader stroke={theme.textTertiary} size="48px" />
-        ),
+        logo: confirmed ? <SizedAnimatedConfirmation /> : <Loader stroke={theme.textTertiary} size="48px" />,
       }
   }
 }
@@ -146,14 +142,24 @@ export function PendingModalContent({
       {logo}
       {/* TODO: implement animations between title/subtitles of each step. */}
       <ColumnCenter gap="md">
-        <ThemedText.HeadlineSmall>{title}</ThemedText.HeadlineSmall>
-        {subtitle && <ThemedText.LabelSmall>{subtitle}</ThemedText.LabelSmall>}
+        <ThemedText.HeadlineSmall data-testid="PendingModalContent-title">{title}</ThemedText.HeadlineSmall>
+        {subtitle && (
+          <ThemedText.LabelSmall data-testid="PendingModalContent-subtitle">{subtitle}</ThemedText.LabelSmall>
+        )}
         <Row justify="center">
-          {label && <ThemedText.Caption color="textSecondary">{label}</ThemedText.Caption>}
+          {label && (
+            <ThemedText.Caption color="textSecondary" data-testid="PendingModalContent-label">
+              {label}
+            </ThemedText.Caption>
+          )}
           {tooltipText && <QuestionHelper text={tooltipText} />}
         </Row>
       </ColumnCenter>
-      {button && <Row justify="center">{button}</Row>}
+      {button && (
+        <Row justify="center" data-testid="PendingModalContent-button">
+          {button}
+        </Row>
+      )}
       {!hideStepIndicators && (
         <Row gap="14px" justify="center">
           {steps.map((_, i) => {
@@ -213,7 +219,7 @@ export function ErrorModalContent({ errorType, onRetry }: ErrorModalContentProps
         </Row>
       </ColumnCenter>
       <Row justify="center">
-        <ButtonPrimary marginX="24px" onClick={onRetry}>
+        <ButtonPrimary marginX="24px" onClick={onRetry} data-testid="pending-modal-content-retry">
           <Trans>Retry</Trans>
         </ButtonPrimary>
       </Row>
