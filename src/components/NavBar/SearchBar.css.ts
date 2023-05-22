@@ -96,7 +96,7 @@ export const searchBarInput = style([
     padding: '0',
     fontWeight: 'normal',
     fontSize: '16',
-    color: { default: 'textPrimary', placeholder: 'textSecondary' },
+    color: { default: 'textPrimary', placeholder: 'placeHolderSearch' },
     border: 'none',
     background: 'none',
     lineHeight: '24',

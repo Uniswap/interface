@@ -31,6 +31,7 @@ const themeContractValues = {
     textPrimary: '',
     textSecondary: '',
     textTertiary: '',
+    placeHolderSearch: '',
 
     dropShadow: '',
   },
@@ -52,6 +53,7 @@ const themeContractValues = {
 export type Theme = typeof themeContractValues
 
 export const themeVars = createGlobalThemeContract(themeContractValues, (_, path) => `genie-${path.join('-')}`)
+// const   = DefaultTheme
 
 const dimensions = {
   '0': '0',

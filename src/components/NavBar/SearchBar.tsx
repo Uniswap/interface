@@ -29,7 +29,7 @@ import { SearchBarDropdown } from './SearchBarDropdown'
 
 const KeyShortCut = styled.div`
   background-color: ${({ theme }) => theme.hoverState};
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.accentActive};
   padding: 0px 8px;
   width: 20px;
   height: 20px;
@@ -174,7 +174,6 @@ export const SearchBar = () => {
             !isOpen && !isMobile && magicalGradientOnHover,
             isMobileOrTablet && (isOpen ? styles.visible : styles.hidden)
           )}
-          style={{ borderColor: isOpen ? theme.searchOutline : theme.accentActive }}
           borderRadius={isOpen || isMobileOrTablet ? undefined : '30'}
           borderTopRightRadius={isOpen && !isMobile ? '30' : undefined}
           borderTopLeftRadius={isOpen && !isMobile ? '30' : undefined}
@@ -187,7 +186,7 @@ export const SearchBar = () => {
             <Box display={{ sm: 'none', md: 'flex' }}>
               <MagnifyingGlassIcon color={theme.accentActive} />
             </Box>
-            <Box display={{ sm: 'flex', md: 'none' }} color="textTertiary" onClick={toggleOpen}>
+            <Box display={{ sm: 'flex', md: 'none' }} color="accentActive" onClick={toggleOpen}>
               <ChevronLeftIcon />
             </Box>
           </Box>

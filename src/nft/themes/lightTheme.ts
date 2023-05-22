@@ -29,6 +29,7 @@ export const lightTheme: Theme = {
     textPrimary: vars.color.gray900,
     textSecondary: vars.color.gray500,
     textTertiary: vars.color.gray300,
+    placeHolderSearch: vars.color.gray500,
 
     dropShadow: `0px 4px 16px rgba(251, 17, 142, 0.4)`,
   },

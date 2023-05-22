@@ -273,6 +273,7 @@ export const darkTheme = {
   textPrimary: colors.white,
   textSecondary: colors.gray400,
   textTertiary: colors.gray500,
+  placeHolderSearch: colors.white,
 
   accentAction: colors.blueButton,
   accentActive: colors.cyanText,
@@ -332,6 +333,7 @@ export const lightTheme: Theme = {
   textPrimary: colors.gray900,
   textSecondary: colors.gray500,
   textTertiary: colors.gray400,
+  placeHolderSearch: colors.gray500,
 
   accentAction: colors.purpleMain,
   accentActive: colors.purpleMain,
