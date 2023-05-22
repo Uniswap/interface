@@ -4,7 +4,7 @@ import noop from 'utils/noop'
 import Expand from './index'
 
 describe('Expand', () => {
-  it('does not render children when closed', async () => {
+  it('does not render children when closed', () => {
     render(
       <Expand header={<span>Header</span>} isOpen={false} onToggle={noop} button={<span>Button</span>}>
         Body

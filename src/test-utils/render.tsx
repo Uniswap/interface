@@ -13,6 +13,7 @@ import { Provider } from 'react-redux'
 import { HashRouter } from 'react-router-dom'
 import store from 'state'
 import ThemeProvider from 'theme'
+
 i18n.load({
   [DEFAULT_LOCALE]: catalog.messages,
 })
