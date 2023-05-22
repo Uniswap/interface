@@ -34,7 +34,7 @@ function runCommand(command) {
     // Log when and how the yarn exited
     childProcess.on('close', (code) => {
       if (code !== 0) {
-        return reject(new Error(`Command "yarn ${command}" exited with non-zero code: ${code}`))
+        return reject(new Error(`[${command}] exited with non-zero code: ${code}`))
       }
       console.timeLog('prepare-commands', `yarn ${command} completed`)
       resolve()
