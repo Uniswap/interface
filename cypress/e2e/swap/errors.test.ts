@@ -85,10 +85,15 @@ describe('Swap errors', () => {
         .clear()
         .type(AMOUNT_TO_SWAP.toString())
         .should('have.value', AMOUNT_TO_SWAP.toString())
-      cy.get('#swap-currency-output .token-amount-input').should('not.have.value', '')
-      cy.get('#swap-button').click()
-      cy.get('#confirm-swap-or-send').click()
-      cy.get(getTestSelector('confirmation-close-icon')).click()
+        .then(() => {
+          cy.get('#swap-currency-output .token-amount-input').should('not.have.value', '')
+          cy.get('#swap-button')
+            .click()
+            .then(() => {
+              cy.get('#confirm-swap-or-send').click()
+              cy.get(getTestSelector('confirmation-close-icon')).click()
+            })
+        })
 
       cy.get('#swap-currency-input .token-amount-input')
         .clear()
