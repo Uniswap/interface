@@ -85,7 +85,7 @@ const PinkCircle = styled(LogoContainer)`
   z-index: 1;
 `
 
-function PaperIcon({ currency, loading }: { currency: Currency | undefined; loading: boolean }) {
+function PaperIcon({ currency, loading }: { currency?: Currency; loading: boolean }) {
   const theme = useTheme()
   return (
     <LogoContainer>
@@ -145,22 +145,22 @@ interface PendingModalStep {
 interface PendingModalContentProps {
   steps: PendingConfirmModalState[]
   currentStep: PendingConfirmModalState
-  trade: InterfaceTrade | undefined
-  swapHash: string | undefined
+  trade?: InterfaceTrade
+  swapTxHash?: string
   hideStepIndicators?: boolean
   tokenApprovalPending?: boolean
 }
 
 interface ContentArgs {
-  chainId: number | undefined
+  chainId?: number
   step: PendingConfirmModalState
-  approvalCurrency: Currency | undefined
-  trade: InterfaceTrade | undefined
+  approvalCurrency?: Currency
+  trade?: InterfaceTrade
   swapConfirmed: boolean
   swapPending: boolean
   tokenApprovalPending: boolean
   theme: DefaultTheme
-  swapHash: string | undefined
+  swapTxHash?: string
 }
 
 function getContent(args: ContentArgs): PendingModalStep {
@@ -168,7 +168,7 @@ function getContent(args: ContentArgs): PendingModalStep {
   switch (step) {
     case ConfirmModalState.APPROVING_TOKEN:
       return {
-        title: t`Allow trading ${approvalCurrency?.symbol} on Uniswap`,
+        title: t`Allow trading ${approvalCurrency?.symbol ?? 'token'} on Uniswap`,
         subtitle: (
           <>
             <Trans>First, we need your permission to use your DAI for swapping.</Trans>{' '}
@@ -206,6 +206,7 @@ function getContent(args: ContentArgs): PendingModalStep {
         ) : null,
         label: !swapPending && !swapConfirmed ? t`Proceed in your wallet` : null,
         logo:
+          // On mainnet, we show the success icon once the tx is sent, since it takes longer to confirm than on L2s.
           swapConfirmed || (swapPending && chainId === SupportedChainId.MAINNET) ? (
             <SizedAnimatedConfirmation />
           ) : (
@@ -219,14 +220,14 @@ export function PendingModalContent({
   steps,
   currentStep,
   trade,
-  swapHash,
+  swapTxHash,
   hideStepIndicators,
   tokenApprovalPending = false,
 }: PendingModalContentProps) {
   const theme = useTheme()
   const { chainId } = useWeb3React()
-  const swapConfirmed = useIsTransactionConfirmed(swapHash)
-  const swapPending = swapHash !== undefined && !swapConfirmed
+  const swapConfirmed = useIsTransactionConfirmed(swapTxHash)
+  const swapPending = swapTxHash !== undefined && !swapConfirmed
   const { logo, title, subtitle, label, button } = getContent({
     chainId,
     step: currentStep,
@@ -235,7 +236,7 @@ export function PendingModalContent({
     swapPending,
     tokenApprovalPending,
     theme,
-    swapHash,
+    swapTxHash,
     trade,
   })
   return (
