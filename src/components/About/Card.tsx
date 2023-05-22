@@ -10,14 +10,14 @@ export enum CardType {
   Secondary = 'Secondary',
 }
 
-const StyledCard = styled.div<{ isDarkMode: boolean; backgroundImgSrc?: string; type: CardType }>`
+const StyledCard = styled.div<{ $isDarkMode: boolean; $backgroundImgSrc?: string; $type: CardType }>`
   display: flex;
-  background: ${({ isDarkMode, backgroundImgSrc, type, theme }) =>
-    isDarkMode
-      ? `${type === CardType.Primary ? theme.backgroundModule : theme.backgroundSurface} ${
-          backgroundImgSrc ? ` url(${backgroundImgSrc})` : ''
+  background: ${({ $isDarkMode, $backgroundImgSrc, $type, theme }) =>
+    $isDarkMode
+      ? `${$type === CardType.Primary ? theme.backgroundModule : theme.backgroundSurface} ${
+          $backgroundImgSrc ? ` url(${$backgroundImgSrc})` : ''
         }`
-      : `${type === CardType.Primary ? 'white' : theme.backgroundModule} url(${backgroundImgSrc})`};
+      : `${$type === CardType.Primary ? 'white' : theme.backgroundModule} url(${$backgroundImgSrc})`};
   background-size: auto 100%;
   background-position: right;
   background-repeat: no-repeat;
@@ -30,15 +30,15 @@ const StyledCard = styled.div<{ isDarkMode: boolean; backgroundImgSrc?: string; 
   padding: 24px;
   height: 212px;
   border-radius: 24px;
-  border: 1px solid ${({ theme, type }) => (type === CardType.Primary ? 'transparent' : theme.backgroundOutline)};
+  border: 1px solid ${({ theme, $type }) => ($type === CardType.Primary ? 'transparent' : theme.backgroundOutline)};
   box-shadow: 0px 10px 24px 0px rgba(51, 53, 72, 0.04);
   transition: ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.ease} border`};
 
   &:hover {
-    border: 1px solid ${({ theme, isDarkMode }) => (isDarkMode ? theme.backgroundInteractive : theme.textTertiary)};
+    border: 1px solid ${({ theme, $isDarkMode }) => ($isDarkMode ? theme.backgroundInteractive : theme.textTertiary)};
   }
   @media screen and (min-width: ${BREAKPOINTS.sm}px) {
-    height: ${({ backgroundImgSrc }) => (backgroundImgSrc ? 360 : 260)}px;
+    height: ${({ $backgroundImgSrc }) => ($backgroundImgSrc ? 360 : 260)}px;
   }
   @media screen and (min-width: ${BREAKPOINTS.xl}px) {
     padding: 32px;
@@ -125,14 +125,14 @@ const Card = ({
   return (
     <TraceEvent events={[BrowserEvent.onClick]} name={SharedEventName.ELEMENT_CLICKED} element={elementName}>
       <StyledCard
-        type={type}
         as={external ? 'a' : Link}
         to={external ? undefined : to}
         href={external ? to : undefined}
         target={external ? '_blank' : undefined}
         rel={external ? 'noopenener noreferrer' : undefined}
-        isDarkMode={isDarkMode}
-        backgroundImgSrc={backgroundImgSrc}
+        $backgroundImgSrc={backgroundImgSrc}
+        $isDarkMode={isDarkMode}
+        $type={type}
       >
         <TitleRow>
           <CardTitle>{title}</CardTitle>
