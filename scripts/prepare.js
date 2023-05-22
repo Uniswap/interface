@@ -45,7 +45,6 @@ function runCommand(command) {
 console.time('prepare')
 Promise.all(commands.map(runCommand))
   .then(() => {
-    console.log('All commands finished')
     console.timeEnd('prepare-commands')
   })
   .catch(console.error)
