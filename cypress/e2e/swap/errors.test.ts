@@ -85,27 +85,21 @@ describe('Swap errors', () => {
         .clear()
         .type(AMOUNT_TO_SWAP.toString())
         .should('have.value', AMOUNT_TO_SWAP.toString())
-        .then(() => {
-          cy.get('#swap-currency-output .token-amount-input').should('not.have.value', '')
-          cy.get('#swap-button')
-            .click()
-            .then(() => {
-              cy.get('#confirm-swap-or-send').click()
-              cy.get(getTestSelector('confirmation-close-icon')).click()
-            })
-        })
+      cy.get('#swap-currency-output .token-amount-input').should('not.have.value', '')
+      cy.get('#swap-button').click()
+      cy.get('#confirm-swap-or-send').click()
+      cy.contains('Confirm Swap').should('exist')
+      cy.get(getTestSelector('confirmation-close-icon')).click()
 
       cy.get('#swap-currency-input .token-amount-input')
         .clear()
         .type(AMOUNT_TO_SWAP.toString())
         .should('have.value', AMOUNT_TO_SWAP.toString())
-        .then(() => {
-          cy.get('#swap-currency-output .token-amount-input').should('not.have.value', '')
-          cy.get('#swap-button')
-            .click()
-            .then(() => cy.get('#confirm-swap-or-send').click())
-            .then(() => cy.get(getTestSelector('confirmation-close-icon')).click())
-        })
+      cy.get('#swap-currency-output .token-amount-input').should('not.have.value', '')
+      cy.get('#swap-button').click()
+      cy.get('#confirm-swap-or-send').click()
+      cy.contains('Confirm Swap').should('exist')
+      cy.get(getTestSelector('confirmation-close-icon')).click()
 
       // The pending transaction indicator should reflect the state.
       cy.get(getTestSelector('web3-status-connected')).should('contain', '2 Pending')
