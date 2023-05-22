@@ -45,7 +45,7 @@ function pickBackgroundColor(variant: BadgeVariant | undefined, theme: DefaultTh
 function pickBorder(variant: BadgeVariant | undefined, theme: DefaultTheme): string {
   switch (variant) {
     case BadgeVariant.WARNING_OUTLINE:
-      return `1px solid ${theme.accentWarning}`
+      return `1px solid ${theme.goldVibrant}`
     default:
       return 'unset'
   }
@@ -64,7 +64,7 @@ function pickFontColor(variant: BadgeVariant | undefined, theme: DefaultTheme): 
     case BadgeVariant.WARNING:
       return readableColor(theme.accentWarning)
     case BadgeVariant.WARNING_OUTLINE:
-      return '#8C15E8'
+      return theme.goldVibrant
     default:
       return readableColor(theme.backgroundInteractive)
   }

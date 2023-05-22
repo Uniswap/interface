@@ -66,7 +66,7 @@ const CHAIN_INFO: ChainInfoMap = {
     statusPage: 'https://rollux.com/',
     helpCenterUrl: 'https://pegasys.fi/',
     nativeCurrency: { name: 'Syscoin', symbol: 'SYS', decimals: 18 },
-    color: darkTheme.chain_10,
+    color: darkTheme.chain_570_background,
     backgroundColor: darkTheme.chain_570_background,
   },
   [SupportedChainId.ROLLUX_TANENBAUM]: {

@@ -271,13 +271,14 @@ export const darkTheme = {
   backgroundConnectButton: 'linear-gradient(90deg, #53D9D9 9.38%, rgba(0, 184, 255, 0.1) 128.42%)',
 
   textPrimary: colors.white,
-  textSecondary: colors.gray300,
+  textSecondary: colors.gray400,
   textTertiary: colors.gray500,
 
   accentAction: colors.blueButton,
   accentActive: colors.cyanText,
   accentSuccess: colors.green200,
   accentWarning: colors.gold200,
+  goldVibrant: colors.goldVibrant,
   accentFailure: colors.red500,
   accentCritical: colors.red300,
 
@@ -336,6 +337,7 @@ export const lightTheme: Theme = {
   accentActive: colors.purpleMain,
   accentSuccess: colors.green300,
   accentWarning: colors.gold400,
+  goldVibrant: colors.goldVibrant,
   accentFailure: colors.red400,
   accentCritical: colors.red400,
 

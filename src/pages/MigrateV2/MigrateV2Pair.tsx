@@ -398,7 +398,7 @@ function V2PairMigration({
         .
       </ThemedText.DeprecatedBody>
 
-      <LightCard>
+      <LightCard style={{ border: 'none' }}>
         <AutoColumn gap="lg">
           <RowBetween>
             <RowFixed style={{ marginLeft: '8px' }}>
@@ -419,7 +419,7 @@ function V2PairMigration({
         <ArrowDown size={24} />
       </div>
 
-      <LightCard>
+      <LightCard style={{ border: 'none' }}>
         <AutoColumn gap="lg">
           <RowBetween>
             <RowFixed style={{ marginLeft: '8px' }}>

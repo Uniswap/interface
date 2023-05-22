@@ -140,7 +140,7 @@ const CopyIcon = styled(Copy)`
   ${IconStyle}
   ${ClickableStyle}
   ${LinkStyle}
-  stroke: ${({ theme }) => theme.accentAction};
+  stroke: ${({ theme }) => theme.accentActive};
 `
 
 const rotateImg = keyframes`

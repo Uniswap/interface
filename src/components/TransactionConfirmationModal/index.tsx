@@ -294,7 +294,7 @@ function L2Content({
           </Text>
           {chainId && hash ? (
             <ExternalLink href={getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)}>
-              <Text fontWeight={500} fontSize={14} color={theme.accentAction}>
+              <Text fontWeight={500} fontSize={14} color={theme.accentActive}>
                 <Trans>View on Explorer</Trans>
               </Text>
             </ExternalLink>

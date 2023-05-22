@@ -145,11 +145,13 @@ const ExplorerLink = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  color: ${({ theme }) => theme.accentActive};
 `
 const ExplorerLinkIcon = styled(LinkIconFeather)`
   height: 16px;
   width: 18px;
   margin-left: 8px;
+  color: ${({ theme }) => theme.accentActive};
 `
 
 const LinkIconWrapper = styled.div`

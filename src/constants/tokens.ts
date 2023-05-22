@@ -69,15 +69,15 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token | undefined } =
     SupportedChainId.ROLLUX,
     '0x4200000000000000000000000000000000000006',
     18,
-    'WETH',
-    'Wrapped Ether'
+    'WSYS',
+    'Wrapped Syscoin'
   ),
   [SupportedChainId.ROLLUX_TANENBAUM]: new Token(
     SupportedChainId.ROLLUX_TANENBAUM,
     '0x4200000000000000000000000000000000000006',
     18,
-    'WETH',
-    'Wrapped Ether'
+    'WSYS',
+    'Wrapped Syscoin'
   ),
 }
 
