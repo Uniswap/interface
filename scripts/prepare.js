@@ -42,7 +42,7 @@ function runCommand(command) {
   })
 }
 
-console.time('prepare-commands')
+console.time('prepare')
 Promise.all(commands.map(runCommand))
   .then(() => {
     console.log('All commands finished')
