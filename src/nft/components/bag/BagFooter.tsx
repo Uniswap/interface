@@ -386,7 +386,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
     }
 
     if (sufficientBalance === false) {
-      return getBuyButtonStateData(BuyButtonStates.INSUFFICIENT_BALANCE, theme, handleClick)
+      return getBuyButtonStateData(BuyButtonStates.INSUFFICIENT_BALANCE, theme)
     }
 
     if (bagStatus === BagStatus.WARNING) {

@@ -113,6 +113,7 @@ export function getBuyButtonStateData(
     },
     [BuyButtonStates.REQUIRE_APPROVAL]: {
       ...defaultBuyButtonState,
+      disabled: false,
       handleClick: handleClickOverride ?? (() => undefined),
       helperText: <Trans>An approval is needed to use this token. </Trans>,
       buttonText: <Trans>Approve</Trans>,
