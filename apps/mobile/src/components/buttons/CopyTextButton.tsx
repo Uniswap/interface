@@ -3,9 +3,9 @@ import { useTranslation } from 'react-i18next'
 import { useAppTheme } from 'src/app/hooks'
 import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import { setClipboard } from 'src/utils/clipboard'
-import { useTimeout } from 'src/utils/timing'
 import CheckCircle from 'ui/src/assets/icons/check-circle.svg'
 import CopySheets from 'ui/src/assets/icons/copy-sheets.svg'
+import { useTimeout } from 'wallet/src/utils/timing'
 
 interface Props {
   copyText?: string

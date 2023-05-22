@@ -4,6 +4,7 @@ import { OnboardingRoutes } from 'src/app/navigation/constants'
 import { Input, Stack, XStack, YStack } from 'tamagui'
 import { Text } from 'ui/src'
 import { Button } from 'ui/src/components/button/Button'
+import { logger } from 'wallet/src/features/logger/logger'
 import {
   importAccountActions,
   importAccountSagaName,
@@ -11,6 +12,7 @@ import {
 import { ImportAccountType } from 'wallet/src/features/wallet/import/types'
 import { useAppDispatch } from 'wallet/src/state'
 import { useSagaStatus } from 'wallet/src/state/useSagaStatus'
+import { isValidPassword } from 'wallet/src/utils/password'
 
 export function Password(): JSX.Element {
   const dispatch = useAppDispatch()
@@ -65,6 +67,10 @@ export function Password(): JSX.Element {
           flexGrow={1}
           theme="primary"
           onPress={(): void => {
+            if (!isValidPassword) {
+              logger.error('Password', 'onPress', 'Invalid password.')
+            }
+
             dispatch(
               importAccountActions.trigger({
                 type: ImportAccountType.Mnemonic,

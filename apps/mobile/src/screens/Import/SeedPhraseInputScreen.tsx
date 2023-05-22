@@ -18,14 +18,14 @@ import { SafeKeyboardOnboardingScreen } from 'src/features/onboarding/SafeKeyboa
 import { ElementName } from 'src/features/telemetry/constants'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { openUri } from 'src/utils/linking'
+import { useAddBackButton } from 'src/utils/useAddBackButton'
 import {
   MnemonicValidationError,
   translateMnemonicErrorMessage,
   userFinishedTypingWord,
   validateMnemonic,
   validateSetOfWords,
-} from 'src/utils/mnemonics'
-import { useAddBackButton } from 'src/utils/useAddBackButton'
+} from 'wallet/src/utils/mnemonics'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.ImportMethod>
 

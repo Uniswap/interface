@@ -1,4 +1,4 @@
-import { MnemonicValidationError, translateMnemonicErrorMessage } from 'src/utils/mnemonics'
+import { MnemonicValidationError, translateMnemonicErrorMessage } from 'wallet/src/utils/mnemonics'
 
 describe(translateMnemonicErrorMessage, () => {
   const t = (str: string): string => str

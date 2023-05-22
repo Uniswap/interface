@@ -14,11 +14,11 @@ import {
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { ImportType } from 'src/features/onboarding/utils'
 import { OnboardingScreens } from 'src/screens/Screens'
-import { useTimeout } from 'src/utils/timing'
 import { useAddBackButton } from 'src/utils/useAddBackButton'
 import CloudIcon from 'ui/src/assets/icons/cloud.svg'
 import { logger } from 'wallet/src/features/logger/logger'
 import { ONE_SECOND_MS } from 'wallet/src/utils/time'
+import { useTimeout } from 'wallet/src/utils/timing'
 
 type Props = NativeStackScreenProps<
   OnboardingStackParamList,

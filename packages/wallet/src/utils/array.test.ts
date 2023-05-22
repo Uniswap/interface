@@ -1,4 +1,4 @@
-import { differenceWith, next } from 'src/utils/array'
+import { differenceWith, next } from 'wallet/src/utils/array'
 
 it('returns undefined for empty arrays', () => {
   expect(next([], '123')).toBe(undefined)

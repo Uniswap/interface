@@ -13,9 +13,9 @@ import { GQLNftAsset } from 'src/features/nfts/hooks'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
 import { DerivedTransferInfo } from 'src/features/transactions/transfer/hooks'
 import { isOffline } from 'src/features/transactions/utils'
-import { useMemoCompare } from 'src/utils/hooks'
 import { ChainId } from 'wallet/src/constants/chains'
 import { currencyAddress } from 'wallet/src/utils/currencyId'
+import { useMemoCompare } from 'wallet/src/utils/hooks'
 
 export function getTransferWarnings(
   t: TFunction,

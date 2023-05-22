@@ -1,8 +1,8 @@
 import React from 'react'
 import { Image, ImageResizeMode } from 'react-native'
 import { SvgUri } from 'react-native-svg'
-import { uriToHttp } from 'src/utils/uriToHttp'
 import { logger } from 'wallet/src/features/logger/logger'
+import { uriToHttp } from 'wallet/src/utils/uriToHttp'
 
 type Props = {
   backgroundColor?: string

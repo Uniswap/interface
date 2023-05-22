@@ -7,10 +7,10 @@ import { useFeatureFlag } from 'src/features/experiments/hooks'
 import { useQuoteQuery } from 'src/features/routing/routingApi'
 import { PermitSignatureInfo } from 'src/features/transactions/swap/usePermit2Signature'
 import { useActiveAccount } from 'src/features/wallet/hooks'
-import { useDebounceWithStatus } from 'src/utils/timing'
 import { ChainId } from 'wallet/src/constants/chains'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import { currencyAddressForSwapQuote } from 'wallet/src/utils/currencyId'
+import { useDebounceWithStatus } from 'wallet/src/utils/timing'
 
 export interface UseQuoteProps {
   amountSpecified: CurrencyAmount<Currency> | null | undefined

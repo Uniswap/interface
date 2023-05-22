@@ -13,7 +13,7 @@ import { AnimatedBox, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { popNotification } from 'src/features/notifications/notificationSlice'
 import { selectActiveAccountNotifications } from 'src/features/notifications/selectors'
-import { useTimeout } from 'src/utils/timing'
+import { useTimeout } from 'wallet/src/utils/timing'
 
 const NOTIFICATION_HEIGHT = 64
 

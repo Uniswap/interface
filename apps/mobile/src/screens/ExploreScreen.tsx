@@ -18,7 +18,7 @@ import { SectionName } from 'src/features/telemetry/constants'
 import { Screens } from 'src/screens/Screens'
 import { flex } from 'src/styles/flex'
 import { Theme } from 'src/styles/theme'
-import { useDebounce } from 'src/utils/timing'
+import { useDebounce } from 'wallet/src/utils/timing'
 
 export function ExploreScreen(): JSX.Element {
   const { t } = useTranslation()

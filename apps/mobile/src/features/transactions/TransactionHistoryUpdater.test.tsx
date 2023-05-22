@@ -19,9 +19,9 @@ import { Account } from 'src/features/wallet/accounts/types'
 import { account, account2 } from 'src/test/fixtures'
 import { MAX_FIXTURE_TIMESTAMP, Portfolios, PortfoliosWithReceive } from 'src/test/gqlFixtures'
 import { render } from 'src/test/test-utils'
-import { sleep } from 'src/utils/timing'
 import { ChainId } from 'wallet/src/constants/chains'
 import { ONE_SECOND_MS } from 'wallet/src/utils/time'
+import { sleep } from 'wallet/src/utils/timing'
 
 const mockedRefetchQueries = jest.fn()
 jest.mock('src/data/hooks', () => ({

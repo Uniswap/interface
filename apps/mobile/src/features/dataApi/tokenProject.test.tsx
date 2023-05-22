@@ -5,8 +5,8 @@ import { currencyIdToContractInput, tokenProjectToCurrencyInfos } from 'src/feat
 import { MainnetEth } from 'src/test/fixtures'
 import { TokenProjects } from 'src/test/gqlFixtures'
 import { renderHook } from 'src/test/test-utils'
-import { sleep } from 'src/utils/timing'
 import { currencyId } from 'wallet/src/utils/currencyId'
+import { sleep } from 'wallet/src/utils/timing'
 
 const _currencyId = currencyId(MainnetEth)
 

@@ -12,7 +12,6 @@ import { AnimatedButton, Button, ButtonEmphasis, ButtonSize } from 'src/componen
 import { TextInput } from 'src/components/input/TextInput'
 import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
-import { NICKNAME_MAX_LENGTH } from 'src/constants/accounts'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { ImportType } from 'src/features/onboarding/utils'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
@@ -26,6 +25,7 @@ import {
 } from 'src/features/wallet/pendingAccountsSaga'
 import { OnboardingScreens } from 'src/screens/Screens'
 import PencilIcon from 'ui/src/assets/icons/pencil-detailed.svg'
+import { NICKNAME_MAX_LENGTH } from 'wallet/src/constants/accounts'
 import { shortenAddress } from 'wallet/src/utils/addresses'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.EditName>

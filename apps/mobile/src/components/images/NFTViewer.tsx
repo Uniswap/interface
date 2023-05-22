@@ -5,7 +5,7 @@ import { ImageUri } from 'src/components/images/ImageUri'
 import { WebSvgUri } from 'src/components/images/WebSvgUri'
 import { Box } from 'src/components/layout'
 import { Text } from 'src/components/Text'
-import { uriToHttp } from 'src/utils/uriToHttp'
+import { uriToHttp } from 'wallet/src/utils/uriToHttp'
 
 type Props = {
   uri: string | undefined

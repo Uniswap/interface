@@ -40,8 +40,8 @@ import { createTransactionId } from 'src/features/transactions/utils'
 import { BlockedAddressWarning } from 'src/features/trm/BlockedAddressWarning'
 import { useIsBlockedActiveAddress } from 'src/features/trm/hooks'
 import { dimensions } from 'src/styles/sizing'
-import { usePrevious } from 'src/utils/hooks'
 import AlertTriangleIcon from 'ui/src/assets/icons/alert-triangle.svg'
+import { usePrevious } from 'wallet/src/utils/hooks'
 
 interface TransferTokenProps {
   dispatch: React.Dispatch<AnyAction>

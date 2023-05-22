@@ -9,10 +9,10 @@ import {
   TransactionStatus,
   TransactionType,
 } from 'src/features/transactions/types'
-import { unique } from 'src/utils/array'
 import { flattenObjectOfObjects } from 'src/utils/objects'
 import { ChainId } from 'wallet/src/constants/chains'
 import { EMPTY_ARRAY } from 'wallet/src/constants/misc'
+import { unique } from 'wallet/src/utils/array'
 
 export const selectTransactions = (state: RootState): TransactionState => state.transactions
 

@@ -8,7 +8,7 @@ import { useAppSelector } from 'src/app/hooks'
 import { BiometricAuthenticationStatus, tryLocalAuthenticate } from 'src/features/biometrics'
 import { useBiometricContext } from 'src/features/biometrics/context'
 import { BiometricSettingsState } from 'src/features/biometrics/slice'
-import { useAsyncData } from 'src/utils/hooks'
+import { useAsyncData } from 'wallet/src/utils/hooks'
 
 /**
  * Hook shortcut to use the biometric prompt.

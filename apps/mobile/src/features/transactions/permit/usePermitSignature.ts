@@ -12,11 +12,11 @@ import { Account } from 'src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
 import { SignerManager } from 'src/features/wallet/signing/SignerManager'
 import { signTypedData } from 'src/features/wallet/signing/signing'
-import { useAsyncData } from 'src/utils/hooks'
 import { SWAP_ROUTER_ADDRESSES } from 'wallet/src/constants/addresses'
 import { ChainId } from 'wallet/src/constants/chains'
 import { logger } from 'wallet/src/features/logger/logger'
 import { areAddressesEqual } from 'wallet/src/utils/addresses'
+import { useAsyncData } from 'wallet/src/utils/hooks'
 import { inXMinutesUnix } from 'wallet/src/utils/time'
 
 const PERMIT_VALIDITY_TIME = 20 * 60 // 20 mins

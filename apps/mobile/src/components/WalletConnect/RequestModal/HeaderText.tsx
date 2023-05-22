@@ -4,7 +4,7 @@ import { Trans, useTranslation } from 'react-i18next'
 import { Text } from 'src/components/Text'
 import { EthMethod } from 'src/features/walletConnect/types'
 import { WalletConnectRequest } from 'src/features/walletConnect/walletConnectSlice'
-import { tryParseRawAmount } from 'src/utils/tryParseAmount'
+import { tryParseRawAmount } from 'wallet/src/utils/tryParseAmount'
 
 export function HeaderText({
   request,

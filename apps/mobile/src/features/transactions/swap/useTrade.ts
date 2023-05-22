@@ -14,9 +14,9 @@ import { QuoteResult } from 'src/features/routing/types'
 import { useUSDCValue } from 'src/features/routing/useUSDCPrice'
 import { transformQuoteToTrade } from 'src/features/transactions/swap/routeUtils'
 import { clearStaleTrades } from 'src/features/transactions/swap/utils'
-import { useDebounceWithStatus } from 'src/utils/timing'
 import { isL2Chain } from 'wallet/src/constants/chains'
 import { PollingInterval } from 'wallet/src/constants/misc'
+import { useDebounceWithStatus } from 'wallet/src/utils/timing'
 
 // TODO: [MOB-3906] use composition instead of inheritance
 export class Trade<

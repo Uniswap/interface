@@ -1,7 +1,7 @@
 import { by, device, element, expect } from 'detox'
 import { Accounts } from 'src/e2e/utils/fixtures'
 import { ElementName } from 'src/features/telemetry/constants'
-import { sleep } from 'src/utils/timing'
+import { sleep } from 'wallet/src/utils/timing'
 
 export function Create() {
   it('onboards a new account', async () => {

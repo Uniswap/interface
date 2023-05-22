@@ -28,9 +28,9 @@ import {
   txDetailsPending,
   txReceipt,
 } from 'src/test/fixtures'
-import { sleep } from 'src/utils/timing'
 import { ChainId } from 'wallet/src/constants/chains'
 import { PollingInterval } from 'wallet/src/constants/misc'
+import { sleep } from 'wallet/src/utils/timing'
 
 describe(transactionWatcher, () => {
   it('Triggers watchers successfully', () => {

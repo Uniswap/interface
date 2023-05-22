@@ -19,8 +19,8 @@ import {
 import { OnboardingScreens } from 'src/screens/Screens'
 import { openUri } from 'src/utils/linking'
 import { hideSplashScreen } from 'src/utils/splashScreen'
-import { useTimeout } from 'src/utils/timing'
 import { uniswapUrls } from 'wallet/src/constants/urls'
+import { useTimeout } from 'wallet/src/utils/timing'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.Landing>
 

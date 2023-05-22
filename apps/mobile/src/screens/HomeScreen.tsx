@@ -59,11 +59,11 @@ import { removePendingSession } from 'src/features/walletConnect/walletConnectSl
 import { Screens } from 'src/screens/Screens'
 import { dimensions } from 'src/styles/sizing'
 import { hideSplashScreen } from 'src/utils/splashScreen'
-import { useInterval, useTimeout } from 'src/utils/timing'
 import BuyIcon from 'ui/src/assets/icons/buy.svg'
 import ScanIcon from 'ui/src/assets/icons/scan-receive.svg'
 import SendIcon from 'ui/src/assets/icons/send-action.svg'
 import { ONE_SECOND_MS } from 'wallet/src/utils/time'
+import { useInterval, useTimeout } from 'wallet/src/utils/timing'
 
 const CONTENT_HEADER_HEIGHT_ESTIMATE = 270
 

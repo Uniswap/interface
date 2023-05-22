@@ -10,11 +10,11 @@ import { CurrencyField } from 'src/features/transactions/transactionState/transa
 import { DerivedTransferInfo } from 'src/features/transactions/transfer/hooks'
 import { Account } from 'src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
-import { useAsyncData } from 'src/utils/hooks'
 import { ChainId } from 'wallet/src/constants/chains'
 import { ContractManager } from 'wallet/src/features/contracts/ContractManager'
 import { toSupportedChainId } from 'wallet/src/utils/chainId'
 import { currencyAddress, isNativeCurrencyAddress } from 'wallet/src/utils/currencyId'
+import { useAsyncData } from 'wallet/src/utils/hooks'
 
 export interface BaseTransferParams {
   type: AssetType

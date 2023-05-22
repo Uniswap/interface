@@ -6,9 +6,9 @@ import { Text } from 'src/components/Text'
 import { useUSDValue } from 'src/features/gas/hooks'
 import { useNativeCurrencyInfo } from 'src/features/tokens/useCurrencyInfo'
 import { iconSizes } from 'src/styles/sizing'
-import { tryParseRawAmount } from 'src/utils/tryParseAmount'
 import { ChainId } from 'wallet/src/constants/chains'
 import { formatCurrencyAmount, formatUSDPrice, NumberType } from 'wallet/src/utils/format'
+import { tryParseRawAmount } from 'wallet/src/utils/tryParseAmount'
 
 export function SpendingDetails({
   value,

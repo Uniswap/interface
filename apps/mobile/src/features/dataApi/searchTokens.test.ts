@@ -5,7 +5,7 @@ import { useTokenProjects } from 'src/features/dataApi/tokenProjects'
 import { gqlTokenToCurrencyInfo } from 'src/features/dataApi/utils'
 import { SearchTokens } from 'src/test/gqlFixtures'
 import { renderHook } from 'src/test/test-utils'
-import { sleep } from 'src/utils/timing'
+import { sleep } from 'wallet/src/utils/timing'
 import { useSearchTokens } from './searchTokens'
 
 const mock: MockedResponse<SearchTokensQuery> = {

@@ -20,8 +20,8 @@ import {
 import { createTransactionId } from 'src/features/transactions/utils'
 import { useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
 import { Theme } from 'src/styles/theme'
-import { useDebounce } from 'src/utils/timing'
 import { ChainId } from 'wallet/src/constants/chains'
+import { useDebounce } from 'wallet/src/utils/timing'
 
 /** Returns a new externalTransactionId and a callback to store the transaction. */
 export function useFiatOnRampTransactionCreator(ownerAddress: string): {

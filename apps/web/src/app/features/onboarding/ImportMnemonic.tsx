@@ -4,6 +4,7 @@ import { OnboardingRoutes } from 'src/app/navigation/constants'
 import { Input, Stack, XStack, YStack } from 'tamagui'
 import { Text } from 'ui/src'
 import { Button, LinkButton } from 'ui/src/components/button/Button'
+import { validateMnemonic } from 'wallet/src/utils/mnemonics'
 
 export function ImportMnemonic(): JSX.Element {
   const navigate = useNavigate()
@@ -13,7 +14,8 @@ export function ImportMnemonic(): JSX.Element {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleClick = (e: any): void => {
     // TODO: validate mnemonic and give the button a disabled state when there is no mnemonic
-    if (!mnemonic) {
+    // Consider reusing logic from apps/mobile/**/SeedPhraseInputScreen
+    if (!validateMnemonic(mnemonic)) {
       e.preventDefault()
     }
   }

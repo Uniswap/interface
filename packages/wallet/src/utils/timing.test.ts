@@ -1,6 +1,6 @@
 import { renderHook } from '@testing-library/react-hooks'
 import { act } from 'react-test-renderer'
-import { DEFAULT_DELAY, useDebounceWithStatus } from 'src/utils/timing'
+import { DEFAULT_DELAY, useDebounceWithStatus } from 'wallet/src/utils/timing'
 
 jest.useFakeTimers()
 

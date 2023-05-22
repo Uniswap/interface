@@ -2,11 +2,11 @@
 import { Mutex } from 'async-mutex'
 import { providers as ethersProviders } from 'ethers'
 import { Task } from 'redux-saga'
-import { promiseTimeout, sleep } from 'src/utils/timing'
 import { config } from 'wallet/src/config'
 import { ChainId, CHAIN_INFO, L1ChainInfo, L2ChainInfo } from 'wallet/src/constants/chains'
 import { logger } from 'wallet/src/features/logger/logger'
 import { isStale } from 'wallet/src/utils/time'
+import { promiseTimeout, sleep } from 'wallet/src/utils/timing'
 import { getEthersProvider } from './getEthersProvider'
 import { getInfuraChainName } from './utils'
 

@@ -51,9 +51,7 @@ import {
 } from 'src/features/transactions/transactionState/transactionState'
 import { BaseDerivedInfo } from 'src/features/transactions/transactionState/types'
 import { useActiveAccount, useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
-import { useAsyncData, usePrevious } from 'src/utils/hooks'
 import { toStringish } from 'src/utils/number'
-import { tryParseExactAmount } from 'src/utils/tryParseAmount'
 import { SWAP_ROUTER_ADDRESSES } from 'wallet/src/constants/addresses'
 import { ChainId } from 'wallet/src/constants/chains'
 import { ContractManager } from 'wallet/src/features/contracts/ContractManager'
@@ -63,6 +61,8 @@ import { logger } from 'wallet/src/features/logger/logger'
 import { areAddressesEqual } from 'wallet/src/utils/addresses'
 import { buildCurrencyId } from 'wallet/src/utils/currencyId'
 import { formatCurrencyAmount, NumberType } from 'wallet/src/utils/format'
+import { useAsyncData, usePrevious } from 'wallet/src/utils/hooks'
+import { tryParseExactAmount } from 'wallet/src/utils/tryParseAmount'
 
 const NUM_USD_DECIMALS_DISPLAY = 2
 

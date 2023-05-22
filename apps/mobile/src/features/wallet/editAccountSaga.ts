@@ -9,9 +9,9 @@ import {
   removeAccount as removeInStore,
 } from 'src/features/wallet/walletSlice'
 import { disconnectWCForAccount } from 'src/features/walletConnect/WalletConnect'
-import { unique } from 'src/utils/array'
 import { all, call, put, SagaGenerator } from 'typed-redux-saga'
 import { logger } from 'wallet/src/features/logger/logger'
+import { unique } from 'wallet/src/utils/array'
 import { createMonitoredSaga } from 'wallet/src/utils/saga'
 
 export enum EditAccountAction {

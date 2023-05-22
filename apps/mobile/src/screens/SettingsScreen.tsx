@@ -25,7 +25,6 @@ import { AccountType, SignerMnemonicAccount } from 'src/features/wallet/accounts
 import { useAccounts } from 'src/features/wallet/hooks'
 import { resetWallet, setFinishedOnboarding } from 'src/features/wallet/walletSlice'
 import { Screens } from 'src/screens/Screens'
-import { useTimeout } from 'src/utils/timing'
 import { getFullAppVersion } from 'src/utils/version'
 import { AVATARS_DARK, AVATARS_LIGHT } from 'ui/src/assets'
 import BookOpenIcon from 'ui/src/assets/icons/book-open.svg'
@@ -38,6 +37,7 @@ import MessageQuestion from 'ui/src/assets/icons/message-question.svg'
 import UniswapIcon from 'ui/src/assets/icons/uniswap-logo.svg'
 import { uniswapUrls } from 'wallet/src/constants/urls'
 import { ONE_SECOND_MS } from 'wallet/src/utils/time'
+import { useTimeout } from 'wallet/src/utils/timing'
 
 export function SettingsScreen(): JSX.Element {
   const navigation = useSettingsStackNavigation()

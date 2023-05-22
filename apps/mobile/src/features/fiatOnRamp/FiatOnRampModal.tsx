@@ -41,12 +41,12 @@ import { ANIMATE_SPRING_CONFIG } from 'src/features/transactions/utils'
 import { dimensions, iconSizes, spacing } from 'src/styles/sizing'
 import { Theme } from 'src/styles/theme'
 import { openUri } from 'src/utils/linking'
-import { useTimeout } from 'src/utils/timing'
 import InformationIcon from 'ui/src/assets/icons/i-icon.svg'
 import { NATIVE_ADDRESS } from 'wallet/src/constants/addresses'
 import { ChainId } from 'wallet/src/constants/chains'
 import { buildCurrencyId } from 'wallet/src/utils/currencyId'
 import { formatUSDPrice } from 'wallet/src/utils/format'
+import { useTimeout } from 'wallet/src/utils/timing'
 
 export type FiatOnRampCurrency = {
   currencyInfo: Maybe<CurrencyInfo>

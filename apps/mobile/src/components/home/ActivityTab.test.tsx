@@ -11,7 +11,7 @@ import {
 import { ACCOUNT_ADDRESS_ONE, mockWalletPreloadedState } from 'src/test/fixtures'
 import { DaiAsset, Portfolios } from 'src/test/gqlFixtures'
 import { act, render } from 'src/test/test-utils'
-import { sleep } from 'src/utils/timing'
+import { sleep } from 'wallet/src/utils/timing'
 
 const TransactionListMock: MockedResponse<TransactionListQuery> = {
   request: {

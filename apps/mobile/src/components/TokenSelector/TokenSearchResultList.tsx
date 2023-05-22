@@ -29,10 +29,10 @@ import {
   makeSelectAccountHideSmallBalances,
   makeSelectAccountHideSpamTokens,
 } from 'src/features/wallet/selectors'
-import { useDebounce } from 'src/utils/timing'
 import { ChainId } from 'wallet/src/constants/chains'
 import { EMPTY_ARRAY } from 'wallet/src/constants/misc'
 import { CurrencyId } from 'wallet/src/utils/currencyId'
+import { useDebounce } from 'wallet/src/utils/timing'
 
 interface TokenSearchResultListProps {
   onChangeChainFilter: (newChainFilter: ChainId | null) => void

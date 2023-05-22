@@ -7,7 +7,7 @@ import { PasswordInput } from 'src/components/input/PasswordInput'
 import { Flex } from 'src/components/layout'
 import { PasswordError } from 'src/features/onboarding/PasswordError'
 import { ElementName } from 'src/features/telemetry/constants'
-import { isValidPassword } from 'src/utils/password'
+import { isValidPassword } from 'wallet/src/utils/password'
 
 export enum PasswordErrors {
   InvalidPassword = 'InvalidPassword',
