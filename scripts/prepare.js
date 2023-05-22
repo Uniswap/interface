@@ -2,7 +2,7 @@
 const { spawn } = require('child_process')
 
 // Add yarn setup commands to this array
-const commands = ['ajv', 'contracts', 'graphql', 'i18n']
+const COMMANDS = ['ajv', 'contracts', 'graphql', 'i18n']
 
 // Check if --verbose flag is set
 const verbose = process.argv.includes('--verbose')
