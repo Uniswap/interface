@@ -18,7 +18,7 @@ const DRAWER_MARGIN = '8px'
 const DRAWER_OFFSET = '10px'
 const DRAWER_TOP_MARGIN_MOBILE_WEB = '72px'
 
-const accountDrawerOpenAtom = atom(false)
+export const accountDrawerOpenAtom = atom(false)
 
 export function useToggleAccountDrawer() {
   const updateAccountDrawerOpen = useUpdateAtom(accountDrawerOpenAtom)

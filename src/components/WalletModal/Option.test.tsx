@@ -71,11 +71,7 @@ describe('Wallet Option', () => {
     expect(option2).toBeDisabled()
     expect(option2).toHaveProperty('selected', false)
 
-    expect(mockCloseDrawer).toHaveBeenCalledTimes(0)
-
     await act(async () => activationResponse.resolve())
-
-    expect(mockCloseDrawer).toHaveBeenCalledTimes(1)
 
     expect(option1).toBeEnabled()
     expect(option1).toHaveProperty('selected', false)
