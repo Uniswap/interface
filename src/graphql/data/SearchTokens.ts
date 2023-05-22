@@ -1,6 +1,7 @@
-import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
+import { ARB, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import gql from 'graphql-tag'
 import { useMemo } from 'react'
+import invariant from 'tiny-invariant'
 
 import { Chain, SearchTokensQuery, useSearchTokensQuery } from './__generated__/types-and-hooks'
 import { chainIdToBackendName } from './util'
@@ -41,19 +42,30 @@ gql`
   }
 `
 
+const ARB_ADDRESS = ARB.address.toLowerCase()
+
 export type SearchToken = NonNullable<NonNullable<SearchTokensQuery['searchTokens']>[number]>
 
-function isMoreRevelantToken(current: SearchToken, existing: SearchToken | undefined, searchChain: Chain) {
-  if (!existing) return true
+/* Returns the more relevant cross-chain token based on native status and search chain */
+function dedupeCrosschainTokens(current: SearchToken, existing: SearchToken | undefined, searchChain: Chain) {
+  if (!existing) return current
+  invariant(current.project?.id === existing.project?.id, 'Cannot dedupe tokens within different tokenProjects')
 
-  // Always priotize natives, and if both tokens are native, prefer native on current chain (i.e. Matic on Polygon over Matic on Mainnet )
-  if (current.standard === 'NATIVE' && (existing.standard !== 'NATIVE' || current.chain === searchChain)) return true
+  // Special case: always prefer Arbitrum ARB over Mainnet ARB
+  if (current.address?.toLowerCase() === ARB_ADDRESS) return current
+  if (existing.address?.toLowerCase() === ARB_ADDRESS) return existing
+
+  // Always prioritize natives, and if both tokens are native, prefer native on current chain (i.e. Matic on Polygon over Matic on Mainnet )
+  if (current.standard === 'NATIVE' && (existing.standard !== 'NATIVE' || current.chain === searchChain)) return current
 
   // Prefer tokens on the searched chain, otherwise prefer mainnet tokens
-  return current.chain === searchChain || (existing.chain !== searchChain && current.chain === Chain.Ethereum)
+  if (current.chain === searchChain || (existing.chain !== searchChain && current.chain === Chain.Ethereum))
+    return current
+
+  return existing
 }
 
-// Places natives first, wrapped native on current chain next, then sorts by volume
+/* Places natives first, wrapped native on current chain next, then sorts by volume */
 function searchTokenSortFunction(
   searchChain: Chain,
   wrappedNativeAddress: string | undefined,
@@ -87,7 +99,7 @@ export function useSearchTokens(searchQuery: string, chainId: number) {
     data?.searchTokens?.forEach((token) => {
       if (token.project?.id) {
         const existing = selectionMap[token.project.id]
-        if (isMoreRevelantToken(token, existing, searchChain)) selectionMap[token.project.id] = token
+        selectionMap[token.project.id] = dedupeCrosschainTokens(token, existing, searchChain)
       }
     })
     return Object.values(selectionMap).sort(
