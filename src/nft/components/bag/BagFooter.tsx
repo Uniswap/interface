@@ -40,6 +40,8 @@ import { ThemedText } from 'theme'
 import { switchChain } from 'utils/switchChain'
 import { shallow } from 'zustand/shallow'
 
+import { BuyButtonState, BuyButtonStates, getBuyButtonStateData } from './ButtonStates'
+
 const FooterContainer = styled.div`
   padding: 0px 12px;
 `
@@ -274,17 +276,17 @@ const FiatValue = ({
   )
 }
 
-interface BagFooterProps {
-  setModalIsOpen: (open: boolean) => void
-  eventProperties: Record<string, unknown>
-}
-
 const PENDING_BAG_STATUSES = [
   BagStatus.FETCHING_ROUTE,
   BagStatus.CONFIRMING_IN_WALLET,
   BagStatus.FETCHING_FINAL_ROUTE,
   BagStatus.PROCESSING_TRANSACTION,
 ]
+
+interface BagFooterProps {
+  setModalIsOpen: (open: boolean) => void
+  eventProperties: Record<string, unknown>
+}
 
 export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) => {
   const toggleWalletDrawer = useToggleAccountDrawer()
@@ -377,105 +379,78 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
     helperTextColor,
     handleClick,
     buttonColor,
-  } = useMemo(() => {
-    let handleClick: (() => void) | (() => Promise<void>) = fetchAssets
-    let buttonText = <Trans>Something went wrong</Trans>
-    let disabled = true
-    let warningText = undefined
-    let warningTextColor = theme.accentWarning
-    let helperText = undefined
-    let helperTextColor = theme.textSecondary
-    let buttonColor = theme.accentAction
-    let buttonTextColor = theme.accentTextLightPrimary
-
+  } = useMemo((): BuyButtonState => {
     if (connected && chainId !== SupportedChainId.MAINNET) {
-      handleClick = () => switchChain(connector, SupportedChainId.MAINNET)
-      buttonText = <Trans>Switch networks</Trans>
-      disabled = false
-      warningText = <Trans>Wrong network</Trans>
-    } else if (sufficientBalance === false) {
-      buttonText = <Trans>Pay</Trans>
-      disabled = true
-      warningText = <Trans>Insufficient funds</Trans>
-    } else if (bagStatus === BagStatus.WARNING) {
-      warningText = <Trans>Something went wrong. Please try again.</Trans>
-    } else if (!connected) {
-      handleClick = () => {
+      const handleClick = () => switchChain(connector, SupportedChainId.MAINNET)
+      return getBuyButtonStateData(BuyButtonStates.WALLET_NOT_CONNECTED, theme, handleClick)
+    }
+
+    if (sufficientBalance === false) {
+      return getBuyButtonStateData(BuyButtonStates.INSUFFICIENT_BALANCE, theme, handleClick)
+    }
+
+    if (bagStatus === BagStatus.WARNING) {
+      return getBuyButtonStateData(BuyButtonStates.ERROR, theme)
+    }
+
+    if (!connected) {
+      const handleClick = () => {
         toggleWalletDrawer()
         setBagExpanded({ bagExpanded: false })
       }
-      disabled = false
-      buttonText = <Trans>Connect wallet</Trans>
-    } else if (bagStatus === BagStatus.FETCHING_FINAL_ROUTE || bagStatus === BagStatus.CONFIRMING_IN_WALLET) {
-      disabled = true
-      buttonText = <Trans>Proceed in wallet</Trans>
-    } else if (bagStatus === BagStatus.PROCESSING_TRANSACTION) {
-      disabled = true
-      buttonText = <Trans>Transaction pending</Trans>
-    } else if (usingPayWithAnyToken && tradeState !== TradeState.VALID) {
-      disabled = true
-      buttonText = <Trans>Fetching Route</Trans>
+      return getBuyButtonStateData(BuyButtonStates.WALLET_NOT_CONNECTED, theme, handleClick)
+    }
 
+    if (bagStatus === BagStatus.FETCHING_FINAL_ROUTE || bagStatus === BagStatus.CONFIRMING_IN_WALLET) {
+      return getBuyButtonStateData(BuyButtonStates.IN_WALLET_CONFIRMATION, theme)
+    }
+
+    if (bagStatus === BagStatus.PROCESSING_TRANSACTION) {
+      return getBuyButtonStateData(BuyButtonStates.PROCESSING_TRANSACTION, theme)
+    }
+
+    if (usingPayWithAnyToken && tradeState !== TradeState.VALID) {
       if (tradeState === TradeState.INVALID) {
-        buttonText = <Trans>Pay</Trans>
+        return getBuyButtonStateData(BuyButtonStates.INVALID_TOKEN_ROUTE, theme)
       }
 
       if (tradeState === TradeState.NO_ROUTE_FOUND) {
-        buttonText = <Trans>Insufficient liquidity</Trans>
-        buttonColor = theme.backgroundInteractive
-        buttonTextColor = theme.textPrimary
-        helperText = <Trans>Insufficient pool liquidity to complete transaction</Trans>
+        return getBuyButtonStateData(BuyButtonStates.NO_TOKEN_ROUTE_FOUND, theme)
       }
-    } else if (allowance.state === AllowanceState.REQUIRED || loadingAllowance) {
-      handleClick = () => updateAllowance()
-      disabled = isAllowancePending || isApprovalLoading || loadingAllowance
+
+      return getBuyButtonStateData(BuyButtonStates.FETCHING_TOKEN_ROUTE, theme)
+    }
+
+    if (allowance.state === AllowanceState.REQUIRED || loadingAllowance) {
+      const handleClick = () => updateAllowance()
 
       if (loadingAllowance) {
-        buttonText = <Trans>Loading Allowance</Trans>
+        return getBuyButtonStateData(BuyButtonStates.LOADING_ALLOWANCE, theme, handleClick)
       } else if (isAllowancePending) {
-        buttonText = <Trans>Approve in your wallet</Trans>
+        return getBuyButtonStateData(BuyButtonStates.IN_WALLET_ALLOWANCE_APPROVAL, theme, handleClick)
       } else if (isApprovalLoading) {
-        buttonText = <Trans>Approval pending</Trans>
-      } else {
-        helperText = <Trans>An approval is needed to use this token. </Trans>
-        buttonText = <Trans>Approve</Trans>
+        return getBuyButtonStateData(BuyButtonStates.PROCESSING_APPROVAL, theme, handleClick)
       }
-    } else if (bagStatus === BagStatus.CONFIRM_QUOTE) {
-      disabled = false
-      warningTextColor = theme.accentAction
-      warningText = <Trans>Price updated</Trans>
-      buttonText = <Trans>Pay</Trans>
-    } else if (priceImpact && priceImpact.priceImpactSeverity.type === 'error') {
-      disabled = false
-      buttonColor = priceImpact.priceImpactSeverity.color
-      helperText = <Trans>Price impact warning</Trans>
-      helperTextColor = priceImpact.priceImpactSeverity.color
-      buttonText = <Trans>Pay Anyway</Trans>
-    } else if (sufficientBalance === true) {
-      disabled = false
-      buttonText = <Trans>Pay</Trans>
-      helperText = usingPayWithAnyToken ? <Trans>Refunds for unavailable items will be given in ETH</Trans> : undefined
+
+      return getBuyButtonStateData(BuyButtonStates.REQUIRE_APPROVAL, theme, handleClick)
     }
 
-    return {
-      buttonText,
-      buttonTextColor,
-      disabled,
-      warningText,
-      warningTextColor,
-      helperText,
-      helperTextColor,
-      handleClick,
-      buttonColor,
+    if (bagStatus === BagStatus.CONFIRM_QUOTE) {
+      return getBuyButtonStateData(BuyButtonStates.CONFIRM_UPDATED_PRICE, theme, fetchAssets)
     }
+
+    if (priceImpact && priceImpact.priceImpactSeverity.type === 'error') {
+      return getBuyButtonStateData(
+        BuyButtonStates.PRICE_IMPACT_HIGH,
+        theme,
+        fetchAssets,
+        usingPayWithAnyToken,
+        priceImpact
+      )
+    }
+
+    return getBuyButtonStateData(BuyButtonStates.PAY, theme, fetchAssets, usingPayWithAnyToken)
   }, [
-    fetchAssets,
-    theme.accentWarning,
-    theme.textSecondary,
-    theme.accentAction,
-    theme.accentTextLightPrimary,
-    theme.backgroundInteractive,
-    theme.textPrimary,
     connected,
     chainId,
     sufficientBalance,
@@ -485,6 +460,8 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
     allowance.state,
     loadingAllowance,
     priceImpact,
+    theme,
+    fetchAssets,
     connector,
     toggleWalletDrawer,
     setBagExpanded,
