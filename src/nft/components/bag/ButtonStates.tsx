@@ -143,40 +143,5 @@ export function getBuyButtonStateData(
     },
   }
 
-  switch (buyButtonState) {
-    case BuyButtonStates.NOT_SUPPORTED_CHAIN:
-      return buyButtonStateData[BuyButtonStates.NOT_SUPPORTED_CHAIN]
-    case BuyButtonStates.WALLET_NOT_CONNECTED:
-      return buyButtonStateData[BuyButtonStates.WALLET_NOT_CONNECTED]
-    case BuyButtonStates.INSUFFICIENT_BALANCE:
-      return buyButtonStateData[BuyButtonStates.INSUFFICIENT_BALANCE]
-    case BuyButtonStates.ERROR:
-      return buyButtonStateData[BuyButtonStates.ERROR]
-    case BuyButtonStates.IN_WALLET_CONFIRMATION:
-      return buyButtonStateData[BuyButtonStates.IN_WALLET_CONFIRMATION]
-    case BuyButtonStates.PROCESSING_TRANSACTION:
-      return buyButtonStateData[BuyButtonStates.PROCESSING_TRANSACTION]
-    case BuyButtonStates.FETCHING_TOKEN_ROUTE:
-      return buyButtonStateData[BuyButtonStates.FETCHING_TOKEN_ROUTE]
-    case BuyButtonStates.INVALID_TOKEN_ROUTE:
-      return buyButtonStateData[BuyButtonStates.INVALID_TOKEN_ROUTE]
-    case BuyButtonStates.NO_TOKEN_ROUTE_FOUND:
-      return buyButtonStateData[BuyButtonStates.NO_TOKEN_ROUTE_FOUND]
-    case BuyButtonStates.LOADING_ALLOWANCE:
-      return buyButtonStateData[BuyButtonStates.LOADING_ALLOWANCE]
-    case BuyButtonStates.IN_WALLET_ALLOWANCE_APPROVAL:
-      return buyButtonStateData[BuyButtonStates.IN_WALLET_ALLOWANCE_APPROVAL]
-    case BuyButtonStates.PROCESSING_APPROVAL:
-      return buyButtonStateData[BuyButtonStates.PROCESSING_APPROVAL]
-    case BuyButtonStates.REQUIRE_APPROVAL:
-      return buyButtonStateData[BuyButtonStates.REQUIRE_APPROVAL]
-    case BuyButtonStates.CONFIRM_UPDATED_PRICE:
-      return buyButtonStateData[BuyButtonStates.CONFIRM_UPDATED_PRICE]
-    case BuyButtonStates.PRICE_IMPACT_HIGH:
-      return buyButtonStateData[BuyButtonStates.PRICE_IMPACT_HIGH]
-    case BuyButtonStates.PAY:
-      return buyButtonStateData[BuyButtonStates.PAY]
-    default:
-      return defaultBuyButtonState
-  }
+  return buyButtonStateData[buyButtonState]
 }
