@@ -19,16 +19,20 @@ function runCommand(command) {
     // Log when the childProcess starts
     console.log(`[${command}] initiated`)
 
-    // Uncomment to see output of each yarn
-    if (verbose) {
+    // verbose mode enables logging to stdout of all command data.
+    // This can get pretty noisy.
+    if (isVerbose) {
       childProcess.stdout.on('data', (data) => {
-        data.split('\n').map((line) => `[${command}] ${line}`).forEach(console.log)
+        data
+          .split('\n')
+          .map((line) => `[${command}] ${line}`)
+          .forEach(console.log)
       })
     }
 
     // Log errors
     childProcess.stderr.on('data', (data) => {
-      console.error(`Error during execution of yarn ${command}:\n${data}`)
+      console.error(`Error during execution of [${command}]:\n${data}`)
     })
 
     // Log when and how the yarn exited
@@ -36,15 +40,15 @@ function runCommand(command) {
       if (code !== 0) {
         return reject(new Error(`[${command}] exited with non-zero code: ${code}`))
       }
-      console.timeLog('prepare-commands', `yarn ${command} completed`)
+      console.timeLog('prepare', `[${command}] completed`)
       resolve()
     })
   })
 }
 
 console.time('prepare')
-Promise.all(commands.map(runCommand))
+Promise.all(COMMANDS.map(runCommand))
   .then(() => {
-    console.timeEnd('prepare-commands')
+    console.timeEnd('prepare')
   })
   .catch(console.error)
