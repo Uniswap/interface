@@ -72,10 +72,10 @@ interface PendingModalContentProps {
   currentStep: PendingConfirmModalState
   approvalCurrency?: Currency
   hideStepIndicators?: boolean
-  txHash: string | undefined
+  txHash?: string
 }
 
-function CurrencyLoader({ currency }: { currency: Currency | undefined }) {
+function CurrencyLoader({ currency }: { currency?: Currency }) {
   const theme = useTheme()
   return (
     <LogoContainer>
@@ -104,7 +104,7 @@ function getContent(
       }
     case ConfirmModalState.PERMITTING:
       return {
-        title: t`Approve ${approvalCurrency?.symbol}`,
+        title: t`Approve ${approvalCurrency?.symbol ?? 'token'}`,
         subtitle: t`Proceed in wallet`,
         label: t`Why are approvals required?`,
         tooltipText: t`This provides the Uniswap protocol access to your token for trading. For security, this will expire after 30 days.`,
