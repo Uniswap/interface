@@ -177,8 +177,6 @@ export function Swap({
   disableTokenInputs?: boolean
 }) {
   const { account, chainId: connectedChainId, connector } = useWeb3React()
-  const [newSwapQuoteNeedsLogging, setNewSwapQuoteNeedsLogging] = useState(true)
-  const [fetchingSwapQuoteStartTime, setFetchingSwapQuoteStartTime] = useState<Date | undefined>()
   const trace = useTrace()
 
   // token warning stuff
@@ -417,10 +415,20 @@ export function Swap({
     if (stablecoinPriceImpact && !confirmPriceImpactWithoutFee(stablecoinPriceImpact)) {
       return
     }
-    setSwapState({ attemptingTxn: true, tradeToConfirm, showConfirm, swapErrorMessage: undefined, txHash: undefined })
+    setSwapState((currentState) => ({
+      ...currentState,
+      attemptingTxn: true,
+      swapErrorMessage: undefined,
+      txHash: undefined,
+    }))
     swapCallback()
       .then((hash) => {
-        setSwapState({ attemptingTxn: false, tradeToConfirm, showConfirm, swapErrorMessage: undefined, txHash: hash })
+        setSwapState((currentState) => ({
+          ...currentState,
+          attemptingTxn: false,
+          swapErrorMessage: undefined,
+          txHash: hash,
+        }))
         sendEvent({
           category: 'Swap',
           action: 'transaction hash',
@@ -440,19 +448,16 @@ export function Swap({
         })
       })
       .catch((error) => {
-        setSwapState({
+        setSwapState((currentState) => ({
+          ...currentState,
           attemptingTxn: false,
-          tradeToConfirm,
-          showConfirm,
           swapErrorMessage: error.message,
           txHash: undefined,
-        })
+        }))
       })
   }, [
     swapCallback,
     stablecoinPriceImpact,
-    tradeToConfirm,
-    showConfirm,
     recipient,
     recipientAddress,
     account,
@@ -471,16 +476,16 @@ export function Swap({
   }, [stablecoinPriceImpact, trade])
 
   const handleConfirmDismiss = useCallback(() => {
-    setSwapState({ showConfirm: false, tradeToConfirm, attemptingTxn, swapErrorMessage, txHash })
+    setSwapState((currentState) => ({ ...currentState, showConfirm: false }))
     // if there was a tx hash, we want to clear the input
     if (txHash) {
       onUserInput(Field.INPUT, '')
     }
-  }, [attemptingTxn, onUserInput, swapErrorMessage, tradeToConfirm, txHash])
+  }, [onUserInput, txHash])
 
   const handleAcceptChanges = useCallback(() => {
-    setSwapState({ tradeToConfirm: trade, swapErrorMessage, txHash, attemptingTxn, showConfirm })
-  }, [attemptingTxn, showConfirm, swapErrorMessage, trade, txHash])
+    setSwapState((currentState) => ({ ...currentState, tradeToConfirm: trade }))
+  }, [trade])
 
   const handleInputSelect = useCallback(
     (inputCurrency: Currency) => {
@@ -519,42 +524,16 @@ export function Swap({
   const priceImpactTooHigh = priceImpactSeverity > 3 && !isExpertMode
   const showPriceImpactWarning = largerPriceImpact && priceImpactSeverity > 3
 
-  // Handle time based logging events and event properties.
+  const prevTrade = usePrevious(trade)
   useEffect(() => {
-    const now = new Date()
-    // If a trade exists, and we need to log the receipt of this new swap quote:
-    if (newSwapQuoteNeedsLogging && !!trade) {
-      // Set the current datetime as the time of receipt of latest swap quote.
-      setSwapQuoteReceivedDate(now)
-      // Log swap quote.
-      sendAnalyticsEvent(SwapEventName.SWAP_QUOTE_RECEIVED, {
-        ...formatSwapQuoteReceivedEventProperties(
-          trade,
-          trade.gasUseEstimateUSD ?? undefined,
-          fetchingSwapQuoteStartTime
-        ),
-        ...trace,
-      })
-      // Latest swap quote has just been logged, so we don't need to log the current trade anymore
-      // unless user inputs change again and a new trade is in the process of being generated.
-      setNewSwapQuoteNeedsLogging(false)
-      // New quote is not being fetched, so set start time of quote fetch to undefined.
-      setFetchingSwapQuoteStartTime(undefined)
-    }
-    // If another swap quote is being loaded based on changed user inputs:
-    if (routeIsLoading) {
-      setNewSwapQuoteNeedsLogging(true)
-      if (!fetchingSwapQuoteStartTime) setFetchingSwapQuoteStartTime(now)
-    }
-  }, [
-    newSwapQuoteNeedsLogging,
-    routeIsSyncing,
-    routeIsLoading,
-    fetchingSwapQuoteStartTime,
-    trade,
-    setSwapQuoteReceivedDate,
-    trace,
-  ])
+    if (!trade || prevTrade === trade) return // no new swap quote to log
+
+    setSwapQuoteReceivedDate(new Date())
+    sendAnalyticsEvent(SwapEventName.SWAP_QUOTE_RECEIVED, {
+      ...formatSwapQuoteReceivedEventProperties(trade, trade.gasUseEstimateUSD ?? undefined),
+      ...trace,
+    })
+  }, [prevTrade, trade, trace])
 
   const showDetailsDropdown = Boolean(
     !showWrap && userHasSpecifiedInputOutput && (trade || routeIsLoading || routeIsSyncing)
