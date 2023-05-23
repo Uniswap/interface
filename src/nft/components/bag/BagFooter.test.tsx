@@ -1,8 +1,9 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { parseEther } from '@ethersproject/units'
-import { Currency, Percent, SupportedChainId } from '@uniswap/sdk-core'
+import { Percent, SupportedChainId } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { nativeOnChain } from 'constants/tokens'
+import { useNftUniversalRouterAddress } from 'graphql/data/nft/NftUniversalRouterAddress'
 import { useCurrency } from 'hooks/Tokens'
 import { useTokenBalance } from 'lib/hooks/useCurrencyBalance'
 import { useBag, useWalletBalance } from 'nft/hooks'
@@ -12,6 +13,7 @@ import usePayWithAnyTokenSwap from 'nft/hooks/usePayWithAnyTokenSwap'
 import { useTokenInput } from 'nft/hooks/useTokenInput'
 import { BagStatus } from 'nft/types'
 import { TradeState } from 'state/routing/types'
+import { TEST_TOKEN_1, TEST_TRADE_EXACT_INPUT, toCurrencyAmount } from 'test-utils/constants'
 import { mocked } from 'test-utils/mocked'
 import { render, screen } from 'test-utils/render'
 
@@ -25,12 +27,7 @@ jest.mock('lib/hooks/useCurrencyBalance')
 jest.mock('hooks/Tokens')
 jest.mock('nft/hooks/usePayWithAnyTokenSwap')
 jest.mock('nft/hooks/useDerivedPayWithAnyTokenSwapInfo')
-jest.mock(
-  'components/Logo/CurrencyLogo',
-  () =>
-    ({ currency }: { currency: Currency }) =>
-      `CurrencyLogo currency=${currency.symbol}`
-)
+jest.mock('graphql/data/nft/NftUniversalRouterAddress')
 
 const renderBagFooter = () => {
   render(<BagFooter setModalIsOpen={() => undefined} eventProperties={{}} />)
@@ -46,6 +43,13 @@ describe('BagFooter.tsx', () => {
       account: '0x52270d8234b864dcAC9947f510CE9275A8a116Db',
     } as ReturnType<typeof useWeb3React>)
 
+    mocked(useBag).mockReturnValue({
+      bagStatus: BagStatus.ADDING_TO_BAG,
+      setBagStatus: () => undefined,
+      setBagExpanded: () => undefined,
+      isLocked: false,
+      itemsInBag: [],
+    }) as ReturnType<typeof useBag>
     mocked(useBagTotalEthPrice).mockReturnValue(BigNumber.from(12))
     mocked(useWalletBalance).mockReturnValue({
       address: '',
@@ -54,13 +58,10 @@ describe('BagFooter.tsx', () => {
       provider: undefined,
     })
 
-    mocked(useBag).mockReturnValue({
-      bagStatus: BagStatus.ADDING_TO_BAG,
-      setBagStatus: () => undefined,
-      setBagExpanded: () => undefined,
-      isLocked: false,
-      itemsInBag: [],
-    }) as ReturnType<typeof useBag>
+    mocked(useNftUniversalRouterAddress).mockReturnValue({
+      universalRouterAddress: undefined,
+      universalRouterAddressIsLoading: false,
+    })
 
     mocked(useDerivedPayWithAnyTokenSwapInfo).mockReturnValue({
       state: TradeState.INVALID,
@@ -78,6 +79,15 @@ describe('BagFooter.tsx', () => {
       setTokenTradeInput: () => undefined,
     })
     mocked(useTokenBalance).mockReturnValue(undefined)
+  })
+
+  it('pay', () => {
+    renderBagFooter()
+    const buyButton = getBuyButton()
+
+    expect(buyButton).toBeInTheDocument()
+    expect(buyButton.textContent).toBe('Pay')
+    expect(buyButton).not.toBeDisabled()
   })
 
   it('wallet not connected', () => {
@@ -186,5 +196,111 @@ describe('BagFooter.tsx', () => {
 
     expect(buyButton.textContent).toBe('Transaction pending')
     expect(buyButton).toBeDisabled()
+  })
+
+  it('insufficient funds for token trade', () => {
+    mocked(useTokenInput).mockReturnValue({
+      inputCurrency: TEST_TOKEN_1,
+      setInputCurrency: () => undefined,
+      clearInputCurrency: () => undefined,
+      tokenTradeInput: undefined,
+      setTokenTradeInput: () => undefined,
+    })
+    mocked(useTokenBalance).mockReturnValue(toCurrencyAmount(TEST_TOKEN_1, 20))
+    mocked(useDerivedPayWithAnyTokenSwapInfo).mockReturnValue({
+      state: TradeState.INVALID,
+      trade: TEST_TRADE_EXACT_INPUT,
+      maximumAmountIn: undefined,
+      allowedSlippage: new Percent(10, 100),
+    })
+
+    renderBagFooter()
+    const buyButton = getBuyButton()
+    const buyButtonWarning = getBuyButtonWarning()
+
+    expect(buyButtonWarning.textContent).toBe('Insufficient funds')
+    expect(buyButton).toBeDisabled()
+  })
+
+  it('invalid token trade', () => {
+    mocked(useTokenInput).mockReturnValue({
+      inputCurrency: TEST_TOKEN_1,
+      setInputCurrency: () => undefined,
+      clearInputCurrency: () => undefined,
+      tokenTradeInput: undefined,
+      setTokenTradeInput: () => undefined,
+    })
+    mocked(useTokenBalance).mockReturnValue(toCurrencyAmount(TEST_TOKEN_1, 1000))
+    mocked(useDerivedPayWithAnyTokenSwapInfo).mockReturnValue({
+      state: TradeState.INVALID,
+      trade: TEST_TRADE_EXACT_INPUT,
+      maximumAmountIn: undefined,
+      allowedSlippage: new Percent(10, 100),
+    })
+
+    renderBagFooter()
+    const buyButton = getBuyButton()
+    expect(buyButton.textContent).toBe('Pay')
+    expect(buyButton).toBeDisabled()
+  })
+
+  it('no token route found', () => {
+    mocked(useTokenInput).mockReturnValue({
+      inputCurrency: TEST_TOKEN_1,
+      setInputCurrency: () => undefined,
+      clearInputCurrency: () => undefined,
+      tokenTradeInput: undefined,
+      setTokenTradeInput: () => undefined,
+    })
+    mocked(useTokenBalance).mockReturnValue(toCurrencyAmount(TEST_TOKEN_1, 1000))
+    mocked(useDerivedPayWithAnyTokenSwapInfo).mockReturnValue({
+      state: TradeState.NO_ROUTE_FOUND,
+      trade: TEST_TRADE_EXACT_INPUT,
+      maximumAmountIn: undefined,
+      allowedSlippage: new Percent(10, 100),
+    })
+
+    renderBagFooter()
+    const buyButton = getBuyButton()
+    expect(buyButton.textContent).toBe('Insufficient liquidity')
+    expect(buyButton).toBeDisabled()
+  })
+
+  it('fetching token route', () => {
+    mocked(useTokenInput).mockReturnValue({
+      inputCurrency: TEST_TOKEN_1,
+      setInputCurrency: () => undefined,
+      clearInputCurrency: () => undefined,
+      tokenTradeInput: undefined,
+      setTokenTradeInput: () => undefined,
+    })
+    mocked(useTokenBalance).mockReturnValue(toCurrencyAmount(TEST_TOKEN_1, 1000))
+    mocked(useDerivedPayWithAnyTokenSwapInfo).mockReturnValue({
+      state: TradeState.LOADING,
+      trade: TEST_TRADE_EXACT_INPUT,
+      maximumAmountIn: undefined,
+      allowedSlippage: new Percent(10, 100),
+    })
+
+    renderBagFooter()
+    const buyButton = getBuyButton()
+    expect(buyButton.textContent).toBe('Fetching Route')
+    expect(buyButton).toBeDisabled()
+  })
+
+  it('confirm price change', () => {
+    mocked(useBag).mockReturnValue({
+      bagStatus: BagStatus.CONFIRM_QUOTE,
+      setBagStatus: () => undefined,
+      setBagExpanded: () => undefined,
+      isLocked: false,
+      itemsInBag: [],
+    }) as ReturnType<typeof useBag>
+
+    renderBagFooter()
+    const buyButton = getBuyButton()
+
+    expect(buyButton.textContent).toBe('Pay')
+    expect(buyButton).not.toBeDisabled()
   })
 })
