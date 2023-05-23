@@ -7,6 +7,7 @@ import { INTERNAL_ROUTER_PREFERENCE_PRICE } from 'state/routing/slice'
 import { useRoutingAPITrade } from 'state/routing/useRoutingAPITrade'
 
 import { CUSD_CELO, DAI_OPTIMISM, USDC_ARBITRUM, USDC_MAINNET, USDC_POLYGON, USDT_BSC } from '../constants/tokens'
+import useDebounce from './useDebounce'
 
 // Stablecoin amounts used when calculating spot price for a given currency.
 // The amount is large enough to filter low liquidity pairs.
@@ -29,23 +30,26 @@ export default function useStablecoinPrice(currency?: Currency): Price<Currency,
   const stablecoin = amountOut?.currency
 
   const { trade } = useRoutingAPITrade(TradeType.EXACT_OUTPUT, amountOut, currency, INTERNAL_ROUTER_PREFERENCE_PRICE)
-  const price = useMemo(() => {
-    if (!currency || !stablecoin) {
+  const price = useDebounce(
+    useMemo(() => {
+      if (!currency || !stablecoin) {
+        return undefined
+      }
+
+      // handle usdc
+      if (currency?.wrapped.equals(stablecoin)) {
+        return new Price(stablecoin, stablecoin, '1', '1')
+      }
+
+      if (trade) {
+        const { numerator, denominator } = trade.routes[0].midPrice
+        return new Price(currency, stablecoin, denominator, numerator)
+      }
+
       return undefined
-    }
-
-    // handle usdc
-    if (currency?.wrapped.equals(stablecoin)) {
-      return new Price(stablecoin, stablecoin, '1', '1')
-    }
-
-    if (trade) {
-      const { numerator, denominator } = trade.routes[0].midPrice
-      return new Price(currency, stablecoin, denominator, numerator)
-    }
-
-    return undefined
-  }, [currency, stablecoin, trade])
+    }, [currency, stablecoin, trade]),
+    200
+  )
 
   const lastPrice = useRef(price)
   if (
