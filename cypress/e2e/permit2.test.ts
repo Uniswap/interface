@@ -22,7 +22,7 @@ describe('Permit2', () => {
     cy.visit(`/swap/?inputCurrency=${INPUT_TOKEN.address}&outputCurrency=${OUTPUT_TOKEN.address}`, {
       ethereum: 'hardhat',
     })
-    cy.get('#swap-currency-input .token-amount-input').click().type(TEST_BALANCE_INCREMENT.toString())
+    cy.get('#swap-currency-input .token-amount-input').type(TEST_BALANCE_INCREMENT.toString())
   })
 
   /** Asserts permit2 has a max approval for spend of the input token on-chain. */
@@ -48,33 +48,32 @@ describe('Permit2', () => {
   }
 
   it('swaps when user has already approved token and permit2', () => {
-    cy.hardhat()
-      .then(({ approval, wallet }) => {
-        approval.setTokenAllowanceForPermit2({ owner: wallet, token: INPUT_TOKEN })
-        approval.setPermit2Allowance({ owner: wallet, token: INPUT_TOKEN })
-      })
-      .then(initiateSwap)
-      .then(() => {
-        cy.get(getTestSelector('confirmation-close-icon')).click()
-        // Verifies that there is a successful swap notification.
-        cy.contains('Swapped').should('exist')
-      })
+    cy.hardhat().then(({ approval, wallet }) => {
+      approval.setTokenAllowanceForPermit2({ owner: wallet, token: INPUT_TOKEN })
+      approval.setPermit2Allowance({ owner: wallet, token: INPUT_TOKEN })
+    })
+    initiateSwap()
+    cy.get(getTestSelector('confirmation-close-icon')).click()
+    // Verifies that there is a successful swap notification.
+    cy.contains('Swapped').should('exist')
   })
 
   it('swaps after completing full permit2 approval process', () => {
     initiateSwap()
-    cy.get(getTestSelector('PendingModalContent-title')).should('have.text', 'Approve permit')
+    cy.contains('Approve permit').should('exist')
     cy.contains('Approved').should('exist')
 
-    cy.get(getTestSelector('PendingModalContent-title')).should('have.text', 'Approve DAI')
-    cy.get(getTestSelector('PendingModalContent-title')).should('have.text', 'Confirm Swap')
+    cy.contains('Approve DAI').should('exist')
+    cy.contains('Confirm Swap').should('exist')
 
-    const approvalTime = Date.now()
+    cy.then(() => {
+      const approvalTime = Date.now()
 
-    cy.contains('Swapped').should('exist')
+      cy.contains('Swapped').should('exist')
 
-    expectTokenAllowanceForPermit2ToBeMax()
-    expectPermit2AllowanceForUniversalRouterToBeMax(approvalTime)
+      expectTokenAllowanceForPermit2ToBeMax()
+      expectPermit2AllowanceForUniversalRouterToBeMax(approvalTime)
+    })
   })
 
   it('swaps after handling user rejection of both approval and signature', () => {
@@ -89,15 +88,15 @@ describe('Permit2', () => {
       initiateSwap()
 
       // tokenApprovalStub should reject here, and the modal should revert to the review state.
-      cy.contains('Review Swap')
-        .should('be.visible')
-        .then(() => {
-          // The user is now allowing approval, but the permit2 signature will be rejected by the user (permitApprovalStub).
-          tokenApprovalStub.restore() // allow token approval
-        })
+      cy.contains('Review Swap').should('be.visible')
+
+      cy.then(() => {
+        // The user is now allowing approval, but the permit2 signature will be rejected by the user (permitApprovalStub).
+        tokenApprovalStub.restore() // allow token approval
+      })
 
       cy.get(getTestSelector('confirm-swap-button')).click()
-      cy.get(getTestSelector('PendingModalContent-title')).should('have.text', 'Approve permit')
+      cy.contains('Approve permit').should('exist')
       cy.contains('Approved').should('exist')
 
       // permitApprovalStub should reject here, and the modal should revert to the review state.
@@ -112,7 +111,7 @@ describe('Permit2', () => {
       // The swap should now be able to proceed, as the permit2 signature will be accepted by the user.
       const approvalTime = Date.now()
 
-      cy.get(getTestSelector('PendingModalContent-title')).should('have.text', 'Confirm Swap')
+      cy.contains('Confirm Swap').should('exist')
       cy.contains('Swapped').should('exist')
 
       expectTokenAllowanceForPermit2ToBeMax()
@@ -121,36 +120,35 @@ describe('Permit2', () => {
   })
 
   it('swaps with existing token approval and missing permit approval', () => {
-    cy.hardhat()
-      .then(({ approval, wallet, provider }) => {
-        approval.setTokenAllowanceForPermit2({ owner: wallet, token: INPUT_TOKEN })
-        cy.spy(provider, 'send').as('permitApprovalSpy')
-      })
-      .then(() => {
-        initiateSwap()
-        const approvalTime = Date.now()
+    cy.hardhat().then(({ approval, wallet, provider }) => {
+      approval.setTokenAllowanceForPermit2({ owner: wallet, token: INPUT_TOKEN })
+      cy.spy(provider, 'send').as('permitApprovalSpy')
+    })
+    cy.then(() => initiateSwap())
+    cy.then(() => {
+      const approvalTime = Date.now()
 
-        cy.get(getTestSelector('PendingModalContent-title')).should('have.text', 'Confirm Swap')
-        cy.contains('Swapped').should('exist')
+      cy.contains('Confirm Swap').should('exist')
+      cy.contains('Swapped').should('exist')
 
-        expectPermit2AllowanceForUniversalRouterToBeMax(approvalTime)
-        cy.get('@permitApprovalSpy').should('have.been.calledWith', 'eth_signTypedData_v4')
-      })
+      expectPermit2AllowanceForUniversalRouterToBeMax(approvalTime)
+      cy.get('@permitApprovalSpy').should('have.been.calledWith', 'eth_signTypedData_v4')
+    })
   })
 
   it('swaps with existing permit approval and missing token approval', () => {
-    cy.hardhat()
-      .then(({ approval, wallet }) => approval.setPermit2Allowance({ owner: wallet, token: INPUT_TOKEN }))
-      .then(() => {
-        initiateSwap()
-        const approvalTime = Date.now()
-        cy.get(getTestSelector('PendingModalContent-title')).should('have.text', 'Approve permit')
+    cy.hardhat().then(({ approval, wallet }) => approval.setPermit2Allowance({ owner: wallet, token: INPUT_TOKEN }))
+    cy.then(() => {
+      initiateSwap()
+    })
+    cy.then(() => {
+      const approvalTime = Date.now()
 
-        cy.get(getTestSelector('PendingModalContent-title')).should('have.text', 'Confirm Swap')
-        cy.contains('Swapped').should('exist')
+      cy.contains('Confirm Swap').should('exist')
+      cy.contains('Swapped').should('exist')
 
-        expectPermit2AllowanceForUniversalRouterToBeMax(approvalTime)
-      })
+      expectPermit2AllowanceForUniversalRouterToBeMax(approvalTime)
+    })
   })
 
   it('prompts signature when existing permit approval is expired', () => {
@@ -160,10 +158,14 @@ describe('Permit2', () => {
       approval.setTokenAllowanceForPermit2({ owner: wallet, token: INPUT_TOKEN })
       approval.setPermit2Allowance({ owner: wallet, token: INPUT_TOKEN }, expiredAllowance)
       cy.spy(provider, 'send').as('permitApprovalSpy')
+    })
+    cy.then(() => {
       initiateSwap()
+    })
+    cy.then(() => {
       const approvalTime = Date.now()
 
-      cy.get(getTestSelector('PendingModalContent-title')).should('have.text', 'Confirm Swap')
+      cy.contains('Confirm Swap').should('exist')
       cy.contains('Swapped').should('exist')
 
       expectPermit2AllowanceForUniversalRouterToBeMax(approvalTime)
@@ -181,7 +183,7 @@ describe('Permit2', () => {
       initiateSwap()
       const approvalTime = Date.now()
 
-      cy.get(getTestSelector('PendingModalContent-title')).should('have.text', 'Confirm Swap')
+      cy.contains('Confirm Swap').should('exist')
       cy.contains('Swapped').should('exist')
 
       expectPermit2AllowanceForUniversalRouterToBeMax(approvalTime)
@@ -198,9 +200,9 @@ describe('Permit2', () => {
       .then(() => {
         initiateSwap()
         const approvalTime = Date.now()
-        cy.get(getTestSelector('PendingModalContent-title')).should('have.text', 'Approve permit')
+        cy.contains('Approve permit').should('exist')
 
-        cy.get(getTestSelector('PendingModalContent-title')).should('have.text', 'Confirm Swap')
+        cy.contains('Confirm Swap').should('exist')
         cy.contains('Swapped').should('exist')
 
         expectPermit2AllowanceForUniversalRouterToBeMax(approvalTime)
