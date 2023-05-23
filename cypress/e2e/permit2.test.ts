@@ -64,10 +64,10 @@ describe('Permit2', () => {
 
   it('swaps after completing full permit2 approval process', () => {
     initiateSwap()
-    cy.get(getTestSelector('PendingModalContent-title')).should('have.text', 'Approve permit')
+    cy.get(getTestSelector('PendingModalContent-title')).should('have.text', 'Allow trading DAI on Uniswap')
     cy.contains('Approved').should('exist')
 
-    cy.get(getTestSelector('PendingModalContent-title')).should('have.text', 'Approve DAI')
+    cy.get(getTestSelector('PendingModalContent-title')).should('have.text', 'Unlock DAI for swapping')
     cy.get(getTestSelector('PendingModalContent-title')).should('have.text', 'Confirm Swap')
 
     const approvalTime = Date.now()
@@ -98,7 +98,7 @@ describe('Permit2', () => {
         })
 
       cy.get(getTestSelector('confirm-swap-button')).click()
-      cy.get(getTestSelector('PendingModalContent-title')).should('have.text', 'Approve permit')
+      cy.get(getTestSelector('PendingModalContent-title')).should('have.text', 'Allow trading DAI on Uniswap')
       cy.contains('Approved').should('exist')
 
       // permitApprovalStub should reject here, and the modal should revert to the review state.
@@ -145,7 +145,7 @@ describe('Permit2', () => {
       .then(() => {
         initiateSwap()
         const approvalTime = Date.now()
-        cy.get(getTestSelector('PendingModalContent-title')).should('have.text', 'Approve permit')
+        cy.get(getTestSelector('PendingModalContent-title')).should('have.text', 'Allow trading DAI on Uniswap')
 
         cy.get(getTestSelector('PendingModalContent-title')).should('have.text', 'Confirm Swap')
         cy.contains('Swapped').should('exist')
@@ -199,7 +199,7 @@ describe('Permit2', () => {
       .then(() => {
         initiateSwap()
         const approvalTime = Date.now()
-        cy.get(getTestSelector('PendingModalContent-title')).should('have.text', 'Approve permit')
+        cy.get(getTestSelector('PendingModalContent-title')).should('have.text', 'Allow trading DAI on Uniswap')
 
         cy.get(getTestSelector('PendingModalContent-title')).should('have.text', 'Confirm Swap')
         cy.contains('Swapped').should('exist')
