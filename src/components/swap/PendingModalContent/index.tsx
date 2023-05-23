@@ -200,19 +200,29 @@ export function PendingModalContent({
   return (
     <PendingModalContainer gap="lg">
       <LogoContainer>
+        {/* Shown during the first step, and fades out afterwards. */}
         <PaperIcon visible={currentStep === ConfirmModalState.APPROVING_TOKEN} />
+        {/* Shown during the first step as a small badge. */}
+        {/* Scales up once we transition from first to second step. */}
+        {/* Fades out after the second step. */}
         <CurrencyLoader
           visible={currentStep !== ConfirmModalState.PENDING_CONFIRMATION}
           currency={trade?.inputAmount.currency}
           asBadge={currentStep === ConfirmModalState.APPROVING_TOKEN}
         />
-        {currentStep === ConfirmModalState.PENDING_CONFIRMATION &&
-        // On mainnet, we show the success icon once the tx is sent, since it takes longer to confirm than on L2s.
-        (swapConfirmed || (swapPending && chainId === SupportedChainId.MAINNET)) ? (
-          <AnimatedEntranceConfirmationIcon />
-        ) : swapPending || tokenApprovalPending ? (
-          <LoadingIndicatorOverlay />
-        ) : null}
+        {/* Shown only during the third step under "success" conditions, and scales in. */}
+        {/* On mainnet, we show the success icon once the tx is sent, since it takes longer to confirm than on L2s. */}
+        <AnimatedEntranceConfirmationIcon
+          visible={
+            currentStep === ConfirmModalState.PENDING_CONFIRMATION &&
+            (swapConfirmed || (swapPending && chainId === SupportedChainId.MAINNET))
+          }
+        />
+        {/* Scales in for the first step if the approval is pending onchain confirmation. */}
+        {/* Scales in for the third step if the swap is pending user signature or onchain confirmation. */}
+        <LoadingIndicatorOverlay
+          visible={(currentStep === ConfirmModalState.PENDING_CONFIRMATION && !swapConfirmed) || tokenApprovalPending}
+        />
       </LogoContainer>
       <HeaderContainer gap="md" $disabled={tokenApprovalPending || swapPending}>
         <AnimationWrapper>
