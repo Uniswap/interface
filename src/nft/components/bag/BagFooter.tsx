@@ -40,7 +40,7 @@ import { ThemedText } from 'theme'
 import { switchChain } from 'utils/switchChain'
 import { shallow } from 'zustand/shallow'
 
-import { BuyButtonState, BuyButtonStates, getBuyButtonStateData } from './ButtonStates'
+import { BuyButtonStateData, BuyButtonStates, getBuyButtonStateData } from './ButtonStates'
 
 const FooterContainer = styled.div`
   padding: 0px 12px;
@@ -379,10 +379,10 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
     helperTextColor,
     handleClick,
     buttonColor,
-  } = useMemo((): BuyButtonState => {
+  } = useMemo((): BuyButtonStateData => {
     if (connected && chainId !== SupportedChainId.MAINNET) {
       const handleClick = () => switchChain(connector, SupportedChainId.MAINNET)
-      return getBuyButtonStateData(BuyButtonStates.WALLET_NOT_CONNECTED, theme, handleClick)
+      return getBuyButtonStateData(BuyButtonStates.NOT_SUPPORTED_CHAIN, theme, handleClick)
     }
 
     if (sufficientBalance === false) {

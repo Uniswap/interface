@@ -22,7 +22,7 @@ export enum BuyButtonStates {
   PAY,
 }
 
-export interface BuyButtonState {
+export interface BuyButtonStateData {
   handleClick: (() => void) | (() => Promise<void>)
   buttonText: ReactNode
   disabled: boolean
@@ -40,8 +40,8 @@ export function getBuyButtonStateData(
   handleClickOverride?: (() => void) | (() => Promise<void>),
   usingPayWithAnyToken?: boolean,
   priceImpact?: PriceImpact
-): BuyButtonState {
-  const defaultBuyButtonState: BuyButtonState = {
+): BuyButtonStateData {
+  const defaultBuyButtonState: BuyButtonStateData = {
     handleClick: () => undefined,
     buttonText: <Trans>Something went wrong</Trans>,
     disabled: true,
@@ -53,7 +53,7 @@ export function getBuyButtonStateData(
     buttonTextColor: theme.accentTextLightPrimary,
   }
 
-  const buyButtonStateData: Record<BuyButtonStates, BuyButtonState> = {
+  const buyButtonStateData: Record<BuyButtonStates, BuyButtonStateData> = {
     [BuyButtonStates.WALLET_NOT_CONNECTED]: {
       ...defaultBuyButtonState,
       handleClick: handleClickOverride ?? (() => undefined),
