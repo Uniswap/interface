@@ -93,6 +93,7 @@ function ConfirmedIcon({ className }: { className?: string }) {
   const theme = useTheme()
   return (
     <svg
+      data-testid="confirmed-icon"
       width="54"
       height="54"
       viewBox="0 0 54 54"
