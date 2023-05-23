@@ -417,10 +417,20 @@ export function Swap({
     if (stablecoinPriceImpact && !confirmPriceImpactWithoutFee(stablecoinPriceImpact)) {
       return
     }
-    setSwapState({ attemptingTxn: true, tradeToConfirm, showConfirm, swapErrorMessage: undefined, txHash: undefined })
+    setSwapState((currentState) => ({
+      ...currentState,
+      attemptingTxn: true,
+      swapErrorMessage: undefined,
+      txHash: undefined,
+    }))
     swapCallback()
       .then((hash) => {
-        setSwapState({ attemptingTxn: false, tradeToConfirm, showConfirm, swapErrorMessage: undefined, txHash: hash })
+        setSwapState((currentState) => ({
+          ...currentState,
+          attemptingTxn: false,
+          swapErrorMessage: undefined,
+          txHash: hash,
+        }))
         sendEvent({
           category: 'Swap',
           action: 'transaction hash',
@@ -440,19 +450,16 @@ export function Swap({
         })
       })
       .catch((error) => {
-        setSwapState({
+        setSwapState((currentState) => ({
+          ...currentState,
           attemptingTxn: false,
-          tradeToConfirm,
-          showConfirm,
           swapErrorMessage: error.message,
           txHash: undefined,
-        })
+        }))
       })
   }, [
     swapCallback,
     stablecoinPriceImpact,
-    tradeToConfirm,
-    showConfirm,
     recipient,
     recipientAddress,
     account,
@@ -471,16 +478,16 @@ export function Swap({
   }, [stablecoinPriceImpact, trade])
 
   const handleConfirmDismiss = useCallback(() => {
-    setSwapState({ showConfirm: false, tradeToConfirm, attemptingTxn, swapErrorMessage, txHash })
+    setSwapState((currentState) => ({ ...currentState, showConfirm: false }))
     // if there was a tx hash, we want to clear the input
     if (txHash) {
       onUserInput(Field.INPUT, '')
     }
-  }, [attemptingTxn, onUserInput, swapErrorMessage, tradeToConfirm, txHash])
+  }, [onUserInput, txHash])
 
   const handleAcceptChanges = useCallback(() => {
-    setSwapState({ tradeToConfirm: trade, swapErrorMessage, txHash, attemptingTxn, showConfirm })
-  }, [attemptingTxn, showConfirm, swapErrorMessage, trade, txHash])
+    setSwapState((currentState) => ({ ...currentState, tradeToConfirm: trade }))
+  }, [trade])
 
   const handleInputSelect = useCallback(
     (inputCurrency: Currency) => {
