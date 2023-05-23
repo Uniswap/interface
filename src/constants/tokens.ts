@@ -415,7 +415,7 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token | undefined } =
   // Why isn't it handled like Goerli?
   [SupportedChainId.SEPOLIA]: new Token(
     SupportedChainId.SEPOLIA,
-    '0xfff9976782d46cc05630d1f6ebab18b2324d6b14',
+    '0x7b79995e5f793A07Bc00c21412e50Ecae098E7f9',
     18,
     'WETH',
     'Wrapped Ether'
