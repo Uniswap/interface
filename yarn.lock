@@ -5502,10 +5502,33 @@
     bignumber.js "^9.0.2"
     ethers "^5.3.1"
 
+"@uniswap/universal-router-sdk@^1.5.1":
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/@uniswap/universal-router-sdk/-/universal-router-sdk-1.5.1.tgz#72acb13908d95ea2c3224e0de33ee4ebd20fefc6"
+  integrity sha512-5E9kCMJOZ2V5jQYOHLAFCzO4j6wg2pKqJDkcS9FVrPS/lXf0jSarzp3DpAFrVr2MKKpvg5l70PA3PNH/8n9McQ==
+  dependencies:
+    "@uniswap/permit2-sdk" "^1.2.0"
+    "@uniswap/router-sdk" "^1.4.0"
+    "@uniswap/sdk-core" "^3.1.0"
+    "@uniswap/universal-router" "1.4.2"
+    "@uniswap/v2-sdk" "^3.0.1"
+    "@uniswap/v3-sdk" "^3.9.0"
+    bignumber.js "^9.0.2"
+    ethers "^5.3.1"
+
 "@uniswap/universal-router@1.2.1":
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/@uniswap/universal-router/-/universal-router-1.2.1.tgz#5fe4aa21d6bc89314d99f26407f28154f8e16f42"
   integrity sha512-F3S1wKylncuvIG2qwC1ciXXc1z1QmKsalo4p6H2A90LSRylEEhNp7ITxs7qCcnfRh+ZNkGJ0yQ0zmuVJSBezOQ==
+  dependencies:
+    "@openzeppelin/contracts" "4.7.0"
+    "@uniswap/v2-core" "1.0.1"
+    "@uniswap/v3-core" "1.0.0"
+
+"@uniswap/universal-router@1.4.2":
+  version "1.4.2"
+  resolved "https://registry.yarnpkg.com/@uniswap/universal-router/-/universal-router-1.4.2.tgz#7f46f83ae8e69cf38cc2391891965785b1da253f"
+  integrity sha512-oNa9e+dYB/QnwYy59i5bRwrUIgq/e66TEVd/np/wk+FnUGMemblyRwDgg2sSqmLu90XAUQYpe1IYFEh1a0XYZg==
   dependencies:
     "@openzeppelin/contracts" "4.7.0"
     "@uniswap/v2-core" "1.0.1"
@@ -8160,11 +8183,6 @@ commander@^4.0.0:
   resolved "https://registry.yarnpkg.com/commander/-/commander-4.1.1.tgz#9fd602bd936294e9e9ef46a3f4d6964044b18068"
   integrity sha512-NOKm8xhkzAjzFx8B2v5OAHT+u5pRQc2UCa2Vq9jYL/31o2wi9mxBA7LIFs3sV5VSC49z6pEhfbMULvShKj26WA==
 
-commander@^5.1.0:
-  version "5.1.0"
-  resolved "https://registry.yarnpkg.com/commander/-/commander-5.1.0.tgz#46abbd1652f8e059bddaef99bbdcb2ad9cf179ae"
-  integrity sha512-P0CysNDQ7rtVw4QIQtm+MRxV66vKFSvlsQvGYXZWR3qFU0jlMKHZZZgw8e+8DSah4UDKMqnknRDQz+xuQXQ/Zg==
-
 commander@^6.1.0, commander@^6.2.1:
   version "6.2.1"
   resolved "https://registry.npmjs.org/commander/-/commander-6.2.1.tgz"
@@ -10357,7 +10375,7 @@ event-target-shim@^5.0.0:
   resolved "https://registry.yarnpkg.com/event-target-shim/-/event-target-shim-5.0.1.tgz#5d4d3ebdf9583d63a5333ce2deb7480ab2b05789"
   integrity sha512-i/2XbnSz/uxRCU6+NdVJgKWDTM427+MqYbkQzD321DuCQJUqOuJKIA0IM2+W2xtYHdKOmZ4dR6fExsd4SXL+WQ==
 
-eventemitter2@6.4.7, eventemitter2@^6.4.3:
+eventemitter2@6.4.7:
   version "6.4.7"
   resolved "https://registry.yarnpkg.com/eventemitter2/-/eventemitter2-6.4.7.tgz#a7f6c4d7abf28a14c1ef3442f21cb306a054271d"
   integrity sha512-tYUSVOGeQPKt/eC1ABfhHy5Xd96N3oIijJvN3O9+TsC28T5V9yX9oEfEK5faP0EFSNVOG97qtAS68GBrQB2hDg==
