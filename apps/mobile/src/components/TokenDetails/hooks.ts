@@ -1,10 +1,13 @@
 import { useMemo } from 'react'
 import { useAppStackNavigation } from 'src/app/navigation/types'
-import { Chain, useTokenDetailsScreenLazyQuery } from 'src/data/__generated__/types-and-hooks'
 import { useMultipleBalances, useSingleBalance } from 'src/features/dataApi/balances'
 import { PortfolioBalance } from 'src/features/dataApi/types'
 import { currencyIdToContractInput } from 'src/features/dataApi/utils'
 import { Screens } from 'src/screens/Screens'
+import {
+  Chain,
+  useTokenDetailsScreenLazyQuery,
+} from 'wallet/src/data/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'wallet/src/utils/chainId'
 import {
   buildCurrencyId,

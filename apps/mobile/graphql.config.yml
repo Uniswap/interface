@@ -1,3 +1,0 @@
-# Used by GraphQL.vscode-graphql
-schema: 'src/data/__generated__/schema.graphql'
-documents: 'src/**/*.{graphql}'

@@ -7,9 +7,9 @@ import {
 } from 'src/components/explore/search/utils'
 import { Inset } from 'src/components/layout'
 import { Loader } from 'src/components/loading'
-import { useSearchPopularNftCollectionsQuery } from 'src/data/__generated__/types-and-hooks'
 import { NFTCollectionSearchResult } from 'src/features/explore/searchHistorySlice'
 import { EMPTY_ARRAY } from 'wallet/src/constants/misc'
+import { useSearchPopularNftCollectionsQuery } from 'wallet/src/data/__generated__/types-and-hooks'
 
 export function SearchPopularNFTCollections(): JSX.Element {
   // Load popular NFTs by top trading volume

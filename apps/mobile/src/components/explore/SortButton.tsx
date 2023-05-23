@@ -5,7 +5,6 @@ import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { Chevron } from 'src/components/icons/Chevron'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
-import { TokenSortableField } from 'src/data/__generated__/types-and-hooks'
 import { useIsDarkMode } from 'src/features/appearance/hooks'
 import {
   getTokensOrderByMenuLabel,
@@ -14,6 +13,7 @@ import {
 import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
 import { setTokensOrderBy } from 'src/features/wallet/walletSlice'
+import { TokenSortableField } from 'wallet/src/data/__generated__/types-and-hooks'
 import { logger } from 'wallet/src/features/logger/logger'
 import { ClientTokensOrderBy, TokensOrderBy } from 'wallet/src/features/wallet/types'
 interface FilterGroupProps {

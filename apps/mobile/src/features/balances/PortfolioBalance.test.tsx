@@ -1,12 +1,12 @@
 import { MockedResponse } from '@apollo/client/testing'
 import React from 'react'
-import {
-  PortfolioBalancesDocument,
-  PortfolioBalancesQuery,
-} from 'src/data/__generated__/types-and-hooks'
 import { PortfolioBalance } from 'src/features/balances/PortfolioBalance'
 import { Portfolios } from 'src/test/gqlFixtures'
 import { render, screen } from 'src/test/test-utils'
+import {
+  PortfolioBalancesDocument,
+  PortfolioBalancesQuery,
+} from 'wallet/src/data/__generated__/types-and-hooks'
 import { formatUSDPrice, NumberType } from 'wallet/src/utils/format'
 
 const mock: MockedResponse<PortfolioBalancesQuery> = {

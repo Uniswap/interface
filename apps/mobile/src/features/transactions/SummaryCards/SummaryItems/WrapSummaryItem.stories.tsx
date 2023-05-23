@@ -1,12 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import React from 'react'
-import { TokenDocument } from 'src/data/__generated__/types-and-hooks'
 import {
   TransactionDetails,
   TransactionStatus,
   TransactionType,
   WrapTransactionInfo,
 } from 'src/features/transactions/types'
+import { TokenDocument } from 'wallet/src/data/__generated__/types-and-hooks'
 import WrapSummaryItem from './WrapSummaryItem'
 
 const meta: Meta<typeof WrapSummaryItem> = {

@@ -4,15 +4,15 @@ import { SearchTokenItem } from 'src/components/explore/search/items/SearchToken
 import { getSearchResultId } from 'src/components/explore/search/utils'
 import { Inset } from 'src/components/layout'
 import { Loader } from 'src/components/loading'
-import {
-  Chain,
-  SearchPopularTokensQuery,
-  useSearchPopularTokensQuery,
-} from 'src/data/__generated__/types-and-hooks'
 import { SearchResultType, TokenSearchResult } from 'src/features/explore/searchHistorySlice'
 import { ChainId } from 'wallet/src/constants/chains'
 import { EMPTY_ARRAY } from 'wallet/src/constants/misc'
 import { WRAPPED_NATIVE_CURRENCY } from 'wallet/src/constants/tokens'
+import {
+  Chain,
+  SearchPopularTokensQuery,
+  useSearchPopularTokensQuery,
+} from 'wallet/src/data/__generated__/types-and-hooks'
 import { areAddressesEqual } from 'wallet/src/utils/addresses'
 import { fromGraphQLChain } from 'wallet/src/utils/chainId'
 

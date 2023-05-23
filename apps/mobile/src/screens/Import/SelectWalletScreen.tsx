@@ -8,7 +8,6 @@ import { Button } from 'src/components/buttons/Button'
 import { Box, Flex } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { Loader } from 'src/components/loading'
-import { useSelectWalletScreenQuery } from 'src/data/__generated__/types-and-hooks'
 import { importAccountActions, IMPORT_WALLET_AMOUNT } from 'src/features/import/importAccountSaga'
 import { ImportAccountType } from 'src/features/import/types'
 import WalletPreviewCard from 'src/features/import/WalletPreviewCard'
@@ -24,6 +23,7 @@ import {
 import { activateAccount } from 'src/features/wallet/walletSlice'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { EMPTY_ARRAY } from 'wallet/src/constants/misc'
+import { useSelectWalletScreenQuery } from 'wallet/src/data/__generated__/types-and-hooks'
 import {
   Account,
   AccountType,

@@ -9,10 +9,10 @@ import { Box, Flex } from 'src/components/layout'
 import { Spacer } from 'src/components/layout/Spacer'
 import { Text } from 'src/components/Text'
 import { isNonPollingRequestInFlight } from 'src/data/utils'
-import { useAccountListQuery } from 'src/data/__generated__/types-and-hooks'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { spacing } from 'src/styles/sizing'
 import { PollingInterval } from 'wallet/src/constants/misc'
+import { useAccountListQuery } from 'wallet/src/data/__generated__/types-and-hooks'
 import { Account, AccountType } from 'wallet/src/features/wallet/accounts/types'
 
 // Most screens can fit more but this is set conservatively

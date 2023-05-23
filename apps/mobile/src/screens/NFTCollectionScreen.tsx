@@ -17,10 +17,6 @@ import { Loader } from 'src/components/loading'
 import { Trace } from 'src/components/telemetry/Trace'
 import { Text } from 'src/components/Text'
 import { isError } from 'src/data/utils'
-import {
-  NftCollectionScreenQuery,
-  useNftCollectionScreenQuery,
-} from 'src/data/__generated__/types-and-hooks'
 import { ListPriceBadge } from 'src/features/nfts/collection/ListPriceCard'
 import { NFTCollectionContextMenu } from 'src/features/nfts/collection/NFTCollectionContextMenu'
 import {
@@ -34,6 +30,10 @@ import { Screens } from 'src/screens/Screens'
 import { dimensions } from 'src/styles/sizing'
 import { theme } from 'src/styles/theme'
 import { EMPTY_ARRAY } from 'wallet/src/constants/misc'
+import {
+  NftCollectionScreenQuery,
+  useNftCollectionScreenQuery,
+} from 'wallet/src/data/__generated__/types-and-hooks'
 
 const PREFETCH_ITEMS_THRESHOLD = 0.5
 const ASSET_FETCH_PAGE_SIZE = 30

@@ -2,14 +2,14 @@ import { Dispatch, SetStateAction, useCallback, useMemo, useState } from 'react'
 import { SharedValue } from 'react-native-reanimated'
 import { TLineChartData } from 'react-native-wagmi-charts'
 import { isError, isNonPollingRequestInFlight } from 'src/data/utils'
+import { GqlResult } from 'src/features/dataApi/types'
+import { currencyIdToContractInput } from 'src/features/dataApi/utils'
+import { PollingInterval } from 'wallet/src/constants/misc'
 import {
   HistoryDuration,
   TimestampedAmount,
   useTokenPriceHistoryQuery,
-} from 'src/data/__generated__/types-and-hooks'
-import { GqlResult } from 'src/features/dataApi/types'
-import { currencyIdToContractInput } from 'src/features/dataApi/utils'
-import { PollingInterval } from 'wallet/src/constants/misc'
+} from 'wallet/src/data/__generated__/types-and-hooks'
 
 /**
  * @returns Token price history for requested duration

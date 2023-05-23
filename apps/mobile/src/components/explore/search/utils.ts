@@ -2,7 +2,6 @@ import {
   SearchResultOrHeader,
   SEARCH_RESULT_HEADER_KEY,
 } from 'src/components/explore/search/SearchResultsSection'
-import { Chain, ExploreSearchQuery } from 'src/data/__generated__/types-and-hooks'
 import {
   NFTCollectionSearchResult,
   searchResultId,
@@ -10,6 +9,7 @@ import {
   TokenSearchResult,
 } from 'src/features/explore/searchHistorySlice'
 import { EMPTY_ARRAY } from 'wallet/src/constants/misc'
+import { Chain, ExploreSearchQuery } from 'wallet/src/data/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'wallet/src/utils/chainId'
 
 const MAX_TOKEN_RESULTS_COUNT = 4

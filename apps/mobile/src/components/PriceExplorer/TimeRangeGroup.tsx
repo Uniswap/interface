@@ -18,7 +18,7 @@ import {
 } from 'src/components/PriceExplorer/constants'
 import { TracePressEvent } from 'src/components/telemetry/TraceEvent'
 import { Text } from 'src/components/Text'
-import { HistoryDuration } from 'src/data/__generated__/types-and-hooks'
+import { HistoryDuration } from 'wallet/src/data/__generated__/types-and-hooks'
 
 interface Props {
   label: string

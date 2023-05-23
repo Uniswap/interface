@@ -1,7 +1,7 @@
-import { SpotPricesQuery, useSpotPricesQuery } from 'src/data/__generated__/types-and-hooks'
 import { GqlResult } from 'src/features/dataApi/types'
 import { currencyIdToContractInput } from 'src/features/dataApi/utils'
 import { PollingInterval } from 'wallet/src/constants/misc'
+import { SpotPricesQuery, useSpotPricesQuery } from 'wallet/src/data/__generated__/types-and-hooks'
 
 export type SpotPrice = NonNullable<
   NonNullable<NonNullable<SpotPricesQuery['tokenProjects']>[0]>['markets']

@@ -7,10 +7,10 @@ import { NFTViewer } from 'src/components/images/NFTViewer'
 import { Box, Flex } from 'src/components/layout'
 import { Loader } from 'src/components/loading'
 import { Text } from 'src/components/Text'
-import { Currency, NftItemScreenQuery } from 'src/data/__generated__/types-and-hooks'
 import { PriceAmount } from 'src/features/nfts/collection/ListPriceCard'
 import { iconSizes, imageSizes } from 'src/styles/sizing'
 import VerifiedIcon from 'ui/src/assets/icons/verified.svg'
+import { Currency, NftItemScreenQuery } from 'wallet/src/data/__generated__/types-and-hooks'
 
 export type Collection = NonNullable<
   NonNullable<NonNullable<NftItemScreenQuery['nftAssets']>>['edges'][0]

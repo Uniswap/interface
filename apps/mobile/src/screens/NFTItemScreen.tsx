@@ -18,11 +18,6 @@ import { Loader } from 'src/components/loading'
 import { Trace } from 'src/components/telemetry/Trace'
 import { Text } from 'src/components/Text'
 import { LongText } from 'src/components/text/LongText'
-import {
-  NftActivityType,
-  NftItemScreenQuery,
-  useNftItemScreenQuery,
-} from 'src/data/__generated__/types-and-hooks'
 import { selectModalState } from 'src/features/modals/modalSlice'
 import { PriceAmount } from 'src/features/nfts/collection/ListPriceCard'
 import { useNFTMenu } from 'src/features/nfts/hooks'
@@ -47,6 +42,11 @@ import EllipsisIcon from 'ui/src/assets/icons/ellipsis.svg'
 import ShareIcon from 'ui/src/assets/icons/share.svg'
 import { colorsDark } from 'ui/src/theme/color'
 import { PollingInterval } from 'wallet/src/constants/misc'
+import {
+  NftActivityType,
+  NftItemScreenQuery,
+  useNftItemScreenQuery,
+} from 'wallet/src/data/__generated__/types-and-hooks'
 import { areAddressesEqual } from 'wallet/src/utils/addresses'
 
 const MAX_NFT_IMAGE_HEIGHT = 375

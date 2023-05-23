@@ -1,4 +1,4 @@
-name: '[mobile] Update GraphQL Schema'
+name: '[monorepo] Update GraphQL Schema'
 on:
   schedule:
     # “At 12:00 on Wednesday.”
@@ -22,7 +22,7 @@ jobs:
         uses: ./.github/actions/monorepo_yarn_install
 
       - name: 📈 Update GraphQL Schema
-        run: yarn mobile apollo:schema
+        run: yarn graphql:schema
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v3

@@ -1,5 +1,5 @@
 import { TFunction } from 'i18next'
-import { SafetyLevel } from 'src/data/__generated__/types-and-hooks'
+import { SafetyLevel } from 'wallet/src/data/__generated__/types-and-hooks'
 
 export function getTokenSafetyHeaderText(
   safetyLevel: Maybe<SafetyLevel>,

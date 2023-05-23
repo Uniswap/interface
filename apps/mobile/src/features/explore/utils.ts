@@ -1,6 +1,6 @@
 import { TFunction } from 'i18next'
 import { TokenItemData } from 'src/components/explore/TokenItem'
-import { TokenSortableField } from 'src/data/__generated__/types-and-hooks'
+import { TokenSortableField } from 'wallet/src/data/__generated__/types-and-hooks'
 import {
   ClientTokensOrderBy,
   TokenMetadataDisplayType,

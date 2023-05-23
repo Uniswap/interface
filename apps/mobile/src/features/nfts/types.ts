@@ -1,4 +1,4 @@
-import { Amount } from 'src/data/__generated__/types-and-hooks'
+import { Amount } from 'wallet/src/data/__generated__/types-and-hooks'
 
 export type NFTItem = {
   name?: string

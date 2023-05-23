@@ -1,6 +1,6 @@
 import { QueryResult } from '@apollo/client'
 import { Currency } from '@uniswap/sdk-core'
-import { SafetyLevel } from 'src/data/__generated__/types-and-hooks'
+import { SafetyLevel } from 'wallet/src/data/__generated__/types-and-hooks'
 import { CurrencyId } from 'wallet/src/utils/currencyId'
 
 export type CurrencyInfo = {

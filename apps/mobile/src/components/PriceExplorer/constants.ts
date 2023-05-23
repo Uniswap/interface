@@ -1,7 +1,7 @@
-import { HistoryDuration } from 'src/data/__generated__/types-and-hooks'
 import { ElementName } from 'src/features/telemetry/constants'
 import { dimensions } from 'src/styles/sizing'
 import { theme as FixedTheme } from 'src/styles/theme'
+import { HistoryDuration } from 'wallet/src/data/__generated__/types-and-hooks'
 
 // sets the height of the chart short enough on small devices that the
 // "Your balance" section will always show above the fold

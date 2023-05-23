@@ -1,13 +1,4 @@
 import { TradeType } from '@uniswap/sdk-core'
-import {
-  ActivityType,
-  Chain,
-  Currency,
-  NftStandard,
-  TokenStandard,
-  TransactionDirection,
-  TransactionStatus,
-} from 'src/data/__generated__/types-and-hooks'
 import extractTransactionDetails from 'src/features/transactions/history/conversion/extractTransactionDetails'
 import parseApproveTransaction from 'src/features/transactions/history/conversion/parseApproveTransaction'
 import parseNFTMintTransaction from 'src/features/transactions/history/conversion/parseMintTransaction'
@@ -22,6 +13,15 @@ import {
 import { NATIVE_ADDRESS } from 'wallet/src/constants/addresses'
 import { ChainId } from 'wallet/src/constants/chains'
 import { WRAPPED_NATIVE_CURRENCY } from 'wallet/src/constants/tokens'
+import {
+  ActivityType,
+  Chain,
+  Currency,
+  NftStandard,
+  TokenStandard,
+  TransactionDirection,
+  TransactionStatus,
+} from 'wallet/src/data/__generated__/types-and-hooks'
 
 /**
  * Testing for API transaction parsing utils.

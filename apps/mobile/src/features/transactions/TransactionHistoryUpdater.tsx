@@ -7,12 +7,6 @@ import { batch } from 'react-redux'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { useRefetchQueries } from 'src/data/hooks'
 import {
-  TransactionHistoryUpdaterQueryResult,
-  TransactionListQuery,
-  useTransactionHistoryUpdaterQuery,
-  useTransactionListLazyQuery,
-} from 'src/data/__generated__/types-and-hooks'
-import {
   pushNotification,
   setLastTxNotificationUpdate,
   setNotificationStatus,
@@ -28,6 +22,12 @@ import {
   selectActiveAccountAddress,
 } from 'src/features/wallet/selectors'
 import { PollingInterval } from 'wallet/src/constants/misc'
+import {
+  TransactionHistoryUpdaterQueryResult,
+  TransactionListQuery,
+  useTransactionHistoryUpdaterQuery,
+  useTransactionListLazyQuery,
+} from 'wallet/src/data/__generated__/types-and-hooks'
 import { ONE_SECOND_MS } from 'wallet/src/utils/time'
 
 /**

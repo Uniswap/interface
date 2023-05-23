@@ -8,7 +8,6 @@ import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import WarningIcon from 'src/components/tokens/WarningIcon'
-import { SafetyLevel } from 'src/data/__generated__/types-and-hooks'
 import {
   addToSearchHistory,
   SearchResultType,
@@ -16,6 +15,7 @@ import {
 } from 'src/features/explore/searchHistorySlice'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { ElementName, MobileEventName } from 'src/features/telemetry/constants'
+import { SafetyLevel } from 'wallet/src/data/__generated__/types-and-hooks'
 import { buildCurrencyId, buildNativeCurrencyId } from 'wallet/src/utils/currencyId'
 
 type SearchTokenItemProps = {

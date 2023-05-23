@@ -1,6 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import React from 'react'
-import { Chain, TokenDocument } from 'src/data/__generated__/types-and-hooks'
 import {
   FiatPurchaseTransactionInfo,
   TransactionDetails,
@@ -9,6 +8,7 @@ import {
 } from 'src/features/transactions/types'
 import { NATIVE_ADDRESS } from 'wallet/src/constants/addresses'
 import { ChainId } from 'wallet/src/constants/chains'
+import { Chain, TokenDocument } from 'wallet/src/data/__generated__/types-and-hooks'
 import FiatPurchaseSummaryItem from './FiatPurchaseSummaryItem'
 
 const meta: Meta<typeof FiatPurchaseSummaryItem> = {

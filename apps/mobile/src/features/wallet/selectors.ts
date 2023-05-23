@@ -1,6 +1,6 @@
 import { createSelector, Selector } from '@reduxjs/toolkit'
 import type { RootState } from 'src/app/rootReducer'
-import { TokenSortableField } from 'src/data/__generated__/types-and-hooks'
+import { TokenSortableField } from 'wallet/src/data/__generated__/types-and-hooks'
 import {
   Account,
   AccountType,

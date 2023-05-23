@@ -31,9 +31,6 @@
   },
   "devDependencies": {
     "@faker-js/faker": "7.6.0",
-    "@graphql-codegen/cli": "3.2.2",
-    "@graphql-codegen/typescript-operations": "3.0.2",
-    "@graphql-codegen/typescript-react-apollo": "3.3.7",
     "@testing-library/jest-native": "5.4.2",
     "@types/chrome": "0.0.229",
     "@types/jest": "29.5.0",
@@ -42,7 +39,6 @@
     "@types/redux-logger": "3.0.9",
     "@types/sinon-chrome": "2.2.11",
     "eslint": "8.21.0",
-    "get-graphql-schema": "2.1.2",
     "jest": "29.5.0",
     "jest-chrome": "0.8.0",
     "jest-presets": "workspace:^",
@@ -57,8 +53,6 @@
   "main": "src/index.ts",
   "private": true,
   "scripts": {
-    "graphql:generate": "graphql-codegen --config codegen.ts",
-    "graphql:schema": "get-graphql-schema https://api.uniswap.org/v1/graphql -h Origin=https://app.uniswap.org > ./src/data/__generated__/schema.graphql",
     "lint": "eslint . --ext ts,tsx",
     "lint:fix": "eslint . --ext ts,tsx --fix",
     "test": "jest",

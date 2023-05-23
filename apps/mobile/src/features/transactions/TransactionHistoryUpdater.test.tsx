@@ -4,10 +4,6 @@ import { waitFor } from '@testing-library/react-native'
 import dayjs from 'dayjs'
 import MockDate from 'mockdate'
 import React from 'react'
-import {
-  TransactionHistoryUpdaterDocument,
-  TransactionHistoryUpdaterQuery,
-} from 'src/data/__generated__/types-and-hooks'
 import { AssetType } from 'src/entities/assets'
 import { AppNotificationType } from 'src/features/notifications/types'
 import {
@@ -19,6 +15,10 @@ import { account, account2 } from 'src/test/fixtures'
 import { MAX_FIXTURE_TIMESTAMP, Portfolios, PortfoliosWithReceive } from 'src/test/gqlFixtures'
 import { render } from 'src/test/test-utils'
 import { ChainId } from 'wallet/src/constants/chains'
+import {
+  TransactionHistoryUpdaterDocument,
+  TransactionHistoryUpdaterQuery,
+} from 'wallet/src/data/__generated__/types-and-hooks'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { ONE_SECOND_MS } from 'wallet/src/utils/time'
 import { sleep } from 'wallet/src/utils/timing'

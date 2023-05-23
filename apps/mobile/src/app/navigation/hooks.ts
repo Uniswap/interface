@@ -2,9 +2,9 @@ import { NavigationContainerRefContext, NavigationContext } from '@react-navigat
 import { useCallback, useContext } from 'react'
 import { navigate as rootNavigate } from 'src/app/navigation/rootNavigation'
 import { useAppStackNavigation, useExploreStackNavigation } from 'src/app/navigation/types'
-import { useTransactionListLazyQuery } from 'src/data/__generated__/types-and-hooks'
 import { TabIndex } from 'src/screens/HomeScreen'
 import { Screens } from 'src/screens/Screens'
+import { useTransactionListLazyQuery } from 'wallet/src/data/__generated__/types-and-hooks'
 
 /**
  * Utility hook to simplify navigating to Activity screen.

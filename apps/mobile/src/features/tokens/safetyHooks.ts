@@ -1,11 +1,11 @@
 import { useCallback } from 'react'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
-import { SafetyLevel } from 'src/data/__generated__/types-and-hooks'
 import {
   addDismissedWarningToken,
   dismissedWarningTokensSelector,
 } from 'src/features/tokens/tokensSlice'
 import { Theme } from 'src/styles/theme'
+import { SafetyLevel } from 'wallet/src/data/__generated__/types-and-hooks'
 import { CurrencyId } from 'wallet/src/utils/currencyId'
 
 export function useTokenWarningDismissed(currencyId: Maybe<CurrencyId>): {

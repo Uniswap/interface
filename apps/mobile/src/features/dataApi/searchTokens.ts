@@ -1,6 +1,5 @@
 import groupBy from 'lodash/groupBy'
 import { useCallback, useMemo } from 'react'
-import { SearchTokensQuery, useSearchTokensQuery } from 'src/data/__generated__/types-and-hooks'
 import { CurrencyInfo, GqlResult } from 'src/features/dataApi/types'
 import {
   gqlTokenToCurrencyInfo,
@@ -8,6 +7,10 @@ import {
   usePersistedError,
 } from 'src/features/dataApi/utils'
 import { ChainId } from 'wallet/src/constants/chains'
+import {
+  SearchTokensQuery,
+  useSearchTokensQuery,
+} from 'wallet/src/data/__generated__/types-and-hooks'
 
 const NO_PROJECT = 'NO_PROJECT'
 
