@@ -5,6 +5,7 @@ import { AboutFooter } from 'components/About/AboutFooter'
 import Card, { CardType } from 'components/About/Card'
 import { MAIN_CARDS, MORE_CARDS } from 'components/About/constants'
 import ProtocolBanner from 'components/About/ProtocolBanner'
+import { accountDrawerOpenAtom } from 'components/AccountDrawer'
 import { BaseButton } from 'components/Button'
 import { useAtomValue } from 'jotai/utils'
 import Swap from 'pages/Swap'
@@ -301,14 +302,14 @@ export default function Landing() {
     ignoreQueryPrefix: true,
   })
 
-  // This can be simplified significantly once the flag is removed! For now being explicit is clearer.
+  const accountDrawerOpen = useAtomValue(accountDrawerOpenAtom)
   useEffect(() => {
-    if (queryParams.intro || !selectedWallet) {
+    if ((queryParams.intro || !selectedWallet) && !accountDrawerOpen) {
       setShowContent(true)
     } else {
       navigate('/swap')
     }
-  }, [navigate, selectedWallet, queryParams.intro])
+  }, [navigate, selectedWallet, queryParams.intro, accountDrawerOpen])
 
   const shouldDisableNFTRoutes = useAtomValue(shouldDisableNFTRoutesAtom)
 
