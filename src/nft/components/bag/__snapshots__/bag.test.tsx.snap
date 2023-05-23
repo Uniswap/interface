@@ -1,3 +1,251 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Bag.tsx matches base snapshot 1`] = `<DocumentFragment />`;
+
+exports[`BagFooter.tsx matches base snapshot 1`] = `
+<DocumentFragment>
+  .c4 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c5 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c7 {
+  color: #7780A0;
+}
+
+.c11 {
+  color: #0D111C;
+}
+
+.c2 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
+}
+
+.c13 {
+  border-radius: 12px;
+  border-radius: 12px;
+  height: 24px;
+  width: 50%;
+  width: 50%;
+  -webkit-animation: fAQEyV 1.5s infinite;
+  animation: fAQEyV 1.5s infinite;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  background: linear-gradient( to left,#E8ECFB 25%,#fff 50%,#E8ECFB 75% );
+  will-change: background-position;
+  background-size: 400%;
+}
+
+.c10 {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: radial-gradient(white 60%,#ffffff00 calc(70% + 1px));
+  box-shadow: 0 0 1px white;
+}
+
+.c9 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.c0 {
+  padding: 0px 12px;
+}
+
+.c1 {
+  border-top: 1px solid #D2D9EE;
+  color: #0D111C;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  margin: 0px 16px 8px;
+  padding: 12px 0px;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+}
+
+.c3 {
+  padding-top: 8px;
+  padding-bottom: 16px;
+}
+
+.c6 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  -webkit-align-items: start;
+  -webkit-box-align: start;
+  -ms-flex-align: start;
+  align-items: start;
+  gap: 8px;
+}
+
+.c12 {
+  text-align: end;
+  overflow-x: hidden;
+}
+
+.c8 {
+  gap: 8px;
+  cursor: pointer;
+}
+
+.c15 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  background: #FB118E;
+  color: #F5F6FC;
+  font-weight: 600;
+  line-height: 24px;
+  font-size: 16px;
+  gap: 16px;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 0px;
+  cursor: pointer;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.c15:disabled {
+  opacity: 0.6;
+  cursor: auto;
+}
+
+.c14 {
+  border-radius: 4px;
+  width: 4rem;
+  height: 20px;
+  -webkit-align-self: end;
+  -ms-flex-item-align: end;
+  align-self: end;
+}
+
+<div
+    class="c0"
+  >
+    <div
+      class="c1"
+    >
+      <div
+        class="c2 c3"
+      >
+        <div
+          class="c4 c5 c6"
+        >
+          <div
+            class="c2"
+          >
+            <div
+              class="c7 css-1aekuku"
+            >
+              Pay with
+            </div>
+            <div
+              class="c4 c5 c8"
+            >
+              <div
+                class="c9"
+              >
+                <img
+                  alt="ETH logo"
+                  class="c10"
+                  src="ethereum-logo.png"
+                />
+              </div>
+              <div
+                class="c11 css-e6jk6i"
+              >
+                ETH
+              </div>
+              <svg
+                fill="none"
+                height="20"
+                stroke="#7780A0"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <polyline
+                  points="6 9 12 15 18 9"
+                />
+              </svg>
+            </div>
+          </div>
+          <div
+            class="c2 c12"
+          >
+            <div
+              class="c7 css-133p5g6"
+            >
+              Total
+            </div>
+            <div
+              class="c11 css-1w21yux"
+            >
+              - ETH
+            </div>
+          </div>
+        </div>
+        <div
+          class="0 c13 c14"
+        />
+      </div>
+      <button
+        class="c15"
+      >
+        Connect wallet
+      </button>
+    </div>
+  </div>
+</DocumentFragment>
+`;

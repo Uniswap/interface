@@ -100,7 +100,7 @@ const CurrencyInput = styled(Row)`
   cursor: pointer;
 `
 
-const PayButton = styled.button<{ $backgroundColor: string; $color: string }>`
+const ActionButton = styled.button<{ $backgroundColor: string; $color: string }>`
   display: flex;
   background: ${({ $backgroundColor }) => $backgroundColor};
   color: ${({ $color }) => $color};
@@ -150,27 +150,6 @@ const ValueText = styled(ThemedText.BodyPrimary)`
     display: none;
   }
 `
-
-interface ActionButtonProps {
-  disabled?: boolean
-  onClick: () => void
-  backgroundColor: string
-  textColor: string
-}
-
-const ActionButton = ({
-  disabled,
-  children,
-  onClick,
-  backgroundColor,
-  textColor,
-}: PropsWithChildren<ActionButtonProps>) => {
-  return (
-    <PayButton disabled={disabled} onClick={onClick} $backgroundColor={backgroundColor} $color={textColor}>
-      {children}
-    </PayButton>
-  )
-}
 
 interface HelperTextProps {
   color: string
@@ -530,10 +509,11 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
           <Warning color={warningTextColor}>{warningText}</Warning>
           <Helper color={helperTextColor}>{helperText}</Helper>
           <ActionButton
+            data-testid="nft-buy-button"
             onClick={handleClick}
             disabled={disabled || isPending}
-            backgroundColor={buttonColor}
-            textColor={buttonTextColor}
+            $backgroundColor={buttonColor}
+            $color={buttonTextColor}
           >
             {isPending && <Loader size="20px" stroke="white" />}
             {buttonText}
