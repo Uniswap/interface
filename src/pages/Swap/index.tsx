@@ -332,7 +332,7 @@ export function Swap({
   }, [navigate])
 
   // modal and loading
-  const [{ showConfirm, tradeToConfirm, swapErrorMessage, attemptingTxn, txHash }, setSwapState] = useState<{
+  const [{ showConfirm, tradeToConfirm, swapErrorMessage, txHash }, setSwapState] = useState<{
     showConfirm: boolean
     tradeToConfirm: InterfaceTrade | undefined
     attemptingTxn: boolean
