@@ -8,7 +8,7 @@ import {
   SAMPLE_SEED_ADDRESS_1,
   SAMPLE_SEED_ADDRESS_2,
   signerManager,
-} from 'wallet/src/test/__fixtures__'
+} from 'wallet/src/test/fixtures'
 import { importAccount } from './importAccountSaga'
 import { ImportAccountType, ImportAddressAccountParams, ImportMnemonicAccountParams } from './types'
 

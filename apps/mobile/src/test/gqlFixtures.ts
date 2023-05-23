@@ -1,5 +1,4 @@
 import { faker } from '@faker-js/faker'
-import { ACCOUNT_ADDRESS_ONE, ACCOUNT_ADDRESS_TWO } from 'src/test/fixtures'
 import { ChainId } from 'wallet/src/constants/chains'
 import { DAI, USDC, WRAPPED_NATIVE_CURRENCY } from 'wallet/src/constants/tokens'
 import {
@@ -22,8 +21,8 @@ import {
   TransactionDirection,
   TransactionStatus,
 } from 'wallet/src/data/__generated__/types-and-hooks'
+import { FAKER_SEED, SAMPLE_SEED_ADDRESS_1, SAMPLE_SEED_ADDRESS_2 } from 'wallet/src/test/fixtures'
 
-const FAKER_SEED = 123
 faker.seed(FAKER_SEED)
 
 export const MAX_FIXTURE_TIMESTAMP = 1609459200
@@ -96,8 +95,8 @@ const AssetActivityBase = {
   transaction: {
     id: 'base_tranaction_id',
     status: TransactionStatus.Confirmed,
-    to: ACCOUNT_ADDRESS_TWO,
-    from: ACCOUNT_ADDRESS_ONE,
+    to: SAMPLE_SEED_ADDRESS_2,
+    from: SAMPLE_SEED_ADDRESS_1,
     nonce: faker.datatype.number(),
     blockNumber: 1,
   },
@@ -109,8 +108,8 @@ const Erc20TransferOutAssetChange: TokenTransfer & { __typename: 'TokenTransfer'
   asset: DaiAsset,
   tokenStandard: TokenStandard.Erc20,
   quantity: '1',
-  sender: ACCOUNT_ADDRESS_ONE,
-  recipient: ACCOUNT_ADDRESS_TWO,
+  sender: SAMPLE_SEED_ADDRESS_1,
+  recipient: SAMPLE_SEED_ADDRESS_2,
   direction: TransactionDirection.Out,
   transactedValue: {
     id: faker.datatype.uuid(),
@@ -131,7 +130,7 @@ const Erc20ApproveAssetChange: TokenApproval & { __typename: 'TokenApproval' } =
   id: faker.datatype.uuid(),
   asset: DaiAsset,
   tokenStandard: TokenStandard.Erc20,
-  approvedAddress: ACCOUNT_ADDRESS_TWO,
+  approvedAddress: SAMPLE_SEED_ADDRESS_2,
   quantity: '1',
 }
 
@@ -171,7 +170,7 @@ export const Erc20ReceiveAssetActivity: RequiredAssetActivity = {
 export const Portfolios: [PortfolioWithActivity, PortfolioWithActivity] = [
   {
     id: faker.datatype.uuid(),
-    ownerAddress: ACCOUNT_ADDRESS_ONE,
+    ownerAddress: SAMPLE_SEED_ADDRESS_1,
     tokensTotalDenominatedValue: Amounts.md,
     tokensTotalDenominatedValueChange: {
       id: faker.datatype.uuid(),
@@ -182,7 +181,7 @@ export const Portfolios: [PortfolioWithActivity, PortfolioWithActivity] = [
   },
   {
     id: faker.datatype.uuid(),
-    ownerAddress: ACCOUNT_ADDRESS_TWO,
+    ownerAddress: SAMPLE_SEED_ADDRESS_2,
     tokensTotalDenominatedValue: Amounts.md,
     tokensTotalDenominatedValueChange: {
       id: faker.datatype.uuid(),
@@ -196,7 +195,7 @@ export const Portfolios: [PortfolioWithActivity, PortfolioWithActivity] = [
 export const PortfoliosWithReceive: [PortfolioWithActivity] = [
   {
     id: faker.datatype.uuid(),
-    ownerAddress: ACCOUNT_ADDRESS_ONE,
+    ownerAddress: SAMPLE_SEED_ADDRESS_1,
     tokensTotalDenominatedValue: Amounts.md,
     tokensTotalDenominatedValueChange: {
       id: faker.datatype.uuid(),

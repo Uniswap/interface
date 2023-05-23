@@ -1,6 +1,6 @@
 // NOTE: ideally would not need to mock `crypto`, but `global.crypto` is undefined in jest
 
-import { SAMPLE_PASSWORD, SAMPLE_SEED } from 'wallet/src/test/__fixtures__'
+import { SAMPLE_PASSWORD, SAMPLE_SEED } from 'wallet/src/test/fixtures'
 
 // and common drop-in crypto libs do not support PBKDF2
 export const getRandomValues = (): Uint8Array => new Uint8Array()

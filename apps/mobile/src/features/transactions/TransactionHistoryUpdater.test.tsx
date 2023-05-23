@@ -20,6 +20,7 @@ import {
   TransactionHistoryUpdaterQuery,
 } from 'wallet/src/data/__generated__/types-and-hooks'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
+import { SAMPLE_SEED_ADDRESS_1 } from 'wallet/src/test/fixtures'
 import { ONE_SECOND_MS } from 'wallet/src/utils/time'
 import { sleep } from 'wallet/src/utils/timing'
 
@@ -219,7 +220,7 @@ describe(getReceiveNotificationFromData, () => {
       assetType: AssetType.Currency,
       tokenAddress: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
       currencyAmountRaw: '1000000000000000000',
-      sender: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
+      sender: SAMPLE_SEED_ADDRESS_1,
     })
   })
 

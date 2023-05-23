@@ -20,6 +20,7 @@ import {
 import { account } from 'src/test/fixtures'
 import { ChainId } from 'wallet/src/constants/chains'
 import { DAI, USDC } from 'wallet/src/constants/tokens'
+import { SAMPLE_SEED_ADDRESS_1 } from 'wallet/src/test/fixtures'
 
 describe('convertScientificNotationToNumber', () => {
   it('does not do anything to a regular number', () => {
@@ -236,7 +237,7 @@ describe(buildReceiveNotification, () => {
     const { payload: testTransaction } = createFinalizedTxAction(receiveNftTypeInfo)
 
     expect(buildReceiveNotification(testTransaction, account.address)).toEqual({
-      address: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
+      address: SAMPLE_SEED_ADDRESS_1,
       assetType: AssetType.ERC1155,
       chainId: ChainId.Mainnet,
       sender: '0x000123abc456def',
@@ -255,7 +256,7 @@ describe(buildReceiveNotification, () => {
     testTransaction.typeInfo.type = TransactionType.Receive // overwrite to correct txn type (default is send)
 
     expect(buildReceiveNotification(testTransaction, account.address)).toEqual({
-      address: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
+      address: SAMPLE_SEED_ADDRESS_1,
       assetType: AssetType.Currency,
       chainId: ChainId.Mainnet,
       sender: '0x000123abc456def',

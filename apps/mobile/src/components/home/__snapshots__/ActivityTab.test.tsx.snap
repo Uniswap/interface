@@ -323,7 +323,7 @@ exports[`ActivityTab renders without error 2`] = `
           {
             "addedTime": 634722508000,
             "chainId": 1,
-            "from": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+            "from": "0x82D56A352367453f74FC0dC7B071b311da373Fa6",
             "hash": "0xaef17b4b697be91ab3d7eca4b92fa53efeb2da6b",
             "id": "0xaef17b4b697be91ab3d7eca4b92fa53efeb2da6b",
             "options": {
@@ -332,7 +332,7 @@ exports[`ActivityTab renders without error 2`] = `
             "status": "confirmed",
             "typeInfo": {
               "approvalAmount": "1",
-              "spender": "0x1234567890123456789012345678901234567890",
+              "spender": "0x55f4B664C68F398f9e81EFf63ef4444A1A184F98",
               "tokenAddress": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
               "type": "approve",
             },
@@ -340,7 +340,7 @@ exports[`ActivityTab renders without error 2`] = `
           {
             "addedTime": 634722508000,
             "chainId": 1,
-            "from": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+            "from": "0x82D56A352367453f74FC0dC7B071b311da373Fa6",
             "hash": "0x8123abfa76b2bd459df69d4cffefde0e51b81cf2",
             "id": "0x8123abfa76b2bd459df69d4cffefde0e51b81cf2",
             "options": {
@@ -370,7 +370,7 @@ exports[`ActivityTab renders without error 2`] = `
             {
               "addedTime": 634722508000,
               "chainId": 1,
-              "from": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+              "from": "0x82D56A352367453f74FC0dC7B071b311da373Fa6",
               "hash": "0xaef17b4b697be91ab3d7eca4b92fa53efeb2da6b",
               "id": "0xaef17b4b697be91ab3d7eca4b92fa53efeb2da6b",
               "options": {
@@ -379,7 +379,7 @@ exports[`ActivityTab renders without error 2`] = `
               "status": "confirmed",
               "typeInfo": {
                 "approvalAmount": "1",
-                "spender": "0x1234567890123456789012345678901234567890",
+                "spender": "0x55f4B664C68F398f9e81EFf63ef4444A1A184F98",
                 "tokenAddress": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
                 "type": "approve",
               },
@@ -387,7 +387,7 @@ exports[`ActivityTab renders without error 2`] = `
             {
               "addedTime": 634722508000,
               "chainId": 1,
-              "from": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+              "from": "0x82D56A352367453f74FC0dC7B071b311da373Fa6",
               "hash": "0x8123abfa76b2bd459df69d4cffefde0e51b81cf2",
               "id": "0x8123abfa76b2bd459df69d4cffefde0e51b81cf2",
               "options": {
@@ -476,7 +476,7 @@ exports[`ActivityTab renders without error 2`] = `
               {
                 "addedTime": 634722508000,
                 "chainId": 1,
-                "from": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                "from": "0x82D56A352367453f74FC0dC7B071b311da373Fa6",
                 "hash": "0xaef17b4b697be91ab3d7eca4b92fa53efeb2da6b",
                 "id": "0xaef17b4b697be91ab3d7eca4b92fa53efeb2da6b",
                 "options": {
@@ -485,7 +485,7 @@ exports[`ActivityTab renders without error 2`] = `
                 "status": "confirmed",
                 "typeInfo": {
                   "approvalAmount": "1",
-                  "spender": "0x1234567890123456789012345678901234567890",
+                  "spender": "0x55f4B664C68F398f9e81EFf63ef4444A1A184F98",
                   "tokenAddress": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
                   "type": "approve",
                 },
@@ -493,7 +493,7 @@ exports[`ActivityTab renders without error 2`] = `
               {
                 "addedTime": 634722508000,
                 "chainId": 1,
-                "from": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                "from": "0x82D56A352367453f74FC0dC7B071b311da373Fa6",
                 "hash": "0x8123abfa76b2bd459df69d4cffefde0e51b81cf2",
                 "id": "0x8123abfa76b2bd459df69d4cffefde0e51b81cf2",
                 "options": {

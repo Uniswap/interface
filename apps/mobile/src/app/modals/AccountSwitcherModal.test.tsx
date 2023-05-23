@@ -5,13 +5,14 @@ import { AccountSwitcher } from 'src/app/modals/AccountSwitcherModal'
 import { RootState } from 'src/app/rootReducer'
 import { initialModalState } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
-import { ACCOUNT_ADDRESS_ONE, mockWalletPreloadedState } from 'src/test/fixtures'
+import { mockWalletPreloadedState } from 'src/test/fixtures'
 import { Portfolios } from 'src/test/gqlFixtures'
 import { render } from 'src/test/test-utils'
 import {
   AccountListDocument,
   AccountListQuery,
 } from 'wallet/src/data/__generated__/types-and-hooks'
+import { SAMPLE_SEED_ADDRESS_1 } from 'wallet/src/test/fixtures'
 
 jest.useFakeTimers()
 
@@ -27,7 +28,7 @@ const AccountListMock: MockedResponse<AccountListQuery> = {
   request: {
     query: AccountListDocument,
     variables: {
-      addresses: [ACCOUNT_ADDRESS_ONE],
+      addresses: [SAMPLE_SEED_ADDRESS_1],
     },
   },
   result: {

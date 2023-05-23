@@ -1,5 +1,5 @@
 import { WebKeyring } from 'wallet/src/features/wallet/Keyring/Keyring.web'
-import { SAMPLE_PASSWORD, SAMPLE_SEED, SAMPLE_SEED_ADDRESS_1 } from 'wallet/src/test/__fixtures__'
+import { SAMPLE_PASSWORD, SAMPLE_SEED, SAMPLE_SEED_ADDRESS_1 } from 'wallet/src/test/fixtures'
 
 jest.mock('./crypto')
 
