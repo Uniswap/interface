@@ -62,6 +62,8 @@
   },
   "private": true,
   "scripts": {
+    "env:local:upload": "bash ../../scripts/uploadEnvLocal.sh web-local-envs ../../.env",
+    "env:local:download": "bash ../../scripts/downloadEnvLocal.sh web-local-envs ../../.env",
     "lint": "eslint . --ext ts,tsx",
     "lint:fix": "eslint . --ext ts,tsx --fix",
     "start": "TAMAGUI_TARGET=web webpack serve --config webpack.config.js",
