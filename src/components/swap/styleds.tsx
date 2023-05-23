@@ -26,7 +26,7 @@ export const PageWrapper = styled.div`
 // Mostly copied from `AppBody` but it was getting too hard to maintain backwards compatibility.
 export const SwapWrapper = styled.main<{ chainId: number | undefined }>`
   min-width: 370px;
-  max-width: 600px;
+  max-width: 370px;
   position: relative;
   background: ${({ theme }) => theme.backgroundSurface};
   border-radius: 16px;
