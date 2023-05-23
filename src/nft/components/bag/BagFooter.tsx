@@ -160,7 +160,7 @@ const Warning = ({ color, children }: PropsWithChildren<HelperTextProps>) => {
     return null
   }
   return (
-    <WarningText fontSize="14px" lineHeight="20px" $color={color}>
+    <WarningText data-testid="nft-buy-button-warning" fontSize="14px" lineHeight="20px" $color={color}>
       <WarningIcon />
       {children}
     </WarningText>
@@ -273,7 +273,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
   const { account, chainId, connector } = useWeb3React()
   const connected = Boolean(account && chainId)
   const totalEthPrice = useBagTotalEthPrice()
-  const inputCurrency = useTokenInput((state) => state.inputCurrency)
+  const { inputCurrency } = useTokenInput(({ inputCurrency }) => ({ inputCurrency }), shallow)
   const setInputCurrency = useTokenInput((state) => state.setInputCurrency)
   const defaultCurrency = useCurrency('ETH')
   const inputCurrencyBalance = useTokenBalance(
