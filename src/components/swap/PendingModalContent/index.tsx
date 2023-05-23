@@ -210,9 +210,9 @@ export function PendingModalContent({
         // On mainnet, we show the success icon once the tx is sent, since it takes longer to confirm than on L2s.
         (swapConfirmed || (swapPending && chainId === SupportedChainId.MAINNET)) ? (
           <AnimatedEntranceConfirmationIcon />
-        ) : (
+        ) : swapPending || tokenApprovalPending ? (
           <LoadingIndicatorOverlay />
-        )}
+        ) : null}
       </LogoContainer>
       <HeaderContainer gap="md" $disabled={tokenApprovalPending || swapPending}>
         <AnimationWrapper>
