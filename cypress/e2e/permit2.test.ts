@@ -5,6 +5,7 @@ import { getTestSelector } from '../utils'
 
 /** Initiates a swap. */
 function initiateSwap() {
+  // The swap button is re-rendered once enabled, so we must wait until the original button is not disabled to re-select the appropriate button.
   cy.get('#swap-button').should('not.be.disabled')
   // Completes the swap.
   cy.get('#swap-button').click()

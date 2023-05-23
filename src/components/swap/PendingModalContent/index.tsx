@@ -12,6 +12,8 @@ import { useIsTransactionConfirmed } from 'state/transactions/hooks'
 import styled, { css, keyframes } from 'styled-components/macro'
 import { ExternalLink } from 'theme'
 import { ThemedText } from 'theme/components/text'
+import { getExplorerLink } from 'utils/getExplorerLink'
+import { ExplorerDataType } from 'utils/getExplorerLink'
 
 import { ConfirmModalState } from '../ConfirmSwapModal'
 import {
@@ -116,10 +118,11 @@ interface ContentArgs {
   swapPending: boolean
   tokenApprovalPending: boolean
   swapTxHash?: string
+  chainId?: number
 }
 
 function getContent(args: ContentArgs): PendingModalStep {
-  const { step, approvalCurrency, swapConfirmed, swapPending, tokenApprovalPending, trade } = args
+  const { step, approvalCurrency, swapConfirmed, swapPending, tokenApprovalPending, trade, swapTxHash, chainId } = args
   switch (step) {
     case ConfirmModalState.APPROVING_TOKEN:
       return {
@@ -151,13 +154,17 @@ function getContent(args: ContentArgs): PendingModalStep {
       return {
         title: swapPending ? t`Transaction submitted` : swapConfirmed ? t`Success` : t`Confirm Swap`,
         subtitle: trade ? <TradeSummary trade={trade} /> : null,
-        label: swapConfirmed ? (
-          <ExternalLink href={`https://etherscan.io/tx/${swapConfirmed}`} color="textSecondary">
-            <Trans>View on Explorer</Trans>
-          </ExternalLink>
-        ) : !swapPending ? (
-          t`Proceed in your wallet`
-        ) : null,
+        label:
+          swapConfirmed && swapTxHash && chainId ? (
+            <ExternalLink
+              href={getExplorerLink(chainId, swapTxHash, ExplorerDataType.TRANSACTION)}
+              color="textSecondary"
+            >
+              <Trans>View on Explorer</Trans>
+            </ExternalLink>
+          ) : !swapPending ? (
+            t`Proceed in your wallet`
+          ) : null,
       }
   }
 }
@@ -181,6 +188,7 @@ export function PendingModalContent({
     tokenApprovalPending,
     swapTxHash,
     trade,
+    chainId,
   })
   const currentStepContainerRef = useRef<HTMLDivElement>(null)
   useUnmountingAnimation(currentStepContainerRef, () => AnimationType.EXITING)
