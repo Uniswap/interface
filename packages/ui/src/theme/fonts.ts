@@ -1,47 +1,63 @@
 import { createInterFont } from '@tamagui/font-inter'
 
+export const fonts = {
+  headlineLarge: {
+    fontSize: 40,
+    lineHeight: 48,
+  },
+  headlineMedium: {
+    fontSize: 32,
+    lineHeight: 38,
+  },
+  headlineSmall: {
+    fontSize: 24,
+    lineHeight: 28,
+  },
+  subheadLarge: {
+    fontSize: 20,
+    lineHeight: 24,
+  },
+  subheadSmall: {
+    fontSize: 14,
+    lineHeight: 20,
+  },
+  bodyLarge: {
+    fontSize: 16,
+    lineHeight: 24,
+  },
+  bodySmall: {
+    fontSize: 14,
+    lineHeight: 20,
+  },
+  bodyMicro: {
+    fontSize: 12,
+    lineHeight: 16,
+  },
+  buttonLabelLarge: {
+    fontSize: 20,
+    lineHeight: 24,
+  },
+  buttonLabelMedium: {
+    fontSize: 16,
+    lineHeight: 20,
+  },
+  buttonLabelSmall: {
+    fontSize: 14,
+    lineHeight: 20,
+  },
+  buttonLabelMicro: {
+    fontSize: 12,
+    lineHeight: 16,
+  },
+  monospace: {
+    fontSize: 14,
+    lineHeight: 20,
+  },
+}
+
+// TODO(EXT-148): leverage font tokens better
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const headingFont: any = createInterFont({
-  size: {
-    6: 15,
-  },
-  transform: {
-    6: 'uppercase',
-    7: 'none',
-  },
-  weight: {
-    6: '400',
-    7: '700',
-  },
-  color: {
-    6: '$colorFocus',
-    7: '$color',
-  },
-  letterSpacing: {
-    5: 2,
-    6: 1,
-    7: 0,
-    8: -1,
-    9: -2,
-    10: -3,
-    12: -4,
-    14: -5,
-    15: -6,
-  },
-  face: {
-    700: { normal: 'InterBold' },
-  },
-})
+export const headingFont: any = createInterFont({})
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const bodyFont: any = createInterFont(
-  {
-    face: {
-      700: { normal: 'InterBold' },
-    },
-  },
-  {
-    sizeSize: (size) => Math.round(size * 1.1),
-    sizeLineHeight: (size) => Math.round(size * 1.1 + (size > 20 ? 10 : 10)),
-  }
-)
+export const bodyFont: any = createInterFont({})

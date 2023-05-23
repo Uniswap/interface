@@ -1,6 +1,7 @@
 import { createTokens } from 'tamagui'
 import { borderRadii } from 'ui/src/theme/borderRadii'
 import { colors as color } from 'ui/src/theme/color'
+import { fonts } from 'ui/src/theme/fonts'
 import { zIndices } from 'ui/src/theme/zIndices'
 
 const space = {
@@ -46,19 +47,19 @@ const imageSize = {
 }
 
 const fontSize = {
-  headlineLarge: 40,
-  headlineMedium: 32,
-  headlineSmall: 24,
-  subheadLarge: 20,
-  subheadSmall: 15,
-  bodyLarge: 17,
-  bodySmall: 15,
-  bodyMicro: 12,
-  buttonLabelLarge: 20,
-  buttonLabelMedium: 17,
-  buttonLabelSmall: 15,
-  buttonLabelMicro: 12,
-  monospace: 15,
+  headlineLarge: fonts.headlineLarge.fontSize,
+  headlineMedium: fonts.headlineMedium.fontSize,
+  headlineSmall: fonts.headlineSmall.fontSize,
+  subheadLarge: fonts.subheadLarge.fontSize,
+  subheadSmall: fonts.subheadSmall.fontSize,
+  bodyLarge: fonts.bodyLarge.fontSize,
+  bodySmall: fonts.bodySmall.fontSize,
+  bodyMicro: fonts.bodyMicro.fontSize,
+  buttonLabelLarge: fonts.buttonLabelLarge.fontSize,
+  buttonLabelMedium: fonts.buttonLabelMedium.fontSize,
+  buttonLabelSmall: fonts.buttonLabelSmall.fontSize,
+  buttonLabelMicro: fonts.buttonLabelMicro.fontSize,
+  monospace: fonts.monospace.fontSize,
   true: 'bodySmall',
 }
 
