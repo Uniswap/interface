@@ -66,14 +66,14 @@ export default function Popups() {
 
   return (
     <>
-      <FixedPopupColumn gap="20px" extraPadding={urlWarningActive} xlPadding={isNotOnMainnet}>
+      <FixedPopupColumn gap="20px" extraPadding={urlWarningActive} xlPadding={isNotOnMainnet} data-testid="popups">
         <ClaimPopup />
         {activePopups.map((item) => (
           <PopupItem key={item.key} content={item.content} popKey={item.key} removeAfterMs={item.removeAfterMs} />
         ))}
       </FixedPopupColumn>
       {activePopups?.length > 0 && (
-        <MobilePopupWrapper>
+        <MobilePopupWrapper data-testid="popups">
           <MobilePopupInner>
             {activePopups // reverse so new items up front
               .slice(0)
