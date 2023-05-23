@@ -6,6 +6,7 @@ import { useEffect, useRef } from 'react'
 import styled from 'styled-components/macro'
 import { BREAKPOINTS } from 'theme'
 
+import { BuyButton } from './BuyButton'
 import { InfoChips } from './InfoChips'
 import { MediaRenderer } from './MediaRenderer'
 
@@ -144,6 +145,7 @@ export const LandingPage = ({ asset, collection, setShowDataHeader }: LandingPag
           <StyledHeadlineText>{asset.name ?? `${asset.collectionName} #${asset.tokenId}`}</StyledHeadlineText>
         </InfoDetailsContainer>
         <InfoChips asset={asset} />
+        <BuyButton asset={asset} />
       </InfoContainer>
     </LandingPageContainer>
   )
