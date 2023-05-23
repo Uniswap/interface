@@ -25,7 +25,7 @@ export default function SwapHeader({ autoSlippage }: { autoSlippage: Percent }) 
     <StyledSwapHeader>
       <HeaderButtonContainer>
         <ThemedText.SubHeader>
-          <Trans>Swap</Trans>
+          <Trans>Gouda Swap</Trans>
         </ThemedText.SubHeader>
         {fiatOnRampButtonEnabled && <SwapBuyFiatButton />}
       </HeaderButtonContainer>
