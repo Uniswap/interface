@@ -93,7 +93,7 @@ describe('Permit2', () => {
       initiateSwap()
 
       // tokenApprovalStub should reject here, and the modal should revert to the review state.
-      cy.contains('Review Swap')
+      cy.contains('Review swap')
         .should('be.visible')
         .then(() => {
           // The user is now allowing approval, but the permit2 signature will be rejected by the user (permitApprovalStub).
@@ -105,7 +105,7 @@ describe('Permit2', () => {
       cy.contains('Approved').should('exist')
 
       // permitApprovalStub should reject here, and the modal should revert to the review state.
-      cy.contains('Review Swap')
+      cy.contains('Review swap')
         .should('be.visible')
         .then(() => {
           permitApprovalStub.restore() // allow permit approval
