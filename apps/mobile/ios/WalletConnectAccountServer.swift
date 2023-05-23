@@ -38,7 +38,10 @@ class WalletConnectServerWrapper {
   }
   
   func disconnect(_ topic: String) {
-    guard let session = self.topicToSession[topic] else { return }
+    guard let session = self.topicToSession[topic] else {
+      self.eventEmitter.sendEvent(withName: EventType.error.rawValue, body: ["type": ErrorType.wcDisconnectError.rawValue, "message": "Session not found"])
+      return 
+    }
     
     do {
       try self.server.disconnect(from: session)

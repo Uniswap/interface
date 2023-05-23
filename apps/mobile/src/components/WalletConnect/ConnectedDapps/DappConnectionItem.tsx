@@ -2,7 +2,7 @@ import { getSdkError } from '@walletconnect/utils'
 import { ImpactFeedbackStyle } from 'expo-haptics'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { Alert, StyleSheet } from 'react-native'
+import { StyleSheet } from 'react-native'
 import ContextMenu from 'react-native-context-menu-view'
 import 'react-native-reanimated'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
@@ -48,17 +48,19 @@ export function DappConnectionItem({
 
   const onDisconnect = async (): Promise<void> => {
     if (session.version === '1') {
-      disconnectFromApp(session.id)
+      dispatch(removeSession({ account: address, sessionId: session.id }))
+      // Allow session removal action to complete before disconnecting from app, for immediate UI feedback
+      setImmediate(() => disconnectFromApp(session.id))
       return
     }
 
     if (session.version === '2') {
       try {
+        dispatch(removeSession({ account: address, sessionId: session.id }))
         await wcWeb3Wallet.disconnectSession({
           topic: session.id,
           reason: getSdkError('USER_DISCONNECTED'),
         })
-        dispatch(removeSession({ account: address, sessionId: session.id }))
         dispatch(
           pushNotification({
             type: AppNotificationType.WalletConnect,
@@ -76,13 +78,6 @@ export function DappConnectionItem({
             'onDisconnect',
             'Failed to disconnect session',
             e.message
-          )
-          Alert.alert(
-            t('WalletConnect Error'),
-            t('Failed to disconnect from {{ dapp }}. \n\n Error: {{ message }}', {
-              dapp: dapp.name,
-              message: e.message,
-            })
           )
         }
       }

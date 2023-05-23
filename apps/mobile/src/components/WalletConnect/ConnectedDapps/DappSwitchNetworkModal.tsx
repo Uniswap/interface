@@ -1,14 +1,19 @@
 import { notificationAsync, selectionAsync } from 'expo-haptics'
 import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useAppDispatch } from 'src/app/hooks'
 import { Flex } from 'src/components/layout'
 import { Separator } from 'src/components/layout/Separator'
 import { ActionSheetModal } from 'src/components/modals/ActionSheetModal'
 import { useNetworkOptions } from 'src/components/Network/hooks'
 import { Text } from 'src/components/Text'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
+import { useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
 import { changeChainId, disconnectFromApp } from 'src/features/walletConnect/WalletConnect'
-import { WalletConnectSessionV1 } from 'src/features/walletConnect/walletConnectSlice'
+import {
+  removeSession,
+  WalletConnectSessionV1,
+} from 'src/features/walletConnect/walletConnectSlice'
 import { ChainId } from 'wallet/src/constants/chains'
 import { toSupportedChainId } from 'wallet/src/utils/chainId'
 
@@ -22,6 +27,8 @@ export function DappSwitchNetworkModal({
   onClose,
 }: DappSwitchNetworkModalProps): JSX.Element {
   const { t } = useTranslation()
+  const dispatch = useAppDispatch()
+  const address = useActiveAccountAddressWithThrow()
 
   const onPress = useCallback(
     (chainId: ChainId | null) => {
@@ -45,7 +52,9 @@ export function DappSwitchNetworkModal({
           key: ElementName.Disconnect,
           onPress: (): void => {
             notificationAsync()
-            disconnectFromApp(selectedSession.id)
+            dispatch(removeSession({ account: address, sessionId: selectedSession.id }))
+            // Allow session removal action to complete before disconnecting from app, for immediate UI feedback
+            setImmediate(() => disconnectFromApp(selectedSession.id))
             onClose()
           },
           render: () => (
@@ -60,7 +69,7 @@ export function DappSwitchNetworkModal({
           ),
         },
       ]),
-    [networkOptions, onClose, selectedSession.id, t]
+    [networkOptions, onClose, selectedSession.id, address, dispatch, t]
   )
 
   return (

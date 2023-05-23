@@ -214,6 +214,16 @@ function createWalletConnectChannel(
             })
           )
           break
+        case WCErrorType.DisconnectError:
+          emit(
+            pushNotification({
+              type: AppNotificationType.Error,
+              errorMessage: i18n.t(`Disconnecting resulted in error: {{message}}`, {
+                message: req.message,
+              }),
+            })
+          )
+          break
         default:
           logger.error('wcSaga', 'native module', 'errorHandler', req.type, req.message || '')
       }
