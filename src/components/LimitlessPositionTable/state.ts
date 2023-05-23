@@ -7,7 +7,7 @@ export enum PositionSortMethod {
   VALUE = 'Net Value',
   COLLATERAL = 'Collateral',
   RECENT_PREMIUM = 'Recent Premium',
-  REPAYTIME = 'Repayment Time',
+  REPAYTIME = 'Time Left',
   UNUSED_PREMIUM = 'Unused Premium'
 }
 

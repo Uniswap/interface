@@ -41,13 +41,14 @@ import { AutoColumn } from 'components/Column'
 import ClosePositionModal, { AddPremiumModal } from 'components/swap/CloseLeveragePositionModal'
 import { useWeb3React } from '@web3-react/core'
 import { SmallButtonPrimary } from 'components/Button'
-import { SmallMaxButton } from 'pages/RemoveLiquidity/styled'
+import { ReduceButton, SmallMaxButton } from 'pages/RemoveLiquidity/styled'
 import { MaxButton } from 'pages/Pool/styleds'
 
 const Cell = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
+  font-size: 12px;
 `
 const StyledTokenRow = styled.div<{
   first?: boolean
@@ -57,7 +58,7 @@ const StyledTokenRow = styled.div<{
   background-color: transparent;
   display: grid;
   font-size: 16px;
-  grid-template-columns: 2.75fr 2fr 2fr 2fr 2fr 2fr 2fr;
+  grid-template-columns: 2.75fr 2fr 2fr 2fr 2fr 2fr 1.3fr;
   line-height: 24px;
   max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT};
   min-width: 390px;
@@ -90,15 +91,15 @@ const StyledTokenRow = styled.div<{
   }
 
   @media only screen and (max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT}) {
-    grid-template-columns: 2.75fr 2fr 2fr 2fr 2fr 2fr 2fr;
+    grid-template-columns: 2.75fr 2fr 2fr 2fr 2fr 2fr 1.3fr;
   }
 
   @media only screen and (max-width: ${LARGE_MEDIA_BREAKPOINT}) {
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 0.5fr;
   }
 
   @media only screen and (max-width: ${MEDIUM_MEDIA_BREAKPOINT}) {
-    grid-template-columns:  1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-columns:  1fr 1fr 1fr 1fr 1fr 1fr 0.5fr;
   }
 
   @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
@@ -219,6 +220,12 @@ const GreenText = styled.span`
     theme.accentSuccess
   };
 `
+
+const RedText = styled.span`
+  color: ${({ theme }) =>
+    theme.accentFailure
+    };
+  `
 
 const HeaderCellWrapper = styled.span<{ onClick?: () => void }>`
   align-items: center;
@@ -369,7 +376,9 @@ function HeaderCell({
 
   return (
     <HeaderCellWrapper onClick={handleSortCategory}>
+      <ThemedText.TableText>
       {category}
+      </ThemedText.TableText>
       {description && (
         <MouseoverTooltip text={description} placement="right">
           <InfoIconContainer>
@@ -419,9 +428,9 @@ function PositionRow({
   }
   const actions = (
     <AutoRow>
-      <SmallMaxButton width="auto" onClick={() => setShowClose(!showClose)} >
+      <ReduceButton width="auto" onClick={() => setShowClose(!showClose)} >
         <Trans>reduce</Trans>
-      </SmallMaxButton>
+      </ReduceButton>
     </AutoRow>
   )
   const rowCells = (
@@ -482,7 +491,7 @@ export function HeaderRow() {
   return (
     <PositionRow
       header={true}
-      positionInfo={<Trans>Position</Trans>}
+      positionInfo={<ThemedText.TableText>Position</ThemedText.TableText>}
       value={<HeaderCell category={PositionSortMethod.VALUE} />}
       collateral={<HeaderCell category={PositionSortMethod.COLLATERAL} />}
       recentPremium={<HeaderCell category={PositionSortMethod.RECENT_PREMIUM} />}
@@ -535,11 +544,12 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
 
 
   const now = moment();
-  const timeLeft = useMemo(() => {
+  const [timeLeft, isOverDue] = useMemo(() => {
     const duration = moment.duration(moment.unix(Number(position.openTime)).add(1, 'days').diff(now))
     const hours = duration.hours();
+    const isNegative = hours < 0;
     const minutes = duration.minutes()
-    return `${hours}h ${minutes}m`
+    return [`${Math.abs(hours)}h ${Math.abs(minutes)}m`, isNegative]
   }, [position, now])
 
 
@@ -556,48 +566,57 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
               <RowBetween>
                 <DoubleCurrencyLogo margin={true} size={30} currency0={token0 ?? undefined} currency1={token1 ?? undefined} />
                 <PositionInfo>
-                  <ThemedText.BodyPrimary margin="0" padding="0">
+                  <ThemedText.TableText margin="0" padding="0">
                     <GreenText> x{formatNumber(leverageFactor)} Long </GreenText> {isToken0 ? token0?.symbol : token1?.symbol}
-                  </ThemedText.BodyPrimary>
+                  </ThemedText.TableText>
                 </PositionInfo>
               </RowBetween>
             </ClickableContent>
           }
           value={
             <Trans>
-              <ThemedText.BodyPrimary>
+              <ThemedText.TableText>
                 {formatNumber(Number(position.totalPosition))} {isToken0 ? token0?.symbol : token1?.symbol}
-              </ThemedText.BodyPrimary>
+              </ThemedText.TableText>
             </Trans>
           }
           collateral={
             <Trans>
-              <ThemedText.BodyPrimary>
+              <ThemedText.TableText>
                 {formatNumber(Number(position.initialCollateral))} {isToken0 ? token1?.symbol : token0?.symbol}
-              </ThemedText.BodyPrimary>
+              </ThemedText.TableText>
             </Trans>
           }
           repaymentTime={
             <Trans>
-              <ThemedText.BodyPrimary>
-                {timeLeft}
-              </ThemedText.BodyPrimary>
+              <ThemedText.TableText>
+                { !isOverDue ? (
+                  <GreenText>
+                  {timeLeft}
+                  </GreenText>
+                ) : ( 
+                  <RedText>
+                  -{timeLeft}
+                  </RedText>
+                )
+                }
+              </ThemedText.TableText>
             </Trans>
           }
           recentPremium={
             <Trans>
               <AutoColumn>
-                <ThemedText.BodyPrimary>
+                <ThemedText.TableText>
                   {formatNumber(Number(position.recentPremium))} {isToken0 ? token0?.symbol : token1?.symbol}
-                </ThemedText.BodyPrimary>
+                </ThemedText.TableText>
               </AutoColumn>
             </Trans>
           }
           unusedPremium={
             <Trans>
-              <ThemedText.BodyPrimary>
+              <ThemedText.TableText>
                 {formatNumber(Number(position.unusedPremium))} {isToken0 ? token1?.symbol : token0?.symbol}
-              </ThemedText.BodyPrimary>
+              </ThemedText.TableText>
             </Trans>
           }
           position={position}

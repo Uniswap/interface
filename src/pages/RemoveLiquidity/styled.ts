@@ -15,6 +15,10 @@ export const Wrapper = styled.div`
 export const SmallMaxButton = styled(MaxButton)`
   font-size: 12px;
 `
+export const ReduceButton = styled(MaxButton)`
+  font-size: 12px;
+  padding: 2px;
+`
 
 export const ResponsiveHeaderText = styled(Text)`
   font-size: 40px;

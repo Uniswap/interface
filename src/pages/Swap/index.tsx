@@ -76,16 +76,9 @@ import Slider from "../../components/Slider"
 import { ResponsiveHeaderText, SmallMaxButton } from '../RemoveLiquidity/styled'
 import useDebouncedChangeHandler from 'hooks/useDebouncedChangeHandler'
 // import LeveragePositionsList from 'components/LeveragedPositionsList'
-import { LeveragePositionDetails } from 'types/leveragePosition'
-import { BigNumber } from '@ethersproject/bignumber'
-import { AlertTriangle, BookOpen, ChevronDown, ChevronsRight, Inbox, Layers } from 'react-feather'
 import { Chain, TokenPriceQuery } from 'graphql/data/__generated__/types-and-hooks'
 import ChartSection, { PairChartSection } from 'components/Tokens/TokenDetails/ChartSection'
 import TokenDetailsSkeleton, {
-  Hr,
-  LeftPanel,
-  RightPanel,
-  TokenDetailsLayout,
   TokenInfoContainer,
   TokenNameCell,
 } from 'components/Tokens/TokenDetails/Skeleton'
@@ -116,8 +109,15 @@ import { usePoolPriceData } from 'graphql/limitlessGraph/poolPriceData'
 import dayjs from 'dayjs'
 import CandleChart from 'components/CandleChart'
 import PositionsTable from 'components/LimitlessPositionTable/TokenTable'
-import { TVChartContainer } from 'components/ExchangeChart'
+import { PoolDataSection } from 'components/ExchangeChart'
 
+
+const Hr = styled.hr`
+  background-color: ${({ theme }) => theme.backgroundOutline};
+  width: 100%;
+  border: none;
+  height: 0.5px;
+`
 
 const StyledNumericalInput = styled(NumericalInput)`
   width: 100px;
@@ -222,8 +222,23 @@ export const MonoSpace = styled.span`
   font-variant-numeric: tabular-nums;
 `
 const ChartContainer = styled(AutoColumn)`
-  width: 100%;
   margin-right: 20px;
+`
+
+const PositionsContainer = styled.div`
+  margin-right: 20px;
+`
+
+const StatsContainer = styled.div`
+  margin-top: 20px;
+  margin-right: 20px;
+`
+
+const LeftContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-content: center;
 `
 
 
@@ -463,6 +478,7 @@ export default function Swap({ className }: { className?: string }) {
 
   let poolAddress = useBestPoolAddress(currencies[Field.INPUT] ?? undefined, currencies[Field.OUTPUT] ?? undefined)
   // const [leverageManagerAddress, setLeverageManagerAddress] = useState<string>()
+  
 
   useEffect(() => {
     // declare the data fetching function
@@ -478,7 +494,7 @@ export default function Swap({ className }: { className?: string }) {
     }
 
   }, [poolAddress, account, trade, currencies, account, provider])
-  // console.log("poolAddress", poolAddress, leverageManagerAddress)
+  console.log("poolAddress", poolAddress, leverageManagerAddress)
 
   const { tokenAllowance: leverageManagerAllowanceAmount, isSyncing: boolean } = useTokenAllowance(
     (parsedAmounts[Field.INPUT]?.currency.isToken ? (parsedAmounts[Field.INPUT]?.currency as Token) : undefined)
@@ -521,7 +537,7 @@ export default function Swap({ className }: { className?: string }) {
     } catch (err) {
       console.log('err', err)
     }
-    
+
     // loadedInputCurrency, loadedOutputCurrency
   }, [currencies])
   const faucetOut = useCallback(async () => {
@@ -783,6 +799,15 @@ export default function Swap({ className }: { className?: string }) {
   }, [timePeriod])
   const chain = chainId ? CHAIN_ID_TO_BACKEND_NAME[chainId] : Chain.Ethereum
 
+  const defaultInputCurrency = useCurrency(feth);
+  const defaultOutputCurrency = useCurrency(fusdc);
+  useEffect(() => {
+    if (defaultInputCurrency && defaultOutputCurrency) {
+      onCurrencySelection(Field.INPUT, defaultInputCurrency)
+      onCurrencySelection(Field.OUTPUT, defaultOutputCurrency)
+    }
+  }, [defaultInputCurrency, defaultOutputCurrency])
+
   const { data: token0PriceQuery } = useTokenPriceQuery({
     variables: {
       address: inputAddress,
@@ -849,45 +874,44 @@ export default function Swap({ className }: { className?: string }) {
               width="100%"
             />
           ) : (
-            <AutoColumn>
-              <RowBetween align="flex-start">
-                <ChartContainer>
-                  <TokenInfoContainer data-testid="token-info-container">
-                    <TokenNameCell>
-                      {inputCurrency && outputCurrency && <DoubleCurrencyLogo currency0={inputCurrency as Currency} currency1={outputCurrency as Currency} size={18} margin />}
-                      {inputCurrency && outputCurrency
-                        ? `${(outputCurrency.symbol)}/${(inputCurrency.symbol)}`
-                        : <Trans>Pair not found</Trans>}
-                      {
-                        inputCurrency && (
-                          <SmallMaxButton onClick={() => faucetIn()} width="10%">
-                            <Trans>Faucet {inputCurrency.symbol}</Trans>
-                          </SmallMaxButton>
-                        )
-                      }
-                      {
-                        outputCurrency && (
-                          <SmallMaxButton onClick={() => faucetOut()} width="10%">
-                            <Trans>Faucet {outputCurrency.symbol}</Trans>
-                          </SmallMaxButton>
-                        )
-                      }
-                    </TokenNameCell>
-                  </TokenInfoContainer>
+              <RowFixed align="flex-start">
+                <LeftContainer>
+                  <StatsContainer>
+                    <TokenInfoContainer data-testid="token-info-container">
+                      <TokenNameCell>
+                        {inputCurrency && outputCurrency && <DoubleCurrencyLogo currency0={inputCurrency as Currency} currency1={outputCurrency as Currency} size={40} margin />}
+                        {inputCurrency && outputCurrency
+                          ? <ThemedText.LargeHeader>{(outputCurrency.symbol)}/{(inputCurrency.symbol)}</ThemedText.LargeHeader>
+                          : <ThemedText.LargeHeader>Pair not found</ThemedText.LargeHeader>}
+                        {
+                          inputCurrency && (
+                            <SmallMaxButton onClick={() => faucetIn()} width="10%">
+                              <Trans>Faucet {inputCurrency.symbol}</Trans>
+                            </SmallMaxButton>
+                          )
+                        }
+                        {
+                          outputCurrency && (
+                            <SmallMaxButton onClick={() => faucetOut()} width="10%">
+                              <Trans>Faucet {outputCurrency.symbol}</Trans>
+                            </SmallMaxButton>
+                          )
+                        }
+                      </TokenNameCell>
+                    </TokenInfoContainer>
+                    <PoolDataSection
+                      chainId={chainId ?? 80001}
+                      token0={pool?.token0}
+                      token1={pool?.token1}
+                      fee={pool?.fee}
+                    />
+                  </StatsContainer>
+                  <Hr />
+                  <PositionsContainer>
+                    <PositionsTable positions={leveragePositions} loading={leveragePositionsLoading} />
+                  </PositionsContainer>
 
-                  {/* <CandleChart
-                      data={priceData ?? []}
-                      setValue={setLatestValue}
-                      setLabel={setValueLabel}
-                    /> */}
-                  <TVChartContainer
-                    chainId={chainId ?? 80001}
-                    token0={pool?.token0}
-                    token1={pool?.token1}
-                    fee={pool?.fee}
-                  />
-                  {/* <PairChartSection token0PriceQuery={token0PriceQuery} token1PriceQuery={token1PriceQuery} token0symbol={inputCurrency?.symbol} token1symbol={outputCurrency?.symbol} onChangeTimePeriod={setTimePeriod} /> */}
-                </ChartContainer>
+                </LeftContainer>
 
                 <SwapWrapper chainId={chainId} className={className} id="swap-page">
                   <SwapHeader allowedSlippage={allowedSlippage} />
@@ -1101,9 +1125,6 @@ export default function Swap({ className }: { className?: string }) {
                                       <Trans>100</Trans>
                                     </SmallMaxButton>
                                     <SmallMaxButton onClick={() => onLeverageFactorChange("1000")} width="20%">
-                                      <Trans>500</Trans>
-                                    </SmallMaxButton>
-                                    <SmallMaxButton onClick={() => onLeverageFactorChange("1000")} width="20%">
                                       <Trans>1000</Trans>
                                     </SmallMaxButton>
                                   </AutoRow>
@@ -1121,16 +1142,16 @@ export default function Swap({ className }: { className?: string }) {
                           </AutoColumn>
                         </LightCard>
                       </LeverageGaugeSection>
-                        <DetailsSwapSection>
-                          <SwapDetailsDropdown
-                            trade={trade}
-                            syncing={routeIsSyncing}
-                            loading={routeIsLoading}
-                            allowedSlippage={allowedSlippage}
-                            leverageTrade={leverageTrade}
-                          />
-                        </DetailsSwapSection>
-                      
+                      <DetailsSwapSection>
+                        <SwapDetailsDropdown
+                          trade={trade}
+                          syncing={routeIsSyncing}
+                          loading={routeIsLoading}
+                          allowedSlippage={allowedSlippage}
+                          leverageTrade={leverageTrade}
+                        />
+                      </DetailsSwapSection>
+
                     </div>
                     {showPriceImpactWarning && <PriceImpactWarning priceImpact={largerPriceImpact} />}
                     <div>
@@ -1315,11 +1336,7 @@ export default function Swap({ className }: { className?: string }) {
                   </div>
 
                 </SwapWrapper>
-
-              </RowBetween>
-
-              <PositionsTable positions={leveragePositions} loading={leveragePositionsLoading} />
-            </AutoColumn>
+              </RowFixed>
           )}
           <NetworkAlert />
         </PageWrapper>

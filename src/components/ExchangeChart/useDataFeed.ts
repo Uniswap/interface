@@ -105,7 +105,7 @@ export default function useDatafeed(
 
 
           try {
-            let { data, error } = await fetchPoolPriceData(poolAddress, from, to, countBack, invertPrice, useUniswapSubgraph ? arbitrumClient : UniswapClient);
+            let { data, error } = await fetchPoolPriceData(poolAddress, from, to, countBack, invertPrice, useUniswapSubgraph ? arbitrumClient : limitlessClient);
             const noData = !data || data.length === 0;
             if (error) {
               console.error("subgraph error: ", error, data);

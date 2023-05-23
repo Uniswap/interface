@@ -25,6 +25,9 @@ export const ThemedText = {
   BodySmall(props: TextProps) {
     return <TextWrapper fontWeight={400} fontSize={14} color="textPrimary" {...props} />
   },
+  TableText(props: TextProps) {
+    return <TextWrapper fontWeight={400} fontSize={12} color="textPrimary" {...props} />
+  },
   Caption(props: TextProps) {
     return <TextWrapper fontWeight={400} fontSize={12} color="textPrimary" {...props} />
   },

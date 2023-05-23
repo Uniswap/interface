@@ -11,8 +11,8 @@ import { defaultChartProps, DEFAULT_PERIOD, disabledFeaturesOnMobile } from "./c
 import useDatafeed from "./useDataFeed";
 import { FeeAmount, Pool, computePoolAddress } from '@uniswap/v3-sdk';
 import { Currency, Token } from '@uniswap/sdk-core';
-import { useUniswapSubgraph } from 'graphql/limitlessGraph/uniswapClients';
-import { useLimitlessSubgraph } from 'graphql/limitlessGraph/limitlessClients';
+import { arbitrumClient, useUniswapSubgraph } from 'graphql/limitlessGraph/uniswapClients';
+import { useLimitlessSubgraph, limitlessClient } from 'graphql/limitlessGraph/limitlessClients';
 import { V3_CORE_FACTORY_ADDRESSES as UNISWAP_FACTORIES } from "constants/addresses-uniswap"
 import { V3_CORE_FACTORY_ADDRESSES as LIMITLESS_FACTORIES, POOL_INIT_CODE_HASH, UNISWAP_POOL_INIT_CODE_HASH, feth, fusdc } from "constants/addresses"
 import { useContract } from 'hooks/useContract';
@@ -23,8 +23,18 @@ import { useCurrency } from 'hooks/Tokens';
 import { convertBNToStr } from 'hooks/useV3Positions';
 import { LoadingRows } from 'components/Loader/styled';
 import { ThemedText } from 'theme';
+import StatsSection from 'components/swap/StatsSection';
+import { useQuery } from "@apollo/client";
+import moment from "moment"
+import { POOL_STATS_QUERY } from 'graphql/limitlessGraph/queries';
+import { BigNumber as BN } from "bignumber.js"
+import styled from 'styled-components';
 
 const POOL_STATE_INTERFACE = new Interface(IUniswapV3PoolStateABI)
+
+const StatsContainer = styled.div`
+	margin-top:16px;
+`
 
 export interface ChartContainerProps {
 	symbol: ChartingLibraryWidgetOptions['symbol'];
@@ -49,7 +59,7 @@ const getLanguageFromURL = (): LanguageCode | null => {
 	return results === null ? null : decodeURIComponent(results[1].replace(/\+/g, ' ')) as LanguageCode;
 };
 
-export const TVChartContainer = ({
+export const PoolDataSection = ({
 	chainId,
 	token0,
 	token1,
@@ -65,9 +75,21 @@ export const TVChartContainer = ({
 	const tvWidgetRef = useRef<IChartingLibraryWidget | null>(null);
 	const [chartReady, setChartReady] = useState(false);
 	const [chartDataLoading, setChartDataLoading] = useState(true);
+	const [lastUpdate, setLastUpdate] = useState(moment.now())
+
+	useEffect(() => {
+		// if longer than 5 seconds w/o update, reload
+		if (lastUpdate < moment.now() - 1000 * 5) {
+			setLastUpdate(moment.now())
+		}
+	})
 
 	const uniswapPoolAddress = useMemo(() => {
-		if (chainId && token0 && token1 && fee) {
+		if (chainId && token0 && token1 && fee) {	
+			if (token0?.address.toLowerCase() === fusdc.toLowerCase() && token1?.address.toLowerCase() === feth.toLowerCase()) {
+				return "0xc31e54c7a869b9fcbecc14363cf510d1c41fa443";
+			}
+
 			return computePoolAddress({
 				factoryAddress: UNISWAP_FACTORIES[42161],
 				tokenA: token0,
@@ -100,7 +122,85 @@ export const TVChartContainer = ({
 	const currency1 = useCurrency(token1?.address)
 	const [poolState, limitlessPool] = usePool(currency0 ?? undefined, currency1 ?? undefined, fee)
 	const [symbol, setSymbol] = useState("missing pool")
+	const [stats, setStats] = useState<{
+		price: number | null,
+		delta: number | null,
+		// token0Volume: number | null,
+		// token1Volume: number | null,
+		high24h: number | null,
+		low24h: number | null,
+		invertPrice: boolean
+	}>({
+		price: null,
+		delta: null,
+		high24h: null,
+		low24h: null,
+		invertPrice: false
+	})
+
+	useEffect(() => {
+		if (token0 && token1) {
+			// fetch data and process it
+			const fetch = async () => {
+				console.log("ABC", uniswapPoolAddress?.toLowerCase())
+				try {
+					if (uniswapPoolAddress) {
+						const startTime = moment().subtract(1, 'days').unix()
+						console.log("startTime: ", startTime)
+						const result = await arbitrumClient.query(
+							{
+								query: POOL_STATS_QUERY,
+								variables: {
+									address: uniswapPoolAddress,
+									startTime: startTime,
+								},
+								fetchPolicy: 'cache-first',	
+							}
+						)
+						if (!result.error && !result.loading) {
+
+							const data =  result.data.poolHourDatas
+
+							let price = data[data.length - 1].token0Price
+							const invertPrice = price < 1;
+							let price24hAgo = data[0].token0Price
+							let delta;
+							let price24hHigh;
+							let price24hLow;
+							if (invertPrice) {
+								price = 1 / price;
+								price24hAgo = 1 / price24hAgo;
+								delta = ( Number(price) - Number(price24hAgo) ) / Number(price24hAgo) * 100
+								price24hHigh = Math.max(...data.map((item: any) => 1 / Number(item.high)))
+								price24hLow = Math.min(...data.map((item: any) => 1 / Number(item.low)))	
+							} else {
+								delta = ( Number(price) - Number(price24hAgo) ) / Number(price24hAgo) * 100
+								price24hHigh = Math.max(...data.map((item: any) => Number(item.high)))
+								price24hLow = Math.min(...data.map((item: any) => Number(item.low)))	
+							}
+							setStats(
+								{
+									price: Number(price),
+									delta: delta,
+									high24h: price24hHigh,
+									low24h: price24hLow,
+									invertPrice
+								}
+							)
+						}
+
+						console.log("ExchangeResult ", result)
+					}
+				} catch (err) {
+					console.log("subgraph error: ", err)
+				}
+			}
 	
+			fetch()
+		}
+	}, [lastUpdate, uniswapPoolAddress, uniswapPoolExists])
+
+	console.log("stats: ", stats)
 
 	useEffect(() => {
 		async function fetch() {
@@ -109,6 +209,7 @@ export const TVChartContainer = ({
 					const token0Price = await uniswapPoolContract.callStatic.token0Price()
 					if (token0Price) {
 						setUniswapPoolExists(true)
+						setStats((prev) => ({...prev, token0Price: new BN(token0Price.toString()).shiftedBy(18).toNumber()}))
 						setUniswapToken0Price(Number(convertBNToStr(token0Price, 18)))
 					}
 				} catch (err) {
@@ -116,8 +217,9 @@ export const TVChartContainer = ({
 				}
 			}
 		}
+
 		fetch()
-	}, [uniswapPoolAddress])
+	})
 
 	useEffect(() => {
 		if (token0?.address.toLowerCase() === fusdc.toLowerCase() && token1?.address.toLowerCase() === feth.toLowerCase()) {
@@ -160,6 +262,8 @@ export const TVChartContainer = ({
 					invertPrice: !token0IsBase,
 					useUniswapSubgraph: false
 				}))
+		} else {
+			setSymbol("missing pool")
 		}
 	}, [token0, token1])
 
@@ -180,7 +284,7 @@ export const TVChartContainer = ({
 			user_id: defaultChartProps.userId,
 			//fullscreen: defaultChartProps.fullscreen,
 			// autosize: defaultChartProps.autosize,
-			custom_css_url: defaultChartProps.custom_css_url,
+			// custom_css_url: defaultChartProps.custom_css_url,
 			autosize: true,
 			overrides: defaultChartProps.overrides,
 			interval: "60",//getObjectKeyFromValue(period, SUPPORTED_RESOLUTIONS),
@@ -192,39 +296,50 @@ export const TVChartContainer = ({
 		tvWidgetRef.current = new widget(widgetOptions as any);
 
 		tvWidgetRef.current!.onChartReady(function () {
-      setChartReady(true);
+			setChartReady(true);
 
-      tvWidgetRef.current?.activeChart().dataReady(() => {
-        setChartDataLoading(false);
-      });
-    });
+			tvWidgetRef.current?.activeChart().dataReady(() => {
+				setChartDataLoading(false);
+			});
+		});
 
 
 		return () => {
-      if (tvWidgetRef.current) {
-        tvWidgetRef.current.remove();
-        tvWidgetRef.current = null;
-        setChartReady(false);
-        setChartDataLoading(true);
-      }
-    };
-	}, [chainId, symbol]);
+			if (tvWidgetRef.current) {
+				tvWidgetRef.current.remove();
+				tvWidgetRef.current = null;
+				setChartReady(false);
+				setChartDataLoading(true);
+			}
+		};
+	}, [chainId, symbol, token0, token1, fee]);
 
 	return (
-		<div style={{height: "450px"}}>
-			{/* {symbol === "" && (
-				<ThemedText.BodyPrimary>
-					Pool not found
-				</ThemedText.BodyPrimary>
-			)} */}
-			<div
-			style={{
-				height: '100%'
-			}}
-			ref={chartContainerRef}
-			className={'TVChartContainer'}
-		/>
-		</div>
-		
+		<>
+			<div style={{ height: "450px" }}>
+				<div
+					style={{
+						height: '100%'
+					}}
+					ref={chartContainerRef}
+					className={'TVChartContainer'}
+				/>
+			</div>
+			<StatsContainer>
+			<StatsSection
+				address={uniswapPoolAddress ?? ""}
+				chainId={chainId} 
+				inversePrice={stats.invertPrice}
+				token0Symbol={token0?.symbol}
+				token1Symbol={token1?.symbol}
+				price={stats.price}
+				delta={stats.delta}
+				priceHigh24H={stats.high24h}
+				priceLow24H={stats.low24h}
+			/>
+			</StatsContainer>
+		</>
+
+
 	);
 };

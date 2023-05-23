@@ -10,7 +10,7 @@ import { Z_INDEX } from 'theme/zIndex'
 import { AutoColumn } from '../Column'
 
 export const PageWrapper = styled.div`
-  padding: 20px 16px 0px;
+  padding: 20px 24px 0px;
   // max-width: 480px;
   width: 100%;
 
@@ -25,8 +25,8 @@ export const PageWrapper = styled.div`
 
 // Mostly copied from `AppBody` but it was getting too hard to maintain backwards compatibility.
 export const SwapWrapper = styled.main<{ chainId: number | undefined }>`
-  min-width:480px;
-  max-width: 500px;
+  min-width: 370px;
+  max-width: 600px;
   position: relative;
   background: ${({ theme }) => theme.backgroundSurface};
   border-radius: 16px;

@@ -1,5 +1,6 @@
 .theme-dark:root {
   --dark-blue-bg: #16182e;
+  /* --dark-blue-bg: #464a6e; */
 
   --tv-color-pane-background: var(--dark-blue-bg);
   --tv-color-platform-background: var(--dark-blue-bg);
@@ -42,12 +43,15 @@ html.theme-dark .toggleButton-3zv4iS2j .background-3zv4iS2j:hover {
 }
 
 html.theme-dark .menuWrap-g78rwseC {
-  background-color: #20243f !important;
+  /*background-color: #20243f !important;*/
+  background-color: #464a6e !important;
+
 }
 
 html.theme-dark .item-2IihgTnv:not(.isActive-2IihgTnv) {
   cursor: pointer;
-  background-color: #20243f !important;
+  /* background-color: #20243f !important; */
+  background-color: #464a6e !important;
   color: #b2b5be !important;
 }
 
