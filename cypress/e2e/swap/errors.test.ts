@@ -19,9 +19,9 @@ describe('Swap errors', () => {
       cy.get('#swap-button').click()
       cy.get('#confirm-swap-or-send').click()
 
-      cy.contains('Confirmation failed').should('exist')
+      cy.contains('Review Swap').should('exist')
       cy.get('body').click('topRight')
-      cy.contains('Confirmation failed').should('not.exist')
+      cy.contains('Review Swap').should('not.exist')
     })
   })
 
