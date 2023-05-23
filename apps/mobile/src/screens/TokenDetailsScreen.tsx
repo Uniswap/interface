@@ -20,7 +20,6 @@ import { TokenDetailsFavoriteButton } from 'src/components/TokenDetails/TokenDet
 import { TokenDetailsHeader } from 'src/components/TokenDetails/TokenDetailsHeader'
 import { TokenDetailsStats } from 'src/components/TokenDetails/TokenDetailsStats'
 import TokenWarningModal from 'src/components/tokens/TokenWarningModal'
-import { isError, isNonPollingRequestInFlight } from 'src/data/utils'
 import { AssetType } from 'src/entities/assets'
 import { currencyIdToContractInput } from 'src/features/dataApi/utils'
 import { openModal, selectModalState } from 'src/features/modals/modalSlice'
@@ -35,6 +34,7 @@ import { iconSizes } from 'src/styles/sizing'
 import { useExtractedTokenColor } from 'src/utils/colors'
 import { ChainId } from 'wallet/src/constants/chains'
 import { PollingInterval } from 'wallet/src/constants/misc'
+import { isError, isNonPollingRequestInFlight } from 'wallet/src/data/utils'
 import {
   SafetyLevel,
   TokenDetailsScreenQuery,

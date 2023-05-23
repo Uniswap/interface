@@ -5,7 +5,6 @@ import React, { useEffect, useMemo } from 'react'
 import { View } from 'react-native'
 import { batch } from 'react-redux'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
-import { useRefetchQueries } from 'src/data/hooks'
 import {
   pushNotification,
   setLastTxNotificationUpdate,
@@ -22,6 +21,7 @@ import {
   selectActiveAccountAddress,
 } from 'src/features/wallet/selectors'
 import { PollingInterval } from 'wallet/src/constants/misc'
+import { useRefetchQueries } from 'wallet/src/data/utils'
 import {
   TransactionHistoryUpdaterQueryResult,
   TransactionListQuery,

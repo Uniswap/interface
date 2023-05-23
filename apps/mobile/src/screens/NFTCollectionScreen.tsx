@@ -16,7 +16,6 @@ import { ScrollHeader } from 'src/components/layout/screens/ScrollHeader'
 import { Loader } from 'src/components/loading'
 import { Trace } from 'src/components/telemetry/Trace'
 import { Text } from 'src/components/Text'
-import { isError } from 'src/data/utils'
 import { ListPriceBadge } from 'src/features/nfts/collection/ListPriceCard'
 import { NFTCollectionContextMenu } from 'src/features/nfts/collection/NFTCollectionContextMenu'
 import {
@@ -30,6 +29,7 @@ import { Screens } from 'src/screens/Screens'
 import { dimensions } from 'src/styles/sizing'
 import { theme } from 'src/styles/theme'
 import { EMPTY_ARRAY } from 'wallet/src/constants/misc'
+import { isError } from 'wallet/src/data/utils'
 import {
   NftCollectionScreenQuery,
   useNftCollectionScreenQuery,

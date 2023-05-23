@@ -1,6 +1,7 @@
 import './App.css'
 
 import { createHashRouter, RouterProvider } from 'react-router-dom'
+import { GraphqlProvider } from 'src/app/apollo'
 import { Complete } from 'src/app/features/onboarding/Complete'
 import { ImportMnemonic } from 'src/app/features/onboarding/ImportMnemonic'
 import { IntroScreen } from 'src/app/features/onboarding/IntroScreen'
@@ -48,7 +49,9 @@ const router = createHashRouter([
 function App({ store }: { store: Store }): JSX.Element {
   return (
     <Provider store={store}>
-      <RouterProvider router={router} />
+      <GraphqlProvider>
+        <RouterProvider router={router} />
+      </GraphqlProvider>
     </Provider>
   )
 }

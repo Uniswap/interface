@@ -17,7 +17,6 @@ import { TabProps } from 'src/components/layout/TabHelpers'
 import { Loader } from 'src/components/loading'
 import { HiddenNftsRowLeft, HiddenNftsRowRight } from 'src/components/NFT/NFTHiddenRow'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
-import { isError, isNonPollingRequestInFlight } from 'src/data/utils'
 import { openModal } from 'src/features/modals/modalSlice'
 import {
   EMPTY_NFT_ITEM,
@@ -34,6 +33,7 @@ import { Screens } from 'src/screens/Screens'
 import { dimensions } from 'src/styles/sizing'
 import NoNFTsIcon from 'ui/src/assets/icons/empty-state-picture.svg'
 import { EMPTY_ARRAY } from 'wallet/src/constants/misc'
+import { isError, isNonPollingRequestInFlight } from 'wallet/src/data/utils'
 import { NftsTabQuery, useNftsTabQuery } from 'wallet/src/data/__generated__/types-and-hooks'
 import { useAdaptiveFooterHeight } from './hooks'
 
