@@ -31,7 +31,7 @@ export function useBestTrade(
 
   const [debouncedAmount, debouncedOtherCurrency] = useDebounce(
     useMemo(() => [amountSpecified, otherCurrency], [amountSpecified, otherCurrency]),
-    200
+    600
   )
 
   const isAWrapTransaction = useMemo(() => {
