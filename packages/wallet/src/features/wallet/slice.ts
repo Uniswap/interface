@@ -1,7 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { getAddress } from 'ethers/lib/utils'
-
-import { Account } from 'wallet/src/features/wallet/types'
+import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { getValidAddress } from 'wallet/src/utils/addresses'
 
 export const HIDE_SMALL_USD_BALANCES_THRESHOLD = 1

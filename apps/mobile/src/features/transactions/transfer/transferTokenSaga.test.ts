@@ -2,7 +2,6 @@ import { call } from '@redux-saga/core/effects'
 import { BigNumber } from 'ethers'
 import { expectSaga } from 'redux-saga-test-plan'
 import * as matchers from 'redux-saga-test-plan/matchers'
-import { getContractManager, getProvider } from 'src/app/walletContext'
 import { AssetType } from 'src/entities/assets'
 import { sendTransaction } from 'src/features/transactions/sendTransaction'
 import { transferToken } from 'src/features/transactions/transfer/transferTokenSaga'
@@ -15,6 +14,7 @@ import { account, mockContractManager, mockProvider, txRequest } from 'src/test/
 import { NATIVE_ADDRESS } from 'wallet/src/constants/addresses'
 import { ChainId } from 'wallet/src/constants/chains'
 import { DAI } from 'wallet/src/constants/tokens'
+import { getContractManager, getProvider } from 'wallet/src/features/wallet/context'
 
 const erc20TranferParams: TransferCurrencyParams = {
   txId: '1',

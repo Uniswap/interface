@@ -53,7 +53,6 @@ import {
   SectionName,
 } from 'src/features/telemetry/constants'
 import { useLastBalancesReporter } from 'src/features/telemetry/hooks'
-import { AccountType } from 'src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
 import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
 import { Screens } from 'src/screens/Screens'
@@ -62,6 +61,7 @@ import { hideSplashScreen } from 'src/utils/splashScreen'
 import BuyIcon from 'ui/src/assets/icons/buy.svg'
 import ScanIcon from 'ui/src/assets/icons/scan-receive.svg'
 import SendIcon from 'ui/src/assets/icons/send-action.svg'
+import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { ONE_SECOND_MS } from 'wallet/src/utils/time'
 import { useInterval, useTimeout } from 'wallet/src/utils/timing'
 

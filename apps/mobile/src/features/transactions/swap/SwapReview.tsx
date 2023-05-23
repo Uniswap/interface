@@ -23,9 +23,9 @@ import {
 import { TransactionDetails } from 'src/features/transactions/TransactionDetails'
 import { TransactionReview } from 'src/features/transactions/TransactionReview'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
-import { AccountType } from 'src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
 import InfoCircleSVG from 'ui/src/assets/icons/info-circle.svg'
+import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { formatCurrencyAmount, formatNumberOrString, NumberType } from 'wallet/src/utils/format'
 
 interface SwapFormProps {

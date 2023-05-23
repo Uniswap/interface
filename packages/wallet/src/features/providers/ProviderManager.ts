@@ -96,6 +96,8 @@ export class ProviderManager {
     return provider.provider
   }
 
+  // TODO: [MOB-3895] responsibility of this overlaps with init code in providerSaga which is initializing all upfront
+  // Switch to using lazy init throughout app or cut this
   getInitalizedProvider(chainId: ChainId): ethersProviders.Provider {
     if (this.hasProvider(chainId)) {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

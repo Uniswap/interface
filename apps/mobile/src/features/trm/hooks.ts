@@ -1,6 +1,6 @@
 import { useTrmQueryResult } from 'src/features/trm/api'
-import { AccountType } from 'src/features/wallet/accounts/types'
 import { useActiveAccount } from 'src/features/wallet/hooks'
+import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 
 interface IsBlockedResult {
   isBlockedLoading: boolean

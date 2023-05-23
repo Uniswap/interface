@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next'
 import { Alert } from 'react-native'
 import { useAppSelector } from 'src/app/hooks'
 import { useENSName } from 'src/features/ens/api'
-import { Account } from 'src/features/wallet/accounts/types'
 import {
   makeSelectAccountNotificationSetting,
   selectActiveAccount,
@@ -15,6 +14,7 @@ import {
   selectSignerMnemonicAccountExists,
   selectViewOnlyAccounts,
 } from 'src/features/wallet/selectors'
+import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { getValidAddress, sanitizeAddressText, shortenAddress } from 'wallet/src/utils/addresses'
 import { trimToLength } from 'wallet/src/utils/string'
 

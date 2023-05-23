@@ -4,13 +4,10 @@ import { NativeEventEmitter, NativeModules } from 'react-native'
 import { EventChannel, eventChannel } from 'redux-saga'
 import { CallEffect, ChannelTakeEffect, ForkEffect, PutEffect } from 'redux-saga/effects'
 import { i18n } from 'src/app/i18n'
-import { getSignerManager } from 'src/app/walletContext'
 import { pushNotification } from 'src/features/notifications/notificationSlice'
 import { AppNotification, AppNotificationType } from 'src/features/notifications/types'
 import { sendTransaction, SendTransactionParams } from 'src/features/transactions/sendTransaction'
 import { TransactionType } from 'src/features/transactions/types'
-import { Account } from 'src/features/wallet/accounts/types'
-import { signMessage, signTypedDataMessage } from 'src/features/wallet/signing/signing'
 import {
   deregisterWcPushNotifications,
   registerWcPushNotifications,
@@ -47,6 +44,9 @@ import { wcWeb3Wallet } from 'src/features/walletConnectV2/saga'
 import { call, fork, put, take } from 'typed-redux-saga'
 import { ChainId } from 'wallet/src/constants/chains'
 import { logger } from 'wallet/src/features/logger/logger'
+import { Account } from 'wallet/src/features/wallet/accounts/types'
+import { getSignerManager } from 'wallet/src/features/wallet/context'
+import { signMessage, signTypedDataMessage } from 'wallet/src/features/wallet/signing/signing.ios'
 import { createSaga } from 'wallet/src/utils/saga'
 import { ONE_SECOND_MS } from 'wallet/src/utils/time'
 

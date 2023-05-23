@@ -7,13 +7,13 @@ import {
 import { flushAnalyticsEvents, setUserProperty } from 'src/features/telemetry'
 import { UserPropertyName } from 'src/features/telemetry/constants'
 import { getAuthMethod } from 'src/features/telemetry/utils'
-import { BackupType } from 'src/features/wallet/accounts/types'
 import {
   useActiveAccount,
   useNonPendingSignerAccounts,
   useViewOnlyAccounts,
 } from 'src/features/wallet/hooks'
 import { getFullAppVersion } from 'src/utils/version'
+import { BackupType } from 'wallet/src/features/wallet/accounts/types'
 
 /** Component that tracks UserProperties during the lifetime of the app */
 export function TraceUserProperties(): null {

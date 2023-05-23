@@ -1,3 +1,4 @@
+import { Account } from 'wallet/src/features/wallet/accounts/types'
 import {
   selectActiveAccount,
   selectActiveAccountAddress,
@@ -5,7 +6,6 @@ import {
   selectPendingAccounts,
   selectSignerAccounts,
 } from 'wallet/src/features/wallet/selectors'
-import { Account } from 'wallet/src/features/wallet/types'
 import { useAppSelector } from 'wallet/src/state'
 
 export function useAccounts(): Record<string, Account> {

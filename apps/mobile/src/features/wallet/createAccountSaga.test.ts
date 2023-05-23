@@ -1,8 +1,12 @@
 import dayjs from 'dayjs'
 import { expectSaga } from 'redux-saga-test-plan'
 import { rootReducer } from 'src/app/rootReducer'
-import { Account, AccountType, SignerMnemonicAccount } from 'src/features/wallet/accounts/types'
 import { createAccount } from 'src/features/wallet/createAccountSaga'
+import {
+  Account,
+  AccountType,
+  SignerMnemonicAccount,
+} from 'wallet/src/features/wallet/accounts/types'
 
 const createNativeAccount = async (
   initialAccounts = {},

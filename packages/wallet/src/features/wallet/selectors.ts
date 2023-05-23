@@ -1,5 +1,5 @@
 import { createSelector } from '@reduxjs/toolkit'
-import { Account, AccountType } from 'wallet/src/features/wallet/types'
+import { Account, AccountType } from 'wallet/src/features/wallet/accounts/types'
 import type { AppSelector, RootState } from 'wallet/src/state'
 
 export const isOnboardedSelector: AppSelector<boolean> = (state) =>

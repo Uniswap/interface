@@ -5,7 +5,7 @@ import {
   ClientTokensOrderBy,
   TokenMetadataDisplayType,
   TokensOrderBy,
-} from 'src/features/explore/types'
+} from 'wallet/src/features/wallet/types'
 
 /**
  * Returns server and client orderBy values to use for topTokens query and client side sorting

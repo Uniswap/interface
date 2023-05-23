@@ -8,7 +8,6 @@ import { Text } from 'src/components/Text'
 import { UNISWAP_HELP_CENTER_WALLET_URL } from 'src/constants/urls'
 import { openModal } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
-import { AccountType } from 'src/features/wallet/accounts/types'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { iconSizes } from 'src/styles/sizing'
 import { opacify } from 'src/utils/colors'
@@ -18,6 +17,7 @@ import DollarSign from 'ui/src/assets/icons/dollar.svg'
 import PaperStackIcon from 'ui/src/assets/icons/paper-stack.svg'
 import ScanIcon from 'ui/src/assets/icons/scan-receive.svg'
 import { colors } from 'ui/src/theme/color'
+import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 
 interface ActionCardItem {
   title: string

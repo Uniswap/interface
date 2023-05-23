@@ -15,11 +15,11 @@ import {
   TransactionHistoryUpdater,
 } from 'src/features/transactions/TransactionHistoryUpdater'
 import { TransactionStatus, TransactionType } from 'src/features/transactions/types'
-import { Account } from 'src/features/wallet/accounts/types'
 import { account, account2 } from 'src/test/fixtures'
 import { MAX_FIXTURE_TIMESTAMP, Portfolios, PortfoliosWithReceive } from 'src/test/gqlFixtures'
 import { render } from 'src/test/test-utils'
 import { ChainId } from 'wallet/src/constants/chains'
+import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { ONE_SECOND_MS } from 'wallet/src/utils/time'
 import { sleep } from 'wallet/src/utils/timing'
 

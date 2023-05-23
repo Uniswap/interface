@@ -10,10 +10,10 @@ import {
   TransactionType,
   TransactionTypeInfo,
 } from 'src/features/transactions/types'
-import { Account } from 'src/features/wallet/accounts/types'
 import { call } from 'typed-redux-saga'
 import { ChainId } from 'wallet/src/constants/chains'
 import { WRAPPED_NATIVE_CURRENCY } from 'wallet/src/constants/tokens'
+import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { createMonitoredSaga } from 'wallet/src/utils/saga'
 
 export enum WrapType {

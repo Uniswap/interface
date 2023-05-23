@@ -11,11 +11,11 @@ import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { Text } from 'src/components/Text'
 import { useAccountListQuery } from 'src/data/__generated__/types-and-hooks'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
-import { Account } from 'src/features/wallet/accounts/types'
 import { dimensions, spacing } from 'src/styles/sizing'
 import AlertTriangleIcon from 'ui/src/assets/icons/alert-triangle.svg'
 import WalletIcon from 'ui/src/assets/icons/wallet-filled.svg'
 import { opacify } from 'ui/src/theme/color/utils'
+import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { formatUSDPrice } from 'wallet/src/utils/format'
 
 const ADDRESS_ROW_HEIGHT = 40

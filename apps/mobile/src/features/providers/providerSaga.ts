@@ -3,15 +3,15 @@ import { providers as ethersProviders } from 'ethers'
 import { REHYDRATE } from 'redux-persist'
 import { appSelect } from 'src/app/hooks'
 import { RootState } from 'src/app/rootReducer'
-import { getProviderManager } from 'src/app/walletContext'
 import { setChainActiveStatus } from 'src/features/chains/chainsSlice'
 import { getSortedActiveChainIds } from 'src/features/chains/utils'
-import { ProviderManager } from 'src/features/providers/ProviderManager'
 import { initialized } from 'src/features/providers/providerSlice'
 import { call, fork, join, put, take, takeEvery } from 'typed-redux-saga'
 import { config } from 'wallet/src/config'
 import { ChainId } from 'wallet/src/constants/chains'
 import { logger } from 'wallet/src/features/logger/logger'
+import { ProviderManager } from 'wallet/src/features/providers/ProviderManager'
+import { getProviderManager } from 'wallet/src/features/wallet/context'
 
 // Initialize Ethers providers for the chains the wallet interacts with
 export function* initProviders() {

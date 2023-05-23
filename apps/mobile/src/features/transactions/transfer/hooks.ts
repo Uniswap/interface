@@ -2,7 +2,6 @@ import { AnyAction } from '@reduxjs/toolkit'
 import { providers } from 'ethers'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useAppDispatch } from 'src/app/hooks'
-import { useProvider } from 'src/app/walletContext'
 import { AssetType } from 'src/entities/assets'
 import {
   useOnChainCurrencyBalance,
@@ -22,6 +21,7 @@ import { transferTokenActions } from 'src/features/transactions/transfer/transfe
 import { TransferTokenParams } from 'src/features/transactions/transfer/useTransferTransactionRequest'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { ChainId } from 'wallet/src/constants/chains'
+import { useProvider } from 'wallet/src/features/wallet/context'
 import { buildCurrencyId } from 'wallet/src/utils/currencyId'
 import { tryParseExactAmount } from 'wallet/src/utils/tryParseAmount'
 

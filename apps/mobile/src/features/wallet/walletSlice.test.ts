@@ -1,5 +1,4 @@
 import { createStore, Store } from '@reduxjs/toolkit'
-import { Account, AccountType } from 'src/features/wallet/accounts/types'
 import {
   activateAccount,
   addAccount,
@@ -9,6 +8,7 @@ import {
   walletReducer,
   WalletState,
 } from 'src/features/wallet/walletSlice'
+import { Account, AccountType } from 'wallet/src/features/wallet/accounts/types'
 
 const TEST_IMPORT_TIME_MS = 12345678912345
 const ACCOUNT_1: Account = {

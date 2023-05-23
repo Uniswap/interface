@@ -2,7 +2,7 @@ import { RequestDisplayDetails } from 'src/background/features/dappRequests/Dapp
 import { SignMessageRequest } from 'src/background/features/dappRequests/dappRequestTypes'
 import { Text, XStack, YStack } from 'ui/src'
 import { Unicon } from 'ui/src/components/Unicon'
-import { Account } from 'wallet/src/features/wallet/types'
+import { Account } from 'wallet/src/features/wallet/accounts/types'
 
 export const SignMessageDetails = ({
   activeAccount,

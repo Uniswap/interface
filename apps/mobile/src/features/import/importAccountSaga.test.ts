@@ -6,7 +6,6 @@ import {
   ImportAddressAccountParams,
   ImportMnemonicAccountParams,
 } from 'src/features/import/types'
-import { AccountType } from 'src/features/wallet/accounts/types'
 import {
   activateAccount,
   addAccount,
@@ -14,6 +13,7 @@ import {
   unlockWallet,
 } from 'src/features/wallet/walletSlice'
 import { signerManager } from 'src/test/fixtures'
+import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 
 const SAMPLE_SEED = [
   'dove',

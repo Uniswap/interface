@@ -1,11 +1,11 @@
 import { createStore, Store } from '@reduxjs/toolkit'
+import { Account, AccountType } from 'wallet/src/features/wallet/accounts/types'
 import {
   activateAccount,
   addAccounts,
   walletReducer,
   WalletState,
 } from 'wallet/src/features/wallet/slice'
-import { Account, AccountType } from 'wallet/src/features/wallet/types'
 
 const TEST_IMPORT_TIME_MS = 12345678912345
 const ACCOUNT_1: Account = {

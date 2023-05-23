@@ -2,17 +2,12 @@
 
 import { TypedDataDomain, TypedDataField, Wallet } from 'ethers'
 import { arrayify, isHexString } from 'ethers/lib/utils'
-import { Account } from 'src/features/wallet/accounts/types'
-import { NativeSigner } from 'src/features/wallet/signing/NativeSigner'
-import { SignerManager } from 'src/features/wallet/signing/SignerManager'
 import { logger } from 'wallet/src/features/logger/logger'
+import { Account } from 'wallet/src/features/wallet/accounts/types'
+import { NativeSigner } from 'wallet/src/features/wallet/signing/NativeSigner'
+import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
+import { EthTypedMessage } from 'wallet/src/features/wallet/signing/types'
 import { ensureLeading0x } from 'wallet/src/utils/addresses'
-
-type EthTypedMessage = {
-  domain: TypedDataDomain
-  types: Record<string, Array<TypedDataField>>
-  message: Record<string, unknown>
-}
 
 // https://docs.ethers.io/v5/api/signer/#Signer--signing-methods
 export async function signMessage(

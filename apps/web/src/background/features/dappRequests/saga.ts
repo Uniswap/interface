@@ -9,11 +9,11 @@ import { ExtensionChainChange, ExtensionRequestType } from 'src/types/requests'
 import { call, put, select, take } from 'typed-redux-saga'
 import { ChainId, getChainIdFromString } from 'wallet/src/constants/chains'
 import { logger } from 'wallet/src/features/logger/logger'
+import { Account, AccountType } from 'wallet/src/features/wallet/accounts//types'
 import { getProvider, getSignerManager } from 'wallet/src/features/wallet/context'
 import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
 import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
 import { signMessage, signTypedDataMessage } from 'wallet/src/features/wallet/signing/signing'
-import { Account, AccountType } from 'wallet/src/features/wallet/types'
 import { hexlifyTransaction } from 'wallet/src/utils/transaction'
 import {
   AccountResponse,

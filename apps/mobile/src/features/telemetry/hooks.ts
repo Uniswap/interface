@@ -9,8 +9,8 @@ import {
   selectLastBalancesReportValue,
 } from 'src/features/telemetry/selectors'
 import { recordBalancesReport, shouldReportBalances } from 'src/features/telemetry/slice'
-import { Account, AccountType } from 'src/features/wallet/accounts/types'
 import { useAccounts } from 'src/features/wallet/hooks'
+import { Account, AccountType } from 'wallet/src/features/wallet/accounts/types'
 
 export function useTrace(trace?: ITraceContext): ITraceContext {
   const parentTrace = useContext(TraceContext)

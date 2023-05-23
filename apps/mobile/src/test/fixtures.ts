@@ -21,8 +21,6 @@ import {
   TransactionStatus,
   TransactionType,
 } from 'src/features/transactions/types'
-import { Account, AccountType, BackupType } from 'src/features/wallet/accounts/types'
-import { SignerManager } from 'src/features/wallet/signing/SignerManager'
 import { initialWalletState } from 'src/features/wallet/walletSlice'
 import { WalletConnectEvent } from 'src/features/walletConnect/saga'
 import { config } from 'wallet/src/config'
@@ -31,6 +29,8 @@ import { ChainId } from 'wallet/src/constants/chains'
 import { DAI, DAI_ARBITRUM_ONE, UNI, WRAPPED_NATIVE_CURRENCY } from 'wallet/src/constants/tokens'
 import { ContractManager } from 'wallet/src/features/contracts/ContractManager'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
+import { Account, AccountType, BackupType } from 'wallet/src/features/wallet/accounts/types'
+import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
 import { currencyId } from 'wallet/src/utils/currencyId'
 
 export const MainnetEth = NativeCurrency.onChain(ChainId.Mainnet)

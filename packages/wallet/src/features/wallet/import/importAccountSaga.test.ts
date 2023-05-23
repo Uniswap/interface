@@ -1,7 +1,7 @@
 import { runSaga } from '@redux-saga/core'
 import { PayloadAction } from '@reduxjs/toolkit'
+import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { activateAccount, addAccounts } from 'wallet/src/features/wallet/slice'
-import { AccountType } from 'wallet/src/features/wallet/types'
 import {
   SAMPLE_PASSWORD,
   SAMPLE_SEED,

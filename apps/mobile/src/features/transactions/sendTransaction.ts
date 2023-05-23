@@ -1,7 +1,6 @@
 import { Currency, TradeType } from '@uniswap/sdk-core'
 import { providers } from 'ethers'
 import { CallEffect, PutEffect } from 'redux-saga/effects'
-import { getProvider, getSignerManager } from 'src/app/walletContext'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
 import { transactionActions } from 'src/features/transactions/slice'
@@ -17,11 +16,12 @@ import {
   createTransactionId,
   getSerializableTransactionRequest,
 } from 'src/features/transactions/utils'
-import { Account, AccountType } from 'src/features/wallet/accounts/types'
-import { SignerManager } from 'src/features/wallet/signing/SignerManager'
 import { call, put } from 'typed-redux-saga'
 import { ChainId, CHAIN_INFO } from 'wallet/src/constants/chains'
 import { logger } from 'wallet/src/features/logger/logger'
+import { Account, AccountType } from 'wallet/src/features/wallet/accounts/types'
+import { getProvider, getSignerManager } from 'wallet/src/features/wallet/context'
+import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
 import { getCurrencyAddressForAnalytics } from 'wallet/src/utils/currencyId'
 import { formatCurrencyAmount, NumberType } from 'wallet/src/utils/format'
 import { hexlifyTransaction } from 'wallet/src/utils/transaction'

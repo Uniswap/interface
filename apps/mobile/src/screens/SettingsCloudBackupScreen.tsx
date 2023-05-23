@@ -14,12 +14,12 @@ import { Text } from 'src/components/Text'
 import { backupMnemonicToICloud } from 'src/features/CloudBackup/RNICloudBackupsManager'
 import { CloudBackupSetPassword } from 'src/features/onboarding/CloudBackupSetPassword'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
-import { BackupType, SignerMnemonicAccount } from 'src/features/wallet/accounts/types'
 import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
 import { useAccounts } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
 import CloudIcon from 'ui/src/assets/icons/cloud.svg'
 import { logger } from 'wallet/src/features/logger/logger'
+import { BackupType, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
 
 type Props = NativeStackScreenProps<SettingsStackParamList, Screens.SettingsCloudBackupScreen>
 

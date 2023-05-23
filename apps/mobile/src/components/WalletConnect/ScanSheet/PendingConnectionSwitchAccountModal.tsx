@@ -5,8 +5,8 @@ import { ActionSheetModal } from 'src/components/modals/ActionSheetModal'
 import { Text } from 'src/components/Text'
 import { SwitchAccountOption } from 'src/components/WalletConnect/ScanSheet/SwitchAccountOption'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
-import { Account } from 'src/features/wallet/accounts/types'
 import { useSignerAccounts } from 'src/features/wallet/hooks'
+import { Account } from 'wallet/src/features/wallet/accounts/types'
 
 type Props = {
   activeAccount: Account | null

@@ -10,10 +10,10 @@ import { Spacer } from 'src/components/layout/Spacer'
 import { Text } from 'src/components/Text'
 import { isNonPollingRequestInFlight } from 'src/data/utils'
 import { useAccountListQuery } from 'src/data/__generated__/types-and-hooks'
-import { Account, AccountType } from 'src/features/wallet/accounts/types'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { spacing } from 'src/styles/sizing'
 import { PollingInterval } from 'wallet/src/constants/misc'
+import { Account, AccountType } from 'wallet/src/features/wallet/accounts/types'
 
 // Most screens can fit more but this is set conservatively
 const MIN_ACCOUNTS_TO_ENABLE_SCROLL = 5

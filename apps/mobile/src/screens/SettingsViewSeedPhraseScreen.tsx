@@ -6,9 +6,9 @@ import { BackHeader } from 'src/components/layout/BackHeader'
 import { Screen } from 'src/components/layout/Screen'
 import { SeedPhraseDisplay } from 'src/components/mnemonic/SeedPhraseDisplay'
 import { Text } from 'src/components/Text'
-import { SignerMnemonicAccount } from 'src/features/wallet/accounts/types'
 import { useAccounts } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
+import { SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
 
 type Props = NativeStackScreenProps<SettingsStackParamList, Screens.SettingsViewSeedPhrase>
 
