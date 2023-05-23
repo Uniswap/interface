@@ -22,7 +22,7 @@ export const StatWrapper = styled.div`
   font-size: 14px;
   min-width: 168px;
   flex: 1;
-  padding: 24px 0px;
+  padding: 8px 0px;
 `
 const TokenStatsSection = styled.div`
   display: flex;
@@ -105,9 +105,9 @@ export default function StatsSection(props: StatsSectionProps) {
   if (priceHigh24H || priceLow24H || delta || price) {
     return (
       <StatsWrapper data-testid="token-details-stats">
-        <Header>
+        {/* <Header>
           <Trans>Pool Stats</Trans>
-        </Header>
+        </Header> */}
         <TokenStatsSection>
           <StatPair>
             <Stat

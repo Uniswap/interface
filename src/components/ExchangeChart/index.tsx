@@ -33,7 +33,7 @@ import styled from 'styled-components';
 const POOL_STATE_INTERFACE = new Interface(IUniswapV3PoolStateABI)
 
 const StatsContainer = styled.div`
-	margin-top:16px;
+	margin-top:0px;
 `
 
 export interface ChartContainerProps {
@@ -85,7 +85,7 @@ export const PoolDataSection = ({
 	})
 
 	const uniswapPoolAddress = useMemo(() => {
-		if (chainId && token0 && token1 && fee) {	
+		if (chainId && token0 && token1 && fee) {
 			if (token0?.address.toLowerCase() === fusdc.toLowerCase() && token1?.address.toLowerCase() === feth.toLowerCase()) {
 				return "0xc31e54c7a869b9fcbecc14363cf510d1c41fa443";
 			}
@@ -154,12 +154,12 @@ export const PoolDataSection = ({
 									address: uniswapPoolAddress,
 									startTime: startTime,
 								},
-								fetchPolicy: 'cache-first',	
+								fetchPolicy: 'cache-first',
 							}
 						)
 						if (!result.error && !result.loading) {
 
-							const data =  result.data.poolHourDatas
+							const data = result.data.poolHourDatas
 
 							let price = data[data.length - 1].token0Price
 							const invertPrice = price < 1;
@@ -170,13 +170,13 @@ export const PoolDataSection = ({
 							if (invertPrice) {
 								price = 1 / price;
 								price24hAgo = 1 / price24hAgo;
-								delta = ( Number(price) - Number(price24hAgo) ) / Number(price24hAgo) * 100
+								delta = (Number(price) - Number(price24hAgo)) / Number(price24hAgo) * 100
 								price24hHigh = Math.max(...data.map((item: any) => 1 / Number(item.high)))
-								price24hLow = Math.min(...data.map((item: any) => 1 / Number(item.low)))	
+								price24hLow = Math.min(...data.map((item: any) => 1 / Number(item.low)))
 							} else {
-								delta = ( Number(price) - Number(price24hAgo) ) / Number(price24hAgo) * 100
+								delta = (Number(price) - Number(price24hAgo)) / Number(price24hAgo) * 100
 								price24hHigh = Math.max(...data.map((item: any) => Number(item.high)))
-								price24hLow = Math.min(...data.map((item: any) => Number(item.low)))	
+								price24hLow = Math.min(...data.map((item: any) => Number(item.low)))
 							}
 							setStats(
 								{
@@ -195,7 +195,7 @@ export const PoolDataSection = ({
 					console.log("subgraph error: ", err)
 				}
 			}
-	
+
 			fetch()
 		}
 	}, [lastUpdate, uniswapPoolAddress, uniswapPoolExists])
@@ -209,7 +209,7 @@ export const PoolDataSection = ({
 					const token0Price = await uniswapPoolContract.callStatic.token0Price()
 					if (token0Price) {
 						setUniswapPoolExists(true)
-						setStats((prev) => ({...prev, token0Price: new BN(token0Price.toString()).shiftedBy(18).toNumber()}))
+						setStats((prev) => ({ ...prev, token0Price: new BN(token0Price.toString()).shiftedBy(18).toNumber() }))
 						setUniswapToken0Price(Number(convertBNToStr(token0Price, 18)))
 					}
 				} catch (err) {
@@ -316,6 +316,19 @@ export const PoolDataSection = ({
 
 	return (
 		<>
+			<StatsContainer>
+				<StatsSection
+					address={uniswapPoolAddress ?? ""}
+					chainId={chainId}
+					inversePrice={stats.invertPrice}
+					token0Symbol={token0?.symbol}
+					token1Symbol={token1?.symbol}
+					price={stats.price}
+					delta={stats.delta}
+					priceHigh24H={stats.high24h}
+					priceLow24H={stats.low24h}
+				/>
+			</StatsContainer>
 			<div style={{ height: "450px" }}>
 				<div
 					style={{
@@ -325,19 +338,6 @@ export const PoolDataSection = ({
 					className={'TVChartContainer'}
 				/>
 			</div>
-			<StatsContainer>
-			<StatsSection
-				address={uniswapPoolAddress ?? ""}
-				chainId={chainId} 
-				inversePrice={stats.invertPrice}
-				token0Symbol={token0?.symbol}
-				token1Symbol={token1?.symbol}
-				price={stats.price}
-				delta={stats.delta}
-				priceHigh24H={stats.high24h}
-				priceLow24H={stats.low24h}
-			/>
-			</StatsContainer>
 		</>
 
 
