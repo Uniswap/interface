@@ -109,7 +109,7 @@ describe('PendingModalContent', () => {
       )
       expect(screen.queryByTestId('pending-modal-failure-icon')).toBeNull()
       expect(screen.queryByTestId('pending-modal-currency-logo-loader')).toBeNull()
-      expect(screen.getByTestId('animated-confirmation')).toBeInTheDocument()
+      expect(screen.getByTestId('confirmed-icon')).toBeInTheDocument()
     })
   })
 })

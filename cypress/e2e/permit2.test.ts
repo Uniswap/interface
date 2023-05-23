@@ -62,12 +62,14 @@ describe('Permit2', () => {
   })
 
   it('swaps after completing full permit2 approval process', () => {
+    cy.hardhat().then(({ provider }) => {
+      cy.spy(provider, 'send').as('permitApprovalSpy')
+    })
     initiateSwap()
-    cy.get(getTestSelector('PendingModalContent-title')).should('have.text', 'Allow trading DAI on Uniswap')
+    cy.get(getTestSelector('pending-modal-content-title')).should('have.text', 'Allow trading DAI on Uniswap')
     cy.contains('Approved').should('exist')
 
-    cy.get(getTestSelector('PendingModalContent-title')).should('have.text', 'Unlock DAI for swapping')
-    cy.get(getTestSelector('PendingModalContent-title')).should('have.text', 'Confirm Swap')
+    cy.get(getTestSelector('pending-modal-content-title')).should('have.text', 'Confirm Swap')
 
     const approvalTime = Date.now()
 
@@ -75,6 +77,7 @@ describe('Permit2', () => {
 
     expectTokenAllowanceForPermit2ToBeMax()
     expectPermit2AllowanceForUniversalRouterToBeMax(approvalTime)
+    cy.get('@permitApprovalSpy').should('have.been.calledWith', 'eth_signTypedData_v4')
   })
 
   it('swaps after handling user rejection of both approval and signature', () => {
@@ -97,7 +100,7 @@ describe('Permit2', () => {
         })
 
       cy.get(getTestSelector('confirm-swap-button')).click()
-      cy.get(getTestSelector('PendingModalContent-title')).should('have.text', 'Allow trading DAI on Uniswap')
+      cy.get(getTestSelector('pending-modal-content-title')).should('have.text', 'Allow trading DAI on Uniswap')
       cy.contains('Approved').should('exist')
 
       // permitApprovalStub should reject here, and the modal should revert to the review state.
@@ -112,7 +115,7 @@ describe('Permit2', () => {
       // The swap should now be able to proceed, as the permit2 signature will be accepted by the user.
       const approvalTime = Date.now()
 
-      cy.get(getTestSelector('PendingModalContent-title')).should('have.text', 'Confirm Swap')
+      cy.get(getTestSelector('pending-modal-content-title')).should('have.text', 'Confirm Swap')
       cy.contains('Swapped').should('exist')
 
       expectTokenAllowanceForPermit2ToBeMax()
@@ -130,7 +133,7 @@ describe('Permit2', () => {
         initiateSwap()
         const approvalTime = Date.now()
 
-        cy.get(getTestSelector('PendingModalContent-title')).should('have.text', 'Confirm Swap')
+        cy.get(getTestSelector('pending-modal-content-title')).should('have.text', 'Confirm Swap')
         cy.contains('Swapped').should('exist')
 
         expectPermit2AllowanceForUniversalRouterToBeMax(approvalTime)
@@ -144,9 +147,9 @@ describe('Permit2', () => {
       .then(() => {
         initiateSwap()
         const approvalTime = Date.now()
-        cy.get(getTestSelector('PendingModalContent-title')).should('have.text', 'Allow trading DAI on Uniswap')
+        cy.get(getTestSelector('pending-modal-content-title')).should('have.text', 'Allow trading DAI on Uniswap')
 
-        cy.get(getTestSelector('PendingModalContent-title')).should('have.text', 'Confirm Swap')
+        cy.get(getTestSelector('pending-modal-content-title')).should('have.text', 'Confirm Swap')
         cy.contains('Swapped').should('exist')
 
         expectPermit2AllowanceForUniversalRouterToBeMax(approvalTime)
@@ -163,7 +166,7 @@ describe('Permit2', () => {
       initiateSwap()
       const approvalTime = Date.now()
 
-      cy.get(getTestSelector('PendingModalContent-title')).should('have.text', 'Confirm Swap')
+      cy.get(getTestSelector('pending-modal-content-title')).should('have.text', 'Confirm Swap')
       cy.contains('Swapped').should('exist')
 
       expectPermit2AllowanceForUniversalRouterToBeMax(approvalTime)
@@ -181,7 +184,7 @@ describe('Permit2', () => {
       initiateSwap()
       const approvalTime = Date.now()
 
-      cy.get(getTestSelector('PendingModalContent-title')).should('have.text', 'Confirm Swap')
+      cy.get(getTestSelector('pending-modal-content-title')).should('have.text', 'Confirm Swap')
       cy.contains('Swapped').should('exist')
 
       expectPermit2AllowanceForUniversalRouterToBeMax(approvalTime)
@@ -198,9 +201,9 @@ describe('Permit2', () => {
       .then(() => {
         initiateSwap()
         const approvalTime = Date.now()
-        cy.get(getTestSelector('PendingModalContent-title')).should('have.text', 'Allow trading DAI on Uniswap')
+        cy.get(getTestSelector('pending-modal-content-title')).should('have.text', 'Allow trading DAI on Uniswap')
 
-        cy.get(getTestSelector('PendingModalContent-title')).should('have.text', 'Confirm Swap')
+        cy.get(getTestSelector('pending-modal-content-title')).should('have.text', 'Confirm Swap')
         cy.contains('Swapped').should('exist')
 
         expectPermit2AllowanceForUniversalRouterToBeMax(approvalTime)

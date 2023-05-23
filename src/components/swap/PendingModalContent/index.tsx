@@ -238,7 +238,9 @@ export function PendingModalContent({
                   key={step}
                   ref={step === currentStep ? currentStepContainerRef : undefined}
                 >
-                  <ThemedText.SubHeaderLarge textAlign="center">{title}</ThemedText.SubHeaderLarge>
+                  <ThemedText.SubHeaderLarge textAlign="center" data-testid="pending-modal-content-title">
+                    {title}
+                  </ThemedText.SubHeaderLarge>
                   {subtitle && <ThemedText.LabelSmall textAlign="center">{subtitle}</ThemedText.LabelSmall>}
                 </StepTitleAnimationContainer>
               )
