@@ -80,6 +80,7 @@ const fileExtensions = [
   'ttf',
   'woff',
   'woff2',
+  'mp4',
 ]
 
 const {

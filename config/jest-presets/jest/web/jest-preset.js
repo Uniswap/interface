@@ -17,9 +17,9 @@ module.exports = {
   //   '<rootDir>/packages/**/src/**/*.ts',
   // ],
   moduleDirectories: ["node_modules", "src"],
-  moduleFileExtensions: ["ts", "tsx", "js", "mjs", "cjs", "jsx", "json", "node"],
+  moduleFileExtensions: ["ts", "tsx", "js", "mjs", "cjs", "jsx", "json", "node", "mp4"],
   moduleNameMapper: {
-    '.+\\.(css|style|less|sass|scss|png|jpg|ttf|woff|woff2)$': 'jest-transform-stub',
+    '.+\\.(css|style|less|sass|scss|png|jpg|ttf|woff|woff2|mp4)$': 'jest-transform-stub',
     // Jest by default doesn't support absolute imports out of the box
     '^src/(.*)$': '<rootDir>/src/$1',
   },

@@ -1,11 +1,14 @@
 import { useEffect, useState } from 'react'
 import { Circle, Image, Stack, Theme, XStack, YStack } from 'tamagui'
 import { Text } from 'ui/src'
+import { UNISWAP_LOGO } from 'ui/src/assets'
+import MoreIcon from 'ui/src/assets/icons/more.svg'
+import PinIcon from 'ui/src/assets/icons/pin.svg'
+import { PuzzleIcon } from 'ui/src/assets/icons/PuzzleIcon'
 import { Button } from 'ui/src/components/button/Button'
+import { Flex } from 'ui/src/components/layout/Flex'
 import { Unicon } from 'ui/src/components/Unicon'
 import { iconSize } from 'ui/src/theme/tokens'
-import { MORE_ICON, PIN_ICON, UNISWAP_LOGO } from 'wallet/src/assets'
-import { PuzzleIcon } from 'wallet/src/assets/PuzzleIcon'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 import { sanitizeAddressText, shortenAddress } from 'wallet/src/utils/addresses'
 
@@ -142,19 +145,17 @@ export function Complete(): JSX.Element {
                 {/* mocked extension list item pin button */}
                 <Stack alignItems="center" justifyContent="center">
                   <Circle backgroundColor="$accentBranded" opacity={0.25} size={40} />
-                  <Image
-                    height={iconSize.icon20}
+                  <Flex
+                    alignItems="center"
+                    height={40}
+                    justifyContent="center"
                     position="absolute"
-                    source={{ uri: PIN_ICON }}
-                    width={iconSize.icon20}
-                  />
+                    width={40}>
+                    <PinIcon height={iconSize.icon20} width={iconSize.icon20} />
+                  </Flex>
                 </Stack>
                 {/* mocked extension list item more icon */}
-                <Image
-                  height={iconSize.icon20}
-                  source={{ uri: MORE_ICON }}
-                  width={iconSize.icon20}
-                />
+                <MoreIcon height={iconSize.icon20} width={iconSize.icon20} />
               </XStack>
             </XStack>
           </Stack>
