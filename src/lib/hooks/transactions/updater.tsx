@@ -7,7 +7,7 @@ import { useCallback, useEffect } from 'react'
 import { useTransactionRemover } from 'state/transactions/hooks'
 import { TransactionDetails } from 'state/transactions/types'
 
-import { retry, RetryableError, RetryOptions } from './retry'
+import { CanceledError, retry, RetryableError, RetryOptions } from './retry'
 
 interface Transaction {
   addedTime: number
@@ -72,7 +72,6 @@ export default function Updater({ pendingTransactions, onCheck, onReceipt }: Upd
                   removeTransaction(hash)
                 }
               }
-              console.debug(`Retrying tranasaction receipt for ${hash}`)
               throw new RetryableError()
             }
             return receipt
@@ -92,17 +91,12 @@ export default function Updater({ pendingTransactions, onCheck, onReceipt }: Upd
         const { promise, cancel } = getReceipt(hash)
         promise
           .then((receipt) => {
-            if (receipt) {
-              fastForwardBlockNumber(receipt.blockNumber)
-              onReceipt({ chainId, hash, receipt })
-            } else {
-              onCheck({ chainId, hash, blockNumber: lastBlockNumber })
-            }
+            fastForwardBlockNumber(receipt.blockNumber)
+            onReceipt({ chainId, hash, receipt })
           })
           .catch((error) => {
-            if (!error.isCancelledError) {
-              console.warn(`Failed to get transaction receipt for ${hash}`, error)
-            }
+            if (error instanceof CanceledError) return
+            onCheck({ chainId, hash, blockNumber: lastBlockNumber })
           })
         return cancel
       })
