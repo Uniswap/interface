@@ -60,7 +60,6 @@ describe('Swap errors', () => {
         // Remove the transaction from the mempool, so that it doesn't fail but it is past the deadline.
         // This should result in it being removed from pending transactions, without a failure notificiation.
         const transactions = await hardhat.send('eth_pendingTransactions', [])
-        console.log(transactions)
         await hardhat.send('hardhat_dropTransaction', [transactions[0].hash])
         // Mine past the deadline
         await hardhat.mine(1, /* 10 minutes */ 1000 * 60 * 10)
