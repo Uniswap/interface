@@ -5,6 +5,7 @@ import { ButtonGray } from 'components/Button'
 import Loader from 'components/Icons/LoadingSpinner'
 import Row from 'components/Row'
 import { AddToBagIcon } from 'nft/components/icons'
+import { useBag } from 'nft/hooks'
 import { useBuyAssetCallback } from 'nft/hooks/useFetchAssets'
 import { GenieAsset } from 'nft/types'
 import styled, { css } from 'styled-components/macro'
@@ -20,6 +21,7 @@ const ButtonStyles = css`
 
 const BaseButton = styled(ButtonPrimary)`
   background: none;
+  border: none;
   border-radius: 0px;
 
   ${ButtonStyles}
@@ -58,6 +60,7 @@ const Price = styled.div`
 `
 
 export const BuyButton = ({ asset, onDataPage }: { asset: GenieAsset; onDataPage?: boolean }) => {
+  const addAssetsToBag = useBag((state) => state.addAssetsToBag)
   const { fetchAndPurchaseSingleAsset, isLoading: isLoadingRoute } = useBuyAssetCallback()
   const price = asset.sellorders?.[0]?.price.value
 
@@ -89,7 +92,7 @@ export const BuyButton = ({ asset, onDataPage }: { asset: GenieAsset; onDataPage
         )}
       </StyledBuyButton>
       <ButtonSeparator />
-      <AddToBagButton>
+      <AddToBagButton onClick={() => addAssetsToBag([asset])}>
         <AddToBagIcon width="24px" height="24px" />
       </AddToBagButton>
     </ButtonContainer>
