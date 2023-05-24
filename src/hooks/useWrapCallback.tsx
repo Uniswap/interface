@@ -60,7 +60,7 @@ export default function useWrapCallback(
   inputCurrency: Currency | undefined | null,
   outputCurrency: Currency | undefined | null,
   typedValue: string | undefined
-): { wrapType: WrapType; execute?: undefined | (() => Promise<void>); inputError?: WrapInputError } {
+): { wrapType: WrapType; execute?: () => Promise<void>; inputError?: WrapInputError } {
   const { chainId, account } = useWeb3React()
   const wethContract = useWETHContract()
   const balance = useCurrencyBalance(account ?? undefined, inputCurrency ?? undefined)

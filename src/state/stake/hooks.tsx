@@ -58,7 +58,7 @@ interface StakingInfo {
   // equivalent to percent of total supply * reward rate
   rewardRate: CurrencyAmount<Token>
   // when the period ends
-  periodFinish: Date | undefined
+  periodFinish?: Date
   // if pool is active
   active: boolean
   // calculates a hypothetical amount of token distributed to the active account per second.
