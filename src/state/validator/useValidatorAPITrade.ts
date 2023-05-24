@@ -58,7 +58,7 @@ function useValidatorAPIArguments({
       recipient,
       slippage: allowedSlippage.divide(100).toSignificant(6),
       affiliate: affiliate?.toString() ?? null,
-      affiliateFee: affiliate ? '0.01' : null,
+      affiliateFee: affiliate ? process.env.REACT_APP_AFFILIATE_FEE : null,
       skipValidation,
       signaturePermitData,
     },

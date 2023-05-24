@@ -12,6 +12,7 @@ import { useKromatikaMetaswap } from './useContract'
 import useDebounce from './useDebounce'
 import { SignatureData } from './useERC20Permit'
 import useIsWindowVisible from './useIsWindowVisible'
+import useParsedQueryString from './useParsedQueryString'
 import { useUSDCValue } from './useUSDCPrice'
 import { useActiveWeb3React } from './web3'
 
@@ -76,11 +77,12 @@ export function useBestMarketTrade(
     }
   }
 
+  const { affiliate } = useParsedQueryString()
   const routingAPIEnabled = useRoutingAPIEnabled()
   const quoteTrade = useValidatorAPITrade(
     tradeType,
     null,
-    null,
+    affiliate?.toString(),
     !showConfirm,
     gasless,
     routingAPIEnabled && isWindowVisible ? debouncedAmount : undefined,
@@ -91,7 +93,7 @@ export function useBestMarketTrade(
   const gaslessTrade = useGaslessAPITrade(
     tradeType,
     null,
-    null,
+    affiliate?.toString(),
     !showConfirm,
     !gasless,
     routingAPIEnabled && isWindowVisible ? debouncedAmount : undefined,
