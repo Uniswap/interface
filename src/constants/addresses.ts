@@ -5,7 +5,6 @@ import { SupportedChainId } from './chains'
 
 type AddressMap = { [chainId: number]: string }
 
-// TODO: will Sepolia be supported as a default network?
 const DEFAULT_NETWORKS = [SupportedChainId.MAINNET, SupportedChainId.GOERLI]
 
 function constructSameAddressMap(address: string, additionalNetworks: SupportedChainId[] = []): AddressMap {
@@ -60,7 +59,7 @@ const SEPOLIA_V3_MIGRATOR_ADDRESSES = '0x729004182cF005CEC8Bd85df140094b6aCbe8b1
 const SEPOLIA_MULTICALL_ADDRESS = ''
 const SEPOLIA_QUOTER_ADDRESSES = ''
 const SEPOLIA_NONFUNGIBLE_POSITION_MANAGER_ADDRESSES = '0x1238536071E1c677A632429e3655c799b22cDA52'
-const SEPOLIA_TICK_LENS_ADDRESSES = ''
+const SEPOLIA_TICK_LENS_ADDRESSES = '0xd7f33bcdb21b359c8ee6f0251d30e94832baad07'
 
 /* V3 Contract Addresses */
 export const V3_CORE_FACTORY_ADDRESSES: AddressMap = {
