@@ -1,7 +1,7 @@
 import React from 'react'
 import { TokenLogo } from 'src/components/CurrencyLogo/TokenLogo'
 import { CurrencyInfo } from 'src/features/dataApi/types'
-import { iconSizes } from 'src/styles/sizing'
+import { iconSizes } from 'ui/src/theme/iconSizes'
 
 interface CurrencyLogoProps {
   currencyInfo: Maybe<CurrencyInfo>

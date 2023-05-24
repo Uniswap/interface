@@ -8,8 +8,8 @@ import { ActionSheetModal } from 'src/components/modals/ActionSheetModal'
 import { Text } from 'src/components/Text'
 import { useActiveChainIds } from 'src/features/chains/utils'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
-import { iconSizes } from 'src/styles/sizing'
 import Check from 'ui/src/assets/icons/check.svg'
+import { iconSizes } from 'ui/src/theme/iconSizes'
 import { ChainId, CHAIN_INFO } from 'wallet/src/constants/chains'
 
 type Props = {

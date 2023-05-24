@@ -1,10 +1,10 @@
 import { SVGProps } from 'react'
-import { iconSize } from 'ui/src/theme/tokens'
+import { iconSizes } from 'ui/src/theme/iconSizes'
 
 // TODO(EXT-139): replace with reusable Icon component
 export const PuzzleIcon = ({
-  height = iconSize.icon20,
-  width = iconSize.icon20,
+  height = iconSizes.icon20,
+  width = iconSizes.icon20,
   ...rest
 }: // eslint-disable-next-line @typescript-eslint/no-explicit-any
 SVGProps<any>): JSX.Element => {

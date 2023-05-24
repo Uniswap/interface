@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from 'src/background/store'
 import { Circle, Image, Text, XStack, YStack } from 'ui/src'
 import PowerIcon from 'ui/src/assets/icons/power.svg'
 import { Button } from 'ui/src/components/button/Button'
-import { iconSize } from 'ui/src/theme/tokens'
+import { iconSizes } from 'ui/src/theme/iconSizes'
 import {
   ALL_SUPPORTED_CHAIN_IDS,
   ChainId,
@@ -59,9 +59,9 @@ export function SwitchNetworksModal(): JSX.Element {
             <XStack flexGrow={1} justifyContent="flex-start">
               <XStack alignItems="center" flex={1} gap="$spacing12" paddingRight="$spacing8">
                 <Image
-                  height={iconSize.icon28}
+                  height={iconSizes.icon28}
                   source={CHAIN_ID_TO_LOGO[chain]}
-                  width={iconSize.icon28}
+                  width={iconSizes.icon28}
                 />
                 <Text color="$white" variant="subheadLarge">
                   {CHAIN_INFO[chain]?.label}
@@ -71,9 +71,9 @@ export function SwitchNetworksModal(): JSX.Element {
                 <XStack flexGrow={1}>
                   <Circle
                     backgroundColor="$background3"
-                    height={iconSize.icon8}
+                    height={iconSizes.icon8}
                     marginRight="$spacing8"
-                    width={iconSize.icon8}
+                    width={iconSizes.icon8}
                   />
                 </XStack>
               ) : null}
@@ -84,7 +84,7 @@ export function SwitchNetworksModal(): JSX.Element {
 
       <Button borderRadius="$rounded32" theme="secondary" onPress={onDisconnect}>
         <XStack alignItems="center" gap="$spacing8">
-          <PowerIcon height={iconSize.icon16} width={iconSize.icon16} />
+          <PowerIcon height={iconSizes.icon16} width={iconSizes.icon16} />
           Disconnect
         </XStack>
       </Button>

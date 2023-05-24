@@ -2,7 +2,7 @@ import { memo } from 'react'
 import { Image } from 'tamagui'
 import { Flex } from 'ui/src/components/layout/Flex'
 import { Text } from 'ui/src/components/text/Text'
-import { iconSize } from 'ui/src/theme/tokens'
+import { iconSizes } from 'ui/src/theme/iconSizes'
 import { PortfolioBalance } from 'wallet/src/features/dataApi/types'
 import { CurrencyId } from 'wallet/src/utils/currencyId'
 import { formatNumber, NumberType } from 'wallet/src/utils/format'
@@ -51,9 +51,9 @@ export const TokenBalanceItem = memo(
             gap="$spacing12"
             overflow="hidden">
             <Image
-              height={iconSize.icon36}
+              height={iconSizes.icon36}
               src={currencyInfo.logoUrl ?? ''}
-              width={iconSize.icon36}
+              width={iconSizes.icon36}
             />
             <Flex alignItems="flex-start" flexShrink={1} gap="$none">
               <Text ellipsizeMode="tail" numberOfLines={1} variant="bodyLarge">

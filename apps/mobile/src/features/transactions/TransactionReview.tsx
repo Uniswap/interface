@@ -19,7 +19,8 @@ import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biomet
 import { CurrencyInfo } from 'src/features/dataApi/types'
 import { GQLNftAsset } from 'src/features/nfts/hooks'
 import { ElementName } from 'src/features/telemetry/constants'
-import { dimensions, iconSizes } from 'src/styles/sizing'
+import { dimensions } from 'src/styles/sizing'
+import { iconSizes } from 'ui/src/theme/iconSizes'
 import { formatNumberOrString, NumberType } from 'wallet/src/utils/format'
 
 interface BaseReviewProps {

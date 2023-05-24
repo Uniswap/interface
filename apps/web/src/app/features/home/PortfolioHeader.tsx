@@ -6,7 +6,7 @@ import { Flex } from 'ui/src/components/layout/Flex'
 import { Text } from 'ui/src/components/text/Text'
 import { Unicon } from 'ui/src/components/Unicon'
 import { colors } from 'ui/src/theme/color'
-import { iconSize } from 'ui/src/theme/tokens'
+import { iconSizes } from 'ui/src/theme/iconSizes'
 import { sanitizeAddressText, shortenAddress } from 'wallet/src/utils/addresses'
 
 type PortfolioHeaderProps = {
@@ -18,13 +18,13 @@ export function PortfolioHeader({ address }: PortfolioHeaderProps): JSX.Element 
   return (
     <XStack alignItems="center" justifyContent="space-between" padding="$spacing16">
       <Flex alignItems="center" flexDirection="row" gap="$spacing8" justifyContent="center">
-        <Unicon address={address} size={iconSize.icon36} />
+        <Unicon address={address} size={iconSizes.icon36} />
         <Text variant="subheadSmall">{sanitizeAddressText(shortenAddress(address))}</Text>
       </Flex>
       <XStack alignItems="center" gap="$spacing16" justifyContent="space-around">
         <Popover>
           <Popover.Trigger>
-            <GlobeIcon color={colors.gray200} height={iconSize.icon24} width={iconSize.icon24} />
+            <GlobeIcon color={colors.gray200} height={iconSizes.icon24} width={iconSizes.icon24} />
           </Popover.Trigger>
           <Popover.Content borderRadius="$rounded12">
             <SwitchNetworksModal />
@@ -32,7 +32,11 @@ export function PortfolioHeader({ address }: PortfolioHeaderProps): JSX.Element 
         </Popover>
         <Popover>
           <Popover.Trigger>
-            <SettingsIcon color={colors.gray200} height={iconSize.icon28} width={iconSize.icon28} />
+            <SettingsIcon
+              color={colors.gray200}
+              height={iconSizes.icon28}
+              width={iconSizes.icon28}
+            />
           </Popover.Trigger>
         </Popover>
       </XStack>

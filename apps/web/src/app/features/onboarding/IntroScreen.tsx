@@ -6,7 +6,7 @@ import MultichainIcon from 'ui/src/assets/icons/multichain.svg'
 import { LinkButton } from 'ui/src/components/button/Button'
 import { Flex } from 'ui/src/components/layout/Flex'
 import { opacify } from 'ui/src/theme/color/utils'
-import { iconSize } from 'ui/src/theme/tokens'
+import { iconSizes } from 'ui/src/theme/iconSizes'
 
 function InfoRow({
   primaryText,
@@ -55,10 +55,10 @@ export function IntroScreen(): JSX.Element {
             justifyContent="center"
             padding="$spacing12">
             <Image
-              height={iconSize.icon64}
+              height={iconSizes.icon64}
               source={UNISWAP_LOGO}
               theme="primary"
-              width={iconSize.icon64}
+              width={iconSizes.icon64}
             />
           </Stack>
         </Stack>
@@ -75,19 +75,19 @@ export function IntroScreen(): JSX.Element {
       <YStack alignItems="flex-start" gap="$spacing24" justifyContent="center">
         <InfoRow
           backgroundColor={opacify(10, '$green200')}
-          icon={<BoltIcon height={iconSize.icon20} width={iconSize.icon20} />}
+          icon={<BoltIcon height={iconSizes.icon20} width={iconSizes.icon20} />}
           primaryText="Supercharge your swaps"
           secondaryText="1-click checkout"
         />
         <InfoRow
           backgroundColor="$pink200"
-          icon={<MultichainIcon width={iconSize.icon20} />}
+          icon={<MultichainIcon width={iconSizes.icon20} />}
           primaryText="Multichain experience"
           secondaryText="Say goodbye to switching chains"
         />
         <InfoRow
           backgroundColor="$blue200"
-          icon={<BookIcon height={iconSize.icon20} width={iconSize.icon20} />}
+          icon={<BookIcon height={iconSizes.icon20} width={iconSizes.icon20} />}
           primaryText="Human readable transactions"
           secondaryText="Blockchain activity you can understand"
         />

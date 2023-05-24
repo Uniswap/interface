@@ -16,9 +16,9 @@ import { AppNotificationType, CopyNotificationType } from 'src/features/notifica
 import { ModalName } from 'src/features/telemetry/constants'
 import { useDisplayName } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
-import { iconSizes } from 'src/styles/sizing'
 import { setClipboard } from 'src/utils/clipboard'
 import Check from 'ui/src/assets/icons/check.svg'
+import { iconSizes } from 'ui/src/theme/iconSizes'
 import { formatUSDPrice, NumberType } from 'wallet/src/utils/format'
 
 type AccountCardItemProps = {

@@ -31,8 +31,8 @@ import {
   TransactionState,
 } from 'src/features/transactions/transactionState/transactionState'
 import { Screens } from 'src/screens/Screens'
-import { iconSizes } from 'src/styles/sizing'
 import { useExtractedTokenColor } from 'src/utils/colors'
+import { iconSizes } from 'ui/src/theme/iconSizes'
 import { ChainId } from 'wallet/src/constants/chains'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import {

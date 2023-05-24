@@ -20,10 +20,10 @@ import { selectWatchedAddressSet } from 'src/features/favorites/selectors'
 import { openModal } from 'src/features/modals/modalSlice'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
-import { iconSizes } from 'src/styles/sizing'
 import { useExtractedColors } from 'src/utils/colors'
 import HeartIcon from 'ui/src/assets/icons/heart.svg'
 import SendIcon from 'ui/src/assets/icons/send-action.svg'
+import { iconSizes } from 'ui/src/theme/iconSizes'
 
 const HEADER_GRADIENT_HEIGHT = 137
 const HEADER_ICON_SIZE = 72

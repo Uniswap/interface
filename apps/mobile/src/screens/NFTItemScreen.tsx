@@ -30,7 +30,6 @@ import { ModalName } from 'src/features/telemetry/constants'
 import { useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
 import { ExploreModalAwareView } from 'src/screens/ModalAwareView'
 import { Screens } from 'src/screens/Screens'
-import { iconSizes } from 'src/styles/sizing'
 import { darkTheme } from 'src/styles/theme'
 import { setClipboardImage } from 'src/utils/clipboard'
 import {
@@ -41,6 +40,7 @@ import {
 import EllipsisIcon from 'ui/src/assets/icons/ellipsis.svg'
 import ShareIcon from 'ui/src/assets/icons/share.svg'
 import { colorsDark } from 'ui/src/theme/color'
+import { iconSizes } from 'ui/src/theme/iconSizes'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import {
   NftActivityType,

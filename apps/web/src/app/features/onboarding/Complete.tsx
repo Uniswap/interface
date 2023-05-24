@@ -8,7 +8,7 @@ import { PuzzleIcon } from 'ui/src/assets/icons/PuzzleIcon'
 import { Button } from 'ui/src/components/button/Button'
 import { Flex } from 'ui/src/components/layout/Flex'
 import { Unicon } from 'ui/src/components/Unicon'
-import { iconSize } from 'ui/src/theme/tokens'
+import { iconSizes } from 'ui/src/theme/iconSizes'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 import { sanitizeAddressText, shortenAddress } from 'wallet/src/utils/addresses'
 
@@ -49,7 +49,7 @@ export function Complete(): JSX.Element {
         <YStack gap="$spacing12">
           <YStack alignItems="center" gap="$spacing12">
             {/* TODO: use AddressDisplay here */}
-            <Unicon address={address} size={iconSize.icon64} />
+            <Unicon address={address} size={iconSizes.icon64} />
             <Text color="$textPrimary" variant="headlineLarge">
               Wallet 1
             </Text>
@@ -131,10 +131,10 @@ export function Complete(): JSX.Element {
                   justifyContent="center"
                   padding="$spacing4">
                   <Image
-                    height={iconSize.icon24}
+                    height={iconSizes.icon24}
                     source={UNISWAP_LOGO}
                     theme="primary"
-                    width={iconSize.icon24}
+                    width={iconSizes.icon24}
                   />
                 </Stack>
                 {/* mocked extension list item name */}
@@ -151,11 +151,11 @@ export function Complete(): JSX.Element {
                     justifyContent="center"
                     position="absolute"
                     width={40}>
-                    <PinIcon height={iconSize.icon20} width={iconSize.icon20} />
+                    <PinIcon height={iconSizes.icon20} width={iconSizes.icon20} />
                   </Flex>
                 </Stack>
                 {/* mocked extension list item more icon */}
-                <MoreIcon height={iconSize.icon20} width={iconSize.icon20} />
+                <MoreIcon height={iconSizes.icon20} width={iconSizes.icon20} />
               </XStack>
             </XStack>
           </Stack>

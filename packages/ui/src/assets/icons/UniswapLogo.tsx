@@ -1,10 +1,10 @@
 import { SVGProps } from 'react'
-import { iconSize } from 'ui/src/theme/tokens'
+import { iconSizes } from 'ui/src/theme/iconSizes'
 
 // TODO(EXT-139): replace with reusable Icon component
 export const UniswapLogo = ({
-  height = iconSize.icon36,
-  width = iconSize.icon36,
+  height = iconSizes.icon36,
+  width = iconSizes.icon36,
   ...rest
 }: // eslint-disable-next-line @typescript-eslint/no-explicit-any
 SVGProps<any>): JSX.Element => {
