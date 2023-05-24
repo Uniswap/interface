@@ -1,11 +1,10 @@
 import { Currency } from '@uniswap/sdk-core'
+import { ReactComponent as PapersIcon } from 'assets/svg/papers-text.svg'
 import { LoaderV3 } from 'components/Icons/LoadingSpinner'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { useUnmountingAnimation } from 'hooks/useUnmountingAnimation'
 import { useRef } from 'react'
 import styled, { css, keyframes, useTheme } from 'styled-components/macro'
-
-import { ReactComponent as PapersIcon } from '../../../assets/svg/papers-text.svg'
 
 export const LogoContainer = styled.div`
   height: 48px;
@@ -64,6 +63,7 @@ function FadePresence({
   children,
   className,
   $scale = false,
+  ...rest
 }: {
   children: React.ReactNode
   className?: string
@@ -72,7 +72,7 @@ function FadePresence({
   const ref = useRef<HTMLDivElement>(null)
   useUnmountingAnimation(ref, () => AnimationType.EXITING)
   return (
-    <FadeWrapper ref={ref} className={className} $scale={$scale}>
+    <FadeWrapper ref={ref} className={className} $scale={$scale} {...rest}>
       {children}
     </FadeWrapper>
   )
