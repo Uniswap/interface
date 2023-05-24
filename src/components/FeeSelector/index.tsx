@@ -56,8 +56,8 @@ export default function FeeSelector({
   disabled?: boolean
   feeAmount?: FeeAmount
   handleFeePoolSelect: (feeAmount: FeeAmount) => void
-  currencyA?: Currency | undefined
-  currencyB?: Currency | undefined
+  currencyA?: Currency
+  currencyB?: Currency
 }) {
   const { chainId } = useWeb3React()
 
