@@ -5,7 +5,7 @@ import { SupportedChainId } from './chains'
 
 type AddressMap = { [chainId: number]: string }
 
-const DEFAULT_NETWORKS = [SupportedChainId.MAINNET, SupportedChainId.GOERLI]
+const DEFAULT_NETWORKS = [SupportedChainId.MAINNET, SupportedChainId.GOERLI, SupportedChainId.SEPOLIA]
 
 function constructSameAddressMap(address: string, additionalNetworks: SupportedChainId[] = []): AddressMap {
   return DEFAULT_NETWORKS.concat(additionalNetworks).reduce<AddressMap>((memo, chainId) => {
