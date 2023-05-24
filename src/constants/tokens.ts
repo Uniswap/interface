@@ -362,9 +362,27 @@ export const BUSD_BSC = new Token(
 export const DAI_BSC = new Token(SupportedChainId.BNB, '0x1AF3F329e8BE154074D8769D1FFa4eE058B1DBc3', 18, 'DAI', 'DAI')
 
 export const UNI: { [chainId: number]: Token } = {
-  [SupportedChainId.MAINNET]: new Token(SupportedChainId.MAINNET, UNI_ADDRESS[1], 18, 'UNI', 'Uniswap'),
-  [SupportedChainId.GOERLI]: new Token(SupportedChainId.GOERLI, UNI_ADDRESS[5], 18, 'UNI', 'Uniswap'),
-  [SupportedChainId.SEPOLIA]: new Token(SupportedChainId.SEPOLIA, UNI_ADDRESS[11155111], 18, 'UNI', 'Uniswap'),
+  [SupportedChainId.MAINNET]: new Token(
+    SupportedChainId.MAINNET,
+    UNI_ADDRESS[SupportedChainId.MAINNET],
+    18,
+    'UNI',
+    'Uniswap'
+  ),
+  [SupportedChainId.GOERLI]: new Token(
+    SupportedChainId.GOERLI,
+    UNI_ADDRESS[SupportedChainId.GOERLI],
+    18,
+    'UNI',
+    'Uniswap'
+  ),
+  [SupportedChainId.SEPOLIA]: new Token(
+    SupportedChainId.SEPOLIA,
+    UNI_ADDRESS[SupportedChainId.SEPOLIA],
+    18,
+    'UNI',
+    'Uniswap'
+  ),
 }
 
 export const ARB = new Token(
