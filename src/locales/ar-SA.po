@@ -420,7 +420,7 @@ msgstr "ألغيت"
 msgid "Canceling the trade will withdraw available amounts for you."
 msgstr "سيؤدي إلغاء الصفقة إلى سحب المبالغ المتاحة لك."
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Cancelled:"
 msgstr "ألغيت:"
 
@@ -516,7 +516,7 @@ msgstr "إغلاق"
 msgid "Closed"
 msgstr "مغلق"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Closed:"
 msgstr "مغلق:"
 
@@ -545,7 +545,7 @@ msgstr "مجمّع"
 msgid "Collected {0} {1}{2} and {3} {4}{5}"
 msgstr "تم تجميع {0} {1} {2} و {3} {4} {5}"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Collected:"
 msgstr "جمعت:"
 
@@ -1040,7 +1040,7 @@ msgstr "استيراد مجموعة V2"
 msgid "Import at your own risk"
 msgstr "استيراد على مسؤوليتك الخاصة"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "In Range"
 msgstr "في النطاق"
 
@@ -1140,11 +1140,11 @@ msgstr "أوامر الحد"
 msgid "Limit Price"
 msgstr "حد السعر"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Limit price (USD):"
 msgstr "السعر المحدد (بالدولار الأمريكي):"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Limit price:"
 msgstr "السعر المحدد:"
 
@@ -1346,7 +1346,7 @@ msgstr "عفواً! حدث خطأ غير معروف. يُرجى تحديث ال�
 msgid "Open Orders"
 msgstr "افتح الأوامر"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Opened:"
 msgstr "افتتح:"
 
@@ -1395,7 +1395,7 @@ msgid "Participating pools"
 msgstr "المجموعات المشاركة"
 
 #: src/components/Badge/RangeBadge.tsx
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 #: src/pages/Vote/styled.tsx
 msgid "Pending"
 msgstr "قيد الانتظار"
@@ -1503,7 +1503,7 @@ msgid "Price:"
 msgstr "السعر:"
 
 #: src/components/Badge/RangeBadge.tsx
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Processed"
 msgstr "معالجتها"
 
@@ -1693,7 +1693,7 @@ msgstr "سيسمح Staking KROM للنظام بمعالجة التداولات �
 msgid "Status"
 msgstr "حالة"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Status:"
 msgstr "حالة:"
 
@@ -2498,12 +2498,12 @@ msgstr "عبر قائمة الرموز {0}"
 msgid "{0, plural, one {Import token} other {Import tokens}}"
 msgstr "{0, plural, one {استيراد رمز} other {استيراد رموز}}"
 
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 #: src/components/NetworkAlert/NetworkAlert.tsx
 #: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx
@@ -2588,11 +2588,11 @@ msgstr "{0} sKrom / الأسبوع"
 msgid "{0} tokens"
 msgstr "{0} رموز"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "{0} {1}"
 msgstr "{0} {1}"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "{0} {1} + {2} {3}"
 msgstr "{0} {1} + {2} {3}"
 

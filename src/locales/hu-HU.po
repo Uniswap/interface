@@ -420,7 +420,7 @@ msgstr "Törölve"
 msgid "Canceling the trade will withdraw available amounts for you."
 msgstr "A kereskedés törlésével a rendelkezésre álló összegeket visszavonják."
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Cancelled:"
 msgstr "Törölve:"
 
@@ -516,7 +516,7 @@ msgstr "Bezárás"
 msgid "Closed"
 msgstr "Zárva"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Closed:"
 msgstr "Zárva:"
 
@@ -545,7 +545,7 @@ msgstr "Beszedett"
 msgid "Collected {0} {1}{2} and {3} {4}{5}"
 msgstr "Összegyűjtve: {0} {1}{2} és {3} {4}{5}"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Collected:"
 msgstr "Összegyűjtött:"
 
@@ -1040,7 +1040,7 @@ msgstr "Import V2 Pool"
 msgid "Import at your own risk"
 msgstr "Import saját felelősségére"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "In Range"
 msgstr "Hatótávolságban"
 
@@ -1140,11 +1140,11 @@ msgstr "Limit megbízások"
 msgid "Limit Price"
 msgstr "Limit ár"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Limit price (USD):"
 msgstr "Limit ár (USD):"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Limit price:"
 msgstr "Limit ár:"
 
@@ -1346,7 +1346,7 @@ msgstr "Hoppá! Ismeretlen hiba történt. Kérjük, frissítse az oldalt, vagy 
 msgid "Open Orders"
 msgstr "Nyissa meg a rendeléseket"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Opened:"
 msgstr "Nyitott:"
 
@@ -1395,7 +1395,7 @@ msgid "Participating pools"
 msgstr "Résztvevő poolok"
 
 #: src/components/Badge/RangeBadge.tsx
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 #: src/pages/Vote/styled.tsx
 msgid "Pending"
 msgstr "Függőben levő"
@@ -1503,7 +1503,7 @@ msgid "Price:"
 msgstr "Ár:"
 
 #: src/components/Badge/RangeBadge.tsx
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Processed"
 msgstr "Feldolgozott"
 
@@ -1693,7 +1693,7 @@ msgstr "A KROM kockáztatása lehetővé teszi a rendszer számára, hogy automa
 msgid "Status"
 msgstr "Állapot"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Status:"
 msgstr "Állapot:"
 
@@ -2498,12 +2498,12 @@ msgstr "{0} token listán keresztül"
 msgid "{0, plural, one {Import token} other {Import tokens}}"
 msgstr "{0, plural, one {Import token} other {Import tokenek}}"
 
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 #: src/components/NetworkAlert/NetworkAlert.tsx
 #: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx
@@ -2588,11 +2588,11 @@ msgstr "{0} sKrom / hét"
 msgid "{0} tokens"
 msgstr "{0} token"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "{0} {1}"
 msgstr "{0} {1}"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "{0} {1} + {2} {3}"
 msgstr "{0} {1} + {2} {3}"
 

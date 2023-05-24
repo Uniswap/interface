@@ -420,7 +420,7 @@ msgstr "Annulé"
 msgid "Canceling the trade will withdraw available amounts for you."
 msgstr "L'annulation de la transaction retirera les montants disponibles pour vous."
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Cancelled:"
 msgstr "Annulé:"
 
@@ -516,7 +516,7 @@ msgstr "Fermer"
 msgid "Closed"
 msgstr "Fermé"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Closed:"
 msgstr "Fermée:"
 
@@ -545,7 +545,7 @@ msgstr "Collecté"
 msgid "Collected {0} {1}{2} and {3} {4}{5}"
 msgstr "{0} {1}{2} et {3} {4}{5} collectés"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Collected:"
 msgstr "Collecté:"
 
@@ -1040,7 +1040,7 @@ msgstr "Importer le pool V2"
 msgid "Import at your own risk"
 msgstr "Importez à vos risques et périls"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "In Range"
 msgstr "Dans la gamme"
 
@@ -1140,11 +1140,11 @@ msgstr "Ordres à cours limité"
 msgid "Limit Price"
 msgstr "Prix limite"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Limit price (USD):"
 msgstr "Prix limite (USD):"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Limit price:"
 msgstr "Prix limite :"
 
@@ -1346,7 +1346,7 @@ msgstr "Oups ! Une erreur inconnue s'est produite. Veuillez rafraîchir la page 
 msgid "Open Orders"
 msgstr "Commandes ouvertes"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Opened:"
 msgstr "Ouverte:"
 
@@ -1395,7 +1395,7 @@ msgid "Participating pools"
 msgstr "Pools participants"
 
 #: src/components/Badge/RangeBadge.tsx
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 #: src/pages/Vote/styled.tsx
 msgid "Pending"
 msgstr "En attente"
@@ -1503,7 +1503,7 @@ msgid "Price:"
 msgstr "Prix :"
 
 #: src/components/Badge/RangeBadge.tsx
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Processed"
 msgstr "Traité"
 
@@ -1693,7 +1693,7 @@ msgstr "Le jalonnement de KROM permettra au système de traiter automatiquement 
 msgid "Status"
 msgstr "Statut"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Status:"
 msgstr "Statut:"
 
@@ -2498,12 +2498,12 @@ msgstr "via {0} liste de jetons"
 msgid "{0, plural, one {Import token} other {Import tokens}}"
 msgstr "{0, plural, one {Jeton d'importation } other {Importez des jetons}}"
 
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 #: src/components/NetworkAlert/NetworkAlert.tsx
 #: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx
@@ -2588,11 +2588,11 @@ msgstr "{0} sKrom / semaine"
 msgid "{0} tokens"
 msgstr "{0} jetons"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "{0} {1}"
 msgstr "{0} {1}"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "{0} {1} + {2} {3}"
 msgstr "{0} {1} + {2} {3}"
 

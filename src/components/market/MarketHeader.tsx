@@ -10,7 +10,7 @@ import SettingsTab from '../Settings'
 
 const StyledMarketHeader = styled.div`
   display: flex;
-  padding: 1rem 1.25rem 0.5rem 1.25rem;
+  padding: 8px;
   width: 100%;
   color: ${({ theme }) => theme.text2};
 `

@@ -1,13 +1,11 @@
 import { Trans } from '@lingui/macro'
 import { ButtonPrimary } from 'components/Button'
 import { AutoColumn } from 'components/Column'
-import { Checkbox, PaddedColumn, TextDot } from 'components/SearchModal/styleds'
-import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useState } from 'react'
 import styled from 'styled-components/macro'
 
-import { CloseIcon, CustomLightSpinner, ExternalLink, TYPE } from '../../theme'
-import { Break, CardSection, DataCard } from '../earn/styled'
+import { CloseIcon, TYPE } from '../../theme'
+import { CardSection, DataCard } from '../earn/styled'
 import Modal from '../Modal'
 import { RowBetween } from '../Row'
 

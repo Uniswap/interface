@@ -5,7 +5,6 @@ import styled from 'styled-components/macro'
 
 import { injected } from '../../connectors'
 import { SUPPORTED_WALLETS } from '../../constants/wallet'
-import { ButtonError } from '../Button'
 import Loader from '../Loader'
 import Option from './Option'
 

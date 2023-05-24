@@ -420,7 +420,7 @@ msgstr "Anulat"
 msgid "Canceling the trade will withdraw available amounts for you."
 msgstr "Anularea tranzacției va retrage sumele disponibile pentru dvs."
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Cancelled:"
 msgstr "Anulat"
 
@@ -516,7 +516,7 @@ msgstr "Închide"
 msgid "Closed"
 msgstr "Închis"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Closed:"
 msgstr "Închis:"
 
@@ -545,7 +545,7 @@ msgstr "Colectat"
 msgid "Collected {0} {1}{2} and {3} {4}{5}"
 msgstr "S-au adunat {0} {1}{2} și {3} {4}{5}"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Collected:"
 msgstr "Colectat:"
 
@@ -1040,7 +1040,7 @@ msgstr "Importă Grupul V2"
 msgid "Import at your own risk"
 msgstr "Importă pe propriul risc"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "In Range"
 msgstr "În rază"
 
@@ -1140,11 +1140,11 @@ msgstr "Comenzi Limitate"
 msgid "Limit Price"
 msgstr "Preț limită"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Limit price (USD):"
 msgstr "Preț limită (USD):"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Limit price:"
 msgstr "Preț limită:"
 
@@ -1346,7 +1346,7 @@ msgstr "Ups! A avut loc o eroare necunoscută. Reîmprospătează pagina, sau vi
 msgid "Open Orders"
 msgstr "Comenzi deschise"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Opened:"
 msgstr "Deschis:"
 
@@ -1395,7 +1395,7 @@ msgid "Participating pools"
 msgstr "Grupuri participante"
 
 #: src/components/Badge/RangeBadge.tsx
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 #: src/pages/Vote/styled.tsx
 msgid "Pending"
 msgstr "In asteptarea"
@@ -1503,7 +1503,7 @@ msgid "Price:"
 msgstr "Preț:"
 
 #: src/components/Badge/RangeBadge.tsx
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Processed"
 msgstr "Procesat"
 
@@ -1693,7 +1693,7 @@ msgstr "Staking KROM va permite sistemului să proceseze automat tranzacțiile"
 msgid "Status"
 msgstr "Stare"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Status:"
 msgstr "Stare:"
 
@@ -2498,12 +2498,12 @@ msgstr "prin {0} lista de jetoane"
 msgid "{0, plural, one {Import token} other {Import tokens}}"
 msgstr "{0, plural, one {Importă jetonul} other {Importă jetoane}}"
 
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 #: src/components/NetworkAlert/NetworkAlert.tsx
 #: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx
@@ -2588,11 +2588,11 @@ msgstr "{0} sKrom/săptămână"
 msgid "{0} tokens"
 msgstr "{0} jetoane"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "{0} {1}"
 msgstr "{0} {1}"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "{0} {1} + {2} {3}"
 msgstr "{0} {1} + {2} {3}"
 

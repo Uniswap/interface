@@ -75,7 +75,7 @@ export const PositionPreview = ({
             {currency0?.symbol} / {currency1?.symbol}
           </TYPE.label>
         </RowFixed>
-        <RangeBadge removed={removed} inRange={inRange} closed={closedOrder} isUnderfunded={false} />
+        <RangeBadge inRange={inRange} closed={closedOrder} isUnderfunded={false} />
       </RowBetween>
 
       <LightCard>

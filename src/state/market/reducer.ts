@@ -1,7 +1,7 @@
 import { createReducer } from '@reduxjs/toolkit'
 import { parsedQueryString } from 'hooks/useParsedQueryString'
 
-import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies, typeInput } from './actions'
+import { Field, replaceMarketState, selectCurrency, setRecipient, switchCurrencies, typeInput } from './actions'
 import { queryParametersToSwapState } from './hooks'
 
 export interface MarketState {
@@ -22,7 +22,7 @@ const initialState: MarketState = queryParametersToSwapState(parsedQueryString()
 export default createReducer<MarketState>(initialState, (builder) =>
   builder
     .addCase(
-      replaceSwapState,
+      replaceMarketState,
       (state, { payload: { typedValue, recipient, field, inputCurrencyId, outputCurrencyId } }) => {
         return {
           [Field.INPUT]: {

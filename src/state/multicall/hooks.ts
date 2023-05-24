@@ -84,7 +84,7 @@ function useCallsData(
         })
       )
     }
-  }, [chainId, dispatch, blocksPerFetch, serializedCallKeys])
+  }, [blocksPerFetch, chainId, dispatch, serializedCallKeys])
 
   return useMemo(
     () =>
@@ -192,7 +192,7 @@ export function useSingleContractMultipleData(
               : undefined
           )
         : [],
-    [contract, callDatas, gasRequired]
+    [callDatas, contract, gasRequired]
   )
 
   const results = useCallsData(calls, blocksPerFetch ? { blocksPerFetch } : undefined)
@@ -201,7 +201,7 @@ export function useSingleContractMultipleData(
 
   return useMemo(() => {
     return results.map((result) => toCallState(result, contract?.interface, fragment, latestBlockNumber))
-  }, [results, contract, fragment, latestBlockNumber])
+  }, [contract?.interface, fragment, latestBlockNumber, results])
 }
 
 export function useMultipleContractSingleData(
@@ -245,7 +245,7 @@ export function useMultipleContractSingleData(
 
   return useMemo(() => {
     return results.map((result) => toCallState(result, contractInterface, fragment, latestBlockNumber))
-  }, [fragment, results, contractInterface, latestBlockNumber])
+  }, [contractInterface, fragment, latestBlockNumber, results])
 }
 
 export function useSingleCallResult(
@@ -278,7 +278,7 @@ export function useSingleContractWithCallData(
             }
           })
         : [],
-    [contract, callDatas, gasRequired]
+    [callDatas, contract, gasRequired]
   )
 
   const results = useCallsData(calls, blocksPerFetch ? { blocksPerFetch } : undefined)
@@ -294,5 +294,5 @@ export function useSingleContractWithCallData(
         latestBlockNumber
       )
     )
-  }, [results, contract, callDatas, latestBlockNumber])
+  }, [callDatas, contract?.interface, latestBlockNumber, results])
 }

@@ -4,7 +4,7 @@ import { Contract } from '@ethersproject/contracts'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import LIMIT_ABI from 'abis/limit-order-manager.json'
 import { KROM } from 'constants/tokens'
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { useLogs } from 'state/logs/hooks'
 import { Result, useSingleCallResult, useSingleContractMultipleData } from 'state/multicall/hooks'
 import { useNetworkGasPrice } from 'state/user/hooks'
@@ -89,7 +89,10 @@ function usePositionCreatedLogs(
   account: string | null | undefined
 ): LimitOrderLogs[] | undefined {
   // create filters for
-  const filter = useMemo(() => contract?.filters?.LimitOrderCreated(account, tokenId), [account])
+  const filter = useMemo(
+    () => contract?.filters?.LimitOrderCreated(account, tokenId),
+    [account, contract?.filters, tokenId]
+  )
 
   const useLogsResult = useLogs(filter)
 
@@ -133,7 +136,10 @@ function usePositionProcessedLogs(
   account: string | null | undefined
 ): LimitOrderLogs[] | undefined {
   // create filters for
-  const filter = useMemo(() => contract?.filters?.LimitOrderProcessed(account, tokenId), [account])
+  const filter = useMemo(
+    () => contract?.filters?.LimitOrderProcessed(account, tokenId),
+    [account, contract?.filters, tokenId]
+  )
 
   const useLogsResult = useLogs(filter)
 
@@ -173,7 +179,10 @@ function usePositionCancelledLogs(
   account: string | null | undefined
 ): LimitOrderLogs[] | undefined {
   // create filters for
-  const filter = useMemo(() => contract?.filters?.LimitOrderCancelled(account, tokenId), [account])
+  const filter = useMemo(
+    () => contract?.filters?.LimitOrderCancelled(account, tokenId),
+    [account, contract?.filters, tokenId]
+  )
 
   const useLogsResult = useLogs(filter)
 
@@ -217,7 +226,10 @@ function usePositionCollectedLogs(
   account: string | null | undefined
 ): LimitOrderLogs[] | undefined {
   // create filters for
-  const filter = useMemo(() => contract?.filters?.LimitOrderCollected(account, tokenId), [account])
+  const filter = useMemo(
+    () => contract?.filters?.LimitOrderCollected(account, tokenId),
+    [account, contract?.filters, tokenId]
+  )
 
   const useLogsResult = useLogs(filter)
 

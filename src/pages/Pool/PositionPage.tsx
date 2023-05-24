@@ -491,12 +491,6 @@ export function PositionPage({
   const [processedBlockDate, setProcessedBlockDate] = useState<DateTime>()
 
   useEffect(() => {
-    let active = true
-    load()
-    return () => {
-      active = false
-    }
-
     async function load() {
       setCreatedBlockDate(undefined) // this is optional
       if (createdBlockNumber) {
@@ -507,15 +501,10 @@ export function PositionPage({
         setCreatedBlockDate(DateTime.fromSeconds(res?.timestamp))
       }
     }
+    load()
   }, [createdBlockNumber, library])
 
   useEffect(() => {
-    let active = true
-    load()
-    return () => {
-      active = false
-    }
-
     async function load() {
       setProcessedBlockDate(undefined) // this is optional
       if (collectedBlockNumber) {
@@ -526,6 +515,7 @@ export function PositionPage({
         setProcessedBlockDate(DateTime.fromSeconds(res?.timestamp))
       }
     }
+    load()
   }, [collectedBlockNumber, library])
 
   // TODO (pai) fix the target price ; upper or lower ; buy or sell
@@ -562,7 +552,7 @@ export function PositionPage({
       return priceUpper?.invert()
     }
     return priceUpper
-  }, [createdPrice, currencyCreatedEventAmount, priceUpper])
+  }, [createdPrice, currencyCreatedEventAmount?.currency, priceUpper])
 
   const addTransaction = useTransactionAdder()
   const limitManager = useLimitOrderManager()
@@ -613,7 +603,7 @@ export function PositionPage({
         setCollecting(false)
         console.error(error)
       })
-  }, [chainId, feeValue0, feeValue1, limitManager, account, tokenId, addTransaction, library])
+  }, [account, addTransaction, chainId, feeValue0, feeValue1, library, limitManager, tokenId])
   const cancel = useCallback(() => {
     if (!chainId || !feeValue0 || !feeValue1 || !limitManager || !account || !tokenId || !library) return
 
@@ -714,18 +704,18 @@ export function PositionPage({
         console.error(error)
       })
   }, [
+    account,
+    addTransaction,
     chainId,
     feeValue0,
     feeValue1,
-    limitManager,
-    account,
-    tokenId,
-    library,
-    isExpertMode,
-    kromatikaRouter,
     gaslessCallback,
     history,
-    addTransaction,
+    isExpertMode,
+    kromatikaRouter,
+    library,
+    limitManager,
+    tokenId,
   ])
 
   const ownsNFT = owner === account
@@ -895,7 +885,7 @@ export function PositionPage({
                     <Trans>{new Percent(feeAmount, 1_000_000).toSignificant()}%</Trans>
                   </BadgeText>
                 </Badge>
-                <RangeBadge removed={removed} inRange={inRange} closed={isClosed} isUnderfunded={false} />
+                <RangeBadge inRange={inRange} closed={isClosed} isUnderfunded={false} />
               </RowFixed>
               {ownsNFT && tokenId && (
                 <RowFixed>

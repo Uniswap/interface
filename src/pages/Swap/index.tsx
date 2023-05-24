@@ -11,7 +11,7 @@ import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter
 import { MouseoverTooltip, MouseoverTooltipContent } from 'components/Tooltip'
 import { useV3Positions } from 'hooks/useV3Positions'
 import { LoadingRows } from 'pages/Pool/styleds'
-import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { ArrowDown, CheckCircle, HelpCircle, Inbox, Info, X } from 'react-feather'
 import ReactGA from 'react-ga'
 import { RouteComponentProps } from 'react-router-dom'
@@ -474,7 +474,7 @@ export default function Swap({ history }: RouteComponentProps) {
           txHash: undefined,
         })
       })
-  }, [swapCallback, tradeToConfirm, showConfirm, recipient, recipientAddress, account, trade])
+  }, [account, recipient, recipientAddress, showConfirm, swapCallback, trade, tradeToConfirm])
 
   // errors
   const [showInverted, setShowInverted] = useState<boolean>(true)
@@ -496,7 +496,7 @@ export default function Swap({ history }: RouteComponentProps) {
     if (txHash) {
       history.push('/#/limitorder/')
     }
-  }, [attemptingTxn, onUserInput, swapErrorMessage, tradeToConfirm, txHash])
+  }, [attemptingTxn, history, swapErrorMessage, tradeToConfirm, txHash])
 
   const handleAcceptChanges = useCallback(() => {
     setSwapState({ tradeToConfirm: trade, swapErrorMessage, txHash, attemptingTxn, showConfirm })

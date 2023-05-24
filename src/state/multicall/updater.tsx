@@ -228,7 +228,7 @@ export default function Updater(): null {
             // dispatch any errored calls
             if (erroredCalls.length > 0) {
               if (process.env.NODE_ENV === 'development') {
-                returnData.forEach((returnData, ix) => {
+                returnData.forEach((returnData) => {
                   if (!returnData.success) {
                     // ignore
                   }

@@ -4,7 +4,7 @@ import { Text } from 'rebass'
 import styled from 'styled-components/macro'
 
 import { useExpertModeManager } from '../../state/user/hooks'
-import { RowBetween, RowFixed } from '../Row'
+import { RowFixed } from '../Row'
 
 const StyledSwapHeader = styled.div`
   padding: 1rem 1.25rem 0.5rem 1.25rem;

@@ -420,7 +420,7 @@ msgstr "Скасовано"
 msgid "Canceling the trade will withdraw available amounts for you."
 msgstr "Скасування торгівлі призведе до вилучення доступних для вас сум."
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Cancelled:"
 msgstr "Скасовано"
 
@@ -516,7 +516,7 @@ msgstr "Закрити"
 msgid "Closed"
 msgstr "Закрито"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Closed:"
 msgstr "ЗАЧИНЕНО:"
 
@@ -545,7 +545,7 @@ msgstr "Зібрано"
 msgid "Collected {0} {1}{2} and {3} {4}{5}"
 msgstr "Зібрано {0} {1}{2} і {3} {4}{5}"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Collected:"
 msgstr "Зібрано:"
 
@@ -1040,7 +1040,7 @@ msgstr "Імпортувати пул V2"
 msgid "Import at your own risk"
 msgstr "Імпортувати на власний ризик"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "In Range"
 msgstr "В діапазоні"
 
@@ -1140,11 +1140,11 @@ msgstr "Лімітні замовлення"
 msgid "Limit Price"
 msgstr "Гранична ціна"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Limit price (USD):"
 msgstr "Гранична ціна (USD):"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Limit price:"
 msgstr "Гранична ціна:"
 
@@ -1346,7 +1346,7 @@ msgstr "Ой! Сталася невідома помилка. Оновіть с�
 msgid "Open Orders"
 msgstr "Відкриті замовлення"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Opened:"
 msgstr "Відкрито:"
 
@@ -1395,7 +1395,7 @@ msgid "Participating pools"
 msgstr "Пули, що беруть участь"
 
 #: src/components/Badge/RangeBadge.tsx
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 #: src/pages/Vote/styled.tsx
 msgid "Pending"
 msgstr "Очікується"
@@ -1503,7 +1503,7 @@ msgid "Price:"
 msgstr "Ціна:"
 
 #: src/components/Badge/RangeBadge.tsx
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Processed"
 msgstr "Оброблено"
 
@@ -1693,7 +1693,7 @@ msgstr "Стейкинг KROM дозволить системі автомати
 msgid "Status"
 msgstr "Статус"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Status:"
 msgstr "Статус:"
 
@@ -2498,12 +2498,12 @@ msgstr "через {0} список токенів"
 msgid "{0, plural, one {Import token} other {Import tokens}}"
 msgstr "{0, plural, one {токен імпортувати} other {токенів імпортувати}}"
 
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 #: src/components/NetworkAlert/NetworkAlert.tsx
 #: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx
@@ -2588,11 +2588,11 @@ msgstr "{0} sKrom / тиждень"
 msgid "{0} tokens"
 msgstr "{0} токенів"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "{0} {1}"
 msgstr "{0} {1}"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "{0} {1} + {2} {3}"
 msgstr "{0} {1} + {2} {3}"
 

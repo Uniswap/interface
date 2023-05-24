@@ -53,7 +53,10 @@ export default function RemoveLiquidity({
 }: RouteComponentProps<{ currencyIdA: string; currencyIdB: string }>) {
   const [currencyA, currencyB] = [useCurrency(currencyIdA) ?? undefined, useCurrency(currencyIdB) ?? undefined]
   const { account, chainId, library } = useActiveWeb3React()
-  const [tokenA, tokenB] = useMemo(() => [currencyA?.wrapped, currencyB?.wrapped], [currencyA, currencyB])
+  const [tokenA, tokenB] = useMemo(
+    () => [currencyA?.wrapped, currencyB?.wrapped],
+    [currencyA?.wrapped, currencyB?.wrapped]
+  )
   const theme = useContext(ThemeContext)
 
   // toggle wallet when disconnected

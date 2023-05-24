@@ -5,7 +5,7 @@ import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { useContext, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
 import { Text } from 'rebass'
-import styled, { ThemeContext } from 'styled-components/macro'
+import { ThemeContext } from 'styled-components/macro'
 
 import { useUSDCValue } from '../../hooks/useUSDCPrice'
 import { TYPE } from '../../theme'
@@ -19,24 +19,6 @@ import { RowBetween, RowFixed } from '../Row'
 import TradePrice from '../swap/TradePrice'
 import { AdvancedSwapDetails } from './AdvancedSwapDetails'
 import { SwapShowAcceptChanges, TruncatedText } from './styleds'
-
-const ArrowWrapper = styled.div`
-  padding: 4px;
-  border-radius: 20px;
-  height: 32px;
-  width: 32px;
-  position: relative;
-  margin-top: -18px;
-  margin-bottom: -18px;
-  left: calc(50% - 16px);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: ${({ theme }) => theme.bg1};
-  border: 4px solid;
-  border-color: ${({ theme }) => theme.bg1};
-  z-index: 2;
-`
 
 export default function SwapModalHeader({
   trade,

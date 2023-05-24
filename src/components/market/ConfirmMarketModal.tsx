@@ -120,10 +120,12 @@ export default function ConfirmMarketModal({
     ) : null
   }, [
     allowedSlippage,
+    feeImpactAccepted,
     feeImpactHigh,
     onAcceptChanges,
     paymentFees,
     paymentToken,
+    priceImpactAccepted,
     priceImpactHigh,
     recipient,
     referer,
@@ -144,7 +146,16 @@ export default function ConfirmMarketModal({
         swapErrorMessage={swapErrorMessage}
       />
     ) : null
-  }, [onConfirm, showAcceptChanges, swapErrorMessage, trade])
+  }, [
+    feeImpactAccepted,
+    feeImpactHigh,
+    onConfirm,
+    priceImpactAccepted,
+    priceImpactHigh,
+    showAcceptChanges,
+    swapErrorMessage,
+    trade,
+  ])
 
   // text to show while loading
   const pendingText = (
@@ -168,7 +179,7 @@ export default function ConfirmMarketModal({
       ) : (
         <TransactionPreparingContent onDismiss={onDismiss} routeIsNotFound={routeIsNotFound} />
       ),
-    [swapErrorMessage, onDismiss, swapTransaction?.data, modalHeader, modalBottom]
+    [modalBottom, modalHeader, onDismiss, routeIsNotFound, swapErrorMessage, swapTransaction?.data]
   )
 
   return (

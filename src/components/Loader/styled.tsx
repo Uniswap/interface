@@ -35,5 +35,9 @@ export const loadingOpacityMixin = css<{ $loading: boolean }>`
 `
 
 export const LoadingOpacityContainer = styled.div<{ $loading: boolean }>`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   ${loadingOpacityMixin}
 `

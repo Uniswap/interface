@@ -420,7 +420,7 @@ msgstr "Imeghairishwa"
 msgid "Canceling the trade will withdraw available amounts for you."
 msgstr "Kughairi biashara kutaondoa kiasi kinachopatikana kwa ajili yako."
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Cancelled:"
 msgstr "Imeghairiwa"
 
@@ -516,7 +516,7 @@ msgstr "Funga"
 msgid "Closed"
 msgstr "Imefungwa"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Closed:"
 msgstr "Imefungwa:"
 
@@ -545,7 +545,7 @@ msgstr "Imekusanywa"
 msgid "Collected {0} {1}{2} and {3} {4}{5}"
 msgstr "Imekusanywa {0} {1}{2} na {3} {4}{5}"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Collected:"
 msgstr "Imekusanywa:"
 
@@ -1040,7 +1040,7 @@ msgstr "Ingiza Bwawa la V2"
 msgid "Import at your own risk"
 msgstr "Ingiza kwa hatari yako mwenyewe"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "In Range"
 msgstr "Katika Masafa"
 
@@ -1140,11 +1140,11 @@ msgstr "Maagizo ya Kikomo"
 msgid "Limit Price"
 msgstr "Bei Kikomo"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Limit price (USD):"
 msgstr "Bei ya kikomo (USD):"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Limit price:"
 msgstr "Bei ya kikomo:"
 
@@ -1346,7 +1346,7 @@ msgstr "Lo! Hitilafu isiyojulikana ilitokea. Tafadhali onyesha upya ukurasa, au 
 msgid "Open Orders"
 msgstr "Fungua Maagizo"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Opened:"
 msgstr "Imefunguliwa:"
 
@@ -1395,7 +1395,7 @@ msgid "Participating pools"
 msgstr "Mabwawa ya kushiriki"
 
 #: src/components/Badge/RangeBadge.tsx
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 #: src/pages/Vote/styled.tsx
 msgid "Pending"
 msgstr "Inasubiri"
@@ -1503,7 +1503,7 @@ msgid "Price:"
 msgstr "Bei:"
 
 #: src/components/Badge/RangeBadge.tsx
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Processed"
 msgstr "Imechakatwa"
 
@@ -1693,7 +1693,7 @@ msgstr "Staking KROM itaruhusu mfumo kuchakata biashara kiotomatiki"
 msgid "Status"
 msgstr "Hali"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Status:"
 msgstr "Hali"
 
@@ -2498,12 +2498,12 @@ msgstr "kupitia orodha ya ishara {0}"
 msgid "{0, plural, one {Import token} other {Import tokens}}"
 msgstr "{0, plural, one {Leta ishara} other {Ingiza ishara}}"
 
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 #: src/components/NetworkAlert/NetworkAlert.tsx
 #: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx
@@ -2588,11 +2588,11 @@ msgstr "{0} sKrom / wiki"
 msgid "{0} tokens"
 msgstr "Ishara {0}"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "{0} {1}"
 msgstr "{0} {1}"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "{0} {1} + {2} {3}"
 msgstr "{0} {1} + {2} {3}"
 

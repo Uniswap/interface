@@ -43,7 +43,7 @@ export function useBestV2Trade(
       tradeType === TradeType.EXACT_INPUT
         ? [amountSpecified?.currency, otherCurrency]
         : [otherCurrency, amountSpecified?.currency],
-    [tradeType, amountSpecified, otherCurrency]
+    [amountSpecified?.currency, otherCurrency, tradeType]
   )
   const allowedPairs = useAllCommonPairs(currencyIn, currencyOut)
 

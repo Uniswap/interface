@@ -17,7 +17,6 @@ import styled from 'styled-components/macro'
 import Web3 from 'web3-utils'
 
 import { useTotalSupply } from '../../hooks/useTotalSupply'
-import { useV3Positions } from '../../hooks/useV3Positions'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { useTokenBalance } from '../../state/wallet/hooks'
 import { TYPE } from '../../theme'
@@ -196,12 +195,11 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
   )
 }
 
-export default function FullPositionCard({ fundingBalance }: FundingCardProps) {
+export default function FullPositionCard({ fundingBalance, minBalance }: FundingCardProps) {
   const [depositedFiatBalance, setDepositedFiatBalance] = useState<string>('')
   const [minFiatBalance, setMinFiatBalance] = useState<string>('')
 
-  const { account, chainId } = useActiveWeb3React()
-  const { minBalance } = useV3Positions(account)
+  const { chainId } = useActiveWeb3React()
 
   const isUnderfunded = minBalance && fundingBalance ? !minBalance?.lessThan(fundingBalance?.quotient) : false
   const depositedAmount = fundingBalance?.toSignificant(2)
@@ -469,12 +467,4 @@ export function StakePositionCard({ fundingBalance, minBalance, gasPrice }: Fund
       </CardSection>
     </VoteCard>
   )
-}
-
-function setCollectMigrationHash(hash: any) {
-  throw new Error('Function not implemented.')
-}
-
-function setCollecting(arg0: boolean) {
-  throw new Error('Function not implemented.')
 }

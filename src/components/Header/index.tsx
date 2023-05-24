@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import PerpModal from 'components/Perpetual'
-import { CHAIN_INFO, SupportedChainId } from 'constants/chains'
+import { SupportedChainId } from 'constants/chains'
 import { useModalOpen, useShowClaimPopup, useTogglePerpModal, useToggleSelfClaimModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import { useUserHasAvailableClaim } from 'state/claim/hooks'
@@ -76,43 +76,6 @@ const MainLogo = styled.div`
   ${({ theme }) => theme.mediaWidth.upToSmall`
     display: none;
   `}
-`
-
-const LogoTextWrapper = styled.p`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  padding: 0 8px;
-`
-
-const LogoTitle = styled.p`
-  font-style: normal;
-  font-weight: 700;
-  font-size: 24px;
-  line-height: 28px;
-  margin: 0;
-  color: ${({ theme }) => theme.text1};
-
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    font-weight: 700;
-    font-size: 18px;
-    line-height: 24px;
-  `};
-`
-
-const LogoSubTitle = styled.p`
-  font-style: normal;
-  font-weight: 500;
-  font-size: 20px;
-  line-height: 24px;
-  margin: 0;
-  color: ${({ theme }) => theme.text1};
-
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    font-size: 16px;
-    line-height: 20px;
-  `};
 `
 
 const PhoneLogo = styled.div`
@@ -258,12 +221,7 @@ export default function Header() {
     [SupportedChainId.OPTIMISM]: 'https://info.uniswap.org/#/optimism/pools/0xe62bd99a9501ca33d98913105fc2bec5bae6e5dd',
     [SupportedChainId.POLYGON]: ' https://info.uniswap.org/#/polygon/pools/0xba589ba3af52975a12acc6de69c9ab3ac1ae7804',
   }
-  const {
-    infoLink,
-    addNetworkInfo: {
-      nativeCurrency: { symbol: nativeCurrencySymbol },
-    },
-  } = CHAIN_INFO[chainId ? chainId : SupportedChainId.MAINNET]
+
   return (
     <>
       <HeaderFrame showBackground={true}>

@@ -1,7 +1,6 @@
 {
   "name": "@uniswap/interface",
   "description": "Kromatika Limit Order Manager",
-  "homepage": ".",
   "main": "dist/interface.js",
   "module": "dist/interface.esm.js",
   "types": "dist/index.d.ts",
