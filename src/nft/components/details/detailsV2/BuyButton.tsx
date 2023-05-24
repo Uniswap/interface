@@ -1,38 +1,54 @@
 import { Trans } from '@lingui/macro'
 import { formatNumber } from '@uniswap/conedison/format'
-import { ButtonGray, ButtonPrimary } from 'components/Button'
+import { ButtonPrimary } from 'components/Button'
+import { ButtonGray } from 'components/Button'
 import Loader from 'components/Icons/LoadingSpinner'
 import Row from 'components/Row'
+import { AddToBagIcon } from 'nft/components/icons'
 import { useBuyAssetCallback } from 'nft/hooks/useFetchAssets'
 import { GenieAsset } from 'nft/types'
 import styled, { css } from 'styled-components/macro'
 
 const ButtonStyles = css`
-  width: min-content;
-  flex-shrink: 0;
-  border-radius: 16px;
-`
-
-const ButtonContainers = styled(Row)`
-  padding: 16px 24px;
-  gap: 8px;
-  line-height: 24px;
-  white-space: nowrap;
-`
-
-const StyledBuyButton = styled(ButtonPrimary)`
+  padding: 16px;
   display: flex;
   flex-direction: row;
-  padding: 16px 24px;
   gap: 8px;
   line-height: 24px;
   white-space: nowrap;
+`
+
+const BaseButton = styled(ButtonPrimary)`
+  background: none;
+  border-radius: 0px;
 
   ${ButtonStyles}
 `
 
-const NotAvailableButton = styled(ButtonGray)`
+const ButtonContainer = styled(Row)`
+  width: 320px;
+  background-color: ${({ theme }) => theme.accentAction};
+  border-radius: 16px;
+  overflow: hidden;
   white-space: nowrap;
+`
+
+const ButtonSeparator = styled.div`
+  height: 24px;
+  width: 0px;
+  border-left: 0.5px solid #f5f6fc;
+`
+
+const StyledBuyButton = styled(BaseButton)``
+
+const AddToBagButton = styled(BaseButton)`
+  width: min-content;
+  flex-shrink: 0;
+`
+
+const NotAvailableButton = styled(ButtonGray)`
+  width: min-content;
+  border-radius: 16px;
 
   ${ButtonStyles}
 `
@@ -58,18 +74,24 @@ export const BuyButton = ({ asset, onDataPage }: { asset: GenieAsset; onDataPage
   }
 
   return (
-    <StyledBuyButton disabled={isLoadingRoute} onClick={() => fetchAndPurchaseSingleAsset(asset)}>
-      {isLoadingRoute ? (
-        <>
-          <Trans>Fetching Route</Trans>
-          <Loader size="24px" stroke="white" />
-        </>
-      ) : (
-        <>
-          <Trans>Buy</Trans>
-          <Price>{formatNumber(price)} ETH</Price>
-        </>
-      )}
-    </StyledBuyButton>
+    <ButtonContainer>
+      <StyledBuyButton disabled={isLoadingRoute} onClick={() => fetchAndPurchaseSingleAsset(asset)}>
+        {isLoadingRoute ? (
+          <>
+            <Trans>Fetching Route</Trans>
+            <Loader size="24px" stroke="white" />
+          </>
+        ) : (
+          <>
+            <Trans>Buy</Trans>
+            <Price>{formatNumber(price)} ETH</Price>
+          </>
+        )}
+      </StyledBuyButton>
+      <ButtonSeparator />
+      <AddToBagButton>
+        <AddToBagIcon width="24px" height="24px" />
+      </AddToBagButton>
+    </ButtonContainer>
   )
 }
