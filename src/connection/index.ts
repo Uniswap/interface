@@ -95,7 +95,7 @@ export const walletConnectV2Connection: Connection = {
   getName: () => 'WalletConnectV2',
   connector: web3WalletConnectV2,
   hooks: web3WalletConnectV2Hooks,
-  type: ConnectionType.WALLET_CONNECT,
+  type: ConnectionType.WALLET_CONNECT_V2,
   getIcon: () => WALLET_CONNECT_ICON,
   shouldDisplay: () => false,
 }
