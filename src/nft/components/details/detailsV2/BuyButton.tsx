@@ -2,6 +2,7 @@ import { Trans } from '@lingui/macro'
 import { formatNumber } from '@uniswap/conedison/format'
 import { ButtonGray, ButtonPrimary } from 'components/Button'
 import Loader from 'components/Icons/LoadingSpinner'
+import Row from 'components/Row'
 import { useBuyAssetCallback } from 'nft/hooks/useFetchAssets'
 import { GenieAsset } from 'nft/types'
 import styled, { css } from 'styled-components/macro'
@@ -10,6 +11,13 @@ const ButtonStyles = css`
   width: min-content;
   flex-shrink: 0;
   border-radius: 16px;
+`
+
+const ButtonContainers = styled(Row)`
+  padding: 16px 24px;
+  gap: 8px;
+  line-height: 24px;
+  white-space: nowrap;
 `
 
 const StyledBuyButton = styled(ButtonPrimary)`
@@ -50,20 +58,18 @@ export const BuyButton = ({ asset, onDataPage }: { asset: GenieAsset; onDataPage
   }
 
   return (
-    <>
-      <StyledBuyButton disabled={isLoadingRoute} onClick={() => fetchAndPurchaseSingleAsset(asset)}>
-        {isLoadingRoute ? (
-          <>
-            <Trans>Fetching Route</Trans>
-            <Loader size="24px" stroke="white" />
-          </>
-        ) : (
-          <>
-            <Trans>Buy</Trans>
-            <Price>{formatNumber(price)} ETH</Price>
-          </>
-        )}
-      </StyledBuyButton>
-    </>
+    <StyledBuyButton disabled={isLoadingRoute} onClick={() => fetchAndPurchaseSingleAsset(asset)}>
+      {isLoadingRoute ? (
+        <>
+          <Trans>Fetching Route</Trans>
+          <Loader size="24px" stroke="white" />
+        </>
+      ) : (
+        <>
+          <Trans>Buy</Trans>
+          <Price>{formatNumber(price)} ETH</Price>
+        </>
+      )}
+    </StyledBuyButton>
   )
 }
