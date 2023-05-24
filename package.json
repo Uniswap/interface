@@ -12,6 +12,7 @@
     "@graphql-codegen/typescript-react-apollo": "3.3.7",
     "@graphql-codegen/typescript-resolvers": "2.7.6",
     "@manypkg/cli": "^0.19.2",
+    "@typechain/ethers-v5": "7.2.0",
     "@types/react": "^18.0.15",
     "@typescript-eslint/eslint-plugin": "5.59.2",
     "concurrently": "^7.6.0",
@@ -30,6 +31,7 @@
     "semantic-release-monorepo": "^7.0.5",
     "syncpack": "^8.5.14",
     "turbo": "latest",
+    "typechain": "5.2.0",
     "undici": "5.19.1"
   },
   "engines": {
@@ -65,6 +67,7 @@
     "yaml": "2.2.2"
   },
   "scripts": {
+    "contracts:compile": "typechain --target ethers-v5 --out-dir packages/wallet/src/abis/types './packages/wallet/src/abis/**/*.json'",
     "g:build": "turbo run build --concurrency=100%",
     "g:check:deps": "manypkg check",
     "g:format:deps": "syncpack format",

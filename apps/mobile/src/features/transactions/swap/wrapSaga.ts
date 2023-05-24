@@ -1,8 +1,6 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { Contract, providers } from 'ethers'
 import { CallEffect } from 'redux-saga/effects'
-import { Weth } from 'src/abis/types'
-import WETH_ABI from 'src/abis/weth.json'
 import { getNotificationErrorAction } from 'src/features/notifications/utils'
 import { sendTransaction } from 'src/features/transactions/sendTransaction'
 import {
@@ -11,6 +9,8 @@ import {
   TransactionTypeInfo,
 } from 'src/features/transactions/types'
 import { call } from 'typed-redux-saga'
+import { Weth } from 'wallet/src/abis/types'
+import WETH_ABI from 'wallet/src/abis/weth.json'
 import { ChainId } from 'wallet/src/constants/chains'
 import { WRAPPED_NATIVE_CURRENCY } from 'wallet/src/constants/tokens'
 import { Account } from 'wallet/src/features/wallet/accounts/types'

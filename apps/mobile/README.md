@@ -133,7 +133,7 @@ Use the environment variables defined in the `.env.defaults.local` file to run t
 
 ### Compile contract ABI types
 
-Before the code will compile you need to generate types for the smart contracts the wallet interacts with. Run `yarn contracts:compile`. Re-run this if the ABIs are ever changed.
+Before the code will compile you need to generate types for the smart contracts the wallet interacts with. Run `yarn contracts:compile` at the top level. Re-run this if the ABIs are ever changed.
 
 ### Run the app
 

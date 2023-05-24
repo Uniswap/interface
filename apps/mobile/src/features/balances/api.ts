@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { Currency, CurrencyAmount, NativeCurrency as NativeCurrencyClass } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
-import ERC20_ABI from 'src/abis/erc20.json'
+import ERC20_ABI from 'wallet/src/abis/erc20.json'
 import { ChainId } from 'wallet/src/constants/chains'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
 import { walletContextValue } from 'wallet/src/features/wallet/context'
