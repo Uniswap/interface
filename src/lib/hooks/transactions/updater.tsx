@@ -72,7 +72,7 @@ export default function Updater({ pendingTransactions, onCheck, onReceipt }: Upd
                   if (blockTimestamp && tx.deadline < blockTimestamp.toNumber()) {
                     removeTransaction(hash)
                   }
-                } else if (tx.addedTime < Date.now()) {
+                } else if (tx.addedTime + ms`6h` < Date.now()) {
                   removeTransaction(hash)
                 }
               }
