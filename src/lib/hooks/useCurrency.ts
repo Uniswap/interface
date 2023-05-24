@@ -97,25 +97,19 @@ export function useCurrencyFromMap(
   chainId: SupportedChainId | undefined,
   currencyId?: string | null
 ): Currency | null | undefined {
-  console.log('useCurrencyFromMap', tokens, chainId, currencyId)
   const nativeCurrency = useNativeCurrency(chainId)
-  console.log('nativeCurrency', nativeCurrency)
   const isNative = Boolean(nativeCurrency && currencyId?.toUpperCase() === 'ETH')
-  console.log('isNative', isNative)
   const shorthandMatchAddress = useMemo(() => {
     const chain = supportedChainId(chainId)
     return chain && currencyId ? TOKEN_SHORTHANDS[currencyId.toUpperCase()]?.[chain] : undefined
   }, [chainId, currencyId])
-  console.log('shorthandMatchAddress', shorthandMatchAddress)
 
   const token = useTokenFromMapOrNetwork(tokens, isNative ? undefined : shorthandMatchAddress ?? currencyId)
-  console.log('token', token)
 
   if (currencyId === null || currencyId === undefined || !isSupportedChain(chainId)) return null
 
   // this case so we use our builtin wrapped token instead of wrapped tokens on token lists
   const wrappedNative = nativeCurrency?.wrapped
-  console.log('wrapped', wrappedNative)
   if (wrappedNative?.address?.toUpperCase() === currencyId?.toUpperCase()) return wrappedNative
   return isNative ? nativeCurrency : token
 }
