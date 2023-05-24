@@ -197,6 +197,9 @@ export function PendingModalContent({
     return null
   }
 
+  // On mainnet, we show the success icon once the tx is sent, since it takes longer to confirm than on L2s.
+  const showSuccess = swapConfirmed || (swapPending && chainId === SupportedChainId.MAINNET)
+
   return (
     <PendingModalContainer gap="lg">
       <LogoContainer>
@@ -211,17 +214,13 @@ export function PendingModalContent({
           asBadge={currentStep === ConfirmModalState.APPROVING_TOKEN}
         />
         {/* Shown only during the third step under "success" conditions, and scales in. */}
-        {/* On mainnet, we show the success icon once the tx is sent, since it takes longer to confirm than on L2s. */}
         <AnimatedEntranceConfirmationIcon
-          visible={
-            currentStep === ConfirmModalState.PENDING_CONFIRMATION &&
-            (swapConfirmed || (swapPending && chainId === SupportedChainId.MAINNET))
-          }
+          visible={currentStep === ConfirmModalState.PENDING_CONFIRMATION && showSuccess}
         />
         {/* Scales in for the first step if the approval is pending onchain confirmation. */}
         {/* Scales in for the third step if the swap is pending user signature or onchain confirmation. */}
         <LoadingIndicatorOverlay
-          visible={(currentStep === ConfirmModalState.PENDING_CONFIRMATION && !swapConfirmed) || tokenApprovalPending}
+          visible={(currentStep === ConfirmModalState.PENDING_CONFIRMATION && !showSuccess) || tokenApprovalPending}
         />
       </LogoContainer>
       <HeaderContainer gap="md" $disabled={tokenApprovalPending || swapPending}>
