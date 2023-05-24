@@ -1,7 +1,6 @@
 import { combineReducers } from '@reduxjs/toolkit'
 import { monitoredSagaReducers } from 'src/app/rootSaga'
 import { appearanceSettingsReducer } from 'src/features/appearance/slice'
-import { onChainBalanceApi } from 'src/features/balances/api'
 import { biometricSettingsReducer } from 'src/features/biometrics/slice'
 import { chainsReducer } from 'src/features/chains/chainsSlice'
 import { cloudBackupReducer } from 'src/features/CloudBackup/cloudBackupSlice'
@@ -21,6 +20,7 @@ import { trmApi } from 'src/features/trm/api'
 import { walletReducer } from 'src/features/wallet/walletSlice'
 import { walletConnectReducer } from 'src/features/walletConnect/walletConnectSlice'
 import { gasApi } from 'wallet/src/features/gas/gasApi'
+import { onChainBalanceApi } from 'wallet/src/features/portfolio/api'
 
 const reducers = {
   [ensApi.reducerPath]: ensApi.reducer,

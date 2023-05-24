@@ -6,12 +6,12 @@ import {
   WarningLabel,
   WarningSeverity,
 } from 'src/components/modals/WarningModal/types'
-import { useOnChainNativeCurrencyBalance } from 'src/features/balances/api'
 import { DerivedSwapInfo } from 'src/features/transactions/swap/hooks'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
 import { DerivedTransferInfo } from 'src/features/transactions/transfer/hooks'
 import { hasSufficientFundsIncludingGas } from 'src/features/transactions/utils'
 import { useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
+import { useOnChainNativeCurrencyBalance } from 'wallet/src/features/portfolio/api'
 
 export function useTransactionGasWarning(
   { chainId, currencyAmounts, currencyBalances }: DerivedSwapInfo | DerivedTransferInfo,
