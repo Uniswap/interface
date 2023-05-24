@@ -411,11 +411,9 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token | undefined } =
     'WETH',
     'Wrapped Ether'
   ),
-  // TODO: get ExtendedEther.wrapped() is currently failing with Sepolia unless this is added.
-  // Why isn't it handled like Goerli?
   [SupportedChainId.SEPOLIA]: new Token(
     SupportedChainId.SEPOLIA,
-    '0xfff9976782d46cc05630d1f6ebab18b2324d6b14',
+    '0xfFf9976782d46CC05630D1f6eBAb18b2324d6B14',
     18,
     'WETH',
     'Wrapped Ether'
