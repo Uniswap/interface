@@ -10,7 +10,7 @@ describe('Expand', () => {
         Body
       </Expand>
     )
-    expect(screen.queryByText('Body')).not.toBeInTheDocument()
+    expect(screen.queryByText('Body')).not.toBeVisible()
   })
 
   it('renders children when open', () => {
@@ -19,7 +19,7 @@ describe('Expand', () => {
         Body
       </Expand>
     )
-    expect(screen.queryByText('Body')).toBeInTheDocument()
+    expect(screen.queryByText('Body')).toBeVisible()
   })
 
   it('calls `onToggle` when button is pressed', () => {
