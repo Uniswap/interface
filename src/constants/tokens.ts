@@ -27,7 +27,7 @@ const USDC_GOERLI = new Token(
 )
 const USDC_SEPOLIA = new Token(
   SupportedChainId.SEPOLIA,
-  '0x6f14c02fc1f78322cfd7d707ab90f18bad3b54f5',
+  '0x6f14C02Fc1F78322cFd7d707aB90f18baD3B54f5',
   6,
   'USDC',
   'USD//C'
