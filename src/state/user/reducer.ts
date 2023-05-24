@@ -10,7 +10,7 @@ import { SerializedPair, SerializedToken, SlippageTolerance } from './types'
 const currentTimestamp = () => new Date().getTime()
 
 export interface UserState {
-  buyFiatFlowCompleted: boolean | undefined
+  buyFiatFlowCompleted?: boolean
 
   selectedWallet?: ConnectionType
 
@@ -53,7 +53,7 @@ export interface UserState {
   URLWarningVisible: boolean
   hideUniswapWalletBanner: boolean
   // undefined means has not gone through A/B split yet
-  showSurveyPopup: boolean | undefined
+  showSurveyPopup?: boolean
 }
 
 function pairKey(token0Address: string, token1Address: string) {

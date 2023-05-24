@@ -45,7 +45,7 @@ interface SwapOptions {
 
 export function useUniversalRouterSwapCallback(
   trade: Trade<Currency, Currency, TradeType> | undefined,
-  fiatValues: { amountIn: number | undefined; amountOut: number | undefined },
+  fiatValues: { amountIn?: number; amountOut?: number },
   options: SwapOptions
 ) {
   const { account, chainId, provider } = useWeb3React()

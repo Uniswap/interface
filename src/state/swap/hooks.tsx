@@ -78,7 +78,7 @@ export function useDerivedSwapInfo(
 ): {
   currencies: { [field in Field]?: Currency | null }
   currencyBalances: { [field in Field]?: CurrencyAmount<Currency> }
-  parsedAmount: CurrencyAmount<Currency> | undefined
+  parsedAmount?: CurrencyAmount<Currency>
   inputError?: ReactNode
   trade: {
     trade?: InterfaceTrade

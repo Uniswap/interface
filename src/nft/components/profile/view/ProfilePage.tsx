@@ -313,7 +313,7 @@ const CollectionFilterItem = ({
   collection,
   setCollectionFilters,
 }: {
-  collection: WalletCollection | undefined
+  collection?: WalletCollection
   setCollectionFilters: (address: string) => void
 }) => {
   if (!collection) return null

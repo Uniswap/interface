@@ -172,7 +172,7 @@ export function Swap({
 }: {
   className?: string
   prefilledState?: Partial<SwapState>
-  chainId: SupportedChainId | undefined
+  chainId?: SupportedChainId
   onCurrencyChange?: (selected: Pick<SwapState, Field.INPUT | Field.OUTPUT>) => void
   disableTokenInputs?: boolean
 }) {
@@ -287,8 +287,11 @@ export function Swap({
           },
     [independentField, parsedAmount, showWrap, trade]
   )
+
   const fiatValueInput = useUSDPrice(parsedAmounts[Field.INPUT])
   const fiatValueOutput = useUSDPrice(parsedAmounts[Field.OUTPUT])
+  const showFiatValueInput = Boolean(parsedAmounts[Field.INPUT])
+  const showFiatValueOutput = Boolean(parsedAmounts[Field.OUTPUT])
 
   const [routeNotFound, routeIsLoading, routeIsSyncing] = useMemo(
     () => [!trade?.swaps, TradeState.LOADING === tradeState, TradeState.LOADING === tradeState && Boolean(trade)],
@@ -334,10 +337,10 @@ export function Swap({
   // modal and loading
   const [{ showConfirm, tradeToConfirm, swapErrorMessage, attemptingTxn, txHash }, setSwapState] = useState<{
     showConfirm: boolean
-    tradeToConfirm: InterfaceTrade | undefined
+    tradeToConfirm?: InterfaceTrade
     attemptingTxn: boolean
-    swapErrorMessage: string | undefined
-    txHash: string | undefined
+    swapErrorMessage?: string
+    txHash?: string
   }>({
     showConfirm: false,
     tradeToConfirm: undefined,
@@ -580,10 +583,10 @@ export function Swap({
               currency={currencies[Field.INPUT] ?? null}
               onUserInput={handleTypeInput}
               onMax={handleMaxInput}
-              fiatValue={fiatValueInput}
+              fiatValue={showFiatValueInput ? fiatValueInput : undefined}
               onCurrencySelect={handleInputSelect}
               otherCurrency={currencies[Field.OUTPUT]}
-              showCommonBases={true}
+              showCommonBases
               id={InterfaceSectionName.CURRENCY_INPUT_PANEL}
               loading={independentField === Field.OUTPUT && routeIsSyncing}
             />
@@ -621,12 +624,12 @@ export function Swap({
                 label={independentField === Field.INPUT && !showWrap ? <Trans>To (at least)</Trans> : <Trans>To</Trans>}
                 showMaxButton={false}
                 hideBalance={false}
-                fiatValue={fiatValueOutput}
+                fiatValue={showFiatValueOutput ? fiatValueOutput : undefined}
                 priceImpact={stablecoinPriceImpact}
                 currency={currencies[Field.OUTPUT] ?? null}
                 onCurrencySelect={handleOutputSelect}
                 otherCurrency={currencies[Field.INPUT]}
-                showCommonBases={true}
+                showCommonBases
                 id={InterfaceSectionName.CURRENCY_OUTPUT_PANEL}
                 loading={independentField === Field.INPUT && routeIsSyncing}
               />
