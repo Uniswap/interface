@@ -1,19 +1,28 @@
-import { ApolloLink, createHttpLink } from '@apollo/client'
+import { ApolloLink, NetworkStatus } from '@apollo/client'
 import { onError } from '@apollo/client/link/error'
-import { config } from 'wallet/src/config'
-import { uniswapUrls } from 'wallet/src/constants/urls'
+import { sendAnalyticsEvent } from 'src/features/telemetry'
+import { MobileEventName } from 'src/features/telemetry/constants'
 import { logger } from 'wallet/src/features/logger/logger'
 
-export const getHttpLink = (): ApolloLink =>
-  createHttpLink({
-    uri: uniswapUrls.graphQLUrl,
-    headers: {
-      'Content-Type': 'application/json',
-      'X-API-KEY': config.uniswapApiKey,
-      // TODO: [MOB-3883] remove once API gateway supports mobile origin URL
-      Origin: uniswapUrls.apiBaseUrl,
-    },
-  })
+export function isNonPollingRequestInFlight(networkStatus: NetworkStatus): boolean {
+  return (
+    networkStatus === NetworkStatus.loading ||
+    networkStatus === NetworkStatus.setVariables ||
+    networkStatus === NetworkStatus.refetch
+  )
+}
+
+export function isWarmLoadingStatus(networkStatus: NetworkStatus): boolean {
+  return networkStatus === NetworkStatus.loading
+}
+
+/**
+ * Consider a query in an error state for UI purposes if query has no data, and
+ * query has been loading at least once.
+ */
+export function isError(networkStatus: NetworkStatus, hasData: boolean): boolean {
+  return !hasData && networkStatus !== NetworkStatus.loading
+}
 
 // Samples error reports to reduce load on backend
 // Recurring errors that we must fix should have enough occurrences that we detect them still
@@ -27,7 +36,7 @@ export function sample(cb: () => void, rate: number): void {
   }
 }
 
-export function getErrorLink(
+export function setupErrorLink(
   graphqlErrorSamplingRate = APOLLO_GRAPHQL_ERROR_SAMPLING_RATE,
   networkErrorSamplingRate = APOLLO_NETWORK_ERROR_SAMPLING_RATE
 ): ApolloLink {
@@ -57,20 +66,17 @@ export function getErrorLink(
   return errorLink
 }
 
-export function getPerformanceLink(
-  sendAnalyticsEvent: (args: Record<string, string>) => void,
-  samplingRate = APOLLO_PERFORMANCE_SAMPLING_RATE
-): ApolloLink {
+export function setupPerformanceLink(samplingRate = APOLLO_PERFORMANCE_SAMPLING_RATE): ApolloLink {
   return new ApolloLink((operation, forward) => {
     const startTime = Date.now()
 
     return forward(operation).map((data) => {
-      const duration = (Date.now() - startTime).toString()
-      const dataSize = JSON.stringify(data).length.toString()
+      const duration = Date.now() - startTime
+      const dataSize = JSON.stringify(data).length
 
       sample(
         () =>
-          sendAnalyticsEvent({
+          sendAnalyticsEvent(MobileEventName.PerformanceGraphql, {
             dataSize,
             duration,
             operationName: operation.operationName,

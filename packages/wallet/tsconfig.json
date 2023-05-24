@@ -4,7 +4,7 @@
     "src/**/*.ts",
     "src/**/*.tsx",
     "src/**/*.json"
- ],
+  ],
   "references": [
     {
       "path": "../ui"

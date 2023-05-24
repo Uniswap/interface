@@ -4,7 +4,7 @@ import mockRNLocalize from 'react-native-localize/mock'
 import App from 'src/app/App'
 import { render } from 'src/test/test-utils'
 
-jest.mock('src/data/usePersistedApolloClient', () => {
+jest.mock('src/data/hooks', () => {
   return {
     usePersistedApolloClient: (): undefined => undefined,
   }
