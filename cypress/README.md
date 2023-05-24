@@ -4,9 +4,9 @@ End-to-end tests are run through [Cypress](https://docs.cypress.io/api/table-of-
 
 ## Running your first e2e tests
 
-Cypress tests run against a local server, so you'll need to run them at the same time. The fastest way to run e2e tests is to use your dev server: `yarn start`.
+Cypress tests run against a local server, so you'll need to run the application locally at the same time. The fastest way to run e2e tests is to use your dev server: `yarn start`.
 
-Open cypress at the same time with `yarn cypress:open`. You'll need to do this from a separate window or tab, as they'll need to run simultaneously.
+Open cypress at the same time with `yarn cypress:open`. You should do this from another window or tab, so that you can continue to see any typechecking/linting warnings from `yarn start`.
 
 Cypress opens its own instance of Chrome, with a list of "E2E specs" for you to select. When you're developing locally, you usually only want to run one spec file at a time. Select your spec by clicking on the filename and it will run.
 
