@@ -11,6 +11,9 @@ import { useClientSideV3Trade } from './useClientSideV3Trade'
 import useDebounce from './useDebounce'
 import useIsWindowVisible from './useIsWindowVisible'
 
+// Adds a debounce to the trade request to prevent excessive requests between keystrokes.
+const DEBOUNCE_TIME = 350
+
 /**
  * Returns the best v2+v3 trade for a desired swap.
  * @param tradeType whether the swap is an exact in/out
@@ -31,7 +34,7 @@ export function useBestTrade(
 
   const [debouncedAmount, debouncedOtherCurrency] = useDebounce(
     useMemo(() => [amountSpecified, otherCurrency], [amountSpecified, otherCurrency]),
-    400
+    DEBOUNCE_TIME
   )
 
   const isAWrapTransaction = useMemo(() => {
