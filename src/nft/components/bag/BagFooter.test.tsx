@@ -184,7 +184,7 @@ describe('BagFooter.tsx', () => {
 
   it('is in wallet confirmation for confirming in wallet', () => {
     mocked(useBag).mockReturnValue({
-      bagStatus: BagStatus.FETCHING_FINAL_ROUTE,
+      bagStatus: BagStatus.CONFIRMING_IN_WALLET,
       setBagStatus: () => undefined,
       setBagExpanded: () => undefined,
       isLocked: false,
