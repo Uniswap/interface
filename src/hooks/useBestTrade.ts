@@ -11,7 +11,7 @@ import { useClientSideV3Trade } from './useClientSideV3Trade'
 import useDebounce from './useDebounce'
 import useIsWindowVisible from './useIsWindowVisible'
 
-// Adds a debounce to the trade request to prevent excessive requests between keystrokes.
+// Prevents excessive quote requests between keystrokes.
 const DEBOUNCE_TIME = 350
 
 /**
