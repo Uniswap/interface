@@ -31,17 +31,6 @@ export const iconSizes = {
   icon64: 64,
 }
 
-export const imageSizes = {
-  image12: 12,
-  image16: 16,
-  image20: 20,
-  image24: 24,
-  image32: 32,
-  image36: 36,
-  image40: 40,
-  image48: 48,
-}
-
 // HitSlop allows users to slightly miss button
 // To work, requires some padding in parent of button
 export const defaultHitslop = 5

@@ -2,6 +2,7 @@ import { createTokens } from 'tamagui'
 import { borderRadii } from 'ui/src/theme/borderRadii'
 import { colors as color } from 'ui/src/theme/color'
 import { fonts } from 'ui/src/theme/fonts'
+import { imageSizes } from 'ui/src/theme/imageSizes'
 import { zIndices } from 'ui/src/theme/zIndices'
 
 const space = {
@@ -34,17 +35,7 @@ export const iconSize = {
   true: 40,
 }
 
-const imageSize = {
-  image12: 12,
-  image16: 16,
-  image20: 20,
-  image24: 24,
-  image32: 32,
-  image36: 36,
-  image40: 40,
-  image48: 48,
-  true: 40,
-}
+const imageSize = { ...imageSizes, true: 'image40' }
 
 const fontSize = {
   headlineLarge: fonts.headlineLarge.fontSize,
