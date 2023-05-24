@@ -58,7 +58,6 @@ export default function DelegateModal({ isOpen, onDismiss, title }: VoteModalPro
 
   // get the number of votes available to delegate
   const uniBalance = useTokenBalance(account ?? undefined, chainId ? UNI[chainId] : undefined)
-  console.log(uniBalance)
 
   const delegateCallback = useDelegateCallback()
 
