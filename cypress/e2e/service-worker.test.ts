@@ -40,7 +40,7 @@ describe('Service Worker', () => {
   })
 
   it('installs a ServiceWorker and reports the uninstalled status to analytics', () => {
-    cy.visit('/', { serviceWorker: true })
+    cy.visit('/')
     cy.wait('@ServiceWorker:uninstalled')
     cy.window().should(
       'have.nested.property',
@@ -53,7 +53,7 @@ describe('Service Worker', () => {
 
   describe('cache hit', () => {
     it('reports the hit to analytics', () => {
-      cy.visit('/', { serviceWorker: true })
+      cy.visit('/')
       cy.wait('@ServiceWorker:hit')
     })
   })
@@ -64,7 +64,7 @@ describe('Service Worker', () => {
     let response: Response | undefined
     before(() => {
       // Mocks the index.html in the cache to force a cache miss.
-      cy.visit('/', { serviceWorker: true }).then(async () => {
+      cy.visit('/').then(async () => {
         const cacheKeys = await window.caches.keys()
         const cacheKey = cacheKeys.find((key) => key.match(/precache/))
         assert(cacheKey)
@@ -90,7 +90,7 @@ describe('Service Worker', () => {
       })
     })
     it('reports the miss to analytics', () => {
-      cy.visit('/', { serviceWorker: true })
+      cy.visit('/')
       cy.wait('@ServiceWorker:miss')
     })
   })
