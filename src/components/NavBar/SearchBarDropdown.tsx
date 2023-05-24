@@ -23,6 +23,7 @@ import { ClockIcon, TrendingArrow } from '../../nft/components/icons'
 import { useRecentlySearchedAssets } from './RecentlySearchedAssets'
 import * as styles from './SearchBar.css'
 import { CollectionRow, SkeletonRow, TokenRow } from './SuggestionRow'
+import clsx from 'clsx'
 
 function isCollection(suggestion: GenieCollection | SearchToken | TrendingCollection) {
   return (suggestion as SearchToken).decimals === undefined
@@ -355,7 +356,7 @@ export const SearchBarDropdown = ({
   const showBNBComingSoonBadge = chainId === SupportedChainId.BNB && !isLoading
 
   return (
-    <Box className={styles.searchBarDropdownNft}>
+    <Column overflow="hidden" className={clsx(styles.searchBarDropdownNft, styles.searchBarScrollable)}>
       <Box opacity={isLoading ? '0.3' : '1'} transition="125">
         {resultsState}
         {showBNBComingSoonBadge && (
@@ -367,6 +368,6 @@ export const SearchBarDropdown = ({
           </BNBComingSoonBadge>
         )}
       </Box>
-    </Box>
+    </Column>
   )
 }

@@ -91,6 +91,7 @@ const dimensions = {
   full: '100%',
   min: 'min-content',
   max: 'max-content',
+  searchResultsMaxHeight: 'calc(100vh - 40px)',
   viewHeight: '100vh',
   viewWidth: '100vw',
   auto: 'auto',
