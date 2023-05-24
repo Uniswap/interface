@@ -55,7 +55,7 @@ import { useWalletModalToggle } from '../../state/application/hooks'
 import { Field } from '../../state/market/actions'
 import { useDefaultsFromURLSearch } from '../../state/market/hooks'
 import { useDarkModeManager, useExpertModeManager, useIsGaslessMode } from '../../state/user/hooks'
-import { LinkStyledButton, TYPE } from '../../theme'
+import { ExternalLink, LinkStyledButton, TYPE } from '../../theme'
 import { computeFiatValuePriceImpact } from '../../utils/computeFiatValuePriceImpact'
 import { getTradeVersion } from '../../utils/getTradeVersion'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
@@ -626,7 +626,9 @@ export default function SwapWidget() {
               <WidgetHeader>
                 <PoweredBy>
                   <Text>Powered by</Text>
-                  <img src={KromLogo} alt="KROM Logo" height="24px" />
+                  <ExternalLink href="https://app.kromatika.finance" style={{ fontSize: '14px' }}>
+                    <img src={KromLogo} alt="KROM Logo" height="24px" />
+                  </ExternalLink>
                 </PoweredBy>
                 <MarketHeader showChartSwitch={true} allowedSlippage={allowedSlippage} />
               </WidgetHeader>
@@ -1163,7 +1165,9 @@ export default function SwapWidget() {
           <WidgetHeader>
             <PoweredBy>
               <Text>Powered by</Text>
-              <img src={KromLogo} alt="KROM Logo" height="24px" />
+              <ExternalLink href="https://app.kromatika.finance" style={{ fontSize: '14px' }}>
+                <img src={KromLogo} alt="KROM Logo" height="24px" />
+              </ExternalLink>
             </PoweredBy>
             <MarketHeader showChartSwitch={true} allowedSlippage={allowedSlippage} />
           </WidgetHeader>
