@@ -50,6 +50,9 @@ function useETHValue(currencyAmount?: CurrencyAmount<Currency>): {
   return { data: price.quote(currencyAmount), isLoading: false }
 }
 
+// TODO(WEB-2095): This hook should early return `null` when `currencyAmount` is undefined. Otherwise,
+// it is not possible to differentiate between a loading state and a state where `currencyAmount`
+// is undefined
 export function useUSDPrice(currencyAmount?: CurrencyAmount<Currency>): {
   data?: number
   isLoading: boolean
