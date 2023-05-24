@@ -16,6 +16,7 @@ import { ThemedText } from 'theme/components/text'
 import { ConfirmModalState } from '../ConfirmSwapModal'
 import {
   AnimatedEntranceConfirmationIcon,
+  AnimationType,
   CurrencyLoader,
   LoadingIndicatorOverlay,
   LogoContainer,
@@ -42,23 +43,19 @@ const StepCircle = styled.div<{ active: boolean }>`
   transition: background-color ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.inOut}`};
 `
 
-enum AnimationType {
-  EXITING = 'exiting',
-}
-
-const fadeIn = keyframes`
+const slideIn = keyframes`
   from { opacity: 0; transform: translateX(40px) }
   to { opacity: 1; transform: translateX(0px) }
 `
-const fadeInAnimation = css`
-  animation: ${fadeIn} ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.inOut}`};
+const slideInAnimation = css`
+  animation: ${slideIn} ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.inOut}`};
 `
-const fadeOut = keyframes`
+const slideOut = keyframes`
   from { opacity: 1; transform: translateX(0px) }
   to { opacity: 0; transform: translateX(-40px) }
 `
-const fadeOutAnimation = css`
-  animation: ${fadeOut} ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.inOut}`};
+const slideOutAnimation = css`
+  animation: ${slideOut} ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.inOut}`};
 `
 
 const AnimationWrapper = styled.div`
@@ -77,11 +74,11 @@ const StepTitleAnimationContainer = styled(Column)<{ disableEntranceAnimation?: 
   ${({ disableEntranceAnimation }) =>
     !disableEntranceAnimation &&
     css`
-      ${fadeInAnimation}
+      ${slideInAnimation}
     `}
 
   &.${AnimationType.EXITING} {
-    ${fadeOutAnimation}
+    ${slideOutAnimation}
   }
 `
 
@@ -196,24 +193,23 @@ export function PendingModalContent({
     <PendingModalContainer gap="lg">
       <LogoContainer>
         {/* Shown during the first step, and fades out afterwards. */}
-        <PaperIcon visible={currentStep === ConfirmModalState.APPROVING_TOKEN} />
+        {currentStep === ConfirmModalState.APPROVING_TOKEN && <PaperIcon />}
         {/* Shown during the first step as a small badge. */}
         {/* Scales up once we transition from first to second step. */}
         {/* Fades out after the second step. */}
-        <CurrencyLoader
-          visible={currentStep !== ConfirmModalState.PENDING_CONFIRMATION}
-          currency={trade?.inputAmount.currency}
-          asBadge={currentStep === ConfirmModalState.APPROVING_TOKEN}
-        />
+        {currentStep !== ConfirmModalState.PENDING_CONFIRMATION && (
+          <CurrencyLoader
+            currency={trade?.inputAmount.currency}
+            asBadge={currentStep === ConfirmModalState.APPROVING_TOKEN}
+          />
+        )}
         {/* Shown only during the third step under "success" conditions, and scales in. */}
-        <AnimatedEntranceConfirmationIcon
-          visible={currentStep === ConfirmModalState.PENDING_CONFIRMATION && showSuccess}
-        />
+        {currentStep === ConfirmModalState.PENDING_CONFIRMATION && showSuccess && <AnimatedEntranceConfirmationIcon />}
         {/* Scales in for the first step if the approval is pending onchain confirmation. */}
         {/* Scales in for the third step if the swap is pending user signature or onchain confirmation. */}
-        <LoadingIndicatorOverlay
-          visible={(currentStep === ConfirmModalState.PENDING_CONFIRMATION && !showSuccess) || tokenApprovalPending}
-        />
+        {((currentStep === ConfirmModalState.PENDING_CONFIRMATION && !showSuccess) || tokenApprovalPending) && (
+          <LoadingIndicatorOverlay />
+        )}
       </LogoContainer>
       <HeaderContainer gap="md" $disabled={tokenApprovalPending || swapPending}>
         <AnimationWrapper>
