@@ -1,4 +1,5 @@
 import { Trans } from '@lingui/macro'
+import { InformationBanner } from 'components/InformationBanner'
 import Web3Status from 'components/Web3Status'
 import { useIsNftPage } from 'hooks/useIsNftPage'
 import { Box } from 'nft/components/Box'
@@ -125,6 +126,38 @@ const Navbar = () => {
             </Row>
           </Box>
         </Box>
+        <InformationBanner
+          text={
+            <div
+              style={{
+                fontSize: '1rem',
+                lineHeight: '1.5rem',
+                color: 'black',
+              }}
+            >
+              Join the Inferno Incentives program to earn Evmos and Stride rewards!{' '}
+              <a
+                style={{
+                  color: 'rgb(250, 241, 228)',
+                  fontWeight: 600,
+                  paddingTop: '0.375rem',
+                  paddingBottom: '0.375rem',
+                  paddingRight: '1.25rem',
+                  paddingLeft: '1.25rem',
+                  backgroundColor: 'rgb(237, 78, 51)',
+                  borderRadius: '0.25rem',
+                  marginLeft: '0.625rem',
+                }}
+                href="https://revert.finance/#/incentives/evmos"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="ml-2.5 rounded bg-red p-5 py-1.5 font-semibold text-pearl"
+              >
+                Check Incentives Now 🚀
+              </a>
+            </div>
+          }
+        />
       </Nav>
     </>
   )

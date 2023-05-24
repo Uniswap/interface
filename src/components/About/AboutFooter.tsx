@@ -147,6 +147,7 @@ export const AboutFooter = () => {
         </LinkGroup>
         <LinkGroup>
           <LinkGroupTitle>Get Help</LinkGroupTitle>
+          <ExternalTextLink href="https://medium.com/forge-dex">Medium</ExternalTextLink>
           <ExternalTextLink href="https://t.me/forgeDEX" target="_blank" rel="noopener noreferrer">
             Telegram
           </ExternalTextLink>
