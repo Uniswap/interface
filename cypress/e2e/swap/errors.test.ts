@@ -56,11 +56,20 @@ describe('Swap errors', () => {
 
       // Mine transaction
       cy.get(getTestSelector('web3-status-connected')).should('contain', '1 Pending')
-      cy.hardhat().then((hardhat) => hardhat.mine(1, /* 10 minutes */ 1000 * 60 * 10)) // mines past the deadline
-      cy.get(getTestSelector('web3-status-connected')).should('not.contain', 'Pending')
-      cy.get(getTestSelector('popups')).contains('Swap failed')
+      cy.hardhat().then(async (hardhat) => {
+        // Remove the transaction from the mempool, so that it doesn't fail but it is past the deadline.
+        // This should result in it being removed from pending transactions, without a failure notificiation.
+        const transactions = await hardhat.send('eth_pendingTransactions', [])
+        console.log(transactions)
+        await hardhat.send('hardhat_dropTransaction', [transactions[0].hash])
+        // Mine past the deadline
+        await hardhat.mine(1, /* 10 minutes */ 1000 * 60 * 10)
+      })
+      cy.wait('@eth_getTransactionReceipt')
 
       // Verify transaction did not occur
+      cy.get(getTestSelector('web3-status-connected')).should('not.contain', 'Pending')
+      cy.get(getTestSelector('popups')).should('not.contain', 'Swap failed')
       cy.get('#swap-currency-output').contains(`Balance: ${initialBalance}`)
       getBalance(USDC_MAINNET).should('eq', initialBalance)
     })
@@ -101,10 +110,11 @@ describe('Swap errors', () => {
       // Mine transactions
       cy.get(getTestSelector('web3-status-connected')).should('contain', '2 Pending')
       cy.hardhat().then((hardhat) => hardhat.mine())
-      cy.get(getTestSelector('web3-status-connected')).should('not.contain', 'Pending')
-      cy.get(getTestSelector('popups')).contains('Swap failed')
+      cy.wait('@eth_getTransactionReceipt')
 
       // Verify transaction did not occur
+      cy.get(getTestSelector('web3-status-connected')).should('not.contain', 'Pending')
+      cy.get(getTestSelector('popups')).contains('Swap failed')
       getBalance(UNI_MAINNET).should('eq', initialBalance)
     })
   })

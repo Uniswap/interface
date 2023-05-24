@@ -35,10 +35,10 @@ describe('Swap wrap', () => {
       cy.get(getTestSelector('web3-status-connected')).should('contain', '1 Pending')
       cy.hardhat().then((hardhat) => hardhat.mine())
       cy.wait('@eth_getTransactionReceipt')
-      cy.get(getTestSelector('web3-status-connected')).should('not.contain', 'Pending')
-      cy.get(getTestSelector('popups')).contains('Wrapped')
 
       // Verify transaction
+      cy.get(getTestSelector('web3-status-connected')).should('not.contain', 'Pending')
+      cy.get(getTestSelector('popups')).contains('Wrapped')
       const finalBalance = initialBalance + 1
       cy.get('#swap-currency-output').contains(`Balance: ${finalBalance}`)
       getBalance(WETH).should('equal', finalBalance)
@@ -68,10 +68,10 @@ describe('Swap wrap', () => {
       cy.get(getTestSelector('web3-status-connected')).should('contain', '1 Pending')
       cy.hardhat().then((hardhat) => hardhat.mine())
       cy.wait('@eth_getTransactionReceipt')
-      cy.get(getTestSelector('web3-status-connected')).should('not.contain', 'Pending')
-      cy.get(getTestSelector('popups')).contains('Unwrapped')
 
       // Verify transaction
+      cy.get(getTestSelector('web3-status-connected')).should('not.contain', 'Pending')
+      cy.get(getTestSelector('popups')).contains('Unwrapped')
       const finalBalance = initialBalance - 1
       cy.get('#swap-currency-input').contains(`Balance: ${finalBalance}`)
       getBalance(WETH).should('equal', finalBalance)

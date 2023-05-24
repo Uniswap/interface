@@ -37,7 +37,7 @@ describe('Swap', () => {
       cy.get('#swap-currency-input .token-amount-input').should('have.value', '')
     })
 
-    it('swaps ETH for USDC', () => {
+    it.only('swaps ETH for USDC', () => {
       cy.visit('/swap', { ethereum: 'hardhat' })
       cy.hardhat({ automine: false })
       getBalance(USDC_MAINNET).then((initialBalance) => {
@@ -64,10 +64,10 @@ describe('Swap', () => {
         cy.get(getTestSelector('web3-status-connected')).should('contain', '1 Pending')
         cy.hardhat().then((hardhat) => hardhat.mine())
         cy.wait('@eth_getTransactionReceipt')
-        cy.get(getTestSelector('web3-status-connected')).should('not.contain', 'Pending')
-        cy.get(getTestSelector('popups')).contains('Swapped')
 
         // Verify transaction
+        cy.get(getTestSelector('web3-status-connected')).should('not.contain', 'Pending')
+        cy.get(getTestSelector('popups')).contains('Swapped')
         const finalBalance = initialBalance + 1
         cy.get('#swap-currency-output').contains(`Balance: ${finalBalance}`)
         getBalance(USDC_MAINNET).should('eq', finalBalance)

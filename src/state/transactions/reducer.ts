@@ -4,8 +4,6 @@ import { SupportedChainId } from 'constants/chains'
 import { updateVersion } from '../global/actions'
 import { TransactionDetails, TransactionInfo } from './types'
 
-const now = () => new Date().getTime()
-
 // TODO(WEB-2053): update this to be a map of account -> chainId -> txHash -> TransactionDetails
 // to simplify usage, once we're able to invalidate localstorage
 export interface TransactionState {
@@ -20,6 +18,7 @@ interface AddTransactionPayload {
   hash: string
   info: TransactionInfo
   nonce: number
+  deadline?: number
 }
 
 export const initialState: TransactionState = {}
@@ -30,13 +29,13 @@ const transactionSlice = createSlice({
   reducers: {
     addTransaction(
       transactions,
-      { payload: { chainId, from, hash, info, nonce } }: { payload: AddTransactionPayload }
+      { payload: { chainId, from, hash, info, nonce, deadline } }: { payload: AddTransactionPayload }
     ) {
       if (transactions[chainId]?.[hash]) {
         throw Error('Attempted to add existing transaction.')
       }
       const txs = transactions[chainId] ?? {}
-      txs[hash] = { hash, info, from, addedTime: now(), nonce }
+      txs[hash] = { hash, info, from, addedTime: Date.now(), nonce, deadline }
       transactions[chainId] = txs
     },
     clearAllTransactions(transactions, { payload: { chainId } }) {
@@ -65,7 +64,7 @@ const transactionSlice = createSlice({
         return
       }
       tx.receipt = receipt
-      tx.confirmedTime = now()
+      tx.confirmedTime = Date.now()
     },
   },
   extraReducers: (builder) => {
