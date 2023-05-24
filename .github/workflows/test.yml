@@ -16,8 +16,6 @@ on:
 jobs:
   lint:
     runs-on: ubuntu-latest
-    environment:
-      name: ${{ github.ref_name == 'main' && 'notify/test' }}
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
@@ -32,12 +30,10 @@ jobs:
         uses: ./.github/actions/report
         with:
           name: Lint
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_TEST_REPORTER_WEBHOOK }}
   
   typecheck:
     runs-on: ubuntu-latest
-    environment:
-      name: ${{ github.ref_name == 'main' && 'notify/test' }}
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
@@ -52,12 +48,10 @@ jobs:
         uses: ./.github/actions/report
         with:
           name: Typecheck
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_TEST_REPORTER_WEBHOOK }}
 
   deps-tests:
     runs-on: ubuntu-latest
-    environment:
-      name: ${{ github.ref_name == 'main' && 'notify/test' }}
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
@@ -66,12 +60,10 @@ jobs:
         uses: ./.github/actions/report
         with:
           name: Dependency checks
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_TEST_REPORTER_WEBHOOK }}
 
   unit-tests:
     runs-on: ubuntu-latest
-    environment:
-      name: ${{ github.ref_name == 'main' && 'notify/test' }}
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
@@ -92,7 +84,7 @@ jobs:
         uses: ./.github/actions/report
         with:
           name: Unit tests
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_TEST_REPORTER_WEBHOOK }}
 
   build-e2e:
     runs-on: ubuntu-latest
@@ -123,8 +115,6 @@ jobs:
   cypress-test-matrix:
     needs: [build-e2e, cypress-rerun]
     runs-on: ubuntu-latest
-    environment:
-      name: ${{ github.ref_name == 'main' && 'notify/test' }}
     container: cypress/browsers:node-18.14.1-chrome-111.0.5563.64-1-ff-111.0-edge-111.0.1661.43-1
     strategy:
       fail-fast: false
@@ -181,7 +171,7 @@ jobs:
         uses: ./.github/actions/report
         with:
           name: Cypress tests
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_TEST_REPORTER_WEBHOOK }}
 
   # Included as a single job to check for cypress-test-matrix success, as a matrix cannot be checked.
   cypress-tests:
