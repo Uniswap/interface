@@ -1,13 +1,16 @@
 import { Trans } from '@lingui/macro'
 import { formatNumber } from '@uniswap/conedison/format'
-import { ButtonPrimary } from 'components/Button'
+import { ButtonGray, ButtonPrimary } from 'components/Button'
 import Loader from 'components/Icons/LoadingSpinner'
 import { useBuyAssetCallback } from 'nft/hooks/useFetchAssets'
 import { GenieAsset } from 'nft/types'
-import styled from 'styled-components/macro'
+import styled, { css } from 'styled-components/macro'
 
-import { OfferButton } from './OfferButton'
-import { ButtonStyles } from './shared'
+const ButtonStyles = css`
+  width: min-content;
+  flex-shrink: 0;
+  border-radius: 16px;
+`
 
 const StyledBuyButton = styled(ButtonPrimary)`
   display: flex;
@@ -15,6 +18,12 @@ const StyledBuyButton = styled(ButtonPrimary)`
   padding: 16px 24px;
   gap: 8px;
   line-height: 24px;
+  white-space: nowrap;
+
+  ${ButtonStyles}
+`
+
+const NotAvailableButton = styled(ButtonGray)`
   white-space: nowrap;
 
   ${ButtonStyles}
@@ -29,7 +38,15 @@ export const BuyButton = ({ asset, onDataPage }: { asset: GenieAsset; onDataPage
   const price = asset.sellorders?.[0]?.price.value
 
   if (!price) {
-    return <OfferButton />
+    if (onDataPage) {
+      return null
+    }
+
+    return (
+      <NotAvailableButton disabled>
+        <Trans>Not available for purchase</Trans>
+      </NotAvailableButton>
+    )
   }
 
   return (
@@ -47,7 +64,6 @@ export const BuyButton = ({ asset, onDataPage }: { asset: GenieAsset; onDataPage
           </>
         )}
       </StyledBuyButton>
-      {onDataPage && <OfferButton smallVersion />}
     </>
   )
 }
