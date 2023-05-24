@@ -172,7 +172,7 @@ export function Swap({
 }: {
   className?: string
   prefilledState?: Partial<SwapState>
-  chainId: SupportedChainId | undefined
+  chainId?: SupportedChainId
   onCurrencyChange?: (selected: Pick<SwapState, Field.INPUT | Field.OUTPUT>) => void
   disableTokenInputs?: boolean
 }) {
@@ -334,10 +334,10 @@ export function Swap({
   // modal and loading
   const [{ showConfirm, tradeToConfirm, swapErrorMessage, attemptingTxn, txHash }, setSwapState] = useState<{
     showConfirm: boolean
-    tradeToConfirm: InterfaceTrade | undefined
+    tradeToConfirm?: InterfaceTrade
     attemptingTxn: boolean
-    swapErrorMessage: string | undefined
-    txHash: string | undefined
+    swapErrorMessage?: string
+    txHash?: string
   }>({
     showConfirm: false,
     tradeToConfirm: undefined,

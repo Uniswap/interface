@@ -21,7 +21,7 @@ const ETH_AMOUNT_OUT: { [chainId: number]: CurrencyAmount<Currency> } = {
 }
 
 function useETHValue(currencyAmount?: CurrencyAmount<Currency>): {
-  data: CurrencyAmount<Currency> | undefined
+  data?: CurrencyAmount<Currency>
   isLoading: boolean
 } {
   const chainId = currencyAmount?.currency?.chainId
@@ -51,7 +51,7 @@ function useETHValue(currencyAmount?: CurrencyAmount<Currency>): {
 }
 
 export function useUSDPrice(currencyAmount?: CurrencyAmount<Currency>): {
-  data: number | undefined
+  data?: number
   isLoading: boolean
 } {
   const chain = currencyAmount?.currency.chainId ? chainIdToBackendName(currencyAmount?.currency.chainId) : undefined
