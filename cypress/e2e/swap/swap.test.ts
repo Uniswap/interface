@@ -44,6 +44,9 @@ describe('Swap', () => {
         // Select USDC
         cy.get('#swap-currency-output .open-currency-select-button').click()
         cy.get(getTestSelector('token-search-input')).type(USDC_MAINNET.address)
+
+        // Wait for price to populate so we don't overload the hardhat node with calls
+        cy.get(`.token-item-${USDC_MAINNET.address}`).contains(initialBalance)
         cy.contains('USDC').click()
 
         // Enter amount to swap
