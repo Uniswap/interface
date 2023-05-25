@@ -212,7 +212,7 @@ export default function Option({ connection }: OptionProps) {
           onClick={handleClickConnectViaWCv2}
           onClose={() => setWC2PromptOpen(false)}
         >
-          <WCv2PopoverToggle onClick={handleClickOpenWCv2Tooltip}>
+          <WCv2PopoverToggle onClick={handleClickOpenWCv2Tooltip} onMouseDown={handleClickOpenWCv2Tooltip}>
             <MoreHorizontal />
           </WCv2PopoverToggle>
         </PopupButtonContent>
