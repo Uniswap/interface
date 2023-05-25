@@ -1,0 +1,1075 @@
+{
+	"priceHistory": [
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4zNDAzMTg4MzkyNDMyNzJfMTY4NDM2NDQwMF9VU0Q=",
+			"timestamp": 1684364400,
+			"value": 5.340318839243272,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS40MDM2ODYwNTEyNDM2NDFfMTY4NDM2ODAwMF9VU0Q=",
+			"timestamp": 1684368000,
+			"value": 5.403686051243641,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4zOTMxMTQ4MTM2MzY2MThfMTY4NDM3MTYwMF9VU0Q=",
+			"timestamp": 1684371600,
+			"value": 5.393114813636618,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS40MDQ4MTI0MDc5NDgwMTlfMTY4NDM3NTIwMF9VU0Q=",
+			"timestamp": 1684375200,
+			"value": 5.404812407948019,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS40MDA3MTMzNDQ1MTU3MzVfMTY4NDM3ODgwMF9VU0Q=",
+			"timestamp": 1684378800,
+			"value": 5.400713344515735,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4zNzIzODI4MjYzMTk4ODJfMTY4NDM4MjQwMF9VU0Q=",
+			"timestamp": 1684382400,
+			"value": 5.372382826319882,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4zNzIzOTg2Mzc4MjAzNDVfMTY4NDM4NjAwMF9VU0Q=",
+			"timestamp": 1684386000,
+			"value": 5.372398637820345,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4zNjM5NjkxNzM3MDQwMjQ1XzE2ODQzODk2MDBfVVNE",
+			"timestamp": 1684389600,
+			"value": 5.3639691737040245,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4zNDg3MTg3MjU2NjY2Mzk1XzE2ODQzOTMyMDBfVVNE",
+			"timestamp": 1684393200,
+			"value": 5.3487187256666395,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4zNjAxOTE3NjgxMDY5MTZfMTY4NDM5NjgwMF9VU0Q=",
+			"timestamp": 1684396800,
+			"value": 5.360191768106916,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4zNDk4MjE2MTg5NTg0MjNfMTY4NDQwMDQwMF9VU0Q=",
+			"timestamp": 1684400400,
+			"value": 5.349821618958423,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4zMTc5NTg3MzAxMjcxMzZfMTY4NDQwNDAwMF9VU0Q=",
+			"timestamp": 1684404000,
+			"value": 5.317958730127136,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4zMTc5NTg3MzAxMjcxMzZfMTY4NDQwNzYwMF9VU0Q=",
+			"timestamp": 1684407600,
+			"value": 5.317958730127136,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4zMTIxMDQ0MzQzODE5MjRfMTY4NDQxMTIwMF9VU0Q=",
+			"timestamp": 1684411200,
+			"value": 5.312104434381924,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4yOTk1OTUyOTk2ODAyNjRfMTY4NDQxNDgwMF9VU0Q=",
+			"timestamp": 1684414800,
+			"value": 5.299595299680264,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4yODIyOTQ5MjcwNTA1NjFfMTY4NDQxODQwMF9VU0Q=",
+			"timestamp": 1684418400,
+			"value": 5.282294927050561,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4yOTIyMzM3ODg0NTY2NzhfMTY4NDQyMjAwMF9VU0Q=",
+			"timestamp": 1684422000,
+			"value": 5.292233788456678,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4zMDI5OTc1MzkwNDU1MDlfMTY4NDQyNTYwMF9VU0Q=",
+			"timestamp": 1684425600,
+			"value": 5.302997539045509,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4yMTUxODY3OTI5MjkyNzdfMTY4NDQyOTIwMF9VU0Q=",
+			"timestamp": 1684429200,
+			"value": 5.215186792929277,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4yMTczNjc3NTk3OTE5MDlfMTY4NDQzMjgwMF9VU0Q=",
+			"timestamp": 1684432800,
+			"value": 5.217367759791909,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4yNzIzNDgxNDk3NjQ4NzlfMTY4NDQzNjQwMF9VU0Q=",
+			"timestamp": 1684436400,
+			"value": 5.272348149764879,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4yODA0MjYzMTQ3NjQ2MDNfMTY4NDQ0MDAwMF9VU0Q=",
+			"timestamp": 1684440000,
+			"value": 5.280426314764603,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4zMTgzNjM3MjY0Nzc0ODdfMTY4NDQ0MzYwMF9VU0Q=",
+			"timestamp": 1684443600,
+			"value": 5.318363726477487,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4zMTgyOTU5NjY2MjQ2NDRfMTY4NDQ0NzIwMF9VU0Q=",
+			"timestamp": 1684447200,
+			"value": 5.318295966624644,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4yOTc1Mzc4Njc1NjMwMDNfMTY4NDQ1MDgwMF9VU0Q=",
+			"timestamp": 1684450800,
+			"value": 5.297537867563003,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4yOTQ1MTc3MDc5MjU3MzNfMTY4NDQ1NDQwMF9VU0Q=",
+			"timestamp": 1684454400,
+			"value": 5.294517707925733,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4yOTA3OTg5Mjg0OTA3NjJfMTY4NDQ1ODAwMF9VU0Q=",
+			"timestamp": 1684458000,
+			"value": 5.290798928490762,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4yODc3MDU1NDI0MTQwODZfMTY4NDQ2NTIwMF9VU0Q=",
+			"timestamp": 1684465200,
+			"value": 5.287705542414086,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4yODUyOTA2MzIyMTQxMzFfMTY4NDQ2ODgwMF9VU0Q=",
+			"timestamp": 1684468800,
+			"value": 5.285290632214131,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4yODY0NTAxMjI1NzYyNzRfMTY4NDQ3MjQwMF9VU0Q=",
+			"timestamp": 1684472400,
+			"value": 5.286450122576274,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4zMDU1NzgwNzE3OTA2MzlfMTY4NDQ3NjAwMF9VU0Q=",
+			"timestamp": 1684476000,
+			"value": 5.305578071790639,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4zMTAxMTA4MjE0MjM4MTJfMTY4NDQ3OTYwMF9VU0Q=",
+			"timestamp": 1684479600,
+			"value": 5.310110821423812,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4zMTAzODU0OTkzNjM3OTNfMTY4NDQ4MzIwMF9VU0Q=",
+			"timestamp": 1684483200,
+			"value": 5.310385499363793,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4zMTEyNDM4OTQ5OTI0MThfMTY4NDQ4NjgwMF9VU0Q=",
+			"timestamp": 1684486800,
+			"value": 5.311243894992418,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4zMTEyNTI2NzU5MDEzODJfMTY4NDQ5MDQwMF9VU0Q=",
+			"timestamp": 1684490400,
+			"value": 5.311252675901382,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4zMjY3MjI2Mzg0NTI5MjQ1XzE2ODQ0OTc2MDBfVVNE",
+			"timestamp": 1684497600,
+			"value": 5.3267226384529245,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4zMjM5MTIxMjkzMDA2MTdfMTY4NDUwMTIwMF9VU0Q=",
+			"timestamp": 1684501200,
+			"value": 5.323912129300617,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4zMjI2NTQxMDQxNDg0MTdfMTY4NDUwNDgwMF9VU0Q=",
+			"timestamp": 1684504800,
+			"value": 5.322654104148417,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4zMTc1MjUwMTM4MTkxMDZfMTY4NDUwODQwMF9VU0Q=",
+			"timestamp": 1684508400,
+			"value": 5.317525013819106,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4zMzAyNTE1MzM4NDQ4NzZfMTY4NDUxMjAwMF9VU0Q=",
+			"timestamp": 1684512000,
+			"value": 5.330251533844876,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4zMzM1OTMwMTM2NDM1M18xNjg0NTE1NjAwX1VTRA==",
+			"timestamp": 1684515600,
+			"value": 5.33359301364353,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4zMjgyMTU5NTIzMjI5NDk1XzE2ODQ1MjY0MDBfVVNE",
+			"timestamp": 1684526400,
+			"value": 5.3282159523229495,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4zMjc1NTgzNTY0ODI3NTlfMTY4NDUzMDAwMF9VU0Q=",
+			"timestamp": 1684530000,
+			"value": 5.327558356482759,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4zMjc1NTgzNTY0ODI3NTlfMTY4NDUzMzYwMF9VU0Q=",
+			"timestamp": 1684533600,
+			"value": 5.327558356482759,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4zMTI0NjU0MTIwNzA2NDFfMTY4NDU0MDgwMF9VU0Q=",
+			"timestamp": 1684540800,
+			"value": 5.312465412070641,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4zMTIxNDA2OTM1NTA2NTJfMTY4NDU0NDQwMF9VU0Q=",
+			"timestamp": 1684544400,
+			"value": 5.312140693550652,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4zMTA1NjE3NjExODc0NzY1XzE2ODQ1NDgwMDBfVVNE",
+			"timestamp": 1684548000,
+			"value": 5.3105617611874765,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4zMTA1NjE3NjExODc0NzY1XzE2ODQ1NTE2MDBfVVNE",
+			"timestamp": 1684551600,
+			"value": 5.3105617611874765,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4zMDY4OTMzMjkzMzAyNTFfMTY4NDU1NTIwMF9VU0Q=",
+			"timestamp": 1684555200,
+			"value": 5.306893329330251,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4zMDI2NjU1NjU0ODIxMDJfMTY4NDU1ODgwMF9VU0Q=",
+			"timestamp": 1684558800,
+			"value": 5.302665565482102,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4zMDIxOTg4MDk1MDcwNjZfMTY4NDU2MjQwMF9VU0Q=",
+			"timestamp": 1684562400,
+			"value": 5.302198809507066,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4yOTEzNDQ0MTgxOTEwNTJfMTY4NDU2OTYwMF9VU0Q=",
+			"timestamp": 1684569600,
+			"value": 5.291344418191052,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4yOTE0ODQ2NjE1MjIxNTVfMTY4NDU3MzIwMF9VU0Q=",
+			"timestamp": 1684573200,
+			"value": 5.291484661522155,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4zMDM5NzA0NjU2NTYwMDFfMTY4NDU3NjgwMF9VU0Q=",
+			"timestamp": 1684576800,
+			"value": 5.303970465656001,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4yOTExOTg5MjYwNjY2NTZfMTY4NDU4MDQwMF9VU0Q=",
+			"timestamp": 1684580400,
+			"value": 5.291198926066656,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4yOTEwNDAyNDQwMjYzNzc1XzE2ODQ1ODQwMDBfVVNE",
+			"timestamp": 1684584000,
+			"value": 5.2910402440263775,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4yOTA4MTE2MTE0MTA0NjVfMTY4NDU4NzYwMF9VU0Q=",
+			"timestamp": 1684587600,
+			"value": 5.290811611410465,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4yNzMxODQ5MzcyMTU3NDRfMTY4NDU5MTIwMF9VU0Q=",
+			"timestamp": 1684591200,
+			"value": 5.273184937215744,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4yNzI4MzU0NjEzODU5MDZfMTY4NDU5ODQwMF9VU0Q=",
+			"timestamp": 1684598400,
+			"value": 5.272835461385906,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4yODA5MDIxMDI0NzAyMTNfMTY4NDYwMjAwMF9VU0Q=",
+			"timestamp": 1684602000,
+			"value": 5.280902102470213,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4yOTEyMzEzNzUyMjAyMTlfMTY4NDYwNTYwMF9VU0Q=",
+			"timestamp": 1684605600,
+			"value": 5.291231375220219,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4yODM4OTY3NTQ3NzU0ODNfMTY4NDYxMjgwMF9VU0Q=",
+			"timestamp": 1684612800,
+			"value": 5.283896754775483,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4yODQzNDk1MDM0MTQ2MTdfMTY4NDYxNjQwMF9VU0Q=",
+			"timestamp": 1684616400,
+			"value": 5.284349503414617,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4yODQzNTcxNzE4NzU1MjZfMTY4NDYyMDAwMF9VU0Q=",
+			"timestamp": 1684620000,
+			"value": 5.284357171875526,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4yODQzMzc0NDAwNjYwNzdfMTY4NDYyMzYwMF9VU0Q=",
+			"timestamp": 1684623600,
+			"value": 5.284337440066077,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4yOTU2MzkxMDk5OTYwMjlfMTY4NDYzMDgwMF9VU0Q=",
+			"timestamp": 1684630800,
+			"value": 5.295639109996029,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4yOTU5NDI0NzQxMTkyNF8xNjg0NjM0NDAwX1VTRA==",
+			"timestamp": 1684634400,
+			"value": 5.29594247411924,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4yOTQ2MDA0Mzg1NTU4MzFfMTY4NDY0MTYwMF9VU0Q=",
+			"timestamp": 1684641600,
+			"value": 5.294600438555831,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4yODY2NDkwNTYzNDEzNjE1XzE2ODQ2NDUyMDBfVVNE",
+			"timestamp": 1684645200,
+			"value": 5.2866490563413615,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4yNzIzMTYzMjI3MjEyOTE1XzE2ODQ2NDg4MDBfVVNE",
+			"timestamp": 1684648800,
+			"value": 5.2723163227212915,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4yNjUxNjI4MDc5NTM3NjhfMTY4NDY1MjQwMF9VU0Q=",
+			"timestamp": 1684652400,
+			"value": 5.265162807953768,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4yNjU1MzI4MDE4NDQzNzM0XzE2ODQ2NTYwMDBfVVNE",
+			"timestamp": 1684656000,
+			"value": 5.2655328018443734,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4yNjQyMjA0MDQxMDczMTlfMTY4NDY1OTYwMF9VU0Q=",
+			"timestamp": 1684659600,
+			"value": 5.264220404107319,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4yNTU0NzU5ODU2MzA2ODRfMTY4NDY2MzIwMF9VU0Q=",
+			"timestamp": 1684663200,
+			"value": 5.255475985630684,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4yMTcxMzA4MDk0Mzc3OTlfMTY4NDY2NjgwMF9VU0Q=",
+			"timestamp": 1684666800,
+			"value": 5.217130809437799,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4yMTkyNzYzNzIxNDAzMzhfMTY4NDY3MDQwMF9VU0Q=",
+			"timestamp": 1684670400,
+			"value": 5.219276372140338,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4yMTgzNTIxMDM3NjI2MTNfMTY4NDY3NzYwMF9VU0Q=",
+			"timestamp": 1684677600,
+			"value": 5.218352103762613,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4yMDY5OTM0NjYxMzk4MjFfMTY4NDY4MTIwMF9VU0Q=",
+			"timestamp": 1684681200,
+			"value": 5.206993466139821,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4xODg5MjQ0Nzk4MDM3MzhfMTY4NDY4NDgwMF9VU0Q=",
+			"timestamp": 1684684800,
+			"value": 5.188924479803738,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4xNzgxNjg3NjkyMDU3MjRfMTY4NDY5MjAwMF9VU0Q=",
+			"timestamp": 1684692000,
+			"value": 5.178168769205724,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4xNzEyNjQ1NjY0NjIxMTVfMTY4NDY5NTYwMF9VU0Q=",
+			"timestamp": 1684695600,
+			"value": 5.171264566462115,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4xNTk3MTE4MDI3ODA1NjJfMTY4NDY5OTIwMF9VU0Q=",
+			"timestamp": 1684699200,
+			"value": 5.159711802780562,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4xMTg3MDY5Njk2NDc4NzJfMTY4NDcwMjgwMF9VU0Q=",
+			"timestamp": 1684702800,
+			"value": 5.118706969647872,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4xMTg0NjM4MDk0Njc0ODlfMTY4NDcwNjQwMF9VU0Q=",
+			"timestamp": 1684706400,
+			"value": 5.118463809467489,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4xMTgzNDIzMDM2MjQ0MzZfMTY4NDcxMDAwMF9VU0Q=",
+			"timestamp": 1684710000,
+			"value": 5.118342303624436,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4wOTEwODkzODg3MDE4NDJfMTY4NDcxMzYwMF9VU0Q=",
+			"timestamp": 1684713600,
+			"value": 5.091089388701842,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4wODgyMzcwMjU0Nzk2NjA1XzE2ODQ3MTcyMDBfVVNE",
+			"timestamp": 1684717200,
+			"value": 5.0882370254796605,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4wODQ0NjY4OTQ5MTQwOF8xNjg0NzIwODAwX1VTRA==",
+			"timestamp": 1684720800,
+			"value": 5.08446689491408,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4wODY5NTQ4MjU0NjQ0N18xNjg0NzI0NDAwX1VTRA==",
+			"timestamp": 1684724400,
+			"value": 5.08695482546447,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4wODYyNDM2NDg3MDUzNzRfMTY4NDcyODAwMF9VU0Q=",
+			"timestamp": 1684728000,
+			"value": 5.086243648705374,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4xMzM2NTU4Mjg0Njk1MDlfMTY4NDczMTYwMF9VU0Q=",
+			"timestamp": 1684731600,
+			"value": 5.133655828469509,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4xMjc2OTU3NzY1NTYyMjRfMTY4NDczNTIwMF9VU0Q=",
+			"timestamp": 1684735200,
+			"value": 5.127695776556224,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4xMjc3ODY4Mjc3Mjk3NDNfMTY4NDczODgwMF9VU0Q=",
+			"timestamp": 1684738800,
+			"value": 5.127786827729743,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4xMjc4MjA2NjUxODA4OF8xNjg0NzQyNDAwX1VTRA==",
+			"timestamp": 1684742400,
+			"value": 5.12782066518088,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4xMTA3OTc3MzI0OTE0MjJfMTY4NDc0NjAwMF9VU0Q=",
+			"timestamp": 1684746000,
+			"value": 5.110797732491422,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4xMTQ3OTQzMjgxNzI0MzZfMTY4NDc0OTYwMF9VU0Q=",
+			"timestamp": 1684749600,
+			"value": 5.114794328172436,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4xMTQ3OTc5NzYwNjExMDk1XzE2ODQ3NTMyMDBfVVNE",
+			"timestamp": 1684753200,
+			"value": 5.1147979760611095,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4xMTQ3NTc2MzUyMzgyNDI1XzE2ODQ3NTY4MDBfVVNE",
+			"timestamp": 1684756800,
+			"value": 5.1147576352382425,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4xMjk4OTU1ODA1ODUwODVfMTY4NDc2MDQwMF9VU0Q=",
+			"timestamp": 1684760400,
+			"value": 5.129895580585085,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4xMTI1MTAyNDg2MzA5MDFfMTY4NDc2NDAwMF9VU0Q=",
+			"timestamp": 1684764000,
+			"value": 5.112510248630901,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4xMDI3MTg3MTI5Nzg0NTM1XzE2ODQ3Njc2MDBfVVNE",
+			"timestamp": 1684767600,
+			"value": 5.1027187129784535,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4wNzgyOTI3MTk2MDU2OV8xNjg0NzcxMjAwX1VTRA==",
+			"timestamp": 1684771200,
+			"value": 5.07829271960569,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4wNzgyNDI0OTM5NjM1NzhfMTY4NDc3NDgwMF9VU0Q=",
+			"timestamp": 1684774800,
+			"value": 5.078242493963578,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4wODEzMjcxNTM3MDA0MjY1XzE2ODQ3Nzg0MDBfVVNE",
+			"timestamp": 1684778400,
+			"value": 5.0813271537004265,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4wODM5MjU2Nzc5NzY1NzRfMTY4NDc4MjAwMF9VU0Q=",
+			"timestamp": 1684782000,
+			"value": 5.083925677976574,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4wODM5NzY0MzQ0MzMxMTdfMTY4NDc4NTYwMF9VU0Q=",
+			"timestamp": 1684785600,
+			"value": 5.083976434433117,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4wOTEyNTQyNTM4OTg4MDRfMTY4NDc4OTIwMF9VU0Q=",
+			"timestamp": 1684789200,
+			"value": 5.091254253898804,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4wOTE0ODE1ODg2NDE3ODRfMTY4NDc5MjgwMF9VU0Q=",
+			"timestamp": 1684792800,
+			"value": 5.091481588641784,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4wOTA5NzQ5OTA3NDIwOTdfMTY4NDgwMDAwMF9VU0Q=",
+			"timestamp": 1684800000,
+			"value": 5.090974990742097,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4xMTUyMzc2NzcwOTcxNjVfMTY4NDgwMzYwMF9VU0Q=",
+			"timestamp": 1684803600,
+			"value": 5.115237677097165,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4xMjkyNzkxMjE5NjE2NDhfMTY4NDgwNzIwMF9VU0Q=",
+			"timestamp": 1684807200,
+			"value": 5.129279121961648,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4xNzUwOTk2NDg0NDcxMjhfMTY4NDgxMDgwMF9VU0Q=",
+			"timestamp": 1684810800,
+			"value": 5.175099648447128,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4xNjkxNDM0NDM1MTI1NF8xNjg0ODE0NDAwX1VTRA==",
+			"timestamp": 1684814400,
+			"value": 5.16914344351254,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4xNjUzMTgyNTE3MTU1NzFfMTY4NDgxODAwMF9VU0Q=",
+			"timestamp": 1684818000,
+			"value": 5.165318251715571,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4xNjA4NzM1NTY0MDI4NzRfMTY4NDgyMTYwMF9VU0Q=",
+			"timestamp": 1684821600,
+			"value": 5.160873556402874,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4xMzY3NTI0ODYwODcyMDJfMTY4NDgyNTIwMF9VU0Q=",
+			"timestamp": 1684825200,
+			"value": 5.136752486087202,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4xMjQ3MzU5MDczNTY5NTI1XzE2ODQ4Mjg4MDBfVVNE",
+			"timestamp": 1684828800,
+			"value": 5.1247359073569525,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4xMjk4MDE0ODI2NDc2ODA1XzE2ODQ4MzI0MDBfVVNE",
+			"timestamp": 1684832400,
+			"value": 5.1298014826476805,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4xMjk3MTc1MTIzNzI1OTM1XzE2ODQ4MzYwMDBfVVNE",
+			"timestamp": 1684836000,
+			"value": 5.1297175123725935,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4xMjk2NTU3NzU3MTY3MjNfMTY4NDgzOTYwMF9VU0Q=",
+			"timestamp": 1684839600,
+			"value": 5.129655775716723,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4xMjk2NTU3NzU3MTY3MjNfMTY4NDg0MzIwMF9VU0Q=",
+			"timestamp": 1684843200,
+			"value": 5.129655775716723,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4xMTQ5ODMzNTgxMTQyODQ1XzE2ODQ4NDY4MDBfVVNE",
+			"timestamp": 1684846800,
+			"value": 5.1149833581142845,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4xMTMyOTc2NDI2OTUxNzhfMTY4NDg1MDQwMF9VU0Q=",
+			"timestamp": 1684850400,
+			"value": 5.113297642695178,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4xMjMzNDgyODUxNDk4Nl8xNjg0ODU3NjAwX1VTRA==",
+			"timestamp": 1684857600,
+			"value": 5.12334828514986,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4xMjI5NjgwNTQ0NjU5NTVfMTY4NDg2MTIwMF9VU0Q=",
+			"timestamp": 1684861200,
+			"value": 5.122968054465955,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4wNzA5ODAzODQ3NDk2NDVfMTY4NDg2NDgwMF9VU0Q=",
+			"timestamp": 1684864800,
+			"value": 5.070980384749645,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4wNTQxMTAwNTUzNzU4MjFfMTY4NDg2ODQwMF9VU0Q=",
+			"timestamp": 1684868400,
+			"value": 5.054110055375821,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4wNjIxNTE0MzI5NjI5ODZfMTY4NDg3NTYwMF9VU0Q=",
+			"timestamp": 1684875600,
+			"value": 5.062151432962986,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4wNjIwNzM1Nzk4NDg4ODJfMTY4NDg3OTIwMF9VU0Q=",
+			"timestamp": 1684879200,
+			"value": 5.062073579848882,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4wNjMxNzE4MjA2OTQxMzNfMTY4NDg4MjgwMF9VU0Q=",
+			"timestamp": 1684882800,
+			"value": 5.063171820694133,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4wNjMxMjUxMjMxMjQ3MzdfMTY4NDg4NjQwMF9VU0Q=",
+			"timestamp": 1684886400,
+			"value": 5.063125123124737,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4wNjMxMjUxMjMxMjQ3MzdfMTY4NDg5MDAwMF9VU0Q=",
+			"timestamp": 1684890000,
+			"value": 5.063125123124737,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NS4wNTg2MDQ2OTE0ODY5OF8xNjg0ODkzNjAwX1VTRA==",
+			"timestamp": 1684893600,
+			"value": 5.05860469148698,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NC45ODM1OTczOTUzNjI1MzZfMTY4NDg5NzIwMF9VU0Q=",
+			"timestamp": 1684897200,
+			"value": 4.983597395362536,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NC45ODg5NjIwNDUxMzU1MjZfMTY4NDkwMDgwMF9VU0Q=",
+			"timestamp": 1684900800,
+			"value": 4.988962045135526,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NC45ODg5Njg1MTAxNjU5MDZfMTY4NDkwNDQwMF9VU0Q=",
+			"timestamp": 1684904400,
+			"value": 4.988968510165906,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NC45OTA2MDEwNTc1Mzk3NjRfMTY4NDkwODAwMF9VU0Q=",
+			"timestamp": 1684908000,
+			"value": 4.990601057539764,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NC45ODU4NDQ0MTE1ODQyMThfMTY4NDkxMTYwMF9VU0Q=",
+			"timestamp": 1684911600,
+			"value": 4.985844411584218,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NC45NzQyOTAyMzIxMTE5NThfMTY4NDkxNTIwMF9VU0Q=",
+			"timestamp": 1684915200,
+			"value": 4.974290232111958,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NC45NzM4MDUyNjY5OTQ0ODdfMTY4NDkxODgwMF9VU0Q=",
+			"timestamp": 1684918800,
+			"value": 4.973805266994487,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NC45NzM2MjAzMTcwNzgwNjVfMTY4NDkyMjQwMF9VU0Q=",
+			"timestamp": 1684922400,
+			"value": 4.973620317078065,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NC45NzAyNzAyMDA2OTIzMzRfMTY4NDkyNjAwMF9VU0Q=",
+			"timestamp": 1684926000,
+			"value": 4.970270200692334,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NC45NjQ3MTUyMDc5NTgzMDVfMTY4NDkyOTYwMF9VU0Q=",
+			"timestamp": 1684929600,
+			"value": 4.964715207958305,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NC45MjI5NDcyMzUyOTc0MTVfMTY4NDkzMzIwMF9VU0Q=",
+			"timestamp": 1684933200,
+			"value": 4.922947235297415,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NC45MDEwMjY5Nzg1NDc3NjRfMTY4NDkzNjgwMF9VU0Q=",
+			"timestamp": 1684936800,
+			"value": 4.901026978547764,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NC45MDEzNDQyMTUzNDUwMDZfMTY4NDk0MDQwMF9VU0Q=",
+			"timestamp": 1684940400,
+			"value": 4.901344215345006,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NC45MDQ4ODk0NTc0NTk0MV8xNjg0OTQ0MDAwX1VTRA==",
+			"timestamp": 1684944000,
+			"value": 4.90488945745941,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NC45MDM4NjA0OTgzNDI5NzRfMTY4NDk0NzYwMF9VU0Q=",
+			"timestamp": 1684947600,
+			"value": 4.903860498342974,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NC45MTAyMDQ2MzQ2MDgzMDJfMTY4NDk1MTIwMF9VU0Q=",
+			"timestamp": 1684951200,
+			"value": 4.910204634608302,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NC45MzEwNzE2NzUzOTUxMjdfMTY4NDk1NDgwMF9VU0Q=",
+			"timestamp": 1684954800,
+			"value": 4.931071675395127,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NC45NjQ1NzY2NjgwODk3OThfMTY4NDk1ODQwMF9VU0Q=",
+			"timestamp": 1684958400,
+			"value": 4.964576668089798,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NC45NzIwMjM5MTAzNDMxMTZfMTY4NDk2MjAwMF9VU0Q=",
+			"timestamp": 1684962000,
+			"value": 4.972023910343116,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		},
+		{
+			"id": "VGltZXN0YW1wZWRBbW91bnQ6NC45NjEwMTI4MzY5OTU5NTNfMTY4NDk2NTYwMF9VU0Q=",
+			"timestamp": 1684965600,
+			"value": 4.961012836995953,
+			"__typename": "TimestampedAmount",
+			"currency": "ETH"
+		}
+	]
+}

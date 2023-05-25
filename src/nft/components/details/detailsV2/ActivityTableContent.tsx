@@ -1,5 +1,12 @@
+import { ActivityPriceChart } from './ActivityPriceChart'
+import { ActivityRows } from './ActivityRows'
 import { TableContentContainer } from './shared'
 
 export const ActivityTableContent = () => {
-  return <TableContentContainer>Activity Content</TableContentContainer>
+  return (
+    <TableContentContainer>
+      <ActivityPriceChart />
+      <ActivityRows />
+    </TableContentContainer>
+  )
 }
