@@ -1,5 +1,5 @@
-import { DAI_MAINNET } from '@uniswap/smart-order-router'
 import { useIsTransactionConfirmed } from 'state/transactions/hooks'
+import { TEST_TRADE_EXACT_INPUT } from 'test-utils/constants'
 import { mocked } from 'test-utils/mocked'
 import { render, screen } from 'test-utils/render'
 
@@ -24,15 +24,12 @@ describe('PendingModalContent', () => {
       <PendingModalContent
         steps={[ConfirmModalState.APPROVING_TOKEN]}
         currentStep={ConfirmModalState.APPROVING_TOKEN}
-        approvalCurrency={DAI_MAINNET}
+        trade={TEST_TRADE_EXACT_INPUT}
       />
     )
-    expect(screen.getByText('Approve permit')).toBeInTheDocument()
-    expect(screen.getByText('Proceed in wallet')).toBeInTheDocument()
-    expect(screen.getByText('Why are permits required?')).toBeInTheDocument()
-    expect(
-      screen.getByText('Permit2 allows token approvals to be shared and managed across different applications.')
-    ).toBeInTheDocument()
+    expect(screen.getByText('Allow trading ABC on Uniswap')).toBeInTheDocument()
+    expect(screen.getByText('Proceed in your wallet')).toBeInTheDocument()
+    expect(screen.getByText('Why is this required?')).toBeInTheDocument()
   })
 
   describe('renders the correct step when there are multiple', () => {
@@ -45,22 +42,13 @@ describe('PendingModalContent', () => {
             ConfirmModalState.PENDING_CONFIRMATION,
           ]}
           currentStep={ConfirmModalState.APPROVING_TOKEN}
-          approvalCurrency={DAI_MAINNET}
+          trade={TEST_TRADE_EXACT_INPUT}
         />
       )
-      expect(screen.getByText('Approve permit')).toBeInTheDocument()
-      expect(screen.getByText('Proceed in wallet')).toBeInTheDocument()
-      expect(screen.getByText('Why are permits required?')).toBeInTheDocument()
-      expect(
-        screen.getByText('Permit2 allows token approvals to be shared and managed across different applications.')
-      ).toBeInTheDocument()
-      expect(screen.queryByText('Approve DAI')).toBeNull()
-      expect(screen.queryByText('Why are approvals required?')).toBeNull()
-      expect(
-        screen.queryByText(
-          'This provides the Uniswap protocol access to your token for trading. For security, this will expire after 30 days.'
-        )
-      ).toBeNull()
+      expect(screen.getByText('Allow trading ABC on Uniswap')).toBeInTheDocument()
+      expect(screen.getByText('Proceed in your wallet')).toBeInTheDocument()
+      expect(screen.getByText('Why is this required?')).toBeInTheDocument()
+      expect(screen.queryByText('Unlock ABC for swapping')).not.toBeInTheDocument()
     })
 
     it('renders the second step with activeStepIndex=1', () => {
@@ -72,22 +60,13 @@ describe('PendingModalContent', () => {
             ConfirmModalState.PENDING_CONFIRMATION,
           ]}
           currentStep={ConfirmModalState.PERMITTING}
-          approvalCurrency={DAI_MAINNET}
+          trade={TEST_TRADE_EXACT_INPUT}
         />
       )
-      expect(screen.queryByText('Approve permit')).toBeNull()
-      expect(screen.queryByText('Why are permits required?')).toBeNull()
-      expect(
-        screen.queryByText('Permit2 allows token approvals to be shared and managed across different applications.')
-      ).toBeNull()
-      expect(screen.queryByText('Approve DAI')).toBeInTheDocument()
-      expect(screen.queryByText('Proceed in wallet')).toBeInTheDocument()
-      expect(screen.queryByText('Why are approvals required?')).toBeInTheDocument()
-      expect(
-        screen.queryByText(
-          'This provides the Uniswap protocol access to your token for trading. For security, this will expire after 30 days.'
-        )
-      ).toBeInTheDocument()
+      expect(screen.getByText('Unlock ABC for swapping')).toBeInTheDocument()
+      expect(screen.getByText('Proceed in your wallet')).toBeInTheDocument()
+      expect(screen.getByText('Why is this required?')).toBeInTheDocument()
+      expect(screen.queryByText('Allow trading ABC on Uniswap')).not.toBeInTheDocument()
     })
   })
 
@@ -101,10 +80,10 @@ describe('PendingModalContent', () => {
             ConfirmModalState.PENDING_CONFIRMATION,
           ]}
           currentStep={ConfirmModalState.APPROVING_TOKEN}
-          approvalCurrency={DAI_MAINNET}
+          trade={TEST_TRADE_EXACT_INPUT}
         />
       )
-      expect(screen.getByTestId('pending-modal-currency-logo-loader-DAI')).toBeInTheDocument()
+      expect(screen.getByTestId('papers-icon-container-ABC')).toBeInTheDocument()
       expect(screen.queryByTestId('pending-modal-failure-icon')).toBeNull()
     })
 
@@ -125,7 +104,6 @@ describe('PendingModalContent', () => {
             ConfirmModalState.PENDING_CONFIRMATION,
           ]}
           currentStep={ConfirmModalState.PENDING_CONFIRMATION}
-          approvalCurrency={DAI_MAINNET}
         />
       )
       expect(screen.queryByTestId('pending-modal-failure-icon')).toBeNull()

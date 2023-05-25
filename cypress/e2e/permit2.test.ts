@@ -60,10 +60,10 @@ describe('Permit2', () => {
 
   it('swaps after completing full permit2 approval process', () => {
     initiateSwap()
-    cy.contains('Approve permit').should('exist')
+    cy.contains('Allow trading DAI on Uniswap').should('exist')
     cy.contains('Approved').should('exist')
 
-    cy.contains('Approve DAI').should('exist')
+    cy.contains('Unlock DAI for swapping').should('exist')
     cy.contains('Confirm Swap').should('exist')
 
     cy.then(() => {
@@ -96,7 +96,7 @@ describe('Permit2', () => {
       })
 
       cy.get(getTestSelector('confirm-swap-button')).click()
-      cy.contains('Approve permit').should('exist')
+      cy.contains('Allow trading DAI on Uniswap').should('exist')
       cy.contains('Approved').should('exist')
 
       // permitApprovalStub should reject here, and the modal should revert to the review state.
@@ -200,7 +200,7 @@ describe('Permit2', () => {
       .then(() => {
         initiateSwap()
         const approvalTime = Date.now()
-        cy.contains('Approve permit').should('exist')
+        cy.contains('Allow trading DAI on Uniswap').should('exist')
 
         cy.contains('Confirm Swap').should('exist')
         cy.contains('Swapped').should('exist')

@@ -258,8 +258,9 @@ export default function ConfirmSwapModal({
         hideStepIndicators={pendingModalSteps.length === 1}
         steps={pendingModalSteps}
         currentStep={confirmModalState}
-        approvalCurrency={trade?.inputAmount?.currency}
-        txHash={txHash}
+        trade={trade}
+        swapTxHash={txHash}
+        tokenApprovalPending={allowance.state === AllowanceState.REQUIRED && allowance.isApprovalPending}
       />
     )
   }, [
@@ -268,6 +269,7 @@ export default function ConfirmSwapModal({
     pendingModalSteps,
     trade,
     txHash,
+    allowance,
     allowedSlippage,
     swapQuoteReceivedDate,
     fiatValueInput,
