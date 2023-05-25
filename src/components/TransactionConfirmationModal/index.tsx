@@ -6,16 +6,15 @@ import { getChainInfo } from 'constants/chainInfo'
 import { SupportedChainId, SupportedL2ChainId } from 'constants/chains'
 import useCurrencyLogoURIs from 'lib/hooks/useCurrencyLogoURIs'
 import { ReactNode, useCallback, useState } from 'react'
-import { AlertCircle, AlertTriangle, ArrowUpCircle, CheckCircle } from 'react-feather'
-import { Text } from 'rebass'
+import { AlertCircle, ArrowUpCircle, CheckCircle } from 'react-feather'
 import { useIsTransactionConfirmed, useTransaction } from 'state/transactions/hooks'
 import styled, { useTheme } from 'styled-components/macro'
 import { isL2ChainId } from 'utils/chains'
+import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 import Circle from '../../assets/images/blue-loader.svg'
 import { ExternalLink, ThemedText } from '../../theme'
 import { CloseIcon, CustomLightSpinner } from '../../theme'
-import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import { TransactionSummary } from '../AccountDetails/TransactionSummary'
 import { ButtonLight, ButtonPrimary } from '../Button'
 import { AutoColumn, ColumnCenter } from '../Column'
@@ -187,36 +186,11 @@ export function ConfirmationModalContent({
           <Row justify="center" marginLeft="24px">
             <ThemedText.SubHeader>{title}</ThemedText.SubHeader>
           </Row>
-          <CloseIcon onClick={onDismiss} data-cy="confirmation-close-icon" />
+          <CloseIcon onClick={onDismiss} data-testid="confirmation-close-icon" />
         </Row>
         {topContent()}
       </AutoColumn>
       {bottomContent && <BottomSection gap="12px">{bottomContent()}</BottomSection>}
-    </Wrapper>
-  )
-}
-
-export function TransactionErrorContent({ message, onDismiss }: { message: ReactNode; onDismiss: () => void }) {
-  const theme = useTheme()
-  return (
-    <Wrapper>
-      <AutoColumn>
-        <RowBetween>
-          <Text fontWeight={600} fontSize={16}>
-            <Trans>Error</Trans>
-          </Text>
-          <CloseIcon onClick={onDismiss} />
-        </RowBetween>
-        <AutoColumn style={{ marginTop: 20, padding: '2rem 0' }} gap="24px" justify="center">
-          <AlertTriangle color={theme.accentCritical} style={{ strokeWidth: 1 }} size={90} />
-          <ThemedText.MediumHeader textAlign="center">{message}</ThemedText.MediumHeader>
-        </AutoColumn>
-      </AutoColumn>
-      <BottomSection gap="12px">
-        <ButtonPrimary onClick={onDismiss}>
-          <Trans>Dismiss</Trans>
-        </ButtonPrimary>
-      </BottomSection>
     </Wrapper>
   )
 }
@@ -325,7 +299,7 @@ interface ConfirmationModalProps {
   isOpen: boolean
   onDismiss: () => void
   hash?: string
-  content: () => ReactNode
+  reviewContent: () => ReactNode
   attemptingTxn: boolean
   pendingText: ReactNode
   currencyToAdd?: Currency
@@ -337,7 +311,7 @@ export default function TransactionConfirmationModal({
   attemptingTxn,
   hash,
   pendingText,
-  content,
+  reviewContent,
   currencyToAdd,
 }: ConfirmationModalProps) {
   const { chainId } = useWeb3React()
@@ -359,7 +333,7 @@ export default function TransactionConfirmationModal({
           currencyToAdd={currencyToAdd}
         />
       ) : (
-        content()
+        reviewContent()
       )}
     </Modal>
   )
