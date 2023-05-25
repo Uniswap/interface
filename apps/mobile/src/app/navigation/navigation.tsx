@@ -1,3 +1,4 @@
+import { HeaderTitleProps } from '@react-navigation/elements'
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { createStackNavigator } from '@react-navigation/stack'
@@ -20,6 +21,7 @@ import { useBiometricCheck } from 'src/features/biometrics/useBiometricCheck'
 import { EXPERIMENT_NAMES } from 'src/features/experiments/constants'
 import { useExperimentEnabled } from 'src/features/experiments/hooks'
 import { CloudBackupPasswordConfirmScreen } from 'src/features/onboarding/CloudBackupConfirmPasswordConfirm'
+import { OnboardingHeader } from 'src/features/onboarding/OnboardingHeader'
 import { OnboardingEntryPoint } from 'src/features/onboarding/utils'
 import { selectFinishedOnboarding } from 'src/features/wallet/selectors'
 import { DevScreen } from 'src/screens/DevScreen'
@@ -151,6 +153,7 @@ export function ExploreStackNavigator(): JSX.Element {
   )
 }
 
+const renderHeaderTitle = (props: HeaderTitleProps): JSX.Element => <OnboardingHeader {...props} />
 const renderEmptyBackImage = (): JSX.Element => <></>
 
 export function OnboardingStackNavigator(): JSX.Element {
@@ -171,7 +174,7 @@ export function OnboardingStackNavigator(): JSX.Element {
       <OnboardingStack.Group
         screenOptions={{
           headerMode: 'float',
-          headerTitle: '',
+          headerTitle: renderHeaderTitle,
           headerBackTitleVisible: false,
           headerBackImage: renderHeaderBackImage,
           headerStatusBarHeight: insets.top + theme.spacing.spacing8,
