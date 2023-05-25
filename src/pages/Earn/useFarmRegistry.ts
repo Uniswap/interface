@@ -70,7 +70,6 @@ export const useFarmRegistry = () => {
   const client = useApolloClient()
   const [farmSummaries, setFarmSummaries] = React.useState<FarmSummary[]>([])
   const call = React.useCallback(async () => {
-    console.log('HERE')
     const farmRegistry = new kit.web3.eth.Contract(
       farmRegistryAbi as AbiItem[],
       '0xa2bf67e12EeEDA23C7cA1e5a34ae2441a17789Ec'
