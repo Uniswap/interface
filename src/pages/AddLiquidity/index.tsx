@@ -267,7 +267,7 @@ export default function AddLiquidity() {
           to: argentWalletContract.address,
           data,
           value: '0x0',
-        }
+        } 
       }
 
       setAttemptingTxn(true)

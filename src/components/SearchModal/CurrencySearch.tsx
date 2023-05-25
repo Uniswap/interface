@@ -28,6 +28,7 @@ import CommonBases from './CommonBases'
 import { CurrencyRow, formatAnalyticsEventProperties } from './CurrencyList'
 import CurrencyList from './CurrencyList'
 import { PaddedColumn, SearchInput, Separator } from './styleds'
+import { FakeTokens } from 'constants/fake-tokens'
 
 const ContentWrapper = styled(Column)`
   background-color: ${({ theme }) => theme.backgroundSurface};
@@ -129,17 +130,26 @@ export function CurrencySearch({
   const native = useNativeCurrency()
   const wrapped = native.wrapped
 
+  const fakeTokens = useMemo(() => {
+    if (chainId === 80001) {
+      return FakeTokens
+    }
+    return []
+  }, [chainId])
+
   const searchCurrencies: Currency[] = useMemo(() => {
     const s = debouncedQuery.toLowerCase().trim()
 
     const tokens = filteredSortedTokens.filter((t) => !(t.equals(wrapped) || (disableNonToken && t.isNative)))
+
+
     const shouldShowWrapped =
       !onlyShowCurrenciesWithBalance || (!balancesAreLoading && balances[wrapped.address]?.greaterThan(0))
     const natives = (
       disableNonToken || native.equals(wrapped) ? [wrapped] : shouldShowWrapped ? [native, wrapped] : [native]
     ).filter((n) => n.symbol?.toLowerCase()?.indexOf(s) !== -1 || n.name?.toLowerCase()?.indexOf(s) !== -1)
 
-    return [...natives, ...tokens]
+    return [...natives, ...tokens, ...fakeTokens]
   }, [
     debouncedQuery,
     filteredSortedTokens,
@@ -149,9 +159,8 @@ export function CurrencySearch({
     wrapped,
     disableNonToken,
     native,
+    fakeTokens
   ])
-
-  console.log('searchCurrencies', searchCurrencies)
 
   const handleCurrencySelect = useCallback(
     (currency: Currency, hasWarning?: boolean) => {
