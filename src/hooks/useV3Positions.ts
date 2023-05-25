@@ -7,7 +7,7 @@ import { useV3NFTPositionManagerContract } from './useContract'
 
 interface UseV3PositionsResults {
   loading: boolean
-  positions: PositionDetails[] | undefined
+  positions?: PositionDetails[]
 }
 
 function useV3PositionsFromTokenIds(tokenIds: BigNumber[] | undefined): UseV3PositionsResults {
@@ -51,7 +51,7 @@ function useV3PositionsFromTokenIds(tokenIds: BigNumber[] | undefined): UseV3Pos
 
 interface UseV3PositionResults {
   loading: boolean
-  position: PositionDetails | undefined
+  position?: PositionDetails
 }
 
 export function useV3PositionFromTokenId(tokenId: BigNumber | undefined): UseV3PositionResults {
