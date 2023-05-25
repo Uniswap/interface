@@ -137,6 +137,13 @@ jobs:
           name: build-e2e
           path: build
 
+      - uses: actions/cache@v3
+        id: hardhat-cache
+        with:
+          path: cache
+          key: ${{ runner.os }}-hardhat-${{ hashFiles('hardhat.config.js') }}-${{ github.run_id }}
+          restore-keys: ${{ runner.os }}-hardhat-${{ hashFiles('hardhat.config.js') }}-
+
       - uses: cypress-io/github-action@v4
         with:
           install: false
