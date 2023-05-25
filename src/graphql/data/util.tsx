@@ -153,7 +153,7 @@ export function getTokenDetailsURL({
 
 export function unwrapToken<
   T extends {
-    address?: string | null | undefined
+    address?: string | null
   } | null
 >(chainId: number, token: T): T {
   if (!token?.address) return token

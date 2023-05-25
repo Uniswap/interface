@@ -64,7 +64,7 @@ export function formatDelta(delta: number | null | undefined) {
   return formattedDelta
 }
 
-export const DeltaText = styled.span<{ delta: number | undefined }>`
+export const DeltaText = styled.span<{ delta?: number }>`
   color: ${({ theme, delta }) =>
     delta !== undefined ? (Math.sign(delta) < 0 ? theme.accentFailure : theme.accentSuccess) : theme.textPrimary};
 `
@@ -124,7 +124,7 @@ const timeOptionsHeight = 44
 interface PriceChartProps {
   width: number
   height: number
-  prices: PricePoint[] | undefined | null
+  prices?: PricePoint[] | null
   timePeriod: TimePeriod
 }
 
