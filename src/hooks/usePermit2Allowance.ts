@@ -25,6 +25,10 @@ interface AllowanceRequired {
   token: Token
   isApprovalLoading: boolean
   approveAndPermit: () => Promise<void>
+  approve: () => Promise<void>
+  permit: () => Promise<void>
+  needsPermit2Approval: boolean
+  needsSignature: boolean
 }
 
 export type Allowance =
@@ -101,24 +105,64 @@ export default function usePermit2Allowance(amount?: CurrencyAmount<Token>, spen
     }
   }, [addTransaction, shouldRequestApproval, shouldRequestSignature, updatePermitAllowance, updateTokenAllowance])
 
+  const approve = useCallback(async () => {
+    if (shouldRequestApproval) {
+      const { response, info } = await updateTokenAllowance()
+      addTransaction(response, info)
+    }
+  }, [addTransaction, shouldRequestApproval, updateTokenAllowance])
+
+  const permit = useCallback(async () => {
+    if (shouldRequestSignature) {
+      await updatePermitAllowance()
+    }
+  }, [shouldRequestSignature, updatePermitAllowance])
+
   return useMemo(() => {
     if (token) {
       if (!tokenAllowance || !permitAllowance) {
         return { state: AllowanceState.LOADING }
-      } else if (!(isPermitted || isSigned)) {
-        return { token, state: AllowanceState.REQUIRED, isApprovalLoading: false, approveAndPermit }
+      } else if (shouldRequestSignature) {
+        return {
+          token,
+          state: AllowanceState.REQUIRED,
+          isApprovalLoading: false,
+          approveAndPermit,
+          approve,
+          permit,
+          needsPermit2Approval: !isApproved,
+          needsSignature: shouldRequestSignature,
+        }
       } else if (!isApproved) {
-        return { token, state: AllowanceState.REQUIRED, isApprovalLoading, approveAndPermit }
+        return {
+          token,
+          state: AllowanceState.REQUIRED,
+          isApprovalLoading,
+          approveAndPermit,
+          approve,
+          permit,
+          needsPermit2Approval: true,
+          needsSignature: shouldRequestSignature,
+        }
       }
     }
-    return { token, state: AllowanceState.ALLOWED, permitSignature: !isPermitted && isSigned ? signature : undefined }
+    return {
+      token,
+      state: AllowanceState.ALLOWED,
+      permitSignature: !isPermitted && isSigned ? signature : undefined,
+      needsPermit2Approval: false,
+      needsSignature: false,
+    }
   }, [
+    approve,
     approveAndPermit,
     isApprovalLoading,
     isApproved,
     isPermitted,
     isSigned,
+    permit,
     permitAllowance,
+    shouldRequestSignature,
     signature,
     token,
     tokenAllowance,
