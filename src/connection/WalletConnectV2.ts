@@ -1,6 +1,7 @@
 import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { WalletConnect, WalletConnectConstructorArgs } from '@web3-react/walletconnect-v2'
 import { SupportedChainId } from 'constants/chains'
+import { Z_INDEX } from 'theme/zIndex'
 
 import { RPC_URLS } from '../constants/networks'
 
@@ -33,6 +34,7 @@ export class WalletConnectV2Popup extends WalletConnect {
     //    metadata?: Metadata;
     //    showQrModal: boolean;
     //    qrModalOptions?: QrModalOptions;
+    const darkmode = Boolean(window.matchMedia('(prefers-color-scheme: dark)'))
     super({
       actions,
       options: {
@@ -41,6 +43,13 @@ export class WalletConnectV2Popup extends WalletConnect {
         chains: [SupportedChainId.MAINNET],
         showQrModal: qrcode,
         rpcMap: RPC_URLS_WITHOUT_FALLBACKS,
+        qrModalOptions: {
+          themeMode: darkmode ? 'dark' : 'light',
+          themeVariables: {
+            '--w3m-font-family': '"Inter custom", sans-serif',
+            '--w3m-z-index': Z_INDEX.modal.toString(),
+          },
+        },
       },
       onError,
     })
