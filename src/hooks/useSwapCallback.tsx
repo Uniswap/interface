@@ -30,26 +30,24 @@ export function useSwapCallback(
 
   const callback = useMemo(() => {
     if (!trade || !swapCallback) return null
-    const info: TransactionInfo =
-      trade.tradeType === TradeType.EXACT_INPUT
+    const info: TransactionInfo = {
+      type: TransactionType.SWAP,
+      inputCurrencyId: currencyId(trade.inputAmount.currency),
+      outputCurrencyId: currencyId(trade.outputAmount.currency),
+      ...(trade.tradeType === TradeType.EXACT_INPUT
         ? {
-            type: TransactionType.SWAP,
             tradeType: TradeType.EXACT_INPUT,
-            inputCurrencyId: currencyId(trade.inputAmount.currency),
             inputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
             expectedOutputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
-            outputCurrencyId: currencyId(trade.outputAmount.currency),
             minimumOutputCurrencyAmountRaw: trade.minimumAmountOut(allowedSlippage).quotient.toString(),
           }
         : {
-            type: TransactionType.SWAP,
             tradeType: TradeType.EXACT_OUTPUT,
-            inputCurrencyId: currencyId(trade.inputAmount.currency),
             maximumInputCurrencyAmountRaw: trade.maximumAmountIn(allowedSlippage).quotient.toString(),
-            outputCurrencyId: currencyId(trade.outputAmount.currency),
             outputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
             expectedInputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
-          }
+          }),
+    }
     return () =>
       swapCallback().then((response) => {
         addTransaction(response, info, deadline?.toNumber())
