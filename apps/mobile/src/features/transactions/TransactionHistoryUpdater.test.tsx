@@ -111,6 +111,22 @@ describe(TransactionHistoryUpdater, () => {
     MockDate.reset()
   })
 
+  it('skips rendering when no accounts available', () => {
+    const reduxState = {
+      wallet: {
+        ...walletSlice,
+        accounts: {},
+      },
+    }
+
+    const tree = render(<TransactionHistoryUpdater />, {
+      mocks: [mock],
+      preloadedState: reduxState,
+    })
+
+    expect(tree.toJSON()).toEqual(null)
+  })
+
   it('updates notification status when there are new transactions', async () => {
     const reduxState = {
       wallet: walletSlice,
