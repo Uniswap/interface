@@ -46,5 +46,9 @@ export const DataPageTable = ({ asset }: { asset: GenieAsset }) => {
       ]),
     [asset]
   )
-  return <TabbedComponent tabs={TableTabs} />
+  return <TabbedComponent tabs={TableTabs} RightButton={TimePeriodSwitcher} />
+}
+
+const TimePeriodSwitcher = () => {
+  return <div>Switcher</div>
 }
