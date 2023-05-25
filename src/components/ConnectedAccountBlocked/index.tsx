@@ -14,7 +14,7 @@ const ContentWrapper = styled(Column)`
   font-size: 12px;
 `
 interface ConnectedAccountBlockedProps {
-  account: string | null | undefined
+  account?: string | null
   isOpen: boolean
 }
 
