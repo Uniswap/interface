@@ -1,5 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { formatNumber } from '@uniswap/conedison/format'
+import { useWeb3React } from '@web3-react/core'
+import { useAccountDrawer } from 'components/AccountDrawer'
 import { ButtonPrimary } from 'components/Button'
 import { ButtonGray } from 'components/Button'
 import Loader from 'components/Icons/LoadingSpinner'
@@ -9,7 +11,7 @@ import { useBag } from 'nft/hooks'
 import { useBuyAssetCallback } from 'nft/hooks/useFetchAssets'
 import { useIsAssetInBag } from 'nft/hooks/useIsAssetInBag'
 import { GenieAsset } from 'nft/types'
-import { MouseEvent, useState } from 'react'
+import { MouseEvent, useCallback, useState } from 'react'
 import styled, { css } from 'styled-components/macro'
 import { BREAKPOINTS } from 'theme'
 import { shallow } from 'zustand/shallow'
@@ -84,7 +86,11 @@ const Price = styled.div`
 `
 
 export const BuyButton = ({ asset, onDataPage }: { asset: GenieAsset; onDataPage?: boolean }) => {
+  const { account } = useWeb3React()
+  const [accountDrawerOpen, toggleWalletDrawer] = useAccountDrawer()
   const { fetchAndPurchaseSingleAsset, isLoading: isLoadingRoute } = useBuyAssetCallback()
+  const [wishBuyAsset, setWishBuyAsset] = useState(false)
+
   const { addAssetsToBag, removeAssetsFromBag } = useBag(
     ({ addAssetsToBag, removeAssetsFromBag }) => ({
       addAssetsToBag,
@@ -92,6 +98,16 @@ export const BuyButton = ({ asset, onDataPage }: { asset: GenieAsset; onDataPage
     }),
     shallow
   )
+
+  const oneClickBuyAsset = useCallback(() => {
+    if (!account) {
+      if (!accountDrawerOpen) toggleWalletDrawer()
+      setWishBuyAsset(true)
+      return
+    }
+
+    fetchAndPurchaseSingleAsset(asset)
+  }, [account, accountDrawerOpen, asset, fetchAndPurchaseSingleAsset, toggleWalletDrawer])
 
   const [addToBagExpanded, setAddToBagExpanded] = useState(false)
   const assetInBag = useIsAssetInBag(asset)
@@ -122,8 +138,8 @@ export const BuyButton = ({ asset, onDataPage }: { asset: GenieAsset; onDataPage
     <ButtonContainer>
       <StyledBuyButton
         shouldHide={addToBagExpanded}
-        disabled={isLoadingRoute}
-        onClick={() => fetchAndPurchaseSingleAsset(asset)}
+        disabled={isLoadingRoute || wishBuyAsset}
+        onClick={() => oneClickBuyAsset()}
       >
         {isLoadingRoute ? (
           <>
