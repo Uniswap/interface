@@ -4,11 +4,14 @@ import { ButtonPrimary } from 'components/Button'
 import { ButtonGray } from 'components/Button'
 import Loader from 'components/Icons/LoadingSpinner'
 import Row from 'components/Row'
-import { AddToBagIcon } from 'nft/components/icons'
+import { AddToBagIcon, CondensedBagIcon } from 'nft/components/icons'
 import { useBag } from 'nft/hooks'
 import { useBuyAssetCallback } from 'nft/hooks/useFetchAssets'
 import { GenieAsset } from 'nft/types'
+import { MouseEvent, useMemo, useState } from 'react'
 import styled, { css } from 'styled-components/macro'
+import { BREAKPOINTS } from 'theme'
+import { shallow } from 'zustand/shallow'
 
 const ButtonStyles = css`
   padding: 16px;
@@ -27,25 +30,45 @@ const BaseButton = styled(ButtonPrimary)`
   ${ButtonStyles}
 `
 
+const ButtonSeparator = styled.div<{ shouldHide: boolean }>`
+  height: 24px;
+  width: 0px;
+  border-left: 0.5px solid #f5f6fc;
+
+  ${({ shouldHide }) => shouldHide && `display: none;`}
+`
+
+const AddToBagButton = styled(BaseButton)<{ isExpanded: boolean }>`
+  width: ${({ isExpanded }) => (isExpanded ? '100%' : 'min-content')};
+  transition: ${({ theme }) => theme.transition.duration.medium};
+  flex-shrink: 0;
+  will-change: width;
+`
+
+const StyledBuyButton = styled(BaseButton)<{ shouldHide: boolean }>`
+  min-width: 0px;
+  transition: ${({ theme }) => theme.transition.duration.medium};
+  will-change: width;
+  overflow: hidden;
+
+  ${({ shouldHide }) =>
+    shouldHide &&
+    css`
+      width: 0px;
+      padding: 0px;
+    `}
+`
+
 const ButtonContainer = styled(Row)`
-  width: 320px;
+  width: 100%;
   background-color: ${({ theme }) => theme.accentAction};
   border-radius: 16px;
   overflow: hidden;
   white-space: nowrap;
-`
 
-const ButtonSeparator = styled.div`
-  height: 24px;
-  width: 0px;
-  border-left: 0.5px solid #f5f6fc;
-`
-
-const StyledBuyButton = styled(BaseButton)``
-
-const AddToBagButton = styled(BaseButton)`
-  width: min-content;
-  flex-shrink: 0;
+  @media screen and (min-width: ${BREAKPOINTS.sm}px) {
+    width: 320px;
+  }
 `
 
 const NotAvailableButton = styled(ButtonGray)`
@@ -60,8 +83,29 @@ const Price = styled.div`
 `
 
 export const BuyButton = ({ asset, onDataPage }: { asset: GenieAsset; onDataPage?: boolean }) => {
-  const addAssetsToBag = useBag((state) => state.addAssetsToBag)
   const { fetchAndPurchaseSingleAsset, isLoading: isLoadingRoute } = useBuyAssetCallback()
+  const { addAssetsToBag, itemsInBag, removeAssetsFromBag } = useBag(
+    ({ addAssetsToBag, itemsInBag, removeAssetsFromBag }) => ({
+      addAssetsToBag,
+      itemsInBag,
+      removeAssetsFromBag,
+    }),
+    shallow
+  )
+
+  const [addToBagExpanded, setAddToBagExpanded] = useState(false)
+  const assetInBag = useMemo(() => {
+    return itemsInBag.some((item) => asset.tokenId === item.asset.tokenId && asset.address === item.asset.address)
+  }, [asset, itemsInBag])
+
+  const secondaryButtonCta = assetInBag ? 'Remove from Bag' : 'Add to Bag'
+  const secondaryButtonAction = (event: MouseEvent<HTMLButtonElement>) => {
+    assetInBag ? removeAssetsFromBag([asset]) : addAssetsToBag([asset])
+    event.currentTarget.blur()
+  }
+  const SecondaryButtonIcon = () =>
+    assetInBag ? <CondensedBagIcon width="24px" height="24px" /> : <AddToBagIcon width="24px" height="24px" />
+
   const price = asset.sellorders?.[0]?.price.value
 
   if (!price) {
@@ -78,7 +122,11 @@ export const BuyButton = ({ asset, onDataPage }: { asset: GenieAsset; onDataPage
 
   return (
     <ButtonContainer>
-      <StyledBuyButton disabled={isLoadingRoute} onClick={() => fetchAndPurchaseSingleAsset(asset)}>
+      <StyledBuyButton
+        shouldHide={addToBagExpanded}
+        disabled={isLoadingRoute}
+        onClick={() => fetchAndPurchaseSingleAsset(asset)}
+      >
         {isLoadingRoute ? (
           <>
             <Trans>Fetching Route</Trans>
@@ -91,9 +139,15 @@ export const BuyButton = ({ asset, onDataPage }: { asset: GenieAsset; onDataPage
           </>
         )}
       </StyledBuyButton>
-      <ButtonSeparator />
-      <AddToBagButton onClick={() => addAssetsToBag([asset])}>
-        <AddToBagIcon width="24px" height="24px" />
+      <ButtonSeparator shouldHide={addToBagExpanded} />
+      <AddToBagButton
+        onMouseEnter={() => setAddToBagExpanded(true)}
+        onMouseLeave={() => setAddToBagExpanded(false)}
+        onClick={secondaryButtonAction}
+        isExpanded={addToBagExpanded}
+      >
+        <SecondaryButtonIcon />
+        {addToBagExpanded && secondaryButtonCta}
       </AddToBagButton>
     </ButtonContainer>
   )
