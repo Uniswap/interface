@@ -87,11 +87,11 @@ function useRelevantToken(
 }
 
 type TokenDetailsProps = {
-  urlAddress: string | undefined
+  urlAddress?: string
   inputTokenAddress?: string
   chain: Chain
   tokenQuery: TokenQuery
-  tokenPriceQuery: TokenPriceQuery | undefined
+  tokenPriceQuery?: TokenPriceQuery
   onChangeTimePeriod: OnChangeTimePeriod
 }
 export default function TokenDetails({

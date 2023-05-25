@@ -37,7 +37,7 @@ const ConfirmedIcon = styled(ColumnCenter)`
 interface QueueModalProps {
   isOpen: boolean
   onDismiss: () => void
-  proposalId: string | undefined // id for the proposal to queue
+  proposalId?: string // id for the proposal to queue
 }
 
 export default function QueueModal({ isOpen, onDismiss, proposalId }: QueueModalProps) {

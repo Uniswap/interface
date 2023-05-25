@@ -58,12 +58,12 @@ export default function SwapModalFooter({
   onAcceptChanges,
 }: {
   trade: InterfaceTrade
-  hash: string | undefined
+  hash?: string
   allowedSlippage: Percent
   onConfirm: () => void
-  swapErrorMessage: ReactNode | undefined
+  swapErrorMessage?: ReactNode
   disabledConfirm: boolean
-  swapQuoteReceivedDate: Date | undefined
+  swapQuoteReceivedDate?: Date
   fiatValueInput: { data?: number; isLoading: boolean }
   fiatValueOutput: { data?: number; isLoading: boolean }
   showAcceptChanges: boolean

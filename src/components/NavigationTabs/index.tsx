@@ -21,7 +21,7 @@ const Tabs = styled.div`
   justify-content: space-evenly;
 `
 
-const StyledHistoryLink = styled(HistoryLink)<{ flex: string | undefined }>`
+const StyledHistoryLink = styled(HistoryLink)<{ flex?: string }>`
   flex: ${({ flex }) => flex ?? 'none'};
 
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
@@ -64,9 +64,9 @@ export function AddRemoveTabs({
   adding: boolean
   creating: boolean
   autoSlippage: Percent
-  positionID?: string | undefined
+  positionID?: string
   showBackLink?: boolean
-  children?: ReactNode | undefined
+  children?: ReactNode
 }) {
   const theme = useTheme()
   // reset states on back

@@ -79,8 +79,8 @@ interface StepCounterProps {
   width?: string
   locked?: boolean // disable input
   title: ReactNode
-  tokenA: string | undefined
-  tokenB: string | undefined
+  tokenA?: string
+  tokenB?: string
 }
 
 const StepCounter = ({

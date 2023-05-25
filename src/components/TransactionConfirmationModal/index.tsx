@@ -93,9 +93,9 @@ function TransactionSubmittedContent({
   inline,
 }: {
   onDismiss: () => void
-  hash: string | undefined
+  hash?: string
   chainId: number
-  currencyToAdd?: Currency | undefined
+  currencyToAdd?: Currency
   inline?: boolean // not in modal
 }) {
   const theme = useTheme()
@@ -203,9 +203,9 @@ function L2Content({
   inline,
 }: {
   onDismiss: () => void
-  hash: string | undefined
+  hash?: string
   chainId: SupportedL2ChainId
-  currencyToAdd?: Currency | undefined
+  currencyToAdd?: Currency
   pendingText: ReactNode
   inline?: boolean // not in modal
 }) {
@@ -298,11 +298,11 @@ function L2Content({
 interface ConfirmationModalProps {
   isOpen: boolean
   onDismiss: () => void
-  hash: string | undefined
+  hash?: string
   reviewContent: () => ReactNode
   attemptingTxn: boolean
   pendingText: ReactNode
-  currencyToAdd?: Currency | undefined
+  currencyToAdd?: Currency
 }
 
 export default function TransactionConfirmationModal({
