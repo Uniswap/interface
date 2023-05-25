@@ -94,7 +94,7 @@ const RaisedCurrencyLogo = styled(CurrencyLogo)`
   z-index: 1;
 `
 
-export function CurrencyLoader({ currency, asBadge = false }: { currency: Currency | undefined; asBadge?: boolean }) {
+export function CurrencyLoader({ currency, asBadge = false }: { currency?: Currency; asBadge?: boolean }) {
   return (
     <CurrencyLoaderContainer asBadge={asBadge} data-testid={`pending-modal-currency-logo-${currency?.symbol}`}>
       <RaisedCurrencyLogo currency={currency} size="100%" />
