@@ -46,7 +46,7 @@ msgstr "({0})"
 
 #: src/nft/components/profile/view/EmptyWalletContent.tsx
 msgid "+ New position"
-msgstr "+ 新职位"
+msgstr "+ 新倉位"
 
 #: src/pages/Swap/index.tsx
 msgid "- Remove recipient"
@@ -128,7 +128,7 @@ msgstr "提交提案所需的最低门槛为 UNI 总供应量的 0.25%"
 
 #: src/components/swap/PriceImpactWarning.tsx
 msgid "A swap of this size may have a high price impact, given the current liquidity in the pool. There may be a large difference between the amount of your input token and what you will receive in the output token"
-msgstr "鉴于池中当前的流动性，这种规模的互换可能会对价格产生很大影响。您输入的令牌数量与您将在输出令牌中收到的数量之间可能存在很大差异"
+msgstr "鉴于池中当前的流动性，这种规模的互换可能会对价格产生很大影响。您输入的代币数量与您将在输出代币中收到的数量之间可能存在很大差异"
 
 #: src/components/Tokens/TokenDetails/About.tsx
 msgid "About"
@@ -262,11 +262,11 @@ msgstr "数额"
 
 #: src/nft/components/bag/BagFooter.tsx
 msgid "An approval is needed to use this token."
-msgstr "使用此令牌需要获得批准。"
+msgstr "使用此代币需要获得批准。"
 
 #: src/components/Tokens/TokenTable/TokenTable.tsx
 msgid "An error occurred loading tokens. Please try again."
-msgstr "加载令牌时发生错误。请再试一次。"
+msgstr "加载代币时发生错误。请再试一次。"
 
 #: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
@@ -409,7 +409,7 @@ msgstr "买"
 
 #: src/components/AccountDrawer/MiniPortfolio/constants.ts
 msgid "Burn failed"
-msgstr "刻录失败"
+msgstr "销毁失败"
 
 #: src/components/AccountDrawer/MiniPortfolio/constants.ts
 msgid "Burned"
@@ -417,7 +417,7 @@ msgstr "被烧毁"
 
 #: src/components/AccountDrawer/MiniPortfolio/constants.ts
 msgid "Burning"
-msgstr "燃烧"
+msgstr "销毁"
 
 #: src/components/swap/SwapBuyFiatButton.tsx
 #: src/nft/components/details/detailsV2/BuyButton.tsx
@@ -519,7 +519,7 @@ msgstr "领取 Uniswap NFT 空投"
 
 #: src/components/AccountDrawer/MiniPortfolio/constants.ts
 msgid "Claim failed"
-msgstr "索赔失败"
+msgstr "领取失败"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Claim fees"
@@ -1554,7 +1554,7 @@ msgstr "没有可用的代币信息"
 
 #: src/components/Tokens/TokenTable/TokenTable.tsx
 msgid "No tokens found"
-msgstr "未找到令牌"
+msgstr "未找到代币"
 
 #: src/components/NavBar/SearchBarDropdown.tsx
 msgid "No tokens found."
@@ -1704,7 +1704,7 @@ msgstr "热门代币"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Position unavailable"
-msgstr "职位空缺"
+msgstr "倉位空缺"
 
 #: src/components/AccountDrawer/SettingsMenu.tsx
 msgid "Preferences"
@@ -2437,7 +2437,7 @@ msgstr "此表包含 Uniswap 交易量排名靠前的代币，并根据您的输
 
 #: src/components/Tokens/TokenDetails/InvalidTokenDetails.tsx
 msgid "This token doesn't exist"
-msgstr "此令牌不存在"
+msgstr "此代币不存在"
 
 #: src/components/Tokens/TokenDetails/InvalidTokenDetails.tsx
 msgid "This token doesn't exist on {0}"
@@ -2488,7 +2488,7 @@ msgstr "要在 {0}上使用 Uniswap，请在钱包设置中切换网络。"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "To view a position, you must be connected to the network it belongs to."
-msgstr "要查看职位，您必须连接到它所属的网络。"
+msgstr "要查看倉位，您必须连接到它所属的网络。"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/index.tsx
 msgid "Today"
@@ -2500,7 +2500,7 @@ msgstr "代币名称"
 
 #: src/components/TokenSafety/index.tsx
 msgid "Token not found"
-msgstr "未找到令牌"
+msgstr "未找到代币"
 
 #: src/components/Tokens/TokenDetails/StatsSection.tsx
 msgid "Token stats and charts for {label} are available on <0>info.uniswap.org</0>"
@@ -2956,7 +2956,7 @@ msgstr "您正在创建一个流动池"
 
 #: src/components/addLiquidity/OwnershipWarning.tsx
 msgid "You are not the owner of this LP position. You will not be able to withdraw the liquidity from this position unless you own the following address: {ownerAddress}"
-msgstr "您不是此 LP 职位的所有者。除非您拥有以下地址，否则您将无法从此头寸提取流动性： {ownerAddress}"
+msgstr "您不是此 LP 倉位的所有者。除非您拥有以下地址，否则您将无法从此头寸提取流动性： {ownerAddress}"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You are the first liquidity provider for this Uniswap V3 pool. Your liquidity will migrate at the current {0} price."
