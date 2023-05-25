@@ -79,7 +79,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
             ]
           }
         >
-          Back up your recovery phrase
+          Choose a backup for your wallet
         </Text>
         <View
           style={
@@ -109,7 +109,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
             ]
           }
         >
-          Your recovery phrase is the key to your wallet. Back it up so you can restore your wallet if you lose or damage your device.
+          Remember, backups are your lifeline. They're your ticket back in if something goes wrong.
         </Text>
       </View>
       <View
@@ -146,7 +146,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                 "display": "flex",
                 "flexDirection": "column",
                 "flexGrow": 1,
-                "justifyContent": "flex-start",
+                "justifyContent": "space-between",
               },
             ]
           }
@@ -164,159 +164,169 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
             }
           >
             <View
-              style={
-                [
-                  {
-                    "alignItems": "center",
-                    "display": "flex",
-                    "flexDirection": "row",
-                    "justifyContent": "flex-start",
-                    "paddingVertical": 16,
-                  },
-                ]
+              accessible={true}
+              collapsable={false}
+              focusable={true}
+              hitSlop={
+                {
+                  "bottom": 5,
+                  "left": 5,
+                  "right": 5,
+                  "top": 5,
+                }
               }
+              onClick={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              style={
+                {
+                  "backgroundColor": "#FFFFFF",
+                  "borderColor": "#D2D9EE80",
+                  "borderRadius": 20,
+                  "borderWidth": 1,
+                  "display": "flex",
+                  "opacity": 1,
+                  "padding": 16,
+                }
+              }
+              testID="add-icloud-backup"
             >
               <View
                 style={
                   [
                     {
+                      "alignContent": "center",
                       "alignItems": "center",
-                      "borderColor": "#FC72FF",
-                      "borderRadius": 12,
-                      "borderWidth": 1.25,
                       "display": "flex",
-                      "flexDirection": "column",
-                      "height": 40,
-                      "justifyContent": "center",
-                      "padding": 16,
-                      "width": 40,
-                    },
-                  ]
-                }
-              >
-                <svg
-                  color="#0E1524"
-                  data-file-name="SvgCloud"
-                  height={24}
-                  strokeWidth={1.5}
-                  width={24}
-                />
-              </View>
-              <View
-                style={
-                  [
-                    {
-                      "display": "flex",
-                      "flexGrow": 0,
-                      "flexShrink": 0,
-                      "height": 16,
-                      "width": 16,
-                    },
-                  ]
-                }
-              />
-              <Text
-                allowFontScaling={true}
-                maxFontSizeMultiplier={1.4}
-                style={
-                  [
-                    {
-                      "color": "#0E1524",
-                      "display": "flex",
-                      "fontFamily": "Inter-Medium",
-                      "fontSize": 17,
-                      "lineHeight": 24,
-                    },
-                  ]
-                }
-              >
-                iCloud backup
-              </Text>
-              <View
-                style={
-                  [
-                    {
-                      "display": "flex",
-                      "flexGrow": 0,
-                      "flexShrink": 0,
-                      "height": 16,
-                      "width": 16,
-                    },
-                  ]
-                }
-              />
-              <View
-                style={
-                  [
-                    {
-                      "alignItems": "flex-end",
-                      "display": "flex",
-                      "flexDirection": "column",
-                      "flexGrow": 1,
+                      "flexDirection": "row",
                       "justifyContent": "flex-start",
                     },
                   ]
                 }
               >
                 <View
-                  accessible={true}
-                  collapsable={false}
-                  focusable={true}
-                  hitSlop={
-                    {
-                      "bottom": 5,
-                      "left": 5,
-                      "right": 5,
-                      "top": 5,
-                    }
-                  }
-                  onClick={[Function]}
-                  onResponderGrant={[Function]}
-                  onResponderMove={[Function]}
-                  onResponderRelease={[Function]}
-                  onResponderTerminate={[Function]}
-                  onResponderTerminationRequest={[Function]}
-                  onStartShouldSetResponder={[Function]}
                   style={
-                    {
-                      "backgroundColor": "#FC72FF1f",
-                      "borderRadius": 999999,
-                      "display": "flex",
-                      "opacity": 1,
-                      "padding": 12,
-                    }
+                    [
+                      {
+                        "alignItems": "center",
+                        "backgroundColor": "#FC72FF1f",
+                        "borderRadius": 999999,
+                        "display": "flex",
+                        "height": 36,
+                        "justifyContent": "center",
+                        "padding": 16,
+                        "width": 36,
+                      },
+                    ]
                   }
-                  testID="add-icloud-backup"
+                >
+                  <svg
+                    color="#FC72FF"
+                    data-file-name="SvgCloud"
+                    height={16}
+                  />
+                </View>
+                <View
+                  style={
+                    [
+                      {
+                        "display": "flex",
+                        "flexGrow": 0,
+                        "flexShrink": 0,
+                        "height": 16,
+                        "width": 16,
+                      },
+                    ]
+                  }
+                />
+                <View
+                  style={
+                    [
+                      {
+                        "alignItems": "center",
+                        "display": "flex",
+                        "flexDirection": "row",
+                        "justifyContent": "flex-start",
+                        "paddingRight": 60,
+                      },
+                    ]
+                  }
                 >
                   <View
                     style={
                       [
                         {
-                          "alignItems": "stretch",
+                          "alignItems": "flex-start",
                           "display": "flex",
-                          "flexDirection": "row",
-                          "justifyContent": "flex-start",
+                          "flex": 1,
+                          "flexDirection": "column",
+                          "justifyContent": "space-around",
                         },
                       ]
                     }
                   >
-                    <Text
-                      allowFontScaling={true}
-                      maxFontSizeMultiplier={1.2}
+                    <View
                       style={
                         [
                           {
-                            "color": "#FC72FF",
+                            "alignItems": "stretch",
                             "display": "flex",
-                            "fontFamily": "Inter-SemiBold",
-                            "fontSize": 12,
-                            "lineHeight": 17,
+                            "flexDirection": "row",
+                            "justifyContent": "flex-start",
                           },
                         ]
                       }
                     >
-                      + 
-                      ADD
+                      <Text
+                        allowFontScaling={false}
+                        maxFontSizeMultiplier={1.4}
+                        style={
+                          [
+                            {
+                              "color": "#0E1524",
+                              "display": "flex",
+                              "fontFamily": "Inter-Medium",
+                              "fontSize": 17,
+                              "lineHeight": 24,
+                            },
+                          ]
+                        }
+                      >
+                        Backup with iCloud
+                      </Text>
+                    </View>
+                    <View
+                      style={
+                        [
+                          {
+                            "display": "flex",
+                            "flexGrow": 0,
+                            "flexShrink": 0,
+                            "height": 4,
+                          },
+                        ]
+                      }
+                    />
+                    <Text
+                      allowFontScaling={false}
+                      maxFontSizeMultiplier={1.4}
+                      style={
+                        [
+                          {
+                            "color": "#5D6785",
+                            "display": "flex",
+                            "fontFamily": "Inter-Regular",
+                            "fontSize": 15,
+                            "lineHeight": 20,
+                          },
+                        ]
+                      }
+                    >
+                      Safe, simple, and all you need to save is your password.
                     </Text>
                   </View>
                 </View>
@@ -326,275 +336,182 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
               style={
                 [
                   {
-                    "borderBottomColor": "#D2D9EE",
-                    "borderBottomWidth": 0.5,
                     "display": "flex",
                     "flexGrow": 0,
                     "flexShrink": 0,
-                    "height": 0,
+                    "height": 12,
                   },
                 ]
               }
             />
             <View
-              style={
-                [
-                  {
-                    "alignItems": "center",
-                    "display": "flex",
-                    "flexDirection": "row",
-                    "justifyContent": "flex-start",
-                    "paddingVertical": 16,
-                  },
-                ]
+              accessible={true}
+              collapsable={false}
+              focusable={true}
+              hitSlop={
+                {
+                  "bottom": 5,
+                  "left": 5,
+                  "right": 5,
+                  "top": 5,
+                }
               }
+              onClick={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              style={
+                {
+                  "backgroundColor": "#FFFFFF",
+                  "borderColor": "#D2D9EE80",
+                  "borderRadius": 20,
+                  "borderWidth": 1,
+                  "display": "flex",
+                  "opacity": 1,
+                  "padding": 16,
+                }
+              }
+              testID="add-manual-backup"
             >
               <View
                 style={
                   [
                     {
+                      "alignContent": "center",
                       "alignItems": "center",
-                      "borderColor": "#FC72FF",
-                      "borderRadius": 12,
-                      "borderWidth": 1.25,
                       "display": "flex",
-                      "flexDirection": "column",
-                      "height": 40,
-                      "justifyContent": "center",
-                      "padding": 16,
-                      "width": 40,
-                    },
-                  ]
-                }
-              >
-                <svg
-                  color="#0E1524"
-                  data-file-name="SvgPencil"
-                  height={24}
-                  strokeWidth={1.5}
-                  width={24}
-                />
-              </View>
-              <View
-                style={
-                  [
-                    {
-                      "display": "flex",
-                      "flexGrow": 0,
-                      "flexShrink": 0,
-                      "height": 16,
-                      "width": 16,
-                    },
-                  ]
-                }
-              />
-              <Text
-                allowFontScaling={true}
-                maxFontSizeMultiplier={1.4}
-                style={
-                  [
-                    {
-                      "color": "#0E1524",
-                      "display": "flex",
-                      "fontFamily": "Inter-Medium",
-                      "fontSize": 17,
-                      "lineHeight": 24,
-                    },
-                  ]
-                }
-              >
-                Manual backup
-              </Text>
-              <View
-                style={
-                  [
-                    {
-                      "display": "flex",
-                      "flexGrow": 0,
-                      "flexShrink": 0,
-                      "height": 16,
-                      "width": 16,
-                    },
-                  ]
-                }
-              />
-              <View
-                style={
-                  [
-                    {
-                      "alignItems": "flex-end",
-                      "display": "flex",
-                      "flexDirection": "column",
-                      "flexGrow": 1,
+                      "flexDirection": "row",
                       "justifyContent": "flex-start",
                     },
                   ]
                 }
               >
                 <View
-                  accessible={true}
-                  collapsable={false}
-                  focusable={true}
-                  hitSlop={
-                    {
-                      "bottom": 5,
-                      "left": 5,
-                      "right": 5,
-                      "top": 5,
-                    }
-                  }
-                  onClick={[Function]}
-                  onResponderGrant={[Function]}
-                  onResponderMove={[Function]}
-                  onResponderRelease={[Function]}
-                  onResponderTerminate={[Function]}
-                  onResponderTerminationRequest={[Function]}
-                  onStartShouldSetResponder={[Function]}
                   style={
-                    {
-                      "backgroundColor": "#FC72FF1f",
-                      "borderRadius": 999999,
-                      "display": "flex",
-                      "opacity": 1,
-                      "padding": 12,
-                    }
+                    [
+                      {
+                        "alignItems": "center",
+                        "backgroundColor": "#FC72FF1f",
+                        "borderRadius": 999999,
+                        "display": "flex",
+                        "height": 36,
+                        "justifyContent": "center",
+                        "padding": 16,
+                        "width": 36,
+                      },
+                    ]
                   }
-                  testID="add-manual-backup"
+                >
+                  <svg
+                    color="#FC72FF"
+                    data-file-name="SvgPaperStack"
+                    height={16}
+                  />
+                </View>
+                <View
+                  style={
+                    [
+                      {
+                        "display": "flex",
+                        "flexGrow": 0,
+                        "flexShrink": 0,
+                        "height": 16,
+                        "width": 16,
+                      },
+                    ]
+                  }
+                />
+                <View
+                  style={
+                    [
+                      {
+                        "alignItems": "center",
+                        "display": "flex",
+                        "flexDirection": "row",
+                        "justifyContent": "flex-start",
+                        "paddingRight": 60,
+                      },
+                    ]
+                  }
                 >
                   <View
                     style={
                       [
                         {
-                          "alignItems": "stretch",
+                          "alignItems": "flex-start",
                           "display": "flex",
-                          "flexDirection": "row",
-                          "justifyContent": "flex-start",
+                          "flex": 1,
+                          "flexDirection": "column",
+                          "justifyContent": "space-around",
                         },
                       ]
                     }
                   >
-                    <Text
-                      allowFontScaling={true}
-                      maxFontSizeMultiplier={1.2}
+                    <View
                       style={
                         [
                           {
-                            "color": "#FC72FF",
+                            "alignItems": "stretch",
                             "display": "flex",
-                            "fontFamily": "Inter-SemiBold",
-                            "fontSize": 12,
-                            "lineHeight": 17,
+                            "flexDirection": "row",
+                            "justifyContent": "flex-start",
                           },
                         ]
                       }
                     >
-                      + 
-                      ADD
+                      <Text
+                        allowFontScaling={false}
+                        maxFontSizeMultiplier={1.4}
+                        style={
+                          [
+                            {
+                              "color": "#0E1524",
+                              "display": "flex",
+                              "fontFamily": "Inter-Medium",
+                              "fontSize": 17,
+                              "lineHeight": 24,
+                            },
+                          ]
+                        }
+                      >
+                        Backup with recovery phrase
+                      </Text>
+                    </View>
+                    <View
+                      style={
+                        [
+                          {
+                            "display": "flex",
+                            "flexGrow": 0,
+                            "flexShrink": 0,
+                            "height": 4,
+                          },
+                        ]
+                      }
+                    />
+                    <Text
+                      allowFontScaling={false}
+                      maxFontSizeMultiplier={1.4}
+                      style={
+                        [
+                          {
+                            "color": "#5D6785",
+                            "display": "flex",
+                            "fontFamily": "Inter-Regular",
+                            "fontSize": 15,
+                            "lineHeight": 20,
+                          },
+                        ]
+                      }
+                    >
+                      Top-notch security with no third parties. You're in control.
                     </Text>
                   </View>
                 </View>
               </View>
-            </View>
-          </View>
-          <View
-            style={
-              [
-                {
-                  "display": "flex",
-                  "flexGrow": 0,
-                  "flexShrink": 0,
-                  "height": 16,
-                },
-              ]
-            }
-          />
-          <View
-            accessible={true}
-            collapsable={false}
-            focusable={true}
-            hitSlop={
-              {
-                "bottom": 5,
-                "left": 5,
-                "right": 5,
-                "top": 5,
-              }
-            }
-            onClick={[Function]}
-            onResponderGrant={[Function]}
-            onResponderMove={[Function]}
-            onResponderRelease={[Function]}
-            onResponderTerminate={[Function]}
-            onResponderTerminationRequest={[Function]}
-            onStartShouldSetResponder={[Function]}
-            style={
-              {
-                "alignSelf": "flex-start",
-                "display": "flex",
-                "opacity": 1,
-                "paddingVertical": 0,
-              }
-            }
-          >
-            <View
-              style={
-                [
-                  {
-                    "alignItems": "center",
-                    "display": "flex",
-                    "flexDirection": "row",
-                    "justifyContent": "center",
-                  },
-                ]
-              }
-            >
-              <View
-                style={
-                  [
-                    {
-                      "display": "flex",
-                      "paddingHorizontal": 4,
-                    },
-                  ]
-                }
-              >
-                <svg
-                  color="#5D6785"
-                  data-file-name="SvgInfoCircle"
-                  height={24}
-                  width={24}
-                />
-              </View>
-              <View
-                style={
-                  [
-                    {
-                      "display": "flex",
-                      "flexGrow": 0,
-                      "flexShrink": 0,
-                      "height": 4,
-                      "width": 4,
-                    },
-                  ]
-                }
-              />
-              <Text
-                allowFontScaling={true}
-                maxFontSizeMultiplier={1.4}
-                style={
-                  [
-                    {
-                      "color": "#0E1524",
-                      "display": "flex",
-                      "fontFamily": "Inter-Medium",
-                      "fontSize": 15,
-                      "lineHeight": 20,
-                    },
-                  ]
-                }
-              >
-                What’s a recovery phrase?
-              </Text>
             </View>
           </View>
           <View
@@ -622,6 +539,107 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
               ]
             }
           >
+            <View
+              accessible={true}
+              collapsable={false}
+              focusable={true}
+              hitSlop={
+                {
+                  "bottom": 5,
+                  "left": 5,
+                  "right": 5,
+                  "top": 5,
+                }
+              }
+              onClick={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              style={
+                {
+                  "alignSelf": "center",
+                  "display": "flex",
+                  "opacity": 1,
+                  "paddingVertical": 0,
+                }
+              }
+            >
+              <View
+                style={
+                  [
+                    {
+                      "alignItems": "center",
+                      "display": "flex",
+                      "flexDirection": "row",
+                      "justifyContent": "center",
+                    },
+                  ]
+                }
+              >
+                <View
+                  style={
+                    [
+                      {
+                        "display": "flex",
+                        "paddingHorizontal": 4,
+                      },
+                    ]
+                  }
+                >
+                  <svg
+                    color="#5D6785"
+                    data-file-name="SvgInfoCircle"
+                    height={24}
+                    width={24}
+                  />
+                </View>
+                <View
+                  style={
+                    [
+                      {
+                        "display": "flex",
+                        "flexGrow": 0,
+                        "flexShrink": 0,
+                        "height": 4,
+                        "width": 4,
+                      },
+                    ]
+                  }
+                />
+                <Text
+                  allowFontScaling={true}
+                  maxFontSizeMultiplier={1.4}
+                  style={
+                    [
+                      {
+                        "color": "#0E1524",
+                        "display": "flex",
+                        "fontFamily": "Inter-Medium",
+                        "fontSize": 15,
+                        "lineHeight": 20,
+                      },
+                    ]
+                  }
+                >
+                  Learn about wallet safety and recovery
+                </Text>
+              </View>
+            </View>
+            <View
+              style={
+                [
+                  {
+                    "display": "flex",
+                    "flexGrow": 0,
+                    "flexShrink": 0,
+                    "height": 16,
+                  },
+                ]
+              }
+            />
             <View
               accessibilityState={
                 {
@@ -689,7 +707,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                     ]
                   }
                 >
-                  Add backup to continue
+                  Select backup to continue
                 </Text>
               </View>
             </View>
@@ -780,7 +798,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
             ]
           }
         >
-          Back up your recovery phrase
+          Choose a backup for your wallet
         </Text>
         <View
           style={
@@ -810,7 +828,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
             ]
           }
         >
-          Your recovery phrase is the key to your wallet. Back it up so you can restore your wallet if you lose or damage your device.
+          Remember, backups are your lifeline. They're your ticket back in if something goes wrong.
         </Text>
       </View>
       <View
@@ -847,7 +865,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                 "display": "flex",
                 "flexDirection": "column",
                 "flexGrow": 1,
-                "justifyContent": "flex-start",
+                "justifyContent": "space-between",
               },
             ]
           }
@@ -865,95 +883,45 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
             }
           >
             <View
-              style={
-                [
-                  {
-                    "alignItems": "center",
-                    "display": "flex",
-                    "flexDirection": "row",
-                    "justifyContent": "flex-start",
-                    "paddingVertical": 16,
-                  },
-                ]
+              accessible={true}
+              collapsable={false}
+              focusable={true}
+              hitSlop={
+                {
+                  "bottom": 5,
+                  "left": 5,
+                  "right": 5,
+                  "top": 5,
+                }
               }
+              onClick={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              style={
+                {
+                  "backgroundColor": "#FFFFFF",
+                  "borderColor": "#D2D9EE80",
+                  "borderRadius": 20,
+                  "borderWidth": 1,
+                  "display": "flex",
+                  "opacity": 1,
+                  "padding": 16,
+                }
+              }
+              testID="add-icloud-backup"
             >
               <View
                 style={
                   [
                     {
+                      "alignContent": "center",
                       "alignItems": "center",
-                      "borderColor": "#FC72FF",
-                      "borderRadius": 12,
-                      "borderWidth": 1.25,
                       "display": "flex",
-                      "flexDirection": "column",
-                      "height": 40,
-                      "justifyContent": "center",
-                      "padding": 16,
-                      "width": 40,
-                    },
-                  ]
-                }
-              >
-                <svg
-                  color="#0E1524"
-                  data-file-name="SvgCloud"
-                  height={24}
-                  strokeWidth={1.5}
-                  width={24}
-                />
-              </View>
-              <View
-                style={
-                  [
-                    {
-                      "display": "flex",
-                      "flexGrow": 0,
-                      "flexShrink": 0,
-                      "height": 16,
-                      "width": 16,
-                    },
-                  ]
-                }
-              />
-              <Text
-                allowFontScaling={true}
-                maxFontSizeMultiplier={1.4}
-                style={
-                  [
-                    {
-                      "color": "#0E1524",
-                      "display": "flex",
-                      "fontFamily": "Inter-Medium",
-                      "fontSize": 17,
-                      "lineHeight": 24,
-                    },
-                  ]
-                }
-              >
-                iCloud backup
-              </Text>
-              <View
-                style={
-                  [
-                    {
-                      "display": "flex",
-                      "flexGrow": 0,
-                      "flexShrink": 0,
-                      "height": 16,
-                      "width": 16,
-                    },
-                  ]
-                }
-              />
-              <View
-                style={
-                  [
-                    {
-                      "alignItems": "flex-end",
-                      "display": "flex",
-                      "flexDirection": "column",
-                      "flexGrow": 1,
+                      "flexDirection": "row",
                       "justifyContent": "flex-start",
                     },
                   ]
@@ -964,50 +932,122 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                     [
                       {
                         "alignItems": "center",
+                        "backgroundColor": "#FC72FF1f",
+                        "borderRadius": 999999,
                         "display": "flex",
-                        "flexDirection": "row",
-                        "justifyContent": "flex-start",
+                        "height": 36,
+                        "justifyContent": "center",
+                        "padding": 16,
+                        "width": 36,
                       },
                     ]
                   }
                 >
                   <svg
-                    color="#40B66B"
-                    data-file-name="SvgCheck"
-                    height={24}
-                    width={24}
+                    color="#FC72FF"
+                    data-file-name="SvgCloud"
+                    height={16}
                   />
+                </View>
+                <View
+                  style={
+                    [
+                      {
+                        "display": "flex",
+                        "flexGrow": 0,
+                        "flexShrink": 0,
+                        "height": 16,
+                        "width": 16,
+                      },
+                    ]
+                  }
+                />
+                <View
+                  style={
+                    [
+                      {
+                        "alignItems": "center",
+                        "display": "flex",
+                        "flexDirection": "row",
+                        "justifyContent": "flex-start",
+                        "paddingRight": 60,
+                      },
+                    ]
+                  }
+                >
                   <View
                     style={
                       [
                         {
+                          "alignItems": "flex-start",
                           "display": "flex",
-                          "flexGrow": 0,
-                          "flexShrink": 0,
-                          "height": 4,
-                          "width": 4,
-                        },
-                      ]
-                    }
-                  />
-                  <Text
-                    allowFontScaling={true}
-                    maxFontSizeMultiplier={1.4}
-                    style={
-                      [
-                        {
-                          "color": "#0E1524",
-                          "display": "flex",
-                          "fontFamily": "Inter-Regular",
-                          "fontSize": 12,
-                          "fontWeight": "600",
-                          "lineHeight": 17,
+                          "flex": 1,
+                          "flexDirection": "column",
+                          "justifyContent": "space-around",
                         },
                       ]
                     }
                   >
-                    Completed
-                  </Text>
+                    <View
+                      style={
+                        [
+                          {
+                            "alignItems": "stretch",
+                            "display": "flex",
+                            "flexDirection": "row",
+                            "justifyContent": "flex-start",
+                          },
+                        ]
+                      }
+                    >
+                      <Text
+                        allowFontScaling={false}
+                        maxFontSizeMultiplier={1.4}
+                        style={
+                          [
+                            {
+                              "color": "#0E1524",
+                              "display": "flex",
+                              "fontFamily": "Inter-Medium",
+                              "fontSize": 17,
+                              "lineHeight": 24,
+                            },
+                          ]
+                        }
+                      >
+                        Backup with iCloud
+                      </Text>
+                    </View>
+                    <View
+                      style={
+                        [
+                          {
+                            "display": "flex",
+                            "flexGrow": 0,
+                            "flexShrink": 0,
+                            "height": 4,
+                          },
+                        ]
+                      }
+                    />
+                    <Text
+                      allowFontScaling={false}
+                      maxFontSizeMultiplier={1.4}
+                      style={
+                        [
+                          {
+                            "color": "#5D6785",
+                            "display": "flex",
+                            "fontFamily": "Inter-Regular",
+                            "fontSize": 15,
+                            "lineHeight": 20,
+                          },
+                        ]
+                      }
+                    >
+                      Safe, simple, and all you need to save is your password.
+                    </Text>
+                  </View>
                 </View>
               </View>
             </View>
@@ -1015,275 +1055,182 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
               style={
                 [
                   {
-                    "borderBottomColor": "#D2D9EE",
-                    "borderBottomWidth": 0.5,
                     "display": "flex",
                     "flexGrow": 0,
                     "flexShrink": 0,
-                    "height": 0,
+                    "height": 12,
                   },
                 ]
               }
             />
             <View
-              style={
-                [
-                  {
-                    "alignItems": "center",
-                    "display": "flex",
-                    "flexDirection": "row",
-                    "justifyContent": "flex-start",
-                    "paddingVertical": 16,
-                  },
-                ]
+              accessible={true}
+              collapsable={false}
+              focusable={true}
+              hitSlop={
+                {
+                  "bottom": 5,
+                  "left": 5,
+                  "right": 5,
+                  "top": 5,
+                }
               }
+              onClick={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              style={
+                {
+                  "backgroundColor": "#FFFFFF",
+                  "borderColor": "#D2D9EE80",
+                  "borderRadius": 20,
+                  "borderWidth": 1,
+                  "display": "flex",
+                  "opacity": 1,
+                  "padding": 16,
+                }
+              }
+              testID="add-manual-backup"
             >
               <View
                 style={
                   [
                     {
+                      "alignContent": "center",
                       "alignItems": "center",
-                      "borderColor": "#FC72FF",
-                      "borderRadius": 12,
-                      "borderWidth": 1.25,
                       "display": "flex",
-                      "flexDirection": "column",
-                      "height": 40,
-                      "justifyContent": "center",
-                      "padding": 16,
-                      "width": 40,
-                    },
-                  ]
-                }
-              >
-                <svg
-                  color="#0E1524"
-                  data-file-name="SvgPencil"
-                  height={24}
-                  strokeWidth={1.5}
-                  width={24}
-                />
-              </View>
-              <View
-                style={
-                  [
-                    {
-                      "display": "flex",
-                      "flexGrow": 0,
-                      "flexShrink": 0,
-                      "height": 16,
-                      "width": 16,
-                    },
-                  ]
-                }
-              />
-              <Text
-                allowFontScaling={true}
-                maxFontSizeMultiplier={1.4}
-                style={
-                  [
-                    {
-                      "color": "#0E1524",
-                      "display": "flex",
-                      "fontFamily": "Inter-Medium",
-                      "fontSize": 17,
-                      "lineHeight": 24,
-                    },
-                  ]
-                }
-              >
-                Manual backup
-              </Text>
-              <View
-                style={
-                  [
-                    {
-                      "display": "flex",
-                      "flexGrow": 0,
-                      "flexShrink": 0,
-                      "height": 16,
-                      "width": 16,
-                    },
-                  ]
-                }
-              />
-              <View
-                style={
-                  [
-                    {
-                      "alignItems": "flex-end",
-                      "display": "flex",
-                      "flexDirection": "column",
-                      "flexGrow": 1,
+                      "flexDirection": "row",
                       "justifyContent": "flex-start",
                     },
                   ]
                 }
               >
                 <View
-                  accessible={true}
-                  collapsable={false}
-                  focusable={true}
-                  hitSlop={
-                    {
-                      "bottom": 5,
-                      "left": 5,
-                      "right": 5,
-                      "top": 5,
-                    }
-                  }
-                  onClick={[Function]}
-                  onResponderGrant={[Function]}
-                  onResponderMove={[Function]}
-                  onResponderRelease={[Function]}
-                  onResponderTerminate={[Function]}
-                  onResponderTerminationRequest={[Function]}
-                  onStartShouldSetResponder={[Function]}
                   style={
-                    {
-                      "backgroundColor": "#FC72FF1f",
-                      "borderRadius": 999999,
-                      "display": "flex",
-                      "opacity": 1,
-                      "padding": 12,
-                    }
+                    [
+                      {
+                        "alignItems": "center",
+                        "backgroundColor": "#FC72FF1f",
+                        "borderRadius": 999999,
+                        "display": "flex",
+                        "height": 36,
+                        "justifyContent": "center",
+                        "padding": 16,
+                        "width": 36,
+                      },
+                    ]
                   }
-                  testID="add-manual-backup"
+                >
+                  <svg
+                    color="#FC72FF"
+                    data-file-name="SvgPaperStack"
+                    height={16}
+                  />
+                </View>
+                <View
+                  style={
+                    [
+                      {
+                        "display": "flex",
+                        "flexGrow": 0,
+                        "flexShrink": 0,
+                        "height": 16,
+                        "width": 16,
+                      },
+                    ]
+                  }
+                />
+                <View
+                  style={
+                    [
+                      {
+                        "alignItems": "center",
+                        "display": "flex",
+                        "flexDirection": "row",
+                        "justifyContent": "flex-start",
+                        "paddingRight": 60,
+                      },
+                    ]
+                  }
                 >
                   <View
                     style={
                       [
                         {
-                          "alignItems": "stretch",
+                          "alignItems": "flex-start",
                           "display": "flex",
-                          "flexDirection": "row",
-                          "justifyContent": "flex-start",
+                          "flex": 1,
+                          "flexDirection": "column",
+                          "justifyContent": "space-around",
                         },
                       ]
                     }
                   >
-                    <Text
-                      allowFontScaling={true}
-                      maxFontSizeMultiplier={1.2}
+                    <View
                       style={
                         [
                           {
-                            "color": "#FC72FF",
+                            "alignItems": "stretch",
                             "display": "flex",
-                            "fontFamily": "Inter-SemiBold",
-                            "fontSize": 12,
-                            "lineHeight": 17,
+                            "flexDirection": "row",
+                            "justifyContent": "flex-start",
                           },
                         ]
                       }
                     >
-                      + 
-                      ADD
+                      <Text
+                        allowFontScaling={false}
+                        maxFontSizeMultiplier={1.4}
+                        style={
+                          [
+                            {
+                              "color": "#0E1524",
+                              "display": "flex",
+                              "fontFamily": "Inter-Medium",
+                              "fontSize": 17,
+                              "lineHeight": 24,
+                            },
+                          ]
+                        }
+                      >
+                        Backup with recovery phrase
+                      </Text>
+                    </View>
+                    <View
+                      style={
+                        [
+                          {
+                            "display": "flex",
+                            "flexGrow": 0,
+                            "flexShrink": 0,
+                            "height": 4,
+                          },
+                        ]
+                      }
+                    />
+                    <Text
+                      allowFontScaling={false}
+                      maxFontSizeMultiplier={1.4}
+                      style={
+                        [
+                          {
+                            "color": "#5D6785",
+                            "display": "flex",
+                            "fontFamily": "Inter-Regular",
+                            "fontSize": 15,
+                            "lineHeight": 20,
+                          },
+                        ]
+                      }
+                    >
+                      Top-notch security with no third parties. You're in control.
                     </Text>
                   </View>
                 </View>
               </View>
-            </View>
-          </View>
-          <View
-            style={
-              [
-                {
-                  "display": "flex",
-                  "flexGrow": 0,
-                  "flexShrink": 0,
-                  "height": 16,
-                },
-              ]
-            }
-          />
-          <View
-            accessible={true}
-            collapsable={false}
-            focusable={true}
-            hitSlop={
-              {
-                "bottom": 5,
-                "left": 5,
-                "right": 5,
-                "top": 5,
-              }
-            }
-            onClick={[Function]}
-            onResponderGrant={[Function]}
-            onResponderMove={[Function]}
-            onResponderRelease={[Function]}
-            onResponderTerminate={[Function]}
-            onResponderTerminationRequest={[Function]}
-            onStartShouldSetResponder={[Function]}
-            style={
-              {
-                "alignSelf": "flex-start",
-                "display": "flex",
-                "opacity": 1,
-                "paddingVertical": 0,
-              }
-            }
-          >
-            <View
-              style={
-                [
-                  {
-                    "alignItems": "center",
-                    "display": "flex",
-                    "flexDirection": "row",
-                    "justifyContent": "center",
-                  },
-                ]
-              }
-            >
-              <View
-                style={
-                  [
-                    {
-                      "display": "flex",
-                      "paddingHorizontal": 4,
-                    },
-                  ]
-                }
-              >
-                <svg
-                  color="#5D6785"
-                  data-file-name="SvgInfoCircle"
-                  height={24}
-                  width={24}
-                />
-              </View>
-              <View
-                style={
-                  [
-                    {
-                      "display": "flex",
-                      "flexGrow": 0,
-                      "flexShrink": 0,
-                      "height": 4,
-                      "width": 4,
-                    },
-                  ]
-                }
-              />
-              <Text
-                allowFontScaling={true}
-                maxFontSizeMultiplier={1.4}
-                style={
-                  [
-                    {
-                      "color": "#0E1524",
-                      "display": "flex",
-                      "fontFamily": "Inter-Medium",
-                      "fontSize": 15,
-                      "lineHeight": 20,
-                    },
-                  ]
-                }
-              >
-                What’s a recovery phrase?
-              </Text>
             </View>
           </View>
           <View
@@ -1311,6 +1258,107 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
               ]
             }
           >
+            <View
+              accessible={true}
+              collapsable={false}
+              focusable={true}
+              hitSlop={
+                {
+                  "bottom": 5,
+                  "left": 5,
+                  "right": 5,
+                  "top": 5,
+                }
+              }
+              onClick={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              style={
+                {
+                  "alignSelf": "center",
+                  "display": "flex",
+                  "opacity": 1,
+                  "paddingVertical": 0,
+                }
+              }
+            >
+              <View
+                style={
+                  [
+                    {
+                      "alignItems": "center",
+                      "display": "flex",
+                      "flexDirection": "row",
+                      "justifyContent": "center",
+                    },
+                  ]
+                }
+              >
+                <View
+                  style={
+                    [
+                      {
+                        "display": "flex",
+                        "paddingHorizontal": 4,
+                      },
+                    ]
+                  }
+                >
+                  <svg
+                    color="#5D6785"
+                    data-file-name="SvgInfoCircle"
+                    height={24}
+                    width={24}
+                  />
+                </View>
+                <View
+                  style={
+                    [
+                      {
+                        "display": "flex",
+                        "flexGrow": 0,
+                        "flexShrink": 0,
+                        "height": 4,
+                        "width": 4,
+                      },
+                    ]
+                  }
+                />
+                <Text
+                  allowFontScaling={true}
+                  maxFontSizeMultiplier={1.4}
+                  style={
+                    [
+                      {
+                        "color": "#0E1524",
+                        "display": "flex",
+                        "fontFamily": "Inter-Medium",
+                        "fontSize": 15,
+                        "lineHeight": 20,
+                      },
+                    ]
+                  }
+                >
+                  Learn about wallet safety and recovery
+                </Text>
+              </View>
+            </View>
+            <View
+              style={
+                [
+                  {
+                    "display": "flex",
+                    "flexGrow": 0,
+                    "flexShrink": 0,
+                    "height": 16,
+                  },
+                ]
+              }
+            />
             <View
               accessibilityState={
                 {

@@ -6,14 +6,16 @@ import { Alert, Image, StyleSheet } from 'react-native'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { i18n } from 'src/app/i18n'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
-import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
+import { Button } from 'src/components/buttons/Button'
+import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Flex } from 'src/components/layout'
+import { Text } from 'src/components/Text'
 import { useIsDarkMode } from 'src/features/appearance/hooks'
 import { useBiometricAppSettings } from 'src/features/biometrics/hooks'
 import { promptPushPermission } from 'src/features/notifications/Onesignal'
+import { useCompleteOnboardingCallback } from 'src/features/onboarding/hooks'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { OnboardingEntryPoint } from 'src/features/onboarding/utils'
-import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { ElementName } from 'src/features/telemetry/constants'
 import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
 import { useNativeAccountExists } from 'src/features/wallet/hooks'
@@ -47,11 +49,21 @@ export function NotificationsSetupScreen({ navigation, route: { params } }: Prop
   const addresses = Object.keys(accounts)
   const hasSeedPhrase = useNativeAccountExists()
 
+  const onCompleteOnboarding = useCompleteOnboardingCallback(params.entryPoint, params.importType)
+
+  const navigateToNextScreen = (): void => {
+    // Skip security setup if already enabled or already imported seed phrase
+    if (
+      isBiometricAuthEnabled ||
+      (params?.entryPoint === OnboardingEntryPoint.Sidebar && hasSeedPhrase)
+    ) {
+      onCompleteOnboarding()
+    } else {
+      navigation.navigate({ name: OnboardingScreens.Security, params, merge: true })
+    }
+  }
+
   const onPressNext = (): void => {
-    sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
-      element: ElementName.Skip,
-      screen: OnboardingScreens.Notifications,
-    })
     navigateToNextScreen()
   }
 
@@ -66,43 +78,33 @@ export function NotificationsSetupScreen({ navigation, route: { params } }: Prop
           })
         )
       )
-      sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
-        element: ElementName.Enable,
-        screen: OnboardingScreens.Notifications,
-      })
       navigateToNextScreen()
     }, showNotificationSettingsAlert)
-  }
-
-  const navigateToNextScreen = (): void => {
-    if (
-      isBiometricAuthEnabled ||
-      (params?.entryPoint === OnboardingEntryPoint.Sidebar && hasSeedPhrase)
-    ) {
-      navigation.navigate({ name: OnboardingScreens.Outro, params, merge: true })
-    } else {
-      navigation.navigate({ name: OnboardingScreens.Security, params, merge: true })
-    }
   }
 
   return (
     <OnboardingScreen
       subtitle={t('Get notified when your transfers, swaps, and approvals complete.')}
       title={t('Turn on push notifications')}>
-      <Flex centered shrink py="spacing24">
+      <Flex centered shrink py="spacing60">
         <NotificationsBackgroundImage />
       </Flex>
-      <Button
-        emphasis={ButtonEmphasis.Tertiary}
-        label={t('Maybe later')}
-        name={ElementName.Skip}
-        onPress={onPressNext}
-      />
-      <Button
-        label={t('Turn on notifications')}
-        name={ElementName.Enable}
-        onPress={onPressEnableNotifications}
-      />
+      <Flex gap="spacing24">
+        <TouchableArea
+          eventName={SharedEventName.ELEMENT_CLICKED}
+          name={ElementName.Skip}
+          onPress={onPressNext}>
+          <Text color="magentaVibrant" textAlign="center" variant="subheadSmall">
+            {t('Maybe later')}
+          </Text>
+        </TouchableArea>
+        <Button
+          eventName={SharedEventName.ELEMENT_CLICKED}
+          label={t('Turn on notifications')}
+          name={ElementName.Enable}
+          onPress={onPressEnableNotifications}
+        />
+      </Flex>
     </OnboardingScreen>
   )
 }

@@ -6,6 +6,7 @@ import { Trans, useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { Button, ButtonSize } from 'src/components/buttons/Button'
+import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { LandingBackground } from 'src/components/gradients/LandingBackground'
 import { Box, Flex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
@@ -13,6 +14,7 @@ import { Text } from 'src/components/Text'
 import { useIsDarkMode } from 'src/features/appearance/hooks'
 import { ImportType, OnboardingEntryPoint } from 'src/features/onboarding/utils'
 import { ElementName } from 'src/features/telemetry/constants'
+import { createAccountActions } from 'src/features/wallet/createAccountSaga'
 import {
   PendingAccountActions,
   pendingAccountActions,
@@ -25,14 +27,26 @@ import { useTimeout } from 'wallet/src/utils/timing'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.Landing>
 
-export function LandingScreen({ navigation }: Props): JSX.Element {
+/**
+ * Test view for experiment : onboarding-ab-1
+ */
+
+export function LandingScreenNew({ navigation }: Props): JSX.Element {
   const dispatch = useAppDispatch()
 
   const { t } = useTranslation()
   const isDarkMode = useIsDarkMode()
 
-  const onPressGetStarted = (): void => {
+  const onPressCreateWallet = (): void => {
     dispatch(pendingAccountActions.trigger(PendingAccountActions.DELETE))
+    dispatch(createAccountActions.trigger())
+    navigation.navigate(OnboardingScreens.EditName, {
+      importType: ImportType.CreateNew,
+      entryPoint: OnboardingEntryPoint.FreshInstallOrReplace,
+    })
+  }
+
+  const onPressImportWallet = (): void => {
     navigation.navigate(OnboardingScreens.ImportMethod, {
       importType: ImportType.NotYetSelected,
       entryPoint: OnboardingEntryPoint.FreshInstallOrReplace,
@@ -52,16 +66,23 @@ export function LandingScreen({ navigation }: Props): JSX.Element {
         <LandingBackground />
       </Flex>
       <Flex grow height="auto">
-        <Flex gap={outerGap} justifyContent="flex-end">
-          <Flex mx="spacing16">
-            <Button
-              eventName={SharedEventName.ELEMENT_CLICKED}
-              label={t('Get started')}
-              name={ElementName.GetStarted}
-              size={buttonSize}
-              onPress={onPressGetStarted}
-            />
-          </Flex>
+        <Flex grow gap={outerGap} justifyContent="flex-end" mx="spacing16">
+          <Button
+            eventName={SharedEventName.ELEMENT_CLICKED}
+            label={t('Create a new wallet')}
+            name={ElementName.CreateAccount}
+            size={buttonSize}
+            onPress={onPressCreateWallet}
+          />
+          <TouchableArea
+            alignItems="center"
+            eventName={SharedEventName.ELEMENT_CLICKED}
+            name={ElementName.ImportAccount}
+            onPress={onPressImportWallet}>
+            <Text color="magentaVibrant" variant="buttonLabelSmall">
+              {t('Import or watch a wallet')}
+            </Text>
+          </TouchableArea>
           <Box mx="spacing24" pb={pb}>
             <Text color="textTertiary" mx="spacing4" textAlign="center" variant="buttonLabelMicro">
               <Trans t={t}>

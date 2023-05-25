@@ -18,6 +18,9 @@ import { TokenDetailsPreloaders } from 'src/data/preload/TokenDetailsPreloader'
 import { useLowPriorityPreloadedQueries } from 'src/data/preload/useLowPriorityPreloadedQueries'
 import { usePreloadedHomeScreenQueries } from 'src/data/preload/usePreloadedHomeScreenQueries'
 import { useBiometricCheck } from 'src/features/biometrics/useBiometricCheck'
+import { EXPERIMENT_NAMES } from 'src/features/experiments/constants'
+import { useExperimentEnabled } from 'src/features/experiments/hooks'
+import { CloudBackupPasswordConfirmScreen } from 'src/features/onboarding/CloudBackupConfirmPasswordConfirm'
 import { OnboardingHeader } from 'src/features/onboarding/OnboardingHeader'
 import { OnboardingEntryPoint } from 'src/features/onboarding/utils'
 import { selectFinishedOnboarding } from 'src/features/wallet/selectors'
@@ -27,6 +30,7 @@ import { ExploreScreen } from 'src/screens/ExploreScreen'
 import { ExternalProfileScreen } from 'src/screens/ExternalProfileScreen'
 import { HomeScreen } from 'src/screens/HomeScreen'
 import { ImportMethodScreen } from 'src/screens/Import/ImportMethodScreen'
+import { ImportMethodScreenNew } from 'src/screens/Import/ImportMethodScreenNew'
 import { RestoreCloudBackupLoadingScreen } from 'src/screens/Import/RestoreCloudBackupLoadingScreen'
 import { RestoreCloudBackupPasswordScreen } from 'src/screens/Import/RestoreCloudBackupPasswordScreen'
 import { RestoreCloudBackupScreen } from 'src/screens/Import/RestoreCloudBackupScreen'
@@ -40,9 +44,10 @@ import { CloudBackupPasswordScreen } from 'src/screens/Onboarding/CloudBackupPas
 import { CloudBackupProcessingScreen } from 'src/screens/Onboarding/CloudBackupProcessingScreen'
 import { EditNameScreen } from 'src/screens/Onboarding/EditNameScreen'
 import { LandingScreen } from 'src/screens/Onboarding/LandingScreen'
+import { LandingScreenNew } from 'src/screens/Onboarding/LandingScreenNew'
 import { ManualBackupScreen } from 'src/screens/Onboarding/ManualBackupScreen'
 import { NotificationsSetupScreen } from 'src/screens/Onboarding/NotificationsSetupScreen'
-import { OutroScreen } from 'src/screens/Onboarding/OutroScreen'
+import { QRAnimationScreen } from 'src/screens/Onboarding/QRAnimationScreen'
 import { SecuritySetupScreen } from 'src/screens/Onboarding/SecuritySetupScreen'
 import { OnboardingScreens, Screens } from 'src/screens/Screens'
 import { SettingsAppearanceScreen } from 'src/screens/SettingsAppearanceScreen'
@@ -155,6 +160,10 @@ export function OnboardingStackNavigator(): JSX.Element {
   const theme = useAppTheme()
   const insets = useSafeAreaInsets()
 
+  const isOnboardingNewCreateImportExperimentEnabled = useExperimentEnabled(
+    EXPERIMENT_NAMES.OnboardingNewCreateImportFlow
+  )
+
   const renderHeaderBackImage = useCallback(
     () => <Chevron color={theme.colors.textSecondary} height={28} width={28} />,
     [theme.colors.textSecondary]
@@ -175,7 +184,9 @@ export function OnboardingStackNavigator(): JSX.Element {
           headerRightContainerStyle: { paddingRight: theme.spacing.spacing16 },
         }}>
         <OnboardingStack.Screen
-          component={LandingScreen}
+          component={
+            isOnboardingNewCreateImportExperimentEnabled ? LandingScreenNew : LandingScreen
+          }
           name={OnboardingScreens.Landing}
           options={{ headerShown: false }}
         />
@@ -191,8 +202,8 @@ export function OnboardingStackNavigator(): JSX.Element {
           name={OnboardingScreens.BackupManual}
         />
         <OnboardingStack.Screen
-          component={OutroScreen}
-          name={OnboardingScreens.Outro}
+          component={QRAnimationScreen}
+          name={OnboardingScreens.QRAnimation}
           // There should be no header shown on this screen but if headerShown: false and the user is adding a wallet from the
           // sidebar then when this screen is navigated away from the header will reappear on the home screen on top of the account
           // header.
@@ -213,7 +224,15 @@ export function OnboardingStackNavigator(): JSX.Element {
           name={OnboardingScreens.BackupCloudPassword}
         />
         <OnboardingStack.Screen
-          component={ImportMethodScreen}
+          component={CloudBackupPasswordConfirmScreen}
+          name={OnboardingScreens.BackupCloudPasswordConfirm}
+        />
+        <OnboardingStack.Screen
+          component={
+            isOnboardingNewCreateImportExperimentEnabled
+              ? ImportMethodScreenNew
+              : ImportMethodScreen
+          }
           name={OnboardingScreens.ImportMethod}
         />
         <OnboardingStack.Screen
