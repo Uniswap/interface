@@ -5,13 +5,15 @@ import { useTokenContract } from 'hooks/useContract'
 import { useSingleCallResult } from 'lib/hooks/multicall'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ApproveTransactionInfo, TransactionType } from 'state/transactions/types'
+import { UserRejectedRequestError } from 'utils/errors'
+import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 
 export function useTokenAllowance(
   token?: Token,
   owner?: string,
   spender?: string
 ): {
-  tokenAllowance: CurrencyAmount<Token> | undefined
+  tokenAllowance?: CurrencyAmount<Token>
   isSyncing: boolean
 } {
   const contract = useTokenContract(token?.address, false)
@@ -21,7 +23,7 @@ export function useTokenAllowance(
   // This guarantees that the tokenAllowance is marked isSyncing upon approval and updated upon being synced.
   const [blocksPerFetch, setBlocksPerFetch] = useState<1>()
   const { result, syncing: isSyncing } = useSingleCallResult(contract, 'allowance', inputs, { blocksPerFetch }) as {
-    result: Awaited<ReturnType<NonNullable<typeof contract>['allowance']>> | undefined
+    result?: Awaited<ReturnType<NonNullable<typeof contract>['allowance']>>
     syncing: boolean
   }
 
@@ -59,6 +61,9 @@ export function useUpdateTokenAllowance(
       }
     } catch (e: unknown) {
       const symbol = amount?.currency.symbol ?? 'Token'
+      if (didUserReject(e)) {
+        throw new UserRejectedRequestError(`${symbol} token allowance failed: User rejected`)
+      }
       throw new Error(`${symbol} token allowance failed: ${e instanceof Error ? e.message : e}`)
     }
   }, [amount, contract, spender])

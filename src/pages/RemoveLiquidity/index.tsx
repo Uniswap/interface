@@ -449,7 +449,7 @@ function RemoveLiquidity() {
             onDismiss={handleDismissConfirmation}
             attemptingTxn={attemptingTxn}
             hash={txHash ? txHash : ''}
-            content={() => (
+            reviewContent={() => (
               <ConfirmationModalContent
                 title={<Trans>You will receive</Trans>}
                 onDismiss={handleDismissConfirmation}

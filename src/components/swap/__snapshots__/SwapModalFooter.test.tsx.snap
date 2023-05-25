@@ -330,7 +330,7 @@ exports[`SwapModalFooter.tsx matches base snapshot, test trade exact input 1`] =
       <div
         class="c7 css-iapcxi"
       >
-        Swap
+        Confirm swap
       </div>
     </button>
   </div>

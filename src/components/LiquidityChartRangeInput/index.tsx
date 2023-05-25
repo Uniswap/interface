@@ -76,11 +76,11 @@ export default function LiquidityChartRangeInput({
   onRightRangeInput,
   interactive,
 }: {
-  currencyA: Currency | undefined
-  currencyB: Currency | undefined
+  currencyA?: Currency
+  currencyB?: Currency
   feeAmount?: FeeAmount
   ticksAtLimit: { [bound in Bound]?: boolean | undefined }
-  price: number | undefined
+  price?: number
   priceLower?: Price<Token, Token>
   priceUpper?: Price<Token, Token>
   onLeftRangeInput: (typedValue: string) => void

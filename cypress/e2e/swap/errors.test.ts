@@ -20,13 +20,12 @@ describe('Swap errors', () => {
 
       // Submit transaction
       cy.get('#swap-button').click()
-      cy.get('#confirm-swap-or-send').click()
+      cy.contains('Confirm swap').click()
       cy.wait('@eth_estimateGas')
 
       // Verify rejection
-      cy.contains('Transaction rejected').should('exist')
-      cy.contains('Dismiss').click()
-      cy.contains('Transaction rejected').should('not.exist')
+      cy.contains('Review swap')
+      cy.contains('Confirm swap')
     })
   })
 
@@ -40,16 +39,13 @@ describe('Swap errors', () => {
 
       // Submit transaction
       cy.get('#swap-button').click()
-      cy.get('#confirm-swap-or-send').click()
-      cy.contains('Waiting for confirmation')
+      cy.contains('Confirm swap').click()
       cy.wait('@eth_estimateGas').wait('@eth_sendRawTransaction').wait('@eth_getTransactionReceipt')
-      cy.contains('Waiting for confirmation').should('not.exist')
       cy.contains('Transaction submitted')
-      cy.contains('Close').click()
-      cy.contains('Transaction submitted').should('not.exist')
+      cy.get(getTestSelector('confirmation-close-icon')).click()
+      cy.get(getTestSelector('web3-status-connected')).should('contain', '1 Pending')
 
       // Mine transaction
-      cy.get(getTestSelector('web3-status-connected')).should('contain', '1 Pending')
       cy.hardhat().then(async (hardhat) => {
         // Remove the transaction from the mempool, so that it doesn't fail but it is past the deadline.
         // This should result in it being removed from pending transactions, without a failure notificiation.
@@ -91,17 +87,14 @@ describe('Swap errors', () => {
         cy.get('#swap-currency-input .token-amount-input').type('200').should('have.value', '200')
         cy.get('#swap-currency-output .token-amount-input').should('not.have.value', '')
         cy.get('#swap-button').click()
-        cy.get('#confirm-swap-or-send').click()
-        cy.contains('Waiting for confirmation')
+        cy.contains('Confirm swap').click()
         cy.wait('@eth_sendRawTransaction').wait('@eth_getTransactionReceipt')
-        cy.contains('Waiting for confirmation').should('not.exist')
         cy.contains('Transaction submitted')
-        cy.contains('Close').click()
-        cy.contains('Transaction submitted').should('not.exist')
+        cy.get(getTestSelector('confirmation-close-icon')).click()
       }
+      cy.get(getTestSelector('web3-status-connected')).should('contain', '2 Pending')
 
       // Mine transactions
-      cy.get(getTestSelector('web3-status-connected')).should('contain', '2 Pending')
       cy.hardhat().then((hardhat) => hardhat.mine())
       cy.wait('@eth_getTransactionReceipt')
 

@@ -30,9 +30,9 @@ describe('Swap wrap', () => {
       // Submit transaction
       cy.contains('Wrap').click()
       cy.wait('@eth_estimateGas').wait('@eth_sendRawTransaction').wait('@eth_getTransactionReceipt')
+      cy.get(getTestSelector('web3-status-connected')).should('contain', '1 Pending')
 
       // Mine transaction
-      cy.get(getTestSelector('web3-status-connected')).should('contain', '1 Pending')
       cy.hardhat().then((hardhat) => hardhat.mine())
       cy.wait('@eth_getTransactionReceipt')
 
@@ -63,9 +63,9 @@ describe('Swap wrap', () => {
       // Submit transaction
       cy.contains('Unwrap').click()
       cy.wait('@eth_estimateGas').wait('@eth_sendRawTransaction').wait('@eth_getTransactionReceipt')
+      cy.get(getTestSelector('web3-status-connected')).should('contain', '1 Pending')
 
       // Mine transaction
-      cy.get(getTestSelector('web3-status-connected')).should('contain', '1 Pending')
       cy.hardhat().then((hardhat) => hardhat.mine())
       cy.wait('@eth_getTransactionReceipt')
 

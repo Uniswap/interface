@@ -52,16 +52,15 @@ describe('Swap', () => {
 
         // Submit transaction
         cy.get('#swap-button').click()
-        cy.get('#confirm-swap-or-send').click()
-        cy.contains('Waiting for confirmation')
+        cy.contains('Review swap')
+        cy.contains('Confirm swap').click()
         cy.wait('@eth_estimateGas').wait('@eth_sendRawTransaction').wait('@eth_getTransactionReceipt')
-        cy.contains('Waiting for confirmation').should('not.exist')
         cy.contains('Transaction submitted')
-        cy.contains('Close').click()
+        cy.get(getTestSelector('confirmation-close-icon')).click()
         cy.contains('Transaction submitted').should('not.exist')
+        cy.get(getTestSelector('web3-status-connected')).should('contain', '1 Pending')
 
         // Mine transaction
-        cy.get(getTestSelector('web3-status-connected')).should('contain', '1 Pending')
         cy.hardhat().then((hardhat) => hardhat.mine())
         cy.wait('@eth_getTransactionReceipt')
 
