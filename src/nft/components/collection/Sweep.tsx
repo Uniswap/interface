@@ -111,7 +111,7 @@ const NftDisplayContainer = styled.div`
   height: 34px;
 `
 
-const NftHolder = styled.div<{ index: number; src: string | undefined }>`
+const NftHolder = styled.div<{ index: number; src?: string }>`
   position: absolute;
   top: 50%;
   left: 50%;

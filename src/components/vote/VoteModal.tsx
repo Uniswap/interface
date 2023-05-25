@@ -39,8 +39,8 @@ const ConfirmedIcon = styled(ColumnCenter)`
 interface VoteModalProps {
   isOpen: boolean
   onDismiss: () => void
-  voteOption: VoteOption | undefined
-  proposalId: string | undefined // id for the proposal to vote on
+  voteOption?: VoteOption
+  proposalId?: string // id for the proposal to vote on
 }
 
 export default function VoteModal({ isOpen, onDismiss, proposalId, voteOption }: VoteModalProps) {
