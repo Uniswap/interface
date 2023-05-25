@@ -46,7 +46,7 @@ msgstr "({0})"
 
 #: src/nft/components/profile/view/EmptyWalletContent.tsx
 msgid "+ New position"
-msgstr "+ 新職位"
+msgstr "+ 新倉位"
 
 #: src/pages/Swap/index.tsx
 msgid "- Remove recipient"
@@ -58,7 +58,7 @@ msgstr "24小時成交量"
 
 #: src/components/Tokens/TokenDetails/StatsSection.tsx
 msgid "24H volume is the amount of the asset that has been traded on Uniswap v3 during the past 24 hours."
-msgstr "24 小時交易量是過去 24 小時內在 Uniswap v3 上交易的資產數量。"
+msgstr "「24 小時交易量」是指過去 24 小時內在 Uniswap v3 上交易的資產量體。"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "25%"
@@ -111,7 +111,7 @@ msgstr "<0>提示：</0>使用此工具可查找未自動出現在界面中的 v
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "<0>Tip:</0> When you add liquidity, you will receive pool tokens representing your position. These tokens automatically earn fees proportional to your share of the pool, and can be redeemed at any time."
-msgstr "<0>提示：</0>當您註入流動資金時，您將收到代表您份額的流動池代幣。這些代幣將根據您在池中所占份額，自動賺取和累計相稱的手續費，並且可以隨時贖回流動池幣對。"
+msgstr "<0>提示：</0>當您注入流動資金時，您將收到代表您份額的流動池代幣。這些代幣將根據您在池中所占份額，自動賺取和累計相對應的手續費，並且您可以隨時贖回流動池交易對。"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "<0>Unlock voting</0> to prepare for the next proposal."
@@ -128,7 +128,7 @@ msgstr "提交提案所需的最低門檻為 UNI 總供應量的 0.25%"
 
 #: src/components/swap/PriceImpactWarning.tsx
 msgid "A swap of this size may have a high price impact, given the current liquidity in the pool. There may be a large difference between the amount of your input token and what you will receive in the output token"
-msgstr "鑑於池中當前的流動性，這種規模的互換可能會對價格產生很大影響。您輸入的令牌數量與您將在輸出令牌中收到的數量之間可能存在很大差異"
+msgstr "鑑於池中當前的流動性，這種規模的互換可能會對價格產生很大影響。如果您堅持繼續，您輸入的原始代幣數量與您將在輸出代幣中收到的數量之間可能存在很大差異"
 
 #: src/components/Tokens/TokenDetails/About.tsx
 msgid "About"
@@ -164,11 +164,11 @@ msgstr "添加委托 +"
 #: src/components/NavigationTabs/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 msgid "Add Liquidity"
-msgstr "註入流動資金"
+msgstr "注入流動資金"
 
 #: src/pages/Pool/v2.tsx
 msgid "Add V2 Liquidity"
-msgstr "註入 V2 流動資金"
+msgstr "注入 V2 流動資金"
 
 #: src/components/AccountDrawer/MiniPortfolio/constants.ts
 msgid "Add V2 liquidity failed"
@@ -180,7 +180,7 @@ msgstr "添加流動性失敗"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Add liquidity."
-msgstr "註入流動資金。"
+msgstr "注入流動資金。"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Add more liquidity"
@@ -188,12 +188,12 @@ msgstr "增加流動性"
 
 #: src/nft/components/details/detailsV2/ListingsTableContent.tsx
 msgid "Add to Bag"
-msgstr "添加至購物袋"
+msgstr "加入購物袋"
 
 #: src/nft/components/collection/ActivityCells.tsx
 #: src/nft/components/collection/CollectionAsset.tsx
 msgid "Add to bag"
-msgstr "添加至購物袋"
+msgstr "加入購物袋"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Add {0}"
@@ -201,7 +201,7 @@ msgstr "加 {0}"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Add {0}/{1} V3 liquidity"
-msgstr "註入 {0}/{1} V3 流動資金"
+msgstr "注入 {0}/{1} V3 流動資金"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
 msgid "Added Liquidity"
@@ -233,7 +233,7 @@ msgstr "將此提案添加到隊列將允許它在延遲後執行。"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Address has no available claim"
-msgstr "地址沒有可领取的代幣"
+msgstr "此地址沒有可领取的代幣"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Against"
@@ -254,7 +254,7 @@ msgstr "已列於"
 #: src/constants/tokenSafety.tsx
 #: src/constants/tokenSafety.tsx
 msgid "Always conduct your own research before trading."
-msgstr "交易前始終進行自己的研究。"
+msgstr "請確保在交易前已自行研究。"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Amount"
@@ -262,15 +262,15 @@ msgstr "數額"
 
 #: src/nft/components/bag/BagFooter.tsx
 msgid "An approval is needed to use this token."
-msgstr "使用此令牌需要獲得批准。"
+msgstr "使用此代幣需要獲得批准。"
 
 #: src/components/Tokens/TokenTable/TokenTable.tsx
 msgid "An error occurred loading tokens. Please try again."
-msgstr "加載令牌時發生錯誤。請再試一次。"
+msgstr "載入代幣時發生錯誤。請再試一次。"
 
 #: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "嘗試執行此兌換時發生錯誤。您可能需要增加滑點限制。如果還是不行，則可能是您正在交易的代幣與Uniswap不兼容。注：Uniswap V3不兼容轉賬時帶扣除費用（fee-on-transfer）的代幣和彈性供應（rebase）代幣。"
+msgstr "嘗試執行此兌換時發生錯誤。您可能需要增加滑點限制。如果還是不行，則可能是您正在交易的代幣與Uniswap不兼容。注：Uniswap V3不支援轉帳時夾帶扣除費用（fee-on-transfer）的代幣和彈性供應（rebase）代幣。"
 
 #: src/components/AccountDrawer/MiniPortfolio/constants.ts
 msgid "Approval failed"
@@ -409,15 +409,15 @@ msgstr "買"
 
 #: src/components/AccountDrawer/MiniPortfolio/constants.ts
 msgid "Burn failed"
-msgstr "刻錄失敗"
+msgstr "銷毀失敗"
 
 #: src/components/AccountDrawer/MiniPortfolio/constants.ts
 msgid "Burned"
-msgstr "被燒毀"
+msgstr "已銷毀"
 
 #: src/components/AccountDrawer/MiniPortfolio/constants.ts
 msgid "Burning"
-msgstr "燃燒"
+msgstr "銷毀"
 
 #: src/components/swap/SwapBuyFiatButton.tsx
 #: src/nft/components/details/detailsV2/BuyButton.tsx
@@ -434,7 +434,7 @@ msgstr "購買失敗"
 
 #: src/nft/components/profile/view/EmptyWalletContent.tsx
 msgid "Buy or transfer NFTs to this wallet to get started."
-msgstr "購買 NFT 或將 NFT 轉移到此錢包即可開始使用。"
+msgstr "請購買新 NFT 或將 NFT 轉移到此錢包以開始使用。"
 
 #: src/nft/components/profile/view/EmptyWalletContent.tsx
 msgid "Buy or transfer tokens to this wallet to get started."
@@ -442,11 +442,11 @@ msgstr "購買或轉移代幣到此錢包以開始使用。"
 
 #: src/pages/Landing/index.tsx
 msgid "Buy, sell, and explore tokens"
-msgstr "購買、出售和探索代幣"
+msgstr "購買、出售和瀏覽代幣"
 
 #: src/pages/Landing/index.tsx
 msgid "Buy, sell, and explore tokens and NFTs"
-msgstr "購買、出售和探索代幣和 NFT"
+msgstr "購買、出售和瀏覽代幣和 NFT"
 
 #: src/components/AccountDrawer/MiniPortfolio/constants.ts
 msgid "Buying"
@@ -487,7 +487,7 @@ msgstr "警告"
 
 #: src/components/Polling/ChainConnectivityWarning.tsx
 msgid "Check network status"
-msgstr "檢查網絡狀態"
+msgstr "檢查網路狀態"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Check out our v3 LP walkthrough and migration guides."
@@ -511,7 +511,7 @@ msgstr "領取 UNI 代幣"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Claim UNI reward for {0}"
-msgstr "{0} 索取 UNI 獎勵"
+msgstr "{0} 領取 UNI 獎勵"
 
 #: src/components/AccountDrawer/AuthenticatedHeader.tsx
 msgid "Claim Uniswap NFT Airdrop"
@@ -519,7 +519,7 @@ msgstr "領取 Uniswap NFT 空投"
 
 #: src/components/AccountDrawer/MiniPortfolio/constants.ts
 msgid "Claim failed"
-msgstr "索賠失敗"
+msgstr "領取失敗"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Claim fees"
@@ -721,7 +721,7 @@ msgstr "創建流動池並註入 {0}/{1} V3 流動資金"
 
 #: src/components/AccountDrawer/MiniPortfolio/constants.ts
 msgid "Create pool failed"
-msgstr "創建池失敗"
+msgstr "流動池創建失敗"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Create pool."
@@ -733,11 +733,11 @@ msgstr "創建 {0}/{1} V3 池"
 
 #: src/components/AccountDrawer/MiniPortfolio/constants.ts
 msgid "Created pool"
-msgstr "創建池"
+msgstr "創建流動池"
 
 #: src/components/AccountDrawer/MiniPortfolio/constants.ts
 msgid "Creating pool"
-msgstr "創建池"
+msgstr "創建流動池"
 
 #: src/components/swap/SwapBuyFiatButton.tsx
 msgid "Crypto purchases are not available in your region."
@@ -755,7 +755,7 @@ msgstr "當前 {0} 兌換率："
 #: src/components/Settings/MaxSlippageSettings/index.tsx
 #: src/nft/components/profile/list/NFTListingsGrid.tsx
 msgid "Custom"
-msgstr "風俗"
+msgstr "自訂"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
 msgid "DNS Registrar"
@@ -807,7 +807,7 @@ msgstr "部署中"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Deposit Amounts"
-msgstr "充值數額"
+msgstr "入金數額"
 
 #: src/components/AccountDrawer/MiniPortfolio/constants.ts
 msgid "Deposit failed"
@@ -991,20 +991,20 @@ msgstr "已過期"
 
 #: src/nft/components/details/detailsV2/TableRowComponent.tsx
 msgid "Expires in"
-msgstr "過期日期在"
+msgstr "過期時間為"
 
 #: src/nft/components/profile/view/EmptyWalletContent.tsx
 msgid "Explore NFTs"
-msgstr "探索 NFT"
+msgstr "瀏覽 NFT"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore Uniswap Analytics."
-msgstr "探索 Uniswap 分析。"
+msgstr "瀏覽 Uniswap 分析。"
 
 #: src/components/Tokens/TokenDetails/InvalidTokenDetails.tsx
 #: src/nft/components/profile/view/EmptyWalletContent.tsx
 msgid "Explore tokens"
-msgstr "探索代幣"
+msgstr "瀏覽代幣"
 
 #: src/nft/components/details/detailsV2/RarityGraph.tsx
 msgid "Extremely rare"
@@ -1016,7 +1016,7 @@ msgstr "失敗的"
 
 #: src/components/Popups/FailedNetworkSwitchPopup.tsx
 msgid "Failed to switch networks"
-msgstr "切換網絡失敗"
+msgstr "切換網路失敗"
 
 #: src/components/NavBar/MenuDropdown.tsx
 msgid "Feature Flags"
@@ -1053,19 +1053,19 @@ msgstr "正在獲取價格..."
 
 #: src/components/Tokens/TokenTable/SearchBar.tsx
 msgid "Filter tokens"
-msgstr "篩選標記"
+msgstr "篩選代幣"
 
 #: src/components/Settings/RouterPreferenceSettings/index.tsx
 msgid "Finds the best route on the Uniswap Protocol through your browser. May result in high latency and prices."
-msgstr "通過瀏覽器在 Uniswap 協議上找到最佳路線。可能會導致高延遲和價格。"
+msgstr "通過瀏覽器在 Uniswap 協議上找到最佳路徑。可能會導致高延遲和價格。"
 
 #: src/components/Settings/RouterPreferenceSettings/index.tsx
 msgid "Finds the best route on the Uniswap Protocol using the Uniswap Labs Routing API."
-msgstr "使用 Uniswap 實驗室路由 API 在 Uniswap 協議上找到最佳路由。"
+msgstr "使用 Uniswap Labs Routing API 在 Uniswap 協議上找到最佳路由。"
 
 #: src/nft/components/profile/list/NFTListingsGrid.tsx
 msgid "Floor"
-msgstr "地面"
+msgstr "底部"
 
 #: src/nft/components/details/detailsV2/DataPageTraits.tsx
 #: src/nft/components/profile/list/NFTListingsGrid.tsx
@@ -1078,7 +1078,7 @@ msgstr "贊成"
 
 #: src/pages/MigrateV2/index.tsx
 msgid "For each pool shown below, click migrate to remove your liquidity from Uniswap V2 and deposit it into Uniswap V3."
-msgstr "對於下面顯示的每個流動池，單擊“遷移”以從 Uniswap V2 贖回您的流動資金，並將其註入到 Uniswap V3。"
+msgstr "對於下面顯示的每個流動池，單擊“遷移”以從 Uniswap V2 贖回您的流動資金，並將其注入到 Uniswap V3。"
 
 #: src/nft/components/details/detailsV2/TableRowComponent.tsx
 #: src/pages/Swap/index.tsx
@@ -1107,7 +1107,7 @@ msgstr "幫助中心"
 
 #: src/components/AccountDrawer/MiniPortfolio/ExpandoRow.tsx
 msgid "Hidden"
-msgstr "隱"
+msgstr "隱藏"
 
 #: src/components/AccountDrawer/MiniPortfolio/ExpandoRow.tsx
 #: src/components/FeeSelector/index.tsx
@@ -1130,11 +1130,11 @@ msgstr "隱藏小額餘額"
 
 #: src/components/TokenSafety/index.tsx
 msgid "I understand"
-msgstr "我已知悉"
+msgstr "我已了解"
 
 #: src/components/ConnectedAccountBlocked/index.tsx
 msgid "If you believe this is an error, please send an email including your address to"
-msgstr "如果您認為這是一個錯誤，請將包含您的地址的電子郵件發送至"
+msgstr "如果您認為這是一個錯誤，請發送電子郵件至(內容包含您的地址)"
 
 #: src/pages/Pool/v2.tsx
 msgid "Import Pool"
@@ -1166,7 +1166,7 @@ msgstr "輸入數額僅為估值。您最多會售出<0>{0} {1}</0> 否則將還
 
 #: src/nft/components/bag/BagFooter.tsx
 msgid "Insufficient funds"
-msgstr "不充足的資金"
+msgstr "資金不足"
 
 #: src/nft/components/bag/BagFooter.tsx
 msgid "Insufficient liquidity"
@@ -1250,23 +1250,23 @@ msgstr "瞭解更多"
 #: src/components/NavBar/MenuDropdown.tsx
 #: src/components/PrivacyPolicy/index.tsx
 msgid "Legal & Privacy"
-msgstr "法律與隱私"
+msgstr "條款與隱私權"
 
 #: src/components/Tokens/TokenDetails/About.tsx
 msgid "Links"
-msgstr "鏈接"
+msgstr "連結"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Liquidity"
-msgstr "流動資金"
+msgstr "流動性"
 
 #: src/components/LiquidityChartRangeInput/index.tsx
 msgid "Liquidity data not available."
-msgstr "沒有流動性數據。"
+msgstr "無流動性資料。"
 
 #: src/pages/Pool/v2.tsx
 msgid "Liquidity provider rewards"
-msgstr "流動資金提供者獎勵"
+msgstr "流動性提供者獎勵"
 
 #: src/pages/Pool/v2.tsx
 msgid "Liquidity providers earn a 0.3% fee on all trades proportional to their share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
@@ -1282,11 +1282,11 @@ msgstr "待售清單"
 
 #: src/nft/components/profile/list/Modal/ListModalSection.tsx
 msgid "Listing an NFT requires a one-time marketplace approval for each NFT collection."
-msgstr "列出 NFT 需要對每個 NFT 集合進行一次性市場批准。"
+msgstr "列出 NFT 需要對每個 NFT 集合進行一次性批准。"
 
 #: src/nft/components/details/detailsV2/DataPageTable.tsx
 msgid "Listings"
-msgstr "房源"
+msgstr "清單"
 
 #: src/components/PositionCard/Sushi.tsx
 #: src/components/PositionCard/V2.tsx
@@ -1300,11 +1300,11 @@ msgstr "載入中"
 
 #: src/nft/components/bag/BagFooter.tsx
 msgid "Loading Allowance"
-msgstr "裝載津貼"
+msgstr "載入津貼"
 
 #: src/nft/components/profile/list/Modal/BelowFloorWarningModal.tsx
 msgid "Low listing price"
-msgstr "上市價低"
+msgstr "低上架價"
 
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "MAX"
@@ -1312,7 +1312,7 @@ msgstr "最大值"
 
 #: src/nft/components/details/detailsV2/OfferButton.tsx
 msgid "Make an offer"
-msgstr "開個價"
+msgstr "開價"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/V2.tsx
@@ -1448,7 +1448,7 @@ msgstr "缺少圖表數據"
 
 #: src/components/Tokens/TokenDetails/PriceChart.tsx
 msgid "Missing price data due to recently low trading volume on Uniswap v3"
-msgstr "由於最近 Uniswap v3 交易量低，價格數據缺失"
+msgstr "由於最近 Uniswap v3 交易量低，缺失價格資料"
 
 #: src/components/FiatOnrampModal/index.tsx
 msgid "Moonpay Fiat On-ramp iframe"
@@ -1485,16 +1485,16 @@ msgstr "找不到名稱"
 
 #: src/components/NavBar/NavIcon.tsx
 msgid "Navigation button"
-msgstr "導航按鈕"
+msgstr "導航鈕"
 
 #: src/components/Polling/ChainConnectivityWarning.tsx
 msgid "Network Warning"
-msgstr "網絡警告"
+msgstr "網路警告"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 #: src/components/swap/SwapModalFooter.tsx
 msgid "Network fee"
-msgstr "網絡費用"
+msgstr "網路費用"
 
 #: src/nft/components/details/detailsV2/TableRowComponent.tsx
 msgid "Never"
@@ -1506,15 +1506,15 @@ msgstr "新倉位"
 
 #: src/nft/components/profile/view/EmptyWalletContent.tsx
 msgid "No NFTs yet"
-msgstr "還沒有 NFT"
+msgstr "目前沒有 NFT"
 
 #: src/pages/MigrateV2/index.tsx
 msgid "No V2 Liquidity found."
-msgstr "找不到V2流動資金。"
+msgstr "找不到 V2 流動資金。"
 
 #: src/nft/components/profile/view/EmptyWalletContent.tsx
 msgid "No activity yet"
-msgstr "還沒有活動"
+msgstr "目前還沒有活動"
 
 #: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "No data"
@@ -1522,7 +1522,7 @@ msgstr "沒有資料"
 
 #: src/state/governance/hooks.ts
 msgid "No description."
-msgstr "沒有說明。"
+msgstr "無說明資訊。"
 
 #: src/nft/pages/profile/profile.tsx
 msgid "No items to display"
@@ -1554,11 +1554,11 @@ msgstr "沒有可用的代幣信息"
 
 #: src/components/Tokens/TokenTable/TokenTable.tsx
 msgid "No tokens found"
-msgstr "未找到令牌"
+msgstr "未找到代幣"
 
 #: src/components/NavBar/SearchBarDropdown.tsx
 msgid "No tokens found."
-msgstr "找不到標記。"
+msgstr "找不到代幣。"
 
 #: src/nft/components/profile/view/EmptyWalletContent.tsx
 msgid "No tokens yet"
@@ -1640,7 +1640,7 @@ msgstr "支付"
 
 #: src/nft/components/bag/BagFooter.tsx
 msgid "Pay Anyway"
-msgstr "無論如何支付"
+msgstr "無論如何皆要支付"
 
 #: src/nft/components/bag/BagFooter.tsx
 msgid "Pay with"
@@ -1649,11 +1649,11 @@ msgstr "使用。。。支付"
 #: src/components/AccountDrawer/MiniPortfolio/Activity/index.tsx
 #: src/pages/Vote/styled.tsx
 msgid "Pending"
-msgstr "待辦"
+msgstr "未完成"
 
 #: src/pages/Swap/index.tsx
 msgid "Permission is required for Uniswap to swap each token. This will expire after one month for your security."
-msgstr "Uniswap 交換每個代幣需要獲得許可。為了您的安全，這將在一個月後過期。"
+msgstr "Uniswap 交換每個代幣需要獲得許可。為了資訊安全，此許可將在一個月後過期。"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
 msgid "Permit2"
@@ -1692,7 +1692,7 @@ msgstr "流動池匯集 {0}:"
 #: src/pages/Pool/index.tsx
 #: src/pages/Pool/index.tsx
 msgid "Pools"
-msgstr "游泳池"
+msgstr "交易池"
 
 #: src/components/NavBar/SearchBarDropdown.tsx
 msgid "Popular NFT collections"
@@ -1704,11 +1704,11 @@ msgstr "熱門代幣"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Position unavailable"
-msgstr "職位空缺"
+msgstr "倉位不可用"
 
 #: src/components/AccountDrawer/SettingsMenu.tsx
 msgid "Preferences"
-msgstr "偏好"
+msgstr "偏好設定"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Preview"
@@ -1774,7 +1774,7 @@ msgstr "進入錢包"
 
 #: src/nft/components/profile/list/Modal/SuccessScreen.tsx
 msgid "Proceeds if sold"
-msgstr "出售後的收益"
+msgstr "售後收益"
 
 #: src/pages/CreateProposal/ProposalEditor.tsx
 msgid "Proposal"
@@ -1824,7 +1824,7 @@ msgstr "隊列提案 {proposalId}"
 
 #: src/components/AccountDrawer/MiniPortfolio/constants.ts
 msgid "Queue failed"
-msgstr "排隊失敗"
+msgstr "加入隊列失敗"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Queue proposal {proposalKey}."
@@ -1865,7 +1865,7 @@ msgstr "閱讀有關提供流動資金的更多資訊"
 
 #: src/components/swap/UnsupportedCurrencyFooter.tsx
 msgid "Read more about unsupported assets"
-msgstr "閱讀有關不受支持的代幣的更多資訊"
+msgstr "閱讀有關不支援的代幣的更多資訊"
 
 #: src/nft/components/profile/list/ListPage.tsx
 msgid "Receive"
@@ -1912,7 +1912,7 @@ msgstr "重新載入此頁。"
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Remove"
-msgstr "去除"
+msgstr "移除"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Remove <0/> and <1/>"
@@ -1920,11 +1920,11 @@ msgstr "移除 <0/> 和 <1/>"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Remove Amount"
-msgstr "去除數額"
+msgstr "移除數額"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Remove Delegate"
-msgstr "去除投票權代表"
+msgstr "移除委任"
 
 #: src/components/NavigationTabs/index.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1935,11 +1935,11 @@ msgstr "去除流動資金"
 #: src/nft/components/collection/CollectionAsset.tsx
 #: src/nft/components/profile/view/ViewMyNftsAsset.tsx
 msgid "Remove from bag"
-msgstr "從包中取出"
+msgstr "自購物包中移除"
 
 #: src/nft/components/profile/list/PriceTextInput.tsx
 msgid "Remove item"
-msgstr "除去項目"
+msgstr "移除項目"
 
 #: src/components/AccountDrawer/MiniPortfolio/constants.ts
 msgid "Remove liquidity failed"
@@ -2128,7 +2128,7 @@ msgstr "顯示"
 
 #: src/pages/Vote/Landing.tsx
 msgid "Show Cancelled"
-msgstr "演出取消"
+msgstr "顯示已取消提案"
 
 #: src/components/PositionList/index.tsx
 #: src/components/PositionList/index.tsx
@@ -2138,7 +2138,7 @@ msgstr "顯示已關閉的倉位"
 
 #: src/components/Tokens/TokenDetails/About.tsx
 msgid "Show more"
-msgstr "展示更多"
+msgstr "顯示更多"
 
 #: src/components/NavBar/MenuDropdown.tsx
 msgid "Show resources"
@@ -2150,7 +2150,7 @@ msgstr "符號"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Simple"
-msgstr "簡單型"
+msgstr "簡單"
 
 #: src/components/Settings/MaxSlippageSettings/index.tsx
 msgid "Slippage below {0}% may result in a failed transaction"
@@ -2169,7 +2169,7 @@ msgstr "有些代幣無法通過此界面使用，因為它們可能無法很好
 #: src/components/ErrorBoundary/index.tsx
 #: src/nft/components/bag/BagFooter.tsx
 msgid "Something went wrong"
-msgstr "出問題了"
+msgstr "發生問題!"
 
 #: src/nft/components/bag/BagFooter.tsx
 msgid "Something went wrong. Please try again."
@@ -2177,7 +2177,7 @@ msgstr "出了些問題。請再試一次。"
 
 #: src/components/ErrorBoundary/index.tsx
 msgid "Sorry, an error occured while processing your request. If you request support, be sure to copy the details of this error."
-msgstr "抱歉，處理您的請求時出錯。如果您請求支持，請務必復制此錯誤的詳細信息。"
+msgstr "抱歉，處理您的請求時出錯。如果您請求支持，請務必複製此錯誤的詳細信息。"
 
 #: src/components/ErrorBoundary/index.tsx
 msgid "Sorry, an error occured while processing your request. If you request support, be sure to provide your error ID."
@@ -2185,7 +2185,7 @@ msgstr "0xf4bea2c219eb95c6745983b68185c7340c319d9e"
 
 #: src/nft/components/profile/list/ListingButton.tsx
 msgid "Start listing"
-msgstr "開始上市"
+msgstr "開始陳列"
 
 #: src/components/Tokens/TokenDetails/StatsSection.tsx
 #: src/components/Tokens/TokenDetails/StatsSection.tsx
@@ -2206,7 +2206,7 @@ msgstr "提交提案"
 
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "Submitting Proposal"
-msgstr "正提交提案"
+msgstr "提案提交中"
 
 #: src/components/vote/VoteModal.tsx
 msgid "Submitting Vote"
@@ -2226,7 +2226,7 @@ msgstr "成功"
 
 #: src/nft/components/profile/list/Modal/SuccessScreen.tsx
 msgid "Successfully listed"
-msgstr "成功上市"
+msgstr "成功上架"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Supply"
@@ -2281,7 +2281,7 @@ msgstr "掃"
 
 #: src/nft/components/bag/BagFooter.tsx
 msgid "Switch networks"
-msgstr "切換網絡"
+msgstr "切換網路"
 
 #: src/components/Tokens/TokenDetails/InvalidTokenDetails.tsx
 msgid "Switch to {0}"
@@ -2289,11 +2289,11 @@ msgstr "切換到 {0}"
 
 #: src/components/Tokens/TokenDetails/index.tsx
 msgid "Symbol not found"
-msgstr "找不到符號"
+msgstr "找不到代幣"
 
 #: src/components/Tokens/TokenDetails/StatsSection.tsx
 msgid "TVL"
-msgstr "TVL"
+msgstr "總鎖倉量"
 
 #: src/components/WalletModal/PrivacyPolicyNotice.tsx
 msgid "Terms of Service"
@@ -2301,7 +2301,7 @@ msgstr "服務條款"
 
 #: src/components/Popups/ClaimPopup.tsx
 msgid "Thanks for being part of the Uniswap community <0/>"
-msgstr "感謝您加入 Uniswap 社區 <0/>"
+msgstr "感謝您加入 Uniswap 社群 <0/>"
 
 #: src/components/FeeSelector/index.tsx
 msgid "The % you will earn in fees."
@@ -2405,7 +2405,7 @@ msgstr "主題"
 
 #: src/components/LiquidityChartRangeInput/index.tsx
 msgid "There is no liquidity data."
-msgstr "沒有流動性數據。"
+msgstr "無流動性數據。"
 
 #: src/components/ConnectedAccountBlocked/index.tsx
 msgid "This address is blocked on the Uniswap Labs interface because it is associated with one or more"
@@ -2417,11 +2417,11 @@ msgstr "此應用程序使用以下第三方 API："
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/index.tsx
 msgid "This month"
-msgstr "這個月"
+msgstr "本月"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "This pool must be initialized before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount. Gas fees will be higher than usual due to the initialization transaction."
-msgstr "需要先初始化，然後再添加流動性。初始化時，請先選擇起始價格，然後輸入您的流動性價格範圍和存款金額。因需進行初始化相關操作，Gas 費將比平時高一些。"
+msgstr "請先初始化，然後再添加流動性。初始化時，請先選擇起始價格，然後輸入您的流動性價格範圍和存款金額。因需進行初始化相關操作，Gas 費將比平時高一些。"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "This proposal may be executed after {0}."
@@ -2437,7 +2437,7 @@ msgstr "此表包含 Uniswap 交易量排名靠前的代幣，並根據您的輸
 
 #: src/components/Tokens/TokenDetails/InvalidTokenDetails.tsx
 msgid "This token doesn't exist"
-msgstr "此令牌不存在"
+msgstr "此代幣不存在"
 
 #: src/components/Tokens/TokenDetails/InvalidTokenDetails.tsx
 msgid "This token doesn't exist on {0}"
@@ -2500,7 +2500,7 @@ msgstr "Token name"
 
 #: src/components/TokenSafety/index.tsx
 msgid "Token not found"
-msgstr "未找到令牌"
+msgstr "未找到代幣"
 
 #: src/components/Tokens/TokenDetails/StatsSection.tsx
 msgid "Token stats and charts for {label} are available on <0>info.uniswap.org</0>"
@@ -2522,11 +2522,11 @@ msgstr "較活躍的流動池"
 
 #: src/pages/Tokens/index.tsx
 msgid "Top tokens on Uniswap"
-msgstr "Uniswap 上的頂級代幣"
+msgstr "Uniswap 上的熱門代幣"
 
 #: src/nft/components/bag/BagFooter.tsx
 msgid "Total"
-msgstr "全部的"
+msgstr "全部"
 
 #: src/components/Tokens/TokenTable/TokenRow.tsx
 msgid "Total value locked (TVL) is the aggregate amount of the asset available across all Uniswap v3 liquidity pools."
@@ -2546,11 +2546,11 @@ msgstr "特徵"
 
 #: src/nft/components/details/detailsV2/InfoChips.tsx
 msgid "Trait Floor"
-msgstr "特徵樓層"
+msgstr "特徵地板價"
 
 #: src/nft/components/details/detailsV2/DataPageTraits.tsx
 msgid "Traits"
-msgstr "特質"
+msgstr "特徵"
 
 #: src/components/Settings/MenuButton/index.tsx
 msgid "Transaction Settings"
@@ -2585,7 +2585,7 @@ msgstr "交易已提交"
 
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Transfer Token"
-msgstr "代幣轉賬"
+msgstr "代幣轉帳"
 
 #: src/components/WalletModal/ConnectionErrorView.tsx
 msgid "Try Again"
@@ -2597,7 +2597,7 @@ msgstr "UNI治理"
 
 #: src/components/Popups/ClaimPopup.tsx
 msgid "UNI has arrived"
-msgstr "UNI 代幣已到賬"
+msgstr "UNI 代幣已到帳"
 
 #: src/pages/Vote/Landing.tsx
 msgid "UNI tokens represent voting shares in Uniswap governance. You can vote on each proposal yourself or delegate your votes to a third party."
@@ -2613,7 +2613,7 @@ msgstr "不可用"
 
 #: src/nft/components/profile/view/ViewMyNftsAsset.tsx
 msgid "Unavailable for listing"
-msgstr "不可上市"
+msgstr "不可上架"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Unclaimed fees"
@@ -2708,15 +2708,15 @@ msgstr "解鎖投票"
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Unsupported Asset"
-msgstr "不支持的資產"
+msgstr "不支援的資產"
 
 #: src/components/swap/UnsupportedCurrencyFooter.tsx
 msgid "Unsupported Assets"
-msgstr "不支持的資產"
+msgstr "不支援的資產"
 
 #: src/components/NavBar/ChainSelectorRow.tsx
 msgid "Unsupported by your wallet"
-msgstr "你的錢包不支持"
+msgstr "你的錢包不支援"
 
 #: src/state/governance/hooks.ts
 msgid "Untitled"
@@ -2923,7 +2923,7 @@ msgstr "退出"
 
 #: src/pages/Swap/index.tsx
 msgid "Wrap"
-msgstr "包裹"
+msgstr "封裝"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Wrap <0/> to {0}"
@@ -2931,20 +2931,20 @@ msgstr "將 <0/> 換為 {0}"
 
 #: src/components/AccountDrawer/MiniPortfolio/constants.ts
 msgid "Wrap failed"
-msgstr "包裝失敗"
+msgstr "封裝失敗"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
 #: src/components/AccountDrawer/MiniPortfolio/constants.ts
 msgid "Wrapped"
-msgstr "包裹"
+msgstr "已封裝"
 
 #: src/components/AccountDrawer/MiniPortfolio/constants.ts
 msgid "Wrapping"
-msgstr "包裝"
+msgstr "封裝中"
 
 #: src/nft/components/bag/BagFooter.tsx
 msgid "Wrong network"
-msgstr "錯誤的網絡"
+msgstr "錯誤的網路"
 
 #: src/pages/CreateProposal/index.tsx
 msgid "You already have an active or pending proposal"
@@ -2956,7 +2956,7 @@ msgstr "您正在創建一個流動池"
 
 #: src/components/addLiquidity/OwnershipWarning.tsx
 msgid "You are not the owner of this LP position. You will not be able to withdraw the liquidity from this position unless you own the following address: {ownerAddress}"
-msgstr "您不是此 LP 職位的所有者。除非您擁有以下地址，否則您將無法從此頭寸提取流動性： {ownerAddress}"
+msgstr "您不是此 LP 倉位的所有者。除非您擁有以下地址，否則您將無法從此頭寸提取流動性： {ownerAddress}"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You are the first liquidity provider for this Uniswap V3 pool. Your liquidity will migrate at the current {0} price."
@@ -2980,7 +2980,7 @@ msgstr "您在此流動池中還未有流動資金。"
 
 #: src/components/Polling/ChainConnectivityWarning.tsx
 msgid "You may have lost your network connection."
-msgstr "您的網絡連接可能斷了。"
+msgstr "您的網路連接可能斷了。"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You must connect an account."
@@ -3232,7 +3232,7 @@ msgstr "{0} 待處理"
 msgid "{0} Try increasing your slippage tolerance.\n"
 "Note: fee-on-transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "{0} 嘗試增加滑點容忍度。\n"
-"注意：轉賬費用和變基代幣與 Uniswap V3 不兼容。"
+"注意：轉帳費用和變基代幣與 Uniswap V3 不兼容。"
 
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/AddressClaimModal.tsx
@@ -3296,7 +3296,7 @@ msgstr "{0}{1} 流動池代幣"
 
 #: src/components/Settings/TransactionDeadlineSettings/index.tsx
 msgid "{0}m"
-msgstr "{0}米"
+msgstr "{0}分"
 
 #: src/nft/components/profile/list/SetDurationModal.tsx
 msgid "{amount, plural, =1 {day} other {days}}"
@@ -3364,5 +3364,5 @@ msgstr "{uniqueCollections, plural, =1 {收藏} other {收藏}}"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "← Back to Pools"
-msgstr "← 返回池"
+msgstr "← 返回"
 
