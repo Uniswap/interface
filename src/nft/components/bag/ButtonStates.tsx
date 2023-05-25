@@ -26,9 +26,9 @@ export interface BuyButtonStateData {
   handleClick: (() => void) | (() => Promise<void>)
   buttonText: ReactNode
   disabled: boolean
-  warningText: ReactNode | undefined
+  warningText?: ReactNode
   warningTextColor: string
-  helperText: ReactNode | undefined
+  helperText?: ReactNode
   helperTextColor: string
   buttonColor: string
   buttonTextColor: string
