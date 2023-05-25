@@ -15,7 +15,7 @@ export const ProposalSubmissionModal = ({
   onDismiss,
 }: {
   isOpen: boolean
-  hash: string | undefined
+  hash?: string
   onDismiss: () => void
 }) => {
   const theme = useTheme()

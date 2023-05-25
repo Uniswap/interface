@@ -8,7 +8,7 @@ interface WalletBalanceProps {
   address: string
   balance: string
   weiBalance: BigNumber
-  provider: Web3Provider | undefined
+  provider?: Web3Provider
 }
 
 export function useWalletBalance(): WalletBalanceProps {

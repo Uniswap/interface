@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
-import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { AutoColumn } from 'components/Column'
@@ -183,7 +183,6 @@ interface CurrencyInputPanelProps {
   hideInput?: boolean
   otherCurrency?: Currency | null
   fiatValue?: { data?: number; isLoading: boolean }
-  priceImpact?: Percent
   id: string
   showCommonBases?: boolean
   showCurrencyAmount?: boolean
@@ -207,7 +206,6 @@ export default function CurrencyInputPanel({
   disableNonToken,
   renderBalance,
   fiatValue,
-  priceImpact,
   hideBalance = false,
   pair = null, // used for double token logo
   hideInput = false,
@@ -293,7 +291,7 @@ export default function CurrencyInputPanel({
           <FiatRow>
             <RowBetween>
               <LoadingOpacityContainer $loading={loading}>
-                <FiatValue fiatValue={fiatValue} priceImpact={priceImpact} />
+                {fiatValue && <FiatValue fiatValue={fiatValue} />}
               </LoadingOpacityContainer>
               {account ? (
                 <RowFixed style={{ height: '17px' }}>

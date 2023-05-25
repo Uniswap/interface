@@ -165,15 +165,15 @@ export default function ConfirmSwapModal({
   fiatValueOutput,
 }: {
   trade: InterfaceTrade
-  originalTrade: InterfaceTrade | undefined
-  txHash: string | undefined
+  originalTrade?: InterfaceTrade
+  txHash?: string
   allowedSlippage: Percent
   allowance: Allowance
   onAcceptChanges: () => void
   onConfirm: () => void
-  swapError: Error | undefined
+  swapError?: Error
   onDismiss: () => void
-  swapQuoteReceivedDate: Date | undefined
+  swapQuoteReceivedDate?: Date
   fiatValueInput: { data?: number; isLoading: boolean }
   fiatValueOutput: { data?: number; isLoading: boolean }
 }) {
