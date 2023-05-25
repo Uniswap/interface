@@ -222,8 +222,34 @@ exports[`Header loads with asset with a sell order 1`] = `
   white-space: nowrap;
 }
 
+.c18 {
+  height: 24px;
+  width: 0px;
+  border-left: 0.5px solid #f5f6fc;
+}
+
+.c19 {
+  width: -webkit-min-content;
+  width: -moz-min-content;
+  width: min-content;
+  -webkit-transition: 250ms;
+  transition: 250ms;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  will-change: width;
+}
+
+.c16 {
+  min-width: 0px;
+  -webkit-transition: 250ms;
+  transition: 250ms;
+  will-change: width;
+  overflow: hidden;
+}
+
 .c11 {
-  width: 320px;
+  width: 100%;
   background-color: #FB118E;
   border-radius: 16px;
   overflow: hidden;
@@ -231,21 +257,6 @@ exports[`Header loads with asset with a sell order 1`] = `
 }
 
 .c17 {
-  height: 24px;
-  width: 0px;
-  border-left: 0.5px solid #f5f6fc;
-}
-
-.c18 {
-  width: -webkit-min-content;
-  width: -moz-min-content;
-  width: min-content;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-}
-
-.c16 {
   color: #F5F6FCb8;
 }
 
@@ -263,6 +274,12 @@ exports[`Header loads with asset with a sell order 1`] = `
 .c5 {
   gap: 4px;
   margin-right: auto;
+}
+
+@media screen and (min-width:640px) {
+  .c11 {
+    width: 320px;
+  }
 }
 
 @media screen and (max-width:1024px) {
@@ -320,20 +337,20 @@ exports[`Header loads with asset with a sell order 1`] = `
         class="c0 c1 c11"
       >
         <button
-          class="c12 c13 c14 c15"
+          class="c12 c13 c14 c15 c16"
         >
           Buy
           <div
-            class="c16"
+            class="c17"
           >
             100.00M ETH
           </div>
         </button>
         <div
-          class="c17"
+          class="c18"
         />
         <button
-          class="c12 c13 c14 c15 c18"
+          class="c12 c13 c14 c15 c19"
         >
           <svg
             fill="none"
