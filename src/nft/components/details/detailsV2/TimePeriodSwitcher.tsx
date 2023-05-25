@@ -52,7 +52,7 @@ const TimeDropdownMenu = styled(Column)`
 
 const DropdownContent = styled(Row)`
   gap: 4px;
-  padding: 8px 4px;
+  padding: 8px;
   width: 100%;
   justify-content: flex-end;
   border-radius: 8px;
