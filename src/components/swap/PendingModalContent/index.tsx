@@ -137,7 +137,7 @@ function getContent(args: ContentArgs): PendingModalStep {
         subtitle: (
           <>
             <Trans>This will expire after 30 days for your security.</Trans>{' '}
-            <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/360056642192">
+            <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/8120520483085">
               <Trans>Why is this required?</Trans>
             </ExternalLink>
           </>
