@@ -33,6 +33,10 @@ const TabNumBubble = styled(ThemedText.UtilityBadge)`
   line-height: 12px;
 `
 
+const EndButtonWrapper = styled.div`
+  margin-left: auto;
+`
+
 export interface Tab {
   title: React.ReactNode
   key: string
@@ -43,9 +47,10 @@ export interface Tab {
 interface TabbedComponentProps {
   tabs: Map<string, Tab>
   defaultTabKey?: string
+  endButton?: React.ReactNode
 }
 
-export const TabbedComponent = ({ tabs, defaultTabKey }: TabbedComponentProps) => {
+export const TabbedComponent = ({ tabs, defaultTabKey, endButton }: TabbedComponentProps) => {
   const firstKey = tabs.keys().next().value
   const [activeKey, setActiveKey] = useState(defaultTabKey ?? firstKey)
   const activeContent = tabs.get(activeKey)?.content
@@ -66,6 +71,7 @@ export const TabbedComponent = ({ tabs, defaultTabKey }: TabbedComponentProps) =
             </Row>
           </Tab>
         ))}
+        {endButton && <EndButtonWrapper>{endButton}</EndButtonWrapper>}
       </TabsRow>
       {activeContent}
     </TabbedComponentContainer>

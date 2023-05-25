@@ -1,11 +1,13 @@
 import { Trans } from '@lingui/macro'
+import { HistoryDuration } from 'graphql/data/__generated__/types-and-hooks'
 import { GenieAsset } from 'nft/types'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 
 import { ActivityTableContent } from './ActivityTableContent'
 import { ListingsTableContent } from './ListingsTableContent'
 import { OffersTableContent } from './OffersTableContent'
 import { Tab, TabbedComponent } from './TabbedComponent'
+import { TimePeriodSwitcher } from './TimePeriodSwitcher'
 
 export enum TableTabsKeys {
   Activity = 'activity',
@@ -14,6 +16,8 @@ export enum TableTabsKeys {
 }
 
 export const DataPageTable = ({ asset }: { asset: GenieAsset }) => {
+  const [timePeriod, setTimePeriod] = useState<HistoryDuration>(HistoryDuration.Week)
+  const timePeriodSwitcher = <TimePeriodSwitcher activeTimePeriod={timePeriod} setTimePeriod={setTimePeriod} />
   const TableTabs: Map<string, Tab> = useMemo(
     () =>
       new Map([
@@ -46,5 +50,5 @@ export const DataPageTable = ({ asset }: { asset: GenieAsset }) => {
       ]),
     [asset]
   )
-  return <TabbedComponent tabs={TableTabs} />
+  return <TabbedComponent tabs={TableTabs} endButton={timePeriodSwitcher} />
 }
