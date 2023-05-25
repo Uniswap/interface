@@ -1,7 +1,7 @@
-import { Trade } from '@uniswap/router-sdk'
-import { Currency, CurrencyAmount, Percent, Price, Token, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Percent, Price, Token } from '@uniswap/sdk-core'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
-import { InterfaceTrade } from 'state/routing/types'
+import { ClassicTrade, InterfaceTrade } from 'state/routing/types'
+import { isClassicTrade } from 'state/routing/utils'
 import { computeRealizedPriceImpact } from 'utils/prices'
 
 export const getDurationUntilTimestampSeconds = (futureTimestampInSecondsSinceEpoch?: number): number | undefined => {
@@ -39,7 +39,7 @@ export const formatSwapSignedAnalyticsEventProperties = ({
   fiatValues,
   txHash,
 }: {
-  trade: InterfaceTrade | Trade<Currency, Currency, TradeType>
+  trade: InterfaceTrade
   fiatValues: { amountIn: number | undefined; amountOut: number | undefined }
   txHash: string
 }) => ({
@@ -52,7 +52,9 @@ export const formatSwapSignedAnalyticsEventProperties = ({
   token_out_amount: formatToDecimal(trade.outputAmount, trade.outputAmount.currency.decimals),
   token_in_amount_usd: fiatValues.amountIn,
   token_out_amount_usd: fiatValues.amountOut,
-  price_impact_basis_points: formatPercentInBasisPointsNumber(computeRealizedPriceImpact(trade)),
+  price_impact_basis_points: isClassicTrade(trade)
+    ? formatPercentInBasisPointsNumber(computeRealizedPriceImpact(trade))
+    : undefined,
   chain_id:
     trade.inputAmount.currency.chainId === trade.outputAmount.currency.chainId
       ? trade.inputAmount.currency.chainId
@@ -60,7 +62,7 @@ export const formatSwapSignedAnalyticsEventProperties = ({
 })
 
 export const formatSwapQuoteReceivedEventProperties = (
-  trade: Trade<Currency, Currency, TradeType>,
+  trade: ClassicTrade,
   gasUseEstimateUSD?: string,
   fetchingSwapQuoteStartTime?: Date
 ) => {

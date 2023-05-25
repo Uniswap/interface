@@ -8,11 +8,31 @@ import ms from 'ms.macro'
 import { useMemo } from 'react'
 import { INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference, useGetQuoteQuery } from 'state/routing/slice'
 
-import { InterfaceTrade, QuoteState, TradeState } from './types'
+import { ClassicTrade, InterfaceTrade, QuoteState, TradeState } from './types'
 
 const TRADE_INVALID = { state: TradeState.INVALID, trade: undefined } as const
 const TRADE_NOT_FOUND = { state: TradeState.NO_ROUTE_FOUND, trade: undefined } as const
 const TRADE_LOADING = { state: TradeState.LOADING, trade: undefined } as const
+
+export function useRoutingAPITrade<TTradeType extends TradeType>(
+  tradeType: TTradeType,
+  amountSpecified: CurrencyAmount<Currency> | undefined,
+  otherCurrency: Currency | undefined,
+  routerPreference: typeof INTERNAL_ROUTER_PREFERENCE_PRICE
+): {
+  state: TradeState
+  trade?: ClassicTrade
+}
+
+export function useRoutingAPITrade<TTradeType extends TradeType>(
+  tradeType: TTradeType,
+  amountSpecified: CurrencyAmount<Currency> | undefined,
+  otherCurrency: Currency | undefined,
+  routerPreference: RouterPreference
+): {
+  state: TradeState
+  trade?: InterfaceTrade
+}
 
 /**
  * Returns the best trade by invoking the routing api or the smart order router on the client

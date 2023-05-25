@@ -1,3 +1,4 @@
+import { DutchLimitOrderInfo, DutchLimitOrderTrade as IDutchLimitOrderTrade } from '@uniswap/gouda-sdk'
 import { MixedRouteSDK, Trade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { Route as V2Route } from '@uniswap/v2-sdk'
@@ -67,11 +68,13 @@ export interface QuoteData {
   routeString: string
 }
 
-export class ClassicTrade<
-  TInput extends Currency,
-  TOutput extends Currency,
-  TTradeType extends TradeType
-> extends Trade<TInput, TOutput, TTradeType> {
+export enum TradeFillType {
+  Classic = 'classic', // Uniswap V1, V2, and V3 trades with on-chain routes
+  UniswapX = 'uniswap_x', // off-chain trades, no routes
+}
+
+export class ClassicTrade extends Trade<Currency, Currency, TradeType> {
+  public readonly fillType = TradeFillType.Classic
   gasUseEstimateUSD: string | null | undefined
   blockNumber: string | null | undefined
 
@@ -83,20 +86,20 @@ export class ClassicTrade<
     gasUseEstimateUSD?: string | null
     blockNumber?: string | null
     v2Routes: {
-      routev2: V2Route<TInput, TOutput>
-      inputAmount: CurrencyAmount<TInput>
-      outputAmount: CurrencyAmount<TOutput>
+      routev2: V2Route<Currency, Currency>
+      inputAmount: CurrencyAmount<Currency>
+      outputAmount: CurrencyAmount<Currency>
     }[]
     v3Routes: {
-      routev3: V3Route<TInput, TOutput>
-      inputAmount: CurrencyAmount<TInput>
-      outputAmount: CurrencyAmount<TOutput>
+      routev3: V3Route<Currency, Currency>
+      inputAmount: CurrencyAmount<Currency>
+      outputAmount: CurrencyAmount<Currency>
     }[]
-    tradeType: TTradeType
+    tradeType: TradeType
     mixedRoutes?: {
-      mixedRoute: MixedRouteSDK<TInput, TOutput>
-      inputAmount: CurrencyAmount<TInput>
-      outputAmount: CurrencyAmount<TOutput>
+      mixedRoute: MixedRouteSDK<Currency, Currency>
+      inputAmount: CurrencyAmount<Currency>
+      outputAmount: CurrencyAmount<Currency>
     }[]
   }) {
     super(routes)
@@ -105,7 +108,33 @@ export class ClassicTrade<
   }
 }
 
-export type InterfaceTrade = ClassicTrade<Currency, Currency, TradeType>
+export class DutchLimitOrderTrade extends IDutchLimitOrderTrade<Currency, Currency, TradeType> {
+  public readonly fillType = TradeFillType.UniswapX
+  quoteId?: string
+  needsWrap: boolean
+
+  constructor({
+    currencyIn,
+    currenciesOut,
+    orderInfo,
+    tradeType,
+    quoteId,
+    needsWrap,
+  }: {
+    currencyIn: Currency
+    currenciesOut: Currency[]
+    orderInfo: DutchLimitOrderInfo
+    tradeType: TradeType
+    quoteId?: string
+    needsWrap: boolean
+  }) {
+    super({ currencyIn, currenciesOut, orderInfo, tradeType })
+    this.quoteId = quoteId
+    this.needsWrap = needsWrap
+  }
+}
+
+export type InterfaceTrade = ClassicTrade | DutchLimitOrderTrade
 
 export enum QuoteState {
   SUCCESS = 'Success',

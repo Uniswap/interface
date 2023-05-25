@@ -11,6 +11,7 @@ import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
 import { useState } from 'react'
 import { ChevronDown } from 'react-feather'
 import { InterfaceTrade } from 'state/routing/types'
+import { isUniswapXTrade } from 'state/routing/utils'
 import styled, { keyframes, useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
@@ -136,7 +137,8 @@ export default function SwapDetailsDropdown({ trade, syncing, loading, allowedSl
             ) : null}
           </RowFixed>
           <RowFixed>
-            {!trade?.gasUseEstimateUSD ||
+            {isUniswapXTrade(trade) ||
+            !trade?.gasUseEstimateUSD ||
             showDetails ||
             !chainId ||
             !SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId) ? null : (

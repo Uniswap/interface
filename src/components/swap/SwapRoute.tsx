@@ -5,13 +5,13 @@ import { LoadingRows } from 'components/Loader/styled'
 import RoutingDiagram from 'components/RoutingDiagram/RoutingDiagram'
 import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
 import useAutoRouterSupported from 'hooks/useAutoRouterSupported'
-import { InterfaceTrade } from 'state/routing/types'
+import { ClassicTrade } from 'state/routing/types'
 import { Separator, ThemedText } from 'theme'
 import getRoutingDiagramEntries from 'utils/getRoutingDiagramEntries'
 
 import RouterLabel from './RouterLabel'
 
-export default function SwapRoute({ trade, syncing }: { trade: InterfaceTrade; syncing: boolean }) {
+export default function SwapRoute({ trade, syncing }: { trade: ClassicTrade; syncing: boolean }) {
   const { chainId } = useWeb3React()
   const autoRouterSupported = useAutoRouterSupported()
 

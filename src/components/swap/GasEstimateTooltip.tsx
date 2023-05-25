@@ -3,7 +3,7 @@ import { InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
 import { LoadingOpacityContainer } from 'components/Loader/styled'
 import { RowFixed } from 'components/Row'
 import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
-import { InterfaceTrade } from 'state/routing/types'
+import { ClassicTrade } from 'state/routing/types'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
@@ -25,7 +25,7 @@ export default function GasEstimateTooltip({
   loading,
   disabled,
 }: {
-  trade: InterfaceTrade // dollar amount in active chain's stablecoin
+  trade: ClassicTrade // dollar amount in active chain's stablecoin
   loading: boolean
   disabled?: boolean
 }) {

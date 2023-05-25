@@ -8,10 +8,13 @@ import { nativeOnChain } from 'constants/tokens'
 import { GetQuoteArgs } from './slice'
 import {
   ClassicTrade,
+  DutchLimitOrderTrade,
+  InterfaceTrade,
   PoolType,
   QuoteData,
   QuoteState,
   SwapRouterNativeAssets,
+  TradeFillType,
   TradeResult,
   V2PoolInRoute,
   V3PoolInRoute,
@@ -165,4 +168,12 @@ export function currencyAddressForSwapQuote(currency: Currency): string {
   }
 
   return currency.address
+}
+
+export function isClassicTrade(trade?: InterfaceTrade): trade is ClassicTrade {
+  return trade?.fillType === TradeFillType.Classic
+}
+
+export function isUniswapXTrade(trade?: InterfaceTrade): trade is DutchLimitOrderTrade {
+  return trade?.fillType === TradeFillType.UniswapX
 }

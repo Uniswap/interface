@@ -7,6 +7,7 @@ import { LoadingRows } from 'components/Loader/styled'
 import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { InterfaceTrade } from 'state/routing/types'
+import { isClassicTrade, isUniswapXTrade } from 'state/routing/utils'
 
 import { Separator, ThemedText } from '../../theme'
 import Column from '../Column'
@@ -46,7 +47,10 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
   return (
     <Column gap="md">
       <Separator />
-      {!trade.gasUseEstimateUSD || !chainId || !SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId) ? null : (
+      {isUniswapXTrade(trade) ||
+      !trade.gasUseEstimateUSD ||
+      !chainId ||
+      !SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId) ? null : (
         <RowBetween>
           <MouseoverTooltip
             text={
@@ -113,17 +117,20 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
         <ThemedText.BodySmall color="textSecondary">
           <Trans>Order routing</Trans>
         </ThemedText.BodySmall>
-        <MouseoverTooltip
-          size={TooltipSize.Large}
-          text={<SwapRoute data-testid="swap-route-info" trade={trade} syncing={syncing} />}
-          onOpen={() => {
-            sendAnalyticsEvent(SwapEventName.SWAP_AUTOROUTER_VISUALIZATION_EXPANDED, {
-              element: InterfaceElementName.AUTOROUTER_VISUALIZATION_ROW,
-            })
-          }}
-        >
-          <RouterLabel />
-        </MouseoverTooltip>
+        {/* TODO (Gouda): add router label for UniswapX */}
+        {isClassicTrade(trade) ? (
+          <MouseoverTooltip
+            size={TooltipSize.Large}
+            text={<SwapRoute data-testid="swap-route-info" trade={trade} syncing={syncing} />}
+            onOpen={() => {
+              sendAnalyticsEvent(SwapEventName.SWAP_AUTOROUTER_VISUALIZATION_EXPANDED, {
+                element: InterfaceElementName.AUTOROUTER_VISUALIZATION_ROW,
+              })
+            }}
+          >
+            <RouterLabel />
+          </MouseoverTooltip>
+        ) : undefined}
       </RowBetween>
     </Column>
   )

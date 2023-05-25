@@ -33,8 +33,9 @@ import { ReactNode } from 'react'
 import { ArrowDown, Info } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
 import { Text } from 'rebass'
-import { InterfaceTrade } from 'state/routing/types'
+import { InterfaceTrade, TradeFillType } from 'state/routing/types'
 import { TradeState } from 'state/routing/types'
+import { isClassicTrade, isUniswapXTrade } from 'state/routing/utils'
 import styled, { useTheme } from 'styled-components/macro'
 import invariant from 'tiny-invariant'
 import { currencyAmountToPreciseFloat, formatTransactionAmount } from 'utils/formatNumbers'
@@ -293,7 +294,11 @@ export function Swap({
   const fiatValueOutput = useUSDPrice(parsedAmounts[Field.OUTPUT])
 
   const [routeNotFound, routeIsLoading, routeIsSyncing] = useMemo(
-    () => [!trade?.swaps, TradeState.LOADING === tradeState, TradeState.LOADING === tradeState && Boolean(trade)],
+    () => [
+      tradeState === TradeState.NO_ROUTE_FOUND,
+      TradeState.LOADING === tradeState,
+      TradeState.LOADING === tradeState && Boolean(trade),
+    ],
     [trade, tradeState]
   )
 
@@ -404,7 +409,7 @@ export function Swap({
 
   // the callback to execute the swap
   const { callback: swapCallback } = useSwapCallback(
-    trade,
+    trade?.fillType === TradeFillType.Classic ? trade : undefined,
     swapFiatValues,
     allowedSlippage,
     allowance.state === AllowanceState.ALLOWED ? allowance.permitSignature : undefined
@@ -465,6 +470,10 @@ export function Swap({
 
   // warnings on the greater of fiat value price impact and execution price impact
   const { priceImpactSeverity, largerPriceImpact } = useMemo(() => {
+    if (isUniswapXTrade(trade)) {
+      return { priceImpactSeverity: undefined, largerPriceImpact: undefined }
+    }
+
     const marketPriceImpact = trade?.priceImpact ? computeRealizedPriceImpact(trade) : undefined
     const largerPriceImpact = largerPercentValue(marketPriceImpact, stablecoinPriceImpact)
     return { priceImpactSeverity: warningSeverity(largerPriceImpact), largerPriceImpact }
@@ -516,8 +525,8 @@ export function Swap({
     [onCurrencyChange, onCurrencySelection, state]
   )
 
-  const priceImpactTooHigh = priceImpactSeverity > 3 && !isExpertMode
-  const showPriceImpactWarning = largerPriceImpact && priceImpactSeverity > 3
+  const priceImpactTooHigh = !!priceImpactSeverity && priceImpactSeverity > 3 && !isExpertMode
+  const showPriceImpactWarning = largerPriceImpact && !!priceImpactSeverity && priceImpactSeverity > 3
 
   // Handle time based logging events and event properties.
   useEffect(() => {
@@ -527,14 +536,19 @@ export function Swap({
       // Set the current datetime as the time of receipt of latest swap quote.
       setSwapQuoteReceivedDate(now)
       // Log swap quote.
-      sendAnalyticsEvent(SwapEventName.SWAP_QUOTE_RECEIVED, {
-        ...formatSwapQuoteReceivedEventProperties(
-          trade,
-          trade.gasUseEstimateUSD ?? undefined,
-          fetchingSwapQuoteStartTime
-        ),
-        ...trace,
-      })
+
+      // TODO (Gouda): log analytics for UniswapX trades too
+      if (isClassicTrade(trade)) {
+        sendAnalyticsEvent(SwapEventName.SWAP_QUOTE_RECEIVED, {
+          ...formatSwapQuoteReceivedEventProperties(
+            trade,
+            trade.gasUseEstimateUSD ?? undefined,
+            fetchingSwapQuoteStartTime
+          ),
+          ...trace,
+        })
+      }
+
       // Latest swap quote has just been logged, so we don't need to log the current trade anymore
       // unless user inputs change again and a new trade is in the process of being generated.
       setNewSwapQuoteNeedsLogging(false)
@@ -790,7 +804,12 @@ export function Swap({
                 priceImpactTooHigh ||
                 allowance.state !== AllowanceState.ALLOWED
               }
-              error={isValid && priceImpactSeverity > 2 && allowance.state === AllowanceState.ALLOWED}
+              error={
+                isValid &&
+                !!priceImpactSeverity &&
+                priceImpactSeverity > 2 &&
+                allowance.state === AllowanceState.ALLOWED
+              }
             >
               <Text fontSize={20} fontWeight={600}>
                 {swapInputError ? (
@@ -799,7 +818,7 @@ export function Swap({
                   <Trans>Swap</Trans>
                 ) : priceImpactTooHigh ? (
                   <Trans>Price Impact Too High</Trans>
-                ) : priceImpactSeverity > 2 ? (
+                ) : !!priceImpactSeverity && priceImpactSeverity > 2 ? (
                   <Trans>Swap Anyway</Trans>
                 ) : (
                   <Trans>Swap</Trans>

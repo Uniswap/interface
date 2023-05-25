@@ -12,6 +12,7 @@ import { ReactNode } from 'react'
 import { AlertTriangle } from 'react-feather'
 import { RouterPreference } from 'state/routing/slice'
 import { InterfaceTrade } from 'state/routing/types'
+import { isClassicTrade } from 'state/routing/utils'
 import { useRouterPreference, useUserSlippageTolerance } from 'state/user/hooks'
 import styled, { useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
@@ -72,7 +73,7 @@ export default function SwapModalFooter({
   const transactionDeadlineSecondsSinceEpoch = useTransactionDeadline()?.toNumber() // in seconds since epoch
   const isAutoSlippage = useUserSlippageTolerance()[0] === 'auto'
   const [routerPreference] = useRouterPreference()
-  const routes = getRoutingDiagramEntries(trade)
+  const routes = isClassicTrade(trade) ? getRoutingDiagramEntries(trade) : undefined
   const theme = useTheme()
   const { chainId } = useWeb3React()
   const nativeCurrency = useNativeCurrency(chainId)
@@ -105,21 +106,26 @@ export default function SwapModalFooter({
                 <Trans>Network fee</Trans>
               </Label>
             </MouseoverTooltip>
-            <DetailRowValue>{trade.gasUseEstimateUSD ? `~$${trade.gasUseEstimateUSD}` : '-'}</DetailRowValue>
-          </Row>
-        </ThemedText.BodySmall>
-        <ThemedText.BodySmall>
-          <Row align="flex-start" justify="space-between" gap="sm">
-            <MouseoverTooltip text={<Trans>The impact your trade has on the market price of this pool.</Trans>}>
-              <Label cursor="help">
-                <Trans>Price impact</Trans>
-              </Label>
-            </MouseoverTooltip>
-            <DetailRowValue color={getPriceImpactWarning(trade.priceImpact)}>
-              {trade.priceImpact ? formatPriceImpact(trade.priceImpact) : '-'}
+            <DetailRowValue>
+              {/* TODO (Gouda): update this with actual designs */}
+              {isClassicTrade(trade) ? (trade.gasUseEstimateUSD ? `~$${trade.gasUseEstimateUSD}` : '-') : 'freedotcom'}
             </DetailRowValue>
           </Row>
         </ThemedText.BodySmall>
+        {isClassicTrade(trade) && (
+          <ThemedText.BodySmall>
+            <Row align="flex-start" justify="space-between" gap="sm">
+              <MouseoverTooltip text={<Trans>The impact your trade has on the market price of this pool.</Trans>}>
+                <Label cursor="help">
+                  <Trans>Price impact</Trans>
+                </Label>
+              </MouseoverTooltip>
+              <DetailRowValue color={getPriceImpactWarning(trade.priceImpact)}>
+                {trade.priceImpact ? formatPriceImpact(trade.priceImpact) : '-'}
+              </DetailRowValue>
+            </Row>
+          </ThemedText.BodySmall>
+        )}
         <ThemedText.BodySmall>
           <Row align="flex-start" justify="space-between" gap="sm">
             <MouseoverTooltip

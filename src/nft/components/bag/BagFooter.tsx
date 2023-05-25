@@ -337,6 +337,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
     universalRouterAddress
   )
   const loadingAllowance = allowance.state === AllowanceState.LOADING || universalRouterAddressIsLoading
+
   usePayWithAnyTokenSwap(trade, allowance, allowedSlippage)
   const priceImpact = usePriceImpact(trade)
 
