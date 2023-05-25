@@ -33,7 +33,7 @@ interface SearchBarDropdownSectionProps {
   suggestions: (GenieCollection | SearchToken)[]
   header: JSX.Element
   headerIcon?: JSX.Element
-  hoveredIndex: number | undefined
+  hoveredIndex?: number
   startingIndex: number
   setHoveredIndex: (index: number | undefined) => void
   isLoading?: boolean

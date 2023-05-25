@@ -37,7 +37,7 @@ const ConfirmedIcon = styled(ColumnCenter)`
 interface ExecuteModalProps {
   isOpen: boolean
   onDismiss: () => void
-  proposalId: string | undefined // id for the proposal to execute
+  proposalId?: string // id for the proposal to execute
 }
 
 export default function ExecuteModal({ isOpen, onDismiss, proposalId }: ExecuteModalProps) {
