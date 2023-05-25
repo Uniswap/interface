@@ -1,24 +1,112 @@
-import { ApolloError, NetworkStatus } from '@apollo/client'
+import { ApolloError } from '@apollo/client'
+import { Token } from '@uniswap/sdk-core'
 import { useEffect, useState } from 'react'
+import { ChainId } from 'wallet/src/constants/chains'
+import {
+  Chain,
+  ContractInput,
+  TokenProjectsQuery,
+  TopTokensQuery,
+} from 'wallet/src/data/__generated__/types-and-hooks'
+import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
+import { fromGraphQLChain, toGraphQLChain } from 'wallet/src/utils/chainId'
+import {
+  currencyId,
+  CurrencyId,
+  currencyIdToChain,
+  currencyIdToGraphQLAddress,
+  isNativeCurrencyAddress,
+} from 'wallet/src/utils/currencyId'
+import { CurrencyInfo } from './types'
 
-export function isNonPollingRequestInFlight(networkStatus: NetworkStatus): boolean {
-  return (
-    networkStatus === NetworkStatus.loading ||
-    networkStatus === NetworkStatus.setVariables ||
-    networkStatus === NetworkStatus.refetch
-  )
+// Converts CurrencyId to ContractInput format for GQL token queries
+export function currencyIdToContractInput(id: CurrencyId): ContractInput {
+  return {
+    chain: toGraphQLChain(currencyIdToChain(id) ?? ChainId.Mainnet) ?? Chain.Ethereum,
+    address: currencyIdToGraphQLAddress(id),
+  }
 }
 
-export function isWarmLoadingStatus(networkStatus: NetworkStatus): boolean {
-  return networkStatus === NetworkStatus.loading
+const rank: Partial<Record<Chain, number>> = {
+  [Chain.Ethereum]: 1,
+  [Chain.Polygon]: 2,
+  [Chain.Arbitrum]: 3,
+  [Chain.Optimism]: 4,
 }
 
-/**
- * Consider a query in an error state for UI purposes if query has no data, and
- * query has been loading at least once.
- */
-export function isError(networkStatus: NetworkStatus, hasData: boolean): boolean {
-  return !hasData && networkStatus !== NetworkStatus.loading
+// this ideally should be done on the backend side, but until it's possible we control it on the client
+export function sortTokensWithinProject<T extends { chain: Chain } | null>(tokens: T[]): T[] {
+  return [...tokens].sort((a, b) => ((a && rank[a.chain]) ?? 0) - ((b && rank[b.chain]) ?? 0)) // sorting by rank
+}
+
+export function tokenProjectToCurrencyInfos(
+  tokenProject: TokenProjectsQuery['tokenProjects'],
+  chainFilter?: ChainId | null
+): CurrencyInfo[] {
+  return tokenProject
+    ?.flatMap(
+      (project) =>
+        project?.tokens &&
+        sortTokensWithinProject(project?.tokens).map((token) => {
+          const { logoUrl, safetyLevel, name } = project ?? {}
+          const { chain, address, decimals, symbol } = token ?? {}
+          const chainId = fromGraphQLChain(chain)
+          if (!chainId || !decimals || !symbol) return null
+
+          if (chainFilter && chainFilter !== chainId) return null
+          const currency = isNonNativeAddress(chainId, address)
+            ? new Token(
+                chainId,
+                address,
+                decimals,
+                symbol,
+                name ?? undefined,
+                /* bypassChecksum:*/ true
+              )
+            : NativeCurrency.onChain(chainId)
+
+          const currencyInfo: CurrencyInfo = {
+            currency,
+            currencyId: currencyId(currency),
+            logoUrl,
+            safetyLevel,
+          }
+
+          return currencyInfo
+        })
+    )
+    .filter(Boolean) as CurrencyInfo[]
+}
+
+// use inverse check here (instead of isNativeAddress) so we can typeguard address as must be string if this is true
+function isNonNativeAddress(chainId: ChainId, address: Maybe<string>): address is string {
+  return !isNativeCurrencyAddress(chainId, address)
+}
+
+export function gqlTokenToCurrencyInfo(
+  token: NonNullable<NonNullable<TopTokensQuery['topTokens']>[0]>,
+  chainFilter?: ChainId | null
+): CurrencyInfo | null {
+  const { chain, address, decimals, symbol, project } = token
+  const chainId = fromGraphQLChain(chain)
+
+  if (!chainId || !decimals || !symbol || !project || !project.name) return null
+  if (chainFilter && chainFilter !== chainId) return null
+
+  const { logoUrl, name, safetyLevel, isSpam } = project
+
+  const currency = isNonNativeAddress(chainId, address)
+    ? new Token(chainId, address, decimals, symbol, name, /* bypassChecksum:*/ true)
+    : NativeCurrency.onChain(chainId)
+
+  const currencyInfo: CurrencyInfo = {
+    currency,
+    currencyId: currencyId(currency),
+    logoUrl,
+    safetyLevel,
+    isSpam,
+  }
+  return currencyInfo
 }
 
 /*

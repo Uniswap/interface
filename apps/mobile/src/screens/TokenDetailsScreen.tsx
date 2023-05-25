@@ -22,7 +22,6 @@ import { TokenDetailsStats } from 'src/components/TokenDetails/TokenDetailsStats
 import TokenWarningModal from 'src/components/tokens/TokenWarningModal'
 import { isError, isNonPollingRequestInFlight } from 'src/data/utils'
 import { AssetType } from 'src/entities/assets'
-import { currencyIdToContractInput } from 'src/features/dataApi/utils'
 import { openModal, selectModalState } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
 import { useTokenWarningDismissed } from 'src/features/tokens/safetyHooks'
@@ -40,6 +39,7 @@ import {
   TokenDetailsScreenQuery,
   useTokenDetailsScreenQuery,
 } from 'wallet/src/data/__generated__/types-and-hooks'
+import { currencyIdToContractInput } from 'wallet/src/features/dataApi/utils'
 import { fromGraphQLChain } from 'wallet/src/utils/chainId'
 import { currencyIdToAddress, currencyIdToChain } from 'wallet/src/utils/currencyId'
 import { formatUSDPrice } from 'wallet/src/utils/format'

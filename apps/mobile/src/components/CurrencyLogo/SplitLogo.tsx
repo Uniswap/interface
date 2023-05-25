@@ -2,8 +2,8 @@ import React from 'react'
 import { CurrencyLogo, STATUS_RATIO } from 'src/components/CurrencyLogo'
 import { TransactionSummaryNetworkLogo } from 'src/components/CurrencyLogo/NetworkLogo'
 import { Box } from 'src/components/layout/Box'
-import { CurrencyInfo } from 'src/features/dataApi/types'
 import { ChainId } from 'wallet/src/constants/chains'
+import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
 
 interface Props {
   inputCurrencyInfo: Maybe<CurrencyInfo>

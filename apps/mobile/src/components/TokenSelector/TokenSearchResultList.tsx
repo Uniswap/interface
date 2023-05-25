@@ -20,10 +20,8 @@ import {
   formatSearchResults,
   tokenOptionDifference,
 } from 'src/components/TokenSelector/utils'
-import { sortPortfolioBalances, usePortfolioBalances } from 'src/features/dataApi/balances'
 import { useSearchTokens } from 'src/features/dataApi/searchTokens'
 import { usePopularTokens } from 'src/features/dataApi/topTokens'
-import { GqlResult, PortfolioBalance } from 'src/features/dataApi/types'
 import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
 import {
   makeSelectAccountHideSmallBalances,
@@ -31,6 +29,8 @@ import {
 } from 'src/features/wallet/selectors'
 import { ChainId } from 'wallet/src/constants/chains'
 import { EMPTY_ARRAY } from 'wallet/src/constants/misc'
+import { sortPortfolioBalances, usePortfolioBalances } from 'wallet/src/features/dataApi/balances'
+import { GqlResult, PortfolioBalance } from 'wallet/src/features/dataApi/types'
 import { CurrencyId } from 'wallet/src/utils/currencyId'
 import { useDebounce } from 'wallet/src/utils/timing'
 

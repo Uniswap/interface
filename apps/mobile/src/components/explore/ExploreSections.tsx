@@ -12,7 +12,6 @@ import { Box, Flex, Inset } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { Loader } from 'src/components/loading'
 import { Text } from 'src/components/Text'
-import { usePersistedError } from 'src/features/dataApi/utils'
 import {
   getClientTokensOrderByCompareFn,
   getTokenMetadataDisplayType,
@@ -29,6 +28,7 @@ import {
   ExploreTokensTabQuery,
   useExploreTokensTabQuery,
 } from 'wallet/src/data/__generated__/types-and-hooks'
+import { usePersistedError } from 'wallet/src/features/dataApi/utils'
 import { areAddressesEqual } from 'wallet/src/utils/addresses'
 import { fromGraphQLChain } from 'wallet/src/utils/chainId'
 import { buildCurrencyId, buildNativeCurrencyId } from 'wallet/src/utils/currencyId'

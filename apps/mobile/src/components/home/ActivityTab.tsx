@@ -13,7 +13,6 @@ import { Loader } from 'src/components/loading'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { Text } from 'src/components/Text'
 import { isNonPollingRequestInFlight } from 'src/data/utils'
-import { usePersistedError } from 'src/features/dataApi/utils'
 import { openModal } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
 import {
@@ -38,6 +37,7 @@ import { makeSelectAccountHideSpamTokens } from 'src/features/wallet/selectors'
 import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
 import { EMPTY_ARRAY } from 'wallet/src/constants/misc'
 import { useTransactionListQuery } from 'wallet/src/data/__generated__/types-and-hooks'
+import { usePersistedError } from 'wallet/src/features/dataApi/utils'
 
 type LoadingItem = {
   itemType: 'LOADING'

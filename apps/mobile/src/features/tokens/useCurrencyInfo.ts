@@ -1,9 +1,12 @@
 import { useMemo } from 'react'
-import { CurrencyInfo } from 'src/features/dataApi/types'
-import { currencyIdToContractInput, gqlTokenToCurrencyInfo } from 'src/features/dataApi/utils'
 import { ChainId } from 'wallet/src/constants/chains'
 import { WRAPPED_NATIVE_CURRENCY } from 'wallet/src/constants/tokens'
 import { useTokenQuery } from 'wallet/src/data/__generated__/types-and-hooks'
+import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
+import {
+  currencyIdToContractInput,
+  gqlTokenToCurrencyInfo,
+} from 'wallet/src/features/dataApi/utils'
 import { buildNativeCurrencyId, currencyId } from 'wallet/src/utils/currencyId'
 
 export function useCurrencyInfo(_currencyId?: string): Maybe<CurrencyInfo> {

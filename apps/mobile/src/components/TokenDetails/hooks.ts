@@ -1,13 +1,13 @@
 import { useMemo } from 'react'
 import { useAppStackNavigation } from 'src/app/navigation/types'
 import { useMultipleBalances, useSingleBalance } from 'src/features/dataApi/balances'
-import { PortfolioBalance } from 'src/features/dataApi/types'
-import { currencyIdToContractInput } from 'src/features/dataApi/utils'
 import { Screens } from 'src/screens/Screens'
 import {
   Chain,
   useTokenDetailsScreenLazyQuery,
 } from 'wallet/src/data/__generated__/types-and-hooks'
+import { PortfolioBalance } from 'wallet/src/features/dataApi/types'
+import { currencyIdToContractInput } from 'wallet/src/features/dataApi/utils'
 import { fromGraphQLChain } from 'wallet/src/utils/chainId'
 import {
   buildCurrencyId,

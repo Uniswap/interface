@@ -6,10 +6,10 @@ import { NetworkLogo } from 'src/components/CurrencyLogo/NetworkLogo'
 import { ImageUri } from 'src/components/images/ImageUri'
 import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
-import { CurrencyInfo } from 'src/features/dataApi/types'
 import { DappInfo } from 'src/features/walletConnect/types'
 import { borderRadii } from 'ui/src/theme/borderRadii'
 import { iconSizes } from 'ui/src/theme/iconSizes'
+import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
 import { toSupportedChainId } from 'wallet/src/utils/chainId'
 
 export function DappHeaderIcon({

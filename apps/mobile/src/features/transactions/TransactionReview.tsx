@@ -16,11 +16,11 @@ import { AnimatedFlex, Flex } from 'src/components/layout'
 import { NFTTransfer } from 'src/components/NFT/NFTTransfer'
 import { Text } from 'src/components/Text'
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
-import { CurrencyInfo } from 'src/features/dataApi/types'
 import { GQLNftAsset } from 'src/features/nfts/hooks'
 import { ElementName } from 'src/features/telemetry/constants'
 import { dimensions } from 'src/styles/sizing'
 import { iconSizes } from 'ui/src/theme/iconSizes'
+import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
 import { formatNumberOrString, NumberType } from 'wallet/src/utils/format'
 
 interface BaseReviewProps {

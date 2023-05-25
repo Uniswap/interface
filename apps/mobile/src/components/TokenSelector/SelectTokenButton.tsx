@@ -6,10 +6,10 @@ import { CurrencyLogo } from 'src/components/CurrencyLogo'
 import { Chevron } from 'src/components/icons/Chevron'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
-import { CurrencyInfo } from 'src/features/dataApi/types'
 import { ElementName } from 'src/features/telemetry/constants'
 import { Theme } from 'src/styles/theme'
 import { iconSizes } from 'ui/src/theme/iconSizes'
+import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
 
 interface SelectTokenButtonProps {
   showNonZeroBalancesOnly?: boolean

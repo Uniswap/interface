@@ -1,14 +1,14 @@
 import React, { memo, useEffect, useState } from 'react'
 import { InteractionManager } from 'react-native'
 import { Delay, Delayed } from 'src/components/layout/Delayed'
-import { useSortedPortfolioBalances } from 'src/features/dataApi/balances'
-import { PortfolioBalance } from 'src/features/dataApi/types'
-import { currencyIdToContractInput } from 'src/features/dataApi/utils'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import {
   useTokenDetailsScreenLazyQuery,
   useTokenPriceHistoryLazyQuery,
 } from 'wallet/src/data/__generated__/types-and-hooks'
+import { useSortedPortfolioBalances } from 'wallet/src/features/dataApi/balances'
+import { PortfolioBalance } from 'wallet/src/features/dataApi/types'
+import { currencyIdToContractInput } from 'wallet/src/features/dataApi/utils'
 import { CurrencyId } from 'wallet/src/utils/currencyId'
 
 /**

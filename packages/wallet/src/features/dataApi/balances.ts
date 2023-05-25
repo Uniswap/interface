@@ -1,14 +1,14 @@
 import { NetworkStatus } from '@apollo/client'
 import { Token } from '@uniswap/sdk-core'
 import { useCallback, useMemo } from 'react'
-import { PollingInterval } from 'wallet/src/constants/misc'
-import { usePortfolioTokenBalancesQuery } from 'wallet/src/data/__generated__/types-and-hooks'
+import { usePortfolioBalancesQuery } from 'wallet/src/data/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'wallet/src/features/chains/chainIdUtils'
 import { CurrencyInfo, GqlResult, PortfolioBalance } from 'wallet/src/features/dataApi/types'
 import { usePersistedError } from 'wallet/src/features/dataApi/utils'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
 import { HIDE_SMALL_USD_BALANCES_THRESHOLD } from 'wallet/src/features/wallet/slice'
 import { CurrencyId, currencyId } from 'wallet/src/utils/currencyId'
+import { ONE_SECOND_MS } from 'wallet/src/utils/time'
 
 type SortedPortfolioBalances = {
   balances: PortfolioBalance[]
@@ -39,23 +39,22 @@ export function usePortfolioBalances(
   hideSmallBalances?: boolean,
   hideSpamTokens?: boolean,
   onCompleted?: () => void
-): GqlResult<Record<CurrencyId, PortfolioBalance>> & {
-  networkStatus: NetworkStatus
-} {
+): GqlResult<Record<CurrencyId, PortfolioBalance>> & { networkStatus: NetworkStatus } {
   const {
     data: balancesData,
     loading,
     networkStatus,
     refetch,
     error,
-  } = usePortfolioTokenBalancesQuery({
+  } = usePortfolioBalancesQuery({
     // query is re-used by multiple components
     // load from cache and update it if the response has new data
     fetchPolicy: 'cache-and-network',
     notifyOnNetworkStatusChange: true,
     onCompleted,
-    pollInterval: shouldPoll ? PollingInterval.Fast : undefined,
+    pollInterval: shouldPoll ? ONE_SECOND_MS * 30 : undefined,
     variables: { ownerAddress: address },
+    skip: !address,
   })
 
   const persistedError = usePersistedError(loading, error)

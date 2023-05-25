@@ -3,7 +3,6 @@ import { providers } from 'ethers'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useAppDispatch } from 'src/app/hooks'
 import { AssetType } from 'src/entities/assets'
-import { CurrencyInfo } from 'src/features/dataApi/types'
 import { GQLNftAsset, useNFT } from 'src/features/nfts/hooks'
 import { useCurrencyInfo } from 'src/features/tokens/useCurrencyInfo'
 import {
@@ -17,6 +16,7 @@ import { transferTokenActions } from 'src/features/transactions/transfer/transfe
 import { TransferTokenParams } from 'src/features/transactions/transfer/useTransferTransactionRequest'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { ChainId } from 'wallet/src/constants/chains'
+import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
 import {
   useOnChainCurrencyBalance,
   useOnChainNativeCurrencyBalance,

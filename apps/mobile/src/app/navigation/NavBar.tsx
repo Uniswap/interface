@@ -24,7 +24,6 @@ import { GradientBackground } from 'src/components/gradients/GradientBackground'
 import { AnimatedBox, AnimatedFlex, Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { useIsDarkMode } from 'src/features/appearance/hooks'
-import { useHighestBalanceNativeCurrencyId } from 'src/features/dataApi/balances'
 import { openModal } from 'src/features/modals/modalSlice'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
@@ -33,6 +32,7 @@ import { useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
 import { Theme } from 'src/styles/theme'
 import SearchIcon from 'ui/src/assets/icons/search.svg'
+import { useHighestBalanceNativeCurrencyId } from 'wallet/src/features/dataApi/balances'
 
 export const NAV_BAR_HEIGHT_XS = 52
 export const NAV_BAR_HEIGHT_SM = 72

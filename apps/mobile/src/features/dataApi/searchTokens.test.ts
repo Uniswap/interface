@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { MockedResponse } from '@apollo/client/testing'
 import { useTokenProjects } from 'src/features/dataApi/tokenProjects'
-import { gqlTokenToCurrencyInfo } from 'src/features/dataApi/utils'
 import { SearchTokens } from 'src/test/gqlFixtures'
 import { renderHook } from 'src/test/test-utils'
 import {
   SearchTokensDocument,
   SearchTokensQuery,
 } from 'wallet/src/data/__generated__/types-and-hooks'
+import { gqlTokenToCurrencyInfo } from 'wallet/src/features/dataApi/utils'
 import { sleep } from 'wallet/src/utils/timing'
 import { useSearchTokens } from './searchTokens'
 

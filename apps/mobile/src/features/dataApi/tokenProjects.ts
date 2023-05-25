@@ -1,7 +1,10 @@
 import { useCallback, useMemo } from 'react'
-import { CurrencyInfo, GqlResult } from 'src/features/dataApi/types'
-import { currencyIdToContractInput, tokenProjectToCurrencyInfos } from 'src/features/dataApi/utils'
 import { useTokenProjectsQuery } from 'wallet/src/data/__generated__/types-and-hooks'
+import { CurrencyInfo, GqlResult } from 'wallet/src/features/dataApi/types'
+import {
+  currencyIdToContractInput,
+  tokenProjectToCurrencyInfos,
+} from 'wallet/src/features/dataApi/utils'
 import { CurrencyId } from 'wallet/src/utils/currencyId'
 
 /**
