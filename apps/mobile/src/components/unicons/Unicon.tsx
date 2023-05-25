@@ -247,7 +247,7 @@ export function _Unicon({
   randomSeed = 0,
   showBorder = false,
 }: Props): JSX.Element | null {
-  // TODO(MOB-2992): move this into a mandatory boolean prop for the Unicon component (e.g. `lightModeOverlay`) so that any consumer of the Unicon component has to decide whether or not to show the light mode overlay (presumably based on whether the current theme is light or dark)
+  // TODO(MOB-75): move this into a mandatory boolean prop for the Unicon component (e.g. `lightModeOverlay`) so that any consumer of the Unicon component has to decide whether or not to show the light mode overlay (presumably based on whether the current theme is light or dark)
   const isLightMode = useSelectedColorScheme() === 'light'
 
   // Renders a Unicon inside a (size) x (size) pixel square Box

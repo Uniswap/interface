@@ -22,7 +22,7 @@ export function Shimmer({ children }: Props): JSX.Element {
   const xPosition = useSharedValue(0)
 
   useEffect(() => {
-    // TODO: [MOB-3874] tweak animation to be smoother, right now sometimes looks kind of stuttery
+    // TODO: [MOB-210] tweak animation to be smoother, right now sometimes looks kind of stuttery
     xPosition.value = withRepeat(withTiming(1, { duration: SHIMMER_DURATION }), Infinity, true)
 
     // only want to do this once on mount

@@ -105,7 +105,7 @@ const getParsedObjectDisplay = (chainId: number, obj: any, depth = 0): JSX.Eleme
           )
         }
 
-        // TODO: [MOB-3881] handle array child types
+        // TODO: [MOB-216] handle array child types
         return null
       })}
     </Flex>

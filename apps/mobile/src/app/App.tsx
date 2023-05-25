@@ -84,7 +84,6 @@ function App(): JSX.Element | null {
   }, [])
 
   if (!client) {
-    // TODO: [MOB-3515] delay splash screen until client is rehydated
     return null
   }
 

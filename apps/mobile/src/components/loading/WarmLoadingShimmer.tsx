@@ -19,7 +19,6 @@ type WarmLoadingShimmerProps = {
   children: JSX.Element
 }
 
-// TODO(MOB-3553): bake this component's functionality into the Shimmer component
 export function WarmLoadingShimmer({
   children,
   isWarmLoading = true,

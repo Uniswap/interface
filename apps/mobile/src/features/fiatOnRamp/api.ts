@@ -46,7 +46,7 @@ export const fiatOnRampApi = createApi({
   endpoints: (builder) => ({
     fiatOnRampIpAddress: builder.query<MoonpayIPAddressesResponse, void>({
       queryFn: () =>
-        // TODO: [MOB-3888] consider a reverse proxy for privacy reasons
+        // TODO: [MOB-223] consider a reverse proxy for privacy reasons
         fetch(`${config.moonpayApiUrl}/v4/ip_address?${COMMON_QUERY_PARAMS}`)
           .then((response) => response.json())
           .then((response: MoonpayIPAddressesResponse) => {
@@ -73,7 +73,7 @@ export const fiatOnRampApi = createApi({
       }
     >({
       queryFn: ({ isUserInUS, stateInUS }) =>
-        // TODO: [MOB-3888] consider a reverse proxy for privacy reasons
+        // TODO: [MOB-223] consider a reverse proxy for privacy reasons
         fetch(`${config.moonpayApiUrl}/v3/currencies?${COMMON_QUERY_PARAMS}`)
           .then((response) => response.json())
           .then((response: MoonpayListCurrenciesResponse) => {
@@ -103,7 +103,7 @@ export const fiatOnRampApi = createApi({
       }
     >({
       queryFn: ({ quoteCurrencyCode, baseCurrencyCode, baseCurrencyAmount, areFeesIncluded }) =>
-        // TODO: [MOB-3888] consider a reverse proxy for privacy reasons
+        // TODO: [MOB-223] consider a reverse proxy for privacy reasons
         fetch(
           `${
             config.moonpayApiUrl
@@ -131,7 +131,7 @@ export const fiatOnRampApi = createApi({
       }
     >({
       queryFn: ({ quoteCurrencyCode, baseCurrencyCode, areFeesIncluded }) =>
-        // TODO: [MOB-3888] consider a reverse proxy for privacy reasons
+        // TODO: [MOB-223] consider a reverse proxy for privacy reasons
         fetch(
           `${config.moonpayApiUrl}/v3/currencies/${quoteCurrencyCode}/limits?${serializeQueryParams(
             {

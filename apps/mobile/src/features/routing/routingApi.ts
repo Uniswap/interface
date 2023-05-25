@@ -34,7 +34,7 @@ export const routingApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: uniswapUrls.routingApiUrl,
     prepareHeaders: (headers) => {
-      // TODO: [MOB-3883] remove once routing api officially supports mobile
+      // TODO: [MOB-218] remove once routing api officially supports mobile
       // spoof origin to go around server permissions
       headers.set('Origin', config.uniswapAppUrl)
       headers.set('X-API-KEY', config.uniswapApiKey)
@@ -127,7 +127,7 @@ export const routingApi = createApi({
         }
       },
       transformResponse: (result: QuoteResult, _, arg): TradeQuoteResult => {
-        // TODO: [MOB-3897] we shouldn't rely on any of the request arguments and transform the data with only response data
+        // TODO: [MOB-231] we shouldn't rely on any of the request arguments and transform the data with only response data
         // Must figure out how to determine whether requested assets are native given the router always returns
         // wrapped token addresses
         const { tokenInAddress, tokenOutAddress, type, deadline, slippageTolerance } = arg

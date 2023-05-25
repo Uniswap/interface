@@ -52,7 +52,7 @@ export function renderWithProviders(
     }),
     ...renderOptions
   }: ExtendedRenderOptions = {}
-): // TODO (MOB-3857): add more specific types
+): // TODO (MOB-645): add more specific types
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 Record<string, any> & {
   store: EnhancedStore
@@ -98,7 +98,7 @@ export function renderHookWithProviders(
     store = configureStore({ reducer: persistedReducer, preloadedState }),
     ...renderOptions
   }: ExtendedRenderOptions = {}
-): // TODO (MOB-3857): add more specific types
+): // TODO (MOB-645): add more specific types
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 Record<string, any> & {
   store: EnhancedStore

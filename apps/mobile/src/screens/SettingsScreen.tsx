@@ -87,7 +87,7 @@ export function SettingsScreen(): JSX.Element {
               <FaceIdIcon {...iconProps} />
             ),
           },
-          // @TODO: [MOB-3920] add back testnet toggle when Zerion provides data for testnets correctly.
+          // @TODO: [MOB-250] add back testnet toggle once nxyz supports testnets
         ],
       },
       {
@@ -143,7 +143,6 @@ export function SettingsScreen(): JSX.Element {
           {
             screen: Screens.SettingsChains,
             text: t('Chains'),
-            // TODO [MOB-3921] use chains icon when available
             icon: <UniswapIcon {...iconProps} />,
           },
           {

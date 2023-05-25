@@ -18,7 +18,7 @@ import { isL2Chain } from 'wallet/src/constants/chains'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import { useDebounceWithStatus } from 'wallet/src/utils/timing'
 
-// TODO: [MOB-3906] use composition instead of inheritance
+// TODO: [MOB-238] use composition instead of inheritance
 export class Trade<
   TInput extends Currency = Currency,
   TOutput extends Currency = Currency,

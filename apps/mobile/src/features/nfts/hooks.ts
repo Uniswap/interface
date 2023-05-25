@@ -24,13 +24,12 @@ export type GQLNftAsset = NonNullable<
   NonNullable<NonNullable<NonNullable<NftsQuery['portfolios']>[0]>['nftBalances']>[0]
 >['ownedAsset']
 
-// TODO(MOB-3390): deprecate this hook in favor of component queries
 export function useNFT(
   owner: Address = '',
   address?: Address,
   tokenId?: string
 ): GqlResult<GQLNftAsset> {
-  // TODO: [MOB-3893] do a direct cache lookup in Apollo using id instead of re-querying
+  // TODO: [MOB-227] do a direct cache lookup in Apollo using id instead of re-querying
   const { data, loading, refetch } = useNftsQuery({
     variables: { ownerAddress: owner },
     pollInterval: PollingInterval.Slow,

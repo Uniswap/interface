@@ -26,7 +26,7 @@ export function* managePendingAccounts(pendingAccountAction: PendingAccountActio
   if (pendingAccountAction === PendingAccountActions.ACTIVATE) {
     yield* put(markAsNonPending(pendingAddresses))
   } else if (pendingAccountAction === PendingAccountActions.DELETE) {
-    // TODO: [MOB-3914] cleanup low level RS key storage.
+    // TODO: [MOB-244] cleanup low level RS key storage.
     yield* put(removeAccounts(pendingAddresses))
   }
 

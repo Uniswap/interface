@@ -260,7 +260,7 @@ export const colorsDark = {
   accentCritical: colors.red400,
 
   accentBranded: colors.magentaVibrant,
-  // TODO(MOB-3591): accommodate one-off color in cleaner way
+  // TODO(MOB-160): accommodate one-off color in cleaner way
   shadowBranded: '#B60ACF',
 
   accentActionSoft: opacify(24, colors.magentaVibrant),

@@ -102,7 +102,7 @@ export function AccountList({ accounts, onPress, isVisible }: AccountListProps):
 
   return (
     <Box flexShrink={1} position="relative">
-      {/* TODO: [MOB-3938] attempt to switch gradients to react-native-svg#LinearGradient and avoid new clear color */}
+      {/* TODO(MOB-646): attempt to switch gradients to react-native-svg#LinearGradient and avoid new clear color */}
       <LinearGradient
         colors={[theme.colors.clearBackground1Backdrop, theme.colors.background1]}
         end={{ x: 0, y: 0 }}

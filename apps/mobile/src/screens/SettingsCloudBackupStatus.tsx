@@ -100,7 +100,7 @@ export function SettingsCloudBackupStatus({
                 {t('Backed up')}
               </Text>
 
-              {/* @TODO: [MOB-3919] Add non-backed up state once we have more options on this page  */}
+              {/* @TODO: [MOB-249] Add non-backed up state once we have more options on this page  */}
               <Checkmark color={theme.colors.accentSuccess} height={24} width={24} />
             </Flex>
           </Flex>

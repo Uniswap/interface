@@ -76,8 +76,6 @@ export function NFTViewer({
       ? convertGIFUriToSmallImageFormat(imageHttpUri, limitGIFSize)
       : imageHttpUri
 
-  // TODO(MOB-954):  handle more asset types (video, audio, etc.)
-
   return squareGridView ? (
     <ImageUri
       fallback={fallback}

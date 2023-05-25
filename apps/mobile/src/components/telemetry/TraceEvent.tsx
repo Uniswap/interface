@@ -8,11 +8,9 @@ import { ElementName, MobileEventName, ReactNativeEvent } from 'src/features/tel
 export type TraceEventProps = {
   // Element name used to identify events sources
   // e.g. account-card, onboarding-create-wallet
-  // TODO: [MOB-3877] Enforce ElementName type only
-  // TODO: [MOB-4085] Explore removing this prop now that it is in TraceContext
+  // TODO: [MOB-640] Explore removing this prop now that it is in TraceContext
   elementName?: ElementName
   // event name to log
-  // TODO: [MOB-3878] Enforce EventName type only
   eventName: MobileEventName | SharedEventName.ELEMENT_CLICKED
   // Known components' events that trigger callbacks to be augmented with telemetry logging
   events: ReactNativeEvent[]

@@ -39,8 +39,6 @@ export interface SendTransactionParams {
 
 // A utility for sagas to send transactions
 // All outgoing transactions should go through here
-// TODO(MOB-3857): Add more specific return type definition
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function* sendTransaction(params: SendTransactionParams): Generator<any> {
   const { chainId, account, options } = params
   const request = options.request

@@ -215,7 +215,7 @@ function pickContrastPassingColor(extractedColors: ExtractedColors, backgroundHe
 
   const { background, detail, secondary, primary } = extractedColors
 
-  // TODO(MOB-3693): Define more robust color extraction logic. Some ideas:
+  // TODO(MOB-643): Define more robust color extraction logic. Some ideas:
   // - compute all extracted colors and find the highest contrast one (that isn't #000000 or #FFFFFF)
   // - bump color until it passes contrast: e.g. `import { lighten, desaturate } from 'polished'`
   // - locally cache the result with the image logo URL as a key

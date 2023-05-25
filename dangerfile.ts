@@ -3,16 +3,6 @@ import { danger, fail, markdown, message, warn } from 'danger'
 // Other ideas:
 //  - verify TODO have work items linked
 
-/* Keep Lockfile up to date  */
-// TODO: [MOB-3860] CI job to run `yarn install` and confirm no changes
-const packageChanged = danger.git.modified_files.includes('package.json')
-const lockfileChanged = danger.git.modified_files.includes('yarn.lock')
-if (packageChanged && !lockfileChanged) {
-  const msg = 'Changes were made to package.json, but not to yarn.lock'
-  const idea = 'Perhaps you need to run `yarn install`?'
-  warn(`${msg} - <i>${idea}</i>`)
-}
-
 /* Warn about storing credentials in GH and uploading env.local to 1Password */
 const envChanged = danger.git.modified_files.includes('.env.defaults')
 if (envChanged) {

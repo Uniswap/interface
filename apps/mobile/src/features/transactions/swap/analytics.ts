@@ -54,7 +54,7 @@ export function getBaseTradeAnalyticsProperties(
     token_in_address: getCurrencyAddressForAnalytics(trade.inputAmount.currency),
     token_out_address: getCurrencyAddressForAnalytics(trade.outputAmount.currency),
     price_impact_basis_points: trade.priceImpact.multiply(100).toSignificant(),
-    // TODO: [MOB-3904] add gas fee in USD here once we calculate USD value of `totalGasFee` on swap form instead of just on review
+    // TODO: [MOB-237] add gas fee in USD here once we calculate USD value of `totalGasFee` on swap form instead of just on review
     estimated_network_fee_usd: undefined,
     chain_id: trade.inputAmount.currency.chainId,
     token_in_amount: trade.inputAmount.toExact(),

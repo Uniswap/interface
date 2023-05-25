@@ -38,7 +38,7 @@ const AccountListMock: MockedResponse<AccountListQuery> = {
   },
 }
 
-// TODO [MOB-3961]: Figure out how to do snapshot tests when there is a BottomSheetModal
+// TODO [MOB-259]: Figure out how to do snapshot tests when there is a BottomSheetModal
 describe(AccountSwitcher, () => {
   it('renders correctly', () => {
     const tree = render(

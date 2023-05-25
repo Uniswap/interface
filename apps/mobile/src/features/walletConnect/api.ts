@@ -3,7 +3,6 @@ import { getOnesignalPushTokenOrError } from 'src/features/notifications/Onesign
 import { config } from 'wallet/src/config'
 import { logger } from 'wallet/src/features/logger/logger'
 
-// TODO: [MOB-3915] Change to production server endpoint for push server, currently using test endpoints
 const WC_PUSH_SERVER_BASE_URL = 'https://us-central1-uniswap-mobile.cloudfunctions.net'
 const WC_REGISTER_ENDPOINT = 'onWalletConnectRegistration'
 const WC_DEREGISTER_ENDPOINT = 'onWalletConnectDeregistration'

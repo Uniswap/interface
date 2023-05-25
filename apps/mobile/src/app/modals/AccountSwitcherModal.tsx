@@ -84,7 +84,7 @@ export function AccountSwitcherModal(): JSX.Element {
 
 /**
  * Exported for testing only.
- * TODO [MOB-3961] Once testing works with the BottomSheetModal stop exporting this component.
+ * TODO [MOB-259] Once testing works with the BottomSheetModal stop exporting this component.
  */
 export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Element | null {
   const { t } = useTranslation()

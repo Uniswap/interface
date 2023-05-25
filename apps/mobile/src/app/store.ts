@@ -126,7 +126,7 @@ export const setupStore = (
         // required for rtk-query
         thunk: true,
         // turn off since it slows down for dev and also doesn't run in prod
-        // TODO: [MOB-681] figure out why this is slow
+        // TODO: [MOB-641] figure out why this is slow
         serializableCheck: false,
         invariantCheck: {
           warnAfter: 256,

@@ -34,7 +34,7 @@ export const usePersistedApolloClient = (): ApolloClient<NormalizedCacheObject> 
         headers: {
           'Content-Type': 'application/json',
           'X-API-KEY': config.uniswapApiKey,
-          // TODO: [MOB-3883] remove once API gateway supports mobile origin URL
+          // TODO: [MOB-218] remove once API gateway supports mobile origin URL
           Origin: uniswapUrls.apiBaseUrl,
         },
       })

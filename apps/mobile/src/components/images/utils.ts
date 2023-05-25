@@ -2,7 +2,7 @@ import { logger } from 'wallet/src/features/logger/logger'
 
 const VIEWBOX_REGEX = /viewBox=["']\d+ \d+ (\d+) (\d+)["']/
 const FALLBACK_ASPECT_RATIO = 1
-// TODO: [MOB-3868] return a nicer SVG asset with an error message
+// TODO: [MOB-205] return a nicer SVG asset with an error message
 const INVALID_SVG = { content: 'Invalid SVG', aspectRatio: FALLBACK_ASPECT_RATIO }
 
 export async function fetchSVG(

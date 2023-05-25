@@ -174,7 +174,7 @@ function* removeAccount(params: RemoveParams): Generator<
 > {
   const { address } = params
   logger.debug('editAccountSaga', 'removeAccount', 'Removing account', address)
-  // TODO [MOB-3913] cleanup account artifacts in native-land (i.e. keystore)
+  // TODO [MOB-243] cleanup account artifacts in native-land (i.e. keystore)
   yield* put(removeInStore(address))
   yield* call(disconnectWCForAccount, address)
 }

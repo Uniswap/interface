@@ -316,7 +316,6 @@ extension WalletConnectServerWrapper: ServerDelegate {
     ])
   }
   
-  // TODO: [MOB-3873] figure out why this update function is never called on network change
   func server(_ server: Server, didUpdate session: Session) {
     self.topicToSession.updateValue(session, forKey: session.url.topic)
   }

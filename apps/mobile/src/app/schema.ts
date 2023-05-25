@@ -277,6 +277,6 @@ export const v42Schema = {
 }
 delete v42Schema.wallet.flashbotsEnabled
 
-// TODO: [MOB-3864] use function with typed output when API reducers are removed from rootReducer
+// TODO: [MOB-201] use function with typed output when API reducers are removed from rootReducer
 // export const getSchema = (): RootState => v0Schema
 export const getSchema = (): typeof v42Schema => v42Schema

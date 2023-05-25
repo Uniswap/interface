@@ -10,7 +10,7 @@ export function useTransactionGasFee(
   speed: GasSpeed = GasSpeed.Urgent,
   skip?: boolean
 ): TransactionGasFeeInfo | undefined {
-  // TODO: [MOB-3889] Handle error responses from gas endpoint
+  // TODO: [MOB-650] Handle error responses from gas endpoint
   const { data } = useGasFeeQuery((!skip && tx) || skipToken, {
     pollingInterval: getPollingIntervalByBlocktime(tx?.chainId),
   })

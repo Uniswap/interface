@@ -71,7 +71,6 @@ export const AmountInput = forwardRef<NativeTextInput, Props>(
       [onChangeText, showCurrencySign]
     )
 
-    // TODO: [MOB-3869] handle non-dollar currencies in the future
     const formattedValue = showCurrencySign ? `$${value}` : value
 
     const textInputProps: TextInputProps = useMemo(

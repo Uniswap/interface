@@ -4,7 +4,7 @@ import { ChainId } from 'wallet/src/constants/chains'
 
 const NATIVE_CURRENCY_DECIMALS = 18
 
-// TODO: calculate this in a more scientific way https://uniswaplabs.atlassian.net/browse/MOB-3775
+// TODO(MOB-181): calculate this in a more scientific way
 export const MIN_ETH_FOR_GAS: JSBI = JSBI.exponentiate(
   JSBI.BigInt(10),
   JSBI.BigInt(NATIVE_CURRENCY_DECIMALS - 2)

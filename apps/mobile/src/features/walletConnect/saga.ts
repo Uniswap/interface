@@ -88,7 +88,7 @@ function createWalletConnectChannel(
           topic: req.client_id,
           address: req.account,
           peerName: req.dapp.name,
-          language: 'en', // TODO: [MOB-3916] Use local user language
+          language: 'en', // TODO: [MOB-246] Use local user language
         })
       }
     }

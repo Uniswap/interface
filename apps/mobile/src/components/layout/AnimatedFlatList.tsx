@@ -46,7 +46,7 @@ interface ReanimatedFlatlistProps<T> extends FlatListProps<T> {
  *
  * Source: https://github.com/software-mansion/react-native-reanimated/blob/main/src/reanimated2/component/FlatList.tsx
  *
- * TODO: [MOB-3870] remove this and use Animated.FlatList directly when can use refs with it. Also type the generic T properly for FlatList and dont use `any`
+ * TODO: [MOB-207] remove this and use Animated.FlatList directly when can use refs with it. Also type the generic T properly for FlatList and dont use `any`
  */
 export const AnimatedFlatList = forwardRef<Animated.FlatList<any>, ReanimatedFlatlistProps<any>>(
   ({ itemLayoutAnimation, FlatListComponent = ReanimatedFlatList, ...restProps }, ref) => {

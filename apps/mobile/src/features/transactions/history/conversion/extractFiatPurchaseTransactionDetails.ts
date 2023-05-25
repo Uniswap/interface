@@ -87,7 +87,7 @@ function formatReturnUrl(
     return providedReturnUrl
   }
 
-  // TODO: [MOB-3900] improve formatting when MoonPay provides us with more info
+  // TODO: [MOB-233] improve formatting when MoonPay provides us with more info
   return `${providedReturnUrl}?transactionId=${id}`
 }
 

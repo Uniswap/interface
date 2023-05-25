@@ -31,14 +31,12 @@ export enum ChainId {
 }
 
 // DON'T CHANGE - order here determines ordering of networks in app
-// TODO: [MOB-3882] Add back in testnets once our endpoints support them
+// TODO: [MOB-250] Add back in testnets once our endpoints support them
 export const ALL_SUPPORTED_CHAIN_IDS: ChainId[] = [
   ChainId.Mainnet,
   ChainId.Polygon,
   ChainId.ArbitrumOne,
   ChainId.Optimism,
-  // ChainId.Goerli,
-  // ChainId.PolygonMumbai,
 ]
 
 export const TESTNET_CHAIN_IDS = [ChainId.Goerli, ChainId.PolygonMumbai]
