@@ -3,8 +3,9 @@ import { TEST_TRADE_EXACT_INPUT } from 'test-utils/constants'
 import { mocked } from 'test-utils/mocked'
 import { render, screen } from 'test-utils/render'
 
-import { ConfirmModalState } from './ConfirmSwapModal'
-import { ErrorModalContent, PendingModalContent, PendingModalError } from './PendingModalContent'
+import { ConfirmModalState } from '../ConfirmSwapModal'
+import { PendingModalContent } from '.'
+import { ErrorModalContent, PendingModalError } from './ErrorModalContent'
 
 jest.mock('state/transactions/hooks')
 
@@ -83,7 +84,7 @@ describe('PendingModalContent', () => {
           trade={TEST_TRADE_EXACT_INPUT}
         />
       )
-      expect(screen.getByTestId('papers-icon-container-ABC')).toBeInTheDocument()
+      expect(screen.getByTestId('pending-modal-currency-logo-ABC')).toBeInTheDocument()
       expect(screen.queryByTestId('pending-modal-failure-icon')).toBeNull()
     })
 
@@ -108,7 +109,7 @@ describe('PendingModalContent', () => {
       )
       expect(screen.queryByTestId('pending-modal-failure-icon')).toBeNull()
       expect(screen.queryByTestId('pending-modal-currency-logo-loader')).toBeNull()
-      expect(screen.getByTestId('animated-confirmation')).toBeInTheDocument()
+      expect(screen.getByTestId('confirmed-icon')).toBeInTheDocument()
     })
   })
 })
