@@ -1,4 +1,3 @@
-import { getFlow, ImportType } from 'src/features/onboarding/utils'
 import { getWrapType, serializeQueryParams } from 'src/features/transactions/swap/utils'
 import { WrapType } from 'src/features/transactions/swap/wrapSaga'
 import { ChainId } from 'wallet/src/constants/chains'
@@ -44,23 +43,5 @@ describe(getWrapType, () => {
     // different chains
     expect(getWrapType(weth, goerliEth)).toEqual(WrapType.NotApplicable)
     expect(getWrapType(goerliWeth, eth)).toEqual(WrapType.NotApplicable)
-  })
-})
-
-describe(getFlow, () => {
-  it('correctly returns length of onboarding create flow without seed phrase with add security screen', () => {
-    expect(getFlow(ImportType.CreateNew, true, false, true)).toHaveLength(4)
-  })
-
-  it('correctly returns length of onboarding create flow with seed phrase existing without add security screen', () => {
-    expect(getFlow(ImportType.CreateNew, true, true, true)).toHaveLength(4)
-  })
-
-  it('correctly returns length of add account create flow showing add security screen and seed phrase does not exist', () => {
-    expect(getFlow(ImportType.CreateNew, false, false, false)).toHaveLength(4)
-  })
-
-  it('correctly returns length of add account with view-only wallet not showing add security screen, but face ID was already added', () => {
-    expect(getFlow(ImportType.Watch, true, false, false)).toHaveLength(2)
   })
 })
