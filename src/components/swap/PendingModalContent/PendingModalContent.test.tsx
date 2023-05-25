@@ -28,7 +28,7 @@ describe('PendingModalContent', () => {
         trade={TEST_TRADE_EXACT_INPUT}
       />
     )
-    expect(screen.getByText('Allow trading ABC on Uniswap')).toBeInTheDocument()
+    expect(screen.getByText('Enable spending limits for ABC on Uniswap')).toBeInTheDocument()
     expect(screen.getByText('Proceed in your wallet')).toBeInTheDocument()
     expect(screen.getByText('Why is this required?')).toBeInTheDocument()
   })
@@ -46,10 +46,10 @@ describe('PendingModalContent', () => {
           trade={TEST_TRADE_EXACT_INPUT}
         />
       )
-      expect(screen.getByText('Allow trading ABC on Uniswap')).toBeInTheDocument()
+      expect(screen.getByText('Enable spending limits for ABC on Uniswap')).toBeInTheDocument()
       expect(screen.getByText('Proceed in your wallet')).toBeInTheDocument()
       expect(screen.getByText('Why is this required?')).toBeInTheDocument()
-      expect(screen.queryByText('Unlock ABC for swapping')).not.toBeInTheDocument()
+      expect(screen.queryByText('Allow ABC to be used for swapping')).not.toBeInTheDocument()
     })
 
     it('renders the second step with activeStepIndex=1', () => {
@@ -64,10 +64,10 @@ describe('PendingModalContent', () => {
           trade={TEST_TRADE_EXACT_INPUT}
         />
       )
-      expect(screen.getByText('Unlock ABC for swapping')).toBeInTheDocument()
+      expect(screen.getByText('Allow ABC to be used for swapping')).toBeInTheDocument()
       expect(screen.getByText('Proceed in your wallet')).toBeInTheDocument()
       expect(screen.getByText('Why is this required?')).toBeInTheDocument()
-      expect(screen.queryByText('Allow trading ABC on Uniswap')).not.toBeInTheDocument()
+      expect(screen.queryByText('Enable spending limits for ABC on Uniswap')).not.toBeInTheDocument()
     })
   })
 

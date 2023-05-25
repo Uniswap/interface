@@ -12,6 +12,8 @@ import { useIsTransactionConfirmed } from 'state/transactions/hooks'
 import styled, { css, keyframes } from 'styled-components/macro'
 import { ExternalLink } from 'theme'
 import { ThemedText } from 'theme/components/text'
+import { getExplorerLink } from 'utils/getExplorerLink'
+import { ExplorerDataType } from 'utils/getExplorerLink'
 
 import { ConfirmModalState } from '../ConfirmSwapModal'
 import {
@@ -113,34 +115,29 @@ interface ContentArgs {
   swapPending: boolean
   tokenApprovalPending: boolean
   swapTxHash?: string
+  chainId?: number
 }
 
 function getContent(args: ContentArgs): PendingModalStep {
-  const { step, approvalCurrency, swapConfirmed, swapPending, tokenApprovalPending, trade } = args
+  const { step, approvalCurrency, swapConfirmed, swapPending, tokenApprovalPending, trade, swapTxHash, chainId } = args
   switch (step) {
     case ConfirmModalState.APPROVING_TOKEN:
       return {
-        title: t`Allow trading ${approvalCurrency?.symbol ?? 'token'} on Uniswap`,
+        title: t`Enable spending limits for ${approvalCurrency?.symbol ?? 'this token'} on Uniswap`,
         subtitle: (
-          <>
-            <Trans>First, we need your permission to use your DAI for swapping.</Trans>{' '}
-            <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/8120520483085">
-              <Trans>Why is this required?</Trans>
-            </ExternalLink>
-          </>
+          <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/8120520483085">
+            <Trans>Why is this required?</Trans>
+          </ExternalLink>
         ),
         label: tokenApprovalPending ? t`Pending...` : t`Proceed in your wallet`,
       }
     case ConfirmModalState.PERMITTING:
       return {
-        title: t`Unlock ${approvalCurrency?.symbol ?? 'token'} for swapping`,
+        title: t`Allow ${approvalCurrency?.symbol ?? 'this token'} to be used for swapping`,
         subtitle: (
-          <>
-            <Trans>This will expire after 30 days for your security.</Trans>{' '}
-            <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/8120520483085">
-              <Trans>Why is this required?</Trans>
-            </ExternalLink>
-          </>
+          <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/8120520483085">
+            <Trans>Why is this required?</Trans>
+          </ExternalLink>
         ),
         label: t`Proceed in your wallet`,
       }
@@ -148,13 +145,17 @@ function getContent(args: ContentArgs): PendingModalStep {
       return {
         title: swapPending ? t`Transaction submitted` : swapConfirmed ? t`Success` : t`Confirm Swap`,
         subtitle: trade ? <TradeSummary trade={trade} /> : null,
-        label: swapConfirmed ? (
-          <ExternalLink href={`https://etherscan.io/tx/${swapConfirmed}`} color="textSecondary">
-            <Trans>View on Explorer</Trans>
-          </ExternalLink>
-        ) : !swapPending ? (
-          t`Proceed in your wallet`
-        ) : null,
+        label:
+          swapConfirmed && swapTxHash && chainId ? (
+            <ExternalLink
+              href={getExplorerLink(chainId, swapTxHash, ExplorerDataType.TRANSACTION)}
+              color="textSecondary"
+            >
+              <Trans>View on Explorer</Trans>
+            </ExternalLink>
+          ) : !swapPending ? (
+            t`Proceed in your wallet`
+          ) : null,
       }
   }
 }
@@ -178,6 +179,7 @@ export function PendingModalContent({
     tokenApprovalPending,
     swapTxHash,
     trade,
+    chainId,
   })
   const currentStepContainerRef = useRef<HTMLDivElement>(null)
   useUnmountingAnimation(currentStepContainerRef, () => AnimationType.EXITING)
