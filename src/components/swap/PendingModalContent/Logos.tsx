@@ -50,7 +50,7 @@ export enum AnimationType {
 }
 
 const FadeWrapper = styled.div<{ $scale: boolean }>`
-  transition: display ${({ theme }) => theme.transition.duration.medium} ${({ theme }) => theme.transition.timing.inOut},
+  transition: display ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.inOut}`},
     transform ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.inOut}`};
   ${({ $scale }) => ($scale ? fadeAndScaleInAnimation : fadeInAnimation)}
 
@@ -116,11 +116,9 @@ const PinkCircle = styled(FadePresence)`
 
 export function PaperIcon() {
   return (
-    <>
-      <PinkCircle>
-        <PapersIcon />
-      </PinkCircle>
-    </>
+    <PinkCircle>
+      <PapersIcon />
+    </PinkCircle>
   )
 }
 
