@@ -148,7 +148,7 @@ const Navbar = () => {
                   borderRadius: '0.25rem',
                   marginLeft: '0.625rem',
                 }}
-                href="https://revert.finance/#/incentives/evmos"
+                href="https://v3staker.revert.finance/#/running-incentives/evmos"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="ml-2.5 rounded bg-red p-5 py-1.5 font-semibold text-pearl"
