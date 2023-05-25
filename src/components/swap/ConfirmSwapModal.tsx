@@ -18,12 +18,14 @@ import usePrevious from 'hooks/usePrevious'
 import { getPriceUpdateBasisPoints } from 'lib/utils/analytics'
 import { useCallback, useEffect, useState } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
+import styled from 'styled-components/macro'
+import { ThemedText } from 'theme'
 import { isL2ChainId } from 'utils/chains'
 import { formatSwapPriceUpdatedEventProperties } from 'utils/loggingFormatters'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 import { tradeMeaningfullyDiffers } from 'utils/tradeMeaningFullyDiffer'
 
-import { ConfirmationModalContent, StyledLogo } from '../TransactionConfirmationModal'
+import { ConfirmationModalContent } from '../TransactionConfirmationModal'
 import { PendingConfirmModalState, PendingModalContent } from './PendingModalContent'
 import { ErrorModalContent, PendingModalError } from './PendingModalContent/ErrorModalContent'
 import SwapModalFooter from './SwapModalFooter'
@@ -35,6 +37,15 @@ export enum ConfirmModalState {
   PERMITTING,
   PENDING_CONFIRMATION,
 }
+
+const StyledL2Badge = styled(Badge)`
+  padding: 6px 8px;
+`
+
+const StyledL2Logo = styled.img`
+  height: 16px;
+  width: 16px;
+`
 
 function isInApprovalPhase(confirmModalState: ConfirmModalState) {
   return confirmModalState === ConfirmModalState.APPROVING_TOKEN || confirmModalState === ConfirmModalState.PERMITTING
@@ -281,12 +292,12 @@ export default function ConfirmSwapModal({
     if (isL2ChainId(chainId) && confirmModalState !== ConfirmModalState.REVIEWING) {
       const info = getChainInfo(chainId)
       return (
-        <Badge>
+        <StyledL2Badge>
           <RowFixed data-testid="confirmation-modal-chain-icon" gap="sm">
-            <StyledLogo src={info.logoUrl} />
-            {info.label}
+            <StyledL2Logo src={info.logoUrl} />
+            <ThemedText.SubHeaderSmall>{info.label}</ThemedText.SubHeaderSmall>
           </RowFixed>
-        </Badge>
+        </StyledL2Badge>
       )
     }
     return undefined
@@ -302,7 +313,7 @@ export default function ConfirmSwapModal({
           />
         ) : (
           <ConfirmationModalContent
-            title={confirmModalState === ConfirmModalState.REVIEWING ? <Trans>Review Swap</Trans> : undefined}
+            title={confirmModalState === ConfirmModalState.REVIEWING ? <Trans>Review swap</Trans> : undefined}
             onDismiss={onModalDismiss}
             topContent={modalHeader}
             bottomContent={modalBottom}
