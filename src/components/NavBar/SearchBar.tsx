@@ -134,11 +134,15 @@ export const SearchBar = () => {
     <Trace section={InterfaceSectionName.NAVBAR_SEARCH}>
       <Box
         data-cy="search-bar"
-        position={{ sm: 'fixed', md: 'absolute', navSearchInputVisible: 'relative' }}
+        position={{ sm: 'fixed', md: 'absolute' }}
         width={{ sm: isOpen ? 'viewWidth' : 'auto', md: 'auto' }}
         ref={searchRef}
         className={styles.searchBarContainerNft}
-        display={{ sm: isOpen ? 'inline-block' : 'none', navSearchInputVisible: 'inline-block' }}
+        display={{ sm: isOpen ? 'inline-block' : 'none' }}
+        {...(isNavSearchInputVisible && {
+          position: 'relative',
+          display: 'inline-block',
+        })}
       >
         <Row
           className={clsx(
