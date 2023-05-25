@@ -37,7 +37,7 @@ interface AmountProps {
   field: Field
   tooltipText?: ReactNode
   label: ReactNode
-  amount: CurrencyAmount<Currency> | undefined
+  amount?: CurrencyAmount<Currency>
   usdAmount?: number
 }
 

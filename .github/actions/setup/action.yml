@@ -53,6 +53,14 @@ runs:
       shell: bash
 
     # Messages are extracted from source.
+    # A record of source file content hashes and catalogs is maintained in node_modules/.cache/lingui.
+    # Messages are always extracted, but extraction may short-circuit from the custom extractor's cache.
+    - uses: actions/cache@v3
+      id: i18n-extract-cache
+      with:
+        path: node_modules/.cache
+        key: ${{ runner.os }}-i18n-extract-${{ github.run_id }}
+        restore-keys: ${{ runner.os }}-i18n-extract-
     - run: yarn i18n:extract
       shell: bash
 

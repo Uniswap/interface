@@ -57,12 +57,12 @@ export const formatSwapPriceUpdatedEventProperties = (
 
 interface AnalyticsEventProps {
   trade: InterfaceTrade
-  hash: string | undefined
+  hash?: string
   allowedSlippage: Percent
-  transactionDeadlineSecondsSinceEpoch: number | undefined
+  transactionDeadlineSecondsSinceEpoch?: number
   isAutoSlippage: boolean
   isAutoRouterApi: boolean
-  swapQuoteReceivedDate: Date | undefined
+  swapQuoteReceivedDate?: Date
   routes: RoutingDiagramEntry[]
   fiatValueInput?: number
   fiatValueOutput?: number
