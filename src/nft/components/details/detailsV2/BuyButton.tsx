@@ -7,8 +7,9 @@ import Row from 'components/Row'
 import { AddToBagIcon, CondensedBagIcon } from 'nft/components/icons'
 import { useBag } from 'nft/hooks'
 import { useBuyAssetCallback } from 'nft/hooks/useFetchAssets'
+import { useIsAssetInBag } from 'nft/hooks/useIsAssetInBag'
 import { GenieAsset } from 'nft/types'
-import { MouseEvent, useMemo, useState } from 'react'
+import { MouseEvent, useState } from 'react'
 import styled, { css } from 'styled-components/macro'
 import { BREAKPOINTS } from 'theme'
 import { shallow } from 'zustand/shallow'
@@ -84,19 +85,16 @@ const Price = styled.div`
 
 export const BuyButton = ({ asset, onDataPage }: { asset: GenieAsset; onDataPage?: boolean }) => {
   const { fetchAndPurchaseSingleAsset, isLoading: isLoadingRoute } = useBuyAssetCallback()
-  const { addAssetsToBag, itemsInBag, removeAssetsFromBag } = useBag(
-    ({ addAssetsToBag, itemsInBag, removeAssetsFromBag }) => ({
+  const { addAssetsToBag, removeAssetsFromBag } = useBag(
+    ({ addAssetsToBag, removeAssetsFromBag }) => ({
       addAssetsToBag,
-      itemsInBag,
       removeAssetsFromBag,
     }),
     shallow
   )
 
   const [addToBagExpanded, setAddToBagExpanded] = useState(false)
-  const assetInBag = useMemo(() => {
-    return itemsInBag.some((item) => asset.tokenId === item.asset.tokenId && asset.address === item.asset.address)
-  }, [asset, itemsInBag])
+  const assetInBag = useIsAssetInBag(asset)
 
   const secondaryButtonCta = assetInBag ? 'Remove from Bag' : 'Add to Bag'
   const secondaryButtonAction = (event: MouseEvent<HTMLButtonElement>) => {
