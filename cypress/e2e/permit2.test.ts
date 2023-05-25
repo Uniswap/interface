@@ -59,6 +59,9 @@ describe('Permit2', () => {
   })
 
   it('swaps after completing full permit2 approval process', () => {
+    cy.hardhat().then(({ provider }) => {
+      cy.spy(provider, 'send').as('permitApprovalSpy')
+    })
     initiateSwap()
     cy.contains('Allow trading DAI on Uniswap').should('exist')
     cy.contains('Approved').should('exist')
@@ -73,6 +76,7 @@ describe('Permit2', () => {
 
       expectTokenAllowanceForPermit2ToBeMax()
       expectPermit2AllowanceForUniversalRouterToBeMax(approvalTime)
+      cy.get('@permitApprovalSpy').should('have.been.calledWith', 'eth_signTypedData_v4')
     })
   })
 
