@@ -333,7 +333,7 @@ export function Swap({
   }, [navigate])
 
   // modal and loading
-  const [{ showConfirm, tradeToConfirm, swapErrorMessage, attemptingTxn, txHash }, setSwapState] = useState<{
+  const [{ showConfirm, tradeToConfirm, swapErrorMessage, txHash }, setSwapState] = useState<{
     showConfirm: boolean
     tradeToConfirm?: InterfaceTrade
     attemptingTxn: boolean
@@ -706,6 +706,7 @@ export function Swap({
                 }
               }}
               id="swap-button"
+              data-testid="swap-button"
               disabled={!isValid || routeIsSyncing || routeIsLoading || priceImpactTooHigh}
               error={isValid && priceImpactSeverity > 2 && allowance.state === AllowanceState.ALLOWED}
             >

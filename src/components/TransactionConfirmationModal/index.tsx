@@ -186,7 +186,7 @@ export function ConfirmationModalContent({
           <Row justify="center" marginLeft="24px">
             <ThemedText.SubHeader>{title}</ThemedText.SubHeader>
           </Row>
-          <CloseIcon onClick={onDismiss} data-cy="confirmation-close-icon" />
+          <CloseIcon onClick={onDismiss} data-testid="confirmation-close-icon" />
         </Row>
         {topContent()}
       </AutoColumn>

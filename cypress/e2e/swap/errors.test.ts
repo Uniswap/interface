@@ -19,9 +19,9 @@ describe('Swap errors', () => {
       cy.get('#swap-button').click()
       cy.get('#confirm-swap-or-send').click()
 
-      cy.contains('Transaction rejected').should('exist')
-      cy.contains('Dismiss').click()
-      cy.contains('Transaction rejected').should('not.exist')
+      cy.contains('Confirmation failed').should('exist')
+      cy.get('body').click('topRight')
+      cy.contains('Confirmation failed').should('not.exist')
     })
   })
 
@@ -43,7 +43,7 @@ describe('Swap errors', () => {
       cy.get('#swap-currency-input .token-amount-input').should('not.have.value', '')
       cy.get('#swap-button').click()
       cy.get('#confirm-swap-or-send').click()
-      cy.get(getTestSelector('dismiss-tx-confirmation')).click()
+      cy.get(getTestSelector('confirmation-close-icon')).click()
 
       // The pending transaction indicator should reflect the state.
       cy.get(getTestSelector('web3-status-connected')).should('contain', '1 Pending')
@@ -88,7 +88,8 @@ describe('Swap errors', () => {
       cy.get('#swap-currency-output .token-amount-input').should('not.have.value', '')
       cy.get('#swap-button').click()
       cy.get('#confirm-swap-or-send').click()
-      cy.get(getTestSelector('dismiss-tx-confirmation')).click()
+      cy.contains('Confirm Swap').should('exist')
+      cy.get(getTestSelector('confirmation-close-icon')).click()
 
       cy.get('#swap-currency-input .token-amount-input')
         .clear()
@@ -97,7 +98,8 @@ describe('Swap errors', () => {
       cy.get('#swap-currency-output .token-amount-input').should('not.have.value', '')
       cy.get('#swap-button').click()
       cy.get('#confirm-swap-or-send').click()
-      cy.get(getTestSelector('dismiss-tx-confirmation')).click()
+      cy.contains('Confirm Swap').should('exist')
+      cy.get(getTestSelector('confirmation-close-icon')).click()
 
       // The pending transaction indicator should reflect the state.
       cy.get(getTestSelector('web3-status-connected')).should('contain', '2 Pending')
