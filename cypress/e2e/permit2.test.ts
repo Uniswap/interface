@@ -5,6 +5,7 @@ import { getTestSelector } from '../utils'
 
 /** Initiates a swap. */
 function initiateSwap() {
+  cy.get('#swap-button').should('not.be.disabled')
   // Completes the swap.
   cy.get('#swap-button').click()
   cy.get(getTestSelector('confirm-swap-button')).click()
