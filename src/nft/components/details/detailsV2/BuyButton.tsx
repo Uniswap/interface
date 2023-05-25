@@ -90,7 +90,9 @@ export const BuyButton = ({ asset, onDataPage }: { asset: GenieAsset; onDataPage
   const [accountDrawerOpen, toggleWalletDrawer] = useAccountDrawer()
   const { fetchAndPurchaseSingleAsset, isLoading: isLoadingRoute } = useBuyAssetCallback()
   const [wishBuyAsset, setWishBuyAsset] = useState(false)
-
+  const [addToBagExpanded, setAddToBagExpanded] = useState(false)
+  const assetInBag = useIsAssetInBag(asset)
+  const price = asset.sellorders?.[0]?.price.value
   const { addAssetsToBag, removeAssetsFromBag } = useBag(
     ({ addAssetsToBag, removeAssetsFromBag }) => ({
       addAssetsToBag,
@@ -109,18 +111,13 @@ export const BuyButton = ({ asset, onDataPage }: { asset: GenieAsset; onDataPage
     fetchAndPurchaseSingleAsset(asset)
   }, [account, accountDrawerOpen, asset, fetchAndPurchaseSingleAsset, toggleWalletDrawer])
 
-  const [addToBagExpanded, setAddToBagExpanded] = useState(false)
-  const assetInBag = useIsAssetInBag(asset)
-
   const secondaryButtonCta = assetInBag ? 'Remove from Bag' : 'Add to Bag'
+  const SecondaryButtonIcon = () =>
+    assetInBag ? <CondensedBagIcon width="24px" height="24px" /> : <AddToBagIcon width="24px" height="24px" />
   const secondaryButtonAction = (event: MouseEvent<HTMLButtonElement>) => {
     assetInBag ? removeAssetsFromBag([asset]) : addAssetsToBag([asset])
     event.currentTarget.blur()
   }
-  const SecondaryButtonIcon = () =>
-    assetInBag ? <CondensedBagIcon width="24px" height="24px" /> : <AddToBagIcon width="24px" height="24px" />
-
-  const price = asset.sellorders?.[0]?.price.value
 
   if (!price) {
     if (onDataPage) {
@@ -141,12 +138,19 @@ export const BuyButton = ({ asset, onDataPage }: { asset: GenieAsset; onDataPage
         disabled={isLoadingRoute || wishBuyAsset}
         onClick={() => oneClickBuyAsset()}
       >
-        {isLoadingRoute ? (
+        {wishBuyAsset && (
+          <>
+            <Trans>Connect Wallet</Trans>
+            <Loader size="24px" stroke="white" />
+          </>
+        )}
+        {isLoadingRoute && (
           <>
             <Trans>Fetching Route</Trans>
             <Loader size="24px" stroke="white" />
           </>
-        ) : (
+        )}
+        {!wishBuyAsset && (
           <>
             <Trans>Buy</Trans>
             <Price>{formatNumber(price)} ETH</Price>
