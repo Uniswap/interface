@@ -72,7 +72,7 @@ const StepTitleAnimationContainer = styled(Column)<{ disableEntranceAnimation?: 
   position: absolute;
   width: 100%;
   align-items: center;
-  transition: display ${({ theme }) => theme.transition.duration.medium} ${({ theme }) => theme.transition.timing.inOut};
+  transition: display ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.inOut}`};
   ${({ disableEntranceAnimation }) =>
     !disableEntranceAnimation &&
     css`
@@ -238,14 +238,14 @@ export function PendingModalContent({
                   <ThemedText.SubHeaderLarge textAlign="center" data-testid="pending-modal-content-title">
                     {title}
                   </ThemedText.SubHeaderLarge>
-                  {subtitle && <ThemedText.LabelSmall textAlign="center">{subtitle}</ThemedText.LabelSmall>}
+                  <ThemedText.LabelSmall textAlign="center">{subtitle}</ThemedText.LabelSmall>
                 </StepTitleAnimationContainer>
               )
             )
           })}
         </AnimationWrapper>
-        <Row justify="center" marginTop="32px">
-          {label && <ThemedText.Caption color="textSecondary">{label}</ThemedText.Caption>}
+        <Row justify="center" marginTop="32px" minHeight="24px">
+          <ThemedText.Caption color="textSecondary">{label}</ThemedText.Caption>
         </Row>
       </HeaderContainer>
       {button && <Row justify="center">{button}</Row>}
