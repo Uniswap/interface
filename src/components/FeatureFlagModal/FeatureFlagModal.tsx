@@ -1,4 +1,5 @@
 import { BaseVariant, FeatureFlag, featureFlagSettings, useUpdateFlag } from 'featureFlags'
+import { UniswapXVariant, useUniswapXFlag } from 'featureFlags/flags/gouda'
 import { DetailsV2Variant, useDetailsV2Flag } from 'featureFlags/flags/nftDetails'
 import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
 import { UnifiedRouterVariant, useUnifiedRoutingAPIFlag } from 'featureFlags/flags/unifiedRouter'
@@ -213,6 +214,12 @@ export default function FeatureFlagModal() {
         value={useUnifiedRoutingAPIFlag()}
         featureFlag={FeatureFlag.uraEnabled}
         label="Enable the Unified Routing API"
+      />
+      <FeatureFlagOption
+        variant={UniswapXVariant}
+        value={useUniswapXFlag()}
+        featureFlag={FeatureFlag.uniswapXEnabled}
+        label="Enable UniswapX"
       />
       <FeatureFlagGroup name="Debug">
         <FeatureFlagOption

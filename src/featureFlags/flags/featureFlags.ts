@@ -7,4 +7,6 @@ export enum FeatureFlag {
   fiatOnRampButtonOnSwap = 'fiat_on_ramp_button_on_swap_page',
   detailsV2 = 'details_v2',
   uraEnabled = 'ura_enabled',
+  // TODO: update this when naming is finalized.
+  uniswapXEnabled = 'gouda_enabled',
 }
