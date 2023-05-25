@@ -14,7 +14,7 @@ import { useHideUniswapWalletBanner } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
-import { isIOS } from 'utils/userAgent'
+import { isIOS, isMobileSafari } from 'utils/userAgent'
 
 const PopupContainer = styled.div<{ show: boolean }>`
   display: flex;
@@ -92,6 +92,8 @@ export default function UniswapWalletBanner() {
   const shouldDisplay = Boolean(!hideUniswapWalletBanner && !isLandingScreen)
 
   const screenSize = useScreenSize()
+
+  if (isMobileSafari) return null
 
   return (
     <PopupContainer show={shouldDisplay}>
