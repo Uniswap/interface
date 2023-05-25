@@ -8,18 +8,22 @@ import {
 } from '@uniswap/analytics-events'
 import { Percent } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import Badge from 'components/Badge'
 import Modal, { MODAL_TRANSITION_DURATION } from 'components/Modal'
+import { RowFixed } from 'components/Row'
+import { getChainInfo } from 'constants/chainInfo'
 import { useMaxAmountIn } from 'hooks/useMaxAmountIn'
 import { Allowance, AllowanceState } from 'hooks/usePermit2Allowance'
 import usePrevious from 'hooks/usePrevious'
 import { getPriceUpdateBasisPoints } from 'lib/utils/analytics'
 import { ReactNode, useCallback, useEffect, useState } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
+import { isL2ChainId } from 'utils/chains'
 import { formatSwapPriceUpdatedEventProperties } from 'utils/loggingFormatters'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 import { tradeMeaningfullyDiffers } from 'utils/tradeMeaningFullyDiffer'
 
-import { ConfirmationModalContent } from '../TransactionConfirmationModal'
+import { ConfirmationModalContent, StyledLogo } from '../TransactionConfirmationModal'
 import {
   ErrorModalContent,
   PendingConfirmModalState,
@@ -173,6 +177,7 @@ export default function ConfirmSwapModal({
   fiatValueInput: { data?: number; isLoading: boolean }
   fiatValueOutput: { data?: number; isLoading: boolean }
 }) {
+  const { chainId } = useWeb3React()
   const doesTradeDiffer = originalTrade && tradeMeaningfullyDiffers(trade, originalTrade, allowedSlippage)
   const { startSwapFlow, onCancel, confirmModalState, approvalError, pendingModalSteps, prepareSwapFlow } =
     useConfirmModalState({
@@ -265,6 +270,21 @@ export default function ConfirmSwapModal({
     startSwapFlow,
   ])
 
+  const l2Badge = () => {
+    if (isL2ChainId(chainId) && confirmModalState !== ConfirmModalState.REVIEWING) {
+      const info = getChainInfo(chainId)
+      return (
+        <Badge>
+          <RowFixed data-testid="confirmation-modal-chain-icon" gap="sm">
+            <StyledLogo src={info.logoUrl} />
+            {info.label}
+          </RowFixed>
+        </Badge>
+      )
+    }
+    return undefined
+  }
+
   return (
     <Trace modal={InterfaceModalName.CONFIRM_SWAP}>
       <Modal isOpen $scrollOverlay onDismiss={onModalDismiss} maxHeight={90}>
@@ -279,6 +299,7 @@ export default function ConfirmSwapModal({
             onDismiss={onModalDismiss}
             topContent={modalHeader}
             bottomContent={modalBottom}
+            headerContent={l2Badge}
           />
         )}
       </Modal>

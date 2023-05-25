@@ -39,7 +39,7 @@ const ConfirmedIcon = styled(ColumnCenter)<{ inline?: boolean }>`
   padding: ${({ inline }) => (inline ? '20px 0' : '32px 0;')};
 `
 
-const StyledLogo = styled.img`
+export const StyledLogo = styled.img`
   height: 16px;
   width: 16px;
   margin-left: 6px;
@@ -173,16 +173,19 @@ export function ConfirmationModalContent({
   bottomContent,
   onDismiss,
   topContent,
+  headerContent,
 }: {
   title: ReactNode
   onDismiss: () => void
   topContent: () => ReactNode
-  bottomContent?: () => ReactNode | undefined
+  bottomContent?: () => ReactNode
+  headerContent?: () => ReactNode
 }) {
   return (
     <Wrapper>
       <AutoColumn gap="sm">
         <Row>
+          {headerContent?.()}
           <Row justify="center" marginLeft="24px">
             <ThemedText.SubHeader>{title}</ThemedText.SubHeader>
           </Row>
