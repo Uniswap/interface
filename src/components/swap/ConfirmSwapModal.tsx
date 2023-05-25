@@ -16,7 +16,7 @@ import { useMaxAmountIn } from 'hooks/useMaxAmountIn'
 import { Allowance, AllowanceState } from 'hooks/usePermit2Allowance'
 import usePrevious from 'hooks/usePrevious'
 import { getPriceUpdateBasisPoints } from 'lib/utils/analytics'
-import { ReactNode, useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 import { isL2ChainId } from 'utils/chains'
 import { formatSwapPriceUpdatedEventProperties } from 'utils/loggingFormatters'
@@ -158,7 +158,7 @@ export default function ConfirmSwapModal({
   allowance,
   onConfirm,
   onDismiss,
-  swapErrorMessage,
+  swapError,
   txHash,
   swapQuoteReceivedDate,
   fiatValueInput,
@@ -171,7 +171,7 @@ export default function ConfirmSwapModal({
   allowance: Allowance
   onAcceptChanges: () => void
   onConfirm: () => void
-  swapErrorMessage?: ReactNode
+  swapError?: Error
   onDismiss: () => void
   swapQuoteReceivedDate?: Date
   fiatValueInput: { data?: number; isLoading: boolean }
@@ -187,6 +187,14 @@ export default function ConfirmSwapModal({
       allowance,
       doesTradeDiffer: Boolean(doesTradeDiffer),
     })
+
+  const swapFailed = Boolean(swapError) && !didUserReject(swapError)
+  useEffect(() => {
+    // Reset the modal state if the user rejected the swap.
+    if (swapError && !swapFailed) {
+      onCancel()
+    }
+  }, [onCancel, swapError, swapFailed])
 
   const showAcceptChanges = Boolean(
     trade && doesTradeDiffer && confirmModalState !== ConfirmModalState.PENDING_CONFIRMATION
@@ -236,12 +244,12 @@ export default function ConfirmSwapModal({
           hash={txHash}
           allowedSlippage={allowedSlippage}
           disabledConfirm={showAcceptChanges}
-          swapErrorMessage={swapErrorMessage}
           swapQuoteReceivedDate={swapQuoteReceivedDate}
           fiatValueInput={fiatValueInput}
           fiatValueOutput={fiatValueOutput}
           showAcceptChanges={showAcceptChanges}
           onAcceptChanges={onAcceptChanges}
+          swapErrorMessage={swapFailed ? swapError?.message : undefined}
         />
       )
     }
@@ -261,11 +269,12 @@ export default function ConfirmSwapModal({
     trade,
     txHash,
     allowedSlippage,
-    swapErrorMessage,
     swapQuoteReceivedDate,
     fiatValueInput,
     fiatValueOutput,
     onAcceptChanges,
+    swapFailed,
+    swapError?.message,
     prepareSwapFlow,
     startSwapFlow,
   ])
@@ -288,7 +297,7 @@ export default function ConfirmSwapModal({
   return (
     <Trace modal={InterfaceModalName.CONFIRM_SWAP}>
       <Modal isOpen $scrollOverlay onDismiss={onModalDismiss} maxHeight={90}>
-        {approvalError || swapErrorMessage ? (
+        {approvalError || swapFailed ? (
           <ErrorModalContent
             errorType={approvalError ?? PendingModalError.CONFIRMATION_ERROR}
             onRetry={startSwapFlow}

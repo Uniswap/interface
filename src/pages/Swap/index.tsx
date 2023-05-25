@@ -333,17 +333,17 @@ export function Swap({
   }, [navigate])
 
   // modal and loading
-  const [{ showConfirm, tradeToConfirm, swapErrorMessage, txHash }, setSwapState] = useState<{
+  const [{ showConfirm, tradeToConfirm, swapError, txHash }, setSwapState] = useState<{
     showConfirm: boolean
     tradeToConfirm?: InterfaceTrade
     attemptingTxn: boolean
-    swapErrorMessage?: string
+    swapError?: Error
     txHash?: string
   }>({
     showConfirm: false,
     tradeToConfirm: undefined,
     attemptingTxn: false,
-    swapErrorMessage: undefined,
+    swapError: undefined,
     txHash: undefined,
   })
 
@@ -397,7 +397,7 @@ export function Swap({
     setSwapState((currentState) => ({
       ...currentState,
       attemptingTxn: true,
-      swapErrorMessage: undefined,
+      swapError: undefined,
       txHash: undefined,
     }))
     swapCallback()
@@ -405,7 +405,7 @@ export function Swap({
         setSwapState((currentState) => ({
           ...currentState,
           attemptingTxn: false,
-          swapErrorMessage: undefined,
+          swapError: undefined,
           txHash: hash,
         }))
         sendEvent({
@@ -430,7 +430,7 @@ export function Swap({
         setSwapState((currentState) => ({
           ...currentState,
           attemptingTxn: false,
-          swapErrorMessage: error.message,
+          swapError: error,
           txHash: undefined,
         }))
       })
@@ -538,7 +538,7 @@ export function Swap({
           allowedSlippage={allowedSlippage}
           onConfirm={handleSwap}
           allowance={allowance}
-          swapErrorMessage={swapErrorMessage}
+          swapError={swapError}
           onDismiss={handleConfirmDismiss}
           swapQuoteReceivedDate={swapQuoteReceivedDate}
           fiatValueInput={fiatValueTradeInput}
@@ -699,7 +699,7 @@ export function Swap({
                   setSwapState({
                     tradeToConfirm: trade,
                     attemptingTxn: false,
-                    swapErrorMessage: undefined,
+                    swapError: undefined,
                     showConfirm: true,
                     txHash: undefined,
                   })
@@ -725,7 +725,7 @@ export function Swap({
               </Text>
             </ButtonError>
           )}
-          {isExpertMode && swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}
+          {Boolean(isExpertMode && swapError) && <SwapCallbackError error={swapError?.message} />}
         </div>
       </AutoColumn>
     </SwapWrapper>
