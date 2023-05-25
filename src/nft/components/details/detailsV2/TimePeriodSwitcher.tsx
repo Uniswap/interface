@@ -83,8 +83,13 @@ export const TimePeriodSwitcher = ({
   useOnClickOutside(menuRef, () => {
     isOpen && toggleIsOpen()
   })
+
+  if (!supportedTimePeriods[activeTimePeriod]) {
+    return null
+  }
+
   return (
-    <SwitcherAndDropdownWrapper ref={menuRef}>
+    <SwitcherAndDropdownWrapper ref={menuRef} data-testid="activity-time-period-switcher">
       <SwitcherWrapper onClick={toggleIsOpen}>
         <ThemedText.LabelSmall lineHeight="16px" color="textPrimary">
           {supportedTimePeriods[activeTimePeriod]}

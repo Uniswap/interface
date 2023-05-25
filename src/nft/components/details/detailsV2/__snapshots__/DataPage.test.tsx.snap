@@ -136,7 +136,7 @@ exports[`data page loads with header showing 1`] = `
   justify-content: flex-start;
 }
 
-.c27 {
+.c31 {
   height: 568px;
 }
 
@@ -183,6 +183,10 @@ exports[`data page loads with header showing 1`] = `
   padding: 2px 4px;
   color: #7780A0;
   line-height: 12px;
+}
+
+.c27 {
+  margin-left: auto;
 }
 
 .c25 {
@@ -285,6 +289,50 @@ exports[`data page loads with header showing 1`] = `
 .c8 {
   gap: 4px;
   margin-right: auto;
+}
+
+.c28 {
+  position: relative;
+  width: 92px;
+}
+
+.c29 {
+  gap: 4px;
+  padding: 8px;
+  cursor: pointer;
+  border-radius: 12px;
+  width: 100%;
+  -webkit-box-pack: end;
+  -webkit-justify-content: flex-end;
+  -ms-flex-pack: end;
+  justify-content: flex-end;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  background: #E8ECFB;
+  -webkit-transition: opacity 250ms ease;
+  transition: opacity 250ms ease;
+}
+
+.c29:hover {
+  opacity: 0.6;
+}
+
+.c29:active {
+  opacity: 0.4;
+}
+
+.c30 {
+  height: 16px;
+  width: 16px;
+  color: #7780A0;
+  -webkit-transform: rotate(0deg);
+  -ms-transform: rotate(0deg);
+  transform: rotate(0deg);
+  -webkit-transition: -webkit-transform 125ms;
+  -webkit-transition: transform 125ms;
+  transition: transform 125ms;
 }
 
 .c0 {
@@ -503,9 +551,43 @@ exports[`data page loads with header showing 1`] = `
                 Listings
               </div>
             </div>
+            <div
+              class="c27"
+            >
+              <div
+                class="c28"
+                data-testid="activity-time-period-switcher"
+              >
+                <div
+                  class="c4 c5 c29"
+                >
+                  <div
+                    class="c11 css-1adn0z6"
+                  >
+                    1 week
+                  </div>
+                  <svg
+                    class="c30"
+                    fill="none"
+                    height="24"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                    width="24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <polyline
+                      points="6 9 12 15 18 9"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </div>
           </div>
           <div
-            class="c27"
+            class="c31"
           >
             Activity Content
           </div>
@@ -652,7 +734,7 @@ exports[`data page loads without header showing 1`] = `
   justify-content: flex-start;
 }
 
-.c27 {
+.c31 {
   height: 568px;
 }
 
@@ -699,6 +781,10 @@ exports[`data page loads without header showing 1`] = `
   padding: 2px 4px;
   color: #7780A0;
   line-height: 12px;
+}
+
+.c27 {
+  margin-left: auto;
 }
 
 .c25 {
@@ -801,6 +887,50 @@ exports[`data page loads without header showing 1`] = `
 .c8 {
   gap: 4px;
   margin-right: auto;
+}
+
+.c28 {
+  position: relative;
+  width: 92px;
+}
+
+.c29 {
+  gap: 4px;
+  padding: 8px;
+  cursor: pointer;
+  border-radius: 12px;
+  width: 100%;
+  -webkit-box-pack: end;
+  -webkit-justify-content: flex-end;
+  -ms-flex-pack: end;
+  justify-content: flex-end;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  background: #E8ECFB;
+  -webkit-transition: opacity 250ms ease;
+  transition: opacity 250ms ease;
+}
+
+.c29:hover {
+  opacity: 0.6;
+}
+
+.c29:active {
+  opacity: 0.4;
+}
+
+.c30 {
+  height: 16px;
+  width: 16px;
+  color: #7780A0;
+  -webkit-transform: rotate(0deg);
+  -ms-transform: rotate(0deg);
+  transform: rotate(0deg);
+  -webkit-transition: -webkit-transform 125ms;
+  -webkit-transition: transform 125ms;
+  transition: transform 125ms;
 }
 
 .c0 {
@@ -1019,9 +1149,43 @@ exports[`data page loads without header showing 1`] = `
                 Listings
               </div>
             </div>
+            <div
+              class="c27"
+            >
+              <div
+                class="c28"
+                data-testid="activity-time-period-switcher"
+              >
+                <div
+                  class="c4 c5 c29"
+                >
+                  <div
+                    class="c11 css-1adn0z6"
+                  >
+                    1 week
+                  </div>
+                  <svg
+                    class="c30"
+                    fill="none"
+                    height="24"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                    width="24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <polyline
+                      points="6 9 12 15 18 9"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </div>
           </div>
           <div
-            class="c27"
+            class="c31"
           >
             Activity Content
           </div>
