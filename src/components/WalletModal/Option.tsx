@@ -87,6 +87,8 @@ const WCv2PopoverToggle = styled.button`
   cursor: pointer;
   display: flex;
   justify-content: center;
+  margin: 0;
+  max-width: 48px;
   padding: 0;
 
   &:hover {
