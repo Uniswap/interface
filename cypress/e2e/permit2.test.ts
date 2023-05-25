@@ -5,7 +5,7 @@ import { getTestSelector } from '../utils'
 
 /** Initiates a swap. */
 function initiateSwap() {
-  // The swap button is re-rendered once enabled, so we must wait until the original button is not disabled to re-select the appropriate button.
+  // The swap button is re-rendered once enable, so we must wait until the original button is not disabled to re-select the appropriate button.
   cy.get('#swap-button').should('not.be.disabled')
   // Completes the swap.
   cy.get('#swap-button').click()
@@ -64,10 +64,10 @@ describe('Permit2', () => {
       cy.spy(provider, 'send').as('permitApprovalSpy')
     })
     initiateSwap()
-    cy.contains('Allow trading DAI on Uniswap').should('exist')
+    cy.contains('Enable spending limits for DAI on Uniswap').should('exist')
     cy.contains('Approved').should('exist')
 
-    cy.contains('Unlock DAI for swapping').should('exist')
+    cy.contains('Allow DAI to be used for swapping').should('exist')
     cy.contains('Confirm Swap').should('exist')
 
     cy.then(() => {
@@ -101,7 +101,7 @@ describe('Permit2', () => {
       })
 
       cy.get(getTestSelector('confirm-swap-button')).click()
-      cy.contains('Allow trading DAI on Uniswap').should('exist')
+      cy.contains('Enable spending limits for DAI on Uniswap').should('exist')
       cy.contains('Approved').should('exist')
 
       // permitApprovalStub should reject here, and the modal should revert to the review state.
@@ -205,7 +205,7 @@ describe('Permit2', () => {
       .then(() => {
         initiateSwap()
         const approvalTime = Date.now()
-        cy.contains('Allow trading DAI on Uniswap').should('exist')
+        cy.contains('Enable spending limits for DAI on Uniswap').should('exist')
 
         cy.contains('Confirm Swap').should('exist')
         cy.contains('Swapped').should('exist')
