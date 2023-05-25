@@ -5,7 +5,7 @@ import { selectChainByDappAndWallet } from 'src/background/features/dapp/selecto
 import { DEFAULT_DAPP_URL, saveDappChain } from 'src/background/features/dapp/slice'
 import { appSelect, WebState } from 'src/background/store'
 import { sendMessageToActiveTab, sendMessageToSpecificTab } from 'src/background/utils/messageUtils'
-import { ExtensionChainChange, ExtensionRequestType } from 'src/types/requests'
+import { DisconnectResponse, ExtensionChainChange, ExtensionRequestType } from 'src/types/requests'
 import { call, put, select, take } from 'typed-redux-saga'
 import { ChainId, getChainIdFromString } from 'wallet/src/constants/chains'
 import { logger } from 'wallet/src/features/logger/logger'
@@ -346,13 +346,19 @@ function* saveLastChainForDapp(chainId: ChainId, senderTabId?: number) {
 }
 
 export const saveChainAction = createAction<{ chainId: ChainId }>(`dappRequest/saveChainAction`)
+export const disconnectAction = createAction(`extensionRequest/disconnectAction`)
 
 export function* extensionRequestWatcher() {
   while (true) {
-    const { payload, type } = yield* take(saveChainAction)
+    const { payload, type } = yield* take([saveChainAction, disconnectAction])
 
-    if (type === saveChainAction.type) {
-      yield* call(changeChainFromExtension, payload.chainId)
+    switch (type) {
+      case saveChainAction.type:
+        yield* call(changeChainFromExtension, payload.chainId)
+        break
+      case disconnectAction.type:
+        yield* call(disconnectFromExtension)
+        break
     }
   }
 }
@@ -365,6 +371,13 @@ export function* changeChainFromExtension(chainId: ChainId) {
     type: ExtensionRequestType.SwitchChain,
     providerUrl: provider.connection.url,
     chainId,
+  }
+  yield* call(sendMessageToActiveTab, response)
+}
+
+export function* disconnectFromExtension() {
+  const response: DisconnectResponse = {
+    type: ExtensionRequestType.Disconnect,
   }
   yield* call(sendMessageToActiveTab, response)
 }

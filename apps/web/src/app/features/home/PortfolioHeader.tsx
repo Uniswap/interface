@@ -15,6 +15,7 @@ type PortfolioHeaderProps = {
 }
 
 export function PortfolioHeader({ address }: PortfolioHeaderProps): JSX.Element {
+  // TODO: Add dapp connection status to store to show/hide switch networks modal
   return (
     <XStack alignItems="center" justifyContent="space-between" padding="$spacing16">
       <Flex alignItems="center" flexDirection="row" gap="$spacing8" justifyContent="center">

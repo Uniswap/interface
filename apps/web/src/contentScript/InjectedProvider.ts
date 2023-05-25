@@ -143,12 +143,18 @@ export class InjectedProvider extends EventEmitter {
   initExtensionListener = (): void => {
     const handleDappRequest = (event: MessageEvent<BaseExtensionRequest>): void => {
       const messageData = event.data
-      if (messageData?.type === ExtensionRequestType.SwitchChain) {
-        const request = messageData as ExtensionChainChange
-        const chainId = chainIdtoHexadecimalString(request.chainId)
-        this.chainId = chainId
-        this.provider = new ethers.providers.JsonRpcProvider(request.providerUrl)
-        this.emit('chainChanged', chainId)
+      switch (messageData?.type) {
+        case ExtensionRequestType.SwitchChain: {
+          const request = messageData as ExtensionChainChange
+          const chainId = chainIdtoHexadecimalString(request.chainId)
+          this.chainId = chainId
+          this.provider = new ethers.providers.JsonRpcProvider(request.providerUrl)
+          this.emit('chainChanged', chainId)
+          break
+        }
+        case ExtensionRequestType.Disconnect: {
+          this._handleDisconnected()
+        }
       }
     }
 

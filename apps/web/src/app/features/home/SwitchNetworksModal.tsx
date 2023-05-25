@@ -1,8 +1,8 @@
 import { useDappInfo } from 'src/background/features/dapp/hooks'
 import { selectChainByDappAndWallet } from 'src/background/features/dapp/selectors'
-import { saveChainAction } from 'src/background/features/dappRequests/saga'
+import { disconnectAction, saveChainAction } from 'src/background/features/dappRequests/saga'
 import { useAppDispatch, useAppSelector } from 'src/background/store'
-import { Circle, Image, Text, XStack, YStack } from 'ui/src'
+import { Circle, Image, Popover, Text, XStack, YStack } from 'ui/src'
 import PowerIcon from 'ui/src/assets/icons/power.svg'
 import { Button } from 'ui/src/components/button/Button'
 import { iconSizes } from 'ui/src/theme/iconSizes'
@@ -25,7 +25,7 @@ export function SwitchNetworksModal(): JSX.Element {
   }
 
   const onDisconnect = (): void => {
-    // TODO: Disconnect from wallet
+    dispatch(disconnectAction())
   }
 
   return (
@@ -82,12 +82,14 @@ export function SwitchNetworksModal(): JSX.Element {
         )
       })}
 
-      <Button borderRadius="$rounded32" theme="secondary" onPress={onDisconnect}>
-        <XStack alignItems="center" gap="$spacing8">
-          <PowerIcon height={iconSizes.icon16} width={iconSizes.icon16} />
-          Disconnect
-        </XStack>
-      </Button>
+      <Popover.Close asChild>
+        <Button borderRadius="$rounded32" theme="secondary" onPress={onDisconnect}>
+          <XStack alignItems="center" gap="$spacing8">
+            <PowerIcon height={iconSizes.icon16} width={iconSizes.icon16} />
+            Disconnect
+          </XStack>
+        </Button>
+      </Popover.Close>
     </YStack>
   )
 }
