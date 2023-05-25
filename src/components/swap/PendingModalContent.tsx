@@ -78,7 +78,7 @@ interface PendingModalContentProps {
 function CurrencyLoader({ currency }: { currency?: Currency }) {
   const theme = useTheme()
   return (
-    <LogoContainer>
+    <LogoContainer data-testid={`pending-modal-currency-logo-loader-${currency?.symbol}`}>
       <LogoLayer>
         <CurrencyLogo currency={currency} size="48px" />
       </LogoLayer>
@@ -134,6 +134,9 @@ export function PendingModalContent({
     confirmed,
     theme
   )
+  if (steps.length === 0) {
+    return null
+  }
   return (
     <Container gap="lg">
       {logo}
@@ -207,7 +210,7 @@ export function ErrorModalContent({ errorType, onRetry }: ErrorModalContentProps
 
   return (
     <Container gap="lg">
-      <AlertTriangle strokeWidth={1} color={theme.accentFailure} size="48px" />
+      <AlertTriangle strokeWidth={1} color={theme.accentFailure} size="48px" data-testid="pending-modal-failure-icon" />
       <ColumnCenter gap="md">
         <ThemedText.HeadlineSmall>{title}</ThemedText.HeadlineSmall>
         <Row justify="center">
