@@ -92,7 +92,7 @@ const Wrapper = styled(Column)`
 `
 
 interface SwapDetailsInlineProps {
-  trade: InterfaceTrade | undefined
+  trade?: InterfaceTrade
   syncing: boolean
   loading: boolean
   allowedSlippage: Percent
