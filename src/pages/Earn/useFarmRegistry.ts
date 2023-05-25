@@ -8,6 +8,7 @@ import React, { useEffect } from 'react'
 import { AbiItem } from 'web3-utils'
 
 import farmRegistryAbi from '../../constants/abis/FarmRegistry.json'
+import { CACHED_FARM_INFO_BLOCK, cachedFarmInfoEvents, cachedLpInfoEvents } from './cachedFarmInfo'
 import { useCustomStakingInfo } from './useCustomStakingInfo'
 
 type FarmData = {
@@ -57,7 +58,7 @@ const pairDataGql = gql`
 `
 const COMPOUNDS_PER_YEAR = 2
 const CREATION_BLOCK = 9840049
-const LAST_N_BLOCKS = 11520 // Last 16 hours
+const LAST_N_BLOCKS = 5760 // Last 8 hours
 
 export interface WarningInfo {
   poolName: string
@@ -69,17 +70,22 @@ export const useFarmRegistry = () => {
   const client = useApolloClient()
   const [farmSummaries, setFarmSummaries] = React.useState<FarmSummary[]>([])
   const call = React.useCallback(async () => {
+    console.log('HERE')
     const farmRegistry = new kit.web3.eth.Contract(
       farmRegistryAbi as AbiItem[],
       '0xa2bf67e12EeEDA23C7cA1e5a34ae2441a17789Ec'
     )
     const lastBlock = await kit.web3.eth.getBlockNumber()
     const [farmInfoEvents, lpInfoEvents, farmDataEvents] = await Promise.all([
-      farmRegistry.getPastEvents('FarmInfo', {
-        fromBlock: CREATION_BLOCK,
-        toBlock: lastBlock,
-      }),
-      farmRegistry.getPastEvents('LPInfo', { fromBlock: CREATION_BLOCK, toBlock: lastBlock }),
+      farmRegistry
+        .getPastEvents('FarmInfo', {
+          fromBlock: CACHED_FARM_INFO_BLOCK,
+          toBlock: lastBlock,
+        })
+        .then((events) => events.concat(cachedFarmInfoEvents)),
+      farmRegistry
+        .getPastEvents('LPInfo', { fromBlock: CACHED_FARM_INFO_BLOCK, toBlock: lastBlock })
+        .then((events) => events.concat(cachedLpInfoEvents)),
       farmRegistry.getPastEvents('FarmData', {
         fromBlock: lastBlock - LAST_N_BLOCKS,
         toBlock: lastBlock,
