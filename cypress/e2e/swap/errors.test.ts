@@ -1,6 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { SupportedChainId } from '@uniswap/sdk-core'
 
+import { DEFAULT_DEADLINE_FROM_NOW } from '../../../src/constants/misc'
 import { UNI, USDC_MAINNET } from '../../../src/constants/tokens'
 import { getBalance, getTestSelector } from '../../utils'
 
@@ -33,13 +34,6 @@ describe('Swap errors', () => {
     cy.visit(`/swap?inputCurrency=ETH&outputCurrency=${USDC_MAINNET.address}`, { ethereum: 'hardhat' })
     cy.hardhat({ automine: false })
     getBalance(USDC_MAINNET).then((initialBalance) => {
-      // Set deadline to minimum: 1 minute
-      cy.get(getTestSelector('open-settings-dialog-button')).click()
-      cy.get(getTestSelector('transaction-deadline-settings')).click()
-      cy.get(getTestSelector('deadline-input')).clear().type('1')
-      cy.get('body').click('topRight') // close modal
-      cy.get(getTestSelector('deadline-input')).should('not.exist')
-
       // Enter amount to swap
       cy.get('#swap-currency-output .token-amount-input').type('1').should('have.value', '1')
       cy.get('#swap-currency-input .token-amount-input').should('not.have.value', '')
@@ -62,7 +56,7 @@ describe('Swap errors', () => {
         const transactions = await hardhat.send('eth_pendingTransactions', [])
         await hardhat.send('hardhat_dropTransaction', [transactions[0].hash])
         // Mine past the deadline
-        await hardhat.mine(1, /* 10 minutes */ 1000 * 60 * 10)
+        await hardhat.mine(1, DEFAULT_DEADLINE_FROM_NOW + 1)
       })
       cy.wait('@eth_getTransactionReceipt')
 
