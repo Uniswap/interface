@@ -3,7 +3,7 @@ import { render } from 'test-utils/render'
 
 import { TimePeriodSwitcher } from './TimePeriodSwitcher'
 
-describe('Media renderer', () => {
+describe('NFT Details Activity Time Period Switcher', () => {
   const mockSetTimePeriod = jest.fn()
 
   it('nothing renders when unsupported HistoryDuration.Hour is passed', () => {
