@@ -126,6 +126,9 @@ export const txReceipt = {
   transactionIndex: 1,
   confirmations: 1,
   status: 1,
+  confirmedTime: 1400000000000,
+  gasUsed: BigNumber.from('100000'),
+  effectiveGasPrice: BigNumber.from('1000000000'),
 }
 
 export const txResponse = {
@@ -160,7 +163,9 @@ export const txDetailsConfirmed: TransactionDetails = {
     blockNumber: txReceipt.blockNumber,
     transactionIndex: txReceipt.transactionIndex,
     confirmations: txReceipt.confirmations,
-    confirmedTime: 1400000000000,
+    confirmedTime: txReceipt.confirmedTime,
+    gasUsed: txReceipt.gasUsed.toNumber(),
+    effectiveGasPrice: txReceipt.effectiveGasPrice.toNumber(),
   },
 }
 

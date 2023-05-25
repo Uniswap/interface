@@ -23,6 +23,23 @@ export type SwapTradeBaseProperties = {
   token_out_amount: string
 } & BaseEventProperty
 
+type SwapTransactionResultProperties = {
+  address: string
+  chain_id: number
+  hash: string
+  added_time: number
+  confirmed_time?: number
+  gas_used?: number
+  effective_gas_price?: number
+  tradeType: string
+  inputCurrencyId: string
+  outputCurrencyId: string
+  slippageTolerance?: number
+  gasUseEstimate?: string
+  route?: string
+  quoteId?: string
+}
+
 // Events related to Moonpay internal transactions
 // NOTE: we do not currently have access to the full life cycle of these txs
 // because we do not yet use Moonpay's webhook
@@ -133,6 +150,8 @@ export type EventProperties = {
     is_auto_slippage?: boolean
     swap_quote_block_number?: string
   } & SwapTradeBaseProperties
+  [SwapEventName.SWAP_TRANSACTION_COMPLETED]: SwapTransactionResultProperties
+  [SwapEventName.SWAP_TRANSACTION_FAILED]: SwapTransactionResultProperties
 }
 
 export type TelemetryEventProps = {

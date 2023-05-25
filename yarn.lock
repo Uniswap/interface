@@ -11095,10 +11095,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@uniswap/analytics-events@npm:2.3.0":
-  version: 2.3.0
-  resolution: "@uniswap/analytics-events@npm:2.3.0"
-  checksum: 50080fda12d5572442b7252cc9916588441a9656fc5afa3a7b44f143224121567d179285e439cef17781dff724751be520736aa781502382a6c7af4255cca38c
+"@uniswap/analytics-events@npm:2.12.0":
+  version: 2.12.0
+  resolution: "@uniswap/analytics-events@npm:2.12.0"
+  checksum: df96fc2ab59c933b01ebb719c2069b776eceb94f8ddfb94970827d40ad29cb05140f869f9ec3e028fa2b5c78ade382ba1a922551222d73e7a544a4167a9334ca
   languageName: node
   linkType: hard
 
@@ -11180,7 +11180,7 @@ __metadata:
     "@types/react-native": 0.70.6
     "@types/uuid": 9.0.1
     "@types/wcag-contrast": 3.0.0
-    "@uniswap/analytics-events": 2.3.0
+    "@uniswap/analytics-events": 2.12.0
     "@uniswap/ethers-rs-mobile": 0.0.1
     "@uniswap/permit2-sdk": 1.2.0
     "@uniswap/router-sdk": 1.4.0

@@ -78,6 +78,8 @@ export interface TransactionReceipt {
   blockNumber: number
   confirmedTime: number
   confirmations: number
+  gasUsed: number
+  effectiveGasPrice: number
 }
 
 export interface NFTSummaryInfo {
@@ -131,11 +133,15 @@ export interface ApproveTransactionInfo extends BaseTransactionInfo {
   approvalAmount?: string
 }
 
-interface BaseSwapTransactionInfo extends BaseTransactionInfo {
+export interface BaseSwapTransactionInfo extends BaseTransactionInfo {
   type: TransactionType.Swap
   tradeType: TradeType
   inputCurrencyId: string
   outputCurrencyId: string
+  slippageTolerance?: number
+  quoteId?: string
+  routeString?: string
+  gasUseEstimate?: string
 }
 
 export interface ExactInputSwapTransactionInfo extends BaseSwapTransactionInfo {

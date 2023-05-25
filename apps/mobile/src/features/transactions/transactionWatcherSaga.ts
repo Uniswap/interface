@@ -1,3 +1,5 @@
+import { SwapEventName } from '@uniswap/analytics-events'
+import { TradeType } from '@uniswap/sdk-core'
 import { BigNumberish, providers } from 'ethers'
 import { PutEffect, TakeEffect } from 'redux-saga/effects'
 import { appSelect } from 'src/app/hooks'
@@ -9,6 +11,7 @@ import {
 } from 'src/features/notifications/notificationSlice'
 import { AppNotificationType } from 'src/features/notifications/types'
 import { waitForProvidersInitialized } from 'src/features/providers/providerSaga'
+import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { attemptCancelTransaction } from 'src/features/transactions/cancelTransaction'
 import { attemptReplaceTransaction } from 'src/features/transactions/replaceTransaction'
 import { selectIncompleteTransactions } from 'src/features/transactions/selectors'
@@ -22,6 +25,7 @@ import {
   upsertFiatOnRampTransaction,
 } from 'src/features/transactions/slice'
 import {
+  BaseSwapTransactionInfo,
   FinalizedTransactionDetails,
   TransactionDetails,
   TransactionId,
@@ -250,6 +254,52 @@ export function* waitForTxnInvalidated(
   }
 }
 
+/**
+ * Send analytics events for finalized transactions
+ */
+export function logTransactionEvent(
+  actionData: ReturnType<typeof transactionActions.finalizeTransaction>
+): void {
+  const { payload } = actionData
+  const { hash, chainId, addedTime, from, typeInfo, receipt, status } = payload
+  const { gasUsed, effectiveGasPrice, confirmedTime } = receipt ?? {}
+  const { type } = typeInfo
+
+  // Send analytics event for swap success and failure
+  if (type === TransactionType.Swap) {
+    const swapTypeInfo = typeInfo as BaseSwapTransactionInfo
+    const {
+      slippageTolerance,
+      quoteId,
+      routeString,
+      gasUseEstimate,
+      inputCurrencyId,
+      outputCurrencyId,
+      tradeType,
+    } = swapTypeInfo
+    const eventName =
+      status === TransactionStatus.Success
+        ? SwapEventName.SWAP_TRANSACTION_COMPLETED
+        : SwapEventName.SWAP_TRANSACTION_FAILED
+    sendAnalyticsEvent(eventName, {
+      address: from,
+      hash,
+      chain_id: chainId,
+      added_time: addedTime,
+      confirmed_time: confirmedTime,
+      gas_used: gasUsed,
+      effective_gas_price: effectiveGasPrice,
+      inputCurrencyId,
+      outputCurrencyId,
+      tradeType: tradeType === TradeType.EXACT_INPUT ? 'EXACT_INPUT' : 'EXACT_OUTPUT',
+      slippageTolerance,
+      gasUseEstimate,
+      route: routeString,
+      quoteId,
+    })
+  }
+}
+
 type StatusOverride =
   | TransactionStatus.Success
   | TransactionStatus.Failed
@@ -285,6 +335,8 @@ function* finalizeTransaction(
         transactionIndex: ethersReceipt.transactionIndex,
         confirmations: ethersReceipt.confirmations,
         confirmedTime: Date.now(),
+        gasUsed: ethersReceipt.gasUsed?.toNumber(),
+        effectiveGasPrice: ethersReceipt.effectiveGasPrice?.toNumber(),
       }
     : undefined
 

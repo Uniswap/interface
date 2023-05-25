@@ -72,27 +72,39 @@ export function isWrapAction(wrapType: WrapType): wrapType is WrapType.Unwrap | 
 export function tradeToTransactionInfo(
   trade: Trade
 ): ExactInputSwapTransactionInfo | ExactOutputSwapTransactionInfo {
-  const slippageTolerance = slippageToleranceToPercent(trade.slippageTolerance)
+  const slippageTolerancePercent = slippageToleranceToPercent(trade.slippageTolerance)
+  const { quote, slippageTolerance } = trade
+  const { gasUseEstimate, quoteId, routeString } = quote || {}
+
+  const baseTransactionInfo = {
+    inputCurrencyId: currencyId(trade.inputAmount.currency),
+    outputCurrencyId: currencyId(trade.outputAmount.currency),
+    slippageTolerance,
+    quoteId,
+    gasUseEstimate,
+    routeString,
+  }
+
   return trade.tradeType === TradeType.EXACT_INPUT
     ? {
+        ...baseTransactionInfo,
         type: TransactionType.Swap,
-        inputCurrencyId: currencyId(trade.inputAmount.currency),
-        outputCurrencyId: currencyId(trade.outputAmount.currency),
         tradeType: TradeType.EXACT_INPUT,
         inputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
         expectedOutputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
         minimumOutputCurrencyAmountRaw: trade
-          .minimumAmountOut(slippageTolerance)
+          .minimumAmountOut(slippageTolerancePercent)
           .quotient.toString(),
       }
     : {
+        ...baseTransactionInfo,
         type: TransactionType.Swap,
-        inputCurrencyId: currencyId(trade.inputAmount.currency),
-        outputCurrencyId: currencyId(trade.outputAmount.currency),
         tradeType: TradeType.EXACT_OUTPUT,
         outputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
         expectedInputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
-        maximumInputCurrencyAmountRaw: trade.maximumAmountIn(slippageTolerance).quotient.toString(),
+        maximumInputCurrencyAmountRaw: trade
+          .maximumAmountIn(slippageTolerancePercent)
+          .quotient.toString(),
       }
 }
 
