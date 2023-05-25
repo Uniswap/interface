@@ -136,10 +136,6 @@ exports[`data page loads with header showing 1`] = `
   justify-content: flex-start;
 }
 
-.c31 {
-  height: 568px;
-}
-
 .c20 {
   background: #FFFFFF;
   border: 1px solid #D2D9EE;
@@ -183,10 +179,6 @@ exports[`data page loads with header showing 1`] = `
   padding: 2px 4px;
   color: #7780A0;
   line-height: 12px;
-}
-
-.c27 {
-  margin-left: auto;
 }
 
 .c25 {
@@ -291,12 +283,12 @@ exports[`data page loads with header showing 1`] = `
   margin-right: auto;
 }
 
-.c28 {
+.c29 {
   position: relative;
   width: 92px;
 }
 
-.c29 {
+.c30 {
   gap: 4px;
   padding: 8px;
   cursor: pointer;
@@ -315,15 +307,15 @@ exports[`data page loads with header showing 1`] = `
   transition: opacity 250ms ease;
 }
 
-.c29:hover {
+.c30:hover {
   opacity: 0.6;
 }
 
-.c29:active {
+.c30:active {
   opacity: 0.4;
 }
 
-.c30 {
+.c31 {
   height: 16px;
   width: 16px;
   color: #7780A0;
@@ -333,6 +325,17 @@ exports[`data page loads with header showing 1`] = `
   -webkit-transition: -webkit-transform 125ms;
   -webkit-transition: transform 125ms;
   transition: transform 125ms;
+}
+
+.c27 {
+  height: 568px;
+  position: relative;
+}
+
+.c28 {
+  position: absolute;
+  right: 0;
+  top: -36px;
 }
 
 .c0 {
@@ -378,6 +381,12 @@ exports[`data page loads with header showing 1`] = `
 @media screen and (max-width:1024px) {
   .c7 {
     display: none;
+  }
+}
+
+@media screen and (max-width:640px) {
+  .c28 {
+    top: 0px;
   }
 }
 
@@ -551,15 +560,19 @@ exports[`data page loads with header showing 1`] = `
                 Listings
               </div>
             </div>
+          </div>
+          <div
+            class="c27"
+          >
             <div
-              class="c27"
+              class="c28"
             >
               <div
-                class="c28"
+                class="c29"
                 data-testid="activity-time-period-switcher"
               >
                 <div
-                  class="c4 c5 c29"
+                  class="c4 c5 c30"
                 >
                   <div
                     class="c11 css-1adn0z6"
@@ -567,7 +580,7 @@ exports[`data page loads with header showing 1`] = `
                     1 week
                   </div>
                   <svg
-                    class="c30"
+                    class="c31"
                     fill="none"
                     height="24"
                     stroke="currentColor"
@@ -585,10 +598,6 @@ exports[`data page loads with header showing 1`] = `
                 </div>
               </div>
             </div>
-          </div>
-          <div
-            class="c31"
-          >
             Activity Content
           </div>
         </div>
@@ -734,10 +743,6 @@ exports[`data page loads without header showing 1`] = `
   justify-content: flex-start;
 }
 
-.c31 {
-  height: 568px;
-}
-
 .c20 {
   background: #FFFFFF;
   border: 1px solid #D2D9EE;
@@ -781,10 +786,6 @@ exports[`data page loads without header showing 1`] = `
   padding: 2px 4px;
   color: #7780A0;
   line-height: 12px;
-}
-
-.c27 {
-  margin-left: auto;
 }
 
 .c25 {
@@ -889,12 +890,12 @@ exports[`data page loads without header showing 1`] = `
   margin-right: auto;
 }
 
-.c28 {
+.c29 {
   position: relative;
   width: 92px;
 }
 
-.c29 {
+.c30 {
   gap: 4px;
   padding: 8px;
   cursor: pointer;
@@ -913,15 +914,15 @@ exports[`data page loads without header showing 1`] = `
   transition: opacity 250ms ease;
 }
 
-.c29:hover {
+.c30:hover {
   opacity: 0.6;
 }
 
-.c29:active {
+.c30:active {
   opacity: 0.4;
 }
 
-.c30 {
+.c31 {
   height: 16px;
   width: 16px;
   color: #7780A0;
@@ -931,6 +932,17 @@ exports[`data page loads without header showing 1`] = `
   -webkit-transition: -webkit-transform 125ms;
   -webkit-transition: transform 125ms;
   transition: transform 125ms;
+}
+
+.c27 {
+  height: 568px;
+  position: relative;
+}
+
+.c28 {
+  position: absolute;
+  right: 0;
+  top: -36px;
 }
 
 .c0 {
@@ -976,6 +988,12 @@ exports[`data page loads without header showing 1`] = `
 @media screen and (max-width:1024px) {
   .c7 {
     display: none;
+  }
+}
+
+@media screen and (max-width:640px) {
+  .c28 {
+    top: 0px;
   }
 }
 
@@ -1149,15 +1167,19 @@ exports[`data page loads without header showing 1`] = `
                 Listings
               </div>
             </div>
+          </div>
+          <div
+            class="c27"
+          >
             <div
-              class="c27"
+              class="c28"
             >
               <div
-                class="c28"
+                class="c29"
                 data-testid="activity-time-period-switcher"
               >
                 <div
-                  class="c4 c5 c29"
+                  class="c4 c5 c30"
                 >
                   <div
                     class="c11 css-1adn0z6"
@@ -1165,7 +1187,7 @@ exports[`data page loads without header showing 1`] = `
                     1 week
                   </div>
                   <svg
-                    class="c30"
+                    class="c31"
                     fill="none"
                     height="24"
                     stroke="currentColor"
@@ -1183,10 +1205,6 @@ exports[`data page loads without header showing 1`] = `
                 </div>
               </div>
             </div>
-          </div>
-          <div
-            class="c31"
-          >
             Activity Content
           </div>
         </div>
