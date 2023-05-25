@@ -4,22 +4,10 @@ import { colors as color } from 'ui/src/theme/color'
 import { fonts } from 'ui/src/theme/fonts'
 import { iconSizes } from 'ui/src/theme/iconSizes'
 import { imageSizes } from 'ui/src/theme/imageSizes'
+import { spacing } from 'ui/src/theme/spacing'
 import { zIndices } from 'ui/src/theme/zIndices'
 
-const space = {
-  none: 0,
-  spacing1: 1,
-  spacing2: 2,
-  spacing4: 4,
-  spacing8: 8,
-  spacing12: 12,
-  spacing16: 16,
-  spacing24: 24,
-  spacing36: 36,
-  spacing48: 48,
-  spacing60: 60,
-  true: 16,
-}
+const space = spacing
 
 const size = space
 
