@@ -49,7 +49,7 @@ const DEFAULT_CHAINS = [
   SupportedChainId.CELO,
 ]
 
-type UseMultiChainPositionsData = { positions: PositionInfo[] | undefined; loading: boolean }
+type UseMultiChainPositionsData = { positions?: PositionInfo[]; loading: boolean }
 
 /**
  * Returns all positions for a given account on multiple chains.

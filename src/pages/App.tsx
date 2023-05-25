@@ -170,13 +170,16 @@ export default function App() {
     const isServiceWorkerHit = Boolean((window as any).__isDocumentCached)
     const serviceWorkerProperty = isServiceWorkerInstalled ? (isServiceWorkerHit ? 'hit' : 'miss') : 'uninstalled'
 
-    sendAnalyticsEvent(SharedEventName.APP_LOADED, { service_worker: serviceWorkerProperty })
-    getCLS(({ delta }: Metric) => sendAnalyticsEvent(SharedEventName.WEB_VITALS, { cumulative_layout_shift: delta }))
-    getFCP(({ delta }: Metric) => sendAnalyticsEvent(SharedEventName.WEB_VITALS, { first_contentful_paint_ms: delta }))
-    getFID(({ delta }: Metric) => sendAnalyticsEvent(SharedEventName.WEB_VITALS, { first_input_delay_ms: delta }))
-    getLCP(({ delta }: Metric) =>
-      sendAnalyticsEvent(SharedEventName.WEB_VITALS, { largest_contentful_paint_ms: delta })
-    )
+    const pageLoadProperties = { service_worker: serviceWorkerProperty }
+    sendAnalyticsEvent(SharedEventName.APP_LOADED, pageLoadProperties)
+    const sendWebVital =
+      (metric: string) =>
+      ({ delta }: Metric) =>
+        sendAnalyticsEvent(SharedEventName.WEB_VITALS, { ...pageLoadProperties, [metric]: delta })
+    getCLS(sendWebVital('cumulative_layout_shift'))
+    getFCP(sendWebVital('first_contentful_paint_ms'))
+    getFID(sendWebVital('first_input_delay_ms'))
+    getLCP(sendWebVital('largest_contentful_paint_ms'))
   }, [])
 
   useEffect(() => {

@@ -128,7 +128,7 @@ function assetMediaType(asset: GenieAsset): MediaType {
   return MediaType.Image
 }
 
-const RenderMediaShadow = ({ imageUrl }: { imageUrl: string | undefined }) => {
+const RenderMediaShadow = ({ imageUrl }: { imageUrl?: string }) => {
   const [contentNotAvailable, setContentNotAvailable] = useState(false)
 
   if (!imageUrl || contentNotAvailable) {
