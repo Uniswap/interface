@@ -1,6 +1,6 @@
 import { createSelector } from '@reduxjs/toolkit'
 import { RootState } from 'src/app/rootReducer'
-import { HiddenNftsByAddress } from 'src/features/favorites/slice'
+import { AccountToNftData } from 'src/features/favorites/slice'
 
 const selectFavoriteTokens = (state: RootState): string[] => state.favorites.tokens
 
@@ -28,5 +28,4 @@ export const selectHasWatchedWallets = createSelector(selectWatchedAddresses, (w
   Boolean(watched?.length > 0)
 )
 
-export const selectHiddenNfts = (state: RootState): HiddenNftsByAddress =>
-  state.favorites.hiddenNfts
+export const selectNftsData = (state: RootState): AccountToNftData => state.favorites.nftsData

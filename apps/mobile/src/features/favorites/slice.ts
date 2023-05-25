@@ -7,12 +7,16 @@ import { WBTC } from 'wallet/src/constants/tokens'
 import { logger } from 'wallet/src/features/logger/logger'
 import { CurrencyId, currencyId as idFromCurrency } from 'wallet/src/utils/currencyId'
 
-export type HiddenNftsByAddress = Record<Address, Record<ReturnType<typeof getNFTAssetKey>, true>>
+type NftData = {
+  isSpamIgnored?: boolean
+  isHidden?: boolean
+}
+export type AccountToNftData = Record<Address, Record<ReturnType<typeof getNFTAssetKey>, NftData>>
 
 export interface FavoritesState {
   tokens: CurrencyId[]
   watchedAddresses: Address[]
-  hiddenNfts: HiddenNftsByAddress
+  nftsData: AccountToNftData
   // add other types of assets here, e.g. nfts
 }
 
@@ -26,7 +30,11 @@ const HAYDEN_ETH_ADDRESS = '0x50EC05ADe8280758E2077fcBC08D878D4aef79C3'
 export const initialFavoritesState: FavoritesState = {
   tokens: [ETH_CURRENCY_ID, WBTC_CURRENCY_ID],
   watchedAddresses: [VITALIK_ETH_ADDRESS, HAYDEN_ETH_ADDRESS],
-  hiddenNfts: {},
+  nftsData: {},
+}
+
+export function isNftHidden(nftData: NftData, isSpam?: boolean): boolean {
+  return Boolean(nftData.isHidden || (isSpam && !nftData.isSpamIgnored))
 }
 
 export const slice = createSlice({
@@ -93,26 +101,41 @@ export const slice = createSlice({
     toggleNftVisibility: (
       state,
       {
-        payload: { owner, contractAddress, tokenId },
-      }: PayloadAction<{ owner: Address; contractAddress: Address; tokenId: string }>
+        payload: { owner, contractAddress, tokenId, isSpam },
+      }: PayloadAction<{
+        owner: Address
+        contractAddress: Address
+        tokenId: string
+        isSpam?: boolean
+      }>
     ) => {
-      const key = getNFTAssetKey(contractAddress, tokenId)
-      if (state.hiddenNfts[owner]?.[key]) {
-        delete state.hiddenNfts[owner]?.[key]
+      const nftKey = getNFTAssetKey(contractAddress, tokenId)
+
+      state.nftsData[owner] ??= {}
+      const ownerNftsData = state.nftsData[owner] ?? {}
+
+      ownerNftsData[nftKey] ??= {}
+      const nftData = ownerNftsData[nftKey] ?? {}
+
+      if (isNftHidden(nftData, isSpam)) {
+        if (nftData.isHidden) {
+          delete nftData.isHidden
+        }
+        if (isSpam) {
+          nftData.isSpamIgnored = true
+        }
       } else {
-        if (!state.hiddenNfts[owner]) {
-          state.hiddenNfts[owner] = {}
-        }
-        const ownerData = state.hiddenNfts[owner]
-        if (ownerData !== undefined) {
-          ownerData[key] = true
-        }
+        nftData.isHidden = true
+      }
+      // remove nftData if it's empty
+      if (Object.keys(nftData).length === 0) {
+        delete ownerNftsData[nftKey]
       }
     },
   },
   extraReducers: (builder) => {
     builder.addCase(removeAccount, (state, { payload: owner }) => {
-      delete state.hiddenNfts[owner]
+      delete state.nftsData[owner]
     })
   },
 })

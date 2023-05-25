@@ -125,6 +125,7 @@ export function NFTCollectionScreen({
       owner: asset.ownerAddress ?? '',
       address: asset.contractAddress ?? '',
       tokenId: asset.tokenId ?? '',
+      isSpam: asset.isSpam ?? false,
     })
   }
 

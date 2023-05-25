@@ -53,7 +53,7 @@ const MAX_NFT_IMAGE_HEIGHT = 375
 
 export function NFTItemScreen({
   route: {
-    params: { owner, address, tokenId },
+    params: { owner, address, tokenId, isSpam },
   },
 }: AppStackScreenProp<Screens.NFTItem>): JSX.Element {
   const { t } = useTranslation()
@@ -116,6 +116,7 @@ export function NFTItemScreen({
     tokenId: asset?.tokenId,
     owner,
     showNotification: true,
+    isSpam,
   })
   const { colorLight, colorDark } = useNearestThemeColorFromImageUri(asset?.image?.url)
   // check if colorLight passes contrast against card bg color, if not use fallback

@@ -6,6 +6,8 @@
 import dayjs from 'dayjs'
 import { ChainsState } from 'src/features/chains/chainsSlice'
 import { ensApi } from 'src/features/ens/api'
+import { AccountToNftData } from 'src/features/favorites/slice'
+import { getNFTAssetKey } from 'src/features/nfts/utils'
 import { ModalName } from 'src/features/telemetry/constants'
 import { TransactionState } from 'src/features/transactions/slice'
 import {
@@ -573,6 +575,38 @@ export const migrations = {
 
     delete newState.wallet.flashbotsEnabled
 
+    return newState
+  },
+
+  43: function convertHiddenNftsToNftsData(state: any) {
+    // see its test to get a better idea of what this migration does
+    const newState = { ...state }
+
+    const accountAddresses = Object.keys(state.favorites?.hiddenNfts ?? {})
+
+    const nftsData: AccountToNftData = {}
+    for (const accountAddress of accountAddresses) {
+      nftsData[accountAddress] ??= {}
+      const hiddenNftKeys = Object.keys(state.favorites.hiddenNfts[accountAddress])
+
+      for (const hiddenNftKey of hiddenNftKeys) {
+        const [, nftKey, tokenId] = hiddenNftKey.split('.')
+
+        // we need to convert NFTs key to the new all not checksummed version
+        const newNftKey = nftKey && tokenId && getNFTAssetKey(nftKey, tokenId)
+
+        const accountNftsData = nftsData[accountAddress]
+        if (newNftKey && accountNftsData) {
+          accountNftsData[newNftKey] = { isHidden: true }
+        }
+      }
+    }
+
+    newState.favorites = {
+      ...state.favorites,
+      nftsData,
+    }
+    delete newState.favorites.hiddenNfts
     return newState
   },
 }

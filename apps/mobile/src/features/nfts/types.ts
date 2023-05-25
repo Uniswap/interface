@@ -12,4 +12,5 @@ export type NFTItem = {
   floorPrice?: number
   ownerAddress?: string
   listPrice?: Amount
+  isSpam?: boolean
 }

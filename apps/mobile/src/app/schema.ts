@@ -277,6 +277,16 @@ export const v42Schema = {
 }
 delete v42Schema.wallet.flashbotsEnabled
 
+export const v43Schema = {
+  ...v42Schema,
+  favorites: {
+    ...v42Schema.favorites,
+    nftsData: {},
+    hiddenNfts: undefined,
+  },
+}
+delete v43Schema.favorites.hiddenNfts
+
 // TODO: [MOB-201] use function with typed output when API reducers are removed from rootReducer
 // export const getSchema = (): RootState => v0Schema
-export const getSchema = (): typeof v42Schema => v42Schema
+export const getSchema = (): typeof v43Schema => v43Schema

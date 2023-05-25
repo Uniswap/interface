@@ -1131,10 +1131,11 @@ export type NftsTabQueryVariables = Exact<{
   ownerAddress: Scalars['String'];
   first?: InputMaybe<Scalars['Int']>;
   after?: InputMaybe<Scalars['String']>;
+  filter?: InputMaybe<NftBalancesFilterInput>;
 }>;
 
 
-export type NftsTabQuery = { __typename?: 'Query', nftBalances?: { __typename?: 'NftBalanceConnection', edges: Array<{ __typename?: 'NftBalanceEdge', node: { __typename?: 'NftBalance', ownedAsset?: { __typename?: 'NftAsset', id: string, name?: string | null, tokenId: string, description?: string | null, collection?: { __typename?: 'NftCollection', id: string, name?: string | null, isVerified?: boolean | null, markets?: Array<{ __typename?: 'NftCollectionMarket', id: string, floorPrice?: { __typename?: 'TimestampedAmount', value: number } | null }> | null } | null, image?: { __typename?: 'Image', id: string, url: string, dimensions?: { __typename?: 'Dimensions', id: string, width?: number | null, height?: number | null } | null } | null, nftContract?: { __typename?: 'NftContract', id: string, address: string } | null } | null } }>, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage?: boolean | null, hasPreviousPage?: boolean | null, startCursor?: string | null } } | null };
+export type NftsTabQuery = { __typename?: 'Query', nftBalances?: { __typename?: 'NftBalanceConnection', edges: Array<{ __typename?: 'NftBalanceEdge', node: { __typename?: 'NftBalance', ownedAsset?: { __typename?: 'NftAsset', id: string, name?: string | null, tokenId: string, description?: string | null, isSpam?: boolean | null, collection?: { __typename?: 'NftCollection', id: string, name?: string | null, isVerified?: boolean | null, markets?: Array<{ __typename?: 'NftCollectionMarket', id: string, floorPrice?: { __typename?: 'TimestampedAmount', value: number } | null }> | null } | null, image?: { __typename?: 'Image', id: string, url: string, dimensions?: { __typename?: 'Dimensions', id: string, width?: number | null, height?: number | null } | null } | null, nftContract?: { __typename?: 'NftContract', id: string, address: string } | null } | null } }>, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage?: boolean | null, hasPreviousPage?: boolean | null, startCursor?: string | null } } | null };
 
 export type PortfolioBalancesQueryVariables = Exact<{
   ownerAddress: Scalars['String'];
@@ -1824,8 +1825,13 @@ export type NftCollectionScreenQueryHookResult = ReturnType<typeof useNftCollect
 export type NftCollectionScreenLazyQueryHookResult = ReturnType<typeof useNftCollectionScreenLazyQuery>;
 export type NftCollectionScreenQueryResult = Apollo.QueryResult<NftCollectionScreenQuery, NftCollectionScreenQueryVariables>;
 export const NftsTabDocument = gql`
-    query NftsTab($ownerAddress: String!, $first: Int, $after: String) {
-  nftBalances(ownerAddress: $ownerAddress, first: $first, after: $after) {
+    query NftsTab($ownerAddress: String!, $first: Int, $after: String, $filter: NftBalancesFilterInput) {
+  nftBalances(
+    ownerAddress: $ownerAddress
+    first: $first
+    after: $after
+    filter: $filter
+  ) {
     edges {
       node {
         ownedAsset {
@@ -1857,6 +1863,7 @@ export const NftsTabDocument = gql`
             id
             address
           }
+          isSpam
         }
       }
     }
@@ -1885,6 +1892,7 @@ export const NftsTabDocument = gql`
  *      ownerAddress: // value for 'ownerAddress'
  *      first: // value for 'first'
  *      after: // value for 'after'
+ *      filter: // value for 'filter'
  *   },
  * });
  */

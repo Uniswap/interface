@@ -102,7 +102,7 @@ export const persistConfig = {
   key: 'root',
   storage: reduxStorage,
   whitelist,
-  version: 42,
+  version: 43,
   migrate: createMigrate(migrations),
 }
 

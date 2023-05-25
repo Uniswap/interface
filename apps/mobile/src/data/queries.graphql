@@ -247,8 +247,8 @@ query NftCollectionScreen(
   }
 }
 
-query NftsTab($ownerAddress: String!, $first: Int, $after: String) {
-  nftBalances(ownerAddress: $ownerAddress, first: $first, after: $after) {
+query NftsTab($ownerAddress: String!, $first: Int, $after: String, $filter: NftBalancesFilterInput) {
+  nftBalances(ownerAddress: $ownerAddress, first: $first, after: $after, filter: $filter) {
     edges {
       node {
         ownedAsset {
@@ -280,6 +280,7 @@ query NftsTab($ownerAddress: String!, $first: Int, $after: String) {
             id
             address
           }
+          isSpam
         }
       }
     }

@@ -10,7 +10,7 @@ import { ImportType, OnboardingEntryPoint } from 'src/features/onboarding/utils'
 import { TabIndex } from 'src/screens/HomeScreen'
 import { OnboardingScreens, Screens } from 'src/screens/Screens'
 
-type NFTItem = { owner: Address; address: string; tokenId: string }
+type NFTItem = { owner: Address; address: string; tokenId: string; isSpam?: boolean }
 
 export type ExploreStackParamList = {
   [Screens.Explore]: undefined

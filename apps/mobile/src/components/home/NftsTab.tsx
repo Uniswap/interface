@@ -57,6 +57,7 @@ function formatNftItems(data: NftsTabQuery | undefined): NFTItem[] {
         collectionName: item?.ownedAsset?.collection?.name ?? undefined,
         isVerifiedCollection: item?.ownedAsset?.collection?.isVerified ?? undefined,
         floorPrice: item?.ownedAsset?.collection?.markets?.[0]?.floorPrice?.value ?? undefined,
+        isSpam: item?.ownedAsset?.isSpam ?? undefined,
         imageDimensions:
           item?.ownedAsset?.image?.dimensions?.height && item?.ownedAsset?.image?.dimensions?.width
             ? {
@@ -81,13 +82,15 @@ function NftView({ owner, item }: { owner: Address; item: NFTItem }): JSX.Elemen
       owner,
       address: item.contractAddress ?? '',
       tokenId: item.tokenId ?? '',
+      isSpam: item.isSpam,
     })
-  }, [item.contractAddress, item.tokenId, navigation, owner])
+  }, [item.contractAddress, item.isSpam, item.tokenId, navigation, owner])
 
   const { menuActions, onContextMenuPress } = useNFTMenu({
     contractAddress: item.contractAddress,
     tokenId: item.tokenId,
     owner,
+    isSpam: item.isSpam,
   })
 
   return (
@@ -137,7 +140,7 @@ export const NftsTab = forwardRef<FlashList<unknown>, TabProps>(
     })
 
     const { data, fetchMore, refetch, networkStatus } = useNftsTabQuery({
-      variables: { ownerAddress: owner, first: 30 },
+      variables: { ownerAddress: owner, first: 30, filter: { filterSpam: false } },
       notifyOnNetworkStatusChange: true, // Used to trigger network state / loading on refetch or fetchMore
       errorPolicy: 'all', // Suppress non-null image.url fields from backend
     })
