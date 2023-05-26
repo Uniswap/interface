@@ -3,7 +3,7 @@ import { useState } from 'react'
 import styled from 'styled-components/macro'
 import { BREAKPOINTS } from 'theme'
 
-import { TimePeriodSwitcher } from './TimePeriodSwitcher'
+import { SupportedTimePeriodsType, TimePeriodSwitcher } from './TimePeriodSwitcher'
 
 const TableContentContainer = styled.div`
   height: 568px;
@@ -21,7 +21,7 @@ const SwitcherWrapper = styled.div`
 `
 
 export const ActivityTableContent = () => {
-  const [timePeriod, setTimePeriod] = useState<HistoryDuration>(HistoryDuration.Week)
+  const [timePeriod, setTimePeriod] = useState<SupportedTimePeriodsType>(HistoryDuration.Week)
   return (
     <TableContentContainer>
       <SwitcherWrapper>

@@ -6,20 +6,6 @@ import { TimePeriodSwitcher } from './TimePeriodSwitcher'
 describe('NFT Details Activity Time Period Switcher', () => {
   const mockSetTimePeriod = jest.fn()
 
-  it('nothing renders when unsupported HistoryDuration.Hour is passed', () => {
-    const rendered = render(
-      <TimePeriodSwitcher activeTimePeriod={HistoryDuration.Hour} setTimePeriod={mockSetTimePeriod} />
-    )
-    expect(rendered.queryByTestId('activity-time-period-switcher')).toBeNull()
-  })
-
-  it('nothing renders when unsupported HistoryDuration.Day is passed', () => {
-    const rendered = render(
-      <TimePeriodSwitcher activeTimePeriod={HistoryDuration.Day} setTimePeriod={mockSetTimePeriod} />
-    )
-    expect(rendered.queryByTestId('activity-time-period-switcher')).toBeNull()
-  })
-
   it('renders when week is selected', () => {
     const { asFragment } = render(
       <TimePeriodSwitcher activeTimePeriod={HistoryDuration.Week} setTimePeriod={mockSetTimePeriod} />

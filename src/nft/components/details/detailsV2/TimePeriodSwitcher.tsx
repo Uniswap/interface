@@ -21,7 +21,7 @@ const SwitcherWrapper = styled(Row)`
   cursor: pointer;
   border-radius: 12px;
   width: 100%;
-  justify-content: flex-end;
+  justify-content: space-between;
   user-select: none;
   background: ${({ theme }) => theme.backgroundInteractive};
   ${OpacityHoverState}
@@ -40,7 +40,7 @@ const TimeDropdownMenu = styled(Column)`
   box-shadow: ${({ theme }) => theme.deepShadow};
   border: 0.5px solid ${({ theme }) => theme.backgroundOutline};
   border-radius: 12px;
-  padding: 4px 0px;
+  padding: 8px 0px;
   gap: 8px;
   position: absolute;
   top: 40px;
@@ -53,7 +53,7 @@ const DropdownContent = styled(Row)`
   gap: 4px;
   padding: 8px;
   width: 100%;
-  justify-content: flex-end;
+  justify-content: space-between;
   border-radius: 8px;
   cursor: pointer;
 
@@ -62,7 +62,15 @@ const DropdownContent = styled(Row)`
   }
 `
 
-const supportedTimePeriods: { [key in HistoryDuration]?: React.ReactNode } = {
+const supportedTimePeriods = [
+  HistoryDuration.Week,
+  HistoryDuration.Month,
+  HistoryDuration.Year,
+  HistoryDuration.Max,
+] as const
+export type SupportedTimePeriodsType = typeof supportedTimePeriods[number]
+
+const supportedTimePeriodsData: Record<SupportedTimePeriodsType, React.ReactNode> = {
   [HistoryDuration.Week]: <Trans>1 week</Trans>,
   [HistoryDuration.Month]: <Trans>1 month</Trans>,
   [HistoryDuration.Year]: <Trans>1 year</Trans>,
@@ -73,8 +81,8 @@ export const TimePeriodSwitcher = ({
   activeTimePeriod,
   setTimePeriod,
 }: {
-  activeTimePeriod: HistoryDuration
-  setTimePeriod: React.Dispatch<React.SetStateAction<HistoryDuration>>
+  activeTimePeriod: SupportedTimePeriodsType
+  setTimePeriod: React.Dispatch<React.SetStateAction<SupportedTimePeriodsType>>
 }) => {
   const theme = useTheme()
   const [isOpen, toggleIsOpen] = useReducer((isOpen) => !isOpen, false)
@@ -83,36 +91,28 @@ export const TimePeriodSwitcher = ({
     isOpen && toggleIsOpen()
   })
 
-  if (!supportedTimePeriods[activeTimePeriod]) {
-    return null
-  }
-
   return (
     <SwitcherAndDropdownWrapper ref={menuRef} data-testid="activity-time-period-switcher">
       <SwitcherWrapper onClick={toggleIsOpen}>
         <ThemedText.LabelSmall lineHeight="16px" color="textPrimary">
-          {supportedTimePeriods[activeTimePeriod]}
+          {supportedTimePeriodsData[activeTimePeriod]}
         </ThemedText.LabelSmall>
         <Chevron $isOpen={isOpen} />
       </SwitcherWrapper>
       {isOpen && (
         <TimeDropdownMenu>
-          {Object.entries(supportedTimePeriods).map((timePeriod) => (
+          {supportedTimePeriods.map((timePeriod) => (
             <DropdownContent
-              key={timePeriod[0]}
+              key={timePeriod}
               onClick={() => {
-                setTimePeriod(timePeriod[0] as HistoryDuration)
+                setTimePeriod(timePeriod)
                 toggleIsOpen()
               }}
             >
               <ThemedText.LabelSmall lineHeight="16px" color="textPrimary">
-                {timePeriod[1]}
+                {supportedTimePeriodsData[timePeriod]}
               </ThemedText.LabelSmall>
-              <Check
-                size="16px"
-                color={theme.accentActive}
-                opacity={activeTimePeriod === (timePeriod[0] as HistoryDuration) ? 1 : 0}
-              />
+              <Check size="16px" color={theme.accentActive} opacity={activeTimePeriod === timePeriod ? 1 : 0} />
             </DropdownContent>
           ))}
         </TimeDropdownMenu>
