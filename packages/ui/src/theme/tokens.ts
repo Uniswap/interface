@@ -7,13 +7,13 @@ import { imageSizes } from 'ui/src/theme/imageSizes'
 import { spacing } from 'ui/src/theme/spacing'
 import { zIndices } from 'ui/src/theme/zIndices'
 
-const space = spacing
+const space = { ...spacing, true: 8 }
 
 const size = space
 
-const iconSize = { ...iconSizes, true: 'icon40' }
+const iconSize = { ...iconSizes, true: 40 }
 
-const imageSize = { ...imageSizes, true: 'image40' }
+const imageSize = { ...imageSizes, true: 40 }
 
 const fontSize = {
   headlineLarge: fonts.headlineLarge.fontSize,
@@ -29,13 +29,13 @@ const fontSize = {
   buttonLabelSmall: fonts.buttonLabelSmall.fontSize,
   buttonLabelMicro: fonts.buttonLabelMicro.fontSize,
   monospace: fonts.monospace.fontSize,
-  true: 'bodySmall',
+  true: 14,
 }
 
 // remove true (default) when migrating from restyle to tamagui
-const radius = { ...borderRadii, true: 'none' }
+const radius = { ...borderRadii, true: 0 }
 
-const zIndex = { ...zIndices, true: 'default' }
+const zIndex = { ...zIndices, true: 1 }
 
 export const tokens = createTokens({
   color,
