@@ -4,7 +4,7 @@ import { OpacityHoverState } from 'components/Common'
 import Row from 'components/Row'
 import { HistoryDuration } from 'graphql/data/__generated__/types-and-hooks'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
-import { useReducer, useRef } from 'react'
+import { Dispatch, ReactNode, SetStateAction, useReducer, useRef } from 'react'
 import { Check, ChevronDown } from 'react-feather'
 import styled, { useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
@@ -70,7 +70,7 @@ const supportedTimePeriods = [
 ] as const
 export type SupportedTimePeriodsType = typeof supportedTimePeriods[number]
 
-const supportedTimePeriodsData: Record<SupportedTimePeriodsType, React.ReactNode> = {
+const supportedTimePeriodsData: Record<SupportedTimePeriodsType, ReactNode> = {
   [HistoryDuration.Week]: <Trans>1 week</Trans>,
   [HistoryDuration.Month]: <Trans>1 month</Trans>,
   [HistoryDuration.Year]: <Trans>1 year</Trans>,
@@ -82,7 +82,7 @@ export const TimePeriodSwitcher = ({
   setTimePeriod,
 }: {
   activeTimePeriod: SupportedTimePeriodsType
-  setTimePeriod: React.Dispatch<React.SetStateAction<SupportedTimePeriodsType>>
+  setTimePeriod: Dispatch<SetStateAction<SupportedTimePeriodsType>>
 }) => {
   const theme = useTheme()
   const [isOpen, toggleIsOpen] = useReducer((isOpen) => !isOpen, false)
