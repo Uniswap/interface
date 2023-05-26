@@ -47,7 +47,6 @@ const TimeDropdownMenu = styled(Column)`
   z-index: ${Z_INDEX.dropdown}};
   left: 0px;
   width: 100%;
-  
 `
 
 const DropdownContent = styled(Row)`
