@@ -149,8 +149,10 @@ exports[`data page loads with header showing 1`] = `
 
 .c21 {
   gap: 32px;
-  margin-bottom: 12px;
   width: 100;
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #D2D9EE;
 }
 
 .c22 {
@@ -749,8 +751,10 @@ exports[`data page loads without header showing 1`] = `
 
 .c21 {
   gap: 32px;
-  margin-bottom: 12px;
   width: 100;
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #D2D9EE;
 }
 
 .c22 {

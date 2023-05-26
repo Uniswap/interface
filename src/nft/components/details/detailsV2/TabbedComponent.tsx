@@ -11,8 +11,10 @@ const TabbedComponentContainer = styled.div`
 
 const TabsRow = styled(Row)`
   gap: 32px;
-  margin-bottom: 12px;
   width: 100;
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid ${({ theme }) => theme.backgroundOutline};
 `
 
 const Tab = styled(ThemedText.SubHeader)<{ isActive: boolean; numTabs: number }>`
