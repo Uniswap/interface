@@ -17,10 +17,16 @@ import { formatNumber, formatUSDPrice, NumberType } from 'wallet/src/utils/forma
 interface OptionProps {
   option: TokenOption
   showNetworkPill: boolean
+  showWarnings: boolean
   onPress: () => void
 }
 
-export function TokenOptionItem({ option, showNetworkPill, onPress }: OptionProps): JSX.Element {
+export function TokenOptionItem({
+  option,
+  showNetworkPill,
+  showWarnings,
+  onPress,
+}: OptionProps): JSX.Element {
   const theme = useAppTheme()
 
   const { currencyInfo, quantity, balanceUSD } = option
@@ -31,9 +37,10 @@ export function TokenOptionItem({ option, showNetworkPill, onPress }: OptionProp
 
   const onPressTokenOption = useCallback(() => {
     if (
-      safetyLevel === SafetyLevel.Blocked ||
-      ((safetyLevel === SafetyLevel.MediumWarning || safetyLevel === SafetyLevel.StrongWarning) &&
-        !tokenWarningDismissed)
+      showWarnings &&
+      (safetyLevel === SafetyLevel.Blocked ||
+        ((safetyLevel === SafetyLevel.MediumWarning || safetyLevel === SafetyLevel.StrongWarning) &&
+          !tokenWarningDismissed))
     ) {
       Keyboard.dismiss()
       setShowWarningModal(true)
@@ -41,7 +48,7 @@ export function TokenOptionItem({ option, showNetworkPill, onPress }: OptionProp
     }
 
     onPress()
-  }, [onPress, safetyLevel, tokenWarningDismissed])
+  }, [onPress, safetyLevel, tokenWarningDismissed, showWarnings])
 
   const onAcceptTokenWarning = useCallback(() => {
     dismissWarningCallback()
@@ -54,7 +61,7 @@ export function TokenOptionItem({ option, showNetworkPill, onPress }: OptionProp
       <TouchableArea
         hapticFeedback
         hapticStyle={ImpactFeedbackStyle.Light}
-        opacity={safetyLevel === SafetyLevel.Blocked ? 0.5 : 1}
+        opacity={showWarnings && safetyLevel === SafetyLevel.Blocked ? 0.5 : 1}
         testID={`token-option-${currency.chainId}-${currency.symbol}`}
         onPress={onPressTokenOption}>
         <Flex row alignItems="center" gap="spacing8" justifyContent="space-between" py="spacing12">

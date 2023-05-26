@@ -105,6 +105,7 @@ function _TokenFiatOnRampList({ onSelectCurrency, onBack }: Props): JSX.Element 
         <TokenOptionItem
           option={{ currencyInfo: currency.currencyInfo, quantity: 0, balanceUSD: 0 }}
           showNetworkPill={currency.currencyInfo.currency.chainId !== ChainId.Mainnet}
+          showWarnings={true}
           onPress={(): void => onSelectCurrency?.(currency)}
         />
       )

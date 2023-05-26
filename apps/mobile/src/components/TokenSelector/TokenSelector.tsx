@@ -89,6 +89,7 @@ function _TokenSelector({
         />
         <TokenSearchResultList
           chainFilter={chainFilter}
+          flow={flow}
           searchFilter={searchFilter}
           variation={variation}
           onChangeChainFilter={onChangeChainFilter}

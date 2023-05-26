@@ -13,7 +13,10 @@ import { filter } from 'src/components/TokenSelector/filter'
 import { useAllCommonBaseCurrencies } from 'src/components/TokenSelector/hooks'
 import { NetworkFilter } from 'src/components/TokenSelector/NetworkFilter'
 import { TokenOptionItem } from 'src/components/TokenSelector/TokenOptionItem'
-import { TokenSelectorVariation } from 'src/components/TokenSelector/TokenSelector'
+import {
+  TokenSelectorFlow,
+  TokenSelectorVariation,
+} from 'src/components/TokenSelector/TokenSelector'
 import { TokenOption } from 'src/components/TokenSelector/types'
 import {
   createEmptyBalanceOption,
@@ -37,6 +40,7 @@ import { useDebounce } from 'wallet/src/utils/timing'
 interface TokenSearchResultListProps {
   onChangeChainFilter: (newChainFilter: ChainId | null) => void
   onSelectCurrency: (currency: Currency, context: SearchContext) => void
+  flow: TokenSelectorFlow
   searchFilter: string | null
   chainFilter: ChainId | null
   variation: TokenSelectorVariation
@@ -247,6 +251,7 @@ export function useTokenSectionsByVariation(
 function _TokenSearchResultList({
   onChangeChainFilter,
   onSelectCurrency,
+  flow,
   chainFilter,
   searchFilter,
   variation,
@@ -254,6 +259,8 @@ function _TokenSearchResultList({
   const { t } = useTranslation()
   const theme = useAppTheme()
   const sectionListRef = useRef<SectionList<TokenOption>>(null)
+  // Only show warnings in swap flow. If a user owns a token and is selecting in the send flow, they should bypass warnings.
+  const showTokenWarnings = flow === TokenSelectorFlow.Swap
 
   const debouncedSearchFilter = useDebounce(searchFilter)
   const {
@@ -280,11 +287,12 @@ function _TokenSearchResultList({
         <TokenOptionItem
           option={item}
           showNetworkPill={!chainFilter && item.currencyInfo.currency.chainId !== ChainId.Mainnet}
+          showWarnings={showTokenWarnings}
           onPress={(): void => onSelectCurrency?.(item.currencyInfo.currency, searchContext)}
         />
       )
     },
-    [searchFilter, chainFilter, onSelectCurrency]
+    [searchFilter, chainFilter, onSelectCurrency, showTokenWarnings]
   )
 
   useEffect(() => {
