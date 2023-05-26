@@ -12,7 +12,6 @@ import { Z_INDEX } from 'theme/zIndex'
 
 const SwitcherAndDropdownWrapper = styled.div`
   position: relative;
-  width: 92px;
 `
 
 const SwitcherWrapper = styled(Row)`
@@ -20,7 +19,7 @@ const SwitcherWrapper = styled(Row)`
   padding: 8px;
   cursor: pointer;
   border-radius: 12px;
-  width: 100%;
+  width: 92px;
   justify-content: space-between;
   user-select: none;
   background: ${({ theme }) => theme.backgroundInteractive};
@@ -36,29 +35,29 @@ const Chevron = styled(ChevronDown)<{ $isOpen: boolean }>`
 `
 
 const TimeDropdownMenu = styled(Column)`
-  background-color: ${({ theme }) => theme.backgroundInteractive};
+  background-color: ${({ theme }) => theme.backgroundSurface};
   box-shadow: ${({ theme }) => theme.deepShadow};
   border: 0.5px solid ${({ theme }) => theme.backgroundOutline};
   border-radius: 12px;
-  padding: 8px 0px;
+  padding: 10px 8px;
   gap: 8px;
   position: absolute;
-  top: 40px;
+  top: 42px;
   z-index: ${Z_INDEX.dropdown}};
-  left: 0px;
-  width: 100%;
+  right: 0px;
+  width: 240px;
 `
 
 const DropdownContent = styled(Row)`
   gap: 4px;
-  padding: 8px;
+  padding: 10px 8px;
   width: 100%;
   justify-content: space-between;
   border-radius: 8px;
   cursor: pointer;
 
   &:hover {
-    background-color: ${({ theme }) => theme.backgroundOutline};
+    background-color: ${({ theme }) => theme.stateOverlayHover};
   }
 `
 
@@ -109,9 +108,7 @@ export const TimePeriodSwitcher = ({
                 toggleIsOpen()
               }}
             >
-              <ThemedText.LabelSmall lineHeight="16px" color="textPrimary">
-                {supportedTimePeriodsData[timePeriod]}
-              </ThemedText.LabelSmall>
+              <ThemedText.BodyPrimary lineHeight="24px">{supportedTimePeriodsData[timePeriod]}</ThemedText.BodyPrimary>
               <Check size="16px" color={theme.accentActive} opacity={activeTimePeriod === timePeriod ? 1 : 0} />
             </DropdownContent>
           ))}

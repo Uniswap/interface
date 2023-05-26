@@ -287,7 +287,6 @@ exports[`data page loads with header showing 1`] = `
 
 .c28 {
   position: relative;
-  width: 92px;
 }
 
 .c29 {
@@ -295,7 +294,7 @@ exports[`data page loads with header showing 1`] = `
   padding: 8px;
   cursor: pointer;
   border-radius: 12px;
-  width: 100%;
+  width: 92px;
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
   -ms-flex-pack: justify;
@@ -889,7 +888,6 @@ exports[`data page loads without header showing 1`] = `
 
 .c28 {
   position: relative;
-  width: 92px;
 }
 
 .c29 {
@@ -897,7 +895,7 @@ exports[`data page loads without header showing 1`] = `
   padding: 8px;
   cursor: pointer;
   border-radius: 12px;
-  width: 100%;
+  width: 92px;
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
   -ms-flex-pack: justify;
