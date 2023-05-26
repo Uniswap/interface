@@ -205,7 +205,7 @@ function AccountDrawer() {
           name={InterfaceEventName.MINI_PORTFOLIO_TOGGLED}
           properties={{ type: 'close' }}
         >
-          <CloseDrawer onClick={toggleWalletDrawer}>
+          <CloseDrawer onClick={toggleWalletDrawer} data-testid="close-account-drawer">
             <CloseIcon />
           </CloseDrawer>
         </TraceEvent>

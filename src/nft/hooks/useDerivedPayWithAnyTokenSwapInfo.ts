@@ -9,8 +9,8 @@ export default function useDerivedPayWithAnyTokenSwapInfo(
   parsedOutputAmount?: CurrencyAmount<NativeCurrency | Token>
 ): {
   state: TradeState
-  trade: InterfaceTrade | undefined
-  maximumAmountIn: CurrencyAmount<Token> | undefined
+  trade?: InterfaceTrade
+  maximumAmountIn?: CurrencyAmount<Token>
   allowedSlippage: Percent
 } {
   const { state, trade } = useBestTrade(TradeType.EXACT_OUTPUT, parsedOutputAmount, inputCurrency ?? undefined)

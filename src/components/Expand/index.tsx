@@ -1,5 +1,6 @@
+import AnimatedDropdown from 'components/AnimatedDropdown'
 import Column from 'components/Column'
-import React, { PropsWithChildren, ReactElement, useState } from 'react'
+import React, { PropsWithChildren, ReactElement } from 'react'
 import { ChevronDown } from 'react-feather'
 import styled from 'styled-components/macro'
 
@@ -11,10 +12,14 @@ const ButtonContainer = styled(Row)`
   width: unset;
 `
 
-const ExpandIcon = styled(ChevronDown)<{ $isExpanded: boolean }>`
+const ExpandIcon = styled(ChevronDown)<{ $isOpen: boolean }>`
   color: ${({ theme }) => theme.textSecondary};
-  transform: ${({ $isExpanded }) => ($isExpanded ? 'rotate(180deg)' : 'rotate(0deg)')};
+  transform: ${({ $isOpen }) => ($isOpen ? 'rotate(180deg)' : 'rotate(0deg)')};
   transition: transform ${({ theme }) => theme.transition.duration.medium};
+`
+
+const Content = styled(Column)`
+  padding-top: ${({ theme }) => theme.grids.md};
 `
 
 export default function Expand({
@@ -22,22 +27,27 @@ export default function Expand({
   button,
   children,
   testId,
+  isOpen,
+  onToggle,
 }: PropsWithChildren<{
   header: ReactElement
   button: ReactElement
   testId?: string
+  isOpen: boolean
+  onToggle: () => void
 }>) {
-  const [isExpanded, setExpanded] = useState(false)
   return (
-    <Column gap="md">
+    <Column>
       <RowBetween>
         {header}
-        <ButtonContainer data-testid={testId} onClick={() => setExpanded(!isExpanded)} aria-expanded={isExpanded}>
+        <ButtonContainer data-testid={testId} onClick={onToggle} aria-expanded={isOpen}>
           {button}
-          <ExpandIcon $isExpanded={isExpanded} />
+          <ExpandIcon $isOpen={isOpen} />
         </ButtonContainer>
       </RowBetween>
-      {isExpanded && children}
+      <AnimatedDropdown open={isOpen}>
+        <Content gap="md">{children}</Content>
+      </AnimatedDropdown>
     </Column>
   )
 }

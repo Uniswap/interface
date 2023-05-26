@@ -6,7 +6,7 @@
 
 
 <!-- Delete inapplicable lines: -->
-_JIRA ticket:_
+_Linear ticket:_
 _Slack thread:_
 _Relevant docs:_
 
@@ -14,9 +14,16 @@ _Relevant docs:_
 <!-- Delete this section if your change does not affect UI. -->
 ## Screen capture
 
-| Before       | After (Desktop) | After (Mobile) |
-| ------------ |---------------- | -------------- |
-| paste_before | past_after      | paste_after    |
+### Before
+|    Mobile    |   Desktop    |
+| ------------ | ------------ |
+| paste_before | paste_before |
+
+
+### After
+|    Mobile    |   Desktop   |
+| ------------ | ----------- |
+| paste_after  | paste_after |
 
 
 ## Test plan

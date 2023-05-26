@@ -12,6 +12,7 @@ jobs:
     steps:
       - name: Send Slack message that build is starting
         uses: slackapi/slack-github-action@007b2c3c751a190b6f0f040e47ed024deaa72844
+        continue-on-error: true
         with:
           payload: |
             {
@@ -26,7 +27,7 @@ jobs:
       - run: yarn build
       - name: Bump and tag
         id: github-tag-action
-        uses: mathieudutour/github-tag-action@v6.0
+        uses: mathieudutour/github-tag-action@d745f2e74aaf1ee82e747b181f7a0967978abee0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           release_branches: releases/prod
@@ -92,6 +93,7 @@ jobs:
 
       - name: Send Slack message about deployment outcome
         uses: slackapi/slack-github-action@007b2c3c751a190b6f0f040e47ed024deaa72844
+        continue-on-error: true
         if: always()
         with:
           payload: |

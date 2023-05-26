@@ -32,7 +32,7 @@ const InputWrapper = styled(Row)<{ borderColor: string }>`
   box-sizing: border-box;
 `
 
-const CurrencyWrapper = styled.div<{ listPrice: number | undefined }>`
+const CurrencyWrapper = styled.div<{ listPrice?: number }>`
   color: ${({ listPrice, theme }) => (listPrice ? theme.textPrimary : theme.textSecondary)};
 `
 
