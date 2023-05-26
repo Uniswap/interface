@@ -8,15 +8,6 @@ on:
       - opened
       - synchronize
       - reopened
-    paths:
-      - 'apps/**'
-      - 'packages/**'
-      - 'config/**'
-      - 'package.json'
-      - '*.lock'
-      - '.yarnrc.yml'
-      - '.prettier*'
-      - '.github/**'
 
 jobs:
   build-and-test:

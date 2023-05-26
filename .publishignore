@@ -17,5 +17,5 @@ apps/web
 *.web.tsx
 *.web.jsx
 
-README.md
+/README.md
 packages/README.md
