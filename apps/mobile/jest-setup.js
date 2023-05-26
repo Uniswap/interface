@@ -87,6 +87,8 @@ jest.mock('@walletconnect/web3wallet', () => ({
     init: () => ({
       on: jest.fn(),
       getActiveSessions: () => [],
+      getPendingSessionProposals: () => [],
+      getPendingSessionRequests: () => [],
     }),
   },
 }))
