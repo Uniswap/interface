@@ -283,12 +283,12 @@ exports[`data page loads with header showing 1`] = `
   margin-right: auto;
 }
 
-.c29 {
+.c28 {
   position: relative;
   width: 92px;
 }
 
-.c30 {
+.c29 {
   gap: 4px;
   padding: 8px;
   cursor: pointer;
@@ -307,15 +307,15 @@ exports[`data page loads with header showing 1`] = `
   transition: opacity 250ms ease;
 }
 
-.c30:hover {
+.c29:hover {
   opacity: 0.6;
 }
 
-.c30:active {
+.c29:active {
   opacity: 0.4;
 }
 
-.c31 {
+.c30 {
   height: 16px;
   width: 16px;
   color: #7780A0;
@@ -329,13 +329,14 @@ exports[`data page loads with header showing 1`] = `
 
 .c27 {
   height: 568px;
-  position: relative;
-}
-
-.c28 {
-  position: absolute;
-  right: 0;
-  top: -36px;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  -webkit-align-items: flex-start;
+  -webkit-box-align: flex-start;
+  -ms-flex-align: flex-start;
+  align-items: flex-start;
 }
 
 .c0 {
@@ -381,12 +382,6 @@ exports[`data page loads with header showing 1`] = `
 @media screen and (max-width:1024px) {
   .c7 {
     display: none;
-  }
-}
-
-@media screen and (max-width:640px) {
-  .c28 {
-    top: 0px;
   }
 }
 
@@ -562,43 +557,41 @@ exports[`data page loads with header showing 1`] = `
             </div>
           </div>
           <div
-            class="c27"
+            class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez4ry sprinkles_flexDirection_row_sm__rgw6ez4uh sprinkles_alignItems_center_sm__rgw6ez3k c27"
           >
+            <span>
+              Activity Content
+            </span>
             <div
               class="c28"
             >
               <div
-                class="c29"
+                class="c4 c5 c29"
                 data-testid="activity-time-period-switcher"
               >
                 <div
-                  class="c4 c5 c30"
+                  class="c11 css-1adn0z6"
                 >
-                  <div
-                    class="c11 css-1adn0z6"
-                  >
-                    1 week
-                  </div>
-                  <svg
-                    class="c31"
-                    fill="none"
-                    height="24"
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    viewBox="0 0 24 24"
-                    width="24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <polyline
-                      points="6 9 12 15 18 9"
-                    />
-                  </svg>
+                  1 week
                 </div>
+                <svg
+                  class="c30"
+                  fill="none"
+                  height="24"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <polyline
+                    points="6 9 12 15 18 9"
+                  />
+                </svg>
               </div>
             </div>
-            Activity Content
           </div>
         </div>
       </div>
@@ -890,12 +883,12 @@ exports[`data page loads without header showing 1`] = `
   margin-right: auto;
 }
 
-.c29 {
+.c28 {
   position: relative;
   width: 92px;
 }
 
-.c30 {
+.c29 {
   gap: 4px;
   padding: 8px;
   cursor: pointer;
@@ -914,15 +907,15 @@ exports[`data page loads without header showing 1`] = `
   transition: opacity 250ms ease;
 }
 
-.c30:hover {
+.c29:hover {
   opacity: 0.6;
 }
 
-.c30:active {
+.c29:active {
   opacity: 0.4;
 }
 
-.c31 {
+.c30 {
   height: 16px;
   width: 16px;
   color: #7780A0;
@@ -936,13 +929,14 @@ exports[`data page loads without header showing 1`] = `
 
 .c27 {
   height: 568px;
-  position: relative;
-}
-
-.c28 {
-  position: absolute;
-  right: 0;
-  top: -36px;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  -webkit-align-items: flex-start;
+  -webkit-box-align: flex-start;
+  -ms-flex-align: flex-start;
+  align-items: flex-start;
 }
 
 .c0 {
@@ -988,12 +982,6 @@ exports[`data page loads without header showing 1`] = `
 @media screen and (max-width:1024px) {
   .c7 {
     display: none;
-  }
-}
-
-@media screen and (max-width:640px) {
-  .c28 {
-    top: 0px;
   }
 }
 
@@ -1169,43 +1157,41 @@ exports[`data page loads without header showing 1`] = `
             </div>
           </div>
           <div
-            class="c27"
+            class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez4ry sprinkles_flexDirection_row_sm__rgw6ez4uh sprinkles_alignItems_center_sm__rgw6ez3k c27"
           >
+            <span>
+              Activity Content
+            </span>
             <div
               class="c28"
             >
               <div
-                class="c29"
+                class="c4 c5 c29"
                 data-testid="activity-time-period-switcher"
               >
                 <div
-                  class="c4 c5 c30"
+                  class="c11 css-1adn0z6"
                 >
-                  <div
-                    class="c11 css-1adn0z6"
-                  >
-                    1 week
-                  </div>
-                  <svg
-                    class="c31"
-                    fill="none"
-                    height="24"
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    viewBox="0 0 24 24"
-                    width="24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <polyline
-                      points="6 9 12 15 18 9"
-                    />
-                  </svg>
+                  1 week
                 </div>
+                <svg
+                  class="c30"
+                  fill="none"
+                  height="24"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <polyline
+                    points="6 9 12 15 18 9"
+                  />
+                </svg>
               </div>
             </div>
-            Activity Content
           </div>
         </div>
       </div>

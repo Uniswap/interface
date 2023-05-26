@@ -92,15 +92,15 @@ export const TimePeriodSwitcher = ({
   })
 
   return (
-    <SwitcherAndDropdownWrapper ref={menuRef} data-testid="activity-time-period-switcher">
-      <SwitcherWrapper onClick={toggleIsOpen}>
+    <SwitcherAndDropdownWrapper ref={menuRef}>
+      <SwitcherWrapper onClick={toggleIsOpen} data-testid="activity-time-period-switcher">
         <ThemedText.LabelSmall lineHeight="16px" color="textPrimary">
           {supportedTimePeriodsData[activeTimePeriod]}
         </ThemedText.LabelSmall>
         <Chevron $isOpen={isOpen} />
       </SwitcherWrapper>
       {isOpen && (
-        <TimeDropdownMenu>
+        <TimeDropdownMenu data-testid="activity-time-period-switcher-dropdown">
           {supportedTimePeriods.map((timePeriod) => (
             <DropdownContent
               key={timePeriod}
