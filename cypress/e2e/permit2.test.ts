@@ -63,7 +63,6 @@ describe('Permit2', () => {
       // Verify permit2 approval
       cy.contains('Allow DAI to be used for swapping')
       cy.wait('@eth_signTypedData_v4')
-      cy.contains('Confirm Swap').click()
       cy.wait('@eth_sendRawTransaction')
       cy.hardhat().then((hardhat) => hardhat.mine())
       cy.contains('Success')
