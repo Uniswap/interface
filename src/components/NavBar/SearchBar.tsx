@@ -137,7 +137,9 @@ export const SearchBar = () => {
         position={{ sm: 'fixed', md: 'absolute' }}
         width={{ sm: isOpen ? 'viewWidth' : 'auto', md: 'auto' }}
         ref={searchRef}
-        className={styles.searchBarContainerNft}
+        className={clsx(styles.searchBarContainerNft, {
+          searchBarContainerDisableBlur: isNavSearchInputVisible,
+        })}
         display={{ sm: isOpen ? 'inline-block' : 'none' }}
         {...(isNavSearchInputVisible && {
           position: 'relative',
