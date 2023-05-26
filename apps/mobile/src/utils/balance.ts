@@ -5,18 +5,21 @@ import { ChainId } from 'wallet/src/constants/chains'
 const NATIVE_CURRENCY_DECIMALS = 18
 
 // TODO(MOB-181): calculate this in a more scientific way
-export const MIN_ETH_FOR_GAS: JSBI = JSBI.exponentiate(
-  JSBI.BigInt(10),
-  JSBI.BigInt(NATIVE_CURRENCY_DECIMALS - 2)
-) // .01 ETH
+export const MIN_ETH_FOR_GAS: JSBI = JSBI.multiply(
+  JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(NATIVE_CURRENCY_DECIMALS - 3)),
+  JSBI.BigInt(12)
+) // .012 ETH
+
 export const MIN_POLYGON_FOR_GAS: JSBI = JSBI.multiply(
   JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(NATIVE_CURRENCY_DECIMALS - 2)),
   JSBI.BigInt(6)
 ) // .06 MATIC
+
 export const MIN_ARBITRUM_FOR_GAS: JSBI = JSBI.multiply(
   JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(NATIVE_CURRENCY_DECIMALS - 4)),
   JSBI.BigInt(6)
 ) // .0006 ETH
+
 export const MIN_OPTIMISM_FOR_GAS: JSBI = MIN_ARBITRUM_FOR_GAS
 
 /**
