@@ -8,7 +8,6 @@ import { i18n } from 'src/app/i18n'
 import { handleMoonpayReturnLink } from 'src/features/deepLinking/handleMoonpayReturnLink'
 import { handleSwapLink } from 'src/features/deepLinking/handleSwapLink'
 import { handleTransactionLink } from 'src/features/deepLinking/handleTransactionLink'
-import { FEATURE_FLAGS } from 'src/features/experiments/constants'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
 import { selectAccounts, selectActiveAccount } from 'src/features/wallet/selectors'
@@ -16,7 +15,6 @@ import { activateAccount } from 'src/features/wallet/walletSlice'
 import { connectToApp, isValidWCUrl } from 'src/features/walletConnect/WalletConnect'
 import { setDidOpenFromDeepLink } from 'src/features/walletConnect/walletConnectSlice'
 import { pairWithWalletConnectURI } from 'src/features/walletConnectV2/utils'
-import { Statsig } from 'statsig-react-native'
 import { call, fork, put, takeLatest } from 'typed-redux-saga'
 import { logger } from 'wallet/src/features/logger/logger'
 
@@ -117,8 +115,7 @@ export function* handleWalletConnectDeepLink(wcUri: string) {
     yield* fork(connectToApp, wcUri)
   }
 
-  const walletConnectV2Enabled = Statsig.checkGate(FEATURE_FLAGS.WalletConnectV2)
-  if (walletConnectV2Enabled && parseUri(wcUri).version === 2) {
+  if (parseUri(wcUri).version === 2) {
     try {
       pairWithWalletConnectURI(wcUri)
       // eslint-disable-next-line @typescript-eslint/no-explicit-any

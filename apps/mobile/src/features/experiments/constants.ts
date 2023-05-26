@@ -4,7 +4,6 @@
  */
 export enum FEATURE_FLAGS {
   SwapPermit2 = 'swap-permit-2',
-  WalletConnectV2 = 'wc-v2',
 }
 
 /**

@@ -17,8 +17,6 @@ import { Text } from 'src/components/Text'
 import { ConnectedDappsList } from 'src/components/WalletConnect/ConnectedDapps/ConnectedDappsList'
 import { getSupportedURI, URIType } from 'src/components/WalletConnect/ScanSheet/util'
 import { useIsDarkMode } from 'src/features/appearance/hooks'
-import { FEATURE_FLAGS } from 'src/features/experiments/constants'
-import { useFeatureFlag } from 'src/features/experiments/hooks'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { useWCTimeoutError } from 'src/features/wallet/hooks'
 import { selectActiveAccountAddress } from 'src/features/wallet/selectors'
@@ -50,7 +48,6 @@ export function WalletConnectModal({
   const { hasScanError, setHasScanError, shouldFreezeCamera, setShouldFreezeCamera } =
     useWCTimeoutError(WC_TIMEOUT_DURATION_MS)
   const { preload, navigate } = useEagerExternalProfileRootNavigation()
-  const walletConnectV2Enabled = useFeatureFlag(FEATURE_FLAGS.WalletConnectV2)
 
   // Update QR scanner states when pending session error alert is shown from WCv2 saga event channel
   useEffect(() => {
@@ -99,7 +96,7 @@ export function WalletConnectModal({
         connectToApp(supportedURI.value)
       }
 
-      if (walletConnectV2Enabled && supportedURI.type === URIType.WalletConnectV2URL) {
+      if (supportedURI.type === URIType.WalletConnectV2URL) {
         setShouldFreezeCamera(true)
         try {
           await pairWithWalletConnectURI(supportedURI.value)
@@ -145,7 +142,6 @@ export function WalletConnectModal({
       setHasScanError,
       setShouldFreezeCamera,
       shouldFreezeCamera,
-      walletConnectV2Enabled,
       t,
     ]
   )
