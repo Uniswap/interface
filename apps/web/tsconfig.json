@@ -1,6 +1,12 @@
 {
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "Web App",
   "extends": "tsconfig/nextjs.json",
-  "include": ["**/*.ts","**/*.tsx", "../../declarations.d.ts"],
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    "../../declarations.d.ts"
+  ],
   "exclude": [
     "node_modules"
   ],
