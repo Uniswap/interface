@@ -46,6 +46,53 @@ describe('Permit2', () => {
       })
   }
 
+  describe('approval process (with intermediate screens)', () => {
+    // Turn off automine so that intermediate screens are available to assert on.
+    beforeEach(() => cy.hardhat({ automine: false }))
+
+    it('swaps after completing full permit2 approval process', () => {
+      initiateSwap()
+
+      // Verify token approval
+      cy.contains('Enable spending limits for DAI on Uniswap')
+      cy.wait('@eth_sendRawTransaction')
+      cy.hardhat().then((hardhat) => hardhat.mine())
+      cy.get(getTestSelector('popups')).contains('Approved')
+      expectTokenAllowanceForPermit2ToBeMax()
+
+      // Verify permit2 approval
+      cy.contains('Allow DAI to be used for swapping')
+      cy.wait('@eth_signTypedData_v4')
+      cy.contains('Confirm Swap').click()
+      cy.wait('@eth_sendRawTransaction')
+      cy.hardhat().then((hardhat) => hardhat.mine())
+      cy.contains('Success')
+      cy.get(getTestSelector('popups')).contains('Swapped')
+      expectPermit2AllowanceForUniversalRouterToBeMax()
+    })
+
+    it('swaps with existing permit approval and missing token approval', () => {
+      cy.hardhat().then(async (hardhat) => {
+        await hardhat.approval.setPermit2Allowance({ owner: hardhat.wallet, token: INPUT_TOKEN })
+        await hardhat.mine()
+      })
+      initiateSwap()
+
+      // Verify token approval
+      cy.contains('Enable spending limits for DAI on Uniswap')
+      cy.wait('@eth_sendRawTransaction')
+      cy.hardhat().then((hardhat) => hardhat.mine())
+      cy.get(getTestSelector('popups')).contains('Approved')
+      expectTokenAllowanceForPermit2ToBeMax()
+
+      // Verify transaction
+      cy.wait('@eth_sendRawTransaction')
+      cy.hardhat().then((hardhat) => hardhat.mine())
+      cy.contains('Success')
+      cy.get(getTestSelector('popups')).contains('Swapped')
+    })
+  })
+
   it('swaps when user has already approved token and permit2', () => {
     cy.hardhat().then(({ approval, wallet }) =>
       Promise.all([
@@ -58,28 +105,6 @@ describe('Permit2', () => {
     // Verify transaction
     cy.contains('Success')
     cy.get(getTestSelector('popups')).contains('Swapped')
-  })
-
-  it('swaps after completing full permit2 approval process', () => {
-    cy.hardhat().then((hardhat) => hardhat.setAutomine(false))
-    initiateSwap()
-
-    // Verify token approval
-    cy.contains('Enable spending limits for DAI on Uniswap')
-    cy.wait('@eth_sendRawTransaction')
-    cy.hardhat().then((hardhat) => hardhat.mine())
-    cy.get(getTestSelector('popups')).contains('Approved')
-    expectTokenAllowanceForPermit2ToBeMax()
-
-    // Verify permit2 approval
-    cy.contains('Allow DAI to be used for swapping')
-    cy.wait('@eth_signTypedData_v4')
-    cy.contains('Confirm Swap').click()
-    cy.wait('@eth_sendRawTransaction')
-    cy.hardhat().then((hardhat) => hardhat.mine())
-    cy.contains('Success')
-    cy.get(getTestSelector('popups')).contains('Swapped')
-    expectPermit2AllowanceForUniversalRouterToBeMax()
   })
 
   it('swaps after handling user rejection of both approval and signature', () => {
@@ -120,25 +145,6 @@ describe('Permit2', () => {
       cy.get(getTestSelector('popups')).contains('Swapped')
       expectPermit2AllowanceForUniversalRouterToBeMax()
     })
-  })
-
-  it('swaps with existing permit approval and missing token approval', () => {
-    cy.hardhat().then(({ approval, wallet }) => approval.setPermit2Allowance({ owner: wallet, token: INPUT_TOKEN }))
-    cy.hardhat({ automine: false })
-    initiateSwap()
-
-    // Verify token approval
-    cy.contains('Enable spending limits for DAI on Uniswap')
-    cy.wait('@eth_sendRawTransaction')
-    cy.hardhat().then((hardhat) => hardhat.mine())
-    cy.get(getTestSelector('popups')).contains('Approved')
-    expectTokenAllowanceForPermit2ToBeMax()
-
-    // Verify transaction
-    cy.wait('@eth_sendRawTransaction')
-    cy.hardhat().then((hardhat) => hardhat.mine())
-    cy.contains('Success')
-    cy.get(getTestSelector('popups')).contains('Swapped')
   })
 
   it('prompts token approval when existing approval amount is too low', () => {
