@@ -7,11 +7,11 @@ import { BackHeader } from 'src/components/layout/BackHeader'
 import { Box } from 'src/components/layout/Box'
 import { SheetScreen } from 'src/components/layout/SheetScreen'
 import { Text } from 'src/components/Text'
-import { setChainActiveStatus } from 'src/features/chains/chainsSlice'
-import { useActiveChainIds } from 'src/features/chains/utils'
 import { flex } from 'src/styles/flex'
 import { theme } from 'src/styles/theme'
 import { ALL_SUPPORTED_CHAIN_IDS, CHAIN_INFO } from 'wallet/src/constants/chains'
+import { useActiveChainIds } from 'wallet/src/features/chains/hooks'
+import { setChainActiveStatus } from 'wallet/src/features/chains/slice'
 
 export function SettingsChainsScreen(): JSX.Element {
   const dispatch = useAppDispatch()

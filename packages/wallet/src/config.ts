@@ -13,7 +13,7 @@ import {
   WALLETCONNECT_PROJECT_ID,
 } from 'react-native-dotenv'
 import { ChainIdTo, ChainState } from 'wallet/src/constants/chains'
-import { chainListToStateMap } from 'wallet/src/features/chains/chainIdUtils'
+import { chainListToStateMap } from 'wallet/src/features/chains/utils'
 import { parseActiveChains } from 'wallet/src/utils/chainId'
 
 export interface Config {

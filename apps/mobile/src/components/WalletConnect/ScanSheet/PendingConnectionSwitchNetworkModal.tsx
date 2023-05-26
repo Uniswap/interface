@@ -6,11 +6,11 @@ import { Box, Flex } from 'src/components/layout'
 import { Separator } from 'src/components/layout/Separator'
 import { ActionSheetModal } from 'src/components/modals/ActionSheetModal'
 import { Text } from 'src/components/Text'
-import { useActiveChainIds } from 'src/features/chains/utils'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import Check from 'ui/src/assets/icons/check.svg'
 import { iconSizes } from 'ui/src/theme/iconSizes'
 import { ChainId, CHAIN_INFO } from 'wallet/src/constants/chains'
+import { useActiveChainIds } from 'wallet/src/features/chains/hooks'
 
 type Props = {
   selectedChainId: ChainId

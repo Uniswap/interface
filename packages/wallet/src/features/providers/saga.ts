@@ -1,15 +1,23 @@
+import { PayloadAction } from '@reduxjs/toolkit'
 import { providers as ethersProviders } from 'ethers'
-import { call, fork, join, put } from 'typed-redux-saga'
-import { ALL_SUPPORTED_CHAIN_IDS, ChainId } from 'wallet/src/constants/chains'
-
+import { REHYDRATE } from 'redux-persist'
+import { call, fork, join, put, take, takeEvery } from 'typed-redux-saga'
+import { config } from 'wallet/src/config'
+import { ChainId } from 'wallet/src/constants/chains'
+import { setChainActiveStatus } from 'wallet/src/features/chains/slice'
+import { getSortedActiveChainIds } from 'wallet/src/features/chains/utils'
 import { logger } from 'wallet/src/features/logger/logger'
+import { ProviderManager } from 'wallet/src/features/providers/ProviderManager'
+import { initialized } from 'wallet/src/features/providers/slice'
 import { getProviderManager } from 'wallet/src/features/wallet/context'
-import { ProviderManager } from './ProviderManager'
-import { initialized } from './slice'
+import { appSelect, RootState } from 'wallet/src/state'
 
 // Initialize Ethers providers for the chains the wallet interacts with
 export function* initProviders() {
-  const activeChains = ALL_SUPPORTED_CHAIN_IDS
+  // Wait for rehydration so we know which networks are enabled
+  const persisted = yield* take<PayloadAction<RootState>>(REHYDRATE)
+  const chains = persisted.payload?.chains?.byChainId ?? config.activeChains
+  const activeChains = getSortedActiveChainIds(chains)
 
   logger.debug('providerSaga', 'initProviders', 'Initializing providers')
   const manager = yield* call(getProviderManager)
@@ -22,6 +30,7 @@ export function* initProviders() {
   yield* join(initTasks)
   logger.debug('providerSaga', 'initProviders', 'Providers ready')
   yield* put(initialized())
+  yield* takeEvery(setChainActiveStatus.type, modifyProviders)
 }
 
 function* initProvider(chainId: ChainId, manager: ProviderManager) {
@@ -42,11 +51,46 @@ function* initProvider(chainId: ChainId, manager: ProviderManager) {
   }
 }
 
+function destroyProvider(chainId: ChainId, manager: ProviderManager): void {
+  logger.debug('providerSaga', 'destroyProvider', 'Disabling a provider for:', chainId)
+  if (!manager.hasProvider(chainId)) {
+    logger.debug('providerSaga', 'destroyProvider', 'Provider does not exists for:', chainId)
+    return
+  }
+  manager.removeProvider(chainId)
+}
+
+function* modifyProviders(action: PayloadAction<{ chainId: ChainId; isActive: boolean }>) {
+  const { chainId, isActive } = action.payload
+  try {
+    const manager = yield* call(getProviderManager)
+    if (isActive) {
+      yield* call(initProvider, chainId, manager)
+    } else {
+      destroyProvider(chainId, manager)
+    }
+  } catch (error) {
+    logger.error(
+      'providerSaga',
+      'modifyProviders',
+      `Error while modifying provider ${chainId}`,
+      error
+    )
+  }
+}
+
 async function createProvider(
   chainId: ChainId,
   manager: ProviderManager
 ): Promise<ethersProviders.Provider> {
   logger.debug('providerSaga', 'createProvider', 'Creating a provider for:', chainId)
-  const provider = manager.createProvider(chainId)
+  const provider = await manager.createProvider(chainId)
   return provider
+}
+
+// Sagas can use this to delay execution until the providers have been initialized
+export function* waitForProvidersInitialized() {
+  const isInitialized = yield* appSelect((state) => state.providers.isInitialized)
+  if (isInitialized) return
+  yield* take(initialized.type)
 }

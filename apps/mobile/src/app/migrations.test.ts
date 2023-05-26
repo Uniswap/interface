@@ -51,7 +51,6 @@ import {
 import { persistConfig } from 'src/app/store'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { initialBiometricsSettingsState } from 'src/features/biometrics/slice'
-import { ChainsState, initialChainsState } from 'src/features/chains/chainsSlice'
 import { initialCloudBackupState } from 'src/features/CloudBackup/cloudBackupSlice'
 import { initialPasswordLockoutState } from 'src/features/CloudBackup/passwordLockoutSlice'
 import { ensApi } from 'src/features/ens/api'
@@ -59,7 +58,6 @@ import { initialSearchHistoryState } from 'src/features/explore/searchHistorySli
 import { initialFavoritesState } from 'src/features/favorites/slice'
 import { initialModalState } from 'src/features/modals/modalSlice'
 import { initialNotificationsState } from 'src/features/notifications/notificationSlice'
-import { initialProvidersState } from 'src/features/providers/providerSlice'
 import { ModalName } from 'src/features/telemetry/constants'
 import { initialTelemetryState } from 'src/features/telemetry/slice'
 import { initialTokensState } from 'src/features/tokens/tokensSlice'
@@ -74,6 +72,8 @@ import { initialWalletConnectState } from 'src/features/walletConnect/walletConn
 import { account, fiatOnRampTxDetailsFailed, txDetailsConfirmed } from 'src/test/fixtures'
 import { SWAP_ROUTER_ADDRESSES } from 'wallet/src/constants/addresses'
 import { ChainId } from 'wallet/src/constants/chains'
+import { ChainsState, initialChainsState } from 'wallet/src/features/chains/slice'
+import { initialProvidersState } from 'wallet/src/features/providers/slice'
 import {
   Account,
   AccountType,

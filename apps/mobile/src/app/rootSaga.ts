@@ -11,7 +11,6 @@ import {
   importAccountSagaName,
 } from 'src/features/import/importAccountSaga'
 import { notificationWatcher } from 'src/features/notifications/notificationWatcher'
-import { initProviders } from 'src/features/providers/providerSaga'
 import { telemetrySaga } from 'src/features/telemetry/saga'
 import {
   swapActions,
@@ -52,6 +51,7 @@ import {
 } from 'src/features/wallet/pendingAccountsSaga'
 import { signWcRequestSaga, walletConnectSaga } from 'src/features/walletConnect/saga'
 import { walletConnectV2Saga } from 'src/features/walletConnectV2/saga'
+import { initProviders } from 'wallet/src/features/providers/saga'
 import { SagaState } from 'wallet/src/utils/saga'
 
 // All regular sagas must be included here

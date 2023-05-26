@@ -1,5 +1,6 @@
 import { BigNumberish } from 'ethers'
 import {
+  ALL_SUPPORTED_CHAIN_IDS,
   ChainId,
   ChainIdTo,
   ChainState,
@@ -11,6 +12,11 @@ import { PollingInterval } from 'wallet/src/constants/misc'
 import { Chain } from 'wallet/src/data/__generated__/types-and-hooks'
 
 const supportedChains = Object.values(ChainId).map((c) => c.toString())
+
+// ALL_SUPPORTED_CHAINS is manually sorted by chain TVL
+export function getSortedActiveChainIds(chains: ChainIdTo<ChainState>): ChainId[] {
+  return ALL_SUPPORTED_CHAIN_IDS.filter((n: ChainId) => !!chains[n]?.isActive)
+}
 
 // Some code from the web app uses chainId types as numbers
 // This validates them as coerces into SupportedChainId

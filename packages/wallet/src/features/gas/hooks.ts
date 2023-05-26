@@ -1,7 +1,7 @@
 import { skipToken } from '@reduxjs/toolkit/dist/query'
 import { providers } from 'ethers'
 import { useMemo } from 'react'
-import { getPollingIntervalByBlocktime } from 'wallet/src/features/chains/chainIdUtils'
+import { getPollingIntervalByBlocktime } from 'wallet/src/features/chains/utils'
 import { useGasFeeQuery } from 'wallet/src/features/gas/gasApi'
 import { FeeType, GasSpeed, TransactionGasFeeInfo } from 'wallet/src/features/gas/types'
 

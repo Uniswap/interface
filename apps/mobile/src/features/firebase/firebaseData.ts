@@ -2,7 +2,6 @@ import firebase from '@react-native-firebase/app'
 import firestore from '@react-native-firebase/firestore'
 import { CallEffect, ForkEffect, PutEffect, SelectEffect } from 'redux-saga/effects'
 import { appSelect } from 'src/app/hooks'
-import { selectTestnetsAreEnabled } from 'src/features/chains/chainsSlice'
 import {
   getFirebaseUidOrError,
   getFirestoreMetadataRef,
@@ -18,6 +17,7 @@ import { makeSelectAccountNotificationSetting, selectAccounts } from 'src/featur
 import { editAccount } from 'src/features/wallet/walletSlice'
 import { getKeys } from 'src/utils/objects'
 import { call, put, select, takeEvery } from 'typed-redux-saga'
+import { selectTestnetsAreEnabled } from 'wallet/src/features/chains/slice'
 import { logger } from 'wallet/src/features/logger/logger'
 import { Account, AccountType } from 'wallet/src/features/wallet/accounts/types'
 

@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { RootState } from 'src/app/rootReducer'
 import { config } from 'wallet/src/config'
 import { ChainId, ChainIdTo, ChainState } from 'wallet/src/constants/chains'
+import { RootState } from 'wallet/src/state'
 
 export interface ChainsState {
   byChainId: ChainIdTo<ChainState>

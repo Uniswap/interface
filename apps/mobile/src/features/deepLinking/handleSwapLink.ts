@@ -1,7 +1,6 @@
 import { BigNumber } from 'ethers'
 import { CallEffect, put, PutEffect } from 'redux-saga/effects'
 import { AssetType, CurrencyAsset } from 'src/entities/assets'
-import { selectActiveChainIds } from 'src/features/chains/utils'
 import { openModal, OpenModalParams } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
 import {
@@ -10,6 +9,7 @@ import {
 } from 'src/features/transactions/transactionState/transactionState'
 import { call } from 'typed-redux-saga'
 import { ChainId } from 'wallet/src/constants/chains'
+import { selectActiveChainIds } from 'wallet/src/features/chains/saga'
 import { logger } from 'wallet/src/features/logger/logger'
 import { getValidAddress } from 'wallet/src/utils/addresses'
 import { currencyIdToAddress, currencyIdToChain } from 'wallet/src/utils/currencyId'

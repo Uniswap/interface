@@ -31,7 +31,7 @@ import {
   ExtensionRequestType,
 } from 'src/types/requests'
 import { v4 as uuidv4 } from 'uuid'
-import { chainIdtoHexadecimalString } from 'wallet/src/features/chains/chainIdUtils'
+import { chainIdtoHexadecimalString } from 'wallet/src/features/chains/utils'
 import { logger } from 'wallet/src/features/logger/logger'
 
 export type EthersSendCallback = (error: unknown, response: unknown) => void
