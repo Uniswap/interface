@@ -21,7 +21,6 @@ type AddressDisplayProps = {
   size?: number
   variant?: keyof Theme['textVariants']
   textColor?: keyof Theme['colors']
-  captionTextColor?: keyof Theme['colors']
   captionVariant?: keyof Theme['textVariants']
   direction?: 'row' | 'column'
   showCopy?: boolean
@@ -62,7 +61,6 @@ export function AddressDisplay({
   size = 24,
   variant = 'bodyLarge',
   textColor = 'textPrimary',
-  captionTextColor = 'textSecondary',
   captionVariant = 'subheadSmall',
   hideAddressInSubtitle,
   direction = 'row',
@@ -140,12 +138,12 @@ export function AddressDisplay({
               marginTop={showCopyWrapperButton ? 'spacing8' : 'none'}
               px={showCopyWrapperButton ? 'spacing8' : 'none'}
               py={showCopyWrapperButton ? 'spacing4' : 'none'}>
-              <Text color={captionTextColor} variant={captionVariant}>
+              <Text color="textSecondary" variant={captionVariant}>
                 {sanitizeAddressText(shortenAddress(address))}
               </Text>
               {showCopy && (
                 <CopyIcon
-                  color={theme.colors[captionTextColor]}
+                  color={theme.colors.textSecondary}
                   height={captionSize}
                   width={captionSize}
                 />

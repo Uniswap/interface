@@ -63,10 +63,10 @@ export function CloudBackupProcessingScreen({
   useEffect(() => {
     if (activeAccount?.backups?.includes(BackupType.Cloud)) {
       doneProcessing()
-      // Show success state for 1s before navigating
+      // Show success state for 1s before navigating back
       const timer = setTimeout(() => {
         navigation.navigate({
-          name: OnboardingScreens.Notifications,
+          name: OnboardingScreens.Backup,
           params: { importType, entryPoint },
           merge: true,
         })

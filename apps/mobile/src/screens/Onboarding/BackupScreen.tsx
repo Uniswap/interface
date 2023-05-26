@@ -1,13 +1,16 @@
 import { CompositeScreenProps } from '@react-navigation/native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { StackScreenProps } from '@react-navigation/stack'
+import { useResponsiveProp } from '@shopify/restyle'
 import { SharedEventName } from '@uniswap/analytics-events'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert } from 'react-native'
+import { SvgProps } from 'react-native-svg'
 import { useAppTheme } from 'src/app/hooks'
 import {
   AppStackParamList,
+  OnboardingStackBaseParams,
   OnboardingStackParamList,
   useOnboardingStackNavigation,
 } from 'src/app/navigation/types'
@@ -15,38 +18,35 @@ import { BackButton } from 'src/components/buttons/BackButton'
 import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { EducationContentType } from 'src/components/education'
-import { Box, Flex } from 'src/components/layout'
+import { Box, BoxProps, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { isICloudAvailable } from 'src/features/CloudBackup/RNICloudBackupsManager'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
-import { OptionCard } from 'src/features/onboarding/OptionCard'
 import { ImportType } from 'src/features/onboarding/utils'
+import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { ElementName } from 'src/features/telemetry/constants'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { OnboardingScreens, Screens } from 'src/screens/Screens'
 import { openSettings } from 'src/utils/linking'
+import Check from 'ui/src/assets/icons/check.svg'
 import CloudIcon from 'ui/src/assets/icons/cloud.svg'
 import InfoCircle from 'ui/src/assets/icons/info-circle.svg'
-import PaperIcon from 'ui/src/assets/icons/paper-stack.svg'
+import PencilIcon from 'ui/src/assets/icons/pencil.svg'
+import { BackupType } from 'wallet/src/features/wallet/accounts/types'
 
 type Props = CompositeScreenProps<
   StackScreenProps<OnboardingStackParamList, OnboardingScreens.Backup>,
   NativeStackScreenProps<AppStackParamList, Screens.Education>
 >
 
+const spacerProps: BoxProps = {
+  borderBottomColor: 'backgroundOutline',
+  borderBottomWidth: 0.5,
+}
+
 export function BackupScreen({ navigation, route: { params } }: Props): JSX.Element {
   const { t } = useTranslation()
   const theme = useAppTheme()
-  const { navigate } = useOnboardingStackNavigation()
-  const [iCloudAvailable, setICloudAvailable] = useState<boolean>()
-
-  useEffect(() => {
-    async function checkICloudAvailable(): Promise<void> {
-      const available = await isICloudAvailable()
-      setICloudAvailable(available)
-    }
-    checkICloudAvailable()
-  }, [])
 
   const activeAccountBackups = useActiveAccount()?.backups
 
@@ -82,6 +82,83 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
     })
   }
 
+  const onPressSkipBack = (): void => {
+    sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
+      element: ElementName.AddBackupNone,
+      screen: OnboardingScreens.Backup,
+    })
+    onPressNext()
+  }
+
+  const disabled = !activeAccountBackups || activeAccountBackups.length < 1
+  const showSkipOption =
+    !activeAccountBackups?.length &&
+    (params?.importType === ImportType.SeedPhrase || params?.importType === ImportType.Restore)
+
+  return (
+    <OnboardingScreen
+      subtitle={t(
+        'Your recovery phrase is the key to your wallet. Back it up so you can restore your wallet if you lose or damage your device.'
+      )}
+      title={t('Back up your recovery phrase')}>
+      <Flex grow>
+        <BackupOptions backupMethods={activeAccountBackups} params={params} />
+        <TouchableArea alignSelf="flex-start" py="none" onPress={onPressEducationButton}>
+          <Flex centered row gap="spacing4">
+            <Box px="spacing4">
+              <InfoCircle
+                color={theme.colors.textSecondary}
+                height={theme.iconSizes.icon24}
+                width={theme.iconSizes.icon24}
+              />
+            </Box>
+            <Text color="textPrimary" variant="subheadSmall">
+              {t('What’s a recovery phrase?')}
+            </Text>
+          </Flex>
+        </TouchableArea>
+        <Flex grow justifyContent="flex-end">
+          {showSkipOption ? (
+            <Button
+              emphasis={ButtonEmphasis.Tertiary}
+              label={t('I already backed up')}
+              name={ElementName.Next}
+              onPress={onPressSkipBack}
+            />
+          ) : (
+            <Button
+              disabled={disabled}
+              label={disabled ? t('Add backup to continue') : t('Continue')}
+              name={ElementName.Next}
+              onPress={onPressNext}
+            />
+          )}
+        </Flex>
+      </Flex>
+    </OnboardingScreen>
+  )
+}
+
+function BackupOptions({
+  backupMethods,
+  params,
+}: {
+  backupMethods?: BackupType[]
+  params: Readonly<OnboardingStackBaseParams>
+}): JSX.Element {
+  const { t } = useTranslation()
+  const [iCloudAvailable, setICloudAvailable] = useState<boolean>()
+
+  const { navigate } = useOnboardingStackNavigation()
+
+  useEffect(() => {
+    async function checkICloudAvailable(): Promise<void> {
+      const available = await isICloudAvailable()
+      setICloudAvailable(available)
+    }
+    checkICloudAvailable()
+  }, [])
+
   const onPressICloudBackup = (): void => {
     if (!iCloudAvailable) {
       Alert.alert(
@@ -96,6 +173,10 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
       )
       return
     }
+    sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
+      element: ElementName.AddiCloudBackup,
+      screen: OnboardingScreens.Backup,
+    })
     navigate({
       name: OnboardingScreens.BackupCloudPassword,
       params,
@@ -104,69 +185,120 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
   }
 
   const onPressManualBackup = (): void => {
+    sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
+      element: ElementName.AddManualBackup,
+      screen: OnboardingScreens.Backup,
+    })
     navigate({ name: OnboardingScreens.BackupManual, params, merge: true })
   }
 
-  const disabled = !activeAccountBackups || activeAccountBackups.length < 1
-  const showSkipOption =
-    !activeAccountBackups?.length &&
-    (params?.importType === ImportType.SeedPhrase || params?.importType === ImportType.Restore)
+  return (
+    <Flex gap="none" spacerProps={spacerProps}>
+      <BackupOptionButton
+        Icon={CloudIcon}
+        completed={backupMethods?.includes(BackupType.Cloud)}
+        label={t('iCloud backup')}
+        name={ElementName.AddiCloudBackup}
+        onPress={onPressICloudBackup}
+      />
+      <BackupOptionButton
+        Icon={PencilIcon}
+        completed={backupMethods?.includes(BackupType.Manual)}
+        label={t('Manual backup')}
+        name={ElementName.AddManualBackup}
+        onPress={onPressManualBackup}
+      />
+    </Flex>
+  )
+}
+
+interface BackupOptionButtonProps {
+  completed?: boolean
+  Icon: React.FC<SvgProps>
+  label: string
+  name: ElementName
+  onPress: () => void
+}
+
+function BackupOptionButton({
+  Icon,
+  label,
+  name,
+  onPress,
+  completed,
+}: BackupOptionButtonProps): JSX.Element {
+  const theme = useAppTheme()
+  const { t } = useTranslation()
+
+  const labelMaxFontSizeMultiplier = useResponsiveProp({
+    xs: 1.2,
+    sm: theme.textVariants.subheadSmall.maxFontSizeMultiplier,
+  })
+
+  const iconSizeBox = useResponsiveProp({
+    xs: theme.iconSizes.icon24,
+    sm: theme.iconSizes.icon40,
+  })
+
+  const iconSize = useResponsiveProp({
+    xs: theme.iconSizes.icon20,
+    sm: theme.iconSizes.icon24,
+  })
+
+  const addSpacing = useResponsiveProp({
+    xs: 'spacing4',
+    sm: 'spacing12',
+  })
+
+  const textSize = useResponsiveProp({
+    xs: 'subheadSmall',
+    sm: 'bodyLarge',
+  })
 
   return (
-    <OnboardingScreen
-      subtitle={t(
-        "Remember, backups are your lifeline. They're your ticket back in if something goes wrong."
-      )}
-      title={t('Choose a backup for your wallet')}>
-      <Flex grow justifyContent="space-between">
-        <Flex gap="spacing12">
-          <OptionCard
-            blurb={t('Safe, simple, and all you need to save is your password.')}
-            icon={<CloudIcon color={theme.colors.magentaVibrant} height={theme.iconSizes.icon16} />}
-            name={ElementName.AddiCloudBackup}
-            title={t('Backup with iCloud')}
-            onPress={onPressICloudBackup}
-          />
-          <OptionCard
-            blurb={t("Top-notch security with no third parties. You're in control.")}
-            icon={<PaperIcon color={theme.colors.magentaVibrant} height={theme.iconSizes.icon16} />}
-            name={ElementName.AddManualBackup}
-            title={t('Backup with recovery phrase')}
-            onPress={onPressManualBackup}
-          />
-        </Flex>
-        <Flex grow justifyContent="flex-end">
-          <TouchableArea alignSelf="center" py="none" onPress={onPressEducationButton}>
-            <Flex centered row gap="spacing4">
-              <Box px="spacing4">
-                <InfoCircle
-                  color={theme.colors.textSecondary}
-                  height={theme.iconSizes.icon24}
-                  width={theme.iconSizes.icon24}
-                />
-              </Box>
-              <Text color="textPrimary" variant="subheadSmall">
-                {t('Learn about wallet safety and recovery')}
+    <Flex row alignItems="center" py="spacing16">
+      <Flex
+        centered
+        borderColor="accentBranded"
+        borderRadius="rounded12"
+        borderWidth={1.25}
+        height={iconSizeBox}
+        padding="spacing16"
+        width={iconSizeBox}>
+        <Icon
+          color={theme.colors.textPrimary}
+          height={iconSize}
+          strokeWidth={1.5}
+          width={iconSize}
+        />
+      </Flex>
+      <Text maxFontSizeMultiplier={labelMaxFontSizeMultiplier} variant={textSize}>
+        {label}
+      </Text>
+      <Flex grow alignItems="flex-end">
+        {completed ? (
+          <Flex row alignItems="center" gap="spacing4">
+            <Check color={theme.colors.accentSuccess} height={iconSize} width={iconSize} />
+            <Text fontWeight="600" variant="bodyMicro">
+              {t('Completed')}
+            </Text>
+          </Flex>
+        ) : (
+          <TouchableArea
+            hapticFeedback
+            backgroundColor="magentaDark"
+            borderRadius="roundedFull"
+            p={addSpacing}
+            testID={name}
+            onPress={onPress}>
+            <Flex row>
+              <Text color="magentaVibrant" variant="buttonLabelMicro">
+                + {t('ADD')}
               </Text>
             </Flex>
           </TouchableArea>
-          {showSkipOption && (
-            <Button
-              emphasis={ButtonEmphasis.Tertiary}
-              eventName={SharedEventName.ELEMENT_CLICKED}
-              label={t('I already backed up')}
-              name={ElementName.Next}
-              onPress={onPressNext}
-            />
-          )}
-          <Button
-            disabled={disabled}
-            eventName={SharedEventName.ELEMENT_CLICKED}
-            label={disabled ? t('Select backup to continue') : t('Continue')}
-            name={ElementName.Next}
-          />
-        </Flex>
+        )}
       </Flex>
-    </OnboardingScreen>
+    </Flex>
   )
 }

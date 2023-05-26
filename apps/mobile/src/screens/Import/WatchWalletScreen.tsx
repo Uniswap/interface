@@ -13,7 +13,6 @@ import { useENS } from 'src/features/ens/useENS'
 import { GenericImportForm } from 'src/features/import/GenericImportForm'
 import { importAccountActions } from 'src/features/import/importAccountSaga'
 import { ImportAccountType } from 'src/features/import/types'
-import { useCompleteOnboardingCallback } from 'src/features/onboarding/hooks'
 import { SafeKeyboardOnboardingScreen } from 'src/features/onboarding/SafeKeyboardOnboardingScreen'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { ElementName } from 'src/features/telemetry/constants'
@@ -49,8 +48,6 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX
     isAddress ?? undefined,
     ChainId.Mainnet
   )
-
-  const onCompleteOnboarding = useCompleteOnboardingCallback(params.entryPoint, params.importType)
 
   // Form validation.
   const walletExists =
@@ -88,9 +85,9 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX
         screen: OnboardingScreens.WatchWallet,
         element: ElementName.Continue,
       })
-      onCompleteOnboarding()
+      navigation.navigate({ name: OnboardingScreens.Notifications, params, merge: true })
     }
-  }, [dispatch, isValid, normalizedValue, onCompleteOnboarding, resolvedAddress, value])
+  }, [dispatch, isValid, navigation, normalizedValue, params, resolvedAddress, value])
 
   const onChange = (text: string | undefined): void => {
     if (value !== text?.trim()) {

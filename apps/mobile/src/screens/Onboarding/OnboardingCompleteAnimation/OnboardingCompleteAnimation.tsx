@@ -9,7 +9,6 @@ import {
   useValue,
 } from '@shopify/react-native-skia'
 import { useResponsiveProp } from '@shopify/restyle'
-import { SharedEventName } from '@uniswap/analytics-events'
 import { ResizeMode, Video } from 'expo-av'
 import React, { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -24,11 +23,9 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated'
 import { useAppTheme } from 'src/app/hooks'
-import { AddressDisplay } from 'src/components/AddressDisplay'
 import { Button } from 'src/components/buttons/Button'
 import { GradientBackground } from 'src/components/gradients/GradientBackground'
 import { UniconThemedGradient } from 'src/components/gradients/UniconThemedGradient'
-import { Arrow } from 'src/components/icons/Arrow'
 import { Box, Flex } from 'src/components/layout'
 import { QRCodeDisplay } from 'src/components/QRCodeScanner/QRCode'
 import { Text } from 'src/components/Text'
@@ -46,13 +43,11 @@ import {
   realQrTopGlowFadeIn,
   textSlideUpAtEnd,
   videoFadeOut,
-} from 'src/screens/Onboarding/QRAnimation/animations'
+} from 'src/screens/Onboarding/OnboardingCompleteAnimation/animations'
 import { flex } from 'src/styles/flex'
 import { ONBOARDING_QR_ETCHING_VIDEO_DARK, ONBOARDING_QR_ETCHING_VIDEO_LIGHT } from 'ui/src/assets'
-import LockIcon from 'ui/src/assets/icons/lock.svg'
-import { opacify } from 'ui/src/theme/color/utils'
 
-export function QRAnimation({
+export function OnboardingCompleteAnimation({
   activeAddress,
   isNewWallet,
   onPressNext,
@@ -168,9 +163,14 @@ export function QRAnimation({
     sm: theme.textVariants.bodyLarge.maxFontSizeMultiplier,
   })
 
+  const subheadSize = useResponsiveProp({
+    xs: 'bodySmall',
+    sm: 'bodyLarge',
+  })
+
   return (
     <>
-      <Animated.View entering={realQrTopGlowFadeIn}>
+      <Animated.View entering={realQrTopGlowFadeIn} style={[styles.qrGlow]}>
         <GradientBackground>
           <UniconThemedGradient
             borderRadius="rounded16"
@@ -261,18 +261,6 @@ export function QRAnimation({
                     />
                   </Animated.View>
                 </Animated.View>
-                <Animated.View entering={textSlideUpAtEnd}>
-                  <Flex centered mt="spacing24">
-                    <AddressDisplay
-                      showCopy
-                      address={activeAddress}
-                      captionTextColor="textTertiary"
-                      captionVariant="subheadSmall"
-                      showAccountIcon={false}
-                      variant="headlineSmall"
-                    />
-                  </Flex>
-                </Animated.View>
               </Animated.View>
             </Animated.View>
           </Flex>
@@ -280,17 +268,18 @@ export function QRAnimation({
             <Text
               maxFontSizeMultiplier={finalTitleMaxFontSizeMultiplier}
               pb="spacing12"
-              textAlign="center"
-              variant="subheadLarge">
-              {t('Welcome to your new wallet')}
+              variant="headlineSmall">
+              {t("You're ready to go!")}
             </Text>
             <Text
               color="textSecondary"
               maxFontSizeMultiplier={finalBodyMaxFontSizeMultiplier}
               textAlign="center"
-              variant="bodySmall">
+              variant={subheadSize}>
               {isNewWallet
-                ? t('This is your personal bank vault for tokens, NFTs, and all your trades.')
+                ? t(
+                    "You've created, nicknamed, and backed up your wallet. Now, you can explore the world of crypto."
+                  )
                 : t(
                     'Check out your tokens and NFTs, follow crypto wallets, and stay up to date on the go.'
                   )}
@@ -298,31 +287,7 @@ export function QRAnimation({
           </Animated.View>
         </Flex>
         <Animated.View entering={letsGoButtonFadeIn}>
-          <Button
-            CustomIcon={
-              <Flex grow row alignItems="center" justifyContent="space-between">
-                <Flex row alignItems="center" gap="spacing8">
-                  <Box
-                    borderRadius="roundedFull"
-                    padding="spacing8"
-                    style={{ backgroundColor: opacify(10, theme.colors.white) }}>
-                    <LockIcon
-                      color={theme.colors.white}
-                      height={theme.iconSizes.icon16}
-                      width={theme.iconSizes.icon16}
-                    />
-                  </Box>
-                  <Text color="white" variant="buttonLabelMedium">
-                    {t('Let’s keep it safe')}
-                  </Text>
-                </Flex>
-                <Arrow color={theme.colors.white} direction="e" size={theme.iconSizes.icon24} />
-              </Flex>
-            }
-            eventName={SharedEventName.ELEMENT_CLICKED}
-            name={ElementName.Next}
-            onPress={onPressNext}
-          />
+          <Button label={t('Let’s go')} name={ElementName.Next} onPress={onPressNext} />
         </Animated.View>
       </Flex>
     </>
@@ -350,6 +315,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     display: 'flex',
     justifyContent: 'center',
+  },
+  qrGlow: {
+    borderRadius: 18,
+    bottom: 0,
+    left: 0,
+    overflow: 'hidden',
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    zIndex: -1,
+    // to make the glow appear behind the QR code
   },
   textContainer: {
     alignItems: 'center',

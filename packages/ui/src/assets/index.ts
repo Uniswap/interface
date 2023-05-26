@@ -15,6 +15,3 @@ export const ONBOARDING_NOTIFICATIONS_DARK = require('./backgrounds/notification
 export const ONBOARDING_NOTIFICATIONS_LIGHT = require('./backgrounds/notifications-light.png')
 export const FOR_CONNECTING_BACKGROUND_DARK = require('./backgrounds/for-connecting-dark.png')
 export const FOR_CONNECTING_BACKGROUND_LIGHT = require('./backgrounds/for-connecting-light.png')
-
-export const SECURITY_SCREEN_BACKGROUND_DARK = require('./backgrounds/security-background-dark.png')
-export const SECURITY_SCREEN_BACKGROUND_LIGHT = require('./backgrounds/security-background-light.png')

@@ -1,6 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { useResponsiveProp } from '@shopify/restyle'
-import { SharedEventName } from '@uniswap/analytics-events'
 import React from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'src/app/hooks'
@@ -55,7 +54,6 @@ export function LandingScreen({ navigation }: Props): JSX.Element {
         <Flex gap={outerGap} justifyContent="flex-end">
           <Flex mx="spacing16">
             <Button
-              eventName={SharedEventName.ELEMENT_CLICKED}
               label={t('Get started')}
               name={ElementName.GetStarted}
               size={buttonSize}

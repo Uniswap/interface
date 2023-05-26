@@ -72,7 +72,7 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
 
   useEffect(() => {
     if (activeAccount?.backups?.includes(BackupType.Manual)) {
-      navigation.navigate({ name: OnboardingScreens.Notifications, params, merge: true })
+      navigation.navigate({ name: OnboardingScreens.Backup, params, merge: true })
     }
   }, [activeAccount?.backups, navigation, params])
 

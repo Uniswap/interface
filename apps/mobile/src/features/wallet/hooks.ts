@@ -83,10 +83,7 @@ export function useDisplayName(
   const validated = getValidAddress(address)
   const ens = useENSName(validated ?? undefined)
 
-  // Need to account for pending accounts for use within onboarding
   const maybeLocalName = useAccounts()[address ?? '']?.name
-  const maybeLocalNamePending = usePendingAccounts()[address ?? '']?.name
-  const localName = maybeLocalName ?? maybeLocalNamePending
 
   if (!address) return
 
@@ -97,8 +94,8 @@ export function useDisplayName(
     }
   }
 
-  if (localName) {
-    return { name: localName, type: 'local' }
+  if (maybeLocalName) {
+    return { name: maybeLocalName, type: 'local' }
   }
 
   return { name: `${sanitizeAddressText(shortenAddress(address))}`, type: 'address' }
