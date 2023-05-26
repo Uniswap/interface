@@ -21,7 +21,7 @@ const ETH_AMOUNT_OUT: { [chainId: number]: CurrencyAmount<Currency> } = {
 }
 
 function useETHValue(currencyAmount?: CurrencyAmount<Currency>): {
-  data: CurrencyAmount<Currency> | undefined
+  data?: CurrencyAmount<Currency>
   isLoading: boolean
 } {
   const chainId = currencyAmount?.currency?.chainId
@@ -50,8 +50,11 @@ function useETHValue(currencyAmount?: CurrencyAmount<Currency>): {
   return { data: price.quote(currencyAmount), isLoading: false }
 }
 
+// TODO(WEB-2095): This hook should early return `null` when `currencyAmount` is undefined. Otherwise,
+// it is not possible to differentiate between a loading state and a state where `currencyAmount`
+// is undefined
 export function useUSDPrice(currencyAmount?: CurrencyAmount<Currency>): {
-  data: number | undefined
+  data?: number
   isLoading: boolean
 } {
   const chain = currencyAmount?.currency.chainId ? chainIdToBackendName(currencyAmount?.currency.chainId) : undefined
