@@ -21,7 +21,7 @@ enum LogsState {
 }
 
 interface UseLogsResult {
-  logs: Log[] | undefined
+  logs?: Log[]
   state: LogsState
 }
 

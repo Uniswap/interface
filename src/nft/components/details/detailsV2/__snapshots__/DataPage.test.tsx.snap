@@ -136,10 +136,6 @@ exports[`data page loads with header showing 1`] = `
   justify-content: flex-start;
 }
 
-.c27 {
-  height: 568px;
-}
-
 .c20 {
   background: #FFFFFF;
   border: 1px solid #D2D9EE;
@@ -153,8 +149,10 @@ exports[`data page loads with header showing 1`] = `
 
 .c21 {
   gap: 32px;
-  margin-bottom: 12px;
   width: 100;
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #D2D9EE;
 }
 
 .c22 {
@@ -285,6 +283,61 @@ exports[`data page loads with header showing 1`] = `
 .c8 {
   gap: 4px;
   margin-right: auto;
+}
+
+.c28 {
+  position: relative;
+}
+
+.c29 {
+  gap: 4px;
+  padding: 8px;
+  cursor: pointer;
+  border-radius: 12px;
+  width: 92px;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  background: #E8ECFB;
+  -webkit-transition: opacity 250ms ease;
+  transition: opacity 250ms ease;
+}
+
+.c29:hover {
+  opacity: 0.6;
+}
+
+.c29:active {
+  opacity: 0.4;
+}
+
+.c30 {
+  height: 16px;
+  width: 16px;
+  color: #7780A0;
+  -webkit-transform: rotate(0deg);
+  -ms-transform: rotate(0deg);
+  transform: rotate(0deg);
+  -webkit-transition: -webkit-transform 125ms;
+  -webkit-transition: transform 125ms;
+  transition: transform 125ms;
+}
+
+.c27 {
+  height: 568px;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  -webkit-align-items: flex-start;
+  -webkit-box-align: flex-start;
+  -ms-flex-align: flex-start;
+  align-items: flex-start;
 }
 
 .c0 {
@@ -505,9 +558,41 @@ exports[`data page loads with header showing 1`] = `
             </div>
           </div>
           <div
-            class="c27"
+            class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez4ry sprinkles_flexDirection_row_sm__rgw6ez4uh sprinkles_alignItems_center_sm__rgw6ez3k c27"
           >
-            Activity Content
+            <span>
+              Activity Content
+            </span>
+            <div
+              class="c28"
+            >
+              <div
+                class="c4 c5 c29"
+                data-testid="activity-time-period-switcher"
+              >
+                <div
+                  class="c11 css-1adn0z6"
+                >
+                  1 week
+                </div>
+                <svg
+                  class="c30"
+                  fill="none"
+                  height="24"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <polyline
+                    points="6 9 12 15 18 9"
+                  />
+                </svg>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -652,10 +737,6 @@ exports[`data page loads without header showing 1`] = `
   justify-content: flex-start;
 }
 
-.c27 {
-  height: 568px;
-}
-
 .c20 {
   background: #FFFFFF;
   border: 1px solid #D2D9EE;
@@ -669,8 +750,10 @@ exports[`data page loads without header showing 1`] = `
 
 .c21 {
   gap: 32px;
-  margin-bottom: 12px;
   width: 100;
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #D2D9EE;
 }
 
 .c22 {
@@ -801,6 +884,61 @@ exports[`data page loads without header showing 1`] = `
 .c8 {
   gap: 4px;
   margin-right: auto;
+}
+
+.c28 {
+  position: relative;
+}
+
+.c29 {
+  gap: 4px;
+  padding: 8px;
+  cursor: pointer;
+  border-radius: 12px;
+  width: 92px;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  background: #E8ECFB;
+  -webkit-transition: opacity 250ms ease;
+  transition: opacity 250ms ease;
+}
+
+.c29:hover {
+  opacity: 0.6;
+}
+
+.c29:active {
+  opacity: 0.4;
+}
+
+.c30 {
+  height: 16px;
+  width: 16px;
+  color: #7780A0;
+  -webkit-transform: rotate(0deg);
+  -ms-transform: rotate(0deg);
+  transform: rotate(0deg);
+  -webkit-transition: -webkit-transform 125ms;
+  -webkit-transition: transform 125ms;
+  transition: transform 125ms;
+}
+
+.c27 {
+  height: 568px;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  -webkit-align-items: flex-start;
+  -webkit-box-align: flex-start;
+  -ms-flex-align: flex-start;
+  align-items: flex-start;
 }
 
 .c0 {
@@ -1021,9 +1159,41 @@ exports[`data page loads without header showing 1`] = `
             </div>
           </div>
           <div
-            class="c27"
+            class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez4ry sprinkles_flexDirection_row_sm__rgw6ez4uh sprinkles_alignItems_center_sm__rgw6ez3k c27"
           >
-            Activity Content
+            <span>
+              Activity Content
+            </span>
+            <div
+              class="c28"
+            >
+              <div
+                class="c4 c5 c29"
+                data-testid="activity-time-period-switcher"
+              >
+                <div
+                  class="c11 css-1adn0z6"
+                >
+                  1 week
+                </div>
+                <svg
+                  class="c30"
+                  fill="none"
+                  height="24"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <polyline
+                    points="6 9 12 15 18 9"
+                  />
+                </svg>
+              </div>
+            </div>
           </div>
         </div>
       </div>
