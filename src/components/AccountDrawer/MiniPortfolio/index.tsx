@@ -95,7 +95,7 @@ export default function MiniPortfolio({ account }: { account: string }) {
   return (
     <Trace section={InterfaceSectionName.MINI_PORTFOLIO}>
       <Wrapper>
-        <Nav>
+        <Nav data-testid="mini-portfolio-navbar">
           {Pages.map(({ title, loggingElementName, key }, index) => {
             if (shouldDisableNFTRoutes && loggingElementName.includes('nft')) return null
             return (
@@ -105,19 +105,14 @@ export default function MiniPortfolio({ account }: { account: string }) {
                 element={loggingElementName}
                 key={index}
               >
-                <NavItem
-                  data-testid={`mini-portfolio-nav-${key}`}
-                  onClick={() => setCurrentPage(index)}
-                  active={currentPage === index}
-                  key={`Mini Portfolio page ${index}`}
-                >
+                <NavItem onClick={() => setCurrentPage(index)} active={currentPage === index} key={key}>
                   {title}
                 </NavItem>
               </TraceEvent>
             )
           })}
         </Nav>
-        <PageWrapper>
+        <PageWrapper data-testid="mini-portfolio-page">
           <Page account={account} />
         </PageWrapper>
       </Wrapper>
