@@ -130,13 +130,14 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
           as="button"
           gap="8"
           className={styles.ChainSelector}
+          data-testid="chain-selector"
           background={isOpen ? 'accentActiveSoft' : 'none'}
           onClick={() => setIsOpen(!isOpen)}
         >
           {!isSupported ? (
             <AlertTriangle size={20} color={theme.textSecondary} />
           ) : (
-            <img src={info.logoUrl} alt={info.label} className={styles.Image} data-testid="chain-selector-logo" />
+            <img src={info.logoUrl} alt={info.label} className={styles.Image} />
           )}
           {isOpen ? <ChevronUp {...chevronProps} /> : <ChevronDown {...chevronProps} />}
         </Row>

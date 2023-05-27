@@ -205,11 +205,13 @@ function Web3StatusInner() {
 
 export default function Web3Status() {
   return (
-    <PrefetchBalancesWrapper>
-      <Web3StatusInner />
-      <Portal>
-        <PortfolioDrawer />
-      </Portal>
-    </PrefetchBalancesWrapper>
+    <div data-testid="web3-status">
+      <PrefetchBalancesWrapper>
+        <Web3StatusInner />
+        <Portal>
+          <PortfolioDrawer />
+        </Portal>
+      </PrefetchBalancesWrapper>
+    </div>
   )
 }
