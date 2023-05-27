@@ -788,7 +788,7 @@ export default function Swap({ className }: { className?: string }) {
 
 
   // console.log("leverageTrade: ", leverageTrade)
-  //console.log("leveragePositions", poolAddress, leverageManagerAddress, leveragePositions)
+  console.log("leverageTrade:", leverageTrade, lmtRouteNotFound, poolAddress, leverageManagerAddress, leveragePositions)
 
   const [debouncedLeverageFactor, onDebouncedLeverageFactor] = useDebouncedChangeHandler(leverageFactor ?? "1", onLeverageFactorChange);
 
@@ -1222,7 +1222,7 @@ export default function Swap({ className }: { className?: string }) {
                           <Trans>Connect Wallet</Trans>
                         </ButtonLight>
                       </TraceEvent>
-                    ) : (lmtRouteNotFound && userHasSpecifiedInputOutput && !lmtRouteIsLoading ? (
+                    ) : ((routeNotFound || lmtRouteNotFound) && userHasSpecifiedInputOutput && !lmtRouteIsLoading ? (
                       <GrayCard style={{ textAlign: 'center' }}>
                         <ThemedText.DeprecatedMain mb="4px">
                           <Trans>Insufficient liquidity for this trade.</Trans>
@@ -1268,9 +1268,12 @@ export default function Swap({ className }: { className?: string }) {
                             txHash: undefined,
                             showLeverageConfirm: true
                           })
-                        }
-                        }
+                        }}
                         id="leverage-button"
+                        disabled={
+                          !!inputError ||
+                          priceImpactTooHigh
+                        }
                       >
                         <Text fontSize={20} fontWeight={600}>
                           {inputError ? (

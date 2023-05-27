@@ -167,6 +167,7 @@ export function useDerivedLeverageCreationInfo()
   const { account } = useWeb3React()
   const [tradeState, setTradeState] = useState<LeverageTradeState>(LeverageTradeState.LOADING)
   const [contractResult, setContractResult] = useState()
+  const [contractError, setContractError] = useState()
 
   const {
     typedValue,
@@ -240,7 +241,7 @@ export function useDerivedLeverageCreationInfo()
         leverageManager.callStatic.liquidityManager()
       } catch (err) {
         setTradeState(LeverageTradeState.NO_ROUTE_FOUND)
-        console.log("error", err)
+        console.log("no route found", err)
         return
       }
     }
@@ -255,6 +256,8 @@ export function useDerivedLeverageCreationInfo()
         let input = new BN((debouncedAmount.toFixed()))
         let borrowAmount = input.multipliedBy((Number(leverageFactor) - 1))
 
+        console.log("input: ", input.toFixed(), borrowAmount.toFixed(0))
+
         const trade = await leverageManager.callStatic.addPosition(
           input.shiftedBy(inputCurrency?.wrapped.decimals).toFixed(0),
           new BN(allowedSlippage.toFixed(4)).plus(1).shiftedBy(18).toFixed(0),
@@ -265,7 +268,8 @@ export function useDerivedLeverageCreationInfo()
 
         setContractResult(trade)
       } catch (err) {
-        console.log("simulation error: ", err)
+        console.log("simulation error: ", err, err.message)
+        setContractError(err.message)
         setTradeState(LeverageTradeState.INVALID)
       }
     } else {
@@ -351,11 +355,15 @@ export function useDerivedLeverageCreationInfo()
     }
 
     if (trade.state === LeverageTradeState.NO_ROUTE_FOUND) {
-      inputError = <Trans>Insufficient Liquidity</Trans>
+      inputError = inputError ?? <Trans>Insufficient Liquidity</Trans>
+    }
+
+    if (trade.state === LeverageTradeState.INVALID) {
+      inputError = inputError ?? <Trans>Invalid Trade</Trans>
     }
 
     return inputError
-  }, [account, allowedSlippage, currencies, currencyBalances, parsedAmount, leverage, leverageFactor, inputCurrency, trade])
+  }, [account, allowedSlippage, currencies, currencyBalances, parsedAmount, leverage, contractError, leverageFactor, inputCurrency, trade])
 
   return {
     trade,
