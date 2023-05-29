@@ -177,19 +177,17 @@ const TvlCell = styled(DataCell)`
 `
 const NameCell = styled(Cell)`
   justify-content: flex-start;
-  padding: 0px 8px;
-  min-width: 150px;
-  gap: 8px;
+  padding-right: 8px;
 `
 const PriceCell = styled(DataCell)`
   width: 100%;
-  padding-right: 8px;
   justify-content: flex-start;
+  padding-right: 8px;
 `
 
 const ActionCell = styled(DataCell)`
-  padding-right: 8px;
   justify-content: flex-start;
+  padding-right: 8px;
 `
 
 const PercentChangeCell = styled(DataCell)`
@@ -520,14 +518,18 @@ export function HeaderRow() {
     <PositionRow
       header={true}
       positionInfo={<ThemedText.TableText>Position</ThemedText.TableText>}
-      value={<HeaderCell category={PositionSortMethod.VALUE} />}
-      collateral={<HeaderCell category={PositionSortMethod.COLLATERAL} />}
-      PnL={<HeaderCell category={PositionSortMethod.PNL} />}
-      entryPrice={<HeaderCell category={PositionSortMethod.ENTRYPRICE} />}
-      remainingPremium={<HeaderCell category={PositionSortMethod.REMAINING} />}
-      // recentPremium={<HeaderCell category={PositionSortMethod.RECENT_PREMIUM} />}
-      // unusedPremium={<HeaderCell category={PositionSortMethod.UNUSED_PREMIUM} />}
-      repaymentTime={<HeaderCell category={PositionSortMethod.REPAYTIME} />}
+      value={<ThemedText.TableText>Net Value</ThemedText.TableText>}
+      collateral={<ThemedText.TableText>Collateral</ThemedText.TableText>}
+      repaymentTime={<ThemedText.TableText>Time Left</ThemedText.TableText>}
+      remainingPremium={<ThemedText.TableText>Prem. Left</ThemedText.TableText>}
+      entryPrice={<ThemedText.TableText>Entry Price</ThemedText.TableText>}
+      PnL={<ThemedText.TableText>Profit/Loss</ThemedText.TableText>}
+      // value={<HeaderCell category={PositionSortMethod.VALUE} />}
+      // collateral={<HeaderCell category={PositionSortMethod.COLLATERAL} />}
+      // PnL={<HeaderCell category={PositionSortMethod.PNL} />}
+      // entryPrice={<HeaderCell category={PositionSortMethod.ENTRYPRICE} />}
+      // remainingPremium={<HeaderCell category={PositionSortMethod.REMAINING} />}
+      // repaymentTime={<HeaderCell category={PositionSortMethod.REPAYTIME} />}
     />
   )
 }
