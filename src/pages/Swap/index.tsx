@@ -748,6 +748,7 @@ export default function Swap({ className }: { className?: string }) {
   const showPriceImpactWarning = largerPriceImpact && priceImpactSeverity > 3
 
   const [sliderLeverageFactor, setSliderLeverageFactor] = useDebouncedChangeHandler(leverageFactor ?? "1", onLeverageFactorChange)
+  const [isTrade, setIsTrade] = useState(true); 
 
   const { state } = useLocation() as any;
   if (state) {
@@ -866,11 +867,13 @@ export default function Swap({ className }: { className?: string }) {
                 <PositionsContainer>
                   <PositionsTable positions={leveragePositions} loading={leveragePositionsLoading} />
                 </PositionsContainer>
+                <PositionsContainer>
+                </PositionsContainer>
 
               </LeftContainer>
 
               <SwapWrapper chainId={chainId} className={className} id="swap-page">
-                <SwapHeader allowedSlippage={allowedSlippage} />
+                <SwapHeader allowedSlippage={allowedSlippage} action = {isTrade} setAction = {setIsTrade}  />
                 {leverage ? (
                   <LeverageConfirmModal
                     isOpen={showLeverageConfirm}
@@ -908,7 +911,57 @@ export default function Swap({ className }: { className?: string }) {
                     fiatValueOutput={fiatValueTradeOutput}
                   />
                 )}
-
+                {!isTrade? 
+                  (<div style={{ display: 'relative' }}>
+                  <InputSection leverage={leverage}>
+                    <Trace section={InterfaceSectionName.CURRENCY_INPUT_PANEL}>
+                      <SwapCurrencyInputPanel
+                        label={
+                          independentField === Field.OUTPUT && !showWrap ? (
+                            <Trans>From (at most)</Trans>
+                          ) : (
+                            <Trans>From</Trans>
+                          )
+                        }
+                        value={formattedAmounts[Field.INPUT]}
+                        showMaxButton={showMaxButton}
+                        currency={currencies[Field.INPUT] ?? null}
+                        onUserInput={handleTypeInput}
+                        onMax={handleMaxInput}
+                        fiatValue={fiatValueInput}
+                        onCurrencySelect={handleInputSelect}
+                        otherCurrency={currencies[Field.OUTPUT]}
+                        showCommonBases={true}
+                        id={InterfaceSectionName.CURRENCY_INPUT_PANEL}
+                        loading={independentField === Field.OUTPUT && routeIsSyncing}
+                        isInput={true}
+                        isTrade = {false}
+                      />
+                    </Trace>
+                  </InputSection>
+              
+                  <ArrowWrapper clickable={isSupportedChain(chainId)}>
+                    <TraceEvent
+                      events={[BrowserEvent.onClick]}
+                      name={SwapEventName.SWAP_TOKENS_REVERSED}
+                      element={InterfaceElementName.SWAP_TOKENS_REVERSE_ARROW_BUTTON}
+                    >
+                      <ArrowContainer
+                        onClick={() => {
+                          onSwitchTokens()
+                        }}
+                        color={theme.textPrimary}
+                      >
+                        <ArrowDown
+                          size="16"
+                          color={
+                            currencies[Field.INPUT] && currencies[Field.OUTPUT] ? theme.textPrimary : theme.textTertiary
+                          }
+                        />
+                      </ArrowContainer>
+                    </TraceEvent>
+                  </ArrowWrapper>
+                </div>): 
                 <div style={{ display: 'relative' }}>
                   <InputSection leverage={leverage}>
                     <Trace section={InterfaceSectionName.CURRENCY_INPUT_PANEL}>
@@ -984,6 +1037,9 @@ export default function Swap({ className }: { className?: string }) {
                     </TraceEvent>
                   </ArrowWrapper>
                 </div>
+                 }
+
+
                 <div>
                   <div>
                     <OutputSwapSection showDetailsDropdown={showDetailsDropdown}>
@@ -1021,6 +1077,7 @@ export default function Swap({ className }: { className?: string }) {
                           isInput={false}
                           isLevered={leverage}
                           disabled={leverage}
+                          isTrade = {isTrade}
                         />
                       </Trace>
 
@@ -1043,7 +1100,7 @@ export default function Swap({ className }: { className?: string }) {
                         <AutoColumn gap="md">
                           <RowBetween>
                             <ThemedText.DeprecatedMain fontWeight={400}>
-                              <Trans>Leverage</Trans>
+                              <Trans>{isTrade?"Leverage": "LTV"}</Trans>
                             </ThemedText.DeprecatedMain>
                             <Checkbox hovered={false} checked={leverage} onClick={() => {
                               onLeverageChange(!leverage)
@@ -1073,7 +1130,7 @@ export default function Swap({ className }: { className?: string }) {
                                     disabled={false}
                                   />
                                 </LeverageInputSection>
-                                <AutoRow gap="4px" justify="flex-end">
+                                {isTrade? (<AutoRow gap="4px" justify="flex-end">
                                   <SmallMaxButton onClick={() => onLeverageFactorChange("10")} width="20%">
                                     <Trans>10</Trans>
                                   </SmallMaxButton>
@@ -1083,17 +1140,40 @@ export default function Swap({ className }: { className?: string }) {
                                   <SmallMaxButton onClick={() => onLeverageFactorChange("1000")} width="20%">
                                     <Trans>1000</Trans>
                                   </SmallMaxButton>
-                                </AutoRow>
+                                </AutoRow>)
+                                : (<AutoRow gap="4px" justify="flex-end">
+                                  <SmallMaxButton onClick={() => onLeverageFactorChange("10")} width="20%">
+                                    <Trans>50%</Trans>
+                                  </SmallMaxButton>
+                                  <SmallMaxButton onClick={() => onLeverageFactorChange("100")} width="20%">
+                                    <Trans>70%</Trans>
+                                  </SmallMaxButton>
+                                  <SmallMaxButton onClick={() => onLeverageFactorChange("10")} width="20%">
+                                    <Trans>90%</Trans>
+                                  </SmallMaxButton>                        
+                                  <SmallMaxButton onClick={() => onLeverageFactorChange("1000")} width="20%">
+                                    <Trans>99%</Trans>
+                                  </SmallMaxButton>
+                                </AutoRow>)}
                               </RowBetween>
-                              <Slider
+                              {isTrade ?(<Slider
                                 value={sliderLeverageFactor === "" ? 1.0 : parseFloat(sliderLeverageFactor)}
                                 onChange={(val) => setSliderLeverageFactor(val.toString())}
                                 min={1.0}
                                 max={1000.0}
                                 step={1}
                                 float={true}
-                              />
-                            </>
+                              />) : 
+                               (<Slider
+                                value={sliderLeverageFactor === "" ? 1.0 : parseFloat(sliderLeverageFactor)}
+                                onChange={(val) => setSliderLeverageFactor(val.toString())}
+                                min={0}
+                                max={99.9}
+                                step={0.1}
+                                float={true}
+                              />)
+                             }
+                            </> 
                           )}
                         </AutoColumn>
                       </LightCard>
