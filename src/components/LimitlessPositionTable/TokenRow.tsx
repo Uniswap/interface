@@ -47,6 +47,7 @@ import { MaxButton } from 'pages/Pool/styleds'
 import { usePool } from 'hooks/usePools'
 import { Fraction, Price } from '@uniswap/sdk-core'
 import { DEFAULT_ERC20_DECIMALS } from 'constants/tokens'
+import { formatSymbol } from 'lib/utils/formatSymbol'
 
 const Cell = styled.div`
   display: flex;
@@ -71,8 +72,8 @@ const StyledTokenRow = styled.div<{
     padding-top: ${first ? '8px' : '0px'};
     padding-bottom: ${last ? '8px' : '0px'};
   `}
-  padding-left: 12px;
-  padding-right: 12px;
+  padding-left: 8px;
+  padding-right: 8px;
   transition: ${({
   theme: {
     transition: { duration, timing },
@@ -187,7 +188,7 @@ const PriceCell = styled(DataCell)`
 
 const ActionCell = styled(DataCell)`
   justify-content: flex-start;
-  padding-right: 8px;
+  min-width: 60px;
 `
 
 const PercentChangeCell = styled(DataCell)`
@@ -657,9 +658,9 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
 
   const [inputCurrencySymbol, outputCurrencySymbol] = useMemo(() => {
     if (position.isToken0) {
-      return [token1?.symbol, token0?.symbol]
+      return [formatSymbol(token1?.symbol), formatSymbol(token0?.symbol)]
     } else {
-      return [token0?.symbol, token1?.symbol]
+      return [formatSymbol(token0?.symbol), formatSymbol(token1?.symbol)]
     }
   }, [
     token0,
@@ -685,7 +686,6 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
           positionInfo={
             <ClickableContent>
               <RowBetween>
-                {/* <DoubleCurrencyLogo margin={true} size={30} currency0={token0 ?? undefined} currency1={token1 ?? undefined} /> */}
                 <PositionInfo>
                   <ThemedText.TableText margin="0" padding="0">
                     <GreenText> x{formatNumber(leverageFactor)}</GreenText> {outputCurrencySymbol}
