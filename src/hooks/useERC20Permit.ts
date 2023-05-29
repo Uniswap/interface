@@ -243,20 +243,20 @@ function useERC20Permit(
       },
     }
   }, [
-    currencyAmount,
-    eip2612Contract,
     account,
     chainId,
+    currencyAmount,
+    eip2612Contract,
     isArgentWallet,
-    transactionDeadline,
     library,
-    tokenNonceState.loading,
-    tokenNonceState.valid,
-    tokenNonceState.result,
-    tokenAddress,
-    spender,
     permitInfo,
     signatureData,
+    spender,
+    tokenAddress,
+    tokenNonceState.loading,
+    tokenNonceState.result,
+    tokenNonceState.valid,
+    transactionDeadline,
   ])
 }
 

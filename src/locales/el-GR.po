@@ -420,7 +420,7 @@ msgstr "Ακυρώθηκε"
 msgid "Canceling the trade will withdraw available amounts for you."
 msgstr "Η ακύρωση του εμπορίου θα αποσύρει τα διαθέσιμα ποσά για εσάς."
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Cancelled:"
 msgstr "Ακυρώθηκε:"
 
@@ -516,7 +516,7 @@ msgstr "Κλείσιμο"
 msgid "Closed"
 msgstr "Κλειστό"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Closed:"
 msgstr "Κλειστό:"
 
@@ -545,7 +545,7 @@ msgstr "Συλλέχθηκαν"
 msgid "Collected {0} {1}{2} and {3} {4}{5}"
 msgstr "Συλλέγονται {0} {1} {2} και {3} {4} {5}"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Collected:"
 msgstr "Συγκεντρωμένος:"
 
@@ -1040,7 +1040,7 @@ msgstr "Εισαγωγή Δεξαμενής της V2"
 msgid "Import at your own risk"
 msgstr "Εισαγωγή με δική σας ευθύνη"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "In Range"
 msgstr "Στο Range"
 
@@ -1140,11 +1140,11 @@ msgstr "Περιορίζεις παραγγελίες"
 msgid "Limit Price"
 msgstr "Οριακή τιμή"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Limit price (USD):"
 msgstr "Όριο τιμή (USD):"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Limit price:"
 msgstr "Όριο τιμή:"
 
@@ -1346,7 +1346,7 @@ msgstr "Ωχ! Προέκυψε ένα άγνωστο σφάλμα. Παρακα�
 msgid "Open Orders"
 msgstr "Ανοιχτές Παραγγελίες"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Opened:"
 msgstr "Άνοιξε:"
 
@@ -1395,7 +1395,7 @@ msgid "Participating pools"
 msgstr "Συμμετέχουσες δεξαμενές"
 
 #: src/components/Badge/RangeBadge.tsx
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 #: src/pages/Vote/styled.tsx
 msgid "Pending"
 msgstr "εκκρεμής"
@@ -1503,7 +1503,7 @@ msgid "Price:"
 msgstr "Τιμή:"
 
 #: src/components/Badge/RangeBadge.tsx
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Processed"
 msgstr "Επεξεργασμένος"
 
@@ -1693,7 +1693,7 @@ msgstr "Το Stating Krom θα επιτρέψει στο σύστημα να ε�
 msgid "Status"
 msgstr "Κατάσταση"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Status:"
 msgstr "Κατάσταση:"
 
@@ -2498,12 +2498,12 @@ msgstr "μέσω {0} λίστας μάρκας"
 msgid "{0, plural, one {Import token} other {Import tokens}}"
 msgstr "{0, plural, one {Εισαγωγή διακριτικού} other {Εισαγωγή διακριτικών}}"
 
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 #: src/components/NetworkAlert/NetworkAlert.tsx
 #: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx
@@ -2588,11 +2588,11 @@ msgstr "{0} sKrom / εβδομάδα"
 msgid "{0} tokens"
 msgstr "{0} μάρκες"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "{0} {1}"
 msgstr "{0} {1}"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "{0} {1} + {2} {3}"
 msgstr "{0} {1} + {2} {3}"
 

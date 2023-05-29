@@ -420,7 +420,7 @@ msgstr "Zrušeno"
 msgid "Canceling the trade will withdraw available amounts for you."
 msgstr "Zrušením obchodu pro vás budou staženy dostupné částky."
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Cancelled:"
 msgstr "Zrušeno:"
 
@@ -516,7 +516,7 @@ msgstr "Zavřít"
 msgid "Closed"
 msgstr "Zavřeno"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Closed:"
 msgstr "ZAVŘENO:"
 
@@ -545,7 +545,7 @@ msgstr "Vybráno"
 msgid "Collected {0} {1}{2} and {3} {4}{5}"
 msgstr "Shromážděno {0} {1}{2} a {3} {4}{5}"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Collected:"
 msgstr "Shromážděno:"
 
@@ -1040,7 +1040,7 @@ msgstr "Importovat fond V2"
 msgid "Import at your own risk"
 msgstr "Importovat na vlastní riziko"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "In Range"
 msgstr "V dosahu"
 
@@ -1140,11 +1140,11 @@ msgstr "Limitní objednávky"
 msgid "Limit Price"
 msgstr "Limitní cena"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Limit price (USD):"
 msgstr "Limitní cena (USD):"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Limit price:"
 msgstr "Limitní cena:"
 
@@ -1346,7 +1346,7 @@ msgstr "Jejda! Došlo k neznámé chybě. Obnovte prosím stránku nebo ji navš
 msgid "Open Orders"
 msgstr "Otevřené objednávky"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Opened:"
 msgstr "Otevřeno:"
 
@@ -1395,7 +1395,7 @@ msgid "Participating pools"
 msgstr "Zúčastněné fondy"
 
 #: src/components/Badge/RangeBadge.tsx
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 #: src/pages/Vote/styled.tsx
 msgid "Pending"
 msgstr "čekající"
@@ -1503,7 +1503,7 @@ msgid "Price:"
 msgstr "Cena:"
 
 #: src/components/Badge/RangeBadge.tsx
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Processed"
 msgstr "Zpracováno"
 
@@ -1693,7 +1693,7 @@ msgstr "Staking KROM umožní systému automaticky zpracovávat obchody"
 msgid "Status"
 msgstr "Postavení"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Status:"
 msgstr "Postavení:"
 
@@ -2498,12 +2498,12 @@ msgstr "prostřednictvím seznamu žetonů {0}"
 msgid "{0, plural, one {Import token} other {Import tokens}}"
 msgstr "{0, plural, one {Importovat žeton} other {Importovat žetony}}"
 
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 #: src/components/NetworkAlert/NetworkAlert.tsx
 #: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx
@@ -2588,11 +2588,11 @@ msgstr "{0} sKrom / týden"
 msgid "{0} tokens"
 msgstr "{0} žetonů"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "{0} {1}"
 msgstr "{0} {1}"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "{0} {1} + {2} {3}"
 msgstr "{0} {1} + {2} {3}"
 

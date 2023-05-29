@@ -25,12 +25,10 @@ const ActiveDot = styled.span`
 `
 
 export default function RangeBadge({
-  removed,
   inRange,
   closed,
   isUnderfunded,
 }: {
-  removed: boolean | undefined
   inRange: boolean | undefined
   closed: boolean | undefined
   isUnderfunded: boolean | undefined

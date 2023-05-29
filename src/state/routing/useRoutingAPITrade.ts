@@ -123,7 +123,7 @@ export function useInchQuoteAPITrade(
       tradeType === TradeType.EXACT_INPUT
         ? [amountSpecified?.currency, otherCurrency]
         : [otherCurrency, amountSpecified?.currency],
-    [amountSpecified, otherCurrency, tradeType]
+    [amountSpecified?.currency, otherCurrency, tradeType]
   )
 
   const { chainId, account } = useActiveWeb3React()
@@ -243,16 +243,16 @@ export function useInchQuoteAPITrade(
       }
     }
   }, [
-    currencyIn,
-    currencyOut,
-    isLoading,
-    data,
-    tradeType,
-    isError,
-    routes,
-    queryArgs,
     account,
     chainId,
+    currencyIn,
+    currencyOut,
+    data,
     gasUseEstimateUSD,
+    isError,
+    isLoading,
+    queryArgs,
+    routes,
+    tradeType,
   ])
 }

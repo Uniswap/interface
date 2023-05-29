@@ -420,7 +420,7 @@ msgstr "מבוטל"
 msgid "Canceling the trade will withdraw available amounts for you."
 msgstr "ביטול העסקה ימשוך עבורך סכומים זמינים."
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Cancelled:"
 msgstr "מבוטל:"
 
@@ -516,7 +516,7 @@ msgstr "סגור"
 msgid "Closed"
 msgstr "סָגוּר"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Closed:"
 msgstr "סָגוּר:"
 
@@ -545,7 +545,7 @@ msgstr "נגבה"
 msgid "Collected {0} {1}{2} and {3} {4}{5}"
 msgstr "נאספו {0} {1}{2} ו-{3} {4}{5}"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Collected:"
 msgstr "נאסף:"
 
@@ -1040,7 +1040,7 @@ msgstr "יְיבוּא בריכת V2"
 msgid "Import at your own risk"
 msgstr "ייבא על אחריותך בלבד"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "In Range"
 msgstr "בטווח"
 
@@ -1140,11 +1140,11 @@ msgstr "הזמנות מוגבלות"
 msgid "Limit Price"
 msgstr "מחיר הגבלה"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Limit price (USD):"
 msgstr "מחיר הגבלה (דולר ארה\"ב):"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Limit price:"
 msgstr "מחיר מוגבל:"
 
@@ -1346,7 +1346,7 @@ msgstr "אופס! אירעה שגיאה לא ידועה. אנא רענן את ה
 msgid "Open Orders"
 msgstr "הזמנות פתוחות"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Opened:"
 msgstr "נפתח:"
 
@@ -1395,7 +1395,7 @@ msgid "Participating pools"
 msgstr "בריכות המשתתפות"
 
 #: src/components/Badge/RangeBadge.tsx
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 #: src/pages/Vote/styled.tsx
 msgid "Pending"
 msgstr "ממתין ל"
@@ -1503,7 +1503,7 @@ msgid "Price:"
 msgstr "מחיר:"
 
 #: src/components/Badge/RangeBadge.tsx
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Processed"
 msgstr "מעובד"
 
@@ -1693,7 +1693,7 @@ msgstr "Staking KROM יאפשר למערכת לעבד עסקאות באופן א
 msgid "Status"
 msgstr "סטָטוּס"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Status:"
 msgstr "סטָטוּס:"
 
@@ -2498,12 +2498,12 @@ msgstr "דרך רשימת אסימונים {0}"
 msgid "{0, plural, one {Import token} other {Import tokens}}"
 msgstr "{0, plural, one {ייבוא אסימון} other {ייבא אסימונים}}"
 
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 #: src/components/NetworkAlert/NetworkAlert.tsx
 #: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx
@@ -2588,11 +2588,11 @@ msgstr "{0} סקרום לשבוע"
 msgid "{0} tokens"
 msgstr "{0} אסימונים"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "{0} {1}"
 msgstr "{0} {1}"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "{0} {1} + {2} {3}"
 msgstr "{0} {1} + {2} {3}"
 

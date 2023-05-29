@@ -3,9 +3,6 @@ import { Currency, CurrencyAmount, Price, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { LoadingRows } from 'components/Loader/styled'
-import { useContext } from 'react'
-import { useNetworkGasPrice } from 'state/user/hooks'
-import { ThemeContext } from 'styled-components/macro'
 
 import { TYPE } from '../../theme'
 import { AutoColumn } from '../Column'
@@ -45,10 +42,6 @@ export function AdvancedSwapDetails({
   priceAmount,
   syncing = false,
 }: AdvancedSwapDetailsProps) {
-  const theme = useContext(ThemeContext)
-
-  const gasAmount = useNetworkGasPrice()
-
   return trade && priceAmount ? (
     <AutoColumn gap="8px">
       <TransactionDetailsLabel fontWeight={400} fontSize={14}>
@@ -66,7 +59,6 @@ export function AdvancedSwapDetails({
           </TYPE.darkGray>
         </TextWithLoadingPlaceholder>
       </RowBetween>
-
       <RowBetween>
         <RowFixed>
           <TYPE.darkGray fontSize={14}>

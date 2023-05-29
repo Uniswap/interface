@@ -6,7 +6,6 @@ import { RowFixed } from 'components/Row'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { KROM, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { usePool } from 'hooks/usePools'
-import useTheme from 'hooks/useTheme'
 import { useV3PositionFees } from 'hooks/useV3PositionFees'
 import JSBI from 'jsbi'
 import { useEffect, useState } from 'react'
@@ -122,7 +121,6 @@ const Spinner = styled.div<{ warning: boolean }>`
 export default function Polling() {
   const { chainId } = useActiveWeb3React()
   const blockNumber = useBlockNumber()
-  const theme = useTheme()
 
   const ethGasPrice = useNetworkGasPrice()
   const priceGwei = ethGasPrice ? ethGasPrice.multiply(JSBI.BigInt(1000000000)) : undefined
@@ -152,7 +150,7 @@ export default function Polling() {
   const eth = chainId ? WETH9[chainId] : undefined
   const nativeToken = chainId ? WRAPPED_NATIVE_CURRENCY[chainId] : undefined
   const [, pool] = usePool(kromToken, eth, FeeAmount.MEDIUM)
-  const [feeValue0, feeValue1] = useV3PositionFees(pool ?? undefined, BigNumber.from('154097'), false)
+  const [feeValue0] = useV3PositionFees(pool ?? undefined, BigNumber.from('154097'), false)
   const { networkType, explorer } = CHAIN_INFO[chainId ?? SupportedChainId.MAINNET]
   const gasTracker = networkType === NetworkType.L1 ? explorer + 'gasTracker' : explorer
 

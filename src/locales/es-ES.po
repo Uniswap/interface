@@ -420,7 +420,7 @@ msgstr "Cancelado"
 msgid "Canceling the trade will withdraw available amounts for you."
 msgstr "Nuligi la komercon retiros disponeblajn kvantojn por vi."
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Cancelled:"
 msgstr "Nuligite:"
 
@@ -516,7 +516,7 @@ msgstr "Cerrar"
 msgid "Closed"
 msgstr "Cerrado"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Closed:"
 msgstr "Fermita:"
 
@@ -545,7 +545,7 @@ msgstr "Recogido"
 msgid "Collected {0} {1}{2} and {3} {4}{5}"
 msgstr "Kolektis {0} {1}{2} kaj {3} {4}{5}"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Collected:"
 msgstr "Recogida:"
 
@@ -1040,7 +1040,7 @@ msgstr "Importar grupo V2"
 msgid "Import at your own risk"
 msgstr "Importar bajo su propio riesgo"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "In Range"
 msgstr "En el rango"
 
@@ -1140,11 +1140,11 @@ msgstr "Limigaj Ordoj"
 msgid "Limit Price"
 msgstr "Precio límite"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Limit price (USD):"
 msgstr "Limprezo (USD):"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Limit price:"
 msgstr "Limiga prezo:"
 
@@ -1346,7 +1346,7 @@ msgstr "¡Ups! Se ha producido un error desconocido. Actualice la página o acce
 msgid "Open Orders"
 msgstr "Ordenes abiertas"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Opened:"
 msgstr "Malfermita:"
 
@@ -1395,7 +1395,7 @@ msgid "Participating pools"
 msgstr "Fondos comunes que participan"
 
 #: src/components/Badge/RangeBadge.tsx
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 #: src/pages/Vote/styled.tsx
 msgid "Pending"
 msgstr "Pendiente"
@@ -1503,7 +1503,7 @@ msgid "Price:"
 msgstr "Precio:"
 
 #: src/components/Badge/RangeBadge.tsx
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Processed"
 msgstr "Prilaborita"
 
@@ -1693,7 +1693,7 @@ msgstr "Staking KROM permesos al la sistemo aŭtomate prilabori komercojn"
 msgid "Status"
 msgstr "Estado"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Status:"
 msgstr "Statuso:"
 
@@ -2498,12 +2498,12 @@ msgstr "a través de la lista de fichas {0}"
 msgid "{0, plural, one {Import token} other {Import tokens}}"
 msgstr "{0, plural, one {Importar token} other {Importa tokens}}"
 
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 #: src/components/NetworkAlert/NetworkAlert.tsx
 #: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx
@@ -2588,11 +2588,11 @@ msgstr "{0} sKrom / semajno"
 msgid "{0} tokens"
 msgstr "{0} tokens"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "{0} {1}"
 msgstr "{0} {1}"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "{0} {1} + {2} {3}"
 msgstr "{0} {1} + {2} {3}"
 

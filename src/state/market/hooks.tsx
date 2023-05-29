@@ -25,7 +25,7 @@ import { useActiveWeb3React } from '../../hooks/web3'
 import { isAddress } from '../../utils'
 import { AppState } from '../index'
 import { useCurrencyBalances } from '../wallet/hooks'
-import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies, typeInput } from './actions'
+import { Field, replaceMarketState, selectCurrency, setRecipient, switchCurrencies, typeInput } from './actions'
 import { MarketState } from './reducer'
 
 export function useMarketState(): AppState['market'] {
@@ -383,7 +383,7 @@ export function useDefaultsFromURLSearch():
     const outputCurrencyId = parsed[Field.OUTPUT].currencyId ?? undefined
 
     dispatch(
-      replaceSwapState({
+      replaceMarketState({
         typedValue: parsed.typedValue,
         field: parsed.independentField,
         inputCurrencyId,

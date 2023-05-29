@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { darken } from 'polished'
-import React, { ReactNode, useEffect, useState } from 'react'
+import { ReactNode, useEffect, useState } from 'react'
 import { ArrowDownCircle, ArrowLeft } from 'react-feather'
 import { Text } from 'rebass'
 import styled from 'styled-components/macro'
@@ -37,7 +37,7 @@ const CollapsibleToggler = styled(BaseButton)<{ isOpen: boolean }>`
   }
 `
 
-const CollapsibleContentContainer = styled.div<{ isOpen: boolean }>`
+const CollapsibleContent = styled.div<{ isOpen: boolean }>`
   display: ${({ isOpen }) => (isOpen ? 'block' : 'none')};
   background-color: ${({ theme }) => theme.bg1};
   position: relative;
@@ -100,7 +100,7 @@ export default function Collapsible({ label, children, initState = false }: Coll
           <ArrowLeft />
         </StyledArrow>
       </CollapsibleToggler>
-      <CollapsibleContentContainer isOpen={isOpen}>{children}</CollapsibleContentContainer>
+      <CollapsibleContent isOpen={isOpen}>{children}</CollapsibleContent>
     </CollapsibleContainer>
   )
 }

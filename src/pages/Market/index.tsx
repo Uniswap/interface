@@ -1,4 +1,3 @@
-import { Skeleton } from '@chakra-ui/react'
 // eslint-disable-next-line no-restricted-imports
 import { t, Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
@@ -16,7 +15,7 @@ import { SupportedChainId } from 'constants/chains'
 import { CHAIN_NATIVE_TOKEN_SYMBOL, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { useMarketCallback } from 'hooks/useMarketCallback'
 import JSBI from 'jsbi'
-import React, { Suspense, useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { ArrowDown, CheckCircle, HelpCircle, Info } from 'react-feather'
 import ReactGA from 'react-ga'
 import { RouteComponentProps } from 'react-router-dom'
@@ -28,6 +27,7 @@ import { shortenAddress } from 'utils'
 
 import AddressInputPanel from '../../components/AddressInputPanel'
 import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
+import CandleSticks from '../../components/CandleSticks'
 import { GreyCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
@@ -56,16 +56,15 @@ import useWrapCallback, { WrapType } from '../../hooks/useWrapCallback'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { Field } from '../../state/market/actions'
-import { useDefaultsFromURLSearch, usePoolAddress } from '../../state/swap/hooks'
-import { useDarkModeManager, useExpertModeManager, useIsGaslessMode } from '../../state/user/hooks'
+import { useDefaultsFromURLSearch } from '../../state/market/hooks'
+import { usePoolAddress } from '../../state/swap/hooks'
+import { useExpertModeManager, useIsGaslessMode } from '../../state/user/hooks'
 import { LinkStyledButton, TYPE } from '../../theme'
 import { computeFiatValuePriceImpact } from '../../utils/computeFiatValuePriceImpact'
 import { getTradeVersion } from '../../utils/getTradeVersion'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { warningSeverity } from '../../utils/prices'
 import AppBody from '../AppBody'
-
-const MemoizedCandleSticks = React.lazy(() => import('../../components/CandleSticks'))
 
 const WarningTitle = styled.div`
   width: 95%;
@@ -95,7 +94,7 @@ const PriceImpactWarning = styled.div`
   justify-content: center;
 `
 
-const RefferalStylePro = styled.div`
+const ReferralStylePro = styled.div`
   margin: 5px 0px;
   width: 100%;
   display: flex;
@@ -103,17 +102,21 @@ const RefferalStylePro = styled.div`
   vertical-align: middle;
 `
 
-const RefferalStyle = styled.div`
-  margin: 10px 10px;
-  width: 100%;
+const ReferralStyle = styled.div`
   display: flex;
+  align-items: center;
   justify-content: center;
   height: 100%;
-  vertical-align: middle;
+  width: 100%;
 `
 
-const ReferralElement2 = styled.div`
-  margin-left: 10px;
+const ReferralContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  justify-content: center;
+  padding: 8px;
+  width: 100%;
 `
 
 const ReferralElement1 = styled.div`
@@ -122,16 +125,10 @@ const ReferralElement1 = styled.div`
   justify-content: center;
 `
 
-const ReferralContainer = styled.div`
+const ReferralElement2 = styled.div`
   display: flex;
-  flex-direction: row;
-  align-content: center;
-
-  padding-top: 20px;
-  padding-bottom: 20px;
-  padding-left: 20px;
-  padding-right: 5px;
-  vertical-align: middle;
+  align-items: center;
+  justify-content: center;
 `
 
 const NoWalletStyle = styled.div`
@@ -241,11 +238,10 @@ const FlexItem = styled.div`
 export default function Market({ history }: RouteComponentProps) {
   const { chainId, account } = useActiveWeb3React()
   const loadedUrlParams = useDefaultsFromURLSearch()
-  const [expertMode, toggleExpertMode] = useExpertModeManager()
+  const [expertMode] = useExpertModeManager()
   const [priceImpactAccepted, setPriceImpactAccepted] = useState(false)
   const [feeImpactAccepted, setFeeImpactAccepted] = useState(false)
-  const refEnabled = false
-
+  const refEnabled = false //process.env.REACT_APP_REFERRAL_ENABLED
   // token warning stuff
   const [loadedInputCurrency, loadedOutputCurrency] = [
     useCurrency(loadedUrlParams?.inputCurrencyId),
@@ -326,7 +322,7 @@ export default function Market({ history }: RouteComponentProps) {
   })
 
   const {
-    v2Trade: { state: v3TradeState, tx: swapTransaction, savings: uniSavings },
+    v2Trade: { state: v3TradeState, tx: swapTransaction },
     bestTrade: trade,
     allowedSlippage,
     currencyBalances,
@@ -359,8 +355,6 @@ export default function Market({ history }: RouteComponentProps) {
   const showWrap: boolean = wrapType !== WrapType.NOT_APPLICABLE
   const { address: recipientAddress } = useENSAddress(recipient)
 
-  const [darkMode] = useDarkModeManager()
-
   const parsedAmounts = useMemo(
     () =>
       showWrap
@@ -372,7 +366,7 @@ export default function Market({ history }: RouteComponentProps) {
             [Field.INPUT]: independentField === Field.INPUT ? parsedAmount : trade?.inputAmount,
             [Field.OUTPUT]: independentField === Field.OUTPUT ? parsedAmount : trade?.outputAmount,
           },
-    [independentField, parsedAmount, showWrap, trade]
+    [independentField, parsedAmount, showWrap, trade?.inputAmount, trade?.outputAmount]
   )
 
   const [routeNotFound, routeIsLoading, routeIsSyncing] = useMemo(
@@ -532,16 +526,16 @@ export default function Market({ history }: RouteComponentProps) {
         })
       })
   }, [
-    swapCallback,
+    account,
     priceImpact,
-    tradeToConfirm,
-    showConfirm,
-    signatureData,
-    swapTransaction,
     recipient,
     recipientAddress,
-    account,
+    showConfirm,
+    signatureData,
+    swapCallback,
+    swapTransaction,
     trade,
+    tradeToConfirm,
   ])
 
   // errors
@@ -557,7 +551,7 @@ export default function Market({ history }: RouteComponentProps) {
           : priceImpact
         : executionPriceImpact ?? priceImpact
     )
-  }, [priceImpact, trade])
+  }, [priceImpact, trade?.priceImpact])
 
   const isArgentWallet = useIsArgentWallet()
 
@@ -637,9 +631,7 @@ export default function Market({ history }: RouteComponentProps) {
       <>
         <FlexContainer>
           <FlexItem>
-            <Suspense fallback={<Skeleton height="60px" />}>
-              <MemoizedCandleSticks networkName={networkName} poolAddress={poolAddress} />
-            </Suspense>
+            <CandleSticks networkName={networkName} poolAddress={poolAddress} />
           </FlexItem>
           <FlexItem>
             <StyledSwap>
@@ -1092,9 +1084,8 @@ export default function Market({ history }: RouteComponentProps) {
                 />
               )}
               {refEnabled && (
-                <RefferalStylePro>
+                <ReferralStylePro>
                   <AppBody>
-                    {' '}
                     {account ? (
                       <Trans>
                         <ReferralContainer>
@@ -1146,19 +1137,18 @@ export default function Market({ history }: RouteComponentProps) {
                             </svg>
                           </ReferralElement1>
                           <ReferralElement2>
-                            Earn crypto by sharing the following referral link{' '}
-                            <div>
+                            <Text>
+                              <Trans>Earn crypto by sharing the following referral link </Trans>
                               <StyledCopyButton onClick={handleCopy} id="walletAddress">
                                 {shortenAddress(account)} {copied ? <span>(Copied)</span> : <span>Copy</span>}
                               </StyledCopyButton>
-                            </div>
+                            </Text>
                           </ReferralElement2>
                         </ReferralContainer>
                       </Trans>
                     ) : (
                       <Trans>
                         <NoWalletStyle>
-                          {' '}
                           Connect wallet to generate referral link. How it works ?{' '}
                           <a href="https://docs.kromatika.finance" target="_blank" rel="noreferrer">
                             Read More
@@ -1167,7 +1157,7 @@ export default function Market({ history }: RouteComponentProps) {
                       </Trans>
                     )}
                   </AppBody>
-                </RefferalStylePro>
+                </ReferralStylePro>
               )}
             </StyledSwap>
           </FlexItem>
@@ -1616,7 +1606,7 @@ export default function Market({ history }: RouteComponentProps) {
         />
       )}
       {refEnabled && (
-        <RefferalStyle>
+        <ReferralStyle>
           <AppBody>
             {' '}
             {account ? (
@@ -1670,12 +1660,12 @@ export default function Market({ history }: RouteComponentProps) {
                     </svg>
                   </ReferralElement1>
                   <ReferralElement2>
-                    Earn crypto by sharing the following referral link{' '}
-                    <div>
+                    <Text>
+                      <Trans>Earn crypto by sharing the following referral link </Trans>
                       <StyledCopyButton onClick={handleCopy} id="walletAddress">
                         {shortenAddress(account)} {copied ? <span>(Copied)</span> : <span>Copy</span>}
                       </StyledCopyButton>
-                    </div>
+                    </Text>
                   </ReferralElement2>
                 </ReferralContainer>
               </Trans>
@@ -1691,7 +1681,7 @@ export default function Market({ history }: RouteComponentProps) {
               </Trans>
             )}
           </AppBody>
-        </RefferalStyle>
+        </ReferralStyle>
       )}
     </ClassicModeContainer>
   )

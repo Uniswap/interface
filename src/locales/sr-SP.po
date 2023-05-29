@@ -420,7 +420,7 @@ msgstr "Отказано"
 msgid "Canceling the trade will withdraw available amounts for you."
 msgstr "Отказивање трговине ће повући доступне износе за вас."
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Cancelled:"
 msgstr "Отказано:"
 
@@ -516,7 +516,7 @@ msgstr "Затвори"
 msgid "Closed"
 msgstr "Затворено"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Closed:"
 msgstr "Затворено:"
 
@@ -545,7 +545,7 @@ msgstr "Сакупљено"
 msgid "Collected {0} {1}{2} and {3} {4}{5}"
 msgstr "Прикупљено {0} {1}{2} и {3} {4}{5}"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Collected:"
 msgstr "Прикупљени"
 
@@ -1040,7 +1040,7 @@ msgstr "Увоз V2 фонда"
 msgid "Import at your own risk"
 msgstr "Увозите на сопствени ризик"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "In Range"
 msgstr "У распону"
 
@@ -1140,11 +1140,11 @@ msgstr "Лимит Ордерс"
 msgid "Limit Price"
 msgstr "Лимит Прице"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Limit price (USD):"
 msgstr "Ограничена цена (УСД):"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Limit price:"
 msgstr "Ограничена цена:"
 
@@ -1346,7 +1346,7 @@ msgstr "Упс! Дошло је до непознате грешке. Освеж
 msgid "Open Orders"
 msgstr "Опен Ордерс"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Opened:"
 msgstr "Отворен:"
 
@@ -1395,7 +1395,7 @@ msgid "Participating pools"
 msgstr "Фондови који учествују"
 
 #: src/components/Badge/RangeBadge.tsx
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 #: src/pages/Vote/styled.tsx
 msgid "Pending"
 msgstr "нерешен"
@@ -1503,7 +1503,7 @@ msgid "Price:"
 msgstr "Цена:"
 
 #: src/components/Badge/RangeBadge.tsx
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Processed"
 msgstr "Обрађено"
 
@@ -1693,7 +1693,7 @@ msgstr "Улагање КРОМ-а ће омогућити систему да �
 msgid "Status"
 msgstr "Статус"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Status:"
 msgstr "Статус:"
 
@@ -2498,12 +2498,12 @@ msgstr "преко {0} листе токена"
 msgid "{0, plural, one {Import token} other {Import tokens}}"
 msgstr "{0, plural, one {Import token} other {Import tokens}}"
 
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 #: src/components/NetworkAlert/NetworkAlert.tsx
 #: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx
@@ -2588,11 +2588,11 @@ msgstr "{0} сКром/недеља"
 msgid "{0} tokens"
 msgstr "{0} жетона"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "{0} {1}"
 msgstr "{0} {1}"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "{0} {1} + {2} {3}"
 msgstr "{0} {1} + {2} {3}"
 

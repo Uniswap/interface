@@ -21,7 +21,7 @@ export function useGaslessCallback(): {
       debug: true,
       strictMode: true,
     })
-    return new Promise<Web3Provider>((resolve, reject) => {
+    return new Promise<Web3Provider>((resolve) => {
       biconomy
         .onEvent(biconomy.READY, () => {
           // Initialize your dapp here like getting user accounts etc

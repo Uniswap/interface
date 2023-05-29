@@ -127,16 +127,16 @@ function useMarketCallArguments(
       ],
     }
   }, [
-    trade,
-    recipient,
-    library,
     account,
+    allowedSlippage,
+    argentWalletContract,
     chainId,
     deadline,
+    library,
     parsedAmount,
+    recipient,
     swapTransaction,
-    argentWalletContract,
-    allowedSlippage,
+    trade,
   ])
 }
 
@@ -444,18 +444,18 @@ export function useMarketCallback(
       error: null,
     }
   }, [
-    trade,
-    library,
     account,
-    chainId,
-    swapTransaction,
-    recipient,
-    swapCalls.state,
-    swapCalls.marketcall,
-    recipientAddressOrName,
-    gasless,
-    gaslessCallback,
     addTransaction,
     allowedSlippage,
+    chainId,
+    gasless,
+    gaslessCallback,
+    library,
+    recipient,
+    recipientAddressOrName,
+    swapCalls.marketcall,
+    swapCalls.state,
+    swapTransaction,
+    trade,
   ])
 }

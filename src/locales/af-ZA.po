@@ -420,7 +420,7 @@ msgstr "Gekanselleer"
 msgid "Canceling the trade will withdraw available amounts for you."
 msgstr "Deur die handel te kanselleer, sal beskikbare bedrae vir jou onttrek word."
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Cancelled:"
 msgstr "Gekanselleer:"
 
@@ -516,7 +516,7 @@ msgstr "Naby"
 msgid "Closed"
 msgstr "Gesluit"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Closed:"
 msgstr "Gesluit:"
 
@@ -545,7 +545,7 @@ msgstr "Versamel"
 msgid "Collected {0} {1}{2} and {3} {4}{5}"
 msgstr "Versamel {0} {1}{2} en {3} {4}{5}"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Collected:"
 msgstr "Afgehaal:"
 
@@ -1040,7 +1040,7 @@ msgstr "Voer V2-swembad in"
 msgid "Import at your own risk"
 msgstr "Invoer op eie risiko"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "In Range"
 msgstr "Binne bereik"
 
@@ -1140,11 +1140,11 @@ msgstr "Beperk bestellings"
 msgid "Limit Price"
 msgstr "Beperk prys"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Limit price (USD):"
 msgstr "Beperk prys (USD):"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Limit price:"
 msgstr "Beperk prys:"
 
@@ -1346,7 +1346,7 @@ msgstr "Oeps! 'N Onbekende fout het voorgekom. Verfris die bladsy of besoek 'n a
 msgid "Open Orders"
 msgstr "Oop bestellings"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Opened:"
 msgstr "Oopgemaak:"
 
@@ -1395,7 +1395,7 @@ msgid "Participating pools"
 msgstr "Deelnemende poele"
 
 #: src/components/Badge/RangeBadge.tsx
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 #: src/pages/Vote/styled.tsx
 msgid "Pending"
 msgstr "In afwagting"
@@ -1503,7 +1503,7 @@ msgid "Price:"
 msgstr "Prys:"
 
 #: src/components/Badge/RangeBadge.tsx
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Processed"
 msgstr "Verwerk"
 
@@ -1693,7 +1693,7 @@ msgstr "Deur KROM in te span, sal die stelsel outomaties handel dryf"
 msgid "Status"
 msgstr "Status"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Status:"
 msgstr "Status:"
 
@@ -2498,12 +2498,12 @@ msgstr "via {0} tekenlys"
 msgid "{0, plural, one {Import token} other {Import tokens}}"
 msgstr "{0, plural, one {Invoer token} other {Voer tokens in}}"
 
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 #: src/components/NetworkAlert/NetworkAlert.tsx
 #: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx
@@ -2588,11 +2588,11 @@ msgstr "{0} sKrom / week"
 msgid "{0} tokens"
 msgstr "{0} tekens"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "{0} {1}"
 msgstr "{0} {1}"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "{0} {1} + {2} {3}"
 msgstr "{0} {1} + {2} {3}"
 

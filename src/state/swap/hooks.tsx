@@ -246,7 +246,7 @@ export function useDerivedSwapInfo(): {
 
   const gasAmount = useNetworkGasPrice()
 
-  const [userTickOffset, setUserTickOffset] = useUserTickOffset()
+  const [userTickOffset] = useUserTickOffset()
 
   // get quotes
   const v3Trade = useBestV3Trade(
@@ -412,7 +412,7 @@ export function useDerivedSwapInfo(): {
             .toFixed(0)
         : undefined,
     }),
-    [inputCurrency, outputCurrency, parsedAmounts]
+    [inputCurrency, outputCurrency, parsedAmounts.input, parsedAmounts.output]
   )
 
   return {

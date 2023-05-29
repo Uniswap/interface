@@ -5,14 +5,12 @@ import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { LoadingRows } from 'components/Loader/styled'
 import { SupportedChainId } from 'constants/chains'
 import { useActiveWeb3React } from 'hooks/web3'
-import { useContext, useMemo } from 'react'
-import { Text } from 'rebass'
+import { useContext } from 'react'
 import { useIsGaslessMode } from 'state/user/hooks'
 import { ThemeContext } from 'styled-components/macro'
 
 import { TYPE } from '../../theme'
 import { shortenAddress } from '../../utils'
-import { computeRealizedLPFeePercent } from '../../utils/prices'
 import { AutoColumn } from '../Column'
 import { RowBetween, RowFixed } from '../Row'
 import { TransactionDetailsLabel } from './styleds'
@@ -58,15 +56,6 @@ export function AdvancedMarketDetails({
   const { chainId } = useActiveWeb3React()
   const isGaslessMode =
     useIsGaslessMode() && (chainId == SupportedChainId.POLYGON || chainId == SupportedChainId.ARBITRUM_ONE)
-
-  const { realizedLPFee, priceImpact } = useMemo(() => {
-    if (!trade) return { realizedLPFee: undefined, priceImpact: undefined }
-
-    const realizedLpFeePercent = computeRealizedLPFeePercent(trade)
-    const realizedLPFee = trade.inputAmount.multiply(realizedLpFeePercent)
-    const priceImpact = trade.priceImpact.subtract(realizedLpFeePercent)
-    return { priceImpact, realizedLPFee }
-  }, [trade])
 
   return !trade ? null : (
     <AutoColumn gap="8px">

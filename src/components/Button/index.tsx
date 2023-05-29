@@ -328,6 +328,7 @@ const ButtonConfirmedStyle = styled(BaseButton)`
 export const ButtonErrorStyle = styled(BaseButton)`
   background-color: ${({ theme }) => theme.red1};
   border: 1px solid ${({ theme }) => theme.red1};
+  white-space: break-spaces;
 
   &:focus {
     box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.05, theme.red1)};

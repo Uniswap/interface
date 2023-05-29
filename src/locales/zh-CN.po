@@ -420,7 +420,7 @@ msgstr "已取消"
 msgid "Canceling the trade will withdraw available amounts for you."
 msgstr "取消交易将为您提取可用金额。"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Cancelled:"
 msgstr "取消:"
 
@@ -516,7 +516,7 @@ msgstr "关闭"
 msgid "Closed"
 msgstr "已关闭"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Closed:"
 msgstr "关闭:"
 
@@ -545,7 +545,7 @@ msgstr "已收取"
 msgid "Collected {0} {1}{2} and {3} {4}{5}"
 msgstr "收集了 {0} {1}{2} 和 {3} {4}{5}"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Collected:"
 msgstr "集:"
 
@@ -1040,7 +1040,7 @@ msgstr "导入 V2 流动池"
 msgid "Import at your own risk"
 msgstr "自行承担导入的风险"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "In Range"
 msgstr "在范围内"
 
@@ -1140,11 +1140,11 @@ msgstr "限价单"
 msgid "Limit Price"
 msgstr "限价"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Limit price (USD):"
 msgstr "限价（美元）："
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Limit price:"
 msgstr "限价："
 
@@ -1346,7 +1346,7 @@ msgstr "糟糕！出现未知错误。请刷新页面，或从其他浏览器或
 msgid "Open Orders"
 msgstr "打开订单"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Opened:"
 msgstr "开业:"
 
@@ -1395,7 +1395,7 @@ msgid "Participating pools"
 msgstr "参与的流动池"
 
 #: src/components/Badge/RangeBadge.tsx
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 #: src/pages/Vote/styled.tsx
 msgid "Pending"
 msgstr "待办"
@@ -1503,7 +1503,7 @@ msgid "Price:"
 msgstr "兑换率："
 
 #: src/components/Badge/RangeBadge.tsx
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Processed"
 msgstr "处理"
 
@@ -1693,7 +1693,7 @@ msgstr "质押 KROM 将允许系统自动处理交易"
 msgid "Status"
 msgstr "状态"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Status:"
 msgstr "地位:"
 
@@ -2498,12 +2498,12 @@ msgstr "从 {0} 代币列表"
 msgid "{0, plural, one {Import token} other {Import tokens}}"
 msgstr "{0, plural, one {导入代币} other {导入代币}}"
 
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 #: src/components/NetworkAlert/NetworkAlert.tsx
 #: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx
@@ -2588,11 +2588,11 @@ msgstr "{0} sKrom/周"
 msgid "{0} tokens"
 msgstr "{0} 代币"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "{0} {1}"
 msgstr "{0} {1}"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "{0} {1} + {2} {3}"
 msgstr "{0} {1} + {2} {3}"
 

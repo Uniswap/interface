@@ -11,7 +11,7 @@ import styled, { ThemeContext } from 'styled-components/macro'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import { useModalOpen, useToggleSettingsMenu } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
-import { useClientSideRouter, useGaslessModeManager } from '../../state/user/hooks'
+import { useGaslessModeManager } from '../../state/user/hooks'
 import { TYPE } from '../../theme'
 import { ButtonError } from '../Button'
 import { AutoColumn } from '../Column'
@@ -129,8 +129,6 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
 
   // FIXME enable for Polygon first
   const isGaslessEnabledForNetwork = chainId == SupportedChainId.POLYGON || chainId == SupportedChainId.ARBITRUM_ONE
-
-  const [clientSideRouter, setClientSideRouter] = useClientSideRouter()
 
   // show confirmation view before turning on
   const [showConfirmation, setShowConfirmation] = useState(false)

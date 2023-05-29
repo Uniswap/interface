@@ -20,7 +20,7 @@ export const routingApiKromatika = createApi({
           recipient: string | null | undefined
           slippage: string
           affiliate: string | null
-          affiliateFee: string | null
+          affiliateFee: string | null | undefined
           skipValidation: boolean
           signaturePermitData: string | null | undefined
         }
@@ -45,7 +45,7 @@ export const routingApiKromatika = createApi({
           recipient: string | null | undefined
           slippage: string
           affiliate: string | null
-          affiliateFee: string | null
+          affiliateFee: string | null | undefined
           skipValidation: boolean
           signaturePermitData: string | null | undefined
         }

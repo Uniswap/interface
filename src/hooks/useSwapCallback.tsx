@@ -17,7 +17,7 @@ import { calculateGasMargin } from '../utils/calculateGasMargin'
 import { currencyId } from '../utils/currencyId'
 import isZero from '../utils/isZero'
 import { useArgentWalletContract } from './useArgentWalletContract'
-import { useKromatikaRouter, useLimitOrderManager, useUniswapUtils } from './useContract'
+import { useKromatikaRouter, useLimitOrderManager } from './useContract'
 import useENS from './useENS'
 import { SignatureData } from './useERC20Permit'
 import { useGaslessCallback } from './useGaslessCallback'
@@ -72,18 +72,13 @@ function useSwapCallArguments(
   const { address: recipientAddress } = useENS(recipientAddressOrName)
   const recipient = recipientAddressOrName === null ? account : recipientAddress
   const limitOrderManager = useLimitOrderManager()
-  const uniswapUtils = useUniswapUtils()
   const argentWalletContract = useArgentWalletContract()
 
   const allowedSlippage = useUserSlippageToleranceWithDefault(DEFAULT_REMOVE_LIQUIDITY_SLIPPAGE_TOLERANCE) // custom from users
 
   const priceInfo = useMemo(() => {
     if (!chainId || !priceAmount || !parsedAmount) return undefined
-
-    const value = parsedAmount.currency.isNative ? toHex(parsedAmount.quotient) : toHex('0')
-
     const weth = WRAPPED_NATIVE_CURRENCY[chainId]
-
     const token0: Token = parsedAmount.currency.isToken ? parsedAmount.currency.wrapped : weth
     const token1: Token = priceAmount.quoteCurrency.isToken ? priceAmount.quoteCurrency.wrapped : weth
     let amount0: CurrencyAmount<Currency> = parsedAmount
@@ -245,18 +240,18 @@ function useSwapCallArguments(
       },
     ]
   }, [
-    trade,
-    recipient,
-    library,
     account,
+    argentWalletContract,
     chainId,
+    gasAmount,
+    library,
     limitOrderManager,
     parsedAmount,
     priceAmount,
     priceInfo,
-    gasAmount,
+    recipient,
     signatureData,
-    argentWalletContract,
+    trade,
   ])
 }
 
@@ -568,18 +563,18 @@ export function useSwapCallback(
       error: null,
     }
   }, [
-    trade,
-    library,
     account,
+    addTransaction,
     chainId,
-    priceAmount,
+    gaslessCallback,
+    isExpertMode,
+    kromatikaRouter,
+    library,
     parsedAmount,
+    priceAmount,
     recipient,
     recipientAddressOrName,
     swapCalls,
-    isExpertMode,
-    kromatikaRouter,
-    gaslessCallback,
-    addTransaction,
+    trade,
   ])
 }

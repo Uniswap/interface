@@ -6,14 +6,13 @@ import { Position } from '@uniswap/v3-sdk'
 import RangeBadge from 'components/Badge/RangeBadge'
 import JSBI from 'jsbi'
 import { DateTime } from 'luxon/src/luxon'
-import { memo, useMemo } from 'react'
+import { useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { Text } from 'rebass'
 import styled from 'styled-components/macro'
 
 import { DAI, USDC, USDT, WBTC, WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
 import { useToken } from '../../hooks/Tokens'
-import useIsTickAtLimit from '../../hooks/useIsTickAtLimit'
 import useLimitOrdersDates from '../../hooks/useLimitOrdersDates'
 import { usePool } from '../../hooks/usePools'
 import useUSDCPrice from '../../hooks/useUSDCPrice'
@@ -183,7 +182,7 @@ function formatPrice(value: string | number | undefined) {
   return commafy(Number(value).toFixed(3))
 }
 
-function LimitOrdersListItem({ limitOrderDetails, isUnderfunded }: OrderListItemProps) {
+export default function LimitOrderListItem({ limitOrderDetails, isUnderfunded }: OrderListItemProps) {
   const {
     token0: token0Address,
     token1: token1Address,
@@ -195,7 +194,6 @@ function LimitOrdersListItem({ limitOrderDetails, isUnderfunded }: OrderListItem
     processed,
     tokensOwed0,
     tokensOwed1,
-    owner,
   } = limitOrderDetails || {}
 
   const positionSummaryLink = '/limitorder/' + tokenId
@@ -207,8 +205,10 @@ function LimitOrdersListItem({ limitOrderDetails, isUnderfunded }: OrderListItem
 
   const token0 = useToken(token0Address)
   const token1 = useToken(token1Address)
+
   const currency0 = token0 ? unwrappedToken(token0) : undefined
   const currency1 = token1 ? unwrappedToken(token1) : undefined
+
   const currency0Wrapped = token0 ? token0 : undefined
   const currency1Wrapped = token1 ? token1 : undefined
 
@@ -223,14 +223,6 @@ function LimitOrdersListItem({ limitOrderDetails, isUnderfunded }: OrderListItem
 
   const createdEventAmount0 = createdEvent?.amount0
   const createdEventAmount1 = createdEvent?.amount1
-  const createdValue0: CurrencyAmount<Token> | undefined = useMemo(() => {
-    if (!createdEventAmount0 || !currency0) return undefined
-    return CurrencyAmount.fromRawAmount(currency0 as Token, createdEventAmount0?.toString())
-  }, [createdEventAmount0, currency0])
-  const createdValue1: CurrencyAmount<Token> | undefined = useMemo(() => {
-    if (!createdEventAmount1 || !currency1) return undefined
-    return CurrencyAmount.fromRawAmount(currency1 as Token, createdEventAmount1?.toString())
-  }, [createdEventAmount1, currency1])
 
   const currencyCreatedEventAmount: CurrencyAmount<Token> | undefined = useMemo(() => {
     if (!createdEventAmount0 || !currency0Wrapped) return undefined
@@ -243,6 +235,7 @@ function LimitOrdersListItem({ limitOrderDetails, isUnderfunded }: OrderListItem
 
   const collectedAmount0 = collectedEvent?.tokensOwed0
   const collectedAmount1 = collectedEvent?.tokensOwed1
+
   const collectedValue0: CurrencyAmount<Token> | undefined = useMemo(() => {
     if (!collectedAmount0 || !currency0) return undefined
     return CurrencyAmount.fromRawAmount(currency0 as Token, collectedAmount0?.toString())
@@ -264,8 +257,8 @@ function LimitOrdersListItem({ limitOrderDetails, isUnderfunded }: OrderListItem
     return undefined
   }, [liquidity, pool, tickLower, tickUpper])
 
-  const tickAtLimit = useIsTickAtLimit(feeAmount, tickLower, tickUpper)
-  const { priceLower, priceUpper, quote, base } = getPriceOrderingFromPositionForUI(position)
+  // const tickAtLimit = useIsTickAtLimit(feeAmount, tickLower, tickUpper)
+  const { priceUpper, quote, base } = getPriceOrderingFromPositionForUI(position)
   const currencyQuote = quote && unwrappedToken(quote)
   const currencyBase = base && unwrappedToken(base)
 
@@ -293,16 +286,7 @@ function LimitOrdersListItem({ limitOrderDetails, isUnderfunded }: OrderListItem
       return priceUpper?.invert()
     }
     return priceUpper
-  }, [createdPrice, currencyCreatedEventAmount, priceUpper])
-
-  const currentPriceUSD =
-    currency0 && currencyBase?.name == unwrappedToken(currency0)?.name
-      ? inverted
-        ? Number(token0USD) / Number(pool?.token1Price.toSignificant(6))
-        : Number(token0USD) / Number(pool?.token0Price.toSignificant(6))
-      : inverted
-      ? Number(token1USD) / Number(pool?.token1Price.toSignificant(6))
-      : Number(token1USD) / Number(pool?.token0Price.toSignificant(6))
+  }, [createdPrice, currencyCreatedEventAmount?.currency, priceUpper])
 
   const targetPriceUSD =
     currency0 && currencyBase?.name == unwrappedToken(currency0)?.name
@@ -318,7 +302,6 @@ function LimitOrdersListItem({ limitOrderDetails, isUnderfunded }: OrderListItem
   const above = pool && typeof tickUpper === 'number' ? pool.tickCurrent >= tickUpper : undefined
   const inRange: boolean = typeof below === 'boolean' && typeof above === 'boolean' ? !below && !above : false
 
-  const removed = position?.liquidity && JSBI.equal(position?.liquidity, JSBI.BigInt(0))
   const closedOrder: boolean = processed ? true : false
 
   return (
@@ -346,7 +329,7 @@ function LimitOrdersListItem({ limitOrderDetails, isUnderfunded }: OrderListItem
               <Trans>Status:</Trans>
             </TYPE.darkGray>
           </TextLabel>
-          <RangeBadge removed={removed} inRange={inRange} closed={closedOrder} isUnderfunded={isUnderfunded} />
+          <RangeBadge inRange={inRange} closed={closedOrder} isUnderfunded={isUnderfunded} />
         </RowFixedHeight>
         {createdBlockDate && (
           <RowFixedHeight>
@@ -395,7 +378,7 @@ function LimitOrdersListItem({ limitOrderDetails, isUnderfunded }: OrderListItem
               {targetPrice ? (
                 <>
                   <span>1 {currencyAmount0?.currency.symbol} = </span>
-                  <span>{commafy(targetPrice?.toSignificant(6))}</span>
+                  <span>{commafy(createdPrice?.toSignificant(6))}</span>
                   <span> {currencyAmount1?.currency.symbol}</span>{' '}
                 </>
               ) : (
@@ -434,18 +417,3 @@ function LimitOrdersListItem({ limitOrderDetails, isUnderfunded }: OrderListItem
     </>
   )
 }
-
-const MemoizedLimitOrdersListItem = memo(
-  LimitOrdersListItem,
-  (prevProps, nextProps) =>
-    prevProps.limitOrderDetails.owner === nextProps.limitOrderDetails.owner &&
-    prevProps.limitOrderDetails.tokenId === nextProps.limitOrderDetails.tokenId &&
-    prevProps.limitOrderDetails.token0 === nextProps.limitOrderDetails.token0 &&
-    prevProps.limitOrderDetails.token1 === nextProps.limitOrderDetails.token1 &&
-    prevProps.limitOrderDetails.fee === nextProps.limitOrderDetails.fee &&
-    prevProps.limitOrderDetails.processed === nextProps.limitOrderDetails.processed &&
-    prevProps.limitOrderDetails.tokensOwed0 === nextProps.limitOrderDetails.tokensOwed0 &&
-    prevProps.limitOrderDetails.tokensOwed1 === nextProps.limitOrderDetails.tokensOwed1
-)
-
-export { MemoizedLimitOrdersListItem as default }

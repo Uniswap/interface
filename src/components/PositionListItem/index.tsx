@@ -331,7 +331,7 @@ export default function PositionListItem({ positionDetails, isUnderfunded }: Pos
           </DataText>
           &nbsp;
         </PrimaryPositionIdData>
-        <RangeBadge removed={removed} inRange={!outOfRange} closed={closedOrder} isUnderfunded={isUnderfunded} />
+        <RangeBadge inRange={!outOfRange} closed={closedOrder} isUnderfunded={isUnderfunded} />
       </RowBetween>
       <RowBetween>
         <RangeText>

@@ -420,7 +420,7 @@ msgstr "Dibatalkan"
 msgid "Canceling the trade will withdraw available amounts for you."
 msgstr "Membatalkan perdagangan akan menarik jumlah yang tersedia untuk Anda."
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Cancelled:"
 msgstr "Dibatalkan:"
 
@@ -516,7 +516,7 @@ msgstr "Tutup"
 msgid "Closed"
 msgstr "Ditutup"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Closed:"
 msgstr "Tertutup:"
 
@@ -545,7 +545,7 @@ msgstr "Ditagihkan"
 msgid "Collected {0} {1}{2} and {3} {4}{5}"
 msgstr "Mengumpulkan {0} {1}{2} dan {3} {4}{5}"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Collected:"
 msgstr "Dikumpulkan:"
 
@@ -1040,7 +1040,7 @@ msgstr "Impor Pool V2"
 msgid "Import at your own risk"
 msgstr "Impor dengan risiko yang Anda tanggung sendiri"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "In Range"
 msgstr "Dalam lingkup"
 
@@ -1140,11 +1140,11 @@ msgstr "Batasi Pesanan"
 msgid "Limit Price"
 msgstr "Batasi Harga"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Limit price (USD):"
 msgstr "Harga batas (USD):"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Limit price:"
 msgstr "Harga batas:"
 
@@ -1346,7 +1346,7 @@ msgstr "Ups! Terjadi kesalahan yang tidak diketahui. Harap segarkan halaman, ata
 msgid "Open Orders"
 msgstr "Buka Pesanan"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Opened:"
 msgstr "Dibuka:"
 
@@ -1395,7 +1395,7 @@ msgid "Participating pools"
 msgstr "Kolam yang berpartisipasi"
 
 #: src/components/Badge/RangeBadge.tsx
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 #: src/pages/Vote/styled.tsx
 msgid "Pending"
 msgstr "Tertunda"
@@ -1503,7 +1503,7 @@ msgid "Price:"
 msgstr "Harga:"
 
 #: src/components/Badge/RangeBadge.tsx
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Processed"
 msgstr "Diproses"
 
@@ -1693,7 +1693,7 @@ msgstr "Staking KROM akan memungkinkan sistem memproses perdagangan secara otoma
 msgid "Status"
 msgstr "Status"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Status:"
 msgstr "Status:"
 
@@ -2498,12 +2498,12 @@ msgstr "melalui {0} daftar token"
 msgid "{0, plural, one {Import token} other {Import tokens}}"
 msgstr "{0, plural, one {Impor token} other {Impor token}}"
 
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 #: src/components/NetworkAlert/NetworkAlert.tsx
 #: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx
@@ -2588,11 +2588,11 @@ msgstr "{0} sKrom / minggu"
 msgid "{0} tokens"
 msgstr "{0} token"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "{0} {1}"
 msgstr "{0} {1}"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "{0} {1} + {2} {3}"
 msgstr "{0} {1} + {2} {3}"
 

@@ -43,14 +43,14 @@ function useValidatorAPIArguments({
   const { chainId, account } = useActiveWeb3React()
   const allowedSlippage = useUserSlippageToleranceWithDefault(DEFAULT_REMOVE_LIQUIDITY_SLIPPAGE_TOLERANCE)
 
-  if (!chainId || !account || !tokenIn || !tokenOut || !amount || tokenIn.equals(tokenOut)) {
+  if (!chainId || !tokenIn || !tokenOut || !amount || tokenIn.equals(tokenOut)) {
     return undefined
   }
 
   return {
     chainId: chainId.toString(),
     queryArg: {
-      fromAddress: account.toString(),
+      fromAddress: account ? account.toString() : '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee', // fromAddress is required
       sellTokenAddress: tokenIn.isNative ? '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' : tokenIn.wrapped.address,
       buyTokenAddress: tokenOut.isNative ? '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' : tokenOut.wrapped.address,
       sellTokenAmount: tradeType == TradeType.EXACT_INPUT ? amount.quotient.toString() : null,
@@ -58,7 +58,7 @@ function useValidatorAPIArguments({
       recipient,
       slippage: allowedSlippage.divide(100).toSignificant(6),
       affiliate: affiliate?.toString() ?? null,
-      affiliateFee: affiliate ? '0.01' : null,
+      affiliateFee: affiliate ? process.env.REACT_APP_AFFILIATE_FEE : null,
       skipValidation,
       signaturePermitData,
     },
@@ -230,16 +230,16 @@ export function useGaslessAPITrade(
       }
     }
   }, [
+    account,
     currencyIn,
     currencyOut,
+    gasUseEstimateUSD,
+    isError,
     isLoading,
+    paymentToken,
+    queryArgs,
     quoteResult,
     tradeType,
-    isError,
-    queryArgs,
-    account,
-    gasUseEstimateUSD,
-    paymentToken,
   ])
 }
 
@@ -274,10 +274,10 @@ export function useValidatorAPITrade(
       tradeType === TradeType.EXACT_INPUT
         ? [amountSpecified?.currency, otherCurrency]
         : [otherCurrency, amountSpecified?.currency],
-    [amountSpecified, otherCurrency, tradeType]
+    [amountSpecified?.currency, otherCurrency, tradeType]
   )
 
-  const { chainId, account } = useActiveWeb3React()
+  const { account } = useActiveWeb3React()
   const queryArgs = useValidatorAPIArguments({
     tokenIn: currencyIn,
     tokenOut: currencyOut,
@@ -385,5 +385,5 @@ export function useValidatorAPITrade(
         uniswapAmount: undefined,
       }
     }
-  }, [currencyIn, currencyOut, isLoading, quoteResult, tradeType, isError, queryArgs, account, gasUseEstimateUSD])
+  }, [account, currencyIn, currencyOut, gasUseEstimateUSD, isError, isLoading, queryArgs, quoteResult, tradeType])
 }

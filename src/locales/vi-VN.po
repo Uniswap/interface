@@ -420,7 +420,7 @@ msgstr "Đã hủy"
 msgid "Canceling the trade will withdraw available amounts for you."
 msgstr "Việc hủy giao dịch sẽ rút số tiền khả dụng cho bạn."
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Cancelled:"
 msgstr "Đã hủy"
 
@@ -516,7 +516,7 @@ msgstr "Đóng"
 msgid "Closed"
 msgstr "Đã đóng cửa"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Closed:"
 msgstr "đóng cửa:"
 
@@ -545,7 +545,7 @@ msgstr "Đã thu thập"
 msgid "Collected {0} {1}{2} and {3} {4}{5}"
 msgstr "Đã thu thập {0} {1}{2} và {3} {4}{5}"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Collected:"
 msgstr "thu thập:"
 
@@ -1040,7 +1040,7 @@ msgstr "Nhập pool V2"
 msgid "Import at your own risk"
 msgstr "Nhập rồi tự chịu mọi rủ ro"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "In Range"
 msgstr "Trong phạm vi"
 
@@ -1140,11 +1140,11 @@ msgstr "Lệnh giới hạn"
 msgid "Limit Price"
 msgstr "Giá giới hạn"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Limit price (USD):"
 msgstr "Giá giới hạn (USD):"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Limit price:"
 msgstr "Giá giới hạn:"
 
@@ -1346,7 +1346,7 @@ msgstr "Ối! Đã xảy ra lỗi không xác định. Vui lòng làm mới tran
 msgid "Open Orders"
 msgstr "Đơn đặt hàng mở"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Opened:"
 msgstr "đã mở:"
 
@@ -1395,7 +1395,7 @@ msgid "Participating pools"
 msgstr "Pool tham gia"
 
 #: src/components/Badge/RangeBadge.tsx
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 #: src/pages/Vote/styled.tsx
 msgid "Pending"
 msgstr "Đang chờ xử lý"
@@ -1503,7 +1503,7 @@ msgid "Price:"
 msgstr "Giá:"
 
 #: src/components/Badge/RangeBadge.tsx
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Processed"
 msgstr "Xử lý"
 
@@ -1693,7 +1693,7 @@ msgstr "Staking KROM sẽ cho phép hệ thống tự động xử lý các giao
 msgid "Status"
 msgstr "Trạng thái"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Status:"
 msgstr "Trạng thái:"
 
@@ -2498,12 +2498,12 @@ msgstr "thông qua {0} mã token"
 msgid "{0, plural, one {Import token} other {Import tokens}}"
 msgstr "{0, plural, one {Import token} other {Import tokens}}"
 
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 #: src/components/NetworkAlert/NetworkAlert.tsx
 #: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx
@@ -2588,11 +2588,11 @@ msgstr "{0} sKrom / tuần"
 msgid "{0} tokens"
 msgstr "{0} mã token"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "{0} {1}"
 msgstr "{0} {1}"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "{0} {1} + {2} {3}"
 msgstr "{0} {1} + {2} {3}"
 

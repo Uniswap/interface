@@ -420,7 +420,7 @@ msgstr "취소 된"
 msgid "Canceling the trade will withdraw available amounts for you."
 msgstr "거래를 취소하면 사용 가능한 금액이 인출됩니다."
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Cancelled:"
 msgstr "취소 된:"
 
@@ -516,7 +516,7 @@ msgstr "닫기"
 msgid "Closed"
 msgstr "닫힘"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Closed:"
 msgstr "닫은:"
 
@@ -545,7 +545,7 @@ msgstr "수집됨"
 msgid "Collected {0} {1}{2} and {3} {4}{5}"
 msgstr "수집된 {0} {1}{2} 및 {3} {4}{5}"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Collected:"
 msgstr "모은:"
 
@@ -1040,7 +1040,7 @@ msgstr "V2 풀 가져 오기"
 msgid "Import at your own risk"
 msgstr "자신의 책임하에 가져오기"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "In Range"
 msgstr "범위 내"
 
@@ -1140,11 +1140,11 @@ msgstr "주문 제한"
 msgid "Limit Price"
 msgstr "제한 가격"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Limit price (USD):"
 msgstr "지정가(USD):"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Limit price:"
 msgstr "제한 가격:"
 
@@ -1346,7 +1346,7 @@ msgstr "죄송합니다! 알 수없는 오류가 발생했습니다. 페이지�
 msgid "Open Orders"
 msgstr "공개 주문"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Opened:"
 msgstr "개봉:"
 
@@ -1395,7 +1395,7 @@ msgid "Participating pools"
 msgstr "참여 풀"
 
 #: src/components/Badge/RangeBadge.tsx
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 #: src/pages/Vote/styled.tsx
 msgid "Pending"
 msgstr "보류 중"
@@ -1503,7 +1503,7 @@ msgid "Price:"
 msgstr "가격:"
 
 #: src/components/Badge/RangeBadge.tsx
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Processed"
 msgstr "처리됨"
 
@@ -1693,7 +1693,7 @@ msgstr "KROM을 스테이킹하면 시스템이 자동으로 거래를 처리할
 msgid "Status"
 msgstr "상태"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Status:"
 msgstr "상태:"
 
@@ -2498,12 +2498,12 @@ msgstr "{0} 토큰 목록을 통해"
 msgid "{0, plural, one {Import token} other {Import tokens}}"
 msgstr "{0, plural, one {토큰 가져 오기} other {토큰 가져 오기}}"
 
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 #: src/components/NetworkAlert/NetworkAlert.tsx
 #: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx
@@ -2588,11 +2588,11 @@ msgstr "{0} sKrom / 주"
 msgid "{0} tokens"
 msgstr "{0} 토큰"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "{0} {1}"
 msgstr "{0} {1}"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "{0} {1} + {2} {3}"
 msgstr "{0} {1} + {2} {3}"
 

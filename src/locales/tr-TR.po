@@ -420,7 +420,7 @@ msgstr "İptal edildi"
 msgid "Canceling the trade will withdraw available amounts for you."
 msgstr "İşlemin iptal edilmesi, sizin için mevcut olan tutarları geri çekecektir."
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Cancelled:"
 msgstr "İptal edildi:"
 
@@ -516,7 +516,7 @@ msgstr "Kapat"
 msgid "Closed"
 msgstr "Kapalı"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Closed:"
 msgstr "Kapalı:"
 
@@ -545,7 +545,7 @@ msgstr "Toplandı"
 msgid "Collected {0} {1}{2} and {3} {4}{5}"
 msgstr "Toplanan {0} {1}{2} ve {3} {4}{5}"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Collected:"
 msgstr "Toplanmış:"
 
@@ -1040,7 +1040,7 @@ msgstr "V2 Havuzunu İçe Aktar"
 msgid "Import at your own risk"
 msgstr "Riskin size ait olduğunu bilerek içe aktarın"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "In Range"
 msgstr "Menzilde"
 
@@ -1140,11 +1140,11 @@ msgstr "Limit Emirleri"
 msgid "Limit Price"
 msgstr "Limit Fiyatı"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Limit price (USD):"
 msgstr "Limit fiyatı (USD):"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Limit price:"
 msgstr "Limit fiyatı:"
 
@@ -1346,7 +1346,7 @@ msgstr "Bilinmeyen bir hata oluştu. Lütfen sayfayı yenileyin veya başka bir 
 msgid "Open Orders"
 msgstr "Açık siparişler"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Opened:"
 msgstr "Açıldı:"
 
@@ -1395,7 +1395,7 @@ msgid "Participating pools"
 msgstr "Katılımcı havuzlar"
 
 #: src/components/Badge/RangeBadge.tsx
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 #: src/pages/Vote/styled.tsx
 msgid "Pending"
 msgstr "Bekliyor"
@@ -1503,7 +1503,7 @@ msgid "Price:"
 msgstr "Fiyat:"
 
 #: src/components/Badge/RangeBadge.tsx
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Processed"
 msgstr "İşlenmiş"
 
@@ -1693,7 +1693,7 @@ msgstr "KROM'u stake etmek, sistemin alım satımları otomatik olarak işleme k
 msgid "Status"
 msgstr "Durum"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Status:"
 msgstr "Durum:"
 
@@ -2498,12 +2498,12 @@ msgstr "{0} jeton listesi aracılığıyla"
 msgid "{0, plural, one {Import token} other {Import tokens}}"
 msgstr "{0, plural, one {Jetonu içe aktar} other {Jetonu içe aktar}}"
 
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 #: src/components/NetworkAlert/NetworkAlert.tsx
 #: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx
@@ -2588,11 +2588,11 @@ msgstr "{0} sKrom / hafta"
 msgid "{0} tokens"
 msgstr "{0} jeton"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "{0} {1}"
 msgstr "{0} {1}"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "{0} {1} + {2} {3}"
 msgstr "{0} {1} + {2} {3}"
 

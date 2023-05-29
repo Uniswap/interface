@@ -420,7 +420,7 @@ msgstr "Cancel·lat"
 msgid "Canceling the trade will withdraw available amounts for you."
 msgstr "En cancel·lar l'operació, es retiraran les quantitats disponibles."
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Cancelled:"
 msgstr "Cancel·lat:"
 
@@ -516,7 +516,7 @@ msgstr "Tanca"
 msgid "Closed"
 msgstr "Tancat"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Closed:"
 msgstr "Tancat:"
 
@@ -545,7 +545,7 @@ msgstr "Cobrat"
 msgid "Collected {0} {1}{2} and {3} {4}{5}"
 msgstr "S'han recollit {0} {1}{2} i {3} {4}{5}"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Collected:"
 msgstr "Recollida:"
 
@@ -1040,7 +1040,7 @@ msgstr "Importa l'agrupació V2"
 msgid "Import at your own risk"
 msgstr "Importa al vostre propi risc"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "In Range"
 msgstr "A la gamma"
 
@@ -1140,11 +1140,11 @@ msgstr "Comandes limitades"
 msgid "Limit Price"
 msgstr "Preu límit"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Limit price (USD):"
 msgstr "Preu límit (USD):"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Limit price:"
 msgstr "Preu límit:"
 
@@ -1346,7 +1346,7 @@ msgstr "Vaja! S'ha produït un error desconegut. Actualitzeu la pàgina o visite
 msgid "Open Orders"
 msgstr "Comandes obertes"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Opened:"
 msgstr "Obert:"
 
@@ -1395,7 +1395,7 @@ msgid "Participating pools"
 msgstr "Grups participants"
 
 #: src/components/Badge/RangeBadge.tsx
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 #: src/pages/Vote/styled.tsx
 msgid "Pending"
 msgstr "Pendents"
@@ -1503,7 +1503,7 @@ msgid "Price:"
 msgstr "Preu:"
 
 #: src/components/Badge/RangeBadge.tsx
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Processed"
 msgstr "Processat"
 
@@ -1693,7 +1693,7 @@ msgstr "Apostar KROM permetrà que el sistema processi automàticament les opera
 msgid "Status"
 msgstr "Estat"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "Status:"
 msgstr "Estat:"
 
@@ -2498,12 +2498,12 @@ msgstr "mitjançant la llista de tokens {0}"
 msgid "{0, plural, one {Import token} other {Import tokens}}"
 msgstr "{0, plural, one {Importa el testimoni.} other {Importeu fitxes.}}"
 
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 #: src/components/NetworkAlert/NetworkAlert.tsx
 #: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx
@@ -2588,11 +2588,11 @@ msgstr "{0} sKrom/setmana"
 msgid "{0} tokens"
 msgstr "{0} fitxes"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "{0} {1}"
 msgstr "{0} {1}"
 
-#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrderListItem/index.tsx
 msgid "{0} {1} + {2} {3}"
 msgstr "{0} {1} + {2} {3}"
 
