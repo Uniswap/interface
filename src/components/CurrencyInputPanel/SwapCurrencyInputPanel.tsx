@@ -205,6 +205,7 @@ interface SwapCurrencyInputPanelProps {
   locked?: boolean
   loading?: boolean
   isInput?:boolean
+  isTrade?: boolean
   isLevered?: boolean
   leverageFactor?: string
   disabled?: boolean  
@@ -230,6 +231,7 @@ export default function SwapCurrencyInputPanel({
   hideInput = false,
   locked = false,
   loading = false,
+  isTrade = true, 
   isInput = true,
   isLevered = false,
   leverageFactor = "1",
@@ -260,7 +262,13 @@ export default function SwapCurrencyInputPanel({
         </FixedContainer>
       )}
       <Container hideInput={hideInput}>
+      {isTrade? (
         <Trans>{isInput ? "What you pay" : (isLevered ? "Total Output Position" : "What you get")}</Trans>
+        ): (
+        <Trans>{isInput? "Collateral Amount": "Borrowed Amount"}</Trans>
+          )
+        }
+        
         <InputRow style={hideInput ? { padding: '0', borderRadius: '8px' } : {}}>
           {!hideInput && (
             isInput?
@@ -270,7 +278,7 @@ export default function SwapCurrencyInputPanel({
               onUserInput={onUserInput}
               disabled={!chainAllowed || disabled}
               $loading={loading}
-              placeholder = {"Input <= 1"}
+              placeholder = {"0.000"}
             />
             : <StyledNumericalInput
               className="token-amount-input"
