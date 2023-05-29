@@ -3058,10 +3058,10 @@
     tiny-invariant "^1.1.0"
     toformat "^2.0.0"
 
-"@pollum-io/smart-order-router@0.0.6":
-  version "0.0.6"
-  resolved "https://registry.yarnpkg.com/@pollum-io/smart-order-router/-/smart-order-router-0.0.6.tgz#ad792e335cd4316215425adcc565342b96b325e9"
-  integrity sha512-ukQQPIDIwh6URXP5SNZgzx4Lmo/6ClZHigm5sZzSA676MBVaaLmMn7zN2CcI1CFMKAQCId50MA2jBvyZOzCMpQ==
+"@pollum-io/smart-order-router@0.0.9":
+  version "0.0.9"
+  resolved "https://registry.yarnpkg.com/@pollum-io/smart-order-router/-/smart-order-router-0.0.9.tgz#f7a3d9dcae3d75b2b431d6fb8a70d25f93d35ff1"
+  integrity sha512-+fWC14GRyeYpN7woKyPZjc7mFGO4VKw3NgGg19+rxPqSH5JWbCsuVubagQO5jDGEVi6WSw0L3I0vsyhViPEl3g==
   dependencies:
     "@pollum-io/default-token-list" "0.0.1"
     "@pollum-io/router-sdk" "0.0.2"
@@ -3197,17 +3197,17 @@
     "@pollum-io/v2-core" "0.0.1"
     "@pollum-io/v2-periphery" "0.0.1"
 
-"@pollum-io/widgets@0.0.3":
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/@pollum-io/widgets/-/widgets-0.0.3.tgz#7162110f2a16ae80912f5a0d22bf1f42bb216ead"
-  integrity sha512-3d2fFoI5wv/xm3HsoGYoVcYnF5KucNemwxnp8sKlH6naJVtWe0p9gwD2uDF/RPW/izq0ee8On4AF48jO6UqnAA==
+"@pollum-io/widgets@0.0.4":
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/@pollum-io/widgets/-/widgets-0.0.4.tgz#d72b6f87092f5f1625075da5ee5f0886a9769758"
+  integrity sha512-pOF1uqJvna5YzlaDSOxQpupAGjGq4bQh/LTMKSMbCNzoyc1ZYLPwEjoW9TYTEJjQPvxkATaa5/0yby6jLnb+kw==
   dependencies:
     "@babel/runtime" ">=7.17.0"
     "@fontsource/ibm-plex-mono" "^4.5.1"
     "@fontsource/inter" "^4.5.1"
     "@pollum-io/router-sdk" "0.0.2"
     "@pollum-io/sdk-core" "0.0.3"
-    "@pollum-io/smart-order-router" "0.0.6"
+    "@pollum-io/smart-order-router" "0.0.9"
     "@pollum-io/universal-router-sdk" "0.0.2"
     "@pollum-io/v1-sdk" "0.0.2"
     "@pollum-io/v2-sdk" "0.0.2"

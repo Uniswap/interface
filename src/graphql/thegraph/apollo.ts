@@ -4,7 +4,7 @@ import { SupportedChainId } from 'constants/chains'
 import store from '../../state/index'
 
 const CHAIN_SUBGRAPH_URL: Record<number, string> = {
-  [SupportedChainId.ROLLUX]: 'https://api.thegraph.com/subgraphs/name/ianlapham/optimism-post-regenesis',
+  [SupportedChainId.ROLLUX]: 'https://rollux.graph.pegasys.fi/subgraphs/name/pollum-io/pegasys-v2',
 }
 
 const httpLink = new HttpLink({ uri: CHAIN_SUBGRAPH_URL[SupportedChainId.ROLLUX] })

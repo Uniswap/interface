@@ -1,5 +1,5 @@
 overrideExisting: true
-schema: 'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3'
+schema: 'https://rollux.graph.pegasys.fi/subgraphs/name/pollum-io/pegasys-v2'
 generates:
   ./src/graphql/thegraph/schema/schema.graphql:
     plugins:

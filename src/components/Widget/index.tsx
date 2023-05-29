@@ -1,6 +1,6 @@
 import { Trade } from '@pollum-io/router-sdk'
 import { Currency, TradeType } from '@pollum-io/sdk-core'
-import { AddEthereumChainParameter, OnReviewSwapClick, SwapWidgetSkeleton } from '@pollum-io/widgets'
+import { AddEthereumChainParameter, DialogAnimationType, EMPTY_TOKEN_LIST, OnReviewSwapClick, SwapWidget, SwapWidgetSkeleton } from '@pollum-io/widgets'
 import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
 import {
   InterfaceEventName,
@@ -31,7 +31,7 @@ import { useSyncWidgetTransactions } from './transactions'
 
 export const DEFAULT_WIDGET_WIDTH = 360
 
-const WIDGET_ROUTER_URL = 'https://a0cxzj8dg5.execute-api.us-east-2.amazonaws.com/prod/'
+const WIDGET_ROUTER_URL = 'https://api.pegasys.fi/prod/'
 
 function useWidgetTheme() {
   return useIsDarkMode() ? DARK_THEME : LIGHT_THEME
@@ -153,7 +153,7 @@ export default function Widget({
   return (
     <>
       <div style={{ zIndex: 1, position: 'relative' }}>
-        {/* <SwapWidget
+        <SwapWidget
           hideConnectionUI
           brandedFooter={false}
           permit2
@@ -182,7 +182,7 @@ export default function Widget({
           onError={(error, errorInfo) => {
             sendAnalyticsEvent(SwapEventName.SWAP_ERROR, { error, errorInfo, ...trace })
           }}
-        /> */}
+        />
       </div>
       {tokenSelector}
     </>
