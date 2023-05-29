@@ -97,7 +97,7 @@ export default function StatsSection(props: StatsSectionProps) {
   const { chainId, address, priceHigh24H, priceLow24H, delta, price, inversePrice, token0Symbol, token1Symbol } = props
   const { label, infoLink } = getChainInfo(chainId)
 
-  console.log('delta', delta)
+  // console.log('delta', delta)
 
   // if inversePrice then token0 is base token, otherwise token0 is quote token
   const arrow = getDeltaArrow(delta, 18)
@@ -124,18 +124,18 @@ export default function StatsSection(props: StatsSectionProps) {
             />
             <StatWrapper data-cy={"delta-24h"}>
               <MouseoverTooltip text={<Trans>
-                  24H volume is the amount of the asset that has been traded on Uniswap v3 during the past 24 hours.
-                </Trans>}>{<Trans>24h Change</Trans>}</MouseoverTooltip>
+                24H volume is the amount of the asset that has been traded on Uniswap v3 during the past 24 hours.
+              </Trans>}>{<Trans>24h Change</Trans>}</MouseoverTooltip>
               <StatPrice>
                 <AutoRow>
-                <ArrowCell>
+                  <ArrowCell>
                     {arrow}
                   </ArrowCell>
                   <DeltaText delta={Number(delta)}>
-                  {delta ? formatNumber(delta, NumberType.FiatTokenPrice).replace(/\$/g, '') : "-"}%
+                    {delta ? formatNumber(delta, NumberType.FiatTokenPrice).replace(/\$/g, '') : "-"}%
                   </DeltaText>
                 </AutoRow>
-                
+
               </StatPrice>
             </StatWrapper>
             {/* <Stat

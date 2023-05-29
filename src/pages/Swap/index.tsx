@@ -110,6 +110,8 @@ import dayjs from 'dayjs'
 import CandleChart from 'components/CandleChart'
 import PositionsTable from 'components/LimitlessPositionTable/TokenTable'
 import { PoolDataSection } from 'components/ExchangeChart'
+import _ from 'lodash'
+import { FakeTokens } from "constants/fake-tokens"
 
 
 const Hr = styled.hr`
@@ -304,14 +306,6 @@ export default function Swap({ className }: { className?: string }) {
   //   }
   // }, [chainId, account])
 
-  const {
-    trade: leverageTrade,
-    inputError,
-    allowedSlippage: leverageAllowedSlippage
-  } = useDerivedLeverageCreationInfo()
-
-  console.log('useDerived:', leverageTrade, inputError)
-
   // console.log("loadedUrlParams", loadedUrlParams)
   // token warning stuff
   const [loadedInputCurrency, loadedOutputCurrency] = [
@@ -394,6 +388,15 @@ export default function Swap({ className }: { className?: string }) {
         },
     [independentField, parsedAmount, showWrap, trade]
   )
+
+  const [leverageApprovalState, approveLeverageManager] = useApproveCallback(parsedAmounts[Field.INPUT], leverageManagerAddress ?? undefined)
+  const {
+    trade: leverageTrade,
+    inputError,
+    allowedSlippage: leverageAllowedSlippage,
+    contractError
+  } = useDerivedLeverageCreationInfo({ allowance: leverageApprovalState })
+
   const fiatValueInput = useUSDPrice(parsedAmounts[Field.INPUT])
   const fiatValueOutput = useUSDPrice(parsedAmounts[Field.OUTPUT])
 
@@ -503,7 +506,7 @@ export default function Swap({ className }: { className?: string }) {
     }
 
   }, [poolAddress, account, trade, currencies, account, provider])
-  // console.log("poolLevAddress", poolAddress, leverageManagerAddress)
+  console.log("poolLevAddress", poolAddress, leverageManagerAddress)
 
   const isApprovalLoading = allowance.state === AllowanceState.REQUIRED && allowance.isApprovalLoading
   const [isAllowancePending, setIsAllowancePending] = useState(false)
@@ -528,14 +531,23 @@ export default function Swap({ className }: { className?: string }) {
     return [currencies[Field.INPUT], currencies[Field.OUTPUT]]
   }, [currencies])
 
-  const [leverageApprovalState, approveLeverageManager] = useApproveCallback(parsedAmounts[Field.INPUT], leverageManagerAddress ?? undefined)
-  // console.log("leverageApprovalState", leverageApprovalState)
 
-  const tokenin = (currencies?.INPUT?.isToken ? (currencies?.INPUT as Token) : undefined)
-  const tokenout = (currencies?.OUTPUT?.isToken ? (currencies?.OUTPUT as Token) : undefined)
 
-  const faucetin = useFaucetCallback(tokenin, account)
-  const faucetout = useFaucetCallback(tokenout, account)
+  const inputToken = (currencies?.INPUT?.isToken ? (currencies?.INPUT as Token) : undefined)
+  const outputToken = (currencies?.OUTPUT?.isToken ? (currencies?.OUTPUT as Token) : undefined)
+
+  const faucetin = useFaucetCallback(inputToken, account)
+  const faucetout = useFaucetCallback(outputToken, account)
+
+  const [showInputFaucet, showOutputFaucet] = useMemo(() => {
+    const inputResult = _.find(FakeTokens, (token: Token) => {
+      return token.address === inputToken?.address
+    })
+    const outputResult = _.find(FakeTokens, (token: Token) => {
+      return token.address === outputToken?.address
+    })
+    return [inputResult, outputResult]
+  }, [inputToken, outputToken]);
 
   const faucetIn = useCallback(async () => {
     try {
@@ -546,6 +558,7 @@ export default function Swap({ className }: { className?: string }) {
 
     // loadedInputCurrency, loadedOutputCurrency
   }, [currencies])
+
   const faucetOut = useCallback(async () => {
     try {
       faucetout()
@@ -553,9 +566,8 @@ export default function Swap({ className }: { className?: string }) {
       console.log('err', err)
     }
 
-
-    // loadedInputCurrency, loadedOutputCurrency
   }, [currencies])
+
   const updateLeverageAllowance = useCallback(async () => {
     try {
       await approveLeverageManager()
@@ -569,6 +581,7 @@ export default function Swap({ className }: { className?: string }) {
     () => maxAmountSpend(currencyBalances[Field.INPUT]),
     [currencyBalances]
   )
+
   const showMaxButton = Boolean(maxInputAmount?.greaterThan(0) && !parsedAmounts[Field.INPUT]?.equalTo(maxInputAmount))
   const swapFiatValues = useMemo(() => {
     return { amountIn: fiatValueTradeInput.data, amountOut: fiatValueTradeOutput.data }
@@ -788,11 +801,13 @@ export default function Swap({ className }: { className?: string }) {
 
 
   // console.log("leverageTrade: ", leverageTrade)
-  console.log("leverageTrade:", leverageTrade, lmtRouteNotFound, poolAddress, leverageManagerAddress, leveragePositions)
+  // console.log("leverageTrade:", leverageTrade, lmtRouteNotFound, poolAddress, leverageManagerAddress, leveragePositions)
 
   const [debouncedLeverageFactor, onDebouncedLeverageFactor] = useDebouncedChangeHandler(leverageFactor ?? "1", onLeverageFactorChange);
 
   const [poolState, pool] = usePool(currencies.INPUT ?? undefined, currencies.OUTPUT ?? undefined, FeeAmount.LOW)
+
+  console.log("leverageApprovalState",leveragePositions, lmtIsValid, leverageApprovalState, inputError)
 
   return (
     <Trace page={InterfacePageName.SWAP_PAGE} shouldLogImpression>
@@ -825,14 +840,14 @@ export default function Swap({ className }: { className?: string }) {
                         ? <ThemedText.LargeHeader>{(outputCurrency.symbol)}/{(inputCurrency.symbol)}</ThemedText.LargeHeader>
                         : <ThemedText.LargeHeader>Pair not found</ThemedText.LargeHeader>}
                       {
-                        inputCurrency && (
+                        showInputFaucet && (
                           <SmallMaxButton onClick={() => faucetIn()} width="10%">
                             <Trans>Faucet {inputCurrency?.symbol}</Trans>
                           </SmallMaxButton>
                         )
                       }
                       {
-                        outputCurrency && (
+                        showOutputFaucet && (
                           <SmallMaxButton onClick={() => faucetOut()} width="10%">
                             <Trans>Faucet {outputCurrency?.symbol}</Trans>
                           </SmallMaxButton>
@@ -1278,6 +1293,8 @@ export default function Swap({ className }: { className?: string }) {
                         <Text fontSize={20} fontWeight={600}>
                           {inputError ? (
                             inputError
+                          ) : contractError ? (
+                            contractError
                           ) : routeIsSyncing || routeIsLoading ? (
                             <Trans>Leverage</Trans>
                           ) : priceImpactTooHigh ? (

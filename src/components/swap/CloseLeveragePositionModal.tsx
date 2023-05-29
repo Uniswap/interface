@@ -11,7 +11,7 @@ import TransactionConfirmationModal, {
   ConfirmationModalContent,
   TransactionErrorContent,
 } from '../TransactionConfirmationModal'
-import SwapModalFooter, { AddPremiumModalFooter, CloseLeverageModalFooter, LeverageModalFooter } from './SwapModalFooter'
+import SwapModalFooter, { AddPremiumModalFooter, ReduceLeverageModalFooter, LeverageModalFooter } from './SwapModalFooter'
 import SwapModalHeader, { LeverageModalHeader } from './SwapModalHeader'
 import { LeverageTrade } from 'state/swap/hooks'
 import { useLeveragePositionFromTokenId } from 'hooks/useV3Positions'
@@ -29,7 +29,7 @@ import { ResponsiveHeaderText, SmallMaxButton } from 'pages/RemoveLiquidity/styl
 import Slider from 'components/Slider'
 
 
-export default function ClosePositionModal({
+export default function ReducePositionModal({
   trader,
   isOpen,
   tokenId,
@@ -69,7 +69,7 @@ export default function ClosePositionModal({
 
 
   const modalBottom = useCallback(() => {
-    return (<CloseLeverageModalFooter 
+    return (<ReduceLeverageModalFooter 
       leverageManagerAddress={leverageManagerAddress} tokenId={tokenId} trader={trader}
       setAttemptingTxn={setAttemptingTxn}
       setTxHash={setTxHash}

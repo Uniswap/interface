@@ -6,9 +6,12 @@ import { useCallback } from 'react'
 export enum PositionSortMethod {
   VALUE = 'Net Value',
   COLLATERAL = 'Collateral',
-  RECENT_PREMIUM = 'Recent Premium',
+  // RECENT_PREMIUM = 'Recent Premium',
   REPAYTIME = 'Time Left',
-  UNUSED_PREMIUM = 'Unused Premium'
+  PNL = 'PnL',
+  ENTRYPRICE = 'Entry Price',
+  REMAINING = "Remaining Prem."
+  // UNUSED_PREMIUM = 'Unused Premium'
 }
 
 export const filterStringAtom = atomWithReset<string>('')

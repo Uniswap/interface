@@ -7,7 +7,7 @@ import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import TransactionConfirmationModal, {
   ConfirmationModalContent,
 } from '../TransactionConfirmationModal'
-import { AddPremiumModalFooter, CloseLeverageModalFooter } from './SwapModalFooter'
+import { AddPremiumModalFooter, ReduceLeverageModalFooter } from './SwapModalFooter'
 
 import { useLeveragePositionFromTokenId } from 'hooks/useV3Positions'
 import { CloseLeveragePositionDetails } from './AdvancedSwapDetails'
@@ -54,7 +54,7 @@ export default function ClosePositionModal({
 
 
   const modalBottom = useCallback(() => {
-    return (<CloseLeverageModalFooter 
+    return (<ReduceLeverageModalFooter 
       leverageManagerAddress={leverageManagerAddress} tokenId={tokenId} trader={trader}
       setAttemptingTxn={setAttemptingTxn}
       setTxHash={setTxHash}

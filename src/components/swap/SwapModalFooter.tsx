@@ -22,11 +22,11 @@ import Row, { AutoRow, RowBetween, RowFixed } from '../Row'
 import { ResponsiveTooltipContainer, SwapCallbackError } from './styleds'
 import { getTokenPath, RoutingDiagramEntry } from './SwapRoute'
 import { ModalInputPanel } from 'components/CurrencyInputPanel/SwapCurrencyInputPanel'
-import Card, { LightCard, OutlineCard } from 'components/Card'
+import Card, { DarkCard, LightCard, OutlineCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
 import { Checkbox } from 'nft/components/layout/Checkbox'
 import { HideSmall, Separator, ThemedText } from 'theme'
-import { ResponsiveHeaderText, SmallMaxButton } from 'pages/RemoveLiquidity/styled'
+import { SmallMaxButton } from 'pages/RemoveLiquidity/styled'
 import Slider from 'components/Slider'
 import styled, { keyframes, useTheme } from 'styled-components'
 
@@ -48,19 +48,22 @@ import { truncateSync } from 'fs'
 import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
 import Loader from 'components/Icons/LoadingSpinner'
 import useDebouncedChangeHandler from 'hooks/useDebouncedChangeHandler'
-import Input from 'components/NumericalInput'
+import { Input as NumericalInput } from 'components/NumericalInput'
 import { LeveragePositionDetails } from 'types/leveragePosition'
 import { LoadingOpacityContainer, loadingOpacityMixin } from 'components/Loader/styled'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
+import CurrencyInputPanel from 'components/CurrencyInputPanel'
+import { TradeState } from 'state/routing/types'
+import { DEFAULT_ERC20_DECIMALS } from 'constants/tokens'
 
-const StyledNumericalInput = styled(Input)<{ $loading: boolean }>`
-  ${loadingOpacityMixin};
+const StyledNumericalInput = styled(NumericalInput)`
+  width: 70%;
   text-align: left;
-  font-size: 36px;
-  line-height: 44px;
-  font-variant: small-caps;
+  padding: 10px;
+  background-color: ${({ theme }) => theme.backgroundFloating};
+  border-radius: 10px;
+  font-size: 20px;
 `
-
 
 
 interface AnalyticsEventProps {
@@ -332,13 +335,21 @@ const StyledPriceContainer = styled.button`
   user-select: text;
 `
 
+const SliderText = styled(Text)`
+  font-size: 25px;
+  font-weight: 500;
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToExtraSmall`
+     font-size: 24px
+  `};
+`
+
 enum DerivedInfoState {
   LOADING,
   VALID,
   INVALID
 }
 // (vars.amount0, vars.amount1)
-function useDerivedLeverageCloseInfo(
+function useDerivedLeverageReduceInfo(
   leverageManager: string | undefined,
   trader: string | undefined,
   tokenId: string | undefined,
@@ -348,30 +359,43 @@ function useDerivedLeverageCloseInfo(
   setState: (state: DerivedInfoState) => void,
 ): {
   // token0: string | undefined
+  // int256 amount0;
+  // int256 amount1;
+  // int256 PnL;
+  // uint256 returnedAmount;
+  // uint256 unusedPremium;
+  // uint256 premium;
   // token1: string | undefined
   token0Amount: string | undefined
   token1Amount: string | undefined
+  pnl: string | undefined
+  returnedAmount: string | undefined
+  unusedPremium: string | undefined
+  premium: string | undefined
 } {
   const leverageManagerContract = useLeverageManagerContract(leverageManager)
+  
   const [contractResult, setContractResult] = useState<{
     reducePositionResult: any,
+    
     // token0: any,
     // token1: any
   }>()
 
   useEffect(() => {
     const laggedfxn = async () => {
-      if (!leverageManagerContract || !tokenId || !trader || parseFloat(allowedSlippage) <= 0 && !position || !newTotalPosition || !position?.totalPosition) {
+      if (!leverageManagerContract || !tokenId || !trader || parseFloat(allowedSlippage) <= 0 && !position || !position?.totalPosition) {
         setState(DerivedInfoState.INVALID)
         return
       }
 
       const formattedSlippage = new BN(allowedSlippage).plus(100).shiftedBy(16).toFixed(0)
-      const formattedReduceAmount = new BN(position?.totalPosition).minus(new BN(newTotalPosition)).shiftedBy(18).toFixed(0)
+      const formattedReduceAmount = newTotalPosition ? new BN(position?.totalPosition).minus(newTotalPosition).shiftedBy(18).toFixed(0) : 
+        new BN(position?.totalPosition).shiftedBy(18).toFixed(0)
       setState(DerivedInfoState.LOADING)
 
       try {
-
+        console.log('reducePositionArgs', position, position.isToken0, position.totalPosition, formattedSlippage, formattedReduceAmount)
         const reducePositionResult = await leverageManagerContract.callStatic.reducePosition(position?.isToken0, formattedSlippage, formattedReduceAmount)
         // const position = await leverageManagerContract.callStatic.getPosition(trader, tokenId)
         // const token0 = await leverageManagerContract.callStatic.token0()
@@ -383,7 +407,7 @@ function useDerivedLeverageCloseInfo(
         setState(DerivedInfoState.VALID)
 
       } catch (error) {
-        console.error('Failed to get close info', error)
+        console.error('Failed to get reduce info', error)
         setState(DerivedInfoState.INVALID)
       }
     }
@@ -394,16 +418,30 @@ function useDerivedLeverageCloseInfo(
   const info = useMemo(() => {
     if (contractResult) {
       const { reducePositionResult } = contractResult
-      let token0Amount = new BN(reducePositionResult[0].toString()).shiftedBy(-18).toFixed(6)
-      let token1Amount = new BN(reducePositionResult[1].toString()).shiftedBy(-18).toFixed(6)
+      let token0Amount = new BN(reducePositionResult[0].toString()).shiftedBy(-DEFAULT_ERC20_DECIMALS).toFixed(DEFAULT_ERC20_DECIMALS)
+      let token1Amount = new BN(reducePositionResult[1].toString()).shiftedBy(-DEFAULT_ERC20_DECIMALS).toFixed(DEFAULT_ERC20_DECIMALS)
+      let pnl = new BN(reducePositionResult[2].toString()).shiftedBy(-DEFAULT_ERC20_DECIMALS).toFixed(DEFAULT_ERC20_DECIMALS)
+      let returnedAmount = new BN(reducePositionResult[3].toString()).shiftedBy(-DEFAULT_ERC20_DECIMALS).toFixed(DEFAULT_ERC20_DECIMALS)
+      let unusedPremium = new BN(reducePositionResult[4].toString()).shiftedBy(-DEFAULT_ERC20_DECIMALS).toFixed(DEFAULT_ERC20_DECIMALS)
+      let premium = new BN(reducePositionResult[5].toString()).shiftedBy(-DEFAULT_ERC20_DECIMALS).toFixed(DEFAULT_ERC20_DECIMALS)
+
       return {
         token0Amount,
-        token1Amount
+        token1Amount,
+        pnl,
+        returnedAmount,
+        unusedPremium,
+        premium
       }
     } else {
       return {
         token0Amount: undefined,
         token1Amount: undefined,
+        pnl: undefined,
+        returnedAmount: undefined,
+        unusedPremium: undefined,
+        premium: undefined,
+
       }
     }
   }, [
@@ -490,7 +528,8 @@ function useDerivedAddPremiumInfo(
   return info
 }
 
-export function CloseLeverageModalFooter({
+
+export function ReduceLeverageModalFooter({
   leverageManagerAddress,
   tokenId,
   trader,
@@ -504,16 +543,18 @@ export function CloseLeverageModalFooter({
   setTxHash: (txHash: string) => void
 }) {
   // const [nonce, setNonce] = useState(0)
+  const { error, position } = useLeveragePositionFromTokenId(tokenId)
+
   const [slippage, setSlippage] = useState("1")
   const [newPosition, setNewPosition] = useState("")
 
   const leverageManagerContract = useLeverageManagerContract(leverageManagerAddress, true)
-  const { error, position } = useLeveragePositionFromTokenId(tokenId)
 
   const handleReducePosition = useMemo(() => {
-    if (leverageManagerContract && position) {
+    if (leverageManagerContract && position && Number(newPosition) >=0 && Number(newPosition) < Number(position.totalPosition)) {
       const formattedSlippage = new BN(slippage).plus(100).shiftedBy(16).toFixed(0)
-      const formattedReduceAmount = new BN(position?.totalPosition).minus(new BN(newPosition)).shiftedBy(18).toFixed(0)
+      const formattedReduceAmount = newPosition ? new BN(position?.totalPosition).minus(newPosition).shiftedBy(18).toFixed(0) : 
+        new BN(position?.totalPosition).shiftedBy(18).toFixed(0)
       return () => {
         setAttemptingTxn(true)
         leverageManagerContract.reducePosition(
@@ -538,12 +579,17 @@ export function CloseLeverageModalFooter({
   // what do we need for the simulation
 
   const [debouncedSlippage, setDebouncedSlippage] = useDebouncedChangeHandler(slippage, setSlippage)
+  const [debouncedNewPosition, setDebouncedNewPosition] = useDebouncedChangeHandler(newPosition, setNewPosition);
   // console.log("nonce: ", nonce, slippage)
 
   const {
     token0Amount,
-    token1Amount
-  } = useDerivedLeverageCloseInfo(leverageManagerAddress, trader, tokenId, debouncedSlippage, position, newPosition, setDerivedState)
+    token1Amount,
+    pnl,
+    returnedAmount,
+    unusedPremium,
+    premium
+  } = useDerivedLeverageReduceInfo(leverageManagerAddress, trader, tokenId, debouncedSlippage, position, debouncedNewPosition, setDerivedState)
 
   const token0 = useCurrency(position?.token0Address)
   const token1 = useCurrency(position?.token1Address)
@@ -560,8 +606,8 @@ export function CloseLeverageModalFooter({
 
   return (
     <AutoRow>
-      <LightCard marginTop="10px">
-        <AutoColumn gap="md">
+      <DarkCard marginTop="5px" padding="5px">
+        <AutoColumn gap="4px">
           <RowBetween>
             <ThemedText.DeprecatedMain fontWeight={400}>
               <Trans>Allowed Slippage</Trans>
@@ -569,9 +615,9 @@ export function CloseLeverageModalFooter({
           </RowBetween>
           <>
             <RowBetween>
-              <ResponsiveHeaderText>
+              <SliderText>
                 <Trans>{debouncedSlippage}%</Trans>
-              </ResponsiveHeaderText>
+              </SliderText>
               <AutoRow gap="4px" justify="flex-end">
                 <SmallMaxButton onClick={() => setSlippage("0.5")} width="20%">
                   <Trans>0.5</Trans>
@@ -598,46 +644,37 @@ export function CloseLeverageModalFooter({
             />
           </>
         </AutoColumn>
-      </LightCard>
-      <LightCard marginTop="10px">
+      </DarkCard>
+      <DarkCard padding="5px">
         <AutoColumn gap="md">
           <>
             <RowBetween>
-              <ThemedText.DeprecatedMain fontWeight={400}>
-                <Trans>New Reduced Position</Trans>
-              </ThemedText.DeprecatedMain>
+            <ThemedText.DeprecatedMain fontWeight={400}>
+              <Trans>New Position ({`${position?.totalPosition ? formatNumber(100 - Number(newPosition)/Number(position?.totalPosition) * 100) : "-"}% Reduction`})</Trans>
+            </ThemedText.DeprecatedMain>
             </RowBetween>
-            <RowBetween>
-              <div>
-              <ResponsiveHeaderText>
-                <StyledNumericalInput
-                  className="token-amount-input"
-                  value={newPosition}
-                  placeholder="0"
-                  onUserInput={(str: string) => {
-                    if (position?.totalPosition) {
-                      if (new BN(str).isGreaterThan(new BN(position?.totalPosition))) {
-                        return
-                      } else {
-                        setNewPosition(str)
-                      }
-                    }
-                  }  
+            <AutoColumn>
+            <CurrencyInputPanel
+              value={debouncedNewPosition}
+              id="reduce-position-input"
+              onUserInput={(str: string) => {
+                if (position?.totalPosition) {
+                  if (str === "") {
+                    setDebouncedNewPosition("")
+                  } else if (new BN(str).isGreaterThan(new BN(position?.totalPosition ))) {
+                    return
+                  } else {
+                    setDebouncedNewPosition(str)
                   }
-                  $loading={false}
-                  disabled={false}
-                  style={{ width: "100%"}}
-                />
-                {/* <SmallMaxButton width={"100px"} onClick={() => {position?.totalPosition ? setNewPosition(position?.totalPosition) : null}}>
-                  Reset
-                </SmallMaxButton> */}
-              </ResponsiveHeaderText>
-              </div>
-              <CurrencyLogo currency={token0} size={'50px'} />
-            </RowBetween>
+                }
+              }}
+              showMaxButton={false}
+              currency={inputIsToken0 ? token1 : token0}
+            />
+            </AutoColumn>
           </>
         </AutoColumn>
-      </LightCard>
+      </DarkCard>
       <TransactionDetails>
         <Wrapper style={{ marginTop: '0' }}>
           <AutoColumn gap="sm" style={{ width: '100%', marginBottom: '-8px' }}>

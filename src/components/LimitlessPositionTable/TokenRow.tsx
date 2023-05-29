@@ -16,6 +16,7 @@ import { Link, useParams } from 'react-router-dom'
 import styled, { css, useTheme } from 'styled-components/macro'
 import { ClickableStyle, ThemedText } from 'theme'
 import moment from "moment"
+import { BigNumber as BN } from "bignumber.js"
 
 import {
   LARGE_MEDIA_BREAKPOINT,
@@ -38,11 +39,14 @@ import { useCurrency } from 'hooks/Tokens'
 import { AutoRow, RowBetween } from 'components/Row'
 import { LeveragePositionDetails } from 'types/leveragePosition'
 import { AutoColumn } from 'components/Column'
-import ClosePositionModal, { AddPremiumModal } from 'components/swap/CloseLeveragePositionModal'
+import ReducePositionModal, { AddPremiumModal } from 'components/swap/CloseLeveragePositionModal'
 import { useWeb3React } from '@web3-react/core'
 import { SmallButtonPrimary } from 'components/Button'
 import { ReduceButton, SmallMaxButton } from 'pages/RemoveLiquidity/styled'
 import { MaxButton } from 'pages/Pool/styleds'
+import { usePool } from 'hooks/usePools'
+import { Fraction, Price } from '@uniswap/sdk-core'
+import { DEFAULT_ERC20_DECIMALS } from 'constants/tokens'
 
 const Cell = styled.div`
   display: flex;
@@ -58,7 +62,7 @@ const StyledTokenRow = styled.div<{
   background-color: transparent;
   display: grid;
   font-size: 16px;
-  grid-template-columns: 2.75fr 2fr 2fr 2fr 2fr 2fr 1.3fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 0.5fr;
   line-height: 24px;
   max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT};
   min-width: 390px;
@@ -91,15 +95,15 @@ const StyledTokenRow = styled.div<{
   }
 
   @media only screen and (max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT}) {
-    grid-template-columns: 2.75fr 2fr 2fr 2fr 2fr 2fr 1.3fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 0.5fr;
   }
 
   @media only screen and (max-width: ${LARGE_MEDIA_BREAKPOINT}) {
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 0.5fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 0.5fr;
   }
 
   @media only screen and (max-width: ${MEDIUM_MEDIA_BREAKPOINT}) {
-    grid-template-columns:  1fr 1fr 1fr 1fr 1fr 1fr 0.5fr;
+    grid-template-columns:  1fr 1fr 1fr 1fr 1fr 1fr 1fr 0.5fr;
   }
 
   @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
@@ -356,12 +360,27 @@ export const HEADER_DESCRIPTIONS: Record<PositionSortMethod, ReactNode | undefin
       Time left for position repayment
     </Trans>
   ),
-  [PositionSortMethod.RECENT_PREMIUM]: (
-    <Trans>Recent Premium (Total Premium Paid)</Trans>
+  [PositionSortMethod.ENTRYPRICE]: (
+    <Trans>
+      Entry Price
+    </Trans>
   ),
-  [PositionSortMethod.UNUSED_PREMIUM]: (
-    <Trans>Unused Premium Description</Trans>
+  [PositionSortMethod.PNL]: (
+    <Trans>
+      Profit/Loss
+    </Trans>
+  ),
+  [PositionSortMethod.REMAINING]: (
+    <Trans>
+      Remaining Premium
+    </Trans>
   )
+  // [PositionSortMethod.RECENT_PREMIUM]: (
+  //   <Trans>Recent Premium (Total Premium Paid)</Trans>
+  // ),
+  // [PositionSortMethod.UNUSED_PREMIUM]: (
+  //   <Trans>Unused Premium Description</Trans>
+  // )
 }
 
 /* Get singular header cell for header row */
@@ -397,8 +416,9 @@ function PositionRow({
   value,
   collateral,
   repaymentTime,
-  recentPremium,
-  unusedPremium,
+  PnL,
+  entryPrice,
+  remainingPremium,
   position,
   ...rest
 }: {
@@ -409,8 +429,11 @@ function PositionRow({
   collateral: ReactNode
   repaymentTime: ReactNode
   positionInfo: ReactNode
-  recentPremium: ReactNode
-  unusedPremium: ReactNode
+  // recentPremium: ReactNode
+  // unusedPremium: ReactNode
+  PnL: ReactNode
+  entryPrice: ReactNode
+  remainingPremium: ReactNode
   position?: LeveragePositionDetails,
   last?: boolean
   style?: CSSProperties
@@ -433,11 +456,12 @@ function PositionRow({
       </ReduceButton>
     </AutoRow>
   )
+
   const rowCells = (
     <>
       {/* <ListNumberCell header={header}>{listNumber}</ListNumberCell> */}
       {showClose && (
-        <ClosePositionModal
+        <ReducePositionModal
           isOpen={showClose}
           trader={account}
           leverageManagerAddress={position?.leverageManagerAddress ?? undefined}
@@ -469,10 +493,13 @@ function PositionRow({
         {repaymentTime}
       </PriceCell>
       <PriceCell data-testid="premium-cell" sortable={header}>
-        {recentPremium}
+        {remainingPremium}
       </PriceCell>
       <PriceCell data-testid="premium-cell" sortable={header}>
-        {unusedPremium}
+        {entryPrice}
+      </PriceCell>
+      <PriceCell data-testid="premium-cell" sortable={header}>
+        {PnL}
       </PriceCell>
       <ActionCell data-testid="action-cell" sortable={header}>
         {
@@ -482,6 +509,7 @@ function PositionRow({
       {/* <SparkLineCell>{sparkLine}</SparkLineCell> */}
     </>
   )
+
   if (header) return <StyledHeaderRow data-testid="header-row">{rowCells}</StyledHeaderRow>
   return <StyledTokenRow {...rest}>{rowCells}</StyledTokenRow>
 }
@@ -494,8 +522,11 @@ export function HeaderRow() {
       positionInfo={<ThemedText.TableText>Position</ThemedText.TableText>}
       value={<HeaderCell category={PositionSortMethod.VALUE} />}
       collateral={<HeaderCell category={PositionSortMethod.COLLATERAL} />}
-      recentPremium={<HeaderCell category={PositionSortMethod.RECENT_PREMIUM} />}
-      unusedPremium={<HeaderCell category={PositionSortMethod.UNUSED_PREMIUM} />}
+      PnL={<HeaderCell category={PositionSortMethod.PNL} />}
+      entryPrice={<HeaderCell category={PositionSortMethod.ENTRYPRICE} />}
+      remainingPremium={<HeaderCell category={PositionSortMethod.REMAINING} />}
+      // recentPremium={<HeaderCell category={PositionSortMethod.RECENT_PREMIUM} />}
+      // unusedPremium={<HeaderCell category={PositionSortMethod.UNUSED_PREMIUM} />}
       repaymentTime={<HeaderCell category={PositionSortMethod.REPAYTIME} />}
     />
   )
@@ -517,8 +548,11 @@ export function LoadingRow(props: { first?: boolean; last?: boolean }) {
       value={<MediumLoadingBubble />}
       collateral={<LoadingBubble />}
       repaymentTime={<LoadingBubble />}
-      recentPremium={<LoadingBubble />}
-      unusedPremium={<LoadingBubble />}
+      PnL={<LoadingBubble />}
+      entryPrice={<LoadingBubble />}
+      remainingPremium={<LoadingBubble />}
+      // recentPremium={<LoadingBubble />}
+      // unusedPremium={<LoadingBubble />}
       {...props}
     />
   )
@@ -538,10 +572,11 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
   const token0 = useCurrency(token0Address)
   const token1 = useCurrency(token1Address)
 
+  const [poolState, pool] = usePool(token0 ?? undefined, token1 ?? undefined, position?.poolFee)
+
   const leverageFactor = useMemo(() => (
     (Number(initialCollateral) + Number(totalDebtInput)) / Number(initialCollateral)
   ), [initialCollateral, totalDebtInput]);
-
 
   const now = moment();
   const [timeLeft, isOverDue] = useMemo(() => {
@@ -554,6 +589,90 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
 
 
 
+  // /**
+  //    * Returns the current mid price of the pool in terms of token0, i.e. the ratio of token1 over token0
+  //    */
+  // get token0Price(): Price<Token, Token>;
+  // /**
+  //  * Returns the current mid price of the pool in terms of token1, i.e. the ratio of token0 over token1
+  //  */
+  // get token1Price(): Price<Token, Token>;
+
+  // pnl in input token.
+  // entry price in quote token / base token
+  const [pnl, entryPrice] = useMemo(() => {
+    if (
+      pool?.token0Price && 
+      pool?.token1Price && 
+      position.creationPrice && 
+      position.totalPosition &&
+      token0 &&
+      token1
+    ) {
+      // entryPrice if isToken0, output is in token0. so entry price would be in input token / output token
+      let _entryPrice = new BN(position.initialCollateral).plus(position.totalDebtInput).dividedBy(position.totalPosition)
+
+      // token0Price => token1 / token0, token1Price => token0 / token1.
+      // total position is in output token
+      let _pnl = position.isToken0 ? (
+       // token0Price => input / output, token1Price => output / input
+       // entry price => input / output -> token1 / token0. 
+       // total position -> output -> token0
+        new BN(pool.token0Price.toFixed(DEFAULT_ERC20_DECIMALS)).minus(_entryPrice).multipliedBy(position.totalPosition).toNumber() // pnl in token1
+      ) : (
+        // token1Price -> token0 / token1
+        // entry price -> input / output -> token0 / token1
+        // total position -> output -> token1
+        new BN(pool.token1Price.toFixed(DEFAULT_ERC20_DECIMALS)).minus(_entryPrice).multipliedBy(position.totalPosition).toNumber() // pnl in token0
+      )
+  
+      // use token0 as quote, token1 as base
+      // pnl will be in output token
+      // entry price will be in quote token.
+    
+      if (pool.token0Price.greaterThan(1)) {
+        // entry price = token1 / token0
+        return [_pnl, position.isToken0 ? _entryPrice.toNumber() : new BN(1).dividedBy(_entryPrice).toNumber()]
+      } else {
+        // entry price = token0 / token1
+        return [_pnl, position.isToken0 ? new BN(1).dividedBy(_entryPrice).toNumber() : _entryPrice.toNumber()]
+      }
+    }
+
+    return [undefined, undefined]
+  }, [position, pool?.token0Price, pool?.token1Price, token0, token1])
+
+  const quoteBaseSymbol = useMemo(() => {
+    if (token0 && token1 && pool?.token0Price) {
+      if (pool.token0Price.greaterThan(1)) {
+        return `${token0.symbol}/${token1.symbol}`
+      } else {
+        return `${token1.symbol}/${token0.symbol}`
+      }
+    }
+    return '-/-'
+  }, [pool, token1, token0])
+
+  const [inputCurrencySymbol, outputCurrencySymbol] = useMemo(() => {
+    if (position.isToken0) {
+      return [token1?.symbol, token0?.symbol]
+    } else {
+      return [token0?.symbol, token1?.symbol]
+    }
+  }, [
+    token0,
+    token1,
+    position
+  ])
+
+  // const token0Quote = useMemo(() => {
+  //   return pool?.token0Price?.greaterThan(1)
+  // },[pool?.token0Price])
+
+  // console.log("position: ", position)
+
+  const arrow = getDeltaArrow(pnl, 18)
+
   // TODO: currency logo sizing mobile (32px) vs. desktop (24px)
   return (
     <div ref={ref} data-testid={`token-table-row-${position.tokenId}`}>
@@ -564,10 +683,10 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
           positionInfo={
             <ClickableContent>
               <RowBetween>
-                <DoubleCurrencyLogo margin={true} size={30} currency0={token0 ?? undefined} currency1={token1 ?? undefined} />
+                {/* <DoubleCurrencyLogo margin={true} size={30} currency0={token0 ?? undefined} currency1={token1 ?? undefined} /> */}
                 <PositionInfo>
                   <ThemedText.TableText margin="0" padding="0">
-                    <GreenText> x{formatNumber(leverageFactor)} Long </GreenText> {isToken0 ? token0?.symbol : token1?.symbol}
+                    <GreenText> x{formatNumber(leverageFactor)}</GreenText> {outputCurrencySymbol}
                   </ThemedText.TableText>
                 </PositionInfo>
               </RowBetween>
@@ -576,14 +695,14 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
           value={
             <Trans>
               <ThemedText.TableText>
-                {formatNumber(Number(position.totalPosition))} {isToken0 ? token0?.symbol : token1?.symbol}
+                {formatNumber(Number(position.totalPosition))} {outputCurrencySymbol}
               </ThemedText.TableText>
             </Trans>
           }
           collateral={
             <Trans>
               <ThemedText.TableText>
-                {formatNumber(Number(position.initialCollateral))} {isToken0 ? token1?.symbol : token0?.symbol}
+                {formatNumber(Number(position.initialCollateral))} {inputCurrencySymbol}
               </ThemedText.TableText>
             </Trans>
           }
@@ -603,22 +722,50 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
               </ThemedText.TableText>
             </Trans>
           }
-          recentPremium={
-            <Trans>
-              <AutoColumn>
-                <ThemedText.TableText>
-                  {formatNumber(Number(position.recentPremium))} {isToken0 ? token0?.symbol : token1?.symbol}
-                </ThemedText.TableText>
-              </AutoColumn>
-            </Trans>
-          }
-          unusedPremium={
+          PnL={
             <Trans>
               <ThemedText.TableText>
-                {formatNumber(Number(position.unusedPremium))} {isToken0 ? token1?.symbol : token0?.symbol}
+                <AutoRow>
+                  <ArrowCell>
+                    {arrow}
+                  </ArrowCell>
+                  <DeltaText delta={Number(pnl)}>
+                    {pnl ? formatNumber(pnl) : "-"} {inputCurrencySymbol}
+                  </DeltaText>
+                </AutoRow>
               </ThemedText.TableText>
             </Trans>
           }
+          entryPrice={
+            <Trans>
+              <ThemedText.TableText>
+                {formatNumber(entryPrice)} {quoteBaseSymbol}
+              </ThemedText.TableText>
+            </Trans>
+          }
+          remainingPremium={
+            <Trans>
+              <ThemedText.TableText>
+                {formatNumber(Number(position.unusedPremium))} {inputCurrencySymbol}
+              </ThemedText.TableText>
+            </Trans>
+          }
+          // recentPremium={
+          //   <Trans>
+          //     <AutoColumn>
+          //       <ThemedText.TableText>
+          //         {formatNumber(Number(position.recentPremium))} {isToken0 ? token0?.symbol : token1?.symbol}
+          //       </ThemedText.TableText>
+          //     </AutoColumn>
+          //   </Trans>
+          // }
+          // unusedPremium={
+          //   <Trans>
+          //     <ThemedText.TableText>
+          //       {formatNumber(Number(position.unusedPremium))} {isToken0 ? token1?.symbol : token0?.symbol}
+          //     </ThemedText.TableText>
+          //   </Trans>
+          // }
           position={position}
         // first={tokenListIndex === 0}
         // last={tokenListIndex === tokenListLength - 1}
@@ -628,4 +775,4 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
   )
 })
 
-LoadedRow.displayName = 'LoadedRow'
+

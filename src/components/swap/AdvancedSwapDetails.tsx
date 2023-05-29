@@ -197,7 +197,7 @@ export function CloseLeveragePositionDetails({
               }
             >
               <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
-                <Trans>Total Position</Trans>
+                <Trans>Original Position</Trans>
               </ThemedText.DeprecatedSubHeader>
             </MouseoverTooltip>
           </RowFixed>
@@ -216,7 +216,7 @@ export function CloseLeveragePositionDetails({
             // disableHover={hideInfoTooltips}
             >
               <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
-                <Trans>Total Debt</Trans>
+                <Trans>Original Debt</Trans>
               </ThemedText.DeprecatedSubHeader>
             </MouseoverTooltip>
           </RowFixed>

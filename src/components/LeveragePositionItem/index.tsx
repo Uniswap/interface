@@ -269,7 +269,7 @@ export default function LeveragePositionItem({
   // const collateral = (totalLiquidity - totalDebt)
   const handleConfirmDismiss = ()=>{
     setShowClose(false); 
-  } 
+  }
   const handlePremiumConfirmDismiss = ()=>{
     setShowAddPremium(false); 
   }
@@ -288,7 +288,7 @@ export default function LeveragePositionItem({
   const PNL = useMemo(() => {
     let x = isToken0 ? 1:Number(currentPrice)// : 1/Number(currentPrice)
     // console.log("x", x, totalDebtInput, totalLiquidity, currentPrice, enterPrice)
-    return !isToken0?(Number(totalLiquidity))*(1/Number(currentPrice) - 1/Number(enterPrice?.toFixed(10)))
+    return !isToken0 ? (Number(totalLiquidity)) * ( 1/Number(currentPrice) - 1/Number(enterPrice?.toFixed(10)) )
           : (Number(totalLiquidity))*(Number(currentPrice) - Number(enterPrice?.toFixed(10)))
   }, [pool, enterPrice])
   const remainingPremium = ((1- (Date.now() - Number(repayTime)*1000)/86400000)*

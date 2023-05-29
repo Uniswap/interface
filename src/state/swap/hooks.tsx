@@ -28,7 +28,8 @@ import JSBI from 'jsbi'
 import { BigNumber } from 'ethers'
 import { input } from 'nft/components/layout/Checkbox.css'
 import { useAllV3Routes } from 'hooks/useAllV3Routes'
-import { POOL_INIT_CODE_HASH, V3_CORE_FACTORY_ADDRESSES } from 'constants/addresses'
+import { POOL_INIT_CODE_HASH, V3_CORE_FACTORY_ADDRESSES, feth } from 'constants/addresses'
+import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
 // import { useLeveragePosition } from 'hooks/useV3Positions'
 
 export function useSwapState(): AppState['swap'] {
@@ -154,7 +155,7 @@ export function useBestPoolAddress(
 }
 
 
-export function useDerivedLeverageCreationInfo()
+export function useDerivedLeverageCreationInfo({ allowance } : { allowance: ApprovalState })
   : {
     currencies: { [field in Field]?: Currency | null }
     currencyBalances: { [field in Field]?: CurrencyAmount<Currency> }
@@ -162,12 +163,13 @@ export function useDerivedLeverageCreationInfo()
     inputError?: ReactNode
     trade: LeverageTrade
     allowedSlippage: Percent
+    contractError?: ReactNode
   } {
 
   const { account } = useWeb3React()
   const [tradeState, setTradeState] = useState<LeverageTradeState>(LeverageTradeState.LOADING)
   const [contractResult, setContractResult] = useState()
-  const [contractError, setContractError] = useState()
+  // const [contractError, setContractError] = useState()
 
   const {
     typedValue,
@@ -229,7 +231,7 @@ export function useDerivedLeverageCreationInfo()
   if (debouncedAmount && Number(leverageFactor) > 1) {
     const _input = Number(debouncedAmount.toFixed()) * (10 ** Number(inputCurrency?.wrapped.decimals))
     const _borrowAmount = _input * (Number(leverageFactor) - 1)
-    //   , _borrowAmount.toFixed(0) ); 
+    //   , _borrowAmount.toFixed(0) );
   }
 
   // retrieves the trade object
@@ -269,7 +271,7 @@ export function useDerivedLeverageCreationInfo()
         setContractResult(trade)
       } catch (err) {
         console.log("simulation error: ", err, err.message)
-        setContractError(err.message)
+        // setContractError(err)
         setTradeState(LeverageTradeState.INVALID)
       }
     } else {
@@ -280,7 +282,7 @@ export function useDerivedLeverageCreationInfo()
 
   useEffect(() => {
     simulate()
-  }, [currencies, leverageManager, leverage, leverageFactor, debouncedAmount])
+  }, [currencies, leverageManager, leverage, leverageFactor, debouncedAmount, allowance])
   // console.log("contractResult", pool, contractResult, initialPrice, debouncedAmount)
   const trade: LeverageTrade = useMemo(() => {
     if (
@@ -290,8 +292,7 @@ export function useDerivedLeverageCreationInfo()
       outputCurrency?.wrapped && 
       inputCurrency?.wrapped && 
       debouncedAmount
-      ) {
-
+    ) {
       const position: any = contractResult[0]
       const expectedOutput = new BN(position.totalPosition.toString()).shiftedBy(-outputCurrency?.wrapped.decimals).toFixed(6)
       const borrowedAmount = new BN(position.totalDebtInput.toString()).shiftedBy(-inputCurrency?.wrapped.decimals).toFixed(6)
@@ -325,7 +326,7 @@ export function useDerivedLeverageCreationInfo()
         effectiveLeverage: undefined
       }
     }
-  }, [leverageFactor, initialPrice, tradeState, contractResult, leverageManager, leverage, debouncedAmount, currencies, inputCurrency, outputCurrency])
+  }, [allowance, leverageFactor, initialPrice, tradeState, contractResult, leverageManager, leverage, debouncedAmount, currencies, inputCurrency, outputCurrency])
 
   const inputError = useMemo(() => {
     let inputError: ReactNode | undefined
@@ -358,12 +359,17 @@ export function useDerivedLeverageCreationInfo()
       inputError = inputError ?? <Trans>Insufficient Liquidity</Trans>
     }
 
-    if (trade.state === LeverageTradeState.INVALID) {
-      inputError = inputError ?? <Trans>Invalid Trade</Trans>
-    }
-
     return inputError
-  }, [account, allowedSlippage, currencies, currencyBalances, parsedAmount, leverage, contractError, leverageFactor, inputCurrency, trade])
+  }, [allowance, account, allowedSlippage, currencies, currencyBalances, parsedAmount, leverage, leverageFactor, inputCurrency, trade])
+
+  const contractError = useMemo(() => {
+    let _contractError;
+
+    if (trade.state === LeverageTradeState.INVALID) {
+      _contractError = _contractError ?? <Trans>Invalid Trade</Trans>
+    }
+    return _contractError
+  }, [allowance, account, allowedSlippage, currencies, currencyBalances, parsedAmount, leverage, leverageFactor, inputCurrency, trade])
 
   return {
     trade,
@@ -371,7 +377,8 @@ export function useDerivedLeverageCreationInfo()
     currencyBalances,
     parsedAmount,
     inputError: inputError,
-    allowedSlippage
+    allowedSlippage,
+    contractError
   }
 }
 
@@ -466,9 +473,9 @@ export function useDerivedSwapInfo(): {
       }
     }
 
-    if (leverage && Number(leverageFactor) <= 1) {
-      inputError = inputError ?? <Trans>Invalid Leverage</Trans>
-    }
+    // if (leverage && Number(leverageFactor) <= 1) {
+    //   inputError = inputError ?? <Trans>Invalid Leverage</Trans>
+    // }
 
     // compare input balance to max input based on version
     const [balanceIn, amountIn] = [currencyBalances[Field.INPUT], trade.trade?.maximumAmountIn(allowedSlippage)]

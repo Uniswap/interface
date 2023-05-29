@@ -108,7 +108,7 @@ export function useLeveragePositions(account: string | undefined): {loading: boo
 }
 
 export function convertBNToStr(num: BigNumber, decimals: number) {
-  return new BN(num.toString()).shiftedBy(-decimals).toFixed(6)
+  return new BN(num.toString()).shiftedBy(-decimals).toFixed(18)
 }
 
 export enum PositionState {
@@ -163,6 +163,7 @@ export function useLeveragePositionFromTokenId(tokenId: string | undefined): { l
       error,
       tokenId
     ])
+
   return {
     loading,
     error,
