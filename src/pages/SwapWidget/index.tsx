@@ -228,7 +228,7 @@ export default function SwapWidget() {
   const loadedUrlParams = useDefaultsFromURLSearch()
   const [priceImpactAccepted, setPriceImpactAccepted] = useState(false)
   const [feeImpactAccepted, setFeeImpactAccepted] = useState(false)
-  const refEnabled = process.env.REACT_APP_REFERRAL_ENABLED
+  const refEnabled = false //process.env.REACT_APP_REFERRAL_ENABLED
 
   // token warning stuff
   const [loadedInputCurrency, loadedOutputCurrency] = [
