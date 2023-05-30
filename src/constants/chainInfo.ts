@@ -148,7 +148,7 @@ const CHAIN_INFO: ChainInfoMap = {
   [SupportedChainId.POLYGON]: {
     networkType: NetworkType.L1,
     blockWaitMsBeforeWarning: ms`10m`,
-    bridge: 'https://wallet.polygon.technology',
+    bridge: 'https://wallet.polygon.technology/polygon/bridge',
     docs: 'https://polygon.io/',
     explorer: 'https://polygonscan.com/',
     infoLink: 'https://info.uniswap.org/#/polygon/',
