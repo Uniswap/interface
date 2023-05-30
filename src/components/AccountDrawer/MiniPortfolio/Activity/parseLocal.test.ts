@@ -12,7 +12,7 @@ import {
 } from 'state/transactions/types'
 import { renderHook } from 'test-utils/render'
 
-import { parseLocalActivity, useLocalActivities } from './parseLocal'
+import { transactionToActivity, useLocalActivities } from './parseLocal'
 
 function mockSwapInfo(
   type: MockTradeType,
@@ -237,7 +237,7 @@ describe('parseLocalActivity', () => {
       },
     } as TransactionDetails
     const chainId = SupportedChainId.MAINNET
-    expect(parseLocalActivity(details, chainId, mockTokenAddressMap)).toEqual({
+    expect(transactionToActivity(details, chainId, mockTokenAddressMap)).toEqual({
       chainId: 1,
       currencies: [MockUSDC_MAINNET, MockDAI],
       descriptor: '1.00 USDC for 1.00 DAI',
@@ -279,7 +279,7 @@ describe('parseLocalActivity', () => {
       },
     } as TransactionDetails
     const chainId = SupportedChainId.MAINNET
-    expect(parseLocalActivity(details, chainId, mockTokenAddressMap)).toMatchObject({
+    expect(transactionToActivity(details, chainId, mockTokenAddressMap)).toMatchObject({
       chainId: 1,
       currencies: [MockUSDC_MAINNET, MockDAI],
       descriptor: '1.00 USDC for 1.00 DAI',
@@ -304,7 +304,7 @@ describe('parseLocalActivity', () => {
     } as TransactionDetails
     const chainId = SupportedChainId.MAINNET
     const tokens = {} as ChainTokenMap
-    expect(parseLocalActivity(details, chainId, tokens)).toMatchObject({
+    expect(transactionToActivity(details, chainId, tokens)).toMatchObject({
       chainId: 1,
       currencies: [undefined, undefined],
       descriptor: 'Unknown for Unknown',

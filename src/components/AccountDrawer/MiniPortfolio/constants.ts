@@ -1,5 +1,6 @@
 import { t } from '@lingui/macro'
 import { TransactionStatus } from 'graphql/data/__generated__/types-and-hooks'
+import { DutchLimitOrderStatus } from 'state/signatures/types'
 import { TransactionType } from 'state/transactions/types'
 
 // use even number because rows are in groups of 2
@@ -152,4 +153,36 @@ export function getActivityTitle(type: TransactionType, status: TransactionStatu
     if (alternateTitle !== undefined) return alternateTitle[status]
   }
   return TransactionTitleTable[type][status]
+}
+
+const SwapTitleTable = TransactionTitleTable[TransactionType.SWAP]
+export const OrderTextTable: {
+  [status in DutchLimitOrderStatus]: { title: string; status: TransactionStatus; statusMessage?: string }
+} = {
+  [DutchLimitOrderStatus.OPEN]: {
+    title: SwapTitleTable.PENDING,
+    status: TransactionStatus.Pending,
+  },
+  [DutchLimitOrderStatus.FILLED]: {
+    title: SwapTitleTable.CONFIRMED,
+    status: TransactionStatus.Confirmed,
+  },
+  [DutchLimitOrderStatus.EXPIRED]: {
+    title: t`Swap expired`,
+    statusMessage: t`Your swap could not be fulfilled at this time. Please try again.`,
+    status: TransactionStatus.Failed,
+  },
+  [DutchLimitOrderStatus.ERROR]: {
+    title: SwapTitleTable.FAILED,
+    status: TransactionStatus.Failed,
+  },
+  [DutchLimitOrderStatus.INSUFFICIENT_FUNDS]: {
+    title: SwapTitleTable.FAILED,
+    statusMessage: t`Your account had insufficent funds to complete this swap.`,
+    status: TransactionStatus.Failed,
+  },
+  [DutchLimitOrderStatus.CANCELLED]: {
+    title: t`Swap cancelled`,
+    status: TransactionStatus.Failed,
+  },
 }

@@ -6,8 +6,7 @@ export enum DutchLimitOrderStatus {
   ERROR = 'error',
   CANCELLED = 'cancelled',
   FILLED = 'filled',
-  UNVERIFIED = 'unverified',
-  INSUFFICIENT_FUNDS = 'insufficientFunds',
+  INSUFFICIENT_FUNDS = 'insufficient-funds',
 }
 
 export enum SignatureType {

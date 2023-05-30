@@ -8,6 +8,7 @@ export type Activity = {
   hash: string
   chainId: SupportedChainId
   status: TransactionStatus
+  statusMessage?: string
   timestamp: number
   title: string
   descriptor?: string
@@ -18,4 +19,4 @@ export type Activity = {
   nonce?: number | null
 }
 
-export type ActivityMap = { [hash: string]: Activity | undefined }
+export type ActivityMap = { [id: string]: Activity | undefined }

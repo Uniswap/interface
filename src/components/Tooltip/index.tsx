@@ -6,12 +6,15 @@ import noop from 'utils/noop'
 import Popover, { PopoverProps } from '../Popover'
 
 export enum TooltipSize {
+  ExtraSmall = '200px',
   Small = '256px',
   Large = '400px',
 }
 
 const getPaddingForSize = (size: TooltipSize) => {
   switch (size) {
+    case TooltipSize.ExtraSmall:
+      return '8px'
     case TooltipSize.Small:
       return '12px'
     case TooltipSize.Large:

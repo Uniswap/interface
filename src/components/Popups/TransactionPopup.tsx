@@ -1,5 +1,5 @@
 import { useWeb3React } from '@web3-react/core'
-import { parseLocalActivity } from 'components/AccountDrawer/MiniPortfolio/Activity/parseLocal'
+import { transactionToActivity } from 'components/AccountDrawer/MiniPortfolio/Activity/parseLocal'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import PortfolioRow from 'components/AccountDrawer/MiniPortfolio/PortfolioRow'
 import Column from 'components/Column'
@@ -20,7 +20,7 @@ const Descriptor = styled(ThemedText.BodySmall)`
 function TransactionPopupContent({ tx, chainId }: { tx: TransactionDetails; chainId: number }) {
   const success = tx.receipt?.status === 1
   const tokens = useAllTokensMultichain()
-  const activity = parseLocalActivity(tx, chainId, tokens)
+  const activity = transactionToActivity(tx, chainId, tokens)
   const { ENSName } = useENSName(activity?.otherAccount)
 
   if (!activity) return null

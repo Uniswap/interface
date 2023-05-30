@@ -6,6 +6,8 @@ import { SupportedChainId } from 'constants/chains'
 import { TransactionStatus } from 'graphql/data/__generated__/types-and-hooks'
 import { ChainTokenMap, useAllTokensMultichain } from 'hooks/Tokens'
 import { useMemo } from 'react'
+import { isOnChainOrder, useAllSignatures } from 'state/signatures/hooks'
+import { SignatureDetails, SignatureType } from 'state/signatures/types'
 import { useMultichainTransactions } from 'state/transactions/hooks'
 import {
   AddLiquidityV2PoolTransactionInfo,
@@ -22,7 +24,7 @@ import {
   WrapTransactionInfo,
 } from 'state/transactions/types'
 
-import { getActivityTitle } from '../constants'
+import { getActivityTitle, OrderTextTable } from '../constants'
 import { Activity, ActivityMap } from './types'
 
 function getCurrency(currencyId: string, chainId: SupportedChainId, tokens: ChainTokenMap): Currency | undefined {
@@ -129,7 +131,7 @@ function parseMigrateCreateV3(
   return { descriptor, currencies: [baseCurrency, quoteCurrency] }
 }
 
-export function parseLocalActivity(
+export function transactionToActivity(
   details: TransactionDetails,
   chainId: SupportedChainId,
   tokens: ChainTokenMap
@@ -187,17 +189,52 @@ export function parseLocalActivity(
   }
 }
 
+function signatureToActivity(signature: SignatureDetails, tokens: ChainTokenMap): Activity | undefined {
+  switch (signature.type) {
+    case SignatureType.SIGN_UNISWAPX_ORDER: {
+      // Only returns Activity items for orders that don't have an on-chain counterpart
+      if (isOnChainOrder(signature.status)) return undefined
+
+      const { title, statusMessage, status } = OrderTextTable[signature.status]
+
+      return {
+        hash: signature.orderHash,
+        chainId: signature.chainId,
+        title,
+        status,
+        timestamp: signature.addedTime / 1000,
+        // TODO(cartcrom): remove nonce requirements in Activity type refactor
+        nonce: 0,
+        statusMessage,
+        ...parseSwap(signature.swapInfo, signature.chainId, tokens),
+      }
+    }
+    default:
+      return undefined
+  }
+}
+
 export function useLocalActivities(account: string): ActivityMap {
   const allTransactions = useMultichainTransactions()
+  const allSignatures = useAllSignatures()
   const tokens = useAllTokensMultichain()
 
   return useMemo(() => {
-    const activityByHash: ActivityMap = {}
+    const activityMap: ActivityMap = {}
     for (const [transaction, chainId] of allTransactions) {
       if (transaction.from !== account) continue
 
-      activityByHash[transaction.hash] = parseLocalActivity(transaction, chainId, tokens)
+      const activity = transactionToActivity(transaction, chainId, tokens)
+      if (activity) activityMap[transaction.hash] = activity
     }
-    return activityByHash
-  }, [account, allTransactions, tokens])
+
+    for (const signature of Object.values(allSignatures)) {
+      if (signature.offerer !== account) continue
+
+      const activity = signatureToActivity(signature, tokens)
+      if (activity) activityMap[signature.id] = activity
+    }
+
+    return activityMap
+  }, [account, allSignatures, allTransactions, tokens])
 }
