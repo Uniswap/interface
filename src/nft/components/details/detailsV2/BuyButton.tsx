@@ -11,7 +11,7 @@ import { useBag } from 'nft/hooks'
 import { useBuyAssetCallback } from 'nft/hooks/useFetchAssets'
 import { useIsAssetInBag } from 'nft/hooks/useIsAssetInBag'
 import { GenieAsset } from 'nft/types'
-import { MouseEvent, useCallback, useState } from 'react'
+import { MouseEvent, useCallback, useEffect, useState } from 'react'
 import styled, { css } from 'styled-components/macro'
 import { BREAKPOINTS } from 'theme'
 import { shallow } from 'zustand/shallow'
@@ -105,11 +105,19 @@ export const BuyButton = ({ asset, onDataPage }: { asset: GenieAsset; onDataPage
     if (!account) {
       if (!accountDrawerOpen) toggleWalletDrawer()
       setWishBuyAsset(true)
+      setTimeout(() => setWishBuyAsset(false), 20000)
       return
     }
 
     fetchAndPurchaseSingleAsset(asset)
   }, [account, accountDrawerOpen, asset, fetchAndPurchaseSingleAsset, toggleWalletDrawer])
+
+  useEffect(() => {
+    if (wishBuyAsset && account) {
+      setWishBuyAsset(false)
+      fetchAndPurchaseSingleAsset(asset)
+    }
+  }, [wishBuyAsset, account, fetchAndPurchaseSingleAsset, asset])
 
   const secondaryButtonCta = assetInBag ? 'Remove from Bag' : 'Add to Bag'
   const SecondaryButtonIcon = () =>
@@ -150,7 +158,7 @@ export const BuyButton = ({ asset, onDataPage }: { asset: GenieAsset; onDataPage
             <Loader size="24px" stroke="white" />
           </>
         )}
-        {!wishBuyAsset && (
+        {!wishBuyAsset && !isLoadingRoute && (
           <>
             <Trans>Buy</Trans>
             <Price>{formatNumber(price)} ETH</Price>
