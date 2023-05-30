@@ -1,6 +1,7 @@
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
+import { DebounceSwapQuoteVariant, useDebounceSwapQuoteFlag } from 'featureFlags/flags/debounceSwapQuote'
 import { useMemo } from 'react'
 import { InterfaceTrade, TradeState } from 'state/routing/types'
 import { useRoutingAPITrade } from 'state/routing/useRoutingAPITrade'
@@ -10,9 +11,6 @@ import useAutoRouterSupported from './useAutoRouterSupported'
 import { useClientSideV3Trade } from './useClientSideV3Trade'
 import useDebounce from './useDebounce'
 import useIsWindowVisible from './useIsWindowVisible'
-
-// Prevents excessive quote requests between keystrokes.
-const DEBOUNCE_TIME = 350
 
 /**
  * Returns the best v2+v3 trade for a desired swap.
@@ -31,6 +29,10 @@ export function useBestTrade(
   const { chainId } = useWeb3React()
   const autoRouterSupported = useAutoRouterSupported()
   const isWindowVisible = useIsWindowVisible()
+
+  // Prevents excessive quote requests between keystrokes.
+  // This constant is temporarily inside the hook until we can remove the flag.
+  const DEBOUNCE_TIME = useDebounceSwapQuoteFlag() === DebounceSwapQuoteVariant.Enabled ? 650 : 350
 
   const [debouncedAmount, debouncedOtherCurrency] = useDebounce(
     useMemo(() => [amountSpecified, otherCurrency], [amountSpecified, otherCurrency]),
