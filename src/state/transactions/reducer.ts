@@ -19,7 +19,7 @@ interface AddTransactionPayload {
   from: string
   hash: string
   info: TransactionInfo
-  nonce: number
+  nonce?: number
 }
 
 export const initialState: TransactionState = {}

@@ -86,6 +86,7 @@ interface BaseSwapTransactionInfo extends BaseTransactionInfo {
   tradeType: TradeType
   inputCurrencyId: string
   outputCurrencyId: string
+  isUniswapXOrder: boolean
 }
 
 export interface ExactInputSwapTransactionInfo extends BaseSwapTransactionInfo {

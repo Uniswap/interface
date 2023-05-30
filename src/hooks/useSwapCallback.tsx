@@ -57,6 +57,7 @@ export function useSwapCallback(
                 expectedOutputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
                 outputCurrencyId: currencyId(trade.outputAmount.currency),
                 minimumOutputCurrencyAmountRaw: trade.minimumAmountOut(allowedSlippage).quotient.toString(),
+                isUniswapXOrder: false,
               }
             : {
                 type: TransactionType.SWAP,
@@ -66,6 +67,7 @@ export function useSwapCallback(
                 outputCurrencyId: currencyId(trade.outputAmount.currency),
                 outputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
                 expectedInputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
+                isUniswapXOrder: false,
               }
         )
         return response.hash

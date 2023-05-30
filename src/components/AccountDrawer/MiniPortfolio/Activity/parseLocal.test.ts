@@ -30,6 +30,7 @@ function mockSwapInfo(
       outputCurrencyId: outputCurrency.address,
       expectedOutputCurrencyAmountRaw: outputCurrencyAmountRaw,
       minimumOutputCurrencyAmountRaw: outputCurrencyAmountRaw,
+      isUniswapXOrder: false,
     }
   } else {
     return {
@@ -40,6 +41,7 @@ function mockSwapInfo(
       maximumInputCurrencyAmountRaw: inputCurrencyAmountRaw,
       outputCurrencyId: outputCurrency.address,
       outputCurrencyAmountRaw,
+      isUniswapXOrder: false,
     }
   }
 }
@@ -250,6 +252,7 @@ describe('parseLocalActivity', () => {
           outputCurrencyId: MockDAI.address,
           expectedOutputCurrencyAmountRaw: mockCurrencyAmountRaw,
           minimumOutputCurrencyAmountRaw: mockCurrencyAmountRaw,
+          isUniswapXOrder: false,
         },
         receipt: { status: 1, transactionHash: '0x123' },
         status: 'CONFIRMED',

@@ -9,6 +9,7 @@ import logs from './logs/slice'
 import mint from './mint/reducer'
 import mintV3 from './mint/v3/reducer'
 import { routingApi } from './routing/slice'
+import signatures from './signatures/reducer'
 import transactions from './transactions/reducer'
 import user from './user/reducer'
 import wallets from './wallets/reducer'
@@ -18,6 +19,7 @@ export default {
   user,
   connection,
   transactions,
+  signatures,
   wallets,
   mint,
   mintV3,
