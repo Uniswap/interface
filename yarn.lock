@@ -2701,7 +2701,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ethersproject/contracts@npm:5.7.0, @ethersproject/contracts@npm:^5.7.0":
+"@ethersproject/contracts@npm:5.7.0":
   version: 5.7.0
   resolution: "@ethersproject/contracts@npm:5.7.0"
   dependencies:
@@ -2838,7 +2838,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ethersproject/providers@npm:5.7.2, @ethersproject/providers@npm:^5.7.2":
+"@ethersproject/providers@npm:5.7.2":
   version: 5.7.2
   resolution: "@ethersproject/providers@npm:5.7.2"
   dependencies:
@@ -5649,6 +5649,13 @@ __metadata:
   version: 3.4.2-solc-0.7
   resolution: "@openzeppelin/contracts@npm:3.4.2-solc-0.7"
   checksum: 1a6048f31ed560c34429a05e534102c51124ecaf113aca7ebeb7897cfaaf61007cdd7952374c282adaeb79b04ee86ee80b16eed28b62fc6d60e3ffcd7a696895
+  languageName: node
+  linkType: hard
+
+"@openzeppelin/contracts@npm:4.7.0":
+  version: 4.7.0
+  resolution: "@openzeppelin/contracts@npm:4.7.0"
+  checksum: ac917e668505ffbd300fcb00fd2f39b5f1153f77f82d482988336a881134b806b2d820f4293962691ef4d6f9f8ee5ecc71da82c6eb6ad2f02810511e90fa0d96
   languageName: node
   linkType: hard
 
@@ -11185,7 +11192,7 @@ __metadata:
     "@uniswap/permit2-sdk": 1.2.0
     "@uniswap/router-sdk": 1.4.0
     "@uniswap/sdk-core": 3.2.2
-    "@uniswap/universal-router-sdk": 1.1.2
+    "@uniswap/universal-router-sdk": 1.5.1
     "@uniswap/v2-sdk": 3.0.1
     "@uniswap/v3-sdk": 3.9.0
     "@walletconnect/react-native-compat": 2.7.0
@@ -11297,28 +11304,13 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@uniswap/permit2-sdk@npm:1.2.0":
+"@uniswap/permit2-sdk@npm:1.2.0, @uniswap/permit2-sdk@npm:^1.2.0":
   version: 1.2.0
   resolution: "@uniswap/permit2-sdk@npm:1.2.0"
   dependencies:
     ethers: ^5.3.1
     tiny-invariant: ^1.3.1
   checksum: 524519c4f5492a721de9215f4c74c18af4a8a4f676273ccc9c01512fe36c8e8ac51dd3474b19021522b76ef2edd25d9c871b0eb051e22b6564e37cd2b9422920
-  languageName: node
-  linkType: hard
-
-"@uniswap/permit2-sdk@npm:^0.4.0":
-  version: 0.4.0
-  resolution: "@uniswap/permit2-sdk@npm:0.4.0"
-  dependencies:
-    "@ethersproject/abi": ^5.7.0
-    "@ethersproject/abstract-signer": ^5.7.0
-    "@ethersproject/contracts": ^5.7.0
-    "@ethersproject/hash": ^5.7.0
-    "@ethersproject/keccak256": ^5.7.0
-    "@ethersproject/providers": ^5.7.2
-    "@ethersproject/strings": ^5.7.0
-  checksum: c0bbd9c36586d73ed8793699239ef9d8afaac1bd62920855d65731f5c90d511958cf3ea5477ef274451c95104f7cf1b21d0d63a6036fe09f12e8205708c16738
   languageName: node
   linkType: hard
 
@@ -11376,26 +11368,30 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@uniswap/universal-router-sdk@npm:1.1.2":
-  version: 1.1.2
-  resolution: "@uniswap/universal-router-sdk@npm:1.1.2"
+"@uniswap/universal-router-sdk@npm:1.5.1":
+  version: 1.5.1
+  resolution: "@uniswap/universal-router-sdk@npm:1.5.1"
   dependencies:
-    "@uniswap/permit2-sdk": ^0.4.0
+    "@uniswap/permit2-sdk": ^1.2.0
     "@uniswap/router-sdk": ^1.4.0
     "@uniswap/sdk-core": ^3.1.0
-    "@uniswap/universal-router": 1.1.1
+    "@uniswap/universal-router": 1.4.2
     "@uniswap/v2-sdk": ^3.0.1
     "@uniswap/v3-sdk": ^3.9.0
     bignumber.js: ^9.0.2
     ethers: ^5.3.1
-  checksum: 7a2ad61e08d542d85af8951e40bc0c617733315a9678c19b3d4823bcf58d2e48e52ba6f6ad47d746fc9098a5356760bc7d6814f2633ef9edb21f6ba8dacc87a8
+  checksum: 754963144307a8d790cdb15ab4293d6f6f9ed139c389a7f2d30799cb274a46bd863a1cf46f654dbd6b3868baa9b48a0df01b91b8040c20fd07dea46bfd1e54be
   languageName: node
   linkType: hard
 
-"@uniswap/universal-router@npm:1.1.1":
-  version: 1.1.1
-  resolution: "@uniswap/universal-router@npm:1.1.1"
-  checksum: e220184e096f71cbb35d8e89affa53ca10ef45ca79eec98a1f41cdc14b855681046bc90826ff764d3bc523886218b5c8890aa1699699b9ad60bb9fcc11eb74fc
+"@uniswap/universal-router@npm:1.4.2":
+  version: 1.4.2
+  resolution: "@uniswap/universal-router@npm:1.4.2"
+  dependencies:
+    "@openzeppelin/contracts": 4.7.0
+    "@uniswap/v2-core": 1.0.1
+    "@uniswap/v3-core": 1.0.0
+  checksum: c784968603bc3132108b57db134ce8b322df70f63da42a6d18f908a5983054ea4233bf252157263313b59a784e7d7e78c109104dceba799818c02671b52ec6a1
   languageName: node
   linkType: hard
 

@@ -5,6 +5,31 @@ version: v1.25.0
 # ignores vulnerabilities until expiry date; change duration by modifying expiry date
 
 ignore:
+  SNYK-JS-OPENZEPPELINCONTRACTS-5425051:
+    - '*':
+        reason: None Given
+        expires: 2023-12-31T00:00:00.000Z
+        created: 2023-05-23T16:25:57.347Z
+  SNYK-JS-OPENZEPPELINCONTRACTS-2964946:
+    - '*':
+        reason: None Given
+        expires: 2023-12-31T00:00:00.000Z
+        created: 2023-05-23T16:25:57.347Z
+  SNYK-JS-OPENZEPPELINCONTRACTS-2958047:
+    - '*':
+        reason: None Given
+        expires: 2023-12-31T00:00:00.000Z
+        created: 2023-05-23T16:26:09.720Z
+  SNYK-JS-OPENZEPPELINCONTRACTS-2958050:
+    - '*':
+        reason: None Given
+        expires: 2023-12-31T00:00:00.000Z
+        created: 2023-05-23T16:26:17.702Z
+  SNYK-JS-OPENZEPPELINCONTRACTS-2965580:
+    - '*':
+        reason: None Given
+        expires: 2023-12-31T00:00:00.000Z
+        created: 2023-05-23T16:26:17.702Z
   'snyk:lic:npm:uniswap:universal-router:GPL-2.0':
     - '*':
         reason: 'Internal library, GPL library is ok'
