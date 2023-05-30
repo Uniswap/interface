@@ -1,4 +1,4 @@
-import { Trans } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 import { formatNumber } from '@uniswap/conedison/format'
 import { useWeb3React } from '@web3-react/core'
 import { useAccountDrawer } from 'components/AccountDrawer'
@@ -6,12 +6,14 @@ import { ButtonPrimary } from 'components/Button'
 import { ButtonGray } from 'components/Button'
 import Loader from 'components/Icons/LoadingSpinner'
 import Row from 'components/Row'
+import { useNftBalance } from 'graphql/data/nft/NftBalance'
 import { AddToBagIcon, CondensedBagIcon } from 'nft/components/icons'
-import { useBag } from 'nft/hooks'
+import { useBag, useProfilePageState, useSellAsset, useWalletCollections } from 'nft/hooks'
 import { useBuyAssetCallback } from 'nft/hooks/useFetchAssets'
 import { useIsAssetInBag } from 'nft/hooks/useIsAssetInBag'
-import { GenieAsset } from 'nft/types'
+import { GenieAsset, ProfilePageStateType } from 'nft/types'
 import { MouseEvent, useCallback, useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import styled, { css } from 'styled-components/macro'
 import { BREAKPOINTS } from 'theme'
 import { shallow } from 'zustand/shallow'
@@ -89,10 +91,20 @@ export const BuyButton = ({ asset, onDataPage }: { asset: GenieAsset; onDataPage
   const { account } = useWeb3React()
   const [accountDrawerOpen, toggleWalletDrawer] = useAccountDrawer()
   const { fetchAndPurchaseSingleAsset, isLoading: isLoadingRoute } = useBuyAssetCallback()
-  const [wishBuyAsset, setWishBuyAsset] = useState(false)
+  const [connectingToWallet, setConnectingToWallet] = useState(false)
   const [addToBagExpanded, setAddToBagExpanded] = useState(false)
-  const assetInBag = useIsAssetInBag(asset)
+  const navigate = useNavigate()
+  const setSellPageState = useProfilePageState((state) => state.setProfilePageState)
+  const resetSellAssets = useSellAsset((state) => state.reset)
+  const clearCollectionFilters = useWalletCollections((state) => state.clearCollectionFilters)
+
+  const { walletAssets } = useNftBalance(account ?? '', [], [{ address: asset.address, tokenId: asset.tokenId }], 1)
+  const walletAsset = walletAssets?.[0]
+
   const price = asset.sellorders?.[0]?.price.value
+  const ownsAsset = Boolean(walletAsset) && account?.toLowerCase() === asset.ownerAddress?.toLowerCase()
+
+  const assetInBag = useIsAssetInBag(asset)
   const { addAssetsToBag, removeAssetsFromBag } = useBag(
     ({ addAssetsToBag, removeAssetsFromBag }) => ({
       addAssetsToBag,
@@ -101,11 +113,18 @@ export const BuyButton = ({ asset, onDataPage }: { asset: GenieAsset; onDataPage
     shallow
   )
 
+  const navigateToProfile = useCallback(() => {
+    resetSellAssets()
+    setSellPageState(ProfilePageStateType.VIEWING)
+    clearCollectionFilters()
+    navigate('/nfts/profile')
+  }, [clearCollectionFilters, navigate, resetSellAssets, setSellPageState])
+
   const oneClickBuyAsset = useCallback(() => {
     if (!account) {
       if (!accountDrawerOpen) toggleWalletDrawer()
-      setWishBuyAsset(true)
-      setTimeout(() => setWishBuyAsset(false), 20000)
+      setConnectingToWallet(true)
+      setTimeout(() => setConnectingToWallet(false), 20000)
       return
     }
 
@@ -113,18 +132,29 @@ export const BuyButton = ({ asset, onDataPage }: { asset: GenieAsset; onDataPage
   }, [account, accountDrawerOpen, asset, fetchAndPurchaseSingleAsset, toggleWalletDrawer])
 
   useEffect(() => {
-    if (wishBuyAsset && account) {
-      setWishBuyAsset(false)
+    if (connectingToWallet && account) {
+      setConnectingToWallet(false)
       fetchAndPurchaseSingleAsset(asset)
     }
-  }, [wishBuyAsset, account, fetchAndPurchaseSingleAsset, asset])
+  }, [connectingToWallet, account, fetchAndPurchaseSingleAsset, asset])
 
-  const secondaryButtonCta = assetInBag ? 'Remove from Bag' : 'Add to Bag'
-  const SecondaryButtonIcon = () =>
-    assetInBag ? <CondensedBagIcon width="24px" height="24px" /> : <AddToBagIcon width="24px" height="24px" />
-  const secondaryButtonAction = (event: MouseEvent<HTMLButtonElement>) => {
-    assetInBag ? removeAssetsFromBag([asset]) : addAssetsToBag([asset])
-    event.currentTarget.blur()
+  if (ownsAsset) {
+    return (
+      <ButtonContainer onDataPage={Boolean(onDataPage)}>
+        <StyledBuyButton shouldHide={false} onClick={navigateToProfile}>
+          {price ? (
+            <>
+              <Trans>Edit Listing</Trans>
+              <Price>{formatNumber(price)} ETH</Price>
+            </>
+          ) : (
+            <>
+              <Trans>List</Trans>
+            </>
+          )}
+        </StyledBuyButton>
+      </ButtonContainer>
+    )
   }
 
   if (!price) {
@@ -139,16 +169,24 @@ export const BuyButton = ({ asset, onDataPage }: { asset: GenieAsset; onDataPage
     )
   }
 
+  const secondaryButtonCta = assetInBag ? t`Remove from Bag` : t`Add to Bag`
+  const SecondaryButtonIcon = () =>
+    assetInBag ? <CondensedBagIcon width="24px" height="24px" /> : <AddToBagIcon width="24px" height="24px" />
+  const secondaryButtonAction = (event: MouseEvent<HTMLButtonElement>) => {
+    assetInBag ? removeAssetsFromBag([asset]) : addAssetsToBag([asset])
+    event.currentTarget.blur()
+  }
+
   return (
     <ButtonContainer onDataPage={Boolean(onDataPage)}>
       {!onDataPage && (
         <>
           <StyledBuyButton
             shouldHide={addToBagExpanded}
-            disabled={isLoadingRoute || wishBuyAsset}
+            disabled={isLoadingRoute || connectingToWallet}
             onClick={() => oneClickBuyAsset()}
           >
-            {wishBuyAsset && (
+            {connectingToWallet && (
               <>
                 <Trans>Connect Wallet</Trans>
                 <Loader size="24px" stroke="white" />
@@ -160,7 +198,7 @@ export const BuyButton = ({ asset, onDataPage }: { asset: GenieAsset; onDataPage
                 <Loader size="24px" stroke="white" />
               </>
             )}
-            {!wishBuyAsset && !isLoadingRoute && (
+            {!connectingToWallet && !isLoadingRoute && (
               <>
                 <Trans>Buy</Trans>
                 <Price>{formatNumber(price)} ETH</Price>
