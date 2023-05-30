@@ -1,5 +1,9 @@
+import React, { forwardRef, useCallback, useEffect, useRef, useState } from 'react'
 import { Icon } from 'react-feather'
 import styled, { css } from 'styled-components/macro'
+import useResizeObserver from 'use-resize-observer'
+
+import Row from '../Row'
 
 export const IconHoverText = styled.span`
   color: ${({ theme }) => theme.textPrimary};
@@ -13,12 +17,17 @@ export const IconHoverText = styled.span`
   left: 10px;
 `
 
+const widthTransition = `width ease-in 80ms`
+
 const IconStyles = css`
   background-color: ${({ theme }) => theme.backgroundInteractive};
+  transition: ${widthTransition};
   border-radius: 12px;
-  display: inline-block;
+  display: flex;
+  padding: 0;
   cursor: pointer;
   position: relative;
+  overflow: hidden;
   height: 32px;
   width: 32px;
   color: ${({ theme }) => theme.textPrimary};
@@ -28,7 +37,7 @@ const IconStyles = css`
       theme: {
         transition: { duration, timing },
       },
-    }) => `${duration.fast} background-color ${timing.in}`};
+    }) => `${duration.fast} background-color ${timing.in}, ${widthTransition}`};
 
     ${IconHoverText} {
       opacity: 1;
@@ -36,7 +45,7 @@ const IconStyles = css`
   }
   :active {
     background-color: ${({ theme }) => theme.backgroundSurface};
-    transition: background-color 50ms linear;
+    transition: background-color 50ms linear, ${widthTransition};
   }
 `
 
@@ -51,27 +60,29 @@ const IconBlockButton = styled.button`
 `
 
 const IconWrapper = styled.span`
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
   width: 16px;
   height: 16px;
+  margin: auto;
+  display: flex;
 `
-interface BaseProps {
+type BaseProps = {
   Icon: Icon
+  children?: React.ReactNode
 }
+
 interface IconLinkProps extends React.ComponentPropsWithoutRef<'a'>, BaseProps {}
 interface IconButtonProps extends React.ComponentPropsWithoutRef<'button'>, BaseProps {}
 
-const IconBlock = (props: React.ComponentPropsWithoutRef<'a' | 'button'>) => {
+type IconBlockProps = React.ComponentPropsWithoutRef<'a' | 'button'>
+
+const IconBlock = forwardRef<IconBlockProps>(function IconBlock(props, ref: any) {
   if ('href' in props) {
-    return <IconBlockLink {...props} />
+    return <IconBlockLink ref={ref} {...props} />
   }
   // ignoring 'button' 'type' conflict between React and styled-components
   // @ts-ignore
-  return <IconBlockButton {...props} />
-}
+  return <IconBlockButton ref={ref} {...props} />
+})
 
 const IconButton = ({ Icon, ...rest }: IconButtonProps | IconLinkProps) => (
   <IconBlock {...rest}>
@@ -80,5 +91,114 @@ const IconButton = ({ Icon, ...rest }: IconButtonProps | IconLinkProps) => (
     </IconWrapper>
   </IconBlock>
 )
+
+type IconWithTextProps = (IconButtonProps | IconLinkProps) & {
+  text: string
+  onConfirm?: () => void
+  onShowConfirm?: (on: boolean) => void
+}
+
+const TextWrapper = styled.div`
+  display: flex;
+  flex-shrink: 0;
+  overflow: hidden;
+  min-width: min-content;
+`
+
+/**
+ * Allows for hiding and showing some text next to an IconButton
+ * Note that for width transitions to animate in CSS we need to always specify the width (no auto)
+ * so there's resize observing and measuring going on here.
+ */
+export const IconWithTextButton = ({ Icon, text, onConfirm, onShowConfirm, onClick, ...rest }: IconWithTextProps) => {
+  const [showText, _setShowText] = useState(false)
+  const frameObserver = useResizeObserver()
+  const hiddenObserver = useResizeObserver()
+
+  const setShowText = useCallback(
+    (val: boolean) => {
+      _setShowText(val)
+      onShowConfirm?.(val)
+    },
+    [onShowConfirm]
+  )
+
+  // need to avoid using updates once opened
+  const dimensionsRef = useRef({
+    frame: 0,
+    hidden: 0,
+  })
+  const dimensions = (() => {
+    if (!showText) {
+      dimensionsRef.current = { frame: frameObserver.width || 0, hidden: hiddenObserver.width || 0 }
+    }
+    return dimensionsRef.current
+  })()
+
+  // keyboard action to cancel the Disconnect slide out button
+  useEffect(() => {
+    if (!showText) return
+    const isClient = typeof window !== 'undefined'
+    if (!isClient) return
+    if (!showText) return
+    const keyHandler = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setShowText(false)
+        e.preventDefault()
+        e.stopPropagation()
+      }
+    }
+    window.addEventListener('keydown', keyHandler, { capture: true })
+    return () => {
+      window.removeEventListener('keydown', keyHandler, { capture: true })
+    }
+  }, [setShowText, showText])
+
+  const xPad = showText ? 12 : 0
+  const width = showText ? dimensions.frame + dimensions.hidden + xPad : 32
+
+  return (
+    <IconBlock
+      // @ts-ignore its a fine ref
+      ref={frameObserver.ref}
+      {...rest}
+      style={{
+        width,
+        paddingLeft: xPad,
+        paddingRight: xPad,
+      }}
+      onClick={(e: any) => {
+        if (showText) {
+          onConfirm?.()
+        } else {
+          onClick?.(e)
+          setShowText(!showText)
+        }
+      }}
+    >
+      <Row height="100%" gap="xs">
+        <IconWrapper>
+          <Icon strokeWidth={1.5} size={16} />
+        </IconWrapper>
+
+        {/* this outer div is so we can cut it off but keep the inner text width full-width so we can measure it */}
+        <div
+          style={{
+            maxWidth: showText ? dimensions.hidden : 0,
+            minWidth: showText ? dimensions.hidden : 0,
+            overflow: 'hidden',
+          }}
+        >
+          <TextWrapper
+            // @ts-ignore its a fine ref
+            ref={hiddenObserver.ref}
+          >
+            {text}
+          </TextWrapper>
+        </div>
+      </Row>
+    </IconBlock>
+  )
+}
 
 export default IconButton
