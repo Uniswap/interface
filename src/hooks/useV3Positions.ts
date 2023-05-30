@@ -94,7 +94,7 @@ export function useLeveragePositions(account: string | undefined): {loading: boo
           isToken0: position.isToken0,
           openTime: position.openTime.toString(),
           repayTime: position.repayTime.toString(),
-          borrowInfo: position.borrowInfo.map((info: any) => ({ tick: info.tick, liquidity: convertBNToStr(info.liquidity, 18)})),
+          // borrowInfo: position.borrowInfo.map((info: any) => ({ tick: info.tick, liquidity: convertBNToStr(info.liquidity, 18)})),
         }
       })
     }

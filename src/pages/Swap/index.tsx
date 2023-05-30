@@ -241,6 +241,7 @@ const LeftContainer = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   align-content: center;
+  width:95%;
 `
 
 
@@ -506,7 +507,7 @@ export default function Swap({ className }: { className?: string }) {
     }
 
   }, [poolAddress, account, trade, currencies, account, provider])
-  console.log("poolLevAddress", poolAddress, leverageManagerAddress)
+  // console.log("poolLevAddress", poolAddress, leverageManagerAddress)
 
   const isApprovalLoading = allowance.state === AllowanceState.REQUIRED && allowance.isApprovalLoading
   const [isAllowancePending, setIsAllowancePending] = useState(false)
@@ -808,7 +809,7 @@ export default function Swap({ className }: { className?: string }) {
 
   const [poolState, pool] = usePool(currencies.INPUT ?? undefined, currencies.OUTPUT ?? undefined, FeeAmount.LOW)
 
-  console.log("leverageApprovalState",leveragePositions, lmtIsValid, leverageApprovalState, inputError)
+  console.log("loggingSwap",leveragePositions, lmtIsValid, leverageTrade, leverageApprovalState, inputError, contractError)
 
   return (
     <Trace page={InterfacePageName.SWAP_PAGE} shouldLogImpression>
@@ -831,7 +832,7 @@ export default function Swap({ className }: { className?: string }) {
               width="100%"
             />
           ) : (
-            <RowFixed align="flex-start">
+            <RowBetween>
               <LeftContainer>
                 <StatsContainer>
                   <TokenInfoContainer data-testid="token-info-container">
@@ -1394,7 +1395,7 @@ export default function Swap({ className }: { className?: string }) {
                 </div>
 
               </SwapWrapper>
-            </RowFixed>
+            </RowBetween>
           )}
           <NetworkAlert />
         </PageWrapper>

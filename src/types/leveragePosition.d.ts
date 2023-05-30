@@ -19,8 +19,9 @@ export interface LeveragePositionDetails {
   isToken0: boolean
   openTime: string
   repayTime: string
-  borrowInfo: TickLiquidity[]
+  // borrowInfo: TickLiquidity[]
 }
+// open price == ( totalDebtInput + initialCollateral ) / totalPosition
 
 interface TickLiquidity {
   tick: number,
