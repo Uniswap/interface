@@ -315,7 +315,7 @@ export const lightTheme: Theme = {
   userThemeColor: colors.magentaVibrant,
 
   background: colors.bgLight,
-  backgroundImage: 'radial-gradient(50% 50% at 50% 50% , #68e1ffbe, #e6faff)',
+  backgroundImage: 'radial-gradient(60% 50% at 50% 45%, #68e1ffbe, #e6faff)',
   backgroundBackdrop: colors.white,
   backgroundSurface: colors.white,
   backgroundModule: colors.gray100,
