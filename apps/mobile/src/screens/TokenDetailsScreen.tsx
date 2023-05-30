@@ -253,14 +253,9 @@ function TokenDetails({
   )
 
   const onPressSend = useCallback(() => {
-    // show warning modal speedbump if token has a warning level and user has not dismissed
-    if (safetyLevel !== SafetyLevel.Verified && !tokenWarningDismissed) {
-      setActiveTransactionType(TransactionType.SEND)
-      setShowWarningModal(true)
-    } else {
-      dispatch(openModal({ name: ModalName.Send, ...{ initialState: initialSendState } }))
-    }
-  }, [safetyLevel, tokenWarningDismissed, dispatch, initialSendState])
+    // Do not show warning modal speedbump if user is trying to send tokens they own
+    dispatch(openModal({ name: ModalName.Send, ...{ initialState: initialSendState } }))
+  }, [dispatch, initialSendState])
 
   const onAcceptWarning = useCallback(() => {
     dismissWarningCallback()
@@ -269,18 +264,8 @@ function TokenDetails({
       navigateToSwapBuy()
     } else if (activeTransactionType === TransactionType.SELL) {
       navigateToSwapSell()
-    } else if (activeTransactionType === TransactionType.SEND) {
-      navigateToSwapSell()
-      dispatch(openModal({ name: ModalName.Send, ...{ initialState: initialSendState } }))
     }
-  }, [
-    activeTransactionType,
-    dismissWarningCallback,
-    dispatch,
-    initialSendState,
-    navigateToSwapBuy,
-    navigateToSwapSell,
-  ])
+  }, [activeTransactionType, dismissWarningCallback, navigateToSwapBuy, navigateToSwapSell])
 
   const pb = useResponsiveProp({ xs: 'none', sm: 'spacing16' })
 
