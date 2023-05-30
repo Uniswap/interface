@@ -14,7 +14,6 @@ import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { ImportType } from 'src/features/onboarding/utils'
-import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { ElementName } from 'src/features/telemetry/constants'
 import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
 import { usePendingAccounts } from 'src/features/wallet/hooks'
@@ -73,15 +72,10 @@ export function EditNameScreen({ navigation, route: { params } }: Props): JSX.El
   }, [dispatch, navigation])
 
   const onPressNext = (): void => {
-    sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
-      screen: OnboardingScreens.EditName,
-      element: ElementName.Continue,
-    })
-
     navigation.navigate({
       name:
         params?.importType === ImportType.CreateNew
-          ? OnboardingScreens.Backup
+          ? OnboardingScreens.QRAnimation
           : OnboardingScreens.Notifications,
       merge: true,
       params,
@@ -100,11 +94,9 @@ export function EditNameScreen({ navigation, route: { params } }: Props): JSX.El
 
   return (
     <OnboardingScreen
-      subtitle={t(
-        'It has a public address that starts with 0x but you can set a private nickname for yourself.'
-      )}
-      title={t('Say hello to your new wallet')}>
-      <Box>
+      subtitle={t('This is a way to keep track of your wallet. Only you will see this.')}
+      title={t('Give your wallet a nickname')}>
+      <Box my="spacing24">
         {pendingAccount ? (
           <CustomizationSection
             accountName={newAccountName}
@@ -118,7 +110,12 @@ export function EditNameScreen({ navigation, route: { params } }: Props): JSX.El
         )}
       </Box>
       <Flex justifyContent="flex-end">
-        <Button label={t('Continue')} name={ElementName.Next} onPress={onPressNext} />
+        <Button
+          eventName={SharedEventName.ELEMENT_CLICKED}
+          label={t('Create Wallet')}
+          name={ElementName.Continue}
+          onPress={onPressNext}
+        />
       </Flex>
     </OnboardingScreen>
   )
@@ -137,6 +134,7 @@ function CustomizationSection({
   focused: boolean
   setFocused: Dispatch<SetStateAction<boolean>>
 }): JSX.Element {
+  const { t } = useTranslation()
   const theme = useAppTheme()
   const textInputRef = useRef<NativeTextInput>(null)
 
@@ -156,7 +154,7 @@ function CustomizationSection({
 
   return (
     <Flex centered gap={gapSize}>
-      <Flex centered gap="none" width="100%">
+      <Flex centered gap="spacing24" width="100%">
         <Flex centered row gap="none">
           <TextInput
             ref={textInputRef}
@@ -185,9 +183,14 @@ function CustomizationSection({
             />
           )}
         </Flex>
-        <Text color="textSecondary" variant="bodySmall">
-          {shortenAddress(address)}
-        </Text>
+        <Flex centered gap="spacing4">
+          <Text color="textTertiary" variant="bodyMicro">
+            {t('Your public address will be')}
+          </Text>
+          <Text color="textTertiary" variant="buttonLabelSmall">
+            {shortenAddress(address)}
+          </Text>
+        </Flex>
       </Flex>
     </Flex>
   )

@@ -1,50 +1,55 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { SharedEventName } from '@uniswap/analytics-events'
+import { BlurView } from 'expo-blur'
 import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Alert, StyleSheet } from 'react-native'
+import { Alert, Image, StyleSheet } from 'react-native'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
+import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Box, Flex } from 'src/components/layout'
 import { BiometricAuthWarningModal } from 'src/components/Settings/BiometricAuthWarningModal'
+import { Text } from 'src/components/Text'
+import { useIsDarkMode } from 'src/features/appearance/hooks'
 import { BiometricAuthenticationStatus, tryLocalAuthenticate } from 'src/features/biometrics'
 import {
   biometricAuthenticationSuccessful,
   useDeviceSupportsBiometricAuth,
 } from 'src/features/biometrics/hooks'
 import { setRequiredForTransactions } from 'src/features/biometrics/slice'
+import { useCompleteOnboardingCallback } from 'src/features/onboarding/hooks'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { ImportType } from 'src/features/onboarding/utils'
-import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { ElementName } from 'src/features/telemetry/constants'
 import { OnboardingScreens } from 'src/screens/Screens'
+import { theme as FixedTheme } from 'src/styles/theme'
+import { opacify } from 'src/utils/colors'
 import { openSettings } from 'src/utils/linking'
-import FaceIcon from 'ui/src/assets/icons/faceid.svg'
+import { SECURITY_SCREEN_BACKGROUND_DARK, SECURITY_SCREEN_BACKGROUND_LIGHT } from 'ui/src/assets'
+import FaceIcon from 'ui/src/assets/icons/faceid-thin.svg'
 import FingerprintIcon from 'ui/src/assets/icons/fingerprint.svg'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.Security>
 
-export function SecuritySetupScreen({ navigation, route: { params } }: Props): JSX.Element {
+export function SecuritySetupScreen({ route: { params } }: Props): JSX.Element {
   const { t } = useTranslation()
   const theme = useAppTheme()
   const dispatch = useAppDispatch()
+  const isDarkMode = useIsDarkMode()
 
   const [showWarningModal, setShowWarningModal] = useState(false)
   const { touchId: isTouchIdDevice } = useDeviceSupportsBiometricAuth()
   const authenticationTypeName = isTouchIdDevice ? 'Touch' : 'Face'
 
+  const onCompleteOnboarding = useCompleteOnboardingCallback(params.entryPoint, params.importType)
+
   const onPressNext = useCallback(() => {
     setShowWarningModal(false)
-    navigation.navigate({ name: OnboardingScreens.Outro, params, merge: true })
-  }, [navigation, params])
+    onCompleteOnboarding()
+  }, [onCompleteOnboarding])
 
   const onMaybeLaterPressed = useCallback(() => {
-    sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
-      element: ElementName.Skip,
-      screen: OnboardingScreens.Security,
-    })
-
     if (params?.importType === ImportType.Watch) {
       onPressNext()
     } else {
@@ -55,11 +60,6 @@ export function SecuritySetupScreen({ navigation, route: { params } }: Props): J
   const onPressEnableSecurity = useCallback(async () => {
     const authStatus = await tryLocalAuthenticate({
       disableDeviceFallback: true,
-    })
-
-    sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
-      element: ElementName.Enable,
-      screen: OnboardingScreens.Security,
     })
 
     if (
@@ -94,45 +94,85 @@ export function SecuritySetupScreen({ navigation, route: { params } }: Props): J
       )}
       <OnboardingScreen
         childrenGap="none"
-        subtitle={t('{{ authenticationTypeName }} ID will be required to make transactions.', {
-          authenticationTypeName,
-        })}
+        subtitle={t(
+          'Add an extra layer of security by requiring {{ authenticationTypeName }} ID to send transactions.',
+          {
+            authenticationTypeName,
+          }
+        )}
         title={t('Protect your wallet')}>
-        <Flex centered grow>
+        <Flex centered shrink my="spacing12" position="relative" py="spacing24">
+          <Box paddingTop="spacing24">
+            <SecurityBackgroundImage />
+          </Box>
           <Box
-            borderColor="background3"
-            borderRadius="rounded20"
-            borderWidth={4}
-            style={styles.iconView}>
+            borderRadius="rounded16"
+            borderWidth={1}
+            padding="spacing36"
+            position="absolute"
+            style={{
+              borderColor: opacify(15, theme.colors.textOnBrightPrimary),
+              backgroundColor: opacify(35, theme.colors.background0),
+            }}
+            top={0}>
+            <BlurView intensity={20} style={styles.blurView} tint="dark" />
             {isTouchIdDevice ? (
-              <FingerprintIcon color={theme.colors.textSecondary} height={58} width={58} />
+              <FingerprintIcon
+                color={theme.colors.textPrimary}
+                height={theme.imageSizes.image48}
+                width={theme.imageSizes.image48}
+              />
             ) : (
-              <FaceIcon color={theme.colors.textSecondary} height={58} width={58} />
+              <FaceIcon
+                color={theme.colors.textOnBrightPrimary}
+                height={theme.imageSizes.image48}
+                width={theme.imageSizes.image48}
+              />
             )}
           </Box>
         </Flex>
-
-        <Button
-          emphasis={ButtonEmphasis.Tertiary}
-          label={t('Maybe later')}
-          name={ElementName.Skip}
-          onPress={onMaybeLaterPressed}
-        />
-
-        <Button
-          label={t('Turn on {{authenticationTypeName}} ID', { authenticationTypeName })}
-          name={ElementName.Enable}
-          onPress={onPressEnableSecurity}
-        />
+        <Flex gap="spacing24">
+          <TouchableArea
+            eventName={SharedEventName.ELEMENT_CLICKED}
+            name={ElementName.Skip}
+            onPress={onMaybeLaterPressed}>
+            <Text color="magentaVibrant" textAlign="center" variant="subheadSmall">
+              {t('Maybe later')}
+            </Text>
+          </TouchableArea>
+          <Button
+            emphasis={ButtonEmphasis.Primary}
+            eventName={SharedEventName.ELEMENT_CLICKED}
+            label={t('Turn on {{authenticationTypeName}} ID', {
+              authenticationTypeName,
+            })}
+            name={ElementName.Enable}
+            onPress={onPressEnableSecurity}
+          />
+        </Flex>
       </OnboardingScreen>
     </>
   )
 }
 
+const SecurityBackgroundImage = (): JSX.Element => {
+  const isDarkMode = useIsDarkMode()
+  return (
+    <Image
+      source={isDarkMode ? SECURITY_SCREEN_BACKGROUND_DARK : SECURITY_SCREEN_BACKGROUND_LIGHT}
+      style={styles.image}
+    />
+  )
+}
+
 const styles = StyleSheet.create({
-  iconView: {
-    paddingBottom: 94,
-    paddingHorizontal: 32,
-    paddingTop: 70,
+  blurView: {
+    ...StyleSheet.absoluteFillObject,
+    borderRadius: FixedTheme.borderRadii.rounded16,
+    overflow: 'hidden',
+  },
+  image: {
+    height: '100%',
+    resizeMode: 'contain',
   },
 })

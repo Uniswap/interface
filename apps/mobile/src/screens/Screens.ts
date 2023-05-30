@@ -28,13 +28,14 @@ export enum Screens {
 export enum OnboardingScreens {
   Backup = 'OnboardingBackup',
   BackupCloudPassword = 'OnboardingBackupCloudPassword',
+  BackupCloudPasswordConfirm = 'OnboardingBackupCloudPasswordConfirm',
   BackupCloudProcessing = 'OnboardingBackupCloudProcessing',
   BackupManual = 'OnboardingBackupManual',
   Landing = 'OnboardingLanding',
   EditName = 'EditName',
   SelectColor = 'SelectColor',
   Notifications = 'OnboardingNotifications',
-  Outro = 'OnboardingOutro',
+  QRAnimation = 'QRAnimation',
   Security = 'OnboardingSecurity',
 
   // import

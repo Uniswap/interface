@@ -55,12 +55,15 @@ export type OnboardingStackParamList = {
   } & OnboardingStackBaseParams
   [OnboardingScreens.BackupManual]: OnboardingStackBaseParams
   [OnboardingScreens.BackupCloudPassword]: OnboardingStackBaseParams
+  [OnboardingScreens.BackupCloudPasswordConfirm]: {
+    password: string
+  } & OnboardingStackBaseParams
   [OnboardingScreens.Backup]: OnboardingStackBaseParams
   [OnboardingScreens.Landing]: OnboardingStackBaseParams
   [OnboardingScreens.EditName]: OnboardingStackBaseParams
   [OnboardingScreens.SelectColor]: OnboardingStackBaseParams
   [OnboardingScreens.Notifications]: OnboardingStackBaseParams
-  [OnboardingScreens.Outro]: OnboardingStackBaseParams
+  [OnboardingScreens.QRAnimation]: OnboardingStackBaseParams
   [OnboardingScreens.Security]: OnboardingStackBaseParams
 
   // import
