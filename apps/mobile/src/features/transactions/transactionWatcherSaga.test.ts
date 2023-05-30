@@ -28,7 +28,6 @@ import {
 } from 'src/test/fixtures'
 import { ChainId } from 'wallet/src/constants/chains'
 import { PollingInterval } from 'wallet/src/constants/misc'
-import { waitForProvidersInitialized } from 'wallet/src/features/providers/saga'
 import { getProvider, getProviderManager } from 'wallet/src/features/wallet/context'
 import { sleep } from 'wallet/src/utils/timing'
 
@@ -45,7 +44,6 @@ describe(transactionWatcher, () => {
         },
       })
       .provide([
-        [call(waitForProvidersInitialized), true],
         [call(getProvider, ChainId.Mainnet), mockProvider],
         [call(getProviderManager), mockProviderManager],
       ])

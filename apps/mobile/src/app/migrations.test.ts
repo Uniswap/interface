@@ -41,6 +41,7 @@ import {
   v40Schema,
   v41Schema,
   v42Schema,
+  v43Schema,
   v4Schema,
   v5Schema,
   v6Schema,
@@ -73,7 +74,6 @@ import { account, fiatOnRampTxDetailsFailed, txDetailsConfirmed } from 'src/test
 import { SWAP_ROUTER_ADDRESSES } from 'wallet/src/constants/addresses'
 import { ChainId } from 'wallet/src/constants/chains'
 import { ChainsState, initialChainsState } from 'wallet/src/features/chains/slice'
-import { initialProvidersState } from 'wallet/src/features/providers/slice'
 import {
   Account,
   AccountType,
@@ -130,7 +130,7 @@ describe('Redux state migrations', () => {
       modals: initialModalState,
       notifications: initialNotificationsState,
       passwordLockout: initialPasswordLockoutState,
-      providers: initialProvidersState,
+      providers: { isInitialized: false },
       saga: {},
       searchHistory: initialSearchHistoryState,
       telemetry: initialTelemetryState,
@@ -1123,5 +1123,15 @@ describe('Redux state migrations', () => {
         'nftItem.0xe94abea3932576ff957a0b92190d0191aeb1a782.2': { isHidden: true }, // not checksummed 3
       },
     })
+  })
+
+  it('migrates from v43 to v44', () => {
+    const v43Stub = { ...v43Schema }
+
+    v43Stub.providers = { isInitialized: true }
+
+    const v44 = migrations[44](v43Stub)
+
+    expect(v44.providers).toBeUndefined()
   })
 })

@@ -4,6 +4,7 @@ import { config } from 'wallet/src/config'
 import { ChainId, CHAIN_INFO, L1ChainInfo, L2ChainInfo } from 'wallet/src/constants/chains'
 import { logger } from 'wallet/src/features/logger/logger'
 
+import { getEthersProvider } from 'wallet/src/features/providers/getEthersProvider'
 import { getInfuraChainName } from './utils'
 
 enum ProviderStatus {
@@ -118,10 +119,7 @@ export class ProviderManager {
         `Connecting to infura rpc provider for ${getInfuraChainName(chainId)}`
       )
 
-      const provider = new ethersProviders.InfuraProvider(
-        getInfuraChainName(chainId),
-        config.infuraProjectId
-      )
+      const provider = getEthersProvider(chainId, config)
 
       return provider
     } catch (error) {

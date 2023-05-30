@@ -1,16 +1,15 @@
 import { PayloadAction } from '@reduxjs/toolkit'
 import { providers as ethersProviders } from 'ethers'
 import { REHYDRATE } from 'redux-persist'
-import { call, fork, join, put, take, takeEvery } from 'typed-redux-saga'
+import { call, fork, join, take, takeEvery } from 'typed-redux-saga'
 import { config } from 'wallet/src/config'
 import { ChainId } from 'wallet/src/constants/chains'
 import { setChainActiveStatus } from 'wallet/src/features/chains/slice'
 import { getSortedActiveChainIds } from 'wallet/src/features/chains/utils'
 import { logger } from 'wallet/src/features/logger/logger'
 import { ProviderManager } from 'wallet/src/features/providers/ProviderManager'
-import { initialized } from 'wallet/src/features/providers/slice'
 import { getProviderManager } from 'wallet/src/features/wallet/context'
-import { appSelect, RootState } from 'wallet/src/state'
+import { RootState } from 'wallet/src/state'
 
 // Initialize Ethers providers for the chains the wallet interacts with
 export function* initProviders() {
@@ -29,7 +28,6 @@ export function* initProviders() {
   logger.debug('providerSaga', 'initProviders', 'Waiting for provider')
   yield* join(initTasks)
   logger.debug('providerSaga', 'initProviders', 'Providers ready')
-  yield* put(initialized())
   yield* takeEvery(setChainActiveStatus.type, modifyProviders)
 }
 
@@ -84,13 +82,6 @@ async function createProvider(
   manager: ProviderManager
 ): Promise<ethersProviders.Provider> {
   logger.debug('providerSaga', 'createProvider', 'Creating a provider for:', chainId)
-  const provider = await manager.createProvider(chainId)
+  const provider = manager.createProvider(chainId)
   return provider
-}
-
-// Sagas can use this to delay execution until the providers have been initialized
-export function* waitForProvidersInitialized() {
-  const isInitialized = yield* appSelect((state) => state.providers.isInitialized)
-  if (isInitialized) return
-  yield* take(initialized.type)
 }

@@ -20,7 +20,6 @@ import { walletConnectReducer } from 'src/features/walletConnect/walletConnectSl
 import { chainsReducer } from 'wallet/src/features/chains/slice'
 import { gasApi } from 'wallet/src/features/gas/gasApi'
 import { onChainBalanceApi } from 'wallet/src/features/portfolio/api'
-import { providersReducer } from 'wallet/src/features/providers/slice'
 
 const reducers = {
   [ensApi.reducerPath]: ensApi.reducer,
@@ -37,7 +36,6 @@ const reducers = {
   modals: modalsReducer,
   notifications: notificationReducer,
   passwordLockout: passwordLockoutReducer,
-  providers: providersReducer,
   saga: monitoredSagaReducers,
   searchHistory: searchHistoryReducer,
   telemetry: telemetryReducer,

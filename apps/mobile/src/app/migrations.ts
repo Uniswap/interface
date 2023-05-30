@@ -609,4 +609,12 @@ export const migrations = {
     delete newState.favorites.hiddenNfts
     return newState
   },
+
+  44: function removeProviders(state: any) {
+    const newState = { ...state }
+
+    delete newState.providers
+
+    return newState
+  },
 }

@@ -37,12 +37,9 @@ import { call, delay, fork, put, race, take } from 'typed-redux-saga'
 import { ChainId } from 'wallet/src/constants/chains'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import { logger } from 'wallet/src/features/logger/logger'
-import { waitForProvidersInitialized } from 'wallet/src/features/providers/saga'
 import { getProvider } from 'wallet/src/features/wallet/context'
 
 export function* transactionWatcher() {
-  // Delay execution until providers are ready
-  yield* call(waitForProvidersInitialized)
   logger.debug('transactionWatcherSaga', 'transactionWatcher', 'Starting tx watcher')
 
   // First, fork off watchers for any incomplete txs that are already in store

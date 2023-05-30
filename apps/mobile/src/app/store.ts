@@ -1,4 +1,4 @@
-import type { Middleware, MiddlewareAPI, PayloadAction, PreloadedState } from '@reduxjs/toolkit'
+import type { Middleware, PayloadAction, PreloadedState } from '@reduxjs/toolkit'
 import { configureStore, isRejectedWithValue } from '@reduxjs/toolkit'
 import { MMKV } from 'react-native-mmkv'
 import { persistReducer, persistStore, Storage } from 'redux-persist'
@@ -47,40 +47,35 @@ const rtkQueryErrorLoggerIgnorelist: Array<ReducerNames> = [
   ensApi.reducerPath, // verbose
   routingApi.reducerPath, // verbose, handled in routing hook
 ]
-const rtkQueryErrorLogger: Middleware =
-  (api: MiddlewareAPI) => (next) => (action: PayloadAction<unknown>) => {
-    if (!isRejectedWithValue(action)) {
-      return next(action)
-    }
-
-    const shouldSkipErrorLogging = rtkQueryErrorLoggerIgnorelist.some((reducerName) =>
-      action.type.startsWith(reducerName)
-    )
-    if (shouldSkipErrorLogging) {
-      // still log in debug to ensure those errors are surfaced, but avoids polutting sentry
-      logger.debug('store', 'rtkQueryErrorLogger', JSON.stringify(action))
-    } else {
-      logger.error(
-        'store',
-        'rtkQueryErrorLogger',
-        // extract specific properties to avoid PII
-        JSON.stringify({
-          type: action.type,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          endpointName: (action.meta as any)?.arg?.endpointName,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          status: (action.payload as any)?.status,
-          error: action.error,
-          state: {
-            // Add additional state properties to help debug
-            isProviderInitialized: api.getState()?.providers?.isInitialized,
-          },
-        })
-      )
-    }
-
+const rtkQueryErrorLogger: Middleware = () => (next) => (action: PayloadAction<unknown>) => {
+  if (!isRejectedWithValue(action)) {
     return next(action)
   }
+
+  const shouldSkipErrorLogging = rtkQueryErrorLoggerIgnorelist.some((reducerName) =>
+    action.type.startsWith(reducerName)
+  )
+  if (shouldSkipErrorLogging) {
+    // still log in debug to ensure those errors are surfaced, but avoids polutting sentry
+    logger.debug('store', 'rtkQueryErrorLogger', JSON.stringify(action))
+  } else {
+    logger.error(
+      'store',
+      'rtkQueryErrorLogger',
+      // extract specific properties to avoid PII
+      JSON.stringify({
+        type: action.type,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        endpointName: (action.meta as any)?.arg?.endpointName,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        status: (action.payload as any)?.status,
+        error: action.error,
+      })
+    )
+  }
+
+  return next(action)
+}
 
 const whitelist: Array<ReducerNames> = [
   'appearanceSettings',
@@ -102,7 +97,7 @@ export const persistConfig = {
   key: 'root',
   storage: reduxStorage,
   whitelist,
-  version: 43,
+  version: 44,
   migrate: createMigrate(migrations),
 }
 

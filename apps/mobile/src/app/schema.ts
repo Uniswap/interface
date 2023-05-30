@@ -287,6 +287,10 @@ export const v43Schema = {
 }
 delete v43Schema.favorites.hiddenNfts
 
+export const { providers, ...v44Schema } = {
+  ...v43Schema,
+}
+
 // TODO: [MOB-201] use function with typed output when API reducers are removed from rootReducer
 // export const getSchema = (): RootState => v0Schema
 export const getSchema = (): typeof v43Schema => v43Schema
