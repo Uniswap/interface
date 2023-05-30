@@ -12,6 +12,12 @@ import { useClientSideV3Trade } from './useClientSideV3Trade'
 import useDebounce from './useDebounce'
 import useIsWindowVisible from './useIsWindowVisible'
 
+// Prevents excessive quote requests between keystrokes.
+const DEBOUNCE_TIME = 350
+
+// Temporary until we remove the feature flag.
+const DEBOUNCE_TIME_INCREASED = 650
+
 /**
  * Returns the best v2+v3 trade for a desired swap.
  * @param tradeType whether the swap is an exact in/out
@@ -30,13 +36,9 @@ export function useBestTrade(
   const autoRouterSupported = useAutoRouterSupported()
   const isWindowVisible = useIsWindowVisible()
 
-  // Prevents excessive quote requests between keystrokes.
-  // This constant is temporarily inside the hook until we can remove the flag.
-  const DEBOUNCE_TIME = useDebounceSwapQuoteFlag() === DebounceSwapQuoteVariant.Enabled ? 650 : 350
-
   const [debouncedAmount, debouncedOtherCurrency] = useDebounce(
     useMemo(() => [amountSpecified, otherCurrency], [amountSpecified, otherCurrency]),
-    DEBOUNCE_TIME
+    useDebounceSwapQuoteFlag() === DebounceSwapQuoteVariant.Enabled ? DEBOUNCE_TIME_INCREASED : DEBOUNCE_TIME
   )
 
   const isAWrapTransaction = useMemo(() => {
