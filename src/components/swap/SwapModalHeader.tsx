@@ -23,6 +23,9 @@ import TradePrice from '../swap/TradePrice'
 import { AdvancedLeverageSwapDetails, AdvancedSwapDetails } from './AdvancedSwapDetails'
 import { SwapShowAcceptChanges, TruncatedText } from './styleds'
 import { LeverageTrade } from 'state/swap/hooks'
+import { DEFAULT_ERC20_DECIMALS } from 'constants/tokens'
+import { formatNumber, formatNumberOrString } from '@uniswap/conedison/format'
+import {BigNumber as BN} from "bignumber.js"
 
 const ArrowWrapper = styled.div`
   padding: 4px;
@@ -371,6 +374,17 @@ export function LeverageCloseModalHeader({
   )
 }
 
+
+// LeverageTrade {
+//   inputAmount: CurrencyAmount<Currency> | undefined
+//   borrowedAmount: CurrencyAmount<Currency> | undefined
+//   state: LeverageTradeState
+//   expectedOutput: string | undefined
+//   strikePrice: string | undefined
+//   quotedPremium: string | undefined
+//   priceImpact: Percent | undefined
+//   effectiveLeverage: string | undefined
+// }
 export function LeverageModalHeader({
   trade,
   shouldLogModalCloseEvent,
@@ -427,7 +441,7 @@ export function LeverageModalHeader({
                 fontWeight={500}
                 color={showAcceptChanges && trade.tradeType === TradeType.EXACT_OUTPUT ? theme.accentAction : ''}
               >
-                {trade.inputAmount.toSignificant(6)} (+ {leverageTrade?.quotedPremium})
+                {leverageTrade.inputAmount?.toSignificant(18)} (+ {leverageTrade?.quotedPremium})
               </TruncatedText>
             </RowFixed>
             <RowFixed gap="0px">
@@ -450,7 +464,13 @@ export function LeverageModalHeader({
           <RowBetween align="flex-end">
             <RowFixed gap="0px">
               <TruncatedText fontSize={24} fontWeight={500}>
-                {String( (Number(trade.inputAmount.toSignificant(6)) * Number(leverageFactor)).toFixed(4))}
+                {leverageTrade.borrowedAmount && leverageTrade.inputAmount ? (
+                  new BN(leverageTrade.borrowedAmount.toExact()).plus(leverageTrade.inputAmount.toExact()).toNumber()
+                ) : 
+                  (
+                    "-"
+                  )
+                }
               </TruncatedText>
             </RowFixed>
             <RowFixed gap="0px">
@@ -476,7 +496,7 @@ export function LeverageModalHeader({
           <RowBetween align="flex-end">
             <RowFixed gap="0px">
               <TruncatedText fontSize={24} fontWeight={500}>
-                {String(Number(Number(trade.outputAmount.toSignificant(6)) * Number(leverageFactor)).toFixed(4) )}
+                {String(Number(leverageTrade.expectedOutput))}
               </TruncatedText>
             </RowFixed>
             <RowFixed gap="0px">

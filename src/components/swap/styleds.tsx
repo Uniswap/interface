@@ -77,9 +77,9 @@ export const ErrorText = styled(Text)<{ severity?: 0 | 1 | 2 | 3 | 4 }>`
       : theme.textSecondary};
 `
 
-export const TruncatedText = styled(Text)`
+export const TruncatedText = styled(Text)<{width?: string}>`
   text-overflow: ellipsis;
-  max-width: 220px;
+  max-width: ${({width}) => width ? width : '220px'};
   overflow: hidden;
   text-align: right;
 `

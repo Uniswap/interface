@@ -19,7 +19,7 @@ import { computeRealizedPriceImpact } from 'utils/prices'
 
 import { ButtonError, ButtonPrimary, ButtonSecondary } from '../Button'
 import Row, { AutoRow, RowBetween, RowFixed } from '../Row'
-import { ResponsiveTooltipContainer, SwapCallbackError } from './styleds'
+import { ResponsiveTooltipContainer, SwapCallbackError, TruncatedText } from './styleds'
 import { getTokenPath, RoutingDiagramEntry } from './SwapRoute'
 import { ModalInputPanel } from 'components/CurrencyInputPanel/SwapCurrencyInputPanel'
 import Card, { DarkCard, LightCard, OutlineCard } from 'components/Card'
@@ -374,10 +374,10 @@ function useDerivedLeverageReduceInfo(
   premium: string | undefined
 } {
   const leverageManagerContract = useLeverageManagerContract(leverageManager)
-  
+
   const [contractResult, setContractResult] = useState<{
     reducePositionResult: any,
-    
+
     // token0: any,
     // token1: any
   }>()
@@ -390,7 +390,7 @@ function useDerivedLeverageReduceInfo(
       }
 
       const formattedSlippage = new BN(allowedSlippage).plus(100).shiftedBy(16).toFixed(0)
-      const formattedReduceAmount = newTotalPosition ? new BN(position?.totalPosition).minus(newTotalPosition).shiftedBy(18).toFixed(0) : 
+      const formattedReduceAmount = newTotalPosition ? new BN(position?.totalPosition).minus(newTotalPosition).shiftedBy(18).toFixed(0) :
         new BN(position?.totalPosition).shiftedBy(18).toFixed(0)
       setState(DerivedInfoState.LOADING)
 
@@ -551,9 +551,9 @@ export function ReduceLeverageModalFooter({
   const leverageManagerContract = useLeverageManagerContract(leverageManagerAddress, true)
 
   const handleReducePosition = useMemo(() => {
-    if (leverageManagerContract && position && Number(newPosition) >=0 && Number(newPosition) < Number(position.totalPosition)) {
+    if (leverageManagerContract && position && Number(newPosition) >= 0 && Number(newPosition) < Number(position.totalPosition)) {
       const formattedSlippage = new BN(slippage).plus(100).shiftedBy(16).toFixed(0)
-      const formattedReduceAmount = newPosition ? new BN(position?.totalPosition).minus(newPosition).shiftedBy(18).toFixed(0) : 
+      const formattedReduceAmount = newPosition ? new BN(position?.totalPosition).minus(newPosition).shiftedBy(18).toFixed(0) :
         new BN(position?.totalPosition).shiftedBy(18).toFixed(0)
       return () => {
         setAttemptingTxn(true)
@@ -601,8 +601,8 @@ export function ReduceLeverageModalFooter({
 
   const debt = position?.totalDebtInput;
   const initCollateral = position?.initialCollateral;
-  const received = inputIsToken0 ? (Math.abs(Number(token0Amount)) - Number(debt)).toFixed(5)
-    : (Math.abs(Number(token1Amount)) - Number(debt)).toFixed(5)
+  const received = inputIsToken0 ? (Math.abs(Number(token0Amount)) - Number(debt))
+    : (Math.abs(Number(token1Amount)) - Number(debt))
 
   return (
     <AutoRow>
@@ -649,28 +649,28 @@ export function ReduceLeverageModalFooter({
         <AutoColumn gap="md">
           <>
             <RowBetween>
-            <ThemedText.DeprecatedMain fontWeight={400}>
-              <Trans>New Position ({`${position?.totalPosition ? formatNumber(100 - Number(newPosition)/Number(position?.totalPosition) * 100) : "-"}% Reduction`})</Trans>
-            </ThemedText.DeprecatedMain>
+              <ThemedText.DeprecatedMain fontWeight={400}>
+                <Trans>New Position ({`${position?.totalPosition ? formatNumber(100 - Number(newPosition) / Number(position?.totalPosition) * 100) : "-"}% Reduction`})</Trans>
+              </ThemedText.DeprecatedMain>
             </RowBetween>
             <AutoColumn>
-            <CurrencyInputPanel
-              value={debouncedNewPosition}
-              id="reduce-position-input"
-              onUserInput={(str: string) => {
-                if (position?.totalPosition) {
-                  if (str === "") {
-                    setDebouncedNewPosition("")
-                  } else if (new BN(str).isGreaterThan(new BN(position?.totalPosition ))) {
-                    return
-                  } else {
-                    setDebouncedNewPosition(str)
+              <CurrencyInputPanel
+                value={debouncedNewPosition}
+                id="reduce-position-input"
+                onUserInput={(str: string) => {
+                  if (position?.totalPosition) {
+                    if (str === "") {
+                      setDebouncedNewPosition("")
+                    } else if (new BN(str).isGreaterThan(new BN(position?.totalPosition))) {
+                      return
+                    } else {
+                      setDebouncedNewPosition(str)
+                    }
                   }
-                }
-              }}
-              showMaxButton={false}
-              currency={inputIsToken0 ? token1 : token0}
-            />
+                }}
+                showMaxButton={false}
+                currency={inputIsToken0 ? token1 : token0}
+              />
             </AutoColumn>
           </>
         </AutoColumn>
@@ -734,9 +734,12 @@ export function ReduceLeverageModalFooter({
                         </RowFixed>
                         <TextWithLoadingPlaceholder syncing={loading} width={65}>
                           <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
+                            <TruncatedText>
                             {
                               `${inputIsToken0 ? new BN(token1Amount).abs().toString() : new BN(token0Amount).abs().toString()}  ${!inputIsToken0 ? token0?.symbol : token1?.symbol}`
                             }
+                            </TruncatedText>
+                            
                           </ThemedText.DeprecatedBlack>
                         </TextWithLoadingPlaceholder>
                       </RowBetween>
@@ -756,9 +759,11 @@ export function ReduceLeverageModalFooter({
                         </RowFixed>
                         <TextWithLoadingPlaceholder syncing={loading} width={65}>
                           <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
+                            <TruncatedText>
                             {
-                              debt && `${debt.toString()}  ${inputIsToken0 ? token0?.symbol : token1?.symbol}`
+                              debt && `${Number(debt)}  ${inputIsToken0 ? token0?.symbol : token1?.symbol}`
                             }
+                            </TruncatedText>
                           </ThemedText.DeprecatedBlack>
                         </TextWithLoadingPlaceholder>
                       </RowBetween>
@@ -780,9 +785,11 @@ export function ReduceLeverageModalFooter({
                         </RowFixed>
                         <TextWithLoadingPlaceholder syncing={loading} width={65}>
                           <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
+                            <TruncatedText>
                             {
                               `${inputIsToken0 ? new BN(token0Amount).abs().toString() : new BN(token1Amount).abs().toString()}  ${inputIsToken0 ? token0?.symbol : token1?.symbol}`
                             }
+                            </TruncatedText>
                           </ThemedText.DeprecatedBlack>
                         </TextWithLoadingPlaceholder>
                       </RowBetween>
@@ -802,14 +809,15 @@ export function ReduceLeverageModalFooter({
                         </RowFixed>
                         <TextWithLoadingPlaceholder syncing={loading} width={65}>
                           <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
+                            <TruncatedText>
                             {
-                              `${received}  ${inputIsToken0 ? token0?.symbol : token1?.symbol}`
+                              `${Number(received)}  ${inputIsToken0 ? token0?.symbol : token1?.symbol}`
                             }
+                            </TruncatedText>
                           </ThemedText.DeprecatedBlack>
                         </TextWithLoadingPlaceholder>
                       </RowBetween>
-                    </AutoColumn>
-                    <RowBetween>
+                      <RowBetween>
                       <RowFixed>
                         <MouseoverTooltip
                           text={
@@ -825,13 +833,16 @@ export function ReduceLeverageModalFooter({
                       </RowFixed>
                       <TextWithLoadingPlaceholder syncing={loading} width={65}>
                         <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
-                          {
-
-                            `${(Number(received) - Number(initCollateral)).toFixed(5)}  ${inputIsToken0 ? token0?.symbol : token1?.symbol}`
-                          }
+                          <TruncatedText>
+                            {
+                              `${(Number(received) - Number(initCollateral))}  ${inputIsToken0 ? token0?.symbol : token1?.symbol}`
+                            }
+                          </TruncatedText>
                         </ThemedText.DeprecatedBlack>
                       </TextWithLoadingPlaceholder>
                     </RowBetween>
+                    </AutoColumn>
+
                   </StyledCard>
                 )
                   : null}

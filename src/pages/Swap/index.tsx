@@ -112,6 +112,7 @@ import PositionsTable from 'components/LimitlessPositionTable/TokenTable'
 import { PoolDataSection } from 'components/ExchangeChart'
 import _ from 'lodash'
 import { FakeTokens } from "constants/fake-tokens"
+import { formatNumber } from '@uniswap/conedison/format'
 
 
 const Hr = styled.hr`
@@ -176,6 +177,10 @@ const SwapSection = styled.div`
   &:focus-within:before {
     border-color: ${({ theme }) => theme.stateOverlayPressed};
   }
+`
+
+const MainSwapContainer = styled(RowBetween)`
+  align-items: flex-start;
 `
 
 const InputLeverageSection = styled(SwapSection)`
@@ -809,7 +814,7 @@ export default function Swap({ className }: { className?: string }) {
 
   const [poolState, pool] = usePool(currencies.INPUT ?? undefined, currencies.OUTPUT ?? undefined, FeeAmount.LOW)
 
-  console.log("loggingSwap",leveragePositions, lmtIsValid, leverageTrade, leverageApprovalState, inputError, contractError)
+  // console.log("loggingSwap", leverageManagerAddress, leveragePositions, lmtIsValid, leverageTrade, leverageApprovalState, inputError, contractError)
 
   return (
     <Trace page={InterfacePageName.SWAP_PAGE} shouldLogImpression>
@@ -832,7 +837,7 @@ export default function Swap({ className }: { className?: string }) {
               width="100%"
             />
           ) : (
-            <RowBetween>
+            <MainSwapContainer>
               <LeftContainer>
                 <StatsContainer>
                   <TokenInfoContainer data-testid="token-info-container">
@@ -1052,10 +1057,7 @@ export default function Swap({ className }: { className?: string }) {
                               :
                               !leverage ? formattedAmounts[Field.OUTPUT] :
                                 leverageTrade?.expectedOutput ?
-                                  new BN(leverageTrade.expectedOutput).toString()
-                                  : leverageTrade?.quotedPremium != "0" ?
-                                    "-"
-                                    : "searching liquidity"
+                                  formatNumber(leverageTrade?.expectedOutput) : "-"
                           }
                           onUserInput={handleTypeOutput}
                           label={
@@ -1395,7 +1397,7 @@ export default function Swap({ className }: { className?: string }) {
                 </div>
 
               </SwapWrapper>
-            </RowBetween>
+            </MainSwapContainer>
           )}
           <NetworkAlert />
         </PageWrapper>

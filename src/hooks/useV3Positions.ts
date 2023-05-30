@@ -152,7 +152,7 @@ export function useLeveragePositionFromTokenId(tokenId: string | undefined): { l
         isToken0: position.isToken0,
         openTime: position.openTime.toString(),
         repayTime: position.repayTime.toString(),
-        borrowInfo: position.borrowInfo.map((info: any) => convertBNToStr(info, 18)),
+        // borrowInfo: position.borrowInfo.map((info: any) => convertBNToStr(info, 18)),
       }
       return _position
     }

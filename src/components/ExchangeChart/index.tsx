@@ -146,7 +146,7 @@ export const PoolDataSection = ({
 				try {
 					if (uniswapPoolAddress) {
 						const startTime = moment().subtract(1, 'days').unix()
-						console.log("startTime: ", startTime)
+						// console.log("startTime: ", startTime)
 						const result = await arbitrumClient.query(
 							{
 								query: POOL_STATS_QUERY,
@@ -189,7 +189,7 @@ export const PoolDataSection = ({
 							)
 						}
 
-						console.log("ExchangeResult ", result)
+						// console.log("ExchangeResult ", result)
 					}
 				} catch (err) {
 					console.log("subgraph error: ", err)
@@ -200,7 +200,7 @@ export const PoolDataSection = ({
 		}
 	}, [lastUpdate, uniswapPoolAddress, uniswapPoolExists])
 
-	console.log("stats: ", stats)
+	// console.log("stats: ", stats)
 
 	useEffect(() => {
 		async function fetch() {

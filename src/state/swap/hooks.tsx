@@ -10,7 +10,7 @@ import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { InterfaceTrade, LeverageTradeState, TradeState } from 'state/routing/types'
 import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
 
-import { TOKEN_SHORTHANDS } from '../../constants/tokens'
+import { DEFAULT_ERC20_DECIMALS, TOKEN_SHORTHANDS } from '../../constants/tokens'
 import { useCurrency } from '../../hooks/Tokens'
 import useENS from '../../hooks/useENS'
 import useParsedQueryString from '../../hooks/useParsedQueryString'
@@ -126,11 +126,11 @@ export interface LeverageTrade {
   inputAmount: CurrencyAmount<Currency> | undefined
   borrowedAmount: CurrencyAmount<Currency> | undefined
   state: LeverageTradeState
-  expectedOutput: string | undefined
-  strikePrice: string | undefined
-  quotedPremium: string | undefined
+  expectedOutput: number | undefined
+  strikePrice: number | undefined
+  quotedPremium: number | undefined
   priceImpact: Percent | undefined
-  effectiveLeverage: string | undefined
+  effectiveLeverage: number | undefined
 }
 
 export function useBestPoolAddress(
@@ -294,15 +294,16 @@ export function useDerivedLeverageCreationInfo({ allowance } : { allowance: Appr
       debouncedAmount
     ) {
       const position: any = contractResult[0]
-      const expectedOutput = new BN(position.totalPosition.toString()).shiftedBy(-outputCurrency?.wrapped.decimals).toFixed(6)
-      const borrowedAmount = new BN(position.totalDebtInput.toString()).shiftedBy(-inputCurrency?.wrapped.decimals).toFixed(6)
-      const strikePrice = new BN(expectedOutput).div(new BN(borrowedAmount).plus(debouncedAmount.toExact())).toFixed(6)
+      const expectedOutput = new BN(position.totalPosition.toString()).shiftedBy(-outputCurrency?.wrapped.decimals).toNumber()
+      const borrowedAmount = new BN(position.totalDebtInput.toString()).shiftedBy(-inputCurrency?.wrapped.decimals).toNumber()
+      const strikePrice = new BN(expectedOutput).div(new BN(borrowedAmount).plus(debouncedAmount.toExact())).toNumber()
+
       const quotedPremium = new BN((contractResult[2] as any)
-        .toString()).shiftedBy(-inputCurrency?.wrapped.decimals).toFixed(6)
-      let t = new BN(strikePrice).minus(initialPrice.toFixed(12)).abs().dividedBy(initialPrice.toFixed(12)).multipliedBy(1000).toFixed(0)
+        .toString()).shiftedBy(-inputCurrency?.wrapped.decimals).toNumber()
+      let t = new BN(strikePrice).minus(initialPrice.toFixed(DEFAULT_ERC20_DECIMALS)).abs().dividedBy(initialPrice.toFixed(DEFAULT_ERC20_DECIMALS)).multipliedBy(1000).toFixed(0)
       const priceImpact = new Percent(t, 1000)
 
-      const effectiveLeverage = new BN((Number(borrowedAmount) + Number(debouncedAmount.toExact()) + Number(quotedPremium)) / (Number(debouncedAmount.toExact()) + Number(quotedPremium))).toFixed(6)
+      const effectiveLeverage = new BN((Number(borrowedAmount) + Number(debouncedAmount.toExact()) + Number(quotedPremium)) / (Number(debouncedAmount.toExact()) + Number(quotedPremium))).toNumber()
       
       return {
         inputAmount: debouncedAmount,

@@ -19,6 +19,8 @@ import { LeverageTrade } from 'state/swap/hooks'
 import { LeveragePositionDetails } from 'types/leveragePosition'
 import { BigNumber as BN } from "bignumber.js"
 import { useToken } from 'hooks/Tokens'
+import { formatNumber } from '@uniswap/conedison/format'
+import { TruncatedText } from './styleds'
 
 const StyledCard = styled(Card)`
   padding: 0;
@@ -89,11 +91,16 @@ export function AdvancedSwapDetails({
             </MouseoverTooltip>
           </RowFixed>
           <TextWithLoadingPlaceholder syncing={syncing} width={65}>
-            <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
-              {trade?.outputAmount.toFixed(3)
-                ? `${trade?.outputAmount.toFixed(3)}  ${trade.outputAmount.currency.symbol}`
-                : '-'}
-            </ThemedText.DeprecatedBlack>
+            
+              <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
+              <TruncatedText>
+                {trade?.outputAmount.toFixed(3)
+                  ? `${trade?.outputAmount.toFixed(3)}  ${trade.outputAmount.currency.symbol}`
+                  : '-'}
+              </TruncatedText>
+              </ThemedText.DeprecatedBlack>
+            
+            
           </TextWithLoadingPlaceholder>
         </RowBetween>
         <RowBetween>
@@ -108,9 +115,14 @@ export function AdvancedSwapDetails({
             </MouseoverTooltip>
           </RowFixed>
           <TextWithLoadingPlaceholder syncing={syncing} width={50}>
+            
             <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
+            <TruncatedText>
               <FormattedPriceImpact priceImpact={priceImpact} />
+              </TruncatedText>
             </ThemedText.DeprecatedBlack>
+            
+            
           </TextWithLoadingPlaceholder>
         </RowBetween>
         <Separator />
@@ -136,11 +148,15 @@ export function AdvancedSwapDetails({
             </MouseoverTooltip>
           </RowFixed>
           <TextWithLoadingPlaceholder syncing={syncing} width={70}>
+          
             <ThemedText.DeprecatedBlack textAlign="right" fontSize={14} color={theme.textTertiary}>
+            <TruncatedText>
               {trade.tradeType === TradeType.EXACT_INPUT
                 ? `${trade.minimumAmountOut(allowedSlippage).toSignificant(6)} ${trade.outputAmount.currency.symbol}`
                 : `${trade.maximumAmountIn(allowedSlippage).toSignificant(6)} ${trade.inputAmount.currency.symbol}`}
+              </TruncatedText>
             </ThemedText.DeprecatedBlack>
+            
           </TextWithLoadingPlaceholder>
         </RowBetween>
         {!trade?.gasUseEstimateUSD || !chainId || !SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId) ? null : (
@@ -203,9 +219,12 @@ export function CloseLeveragePositionDetails({
           </RowFixed>
           <TextWithLoadingPlaceholder syncing={false} width={65}>
             <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
-              {leverageTrade?.totalPosition
-                ? `${new BN(leverageTrade?.totalPosition ?? "").toString()}  ${inputIsToken0 ? token1?.symbol : token0?.symbol}`
-                : '-'}
+              
+                <TruncatedText>
+                {
+                `${leverageTrade?.totalPosition ?? "-"}  ${inputIsToken0 ? token1?.symbol : token0?.symbol}`
+                }
+                </TruncatedText>
             </ThemedText.DeprecatedBlack>
           </TextWithLoadingPlaceholder>
         </RowBetween>
@@ -221,11 +240,14 @@ export function CloseLeveragePositionDetails({
             </MouseoverTooltip>
           </RowFixed>
           <TextWithLoadingPlaceholder syncing={false} width={50}>
+            
             <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
-              {leverageTrade?.totalDebtInput
-                ? `${new BN(leverageTrade?.totalDebtInput ?? "").toString()}  ${inputIsToken0 ? token0?.symbol : token1?.symbol}`
-                : '-'}
+            <TruncatedText>
+              {`${Number(leverageTrade?.totalDebtInput) ?? "-"}  ${inputIsToken0 ? token0?.symbol : token1?.symbol}` }
+            </TruncatedText>
             </ThemedText.DeprecatedBlack>
+            
+            
           </TextWithLoadingPlaceholder>
         </RowBetween>
         <RowBetween>
@@ -244,9 +266,12 @@ export function CloseLeveragePositionDetails({
           </RowFixed>
           <TextWithLoadingPlaceholder syncing={false} width={65}>
             <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
-              {leverageTrade?.totalDebtInput
-                ? `${new BN((Number(leverageTrade?.totalDebtInput) + Number(leverageTrade.initialCollateral) ) / Number(leverageTrade?.initialCollateral) ?? "").toString()}`
+              <TruncatedText>
+              {leverageTrade?.totalDebtInput && leverageTrade?.initialCollateral
+                ? `${(Number(leverageTrade?.totalDebtInput) + Number(leverageTrade.initialCollateral) ) / Number(leverageTrade?.initialCollateral)}`
                 : '-'}
+              </TruncatedText>
+              
             </ThemedText.DeprecatedBlack>
           </TextWithLoadingPlaceholder>
         </RowBetween>
@@ -362,11 +387,15 @@ export function AdvancedLeverageSwapDetails({
             </MouseoverTooltip>
           </RowFixed>
           <TextWithLoadingPlaceholder syncing={syncing} width={65}>
+            
             <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
+            <TruncatedText>
               {leverageTrade?.expectedOutput
-                ? `${Number(leverageTrade?.expectedOutput ?? "-")}  ${trade.outputAmount.currency.symbol}`
+                ? `${(leverageTrade?.expectedOutput) ?? "-"}  ${trade.outputAmount.currency.symbol}`
                 : '-'}
+            </TruncatedText>
             </ThemedText.DeprecatedBlack>
+            
           </TextWithLoadingPlaceholder>
         </RowBetween>
         <RowBetween>
@@ -385,11 +414,15 @@ export function AdvancedLeverageSwapDetails({
             </MouseoverTooltip>
           </RowFixed>
           <TextWithLoadingPlaceholder syncing={syncing} width={65}>
+            
             <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
+            <TruncatedText>
               {
-                leverageTrade?.strikePrice ? `${leverageTrade?.strikePrice}  ${trade.inputAmount.currency.symbol} / ${trade.outputAmount.currency.symbol}`
+                leverageTrade?.strikePrice ? `${(leverageTrade?.strikePrice)}  ${trade.inputAmount.currency.symbol} / ${trade.outputAmount.currency.symbol}`
                   : '-'}
+            </TruncatedText>
             </ThemedText.DeprecatedBlack>
+            
           </TextWithLoadingPlaceholder>
         </RowBetween>
 
@@ -410,11 +443,13 @@ export function AdvancedLeverageSwapDetails({
             </MouseoverTooltip>
           </RowFixed>
           <TextWithLoadingPlaceholder syncing={syncing} width={65}>
+            <TruncatedText>
             <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
               {
-                leverageTrade?.quotedPremium ? `${leverageTrade?.quotedPremium}  ${trade.inputAmount.currency.symbol}`
+                leverageTrade?.quotedPremium ? `${(leverageTrade?.quotedPremium)}  ${trade.inputAmount.currency.symbol}`
                   : '-'}
             </ThemedText.DeprecatedBlack>
+            </TruncatedText>
           </TextWithLoadingPlaceholder>
         </RowBetween>
 
@@ -429,12 +464,14 @@ export function AdvancedLeverageSwapDetails({
               </ThemedText.DeprecatedSubHeader>
             </MouseoverTooltip>
           </RowFixed>
+          <TruncatedText>
           <TextWithLoadingPlaceholder syncing={syncing} width={50}>
             <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
               {
-                leverageTrade?.quotedPremium ? `${leverageTrade?.quotedPremium}  ${trade.inputAmount.currency.symbol}`
+                leverageTrade?.quotedPremium ? `${(leverageTrade?.quotedPremium)}  ${trade.inputAmount.currency.symbol}`
                   : '-'}            </ThemedText.DeprecatedBlack>
           </TextWithLoadingPlaceholder>
+          </TruncatedText>
         </RowBetween>
 
         <RowBetween>
@@ -453,11 +490,13 @@ export function AdvancedLeverageSwapDetails({
             </MouseoverTooltip>
           </RowFixed>
           <TextWithLoadingPlaceholder syncing={syncing} width={65}>
+            <TruncatedText>
             <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
               {
-                leverageTrade?.effectiveLeverage ? `${leverageTrade?.effectiveLeverage}`
+                leverageTrade?.effectiveLeverage ? `${(leverageTrade?.effectiveLeverage)}`
                   : '-'}
             </ThemedText.DeprecatedBlack>
+            </TruncatedText>
           </TextWithLoadingPlaceholder>
         </RowBetween>
 
@@ -473,9 +512,11 @@ export function AdvancedLeverageSwapDetails({
             </MouseoverTooltip>
           </RowFixed>
           <TextWithLoadingPlaceholder syncing={syncing} width={50}>
+            <TruncatedText>
             <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
               <FormattedPriceImpact priceImpact={leverageTrade?.priceImpact} />
             </ThemedText.DeprecatedBlack>
+            </TruncatedText>
           </TextWithLoadingPlaceholder>
         </RowBetween>
         <Separator />
@@ -501,15 +542,19 @@ export function AdvancedLeverageSwapDetails({
             </MouseoverTooltip>
           </RowFixed>
           <TextWithLoadingPlaceholder syncing={syncing} width={70}>
+            
             <ThemedText.DeprecatedBlack textAlign="right" fontSize={14} color={theme.textTertiary}>
+            <TruncatedText>
               {trade.tradeType === TradeType.EXACT_INPUT
-                ? `${Number(leverageTrade?.expectedOutput ?? "-")}  ${trade.outputAmount.currency.symbol}`
+                ? `${(leverageTrade?.expectedOutput) ?? "-"}  ${trade.outputAmount.currency.symbol}`
                 : '-'
 
                 // ? `${Number(leverageFactor) * Number(trade.minimumAmountOut(allowedSlippage).toSignificant(6))} ${trade.outputAmount.currency.symbol}`
                 // : `${trade.maximumAmountIn(allowedSlippage).toSignificant(6)} ${trade.inputAmount.currency.symbol}`
               }
+               </TruncatedText>
             </ThemedText.DeprecatedBlack>
+           
           </TextWithLoadingPlaceholder>
         </RowBetween>
         {!trade?.gasUseEstimateUSD || !chainId || !SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId) ? null : (
