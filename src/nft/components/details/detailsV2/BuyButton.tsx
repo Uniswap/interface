@@ -122,13 +122,14 @@ export const BuyButton = ({ asset, dataPage: dataPage }: { asset: GenieAsset; da
 
   const oneClickBuyAsset = useCallback(() => {
     if (!account) {
-      if (!accountDrawerOpen) toggleWalletDrawer()
+      if (!accountDrawerOpen) {
+        toggleWalletDrawer()
+      }
       setConnectingToWallet(true)
       setTimeout(() => setConnectingToWallet(false), 20000)
-      return
+    } else {
+      fetchAndPurchaseSingleAsset(asset)
     }
-
-    fetchAndPurchaseSingleAsset(asset)
   }, [account, accountDrawerOpen, asset, fetchAndPurchaseSingleAsset, toggleWalletDrawer])
 
   useEffect(() => {
@@ -148,9 +149,7 @@ export const BuyButton = ({ asset, dataPage: dataPage }: { asset: GenieAsset; da
               <Price>{formatNumber(price)} ETH</Price>
             </>
           ) : (
-            <>
-              <Trans>List</Trans>
-            </>
+            <Trans>List</Trans>
           )}
         </StyledBuyButton>
       </ButtonContainer>
@@ -176,13 +175,14 @@ export const BuyButton = ({ asset, dataPage: dataPage }: { asset: GenieAsset; da
     assetInBag ? removeAssetsFromBag([asset]) : addAssetsToBag([asset])
     event.currentTarget.blur()
   }
+  const secondaryButtonExpanded = addToBagExpanded || Boolean(dataPage)
 
   return (
     <ButtonContainer dataPage={Boolean(dataPage)}>
       {!dataPage && (
         <>
           <StyledBuyButton
-            shouldHide={addToBagExpanded}
+            shouldHide={secondaryButtonExpanded}
             disabled={isLoadingRoute || connectingToWallet}
             onClick={() => oneClickBuyAsset()}
           >
@@ -212,10 +212,10 @@ export const BuyButton = ({ asset, dataPage: dataPage }: { asset: GenieAsset; da
         onMouseEnter={() => setAddToBagExpanded(true)}
         onMouseLeave={() => setAddToBagExpanded(false)}
         onClick={secondaryButtonAction}
-        isExpanded={addToBagExpanded || Boolean(dataPage)}
+        isExpanded={secondaryButtonExpanded}
       >
         <SecondaryButtonIcon />
-        {(addToBagExpanded || Boolean(dataPage)) && secondaryButtonCta}
+        {secondaryButtonExpanded && secondaryButtonCta}
       </AddToBagButton>
     </ButtonContainer>
   )
