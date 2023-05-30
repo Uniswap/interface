@@ -10,8 +10,8 @@ export default function useDerivedPayWithAnyTokenSwapInfo(
   parsedOutputAmount?: CurrencyAmount<NativeCurrency | Token>
 ): {
   state: TradeState
-  trade: ClassicTrade | undefined
-  maximumAmountIn: CurrencyAmount<Token> | undefined
+  trade?: ClassicTrade
+  maximumAmountIn?: CurrencyAmount<Token>
   allowedSlippage: Percent
 } {
   // TODO (tina): UMMM fix this? probably force the router config here to be Classic ONLY

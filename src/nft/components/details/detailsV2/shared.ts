@@ -10,10 +10,6 @@ export const containerStyles = css`
   align-self: flex-start;
 `
 
-export const TableContentContainer = styled.div`
-  height: 568px;
-`
-
 // Scrim that fades out the top and bottom of the scrollable container, isBottom changes the direction and placement of the fade
 export const Scrim = styled.div<{ isBottom?: boolean }>`
   position: absolute;
@@ -33,4 +29,10 @@ export const Scrim = styled.div<{ isBottom?: boolean }>`
   background: ${({ theme }) =>
     `linear-gradient(180deg, ${opacify(0, theme.backgroundSurface)} 0%, ${theme.backgroundSurface} 100%)`};
   display: flex;
+`
+
+export const ButtonStyles = css`
+  width: min-content;
+  flex-shrink: 0;
+  border-radius: 16px;
 `

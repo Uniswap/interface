@@ -8,6 +8,7 @@ import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { InterfaceTrade } from 'state/routing/types'
 import { isClassicTrade, isUniswapXTrade } from 'state/routing/utils'
+import formatPriceImpact from 'utils/formatPriceImpact'
 
 import { Separator, ThemedText } from '../../theme'
 import Column from '../Column'
@@ -65,6 +66,18 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
           </MouseoverTooltip>
           <TextWithLoadingPlaceholder syncing={syncing} width={50}>
             <ThemedText.BodySmall>~${trade.gasUseEstimateUSD}</ThemedText.BodySmall>
+          </TextWithLoadingPlaceholder>
+        </RowBetween>
+      )}
+      {isClassicTrade(trade) && (
+        <RowBetween>
+          <MouseoverTooltip text={<Trans>The impact your trade has on the market price of this pool.</Trans>}>
+            <ThemedText.BodySmall color="textSecondary">
+              <Trans>Price Impact</Trans>
+            </ThemedText.BodySmall>
+          </MouseoverTooltip>
+          <TextWithLoadingPlaceholder syncing={syncing} width={50}>
+            <ThemedText.BodySmall>{formatPriceImpact(trade.priceImpact)}</ThemedText.BodySmall>
           </TextWithLoadingPlaceholder>
         </RowBetween>
       )}

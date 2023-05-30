@@ -14,7 +14,7 @@ import { useUniversalRouterSwapCallback } from './useUniversalRouter'
 // and the user has approved the slippage adjusted input amount for the trade
 export function useSwapCallback(
   trade: InterfaceTrade | undefined,
-  fiatValues: { amountIn: number | undefined; amountOut: number | undefined }, // usd values for amount in and out, logged for analytics
+  fiatValues: { amountIn?: number; amountOut?: number }, // usd values for amount in and out, logged for analytics
   allowedSlippage: Percent, // in bips
   permitSignature: PermitSignature | undefined
 ): { callback: null | (() => Promise<string>) } {

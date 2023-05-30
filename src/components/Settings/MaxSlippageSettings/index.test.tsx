@@ -8,11 +8,8 @@ import MaxSlippageSettings from '.'
 
 const AUTO_SLIPPAGE = new Percent(5, 10_000)
 
-const renderAndExpandSlippageSettings = () => {
+const renderSlippageSettings = () => {
   render(<MaxSlippageSettings autoSlippage={AUTO_SLIPPAGE} />)
-
-  // By default, the button to expand Slippage component and show `input` will have `Auto` label
-  fireEvent.click(screen.getByText('Auto'))
 }
 
 // Switch to custom mode by tapping on `Custom` label
@@ -20,7 +17,7 @@ const switchToCustomSlippage = () => {
   fireEvent.click(screen.getByText('Custom'))
 }
 
-const getSlippageInput = () => screen.getByTestId('slippage-input') as HTMLInputElement
+const getSlippageInput = () => screen.queryByTestId('slippage-input') as HTMLInputElement
 
 describe('MaxSlippageSettings', () => {
   describe('input', () => {
@@ -28,14 +25,23 @@ describe('MaxSlippageSettings', () => {
     beforeEach(() => {
       store.dispatch(updateUserSlippageTolerance({ userSlippageTolerance: SlippageTolerance.Auto }))
     })
+    it('is not expanded by default', () => {
+      renderSlippageSettings()
+      expect(getSlippageInput()).not.toBeVisible()
+    })
+    it('is expanded by default when custom slippage is set', () => {
+      store.dispatch(updateUserSlippageTolerance({ userSlippageTolerance: 10 }))
+      renderSlippageSettings()
+      expect(getSlippageInput()).toBeVisible()
+    })
     it('does not render auto slippage as a value, but a placeholder', () => {
-      renderAndExpandSlippageSettings()
+      renderSlippageSettings()
       switchToCustomSlippage()
 
       expect(getSlippageInput().value).toBe('')
     })
     it('renders custom slippage above the input', () => {
-      renderAndExpandSlippageSettings()
+      renderSlippageSettings()
       switchToCustomSlippage()
 
       fireEvent.change(getSlippageInput(), { target: { value: '0.5' } })
@@ -43,7 +49,7 @@ describe('MaxSlippageSettings', () => {
       expect(screen.queryAllByText('0.50%').length).toEqual(1)
     })
     it('updates input value on blur with the slippage in store', () => {
-      renderAndExpandSlippageSettings()
+      renderSlippageSettings()
       switchToCustomSlippage()
 
       const input = getSlippageInput()
@@ -53,7 +59,7 @@ describe('MaxSlippageSettings', () => {
       expect(input.value).toBe('0.50')
     })
     it('clears errors on blur and overwrites incorrect value with the latest correct value', () => {
-      renderAndExpandSlippageSettings()
+      renderSlippageSettings()
       switchToCustomSlippage()
 
       const input = getSlippageInput()
@@ -65,7 +71,7 @@ describe('MaxSlippageSettings', () => {
       expect(input.value).toBe('50.00')
     })
     it('does not allow to enter more than 2 digits after the decimal point', () => {
-      renderAndExpandSlippageSettings()
+      renderSlippageSettings()
       switchToCustomSlippage()
 
       const input = getSlippageInput()
@@ -75,7 +81,7 @@ describe('MaxSlippageSettings', () => {
       expect(input.value).toBe('0.01')
     })
     it('does not accept non-numerical values', () => {
-      renderAndExpandSlippageSettings()
+      renderSlippageSettings()
       switchToCustomSlippage()
 
       const input = getSlippageInput()
@@ -84,7 +90,7 @@ describe('MaxSlippageSettings', () => {
       expect(input.value).toBe('')
     })
     it('does not set slippage when user enters `.` value', () => {
-      renderAndExpandSlippageSettings()
+      renderSlippageSettings()
       switchToCustomSlippage()
 
       const input = getSlippageInput()

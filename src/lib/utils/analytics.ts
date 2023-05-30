@@ -40,7 +40,7 @@ export const formatSwapSignedAnalyticsEventProperties = ({
   txHash,
 }: {
   trade: InterfaceTrade
-  fiatValues: { amountIn: number | undefined; amountOut: number | undefined }
+  fiatValues: { amountIn?: number; amountOut?: number }
   txHash: string
 }) => ({
   transaction_hash: txHash,
@@ -61,11 +61,7 @@ export const formatSwapSignedAnalyticsEventProperties = ({
       : undefined,
 })
 
-export const formatSwapQuoteReceivedEventProperties = (
-  trade: ClassicTrade,
-  gasUseEstimateUSD?: string,
-  fetchingSwapQuoteStartTime?: Date
-) => {
+export const formatSwapQuoteReceivedEventProperties = (trade: ClassicTrade, gasUseEstimateUSD?: string) => {
   return {
     token_in_symbol: trade.inputAmount.currency.symbol,
     token_out_symbol: trade.outputAmount.currency.symbol,
@@ -79,8 +75,5 @@ export const formatSwapQuoteReceivedEventProperties = (
         : undefined,
     token_in_amount: formatToDecimal(trade.inputAmount, trade.inputAmount.currency.decimals),
     token_out_amount: formatToDecimal(trade.outputAmount, trade.outputAmount.currency.decimals),
-    quote_latency_milliseconds: fetchingSwapQuoteStartTime
-      ? getDurationFromDateMilliseconds(fetchingSwapQuoteStartTime)
-      : undefined,
   }
 }
