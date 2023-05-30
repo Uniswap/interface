@@ -24,6 +24,7 @@ interface AllowanceRequired {
   state: AllowanceState.REQUIRED
   token: Token
   isApprovalLoading: boolean
+  isApprovalPending: boolean
   approveAndPermit: () => Promise<void>
   approve: () => Promise<void>
   permit: () => Promise<void>
@@ -127,6 +128,7 @@ export default function usePermit2Allowance(amount?: CurrencyAmount<Token>, spen
           token,
           state: AllowanceState.REQUIRED,
           isApprovalLoading: false,
+          isApprovalPending,
           approveAndPermit,
           approve,
           permit,
@@ -138,6 +140,7 @@ export default function usePermit2Allowance(amount?: CurrencyAmount<Token>, spen
           token,
           state: AllowanceState.REQUIRED,
           isApprovalLoading,
+          isApprovalPending,
           approveAndPermit,
           approve,
           permit,
@@ -157,6 +160,7 @@ export default function usePermit2Allowance(amount?: CurrencyAmount<Token>, spen
     approve,
     approveAndPermit,
     isApprovalLoading,
+    isApprovalPending,
     isApproved,
     isPermitted,
     isSigned,

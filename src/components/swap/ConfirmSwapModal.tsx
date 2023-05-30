@@ -8,24 +8,26 @@ import {
 } from '@uniswap/analytics-events'
 import { Percent } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import Badge from 'components/Badge'
 import Modal, { MODAL_TRANSITION_DURATION } from 'components/Modal'
+import { RowFixed } from 'components/Row'
+import { getChainInfo } from 'constants/chainInfo'
 import { useMaxAmountIn } from 'hooks/useMaxAmountIn'
 import { Allowance, AllowanceState } from 'hooks/usePermit2Allowance'
 import usePrevious from 'hooks/usePrevious'
 import { getPriceUpdateBasisPoints } from 'lib/utils/analytics'
-import { ReactNode, useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
+import styled from 'styled-components/macro'
+import { ThemedText } from 'theme'
+import { isL2ChainId } from 'utils/chains'
 import { formatSwapPriceUpdatedEventProperties } from 'utils/loggingFormatters'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 import { tradeMeaningfullyDiffers } from 'utils/tradeMeaningFullyDiffer'
 
 import { ConfirmationModalContent } from '../TransactionConfirmationModal'
-import {
-  ErrorModalContent,
-  PendingConfirmModalState,
-  PendingModalContent,
-  PendingModalError,
-} from './PendingModalContent'
+import { PendingConfirmModalState, PendingModalContent } from './PendingModalContent'
+import { ErrorModalContent, PendingModalError } from './PendingModalContent/ErrorModalContent'
 import SwapModalFooter from './SwapModalFooter'
 import SwapModalHeader from './SwapModalHeader'
 
@@ -35,6 +37,15 @@ export enum ConfirmModalState {
   PERMITTING,
   PENDING_CONFIRMATION,
 }
+
+const StyledL2Badge = styled(Badge)`
+  padding: 6px 8px;
+`
+
+const StyledL2Logo = styled.img`
+  height: 16px;
+  width: 16px;
+`
 
 function isInApprovalPhase(confirmModalState: ConfirmModalState) {
   return confirmModalState === ConfirmModalState.APPROVING_TOKEN || confirmModalState === ConfirmModalState.PERMITTING
@@ -154,7 +165,7 @@ export default function ConfirmSwapModal({
   allowance,
   onConfirm,
   onDismiss,
-  swapErrorMessage,
+  swapError,
   txHash,
   swapQuoteReceivedDate,
   fiatValueInput,
@@ -167,12 +178,13 @@ export default function ConfirmSwapModal({
   allowance: Allowance
   onAcceptChanges: () => void
   onConfirm: () => void
-  swapErrorMessage?: ReactNode
+  swapError?: Error
   onDismiss: () => void
   swapQuoteReceivedDate?: Date
   fiatValueInput: { data?: number; isLoading: boolean }
   fiatValueOutput: { data?: number; isLoading: boolean }
 }) {
+  const { chainId } = useWeb3React()
   const doesTradeDiffer = originalTrade && tradeMeaningfullyDiffers(trade, originalTrade, allowedSlippage)
   const { startSwapFlow, onCancel, confirmModalState, approvalError, pendingModalSteps, prepareSwapFlow } =
     useConfirmModalState({
@@ -182,6 +194,14 @@ export default function ConfirmSwapModal({
       allowance,
       doesTradeDiffer: Boolean(doesTradeDiffer),
     })
+
+  const swapFailed = Boolean(swapError) && !didUserReject(swapError)
+  useEffect(() => {
+    // Reset the modal state if the user rejected the swap.
+    if (swapError && !swapFailed) {
+      onCancel()
+    }
+  }, [onCancel, swapError, swapFailed])
 
   const showAcceptChanges = Boolean(
     trade && doesTradeDiffer && confirmModalState !== ConfirmModalState.PENDING_CONFIRMATION
@@ -231,12 +251,12 @@ export default function ConfirmSwapModal({
           hash={txHash}
           allowedSlippage={allowedSlippage}
           disabledConfirm={showAcceptChanges}
-          swapErrorMessage={swapErrorMessage}
           swapQuoteReceivedDate={swapQuoteReceivedDate}
           fiatValueInput={fiatValueInput}
           fiatValueOutput={fiatValueOutput}
           showAcceptChanges={showAcceptChanges}
           onAcceptChanges={onAcceptChanges}
+          swapErrorMessage={swapFailed ? swapError?.message : undefined}
         />
       )
     }
@@ -245,8 +265,9 @@ export default function ConfirmSwapModal({
         hideStepIndicators={pendingModalSteps.length === 1}
         steps={pendingModalSteps}
         currentStep={confirmModalState}
-        approvalCurrency={trade?.inputAmount?.currency}
-        txHash={txHash}
+        trade={trade}
+        swapTxHash={txHash}
+        tokenApprovalPending={allowance.state === AllowanceState.REQUIRED && allowance.isApprovalPending}
       />
     )
   }, [
@@ -255,30 +276,48 @@ export default function ConfirmSwapModal({
     pendingModalSteps,
     trade,
     txHash,
+    allowance,
     allowedSlippage,
-    swapErrorMessage,
     swapQuoteReceivedDate,
     fiatValueInput,
     fiatValueOutput,
     onAcceptChanges,
+    swapFailed,
+    swapError?.message,
     prepareSwapFlow,
     startSwapFlow,
   ])
 
+  const l2Badge = () => {
+    if (isL2ChainId(chainId) && confirmModalState !== ConfirmModalState.REVIEWING) {
+      const info = getChainInfo(chainId)
+      return (
+        <StyledL2Badge>
+          <RowFixed data-testid="confirmation-modal-chain-icon" gap="sm">
+            <StyledL2Logo src={info.logoUrl} />
+            <ThemedText.SubHeaderSmall>{info.label}</ThemedText.SubHeaderSmall>
+          </RowFixed>
+        </StyledL2Badge>
+      )
+    }
+    return undefined
+  }
+
   return (
     <Trace modal={InterfaceModalName.CONFIRM_SWAP}>
       <Modal isOpen $scrollOverlay onDismiss={onModalDismiss} maxHeight={90}>
-        {approvalError || swapErrorMessage ? (
+        {approvalError || swapFailed ? (
           <ErrorModalContent
             errorType={approvalError ?? PendingModalError.CONFIRMATION_ERROR}
             onRetry={startSwapFlow}
           />
         ) : (
           <ConfirmationModalContent
-            title={confirmModalState === ConfirmModalState.REVIEWING ? <Trans>Review Swap</Trans> : undefined}
+            title={confirmModalState === ConfirmModalState.REVIEWING ? <Trans>Review swap</Trans> : undefined}
             onDismiss={onModalDismiss}
             topContent={modalHeader}
             bottomContent={modalBottom}
+            headerContent={l2Badge}
           />
         )}
       </Modal>

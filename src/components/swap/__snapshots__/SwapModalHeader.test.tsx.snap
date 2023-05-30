@@ -145,7 +145,7 @@ exports[`SwapModalHeader.tsx matches base snapshot, test trade exact input 1`] =
             class="c5"
           >
             <div
-              class="c8 css-xdrz3"
+              class="c8 css-z2fexy"
               data-testid="INPUT-amount"
             >
               &lt;0.00001 ABC
@@ -188,7 +188,7 @@ exports[`SwapModalHeader.tsx matches base snapshot, test trade exact input 1`] =
             class="c5"
           >
             <div
-              class="c8 css-xdrz3"
+              class="c8 css-z2fexy"
               data-testid="OUTPUT-amount"
             >
               &lt;0.00001 DEF
@@ -358,7 +358,7 @@ exports[`SwapModalHeader.tsx test trade exact output, no recipient 1`] = `
             class="c5"
           >
             <div
-              class="c8 css-xdrz3"
+              class="c8 css-z2fexy"
               data-testid="INPUT-amount"
             >
               &lt;0.00001 ABC
@@ -401,7 +401,7 @@ exports[`SwapModalHeader.tsx test trade exact output, no recipient 1`] = `
             class="c5"
           >
             <div
-              class="c8 css-xdrz3"
+              class="c8 css-z2fexy"
               data-testid="OUTPUT-amount"
             >
               &lt;0.00001 GHI

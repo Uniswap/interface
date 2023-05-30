@@ -12,6 +12,7 @@ import { formatSwapSignedAnalyticsEventProperties } from 'lib/utils/analytics'
 import { useCallback } from 'react'
 import { trace } from 'tracing/trace'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
+import { UserRejectedRequestError } from 'utils/errors'
 import isZero from 'utils/isZero'
 import { didUserReject, swapErrorToUserReadableMessage } from 'utils/swapErrorToUserReadableMessage'
 
@@ -110,11 +111,15 @@ export function useUniversalRouterSwapCallback(
       } catch (swapError: unknown) {
         if (swapError instanceof ModifiedSwapError) throw swapError
 
-        // Cancellations are not failures, and must be accounted for as 'cancelled'.
-        if (didUserReject(swapError)) setTraceStatus('cancelled')
-
         // GasEstimationErrors are already traced when they are thrown.
         if (!(swapError instanceof GasEstimationError)) setTraceError(swapError)
+
+        // Cancellations are not failures, and must be accounted for as 'cancelled'.
+        if (didUserReject(swapError)) {
+          setTraceStatus('cancelled')
+          // This error type allows us to distinguish between user rejections and other errors later too.
+          throw new UserRejectedRequestError(swapErrorToUserReadableMessage(swapError))
+        }
 
         throw new Error(swapErrorToUserReadableMessage(swapError))
       }

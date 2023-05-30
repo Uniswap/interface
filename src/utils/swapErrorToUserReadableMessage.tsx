@@ -1,5 +1,7 @@
 import { t } from '@lingui/macro'
 
+import { UserRejectedRequestError } from './errors'
+
 function getReason(error: any): string | undefined {
   let reason: string | undefined
   while (error) {
@@ -26,7 +28,8 @@ export function didUserReject(error: any): boolean {
     // For Coinbase:
     reason?.match(/user denied/i) ||
     // For Fireblocks
-    reason?.match(/user rejected/i)
+    reason?.match(/user rejected/i) ||
+    error instanceof UserRejectedRequestError
   ) {
     return true
   }
