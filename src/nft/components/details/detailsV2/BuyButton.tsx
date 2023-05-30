@@ -141,44 +141,44 @@ export const BuyButton = ({ asset, onDataPage }: { asset: GenieAsset; onDataPage
 
   return (
     <ButtonContainer onDataPage={Boolean(onDataPage)}>
-      <StyledBuyButton
-        shouldHide={addToBagExpanded}
-        disabled={isLoadingRoute || wishBuyAsset}
-        onClick={() => oneClickBuyAsset()}
-      >
-        {wishBuyAsset && (
-          <>
-            <Trans>Connect Wallet</Trans>
-            <Loader size="24px" stroke="white" />
-          </>
-        )}
-        {isLoadingRoute && (
-          <>
-            <Trans>Fetching Route</Trans>
-            <Loader size="24px" stroke="white" />
-          </>
-        )}
-        {!wishBuyAsset && !isLoadingRoute && (
-          <>
-            <Trans>Buy</Trans>
-            <Price>{formatNumber(price)} ETH</Price>
-          </>
-        )}
-      </StyledBuyButton>
       {!onDataPage && (
         <>
-          <ButtonSeparator shouldHide={addToBagExpanded} />
-          <AddToBagButton
-            onMouseEnter={() => setAddToBagExpanded(true)}
-            onMouseLeave={() => setAddToBagExpanded(false)}
-            onClick={secondaryButtonAction}
-            isExpanded={addToBagExpanded}
+          <StyledBuyButton
+            shouldHide={addToBagExpanded}
+            disabled={isLoadingRoute || wishBuyAsset}
+            onClick={() => oneClickBuyAsset()}
           >
-            <SecondaryButtonIcon />
-            {addToBagExpanded && secondaryButtonCta}
-          </AddToBagButton>
+            {wishBuyAsset && (
+              <>
+                <Trans>Connect Wallet</Trans>
+                <Loader size="24px" stroke="white" />
+              </>
+            )}
+            {isLoadingRoute && (
+              <>
+                <Trans>Fetching Route</Trans>
+                <Loader size="24px" stroke="white" />
+              </>
+            )}
+            {!wishBuyAsset && !isLoadingRoute && (
+              <>
+                <Trans>Buy</Trans>
+                <Price>{formatNumber(price)} ETH</Price>
+              </>
+            )}
+          </StyledBuyButton>
+          <ButtonSeparator shouldHide={addToBagExpanded} />
         </>
       )}
+      <AddToBagButton
+        onMouseEnter={() => setAddToBagExpanded(true)}
+        onMouseLeave={() => setAddToBagExpanded(false)}
+        onClick={secondaryButtonAction}
+        isExpanded={addToBagExpanded || Boolean(onDataPage)}
+      >
+        <SecondaryButtonIcon />
+        {(addToBagExpanded || Boolean(onDataPage)) && secondaryButtonCta}
+      </AddToBagButton>
     </ButtonContainer>
   )
 }
