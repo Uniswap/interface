@@ -1,7 +1,7 @@
 import { useAppSelector } from 'src/app/hooks'
-import { useRefetchQueries } from 'src/data/hooks'
 import { selectActiveAccountNotifications } from 'src/features/notifications/selectors'
 import { AppNotificationType } from 'src/features/notifications/types'
+import { useRefetchQueries } from 'wallet/src/data/utils'
 import { ONE_SECOND_MS } from 'wallet/src/utils/time'
 import { useTimeout } from 'wallet/src/utils/timing'
 

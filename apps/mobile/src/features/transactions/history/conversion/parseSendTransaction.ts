@@ -1,4 +1,3 @@
-import { SpamCode } from 'src/data/types'
 import { AssetType } from 'src/entities/assets'
 import {
   deriveCurrencyAmountFromAssetResponse,
@@ -10,6 +9,7 @@ import {
   TransactionListQueryResponse,
   TransactionType,
 } from 'src/features/transactions/types'
+import { SpamCode } from 'wallet/src/data/types'
 
 export default function parseSendTransaction(
   transaction: TransactionListQueryResponse

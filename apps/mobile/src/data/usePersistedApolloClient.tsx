@@ -1,17 +1,11 @@
-import {
-  ApolloClient,
-  createHttpLink,
-  from,
-  NormalizedCacheObject,
-  useApolloClient,
-} from '@apollo/client'
+import { ApolloClient, from, NormalizedCacheObject } from '@apollo/client'
 import { MMKVWrapper } from 'apollo3-cache-persist'
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { MMKV } from 'react-native-mmkv'
 import { initAndPersistCache } from 'src/data/cache'
-import { setupErrorLink, setupPerformanceLink } from 'src/data/utils'
-import { config } from 'wallet/src/config'
-import { uniswapUrls } from 'wallet/src/constants/urls'
+import { sendAnalyticsEvent } from 'src/features/telemetry'
+import { MobileEventName } from 'src/features/telemetry/constants'
+import { getErrorLink, getHttpLink, getPerformanceLink } from 'wallet/src/data/links'
 import { isNonJestDev } from 'wallet/src/utils/environment'
 
 const mmkv = new MMKV()
@@ -29,19 +23,17 @@ export const usePersistedApolloClient = (): ApolloClient<NormalizedCacheObject> 
       const storage = new MMKVWrapper(mmkv)
       const cache = await initAndPersistCache(storage)
 
-      const httpLink = createHttpLink({
-        uri: uniswapUrls.graphQLUrl,
-        headers: {
-          'Content-Type': 'application/json',
-          'X-API-KEY': config.uniswapApiKey,
-          // TODO: [MOB-218] remove once API gateway supports mobile origin URL
-          Origin: uniswapUrls.apiBaseUrl,
-        },
-      })
-
       setClient(
         new ApolloClient({
-          link: from([setupErrorLink(), setupPerformanceLink(), httpLink]),
+          link: from([
+            getErrorLink(),
+            // requires typing outside of wallet package
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            getPerformanceLink((args: any) =>
+              sendAnalyticsEvent(MobileEventName.PerformanceGraphql, args)
+            ),
+            getHttpLink(),
+          ]),
           cache,
           defaultOptions: {
             watchQuery: {
@@ -68,21 +60,4 @@ export const usePersistedApolloClient = (): ApolloClient<NormalizedCacheObject> 
   }, [client])
 
   return client
-}
-
-export function useRefetchQueries(): (
-  include?: Parameters<ApolloClient<NormalizedCacheObject>['refetchQueries']>[0]['include']
-) => void {
-  const client = useApolloClient()
-
-  return useCallback(
-    (
-      include: Parameters<
-        ApolloClient<NormalizedCacheObject>['refetchQueries']
-      >[0]['include'] = 'active'
-    ) => {
-      client?.refetchQueries({ include })
-    },
-    [client]
-  )
 }

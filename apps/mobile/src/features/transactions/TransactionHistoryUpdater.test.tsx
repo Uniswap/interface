@@ -25,7 +25,7 @@ import { ONE_SECOND_MS } from 'wallet/src/utils/time'
 import { sleep } from 'wallet/src/utils/timing'
 
 const mockedRefetchQueries = jest.fn()
-jest.mock('src/data/hooks', () => ({
+jest.mock('wallet/src/data/utils', () => ({
   useRefetchQueries: (): jest.Mock => mockedRefetchQueries,
 }))
 
