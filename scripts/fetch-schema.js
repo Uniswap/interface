@@ -10,14 +10,12 @@ const thegraphConfig = require('../graphql.thegraph.config')
 const exec = promisify(child_process.exec)
 
 function fetchSchema(url, outputFile) {
-  exec(`yarn get-graphql-schema --h Origin=https://app.uniswap.org ${url}`)
+  exec(`yarn --silent get-graphql-schema --h Origin=https://app.uniswap.org ${url}`)
     .then(({ stderr, stdout }) => {
       if (stderr) {
         throw new Error(stderr)
       } else {
-        // yarn adds the command that was run to the top of stdout, so this line removes the first line so only the fetched schema is parsed
-        const outputSchema = stdout.substring(stdout.indexOf('\n') + 1)
-        fs.writeFile(outputFile, outputSchema)
+        fs.writeFile(outputFile, stdout)
       }
     })
     .catch((err) => {
