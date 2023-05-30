@@ -72,6 +72,7 @@ export const Button = CustomButtonFrame.styleable(({ children, ...props }: Butto
     <CustomButtonFrame {...props} opacity={props.disabled ? 0.4 : 1} theme={props.theme}>
       {/* TODO: improve styling button text based on size of button, e.g. derive weight and color from size / theme */}
       <CustomButtonText fontWeight="600">{children}</CustomButtonText>
+      {props.icon ? props.icon : null}
     </CustomButtonFrame>
   )
 })

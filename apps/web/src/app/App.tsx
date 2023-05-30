@@ -7,10 +7,17 @@ import { ImportMnemonic } from 'src/app/features/onboarding/ImportMnemonic'
 import { IntroScreen } from 'src/app/features/onboarding/IntroScreen'
 import { OnboardingWrapper } from 'src/app/features/onboarding/OnboardingWrapper'
 import { Password } from 'src/app/features/onboarding/Password'
-import { OnboardingRoutes, TopLevelRoutes } from 'src/app/navigation/constants'
+import { SettingsScreen } from 'src/app/features/settings/SettingsScreen'
+import {
+  AppRoutes,
+  OnboardingRoutes,
+  SettingsRoutes,
+  TopLevelRoutes,
+} from 'src/app/navigation/constants'
+import { Flex } from 'ui/src/components/layout/Flex'
 import { Provider } from 'wallet/src/provider'
 import { Store } from 'webext-redux'
-import { WebNavigation } from './navigation'
+import { MainContent, WebNavigation } from './navigation'
 
 const router = createHashRouter([
   {
@@ -43,6 +50,30 @@ const router = createHashRouter([
   {
     path: '',
     element: <WebNavigation />,
+    children: [
+      {
+        path: '',
+        element: <MainContent />,
+      },
+      {
+        path: AppRoutes.Settings,
+        element: <SettingsScreen />,
+        children: [
+          {
+            path: SettingsRoutes.Home,
+            element: <Flex />, // TODO: Add home screen content
+          },
+          {
+            path: SettingsRoutes.EditWallet,
+            element: <Flex />, // TODO: Add EditWallet screen
+          },
+          {
+            path: SettingsRoutes.ViewRecoveryPhrase,
+            element: <Flex />, // TODO: Add ViewRecoveryPhrase screen
+          },
+        ],
+      },
+    ],
   },
 ])
 

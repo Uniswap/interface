@@ -1,3 +1,4 @@
+import { Outlet } from 'react-router-dom'
 import { HomeScreen } from 'src/app/features/home/HomeScreen'
 import Locked from 'src/app/features/lockScreen/Locked'
 import { DappRequestContent } from 'src/background/features/dappRequests/DappRequestContent'
@@ -9,9 +10,8 @@ import { isOnboardedSelector } from 'wallet/src/features/wallet/selectors'
 import { useSagaStatus } from 'wallet/src/state/useSagaStatus'
 import { SagaStatus } from 'wallet/src/utils/saga'
 
-function WebNavigationInner(): JSX.Element {
+export function MainContent(): JSX.Element {
   const pendingDappRequests = useAppSelector((state) => state.dappRequests.pending)
-  const isLoggedIn = useSagaStatus(authSagaName, undefined, false).status === SagaStatus.Success
 
   const areRequestsPending = pendingDappRequests.length > 0
   const isOnboarded = useAppSelector(isOnboardedSelector)
@@ -21,16 +21,13 @@ function WebNavigationInner(): JSX.Element {
     throw new Error('you should have onboarded')
   }
 
-  if (!isLoggedIn) {
-    return <Locked />
-  }
-
   return areRequestsPending ? <DappRequestContent /> : <HomeScreen />
 }
 
 const CONTENT_MIN_HEIGHT = 576 // Subtract 2 * $spacing12 from 600 height
 
 export function WebNavigation(): JSX.Element {
+  const isLoggedIn = useSagaStatus(authSagaName, undefined, false).status === SagaStatus.Success
   return (
     <YStack backgroundColor="$background2">
       <YStack
@@ -42,7 +39,7 @@ export function WebNavigation(): JSX.Element {
         overflow="hidden"
         width={350}>
         <Flex flex={1} flexGrow={1} overflow="visible">
-          <WebNavigationInner />
+          {isLoggedIn ? <Outlet /> : <Locked />}
         </Flex>
       </YStack>
     </YStack>

@@ -2,6 +2,7 @@ import { SwitchNetworksModal } from 'src/app/features/home/SwitchNetworksModal'
 import { Popover, XStack } from 'ui/src'
 import GlobeIcon from 'ui/src/assets/icons/globe.svg'
 import SettingsIcon from 'ui/src/assets/icons/settings.svg'
+import { LinkButton } from 'ui/src/components/button/Button'
 import { Flex } from 'ui/src/components/layout/Flex'
 import { Text } from 'ui/src/components/text/Text'
 import { Unicon } from 'ui/src/components/Unicon'
@@ -31,15 +32,17 @@ export function PortfolioHeader({ address }: PortfolioHeaderProps): JSX.Element 
             <SwitchNetworksModal />
           </Popover.Content>
         </Popover>
-        <Popover>
-          <Popover.Trigger>
+        <LinkButton
+          icon={
             <SettingsIcon
               color={colors.gray200}
-              height={iconSizes.icon28}
-              width={iconSizes.icon28}
+              height={iconSizes.icon24}
+              width={iconSizes.icon24}
             />
-          </Popover.Trigger>
-        </Popover>
+          }
+          padding={0}
+          to="/settings"
+        />
       </XStack>
     </XStack>
   )
