@@ -9,6 +9,7 @@ import { Connection, ConnectionType } from 'connection/types'
 import useEagerlyConnect from 'hooks/useEagerlyConnect'
 import useOrderedConnections from 'hooks/useOrderedConnections'
 import { Provider } from 'react-redux'
+import { HashRouter } from 'react-router-dom'
 import store from 'state'
 import { mocked } from 'test-utils/mocked'
 
@@ -36,9 +37,11 @@ function last<T>(array: T[]): T {
 }
 
 const UI = (
-  <Provider store={store}>
-    <Web3Provider>{null}</Web3Provider>
-  </Provider>
+  <HashRouter>
+    <Provider store={store}>
+      <Web3Provider>{null}</Web3Provider>
+    </Provider>
+  </HashRouter>
 )
 
 describe('Web3Provider', () => {
