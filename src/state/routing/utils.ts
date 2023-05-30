@@ -1,3 +1,5 @@
+import { BigNumber } from '@ethersproject/bignumber'
+import { DutchLimitOrderInfo, DutchLimitOrderInfoJSON } from '@uniswap/gouda-sdk'
 import { MixedRouteSDK } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
@@ -7,15 +9,17 @@ import { nativeOnChain } from 'constants/tokens'
 
 import { GetQuoteArgs } from './slice'
 import {
+  ClassicQuoteData,
   ClassicTrade,
   DutchLimitOrderTrade,
   InterfaceTrade,
   PoolType,
-  QuoteData,
   QuoteState,
   SwapRouterNativeAssets,
   TradeFillType,
   TradeResult,
+  URAQuoteResponse,
+  URAQuoteType,
   V2PoolInRoute,
   V3PoolInRoute,
 } from './types'
@@ -27,7 +31,7 @@ import {
 export function computeRoutes(
   tokenInIsNative: boolean,
   tokenOutIsNative: boolean,
-  routes: QuoteData['route']
+  routes: ClassicQuoteData['route']
 ):
   | {
       routev3: V3Route<Currency, Currency> | null
@@ -89,12 +93,71 @@ function isVersionedRoute<T extends V2PoolInRoute | V3PoolInRoute>(
   return route.every((pool) => pool.type === type)
 }
 
-export function transformRoutesToTrade(args: GetQuoteArgs, data: QuoteData): TradeResult {
-  const { tokenInAddress, tokenOutAddress, tradeType } = args
+function toDutchLimitOrderInfo(orderInfoJSON: DutchLimitOrderInfoJSON): DutchLimitOrderInfo {
+  const { nonce, input, outputs, exclusivityOverrideBps } = orderInfoJSON
+  return {
+    ...orderInfoJSON,
+    nonce: BigNumber.from(nonce),
+    exclusivityOverrideBps: BigNumber.from(exclusivityOverrideBps),
+    input: {
+      ...input,
+      startAmount: BigNumber.from(input.startAmount),
+      endAmount: BigNumber.from(input.endAmount),
+    },
+    outputs: outputs.map((output) => ({
+      ...output,
+      startAmount: BigNumber.from(output.startAmount),
+      endAmount: BigNumber.from(output.endAmount),
+    })),
+  }
+}
+
+export function transformRoutesToTrade(args: GetQuoteArgs, data: URAQuoteResponse): TradeResult {
+  const {
+    tokenInAddress,
+    tokenInChainId,
+    tokenInDecimals,
+    tokenInSymbol,
+    tokenOutAddress,
+    tokenOutChainId,
+    tokenOutDecimals,
+    tokenOutSymbol,
+    tradeType,
+  } = args
+
   const tokenInIsNative = Object.values(SwapRouterNativeAssets).includes(tokenInAddress as SwapRouterNativeAssets)
   const tokenOutIsNative = Object.values(SwapRouterNativeAssets).includes(tokenOutAddress as SwapRouterNativeAssets)
-  const { gasUseEstimateUSD, blockNumber } = data
-  const routes = computeRoutes(tokenInIsNative, tokenOutIsNative, data.route)
+
+  const currencyIn = tokenInIsNative
+    ? nativeOnChain(tokenInChainId)
+    : parseToken({ address: tokenInAddress, chainId: tokenInChainId, decimals: tokenInDecimals, symbol: tokenInSymbol })
+  const currencyOut = tokenOutIsNative
+    ? nativeOnChain(tokenOutChainId)
+    : parseToken({
+        address: tokenOutAddress,
+        chainId: tokenOutChainId,
+        decimals: tokenOutDecimals,
+        symbol: tokenOutSymbol,
+      })
+
+  if (data.routing === URAQuoteType.DUTCH_LIMIT) {
+    const orderInfo = toDutchLimitOrderInfo(data.quote)
+    return {
+      state: QuoteState.SUCCESS,
+      trade: new DutchLimitOrderTrade({
+        currencyIn,
+        currenciesOut: [currencyOut],
+        orderInfo,
+        tradeType,
+        quoteId: data.quote.quoteId,
+        // TODO (Gouda): fix this value for ETH input flow
+        needsWrap: false,
+      }),
+    }
+  }
+
+  const { gasUseEstimateUSD, blockNumber } = data.quote
+  const routes = computeRoutes(tokenInIsNative, tokenOutIsNative, data.quote.route)
 
   const trade = new ClassicTrade({
     v2Routes:
@@ -136,7 +199,7 @@ export function transformRoutesToTrade(args: GetQuoteArgs, data: QuoteData): Tra
   return { state: QuoteState.SUCCESS, trade }
 }
 
-function parseToken({ address, chainId, decimals, symbol }: QuoteData['route'][0][0]['tokenIn']): Token {
+function parseToken({ address, chainId, decimals, symbol }: ClassicQuoteData['route'][0][0]['tokenIn']): Token {
   return new Token(chainId, address, parseInt(decimals.toString()), symbol)
 }
 

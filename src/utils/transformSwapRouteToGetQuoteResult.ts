@@ -3,7 +3,7 @@ import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { routeAmountsToString, SwapRoute } from '@uniswap/smart-order-router'
 import { Pool } from '@uniswap/v3-sdk'
 import { QuoteResult, QuoteState } from 'state/routing/types'
-import { QuoteData, V2PoolInRoute, V3PoolInRoute } from 'state/routing/types'
+import { ClassicQuoteData, V2PoolInRoute, V3PoolInRoute } from 'state/routing/types'
 
 // from routing-api (https://github.com/Uniswap/routing-api/blob/main/lib/handlers/quote/quote.ts#L243-L311)
 export function transformSwapRouteToGetQuoteResult(
@@ -110,7 +110,7 @@ export function transformSwapRouteToGetQuoteResult(
     routeResponse.push(curRoute)
   }
 
-  const result: QuoteData = {
+  const result: ClassicQuoteData = {
     methodParameters,
     blockNumber: blockNumber.toString(),
     amount: amount.quotient.toString(),

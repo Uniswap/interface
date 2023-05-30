@@ -1,5 +1,9 @@
-import { DutchLimitOrderInfo, DutchLimitOrderTrade as IDutchLimitOrderTrade } from '@uniswap/gouda-sdk'
-import { MixedRouteSDK, Trade } from '@uniswap/router-sdk'
+import {
+  DutchLimitOrderInfo,
+  DutchLimitOrderInfoJSON,
+  DutchLimitOrderTrade as IDutchLimitOrderTrade,
+} from '@uniswap/gouda-sdk'
+import { MixedRouteSDK, Protocol, Trade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { Route as V2Route } from '@uniswap/v2-sdk'
 import { Route as V3Route } from '@uniswap/v3-sdk'
@@ -49,7 +53,7 @@ export type V2PoolInRoute = {
   address?: string
 }
 
-export interface QuoteData {
+export interface ClassicQuoteData {
   quoteId?: string
   blockNumber: string
   amount: string
@@ -67,6 +71,16 @@ export interface QuoteData {
   route: Array<(V3PoolInRoute | V2PoolInRoute)[]>
   routeString: string
 }
+
+export type URAQuoteResponse =
+  | {
+      routing: URAQuoteType.CLASSIC
+      quote: ClassicQuoteData
+    }
+  | {
+      routing: URAQuoteType.DUTCH_LIMIT
+      quote: DutchLimitOrderInfoJSON & { quoteId?: string }
+    }
 
 export enum TradeFillType {
   Classic = 'classic', // Uniswap V1, V2, and V3 trades with on-chain routes
@@ -148,7 +162,7 @@ export type QuoteResult =
     }
   | {
       state: QuoteState.SUCCESS
-      data: QuoteData
+      data: ClassicQuoteData
     }
 
 export type TradeResult =
@@ -172,3 +186,20 @@ export enum SwapRouterNativeAssets {
   MATIC = 'MATIC',
   ETH = 'ETH',
 }
+
+export enum URAQuoteType {
+  CLASSIC = 'CLASSIC',
+  DUTCH_LIMIT = 'DUTCH_LIMIT',
+}
+
+type ClassicAPIConfig = {
+  protocols: Protocol[]
+}
+
+type GoudaDutchLimitConfig = {
+  offerer?: string
+  exclusivityOverrideBps?: number
+  auctionPeriodSecs?: number
+}
+
+export type RoutingConfig = (GoudaDutchLimitConfig | ClassicAPIConfig)[]

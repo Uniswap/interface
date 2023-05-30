@@ -130,7 +130,9 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
           >
             <RouterLabel />
           </MouseoverTooltip>
-        ) : undefined}
+        ) : (
+          <div>UniswapX</div>
+        )}
       </RowBetween>
     </Column>
   )

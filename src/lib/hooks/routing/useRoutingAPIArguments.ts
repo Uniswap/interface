@@ -9,15 +9,17 @@ import { currencyAddressForSwapQuote } from 'state/routing/utils'
  * be destructured.
  */
 export function useRoutingAPIArguments({
+  account,
   tokenIn,
   tokenOut,
   amount,
   tradeType,
   routerPreference,
 }: {
-  tokenIn: Currency | undefined
-  tokenOut: Currency | undefined
-  amount: CurrencyAmount<Currency> | undefined
+  account?: string
+  tokenIn?: Currency
+  tokenOut?: Currency
+  amount?: CurrencyAmount<Currency>
   tradeType: TradeType
   routerPreference: RouterPreference | typeof INTERNAL_ROUTER_PREFERENCE_PRICE
 }) {
@@ -26,6 +28,7 @@ export function useRoutingAPIArguments({
       !tokenIn || !tokenOut || !amount || tokenIn.equals(tokenOut) || tokenIn.wrapped.equals(tokenOut.wrapped)
         ? undefined
         : {
+            account,
             amount: amount.quotient.toString(),
             tokenInAddress: currencyAddressForSwapQuote(tokenIn),
             tokenInChainId: tokenIn.wrapped.chainId,
@@ -38,6 +41,6 @@ export function useRoutingAPIArguments({
             routerPreference,
             tradeType,
           },
-    [amount, routerPreference, tokenIn, tokenOut, tradeType]
+    [account, amount, routerPreference, tokenIn, tokenOut, tradeType]
   )
 }
