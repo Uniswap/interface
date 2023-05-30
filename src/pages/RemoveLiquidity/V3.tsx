@@ -283,7 +283,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
         onDismiss={handleDismissConfirmation}
         attemptingTxn={attemptingTxn}
         hash={txnHash ?? ''}
-        content={() => (
+        reviewContent={() => (
           <ConfirmationModalContent
             title={<Trans>Remove Liquidity</Trans>}
             onDismiss={handleDismissConfirmation}
