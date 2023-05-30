@@ -41,7 +41,7 @@ export const DataPageHeader = ({ asset }: { asset: GenieAsset }) => {
         </ThemedText.HeadlineMedium>
       </AssetText>
       <Row justifySelf="flex-end" width="min-content" gap="12px">
-        <BuyButton asset={asset} onDataPage />
+        <BuyButton asset={asset} dataPage />
       </Row>
     </HeaderContainer>
   )

@@ -64,7 +64,7 @@ const StyledBuyButton = styled(BaseButton)<{ shouldHide: boolean }>`
     `}
 `
 
-const ButtonContainer = styled(Row)<{ onDataPage: boolean }>`
+const ButtonContainer = styled(Row)<{ dataPage: boolean }>`
   width: 100%;
   background-color: ${({ theme }) => theme.accentAction};
   border-radius: 16px;
@@ -72,7 +72,7 @@ const ButtonContainer = styled(Row)<{ onDataPage: boolean }>`
   white-space: nowrap;
 
   @media screen and (min-width: ${BREAKPOINTS.sm}px) {
-    width: ${({ onDataPage }) => (onDataPage ? 'min-content' : '320px')};
+    width: ${({ dataPage }) => (dataPage ? 'min-content' : '320px')};
   }
 `
 
@@ -87,7 +87,7 @@ const Price = styled.div`
   color: ${({ theme }) => theme.accentTextLightSecondary};
 `
 
-export const BuyButton = ({ asset, onDataPage }: { asset: GenieAsset; onDataPage?: boolean }) => {
+export const BuyButton = ({ asset, dataPage: dataPage }: { asset: GenieAsset; dataPage?: boolean }) => {
   const { account } = useWeb3React()
   const [accountDrawerOpen, toggleWalletDrawer] = useAccountDrawer()
   const { fetchAndPurchaseSingleAsset, isLoading: isLoadingRoute } = useBuyAssetCallback()
@@ -140,7 +140,7 @@ export const BuyButton = ({ asset, onDataPage }: { asset: GenieAsset; onDataPage
 
   if (ownsAsset) {
     return (
-      <ButtonContainer onDataPage={Boolean(onDataPage)}>
+      <ButtonContainer dataPage={Boolean(dataPage)}>
         <StyledBuyButton shouldHide={false} onClick={navigateToProfile}>
           {price ? (
             <>
@@ -158,7 +158,7 @@ export const BuyButton = ({ asset, onDataPage }: { asset: GenieAsset; onDataPage
   }
 
   if (!price) {
-    if (onDataPage) {
+    if (dataPage) {
       return null
     }
 
@@ -178,8 +178,8 @@ export const BuyButton = ({ asset, onDataPage }: { asset: GenieAsset; onDataPage
   }
 
   return (
-    <ButtonContainer onDataPage={Boolean(onDataPage)}>
-      {!onDataPage && (
+    <ButtonContainer dataPage={Boolean(dataPage)}>
+      {!dataPage && (
         <>
           <StyledBuyButton
             shouldHide={addToBagExpanded}
@@ -212,10 +212,10 @@ export const BuyButton = ({ asset, onDataPage }: { asset: GenieAsset; onDataPage
         onMouseEnter={() => setAddToBagExpanded(true)}
         onMouseLeave={() => setAddToBagExpanded(false)}
         onClick={secondaryButtonAction}
-        isExpanded={addToBagExpanded || Boolean(onDataPage)}
+        isExpanded={addToBagExpanded || Boolean(dataPage)}
       >
         <SecondaryButtonIcon />
-        {(addToBagExpanded || Boolean(onDataPage)) && secondaryButtonCta}
+        {(addToBagExpanded || Boolean(dataPage)) && secondaryButtonCta}
       </AddToBagButton>
     </ButtonContainer>
   )
