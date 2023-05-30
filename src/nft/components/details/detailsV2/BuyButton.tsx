@@ -62,7 +62,7 @@ const StyledBuyButton = styled(BaseButton)<{ shouldHide: boolean }>`
     `}
 `
 
-const ButtonContainer = styled(Row)`
+const ButtonContainer = styled(Row)<{ onDataPage: boolean }>`
   width: 100%;
   background-color: ${({ theme }) => theme.accentAction};
   border-radius: 16px;
@@ -70,7 +70,7 @@ const ButtonContainer = styled(Row)`
   white-space: nowrap;
 
   @media screen and (min-width: ${BREAKPOINTS.sm}px) {
-    width: 320px;
+    width: ${({ onDataPage }) => (onDataPage ? 'min-content' : '320px')};
   }
 `
 
@@ -140,7 +140,7 @@ export const BuyButton = ({ asset, onDataPage }: { asset: GenieAsset; onDataPage
   }
 
   return (
-    <ButtonContainer>
+    <ButtonContainer onDataPage={Boolean(onDataPage)}>
       <StyledBuyButton
         shouldHide={addToBagExpanded}
         disabled={isLoadingRoute || wishBuyAsset}
@@ -165,16 +165,20 @@ export const BuyButton = ({ asset, onDataPage }: { asset: GenieAsset; onDataPage
           </>
         )}
       </StyledBuyButton>
-      <ButtonSeparator shouldHide={addToBagExpanded} />
-      <AddToBagButton
-        onMouseEnter={() => setAddToBagExpanded(true)}
-        onMouseLeave={() => setAddToBagExpanded(false)}
-        onClick={secondaryButtonAction}
-        isExpanded={addToBagExpanded}
-      >
-        <SecondaryButtonIcon />
-        {addToBagExpanded && secondaryButtonCta}
-      </AddToBagButton>
+      {!onDataPage && (
+        <>
+          <ButtonSeparator shouldHide={addToBagExpanded} />
+          <AddToBagButton
+            onMouseEnter={() => setAddToBagExpanded(true)}
+            onMouseLeave={() => setAddToBagExpanded(false)}
+            onClick={secondaryButtonAction}
+            isExpanded={addToBagExpanded}
+          >
+            <SecondaryButtonIcon />
+            {addToBagExpanded && secondaryButtonCta}
+          </AddToBagButton>
+        </>
+      )}
     </ButtonContainer>
   )
 }
