@@ -5,6 +5,11 @@ export enum Field {
   OUTPUT = 'OUTPUT',
 }
 
+export enum ActiveSwapTab {
+  TRADE,
+  BORROW
+}
+
 export const selectCurrency = createAction<{ field: Field; currencyId: string }>('swap/selectCurrency')
 export const switchCurrencies = createAction<void>('swap/switchCurrencies')
 export const typeInput = createAction<{ field: Field; typedValue: string }>('swap/typeInput')
@@ -18,9 +23,11 @@ export const replaceSwapState = createAction<{
   leverageFactor?: string
   hideClosedLeveragePositions: boolean
   leverageManagerAddress?: string
+  activeTab: ActiveSwapTab
 }>('swap/replaceSwapState')
 export const setRecipient = createAction<{ recipient: string | null }>('swap/setRecipient')
 export const setLeverageFactor = createAction<{ leverageFactor: string }>('swap/setLeverageFactor')
 export const setHideClosedLeveragePositions = createAction<{ hideClosedLeveragePositions: boolean }>('swap/setHideClosedLeveragePositions')
 export const setLeverage = createAction<{ leverage: boolean }>('swap/setLeverage')
 export const setLeverageManagerAddress = createAction<{ leverageManagerAddress: string }>('swap/setLeverageManagerAddress')
+export const setActiveTab = createAction<{ activeTab: ActiveSwapTab}>('swap/setActiveTab')

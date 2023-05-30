@@ -1,8 +1,9 @@
 import { createReducer } from '@reduxjs/toolkit'
 import { parsedQueryString } from 'hooks/useParsedQueryString'
 
-import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies, typeInput, setLeverageFactor, setHideClosedLeveragePositions, setLeverage, setLeverageManagerAddress } from './actions'
+import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies, typeInput, setLeverageFactor, setHideClosedLeveragePositions, setLeverage, setLeverageManagerAddress, ActiveSwapTab, setActiveTab } from './actions'
 import { queryParametersToSwapState } from './hooks'
+import { statsText } from 'nft/components/collection/CollectionStats.css'
 
 export interface SwapState {
   readonly independentField: Field
@@ -19,6 +20,7 @@ export interface SwapState {
   readonly hideClosedLeveragePositions: boolean
   readonly leverage: boolean
   readonly leverageManagerAddress: string | undefined | null
+  readonly activeTab: ActiveSwapTab
 }
 
 const initialState: SwapState = queryParametersToSwapState(parsedQueryString())
@@ -27,7 +29,7 @@ export default createReducer<SwapState>(initialState, (builder) =>
   builder
     .addCase(
       replaceSwapState,
-      (state, { payload: { typedValue, recipient, field, inputCurrencyId, outputCurrencyId, leverage, leverageFactor, hideClosedLeveragePositions, leverageManagerAddress } }) => {
+      (state, { payload: { typedValue, recipient, field, inputCurrencyId, outputCurrencyId, leverage, leverageFactor, hideClosedLeveragePositions, leverageManagerAddress, activeTab } }) => {
         return {
           [Field.INPUT]: {
             currencyId: inputCurrencyId ?? null,
@@ -41,7 +43,8 @@ export default createReducer<SwapState>(initialState, (builder) =>
           leverageFactor: leverageFactor ?? null,
           leverage,
           hideClosedLeveragePositions,
-          leverageManagerAddress: leverageManagerAddress ?? null
+          leverageManagerAddress: leverageManagerAddress ?? null,
+          activeTab: activeTab
         }
       }
     )
@@ -111,4 +114,9 @@ export default createReducer<SwapState>(initialState, (builder) =>
     .addCase(setRecipient, (state, { payload: { recipient } }) => {
       state.recipient = recipient
     })
+    .addCase(setActiveTab, (state, { payload: { activeTab } }) => ({
+      ...state,
+      activeTab
+    })
+    )
 )

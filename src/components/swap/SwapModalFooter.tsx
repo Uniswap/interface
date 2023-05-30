@@ -473,6 +473,7 @@ function useDerivedAddPremiumInfo(
   leverageManager: string | undefined,
   trader: string | undefined,
   tokenId: string | undefined,
+  isToken0: boolean | undefined,
   setState: (state: DerivedInfoState) => void,
 ): {
   rate: string | undefined
@@ -491,9 +492,9 @@ function useDerivedAddPremiumInfo(
       setState(DerivedInfoState.LOADING)
 
       try {
-        const position = await leverageManagerContract.callStatic.getPosition(trader, tokenId)
+        // const position = await leverageManagerContract.callStatic.getPosition(trader, tokenId)
 
-        const addPremiumResult = await leverageManagerContract.callStatic.payPremium(trader, tokenId)
+        const addPremiumResult = await leverageManagerContract.callStatic.payPremium(trader, isToken0)
         setContractResult({
           addPremiumResult
         })
@@ -507,7 +508,7 @@ function useDerivedAddPremiumInfo(
     }
 
     laggedfxn()
-  }, [leverageManager, trader, tokenId])
+  }, [leverageManager, trader, tokenId, isToken0])
 
   const info = useMemo(() => {
     // console.log("addPosition2:", contractResult)
@@ -885,18 +886,17 @@ export function AddPremiumModalFooter({
   const { error, position } = useLeveragePositionFromTokenId(tokenId)
   const token0 = useToken(position?.token0Address)
   const token1 = useToken(position?.token1Address)
-  const { rate } = useDerivedAddPremiumInfo(leverageManagerAddress, trader, tokenId, setDerivedState)
+  const { rate } = useDerivedAddPremiumInfo(leverageManagerAddress, trader, tokenId, position?.isToken0, setDerivedState)
   const inputIsToken0 = !position?.isToken0
-  console.log("rate: ", rate)
+  // console.log("rate: ", rate)
 
   const payment = position?.totalDebtInput && rate ? new BN(position.totalDebtInput).multipliedBy(new BN(rate)).div(100).toString() : "0"
   const inputCurrency = useCurrency(position?.isToken0 ? position?.token0Address : position?.token1Address)
   const [leverageApprovalState, approveLeverageManager] = useApproveCallback(
     inputCurrency ?
-      CurrencyAmount.fromRawAmount(inputCurrency, "1000") : undefined,
-    leverageManagerAddress ?? undefined)
-  console.log("payment", leverageApprovalState)
-
+      CurrencyAmount.fromRawAmount(inputCurrency, "1") : undefined,
+    leverageManagerAddress ?? undefined
+    )
 
   const updateLeverageAllowance = useCallback(async () => {
     try {

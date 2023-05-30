@@ -113,13 +113,11 @@ export default function ReducePositionModal({
 
 export function AddPremiumModal({
   trader,
-  isOpen,
   tokenId,
-  leverageManagerAddress,
+  isOpen,
   onDismiss,
   onAcceptChanges,
   onConfirm
-
 }: {
   trader: string | undefined,
   isOpen: boolean,
@@ -138,12 +136,13 @@ export function AddPremiumModal({
   // console.log("args: ", trader, isOpen, tokenId, leverageManagerAddress)
 
   const { loading, error, position} = useLeveragePositionFromTokenId(tokenId)
-  const leverageManager = useLeverageManagerContract(leverageManagerAddress, true)
+  const leverageManagerAddress = position?.leverageManagerAddress;
+  const leverageManager = useLeverageManagerContract(position?.leverageManagerAddress, true)
 
   const handleAddPremium = useCallback(() => {
     if (leverageManager) {
       setAttemptingTxn(true)
-      leverageManager.addPremium(trader, tokenId).then(
+      leverageManager.payPremium(trader, position?.isToken0).then(
         (hash: any) => {
           setAttemptingTxn(false)
           setTxHash(hash)

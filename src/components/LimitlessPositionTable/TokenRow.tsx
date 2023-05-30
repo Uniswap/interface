@@ -36,7 +36,7 @@ import {
 import { ArrowCell, DeltaText, formatDelta, getDeltaArrow } from 'components/Tokens/TokenDetails/PriceChart'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import { useCurrency } from 'hooks/Tokens'
-import { AutoRow, RowBetween } from 'components/Row'
+import { AutoRow, RowBetween, RowFixed } from 'components/Row'
 import { LeveragePositionDetails } from 'types/leveragePosition'
 import { AutoColumn } from 'components/Column'
 import ReducePositionModal, { AddPremiumModal } from 'components/swap/CloseLeveragePositionModal'
@@ -187,7 +187,8 @@ const PriceCell = styled(DataCell)`
 `
 
 const ActionCell = styled(DataCell)`
-  justify-content: flex-start;
+  justify-content: center;
+  align-items: center;
   min-width: 60px;
 `
 
@@ -227,11 +228,12 @@ const GreenText = styled.span`
 const RedText = styled.span`
   color: ${({ theme }) =>
     theme.accentFailure
-    };
+  };
   `
 
 const HeaderCellWrapper = styled.span<{ onClick?: () => void }>`
   align-items: center;
+  flex-flow: row nowrap;
   cursor: ${({ onClick }) => (onClick ? 'pointer' : 'unset')};
   display: flex;
   gap: 4px;
@@ -347,6 +349,10 @@ const ResponsiveButtonPrimary = styled(SmallMaxButton)`
   `};
 `
 
+const ActionsContainer = styled(AutoColumn)`
+  align-items: center;
+`
+
 export const HEADER_DESCRIPTIONS: Record<PositionSortMethod, ReactNode | undefined> = {
   [PositionSortMethod.VALUE]: undefined,
   [PositionSortMethod.COLLATERAL]: (
@@ -373,6 +379,12 @@ export const HEADER_DESCRIPTIONS: Record<PositionSortMethod, ReactNode | undefin
     <Trans>
       Remaining Premium
     </Trans>
+  ),
+  [PositionSortMethod.ACTIONS]: (
+    <Trans>
+      (Reduce): reduce position size
+      (Pay): pay premium
+    </Trans>
   )
   // [PositionSortMethod.RECENT_PREMIUM]: (
   //   <Trans>Recent Premium (Total Premium Paid)</Trans>
@@ -392,16 +404,21 @@ function HeaderCell({
 
   const description = HEADER_DESCRIPTIONS[category]
 
+  console.log("category",category, )
+
   return (
     <HeaderCellWrapper onClick={handleSortCategory}>
-      <ThemedText.TableText>
-      {category}
-      </ThemedText.TableText>
       {description && (
         <MouseoverTooltip text={description} placement="right">
+          <RowFixed>
+          <ThemedText.TableText>
+            {category !== PositionSortMethod.ACTIONS && category}
+          </ThemedText.TableText>
           <InfoIconContainer>
-            <Info size={14} />
+            <Info size={10} />
           </InfoIconContainer>
+          </RowFixed>
+          
         </MouseoverTooltip>
       )}
     </HeaderCellWrapper>
@@ -448,13 +465,24 @@ function PositionRow({
   const handlePremiumConfirmDismiss = () => {
     setShowAddPremium(false);
   }
-  const actions = (
-    <AutoRow>
+  const actions = (!header ? (
+    <ActionsContainer>
       <ReduceButton width="auto" onClick={() => setShowClose(!showClose)} >
         <Trans>reduce</Trans>
       </ReduceButton>
-    </AutoRow>
-  )
+      <ReduceButton width="auto" onClick={() => setShowAddPremium(!showClose)} >
+        <Trans>pay</Trans>
+      </ReduceButton>
+    </ActionsContainer>
+  ): (
+    (
+      <MouseoverTooltip text={"(reduce): reduce position, (pay): pay premium"} placement="right">
+        <InfoIconContainer>
+          <Info size={14} />
+        </InfoIconContainer>
+      </MouseoverTooltip>
+    )
+  ))
 
   const rowCells = (
     <>
@@ -502,7 +530,7 @@ function PositionRow({
       </PriceCell>
       <ActionCell data-testid="action-cell" sortable={header}>
         {
-          !header && actions
+          actions
         }
       </ActionCell>
       {/* <SparkLineCell>{sparkLine}</SparkLineCell> */}
@@ -519,18 +547,18 @@ export function HeaderRow() {
     <PositionRow
       header={true}
       positionInfo={<ThemedText.TableText>Position</ThemedText.TableText>}
-      value={<ThemedText.TableText>Net Value</ThemedText.TableText>}
-      collateral={<ThemedText.TableText>Collateral</ThemedText.TableText>}
-      repaymentTime={<ThemedText.TableText>Time Left</ThemedText.TableText>}
-      remainingPremium={<ThemedText.TableText>Prem. Left</ThemedText.TableText>}
-      entryPrice={<ThemedText.TableText>Entry Price</ThemedText.TableText>}
-      PnL={<ThemedText.TableText>Profit/Loss</ThemedText.TableText>}
-      // value={<HeaderCell category={PositionSortMethod.VALUE} />}
-      // collateral={<HeaderCell category={PositionSortMethod.COLLATERAL} />}
-      // PnL={<HeaderCell category={PositionSortMethod.PNL} />}
-      // entryPrice={<HeaderCell category={PositionSortMethod.ENTRYPRICE} />}
-      // remainingPremium={<HeaderCell category={PositionSortMethod.REMAINING} />}
-      // repaymentTime={<HeaderCell category={PositionSortMethod.REPAYTIME} />}
+      // value={<ThemedText.TableText>Net Value</ThemedText.TableText>}
+      // collateral={<ThemedText.TableText>Collateral</ThemedText.TableText>}
+      // repaymentTime={<ThemedText.TableText>Time Left</ThemedText.TableText>}
+      // remainingPremium={<ThemedText.TableText>Prem. Left</ThemedText.TableText>}
+      // entryPrice={<ThemedText.TableText>Entry Price</ThemedText.TableText>}
+      // PnL={<ThemedText.TableText>Profit/Loss</ThemedText.TableText>}
+      value={<HeaderCell category={PositionSortMethod.VALUE} />}
+      collateral={<HeaderCell category={PositionSortMethod.COLLATERAL} />}
+      PnL={<HeaderCell category={PositionSortMethod.PNL} />}
+      entryPrice={<HeaderCell category={PositionSortMethod.ENTRYPRICE} />}
+      remainingPremium={<HeaderCell category={PositionSortMethod.REMAINING} />}
+      repaymentTime={<HeaderCell category={PositionSortMethod.REPAYTIME} />}
     />
   )
 }
@@ -605,9 +633,9 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
   // entry price in quote token / base token
   const [pnl, entryPrice] = useMemo(() => {
     if (
-      pool?.token0Price && 
-      pool?.token1Price && 
-      position.creationPrice && 
+      pool?.token0Price &&
+      pool?.token1Price &&
+      position.creationPrice &&
       position.totalPosition &&
       token0 &&
       token1
@@ -618,9 +646,9 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
       // token0Price => token1 / token0, token1Price => token0 / token1.
       // total position is in output token
       let _pnl = position.isToken0 ? (
-       // token0Price => input / output, token1Price => output / input
-       // entry price => input / output -> token1 / token0. 
-       // total position -> output -> token0
+        // token0Price => input / output, token1Price => output / input
+        // entry price => input / output -> token1 / token0. 
+        // total position -> output -> token0
         new BN(pool.token0Price.toFixed(DEFAULT_ERC20_DECIMALS)).minus(_entryPrice).multipliedBy(position.totalPosition).toNumber() // pnl in token1
       ) : (
         // token1Price -> token0 / token1
@@ -628,11 +656,11 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
         // total position -> output -> token1
         new BN(pool.token1Price.toFixed(DEFAULT_ERC20_DECIMALS)).minus(_entryPrice).multipliedBy(position.totalPosition).toNumber() // pnl in token0
       )
-  
+
       // use token0 as quote, token1 as base
       // pnl will be in output token
       // entry price will be in quote token.
-    
+
       if (pool.token0Price.greaterThan(1)) {
         // entry price = token1 / token0
         return [_pnl, position.isToken0 ? _entryPrice.toNumber() : new BN(1).dividedBy(_entryPrice).toNumber()]
@@ -641,7 +669,6 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
         return [_pnl, position.isToken0 ? new BN(1).dividedBy(_entryPrice).toNumber() : _entryPrice.toNumber()]
       }
     }
-
     return [undefined, undefined]
   }, [position, pool?.token0Price, pool?.token1Price, token0, token1])
 
@@ -711,13 +738,13 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
           repaymentTime={
             <Trans>
               <ThemedText.TableText>
-                { !isOverDue ? (
+                {!isOverDue ? (
                   <GreenText>
-                  {timeLeft}
+                    {timeLeft}
                   </GreenText>
-                ) : ( 
+                ) : (
                   <RedText>
-                  -{timeLeft}
+                    -{timeLeft}
                   </RedText>
                 )
                 }

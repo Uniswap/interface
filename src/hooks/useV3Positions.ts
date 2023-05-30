@@ -59,7 +59,7 @@ export function useLeveragePositions(account: string | undefined): {loading: boo
   //console.log("inputs: ", inputs)
   
   const results = useSingleContractMultipleData(globalStorage, 'getPosition', inputs)
-  console.log("calldataResults: ", results)
+  // console.log("calldataResults: ", results)
 
   const loading = useMemo(() => results.some(({ loading }) => loading), [results])
   const error = useMemo(() => results.some(({ error }) => error), [results])

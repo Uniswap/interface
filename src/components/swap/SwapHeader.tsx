@@ -7,6 +7,10 @@ import { RowBetween, RowFixed } from '../Row'
 import SettingsTab from '../Settings'
 import { ButtonPrimary } from '../Button'
 import { SmallButtonPrimary } from 'components/Button'
+import SwapTabHeader, { TabNavItem } from 'components/Tabs'
+import { ActiveSwapTab } from 'state/swap/actions'
+import { useSwapActionHandlers } from 'state/swap/hooks'
+import { useCallback } from 'react'
 
 const StyledSwapHeader = styled.div`
   padding: 8px 12px;
@@ -24,20 +28,17 @@ const ResponsiveButtonPrimary = styled(SmallButtonPrimary)`
     width: 100%;
   `};
 `
-export default function SwapHeader({ allowedSlippage, setAction, action}: { allowedSlippage: Percent, setAction:any, action: any}) {
+export default function SwapHeader({ activeTab, allowedSlippage }: { activeTab: ActiveSwapTab, allowedSlippage: Percent }) {
+  const { onActiveTabChange } = useSwapActionHandlers();
+
+  const handleTabChange = useCallback(() => {
+    onActiveTabChange(activeTab === ActiveSwapTab.TRADE ? ActiveSwapTab.BORROW : ActiveSwapTab.TRADE)
+  }, [activeTab])
   return (
     <StyledSwapHeader>
       <RowBetween>
         <RowFixed>
-          <ThemedText.DeprecatedBlack fontWeight={500} fontSize={16} style={{ marginRight: '16px' }}>
-            <Trans>{action? "Trade": "Borrow"}</Trans>
-          </ThemedText.DeprecatedBlack>    
-            <ResponsiveButtonPrimary 
-             onClick={() => setAction(!action)}
-             >
-              <Trans>{!action? "Trade": "Borrow"}</Trans>
-            </ResponsiveButtonPrimary>
-
+          <SwapTabHeader activeTab={activeTab} handleSetTab={handleTabChange}/>
         </RowFixed>
 
         <RowFixed>
