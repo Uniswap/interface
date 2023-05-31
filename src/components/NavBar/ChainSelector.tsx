@@ -15,6 +15,7 @@ import { useIsMobile } from 'nft/hooks'
 import { useCallback, useRef, useState } from 'react'
 import { AlertTriangle, ChevronDown, ChevronUp } from 'react-feather'
 import { useTheme } from 'styled-components/macro'
+import { isProductionEnv } from 'utils/env'
 
 import * as styles from './ChainSelector.css'
 import ChainSelectorRow from './ChainSelectorRow'
@@ -28,6 +29,10 @@ const NETWORK_SELECTOR_CHAINS = [
   SupportedChainId.CELO,
   SupportedChainId.BNB,
 ]
+
+if (!isProductionEnv()) {
+  NETWORK_SELECTOR_CHAINS.push(SupportedChainId.GOERLI)
+}
 
 interface ChainSelectorProps {
   leftAlign?: boolean
