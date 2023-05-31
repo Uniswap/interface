@@ -26,8 +26,9 @@ const OptionCardLeft = styled.div`
 
 const OptionCardClickable = styled.button<{ selected: boolean }>`
   align-items: center;
-  background-color: ${({ theme }) => theme.backgroundModule};
+  background-color: unset;
   border: none;
+  cursor: pointer;
   display: flex;
   flex: 1 1 auto;
   flex-direction: row;
@@ -35,14 +36,6 @@ const OptionCardClickable = styled.button<{ selected: boolean }>`
   opacity: ${({ disabled, selected }) => (disabled && !selected ? '0.5' : '1')};
   padding: 18px;
   transition: ${({ theme }) => theme.transition.duration.fast};
-
-  &:hover {
-    cursor: ${({ disabled }) => !disabled && 'pointer'};
-    background-color: ${({ theme, disabled }) => !disabled && theme.hoverState};
-  }
-  &:focus {
-    background-color: ${({ theme, disabled }) => !disabled && theme.hoverState};
-  }
 `
 
 const HeaderText = styled.div`
@@ -81,34 +74,42 @@ const WCv2PopoverContent = styled(ThemeButton)`
 `
 const WCv2PopoverToggle = styled.button`
   align-items: center;
-  background-color: ${({ theme }) => theme.backgroundModule};
+  background-color: transparent;
   border: none;
   color: ${({ theme }) => theme.textTertiary};
   cursor: pointer;
   display: flex;
+  height: 24px;
   justify-content: center;
   margin: 0;
   max-width: 48px;
   padding: 0;
+  position: absolute;
+  right: 16px;
+  top: calc(50% - 12px);
+  width: 24px;
 
   &:hover {
-    background-color: ${({ theme }) => theme.hoverState};
-  }
-
-  svg {
-    border-color: ${({ theme }) => theme.textTertiary};
-    border-width: 0px 0px 0px 1px;
-    border-style: solid;
-    padding: 0 16px;
-    width: 100%;
+    opacity: 0.6;
   }
 `
-const Wrapper = styled.div`
+const Wrapper = styled.div<{ disabled: boolean }>`
   align-items: stretch;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   position: relative;
+  width: 100%;
+
+  background-color: ${({ theme }) => theme.backgroundModule};
+
+  &:hover {
+    cursor: ${({ disabled }) => !disabled && 'pointer'};
+    background-color: ${({ theme, disabled }) => !disabled && theme.hoverState};
+  }
+  &:focus {
+    background-color: ${({ theme, disabled }) => !disabled && theme.hoverState};
+  }
 `
 
 interface PopupButtonContentProps {
@@ -180,7 +181,7 @@ export default function Option({ connection }: OptionProps) {
   }
 
   return (
-    <Wrapper>
+    <Wrapper disabled={isSomeOptionPending}>
       <TraceEvent
         events={[BrowserEvent.onClick]}
         name={InterfaceEventName.WALLET_SELECTED}
@@ -188,8 +189,8 @@ export default function Option({ connection }: OptionProps) {
         element={InterfaceElementName.WALLET_TYPE_OPTION}
       >
         <OptionCardClickable
-          onClick={activate}
           disabled={isSomeOptionPending}
+          onClick={activate}
           selected={isCurrentOptionPending}
           data-testid={`wallet-option-${connection.type}`}
         >
