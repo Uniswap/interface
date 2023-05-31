@@ -579,23 +579,12 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                   ]
                 }
               >
-                <View
-                  style={
-                    [
-                      {
-                        "display": "flex",
-                        "paddingHorizontal": 4,
-                      },
-                    ]
-                  }
-                >
-                  <svg
-                    color="#5D6785"
-                    data-file-name="SvgInfoCircle"
-                    height={24}
-                    width={24}
-                  />
-                </View>
+                <svg
+                  color="#5D6785"
+                  data-file-name="SvgInfoCircle"
+                  height={24}
+                  width={24}
+                />
                 <View
                   style={
                     [
@@ -1298,23 +1287,12 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                   ]
                 }
               >
-                <View
-                  style={
-                    [
-                      {
-                        "display": "flex",
-                        "paddingHorizontal": 4,
-                      },
-                    ]
-                  }
-                >
-                  <svg
-                    color="#5D6785"
-                    data-file-name="SvgInfoCircle"
-                    height={24}
-                    width={24}
-                  />
-                </View>
+                <svg
+                  color="#5D6785"
+                  data-file-name="SvgInfoCircle"
+                  height={24}
+                  width={24}
+                />
                 <View
                   style={
                     [

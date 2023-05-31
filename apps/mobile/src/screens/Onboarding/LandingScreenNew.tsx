@@ -68,6 +68,7 @@ export function LandingScreenNew({ navigation }: Props): JSX.Element {
       <Flex grow height="auto">
         <Flex grow gap={outerGap} justifyContent="flex-end" mx="spacing16">
           <Button
+            hapticFeedback
             eventName={SharedEventName.ELEMENT_CLICKED}
             label={t('Create a new wallet')}
             name={ElementName.CreateAccount}
@@ -75,11 +76,12 @@ export function LandingScreenNew({ navigation }: Props): JSX.Element {
             onPress={onPressCreateWallet}
           />
           <TouchableArea
+            hapticFeedback
             alignItems="center"
             eventName={SharedEventName.ELEMENT_CLICKED}
             name={ElementName.ImportAccount}
             onPress={onPressImportWallet}>
-            <Text color="magentaVibrant" variant="buttonLabelSmall">
+            <Text color="magentaVibrant" variant="buttonLabelLarge">
               {t('Import or watch a wallet')}
             </Text>
           </TouchableArea>

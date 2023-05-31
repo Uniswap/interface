@@ -136,7 +136,7 @@ export function SecuritySetupScreen({ route: { params } }: Props): JSX.Element {
             eventName={SharedEventName.ELEMENT_CLICKED}
             name={ElementName.Skip}
             onPress={onMaybeLaterPressed}>
-            <Text color="magentaVibrant" textAlign="center" variant="subheadSmall">
+            <Text color="magentaVibrant" textAlign="center" variant="buttonLabelMedium">
               {t('Maybe later')}
             </Text>
           </TouchableArea>

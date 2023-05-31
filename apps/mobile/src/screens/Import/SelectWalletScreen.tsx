@@ -257,7 +257,7 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props): JS
         <Box opacity={showError ? 0 : 1}>
           <Button
             disabled={
-              isImportingAccounts || loading || !!showError || selectedAddresses.length === 0
+              isImportingAccounts || isLoading || !!showError || selectedAddresses.length === 0
             }
             label={t('Continue')}
             name={ElementName.Next}

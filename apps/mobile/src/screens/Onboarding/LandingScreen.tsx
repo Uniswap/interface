@@ -55,6 +55,7 @@ export function LandingScreen({ navigation }: Props): JSX.Element {
         <Flex gap={outerGap} justifyContent="flex-end">
           <Flex mx="spacing16">
             <Button
+              hapticFeedback
               eventName={SharedEventName.ELEMENT_CLICKED}
               label={t('Get started')}
               name={ElementName.GetStarted}

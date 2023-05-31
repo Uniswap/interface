@@ -17,6 +17,7 @@ export function OptionCard({
   disabled,
   opacity,
   badgeText,
+  hapticFeedback,
 }: {
   title: string
   blurb: string
@@ -26,6 +27,7 @@ export function OptionCard({
   disabled?: boolean
   opacity?: number
   badgeText?: string | undefined
+  hapticFeedback?: boolean | undefined
 }): JSX.Element {
   const theme = useAppTheme()
 
@@ -49,6 +51,7 @@ export function OptionCard({
       borderWidth={1}
       disabled={disabled}
       eventName={SharedEventName.ELEMENT_CLICKED}
+      hapticFeedback={hapticFeedback}
       name={name}
       opacity={opacity}
       p="spacing16"

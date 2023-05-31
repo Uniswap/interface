@@ -15,7 +15,7 @@ import { BackButton } from 'src/components/buttons/BackButton'
 import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { EducationContentType } from 'src/components/education'
-import { Box, Flex } from 'src/components/layout'
+import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { isICloudAvailable } from 'src/features/CloudBackup/RNICloudBackupsManager'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
@@ -138,13 +138,11 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
         <Flex grow justifyContent="flex-end">
           <TouchableArea alignSelf="center" py="none" onPress={onPressEducationButton}>
             <Flex centered row gap="spacing4">
-              <Box px="spacing4">
-                <InfoCircle
-                  color={theme.colors.textSecondary}
-                  height={theme.iconSizes.icon24}
-                  width={theme.iconSizes.icon24}
-                />
-              </Box>
+              <InfoCircle
+                color={theme.colors.textSecondary}
+                height={theme.iconSizes.icon24}
+                width={theme.iconSizes.icon24}
+              />
               <Text color="textPrimary" variant="subheadSmall">
                 {t('Learn about wallet safety and recovery')}
               </Text>

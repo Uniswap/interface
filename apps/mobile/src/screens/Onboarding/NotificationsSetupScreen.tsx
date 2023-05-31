@@ -94,7 +94,7 @@ export function NotificationsSetupScreen({ navigation, route: { params } }: Prop
           eventName={SharedEventName.ELEMENT_CLICKED}
           name={ElementName.Skip}
           onPress={onPressNext}>
-          <Text color="magentaVibrant" textAlign="center" variant="subheadSmall">
+          <Text color="magentaVibrant" textAlign="center" variant="buttonLabelMedium">
             {t('Maybe later')}
           </Text>
         </TouchableArea>

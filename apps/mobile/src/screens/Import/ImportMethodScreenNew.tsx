@@ -121,6 +121,7 @@ export function ImportMethodScreenNew({ navigation, route: { params } }: Props):
         {importOptions.map(({ title, blurb, icon, nav, importType, name, badgeText }) => (
           <OptionCard
             key={'connection-option-' + title}
+            hapticFeedback
             badgeText={badgeText?.(t)}
             blurb={blurb(t)}
             icon={icon(theme)}
