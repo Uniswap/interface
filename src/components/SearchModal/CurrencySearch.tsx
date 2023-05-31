@@ -131,9 +131,9 @@ export function CurrencySearch({
   const wrapped = native.wrapped
 
   const fakeTokens = useMemo(() => {
-    if (chainId === 80001) {
-      return FakeTokens
-    }
+    // if (chainId === 80001) {
+    //   return FakeTokens
+    // }
     return []
   }, [chainId])
 

@@ -828,7 +828,7 @@ export default function Swap({ className }: { className?: string }) {
   const [debouncedLTV, debouncedSetLTV] = useDebouncedChangeHandler(ltv, setLTV);
   
 
-  // console.log("loggingSwap", activeTab, leverageManagerAddress, leveragePositions, lmtIsValid, leverageTrade, leverageApprovalState, inputError, contractError)
+  console.log("loggingSwap", currencies.INPUT, currencies.OUTPUT, leverageManagerAddress, leveragePositions, lmtIsValid, leverageTrade, leverageApprovalState, inputError, contractError)
   // console.log("activeTab: ", activeTab)
   return (
     <Trace page={InterfacePageName.SWAP_PAGE} shouldLogImpression>

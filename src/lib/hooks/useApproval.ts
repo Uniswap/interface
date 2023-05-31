@@ -10,6 +10,7 @@ import { useTokenAllowance } from 'hooks/useTokenAllowance'
 import { getTokenAddress } from 'lib/utils/analytics'
 import { useCallback, useMemo } from 'react'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
+import { BigNumber as BN } from "bignumber.js";
 
 export enum ApprovalState {
   UNKNOWN = 'UNKNOWN',
@@ -143,7 +144,8 @@ export function useFaucet(
     // console.log('here', tokenContract)
     // await tokenContract?.faucet(spender, "10000000000000000000000"); 
     // console.log('hello?')
-    return tokenContract?.faucet(spender, "10000000000000000000").then((response: any) => {
+    const amount = new BN("100").shiftedBy(18).toFixed(0)
+    return tokenContract?.faucet(spender, amount).then((response: any) => {
         // console.log('here')
         // const eventProperties = {
         //   chain_id: chainId,
