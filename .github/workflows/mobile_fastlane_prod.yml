@@ -3,7 +3,8 @@ name: '[mobile] Fastlane deploy prod (iOS)'
 on:
   push:
     branches:
-      - '^releases\/([0-9]\.[0-9]+(.[0-9]+)?$)'
+      - 'releases\/[0-9]\.[0-9]+'
+      - 'releases\/[0-9]\.[0-9]+\.[0-9]+'
 
 jobs:
   ios:
