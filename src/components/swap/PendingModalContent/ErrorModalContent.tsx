@@ -7,7 +7,7 @@ import { AlertTriangle } from 'react-feather'
 import { useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
-import { PendingModalContainer } from '.'
+import { PendingModalContainer } from './index'
 
 export enum PendingModalError {
   TOKEN_APPROVAL_ERROR,
