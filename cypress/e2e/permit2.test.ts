@@ -81,6 +81,34 @@ describe('Permit2', () => {
     })
   })
 
+  it('swaps after completing full permit2 approval process in expert mode', () => {
+    // Sets up a swap between INPUT_TOKEN and OUTPUT_TOKEN.
+    cy.visit(`/swap/?inputCurrency=${INPUT_TOKEN.address}&outputCurrency=${OUTPUT_TOKEN.address}&ape=true`, {
+      ethereum: 'hardhat',
+    })
+    cy.get('#swap-currency-input .token-amount-input').type(TEST_BALANCE_INCREMENT.toString())
+
+    cy.hardhat().then(({ provider }) => {
+      cy.spy(provider, 'send').as('permitApprovalSpy')
+    })
+    initiateSwap()
+    cy.contains('Enable spending limits for DAI on Uniswap').should('exist')
+    cy.contains('Approved').should('exist')
+
+    cy.contains('Allow DAI to be used for swapping').should('exist')
+    cy.contains('Confirm Swap').should('exist')
+
+    cy.then(() => {
+      const approvalTime = Date.now()
+
+      cy.contains('Swapped').should('exist')
+
+      expectTokenAllowanceForPermit2ToBeMax()
+      expectPermit2AllowanceForUniversalRouterToBeMax(approvalTime)
+      cy.get('@permitApprovalSpy').should('have.been.calledWith', 'eth_signTypedData_v4')
+    })
+  })
+
   it('swaps after handling user rejection of both approval and signature', () => {
     const USER_REJECTION = { code: 4001 }
     cy.hardhat().then((hardhat) => {
