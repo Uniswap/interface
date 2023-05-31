@@ -126,6 +126,16 @@ export const FiatPurchase: StoryObj = {
       <FiatPurchaseSummaryItem
         transaction={{
           ...baseFaitPurchaseTx,
+          status: TransactionStatus.Success,
+          typeInfo: {
+            ...baseFaitPurchaseTx.typeInfo,
+            outputCurrencyAmount: 123000000,
+          },
+        }}
+      />
+      <FiatPurchaseSummaryItem
+        transaction={{
+          ...baseFaitPurchaseTx,
           chainId: ChainId.Optimism,
           status: TransactionStatus.Success,
         }}

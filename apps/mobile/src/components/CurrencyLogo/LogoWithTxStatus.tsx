@@ -254,9 +254,9 @@ export function DappLogoWithWCBadge({
           borderColor="background0"
           borderRadius="roundedFull"
           borderWidth={2}
-          bottom={0}
+          bottom={-2}
           position="absolute"
-          right={0}>
+          right={-2}>
           <WalletConnectLogo height={statusSize} width={statusSize} />
         </Box>
       )}

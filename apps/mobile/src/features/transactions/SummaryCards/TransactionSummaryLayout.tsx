@@ -153,14 +153,14 @@ function TransactionSummaryLayout({
           <Flex grow shrink gap="none">
             <Flex grow gap="none">
               <Flex grow row alignItems="center" gap="spacing4" justifyContent="space-between">
-                <Text color="textPrimary" numberOfLines={1} variant="bodyLarge">
+                <Text color="textSecondary" numberOfLines={1} variant="bodyLarge">
                   {title}
                 </Text>
                 {!inProgress && rightBlock}
               </Flex>
               <Flex grow row>
                 <Box flexGrow={1} flexShrink={1}>
-                  <Text color="textSecondary" numberOfLines={1} variant="subheadSmall">
+                  <Text color="textPrimary" variant="bodyLarge">
                     {caption}
                   </Text>
                 </Box>

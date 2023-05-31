@@ -23,7 +23,7 @@ import { CHAIN_INFO } from 'wallet/src/constants/chains'
 import { logger } from 'wallet/src/features/logger/logger'
 import { getValidAddress, shortenAddress } from 'wallet/src/utils/addresses'
 import { currencyIdToAddress } from 'wallet/src/utils/currencyId'
-import { formatCurrencyAmount, formatUSDPrice, NumberType } from 'wallet/src/utils/format'
+import { formatCurrencyAmount, formatUSDPrice } from 'wallet/src/utils/format'
 
 export const formWCNotificationTitle = (appNotification: WalletConnectNotification): string => {
   const { event, dappName, chainId } = appNotification
@@ -330,7 +330,7 @@ export const getFormattedCurrencyAmount = (
       convertScientificNotationToNumber(currencyAmountRaw)
 
     const currencyAmount = CurrencyAmount.fromRawAmount<Currency>(currency, parsedCurrencyAmountRaw)
-    const formattedAmount = formatCurrencyAmount(currencyAmount, NumberType.TokenTx)
+    const formattedAmount = formatCurrencyAmount(currencyAmount)
     return isApproximateAmount ? `~${formattedAmount} ` : `${formattedAmount} `
   } catch (e) {
     logger.error('notifications/utils', 'getFormattedCurrencyAmount', 'could not format amount', e)
