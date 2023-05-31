@@ -84,6 +84,10 @@ class GAMetric extends IMetric {
   putMetric(key: string, value: number, unit?: MetricLoggerUnit) {
     sendTiming('Routing API', `${key} | ${unit}`, value, 'client')
   }
+
+  setProperty() {
+    return
+  }
 }
 
 setGlobalMetric(new GAMetric())
