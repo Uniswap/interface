@@ -416,7 +416,7 @@
   "Disconnecting resulted in error: {{message}}": "Disconnecting resulted in error: {{message}}",
   "Connection Error": "Connection Error",
   "Uniswap Wallet currently only supports {{ chains }}. \n\n {{ error }}": "Uniswap Wallet currently only supports {{ chains }}. \n\n {{ error }}",
-  "Search tokens and wallets": "Search tokens and wallets",
+  "Search tokens, NFTs, and wallets": "Search tokens, NFTs, and wallets",
   "NFTs": "NFTs",
   "Activity": "Activity",
   "Scan": "Scan",
