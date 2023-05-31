@@ -12,6 +12,11 @@ jobs:
     runs-on: macos-latest
     timeout-minutes: 180
     steps:
+      - uses: actions/checkout@7884fcad6b5d53d10323aee724dc68d8b9096a2e
+        with:
+          token: ${{ secrets.SERVICE_ACCOUNT_PAT }}
+          ref: ${{ github.ref }}
+
       - name: 📲 Fastlane Deploy Beta
         uses: ./.github/actions/mobile_fastlane_deploy
         with:
