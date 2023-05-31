@@ -47,13 +47,13 @@ describe(useTokenProjects, () => {
 
     const data = result.current.data
     expect(data).toEqual([
-      gqlTokenToCurrencyInfo(SearchTokens[1]!, null),
-      gqlTokenToCurrencyInfo(SearchTokens[3]!, null),
       gqlTokenToCurrencyInfo(SearchTokens[0]!, null),
+      gqlTokenToCurrencyInfo(SearchTokens[1]!, null),
       gqlTokenToCurrencyInfo(SearchTokens[2]!, null),
+      gqlTokenToCurrencyInfo(SearchTokens[3]!, null),
       gqlTokenToCurrencyInfo(SearchTokens[4]!, null),
-      gqlTokenToCurrencyInfo(SearchTokens[6]!, null),
       gqlTokenToCurrencyInfo(SearchTokens[5]!, null),
+      gqlTokenToCurrencyInfo(SearchTokens[6]!, null),
       gqlTokenToCurrencyInfo(SearchTokens[7]!, null),
       gqlTokenToCurrencyInfo(SearchTokens[8]!, null),
     ])

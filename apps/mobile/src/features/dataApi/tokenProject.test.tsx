@@ -51,9 +51,6 @@ describe(useTokenProjects, () => {
     await sleep(1000)
 
     const data = result.current.data
-    expect(data[0]).toEqual(tokenProjectToCurrencyInfos(TokenProjects)[0])
-    expect(data[1]).toEqual(tokenProjectToCurrencyInfos(TokenProjects)[1])
-    expect(data[2]).toEqual(tokenProjectToCurrencyInfos(TokenProjects)[2])
-    expect(data[3]).toEqual(tokenProjectToCurrencyInfos(TokenProjects)[3])
+    expect(data).toEqual(tokenProjectToCurrencyInfos(TokenProjects))
   })
 })
