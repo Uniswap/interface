@@ -1,4 +1,4 @@
-name: '4 | [mobile] Push to public repo from releases/prod'
+name: '4 | [mobile] Push branch changes to public repo'
 
 # This CI job is responsible for generating PRs that merge the contents of the private
 # UL Mobile repository to the public mirror.
@@ -15,7 +15,7 @@ jobs:
         name: 'Check out releases/prod from private repository'
         with:
           token: ${{ secrets.SERVICE_ACCOUNT_PAT }}
-          ref: releases/prod
+          ref: ${{ github.ref }}
           repository: Uniswap/wallet-internal
           path: 'private'
 
