@@ -2,6 +2,7 @@ import { Trans } from '@lingui/macro'
 import { useTrace } from '@uniswap/analytics'
 import { InterfaceSectionName, NavBarSearchTypes } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
+import clsx from 'clsx'
 import Badge from 'components/Badge'
 import { SupportedChainId } from 'constants/chains'
 import { HistoryDuration, SafetyLevel } from 'graphql/data/__generated__/types-and-hooks'
@@ -355,7 +356,7 @@ export const SearchBarDropdown = ({
   const showBNBComingSoonBadge = chainId === SupportedChainId.BNB && !isLoading
 
   return (
-    <Box className={styles.searchBarDropdownNft}>
+    <Column overflow="hidden" className={clsx(styles.searchBarDropdownNft, styles.searchBarScrollable)}>
       <Box opacity={isLoading ? '0.3' : '1'} transition="125">
         {resultsState}
         {showBNBComingSoonBadge && (
@@ -367,6 +368,6 @@ export const SearchBarDropdown = ({
           </BNBComingSoonBadge>
         )}
       </Box>
-    </Box>
+    </Column>
   )
 }
