@@ -12,7 +12,7 @@ import { RoutingConfig, SwapRouterNativeAssets, TradeResult, URAQuoteResponse, U
 import { isExactInput, transformRoutesToTrade } from './utils'
 
 export enum RouterPreference {
-  AUTO = 'auto',
+  X = 'uniswapx',
   API = 'api',
   CLIENT = 'client',
 }
@@ -68,7 +68,15 @@ const DEFAULT_QUERY_PARAMS = {
   protocols,
 }
 
-function getConfigByRouterPreference(args: GetQuoteArgs): RoutingConfig {
+type GetAPIOrUniswapXQuoteArgs = Omit<GetQuoteArgs, 'routerPreference'> & {
+  routerPreference: RouterPreference.API | RouterPreference.X
+}
+
+function isApiOrUniswapXQuote(args: GetQuoteArgs): args is GetAPIOrUniswapXQuoteArgs {
+  return args.routerPreference === RouterPreference.API || args.routerPreference === RouterPreference.X
+}
+
+function getConfigByRouterPreference(args: GetAPIOrUniswapXQuoteArgs): RoutingConfig {
   const { account, routerPreference, tradeType, tokenOutAddress, tokenInAddress, tokenInChainId } = args
   const goudaDutchLimit = {
     offerer: account,
@@ -99,11 +107,6 @@ function getConfigByRouterPreference(args: GetQuoteArgs): RoutingConfig {
   ) {
     return [classic]
   }
-
-  // TODO (Gouda): Will there ever be a case in the future where we only pass in UniswapX configs?
-  // if (routerPreference === RouterPreference.GOUDA_ONLY) {
-  //   return [goudaDutchLimit]
-  // }
 
   return [goudaDutchLimit, classic]
 }
@@ -138,15 +141,13 @@ export const routingApi = createApi({
             data: {
               ...args,
               isPrice: args.routerPreference === INTERNAL_ROUTER_PREFERENCE_PRICE,
-              isAutoRouter:
-                args.routerPreference === RouterPreference.AUTO || args.routerPreference === RouterPreference.API,
+              isAutoRouter: args.routerPreference === RouterPreference.API,
             },
           }
         )
       },
       async queryFn(args: GetQuoteArgs, _api, _extraOptions, fetch) {
-        const routerPreference = args.routerPreference
-        if (routerPreference === RouterPreference.API || routerPreference === RouterPreference.AUTO) {
+        if (isApiOrUniswapXQuote(args)) {
           try {
             const { tokenInAddress, tokenInChainId, tokenOutAddress, tokenOutChainId, amount, tradeType } = args
             const type = isExactInput(tradeType) ? 'EXACT_INPUT' : 'EXACT_OUTPUT'

@@ -9,7 +9,7 @@ import { ClassicTrade } from 'state/routing/types'
 import { Separator, ThemedText } from 'theme'
 import getRoutingDiagramEntries from 'utils/getRoutingDiagramEntries'
 
-import RouterLabel from './RouterLabel'
+import RouterLabel from '../RouterLabel'
 
 export default function SwapRoute({ trade, syncing }: { trade: ClassicTrade; syncing: boolean }) {
   const { chainId } = useWeb3React()

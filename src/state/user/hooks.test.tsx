@@ -72,6 +72,6 @@ describe('useRouterPreference', () => {
         current: [routerPreference],
       },
     } = renderHook(() => useRouterPreference())
-    expect(routerPreference).toBe(RouterPreference.AUTO)
+    expect(routerPreference).toBe(RouterPreference.API)
   })
 })

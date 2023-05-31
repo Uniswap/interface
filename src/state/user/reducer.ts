@@ -65,7 +65,7 @@ export const initialState: UserState = {
   selectedWallet: undefined,
   userExpertMode: false,
   userLocale: null,
-  userRouterPreference: RouterPreference.AUTO,
+  userRouterPreference: RouterPreference.API,
   userHideClosedPositions: false,
   userSlippageTolerance: SlippageTolerance.Auto,
   userSlippageToleranceHasBeenMigratedToAuto: true,
@@ -168,7 +168,12 @@ const userSlice = createSlice({
 
       // If `userRouterPreference` is not present, reset to default
       if (typeof state.userRouterPreference !== 'string') {
-        state.userRouterPreference = RouterPreference.AUTO
+        state.userRouterPreference = RouterPreference.API
+      }
+
+      // If `userRouterPreference` is `AUTO`, migrate to `API`
+      if ((state.userRouterPreference as string) === 'auto') {
+        state.userRouterPreference = RouterPreference.API
       }
 
       state.lastUpdateVersionTimestamp = currentTimestamp()

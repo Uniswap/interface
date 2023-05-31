@@ -7,14 +7,14 @@ import { LoadingRows } from 'components/Loader/styled'
 import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { InterfaceTrade } from 'state/routing/types'
-import { isClassicTrade, isUniswapXTrade } from 'state/routing/utils'
+import { isClassicTrade } from 'state/routing/utils'
 import formatPriceImpact from 'utils/formatPriceImpact'
 
 import { Separator, ThemedText } from '../../theme'
 import Column from '../Column'
+import RouterLabel from '../RouterLabel'
 import { RowBetween, RowFixed } from '../Row'
 import { MouseoverTooltip, TooltipSize } from '../Tooltip'
-import RouterLabel from './RouterLabel'
 import SwapRoute from './SwapRoute'
 
 interface AdvancedSwapDetailsProps {
@@ -45,13 +45,13 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
   const { chainId } = useWeb3React()
   const nativeCurrency = useNativeCurrency(chainId)
 
+  const supportsGasEstimate =
+    isClassicTrade(trade) && trade.gasUseEstimateUSD && chainId && SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId)
+
   return (
     <Column gap="md">
       <Separator />
-      {isUniswapXTrade(trade) ||
-      !trade.gasUseEstimateUSD ||
-      !chainId ||
-      !SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId) ? null : (
+      {supportsGasEstimate && (
         <RowBetween>
           <MouseoverTooltip
             text={
@@ -130,7 +130,6 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
         <ThemedText.BodySmall color="textSecondary">
           <Trans>Order routing</Trans>
         </ThemedText.BodySmall>
-        {/* TODO (Gouda): add router label for UniswapX */}
         {isClassicTrade(trade) ? (
           <MouseoverTooltip
             size={TooltipSize.Large}
@@ -144,7 +143,7 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
             <RouterLabel />
           </MouseoverTooltip>
         ) : (
-          <div>UniswapX</div>
+          <RouterLabel />
         )}
       </RowBetween>
     </Column>

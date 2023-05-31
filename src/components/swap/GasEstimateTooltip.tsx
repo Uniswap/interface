@@ -11,7 +11,6 @@ import { ReactComponent as GasIcon } from '../../assets/images/gas-icon.svg'
 import SwapRoute from './SwapRoute'
 
 const StyledGasIcon = styled(GasIcon)`
-  margin-right: 4px;
   height: 18px;
 
   // We apply the following to all children of the SVG in order to override the default color
@@ -23,11 +22,9 @@ const StyledGasIcon = styled(GasIcon)`
 export default function GasEstimateTooltip({
   trade,
   loading,
-  disabled,
 }: {
   trade: ClassicTrade // dollar amount in active chain's stablecoin
   loading: boolean
-  disabled?: boolean
 }) {
   const formattedGasPriceString = trade?.gasUseEstimateUSD
     ? trade.gasUseEstimateUSD === '0.00'
@@ -37,7 +34,6 @@ export default function GasEstimateTooltip({
 
   return (
     <MouseoverTooltip
-      disabled={disabled}
       size={TooltipSize.Large}
       // TODO(WEB-3304)
       // Most of Swap-related components accept either `syncing`, `loading` or both props at the same time.
@@ -52,7 +48,7 @@ export default function GasEstimateTooltip({
       placement="bottom"
     >
       <LoadingOpacityContainer $loading={loading}>
-        <RowFixed>
+        <RowFixed gap="xs">
           <StyledGasIcon />
           <ThemedText.BodySmall color="textSecondary">{formattedGasPriceString}</ThemedText.BodySmall>
         </RowFixed>

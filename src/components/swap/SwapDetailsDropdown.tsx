@@ -11,7 +11,7 @@ import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
 import { useState } from 'react'
 import { ChevronDown } from 'react-feather'
 import { InterfaceTrade } from 'state/routing/types'
-import { isUniswapXTrade } from 'state/routing/utils'
+import { isClassicTrade } from 'state/routing/utils'
 import styled, { keyframes, useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
@@ -104,6 +104,9 @@ export default function SwapDetailsDropdown({ trade, syncing, loading, allowedSl
   const { chainId } = useWeb3React()
   const [showDetails, setShowDetails] = useState(false)
 
+  const supportsGasEstimate =
+    isClassicTrade(trade) && trade?.gasUseEstimateUSD && chainId && SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId)
+
   return (
     <Wrapper>
       <TraceEvent
@@ -137,13 +140,7 @@ export default function SwapDetailsDropdown({ trade, syncing, loading, allowedSl
             ) : null}
           </RowFixed>
           <RowFixed>
-            {isUniswapXTrade(trade) ||
-            !trade?.gasUseEstimateUSD ||
-            showDetails ||
-            !chainId ||
-            !SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId) ? null : (
-              <GasEstimateTooltip trade={trade} loading={syncing || loading} disabled={showDetails} />
-            )}
+            {supportsGasEstimate && !showDetails && <GasEstimateTooltip trade={trade} loading={syncing || loading} />}
             <RotatingArrow
               stroke={trade ? theme.textTertiary : theme.deprecated_bg3}
               open={Boolean(trade && showDetails)}
