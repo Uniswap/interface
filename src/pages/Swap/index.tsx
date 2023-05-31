@@ -10,6 +10,7 @@ import {
 } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
 import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
+import WalletConnectV2Provider from '@walletconnect/ethereum-provider'
 import { useWeb3React } from '@web3-react/core'
 import { useToggleAccountDrawer } from 'components/AccountDrawer'
 import { sendEvent } from 'components/analytics'
@@ -17,6 +18,8 @@ import { NetworkAlert } from 'components/NetworkAlert/NetworkAlert'
 import PriceImpactWarning from 'components/swap/PriceImpactWarning'
 import SwapDetailsDropdown from 'components/swap/SwapDetailsDropdown'
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
+import { useGetConnection } from 'connection'
+import { ConnectionType } from 'connection/types'
 import { getChainInfo } from 'constants/chainInfo'
 import { isSupportedChain, SupportedChainId } from 'constants/chains'
 import useENSAddress from 'hooks/useENSAddress'
@@ -175,6 +178,15 @@ export function Swap({
   disableTokenInputs?: boolean
 }) {
   const { account, chainId: connectedChainId, connector } = useWeb3React()
+  const getConnection = useGetConnection()
+  const connectionType = getConnection(connector).type
+  const isWCv2 = connectionType === ConnectionType.WALLET_CONNECT_V2
+
+  useEffect(() => {
+    if (isWCv2) {
+      console.log('jfrankfurt', (connector.provider as WalletConnectV2Provider).session)
+    }
+  }, [connector, isWCv2])
   const trace = useTrace()
 
   // token warning stuff
