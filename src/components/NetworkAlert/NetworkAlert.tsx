@@ -122,9 +122,9 @@ const LinkOutToBridge = styled(ExternalLink)`
   font-size: 16px;
   justify-content: space-between;
   padding: 6px 8px;
-  margin-right: 12px;
   text-decoration: none !important;
   width: 100%;
+  z-index: 1;
 `
 
 const StyledArrowUpRight = styled(ArrowUpRight)`
