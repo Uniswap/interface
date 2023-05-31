@@ -69,7 +69,9 @@ export function CloudBackupPasswordConfirmScreen({
 
   return (
     <SafeKeyboardOnboardingScreen
-      subtitle={t("This is top-secret and all on you. Even we can't retrieve it, so keep it safe.")}
+      subtitle={t(
+        "You’ll need to enter this password to recover your account. It's not stored anywhere, so it can't be recovered by anyone else."
+      )}
       title={t('Confirm your backup password')}>
       <Flex gap="spacing24" mb="spacing24" mx="spacing8">
         <Flex gap="spacing8">

@@ -1,3 +1,4 @@
+import { SharedEventName } from '@uniswap/analytics-events'
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
@@ -7,7 +8,7 @@ import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { Text } from 'src/components/Text'
 import { UNISWAP_HELP_CENTER_WALLET_URL } from 'src/constants/urls'
 import { openModal } from 'src/features/modals/modalSlice'
-import { ModalName } from 'src/features/telemetry/constants'
+import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { opacify } from 'src/utils/colors'
 import { openUri } from 'src/utils/linking'
@@ -24,6 +25,7 @@ interface ActionCardItem {
   blurb: string
   icon: JSX.Element
   onPress: () => void
+  elementName: ElementName
   badgeText?: string
 }
 
@@ -48,6 +50,7 @@ export function WalletEmptyState(): JSX.Element {
         title: t('Buy Crypto'),
         badgeText: t('Popular'),
         blurb: t('You’ll need ETH to get started. Buy with a card or bank.'),
+        elementName: ElementName.EmptyStateBuy,
         icon: (
           <IconContainer
             backgroundColor={colors.green200}
@@ -70,6 +73,7 @@ export function WalletEmptyState(): JSX.Element {
       [ActionOption.Scan]: {
         title: t('Receive funds'),
         blurb: t('Transfer tokens from another wallet or crypto exchange.'),
+        elementName: ElementName.EmptyStateReceive,
         icon: (
           <IconContainer
             backgroundColor={colors.gold300}
@@ -100,6 +104,7 @@ export function WalletEmptyState(): JSX.Element {
         blurb: isViewOnly
           ? t('Explore and learn the essentials of what’s possible.')
           : t('Explore and learn the essentials of your new wallet.'),
+        elementName: ElementName.EmptyStateGetStarted,
         icon: (
           <IconContainer
             backgroundColor={colors.blue300}
@@ -117,6 +122,7 @@ export function WalletEmptyState(): JSX.Element {
       [ActionOption.Import]: {
         title: t('Import wallet'),
         blurb: t(`Enter this wallet's recovery phrase to begin swapping and sending.`),
+        elementName: ElementName.EmptyStateImport,
         icon: (
           <IconContainer
             backgroundColor={colors.violet400}
@@ -149,8 +155,20 @@ export function WalletEmptyState(): JSX.Element {
   )
 }
 
-const ActionCard = ({ title, blurb, onPress, icon, badgeText }: ActionCardItem): JSX.Element => (
-  <TouchableArea backgroundColor="background2" borderRadius="rounded20" onPress={onPress}>
+const ActionCard = ({
+  title,
+  blurb,
+  onPress,
+  icon,
+  badgeText,
+  elementName,
+}: ActionCardItem): JSX.Element => (
+  <TouchableArea
+    backgroundColor="background2"
+    borderRadius="rounded20"
+    eventName={SharedEventName.ELEMENT_CLICKED}
+    name={elementName}
+    onPress={onPress}>
     <Flex centered row p="spacing16">
       {icon}
       <Flex flexShrink={1} gap="spacing4">
