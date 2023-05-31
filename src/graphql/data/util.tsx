@@ -56,11 +56,10 @@ export function isPricePoint(p: PricePoint | null): p is PricePoint {
   return p !== null
 }
 
-//TODO: Request BE add Ethereum Sepolia to supported chains
+// TODO(DAT-33) Update when BE adds Ethereum Sepolia to supported chains
 export const CHAIN_ID_TO_BACKEND_NAME: { [key: number]: Chain } = {
   [SupportedChainId.MAINNET]: Chain.Ethereum,
   [SupportedChainId.GOERLI]: Chain.EthereumGoerli,
-  // [SupportedChainId.SEPOLIA]: Chain.EthereumSepolia,
   [SupportedChainId.POLYGON]: Chain.Polygon,
   [SupportedChainId.POLYGON_MUMBAI]: Chain.Polygon,
   [SupportedChainId.CELO]: Chain.Celo,
@@ -124,7 +123,6 @@ export function validateUrlChainParam(chainName: string | undefined) {
 export const CHAIN_NAME_TO_CHAIN_ID: { [key in Chain]: SupportedChainId } = {
   [Chain.Ethereum]: SupportedChainId.MAINNET,
   [Chain.EthereumGoerli]: SupportedChainId.GOERLI,
-  // [Chain.EthereumSepolia]: SupportedChainId.SEPOLIA,
   [Chain.Polygon]: SupportedChainId.POLYGON,
   [Chain.Celo]: SupportedChainId.CELO,
   [Chain.Optimism]: SupportedChainId.OPTIMISM,
