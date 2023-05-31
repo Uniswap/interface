@@ -115,7 +115,7 @@ export const routingApi = createApi({
   reducerPath: 'routingApi',
   baseQuery: fetchBaseQuery({
     // TODO (Gouda): Update this with final API url
-    baseUrl: 'https://4uemel8n4g.execute-api.us-east-2.amazonaws.com/prod',
+    baseUrl: 'https://***REMOVED***.execute-api.us-east-2.amazonaws.com/prod',
   }),
   endpoints: (build) => ({
     getQuote: build.query<TradeResult, GetQuoteArgs>({

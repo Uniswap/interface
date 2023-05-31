@@ -14,7 +14,7 @@ export default function useDerivedPayWithAnyTokenSwapInfo(
   maximumAmountIn?: CurrencyAmount<Token>
   allowedSlippage: Percent
 } {
-  // TODO (tina): UMMM fix this? probably force the router config here to be Classic ONLY
+  // TODO (Gouda): UMMM fix this? probably force the router config here to be Classic ONLY
   const { state, trade } = useBestTrade(TradeType.EXACT_OUTPUT, parsedOutputAmount, inputCurrency ?? undefined)
   const classicTrade = trade as ClassicTrade
 
