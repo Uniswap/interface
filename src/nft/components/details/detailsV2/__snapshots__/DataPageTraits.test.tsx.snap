@@ -78,8 +78,10 @@ exports[`data page trait component does not load with asset with no traits 1`] =
 
 .c3 {
   gap: 32px;
-  margin-bottom: 12px;
   width: 100;
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #D2D9EE;
 }
 
 .c5 {

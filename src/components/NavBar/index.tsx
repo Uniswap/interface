@@ -23,7 +23,7 @@ import { SearchBar } from './SearchBar'
 import * as styles from './style.css'
 
 const Nav = styled.nav`
-  padding: 20px 12px;
+  padding: ${({ theme }) => `${theme.navVerticalPad}px 12px`};
   width: 100%;
   height: ${({ theme }) => theme.navHeight}px;
   z-index: 2;

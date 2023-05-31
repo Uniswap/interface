@@ -4,8 +4,10 @@ import { Connection } from 'connection/types'
 import { atom } from 'jotai'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { useCallback } from 'react'
+import { useLocation } from 'react-router-dom'
 import { useAppDispatch } from 'state/hooks'
 import { updateSelectedWallet } from 'state/user/reducer'
+import { getCurrentPageFromLocation } from 'utils/urlRoutes'
 
 import { didUserReject } from './utils'
 
@@ -25,6 +27,8 @@ const activationStateAtom = atom<ActivationState>(IDLE_ACTIVATION_STATE)
 function useTryActivation() {
   const dispatch = useAppDispatch()
   const setActivationState = useUpdateAtom(activationStateAtom)
+  const { pathname } = useLocation()
+  const currentPage = getCurrentPageFromLocation(pathname)
 
   return useCallback(
     async (connection: Connection, onSuccess: () => void) => {
@@ -60,11 +64,12 @@ function useTryActivation() {
         sendAnalyticsEvent(InterfaceEventName.WALLET_CONNECT_TXN_COMPLETED, {
           result: WalletConnectionResult.FAILED,
           wallet_type: connection.getName(),
+          page: currentPage,
         })
         setActivationState({ status: ActivationStatus.ERROR, connection, error })
       }
     },
-    [dispatch, setActivationState]
+    [currentPage, dispatch, setActivationState]
   )
 }
 

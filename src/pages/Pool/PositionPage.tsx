@@ -641,7 +641,7 @@ function PositionPageContent() {
             onDismiss={() => setShowConfirm(false)}
             attemptingTxn={collecting}
             hash={collectMigrationHash ?? ''}
-            content={() => (
+            reviewContent={() => (
               <ConfirmationModalContent
                 title={<Trans>Claim fees</Trans>}
                 onDismiss={() => setShowConfirm(false)}
