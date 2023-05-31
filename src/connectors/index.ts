@@ -27,13 +27,13 @@ export function getNetworkLibrary(): Web3Provider {
 }
 
 export const injected = new InjectedConnector({
-  supportedChainIds: [1, 3, 4, 5, 42, 31337, 167, 167001, 167004]
+  supportedChainIds: [1, 3, 4, 5, 42, 31337, 167, 167001, 167005]
 })
 
 // mainnet only
 export const walletconnect = new WalletConnectConnector({
   rpc: {
-    167004: 'https://l2rpc.a2.taiko.xyz/'
+    167005: 'https://rpc.test.taiko.xyz/'
   },
   bridge: 'https://bridge.walletconnect.org',
   qrcode: true,
