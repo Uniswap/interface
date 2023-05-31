@@ -1,5 +1,5 @@
 import { getDeviceId, sendAnalyticsEvent, Trace, user } from '@uniswap/analytics'
-import { CustomUserProperties, getBrowser, InterfacePageName, SharedEventName } from '@uniswap/analytics-events'
+import { CustomUserProperties, getBrowser, SharedEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import Loader from 'components/Icons/LoadingSpinner'
 import TopLevelModals from 'components/TopLevelModals'
@@ -19,6 +19,7 @@ import { Z_INDEX } from 'theme/zIndex'
 import { STATSIG_DUMMY_KEY } from 'tracing'
 import { getEnvName } from 'utils/env'
 import { retry } from 'utils/retry'
+import { getCurrentPageFromLocation } from 'utils/urlRoutes'
 import { getCLS, getFCP, getFID, getLCP, Metric } from 'web-vitals'
 
 import { useAnalyticsReporter } from '../components/analytics'
@@ -92,30 +93,6 @@ const HeaderWrapper = styled.div<{ transparent?: boolean }>`
   top: 0;
   z-index: ${Z_INDEX.dropdown};
 `
-
-function getCurrentPageFromLocation(locationPathname: string): InterfacePageName | undefined {
-  switch (true) {
-    case locationPathname.startsWith('/swap'):
-      return InterfacePageName.SWAP_PAGE
-    case locationPathname.startsWith('/vote'):
-      return InterfacePageName.VOTE_PAGE
-    case locationPathname.startsWith('/pools'):
-    case locationPathname.startsWith('/pool'):
-      return InterfacePageName.POOL_PAGE
-    case locationPathname.startsWith('/tokens'):
-      return InterfacePageName.TOKENS_PAGE
-    case locationPathname.startsWith('/nfts/profile'):
-      return InterfacePageName.NFT_PROFILE_PAGE
-    case locationPathname.startsWith('/nfts/asset'):
-      return InterfacePageName.NFT_DETAILS_PAGE
-    case locationPathname.startsWith('/nfts/collection'):
-      return InterfacePageName.NFT_COLLECTION_PAGE
-    case locationPathname.startsWith('/nfts'):
-      return InterfacePageName.NFT_EXPLORE_PAGE
-    default:
-      return undefined
-  }
-}
 
 // this is the same svg defined in assets/images/blue-loader.svg
 // it is defined here because the remote asset may not have had time to load when this file is executing
