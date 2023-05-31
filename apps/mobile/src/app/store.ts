@@ -1,12 +1,9 @@
 import type { Middleware, PayloadAction, PreloadedState } from '@reduxjs/toolkit'
-import { configureStore, isRejectedWithValue } from '@reduxjs/toolkit'
+import { isRejectedWithValue } from '@reduxjs/toolkit'
 import { MMKV } from 'react-native-mmkv'
 import { persistReducer, persistStore, Storage } from 'redux-persist'
-import createSagaMiddleware from 'redux-saga'
 import createMigrate from 'src/app/createMigrate'
 import { migrations } from 'src/app/migrations'
-import { ReducerNames, rootReducer, RootState } from 'src/app/rootReducer'
-import { rootSaga } from 'src/app/rootSaga'
 import { ensApi } from 'src/features/ens/api'
 import { fiatOnRampApi } from 'src/features/fiatOnRamp/api'
 import { routingApi } from 'src/features/routing/routingApi'
@@ -14,8 +11,11 @@ import { trmApi } from 'src/features/trm/api'
 import { gasApi } from 'wallet/src/features/gas/gasApi'
 import { logger } from 'wallet/src/features/logger/logger'
 import { onChainBalanceApi } from 'wallet/src/features/portfolio/api'
-import { walletContextValue } from 'wallet/src/features/wallet/context'
+import { createStore } from 'wallet/src/state'
+import { RootReducerNames } from 'wallet/src/state/reducer'
 import { isNonJestDev } from 'wallet/src/utils/environment'
+import { mobileReducer, MobileState, ReducerNames } from './reducer'
+import { mobileSaga } from './saga'
 
 const storage = new MMKV()
 
@@ -33,14 +33,6 @@ export const reduxStorage: Storage = {
     return Promise.resolve()
   },
 }
-
-const sagaMiddleware = createSagaMiddleware({
-  context: {
-    signers: walletContextValue.signers,
-    providers: walletContextValue.providers,
-    contracts: walletContextValue.contracts,
-  },
-})
 
 // list of apis to ignore when logging errors, i.e. logging is handled by api
 const rtkQueryErrorLoggerIgnorelist: Array<ReducerNames> = [
@@ -77,7 +69,7 @@ const rtkQueryErrorLogger: Middleware = () => (next) => (action: PayloadAction<u
   return next(action)
 }
 
-const whitelist: Array<ReducerNames> = [
+const whitelist: Array<ReducerNames | RootReducerNames> = [
   'appearanceSettings',
   'biometricSettings',
   'chains',
@@ -101,7 +93,7 @@ export const persistConfig = {
   migrate: createMigrate(migrations),
 }
 
-export const persistedReducer = persistReducer(persistConfig, rootReducer)
+export const persistedReducer = persistReducer(persistConfig, mobileReducer)
 
 const middlewares: Middleware[] = []
 if (isNonJestDev()) {
@@ -111,41 +103,27 @@ if (isNonJestDev()) {
 
 // eslint-disable-next-line prettier/prettier, @typescript-eslint/explicit-function-return-type
 export const setupStore = (
-  preloadedState?: PreloadedState<RootState>
+  preloadedState?: PreloadedState<MobileState>
 ) => {
-  return configureStore({
+  return createStore({
     reducer: persistedReducer,
     preloadedState,
-    middleware: (getDefaultMiddleware) =>
-      getDefaultMiddleware({
-        // required for rtk-query
-        thunk: true,
-        // turn off since it slows down for dev and also doesn't run in prod
-        // TODO: [MOB-641] figure out why this is slow
-        serializableCheck: false,
-        invariantCheck: {
-          warnAfter: 256,
-        },
-        // slows down dev build considerably
-        immutableCheck: false,
-      }).concat(
-        ensApi.middleware,
-        fiatOnRampApi.middleware,
-        gasApi.middleware,
-        onChainBalanceApi.middleware,
-        routingApi.middleware,
-        rtkQueryErrorLogger,
-        sagaMiddleware,
-        trmApi.middleware,
-        ...middlewares
-      ),
-    devTools: __DEV__,
+    additionalSagas: [mobileSaga],
+    middlewareAfter: [
+      ensApi.middleware,
+      fiatOnRampApi.middleware,
+      gasApi.middleware,
+      onChainBalanceApi.middleware,
+      routingApi.middleware,
+      rtkQueryErrorLogger,
+      trmApi.middleware,
+      ...middlewares,
+    ],
   })
 }
 export const store = setupStore()
 
 export const persistor = persistStore(store)
-sagaMiddleware.run(rootSaga)
 
 export type AppDispatch = typeof store.dispatch
 export type AppStore = typeof store

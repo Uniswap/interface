@@ -3,11 +3,11 @@ import { HomeScreen } from 'src/app/features/home/HomeScreen'
 import Locked from 'src/app/features/lockScreen/Locked'
 import { DappRequestContent } from 'src/background/features/dappRequests/DappRequestContent'
 import { useAppSelector } from 'src/background/store'
+import { useSagaStatus } from 'src/background/utils/useSagaStatus'
 import { YStack } from 'ui/src'
 import { Flex } from 'ui/src/components/layout/Flex'
 import { authSagaName } from 'wallet/src/features/auth/saga'
 import { isOnboardedSelector } from 'wallet/src/features/wallet/selectors'
-import { useSagaStatus } from 'wallet/src/state/useSagaStatus'
 import { SagaStatus } from 'wallet/src/utils/saga'
 
 export function MainContent(): JSX.Element {

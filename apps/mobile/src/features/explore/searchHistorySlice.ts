@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { RootState } from 'src/app/rootReducer'
+import { MobileState } from 'src/app/reducer'
 import { ChainId } from 'wallet/src/constants/chains'
 import { SafetyLevel } from 'wallet/src/data/__generated__/types-and-hooks'
 
@@ -99,7 +99,7 @@ const slice = createSlice({
   },
 })
 
-export const selectSearchHistory = (state: RootState): SearchResult[] => {
+export const selectSearchHistory = (state: MobileState): SearchResult[] => {
   return state.searchHistory.results
 }
 

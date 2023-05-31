@@ -12,7 +12,7 @@ import {
 import React, { PropsWithChildren } from 'react'
 import { Provider } from 'react-redux'
 import { ReactTestRendererJSON } from 'react-test-renderer'
-import type { RootState } from 'src/app/rootReducer'
+import type { MobileState } from 'src/app/reducer'
 import type { AppStore } from 'src/app/store'
 import { persistedReducer } from 'src/app/store'
 import { ensApi } from 'src/features/ens/api'
@@ -25,7 +25,7 @@ import { getErrorLink } from 'wallet/src/data/links'
 // as allows the user to specify other things such as initialState, store.
 interface ExtendedRenderOptions extends Omit<RenderOptions, 'queries'> {
   mocks?: ReadonlyArray<MockedResponse>
-  preloadedState?: PreloadedState<RootState>
+  preloadedState?: PreloadedState<MobileState>
   store?: AppStore
 }
 

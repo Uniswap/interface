@@ -1,5 +1,4 @@
 import { combineReducers } from '@reduxjs/toolkit'
-import { monitoredSagaReducers } from 'src/app/rootSaga'
 import { appearanceSettingsReducer } from 'src/features/appearance/slice'
 import { biometricSettingsReducer } from 'src/features/biometrics/slice'
 import { cloudBackupReducer } from 'src/features/CloudBackup/cloudBackupSlice'
@@ -17,9 +16,9 @@ import { transactionReducer } from 'src/features/transactions/slice'
 import { trmApi } from 'src/features/trm/api'
 import { walletReducer } from 'src/features/wallet/walletSlice'
 import { walletConnectReducer } from 'src/features/walletConnect/walletConnectSlice'
-import { chainsReducer } from 'wallet/src/features/chains/slice'
 import { gasApi } from 'wallet/src/features/gas/gasApi'
 import { onChainBalanceApi } from 'wallet/src/features/portfolio/api'
+import { monitoredSagaReducers } from './saga'
 
 const reducers = {
   [ensApi.reducerPath]: ensApi.reducer,
@@ -30,7 +29,6 @@ const reducers = {
   [trmApi.reducerPath]: trmApi.reducer,
   appearanceSettings: appearanceSettingsReducer,
   biometricSettings: biometricSettingsReducer,
-  chains: chainsReducer,
   cloudBackup: cloudBackupReducer,
   favorites: favoritesReducer,
   modals: modalsReducer,
@@ -44,7 +42,7 @@ const reducers = {
   wallet: walletReducer,
   walletConnect: walletConnectReducer,
 } as const
-export const rootReducer = combineReducers(reducers)
+export const mobileReducer = combineReducers(reducers)
 
-export type RootState = ReturnType<typeof rootReducer>
+export type MobileState = ReturnType<typeof mobileReducer>
 export type ReducerNames = keyof typeof reducers

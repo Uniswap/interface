@@ -1,7 +1,7 @@
-import { RootState } from 'src/app/rootReducer'
+import { MobileState } from 'src/app/reducer'
 
-export const selectLastBalancesReport = (state: RootState): number | undefined =>
+export const selectLastBalancesReport = (state: MobileState): number | undefined =>
   state.telemetry.lastBalancesReport
 
-export const selectLastBalancesReportValue = (state: RootState): number | undefined =>
+export const selectLastBalancesReportValue = (state: MobileState): number | undefined =>
   state.telemetry.lastBalancesReportValue

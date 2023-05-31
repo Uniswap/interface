@@ -1,5 +1,5 @@
 import { createSelector, Selector } from '@reduxjs/toolkit'
-import { RootState } from 'src/app/rootReducer'
+import { MobileState } from 'src/app/reducer'
 import { SearchableRecipient } from 'src/components/RecipientSelect/types'
 import { uniqueAddressesOnly } from 'src/components/RecipientSelect/utils'
 import { TransactionState } from 'src/features/transactions/slice'
@@ -14,11 +14,11 @@ import { ChainId } from 'wallet/src/constants/chains'
 import { EMPTY_ARRAY } from 'wallet/src/constants/misc'
 import { unique } from 'wallet/src/utils/array'
 
-export const selectTransactions = (state: RootState): TransactionState => state.transactions
+export const selectTransactions = (state: MobileState): TransactionState => state.transactions
 
 export const makeSelectAddressTransactions = (
   address: Address | null
-): Selector<RootState, TransactionDetails[]> =>
+): Selector<MobileState, TransactionDetails[]> =>
   createSelector(selectTransactions, (transactions) => {
     if (!address) return EMPTY_ARRAY
     const addressTransactions = transactions[address]
@@ -50,7 +50,7 @@ export const makeSelectTransaction = (
   address: Address | undefined,
   chainId: ChainId | undefined,
   txId: string | undefined
-): Selector<RootState, TransactionDetails | undefined> =>
+): Selector<MobileState, TransactionDetails | undefined> =>
   createSelector(selectTransactions, (transactions): TransactionDetails | undefined => {
     if (!address || !transactions[address] || !chainId || !txId) {
       return undefined
@@ -66,7 +66,7 @@ export const makeSelectTransaction = (
 
 // Returns a list of past recipients ordered from most to least recent
 // TODO: [MOB-232] either revert this to return addresses or keep but also return displayName so that it's searchable for RecipientSelect
-export const selectRecipientsByRecency = (state: RootState): SearchableRecipient[] => {
+export const selectRecipientsByRecency = (state: MobileState): SearchableRecipient[] => {
   const transactionsByChainId = flattenObjectOfObjects(state.transactions)
   const sendTransactions = transactionsByChainId.reduce<TransactionDetails[]>(
     (accum, transactions) => {
@@ -88,7 +88,7 @@ export const selectRecipientsByRecency = (state: RootState): SearchableRecipient
   return uniqueAddressesOnly(sortedRecipients)
 }
 
-export const selectIncompleteTransactions = (state: RootState): TransactionDetails[] => {
+export const selectIncompleteTransactions = (state: MobileState): TransactionDetails[] => {
   const transactionsByChainId = flattenObjectOfObjects(state.transactions)
   return transactionsByChainId.reduce<TransactionDetails[]>((accum, transactions) => {
     const pendingTxs = Object.values(transactions).filter(

@@ -1,11 +1,11 @@
 import { useState } from 'react'
 import { useAppDispatch } from 'src/background/store'
+import { useSagaStatus } from 'src/background/utils/useSagaStatus'
 import { Image, Input, InputProps, Stack, Text, YStack } from 'ui/src'
 import { UNISWAP_LOGO } from 'ui/src/assets'
 import { Button, ButtonSize } from 'ui/src/components/button/Button'
 import { authActions, authSagaName } from 'wallet/src/features/auth/saga'
 import { AuthType } from 'wallet/src/features/auth/types'
-import { useSagaStatus } from 'wallet/src/state/useSagaStatus'
 import { SagaStatus } from 'wallet/src/utils/saga'
 
 const ICON_SIZE = 64

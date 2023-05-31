@@ -2,7 +2,7 @@ import { MockedResponse } from '@apollo/client/testing'
 import React from 'react'
 import { PreloadedState } from 'redux'
 import { AccountSwitcher } from 'src/app/modals/AccountSwitcherModal'
-import { RootState } from 'src/app/rootReducer'
+import { MobileState } from 'src/app/reducer'
 import { initialModalState } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
 import { mockWalletPreloadedState } from 'src/test/fixtures'
@@ -22,7 +22,7 @@ const preloadedState = {
     ...initialModalState,
     [ModalName.AccountSwitcher]: { isOpen: true },
   },
-} as unknown as PreloadedState<RootState>
+} as unknown as PreloadedState<MobileState>
 
 const AccountListMock: MockedResponse<AccountListQuery> = {
   request: {

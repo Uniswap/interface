@@ -2,7 +2,7 @@ import { PreloadedState } from '@reduxjs/toolkit'
 import React from 'react'
 import { Text } from 'react-native'
 import { LazyModalRenderer } from 'src/app/modals/utils'
-import { RootState } from 'src/app/rootReducer'
+import { MobileState } from 'src/app/reducer'
 import { initialModalState } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
 import { mockWalletPreloadedState } from 'src/test/fixtures'
@@ -11,7 +11,7 @@ import { renderWithProviders } from 'src/test/render'
 const preloadedState = {
   ...mockWalletPreloadedState,
   modals: initialModalState,
-} as unknown as PreloadedState<RootState>
+} as unknown as PreloadedState<MobileState>
 
 describe(LazyModalRenderer, () => {
   it('renders null when modal is not open', () => {

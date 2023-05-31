@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { RootState } from 'src/app/rootReducer'
+import { MobileState } from 'src/app/reducer'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { ModalName } from 'src/features/telemetry/constants'
 import { TransactionState } from 'src/features/transactions/transactionState/transactionState'
@@ -101,11 +101,11 @@ const slice = createSlice({
 
 export function selectModalState<T extends keyof ModalsState>(
   name: T
-): (state: RootState) => ModalsState[T] {
+): (state: MobileState) => ModalsState[T] {
   return (state) => state.modals[name]
 }
 
-export function selectSomeModalOpen(state: RootState): boolean {
+export function selectSomeModalOpen(state: MobileState): boolean {
   return Object.values(state.modals).some((modalState) => modalState.isOpen)
 }
 

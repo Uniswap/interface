@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { AppNotification } from 'src/features/notifications/types'
 
-interface NotificationState {
+export interface NotificationState {
   notificationQueue: AppNotification[]
   notificationStatus: {
     [userAddress: Address]: boolean | undefined

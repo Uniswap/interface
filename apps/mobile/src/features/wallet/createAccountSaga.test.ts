@@ -1,6 +1,6 @@
 import dayjs from 'dayjs'
 import { expectSaga } from 'redux-saga-test-plan'
-import { rootReducer } from 'src/app/rootReducer'
+import { mobileReducer } from 'src/app/reducer'
 import { createAccount } from 'src/features/wallet/createAccountSaga'
 import {
   Account,
@@ -17,7 +17,7 @@ const createNativeAccount = async (
   }
 }> => {
   const { storeState } = await expectSaga(createAccount)
-    .withReducer(rootReducer)
+    .withReducer(mobileReducer)
     .withState({
       wallet: {
         accounts: initialAccounts as { [key: string]: Account },

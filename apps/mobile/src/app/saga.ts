@@ -1,5 +1,3 @@
-import { combineReducers, Reducer } from '@reduxjs/toolkit'
-import { spawn } from 'redux-saga/effects'
 import { cloudBackupsManagerSaga } from 'src/features/CloudBackup/saga'
 import { deepLinkWatcher } from 'src/features/deepLinking/handleDeepLink'
 import { firebaseDataWatcher } from 'src/features/firebase/firebaseData'
@@ -51,13 +49,12 @@ import {
 } from 'src/features/wallet/pendingAccountsSaga'
 import { signWcRequestSaga, walletConnectSaga } from 'src/features/walletConnect/saga'
 import { walletConnectV2Saga } from 'src/features/walletConnectV2/saga'
-import { initProviders } from 'wallet/src/features/providers/saga'
-import { SagaState } from 'wallet/src/utils/saga'
+import { spawn } from 'typed-redux-saga'
+import { getMonitoredSagaReducers, MonitoredSaga } from 'wallet/src/state/saga'
 
 // All regular sagas must be included here
 const sagas = [
   telemetrySaga,
-  initProviders,
   initFirebase,
   deepLinkWatcher,
   transactionWatcher,
@@ -69,11 +66,6 @@ const sagas = [
   cloudBackupsManagerSaga,
 ]
 
-interface MonitoredSaga {
-  // TODO(MOB-645): Add more specific types
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [key: string]: any
-}
 // All monitored sagas must be included here
 export const monitoredSagas: Record<string, MonitoredSaga> = {
   [createAccountSagaName]: {
@@ -120,24 +112,13 @@ export const monitoredSagas: Record<string, MonitoredSaga> = {
   },
 }
 
-type MonitoredSagaReducer = Reducer<Record<string, SagaState>>
-export const monitoredSagaReducers: MonitoredSagaReducer = combineReducers(
-  Object.keys(monitoredSagas).reduce(
-    (acc: { [name: string]: Reducer<SagaState> }, sagaName: string) => {
-      // Safe non-null assertion because key `sagaName` comes from `Object.keys(monitoredSagas)`
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      acc[sagaName] = monitoredSagas[sagaName]!.reducer
-      return acc
-    },
-    {}
-  )
-)
+export const monitoredSagaReducers = getMonitoredSagaReducers(monitoredSagas)
 
-export function* rootSaga() {
+export function* mobileSaga() {
   for (const s of sagas) {
-    yield spawn(s)
+    yield* spawn(s)
   }
   for (const m of Object.values(monitoredSagas)) {
-    yield spawn(m.wrappedSaga)
+    yield* spawn(m.wrappedSaga)
   }
 }

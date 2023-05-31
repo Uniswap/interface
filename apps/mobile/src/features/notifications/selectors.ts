@@ -1,10 +1,10 @@
 import { createSelector, Selector } from '@reduxjs/toolkit'
-import { RootState } from 'src/app/rootReducer'
+import { MobileState } from 'src/app/reducer'
 import { AppNotification } from 'src/features/notifications/types'
 import { selectActiveAccountAddress } from 'src/features/wallet/selectors'
 import { EMPTY_ARRAY } from 'wallet/src/constants/misc'
 
-const selectNotificationQueue = (state: RootState): AppNotification[] =>
+const selectNotificationQueue = (state: MobileState): AppNotification[] =>
   state.notifications.notificationQueue
 
 export const selectActiveAccountNotifications = createSelector(
@@ -18,21 +18,21 @@ export const selectActiveAccountNotifications = createSelector(
 )
 
 const selectNotificationStatus = (
-  state: RootState
+  state: MobileState
 ): {
   [userAddress: string]: boolean | undefined
 } => state.notifications.notificationStatus
 
 export const makeSelectHasNotifications = (
   address: Address | null
-): Selector<RootState, boolean | undefined> =>
+): Selector<MobileState, boolean | undefined> =>
   createSelector(selectNotificationStatus, (notificationStatuses) => {
     if (!address) return undefined
     return notificationStatuses?.[address]
   })
 
 export const selectLastTxNotificationUpdate = (
-  state: RootState
+  state: MobileState
 ): {
   [address: string]: number | undefined
 } => state.notifications.lastTxNotificationUpdate

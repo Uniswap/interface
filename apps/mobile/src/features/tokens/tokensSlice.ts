@@ -1,9 +1,9 @@
 // Shares similarities with https://github.com/Uniswap/interface/blob/main/src/state/user/reducer.ts
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import type { RootState } from 'src/app/rootReducer'
+import type { MobileState } from 'src/app/reducer'
 import { CurrencyId } from 'wallet/src/utils/currencyId'
 
-interface Tokens {
+export interface Tokens {
   dismissedWarningTokens: {
     [currencyId: CurrencyId]: boolean
   }
@@ -34,7 +34,7 @@ export const tokensReducer = slice.reducer
 
 // selectors
 export const dismissedWarningTokensSelector = (
-  state: RootState
+  state: MobileState
 ): {
   [currencyId: string]: boolean
 } => state.tokens.dismissedWarningTokens

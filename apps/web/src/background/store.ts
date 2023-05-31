@@ -1,22 +1,21 @@
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
 import { combineReducers } from 'redux'
 import { persistReducer, persistStore } from 'redux-persist'
-import { ForkEffect, SelectEffect } from 'redux-saga/effects'
+import { SelectEffect } from 'redux-saga/effects'
 import { dappReducer } from 'src/background/features/dapp/slice'
-import { dappRequestApprovalWatcher } from 'src/background/features/dappRequests/dappRequestApprovalWatcherSaga'
-import {
-  dappRequestWatcher,
-  extensionRequestWatcher,
-} from 'src/background/features/dappRequests/saga'
+
 import { dappRequestReducer } from 'src/background/features/dappRequests/slice'
 import { PortName } from 'src/types'
-import { SagaGenerator, select, spawn } from 'typed-redux-saga'
+import { SagaGenerator, select } from 'typed-redux-saga'
 import { createStore, RootState } from 'wallet/src/state'
-import { persistConfig, sharedReducers } from 'wallet/src/state/reducer'
+import { sharedReducers } from 'wallet/src/state/reducer'
 import { wrapStore } from 'webext-redux'
+import { persistConfig } from './reducer'
+import { monitoredSagaReducers, webRootSaga } from './saga'
 
 export const webReducers = {
   ...sharedReducers,
+  saga: monitoredSagaReducers,
   dapp: dappReducer,
   dappRequests: dappRequestReducer,
 } as const
@@ -58,16 +57,4 @@ export const useAppSelector: TypedUseSelectorHook<WebState> = useSelector
 export function* appSelect<T>(fn: (state: WebState) => T): SagaGenerator<T, SelectEffect> {
   const state = yield* select(fn)
   return state
-}
-
-const sagasInitializedOnStartup = [
-  dappRequestWatcher,
-  dappRequestApprovalWatcher,
-  extensionRequestWatcher,
-] as const
-
-export function* webRootSaga(): Generator<ForkEffect<void>> {
-  for (const s of sagasInitializedOnStartup) {
-    yield* spawn(s)
-  }
 }

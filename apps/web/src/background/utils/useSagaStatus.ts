@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
+import { monitoredSagas } from 'src/background/saga'
+import { useAppDispatch, useAppSelector } from 'src/background/store'
 import { SagaState, SagaStatus } from 'wallet/src/utils/saga'
-import { useAppDispatch, useAppSelector } from './index'
-import { monitoredSagas } from './saga'
 
 // Convenience hook to get the status + error of an active saga
 export function useSagaStatus(

@@ -1,5 +1,5 @@
 import { createSelector, Selector } from '@reduxjs/toolkit'
-import type { RootState } from 'src/app/rootReducer'
+import type { MobileState } from 'src/app/reducer'
 import { TokenSortableField } from 'wallet/src/data/__generated__/types-and-hooks'
 import {
   Account,
@@ -10,7 +10,7 @@ import { TokensOrderBy } from 'wallet/src/features/wallet/types'
 
 const DEFAULT_TOKENS_ORDER_BY = TokenSortableField.Volume
 
-export const selectAccounts = (state: RootState): Record<string, Account> => state.wallet.accounts
+export const selectAccounts = (state: MobileState): Record<string, Account> => state.wallet.accounts
 
 export const selectNonPendingAccounts = createSelector(selectAccounts, (accounts) =>
   Object.fromEntries(Object.entries(accounts).filter((a) => !a[1].pending))
@@ -48,7 +48,7 @@ export const selectSignerMnemonicAccountExists = createSelector(
     Object.values(accounts).findIndex((value) => value.type === AccountType.SignerMnemonic) >= 0
 )
 
-export const selectActiveAccountAddress = (state: RootState): string | null =>
+export const selectActiveAccountAddress = (state: MobileState): string | null =>
   state.wallet.activeAccountAddress
 export const selectActiveAccount = createSelector(
   selectAccounts,
@@ -62,10 +62,10 @@ export const selectUserPalette = createSelector(
   (activeAccount) => activeAccount?.customizations?.palette
 )
 
-export const selectFinishedOnboarding = (state: RootState): boolean | undefined =>
+export const selectFinishedOnboarding = (state: MobileState): boolean | undefined =>
   state.wallet.finishedOnboarding
 
-export const selectTokensOrderBy = (state: RootState): TokensOrderBy =>
+export const selectTokensOrderBy = (state: MobileState): TokensOrderBy =>
   state.wallet.settings.tokensOrderBy ?? DEFAULT_TOKENS_ORDER_BY
 
 export const selectInactiveAccounts = createSelector(
@@ -77,13 +77,13 @@ export const selectInactiveAccounts = createSelector(
 
 export const makeSelectAccountNotificationSetting = (
   address: Address
-): Selector<RootState, boolean> =>
+): Selector<MobileState, boolean> =>
   createSelector(selectAccounts, (accounts) => !!accounts[address]?.pushNotificationsEnabled)
 
 export const makeSelectAccountHideSmallBalances = (
   address: Address
-): Selector<RootState, boolean> =>
+): Selector<MobileState, boolean> =>
   createSelector(selectAccounts, (accounts) => !accounts[address]?.showSmallBalances)
 
-export const makeSelectAccountHideSpamTokens = (address: Address): Selector<RootState, boolean> =>
+export const makeSelectAccountHideSpamTokens = (address: Address): Selector<MobileState, boolean> =>
   createSelector(selectAccounts, (accounts) => !accounts[address]?.showSpamTokens)
