@@ -53,6 +53,11 @@ export type Theme = typeof themeContractValues
 
 export const themeVars = createGlobalThemeContract(themeContractValues, (_, path) => `genie-${path.join('-')}`)
 
+export const navDimensions = {
+  height: 72,
+  verticalPad: 20,
+}
+
 const dimensions = {
   '0': '0',
   '2': '2',
@@ -91,6 +96,7 @@ const dimensions = {
   full: '100%',
   min: 'min-content',
   max: 'max-content',
+  searchResultsMaxHeight: `calc(100vh - ${navDimensions.verticalPad * 2}px)`,
   viewHeight: '100vh',
   viewWidth: '100vw',
   auto: 'auto',

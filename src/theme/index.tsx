@@ -3,6 +3,7 @@ import React, { useMemo } from 'react'
 import { createGlobalStyle, css, ThemeProvider as StyledComponentsThemeProvider } from 'styled-components/macro'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 
+import { navDimensions } from '../nft/css/sprinkles.css'
 import { darkTheme, lightTheme } from './colors'
 import { darkDeprecatedTheme, lightDeprecatedTheme } from './deprecatedColors'
 
@@ -86,7 +87,8 @@ function getSettings(darkMode: boolean) {
     // media queries
     deprecated_mediaWidth: deprecated_mediaWidthTemplates,
 
-    navHeight: 72,
+    navHeight: navDimensions.height,
+    navVerticalPad: navDimensions.verticalPad,
     mobileBottomBarHeight: 52,
     maxWidth: MAX_CONTENT_WIDTH,
 

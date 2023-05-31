@@ -11,7 +11,7 @@ import { useIsNftPage } from 'hooks/useIsNftPage'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { organizeSearchResults } from 'lib/utils/searchBar'
 import { Box } from 'nft/components/Box'
-import { Row } from 'nft/components/Flex'
+import { Column, Row } from 'nft/components/Flex'
 import { magicalGradientOnHover } from 'nft/css/common.css'
 import { useIsMobile, useIsTablet } from 'nft/hooks'
 import { useIsNavSearchInputVisible } from 'nft/hooks/useIsNavSearchInputVisible'
@@ -132,7 +132,7 @@ export const SearchBar = () => {
 
   return (
     <Trace section={InterfaceSectionName.NAVBAR_SEARCH}>
-      <Box
+      <Column
         data-cy="search-bar"
         position={{ sm: 'fixed', md: 'absolute' }}
         width={{ sm: isOpen ? 'viewWidth' : 'auto', md: 'auto' }}
@@ -140,10 +140,10 @@ export const SearchBar = () => {
         className={clsx(styles.searchBarContainerNft, {
           searchBarContainerDisableBlur: isNavSearchInputVisible,
         })}
-        display={{ sm: isOpen ? 'inline-block' : 'none' }}
+        display={{ sm: isOpen ? 'flex' : 'none', xl: 'flex' }}
         {...(isNavSearchInputVisible && {
           position: 'relative',
-          display: 'inline-block',
+          display: 'flex',
         })}
       >
         <Row
@@ -198,7 +198,7 @@ export const SearchBar = () => {
           </TraceEvent>
           {!isOpen && <KeyShortCut>/</KeyShortCut>}
         </Row>
-        <Box className={clsx(isOpen ? styles.visible : styles.hidden)}>
+        <Column overflow="hidden" className={clsx(isOpen ? styles.visible : styles.hidden)}>
           {isOpen && (
             <SearchBarDropdown
               toggleOpen={toggleOpen}
@@ -209,8 +209,8 @@ export const SearchBar = () => {
               isLoading={tokensAreLoading || collectionsAreLoading}
             />
           )}
-        </Box>
-      </Box>
+        </Column>
+      </Column>
       {isMobileOrTablet && (
         <NavIcon onClick={toggleOpen} label={placeholderText}>
           <NavMagnifyingGlassIcon />
