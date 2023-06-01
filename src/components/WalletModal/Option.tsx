@@ -1,13 +1,12 @@
 import { TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
-import { accountDrawerOpenAtom } from 'components/AccountDrawer'
+import { useAccountDrawer } from 'components/AccountDrawer'
 import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button'
 import Loader from 'components/Icons/LoadingSpinner'
 import { walletConnectV2Connection } from 'connection'
 import { ActivationStatus, useActivationState } from 'connection/activate'
 import { Connection, ConnectionType } from 'connection/types'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
-import { useAtom } from 'jotai'
 import { MouseEvent, useEffect, useRef, useState } from 'react'
 import { MoreHorizontal } from 'react-feather'
 import styled from 'styled-components/macro'
@@ -157,8 +156,8 @@ interface OptionProps {
 export default function Option({ connection }: OptionProps) {
   const { activationState, tryActivation } = useActivationState()
   const [WC2PromptOpen, setWC2PromptOpen] = useState(false)
-  const [accountDrawerOpen, updateAccountDrawerOpen] = useAtom(accountDrawerOpenAtom)
-  const activate = () => tryActivation(connection, () => updateAccountDrawerOpen(false))
+  const [accountDrawerOpen, toggleAccountDrawerOpen] = useAccountDrawer()
+  const activate = () => tryActivation(connection, toggleAccountDrawerOpen)
 
   useEffect(() => {
     if (!accountDrawerOpen) setWC2PromptOpen(false)
@@ -172,7 +171,7 @@ export default function Option({ connection }: OptionProps) {
     e.stopPropagation()
     tryActivation(walletConnectV2Connection, () => {
       setWC2PromptOpen(false)
-      updateAccountDrawerOpen(false)
+      toggleAccountDrawerOpen()
     })
   }
   const handleClickOpenWCv2Tooltip = (e: MouseEvent<HTMLButtonElement>) => {
