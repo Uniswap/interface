@@ -85,7 +85,7 @@ const Buttons = ({
   return warning.canProceed ? (
     <>
       <StyledButton onClick={onContinue}>
-        <Trans>I understand</Trans>
+        {warning.level === WARNING_LEVEL.MEDIUM ? <Trans>Continue</Trans> : <Trans>I understand</Trans>}
       </StyledButton>
       {showCancel && <StyledCancelButton onClick={onCancel}>Cancel</StyledCancelButton>}
     </>
@@ -183,7 +183,7 @@ function ExplorerView({ token }: { token: Token }) {
 }
 
 const StyledExternalLink = styled(ExternalLink)`
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.accentAction};
   stroke: currentColor;
   font-weight: 600;
 `
@@ -255,6 +255,7 @@ export default function TokenSafety({
     level: WARNING_LEVEL.UNKNOWN,
     message: <Trans>Token not found</Trans>,
     canProceed: false,
+    displayLabel: true,
   }
 
   return displayWarning ? (
@@ -263,9 +264,11 @@ export default function TokenSafety({
         <AutoColumn>
           <LogoContainer>{logos}</LogoContainer>
         </AutoColumn>
-        <ShortColumn>
-          <SafetyLabel warning={displayWarning} />
-        </ShortColumn>
+        {displayWarning.displayLabel && (
+          <ShortColumn>
+            <SafetyLabel warning={displayWarning} />
+          </ShortColumn>
+        )}
         <ShortColumn>
           <InfoText>
             {heading} {description} {learnMoreUrl}
