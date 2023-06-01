@@ -123,12 +123,12 @@ export const IconWithTextButton = ({ Icon, text, onConfirm, onShowConfirm, onCli
     [onShowConfirm]
   )
 
-  // need to avoid using updates once opened
   const dimensionsRef = useRef({
     frame: 0,
     hidden: 0,
   })
   const dimensions = (() => {
+    // once opened, we avoid updating it to prevent constant resize loop
     if (!showText) {
       dimensionsRef.current = { frame: frameObserver.width || 0, hidden: hiddenObserver.width || 0 }
     }
