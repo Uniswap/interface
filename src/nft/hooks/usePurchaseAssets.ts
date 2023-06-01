@@ -10,7 +10,8 @@ import { useTransactionResponse } from './useTransactionResponse'
 export function usePurchaseAssets(): (
   routingData: RouteResponse,
   assetsToBuy: UpdatedGenieAsset[],
-  purchasingWithErc20?: boolean
+  purchasingWithErc20?: boolean,
+  doNotInteractWithBag?: boolean
 ) => Promise<void> {
   const { provider } = useWeb3React()
   const sendTransaction = useSendTransaction((state) => state.sendTransaction)
@@ -30,7 +31,12 @@ export function usePurchaseAssets(): (
   )
 
   return useCallback(
-    async (routingData: RouteResponse, assetsToBuy: UpdatedGenieAsset[], purchasingWithErc20 = false) => {
+    async (
+      routingData: RouteResponse,
+      assetsToBuy: UpdatedGenieAsset[],
+      purchasingWithErc20 = false,
+      doNotInteractWithBag = false
+    ) => {
       if (!provider) return
 
       const purchaseResponse = await sendTransaction(
@@ -44,7 +50,9 @@ export function usePurchaseAssets(): (
         setBagLocked(false)
         setTransactionResponse(purchaseResponse)
         setBagExpanded({ bagExpanded: false })
-        resetBag()
+        if (!doNotInteractWithBag) {
+          resetBag()
+        }
       }
     },
     [provider, resetBag, sendTransaction, setBagExpanded, setBagLocked, setTransactionResponse]

@@ -142,7 +142,7 @@ export const useBuyAssetCallback = () => {
             return
           }
 
-          purchaseAssets(routeResponse, updatedAssets, false)
+          purchaseAssets(routeResponse, updatedAssets, false, true)
         },
       })
     },
