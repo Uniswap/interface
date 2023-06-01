@@ -1,4 +1,5 @@
 import TokenLogoLookupTable from 'constants/TokenLogoLookupTable'
+import { isCelo, nativeOnChain } from 'constants/tokens'
 import { chainIdToNetworkName, getNativeLogoURI } from 'lib/hooks/useCurrencyLogoURIs'
 import uriToHttp from 'lib/utils/uriToHttp'
 import { useCallback, useEffect, useState } from 'react'
@@ -39,6 +40,14 @@ function getInitialUrl(address?: string | null, chainId?: number | null, isNativ
 
   const networkName = chainId ? chainIdToNetworkName(chainId) : 'ethereum'
   const checksummedAddress = isAddress(address)
+
+  // Celo logo logo is hosted elsewhere.
+  if (chainId && isCelo(chainId)) {
+    if (address === nativeOnChain(chainId).wrapped.address) {
+      return 'https://s2.coinmarketcap.com/static/img/coins/64x64/5567.png'
+    }
+  }
+
   if (checksummedAddress) {
     return `https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/${networkName}/assets/${checksummedAddress}/logo.png`
   } else {
