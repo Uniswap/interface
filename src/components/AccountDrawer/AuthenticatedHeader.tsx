@@ -160,10 +160,9 @@ export function PortfolioArrow({ change, ...rest }: { change: number } & IconPro
   )
 }
 
-// LogOut icon is a bit off center
-const LogOutCentered = (props: IconProps) => {
-  return <LogOut {...props} style={{ ...props.style, transform: `translateX(2px)` }} />
-}
+const LogOutCentered = styled(LogOut)`
+  transform: translateX(2px);
+`
 
 export default function AuthenticatedHeader({ account, openSettings }: { account: string; openSettings: () => void }) {
   const { connector, ENSName } = useWeb3React()
