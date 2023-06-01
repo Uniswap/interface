@@ -11,7 +11,7 @@ import { useIsNftPage } from 'hooks/useIsNftPage'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { organizeSearchResults } from 'lib/utils/searchBar'
 import { Box } from 'nft/components/Box'
-import { Row } from 'nft/components/Flex'
+import { Column, Row } from 'nft/components/Flex'
 import { magicalGradientOnHover } from 'nft/css/common.css'
 import { useIsMobile, useIsTablet } from 'nft/hooks'
 import { useIsNavSearchInputVisible } from 'nft/hooks/useIsNavSearchInputVisible'
@@ -132,13 +132,13 @@ export const SearchBar = () => {
 
   return (
     <Trace section={InterfaceSectionName.NAVBAR_SEARCH}>
-      <Box
+      <Column
         data-cy="search-bar"
         position={{ sm: 'fixed', md: 'absolute', xl: 'relative' }}
         width={{ sm: isOpen ? 'viewWidth' : 'auto', md: 'auto' }}
         ref={searchRef}
         className={styles.searchBarContainerNft}
-        display={{ sm: isOpen ? 'inline-block' : 'none', xl: 'inline-block' }}
+        display={{ sm: isOpen ? 'flex' : 'none', xl: 'flex' }}
       >
         <Row
           className={clsx(
@@ -192,7 +192,7 @@ export const SearchBar = () => {
           </TraceEvent>
           {!isOpen && <KeyShortCut>/</KeyShortCut>}
         </Row>
-        <Box className={clsx(isOpen ? styles.visible : styles.hidden)}>
+        <Column overflow="hidden" className={clsx(isOpen ? styles.visible : styles.hidden)}>
           {isOpen && (
             <SearchBarDropdown
               toggleOpen={toggleOpen}
@@ -203,8 +203,8 @@ export const SearchBar = () => {
               isLoading={tokensAreLoading || collectionsAreLoading}
             />
           )}
-        </Box>
-      </Box>
+        </Column>
+      </Column>
       {isMobileOrTablet && (
         <NavIcon onClick={toggleOpen} label={placeholderText}>
           <NavMagnifyingGlassIcon />
