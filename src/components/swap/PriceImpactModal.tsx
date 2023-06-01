@@ -53,7 +53,7 @@ export default function PriceImpactModal({ priceImpact, onDismiss, onContinue }:
           <ThemedText.BodyPrimary lineHeight="24px" textAlign="center">
             <Trans>
               This transaction will result in a{' '}
-              <ThemedText.BodyPrimary lineHeight="24px" textAlign="center" color="accentFailure" display="inline">
+              <ThemedText.BodyPrimary lineHeight="24px" color="accentFailure" display="inline">
                 {formatPriceImpact(priceImpact)}
               </ThemedText.BodyPrimary>{' '}
               price impact on the market price of this pool. Do you wish to continue?
