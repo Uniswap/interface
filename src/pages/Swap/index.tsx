@@ -826,10 +826,11 @@ export default function Swap({ className }: { className?: string }) {
   const [ltv, setLTV] = useState("");
 
   const [debouncedLTV, debouncedSetLTV] = useDebouncedChangeHandler(ltv, setLTV);
+
   
 
-  console.log("loggingSwap", currencies.INPUT, currencies.OUTPUT, leverageManagerAddress, leveragePositions, lmtIsValid, leverageTrade, leverageApprovalState, inputError, contractError)
-  // console.log("pooltoken", pool?.token0?.address);
+  // console.log("loggingSwap", currencies.INPUT, currencies.OUTPUT, leverageManagerAddress, leveragePositions, lmtIsValid, leverageTrade, leverageApprovalState, inputError, contractError)
+  // console.log("pooltoken", pool?.token0?.address, pool?.token0?.symbol);
   // console.log("activeTab: ", activeTab)
   return (
     <Trace page={InterfacePageName.SWAP_PAGE} shouldLogImpression>
@@ -843,7 +844,7 @@ export default function Swap({ className }: { className?: string }) {
           showCancel={true}
         />
         <PageWrapper>
-          {swapWidgetEnabled ? (
+          { swapWidgetEnabled ? (
             <Widget
               defaultTokens={{
                 [Field.INPUT]: loadedInputCurrency ?? undefined,
@@ -1703,7 +1704,7 @@ export default function Swap({ className }: { className?: string }) {
 
               </SwapWrapper>
             </MainSwapContainer>
-          )}
+          ) }
           <NetworkAlert />
         </PageWrapper>
         <SwitchLocaleLink />
