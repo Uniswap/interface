@@ -547,12 +547,6 @@ export function HeaderRow() {
     <PositionRow
       header={true}
       positionInfo={<ThemedText.TableText>Position</ThemedText.TableText>}
-      // value={<ThemedText.TableText>Net Value</ThemedText.TableText>}
-      // collateral={<ThemedText.TableText>Collateral</ThemedText.TableText>}
-      // repaymentTime={<ThemedText.TableText>Time Left</ThemedText.TableText>}
-      // remainingPremium={<ThemedText.TableText>Prem. Left</ThemedText.TableText>}
-      // entryPrice={<ThemedText.TableText>Entry Price</ThemedText.TableText>}
-      // PnL={<ThemedText.TableText>Profit/Loss</ThemedText.TableText>}
       value={<ThemedText.TableText>Net Value</ThemedText.TableText>}
       collateral={<HeaderCell category={PositionSortMethod.COLLATERAL} />}
       PnL={<HeaderCell category={PositionSortMethod.PNL} />}
