@@ -10,7 +10,6 @@ import {
 } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
 import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
-import WalletConnectV2Provider from '@walletconnect/ethereum-provider'
 import { useWeb3React } from '@web3-react/core'
 import { useToggleAccountDrawer } from 'components/AccountDrawer'
 import { sendEvent } from 'components/analytics'
@@ -18,8 +17,6 @@ import { NetworkAlert } from 'components/NetworkAlert/NetworkAlert'
 import PriceImpactWarning from 'components/swap/PriceImpactWarning'
 import SwapDetailsDropdown from 'components/swap/SwapDetailsDropdown'
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
-import { useGetConnection } from 'connection'
-import { ConnectionType } from 'connection/types'
 import { getChainInfo } from 'constants/chainInfo'
 import { isSupportedChain, SupportedChainId } from 'constants/chains'
 import useENSAddress from 'hooks/useENSAddress'
@@ -30,13 +27,11 @@ import { useSwapCallback } from 'hooks/useSwapCallback'
 import { useUSDPrice } from 'hooks/useUSDPrice'
 import JSBI from 'jsbi'
 import { formatSwapQuoteReceivedEventProperties } from 'lib/utils/analytics'
-import { useCallback, useEffect, useMemo, useReducer, useState } from 'react'
-import { ReactNode } from 'react'
+import { ReactNode, useCallback, useEffect, useMemo, useReducer, useState } from 'react'
 import { ArrowDown } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
 import { Text } from 'rebass'
-import { InterfaceTrade } from 'state/routing/types'
-import { TradeState } from 'state/routing/types'
+import { InterfaceTrade, TradeState } from 'state/routing/types'
 import styled, { useTheme } from 'styled-components/macro'
 import { currencyAmountToPreciseFloat, formatTransactionAmount } from 'utils/formatNumbers'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
@@ -178,15 +173,7 @@ export function Swap({
   disableTokenInputs?: boolean
 }) {
   const { account, chainId: connectedChainId, connector } = useWeb3React()
-  const getConnection = useGetConnection()
-  const connectionType = getConnection(connector).type
-  const isWCv2 = connectionType === ConnectionType.WALLET_CONNECT_V2
 
-  useEffect(() => {
-    if (isWCv2) {
-      console.log('jfrankfurt', (connector.provider as WalletConnectV2Provider).session)
-    }
-  }, [connector, isWCv2])
   const trace = useTrace()
 
   // token warning stuff
