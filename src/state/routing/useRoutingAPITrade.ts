@@ -53,7 +53,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
     isError: isLegacyAPIError,
     data: legacyAPITradeResult,
     currentData: currentLegacyAPITradeResult,
-  } = useGetQuoteQuery(!shouldUseRoutingApiV2 ? queryArgs ?? skipToken : skipToken, {
+  } = useGetQuoteQuery(shouldUseRoutingApiV2 ? skipToken : queryArgs ?? skipToken, {
     // Price-fetching is informational and costly, so it's done less frequently.
     pollingInterval: routerPreference === INTERNAL_ROUTER_PREFERENCE_PRICE ? ms`1m` : AVERAGE_L1_BLOCK_TIME,
     // If latest quote from cache was fetched > 2m ago, instantly repoll for another instead of waiting for next poll period
@@ -64,7 +64,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
     isError: isV2APIError,
     data: v2TradeResult,
     currentData: currentV2TradeResult,
-  } = useGetQuoteQueryV2(shouldUseRoutingApiV2 ? queryArgs ?? skipToken : skipToken, {
+  } = useGetQuoteQueryV2(!shouldUseRoutingApiV2 ? skipToken : queryArgs ?? skipToken, {
     // Price-fetching is informational and costly, so it's done less frequently.
     pollingInterval: routerPreference === INTERNAL_ROUTER_PREFERENCE_PRICE ? ms`1m` : AVERAGE_L1_BLOCK_TIME,
     // If latest quote from cache was fetched > 2m ago, instantly repoll for another instead of waiting for next poll period

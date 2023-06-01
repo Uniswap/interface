@@ -186,7 +186,7 @@ export function currencyAddressForSwapQuote(currency: Currency): string {
   return currency.address
 }
 
-export function isAPIAcceptedRouterPreference(
+export function shouldUseAPIRouter(
   routerPreference?: RouterPreference | typeof INTERNAL_ROUTER_PREFERENCE_PRICE
 ): boolean {
   return routerPreference === RouterPreference.API || routerPreference === RouterPreference.AUTO

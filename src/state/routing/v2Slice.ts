@@ -6,7 +6,7 @@ import { trace } from 'tracing/trace'
 
 import { GetQuoteArgs, INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference } from './slice'
 import { QuoteDataV2, QuoteState, TradeResult } from './types'
-import { getRouter, isAPIAcceptedRouterPreference, isExactInput, transformRoutesToTrade } from './utils'
+import { getRouter, shouldUseAPIRouter, isExactInput, transformRoutesToTrade } from './utils'
 
 const CLIENT_PARAMS = {
   protocols: [Protocol.V2, Protocol.V3, Protocol.MIXED],
@@ -55,7 +55,7 @@ export const routingApiV2 = createApi({
       },
       async queryFn(args: GetQuoteArgs, _api, _extraOptions, fetch) {
         const routerPreference = args.routerPreference
-        if (isAPIAcceptedRouterPreference(routerPreference)) {
+        if (shouldUseAPIRouter(routerPreference)) {
           try {
             const { tokenInAddress, tokenInChainId, tokenOutAddress, tokenOutChainId, amount, tradeType } = args
             const type = isExactInput(tradeType) ? 'EXACT_INPUT' : 'EXACT_OUTPUT'
