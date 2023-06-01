@@ -18,7 +18,7 @@ export const formatEth = (price: number) => {
   } else if (price < 0.001) {
     return '<0.001'
   } else {
-    return `${Math.round(price * 100 + Number.EPSILON) / 100}`
+    return `${Math.round(price * 1000 + Number.EPSILON) / 1000}`
   }
 }
 
@@ -72,4 +72,12 @@ export const ethNumberStandardFormatter = (
 export const formatWeiToDecimal = (amount: string, removeZeroes = false) => {
   if (!amount) return '-'
   return ethNumberStandardFormatter(formatEther(amount), false, removeZeroes, false)
+}
+
+// prevent BigNumber overflow by properly handling scientific notation and comma delimited values
+export function wrapScientificNotation(value: string | number): string {
+  return parseFloat(value.toString())
+    .toLocaleString('fullwide', { useGrouping: false })
+    .replace(',', '.')
+    .replace(' ', '')
 }

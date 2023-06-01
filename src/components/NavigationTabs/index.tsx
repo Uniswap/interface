@@ -21,7 +21,7 @@ const Tabs = styled.div`
   justify-content: space-evenly;
 `
 
-const StyledHistoryLink = styled(HistoryLink)<{ flex: string | undefined }>`
+const StyledHistoryLink = styled(HistoryLink)<{ flex?: string }>`
   flex: ${({ flex }) => flex ?? 'none'};
 
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
@@ -36,7 +36,7 @@ const ActiveText = styled.div`
 `
 
 const StyledArrowLeft = styled(ArrowLeft)`
-  color: ${({ theme }) => theme.deprecated_text1};
+  color: ${({ theme }) => theme.textPrimary};
 `
 
 export function FindPoolTabs({ origin }: { origin: string }) {
@@ -57,20 +57,16 @@ export function FindPoolTabs({ origin }: { origin: string }) {
 export function AddRemoveTabs({
   adding,
   creating,
-  buying,
-  selling,
-  defaultSlippage,
+  autoSlippage,
   positionID,
   children,
 }: {
   adding: boolean
   creating: boolean
-  buying?: boolean
-  selling?: boolean
-  defaultSlippage: Percent
-  positionID?: string | undefined
+  autoSlippage: Percent
+  positionID?: string
   showBackLink?: boolean
-  children?: ReactNode | undefined
+  children?: ReactNode
 }) {
   const theme = useTheme()
   // reset states on back
@@ -79,8 +75,8 @@ export function AddRemoveTabs({
 
   // detect if back should redirect to v3 or v2 pool page
   const poolLink = location.pathname.includes('add/v2')
-    ? '/pool/v2'
-    : '/pool' + (!!positionID ? `/${positionID.toString()}` : '')
+    ? '/pools/v2'
+    : '/pools' + (positionID ? `/${positionID.toString()}` : '')
 
   return (
     <Tabs>
@@ -96,7 +92,7 @@ export function AddRemoveTabs({
           }}
           flex={children ? '1' : undefined}
         >
-          <StyledArrowLeft stroke={theme.deprecated_text2} />
+          <StyledArrowLeft stroke={theme.textSecondary} />
         </StyledHistoryLink>
         <ThemedText.DeprecatedMediumHeader
           fontWeight={500}
@@ -116,7 +112,7 @@ export function AddRemoveTabs({
           )}
         </ThemedText.DeprecatedMediumHeader>
         <Box style={{ marginRight: '.5rem' }}>{children}</Box>
-        <SettingsTab placeholderSlippage={defaultSlippage} />
+        <SettingsTab autoSlippage={autoSlippage} />
       </RowBetween>
     </Tabs>
   )

@@ -1,11 +1,11 @@
+import { BigNumber } from '@ethersproject/bignumber'
 import { Trans } from '@lingui/macro'
 import { Percent, Price, Token } from '@uniswap/sdk-core'
 import { Position } from '@uniswap/v3-sdk'
-import Badge from 'components/Badge'
 import RangeBadge from 'components/Badge/RangeBadge'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import HoverInlineText from 'components/HoverInlineText'
-import Loader from 'components/Loader'
+import Loader from 'components/Icons/LoadingSpinner'
 import { RowBetween } from 'components/Row'
 import { useToken } from 'hooks/Tokens'
 import useIsTickAtLimit from 'hooks/useIsTickAtLimit'
@@ -14,8 +14,7 @@ import { useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { Bound } from 'state/mint/v3/actions'
 import styled from 'styled-components/macro'
-import { HideSmall, MEDIA_WIDTHS, SmallOnly } from 'theme'
-import { PositionDetails } from 'types/position'
+import { HideSmall, MEDIA_WIDTHS, SmallOnly, ThemedText } from 'theme'
 import { formatTickPrice } from 'utils/formatTickPrice'
 import { unwrappedToken } from 'utils/unwrappedToken'
 
@@ -29,7 +28,7 @@ const LinkRow = styled(Link)`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  color: ${({ theme }) => theme.deprecated_text1};
+  color: ${({ theme }) => theme.textPrimary};
   padding: 16px;
   text-decoration: none;
   font-weight: 500;
@@ -51,14 +50,6 @@ const LinkRow = styled(Link)`
   `};
 `
 
-const BadgeText = styled.div`
-  font-weight: 500;
-  font-size: 14px;
-  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
-    font-size: 12px;
-  `};
-`
-
 const DataLineItem = styled.div`
   font-size: 14px;
 `
@@ -72,19 +63,27 @@ const RangeLineItem = styled(DataLineItem)`
 `
 
 const DoubleArrow = styled.span`
+  font-size: 12px;
   margin: 0 2px;
-  color: ${({ theme }) => theme.deprecated_text3};
+  color: ${({ theme }) => theme.textTertiary};
 `
 
-const RangeText = styled.span`
+const RangeText = styled(ThemedText.Caption)`
+  font-size: 12px !important;
+  word-break: break-word;
   padding: 0.25rem 0.25rem;
   border-radius: 8px;
 `
 
-const ExtentsText = styled.span`
-  color: ${({ theme }) => theme.deprecated_text3};
-  font-size: 14px;
-  margin-right: 4px;
+const FeeTierText = styled(ThemedText.UtilityBadge)`
+  font-size: 10px !important;
+  margin-left: 14px !important;
+`
+const ExtentsText = styled(ThemedText.Caption)`
+  color: ${({ theme }) => theme.textTertiary};
+  display: inline-block;
+  line-height: 16px;
+  margin-right: 4px !important;
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
     display: none;
   `};
@@ -99,17 +98,14 @@ const PrimaryPositionIdData = styled.div`
   }
 `
 
-const DataText = styled.div`
-  font-weight: 600;
-  font-size: 18px;
-
-  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
-    font-size: 18px;
-  `};
-`
-
 interface PositionListItemProps {
-  positionDetails: PositionDetails
+  token0: string
+  token1: string
+  tokenId: BigNumber
+  fee: number
+  liquidity: BigNumber
+  tickLower: number
+  tickUpper: number
 }
 
 export function getPriceOrderingFromPositionForUI(position?: Position): {
@@ -166,16 +162,15 @@ export function getPriceOrderingFromPositionForUI(position?: Position): {
   }
 }
 
-export default function PositionListItem({ positionDetails }: PositionListItemProps) {
-  const {
-    token0: token0Address,
-    token1: token1Address,
-    fee: feeAmount,
-    liquidity,
-    tickLower,
-    tickUpper,
-  } = positionDetails
-
+export default function PositionListItem({
+  token0: token0Address,
+  token1: token1Address,
+  tokenId,
+  fee: feeAmount,
+  liquidity,
+  tickLower,
+  tickUpper,
+}: PositionListItemProps) {
   const token0 = useToken(token0Address)
   const token1 = useToken(token1Address)
 
@@ -203,7 +198,7 @@ export default function PositionListItem({ positionDetails }: PositionListItemPr
   // check if price is within range
   const outOfRange: boolean = pool ? pool.tickCurrent < tickLower || pool.tickCurrent >= tickUpper : false
 
-  const positionSummaryLink = '/pool/' + positionDetails.tokenId
+  const positionSummaryLink = '/pools/' + tokenId
 
   const removed = liquidity?.eq(0)
 
@@ -212,15 +207,13 @@ export default function PositionListItem({ positionDetails }: PositionListItemPr
       <RowBetween>
         <PrimaryPositionIdData>
           <DoubleCurrencyLogo currency0={currencyBase} currency1={currencyQuote} size={18} margin />
-          <DataText>
+          <ThemedText.SubHeader>
             &nbsp;{currencyQuote?.symbol}&nbsp;/&nbsp;{currencyBase?.symbol}
-          </DataText>
-          &nbsp;
-          <Badge>
-            <BadgeText>
-              <Trans>{new Percent(feeAmount, 1_000_000).toSignificant()}%</Trans>
-            </BadgeText>
-          </Badge>
+          </ThemedText.SubHeader>
+
+          <FeeTierText>
+            <Trans>{new Percent(feeAmount, 1_000_000).toSignificant()}%</Trans>
+          </FeeTierText>
         </PrimaryPositionIdData>
         <RangeBadge removed={removed} inRange={!outOfRange} />
       </RowBetween>
@@ -232,23 +225,36 @@ export default function PositionListItem({ positionDetails }: PositionListItemPr
               <Trans>Min: </Trans>
             </ExtentsText>
             <Trans>
-              {formatTickPrice(priceLower, tickAtLimit, Bound.LOWER)} <HoverInlineText text={currencyQuote?.symbol} />{' '}
-              per <HoverInlineText text={currencyBase?.symbol ?? ''} />
+              <span>
+                {formatTickPrice({
+                  price: priceLower,
+                  atLimit: tickAtLimit,
+                  direction: Bound.LOWER,
+                })}{' '}
+              </span>
+              <HoverInlineText text={currencyQuote?.symbol} /> per <HoverInlineText text={currencyBase?.symbol ?? ''} />
             </Trans>
           </RangeText>{' '}
           <HideSmall>
-            <DoubleArrow>⟷</DoubleArrow>{' '}
+            <DoubleArrow>↔</DoubleArrow>{' '}
           </HideSmall>
           <SmallOnly>
-            <DoubleArrow>⟷</DoubleArrow>{' '}
+            <DoubleArrow>↔</DoubleArrow>{' '}
           </SmallOnly>
           <RangeText>
             <ExtentsText>
               <Trans>Max:</Trans>
             </ExtentsText>
             <Trans>
-              {formatTickPrice(priceUpper, tickAtLimit, Bound.UPPER)} <HoverInlineText text={currencyQuote?.symbol} />{' '}
-              per <HoverInlineText maxCharacters={10} text={currencyBase?.symbol} />
+              <span>
+                {formatTickPrice({
+                  price: priceUpper,
+                  atLimit: tickAtLimit,
+                  direction: Bound.UPPER,
+                })}{' '}
+              </span>
+              <HoverInlineText text={currencyQuote?.symbol} /> per{' '}
+              <HoverInlineText maxCharacters={10} text={currencyBase?.symbol} />
             </Trans>
           </RangeText>
         </RangeLineItem>

@@ -99,9 +99,9 @@ export default function PositionList({
           </ToggleLabel>
         </ToggleWrap>
       </MobileHeader>
-      {positions.map((p) => {
-        return <PositionListItem key={p.tokenId.toString()} positionDetails={p} />
-      })}
+      {positions.map((p) => (
+        <PositionListItem key={p.tokenId.toString()} {...p} />
+      ))}
     </>
   )
 }

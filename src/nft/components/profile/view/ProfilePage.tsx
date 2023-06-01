@@ -1,10 +1,10 @@
-import { useNftBalanceQuery } from 'graphql/data/nft/NftBalance'
+import { useNftBalance } from 'graphql/data/nft/NftBalance'
 import { AnimatedBox, Box } from 'nft/components/Box'
-import { ClearAllButton } from 'nft/components/collection/CollectionNfts'
+import { LoadingAssets } from 'nft/components/collection/CollectionAssetLoading'
 import { assetList } from 'nft/components/collection/CollectionNfts.css'
 import { FilterButton } from 'nft/components/collection/FilterButton'
-import { LoadingSparkle } from 'nft/components/common/Loading/LoadingSparkle'
-import { Center, Column, Row } from 'nft/components/Flex'
+import { ClearAllButton } from 'nft/components/collection/shared'
+import { Column, Row } from 'nft/components/Flex'
 import { CrossIcon } from 'nft/components/icons'
 import { FilterSidebar } from 'nft/components/profile/view/FilterSidebar'
 import { subhead } from 'nft/css/common.css'
@@ -24,9 +24,9 @@ import InfiniteScroll from 'react-infinite-scroll-component'
 import { useInfiniteQuery } from 'react-query'
 import { easings, useSpring } from 'react-spring'
 import styled from 'styled-components/macro'
-import shallow from 'zustand/shallow'
+import { shallow } from 'zustand/shallow'
 
-import { EmptyWalletContent } from './EmptyWalletContent'
+import { EmptyWalletModule } from './EmptyWalletContent'
 import * as styles from './ProfilePage.css'
 import { ProfileBodyLoadingSkeleton } from './ProfilePageLoadingSkeleton'
 import { ViewMyNftsAsset } from './ViewMyNftsAsset'
@@ -48,6 +48,10 @@ const ProfileHeader = styled.div`
     line-height: 28px;
     margin-bottom: 0px;
   }
+`
+
+const EmptyStateContainer = styled.div`
+  margin-top: 164px;
 `
 
 export const DEFAULT_WALLET_ASSET_QUERY_AMOUNT = 25
@@ -91,7 +95,7 @@ export const ProfilePage = () => {
     isFetchingNextPage,
     isSuccess,
   } = useInfiniteQuery(['ownerCollections', { address }], getOwnerCollections, {
-    getNextPageParam: (lastGroup, _allGroups) => (lastGroup.data.length === 0 ? undefined : lastGroup.nextPage),
+    getNextPageParam: (lastGroup) => (lastGroup.data.length === 0 ? undefined : lastGroup.nextPage),
     refetchInterval: 15000,
     refetchIntervalInBackground: false,
     refetchOnWindowFocus: false,
@@ -138,7 +142,7 @@ export const ProfilePage = () => {
           borderRadius="12"
           paddingX="16"
           paddingY="12"
-          background="backgroundModule"
+          background="backgroundSurface"
           borderStyle="solid"
           borderColor="backgroundOutline"
           borderWidth="1px"
@@ -199,9 +203,10 @@ const ProfilePageNfts = ({
 
   const {
     walletAssets: ownerAssets,
-    loadNext,
+    loading,
     hasNext,
-  } = useNftBalanceQuery(address, collectionFilters, [], DEFAULT_WALLET_ASSET_QUERY_AMOUNT)
+    loadMore,
+  } = useNftBalance(address, collectionFilters, [], DEFAULT_WALLET_ASSET_QUERY_AMOUNT)
 
   const { gridX } = useSpring({
     gridX: isFiltersExpanded ? FILTER_SIDEBAR_WIDTH : -PADDING,
@@ -211,10 +216,14 @@ const ProfilePageNfts = ({
     },
   })
 
+  if (loading) return <ProfileBodyLoadingSkeleton />
+
   return (
     <Column width="full">
       {ownerAssets?.length === 0 ? (
-        <EmptyWalletContent />
+        <EmptyStateContainer>
+          <EmptyWalletModule />
+        </EmptyStateContainer>
       ) : (
         <AnimatedBox
           flexShrink="0"
@@ -242,30 +251,27 @@ const ProfilePageNfts = ({
             />
           </Row>
           <InfiniteScroll
-            next={() => loadNext(DEFAULT_WALLET_ASSET_QUERY_AMOUNT)}
-            hasMore={hasNext}
+            next={loadMore}
+            hasMore={hasNext ?? false}
             loader={
-              <Center>
-                <LoadingSparkle />
-              </Center>
+              Boolean(hasNext && ownerAssets?.length) && <LoadingAssets count={DEFAULT_WALLET_ASSET_QUERY_AMOUNT} />
             }
             dataLength={ownerAssets?.length ?? 0}
+            className={ownerAssets?.length ? assetList : undefined}
             style={{ overflow: 'unset' }}
           >
-            <div className={assetList}>
-              {ownerAssets?.length
-                ? ownerAssets.map((asset, index) => (
-                    <div key={index}>
-                      <ViewMyNftsAsset
-                        asset={asset}
-                        mediaShouldBePlaying={asset.tokenId === currentTokenPlayingMedia}
-                        setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
-                        hideDetails={sellAssets.length > 0}
-                      />
-                    </div>
-                  ))
-                : null}
-            </div>
+            {ownerAssets?.length
+              ? ownerAssets.map((asset, index) => (
+                  <div key={index}>
+                    <ViewMyNftsAsset
+                      asset={asset}
+                      mediaShouldBePlaying={asset.tokenId === currentTokenPlayingMedia}
+                      setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
+                      hideDetails={sellAssets.length > 0}
+                    />
+                  </div>
+                ))
+              : null}
           </InfiniteScroll>
         </AnimatedBox>
       )}
@@ -307,7 +313,7 @@ const CollectionFilterItem = ({
   collection,
   setCollectionFilters,
 }: {
-  collection: WalletCollection | undefined
+  collection?: WalletCollection
   setCollectionFilters: (address: string) => void
 }) => {
   if (!collection) return null

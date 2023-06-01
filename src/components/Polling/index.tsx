@@ -3,35 +3,48 @@ import { useWeb3React } from '@web3-react/core'
 import { RowFixed } from 'components/Row'
 import { getChainInfo } from 'constants/chainInfo'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
-import useGasPrice from 'hooks/useGasPrice'
+import { useIsLandingPage } from 'hooks/useIsLandingPage'
 import { useIsNftPage } from 'hooks/useIsNftPage'
 import useMachineTimeMs from 'hooks/useMachineTime'
-import JSBI from 'jsbi'
 import useBlockNumber from 'lib/hooks/useBlockNumber'
 import ms from 'ms.macro'
-import { useEffect, useState } from 'react'
-import styled, { keyframes, useTheme } from 'styled-components/macro'
+import { useEffect, useMemo, useState } from 'react'
+import styled, { keyframes } from 'styled-components/macro'
 import { ExternalLink, ThemedText } from 'theme'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 import { MouseoverTooltip } from '../Tooltip'
 import { ChainConnectivityWarning } from './ChainConnectivityWarning'
 
-const StyledPolling = styled.div<{ warning: boolean }>`
-  position: fixed;
-  display: flex;
+const StyledPolling = styled.div`
   align-items: center;
   left: 0;
   bottom: 0;
+  color: ${({ theme }) => theme.textTertiary};
+  display: none;
   padding: 1rem;
-  color: ${({ theme, warning }) => (warning ? theme.deprecated_yellow3 : theme.deprecated_green1)};
+  position: fixed;
+  right: 0;
   transition: 250ms ease color;
 
-  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
-    display: none;
-  `}
+  a {
+    color: unset;
+  }
+  a:hover {
+    color: unset;
+    text-decoration: none;
+  }
+
+  @media screen and (min-width: ${({ theme }) => theme.breakpoint.md}px) {
+    display: flex;
+  }
 `
-const StyledPollingNumber = styled(ThemedText.DeprecatedSmall)<{ breathe: boolean; hovering: boolean }>`
+const StyledPollingBlockNumber = styled(ThemedText.DeprecatedSmall)<{
+  breathe: boolean
+  hovering: boolean
+  warning: boolean
+}>`
+  color: ${({ theme, warning }) => (warning ? theme.deprecated_yellow3 : theme.accentSuccess)};
   transition: opacity 0.25s ease;
   opacity: ${({ breathe, hovering }) => (hovering ? 0.7 : breathe ? 1 : 0.5)};
   :hover {
@@ -53,19 +66,8 @@ const StyledPollingDot = styled.div<{ warning: boolean }>`
   min-width: 8px;
   border-radius: 50%;
   position: relative;
-  background-color: ${({ theme, warning }) => (warning ? theme.deprecated_yellow3 : theme.deprecated_green1)};
+  background-color: ${({ theme, warning }) => (warning ? theme.deprecated_yellow3 : theme.accentSuccess)};
   transition: 250ms ease background-color;
-`
-
-const StyledGasDot = styled.div`
-  background-color: ${({ theme }) => theme.deprecated_text3};
-  border-radius: 50%;
-  height: 4px;
-  min-height: 4px;
-  min-width: 4px;
-  position: relative;
-  transition: 250ms ease background-color;
-  width: 4px;
 `
 
 const rotate360 = keyframes`
@@ -84,7 +86,7 @@ const Spinner = styled.div<{ warning: boolean }>`
   border-top: 1px solid transparent;
   border-right: 1px solid transparent;
   border-bottom: 1px solid transparent;
-  border-left: 2px solid ${({ theme, warning }) => (warning ? theme.deprecated_yellow3 : theme.deprecated_green1)};
+  border-left: 2px solid ${({ theme, warning }) => (warning ? theme.deprecated_yellow3 : theme.accentSuccess)};
   background: transparent;
   width: 14px;
   height: 14px;
@@ -106,11 +108,8 @@ export default function Polling() {
   const [isHover, setIsHover] = useState(false)
   const machineTime = useMachineTimeMs(NETWORK_HEALTH_CHECK_MS)
   const blockTime = useCurrentBlockTimestamp()
-  const theme = useTheme()
   const isNftPage = useIsNftPage()
-
-  const ethGasPrice = useGasPrice()
-  const priceGwei = ethGasPrice ? JSBI.divide(ethGasPrice, JSBI.BigInt(1000000000)) : undefined
+  const isLandingPage = useIsLandingPage()
 
   const waitMsBeforeWarning =
     (chainId ? getChainInfo(chainId)?.blockWaitMsBeforeWarning : DEFAULT_MS_BEFORE_WARNING) ?? DEFAULT_MS_BEFORE_WARNING
@@ -137,46 +136,30 @@ export default function Polling() {
 
   //TODO - chainlink gas oracle is really slow. Can we get a better data source?
 
-  return isNftPage ? null : (
-    <>
-      <RowFixed>
-        <StyledPolling onMouseEnter={() => setIsHover(true)} onMouseLeave={() => setIsHover(false)} warning={warning}>
-          <ExternalLink href="https://etherscan.io/gastracker">
-            {priceGwei ? (
-              <RowFixed style={{ marginRight: '8px' }}>
-                <ThemedText.DeprecatedMain fontSize="11px" mr="8px" color={theme.deprecated_text3}>
-                  <MouseoverTooltip
-                    text={
-                      <Trans>
-                        The current fast gas amount for sending a transaction on L1. Gas fees are paid in
-                        Ethereum&apos;s native currency Ether (ETH) and denominated in GWEI.
-                      </Trans>
-                    }
-                  >
-                    {priceGwei.toString()} <Trans>gwei</Trans>
-                  </MouseoverTooltip>
-                </ThemedText.DeprecatedMain>
-                <StyledGasDot />
-              </RowFixed>
-            ) : null}
-          </ExternalLink>
-          <StyledPollingNumber breathe={isMounting} hovering={isHover}>
-            <ExternalLink
-              href={
-                chainId && blockNumber ? getExplorerLink(chainId, blockNumber.toString(), ExplorerDataType.BLOCK) : ''
-              }
+  const blockExternalLinkHref = useMemo(() => {
+    if (!chainId || !blockNumber) return ''
+    return getExplorerLink(chainId, blockNumber.toString(), ExplorerDataType.BLOCK)
+  }, [blockNumber, chainId])
+
+  if (isNftPage || isLandingPage) {
+    return null
+  }
+
+  return (
+    <RowFixed>
+      <StyledPolling onMouseEnter={() => setIsHover(true)} onMouseLeave={() => setIsHover(false)}>
+        <StyledPollingBlockNumber breathe={isMounting} hovering={isHover} warning={warning}>
+          <ExternalLink href={blockExternalLinkHref}>
+            <MouseoverTooltip
+              text={<Trans>The most recent block number on this network. Prices update on every block.</Trans>}
             >
-              <MouseoverTooltip
-                text={<Trans>The most recent block number on this network. Prices update on every block.</Trans>}
-              >
-                {blockNumber}&ensp;
-              </MouseoverTooltip>
-            </ExternalLink>
-          </StyledPollingNumber>
-          <StyledPollingDot warning={warning}>{isMounting && <Spinner warning={warning} />}</StyledPollingDot>{' '}
-        </StyledPolling>
-        {warning && <ChainConnectivityWarning />}
-      </RowFixed>
-    </>
+              {blockNumber}&ensp;
+            </MouseoverTooltip>
+          </ExternalLink>
+        </StyledPollingBlockNumber>
+        <StyledPollingDot warning={warning}>{isMounting && <Spinner warning={warning} />}</StyledPollingDot>{' '}
+      </StyledPolling>
+      {warning && <ChainConnectivityWarning />}
+    </RowFixed>
   )
 }

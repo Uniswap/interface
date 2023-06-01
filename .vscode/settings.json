@@ -5,7 +5,7 @@
   "editor.formatOnSaveMode": "file",
   "editor.tabCompletion": "on",
   "editor.tabSize": 2,
-  "editor.formatOnSave": true,
+  "editor.formatOnSave": false,
   "editor.inlineSuggest.enabled": true,
   "editor.codeActionsOnSave": {
     "source.fixAll": true
@@ -13,7 +13,13 @@
   "files.eol": "\n",
   "eslint.enable": true,
   "eslint.debug": true,
+  "[javascript]": {
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+  },
   "[typescript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  }
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+  },
 }

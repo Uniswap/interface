@@ -1,18 +1,20 @@
-import clsx from 'clsx'
+import { OpacityHoverState } from 'components/Common'
+import { NftActivityType } from 'graphql/data/__generated__/types-and-hooks'
+import { useNftActivity } from 'graphql/data/nft/NftActivity'
 import { Box } from 'nft/components/Box'
-import { LoadingSparkle } from 'nft/components/common/Loading/LoadingSparkle'
-import { Center, Column, Row } from 'nft/components/Flex'
+import { Column, Row } from 'nft/components/Flex'
+import { themeVars, vars } from 'nft/css/sprinkles.css'
 import { useBag, useIsMobile } from 'nft/hooks'
-import { ActivityFetcher } from 'nft/queries/genie/ActivityFetcher'
-import { ActivityEvent, ActivityEventResponse, ActivityEventType } from 'nft/types'
+import { ActivityEvent, ActivityEventType } from 'nft/types'
 import { fetchPrice } from 'nft/utils/fetchPrice'
-import { useCallback, useEffect, useMemo, useReducer, useState } from 'react'
+import { useCallback, useEffect, useReducer, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
-import { useInfiniteQuery } from 'react-query'
+import styled from 'styled-components/macro'
+import { useIsDarkMode } from 'theme/components/ThemeToggle'
 
 import * as styles from './Activity.css'
 import { AddressCell, BuyCell, EventCell, ItemCell, PriceCell } from './ActivityCells'
-import { ActivityLoader } from './ActivityLoader'
+import { ActivityLoader, ActivityPageLoader } from './ActivityLoader'
 
 enum ColumnHeaders {
   Item = 'Item',
@@ -21,6 +23,12 @@ enum ColumnHeaders {
   By = 'By',
   To = 'To',
 }
+
+const FilterBox = styled.div<{ backgroundColor: string }>`
+  display: flex;
+  background: ${({ backgroundColor }) => backgroundColor};
+  ${OpacityHoverState};
+`
 
 export const HeaderRow = () => {
   return (
@@ -58,47 +66,21 @@ export const Activity = ({ contractAddress, rarityVerified, collectionName, chai
   const [activeFilters, filtersDispatch] = useReducer(reduceFilters, initialFilterState)
 
   const {
-    data: eventsData,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    isSuccess,
-    isLoading,
-  } = useInfiniteQuery<ActivityEventResponse>(
-    [
-      'collectionActivity',
-      {
-        contractAddress,
-        activeFilters,
-      },
-    ],
-    async ({ pageParam = '' }) => {
-      return await ActivityFetcher(
-        contractAddress,
-        {
-          eventTypes: Object.keys(activeFilters)
-            .filter((key) => activeFilters[key as ActivityEventType])
-            .map((key) => key as ActivityEventType),
-        },
-        pageParam
-      )
-    },
+    nftActivity,
+    hasNext: hasNextActivity,
+    loadMore: loadMoreActivities,
+    loading: activitiesAreLoading,
+  } = useNftActivity(
     {
-      getNextPageParam: (lastPage) => {
-        return lastPage.events?.length === 25 ? lastPage.cursor : undefined
-      },
-      refetchInterval: 15000,
-      refetchIntervalInBackground: false,
-      refetchOnWindowFocus: false,
-      refetchOnMount: false,
-    }
+      activityTypes: Object.keys(activeFilters)
+        .map((key) => key as NftActivityType)
+        .filter((key) => activeFilters[key]),
+      address: contractAddress,
+    },
+    25
   )
 
-  const events = useMemo(
-    () => (isSuccess ? eventsData?.pages.map((page) => page.events).flat() : null),
-    [isSuccess, eventsData]
-  )
-
+  const isLoadingMore = hasNextActivity && nftActivity?.length
   const itemsInBag = useBag((state) => state.itemsInBag)
   const addAssetsToBag = useBag((state) => state.addAssetsToBag)
   const removeAssetsFromBag = useBag((state) => state.removeAssetsFromBag)
@@ -106,6 +88,7 @@ export const Activity = ({ contractAddress, rarityVerified, collectionName, chai
   const toggleCart = useBag((state) => state.toggleBag)
   const isMobile = useIsMobile()
   const [ethPriceInUSD, setEthPriceInUSD] = useState(0)
+  const isDarkMode = useIsDarkMode()
 
   useEffect(() => {
     fetchPrice().then((price) => {
@@ -116,17 +99,19 @@ export const Activity = ({ contractAddress, rarityVerified, collectionName, chai
   const Filter = useCallback(
     function ActivityFilter({ eventType }: { eventType: ActivityEventType }) {
       const isActive = activeFilters[eventType]
+      const activeBackgroundColor = isDarkMode ? vars.color.gray500 : vars.color.gray200
 
       return (
-        <Box
-          className={clsx(styles.filter, isActive && styles.activeFilter)}
+        <FilterBox
+          className={styles.filter}
+          backgroundColor={isActive ? activeBackgroundColor : themeVars.colors.backgroundInteractive}
           onClick={() => filtersDispatch({ eventType })}
         >
           {eventType.charAt(0) + eventType.slice(1).toLowerCase() + 's'}
-        </Box>
+        </FilterBox>
       )
     },
-    [activeFilters]
+    [activeFilters, isDarkMode]
   )
 
   return (
@@ -136,57 +121,63 @@ export const Activity = ({ contractAddress, rarityVerified, collectionName, chai
         <Filter eventType={ActivityEventType.Sale} />
         <Filter eventType={ActivityEventType.Transfer} />
       </Row>
-      {isLoading && <ActivityLoader />}
-      {events && (
-        <Column marginTop="36">
-          <HeaderRow />
-          <InfiniteScroll
-            next={fetchNextPage}
-            hasMore={!!hasNextPage}
-            loader={
-              isFetchingNextPage ? (
-                <Center paddingY="20">
-                  <LoadingSparkle />
-                </Center>
-              ) : null
-            }
-            dataLength={events?.length ?? 0}
-            style={{ overflow: 'unset' }}
-          >
-            {events.map((event, i) => (
-              <Box as="a" href={baseHref(event)} className={styles.eventRow} key={i}>
-                <ItemCell
-                  event={event}
-                  rarityVerified={rarityVerified}
-                  collectionName={collectionName}
-                  eventTimestamp={event.eventTimestamp}
-                  isMobile={isMobile}
-                />
-                <EventCell
-                  eventType={event.eventType}
-                  eventTimestamp={event.eventTimestamp}
-                  eventTransactionHash={event.transactionHash}
-                  price={event.price}
-                  isMobile={isMobile}
-                />
-                <PriceCell marketplace={event.marketplace} price={event.price} />
-                <AddressCell address={event.fromAddress} chainId={chainId} />
-                <AddressCell address={event.toAddress} chainId={chainId} desktopLBreakpoint />
-                <BuyCell
-                  event={event}
-                  collectionName={collectionName}
-                  selectAsset={addAssetsToBag}
-                  removeAsset={removeAssetsFromBag}
-                  itemsInBag={itemsInBag}
-                  cartExpanded={cartExpanded}
-                  toggleCart={toggleCart}
-                  isMobile={isMobile}
-                  ethPriceInUSD={ethPriceInUSD}
-                />
-              </Box>
-            ))}
-          </InfiniteScroll>
-        </Column>
+      {activitiesAreLoading ? (
+        <ActivityLoader />
+      ) : (
+        nftActivity && (
+          <Column marginTop="36">
+            <HeaderRow />
+            <InfiniteScroll
+              next={loadMoreActivities}
+              hasMore={!!hasNextActivity}
+              loader={isLoadingMore ? <ActivityPageLoader rowCount={2} /> : null}
+              dataLength={nftActivity?.length ?? 0}
+              style={{ overflow: 'unset' }}
+            >
+              {nftActivity.map(
+                (event, i) =>
+                  event.eventType && (
+                    <Box
+                      as="a"
+                      data-testid="nft-activity-row"
+                      href={baseHref(event)}
+                      className={styles.eventRow}
+                      key={i}
+                    >
+                      <ItemCell
+                        event={event}
+                        rarityVerified={rarityVerified}
+                        collectionName={collectionName}
+                        eventTimestamp={event.eventTimestamp}
+                        isMobile={isMobile}
+                      />
+                      <EventCell
+                        eventType={event.eventType}
+                        eventTimestamp={event.eventTimestamp}
+                        eventTransactionHash={event.transactionHash}
+                        price={event.price}
+                        isMobile={isMobile}
+                      />
+                      <PriceCell marketplace={event.marketplace} price={event.price} />
+                      <AddressCell address={event.fromAddress} chainId={chainId} />
+                      <AddressCell address={event.toAddress} chainId={chainId} desktopLBreakpoint />
+                      <BuyCell
+                        event={event}
+                        collectionName={collectionName}
+                        selectAsset={addAssetsToBag}
+                        removeAsset={removeAssetsFromBag}
+                        itemsInBag={itemsInBag}
+                        cartExpanded={cartExpanded}
+                        toggleCart={toggleCart}
+                        isMobile={isMobile}
+                        ethPriceInUSD={ethPriceInUSD}
+                      />
+                    </Box>
+                  )
+              )}
+            </InfiniteScroll>
+          </Column>
+        )
       )}
     </Box>
   )

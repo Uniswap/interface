@@ -237,7 +237,7 @@ export default function DelegateModal({ isOpen, poolInfo, onDismiss, title }: Vo
       )}
       {attempting && !hash && (
         <LoadingView onDismiss={wrappedOnDismiss}>
-          <AutoColumn gap="12px" justify="center">
+          <AutoColumn gap="md" justify="center">
             <ThemedText.DeprecatedLargeHeader>
               {usingDelegate ? <Trans>Staking From Pool</Trans> : <Trans>Unlocking Votes</Trans>}
             </ThemedText.DeprecatedLargeHeader>
@@ -247,7 +247,7 @@ export default function DelegateModal({ isOpen, poolInfo, onDismiss, title }: Vo
       )}
       {hash && (
         <SubmittedView onDismiss={wrappedOnDismiss} hash={hash}>
-          <AutoColumn gap="12px" justify="center">
+          <AutoColumn gap="md" justify="center">
             <ThemedText.DeprecatedLargeHeader>
               <Trans>Transaction Submitted</Trans>
             </ThemedText.DeprecatedLargeHeader>

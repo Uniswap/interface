@@ -35,9 +35,18 @@ export enum TransactionType {
   SUBMIT_PROPOSAL,
   QUEUE,
   EXECUTE,
+  BUY,
+  SEND,
+  RECEIVE,
+  MINT,
+  BURN,
+  BORROW,
+  REPAY,
+  DEPLOY,
+  CANCEL,
 }
 
-export interface BaseTransactionInfo {
+interface BaseTransactionInfo {
   type: TransactionType
 }
 
@@ -92,13 +101,13 @@ export interface ExactOutputSwapTransactionInfo extends BaseSwapTransactionInfo 
   maximumInputCurrencyAmountRaw: string
 }
 
-export interface DepositLiquidityStakingTransactionInfo {
+interface DepositLiquidityStakingTransactionInfo {
   type: TransactionType.DEPOSIT_LIQUIDITY_STAKING
   token0Address: string
   token1Address: string
 }
 
-export interface WithdrawLiquidityStakingTransactionInfo {
+interface WithdrawLiquidityStakingTransactionInfo {
   type: TransactionType.WITHDRAW_LIQUIDITY_STAKING
   token0Address: string
   token1Address: string
@@ -164,7 +173,7 @@ export interface RemoveLiquidityV3TransactionInfo {
   expectedAmountQuoteRaw: string
 }
 
-export interface SubmitProposalTransactionInfo {
+interface SubmitProposalTransactionInfo {
   type: TransactionType.SUBMIT_PROPOSAL
 }
 
@@ -196,4 +205,5 @@ export interface TransactionDetails {
   confirmedTime?: number
   from: string
   info: TransactionInfo
+  nonce?: number
 }

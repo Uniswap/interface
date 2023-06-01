@@ -6,32 +6,29 @@ import { SupportedLocale } from 'constants/locales'
 import { L2_DEADLINE_FROM_NOW } from 'constants/misc'
 import JSBI from 'jsbi'
 import { useCallback, useMemo } from 'react'
-import { shallowEqual } from 'react-redux'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
+import { RouterPreference } from 'state/routing/slice'
 import { UserAddedToken } from 'types/tokens'
 
 import { V2_FACTORY_ADDRESSES } from '../../constants/addresses'
 import { BASES_TO_TRACK_LIQUIDITY_FOR, PINNED_PAIRS } from '../../constants/routing'
-import { useAllTokens } from '../../hooks/Tokens'
-import { AppState } from '../index'
+import { useDefaultActiveTokens } from '../../hooks/Tokens'
+import { AppState } from '../types'
 import {
   addSerializedPair,
   addSerializedToken,
-  removeSerializedToken,
   updateHideClosedPositions,
-  updateHideNFTWelcomeModal,
-  updateShowNftPromoBanner,
-  updateShowSurveyPopup,
-  updateUserClientSideRouter,
-  updateUserDarkMode,
+  updateHideUniswapWalletBanner,
+  updateUserBuyFiatFlowCompleted,
   updateUserDeadline,
   updateUserExpertMode,
   updateUserLocale,
+  updateUserRouterPreference,
   updateUserSlippageTolerance,
 } from './reducer'
-import { SerializedPair, SerializedToken } from './types'
+import { SerializedPair, SerializedToken, SlippageTolerance } from './types'
 
-function serializeToken(token: Token): SerializedToken {
+export function serializeToken(token: Token): SerializedToken {
   return {
     chainId: token.chainId,
     address: token.address,
@@ -41,7 +38,7 @@ function serializeToken(token: Token): SerializedToken {
   }
 }
 
-function deserializeToken(serializedToken: SerializedToken, Class: typeof Token = Token): Token {
+export function deserializeToken(serializedToken: SerializedToken, Class: typeof Token = Token): Token {
   return new Class(
     serializedToken.chainId,
     serializedToken.address,
@@ -49,29 +46,6 @@ function deserializeToken(serializedToken: SerializedToken, Class: typeof Token 
     serializedToken.symbol,
     serializedToken.name
   )
-}
-
-export function useIsDarkMode(): boolean {
-  const { userDarkMode, matchesDarkMode } = useAppSelector(
-    ({ user: { matchesDarkMode, userDarkMode } }) => ({
-      userDarkMode,
-      matchesDarkMode,
-    }),
-    shallowEqual
-  )
-
-  return userDarkMode === null ? matchesDarkMode : userDarkMode
-}
-
-export function useDarkModeManager(): [boolean, () => void] {
-  const dispatch = useAppDispatch()
-  const darkMode = useIsDarkMode()
-
-  const toggleSetDarkMode = useCallback(() => {
-    dispatch(updateUserDarkMode({ userDarkMode: !darkMode }))
-  }, [darkMode, dispatch])
-
-  return [darkMode, toggleSetDarkMode]
 }
 
 export function useUserLocale(): SupportedLocale | null {
@@ -96,6 +70,18 @@ export function useIsExpertMode(): boolean {
   return useAppSelector((state) => state.user.userExpertMode)
 }
 
+export function useBuyFiatFlowCompleted(): [boolean | undefined, (buyFiatFlowCompleted: boolean) => void] {
+  const dispatch = useAppDispatch()
+  const buyFiatFlowCompleted = useAppSelector((state) => state.user.buyFiatFlowCompleted)
+  const setBuyFiatFlowCompleted = useCallback(
+    (buyFiatFlowCompleted: boolean) => {
+      dispatch(updateUserBuyFiatFlowCompleted(buyFiatFlowCompleted))
+    },
+    [dispatch]
+  )
+  return [buyFiatFlowCompleted, setBuyFiatFlowCompleted]
+}
+
 export function useExpertModeManager(): [boolean, () => void] {
   const dispatch = useAppDispatch()
   const expertMode = useIsExpertMode()
@@ -107,63 +93,52 @@ export function useExpertModeManager(): [boolean, () => void] {
   return [expertMode, toggleSetExpertMode]
 }
 
-export function useShowSurveyPopup(): [boolean | undefined, (showPopup: boolean) => void] {
-  const dispatch = useAppDispatch()
-  const showSurveyPopup = useAppSelector((state) => state.user.showSurveyPopup)
-  const toggleShowSurveyPopup = useCallback(
-    (showPopup: boolean) => {
-      dispatch(updateShowSurveyPopup({ showSurveyPopup: showPopup }))
-    },
-    [dispatch]
-  )
-  return [showSurveyPopup, toggleShowSurveyPopup]
-}
-
-export function useHideNFTWelcomeModal(): [boolean | undefined, () => void] {
-  const dispatch = useAppDispatch()
-  const hideNFTWelcomeModal = useAppSelector((state) => state.user.hideNFTWelcomeModal)
-  const hideModal = useCallback(() => {
-    dispatch(updateHideNFTWelcomeModal({ hideNFTWelcomeModal: true }))
-  }, [dispatch])
-  return [hideNFTWelcomeModal, hideModal]
-}
-
-export function useClientSideRouter(): [boolean, (userClientSideRouter: boolean) => void] {
+export function useRouterPreference(): [RouterPreference, (routerPreference: RouterPreference) => void] {
   const dispatch = useAppDispatch()
 
-  const clientSideRouter = useAppSelector((state) => Boolean(state.user.userClientSideRouter))
+  const routerPreference = useAppSelector((state) => state.user.userRouterPreference)
 
-  const setClientSideRouter = useCallback(
-    (newClientSideRouter: boolean) => {
-      dispatch(updateUserClientSideRouter({ userClientSideRouter: newClientSideRouter }))
+  const setRouterPreference = useCallback(
+    (newRouterPreference: RouterPreference) => {
+      dispatch(updateUserRouterPreference({ userRouterPreference: newRouterPreference }))
     },
     [dispatch]
   )
 
-  return [clientSideRouter, setClientSideRouter]
+  return [routerPreference, setRouterPreference]
 }
 
 /**
  * Return the user's slippage tolerance, from the redux store, and a function to update the slippage tolerance
  */
-export function useUserSlippageTolerance(): [Percent | 'auto', (slippageTolerance: Percent | 'auto') => void] {
+export function useUserSlippageTolerance(): [
+  Percent | SlippageTolerance.Auto,
+  (slippageTolerance: Percent | SlippageTolerance.Auto) => void
+] {
   const userSlippageToleranceRaw = useAppSelector((state) => {
     return state.user.userSlippageTolerance
   })
+
+  // TODO(WEB-3291): Keep `userSlippageTolerance` as Percent in Redux store and remove this conversion
   const userSlippageTolerance = useMemo(
-    () => (userSlippageToleranceRaw === 'auto' ? 'auto' : new Percent(userSlippageToleranceRaw, 10_000)),
+    () =>
+      userSlippageToleranceRaw === SlippageTolerance.Auto
+        ? SlippageTolerance.Auto
+        : new Percent(userSlippageToleranceRaw, 10_000),
     [userSlippageToleranceRaw]
   )
 
   const dispatch = useAppDispatch()
   const setUserSlippageTolerance = useCallback(
-    (userSlippageTolerance: Percent | 'auto') => {
-      let value: 'auto' | number
+    (userSlippageTolerance: Percent | SlippageTolerance.Auto) => {
+      let value: SlippageTolerance.Auto | number
       try {
         value =
-          userSlippageTolerance === 'auto' ? 'auto' : JSBI.toNumber(userSlippageTolerance.multiply(10_000).quotient)
+          userSlippageTolerance === SlippageTolerance.Auto
+            ? SlippageTolerance.Auto
+            : JSBI.toNumber(userSlippageTolerance.multiply(10_000).quotient)
       } catch (error) {
-        value = 'auto'
+        value = SlippageTolerance.Auto
       }
       dispatch(
         updateUserSlippageTolerance({
@@ -174,10 +149,16 @@ export function useUserSlippageTolerance(): [Percent | 'auto', (slippageToleranc
     [dispatch]
   )
 
-  return useMemo(
-    () => [userSlippageTolerance, setUserSlippageTolerance],
-    [setUserSlippageTolerance, userSlippageTolerance]
-  )
+  return [userSlippageTolerance, setUserSlippageTolerance]
+}
+
+/**
+ *Returns user slippage tolerance, replacing the auto with a default value
+ * @param defaultSlippageTolerance the value to replace auto with
+ */
+export function useUserSlippageToleranceWithDefault(defaultSlippageTolerance: Percent): Percent {
+  const [allowedSlippage] = useUserSlippageTolerance()
+  return allowedSlippage === SlippageTolerance.Auto ? defaultSlippageTolerance : allowedSlippage
 }
 
 export function useUserHideClosedPositions(): [boolean, (newHideClosedPositions: boolean) => void] {
@@ -193,18 +174,6 @@ export function useUserHideClosedPositions(): [boolean, (newHideClosedPositions:
   )
 
   return [hideClosedPositions, setHideClosedPositions]
-}
-
-/**
- * Same as above but replaces the auto with a default value
- * @param defaultSlippageTolerance the default value to replace auto with
- */
-export function useUserSlippageToleranceWithDefault(defaultSlippageTolerance: Percent): Percent {
-  const allowedSlippage = useUserSlippageTolerance()[0]
-  return useMemo(
-    () => (allowedSlippage === 'auto' ? defaultSlippageTolerance : allowedSlippage),
-    [allowedSlippage, defaultSlippageTolerance]
-  )
 }
 
 export function useUserTransactionTTL(): [number, (slippage: number) => void] {
@@ -234,17 +203,7 @@ export function useAddUserToken(): (token: Token) => void {
   )
 }
 
-export function useRemoveUserAddedToken(): (chainId: number, address: string) => void {
-  const dispatch = useAppDispatch()
-  return useCallback(
-    (chainId: number, address: string) => {
-      dispatch(removeSerializedToken({ chainId, address }))
-    },
-    [dispatch]
-  )
-}
-
-export function useUserAddedTokensOnChain(chainId: number | undefined | null): Token[] {
+function useUserAddedTokensOnChain(chainId: number | undefined | null): Token[] {
   const serializedTokensMap = useAppSelector(({ user: { tokens } }) => tokens)
 
   return useMemo(() => {
@@ -282,15 +241,15 @@ export function useURLWarningVisible(): boolean {
   return useAppSelector((state: AppState) => state.user.URLWarningVisible)
 }
 
-export function useHideNftPromoBanner(): [boolean, () => void] {
+export function useHideUniswapWalletBanner(): [boolean, () => void] {
   const dispatch = useAppDispatch()
-  const hideNftPromoBanner = useAppSelector((state) => state.user.hideNFTPromoBanner)
+  const hideUniswapWalletBanner = useAppSelector((state) => state.user.hideUniswapWalletBanner)
 
-  const toggleHideNftPromoBanner = useCallback(() => {
-    dispatch(updateShowNftPromoBanner({ hideNFTPromoBanner: true }))
+  const toggleHideUniswapWalletBanner = useCallback(() => {
+    dispatch(updateHideUniswapWalletBanner({ hideUniswapWalletBanner: true }))
   }, [dispatch])
 
-  return [hideNftPromoBanner, toggleHideNftPromoBanner]
+  return [hideUniswapWalletBanner, toggleHideUniswapWalletBanner]
 }
 
 /**
@@ -317,7 +276,7 @@ export function toV2LiquidityToken([tokenA, tokenB]: [Token, Token]): Token {
  */
 export function useTrackedTokenPairs(): [Token, Token][] {
   const { chainId } = useWeb3React()
-  const tokens = useAllTokens()
+  const tokens = useDefaultActiveTokens(chainId)
 
   // pinned pairs
   const pinnedPairs = useMemo(() => (chainId ? PINNED_PAIRS[chainId] ?? [] : []), [chainId])

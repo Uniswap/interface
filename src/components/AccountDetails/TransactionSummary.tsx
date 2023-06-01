@@ -14,18 +14,15 @@ import {
   CollectFeesTransactionInfo,
   CreateV3PoolTransactionInfo,
   DelegateTransactionInfo,
-  DepositLiquidityStakingTransactionInfo,
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,
   ExecuteTransactionInfo,
   MigrateV2LiquidityToV3TransactionInfo,
   QueueTransactionInfo,
   RemoveLiquidityV3TransactionInfo,
-  SubmitProposalTransactionInfo,
   TransactionInfo,
   TransactionType,
   VoteTransactionInfo,
-  WithdrawLiquidityStakingTransactionInfo,
   WrapTransactionInfo,
 } from '../../state/transactions/types'
 
@@ -83,7 +80,7 @@ function ClaimSummary({ info: { recipient, uniAmountRaw } }: { info: ClaimTransa
   )
 }
 
-function SubmitProposalTransactionSummary(_: { info: SubmitProposalTransactionInfo }) {
+function SubmitProposalTransactionSummary() {
   return <Trans>Submit new proposal</Trans>
 }
 
@@ -175,13 +172,13 @@ function WrapSummary({ info: { chainId, currencyAmountRaw, unwrapped } }: { info
   }
 }
 
-function DepositLiquidityStakingSummary(_: { info: DepositLiquidityStakingTransactionInfo }) {
+function DepositLiquidityStakingSummary() {
   // not worth rendering the tokens since you can should no longer deposit liquidity in the staking contracts
   // todo: deprecate and delete the code paths that allow this, show user more information
   return <Trans>Deposit liquidity</Trans>
 }
 
-function WithdrawLiquidityStakingSummary(_: { info: WithdrawLiquidityStakingTransactionInfo }) {
+function WithdrawLiquidityStakingSummary() {
   return <Trans>Withdraw deposited liquidity</Trans>
 }
 
@@ -319,10 +316,10 @@ export function TransactionSummary({ info }: { info: TransactionInfo }) {
       return <ClaimSummary info={info} />
 
     case TransactionType.DEPOSIT_LIQUIDITY_STAKING:
-      return <DepositLiquidityStakingSummary info={info} />
+      return <DepositLiquidityStakingSummary />
 
     case TransactionType.WITHDRAW_LIQUIDITY_STAKING:
-      return <WithdrawLiquidityStakingSummary info={info} />
+      return <WithdrawLiquidityStakingSummary />
 
     case TransactionType.SWAP:
       return <SwapSummary info={info} />
@@ -358,6 +355,6 @@ export function TransactionSummary({ info }: { info: TransactionInfo }) {
       return <ExecuteSummary info={info} />
 
     case TransactionType.SUBMIT_PROPOSAL:
-      return <SubmitProposalTransactionSummary info={info} />
+      return <SubmitProposalTransactionSummary />
   }
 }

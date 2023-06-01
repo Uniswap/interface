@@ -1,13 +1,13 @@
 import { Trans } from '@lingui/macro'
 import { Trace } from '@uniswap/analytics'
-import { PageName } from '@uniswap/analytics-events'
+import { InterfacePageName } from '@uniswap/analytics-events'
 //import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { ButtonPrimary } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import { CardBGImage, CardNoise, CardSection, DataCard } from 'components/earn/styled'
 //import FormattedCurrencyAmount from 'components/FormattedCurrencyAmount'
-import Loader from 'components/Loader'
+import Loader from 'components/Icons/LoadingSpinner'
 import { AutoRow, RowBetween, RowFixed } from 'components/Row'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import Toggle from 'components/Toggle'
@@ -60,14 +60,14 @@ const Proposal = styled(Button)`
   text-align: left;
   outline: none;
   cursor: pointer;
-  color: ${({ theme }) => theme.deprecated_text1};
+  color: ${({ theme }) => theme.textPrimary};
   text-decoration: none;
   background-color: ${({ theme }) => theme.deprecated_bg1};
   &:focus {
     background-color: ${({ theme }) => darken(0.05, theme.deprecated_bg1)};
   }
   &:hover {
-    background-color: ${({ theme }) => theme.deprecated_bg2};
+    background-color: ${({ theme }) => theme.backgroundInteractive};
   }
 `
 
@@ -98,7 +98,7 @@ const WrapSmall = styled(RowBetween)`
 `
 
 const TextButton = styled(ThemedText.DeprecatedMain)`
-  color: ${({ theme }) => theme.deprecated_primary1};
+  color: ${({ theme }) => theme.accentAction};
   :hover {
     cursor: pointer;
     text-decoration: underline;
@@ -106,16 +106,16 @@ const TextButton = styled(ThemedText.DeprecatedMain)`
 `
 
 const AddressButton = styled.div`
-  border: 1px solid ${({ theme }) => theme.deprecated_bg3};
   padding: 2px 4px;
   border-radius: 8px;
   display: flex;
   justify-content: center;
   align-items: center;
+  color: ${({ theme }) => theme.accentAction};
 `
 
 const StyledExternalLink = styled(ExternalLink)`
-  color: ${({ theme }) => theme.deprecated_text1};
+  color: ${({ theme }) => theme.textPrimary};
 `
 
 export default function Landing() {
@@ -147,7 +147,7 @@ export default function Landing() {
   const showUnlockVoting = true
   return (
     <>
-      <Trace page={PageName.VOTE_PAGE} shouldLogImpression>
+      <Trace page={InterfacePageName.VOTE_PAGE} shouldLogImpression>
         <PageWrapper gap="lg" justify="center">
           <DelegateModal
             isOpen={showDelegateModal}
@@ -175,7 +175,7 @@ export default function Landing() {
                   </RowBetween>
                   <ExternalLink
                     style={{
-                      color: theme.deprecated_white,
+                      color: theme.white,
                       textDecoration: 'underline',
                     }}
                     href="https://docs.rigoblock.com/governance/rigoblock-governance"
@@ -200,7 +200,7 @@ export default function Landing() {
                 {loadingProposals ? <Loader /> : null}
                 {showUnlockVoting && (
                   <ButtonPrimary
-                    style={{ width: 'fit-content' }}
+                    style={{ width: 'fit-content', height: '40px' }}
                     padding="8px"
                     $borderRadius="8px"
                     onClick={toggleDelegateModal}
@@ -241,7 +241,7 @@ export default function Landing() {
                 <ButtonPrimary
                   as={Link}
                   to="/create-proposal"
-                  style={{ width: 'fit-content', borderRadius: '8px' }}
+                  style={{ width: 'fit-content', borderRadius: '8px', height: '40px' }}
                   padding="8px"
                 >
                   <Trans>Create Proposal</Trans>
@@ -278,6 +278,7 @@ export default function Landing() {
 
             {allProposals?.length > 0 && (
               <AutoColumn gap="md">
+                <RowBetween></RowBetween>
                 <RowBetween>
                   <ThemedText.DeprecatedMain>
                     <Trans>Show Cancelled</Trans>

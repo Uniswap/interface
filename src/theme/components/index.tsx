@@ -2,19 +2,27 @@ import { Trans } from '@lingui/macro'
 import { outboundLink } from 'components/analytics'
 import { MOBILE_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import useCopyClipboard from 'hooks/useCopyClipboard'
-import React, { forwardRef, HTMLProps, ReactNode, useCallback, useImperativeHandle, useState } from 'react'
+import React, {
+  forwardRef,
+  HTMLProps,
+  PropsWithChildren,
+  ReactNode,
+  useCallback,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from 'react'
 import {
+  AlertTriangle,
   ArrowLeft,
   CheckCircle,
   Copy,
   ExternalLink as ExternalLinkIconFeather,
-  Link as LinkIconFeather,
-  Trash,
+  Icon,
   X,
 } from 'react-feather'
 import { Link } from 'react-router-dom'
 import styled, { css, keyframes } from 'styled-components/macro'
-import { flexRowNoWrap } from 'theme/styles'
 import { Z_INDEX } from 'theme/zIndex'
 
 import { ReactComponent as TooltipTriangle } from '../../assets/svg/tooltip_triangle.svg'
@@ -23,7 +31,7 @@ import { anonymizeLink } from '../../utils/anonymizeLink'
 // TODO: Break this file into a components folder
 
 export const CloseIcon = styled(X)<{ onClick: () => void }>`
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.textPrimary};
   cursor: pointer;
 `
 
@@ -48,7 +56,7 @@ export const LinkStyledButton = styled.button<{ disabled?: boolean }>`
   background: none;
 
   cursor: ${({ disabled }) => (disabled ? 'default' : 'pointer')};
-  color: ${({ theme, disabled }) => (disabled ? theme.deprecated_text2 : theme.deprecated_primary1)};
+  color: ${({ theme, disabled }) => (disabled ? theme.textSecondary : theme.accentAction)};
   font-weight: 500;
 
   :hover {
@@ -84,6 +92,12 @@ export const ButtonText = styled.button`
   :focus {
     text-decoration: underline;
   }
+`
+
+export const EllipsisStyle = css`
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `
 
 export const ClickableStyle = css`
@@ -136,17 +150,6 @@ const CopyIcon = styled(Copy)`
   stroke: ${({ theme }) => theme.accentAction};
 `
 
-export const TrashIcon = styled(Trash)`
-  ${ClickableStyle}
-  ${IconStyle}
-  stroke: ${({ theme }) => theme.deprecated_text3};
-
-  cursor: pointer;
-  align-items: center;
-  justify-content: center;
-  display: flex;
-`
-
 const rotateImg = keyframes`
   0% {
     transform: perspective(1000px) rotateY(0deg);
@@ -186,6 +189,12 @@ const StyledLink = styled.a`
   ${ClickableStyle}
   ${LinkStyle}
 `
+
+export const StyledRouterLink = styled(Link)`
+  ${ClickableStyle}
+  ${LinkStyle}
+`
+
 /**
  * Outbound link that handles firing google analytics events
  */
@@ -262,16 +271,24 @@ const CopyIconWrapper = styled.div`
   display: flex;
 `
 
-export function CopyLinkIcon({ toCopy }: { toCopy: string }) {
+export function CopyToClipboard({ toCopy, children }: PropsWithChildren<{ toCopy: string }>) {
   const [isCopied, setCopied] = useCopyClipboard()
   const copy = useCallback(() => {
     setCopied(toCopy)
   }, [toCopy, setCopied])
   return (
     <CopyIconWrapper onClick={copy}>
-      <CopyIcon />
+      {children}
       {isCopied && <Tooltip isCopyContractTooltip={false} />}
     </CopyIconWrapper>
+  )
+}
+
+export function CopyLinkIcon({ toCopy }: { toCopy: string }) {
+  return (
+    <CopyToClipboard toCopy={toCopy}>
+      <CopyIcon />
+    </CopyToClipboard>
   )
 }
 
@@ -329,34 +346,33 @@ export function CopyContractAddress({ address }: { address: string }) {
   )
 }
 
-const CopyHelperContainer = styled(LinkStyledButton)<{ clicked: boolean }>`
-  ${({ clicked }) => !clicked && ClickableStyle};
-  color: ${({ color, theme }) => color || theme.accentAction};
-  padding: 0;
-  flex-shrink: 0;
+const CopyHelperContainer = styled.div<{ clicked: boolean; color?: string; gap: number }>`
+  ${ClickableStyle}
   display: flex;
-  text-decoration: none;
-  :hover,
-  :active,
-  :focus {
-    text-decoration: none;
-    color: ${({ color, theme }) => color || theme.accentAction};
-  }
-`
-
-const CopyHelperText = styled.span<{ fontSize: number }>`
-  ${flexRowNoWrap};
-  font-size: ${({ fontSize }) => fontSize + 'px'};
-  font-weight: 400;
+  flex-direction: row;
+  gap: ${({ gap }) => gap + 'px'};
   align-items: center;
+  color: ${({ color }) => color ?? 'inherit'};
 `
 
-const CopiedIcon = styled(CheckCircle)`
+const CopyHelperText = styled.div<{ fontSize?: number; offset: number }>`
+  ${EllipsisStyle}
+  ${({ fontSize }) => (fontSize ? 'font-size: ' + fontSize + 'px' : 'inherit')};
+  max-width: calc(100% - ${({ offset }) => offset + 'px'});
+`
+
+const StyledCheckCircle = styled(CheckCircle)`
   color: ${({ theme }) => theme.accentSuccess};
   stroke-width: 1.5px;
 `
+
+function isEllipsisActive(element: HTMLDivElement | null) {
+  return Boolean(element && element.offsetWidth < element.scrollWidth)
+}
+
 interface CopyHelperProps {
-  link?: boolean
+  InitialIcon?: Icon | null
+  CopiedIcon?: Icon
   toCopy: string
   color?: string
   fontSize?: number
@@ -371,14 +387,15 @@ export type CopyHelperRefType = { forceCopy: () => void }
 export const CopyHelper = forwardRef<CopyHelperRefType, CopyHelperProps>(
   (
     {
-      link,
+      InitialIcon = Copy,
+      CopiedIcon = StyledCheckCircle,
       toCopy,
       color,
-      fontSize = 16,
+      fontSize,
       iconSize = 20,
-      gap = 12,
+      gap = 4,
       iconPosition = 'left',
-      iconColor,
+      iconColor = 'currentColor',
       children,
     }: CopyHelperProps,
     ref
@@ -394,15 +411,35 @@ export const CopyHelper = forwardRef<CopyHelperRefType, CopyHelperProps>(
       },
     }))
 
-    const BaseIcon = isCopied ? CopiedIcon : link ? LinkIconFeather : Copy
+    // Detects is text is ellipsing in order to shorten gap caused by extra space browsers add after ... chars
+    const textRef = useRef<HTMLDivElement>(null)
+    const isEllipsis = isEllipsisActive(textRef.current)
+    const displayGap = isEllipsis ? gap - 4 : gap
 
+    const [isHover, setIsHover] = useState(false)
+    const onHover = useCallback(() => setIsHover(true), [])
+    const offHover = useCallback(() => setIsHover(false), [])
+
+    // Copy-helpers w/ left icon always show icon & display "Copied!" in copied state
+    // Copy-helpers w/ right icon show icon on hover & do not change text
+    const showIcon = Boolean(iconPosition === 'left' || isHover || isCopied)
+    const Icon = isCopied ? CopiedIcon : showIcon ? InitialIcon : null
+    const offset = showIcon ? gap + iconSize : 0
     return (
-      <CopyHelperContainer onClick={copy} color={color} clicked={isCopied}>
-        <div style={{ display: 'flex', flexDirection: 'row', gap }}>
-          {iconPosition === 'left' && <BaseIcon size={iconSize} strokeWidth={1.5} color={iconColor} />}
-          <CopyHelperText fontSize={fontSize}>{isCopied ? <Trans>Copied!</Trans> : children}</CopyHelperText>
-          {iconPosition === 'right' && <BaseIcon size={iconSize} strokeWidth={1.5} color={iconColor} />}
-        </div>
+      <CopyHelperContainer
+        onClick={copy}
+        color={color}
+        clicked={isCopied}
+        gap={displayGap}
+        onMouseEnter={onHover}
+        onMouseLeave={offHover}
+      >
+        {iconPosition === 'left' && Icon && <Icon size={iconSize} strokeWidth={1.5} color={iconColor} />}
+        <CopyHelperText ref={textRef} fontSize={fontSize} offset={offset}>
+          {isCopied && iconPosition === 'left' ? <Trans>Copied!</Trans> : children}
+        </CopyHelperText>
+        <div style={{ clear: 'both' }} />
+        {iconPosition === 'right' && Icon && <Icon size={iconSize} strokeWidth={1.5} color={iconColor} />}
       </CopyHelperContainer>
     )
   }
@@ -430,14 +467,15 @@ export const SpinnerSVG = styled.svg`
   ${SpinnerCss}
 `
 
-const BackArrowLink = styled(StyledInternalLink)`
-  color: ${({ theme }) => theme.deprecated_text1};
+const BackArrowIcon = styled(ArrowLeft)`
+  color: ${({ theme }) => theme.textPrimary};
 `
-export function BackArrow({ to }: { to: string }) {
+
+export function BackArrowLink({ to }: { to: string }) {
   return (
-    <BackArrowLink to={to}>
-      <ArrowLeft />
-    </BackArrowLink>
+    <StyledInternalLink to={to}>
+      <BackArrowIcon />
+    </StyledInternalLink>
   )
 }
 
@@ -481,4 +519,16 @@ export const Separator = styled.div`
 export const GlowEffect = styled.div`
   border-radius: 32px;
   box-shadow: ${({ theme }) => theme.networkDefaultShadow};
+`
+
+export const CautionTriangle = styled(AlertTriangle)`
+  color: ${({ theme }) => theme.accentWarning};
+`
+
+export const Divider = styled.div`
+  width: 100%;
+  height: 1px;
+  border-width: 0;
+  margin: 0;
+  background-color: ${({ theme }) => theme.backgroundOutline};
 `

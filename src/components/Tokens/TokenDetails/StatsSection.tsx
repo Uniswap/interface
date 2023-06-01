@@ -1,25 +1,25 @@
 import { Trans } from '@lingui/macro'
 import { formatNumber, NumberType } from '@uniswap/conedison/format'
+import { MouseoverTooltip } from 'components/Tooltip'
+import { getChainInfo } from 'constants/chainInfo'
+import { SupportedChainId } from 'constants/chains'
 import { ReactNode } from 'react'
 import styled from 'styled-components/macro'
-import { ThemedText } from 'theme'
+import { ExternalLink, ThemedText } from 'theme'
 import { textFadeIn } from 'theme/styles'
 
+import { UNSUPPORTED_METADATA_CHAINS } from '../constants'
 import { TokenSortMethod } from '../state'
 import { HEADER_DESCRIPTIONS } from '../TokenTable/TokenRow'
-import InfoTip from './InfoTip'
 
 export const StatWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
   color: ${({ theme }) => theme.textSecondary};
   font-size: 14px;
   min-width: 168px;
   flex: 1;
-  gap: 4px;
   padding: 24px 0px;
 `
-export const TokenStatsSection = styled.div`
+const TokenStatsSection = styled.div`
   display: flex;
   flex-wrap: wrap;
 `
@@ -32,12 +32,9 @@ export const StatPair = styled.div`
 const Header = styled(ThemedText.MediumHeader)`
   font-size: 28px !important;
 `
-const StatTitle = styled.div`
-  display: flex;
-  flex-direction: row;
-  gap: 4px;
-`
-const StatPrice = styled.span`
+
+const StatPrice = styled.div`
+  margin-top: 4px;
   font-size: 28px;
   color: ${({ theme }) => theme.textPrimary};
 `
@@ -52,50 +49,52 @@ export const StatsWrapper = styled.div`
 type NumericStat = number | undefined | null
 
 function Stat({
+  dataCy,
   value,
   title,
   description,
-  isPrice = false,
 }: {
+  dataCy: string
   value: NumericStat
   title: ReactNode
   description?: ReactNode
-  isPrice?: boolean
 }) {
   return (
-    <StatWrapper>
-      <StatTitle>
-        {title}
-        {description && <InfoTip text={description}></InfoTip>}
-      </StatTitle>
-
+    <StatWrapper data-cy={`${dataCy}`}>
+      <MouseoverTooltip text={description}>{title}</MouseoverTooltip>
       <StatPrice>{formatNumber(value, NumberType.FiatTokenStats)}</StatPrice>
     </StatWrapper>
   )
 }
 
 type StatsSectionProps = {
+  chainId: SupportedChainId
+  address: string
   priceLow52W?: NumericStat
   priceHigh52W?: NumericStat
   TVL?: NumericStat
   volume24H?: NumericStat
 }
 export default function StatsSection(props: StatsSectionProps) {
-  const { priceLow52W, priceHigh52W, TVL, volume24H } = props
+  const { chainId, address, priceLow52W, priceHigh52W, TVL, volume24H } = props
+  const { label, infoLink } = getChainInfo(chainId)
+
   if (TVL || volume24H || priceLow52W || priceHigh52W) {
     return (
-      <StatsWrapper>
+      <StatsWrapper data-testid="token-details-stats">
         <Header>
           <Trans>Stats</Trans>
         </Header>
         <TokenStatsSection>
           <StatPair>
             <Stat
+              dataCy="tvl"
               value={TVL}
               description={HEADER_DESCRIPTIONS[TokenSortMethod.TOTAL_VALUE_LOCKED]}
               title={<Trans>TVL</Trans>}
             />
             <Stat
+              dataCy="volume-24h"
               value={volume24H}
               description={
                 <Trans>
@@ -106,13 +105,29 @@ export default function StatsSection(props: StatsSectionProps) {
             />
           </StatPair>
           <StatPair>
-            <Stat value={priceLow52W} title={<Trans>52W low</Trans>} isPrice={true} />
-            <Stat value={priceHigh52W} title={<Trans>52W high</Trans>} isPrice={true} />
+            <Stat dataCy="52w-low" value={priceLow52W} title={<Trans>52W low</Trans>} />
+            <Stat dataCy="52w-high" value={priceHigh52W} title={<Trans>52W high</Trans>} />
           </StatPair>
         </TokenStatsSection>
       </StatsWrapper>
     )
   } else {
-    return <NoData>No stats available</NoData>
+    return UNSUPPORTED_METADATA_CHAINS.includes(chainId) ? (
+      <>
+        <Header>
+          <Trans>Stats</Trans>
+        </Header>
+        <ThemedText.BodySecondary paddingTop="12px">
+          <Trans>
+            Token stats and charts for {label} are available on{' '}
+            <ExternalLink color="currentColor" href={`${infoLink}tokens/${address}`}>
+              info.uniswap.org
+            </ExternalLink>
+          </Trans>
+        </ThemedText.BodySecondary>
+      </>
+    ) : (
+      <NoData>No stats available</NoData>
+    )
   }
 }

@@ -5,7 +5,7 @@ import { SupportedChainId } from 'constants/chains'
 import JSBI from 'jsbi'
 import { useSingleContractWithCallData } from 'lib/hooks/multicall'
 import { useMemo } from 'react'
-import { InterfaceTrade, TradeState } from 'state/routing/types'
+import { ClassicTrade, InterfaceTrade, TradeState } from 'state/routing/types'
 
 import { isCelo } from '../constants/tokens'
 import { useAllV3Routes } from './useAllV3Routes'
@@ -13,7 +13,7 @@ import { useQuoter } from './useContract'
 
 const QUOTE_GAS_OVERRIDES: { [chainId: number]: number } = {
   [SupportedChainId.ARBITRUM_ONE]: 25_000_000,
-  [SupportedChainId.ARBITRUM_RINKEBY]: 25_000_000,
+  [SupportedChainId.ARBITRUM_GOERLI]: 25_000_000,
   [SupportedChainId.CELO]: 50_000_000,
   [SupportedChainId.CELO_ALFAJORES]: 50_000_000,
   [SupportedChainId.POLYGON]: 40_000_000,
@@ -33,7 +33,7 @@ export function useClientSideV3Trade<TTradeType extends TradeType>(
   tradeType: TTradeType,
   amountSpecified?: CurrencyAmount<Currency>,
   otherCurrency?: Currency
-): { state: TradeState; trade: InterfaceTrade<Currency, Currency, TTradeType> | undefined } {
+): { state: TradeState; trade?: InterfaceTrade } {
   const [currencyIn, currencyOut] =
     tradeType === TradeType.EXACT_INPUT
       ? [amountSpecified?.currency, otherCurrency]
@@ -58,16 +58,18 @@ export function useClientSideV3Trade<TTradeType extends TradeType>(
     gasRequired: chainId ? QUOTE_GAS_OVERRIDES[chainId] ?? DEFAULT_GAS_QUOTE : undefined,
   })
 
+  const currenciesAreTheSame = useMemo(
+    () => currencyIn && currencyOut && (currencyIn.equals(currencyOut) || currencyIn.wrapped.equals(currencyOut)),
+    [currencyIn, currencyOut]
+  )
+
   return useMemo(() => {
     if (
       !amountSpecified ||
       !currencyIn ||
       !currencyOut ||
       quotesResults.some(({ valid }) => !valid) ||
-      // skip when tokens are the same
-      (tradeType === TradeType.EXACT_INPUT
-        ? amountSpecified.currency.equals(currencyOut)
-        : amountSpecified.currency.equals(currencyIn))
+      currenciesAreTheSame
     ) {
       return {
         state: TradeState.INVALID,
@@ -133,7 +135,7 @@ export function useClientSideV3Trade<TTradeType extends TradeType>(
 
     return {
       state: TradeState.VALID,
-      trade: new InterfaceTrade({
+      trade: new ClassicTrade({
         v2Routes: [],
         v3Routes: [
           {
@@ -145,5 +147,5 @@ export function useClientSideV3Trade<TTradeType extends TradeType>(
         tradeType,
       }),
     }
-  }, [amountSpecified, currencyIn, currencyOut, quotesResults, routes, routesLoading, tradeType])
+  }, [amountSpecified, currenciesAreTheSame, currencyIn, currencyOut, quotesResults, routes, routesLoading, tradeType])
 }

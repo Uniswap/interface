@@ -1,3 +1,4 @@
+import { MediaType, NftMarketplace, NftStandard } from 'graphql/data/__generated__/types-and-hooks'
 import { SortBy } from 'nft/hooks'
 
 import { SellOrder } from '../sell'
@@ -78,14 +79,30 @@ export interface Trait {
   trait_count?: number
   order?: any
 }
+
+export interface Offer {
+  createdAt: number
+  endAt?: number
+  id: string
+  maker: string
+  marketplace: NftMarketplace
+  marketplaceUrl: string
+  price: {
+    currency?: string
+    value: number
+  }
+  quantity?: number
+}
+
 export interface GenieAsset {
   id?: string // This would be a random id created and assigned by front end
   address: string
-  notForSale: boolean
+  notForSale?: boolean
   collectionName?: string
   collectionSymbol?: string
   imageUrl?: string
   animationUrl?: string
+  mediaType?: MediaType
   marketplace?: Markets
   name?: string
   priceInfo: PriceInfo
@@ -93,17 +110,15 @@ export interface GenieAsset {
   sellorders?: SellOrder[]
   smallImageUrl?: string
   tokenId: string
-  tokenType: TokenType
+  tokenType?: NftStandard
   totalCount?: number // The totalCount from the query to /assets
   collectionIsVerified?: boolean
   rarity?: Rarity
-  owner: {
-    address: string
-  }
-  metadataUrl: string
+  ownerAddress?: string
+  metadataUrl?: string
   creator: {
-    address: string
-    profile_img_url: string
+    address?: string
+    profile_img_url?: string
   }
   traits?: Trait[]
 }
@@ -144,18 +159,17 @@ export enum Markets {
   NFTX = 'nftx',
   Opensea = 'opensea',
   Rarible = 'rarible',
-  Uniswap = 'Uniswap',
-  Uniswap_V2 = 'Uniswap_V2',
-  SushiSwap = 'SushiSwap',
-  SuperRare = 'superrare',
   Sudoswap = 'sudoswap',
-  KnownOrigin = 'knownorigin',
-  WETH = 'weth',
   Cryptopunks = 'cryptopunks',
-  CryptoPhunks = 'cryptophunks',
+  Gem = 'gem',
+  Foundation = 'foundation',
+  Zora = 'zora',
+  Blur = 'blur',
+  Ensvision = 'ensvision',
 }
 
-export const isPooledMarket = (market: Markets): boolean => {
+export const isPooledMarket = (market?: Markets): boolean => {
+  if (!market) return false
   return market === Markets.NFTX || market === Markets.NFT20 || market === Markets.Sudoswap
 }
 
@@ -171,6 +185,7 @@ export interface DropDownOption {
   reverseIndex?: number
   reverseOnClick?: () => void
   sortBy?: SortBy
+  isSelected?: boolean
 }
 
 export enum DetailsOrigin {

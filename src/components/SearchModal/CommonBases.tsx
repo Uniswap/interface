@@ -1,5 +1,5 @@
 import { TraceEvent } from '@uniswap/analytics'
-import { BrowserEvent, ElementName, EventName } from '@uniswap/analytics-events'
+import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import { Currency } from '@uniswap/sdk-core'
 import { AutoColumn } from 'components/Column'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
@@ -18,7 +18,7 @@ const MobileWrapper = styled(AutoColumn)`
 `
 
 const BaseWrapper = styled.div<{ disable?: boolean }>`
-  border: 1px solid ${({ theme, disable }) => (disable ? theme.accentAction : theme.backgroundOutline)};
+  border: 1px solid ${({ theme, disable }) => (disable ? theme.accentActive : theme.backgroundOutline)};
   border-radius: 16px;
   display: flex;
   padding: 6px;
@@ -30,8 +30,8 @@ const BaseWrapper = styled.div<{ disable?: boolean }>`
     background-color: ${({ theme }) => theme.hoverDefault};
   }
 
-  color: ${({ theme, disable }) => disable && theme.accentAction};
-  background-color: ${({ theme, disable }) => disable && theme.accentActionSoft};
+  color: ${({ theme, disable }) => disable && theme.accentActive};
+  background-color: ${({ theme, disable }) => disable && theme.accentActiveSoft};
 `
 
 const formatAnalyticsEventProperties = (currency: Currency, searchQuery: string, isAddressSearch: string | false) => ({
@@ -70,9 +70,9 @@ export default function CommonBases({
           return (
             <TraceEvent
               events={[BrowserEvent.onClick, BrowserEvent.onKeyPress]}
-              name={EventName.TOKEN_SELECTED}
+              name={InterfaceEventName.TOKEN_SELECTED}
               properties={formatAnalyticsEventProperties(currency, searchQuery, isAddressSearch)}
-              element={ElementName.COMMON_BASES_CURRENCY_BUTTON}
+              element={InterfaceElementName.COMMON_BASES_CURRENCY_BUTTON}
               key={currencyId(currency)}
             >
               <BaseWrapper

@@ -53,7 +53,9 @@ export const Filters = ({ traitsByGroup }: { traitsByGroup: Record<string, Trait
           onMouseEnter={toggleBuyNowHover}
           onMouseLeave={toggleBuyNowHover}
         >
-          <Box className={subhead}>Buy now</Box>
+          <Box data-testid="nft-collection-filter-buy-now" className={subhead}>
+            Buy now
+          </Box>
           <Checkbox hovered={buyNowHovered} checked={buyNow} onClick={handleBuyNowToggle}>
             <span />
           </Checkbox>

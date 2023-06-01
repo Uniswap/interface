@@ -4,25 +4,27 @@ import { hexStripZeros } from '@ethersproject/bytes'
 import { ContractReceipt } from '@ethersproject/contracts'
 import type { JsonRpcSigner } from '@ethersproject/providers'
 import { sendAnalyticsEvent } from '@uniswap/analytics'
-import { EventName } from '@uniswap/analytics-events'
-import create from 'zustand'
+import { NFTEventName } from '@uniswap/analytics-events'
+import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
 
 import ERC721 from '../../abis/erc721.json'
 import ERC1155 from '../../abis/erc1155.json'
 import CryptoPunksMarket from '../abis/CryptoPunksMarket.json'
 import { GenieAsset, RouteResponse, RoutingItem, TxResponse, TxStateType, UpdatedGenieAsset } from '../types'
-import { combineBuyItemsWithTxRoute } from '../utils/txRoute/combineItemsWithTxRoute'
+import { compareAssetsWithTransactionRoute } from '../utils/txRoute/combineItemsWithTxRoute'
 
 interface TxState {
   state: TxStateType
   setState: (state: TxStateType) => void
   txHash: string
   clearTxHash: () => void
+  purchasedWithErc20: boolean
   sendTransaction: (
     signer: JsonRpcSigner,
     selectedAssets: UpdatedGenieAsset[],
-    transactionData: RouteResponse
+    transactionData: RouteResponse,
+    purchasedWithErc20: boolean
   ) => Promise<TxResponse | undefined>
 }
 
@@ -31,14 +33,15 @@ export const useSendTransaction = create<TxState>()(
     (set) => ({
       state: TxStateType.New,
       txHash: '',
+      purchasedWithErc20: false,
       clearTxHash: () => set({ txHash: '' }),
       setState: (newState) => set(() => ({ state: newState })),
-      sendTransaction: async (signer, selectedAssets, transactionData) => {
+      sendTransaction: async (signer, selectedAssets, transactionData, purchasedWithErc20) => {
         const address = await signer.getAddress()
         try {
           const txNoGasLimit = {
             to: transactionData.to,
-            value: BigNumber.from(transactionData.valueToSend),
+            value: transactionData.valueToSend ? BigNumber.from(transactionData.valueToSend) : undefined,
             data: transactionData.data,
           }
 
@@ -50,7 +53,8 @@ export const useSendTransaction = create<TxState>()(
           const res = await signer.sendTransaction(tx)
           set({ state: TxStateType.Confirming })
           set({ txHash: res.hash })
-          sendAnalyticsEvent(EventName.NFT_BUY_BAG_SIGNED, { transaction_hash: res.hash })
+          set({ purchasedWithErc20 })
+          sendAnalyticsEvent(NFTEventName.NFT_BUY_BAG_SIGNED, { transaction_hash: res.hash })
 
           const txReceipt = await res.wait()
 
@@ -143,7 +147,7 @@ const findNFTsPurchased = (
     )
   })
 
-  return combineBuyItemsWithTxRoute(transferredItems, txRoute)
+  return compareAssetsWithTransactionRoute(transferredItems, txRoute).updatedAssets
 }
 
 const findNFTsNotPurchased = (toBuy: GenieAsset[], nftsPurchased: UpdatedGenieAsset[]) => {

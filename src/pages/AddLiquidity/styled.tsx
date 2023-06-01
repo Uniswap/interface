@@ -59,7 +59,7 @@ export const CurrencyDropdown = styled(CurrencyInputPanel)`
 `
 
 export const StyledInput = styled(Input)`
-  background-color: ${({ theme }) => theme.deprecated_bg0};
+  background-color: ${({ theme }) => theme.backgroundSurface};
   text-align: left;
   font-size: 18px;
   width: 100%;
@@ -76,7 +76,7 @@ export const ResponsiveTwoColumns = styled.div<{ wide: boolean }>`
 
   padding-top: 20px;
 
-  border-top: 1px solid ${({ theme }) => theme.deprecated_bg2};
+  border-top: 1px solid ${({ theme }) => theme.backgroundInteractive};
 
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
     grid-template-columns: 1fr;

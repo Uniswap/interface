@@ -1,4 +1,5 @@
-import { GenieAsset, RouteResponse, TokenType } from '../../types'
+import { NftStandard } from 'graphql/data/__generated__/types-and-hooks'
+import { GenieAsset, RouteResponse } from 'nft/types'
 
 export const fetchRoute = async ({
   toSell,
@@ -9,7 +10,7 @@ export const fetchRoute = async ({
   toBuy: any
   senderAddress: string
 }): Promise<RouteResponse> => {
-  const url = `${process.env.REACT_APP_GENIE_V3_API_URL}/route`
+  const url = `${process.env.REACT_APP_TEMP_API_URL}/nft/route`
   const payload = {
     sell: [...toSell].map((x) => buildRouteItem(x)),
     buy: [...toBuy].filter((x) => x.tokenType !== 'Dust').map((x) => buildRouteItem(x)),
@@ -41,7 +42,7 @@ type RouteItem = {
   decimals: number
   address: string
   priceInfo: ApiPriceInfo
-  tokenType: TokenType
+  tokenType?: NftStandard
   tokenId: string
   amount: number
   marketplace?: string

@@ -1,10 +1,13 @@
 import { TransactionReceipt } from '@ethersproject/abstract-provider'
 import { useWeb3React } from '@web3-react/core'
 import { SupportedChainId } from 'constants/chains'
-import useBlockNumber from 'lib/hooks/useBlockNumber'
+import useBlockNumber, { useFastForwardBlockNumber } from 'lib/hooks/useBlockNumber'
 import ms from 'ms.macro'
 import { useCallback, useEffect } from 'react'
-import { retry, RetryableError, RetryOptions } from 'utils/retry'
+import { useTransactionRemover } from 'state/transactions/hooks'
+import { TransactionDetails } from 'state/transactions/types'
+
+import { retry, RetryableError, RetryOptions } from './retry'
 
 interface Transaction {
   addedTime: number
@@ -32,22 +35,24 @@ export function shouldCheck(lastBlockNumber: number, tx: Transaction): boolean {
 
 const RETRY_OPTIONS_BY_CHAIN_ID: { [chainId: number]: RetryOptions } = {
   [SupportedChainId.ARBITRUM_ONE]: { n: 10, minWait: 250, maxWait: 1000 },
-  [SupportedChainId.ARBITRUM_RINKEBY]: { n: 10, minWait: 250, maxWait: 1000 },
-  [SupportedChainId.OPTIMISM_GOERLI]: { n: 10, minWait: 250, maxWait: 1000 },
+  [SupportedChainId.ARBITRUM_GOERLI]: { n: 10, minWait: 250, maxWait: 1000 },
   [SupportedChainId.OPTIMISM]: { n: 10, minWait: 250, maxWait: 1000 },
+  [SupportedChainId.OPTIMISM_GOERLI]: { n: 10, minWait: 250, maxWait: 1000 },
 }
 const DEFAULT_RETRY_OPTIONS: RetryOptions = { n: 1, minWait: 0, maxWait: 0 }
 
 interface UpdaterProps {
-  pendingTransactions: { [hash: string]: Transaction }
+  pendingTransactions: { [hash: string]: TransactionDetails }
   onCheck: (tx: { chainId: number; hash: string; blockNumber: number }) => void
   onReceipt: (tx: { chainId: number; hash: string; receipt: TransactionReceipt }) => void
 }
 
 export default function Updater({ pendingTransactions, onCheck, onReceipt }: UpdaterProps): null {
-  const { chainId, provider } = useWeb3React()
+  const { account, chainId, provider } = useWeb3React()
 
   const lastBlockNumber = useBlockNumber()
+  const fastForwardBlockNumber = useFastForwardBlockNumber()
+  const removeTransaction = useTransactionRemover()
 
   const getReceipt = useCallback(
     (hash: string) => {
@@ -55,8 +60,18 @@ export default function Updater({ pendingTransactions, onCheck, onReceipt }: Upd
       const retryOptions = RETRY_OPTIONS_BY_CHAIN_ID[chainId] ?? DEFAULT_RETRY_OPTIONS
       return retry(
         () =>
-          provider.getTransactionReceipt(hash).then((receipt) => {
+          provider.getTransactionReceipt(hash).then(async (receipt) => {
             if (receipt === null) {
+              if (account) {
+                const transactionCount = await provider.getTransactionCount(account)
+                const tx = pendingTransactions[hash]
+                // We check for the presence of a nonce because we haven't always saved them,
+                //   so this code may run against old store state where nonce is undefined.
+                if (tx.nonce && tx.nonce < transactionCount) {
+                  // We remove pending transactions from redux if they are no longer the latest nonce.
+                  removeTransaction(hash)
+                }
+              }
               console.debug(`Retrying tranasaction receipt for ${hash}`)
               throw new RetryableError()
             }
@@ -65,7 +80,7 @@ export default function Updater({ pendingTransactions, onCheck, onReceipt }: Upd
         retryOptions
       )
     },
-    [chainId, provider]
+    [account, chainId, pendingTransactions, provider, removeTransaction]
   )
 
   useEffect(() => {
@@ -78,6 +93,7 @@ export default function Updater({ pendingTransactions, onCheck, onReceipt }: Upd
         promise
           .then((receipt) => {
             if (receipt) {
+              fastForwardBlockNumber(receipt.blockNumber)
               onReceipt({ chainId, hash, receipt })
             } else {
               onCheck({ chainId, hash, blockNumber: lastBlockNumber })
@@ -94,7 +110,7 @@ export default function Updater({ pendingTransactions, onCheck, onReceipt }: Upd
     return () => {
       cancels.forEach((cancel) => cancel())
     }
-  }, [chainId, provider, lastBlockNumber, getReceipt, onReceipt, onCheck, pendingTransactions])
+  }, [chainId, provider, lastBlockNumber, getReceipt, onReceipt, onCheck, pendingTransactions, fastForwardBlockNumber])
 
   return null
 }

@@ -18,8 +18,8 @@ const Wrapper = styled.div<{ count: number }>`
 
 const Button = styled(ButtonGray)`
   &:hover {
-    background-color: ${({ theme }) => theme.deprecated_bg2};
-    color: ${({ theme }) => theme.deprecated_text1};
+    background-color: ${({ theme }) => theme.backgroundInteractive};
+    color: ${({ theme }) => theme.textPrimary};
   }
 
   width: 32px;

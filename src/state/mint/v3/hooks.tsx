@@ -16,16 +16,15 @@ import { usePool } from 'hooks/usePools'
 import JSBI from 'jsbi'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { ReactNode, useCallback, useMemo } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useSearchParams } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { getTickToPrice } from 'utils/getTickToPrice'
-import { replaceURLParam } from 'utils/routes'
 
 import { BIG_INT_ZERO } from '../../../constants/misc'
 import { PoolState } from '../../../hooks/usePools'
 import { useSwapState } from '../../../state/swap/hooks'
 import { useCurrencyBalances } from '../../connection/hooks'
-import { AppState } from '../../index'
+import { AppState } from '../../types'
 import {
   Bound,
   Field,
@@ -49,7 +48,6 @@ export function useV3MintActionHandlers(noLiquidity: boolean | undefined): {
   onStartPriceInput: (typedValue: string) => void
 } {
   const dispatch = useAppDispatch()
-  const navigate = useNavigate()
 
   const onFieldAInput = useCallback(
     (typedValue: string) => {
@@ -65,22 +63,30 @@ export function useV3MintActionHandlers(noLiquidity: boolean | undefined): {
     [dispatch, noLiquidity]
   )
 
-  const { search } = useLocation()
+  const [searchParams, setSearchParams] = useSearchParams()
 
   const onLeftRangeInput = useCallback(
     (typedValue: string) => {
       dispatch(typeLeftRangeInput({ typedValue }))
-      navigate({ search: replaceURLParam(search, 'minPrice', typedValue) }, { replace: true })
+      const paramMinPrice = searchParams.get('minPrice')
+      if (!paramMinPrice || (paramMinPrice && paramMinPrice !== typedValue)) {
+        searchParams.set('minPrice', typedValue)
+        setSearchParams(searchParams)
+      }
     },
-    [dispatch, navigate, search]
+    [dispatch, searchParams, setSearchParams]
   )
 
   const onRightRangeInput = useCallback(
     (typedValue: string) => {
       dispatch(typeRightRangeInput({ typedValue }))
-      navigate({ search: replaceURLParam(search, 'maxPrice', typedValue) }, { replace: true })
+      const paramMaxPrice = searchParams.get('maxPrice')
+      if (!paramMaxPrice || (paramMaxPrice && paramMaxPrice !== typedValue)) {
+        searchParams.set('maxPrice', typedValue)
+        setSearchParams(searchParams)
+      }
     },
-    [dispatch, navigate, search]
+    [dispatch, searchParams, setSearchParams]
   )
 
   const onStartPriceInput = useCallback(
@@ -114,11 +120,14 @@ export function useV3DerivedMintInfo(
   pricesAtTicks: {
     [bound in Bound]?: Price<Token, Token> | undefined
   }
+  pricesAtLimit: {
+    [bound in Bound]?: Price<Token, Token> | undefined
+  }
   currencies: { [field in Field]?: Currency }
   currencyBalances: { [field in Field]?: CurrencyAmount<Currency> }
   dependentField: Field
   parsedAmounts: { [field in Field]?: CurrencyAmount<Currency> }
-  position: Position | undefined
+  position?: Position
   noLiquidity?: boolean
   errorMessage?: ReactNode
   invalidPool: boolean
@@ -230,9 +239,7 @@ export function useV3DerivedMintInfo(
   const poolForPosition: Pool | undefined = pool ?? mockPool
 
   // lower and upper limits in the tick space for `feeAmoun<Trans>
-  const tickSpaceLimits: {
-    [bound in Bound]: number | undefined
-  } = useMemo(
+  const tickSpaceLimits = useMemo(
     () => ({
       [Bound.LOWER]: feeAmount ? nearestUsableTick(TickMath.MIN_TICK, TICK_SPACINGS[feeAmount]) : undefined,
       [Bound.UPPER]: feeAmount ? nearestUsableTick(TickMath.MAX_TICK, TICK_SPACINGS[feeAmount]) : undefined,
@@ -242,9 +249,7 @@ export function useV3DerivedMintInfo(
 
   // parse typed range values and determine closest ticks
   // lower should always be a smaller tick
-  const ticks: {
-    [key: string]: number | undefined
-  } = useMemo(() => {
+  const ticks = useMemo(() => {
     return {
       [Bound.LOWER]:
         typeof existingPosition?.tickLower === 'number'
@@ -289,6 +294,13 @@ export function useV3DerivedMintInfo(
 
   // mark invalid range
   const invalidRange = Boolean(typeof tickLower === 'number' && typeof tickUpper === 'number' && tickLower >= tickUpper)
+
+  const pricesAtLimit = useMemo(() => {
+    return {
+      [Bound.LOWER]: getTickToPrice(token0, token1, tickSpaceLimits.LOWER),
+      [Bound.UPPER]: getTickToPrice(token0, token1, tickSpaceLimits.UPPER),
+    }
+  }, [token0, token1, tickSpaceLimits.LOWER, tickSpaceLimits.UPPER])
 
   // always returns the price with 0 as base token
   const pricesAtTicks = useMemo(() => {
@@ -476,6 +488,7 @@ export function useV3DerivedMintInfo(
     ticks,
     price,
     pricesAtTicks,
+    pricesAtLimit,
     position,
     noLiquidity,
     errorMessage,

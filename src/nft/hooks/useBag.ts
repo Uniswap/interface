@@ -1,7 +1,7 @@
-import { BigNumber } from '@ethersproject/bignumber'
-import { BagItem, BagItemStatus, BagStatus, TokenType, UpdatedGenieAsset } from 'nft/types'
+import { NftStandard } from 'graphql/data/__generated__/types-and-hooks'
+import { BagItem, BagItemStatus, BagStatus, UpdatedGenieAsset } from 'nft/types'
 import { v4 as uuidv4 } from 'uuid'
-import create from 'zustand'
+import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
 
 interface BagState {
@@ -11,10 +11,6 @@ interface BagState {
   setBagStatus: (state: BagStatus) => void
   itemsInBag: BagItem[]
   setItemsInBag: (items: BagItem[]) => void
-  totalEthPrice: BigNumber
-  setTotalEthPrice: (totalEthPrice: BigNumber) => void
-  totalUsdPrice: number | undefined
-  setTotalUsdPrice: (totalUsdPrice: number | undefined) => void
   addAssetsToBag: (asset: UpdatedGenieAsset[], fromSweep?: boolean) => void
   removeAssetsFromBag: (assets: UpdatedGenieAsset[], fromSweep?: boolean) => void
   markAssetAsReviewed: (asset: UpdatedGenieAsset, toKeep: boolean) => void
@@ -68,19 +64,8 @@ export const useBag = create<BagState>()(
         })),
       itemsInBag: [],
       setItemsInBag: (items) =>
-        set(({ bagManuallyClosed }) => ({
-          bagManuallyClosed: items.length === 0 ? false : bagManuallyClosed,
+        set(() => ({
           itemsInBag: items,
-        })),
-      totalEthPrice: BigNumber.from(0),
-      setTotalEthPrice: (totalEthPrice) =>
-        set(() => ({
-          totalEthPrice,
-        })),
-      totalUsdPrice: undefined,
-      setTotalUsdPrice: (totalUsdPrice) =>
-        set(() => ({
-          totalUsdPrice,
         })),
       addAssetsToBag: (assets, fromSweep = false) =>
         set(({ itemsInBag }) => {
@@ -89,7 +74,7 @@ export const useBag = create<BagState>()(
           const itemsInBagCopy = [...itemsInBag]
           assets.forEach((asset) => {
             let index = -1
-            if (asset.tokenType !== TokenType.ERC1155) {
+            if (asset.tokenType !== NftStandard.Erc1155) {
               index = itemsInBag.findIndex(
                 (n) => n.asset.tokenId === asset.tokenId && n.asset.address === asset.address
               )
@@ -119,7 +104,7 @@ export const useBag = create<BagState>()(
             }
         }),
       removeAssetsFromBag: (assets, fromSweep = false) => {
-        set(({ bagManuallyClosed, itemsInBag }) => {
+        set(({ itemsInBag }) => {
           if (get().isLocked) return { itemsInBag: get().itemsInBag }
           if (itemsInBag.length === 0) return { itemsInBag: [] }
           const itemsCopy = itemsInBag.filter(
@@ -131,7 +116,6 @@ export const useBag = create<BagState>()(
               )
           )
           return {
-            bagManuallyClosed: itemsCopy.length === 0 ? false : bagManuallyClosed,
             itemsInBag: itemsCopy,
             usedSweep: fromSweep,
           }
@@ -161,6 +145,7 @@ export const useBag = create<BagState>()(
               didOpenUnavailableAssets: false,
               isLocked: false,
               bagManuallyClosed: false,
+              bagExpanded: false,
             }
           else return {}
         }),

@@ -1,34 +1,37 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { ConnectionType } from 'connection'
+import { ConnectionType } from 'connection/types'
 import { SupportedLocale } from 'constants/locales'
+import { RouterPreference } from 'state/routing/slice'
 
 import { DEFAULT_DEADLINE_FROM_NOW } from '../../constants/misc'
 import { updateVersion } from '../global/actions'
-import { SerializedPair, SerializedToken } from './types'
+import { SerializedPair, SerializedToken, SlippageTolerance } from './types'
 
 const currentTimestamp = () => new Date().getTime()
 
 export interface UserState {
+  buyFiatFlowCompleted?: boolean
+
   selectedWallet?: ConnectionType
 
   // the timestamp of the last updateVersion action
   lastUpdateVersionTimestamp?: number
 
-  matchesDarkMode: boolean // whether the dark mode media query matches
-
-  userDarkMode: boolean | null // the user's choice for dark mode or light mode
   userLocale: SupportedLocale | null
 
   userExpertMode: boolean
 
-  userClientSideRouter: boolean // whether routes should be calculated with the client side router only
+  // which router should be used to calculate trades
+  userRouterPreference: RouterPreference
 
   // hides closed (inactive) positions across the app
   userHideClosedPositions: boolean
 
   // user defined slippage tolerance in bips, used in all txns
-  userSlippageTolerance: number | 'auto'
-  userSlippageToleranceHasBeenMigratedToAuto: boolean // temporary flag for migration status
+  userSlippageTolerance: number | SlippageTolerance.Auto
+
+  // flag to indicate whether the user has been migrated from the old slippage tolerance values
+  userSlippageToleranceHasBeenMigratedToAuto: boolean
 
   // deadline set by user in minutes, used in all txns
   userDeadline: number
@@ -48,14 +51,9 @@ export interface UserState {
 
   timestamp: number
   URLWarningVisible: boolean
-  hideNFTPromoBanner: boolean // whether or not we should hide the nft explore promo banner
-
+  hideUniswapWalletBanner: boolean
   // undefined means has not gone through A/B split yet
-  showSurveyPopup: boolean | undefined
-
-  showDonationLink: boolean
-
-  hideNFTWelcomeModal: boolean
+  showSurveyPopup?: boolean
 }
 
 function pairKey(token0Address: string, token1Address: string) {
@@ -63,40 +61,32 @@ function pairKey(token0Address: string, token1Address: string) {
 }
 
 export const initialState: UserState = {
+  buyFiatFlowCompleted: undefined,
   selectedWallet: undefined,
-  matchesDarkMode: false,
-  userDarkMode: null,
   userExpertMode: false,
   userLocale: null,
-  userClientSideRouter: false,
+  userRouterPreference: RouterPreference.AUTO,
   userHideClosedPositions: false,
-  userSlippageTolerance: 'auto',
+  userSlippageTolerance: SlippageTolerance.Auto,
   userSlippageToleranceHasBeenMigratedToAuto: true,
   userDeadline: DEFAULT_DEADLINE_FROM_NOW,
   tokens: {},
   pairs: {},
   timestamp: currentTimestamp(),
   URLWarningVisible: true,
-  hideNFTPromoBanner: false,
+  hideUniswapWalletBanner: false,
   showSurveyPopup: undefined,
-  showDonationLink: true,
-  hideNFTWelcomeModal: true,
 }
 
 const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
+    updateUserBuyFiatFlowCompleted(state, action) {
+      state.buyFiatFlowCompleted = action.payload
+    },
     updateSelectedWallet(state, { payload: { wallet } }) {
       state.selectedWallet = wallet
-    },
-    updateUserDarkMode(state, action) {
-      state.userDarkMode = action.payload.userDarkMode
-      state.timestamp = currentTimestamp()
-    },
-    updateMatchesDarkMode(state, action) {
-      state.matchesDarkMode = action.payload.matchesDarkMode
-      state.timestamp = currentTimestamp()
     },
     updateUserExpertMode(state, action) {
       state.userExpertMode = action.payload.userExpertMode
@@ -114,23 +104,14 @@ const userSlice = createSlice({
       state.userDeadline = action.payload.userDeadline
       state.timestamp = currentTimestamp()
     },
-    updateUserClientSideRouter(state, action) {
-      state.userClientSideRouter = action.payload.userClientSideRouter
+    updateUserRouterPreference(state, action) {
+      state.userRouterPreference = action.payload.userRouterPreference
     },
     updateHideClosedPositions(state, action) {
       state.userHideClosedPositions = action.payload.userHideClosedPositions
     },
-    updateShowSurveyPopup(state, action) {
-      state.showSurveyPopup = action.payload.showSurveyPopup
-    },
-    updateShowDonationLink(state, action) {
-      state.showDonationLink = action.payload.showDonationLink
-    },
-    updateHideNFTWelcomeModal(state, action) {
-      state.hideNFTWelcomeModal = action.payload.hideNFTWelcomeModal
-    },
-    updateShowNftPromoBanner(state, action) {
-      state.hideNFTPromoBanner = action.payload.hideNFTPromoBanner
+    updateHideUniswapWalletBanner(state, action) {
+      state.hideUniswapWalletBanner = action.payload.hideUniswapWalletBanner
     },
     addSerializedToken(state, { payload: { serializedToken } }) {
       if (!state.tokens) {
@@ -138,14 +119,6 @@ const userSlice = createSlice({
       }
       state.tokens[serializedToken.chainId] = state.tokens[serializedToken.chainId] || {}
       state.tokens[serializedToken.chainId][serializedToken.address] = serializedToken
-      state.timestamp = currentTimestamp()
-    },
-    removeSerializedToken(state, { payload: { address, chainId } }) {
-      if (!state.tokens) {
-        state.tokens = {}
-      }
-      state.tokens[chainId] = state.tokens[chainId] || {}
-      delete state.tokens[chainId][address]
       state.timestamp = currentTimestamp()
     },
     addSerializedPair(state, { payload: { serializedPair } }) {
@@ -159,38 +132,31 @@ const userSlice = createSlice({
       }
       state.timestamp = currentTimestamp()
     },
-    removeSerializedPair(state, { payload: { chainId, tokenAAddress, tokenBAddress } }) {
-      if (state.pairs[chainId]) {
-        // just delete both keys if either exists
-        delete state.pairs[chainId][pairKey(tokenAAddress, tokenBAddress)]
-        delete state.pairs[chainId][pairKey(tokenBAddress, tokenAAddress)]
-      }
-      state.timestamp = currentTimestamp()
-    },
   },
   extraReducers: (builder) => {
+    // After adding a new property to the state, its value will be `undefined` (instead of the default)
+    // for all existing users with a previous version of the state in their localStorage.
+    // In order to avoid this, we need to set a default value for each new property manually during hydration.
     builder.addCase(updateVersion, (state) => {
-      // slippage isnt being tracked in local storage, reset to default
-      // noinspection SuspiciousTypeOfGuard
+      // If `userSlippageTolerance` is not present or its value is invalid, reset to default
       if (
         typeof state.userSlippageTolerance !== 'number' ||
         !Number.isInteger(state.userSlippageTolerance) ||
         state.userSlippageTolerance < 0 ||
         state.userSlippageTolerance > 5000
       ) {
-        state.userSlippageTolerance = 'auto'
+        state.userSlippageTolerance = SlippageTolerance.Auto
       } else {
         if (
           !state.userSlippageToleranceHasBeenMigratedToAuto &&
           [10, 50, 100].indexOf(state.userSlippageTolerance) !== -1
         ) {
-          state.userSlippageTolerance = 'auto'
+          state.userSlippageTolerance = SlippageTolerance.Auto
           state.userSlippageToleranceHasBeenMigratedToAuto = true
         }
       }
 
-      // deadline isnt being tracked in local storage, reset to default
-      // noinspection SuspiciousTypeOfGuard
+      // If `userDeadline` is not present or its value is invalid, reset to default
       if (
         typeof state.userDeadline !== 'number' ||
         !Number.isInteger(state.userDeadline) ||
@@ -200,28 +166,27 @@ const userSlice = createSlice({
         state.userDeadline = DEFAULT_DEADLINE_FROM_NOW
       }
 
+      // If `userRouterPreference` is not present, reset to default
+      if (typeof state.userRouterPreference !== 'string') {
+        state.userRouterPreference = RouterPreference.AUTO
+      }
+
       state.lastUpdateVersionTimestamp = currentTimestamp()
     })
   },
 })
 
 export const {
-  updateSelectedWallet,
   addSerializedPair,
   addSerializedToken,
-  removeSerializedPair,
-  removeSerializedToken,
+  updateUserBuyFiatFlowCompleted,
+  updateSelectedWallet,
   updateHideClosedPositions,
-  updateMatchesDarkMode,
-  updateShowDonationLink,
-  updateShowSurveyPopup,
-  updateUserClientSideRouter,
-  updateHideNFTWelcomeModal,
-  updateUserDarkMode,
+  updateUserRouterPreference,
   updateUserDeadline,
   updateUserExpertMode,
   updateUserLocale,
   updateUserSlippageTolerance,
-  updateShowNftPromoBanner,
+  updateHideUniswapWalletBanner,
 } = userSlice.actions
 export default userSlice.reducer

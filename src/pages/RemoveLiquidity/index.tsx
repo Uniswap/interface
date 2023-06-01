@@ -3,11 +3,14 @@ import { Contract } from '@ethersproject/contracts'
 import type { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
 import { TraceEvent } from '@uniswap/analytics'
-import { BrowserEvent, ElementName, EventName } from '@uniswap/analytics-events'
+import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import { Currency, Percent } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { useToggleAccountDrawer } from 'components/AccountDrawer'
 import { sendEvent } from 'components/analytics'
+import { isSupportedChain } from 'constants/chains'
 import { useV2LiquidityTokenPermit } from 'hooks/useV2LiquidityTokenPermit'
+import { PositionPageUnsupportedContent } from 'pages/Pool/PositionPage'
 import { useCallback, useMemo, useState } from 'react'
 import { ArrowDown, Plus } from 'react-feather'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -32,7 +35,6 @@ import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallbac
 import { usePairContract, useV2RouterContract } from '../../hooks/useContract'
 import useDebouncedChangeHandler from '../../hooks/useDebouncedChangeHandler'
 import useTransactionDeadline from '../../hooks/useTransactionDeadline'
-import { useToggleWalletModal } from '../../state/application/hooks'
 import { Field } from '../../state/burn/actions'
 import { useBurnActionHandlers, useBurnState, useDerivedBurnInfo } from '../../state/burn/hooks'
 import { useTransactionAdder } from '../../state/transactions/hooks'
@@ -47,7 +49,16 @@ import { ClickableText, MaxButton, Wrapper } from '../Pool/styleds'
 
 const DEFAULT_REMOVE_LIQUIDITY_SLIPPAGE_TOLERANCE = new Percent(5, 100)
 
-export default function RemoveLiquidity() {
+export default function RemoveLiquidityWrapper() {
+  const { chainId } = useWeb3React()
+  if (isSupportedChain(chainId)) {
+    return <RemoveLiquidity />
+  } else {
+    return <PositionPageUnsupportedContent />
+  }
+}
+
+function RemoveLiquidity() {
   const navigate = useNavigate()
   const { currencyIdA, currencyIdB } = useParams<{ currencyIdA: string; currencyIdB: string }>()
   const [currencyA, currencyB] = [useCurrency(currencyIdA) ?? undefined, useCurrency(currencyIdB) ?? undefined]
@@ -57,7 +68,7 @@ export default function RemoveLiquidity() {
   const theme = useTheme()
 
   // toggle wallet when disconnected
-  const toggleWalletModal = useToggleWalletModal()
+  const toggleWalletDrawer = useToggleAccountDrawer()
 
   // burn state
   const { independentField, typedValue } = useBurnState()
@@ -304,7 +315,7 @@ export default function RemoveLiquidity() {
           </RowFixed>
         </RowBetween>
         <RowFixed>
-          <Plus size="16" color={theme.deprecated_text2} />
+          <Plus size="16" color={theme.textSecondary} />
         </RowFixed>
         <RowBetween align="flex-end">
           <Text fontSize={24} fontWeight={500}>
@@ -318,7 +329,7 @@ export default function RemoveLiquidity() {
           </RowFixed>
         </RowBetween>
 
-        <ThemedText.DeprecatedItalic fontSize={12} color={theme.deprecated_text2} textAlign="left" padding="12px 0 0 0">
+        <ThemedText.DeprecatedItalic fontSize={12} color={theme.textSecondary} textAlign="left" padding="12px 0 0 0">
           <Trans>
             Output is estimated. If the price changes by more than {allowedSlippage.toSignificant(4)}% your transaction
             will revert.
@@ -332,7 +343,7 @@ export default function RemoveLiquidity() {
     return (
       <>
         <RowBetween>
-          <Text color={theme.deprecated_text2} fontWeight={500} fontSize={16}>
+          <Text color={theme.textSecondary} fontWeight={500} fontSize={16}>
             <Trans>
               UNI {currencyA?.symbol}/{currencyB?.symbol} Burned
             </Trans>
@@ -347,16 +358,16 @@ export default function RemoveLiquidity() {
         {pair && (
           <>
             <RowBetween>
-              <Text color={theme.deprecated_text2} fontWeight={500} fontSize={16}>
+              <Text color={theme.textSecondary} fontWeight={500} fontSize={16}>
                 <Trans>Price</Trans>
               </Text>
-              <Text fontWeight={500} fontSize={16} color={theme.deprecated_text1}>
+              <Text fontWeight={500} fontSize={16} color={theme.textPrimary}>
                 1 {currencyA?.symbol} = {tokenA ? pair.priceOf(tokenA).toSignificant(6) : '-'} {currencyB?.symbol}
               </Text>
             </RowBetween>
             <RowBetween>
               <div />
-              <Text fontWeight={500} fontSize={16} color={theme.deprecated_text1}>
+              <Text fontWeight={500} fontSize={16} color={theme.textPrimary}>
                 1 {currencyB?.symbol} = {tokenB ? pair.priceOf(tokenB).toSignificant(6) : '-'} {currencyA?.symbol}
               </Text>
             </RowBetween>
@@ -432,14 +443,14 @@ export default function RemoveLiquidity() {
   return (
     <>
       <AppBody>
-        <AddRemoveTabs creating={false} adding={false} defaultSlippage={DEFAULT_REMOVE_LIQUIDITY_SLIPPAGE_TOLERANCE} />
+        <AddRemoveTabs creating={false} adding={false} autoSlippage={DEFAULT_REMOVE_LIQUIDITY_SLIPPAGE_TOLERANCE} />
         <Wrapper>
           <TransactionConfirmationModal
             isOpen={showConfirm}
             onDismiss={handleDismissConfirmation}
             attemptingTxn={attemptingTxn}
             hash={txHash ? txHash : ''}
-            content={() => (
+            reviewContent={() => (
               <ConfirmationModalContent
                 title={<Trans>You will receive</Trans>}
                 onDismiss={handleDismissConfirmation}
@@ -452,7 +463,7 @@ export default function RemoveLiquidity() {
           <AutoColumn gap="md">
             <BlueCard>
               <AutoColumn gap="10px">
-                <ThemedText.DeprecatedLink fontWeight={400} color="deprecated_primaryText1">
+                <ThemedText.DeprecatedLink fontWeight={400} color="accentAction">
                   <Trans>
                     <b>Tip:</b> Removing pool tokens converts your position back into underlying tokens at the current
                     rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive.
@@ -504,7 +515,7 @@ export default function RemoveLiquidity() {
             {!showDetailed && (
               <>
                 <ColumnCenter>
-                  <ArrowDown size="16" color={theme.deprecated_text2} />
+                  <ArrowDown size="16" color={theme.textSecondary} />
                 </ColumnCenter>
                 <LightCard>
                   <AutoColumn gap="10px">
@@ -578,7 +589,7 @@ export default function RemoveLiquidity() {
                   id="liquidity-amount"
                 />
                 <ColumnCenter>
-                  <ArrowDown size="16" color={theme.deprecated_text2} />
+                  <ArrowDown size="16" color={theme.textSecondary} />
                 </ColumnCenter>
                 <CurrencyInputPanel
                   hideBalance={true}
@@ -592,7 +603,7 @@ export default function RemoveLiquidity() {
                   id="remove-liquidity-tokena"
                 />
                 <ColumnCenter>
-                  <Plus size="16" color={theme.deprecated_text2} />
+                  <Plus size="16" color={theme.textSecondary} />
                 </ColumnCenter>
                 <CurrencyInputPanel
                   hideBalance={true}
@@ -627,11 +638,11 @@ export default function RemoveLiquidity() {
               {!account ? (
                 <TraceEvent
                   events={[BrowserEvent.onClick]}
-                  name={EventName.CONNECT_WALLET_BUTTON_CLICKED}
+                  name={InterfaceEventName.CONNECT_WALLET_BUTTON_CLICKED}
                   properties={{ received_swap_quote: false }}
-                  element={ElementName.CONNECT_WALLET_BUTTON}
+                  element={InterfaceElementName.CONNECT_WALLET_BUTTON}
                 >
-                  <ButtonLight onClick={toggleWalletModal}>
+                  <ButtonLight onClick={toggleWalletDrawer}>
                     <Trans>Connect Wallet</Trans>
                   </ButtonLight>
                 </TraceEvent>

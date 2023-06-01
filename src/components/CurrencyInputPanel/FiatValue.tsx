@@ -1,45 +1,58 @@
 import { Trans } from '@lingui/macro'
-// eslint-disable-next-line no-restricted-imports
-import { t } from '@lingui/macro'
-import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
+import { formatNumber, formatPriceImpact, NumberType } from '@uniswap/conedison/format'
+import { Percent } from '@uniswap/sdk-core'
+import Row from 'components/Row'
+import { LoadingBubble } from 'components/Tokens/loading'
+import { MouseoverTooltip } from 'components/Tooltip'
 import { useMemo } from 'react'
-import { useTheme } from 'styled-components/macro'
+import styled from 'styled-components/macro'
+import { ThemedText } from 'theme'
+import { warningSeverity } from 'utils/prices'
 
-import { ThemedText } from '../../theme'
-import { warningSeverity } from '../../utils/prices'
-import { MouseoverTooltip } from '../Tooltip'
+const FiatLoadingBubble = styled(LoadingBubble)`
+  border-radius: 4px;
+  width: 4rem;
+  height: 1rem;
+`
 
 export function FiatValue({
   fiatValue,
   priceImpact,
 }: {
-  fiatValue: CurrencyAmount<Currency> | null | undefined
+  fiatValue: { data?: number; isLoading: boolean }
   priceImpact?: Percent
 }) {
-  const theme = useTheme()
   const priceImpactColor = useMemo(() => {
     if (!priceImpact) return undefined
-    if (priceImpact.lessThan('0')) return theme.deprecated_green1
+    if (priceImpact.lessThan('0')) return 'accentSuccess'
     const severity = warningSeverity(priceImpact)
-    if (severity < 1) return theme.deprecated_text3
-    if (severity < 3) return theme.deprecated_yellow1
-    return theme.deprecated_red1
-  }, [priceImpact, theme.deprecated_green1, theme.deprecated_red1, theme.deprecated_text3, theme.deprecated_yellow1])
+    if (severity < 1) return 'textTertiary'
+    if (severity < 3) return 'deprecated_yellow1'
+    return 'accentFailure'
+  }, [priceImpact])
 
-  const p = Number(fiatValue?.toFixed())
-  const visibleDecimalPlaces = p < 1.05 ? 4 : 2
+  if (fiatValue.isLoading) {
+    return <FiatLoadingBubble />
+  }
 
   return (
-    <ThemedText.DeprecatedBody fontSize={14} color={theme.textSecondary}>
-      {fiatValue && <>${fiatValue?.toFixed(visibleDecimalPlaces, { groupSeparator: ',' })}</>}
-      {priceImpact ? (
-        <span style={{ color: priceImpactColor }}>
-          {' '}
-          <MouseoverTooltip text={t`The estimated difference between the USD values of input and output amounts.`}>
-            (<Trans>{priceImpact.multiply(-1).toSignificant(3)}%</Trans>)
+    <Row gap="sm">
+      <ThemedText.BodySmall>
+        {fiatValue.data ? (
+          formatNumber(fiatValue.data, NumberType.FiatTokenPrice)
+        ) : (
+          <MouseoverTooltip text={<Trans>Not enough liquidity to show accurate USD value.</Trans>}>-</MouseoverTooltip>
+        )}
+      </ThemedText.BodySmall>
+      {priceImpact && (
+        <ThemedText.BodySmall color={priceImpactColor}>
+          <MouseoverTooltip
+            text={<Trans>The estimated difference between the USD values of input and output amounts.</Trans>}
+          >
+            (<Trans>{formatPriceImpact(priceImpact)}</Trans>)
           </MouseoverTooltip>
-        </span>
-      ) : null}
-    </ThemedText.DeprecatedBody>
+        </ThemedText.BodySmall>
+      )}
+    </Row>
   )
 }

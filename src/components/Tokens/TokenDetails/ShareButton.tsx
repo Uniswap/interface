@@ -4,7 +4,7 @@ import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { chainIdToBackendName } from 'graphql/data/util'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useRef } from 'react'
-import { Twitter } from 'react-feather'
+import { Link, Twitter } from 'react-feather'
 import { useModalIsOpen, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import styled, { useTheme } from 'styled-components/macro'
@@ -96,9 +96,10 @@ export default function ShareButton({ currency }: { currency: Currency }) {
         <ShareActions>
           <ShareAction onClick={() => copyHelperRef.current?.forceCopy()}>
             <CopyHelper
-              link
+              InitialIcon={Link}
               color={theme.textPrimary}
               iconPosition="left"
+              gap={12}
               toCopy={window.location.href}
               ref={copyHelperRef}
             >

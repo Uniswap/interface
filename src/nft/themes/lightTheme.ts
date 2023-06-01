@@ -19,6 +19,8 @@ export const lightTheme: Theme = {
 
     modalBackdrop: 'rgba(0, 0, 0, 0.3)',
 
+    searchBackground: `rgba(255,255,255,0.4)`,
+    searchOutline: `rgba(0,0,0,0.1)`,
     stateOverlayHover: `rgba(153,161,189,0.08)`,
     green: vars.color.green400,
     gold: vars.color.gold400,
@@ -27,10 +29,11 @@ export const lightTheme: Theme = {
     textPrimary: vars.color.gray900,
     textSecondary: vars.color.gray500,
     textTertiary: vars.color.gray300,
+
+    dropShadow: `0px 4px 16px rgba(251, 17, 142, 0.4)`,
   },
   shadows: {
     menu: '0px 10px 30px rgba(0, 0, 0, 0.1)',
-    genieBlue: '0 4px 16px 0 rgba(251, 17, 142)',
     elevation: '0px 4px 16px rgba(70, 115, 250, 0.4)',
     tooltip: '0px 4px 16px rgba(10, 10, 59, 0.2)',
     deep: '8px 12px 20px rgba(51, 53, 72, 0.04), 4px 6px 12px rgba(51, 53, 72, 0.02), 4px 4px 8px rgba(51, 53, 72, 0.04)',

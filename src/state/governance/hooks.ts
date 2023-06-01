@@ -21,6 +21,7 @@ import {
   RB_REGISTRY_ADDRESSES,
   STAKING_PROXY_ADDRESSES,
 } from 'constants/addresses'
+import { SupportedChainId } from 'constants/chains'
 import { LATEST_GOVERNOR_INDEX } from 'constants/governance'
 import { ZERO_ADDRESS } from 'constants/misc'
 import { POLYGON_PROPOSAL_TITLE } from 'constants/proposals/polygon_proposal_title'
@@ -30,7 +31,6 @@ import { useSingleCallResult, useSingleContractMultipleData } from 'lib/hooks/mu
 import { useCallback, useMemo } from 'react'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
 
-import { SupportedChainId } from '../../constants/chains'
 import {
   BRAVO_START_BLOCK,
   MOONBEAN_START_BLOCK,
@@ -53,7 +53,7 @@ const useLatestGovernanceContract = useGovernanceProxyContract
 export function useUniContract() {
   const { chainId } = useWeb3React()
   const uniAddress = useMemo(() => (chainId ? UNI[chainId]?.address : undefined), [chainId])
-  return useContract(uniAddress, UNI_ABI, true)
+  return useContract(uniAddress, UniJSON.abi, true)
 }
 
 export function useRegistryContract(): Contract | null {
@@ -390,7 +390,7 @@ export function useUserDelegatee(): string {
 }
 
 // gets the users current votes
-export function useUserVotes(): { loading: boolean; votes: CurrencyAmount<Token> | undefined } {
+export function useUserVotes(): { loading: boolean; votes?: CurrencyAmount<Token> } {
   const { account, chainId } = useWeb3React()
   const governance = useGovernanceProxyContract()
 

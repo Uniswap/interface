@@ -64,6 +64,14 @@ To run _all_ cypress integration tests _from the command line_:
 yarn cypress:run
 ```
 
+## Adding a new dependency
+
+Adding many new dependencies would cause bloat, so we have a test to guard against this: `scripts/test-size.js`. This will run as part of CI with every PR.
+
+If you *need* to add a new dependency, and it causes the generated build to exceed its size quota, you'll need to increase the quota. Do so in `scripts/test-size.js`.
+
+You can also run the test on your last build using `yarn build && yarn test:size`. If you exceed the size quota, it will let you know what to do :).
+
 ## Engineering standards
 
 Code merged into the `main` branch of this repository should adhere to high standards of correctness and maintainability.

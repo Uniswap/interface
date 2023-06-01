@@ -1,7 +1,8 @@
 import { BaseVariant, FeatureFlag, featureFlagSettings, useUpdateFlag } from 'featureFlags'
-import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
+import { DetailsV2Variant, useDetailsV2Flag } from 'featureFlags/flags/nftDetails'
 import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
-import { useAtomValue, useUpdateAtom } from 'jotai/utils'
+import { UnifiedRouterVariant, useUnifiedRoutingAPIFlag } from 'featureFlags/flags/unifiedRouter'
+import { useUpdateAtom } from 'jotai/utils'
 import { Children, PropsWithChildren, ReactElement, ReactNode, useCallback, useState } from 'react'
 import { X } from 'react-feather'
 import { useModalIsOpen, useToggleFeatureFlags } from 'state/application/hooks'
@@ -163,10 +164,9 @@ function FeatureFlagGroup({ name, children }: PropsWithChildren<{ name: string }
   )
 }
 
-function FeatureFlagOption({ variant, featureFlag, value, label }: FeatureFlagProps) {
+function FeatureFlagOption({ value, variant, featureFlag, label }: FeatureFlagProps) {
   const updateFlag = useUpdateFlag()
   const [count, setCount] = useState(0)
-  const featureFlags = useAtomValue(featureFlagSettings)
 
   return (
     <Row key={featureFlag}>
@@ -180,7 +180,7 @@ function FeatureFlagOption({ variant, featureFlag, value, label }: FeatureFlagPr
           updateFlag(featureFlag, e.target.value)
           setCount(count + 1)
         }}
-        value={featureFlags[featureFlag]}
+        value={value}
       >
         {Object.values(variant).map((variant) => (
           <Variant key={variant} option={variant} />
@@ -202,9 +202,18 @@ export default function FeatureFlagModal() {
           <X size={24} />
         </CloseButton>
       </Header>
-      <FeatureFlagGroup name="Phase 1">
-        <FeatureFlagOption variant={NftVariant} value={useNftFlag()} featureFlag={FeatureFlag.nft} label="NFTs" />
-      </FeatureFlagGroup>
+      <FeatureFlagOption
+        variant={DetailsV2Variant}
+        value={useDetailsV2Flag()}
+        featureFlag={FeatureFlag.detailsV2}
+        label="Use the new details page for nfts"
+      />
+      <FeatureFlagOption
+        variant={UnifiedRouterVariant}
+        value={useUnifiedRoutingAPIFlag()}
+        featureFlag={FeatureFlag.uraEnabled}
+        label="Enable the Unified Routing API"
+      />
       <FeatureFlagGroup name="Debug">
         <FeatureFlagOption
           variant={TraceJsonRpcVariant}

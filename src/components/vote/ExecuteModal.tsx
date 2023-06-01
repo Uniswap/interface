@@ -37,7 +37,7 @@ const ConfirmedIcon = styled(ColumnCenter)`
 interface ExecuteModalProps {
   isOpen: boolean
   onDismiss: () => void
-  proposalId: string | undefined // id for the proposal to execute
+  proposalId?: string // id for the proposal to execute
 }
 
 export default function ExecuteModal({ isOpen, onDismiss, proposalId }: ExecuteModalProps) {
@@ -109,7 +109,7 @@ export default function ExecuteModal({ isOpen, onDismiss, proposalId }: ExecuteM
             <CustomLightSpinner src={Circle} alt="loader" size="90px" />
           </ConfirmedIcon>
           <AutoColumn gap="100px" justify="center">
-            <AutoColumn gap="12px" justify="center">
+            <AutoColumn gap="md" justify="center">
               <ThemedText.DeprecatedLargeHeader>
                 <Trans>Executing</Trans>
               </ThemedText.DeprecatedLargeHeader>
@@ -127,10 +127,10 @@ export default function ExecuteModal({ isOpen, onDismiss, proposalId }: ExecuteM
             <StyledClosed onClick={wrappedOnDismiss} />
           </RowBetween>
           <ConfirmedIcon>
-            <ArrowUpCircle strokeWidth={0.5} size={90} color={theme.deprecated_primary1} />
+            <ArrowUpCircle strokeWidth={0.5} size={90} color={theme.accentAction} />
           </ConfirmedIcon>
           <AutoColumn gap="100px" justify="center">
-            <AutoColumn gap="12px" justify="center">
+            <AutoColumn gap="md" justify="center">
               <ThemedText.DeprecatedLargeHeader>
                 <Trans>Execution Submitted</Trans>
               </ThemedText.DeprecatedLargeHeader>

@@ -1,10 +1,7 @@
-import { useLoadCollectionQuery } from 'graphql/data/nft/Collection'
-import { useIsMobile } from 'nft/hooks'
-import { fetchTrendingCollections } from 'nft/queries'
-import { TimePeriod } from 'nft/types'
+import { HistoryDuration } from 'graphql/data/__generated__/types-and-hooks'
+import { useTrendingCollections } from 'graphql/data/nft/TrendingCollections'
 import { calculateCardIndex } from 'nft/utils'
-import { Suspense, useCallback, useMemo, useState } from 'react'
-import { useQuery } from 'react-query'
+import { useCallback, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { opacify } from 'theme/utils'
@@ -16,11 +13,11 @@ const BannerContainer = styled.div`
   display: flex;
   justify-content: center;
   width: 100%;
-  padding-top: 32px;
+  padding-top: 22px;
   position: relative;
 
   @media only screen and (min-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
-    padding: 32px 16px 0 16px;
+    padding: 32px 16px;
   }
 `
 
@@ -53,7 +50,7 @@ const BannerMainArea = styled.div`
   width: 100%;
   height: 100%;
   gap: 36px;
-  max-width: 1200px;
+  max-width: ${({ theme }) => theme.maxWidth};
   justify-content: space-between;
   z-index: 2;
 
@@ -72,8 +69,6 @@ const HeaderContainer = styled.div`
   font-weight: 500;
   font-size: 72px;
   line-height: 88px;
-  justify-content: start;
-  align-items: start;
   align-self: center;
   flex-shrink: 0;
   padding-bottom: 32px;
@@ -91,12 +86,24 @@ const HeaderContainer = styled.div`
   }
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
-    font-size: 20px;
-    line-height: 28px;
-    justify-content: center;
-    align-items: center;
-    padding-top: 0px;
-    padding-bottom: 0px;
+    line-height: 43px;
+    text-align: center;
+    padding-bottom: 16px;
+
+    br {
+      display: none;
+    }
+  }
+
+  /* Custom breakpoint to split into two lines on smaller screens */
+  @media only screen and (max-width: 550px) {
+    font-size: 28px;
+    line-height: 34px;
+    padding-bottom: 0;
+
+    br {
+      display: unset;
+    }
   }
 `
 
@@ -106,32 +113,17 @@ const TRENDING_COLLECTION_SIZE = 5
 
 const Banner = () => {
   const navigate = useNavigate()
-  const isMobile = useIsMobile()
 
-  const { data } = useQuery(
-    ['trendingCollections'],
-    () => {
-      return fetchTrendingCollections({
-        volumeType: 'eth',
-        timePeriod: TimePeriod.OneDay,
-        size: TRENDING_COLLECTION_SIZE + EXCLUDED_COLLECTIONS.length,
-      })
-    },
-    {
-      refetchOnReconnect: false,
-      refetchOnWindowFocus: false,
-      refetchOnMount: false,
-    }
+  const { data: trendingCollections } = useTrendingCollections(
+    TRENDING_COLLECTION_SIZE + EXCLUDED_COLLECTIONS.length,
+    HistoryDuration.Day
   )
 
-  const collections = useMemo(
-    () => data?.filter((collection) => !EXCLUDED_COLLECTIONS.includes(collection.address)).slice(0, 5),
-    [data]
-  )
-
-  // Trigger queries for the top trending collections, so that the data is immediately available if the user clicks through.
-  const collectionAddresses = useMemo(() => collections?.map(({ address }) => address), [collections])
-  useLoadCollectionQuery(collectionAddresses)
+  const collections = useMemo(() => {
+    return trendingCollections
+      ?.filter((collection) => collection.address && !EXCLUDED_COLLECTIONS.includes(collection.address))
+      .slice(0, TRENDING_COLLECTION_SIZE)
+  }, [trendingCollections])
 
   const [activeCollectionIdx, setActiveCollectionIdx] = useState(0)
   const onToggleNextSlide = useCallback(
@@ -155,19 +147,17 @@ const Banner = () => {
       ) : null}
       <BannerMainArea>
         <HeaderContainer>
-          Better prices. {!isMobile && <br />}
+          Better prices. <br />
           More listings.
         </HeaderContainer>
         {collections ? (
           <Carousel activeIndex={activeCollectionIdx} toggleNextSlide={onToggleNextSlide}>
             {collections.map((collection) => (
-              <Suspense fallback={<LoadingCarouselCard collection={collection} />} key={collection.address}>
-                <CarouselCard
-                  key={collection.address}
-                  collection={collection}
-                  onClick={() => navigate(`/nfts/collection/${collection.address}`)}
-                />
-              </Suspense>
+              <CarouselCard
+                key={collection.address}
+                collection={collection}
+                onClick={() => navigate(`/nfts/collection/${collection.address}`)}
+              />
             ))}
           </Carousel>
         ) : (

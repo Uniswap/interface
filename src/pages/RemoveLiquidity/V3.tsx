@@ -12,17 +12,19 @@ import { AutoColumn } from 'components/Column'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import { Break } from 'components/earn/styled'
 import FormattedCurrencyAmount from 'components/FormattedCurrencyAmount'
-import Loader from 'components/Loader'
+import Loader from 'components/Icons/LoadingSpinner'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { AddRemoveTabs } from 'components/NavigationTabs'
 import { AutoRow, RowBetween, RowFixed } from 'components/Row'
 import Slider from 'components/Slider'
 import Toggle from 'components/Toggle'
+import { isSupportedChain } from 'constants/chains'
 import { useV3NFTPositionManagerContract } from 'hooks/useContract'
 import useDebouncedChangeHandler from 'hooks/useDebouncedChangeHandler'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import { useV3PositionFromTokenId } from 'hooks/useV3Positions'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
+import { PositionPageUnsupportedContent } from 'pages/Pool/PositionPage'
 import { useCallback, useMemo, useState } from 'react'
 import { Navigate, useLocation, useParams } from 'react-router-dom'
 import { Text } from 'rebass'
@@ -45,6 +47,7 @@ const DEFAULT_REMOVE_V3_LIQUIDITY_SLIPPAGE_TOLERANCE = new Percent(5, 100)
 
 // redirect invalid tokenIds
 export default function RemoveLiquidityV3() {
+  const { chainId } = useWeb3React()
   const { tokenId } = useParams<{ tokenId: string }>()
   const location = useLocation()
   const parsedTokenId = useMemo(() => {
@@ -56,10 +59,14 @@ export default function RemoveLiquidityV3() {
   }, [tokenId])
 
   if (parsedTokenId === null || parsedTokenId.eq(0)) {
-    return <Navigate to={{ ...location, pathname: '/pool' }} replace />
+    return <Navigate to={{ ...location, pathname: '/pools' }} replace />
   }
 
-  return <Remove tokenId={parsedTokenId} />
+  if (isSupportedChain(chainId)) {
+    return <Remove tokenId={parsedTokenId} />
+  } else {
+    return <PositionPageUnsupportedContent />
+  }
 }
 function Remove({ tokenId }: { tokenId: BigNumber }) {
   const { position } = useV3PositionFromTokenId(tokenId)
@@ -72,7 +79,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
   // flag for receiving WETH
   // we always collect as WETH as unwrap, sweep token methods would clash between adapters otherwise
   const [receiveWETH, setReceiveWETH] = useState(true)
-  const nativeCurrency = useNativeCurrency()
+  const nativeCurrency = useNativeCurrency(chainId)
   const nativeWrappedSymbol = nativeCurrency.wrapped.symbol
 
   // burn state
@@ -234,12 +241,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
         </RowBetween>
         {feeValue0?.greaterThan(0) || feeValue1?.greaterThan(0) ? (
           <>
-            <ThemedText.DeprecatedItalic
-              fontSize={12}
-              color={theme.deprecated_text2}
-              textAlign="left"
-              padding="8px 0 0 0"
-            >
+            <ThemedText.DeprecatedItalic fontSize={12} color={theme.textSecondary} textAlign="left" padding="8px 0 0 0">
               <Trans>You will also collect fees earned from this position.</Trans>
             </ThemedText.DeprecatedItalic>
             <RowBetween>
@@ -288,7 +290,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
         onDismiss={handleDismissConfirmation}
         attemptingTxn={attemptingTxn}
         hash={txnHash ?? ''}
-        content={() => (
+        reviewContent={() => (
           <ConfirmationModalContent
             title={<Trans>Remove Liquidity</Trans>}
             onDismiss={handleDismissConfirmation}
@@ -302,7 +304,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
           creating={false}
           adding={false}
           positionID={tokenId.toString()}
-          defaultSlippage={DEFAULT_REMOVE_V3_LIQUIDITY_SLIPPAGE_TOLERANCE}
+          autoSlippage={DEFAULT_REMOVE_V3_LIQUIDITY_SLIPPAGE_TOLERANCE}
         />
         <Wrapper>
           {position ? (
@@ -417,7 +419,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
               )}
 
               <div style={{ display: 'flex' }}>
-                <AutoColumn gap="12px" style={{ flex: '1' }}>
+                <AutoColumn gap="md" style={{ flex: '1' }}>
                   <ButtonConfirmed
                     confirmed={false}
                     disabled={removed || percent === 0 || !liquidityValue0}

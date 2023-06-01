@@ -1,149 +1,99 @@
 import { TraceEvent } from '@uniswap/analytics'
-import { BrowserEvent, ElementName, EventName } from '@uniswap/analytics-events'
-import React from 'react'
-import { Check } from 'react-feather'
+import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
+import { useCloseAccountDrawer } from 'components/AccountDrawer'
+import Loader from 'components/Icons/LoadingSpinner'
+import { ActivationStatus, useActivationState } from 'connection/activate'
+import { Connection } from 'connection/types'
 import styled from 'styled-components/macro'
+import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { flexColumnNoWrap, flexRowNoWrap } from 'theme/styles'
 
-import { ExternalLink } from '../../theme'
+import NewBadge from './NewBadge'
 
-const InfoCard = styled.button<{ isActive?: boolean }>`
-  background-color: ${({ theme }) => theme.backgroundInteractive};
-  padding: 1rem;
-  outline: none;
-  border: 1px solid;
-  border-radius: 12px;
-  width: 100% !important;
-  &:focus {
-    background-color: ${({ theme }) => theme.hoverState};
-  }
-  border-color: ${({ theme, isActive }) => (isActive ? theme.accentActive : 'transparent')};
-`
-
-const CheckIcon = styled(Check)`
+const OptionCardLeft = styled.div`
   ${flexColumnNoWrap};
-  height: 20px;
-  width: 20px;
+  flex-direction: row;
   align-items: center;
-  justify-content: center;
-  color: ${({ theme }) => theme.accentAction};
-  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
-    align-items: flex-end;
-  `};
 `
 
-const OptionCard = styled(InfoCard as any)`
+const OptionCardClickable = styled.button<{ selected: boolean }>`
+  background-color: ${({ theme }) => theme.backgroundModule};
+  border: none;
+  width: 100% !important;
+
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  margin-top: 2rem;
-  padding: 1rem;
-`
+  padding: 18px;
 
-const OptionCardLeft = styled.div`
-  ${flexColumnNoWrap};
-  justify-content: center;
-  height: 100%;
-`
+  transition: ${({ theme }) => theme.transition.duration.fast};
+  opacity: ${({ disabled, selected }) => (disabled && !selected ? '0.5' : '1')};
 
-const OptionCardClickable = styled(OptionCard as any)<{
-  active?: boolean
-  clickable?: boolean
-}>`
-  margin-top: 0;
-  border: ${({ active, theme }) => active && `1px solid ${theme.accentActive}`};
   &:hover {
-    cursor: ${({ clickable }) => clickable && 'pointer'};
-    background-color: ${({ theme }) => theme.hoverState};
+    cursor: ${({ disabled }) => !disabled && 'pointer'};
+    background-color: ${({ theme, disabled }) => !disabled && theme.hoverState};
   }
-  opacity: ${({ disabled }) => (disabled ? '0.5' : '1')};
+  &:focus {
+    background-color: ${({ theme, disabled }) => !disabled && theme.hoverState};
+  }
 `
 
 const HeaderText = styled.div`
   ${flexRowNoWrap};
   align-items: center;
   justify-content: center;
-  color: ${(props) =>
-    props.color === 'blue' ? ({ theme }) => theme.deprecated_primary1 : ({ theme }) => theme.deprecated_text1};
+  color: ${(props) => (props.color === 'blue' ? ({ theme }) => theme.accentAction : ({ theme }) => theme.textPrimary)};
   font-size: 16px;
   font-weight: 600;
+  padding: 0 8px;
 `
 
-const SubHeader = styled.div`
-  color: ${({ theme }) => theme.deprecated_text1};
-  margin-top: 10px;
-  font-size: 12px;
-`
-
-const IconWrapper = styled.div<{ size?: number | null }>`
+const IconWrapper = styled.div`
   ${flexColumnNoWrap};
   align-items: center;
   justify-content: center;
-  padding-right: 12px;
   & > img,
   span {
-    height: ${({ size }) => (size ? size + 'px' : '28px')};
-    width: ${({ size }) => (size ? size + 'px' : '28px')};
+    height: 40px;
+    width: 40px;
   }
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
     align-items: flex-end;
   `};
 `
 
-export default function Option({
-  link = null,
-  clickable = true,
-  size,
-  onClick = null,
-  color,
-  header,
-  subheader,
-  icon,
-  isActive = false,
-  id,
-}: {
-  link?: string | null
-  clickable?: boolean
-  size?: number | null
-  onClick?: null | (() => void)
-  color: string
-  header: React.ReactNode
-  subheader?: React.ReactNode
-  icon: string
-  isActive?: boolean
-  id: string
-}) {
-  const content = (
+export default function Option({ connection }: { connection: Connection }) {
+  const { activationState, tryActivation } = useActivationState()
+  const closeDrawer = useCloseAccountDrawer()
+  const activate = () => tryActivation(connection, closeDrawer)
+
+  const isSomeOptionPending = activationState.status === ActivationStatus.PENDING
+  const isCurrentOptionPending = isSomeOptionPending && activationState.connection.type === connection.type
+  const isDarkMode = useIsDarkMode()
+
+  return (
     <TraceEvent
       events={[BrowserEvent.onClick]}
-      name={EventName.WALLET_SELECTED}
-      properties={{ wallet_type: header }}
-      element={ElementName.WALLET_TYPE_OPTION}
+      name={InterfaceEventName.WALLET_SELECTED}
+      properties={{ wallet_type: connection.getName() }}
+      element={InterfaceElementName.WALLET_TYPE_OPTION}
     >
       <OptionCardClickable
-        id={id}
-        onClick={onClick}
-        clickable={clickable && !isActive}
-        active={isActive}
-        data-testid="wallet-modal-option"
+        onClick={activate}
+        disabled={isSomeOptionPending}
+        selected={isCurrentOptionPending}
+        data-testid={`wallet-option-${connection.type}`}
       >
         <OptionCardLeft>
-          <HeaderText color={color}>
-            <IconWrapper size={size}>
-              <img src={icon} alt="Icon" />
-            </IconWrapper>
-            {header}
-          </HeaderText>
-          {subheader && <SubHeader>{subheader}</SubHeader>}
+          <IconWrapper>
+            <img src={connection.getIcon?.(isDarkMode)} alt="Icon" />
+          </IconWrapper>
+          <HeaderText>{connection.getName()}</HeaderText>
+          {connection.isNew && <NewBadge />}
         </OptionCardLeft>
-        {isActive && <CheckIcon />}
+        {isCurrentOptionPending && <Loader />}
       </OptionCardClickable>
     </TraceEvent>
   )
-  if (link) {
-    return <ExternalLink href={link}>{content}</ExternalLink>
-  }
-
-  return content
 }

@@ -1,5 +1,6 @@
 import { atomWithStorage, useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { createContext, ReactNode, useCallback, useContext } from 'react'
+import { useGate } from 'statsig-react'
 export { FeatureFlag } from './flags/featureFlags'
 
 interface FeatureFlagsContextType {
@@ -9,7 +10,7 @@ interface FeatureFlagsContextType {
 
 const FeatureFlagContext = createContext<FeatureFlagsContextType>({ isLoaded: false, flags: {} })
 
-export function useFeatureFlagsContext(): FeatureFlagsContextType {
+function useFeatureFlagsContext(): FeatureFlagsContextType {
   const context = useContext(FeatureFlagContext)
   if (!context) {
     throw Error('Feature flag hooks can only be used by children of FeatureFlagProvider.')
@@ -55,12 +56,18 @@ export enum BaseVariant {
   Enabled = 'enabled',
 }
 
-export function useBaseFlag(flag: string): BaseVariant {
-  switch (useFeatureFlagsContext().flags[flag]) {
+export function useBaseFlag(flag: string, defaultValue = BaseVariant.Control): BaseVariant {
+  const { value: statsigValue } = useGate(flag) // non-existent gates return false
+  const featureFlagsContext = useFeatureFlagsContext()
+  if (statsigValue) {
+    return BaseVariant.Enabled
+  }
+  switch (featureFlagsContext.flags[flag]) {
     case 'enabled':
       return BaseVariant.Enabled
     case 'control':
-    default:
       return BaseVariant.Control
+    default:
+      return defaultValue
   }
 }

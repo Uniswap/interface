@@ -1,14 +1,16 @@
 msgid ""
 msgstr ""
+"POT-Creation-Date: 2023-05-22 22:30+0000\n"
+"Mime-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: de\n"
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-11-17 01:33\n"
+"PO-Revision-Date: 2023-05-23 20:46\n"
 "Last-Translator: \n"
-"Language: de_DE\n"
 "Language-Team: German\n"
-"Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Crowdin-Project: uniswap-interface\n"
 "X-Crowdin-Project-ID: 458284\n"
@@ -21,20 +23,18 @@ msgstr ""
 msgid "$-"
 msgstr "$-"
 
-#: src/components/earn/PoolCard.tsx
-#: src/components/swap/GasEstimateBadge.tsx
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "${0}"
 msgstr "${0}"
 
+#: src/nft/components/profile/list/MarketplaceRow.tsx
+msgid "% max"
+msgstr "% max"
+
 #: src/components/AddressInputPanel/index.tsx
 msgid "(View on Explorer)"
 msgstr "(Im Explorer anzeigen)"
-
-#: src/components/AccountDetails/index.tsx
-msgid "(clear all)"
-msgstr "(alles löschen)"
 
 #: src/pages/Vote/Landing.tsx
 msgid "(edit)"
@@ -44,16 +44,13 @@ msgstr "(bearbeiten)"
 msgid "({0})"
 msgstr "({0})"
 
+#: src/nft/components/profile/view/EmptyWalletContent.tsx
+msgid "+ New position"
+msgstr "+ Neue Position"
+
 #: src/pages/Swap/index.tsx
 msgid "- Remove recipient"
 msgstr "- Empfänger entfernen"
-
-#: src/components/earn/PoolCard.tsx
-#: src/components/earn/PoolCard.tsx
-#: src/pages/Earn/Manage.tsx
-#: src/pages/Earn/Manage.tsx
-msgid "0 UNI / week"
-msgstr "0 UNI / Woche"
 
 #: src/components/Tokens/TokenDetails/StatsSection.tsx
 msgid "24H volume"
@@ -77,7 +74,7 @@ msgstr "52W hoch"
 
 #: src/components/Tokens/TokenDetails/StatsSection.tsx
 msgid "52W low"
-msgstr "52W niedrig"
+msgstr "52 W niedrig"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "75%"
@@ -120,9 +117,10 @@ msgstr "<0>Tipp:</0> Wenn Sie Liquidität hinzufügen, erhalten Sie Pool-Token, 
 msgid "<0>Unlock voting</0> to prepare for the next proposal."
 msgstr "<0>Abstimmen freischalten</0> um bereit zu sein für den nächsten Vorschlag."
 
-#: src/components/claim/ClaimModal.tsx
-msgid "<0>🎉 </0>Welcome to team Unicorn :) <1>🎉</1>"
-msgstr "<0>🎉 </0>Willkommen im Team Unicorn :) <1>🎉</1>"
+#: src/components/PositionListItem/index.tsx
+#: src/components/PositionListItem/index.tsx
+msgid "<0>{0} </0><1/> per <2/>"
+msgstr "<0>{0} </0><1/> pro <2/>"
 
 #: src/pages/Vote/Landing.tsx
 msgid "A minimum threshold of 0.25% of the total UNI supply is required to submit proposals"
@@ -130,26 +128,26 @@ msgstr "Für das Einreichen von Anträgen ist eine Mindestschwelle von 0,25% des
 
 #: src/components/swap/PriceImpactWarning.tsx
 msgid "A swap of this size may have a high price impact, given the current liquidity in the pool. There may be a large difference between the amount of your input token and what you will receive in the output token"
-msgstr "Ein Swap dieser Größe kann angesichts der aktuellen Liquidität im Pool einen hohen Preiseffekt haben. Es kann einen großen Unterschied zwischen der Menge Ihres Eingabe-Tokens und dem geben, was Sie als Ausgabe-Token erhalten"
+msgstr "Ein Swap dieser Größenordnung kann angesichts der aktuellen Liquidität im Pool erhebliche Auswirkungen auf den Preis haben. Es kann einen großen Unterschied zwischen der Menge Ihres Eingabe-Tokens und dem, was Sie als Ausgabe-Token erhalten, geben"
 
-#: src/components/Menu/index.tsx
 #: src/components/Tokens/TokenDetails/About.tsx
 msgid "About"
 msgstr "Über"
 
-#: src/components/swap/SwapModalHeader.tsx
+#: src/components/swap/SwapModalFooter.tsx
+#: src/nft/components/details/detailsV2/OffersTableContent.tsx
 msgid "Accept"
 msgstr "Akzeptieren"
-
-#: src/components/AccountDetails/index.tsx
-msgid "Account"
-msgstr "Konto"
 
 #: src/pages/Vote/styled.tsx
 msgid "Active"
 msgstr "Aktiv"
 
-#: src/components/AccountDetailsV2/TransactionBody.tsx
+#: src/components/AccountDrawer/MiniPortfolio/index.tsx
+#: src/nft/components/details/detailsV2/DataPageTable.tsx
+msgid "Activity"
+msgstr "Aktivität"
+
 #: src/components/PositionCard/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 msgid "Add"
@@ -157,7 +155,7 @@ msgstr "Hinzufügen"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Add <0/> and <1/> to Uniswap V2"
-msgstr "<0/> und <1/> zu Uniswap V2 hinzufügen"
+msgstr "Addiere <0/> und <1/> zu Uniswap V2"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Add Delegate +"
@@ -172,6 +170,14 @@ msgstr "Liquidität hinzufügen"
 msgid "Add V2 Liquidity"
 msgstr "V2 Liquidität hinzufügen"
 
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Add V2 liquidity failed"
+msgstr "Das Hinzufügen der V2-Liquidität ist fehlgeschlagen"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Add liquidity failed"
+msgstr "Das Hinzufügen von Liquidität ist fehlgeschlagen"
+
 #: src/pages/PoolFinder/index.tsx
 msgid "Add liquidity."
 msgstr "Liquidität hinzufügen."
@@ -180,37 +186,50 @@ msgstr "Liquidität hinzufügen."
 msgid "Add more liquidity"
 msgstr "Mehr Liquidität hinzufügen"
 
+#: src/nft/components/details/detailsV2/ListingsTableContent.tsx
+msgid "Add to Bag"
+msgstr "Der Tasche hinzufügen"
+
+#: src/nft/components/collection/ActivityCells.tsx
+#: src/nft/components/collection/CollectionAsset.tsx
+msgid "Add to bag"
+msgstr "Der Tasche hinzufügen"
+
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Add {0}"
-msgstr "{0}hinzufügen"
-
-#: src/pages/Earn/Manage.tsx
-msgid "Add {0}-{1} liquidity"
-msgstr "{0}-{1} Liquidität hinzufügen"
+msgstr "Addiere {0}"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Add {0}/{1} V3 liquidity"
 msgstr "{0}/{1} V3 Liquidität hinzufügen"
 
-#: src/components/AccountDetailsV2/TransactionBody.tsx
-msgid "Added"
-msgstr "Hinzugefügt"
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+msgid "Added Liquidity"
+msgstr "Zusätzliche Liquidität"
 
-#: src/nft/components/collection/CollectionAsset.tsx
-msgid "Added to bag"
-msgstr ""
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Added V2 liquidity"
+msgstr "V2-Liquidität hinzugefügt"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Added liquidity"
+msgstr "Zusätzliche Liquidität"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Added {0}"
 msgstr "{0} hinzugefügt"
 
-#: src/components/AccountDetailsV2/TransactionBody.tsx
-msgid "Adding"
-msgstr "Hinzufügen"
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Adding V2 liquidity"
+msgstr "Hinzufügen von V2-Liquidität"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Adding liquidity"
+msgstr "Liquidität hinzufügen"
 
 #: src/components/vote/QueueModal.tsx
 msgid "Adding this proposal to the queue will allow it to be executed, after a delay."
-msgstr "Wenn Sie diesen Vorschlag der Warteschlange hinzufügen, kann er nach einer Verzögerung ausgeführt werden."
+msgstr "Wenn Sie diesen Vorschlag zur Warteschlange hinzufügen, kann er nach einer Verzögerung ausgeführt werden."
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Address has no available claim"
@@ -224,26 +243,26 @@ msgstr "Gegen"
 msgid "Allow LP token migration"
 msgstr "LP-Token Migration erlauben"
 
-#: src/components/Settings/index.tsx
-msgid "Allow high price impact trades and skip the confirm screen. Use at your own risk."
-msgstr "Erlaube hohe Preisauswirkungen und überspringe den Bestätigungsbildschirm. Auf eigene Gefahr."
-
-#: src/pages/Swap/index.tsx
-msgid "Allow the Uniswap Protocol to use your {0}"
-msgstr "Erlaube dem Uniswap Protokoll, {0} zu verwenden"
-
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allowed"
 msgstr "Erlaubt"
 
+#: src/nft/components/profile/list/PriceTextInput.tsx
+msgid "Already listed at"
+msgstr "Bereits gelistet unter"
+
 #: src/constants/tokenSafety.tsx
 #: src/constants/tokenSafety.tsx
 msgid "Always conduct your own research before trading."
-msgstr "Führen Sie vor dem Handel immer Ihre eigene Recherche durch."
+msgstr "Führen Sie vor dem Handel immer Ihre eigenen Recherchen durch."
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Amount"
 msgstr "Betrag"
+
+#: src/nft/components/bag/BagFooter.tsx
+msgid "An approval is needed to use this token."
+msgstr "Für die Verwendung dieses Tokens ist eine Genehmigung erforderlich."
 
 #: src/components/Tokens/TokenTable/TokenTable.tsx
 msgid "An error occurred loading tokens. Please try again."
@@ -253,8 +272,17 @@ msgstr "Beim Laden der Token ist ein Fehler aufgetreten. Bitte versuche es erneu
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Beim Versuch, diesen Swap auszuführen, ist ein Fehler aufgetreten. Möglicherweise müssen Sie Ihre Schlupftoleranz erhöhen. Wenn dies nicht funktioniert, liegt möglicherweise eine Inkompatibilität mit dem Token vor, den Sie handeln. Hinweis: Gebühren für Transfer- und Rebase-Token sind nicht mit Uniswap V3 kompatibel."
 
-#: src/components/AccountDetailsV2/TransactionBody.tsx
-#: src/components/earn/StakingModal.tsx
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Approval failed"
+msgstr "Die Genehmigung ist fehlgeschlagen"
+
+#: src/nft/components/bag/BagFooter.tsx
+#: src/pages/Swap/index.tsx
+msgid "Approval pending"
+msgstr "Bestätigung ausstehend"
+
+#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/profile/list/Modal/ListModalSection.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
 msgstr "Bestätigen"
@@ -262,6 +290,19 @@ msgstr "Bestätigen"
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Approve Token"
 msgstr "Token genehmigen"
+
+#: src/components/NavBar/ChainSelectorRow.tsx
+msgid "Approve in wallet"
+msgstr "In der Brieftasche genehmigen"
+
+#: src/nft/components/bag/BagFooter.tsx
+#: src/pages/Swap/index.tsx
+msgid "Approve in your wallet"
+msgstr "Genehmigen Sie in Ihrer Brieftasche"
+
+#: src/pages/Swap/index.tsx
+msgid "Approve use of {0}"
+msgstr "Genehmigen Sie die Verwendung von {0}"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -271,12 +312,13 @@ msgstr "Token genehmigen"
 msgid "Approve {0}"
 msgstr "{0} freischalten"
 
-#: src/components/AccountDetailsV2/TransactionBody.tsx
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approved"
 msgstr "Bestätigt"
 
-#: src/components/AccountDetailsV2/TransactionBody.tsx
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approving"
@@ -289,37 +331,27 @@ msgstr "Bestätige"
 msgid "Approving {0}"
 msgstr "Schalte {0} frei"
 
-#: src/components/DowntimeWarning/index.tsx
-msgid "Arbitrum is in Beta and may experience downtime. During downtime, your position will not earn fees and you will be unable to remove liquidity. <0>Read more.</0>"
-msgstr "Arbitrum befindet sich in der Beta-Phase und es kann zu Ausfallzeiten kommen. Während der Ausfallzeit werden für Ihre Position keine Gebühren erhoben und Sie können keine Liquidität entfernen. <0>Weiterlesen.</0>"
-
-#: src/components/Settings/index.tsx
-msgid "Are you sure?"
-msgstr "Sind Sie sicher?"
-
-#: src/components/claim/ClaimModal.tsx
-msgid "As a member of the Uniswap community you may claim UNI to be used for voting and governance.<0/><1/><2>Read more about UNI</2>"
-msgstr "Als Mitglied der Uniswap-Community können Sie UNI beantragen, dass für Abstimmungen verwendet wird.<0/><1/><2>Lesen Sie mehr über UNI</2>"
-
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "At least {0} {1} and {2} {3} will be refunded to your wallet due to selected price range."
 msgstr "Mindestens {0} {1} und {2} {3} werden aufgrund des gewählten Preisbereichs in Ihre Wallet zurückerstattet."
 
-#: src/components/TransactionSettings/index.tsx
+#: src/components/Settings/MaxSlippageSettings/index.tsx
+#: src/components/Settings/MaxSlippageSettings/index.tsx
+#: src/theme/components/ThemeToggle.tsx
 msgid "Auto"
 msgstr "Autom."
 
-#: src/components/Settings/index.tsx
+#: src/components/Settings/RouterPreferenceSettings/index.tsx
 msgid "Auto Router API"
 msgstr "Auto-Router-API"
 
-#: src/components/earn/StakingModal.tsx
-msgid "Available to deposit: {0}"
-msgstr "Zur Einlage verfügbar: {0}"
+#: src/pages/Pool/PositionPage.tsx
+msgid "Back to Pools"
+msgstr "Zurück zu Pools"
 
-#: src/components/WalletModal/PendingView.tsx
+#: src/components/WalletModal/ConnectionErrorView.tsx
 msgid "Back to wallet selection"
-msgstr "Zurück zur Brieftaschenauswahl"
+msgstr "Zurück zur Wallet-Auswahl"
 
 #: src/nft/components/bag/BagHeader.tsx
 msgid "Bag"
@@ -328,7 +360,7 @@ msgstr "Tasche"
 #: src/components/CurrencyInputPanel/SwapCurrencyInputPanel.tsx
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "Balance: {0}"
-msgstr "Guthaben: {0}"
+msgstr "Saldo: {0}"
 
 #: src/components/FeeSelector/shared.tsx
 msgid "Best for exotic pairs."
@@ -347,61 +379,129 @@ msgid "Best for very stable pairs."
 msgstr "Am besten für sehr stabile Paare."
 
 #: src/components/swap/SwapRoute.tsx
-msgid "Best price route costs ~{formattedGasPriceString} in gas."
-msgstr "Die günstigste Route kostet ~{formattedGasPriceString} in Gas."
+msgid "Best price route costs ~{gasPrice} in gas."
+msgstr "Die günstigste Route kostet ~{gasPrice} in Benzin."
 
 #: src/components/ConnectedAccountBlocked/index.tsx
 msgid "Blocked Address"
 msgstr "Gesperrte Adresse"
 
-#: src/nft/components/profile/view/ViewMyNftsAsset.tsx
-msgid "Blocked from trading"
-msgstr ""
+#: src/nft/components/card/icons.tsx
+msgid "Blocked on OpenSea"
+msgstr "Auf OpenSea blockiert"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Borrow failed"
+msgstr "Die Ausleihe ist fehlgeschlagen"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Borrowed"
+msgstr "Geliehen"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Borrowing"
+msgstr "Ausleihen"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Bought"
+msgstr "Gekauft"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Burn failed"
+msgstr "Das Brennen ist fehlgeschlagen"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Burned"
+msgstr "Verbrannt"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Burning"
+msgstr "Verbrennung"
+
+#: src/components/swap/SwapBuyFiatButton.tsx
+#: src/nft/components/details/detailsV2/BuyButton.tsx
+msgid "Buy"
+msgstr "Besorgen"
+
+#: src/components/AccountDrawer/AuthenticatedHeader.tsx
+msgid "Buy crypto"
+msgstr "Krypto kaufen"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Buy failed"
+msgstr "Der Kauf ist fehlgeschlagen"
+
+#: src/nft/components/profile/view/EmptyWalletContent.tsx
+msgid "Buy or transfer NFTs to this wallet to get started."
+msgstr "Kaufen Sie NFTs oder übertragen Sie sie auf dieses Wallet, um loszulegen."
+
+#: src/nft/components/profile/view/EmptyWalletContent.tsx
+msgid "Buy or transfer tokens to this wallet to get started."
+msgstr "Kaufen Sie Token oder übertragen Sie sie auf dieses Wallet, um loszulegen."
+
+#: src/pages/Landing/index.tsx
+msgid "Buy, sell, and explore tokens"
+msgstr "Kaufen, verkaufen und erkunden Sie Token"
+
+#: src/pages/Landing/index.tsx
+msgid "Buy, sell, and explore tokens and NFTs"
+msgstr "Kaufen, verkaufen und erkunden Sie Token und NFTs"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Buying"
+msgstr "Kauf"
+
+#: src/nft/components/details/AssetActivity.tsx
+msgid "By"
+msgstr "Von"
 
 #: src/components/PositionCard/index.tsx
 msgid "By adding liquidity you'll earn 0.3% of all trades on this pair proportional to your share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
-msgstr "Durch das Hinzufügen von Liquidität verdienen Sie 0,3% aller Transaktionen an diesem Paar, proportional zu Ihrem Anteil am Pool. Diese Gebühren werden dem Pool zugerechnet, fallen in Echtzeit an und können durch Entfernen Ihrer Liquidität geltend gemacht werden."
+msgstr "Durch das Hinzufügen von Liquidität verdienen Sie 0,3 % aller Handelstransaktionen an diesem Paar, proportional zu Ihrem Anteil am Pool. Diese Gebühren werden dem Pool zugerechnet, fallen in Echtzeit an und können durch Entfernen Ihrer Liquidität geltend gemacht werden."
 
-#: src/components/WalletModal/index.tsx
-msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and consent to its <1>Privacy Policy</1>."
-msgstr "Indem Sie ein Wallet verbinden, stimmen Sie den <0>Nutzungsbedingungen</0> von Uniswap Labs und der <1>Datenschutzrichtlinie</1>zu."
+#: src/components/WalletModal/PrivacyPolicyNotice.tsx
+msgid "By connecting a wallet, you agree to Uniswap Labs'"
+msgstr "Durch die Verbindung einer Wallet stimmen Sie den Bestimmungen von Uniswap Labs zu."
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Cancel failed"
+msgstr "Abbrechen fehlgeschlagen"
 
 #: src/pages/Vote/styled.tsx
 msgid "Canceled"
 msgstr "Abgesagt"
 
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/nft/components/collection/ActivityCells.tsx
+msgid "Cancelled"
+msgstr "Abgesagt"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Cancelling"
+msgstr "Stornieren"
+
 #: src/constants/tokenSafety.tsx
 msgid "Caution"
 msgstr "Vorsicht"
 
-#: src/components/AccountDetails/index.tsx
-msgid "Change"
-msgstr "Ändern"
-
 #: src/components/Polling/ChainConnectivityWarning.tsx
 msgid "Check network status"
-msgstr "Netzwerkstatus prüfen"
+msgstr "Überprüfen Sie den Netzwerkstatus"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Check out our v3 LP walkthrough and migration guides."
 msgstr "Schauen Sie sich unsere v3 LP Einführung und die Hilfe zur Liquiditätsmigration an."
 
-#: src/components/AccountDetailsV2/TransactionBody.tsx
-#: src/components/WalletDropdown/AuthenticatedHeader.tsx
-#: src/components/earn/ClaimRewardModal.tsx
-#: src/components/earn/ClaimRewardModal.tsx
-#: src/pages/Earn/Manage.tsx
+#: src/components/AccountDrawer/AuthenticatedHeader.tsx
 msgid "Claim"
 msgstr "Einfordern"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Claim <0/> for {0}"
-msgstr "Anspruch auf <0/> für {0}"
+msgstr "Anspruch <0/> für {0}"
 
-#: src/components/Menu/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
-#: src/components/claim/ClaimModal.tsx
-#: src/components/claim/ClaimModal.tsx
 msgid "Claim UNI"
 msgstr "UNI einfordern"
 
@@ -411,7 +511,15 @@ msgstr "UNI Token einfordern"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Claim UNI reward for {0}"
-msgstr "Fordern Sie die UNI-Belohnung für {0}"
+msgstr "Fordern Sie eine UNI-Prämie für {0}an"
+
+#: src/components/AccountDrawer/AuthenticatedHeader.tsx
+msgid "Claim Uniswap NFT Airdrop"
+msgstr "Fordern Sie Uniswap NFT Airdrop an"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Claim failed"
+msgstr "Anspruch gescheitert"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Claim fees"
@@ -421,33 +529,22 @@ msgstr "Gebühren einfordern"
 msgid "Claim your UNI tokens"
 msgstr "Fordern Sie Ihre UNI-Token ein"
 
-#: src/components/AccountDetailsV2/TransactionBody.tsx
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Claimed"
 msgstr "Eingefordert"
 
-#: src/components/earn/ClaimRewardModal.tsx
-#: src/components/earn/UnstakingModal.tsx
-msgid "Claimed UNI!"
-msgstr "UNI erhalten!"
-
-#: src/components/claim/ClaimModal.tsx
-msgid "Claimed!"
-msgstr "Behauptet!"
-
-#: src/components/AccountDetailsV2/TransactionBody.tsx
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
 #: src/components/claim/AddressClaimModal.tsx
-#: src/components/claim/ClaimModal.tsx
 msgid "Claiming"
 msgstr "Fordere ein"
 
-#: src/components/earn/ClaimRewardModal.tsx
-#: src/components/earn/UnstakingModal.tsx
-msgid "Claiming {0} UNI"
-msgstr "Fordere {0} UNI ein"
-
 #: src/pages/AddLiquidity/index.tsx
 msgid "Clear All"
+msgstr "Alles löschen"
+
+#: src/nft/components/bag/BagHeader.tsx
+msgid "Clear all"
 msgstr "Alles löschen"
 
 #: src/components/TokenSafety/index.tsx
@@ -456,12 +553,16 @@ msgstr "Alles löschen"
 msgid "Close"
 msgstr "Schließen"
 
+#: src/components/AccountDrawer/MiniPortfolio/Pools/index.tsx
 #: src/components/Badge/RangeBadge.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Closed"
 msgstr "Geschlossen"
 
-#: src/components/AccountDetailsV2/TransactionBody.tsx
+#: src/components/AccountDrawer/MiniPortfolio/Pools/index.tsx
+msgid "Closed Positions"
+msgstr "Geschlossene Positionen"
+
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect"
 msgstr "Beziehen"
@@ -475,20 +576,27 @@ msgstr "Sammeln Sie als {nativeWrappedSymbol}"
 msgid "Collect fees"
 msgstr "Gebühren beziehen"
 
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Collect fees failed"
+msgstr "Die Erhebung der Gebühren ist fehlgeschlagen"
+
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Collect {0}/{1} fees"
-msgstr "Sammle {0}/{1} Gebühren"
+msgstr "Sammeln Sie {0}{1}"
 
-#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collected"
 msgstr "Eingezogen"
 
-#: src/components/AccountDetailsV2/TransactionBody.tsx
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Collected fees"
+msgstr "Eingezogene Gebühren"
+
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting"
 msgstr "Ziehe ein"
 
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting fees"
 msgstr "Ziehe Gebühren ein"
@@ -496,6 +604,18 @@ msgstr "Ziehe Gebühren ein"
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting fees will withdraw currently available fees for you."
 msgstr "Gebühren einziehen wird für Sie derzeit verfügbare Gebühren beziehen."
+
+#: src/components/NavBar/SearchBarDropdown.tsx
+msgid "Coming soon: search and explore tokens on BNB Chain"
+msgstr "In Kürze erhältlich: Suchen und erkunden Sie Token auf der BNB-Kette"
+
+#: src/nft/components/details/detailsV2/RarityGraph.tsx
+msgid "Common"
+msgstr "Gemeinsam"
+
+#: src/nft/components/collection/TransactionCompleteModal.tsx
+msgid "Complete!"
+msgstr "Vollständig!"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Confirm"
@@ -505,19 +625,9 @@ msgstr "Bestätigen"
 msgid "Confirm Supply"
 msgstr "Angebot bestätigen"
 
-#: src/components/swap/ConfirmSwapModal.tsx
-#: src/components/swap/SwapModalFooter.tsx
-msgid "Confirm Swap"
-msgstr "Tausch bestätigen"
-
-#: src/components/WalletModal/PendingView.tsx
-msgid "Confirm this connection in your wallet"
-msgstr "Bestätigen Sie diese Verbindung in Ihrem Wallet"
-
 #: src/components/ModalViews/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
-#: src/components/claim/ClaimModal.tsx
 #: src/components/vote/ExecuteModal.tsx
 #: src/components/vote/QueueModal.tsx
 #: src/components/vote/VoteModal.tsx
@@ -532,7 +642,7 @@ msgstr "Transaktion in Wallet bestätigen"
 msgid "Connect"
 msgstr "Verbinden"
 
-#: src/components/earn/ClaimRewardModal.tsx
+#: src/nft/pages/profile/profile.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -541,13 +651,10 @@ msgstr "Verbinden"
 #: src/state/burn/v3/hooks.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/v3/hooks.tsx
-#: src/state/stake/hooks.tsx
 #: src/state/swap/hooks.tsx
 msgid "Connect Wallet"
 msgstr "Wallet verbinden"
 
-#: src/components/WalletModal/index.tsx
-#: src/components/earn/UnstakingModal.tsx
 #: src/pages/Pool/index.tsx
 msgid "Connect a wallet"
 msgstr "Eine Wallet verbinden"
@@ -568,36 +675,31 @@ msgstr "Verbinden Sie sich mit einer Wallet, um Ihre Liquidität anzuzeigen."
 msgid "Connect wallet"
 msgstr "Wallet verbinden"
 
-#: src/components/AccountDetails/index.tsx
-msgid "Connected with"
-msgstr "Verbunden mit"
+#: src/nft/components/card/media.tsx
+msgid "Content not"
+msgstr "Inhaltlich nicht"
+
+#: src/nft/components/bag/Bag.tsx
+#: src/nft/components/profile/list/Modal/BelowFloorWarningModal.tsx
+msgid "Continue"
+msgstr "Weitermachen"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+msgid "Contract Interaction"
+msgstr "Vertragsinteraktion"
 
 #: src/components/Tokens/TokenDetails/AddressSection.tsx
 msgid "Contract address"
 msgstr "Vertragsadresse"
 
-#: src/components/WalletDropdown/AuthenticatedHeader.tsx
-#: src/nft/components/profile/view/ProfileAccountDetails.tsx
 #: src/theme/components/index.tsx
 msgid "Copied!"
 msgstr "Kopiert!"
 
-#: src/components/WalletDropdown/AuthenticatedHeader.tsx
-#: src/nft/components/profile/view/ProfileAccountDetails.tsx
-msgid "Copy"
-msgstr "Kopieren"
-
-#: src/components/AccountDetails/index.tsx
-msgid "Copy Address"
-msgstr "Adresse kopieren"
-
 #: src/components/Tokens/TokenDetails/ShareButton.tsx
 msgid "Copy Link"
 msgstr "Link kopieren"
-
-#: src/components/AccountDetailsV2/TransactionBody.tsx
-msgid "Create"
-msgstr "Hinzufügen"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Create Pool & Supply"
@@ -613,17 +715,13 @@ msgstr "Vorschlag erstellen"
 msgid "Create a pair"
 msgstr "Paar erstellen"
 
-#: src/pages/Pool/index.tsx
-msgid "Create a pool"
-msgstr "Pool erstellen"
-
-#: src/components/ErrorBoundary/index.tsx
-msgid "Create an issue on GitHub"
-msgstr "Ein Ticket auf GitHub eröffnen"
-
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Create pool and add {0}/{1} V3 liquidity"
 msgstr "Pool erstellen und {0}/{1} V3 Liquidität hinzufügen"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Create pool failed"
+msgstr "Fehler beim Erstellen des Pools"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Create pool."
@@ -633,13 +731,17 @@ msgstr "Pool erstellen."
 msgid "Create {0}/{1} V3 pool"
 msgstr "{0}/{1} V3-Pool erstellen"
 
-#: src/components/AccountDetailsV2/TransactionBody.tsx
-msgid "Created"
-msgstr "Erstellt"
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Created pool"
+msgstr "Pool erstellt"
 
-#: src/components/AccountDetailsV2/TransactionBody.tsx
-msgid "Creating"
-msgstr "Erstellen"
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Creating pool"
+msgstr "Pool erstellen"
+
+#: src/components/swap/SwapBuyFiatButton.tsx
+msgid "Crypto purchases are not available in your region."
+msgstr "Kryptokäufe sind in Ihrer Region nicht möglich."
 
 #: src/components/PositionPreview/index.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -650,13 +752,14 @@ msgstr "Aktueller Preis"
 msgid "Current {0} Price:"
 msgstr "Aktueller {0}-Preis:"
 
-#: src/components/Menu/index.tsx
-msgid "Dark Theme"
-msgstr "Dunkles Design"
+#: src/components/Settings/MaxSlippageSettings/index.tsx
+#: src/nft/components/profile/list/NFTListingsGrid.tsx
+msgid "Custom"
+msgstr "Brauch"
 
-#: src/components/WalletDropdown/DefaultMenu.tsx
-msgid "Dark theme"
-msgstr "Dunkles Thema"
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+msgid "DNS Registrar"
+msgstr "DNS-Registrar"
 
 #: src/pages/Vote/styled.tsx
 msgid "Defeated"
@@ -666,32 +769,49 @@ msgstr "Verloren"
 msgid "Delegate Votes"
 msgstr "Abstimmungen delegieren"
 
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Delegate failed"
+msgstr "Der Delegierte ist fehlgeschlagen"
+
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Delegate voting power to {0}"
-msgstr "Stimmrecht auf {0}"
+msgstr "Stimmrecht auf {0}delegieren"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Delegated"
+msgstr "Delegiert"
 
 #: src/pages/Vote/Landing.tsx
 msgid "Delegated to:"
 msgstr "Delegiert an:"
 
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Delegating"
+msgstr "Delegieren"
+
 #: src/components/vote/DelegateModal.tsx
 msgid "Delegating votes"
 msgstr "Delegiere Stimmrecht"
 
-#: src/components/earn/PoolCard.tsx
-#: src/components/earn/StakingModal.tsx
-#: src/components/earn/StakingModal.tsx
-#: src/pages/Earn/Manage.tsx
-msgid "Deposit"
-msgstr "Einzahlung"
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Deploy failed"
+msgstr "Die Bereitstellung ist fehlgeschlagen"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Deployed"
+msgstr "Im Einsatz"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Deploying"
+msgstr "Bereitstellen"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Deposit Amounts"
 msgstr "Betrag deponieren"
 
-#: src/pages/Earn/Manage.tsx
-msgid "Deposit UNI-V2 LP Tokens"
-msgstr "UNI-V2 LP Token einzahlen"
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Deposit failed"
+msgstr "Die Einzahlung ist fehlgeschlagen"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Deposit liquidity"
@@ -699,68 +819,66 @@ msgstr "Liquidität einzahlen"
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
 msgid "Deposit tokens to the {label} network."
-msgstr "Hinterlegen Sie Token im {label} Netzwerk."
+msgstr "Zahlen Sie Token im {label} Netzwerk ein."
 
-#: src/pages/Earn/index.tsx
-msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
-msgstr "Deponieren Sie Ihre Liquiditäts-Provider Token um UNI zu erhalten, den Uniswap-Protokoll-Governance-Token."
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Deposited"
+msgstr "Hinterlegt"
 
-#: src/components/earn/UnstakingModal.tsx
-msgid "Deposited liquidity:"
-msgstr "Deponierte Liquidität:"
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Depositing"
+msgstr "Einzahlen"
 
-#: src/components/earn/StakingModal.tsx
-msgid "Deposited {0} UNI-V2"
-msgstr "{0} UNI-V2 deponiert"
-
-#: src/components/earn/StakingModal.tsx
-msgid "Depositing Liquidity"
-msgstr "Liquidität einzahlen"
-
+#: src/nft/components/details/detailsV2/DataPageDescription.tsx
 #: src/pages/Vote/VotePage.tsx
 msgid "Description"
 msgstr "Beschreibung"
-
-#: src/nft/components/profile/view/ViewMyNftsAsset.tsx
-msgid "Deselected"
-msgstr ""
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Detailed"
 msgstr "Detailliert"
 
+#: src/nft/components/details/detailsV2/DataPageDescription.tsx
 #: src/pages/Vote/VotePage.tsx
 msgid "Details"
 msgstr "Details"
 
-#: src/components/AccountDetails/index.tsx
-#: src/components/WalletDropdown/AuthenticatedHeader.tsx
-msgid "Disconnect"
-msgstr "Verbindung trennen"
-
-#: src/components/Menu/index.tsx
-msgid "Discord"
-msgstr "Discord"
-
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/nft/components/profile/list/PriceTextInput.tsx
 msgid "Dismiss"
 msgstr "Verwerfen"
-
-#: src/components/Menu/index.tsx
-msgid "Docs"
-msgstr "Dokumentation"
 
 #: src/components/NavBar/MenuDropdown.tsx
 msgid "Documentation"
 msgstr "Dokumentation"
 
+#: src/components/AccountDrawer/UniwalletModal.tsx
+msgid "Don't have Uniswap Wallet?"
+msgstr "Sie haben kein Uniswap-Wallet?"
+
 #: src/pages/MigrateV2/index.tsx
 msgid "Don’t see one of your v2 positions? <0>Import it.</0>"
 msgstr "Sie sehen eine Ihrer v2-Positionen nicht? <0>Importiere sie.</0>"
 
-#: src/nft/components/profile/view/ViewMyNftsAsset.tsx
-msgid "ERC-1155 support coming soon"
-msgstr ""
+#: src/components/Banner/UniswapWalletBanner.tsx
+msgid "Download"
+msgstr "Herunterladen"
+
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Download Uniswap Wallet"
+msgstr "Laden Sie Uniswap Wallet herunter"
+
+#: src/components/Banner/UniswapWalletBanner.tsx
+msgid "Download app"
+msgstr "Lade App herunter"
+
+#: src/components/AccountDrawer/UniwalletModal.tsx
+msgid "Download in the App Store to safely store your tokens and NFTs, swap tokens, and connect to crypto apps."
+msgstr "Laden Sie es im App Store herunter, um Ihre Token und NFTs sicher zu speichern, Token auszutauschen und eine Verbindung zu Krypto-Apps herzustellen."
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+msgid "ETH Registrar Controller"
+msgstr "ETH-Registrar-Controller"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Earned UNI tokens represent voting shares in Uniswap governance."
@@ -770,9 +888,9 @@ msgstr "Erhaltene UNI-Token stellen Stimmbeteiligungen an der Uniswap-Governance
 msgid "Edit"
 msgstr "Bearbeiten"
 
-#: src/pages/AddLiquidity/index.tsx
-msgid "Efficiency Comparison"
-msgstr "Effizienzvergleich"
+#: src/nft/components/profile/list/Modal/BelowFloorWarningModal.tsx
+msgid "Edit listings"
+msgstr "Einträge bearbeiten"
 
 #: src/state/burn/v3/hooks.tsx
 msgid "Enter a percent"
@@ -782,20 +900,13 @@ msgstr "Prozentsatz eingeben"
 msgid "Enter a recipient"
 msgstr "Empfänger eingeben"
 
-#: src/components/TransactionSettings/index.tsx
-msgid "Enter a valid slippage percentage"
-msgstr "Geben Sie einen gültigen Schlupf-Prozentsatz ein"
-
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Enter an address to trigger a UNI claim. If the address has any claimable UNI it will be sent to them on submission."
 msgstr "Geben Sie eine Adresse ein, um UNI einzufordern. Wenn die Adresse Anspruch auf UNI hat, wird es bei der Ausführung an sie gesendet."
 
-#: src/components/earn/ClaimRewardModal.tsx
-#: src/components/earn/UnstakingModal.tsx
 #: src/state/burn/hooks.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/v3/hooks.tsx
-#: src/state/stake/hooks.tsx
 #: src/state/swap/hooks.tsx
 msgid "Enter an amount"
 msgstr "Betrag eingeben"
@@ -811,17 +922,28 @@ msgstr "{0} Betrag eingeben"
 msgid "Error"
 msgstr "Fehler"
 
-#: src/components/WalletModal/PendingView.tsx
+#: src/components/ErrorBoundary/index.tsx
+msgid "Error ID: {eventId}"
+msgstr "Fehler-ID: {eventId}"
+
+#: src/components/WalletModal/ConnectionErrorView.tsx
 msgid "Error connecting"
 msgstr "Verbindungsfehler"
 
-#: src/components/swap/GasEstimateBadge.tsx
-msgid "Estimate may differ due to your wallet gas settings"
-msgstr "Schätzung kann aufgrund Ihrer Wallet-Gaseinstellungen abweichen"
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+msgid "Ethereum Name Service"
+msgstr "Ethereum-Namensdienst"
 
-#: src/components/swap/GasEstimateBadge.tsx
-msgid "Estimated network fee"
-msgstr "Geschätzte Netzwerkgebühr"
+#: src/nft/components/details/AssetActivity.tsx
+msgid "Event"
+msgstr "Fall"
+
+#: src/components/swap/SwapModalFooter.tsx
+msgid "Exchange rate"
+msgstr "Tauschrate"
 
 #: src/components/vote/ExecuteModal.tsx
 #: src/pages/Vote/VotePage.tsx
@@ -832,53 +954,69 @@ msgstr "Ausführen"
 msgid "Execute Proposal {proposalId}"
 msgstr "Vorschlag {proposalId}ausführen"
 
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Execute failed"
+msgstr "Ausführung fehlgeschlagen"
+
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Execute proposal {proposalKey}."
 msgstr "Vorschlag ausführen {proposalKey}."
 
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
 #: src/pages/Vote/styled.tsx
 msgid "Executed"
 msgstr "Ausgeführt"
 
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
 #: src/components/vote/ExecuteModal.tsx
 msgid "Executing"
 msgstr "Ausführen"
 
 #: src/components/vote/ExecuteModal.tsx
 msgid "Executing this proposal will enact the calldata on-chain."
-msgstr "Durch die Ausführung dieses Vorschlags werden die Anrufdaten in der Kette ausgeführt."
+msgstr "Durch die Ausführung dieses Vorschlags werden die Anrufdaten in der Kette umgesetzt."
 
 #: src/components/vote/ExecuteModal.tsx
 msgid "Execution Submitted"
 msgstr "Ausführung eingereicht"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
-msgid "Expected Output"
+msgid "Expected output"
 msgstr "Erwartete Ausgabe"
 
-#: src/components/Settings/index.tsx
-msgid "Expert Mode"
-msgstr "Expertenmodus"
-
-#: src/components/Settings/index.tsx
-msgid "Expert mode turns off the confirm transaction prompt and allows high slippage trades that often result in bad rates and lost funds."
-msgstr "Der Expertenmodus schaltet die Transaktions-Bestätigung aus und ermöglicht Transaktionen mit viel Schlupf, was zu schlechten Kursen und verlorenem Geld führen kann."
-
+#: src/nft/components/collection/ActivityCells.tsx
 #: src/pages/Vote/styled.tsx
 msgid "Expired"
 msgstr "Verfallen"
 
-#: src/components/WalletDropdown/AuthenticatedHeader.tsx
-msgid "Explore"
-msgstr "Entdecken"
+#: src/nft/components/details/detailsV2/TableRowComponent.tsx
+msgid "Expires in"
+msgstr "Läuft ab in"
+
+#: src/nft/components/profile/view/EmptyWalletContent.tsx
+msgid "Explore NFTs"
+msgstr "Entdecken Sie NFTs"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore Uniswap Analytics."
 msgstr "Entdecken Sie Uniswap Analytics."
 
+#: src/components/Tokens/TokenDetails/InvalidTokenDetails.tsx
+#: src/nft/components/profile/view/EmptyWalletContent.tsx
+msgid "Explore tokens"
+msgstr "Entdecken Sie Token"
+
+#: src/nft/components/details/detailsV2/RarityGraph.tsx
+msgid "Extremely rare"
+msgstr "Sehr selten"
+
+#: src/nft/components/profile/list/Modal/ContentRow.tsx
+msgid "Failed"
+msgstr "Fehlgeschlagen"
+
 #: src/components/Popups/FailedNetworkSwitchPopup.tsx
-msgid "Failed to switch networks from the Uniswap Interface. In order to use Uniswap on {0}, you must change the network in your wallet."
-msgstr "Netzwerkwechsel über die Uniswap-Schnittstelle fehlgeschlagen. Um Uniswap auf {0}, müssen Sie das Netzwerk in Ihrem Wallet ändern."
+msgid "Failed to switch networks"
+msgstr "Netzwerkwechsel fehlgeschlagen"
 
 #: src/components/NavBar/MenuDropdown.tsx
 msgid "Feature Flags"
@@ -892,13 +1030,47 @@ msgstr "Gebührenstufe"
 msgid "Fee tier"
 msgstr "Gebührenstufe"
 
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Feedback"
+msgstr "Rückmeldung"
+
+#: src/nft/components/profile/list/NFTListingsGrid.tsx
+msgid "Fees"
+msgstr "Gebühren"
+
+#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/details/detailsV2/BuyButton.tsx
+msgid "Fetching Route"
+msgstr "Route abrufen"
+
 #: src/components/swap/SwapDetailsDropdown.tsx
 msgid "Fetching best price..."
-msgstr "Bester Preis geholt..."
+msgstr "Den besten Preis erzielen..."
+
+#: src/nft/components/bag/BagFooter.tsx
+msgid "Fetching price..."
+msgstr "Preis wird abgerufen..."
 
 #: src/components/Tokens/TokenTable/SearchBar.tsx
 msgid "Filter tokens"
 msgstr "Token filtern"
+
+#: src/components/Settings/RouterPreferenceSettings/index.tsx
+msgid "Finds the best route on the Uniswap Protocol through your browser. May result in high latency and prices."
+msgstr "Findet über Ihren Browser die beste Route im Uniswap-Protokoll. Kann zu hoher Latenz und hohen Preisen führen."
+
+#: src/components/Settings/RouterPreferenceSettings/index.tsx
+msgid "Finds the best route on the Uniswap Protocol using the Uniswap Labs Routing API."
+msgstr "Findet mithilfe der Uniswap Labs Routing API die beste Route im Uniswap-Protokoll."
+
+#: src/nft/components/profile/list/NFTListingsGrid.tsx
+msgid "Floor"
+msgstr "Boden"
+
+#: src/nft/components/details/detailsV2/DataPageTraits.tsx
+#: src/nft/components/profile/list/NFTListingsGrid.tsx
+msgid "Floor price"
+msgstr "Mindestpreis"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "For"
@@ -908,6 +1080,7 @@ msgstr "Dafür"
 msgid "For each pool shown below, click migrate to remove your liquidity from Uniswap V2 and deposit it into Uniswap V3."
 msgstr "Klicken Sie für jeden unten angezeigten Pool auf migrieren, um Ihre Liquidität aus Uniswap V2 zu entfernen und in Uniswap V3 zu deponieren."
 
+#: src/nft/components/details/detailsV2/TableRowComponent.tsx
 #: src/pages/Swap/index.tsx
 msgid "From"
 msgstr "Von"
@@ -920,22 +1093,23 @@ msgstr "Von (höchstens)"
 msgid "Full Range"
 msgstr "Gesamter Bereich"
 
-#: src/pages/AddLiquidity/index.tsx
-msgid "Full range positions may earn less fees than concentrated positions. Learn more <0>here</0>."
-msgstr "Positionen über den gesamten Bereich können weniger Gebühren einbringen als konzentrierte Positionen. Erfahren Sie mehr <0>hier</0>."
+#: src/pages/Landing/index.tsx
+msgid "Get started"
+msgstr "Loslegen"
 
 #: src/components/ErrorBoundary/index.tsx
-msgid "Get support on Discord"
-msgstr "Holen Sie sich Unterstützung bei Discord"
-
-#: src/components/Menu/index.tsx
-msgid "Help Center"
-msgstr "Hilfezentrum"
+msgid "Get support"
+msgstr "Hole dir Unterstützung"
 
 #: src/components/NavBar/MenuDropdown.tsx
 msgid "Help center"
 msgstr "Hilfezentrum"
 
+#: src/components/AccountDrawer/MiniPortfolio/ExpandoRow.tsx
+msgid "Hidden"
+msgstr "Versteckt"
+
+#: src/components/AccountDrawer/MiniPortfolio/ExpandoRow.tsx
 #: src/components/FeeSelector/index.tsx
 #: src/components/Tokens/TokenDetails/About.tsx
 msgid "Hide"
@@ -946,18 +1120,21 @@ msgstr "Ausblenden"
 msgid "Hide closed positions"
 msgstr "Geschlossene Positionen ausblenden"
 
-#: src/pages/Swap/index.tsx
-msgid "High Price Impact"
-msgstr "Hoher Preiseinfluss"
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Hide resources"
+msgstr "Ressourcen ausblenden"
+
+#: src/components/AccountDrawer/SmallBalanceToggle.tsx
+msgid "Hide small balances"
+msgstr "Kleine Guthaben ausblenden"
 
 #: src/components/TokenSafety/index.tsx
-#: src/pages/AddLiquidity/index.tsx
 msgid "I understand"
 msgstr "Einverstanden"
 
 #: src/components/ConnectedAccountBlocked/index.tsx
 msgid "If you believe this is an error, please send an email including your address to"
-msgstr "Wenn Sie glauben, dass dies ein Fehler ist, senden Sie bitte eine E-Mail mit Ihrer Adresse an"
+msgstr "Wenn Sie glauben, dass es sich hierbei um einen Fehler handelt, senden Sie bitte eine E-Mail mit Ihrer Adresse an"
 
 #: src/pages/Pool/v2.tsx
 msgid "Import Pool"
@@ -968,6 +1145,10 @@ msgid "Import V2 Pool"
 msgstr "V2-Pool importieren"
 
 #: src/components/Badge/RangeBadge.tsx
+msgid "In Range"
+msgstr "Im Bereich"
+
+#: src/components/AccountDrawer/MiniPortfolio/Pools/index.tsx
 msgid "In range"
 msgstr "Im Bereich"
 
@@ -983,17 +1164,21 @@ msgstr "Anfangspreis und Poolanteil"
 msgid "Input is estimated. You will sell at most <0>{0} {1}</0> or the transaction will revert."
 msgstr "Eingabe wird geschätzt. Sie werden höchstens <0>{0} {1}</0> verkaufen, andernfalls wird die Transaktion rückgängig gemacht."
 
-#: src/components/WalletModal/InjectedOption.tsx
-msgid "Install MetaMask"
-msgstr "Meta Mask installieren"
-
 #: src/nft/components/bag/BagFooter.tsx
 msgid "Insufficient funds"
 msgstr "Unzureichende Mittel"
 
+#: src/nft/components/bag/BagFooter.tsx
+msgid "Insufficient liquidity"
+msgstr "Unzureichende Liquidität"
+
 #: src/pages/Swap/index.tsx
 msgid "Insufficient liquidity for this trade."
 msgstr "Unzureichende Liquidität für diesen Handel."
+
+#: src/nft/components/bag/BagFooter.tsx
+msgid "Insufficient pool liquidity to complete transaction"
+msgstr "Unzureichende Poolliquidität, um die Transaktion abzuschließen"
 
 #: src/hooks/useWrapCallback.tsx
 #: src/hooks/useWrapCallback.tsx
@@ -1004,10 +1189,6 @@ msgstr "Unzureichende Liquidität für diesen Handel."
 #: src/state/swap/hooks.tsx
 msgid "Insufficient {0} balance"
 msgstr "Unzureichendes {0} Guthaben"
-
-#: src/components/Settings/index.tsx
-msgid "Interface Settings"
-msgstr "Einstellungen der Benutzeroberfläche"
 
 #: src/state/mint/hooks.tsx
 #: src/state/mint/v3/hooks.tsx
@@ -1027,16 +1208,25 @@ msgstr "Ungültige Preisangabe"
 msgid "Invalid range selected. The min price must be lower than the max price."
 msgstr "Ungültiger Bereich ausgewählt. Der Mindestpreis muss kleiner als der Maximalpreis sein."
 
-#: src/lib/hooks/swap/useSwapCallback.tsx
 #: src/state/swap/hooks.tsx
 msgid "Invalid recipient"
 msgstr "Ungültiger Empfänger"
 
-#: src/components/Menu/index.tsx
-#: src/components/WalletDropdown/DefaultMenu.tsx
-#: src/components/WalletDropdown/LanguageMenu.tsx
+#: src/components/AccountDrawer/SettingsMenu.tsx
 msgid "Language"
 msgstr "Sprache"
+
+#: src/nft/components/profile/list/NFTListingsGrid.tsx
+msgid "Last"
+msgstr "Zuletzt"
+
+#: src/nft/components/profile/list/NFTListingsGrid.tsx
+msgid "Last Price"
+msgstr "Letzter Preis"
+
+#: src/components/WalletModal/PrivacyPolicyNotice.tsx
+msgid "Last Updated"
+msgstr "Letzte Aktualisierung"
 
 #: src/pages/Pool/index.tsx
 msgid "Learn"
@@ -1046,32 +1236,26 @@ msgstr "Lernen"
 msgid "Learn about providing liquidity"
 msgstr "Erfahren Sie mehr über die Bereitstellung von Liquidität"
 
+#: src/components/Banner/UniswapWalletBanner.tsx
+#: src/components/Banner/UniswapWalletBanner.tsx
 #: src/components/PrivacyPolicy/index.tsx
 #: src/components/PrivacyPolicy/index.tsx
 #: src/components/TokenSafety/TokenSafetyMessage.tsx
 #: src/components/TokenSafety/index.tsx
+#: src/components/swap/SwapBuyFiatButton.tsx
+#: src/pages/Landing/index.tsx
 msgid "Learn more"
 msgstr "Mehr erfahren"
 
-#: src/components/Menu/index.tsx
 #: src/components/NavBar/MenuDropdown.tsx
 #: src/components/PrivacyPolicy/index.tsx
 msgid "Legal & Privacy"
-msgstr "Rechtliches & Datenschutz"
-
-#: src/components/Menu/index.tsx
-msgid "Light Theme"
-msgstr "Helles Design"
-
-#: src/components/WalletDropdown/DefaultMenu.tsx
-msgid "Light theme"
-msgstr "Lichtthema"
+msgstr "Rechtliches und Datenschutz"
 
 #: src/components/Tokens/TokenDetails/About.tsx
 msgid "Links"
-msgstr "Verknüpfungen"
+msgstr "Links"
 
-#: src/components/claim/ClaimModal.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Liquidity"
 msgstr "Liquidität"
@@ -1088,6 +1272,22 @@ msgstr "Liquiditätsanbieter-Belohnungen"
 msgid "Liquidity providers earn a 0.3% fee on all trades proportional to their share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
 msgstr "Liquiditätsgeber verdienen eine 0,3%ige Gebühr für jeden Tausch im Verhältnis zu ihrem Anteil am Pool. Die Gebühren werden dem Pool zugerechnet, fallen in Echtzeit an und können durch Entfernen der Liquidität in Anspruch genommen werden."
 
+#: src/nft/components/profile/list/Modal/ListModal.tsx
+msgid "List NFTs"
+msgstr "NFTs auflisten"
+
+#: src/nft/components/profile/view/ViewMyNftsAsset.tsx
+msgid "List for sale"
+msgstr "Liste zum Verkauf"
+
+#: src/nft/components/profile/list/Modal/ListModalSection.tsx
+msgid "Listing an NFT requires a one-time marketplace approval for each NFT collection."
+msgstr "Die Listung eines NFT erfordert eine einmalige Marktplatzgenehmigung für jede NFT-Sammlung."
+
+#: src/nft/components/details/detailsV2/DataPageTable.tsx
+msgid "Listings"
+msgstr "Einträge"
+
 #: src/components/PositionCard/Sushi.tsx
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
@@ -1098,15 +1298,26 @@ msgstr "Liquiditätsgeber verdienen eine 0,3%ige Gebühr für jeden Tausch im Ve
 msgid "Loading"
 msgstr "Lädt"
 
+#: src/nft/components/bag/BagFooter.tsx
+msgid "Loading Allowance"
+msgstr "Ladezulage"
+
+#: src/nft/components/profile/list/Modal/BelowFloorWarningModal.tsx
+msgid "Low listing price"
+msgstr "Niedriger Listenpreis"
+
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "MAX"
-msgstr "max"
+msgstr "MAX"
+
+#: src/nft/components/details/detailsV2/OfferButton.tsx
+msgid "Make an offer"
+msgstr "Machen Sie ein Angebot"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
 #: src/components/PositionCard/index.tsx
-#: src/components/earn/PoolCard.tsx
 msgid "Manage"
 msgstr "Verwalten"
 
@@ -1128,21 +1339,33 @@ msgstr "Max."
 msgid "Max Price"
 msgstr "Max. Preis"
 
+#: src/nft/components/profile/list/RoyaltyTooltip.tsx
+msgid "Max creator royalties"
+msgstr "Maximale Lizenzgebühren für Ersteller"
+
+#: src/nft/components/profile/list/RoyaltyTooltip.tsx
+msgid "Max fees"
+msgstr "Maximale Gebühren"
+
 #: src/pages/Pool/PositionPage.tsx
 msgid "Max price"
 msgstr "Max. Preis"
+
+#: src/components/Settings/MaxSlippageSettings/index.tsx
+msgid "Max slippage"
+msgstr "Max. Schlupf"
 
 #: src/components/PositionListItem/index.tsx
 msgid "Max:"
 msgstr "Max.:"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
+msgid "Maximum input"
+msgstr "Maximaler Input"
+
+#: src/components/swap/SwapModalFooter.tsx
 msgid "Maximum sent"
 msgstr "Maximum gesendet"
-
-#: src/components/Menu/index.tsx
-msgid "Menu"
-msgstr "Menü"
 
 #: src/components/PositionCard/Sushi.tsx
 #: src/components/PositionCard/V2.tsx
@@ -1161,17 +1384,29 @@ msgstr "Liquidität nach V3 migrieren"
 msgid "Migrate V2 Liquidity"
 msgstr "V2-Liquidität migrieren"
 
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Migrate liquidity failed"
+msgstr "Die Migration der Liquidität ist fehlgeschlagen"
+
 #: src/pages/MigrateV2/index.tsx
 msgid "Migrate your liquidity tokens from Uniswap V2 to Uniswap V3."
 msgstr "Migrieren Sie Ihre Liquiditäts-Token von Uniswap V2 nach Uniswap V3."
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Migrate {0}/{1} liquidity to V3"
-msgstr "Migrieren Sie {0}/{1} Liquidität zu V3"
+msgstr "{0}/{1} -Liquidität nach V3 migrieren"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Migrated liquidity"
+msgstr "Migrierte Liquidität"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Migrating"
 msgstr "Migrieren"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Migrating liquidity"
+msgstr "Liquidität migrieren"
 
 #: src/components/PositionPreview/index.tsx
 #: src/components/RangeSelector/index.tsx
@@ -1187,26 +1422,59 @@ msgid "Min:"
 msgstr "Min.:"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
+msgid "Minimum output"
+msgstr "Mindestleistung"
+
+#: src/components/swap/SwapModalFooter.tsx
 msgid "Minimum received"
 msgstr "Minimum erhalten"
 
-#: src/components/Tokens/TokenDetails/PriceChart.tsx
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Mint failed"
+msgstr "Mint ist gescheitert"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Minted"
+msgstr "Geprägt"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Minting"
+msgstr "Prägung"
+
 #: src/components/Tokens/TokenDetails/PriceChart.tsx
 msgid "Missing chart data"
 msgstr "Fehlende Diagrammdaten"
 
-#: src/lib/hooks/swap/useSwapCallback.tsx
-msgid "Missing dependencies"
-msgstr "Fehlende Abhängigkeiten"
+#: src/components/Tokens/TokenDetails/PriceChart.tsx
+msgid "Missing price data due to recently low trading volume on Uniswap v3"
+msgstr "Fehlende Preisdaten aufgrund des kürzlich geringen Handelsvolumens auf Uniswap v3"
+
+#: src/components/FiatOnrampModal/index.tsx
+msgid "Moonpay Fiat On-ramp iframe"
+msgstr "Moonpay Fiat Auffahrt-Iframe"
+
+#: src/components/AccountDrawer/AuthenticatedHeader.tsx
+msgid "Moonpay is not available in some regions. Click to learn more."
+msgstr "Moonpay ist in einigen Regionen nicht verfügbar. Klicke, um mehr zu lernen."
 
 #: src/pages/Pool/index.tsx
 msgid "More"
 msgstr "Mehr"
 
+#: src/nft/components/profile/list/ListPage.tsx
+msgid "My NFTs"
+msgstr "Meine NFTs"
+
+#: src/nft/components/profile/list/NFTListingsGrid.tsx
+msgid "NFT"
+msgstr "NFT"
+
 #: src/components/NavBar/SearchBarDropdown.tsx
 msgid "NFT Collections"
 msgstr "NFT-Sammlungen"
 
+#: src/components/AccountDrawer/MiniPortfolio/index.tsx
 #: src/components/NavBar/index.tsx
 msgid "NFTs"
 msgstr "NFTs"
@@ -1215,34 +1483,38 @@ msgstr "NFTs"
 msgid "Name not found"
 msgstr "Name nicht gefunden"
 
-#: src/components/swap/AdvancedSwapDetails.tsx
-msgid "Network Fee"
-msgstr "Netzwerkgebühr"
+#: src/components/NavBar/NavIcon.tsx
+msgid "Navigation button"
+msgstr "Navigationstaste"
 
 #: src/components/Polling/ChainConnectivityWarning.tsx
 msgid "Network Warning"
 msgstr "Netzwerkwarnung"
 
-#: src/components/swap/SwapWarningDropdown.tsx
-msgid "Network fees exceed 50% of the swap amount!"
-msgstr "Netzwerkgebühren übersteigen 50% des Swap-Betrags!"
+#: src/components/swap/AdvancedSwapDetails.tsx
+#: src/components/swap/SwapModalFooter.tsx
+msgid "Network fee"
+msgstr "Netzwerkgebühr"
+
+#: src/nft/components/details/detailsV2/TableRowComponent.tsx
+msgid "Never"
+msgstr "Niemals"
 
 #: src/pages/Pool/index.tsx
 msgid "New Position"
 msgstr "Neue Position"
 
 #: src/nft/components/profile/view/EmptyWalletContent.tsx
-msgid "No NFTs in"
-msgstr "Keine NFTs drin"
+msgid "No NFTs yet"
+msgstr "Noch keine NFTs"
 
 #: src/pages/MigrateV2/index.tsx
 msgid "No V2 Liquidity found."
 msgstr "Keine V2-Liquidität gefunden."
 
-#: src/pages/Earn/index.tsx
-#: src/pages/Earn/index.tsx
-msgid "No active pools"
-msgstr "Keine aktiven Pools"
+#: src/nft/components/profile/view/EmptyWalletContent.tsx
+msgid "No activity yet"
+msgstr "Noch keine Aktivität"
 
 #: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "No data"
@@ -1252,6 +1524,10 @@ msgstr "Keine Daten"
 msgid "No description."
 msgstr "Keine Beschreibung."
 
+#: src/nft/pages/profile/profile.tsx
+msgid "No items to display"
+msgstr "Keine Elemente zum Anzeigen vorhanden"
+
 #: src/pages/Pool/v2.tsx
 msgid "No liquidity found."
 msgstr "Keine Liquidität gefunden."
@@ -1259,6 +1535,10 @@ msgstr "Keine Liquidität gefunden."
 #: src/pages/PoolFinder/index.tsx
 msgid "No pool found."
 msgstr "Keinen Pool gefunden."
+
+#: src/nft/components/profile/view/EmptyWalletContent.tsx
+msgid "No pools yet"
+msgstr "Noch keine Pools"
 
 #: src/components/vote/ProposalEmptyState.tsx
 msgid "No proposals found."
@@ -1280,30 +1560,55 @@ msgstr "Keine Token gefunden"
 msgid "No tokens found."
 msgstr "Keine Token gefunden."
 
+#: src/nft/components/profile/view/EmptyWalletContent.tsx
+msgid "No tokens yet"
+msgstr "Noch keine Token"
+
 #: src/constants/tokenSafety.tsx
 msgid "Not Available"
 msgstr "Nicht verfügbar"
+
+#: src/components/AccountDrawer/AuthenticatedHeader.tsx
+msgid "Not available in your region"
+msgstr "In Ihrer Region nicht verfügbar"
 
 #: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "Not created"
 msgstr "Nicht erstellt"
 
-#: src/components/Settings/index.tsx
-msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
-msgstr "VERWENDEN SIE DIESEN MODUS NUR, WENN SIE WISSEN, WAS SIE TUN."
+#: src/nft/components/collection/CollectionAsset.tsx
+msgid "Not listed"
+msgstr "Nicht aufgeführt"
+
+#: src/nft/components/details/detailsV2/DataPageTable.tsx
+msgid "Offers"
+msgstr "Bietet an"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Once you are happy with the rate click supply to review."
 msgstr "Sobald Sie mit dem Preis zufrieden sind, klicken Sie auf Bereitstellen zum Überprüfen."
 
+#: src/nft/components/profile/list/Modal/BelowFloorWarningModal.tsx
+msgid "One NFT is listed {0}%"
+msgstr "Ein NFT ist zu {0}% gelistet"
+
 #: src/pages/Vote/VotePage.tsx
 msgid "Only UNI votes that were self delegated or delegated to another address before block {0} are eligible for voting."
 msgstr "Nur UNI-Stimmen, die vor Block {0} an die eigene oder eine fremde Adresse delegiert wurden, sind zur Abstimmung berechtigt."
 
-#: src/components/DowntimeWarning/index.tsx
-msgid "Optimism is in Beta and may experience downtime. Optimism expects planned downtime to upgrade the network in the near future. During downtime, your position will not earn fees and you will be unable to remove liquidity. <0>Read more.</0>"
-msgstr "Optimismus befindet sich in der Betaphase und kann zu Ausfallzeiten führen. Optimismus erwartet geplante Ausfallzeiten, um das Netzwerk in naher Zukunft zu aktualisieren. Während der Ausfallzeit werden für Ihre Position keine Gebühren erhoben und Sie können keine Liquidität entfernen. <0>Lesen Sie mehr.</0>"
+#: src/pages/NotFound/index.tsx
+msgid "Oops, take me back to Swap"
+msgstr "Ups, bring mich zurück zu Swap"
 
+#: src/nft/components/profile/view/EmptyWalletContent.tsx
+msgid "Open a new position or create a pool to get started."
+msgstr "Eröffnen Sie eine neue Position oder erstellen Sie einen Pool, um loszulegen."
+
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "Order routing"
+msgstr "Auftragsweiterleitung"
+
+#: src/components/AccountDrawer/MiniPortfolio/Pools/index.tsx
 #: src/components/Badge/RangeBadge.tsx
 msgid "Out of range"
 msgstr "Nicht im Bereich"
@@ -1317,52 +1622,54 @@ msgstr "Ausgabemenge geschätzt. Wenn sich der Preis um mehr als {0}% ändert, w
 msgid "Output is estimated. You will receive at least <0>{0} {1}</0> or the transaction will revert."
 msgstr "Ausgabemenge geschätzt. Sie erhalten mindestens <0>{0} {1}</0> oder die Transaktion wird rückgängig gemacht."
 
-#: src/components/swap/SwapModalHeader.tsx
-msgid "Output will be sent to <0>{0}</0>"
-msgstr "Ausgabe wird an <0>{0}</0> gesendet"
-
+#: src/nft/components/details/detailsV2/InfoChips.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Owner"
 msgstr "Besitzer"
 
-#: src/pages/Earn/index.tsx
-msgid "Participating pools"
-msgstr "Teilnehmende Pools"
+#: src/pages/NotFound/index.tsx
+msgid "Page not found!"
+msgstr "Seite nicht gefunden!"
 
+#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/BagFooter.tsx
 #: src/nft/components/bag/BagFooter.tsx
 #: src/nft/components/bag/BagFooter.tsx
 msgid "Pay"
 msgstr "Zahlen"
 
-#: src/components/WalletDropdown/DefaultMenu.tsx
+#: src/nft/components/bag/BagFooter.tsx
+msgid "Pay Anyway"
+msgstr "Zahlen Sie trotzdem"
+
+#: src/nft/components/bag/BagFooter.tsx
+msgid "Pay with"
+msgstr "Bezahlen mit"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/index.tsx
 #: src/pages/Vote/styled.tsx
 msgid "Pending"
 msgstr "Ausstehend"
+
+#: src/pages/Swap/index.tsx
+msgid "Permission is required for Uniswap to swap each token. This will expire after one month for your security."
+msgstr "Für den Austausch jedes Tokens durch Uniswap ist eine Genehmigung erforderlich. Zu Ihrer Sicherheit läuft die Gültigkeit nach einem Monat ab."
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+msgid "Permit2"
+msgstr "Erlaubnis2"
 
 #: src/components/vote/ProposalEmptyState.tsx
 msgid "Please connect to Layer 1 Ethereum"
 msgstr "Bitte verbinden Sie sich mit Layer 1 Ethereum"
 
-#: src/components/Settings/index.tsx
-msgid "Please type the word \"{confirmWord}\" to enable expert mode."
-msgstr "Bitte geben Sie das Wort \"{confirmWord}\" ein, um den Experten-Modus zu aktivieren."
-
-#: src/components/AccountDetailsV2/TransactionBody.tsx
-#: src/components/NavBar/index.tsx
+#: src/components/NavBar/MenuDropdown.tsx
 msgid "Pool"
 msgstr "Pool"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Pool Found!"
 msgstr "Pool gefunden!"
-
-#: src/pages/Earn/Manage.tsx
-msgid "Pool Rate"
-msgstr "Pool Rate"
-
-#: src/components/earn/PoolCard.tsx
-msgid "Pool rate"
-msgstr "Pool Rate"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
@@ -1380,10 +1687,12 @@ msgstr "Pool-Token im Belohnungspool:"
 msgid "Pooled {0}:"
 msgstr "{0} gepoolt:"
 
+#: src/components/AccountDrawer/MiniPortfolio/index.tsx
+#: src/components/NavBar/index.tsx
 #: src/pages/Pool/index.tsx
 #: src/pages/Pool/index.tsx
 msgid "Pools"
-msgstr "Schwimmbecken"
+msgstr "Pools"
 
 #: src/components/NavBar/SearchBarDropdown.tsx
 msgid "Popular NFT collections"
@@ -1393,10 +1702,21 @@ msgstr "Beliebte NFT-Sammlungen"
 msgid "Popular tokens"
 msgstr "Beliebte Token"
 
+#: src/pages/Pool/PositionPage.tsx
+msgid "Position unavailable"
+msgstr "Position nicht verfügbar"
+
+#: src/components/AccountDrawer/SettingsMenu.tsx
+msgid "Preferences"
+msgstr "Präferenzen"
+
 #: src/pages/AddLiquidity/index.tsx
 msgid "Preview"
 msgstr "Vorschau"
 
+#: src/nft/components/details/AssetActivity.tsx
+#: src/nft/components/details/detailsV2/TableRowComponent.tsx
+#: src/nft/components/profile/list/NFTListingsGrid.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Price"
 msgstr "Preis"
@@ -1413,17 +1733,23 @@ msgstr "Preiseinfluss"
 msgid "Price Impact Too High"
 msgstr "Preiseinfluss zu hoch"
 
-#: src/components/swap/SwapModalHeader.tsx
-msgid "Price Updated"
-msgstr "Preis aktualisiert"
+#: src/components/swap/SwapModalFooter.tsx
+msgid "Price impact"
+msgstr "Preisauswirkung"
 
 #: src/components/swap/PriceImpactWarning.tsx
+#: src/nft/components/bag/BagFooter.tsx
 msgid "Price impact warning"
-msgstr "Preisauswirkungswarnung"
+msgstr "Warnung vor Preisauswirkungen"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Price range"
 msgstr "Preisbereich"
+
+#: src/components/swap/SwapModalFooter.tsx
+#: src/nft/components/bag/BagFooter.tsx
+msgid "Price updated"
+msgstr "Preis aktualisiert"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Price:"
@@ -1437,9 +1763,18 @@ msgstr "Preise und Pool-Anteil"
 msgid "Privacy Policy"
 msgstr "Datenschutz-Bestimmungen"
 
+#: src/components/WalletModal/PrivacyPolicyNotice.tsx
+msgid "Privacy Policy."
+msgstr "Datenschutz-Bestimmungen."
+
 #: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/profile/list/Modal/ContentRow.tsx
 msgid "Proceed in wallet"
-msgstr "Fahren Sie in der Brieftasche fort"
+msgstr "Fahren Sie mit der Brieftasche fort"
+
+#: src/nft/components/profile/list/Modal/SuccessScreen.tsx
+msgid "Proceeds if sold"
+msgstr "Erlös bei Verkauf"
 
 #: src/pages/CreateProposal/ProposalEditor.tsx
 msgid "Proposal"
@@ -1469,6 +1804,15 @@ msgstr "Vorgeschlagene Aktion"
 msgid "Proposer"
 msgstr "Antragsteller"
 
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+msgid "Public Resolver"
+msgstr "Öffentlicher Insolvenzverwalter"
+
+#: src/nft/components/details/detailsV2/DataPageTraits.tsx
+#: src/nft/components/details/detailsV2/TableRowComponent.tsx
+msgid "Quantity"
+msgstr "Menge"
+
 #: src/components/vote/QueueModal.tsx
 #: src/pages/Vote/VotePage.tsx
 msgid "Queue"
@@ -1478,10 +1822,15 @@ msgstr "Warteschlange"
 msgid "Queue Proposal {proposalId}"
 msgstr "Warteschlangenvorschlag {proposalId}"
 
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Queue failed"
+msgstr "Warteschlange fehlgeschlagen"
+
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Queue proposal {proposalKey}."
 msgstr "Warteschlangenvorschlag {proposalKey}."
 
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
 #: src/pages/Vote/styled.tsx
 msgid "Queued"
 msgstr "In Warteschlange"
@@ -1490,13 +1839,21 @@ msgstr "In Warteschlange"
 msgid "Queueing"
 msgstr "Warteschlange"
 
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Queuing"
+msgstr "Warteschlange"
+
+#: src/nft/components/details/detailsV2/RarityGraph.tsx
+msgid "Rare"
+msgstr "Selten"
+
+#: src/nft/components/details/detailsV2/DataPageTraits.tsx
+msgid "Rarity"
+msgstr "Seltenheit"
+
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Rates"
 msgstr "Preise"
-
-#: src/pages/Earn/index.tsx
-msgid "Read more about UNI"
-msgstr "Erfahre mehr über UNI"
 
 #: src/pages/Vote/Landing.tsx
 msgid "Read more about Uniswap governance"
@@ -1504,27 +1861,53 @@ msgstr "Erfahren Sie mehr über Uniswap Governance"
 
 #: src/pages/Pool/v2.tsx
 msgid "Read more about providing liquidity"
-msgstr "Erfahre mehr über Liquiditäts-Bereitstellung"
+msgstr "Erfahren Sie mehr über Liquiditäts-Bereitstellung"
 
 #: src/components/swap/UnsupportedCurrencyFooter.tsx
 msgid "Read more about unsupported assets"
 msgstr "Erfahre mehr über nicht unterstützte Token"
 
-#: src/components/AccountDetails/index.tsx
-msgid "Recent Transactions"
-msgstr "Letzte Transaktionen"
+#: src/nft/components/profile/list/ListPage.tsx
+msgid "Receive"
+msgstr "Erhalten"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Receive failed"
+msgstr "Empfang fehlgeschlagen"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Received"
+msgstr "Erhalten"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Receiving"
+msgstr "Empfang"
 
 #: src/components/NavBar/SearchBarDropdown.tsx
 msgid "Recent searches"
-msgstr "Letzte Suchen"
+msgstr "Aktuelle Suchanfragen"
 
 #: src/components/AddressInputPanel/index.tsx
 msgid "Recipient"
 msgstr "Empfänger"
 
-#: src/components/AccountDetailsV2/TransactionBody.tsx
+#: src/nft/components/bag/BagFooter.tsx
+msgid "Refunds for unavailable items will be given in ETH"
+msgstr "Rückerstattungen für nicht verfügbare Artikel werden in ETH gewährt"
+
+#: src/nft/components/profile/list/Modal/ContentRow.tsx
+msgid "Rejected"
+msgstr "Abgelehnt"
+
+#: src/components/ErrorBoundary/index.tsx
+msgid "Reload the app"
+msgstr "Laden Sie die App neu"
+
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
+#: src/nft/components/collection/ActivityCells.tsx
+#: src/nft/components/profile/list/Modal/ContentRow.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -1533,7 +1916,7 @@ msgstr "Entfernen"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Remove <0/> and <1/>"
-msgstr "<0/> und <1/> entfernen"
+msgstr "Entfernen Sie <0/> und <1/>"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Remove Amount"
@@ -1549,29 +1932,58 @@ msgstr "Delegierung entfernen"
 msgid "Remove Liquidity"
 msgstr "Liquidität entfernen"
 
-#: src/components/AccountDetailsV2/TransactionBody.tsx
-msgid "Removed"
-msgstr "ENTFERNT"
-
 #: src/nft/components/collection/CollectionAsset.tsx
-msgid "Removed from bag"
-msgstr ""
+#: src/nft/components/profile/view/ViewMyNftsAsset.tsx
+msgid "Remove from bag"
+msgstr "Aus dem Beutel nehmen"
 
-#: src/components/AccountDetailsV2/TransactionBody.tsx
-msgid "Removing"
-msgstr "Entfernen"
+#: src/nft/components/profile/list/PriceTextInput.tsx
+msgid "Remove item"
+msgstr "Gegenstand entfernen"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Remove liquidity failed"
+msgstr "Das Entfernen der Liquidität ist fehlgeschlagen"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+msgid "Removed Liquidity"
+msgstr "Liquidität entfernt"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Removed liquidity"
+msgstr "Liquidität entfernt"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Removing liquidity"
+msgstr "Liquidität abziehen"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Removing {0} {1} and {2} {3}"
-msgstr "Entferne {0} {1} und {2} {3}"
+msgstr "{0} {1} und {2} {3} entfernen"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Removing {0} {1} and{2} {3}"
-msgstr "Entfernen {0} {1} und{2} {3}"
+msgstr "Entfernen von {0} {1} und{2} {3}"
 
-#: src/components/Menu/index.tsx
-msgid "Request Features"
-msgstr "Funktionen anfordern"
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Repaid"
+msgstr "Zurückgezahlt"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Repay failed"
+msgstr "Rückzahlung fehlgeschlagen"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Repaying"
+msgstr "Zurückzahlen"
+
+#: src/nft/components/profile/list/ListingButton.tsx
+msgid "Resolve {issues} issues"
+msgstr "{issues} Probleme lösen"
+
+#: src/nft/components/profile/list/Modal/ContentRow.tsx
+msgid "Retry"
+msgstr "Wiederholen"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
@@ -1579,21 +1991,45 @@ msgstr "Funktionen anfordern"
 msgid "Return"
 msgstr "Zurück"
 
+#: src/nft/components/profile/list/Modal/SuccessScreen.tsx
+msgid "Return to My NFTs"
+msgstr "Zurück zu „Meine NFTs“."
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+msgid "Reverse Registrar"
+msgstr "Reverse-Registrar"
+
+#: src/components/swap/ConfirmSwapModal.tsx
+msgid "Review Swap"
+msgstr "Bewertungstausch"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+msgid "Revoked Approval"
+msgstr "Genehmigung widerrufen"
+
+#: src/nft/components/profile/list/NFTListingsGrid.tsx
+msgid "Same Price"
+msgstr "Gleicher Preis"
+
+#: src/components/AccountDrawer/UniwalletModal.tsx
+msgid "Scan with Uniswap Wallet"
+msgstr "Scannen Sie mit Uniswap Wallet"
+
+#: src/components/NavBar/SearchBar.tsx
+msgid "Search"
+msgstr "Suchen"
+
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "Search name or paste address"
 msgstr "Name suchen oder Adresse einfügen"
 
 #: src/components/NavBar/SearchBar.tsx
-msgid "Search tokens"
-msgstr "Token suchen"
-
-#: src/components/NavBar/SearchBar.tsx
 msgid "Search tokens and NFT collections"
-msgstr "Durchsuchen Sie Token und NFT-Sammlungen"
+msgstr "Suchen Sie nach Token und NFT-Sammlungen"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Select Pair"
-msgstr "Paar auswählen"
+msgstr "Wählen Sie „Koppeln“."
 
 #: src/components/CurrencyInputPanel/index.tsx
 #: src/components/SearchModal/CurrencySearch.tsx
@@ -1609,15 +2045,11 @@ msgstr "Wählen Sie einen Token aus, um Ihre v2-Liquidität zu finden."
 
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Select an action"
-msgstr "Wählen Sie eine Aktion"
+msgstr "Wählen Sie eine Aktion aus"
 
 #: src/components/CurrencyInputPanel/SwapCurrencyInputPanel.tsx
 msgid "Select token"
 msgstr "Token auswählen"
-
-#: src/nft/components/profile/view/ViewMyNftsAsset.tsx
-msgid "Selected"
-msgstr ""
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Selected Range"
@@ -1635,6 +2067,27 @@ msgstr "Selbstdelegierung"
 msgid "Sell"
 msgstr "Verkaufen"
 
+#: src/nft/components/profile/list/ListPage.tsx
+msgid "Sell NFTs"
+msgstr "NFTs verkaufen"
+
+#: src/nft/components/details/detailsV2/TableRowComponent.tsx
+msgid "Seller"
+msgstr "Verkäufer"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Send failed"
+msgstr "Senden fehlgeschlagen"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Sending"
+msgstr "Senden"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Sent"
+msgstr "Gesendet"
+
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
@@ -1645,7 +2098,11 @@ msgstr "Preisbereich festlegen"
 msgid "Set Starting Price"
 msgstr "Startpreis festlegen"
 
-#: src/components/Settings/index.tsx
+#: src/nft/components/profile/list/ListingButton.tsx
+msgid "Set prices to continue"
+msgstr "Legen Sie die Preise fest, um fortzufahren"
+
+#: src/components/AccountDrawer/SettingsMenu.tsx
 msgid "Settings"
 msgstr "Einstellungen"
 
@@ -1657,13 +2114,21 @@ msgstr "Anteil am Pool"
 msgid "Share of Pool:"
 msgstr "Anteil am Pool:"
 
+#: src/nft/components/profile/list/Modal/SuccessScreen.tsx
+msgid "Share on Twitter"
+msgstr "Auf Twitter teilen"
+
 #: src/components/Tokens/TokenDetails/ShareButton.tsx
 msgid "Share to Twitter"
 msgstr "Auf Twitter teilen"
 
+#: src/components/AccountDrawer/MiniPortfolio/ExpandoRow.tsx
+msgid "Show"
+msgstr "Zeigen"
+
 #: src/pages/Vote/Landing.tsx
 msgid "Show Cancelled"
-msgstr "Show abgesagt"
+msgstr "Abgebrochen anzeigen"
 
 #: src/components/PositionList/index.tsx
 #: src/components/PositionList/index.tsx
@@ -1675,18 +2140,32 @@ msgstr "Geschlossene Positionen anzeigen"
 msgid "Show more"
 msgstr "Zeig mehr"
 
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Show resources"
+msgstr "Ressourcen anzeigen"
+
+#: src/nft/components/profile/list/Modal/ListModalSection.tsx
+msgid "Sign"
+msgstr "Zeichen"
+
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Simple"
 msgstr "Einfach"
 
-#: src/components/TransactionSettings/index.tsx
-msgid "Slippage tolerance"
-msgstr "Schlupftoleranz"
+#: src/components/Settings/MaxSlippageSettings/index.tsx
+msgid "Slippage below {0}% may result in a failed transaction"
+msgstr "Ein Slippage unter {0}% kann zu einer fehlgeschlagenen Transaktion führen"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+#: src/nft/components/collection/ActivityCells.tsx
+msgid "Sold"
+msgstr "Verkauft"
 
 #: src/components/swap/UnsupportedCurrencyFooter.tsx
 msgid "Some assets are not available through this interface because they may not work well with the smart contracts or we are unable to allow trading for legal reasons."
 msgstr "Einige Assets sind über diese Benutzeroberfläche nicht verfügbar, da sie möglicherweise nicht gut mit den Smart Contracts funktionieren oder wir den Handel aus rechtlichen Gründen nicht zulassen können."
 
+#: src/components/ErrorBoundary/index.tsx
 #: src/components/ErrorBoundary/index.tsx
 #: src/nft/components/bag/BagFooter.tsx
 msgid "Something went wrong"
@@ -1696,25 +2175,46 @@ msgstr "Etwas ist schief gelaufen"
 msgid "Something went wrong. Please try again."
 msgstr "Etwas ist schief gelaufen. Bitte versuche es erneut."
 
+#: src/components/ErrorBoundary/index.tsx
+msgid "Sorry, an error occured while processing your request. If you request support, be sure to copy the details of this error."
+msgstr "Leider ist bei der Bearbeitung Ihrer Anfrage ein Fehler aufgetreten. Wenn Sie Support anfordern, kopieren Sie unbedingt die Details dieses Fehlers."
+
+#: src/components/ErrorBoundary/index.tsx
+msgid "Sorry, an error occured while processing your request. If you request support, be sure to provide your error ID."
+msgstr "Leider ist bei der Bearbeitung Ihrer Anfrage ein Fehler aufgetreten. Wenn Sie Support anfordern, geben Sie unbedingt Ihre Fehler-ID an."
+
+#: src/nft/components/profile/list/ListingButton.tsx
+msgid "Start listing"
+msgstr "Beginnen Sie mit der Auflistung"
+
+#: src/components/Tokens/TokenDetails/StatsSection.tsx
 #: src/components/Tokens/TokenDetails/StatsSection.tsx
 msgid "Stats"
 msgstr "Statistiken"
 
-#: src/pages/Earn/Manage.tsx
-msgid "Step 1. Get UNI-V2 Liquidity tokens"
-msgstr "Schritt 1. Holen Sie sich UNI-V2-Liquiditätstoken"
-
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Submit new proposal"
-msgstr "Neues Angebot einreichen"
+msgstr "Neuen Vorschlag einreichen"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Submit proposal failed"
+msgstr "Das Einreichen des Vorschlags ist fehlgeschlagen"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Submitted proposal"
+msgstr "Vorschlag eingereicht"
 
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "Submitting Proposal"
-msgstr "Angebot einreichen"
+msgstr "Vorschlag einreichen"
 
 #: src/components/vote/VoteModal.tsx
 msgid "Submitting Vote"
 msgstr "Stimmabgabe wird eingereicht"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Submitting proposal"
+msgstr "Vorschlag einreichen"
 
 #: src/pages/Vote/styled.tsx
 msgid "Succeeded"
@@ -1724,19 +2224,23 @@ msgstr "Erfolgreich"
 msgid "Success"
 msgstr "Erfolg"
 
+#: src/nft/components/profile/list/Modal/SuccessScreen.tsx
+msgid "Successfully listed"
+msgstr "Erfolgreich gelistet"
+
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Supply"
-msgstr "Bereitstellen"
+msgstr "Angebot"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Supplying {0} {1} and {2} {3}"
 msgstr "Biete {0} {1} und {2} {3} an"
 
-#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/NavBar/index.tsx
 #: src/components/Tokens/TokenDetails/MobileBalanceSummaryFooter.tsx
 #: src/components/swap/SwapHeader.tsx
-#: src/pages/Swap/index.tsx
+#: src/components/swap/SwapModalFooter.tsx
+#: src/components/swap/SwapSkeleton.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Swap"
@@ -1747,7 +2251,6 @@ msgid "Swap <0/> for exactly <1/>"
 msgstr "Tausche <0/> gegen genau <1/>"
 
 #: src/pages/Swap/index.tsx
-#: src/pages/Swap/index.tsx
 msgid "Swap Anyway"
 msgstr "Trotzdem tauschen"
 
@@ -1755,26 +2258,34 @@ msgstr "Trotzdem tauschen"
 msgid "Swap exactly <0/> for <1/>"
 msgstr "Tausche genau <0/> gegen <1/>"
 
-#: src/lib/hooks/swap/useSendSwapTransaction.tsx
-#: src/lib/hooks/swap/useSendSwapTransaction.tsx
-msgid "Swap failed: {0}"
-msgstr "Tausch fehlgeschlagen: {0}"
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Swap failed"
+msgstr "Der Tausch ist fehlgeschlagen"
 
-#: src/components/AccountDetailsV2/TransactionBody.tsx
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
 msgid "Swapped"
-msgstr "Vertauscht"
+msgstr "Getauscht"
 
-#: src/components/AccountDetailsV2/TransactionBody.tsx
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
 msgid "Swapping"
-msgstr "Austauschen"
+msgstr "Tauschen"
 
 #: src/components/swap/ConfirmSwapModal.tsx
 msgid "Swapping {0} {1} for {2} {3}"
 msgstr "Tausche {0} {1} gegen {2} {3}"
 
+#: src/nft/components/collection/Sweep.tsx
+msgid "Sweep"
+msgstr "Fegen"
+
 #: src/nft/components/bag/BagFooter.tsx
 msgid "Switch networks"
 msgstr "Netzwerke wechseln"
+
+#: src/components/Tokens/TokenDetails/InvalidTokenDetails.tsx
+msgid "Switch to {0}"
+msgstr "Wechseln Sie zu {0}"
 
 #: src/components/Tokens/TokenDetails/index.tsx
 msgid "Symbol not found"
@@ -1784,13 +2295,9 @@ msgstr "Symbol nicht gefunden"
 msgid "TVL"
 msgstr "TVL"
 
-#: src/components/Popups/SurveyPopup.tsx
-msgid "Take a 10 minute survey to help us improve your experience in the Uniswap app."
-msgstr "Nehmen Sie an einer 10-minütigen Umfrage teil, um uns dabei zu helfen, Ihre Erfahrung in der Uniswap-App zu verbessern."
-
-#: src/components/Popups/SurveyPopup.tsx
-msgid "Tell us what you think ↗"
-msgstr "Sagen Sie uns Ihre Meinung ↗"
+#: src/components/WalletModal/PrivacyPolicyNotice.tsx
+msgid "Terms of Service"
+msgstr "Nutzungsbedingungen"
 
 #: src/components/Popups/ClaimPopup.tsx
 msgid "Thanks for being part of the Uniswap community <0/>"
@@ -1826,31 +2333,29 @@ msgstr "Die App protokolliert anonymisierte Nutzungsstatistiken, um sie im Laufe
 
 #: src/components/PrivacyPolicy/index.tsx
 msgid "The app securely collects your wallet address and shares it with TRM Labs Inc. for risk and compliance reasons."
-msgstr "Die App sammelt sicher Ihre Wallet-Adresse und teilt sie aus Risiko- und Compliance-Gründen mit TRM Labs Inc."
+msgstr "Die App erfasst Ihre Wallet-Adresse sicher und gibt sie aus Risiko- und Compliance-Gründen an TRM Labs Inc. weiter."
 
-#: src/components/WalletModal/PendingView.tsx
+#: src/components/WalletModal/ConnectionErrorView.tsx
 msgid "The connection attempt failed. Please click try again and follow the steps to connect in your wallet."
-msgstr "Der Verbindungsversuch ist fehlgeschlagen. Bitte klicken Sie auf „Erneut versuchen“ und befolgen Sie die Schritte, um sich in Ihrem Wallet zu verbinden."
-
-#: src/components/swap/SwapWarningDropdown.tsx
-msgid "The cost of sending this transaction is more than half of the value of the input amount."
-msgstr "Die Kosten für das Senden dieser Transaktion betragen mehr als die Hälfte des Wertes des eingegebenen Betrags."
-
-#: src/components/Polling/index.tsx
-msgid "The current fast gas amount for sending a transaction on L1. Gas fees are paid in Ethereum's native currency Ether (ETH) and denominated in GWEI."
-msgstr "Der aktuelle Fast-Gas-Betrag zum Senden einer Transaktion auf L1. Die Gasgebühren werden in Ethereums Heimatwährung Ether (ETH) bezahlt und lauten auf GWEI."
+msgstr "Der Verbindungsversuch ist fehlgeschlagen. Bitte klicken Sie auf „Erneut versuchen“ und befolgen Sie die Schritte zum Herstellen einer Verbindung in Ihrem Wallet."
 
 #: src/components/CurrencyInputPanel/FiatValue.tsx
+#: src/nft/components/bag/BagFooter.tsx
 msgid "The estimated difference between the USD values of input and output amounts."
-msgstr "Die geschätzte Differenz zwischen den USD-Werten der Input- und Outputmengen."
+msgstr "Die geschätzte Differenz zwischen den USD-Werten der Eingabe- und Ausgabebeträge."
+
+#: src/components/swap/SwapModalFooter.tsx
+msgid "The fee paid to miners who process your transaction. This must be paid in ${0}."
+msgstr "Die Gebühr, die an Miner gezahlt wird, die Ihre Transaktion verarbeiten. Diese muss in ${0}bezahlt werden."
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "The fee paid to miners who process your transaction. This must be paid in {0}."
 msgstr "Die Gebühr, die an Miner gezahlt wird, die Ihre Transaktion verarbeiten. Diese muss in {0}bezahlt werden."
 
 #: src/components/swap/AdvancedSwapDetails.tsx
+#: src/components/swap/SwapModalFooter.tsx
 msgid "The impact your trade has on the market price of this pool."
-msgstr "Die Auswirkung Ihres Trades auf den Marktpreis dieses Pools."
+msgstr "Die Auswirkung Ihres Handels auf den Marktpreis dieses Pools."
 
 #: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "The input token cannot be transferred. There may be an issue with the input token."
@@ -1861,13 +2366,18 @@ msgstr "Der eingegebene Token kann nicht übertragen werden. Möglicherweise lie
 msgid "The market price is outside your specified price range. Single-asset deposit only."
 msgstr "Der Marktpreis liegt außerhalb der angegebenen Preisklasse. Nur einseitige Liquiditätsgabe möglich."
 
+#: src/components/swap/SwapModalFooter.tsx
+msgid "The maximum amount you are guaranteed to spend. If the price slips any further, your transaction will revert."
+msgstr "Der Höchstbetrag, den Sie garantiert ausgeben werden. Sollte der Preis weiter sinken, wird Ihre Transaktion rückgängig gemacht."
+
 #: src/components/swap/AdvancedSwapDetails.tsx
+#: src/components/swap/SwapModalFooter.tsx
 msgid "The minimum amount you are guaranteed to receive. If the price slips any further, your transaction will revert."
-msgstr "Der Mindestbetrag, den Sie garantiert erhalten. Wenn der Preis weiter sinkt, wird Ihre Transaktion rückgängig gemacht."
+msgstr "Der Mindestbetrag, den Sie garantiert erhalten. Sollte der Preis weiter sinken, wird Ihre Transaktion rückgängig gemacht."
 
 #: src/components/Polling/index.tsx
 msgid "The most recent block number on this network. Prices update on every block."
-msgstr "Die neueste Blocknummer in diesem Netzwerk. Die Preise werden für jeden Block aktualisiert."
+msgstr "Die aktuellste Blocknummer in diesem Netzwerk. Die Preise werden bei jedem Block aktualisiert."
 
 #: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "The output token cannot be transferred. There may be an issue with the output token."
@@ -1889,9 +2399,9 @@ msgstr "Der Preis für diesen Pool liegt innerhalb des gewählten Bereichs. Ihre
 msgid "The ratio of tokens you add will set the price of this pool."
 msgstr "Das Verhältnis der von Ihnen hinzugefügten Token legt den Preis für diesen Pool fest."
 
-#: src/utils/swapErrorToUserReadableMessage.tsx
-msgid "The transaction could not be sent because the deadline has passed. Please check that your transaction deadline is not too low."
-msgstr "Die Transaktion konnte nicht gesendet werden, da die Frist abgelaufen ist. Bitte überprüfen Sie, ob Ihre Transaktionsfrist nicht zu niedrig ist."
+#: src/theme/components/ThemeToggle.tsx
+msgid "Theme"
+msgstr "Thema"
 
 #: src/components/LiquidityChartRangeInput/index.tsx
 msgid "There is no liquidity data."
@@ -1903,11 +2413,15 @@ msgstr "Diese Adresse ist auf der Uniswap Labs-Schnittstelle blockiert, da sie m
 
 #: src/components/PrivacyPolicy/index.tsx
 msgid "This app uses the following third-party APIs:"
-msgstr "Diese App verwendet die folgenden Drittanbieter-APIs:"
+msgstr "Diese App verwendet die folgenden APIs von Drittanbietern:"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/index.tsx
+msgid "This month"
+msgstr "Diesen Monat"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "This pool must be initialized before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount. Gas fees will be higher than usual due to the initialization transaction."
-msgstr "Dieser Pool muss initialisiert werden, bevor Sie Liquidität hinzufügen können. Wählen Sie zum Initialisieren einen Startpreis für den Pool aus. Geben Sie dann Ihre Liquiditätspreisspanne und den Einzahlungsbetrag ein. Die Gasgebühren werden aufgrund der Initialisierungstransaktion höher als üblich sein."
+msgstr "Dieser Pool muss initialisiert werden, bevor Sie Liquidität hinzufügen können. Wählen Sie zum Initialisieren einen Startpreis für den Pool aus. Geben Sie dann Ihre Liquiditätspreisspanne und den Einzahlungsbetrag ein. Aufgrund der Initialisierungstransaktion werden die Gasgebühren höher als üblich sein."
 
 #: src/pages/Vote/VotePage.tsx
 msgid "This proposal may be executed after {0}."
@@ -1915,15 +2429,27 @@ msgstr "Dieser Vorschlag kann nach {0}ausgeführt werden."
 
 #: src/components/swap/SwapRoute.tsx
 msgid "This route optimizes your total output by considering split routes, multiple hops, and the gas cost of each step."
-msgstr "Diese Route optimiert Ihre Gesamtleistung, indem sie Split-Routen, mehrere Hops und die Benzinkosten jedes Schritts berücksichtigt."
+msgstr "Diese Route optimiert Ihre Gesamtleistung, indem sie geteilte Routen, mehrere Hops und die Gaskosten jedes Schritts berücksichtigt."
 
-#: src/components/Tokens/TokenDetails/PriceChart.tsx
-msgid "This token doesn't have chart data because it hasn't been traded on Uniswap v3"
-msgstr "Dieser Token hat keine Chartdaten, da er nicht auf Uniswap v3 gehandelt wurde"
+#: src/pages/Tokens/index.tsx
+msgid "This table contains the top tokens by Uniswap volume, sorted based on your input."
+msgstr "Diese Tabelle enthält die Top-Tokens nach Uniswap-Volumen, sortiert nach Ihrer Eingabe."
+
+#: src/components/Tokens/TokenDetails/InvalidTokenDetails.tsx
+msgid "This token doesn't exist"
+msgstr "Dieses Token existiert nicht"
+
+#: src/components/Tokens/TokenDetails/InvalidTokenDetails.tsx
+msgid "This token doesn't exist on {0}"
+msgstr "Dieses Token existiert auf {0}nicht"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
 msgstr "Dieses Tool wird Ihre {0}-Liquidität sicher auf V3 migrieren. Der Prozess ist dank des"
+
+#: src/utils/swapErrorToUserReadableMessage.tsx
+msgid "This transaction could not be sent because the deadline has passed. Please check that your transaction deadline is not too low."
+msgstr "Diese Transaktion konnte nicht gesendet werden, da die Frist abgelaufen ist. Bitte stellen Sie sicher, dass Ihre Transaktionsfrist nicht zu niedrig ist."
 
 #: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
@@ -1933,6 +2459,19 @@ msgstr "Diese Transaktion wird aufgrund von Preisbewegungen nicht erfolgreich se
 msgid "This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance."
 msgstr "Diese Transaktion wird nicht erfolgreich sein, entweder aufgrund von Preisbewegungen oder aufgrund von Gebühr-bei-Transfer. Versuchen Sie, Ihre Schlupftoleranz zu erhöhen."
 
+#: src/components/AccountDrawer/MiniPortfolio/Activity/index.tsx
+msgid "This week"
+msgstr "Diese Woche"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/index.tsx
+msgid "This year"
+msgstr "Dieses Jahr"
+
+#: src/nft/components/details/AssetActivity.tsx
+msgid "Time"
+msgstr "Zeit"
+
+#: src/nft/components/details/AssetActivity.tsx
 #: src/pages/CreateProposal/ProposalActionDetail.tsx
 #: src/pages/CreateProposal/ProposalActionDetail.tsx
 #: src/pages/Swap/index.tsx
@@ -1943,14 +2482,39 @@ msgstr "Nach"
 msgid "To (at least)"
 msgstr "Nach (mindestens)"
 
+#: src/components/Popups/FailedNetworkSwitchPopup.tsx
+msgid "To use Uniswap on {0}, switch the network in your wallet’s settings."
+msgstr "Um Uniswap auf {0}zu verwenden, wechseln Sie das Netzwerk in den Einstellungen Ihres Wallets."
+
+#: src/pages/Pool/PositionPage.tsx
+msgid "To view a position, you must be connected to the network it belongs to."
+msgstr "Um eine Position anzuzeigen, müssen Sie mit dem Netzwerk verbunden sein, zu dem sie gehört."
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/index.tsx
+msgid "Today"
+msgstr "Heute"
+
 #: src/components/Tokens/TokenTable/TokenRow.tsx
 msgid "Token name"
-msgstr "Token-Name"
+msgstr "Tokenname"
 
+#: src/components/TokenSafety/index.tsx
+msgid "Token not found"
+msgstr "Token nicht gefunden"
+
+#: src/components/Tokens/TokenDetails/StatsSection.tsx
+msgid "Token stats and charts for {label} are available on <0>info.uniswap.org</0>"
+msgstr "Token-Statistiken und Diagramme für {label} sind verfügbar auf <0>info.uniswap.org</0>"
+
+#: src/components/AccountDrawer/MiniPortfolio/index.tsx
 #: src/components/NavBar/SearchBarDropdown.tsx
 #: src/components/NavBar/index.tsx
 msgid "Tokens"
 msgstr "Token"
+
+#: src/nft/components/details/detailsV2/InfoChips.tsx
+msgid "Top Trait"
+msgstr "Top-Eigenschaft"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Top pools"
@@ -1960,30 +2524,39 @@ msgstr "Top Pools"
 msgid "Top tokens on Uniswap"
 msgstr "Top-Token auf Uniswap"
 
-#: src/components/earn/PoolCard.tsx
-msgid "Total deposited"
-msgstr "Gesamt deponiert"
-
-#: src/pages/Earn/Manage.tsx
-msgid "Total deposits"
-msgstr "Gesamteinlagen"
+#: src/nft/components/bag/BagFooter.tsx
+msgid "Total"
+msgstr "Gesamt"
 
 #: src/components/Tokens/TokenTable/TokenRow.tsx
-msgid "Total value locked (TVL) is the amount of the asset that’s currently in a Uniswap v3 liquidity pool."
-msgstr "Der gesperrte Gesamtwert (TVL) ist der Betrag des Vermögenswerts, der sich derzeit in einem Liquiditätspool von Uniswap v3 befindet."
+msgid "Total value locked (TVL) is the aggregate amount of the asset available across all Uniswap v3 liquidity pools."
+msgstr "Der gesperrte Gesamtwert (TVL) ist der Gesamtbetrag des Vermögenswerts, der in allen Uniswap v3-Liquiditätspools verfügbar ist."
 
-#: src/components/swap/RouterLabel.tsx
-msgid "Trade Route"
-msgstr "Handelsroute"
+#: src/pages/Landing/index.tsx
+msgid "Trade crypto and NFTs with confidence"
+msgstr "Handeln Sie mit Vertrauen mit Kryptowährungen und NFTs"
 
-#: src/components/Settings/index.tsx
+#: src/pages/Landing/index.tsx
+msgid "Trade crypto with confidence"
+msgstr "Handeln Sie mit Vertrauen mit Kryptowährungen"
+
+#: src/nft/components/details/detailsV2/DataPageTraits.tsx
+msgid "Trait"
+msgstr "Merkmal"
+
+#: src/nft/components/details/detailsV2/InfoChips.tsx
+msgid "Trait Floor"
+msgstr "Eigenschaftsboden"
+
+#: src/nft/components/details/detailsV2/DataPageTraits.tsx
+msgid "Traits"
+msgstr "Züge"
+
+#: src/components/Settings/MenuButton/index.tsx
 msgid "Transaction Settings"
 msgstr "Transaktionseinstellungen"
 
 #: src/components/TransactionConfirmationModal/index.tsx
-#: src/components/earn/ClaimRewardModal.tsx
-#: src/components/earn/StakingModal.tsx
-#: src/components/earn/UnstakingModal.tsx
 #: src/components/vote/DelegateModal.tsx
 #: src/components/vote/QueueModal.tsx
 #: src/components/vote/VoteModal.tsx
@@ -1994,7 +2567,7 @@ msgstr "Transaktion gesendet"
 msgid "Transaction completed in"
 msgstr "Transaktion abgeschlossen in"
 
-#: src/components/TransactionSettings/index.tsx
+#: src/components/Settings/TransactionDeadlineSettings/index.tsx
 msgid "Transaction deadline"
 msgstr "Transaktionsfrist"
 
@@ -2002,8 +2575,7 @@ msgstr "Transaktionsfrist"
 msgid "Transaction pending"
 msgstr "Transaktion ausstehend"
 
-#: src/lib/hooks/swap/useSendSwapTransaction.tsx
-#: src/lib/hooks/swap/useSendSwapTransaction.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "Transaction rejected"
 msgstr "Transaktion abgelehnt"
 
@@ -2011,22 +2583,17 @@ msgstr "Transaktion abgelehnt"
 msgid "Transaction submitted"
 msgstr "Transaktion eingereicht"
 
-#: src/components/WalletDropdown/DefaultMenu.tsx
-#: src/components/WalletDropdown/TransactionMenu.tsx
-msgid "Transactions"
-msgstr "Transaktionen"
-
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Transfer Token"
 msgstr "Token übertragen"
 
-#: src/components/WalletModal/PendingView.tsx
+#: src/components/WalletModal/ConnectionErrorView.tsx
 msgid "Try Again"
 msgstr "Erneut versuchen"
 
-#: src/components/Settings/index.tsx
-msgid "Turn On Expert Mode"
-msgstr "Experten-Modus aktivieren"
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+msgid "UNI Governance"
+msgstr "UNI-Governance"
 
 #: src/components/Popups/ClaimPopup.tsx
 msgid "UNI has arrived"
@@ -2040,18 +2607,13 @@ msgstr "UNI-Token stellen Stimmbeteiligung an der Uniswap Governance dar. Sie k�
 msgid "UNI {0}/{1} Burned"
 msgstr "UNI {0}/{1} verbrannt"
 
-#: src/pages/Earn/Manage.tsx
-msgid "UNI-V2 LP tokens are required. Once you've added liquidity to the {0}-{1} pool you can stake your liquidity tokens on this page."
-msgstr "UNI-V2 LP-Token sind erforderlich. Sobald Sie dem Pool von {0}-{1} Liquidität hinzugefügt haben, können Sie Ihre Liquiditäts-Token auf dieser Seite \"staken\"."
+#: src/nft/components/collection/ActivityCells.tsx
+msgid "Unavailable"
+msgstr "Nicht verfügbar"
 
-#: src/pages/Earn/Manage.tsx
-msgid "UNI-V2 {0}-{1}"
-msgstr "UNI-V2 {0}-{1}"
-
-#: src/components/earn/ClaimRewardModal.tsx
-#: src/components/earn/UnstakingModal.tsx
-msgid "Unclaimed UNI"
-msgstr "Noch nicht bezogene UNI"
+#: src/nft/components/profile/view/ViewMyNftsAsset.tsx
+msgid "Unavailable for listing"
+msgstr "Für die Auflistung nicht verfügbar"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Unclaimed fees"
@@ -2061,13 +2623,9 @@ msgstr "Noch nicht bezogene Gebühren"
 msgid "Undetermined"
 msgstr "Unbestimmt"
 
-#: src/lib/hooks/swap/useSendSwapTransaction.tsx
-msgid "Unexpected error. Could not estimate gas for the swap."
-msgstr "Unerwarteter Fehler. Gas für den Tausch konnte nicht geschätzt werden."
-
-#: src/lib/hooks/swap/useSendSwapTransaction.tsx
-msgid "Unexpected issue with estimating the gas. Please try again."
-msgstr "Unerwartetes Problem bei der Schätzung des Gases. Bitte versuche es erneut."
+#: src/components/Settings/RouterPreferenceSettings/index.tsx
+msgid "Uniswap API"
+msgstr "Uniswap-API"
 
 #: src/pages/Vote/Landing.tsx
 msgid "Uniswap Governance"
@@ -2077,25 +2635,61 @@ msgstr "Uniswap Governance"
 msgid "Uniswap Labs' Terms of Service"
 msgstr "Nutzungsbedingungen von Uniswap Labs"
 
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+msgid "Uniswap Protocol"
+msgstr "Uniswap-Protokoll"
+
+#: src/pages/Pool/v2.tsx
+msgid "Uniswap V2 is not available on this network."
+msgstr "Uniswap V2 ist in diesem Netzwerk nicht verfügbar."
+
 #: src/components/SwitchLocaleLink/index.tsx
 msgid "Uniswap available in: <0>{0}</0>"
 msgstr "Uniswap verfügbar in: <0>{0}</0>"
+
+#: src/components/Settings/RouterPreferenceSettings/index.tsx
+msgid "Uniswap client"
+msgstr "Uniswap-Client"
 
 #: src/components/vote/ProposalEmptyState.tsx
 msgid "Uniswap governance is only available on Layer 1. Switch your network to Ethereum Mainnet to view Proposals and Vote."
 msgstr "Uniswap-Governance ist nur auf Layer 1 verfügbar. Schalten Sie Ihr Netzwerk auf Ethereum Mainnet um, um Anträge und Abstimmungen anzuzeigen."
 
-#: src/pages/Earn/index.tsx
-msgid "Uniswap liquidity mining"
-msgstr "Uniswap Liquiditätsförderung"
+#: src/nft/components/collection/TransactionCompleteModal.tsx
+msgid "Uniswap has granted your wish!"
+msgstr "Uniswap hat Ihren Wunsch erfüllt!"
+
+#: src/components/Banner/UniswapWalletBanner.tsx
+msgid "Uniswap in your pocket"
+msgstr "Uniswap in Ihrer Tasche"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Uniswap migration contract↗"
 msgstr "Uniswap Migrations-contract↗"
 
-#: src/utils/swapErrorToUserReadableMessage.tsx
-msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "Unbekannter Fehler{0}. Versuchen Sie, Ihre Schlupftoleranz zu erhöhen. Hinweis: Gebühren für Transfer- und Rebase-Token sind nicht mit Uniswap V3 kompatibel."
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseLocal.ts
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseLocal.ts
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseLocal.ts
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseLocal.ts
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseLocal.ts
+msgid "Unknown"
+msgstr "Unbekannt"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+msgid "Unknown Approval"
+msgstr "Unbekannte Genehmigung"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+msgid "Unknown Mint"
+msgstr "Unbekannte Münzstätte"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+msgid "Unknown Send"
+msgstr "Unbekannter Versand"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+msgid "Unknown Swap"
+msgstr "Unbekannter Tausch"
 
 #: src/pages/Vote/Landing.tsx
 #: src/pages/Vote/VotePage.tsx
@@ -2120,24 +2714,32 @@ msgstr "Nicht unterstütztes Asset"
 msgid "Unsupported Assets"
 msgstr "Nicht unterstützte Assets"
 
+#: src/components/NavBar/ChainSelectorRow.tsx
+msgid "Unsupported by your wallet"
+msgstr "Wird von Ihrem Geldbeutel nicht unterstützt"
+
 #: src/state/governance/hooks.ts
 msgid "Untitled"
 msgstr "Ohne Titel"
 
-#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/pages/Swap/index.tsx
 msgid "Unwrap"
 msgstr "Unwrap"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Unwrap <0/> to {0}"
-msgstr "Auspacken <0/> bis {0}"
+msgstr "Packen Sie <0/> zu {0}aus"
 
-#: src/components/AccountDetailsV2/TransactionBody.tsx
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Unwrap failed"
+msgstr "Das Auspacken ist fehlgeschlagen"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
 msgid "Unwrapped"
 msgstr "Ausgepackt"
 
-#: src/components/AccountDetailsV2/TransactionBody.tsx
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
 msgid "Unwrapping"
 msgstr "Auspacken"
 
@@ -2145,17 +2747,9 @@ msgstr "Auspacken"
 msgid "Update Delegation"
 msgstr "Delegation aktualisieren"
 
-#: src/components/Settings/index.tsx
+#: src/components/Settings/RouterPreferenceSettings/index.tsx
 msgid "Use the Uniswap Labs API to get faster quotes."
-msgstr "Verwenden Sie die Uniswap Labs-API, um schnellere Angebote zu erhalten."
-
-#: src/components/claim/ClaimModal.tsx
-msgid "User"
-msgstr "Benutzer"
-
-#: src/pages/Pool/v2.tsx
-msgid "V2 Pool is not available on Layer 2. Switch to Layer 1 Ethereum."
-msgstr "V2 Pool ist auf Layer 2 nicht verfügbar. Wechseln Sie zu Layer 1 Ethereum."
+msgstr "Verwenden Sie die Uniswap Labs API, um schneller Angebote zu erhalten."
 
 #: src/pages/Pool/index.tsx
 msgid "V2 liquidity"
@@ -2166,31 +2760,45 @@ msgstr "V2-Liquidität"
 msgid "V3 {0} Price:"
 msgstr "V3 {0} Preis:"
 
+#: src/components/AccountDrawer/GitVersionRow.tsx
+msgid "Version:"
+msgstr "Ausführung:"
+
+#: src/nft/components/details/detailsV2/RarityGraph.tsx
+msgid "Very common"
+msgstr "Sehr gewöhnlich"
+
+#: src/nft/components/details/detailsV2/RarityGraph.tsx
+msgid "Very rare"
+msgstr "Sehr selten"
+
 #: src/components/PositionCard/index.tsx
 msgid "View accrued fees and analytics<0>↗</0>"
-msgstr "Eingenommene Gebühren und Analysen anzeigen<0>↗</0>"
+msgstr "Anfallende Gebühren und Analysen anzeigen<0>↗</0>"
 
-#: src/components/WalletDropdown/AuthenticatedHeader.tsx
+#: src/components/AccountDrawer/AuthenticatedHeader.tsx
 msgid "View and sell NFTs"
-msgstr "Anzeigen und Verkaufen von NFTs"
+msgstr "NFTs ansehen und verkaufen"
 
 #: src/components/NavBar/MenuDropdown.tsx
 msgid "View more analytics"
 msgstr "Weitere Analysen anzeigen"
 
-#: src/components/TransactionConfirmationModal/index.tsx
+#: src/nft/components/collection/TransactionCompleteModal.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "View on Etherscan"
 msgstr "Auf Etherscan ansehen"
 
-#: src/components/AccountDetails/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "View on Explorer"
 msgstr "Im Explorer anzeigen"
 
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "View on {0}"
+msgstr "Ansicht am {0}"
+
 #: src/components/ModalViews/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
-#: src/components/claim/ClaimModal.tsx
 #: src/components/vote/ExecuteModal.tsx
 #: src/components/vote/QueueModal.tsx
 #: src/components/vote/VoteModal.tsx
@@ -2199,7 +2807,7 @@ msgstr "Transaktion im Explorer anzeigen"
 
 #: src/components/Tokens/TokenTable/TokenRow.tsx
 msgid "Volume is the amount of the asset that has been traded on Uniswap v3 during the selected time frame."
-msgstr "Das Volumen ist der Betrag des Vermögenswerts, der während des ausgewählten Zeitrahmens auf Uniswap v3 gehandelt wurde."
+msgstr "Das Volumen ist der Betrag des Vermögenswerts, der im ausgewählten Zeitraum auf Uniswap v3 gehandelt wurde."
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Vote Against"
@@ -2216,11 +2824,15 @@ msgstr "Stimme gegen Antrag {proposalId}"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Vote against proposal {proposalKey}"
-msgstr "Gegen Vorschlag stimmen {proposalKey}"
+msgstr "Stimmen Sie gegen Vorschlag {proposalKey}"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Vote against proposal {proposalKey} with reason \"{0}\""
-msgstr "Stimme gegen Vorschlag {proposalKey} mit Begründung \"{0}\""
+msgstr "Gegen Vorschlag {proposalKey} mit Grund „{0}“ stimmen"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Vote failed"
+msgstr "Die Abstimmung ist fehlgeschlagen"
 
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx
@@ -2229,28 +2841,36 @@ msgstr "Für Vorschlag {proposalId} stimmen"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Vote for proposal {proposalKey}"
-msgstr "Stimme für Vorschlag {proposalKey}"
+msgstr "Stimmen Sie für Vorschlag {proposalKey}"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Vote for proposal {proposalKey} with reason \"{0}\""
-msgstr "Stimme für Vorschlag {proposalKey} mit Grund \"{0}\""
+msgstr "Stimmen Sie für Vorschlag {proposalKey} mit Grund „{0}“"
 
 #: src/components/NavBar/MenuDropdown.tsx
 msgid "Vote in governance"
-msgstr "Stimmen Sie in der Regierung ab"
+msgstr "Abstimmung in der Regierungsführung"
 
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Vote to abstain on proposal {proposalId}"
-msgstr "Stimme für Enthaltung bei Vorschlag {proposalId}"
+msgstr "Stimmen Sie für Enthaltung bei Vorschlag {proposalId}"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Vote to abstain on proposal {proposalKey}"
-msgstr "Stimme für Enthaltung bei Vorschlag {proposalKey}"
+msgstr "Stimmen Sie für Enthaltung bei Vorschlag {proposalKey}"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Vote to abstain on proposal {proposalKey} with reason \"{0}\""
-msgstr "Stimmen Sie für die Enthaltung bei Vorschlag {proposalKey} mit der Begründung „{0}“"
+msgstr "Stimmen Sie für eine Enthaltung bei Vorschlag {proposalKey} mit der Begründung „{0}“."
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Voted"
+msgstr "Abgestimmt"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Voting"
+msgstr "Wählen"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Voting ended {0}"
@@ -2262,79 +2882,63 @@ msgstr "Die Abstimmung endet ungefähr {0}"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Voting starts approximately {0}"
-msgstr "Die Abstimmung beginnt ungefähr {0}"
+msgstr "Die Abstimmung beginnt ungefähr bei {0}"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Waiting for confirmation"
 msgstr "Auf Bestätigung warten"
 
-#: src/components/WalletModal/PendingView.tsx
-msgid "Waiting to connect"
-msgstr "Warten auf Verbindung"
-
 #: src/components/AddressInputPanel/index.tsx
 msgid "Wallet Address or ENS name"
 msgstr "Wallet-Adresse oder ENS-Name"
 
+#: src/components/addLiquidity/OwnershipWarning.tsx
 #: src/constants/tokenSafety.tsx
 msgid "Warning"
 msgstr "Warnung"
-
-#: src/components/earn/StakingModal.tsx
-msgid "Weekly Rewards"
-msgstr "Wöchentliche Belohnungen"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Welcome to team Unicorn :)"
 msgstr "Willkommen bei Team Unicorn :)"
 
-#: src/components/earn/ClaimRewardModal.tsx
-msgid "When you claim without withdrawing your liquidity remains in the mining pool."
-msgstr "Wenn Sie Einfordern ohne die Liquidität abzuheben, bleibt Ihre Liquidität im Förder-Pool."
-
-#: src/pages/Earn/Manage.tsx
-msgid "When you withdraw, the contract will automagically claim UNI on your behalf!"
-msgstr "Wenn Sie Abheben wird der contract \"automagisch\" UNI für Sie einziehen!"
-
-#: src/components/earn/UnstakingModal.tsx
-msgid "When you withdraw, your UNI is claimed and your liquidity is removed from the mining pool."
-msgstr "Wenn Sie abheben, wird Ihr UNI eingefordert und Ihre Liquidität aus dem Förder-Pool entfernt."
-
-#: src/components/earn/UnstakingModal.tsx
-#: src/pages/Earn/Manage.tsx
-msgid "Withdraw"
-msgstr "Abheben"
-
-#: src/components/earn/UnstakingModal.tsx
-msgid "Withdraw & Claim"
-msgstr "Abheben & Einfordern"
+#: src/nft/components/profile/list/Modal/ListModalSection.tsx
+msgid "Why is a transaction required?"
+msgstr "Warum ist eine Transaktion erforderlich?"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Withdraw deposited liquidity"
-msgstr "Deponierte Liquidität abheben"
+msgstr "Eingezahlte Liquidität abheben"
 
-#: src/components/earn/UnstakingModal.tsx
-msgid "Withdrawing {0} UNI-V2"
-msgstr "Hebe {0} UNI-V2 ab"
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Withdraw failed"
+msgstr "Die Auszahlung ist fehlgeschlagen"
 
-#: src/components/earn/UnstakingModal.tsx
-msgid "Withdrew UNI-V2!"
-msgstr "UNI-V2 abgehoben!"
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Withdrawing"
+msgstr "Rückzug"
 
-#: src/components/AccountDetailsV2/TransactionBody.tsx
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Withdrew"
+msgstr "Zurückgezogen"
+
 #: src/pages/Swap/index.tsx
 msgid "Wrap"
 msgstr "Wrap"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Wrap <0/> to {0}"
-msgstr "Wrap <0/> bis {0}"
+msgstr "Wickeln Sie <0/> auf {0}"
 
-#: src/components/AccountDetailsV2/TransactionBody.tsx
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Wrap failed"
+msgstr "Wrap ist fehlgeschlagen"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
 msgid "Wrapped"
-msgstr "Eingewickelt"
+msgstr "Eingepackt"
 
-#: src/components/AccountDetailsV2/TransactionBody.tsx
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
 msgid "Wrapping"
 msgstr "Verpackung"
 
@@ -2350,6 +2954,10 @@ msgstr "Sie haben bereits ein aktives oder ausstehendes Angebot"
 msgid "You are creating a pool"
 msgstr "Sie erstellen einen Pool"
 
+#: src/components/addLiquidity/OwnershipWarning.tsx
+msgid "You are not the owner of this LP position. You will not be able to withdraw the liquidity from this position unless you own the following address: {ownerAddress}"
+msgstr "Sie sind nicht der Inhaber dieser LP-Position. Sie können die Liquidität von dieser Position nicht abheben, es sei denn, Sie besitzen die folgende Adresse: {ownerAddress}"
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You are the first liquidity provider for this Uniswap V3 pool. Your liquidity will migrate at the current {0} price."
 msgstr "Sie sind der erste Liquiditätsgeber für diesen Uniswap V3 Pool. Ihre Liquidität wird zum aktuellen {0}-Preis migriert."
@@ -2361,10 +2969,6 @@ msgstr "Sie sind der erste Liquiditätsanbieter."
 #: src/components/vote/DelegateModal.tsx
 msgid "You can either vote on each proposal yourself or delegate your votes to a third party."
 msgstr "Sie können entweder über jeden Vorschlag selbst abstimmen oder Ihre Stimme an Dritte delegieren."
-
-#: src/pages/Swap/index.tsx
-msgid "You can now trade {0}"
-msgstr "Du kannst jetzt {0} handeln"
 
 #: src/pages/CreateProposal/index.tsx
 msgid "You don't have enough votes to submit a proposal"
@@ -2378,21 +2982,23 @@ msgstr "Sie haben noch keine Liquidität in diesem Pool."
 msgid "You may have lost your network connection."
 msgstr "Möglicherweise haben Sie Ihre Netzwerkverbindung verloren."
 
-#: src/components/swap/SwapWarningDropdown.tsx
-msgid "You might consider waiting until the network fees go down to complete this transaction."
-msgstr "Sie können in Erwägung ziehen, zu warten, bis die Netzwerkgebühren gesunken sind, um diese Transaktion abzuschließen."
-
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You must connect an account."
 msgstr "Sie müssen ein Konto verbinden."
 
-#: src/pages/Swap/index.tsx
-msgid "You must give the Uniswap smart contracts permission to use your {0}. You only have to do this once per token."
-msgstr "Sie müssen den Uniswap Smart Contracts die Erlaubnis erteilen, Ihre {0} zu verwenden. Sie müssen dies nur einmal pro Token tun."
-
 #: src/pages/CreateProposal/index.tsx
 msgid "You must have {formattedProposalThreshold} votes to submit a proposal"
 msgstr "Sie müssen {formattedProposalThreshold} Stimmen haben, um einen Vorschlag einzureichen"
+
+#: src/components/swap/SwapModalHeader.tsx
+msgid "You pay"
+msgstr "Sie bezahlen"
+
+#: src/components/swap/SwapModalHeader.tsx
+#: src/nft/components/profile/list/ListPage.tsx
+#: src/nft/components/profile/list/NFTListingsGrid.tsx
+msgid "You receive"
+msgstr "Du erhältst"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You should only deposit liquidity into Uniswap V3 at a price you believe is correct. <0/>If the price seems incorrect, you can either make a swap to move the price or wait for someone else to do so."
@@ -2400,7 +3006,7 @@ msgstr "Sie sollten nur Liquidität in Uniswap V3 zu einem Preis einzahlen, den 
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "You will also collect fees earned from this position."
-msgstr "Sie werden auch die Gebühren einziehen, die diese Position eingenommen hat."
+msgstr "Sie werden auch die Gebühren einziehen, die diese Position verdient hat."
 
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -2416,16 +3022,16 @@ msgid "Your active V3 liquidity positions will appear here."
 msgstr "Hier werden Ihre aktiven V3-Liquiditätspositionen angezeigt."
 
 #: src/components/Tokens/TokenDetails/BalanceSummary.tsx
-msgid "Your balance"
-msgstr "Dein Kontostand"
+msgid "Your balance on {label}"
+msgstr "Ihr Guthaben beträgt {label}"
 
 #: src/pages/Pool/index.tsx
 msgid "Your connected network is unsupported."
 msgstr "Ihr verbundenes Netzwerk wird nicht unterstützt."
 
-#: src/pages/Earn/Manage.tsx
-msgid "Your liquidity deposits"
-msgstr "Ihre Liquiditätspositionen"
+#: src/nft/components/profile/view/EmptyWalletContent.tsx
+msgid "Your onchain transactions and crypto purchases will appear here."
+msgstr "Ihre On-Chain-Transaktionen und Krypto-Käufe werden hier angezeigt."
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
@@ -2435,7 +3041,7 @@ msgstr "Ihr Poolanteil:"
 
 #: src/components/PositionCard/index.tsx
 msgid "Your position"
-msgstr "Deine Position"
+msgstr "Ihre Position"
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "Your position has 0 liquidity, and is not earning fees."
@@ -2453,26 +3059,25 @@ msgstr "Ihre Position wird zu 100% aus {0} bestehen bei diesem Preis"
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Your position will be 100% {0} at this price."
-msgstr "Ihre Position wird bei diesem Preis 100% {0} sein."
+msgstr "Ihre Position wird bei diesem Preis 100 % {0} sein."
 
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Your position will not earn fees or be used in trades until the market price moves into your range."
-msgstr "Ihre Position wird keine Gebühren verdienen oder in Geschäften genutzt werden, bis sich der Marktpreis in Ihren Bereich bewegt."
+msgstr "Ihre Position wird keine Gebühren verdienen oder im Handel genutzt, bis sich der Marktpreis in Ihren Bereich bewegt."
 
 #: src/components/PositionList/index.tsx
 #: src/components/PositionList/index.tsx
 msgid "Your positions"
 msgstr "Ihre Positionen"
 
-#: src/components/earn/PoolCard.tsx
-msgid "Your rate"
-msgstr "Dein Kurs"
+#: src/hooks/useUniversalRouter.ts
+msgid "Your swap is expected to fail."
+msgstr "Es wird erwartet, dass Ihr Tausch fehlschlägt."
 
-#: src/lib/hooks/swap/useSendSwapTransaction.tsx
-#: src/lib/hooks/swap/useSendSwapTransaction.tsx
+#: src/hooks/useUniversalRouter.ts
 msgid "Your swap was modified through your wallet. If this was a mistake, please cancel immediately or risk losing your funds."
-msgstr ""
+msgstr "Ihr Swap wurde über Ihr Wallet geändert. Wenn dies ein Fehler war, stornieren Sie bitte sofort, da Sie sonst das Risiko eingehen, Ihr Geld zu verlieren."
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
@@ -2483,107 +3088,119 @@ msgstr "Ihre gesamten Pool-Token:"
 msgid "Your transaction cost will be much higher as it includes the gas to create the pool."
 msgstr "Ihre Transaktionskosten werden wesentlich höher sein, da sie das Gas beinhalten, um den Pool zu erstellen."
 
-#: src/components/TransactionSettings/index.tsx
-msgid "Your transaction may be frontrun"
-msgstr "Ihre Transaktion könnte anfällig für \"Frontrunning\" sein"
+#: src/components/Settings/MaxSlippageSettings/index.tsx
+msgid "Your transaction may be frontrun and result in an unfavorable trade."
+msgstr "Ihre Transaktion könnte vorzeitig erfolgen und zu einem ungünstigen Handel führen."
 
-#: src/components/TransactionSettings/index.tsx
-msgid "Your transaction may fail"
-msgstr "Ihre Transaktion könnte fehlschlagen"
-
-#: src/components/TransactionSettings/index.tsx
+#: src/components/Settings/TransactionDeadlineSettings/index.tsx
 msgid "Your transaction will revert if it is pending for more than this period of time."
 msgstr "Ihre Transaktion wird rückgängig gemacht, wenn sie für mehr als diesen Zeitraum aussteht."
 
-#: src/components/TransactionSettings/index.tsx
+#: src/components/Settings/MaxSlippageSettings/index.tsx
 msgid "Your transaction will revert if the price changes unfavorably by more than this percentage."
 msgstr "Ihre Transaktion wird rückgängig gemacht, wenn sich der Preis ungünstig um mehr als diesen Prozentsatz ändert."
 
-#: src/components/WalletDropdown/TransactionMenu.tsx
-msgid "Your transactions will appear here"
-msgstr "Ihre Transaktionen werden hier angezeigt"
-
-#: src/components/AccountDetails/index.tsx
-msgid "Your transactions will appear here..."
-msgstr "Ihre Transaktionen werden hier erscheinen..."
-
-#: src/pages/Earn/Manage.tsx
-msgid "Your unclaimed UNI"
-msgstr "Deine noch nicht bezogenen UNI"
+#: src/components/NavBar/ChainSelector.tsx
+msgid "Your wallet's current network is unsupported."
+msgstr "Das aktuelle Netzwerk Ihres Wallets wird nicht unterstützt."
 
 #: src/components/Tokens/TokenDetails/MobileBalanceSummaryFooter.tsx
 msgid "Your {0} balance"
-msgstr "Ihr {0} -Guthaben"
+msgstr "Ihr {0} Guthaben"
 
-#: src/components/swap/AdvancedSwapDetails.tsx
-msgid "after slippage"
-msgstr "nach dem rutschen"
-
-#: src/components/AccountDetailsV2/TransactionBody.tsx
-#: src/components/AccountDetailsV2/TransactionBody.tsx
-#: src/components/AccountDetailsV2/TransactionBody.tsx
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseLocal.ts
 msgid "and"
-msgstr "und"
+msgstr "Und"
+
+#: src/components/WalletModal/PrivacyPolicyNotice.tsx
+msgid "and consent to its"
+msgstr "und Zustimmung dazu"
+
+#: src/nft/components/card/media.tsx
+msgid "available yet"
+msgstr "noch verfügbar"
+
+#: src/nft/components/profile/list/PriceTextInput.tsx
+msgid "below floor price."
+msgstr "unter dem Mindestpreis."
+
+#: src/nft/components/profile/list/Modal/BelowFloorWarningModal.tsx
+msgid "below the collection’s floor price. Are you sure you want to continue?"
+msgstr "unter dem Mindestpreis der Kollektion. Bist du dir sicher, dass du weitermachen willst?"
 
 #: src/components/ConnectedAccountBlocked/index.tsx
 msgid "blocked activities"
 msgstr "blockierte Aktivitäten"
 
-#: src/components/Settings/index.tsx
-msgid "confirm"
-msgstr "bestätigen"
+#: src/nft/components/profile/list/RoyaltyTooltip.tsx
+msgid "fee"
+msgstr "Gebühr"
 
-#: src/components/AccountDetailsV2/TransactionBody.tsx
-msgid "failed"
-msgstr "gescheitert"
-
-#: src/components/AccountDetailsV2/TransactionBody.tsx
-msgid "fees"
-msgstr "Honorare"
-
-#: src/components/AccountDetailsV2/TransactionBody.tsx
-#: src/components/AccountDetailsV2/TransactionBody.tsx
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseLocal.ts
 msgid "for"
-msgstr "zum"
+msgstr "für"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "for {0}"
 msgstr "für {0}"
 
-#: src/components/Polling/index.tsx
-msgid "gwei"
-msgstr "gwei"
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+msgid "from"
+msgstr "aus"
 
 #: src/components/Polling/ChainConnectivityWarning.tsx
 msgid "here."
 msgstr "Hier."
 
-#: src/components/TransactionSettings/index.tsx
+#: src/components/Settings/TransactionDeadlineSettings/index.tsx
 msgid "minutes"
 msgstr "Minuten"
 
-#: src/components/WalletDropdown/AuthenticatedHeader.tsx
+#: src/nft/utils/time.ts
+msgid "months"
+msgstr "Monate"
+
+#: src/components/AccountDrawer/AuthenticatedHeader.tsx
 msgid "reward"
 msgstr "belohnen"
 
-#: src/components/AccountDetailsV2/TransactionBody.tsx
+#: src/components/FiatOnrampModal/index.tsx
+msgid "something went wrong!"
+msgstr "etwas ist schief gelaufen!"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
 msgid "to"
-msgstr "zu"
+msgstr "Zu"
+
+#: src/nft/components/profile/list/ListingButton.tsx
+msgid "{0, plural, =1 {Resolve issue} other {{1}}}"
+msgstr "{0, plural, =1 {Problem lösen} other {{1}}}"
 
 #: src/constants/tokenSafety.tsx
 msgid "{0, plural, =1 {This token isn't traded on leading U.S. centralized exchanges or frequently swapped on Uniswap.} other {These tokens aren't traded on leading U.S. centralized exchanges or frequently swapped on Uniswap.}}"
-msgstr "{0, plural, =1 {Dieser Token wird nicht an führenden zentralisierten US-Börsen gehandelt oder häufig auf Uniswap getauscht.} other {Diese Token werden nicht an führenden zentralisierten US-Börsen gehandelt oder häufig auf Uniswap getauscht.}}"
+msgstr "{0, plural, =1 {Dieser Token wird nicht an führenden zentralen US-Börsen gehandelt oder häufig auf Uniswap getauscht.} other {Diese Token werden nicht an führenden zentralen US-Börsen gehandelt oder häufig auf Uniswap getauscht.}}"
 
 #: src/constants/tokenSafety.tsx
 msgid "{0, plural, =1 {This token isn't traded on leading U.S. centralized exchanges.} other {These tokens aren't traded on leading U.S. centralized exchanges.}}"
-msgstr "{0, plural, =1 {Dieser Token wird nicht an führenden zentralisierten US-Börsen gehandelt.} other {Diese Token werden nicht an führenden zentralisierten US-Börsen gehandelt.}}"
+msgstr "{0, plural, =1 {Dieser Token wird nicht an führenden zentralen US-Börsen gehandelt.} other {Diese Token werden nicht an führenden zentralen US-Börsen gehandelt.}}"
 
 #: src/constants/tokenSafety.tsx
 msgid "{0, plural, =1 {You can't trade this token using the Uniswap App.} other {You can't trade these tokens using the Uniswap App.}}"
-msgstr "{0, plural, =1 {Sie können diesen Token nicht über die Uniswap-App handeln.} other {Sie können diese Token nicht über die Uniswap-App handeln.}}"
+msgstr "{0, plural, =1 {Sie können diesen Token nicht mit der Uniswap-App handeln.} other {Sie können diese Token nicht mit der Uniswap-App handeln.}}"
 
+#: src/nft/components/profile/list/Modal/ListModalSection.tsx
+msgid "{0, plural, =1 {listing} other {listings}}"
+msgstr "{0, plural, =1 {Auflistung} other {Auflistungen}}"
+
+#: src/nft/components/profile/list/Modal/BelowFloorWarningModal.tsx
+msgid "{0, plural, =1 {{1}} other {{2}}}"
+msgstr "{0, plural, =1 {{1}} other {{2}}}"
+
+#: src/components/CurrencyInputPanel/FiatValue.tsx
+#: src/components/ErrorBoundary/index.tsx
 #: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx
+#: src/nft/components/bag/BagFooter.tsx
 msgid "{0}"
 msgstr "{0}"
 
@@ -2591,54 +3208,36 @@ msgstr "{0}"
 msgid "{0} %"
 msgstr "{0} %"
 
-#: src/components/PositionListItem/index.tsx
-#: src/components/PositionListItem/index.tsx
-msgid "{0} <0/> per <1/>"
-msgstr "{0} <0/>/<1/>"
-
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "{0} Deposited"
-msgstr "{0} deponiert"
-
-#: src/components/earn/PoolCard.tsx
-msgid "{0} ETH"
-msgstr "{0} ETH"
+msgstr "{0} eingezahlt"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "{0} Fees Earned:"
-msgstr "{0} erhaltene Gebühren:"
+msgstr "{0} verdiente Gebühren:"
+
+#: src/nft/components/profile/list/Modal/BelowFloorWarningModal.tsx
+msgid "{0} NFTs are listed significantly"
+msgstr "{0} NFTs sind signifikant aufgeführt"
 
 #: src/components/Web3Status/index.tsx
 msgid "{0} Pending"
 msgstr "{0} Ausstehend"
 
+#: src/utils/swapErrorToUserReadableMessage.tsx
+msgid "{0} Try increasing your slippage tolerance.\n"
+"Note: fee-on-transfer and rebase tokens are incompatible with Uniswap V3."
+msgstr "{0} Versuchen Sie, Ihre Schlupftoleranz zu erhöhen.\n"
+"Hinweis: Fee-on-Transfer- und Rebase-Tokens sind nicht mit Uniswap V3 kompatibel."
+
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/AddressClaimModal.tsx
-#: src/components/claim/ClaimModal.tsx
-#: src/components/claim/ClaimModal.tsx
-#: src/components/claim/ClaimModal.tsx
 msgid "{0} UNI"
 msgstr "{0} UNI"
-
-#: src/components/earn/PoolCard.tsx
-#: src/components/earn/PoolCard.tsx
-#: src/components/earn/StakingModal.tsx
-#: src/pages/Earn/Manage.tsx
-#: src/pages/Earn/Manage.tsx
-msgid "{0} UNI / week"
-msgstr "{0} UNI / Woche"
-
-#: src/components/earn/StakingModal.tsx
-msgid "{0} UNI-V2"
-msgstr "{0} UNI-V2"
-
-#: src/pages/Earn/Manage.tsx
-msgid "{0} UNI-V2 LP tokens available"
-msgstr "{0} UNI-V2 LP Token verfügbar"
 
 #: src/components/vote/VoteModal.tsx
 msgid "{0} Votes"
@@ -2660,7 +3259,6 @@ msgstr "{0} pro {1}"
 msgid "{0} {1} Price:"
 msgstr "{0} {1} Preis:"
 
-#: src/components/CurrencyInputPanel/FiatValue.tsx
 #: src/components/FeeSelector/FeeOption.tsx
 #: src/components/PositionListItem/index.tsx
 #: src/components/PositionPreview/index.tsx
@@ -2670,7 +3268,7 @@ msgstr "{0} {1} Preis:"
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "{0}%"
-msgstr "{0}%"
+msgstr "{0} %"
 
 #: src/components/FeeSelector/index.tsx
 msgid "{0}% fee tier"
@@ -2678,15 +3276,15 @@ msgstr "{0}% Gebührenstufe"
 
 #: src/components/RoutingDiagram/RoutingDiagram.tsx
 msgid "{0}% pool"
-msgstr "{0}% Becken"
+msgstr "{0}% Pool"
 
 #: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "{0}% select"
 msgstr "{0}% auswählen"
 
-#: src/pages/Earn/Manage.tsx
-msgid "{0}-{1} Liquidity Mining"
-msgstr "{0}-{1} Liquiditätsförderung"
+#: src/components/Settings/MenuButton/index.tsx
+msgid "{0}% slippage"
+msgstr "{0}% Schlupf"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "{0}/{1} LP NFT"
@@ -2696,17 +3294,57 @@ msgstr "{0}/{1} LP NFT"
 msgid "{0}/{1} LP Tokens"
 msgstr "{0}/{1} LP-Token"
 
-#: src/components/claim/ClaimModal.tsx
-msgid "{SOCKS_AMOUNT} UNI"
-msgstr "{SOCKS_AMOUNT} UNI"
+#: src/components/Settings/TransactionDeadlineSettings/index.tsx
+msgid "{0}m"
+msgstr "{0}m"
 
-#: src/components/claim/ClaimModal.tsx
-msgid "{USER_AMOUNT} UNI"
-msgstr "{USER_AMOUNT} UNI"
+#: src/nft/components/profile/list/SetDurationModal.tsx
+msgid "{amount, plural, =1 {day} other {days}}"
+msgstr "{amount, plural, =1 {Tag} other {Tage}}"
+
+#: src/nft/components/profile/list/SetDurationModal.tsx
+msgid "{amount, plural, =1 {hour} other {hours}}"
+msgstr "{amount, plural, =1 {Stunde} other {Std}}"
+
+#: src/nft/components/profile/list/SetDurationModal.tsx
+msgid "{amount, plural, =1 {month} other {months}}"
+msgstr "{amount, plural, =1 {Monat} other {Monate}}"
+
+#: src/nft/components/profile/list/SetDurationModal.tsx
+msgid "{amount, plural, =1 {week} other {weeks}}"
+msgstr "{amount, plural, =1 {Woche} other {Wochen}}"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseLocal.ts
+msgid "{baseSymbol} and {quoteSymbol}"
+msgstr "{baseSymbol} und {quoteSymbol}"
+
+#: src/nft/utils/time.ts
+msgid "{i, plural, one {day} other {days}}"
+msgstr "{i, plural, one {Tag} other {Tage}}"
+
+#: src/nft/utils/time.ts
+msgid "{i, plural, one {hour} other {hours}}"
+msgstr "{i, plural, one {Stunde} other {Std}}"
+
+#: src/nft/utils/time.ts
+msgid "{i, plural, one {minute} other {minutes}}"
+msgstr "{i, plural, one {Minute} other {Protokoll}}"
+
+#: src/nft/utils/time.ts
+msgid "{i, plural, one {month} other {months}}"
+msgstr "{i, plural, one {Monat} other {Monate}}"
+
+#: src/nft/utils/time.ts
+msgid "{i, plural, one {second} other {seconds}}"
+msgstr "{i, plural, one {zweite} other {Sekunden}}"
+
+#: src/nft/utils/time.ts
+msgid "{i, plural, one {week} other {weeks}}"
+msgstr "{i, plural, one {Woche} other {Wochen}}"
 
 #: src/components/Polling/ChainConnectivityWarning.tsx
 msgid "{label} might be down right now, or you may have lost your network connection."
-msgstr "{label} ist möglicherweise gerade ausgefallen oder Sie haben Ihre Netzwerkverbindung verloren."
+msgstr "{label} ist möglicherweise gerade nicht verfügbar oder Sie haben Ihre Netzwerkverbindung verloren."
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
 msgid "{label} token bridge"
@@ -2720,7 +3358,11 @@ msgstr "{percentForSlider}%"
 msgid "{tokenB} per {tokenA}"
 msgstr "{tokenB} pro {tokenA}"
 
+#: src/nft/components/profile/list/Modal/ListModalSection.tsx
+msgid "{uniqueCollections, plural, =1 {collection} other {collections}}"
+msgstr "{uniqueCollections, plural, =1 {Sammlung} other {Sammlungen}}"
+
 #: src/pages/Pool/PositionPage.tsx
 msgid "← Back to Pools"
-msgstr "← Zurück zu Schwimmbecken"
+msgstr "← Zurück zu Pools"
 

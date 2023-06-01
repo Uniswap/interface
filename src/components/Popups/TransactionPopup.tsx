@@ -1,47 +1,67 @@
 import { useWeb3React } from '@web3-react/core'
-import { AlertCircle, CheckCircle } from 'react-feather'
-import styled, { useTheme } from 'styled-components/macro'
+import { parseLocalActivity } from 'components/AccountDrawer/MiniPortfolio/Activity/parseLocal'
+import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
+import PortfolioRow from 'components/AccountDrawer/MiniPortfolio/PortfolioRow'
+import Column from 'components/Column'
+import { useAllTokensMultichain } from 'hooks/Tokens'
+import useENSName from 'hooks/useENSName'
+import { useTransaction } from 'state/transactions/hooks'
+import { TransactionDetails } from 'state/transactions/types'
+import styled from 'styled-components/macro'
+import { EllipsisStyle, ThemedText } from 'theme'
+import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
-import { useTransaction } from '../../state/transactions/hooks'
-import { ThemedText } from '../../theme'
-import { ExternalLink } from '../../theme'
-import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
-import { TransactionSummary } from '../AccountDetails/TransactionSummary'
-import { AutoColumn } from '../Column'
-import { AutoRow } from '../Row'
+import { PopupAlertTriangle } from './FailedNetworkSwitchPopup'
 
-const RowNoFlex = styled(AutoRow)`
-  flex-wrap: nowrap;
+const Descriptor = styled(ThemedText.BodySmall)`
+  ${EllipsisStyle}
 `
+
+function TransactionPopupContent({ tx, chainId }: { tx: TransactionDetails; chainId: number }) {
+  const success = tx.receipt?.status === 1
+  const tokens = useAllTokensMultichain()
+  const activity = parseLocalActivity(tx, chainId, tokens)
+  const { ENSName } = useENSName(activity?.otherAccount)
+
+  if (!activity) return null
+
+  const explorerUrl = getExplorerLink(chainId, tx.hash, ExplorerDataType.TRANSACTION)
+
+  return (
+    <PortfolioRow
+      data-testid="transaction-popup"
+      left={
+        success ? (
+          <Column>
+            <PortfolioLogo
+              chainId={chainId}
+              currencies={activity.currencies}
+              images={activity.logos}
+              accountAddress={activity.otherAccount}
+            />
+          </Column>
+        ) : (
+          <PopupAlertTriangle />
+        )
+      }
+      title={<ThemedText.SubHeader>{activity.title}</ThemedText.SubHeader>}
+      descriptor={
+        <Descriptor color="textSecondary">
+          {activity.descriptor}
+          {ENSName ?? activity.otherAccount}
+        </Descriptor>
+      }
+      onClick={() => window.open(explorerUrl, '_blank')}
+    />
+  )
+}
 
 export default function TransactionPopup({ hash }: { hash: string }) {
   const { chainId } = useWeb3React()
 
   const tx = useTransaction(hash)
-  const theme = useTheme()
 
-  if (!tx) return null
-  const success = Boolean(tx.receipt && tx.receipt.status === 1)
+  if (!chainId || !tx) return null
 
-  return (
-    <RowNoFlex>
-      <div style={{ paddingRight: 16 }}>
-        {success ? (
-          <CheckCircle color={theme.deprecated_green1} size={24} />
-        ) : (
-          <AlertCircle color={theme.deprecated_red1} size={24} />
-        )}
-      </div>
-      <AutoColumn gap="8px">
-        <ThemedText.DeprecatedBody fontWeight={500}>
-          <TransactionSummary info={tx.info} />
-        </ThemedText.DeprecatedBody>
-        {chainId && (
-          <ExternalLink href={getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)}>
-            View on Explorer
-          </ExternalLink>
-        )}
-      </AutoColumn>
-    </RowNoFlex>
-  )
+  return <TransactionPopupContent tx={tx} chainId={chainId} />
 }

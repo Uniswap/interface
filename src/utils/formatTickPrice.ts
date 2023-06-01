@@ -1,14 +1,17 @@
+import { formatPrice, NumberType } from '@uniswap/conedison/format'
 import { Price, Token } from '@uniswap/sdk-core'
 
 import { Bound } from '../state/mint/v3/actions'
-import { formatPrice } from './formatCurrencyAmount'
 
-export function formatTickPrice(
-  price: Price<Token, Token> | undefined,
-  atLimit: { [bound in Bound]?: boolean | undefined },
-  direction: Bound,
+interface FormatTickPriceArgs {
+  price?: Price<Token, Token>
+  atLimit: { [bound in Bound]?: boolean | undefined }
+  direction: Bound
   placeholder?: string
-) {
+  numberType?: NumberType
+}
+
+export function formatTickPrice({ price, atLimit, direction, placeholder, numberType }: FormatTickPriceArgs) {
   if (atLimit[direction]) {
     return direction === Bound.LOWER ? '0' : '∞'
   }
@@ -17,5 +20,5 @@ export function formatTickPrice(
     return placeholder
   }
 
-  return formatPrice(price, 5)
+  return formatPrice(price, numberType ?? NumberType.TokenNonTx)
 }

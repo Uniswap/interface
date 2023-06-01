@@ -1,5 +1,5 @@
 import { sendAnalyticsEvent } from '@uniswap/analytics'
-import { EventName, FilterTypes } from '@uniswap/analytics-events'
+import { NFTEventName, NFTFilterTypes } from '@uniswap/analytics-events'
 import clsx from 'clsx'
 import { Box } from 'nft/components/Box'
 import * as styles from 'nft/components/collection/Filters.css'
@@ -8,6 +8,7 @@ import { ChevronUpIcon } from 'nft/components/icons'
 import { subheadSmall } from 'nft/css/common.css'
 import { useCollectionFilters } from 'nft/hooks/useCollectionFilters'
 import { TraitPosition, useTraitsOpen } from 'nft/hooks/useTraitsOpen'
+import { getMarketplaceIcon } from 'nft/utils'
 import { FormEvent, useEffect, useMemo, useReducer, useState } from 'react'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
@@ -24,31 +25,19 @@ const FilterItemWrapper = styled(Row)`
   }
 `
 
-export const MarketplaceLogo = styled.img`
-  height: 16px;
-  width: 16px;
-  border-radius: 4px;
-`
-
 const MarketNameWrapper = styled(Row)`
   gap: 10px;
 `
 
 export const MARKETPLACE_ITEMS = {
-  looksrare: 'LooksRare',
-  nft20: 'NFT20',
-  nftx: 'NFTX',
-  opensea: 'OpenSea',
   x2y2: 'X2Y2',
-  cryptopunks: 'LarvaLabs',
+  opensea: 'OpenSea',
+  looksrare: 'LooksRare',
   sudoswap: 'SudoSwap',
-}
 
-function getMarketLogoSrc(market: string) {
-  const marketplaceItem = Object.keys(MARKETPLACE_ITEMS).find(
-    (key) => MARKETPLACE_ITEMS[key as keyof typeof MARKETPLACE_ITEMS] === market
-  )
-  return `/nft/svgs/marketplaces/${marketplaceItem}.svg`
+  nftx: 'NFTX',
+  nft20: 'NFT20',
+  cryptopunks: 'LarvaLabs',
 }
 
 export const FilterItem = ({
@@ -97,7 +86,7 @@ const MarketplaceItem = ({
       removeMarket(value)
       setCheckboxSelected(false)
     }
-    sendAnalyticsEvent(EventName.NFT_FILTER_SELECTED, { filter_type: FilterTypes.MARKETPLACE })
+    sendAnalyticsEvent(NFTEventName.NFT_FILTER_SELECTED, { filter_type: NFTFilterTypes.MARKETPLACE })
   }
 
   const checkbox = (
@@ -110,7 +99,7 @@ const MarketplaceItem = ({
 
   const titleWithLogo = (
     <MarketNameWrapper>
-      <MarketplaceLogo src={getMarketLogoSrc(title)} />
+      {getMarketplaceIcon(title, '16')}
       {title}
     </MarketNameWrapper>
   )

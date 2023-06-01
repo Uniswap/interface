@@ -1,14 +1,16 @@
 msgid ""
 msgstr ""
+"POT-Creation-Date: 2023-05-22 22:30+0000\n"
+"Mime-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: sl\n"
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-11-17 01:33\n"
+"PO-Revision-Date: 2023-05-23 20:46\n"
 "Last-Translator: \n"
-"Language: sl_SI\n"
 "Language-Team: Slovenian\n"
-"Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n%100==4 ? 3 : 0);\n"
 "X-Crowdin-Project: uniswap-interface\n"
 "X-Crowdin-Project-ID: 458284\n"
@@ -21,20 +23,18 @@ msgstr ""
 msgid "$-"
 msgstr "- $"
 
-#: src/components/earn/PoolCard.tsx
-#: src/components/swap/GasEstimateBadge.tsx
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "${0}"
 msgstr "{0} $"
 
+#: src/nft/components/profile/list/MarketplaceRow.tsx
+msgid "% max"
+msgstr "% maks"
+
 #: src/components/AddressInputPanel/index.tsx
 msgid "(View on Explorer)"
 msgstr "(Ogled v Raziskovalcu)"
-
-#: src/components/AccountDetails/index.tsx
-msgid "(clear all)"
-msgstr "(počisti vse)"
 
 #: src/pages/Vote/Landing.tsx
 msgid "(edit)"
@@ -44,16 +44,13 @@ msgstr "(uredi)"
 msgid "({0})"
 msgstr "({0})"
 
+#: src/nft/components/profile/view/EmptyWalletContent.tsx
+msgid "+ New position"
+msgstr "+ Nov položaj"
+
 #: src/pages/Swap/index.tsx
 msgid "- Remove recipient"
 msgstr "- Odstrani prejemnika"
-
-#: src/components/earn/PoolCard.tsx
-#: src/components/earn/PoolCard.tsx
-#: src/pages/Earn/Manage.tsx
-#: src/pages/Earn/Manage.tsx
-msgid "0 UNI / week"
-msgstr "0 UNI / teden"
 
 #: src/components/Tokens/TokenDetails/StatsSection.tsx
 msgid "24H volume"
@@ -120,9 +117,10 @@ msgstr "<0> Komentar:</0> Ko dodate likvidnost, boste prejeli žetone sklada, ki
 msgid "<0>Unlock voting</0> to prepare for the next proposal."
 msgstr "<0>Odklenite glasovanje</0>, če se želite pripraviti na naslednjo pobudo."
 
-#: src/components/claim/ClaimModal.tsx
-msgid "<0>🎉 </0>Welcome to team Unicorn :) <1>🎉</1>"
-msgstr "<0> 🎉</0> Dobrodošli v ekipi Samorog :) <1> 🎉</1>"
+#: src/components/PositionListItem/index.tsx
+#: src/components/PositionListItem/index.tsx
+msgid "<0>{0} </0><1/> per <2/>"
+msgstr "<0>{0} </0><1/> na <2/>"
 
 #: src/pages/Vote/Landing.tsx
 msgid "A minimum threshold of 0.25% of the total UNI supply is required to submit proposals"
@@ -132,24 +130,24 @@ msgstr "Za predložitev predlogov potrebujete vsaj 0,25 % celotne zaloge UNI."
 msgid "A swap of this size may have a high price impact, given the current liquidity in the pool. There may be a large difference between the amount of your input token and what you will receive in the output token"
 msgstr "Menjava te velikosti ima lahko velik vpliv na ceno glede na trenutno likvidnost v skladu. Med vrednostjo vašega vhodnega žetona in vrednostjo, ki jo boste prejeli v izhodnem žetonu, je lahko velika razlika."
 
-#: src/components/Menu/index.tsx
 #: src/components/Tokens/TokenDetails/About.tsx
 msgid "About"
 msgstr "O Uniswapu"
 
-#: src/components/swap/SwapModalHeader.tsx
+#: src/components/swap/SwapModalFooter.tsx
+#: src/nft/components/details/detailsV2/OffersTableContent.tsx
 msgid "Accept"
 msgstr "Sprejmi"
-
-#: src/components/AccountDetails/index.tsx
-msgid "Account"
-msgstr "Račun"
 
 #: src/pages/Vote/styled.tsx
 msgid "Active"
 msgstr "Aktiven"
 
-#: src/components/AccountDetailsV2/TransactionBody.tsx
+#: src/components/AccountDrawer/MiniPortfolio/index.tsx
+#: src/nft/components/details/detailsV2/DataPageTable.tsx
+msgid "Activity"
+msgstr "dejavnost"
+
 #: src/components/PositionCard/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 msgid "Add"
@@ -172,6 +170,14 @@ msgstr "Dodaj likvidnost"
 msgid "Add V2 Liquidity"
 msgstr "Dodaj likvidnost V2"
 
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Add V2 liquidity failed"
+msgstr "Dodajanje likvidnosti V2 ni uspelo"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Add liquidity failed"
+msgstr "Dodajanje likvidnosti ni uspelo"
+
 #: src/pages/PoolFinder/index.tsx
 msgid "Add liquidity."
 msgstr "Dodaj likvidnost."
@@ -180,33 +186,46 @@ msgstr "Dodaj likvidnost."
 msgid "Add more liquidity"
 msgstr "Dodaj dodatno likvidnost"
 
+#: src/nft/components/details/detailsV2/ListingsTableContent.tsx
+msgid "Add to Bag"
+msgstr "Dodaj v torbo"
+
+#: src/nft/components/collection/ActivityCells.tsx
+#: src/nft/components/collection/CollectionAsset.tsx
+msgid "Add to bag"
+msgstr "Dodaj v torbo"
+
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Add {0}"
 msgstr "Dodaj {0}"
-
-#: src/pages/Earn/Manage.tsx
-msgid "Add {0}-{1} liquidity"
-msgstr "Dodaj likvidnost {0}-{1}"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Add {0}/{1} V3 liquidity"
 msgstr "Dodaj V3-likvidnost {0}/{1}"
 
-#: src/components/AccountDetailsV2/TransactionBody.tsx
-msgid "Added"
-msgstr "Dodano"
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+msgid "Added Liquidity"
+msgstr "Dodana likvidnost"
 
-#: src/nft/components/collection/CollectionAsset.tsx
-msgid "Added to bag"
-msgstr ""
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Added V2 liquidity"
+msgstr "Dodana likvidnost V2"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Added liquidity"
+msgstr "Dodana likvidnost"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Added {0}"
 msgstr "Dodano v {0}"
 
-#: src/components/AccountDetailsV2/TransactionBody.tsx
-msgid "Adding"
-msgstr "Dodajanje"
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Adding V2 liquidity"
+msgstr "Dodajanje likvidnosti V2"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Adding liquidity"
+msgstr "Dodajanje likvidnosti"
 
 #: src/components/vote/QueueModal.tsx
 msgid "Adding this proposal to the queue will allow it to be executed, after a delay."
@@ -224,17 +243,13 @@ msgstr "Proti"
 msgid "Allow LP token migration"
 msgstr "Dovoli migracijo likvidnostnih (LP) žetonov"
 
-#: src/components/Settings/index.tsx
-msgid "Allow high price impact trades and skip the confirm screen. Use at your own risk."
-msgstr "Dovolite trgovanje z visokim vplivom na ceno in preskočite zaslon za potrditev. Uporabljajte na lastno odgovornost."
-
-#: src/pages/Swap/index.tsx
-msgid "Allow the Uniswap Protocol to use your {0}"
-msgstr "Dovoli protokolu Uniswap, da uporabi vaše {0}"
-
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allowed"
 msgstr "Dovoljeno"
+
+#: src/nft/components/profile/list/PriceTextInput.tsx
+msgid "Already listed at"
+msgstr "Že na seznamu"
 
 #: src/constants/tokenSafety.tsx
 #: src/constants/tokenSafety.tsx
@@ -245,6 +260,10 @@ msgstr "Pred trgovanjem vedno opravite lastno raziskavo."
 msgid "Amount"
 msgstr "Znesek"
 
+#: src/nft/components/bag/BagFooter.tsx
+msgid "An approval is needed to use this token."
+msgstr "Za uporabo tega žetona je potrebna odobritev."
+
 #: src/components/Tokens/TokenTable/TokenTable.tsx
 msgid "An error occurred loading tokens. Please try again."
 msgstr "Pri nalaganju žetonov je prišlo do napake. Prosim poskusite ponovno."
@@ -253,8 +272,17 @@ msgstr "Pri nalaganju žetonov je prišlo do napake. Prosim poskusite ponovno."
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Pri poskusu izvedbe te zamenjave je prišlo do napake. Morda boste morali povečati toleranco do zdrsa. Če to ne deluje, je morda težava v nezdružljivosti z žetonom, s katerim trgujete. Pozor: žetoni s provizijami ob prenosu in uravnavani (rebase) žetoni niso združljivi z Uniswap V3."
 
-#: src/components/AccountDetailsV2/TransactionBody.tsx
-#: src/components/earn/StakingModal.tsx
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Approval failed"
+msgstr "Odobritev ni uspela"
+
+#: src/nft/components/bag/BagFooter.tsx
+#: src/pages/Swap/index.tsx
+msgid "Approval pending"
+msgstr "Odobritev je v teku"
+
+#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/profile/list/Modal/ListModalSection.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
 msgstr "Odobri"
@@ -262,6 +290,19 @@ msgstr "Odobri"
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Approve Token"
 msgstr "Odobri žeton"
+
+#: src/components/NavBar/ChainSelectorRow.tsx
+msgid "Approve in wallet"
+msgstr "Odobri v denarnici"
+
+#: src/nft/components/bag/BagFooter.tsx
+#: src/pages/Swap/index.tsx
+msgid "Approve in your wallet"
+msgstr "Odobrite v svoji denarnici"
+
+#: src/pages/Swap/index.tsx
+msgid "Approve use of {0}"
+msgstr "Odobri uporabo {0}"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -271,12 +312,13 @@ msgstr "Odobri žeton"
 msgid "Approve {0}"
 msgstr "Odobri {0}"
 
-#: src/components/AccountDetailsV2/TransactionBody.tsx
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approved"
 msgstr "Odobreno"
 
-#: src/components/AccountDetailsV2/TransactionBody.tsx
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approving"
@@ -289,35 +331,25 @@ msgstr "Odobritev v teku"
 msgid "Approving {0}"
 msgstr "Odobritev {0} v teku"
 
-#: src/components/DowntimeWarning/index.tsx
-msgid "Arbitrum is in Beta and may experience downtime. During downtime, your position will not earn fees and you will be unable to remove liquidity. <0>Read more.</0>"
-msgstr "Arbitrum je v različici beta in možni so izpadi. V času izpadov vaša pozicija ne bo služila provizij, likvidnosti pa ne boste mogli dvigniti. <0>Preberi več.</0>"
-
-#: src/components/Settings/index.tsx
-msgid "Are you sure?"
-msgstr "Ste prepričani?"
-
-#: src/components/claim/ClaimModal.tsx
-msgid "As a member of the Uniswap community you may claim UNI to be used for voting and governance.<0/><1/><2>Read more about UNI</2>"
-msgstr "Kot član skupnosti Uniswap ste upravičeni do žetonov UNI, ki se uporabljajo za glasovanje in upravljanje. <0/> <1/> <2> Preberite več o UNI</2>"
-
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "At least {0} {1} and {2} {3} will be refunded to your wallet due to selected price range."
 msgstr "V vašo denarnico bo zaradi izbranega cenovnega razpona vrnjeno vsaj {0} {1} in {2} {3}."
 
-#: src/components/TransactionSettings/index.tsx
+#: src/components/Settings/MaxSlippageSettings/index.tsx
+#: src/components/Settings/MaxSlippageSettings/index.tsx
+#: src/theme/components/ThemeToggle.tsx
 msgid "Auto"
 msgstr "Samodejno"
 
-#: src/components/Settings/index.tsx
+#: src/components/Settings/RouterPreferenceSettings/index.tsx
 msgid "Auto Router API"
 msgstr "API samodejnega iskalnika poti"
 
-#: src/components/earn/StakingModal.tsx
-msgid "Available to deposit: {0}"
-msgstr "Na voljo za polog: {0}"
+#: src/pages/Pool/PositionPage.tsx
+msgid "Back to Pools"
+msgstr "Nazaj na bazene"
 
-#: src/components/WalletModal/PendingView.tsx
+#: src/components/WalletModal/ConnectionErrorView.tsx
 msgid "Back to wallet selection"
 msgstr "Nazaj na izbiro denarnice"
 
@@ -347,36 +379,111 @@ msgid "Best for very stable pairs."
 msgstr "Primerno za zelo stabilne pare."
 
 #: src/components/swap/SwapRoute.tsx
-msgid "Best price route costs ~{formattedGasPriceString} in gas."
-msgstr "Pot z najnižjo ceno stane ~{formattedGasPriceString} v plinu."
+msgid "Best price route costs ~{gasPrice} in gas."
+msgstr "Pot po najboljši ceni stane ~{gasPrice} goriva."
 
 #: src/components/ConnectedAccountBlocked/index.tsx
 msgid "Blocked Address"
 msgstr "Blokiran naslov"
 
-#: src/nft/components/profile/view/ViewMyNftsAsset.tsx
-msgid "Blocked from trading"
-msgstr ""
+#: src/nft/components/card/icons.tsx
+msgid "Blocked on OpenSea"
+msgstr "Blokirano na OpenSea"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Borrow failed"
+msgstr "Izposoja ni uspela"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Borrowed"
+msgstr "Izposojeno"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Borrowing"
+msgstr "Izposoja"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Bought"
+msgstr "kupljeno"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Burn failed"
+msgstr "Zapis ni uspel"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Burned"
+msgstr "Zažgano"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Burning"
+msgstr "goreče"
+
+#: src/components/swap/SwapBuyFiatButton.tsx
+#: src/nft/components/details/detailsV2/BuyButton.tsx
+msgid "Buy"
+msgstr "Nakup"
+
+#: src/components/AccountDrawer/AuthenticatedHeader.tsx
+msgid "Buy crypto"
+msgstr "Kupi kripto"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Buy failed"
+msgstr "Nakup ni uspel"
+
+#: src/nft/components/profile/view/EmptyWalletContent.tsx
+msgid "Buy or transfer NFTs to this wallet to get started."
+msgstr "Za začetek kupite ali prenesite NFT v to denarnico."
+
+#: src/nft/components/profile/view/EmptyWalletContent.tsx
+msgid "Buy or transfer tokens to this wallet to get started."
+msgstr "Če želite začeti, kupite ali prenesite žetone v to denarnico."
+
+#: src/pages/Landing/index.tsx
+msgid "Buy, sell, and explore tokens"
+msgstr "Kupujte, prodajajte in raziskujte žetone"
+
+#: src/pages/Landing/index.tsx
+msgid "Buy, sell, and explore tokens and NFTs"
+msgstr "Kupujte, prodajajte in raziskujte žetone in NFT"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Buying"
+msgstr "Nakupovanje"
+
+#: src/nft/components/details/AssetActivity.tsx
+msgid "By"
+msgstr "Avtor:"
 
 #: src/components/PositionCard/index.tsx
 msgid "By adding liquidity you'll earn 0.3% of all trades on this pair proportional to your share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
 msgstr "Ko dodate likvidnost, boste služili provizijo 0,3 % od vseh poslov na tem paru sorazmerno z vašim deležem v skladu. Provozije se dodajajo v sklad v realnem času. Prevzamete jih, ko umaknete svojo likvidnost iz sklada."
 
-#: src/components/WalletModal/index.tsx
-msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and consent to its <1>Privacy Policy</1>."
-msgstr "Če povežete denarnico, se strinjate s pogoji storitve</0> Labs <0>in se strinjate z njegovim <1>pravilnikom o zasebnosti</1>."
+#: src/components/WalletModal/PrivacyPolicyNotice.tsx
+msgid "By connecting a wallet, you agree to Uniswap Labs'"
+msgstr "S povezavo denarnice se strinjate z Uniswap Labs'"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Cancel failed"
+msgstr "Preklic ni uspel"
 
 #: src/pages/Vote/styled.tsx
 msgid "Canceled"
 msgstr "Preklicana"
 
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/nft/components/collection/ActivityCells.tsx
+msgid "Cancelled"
+msgstr "Prekinjeno"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Cancelling"
+msgstr "Preklic"
+
 #: src/constants/tokenSafety.tsx
 msgid "Caution"
 msgstr "Pozor"
-
-#: src/components/AccountDetails/index.tsx
-msgid "Change"
-msgstr "Spremeni"
 
 #: src/components/Polling/ChainConnectivityWarning.tsx
 msgid "Check network status"
@@ -386,11 +493,7 @@ msgstr "Stanje omrežja preverite"
 msgid "Check out our v3 LP walkthrough and migration guides."
 msgstr "Oglejte si naše vodnike za V3-likvidnost in navodila za migracijo."
 
-#: src/components/AccountDetailsV2/TransactionBody.tsx
-#: src/components/WalletDropdown/AuthenticatedHeader.tsx
-#: src/components/earn/ClaimRewardModal.tsx
-#: src/components/earn/ClaimRewardModal.tsx
-#: src/pages/Earn/Manage.tsx
+#: src/components/AccountDrawer/AuthenticatedHeader.tsx
 msgid "Claim"
 msgstr "Prevzemi"
 
@@ -398,10 +501,7 @@ msgstr "Prevzemi"
 msgid "Claim <0/> for {0}"
 msgstr "Prevzemi <0/> za {0}"
 
-#: src/components/Menu/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
-#: src/components/claim/ClaimModal.tsx
-#: src/components/claim/ClaimModal.tsx
 msgid "Claim UNI"
 msgstr "Prevzemi UNI"
 
@@ -413,6 +513,14 @@ msgstr "Prevzemi žetone UNI"
 msgid "Claim UNI reward for {0}"
 msgstr "Prevzemi nagrado UNI za {0}"
 
+#: src/components/AccountDrawer/AuthenticatedHeader.tsx
+msgid "Claim Uniswap NFT Airdrop"
+msgstr "Zahtevajte Uniswap NFT Airdrop"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Claim failed"
+msgstr "Zahtevek ni uspel"
+
 #: src/pages/Pool/PositionPage.tsx
 msgid "Claim fees"
 msgstr "Prevzemi provizije"
@@ -421,33 +529,22 @@ msgstr "Prevzemi provizije"
 msgid "Claim your UNI tokens"
 msgstr "Prevzemite svoje žetone UNI"
 
-#: src/components/AccountDetailsV2/TransactionBody.tsx
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Claimed"
 msgstr "Prevzeto"
 
-#: src/components/earn/ClaimRewardModal.tsx
-#: src/components/earn/UnstakingModal.tsx
-msgid "Claimed UNI!"
-msgstr "UNI pridobljeni!"
-
-#: src/components/claim/ClaimModal.tsx
-msgid "Claimed!"
-msgstr "Prevzeto!"
-
-#: src/components/AccountDetailsV2/TransactionBody.tsx
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
 #: src/components/claim/AddressClaimModal.tsx
-#: src/components/claim/ClaimModal.tsx
 msgid "Claiming"
 msgstr "Prevzem v teku"
 
-#: src/components/earn/ClaimRewardModal.tsx
-#: src/components/earn/UnstakingModal.tsx
-msgid "Claiming {0} UNI"
-msgstr "Prevzem {0} UNI v teku"
-
 #: src/pages/AddLiquidity/index.tsx
 msgid "Clear All"
+msgstr "Počisti vse"
+
+#: src/nft/components/bag/BagHeader.tsx
+msgid "Clear all"
 msgstr "Počisti vse"
 
 #: src/components/TokenSafety/index.tsx
@@ -456,12 +553,16 @@ msgstr "Počisti vse"
 msgid "Close"
 msgstr "Zapri"
 
+#: src/components/AccountDrawer/MiniPortfolio/Pools/index.tsx
 #: src/components/Badge/RangeBadge.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Closed"
 msgstr "Zaprto"
 
-#: src/components/AccountDetailsV2/TransactionBody.tsx
+#: src/components/AccountDrawer/MiniPortfolio/Pools/index.tsx
+msgid "Closed Positions"
+msgstr "Zaprte pozicije"
+
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect"
 msgstr "Prevzemi"
@@ -475,20 +576,27 @@ msgstr "Zberi kot {nativeWrappedSymbol}"
 msgid "Collect fees"
 msgstr "Prevzemi provizije"
 
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Collect fees failed"
+msgstr "Zbiranje pristojbin ni uspelo"
+
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Collect {0}/{1} fees"
 msgstr "Prevzemi provizije {0}/{1}"
 
-#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collected"
 msgstr "Prevzeto"
 
-#: src/components/AccountDetailsV2/TransactionBody.tsx
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Collected fees"
+msgstr "Pobrane pristojbine"
+
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting"
 msgstr "Prevzem v teku"
 
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting fees"
 msgstr "Prevzem provizij v teku"
@@ -496,6 +604,18 @@ msgstr "Prevzem provizij v teku"
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting fees will withdraw currently available fees for you."
 msgstr "S prevzemom provizij dvignete provizije, ki so vam trenutno na voljo."
+
+#: src/components/NavBar/SearchBarDropdown.tsx
+msgid "Coming soon: search and explore tokens on BNB Chain"
+msgstr "Kmalu na voljo: iščite in raziščite žetone v verigi BNB"
+
+#: src/nft/components/details/detailsV2/RarityGraph.tsx
+msgid "Common"
+msgstr "Običajni"
+
+#: src/nft/components/collection/TransactionCompleteModal.tsx
+msgid "Complete!"
+msgstr "Dokončano!"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Confirm"
@@ -505,19 +625,9 @@ msgstr "Potrdi"
 msgid "Confirm Supply"
 msgstr "Potrdi polog"
 
-#: src/components/swap/ConfirmSwapModal.tsx
-#: src/components/swap/SwapModalFooter.tsx
-msgid "Confirm Swap"
-msgstr "Potrdi menjavo"
-
-#: src/components/WalletModal/PendingView.tsx
-msgid "Confirm this connection in your wallet"
-msgstr "Potrdite to povezavo v svoji denarnici"
-
 #: src/components/ModalViews/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
-#: src/components/claim/ClaimModal.tsx
 #: src/components/vote/ExecuteModal.tsx
 #: src/components/vote/QueueModal.tsx
 #: src/components/vote/VoteModal.tsx
@@ -532,7 +642,7 @@ msgstr "V denarnici potrdite transakcijo"
 msgid "Connect"
 msgstr "Povežite se"
 
-#: src/components/earn/ClaimRewardModal.tsx
+#: src/nft/pages/profile/profile.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -541,13 +651,10 @@ msgstr "Povežite se"
 #: src/state/burn/v3/hooks.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/v3/hooks.tsx
-#: src/state/stake/hooks.tsx
 #: src/state/swap/hooks.tsx
 msgid "Connect Wallet"
 msgstr "Poveži denarnico"
 
-#: src/components/WalletModal/index.tsx
-#: src/components/earn/UnstakingModal.tsx
 #: src/pages/Pool/index.tsx
 msgid "Connect a wallet"
 msgstr "Poveži denarnico"
@@ -568,36 +675,31 @@ msgstr "Če si želite ogledati svojo likvidnost, povežite denarnico."
 msgid "Connect wallet"
 msgstr "Poveži denarnico"
 
-#: src/components/AccountDetails/index.tsx
-msgid "Connected with"
-msgstr "Povezano z"
+#: src/nft/components/card/media.tsx
+msgid "Content not"
+msgstr "Vsebina ne"
+
+#: src/nft/components/bag/Bag.tsx
+#: src/nft/components/profile/list/Modal/BelowFloorWarningModal.tsx
+msgid "Continue"
+msgstr "Nadaljuj"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+msgid "Contract Interaction"
+msgstr "Pogodbena interakcija"
 
 #: src/components/Tokens/TokenDetails/AddressSection.tsx
 msgid "Contract address"
 msgstr "Naslov pogodbe"
 
-#: src/components/WalletDropdown/AuthenticatedHeader.tsx
-#: src/nft/components/profile/view/ProfileAccountDetails.tsx
 #: src/theme/components/index.tsx
 msgid "Copied!"
 msgstr "Skopirano!"
 
-#: src/components/WalletDropdown/AuthenticatedHeader.tsx
-#: src/nft/components/profile/view/ProfileAccountDetails.tsx
-msgid "Copy"
-msgstr "Kopirati"
-
-#: src/components/AccountDetails/index.tsx
-msgid "Copy Address"
-msgstr "Kopiraj naslov"
-
 #: src/components/Tokens/TokenDetails/ShareButton.tsx
 msgid "Copy Link"
 msgstr "Kopiraj povezavo"
-
-#: src/components/AccountDetailsV2/TransactionBody.tsx
-msgid "Create"
-msgstr "Ustvari"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Create Pool & Supply"
@@ -613,17 +715,13 @@ msgstr "Ustvari pobudo"
 msgid "Create a pair"
 msgstr "Ustvarite par"
 
-#: src/pages/Pool/index.tsx
-msgid "Create a pool"
-msgstr "Ustvari sklad"
-
-#: src/components/ErrorBoundary/index.tsx
-msgid "Create an issue on GitHub"
-msgstr "Odprite zadevo na GitHubu"
-
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Create pool and add {0}/{1} V3 liquidity"
 msgstr "Ustvari sklad in dodaj V3-likvidnost za {0}/{1}"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Create pool failed"
+msgstr "Ustvarjanje bazena ni uspelo"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Create pool."
@@ -633,13 +731,17 @@ msgstr "Ustvari sklad."
 msgid "Create {0}/{1} V3 pool"
 msgstr "Ustvari V3-sklad {0}/{1}"
 
-#: src/components/AccountDetailsV2/TransactionBody.tsx
-msgid "Created"
-msgstr "Ustvarjeno"
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Created pool"
+msgstr "Ustvarjen bazen"
 
-#: src/components/AccountDetailsV2/TransactionBody.tsx
-msgid "Creating"
-msgstr "Ustvarjanje"
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Creating pool"
+msgstr "Ustvarjanje bazena"
+
+#: src/components/swap/SwapBuyFiatButton.tsx
+msgid "Crypto purchases are not available in your region."
+msgstr "Kripto nakupi niso na voljo v vaši regiji."
 
 #: src/components/PositionPreview/index.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -650,13 +752,14 @@ msgstr "Trenutna cena"
 msgid "Current {0} Price:"
 msgstr "Trenutna cena {0}:"
 
-#: src/components/Menu/index.tsx
-msgid "Dark Theme"
-msgstr "Temna preobleka"
+#: src/components/Settings/MaxSlippageSettings/index.tsx
+#: src/nft/components/profile/list/NFTListingsGrid.tsx
+msgid "Custom"
+msgstr "Po meri"
 
-#: src/components/WalletDropdown/DefaultMenu.tsx
-msgid "Dark theme"
-msgstr "Temna tema"
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+msgid "DNS Registrar"
+msgstr "DNS Registrar"
 
 #: src/pages/Vote/styled.tsx
 msgid "Defeated"
@@ -666,32 +769,49 @@ msgstr "Zavrnjena"
 msgid "Delegate Votes"
 msgstr "Glasovni zastopnikov"
 
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Delegate failed"
+msgstr "Delegiranje ni uspelo"
+
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Delegate voting power to {0}"
 msgstr "Prenesi pravico glasovanja na zastopnika {0}"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Delegated"
+msgstr "Pooblaščeno"
 
 #: src/pages/Vote/Landing.tsx
 msgid "Delegated to:"
 msgstr "Zastopnik:"
 
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Delegating"
+msgstr "Delegiranje"
+
 #: src/components/vote/DelegateModal.tsx
 msgid "Delegating votes"
 msgstr "Pooblaščanje zastopnika"
 
-#: src/components/earn/PoolCard.tsx
-#: src/components/earn/StakingModal.tsx
-#: src/components/earn/StakingModal.tsx
-#: src/pages/Earn/Manage.tsx
-msgid "Deposit"
-msgstr "Polog"
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Deploy failed"
+msgstr "Razmestitev ni uspela"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Deployed"
+msgstr "Razporejen"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Deploying"
+msgstr "Uvajanje"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Deposit Amounts"
 msgstr "Zneska pologa"
 
-#: src/pages/Earn/Manage.tsx
-msgid "Deposit UNI-V2 LP Tokens"
-msgstr "Naloži likvidnostne žetone UNI-V2"
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Deposit failed"
+msgstr "Nakazilo ni uspelo"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Deposit liquidity"
@@ -701,66 +821,64 @@ msgstr "Položi likvidnost"
 msgid "Deposit tokens to the {label} network."
 msgstr "Položite žetone v omrežje {label}"
 
-#: src/pages/Earn/index.tsx
-msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
-msgstr "Položite likvidnostne (LP) žetone, s čimer prejmete UNI, žeton za upravljanje protokola Uniswap."
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Deposited"
+msgstr "Deponiran"
 
-#: src/components/earn/UnstakingModal.tsx
-msgid "Deposited liquidity:"
-msgstr "Položena likvidnost:"
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Depositing"
+msgstr "Deponiranje"
 
-#: src/components/earn/StakingModal.tsx
-msgid "Deposited {0} UNI-V2"
-msgstr "Položenih {0} UNI-V2"
-
-#: src/components/earn/StakingModal.tsx
-msgid "Depositing Liquidity"
-msgstr "Polog likvidnosti"
-
+#: src/nft/components/details/detailsV2/DataPageDescription.tsx
 #: src/pages/Vote/VotePage.tsx
 msgid "Description"
 msgstr "Opis"
-
-#: src/nft/components/profile/view/ViewMyNftsAsset.tsx
-msgid "Deselected"
-msgstr ""
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Detailed"
 msgstr "Podrobnosti"
 
+#: src/nft/components/details/detailsV2/DataPageDescription.tsx
 #: src/pages/Vote/VotePage.tsx
 msgid "Details"
 msgstr "Podrobnosti"
 
-#: src/components/AccountDetails/index.tsx
-#: src/components/WalletDropdown/AuthenticatedHeader.tsx
-msgid "Disconnect"
-msgstr "Prekini povezavo"
-
-#: src/components/Menu/index.tsx
-msgid "Discord"
-msgstr "Discord"
-
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/nft/components/profile/list/PriceTextInput.tsx
 msgid "Dismiss"
 msgstr "Opusti"
-
-#: src/components/Menu/index.tsx
-msgid "Docs"
-msgstr "Dokumentacija"
 
 #: src/components/NavBar/MenuDropdown.tsx
 msgid "Documentation"
 msgstr "Dokumentacija"
 
+#: src/components/AccountDrawer/UniwalletModal.tsx
+msgid "Don't have Uniswap Wallet?"
+msgstr "Nimate denarnice Uniswap?"
+
 #: src/pages/MigrateV2/index.tsx
 msgid "Don’t see one of your v2 positions? <0>Import it.</0>"
 msgstr "Ne vidite katerega od svojih pologov V2? <0>Uvozite ga.</0>"
 
-#: src/nft/components/profile/view/ViewMyNftsAsset.tsx
-msgid "ERC-1155 support coming soon"
-msgstr ""
+#: src/components/Banner/UniswapWalletBanner.tsx
+msgid "Download"
+msgstr "Prenesi"
+
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Download Uniswap Wallet"
+msgstr "Prenesite denarnico Uniswap"
+
+#: src/components/Banner/UniswapWalletBanner.tsx
+msgid "Download app"
+msgstr "Prenesite aplikacijo"
+
+#: src/components/AccountDrawer/UniwalletModal.tsx
+msgid "Download in the App Store to safely store your tokens and NFTs, swap tokens, and connect to crypto apps."
+msgstr "Prenesite v App Store, da varno shranite svoje žetone in NFT-je, zamenjate žetone in se povežete s kripto aplikacijami."
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+msgid "ETH Registrar Controller"
+msgstr "Nadzornik registra ETH"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Earned UNI tokens represent voting shares in Uniswap governance."
@@ -770,9 +888,9 @@ msgstr "Žetoni UNI predstavljajo delež glasovalnih pravic pri upravljanju sist
 msgid "Edit"
 msgstr "Uredi"
 
-#: src/pages/AddLiquidity/index.tsx
-msgid "Efficiency Comparison"
-msgstr "Primerjava učinkovitosti"
+#: src/nft/components/profile/list/Modal/BelowFloorWarningModal.tsx
+msgid "Edit listings"
+msgstr "Uredite sezname"
 
 #: src/state/burn/v3/hooks.tsx
 msgid "Enter a percent"
@@ -782,20 +900,13 @@ msgstr "Vnesite odstotek"
 msgid "Enter a recipient"
 msgstr "Vnesite prejemnika"
 
-#: src/components/TransactionSettings/index.tsx
-msgid "Enter a valid slippage percentage"
-msgstr "Vnesite veljaven odstotek zdrsa"
-
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Enter an address to trigger a UNI claim. If the address has any claimable UNI it will be sent to them on submission."
 msgstr "Vnesite naslov za prevzem UNI. Če ima naslov pravico do prevzema žetonov UNI, mu bodo le-ti ob sprožitvi poslani."
 
-#: src/components/earn/ClaimRewardModal.tsx
-#: src/components/earn/UnstakingModal.tsx
 #: src/state/burn/hooks.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/v3/hooks.tsx
-#: src/state/stake/hooks.tsx
 #: src/state/swap/hooks.tsx
 msgid "Enter an amount"
 msgstr "Vnesite znesek"
@@ -811,17 +922,28 @@ msgstr "Vnesite znesek {0}"
 msgid "Error"
 msgstr "Napaka"
 
-#: src/components/WalletModal/PendingView.tsx
+#: src/components/ErrorBoundary/index.tsx
+msgid "Error ID: {eventId}"
+msgstr "ID napake: {eventId}"
+
+#: src/components/WalletModal/ConnectionErrorView.tsx
 msgid "Error connecting"
 msgstr "Napaka pri povezovanju"
 
-#: src/components/swap/GasEstimateBadge.tsx
-msgid "Estimate may differ due to your wallet gas settings"
-msgstr "Ocena se lahko spremeni zaradi nastavitev plina v vaši denarnici"
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+msgid "Ethereum Name Service"
+msgstr "Imenska storitev Ethereum"
 
-#: src/components/swap/GasEstimateBadge.tsx
-msgid "Estimated network fee"
-msgstr "Ocena omrežne provizije"
+#: src/nft/components/details/AssetActivity.tsx
+msgid "Event"
+msgstr "Dogodek"
+
+#: src/components/swap/SwapModalFooter.tsx
+msgid "Exchange rate"
+msgstr "Menjalni tečaj"
 
 #: src/components/vote/ExecuteModal.tsx
 #: src/pages/Vote/VotePage.tsx
@@ -832,14 +954,20 @@ msgstr "Izvršitev"
 msgid "Execute Proposal {proposalId}"
 msgstr "Izrši pobudo {proposalId}"
 
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Execute failed"
+msgstr "Izvedba ni uspela"
+
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Execute proposal {proposalKey}."
 msgstr "Ivrši pobudo {proposalKey}."
 
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
 #: src/pages/Vote/styled.tsx
 msgid "Executed"
 msgstr "Izvršena"
 
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
 #: src/components/vote/ExecuteModal.tsx
 msgid "Executing"
 msgstr "Izvrševanje"
@@ -853,32 +981,42 @@ msgid "Execution Submitted"
 msgstr "Izvedba predložena"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
-msgid "Expected Output"
-msgstr "Pričakovani izhodni znesek"
+msgid "Expected output"
+msgstr "Pričakovani rezultat"
 
-#: src/components/Settings/index.tsx
-msgid "Expert Mode"
-msgstr "Strokovni način"
-
-#: src/components/Settings/index.tsx
-msgid "Expert mode turns off the confirm transaction prompt and allows high slippage trades that often result in bad rates and lost funds."
-msgstr "Strokovni način izklopi poziv za potrditev transakcije in omogoča velike zdrse poslov, ki pogosto povzročijo slabe menjalne tečaje in izgubljena sredstva."
-
+#: src/nft/components/collection/ActivityCells.tsx
 #: src/pages/Vote/styled.tsx
 msgid "Expired"
 msgstr "Potekla"
 
-#: src/components/WalletDropdown/AuthenticatedHeader.tsx
-msgid "Explore"
-msgstr "Raziščite"
+#: src/nft/components/details/detailsV2/TableRowComponent.tsx
+msgid "Expires in"
+msgstr "Poteče čez"
+
+#: src/nft/components/profile/view/EmptyWalletContent.tsx
+msgid "Explore NFTs"
+msgstr "Raziščite NFT"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore Uniswap Analytics."
 msgstr "Raziščite Uniswap Analytics."
 
+#: src/components/Tokens/TokenDetails/InvalidTokenDetails.tsx
+#: src/nft/components/profile/view/EmptyWalletContent.tsx
+msgid "Explore tokens"
+msgstr "Raziščite žetone"
+
+#: src/nft/components/details/detailsV2/RarityGraph.tsx
+msgid "Extremely rare"
+msgstr "Izjemno redko"
+
+#: src/nft/components/profile/list/Modal/ContentRow.tsx
+msgid "Failed"
+msgstr "Ni uspelo"
+
 #: src/components/Popups/FailedNetworkSwitchPopup.tsx
-msgid "Failed to switch networks from the Uniswap Interface. In order to use Uniswap on {0}, you must change the network in your wallet."
-msgstr "Zamenjava omrežij iz Uniswapovega vmesnika ni uspela. Če želite uporabiti Uniswap na {0}, morate zamenjati omrežje v svoji denarnici."
+msgid "Failed to switch networks"
+msgstr "Preklop omrežij ni uspel"
 
 #: src/components/NavBar/MenuDropdown.tsx
 msgid "Feature Flags"
@@ -892,13 +1030,47 @@ msgstr "Stopnja provizije"
 msgid "Fee tier"
 msgstr "Stopnja provizije"
 
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Feedback"
+msgstr "Povratne informacije"
+
+#: src/nft/components/profile/list/NFTListingsGrid.tsx
+msgid "Fees"
+msgstr "Pristojbine"
+
+#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/details/detailsV2/BuyButton.tsx
+msgid "Fetching Route"
+msgstr "Pridobivanje poti"
+
 #: src/components/swap/SwapDetailsDropdown.tsx
 msgid "Fetching best price..."
 msgstr "Pridobivam najboljšo ceno ..."
 
+#: src/nft/components/bag/BagFooter.tsx
+msgid "Fetching price..."
+msgstr "Pridobivanje cene ..."
+
 #: src/components/Tokens/TokenTable/SearchBar.tsx
 msgid "Filter tokens"
 msgstr "Filtrirajte žetone"
+
+#: src/components/Settings/RouterPreferenceSettings/index.tsx
+msgid "Finds the best route on the Uniswap Protocol through your browser. May result in high latency and prices."
+msgstr "Poišče najboljšo pot na protokolu Uniswap prek vašega brskalnika. Lahko povzroči visoke zakasnitve in cene."
+
+#: src/components/Settings/RouterPreferenceSettings/index.tsx
+msgid "Finds the best route on the Uniswap Protocol using the Uniswap Labs Routing API."
+msgstr "Poišče najboljšo pot na protokolu Uniswap z API-jem za usmerjanje Uniswap Labs."
+
+#: src/nft/components/profile/list/NFTListingsGrid.tsx
+msgid "Floor"
+msgstr "Nadstropje"
+
+#: src/nft/components/details/detailsV2/DataPageTraits.tsx
+#: src/nft/components/profile/list/NFTListingsGrid.tsx
+msgid "Floor price"
+msgstr "Spodnja cena"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "For"
@@ -908,6 +1080,7 @@ msgstr "Za"
 msgid "For each pool shown below, click migrate to remove your liquidity from Uniswap V2 and deposit it into Uniswap V3."
 msgstr "Za vsak spodaj prikazani sklad s klikom na Migriraj odstranite svojo likvidnost iz Uniswap V2 in jo vložite v Uniswap V3."
 
+#: src/nft/components/details/detailsV2/TableRowComponent.tsx
 #: src/pages/Swap/index.tsx
 msgid "From"
 msgstr "Od"
@@ -920,22 +1093,23 @@ msgstr "Od (največ)"
 msgid "Full Range"
 msgstr "Poln razpon"
 
-#: src/pages/AddLiquidity/index.tsx
-msgid "Full range positions may earn less fees than concentrated positions. Learn more <0>here</0>."
-msgstr "Položaji polnega razpona lahko zaslužijo manj provizij kot koncentrirane pozicije. Preberite več <0> tukaj</0>."
+#: src/pages/Landing/index.tsx
+msgid "Get started"
+msgstr "Začeti"
 
 #: src/components/ErrorBoundary/index.tsx
-msgid "Get support on Discord"
-msgstr "Poiščite podporo na Discordu"
-
-#: src/components/Menu/index.tsx
-msgid "Help Center"
-msgstr "Center za pomoč"
+msgid "Get support"
+msgstr "Pridobite podporo"
 
 #: src/components/NavBar/MenuDropdown.tsx
 msgid "Help center"
 msgstr "Center pomoči"
 
+#: src/components/AccountDrawer/MiniPortfolio/ExpandoRow.tsx
+msgid "Hidden"
+msgstr "Skrito"
+
+#: src/components/AccountDrawer/MiniPortfolio/ExpandoRow.tsx
 #: src/components/FeeSelector/index.tsx
 #: src/components/Tokens/TokenDetails/About.tsx
 msgid "Hide"
@@ -946,18 +1120,21 @@ msgstr "Skrij"
 msgid "Hide closed positions"
 msgstr "Skrij zaprte pozicije"
 
-#: src/pages/Swap/index.tsx
-msgid "High Price Impact"
-msgstr "Visok vpliv na ceno"
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Hide resources"
+msgstr "Skrij vire"
+
+#: src/components/AccountDrawer/SmallBalanceToggle.tsx
+msgid "Hide small balances"
+msgstr "Skrij majhna stanja"
 
 #: src/components/TokenSafety/index.tsx
-#: src/pages/AddLiquidity/index.tsx
 msgid "I understand"
 msgstr "Razumem"
 
 #: src/components/ConnectedAccountBlocked/index.tsx
 msgid "If you believe this is an error, please send an email including your address to"
-msgstr "Če menite, da je to napaka, pošljite e-pošto s svojim naslovom na"
+msgstr "Če menite, da je to napaka, pošljite e-poštno sporočilo s svojim naslovom na"
 
 #: src/pages/Pool/v2.tsx
 msgid "Import Pool"
@@ -968,6 +1145,10 @@ msgid "Import V2 Pool"
 msgstr "Uvozi V2-sklad"
 
 #: src/components/Badge/RangeBadge.tsx
+msgid "In Range"
+msgstr "V dosegu"
+
+#: src/components/AccountDrawer/MiniPortfolio/Pools/index.tsx
 msgid "In range"
 msgstr "Znotraj razpona"
 
@@ -983,17 +1164,21 @@ msgstr "Začetne cene in delež v skladu"
 msgid "Input is estimated. You will sell at most <0>{0} {1}</0> or the transaction will revert."
 msgstr "Vhodni znesek je ocenjen. Prodali boste največ <0>{0} {1}</0> ali pa bo transakcija stornirana."
 
-#: src/components/WalletModal/InjectedOption.tsx
-msgid "Install MetaMask"
-msgstr "Namestite MetaMask"
-
 #: src/nft/components/bag/BagFooter.tsx
 msgid "Insufficient funds"
 msgstr "Nezadostna sredstva"
 
+#: src/nft/components/bag/BagFooter.tsx
+msgid "Insufficient liquidity"
+msgstr "Nezadostna likvidnost"
+
 #: src/pages/Swap/index.tsx
 msgid "Insufficient liquidity for this trade."
 msgstr "Za ta posel je likvidnost prenizka."
+
+#: src/nft/components/bag/BagFooter.tsx
+msgid "Insufficient pool liquidity to complete transaction"
+msgstr "Nezadostna likvidnost sklada za dokončanje transakcije"
 
 #: src/hooks/useWrapCallback.tsx
 #: src/hooks/useWrapCallback.tsx
@@ -1004,10 +1189,6 @@ msgstr "Za ta posel je likvidnost prenizka."
 #: src/state/swap/hooks.tsx
 msgid "Insufficient {0} balance"
 msgstr "Prenizko dobroimetje {0}"
-
-#: src/components/Settings/index.tsx
-msgid "Interface Settings"
-msgstr "Nastavitve vmesnika"
 
 #: src/state/mint/hooks.tsx
 #: src/state/mint/v3/hooks.tsx
@@ -1027,16 +1208,25 @@ msgstr "Neveljaven vnos cene"
 msgid "Invalid range selected. The min price must be lower than the max price."
 msgstr "Razpon ni veljaven. Najnižja cena mora biti nižja od najvišje."
 
-#: src/lib/hooks/swap/useSwapCallback.tsx
 #: src/state/swap/hooks.tsx
 msgid "Invalid recipient"
 msgstr "Neveljaven prejemnik"
 
-#: src/components/Menu/index.tsx
-#: src/components/WalletDropdown/DefaultMenu.tsx
-#: src/components/WalletDropdown/LanguageMenu.tsx
+#: src/components/AccountDrawer/SettingsMenu.tsx
 msgid "Language"
 msgstr "Jezik"
+
+#: src/nft/components/profile/list/NFTListingsGrid.tsx
+msgid "Last"
+msgstr "Zadnji"
+
+#: src/nft/components/profile/list/NFTListingsGrid.tsx
+msgid "Last Price"
+msgstr "Zadnja cena"
+
+#: src/components/WalletModal/PrivacyPolicyNotice.tsx
+msgid "Last Updated"
+msgstr "Zadnja posodobitev"
 
 #: src/pages/Pool/index.tsx
 msgid "Learn"
@@ -1046,32 +1236,26 @@ msgstr "Informacije"
 msgid "Learn about providing liquidity"
 msgstr "Naučite se vse o polaganju likvidnosti"
 
+#: src/components/Banner/UniswapWalletBanner.tsx
+#: src/components/Banner/UniswapWalletBanner.tsx
 #: src/components/PrivacyPolicy/index.tsx
 #: src/components/PrivacyPolicy/index.tsx
 #: src/components/TokenSafety/TokenSafetyMessage.tsx
 #: src/components/TokenSafety/index.tsx
+#: src/components/swap/SwapBuyFiatButton.tsx
+#: src/pages/Landing/index.tsx
 msgid "Learn more"
 msgstr "Več o tem"
 
-#: src/components/Menu/index.tsx
 #: src/components/NavBar/MenuDropdown.tsx
 #: src/components/PrivacyPolicy/index.tsx
 msgid "Legal & Privacy"
 msgstr "Pravna obvestila in zasebnost"
 
-#: src/components/Menu/index.tsx
-msgid "Light Theme"
-msgstr "Svetla preobleka"
-
-#: src/components/WalletDropdown/DefaultMenu.tsx
-msgid "Light theme"
-msgstr "Svetla tema"
-
 #: src/components/Tokens/TokenDetails/About.tsx
 msgid "Links"
 msgstr "Povezave"
 
-#: src/components/claim/ClaimModal.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Liquidity"
 msgstr "Likvidnost"
@@ -1088,6 +1272,22 @@ msgstr "Nagrade ponudnikom likvidnosti"
 msgid "Liquidity providers earn a 0.3% fee on all trades proportional to their share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
 msgstr "Ponudniki likvidnosti služijo provizijo 0,3 % od vseh poslov, sorazmerno s svojim deležem v skladu. Provozije se dodajajo v sklad in se nabirajo v realnem času, prevzamete pa jih, ko dvignete svojo likvidnost iz sklada."
 
+#: src/nft/components/profile/list/Modal/ListModal.tsx
+msgid "List NFTs"
+msgstr "Seznam NFT-jev"
+
+#: src/nft/components/profile/view/ViewMyNftsAsset.tsx
+msgid "List for sale"
+msgstr "Seznam za prodajo"
+
+#: src/nft/components/profile/list/Modal/ListModalSection.tsx
+msgid "Listing an NFT requires a one-time marketplace approval for each NFT collection."
+msgstr "Za uvrstitev NFT na seznam je potrebna enkratna odobritev tržnice za vsako zbirko NFT."
+
+#: src/nft/components/details/detailsV2/DataPageTable.tsx
+msgid "Listings"
+msgstr "Oglasi"
+
 #: src/components/PositionCard/Sushi.tsx
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
@@ -1098,15 +1298,26 @@ msgstr "Ponudniki likvidnosti služijo provizijo 0,3 % od vseh poslov, sorazmern
 msgid "Loading"
 msgstr "Nalagam"
 
+#: src/nft/components/bag/BagFooter.tsx
+msgid "Loading Allowance"
+msgstr "Dodatek za nakladanje"
+
+#: src/nft/components/profile/list/Modal/BelowFloorWarningModal.tsx
+msgid "Low listing price"
+msgstr "Nizka kotacijska cena"
+
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "MAX"
 msgstr "MAX"
+
+#: src/nft/components/details/detailsV2/OfferButton.tsx
+msgid "Make an offer"
+msgstr "Daj ponudbo"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
 #: src/components/PositionCard/index.tsx
-#: src/components/earn/PoolCard.tsx
 msgid "Manage"
 msgstr "Upravljaj"
 
@@ -1128,21 +1339,33 @@ msgstr "Največ"
 msgid "Max Price"
 msgstr "Najvišja cena"
 
+#: src/nft/components/profile/list/RoyaltyTooltip.tsx
+msgid "Max creator royalties"
+msgstr "Največji avtorski honorar"
+
+#: src/nft/components/profile/list/RoyaltyTooltip.tsx
+msgid "Max fees"
+msgstr "Največje pristojbine"
+
 #: src/pages/Pool/PositionPage.tsx
 msgid "Max price"
 msgstr "Najvišja cena"
+
+#: src/components/Settings/MaxSlippageSettings/index.tsx
+msgid "Max slippage"
+msgstr "Največji zdrs"
 
 #: src/components/PositionListItem/index.tsx
 msgid "Max:"
 msgstr "Največ:"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
+msgid "Maximum input"
+msgstr "Največji vnos"
+
+#: src/components/swap/SwapModalFooter.tsx
 msgid "Maximum sent"
 msgstr "Največ poslano"
-
-#: src/components/Menu/index.tsx
-msgid "Menu"
-msgstr "Meni"
 
 #: src/components/PositionCard/Sushi.tsx
 #: src/components/PositionCard/V2.tsx
@@ -1161,6 +1384,10 @@ msgstr "Migriraj likvidnost v V3"
 msgid "Migrate V2 Liquidity"
 msgstr "Migriraj likvidnost iz V2"
 
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Migrate liquidity failed"
+msgstr "Selitev likvidnosti ni uspela"
+
 #: src/pages/MigrateV2/index.tsx
 msgid "Migrate your liquidity tokens from Uniswap V2 to Uniswap V3."
 msgstr "Migrirajte svojo likvidnostne žetone iz Uniswapa V2 v Uniswap V3."
@@ -1169,9 +1396,17 @@ msgstr "Migrirajte svojo likvidnostne žetone iz Uniswapa V2 v Uniswap V3."
 msgid "Migrate {0}/{1} liquidity to V3"
 msgstr "Migriraj likvidnost {0}/{1} v V3"
 
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Migrated liquidity"
+msgstr "Preseljena likvidnost"
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Migrating"
 msgstr "Migacija"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Migrating liquidity"
+msgstr "Selitev likvidnosti"
 
 #: src/components/PositionPreview/index.tsx
 #: src/components/RangeSelector/index.tsx
@@ -1187,26 +1422,59 @@ msgid "Min:"
 msgstr "Najmanj:"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
+msgid "Minimum output"
+msgstr "Minimalna proizvodnja"
+
+#: src/components/swap/SwapModalFooter.tsx
 msgid "Minimum received"
 msgstr "Prejmete najmanj"
 
-#: src/components/Tokens/TokenDetails/PriceChart.tsx
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Mint failed"
+msgstr "Kovnica ni uspela"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Minted"
+msgstr "Kovano"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Minting"
+msgstr "Kovanje"
+
 #: src/components/Tokens/TokenDetails/PriceChart.tsx
 msgid "Missing chart data"
 msgstr "Manjkajo podatki grafikona"
 
-#: src/lib/hooks/swap/useSwapCallback.tsx
-msgid "Missing dependencies"
-msgstr "Manjkajoče odvisnosti"
+#: src/components/Tokens/TokenDetails/PriceChart.tsx
+msgid "Missing price data due to recently low trading volume on Uniswap v3"
+msgstr "Manjkajo podatki o cenah zaradi nedavnega nizkega obsega trgovanja na Uniswap v3"
+
+#: src/components/FiatOnrampModal/index.tsx
+msgid "Moonpay Fiat On-ramp iframe"
+msgstr "Moonpay Fiat On-ramp iframe"
+
+#: src/components/AccountDrawer/AuthenticatedHeader.tsx
+msgid "Moonpay is not available in some regions. Click to learn more."
+msgstr "Moonpay ni na voljo v nekaterih regijah. Kliknite, če želite izvedeti več."
 
 #: src/pages/Pool/index.tsx
 msgid "More"
 msgstr "Več"
 
+#: src/nft/components/profile/list/ListPage.tsx
+msgid "My NFTs"
+msgstr "Moji NFT-ji"
+
+#: src/nft/components/profile/list/NFTListingsGrid.tsx
+msgid "NFT"
+msgstr "NFT"
+
 #: src/components/NavBar/SearchBarDropdown.tsx
 msgid "NFT Collections"
 msgstr "Zbirke NFT"
 
+#: src/components/AccountDrawer/MiniPortfolio/index.tsx
 #: src/components/NavBar/index.tsx
 msgid "NFTs"
 msgstr "NFT-ji"
@@ -1215,34 +1483,38 @@ msgstr "NFT-ji"
 msgid "Name not found"
 msgstr "Ime ni bilo mogoče najti"
 
-#: src/components/swap/AdvancedSwapDetails.tsx
-msgid "Network Fee"
-msgstr "Omrežna provizija"
+#: src/components/NavBar/NavIcon.tsx
+msgid "Navigation button"
+msgstr "Navigacijski gumb"
 
 #: src/components/Polling/ChainConnectivityWarning.tsx
 msgid "Network Warning"
 msgstr "Opozorilo glede omrežja"
 
-#: src/components/swap/SwapWarningDropdown.tsx
-msgid "Network fees exceed 50% of the swap amount!"
-msgstr "Omrežna provizija presega 50% zneska menjave!"
+#: src/components/swap/AdvancedSwapDetails.tsx
+#: src/components/swap/SwapModalFooter.tsx
+msgid "Network fee"
+msgstr "Omrežnina"
+
+#: src/nft/components/details/detailsV2/TableRowComponent.tsx
+msgid "Never"
+msgstr "Nikoli"
 
 #: src/pages/Pool/index.tsx
 msgid "New Position"
 msgstr "Nova pozicija"
 
 #: src/nft/components/profile/view/EmptyWalletContent.tsx
-msgid "No NFTs in"
-msgstr "Nobenih NFT-jev"
+msgid "No NFTs yet"
+msgstr "NFT še ni"
 
 #: src/pages/MigrateV2/index.tsx
 msgid "No V2 Liquidity found."
 msgstr "Ne najdem nobene likvidnosti V2."
 
-#: src/pages/Earn/index.tsx
-#: src/pages/Earn/index.tsx
-msgid "No active pools"
-msgstr "Ni aktivnih skladov"
+#: src/nft/components/profile/view/EmptyWalletContent.tsx
+msgid "No activity yet"
+msgstr "Ni aktivnosti še"
 
 #: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "No data"
@@ -1252,6 +1524,10 @@ msgstr "Ni podatkov"
 msgid "No description."
 msgstr "Brez opisa"
 
+#: src/nft/pages/profile/profile.tsx
+msgid "No items to display"
+msgstr "Ni predmetov za prikaz"
+
 #: src/pages/Pool/v2.tsx
 msgid "No liquidity found."
 msgstr "Ni likvidnosti."
@@ -1259,6 +1535,10 @@ msgstr "Ni likvidnosti."
 #: src/pages/PoolFinder/index.tsx
 msgid "No pool found."
 msgstr "Ne najdem sklada."
+
+#: src/nft/components/profile/view/EmptyWalletContent.tsx
+msgid "No pools yet"
+msgstr "Ni še bazenov"
 
 #: src/components/vote/ProposalEmptyState.tsx
 msgid "No proposals found."
@@ -1280,30 +1560,55 @@ msgstr "Ni najdenih žetonov"
 msgid "No tokens found."
 msgstr "Ni najdenih žetonov."
 
+#: src/nft/components/profile/view/EmptyWalletContent.tsx
+msgid "No tokens yet"
+msgstr "Ni še žetonov"
+
 #: src/constants/tokenSafety.tsx
 msgid "Not Available"
 msgstr "Ni na voljo"
+
+#: src/components/AccountDrawer/AuthenticatedHeader.tsx
+msgid "Not available in your region"
+msgstr "Ni na voljo v vaši regiji"
 
 #: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "Not created"
 msgstr "Ni ustvarjeno"
 
-#: src/components/Settings/index.tsx
-msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
-msgstr "Ta način uporabljajte SAMO, ČE VESTE, KAJ POČNETE."
+#: src/nft/components/collection/CollectionAsset.tsx
+msgid "Not listed"
+msgstr "Ni navedeno"
+
+#: src/nft/components/details/detailsV2/DataPageTable.tsx
+msgid "Offers"
+msgstr "Ponudbe"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Once you are happy with the rate click supply to review."
 msgstr "Ko ste zadovoljni s tečajem, kliknite Položi za pregled."
 
+#: src/nft/components/profile/list/Modal/BelowFloorWarningModal.tsx
+msgid "One NFT is listed {0}%"
+msgstr "En NFT je naveden {0}%"
+
 #: src/pages/Vote/VotePage.tsx
 msgid "Only UNI votes that were self delegated or delegated to another address before block {0} are eligible for voting."
 msgstr "Do glasovanja so upravičeni samo glasovi UNI, ki so bili samozastopani ali so pooblastili drugega zastopnika pred blokom {0}."
 
-#: src/components/DowntimeWarning/index.tsx
-msgid "Optimism is in Beta and may experience downtime. Optimism expects planned downtime to upgrade the network in the near future. During downtime, your position will not earn fees and you will be unable to remove liquidity. <0>Read more.</0>"
-msgstr "Optimism je v različici beta in lahko prihaja do izpadov. Optimizem pričakuje v bližnji prihodnosti načrtovane izpade za nadgradnjo omrežja. V času izpadov vaša pozicija ne bo služila pristojbin in likvidnosti ne boste mogli odstraniti. <0> Preberi več.</0>"
+#: src/pages/NotFound/index.tsx
+msgid "Oops, take me back to Swap"
+msgstr "Ups, pelji me nazaj v Swap"
 
+#: src/nft/components/profile/view/EmptyWalletContent.tsx
+msgid "Open a new position or create a pool to get started."
+msgstr "Za začetek odprite nov položaj ali ustvarite skupino."
+
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "Order routing"
+msgstr "Usmerjanje naročil"
+
+#: src/components/AccountDrawer/MiniPortfolio/Pools/index.tsx
 #: src/components/Badge/RangeBadge.tsx
 msgid "Out of range"
 msgstr "Zunaj razpona"
@@ -1317,52 +1622,54 @@ msgstr "Izhodni znesek je ocenjen. Če se cena spremeni za več kot {0} %, bo tr
 msgid "Output is estimated. You will receive at least <0>{0} {1}</0> or the transaction will revert."
 msgstr "Izhodni znesek je ocenjen. Prejeli boste vsaj <0>{0} {1}</0> ali pa bo transakcija stornirana."
 
-#: src/components/swap/SwapModalHeader.tsx
-msgid "Output will be sent to <0>{0}</0>"
-msgstr "Izhodni znesek bo poslan na <0>{0}</0>"
-
+#: src/nft/components/details/detailsV2/InfoChips.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Owner"
 msgstr "Lastnik"
 
-#: src/pages/Earn/index.tsx
-msgid "Participating pools"
-msgstr "Sodelujoči skladi"
+#: src/pages/NotFound/index.tsx
+msgid "Page not found!"
+msgstr "Stran ni najdena!"
 
+#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/BagFooter.tsx
 #: src/nft/components/bag/BagFooter.tsx
 #: src/nft/components/bag/BagFooter.tsx
 msgid "Pay"
 msgstr "plačaj"
 
-#: src/components/WalletDropdown/DefaultMenu.tsx
+#: src/nft/components/bag/BagFooter.tsx
+msgid "Pay Anyway"
+msgstr "Vseeno plačaj"
+
+#: src/nft/components/bag/BagFooter.tsx
+msgid "Pay with"
+msgstr "Plačajte z"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/index.tsx
 #: src/pages/Vote/styled.tsx
 msgid "Pending"
 msgstr "V teku"
+
+#: src/pages/Swap/index.tsx
+msgid "Permission is required for Uniswap to swap each token. This will expire after one month for your security."
+msgstr "Uniswap potrebuje dovoljenje za zamenjavo vsakega žetona. To zaradi vaše varnosti poteče po enem mesecu."
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+msgid "Permit2"
+msgstr "Dovoljenje2"
 
 #: src/components/vote/ProposalEmptyState.tsx
 msgid "Please connect to Layer 1 Ethereum"
 msgstr "Prosimo, povežite se z Ethereumom prvega sloja (layer 1)"
 
-#: src/components/Settings/index.tsx
-msgid "Please type the word \"{confirmWord}\" to enable expert mode."
-msgstr "Prosimo, vnesite besedo \"{confirmWord}\", če želite omogočiti strokovni način."
-
-#: src/components/AccountDetailsV2/TransactionBody.tsx
-#: src/components/NavBar/index.tsx
+#: src/components/NavBar/MenuDropdown.tsx
 msgid "Pool"
 msgstr "Skladi"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Pool Found!"
 msgstr "Sklad najden!"
-
-#: src/pages/Earn/Manage.tsx
-msgid "Pool Rate"
-msgstr "Tečaj sklada"
-
-#: src/components/earn/PoolCard.tsx
-msgid "Pool rate"
-msgstr "Tečaj sklada"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
@@ -1380,6 +1687,8 @@ msgstr "Žetoni sklada v skladu nagrad:"
 msgid "Pooled {0}:"
 msgstr "{0} v skladu:"
 
+#: src/components/AccountDrawer/MiniPortfolio/index.tsx
+#: src/components/NavBar/index.tsx
 #: src/pages/Pool/index.tsx
 #: src/pages/Pool/index.tsx
 msgid "Pools"
@@ -1393,10 +1702,21 @@ msgstr "Priljubljene zbirke NFT"
 msgid "Popular tokens"
 msgstr "Priljubljeni žetoni"
 
+#: src/pages/Pool/PositionPage.tsx
+msgid "Position unavailable"
+msgstr "Položaj ni na voljo"
+
+#: src/components/AccountDrawer/SettingsMenu.tsx
+msgid "Preferences"
+msgstr "Nastavitve"
+
 #: src/pages/AddLiquidity/index.tsx
 msgid "Preview"
 msgstr "Predogled"
 
+#: src/nft/components/details/AssetActivity.tsx
+#: src/nft/components/details/detailsV2/TableRowComponent.tsx
+#: src/nft/components/profile/list/NFTListingsGrid.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Price"
 msgstr "Cena"
@@ -1413,17 +1733,23 @@ msgstr "Vpliv na ceno"
 msgid "Price Impact Too High"
 msgstr "Vpliv na ceno previsok"
 
-#: src/components/swap/SwapModalHeader.tsx
-msgid "Price Updated"
-msgstr "Cena posodobljena"
+#: src/components/swap/SwapModalFooter.tsx
+msgid "Price impact"
+msgstr "Vpliv na ceno"
 
 #: src/components/swap/PriceImpactWarning.tsx
+#: src/nft/components/bag/BagFooter.tsx
 msgid "Price impact warning"
 msgstr "Opozorilo o vplivu na ceno"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Price range"
 msgstr "Cenovni razpon"
+
+#: src/components/swap/SwapModalFooter.tsx
+#: src/nft/components/bag/BagFooter.tsx
+msgid "Price updated"
+msgstr "Cena posodobljena"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Price:"
@@ -1437,9 +1763,18 @@ msgstr "Cene in delež v skladu"
 msgid "Privacy Policy"
 msgstr "Politika zasebnosti"
 
+#: src/components/WalletModal/PrivacyPolicyNotice.tsx
+msgid "Privacy Policy."
+msgstr "Politika zasebnosti."
+
 #: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/profile/list/Modal/ContentRow.tsx
 msgid "Proceed in wallet"
 msgstr "Nadaljuj v denarnici"
+
+#: src/nft/components/profile/list/Modal/SuccessScreen.tsx
+msgid "Proceeds if sold"
+msgstr "Izkupiček, če je prodan"
 
 #: src/pages/CreateProposal/ProposalEditor.tsx
 msgid "Proposal"
@@ -1469,6 +1804,15 @@ msgstr "Predlagani ukrep"
 msgid "Proposer"
 msgstr "Pobudnik"
 
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+msgid "Public Resolver"
+msgstr "Javni razreševalec"
+
+#: src/nft/components/details/detailsV2/DataPageTraits.tsx
+#: src/nft/components/details/detailsV2/TableRowComponent.tsx
+msgid "Quantity"
+msgstr "Količina"
+
 #: src/components/vote/QueueModal.tsx
 #: src/pages/Vote/VotePage.tsx
 msgid "Queue"
@@ -1478,10 +1822,15 @@ msgstr "Čakalna vrsta"
 msgid "Queue Proposal {proposalId}"
 msgstr "Oddaj pobudo {proposalId} v čakalno vrsto"
 
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Queue failed"
+msgstr "Čakalna vrsta ni uspela"
+
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Queue proposal {proposalKey}."
 msgstr "Oddaj pobudo {proposalKey} v čakalno vrsto."
 
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
 #: src/pages/Vote/styled.tsx
 msgid "Queued"
 msgstr "V čakalni vrsti"
@@ -1490,13 +1839,21 @@ msgstr "V čakalni vrsti"
 msgid "Queueing"
 msgstr "Čakalna vrsta"
 
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Queuing"
+msgstr "Čakalna vrsta"
+
+#: src/nft/components/details/detailsV2/RarityGraph.tsx
+msgid "Rare"
+msgstr "Redko"
+
+#: src/nft/components/details/detailsV2/DataPageTraits.tsx
+msgid "Rarity"
+msgstr "Redkost"
+
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Rates"
 msgstr "Tečaji"
-
-#: src/pages/Earn/index.tsx
-msgid "Read more about UNI"
-msgstr "Preberite več o UNI"
 
 #: src/pages/Vote/Landing.tsx
 msgid "Read more about Uniswap governance"
@@ -1510,9 +1867,22 @@ msgstr "Preberite več o zagotavljanju likvidnosti"
 msgid "Read more about unsupported assets"
 msgstr "Preberite več o nepodprtih sredstvih"
 
-#: src/components/AccountDetails/index.tsx
-msgid "Recent Transactions"
-msgstr "Zadnje transakcije"
+#: src/nft/components/profile/list/ListPage.tsx
+msgid "Receive"
+msgstr "Prejeti"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Receive failed"
+msgstr "Prejemanje ni uspelo"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Received"
+msgstr "Prejeto"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Receiving"
+msgstr "Prejemanje"
 
 #: src/components/NavBar/SearchBarDropdown.tsx
 msgid "Recent searches"
@@ -1522,9 +1892,22 @@ msgstr "Nedavna iskanja"
 msgid "Recipient"
 msgstr "Prejemnik"
 
-#: src/components/AccountDetailsV2/TransactionBody.tsx
+#: src/nft/components/bag/BagFooter.tsx
+msgid "Refunds for unavailable items will be given in ETH"
+msgstr "Povračila za nerazpoložljive izdelke bodo izplačana v ETH"
+
+#: src/nft/components/profile/list/Modal/ContentRow.tsx
+msgid "Rejected"
+msgstr "Zavrnjeno"
+
+#: src/components/ErrorBoundary/index.tsx
+msgid "Reload the app"
+msgstr "Ponovno naložite aplikacijo"
+
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
+#: src/nft/components/collection/ActivityCells.tsx
+#: src/nft/components/profile/list/Modal/ContentRow.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -1549,17 +1932,30 @@ msgstr "Odstrani zastopnika"
 msgid "Remove Liquidity"
 msgstr "Odstrani likvidnost"
 
-#: src/components/AccountDetailsV2/TransactionBody.tsx
-msgid "Removed"
-msgstr "Odstranjeno"
-
 #: src/nft/components/collection/CollectionAsset.tsx
-msgid "Removed from bag"
-msgstr ""
+#: src/nft/components/profile/view/ViewMyNftsAsset.tsx
+msgid "Remove from bag"
+msgstr "Odstranite iz vrečke"
 
-#: src/components/AccountDetailsV2/TransactionBody.tsx
-msgid "Removing"
-msgstr "Odstranjevanje"
+#: src/nft/components/profile/list/PriceTextInput.tsx
+msgid "Remove item"
+msgstr "Odstrani predmet"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Remove liquidity failed"
+msgstr "Odstranjevanje likvidnosti ni uspelo"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+msgid "Removed Liquidity"
+msgstr "Odstranjena likvidnost"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Removed liquidity"
+msgstr "Odstranjena likvidnost"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Removing liquidity"
+msgstr "Odstranjevanje likvidnosti"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Removing {0} {1} and {2} {3}"
@@ -1569,9 +1965,25 @@ msgstr "Odstranitev {0} {1} in {2} {3}"
 msgid "Removing {0} {1} and{2} {3}"
 msgstr "Odstranitev {0} {1} in{2} {3}"
 
-#: src/components/Menu/index.tsx
-msgid "Request Features"
-msgstr "Predlagajte funkcionalnosti"
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Repaid"
+msgstr "Poplačano"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Repay failed"
+msgstr "Povračilo ni uspelo"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Repaying"
+msgstr "Povračilo"
+
+#: src/nft/components/profile/list/ListingButton.tsx
+msgid "Resolve {issues} issues"
+msgstr "Rešite {issues} težav"
+
+#: src/nft/components/profile/list/Modal/ContentRow.tsx
+msgid "Retry"
+msgstr "Poskusite znova"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
@@ -1579,13 +1991,37 @@ msgstr "Predlagajte funkcionalnosti"
 msgid "Return"
 msgstr "Nazaj"
 
+#: src/nft/components/profile/list/Modal/SuccessScreen.tsx
+msgid "Return to My NFTs"
+msgstr "Nazaj na Moje NFT-je"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+msgid "Reverse Registrar"
+msgstr "Povratni registrar"
+
+#: src/components/swap/ConfirmSwapModal.tsx
+msgid "Review Swap"
+msgstr "Pregled Zamenjaj"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+msgid "Revoked Approval"
+msgstr "Preklicana odobritev"
+
+#: src/nft/components/profile/list/NFTListingsGrid.tsx
+msgid "Same Price"
+msgstr "Enaka cena"
+
+#: src/components/AccountDrawer/UniwalletModal.tsx
+msgid "Scan with Uniswap Wallet"
+msgstr "Skenirajte z denarnico Uniswap"
+
+#: src/components/NavBar/SearchBar.tsx
+msgid "Search"
+msgstr "Iskanje"
+
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "Search name or paste address"
 msgstr "Poiščite ime ali prilepite naslov"
-
-#: src/components/NavBar/SearchBar.tsx
-msgid "Search tokens"
-msgstr "Iskanje žetonov"
 
 #: src/components/NavBar/SearchBar.tsx
 msgid "Search tokens and NFT collections"
@@ -1615,10 +2051,6 @@ msgstr "Izberite dejanje"
 msgid "Select token"
 msgstr "Izberite žeton"
 
-#: src/nft/components/profile/view/ViewMyNftsAsset.tsx
-msgid "Selected"
-msgstr ""
-
 #: src/pages/AddLiquidity/index.tsx
 msgid "Selected Range"
 msgstr "Izbrani razpon"
@@ -1635,6 +2067,27 @@ msgstr "Samozastopanje"
 msgid "Sell"
 msgstr "Prodaja"
 
+#: src/nft/components/profile/list/ListPage.tsx
+msgid "Sell NFTs"
+msgstr "Prodaja NFT-jev"
+
+#: src/nft/components/details/detailsV2/TableRowComponent.tsx
+msgid "Seller"
+msgstr "Prodajalec"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Send failed"
+msgstr "Pošiljanje ni uspelo"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Sending"
+msgstr "Pošiljanje"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Sent"
+msgstr "Poslano"
+
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
@@ -1645,7 +2098,11 @@ msgstr "Nastavi razpon cene"
 msgid "Set Starting Price"
 msgstr "Nastavi začetno ceno"
 
-#: src/components/Settings/index.tsx
+#: src/nft/components/profile/list/ListingButton.tsx
+msgid "Set prices to continue"
+msgstr "Nastavite cene za nadaljevanje"
+
+#: src/components/AccountDrawer/SettingsMenu.tsx
 msgid "Settings"
 msgstr "Nastavitve"
 
@@ -1657,9 +2114,17 @@ msgstr "Delež v skladu"
 msgid "Share of Pool:"
 msgstr "Delež sklada:"
 
+#: src/nft/components/profile/list/Modal/SuccessScreen.tsx
+msgid "Share on Twitter"
+msgstr "Delite na Twitterju"
+
 #: src/components/Tokens/TokenDetails/ShareButton.tsx
 msgid "Share to Twitter"
 msgstr "Delite na Twitterju"
+
+#: src/components/AccountDrawer/MiniPortfolio/ExpandoRow.tsx
+msgid "Show"
+msgstr "Prikaži"
 
 #: src/pages/Vote/Landing.tsx
 msgid "Show Cancelled"
@@ -1675,18 +2140,32 @@ msgstr "Pokaži zaprte položaje"
 msgid "Show more"
 msgstr "Pokaži več"
 
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Show resources"
+msgstr "Prikaži vire"
+
+#: src/nft/components/profile/list/Modal/ListModalSection.tsx
+msgid "Sign"
+msgstr "Podpis"
+
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Simple"
 msgstr "Enostavno"
 
-#: src/components/TransactionSettings/index.tsx
-msgid "Slippage tolerance"
-msgstr "Toleranca do zdrsa"
+#: src/components/Settings/MaxSlippageSettings/index.tsx
+msgid "Slippage below {0}% may result in a failed transaction"
+msgstr "Zdrs pod {0}% lahko povzroči neuspešno transakcijo"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+#: src/nft/components/collection/ActivityCells.tsx
+msgid "Sold"
+msgstr "prodano"
 
 #: src/components/swap/UnsupportedCurrencyFooter.tsx
 msgid "Some assets are not available through this interface because they may not work well with the smart contracts or we are unable to allow trading for legal reasons."
 msgstr "Nekatera sredstva v tem vmesniku niso na voljo, ker morda ne delujejo dobro s pametnimi pogodbami ali pa iz pravnih razlogov ne moremo dovoliti trgovanja z njimi."
 
+#: src/components/ErrorBoundary/index.tsx
 #: src/components/ErrorBoundary/index.tsx
 #: src/nft/components/bag/BagFooter.tsx
 msgid "Something went wrong"
@@ -1696,17 +2175,34 @@ msgstr "Nekaj je šlo narobe"
 msgid "Something went wrong. Please try again."
 msgstr "Nekaj je šlo narobe. Prosim poskusite ponovno."
 
+#: src/components/ErrorBoundary/index.tsx
+msgid "Sorry, an error occured while processing your request. If you request support, be sure to copy the details of this error."
+msgstr "Žal je med obdelavo vaše zahteve prišlo do napake. Če zahtevate podporo, ne pozabite kopirati podrobnosti te napake."
+
+#: src/components/ErrorBoundary/index.tsx
+msgid "Sorry, an error occured while processing your request. If you request support, be sure to provide your error ID."
+msgstr "Žal je med obdelavo vaše zahteve prišlo do napake. Če zahtevate podporo, navedite svoj ID napake."
+
+#: src/nft/components/profile/list/ListingButton.tsx
+msgid "Start listing"
+msgstr "Začnite navajati"
+
+#: src/components/Tokens/TokenDetails/StatsSection.tsx
 #: src/components/Tokens/TokenDetails/StatsSection.tsx
 msgid "Stats"
 msgstr "Statistika"
 
-#: src/pages/Earn/Manage.tsx
-msgid "Step 1. Get UNI-V2 Liquidity tokens"
-msgstr "Korak 1. Pridobite žetone za likvidnost UNI-V2"
-
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Submit new proposal"
 msgstr "Predloži novo pobudo"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Submit proposal failed"
+msgstr "Oddaja predloga ni uspela"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Submitted proposal"
+msgstr "Oddan predlog"
 
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "Submitting Proposal"
@@ -1716,6 +2212,10 @@ msgstr "Predložitev pobude"
 msgid "Submitting Vote"
 msgstr "Oddaja glasu"
 
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Submitting proposal"
+msgstr "Oddaja predloga"
+
 #: src/pages/Vote/styled.tsx
 msgid "Succeeded"
 msgstr "Uspelo"
@@ -1723,6 +2223,10 @@ msgstr "Uspelo"
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Success"
 msgstr "Uspelo"
+
+#: src/nft/components/profile/list/Modal/SuccessScreen.tsx
+msgid "Successfully listed"
+msgstr "Uspešno uvrščen na seznam"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Supply"
@@ -1732,11 +2236,11 @@ msgstr "Položi"
 msgid "Supplying {0} {1} and {2} {3}"
 msgstr "Polog {0} {1} in {2} {3}"
 
-#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/NavBar/index.tsx
 #: src/components/Tokens/TokenDetails/MobileBalanceSummaryFooter.tsx
 #: src/components/swap/SwapHeader.tsx
-#: src/pages/Swap/index.tsx
+#: src/components/swap/SwapModalFooter.tsx
+#: src/components/swap/SwapSkeleton.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Swap"
@@ -1747,7 +2251,6 @@ msgid "Swap <0/> for exactly <1/>"
 msgstr "Menjaj <0/> za natanko <1/>"
 
 #: src/pages/Swap/index.tsx
-#: src/pages/Swap/index.tsx
 msgid "Swap Anyway"
 msgstr "Vseeno zamenjaj"
 
@@ -1755,16 +2258,16 @@ msgstr "Vseeno zamenjaj"
 msgid "Swap exactly <0/> for <1/>"
 msgstr "Menjaj natanko <0/> za <1/>"
 
-#: src/lib/hooks/swap/useSendSwapTransaction.tsx
-#: src/lib/hooks/swap/useSendSwapTransaction.tsx
-msgid "Swap failed: {0}"
-msgstr "Menjava je spodletela: {0}"
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Swap failed"
+msgstr "Zamenjava ni uspela"
 
-#: src/components/AccountDetailsV2/TransactionBody.tsx
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
 msgid "Swapped"
 msgstr "Zamenjal"
 
-#: src/components/AccountDetailsV2/TransactionBody.tsx
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
 msgid "Swapping"
 msgstr "Zamenjava"
 
@@ -1772,9 +2275,17 @@ msgstr "Zamenjava"
 msgid "Swapping {0} {1} for {2} {3}"
 msgstr "Menjava {0} {1} za {2} {3}"
 
+#: src/nft/components/collection/Sweep.tsx
+msgid "Sweep"
+msgstr "Pometanje"
+
 #: src/nft/components/bag/BagFooter.tsx
 msgid "Switch networks"
 msgstr "Preklopite omrežja"
+
+#: src/components/Tokens/TokenDetails/InvalidTokenDetails.tsx
+msgid "Switch to {0}"
+msgstr "Preklopite na {0}"
 
 #: src/components/Tokens/TokenDetails/index.tsx
 msgid "Symbol not found"
@@ -1784,13 +2295,9 @@ msgstr "Simbola ni mogoče najti"
 msgid "TVL"
 msgstr "TVL"
 
-#: src/components/Popups/SurveyPopup.tsx
-msgid "Take a 10 minute survey to help us improve your experience in the Uniswap app."
-msgstr "Izpolnite 10-minutno anketo in nam pomagajte izboljšati vašo izkušnjo aplikacije Uniswap."
-
-#: src/components/Popups/SurveyPopup.tsx
-msgid "Tell us what you think ↗"
-msgstr "Povejte nam, kaj si mislite ↗"
+#: src/components/WalletModal/PrivacyPolicyNotice.tsx
+msgid "Terms of Service"
+msgstr "Pogoji storitve"
 
 #: src/components/Popups/ClaimPopup.tsx
 msgid "Thanks for being part of the Uniswap community <0/>"
@@ -1806,7 +2313,7 @@ msgstr "Pri tej menjavi ni bilo zadoščeno Uniswapovi stalnici x*y = k. To obi�
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "The amount you expect to receive at the current market price. You may receive less or more if the market price changes while your transaction is pending."
-msgstr "Znesek, ki ga pričakujete po trenutni tržni ceni. Če se tržna cena med čakanjem na transakcijo spremeni, boste morda prejeli manj ali več."
+msgstr "Znesek, ki ga pričakujete po trenutni tržni ceni. Morda boste prejeli manj ali več, če se tržna cena spremeni, medtem ko je vaša transakcija v teku."
 
 #: src/components/PrivacyPolicy/index.tsx
 msgid "The app fetches blockchain data from The Graph’s hosted service."
@@ -1828,29 +2335,27 @@ msgstr "Aplikacija z namenom prihodnjih izboljšav beleži anonimizirano statist
 msgid "The app securely collects your wallet address and shares it with TRM Labs Inc. for risk and compliance reasons."
 msgstr "Aplikacija na varen način prebere naslov vaše denarnice in ga deli s TRM Labs Inc. zaradi ocene tveganja in skladnosti z zakoni."
 
-#: src/components/WalletModal/PendingView.tsx
+#: src/components/WalletModal/ConnectionErrorView.tsx
 msgid "The connection attempt failed. Please click try again and follow the steps to connect in your wallet."
 msgstr "Poskus povezave ni uspel. Kliknite Poskusi znova in sledite navodilom za povezavo v svoji denarnici."
 
-#: src/components/swap/SwapWarningDropdown.tsx
-msgid "The cost of sending this transaction is more than half of the value of the input amount."
-msgstr "Strošek pošiljanja te transakcije presega polovico vrednosti vhodnega zneska."
-
-#: src/components/Polling/index.tsx
-msgid "The current fast gas amount for sending a transaction on L1. Gas fees are paid in Ethereum's native currency Ether (ETH) and denominated in GWEI."
-msgstr "Trenutna količina plina za hitro pošiljanje transakcije na L1. Provizije za plin se plačajo v valuti ether (ETH), avtohtoni valuti omrežja Ethereum, in so denominirane v enoti Gwei."
-
 #: src/components/CurrencyInputPanel/FiatValue.tsx
+#: src/nft/components/bag/BagFooter.tsx
 msgid "The estimated difference between the USD values of input and output amounts."
 msgstr "Ocenjena razlika med vrednostmi (v USD) vhodnih in izhodnih zneskov."
 
-#: src/components/swap/AdvancedSwapDetails.tsx
-msgid "The fee paid to miners who process your transaction. This must be paid in {0}."
-msgstr "Provizija, plačana rudarjem, ki obdelujejo vašo transakcijo. To je treba plačati v {0}."
+#: src/components/swap/SwapModalFooter.tsx
+msgid "The fee paid to miners who process your transaction. This must be paid in ${0}."
+msgstr "Pristojbina, plačana rudarjem, ki obdelujejo vašo transakcijo. To je treba plačati v ${0}."
 
 #: src/components/swap/AdvancedSwapDetails.tsx
+msgid "The fee paid to miners who process your transaction. This must be paid in {0}."
+msgstr "Pristojbina, plačana rudarjem, ki obdelujejo vašo transakcijo. To je treba plačati v {0}."
+
+#: src/components/swap/AdvancedSwapDetails.tsx
+#: src/components/swap/SwapModalFooter.tsx
 msgid "The impact your trade has on the market price of this pool."
-msgstr "Vpliv vaše trgovine na tržno ceno tega bazena."
+msgstr "Vpliv, ki ga ima vaše trgovanje na tržno ceno tega bazena."
 
 #: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "The input token cannot be transferred. There may be an issue with the input token."
@@ -1861,9 +2366,14 @@ msgstr "Vhodnega žetona ni mogoče prenesti. Morda je gre za težavo z vhodnim 
 msgid "The market price is outside your specified price range. Single-asset deposit only."
 msgstr "Tržna cena je izven območja, ki ste ga izbrali. Položite lahko le eno od obeh sredstev."
 
+#: src/components/swap/SwapModalFooter.tsx
+msgid "The maximum amount you are guaranteed to spend. If the price slips any further, your transaction will revert."
+msgstr "Največji znesek, ki ga boste zagotovo porabili. Če cena še naprej pade, se bo vaša transakcija razveljavila."
+
 #: src/components/swap/AdvancedSwapDetails.tsx
+#: src/components/swap/SwapModalFooter.tsx
 msgid "The minimum amount you are guaranteed to receive. If the price slips any further, your transaction will revert."
-msgstr "Najmanjši znesek, ki ga boste zagotovo prejeli. Če bo cena še zdrsnila, se bo vaša transakcija vrnila."
+msgstr "Najmanjši znesek, ki ga boste prejeli. Če cena še naprej pade, se bo vaša transakcija razveljavila."
 
 #: src/components/Polling/index.tsx
 msgid "The most recent block number on this network. Prices update on every block."
@@ -1889,9 +2399,9 @@ msgstr "Cena v tem skladu je trenutno znotraj območja, ki ste ga izbrali. Vaš 
 msgid "The ratio of tokens you add will set the price of this pool."
 msgstr "Razmerje med žetoni, ki jih boste vložili, bo določilo začetno ceno v tem skladu."
 
-#: src/utils/swapErrorToUserReadableMessage.tsx
-msgid "The transaction could not be sent because the deadline has passed. Please check that your transaction deadline is not too low."
-msgstr "Transakcije ni bilo mogoče poslati, ker je rok potekel. Preverite, ali vaš transakcijski rok ni prekratek."
+#: src/theme/components/ThemeToggle.tsx
+msgid "Theme"
+msgstr "Tema"
 
 #: src/components/LiquidityChartRangeInput/index.tsx
 msgid "There is no liquidity data."
@@ -1905,6 +2415,10 @@ msgstr "Ta naslov je blokiran v vmesniku Uniswap Labs, ker je povezan z"
 msgid "This app uses the following third-party APIs:"
 msgstr "Ta aplikacija uporablja naslednje API-je tretjih oseb:"
 
+#: src/components/AccountDrawer/MiniPortfolio/Activity/index.tsx
+msgid "This month"
+msgstr "Ta mesec"
+
 #: src/pages/AddLiquidity/index.tsx
 msgid "This pool must be initialized before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount. Gas fees will be higher than usual due to the initialization transaction."
 msgstr "Ta sklad je treba inicializirati, preden lahko dodate likvidnost. Za inicializacijo izberite začetno ceno za sklad. Nato vnesite svoj cenovni razpon likvidnosti in znesek depozita. Provizije za plin (gas) bodo zaradi inicializacijske transakcije višje kot običajno."
@@ -1917,13 +2431,25 @@ msgstr "Ta pobuda se lahko izvrši po {0}."
 msgid "This route optimizes your total output by considering split routes, multiple hops, and the gas cost of each step."
 msgstr "To je pot, po kateri iz menjave dobite največ ob upoštevanju razcepljenih poti, zaporednih menjav in stroškov plina na vsakem koraku."
 
-#: src/components/Tokens/TokenDetails/PriceChart.tsx
-msgid "This token doesn't have chart data because it hasn't been traded on Uniswap v3"
-msgstr "Ta žeton nima podatkov grafikona, ker se z njim ni trgovalo na Uniswap v3"
+#: src/pages/Tokens/index.tsx
+msgid "This table contains the top tokens by Uniswap volume, sorted based on your input."
+msgstr "Ta tabela vsebuje najvišje žetone glede na količino Uniswap, razvrščene glede na vaš vnos."
+
+#: src/components/Tokens/TokenDetails/InvalidTokenDetails.tsx
+msgid "This token doesn't exist"
+msgstr "Ta žeton ne obstaja"
+
+#: src/components/Tokens/TokenDetails/InvalidTokenDetails.tsx
+msgid "This token doesn't exist on {0}"
+msgstr "Ta žeton ne obstaja na {0}"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
 msgstr "To orodje poskrbi za varno migracijo vaših likvidnostnih žetonov {0} v Uniswap V3. Ta postopek ne zahteva nikakršnega zaupanja drugi osebi zaradi "
+
+#: src/utils/swapErrorToUserReadableMessage.tsx
+msgid "This transaction could not be sent because the deadline has passed. Please check that your transaction deadline is not too low."
+msgstr "Te transakcije ni bilo mogoče poslati, ker je rok potekel. Prosimo, preverite, ali vaš rok transakcije ni prekratek."
 
 #: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
@@ -1933,6 +2459,19 @@ msgstr "Ta transakcija ne bo uspela zaradi premika cene. Poskusite povečati tol
 msgid "This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance."
 msgstr "Ta transakcija ne bo uspela zaradi gibanja cene ali provizije za prenos. Poskusite povečati toleranco do zdrsa."
 
+#: src/components/AccountDrawer/MiniPortfolio/Activity/index.tsx
+msgid "This week"
+msgstr "Ta teden"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/index.tsx
+msgid "This year"
+msgstr "To leto"
+
+#: src/nft/components/details/AssetActivity.tsx
+msgid "Time"
+msgstr "Čas"
+
+#: src/nft/components/details/AssetActivity.tsx
 #: src/pages/CreateProposal/ProposalActionDetail.tsx
 #: src/pages/CreateProposal/ProposalActionDetail.tsx
 #: src/pages/Swap/index.tsx
@@ -1943,14 +2482,39 @@ msgstr "Za"
 msgid "To (at least)"
 msgstr "Za (vsaj)"
 
+#: src/components/Popups/FailedNetworkSwitchPopup.tsx
+msgid "To use Uniswap on {0}, switch the network in your wallet’s settings."
+msgstr "Če želite uporabljati Uniswap na {0}, preklopite omrežje v nastavitvah denarnice."
+
+#: src/pages/Pool/PositionPage.tsx
+msgid "To view a position, you must be connected to the network it belongs to."
+msgstr "Za ogled položaja morate biti povezani v omrežje, ki mu pripada."
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/index.tsx
+msgid "Today"
+msgstr "Danes"
+
 #: src/components/Tokens/TokenTable/TokenRow.tsx
 msgid "Token name"
 msgstr "Ime žetona"
 
+#: src/components/TokenSafety/index.tsx
+msgid "Token not found"
+msgstr "Žetona ni bilo mogoče najti"
+
+#: src/components/Tokens/TokenDetails/StatsSection.tsx
+msgid "Token stats and charts for {label} are available on <0>info.uniswap.org</0>"
+msgstr "Statistika žetonov in grafikoni za {label} so na voljo na <0>info.uniswap.org</0>"
+
+#: src/components/AccountDrawer/MiniPortfolio/index.tsx
 #: src/components/NavBar/SearchBarDropdown.tsx
 #: src/components/NavBar/index.tsx
 msgid "Tokens"
 msgstr "Žetoni"
+
+#: src/nft/components/details/detailsV2/InfoChips.tsx
+msgid "Top Trait"
+msgstr "Vrhunska lastnost"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Top pools"
@@ -1960,30 +2524,39 @@ msgstr "Glavni skladi"
 msgid "Top tokens on Uniswap"
 msgstr "Najboljši žetoni na Uniswap"
 
-#: src/components/earn/PoolCard.tsx
-msgid "Total deposited"
-msgstr "Skupaj položeno"
-
-#: src/pages/Earn/Manage.tsx
-msgid "Total deposits"
-msgstr "Vsi pologi"
+#: src/nft/components/bag/BagFooter.tsx
+msgid "Total"
+msgstr "Skupaj"
 
 #: src/components/Tokens/TokenTable/TokenRow.tsx
-msgid "Total value locked (TVL) is the amount of the asset that’s currently in a Uniswap v3 liquidity pool."
-msgstr "Skupna zaklenjena vrednost (TVL) je znesek sredstva, ki je trenutno v skladu likvidnosti Uniswap v3."
+msgid "Total value locked (TVL) is the aggregate amount of the asset available across all Uniswap v3 liquidity pools."
+msgstr "Skupna zaklenjena vrednost (TVL) je skupni znesek sredstva, ki je na voljo v vseh likvidnostnih skladih Uniswap v3."
 
-#: src/components/swap/RouterLabel.tsx
-msgid "Trade Route"
-msgstr "Pot menjave"
+#: src/pages/Landing/index.tsx
+msgid "Trade crypto and NFTs with confidence"
+msgstr "Samozavestno trgujte s kripto in NFT"
 
-#: src/components/Settings/index.tsx
+#: src/pages/Landing/index.tsx
+msgid "Trade crypto with confidence"
+msgstr "Trgujte s kripto z zaupanjem"
+
+#: src/nft/components/details/detailsV2/DataPageTraits.tsx
+msgid "Trait"
+msgstr "Lastnost"
+
+#: src/nft/components/details/detailsV2/InfoChips.tsx
+msgid "Trait Floor"
+msgstr "Trait Floor"
+
+#: src/nft/components/details/detailsV2/DataPageTraits.tsx
+msgid "Traits"
+msgstr "Lastnosti"
+
+#: src/components/Settings/MenuButton/index.tsx
 msgid "Transaction Settings"
 msgstr "Nastavitve transakcije"
 
 #: src/components/TransactionConfirmationModal/index.tsx
-#: src/components/earn/ClaimRewardModal.tsx
-#: src/components/earn/StakingModal.tsx
-#: src/components/earn/UnstakingModal.tsx
 #: src/components/vote/DelegateModal.tsx
 #: src/components/vote/QueueModal.tsx
 #: src/components/vote/VoteModal.tsx
@@ -1994,7 +2567,7 @@ msgstr "Transakcija oddana"
 msgid "Transaction completed in"
 msgstr "Transakcija je bila zaključena v "
 
-#: src/components/TransactionSettings/index.tsx
+#: src/components/Settings/TransactionDeadlineSettings/index.tsx
 msgid "Transaction deadline"
 msgstr "Rok za transakcijo"
 
@@ -2002,8 +2575,7 @@ msgstr "Rok za transakcijo"
 msgid "Transaction pending"
 msgstr "Transakcija v teku"
 
-#: src/lib/hooks/swap/useSendSwapTransaction.tsx
-#: src/lib/hooks/swap/useSendSwapTransaction.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "Transaction rejected"
 msgstr "Transakcija zavrnjena"
 
@@ -2011,22 +2583,17 @@ msgstr "Transakcija zavrnjena"
 msgid "Transaction submitted"
 msgstr "Transakcija oddana"
 
-#: src/components/WalletDropdown/DefaultMenu.tsx
-#: src/components/WalletDropdown/TransactionMenu.tsx
-msgid "Transactions"
-msgstr "Transakcije"
-
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Transfer Token"
 msgstr "Prenos žetona"
 
-#: src/components/WalletModal/PendingView.tsx
+#: src/components/WalletModal/ConnectionErrorView.tsx
 msgid "Try Again"
 msgstr "Poskusi ponovno"
 
-#: src/components/Settings/index.tsx
-msgid "Turn On Expert Mode"
-msgstr "Vklopi strokovni način"
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+msgid "UNI Governance"
+msgstr "Upravljanje UNI"
 
 #: src/components/Popups/ClaimPopup.tsx
 msgid "UNI has arrived"
@@ -2040,18 +2607,13 @@ msgstr "Žetoni UNI predstavljajo delež glasovalnih pravic pri upravljanju sist
 msgid "UNI {0}/{1} Burned"
 msgstr "Uničenih  {0}/{1} UNI"
 
-#: src/pages/Earn/Manage.tsx
-msgid "UNI-V2 LP tokens are required. Once you've added liquidity to the {0}-{1} pool you can stake your liquidity tokens on this page."
-msgstr "Potrebni so žetoni likvidnosti (LP) UNI-V2. Če boste dodali likvidnost v sklad {0}-{1} , boste lahko na tej strani zastavili svoje žetone likvidnosti."
+#: src/nft/components/collection/ActivityCells.tsx
+msgid "Unavailable"
+msgstr "Ni na voljo"
 
-#: src/pages/Earn/Manage.tsx
-msgid "UNI-V2 {0}-{1}"
-msgstr "UNI-V2 {0}-{1}"
-
-#: src/components/earn/ClaimRewardModal.tsx
-#: src/components/earn/UnstakingModal.tsx
-msgid "Unclaimed UNI"
-msgstr "Neprevzeti UNI"
+#: src/nft/components/profile/view/ViewMyNftsAsset.tsx
+msgid "Unavailable for listing"
+msgstr "Ni na voljo za vnos"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Unclaimed fees"
@@ -2061,13 +2623,9 @@ msgstr "Neprevzete provizije"
 msgid "Undetermined"
 msgstr "Nedoločeno"
 
-#: src/lib/hooks/swap/useSendSwapTransaction.tsx
-msgid "Unexpected error. Could not estimate gas for the swap."
-msgstr "Nepričakovana napaka. Porabe plina za menjavo ni bilo mogoče oceniti."
-
-#: src/lib/hooks/swap/useSendSwapTransaction.tsx
-msgid "Unexpected issue with estimating the gas. Please try again."
-msgstr "Nepričakovana težava pri ocenjevanju porabe plina. Prosimo, poskusite ponovno."
+#: src/components/Settings/RouterPreferenceSettings/index.tsx
+msgid "Uniswap API"
+msgstr "Uniswap API"
 
 #: src/pages/Vote/Landing.tsx
 msgid "Uniswap Governance"
@@ -2077,25 +2635,61 @@ msgstr "Uniswapovo upravljanje"
 msgid "Uniswap Labs' Terms of Service"
 msgstr "Pogoji storitve Uniswap Labs"
 
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+msgid "Uniswap Protocol"
+msgstr "Protokol Uniswap"
+
+#: src/pages/Pool/v2.tsx
+msgid "Uniswap V2 is not available on this network."
+msgstr "Uniswap V2 ni na voljo v tem omrežju."
+
 #: src/components/SwitchLocaleLink/index.tsx
 msgid "Uniswap available in: <0>{0}</0>"
 msgstr "Uniswap je na voljo v teh jezikih: <0>{0}</0>"
+
+#: src/components/Settings/RouterPreferenceSettings/index.tsx
+msgid "Uniswap client"
+msgstr "Odjemalec Uniswap"
 
 #: src/components/vote/ProposalEmptyState.tsx
 msgid "Uniswap governance is only available on Layer 1. Switch your network to Ethereum Mainnet to view Proposals and Vote."
 msgstr "Upravljanje Uniswapa je za na voljo samo na sloju 1. Če želite videti pobude in glasovati, preklopite na omrežje Ethereum Mainnet."
 
-#: src/pages/Earn/index.tsx
-msgid "Uniswap liquidity mining"
-msgstr "Uniswapovo rudarjenje z likvidnostjo"
+#: src/nft/components/collection/TransactionCompleteModal.tsx
+msgid "Uniswap has granted your wish!"
+msgstr "Uniswap je izpolnil vašo željo!"
+
+#: src/components/Banner/UniswapWalletBanner.tsx
+msgid "Uniswap in your pocket"
+msgstr "Uniswap v žepu"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Uniswap migration contract↗"
 msgstr "Uniswapova pogodba za migracijo↗"
 
-#: src/utils/swapErrorToUserReadableMessage.tsx
-msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "Neznana napaka {0}. Poskusite povečati toleranco do zdrsa. Pozor: žetoni s provizijami ob prenosu in uravnavani (rebase) žetoni niso združljivi z Uniswap V3."
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseLocal.ts
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseLocal.ts
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseLocal.ts
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseLocal.ts
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseLocal.ts
+msgid "Unknown"
+msgstr "Neznano"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+msgid "Unknown Approval"
+msgstr "Neznana odobritev"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+msgid "Unknown Mint"
+msgstr "Neznana kovnica"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+msgid "Unknown Send"
+msgstr "Neznano pošiljanje"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+msgid "Unknown Swap"
+msgstr "Neznana zamenjava"
 
 #: src/pages/Vote/Landing.tsx
 #: src/pages/Vote/VotePage.tsx
@@ -2120,11 +2714,14 @@ msgstr "Nepodprto sredstvo"
 msgid "Unsupported Assets"
 msgstr "Nepodprta sredstva"
 
+#: src/components/NavBar/ChainSelectorRow.tsx
+msgid "Unsupported by your wallet"
+msgstr "Ni podprto v vaši denarnici"
+
 #: src/state/governance/hooks.ts
 msgid "Untitled"
 msgstr "Brez naslova"
 
-#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/pages/Swap/index.tsx
 msgid "Unwrap"
 msgstr "Odvij"
@@ -2133,11 +2730,16 @@ msgstr "Odvij"
 msgid "Unwrap <0/> to {0}"
 msgstr "Odvijte <0/> v {0}"
 
-#: src/components/AccountDetailsV2/TransactionBody.tsx
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Unwrap failed"
+msgstr "Odvijanje ni uspelo"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
 msgid "Unwrapped"
 msgstr "Odvito"
 
-#: src/components/AccountDetailsV2/TransactionBody.tsx
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
 msgid "Unwrapping"
 msgstr "Odvijanje"
 
@@ -2145,17 +2747,9 @@ msgstr "Odvijanje"
 msgid "Update Delegation"
 msgstr "Posodobi pooblastilo"
 
-#: src/components/Settings/index.tsx
+#: src/components/Settings/RouterPreferenceSettings/index.tsx
 msgid "Use the Uniswap Labs API to get faster quotes."
 msgstr "Z uporabo API-ja Uniswap Labs lahko ponudbe pridobite hitreje."
-
-#: src/components/claim/ClaimModal.tsx
-msgid "User"
-msgstr "Uporabnik"
-
-#: src/pages/Pool/v2.tsx
-msgid "V2 Pool is not available on Layer 2. Switch to Layer 1 Ethereum."
-msgstr "Sklad V2 ni na voljo na sloju 2. Preklopite na Ethereum sloja 1."
 
 #: src/pages/Pool/index.tsx
 msgid "V2 liquidity"
@@ -2166,11 +2760,23 @@ msgstr "Likvidnost V2"
 msgid "V3 {0} Price:"
 msgstr "Cena V3 {0}:"
 
+#: src/components/AccountDrawer/GitVersionRow.tsx
+msgid "Version:"
+msgstr "Različica:"
+
+#: src/nft/components/details/detailsV2/RarityGraph.tsx
+msgid "Very common"
+msgstr "Zelo pogosto"
+
+#: src/nft/components/details/detailsV2/RarityGraph.tsx
+msgid "Very rare"
+msgstr "Zelo redek"
+
 #: src/components/PositionCard/index.tsx
 msgid "View accrued fees and analytics<0>↗</0>"
 msgstr "Oglejte si natečene pristojbine in analitiko <0>↗</0>"
 
-#: src/components/WalletDropdown/AuthenticatedHeader.tsx
+#: src/components/AccountDrawer/AuthenticatedHeader.tsx
 msgid "View and sell NFTs"
 msgstr "Ogled in prodaja NFT-jev"
 
@@ -2178,19 +2784,21 @@ msgstr "Ogled in prodaja NFT-jev"
 msgid "View more analytics"
 msgstr "Oglejte si več analitike"
 
-#: src/components/TransactionConfirmationModal/index.tsx
+#: src/nft/components/collection/TransactionCompleteModal.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "View on Etherscan"
 msgstr "Prikaži na Etherscanu"
 
-#: src/components/AccountDetails/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "View on Explorer"
 msgstr "Prikaži v raziskovalcu"
 
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "View on {0}"
+msgstr "Poglej na {0}"
+
 #: src/components/ModalViews/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
-#: src/components/claim/ClaimModal.tsx
 #: src/components/vote/ExecuteModal.tsx
 #: src/components/vote/QueueModal.tsx
 #: src/components/vote/VoteModal.tsx
@@ -2222,6 +2830,10 @@ msgstr "Glasuj proti pobudi {proposalKey}"
 msgid "Vote against proposal {proposalKey} with reason \"{0}\""
 msgstr "Glasujte proti pobudi {proposalKey} z razlogom \"{0}\""
 
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Vote failed"
+msgstr "Glasovanje ni uspelo"
+
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Vote for proposal {proposalId}"
@@ -2252,6 +2864,14 @@ msgstr "Vzdrži se glasovanja o pobudi {proposalKey}"
 msgid "Vote to abstain on proposal {proposalKey} with reason \"{0}\""
 msgstr "Vzdrži se glasovanja o pobudi {proposalKey} z razlogom \"{0}\""
 
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Voted"
+msgstr "Glasoval"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Voting"
+msgstr "Glasovanje"
+
 #: src/pages/Vote/VotePage.tsx
 msgid "Voting ended {0}"
 msgstr "Glasovanje se je končalo {0}"
@@ -2268,60 +2888,39 @@ msgstr "Glasovanje se začne okrog {0}"
 msgid "Waiting for confirmation"
 msgstr "Čakam na potrditev"
 
-#: src/components/WalletModal/PendingView.tsx
-msgid "Waiting to connect"
-msgstr "Čakam na povezavo"
-
 #: src/components/AddressInputPanel/index.tsx
 msgid "Wallet Address or ENS name"
 msgstr "Naslov denarnice ali ENS-ime"
 
+#: src/components/addLiquidity/OwnershipWarning.tsx
 #: src/constants/tokenSafety.tsx
 msgid "Warning"
 msgstr "Opozorilo"
-
-#: src/components/earn/StakingModal.tsx
-msgid "Weekly Rewards"
-msgstr "Tedenske nagrade"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Welcome to team Unicorn :)"
 msgstr "Dobrodošli v ekipi Samorog :)"
 
-#: src/components/earn/ClaimRewardModal.tsx
-msgid "When you claim without withdrawing your liquidity remains in the mining pool."
-msgstr "Ko prevzamete brez dviga, vaša likvidnost ostane v rudarskem skladu."
-
-#: src/pages/Earn/Manage.tsx
-msgid "When you withdraw, the contract will automagically claim UNI on your behalf!"
-msgstr "Ob dvigu bo pogodba samodejno prevzela UNI v vašem imenu!"
-
-#: src/components/earn/UnstakingModal.tsx
-msgid "When you withdraw, your UNI is claimed and your liquidity is removed from the mining pool."
-msgstr "Ko izvedete dvig, prevzamete svoje UNI, vaša likvidnost pa se odstrani iz rudarskega sklada."
-
-#: src/components/earn/UnstakingModal.tsx
-#: src/pages/Earn/Manage.tsx
-msgid "Withdraw"
-msgstr "Dvig"
-
-#: src/components/earn/UnstakingModal.tsx
-msgid "Withdraw & Claim"
-msgstr "Dvigni in prevzemi"
+#: src/nft/components/profile/list/Modal/ListModalSection.tsx
+msgid "Why is a transaction required?"
+msgstr "Zakaj je potrebna transakcija?"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Withdraw deposited liquidity"
 msgstr "Dvignite položeno likvidnost"
 
-#: src/components/earn/UnstakingModal.tsx
-msgid "Withdrawing {0} UNI-V2"
-msgstr "Dvigujem {0} UNI-V2"
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Withdraw failed"
+msgstr "Umik ni uspel"
 
-#: src/components/earn/UnstakingModal.tsx
-msgid "Withdrew UNI-V2!"
-msgstr "UNI-V2 dvignjen!"
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Withdrawing"
+msgstr "Umik"
 
-#: src/components/AccountDetailsV2/TransactionBody.tsx
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Withdrew"
+msgstr "umaknil"
+
 #: src/pages/Swap/index.tsx
 msgid "Wrap"
 msgstr "Ovij"
@@ -2330,11 +2929,16 @@ msgstr "Ovij"
 msgid "Wrap <0/> to {0}"
 msgstr "Ovijte <0/> v {0}"
 
-#: src/components/AccountDetailsV2/TransactionBody.tsx
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Wrap failed"
+msgstr "Ovijanje ni uspelo"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
 msgid "Wrapped"
 msgstr "Zavito"
 
-#: src/components/AccountDetailsV2/TransactionBody.tsx
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
 msgid "Wrapping"
 msgstr "Zavijanje"
 
@@ -2350,6 +2954,10 @@ msgstr "Imate že eno aktivno ali čakajočo pobudo."
 msgid "You are creating a pool"
 msgstr "Ustvarjate sklad"
 
+#: src/components/addLiquidity/OwnershipWarning.tsx
+msgid "You are not the owner of this LP position. You will not be able to withdraw the liquidity from this position unless you own the following address: {ownerAddress}"
+msgstr "Niste lastnik tega položaja LP. S te pozicije ne boste mogli dvigniti likvidnosti, razen če ste lastnik naslednjega naslova: {ownerAddress}"
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You are the first liquidity provider for this Uniswap V3 pool. Your liquidity will migrate at the current {0} price."
 msgstr "V tem skladu Uniswapa V3 ste prvi ponudnik likvidnosti. Vaša likvidnost bo migrirana po trenutni ceni {0}."
@@ -2361,10 +2969,6 @@ msgstr "Ste prvi ponudnik likvidnosti."
 #: src/components/vote/DelegateModal.tsx
 msgid "You can either vote on each proposal yourself or delegate your votes to a third party."
 msgstr "O vsaki pobudi lahko glasujete sami ali pa svoje glasove prenesete na izbranega zastopnika."
-
-#: src/pages/Swap/index.tsx
-msgid "You can now trade {0}"
-msgstr "Zdaj lahko trgujete z {0}"
 
 #: src/pages/CreateProposal/index.tsx
 msgid "You don't have enough votes to submit a proposal"
@@ -2378,21 +2982,23 @@ msgstr "V tem skladu še nimate likvidnosti."
 msgid "You may have lost your network connection."
 msgstr "Morda ste izgubili omrežno povezavo."
 
-#: src/components/swap/SwapWarningDropdown.tsx
-msgid "You might consider waiting until the network fees go down to complete this transaction."
-msgstr "Premislite, ali ne bi te transakcije zaključili v času, ko bodo omrežne provizije nižje."
-
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You must connect an account."
 msgstr "Povezati morate račun."
 
-#: src/pages/Swap/index.tsx
-msgid "You must give the Uniswap smart contracts permission to use your {0}. You only have to do this once per token."
-msgstr "Najprej morate Uniswapovim pametnim pogodbam dovoliti uporabo svojih {0}. To je za vsak žeton potrebno storiti samo enkrat."
-
 #: src/pages/CreateProposal/index.tsx
 msgid "You must have {formattedProposalThreshold} votes to submit a proposal"
 msgstr "Za predložitev pobude potrebujete {formattedProposalThreshold} glasov."
+
+#: src/components/swap/SwapModalHeader.tsx
+msgid "You pay"
+msgstr "Ti plačaš"
+
+#: src/components/swap/SwapModalHeader.tsx
+#: src/nft/components/profile/list/ListPage.tsx
+#: src/nft/components/profile/list/NFTListingsGrid.tsx
+msgid "You receive"
+msgstr "Ti prejmeš"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You should only deposit liquidity into Uniswap V3 at a price you believe is correct. <0/>If the price seems incorrect, you can either make a swap to move the price or wait for someone else to do so."
@@ -2416,16 +3022,16 @@ msgid "Your active V3 liquidity positions will appear here."
 msgstr "Tukaj bodo prikazane vaše aktivne likvidnostne pozicije na V3."
 
 #: src/components/Tokens/TokenDetails/BalanceSummary.tsx
-msgid "Your balance"
-msgstr "Vaše stanje"
+msgid "Your balance on {label}"
+msgstr "Vaše stanje na {label}"
 
 #: src/pages/Pool/index.tsx
 msgid "Your connected network is unsupported."
 msgstr "Omrežje, s katerim ste povezani, ni podprto."
 
-#: src/pages/Earn/Manage.tsx
-msgid "Your liquidity deposits"
-msgstr "Vaši likvidnostni pologi"
+#: src/nft/components/profile/view/EmptyWalletContent.tsx
+msgid "Your onchain transactions and crypto purchases will appear here."
+msgstr "Tukaj bodo prikazane vaše onchain transakcije in kripto nakupi."
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
@@ -2465,14 +3071,13 @@ msgstr "Ta polog vam ne bo prinašal provizij ali se uporabljal za trgovanje, do
 msgid "Your positions"
 msgstr "Vaše pozicije"
 
-#: src/components/earn/PoolCard.tsx
-msgid "Your rate"
-msgstr "Vaš tečaj"
+#: src/hooks/useUniversalRouter.ts
+msgid "Your swap is expected to fail."
+msgstr "Pričakuje se, da vaša zamenjava ne bo uspela."
 
-#: src/lib/hooks/swap/useSendSwapTransaction.tsx
-#: src/lib/hooks/swap/useSendSwapTransaction.tsx
+#: src/hooks/useUniversalRouter.ts
 msgid "Your swap was modified through your wallet. If this was a mistake, please cancel immediately or risk losing your funds."
-msgstr ""
+msgstr "Vaša zamenjava je bila spremenjena prek vaše denarnice. Če je bila to napaka, takoj prekličite ali tvegate izgubo sredstev."
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
@@ -2483,66 +3088,55 @@ msgstr "Količina vaših žetonov sklada:"
 msgid "Your transaction cost will be much higher as it includes the gas to create the pool."
 msgstr "Cena vaše transakcije bo precej višja, ker vsebuje plin (gas) za ustvarjenje sklada."
 
-#: src/components/TransactionSettings/index.tsx
-msgid "Your transaction may be frontrun"
-msgstr "Možno je, da je bila vaša transakcija podvržena t.i. \"front-runningu\"."
+#: src/components/Settings/MaxSlippageSettings/index.tsx
+msgid "Your transaction may be frontrun and result in an unfavorable trade."
+msgstr "Vaša transakcija je lahko prva in povzroči neugodno trgovanje."
 
-#: src/components/TransactionSettings/index.tsx
-msgid "Your transaction may fail"
-msgstr "Vaša transakcija bo morda spodletela"
-
-#: src/components/TransactionSettings/index.tsx
+#: src/components/Settings/TransactionDeadlineSettings/index.tsx
 msgid "Your transaction will revert if it is pending for more than this period of time."
 msgstr "Vaša transakcija bo stornirana, če se v tem časovnem obdobju ne izvrši."
 
-#: src/components/TransactionSettings/index.tsx
+#: src/components/Settings/MaxSlippageSettings/index.tsx
 msgid "Your transaction will revert if the price changes unfavorably by more than this percentage."
 msgstr "Vaša transakcija bo stornirana, če se cena spremeni za več kot ta odstotek v neugodni smeri."
 
-#: src/components/WalletDropdown/TransactionMenu.tsx
-msgid "Your transactions will appear here"
-msgstr "Vaše transakcije bodo prikazane tukaj"
-
-#: src/components/AccountDetails/index.tsx
-msgid "Your transactions will appear here..."
-msgstr "Vaše transakcije bodo prikazane tukaj ..."
-
-#: src/pages/Earn/Manage.tsx
-msgid "Your unclaimed UNI"
-msgstr "Vaši neprevzeti UNI"
+#: src/components/NavBar/ChainSelector.tsx
+msgid "Your wallet's current network is unsupported."
+msgstr "Trenutno omrežje vaše denarnice ni podprto."
 
 #: src/components/Tokens/TokenDetails/MobileBalanceSummaryFooter.tsx
 msgid "Your {0} balance"
 msgstr "Vaše stanje {0}"
 
-#: src/components/swap/AdvancedSwapDetails.tsx
-msgid "after slippage"
-msgstr "po zdrsu"
-
-#: src/components/AccountDetailsV2/TransactionBody.tsx
-#: src/components/AccountDetailsV2/TransactionBody.tsx
-#: src/components/AccountDetailsV2/TransactionBody.tsx
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseLocal.ts
 msgid "and"
 msgstr "in"
+
+#: src/components/WalletModal/PrivacyPolicyNotice.tsx
+msgid "and consent to its"
+msgstr "in privolite v njeno"
+
+#: src/nft/components/card/media.tsx
+msgid "available yet"
+msgstr "še na voljo"
+
+#: src/nft/components/profile/list/PriceTextInput.tsx
+msgid "below floor price."
+msgstr "pod spodnjo ceno."
+
+#: src/nft/components/profile/list/Modal/BelowFloorWarningModal.tsx
+msgid "below the collection’s floor price. Are you sure you want to continue?"
+msgstr "pod najnižjo ceno zbirke. Ste prepričani, da želite nadaljevati?"
 
 #: src/components/ConnectedAccountBlocked/index.tsx
 msgid "blocked activities"
 msgstr "blokiranimi dejanji."
 
-#: src/components/Settings/index.tsx
-msgid "confirm"
-msgstr "potrdi"
+#: src/nft/components/profile/list/RoyaltyTooltip.tsx
+msgid "fee"
+msgstr "pristojbina"
 
-#: src/components/AccountDetailsV2/TransactionBody.tsx
-msgid "failed"
-msgstr "ni uspelo"
-
-#: src/components/AccountDetailsV2/TransactionBody.tsx
-msgid "fees"
-msgstr "pristojbine"
-
-#: src/components/AccountDetailsV2/TransactionBody.tsx
-#: src/components/AccountDetailsV2/TransactionBody.tsx
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseLocal.ts
 msgid "for"
 msgstr "za"
 
@@ -2550,25 +3144,37 @@ msgstr "za"
 msgid "for {0}"
 msgstr "za {0}"
 
-#: src/components/Polling/index.tsx
-msgid "gwei"
-msgstr "gwei"
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+msgid "from"
+msgstr "od"
 
 #: src/components/Polling/ChainConnectivityWarning.tsx
 msgid "here."
 msgstr "tukaj."
 
-#: src/components/TransactionSettings/index.tsx
+#: src/components/Settings/TransactionDeadlineSettings/index.tsx
 msgid "minutes"
 msgstr "minut"
 
-#: src/components/WalletDropdown/AuthenticatedHeader.tsx
+#: src/nft/utils/time.ts
+msgid "months"
+msgstr "mesecih"
+
+#: src/components/AccountDrawer/AuthenticatedHeader.tsx
 msgid "reward"
 msgstr "nagrada"
 
-#: src/components/AccountDetailsV2/TransactionBody.tsx
+#: src/components/FiatOnrampModal/index.tsx
+msgid "something went wrong!"
+msgstr "nekaj je šlo narobe!"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
 msgid "to"
 msgstr "do"
+
+#: src/nft/components/profile/list/ListingButton.tsx
+msgid "{0, plural, =1 {Resolve issue} other {{1}}}"
+msgstr "{0, plural, =1 {Rešite težavo} other {{1}}}"
 
 #: src/constants/tokenSafety.tsx
 msgid "{0, plural, =1 {This token isn't traded on leading U.S. centralized exchanges or frequently swapped on Uniswap.} other {These tokens aren't traded on leading U.S. centralized exchanges or frequently swapped on Uniswap.}}"
@@ -2582,8 +3188,19 @@ msgstr "{0, plural, =1 {S tem žetonom se ne trguje na vodilnih centraliziranih 
 msgid "{0, plural, =1 {You can't trade this token using the Uniswap App.} other {You can't trade these tokens using the Uniswap App.}}"
 msgstr "{0, plural, =1 {S tem žetonom ne morete trgovati v aplikaciji Uniswap.} 2 {S tema žetonoma ne morete trgovati v aplikaciji Uniswap.} other {S temi žetoni ne morete trgovati v aplikaciji Uniswap.}}"
 
+#: src/nft/components/profile/list/Modal/ListModalSection.tsx
+msgid "{0, plural, =1 {listing} other {listings}}"
+msgstr "{0, plural, =1 {seznam} other {oglasi}}"
+
+#: src/nft/components/profile/list/Modal/BelowFloorWarningModal.tsx
+msgid "{0, plural, =1 {{1}} other {{2}}}"
+msgstr "{0, plural, =1 {{1}} other {{2}}}"
+
+#: src/components/CurrencyInputPanel/FiatValue.tsx
+#: src/components/ErrorBoundary/index.tsx
 #: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx
+#: src/nft/components/bag/BagFooter.tsx
 msgid "{0}"
 msgstr "{0}"
 
@@ -2591,19 +3208,10 @@ msgstr "{0}"
 msgid "{0} %"
 msgstr "{0} %"
 
-#: src/components/PositionListItem/index.tsx
-#: src/components/PositionListItem/index.tsx
-msgid "{0} <0/> per <1/>"
-msgstr "{0} <0/> na <1/>"
-
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "{0} Deposited"
 msgstr "Položeno {0}"
-
-#: src/components/earn/PoolCard.tsx
-msgid "{0} ETH"
-msgstr "{0} ETH"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
@@ -2612,33 +3220,24 @@ msgstr "{0} ETH"
 msgid "{0} Fees Earned:"
 msgstr "Prislužene provizije pri {0}:"
 
+#: src/nft/components/profile/list/Modal/BelowFloorWarningModal.tsx
+msgid "{0} NFTs are listed significantly"
+msgstr "{0} NFT-jev je pomembno navedenih"
+
 #: src/components/Web3Status/index.tsx
 msgid "{0} Pending"
 msgstr "{0} v teku"
 
+#: src/utils/swapErrorToUserReadableMessage.tsx
+msgid "{0} Try increasing your slippage tolerance.\n"
+"Note: fee-on-transfer and rebase tokens are incompatible with Uniswap V3."
+msgstr "{0} Poskusite povečati toleranco proti zdrsu.\n"
+"Opomba: žetoni za plačilo ob prenosu in rebase niso združljivi z Uniswap V3."
+
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/AddressClaimModal.tsx
-#: src/components/claim/ClaimModal.tsx
-#: src/components/claim/ClaimModal.tsx
-#: src/components/claim/ClaimModal.tsx
 msgid "{0} UNI"
 msgstr "{0} UNI"
-
-#: src/components/earn/PoolCard.tsx
-#: src/components/earn/PoolCard.tsx
-#: src/components/earn/StakingModal.tsx
-#: src/pages/Earn/Manage.tsx
-#: src/pages/Earn/Manage.tsx
-msgid "{0} UNI / week"
-msgstr "{0} UNI / teden"
-
-#: src/components/earn/StakingModal.tsx
-msgid "{0} UNI-V2"
-msgstr "{0} UNI-V2"
-
-#: src/pages/Earn/Manage.tsx
-msgid "{0} UNI-V2 LP tokens available"
-msgstr "Na voljo {0} žetonov LP UNI-V2"
 
 #: src/components/vote/VoteModal.tsx
 msgid "{0} Votes"
@@ -2660,7 +3259,6 @@ msgstr "{0} na {1}"
 msgid "{0} {1} Price:"
 msgstr "Cena {0} {1}:"
 
-#: src/components/CurrencyInputPanel/FiatValue.tsx
 #: src/components/FeeSelector/FeeOption.tsx
 #: src/components/PositionListItem/index.tsx
 #: src/components/PositionPreview/index.tsx
@@ -2684,9 +3282,9 @@ msgstr "{0}% sklad"
 msgid "{0}% select"
 msgstr "{0}% izberi"
 
-#: src/pages/Earn/Manage.tsx
-msgid "{0}-{1} Liquidity Mining"
-msgstr "Rudarjenje likvidnosti z {0}-{1}"
+#: src/components/Settings/MenuButton/index.tsx
+msgid "{0}% slippage"
+msgstr "{0}% zdrs"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "{0}/{1} LP NFT"
@@ -2696,13 +3294,53 @@ msgstr "LP NFT {0}/{1}"
 msgid "{0}/{1} LP Tokens"
 msgstr "Likvidnostni žetoni {0}/{1}"
 
-#: src/components/claim/ClaimModal.tsx
-msgid "{SOCKS_AMOUNT} UNI"
-msgstr "{SOCKS_AMOUNT} UNI"
+#: src/components/Settings/TransactionDeadlineSettings/index.tsx
+msgid "{0}m"
+msgstr "{0}m"
 
-#: src/components/claim/ClaimModal.tsx
-msgid "{USER_AMOUNT} UNI"
-msgstr "{USER_AMOUNT} UNI"
+#: src/nft/components/profile/list/SetDurationModal.tsx
+msgid "{amount, plural, =1 {day} other {days}}"
+msgstr "{amount, plural, =1 {dan} other {dnevi}}"
+
+#: src/nft/components/profile/list/SetDurationModal.tsx
+msgid "{amount, plural, =1 {hour} other {hours}}"
+msgstr "{amount, plural, =1 {ura} other {ure}}"
+
+#: src/nft/components/profile/list/SetDurationModal.tsx
+msgid "{amount, plural, =1 {month} other {months}}"
+msgstr "{amount, plural, =1 {mesec} other {meseci}}"
+
+#: src/nft/components/profile/list/SetDurationModal.tsx
+msgid "{amount, plural, =1 {week} other {weeks}}"
+msgstr "{amount, plural, =1 {teden} other {tednov}}"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseLocal.ts
+msgid "{baseSymbol} and {quoteSymbol}"
+msgstr "{baseSymbol} in {quoteSymbol}"
+
+#: src/nft/utils/time.ts
+msgid "{i, plural, one {day} other {days}}"
+msgstr "{i, plural, one {dan} other {dnevi}}"
+
+#: src/nft/utils/time.ts
+msgid "{i, plural, one {hour} other {hours}}"
+msgstr "{i, plural, one {ura} other {ure}}"
+
+#: src/nft/utils/time.ts
+msgid "{i, plural, one {minute} other {minutes}}"
+msgstr "{i, plural, one {minuto} other {minut}}"
+
+#: src/nft/utils/time.ts
+msgid "{i, plural, one {month} other {months}}"
+msgstr "{i, plural, one {mesec} other {meseci}}"
+
+#: src/nft/utils/time.ts
+msgid "{i, plural, one {second} other {seconds}}"
+msgstr "{i, plural, one {drugič} other {sekund}}"
+
+#: src/nft/utils/time.ts
+msgid "{i, plural, one {week} other {weeks}}"
+msgstr "{i, plural, one {teden} other {tednov}}"
 
 #: src/components/Polling/ChainConnectivityWarning.tsx
 msgid "{label} might be down right now, or you may have lost your network connection."
@@ -2719,6 +3357,10 @@ msgstr "{percentForSlider} %"
 #: src/components/InputStepCounter/InputStepCounter.tsx
 msgid "{tokenB} per {tokenA}"
 msgstr "{tokenB} na {tokenA}"
+
+#: src/nft/components/profile/list/Modal/ListModalSection.tsx
+msgid "{uniqueCollections, plural, =1 {collection} other {collections}}"
+msgstr "{uniqueCollections, plural, =1 {zbirka} other {zbirke}}"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "← Back to Pools"

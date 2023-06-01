@@ -1,26 +1,27 @@
 import { OpacityHoverState, ScrollBarStyles } from 'components/Common'
 import Resource from 'components/Tokens/TokenDetails/Resource'
 import { MouseoverTooltip } from 'components/Tooltip/index'
+import { NftActivityType } from 'graphql/data/__generated__/types-and-hooks'
+import { useNftActivity } from 'graphql/data/nft/NftActivity'
 import { Box } from 'nft/components/Box'
 import { reduceFilters } from 'nft/components/collection/Activity'
 import { LoadingSparkle } from 'nft/components/common/Loading/LoadingSparkle'
 import { AssetPriceDetails } from 'nft/components/details/AssetPriceDetails'
 import { Center } from 'nft/components/Flex'
-import { ActivityFetcher } from 'nft/queries/genie/ActivityFetcher'
-import { ActivityEventResponse, ActivityEventType, CollectionInfoForAsset, GenieAsset } from 'nft/types'
+import { themeVars, vars } from 'nft/css/sprinkles.css'
+import { ActivityEventType, CollectionInfoForAsset, GenieAsset } from 'nft/types'
 import { shortenAddress } from 'nft/utils/address'
-import { formatEthPrice } from 'nft/utils/currency'
+import { formatEth } from 'nft/utils/currency'
 import { isAudio } from 'nft/utils/isAudio'
 import { isVideo } from 'nft/utils/isVideo'
 import { putCommas } from 'nft/utils/putCommas'
-import { fallbackProvider, getRarityProviderLogo } from 'nft/utils/rarity'
 import { useCallback, useMemo, useReducer, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
-import { useInfiniteQuery, useQuery } from 'react-query'
 import { Link as RouterLink } from 'react-router-dom'
 import styled from 'styled-components/macro'
+import { useIsDarkMode } from 'theme/components/ThemeToggle'
 
-import AssetActivity from './AssetActivity'
+import AssetActivity, { LoadingAssetActivity } from './AssetActivity'
 import * as styles from './AssetDetails.css'
 import DetailsContainer from './DetailsContainer'
 import InfoContainer from './InfoContainer'
@@ -122,9 +123,9 @@ const ContentNotAvailable = styled.div`
   height: 450px;
 `
 
-const FilterBox = styled.div<{ isActive?: boolean }>`
+const FilterBox = styled.div<{ backgroundColor: string }>`
   box-sizing: border-box;
-  background-color: ${({ theme }) => theme.backgroundInteractive};
+  background-color: ${({ backgroundColor }) => backgroundColor};
   font-size: 14px;
   font-weight: 600;
   line-height: 14px;
@@ -133,7 +134,6 @@ const FilterBox = styled.div<{ isActive?: boolean }>`
   border-radius: 12px;
   cursor: pointer;
   box-sizing: border-box;
-  border: ${({ isActive, theme }) => (isActive ? `1px solid ${theme.accentActive}` : undefined)};
   ${OpacityHoverState};
 `
 
@@ -190,33 +190,51 @@ const initialFilterState = {
   [ActivityEventType.CancelListing]: false,
 }
 
+enum MediaType {
+  Audio = 'audio',
+  Video = 'video',
+  Image = 'image',
+  Embed = 'embed',
+}
+
 const AssetView = ({
   mediaType,
   asset,
   dominantColor,
 }: {
-  mediaType: 'image' | 'video' | 'audio'
+  mediaType: MediaType
   asset: GenieAsset
   dominantColor: [number, number, number]
 }) => {
   const style = { ['--shadow' as string]: `rgba(${dominantColor.join(', ')}, 0.5)` }
 
   switch (mediaType) {
-    case 'video':
+    case MediaType.Video:
       return <video src={asset.animationUrl} className={styles.image} autoPlay controls muted loop style={style} />
-    case 'image':
+    case MediaType.Image:
       return (
         <img className={styles.image} src={asset.imageUrl} alt={asset.name || asset.collectionName} style={style} />
       )
-    case 'audio':
+    case MediaType.Audio:
       return <AudioPlayer {...asset} dominantColor={dominantColor} />
+    case MediaType.Embed:
+      return (
+        <div className={styles.embedContainer}>
+          <iframe
+            title={asset.name ?? `${asset.collectionName} #${asset.tokenId}`}
+            src={asset.animationUrl}
+            className={styles.embed}
+            style={style}
+            frameBorder={0}
+            height="100%"
+            width="100%"
+            sandbox="allow-scripts"
+            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          />
+        </div>
+      )
   }
-}
-
-enum MediaType {
-  Audio = 'audio',
-  Video = 'video',
-  Image = 'image',
 }
 
 interface AssetDetailsProps {
@@ -244,52 +262,40 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
       return MediaType.Audio
     } else if (isVideo(asset.animationUrl ?? '')) {
       return MediaType.Video
+    } else if (asset.animationUrl) {
+      return MediaType.Embed
     }
     return MediaType.Image
   }, [asset])
 
   const { address: contractAddress, tokenId: token_id } = asset
 
-  const { data: priceData } = useQuery<ActivityEventResponse>(
-    [
-      'collectionActivity',
-      {
-        contractAddress,
-      },
-    ],
-    async ({ pageParam = '' }) => {
-      return await ActivityFetcher(
-        contractAddress,
-        {
-          token_id,
-          eventTypes: [ActivityEventType.Sale],
-        },
-        pageParam,
-        '1'
-      )
-    },
+  const { nftActivity: gqlPriceData } = useNftActivity(
     {
-      getNextPageParam: (lastPage) => {
-        return lastPage.events?.length === 25 ? lastPage.cursor : undefined
-      },
-      refetchInterval: 15000,
-      refetchIntervalInBackground: false,
-      refetchOnWindowFocus: false,
-      refetchOnMount: false,
-    }
+      activityTypes: [NftActivityType.Sale],
+      address: contractAddress,
+      tokenId: token_id,
+    },
+    1,
+    'no-cache'
   )
 
-  const lastSalePrice = priceData?.events[0]?.price ?? null
-  const formattedEthprice = formatEthPrice(lastSalePrice ?? '') || 0
-  const formattedPrice = lastSalePrice ? putCommas(formattedEthprice).toString() : null
-  const [activeFilters, filtersDispatch] = useReducer(reduceFilters, initialFilterState)
+  const weiPrice = gqlPriceData?.[0]?.price
+  const formattedPrice = weiPrice ? formatEth(parseFloat(weiPrice)) : undefined
 
+  const [activeFilters, filtersDispatch] = useReducer(reduceFilters, initialFilterState)
   const Filter = useCallback(
     function ActivityFilter({ eventType }: { eventType: ActivityEventType }) {
       const isActive = activeFilters[eventType]
+      const isDarkMode = useIsDarkMode()
 
       return (
-        <FilterBox isActive={isActive} onClick={() => filtersDispatch({ eventType })}>
+        <FilterBox
+          backgroundColor={
+            isActive ? (isDarkMode ? vars.color.gray500 : vars.color.gray200) : themeVars.colors.backgroundInteractive
+          }
+          onClick={() => filtersDispatch({ eventType })}
+        >
           {eventType === ActivityEventType.CancelListing
             ? 'Cancellations'
             : eventType.charAt(0) + eventType.slice(1).toLowerCase() + 's'}
@@ -300,50 +306,24 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
   )
 
   const {
-    data: eventsData,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    isSuccess,
-  } = useInfiniteQuery<ActivityEventResponse>(
-    [
-      'collectionActivity',
-      {
-        contractAddress,
-        activeFilters,
-        token_id,
-      },
-    ],
-    async ({ pageParam = '' }) => {
-      return await ActivityFetcher(
-        contractAddress,
-        {
-          token_id,
-          eventTypes: Object.keys(activeFilters)
-            .map((key) => key as ActivityEventType)
-            .filter((key) => activeFilters[key]),
-        },
-        pageParam
-      )
-    },
+    nftActivity,
+    hasNext: hasNextActivity,
+    loadMore: loadMoreActivities,
+    loading: activitiesAreLoading,
+    error: errorLoadingActivities,
+  } = useNftActivity(
     {
-      getNextPageParam: (lastPage) => {
-        return lastPage.events?.length === 25 ? lastPage.cursor : undefined
-      },
-      refetchInterval: 15000,
-      refetchIntervalInBackground: false,
-      refetchOnWindowFocus: false,
-      refetchOnMount: false,
-    }
+      activityTypes: Object.keys(activeFilters)
+        .map((key) => key as NftActivityType)
+        .filter((key) => activeFilters[key]),
+      address: contractAddress,
+      tokenId: token_id,
+    },
+    25
   )
 
-  const rarity = asset?.rarity?.providers?.length ? asset?.rarity?.providers?.[0] : undefined
+  const rarity = asset?.rarity?.providers?.[0]
   const [showHolder, setShowHolder] = useState(false)
-  const rarityProviderLogo = getRarityProviderLogo(rarity?.provider)
-  const events = useMemo(
-    () => (isSuccess ? eventsData?.pages.map((page) => page.events).flat() : null),
-    [isSuccess, eventsData]
-  )
 
   return (
     <Column>
@@ -366,6 +346,7 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
       </AssetPriceDetailsContainer>
       {asset.traits && (
         <InfoContainer
+          data-testid="nft-details-traits"
           primaryHeader="Traits"
           defaultOpen
           secondaryHeader={
@@ -374,11 +355,9 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
                 text={
                   <HoverContainer>
                     <HoverImageContainer>
-                      <img src={rarityProviderLogo} alt="cardLogo" width={16} />
+                      <img src="/nft/svgs/gem.svg" alt="cardLogo" width={16} />
                     </HoverImageContainer>
-                    <ContainerText>
-                      {`Ranking by ${rarity.provider === 'Genie' ? fallbackProvider : rarity.provider}`}
-                    </ContainerText>
+                    <ContainerText>Ranking by Rarity Sniper</ContainerText>
                   </HoverContainer>
                 }
                 placement="top"
@@ -395,6 +374,7 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
         primaryHeader="Activity"
         defaultOpen
         secondaryHeader={formattedPrice ? `Last Sale: ${formattedPrice} ETH` : undefined}
+        data-testid="nft-details-activity"
       >
         <>
           <ActivitySelectContainer $isHorizontalScroll>
@@ -403,31 +383,42 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
             <Filter eventType={ActivityEventType.Transfer} />
             <Filter eventType={ActivityEventType.CancelListing} />
           </ActivitySelectContainer>
-          {events && events.length > 0 ? (
+          {activitiesAreLoading ? (
+            <LoadingAssetActivity rowCount={10} />
+          ) : nftActivity && nftActivity.length > 0 ? (
             <InfiniteScroll
-              next={fetchNextPage}
-              hasMore={!!hasNextPage}
+              next={loadMoreActivities}
+              hasMore={!!hasNextActivity}
               loader={
-                isFetchingNextPage ? (
+                activitiesAreLoading && (
                   <Center>
                     <LoadingSparkle />
                   </Center>
-                ) : null
+                )
               }
-              dataLength={events?.length ?? 0}
+              dataLength={nftActivity?.length ?? 0}
               scrollableTarget="activityContainer"
             >
-              <AssetActivity eventsData={{ events }} />
+              <AssetActivity events={nftActivity} />
             </InfiniteScroll>
           ) : (
-            <EmptyActivitiesContainer>
-              <div>No activities yet</div>
-              <Link to={`/nfts/collection/${asset.address}`}>View collection items</Link>{' '}
-            </EmptyActivitiesContainer>
+            <>
+              {!errorLoadingActivities && nftActivity && (
+                <EmptyActivitiesContainer>
+                  <div>No activities yet</div>
+                  <Link to={`/nfts/collection/${asset.address}`}>View collection items</Link>{' '}
+                </EmptyActivitiesContainer>
+              )}
+            </>
           )}
         </>
       </InfoContainer>
-      <InfoContainer primaryHeader="Description" secondaryHeader={null}>
+      <InfoContainer
+        primaryHeader="Description"
+        defaultOpen
+        secondaryHeader={null}
+        data-testid="nft-details-description"
+      >
         <>
           <ByText>By </ByText>
           {asset?.creator && asset.creator?.address && (
@@ -440,7 +431,9 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
             </AddressTextLink>
           )}
 
-          <DescriptionText>{collection.collectionDescription}</DescriptionText>
+          <DescriptionText data-testid="nft-details-description-text">
+            {collection.collectionDescription}
+          </DescriptionText>
           <SocialsContainer>
             {collection.externalUrl && <Resource name="Website" link={`${collection.externalUrl}`} />}
             {collection.twitterUrl && <Resource name="Twitter" link={`https://twitter.com/${collection.twitterUrl}`} />}
@@ -448,7 +441,7 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
           </SocialsContainer>
         </>
       </InfoContainer>
-      <InfoContainer primaryHeader="Details" secondaryHeader={null}>
+      <InfoContainer primaryHeader="Details" defaultOpen secondaryHeader={null} data-testid="nft-details-asset-details">
         <DetailsContainer asset={asset} collection={collection} />
       </InfoContainer>
     </Column>

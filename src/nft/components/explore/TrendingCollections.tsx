@@ -1,4 +1,6 @@
 import { OpacityHoverState } from 'components/Common'
+import { HistoryDuration } from 'graphql/data/__generated__/types-and-hooks'
+import { useTrendingCollections } from 'graphql/data/nft/TrendingCollections'
 import ms from 'ms.macro'
 import { CollectionTableColumn, Denomination, TimePeriod, VolumeType } from 'nft/types'
 import { fetchPrice } from 'nft/utils'
@@ -7,7 +9,6 @@ import { useQuery } from 'react-query'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
-import { fetchTrendingCollections } from '../../queries'
 import CollectionTable from './CollectionTable'
 
 const timeOptions: { label: string; value: TimePeriod }[] = [
@@ -21,18 +22,15 @@ const ExploreContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  max-width: 1200px;
-
-  padding-left: 16px;
-  padding-right: 16px;
-  padding-top: 36px;
+  max-width: ${({ theme }) => theme.maxWidth};
+  padding: 0 16px;
 `
 
 const StyledHeader = styled.div`
   color: ${({ theme }) => theme.textPrimary};
   font-size: 36px;
   line-height: 44px;
-  weight: 500;
+  font-weight: 500;
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
     font-size: 20px;
@@ -72,21 +70,28 @@ const StyledSelectorText = styled(ThemedText.SubHeader)<{ active: boolean }>`
   color: ${({ theme, active }) => (active ? theme.textPrimary : theme.textSecondary)};
 `
 
+function convertTimePeriodToHistoryDuration(timePeriod: TimePeriod): HistoryDuration {
+  switch (timePeriod) {
+    case TimePeriod.OneDay:
+      return HistoryDuration.Day
+    case TimePeriod.SevenDays:
+      return HistoryDuration.Week
+    case TimePeriod.ThirtyDays:
+      return HistoryDuration.Month
+    case TimePeriod.AllTime:
+      return HistoryDuration.Max
+    default:
+      return HistoryDuration.Day
+  }
+}
+
 const TrendingCollections = () => {
   const [timePeriod, setTimePeriod] = useState<TimePeriod>(TimePeriod.OneDay)
   const [isEthToggled, setEthToggled] = useState(true)
 
-  const { isSuccess, data } = useQuery(
-    ['trendingCollections', timePeriod],
-    () => {
-      return fetchTrendingCollections({ volumeType: 'eth', timePeriod, size: 100 })
-    },
-    {
-      refetchOnReconnect: false,
-      refetchOnWindowFocus: false,
-      refetchOnMount: false,
-      refetchInterval: 5000,
-    }
+  const { data: trendingCollections, loading: trendingCollectionsAreLoading } = useTrendingCollections(
+    100,
+    convertTimePeriodToHistoryDuration(timePeriod)
   )
 
   const { data: usdPrice } = useQuery(['fetchPrice', {}], () => fetchPrice(), {
@@ -96,9 +101,9 @@ const TrendingCollections = () => {
     refetchInterval: ms`1m`,
   })
 
-  const trendingCollections = useMemo(() => {
-    if (isSuccess && data) {
-      return data.map((d) => ({
+  const trendingCollectionColumns = useMemo(() => {
+    if (!trendingCollectionsAreLoading && trendingCollections) {
+      return trendingCollections.map((d) => ({
         ...d,
         collection: {
           name: d.name,
@@ -117,7 +122,6 @@ const TrendingCollections = () => {
         },
         owners: {
           value: d.owners,
-          change: d.ownersChange,
         },
         sales: d.sales,
         totalSupply: d.totalSupply,
@@ -125,7 +129,7 @@ const TrendingCollections = () => {
         usdPrice,
       }))
     } else return [] as CollectionTableColumn[]
-  }, [data, isSuccess, isEthToggled, usdPrice])
+  }, [trendingCollections, trendingCollectionsAreLoading, isEthToggled, usdPrice])
 
   return (
     <ExploreContainer>
@@ -159,7 +163,7 @@ const TrendingCollections = () => {
           </Selector>
         </Filter>
       </FiltersRow>
-      <CollectionTable data={trendingCollections} timePeriod={timePeriod} />
+      <CollectionTable data={trendingCollectionColumns} timePeriod={timePeriod} />
     </ExploreContainer>
   )
 }

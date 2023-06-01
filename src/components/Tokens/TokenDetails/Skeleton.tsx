@@ -1,16 +1,16 @@
-import { WidgetSkeleton } from 'components/Widget'
-import { WIDGET_WIDTH } from 'components/Widget'
+import { SwapSkeleton } from 'components/swap/SwapSkeleton'
 import { ArrowLeft } from 'react-feather'
 import { useParams } from 'react-router-dom'
 import styled, { useTheme } from 'styled-components/macro'
 import { textFadeIn } from 'theme/styles'
 
 import { LoadingBubble } from '../loading'
-import { LogoContainer } from '../TokenTable/TokenRow'
 import { AboutContainer, AboutHeader } from './About'
 import { BreadcrumbNavLink } from './BreadcrumbNavLink'
-import { DeltaContainer, TokenPrice } from './PriceChart'
+import { TokenPrice } from './PriceChart'
 import { StatPair, StatsWrapper, StatWrapper } from './StatsSection'
+
+const SWAP_COMPONENT_WIDTH = 360
 
 export const Hr = styled.hr`
   background-color: ${({ theme }) => theme.backgroundOutline};
@@ -25,7 +25,7 @@ export const TokenDetailsLayout = styled.div`
 
   @media screen and (min-width: ${({ theme }) => theme.breakpoint.sm}px) {
     gap: 16px;
-    padding: 0 16px;
+    padding: 0 16px 52px;
   }
   @media screen and (min-width: ${({ theme }) => theme.breakpoint.md}px) {
     gap: 40px;
@@ -44,7 +44,7 @@ export const RightPanel = styled.div`
   display: none;
   flex-direction: column;
   gap: 20px;
-  width: ${WIDGET_WIDTH}px;
+  width: ${SWAP_COMPONENT_WIDTH}px;
 
   @media screen and (min-width: ${({ theme }) => theme.breakpoint.lg}px) {
     display: flex;
@@ -62,7 +62,6 @@ const LoadingChartContainer = styled.div`
   display: flex;
   flex-direction: row;
   align-items: flex-end;
-  border-bottom: 1px solid ${({ theme }) => theme.backgroundOutline};
   height: 100%;
   margin-bottom: 44px;
   padding-bottom: 66px;
@@ -73,6 +72,8 @@ export const TokenInfoContainer = styled.div`
   justify-content: space-between;
   align-items: center;
   margin-bottom: 4px;
+  ${textFadeIn};
+  animation-duration: ${({ theme }) => theme.transition.duration.medium};
 `
 export const TokenNameCell = styled.div`
   display: flex;
@@ -80,7 +81,6 @@ export const TokenNameCell = styled.div`
   font-size: 20px;
   line-height: 28px;
   align-items: center;
-  ${textFadeIn}
 `
 /* Loading state bubbles */
 const DetailBubble = styled(LoadingBubble)`
@@ -97,31 +97,32 @@ const TokenLogoBubble = styled(DetailBubble)`
   border-radius: 50%;
 `
 const TitleBubble = styled(DetailBubble)`
-  width: 140px;
+  width: 136px;
 `
 const PriceBubble = styled(SquaredBubble)`
-  margin-top: 2px;
-  height: 38px;
+  margin-top: 4px;
+  height: 40px;
 `
-const DeltaBubble = styled(DetailBubble)`
-  margin-top: 6px;
-  width: 96px;
-  height: 20px;
-`
+
 const SectionBubble = styled(SquaredBubble)`
-  width: 96px;
+  width: 120px;
 `
 const StatTitleBubble = styled(DetailBubble)`
-  width: 25%;
+  width: 80px;
   margin-bottom: 4px;
 `
 const StatBubble = styled(SquaredBubble)`
-  width: 50%;
+  width: 116px;
 `
 const WideBubble = styled(DetailBubble)`
   margin-bottom: 6px;
   width: 100%;
 `
+
+const ThinTitleBubble = styled(WideBubble)`
+  width: 120px;
+`
+
 const HalfWideBubble = styled(WideBubble)`
   width: 50%;
 `
@@ -131,6 +132,11 @@ const StatsLoadingContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
 `
+
+const ExtraDetailsContainer = styled.div`
+  padding-top: 24px;
+`
+
 const ChartAnimation = styled.div`
   animation: wave 8s cubic-bezier(0.36, 0.45, 0.63, 0.53) infinite;
   display: flex;
@@ -165,9 +171,6 @@ export function LoadingChart() {
       <TokenPrice>
         <PriceBubble />
       </TokenPrice>
-      <DeltaContainer>
-        <DeltaBubble />
-      </DeltaContainer>
       <Space heightSize={6} />
       <LoadingChartContainer>
         <div>
@@ -219,14 +222,12 @@ export default function TokenDetailsSkeleton() {
   const { chainName } = useParams<{ chainName?: string }>()
   return (
     <LeftPanel>
-      <BreadcrumbNavLink to={{ chainName } ? `/tokens/${chainName}` : `/explore`}>
+      <BreadcrumbNavLink to={chainName ? `/tokens/${chainName}` : `/explore`}>
         <ArrowLeft size={14} /> Tokens
       </BreadcrumbNavLink>
       <TokenInfoContainer>
         <TokenNameCell>
-          <LogoContainer>
-            <TokenLogoBubble />
-          </LogoContainer>
+          <TokenLogoBubble />
           <TitleBubble />
         </TokenNameCell>
       </TokenInfoContainer>
@@ -242,7 +243,15 @@ export default function TokenDetailsSkeleton() {
       </AboutContainer>
       <WideBubble />
       <WideBubble />
-      <HalfWideBubble />
+      <HalfWideBubble style={{ marginBottom: '24px' }} />
+      <ExtraDetailsContainer>
+        <ThinTitleBubble />
+        <HalfWideBubble />
+      </ExtraDetailsContainer>
+      <ExtraDetailsContainer>
+        <ThinTitleBubble />
+        <HalfWideBubble />
+      </ExtraDetailsContainer>
     </LeftPanel>
   )
 }
@@ -252,7 +261,7 @@ export function TokenDetailsPageSkeleton() {
     <TokenDetailsLayout>
       <TokenDetailsSkeleton />
       <RightPanel>
-        <WidgetSkeleton />
+        <SwapSkeleton />
       </RightPanel>
     </TokenDetailsLayout>
   )
