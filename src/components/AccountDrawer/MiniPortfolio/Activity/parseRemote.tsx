@@ -1,5 +1,5 @@
 import { t } from '@lingui/macro'
-import { formatNumberOrString, NumberType } from '@uniswap/conedison/format'
+import { formatFiatPrice, formatNumberOrString, NumberType } from '@uniswap/conedison/format'
 import { SupportedChainId } from '@uniswap/sdk-core'
 import moonpayLogoSrc from 'assets/svg/moonpay.svg'
 import { NONFUNGIBLE_POSITION_MANAGER_ADDRESSES, UNI_ADDRESS } from 'constants/addresses'
@@ -117,9 +117,7 @@ function getSwapTitle(sent: TokenTransferPartsFragment, received: TokenTransferP
 function formatTransactedValue(transactedValue: TokenTransferPartsFragment['transactedValue']): string {
   if (!transactedValue) return '-'
   const price = transactedValue?.currency === Currency.Usd ? transactedValue.value ?? undefined : undefined
-  return price
-    ? new Intl.NumberFormat('en-US', { style: 'currency', currency: transactedValue?.currency }).format(price)
-    : '-'
+  return formatFiatPrice(price)
 }
 
 function parseSwap(changes: TransactionChanges) {
