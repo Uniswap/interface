@@ -112,7 +112,7 @@ function getSwapTitle(sent: TokenTransferPartsFragment, received: TokenTransferP
 /**
  *
  * @param transactedValue Transacted value amount from TokenTransfer API response
- * @returns parsed USD value as a number if currency is of type USD
+ * @returns parsed & formatted USD value as a string if currency is of type USD
  */
 function formatTransactedValue(transactedValue: TokenTransferPartsFragment['transactedValue']): string {
   if (!transactedValue) return '-'
