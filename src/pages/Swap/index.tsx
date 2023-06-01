@@ -252,6 +252,13 @@ export function Swap({
           outputCurrencyId: combinedInitialState.OUTPUT.currencyId ?? undefined,
         })
       )
+      // reset local state
+      setSwapState({
+        tradeToConfirm: undefined,
+        swapError: undefined,
+        showConfirm: false,
+        txHash: undefined,
+      })
     }
   }, [connectedChainId, prefilledState, previousConnectedChainId, previousPrefilledState])
 
@@ -337,13 +344,11 @@ export function Swap({
   const [{ showConfirm, tradeToConfirm, swapError, txHash }, setSwapState] = useState<{
     showConfirm: boolean
     tradeToConfirm?: InterfaceTrade
-    attemptingTxn: boolean
     swapError?: Error
     txHash?: string
   }>({
     showConfirm: false,
     tradeToConfirm: undefined,
-    attemptingTxn: false,
     swapError: undefined,
     txHash: undefined,
   })
@@ -397,7 +402,6 @@ export function Swap({
     }
     setSwapState((currentState) => ({
       ...currentState,
-      attemptingTxn: true,
       swapError: undefined,
       txHash: undefined,
     }))
@@ -405,7 +409,6 @@ export function Swap({
       .then((hash) => {
         setSwapState((currentState) => ({
           ...currentState,
-          attemptingTxn: false,
           swapError: undefined,
           txHash: hash,
         }))
@@ -430,7 +433,6 @@ export function Swap({
       .catch((error) => {
         setSwapState((currentState) => ({
           ...currentState,
-          attemptingTxn: false,
           swapError: error,
           txHash: undefined,
         }))
@@ -701,7 +703,6 @@ export function Swap({
                 onClick={() => {
                   setSwapState({
                     tradeToConfirm: trade,
-                    attemptingTxn: false,
                     swapError: undefined,
                     showConfirm: true,
                     txHash: undefined,
