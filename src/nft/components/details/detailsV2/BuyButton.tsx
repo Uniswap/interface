@@ -8,7 +8,9 @@ import { ButtonPrimary } from 'components/Button'
 import { ButtonGray } from 'components/Button'
 import Loader from 'components/Icons/LoadingSpinner'
 import Row from 'components/Row'
+import { ActivationStatus, useActivationState } from 'connection/activate'
 import { useNftBalance } from 'graphql/data/nft/NftBalance'
+import { atom, useAtom } from 'jotai'
 import { AddToBagIcon, CondensedBagIcon } from 'nft/components/icons'
 import { useBag, useProfilePageState, useSellAsset } from 'nft/hooks'
 import { useBuyAssetCallback } from 'nft/hooks/useFetchAssets'
@@ -85,17 +87,23 @@ const Price = styled.div`
   color: ${({ theme }) => theme.accentTextLightSecondary};
 `
 
+const connectingToWalletAtom = atom<boolean>(false)
+connectingToWalletAtom.onMount = (setAtom) => {
+  setAtom(false)
+}
+
 export const BuyButton = ({ asset, isOnDataPage }: { asset: GenieAsset; isOnDataPage?: boolean }) => {
   const { account } = useWeb3React()
   const [accountDrawerOpen, toggleWalletDrawer] = useAccountDrawer()
   const { fetchAndPurchaseSingleAsset, isLoading: isLoadingRoute } = useBuyAssetCallback()
-  const [connectingToWallet, setConnectingToWallet] = useState(false)
   const [addToBagExpanded, setAddToBagExpanded] = useState(false)
   const navigate = useNavigate()
   const trace = useTrace()
   const setSellPageState = useProfilePageState((state) => state.setProfilePageState)
   const selectSellAsset = useSellAsset((state) => state.selectSellAsset)
   const resetSellAssets = useSellAsset((state) => state.reset)
+  const [connectingToWallet, updateConnectingToWallet] = useAtom(connectingToWalletAtom)
+  const { activationState } = useActivationState()
 
   const { walletAssets } = useNftBalance(account ?? '', [], [{ address: asset.address, tokenId: asset.tokenId }], 1)
   const walletAsset = walletAssets?.[0]
@@ -133,19 +141,28 @@ export const BuyButton = ({ asset, isOnDataPage }: { asset: GenieAsset; isOnData
       if (!accountDrawerOpen) {
         toggleWalletDrawer()
       }
-      setConnectingToWallet(true)
-      setTimeout(() => setConnectingToWallet(false), 20000)
+      updateConnectingToWallet(true)
+      setTimeout(() => updateConnectingToWallet(false), 30000)
     } else {
       fetchAndPurchaseSingleAsset(asset)
     }
-  }, [account, accountDrawerOpen, asset, fetchAndPurchaseSingleAsset, toggleWalletDrawer])
+  }, [account, accountDrawerOpen, asset, fetchAndPurchaseSingleAsset, toggleWalletDrawer, updateConnectingToWallet])
+
+  console.log(connectingToWallet)
 
   useEffect(() => {
-    if (connectingToWallet && account) {
-      setConnectingToWallet(false)
+    if (connectingToWallet && account && activationState.status === ActivationStatus.IDLE) {
+      updateConnectingToWallet(false)
       fetchAndPurchaseSingleAsset(asset)
     }
-  }, [connectingToWallet, account, fetchAndPurchaseSingleAsset, asset])
+  }, [
+    connectingToWallet,
+    account,
+    fetchAndPurchaseSingleAsset,
+    asset,
+    updateConnectingToWallet,
+    activationState.status,
+  ])
 
   if (ownsAsset) {
     return (
