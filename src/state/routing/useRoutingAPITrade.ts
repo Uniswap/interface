@@ -3,10 +3,12 @@ import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { IMetric, MetricLoggerUnit, setGlobalMetric } from '@uniswap/smart-order-router'
 import { sendTiming } from 'components/analytics'
 import { AVERAGE_L1_BLOCK_TIME } from 'constants/chainInfo'
+import { useRoutingAPIV2Enabled } from 'featureFlags/flags/unifiedRouter'
 import { useRoutingAPIArguments } from 'lib/hooks/routing/useRoutingAPIArguments'
 import ms from 'ms.macro'
 import { useMemo } from 'react'
 import { INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference, useGetQuoteQuery } from 'state/routing/slice'
+import { useGetQuoteQuery as useGetQuoteQueryV2 } from 'state/routing/v2Slice'
 
 import { InterfaceTrade, QuoteState, TradeState } from './types'
 
@@ -45,16 +47,33 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
     routerPreference,
   })
 
+  const shouldUseRoutingApiV2 = useRoutingAPIV2Enabled()
+
   const {
-    isError,
-    data: tradeResult,
-    currentData: currentTradeResult,
-  } = useGetQuoteQuery(queryArgs ?? skipToken, {
+    isError: isLegacyAPIError,
+    data: legacyAPITradeResult,
+    currentData: currentLegacyAPITradeResult,
+  } = useGetQuoteQuery(shouldUseRoutingApiV2 ? skipToken : queryArgs ?? skipToken, {
     // Price-fetching is informational and costly, so it's done less frequently.
     pollingInterval: routerPreference === INTERNAL_ROUTER_PREFERENCE_PRICE ? ms`1m` : AVERAGE_L1_BLOCK_TIME,
     // If latest quote from cache was fetched > 2m ago, instantly repoll for another instead of waiting for next poll period
     refetchOnMountOrArgChange: 2 * 60,
   })
+
+  const {
+    isError: isV2APIError,
+    data: v2TradeResult,
+    currentData: currentV2TradeResult,
+  } = useGetQuoteQueryV2(!shouldUseRoutingApiV2 ? skipToken : queryArgs ?? skipToken, {
+    // Price-fetching is informational and costly, so it's done less frequently.
+    pollingInterval: routerPreference === INTERNAL_ROUTER_PREFERENCE_PRICE ? ms`1m` : AVERAGE_L1_BLOCK_TIME,
+    // If latest quote from cache was fetched > 2m ago, instantly repoll for another instead of waiting for next poll period
+    refetchOnMountOrArgChange: 2 * 60,
+  })
+
+  const tradeResult = v2TradeResult ?? legacyAPITradeResult
+  const currentTradeResult = currentLegacyAPITradeResult ?? currentV2TradeResult
+  const isError = isLegacyAPIError || isV2APIError
 
   const isCurrent = currentTradeResult === tradeResult
 
