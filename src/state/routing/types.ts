@@ -69,7 +69,7 @@ export interface QuoteData {
   routeString: string
 }
 
-export type URAQuoteData = {
+export type QuoteDataV2 = {
   routing: RouterPreference.API
   quote: QuoteData
 }

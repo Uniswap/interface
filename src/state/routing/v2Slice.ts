@@ -5,7 +5,7 @@ import ms from 'ms.macro'
 import { trace } from 'tracing/trace'
 
 import { GetQuoteArgs, INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference } from './slice'
-import { QuoteState, TradeResult, URAQuoteData } from './types'
+import { QuoteDataV2, QuoteState, TradeResult } from './types'
 import { getRouter, isAPIAcceptedRouterPreference, isExactInput, transformRoutesToTrade } from './utils'
 
 const CLIENT_PARAMS = {
@@ -18,10 +18,10 @@ const CLASSIC_SWAP_QUERY_PARAMS = {
   routingType: 'CLASSIC',
 }
 
-export const uraRoutingApi = createApi({
-  reducerPath: 'ura-routing',
+export const routingApiV2 = createApi({
+  reducerPath: 'routingApiV2',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'https://4uemel8n4g.execute-api.us-east-2.amazonaws.com/prod',
+    baseUrl: 'https://api.uniswap.org/v2/',
   }),
   endpoints: (build) => ({
     getQuote: build.query<TradeResult, GetQuoteArgs>({
@@ -89,8 +89,8 @@ export const uraRoutingApi = createApi({
               }
             }
 
-            const uraQuoteData = response.data as URAQuoteData
-            const tradeResult = transformRoutesToTrade(args, uraQuoteData.quote)
+            const quoteData = response.data as QuoteDataV2
+            const tradeResult = transformRoutesToTrade(args, quoteData.quote)
 
             return { data: tradeResult }
           } catch (error: any) {
@@ -119,4 +119,4 @@ export const uraRoutingApi = createApi({
   }),
 })
 
-export const { useGetQuoteQuery } = uraRoutingApi
+export const { useGetQuoteQuery } = routingApiV2
