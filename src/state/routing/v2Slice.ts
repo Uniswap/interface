@@ -27,7 +27,7 @@ export const routingApiV2 = createApi({
     getQuote: build.query<TradeResult, GetQuoteArgs>({
       async onQueryStarted(args: GetQuoteArgs, { queryFulfilled }) {
         trace(
-          'quote',
+          'quote-v2',
           async ({ setTraceError, setTraceStatus }) => {
             try {
               await queryFulfilled
@@ -95,7 +95,7 @@ export const routingApiV2 = createApi({
             return { data: tradeResult }
           } catch (error: any) {
             console.warn(
-              `GetQuote failed on Unified Routing API, falling back to client: ${
+              `GetQuote failed on API v2, falling back to client: ${
                 error?.message ?? error?.detail ?? error
               }`
             )
