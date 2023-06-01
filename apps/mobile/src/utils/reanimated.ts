@@ -346,8 +346,7 @@ export function numberToLocaleStringWorklet(
     if (format) {
       sNum = renderFormat(format, {
         num: sNum,
-        code:
-          options.currencyDisplay === 'code' || !symbol ? options.currency.toUpperCase() : symbol,
+        code: options.currencyDisplay === 'code' || !symbol ? options.currency : symbol,
       })
     }
   }

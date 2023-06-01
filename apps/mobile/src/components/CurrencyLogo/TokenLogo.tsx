@@ -54,7 +54,7 @@ export function TokenLogo({
           px="spacing8"
           width={size}>
           <Text adjustsFontSizeToFit color="textPrimary" numberOfLines={1} textAlign="center">
-            {symbol?.slice(0, 3).toUpperCase()}
+            {symbol?.slice(0, 3)}
           </Text>
         </Box>
       )}

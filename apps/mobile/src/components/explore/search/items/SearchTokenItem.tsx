@@ -87,7 +87,7 @@ export function SearchTokenItem({ token, searchContext }: SearchTokenItemProps):
           </Flex>
           <Flex centered row gap="spacing8">
             <Text color="textSecondary" numberOfLines={1} variant="subheadSmall">
-              {symbol.toUpperCase() ?? ''}
+              {symbol}
             </Text>
           </Flex>
         </Flex>
