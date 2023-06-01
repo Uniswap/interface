@@ -19,8 +19,6 @@ export interface UserState {
 
   userLocale: SupportedLocale | null
 
-  userExpertMode: boolean
-
   // which router should be used to calculate trades
   userRouterPreference: RouterPreference
 
@@ -63,7 +61,6 @@ function pairKey(token0Address: string, token1Address: string) {
 export const initialState: UserState = {
   buyFiatFlowCompleted: undefined,
   selectedWallet: undefined,
-  userExpertMode: false,
   userLocale: null,
   userRouterPreference: RouterPreference.AUTO,
   userHideClosedPositions: false,
@@ -87,10 +84,6 @@ const userSlice = createSlice({
     },
     updateSelectedWallet(state, { payload: { wallet } }) {
       state.selectedWallet = wallet
-    },
-    updateUserExpertMode(state, action) {
-      state.userExpertMode = action.payload.userExpertMode
-      state.timestamp = currentTimestamp()
     },
     updateUserLocale(state, action) {
       state.userLocale = action.payload.userLocale
@@ -184,7 +177,6 @@ export const {
   updateHideClosedPositions,
   updateUserRouterPreference,
   updateUserDeadline,
-  updateUserExpertMode,
   updateUserLocale,
   updateUserSlippageTolerance,
   updateHideUniswapWalletBanner,
