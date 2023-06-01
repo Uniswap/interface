@@ -22,18 +22,6 @@ export class WalletConnectV2Popup extends WalletConnect {
     onError,
     qrcode = true,
   }: Omit<WalletConnectConstructorArgs, 'options'> & { qrcode?: boolean }) {
-    //  options:
-    //    projectId: string;
-    //    chains: number[];
-    //    optionalChains?: number[];
-    //    methods?: string[];
-    //    optionalMethods?: string[];
-    //    events?: string[];
-    //    optionalEvents?: string[];
-    //    rpcMap?: EthereumRpcMap;
-    //    metadata?: Metadata;
-    //    showQrModal: boolean;
-    //    qrModalOptions?: QrModalOptions;
     const darkmode = Boolean(window.matchMedia('(prefers-color-scheme: dark)'))
     super({
       actions,
