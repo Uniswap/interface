@@ -148,8 +148,6 @@ export const BuyButton = ({ asset, isOnDataPage }: { asset: GenieAsset; isOnData
     }
   }, [account, accountDrawerOpen, asset, fetchAndPurchaseSingleAsset, toggleWalletDrawer, updateConnectingToWallet])
 
-  console.log(connectingToWallet)
-
   useEffect(() => {
     if (connectingToWallet && account && activationState.status === ActivationStatus.IDLE) {
       updateConnectingToWallet(false)
