@@ -173,7 +173,6 @@ export function Swap({
   disableTokenInputs?: boolean
 }) {
   const { account, chainId: connectedChainId, connector } = useWeb3React()
-
   const trace = useTrace()
 
   // token warning stuff
