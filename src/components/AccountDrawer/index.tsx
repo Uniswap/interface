@@ -181,19 +181,32 @@ function AccountDrawer() {
     }
   }, [walletDrawerOpen, toggleWalletDrawer])
 
-  // close on escape keypress
+  // close on swipe down on mobile
   useEffect(() => {
-    const escapeKeyDownHandler = (event: KeyboardEvent) => {
-      if (event.key === 'Escape' && walletDrawerOpen) {
-        event.preventDefault()
-        toggleWalletDrawer()
+    const touchStartHandler = (event: TouchEvent) => {
+      if (event.touches.length === 1) {
+        const touch = event.touches[0]
+        const startY = touch.clientY
+        const touchMoveHandler = (event: TouchEvent) => {
+          const touch = event.touches[0]
+          const deltaY = touch.clientY - startY
+          if (deltaY > 30 && walletDrawerOpen) {
+            toggleWalletDrawer()
+          }
+        }
+        const touchEndHandler = () => {
+          document.removeEventListener('touchmove', touchMoveHandler)
+          document.removeEventListener('touchend', touchEndHandler)
+        }
+        document.addEventListener('touchmove', touchMoveHandler)
+        document.addEventListener('touchend', touchEndHandler)
       }
     }
 
-    document.addEventListener('keydown', escapeKeyDownHandler)
+    document.addEventListener('touchstart', touchStartHandler)
 
     return () => {
-      document.removeEventListener('keydown', escapeKeyDownHandler)
+      document.removeEventListener('touchstart', touchStartHandler)
     }
   }, [walletDrawerOpen, toggleWalletDrawer])
 
