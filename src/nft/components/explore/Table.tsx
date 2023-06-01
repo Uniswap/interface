@@ -1,5 +1,3 @@
-import { TraceEvent } from '@uniswap/analytics'
-import { BrowserEvent, InterfaceElementName, NFTEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { useWindowSize } from 'hooks/useWindowSize'
@@ -187,46 +185,38 @@ export function Table<D extends Record<string, unknown>>({
             prepareRow(row)
 
             return (
-              <TraceEvent
-                events={[BrowserEvent.onClick]}
-                name={NFTEventName.NFT_TRENDING_ROW_SELECTED}
-                properties={{ collection_address: row.original.collection.address, chain_id: chainId }}
-                element={InterfaceElementName.NFT_TRENDING_ROW}
-                key={i}
+              <StyledRow
+                {...row.getRowProps()}
+                key={row.id}
+                onClick={() => navigate(`/nfts/collection/${row.original.collection.address}`)}
+                data-testid="nft-trending-collection"
               >
-                <StyledRow
-                  {...row.getRowProps()}
-                  key={row.id}
-                  onClick={() => navigate(`/nfts/collection/${row.original.collection.address}`)}
-                  data-testid="nft-trending-collection"
-                >
-                  {row.cells.map((cell, cellIndex) => {
-                    return (
-                      <td
-                        className={styles.td}
-                        {...cell.getCellProps()}
-                        key={cellIndex}
-                        style={{
-                          maxWidth: cellIndex === 0 ? (isMobile ? MOBILE_CELL_WIDTH : DESKTOP_CELL_WIDTH) : CELL_WIDTH,
-                        }}
-                      >
-                        {cellIndex === 0 ? (
-                          <RankCellContainer>
-                            {!isMobile && (
-                              <ThemedText.BodySecondary fontSize="14px" lineHeight="20px">
-                                {i + 1}
-                              </ThemedText.BodySecondary>
-                            )}
-                            {cell.render('Cell')}
-                          </RankCellContainer>
-                        ) : (
-                          cell.render('Cell')
-                        )}
-                      </td>
-                    )
-                  })}
-                </StyledRow>
-              </TraceEvent>
+                {row.cells.map((cell, cellIndex) => {
+                  return (
+                    <td
+                      className={styles.td}
+                      {...cell.getCellProps()}
+                      key={cellIndex}
+                      style={{
+                        maxWidth: cellIndex === 0 ? (isMobile ? MOBILE_CELL_WIDTH : DESKTOP_CELL_WIDTH) : CELL_WIDTH,
+                      }}
+                    >
+                      {cellIndex === 0 ? (
+                        <RankCellContainer>
+                          {!isMobile && (
+                            <ThemedText.BodySecondary fontSize="14px" lineHeight="20px">
+                              {i + 1}
+                            </ThemedText.BodySecondary>
+                          )}
+                          {cell.render('Cell')}
+                        </RankCellContainer>
+                      ) : (
+                        cell.render('Cell')
+                      )}
+                    </td>
+                  )
+                })}
+              </StyledRow>
             )
           })}
         </tbody>

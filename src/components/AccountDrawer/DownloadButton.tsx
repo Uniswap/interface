@@ -1,9 +1,6 @@
-import { sendAnalyticsEvent } from '@uniswap/analytics'
-import { InterfaceElementName, InterfaceEventName, SharedEventName } from '@uniswap/analytics-events'
-import { PropsWithChildren, useCallback } from 'react'
+import { PropsWithChildren } from 'react'
 import styled from 'styled-components/macro'
 import { ClickableStyle } from 'theme'
-import { isIOS } from 'utils/userAgent'
 
 const StyledButton = styled.button<{ padded?: boolean; branded?: boolean }>`
   ${ClickableStyle}
@@ -39,35 +36,25 @@ const openAppStore = () => {
   window.open(APP_STORE_LINK, /* target = */ 'pali_wallet_appstore')
 }
 export const openWalletMicrosite = () => {
-  sendAnalyticsEvent(InterfaceEventName.UNISWAP_WALLET_MICROSITE_OPENED)
   window.open(MICROSITE_LINK, /* target = */ 'pali_wallet_microsite')
 }
 
-export function openDownloadApp(element: InterfaceElementName) {
-  sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, { element })
-  if (isIOS) openAppStore()
-  else openWalletMicrosite()
-}
+// export function openDownloadApp() {
+//   if (isIOS) openAppStore()
+//   else openWalletMicrosite()
+// }
 
-// Launches App Store if on an iOS device, else navigates to Uniswap Wallet microsite
-export function DownloadButton({
-  onClick,
-  text = 'Download',
-  element,
-}: {
-  onClick?: () => void
-  text?: string
-  element: InterfaceElementName
-}) {
-  const onButtonClick = useCallback(() => {
-    // handles any actions required by the parent, i.e. cancelling wallet connection attempt or dismissing an ad
-    onClick?.()
-    openDownloadApp(element)
-  }, [element, onClick])
+// // Launches App Store if on an iOS device, else navigates to Uniswap Wallet microsite
+// export function DownloadButton({ onClick, text = 'Download' }: { onClick?: () => void; text?: string }) {
+//   const onButtonClick = useCallback(() => {
+//     // handles any actions required by the parent, i.e. cancelling wallet connection attempt or dismissing an ad
+//     onClick?.()
+//     openDownloadApp()
+//   }, [onClick])
 
-  return (
-    <BaseButton branded onClick={onButtonClick}>
-      {text}
-    </BaseButton>
-  )
-}
+//   return (
+//     <BaseButton branded onClick={onButtonClick}>
+//       {text}
+//     </BaseButton>
+//   )
+// }

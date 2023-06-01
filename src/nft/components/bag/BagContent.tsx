@@ -1,10 +1,8 @@
-import { sendAnalyticsEvent, Trace } from '@uniswap/analytics'
-import { NFTEventName } from '@uniswap/analytics-events'
 import { BagRow, PriceChangeBagRow, UnavailableAssetsHeaderRow } from 'nft/components/bag/BagRow'
 import { Column } from 'nft/components/Flex'
 import { useBag, useIsMobile } from 'nft/hooks'
 import { BagItemStatus, BagStatus } from 'nft/types'
-import { fetchPrice, formatAssetEventProperties, recalculateBagUsingPooledAssets } from 'nft/utils'
+import { fetchPrice, recalculateBagUsingPooledAssets } from 'nft/utils'
 import { useEffect, useMemo } from 'react'
 import { useQuery } from 'react-query'
 
@@ -46,16 +44,10 @@ export const BagContent = () => {
     const hasAssets = itemsInBag.length > 0
 
     if (hasAssetsInReview)
-      sendAnalyticsEvent(NFTEventName.NFT_BUY_BAG_CHANGED, {
-        usd_value: fetchedPriceData,
-        bag_quantity: itemsInBag,
-        ...formatAssetEventProperties(priceChangedAssets),
-      })
-
-    if (bagStatus === BagStatus.IN_REVIEW && !hasAssetsInReview) {
-      if (hasAssets) setBagStatus(BagStatus.CONFIRM_REVIEW)
-      else setBagStatus(BagStatus.ADDING_TO_BAG)
-    }
+      if (bagStatus === BagStatus.IN_REVIEW && !hasAssetsInReview) {
+        if (hasAssets) setBagStatus(BagStatus.CONFIRM_REVIEW)
+        else setBagStatus(BagStatus.ADDING_TO_BAG)
+      }
 
     if (bagStatus === BagStatus.CONFIRM_REVIEW && !hasAssets) {
       setBagStatus(BagStatus.ADDING_TO_BAG)
@@ -66,24 +58,14 @@ export const BagContent = () => {
     <>
       <Column display={priceChangedAssets.length > 0 || unavailableAssets.length > 0 ? 'flex' : 'none'}>
         {unavailableAssets.length > 0 && (
-          <Trace
-            name={NFTEventName.NFT_BUY_BAG_CHANGED}
-            properties={{
-              usd_value: fetchedPriceData,
-              bag_quantity: itemsInBag.length,
-              ...formatAssetEventProperties(unavailableAssets),
-            }}
-            shouldLogImpression
-          >
-            <UnavailableAssetsHeaderRow
-              assets={unavailableAssets}
-              usdPrice={fetchedPriceData}
-              clearUnavailableAssets={() => setItemsInBag(availableItems)}
-              didOpenUnavailableAssets={didOpenUnavailableAssets}
-              setDidOpenUnavailableAssets={setDidOpenUnavailableAssets}
-              isMobile={isMobile}
-            />
-          </Trace>
+          <UnavailableAssetsHeaderRow
+            assets={unavailableAssets}
+            usdPrice={fetchedPriceData}
+            clearUnavailableAssets={() => setItemsInBag(availableItems)}
+            didOpenUnavailableAssets={didOpenUnavailableAssets}
+            setDidOpenUnavailableAssets={setDidOpenUnavailableAssets}
+            isMobile={isMobile}
+          />
         )}
         {priceChangedAssets.map((asset, index) => (
           <PriceChangeBagRow

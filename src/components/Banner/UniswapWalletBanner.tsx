@@ -1,6 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { InterfaceElementName } from '@uniswap/analytics-events'
-import { openDownloadApp, openWalletMicrosite } from 'components/AccountDrawer/DownloadButton'
+import { openWalletMicrosite } from 'components/AccountDrawer/DownloadButton'
 import { BaseButton } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import { OpacityHoverState } from 'components/Common'
@@ -118,10 +117,7 @@ export default function UniswapWalletBanner() {
       <ButtonRow>
         {isIOS ? (
           <>
-            <BannerButton
-              backgroundColor="white"
-              onClick={() => openDownloadApp(InterfaceElementName.UNISWAP_WALLET_BANNER_DOWNLOAD_BUTTON)}
-            >
+            <BannerButton backgroundColor="white">
               <AppleLogo width={14} height={14} />
               <ThemedText.LabelSmall color="black" marginLeft="5px">
                 {!screenSize['xs'] ? <Trans>Download</Trans> : <Trans>Download app</Trans>}

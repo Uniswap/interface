@@ -1,4 +1,3 @@
-import { InterfaceElementName } from '@uniswap/analytics-events'
 import { isMobile } from 'utils/userAgent'
 
 import BannerPools from './images/bannerDeskDark5.png'
@@ -18,7 +17,7 @@ export const MAIN_CARDS = [
     cta: 'Trade Tokens',
     darkBackgroundImgSrc: isMobile ? swapCardMobileImgSrc : swapCardImgSrc,
     lightBackgroundImgSrc: isMobile ? swapCardMobileLightImgSrc : swapCardLightImgSrc,
-    elementName: InterfaceElementName.ABOUT_PAGE_SWAP_CARD,
+    elementName: 'about-page-swap-card',
   },
   {
     to: '/pools',
@@ -27,6 +26,6 @@ export const MAIN_CARDS = [
     cta: 'Provide liquidity',
     darkBackgroundImgSrc: isMobile ? BannerMobilePools : BannerPools,
     lightBackgroundImgSrc: isMobile ? BannerMobileLightPools : BannerLightPools,
-    elementName: InterfaceElementName.ABOUT_PAGE_EARN_CARD,
+    elementName: 'about-page-earn-card',
   },
 ]

@@ -1,5 +1,3 @@
-import { TraceEvent } from '@uniswap/analytics'
-import { BrowserEvent, InterfaceElementName, SharedEventName } from '@uniswap/analytics-events'
 import LoadingGifLight from 'assets/images/lightLoading.gif'
 import LoadingGif from 'assets/images/loading.gif'
 import Column from 'components/Column'
@@ -39,36 +37,29 @@ export function ActivityRow({
   const explorerUrl = getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)
 
   return (
-    <TraceEvent
-      events={[BrowserEvent.onClick]}
-      name={SharedEventName.ELEMENT_CLICKED}
-      element={InterfaceElementName.MINI_PORTFOLIO_ACTIVITY_ROW}
-      properties={{ hash, chain_id: chainId, explorer_url: explorerUrl }}
-    >
-      <PortfolioRow
-        left={
-          <Column>
-            <PortfolioLogo chainId={chainId} currencies={currencies} images={logos} accountAddress={otherAccount} />
-          </Column>
-        }
-        title={<ThemedText.SubHeader fontWeight={500}>{title}</ThemedText.SubHeader>}
-        descriptor={
-          <ActivityRowDescriptor color="textSecondary">
-            {descriptor}
-            {ENSName ?? otherAccount}
-          </ActivityRowDescriptor>
-        }
-        right={
-          status === TransactionStatus.Pending ? (
-            <LoaderGif gif={isDarkMode ? LoadingGif : LoadingGifLight} />
-          ) : status === TransactionStatus.Confirmed ? (
-            <StyledTimestamp>{timeSince}</StyledTimestamp>
-          ) : (
-            <AlertTriangleFilled />
-          )
-        }
-        onClick={() => window.open(explorerUrl, '_blank')}
-      />
-    </TraceEvent>
+    <PortfolioRow
+      left={
+        <Column>
+          <PortfolioLogo chainId={chainId} currencies={currencies} images={logos} accountAddress={otherAccount} />
+        </Column>
+      }
+      title={<ThemedText.SubHeader fontWeight={500}>{title}</ThemedText.SubHeader>}
+      descriptor={
+        <ActivityRowDescriptor color="textSecondary">
+          {descriptor}
+          {ENSName ?? otherAccount}
+        </ActivityRowDescriptor>
+      }
+      right={
+        status === TransactionStatus.Pending ? (
+          <LoaderGif gif={isDarkMode ? LoadingGif : LoadingGifLight} />
+        ) : status === TransactionStatus.Confirmed ? (
+          <StyledTimestamp>{timeSince}</StyledTimestamp>
+        ) : (
+          <AlertTriangleFilled />
+        )
+      }
+      onClick={() => window.open(explorerUrl, '_blank')}
+    />
   )
 }

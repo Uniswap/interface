@@ -1,6 +1,4 @@
 import { Trans } from '@lingui/macro'
-import { useTrace } from '@uniswap/analytics'
-import { InterfaceSectionName, NavBarSearchTypes } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import Badge from 'components/Badge'
 import { useNftGraphqlEnabled } from 'featureFlags/flags/nftlGraphql'
@@ -221,10 +219,8 @@ export const SearchBarDropdown = ({
   const showCollectionsFirst =
     (isNFTPage && (hasVerifiedCollection || !hasKnownToken)) || (!isNFTPage && !hasKnownToken && hasVerifiedCollection)
 
-  const trace = JSON.stringify(useTrace({ section: InterfaceSectionName.NAVBAR_SEARCH }))
-
   useEffect(() => {
-    const eventProperties = { total_suggestions: totalSuggestions, query_text: queryText, ...JSON.parse(trace) }
+    const eventProperties = { total_suggestions: totalSuggestions, query_text: queryText }
     if (!isLoading) {
       const tokenSearchResults =
         tokens.length > 0 ? (
@@ -235,7 +231,8 @@ export const SearchBarDropdown = ({
             toggleOpen={toggleOpen}
             suggestions={tokens}
             eventProperties={{
-              suggestion_type: NavBarSearchTypes.TOKEN_SUGGESTION,
+              suggestion_type: 'token-suggestion',
+
               ...eventProperties,
             }}
             header={<Trans>Tokens</Trans>}
@@ -291,7 +288,7 @@ export const SearchBarDropdown = ({
                 toggleOpen={toggleOpen}
                 suggestions={shortenedHistory}
                 eventProperties={{
-                  suggestion_type: NavBarSearchTypes.RECENT_SEARCH,
+                  suggestion_type: 'recent',
                   ...eventProperties,
                 }}
                 header={<Trans>Recent searches</Trans>}
@@ -307,7 +304,8 @@ export const SearchBarDropdown = ({
                 toggleOpen={toggleOpen}
                 suggestions={trendingTokens}
                 eventProperties={{
-                  suggestion_type: NavBarSearchTypes.TOKEN_TRENDING,
+                  suggestion_type: 'token-trending',
+
                   ...eventProperties,
                 }}
                 header={<Trans>Popular tokens</Trans>}
@@ -353,7 +351,6 @@ export const SearchBarDropdown = ({
     showCollectionsFirst,
     queryText,
     totalSuggestions,
-    trace,
     searchHistory,
   ])
 

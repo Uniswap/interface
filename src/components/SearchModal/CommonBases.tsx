@@ -1,6 +1,4 @@
 import { Currency } from '@pollum-io/sdk-core'
-import { TraceEvent } from '@uniswap/analytics'
-import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import { AutoColumn } from 'components/Column'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { AutoRow } from 'components/Row'
@@ -68,26 +66,18 @@ export default function CommonBases({
           const isSelected = selectedCurrency?.equals(currency)
 
           return (
-            <TraceEvent
-              events={[BrowserEvent.onClick, BrowserEvent.onKeyPress]}
-              name={InterfaceEventName.TOKEN_SELECTED}
-              properties={formatAnalyticsEventProperties(currency, searchQuery, isAddressSearch)}
-              element={InterfaceElementName.COMMON_BASES_CURRENCY_BUTTON}
+            <BaseWrapper
+              tabIndex={0}
+              onKeyPress={(e) => !isSelected && e.key === 'Enter' && onSelect(currency)}
+              onClick={() => !isSelected && onSelect(currency)}
+              disable={isSelected}
               key={currencyId(currency)}
             >
-              <BaseWrapper
-                tabIndex={0}
-                onKeyPress={(e) => !isSelected && e.key === 'Enter' && onSelect(currency)}
-                onClick={() => !isSelected && onSelect(currency)}
-                disable={isSelected}
-                key={currencyId(currency)}
-              >
-                <CurrencyLogoFromList currency={currency} />
-                <Text fontWeight={500} fontSize={16}>
-                  {currency.symbol}
-                </Text>
-              </BaseWrapper>
-            </TraceEvent>
+              <CurrencyLogoFromList currency={currency} />
+              <Text fontWeight={500} fontSize={16}>
+                {currency.symbol}
+              </Text>
+            </BaseWrapper>
           )
         })}
       </AutoRow>

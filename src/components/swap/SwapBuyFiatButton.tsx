@@ -1,6 +1,4 @@
 import { Trans } from '@lingui/macro'
-import { TraceEvent } from '@uniswap/analytics'
-import { BrowserEvent, InterfaceElementName, SharedEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { useAccountDrawer } from 'components/AccountDrawer'
 import { ButtonText } from 'components/Button'
@@ -116,31 +114,19 @@ export default function SwapBuyFiatButton() {
       content={
         <div data-testid="fiat-on-ramp-unavailable-tooltip">
           <Trans>Crypto purchases are not available in your region. </Trans>
-          <TraceEvent
-            events={[BrowserEvent.onClick]}
-            name={SharedEventName.ELEMENT_CLICKED}
-            element={InterfaceElementName.FIAT_ON_RAMP_LEARN_MORE_LINK}
-          >
-            <ExternalLink href={MOONPAY_REGION_AVAILABILITY_ARTICLE} style={{ paddingLeft: '4px' }}>
-              <Trans>Learn more</Trans>
-            </ExternalLink>
-          </TraceEvent>
+
+          <ExternalLink href={MOONPAY_REGION_AVAILABILITY_ARTICLE} style={{ paddingLeft: '4px' }}>
+            <Trans>Learn more</Trans>
+          </ExternalLink>
         </div>
       }
       placement="bottom"
       disableHover={fiatOnRampsUnavailableTooltipDisabled}
     >
-      <TraceEvent
-        events={[BrowserEvent.onClick]}
-        name={SharedEventName.ELEMENT_CLICKED}
-        element={InterfaceElementName.FIAT_ON_RAMP_BUY_BUTTON}
-        properties={{ account_connected: !!account }}
-      >
-        <StyledTextButton onClick={handleBuyCrypto} disabled={buyCryptoButtonDisabled} data-testid="buy-fiat-button">
-          <Trans>Buy</Trans>
-          {!buyFiatFlowCompleted && <Dot data-testid="buy-fiat-flow-incomplete-indicator" />}
-        </StyledTextButton>
-      </TraceEvent>
+      <StyledTextButton onClick={handleBuyCrypto} disabled={buyCryptoButtonDisabled} data-testid="buy-fiat-button">
+        <Trans>Buy</Trans>
+        {!buyFiatFlowCompleted && <Dot data-testid="buy-fiat-flow-incomplete-indicator" />}
+      </StyledTextButton>
     </MouseoverTooltipContent>
   )
 }

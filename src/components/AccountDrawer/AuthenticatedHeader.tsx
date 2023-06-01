@@ -1,7 +1,5 @@
 import { Trans } from '@lingui/macro'
 import { CurrencyAmount, Token } from '@pollum-io/sdk-core'
-import { sendAnalyticsEvent, TraceEvent } from '@uniswap/analytics'
-import { BrowserEvent, InterfaceElementName, InterfaceEventName, SharedEventName } from '@uniswap/analytics-events'
 import { formatNumber, NumberType } from '@uniswap/conedison/format'
 import { useWeb3React } from '@web3-react/core'
 import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button'
@@ -195,7 +193,6 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
   const openFiatOnrampModal = useOpenModal(ApplicationModal.FIAT_ONRAMP)
   const openFoRModalWithAnalytics = useCallback(() => {
     toggleWalletDrawer()
-    sendAnalyticsEvent(InterfaceEventName.FIAT_ONRAMP_WIDGET_OPENED)
     openFiatOnrampModal()
   }, [openFiatOnrampModal, toggleWalletDrawer])
 
@@ -251,13 +248,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
         </StatusWrapper>
         <IconContainer>
           <IconButton data-testid="wallet-settings" onClick={openSettings} Icon={Settings} />
-          <TraceEvent
-            events={[BrowserEvent.onClick]}
-            name={SharedEventName.ELEMENT_CLICKED}
-            element={InterfaceElementName.DISCONNECT_WALLET_BUTTON}
-          >
-            <IconButton data-testid="wallet-disconnect" onClick={disconnect} Icon={Power} />
-          </TraceEvent>
+          <IconButton data-testid="wallet-disconnect" onClick={disconnect} Icon={Power} />
         </IconContainer>
       </HeaderWrapper>
       <PortfolioDrawerContainer>

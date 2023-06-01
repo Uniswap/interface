@@ -2,8 +2,6 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { formatEther, parseEther } from '@ethersproject/units'
 import { t, Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Token, TradeType } from '@pollum-io/sdk-core'
-import { sendAnalyticsEvent, TraceEvent } from '@uniswap/analytics'
-import { BrowserEvent, InterfaceElementName, NFTEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import LoadingGifLight from 'assets/images/lightLoading.gif'
 import LoadingGif from 'assets/images/loading.gif'
@@ -514,7 +512,6 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
                   onClick={() => {
                     if (!bagIsLocked) {
                       setTokenSelectorOpen(true)
-                      sendAnalyticsEvent(NFTEventName.NFT_BUY_TOKEN_SELECTOR_CLICKED)
                     }
                   }}
                 >
@@ -567,37 +564,24 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
             />
           </FooterHeader>
         )}
-        <TraceEvent
-          events={[BrowserEvent.onClick]}
-          name={NFTEventName.NFT_BUY_BAG_PAY}
-          element={InterfaceElementName.NFT_BUY_BAG_PAY_BUTTON}
-          properties={{ ...traceEventProperties }}
-          shouldLogImpression={connected && !disabled}
+
+        <Warning color={warningTextColor}>{warningText}</Warning>
+        <Helper color={helperTextColor}>{helperText}</Helper>
+        <ActionButton
+          onClick={handleClick}
+          disabled={disabled || isPending}
+          backgroundColor={buttonColor}
+          textColor={buttonTextColor}
         >
-          <Warning color={warningTextColor}>{warningText}</Warning>
-          <Helper color={helperTextColor}>{helperText}</Helper>
-          <ActionButton
-            onClick={handleClick}
-            disabled={disabled || isPending}
-            backgroundColor={buttonColor}
-            textColor={buttonTextColor}
-          >
-            {isPending && <LoaderGif gif={isDarkMode ? LoadingGif : LoadingGifLight} size="20px" stroke="white" />}
-            {buttonText}
-          </ActionButton>
-        </TraceEvent>
+          {isPending && <LoaderGif gif={isDarkMode ? LoadingGif : LoadingGifLight} size="20px" stroke="white" />}
+          {buttonText}
+        </ActionButton>
       </Footer>
       <CurrencySearchModal
         isOpen={tokenSelectorOpen}
         onDismiss={() => setTokenSelectorOpen(false)}
         onCurrencySelect={(currency: Currency) => {
           setInputCurrency(currency.isNative ? undefined : currency)
-          if (currency.isToken) {
-            sendAnalyticsEvent(NFTEventName.NFT_BUY_TOKEN_SELECTED, {
-              token_address: currency.address,
-              token_symbol: currency.symbol,
-            })
-          }
         }}
         selectedCurrency={activeCurrency ?? undefined}
         onlyShowCurrenciesWithBalance={true}

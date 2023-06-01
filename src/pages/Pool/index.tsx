@@ -1,6 +1,4 @@
 import { Trans } from '@lingui/macro'
-import { Trace, TraceEvent } from '@uniswap/analytics'
-import { BrowserEvent, InterfaceElementName, InterfaceEventName, InterfacePageName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { useToggleAccountDrawer } from 'components/AccountDrawer'
 import { ButtonPrimary, ButtonText } from 'components/Button'
@@ -256,7 +254,7 @@ export default function Pool() {
   ]
 
   return (
-    <Trace page={InterfacePageName.POOL_PAGE} shouldLogImpression>
+    <>
       <PageWrapper>
         <AutoColumn gap="lg" justify="center">
           <AutoColumn gap="lg" style={{ width: '100%' }}>
@@ -311,19 +309,12 @@ export default function Pool() {
                     </ButtonText>
                   )}
                   {showConnectAWallet && (
-                    <TraceEvent
-                      events={[BrowserEvent.onClick]}
-                      name={InterfaceEventName.CONNECT_WALLET_BUTTON_CLICKED}
-                      properties={{ received_swap_quote: false }}
-                      element={InterfaceElementName.CONNECT_WALLET_BUTTON}
+                    <ButtonPrimary
+                      style={{ marginTop: '2em', marginBottom: '2em', padding: '8px 16px' }}
+                      onClick={toggleWalletDrawer}
                     >
-                      <ButtonPrimary
-                        style={{ marginTop: '2em', marginBottom: '2em', padding: '8px 16px' }}
-                        onClick={toggleWalletDrawer}
-                      >
-                        <Trans>Connect a wallet</Trans>
-                      </ButtonPrimary>
-                    </TraceEvent>
+                      <Trans>Connect a wallet</Trans>
+                    </ButtonPrimary>
                   )}
                 </ErrorContainer>
               )}
@@ -335,6 +326,6 @@ export default function Pool() {
         </AutoColumn>
       </PageWrapper>
       <SwitchLocaleLink />
-    </Trace>
+    </>
   )
 }

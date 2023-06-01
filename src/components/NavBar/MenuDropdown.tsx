@@ -1,6 +1,4 @@
 import { t, Trans } from '@lingui/macro'
-import { InterfaceElementName } from '@uniswap/analytics-events'
-import { openDownloadApp } from 'components/AccountDrawer/DownloadButton'
 import FeatureFlagModal from 'components/FeatureFlagModal/FeatureFlagModal'
 import { PrivacyPolicyModal } from 'components/PrivacyPolicy'
 import { useMgtmEnabled } from 'featureFlags/flags/mgtm'
@@ -169,10 +167,7 @@ export const MenuDropdown = () => {
                     </PrimaryMenuRow.Text>
                   </PrimaryMenuRow>
                 </Box>
-                <Box
-                  display={mgtmEnabled ? 'flex' : 'none'}
-                  onClick={() => openDownloadApp(InterfaceElementName.UNISWAP_WALLET_MODAL_DOWNLOAD_BUTTON)}
-                >
+                <Box display={mgtmEnabled ? 'flex' : 'none'}>
                   <PrimaryMenuRow close={toggleOpen}>
                     <Icon>
                       <PaliLogo width="24px" height="24px" />

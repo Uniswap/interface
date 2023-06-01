@@ -9,8 +9,6 @@ import {
   TransactionType,
   TransactionType as WidgetTransactionType,
 } from '@pollum-io/widgets'
-import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
-import { InterfaceEventName, InterfaceSectionName, SwapEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import {
   formatPercentInBasisPointsNumber,
@@ -66,8 +64,6 @@ const formatAnalyticsEventProperties = ({
 
 /** Integrates the Widget's transactions, showing the widget's transactions in the app. */
 export function useSyncWidgetTransactions() {
-  const trace = useTrace({ section: InterfaceSectionName.WIDGET })
-
   const { chainId } = useWeb3React()
   const addTransaction = useTransactionAdder()
 
@@ -91,9 +87,7 @@ export function useSyncWidgetTransactions() {
             ? formatToDecimal(transactionAmount, transactionAmount?.currency.decimals)
             : undefined,
           type: type === WidgetTransactionType.WRAP ? TransactionType.WRAP : TransactionType.UNWRAP,
-          ...trace,
         }
-        sendAnalyticsEvent(InterfaceEventName.WRAP_TOKEN_TXN_SUBMITTED, eventProperties)
         const { amount } = transaction.info
         addTransaction(response, {
           type: AppTransactionType.WRAP,
@@ -111,9 +105,7 @@ export function useSyncWidgetTransactions() {
             fiatValues: { amountIn: undefined, amountOut: undefined },
             txHash: transaction.receipt?.transactionHash ?? '',
           }),
-          ...trace,
         }
-        sendAnalyticsEvent(SwapEventName.SWAP_SIGNED, eventProperties)
         const baseTxInfo = {
           type: AppTransactionType.SWAP,
           tradeType,
@@ -137,23 +129,12 @@ export function useSyncWidgetTransactions() {
         }
       }
     },
-    [addTransaction, chainId, trace]
+    [addTransaction, chainId]
   )
 
   const onTxSuccess: OnTxSuccess = useCallback((hash: string, tx) => {
     if (tx.info.type === TransactionType.SWAP) {
       const { trade, slippageTolerance } = tx.info
-      sendAnalyticsEvent(
-        SwapEventName.SWAP_TRANSACTION_COMPLETED,
-        formatAnalyticsEventProperties({
-          trade,
-          hash,
-          gasUsed: tx.receipt?.gasUsed?.toString(),
-          blockNumber: tx.receipt?.blockNumber,
-          allowedSlippage: slippageTolerance,
-          succeeded: tx.receipt?.status === 1,
-        })
-      )
     }
   }, [])
 
