@@ -1,11 +1,13 @@
 import { t } from '@lingui/macro'
 import { formatNumberOrString, NumberType } from '@uniswap/conedison/format'
 import { SupportedChainId } from '@uniswap/sdk-core'
+import moonpayLogoSrc from 'assets/svg/moonpay.svg'
 import { NONFUNGIBLE_POSITION_MANAGER_ADDRESSES, UNI_ADDRESS } from 'constants/addresses'
 import { nativeOnChain } from 'constants/tokens'
 import {
   ActivityType,
   AssetActivityPartsFragment,
+  Currency,
   NftApprovalPartsFragment,
   NftApproveForAllPartsFragment,
   NftTransferPartsFragment,
@@ -17,6 +19,7 @@ import ms from 'ms.macro'
 import { useEffect, useState } from 'react'
 import { isAddress } from 'utils'
 
+import { MOONPAY_SENDER_ADDRESSES } from '../constants'
 import { Activity } from './types'
 
 type TransactionChanges = {
@@ -106,6 +109,19 @@ function getSwapTitle(sent: TokenTransferPartsFragment, received: TokenTransferP
   }
 }
 
+/**
+ *
+ * @param transactedValue Transacted value amount from TokenTransfer API response
+ * @returns parsed USD value as a number if currency is of type USD
+ */
+function formatTransactedValue(transactedValue: TokenTransferPartsFragment['transactedValue']): string {
+  if (!transactedValue) return '-'
+  const price = transactedValue?.currency === Currency.Usd ? transactedValue.value ?? undefined : undefined
+  return price
+    ? new Intl.NumberFormat('en-US', { style: 'currency', currency: transactedValue?.currency }).format(price)
+    : '-'
+}
+
 function parseSwap(changes: TransactionChanges) {
   if (changes.NftTransfer.length > 0 && changes.TokenTransfer.length === 1) {
     const collectionCounts = getCollectionCounts(changes.NftTransfer)
@@ -175,17 +191,31 @@ function parseSendReceive(changes: TransactionChanges, assetActivity: AssetActiv
   }
 
   if (transfer && assetName && amount) {
-    return transfer.direction === 'IN'
-      ? {
+    if (transfer.direction === 'IN') {
+      const sender = transfer.sender
+      const isMoonpayPurchase = MOONPAY_SENDER_ADDRESSES.some((address) => isSameAddress(address, sender))
+
+      if (isMoonpayPurchase && transfer.__typename === 'TokenTransfer') {
+        const fiatPurchasePrice = formatTransactedValue(transfer.transactedValue)
+        return {
+          title: t`Purchased`,
+          descriptor: `${amount} ${assetName} ${t`for`} ${fiatPurchasePrice}`,
+          logos: [moonpayLogoSrc],
+        }
+      } else {
+        return {
           title: t`Received`,
           descriptor: `${amount} ${assetName} ${t`from`} `,
-          otherAccount: isAddress(transfer.sender) || undefined,
+          otherAccount: isAddress(sender) || undefined,
         }
-      : {
-          title: t`Sent`,
-          descriptor: `${amount} ${assetName} ${t`to`} `,
-          otherAccount: isAddress(transfer.recipient) || undefined,
-        }
+      }
+    } else {
+      return {
+        title: t`Sent`,
+        descriptor: `${amount} ${assetName} ${t`to`} `,
+        otherAccount: isAddress(transfer.recipient) || undefined,
+      }
+    }
   }
   return { title: t`Unknown Send` }
 }
