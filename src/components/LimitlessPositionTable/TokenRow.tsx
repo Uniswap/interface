@@ -635,7 +635,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
     if (
       pool?.token0Price &&
       pool?.token1Price &&
-      position.creationPrice &&
+      // position.creationPrice &&
       position.totalPosition &&
       token0 &&
       token1

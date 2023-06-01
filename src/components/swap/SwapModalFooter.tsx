@@ -355,7 +355,8 @@ function useDerivedLeverageReduceInfo(
   tokenId: string | undefined,
   allowedSlippage: string,
   position: LeveragePositionDetails | undefined,
-  newTotalPosition: string | undefined,
+  reduceAmount: string | undefined,
+  //newTotalPosition: string | undefined,
   setState: (state: DerivedInfoState) => void,
 ): {
   // token0: string | undefined
@@ -384,14 +385,13 @@ function useDerivedLeverageReduceInfo(
 
   useEffect(() => {
     const laggedfxn = async () => {
-      if (!leverageManagerContract || !tokenId || !trader || parseFloat(allowedSlippage) <= 0 && !position || !position?.totalPosition) {
+      if (!leverageManagerContract || !tokenId || !trader || parseFloat(allowedSlippage) <= 0 && !position || !position?.totalPosition || Number(reduceAmount) <= 0 || !reduceAmount) {
         setState(DerivedInfoState.INVALID)
         return
       }
 
       const formattedSlippage = new BN(allowedSlippage).plus(100).shiftedBy(16).toFixed(0)
-      const formattedReduceAmount = newTotalPosition ? new BN(position?.totalPosition).minus(newTotalPosition).shiftedBy(18).toFixed(0) :
-        new BN(position?.totalPosition).shiftedBy(18).toFixed(0)
+      const formattedReduceAmount = new BN(reduceAmount).shiftedBy(18).toFixed(0);
       setState(DerivedInfoState.LOADING)
 
       try {
@@ -413,7 +413,7 @@ function useDerivedLeverageReduceInfo(
     }
 
     laggedfxn()
-  }, [leverageManager, trader, tokenId, allowedSlippage, newTotalPosition])
+  }, [leverageManager, trader, tokenId, allowedSlippage, reduceAmount])
 
   const info = useMemo(() => {
     if (contractResult) {
@@ -547,15 +547,16 @@ export function ReduceLeverageModalFooter({
   const { error, position } = useLeveragePositionFromTokenId(tokenId)
 
   const [slippage, setSlippage] = useState("1")
-  const [newPosition, setNewPosition] = useState("")
+  // const [newPosition, setNewPosition] = useState("")
+  const [reduceAmount, setReduceAmount] = useState("")
 
   const leverageManagerContract = useLeverageManagerContract(leverageManagerAddress, true)
 
   const handleReducePosition = useMemo(() => {
-    if (leverageManagerContract && position && Number(newPosition) >= 0 && Number(newPosition) < Number(position.totalPosition)) {
+    if (leverageManagerContract && position && Number(reduceAmount) > 0 && Number(reduceAmount) <= Number(position.totalPosition)) {
       const formattedSlippage = new BN(slippage).plus(100).shiftedBy(16).toFixed(0)
-      const formattedReduceAmount = newPosition ? new BN(position?.totalPosition).minus(newPosition).shiftedBy(18).toFixed(0) :
-        new BN(position?.totalPosition).shiftedBy(18).toFixed(0)
+      const formattedReduceAmount = new BN(reduceAmount).shiftedBy(18).toFixed(0);
+
       return () => {
         setAttemptingTxn(true)
         leverageManagerContract.reducePosition(
@@ -572,7 +573,8 @@ export function ReduceLeverageModalFooter({
       }
     }
     return () => { }
-  }, [leverageManagerAddress, slippage, tokenId, trader, position, newPosition])
+  }, [leverageManagerAddress, slippage, tokenId, trader, position, reduceAmount])
+
   const [derivedState, setDerivedState] = useState<DerivedInfoState>(DerivedInfoState.INVALID)
   const [showDetails, setShowDetails] = useState(false)
   const theme = useTheme()
@@ -580,7 +582,7 @@ export function ReduceLeverageModalFooter({
   // what do we need for the simulation
 
   const [debouncedSlippage, setDebouncedSlippage] = useDebouncedChangeHandler(slippage, setSlippage)
-  const [debouncedNewPosition, setDebouncedNewPosition] = useDebouncedChangeHandler(newPosition, setNewPosition);
+  const [debouncedReduceAmount, setDebouncedReduceAmount] = useDebouncedChangeHandler(reduceAmount, setReduceAmount);
   // console.log("nonce: ", nonce, slippage)
 
   const {
@@ -590,7 +592,7 @@ export function ReduceLeverageModalFooter({
     returnedAmount,
     unusedPremium,
     premium
-  } = useDerivedLeverageReduceInfo(leverageManagerAddress, trader, tokenId, debouncedSlippage, position, debouncedNewPosition, setDerivedState)
+  } = useDerivedLeverageReduceInfo(leverageManagerAddress, trader, tokenId, debouncedSlippage, position, debouncedReduceAmount, setDerivedState)
 
   const token0 = useCurrency(position?.token0Address)
   const token1 = useCurrency(position?.token1Address)
@@ -651,25 +653,28 @@ export function ReduceLeverageModalFooter({
           <>
             <RowBetween>
               <ThemedText.DeprecatedMain fontWeight={400}>
-                <Trans>New Position ({`${position?.totalPosition ? formatNumber(100 - Number(newPosition) / Number(position?.totalPosition) * 100) : "-"}% Reduction`})</Trans>
+                <Trans>Reduce Amount ({`${position?.totalPosition ? formatNumber(Number(reduceAmount) / Number(position?.totalPosition) * 100) : "-"}% Reduction`})</Trans>
               </ThemedText.DeprecatedMain>
             </RowBetween>
             <AutoColumn>
               <CurrencyInputPanel
-                value={debouncedNewPosition}
+                value={debouncedReduceAmount}
                 id="reduce-position-input"
                 onUserInput={(str: string) => {
                   if (position?.totalPosition) {
                     if (str === "") {
-                      setDebouncedNewPosition("")
+                      setDebouncedReduceAmount("")
                     } else if (new BN(str).isGreaterThan(new BN(position?.totalPosition))) {
                       return
                     } else {
-                      setDebouncedNewPosition(str)
+                      setDebouncedReduceAmount(str)
                     }
                   }
                 }}
-                showMaxButton={false}
+                showMaxButton={true}
+                onMax={() => {
+                  setDebouncedReduceAmount(position?.totalPosition ? position?.totalPosition : "")
+                }}
                 currency={inputIsToken0 ? token1 : token0}
               />
             </AutoColumn>

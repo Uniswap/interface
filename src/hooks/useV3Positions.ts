@@ -71,7 +71,19 @@ export function useLeveragePositions(account: string | undefined): {loading: boo
         const result = call.result as CallStateResult
         const key = result.key
         const position = result.position
-
+        // address pool; // pool leveraged from
+        // uint256 totalPosition; //position in output token
+        // uint256 totalDebt; // debt in output token
+        // uint256 totalDebtInput; //debt in input token
+        // uint256 initCollateral; // traderfund
+        // // uint256 creationPrice; // avg open price
+        // uint128 recentPremium;
+        // uint128 totalPremium; // total premium paid
+        // uint128 unusedPremium;
+        // bool isToken0; //if output position is in token0
+        // uint32 openTime;
+        // uint32 repayTime; // this is refreshed when trader replenish interest
+        // LiquidityManager.Liquidity[] borrowInfo;
         return {
           tokenId: tokenId.toString(),
           leverageManagerAddress: computeLeverageManagerAddress({
@@ -86,7 +98,7 @@ export function useLeveragePositions(account: string | undefined): {loading: boo
           totalPosition: convertBNToStr(position.totalPosition, 18),
           totalDebt: convertBNToStr(position.totalDebt, 18),
           totalDebtInput: convertBNToStr(position.totalDebtInput, 18),
-          creationPrice: convertBNToStr(position.creationPrice, 18),
+          // creationPrice: convertBNToStr(position.creationPrice, 18),
           initialCollateral: convertBNToStr(position.initCollateral, 18),
           recentPremium: convertBNToStr(position.recentPremium, 18),
           unusedPremium: convertBNToStr(position.unusedPremium, 18),
@@ -144,7 +156,7 @@ export function useLeveragePositionFromTokenId(tokenId: string | undefined): { l
         totalPosition: convertBNToStr(position.totalPosition, 18),
         totalDebt: convertBNToStr(position.totalDebt, 18),
         totalDebtInput: convertBNToStr(position.totalDebtInput, 18),
-        creationPrice: convertBNToStr(position.creationPrice, 18),
+        // creationPrice: convertBNToStr(position.creationPrice, 18),
         initialCollateral: convertBNToStr(position.initCollateral, 18),
         recentPremium: convertBNToStr(position.recentPremium, 18),
         totalPremium: convertBNToStr(position.totalPremium, 18),

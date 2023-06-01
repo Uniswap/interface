@@ -12,7 +12,7 @@ export interface LeveragePositionDetails {
   totalDebt: string // total debt in output token
   totalDebtInput: string // total debt in input token
   initialCollateral: string
-  creationPrice: string,
+  // creationPrice: string,
   recentPremium: string
   totalPremium: string,
   unusedPremium: string,
