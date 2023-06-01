@@ -872,6 +872,11 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
             }
           >
             <View
+              accessibilityState={
+                {
+                  "disabled": true,
+                }
+              }
               accessible={true}
               collapsable={false}
               focusable={true}
@@ -897,7 +902,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                   "borderRadius": 20,
                   "borderWidth": 1,
                   "display": "flex",
-                  "opacity": 1,
+                  "opacity": 0.5,
                   "padding": 16,
                 }
               }
@@ -1053,6 +1058,11 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
               }
             />
             <View
+              accessibilityState={
+                {
+                  "disabled": false,
+                }
+              }
               accessible={true}
               collapsable={false}
               focusable={true}

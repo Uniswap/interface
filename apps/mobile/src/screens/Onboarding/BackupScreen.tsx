@@ -28,6 +28,7 @@ import { openSettings } from 'src/utils/linking'
 import CloudIcon from 'ui/src/assets/icons/cloud.svg'
 import InfoCircle from 'ui/src/assets/icons/info-circle.svg'
 import PaperIcon from 'ui/src/assets/icons/paper-stack.svg'
+import { BackupType } from 'wallet/src/features/wallet/accounts/types'
 
 type Props = CompositeScreenProps<
   StackScreenProps<OnboardingStackParamList, OnboardingScreens.Backup>,
@@ -107,10 +108,17 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
     navigate({ name: OnboardingScreens.BackupManual, params, merge: true })
   }
 
+  const onPressContinue = (): void => {
+    navigation.navigate({ name: OnboardingScreens.Notifications, params, merge: true })
+  }
+
   const disabled = !activeAccountBackups || activeAccountBackups.length < 1
   const showSkipOption =
     !activeAccountBackups?.length &&
     (params?.importType === ImportType.SeedPhrase || params?.importType === ImportType.Restore)
+
+  const hasCloudBackup = activeAccountBackups?.some((backup) => backup === BackupType.Cloud)
+  const hasManualBackup = activeAccountBackups?.some((backup) => backup === BackupType.Manual)
 
   return (
     <OnboardingScreen
@@ -122,6 +130,7 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
         <Flex gap="spacing12">
           <OptionCard
             blurb={t('Safe, simple, and all you need to save is your password.')}
+            disabled={hasCloudBackup}
             icon={<CloudIcon color={theme.colors.magentaVibrant} height={theme.iconSizes.icon16} />}
             name={ElementName.AddiCloudBackup}
             title={t('Backup with iCloud')}
@@ -129,6 +138,7 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
           />
           <OptionCard
             blurb={t("Top-notch security with no third parties. You're in control.")}
+            disabled={hasManualBackup}
             icon={<PaperIcon color={theme.colors.magentaVibrant} height={theme.iconSizes.icon16} />}
             name={ElementName.AddManualBackup}
             title={t('Backup with recovery phrase')}
@@ -162,6 +172,7 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
             eventName={SharedEventName.ELEMENT_CLICKED}
             label={disabled ? t('Select backup to continue') : t('Continue')}
             name={ElementName.Next}
+            onPress={onPressContinue}
           />
         </Flex>
       </Flex>

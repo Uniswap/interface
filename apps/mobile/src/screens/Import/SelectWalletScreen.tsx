@@ -92,7 +92,7 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props): JS
     }
 
     return EMPTY_ARRAY
-  }, [allAddressBalances, addresses])
+  }, [addresses, allAddressBalances])
 
   const isOnlyOneAccount = initialShownAccounts.length === 1
 
@@ -189,16 +189,7 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props): JS
       params,
       merge: true,
     })
-  }, [
-    dispatch,
-    addresses,
-    pendingAccounts,
-    navigation,
-    selectedAddresses,
-    isFirstAccountActive,
-    params,
-    t,
-  ])
+  }, [addresses, navigation, params, selectedAddresses, dispatch, pendingAccounts, t])
 
   // Force a fixed duration loading state for smoother transition (as we show different UI for 1 vs multiple wallets)
   const [isForcedLoading, setIsForcedLoading] = useState(true)

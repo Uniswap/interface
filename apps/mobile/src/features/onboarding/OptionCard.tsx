@@ -53,7 +53,7 @@ export function OptionCard({
       eventName={SharedEventName.ELEMENT_CLICKED}
       hapticFeedback={hapticFeedback}
       name={name}
-      opacity={opacity}
+      opacity={disabled ? 0.5 : opacity}
       p="spacing16"
       testID={name}
       onPress={onPress}>

@@ -1,11 +1,12 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { SharedEventName } from '@uniswap/analytics-events'
-import React from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert, Image, StyleSheet } from 'react-native'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { i18n } from 'src/app/i18n'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
+import { BackButton } from 'src/components/buttons/BackButton'
 import { Button } from 'src/components/buttons/Button'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Flex } from 'src/components/layout'
@@ -15,7 +16,7 @@ import { useBiometricAppSettings } from 'src/features/biometrics/hooks'
 import { promptPushPermission } from 'src/features/notifications/Onesignal'
 import { useCompleteOnboardingCallback } from 'src/features/onboarding/hooks'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
-import { OnboardingEntryPoint } from 'src/features/onboarding/utils'
+import { ImportType, OnboardingEntryPoint } from 'src/features/onboarding/utils'
 import { ElementName } from 'src/features/telemetry/constants'
 import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
 import { useNativeAccountExists } from 'src/features/wallet/hooks'
@@ -50,6 +51,35 @@ export function NotificationsSetupScreen({ navigation, route: { params } }: Prop
   const hasSeedPhrase = useNativeAccountExists()
 
   const onCompleteOnboarding = useCompleteOnboardingCallback(params.entryPoint, params.importType)
+
+  const renderBackButton = useCallback(
+    (nav: OnboardingScreens): JSX.Element => (
+      <BackButton
+        onPressBack={(): void => navigation.navigate({ name: nav, params, merge: true })}
+      />
+    ),
+    [navigation, params]
+  )
+
+  /* For some screens, we want to override the back button to go to a different screen.
+   * This helps avoid re-visiting loading states or confirmation views.
+   */
+  useEffect(() => {
+    const shouldOverrideBackButton = [
+      ImportType.SeedPhrase,
+      ImportType.Restore,
+      ImportType.CreateNew,
+    ].includes(params.importType)
+    if (shouldOverrideBackButton) {
+      const nextScreen =
+        params.importType === ImportType.Restore
+          ? OnboardingScreens.RestoreCloudBackup
+          : OnboardingScreens.Backup
+      navigation.setOptions({
+        headerLeft: () => renderBackButton(nextScreen),
+      })
+    }
+  }, [navigation, params, renderBackButton])
 
   const navigateToNextScreen = (): void => {
     // Skip security setup if already enabled or already imported seed phrase
