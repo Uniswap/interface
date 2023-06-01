@@ -135,7 +135,7 @@ export const IconWithTextButton = ({ Icon, text, onConfirm, onShowConfirm, onCli
     return dimensionsRef.current
   })()
 
-  // keyboard action to cancel the Disconnect slide out button
+  // keyboard action to cancel
   useEffect(() => {
     if (!showText) return
     const isClient = typeof window !== 'undefined'
