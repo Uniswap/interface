@@ -412,7 +412,7 @@ function HeaderCell({
         <MouseoverTooltip text={description} placement="right">
           <RowFixed>
           <ThemedText.TableText>
-            {category !== PositionSortMethod.ACTIONS && category}
+            {category}
           </ThemedText.TableText>
           <InfoIconContainer>
             <Info size={10} />
@@ -553,7 +553,7 @@ export function HeaderRow() {
       // remainingPremium={<ThemedText.TableText>Prem. Left</ThemedText.TableText>}
       // entryPrice={<ThemedText.TableText>Entry Price</ThemedText.TableText>}
       // PnL={<ThemedText.TableText>Profit/Loss</ThemedText.TableText>}
-      value={<HeaderCell category={PositionSortMethod.VALUE} />}
+      value={<ThemedText.TableText>Net Value</ThemedText.TableText>}
       collateral={<HeaderCell category={PositionSortMethod.COLLATERAL} />}
       PnL={<HeaderCell category={PositionSortMethod.PNL} />}
       entryPrice={<HeaderCell category={PositionSortMethod.ENTRYPRICE} />}

@@ -359,28 +359,18 @@ function useDerivedLeverageReduceInfo(
   //newTotalPosition: string | undefined,
   setState: (state: DerivedInfoState) => void,
 ): {
-  // token0: string | undefined
-  // int256 amount0;
-  // int256 amount1;
-  // int256 PnL;
-  // uint256 returnedAmount;
-  // uint256 unusedPremium;
-  // uint256 premium;
-  // token1: string | undefined
   token0Amount: string | undefined
   token1Amount: string | undefined
   pnl: string | undefined
   returnedAmount: string | undefined
   unusedPremium: string | undefined
-  premium: string | undefined
+  premium: string | undefined,
+  inputError: React.ReactNode | undefined
 } {
   const leverageManagerContract = useLeverageManagerContract(leverageManager)
 
   const [contractResult, setContractResult] = useState<{
-    reducePositionResult: any,
-
-    // token0: any,
-    // token1: any
+    reducePositionResult: any
   }>()
 
   useEffect(() => {
@@ -405,10 +395,10 @@ function useDerivedLeverageReduceInfo(
           reducePositionResult
         })
         setState(DerivedInfoState.VALID)
-
       } catch (error) {
         console.error('Failed to get reduce info', error)
         setState(DerivedInfoState.INVALID)
+        setContractResult(undefined)
       }
     }
 
@@ -416,6 +406,13 @@ function useDerivedLeverageReduceInfo(
   }, [leverageManager, trader, tokenId, allowedSlippage, reduceAmount])
 
   const info = useMemo(() => {
+    let inputError;
+    if (!reduceAmount || !contractResult) {
+      inputError = (<Trans>
+        Invalid Trade
+      </Trans>)
+    }
+    
     if (contractResult) {
       const { reducePositionResult } = contractResult
       let token0Amount = new BN(reducePositionResult[0].toString()).shiftedBy(-DEFAULT_ERC20_DECIMALS).toFixed(DEFAULT_ERC20_DECIMALS)
@@ -431,7 +428,8 @@ function useDerivedLeverageReduceInfo(
         pnl,
         returnedAmount,
         unusedPremium,
-        premium
+        premium,
+        inputError
       }
     } else {
       return {
@@ -441,7 +439,7 @@ function useDerivedLeverageReduceInfo(
         returnedAmount: undefined,
         unusedPremium: undefined,
         premium: undefined,
-
+        inputError
       }
     }
   }, [
@@ -591,7 +589,8 @@ export function ReduceLeverageModalFooter({
     pnl,
     returnedAmount,
     unusedPremium,
-    premium
+    premium,
+    inputError
   } = useDerivedLeverageReduceInfo(leverageManagerAddress, trader, tokenId, debouncedSlippage, position, debouncedReduceAmount, setDerivedState)
 
   const token0 = useCurrency(position?.token0Address)
