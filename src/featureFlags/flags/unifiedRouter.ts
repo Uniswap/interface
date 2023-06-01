@@ -1,12 +1,11 @@
 import { BaseVariant, FeatureFlag, useBaseFlag } from '../index'
 
-export function useUnifiedRoutingAPIFlag(): BaseVariant {
+export function useRoutingAPIV2Flag(): BaseVariant {
   return useBaseFlag(FeatureFlag.uraEnabled)
 }
 
-// eslint-disable-next-line import/no-unused-modules
-export function useUnifiedRoutingAPIEnabled(): boolean {
-  return useUnifiedRoutingAPIFlag() === BaseVariant.Enabled
+export function useRoutingAPIV2Enabled(): boolean {
+  return useRoutingAPIV2Flag() === BaseVariant.Enabled
 }
 
 export { BaseVariant as UnifiedRouterVariant }
