@@ -6,7 +6,7 @@ import { trace } from 'tracing/trace'
 
 import { GetQuoteArgs, INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference } from './slice'
 import { QuoteDataV2, QuoteState, TradeResult } from './types'
-import { getRouter, shouldUseAPIRouter, isExactInput, transformRoutesToTrade } from './utils'
+import { getRouter, isExactInput, shouldUseAPIRouter, transformRoutesToTrade } from './utils'
 
 const CLIENT_PARAMS = {
   protocols: [Protocol.V2, Protocol.V3, Protocol.MIXED],
@@ -95,9 +95,7 @@ export const routingApiV2 = createApi({
             return { data: tradeResult }
           } catch (error: any) {
             console.warn(
-              `GetQuote failed on API v2, falling back to client: ${
-                error?.message ?? error?.detail ?? error
-              }`
+              `GetQuote failed on API v2, falling back to client: ${error?.message ?? error?.detail ?? error}`
             )
           }
         }
