@@ -5,7 +5,7 @@ import { AboutFooter } from 'components/About/AboutFooter'
 import Card, { CardType } from 'components/About/Card'
 import { MAIN_CARDS, MORE_CARDS } from 'components/About/constants'
 import ProtocolBanner from 'components/About/ProtocolBanner'
-import { accountDrawerOpenAtom } from 'components/AccountDrawer'
+import { useAccountDrawer } from 'components/AccountDrawer'
 import { BaseButton } from 'components/Button'
 import { useAtomValue } from 'jotai/utils'
 import Swap from 'pages/Swap'
@@ -298,7 +298,7 @@ export default function Landing() {
     ignoreQueryPrefix: true,
   })
 
-  const accountDrawerOpen = useAtomValue(accountDrawerOpenAtom)
+  const [accountDrawerOpen] = useAccountDrawer()
   useEffect(() => {
     if ((queryParams.intro || !selectedWallet) && !accountDrawerOpen) {
       setShowContent(true)
