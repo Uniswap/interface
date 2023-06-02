@@ -7,6 +7,7 @@ import { dappReducer } from 'src/background/features/dapp/slice'
 import { dappRequestReducer } from 'src/background/features/dappRequests/slice'
 import { PortName } from 'src/types'
 import { SagaGenerator, select } from 'typed-redux-saga'
+import { walletReducer } from 'wallet/src/features/wallet/slice'
 import { createStore, RootState } from 'wallet/src/state'
 import { sharedReducers } from 'wallet/src/state/reducer'
 import { wrapStore } from 'webext-redux'
@@ -15,6 +16,7 @@ import { monitoredSagaReducers, webRootSaga } from './saga'
 
 export const webReducers = {
   ...sharedReducers,
+  wallet: walletReducer,
   saga: monitoredSagaReducers,
   dapp: dappReducer,
   dappRequests: dappRequestReducer,
@@ -47,6 +49,7 @@ export function initializeStore(
 
 // TODO: set up lint rule to prevent imports from packages/wallet
 export type WebState = ReturnType<typeof webReducer> & RootState
+export type ReducerNames = keyof typeof webReducers
 export type AppDispatch = ReturnType<typeof createStore>['dispatch']
 export type AppSelector<T> = (state: WebState) => T
 

@@ -18,9 +18,11 @@ import { walletReducer } from 'src/features/wallet/walletSlice'
 import { walletConnectReducer } from 'src/features/walletConnect/walletConnectSlice'
 import { gasApi } from 'wallet/src/features/gas/gasApi'
 import { onChainBalanceApi } from 'wallet/src/features/portfolio/api'
+import { sharedReducers } from 'wallet/src/state/reducer'
 import { monitoredSagaReducers } from './saga'
 
 const reducers = {
+  ...sharedReducers,
   [ensApi.reducerPath]: ensApi.reducer,
   [fiatOnRampApi.reducerPath]: fiatOnRampApi.reducer,
   [gasApi.reducerPath]: gasApi.reducer,

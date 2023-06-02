@@ -1,8 +1,9 @@
 import { RootReducerNames } from 'wallet/src/state/reducer'
 import { PersistedStorage } from 'wallet/src/utils/persistedStorage'
+import { ReducerNames } from './store'
 
 /** Slices that are persisted across sessions in local storage. */
-const whitelist: Array<RootReducerNames> = ['wallet']
+const whitelist: Array<ReducerNames | RootReducerNames> = ['wallet']
 
 export const persistConfig = {
   key: 'root',

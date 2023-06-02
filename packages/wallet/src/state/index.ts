@@ -6,6 +6,7 @@ import { SelectEffect } from 'redux-saga/effects'
 import { SagaGenerator, select } from 'typed-redux-saga'
 import { loggerMiddleware } from 'wallet/src/features/logger/middleware'
 import { walletContextValue } from 'wallet/src/features/wallet/context'
+import { WalletState } from 'wallet/src/features/wallet/slice'
 import { SagaState } from 'wallet/src/utils/saga'
 import { sharedRootReducer } from './reducer'
 import { rootSaga } from './saga'
@@ -70,6 +71,7 @@ export function createStore({
 // Apps should re-define those with a more specific `AppState`
 export type RootState = ReturnType<typeof sharedRootReducer> & {
   saga: Record<string, SagaState>
+  wallet: WalletState // TODO: share this between mobile and web
 }
 export type AppDispatch = ReturnType<typeof createStore>['dispatch']
 export type AppSelector<T> = (state: RootState) => T
