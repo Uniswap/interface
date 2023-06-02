@@ -15,6 +15,7 @@ import { NavLink, NavLinkProps, useLocation, useNavigate } from 'react-router-do
 import { shouldDisableNFTRoutesAtom } from 'state/application/atoms'
 import styled from 'styled-components/macro'
 
+import { useIsNavSearchInputVisible } from '../../nft/hooks/useIsNavSearchInputVisible'
 import { Bag } from './Bag'
 import Blur from './Blur'
 import { ChainSelector } from './ChainSelector'
@@ -90,6 +91,7 @@ const Navbar = ({ blur }: { blur: boolean }) => {
   const isNftPage = useIsNftPage()
   const sellPageState = useProfilePageState((state) => state.state)
   const navigate = useNavigate()
+  const isNavSearchInputVisible = useIsNavSearchInputVisible()
 
   return (
     <>
@@ -120,12 +122,17 @@ const Navbar = ({ blur }: { blur: boolean }) => {
               <PageTabs />
             </Row>
           </Box>
-          <Box className={styles.searchContainer}>
+          <Box
+            className={styles.searchContainer}
+            {...(isNavSearchInputVisible && {
+              display: 'flex',
+            })}
+          >
             <SearchBar />
           </Box>
           <Box className={styles.rightSideContainer}>
             <Row gap="12">
-              <Box position="relative" display={{ sm: 'flex', navSearchInputVisible: 'none' }}>
+              <Box position="relative" display={isNavSearchInputVisible ? 'none' : { sm: 'flex' }}>
                 <SearchBar />
               </Box>
               {isNftPage && sellPageState !== ProfilePageStateType.LISTING && <Bag />}
