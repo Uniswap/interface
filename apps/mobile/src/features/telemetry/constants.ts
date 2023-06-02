@@ -81,6 +81,7 @@ export const enum ModalName {
   ReimportUninstall = 'reimport-uninstall-modal',
   ScreenshotWarning = 'screenshot-warning',
   Send = 'send-modal',
+  SeedPhraseWarningModal = 'seed-phrase-warning-modal',
   SendWarning = 'send-warning-modal',
   SlippageInfo = 'slippage-info-modal',
   Swap = 'swap-modal',

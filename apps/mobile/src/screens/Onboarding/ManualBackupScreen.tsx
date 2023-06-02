@@ -1,22 +1,26 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
+import LockIcon from 'ui/src/assets/icons/lock.svg'
+
 import { useResponsiveProp } from '@shopify/restyle'
 import { SharedEventName } from '@uniswap/analytics-events'
 import { addScreenshotListener } from 'expo-screen-capture'
 import React, { useEffect, useReducer, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useAppDispatch } from 'src/app/hooks'
+import { TouchableOpacity } from 'react-native-gesture-handler'
+import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { Button } from 'src/components/buttons/Button'
-import { CheckBox } from 'src/components/buttons/CheckBox'
 import { Flex } from 'src/components/layout'
 import {
   DEFAULT_MNEMONIC_DISPLAY_HEIGHT,
   FULL_MNEMONIC_DISPLAY_HEIGHT,
 } from 'src/components/mnemonic/constants'
-import { ManualBackupEducationSection } from 'src/components/mnemonic/ManualBackupEducationSection'
+import { HiddenMnemonicWordView } from 'src/components/mnemonic/HiddenMnemonicWordView'
 import { MnemonicDisplay } from 'src/components/mnemonic/MnemonicDisplay'
 import { MnemonicTest } from 'src/components/mnemonic/MnemonicTest'
+import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import WarningModal from 'src/components/modals/WarningModal/WarningModal'
+import { Text } from 'src/components/Text'
 import { useLockScreenOnBlur } from 'src/features/authentication/lockScreenContext'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
@@ -29,9 +33,8 @@ import { BackupType, SignerMnemonicAccount } from 'wallet/src/features/wallet/ac
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.BackupManual>
 
 enum View {
-  Education,
-  View,
-  Test,
+  SeedPhrase,
+  SeedPhraseTest,
 }
 
 export function ManualBackupScreen({ navigation, route: { params } }: Props): JSX.Element | null {
@@ -43,11 +46,13 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
   const activeAccount = useActiveAccount()
   const mnemonicId = (activeAccount as SignerMnemonicAccount)?.mnemonicId
 
-  const [hasConsent, setHasConsent] = useState(false)
   const [showScreenShotWarningModal, setShowScreenShotWarningModal] = useState(false)
-  const [view, nextView] = useReducer((curView: View) => curView + 1, View.Education)
+  const [view, nextView] = useReducer((curView: View) => curView + 1, View.SeedPhrase)
 
   const [continueButtonEnabled, setContinueButtonEnabled] = useState(false)
+
+  // warning modal on seed phrase view
+  const [seedWarningAcknowledged, setSeedWarningAcknowledged] = useState(false)
 
   const onValidationSuccessful = (): void => {
     if (activeAccount) {
@@ -62,7 +67,7 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
   }
 
   useEffect(() => {
-    if (view !== View.View) {
+    if (view !== View.SeedPhrase) {
       return
     }
 
@@ -94,12 +99,12 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
   // Manually log as page views as these screens are not captured in navigation events
   useEffect(() => {
     switch (view) {
-      case View.View:
+      case View.SeedPhrase:
         sendAnalyticsEvent(SharedEventName.PAGE_VIEWED, {
           screen: ManualPageViewScreen.WriteDownRecoveryPhrase,
         })
         break
-      case View.Test:
+      case View.SeedPhraseTest:
         sendAnalyticsEvent(SharedEventName.PAGE_VIEWED, {
           screen: ManualPageViewScreen.ConfirmRecoveryPhrase,
         })
@@ -107,30 +112,7 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
   }, [view])
 
   switch (view) {
-    case View.Education:
-      return (
-        <OnboardingScreen
-          paddingTop="spacing8"
-          title={t('Instructions for backing up your recovery phrase')}>
-          <ManualBackupEducationSection />
-          <Flex justifyContent="flex-end">
-            <CheckBox
-              checked={hasConsent}
-              text={t(
-                'I understand that if I lose my recovery phrase, Uniswap Labs cannot restore it.'
-              )}
-              onCheckPressed={(): void => setHasConsent(!hasConsent)}
-            />
-            <Button
-              disabled={!hasConsent}
-              label={t('Continue')}
-              name={ElementName.Next}
-              onPress={nextView}
-            />
-          </Flex>
-        </OnboardingScreen>
-      )
-    case View.View:
+    case View.SeedPhrase:
       return (
         <OnboardingScreen
           subtitle={t('Remember to record your words in the same order as they appear below.')}
@@ -148,22 +130,28 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
           )}
           <Flex grow justifyContent="space-between">
             <Flex mx="spacing16">
-              <MnemonicDisplay
-                height={mnemonicDisplayHeight ?? DEFAULT_MNEMONIC_DISPLAY_HEIGHT}
-                mnemonicId={mnemonicId}
-              />
+              {seedWarningAcknowledged ? (
+                <MnemonicDisplay
+                  height={mnemonicDisplayHeight ?? DEFAULT_MNEMONIC_DISPLAY_HEIGHT}
+                  mnemonicId={mnemonicId}
+                />
+              ) : (
+                <HiddenMnemonicWordView />
+              )}
             </Flex>
             <Flex grow justifyContent="flex-end">
               <Button label={t('Continue')} name={ElementName.Next} onPress={nextView} />
             </Flex>
           </Flex>
+          {!seedWarningAcknowledged && (
+            <SeedWarningModal onPress={(): void => setSeedWarningAcknowledged(true)} />
+          )}
         </OnboardingScreen>
       )
-
-    case View.Test:
+    case View.SeedPhraseTest:
       return (
         <OnboardingScreen subtitle={responsiveSubtitle} title={responsiveTitle}>
-          <Flex grow pt="spacing12">
+          <Flex grow pointerEvents={continueButtonEnabled ? 'none' : 'auto'} pt="spacing12">
             <MnemonicTest
               mnemonicId={mnemonicId}
               onTestComplete={(): void => setContinueButtonEnabled(true)}
@@ -182,4 +170,39 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
   }
 
   return null
+}
+
+const SeedWarningModal = ({ onPress }: { onPress: () => void }): JSX.Element => {
+  const theme = useAppTheme()
+  const { t } = useTranslation()
+  return (
+    <BottomSheetModal
+      backgroundColor={theme.colors.background1}
+      hideHandlebar={true}
+      isDismissible={false}
+      name={ModalName.SeedPhraseWarningModal}>
+      <Flex centered gap="spacing12" pb="spacing48" pt="spacing12" px="spacing24">
+        <Flex centered backgroundColor="background3" borderRadius="roundedFull" padding="spacing8">
+          <LockIcon
+            color={theme.colors.textPrimary}
+            height={theme.iconSizes.icon24}
+            width={theme.iconSizes.icon24}
+          />
+        </Flex>
+        <Text color="textPrimary" variant="bodyLarge">
+          {t('Do this step in a private place')}
+        </Text>
+        <Text color="textTertiary" textAlign="center" variant="bodySmall">
+          {t(
+            'Your recovery phrase is what grants you (and anyone who has it) access to your funds. Be sure to store it in a memorable, safe space.'
+          )}
+        </Text>
+        <TouchableOpacity onPress={onPress}>
+          <Text color="magentaVibrant" paddingTop="spacing24" variant="buttonLabelMedium">
+            {t('I’m ready')}
+          </Text>
+        </TouchableOpacity>
+      </Flex>
+    </BottomSheetModal>
+  )
 }
