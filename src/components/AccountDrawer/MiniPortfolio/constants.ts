@@ -153,3 +153,11 @@ export function getActivityTitle(type: TransactionType, status: TransactionStatu
   }
   return TransactionTitleTable[type][status]
 }
+
+// Non-exhaustive list of addresses Moonpay uses when sending purchased tokens
+export const MOONPAY_SENDER_ADDRESSES = [
+  '0x8216874887415e2650d12d53ff53516f04a74fd7',
+  '0x151b381058f91cf871e7ea1ee83c45326f61e96d',
+  '0xb287eac48ab21c5fb1d3723830d60b4c797555b0',
+  '0xd108fd0e8c8e71552a167e7a44ff1d345d233ba6',
+]

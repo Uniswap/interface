@@ -7,6 +7,7 @@ import PrefetchBalancesWrapper from 'components/AccountDrawer/PrefetchBalancesWr
 import Loader from 'components/Icons/LoadingSpinner'
 import { IconWrapper } from 'components/Identicon/StatusIcon'
 import { useGetConnection } from 'connection'
+import { navSearchInputVisibleSize } from 'hooks/useScreenSize'
 import { Portal } from 'nft/components/common/Portal'
 import { useIsNftClaimAvailable } from 'nft/hooks/useIsNftClaimAvailable'
 import { darken } from 'polished'
@@ -107,7 +108,7 @@ const Web3StatusConnected = styled(Web3StatusGeneric)<{
 const AddressAndChevronContainer = styled.div`
   display: flex;
 
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.navSearchInputVisible}px`}) {
+  @media only screen and (max-width: ${navSearchInputVisibleSize}px) {
     display: none;
   }
 `
