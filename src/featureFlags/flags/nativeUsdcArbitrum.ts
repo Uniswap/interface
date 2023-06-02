@@ -1,6 +1,6 @@
 import { BaseVariant, FeatureFlag, useBaseFlag } from '../index'
 
-function useNativeUSDCArbitrumFlag(): BaseVariant {
+export function useNativeUSDCArbitrumFlag(): BaseVariant {
   return useBaseFlag(FeatureFlag.nativeUsdcArbitrum)
 }
 
