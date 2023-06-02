@@ -53,15 +53,15 @@ function getTokenLogoURI(address: string, chainId: SupportedChainId = SupportedC
     SupportedChainId.OPTIMISM,
     SupportedChainId.BNB,
   ]
-  if (networksWithUrls.includes(chainId)) {
-    return `https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/${networkName}/assets/${address}/logo.png`
-  }
-
   // Celo logo logo is hosted elsewhere.
   if (isCelo(chainId)) {
     if (address === nativeOnChain(chainId).wrapped.address) {
-      return 'https://s2.coinmarketcap.com/static/img/coins/64x64/5567.png'
+      return CeloLogo
     }
+  }
+
+  if (networksWithUrls.includes(chainId)) {
+    return `https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/${networkName}/assets/${address}/logo.png`
   }
 }
 

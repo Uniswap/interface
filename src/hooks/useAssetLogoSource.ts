@@ -5,6 +5,8 @@ import uriToHttp from 'lib/utils/uriToHttp'
 import { useCallback, useEffect, useState } from 'react'
 import { isAddress } from 'utils'
 
+import celoLogo from '../assets/svg/celo_logo.svg'
+
 const BAD_SRCS: { [tokenAddress: string]: true } = {}
 
 // Converts uri's into fetchable urls
@@ -44,7 +46,7 @@ function getInitialUrl(address?: string | null, chainId?: number | null, isNativ
   // Celo logo logo is hosted elsewhere.
   if (chainId && isCelo(chainId)) {
     if (address === nativeOnChain(chainId).wrapped.address) {
-      return 'https://s2.coinmarketcap.com/static/img/coins/64x64/5567.png'
+      return celoLogo
     }
   }
 
