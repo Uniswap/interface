@@ -17,7 +17,10 @@ export enum AppRoutes {
 }
 
 export enum SettingsRoutes {
-  Home = '',
-  EditWallet = 'edit-wallet',
+  Wallet = 'wallet',
   ViewRecoveryPhrase = 'view-recovery-phrase',
+}
+
+export enum SettingsWalletRoutes {
+  EditNickname = 'edit-nickname',
 }

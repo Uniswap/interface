@@ -8,10 +8,13 @@ import { IntroScreen } from 'src/app/features/onboarding/IntroScreen'
 import { OnboardingWrapper } from 'src/app/features/onboarding/OnboardingWrapper'
 import { Password } from 'src/app/features/onboarding/Password'
 import { SettingsScreen } from 'src/app/features/settings/SettingsScreen'
+import { SettingsWalletEditNicknameScreen } from 'src/app/features/settings/SettingsWalletEditNicknameScreen'
+import { SettingsWalletScreen } from 'src/app/features/settings/SettingsWalletScreen'
 import {
   AppRoutes,
   OnboardingRoutes,
   SettingsRoutes,
+  SettingsWalletRoutes,
   TopLevelRoutes,
 } from 'src/app/navigation/constants'
 import { Flex } from 'ui/src/components/layout/Flex'
@@ -60,12 +63,12 @@ const router = createHashRouter([
         element: <SettingsScreen />,
         children: [
           {
-            path: SettingsRoutes.Home,
-            element: <Flex />, // TODO: Add home screen content
+            path: SettingsRoutes.Wallet,
+            element: <SettingsWalletScreen />,
           },
           {
-            path: SettingsRoutes.EditWallet,
-            element: <Flex />, // TODO: Add EditWallet screen
+            path: `${SettingsRoutes.Wallet}/${SettingsWalletRoutes.EditNickname}`,
+            element: <SettingsWalletEditNicknameScreen />,
           },
           {
             path: SettingsRoutes.ViewRecoveryPhrase,
