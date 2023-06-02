@@ -2,7 +2,7 @@
 describe('Link', () => {
   it('should update route', () => {
     cy.viewport(2000, 1600)
-    cy.visit('/')
+    cy.visit('/swap')
     cy.contains('Pool').click()
     cy.get('[data-cy="join-pool-button"]').should('exist')
   })
