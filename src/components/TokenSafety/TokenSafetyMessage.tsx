@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { getWarningCopy, TOKEN_SAFETY_ARTICLE, Warning } from 'constants/tokenSafety'
+import { displayWarningLabel, getWarningCopy, TOKEN_SAFETY_ARTICLE, Warning } from 'constants/tokenSafety'
 import { useTokenWarningColor, useTokenWarningTextColor } from 'hooks/useTokenWarningColor'
 import { AlertTriangle, Slash } from 'react-feather'
 import { Text } from 'rebass'
@@ -53,7 +53,7 @@ export default function TokenSafetyMessage({ warning, tokenAddress }: TokenSafet
 
   return (
     <Label data-cy="token-safety-message" color={textColor} backgroundColor={backgroundColor}>
-      {warning.displayLabel && (
+      {displayWarningLabel(warning) && (
         <TitleRow>
           {warning.canProceed ? <AlertTriangle size="16px" /> : <Slash size="16px" />}
           <Title marginLeft="7px">{warning.message}</Title>

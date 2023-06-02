@@ -58,28 +58,30 @@ export type Warning = {
   message: JSX.Element
   /** Determines whether triangle/slash alert icon is used, and whether this token is supported/able to be traded. */
   canProceed: boolean
-  displayLabel: boolean
 }
 
 const MediumWarning: Warning = {
   level: WARNING_LEVEL.MEDIUM,
   message: <Trans>Caution</Trans>,
   canProceed: true,
-  displayLabel: false,
 }
 
 const StrongWarning: Warning = {
   level: WARNING_LEVEL.UNKNOWN,
   message: <Trans>Warning</Trans>,
   canProceed: true,
-  displayLabel: true,
 }
 
 const BlockedWarning: Warning = {
   level: WARNING_LEVEL.BLOCKED,
   message: <Trans>Not Available</Trans>,
   canProceed: false,
-  displayLabel: true,
+}
+
+export const NotFoundWarning: Warning = {
+  level: WARNING_LEVEL.UNKNOWN,
+  message: <Trans>Token not found</Trans>,
+  canProceed: false,
 }
 
 export function checkWarning(tokenAddress: string) {
@@ -106,4 +108,8 @@ export function checkSearchTokenWarning(token: SearchToken) {
     return token.standard === TokenStandard.Native ? null : StrongWarning
   }
   return checkWarning(token.address)
+}
+
+export function displayWarningLabel(warning: Warning | null) {
+  return warning && warning.level !== WARNING_LEVEL.MEDIUM
 }

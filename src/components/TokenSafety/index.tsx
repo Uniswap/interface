@@ -4,7 +4,15 @@ import { ButtonPrimary } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import TokenSafetyLabel from 'components/TokenSafety/TokenSafetyLabel'
-import { checkWarning, getWarningCopy, TOKEN_SAFETY_ARTICLE, Warning, WARNING_LEVEL } from 'constants/tokenSafety'
+import {
+  checkWarning,
+  displayWarningLabel,
+  getWarningCopy,
+  NotFoundWarning,
+  TOKEN_SAFETY_ARTICLE,
+  Warning,
+  WARNING_LEVEL,
+} from 'constants/tokenSafety'
 import { useToken } from 'hooks/Tokens'
 import { ExternalLink as LinkIconFeather } from 'react-feather'
 import { Text } from 'rebass'
@@ -23,7 +31,7 @@ const Wrapper = styled.div`
 
 const Container = styled.div`
   width: 100%;
-  padding: 32px 50px;
+  padding: 32px 40px;
   display: flex;
   flex-flow: column;
   align-items: center;
@@ -251,12 +259,6 @@ export default function TokenSafety({
       <Trans>Learn more</Trans>
     </StyledExternalLink>
   )
-  const tokenNotFoundWarning = {
-    level: WARNING_LEVEL.UNKNOWN,
-    message: <Trans>Token not found</Trans>,
-    canProceed: false,
-    displayLabel: true,
-  }
 
   return displayWarning ? (
     <Wrapper data-testid="TokenSafetyWrapper">
@@ -264,7 +266,7 @@ export default function TokenSafety({
         <AutoColumn>
           <LogoContainer>{logos}</LogoContainer>
         </AutoColumn>
-        {displayWarning.displayLabel && (
+        {displayWarningLabel(displayWarning) && (
           <ShortColumn>
             <SafetyLabel warning={displayWarning} />
           </ShortColumn>
@@ -288,14 +290,14 @@ export default function TokenSafety({
     <Wrapper>
       <Container>
         <ShortColumn>
-          <SafetyLabel warning={tokenNotFoundWarning} />
+          <SafetyLabel warning={NotFoundWarning} />
         </ShortColumn>
         <ShortColumn>
           <InfoText>
             {heading} {description} {learnMoreUrl}
           </InfoText>
         </ShortColumn>
-        <Buttons warning={tokenNotFoundWarning} onCancel={onCancel} showCancel={true} />
+        <Buttons warning={NotFoundWarning} onCancel={onCancel} showCancel={true} />
       </Container>
     </Wrapper>
   )
