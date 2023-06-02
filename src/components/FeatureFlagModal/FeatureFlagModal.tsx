@@ -1,7 +1,8 @@
 import { BaseVariant, FeatureFlag, featureFlagSettings, useUpdateFlag } from 'featureFlags'
+import { useNativeUSDCArbitrumFlag } from 'featureFlags/flags/nativeUsdcArbitrum'
 import { DetailsV2Variant, useDetailsV2Flag } from 'featureFlags/flags/nftDetails'
 import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
-import { UnifiedRouterVariant, useUnifiedRoutingAPIFlag } from 'featureFlags/flags/unifiedRouter'
+import { UnifiedRouterVariant, useRoutingAPIV2Flag } from 'featureFlags/flags/unifiedRouter'
 import { useUpdateAtom } from 'jotai/utils'
 import { Children, PropsWithChildren, ReactElement, ReactNode, useCallback, useState } from 'react'
 import { X } from 'react-feather'
@@ -210,9 +211,15 @@ export default function FeatureFlagModal() {
       />
       <FeatureFlagOption
         variant={UnifiedRouterVariant}
-        value={useUnifiedRoutingAPIFlag()}
+        value={useRoutingAPIV2Flag()}
         featureFlag={FeatureFlag.uraEnabled}
         label="Enable the Unified Routing API"
+      />
+      <FeatureFlagOption
+        variant={BaseVariant}
+        value={useNativeUSDCArbitrumFlag()}
+        featureFlag={FeatureFlag.nativeUsdcArbitrum}
+        label="Enable Circle native USDC on Arbitrum"
       />
       <FeatureFlagGroup name="Debug">
         <FeatureFlagOption

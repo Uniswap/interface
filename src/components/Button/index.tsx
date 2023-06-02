@@ -391,6 +391,7 @@ export enum ButtonEmphasis {
   low,
   warning,
   destructive,
+  failure,
 }
 interface BaseThemeButtonProps {
   size: ButtonSize
@@ -411,6 +412,8 @@ function pickThemeButtonBackgroundColor({ theme, emphasis }: { theme: DefaultThe
       return theme.accentWarningSoft
     case ButtonEmphasis.destructive:
       return theme.accentCritical
+    case ButtonEmphasis.failure:
+      return theme.accentFailureSoft
     case ButtonEmphasis.medium:
     default:
       return theme.backgroundInteractive
@@ -465,6 +468,8 @@ function pickThemeButtonTextColor({ theme, emphasis }: { theme: DefaultTheme; em
       return theme.accentWarning
     case ButtonEmphasis.destructive:
       return theme.accentTextDarkPrimary
+    case ButtonEmphasis.failure:
+      return theme.accentFailure
     case ButtonEmphasis.medium:
     default:
       return theme.textPrimary

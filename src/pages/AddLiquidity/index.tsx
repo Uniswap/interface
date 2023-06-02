@@ -57,7 +57,7 @@ import { useV3PositionFromTokenId } from '../../hooks/useV3Positions'
 import { Bound, Field } from '../../state/mint/v3/actions'
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { TransactionType } from '../../state/transactions/types'
-import { useIsExpertMode, useUserSlippageToleranceWithDefault } from '../../state/user/hooks'
+import { useUserSlippageToleranceWithDefault } from '../../state/user/hooks'
 import { ThemedText } from '../../theme'
 import approveAmountCalldata from '../../utils/approveAmountCalldata'
 import { calculateGasMargin } from '../../utils/calculateGasMargin'
@@ -103,7 +103,6 @@ function AddLiquidity() {
   const theme = useTheme()
 
   const toggleWalletDrawer = useToggleAccountDrawer() // toggle wallet when disconnected
-  const expertMode = useIsExpertMode()
   const addTransaction = useTransactionAdder()
   const positionManager = useV3NFTPositionManagerContract()
 
@@ -532,7 +531,7 @@ function AddLiquidity() {
           )}
         <ButtonError
           onClick={() => {
-            expertMode ? onAdd() : setShowConfirm(true)
+            setShowConfirm(true)
           }}
           disabled={
             !isValid ||
