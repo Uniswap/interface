@@ -48,11 +48,13 @@ const ButtonSeparator = styled.div<{ shouldHide?: boolean }>`
   ${({ shouldHide }) => shouldHide && `display: none;`}
 `
 
-const AddToBagButton = styled(BaseButton)<{ isExpanded: boolean }>`
+const AddToBagButton = styled(BaseButton)<{ isExpanded: boolean; shouldHide: boolean }>`
   width: ${({ isExpanded }) => (isExpanded ? '100%' : 'min-content')};
   transition: ${({ theme }) => theme.transition.duration.medium};
   flex-shrink: 0;
   will-change: width;
+
+  ${({ shouldHide }) => shouldHide && `width: 0px; padding: 0px;`}
 `
 
 const StyledBuyButton = styled(BaseButton)<{ shouldHide?: boolean }>`
@@ -62,6 +64,9 @@ const StyledBuyButton = styled(BaseButton)<{ shouldHide?: boolean }>`
   overflow: hidden;
 
   ${({ shouldHide }) => shouldHide && `width: 0px; padding: 0px;`}
+  &:disabled {
+    width: 100%;
+  }
 `
 
 const ButtonContainer = styled(Row)<{ dataPage: boolean }>`
@@ -195,16 +200,13 @@ export const BuyButton = ({ asset, isOnDataPage }: { asset: GenieAsset; isOnData
     event.currentTarget.blur()
   }
   const secondaryButtonExpanded = addToBagExpanded || Boolean(isOnDataPage)
+  const isDisabled = isLoadingRoute || connectingToWallet
 
   return (
     <ButtonContainer dataPage={Boolean(isOnDataPage)}>
       {!isOnDataPage && (
         <>
-          <StyledBuyButton
-            shouldHide={secondaryButtonExpanded}
-            disabled={isLoadingRoute || connectingToWallet}
-            onClick={oneClickBuyAsset}
-          >
+          <StyledBuyButton shouldHide={secondaryButtonExpanded} disabled={isDisabled} onClick={oneClickBuyAsset}>
             {connectingToWallet && (
               <>
                 <Trans>Connect Wallet</Trans>
@@ -224,7 +226,7 @@ export const BuyButton = ({ asset, isOnDataPage }: { asset: GenieAsset; isOnData
               </>
             )}
           </StyledBuyButton>
-          <ButtonSeparator shouldHide={addToBagExpanded} />
+          <ButtonSeparator shouldHide={addToBagExpanded || isDisabled} />
         </>
       )}
       <AddToBagButton
@@ -232,6 +234,7 @@ export const BuyButton = ({ asset, isOnDataPage }: { asset: GenieAsset; isOnData
         onMouseLeave={() => setAddToBagExpanded(false)}
         onClick={secondaryButtonAction}
         isExpanded={secondaryButtonExpanded}
+        shouldHide={isDisabled}
       >
         <SecondaryButtonIcon />
         {secondaryButtonExpanded && secondaryButtonCta}
