@@ -71,9 +71,9 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
     refetchOnMountOrArgChange: 2 * 60,
   })
 
-  const tradeResult = v2TradeResult ?? legacyAPITradeResult
-  const currentTradeResult = currentLegacyAPITradeResult ?? currentV2TradeResult
-  const isError = isLegacyAPIError || isV2APIError
+  const [tradeResult, currentTradeResult, isError] = shouldUseRoutingApiV2
+    ? [v2TradeResult, currentV2TradeResult, isV2APIError]
+    : [legacyAPITradeResult, currentLegacyAPITradeResult, isLegacyAPIError]
 
   const isCurrent = currentTradeResult === tradeResult
 
