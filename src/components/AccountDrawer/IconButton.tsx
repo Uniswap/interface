@@ -65,7 +65,7 @@ const IconWrapper = styled.span`
   margin: auto;
   display: flex;
 `
-type BaseProps = {
+interface BaseProps {
   Icon: Icon
   children?: React.ReactNode
 }
@@ -110,7 +110,14 @@ const TextWrapper = styled.div`
  * Note that for width transitions to animate in CSS we need to always specify the width (no auto)
  * so there's resize observing and measuring going on here.
  */
-export const IconWithTextButton = ({ Icon, text, onConfirm, onShowConfirm, onClick, ...rest }: IconWithTextProps) => {
+export const IconWithConfirmTextButton = ({
+  Icon,
+  text,
+  onConfirm,
+  onShowConfirm,
+  onClick,
+  ...rest
+}: IconWithTextProps) => {
   const [showText, _setShowText] = useState(false)
   const frameObserver = useResizeObserver<HTMLElement>()
   const hiddenObserver = useResizeObserver<HTMLElement>()

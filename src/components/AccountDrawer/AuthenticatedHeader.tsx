@@ -31,7 +31,7 @@ import { ApplicationModal } from '../../state/application/reducer'
 import { useUserHasAvailableClaim, useUserUnclaimedAmount } from '../../state/claim/hooks'
 import StatusIcon from '../Identicon/StatusIcon'
 import { useToggleAccountDrawer } from '.'
-import IconButton, { IconHoverText, IconWithTextButton } from './IconButton'
+import IconButton, { IconHoverText, IconWithConfirmTextButton } from './IconButton'
 import MiniPortfolio from './MiniPortfolio'
 import { portfolioFadeInAnimation } from './MiniPortfolio/PortfolioRow'
 
@@ -268,7 +268,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
             name={SharedEventName.ELEMENT_CLICKED}
             element={InterfaceElementName.DISCONNECT_WALLET_BUTTON}
           >
-            <IconWithTextButton
+            <IconWithConfirmTextButton
               data-testid="wallet-disconnect"
               onConfirm={disconnect}
               onShowConfirm={setShowDisconnectConfirm}
