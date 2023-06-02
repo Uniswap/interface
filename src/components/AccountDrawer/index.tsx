@@ -4,11 +4,12 @@ import { ScrollBarStyles } from 'components/Common'
 import { useWindowSize } from 'hooks/useWindowSize'
 import { atom } from 'jotai'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
-import { useCallback, useEffect, useRef } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { ChevronsRight } from 'react-feather'
 import styled from 'styled-components/macro'
 import { BREAKPOINTS, ClickableStyle } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
+import { isMobile } from 'utils/userAgent'
 
 import DefaultMenu from './DefaultMenu'
 
@@ -181,6 +182,8 @@ function AccountDrawer() {
     }
   }, [walletDrawerOpen, toggleWalletDrawer])
 
+  const [yPosition, setYPosition] = useState(0)
+
   // close on swipe down on mobile
   useEffect(() => {
     const touchStartHandler = (event: TouchEvent) => {
@@ -190,11 +193,18 @@ function AccountDrawer() {
         const touchMoveHandler = (event: TouchEvent) => {
           const touch = event.touches[0]
           const deltaY = touch.clientY - startY
-          if (deltaY > 30 && walletDrawerOpen) {
-            toggleWalletDrawer()
+          if (deltaY > 0) {
+            setYPosition(deltaY)
           }
         }
-        const touchEndHandler = () => {
+        const touchEndHandler = (event: TouchEvent) => {
+          const touch = event.changedTouches[0]
+          const deltaY = touch.clientY - startY
+          if (walletDrawerOpen && deltaY > 100) {
+            toggleWalletDrawer()
+          } else {
+            setYPosition(0)
+          }
           document.removeEventListener('touchmove', touchMoveHandler)
           document.removeEventListener('touchend', touchEndHandler)
         }
@@ -224,7 +234,14 @@ function AccountDrawer() {
         </TraceEvent>
       )}
       <Scrim onClick={toggleWalletDrawer} open={walletDrawerOpen} />
-      <AccountDrawerWrapper open={walletDrawerOpen}>
+      <AccountDrawerWrapper
+        open={walletDrawerOpen}
+        {...(isMobile
+          ? {
+              style: { transform: `translateY(${yPosition}px)` },
+            }
+          : {})}
+      >
         {/* id used for child InfiniteScrolls to reference when it has reached the bottom of the component */}
         <AccountDrawerScrollWrapper ref={scrollRef} id="wallet-dropdown-scroll-wrapper">
           <DefaultMenu />
