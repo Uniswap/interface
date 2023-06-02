@@ -1,7 +1,7 @@
 import { createReducer } from '@reduxjs/toolkit'
 import { parsedQueryString } from 'hooks/useParsedQueryString'
 
-import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies, typeInput, setLeverageFactor, setHideClosedLeveragePositions, setLeverage, setLeverageManagerAddress, ActiveSwapTab, setActiveTab } from './actions'
+import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies, typeInput, setLeverageFactor, setHideClosedLeveragePositions, setLeverage, setLeverageManagerAddress, ActiveSwapTab, setActiveTab, setLTV, setBorrowManagerAddress } from './actions'
 import { queryParametersToSwapState } from './hooks'
 import { statsText } from 'nft/components/collection/CollectionStats.css'
 
@@ -21,6 +21,8 @@ export interface SwapState {
   readonly leverage: boolean
   readonly leverageManagerAddress: string | undefined | null
   readonly activeTab: ActiveSwapTab
+  readonly ltv: string | undefined | null
+  readonly borrowManagerAddress: string | undefined | null
 }
 
 const initialState: SwapState = queryParametersToSwapState(parsedQueryString())
@@ -29,7 +31,7 @@ export default createReducer<SwapState>(initialState, (builder) =>
   builder
     .addCase(
       replaceSwapState,
-      (state, { payload: { typedValue, recipient, field, inputCurrencyId, outputCurrencyId, leverage, leverageFactor, hideClosedLeveragePositions, leverageManagerAddress, activeTab } }) => {
+      (state, { payload: { typedValue, recipient, field, inputCurrencyId, outputCurrencyId, leverage, leverageFactor, hideClosedLeveragePositions, leverageManagerAddress, activeTab, ltv, borrowManagerAddress } }) => {
         return {
           [Field.INPUT]: {
             currencyId: inputCurrencyId ?? null,
@@ -44,7 +46,9 @@ export default createReducer<SwapState>(initialState, (builder) =>
           leverage,
           hideClosedLeveragePositions,
           leverageManagerAddress: leverageManagerAddress ?? null,
-          activeTab: activeTab
+          activeTab: activeTab,
+          ltv: ltv ?? null,
+          borrowManagerAddress: borrowManagerAddress ?? null
         }
       }
     )
@@ -66,10 +70,10 @@ export default createReducer<SwapState>(initialState, (builder) =>
         }
       }
     })
-    .addCase(switchCurrencies, (state) => {
+    .addCase(switchCurrencies, (state, { payload: { leverage }}) => {
       return {
         ...state,
-        independentField: state.independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT,
+        independentField: !leverage ? (state.independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT) : Field.INPUT,
         [Field.INPUT]: { currencyId: state[Field.OUTPUT].currencyId },
         [Field.OUTPUT]: { currencyId: state[Field.INPUT].currencyId },
       }
@@ -117,6 +121,13 @@ export default createReducer<SwapState>(initialState, (builder) =>
     .addCase(setActiveTab, (state, { payload: { activeTab } }) => ({
       ...state,
       activeTab
-    })
-    )
+    }))
+    .addCase(setLTV, (state, { payload: { ltv } }) => ({
+      ...state,
+      ltv
+    }))
+    .addCase(setBorrowManagerAddress, (state, { payload: { borrowManagerAddress } }) => ({
+      ...state,
+      borrowManagerAddress
+    }))
 )

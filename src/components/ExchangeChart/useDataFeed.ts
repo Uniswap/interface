@@ -50,12 +50,12 @@ export default function useDatafeed(
     return {
       datafeed: {
         onReady: (callback: any) => {
-          console.log('[onReady]: Method call');
+          // console.log('[onReady]: Method call');
           setTimeout(() => callback(configurationData));
         },
         // symbolName => JSON obj. w/ token0Symbol, token1Symbol, poolAddress
         resolveSymbol: (symbolName: string, onSymbolResolvedCallback: any, onResolveErrorCallback: any, extension: any) => {
-          console.log('[resolveSymbol]: Method call', symbolName);
+          // console.log('[resolveSymbol]: Method call', symbolName);
           if (symbolName === "") {
             return onResolveErrorCallback("Symbol cannot be empty");
           }
@@ -87,7 +87,7 @@ export default function useDatafeed(
           setTimeout(() => onSymbolResolvedCallback(symbolInfo));
         },
         searchSymbols: (userInput: any, exchange: any, symbolType: any, onResultReadyCallback: any) => {
-          console.log('[searchSymbols]: Method call');
+          // console.log('[searchSymbols]: Method call');
         },
         getBars: async (
           symbolInfo: SymbolInfo,
@@ -96,7 +96,7 @@ export default function useDatafeed(
           onHistoryCallback: HistoryCallback,
           onErrorCallback: (error: string) => void
         ) => {
-          console.log('[getBars]: Method call', symbolInfo, periodParams);
+          // console.log('[getBars]: Method call', symbolInfo, periodParams);
           if (!_.has(SUPPORTED_RESOLUTIONS, resolution)) {
             return onErrorCallback("[getBars] Invalid resolution");
           }
@@ -111,7 +111,7 @@ export default function useDatafeed(
               console.error("subgraph error: ", error, data);
               return onErrorCallback("Unable to load historical data!");
             }
-            console.log(`[getBars]: returned ${data.length} bar(s)`, data[0]);
+            // console.log(`[getBars]: returned ${data.length} bar(s)`, data[0]);
             onHistoryCallback(data, { noData });
           } catch (err) {
             onErrorCallback("Unable to load historical data!");
@@ -124,10 +124,10 @@ export default function useDatafeed(
           _subscribeUID: string,
           onResetCacheNeededCallback: () => void
         ) => {
-          console.log('[subscribeBars]: Method call with subscriberUID:', _subscribeUID);
+          // console.log('[subscribeBars]: Method call with subscriberUID:', _subscribeUID);
         },
         unsubscribeBars: (subscriberUID: any) => {
-          console.log('[unsubscribeBars]: Method call with subscriberUID:', subscriberUID);
+          // console.log('[unsubscribeBars]: Method call with subscriberUID:', subscriberUID);
         },
       }
     }

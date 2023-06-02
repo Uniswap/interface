@@ -17,9 +17,9 @@ import useParsedQueryString from '../../hooks/useParsedQueryString'
 import { isAddress } from '../../utils'
 import { useCurrencyBalances } from '../connection/hooks'
 import { AppState } from '../types'
-import { Field, replaceSwapState, selectCurrency, setHideClosedLeveragePositions, setLeverageFactor, setRecipient, switchCurrencies, typeInput, setLeverage, setLeverageManagerAddress, ActiveSwapTab, setActiveTab } from './actions'
+import { Field, replaceSwapState, selectCurrency, setHideClosedLeveragePositions, setLeverageFactor, setRecipient, switchCurrencies, typeInput, setLeverage, setLeverageManagerAddress, ActiveSwapTab, setActiveTab, setBorrowManagerAddress, setLTV } from './actions'
 import { SwapState } from './reducer'
-import { useLeverageManagerContract } from "../../hooks/useContract"
+import { useBorrowManagerContract, useLeverageManagerContract } from "../../hooks/useContract"
 import { BigNumber as BN } from "bignumber.js";
 import { usePool } from 'hooks/usePools'
 import { FeeAmount, Pool, computePoolAddress } from '@uniswap/v3-sdk'
@@ -38,7 +38,7 @@ export function useSwapState(): AppState['swap'] {
 
 export function useSwapActionHandlers(): {
   onCurrencySelection: (field: Field, currency: Currency) => void
-  onSwitchTokens: () => void
+  onSwitchTokens: (leverage: boolean) => void
   onUserInput: (field: Field, typedValue: string) => void
   onChangeRecipient: (recipient: string | null) => void
   onLeverageFactorChange: (leverage: string) => void
@@ -46,6 +46,8 @@ export function useSwapActionHandlers(): {
   onLeverageChange: (leverage: boolean) => void
   onLeverageManagerAddress: (leverageManagerAddress: string) => void
   onActiveTabChange: (activeTab: ActiveSwapTab) => void
+  onLTVChange: (ltv: string) => void
+  onBorrowManagerAddress: (borrowManagerAddress: string) => void
 } {
   const dispatch = useAppDispatch()
   const onCurrencySelection = useCallback(
@@ -60,8 +62,8 @@ export function useSwapActionHandlers(): {
     [dispatch]
   )
 
-  const onSwitchTokens = useCallback(() => {
-    dispatch(switchCurrencies())
+  const onSwitchTokens = useCallback((leverage: boolean) => {
+    dispatch(switchCurrencies({leverage}))
   }, [dispatch])
 
   const onUserInput = useCallback(
@@ -110,6 +112,16 @@ export function useSwapActionHandlers(): {
       dispatch(setActiveTab({ activeTab }))
     }, [dispatch])
 
+  const onLTVChange = useCallback(
+    (ltv: string) => {
+      dispatch(setLTV({ ltv: ltv }))
+    }, [dispatch])
+
+  const onBorrowManagerAddress = useCallback(
+    (borrowManagerAddress: string) => {
+      dispatch(setBorrowManagerAddress({ borrowManagerAddress: borrowManagerAddress }))
+    }, [dispatch])
+
   return {
     onSwitchTokens,
     onCurrencySelection,
@@ -119,7 +131,9 @@ export function useSwapActionHandlers(): {
     onHideClosedLeveragePositions,
     onLeverageChange,
     onLeverageManagerAddress,
-    onActiveTabChange
+    onActiveTabChange,
+    onLTVChange,
+    onBorrowManagerAddress
   }
 }
 
@@ -133,7 +147,7 @@ export interface LeverageTrade {
   inputAmount: CurrencyAmount<Currency> | undefined
   borrowedAmount: CurrencyAmount<Currency> | undefined
   state: LeverageTradeState
-  expectedOutput: number | undefined
+  expectedOutput: number | undefined // new output. i.e. new position - existing position.
   strikePrice: number | undefined
   quotedPremium: number | undefined
   priceImpact: Percent | undefined
@@ -141,12 +155,17 @@ export interface LeverageTrade {
 }
 
 export interface BorrowCreationDetails {
-  inputAmount: CurrencyAmount<Currency> | undefined
-  borrowedAmount: CurrencyAmount<Currency> | undefined
-  collateralAmount: CurrencyAmount<Currency> | undefined
-  LTV: number | undefined
-
+  collateralAmount: number | undefined// CurrencyAmount<Currency> | undefined
+  borrowedAmount: number | undefined // totalDebtInput
+  quotedPremium: number | undefined
+  unusedPremium: number | undefined
+  priceImpact: Percent | undefined
+  state: TradeState
 }
+
+// in its return the pos, vars.prevRemainingPremium, vars.premium, the vars.premium is new quoted, prevRemaining is unused amount you get back,
+// for pos struct totalDebtInput
+// is the amount borrowed given collateral and ltv
 
 export function useBestPoolAddress(
   inputCurrency: Currency | undefined,
@@ -185,6 +204,224 @@ export function useBestPool(
 }
 
 
+export function useDerivedBorrowCreationInfo({ allowance } : { allowance: ApprovalState })
+  : {
+    currencies: { [field in Field]?: Currency | null }
+    currencyBalances: { [field in Field]?: CurrencyAmount<Currency> }
+    parsedAmount: CurrencyAmount<Currency> | undefined
+    inputError?: ReactNode
+    trade: BorrowCreationDetails
+    allowedSlippage: Percent
+    contractError?: ReactNode
+  } {
+
+  const { account } = useWeb3React()
+  const [tradeState, setTradeState] = useState<TradeState>(TradeState.LOADING)
+  const [contractResult, setContractResult] = useState()
+
+  const {
+    typedValue,
+    [Field.INPUT]: { currencyId: inputCurrencyId },
+    [Field.OUTPUT]: { currencyId: outputCurrencyId },
+    ltv,
+    borrowManagerAddress
+  } = useSwapState()
+
+  const inputCurrency = useCurrency(inputCurrencyId)
+  const outputCurrency = useCurrency(outputCurrencyId)
+
+  // TODO: need to algoritmically calculate the best pool for the user
+  // let poolAddress = useBestPoolAddress(inputCurrency ?? undefined, outputCurrency ?? undefined)
+  // user fund amount
+
+  const parsedAmount = useMemo(
+    () => tryParseCurrencyAmount(typedValue, (inputCurrency) ?? undefined),
+    [inputCurrency, outputCurrency, typedValue]
+  )
+
+  const relevantTokenBalances = useCurrencyBalances(
+    account ?? undefined,
+    useMemo(() => [inputCurrency ?? undefined, outputCurrency ?? undefined], [inputCurrency, outputCurrency])
+  )
+
+  const currencyBalances = useMemo(
+    () => ({
+      [Field.INPUT]: relevantTokenBalances[0],
+      [Field.OUTPUT]: relevantTokenBalances[1],
+    }),
+    [relevantTokenBalances]
+  )
+
+  const currencies: { [field in Field]?: Currency | null } = useMemo(
+    () => ({
+      [Field.INPUT]: inputCurrency,
+      [Field.OUTPUT]: outputCurrency,
+    }),
+    [inputCurrency, outputCurrency]
+  )
+
+  const [_, pool] = usePool(inputCurrency ?? undefined, outputCurrency?? undefined, 500)
+  // console.log("pool: ", pool, inputCurrency, outputCurrency)
+
+  // const leverageManager = useLeverageManagerContract(leverageManagerAddress ?? undefined, true)
+  const borrowManager = useBorrowManagerContract(borrowManagerAddress ?? undefined, true)
+  const inputIsToken0 = outputCurrency?.wrapped ? inputCurrency?.wrapped.sortsBefore(outputCurrency?.wrapped) : false; //inputCurrency?.wrapped.address === pool?.token0.address
+  const initialPrice = pool ? (inputIsToken0 ? pool.token1Price : pool.token0Price) : undefined;
+  const debouncedAmount = useDebounce(
+    useMemo(() => (parsedAmount), [parsedAmount]),
+    200
+  )
+
+  // TODO calculate slippage from the pool
+  const allowedSlippage = new Percent(JSBI.BigInt(3), JSBI.BigInt(100)) // new Percent(JSBI.BigInt(50), JSBI.BigInt(10000))
+
+  // retrieves the trade object
+  const simulate = useCallback(async () => {
+    
+    // checks if the leverageManager exists
+    if (borrowManager) {
+      try {
+        borrowManager.callStatic.liquidityManager()
+      } catch (err) {
+        setTradeState(TradeState.NO_ROUTE_FOUND)
+        console.log("no route found", err)
+        return
+      }
+    }
+
+    // simulate the trade
+    if (borrowManager && debouncedAmount && ltv && Number(ltv) > 0
+      && outputCurrency?.wrapped && inputCurrency?.wrapped
+    ) {
+      try {
+        let borrowBelow = inputIsToken0 // borrowing token1 to buy token0
+        setTradeState(TradeState.LOADING)
+        let collateralAmount = new BN((debouncedAmount.toFixed(DEFAULT_ERC20_DECIMALS))).shiftedBy(DEFAULT_ERC20_DECIMALS).toFixed(0)
+        let _ltv = new BN(ltv).shiftedBy(16).toFixed(0)
+
+
+        console.log("borrowInput: ", collateralAmount, _ltv)
+
+        const trade = await borrowManager.callStatic.addBorrowPosition(
+          borrowBelow,
+          collateralAmount,
+          ltv,
+          []
+        )
+        setTradeState(TradeState.VALID)
+
+        setContractResult(trade)
+      } catch (err) {
+        console.log("addBorrowPosition simulation error: ", err, err.message)
+        // setContractError(err)
+        setTradeState(TradeState.INVALID)
+      }
+    } else {
+      setTradeState(TradeState.INVALID)
+    }
+  }, [currencies, borrowManager, ltv, debouncedAmount])
+  //console.log("contractResultPost/tradestate", contractResult, tradeState)
+
+  useEffect(() => {
+    simulate()
+  }, [currencies, borrowManager, ltv, debouncedAmount, allowance])
+  // console.log("contractResult", pool, contractResult, initialPrice, debouncedAmount)
+  const trade: BorrowCreationDetails = useMemo(() => {
+    if (
+      tradeState === TradeState.VALID && 
+      initialPrice && 
+      contractResult && 
+      outputCurrency?.wrapped && 
+      inputCurrency?.wrapped && 
+      debouncedAmount
+    ) {
+      const position: any = contractResult[0]
+      // const expectedOutput = new BN(position.totalPosition.toString()).shiftedBy(-outputCurrency?.wrapped.decimals).toNumber()
+      
+      const borrowedAmount = new BN(position.totalDebtInput.toString()).shiftedBy(-inputCurrency?.wrapped.decimals).toNumber()
+      const unusedPremium = new BN((contractResult[0] as any).toString()).shiftedBy(-inputCurrency?.wrapped.decimals).toNumber()
+      const strikePrice = new BN(borrowedAmount).div(debouncedAmount.toExact()).toNumber()
+      const quotedPremium = new BN((contractResult[2] as any)
+        .toString()).shiftedBy(-inputCurrency?.wrapped.decimals).toNumber()
+      let t = new BN(strikePrice).minus(initialPrice.toFixed(DEFAULT_ERC20_DECIMALS)).abs().dividedBy(initialPrice.toFixed(DEFAULT_ERC20_DECIMALS)).multipliedBy(1000).toFixed(0)
+      const priceImpact = new Percent(t, 1000)
+
+      return {
+        collateralAmount: Number(debouncedAmount.toExact()),
+        borrowedAmount, // CurrencyAmount.fromRawAmount(inputCurrency?.wrapped, new BN(borrowedAmount).shiftedBy(inputCurrency?.wrapped.decimals).toFixed(0)),
+        state: tradeState,
+        unusedPremium,
+        strikePrice,
+        quotedPremium,
+        priceImpact
+      }
+    } else {
+      return {
+        collateralAmount: undefined,
+        borrowedAmount: undefined,
+        state: tradeState,
+        quotedPremium: undefined,
+        unusedPremium: undefined,
+        priceImpact: undefined,
+        strikePrice: undefined
+      }
+    }
+  }, [allowance, ltv, initialPrice, tradeState, contractResult, borrowManager, debouncedAmount, currencies, inputCurrency, outputCurrency])
+
+  const inputError = useMemo(() => {
+    let inputError: ReactNode | undefined
+
+    if (!account) {
+      inputError = <Trans>Connect Wallet</Trans>
+    }
+
+    if (!currencies[Field.INPUT] || !currencies[Field.OUTPUT]) {
+      inputError = inputError ?? <Trans>Select a token</Trans>
+    }
+
+    if (!parsedAmount) {
+      inputError = inputError ?? <Trans>Enter an amount</Trans>
+    }
+
+    if (!ltv || Number(ltv) >= 100 || Number(ltv) === 0 ) {
+      inputError = inputError ?? <Trans>Invalid LTV</Trans>
+    }
+
+    // compare input balance to max input based on version
+    const [balanceIn, amountIn] = [currencyBalances[Field.INPUT], parsedAmount?.toExact()]
+
+    // TODO add slippage to all the simulations
+    if (balanceIn && amountIn && Number(balanceIn.toExact()) < Number(amountIn)) {
+      inputError = <Trans>Insufficient {inputCurrency?.symbol} balance</Trans>
+    }
+
+    if (trade.state === TradeState.NO_ROUTE_FOUND) {
+      inputError = inputError ?? <Trans>Insufficient Liquidity</Trans>
+    }
+
+    return inputError
+  }, [allowance, account, allowedSlippage, currencies, currencyBalances, parsedAmount, borrowManager, ltv, inputCurrency, trade])
+
+  const contractError = useMemo(() => {
+    let _contractError;
+
+    if (trade.state === TradeState.INVALID) {
+      _contractError = _contractError ?? <Trans>Invalid Trade</Trans>
+    }
+    return _contractError
+  }, [allowance, account, allowedSlippage, currencies, currencyBalances, parsedAmount, borrowManager, ltv, inputCurrency, trade])
+
+  return {
+    trade,
+    currencies,
+    currencyBalances,
+    parsedAmount,
+    inputError: inputError,
+    allowedSlippage,
+    contractError
+  }
+}
+
 export function useDerivedLeverageCreationInfo({ allowance } : { allowance: ApprovalState })
   : {
     currencies: { [field in Field]?: Currency | null }
@@ -222,7 +459,6 @@ export function useDerivedLeverageCreationInfo({ allowance } : { allowance: Appr
     [inputCurrency, outputCurrency, typedValue, leverage, leverageFactor]
   )
 
-
   const relevantTokenBalances = useCurrencyBalances(
     account ?? undefined,
     useMemo(() => [inputCurrency ?? undefined, outputCurrency ?? undefined], [inputCurrency, outputCurrency])
@@ -258,12 +494,6 @@ export function useDerivedLeverageCreationInfo({ allowance } : { allowance: Appr
   // TODO calculate slippage from the pool
   const allowedSlippage = new Percent(JSBI.BigInt(3), JSBI.BigInt(100)) // new Percent(JSBI.BigInt(50), JSBI.BigInt(10000))
 
-  if (debouncedAmount && Number(leverageFactor) > 1) {
-    const _input = Number(debouncedAmount.toFixed()) * (10 ** Number(inputCurrency?.wrapped.decimals))
-    const _borrowAmount = _input * (Number(leverageFactor) - 1)
-    //   , _borrowAmount.toFixed(0) );
-  }
-
   // retrieves the trade object
   const simulate = useCallback(async () => {
     
@@ -285,237 +515,10 @@ export function useDerivedLeverageCreationInfo({ allowance } : { allowance: Appr
       try {
         let isLong = !inputIsToken0 // borrowing token1 to buy token0
         setTradeState(LeverageTradeState.LOADING)
-        let input = new BN((debouncedAmount.toFixed()))
+        let input = new BN((debouncedAmount.toFixed(DEFAULT_ERC20_DECIMALS)))
         let borrowAmount = input.multipliedBy((Number(leverageFactor) - 1))
 
-        console.log("input: ", input.toFixed(), borrowAmount.toFixed(0))
-
-        const trade = await leverageManager.callStatic.addPosition(
-          input.shiftedBy(inputCurrency?.wrapped.decimals).toFixed(0),
-          new BN(allowedSlippage.toFixed(4)).plus(1).shiftedBy(18).toFixed(0),
-          borrowAmount.shiftedBy(inputCurrency?.wrapped.decimals).toFixed(0),
-          isLong
-        )
-        setTradeState(LeverageTradeState.VALID)
-
-        setContractResult(trade)
-      } catch (err) {
-        console.log("simulation error: ", err, err.message)
-        // setContractError(err)
-        setTradeState(LeverageTradeState.INVALID)
-      }
-    } else {
-      setTradeState(LeverageTradeState.INVALID)
-    }
-  }, [currencies, leverageManager, leverage, leverageFactor, debouncedAmount])
-  //console.log("contractResultPost/tradestate", contractResult, tradeState)
-
-  useEffect(() => {
-    simulate()
-  }, [currencies, leverageManager, leverage, leverageFactor, debouncedAmount, allowance])
-  // console.log("contractResult", pool, contractResult, initialPrice, debouncedAmount)
-  const trade: LeverageTrade = useMemo(() => {
-    if (
-      tradeState === LeverageTradeState.VALID && 
-      initialPrice && 
-      contractResult && 
-      outputCurrency?.wrapped && 
-      inputCurrency?.wrapped && 
-      debouncedAmount
-    ) {
-      const position: any = contractResult[0]
-      const expectedOutput = new BN(position.totalPosition.toString()).shiftedBy(-outputCurrency?.wrapped.decimals).toNumber()
-      const borrowedAmount = new BN(position.totalDebtInput.toString()).shiftedBy(-inputCurrency?.wrapped.decimals).toNumber()
-      const strikePrice = new BN(expectedOutput).div(new BN(borrowedAmount).plus(debouncedAmount.toExact())).toNumber()
-
-      const quotedPremium = new BN((contractResult[2] as any)
-        .toString()).shiftedBy(-inputCurrency?.wrapped.decimals).toNumber()
-      let t = new BN(strikePrice).minus(initialPrice.toFixed(DEFAULT_ERC20_DECIMALS)).abs().dividedBy(initialPrice.toFixed(DEFAULT_ERC20_DECIMALS)).multipliedBy(1000).toFixed(0)
-      const priceImpact = new Percent(t, 1000)
-
-      const effectiveLeverage = new BN((Number(borrowedAmount) + Number(debouncedAmount.toExact()) + Number(quotedPremium)) / (Number(debouncedAmount.toExact()) + Number(quotedPremium))).toNumber()
-      
-      return {
-        inputAmount: debouncedAmount,
-        borrowedAmount: CurrencyAmount.fromRawAmount(inputCurrency?.wrapped, new BN(borrowedAmount).shiftedBy(inputCurrency?.wrapped.decimals).toFixed(0)),
-        state: tradeState,
-        expectedOutput,
-        strikePrice,
-        quotedPremium,
-        priceImpact,
-        effectiveLeverage
-      }
-    } else {
-      return {
-        inputAmount: undefined,
-        borrowedAmount: undefined,
-        state: tradeState,
-        expectedOutput: undefined,
-        strikePrice: undefined,
-        quotedPremium: undefined,
-        priceImpact: undefined,
-        effectiveLeverage: undefined
-      }
-    }
-  }, [allowance, leverageFactor, initialPrice, tradeState, contractResult, leverageManager, leverage, debouncedAmount, currencies, inputCurrency, outputCurrency])
-
-  const inputError = useMemo(() => {
-    let inputError: ReactNode | undefined
-
-    if (!account) {
-      inputError = <Trans>Connect Wallet</Trans>
-    }
-
-    if (!currencies[Field.INPUT] || !currencies[Field.OUTPUT]) {
-      inputError = inputError ?? <Trans>Select a token</Trans>
-    }
-
-    if (!parsedAmount) {
-      inputError = inputError ?? <Trans>Enter an amount</Trans>
-    }
-
-    if (leverage && Number(leverageFactor) <= 1) {
-      inputError = inputError ?? <Trans>Invalid Leverage</Trans>
-    }
-
-    // compare input balance to max input based on version
-    const [balanceIn, amountIn] = [currencyBalances[Field.INPUT], parsedAmount?.toExact()]
-
-    // TODO add slippage to all the simulations
-    if (balanceIn && amountIn && Number(balanceIn.toExact()) < Number(amountIn)) {
-      inputError = <Trans>Insufficient {inputCurrency?.symbol} balance</Trans>
-    }
-
-    if (trade.state === LeverageTradeState.NO_ROUTE_FOUND) {
-      inputError = inputError ?? <Trans>Insufficient Liquidity</Trans>
-    }
-
-    return inputError
-  }, [allowance, account, allowedSlippage, currencies, currencyBalances, parsedAmount, leverage, leverageFactor, inputCurrency, trade])
-
-  const contractError = useMemo(() => {
-    let _contractError;
-
-    if (trade.state === LeverageTradeState.INVALID) {
-      _contractError = _contractError ?? <Trans>Invalid Trade</Trans>
-    }
-    return _contractError
-  }, [allowance, account, allowedSlippage, currencies, currencyBalances, parsedAmount, leverage, leverageFactor, inputCurrency, trade])
-
-  return {
-    trade,
-    currencies,
-    currencyBalances,
-    parsedAmount,
-    inputError: inputError,
-    allowedSlippage,
-    contractError
-  }
-}
-
-export function useDerivedBorrowCreationInfo({ allowance } : { allowance: ApprovalState })
-  : {
-    currencies: { [field in Field]?: Currency | null }
-    currencyBalances: { [field in Field]?: CurrencyAmount<Currency> }
-    parsedAmount: CurrencyAmount<Currency> | undefined
-    inputError?: ReactNode
-    trade: LeverageTrade
-    allowedSlippage: Percent
-    contractError?: ReactNode
-  } {
-
-  const { account } = useWeb3React()
-  const [tradeState, setTradeState] = useState<LeverageTradeState>(LeverageTradeState.LOADING)
-  const [contractResult, setContractResult] = useState()
-  // const [contractError, setContractError] = useState()
-
-  const {
-    typedValue,
-    [Field.INPUT]: { currencyId: inputCurrencyId },
-    [Field.OUTPUT]: { currencyId: outputCurrencyId },
-    leverage,
-    leverageFactor,
-    leverageManagerAddress,
-  } = useSwapState()
-
-  const inputCurrency = useCurrency(inputCurrencyId)
-  const outputCurrency = useCurrency(outputCurrencyId)
-
-  // TODO: need to algoritmically calculate the best pool for the user
-  // let poolAddress = useBestPoolAddress(inputCurrency ?? undefined, outputCurrency ?? undefined)
-  // user fund amount
-
-  const parsedAmount = useMemo(
-    () => tryParseCurrencyAmount(typedValue, (inputCurrency) ?? undefined),
-    [inputCurrency, outputCurrency, typedValue, leverage, leverageFactor]
-  )
-
-  const relevantTokenBalances = useCurrencyBalances(
-    account ?? undefined,
-    useMemo(() => [inputCurrency ?? undefined, outputCurrency ?? undefined], [inputCurrency, outputCurrency])
-  )
-
-  const currencyBalances = useMemo(
-    () => ({
-      [Field.INPUT]: relevantTokenBalances[0],
-      [Field.OUTPUT]: relevantTokenBalances[1],
-    }),
-    [relevantTokenBalances]
-  )
-
-  const currencies: { [field in Field]?: Currency | null } = useMemo(
-    () => ({
-      [Field.INPUT]: inputCurrency,
-      [Field.OUTPUT]: outputCurrency,
-    }),
-    [inputCurrency, outputCurrency]
-  )
-
-  const [_, pool] = usePool(inputCurrency ?? undefined, outputCurrency?? undefined, 500)
-  // console.log("pool: ", pool, inputCurrency, outputCurrency)
-
-  const leverageManager = useLeverageManagerContract(leverageManagerAddress ?? undefined, true)
-  const inputIsToken0 = outputCurrency?.wrapped ? inputCurrency?.wrapped.sortsBefore(outputCurrency?.wrapped) : false; //inputCurrency?.wrapped.address === pool?.token0.address
-  const initialPrice = pool ? (inputIsToken0 ? pool.token1Price : pool.token0Price) : undefined;
-  const debouncedAmount = useDebounce(
-    useMemo(() => (parsedAmount), [parsedAmount]),
-    200
-  )
-
-  // TODO calculate slippage from the pool
-  const allowedSlippage = new Percent(JSBI.BigInt(3), JSBI.BigInt(100)) // new Percent(JSBI.BigInt(50), JSBI.BigInt(10000))
-
-  if (debouncedAmount && Number(leverageFactor) > 1) {
-    const _input = Number(debouncedAmount.toFixed()) * (10 ** Number(inputCurrency?.wrapped.decimals))
-    const _borrowAmount = _input * (Number(leverageFactor) - 1)
-    //   , _borrowAmount.toFixed(0) );
-  }
-
-  // retrieves the trade object
-  const simulate = useCallback(async () => {
-    
-    // checks if the leverageManager exists
-    if (leverageManager) {
-      try {
-        leverageManager.callStatic.liquidityManager()
-      } catch (err) {
-        setTradeState(LeverageTradeState.NO_ROUTE_FOUND)
-        console.log("no route found", err)
-        return
-      }
-    }
-
-    // simulate the trade
-    if (leverageManager && debouncedAmount && leverage && Number(leverageFactor) > 1
-      && outputCurrency?.wrapped && inputCurrency?.wrapped
-    ) {
-      try {
-        let isLong = !inputIsToken0 // borrowing token1 to buy token0
-        setTradeState(LeverageTradeState.LOADING)
-        let input = new BN((debouncedAmount.toFixed()))
-        let borrowAmount = input.multipliedBy((Number(leverageFactor) - 1))
-
-        console.log("input: ", input.toFixed(), borrowAmount.toFixed(0))
+        // console.log("input: ", input.toFixed(), borrowAmount.toFixed(0))
 
         const trade = await leverageManager.callStatic.addPosition(
           input.shiftedBy(inputCurrency?.wrapped.decimals).toFixed(0),
@@ -818,7 +821,9 @@ export function queryParametersToSwapState(parsedQs: ParsedQs): SwapState {
     leverage: false,
     hideClosedLeveragePositions: true,
     leverageManagerAddress: null,
-    activeTab: ActiveSwapTab.TRADE
+    activeTab: ActiveSwapTab.TRADE,
+    ltv: null,
+    borrowManagerAddress: null
   }
 }
 

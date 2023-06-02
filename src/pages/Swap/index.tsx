@@ -16,7 +16,7 @@ import { sendEvent } from 'components/analytics'
 import Loader from 'components/Icons/LoadingSpinner'
 import { NetworkAlert } from 'components/NetworkAlert/NetworkAlert'
 import PriceImpactWarning from 'components/swap/PriceImpactWarning'
-import SwapDetailsDropdown from 'components/swap/SwapDetailsDropdown'
+import SwapDetailsDropdown, { BorrowDetailsDropdown } from 'components/swap/SwapDetailsDropdown'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import { MouseoverTooltip } from 'components/Tooltip'
@@ -66,6 +66,7 @@ import {
   useSwapActionHandlers,
   useSwapState,
   useBestPool,
+  useDerivedBorrowCreationInfo,
 } from '../../state/swap/hooks'
 import { useAddUserToken, useExpertModeManager } from '../../state/user/hooks'
 import { LinkStyledButton, ThemedText } from '../../theme'
@@ -90,13 +91,13 @@ import { pageTimePeriodAtom } from 'pages/TokenDetails'
 import { useAtom } from 'jotai'
 import { CHAIN_ID_TO_BACKEND_NAME, toHistoryDuration } from 'graphql/data/util'
 import { Checkbox } from 'nft/components/layout/Checkbox'
-import { feth, fusdc, GlOBAL_STORAGE_ADDRESS, LEVERAGE_MANAGER_FACTORY_ADDRESSES, PS_ROUTER, V3_CORE_FACTORY_ADDRESSES } from 'constants/addresses'
+import { BORROW_MANAGER_FACTORY_ADDRESSES, feth, fusdc, GlOBAL_STORAGE_ADDRESS, LEVERAGE_MANAGER_FACTORY_ADDRESSES, PS_ROUTER, V3_CORE_FACTORY_ADDRESSES } from 'constants/addresses'
 import { ethers } from 'ethers'
 import GlobalStorageData from "../../perpspotContracts/GlobalStorage.json"
 import LeverageManagerData from "../../perpspotContracts/LeverageManager.json"
 import { useLeverageManagerAddress } from 'hooks/useGetLeverageManager'
 import { usePoolAddressCache } from 'components/WalletDropdown/MiniPortfolio/Pools/cache'
-import { computeLeverageManagerAddress, computePoolAddress, usePool } from 'hooks/usePools'
+import { computeBorrowManagerAddress, computeLeverageManagerAddress, computePoolAddress, usePool } from 'hooks/usePools'
 import { useTokenAllowance } from 'hooks/useTokenAllowance'
 import { ApprovalState, useApproval } from 'lib/hooks/useApproval'
 import { useApproveCallback, useFaucetCallback } from 'hooks/useApproveCallback'
@@ -113,7 +114,7 @@ import PositionsTable from 'components/LimitlessPositionTable/TokenTable'
 import { PoolDataSection } from 'components/ExchangeChart'
 import _ from 'lodash'
 import { FakeTokens } from "constants/fake-tokens"
-import { formatNumber } from '@uniswap/conedison/format'
+import { formatNumber, NumberType } from '@uniswap/conedison/format'
 import { TabContent } from 'components/Tabs'
 
 
@@ -356,15 +357,6 @@ export default function Swap({ className }: { className?: string }) {
     [chainId, defaultTokens, urlLoadedTokens]
   )
 
-  const theme = useTheme()
-
-  // toggle wallet when disconnected
-  const toggleWalletDrawer = useToggleWalletDrawer()
-
-  // for expert mode
-  const [isExpertMode] = useExpertModeManager()
-  // swap state
-  const { independentField, typedValue, recipient, leverageFactor, hideClosedLeveragePositions, leverage, leverageManagerAddress, activeTab } = useSwapState()
   const {
     trade: { state: tradeState, trade },
     allowedSlippage,
@@ -374,6 +366,31 @@ export default function Swap({ className }: { className?: string }) {
     inputError: swapInputError,
   } = useDerivedSwapInfo()
 
+  const [inputCurrency, outputCurrency] = useMemo(() => {
+    return [currencies[Field.INPUT], currencies[Field.OUTPUT]]
+  }, [currencies])
+
+  const theme = useTheme()
+
+  // toggle wallet when disconnected
+  const toggleWalletDrawer = useToggleWalletDrawer()
+
+  // for expert mode
+  const [isExpertMode] = useExpertModeManager()
+  // swap state
+  const { independentField, 
+    typedValue, 
+    recipient, 
+    leverageFactor, 
+    hideClosedLeveragePositions, 
+    leverage, 
+    leverageManagerAddress, 
+    activeTab, 
+    ltv,
+    borrowManagerAddress
+  } = useSwapState()
+
+  
 
 
   // console.log("tradeState", tradeState)
@@ -400,16 +417,40 @@ export default function Swap({ className }: { className?: string }) {
           [Field.INPUT]: independentField === Field.INPUT ? parsedAmount : trade?.inputAmount,
           [Field.OUTPUT]: independentField === Field.OUTPUT ? parsedAmount : trade?.outputAmount,
         },
-    [independentField, parsedAmount, showWrap, trade]
+    [currencies, independentField, parsedAmount, showWrap, trade]
   )
 
-  const [leverageApprovalState, approveLeverageManager] = useApproveCallback(parsedAmounts[Field.INPUT], leverageManagerAddress ?? undefined)
+  const approveAmount = useMemo(() => {
+    if (inputCurrency && parsedAmounts[Field.INPUT]) {
+      return CurrencyAmount.fromRawAmount(
+        inputCurrency,
+        new BN(parsedAmounts[Field.INPUT]?.toExact() ?? "").plus(0.002).shiftedBy(18).toFixed(0)
+      )
+    } 
+    else {
+      return undefined
+    }
+  }, [inputCurrency, parsedAmounts[Field.INPUT]])
+
+  const [leverageApprovalState, approveLeverageManager] = useApproveCallback(
+    approveAmount,
+    leverageManagerAddress ?? undefined
+    )
   const {
     trade: leverageTrade,
     inputError,
     allowedSlippage: leverageAllowedSlippage,
     contractError
   } = useDerivedLeverageCreationInfo({ allowance: leverageApprovalState })
+
+  const [borrowApprovalState, approveBorrowManager] = useApproveCallback(parsedAmounts[Field.INPUT], borrowManagerAddress ?? undefined)
+
+  const {
+    trade: borrowTrade,
+    inputError: borrowInputError,
+    allowedSlippage: borrowAllowedSlippage,
+    contractError: borrowContractError
+  } = useDerivedBorrowCreationInfo({ allowance: borrowApprovalState })
 
   const fiatValueInput = useUSDPrice(parsedAmounts[Field.INPUT])
   const fiatValueOutput = useUSDPrice(parsedAmounts[Field.OUTPUT])
@@ -418,6 +459,10 @@ export default function Swap({ className }: { className?: string }) {
     () => [!trade?.swaps, TradeState.LOADING === tradeState, TradeState.SYNCING === tradeState],
     [trade, tradeState]
   )
+
+  const [borrowRouteNotFound, borrowRouteIsLoading] = useMemo(
+    () => [borrowTrade.state === TradeState.NO_ROUTE_FOUND, borrowTrade.state === TradeState.LOADING]
+  , [borrowTrade])
 
   const [lmtRouteNotFound, lmtRouteIsLoading] = useMemo(
     () => [leverageTrade.state === LeverageTradeState.NO_ROUTE_FOUND, leverageTrade.state === LeverageTradeState.LOADING]
@@ -433,11 +478,13 @@ export default function Swap({ className }: { className?: string }) {
     [fiatValueTradeInput, fiatValueTradeOutput, routeIsSyncing, trade]
   )
 
-  const { onSwitchTokens, onCurrencySelection, onUserInput, onChangeRecipient, onLeverageFactorChange, onHideClosedLeveragePositions, onLeverageChange, onLeverageManagerAddress } = useSwapActionHandlers()
+  const { onSwitchTokens, onCurrencySelection, onUserInput, onChangeRecipient, onLeverageFactorChange, onHideClosedLeveragePositions, onLeverageChange, onLeverageManagerAddress, onLTVChange, onBorrowManagerAddress } = useSwapActionHandlers()
   const isValid = !swapInputError
   const dependentField: Field = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT
 
   const lmtIsValid = !inputError
+
+  const borrowIsValid = !borrowInputError
 
   const handleTypeInput = useCallback(
     (value: string) => {
@@ -482,7 +529,7 @@ export default function Swap({ className }: { className?: string }) {
         ? parsedAmounts[independentField]?.toExact() ?? ''
         : formatTransactionAmount(currencyAmountToPreciseFloat(parsedAmounts[dependentField])),
     }),
-    [dependentField, independentField, parsedAmounts, showWrap, typedValue]
+    [currencies, dependentField, independentField, parsedAmounts, showWrap, typedValue]
   )
 
   const userHasSpecifiedInputOutput = Boolean(
@@ -493,6 +540,7 @@ export default function Swap({ className }: { className?: string }) {
     const maximumAmountIn = trade?.maximumAmountIn(allowedSlippage)
     return maximumAmountIn?.currency.isToken ? (maximumAmountIn as CurrencyAmount<Token>) : undefined
   }, [allowedSlippage, trade])
+
   const allowance = usePermit2Allowance(
     maximumAmountIn ??
     (parsedAmounts[Field.INPUT]?.currency.isToken
@@ -503,8 +551,6 @@ export default function Swap({ className }: { className?: string }) {
   )
 
   let poolAddress = useBestPoolAddress(currencies[Field.INPUT] ?? undefined, currencies[Field.OUTPUT] ?? undefined)
-  // const [leverageManagerAddress, setLeverageManagerAddress] = useState<string>()
-
 
   useEffect(() => {
     // declare the data fetching function
@@ -517,10 +563,15 @@ export default function Swap({ className }: { className?: string }) {
           fee: pool.fee
         }
       ))
+      onBorrowManagerAddress(computeBorrowManagerAddress(
+        {
+          factoryAddress: BORROW_MANAGER_FACTORY_ADDRESSES[chainId ?? 80001],
+          tokenA: pool.token0.address,
+          tokenB: pool.token1.address,
+          fee: pool.fee
+        }))
     }
-
   }, [poolAddress, account, trade, currencies, account, provider])
-  // console.log("poolLevAddress", poolAddress, leverageManagerAddress)
 
   const isApprovalLoading = allowance.state === AllowanceState.REQUIRED && allowance.isApprovalLoading
   const [isAllowancePending, setIsAllowancePending] = useState(false)
@@ -540,12 +591,6 @@ export default function Swap({ className }: { className?: string }) {
       setIsAllowancePending(false)
     }
   }, [allowance, chainId, maximumAmountIn?.currency.address, maximumAmountIn?.currency.symbol])
-
-  const [inputCurrency, outputCurrency] = useMemo(() => {
-    return [currencies[Field.INPUT], currencies[Field.OUTPUT]]
-  }, [currencies])
-
-
 
   const inputToken = (currencies?.INPUT?.isToken ? (currencies?.INPUT as Token) : undefined)
   const outputToken = (currencies?.OUTPUT?.isToken ? (currencies?.OUTPUT as Token) : undefined)
@@ -589,6 +634,15 @@ export default function Swap({ className }: { className?: string }) {
       console.log("approveLeverageManager err: ", err)
     }
   }, [leverageManagerAddress, parsedAmounts[Field.INPUT], approveLeverageManager])
+
+  const updateBorrowAllowance = useCallback(async () => {
+    try {
+      await approveBorrowManager()
+    } catch (err) {
+      console.log("approveBorrowManager err: ", err)
+    }
+  }, [borrowManagerAddress, parsedAmounts[Field.INPUT], approveBorrowManager])
+
   // console.log("leverageApprovalState: ", leverageApprovalState)
 
   const maxInputAmount: CurrencyAmount<Currency> | undefined = useMemo(
@@ -650,7 +704,7 @@ export default function Swap({ className }: { className?: string }) {
           showConfirm,
           swapErrorMessage: error.message,
           txHash: undefined,
-          showLeverageConfirm: false,
+          showLeverageConfirm: false
         })
       })
   }, [
@@ -715,6 +769,7 @@ export default function Swap({ className }: { className?: string }) {
   }, [
     leverageCallback, leverageTrade
   ])
+
   // errors
   const [swapQuoteReceivedDate, setSwapQuoteReceivedDate] = useState<Date | undefined>()
   // warnings on the greater of fiat value price impact and execution price impact
@@ -814,7 +869,6 @@ export default function Swap({ className }: { className?: string }) {
 
   const { loading: leveragePositionsLoading, positions: leveragePositions } = useLeveragePositions(account)
 
-
   // console.log("leverageTrade: ", leverageTrade)
   // console.log("leverageTrade:", leverageTrade, lmtRouteNotFound, poolAddress, leverageManagerAddress, leveragePositions)
 
@@ -823,15 +877,17 @@ export default function Swap({ className }: { className?: string }) {
   const pool = useBestPool(currencies.INPUT ?? undefined, currencies.OUTPUT ?? undefined);// usePool(currencies.INPUT ?? undefined, currencies.OUTPUT ?? undefined, FeeAmount.LOW)
 
   // part of borrow integration
-  const [ltv, setLTV] = useState("");
 
-  const [debouncedLTV, debouncedSetLTV] = useDebouncedChangeHandler(ltv, setLTV);
+  const [debouncedLTV, debouncedSetLTV] = useDebouncedChangeHandler(ltv ?? "", onLTVChange);
 
-  
 
   // console.log("loggingSwap", currencies.INPUT, currencies.OUTPUT, leverageManagerAddress, leveragePositions, lmtIsValid, leverageTrade, leverageApprovalState, inputError, contractError)
   // console.log("pooltoken", pool?.token0?.address, pool?.token0?.symbol);
   // console.log("activeTab: ", activeTab)
+
+  // console.log("loggingSwap: ", typedValue, formattedAmounts[Field.INPUT], leverageFactor)
+  console.log("approvedBorrow", borrowApprovalState)
+
   return (
     <Trace page={InterfacePageName.SWAP_PAGE} shouldLogImpression>
       <>
@@ -969,7 +1025,8 @@ export default function Swap({ className }: { className?: string }) {
                               <Trans>From</Trans>
                             )
                           }
-                          value={(Number(formattedAmounts[Field.INPUT]) * Number(leverageFactor)).toFixed(3).toString()
+                          value={
+                            parsedAmount && leverageFactor ? String(Number(parsedAmount.toExact())*Number(leverageFactor)) : ""
                           }
                           showMaxButton={showMaxButton}
                           currency={currencies[Field.INPUT] ?? null}
@@ -981,8 +1038,8 @@ export default function Swap({ className }: { className?: string }) {
                           showCommonBases={true}
                           id={InterfaceSectionName.CURRENCY_INPUT_PANEL}
                           loading={independentField === Field.OUTPUT && routeIsSyncing}
-                          noLeverageValue={formattedAmounts[Field.INPUT]}
                           disabled={true}
+                          parsedAmount={parsedAmount}
                         />
                       </Trace>
                     </InputLeverageSection>}
@@ -994,7 +1051,7 @@ export default function Swap({ className }: { className?: string }) {
                       >
                         <ArrowContainer
                           onClick={() => {
-                            onSwitchTokens()
+                            onSwitchTokens(leverage)
                           }}
                           color={theme.textPrimary}
                         >
@@ -1042,7 +1099,6 @@ export default function Swap({ className }: { className?: string }) {
                             isInput={false}
                             isLevered={leverage}
                             disabled={leverage}
-                          // isTrade = {isTrade}
                           />
                         </Trace>
 
@@ -1369,7 +1425,7 @@ export default function Swap({ className }: { className?: string }) {
                       >
                         <ArrowContainer
                           onClick={() => {
-                            onSwitchTokens()
+                            onSwitchTokens(true)
                           }}
                           color={theme.textPrimary}
                         >
@@ -1463,13 +1519,13 @@ export default function Swap({ className }: { className?: string }) {
                                   </LeverageInputSection>
                                   <AutoRow gap="4px" justify="flex-end">
                                     <SmallMaxButton onClick={() => debouncedSetLTV("10")} width="20%">
-                                      <Trans>10</Trans>
+                                      <Trans>10%</Trans>
                                     </SmallMaxButton>
                                     <SmallMaxButton onClick={() => debouncedSetLTV("50")} width="20%">
-                                      <Trans>50</Trans>
+                                      <Trans>50%</Trans>
                                     </SmallMaxButton>
                                     <SmallMaxButton onClick={() => debouncedSetLTV("99")} width="20%">
-                                      <Trans>99</Trans>
+                                      <Trans>99%</Trans>
                                     </SmallMaxButton>
                                   </AutoRow>
                                 </RowBetween>
@@ -1487,19 +1543,19 @@ export default function Swap({ className }: { className?: string }) {
                         </LightCard>
                       </LeverageGaugeSection>
                       <DetailsSwapSection>
-                        <SwapDetailsDropdown
-                          trade={trade}
-                          syncing={routeIsSyncing}
-                          loading={routeIsLoading}
-                          allowedSlippage={allowedSlippage}
-                          leverageTrade={leverageTrade}
+                        <BorrowDetailsDropdown
+                          trade={borrowTrade}
+                          tradeState={borrowTrade.state}
+                          syncing={borrowRouteIsLoading}
+                          loading={borrowRouteIsLoading}
+                          allowedSlippage={borrowAllowedSlippage}
                         />
                       </DetailsSwapSection>
 
                     </div>
                     {showPriceImpactWarning && <PriceImpactWarning priceImpact={largerPriceImpact} />}
-                    <div>
-                      {!leverage && (swapIsUnsupported ? (
+                    <div>{
+                      swapIsUnsupported ? (
                         <ButtonPrimary disabled={true}>
                           <ThemedText.DeprecatedMain mb="4px">
                             <Trans>Unsupported Asset</Trans>
@@ -1516,128 +1572,19 @@ export default function Swap({ className }: { className?: string }) {
                             <Trans>Connect Wallet</Trans>
                           </ButtonLight>
                         </TraceEvent>
-                      ) : showWrap ? (
-                        <ButtonPrimary disabled={Boolean(wrapInputError)} onClick={onWrap} fontWeight={600}>
-                          {wrapInputError ? (
-                            <WrapErrorText wrapInputError={wrapInputError} />
-                          ) : wrapType === WrapType.WRAP ? (
-                            <Trans>Wrap</Trans>
-                          ) : wrapType === WrapType.UNWRAP ? (
-                            <Trans>Unwrap</Trans>
-                          ) : null}
-                        </ButtonPrimary>
-                      ) : routeNotFound && userHasSpecifiedInputOutput && !routeIsLoading && !routeIsSyncing ? (
+                      ) : ((routeNotFound || borrowRouteNotFound) && userHasSpecifiedInputOutput && !lmtRouteIsLoading ? (
                         <GrayCard style={{ textAlign: 'center' }}>
                           <ThemedText.DeprecatedMain mb="4px">
                             <Trans>Insufficient liquidity for this trade.</Trans>
                           </ThemedText.DeprecatedMain>
                         </GrayCard>
-                      ) : isValid && allowance.state === AllowanceState.REQUIRED ? (
+                      ) : borrowIsValid && borrowApprovalState !== ApprovalState.APPROVED ? (
                         <ButtonPrimary
-                          onClick={updateAllowance}
-                          disabled={isAllowancePending || isApprovalLoading}
+                          onClick={updateBorrowAllowance}
                           style={{ gap: 14 }}
+                          disabled={borrowApprovalState === ApprovalState.PENDING}
                         >
-                          {isAllowancePending ? (
-                            <>
-                              <Loader size="20px" />
-                              <Trans>Approve in your wallet</Trans>
-                            </>
-                          ) : isApprovalLoading ? (
-                            <>
-                              <Loader size="20px" />
-                              <Trans>Approval pending</Trans>
-                            </>
-                          ) : (
-                            <>
-                              <div style={{ height: 20 }}>
-                                <MouseoverTooltip
-                                  text={
-                                    <Trans>
-                                      Permission is required for Uniswap to swap each token. This will expire after one
-                                      month for your security.
-                                    </Trans>
-                                  }
-                                >
-                                  <Info size={20} />
-                                </MouseoverTooltip>
-                              </div>
-                              <Trans>Approve use of {currencies[Field.INPUT]?.symbol}</Trans>
-                            </>
-                          )}
-                        </ButtonPrimary>
-                      ) : (
-                        <ButtonError
-                          onClick={() => {
-                            if (isExpertMode) {
-                              handleSwap()
-                            } else {
-                              setSwapState({
-                                tradeToConfirm: trade,
-                                attemptingTxn: false,
-                                swapErrorMessage: undefined,
-                                showConfirm: true,
-                                txHash: undefined,
-                                showLeverageConfirm: false
-                              })
-                            }
-                          }}
-                          id="swap-button"
-                          disabled={
-                            !isValid ||
-                            routeIsSyncing ||
-                            routeIsLoading ||
-                            priceImpactTooHigh ||
-                            allowance.state !== AllowanceState.ALLOWED
-                          }
-                          error={isValid && priceImpactSeverity > 2 && allowance.state === AllowanceState.ALLOWED}
-                        >
-                          <Text fontSize={20} fontWeight={600}>
-                            {swapInputError ? (
-                              swapInputError
-                            ) : routeIsSyncing || routeIsLoading ? (
-                              <Trans>Swap</Trans>
-                            ) : priceImpactTooHigh ? (
-                              <Trans>Price Impact Too High</Trans>
-                            ) : priceImpactSeverity > 2 ? (
-                              <Trans>Swap Anyway</Trans>
-                            ) : (
-                              <Trans>Swap</Trans>
-                            )}
-                          </Text>
-                        </ButtonError>
-                      ))}
-
-                      {leverage && (swapIsUnsupported ? (
-                        <ButtonPrimary disabled={true}>
-                          <ThemedText.DeprecatedMain mb="4px">
-                            <Trans>Unsupported Asset</Trans>
-                          </ThemedText.DeprecatedMain>
-                        </ButtonPrimary>
-                      ) : !account ? (
-                        <TraceEvent
-                          events={[BrowserEvent.onClick]}
-                          name={InterfaceEventName.CONNECT_WALLET_BUTTON_CLICKED}
-                          properties={{ received_swap_quote: getIsValidSwapQuote(trade, tradeState, swapInputError) }}
-                          element={InterfaceElementName.CONNECT_WALLET_BUTTON}
-                        >
-                          <ButtonLight onClick={toggleWalletDrawer} fontWeight={600}>
-                            <Trans>Connect Wallet</Trans>
-                          </ButtonLight>
-                        </TraceEvent>
-                      ) : ((routeNotFound || lmtRouteNotFound) && userHasSpecifiedInputOutput && !lmtRouteIsLoading ? (
-                        <GrayCard style={{ textAlign: 'center' }}>
-                          <ThemedText.DeprecatedMain mb="4px">
-                            <Trans>Insufficient liquidity for this trade.</Trans>
-                          </ThemedText.DeprecatedMain>
-                        </GrayCard>
-                      ) : lmtIsValid && leverageApprovalState !== ApprovalState.APPROVED ? (
-                        <ButtonPrimary
-                          onClick={updateLeverageAllowance}
-                          style={{ gap: 14 }}
-                          disabled={leverageApprovalState === ApprovalState.PENDING}
-                        >
-                          {leverageApprovalState === ApprovalState.PENDING ? (
+                          {borrowApprovalState === ApprovalState.PENDING ? (
                             <>
                               <Loader size="20px" />
                               <Trans>Approval pending</Trans>
@@ -1672,31 +1619,29 @@ export default function Swap({ className }: { className?: string }) {
                               showLeverageConfirm: true
                             })
                           }}
-                          id="leverage-button"
+                          id="borrow-button"
                           disabled={
-                            !!inputError ||
+                            !!borrowInputError ||
                             priceImpactTooHigh
                           }
                         >
                           <Text fontSize={20} fontWeight={600}>
-                            {inputError ? (
-                              inputError
-                            ) : contractError ? (
-                              contractError
-                            ) : routeIsSyncing || routeIsLoading ? (
-                              <Trans>Leverage</Trans>
+                            {borrowInputError ? (
+                              borrowInputError
+                            ) : borrowContractError ? (
+                              borrowContractError
+                            ) : borrowRouteIsLoading ? (
+                              <Trans>Borrow</Trans>
                             ) : priceImpactTooHigh ? (
                               <Trans>Price Impact Too High</Trans>
                             ) : priceImpactSeverity > 2 ? (
-                              <Trans>Leverage Anyway</Trans>
+                              <Trans>Borrow Anyway</Trans>
                             ) : (
-                              <Trans>Leverage</Trans>
+                              <Trans>Borrow</Trans>
                             )}
                           </Text>
                         </ButtonError>
-                      )
-                      )
-                      )}
+                      ) )}
                       {isExpertMode && swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}
                     </div>
                   </div>

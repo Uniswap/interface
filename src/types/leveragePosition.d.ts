@@ -4,6 +4,8 @@ import { FeeAmount, Pool } from '@uniswap/v3-sdk'
 
 export interface LeveragePositionDetails {
   leverageManagerAddress: string | undefined
+  borrowManagerAddress: string | undefined
+  isBorrow: boolean
   token0Address: string | undefined
   token1Address: string | undefined
   poolFee: FeeAmount | undefined

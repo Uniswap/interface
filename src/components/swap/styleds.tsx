@@ -79,7 +79,7 @@ export const ErrorText = styled(Text)<{ severity?: 0 | 1 | 2 | 3 | 4 }>`
 
 export const TruncatedText = styled(Text)<{width?: string}>`
   text-overflow: ellipsis;
-  max-width: ${({width}) => width ? width : '220px'};
+  max-width: ${({width}) => width ? width : '180px'};
   overflow: hidden;
   text-align: right;
 `

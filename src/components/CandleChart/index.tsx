@@ -74,7 +74,7 @@ const CandleChart = ({
     return () => window.removeEventListener('resize', handleResize)
   }, [isClient, chartRef, handleResize]) // Empty array ensures that effect is only run on mount and unmount
 
-  console.log("stateCandle: ", nonce, !chartCreated)
+  // console.log("stateCandle: ", nonce, !chartCreated)
 
   // if chart not instantiated in canvas, create it
   useEffect(() => {

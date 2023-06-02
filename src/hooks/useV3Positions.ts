@@ -9,8 +9,8 @@ import { BigNumber as BN } from "bignumber.js"
 import { Currency, Field } from '@uniswap/widgets'
 import { useCurrency, useToken } from './Tokens'
 import { FeeAmount } from '@uniswap/v3-sdk'
-import { computeLeverageManagerAddress, usePool } from './usePools'
-import { LEVERAGE_MANAGER_FACTORY_ADDRESSES } from 'constants/addresses'
+import { computeBorrowManagerAddress, computeLeverageManagerAddress, usePool } from './usePools'
+import { BORROW_MANAGER_FACTORY_ADDRESSES, LEVERAGE_MANAGER_FACTORY_ADDRESSES } from 'constants/addresses'
 import { useWeb3React } from '@web3-react/core'
 
 
@@ -92,6 +92,13 @@ export function useLeveragePositions(account: string | undefined): {loading: boo
             tokenB: key.token1,
             fee: (key.fee),
           }),
+          borrowManagerAddress: computeBorrowManagerAddress({
+            factoryAddress: BORROW_MANAGER_FACTORY_ADDRESSES[chainId ?? 80001],
+            tokenA: key.token0,
+            tokenB: key.token1,
+            fee: (key.fee),
+          }),
+          isBorrow: position.isBorrow,
           token0Address: key.token0,
           token1Address: key.token1,
           poolFee: key.fee,
@@ -118,6 +125,7 @@ export function useLeveragePositions(account: string | undefined): {loading: boo
     positions: positions ?? []
   }
 }
+
 
 export function convertBNToStr(num: BigNumber, decimals: number) {
   return new BN(num.toString()).shiftedBy(-decimals).toFixed(18)
@@ -150,6 +158,12 @@ export function useLeveragePositionFromTokenId(tokenId: string | undefined): { l
           tokenB: key.token1,
           fee: (key.fee),
         }),
+        borrowManagerAddress: computeBorrowManagerAddress({
+          factoryAddress: BORROW_MANAGER_FACTORY_ADDRESSES[chainId ?? 80001],
+          tokenA: key.token0,
+          tokenB: key.token1,
+          fee: (key.fee),
+        }),
         token0Address: key.token0,
         token1Address: key.token1,
         poolFee: key.fee,
@@ -164,6 +178,7 @@ export function useLeveragePositionFromTokenId(tokenId: string | undefined): { l
         isToken0: position.isToken0,
         openTime: position.openTime.toString(),
         repayTime: position.repayTime.toString(),
+        isBorrow: position.isBorrow
         // borrowInfo: position.borrowInfo.map((info: any) => convertBNToStr(info, 18)),
       }
       return _position

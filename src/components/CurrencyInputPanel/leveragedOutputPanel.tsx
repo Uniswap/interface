@@ -24,6 +24,8 @@ import { Input as NumericalInput } from '../NumericalInput'
 import { RowBetween, RowFixed } from '../Row'
 import CurrencySearchModal from '../SearchModal/CurrencySearchModal'
 import { FiatValue } from './FiatValue'
+import { formatNumber } from '@uniswap/conedison/format'
+import { useSwapState } from 'state/swap/hooks'
 
 const InputPanel = styled.div<{ hideInput?: boolean }>`
   ${flexColumnNoWrap};
@@ -204,8 +206,8 @@ interface SwapCurrencyInputPanelProps {
   renderBalance?: (amount: CurrencyAmount<Currency>) => ReactNode
   locked?: boolean
   loading?: boolean
-  noLeverageValue?: string
   disabled?: boolean
+  parsedAmount?: CurrencyAmount<Currency> | undefined
 }
 
 export default function LeveragedOutputPanel({
@@ -228,8 +230,8 @@ export default function LeveragedOutputPanel({
   hideInput = false,
   locked = false,
   loading = false,
-  noLeverageValue="10",
   disabled= false,
+  parsedAmount,
   ...rest
 }: SwapCurrencyInputPanelProps) {
   const [modalOpen, setModalOpen] = useState(false)
@@ -242,6 +244,8 @@ export default function LeveragedOutputPanel({
   }, [setModalOpen])
 
   const chainAllowed = isSupportedChain(chainId)
+
+  const userInputAmount: string | undefined = parsedAmount?.toExact() ?? undefined
 
   return (
     <InputPanel id={id} hideInput={hideInput} {...rest}>
@@ -274,7 +278,7 @@ export default function LeveragedOutputPanel({
           <FiatRow>
             <RowBetween>
               <LoadingOpacityContainer $loading={loading}>
-                 <Trans>{"You are borrowing: "}{String(Number(value) - Number(noLeverageValue))}</Trans>
+                 <Trans>{"You are borrowing: "}{ Number(value) > 0 && userInputAmount ? (Number(value) - Number(userInputAmount)) : "-"}</Trans>
                 {/*<FiatValue fiatValue={noLeverageValue} priceImpact={priceImpact} />*/}
               </LoadingOpacityContainer>
               {account ? (

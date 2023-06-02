@@ -6,7 +6,7 @@ import { LoadingRows } from 'components/Loader/styled'
 import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { useMemo } from 'react'
-import { InterfaceTrade } from 'state/routing/types'
+import { InterfaceTrade, TradeState } from 'state/routing/types'
 import styled, { useTheme } from 'styled-components/macro'
 
 import { Separator, ThemedText } from '../../theme'
@@ -15,12 +15,13 @@ import { AutoColumn } from '../Column'
 import { RowBetween, RowFixed } from '../Row'
 import { MouseoverTooltip } from '../Tooltip'
 import FormattedPriceImpact from './FormattedPriceImpact'
-import { LeverageTrade } from 'state/swap/hooks'
+import { BorrowCreationDetails, LeverageTrade, useSwapState } from 'state/swap/hooks'
 import { LeveragePositionDetails } from 'types/leveragePosition'
 import { BigNumber as BN } from "bignumber.js"
-import { useToken } from 'hooks/Tokens'
+import { useCurrency, useToken } from 'hooks/Tokens'
 import { formatNumber } from '@uniswap/conedison/format'
 import { TruncatedText } from './styleds'
+import { Field } from 'state/swap/actions'
 
 const StyledCard = styled(Card)`
   padding: 0;
@@ -91,16 +92,16 @@ export function AdvancedSwapDetails({
             </MouseoverTooltip>
           </RowFixed>
           <TextWithLoadingPlaceholder syncing={syncing} width={65}>
-            
-              <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
+
+            <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
               <TruncatedText>
                 {trade?.outputAmount.toFixed(3)
                   ? `${trade?.outputAmount.toFixed(3)}  ${trade.outputAmount.currency.symbol}`
                   : '-'}
               </TruncatedText>
-              </ThemedText.DeprecatedBlack>
-            
-            
+            </ThemedText.DeprecatedBlack>
+
+
           </TextWithLoadingPlaceholder>
         </RowBetween>
         <RowBetween>
@@ -115,14 +116,14 @@ export function AdvancedSwapDetails({
             </MouseoverTooltip>
           </RowFixed>
           <TextWithLoadingPlaceholder syncing={syncing} width={50}>
-            
+
             <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
-            <TruncatedText>
-              <FormattedPriceImpact priceImpact={priceImpact} />
+              <TruncatedText>
+                <FormattedPriceImpact priceImpact={priceImpact} />
               </TruncatedText>
             </ThemedText.DeprecatedBlack>
-            
-            
+
+
           </TextWithLoadingPlaceholder>
         </RowBetween>
         <Separator />
@@ -148,15 +149,15 @@ export function AdvancedSwapDetails({
             </MouseoverTooltip>
           </RowFixed>
           <TextWithLoadingPlaceholder syncing={syncing} width={70}>
-          
+
             <ThemedText.DeprecatedBlack textAlign="right" fontSize={14} color={theme.textTertiary}>
-            <TruncatedText>
-              {trade.tradeType === TradeType.EXACT_INPUT
-                ? `${trade.minimumAmountOut(allowedSlippage).toSignificant(6)} ${trade.outputAmount.currency.symbol}`
-                : `${trade.maximumAmountIn(allowedSlippage).toSignificant(6)} ${trade.inputAmount.currency.symbol}`}
+              <TruncatedText>
+                {trade.tradeType === TradeType.EXACT_INPUT
+                  ? `${trade.minimumAmountOut(allowedSlippage).toSignificant(6)} ${trade.outputAmount.currency.symbol}`
+                  : `${trade.maximumAmountIn(allowedSlippage).toSignificant(6)} ${trade.inputAmount.currency.symbol}`}
               </TruncatedText>
             </ThemedText.DeprecatedBlack>
-            
+
           </TextWithLoadingPlaceholder>
         </RowBetween>
         {!trade?.gasUseEstimateUSD || !chainId || !SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId) ? null : (
@@ -219,12 +220,12 @@ export function CloseLeveragePositionDetails({
           </RowFixed>
           <TextWithLoadingPlaceholder syncing={false} width={65}>
             <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
-              
-                <TruncatedText>
+
+              <TruncatedText>
                 {
-                `${leverageTrade?.totalPosition ?? "-"}  ${inputIsToken0 ? token1?.symbol : token0?.symbol}`
+                  `${leverageTrade?.totalPosition ?? "-"}  ${inputIsToken0 ? token1?.symbol : token0?.symbol}`
                 }
-                </TruncatedText>
+              </TruncatedText>
             </ThemedText.DeprecatedBlack>
           </TextWithLoadingPlaceholder>
         </RowBetween>
@@ -240,14 +241,14 @@ export function CloseLeveragePositionDetails({
             </MouseoverTooltip>
           </RowFixed>
           <TextWithLoadingPlaceholder syncing={false} width={50}>
-            
+
             <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
-            <TruncatedText>
-              {`${Number(leverageTrade?.totalDebtInput) ?? "-"}  ${inputIsToken0 ? token0?.symbol : token1?.symbol}` }
-            </TruncatedText>
+              <TruncatedText>
+                {`${Number(leverageTrade?.totalDebtInput) ?? "-"}  ${inputIsToken0 ? token0?.symbol : token1?.symbol}`}
+              </TruncatedText>
             </ThemedText.DeprecatedBlack>
-            
-            
+
+
           </TextWithLoadingPlaceholder>
         </RowBetween>
         <RowBetween>
@@ -267,11 +268,11 @@ export function CloseLeveragePositionDetails({
           <TextWithLoadingPlaceholder syncing={false} width={65}>
             <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
               <TruncatedText>
-              {leverageTrade?.totalDebtInput && leverageTrade?.initialCollateral
-                ? `${(Number(leverageTrade?.totalDebtInput) + Number(leverageTrade.initialCollateral) ) / Number(leverageTrade?.initialCollateral)}`
-                : '-'}
+                {leverageTrade?.totalDebtInput && leverageTrade?.initialCollateral
+                  ? `${(Number(leverageTrade?.totalDebtInput) + Number(leverageTrade.initialCollateral)) / Number(leverageTrade?.initialCollateral)}`
+                  : '-'}
               </TruncatedText>
-              
+
             </ThemedText.DeprecatedBlack>
           </TextWithLoadingPlaceholder>
         </RowBetween>
@@ -348,6 +349,56 @@ export function AddPremiumDetails({
   )
 }
 
+function ValueLabel({
+  label,
+  description,
+  value,
+  syncing,
+  symbolAppend,
+  hideInfoTooltips = false
+}: {
+  description: string,
+  label: string,
+  value?: number,
+  syncing: boolean,
+  symbolAppend?: string,
+  hideInfoTooltips?: boolean
+}) {
+  const theme = useTheme()
+  return (
+    <RowBetween>
+          <RowFixed>
+            <MouseoverTooltip
+              text={
+                <Trans>
+                 {description}
+                </Trans>
+              }
+              disableHover={hideInfoTooltips}
+            >
+              <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
+                <Trans>{label}</Trans>
+              </ThemedText.DeprecatedSubHeader>
+            </MouseoverTooltip>
+          </RowFixed>
+          
+          <TextWithLoadingPlaceholder syncing={syncing} width={65}>
+            <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
+            <RowFixed>
+              <TruncatedText>
+                {value
+                  ? `${(value)}`
+                  : '-'}
+              </TruncatedText>
+              {symbolAppend}
+            </RowFixed>
+            </ThemedText.DeprecatedBlack>
+          </TextWithLoadingPlaceholder>
+          
+        </RowBetween>
+  )
+}
+
 export function AdvancedLeverageSwapDetails({
   trade,
   allowedSlippage,
@@ -370,110 +421,35 @@ export function AdvancedLeverageSwapDetails({
   return !trade ? null : (
     <StyledCard>
       <AutoColumn gap="sm">
-        <RowBetween>
-          <RowFixed>
-            <MouseoverTooltip
-              text={
-                <Trans>
-                  The amount you expect to receive at the current market price. You may receive less or more if the
-                  market price changes while your transaction is pending.
-                </Trans>
-              }
-              disableHover={hideInfoTooltips}
-            >
-              <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
-                <Trans>Expected Output</Trans>
-              </ThemedText.DeprecatedSubHeader>
-            </MouseoverTooltip>
-          </RowFixed>
-          <TextWithLoadingPlaceholder syncing={syncing} width={65}>
-            
-            <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
-            <TruncatedText>
-              {leverageTrade?.expectedOutput
-                ? `${(leverageTrade?.expectedOutput) ?? "-"}  ${trade.outputAmount.currency.symbol}`
-                : '-'}
-            </TruncatedText>
-            </ThemedText.DeprecatedBlack>
-            
-          </TextWithLoadingPlaceholder>
-        </RowBetween>
-        <RowBetween>
-          <RowFixed>
-            <MouseoverTooltip
-              text={
-                <Trans>
-                  Price around which your premium gets expensive.
-                </Trans>
-              }
-              disableHover={hideInfoTooltips}
-            >
-              <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
-                <Trans>Strike Price</Trans>
-              </ThemedText.DeprecatedSubHeader>
-            </MouseoverTooltip>
-          </RowFixed>
-          <TextWithLoadingPlaceholder syncing={syncing} width={65}>
-            
-            <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
-            <TruncatedText>
-              {
-                leverageTrade?.strikePrice ? `${(leverageTrade?.strikePrice)}  ${trade.inputAmount.currency.symbol} / ${trade.outputAmount.currency.symbol}`
-                  : '-'}
-            </TruncatedText>
-            </ThemedText.DeprecatedBlack>
-            
-          </TextWithLoadingPlaceholder>
-        </RowBetween>
-
-
-        <RowBetween>
-          <RowFixed>
-            <MouseoverTooltip
-              text={
-                <Trans>
-                  The first premium payment required to open this position
-                </Trans>
-              }
-              disableHover={hideInfoTooltips}
-            >
-              <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
-                <Trans>Quoted Premium</Trans>
-              </ThemedText.DeprecatedSubHeader>
-            </MouseoverTooltip>
-          </RowFixed>
-          <TextWithLoadingPlaceholder syncing={syncing} width={65}>
-            <TruncatedText>
-            <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
-              {
-                leverageTrade?.quotedPremium ? `${(leverageTrade?.quotedPremium)}  ${trade.inputAmount.currency.symbol}`
-                  : '-'}
-            </ThemedText.DeprecatedBlack>
-            </TruncatedText>
-          </TextWithLoadingPlaceholder>
-        </RowBetween>
-
-        <RowBetween>
-          <RowFixed>
-            <MouseoverTooltip
-              text={<Trans>The impact your trade has on the market price of this pool.</Trans>}
-              disableHover={hideInfoTooltips}
-            >
-              <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
-                <Trans>Fees</Trans>
-              </ThemedText.DeprecatedSubHeader>
-            </MouseoverTooltip>
-          </RowFixed>
-          <TruncatedText>
-          <TextWithLoadingPlaceholder syncing={syncing} width={50}>
-            <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
-              {
-                leverageTrade?.quotedPremium ? `${(leverageTrade?.quotedPremium)}  ${trade.inputAmount.currency.symbol}`
-                  : '-'}            </ThemedText.DeprecatedBlack>
-          </TextWithLoadingPlaceholder>
-          </TruncatedText>
-        </RowBetween>
-
+        <ValueLabel
+          description='The amount you expect to receive at the current market price. You may receive less or more if the market price changes while your transaction is pending.'
+          label='Expected Output'
+          value={leverageTrade?.expectedOutput}
+          syncing={syncing}
+          symbolAppend={trade.outputAmount.currency.symbol}
+        />
+        <ValueLabel
+          description="Price around which your premium gets expensive."
+          label="Strike Price"
+          value={leverageTrade?.strikePrice}
+          syncing={syncing}
+          symbolAppend={`${trade.inputAmount.currency.symbol} / ${trade.outputAmount.currency.symbol}`}
+        />
+        <ValueLabel
+          description="The first premium payment required to open this position"
+          label="Quoted Premium"
+          value={leverageTrade?.quotedPremium}
+          syncing={syncing}
+          symbolAppend={trade.inputAmount.currency.symbol}
+        />
+        <ValueLabel
+          description="The impact your trade has on the market price of this pool."
+          label="Fees"
+          value={leverageTrade?.quotedPremium}
+          syncing={syncing}
+          symbolAppend={trade.inputAmount.currency.symbol}
+        />
+        
         <RowBetween>
           <RowFixed>
             <MouseoverTooltip
@@ -491,15 +467,14 @@ export function AdvancedLeverageSwapDetails({
           </RowFixed>
           <TextWithLoadingPlaceholder syncing={syncing} width={65}>
             <TruncatedText>
-            <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
-              {
-                leverageTrade?.effectiveLeverage ? `${(leverageTrade?.effectiveLeverage)}`
-                  : '-'}
-            </ThemedText.DeprecatedBlack>
+              <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
+                {
+                  leverageTrade?.effectiveLeverage ? `${(leverageTrade?.effectiveLeverage)}`
+                    : '-'}
+              </ThemedText.DeprecatedBlack>
             </TruncatedText>
           </TextWithLoadingPlaceholder>
         </RowBetween>
-
         <RowBetween>
           <RowFixed>
             <MouseoverTooltip
@@ -513,9 +488,9 @@ export function AdvancedLeverageSwapDetails({
           </RowFixed>
           <TextWithLoadingPlaceholder syncing={syncing} width={50}>
             <TruncatedText>
-            <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
-              <FormattedPriceImpact priceImpact={leverageTrade?.priceImpact} />
-            </ThemedText.DeprecatedBlack>
+              <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
+                <FormattedPriceImpact priceImpact={leverageTrade?.priceImpact} />
+              </ThemedText.DeprecatedBlack>
             </TruncatedText>
           </TextWithLoadingPlaceholder>
         </RowBetween>
@@ -542,19 +517,19 @@ export function AdvancedLeverageSwapDetails({
             </MouseoverTooltip>
           </RowFixed>
           <TextWithLoadingPlaceholder syncing={syncing} width={70}>
-            
-            <ThemedText.DeprecatedBlack textAlign="right" fontSize={14} color={theme.textTertiary}>
-            <TruncatedText>
-              {trade.tradeType === TradeType.EXACT_INPUT
-                ? `${(leverageTrade?.expectedOutput) ?? "-"}  ${trade.outputAmount.currency.symbol}`
-                : '-'
 
-                // ? `${Number(leverageFactor) * Number(trade.minimumAmountOut(allowedSlippage).toSignificant(6))} ${trade.outputAmount.currency.symbol}`
-                // : `${trade.maximumAmountIn(allowedSlippage).toSignificant(6)} ${trade.inputAmount.currency.symbol}`
-              }
-               </TruncatedText>
+            <ThemedText.DeprecatedBlack textAlign="right" fontSize={14} color={theme.textTertiary}>
+              <TruncatedText>
+                {trade.tradeType === TradeType.EXACT_INPUT
+                  ? `${(leverageTrade?.expectedOutput) ?? "-"}  ${trade.outputAmount.currency.symbol}`
+                  : '-'
+
+                  // ? `${Number(leverageFactor) * Number(trade.minimumAmountOut(allowedSlippage).toSignificant(6))} ${trade.outputAmount.currency.symbol}`
+                  // : `${trade.maximumAmountIn(allowedSlippage).toSignificant(6)} ${trade.inputAmount.currency.symbol}`
+                }
+              </TruncatedText>
             </ThemedText.DeprecatedBlack>
-           
+
           </TextWithLoadingPlaceholder>
         </RowBetween>
         {!trade?.gasUseEstimateUSD || !chainId || !SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId) ? null : (
@@ -578,6 +553,55 @@ export function AdvancedLeverageSwapDetails({
             </TextWithLoadingPlaceholder>
           </RowBetween>
         )}
+      </AutoColumn>
+    </StyledCard>
+  )
+}
+
+
+// collateralAmount: number | undefined// CurrencyAmount<Currency> | undefined
+//   borrowedAmount: number | undefined // totalDebtInput
+//   quotedPremium: number | undefined
+//   unusedPremium: number | undefined
+//   priceImpact: Percent | undefined
+//   state: TradeState
+
+export function AdvancedBorrowSwapDetails({
+  borrowTrade,
+  tradeState,
+  syncing = false,
+}: {
+  borrowTrade?: BorrowCreationDetails,
+  tradeState?: TradeState,
+  syncing: boolean,
+}) {
+  const {
+    [Field.INPUT]: { currencyId: inputCurrencyId },
+    [Field.OUTPUT]: { currencyId: outputCurrencyId },
+    leverageManagerAddress
+  } = useSwapState()
+
+  const inputCurrency = useCurrency(inputCurrencyId)
+  const outputCurrency = useCurrency(outputCurrencyId)
+  const theme = useTheme()
+  return (
+    <StyledCard>
+      <AutoColumn gap="sm">
+        <ValueLabel
+          description="The borrowed amount you expect to receive at the current market price. You may receive less or more if the market price changes while your transaction is pending."
+          label="Expected Borrowed Amount"
+          value={borrowTrade?.borrowedAmount}
+          syncing={syncing}
+          symbolAppend={outputCurrency?.symbol}
+        />
+        <Separator />
+        <ValueLabel 
+          description="The quoted premium you are expected to pay within 24hrs."
+          label="Quoted Premium"
+          value={borrowTrade?.quotedPremium}
+          syncing={syncing}
+          symbolAppend={inputCurrency?.symbol}
+        />
       </AutoColumn>
     </StyledCard>
   )
