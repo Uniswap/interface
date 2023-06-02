@@ -11,7 +11,7 @@ import Row from 'components/Row'
 import { ActivationStatus, useActivationState } from 'connection/activate'
 import { useNftBalance } from 'graphql/data/nft/NftBalance'
 import { atom, useAtom } from 'jotai'
-import { AddToBagIcon, CondensedBagIcon } from 'nft/components/icons'
+import { AddToBagIcon, RemoveFromBagIcon } from 'nft/components/icons'
 import { useBag, useProfilePageState, useSellAsset } from 'nft/hooks'
 import { useBuyAssetCallback } from 'nft/hooks/useFetchAssets'
 import { useIsAssetInBag } from 'nft/hooks/useIsAssetInBag'
@@ -189,7 +189,7 @@ export const BuyButton = ({ asset, isOnDataPage }: { asset: GenieAsset; isOnData
 
   const secondaryButtonCta = assetInBag ? <Trans>Remove from Bag</Trans> : <Trans>Add to Bag</Trans>
   const SecondaryButtonIcon = () =>
-    assetInBag ? <CondensedBagIcon width="24px" height="24px" /> : <AddToBagIcon width="24px" height="24px" />
+    assetInBag ? <RemoveFromBagIcon width="24px" height="24px" /> : <AddToBagIcon width="24px" height="24px" />
   const secondaryButtonAction = (event: MouseEvent<HTMLButtonElement>) => {
     assetInBag ? removeAssetsFromBag([asset]) : addAssetsToBag([asset])
     event.currentTarget.blur()
