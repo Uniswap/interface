@@ -1,4 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
+import dayjs from 'dayjs'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView } from 'react-native-gesture-handler'
@@ -19,7 +20,6 @@ import {
 import { OnboardingScreens } from 'src/screens/Screens'
 import { useAddBackButton } from 'src/utils/useAddBackButton'
 import { shortenAddress } from 'wallet/src/utils/addresses'
-import { formatDate } from 'wallet/src/utils/format'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.RestoreCloudBackup>
 
@@ -78,7 +78,7 @@ export function RestoreCloudBackupScreen({ navigation, route: { params } }: Prop
                         {t('Backed up on:')}
                       </Text>
                       <Text variant="buttonLabelMicro">
-                        {formatDate(new Date(createdAt * 1000))}
+                        {dayjs.unix(createdAt).format('MMM D, YYYY, h:mma')}
                       </Text>
                     </Flex>
                     <Chevron color={theme.colors.textPrimary} direction="e" />

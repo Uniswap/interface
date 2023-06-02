@@ -309,20 +309,6 @@ export function formatPrice(
   return formatNumber(parseFloat(price.toSignificant()), type)
 }
 
-/**
- * Very simple date formatter
- * Feel free to add more options / adapt to your needs.
- */
-export function formatDate(date: Date): string {
-  return date.toLocaleString('en-US', {
-    day: 'numeric', // numeric, 2-digit
-    year: 'numeric', // numeric, 2-digit
-    month: 'short', // numeric, 2-digit, long, short, narrow
-    hour: 'numeric', // numeric, 2-digit
-    minute: 'numeric', // numeric, 2-digit
-  })
-}
-
 export function formatNumberOrString(price: Maybe<number | string>, type: NumberType): string {
   if (price === null || price === undefined) return '-'
   if (typeof price === 'string') return formatNumber(parseFloat(price), type)
