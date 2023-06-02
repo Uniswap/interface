@@ -7,6 +7,7 @@ import styled from 'styled-components/macro'
 import { ExternalLink, HideSmall } from 'theme'
 import { colors } from 'theme/colors'
 import { useDarkModeManager } from 'theme/components/ThemeToggle'
+import { Z_INDEX } from 'theme/zIndex'
 
 import { AutoRow } from '../Row'
 
@@ -124,7 +125,7 @@ const LinkOutToBridge = styled(ExternalLink)`
   padding: 6px 8px;
   text-decoration: none !important;
   width: 100%;
-  z-index: 1;
+  z-index: ${Z_INDEX.hover};
 `
 
 const StyledArrowUpRight = styled(ArrowUpRight)`
