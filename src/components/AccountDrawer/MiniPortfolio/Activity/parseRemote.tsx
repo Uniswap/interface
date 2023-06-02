@@ -189,24 +189,20 @@ function parseSendReceive(changes: TransactionChanges, assetActivity: AssetActiv
   }
 
   if (transfer && assetName && amount) {
-    if (transfer.direction === 'IN') {
-      const sender = transfer.sender
-      const isMoonpayPurchase = MOONPAY_SENDER_ADDRESSES.some((address) => isSameAddress(address, sender))
+    const isMoonpayPurchase = MOONPAY_SENDER_ADDRESSES.some((address) => isSameAddress(address, transfer?.sender))
 
-      if (isMoonpayPurchase && transfer.__typename === 'TokenTransfer') {
-        const fiatPurchasePrice = formatTransactedValue(transfer.transactedValue)
-        return {
-          title: t`Purchased`,
-          descriptor: `${amount} ${assetName} ${t`for`} ${fiatPurchasePrice}`,
-          logos: [moonpayLogoSrc],
-        }
-      } else {
-        return {
-          title: t`Received`,
-          descriptor: `${amount} ${assetName} ${t`from`} `,
-          otherAccount: isAddress(sender) || undefined,
-        }
-      }
+    if (transfer.direction === 'IN') {
+      return isMoonpayPurchase && transfer.__typename === 'TokenTransfer'
+        ? {
+            title: t`Purchased`,
+            descriptor: `${amount} ${assetName} ${t`for`} ${formatTransactedValue(transfer.transactedValue)}`,
+            logos: [moonpayLogoSrc],
+          }
+        : {
+            title: t`Received`,
+            descriptor: `${amount} ${assetName} ${t`from`} `,
+            otherAccount: isAddress(transfer.sender) || undefined,
+          }
     } else {
       return {
         title: t`Sent`,
