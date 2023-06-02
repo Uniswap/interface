@@ -168,7 +168,7 @@ export const IconWithTextButton = ({ Icon, text, onConfirm, onShowConfirm, onCli
       }}
       // @ts-ignore MouseEvent is valid, its a subset of the two mouse events,
       // even manually typing this all out more specifically it still gets mad about any casting for some reason
-      onClick={(e: MouseEvent) => {
+      onClick={(e: MouseEvent<HTMLAnchorElement>) => {
         if (showText) {
           onConfirm?.()
         } else {
