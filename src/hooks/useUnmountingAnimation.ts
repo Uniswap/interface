@@ -17,7 +17,7 @@ function isAnimating(node?: Animatable | Document) {
  * the `animatedElements` parameter. If no additional elements are specified,
  * the animation will only run on the provided node.
  *
- * After all animations have completed, the node is removed from its parent.
+ * After any of the animated elements have completed their animation, `node` is removed from its parent.
  *
  * @param {RefObject<HTMLElement>} node - The node to animate and remove.
  * @param {() => string} getAnimatingClass - A function that returns the CSS class to add to the animating elements.
