@@ -393,6 +393,15 @@ export function Swap({
     allowance.state === AllowanceState.ALLOWED ? allowance.permitSignature : undefined
   )
 
+  const handleContinueToReview = useCallback(() => {
+    setSwapState({
+      tradeToConfirm: trade,
+      swapError: undefined,
+      showConfirm: true,
+      txHash: undefined,
+    })
+  }, [trade])
+
   const handleSwap = useCallback(() => {
     if (!swapCallback) {
       return
@@ -553,12 +562,7 @@ export function Swap({
           onDismiss={() => setShowPriceImpactModal(false)}
           onContinue={() => {
             setShowPriceImpactModal(false)
-            setSwapState({
-              tradeToConfirm: trade,
-              swapError: undefined,
-              showConfirm: true,
-              txHash: undefined,
-            })
+            handleContinueToReview()
           }}
         />
       )}
@@ -715,14 +719,7 @@ export function Swap({
             >
               <ButtonError
                 onClick={() => {
-                  showPriceImpactWarning
-                    ? setShowPriceImpactModal(true)
-                    : setSwapState({
-                        tradeToConfirm: trade,
-                        swapError: undefined,
-                        showConfirm: true,
-                        txHash: undefined,
-                      })
+                  showPriceImpactWarning ? setShowPriceImpactModal(true) : handleContinueToReview()
                 }}
                 id="swap-button"
                 data-testid="swap-button"
