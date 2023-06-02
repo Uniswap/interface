@@ -1,6 +1,6 @@
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
-import { INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference } from 'state/routing/slice'
+import { GetQuoteArgs, INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference } from 'state/routing/slice'
 import { currencyAddressForSwapQuote } from 'state/routing/utils'
 
 /**
@@ -15,12 +15,12 @@ export function useRoutingAPIArguments({
   tradeType,
   routerPreference,
 }: {
-  tokenIn: Currency | undefined
-  tokenOut: Currency | undefined
-  amount: CurrencyAmount<Currency> | undefined
+  tokenIn?: Currency
+  tokenOut?: Currency
+  amount?: CurrencyAmount<Currency>
   tradeType: TradeType
   routerPreference: RouterPreference | typeof INTERNAL_ROUTER_PREFERENCE_PRICE
-}) {
+}): GetQuoteArgs | undefined {
   return useMemo(
     () =>
       !tokenIn || !tokenOut || !amount || tokenIn.equals(tokenOut) || tokenIn.wrapped.equals(tokenOut.wrapped)

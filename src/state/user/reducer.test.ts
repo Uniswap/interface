@@ -11,7 +11,6 @@ import reducer, {
   updateHideUniswapWalletBanner,
   updateSelectedWallet,
   updateUserDeadline,
-  updateUserExpertMode,
   updateUserLocale,
   updateUserRouterPreference,
   updateUserSlippageTolerance,
@@ -73,13 +72,6 @@ describe('swap reducer', () => {
     it('updates the selected wallet', () => {
       store.dispatch(updateSelectedWallet({ wallet: 'metamask' }))
       expect(store.getState().selectedWallet).toEqual('metamask')
-    })
-  })
-
-  describe('updateUserExpertMode', () => {
-    it('updates the userExpertMode', () => {
-      store.dispatch(updateUserExpertMode({ userExpertMode: true }))
-      expect(store.getState().userExpertMode).toEqual(true)
     })
   })
 

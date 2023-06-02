@@ -7,6 +7,8 @@ import { Z_INDEX } from 'theme/zIndex'
 
 import { isMobile } from '../../utils/userAgent'
 
+export const MODAL_TRANSITION_DURATION = 200
+
 const AnimatedDialogOverlay = animated(DialogOverlay)
 
 const StyledDialogOverlay = styled(AnimatedDialogOverlay)<{ $scrollOverlay?: boolean }>`
@@ -103,7 +105,7 @@ export default function Modal({
   hideBorder = false,
 }: ModalProps) {
   const fadeTransition = useTransition(isOpen, {
-    config: { duration: 200 },
+    config: { duration: MODAL_TRANSITION_DURATION },
     from: { opacity: 0 },
     enter: { opacity: 1 },
     leave: { opacity: 0 },

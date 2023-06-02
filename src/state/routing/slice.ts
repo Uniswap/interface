@@ -1,15 +1,14 @@
 import { createApi, fetchBaseQuery, FetchBaseQueryError } from '@reduxjs/toolkit/query/react'
 import { Protocol } from '@uniswap/router-sdk'
 import { TradeType } from '@uniswap/sdk-core'
-import { AlphaRouter, ChainId } from '@uniswap/smart-order-router'
-import { RPC_PROVIDERS } from 'constants/providers'
-import { getClientSideQuote, toSupportedChainId } from 'lib/hooks/routing/clientSideSmartOrderRouter'
+import { ChainId } from '@uniswap/smart-order-router'
+import { getClientSideQuote } from 'lib/hooks/routing/clientSideSmartOrderRouter'
 import ms from 'ms.macro'
 import qs from 'qs'
 import { trace } from 'tracing/trace'
 
 import { QuoteData, TradeResult } from './types'
-import { isExactInput, transformRoutesToTrade } from './utils'
+import { getRouter, isExactInput, shouldUseAPIRouter, transformRoutesToTrade } from './utils'
 
 export enum RouterPreference {
   AUTO = 'auto',
@@ -21,54 +20,12 @@ export enum RouterPreference {
 // internally for token -> USDC trades to get a USD value.
 export const INTERNAL_ROUTER_PREFERENCE_PRICE = 'price' as const
 
-const routers = new Map<ChainId, AlphaRouter>()
-function getRouter(chainId: ChainId): AlphaRouter {
-  const router = routers.get(chainId)
-  if (router) return router
-
-  const supportedChainId = toSupportedChainId(chainId)
-  if (supportedChainId) {
-    const provider = RPC_PROVIDERS[supportedChainId]
-    const router = new AlphaRouter({ chainId, provider })
-    routers.set(chainId, router)
-    return router
-  }
-
-  throw new Error(`Router does not support this chain (chainId: ${chainId}).`)
-}
-
 // routing API quote params: https://github.com/Uniswap/routing-api/blob/main/lib/handlers/quote/schema/quote-schema.ts
 const API_QUERY_PARAMS = {
   protocols: 'v2,v3,mixed',
 }
 const CLIENT_PARAMS = {
   protocols: [Protocol.V2, Protocol.V3, Protocol.MIXED],
-}
-// Price queries are tuned down to minimize the required RPCs to respond to them.
-// TODO(zzmp): This will be used after testing router caching.
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const PRICE_PARAMS = {
-  protocols: [Protocol.V2, Protocol.V3],
-  v2PoolSelection: {
-    topN: 2,
-    topNDirectSwaps: 1,
-    topNTokenInOut: 2,
-    topNSecondHop: 1,
-    topNWithEachBaseToken: 2,
-    topNWithBaseToken: 2,
-  },
-  v3PoolSelection: {
-    topN: 2,
-    topNDirectSwaps: 1,
-    topNTokenInOut: 2,
-    topNSecondHop: 1,
-    topNWithEachBaseToken: 2,
-    topNWithBaseToken: 2,
-  },
-  maxSwapsPerPath: 2,
-  minSplits: 1,
-  maxSplits: 1,
-  distributionPercent: 100,
 }
 
 export interface GetQuoteArgs {
@@ -126,7 +83,7 @@ export const routingApi = createApi({
         )
       },
       async queryFn(args, _api, _extraOptions, fetch) {
-        if (args.routerPreference === RouterPreference.API || args.routerPreference === RouterPreference.AUTO) {
+        if (shouldUseAPIRouter(args.routerPreference)) {
           try {
             const { tokenInAddress, tokenInChainId, tokenOutAddress, tokenOutChainId, amount, tradeType } = args
             const type = isExactInput(tradeType) ? 'exactIn' : 'exactOut'

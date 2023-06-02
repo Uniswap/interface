@@ -174,7 +174,7 @@ function useAllV3Ticks(
 ): {
   isLoading: boolean
   error: unknown
-  ticks: TickData[] | undefined
+  ticks?: TickData[]
 } {
   const useSubgraph = currencyA ? !CHAIN_IDS_MISSING_SUBGRAPH_DATA.includes(currencyA.chainId) : true
 
@@ -213,8 +213,8 @@ export function usePoolActiveLiquidity(
 ): {
   isLoading: boolean
   error: any
-  activeTick: number | undefined
-  data: TickProcessed[] | undefined
+  activeTick?: number
+  data?: TickProcessed[]
 } {
   const pool = usePool(currencyA, currencyB, feeAmount)
 
