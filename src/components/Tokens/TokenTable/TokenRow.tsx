@@ -41,7 +41,7 @@ const Cell = styled.div`
 const StyledTokenRow = styled.div<{
   first?: boolean
   last?: boolean
-  loading?: boolean
+  $loading?: boolean
 }>`
   background-color: transparent;
   display: grid;
@@ -66,8 +66,8 @@ const StyledTokenRow = styled.div<{
   transition-duration: ${({ theme }) => theme.transition.duration.fast};
 
   &:hover {
-    ${({ loading, theme }) =>
-      !loading &&
+    ${({ $loading, theme }) =>
+      !$loading &&
       css`
         background-color: ${theme.hoverDefault};
       `}
@@ -349,7 +349,7 @@ function TokenRow({
   first?: boolean
   header: boolean
   listNumber: ReactNode
-  loading?: boolean
+  $loading?: boolean
   tvl: ReactNode
   price: ReactNode
   percentChange: ReactNode
@@ -404,7 +404,7 @@ export function LoadingRow(props: { first?: boolean; last?: boolean }) {
     <TokenRow
       header={false}
       listNumber={<SmallLoadingBubble />}
-      loading
+      $loading
       tokenInfo={
         <>
           <IconLoadingBubble />
@@ -453,10 +453,8 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
     search_token_address_input: filterString,
   }
 
-  const price =
-    token.market?.price?.value !== undefined
-      ? formatUSDPrice(token.market?.price?.value, NumberType.FiatTokenStats)
-      : '-'
+  // A simple 0 price indicates the price is not currently available from the api
+  const price = token.market?.price?.value === 0 ? '-' : formatUSDPrice(token.market?.price?.value)
 
   // TODO: currency logo sizing mobile (32px) vs. desktop (24px)
   return (
