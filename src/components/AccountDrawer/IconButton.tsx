@@ -105,6 +105,10 @@ const TextWrapper = styled.div`
   min-width: min-content;
 `
 
+const TextHide = styled.div`
+  overflow: hidden;
+`
+
 /**
  * Allows for hiding and showing some text next to an IconButton
  * Note that for width transitions to animate in CSS we need to always specify the width (no auto)
@@ -190,15 +194,14 @@ export const IconWithConfirmTextButton = ({
         </IconWrapper>
 
         {/* this outer div is so we can cut it off but keep the inner text width full-width so we can measure it */}
-        <div
+        <TextHide
           style={{
             maxWidth: showText ? dimensions.hidden : 0,
             minWidth: showText ? dimensions.hidden : 0,
-            overflow: 'hidden',
           }}
         >
           <TextWrapper ref={hiddenObserver.ref}>{text}</TextWrapper>
-        </div>
+        </TextHide>
       </Row>
     </IconBlock>
   )
