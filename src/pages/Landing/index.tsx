@@ -19,6 +19,7 @@ import { useAppSelector } from 'state/hooks'
 import styled, { css } from 'styled-components/macro'
 import { BREAKPOINTS } from 'theme'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
+import { TRANSITION_DURATIONS } from 'theme/styles'
 import { Z_INDEX } from 'theme/zIndex'
 
 const PageContainer = styled.div<{ isDarkMode: boolean }>`
@@ -31,11 +32,6 @@ const PageContainer = styled.div<{ isDarkMode: boolean }>`
   align-items: center;
   scroll-behavior: smooth;
   overflow-x: hidden;
-
-  background: ${({ isDarkMode }) =>
-    isDarkMode
-      ? 'linear-gradient(rgba(8, 10, 24, 0) 0%, rgb(8 10 24 / 100%) 45%)'
-      : 'linear-gradient(rgba(255, 255, 255, 0) 0%, rgb(255 255 255 /100%) 45%)'};
 `
 
 const Gradient = styled.div<{ isDarkMode: boolean }>`
@@ -307,7 +303,10 @@ export default function Landing() {
     if ((queryParams.intro || !selectedWallet) && !accountDrawerOpen) {
       setShowContent(true)
     } else {
-      navigate('/swap')
+      setShowContent(false)
+      setTimeout(() => {
+        navigate('/swap')
+      }, TRANSITION_DURATIONS.medium)
     }
   }, [navigate, selectedWallet, queryParams.intro, accountDrawerOpen])
 
@@ -315,82 +314,84 @@ export default function Landing() {
 
   return (
     <Trace page={InterfacePageName.LANDING_PAGE} shouldLogImpression>
-      {showContent && (
-        <PageContainer isDarkMode={isDarkMode} data-testid="landing-page">
-          <LandingSwapContainer>
-            <TraceEvent
-              events={[BrowserEvent.onClick]}
-              name={SharedEventName.ELEMENT_CLICKED}
-              element={InterfaceElementName.LANDING_PAGE_SWAP_ELEMENT}
-            >
-              <Link to="/swap">
-                <LandingSwap />
-              </Link>
-            </TraceEvent>
-          </LandingSwapContainer>
-          <Gradient isDarkMode={isDarkMode} />
-          <GlowContainer>
-            <Glow />
-          </GlowContainer>
-          <ContentContainer isDarkMode={isDarkMode}>
-            <TitleText isDarkMode={isDarkMode}>
-              {shouldDisableNFTRoutes ? (
-                <Trans>Trade crypto with confidence</Trans>
-              ) : (
-                <Trans>Trade crypto and NFTs with confidence</Trans>
-              )}
-            </TitleText>
-            <SubTextContainer>
-              <SubText>
+      <PageContainer isDarkMode={isDarkMode} data-testid="landing-page">
+        <LandingSwapContainer>
+          <TraceEvent
+            events={[BrowserEvent.onClick]}
+            name={SharedEventName.ELEMENT_CLICKED}
+            element={InterfaceElementName.LANDING_PAGE_SWAP_ELEMENT}
+          >
+            <Link to="/swap">
+              <LandingSwap />
+            </Link>
+          </TraceEvent>
+        </LandingSwapContainer>
+        {showContent && (
+          <>
+            <Gradient isDarkMode={isDarkMode} />
+            <GlowContainer>
+              <Glow />
+            </GlowContainer>
+            <ContentContainer isDarkMode={isDarkMode}>
+              <TitleText isDarkMode={isDarkMode}>
                 {shouldDisableNFTRoutes ? (
-                  <Trans>Buy, sell, and explore tokens</Trans>
+                  <Trans>Trade crypto with confidence</Trans>
                 ) : (
-                  <Trans>Buy, sell, and explore tokens and NFTs</Trans>
+                  <Trans>Trade crypto and NFTs with confidence</Trans>
                 )}
-              </SubText>
-            </SubTextContainer>
-            <ActionsContainer>
-              <TraceEvent
-                events={[BrowserEvent.onClick]}
-                name={SharedEventName.ELEMENT_CLICKED}
-                element={InterfaceElementName.CONTINUE_BUTTON}
+              </TitleText>
+              <SubTextContainer>
+                <SubText>
+                  {shouldDisableNFTRoutes ? (
+                    <Trans>Buy, sell, and explore tokens</Trans>
+                  ) : (
+                    <Trans>Buy, sell, and explore tokens and NFTs</Trans>
+                  )}
+                </SubText>
+              </SubTextContainer>
+              <ActionsContainer>
+                <TraceEvent
+                  events={[BrowserEvent.onClick]}
+                  name={SharedEventName.ELEMENT_CLICKED}
+                  element={InterfaceElementName.CONTINUE_BUTTON}
+                >
+                  <ButtonCTA as={Link} to="/swap">
+                    <ButtonCTAText>
+                      <Trans>Get started</Trans>
+                    </ButtonCTAText>
+                  </ButtonCTA>
+                </TraceEvent>
+              </ActionsContainer>
+              <LearnMoreContainer
+                onClick={() => {
+                  cardsRef?.current?.scrollIntoView({ behavior: 'smooth' })
+                }}
               >
-                <ButtonCTA as={Link} to="/swap">
-                  <ButtonCTAText>
-                    <Trans>Get started</Trans>
-                  </ButtonCTAText>
-                </ButtonCTA>
-              </TraceEvent>
-            </ActionsContainer>
-            <LearnMoreContainer
-              onClick={() => {
-                cardsRef?.current?.scrollIntoView({ behavior: 'smooth' })
-              }}
-            >
-              <Trans>Learn more</Trans>
-              <LearnMoreArrow />
-            </LearnMoreContainer>
-          </ContentContainer>
-          <AboutContentContainer isDarkMode={isDarkMode}>
-            <CardGrid cols={2} ref={cardsRef}>
-              {MAIN_CARDS.map(({ darkBackgroundImgSrc, lightBackgroundImgSrc, ...card }) => (
-                <Card
-                  {...card}
-                  backgroundImgSrc={isDarkMode ? darkBackgroundImgSrc : lightBackgroundImgSrc}
-                  key={card.title}
-                />
-              ))}
-            </CardGrid>
-            <CardGrid cols={3}>
-              {MORE_CARDS.map(({ darkIcon, lightIcon, ...card }) => (
-                <Card {...card} icon={isDarkMode ? darkIcon : lightIcon} key={card.title} type={CardType.Secondary} />
-              ))}
-            </CardGrid>
-            <ProtocolBanner />
-            <AboutFooter />
-          </AboutContentContainer>
-        </PageContainer>
-      )}
+                <Trans>Learn more</Trans>
+                <LearnMoreArrow />
+              </LearnMoreContainer>
+            </ContentContainer>
+            <AboutContentContainer isDarkMode={isDarkMode}>
+              <CardGrid cols={2} ref={cardsRef}>
+                {MAIN_CARDS.map(({ darkBackgroundImgSrc, lightBackgroundImgSrc, ...card }) => (
+                  <Card
+                    {...card}
+                    backgroundImgSrc={isDarkMode ? darkBackgroundImgSrc : lightBackgroundImgSrc}
+                    key={card.title}
+                  />
+                ))}
+              </CardGrid>
+              <CardGrid cols={3}>
+                {MORE_CARDS.map(({ darkIcon, lightIcon, ...card }) => (
+                  <Card {...card} icon={isDarkMode ? darkIcon : lightIcon} key={card.title} type={CardType.Secondary} />
+                ))}
+              </CardGrid>
+              <ProtocolBanner />
+              <AboutFooter />
+            </AboutContentContainer>
+          </>
+        )}
+      </PageContainer>
     </Trace>
   )
 }
