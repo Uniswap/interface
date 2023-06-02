@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { useAppStackNavigation } from 'src/app/navigation/types'
-import { useMultipleBalances, useSingleBalance } from 'src/features/dataApi/balances'
+import { useBalances } from 'src/features/dataApi/balances'
 import { Screens } from 'src/screens/Screens'
 import {
   Chain,
@@ -24,7 +24,7 @@ export function useCrossChainBalances(
   currentChainBalance: PortfolioBalance | null
   otherChainBalances: PortfolioBalance[] | null
 } {
-  const currentChainBalance = useSingleBalance(currencyId)
+  const currentChainBalance = useBalances([currencyId])?.[0] ?? null
   const currentChainId = currencyIdToChain(currencyId)
 
   const bridgedCurrencyIds = useMemo(
@@ -40,7 +40,7 @@ export function useCrossChainBalances(
 
     [bridgeInfo, currentChainId]
   )
-  const otherChainBalances = useMultipleBalances(bridgedCurrencyIds)
+  const otherChainBalances = useBalances(bridgedCurrencyIds)
 
   return {
     currentChainBalance,

@@ -26,10 +26,7 @@ import {
 import { useSearchTokens } from 'src/features/dataApi/searchTokens'
 import { usePopularTokens } from 'src/features/dataApi/topTokens'
 import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
-import {
-  makeSelectAccountHideSmallBalances,
-  makeSelectAccountHideSpamTokens,
-} from 'src/features/wallet/selectors'
+import { makeSelectAccountHideSpamTokens } from 'src/features/wallet/selectors'
 import { ChainId } from 'wallet/src/constants/chains'
 import { EMPTY_ARRAY } from 'wallet/src/constants/misc'
 import { sortPortfolioBalances, usePortfolioBalances } from 'wallet/src/features/dataApi/balances'
@@ -58,9 +55,6 @@ export function useTokenSectionsByVariation(
 ): GqlResult<TokenSection[]> {
   const { t } = useTranslation()
   const activeAccount = useActiveAccountWithThrow()
-  const hideSmallBalances = useAppSelector<boolean>(
-    makeSelectAccountHideSmallBalances(activeAccount.address)
-  )
   const hideSpamTokens = useAppSelector<boolean>(
     makeSelectAccountHideSpamTokens(activeAccount.address)
   )
@@ -70,6 +64,7 @@ export function useTokenSectionsByVariation(
     error: populateTokensError,
     refetch: refetchPopularTokens,
   } = usePopularTokens(chainFilter ?? ChainId.Mainnet)
+
   const {
     data: portfolioBalancesById,
     error: portfolioBalancesByIdError,
@@ -77,9 +72,10 @@ export function useTokenSectionsByVariation(
   } = usePortfolioBalances(
     activeAccount.address,
     /*shouldPoll=*/ false, // Home tab's TokenBalanceList will poll portfolio balances for activeAccount
-    hideSmallBalances,
+    /*hideSmallBalances=*/ false, // always show small balances in token selector
     hideSpamTokens
   )
+
   const {
     data: commonBaseCurrencies,
     error: commonBaseCurrenciesError,

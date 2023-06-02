@@ -21,10 +21,9 @@ type SortedPortfolioBalances = {
  * @param address
  * @param shouldPoll whether query should poll
  * NOTE:
- *  on TokenDetails, useSingleBalance and useMultipleBalances both rely on
- *  usePortfolioBalances but don't need polling versions of it. Including
- *  polling was causing multiple polling intervals to be kicked off with
- *  usePortfolioBalances.
+ *  on TokenDetails, useBalances relies rely on usePortfolioBalances but don't need
+ *  polling versions of it. Including polling was causing multiple polling intervals
+ *  to be kicked off with usePortfolioBalances.
  *  Same with on Token Selector's TokenSearchResultList, since the home screen
  *  has a usePortfolioBalances polling hook, we don't need to duplicate the
  *  polling interval when token selector is open
@@ -181,8 +180,9 @@ export function useSortedPortfolioBalances(
         if (hideSpamTokens && balance.currencyInfo.isSpam) {
           acc.spamBalances.push(balance)
         } else if (
-          // Small balances includes tokens that don't have a balanceUSD value
+          // Small balances includes tokens that don't have a balanceUSD value but should exclude native currencies
           hideSmallBalances &&
+          !balance.currencyInfo.currency.isNative &&
           (!balance.balanceUSD || balance.balanceUSD < HIDE_SMALL_USD_BALANCES_THRESHOLD)
         ) {
           acc.smallBalances.push(balance)
