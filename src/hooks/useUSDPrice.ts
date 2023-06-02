@@ -8,6 +8,8 @@ import { TradeState } from 'state/routing/types'
 import { useRoutingAPITrade } from 'state/routing/useRoutingAPITrade'
 import { getNativeTokenDBAddress } from 'utils/nativeTokens'
 
+import useNativeCurrency from '../lib/hooks/useNativeCurrency'
+import tryParseCurrencyAmount from '../lib/utils/tryParseCurrencyAmount'
 import useStablecoinPrice from './useStablecoinPrice'
 
 // ETH amounts used when calculating spot price for a given currency.
@@ -82,4 +84,16 @@ export function useUSDPrice(currencyAmount?: CurrencyAmount<Currency>): {
   if (!ethUSDPrice || !ethValue) return { data: undefined, isLoading: isEthValueLoading || isFirstLoad }
 
   return { data: parseFloat(ethValue.toExact()) * ethUSDPrice, isLoading: false }
+}
+
+// eslint-disable-next-line import/no-unused-modules
+export function useUSDPriceFromCurrency(currency?: Currency | null, amount = 1) {
+  return useUSDPriceFromChainId(currency?.chainId, amount)
+}
+
+// eslint-disable-next-line import/no-unused-modules
+export function useUSDPriceFromChainId(chainId?: number | null, amount = 1) {
+  const nativeCurrency = useNativeCurrency(chainId)
+  const parsedAmount = tryParseCurrencyAmount(amount.toString(), nativeCurrency)
+  return useUSDPrice(parsedAmount)
 }

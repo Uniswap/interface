@@ -1,11 +1,12 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { formatEther } from '@ethersproject/units'
+import { formatNumber, NumberType } from '@uniswap/conedison/format'
 import { useCurrency } from 'hooks/Tokens'
-import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { BagItemStatus } from 'nft/types'
 import { useMemo } from 'react'
 
+import { useUSDPrice } from '../../hooks/useUSDPrice'
 import { useBag } from './useBag'
 
 export function useBagTotalEthPrice(): BigNumber {
@@ -36,9 +37,9 @@ export function useBagTotalUsdPrice(): string | undefined {
     return tryParseCurrencyAmount(formatEther(totalEthPrice.toString()), defaultCurrency ?? undefined)
   }, [defaultCurrency, totalEthPrice])
 
-  const usdcValue = useStablecoinValue(parsedOutputAmount)
+  const usdcValue = useUSDPrice(parsedOutputAmount)
 
   return useMemo(() => {
-    return usdcValue?.toExact()
+    return formatNumber(usdcValue?.data, NumberType.FiatTokenQuantity)
   }, [usdcValue])
 }
