@@ -238,7 +238,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
   const totalBalance = portfolio?.tokensTotalDenominatedValue?.value
   const absoluteChange = portfolio?.tokensTotalDenominatedValueChange?.absolute?.value
   const percentChange = portfolio?.tokensTotalDenominatedValueChange?.percentage?.value
-  const [showingConfirm, setShowingConfirm] = useState(false)
+  const [showDisconnectConfirm, setShowDisconnectConfirm] = useState(false)
 
   return (
     <AuthenticatedHeaderWrapper>
@@ -260,7 +260,9 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
           )}
         </StatusWrapper>
         <IconContainer>
-          {!showingConfirm && <IconButton data-testid="wallet-settings" onClick={openSettings} Icon={Settings} />}
+          {!showDisconnectConfirm && (
+            <IconButton data-testid="wallet-settings" onClick={openSettings} Icon={Settings} />
+          )}
           <TraceEvent
             events={[BrowserEvent.onClick]}
             name={SharedEventName.ELEMENT_CLICKED}
@@ -269,7 +271,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
             <IconWithTextButton
               data-testid="wallet-disconnect"
               onConfirm={disconnect}
-              onShowConfirm={setShowingConfirm}
+              onShowConfirm={setShowDisconnectConfirm}
               Icon={LogOutCentered}
               text="Disconnect"
             />

@@ -75,9 +75,9 @@ interface IconButtonProps extends React.ComponentPropsWithoutRef<'button'>, Base
 
 type IconBlockProps = React.ComponentPropsWithoutRef<'a' | 'button'>
 
-const IconBlock = forwardRef<IconBlockProps>(function IconBlock(props, ref: any) {
+const IconBlock = forwardRef<HTMLAnchorElement | HTMLDivElement, IconBlockProps>(function IconBlock(props, ref) {
   if ('href' in props) {
-    return <IconBlockLink ref={ref} {...props} />
+    return <IconBlockLink ref={ref as React.ForwardedRef<HTMLAnchorElement>} {...props} />
   }
   // ignoring 'button' 'type' conflict between React and styled-components
   // @ts-ignore
@@ -112,8 +112,8 @@ const TextWrapper = styled.div`
  */
 export const IconWithTextButton = ({ Icon, text, onConfirm, onShowConfirm, onClick, ...rest }: IconWithTextProps) => {
   const [showText, _setShowText] = useState(false)
-  const frameObserver = useResizeObserver()
-  const hiddenObserver = useResizeObserver()
+  const frameObserver = useResizeObserver<HTMLElement>()
+  const hiddenObserver = useResizeObserver<HTMLElement>()
 
   const setShowText = useCallback(
     (val: boolean) => {
@@ -159,7 +159,6 @@ export const IconWithTextButton = ({ Icon, text, onConfirm, onShowConfirm, onCli
 
   return (
     <IconBlock
-      // @ts-ignore its a fine ref
       ref={frameObserver.ref}
       {...rest}
       style={{
@@ -189,12 +188,7 @@ export const IconWithTextButton = ({ Icon, text, onConfirm, onShowConfirm, onCli
             overflow: 'hidden',
           }}
         >
-          <TextWrapper
-            // @ts-ignore its a fine ref
-            ref={hiddenObserver.ref}
-          >
-            {text}
-          </TextWrapper>
+          <TextWrapper ref={hiddenObserver.ref}>{text}</TextWrapper>
         </div>
       </Row>
     </IconBlock>
