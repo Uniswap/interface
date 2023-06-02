@@ -45,6 +45,8 @@ describe('Wallet Dropdown', () => {
     beforeEach(() => {
       cy.visit('/')
       cy.get(getTestSelector('web3-status-connected')).click()
+      // click twice, first time to show confirmation, second to confirm
+      cy.get(getTestSelector('wallet-disconnect')).click()
       cy.get(getTestSelector('wallet-disconnect')).click()
       cy.get(getTestSelector('wallet-settings')).click()
     })
