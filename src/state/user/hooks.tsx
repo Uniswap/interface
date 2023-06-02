@@ -21,7 +21,6 @@ import {
   updateHideUniswapWalletBanner,
   updateUserBuyFiatFlowCompleted,
   updateUserDeadline,
-  updateUserExpertMode,
   updateUserLocale,
   updateUserRouterPreference,
   updateUserSlippageTolerance,
@@ -66,10 +65,6 @@ export function useUserLocaleManager(): [SupportedLocale | null, (newLocale: Sup
   return [locale, setLocale]
 }
 
-export function useIsExpertMode(): boolean {
-  return useAppSelector((state) => state.user.userExpertMode)
-}
-
 export function useBuyFiatFlowCompleted(): [boolean | undefined, (buyFiatFlowCompleted: boolean) => void] {
   const dispatch = useAppDispatch()
   const buyFiatFlowCompleted = useAppSelector((state) => state.user.buyFiatFlowCompleted)
@@ -80,17 +75,6 @@ export function useBuyFiatFlowCompleted(): [boolean | undefined, (buyFiatFlowCom
     [dispatch]
   )
   return [buyFiatFlowCompleted, setBuyFiatFlowCompleted]
-}
-
-export function useExpertModeManager(): [boolean, () => void] {
-  const dispatch = useAppDispatch()
-  const expertMode = useIsExpertMode()
-
-  const toggleSetExpertMode = useCallback(() => {
-    dispatch(updateUserExpertMode({ userExpertMode: !expertMode }))
-  }, [expertMode, dispatch])
-
-  return [expertMode, toggleSetExpertMode]
 }
 
 export function useRouterPreference(): [RouterPreference, (routerPreference: RouterPreference) => void] {
