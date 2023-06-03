@@ -100,6 +100,9 @@ export const FALLBACK_URLS = {
     'https://bsc-dataseed4.defibit.io',
     'https://rpc.ankr.com/bsc',
   ],
+  [SupportedChainId.HARMONY]: [
+    'https://api.s0.b.hmny.io',
+  ],
 }
 
 /**
@@ -143,4 +146,7 @@ export const RPC_URLS = {
   [SupportedChainId.CELO]: FALLBACK_URLS[SupportedChainId.CELO],
   [SupportedChainId.CELO_ALFAJORES]: FALLBACK_URLS[SupportedChainId.CELO_ALFAJORES],
   [SupportedChainId.BNB]: [QUICKNODE_RPC_URL, ...FALLBACK_URLS[SupportedChainId.BNB]],
+  [SupportedChainId.HARMONY]: [
+    ...FALLBACK_URLS[SupportedChainId.HARMONY],
+  ],
 }

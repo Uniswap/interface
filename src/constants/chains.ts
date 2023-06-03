@@ -24,6 +24,8 @@ export enum SupportedChainId {
   CELO_ALFAJORES = 44787,
 
   BNB = 56,
+
+  HARMONY = 1666700000
 }
 
 export const UniWalletSupportedChains = [
@@ -46,6 +48,7 @@ export const CHAIN_IDS_TO_NAMES = {
   [SupportedChainId.OPTIMISM]: 'optimism',
   [SupportedChainId.OPTIMISM_GOERLI]: 'optimism_goerli',
   [SupportedChainId.BNB]: 'bnb',
+  [SupportedChainId.HARMONY]: 'harmony'
 }
 
 /**
@@ -66,6 +69,7 @@ export const SUPPORTED_GAS_ESTIMATE_CHAIN_IDS = [
   SupportedChainId.OPTIMISM,
   SupportedChainId.ARBITRUM_ONE,
   SupportedChainId.BNB,
+  SupportedChainId.HARMONY,
 ] as const
 
 /**
@@ -77,6 +81,7 @@ export const UNSUPPORTED_V2POOL_CHAIN_IDS = [
   SupportedChainId.ARBITRUM_ONE,
   SupportedChainId.BNB,
   SupportedChainId.ARBITRUM_GOERLI,
+  SupportedChainId.HARMONY,
 ] as const
 
 export const TESTNET_CHAIN_IDS = [

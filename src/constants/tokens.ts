@@ -25,13 +25,6 @@ const USDC_GOERLI = new Token(
   'USDC',
   'USD//C'
 )
-const USDC_SEPOLIA = new Token(
-  SupportedChainId.SEPOLIA,
-  '0x6f14C02Fc1F78322cFd7d707aB90f18baD3B54f5',
-  6,
-  'USDC',
-  'USD//C'
-)
 export const USDC_OPTIMISM = new Token(
   SupportedChainId.OPTIMISM,
   '0x7F5c764cBc14f9669B88837ca1490cCa17c31607',
@@ -471,6 +464,13 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token | undefined } =
     18,
     'WBNB',
     'Wrapped BNB'
+  ),
+  [SupportedChainId.HARMONY]: new Token(
+    SupportedChainId.HARMONY,
+    '0xcf664087a5bb0237a0bad6742852ec6c8d69a27a',
+    18,
+    'WONE',
+    'Wrapped ONE'
   ),
 }
 

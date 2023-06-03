@@ -223,6 +223,16 @@ const CHAIN_INFO: ChainInfoMap = {
     color: darkTheme.chain_56,
     backgroundColor: darkTheme.chain_56_background,
   },
+  [SupportedChainId.HARMONY]: {
+    networkType: NetworkType.L1,
+    docs: 'https://docs.uniswap.org/',
+    explorer: 'https://explorer.testnet.harmony.one/',
+    infoLink: 'https://info.uniswap.org/#/',
+    label: 'Harmony',
+    logoUrl: ethereumLogoUrl,
+    nativeCurrency: { name: 'Harmony', symbol: 'ONE', decimals: 18 },
+    color: darkTheme.chain_1,
+  },
 }
 
 export function getChainInfo(chainId: SupportedL1ChainId): L1ChainInfo
