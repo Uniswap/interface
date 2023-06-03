@@ -578,8 +578,6 @@ export function LoadingRow(props: { first?: boolean; last?: boolean }) {
       PnL={<LoadingBubble />}
       entryPrice={<LoadingBubble />}
       remainingPremium={<LoadingBubble />}
-      // recentPremium={<LoadingBubble />}
-      // unusedPremium={<LoadingBubble />}
       {...props}
     />
   )
@@ -711,7 +709,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
               <RowBetween>
                 <PositionInfo>
                   <ThemedText.TableText margin="0" padding="0">
-                    <GreenText> x{formatNumber(leverageFactor)}</GreenText> {outputCurrencySymbol}
+                    <GreenText> x{leverageFactor}</GreenText> {outputCurrencySymbol}
                   </ThemedText.TableText>
                 </PositionInfo>
               </RowBetween>
@@ -720,14 +718,14 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
           value={
             <Trans>
               <ThemedText.TableText>
-                {formatNumber(Number(position.totalPosition))} {outputCurrencySymbol}
+                {(Number(position.totalPosition))} {outputCurrencySymbol}
               </ThemedText.TableText>
             </Trans>
           }
           collateral={
             <Trans>
               <ThemedText.TableText>
-                {formatNumber(Number(position.initialCollateral))} {inputCurrencySymbol}
+                {(Number(position.initialCollateral))} {inputCurrencySymbol}
               </ThemedText.TableText>
             </Trans>
           }
@@ -755,7 +753,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
                     {arrow}
                   </ArrowCell>
                   <DeltaText delta={Number(pnl)}>
-                    {pnl ? formatNumber(pnl) : "-"} {inputCurrencySymbol}
+                    {pnl ? (pnl) : "-"} {inputCurrencySymbol}
                   </DeltaText>
                 </AutoRow>
               </ThemedText.TableText>
@@ -764,14 +762,14 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
           entryPrice={
             <Trans>
               <ThemedText.TableText>
-                {formatNumber(entryPrice)} {quoteBaseSymbol}
+                {(entryPrice)} {quoteBaseSymbol}
               </ThemedText.TableText>
             </Trans>
           }
           remainingPremium={
             <Trans>
               <ThemedText.TableText>
-                {formatNumber(Number(position.unusedPremium))} {inputCurrencySymbol}
+                {(Number(position.unusedPremium))} {inputCurrencySymbol}
               </ThemedText.TableText>
             </Trans>
           }
