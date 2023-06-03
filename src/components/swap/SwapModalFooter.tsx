@@ -749,30 +749,6 @@ export function ReduceLeverageModalFooter({
                           </ThemedText.DeprecatedBlack>
                         </TextWithLoadingPlaceholder>
                       </RowBetween>
-                      <RowBetween>
-                        <RowFixed>
-                          <MouseoverTooltip
-                            text={
-                              <Trans>
-                                The amount of debt automatically repaid when closing
-                              </Trans>
-                            }
-                          >
-                            <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
-                              <Trans>Debt to repay</Trans>
-                            </ThemedText.DeprecatedSubHeader>
-                          </MouseoverTooltip>
-                        </RowFixed>
-                        <TextWithLoadingPlaceholder syncing={loading} width={65}>
-                          <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
-                            <TruncatedText>
-                            {
-                              debt && `${Number(debt)}  ${inputIsToken0 ? token0?.symbol : token1?.symbol}`
-                            }
-                            </TruncatedText>
-                          </ThemedText.DeprecatedBlack>
-                        </TextWithLoadingPlaceholder>
-                      </RowBetween>
                       <Separator />
                       <RowBetween>
                         <RowFixed>
@@ -804,12 +780,61 @@ export function ReduceLeverageModalFooter({
                           <MouseoverTooltip
                             text={
                               <Trans>
+                                The amount of debt automatically repaid when closing
+                              </Trans>
+                            }
+                          >
+                            <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
+                              <Trans>Premium Returned</Trans>
+                            </ThemedText.DeprecatedSubHeader>
+                          </MouseoverTooltip>
+                        </RowFixed>
+                        <TextWithLoadingPlaceholder syncing={loading} width={65}>
+                          <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
+                            <TruncatedText>
+                            {
+                              debt && `${Number(debt)}  ${inputIsToken0 ? token0?.symbol : token1?.symbol}`
+                            }
+                            </TruncatedText>
+                          </ThemedText.DeprecatedBlack>
+                        </TextWithLoadingPlaceholder>
+                      </RowBetween>
+                      <RowBetween>
+                        <RowFixed>
+                          <MouseoverTooltip
+                            text={
+                              <Trans>
+                                The amount of debt automatically repaid when closing
+                              </Trans>
+                            }
+                          >
+                            <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
+                              <Trans>Premium To Pay</Trans>
+                            </ThemedText.DeprecatedSubHeader>
+                          </MouseoverTooltip>
+                        </RowFixed>
+                        <TextWithLoadingPlaceholder syncing={loading} width={65}>
+                          <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
+                            <TruncatedText>
+                            {
+                              debt && `${Number(debt)}  ${inputIsToken0 ? token0?.symbol : token1?.symbol}`
+                            }
+                            </TruncatedText>
+                          </ThemedText.DeprecatedBlack>
+                        </TextWithLoadingPlaceholder>
+                      </RowBetween>
+
+                      <RowBetween>
+                        <RowFixed>
+                          <MouseoverTooltip
+                            text={
+                              <Trans>
                                 The total amount you get after closing position and repaying debt.
                               </Trans>
                             }
                           >
                             <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
-                              <Trans>Expected Received After Repay</Trans>
+                              <Trans>Expected PnL %</Trans>
                             </ThemedText.DeprecatedSubHeader>
                           </MouseoverTooltip>
                         </RowFixed>

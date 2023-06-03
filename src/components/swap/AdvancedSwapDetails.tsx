@@ -417,40 +417,54 @@ export function AdvancedLeverageSwapDetails({
       priceImpact: trade ? computeRealizedPriceImpact(trade) : undefined,
     }
   }, [trade])
-
+  console.log('leveragetrade', leverageTrade); 
   return !trade ? null : (
     <StyledCard>
       <AutoColumn gap="sm">
         <ValueLabel
           description='The amount you expect to receive at the current market price. You may receive less or more if the market price changes while your transaction is pending.'
           label='Expected Output'
-          value={leverageTrade?.expectedOutput}
+          value={Math.round(Number(leverageTrade?.expectedOutput) * 100000) / 100000 }
           syncing={syncing}
           symbolAppend={trade.outputAmount.currency.symbol}
         />
         <ValueLabel
-          description="Price around which your premium gets expensive."
-          label="Strike Price"
-          value={leverageTrade?.strikePrice}
+          description="Amount In / Amount Out"
+          label="Quoted Price"
+          value={Math.round(Number(leverageTrade?.strikePrice) * 1000000) / 1000000}
+          syncing={syncing}
+          symbolAppend={`${trade.inputAmount.currency.symbol} / ${trade.outputAmount.currency.symbol}`}
+        />
+        <ValueLabel
+          description="Avg entry of your position after this trade"
+          label="Avg. Entry"
+          value={Math.round(Number(leverageTrade?.strikePrice) * 1000000) / 1000000}
           syncing={syncing}
           symbolAppend={`${trade.inputAmount.currency.symbol} / ${trade.outputAmount.currency.symbol}`}
         />
         <ValueLabel
           description="The first premium payment required to open this position"
           label="Quoted Premium"
-          value={leverageTrade?.quotedPremium}
+          value={Math.round(Number(leverageTrade?.quotedPremium) * 100000) / 100000}
+          syncing={syncing}
+          symbolAppend={trade.inputAmount.currency.symbol}
+        />
+        <ValueLabel
+          description="The first premium payment required to open this position"
+          label="Returned premium"
+          value={Math.round(Number(leverageTrade?.quotedPremium) * 100000) / 100000}
           syncing={syncing}
           symbolAppend={trade.inputAmount.currency.symbol}
         />
         <ValueLabel
           description="The impact your trade has on the market price of this pool."
           label="Fees"
-          value={leverageTrade?.quotedPremium}
+          value={Math.round(Number(leverageTrade?.quotedPremium) * 100000) / 100000}
           syncing={syncing}
           symbolAppend={trade.inputAmount.currency.symbol}
         />
         
-        <RowBetween>
+        {/*<RowBetween>
           <RowFixed>
             <MouseoverTooltip
               text={
@@ -474,7 +488,7 @@ export function AdvancedLeverageSwapDetails({
               </ThemedText.DeprecatedBlack>
             </TruncatedText>
           </TextWithLoadingPlaceholder>
-        </RowBetween>
+        </RowBetween>*/}
         <RowBetween>
           <RowFixed>
             <MouseoverTooltip
@@ -598,6 +612,13 @@ export function AdvancedBorrowSwapDetails({
         <ValueLabel 
           description="The quoted premium you are expected to pay within 24hrs."
           label="Quoted Premium"
+          value={borrowTrade?.quotedPremium}
+          syncing={syncing}
+          symbolAppend={inputCurrency?.symbol}
+        />
+        <ValueLabel 
+          description="The quoted premium you are expected to pay within 24hrs."
+          label="Returned Premium"
           value={borrowTrade?.quotedPremium}
           syncing={syncing}
           symbolAppend={inputCurrency?.symbol}
