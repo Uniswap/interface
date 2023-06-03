@@ -82,9 +82,9 @@ const Tokens = () => {
             text={<Trans>This table contains the top tokens by Uniswap volume, sorted based on your input.</Trans>}
             placement="bottom"
           >
-          <ThemedText.LargeHeader>
-            <Trans>Top smart pools on Rigoblock</Trans>
-          </ThemedText.LargeHeader>
+            <ThemedText.LargeHeader>
+              <Trans>Top smart pools on Rigoblock</Trans>
+            </ThemedText.LargeHeader>
           </MouseoverTooltip>
         </TitleContainer>
         <FiltersWrapper>

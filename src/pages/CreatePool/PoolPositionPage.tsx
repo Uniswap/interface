@@ -6,6 +6,7 @@ import { Trans } from '@lingui/macro'
 import { /*Currency,*/ CurrencyAmount /*, Fraction*/, Percent /*, Price, Token*/ } from '@uniswap/sdk-core'
 //import { NonfungiblePositionManager, Pool, Position } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
+import IconButton, { IconHoverText } from 'components/AccountDrawer/IconButton'
 //import { sendEvent } from 'components/analytics'
 //import Badge from 'components/Badge'
 import { /*ButtonConfirmed, ButtonGray,*/ ButtonPrimary } from 'components/Button'
@@ -24,7 +25,6 @@ import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 //import Toggle from 'components/Toggle'
 import TransactionConfirmationModal, { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
 import DelegateModal from 'components/vote/DelegateModal'
-import IconButton, { IconHoverText } from 'components/AccountDrawer/IconButton'
 import { /*BIG_INT_ZERO,*/ ZERO_ADDRESS } from 'constants/misc'
 import { nativeOnChain } from 'constants/tokens'
 import { useCurrency } from 'hooks/Tokens'
@@ -96,12 +96,10 @@ const PageWrapper = styled.div`
   `};
 `
 
-/*
-const BadgeText = styled.div`
-  font-weight: 500;
-  font-size: 14px;
-`
-*/
+//const BadgeText = styled.div`
+//  font-weight: 500;
+//  font-size: 14px;
+//`
 
 // responsive text
 // disable the warning because we don't use the end prop, we just want to filter it out
@@ -148,12 +146,10 @@ const IconContainer = styled.div`
   justify-content: center;
 `
 
-/*
-const DoubleArrow = styled.span`
-  color: ${({ theme }) => theme.textTertiary};
-  margin: 0 1rem;
-`
-*/
+//const DoubleArrow = styled.span`
+//  color: ${({ theme }) => theme.textTertiary};
+//  margin: 0 1rem;
+//`
 
 const ResponsiveRow = styled(RowBetween)`
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`

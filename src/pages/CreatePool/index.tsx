@@ -34,16 +34,14 @@ const TopSection = styled(AutoColumn)`
   width: 100%;
 `
 
-/*
-const PoolSection = styled.div`
-  display: grid;
-  grid-template-columns: 1fr;
-  column-gap: 10px;
-  row-gap: 15px;
-  width: 100%;
-  justify-self: center;
-`
-*/
+//const PoolSection = styled.div`
+//  display: grid;
+//  grid-template-columns: 1fr;
+//  column-gap: 10px;
+//  row-gap: 15px;
+//  width: 100%;
+//  justify-self: center;
+//`
 
 const MainContentWrapper = styled.main`
   background-color: ${({ theme }) => theme.deprecated_bg1};

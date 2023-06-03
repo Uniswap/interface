@@ -50,13 +50,13 @@ function useGovernanceProxyContract(): Contract | null {
 
 const useLatestGovernanceContract = useGovernanceProxyContract
 
-export function useUniContract() {
+function useUniContract() {
   const { chainId } = useWeb3React()
   const uniAddress = useMemo(() => (chainId ? UNI[chainId]?.address : undefined), [chainId])
   return useContract(uniAddress, UniJSON.abi, true)
 }
 
-export function useRegistryContract(): Contract | null {
+function useRegistryContract(): Contract | null {
   return useContract(RB_REGISTRY_ADDRESSES, RB_REGISTRY_ABI, true)
 }
 
@@ -98,7 +98,7 @@ export interface ProposalData {
   governorIndex: number // index in the governance address array for which this proposal pertains
 }
 
-export interface ProposedAction {
+interface ProposedAction {
   target: string
   data: string
   value: string
@@ -110,17 +110,17 @@ export interface CreateProposalData {
 }
 
 // TODO: check if we are using these 2
-export enum StakeStatus {
+enum StakeStatus {
   UNDELEGATED,
   DELEGATED,
 }
 
-export interface StakeInfo {
+interface StakeInfo {
   stakeStatus: StakeStatus
   poolId: string
 }
 
-export interface StakeData {
+interface StakeData {
   amount: string | undefined
   pool: string | null
   fromPoolId?: string | undefined
