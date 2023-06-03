@@ -661,7 +661,7 @@ export function Swap({
           <RowFixed>
             {operatedPools && (
               <StyledTokenName className="pool-name-container" active={true}>
-                {smartPoolName ?? <Trans>Create your pool first</Trans>}
+                {smartPoolName && smartPoolName.length > 3 ? smartPoolName : <Trans>Create your pool first</Trans>}
               </StyledTokenName>
             )}
           </RowFixed>
