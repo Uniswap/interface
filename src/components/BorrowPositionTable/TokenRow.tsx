@@ -397,7 +397,7 @@ function HeaderCell({
 
   const description = HEADER_DESCRIPTIONS[category]
 
-  console.log("category",category, )
+  // console.log("category",category, )
 
   return (
     <HeaderCellWrapper onClick={handleSortCategory}>
@@ -571,6 +571,12 @@ interface LoadedRowProps {
   position: LimitlessPositionDetails
 }
 
+export const TruncatedTableText = styled(ThemedText.TableText)`
+overflow: hidden;
+white-space: nowrap;
+text-overflow: ellipsis;
+`
+
 /* Loaded State: row component with token information */
 export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HTMLDivElement>) => {
   // const { tokenListIndex, tokenListLength, token, sortRank } = props
@@ -647,37 +653,37 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
             <ClickableContent>
               <RowBetween>
                 <PositionInfo>
-                  <ThemedText.TableText margin="0" padding="0">
+                  <TruncatedTableText>
                     {inputCurrencySymbol} {"<->"} {outputCurrencySymbol}
-                  </ThemedText.TableText>
+                  </TruncatedTableText>
                 </PositionInfo>
               </RowBetween>
             </ClickableContent>
           }
           ltv={
             <Trans>
-              <ThemedText.TableText>
-                {formatNumber(Number(ltv))} {outputCurrencySymbol}
-              </ThemedText.TableText>
+              <TruncatedTableText>
+                {(Number(ltv))} {outputCurrencySymbol}
+              </TruncatedTableText>
             </Trans>
           }
           borrowedAmount={
             <Trans>
-              <ThemedText.TableText>
-                {formatNumber(Number(position.totalDebtInput))} {outputCurrencySymbol}
-              </ThemedText.TableText>
+              <TruncatedTableText>
+                {(Number(position.totalDebtInput))} {outputCurrencySymbol}
+              </TruncatedTableText>
             </Trans>
           }
           collateral={
             <Trans>
-              <ThemedText.TableText>
-                {formatNumber(Number(position.initialCollateral))} {inputCurrencySymbol}
-              </ThemedText.TableText>
+              <TruncatedTableText>
+                {(Number(position.initialCollateral))} {inputCurrencySymbol}
+              </TruncatedTableText>
             </Trans>
           }
           repaymentTime={
             <Trans>
-              <ThemedText.TableText>
+              <TruncatedTableText>
                 {!isOverDue ? (
                   <GreenText>
                     {timeLeft}
@@ -688,14 +694,14 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
                   </RedText>
                 )
                 }
-              </ThemedText.TableText>
+              </TruncatedTableText>
             </Trans>
           }
           remainingPremium={
             <Trans>
-              <ThemedText.TableText>
-                {formatNumber(Number(position.unusedPremium))} {inputCurrencySymbol}
-              </ThemedText.TableText>
+              <TruncatedTableText>
+                {(Number(position.unusedPremium))} {inputCurrencySymbol}
+              </TruncatedTableText>
             </Trans>
           }
           position={position}

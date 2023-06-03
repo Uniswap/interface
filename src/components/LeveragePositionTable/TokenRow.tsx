@@ -559,6 +559,12 @@ export function HeaderRow() {
   )
 }
 
+
+export const TruncatedTableText = styled(ThemedText.TableText)`
+overflow: hidden;
+white-space: nowrap;
+text-overflow: ellipsis;
+`
 /* Loading State: row component with loading bubbles */
 export function LoadingRow(props: { first?: boolean; last?: boolean }) {
   return (
@@ -708,30 +714,30 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
             <ClickableContent>
               <RowBetween>
                 <PositionInfo>
-                  <ThemedText.TableText margin="0" padding="0">
+                  <TruncatedTableText>
                     <GreenText> x{leverageFactor}</GreenText> {outputCurrencySymbol}
-                  </ThemedText.TableText>
+                  </TruncatedTableText>
                 </PositionInfo>
               </RowBetween>
             </ClickableContent>
           }
           value={
             <Trans>
-              <ThemedText.TableText>
+              <TruncatedTableText>
                 {(Number(position.totalPosition))} {outputCurrencySymbol}
-              </ThemedText.TableText>
+              </TruncatedTableText>
             </Trans>
           }
           collateral={
             <Trans>
-              <ThemedText.TableText>
+              <TruncatedTableText>
                 {(Number(position.initialCollateral))} {inputCurrencySymbol}
-              </ThemedText.TableText>
+              </TruncatedTableText>
             </Trans>
           }
           repaymentTime={
             <Trans>
-              <ThemedText.TableText>
+              <TruncatedTableText>
                 {!isOverDue ? (
                   <GreenText>
                     {timeLeft}
@@ -742,12 +748,12 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
                   </RedText>
                 )
                 }
-              </ThemedText.TableText>
+              </TruncatedTableText>
             </Trans>
           }
           PnL={
             <Trans>
-              <ThemedText.TableText>
+              <TruncatedTableText>
                 <AutoRow>
                   <ArrowCell>
                     {arrow}
@@ -756,21 +762,21 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
                     {pnl ? (pnl) : "-"} {inputCurrencySymbol}
                   </DeltaText>
                 </AutoRow>
-              </ThemedText.TableText>
+              </TruncatedTableText>
             </Trans>
           }
           entryPrice={
             <Trans>
-              <ThemedText.TableText>
+              <TruncatedTableText>
                 {(entryPrice)} {quoteBaseSymbol}
-              </ThemedText.TableText>
+              </TruncatedTableText>
             </Trans>
           }
           remainingPremium={
             <Trans>
-              <ThemedText.TableText>
+              <TruncatedTableText>
                 {(Number(position.unusedPremium))} {inputCurrencySymbol}
-              </ThemedText.TableText>
+              </TruncatedTableText>
             </Trans>
           }
           // recentPremium={

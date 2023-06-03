@@ -392,9 +392,6 @@ export default function Swap({ className }: { className?: string }) {
     borrowManagerAddress
   } = useSwapState()
 
-  
-
-
   // console.log("tradeState", tradeState)
   // console.log("trade", trade)
   // console.log("allowedSlippage", allowedSlippage)
@@ -445,8 +442,7 @@ export default function Swap({ className }: { className?: string }) {
     contractError
   } = useDerivedLeverageCreationInfo({ allowance: leverageApprovalState })
 
-  const [borrowApprovalState, approveBorrowManager] = useApproveCallback(parsedAmounts[Field.INPUT], borrowManagerAddress ?? undefined)
-
+  const [borrowApprovalState, approveBorrowManager] = useApproveCallback(approveAmount, borrowManagerAddress ?? undefined)
   const {
     trade: borrowTrade,
     inputError: borrowInputError,
@@ -646,8 +642,6 @@ export default function Swap({ className }: { className?: string }) {
       console.log("approveBorrowManager err: ", err)
     }
   }, [borrowManagerAddress, parsedAmounts[Field.INPUT], approveBorrowManager])
-
-  // console.log("leverageApprovalState: ", leverageApprovalState)
 
   const maxInputAmount: CurrencyAmount<Currency> | undefined = useMemo(
     () => maxAmountSpend(currencyBalances[Field.INPUT]),
@@ -935,7 +929,6 @@ export default function Swap({ className }: { className?: string }) {
   const [debouncedLTV, debouncedSetLTV] = useDebouncedChangeHandler(ltv ?? "", onLTVChange);
 
   // console.log("loggingSwap: ", typedValue, formattedAmounts[Field.INPUT], leverageFactor)
-  console.log("approvedBorrow", borrowApprovalState)
 
   return (
     <Trace page={InterfacePageName.SWAP_PAGE} shouldLogImpression>

@@ -44,7 +44,8 @@ export enum TransactionType {
   REPAY,
   DEPLOY,
   CANCEL,
-  ADD_BORROW
+  ADD_BORROW,
+  REDUCE_LEVERAGE
 }
 
 interface BaseTransactionInfo {
@@ -179,6 +180,10 @@ export interface AddBorrowPositionTransactionInfo {
   amount: string
 }
 
+export interface ReduceLeveragePositionTransactionInfo {
+  type: TransactionType.REDUCE_LEVERAGE
+}
+
 interface SubmitProposalTransactionInfo {
   type: TransactionType.SUBMIT_PROPOSAL
 }
@@ -203,6 +208,7 @@ export type TransactionInfo =
   | RemoveLiquidityV3TransactionInfo
   | SubmitProposalTransactionInfo
   | AddBorrowPositionTransactionInfo
+  | ReduceLeveragePositionTransactionInfo
 
 export interface TransactionDetails {
   hash: string

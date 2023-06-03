@@ -56,6 +56,8 @@ import CurrencyInputPanel from 'components/CurrencyInputPanel'
 import { TradeState } from 'state/routing/types'
 import { DEFAULT_ERC20_DECIMALS } from 'constants/tokens'
 import { BorrowCreationDetails } from 'state/swap/hooks'
+import { useTransactionAdder } from 'state/transactions/hooks'
+import { TransactionType } from 'state/transactions/types'
 
 const StyledNumericalInput = styled(NumericalInput)`
   width: 70%;
@@ -550,6 +552,7 @@ export function ReduceLeverageModalFooter({
   const [reduceAmount, setReduceAmount] = useState("")
 
   const leverageManagerContract = useLeverageManagerContract(leverageManagerAddress, true)
+  const addTransaction = useTransactionAdder() 
 
   const handleReducePosition = useMemo(() => {
     if (leverageManagerContract && position && Number(reduceAmount) > 0 && Number(reduceAmount) <= Number(position.totalPosition)) {
@@ -563,6 +566,9 @@ export function ReduceLeverageModalFooter({
           formattedSlippage,
           formattedReduceAmount
         ).then((hash: any) => {
+          addTransaction(hash, {
+            type: TransactionType.REDUCE_LEVERAGE
+          })
           setTxHash(hash)
           setAttemptingTxn(false)
         }).catch((err: any) => {
@@ -675,6 +681,7 @@ export function ReduceLeverageModalFooter({
                 onMax={() => {
                   setDebouncedReduceAmount(position?.totalPosition ? position?.totalPosition : "")
                 }}
+                hideBalance={true}
                 currency={inputIsToken0 ? token1 : token0}
               />
             </AutoColumn>

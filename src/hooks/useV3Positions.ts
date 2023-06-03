@@ -12,11 +12,24 @@ import { FeeAmount } from '@uniswap/v3-sdk'
 import { computeBorrowManagerAddress, computeLeverageManagerAddress, usePool } from './usePools'
 import { BORROW_MANAGER_FACTORY_ADDRESSES, LEVERAGE_MANAGER_FACTORY_ADDRESSES } from 'constants/addresses'
 import { useWeb3React } from '@web3-react/core'
+import _ from 'lodash'
 
 
 interface UseV3PositionsResults {
   loading: boolean
   positions: PositionDetails[] | undefined
+}
+
+export function useLimitlessPositionFromKeys(account: string | undefined, manager: string | undefined, isToken0: boolean | undefined): {loading: boolean, position: LimitlessPositionDetails | undefined} {
+  const { loading, positions } = useLimitlessPositions(account)
+  const position = useMemo(() => {
+    if (positions) {
+      return positions.find(position => (position.leverageManagerAddress === manager || position.borrowManagerAddress === manager) && position.isToken0 === isToken0)
+    }
+    return undefined
+  }
+  , [positions, manager, isToken0])
+  return {loading, position}
 }
 
 // hacked
@@ -58,7 +71,7 @@ export function useLimitlessPositions(account: string | undefined): {loading: bo
   const inputs = useMemo(() => (tokenIds ? tokenIds.map((tokenId) => [BigNumber.from(tokenId)]) : []), [tokenIds])
   //console.log("inputs: ", inputs)
   
-  const results = useSingleContractMultipleData(globalStorage, 'getPosition', inputs)
+  const results = useSingleContractMultipleData(globalStorage, 'getPositionFromId', inputs)
   // console.log("calldataResults: ", results)
 
   const loading = useMemo(() => results.some(({ loading }) => loading), [results])
@@ -66,24 +79,11 @@ export function useLimitlessPositions(account: string | undefined): {loading: bo
 
   const positions = useMemo(() => {
     if (!loading && !error && tokenIds) {
-      return results.map((call, i) => {
+      let allPositions =  _.map(results, (call, i ) => {
         const tokenId = tokenIds[i]
         const result = call.result as CallStateResult
         const key = result.key
         const position = result.position
-        // address pool; // pool leveraged from
-        // uint256 totalPosition; //position in output token
-        // uint256 totalDebt; // debt in output token
-        // uint256 totalDebtInput; //debt in input token
-        // uint256 initCollateral; // traderfund
-        // // uint256 creationPrice; // avg open price
-        // uint128 recentPremium;
-        // uint128 totalPremium; // total premium paid
-        // uint128 unusedPremium;
-        // bool isToken0; //if output position is in token0
-        // uint32 openTime;
-        // uint32 repayTime; // this is refreshed when trader replenish interest
-        // LiquidityManager.Liquidity[] borrowInfo;
         return {
           tokenId: tokenId.toString(),
           leverageManagerAddress: computeLeverageManagerAddress({
@@ -116,10 +116,14 @@ export function useLimitlessPositions(account: string | undefined): {loading: bo
           // borrowInfo: position.borrowInfo.map((info: any) => ({ tick: info.tick, liquidity: convertBNToStr(info.liquidity, 18)})),
         }
       })
+
+      let activePositions = _.filter(allPositions, (position) => {
+        return Number(position.openTime) !== 0
+      })
+      return activePositions
     }
     return undefined
   }, [loading, error, results, tokenIds])
-  // console.log("positions: ", positions)
   return {
     loading: false,
     positions: positions ?? []
@@ -140,7 +144,7 @@ export enum PositionState {
 
 export function useLimitlessPositionFromTokenId(tokenId: string | undefined): { loading: boolean, error: any, position: LimitlessPositionDetails | undefined} {
   const globalStorage = useGlobalStorageContract()
-  const result = useSingleCallResult(globalStorage, 'getPosition', [tokenId]);
+  const result = useSingleCallResult(globalStorage, 'getPositionFromId', [tokenId]);
   const loading = result.loading
   const error = result.error
   const { chainId } = useWeb3React()
