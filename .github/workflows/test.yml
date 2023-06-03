@@ -20,7 +20,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: 16.7.0
+          node-version: 16
       - uses: ./.github/actions/setup
       - uses: actions/cache@v3
         id: eslint-cache
@@ -41,7 +41,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: 16.7.0
+          node-version: 16
       - uses: ./.github/actions/setup
       - uses: actions/cache@v3
         id: tsc-cache
@@ -62,7 +62,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: 16.7.0
+          node-version: 16
       - uses: ./.github/actions/setup
       - run: yarn yarn-deduplicate --strategy=highest --list --fail
       - if: failure() && github.ref_name == 'main'
@@ -77,7 +77,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: 16.7.0
+          node-version: 16
       - uses: ./.github/actions/setup
       - uses: actions/cache@v3
         id: jest-cache
@@ -104,7 +104,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: 16.7.0
+          node-version: 16
       - uses: ./.github/actions/setup
       - uses: actions/cache@v3
         id: build-e2e-cache
