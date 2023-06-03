@@ -4,11 +4,12 @@ import { atomWithReset } from 'jotai/utils'
 import { useCallback } from 'react'
 
 export enum PositionSortMethod {
-  BORROWED_AMOUNT = 'Total Borrowed',
+  BORROWED_AMOUNT = 'Borrowed',
   COLLATERAL = 'Collateral',
   REPAYTIME = 'Time Left',
   REMAINING = "Prem. Left",
-  ACTIONS = 'Actions'
+  ACTIONS = 'Actions',
+  LTV="LTV"
   // UNUSED_PREMIUM = 'Unused Premium'
 }
 

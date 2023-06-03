@@ -354,7 +354,11 @@ const ActionsContainer = styled(AutoColumn)`
 `
 
 export const HEADER_DESCRIPTIONS: Record<PositionSortMethod, ReactNode | undefined> = {
-  [PositionSortMethod.VALUE]: undefined,
+  [PositionSortMethod.VALUE]: (
+    <Trans>
+      Position Value
+    </Trans>
+  ),
   [PositionSortMethod.COLLATERAL]: (
     <Trans>
       Initial Collateral Deposited
@@ -403,8 +407,6 @@ function HeaderCell({
   const handleSortCategory = useSetSortMethod(category)
 
   const description = HEADER_DESCRIPTIONS[category]
-
-  console.log("category",category, )
 
   return (
     <HeaderCellWrapper onClick={handleSortCategory}>
@@ -547,7 +549,7 @@ export function HeaderRow() {
     <PositionRow
       header={true}
       positionInfo={<ThemedText.TableText>Position</ThemedText.TableText>}
-      value={<ThemedText.TableText>Net Value</ThemedText.TableText>}
+      value={<HeaderCell category={PositionSortMethod.VALUE} />}
       collateral={<HeaderCell category={PositionSortMethod.COLLATERAL} />}
       PnL={<HeaderCell category={PositionSortMethod.PNL} />}
       entryPrice={<HeaderCell category={PositionSortMethod.ENTRYPRICE} />}

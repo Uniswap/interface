@@ -63,7 +63,7 @@ const StyledTokenRow = styled.div<{
   background-color: transparent;
   display: grid;
   font-size: 16px;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 0.5fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
   line-height: 24px;
   max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT};
   min-width: 390px;
@@ -96,15 +96,15 @@ const StyledTokenRow = styled.div<{
   }
 
   @media only screen and (max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT}) {
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 0.5fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
   }
 
   @media only screen and (max-width: ${LARGE_MEDIA_BREAKPOINT}) {
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 0.5fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
   }
 
   @media only screen and (max-width: ${MEDIUM_MEDIA_BREAKPOINT}) {
-    grid-template-columns:  1fr 1fr 1fr 1fr 1fr 1fr 1fr 0.5fr;
+    grid-template-columns:  1fr 1fr 1fr 1fr 1fr 1fr 1fr;
   }
 
   @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
@@ -359,6 +359,11 @@ export const HEADER_DESCRIPTIONS: Record<PositionSortMethod, ReactNode | undefin
       Total Borrowed Amount
     </Trans>
   ),
+  [PositionSortMethod.LTV]: (
+    <Trans>
+      Loan-to-Value
+    </Trans>
+  ),
   [PositionSortMethod.COLLATERAL]: (
     <Trans>
       Collateral Deposited
@@ -418,6 +423,7 @@ function PositionRow({
   header,
   positionInfo,
   borrowedAmount,
+  ltv,
   collateral,
   repaymentTime,
   remainingPremium,
@@ -431,6 +437,7 @@ function PositionRow({
   collateral: ReactNode
   repaymentTime: ReactNode
   positionInfo: ReactNode
+  ltv: ReactNode
   remainingPremium: ReactNode
   position?: LimitlessPositionDetails,
   last?: boolean
@@ -504,6 +511,9 @@ function PositionRow({
       <PriceCell data-testid="premium-cell" sortable={header}>
         {remainingPremium}
       </PriceCell>
+      <PriceCell data-testid="ltv-cell" sortable={header}>
+        {ltv}
+      </PriceCell>
       <ActionCell data-testid="action-cell" sortable={header}>
         {
           actions
@@ -527,6 +537,7 @@ export function HeaderRow() {
       collateral={<HeaderCell category={PositionSortMethod.COLLATERAL} />}
       remainingPremium={<HeaderCell category={PositionSortMethod.REMAINING} />}
       repaymentTime={<HeaderCell category={PositionSortMethod.REPAYTIME} />}
+      ltv={<HeaderCell category={PositionSortMethod.LTV} />}
     />
   )
 }
@@ -544,6 +555,7 @@ export function LoadingRow(props: { first?: boolean; last?: boolean }) {
           <MediumLoadingBubble />
         </>
       }
+      ltv={<MediumLoadingBubble />}
       borrowedAmount={<MediumLoadingBubble />}
       collateral={<LoadingBubble />}
       repaymentTime={<LoadingBubble />}
@@ -595,6 +607,15 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
     return '-/-'
   }, [pool, token1, token0])
 
+  const ltv = useMemo(() => {
+    const collateralIsToken0 = position.isToken0; // position.isToken0 === position.borrowBelow
+    const price = collateralIsToken0 ? pool?.token0Price.toFixed(DEFAULT_ERC20_DECIMALS) : pool?.token1Price.toFixed(DEFAULT_ERC20_DECIMALS);
+    const ltv = new BN(position.totalDebtInput).div(
+      new BN(position.initialCollateral).multipliedBy(new BN(price ?? "0"))
+    )
+    return ltv.toNumber();
+  }, [position, pool])
+
   const [inputCurrencySymbol, outputCurrencySymbol] = useMemo(() => {
     if (position.isToken0) {
       return [formatSymbol(token1?.symbol), formatSymbol(token0?.symbol)]
@@ -633,6 +654,13 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
               </RowBetween>
             </ClickableContent>
           }
+          ltv={
+            <Trans>
+              <ThemedText.TableText>
+                {formatNumber(Number(ltv))} {outputCurrencySymbol}
+              </ThemedText.TableText>
+            </Trans>
+          }
           borrowedAmount={
             <Trans>
               <ThemedText.TableText>
@@ -670,25 +698,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
               </ThemedText.TableText>
             </Trans>
           }
-          // recentPremium={
-          //   <Trans>
-          //     <AutoColumn>
-          //       <ThemedText.TableText>
-          //         {formatNumber(Number(position.recentPremium))} {isToken0 ? token0?.symbol : token1?.symbol}
-          //       </ThemedText.TableText>
-          //     </AutoColumn>
-          //   </Trans>
-          // }
-          // unusedPremium={
-          //   <Trans>
-          //     <ThemedText.TableText>
-          //       {formatNumber(Number(position.unusedPremium))} {isToken0 ? token1?.symbol : token0?.symbol}
-          //     </ThemedText.TableText>
-          //   </Trans>
-          // }
           position={position}
-        // first={tokenListIndex === 0}
-        // last={tokenListIndex === tokenListLength - 1}
         />
       </StyledLoadedRow>
     </div>

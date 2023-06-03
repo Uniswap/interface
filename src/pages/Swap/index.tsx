@@ -110,7 +110,7 @@ import { ONE_HOUR_SECONDS, TimeWindow } from './intervals'
 import { usePoolPriceData } from 'graphql/limitlessGraph/poolPriceData'
 import dayjs from 'dayjs'
 import CandleChart from 'components/CandleChart'
-import LeveragePositionsTable from 'components/LimitlessPositionTable/TokenTable'
+import LeveragePositionsTable from 'components/LeveragePositionTable/TokenTable'
 import { PoolDataSection } from 'components/ExchangeChart'
 import _ from 'lodash'
 import { FakeTokens } from "constants/fake-tokens"
@@ -786,36 +786,35 @@ export default function Swap({ className }: { className?: string }) {
   }, [
     leverageCallback, leverageTrade, showLeverageConfirm, showBorrowConfirm
   ])
-  console.log("borrowCallbacks", borrowCallback)
 
   const handleAddBorrowPosition = useCallback(() => {
-    // if (!borrowCallback) {
-    //   return
-    // }
-    // setSwapState({ 
-    //   attemptingTxn: true, 
-    //   tradeToConfirm, 
-    //   showConfirm, 
-    //   swapErrorMessage: undefined, 
-    //   txHash: undefined, 
-    //   showLeverageConfirm, 
-    //   showBorrowConfirm 
-    // })
-    // borrowCallback().then((hash: any) => {
-    //   setSwapState({ attemptingTxn: false, tradeToConfirm, showConfirm, swapErrorMessage: undefined, txHash: hash, showLeverageConfirm, showBorrowConfirm: false })
-    // })
-    //   .catch((error: any) => {
-    //     console.log("leverageCreationError: ", error)
-    //     setSwapState({
-    //       attemptingTxn: false,
-    //       tradeToConfirm,
-    //       showConfirm,
-    //       swapErrorMessage: "Failed creation",//error.message,
-    //       txHash: undefined,
-    //       showLeverageConfirm,
-    //       showBorrowConfirm: false
-    //     })
-    //   })
+    if (!borrowCallback) {
+      return
+    }
+    setSwapState({ 
+      attemptingTxn: true, 
+      tradeToConfirm, 
+      showConfirm, 
+      swapErrorMessage: undefined, 
+      txHash: undefined, 
+      showLeverageConfirm, 
+      showBorrowConfirm 
+    })
+    borrowCallback().then((hash: any) => {
+      setSwapState({ attemptingTxn: false, tradeToConfirm, showConfirm, swapErrorMessage: undefined, txHash: hash, showLeverageConfirm, showBorrowConfirm: false })
+    })
+      .catch((error: any) => {
+        console.log("leverageCreationError: ", error)
+        setSwapState({
+          attemptingTxn: false,
+          tradeToConfirm,
+          showConfirm,
+          swapErrorMessage: "Failed creation",//error.message,
+          txHash: undefined,
+          showLeverageConfirm,
+          showBorrowConfirm: false
+        })
+      })
   }, [
     borrowTrade,
     borrowCallback

@@ -435,7 +435,6 @@ export function useDerivedLeverageCreationInfo({ allowance } : { allowance: Appr
     allowedSlippage: Percent
     contractError?: ReactNode
   } {
-
   const { account } = useWeb3React()
   const [tradeState, setTradeState] = useState<LeverageTradeState>(LeverageTradeState.LOADING)
   const [contractResult, setContractResult] = useState()
@@ -488,7 +487,7 @@ export function useDerivedLeverageCreationInfo({ allowance } : { allowance: Appr
 
   const leverageManager = useLeverageManagerContract(leverageManagerAddress ?? undefined, true)
   const inputIsToken0 = outputCurrency?.wrapped ? inputCurrency?.wrapped.sortsBefore(outputCurrency?.wrapped) : false; //inputCurrency?.wrapped.address === pool?.token0.address
-  const initialPrice = pool ? (inputIsToken0 ? pool.token1Price : pool.token0Price) : undefined;
+  const initialPrice = pool ? (inputIsToken0 ? pool.token0Price : pool.token1Price) : undefined;
   const debouncedAmount = useDebounce(
     useMemo(() => (parsedAmount), [parsedAmount]),
     200

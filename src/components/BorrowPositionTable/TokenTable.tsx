@@ -88,7 +88,7 @@ export default function PositionsTable({positions, loading}: {positions: Limitle
     return <LoadingTokenTable rowCount={PAGE_SIZE} />
   } else if (false) {
   } else if (positions.length == 0) {
-    return <NoTokensState message={<Trans>No tokens found</Trans>} />
+    return <NoTokensState message={<Trans>No positions found</Trans>} />
   } else {
     return (
       
