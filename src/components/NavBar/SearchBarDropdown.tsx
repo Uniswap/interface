@@ -15,12 +15,13 @@ import { subheadSmall } from 'nft/css/common.css'
 import { GenieCollection, TrendingCollection } from 'nft/types'
 import { ReactNode, useEffect, useMemo, useState } from 'react'
 import { useLocation } from 'react-router-dom'
+import { shouldDisableNFTRoutesAtom } from 'state/application/atoms'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
 import BnbLogoURI from '../../assets/svg/bnb-logo.svg'
 import { ClockIcon, TrendingArrow } from '../../nft/components/icons'
-import { useRecentlySearchedAssets } from './RecentlySearchedAssets'
+//import { useRecentlySearchedAssets } from './RecentlySearchedAssets'
 import * as styles from './SearchBar.css'
 import { CollectionRow, PoolRow, SkeletonRow, TokenRow } from './SuggestionRow'
 
@@ -29,8 +30,8 @@ function isCollection(suggestion: GenieCollection | SearchToken | TrendingCollec
 }
 
 // Rigoblock pools do not generate volume
-function isPool(suggestion: GenieCollection | FungibleToken | TrendingCollection) {
-  return (suggestion as FungibleToken).volume24h === 0
+function isPool(suggestion: GenieCollection | SearchToken | TrendingCollection) {
+  return (suggestion as SearchToken).market?.volume24H?.value === 0
 }
 
 interface SearchBarDropdownSectionProps {
@@ -84,7 +85,7 @@ const SearchBarDropdownSection = ({
           ) : isPool(suggestion) ? (
             <PoolRow
               key={suggestion.address}
-              token={suggestion as FungibleToken}
+              token={suggestion as SearchToken}
               isHovered={hoveredIndex === index + startingIndex}
               setHoveredIndex={setHoveredIndex}
               toggleOpen={toggleOpen}
@@ -143,7 +144,7 @@ const BNBComingSoonBadge = styled(Badge)`
 // TODO: we can pass pools as just Token[]
 interface SearchBarDropdownProps {
   toggleOpen: () => void
-  pools: FungibleToken[]
+  pools: SearchToken[]
   tokens: SearchToken[]
   collections: GenieCollection[]
   queryText: string
@@ -162,8 +163,16 @@ export const SearchBarDropdown = ({
 }: SearchBarDropdownProps) => {
   const [hoveredIndex, setHoveredIndex] = useState<number | undefined>(0)
 
-  const { data: searchHistory } = useRecentlySearchedAssets()
-  const shortenedHistory = useMemo(() => searchHistory?.slice(0, 2) ?? [...Array<SearchToken>(2)], [searchHistory])
+  //const { data: searchHistory } = useRecentlySearchedAssets()
+  // we append pools as they are not returned by the recently searched query
+  //pools.forEach((pool) => {
+  //  searchHistory?.push(pool)
+  //})
+  const searchHistory: SearchToken[] = pools
+
+  const shortenedHistory = useMemo(() => {
+    return searchHistory?.slice(0, 2) ?? [...Array<SearchToken>(2)]
+  }, [searchHistory])
 
   const { pathname } = useLocation()
   const { chainId } = useWeb3React()
@@ -287,7 +296,7 @@ export const SearchBarDropdown = ({
         )
       ) : null
 
-      const collectionSearchResults =
+      const collectionSearchResults = !shouldDisableNFTRoutesAtom ? (
         collections.length > 0 ? (
           <SearchBarDropdownSection
             hoveredIndex={hoveredIndex}
@@ -304,6 +313,7 @@ export const SearchBarDropdown = ({
         ) : (
           <Box className={styles.notFoundContainer}>No NFT collections found.</Box>
         )
+      ) : null
 
       const currentState = () =>
         hasInput ? (
@@ -359,7 +369,8 @@ export const SearchBarDropdown = ({
                 isLoading={!trendingTokenData}
               />
             )}
-            {!isTokenPage && (
+            */}
+            {!isTokenPage && !shouldDisableNFTRoutesAtom && (
               <SearchBarDropdownSection
                 hoveredIndex={hoveredIndex}
                 startingIndex={shortenedHistory.length + (isNFTPage ? 0 : trendingTokens?.length ?? 0)}

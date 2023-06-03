@@ -44,6 +44,7 @@ export interface ApplicationState {
   readonly chainId: number | null
   readonly fiatOnramp: { available: boolean; availabilityChecked: boolean }
   readonly openModal: ApplicationModal | null
+  readonly smartPool: { address?: string | null; name: string | null }
   readonly popupList: PopupList
 }
 
@@ -51,6 +52,7 @@ const initialState: ApplicationState = {
   fiatOnramp: { available: false, availabilityChecked: false },
   chainId: null,
   openModal: null,
+  smartPool: { address: null, name: '' },
   popupList: [],
 }
 
@@ -64,6 +66,11 @@ const applicationSlice = createSlice({
     updateChainId(state, action) {
       const { chainId } = action.payload
       state.chainId = chainId
+    },
+    setSmartPoolValue(state, action) {
+      const { smartPool } = action.payload
+      state.smartPool.address = smartPool.address
+      state.smartPool.name = smartPool.name
     },
     setOpenModal(state, action) {
       state.openModal = action.payload
@@ -88,6 +95,6 @@ const applicationSlice = createSlice({
   },
 })
 
-export const { updateChainId, setFiatOnrampAvailability, setOpenModal, addPopup, removePopup } =
+export const { updateChainId, setFiatOnrampAvailability, setOpenModal, setSmartPoolValue, addPopup, removePopup } =
   applicationSlice.actions
 export default applicationSlice.reducer

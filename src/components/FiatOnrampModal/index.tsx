@@ -98,7 +98,7 @@ export default function FiatOnrampModal() {
           theme: isDarkMode ? 'dark' : 'light',
           colorCode: theme.accentAction,
           defaultCurrencyCode: 'eth',
-          redirectUrl: 'https://app.uniswap.org/#/swap',
+          redirectUrl: 'https://app.rigoblock.com/#/swap',
           walletAddresses: JSON.stringify(
             MOONPAY_SUPPORTED_CURRENCY_CODES.reduce(
               (acc, currencyCode) => ({

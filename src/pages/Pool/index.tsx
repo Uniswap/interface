@@ -13,15 +13,15 @@ import { isSupportedChain } from 'constants/chains'
 import { useFilterPossiblyMaliciousPositions } from 'hooks/useFilterPossiblyMaliciousPositions'
 import { useV3Positions } from 'hooks/useV3Positions'
 import { useMemo } from 'react'
-import { AlertTriangle, BookOpen, ChevronDown, ChevronsRight, Inbox, Layers } from 'react-feather'
+import { AlertTriangle, BookOpen, ChevronDown, Inbox, PlusCircle } from 'react-feather'
 import { Link } from 'react-router-dom'
+import { useActiveSmartPool } from 'state/application/hooks'
 import { useUserHideClosedPositions } from 'state/user/hooks'
 import styled, { css, useTheme } from 'styled-components/macro'
 import { /*HideSmall,*/ ThemedText } from 'theme'
 import { PositionDetails } from 'types/position'
 
 import { V2_FACTORY_ADDRESSES } from '../../constants/addresses'
-import { useSwapState } from '../../state/swap/hooks'
 //import CTACards from './CTACards'
 import { LoadingRows } from './styleds'
 
@@ -203,8 +203,8 @@ export default function Pool() {
   const theme = useTheme()
   const [userHideClosedPositions, setUserHideClosedPositions] = useUserHideClosedPositions()
 
-  // we query pool address from swap state
-  const { smartPoolAddress } = useSwapState()
+  // we query pool address from application state
+  const { address: smartPoolAddress } = useActiveSmartPool()
   const { positions, loading: positionsLoading } = useV3Positions(smartPoolAddress)
 
   const [openPositions, closedPositions] = positions?.reduce<[PositionDetails[], PositionDetails[]]>(
@@ -232,17 +232,17 @@ export default function Pool() {
   const menuItems = [
     {
       content: (
-        <MenuItem>
+        <PoolMenuItem>
           <Trans>Create a pool</Trans>
           <PlusCircle size={16} />
-        </MenuItem>
+        </PoolMenuItem>
       ),
       link: '/add/ETH',
       external: false,
     },
     {
       content: (
-        <MenuItem>
+        <PoolMenuItem>
           <Trans>Learn</Trans>
           <BookOpen size={16} />
         </PoolMenuItem>
@@ -325,9 +325,11 @@ export default function Pool() {
                 </ErrorContainer>
               )}
             </MainContentWrapper>
+            {/*
             <HideSmall>
               <CTACards />
             </HideSmall>
+            */}
           </AutoColumn>
         </AutoColumn>
       </PageWrapper>

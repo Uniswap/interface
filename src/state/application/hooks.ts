@@ -1,5 +1,6 @@
 import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { MoonpayEventName } from '@uniswap/analytics-events'
+import { Currency } from '@uniswap/sdk-core'
 import { DEFAULT_TXN_DISMISS_MS } from 'constants/misc'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
@@ -12,6 +13,7 @@ import {
   removePopup,
   setFiatOnrampAvailability,
   setOpenModal,
+  setSmartPoolValue,
 } from './reducer'
 
 export function useModalIsOpen(modal: ApplicationModal): boolean {
@@ -165,8 +167,29 @@ export function useRemovePopup(): (key: string) => void {
   )
 }
 
+export function useSelectActiveSmartPool(): (smartPoolValue: Currency) => void {
+  const dispatch = useAppDispatch()
+  return useCallback(
+    (smartPoolValue: Currency) => {
+      dispatch(
+        setSmartPoolValue({
+          smartPool: {
+            address: smartPoolValue.isToken ? smartPoolValue.address : undefined,
+            name: smartPoolValue.isToken && smartPoolValue.name ? smartPoolValue.name : undefined,
+          },
+        })
+      )
+    },
+    [dispatch]
+  )
+}
+
 // get the list of active popups
 export function useActivePopups(): AppState['application']['popupList'] {
   const list = useAppSelector((state: AppState) => state.application.popupList)
   return useMemo(() => list.filter((item) => item.show), [list])
+}
+
+export function useActiveSmartPool(): AppState['application']['smartPool'] {
+  return useAppSelector((state: AppState) => state.application.smartPool)
 }

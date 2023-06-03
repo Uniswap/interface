@@ -192,10 +192,6 @@ module.exports = {
       // See https://webpack.js.org/loaders/source-map-loader#ignoring-warnings.
       webpackConfig.ignoreWarnings = [/Failed to parse source map/]
 
-      webpackConfig.optimization.splitChunks = Object.assign(webpackConfig.optimization.splitChunks, {
-        maxSize: 6 * 1024 * 1024
-      })
-
       return webpackConfig
     },
   },

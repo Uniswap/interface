@@ -15,20 +15,18 @@ export function useSwapCallback(
   trade: Trade<Currency, Currency, TradeType> | undefined, // trade to execute, required
   fiatValues: { amountIn?: number; amountOut?: number }, // usd values for amount in and out, logged for analytics
   allowedSlippage: Percent, // in bips
-  poolAddress: string | undefined
-  recipientAddressOrName: string | null, // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
-  signatureData: SignatureData | undefined | null,
-): { state: SwapCallbackState; callback: null | (() => Promise<string>); error: ReactNode | null } {
-  const { account } = useWeb3React()
-
+  poolAddress: string | undefined | null,
+  permitSignature: PermitSignature | undefined
+): { callback: null | (() => Promise<string>) } {
   const deadline = useTransactionDeadline()
 
   const addTransaction = useTransactionAdder()
 
+  // TODO: use smart router or add universal router protocol support
   const universalRouterSwapCallback = useUniversalRouterSwapCallback(trade, fiatValues, {
     slippageTolerance: allowedSlippage,
     deadline,
-    poolAddress,
+    //poolAddress,
     permit: permitSignature,
   })
   const swapCallback = universalRouterSwapCallback

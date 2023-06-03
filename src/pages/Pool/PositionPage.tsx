@@ -32,6 +32,7 @@ import { useSingleCallResult } from 'lib/hooks/multicall'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { useCallback, useMemo, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
+import { useActiveSmartPool } from 'state/application/hooks'
 import { Bound } from 'state/mint/v3/actions'
 import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'
 import styled, { useTheme } from 'styled-components/macro'
@@ -47,7 +48,6 @@ import { getPriceOrderingFromPositionForUI } from '../../components/PositionList
 import RateToggle from '../../components/RateToggle'
 import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
 import { usePositionTokenURI } from '../../hooks/usePositionTokenURI'
-import { useSwapState } from '../../state/swap/hooks'
 import { TransactionType } from '../../state/transactions/types'
 import { calculateGasMargin } from '../../utils/calculateGasMargin'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
@@ -378,8 +378,8 @@ function PositionPageContent() {
   const { chainId, account, provider } = useWeb3React()
   const theme = useTheme()
 
-  // we query pool address from swap state
-  const { smartPoolAddress: poolAddress } = useSwapState()
+  // we query pool address from application state
+  const { address: poolAddress } = useActiveSmartPool()
 
   const parsedTokenId = tokenIdFromUrl ? BigNumber.from(tokenIdFromUrl) : undefined
   const { loading, position: positionDetails } = useV3PositionFromTokenId(parsedTokenId)

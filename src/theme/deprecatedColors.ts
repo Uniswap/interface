@@ -19,7 +19,6 @@ function getDeprecatedTheme(darkMode: boolean) {
     deprecated_advancedBG: darkMode ? opacify(10, colors.black) : opacify(60, colors.white),
 
     //primary colors
-    deprecated_primary1: darkMode ? darkTheme.accentAction : lightTheme.accentAction,
     deprecated_primary2: darkMode ? colors.blue400 : colors.gold400,
     deprecated_primary3: darkMode ? colors.blue300 : colors.gold200,
     deprecated_primary4: darkMode ? '#376bad70' : '#F6DDE8',

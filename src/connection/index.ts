@@ -11,7 +11,7 @@ import UNIWALLET_ICON from 'assets/images/uniwallet.png'
 import WALLET_CONNECT_ICON from 'assets/images/walletConnectIcon.svg'
 import INJECTED_DARK_ICON from 'assets/svg/browser-wallet-dark.svg'
 import INJECTED_LIGHT_ICON from 'assets/svg/browser-wallet-light.svg'
-import UNISWAP_LOGO from 'assets/svg/logo.svg'
+import RIGOBLOCK_LOGO from 'assets/svg/logo.svg'
 import { SupportedChainId } from 'constants/chains'
 import { useCallback } from 'react'
 import { isMobile, isNonIOSPhone } from 'utils/userAgent'
@@ -107,7 +107,7 @@ const [web3CoinbaseWallet, web3CoinbaseWalletHooks] = initializeConnector<Coinba
       options: {
         url: RPC_URLS[SupportedChainId.MAINNET][0],
         appName: 'Rigoblock',
-        appLogoUrl: UNISWAP_LOGO_URL,
+        appLogoUrl: RIGOBLOCK_LOGO,
         reloadOnDisconnect: false,
       },
       onError,

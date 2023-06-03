@@ -11,6 +11,7 @@ import { getNativeTokenDBAddress } from 'utils/nativeTokens'
 
 type RecentlySearchedAsset = {
   isNft?: boolean
+  isPool?: boolean
   address: string
   chain: Chain
 }
@@ -47,7 +48,7 @@ export function useRecentlySearchedAssets() {
     variables: {
       collectionAddresses: shortenedHistory.filter((asset) => asset.isNft).map((asset) => asset.address),
       contracts: shortenedHistory
-        .filter((asset) => !asset.isNft)
+        .filter((asset) => !asset.isNft && !asset.isPool)
         .map((token) => ({
           address: token.address === NATIVE_CHAIN_ID ? getQueryAddress(token.chain) : token.address,
           chain: token.chain,
@@ -55,9 +56,19 @@ export function useRecentlySearchedAssets() {
     },
   })
 
+  const pools: SearchToken[] = shortenedHistory
+    .filter((asset) => asset.isPool)
+    .map((token) => ({
+      address: token.address,
+      chain: token.chain,
+      id: '',
+    }))
+  //pools.forEach((pool) => queryData.push(pool))
+  //const queryDataWithPools = [queryData, pools].flat().filter(i => i !== undefined)
+
   const data = useMemo(() => {
     if (shortenedHistory.length === 0) return []
-    else if (!queryData) return undefined
+    else if (!queryData && !pools) return undefined
     // Collects both tokens and collections in a map, so they can later be returned in original order
     const resultsMap: { [key: string]: GenieCollection | SearchToken } = {}
 
@@ -78,25 +89,29 @@ export function useRecentlySearchedAssets() {
       [queryCollections]
     )
     collections?.forEach((collection) => (resultsMap[collection.address] = collection))
-    queryData.tokens?.filter(Boolean).forEach((token) => {
+    queryData?.tokens?.filter(Boolean).forEach((token) => {
       resultsMap[token.address ?? `NATIVE-${token.chain}`] = token
     })
 
     const data: (SearchToken | GenieCollection)[] = []
-    shortenedHistory.forEach((asset) => {
+    shortenedHistory.forEach((asset, i) => {
       if (asset.address === 'NATIVE') {
         // Handles special case where wMATIC data needs to be used for MATIC
         const native = nativeOnChain(CHAIN_NAME_TO_CHAIN_ID[asset.chain] ?? SupportedChainId.MAINNET)
         const queryAddress = getQueryAddress(asset.chain)?.toLowerCase() ?? `NATIVE-${asset.chain}`
         const result = resultsMap[queryAddress]
         if (result) data.push({ ...result, address: 'NATIVE', ...native })
-      } else {
+      } else if (!asset.isPool) {
         const result = resultsMap[asset.address]
         if (result) data.push(result)
+      } else {
+        const result = pools[i]
+        //data.push(result)
+        console.log(result, asset.address)
       }
     })
     return data
-  }, [queryData, shortenedHistory])
+  }, [pools, queryData, shortenedHistory])
 
   return { data, loading }
 }

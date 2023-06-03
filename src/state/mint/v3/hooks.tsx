@@ -17,12 +17,12 @@ import JSBI from 'jsbi'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { ReactNode, useCallback, useMemo } from 'react'
 import { useSearchParams } from 'react-router-dom'
+import { useActiveSmartPool } from 'state/application/hooks'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { getTickToPrice } from 'utils/getTickToPrice'
 
 import { BIG_INT_ZERO } from '../../../constants/misc'
 import { PoolState } from '../../../hooks/usePools'
-import { useSwapState } from '../../../state/swap/hooks'
 import { useCurrencyBalances } from '../../connection/hooks'
 import { AppState } from '../../types'
 import {
@@ -166,8 +166,8 @@ export function useV3DerivedMintInfo(
     [tokenA, tokenB]
   )
 
-  // we query pool address from swap state
-  const { smartPoolAddress } = useSwapState()
+  // we query pool address from application state
+  const { address: smartPoolAddress } = useActiveSmartPool()
 
   // balances
   const balances = useCurrencyBalances(

@@ -1,6 +1,6 @@
 import { t, Trans } from '@lingui/macro'
-import { InterfaceElementName } from '@uniswap/analytics-events'
-import { openDownloadApp } from 'components/AccountDrawer/DownloadButton'
+//import { InterfaceElementName } from '@uniswap/analytics-events'
+//import { openDownloadApp } from 'components/AccountDrawer/DownloadButton'
 import FeatureFlagModal from 'components/FeatureFlagModal/FeatureFlagModal'
 import { PrivacyPolicyModal } from 'components/PrivacyPolicy'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
@@ -23,7 +23,7 @@ import { useToggleModal } from 'state/application/hooks'
 import styled, { useTheme } from 'styled-components/macro'
 import { isDevelopmentEnv, isStagingEnv } from 'utils/env'
 
-import { ReactComponent as AppleLogo } from '../../assets/svg/apple_logo.svg'
+//import { ReactComponent as AppleLogo } from '../../assets/svg/apple_logo.svg'
 import { ApplicationModal } from '../../state/application/reducer'
 import * as styles from './MenuDropdown.css'
 import { NavDropdown } from './NavDropdown'
@@ -150,7 +150,7 @@ export const MenuDropdown = () => {
                     </PrimaryMenuRow.Text>
                   </PrimaryMenuRow>
                 </Box>
-                <Box onClick={() => openDownloadApp(InterfaceElementName.UNISWAP_WALLET_MODAL_DOWNLOAD_BUTTON)}>
+                {/*<Box onClick={() => openDownloadApp(InterfaceElementName.UNISWAP_WALLET_MODAL_DOWNLOAD_BUTTON)}>
                   <PrimaryMenuRow close={toggleOpen}>
                     <Icon>
                       <AppleLogo width="24px" height="24px" fill={theme.textPrimary} />
@@ -159,7 +159,7 @@ export const MenuDropdown = () => {
                       <Trans>Download Uniswap Wallet</Trans>
                     </PrimaryMenuRow.Text>
                   </PrimaryMenuRow>
-                </Box>
+                </Box>*/}
                 <PrimaryMenuRow to="/vote" close={toggleOpen}>
                   <Icon>
                     <GovernanceIcon width={24} height={24} color={theme.textPrimary} />

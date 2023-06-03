@@ -6,8 +6,10 @@ import { Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import clsx from 'clsx'
 import { ZERO_ADDRESS } from 'constants/misc'
+import { Chain } from 'graphql/data/__generated__/types-and-hooks'
 import { useCollectionSearch } from 'graphql/data/nft/CollectionSearch'
-import { useSearchTokens } from 'graphql/data/SearchTokens'
+import { SearchToken, useSearchTokens } from 'graphql/data/SearchTokens'
+import { chainIdToBackendName } from 'graphql/data/util'
 import useDebounce from 'hooks/useDebounce'
 import { useIsNftPage } from 'hooks/useIsNftPage'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
@@ -66,7 +68,6 @@ export const SearchBar = () => {
 
   // TODO: check if we already store all pools' data in state, so can return a richer pool struct
   const smartPoolsLogs = useRegisteredPools()
-  const { chainId } = useWeb3React()
   const smartPools: Token[] = useMemo(() => {
     const mockToken = new Token(1, ZERO_ADDRESS, 0, '', '')
     if (!smartPoolsLogs || !chainId) return [mockToken]
@@ -79,33 +80,39 @@ export const SearchBar = () => {
   const filteredPools: Token[] = useMemo(() => {
     return Object.values(smartPools).filter(getTokenFilter(debouncedSearchValue))
   }, [smartPools, debouncedSearchValue])
+  const chain = chainId ? chainIdToBackendName(chainId) : undefined
   // TODO: check using a different struct for pools
-  const fungiblePools: FungibleToken[] | undefined = useMemo(() => {
-    if (!chainId) return
+  const searchPools: SearchToken[] | undefined = useMemo(() => {
+    if (!chain) return
     return filteredPools.map((p) => {
-      const { name, symbol, address, chainId } = p
+      const { name, symbol, address } = p
       return {
+        id: '',
         name: name ?? '',
         address,
         symbol: symbol ?? '',
         decimals: 0,
-        chainId,
-        logoURI: '',
-        coinGeckoId: '',
-        priceUsd: 1,
-        price24hChange: 0,
-        volume24h: 0,
-        onDefaultList: true,
-        marketCap: 0,
+        chain: chain ?? Chain.Ethereum,
+        project: {
+          logoUrl: '',
+          id: '',
+          safetyLevel: undefined,
+        },
+        market: {
+          id: '',
+          price: { id: '', value: 0, currency: undefined },
+          pricePercentChange: { id: '', value: 0 },
+          volume24H: { id: '', value: 0, currency: undefined },
+        },
       }
     })
-  }, [chainId, filteredPools])
+  }, [chain, filteredPools])
 
   const isNFTPage = useIsNftPage()
 
   const [reducedPools, reducedTokens, reducedCollections] = organizeSearchResults(
     isNFTPage,
-    fungiblePools ?? [],
+    searchPools ?? [],
     tokens ?? [],
     collections ?? []
   )
@@ -148,7 +155,7 @@ export const SearchBar = () => {
     ...trace,
   }
   const placeholderText = useMemo(() => {
-    return isMobileOrTablet ? t`Search` : t`Search tokens and NFT collections`
+    return isMobileOrTablet ? t`Search` : t`Search smart pools`
   }, [isMobileOrTablet])
 
   const handleKeyPress = useCallback(
@@ -242,6 +249,7 @@ export const SearchBar = () => {
           {isOpen && (
             <SearchBarDropdown
               toggleOpen={toggleOpen}
+              pools={reducedPools}
               tokens={reducedTokens}
               collections={reducedCollections}
               queryText={debouncedSearchValue}

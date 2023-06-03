@@ -12,10 +12,10 @@ import { GenieCollection } from 'nft/types'
  */
 export function organizeSearchResults(
   isNFTPage: boolean,
-  poolResults: FungibleToken[],
-  tokenResults: FungibleToken[],
+  poolResults: SearchToken[],
+  tokenResults: SearchToken[],
   collectionResults: GenieCollection[]
-): [FungibleToken[], FungibleToken[], GenieCollection[]] {
+): [SearchToken[], SearchToken[], GenieCollection[]] {
   const reducedPools =
     poolResults?.slice(0, isNFTPage ? 3 : collectionResults.length < 3 ? 8 - collectionResults.length : 5) ?? []
   const reducedTokens =

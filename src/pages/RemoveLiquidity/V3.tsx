@@ -28,6 +28,7 @@ import { PositionPageUnsupportedContent } from 'pages/Pool/PositionPage'
 import { useCallback, useMemo, useState } from 'react'
 import { Navigate, useLocation, useParams } from 'react-router-dom'
 import { Text } from 'rebass'
+import { useActiveSmartPool } from 'state/application/hooks'
 import { useBurnV3ActionHandlers, useBurnV3State, useDerivedV3BurnInfo } from 'state/burn/v3/hooks'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
@@ -36,7 +37,6 @@ import { ThemedText } from 'theme'
 
 import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
 import { WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
-import { useSwapState } from '../../state/swap/hooks'
 import { TransactionType } from '../../state/transactions/types'
 import { calculateGasMargin } from '../../utils/calculateGasMargin'
 import { currencyId } from '../../utils/currencyId'
@@ -73,8 +73,8 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
   const theme = useTheme()
   const { account, chainId, provider } = useWeb3React()
 
-  // we query pool address from swap state
-  const { smartPoolAddress: poolAddress } = useSwapState()
+  // we query pool address from application state
+  const { address: poolAddress } = useActiveSmartPool()
 
   // flag for receiving WETH
   // we always collect as WETH as unwrap, sweep token methods would clash between adapters otherwise

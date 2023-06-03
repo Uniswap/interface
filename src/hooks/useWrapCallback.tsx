@@ -7,11 +7,10 @@ import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { formatToDecimal, getTokenAddress } from 'lib/utils/analytics'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useMemo, useState } from 'react'
+import { useActiveSmartPool } from 'state/application/hooks'
 
 import { WRAPPED_NATIVE_CURRENCY } from '../constants/tokens'
-import useENS from '../hooks/useENS'
 import { useCurrencyBalance } from '../state/connection/hooks'
-import { useSwapState } from '../state/swap/hooks'
 import { useTransactionAdder } from '../state/transactions/hooks'
 import { TransactionType } from '../state/transactions/types'
 import { usePoolContract, useWETHContract } from './useContract'
@@ -66,12 +65,10 @@ export default function useWrapCallback(
   const { chainId } = useWeb3React()
   const wethContract = useWETHContract()
 
-  const { recipient } = useSwapState()
-  const recipientLookup = useENS(recipient ?? undefined)
-  const poolAddress = recipientLookup.address
-  const poolContract = usePoolContract(poolAddress ?? undefined)
+  const { address: smartPoolAddress } = useActiveSmartPool()
+  const poolContract = usePoolContract(smartPoolAddress ?? undefined)
 
-  const balance = useCurrencyBalance(poolAddress ?? undefined, inputCurrency ?? undefined)
+  const balance = useCurrencyBalance(smartPoolAddress ?? undefined, inputCurrency ?? undefined)
   // we can always parse the amount typed as the input currency, since wrapping is 1:1
   const inputAmount = useMemo(
     () => tryParseCurrencyAmount(typedValue, inputCurrency ?? undefined),

@@ -1,12 +1,12 @@
 import { useEffect, useMemo, useState } from 'react'
 
-import { REWARDS_DURATION_DAYS, STAKING_GENESIS } from '../../state/stake/hooks'
+import { STAKING_GENESIS } from '../../state/stake/hooks'
 import { ThemedText } from '../../theme'
 
 const MINUTE = 60
 const HOUR = MINUTE * 60
 const DAY = HOUR * 24
-const REWARDS_DURATION = DAY * REWARDS_DURATION_DAYS
+const REWARDS_DURATION = DAY * 30 // mock
 
 export function Countdown({ exactEnd }: { exactEnd?: Date }) {
   // get end/beginning times

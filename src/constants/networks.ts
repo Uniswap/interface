@@ -9,11 +9,6 @@ if (typeof QUICKNODE_RPC_URL === 'undefined') {
   throw new Error(`REACT_APP_BNB_RPC_URL must be a defined environment variable`)
 }
 
-const QUICKNODE_RPC_URL = process.env.REACT_APP_BNB_RPC_URL
-if (typeof QUICKNODE_RPC_URL === 'undefined') {
-  throw new Error(`REACT_APP_BNB_RPC_URL must be a defined environment variable`)
-}
-
 /**
  * Fallback JSON-RPC endpoints.
  * These are used if the integrator does not provide an endpoint, or if the endpoint does not work.

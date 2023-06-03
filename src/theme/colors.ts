@@ -118,14 +118,13 @@ const commonTheme = {
   chain_42161: colors.networkArbitrum,
   chain_421613: colors.networkArbitrum,
   chain_80001: colors.networkPolygon,
-  chain_56_background: colors.networkBsc,
   chain_137_background: colors.purple900,
   chain_10_background: colors.red900,
   chain_42161_background: colors.blue900,
   chain_56_background: colors.networkBsc,
   promotional: colors.magenta300,
 
-  brandedGradient: 'linear-gradient(139.57deg, #FF79C9 4.35%, #FFB8E2 96.44%);',
+  brandedGradient: 'linear-gradient(139.57deg, #FFC957 4.35%, #F5EFE4 96.44%);',
   promotionalGradient: 'radial-gradient(101.8% 4091.31% at 0% 0%, #4673FA 0%, #9646FA 100%);',
 
   hoverState: opacify(24, colors.blue200),
@@ -189,7 +188,7 @@ export const lightTheme: Theme = {
 
   userThemeColor: colors.goldVibrant,
 
-  background: '#ffae00', //INTENTIONALLY OFF THEME TO GIVE WHITE BG A SOFTER VISUAL
+  background: '#FFAE00', //INTENTIONALLY OFF THEME TO GIVE WHITE BG A SOFTER VISUAL
   backgroundBackdrop: colors.white,
   backgroundSurface: colors.white,
   backgroundModule: colors.gray50,

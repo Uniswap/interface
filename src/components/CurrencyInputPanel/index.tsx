@@ -10,13 +10,13 @@ import { isSupportedChain } from 'constants/chains'
 import { darken } from 'polished'
 import { ReactNode, useCallback, useState } from 'react'
 import { Lock } from 'react-feather'
+import { useActiveSmartPool } from 'state/application/hooks'
 import styled, { useTheme } from 'styled-components/macro'
 import { flexColumnNoWrap, flexRowNoWrap } from 'theme/styles'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
 import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 import { useCurrencyBalance } from '../../state/connection/hooks'
-import { useSwapState } from '../../state/swap/hooks'
 import { ThemedText } from '../../theme'
 import { ButtonGray } from '../Button'
 import DoubleCurrencyLogo from '../DoubleLogo'
@@ -218,7 +218,7 @@ export default function CurrencyInputPanel({
 }: CurrencyInputPanelProps) {
   const [modalOpen, setModalOpen] = useState(false)
   const { account, chainId } = useWeb3React()
-  const { smartPoolAddress } = useSwapState()
+  const { address: smartPoolAddress } = useActiveSmartPool()
   // TODO: check if should invert definition and modify swap currency input panel
   const selectedCurrencyBalance = useCurrencyBalance(
     !isAccount ? smartPoolAddress ?? undefined : account,

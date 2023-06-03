@@ -9,12 +9,12 @@ import { CSSProperties, MutableRefObject, useCallback, useMemo } from 'react'
 import { Check } from 'react-feather'
 import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
+import { useActiveSmartPool } from 'state/application/hooks'
 import styled from 'styled-components/macro'
 
 import { useIsUserAddedToken } from '../../../hooks/Tokens'
 import { useCurrencyBalance } from '../../../state/connection/hooks'
 import { WrappedTokenInfo } from '../../../state/lists/wrappedTokenInfo'
-import { useSwapState } from '../../../state/swap/hooks'
 import { ThemedText } from '../../../theme'
 import Column, { AutoColumn } from '../../Column'
 import CurrencyLogo from '../../Logo/CurrencyLogo'
@@ -130,7 +130,7 @@ export function CurrencyRow({
   const { account } = useWeb3React()
   const key = currencyKey(currency)
   const customAdded = useIsUserAddedToken(currency)
-  const { smartPoolAddress } = useSwapState()
+  const { address: smartPoolAddress } = useActiveSmartPool()
   const balance = useCurrencyBalance(smartPoolAddress ?? undefined, currency)
   const warning = currency.isNative || isSmartPool ? null : checkWarning(currency.address)
   const isBlockedToken = !!warning && !warning.canProceed

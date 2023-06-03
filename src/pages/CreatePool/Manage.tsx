@@ -5,24 +5,23 @@ import JSBI from 'jsbi'
 import { useCallback, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import styled from 'styled-components/macro'
-import { CountUp } from 'use-count-up'
+//import { CountUp } from 'use-count-up'
 
 import { ButtonEmpty, ButtonPrimary } from '../../components/Button'
 import { AutoColumn } from '../../components/Column'
 import DoubleCurrencyLogo from '../../components/DoubleLogo'
-import ClaimRewardModal from '../../components/earn/ClaimRewardModal'
-import StakingModal from '../../components/earn/StakingModal'
+//import ClaimRewardModal from '../../components/earn/ClaimRewardModal'
+//import StakingModal from '../../components/earn/StakingModal'
 import { CardBGImage, CardNoise, CardSection, DataCard } from '../../components/earn/styled'
-import UnstakingModal from '../../components/earn/UnstakingModal'
+//import UnstakingModal from '../../components/earn/UnstakingModal'
 import { RowBetween } from '../../components/Row'
-import { BIG_INT_SECONDS_IN_WEEK, BIG_INT_ZERO } from '../../constants/misc'
+import { BIG_INT_ZERO } from '../../constants/misc'
 import { useCurrency } from '../../hooks/Tokens'
 import { useColor } from '../../hooks/useColor'
 import usePrevious from '../../hooks/usePrevious'
 import useStablecoinPrice from '../../hooks/useStablecoinPrice'
 import { useTotalSupply } from '../../hooks/useTotalSupply'
 import { useV2Pair } from '../../hooks/useV2Pairs'
-import { useToggleWalletModal } from '../../state/application/hooks'
 import { useTokenBalance } from '../../state/connection/hooks'
 import { useStakingInfo } from '../../state/stake/hooks'
 import { ThemedText } from '../../theme'
@@ -61,7 +60,7 @@ const StyledDataCard = styled(DataCard)<{ bgColor?: any; showBackground?: any }>
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
   background: ${({ theme, bgColor, showBackground }) =>
     `radial-gradient(91.85% 100% at 1.84% 0%, ${bgColor} 0%,  ${
-      showBackground ? theme.deprecated_black : theme.deprecated_bg5
+      showBackground ? theme.black : theme.deprecated_bg5
     } 100%) `};
 `
 
@@ -95,6 +94,8 @@ const DataRow = styled(RowBetween)`
     gap: 12px;
   `};
 `
+
+const BIG_INT_SECONDS_IN_WEEK = JSBI.BigInt(60 * 60 * 24 * 7)
 
 export default function Manage() {
   const { currencyIdA, currencyIdB } = useParams<{ currencyIdA: string; currencyIdB: string }>()
@@ -148,16 +149,6 @@ export default function Manage() {
   const USDPrice = useStablecoinPrice(WETH)
   const valueOfTotalStakedAmountInUSDC =
     valueOfTotalStakedAmountInWETH && USDPrice?.quote(valueOfTotalStakedAmountInWETH)
-
-  const toggleWalletModal = useToggleWalletModal()
-
-  const handleDepositClick = useCallback(() => {
-    if (account) {
-      setShowStakingModal(true)
-    } else {
-      toggleWalletModal()
-    }
-  }, [account, toggleWalletModal])
 
   return (
     <PageWrapper gap="lg" justify="center">
@@ -239,6 +230,7 @@ export default function Manage() {
         </VoteCard>
       )}
 
+      {/*
       {stakingInfo && (
         <>
           <StakingModal
@@ -259,6 +251,7 @@ export default function Manage() {
           />
         </>
       )}
+      */}
 
       <PositionInfo gap="lg" justify="center" dim={showAddLiquidityButton}>
         <BottomSection gap="lg" justify="center">
@@ -307,7 +300,7 @@ export default function Manage() {
                 )}
               </RowBetween>
               <RowBetween style={{ alignItems: 'baseline' }}>
-                <ThemedText.DeprecatedLargeHeader fontSize={36} fontWeight={600}>
+                {/*<ThemedText.DeprecatedLargeHeader fontSize={36} fontWeight={600}>
                   <CountUp
                     key={countUpAmount}
                     isCounting
@@ -317,7 +310,7 @@ export default function Manage() {
                     thousandsSeparator=","
                     duration={1}
                   />
-                </ThemedText.DeprecatedLargeHeader>
+                </ThemedText.DeprecatedLargeHeader>*/}
                 <ThemedText.DeprecatedBlack fontSize={16} fontWeight={500}>
                   <span role="img" aria-label="wizard-icon" style={{ marginRight: '8px ' }}>
                     ⚡
@@ -346,7 +339,7 @@ export default function Manage() {
         {!showAddLiquidityButton && (
           <DataRow style={{ marginBottom: '1rem' }}>
             {stakingInfo && stakingInfo.active && (
-              <ButtonPrimary padding="8px" $borderRadius="8px" width="160px" onClick={handleDepositClick}>
+              <ButtonPrimary padding="8px" $borderRadius="8px" width="160px" onClick={() => setShowStakingModal(true)}>
                 {stakingInfo?.stakedAmount?.greaterThan(JSBI.BigInt(0)) ? (
                   <Trans>Deposit</Trans>
                 ) : (

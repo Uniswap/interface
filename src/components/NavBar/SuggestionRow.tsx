@@ -4,7 +4,7 @@ import { formatUSDPrice } from '@uniswap/conedison/format'
 import clsx from 'clsx'
 import QueryTokenLogo from 'components/Logo/QueryTokenLogo'
 import TokenSafetyIcon from 'components/TokenSafety/TokenSafetyIcon'
-import { getChainInfo } from 'constants/chainInfo'
+//import { getChainInfo } from 'constants/chainInfo'
 import { ZERO_ADDRESS } from 'constants/misc'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { checkSearchTokenWarning } from 'constants/tokenSafety'
@@ -241,19 +241,18 @@ function getPoolDetailsURL(address: string) {
 // TODO: we should add pool NAV and performance since inception in base currency
 //  also check what pool data we already have in state and use a different type for pools if appropriate
 export const PoolRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index, eventProperties }: TokenRowProps) => {
-  const addToSearchHistory = useSearchHistory(
-    (state: { addItem: (item: FungibleToken | GenieCollection) => void }) => state.addItem
-  )
+  const addRecentlySearchedAsset = useAddRecentlySearchedAsset()
   const navigate = useNavigate()
 
   const handleClick = useCallback(() => {
-    addToSearchHistory(token)
-    toggleOpen()
-    sendAnalyticsEvent(EventName.NAVBAR_RESULT_SELECTED, { ...eventProperties })
-  }, [addToSearchHistory, toggleOpen, token, eventProperties])
+    const address = !token.address && token.standard === TokenStandard.Native ? 'NATIVE' : token.address
+    address && addRecentlySearchedAsset({ address, isPool: true, chain: token.chain })
 
-  const [L2Icon] = useBridgedAddress(token)
-  const poolDetailsPath = getPoolDetailsURL(token.address)
+    toggleOpen()
+    sendAnalyticsEvent(InterfaceEventName.NAVBAR_RESULT_SELECTED, { ...eventProperties })
+  }, [addRecentlySearchedAsset, token, toggleOpen, eventProperties])
+
+  const poolDetailsPath = getPoolDetailsURL(token.address ?? ZERO_ADDRESS)
   // Close the modal on escape
   useEffect(() => {
     const keyDownHandler = (event: KeyboardEvent) => {
@@ -279,17 +278,13 @@ export const PoolRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index, 
       style={{ background: isHovered ? vars.color.lightGrayOverlay : 'none' }}
     >
       <Row style={{ width: '65%' }}>
-        <StyledLogoContainer>
-          <AssetLogo
-            isNative={token.address === NATIVE_CHAIN_ID}
-            address={token.address}
-            chainId={token.chainId}
-            symbol={token.symbol}
-            size="36px"
-            backupImg={token.logoURI}
-          />
-          <L2NetworkLogo networkUrl={L2Icon} size="16px" />
-        </StyledLogoContainer>
+        <QueryTokenLogo
+          token={token}
+          symbol={token.symbol}
+          size="36px"
+          backupImg={token.project?.logoUrl}
+          style={{ paddingRight: '8px' }}
+        />
         <Column className={styles.suggestionPrimaryContainer}>
           <Row gap="4" width="full">
             <Box className={styles.primaryText}>{token.name}</Box>

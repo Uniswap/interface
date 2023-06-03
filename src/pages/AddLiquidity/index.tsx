@@ -3,6 +3,7 @@ import type { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
 import { TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
+import { MulticallExtended, PaymentsExtended } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { FeeAmount, NonfungiblePositionManager } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
@@ -12,12 +13,14 @@ import { sendEvent } from 'components/analytics'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { isSupportedChain } from 'constants/chains'
 import usePrevious from 'hooks/usePrevious'
+import JSBI from 'jsbi'
 import { useSingleCallResult } from 'lib/hooks/multicall'
 import { PositionPageUnsupportedContent } from 'pages/Pool/PositionPage'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { Text } from 'rebass'
+import { useActiveSmartPool } from 'state/application/hooks'
 import {
   useRangeHopCallbacks,
   useV3DerivedMintInfo,
@@ -55,7 +58,6 @@ import { useStablecoinValue } from '../../hooks/useStablecoinPrice'
 import useTransactionDeadline from '../../hooks/useTransactionDeadline'
 import { useV3PositionFromTokenId } from '../../hooks/useV3Positions'
 import { Bound, Field } from '../../state/mint/v3/actions'
-import { useSwapState } from '../../state/swap/hooks'
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { TransactionType } from '../../state/transactions/types'
 import { useIsExpertMode, useUserSlippageToleranceWithDefault } from '../../state/user/hooks'
@@ -103,9 +105,8 @@ function AddLiquidity() {
   const { account, chainId, provider } = useWeb3React()
   const theme = useTheme()
 
-  // we query pool address from swap state
-  const { smartPoolAddress } = useSwapState()
-  const toggleWalletModal = useToggleWalletModal() // toggle wallet when disconnected
+  // we query pool address from application state
+  const { address: smartPoolAddress } = useActiveSmartPool()
   const toggleWalletDrawer = useToggleAccountDrawer() // toggle wallet when disconnected
   const expertMode = useIsExpertMode()
   const addTransaction = useTransactionAdder()
@@ -572,7 +573,8 @@ function AddLiquidity() {
 
   const owner = useSingleCallResult(tokenId ? positionManager : null, 'ownerOf', [tokenId]).result?.[0]
   const ownsNFT =
-    addressesAreEquivalent(owner, account) || addressesAreEquivalent(existingPositionDetails?.operator, account)
+    addressesAreEquivalent(owner, smartPoolAddress) ||
+    addressesAreEquivalent(existingPositionDetails?.operator, account)
   const showOwnershipWarning = Boolean(hasExistingPosition && account && !ownsNFT)
 
   return (

@@ -8,6 +8,7 @@ import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { ParsedQs } from 'qs'
 import { ReactNode, useCallback, useEffect, useMemo } from 'react'
 import { AnyAction } from 'redux'
+import { useActiveSmartPool } from 'state/application/hooks'
 import { useAppDispatch } from 'state/hooks'
 import { InterfaceTrade, TradeState } from 'state/routing/types'
 import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
@@ -18,15 +19,7 @@ import useENS from '../../hooks/useENS'
 import useParsedQueryString from '../../hooks/useParsedQueryString'
 import { isAddress } from '../../utils'
 import { useCurrencyBalances } from '../connection/hooks'
-import {
-  Field,
-  replaceSwapState,
-  selectCurrency,
-  setRecipient,
-  setSmartPoolValue,
-  switchCurrencies,
-  typeInput,
-} from './actions'
+import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies, typeInput } from './actions'
 import { SwapState } from './reducer'
 
 export function useSwapActionHandlers(dispatch: React.Dispatch<AnyAction>): {
@@ -34,7 +27,6 @@ export function useSwapActionHandlers(dispatch: React.Dispatch<AnyAction>): {
   onSwitchTokens: () => void
   onUserInput: (field: Field, typedValue: string) => void
   onChangeRecipient: (recipient: string | null) => void
-  onPoolSelection: (smartPoolValue: Currency) => void
 } {
   const onCurrencySelection = useCallback(
     (field: Field, currency: Currency) => {
@@ -66,24 +58,11 @@ export function useSwapActionHandlers(dispatch: React.Dispatch<AnyAction>): {
     [dispatch]
   )
 
-  const onPoolSelection = useCallback(
-    (smartPoolValue: Currency) => {
-      dispatch(
-        setSmartPoolValue({
-          smartPoolAddress: smartPoolValue.isToken ? smartPoolValue.address : '',
-          smartPoolName: smartPoolValue.isToken && smartPoolValue.name ? smartPoolValue.name : '',
-        })
-      )
-    },
-    [dispatch]
-  )
-
   return {
     onSwitchTokens,
     onCurrencySelection,
     onUserInput,
     onChangeRecipient,
-    onPoolSelection,
   }
 }
 
@@ -117,9 +96,9 @@ export function useDerivedSwapInfo(
     [Field.INPUT]: { currencyId: inputCurrencyId },
     [Field.OUTPUT]: { currencyId: outputCurrencyId },
     recipient,
-    smartPoolAddress,
   } = state
 
+  const { address: smartPoolAddress } = useActiveSmartPool()
   const inputCurrency = useCurrency(inputCurrencyId, chainId)
   const outputCurrency = useCurrency(outputCurrencyId, chainId)
   const recipientLookup = useENS(recipient ?? undefined)

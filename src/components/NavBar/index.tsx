@@ -11,7 +11,7 @@ import { GrgIcon } from 'nft/components/icons'
 import { useProfilePageState } from 'nft/hooks'
 import { ProfilePageStateType } from 'nft/types'
 import { ReactNode } from 'react'
-import { NavLink, NavLinkProps, useLocation, useNavigate } from 'react-router-dom'
+import { NavLink, NavLinkProps, useLocation } from 'react-router-dom'
 import { shouldDisableNFTRoutesAtom } from 'state/application/atoms'
 import styled from 'styled-components/macro'
 
@@ -82,16 +82,17 @@ export const PageTabs = () => {
         </MenuItem>
       )}
       {connectedChainId !== 56 && (
-      <Box display={{ sm: 'flex', lg: 'none', xxl: 'flex' }} width="full">
         <MenuItem href="/pool" id="pool-nav-link" isActive={isPoolActive}>
           <Trans>Liquidity</Trans>
         </MenuItem>
       )}
+      <Box display={{ sm: 'flex', lg: 'none', xxl: 'flex' }} width="full">
+        <MenuItem href="/stake" isActive={pathname.startsWith('/stake')}>
+          <Trans>Staking</Trans>
+        </MenuItem>
       </Box>
       <Box marginY={{ sm: '4', md: 'unset' }}>
-      <MenuItem href="/stake" isActive={pathname.startsWith('/stake')}>
-        <Trans>Staking</Trans>
-      </MenuItem>
+        <MenuDropdown />
       </Box>
     </>
   )
@@ -100,7 +101,6 @@ export const PageTabs = () => {
 const Navbar = ({ blur }: { blur: boolean }) => {
   const isNftPage = useIsNftPage()
   const sellPageState = useProfilePageState((state) => state.state)
-  const navigate = useNavigate()
 
   return (
     <>
@@ -119,9 +119,6 @@ const Navbar = ({ blur }: { blur: boolean }) => {
             <Row display={{ sm: 'none', lg: 'flex' }}>
               <PageTabs />
             </Row>
-            <Box display={{ sm: 'none', lg: 'flex' }}>
-              <MenuDropdown />
-            </Box>
           </Box>
           <Box className={styles.searchContainer}>
             <SearchBar />

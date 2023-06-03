@@ -57,12 +57,16 @@ export function FindPoolTabs({ origin }: { origin: string }) {
 export function AddRemoveTabs({
   adding,
   creating,
+  buying,
+  selling,
   autoSlippage,
   positionID,
   children,
 }: {
   adding: boolean
   creating: boolean
+  buying?: boolean
+  selling?: boolean
   autoSlippage: Percent
   positionID?: string
   showBackLink?: boolean
