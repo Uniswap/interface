@@ -354,25 +354,19 @@ const ActionsContainer = styled(AutoColumn)`
 `
 
 export const HEADER_DESCRIPTIONS: Record<PositionSortMethod, ReactNode | undefined> = {
-  [PositionSortMethod.VALUE]: undefined,
+  [PositionSortMethod.BORROWED_AMOUNT]: (
+    <Trans>
+      Total Borrowed Amount
+    </Trans>
+  ),
   [PositionSortMethod.COLLATERAL]: (
     <Trans>
-      Initial Collateral Deposited
+      Collateral Deposited
     </Trans>
   ),
   [PositionSortMethod.REPAYTIME]: (
     <Trans>
       Time left for position repayment
-    </Trans>
-  ),
-  [PositionSortMethod.ENTRYPRICE]: (
-    <Trans>
-      Entry Price
-    </Trans>
-  ),
-  [PositionSortMethod.PNL]: (
-    <Trans>
-      Profit/Loss
     </Trans>
   ),
   [PositionSortMethod.REMAINING]: (
@@ -386,12 +380,6 @@ export const HEADER_DESCRIPTIONS: Record<PositionSortMethod, ReactNode | undefin
       (Pay): pay premium
     </Trans>
   )
-  // [PositionSortMethod.RECENT_PREMIUM]: (
-  //   <Trans>Recent Premium (Total Premium Paid)</Trans>
-  // ),
-  // [PositionSortMethod.UNUSED_PREMIUM]: (
-  //   <Trans>Unused Premium Description</Trans>
-  // )
 }
 
 /* Get singular header cell for header row */
@@ -429,11 +417,9 @@ function HeaderCell({
 function PositionRow({
   header,
   positionInfo,
-  value,
+  borrowedAmount,
   collateral,
   repaymentTime,
-  PnL,
-  entryPrice,
   remainingPremium,
   position,
   ...rest
@@ -441,14 +427,10 @@ function PositionRow({
   first?: boolean
   header: boolean
   loading?: boolean
-  value: ReactNode
+  borrowedAmount: ReactNode
   collateral: ReactNode
   repaymentTime: ReactNode
   positionInfo: ReactNode
-  // recentPremium: ReactNode
-  // unusedPremium: ReactNode
-  PnL: ReactNode
-  entryPrice: ReactNode
   remainingPremium: ReactNode
   position?: LimitlessPositionDetails,
   last?: boolean
@@ -511,7 +493,7 @@ function PositionRow({
       )}
       <NameCell data-testid="name-cell">{positionInfo}</NameCell>
       <PriceCell data-testid="value-cell" sortable={header}>
-        {value}
+        {borrowedAmount}
       </PriceCell>
       <PriceCell data-testid="collateral-cell" sortable={header}>
         {collateral}
@@ -521,12 +503,6 @@ function PositionRow({
       </PriceCell>
       <PriceCell data-testid="premium-cell" sortable={header}>
         {remainingPremium}
-      </PriceCell>
-      <PriceCell data-testid="premium-cell" sortable={header}>
-        {entryPrice}
-      </PriceCell>
-      <PriceCell data-testid="premium-cell" sortable={header}>
-        {PnL}
       </PriceCell>
       <ActionCell data-testid="action-cell" sortable={header}>
         {
@@ -547,10 +523,8 @@ export function HeaderRow() {
     <PositionRow
       header={true}
       positionInfo={<ThemedText.TableText>Position</ThemedText.TableText>}
-      value={<ThemedText.TableText>Net Value</ThemedText.TableText>}
+      borrowedAmount={<HeaderCell category={PositionSortMethod.BORROWED_AMOUNT} />}
       collateral={<HeaderCell category={PositionSortMethod.COLLATERAL} />}
-      PnL={<HeaderCell category={PositionSortMethod.PNL} />}
-      entryPrice={<HeaderCell category={PositionSortMethod.ENTRYPRICE} />}
       remainingPremium={<HeaderCell category={PositionSortMethod.REMAINING} />}
       repaymentTime={<HeaderCell category={PositionSortMethod.REPAYTIME} />}
     />
@@ -570,11 +544,9 @@ export function LoadingRow(props: { first?: boolean; last?: boolean }) {
           <MediumLoadingBubble />
         </>
       }
-      value={<MediumLoadingBubble />}
+      borrowedAmount={<MediumLoadingBubble />}
       collateral={<LoadingBubble />}
       repaymentTime={<LoadingBubble />}
-      PnL={<LoadingBubble />}
-      entryPrice={<LoadingBubble />}
       remainingPremium={<LoadingBubble />}
       // recentPremium={<LoadingBubble />}
       // unusedPremium={<LoadingBubble />}
@@ -599,9 +571,9 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
 
   const [poolState, pool] = usePool(token0 ?? undefined, token1 ?? undefined, position?.poolFee)
 
-  const leverageFactor = useMemo(() => (
-    (Number(initialCollateral) + Number(totalDebtInput)) / Number(initialCollateral)
-  ), [initialCollateral, totalDebtInput]);
+  // const leverageFactor = useMemo(() => (
+  //   (Number(initialCollateral) + Number(totalDebtInput)) / Number(initialCollateral)
+  // ), [initialCollateral, totalDebtInput]);
 
   const now = moment();
   const [timeLeft, isOverDue] = useMemo(() => {
@@ -611,60 +583,6 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
     const minutes = duration.minutes()
     return [`${Math.abs(hours)}h ${Math.abs(minutes)}m`, isNegative]
   }, [position, now])
-
-
-
-  // /**
-  //    * Returns the current mid price of the pool in terms of token0, i.e. the ratio of token1 over token0
-  //    */
-  // get token0Price(): Price<Token, Token>;
-  // /**
-  //  * Returns the current mid price of the pool in terms of token1, i.e. the ratio of token0 over token1
-  //  */
-  // get token1Price(): Price<Token, Token>;
-
-  // pnl in input token.
-  // entry price in quote token / base token
-  const [pnl, entryPrice] = useMemo(() => {
-    if (
-      pool?.token0Price &&
-      pool?.token1Price &&
-      // position.creationPrice &&
-      position.totalPosition &&
-      token0 &&
-      token1
-    ) {
-      // entryPrice if isToken0, output is in token0. so entry price would be in input token / output token
-      let _entryPrice = new BN(position.initialCollateral).plus(position.totalDebtInput).dividedBy(position.totalPosition)
-
-      // token0Price => token1 / token0, token1Price => token0 / token1.
-      // total position is in output token
-      let _pnl = position.isToken0 ? (
-        // token0Price => input / output, token1Price => output / input
-        // entry price => input / output -> token1 / token0. 
-        // total position -> output -> token0
-        new BN(pool.token0Price.toFixed(DEFAULT_ERC20_DECIMALS)).minus(_entryPrice).multipliedBy(position.totalPosition).toNumber() // pnl in token1
-      ) : (
-        // token1Price -> token0 / token1
-        // entry price -> input / output -> token0 / token1
-        // total position -> output -> token1
-        new BN(pool.token1Price.toFixed(DEFAULT_ERC20_DECIMALS)).minus(_entryPrice).multipliedBy(position.totalPosition).toNumber() // pnl in token0
-      )
-
-      // use token0 as quote, token1 as base
-      // pnl will be in output token
-      // entry price will be in quote token.
-
-      if (pool.token0Price.greaterThan(1)) {
-        // entry price = token1 / token0
-        return [_pnl, position.isToken0 ? _entryPrice.toNumber() : new BN(1).dividedBy(_entryPrice).toNumber()]
-      } else {
-        // entry price = token0 / token1
-        return [_pnl, position.isToken0 ? new BN(1).dividedBy(_entryPrice).toNumber() : _entryPrice.toNumber()]
-      }
-    }
-    return [undefined, undefined]
-  }, [position, pool?.token0Price, pool?.token1Price, token0, token1])
 
   const quoteBaseSymbol = useMemo(() => {
     if (token0 && token1 && pool?.token0Price) {
@@ -695,7 +613,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
 
   // console.log("position: ", position)
 
-  const arrow = getDeltaArrow(pnl, 18)
+  // const arrow = getDeltaArrow(pnl, 18)
 
   // TODO: currency logo sizing mobile (32px) vs. desktop (24px)
   return (
@@ -709,16 +627,16 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
               <RowBetween>
                 <PositionInfo>
                   <ThemedText.TableText margin="0" padding="0">
-                    <GreenText> x{formatNumber(leverageFactor)}</GreenText> {outputCurrencySymbol}
+                    {inputCurrencySymbol} {"<->"} {outputCurrencySymbol}
                   </ThemedText.TableText>
                 </PositionInfo>
               </RowBetween>
             </ClickableContent>
           }
-          value={
+          borrowedAmount={
             <Trans>
               <ThemedText.TableText>
-                {formatNumber(Number(position.totalPosition))} {outputCurrencySymbol}
+                {formatNumber(Number(position.totalDebtInput))} {outputCurrencySymbol}
               </ThemedText.TableText>
             </Trans>
           }
@@ -742,27 +660,6 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
                   </RedText>
                 )
                 }
-              </ThemedText.TableText>
-            </Trans>
-          }
-          PnL={
-            <Trans>
-              <ThemedText.TableText>
-                <AutoRow>
-                  <ArrowCell>
-                    {arrow}
-                  </ArrowCell>
-                  <DeltaText delta={Number(pnl)}>
-                    {pnl ? formatNumber(pnl) : "-"} {inputCurrencySymbol}
-                  </DeltaText>
-                </AutoRow>
-              </ThemedText.TableText>
-            </Trans>
-          }
-          entryPrice={
-            <Trans>
-              <ThemedText.TableText>
-                {formatNumber(entryPrice)} {quoteBaseSymbol}
               </ThemedText.TableText>
             </Trans>
           }

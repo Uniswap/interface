@@ -4,7 +4,7 @@ import { useMemo } from 'react'
 import { PositionDetails } from 'types/position'
 
 import { useGlobalStorageContract, useLeverageManagerContract, usePoolContract, useV3NFTPositionManagerContract } from './useContract'
-import { LeveragePositionDetails } from 'types/leveragePosition'
+import { LimitlessPositionDetails } from 'types/leveragePosition'
 import { BigNumber as BN } from "bignumber.js"
 import { Currency, Field } from '@uniswap/widgets'
 import { useCurrency, useToken } from './Tokens'
@@ -20,7 +20,7 @@ interface UseV3PositionsResults {
 }
 
 // hacked
-export function useLeveragePositions(account: string | undefined): {loading: boolean, positions: LeveragePositionDetails[]} {
+export function useLimitlessPositions(account: string | undefined): {loading: boolean, positions: LimitlessPositionDetails[]} {
   const {chainId} = useWeb3React()
   const globalStorage = useGlobalStorageContract()
 
@@ -138,7 +138,7 @@ export enum PositionState {
   INVALID
 }
 
-export function useLeveragePositionFromTokenId(tokenId: string | undefined): { loading: boolean, error: any, position: LeveragePositionDetails | undefined} {
+export function useLimitlessPositionFromTokenId(tokenId: string | undefined): { loading: boolean, error: any, position: LimitlessPositionDetails | undefined} {
   const globalStorage = useGlobalStorageContract()
   const result = useSingleCallResult(globalStorage, 'getPosition', [tokenId]);
   const loading = result.loading

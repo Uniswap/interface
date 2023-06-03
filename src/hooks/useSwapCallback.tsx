@@ -1,5 +1,5 @@
 import { Trade } from '@uniswap/router-sdk'
-import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { PermitSignature } from 'hooks/usePermitAllowance'
 import { useMemo } from 'react'
 
@@ -17,6 +17,11 @@ import LeverageManagerData from "../perpspotContracts/LeverageManager.json"
 import { BigNumber as BN } from "bignumber.js";
 
 import { arrayify } from 'ethers/lib/utils'
+import { useBorrowManagerContract } from './useContract'
+import { tree } from 'd3'
+import { DEFAULT_ERC20_DECIMALS } from 'constants/tokens'
+import { BorrowCreationDetails } from 'state/swap/hooks'
+import { TradeState } from 'state/routing/types'
 
 // returns a function that will execute a swap, if the parameters are all valid
 // and the user has approved the slippage adjusted input amount for the trade
@@ -81,9 +86,7 @@ export function useSwapCallback(
 //   bool isLong // if long borrow token1 to buy token 0
 // )
 
-const LEVERAGE_MANAGER_INIT_CODE_HASH = "0x96aa3c987863e85b14d6639858b42e28f0f6892b08af1dc757a3d389d4d88e0b"
-const LEVERAGE_MANAGER_FACTORY_ADDRESS = ""
-export function useLeverageBorrowCallback(
+export function useAddLeveragePositionCallback(
   leverageManagerAddress: string | undefined,
   trade: Trade<Currency, Currency, TradeType> | undefined,  
   allowedSlippage: Percent, // in bips
@@ -91,6 +94,9 @@ export function useLeverageBorrowCallback(
 ) {
   // const deadline = useTransactionDeadline()
   const { account, chainId, provider } = useWeb3React()
+
+  const addTransaction = useTransactionAdder()
+  
   if (!leverageManagerAddress) return null
   if (!trade) return null
   if (!account) throw new Error('missing account')
@@ -109,24 +115,101 @@ export function useLeverageBorrowCallback(
   let borrowedAmount = new BN(trade?.inputAmount.toExact() ?? 0).multipliedBy(leverageFactor ?? "0").minus(trade?.inputAmount.toExact() ?? 0).shiftedBy(decimals).toFixed(0)
   const leverageManagerContract = new Contract(leverageManagerAddress, LeverageManagerData.abi, provider.getSigner())
   let slippage = new BN(1 + Number(allowedSlippage.toFixed(6)) / 100).shiftedBy(decimals).toFixed(0)
-  console.log("arguments: ", input, allowedSlippage.toFixed(6), slippage, borrowedAmount, isLong)
+  // console.log("arguments: ", input, allowedSlippage.toFixed(6), slippage, borrowedAmount, isLong)
   return (): any => {
     return leverageManagerContract.addPosition(
       input,
       slippage,
       borrowedAmount,
       isLong
-    )
+    ).then((response: any) => {
+      addTransaction(
+        response,
+        trade.tradeType === TradeType.EXACT_INPUT
+          ? {
+              type: TransactionType.SWAP,
+              tradeType: TradeType.EXACT_INPUT,
+              inputCurrencyId: currencyId(trade.inputAmount.currency),
+              inputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
+              expectedOutputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
+              outputCurrencyId: currencyId(trade.outputAmount.currency),
+              minimumOutputCurrencyAmountRaw: trade.minimumAmountOut(allowedSlippage).quotient.toString(),
+            }
+          : {
+              type: TransactionType.SWAP,
+              tradeType: TradeType.EXACT_OUTPUT,
+              inputCurrencyId: currencyId(trade.inputAmount.currency),
+              maximumInputCurrencyAmountRaw: trade.maximumAmountIn(allowedSlippage).quotient.toString(),
+              outputCurrencyId: currencyId(trade.outputAmount.currency),
+              outputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
+              expectedInputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
+            }
+      )
+      return response.hash
+    })
   }
 }
 
-export function computeLeverageManagerAddress(
-  pool: string
-): string {
+export function useAddBorrowPositionCallback(
+  borrowManagerAddress: string | undefined,
+  allowedSlippage: Percent, // in bfips
+  ltv: string | undefined,
+  parsedAmount: CurrencyAmount<Currency> | undefined,
+  inputCurrency: Currency | undefined,
+  outputCurrency: Currency | undefined,
+  borrowTrade: BorrowCreationDetails | undefined
+) {
+  // const deadline = useTransactionDeadline()
+  const { account, chainId, provider } = useWeb3React()
+
+
+  const addTransaction = useTransactionAdder()
   
-  return getCreate2Address(
-    LEVERAGE_MANAGER_FACTORY_ADDRESS,
-    keccak256(['bytes'], [defaultAbiCoder.encode(['address'], [pool])]),
-    LEVERAGE_MANAGER_INIT_CODE_HASH
-  )
+  if (!borrowManagerAddress || !borrowTrade || borrowTrade.state !== TradeState.VALID) return null
+  if (!account) throw new Error('missing account')
+  if (!chainId) throw new Error('missing chainId')
+  if (!provider) throw new Error('missing provider')
+
+  let decimals = inputCurrency?.decimals ?? 18
+
+  // borrowBelow is true if input currency is token0.
+  let borrowBelow = true
+  if (
+    inputCurrency?.isToken && 
+    outputCurrency?.isToken &&
+    inputCurrency?.wrapped &&
+    outputCurrency?.wrapped
+    ) {
+    borrowBelow = inputCurrency?.wrapped.sortsBefore(outputCurrency?.wrapped)
+  }
+
+  // if (trade?.inputAmount.currency.isToken && trade?.outputAmount.currency.isToken) {
+  //   if (trade.inputAmount.currency.sortsBefore(trade.outputAmount.currency)) {
+  //     isLong = false
+  //   }
+  // }
+
+  const collateralAmount = new BN(parsedAmount?.toExact() ?? 0).shiftedBy(decimals).toFixed(0)
+  
+
+  const borrowManagerContract = useBorrowManagerContract(borrowManagerAddress)
+  const formattedLTV = new BN(ltv ?? 0).shiftedBy(16).toFixed(0)
+  // console.log("arguments: ", input, allowedSlippage.toFixed(6), slippage, borrowedAmount, isLong)
+  return (): any => {
+    return borrowManagerContract?.addBorrowPosition(
+        borrowBelow,
+        collateralAmount,
+        formattedLTV,
+        []
+    ).then((response: any) => {
+      addTransaction(
+        response,
+        {
+          type: TransactionType.ADD_BORROW,
+          amount: collateralAmount
+        }
+      )
+      return response.hash
+    })
+  }
 }

@@ -9,7 +9,7 @@ import TransactionConfirmationModal, {
 } from '../TransactionConfirmationModal'
 import { AddPremiumModalFooter, ReduceLeverageModalFooter } from './SwapModalFooter'
 
-import { useLeveragePositionFromTokenId } from 'hooks/useV3Positions'
+import { useLimitlessPositionFromTokenId } from 'hooks/useV3Positions'
 import { CloseLeveragePositionDetails } from './AdvancedSwapDetails'
 import { useLeverageManagerContract } from 'hooks/useContract'
 
@@ -36,7 +36,7 @@ export default function ClosePositionModal({
   const [shouldLogModalCloseEvent, setShouldLogModalCloseEvent] = useState(false)
 
 
-  const { loading, error, position } = useLeveragePositionFromTokenId(tokenId)
+  const { loading, error, position } = useLimitlessPositionFromTokenId(tokenId)
   const [txHash, setTxHash] = useState("")
   const [attemptingTxn, setAttemptingTxn] = useState(false)
 
@@ -122,7 +122,7 @@ export function AddPremiumModal({
 
   // console.log("args: ", trader, isOpen, tokenId, leverageManagerAddress)
 
-  const { loading, error, position} = useLeveragePositionFromTokenId(tokenId)
+  const { loading, error, position} = useLimitlessPositionFromTokenId(tokenId)
   const leverageManager = useLeverageManagerContract(leverageManagerAddress, true)
 
   const handleAddPremium = useCallback(() => {

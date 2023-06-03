@@ -14,7 +14,7 @@ import TransactionConfirmationModal, {
 import SwapModalFooter, { AddPremiumModalFooter, ReduceLeverageModalFooter, LeverageModalFooter } from './SwapModalFooter'
 import SwapModalHeader, { LeverageModalHeader } from './SwapModalHeader'
 import { LeverageTrade } from 'state/swap/hooks'
-import { useLeveragePositionFromTokenId } from 'hooks/useV3Positions'
+import { useLimitlessPositionFromTokenId } from 'hooks/useV3Positions'
 import { CloseLeveragePositionDetails } from './AdvancedSwapDetails'
 import useDebounce from 'hooks/useDebounce'
 import { useLeverageManagerAddress } from 'hooks/useGetLeverageManager'
@@ -51,7 +51,7 @@ export default function ReducePositionModal({
   const [shouldLogModalCloseEvent, setShouldLogModalCloseEvent] = useState(false)
 
 
-  const { loading, error, position } = useLeveragePositionFromTokenId(tokenId)
+  const { loading, error, position } = useLimitlessPositionFromTokenId(tokenId)
   const [txHash, setTxHash] = useState("")
   const [attemptingTxn, setAttemptingTxn] = useState(false)
 
@@ -135,7 +135,7 @@ export function AddPremiumModal({
 
   // console.log("args: ", trader, isOpen, tokenId, leverageManagerAddress)
 
-  const { loading, error, position} = useLeveragePositionFromTokenId(tokenId)
+  const { loading, error, position} = useLimitlessPositionFromTokenId(tokenId)
   const leverageManagerAddress = position?.leverageManagerAddress;
   const leverageManager = useLeverageManagerContract(position?.leverageManagerAddress, true)
 

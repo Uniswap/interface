@@ -16,7 +16,7 @@ import { RowBetween, RowFixed } from '../Row'
 import { MouseoverTooltip } from '../Tooltip'
 import FormattedPriceImpact from './FormattedPriceImpact'
 import { BorrowCreationDetails, LeverageTrade, useSwapState } from 'state/swap/hooks'
-import { LeveragePositionDetails } from 'types/leveragePosition'
+import { LimitlessPositionDetails } from 'types/leveragePosition'
 import { BigNumber as BN } from "bignumber.js"
 import { useCurrency, useToken } from 'hooks/Tokens'
 import { formatNumber } from '@uniswap/conedison/format'
@@ -189,7 +189,7 @@ export function AdvancedSwapDetails({
 export function CloseLeveragePositionDetails({
   leverageTrade // user defined slippage.
 }: {
-  leverageTrade: LeveragePositionDetails | undefined,
+  leverageTrade: LimitlessPositionDetails | undefined,
   // allowedSlippage: Percent | undefined
 }) {
   const theme = useTheme()
@@ -285,7 +285,7 @@ export function CloseLeveragePositionDetails({
 export function AddPremiumDetails({
   leverageTrade // user defined slippage.
 }: {
-  leverageTrade: LeveragePositionDetails | undefined,
+  leverageTrade: LimitlessPositionDetails | undefined,
   // allowedSlippage: Percent | undefined
 }) {
   const theme = useTheme()

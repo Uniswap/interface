@@ -3,7 +3,7 @@ import PositionListItem from 'components/PositionListItem'
 import React from 'react'
 import styled from 'styled-components/macro'
 import { MEDIA_WIDTHS } from 'theme'
-import { LeveragePositionDetails } from 'types/leveragePosition'
+import { LimitlessPositionDetails } from 'types/leveragePosition'
 // import LeveragePositionItem from 'components/LeveragePositionItem'
 import { AutoColumn } from 'components/Column'
 import { ReactNode, useCallback, useMemo, useState } from 'react'
@@ -66,7 +66,7 @@ const ToggleLabel = styled.button`
 `
 
 type LeveragePositionListProps = React.PropsWithChildren<{
-  positions: LeveragePositionDetails[]
+  positions: LimitlessPositionDetails[]
   setUserHideClosedPositions: any
   userHideClosedPositions: boolean
 }>

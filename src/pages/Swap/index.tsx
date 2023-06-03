@@ -26,7 +26,7 @@ import { isSupportedChain } from 'constants/chains'
 import { useSwapWidgetEnabled } from 'featureFlags/flags/swapWidget'
 import useENSAddress from 'hooks/useENSAddress'
 import usePermit2Allowance, { Allowance, AllowanceState } from 'hooks/usePermit2Allowance'
-import { useLeverageBorrowCallback, useSwapCallback } from 'hooks/useSwapCallback'
+import { useAddBorrowPositionCallback, useAddLeveragePositionCallback, useSwapCallback } from 'hooks/useSwapCallback'
 import { useUSDPrice } from 'hooks/useUSDPrice'
 import JSBI from 'jsbi'
 import { formatSwapQuoteReceivedEventProperties } from 'lib/utils/analytics'
@@ -49,7 +49,7 @@ import SwapCurrencyInputPanel from '../../components/CurrencyInputPanel/SwapCurr
 import LeveragedOutputPanel from '../../components/CurrencyInputPanel/leveragedOutputPanel'
 import { AutoRow, RowBetween, RowFixed } from '../../components/Row'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
-import ConfirmSwapModal, { LeverageConfirmModal } from '../../components/swap/ConfirmSwapModal'
+import ConfirmSwapModal, { BorrowConfirmModal, LeverageConfirmModal } from '../../components/swap/ConfirmSwapModal'
 import { ArrowWrapper, PageWrapper, SwapCallbackError, SwapWrapper } from '../../components/swap/styleds'
 import SwapHeader from '../../components/swap/SwapHeader'
 import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
@@ -102,7 +102,7 @@ import { useTokenAllowance } from 'hooks/useTokenAllowance'
 import { ApprovalState, useApproval } from 'lib/hooks/useApproval'
 import { useApproveCallback, useFaucetCallback } from 'hooks/useApproveCallback'
 import { BigNumber as BN } from "bignumber.js";
-import { useLeveragePositions } from 'hooks/useV3Positions'
+import { useLimitlessPositions } from 'hooks/useV3Positions'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { Input as NumericalInput } from 'components/NumericalInput'
 import useDebounce from 'hooks/useDebounce'
@@ -110,12 +110,13 @@ import { ONE_HOUR_SECONDS, TimeWindow } from './intervals'
 import { usePoolPriceData } from 'graphql/limitlessGraph/poolPriceData'
 import dayjs from 'dayjs'
 import CandleChart from 'components/CandleChart'
-import PositionsTable from 'components/LimitlessPositionTable/TokenTable'
+import LeveragePositionsTable from 'components/LimitlessPositionTable/TokenTable'
 import { PoolDataSection } from 'components/ExchangeChart'
 import _ from 'lodash'
 import { FakeTokens } from "constants/fake-tokens"
 import { formatNumber, NumberType } from '@uniswap/conedison/format'
 import { TabContent } from 'components/Tabs'
+import BorrowPositionsTable from "components/BorrowPositionTable/TokenTable"
 
 
 const Hr = styled.hr`
@@ -243,6 +244,7 @@ const ChartContainer = styled(AutoColumn)`
 
 const PositionsContainer = styled.div`
   margin-right: 20px;
+  margin-top: 15px;
 `
 
 const StatsContainer = styled.div`
@@ -506,20 +508,22 @@ export default function Swap({ className }: { className?: string }) {
   }, [navigate])
 
   // modal and loading
-  const [{ showConfirm, tradeToConfirm, swapErrorMessage, attemptingTxn, txHash, showLeverageConfirm }, setSwapState] = useState<{
+  const [{ showConfirm, tradeToConfirm, swapErrorMessage, attemptingTxn, txHash, showLeverageConfirm, showBorrowConfirm }, setSwapState] = useState<{
     showConfirm: boolean
     tradeToConfirm: Trade<Currency, Currency, TradeType> | undefined
     attemptingTxn: boolean
     swapErrorMessage: string | undefined
     txHash: string | undefined
     showLeverageConfirm: boolean
+    showBorrowConfirm: boolean
   }>({
     showConfirm: false,
     tradeToConfirm: undefined,
     attemptingTxn: false,
     swapErrorMessage: undefined,
     txHash: undefined,
-    showLeverageConfirm: false
+    showLeverageConfirm: false,
+    showBorrowConfirm: false
   })
 
   const formattedAmounts = useMemo(
@@ -675,10 +679,10 @@ export default function Swap({ className }: { className?: string }) {
     if (stablecoinPriceImpact && !confirmPriceImpactWithoutFee(stablecoinPriceImpact)) {
       return
     }
-    setSwapState({ attemptingTxn: true, tradeToConfirm, showConfirm, swapErrorMessage: undefined, txHash: undefined, showLeverageConfirm: false })
+    setSwapState({ attemptingTxn: true, tradeToConfirm, showConfirm, swapErrorMessage: undefined, txHash: undefined, showLeverageConfirm: false, showBorrowConfirm: false })
     swapCallback()
       .then((hash) => {
-        setSwapState({ attemptingTxn: false, tradeToConfirm, showConfirm, swapErrorMessage: undefined, txHash: hash, showLeverageConfirm: false })
+        setSwapState({ attemptingTxn: false, tradeToConfirm, showConfirm, swapErrorMessage: undefined, txHash: hash, showLeverageConfirm: false, showBorrowConfirm: false })
         sendEvent({
           category: 'Swap',
           action: 'transaction hash',
@@ -704,7 +708,8 @@ export default function Swap({ className }: { className?: string }) {
           showConfirm,
           swapErrorMessage: error.message,
           txHash: undefined,
-          showLeverageConfirm: false
+          showLeverageConfirm: false,
+          showBorrowConfirm: false
         })
       })
   }, [
@@ -718,12 +723,23 @@ export default function Swap({ className }: { className?: string }) {
     trade?.inputAmount?.currency?.symbol,
     trade?.outputAmount?.currency?.symbol,
   ])
+
   // console.log("leverageAllowedSlippage: ", leverageAllowedSlippage.toFixed(6))
-  const leverageCallback = useLeverageBorrowCallback(
+  const leverageCallback = useAddLeveragePositionCallback(
     leverageManagerAddress ?? undefined,
     trade,
     leverageAllowedSlippage,
     leverageFactor ?? undefined,
+  )
+
+  const borrowCallback = useAddBorrowPositionCallback(
+    borrowManagerAddress ?? undefined,
+    borrowAllowedSlippage,
+    ltv ?? undefined,
+    parsedAmount,
+    inputCurrency ?? undefined,
+    outputCurrency ?? undefined,
+    borrowTrade
   )
 
   // poolAddress: string,
@@ -734,9 +750,9 @@ export default function Swap({ className }: { className?: string }) {
     if (!leverageCallback) {
       return
     }
-    setSwapState({ attemptingTxn: true, tradeToConfirm, showConfirm, swapErrorMessage: undefined, txHash: undefined, showLeverageConfirm })
+    setSwapState({ attemptingTxn: true, tradeToConfirm, showConfirm, swapErrorMessage: undefined, txHash: undefined, showLeverageConfirm, showBorrowConfirm: false })
     leverageCallback().then((hash: any) => {
-      setSwapState({ attemptingTxn: false, tradeToConfirm, showConfirm, swapErrorMessage: undefined, txHash: hash, showLeverageConfirm })
+      setSwapState({ attemptingTxn: false, tradeToConfirm, showConfirm, swapErrorMessage: undefined, txHash: hash, showLeverageConfirm, showBorrowConfirm: false })
       sendEvent({
         category: 'Swap',
         action: 'transaction hash',
@@ -763,11 +779,46 @@ export default function Swap({ className }: { className?: string }) {
           showConfirm,
           swapErrorMessage: "Failed creation",//error.message,
           txHash: undefined,
-          showLeverageConfirm
+          showLeverageConfirm,
+          showBorrowConfirm
         })
       })
   }, [
-    leverageCallback, leverageTrade
+    leverageCallback, leverageTrade, showLeverageConfirm, showBorrowConfirm
+  ])
+  console.log("borrowCallbacks", borrowCallback)
+
+  const handleAddBorrowPosition = useCallback(() => {
+    // if (!borrowCallback) {
+    //   return
+    // }
+    // setSwapState({ 
+    //   attemptingTxn: true, 
+    //   tradeToConfirm, 
+    //   showConfirm, 
+    //   swapErrorMessage: undefined, 
+    //   txHash: undefined, 
+    //   showLeverageConfirm, 
+    //   showBorrowConfirm 
+    // })
+    // borrowCallback().then((hash: any) => {
+    //   setSwapState({ attemptingTxn: false, tradeToConfirm, showConfirm, swapErrorMessage: undefined, txHash: hash, showLeverageConfirm, showBorrowConfirm: false })
+    // })
+    //   .catch((error: any) => {
+    //     console.log("leverageCreationError: ", error)
+    //     setSwapState({
+    //       attemptingTxn: false,
+    //       tradeToConfirm,
+    //       showConfirm,
+    //       swapErrorMessage: "Failed creation",//error.message,
+    //       txHash: undefined,
+    //       showLeverageConfirm,
+    //       showBorrowConfirm: false
+    //     })
+    //   })
+  }, [
+    borrowTrade,
+    borrowCallback
   ])
 
   // errors
@@ -780,7 +831,7 @@ export default function Swap({ className }: { className?: string }) {
   }, [stablecoinPriceImpact, trade])
 
   const handleConfirmDismiss = useCallback(() => {
-    setSwapState({ showConfirm: false, tradeToConfirm, attemptingTxn, swapErrorMessage, txHash, showLeverageConfirm: false })
+    setSwapState({ showConfirm: false, tradeToConfirm, attemptingTxn, swapErrorMessage, txHash, showLeverageConfirm: false, showBorrowConfirm: false })
     // if there was a tx hash, we want to clear the input
     if (txHash) {
       onUserInput(Field.INPUT, '')
@@ -788,7 +839,7 @@ export default function Swap({ className }: { className?: string }) {
   }, [attemptingTxn, onUserInput, swapErrorMessage, tradeToConfirm, txHash])
 
   const handleAcceptChanges = useCallback(() => {
-    setSwapState({ tradeToConfirm: trade, swapErrorMessage, txHash, attemptingTxn, showConfirm, showLeverageConfirm: false })
+    setSwapState({ tradeToConfirm: trade, swapErrorMessage, txHash, attemptingTxn, showConfirm, showLeverageConfirm: false, showBorrowConfirm: false })
   }, [attemptingTxn, showConfirm, swapErrorMessage, trade, txHash])
 
   const handleInputSelect = useCallback(
@@ -867,10 +918,14 @@ export default function Swap({ className }: { className?: string }) {
     !showWrap && userHasSpecifiedInputOutput && (trade || routeIsLoading || routeIsSyncing)
   )
 
-  const { loading: leveragePositionsLoading, positions: leveragePositions } = useLeveragePositions(account)
+  const { loading: limitlessPositionsLoading, positions: limitlessPositions } = useLimitlessPositions(account)
 
+  const leveragePositions = limitlessPositions ? 
+    _.filter(limitlessPositions, (position) => (!position.isBorrow)) : []
+  const borrowPositions = limitlessPositions ? 
+    _.filter(limitlessPositions, (position) => (position.isBorrow)) : []
   // console.log("leverageTrade: ", leverageTrade)
-  // console.log("leverageTrade:", leverageTrade, lmtRouteNotFound, poolAddress, leverageManagerAddress, leveragePositions)
+  // console.log("leverageTrade:", leverageTrade, lmtRouteNotFound, poolAddress, leverageManagerAddress, limitlessPositions)
 
   const [debouncedLeverageFactor, onDebouncedLeverageFactor] = useDebouncedChangeHandler(leverageFactor ?? "1", onLeverageFactorChange);
 
@@ -879,11 +934,6 @@ export default function Swap({ className }: { className?: string }) {
   // part of borrow integration
 
   const [debouncedLTV, debouncedSetLTV] = useDebouncedChangeHandler(ltv ?? "", onLTVChange);
-
-
-  // console.log("loggingSwap", currencies.INPUT, currencies.OUTPUT, leverageManagerAddress, leveragePositions, lmtIsValid, leverageTrade, leverageApprovalState, inputError, contractError)
-  // console.log("pooltoken", pool?.token0?.address, pool?.token0?.symbol);
-  // console.log("activeTab: ", activeTab)
 
   // console.log("loggingSwap: ", typedValue, formattedAmounts[Field.INPUT], leverageFactor)
   console.log("approvedBorrow", borrowApprovalState)
@@ -943,9 +993,12 @@ export default function Swap({ className }: { className?: string }) {
                 </StatsContainer>
                 <Hr />
                 <PositionsContainer>
-                  <PositionsTable positions={leveragePositions} loading={leveragePositionsLoading} />
+                  <ThemedText.MediumHeader>Leverage Positions</ThemedText.MediumHeader>
+                  <LeveragePositionsTable positions={leveragePositions} loading={limitlessPositionsLoading} />
                 </PositionsContainer>
                 <PositionsContainer>
+                  <ThemedText.MediumHeader>Borrow Positions</ThemedText.MediumHeader>
+                  <BorrowPositionsTable positions={borrowPositions} loading={limitlessPositionsLoading}/>
                 </PositionsContainer>
               </LeftContainer>
 
@@ -988,6 +1041,17 @@ export default function Swap({ className }: { className?: string }) {
                       fiatValueOutput={fiatValueTradeOutput}
                     />
                   )}
+                <BorrowConfirmModal 
+                  borrowTrade={borrowTrade}
+                  isOpen={showBorrowConfirm}
+                  attemptingTxn={attemptingTxn}
+                  txHash={txHash}
+                  recipient={recipient}
+                  allowedSlippage={borrowAllowedSlippage}
+                  onConfirm={handleAddBorrowPosition}
+                  onDismiss={handleConfirmDismiss}
+                  errorMessage={undefined}
+                />
                 <TabContent id={ActiveSwapTab.TRADE} activeTab={activeTab}>
                   <div style={{ display: 'relative' }}>
                     <InputSection leverage={leverage}>
@@ -1269,7 +1333,8 @@ export default function Swap({ className }: { className?: string }) {
                                 swapErrorMessage: undefined,
                                 showConfirm: true,
                                 txHash: undefined,
-                                showLeverageConfirm: false
+                                showLeverageConfirm: false,
+                                showBorrowConfirm: false
                               })
                             }
                           }}
@@ -1360,12 +1425,13 @@ export default function Swap({ className }: { className?: string }) {
                               swapErrorMessage: undefined,
                               showConfirm: false,
                               txHash: undefined,
-                              showLeverageConfirm: true
+                              showLeverageConfirm: true,
+                              showBorrowConfirm: false
                             })
                           }}
                           id="leverage-button"
                           disabled={
-                            !!inputError ||
+                            !!inputError || !!contractError || 
                             priceImpactTooHigh
                           }
                         >
@@ -1616,12 +1682,13 @@ export default function Swap({ className }: { className?: string }) {
                               swapErrorMessage: undefined,
                               showConfirm: false,
                               txHash: undefined,
-                              showLeverageConfirm: true
+                              showLeverageConfirm: true,
+                              showBorrowConfirm: false,
                             })
                           }}
                           id="borrow-button"
                           disabled={
-                            !!borrowInputError ||
+                            !!borrowInputError || !!borrowContractError ||
                             priceImpactTooHigh
                           }
                         >

@@ -2,7 +2,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { Token } from '@uniswap/sdk-core'
 import { FeeAmount, Pool } from '@uniswap/v3-sdk'
 
-export interface LeveragePositionDetails {
+export interface LimitlessPositionDetails {
   leverageManagerAddress: string | undefined
   borrowManagerAddress: string | undefined
   isBorrow: boolean

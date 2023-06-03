@@ -160,6 +160,7 @@ export interface BorrowCreationDetails {
   quotedPremium: number | undefined
   unusedPremium: number | undefined
   priceImpact: Percent | undefined
+  ltv: number | undefined
   state: TradeState
 }
 
@@ -353,7 +354,8 @@ export function useDerivedBorrowCreationInfo({ allowance } : { allowance: Approv
         unusedPremium,
         strikePrice,
         quotedPremium,
-        priceImpact
+        priceImpact,
+        ltv: Number(ltv)
       }
     } else {
       return {
@@ -363,7 +365,8 @@ export function useDerivedBorrowCreationInfo({ allowance } : { allowance: Approv
         quotedPremium: undefined,
         unusedPremium: undefined,
         priceImpact: undefined,
-        strikePrice: undefined
+        strikePrice: undefined,
+        ltv: undefined
       }
     }
   }, [allowance, ltv, initialPrice, tradeState, contractResult, borrowManager, debouncedAmount, currencies, inputCurrency, outputCurrency])

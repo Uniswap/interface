@@ -106,7 +106,6 @@ export default function PositionsTable({positions, loading}: {positions: Limitle
           )}
         </TokenDataContainer>
       </GridContainer>
-      
     )
   }
 }

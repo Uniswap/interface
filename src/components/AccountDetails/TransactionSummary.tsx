@@ -356,5 +356,7 @@ export function TransactionSummary({ info }: { info: TransactionInfo }) {
 
     case TransactionType.SUBMIT_PROPOSAL:
       return <SubmitProposalTransactionSummary />
+    case TransactionType.ADD_BORROW:
+      return <Trans>Borrow Info Summary</Trans>
   }
 }

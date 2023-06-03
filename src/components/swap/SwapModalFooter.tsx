@@ -41,7 +41,7 @@ import TradePrice from './TradePrice'
 import { useCurrency, useToken } from 'hooks/Tokens'
 import { formatNumber, formatNumberOrString } from '@uniswap/conedison/format'
 import { NumberType } from '@uniswap/conedison/format'
-import { useLeveragePositionFromTokenId } from 'hooks/useV3Positions'
+import { useLimitlessPositionFromTokenId } from 'hooks/useV3Positions'
 import { LoadingRows } from 'components/Loader/styled'
 import { Flash_OrderBy } from 'graphql/thegraph/__generated__/types-and-hooks'
 import { truncateSync } from 'fs'
@@ -49,12 +49,13 @@ import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
 import Loader from 'components/Icons/LoadingSpinner'
 import useDebouncedChangeHandler from 'hooks/useDebouncedChangeHandler'
 import { Input as NumericalInput } from 'components/NumericalInput'
-import { LeveragePositionDetails } from 'types/leveragePosition'
+import { LimitlessPositionDetails } from 'types/leveragePosition'
 import { LoadingOpacityContainer, loadingOpacityMixin } from 'components/Loader/styled'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import CurrencyInputPanel from 'components/CurrencyInputPanel'
 import { TradeState } from 'state/routing/types'
 import { DEFAULT_ERC20_DECIMALS } from 'constants/tokens'
+import { BorrowCreationDetails } from 'state/swap/hooks'
 
 const StyledNumericalInput = styled(NumericalInput)`
   width: 70%;
@@ -354,7 +355,7 @@ function useDerivedLeverageReduceInfo(
   trader: string | undefined,
   tokenId: string | undefined,
   allowedSlippage: string,
-  position: LeveragePositionDetails | undefined,
+  position: LimitlessPositionDetails | undefined,
   reduceAmount: string | undefined,
   //newTotalPosition: string | undefined,
   setState: (state: DerivedInfoState) => void,
@@ -542,7 +543,7 @@ export function ReduceLeverageModalFooter({
   setTxHash: (txHash: string) => void
 }) {
   // const [nonce, setNonce] = useState(0)
-  const { error, position } = useLeveragePositionFromTokenId(tokenId)
+  const { error, position } = useLimitlessPositionFromTokenId(tokenId)
 
   const [slippage, setSlippage] = useState("1")
   // const [newPosition, setNewPosition] = useState("")
@@ -887,7 +888,7 @@ export function AddPremiumModalFooter({
   const [showDetails, setShowDetails] = useState(false)
   const theme = useTheme()
 
-  const { error, position } = useLeveragePositionFromTokenId(tokenId)
+  const { error, position } = useLimitlessPositionFromTokenId(tokenId)
   const token0 = useToken(position?.token0Address)
   const token1 = useToken(position?.token1Address)
   const { rate } = useDerivedAddPremiumInfo(leverageManagerAddress, trader, tokenId, position?.isToken0, setDerivedState)
@@ -1117,6 +1118,44 @@ export function LeverageModalFooter({
         </TraceEvent>
 
         {swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}
+      </AutoRow>
+    </>
+  )
+}
+
+export function BorrowModalFooter({
+  borrowTrade,
+  // allowedSlippage,
+  // hash,
+  onConfirm,
+  errorMessage,
+  disabledConfirm,
+
+}: {
+  borrowTrade: BorrowCreationDetails | undefined
+  // hash: string | undefined
+  // allowedSlippage: Percent
+  onConfirm: () => void
+  errorMessage: ReactNode | undefined
+  disabledConfirm: boolean
+
+}) {
+
+  return (
+    <>
+      <AutoRow>
+          <ButtonError
+            onClick={onConfirm}
+            disabled={disabledConfirm}
+            style={{ margin: '10px 0 0 0' }}
+            id={InterfaceElementName.CONFIRM_SWAP_BUTTON}
+          >
+            <Text fontSize={20} fontWeight={500}>
+              <Trans>Confirm Borrow</Trans>
+            </Text>
+          </ButtonError>
+
+        {errorMessage ? <SwapCallbackError error={errorMessage} /> : null}
       </AutoRow>
     </>
   )

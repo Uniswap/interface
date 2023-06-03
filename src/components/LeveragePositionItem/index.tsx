@@ -31,7 +31,7 @@ import moment from "moment"
 import { BigNumber as BN } from "bignumber.js"
 import ClosePositionModal, { AddPremiumModal } from 'components/swap/CloseLeveragePositionModal'
 import { useWeb3React } from '@web3-react/core'
-import {  useLeveragePositionFromTokenId } from 'hooks/useV3Positions'
+import {  useLimitlessPositionFromTokenId } from 'hooks/useV3Positions'
 
 const ResponsiveButtonPrimary = styled(SmallButtonPrimary)`
   border-radius: 12px;
@@ -274,7 +274,7 @@ export default function LeveragePositionItem({
     setShowAddPremium(false); 
   }
 
-  const { loading, error, position} = useLeveragePositionFromTokenId(tokenId)
+  const { loading, error, position} = useLimitlessPositionFromTokenId(tokenId)
   const token0 = useCurrency(position?.token0Address ?? undefined)
   const token1 = useCurrency(position?.token1Address ?? undefined)
   const [poolState, pool] = usePool(token0 ?? undefined, token1 ?? undefined, position?.poolFee)

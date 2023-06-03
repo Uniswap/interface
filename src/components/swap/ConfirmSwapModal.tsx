@@ -11,9 +11,11 @@ import TransactionConfirmationModal, {
   ConfirmationModalContent,
   TransactionErrorContent,
 } from '../TransactionConfirmationModal'
-import SwapModalFooter, { LeverageModalFooter } from './SwapModalFooter'
-import SwapModalHeader, { LeverageCloseModalHeader, LeverageModalHeader } from './SwapModalHeader'
-import { LeverageTrade } from 'state/swap/hooks'
+import SwapModalFooter, { BorrowModalFooter, LeverageModalFooter } from './SwapModalFooter'
+import SwapModalHeader, { BorrowModalHeader, LeverageCloseModalHeader, LeverageModalHeader } from './SwapModalHeader'
+import { BorrowCreationDetails, LeverageTrade, useSwapState } from 'state/swap/hooks'
+import { Field } from 'state/swap/actions'
+import { useCurrency } from 'hooks/Tokens'
 
 export default function ConfirmSwapModal({
   trade,
@@ -262,6 +264,100 @@ export function LeverageConfirmModal({
         content={confirmationContent}
         pendingText={pendingText}
         currencyToAdd={trade?.outputAmount.currency}
+      />
+    </Trace>
+  )
+}
+
+export function BorrowConfirmModal({
+  borrowTrade,
+  allowedSlippage,
+  onConfirm,
+  onDismiss,
+  recipient,
+  errorMessage,
+  isOpen,
+  attemptingTxn,
+  txHash,
+  // fiatValueInput,
+  // fiatValueOutput,
+}: {
+  borrowTrade: BorrowCreationDetails | undefined
+  isOpen: boolean
+  attemptingTxn: boolean
+  txHash: string | undefined
+  recipient: string | null
+  allowedSlippage: Percent
+  onConfirm: () => void
+  errorMessage: ReactNode | undefined
+  onDismiss: () => void
+  // fiatValueInput: { data?: number; isLoading: boolean }
+  // fiatValueOutput: { data?: number; isLoading: boolean }
+}) {
+
+  const {
+    [Field.INPUT]: { currencyId: inputCurrencyId },
+    [Field.OUTPUT]: { currencyId: outputCurrencyId },
+    ltv
+  } = useSwapState()
+
+  const inputCurrency = useCurrency(inputCurrencyId)
+  const outputCurrency = useCurrency(outputCurrencyId)
+
+  const onModalDismiss = useCallback(() => {
+    onDismiss()
+  }, [isOpen, onDismiss])
+
+  const modalHeader = useCallback(() => {
+    return (
+      <BorrowModalHeader trade={borrowTrade}/>
+    )
+  }, [borrowTrade, allowedSlippage, recipient])
+
+  const modalBottom = useCallback(() => {
+    return (
+      <BorrowModalFooter borrowTrade={borrowTrade} onConfirm={onConfirm} errorMessage={errorMessage} disabledConfirm={false} />
+    )
+  }, [
+    onConfirm,
+    allowedSlippage,
+    txHash,
+    // fiatValueInput,
+    // fiatValueOutput,
+  ])
+
+  // text to show while loading
+  const pendingText = (
+    <Trans>
+      Recieving {borrowTrade?.borrowedAmount} {outputCurrency?.symbol}
+    </Trans>
+  )
+
+  const confirmationContent = useCallback(
+    () =>
+      errorMessage ? (
+        <TransactionErrorContent onDismiss={onModalDismiss} message={errorMessage} />
+      ) : (
+        <ConfirmationModalContent
+          title={<Trans>Confirm {ltv}% Borrow Position</Trans>}
+          onDismiss={onModalDismiss}
+          topContent={modalHeader}
+          bottomContent={modalBottom}
+        />
+      ),
+    [onModalDismiss, modalBottom, modalHeader, errorMessage]
+  )
+
+  return (
+    <Trace modal={InterfaceModalName.CONFIRM_SWAP}>
+      <TransactionConfirmationModal
+        isOpen={isOpen}
+        onDismiss={onModalDismiss}
+        attemptingTxn={attemptingTxn}
+        hash={txHash}
+        content={confirmationContent}
+        pendingText={pendingText}
+        currencyToAdd={outputCurrency ?? undefined}
       />
     </Trace>
   )

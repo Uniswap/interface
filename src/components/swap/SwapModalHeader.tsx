@@ -22,7 +22,7 @@ import { RowBetween, RowFixed } from '../Row'
 import TradePrice from '../swap/TradePrice'
 import { AdvancedLeverageSwapDetails, AdvancedSwapDetails } from './AdvancedSwapDetails'
 import { SwapShowAcceptChanges, TruncatedText } from './styleds'
-import { LeverageTrade } from 'state/swap/hooks'
+import { BorrowCreationDetails, LeverageTrade } from 'state/swap/hooks'
 import { DEFAULT_ERC20_DECIMALS } from 'constants/tokens'
 import { formatNumber, formatNumberOrString } from '@uniswap/conedison/format'
 import {BigNumber as BN} from "bignumber.js"
@@ -577,6 +577,19 @@ export function LeverageModalHeader({
           </ThemedText.DeprecatedMain>
         </AutoColumn>
       ) : null}
+    </AutoColumn>
+  )
+}
+
+export function BorrowModalHeader({
+  trade
+}: {
+  trade?: BorrowCreationDetails
+}) {
+  const theme = useTheme()
+  return (
+    <AutoColumn>
+      Hello
     </AutoColumn>
   )
 }
