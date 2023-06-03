@@ -18,6 +18,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16.7.0
       - uses: ./.github/actions/setup
       - uses: actions/cache@v3
         id: eslint-cache
@@ -31,11 +34,14 @@ jobs:
         with:
           name: Lint
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_TEST_REPORTER_WEBHOOK }}
-  
+
   typecheck:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16.7.0
       - uses: ./.github/actions/setup
       - uses: actions/cache@v3
         id: tsc-cache
@@ -54,6 +60,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16.7.0
       - uses: ./.github/actions/setup
       - run: yarn yarn-deduplicate --strategy=highest --list --fail
       - if: failure() && github.ref_name == 'main'
@@ -66,6 +75,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16.7.0
       - uses: ./.github/actions/setup
       - uses: actions/cache@v3
         id: jest-cache
@@ -90,6 +102,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16.7.0
       - uses: ./.github/actions/setup
       - uses: actions/cache@v3
         id: build-e2e-cache
