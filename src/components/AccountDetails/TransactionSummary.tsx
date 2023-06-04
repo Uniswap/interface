@@ -358,5 +358,9 @@ export function TransactionSummary({ info }: { info: TransactionInfo }) {
       return <SubmitProposalTransactionSummary />
     case TransactionType.ADD_BORROW:
       return <Trans>Borrow Info Summary</Trans>
+    case TransactionType.REDUCE_LEVERAGE:
+      return <Trans>
+        Reduce Leverage Summary
+      </Trans>
   }
 }

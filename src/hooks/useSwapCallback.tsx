@@ -91,14 +91,14 @@ export function useAddLeveragePositionCallback(
   trade: Trade<Currency, Currency, TradeType> | undefined,  
   allowedSlippage: Percent, // in bips
   leverageFactor: string | undefined
-) {
+): {callback: null | (()=> Promise<string>)} {
   // const deadline = useTransactionDeadline()
   const { account, chainId, provider } = useWeb3React()
 
   const addTransaction = useTransactionAdder()
   
-  if (!leverageManagerAddress) return null
-  if (!trade) return null
+  if (!leverageManagerAddress) return {callback: null}
+  if (!trade) return {callback: null}
   if (!account) throw new Error('missing account')
   if (!chainId) throw new Error('missing chainId')
   if (!provider) throw new Error('missing provider')
@@ -116,7 +116,7 @@ export function useAddLeveragePositionCallback(
   const leverageManagerContract = new Contract(leverageManagerAddress, LeverageManagerData.abi, provider.getSigner())
   let slippage = new BN(1 + Number(allowedSlippage.toFixed(6)) / 100).shiftedBy(decimals).toFixed(0)
   // console.log("arguments: ", input, allowedSlippage.toFixed(6), slippage, borrowedAmount, isLong)
-  return (): any => {
+  return {callback: (): any => {
     return leverageManagerContract.addPosition(
       input,
       slippage,
@@ -147,7 +147,7 @@ export function useAddLeveragePositionCallback(
       )
       return response.hash
     })
-  }
+  }}
 }
 
 export function useAddBorrowPositionCallback(
@@ -158,14 +158,14 @@ export function useAddBorrowPositionCallback(
   inputCurrency: Currency | undefined,
   outputCurrency: Currency | undefined,
   borrowTrade: BorrowCreationDetails | undefined
-) {
+) : { callback: null | (() => Promise<string>) } {
   // const deadline = useTransactionDeadline()
   const { account, chainId, provider } = useWeb3React()
 
 
   const addTransaction = useTransactionAdder()
   
-  if (!borrowManagerAddress || !borrowTrade || borrowTrade.state !== TradeState.VALID) return null
+  if (!borrowManagerAddress || !borrowTrade || borrowTrade.state !== TradeState.VALID) return { callback: null }
   if (!account) throw new Error('missing account')
   if (!chainId) throw new Error('missing chainId')
   if (!provider) throw new Error('missing provider')
@@ -190,26 +190,26 @@ export function useAddBorrowPositionCallback(
   // }
 
   const collateralAmount = new BN(parsedAmount?.toExact() ?? 0).shiftedBy(decimals).toFixed(0)
-  
+  const borrowManagerContract = new Contract(borrowManagerAddress, LeverageManagerData.abi, provider.getSigner())
 
-  const borrowManagerContract = useBorrowManagerContract(borrowManagerAddress)
   const formattedLTV = new BN(ltv ?? 0).shiftedBy(16).toFixed(0)
   // console.log("arguments: ", input, allowedSlippage.toFixed(6), slippage, borrowedAmount, isLong)
-  return (): any => {
+  return {callback: (): any => {
     return borrowManagerContract?.addBorrowPosition(
-        borrowBelow,
-        collateralAmount,
-        formattedLTV,
-        []
-    ).then((response: any) => {
+      borrowBelow,
+      collateralAmount,
+      formattedLTV,
+      []
+    ).then((response:any) => {
       addTransaction(
         response,
         {
           type: TransactionType.ADD_BORROW,
-          amount: collateralAmount
+          amount: "0"
         }
+          
       )
       return response.hash
     })
-  }
+  }}
 }

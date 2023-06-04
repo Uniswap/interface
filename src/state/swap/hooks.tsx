@@ -25,12 +25,14 @@ import { usePool } from 'hooks/usePools'
 import { FeeAmount, Pool, computePoolAddress } from '@uniswap/v3-sdk'
 import useDebounce from 'hooks/useDebounce'
 import JSBI from 'jsbi'
-import { BigNumber } from 'ethers'
+import { BigNumber, ethers } from 'ethers'
 import { input } from 'nft/components/layout/Checkbox.css'
 import { useAllV3Routes } from 'hooks/useAllV3Routes'
 import { POOL_INIT_CODE_HASH, V3_CORE_FACTORY_ADDRESSES, feth } from 'constants/addresses'
 import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
 import { useLimitlessPositionFromKeys } from 'hooks/useV3Positions'
+import { AllowanceState } from 'hooks/usePermit2Allowance'
+
 // import { useLeveragePosition } from 'hooks/useV3Positions'
 
 export function useSwapState(): AppState['swap'] {
@@ -206,7 +208,7 @@ export function useBestPool(
 }
 
 
-export function useDerivedBorrowCreationInfo({ allowance } : { allowance: ApprovalState })
+export function useDerivedBorrowCreationInfo({ allowance: {input: inputAllowance, output: outputAllowance} } : { allowance: { input: ApprovalState, output: ApprovalState} })
   : {
     currencies: { [field in Field]?: Currency | null }
     currencyBalances: { [field in Field]?: CurrencyAmount<Currency> }
@@ -297,6 +299,7 @@ export function useDerivedBorrowCreationInfo({ allowance } : { allowance: Approv
     // simulate the trade
     if (borrowManager && debouncedAmount && ltv && Number(ltv) > 0
       && outputCurrency?.wrapped && inputCurrency?.wrapped
+      && inputAllowance === ApprovalState.APPROVED && outputAllowance === ApprovalState.APPROVED
     ) {
       try {
         let borrowBelow = inputIsToken0 // borrowing token1 to buy token0
@@ -304,13 +307,10 @@ export function useDerivedBorrowCreationInfo({ allowance } : { allowance: Approv
         let collateralAmount = new BN((debouncedAmount.toFixed(DEFAULT_ERC20_DECIMALS))).shiftedBy(DEFAULT_ERC20_DECIMALS).toFixed(0)
         let _ltv = new BN(ltv).shiftedBy(16).toFixed(0)
 
-
-        console.log("borrowInput: ", borrowBelow, collateralAmount, _ltv)
-
         const trade = await borrowManager.callStatic.addBorrowPosition(
           borrowBelow,
           collateralAmount,
-          ltv,
+          _ltv,
           []
         )
         setTradeState(TradeState.VALID)
@@ -324,12 +324,12 @@ export function useDerivedBorrowCreationInfo({ allowance } : { allowance: Approv
     } else {
       setTradeState(TradeState.INVALID)
     }
-  }, [currencies, borrowManager, ltv, debouncedAmount])
+  }, [inputAllowance, outputAllowance, currencies, borrowManager, ltv, debouncedAmount])
   //console.log("contractResultPost/tradestate", contractResult, tradeState)
 
   useEffect(() => {
     simulate()
-  }, [currencies, borrowManager, ltv, debouncedAmount, allowance])
+  }, [currencies, borrowManager, ltv, debouncedAmount, inputAllowance, outputAllowance])
   // console.log("contractResult", pool, contractResult, initialPrice, debouncedAmount)
   const trade: BorrowCreationDetails = useMemo(() => {
     if (
@@ -339,6 +339,7 @@ export function useDerivedBorrowCreationInfo({ allowance } : { allowance: Approv
       outputCurrency?.wrapped && 
       inputCurrency?.wrapped && 
       debouncedAmount
+      
     ) {
       const position: any = contractResult[0]
       // const expectedOutput = new BN(position.totalPosition.toString()).shiftedBy(-outputCurrency?.wrapped.decimals).toNumber()
@@ -373,7 +374,7 @@ export function useDerivedBorrowCreationInfo({ allowance } : { allowance: Approv
         ltv: undefined
       }
     }
-  }, [allowance, ltv, initialPrice, tradeState, contractResult, borrowManager, debouncedAmount, currencies, inputCurrency, outputCurrency])
+  }, [inputAllowance, outputAllowance, ltv, initialPrice, tradeState, contractResult, borrowManager, debouncedAmount, currencies, inputCurrency, outputCurrency])
 
   const inputError = useMemo(() => {
     let inputError: ReactNode | undefined
@@ -396,10 +397,15 @@ export function useDerivedBorrowCreationInfo({ allowance } : { allowance: Approv
 
     // compare input balance to max input based on version
     const [balanceIn, amountIn] = [currencyBalances[Field.INPUT], parsedAmount?.toExact()]
+    const [balanceOut, premiumAmount] = [currencyBalances[Field.INPUT], parsedAmount?.toExact()]
 
     // TODO add slippage to all the simulations
     if (balanceIn && amountIn && Number(balanceIn.toExact()) < Number(amountIn)) {
       inputError = <Trans>Insufficient {inputCurrency?.symbol} balance</Trans>
+    }
+
+    if (balanceOut && premiumAmount && Number(balanceOut.toExact()) < Number(premiumAmount)) {
+      inputError = <Trans>Insufficient {outputCurrency?.symbol} balance</Trans>
     }
 
     if (trade.state === TradeState.NO_ROUTE_FOUND) {
@@ -407,7 +413,7 @@ export function useDerivedBorrowCreationInfo({ allowance } : { allowance: Approv
     }
 
     return inputError
-  }, [allowance, account, allowedSlippage, currencies, currencyBalances, parsedAmount, borrowManager, ltv, inputCurrency, trade])
+  }, [inputAllowance, outputAllowance, account, allowedSlippage, currencies, currencyBalances, parsedAmount, borrowManager, ltv, inputCurrency, trade])
 
   const contractError = useMemo(() => {
     let _contractError;
@@ -416,7 +422,7 @@ export function useDerivedBorrowCreationInfo({ allowance } : { allowance: Approv
       _contractError = _contractError ?? <Trans>Invalid Trade</Trans>
     }
     return _contractError
-  }, [allowance, account, allowedSlippage, currencies, currencyBalances, parsedAmount, borrowManager, ltv, inputCurrency, trade])
+  }, [inputAllowance, outputAllowance, account, allowedSlippage, currencies, currencyBalances, parsedAmount, borrowManager, ltv, inputCurrency, trade])
 
   return {
     trade,

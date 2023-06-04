@@ -289,7 +289,7 @@ export function BorrowDetailsDropdown({ trade, tradeState, syncing, loading, all
   const { ltv } = useSwapState()
 
   const disabled = tradeState !== TradeState.VALID
-  // console.log('leverageTrade.state', leverageTrade.state, disabled, leverage)
+  console.log('borrow.state', tradeState, disabled, loading)
   return (
     <Wrapper style={{ marginTop: '0' }}>
       <AutoColumn gap="sm" style={{ width: '100%', marginBottom: '-8px' }}>
@@ -334,7 +334,7 @@ export function BorrowDetailsDropdown({ trade, tradeState, syncing, loading, all
                     <Trans>Simulating position ...</Trans>
                   </ThemedText.DeprecatedMain>
                 ) : (
-                  <LoadingOpacityContainer $loading={syncing}>
+                  <LoadingOpacityContainer $loading={loading}>
                     Trade Details
                   </LoadingOpacityContainer>
                 )

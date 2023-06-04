@@ -140,6 +140,11 @@ const TransactionTitleTable: { [key in TransactionType]: { [state in Transaction
     [TransactionStatus.Pending]: t`Adding borrow`,
     [TransactionStatus.Confirmed]: t`Added borrow`,
     [TransactionStatus.Failed]: t`Add borrow failed`,
+  },
+  [TransactionType.REDUCE_LEVERAGE]: {
+    [TransactionStatus.Pending]: t`Reducing leverage`,
+    [TransactionStatus.Confirmed]: t`Reduced leverage`,
+    [TransactionStatus.Failed]: t`Reduce leverage failed`,
   }
 }
 
