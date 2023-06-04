@@ -674,7 +674,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
 
   const quoteBaseSymbol = useMemo(() => {
     if (token0 && token1 && pool?.token0Price) {
-      if (pool.token0Price.greaterThan(1)) {
+      if (!pool.token0Price.greaterThan(1)) {
         return `${token0.symbol}/${token1.symbol}`
       } else {
         return `${token1.symbol}/${token0.symbol}`
@@ -715,7 +715,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
               <RowBetween>
                 <PositionInfo>
                   <TruncatedTableText>
-                    <GreenText> x{leverageFactor}</GreenText> {outputCurrencySymbol}
+                    <GreenText> x{(Math.round(leverageFactor*1000)/1000)}</GreenText> {outputCurrencySymbol}
                   </TruncatedTableText>
                 </PositionInfo>
               </RowBetween>
@@ -724,14 +724,15 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
           value={
             <Trans>
               <TruncatedTableText>
-                {(Number(position.totalPosition))} {outputCurrencySymbol}
+
+                {(Math.round(Number(position.totalPosition)*10000)/10000)} {outputCurrencySymbol}
               </TruncatedTableText>
             </Trans>
           }
           collateral={
             <Trans>
               <TruncatedTableText>
-                {(Number(position.initialCollateral))} {inputCurrencySymbol}
+                {(Math.round(Number(position.initialCollateral)*10000)/10000)} {inputCurrencySymbol}
               </TruncatedTableText>
             </Trans>
           }
@@ -759,7 +760,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
                     {arrow}
                   </ArrowCell>
                   <DeltaText delta={Number(pnl)}>
-                    {pnl ? (pnl) : "-"} {inputCurrencySymbol}
+                    {pnl ? ((Math.round(Number(pnl)*10000)/10000)) : "-"} {inputCurrencySymbol}
                   </DeltaText>
                 </AutoRow>
               </TruncatedTableText>
@@ -768,14 +769,15 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
           entryPrice={
             <Trans>
               <TruncatedTableText>
-                {(entryPrice)} {quoteBaseSymbol}
+                {(Math.round(Number(entryPrice)*10000)/10000)} {quoteBaseSymbol}
               </TruncatedTableText>
             </Trans>
           }
           remainingPremium={
             <Trans>
               <TruncatedTableText>
-                {(Number(position.unusedPremium))} {inputCurrencySymbol}
+
+                {(Math.round(Number(position.unusedPremium)*10000)/10000)} {inputCurrencySymbol}
               </TruncatedTableText>
             </Trans>
           }

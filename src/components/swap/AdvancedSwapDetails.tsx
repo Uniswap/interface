@@ -417,7 +417,9 @@ export function AdvancedLeverageSwapDetails({
       priceImpact: trade ? computeRealizedPriceImpact(trade) : undefined,
     }
   }, [trade])
-  console.log('leveragetrade', leverageTrade); 
+  const fees = (Number(leverageTrade?.borrowedAmount?.toExact()) + Number(leverageTrade?.inputAmount?.toExact())) * 0.0005
+
+  console.log('leveragetrade', leverageTrade,leverageTrade?.borrowedAmount,leverageTrade?.inputAmount?.toExact()  ); 
   return !trade ? null : (
     <StyledCard>
       <AutoColumn gap="sm">
@@ -435,13 +437,13 @@ export function AdvancedLeverageSwapDetails({
           syncing={syncing}
           symbolAppend={`${trade.inputAmount.currency.symbol} / ${trade.outputAmount.currency.symbol}`}
         />
-        <ValueLabel
+        {/*<ValueLabel
           description="Avg entry of your position after this trade"
           label="Avg. Entry"
           value={Math.round(Number(leverageTrade?.strikePrice) * 1000000) / 1000000}
           syncing={syncing}
           symbolAppend={`${trade.inputAmount.currency.symbol} / ${trade.outputAmount.currency.symbol}`}
-        />
+        />*/}
         <ValueLabel
           description="The first premium payment required to open this position"
           label="Quoted Premium"
@@ -450,16 +452,16 @@ export function AdvancedLeverageSwapDetails({
           symbolAppend={trade.inputAmount.currency.symbol}
         />
         <ValueLabel
-          description="The first premium payment required to open this position"
+          description="The premium refunded from your old payment"
           label="Returned premium"
-          value={Math.round(Number(leverageTrade?.quotedPremium) * 100000) / 100000}
+          value={Math.round(Number(leverageTrade?.effectiveLeverage) ) }
           syncing={syncing}
-          symbolAppend={trade.inputAmount.currency.symbol}
+          symbolAppend={leverageTrade?.effectiveLeverage!=0? trade.inputAmount.currency.symbol:""}
         />
         <ValueLabel
-          description="The impact your trade has on the market price of this pool."
+          description="The fees you pay for swaps"
           label="Fees"
-          value={Math.round(Number(leverageTrade?.quotedPremium) * 100000) / 100000}
+          value={Math.round(Number(fees) * 100000) / 100000}
           syncing={syncing}
           symbolAppend={trade.inputAmount.currency.symbol}
         />
@@ -522,7 +524,7 @@ export function AdvancedLeverageSwapDetails({
             >
               <ThemedText.DeprecatedSubHeader color={theme.textTertiary}>
                 {trade.tradeType === TradeType.EXACT_INPUT ? (
-                  <Trans>Minimum received</Trans>
+                  <Trans>Minimum output</Trans>
                 ) : (
                   <Trans>Maximum sent</Trans>
                 )}{' '}

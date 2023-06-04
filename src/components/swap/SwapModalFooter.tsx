@@ -800,7 +800,7 @@ export function ReduceLeverageModalFooter({
                           <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
                             <TruncatedText>
                             {
-                              debt && `${Number(debt)}  ${inputIsToken0 ? token0?.symbol : token1?.symbol}`
+                              unusedPremium && `${Number(unusedPremium)}  ${inputIsToken0 ? token0?.symbol : token1?.symbol}`
                             }
                             </TruncatedText>
                           </ThemedText.DeprecatedBlack>
@@ -824,14 +824,14 @@ export function ReduceLeverageModalFooter({
                           <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
                             <TruncatedText>
                             {
-                              debt && `${Number(debt)}  ${inputIsToken0 ? token0?.symbol : token1?.symbol}`
+                              premium && `${Number(premium)}  ${inputIsToken0 ? token0?.symbol : token1?.symbol}`
                             }
                             </TruncatedText>
                           </ThemedText.DeprecatedBlack>
                         </TextWithLoadingPlaceholder>
                       </RowBetween>
 
-                      <RowBetween>
+                      {/*<RowBetween>
                         <RowFixed>
                           <MouseoverTooltip
                             text={
@@ -849,12 +849,12 @@ export function ReduceLeverageModalFooter({
                           <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
                             <TruncatedText>
                             {
-                              `${Number(received)}  ${inputIsToken0 ? token0?.symbol : token1?.symbol}`
+                              `${(Number(pnl))}  ${inputIsToken0 ? token0?.symbol : token1?.symbol}`
                             }
                             </TruncatedText>
                           </ThemedText.DeprecatedBlack>
                         </TextWithLoadingPlaceholder>
-                      </RowBetween>
+                      </RowBetween> */}
                       <RowBetween>
                       <RowFixed>
                         <MouseoverTooltip
@@ -873,7 +873,7 @@ export function ReduceLeverageModalFooter({
                         <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
                           <TruncatedText>
                             {
-                              `${(Number(received) - Number(initCollateral))}  ${inputIsToken0 ? token0?.symbol : token1?.symbol}`
+                              `${(Number(pnl))}  ${inputIsToken0 ? token0?.symbol : token1?.symbol}`
                             }
                           </TruncatedText>
                         </ThemedText.DeprecatedBlack>

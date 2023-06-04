@@ -580,6 +580,8 @@ export function useDerivedLeverageCreationInfo({ allowance } : { allowance: Appr
 
       const quotedPremium = new BN((contractResult[2] as any)
         .toString()).shiftedBy(-inputCurrency?.wrapped.decimals).toNumber()
+      const returnedPremium = new BN((contractResult[1] as any)
+        .toString()).shiftedBy(-inputCurrency?.wrapped.decimals).toNumber()
       let t = new BN(strikePrice).minus(initialPrice.toFixed(DEFAULT_ERC20_DECIMALS)).abs().dividedBy(initialPrice.toFixed(DEFAULT_ERC20_DECIMALS)).multipliedBy(1000).toFixed(0)
       const priceImpact = new Percent(t, 1000)
 
@@ -593,7 +595,7 @@ export function useDerivedLeverageCreationInfo({ allowance } : { allowance: Appr
         strikePrice,
         quotedPremium,
         priceImpact,
-        effectiveLeverage
+        effectiveLeverage: returnedPremium
       }
     } else {
       return {
