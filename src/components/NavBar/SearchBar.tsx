@@ -1,12 +1,15 @@
 // eslint-disable-next-line no-restricted-imports
-import { t } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 import { sendAnalyticsEvent, Trace, TraceEvent, useTrace } from '@uniswap/analytics'
-import { BrowserEvent, ElementName, EventName, SectionName } from '@uniswap/analytics-events'
+import { BrowserEvent, InterfaceElementName, InterfaceEventName, InterfaceSectionName } from '@uniswap/analytics-events'
 import { Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import clsx from 'clsx'
 import { ZERO_ADDRESS } from 'constants/misc'
-import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
+import { Chain } from 'graphql/data/__generated__/types-and-hooks'
+import { useCollectionSearch } from 'graphql/data/nft/CollectionSearch'
+import { SearchToken, useSearchTokens } from 'graphql/data/SearchTokens'
+import { chainIdToBackendName } from 'graphql/data/util'
 import useDebounce from 'hooks/useDebounce'
 import { useIsNftPage } from 'hooks/useIsNftPage'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
@@ -16,18 +19,32 @@ import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
 import { magicalGradientOnHover } from 'nft/css/common.css'
 import { useIsMobile, useIsTablet } from 'nft/hooks'
-import { fetchSearchCollections } from 'nft/queries'
-import { fetchSearchTokens } from 'nft/queries/genie/SearchTokensFetcher'
-import { FungibleToken } from 'nft/types'
-import { ChangeEvent, useEffect, useMemo, useReducer, useRef, useState } from 'react'
-import { useQuery } from 'react-query'
+import { useIsNavSearchInputVisible } from 'nft/hooks/useIsNavSearchInputVisible'
+import { ChangeEvent, useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { useRegisteredPools } from 'state/pool/hooks'
+import styled from 'styled-components/macro'
 
 import { ChevronLeftIcon, MagnifyingGlassIcon, NavMagnifyingGlassIcon } from '../../nft/components/icons'
 import { NavIcon } from './NavIcon'
 import * as styles from './SearchBar.css'
 import { SearchBarDropdown } from './SearchBarDropdown'
+
+const KeyShortCut = styled.div`
+  background-color: ${({ theme }) => theme.hoverState};
+  color: ${({ theme }) => theme.textSecondary};
+  padding: 0px 8px;
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 16px;
+  display: flex;
+  align-items: center;
+  opacity: 0.6;
+  backdrop-filter: blur(60px);
+`
 
 export const SearchBar = () => {
   const [isOpen, toggleOpen] = useReducer((state: boolean) => !state, false)
@@ -36,40 +53,21 @@ export const SearchBar = () => {
   const searchRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const { pathname } = useLocation()
-  const phase1Flag = useNftFlag()
   const isMobile = useIsMobile()
   const isTablet = useIsTablet()
-  const isPhase1 = phase1Flag === NftVariant.Enabled
+  const isNavSearchInputVisible = useIsNavSearchInputVisible()
 
   useOnClickOutside(searchRef, () => {
     isOpen && toggleOpen()
   })
 
-  const { data: collections, isLoading: collectionsAreLoading } = useQuery(
-    ['searchCollections', debouncedSearchValue],
-    () => fetchSearchCollections(debouncedSearchValue),
-    {
-      refetchOnWindowFocus: false,
-      refetchOnMount: false,
-      refetchOnReconnect: false,
-      enabled: !!debouncedSearchValue.length && isPhase1,
-    }
-  )
+  const { data: collections, loading: collectionsAreLoading } = useCollectionSearch(debouncedSearchValue)
 
-  const { data: tokens, isLoading: tokensAreLoading } = useQuery(
-    ['searchTokens', debouncedSearchValue],
-    () => fetchSearchTokens(debouncedSearchValue),
-    {
-      refetchOnWindowFocus: false,
-      refetchOnMount: false,
-      refetchOnReconnect: false,
-      enabled: !!debouncedSearchValue.length,
-    }
-  )
+  const { chainId } = useWeb3React()
+  const { data: tokens, loading: tokensAreLoading } = useSearchTokens(debouncedSearchValue, chainId ?? 1)
 
   // TODO: check if we already store all pools' data in state, so can return a richer pool struct
   const smartPoolsLogs = useRegisteredPools()
-  const { chainId } = useWeb3React()
   const smartPools: Token[] = useMemo(() => {
     const mockToken = new Token(1, ZERO_ADDRESS, 0, '', '')
     if (!smartPoolsLogs || !chainId) return [mockToken]
@@ -82,33 +80,39 @@ export const SearchBar = () => {
   const filteredPools: Token[] = useMemo(() => {
     return Object.values(smartPools).filter(getTokenFilter(debouncedSearchValue))
   }, [smartPools, debouncedSearchValue])
+  const chain = chainId ? chainIdToBackendName(chainId) : undefined
   // TODO: check using a different struct for pools
-  const fungiblePools: FungibleToken[] | undefined = useMemo(() => {
-    if (!chainId) return
+  const searchPools: SearchToken[] | undefined = useMemo(() => {
+    if (!chain) return
     return filteredPools.map((p) => {
-      const { name, symbol, address, chainId } = p
+      const { name, symbol, address } = p
       return {
+        id: '',
         name: name ?? '',
         address,
         symbol: symbol ?? '',
         decimals: 0,
-        chainId,
-        logoURI: '',
-        coinGeckoId: '',
-        priceUsd: 1,
-        price24hChange: 0,
-        volume24h: 0,
-        onDefaultList: true,
-        marketCap: 0,
+        chain: chain ?? Chain.Ethereum,
+        project: {
+          logoUrl: '',
+          id: '',
+          safetyLevel: undefined,
+        },
+        market: {
+          id: '',
+          price: { id: '', value: 0, currency: undefined },
+          pricePercentChange: { id: '', value: 0 },
+          volume24H: { id: '', value: 0, currency: undefined },
+        },
       }
     })
-  }, [chainId, filteredPools])
+  }, [chain, filteredPools])
 
   const isNFTPage = useIsNftPage()
 
   const [reducedPools, reducedTokens, reducedCollections] = organizeSearchResults(
     isNFTPage,
-    fungiblePools ?? [],
+    searchPools ?? [],
     tokens ?? [],
     collections ?? []
   )
@@ -141,88 +145,125 @@ export const SearchBar = () => {
     }
   }, [isOpen])
 
-  const placeholderText =
-    phase1Flag === NftVariant.Enabled ? t`Search tokens and NFT collections` : t`Search smart pools`
-  const isMobileOrTablet = isMobile || isTablet
+  const isMobileOrTablet = isMobile || isTablet || !isNavSearchInputVisible
 
-  const trace = useTrace({ section: SectionName.NAVBAR_SEARCH })
+  const trace = useTrace({ section: InterfaceSectionName.NAVBAR_SEARCH })
 
   const navbarSearchEventProperties = {
     navbar_search_input_text: debouncedSearchValue,
     hasInput: debouncedSearchValue && debouncedSearchValue.length > 0,
     ...trace,
   }
+  const placeholderText = useMemo(() => {
+    return isMobileOrTablet ? t`Search` : t`Search smart pools`
+  }, [isMobileOrTablet])
+
+  const handleKeyPress = useCallback(
+    (event: any) => {
+      if (event.key === '/') {
+        event.preventDefault()
+        !isOpen && toggleOpen()
+      }
+    },
+    [isOpen]
+  )
+
+  useEffect(() => {
+    const innerRef = inputRef.current
+
+    if (innerRef !== null) {
+      //only mount the listener when input available as ref
+      document.addEventListener('keydown', handleKeyPress)
+    }
+
+    return () => {
+      if (innerRef !== null) {
+        document.removeEventListener('keydown', handleKeyPress)
+      }
+    }
+  }, [handleKeyPress, inputRef])
 
   return (
-    <Box position="relative">
-      <Trace section={SectionName.NAVBAR_SEARCH}>
-        <Box
-          position={{ sm: 'fixed', md: 'absolute' }}
-          width={{ sm: isOpen ? 'viewWidth' : 'auto', md: 'auto' }}
-          ref={searchRef}
-          className={isPhase1 ? styles.searchBarContainerNft : styles.searchBarContainer}
-          display={{ sm: isOpen ? 'inline-block' : 'none', xl: 'inline-block' }}
+    <Trace section={InterfaceSectionName.NAVBAR_SEARCH}>
+      <Box
+        data-cy="search-bar"
+        position={{ sm: 'fixed', md: 'absolute', xl: 'relative' }}
+        width={{ sm: isOpen ? 'viewWidth' : 'auto', md: 'auto' }}
+        ref={searchRef}
+        className={styles.searchBarContainerNft}
+        display={{ sm: isOpen ? 'inline-block' : 'none', xl: 'inline-block' }}
+      >
+        <Row
+          className={clsx(
+            styles.nftSearchBar,
+            !isOpen && !isMobile && magicalGradientOnHover,
+            isMobileOrTablet && (isOpen ? styles.visible : styles.hidden)
+          )}
+          borderRadius={isOpen || isMobileOrTablet ? undefined : '12'}
+          borderTopRightRadius={isOpen && !isMobile ? '12' : undefined}
+          borderTopLeftRadius={isOpen && !isMobile ? '12' : undefined}
+          borderBottomWidth={isOpen || isMobileOrTablet ? '0px' : '1px'}
+          backgroundColor={isOpen ? 'backgroundSurface' : 'searchBackground'}
+          onClick={() => !isOpen && toggleOpen()}
+          gap="12"
         >
-          <Row
-            className={clsx(
-              ` ${isPhase1 ? styles.nftSearchBar : styles.searchBar} ${
-                !isOpen && !isMobile && magicalGradientOnHover
-              } ${isMobileOrTablet && (isOpen ? styles.visible : styles.hidden)}`
-            )}
-            borderRadius={isOpen || isMobileOrTablet ? undefined : '12'}
-            borderTopRightRadius={isOpen && !isMobile ? '12' : undefined}
-            borderTopLeftRadius={isOpen && !isMobile ? '12' : undefined}
-            borderBottomWidth={isOpen || isMobileOrTablet ? '0px' : isPhase1 ? '2px' : '1px'}
-            onClick={() => !isOpen && toggleOpen()}
-            gap="12"
-          >
-            <Box className={styles.searchContentLeftAlign}>
-              <Box display={{ sm: 'none', md: 'flex' }}>
-                <MagnifyingGlassIcon />
-              </Box>
-              <Box display={{ sm: 'flex', md: 'none' }} color="textTertiary" onClick={toggleOpen}>
-                <ChevronLeftIcon />
-              </Box>
+          <Box className={styles.searchContentLeftAlign}>
+            <Box display={{ sm: 'none', md: 'flex' }}>
+              <MagnifyingGlassIcon />
             </Box>
-            <TraceEvent
-              events={[BrowserEvent.onFocus]}
-              name={EventName.NAVBAR_SEARCH_SELECTED}
-              element={ElementName.NAVBAR_SEARCH_INPUT}
-              properties={{ ...trace }}
-            >
-              <Box
-                as="input"
-                placeholder={placeholderText}
-                onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                  !isOpen && toggleOpen()
-                  setSearchValue(event.target.value)
-                }}
-                onBlur={() => sendAnalyticsEvent(EventName.NAVBAR_SEARCH_EXITED, navbarSearchEventProperties)}
-                className={`${styles.searchBarInput} ${styles.searchContentLeftAlign}`}
-                value={searchValue}
-                ref={inputRef}
-                width={phase1Flag === NftVariant.Enabled || isOpen ? 'full' : '160'}
-              />
-            </TraceEvent>
-          </Row>
-          <Box className={clsx(isOpen ? styles.visible : styles.hidden)}>
-            {isOpen && (
-              <SearchBarDropdown
-                toggleOpen={toggleOpen}
-                pools={reducedPools}
-                tokens={reducedTokens}
-                collections={reducedCollections}
-                queryText={debouncedSearchValue}
-                hasInput={debouncedSearchValue.length > 0}
-                isLoading={tokensAreLoading || (collectionsAreLoading && phase1Flag === NftVariant.Enabled)}
-              />
-            )}
+            <Box display={{ sm: 'flex', md: 'none' }} color="textTertiary" onClick={toggleOpen}>
+              <ChevronLeftIcon />
+            </Box>
           </Box>
+          <TraceEvent
+            events={[BrowserEvent.onFocus]}
+            name={InterfaceEventName.NAVBAR_SEARCH_SELECTED}
+            element={InterfaceElementName.NAVBAR_SEARCH_INPUT}
+            properties={{ ...trace }}
+          >
+            <Trans
+              id={placeholderText}
+              render={({ translation }) => (
+                <Box
+                  as="input"
+                  data-cy="search-bar-input"
+                  placeholder={translation as string}
+                  onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                    !isOpen && toggleOpen()
+                    setSearchValue(event.target.value)
+                  }}
+                  onBlur={() =>
+                    sendAnalyticsEvent(InterfaceEventName.NAVBAR_SEARCH_EXITED, navbarSearchEventProperties)
+                  }
+                  className={`${styles.searchBarInput} ${styles.searchContentLeftAlign}`}
+                  value={searchValue}
+                  ref={inputRef}
+                  width="full"
+                />
+              )}
+            />
+          </TraceEvent>
+          {!isOpen && <KeyShortCut>/</KeyShortCut>}
+        </Row>
+        <Box className={clsx(isOpen ? styles.visible : styles.hidden)}>
+          {isOpen && (
+            <SearchBarDropdown
+              toggleOpen={toggleOpen}
+              pools={reducedPools}
+              tokens={reducedTokens}
+              collections={reducedCollections}
+              queryText={debouncedSearchValue}
+              hasInput={debouncedSearchValue.length > 0}
+              isLoading={tokensAreLoading || collectionsAreLoading}
+            />
+          )}
         </Box>
-        <NavIcon onClick={toggleOpen}>
+      </Box>
+      {isMobileOrTablet && (
+        <NavIcon onClick={toggleOpen} label={placeholderText}>
           <NavMagnifyingGlassIcon />
         </NavIcon>
-      </Trace>
-    </Box>
+      )}
+    </Trace>
   )
 }

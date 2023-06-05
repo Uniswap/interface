@@ -2,7 +2,6 @@ import { SparkLineLoadingBubble } from 'components/Tokens/TokenTable/TokenRow'
 import { curveCardinal, scaleLinear } from 'd3'
 import { SparklineMap, TopToken } from 'graphql/data/TopTokens'
 import { PricePoint } from 'graphql/data/util'
-import { TimePeriod } from 'graphql/data/util'
 import { memo } from 'react'
 import styled, { useTheme } from 'styled-components/macro'
 
@@ -20,19 +19,11 @@ interface SparklineChartProps {
   width: number
   height: number
   tokenData: TopToken
-  pricePercentChange: number | undefined | null
-  timePeriod: TimePeriod
+  pricePercentChange?: number | null
   sparklineMap: SparklineMap
 }
 
-function _SparklineChart({
-  width,
-  height,
-  tokenData,
-  pricePercentChange,
-  timePeriod,
-  sparklineMap,
-}: SparklineChartProps) {
+function _SparklineChart({ width, height, tokenData, pricePercentChange, sparklineMap }: SparklineChartProps) {
   const theme = useTheme()
   // for sparkline
   const pricePoints = tokenData?.address ? sparklineMap[tokenData.address] : null

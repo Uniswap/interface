@@ -1,10 +1,11 @@
 import type { TransactionResponse } from '@ethersproject/providers'
 import { Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { ALL_SUPPORTED_CHAIN_IDS, SupportedChainId } from 'constants/chains'
 import { useCallback, useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 
-import { addTransaction } from './reducer'
+import { addTransaction, removeTransaction } from './reducer'
 import { TransactionDetails, TransactionInfo, TransactionType } from './types'
 
 // helper that can take a ethers library transaction response and add it to the list of transactions
@@ -17,13 +18,37 @@ export function useTransactionAdder(): (response: TransactionResponse, info: Tra
       if (!account) return
       if (!chainId) return
 
-      const { hash } = response
+      const { hash, nonce } = response
       if (!hash) {
         throw Error('No transaction hash found.')
       }
-      dispatch(addTransaction({ hash, from: account, info, chainId }))
+      dispatch(addTransaction({ hash, from: account, info, chainId, nonce }))
     },
     [account, chainId, dispatch]
+  )
+}
+
+export function useTransactionRemover() {
+  const { chainId, account } = useWeb3React()
+  const dispatch = useAppDispatch()
+
+  return useCallback(
+    (hash: string) => {
+      if (!account) return
+      if (!chainId) return
+
+      dispatch(removeTransaction({ hash, chainId }))
+    },
+    [account, chainId, dispatch]
+  )
+}
+
+export function useMultichainTransactions(): [TransactionDetails, SupportedChainId][] {
+  const state = useAppSelector((state) => state.transactions)
+  return ALL_SUPPORTED_CHAIN_IDS.flatMap((chainId) =>
+    state[chainId]
+      ? Object.values(state[chainId]).map((tx): [TransactionDetails, SupportedChainId] => [tx, chainId])
+      : []
   )
 }
 
@@ -89,24 +114,4 @@ export function useHasPendingApproval(token?: Token, spender?: string): boolean 
       }),
     [allTransactions, spender, token?.address]
   )
-}
-
-// watch for submissions to claim
-// return null if not done loading, return undefined if not found
-export function useUserHasSubmittedClaim(account?: string): {
-  claimSubmitted: boolean
-  claimTxn: TransactionDetails | undefined
-} {
-  const allTransactions = useAllTransactions()
-
-  // get the txn if it has been submitted
-  const claimTxn = useMemo(() => {
-    const txnIndex = Object.keys(allTransactions).find((hash) => {
-      const tx = allTransactions[hash]
-      return tx.info.type === TransactionType.CLAIM && tx.info.recipient === account
-    })
-    return txnIndex && allTransactions[txnIndex] ? allTransactions[txnIndex] : undefined
-  }, [account, allTransactions])
-
-  return { claimSubmitted: Boolean(claimTxn), claimTxn }
 }

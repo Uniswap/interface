@@ -1,7 +1,8 @@
-import { getVersionUpgrade, minVersionBump, VersionUpgrade } from '@uniswap/token-lists'
+import { getVersionUpgrade, VersionUpgrade } from '@uniswap/token-lists'
 import { useWeb3React } from '@web3-react/core'
-import { UNSUPPORTED_LIST_URLS } from 'constants/lists'
+import { DEFAULT_LIST_OF_LISTS, UNSUPPORTED_LIST_URLS } from 'constants/lists'
 import useInterval from 'lib/hooks/useInterval'
+import ms from 'ms.macro'
 import { useCallback, useEffect } from 'react'
 import { useAppDispatch } from 'state/hooks'
 import { useAllLists } from 'state/lists/hooks'
@@ -9,6 +10,8 @@ import { useAllLists } from 'state/lists/hooks'
 import { useFetchListCallback } from '../../hooks/useFetchListCallback'
 import useIsWindowVisible from '../../hooks/useIsWindowVisible'
 import { acceptListUpdate } from './actions'
+import { shouldAcceptVersionUpdate } from './utils'
+
 export default function Updater(): null {
   const { provider } = useWeb3React()
   const dispatch = useAppDispatch()
@@ -20,15 +23,15 @@ export default function Updater(): null {
   const fetchList = useFetchListCallback()
   const fetchAllListsCallback = useCallback(() => {
     if (!isWindowVisible) return
-    Object.keys(lists).forEach((url) => {
+    DEFAULT_LIST_OF_LISTS.forEach((url) => {
       // Skip validation on unsupported lists
       const isUnsupportedList = UNSUPPORTED_LIST_URLS.includes(url)
-      fetchList(url, false, isUnsupportedList).catch((error) => console.debug('interval list fetching error', error))
+      fetchList(url, isUnsupportedList).catch((error) => console.debug('interval list fetching error', error))
     })
-  }, [fetchList, isWindowVisible, lists])
+  }, [fetchList, isWindowVisible])
 
   // fetch all lists every 10 minutes, but only after we initialize provider
-  useInterval(fetchAllListsCallback, provider ? 1000 * 60 * 10 : null)
+  useInterval(fetchAllListsCallback, provider ? ms`10m` : null)
 
   // whenever a list is not loaded and not loading, try again to load it
   useEffect(() => {
@@ -45,7 +48,9 @@ export default function Updater(): null {
     UNSUPPORTED_LIST_URLS.forEach((listUrl) => {
       const list = lists[listUrl]
       if (!list || (!list.current && !list.loadingRequestId && !list.error)) {
-        fetchList(listUrl, undefined, true).catch((error) => console.debug('list added fetching error', error))
+        fetchList(listUrl, /* isUnsupportedList= */ true).catch((error) =>
+          console.debug('list added fetching error', error)
+        )
       }
     })
   }, [dispatch, fetchList, lists])
@@ -60,18 +65,12 @@ export default function Updater(): null {
           case VersionUpgrade.NONE:
             throw new Error('unexpected no version bump')
           case VersionUpgrade.PATCH:
-          case VersionUpgrade.MINOR:
-            const min = minVersionBump(list.current.tokens, list.pendingUpdate.tokens)
-            // automatically update minor/patch as long as bump matches the min update
-            if (bump >= min) {
+          case VersionUpgrade.MINOR: {
+            if (shouldAcceptVersionUpdate(listUrl, list.current, list.pendingUpdate, bump)) {
               dispatch(acceptListUpdate(listUrl))
-            } else {
-              console.error(
-                `List at url ${listUrl} could not automatically update because the version bump was only PATCH/MINOR while the update had breaking changes and should have been MAJOR`
-              )
             }
             break
-
+          }
           // update any active or inactive lists
           case VersionUpgrade.MAJOR:
             dispatch(acceptListUpdate(listUrl))

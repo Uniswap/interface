@@ -8,8 +8,10 @@
 /src/locales/**/en-US.po
 /src/locales/**/pseudo.po
 
-# generated graphql types
-__generated__/
+# generated files
+/src/**/__generated__
+
+# schema
 schema.graphql
 
 # dependencies
@@ -17,6 +19,7 @@ schema.graphql
 
 # testing
 /coverage
+/cache
 
 # builds
 /build
@@ -28,6 +31,10 @@ schema.graphql
 .env.development.local
 .env.test.local
 .env.production.local
+
+instrumented
+.nyc_output
+.nyc_output/**/*
 
 /.netlify
 

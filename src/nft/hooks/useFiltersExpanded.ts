@@ -1,4 +1,4 @@
-import create from 'zustand'
+import { create } from 'zustand'
 import { devtools, persist } from 'zustand/middleware'
 
 interface State {

@@ -2,19 +2,25 @@ import { BigNumber } from '@ethersproject/bignumber'
 import type { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
 import { TraceEvent } from '@uniswap/analytics'
-import { BrowserEvent, ElementName, EventName } from '@uniswap/analytics-events'
+import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import { MulticallExtended, PaymentsExtended } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { FeeAmount, NonfungiblePositionManager } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
+import { useToggleAccountDrawer } from 'components/AccountDrawer'
+import OwnershipWarning from 'components/addLiquidity/OwnershipWarning'
 import { sendEvent } from 'components/analytics'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
-import useParsedQueryString from 'hooks/useParsedQueryString'
+import { isSupportedChain } from 'constants/chains'
+import usePrevious from 'hooks/usePrevious'
 import JSBI from 'jsbi'
-import { useCallback, useEffect, useState } from 'react'
+import { useSingleCallResult } from 'lib/hooks/multicall'
+import { PositionPageUnsupportedContent } from 'pages/Pool/PositionPage'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { Text } from 'rebass'
+import { useActiveSmartPool } from 'state/application/hooks'
 import {
   useRangeHopCallbacks,
   useV3DerivedMintInfo,
@@ -22,8 +28,9 @@ import {
   useV3MintState,
 } from 'state/mint/v3/hooks'
 import { useTheme } from 'styled-components/macro'
+import { addressesAreEquivalent } from 'utils/addressesAreEquivalent'
 
-import { ButtonError, ButtonLight, ButtonPrimary, ButtonText, ButtonYellow } from '../../components/Button'
+import { ButtonError, ButtonLight, ButtonPrimary, ButtonText } from '../../components/Button'
 import { BlueCard, OutlineCard, YellowCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
@@ -50,13 +57,11 @@ import { useIsSwapUnsupported } from '../../hooks/useIsSwapUnsupported'
 import { useStablecoinValue } from '../../hooks/useStablecoinPrice'
 import useTransactionDeadline from '../../hooks/useTransactionDeadline'
 import { useV3PositionFromTokenId } from '../../hooks/useV3Positions'
-import { useToggleWalletModal } from '../../state/application/hooks'
 import { Bound, Field } from '../../state/mint/v3/actions'
-import { useSwapState } from '../../state/swap/hooks'
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { TransactionType } from '../../state/transactions/types'
 import { useIsExpertMode, useUserSlippageToleranceWithDefault } from '../../state/user/hooks'
-import { ExternalLink, ThemedText } from '../../theme'
+import { ThemedText } from '../../theme'
 import approveAmountCalldata from '../../utils/approveAmountCalldata'
 import { calculateGasMargin } from '../../utils/calculateGasMargin'
 import { currencyId } from '../../utils/currencyId'
@@ -80,7 +85,16 @@ import {
 
 const DEFAULT_ADD_IN_RANGE_SLIPPAGE_TOLERANCE = new Percent(50, 10_000)
 
-export default function AddLiquidity() {
+export default function AddLiquidityWrapper() {
+  const { chainId } = useWeb3React()
+  if (isSupportedChain(chainId)) {
+    return <AddLiquidity />
+  } else {
+    return <PositionPageUnsupportedContent />
+  }
+}
+
+function AddLiquidity() {
   const navigate = useNavigate()
   const {
     currencyIdA,
@@ -91,13 +105,12 @@ export default function AddLiquidity() {
   const { account, chainId, provider } = useWeb3React()
   const theme = useTheme()
 
-  // we query pool address from swap state
-  const { smartPoolAddress } = useSwapState()
-  const toggleWalletModal = useToggleWalletModal() // toggle wallet when disconnected
+  // we query pool address from application state
+  const { address: smartPoolAddress } = useActiveSmartPool()
+  const toggleWalletDrawer = useToggleAccountDrawer() // toggle wallet when disconnected
   const expertMode = useIsExpertMode()
   const addTransaction = useTransactionAdder()
   const positionManager = useV3NFTPositionManagerContract()
-  const parsedQs = useParsedQueryString()
 
   // check for existing position if tokenId in url
   const { position: existingPositionDetails, loading: positionLoading } = useV3PositionFromTokenId(
@@ -119,8 +132,7 @@ export default function AddLiquidity() {
     baseCurrency && currencyB && baseCurrency.wrapped.equals(currencyB.wrapped) ? undefined : currencyB
 
   // mint state
-  const { independentField, typedValue, startPriceTypedValue, rightRangeTypedValue, leftRangeTypedValue } =
-    useV3MintState()
+  const { independentField, typedValue, startPriceTypedValue } = useV3MintState()
 
   const {
     pool,
@@ -128,6 +140,7 @@ export default function AddLiquidity() {
     dependentField,
     price,
     pricesAtTicks,
+    pricesAtLimit,
     parsedAmounts,
     currencyBalances,
     position,
@@ -157,31 +170,6 @@ export default function AddLiquidity() {
   // modal and loading
   const [showConfirm, setShowConfirm] = useState<boolean>(false)
   const [attemptingTxn, setAttemptingTxn] = useState<boolean>(false) // clicked confirm
-
-  // capital efficiency warning
-  const [showCapitalEfficiencyWarning, setShowCapitalEfficiencyWarning] = useState(false)
-
-  useEffect(() => setShowCapitalEfficiencyWarning(false), [baseCurrency, quoteCurrency, feeAmount])
-
-  useEffect(() => {
-    if (
-      parsedQs.minPrice &&
-      typeof parsedQs.minPrice === 'string' &&
-      parsedQs.minPrice !== leftRangeTypedValue &&
-      !isNaN(parsedQs.minPrice as any)
-    ) {
-      onLeftRangeInput(parsedQs.minPrice)
-    }
-
-    if (
-      parsedQs.maxPrice &&
-      typeof parsedQs.maxPrice === 'string' &&
-      parsedQs.maxPrice !== rightRangeTypedValue &&
-      !isNaN(parsedQs.maxPrice as any)
-    ) {
-      onRightRangeInput(parsedQs.maxPrice)
-    }
-  }, [parsedQs, rightRangeTypedValue, leftRangeTypedValue, onRightRangeInput, onLeftRangeInput])
 
   // txn values
   const deadline = useTransactionDeadline() // custom from users settings
@@ -406,7 +394,7 @@ export default function AddLiquidity() {
     if (txHash) {
       onFieldAInput('')
       // dont jump to pool page if creating
-      navigate('/pool')
+      navigate('/pools')
     }
     setTxHash('')
   }, [navigate, onFieldAInput, txHash])
@@ -440,6 +428,58 @@ export default function AddLiquidity() {
     !depositBDisabled ? currencies[Field.CURRENCY_B]?.symbol : ''
   }`
 
+  const [searchParams, setSearchParams] = useSearchParams()
+
+  const handleSetFullRange = useCallback(() => {
+    getSetFullRange()
+
+    const minPrice = pricesAtLimit[Bound.LOWER]
+    if (minPrice) searchParams.set('minPrice', minPrice.toSignificant(5))
+    const maxPrice = pricesAtLimit[Bound.UPPER]
+    if (maxPrice) searchParams.set('maxPrice', maxPrice.toSignificant(5))
+    setSearchParams(searchParams)
+
+    sendEvent({
+      category: 'Liquidity',
+      action: 'Full Range Clicked',
+    })
+  }, [getSetFullRange, pricesAtLimit, searchParams, setSearchParams])
+
+  // START: sync values with query string
+  const oldSearchParams = usePrevious(searchParams)
+  // use query string as an input to onInput handlers
+  useEffect(() => {
+    const minPrice = searchParams.get('minPrice')
+    const oldMinPrice = oldSearchParams?.get('minPrice')
+    if (
+      minPrice &&
+      typeof minPrice === 'string' &&
+      !isNaN(minPrice as any) &&
+      (!oldMinPrice || oldMinPrice !== minPrice)
+    ) {
+      onLeftRangeInput(minPrice)
+    }
+    // disable eslint rule because this hook only cares about the url->input state data flow
+    // input state -> url updates are handled in the input handlers
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams])
+  useEffect(() => {
+    const maxPrice = searchParams.get('maxPrice')
+    const oldMaxPrice = oldSearchParams?.get('maxPrice')
+    if (
+      maxPrice &&
+      typeof maxPrice === 'string' &&
+      !isNaN(maxPrice as any) &&
+      (!oldMaxPrice || oldMaxPrice !== maxPrice)
+    ) {
+      onRightRangeInput(maxPrice)
+    }
+    // disable eslint rule because this hook only cares about the url->input state data flow
+    // input state -> url updates are handled in the input handlers
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams])
+  // END: sync values with query string
+
   const Buttons = () =>
     addIsUnsupported ? (
       <ButtonPrimary disabled={true} $borderRadius="12px" padding="12px">
@@ -450,11 +490,11 @@ export default function AddLiquidity() {
     ) : !account ? (
       <TraceEvent
         events={[BrowserEvent.onClick]}
-        name={EventName.CONNECT_WALLET_BUTTON_CLICKED}
+        name={InterfaceEventName.CONNECT_WALLET_BUTTON_CLICKED}
         properties={{ received_swap_quote: false }}
-        element={ElementName.CONNECT_WALLET_BUTTON}
+        element={InterfaceElementName.CONNECT_WALLET_BUTTON}
       >
-        <ButtonLight onClick={toggleWalletModal} $borderRadius="12px" padding="12px">
+        <ButtonLight onClick={toggleWalletDrawer} $borderRadius="12px" padding="12px">
           <Trans>Connect Wallet</Trans>
         </ButtonLight>
       </TraceEvent>
@@ -514,6 +554,29 @@ export default function AddLiquidity() {
       </AutoColumn>
     )
 
+  const usdcValueCurrencyA = usdcValues[Field.CURRENCY_A]
+  const usdcValueCurrencyB = usdcValues[Field.CURRENCY_B]
+  const currencyAFiat = useMemo(
+    () => ({
+      data: usdcValueCurrencyA ? parseFloat(usdcValueCurrencyA.toSignificant()) : undefined,
+      isLoading: false,
+    }),
+    [usdcValueCurrencyA]
+  )
+  const currencyBFiat = useMemo(
+    () => ({
+      data: usdcValueCurrencyB ? parseFloat(usdcValueCurrencyB.toSignificant()) : undefined,
+      isLoading: false,
+    }),
+    [usdcValueCurrencyB]
+  )
+
+  const owner = useSingleCallResult(tokenId ? positionManager : null, 'ownerOf', [tokenId]).result?.[0]
+  const ownsNFT =
+    addressesAreEquivalent(owner, smartPoolAddress) ||
+    addressesAreEquivalent(existingPositionDetails?.operator, account)
+  const showOwnershipWarning = Boolean(hasExistingPosition && account && !ownsNFT)
+
   return (
     <>
       <ScrollablePage>
@@ -522,7 +585,7 @@ export default function AddLiquidity() {
           onDismiss={handleDismissConfirmation}
           attemptingTxn={attemptingTxn}
           hash={txHash}
-          content={() => (
+          reviewContent={() => (
             <ConfirmationModalContent
               title={<Trans>Add Liquidity</Trans>}
               onDismiss={handleDismissConfirmation}
@@ -553,7 +616,7 @@ export default function AddLiquidity() {
             creating={false}
             adding={true}
             positionID={tokenId}
-            defaultSlippage={DEFAULT_ADD_IN_RANGE_SLIPPAGE_TOLERANCE}
+            autoSlippage={DEFAULT_ADD_IN_RANGE_SLIPPAGE_TOLERANCE}
             showBackLink={!hasExistingPosition}
           >
             {!hasExistingPosition && (
@@ -664,7 +727,7 @@ export default function AddLiquidity() {
                       showMaxButton={!atMaxAmounts[Field.CURRENCY_A]}
                       currency={currencies[Field.CURRENCY_A] ?? null}
                       id="add-liquidity-input-tokena"
-                      fiatValue={usdcValues[Field.CURRENCY_A]}
+                      fiatValue={currencyAFiat}
                       showCommonBases
                       locked={depositADisabled}
                     />
@@ -676,7 +739,7 @@ export default function AddLiquidity() {
                         onFieldBInput(maxAmounts[Field.CURRENCY_B]?.toExact() ?? '')
                       }}
                       showMaxButton={!atMaxAmounts[Field.CURRENCY_B]}
-                      fiatValue={usdcValues[Field.CURRENCY_B]}
+                      fiatValue={currencyBFiat}
                       currency={currencies[Field.CURRENCY_B] ?? null}
                       id="add-liquidity-input-tokenb"
                       showCommonBases
@@ -765,7 +828,7 @@ export default function AddLiquidity() {
                                 fontSize={14}
                                 style={{ fontWeight: 500 }}
                                 textAlign="left"
-                                color={theme.deprecated_primaryText1}
+                                color={theme.accentAction}
                               >
                                 <Trans>
                                   This pool must be initialized before you can add liquidity. To initialize, select a
@@ -813,7 +876,7 @@ export default function AddLiquidity() {
                       disabled={!feeAmount || invalidPool || (noLiquidity && !startPriceTypedValue)}
                     >
                       <StackedContainer>
-                        <StackedItem style={{ opacity: showCapitalEfficiencyWarning ? '0.05' : 1 }}>
+                        <StackedItem>
                           <AutoColumn gap="md">
                             {noLiquidity && (
                               <RowBetween>
@@ -836,68 +899,9 @@ export default function AddLiquidity() {
                               feeAmount={feeAmount}
                               ticksAtLimit={ticksAtLimit}
                             />
-                            {!noLiquidity && (
-                              <PresetsButtons
-                                setFullRange={() => {
-                                  setShowCapitalEfficiencyWarning(true)
-                                }}
-                              />
-                            )}
+                            {!noLiquidity && <PresetsButtons onSetFullRange={handleSetFullRange} />}
                           </AutoColumn>
                         </StackedItem>
-
-                        {showCapitalEfficiencyWarning && (
-                          <StackedItem zIndex={1}>
-                            <YellowCard
-                              padding="15px"
-                              $borderRadius="12px"
-                              height="100%"
-                              style={{
-                                borderColor: theme.deprecated_yellow3,
-                                border: '1px solid',
-                              }}
-                            >
-                              <AutoColumn gap="8px" style={{ height: '100%' }}>
-                                <RowFixed>
-                                  <AlertTriangle stroke={theme.deprecated_yellow3} size="16px" />
-                                  <ThemedText.DeprecatedYellow ml="12px" fontSize="15px">
-                                    <Trans>Efficiency Comparison</Trans>
-                                  </ThemedText.DeprecatedYellow>
-                                </RowFixed>
-                                <RowFixed>
-                                  <ThemedText.DeprecatedYellow ml="12px" fontSize="13px" margin={0} fontWeight={400}>
-                                    <Trans>
-                                      Full range positions may earn less fees than concentrated positions. Learn more{' '}
-                                      <ExternalLink
-                                        style={{ color: theme.deprecated_yellow3, textDecoration: 'underline' }}
-                                        href="https://help.uniswap.org/en/articles/5434296-can-i-provide-liquidity-over-the-full-range-in-v3"
-                                      >
-                                        here
-                                      </ExternalLink>
-                                      .
-                                    </Trans>
-                                  </ThemedText.DeprecatedYellow>
-                                </RowFixed>
-                                <Row>
-                                  <ButtonYellow
-                                    padding="8px"
-                                    marginRight="8px"
-                                    $borderRadius="8px"
-                                    width="auto"
-                                    onClick={() => {
-                                      setShowCapitalEfficiencyWarning(false)
-                                      getSetFullRange()
-                                    }}
-                                  >
-                                    <ThemedText.DeprecatedBlack fontSize={13} color="black">
-                                      <Trans>I understand</Trans>
-                                    </ThemedText.DeprecatedBlack>
-                                  </ButtonYellow>
-                                </Row>
-                              </AutoColumn>
-                            </YellowCard>
-                          </StackedItem>
-                        )}
                       </StackedContainer>
 
                       {outOfRange ? (
@@ -937,6 +941,7 @@ export default function AddLiquidity() {
             </ResponsiveTwoColumns>
           </Wrapper>
         </PageWrapper>
+        {showOwnershipWarning && <OwnershipWarning ownerAddress={owner} />}
         {addIsUnsupported && (
           <UnsupportedCurrencyFooter
             show={addIsUnsupported}

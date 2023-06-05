@@ -5,12 +5,12 @@ export interface ChartEntry {
   price0: number
 }
 
-export interface Dimensions {
+interface Dimensions {
   width: number
   height: number
 }
 
-export interface Margins {
+interface Margins {
   top: number
   right: number
   bottom: number
@@ -54,7 +54,7 @@ export interface LiquidityChartRangeInputProps {
   interactive?: boolean
 
   brushLabels: (d: 'w' | 'e', x: number) => string
-  brushDomain: [number, number] | undefined
+  brushDomain?: [number, number]
   onBrushDomainChange: (domain: [number, number], mode: string | undefined) => void
 
   zoomLevels: ZoomLevels

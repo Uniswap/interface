@@ -6,12 +6,12 @@ import Badge from 'components/Badge'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import Row, { AutoRow } from 'components/Row'
-import { RoutingDiagramEntry } from 'components/swap/SwapRoute'
 import { useTokenInfoFromActiveList } from 'hooks/useTokenInfoFromActiveList'
 import { Box } from 'rebass'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
+import { RoutingDiagramEntry } from 'utils/getRoutingDiagramEntries'
 
 import { ReactComponent as DotLine } from '../../assets/svg/dot_line.svg'
 import { MouseoverTooltip } from '../Tooltip'
@@ -55,7 +55,7 @@ const DotColor = styled(DotLine)`
 `
 
 const OpaqueBadge = styled(Badge)`
-  background-color: ${({ theme }) => theme.deprecated_bg2};
+  background-color: ${({ theme }) => theme.backgroundInteractive};
   border-radius: 8px;
   display: grid;
   font-size: 12px;
@@ -69,7 +69,7 @@ const OpaqueBadge = styled(Badge)`
 const ProtocolBadge = styled(Badge)`
   background-color: ${({ theme }) => theme.deprecated_bg3};
   border-radius: 4px;
-  color: ${({ theme }) => theme.deprecated_text2};
+  color: ${({ theme }) => theme.textSecondary};
   font-size: 10px;
   padding: 2px 4px;
   z-index: ${Z_INDEX.sticky + 1};

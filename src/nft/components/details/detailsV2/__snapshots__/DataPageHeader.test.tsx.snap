@@ -1,0 +1,617 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Header loads with asset with a sell order 1`] = `
+<DocumentFragment>
+  .c0 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c9 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  justify-self: flex-end;
+  width: -webkit-min-content;
+  width: -moz-min-content;
+  width: min-content;
+}
+
+.c11 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  display: inline-block;
+  text-align: center;
+  line-height: inherit;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  font-size: inherit;
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  color: white;
+  background-color: primary;
+  border: 0;
+  border-radius: 4px;
+}
+
+.c1 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c6 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
+}
+
+.c10 {
+  width: -webkit-min-content;
+  width: -moz-min-content;
+  width: min-content;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 12px;
+}
+
+.c7 {
+  color: #7780A0;
+}
+
+.c8 {
+  color: #0D111C;
+}
+
+.c4 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c12 {
+  padding: 16px;
+  width: 100%;
+  font-weight: 500;
+  text-align: center;
+  border-radius: 20px;
+  outline: none;
+  border: 1px solid transparent;
+  color: #0D111C;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
+  will-change: transform;
+  -webkit-transition: -webkit-transform 450ms ease;
+  -webkit-transition: transform 450ms ease;
+  transition: transform 450ms ease;
+  -webkit-transform: perspective(1px) translateZ(0);
+  -ms-transform: perspective(1px) translateZ(0);
+  transform: perspective(1px) translateZ(0);
+}
+
+.c12:disabled {
+  opacity: 50%;
+  cursor: auto;
+  pointer-events: none;
+}
+
+.c12 > * {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.c12 > a {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+}
+
+.c13 {
+  background-color: #FB118E;
+  font-size: 20px;
+  font-weight: 600;
+  padding: 16px;
+  color: #F5F6FC;
+}
+
+.c13:focus {
+  box-shadow: 0 0 0 1pt #ee0481;
+  background-color: #ee0481;
+}
+
+.c13:hover {
+  background-color: #ee0481;
+}
+
+.c13:active {
+  box-shadow: 0 0 0 1pt #d50474;
+  background-color: #d50474;
+}
+
+.c13:disabled {
+  background-color: #E8ECFB;
+  color: #7780A0;
+  cursor: auto;
+  box-shadow: none;
+  border: 1px solid transparent;
+  outline: none;
+}
+
+.c16 {
+  padding: 16px;
+  width: -webkit-min-content;
+  width: -moz-min-content;
+  width: min-content;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  border-radius: 16px;
+}
+
+.c14 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  padding: 16px 24px;
+  gap: 8px;
+  line-height: 24px;
+  white-space: nowrap;
+  width: -webkit-min-content;
+  width: -moz-min-content;
+  width: min-content;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  border-radius: 16px;
+}
+
+.c15 {
+  color: #F5F6FCb8;
+}
+
+.c2 {
+  gap: 24px;
+}
+
+.c3 {
+  width: 96px;
+  height: 96px;
+  border-radius: 20px;
+  object-fit: cover;
+}
+
+.c5 {
+  gap: 4px;
+  margin-right: auto;
+}
+
+@media screen and (max-width:1024px) {
+  .c3 {
+    display: none;
+  }
+}
+
+<div
+    class="c0 c1 c2"
+  >
+    <img
+      class="c3"
+      src="https://cdn.center.app/1/0xED5AF388653567Af2F388E6224dC7C4b3241C544/3318/50ed67ad647d0aa0cad0b830d136a677efc2fb72a44587bc35f2a5fb334a7fdf.png"
+    />
+    <div
+      class="c4 c5"
+    >
+      <div
+        class="c0 c6"
+      >
+        <div
+          class="c7 css-1aekuku"
+        >
+          Azuki
+        </div>
+        <svg
+          fill="none"
+          height="16px"
+          viewBox="0 0 20 20"
+          width="16px"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M4.52795 13.8056C4.52719 14.4043 4.6712 14.8474 4.95997 15.135C5.24798 15.4233 5.68496 15.5651 6.27091 15.5605H7.57497C7.62945 15.5585 7.68379 15.5676 7.73463 15.5873C7.78547 15.607 7.83176 15.6369 7.87062 15.6752L8.79884 16.5928C9.22054 17.0142 9.63382 17.2237 10.0387 17.2214C10.4436 17.2191 10.8569 17.0096 11.2786 16.5928L12.1954 15.6752C12.2356 15.6365 12.2832 15.6063 12.3354 15.5866C12.3876 15.5669 12.4433 15.558 12.499 15.5605H13.7951C14.3871 15.5613 14.8283 15.4171 15.1186 15.1281C15.4089 14.839 15.5541 14.3959 15.5541 13.7987V12.5014C15.5511 12.389 15.5923 12.2799 15.6687 12.1974L16.5854 11.2798C17.0125 10.86 17.2245 10.4467 17.2214 10.0399C17.2184 9.63305 17.0064 9.21935 16.5854 8.79878L15.6687 7.88115C15.592 7.79886 15.5509 7.68965 15.5541 7.57719V6.2799C15.5533 5.68191 15.4093 5.23878 15.1221 4.95049C14.8348 4.66221 14.3925 4.51806 13.7951 4.51806H12.499C12.4433 4.52036 12.3877 4.51138 12.3355 4.49168C12.2834 4.47197 12.2357 4.44193 12.1954 4.40336L11.2786 3.48574C10.8569 3.06439 10.4436 2.85487 10.0387 2.85717C9.63382 2.85946 9.22054 3.06898 8.79884 3.48574L7.87062 4.40336C7.83164 4.44148 7.78536 4.4713 7.73454 4.49101C7.68373 4.51072 7.62943 4.51993 7.57497 4.51806H6.27091C5.67961 4.51883 5.23995 4.66182 4.95194 4.94705C4.66393 5.23228 4.51992 5.67656 4.51992 6.2799V7.58063C4.52314 7.69309 4.48197 7.80229 4.40533 7.88459L3.48859 8.80222C3.06765 9.22203 2.85718 9.63572 2.85718 10.0433C2.85718 10.4509 3.07033 10.8653 3.49662 11.2867L4.41336 12.2043C4.48979 12.2867 4.53092 12.3958 4.52795 12.5083V13.8056Z"
+            fill="#FB118E"
+          />
+          <path
+            d="M9.99737 12.4943C9.86205 12.7005 9.6623 12.8164 9.43032 12.8164C9.19191 12.8164 9.00504 12.7198 8.83106 12.4943L7.31036 10.6385C7.20082 10.5032 7.14282 10.3614 7.14282 10.2068C7.14282 9.88458 7.38768 9.63327 7.70342 9.63327C7.89673 9.63327 8.05138 9.70415 8.20603 9.90391L9.40455 11.4311L11.9498 7.34577C12.0851 7.12669 12.2591 7.02359 12.4524 7.02359C12.7553 7.02359 13.0388 7.23623 13.0388 7.55197C13.0388 7.70017 12.9615 7.85482 12.8777 7.99014L9.99737 12.4943Z"
+            fill="white"
+          />
+        </svg>
+      </div>
+      <div
+        class="c8 css-1tiu9da"
+      >
+        Azuki #3318
+      </div>
+    </div>
+    <div
+      class="c9 c10"
+      width="min-content"
+    >
+      <button
+        class="c11 c12 c13 c14"
+      >
+        Buy
+        <div
+          class="c15"
+        >
+          100.00M ETH
+        </div>
+      </button>
+      <button
+        class="c11 c12 c13 c16"
+      >
+        <svg
+          fill="none"
+          height="24"
+          viewBox="0 0 24 24"
+          width="24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M5 22H3C2.448 22 2 21.552 2 21V17C2 16.448 2.448 16 3 16H5C5.552 16 6 16.448 6 17V21C6 21.552 5.552 22 5 22ZM19.66 16.02C19.43 16.02 19.2 16.08 18.98 16.21L16.71 17.5699C16.5 18.7999 15.42 19.75 14.12 19.75H11C10.59 19.75 10.25 19.41 10.25 19C10.25 18.59 10.59 18.25 11 18.25H14.12C14.74 18.25 15.25 17.75 15.25 17.12C15.25 16.5 14.74 16 14.12 16H9C7.9 16 7 16.9 7 18V20C7 21.1 7.9 22 9 22H14.6C15.51 22 16.39 21.69 17.1 21.12L20.5 18.4C20.82 18.15 21 17.76 21 17.36C21 16.58 20.36 16.02 19.66 16.02ZM18 7.5C18 10.809 15.309 13.5 12 13.5C8.691 13.5 6 10.809 6 7.5C6 4.191 8.691 1.5 12 1.5C15.309 1.5 18 4.191 18 7.5ZM14.25 8.91199C14.25 7.96999 13.626 7.14894 12.731 6.91394L11.646 6.63403C11.535 6.60503 11.438 6.53894 11.363 6.43994C11.29 6.34394 11.25 6.21901 11.25 6.08801C11.25 5.77901 11.48 5.52698 11.764 5.52698H12.237C12.497 5.52698 12.717 5.74102 12.748 6.02502C12.792 6.43702 13.157 6.73194 13.575 6.68994C13.987 6.64594 14.284 6.27504 14.24 5.86304C14.146 4.99204 13.531 4.307 12.737 4.099V3.99902C12.737 3.58502 12.401 3.24902 11.987 3.24902C11.573 3.24902 11.237 3.58502 11.237 3.99902V4.10803C10.384 4.34703 9.75201 5.13904 9.75201 6.08704C9.75201 6.54404 9.90101 6.99004 10.169 7.34204C10.442 7.70604 10.833 7.96898 11.272 8.08398L12.357 8.36401C12.59 8.42501 12.753 8.65003 12.753 8.91003C12.753 9.06303 12.696 9.20696 12.593 9.31396C12.536 9.37296 12.416 9.46997 12.239 9.46997H11.766C11.506 9.46997 11.286 9.25605 11.255 8.97205C11.211 8.56005 10.847 8.26401 10.428 8.30701C10.016 8.35101 9.719 8.72203 9.763 9.13403C9.856 9.99303 10.456 10.671 11.236 10.889V11C11.236 11.414 11.572 11.75 11.986 11.75C12.4 11.75 12.736 11.414 12.736 11V10.9C13.085 10.808 13.408 10.6281 13.67 10.3571C14.044 9.96906 14.25 9.45499 14.25 8.91199Z"
+            fill="white"
+          />
+        </svg>
+      </button>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`Header loads with asset with no sell orders 1`] = `
+<DocumentFragment>
+  .c0 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c9 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  justify-self: flex-end;
+  width: -webkit-min-content;
+  width: -moz-min-content;
+  width: min-content;
+}
+
+.c11 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  display: inline-block;
+  text-align: center;
+  line-height: inherit;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  font-size: inherit;
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  color: white;
+  background-color: primary;
+  border: 0;
+  border-radius: 4px;
+}
+
+.c1 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c6 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
+}
+
+.c10 {
+  width: -webkit-min-content;
+  width: -moz-min-content;
+  width: min-content;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 12px;
+}
+
+.c7 {
+  color: #7780A0;
+}
+
+.c8 {
+  color: #0D111C;
+}
+
+.c4 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c12 {
+  padding: 16px;
+  width: 100%;
+  font-weight: 500;
+  text-align: center;
+  border-radius: 20px;
+  outline: none;
+  border: 1px solid transparent;
+  color: #0D111C;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
+  will-change: transform;
+  -webkit-transition: -webkit-transform 450ms ease;
+  -webkit-transition: transform 450ms ease;
+  transition: transform 450ms ease;
+  -webkit-transform: perspective(1px) translateZ(0);
+  -ms-transform: perspective(1px) translateZ(0);
+  transform: perspective(1px) translateZ(0);
+}
+
+.c12:disabled {
+  opacity: 50%;
+  cursor: auto;
+  pointer-events: none;
+}
+
+.c12 > * {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.c12 > a {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+}
+
+.c13 {
+  background-color: #F5F6FC;
+  color: #7780A0;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.c13:hover {
+  background-color: #d2daf7;
+}
+
+.c13:active {
+  background-color: #bdc8f3;
+}
+
+.c14 {
+  white-space: nowrap;
+  width: -webkit-min-content;
+  width: -moz-min-content;
+  width: min-content;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  border-radius: 16px;
+}
+
+.c2 {
+  gap: 24px;
+}
+
+.c3 {
+  width: 96px;
+  height: 96px;
+  border-radius: 20px;
+  object-fit: cover;
+}
+
+.c5 {
+  gap: 4px;
+  margin-right: auto;
+}
+
+@media screen and (max-width:1024px) {
+  .c3 {
+    display: none;
+  }
+}
+
+<div
+    class="c0 c1 c2"
+  >
+    <img
+      class="c3"
+      src="https://cdn.center.app/1/0xED5AF388653567Af2F388E6224dC7C4b3241C544/3318/50ed67ad647d0aa0cad0b830d136a677efc2fb72a44587bc35f2a5fb334a7fdf.png"
+    />
+    <div
+      class="c4 c5"
+    >
+      <div
+        class="c0 c6"
+      >
+        <div
+          class="c7 css-1aekuku"
+        >
+          Azuki
+        </div>
+        <svg
+          fill="none"
+          height="16px"
+          viewBox="0 0 20 20"
+          width="16px"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M4.52795 13.8056C4.52719 14.4043 4.6712 14.8474 4.95997 15.135C5.24798 15.4233 5.68496 15.5651 6.27091 15.5605H7.57497C7.62945 15.5585 7.68379 15.5676 7.73463 15.5873C7.78547 15.607 7.83176 15.6369 7.87062 15.6752L8.79884 16.5928C9.22054 17.0142 9.63382 17.2237 10.0387 17.2214C10.4436 17.2191 10.8569 17.0096 11.2786 16.5928L12.1954 15.6752C12.2356 15.6365 12.2832 15.6063 12.3354 15.5866C12.3876 15.5669 12.4433 15.558 12.499 15.5605H13.7951C14.3871 15.5613 14.8283 15.4171 15.1186 15.1281C15.4089 14.839 15.5541 14.3959 15.5541 13.7987V12.5014C15.5511 12.389 15.5923 12.2799 15.6687 12.1974L16.5854 11.2798C17.0125 10.86 17.2245 10.4467 17.2214 10.0399C17.2184 9.63305 17.0064 9.21935 16.5854 8.79878L15.6687 7.88115C15.592 7.79886 15.5509 7.68965 15.5541 7.57719V6.2799C15.5533 5.68191 15.4093 5.23878 15.1221 4.95049C14.8348 4.66221 14.3925 4.51806 13.7951 4.51806H12.499C12.4433 4.52036 12.3877 4.51138 12.3355 4.49168C12.2834 4.47197 12.2357 4.44193 12.1954 4.40336L11.2786 3.48574C10.8569 3.06439 10.4436 2.85487 10.0387 2.85717C9.63382 2.85946 9.22054 3.06898 8.79884 3.48574L7.87062 4.40336C7.83164 4.44148 7.78536 4.4713 7.73454 4.49101C7.68373 4.51072 7.62943 4.51993 7.57497 4.51806H6.27091C5.67961 4.51883 5.23995 4.66182 4.95194 4.94705C4.66393 5.23228 4.51992 5.67656 4.51992 6.2799V7.58063C4.52314 7.69309 4.48197 7.80229 4.40533 7.88459L3.48859 8.80222C3.06765 9.22203 2.85718 9.63572 2.85718 10.0433C2.85718 10.4509 3.07033 10.8653 3.49662 11.2867L4.41336 12.2043C4.48979 12.2867 4.53092 12.3958 4.52795 12.5083V13.8056Z"
+            fill="#FB118E"
+          />
+          <path
+            d="M9.99737 12.4943C9.86205 12.7005 9.6623 12.8164 9.43032 12.8164C9.19191 12.8164 9.00504 12.7198 8.83106 12.4943L7.31036 10.6385C7.20082 10.5032 7.14282 10.3614 7.14282 10.2068C7.14282 9.88458 7.38768 9.63327 7.70342 9.63327C7.89673 9.63327 8.05138 9.70415 8.20603 9.90391L9.40455 11.4311L11.9498 7.34577C12.0851 7.12669 12.2591 7.02359 12.4524 7.02359C12.7553 7.02359 13.0388 7.23623 13.0388 7.55197C13.0388 7.70017 12.9615 7.85482 12.8777 7.99014L9.99737 12.4943Z"
+            fill="white"
+          />
+        </svg>
+      </div>
+      <div
+        class="c8 css-1tiu9da"
+      >
+        Azuki #3318
+      </div>
+    </div>
+    <div
+      class="c9 c10"
+      width="min-content"
+    >
+      <button
+        class="c11 c12 c13 c14"
+      >
+        Make an offer
+      </button>
+    </div>
+  </div>
+</DocumentFragment>
+`;

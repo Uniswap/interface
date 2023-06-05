@@ -3,22 +3,12 @@ import { style } from '@vanilla-extract/css'
 import { subhead } from '../../nft/css/common.css'
 import { sprinkles, vars } from '../../nft/css/sprinkles.css'
 
-export const nav = style([
-  sprinkles({
-    paddingX: '20',
-    paddingY: '12',
-    width: 'full',
-    height: '72',
-    zIndex: '2',
-    background: 'backgroundFloating',
-  }),
-])
-
 export const logoContainer = style([
   sprinkles({
     display: 'flex',
-    marginRight: { sm: '12', xxl: '20' },
+    marginRight: '12',
     alignItems: 'center',
+    cursor: 'pointer',
   }),
 ])
 
@@ -29,14 +19,7 @@ export const logo = style([
   }),
 ])
 
-export const baseContainer = style([
-  sprinkles({
-    alignItems: 'center',
-  }),
-])
-
 export const baseSideContainer = style([
-  baseContainer,
   sprinkles({
     display: 'flex',
     width: 'full',
@@ -48,6 +31,7 @@ export const baseSideContainer = style([
 export const leftSideContainer = style([
   baseSideContainer,
   sprinkles({
+    alignItems: 'center',
     justifyContent: 'flex-start',
   }),
 ])
@@ -57,7 +41,7 @@ export const searchContainer = style([
     flex: '1',
     flexShrink: '1',
     justifyContent: { lg: 'flex-end', xl: 'center' },
-    display: { sm: 'none', xl: 'flex' },
+    display: { sm: 'none', navSearchInputVisible: 'flex' },
     alignSelf: 'center',
     height: '48',
     alignItems: 'flex-start',
@@ -67,6 +51,7 @@ export const searchContainer = style([
 export const rightSideContainer = style([
   baseSideContainer,
   sprinkles({
+    alignItems: 'center',
     justifyContent: 'flex-end',
   }),
 ])
@@ -75,13 +60,16 @@ const baseMenuItem = style([
   subhead,
   sprinkles({
     paddingY: '8',
-    paddingX: '16',
+    paddingX: '14',
     marginY: '4',
     borderRadius: '12',
     transition: '250',
     height: 'min',
     width: 'full',
     textAlign: 'center',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '4',
   }),
   {
     lineHeight: '24px',
@@ -104,20 +92,5 @@ export const activeMenuItem = style([
   sprinkles({
     color: 'textPrimary',
     background: 'backgroundFloating',
-  }),
-])
-
-export const mobileBottomBar = style([
-  sprinkles({
-    position: 'fixed',
-    display: { sm: 'flex', lg: 'none' },
-    bottom: '0',
-    right: '0',
-    left: '0',
-    justifyContent: 'space-between',
-    paddingY: '4',
-    paddingX: '8',
-    height: '56',
-    background: 'backgroundSurface',
   }),
 ])

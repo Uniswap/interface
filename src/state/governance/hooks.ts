@@ -6,21 +6,16 @@ import type { TransactionResponse } from '@ethersproject/providers'
 import { toUtf8String, Utf8ErrorFuncs, Utf8ErrorReason } from '@ethersproject/strings'
 // eslint-disable-next-line no-restricted-imports
 import { t } from '@lingui/macro'
-import { abi as UNI_ABI } from '@uniswap/governance/build/Uni.json'
+import UniJSON from '@uniswap/governance/build/Uni.json'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import GOVERNANCE_RB_ABI from 'abis/governance.json'
 import POOL_EXTENDED_ABI from 'abis/pool-extended.json'
-import RB_POOL_FACTORY_ABI from 'abis/rb-pool-factory.json'
 import RB_REGISTRY_ABI from 'abis/rb-registry.json'
 import STAKING_ABI from 'abis/staking-impl.json'
 import STAKING_PROXY_ABI from 'abis/staking-proxy.json'
-import {
-  GOVERNANCE_PROXY_ADDRESSES,
-  RB_FACTORY_ADDRESSES,
-  RB_REGISTRY_ADDRESSES,
-  STAKING_PROXY_ADDRESSES,
-} from 'constants/addresses'
+import { GOVERNANCE_PROXY_ADDRESSES, RB_REGISTRY_ADDRESSES, STAKING_PROXY_ADDRESSES } from 'constants/addresses'
+import { SupportedChainId } from 'constants/chains'
 import { LATEST_GOVERNOR_INDEX } from 'constants/governance'
 import { ZERO_ADDRESS } from 'constants/misc'
 import { POLYGON_PROPOSAL_TITLE } from 'constants/proposals/polygon_proposal_title'
@@ -30,7 +25,6 @@ import { useSingleCallResult, useSingleContractMultipleData } from 'lib/hooks/mu
 import { useCallback, useMemo } from 'react'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
 
-import { SupportedChainId } from '../../constants/chains'
 import {
   BRAVO_START_BLOCK,
   MOONBEAN_START_BLOCK,
@@ -50,13 +44,13 @@ function useGovernanceProxyContract(): Contract | null {
 
 const useLatestGovernanceContract = useGovernanceProxyContract
 
-export function useUniContract() {
+function useUniContract() {
   const { chainId } = useWeb3React()
   const uniAddress = useMemo(() => (chainId ? UNI[chainId]?.address : undefined), [chainId])
-  return useContract(uniAddress, UNI_ABI, true)
+  return useContract(uniAddress, UniJSON.abi, true)
 }
 
-export function useRegistryContract(): Contract | null {
+function useRegistryContract(): Contract | null {
   return useContract(RB_REGISTRY_ADDRESSES, RB_REGISTRY_ABI, true)
 }
 
@@ -66,10 +60,6 @@ export function useStakingContract(): Contract | null {
 
 function useStakingProxyContract(): Contract | null {
   return useContract(STAKING_PROXY_ADDRESSES, STAKING_PROXY_ABI, true)
-}
-
-function usePoolFactoryContract(): Contract | null {
-  return useContract(RB_FACTORY_ADDRESSES, RB_POOL_FACTORY_ABI, true)
 }
 
 export function usePoolExtendedContract(poolAddress: string | undefined): Contract | null {
@@ -98,7 +88,7 @@ export interface ProposalData {
   governorIndex: number // index in the governance address array for which this proposal pertains
 }
 
-export interface ProposedAction {
+interface ProposedAction {
   target: string
   data: string
   value: string
@@ -109,22 +99,21 @@ export interface CreateProposalData {
   description: string
 }
 
-// TODO: check if we are using these 2
-export enum StakeStatus {
+enum StakeStatus {
   UNDELEGATED,
   DELEGATED,
 }
 
-export interface StakeInfo {
-  stakeStatus: StakeStatus
+interface StakeInfo {
+  status: StakeStatus
   poolId: string
 }
 
 export interface StakeData {
-  amount: string | undefined
+  amount: string
   pool: string | null
-  fromPoolId?: string | undefined
-  poolId: string | undefined
+  fromPoolId?: string
+  poolId: string
   poolContract?: Contract | null
   stakingPoolExists?: boolean
 }
@@ -390,7 +379,7 @@ export function useUserDelegatee(): string {
 }
 
 // gets the users current votes
-export function useUserVotes(): { loading: boolean; votes: CurrencyAmount<Token> | undefined } {
+export function useUserVotes(): { loading: boolean; votes?: CurrencyAmount<Token> } {
   const { account, chainId } = useWeb3React()
   const governance = useGovernanceProxyContract()
 
@@ -415,7 +404,7 @@ export function useUserVotesAsOfBlock(block: number | undefined): CurrencyAmount
 }
 
 export function usePoolIdByAddress(pool: string | undefined): {
-  poolId: string | undefined
+  poolId?: string
   stakingPoolExists: boolean
 } {
   const registryContract = useRegistryContract()
@@ -424,7 +413,8 @@ export function usePoolIdByAddress(pool: string | undefined): {
   const stakingContract = useStakingContract()
   const stakingPool = useSingleCallResult(stakingContract ?? undefined, 'getStakingPool', [poolId])?.result?.[0]
   const stakingPoolExists = stakingPool !== undefined ? stakingPool?.operator !== ZERO_ADDRESS : false
-  return { poolId, stakingPoolExists }
+  if (!poolId) return { stakingPoolExists }
+  else return { poolId, stakingPoolExists }
 }
 
 // TODO: we must return a currency balance
@@ -440,39 +430,6 @@ export function useStakeBalance(poolId: string | null | undefined): CurrencyAmou
   return stake && grg ? CurrencyAmount.fromRawAmount(grg, stake.nextEpochBalance) : undefined
 }
 
-export function useCreateCallback(): (
-  name: string | undefined,
-  symbol: string | undefined,
-  baseCurrency: string | undefined
-) => undefined | Promise<string> {
-  const { account, chainId, provider } = useWeb3React()
-  const addTransaction = useTransactionAdder()
-  const factoryContract = usePoolFactoryContract()
-
-  return useCallback(
-    (name: string | undefined, symbol: string | undefined, baseCurrency: string | undefined) => {
-      //if (!provider || !chainId || !account || name === '' || symbol === '' || !isAddress(baseCurrency ?? ''))
-      if (!provider || !chainId || !account || !name || !symbol || !isAddress(baseCurrency ?? '')) return undefined
-      if (!factoryContract) throw new Error('No Factory Contract!')
-      // TODO: check correctness of asserting is address before returning on no address
-      if (!baseCurrency) return
-      return factoryContract.estimateGas.createPool(name, symbol, baseCurrency, {}).then((estimatedGasLimit) => {
-        return factoryContract
-          .createPool(name, symbol, baseCurrency, { value: null, gasLimit: calculateGasMargin(estimatedGasLimit) })
-          .then((response: TransactionResponse) => {
-            addTransaction(response, {
-              // TODO: define correct transaction type
-              type: TransactionType.DELEGATE,
-              delegatee: baseCurrency,
-            })
-            return response.hash
-          })
-      })
-    },
-    [account, addTransaction, chainId, provider, factoryContract]
-  )
-}
-
 export function useDelegateCallback(): (stakeData: StakeData | undefined) => undefined | Promise<string> {
   const { account, chainId, provider } = useWeb3React()
   const addTransaction = useTransactionAdder()
@@ -485,8 +442,8 @@ export function useDelegateCallback(): (stakeData: StakeData | undefined) => und
       //if (!stakeData.amount) return
       const createPoolCall = stakingContract?.interface.encodeFunctionData('createStakingPool', [stakeData.pool])
       const stakeCall = stakingContract?.interface.encodeFunctionData('stake', [stakeData.amount])
-      const fromInfo = { status: '0', poolId: stakeData.poolId }
-      const toInfo = { status: '1', poolId: stakeData.poolId }
+      const fromInfo: StakeInfo = { status: StakeStatus.UNDELEGATED, poolId: stakeData.poolId }
+      const toInfo: StakeInfo = { status: StakeStatus.DELEGATED, poolId: stakeData.poolId }
       const moveStakeCall = stakingContract?.interface.encodeFunctionData('moveStake', [
         fromInfo,
         toInfo,
@@ -555,20 +512,21 @@ export function useMoveStakeCallback(): (stakeData: StakeData | undefined) => un
 
   return useCallback(
     (stakeData: StakeData | undefined) => {
-      if (!provider || !chainId || !account || !stakeData || !isAddress(stakeData.pool ?? '')) return undefined
+      if (!provider || !chainId || !account || !stakeData || !stakeData.fromPoolId || !isAddress(stakeData.pool ?? ''))
+        return undefined
       //if (!stakeData.amount) return
       const createPoolCall = stakingContract?.interface.encodeFunctionData('createStakingPool', [stakeData.pool])
       // until a staking implementation upgrade, moving delegated stake requires batching from pool deactivation
       //  and to pool activation
-      const deactivateFromInfo = { status: '1', poolId: stakeData.fromPoolId }
-      const deactivateToInfo = { status: '0', poolId: stakeData.fromPoolId }
+      const deactivateFromInfo: StakeInfo = { status: StakeStatus.DELEGATED, poolId: stakeData.fromPoolId }
+      const deactivateToInfo: StakeInfo = { status: StakeStatus.UNDELEGATED, poolId: stakeData.fromPoolId }
       const deactivateCall = stakingContract?.interface.encodeFunctionData('moveStake', [
         deactivateFromInfo,
         deactivateToInfo,
         stakeData.amount,
       ])
-      const activateFromInfo = { status: '0', poolId: stakeData.poolId }
-      const activateToInfo = { status: '1', poolId: stakeData.poolId }
+      const activateFromInfo: StakeInfo = { status: StakeStatus.UNDELEGATED, poolId: stakeData.poolId }
+      const activateToInfo: StakeInfo = { status: StakeStatus.DELEGATED, poolId: stakeData.poolId }
       const activateCall = stakingContract?.interface.encodeFunctionData('moveStake', [
         activateFromInfo,
         activateToInfo,
@@ -607,11 +565,13 @@ export function useDeactivateStakeCallback(): (stakeData: StakeData | undefined)
   return useCallback(
     (stakeData: StakeData | undefined) => {
       if (!provider || !chainId || !account || !stakeData || !isAddress(stakeData.pool ?? '')) return undefined
+      const deactivateFromInfo: StakeInfo = { status: StakeStatus.DELEGATED, poolId: stakeData.poolId }
+      const deactivateToInfo: StakeInfo = { status: StakeStatus.UNDELEGATED, poolId: stakeData.poolId }
       //if (!stakeData.amount) return
       // in unstake, we use the same StakeData struct but use stakeData.poolId instead of stakeData.fromPoolId
       const deactivateCall = stakingContract?.interface.encodeFunctionData('moveStake', [
-        { status: '1', poolId: stakeData.poolId },
-        { status: '0', poolId: stakeData.poolId },
+        deactivateFromInfo,
+        deactivateToInfo,
         stakeData.amount,
       ])
       const delegatee = stakeData.pool
@@ -751,11 +711,11 @@ export function useCreateProposalCallback(): (
   )
 }
 
-export function useLatestProposalId(address: string | undefined): string | undefined {
-  const latestGovernanceContract = useLatestGovernanceContract()
-  const res = useSingleCallResult(latestGovernanceContract, 'latestProposalIds', [address])
-  return res?.result?.[0]?.toString()
-}
+//export function useLatestProposalId(address: string | undefined): string | undefined {
+//  const latestGovernanceContract = useLatestGovernanceContract()
+//  const res = useSingleCallResult(latestGovernanceContract, 'latestProposalIds', [address])
+//  return res?.result?.[0]?.toString()
+//}
 
 export function useProposalThreshold(): CurrencyAmount<Token> | undefined {
   const { chainId } = useWeb3React()

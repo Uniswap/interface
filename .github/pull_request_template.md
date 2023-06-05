@@ -1,24 +1,52 @@
-Your PR title must follow [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/#summary), and should start with one of the following [types](https://github.com/angular/angular/blob/22b96b9/CONTRIBUTING.md#type):
+<!-- Your PR title must follow conventional commits: https://github.com/Uniswap/interface#pr-title -->
 
-- build: Changes that affect the build system or external dependencies (example scopes: yarn, eslint, typescript)
-- ci: Changes to our CI configuration files and scripts (example scopes: vercel, github, cypress)
-- docs: Documentation only changes
-- feat: A new feature
-- fix: A bug fix
-- perf: A code change that improves performance
-- refactor: A code change that neither fixes a bug nor adds a feature
-- style: Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)
-- test: Adding missing tests or correcting existing tests
+## Description
+<!-- Summary of change, including motivation and context. -->
+<!-- Use verb-driven language: "Fixes XYZ" instead of "This change fixes XYZ" -->
 
-Example commit messages:
 
-- feat: adds support for gnosis safe wallet
-- fix: removes a polling memory leak
-- chore: bumps redux version
+<!-- Delete inapplicable lines: -->
+_Linear ticket:_
+_Slack thread:_
+_Relevant docs:_
 
-Other things to note:
 
-- Please describe the change using verb statements (ex: Removes X from Y)
-- PRs with multiple changes should use a list of verb statements
-- Add any relevant unit / integration tests
-- Changes will be previewable via vercel. Non-obvious changes should include instructions for how to reproduce them
+<!-- Delete this section if your change does not affect UI. -->
+## Screen capture
+
+### Before
+|    Mobile    |   Desktop    |
+| ------------ | ------------ |
+| paste_before | paste_before |
+
+
+### After
+|    Mobile    |   Desktop   |
+| ------------ | ----------- |
+| paste_after  | paste_after |
+
+
+## Test plan
+
+<!-- Delete this section if your change is not a bug fix. -->
+### Reproducing the error
+
+<!-- Include steps to reproduce the bug. -->
+1. 
+
+### QA (ie manual testing)
+
+<!-- Include steps to test the change, ensuring no regression. -->
+- [ ] N/A
+
+
+#### Devices
+<!-- If applicable, include different devices and screen sizes that may be affected, and how you've tested them. -->
+
+
+### Automated testing
+
+<!-- If N/A, check and note so it is obvious to your reviewers and does not show up as an incomplete task. -->
+<!-- eg - [x] Unit test N/A -->
+- [ ] Unit test
+- [ ] Integration/E2E test

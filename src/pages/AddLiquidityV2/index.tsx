@@ -2,9 +2,10 @@ import { BigNumber } from '@ethersproject/bignumber'
 import type { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
 import { TraceEvent } from '@uniswap/analytics'
-import { BrowserEvent, ElementName, EventName } from '@uniswap/analytics-events'
+import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { useToggleAccountDrawer } from 'components/AccountDrawer'
 import { sendEvent } from 'components/analytics'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
@@ -31,7 +32,6 @@ import { useV2RouterContract } from '../../hooks/useContract'
 import { useIsSwapUnsupported } from '../../hooks/useIsSwapUnsupported'
 import useTransactionDeadline from '../../hooks/useTransactionDeadline'
 import { PairState } from '../../hooks/useV2Pairs'
-import { useToggleWalletModal } from '../../state/application/hooks'
 import { Field } from '../../state/mint/actions'
 import { useDerivedMintInfo, useMintActionHandlers, useMintState } from '../../state/mint/hooks'
 import { useTransactionAdder } from '../../state/transactions/hooks'
@@ -67,7 +67,7 @@ export default function AddLiquidity() {
       ((currencyA && currencyA.equals(wrappedNativeCurrency)) || (currencyB && currencyB.equals(wrappedNativeCurrency)))
   )
 
-  const toggleWalletModal = useToggleWalletModal() // toggle wallet when disconnected
+  const toggleWalletDrawer = useToggleAccountDrawer() // toggle wallet when disconnected
 
   const expertMode = useIsExpertMode()
 
@@ -324,14 +324,14 @@ export default function AddLiquidity() {
   return (
     <>
       <AppBody>
-        <AddRemoveTabs creating={isCreate} adding={true} defaultSlippage={DEFAULT_ADD_V2_SLIPPAGE_TOLERANCE} />
+        <AddRemoveTabs creating={isCreate} adding={true} autoSlippage={DEFAULT_ADD_V2_SLIPPAGE_TOLERANCE} />
         <Wrapper>
           <TransactionConfirmationModal
             isOpen={showConfirm}
             onDismiss={handleDismissConfirmation}
             attemptingTxn={attemptingTxn}
             hash={txHash}
-            content={() => (
+            reviewContent={() => (
               <ConfirmationModalContent
                 title={noLiquidity ? <Trans>You are creating a pool</Trans> : <Trans>You will receive</Trans>}
                 onDismiss={handleDismissConfirmation}
@@ -348,13 +348,13 @@ export default function AddLiquidity() {
                 <ColumnCenter>
                   <BlueCard>
                     <AutoColumn gap="10px">
-                      <ThemedText.DeprecatedLink fontWeight={600} color="deprecated_primaryText1">
+                      <ThemedText.DeprecatedLink fontWeight={600} color="accentAction">
                         <Trans>You are the first liquidity provider.</Trans>
                       </ThemedText.DeprecatedLink>
-                      <ThemedText.DeprecatedLink fontWeight={400} color="deprecated_primaryText1">
+                      <ThemedText.DeprecatedLink fontWeight={400} color="accentAction">
                         <Trans>The ratio of tokens you add will set the price of this pool.</Trans>
                       </ThemedText.DeprecatedLink>
-                      <ThemedText.DeprecatedLink fontWeight={400} color="deprecated_primaryText1">
+                      <ThemedText.DeprecatedLink fontWeight={400} color="accentAction">
                         <Trans>Once you are happy with the rate click supply to review.</Trans>
                       </ThemedText.DeprecatedLink>
                     </AutoColumn>
@@ -364,7 +364,7 @@ export default function AddLiquidity() {
                 <ColumnCenter>
                   <BlueCard>
                     <AutoColumn gap="10px">
-                      <ThemedText.DeprecatedLink fontWeight={400} color="deprecated_primaryText1">
+                      <ThemedText.DeprecatedLink fontWeight={400} color="accentAction">
                         <Trans>
                           <b>
                             <Trans>Tip:</Trans>
@@ -391,7 +391,7 @@ export default function AddLiquidity() {
               showCommonBases
             />
             <ColumnCenter>
-              <Plus size="16" color={theme.deprecated_text2} />
+              <Plus size="16" color={theme.textSecondary} />
             </ColumnCenter>
             <CurrencyInputPanel
               value={formattedAmounts[Field.CURRENCY_B]}
@@ -438,11 +438,11 @@ export default function AddLiquidity() {
             ) : !account ? (
               <TraceEvent
                 events={[BrowserEvent.onClick]}
-                name={EventName.CONNECT_WALLET_BUTTON_CLICKED}
+                name={InterfaceEventName.CONNECT_WALLET_BUTTON_CLICKED}
                 properties={{ received_swap_quote: false }}
-                element={ElementName.CONNECT_WALLET_BUTTON}
+                element={InterfaceElementName.CONNECT_WALLET_BUTTON}
               >
-                <ButtonLight onClick={toggleWalletModal}>
+                <ButtonLight onClick={toggleWalletDrawer}>
                   <Trans>Connect Wallet</Trans>
                 </ButtonLight>
               </TraceEvent>

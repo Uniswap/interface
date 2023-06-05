@@ -5,7 +5,6 @@ export const modalContainer = style([
   sprinkles({
     display: 'flex',
     position: 'fixed',
-    flexWrap: 'wrap',
     height: 'full',
     width: { sm: 'full', md: 'min' },
     left: { sm: '0', md: '1/2' },
@@ -16,8 +15,9 @@ export const modalContainer = style([
     paddingX: '12',
   }),
   {
-    alignItems: 'center',
+    flexDirection: 'column',
     justifyContent: 'center',
+    gap: '24px',
     '@media': {
       'screen and (min-width: 656px)': {
         marginLeft: '-320px',
@@ -54,8 +54,8 @@ export const successModal = style([
 export const uniLogo = style([
   sprinkles({
     position: 'absolute',
-    left: '32',
-    right: '40',
+    left: { sm: '12', md: '32' },
+    top: { sm: '16', md: '20' },
   }),
 ])
 
@@ -142,7 +142,7 @@ export const successAssetsContainer = style([
 
 export const successAssetImage = style([
   sprinkles({
-    borderRadius: '20',
+    borderRadius: '12',
     flexShrink: '0',
   }),
   {
@@ -171,7 +171,7 @@ export const overflowFade = style({
 export const totalEthCost = style([
   sprinkles({
     fontSize: '14',
-    color: 'textPrimary',
+    color: 'textSecondary',
     marginTop: '1',
     marginBottom: '0',
   }),
@@ -353,7 +353,7 @@ export const returnButton = style([
     fontWeight: 'bold',
     fontSize: '14',
     color: 'explicitWhite',
-    backgroundColor: 'genieBlue',
+    backgroundColor: 'accentAction',
     display: 'flex',
     alignItems: 'center',
     marginLeft: 'auto',
@@ -391,7 +391,6 @@ export const bodySmall = style([
 
 export const allUnavailableAssets = style([
   sprinkles({
-    height: 'full',
     width: 'full',
   }),
   {

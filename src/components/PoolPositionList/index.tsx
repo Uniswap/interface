@@ -60,7 +60,7 @@ type PoolPositionListProps = React.PropsWithChildren<{
   filterByHolder?: string
 }>
 
-export default function PoolPositionList({ positions, filterByOperator, filterByHolder }: PoolPositionListProps) {
+export default function PoolPositionList({ positions, filterByOperator }: PoolPositionListProps) {
   const { account, chainId } = useWeb3React()
   // TODO: we should merge this part with same part in swap page and move to a custom hook
   const poolAddresses = positions.map((p) => p.pool)

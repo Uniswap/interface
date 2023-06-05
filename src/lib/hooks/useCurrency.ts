@@ -2,7 +2,7 @@ import { arrayify } from '@ethersproject/bytes'
 import { parseBytes32String } from '@ethersproject/strings'
 import { Currency, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { isSupportedChain } from 'constants/chains'
+import { isSupportedChain, SupportedChainId } from 'constants/chains'
 import { useBytes32TokenContract, useTokenContract } from 'hooks/useContract'
 import { NEVER_RELOAD, useSingleCallResult } from 'lib/hooks/multicall'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
@@ -26,7 +26,7 @@ function parseStringOrBytes32(str: string | undefined, bytes32: string | undefin
 }
 
 export const UNKNOWN_TOKEN_SYMBOL = 'UNKNOWN'
-export const UNKNOWN_TOKEN_NAME = 'Unknown Token'
+const UNKNOWN_TOKEN_NAME = 'Unknown Token'
 
 /**
  * Returns a Token from the tokenAddress.
@@ -40,6 +40,7 @@ export function useTokenFromActiveNetwork(tokenAddress: string | undefined): Tok
   const tokenContract = useTokenContract(formattedAddress ? formattedAddress : undefined, false)
   const tokenContractBytes32 = useBytes32TokenContract(formattedAddress ? formattedAddress : undefined, false)
 
+  // TODO (WEB-3009): reduce this to one RPC call instead of 5
   // TODO: Fix redux-multicall so that these values do not reload.
   const tokenName = useSingleCallResult(tokenContract, 'name', undefined, NEVER_RELOAD)
   const tokenNameBytes32 = useSingleCallResult(tokenContractBytes32, 'name', undefined, NEVER_RELOAD)
@@ -91,9 +92,12 @@ export function useTokenFromMapOrNetwork(tokens: TokenMap, tokenAddress?: string
  * Returns null if currency is loading or null was passed.
  * Returns undefined if currencyId is invalid or token does not exist.
  */
-export function useCurrencyFromMap(tokens: TokenMap, currencyId?: string | null): Currency | null | undefined {
-  const nativeCurrency = useNativeCurrency()
-  const { chainId } = useWeb3React()
+export function useCurrencyFromMap(
+  tokens: TokenMap,
+  chainId: SupportedChainId | undefined,
+  currencyId?: string | null
+): Currency | null | undefined {
+  const nativeCurrency = useNativeCurrency(chainId)
   const isNative = Boolean(nativeCurrency && currencyId?.toUpperCase() === 'ETH')
   const shorthandMatchAddress = useMemo(() => {
     const chain = supportedChainId(chainId)
@@ -107,6 +111,5 @@ export function useCurrencyFromMap(tokens: TokenMap, currencyId?: string | null)
   // this case so we use our builtin wrapped token instead of wrapped tokens on token lists
   const wrappedNative = nativeCurrency?.wrapped
   if (wrappedNative?.address?.toUpperCase() === currencyId?.toUpperCase()) return wrappedNative
-
   return isNative ? nativeCurrency : token
 }

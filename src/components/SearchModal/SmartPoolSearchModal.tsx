@@ -20,7 +20,7 @@ interface SmartPoolSearchModalProps {
   disableNonToken?: boolean
 }
 
-export enum PoolModalView {
+enum PoolModalView {
   search,
   importToken,
   tokenSafety,

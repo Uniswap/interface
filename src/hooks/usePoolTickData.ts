@@ -3,7 +3,9 @@ import { FeeAmount, nearestUsableTick, Pool, TICK_SPACINGS, tickToPrice } from '
 import { useWeb3React } from '@web3-react/core'
 import { SupportedChainId } from 'constants/chains'
 import { ZERO_ADDRESS } from 'constants/misc'
-import useAllV3TicksQuery, { TickData } from 'graphql/thegraph/AllV3TicksQuery'
+import { useAllV3TicksQuery } from 'graphql/thegraph/__generated__/types-and-hooks'
+import { TickData, Ticks } from 'graphql/thegraph/AllV3TicksQuery'
+import { apolloClient } from 'graphql/thegraph/apollo'
 import JSBI from 'jsbi'
 import { useSingleContractMultipleData } from 'lib/hooks/multicall'
 import ms from 'ms.macro'
@@ -15,7 +17,7 @@ import { useTickLens } from './useContract'
 import { PoolState, usePool } from './usePools'
 
 const PRICE_FIXED_DIGITS = 8
-const CHAIN_IDS_MISSING_SUBGRAPH_DATA = [SupportedChainId.ARBITRUM_ONE, SupportedChainId.ARBITRUM_RINKEBY]
+const CHAIN_IDS_MISSING_SUBGRAPH_DATA = [SupportedChainId.ARBITRUM_ONE, SupportedChainId.ARBITRUM_GOERLI]
 
 // Tick with fields parsed to JSBIs, and active liquidity computed.
 export interface TickProcessed {
@@ -140,7 +142,8 @@ function useTicksFromTickLens(
 function useTicksFromSubgraph(
   currencyA: Currency | undefined,
   currencyB: Currency | undefined,
-  feeAmount: FeeAmount | undefined
+  feeAmount: FeeAmount | undefined,
+  skip = 0
 ) {
   const { chainId } = useWeb3React()
   const poolAddress =
@@ -154,9 +157,15 @@ function useTicksFromSubgraph(
         )
       : undefined
 
-  return useAllV3TicksQuery(poolAddress, 0, ms`30s`)
+  return useAllV3TicksQuery({
+    variables: { poolAddress: poolAddress?.toLowerCase(), skip },
+    skip: !poolAddress,
+    pollInterval: ms`30s`,
+    client: apolloClient,
+  })
 }
 
+const MAX_THE_GRAPH_TICK_FETCH_VALUE = 1000
 // Fetches all ticks for a given pool
 function useAllV3Ticks(
   currencyA: Currency | undefined,
@@ -165,17 +174,35 @@ function useAllV3Ticks(
 ): {
   isLoading: boolean
   error: unknown
-  ticks: readonly TickData[] | undefined
+  ticks?: TickData[]
 } {
   const useSubgraph = currencyA ? !CHAIN_IDS_MISSING_SUBGRAPH_DATA.includes(currencyA.chainId) : true
 
   const tickLensTickData = useTicksFromTickLens(!useSubgraph ? currencyA : undefined, currencyB, feeAmount)
-  const subgraphTickData = useTicksFromSubgraph(useSubgraph ? currencyA : undefined, currencyB, feeAmount)
+
+  const [skipNumber, setSkipNumber] = useState(0)
+  const [subgraphTickData, setSubgraphTickData] = useState<Ticks>([])
+  const {
+    data,
+    error,
+    loading: isLoading,
+  } = useTicksFromSubgraph(useSubgraph ? currencyA : undefined, currencyB, feeAmount, skipNumber)
+
+  useEffect(() => {
+    if (data?.ticks.length) {
+      setSubgraphTickData((tickData) => [...tickData, ...data.ticks])
+      if (data.ticks.length === MAX_THE_GRAPH_TICK_FETCH_VALUE) {
+        setSkipNumber((skipNumber) => skipNumber + MAX_THE_GRAPH_TICK_FETCH_VALUE)
+      }
+    }
+  }, [data?.ticks])
 
   return {
-    isLoading: useSubgraph ? subgraphTickData.isLoading : tickLensTickData.isLoading,
-    error: useSubgraph ? subgraphTickData.error : tickLensTickData.isError,
-    ticks: useSubgraph ? subgraphTickData.data?.ticks : tickLensTickData.tickData,
+    isLoading: useSubgraph
+      ? isLoading || data?.ticks.length === MAX_THE_GRAPH_TICK_FETCH_VALUE
+      : tickLensTickData.isLoading,
+    error: useSubgraph ? error : tickLensTickData.isError,
+    ticks: useSubgraph ? subgraphTickData : tickLensTickData.tickData,
   }
 }
 
@@ -186,8 +213,8 @@ export function usePoolActiveLiquidity(
 ): {
   isLoading: boolean
   error: any
-  activeTick: number | undefined
-  data: TickProcessed[] | undefined
+  activeTick?: number
+  data?: TickProcessed[]
 } {
   const pool = usePool(currencyA, currencyB, feeAmount)
 

@@ -6,6 +6,7 @@ import reducer, {
   ApplicationState,
   removePopup,
   setOpenModal,
+  setSmartPoolValue,
   updateChainId,
 } from './reducer'
 
@@ -14,8 +15,10 @@ describe('application reducer', () => {
 
   beforeEach(() => {
     store = createStore(reducer, {
+      fiatOnramp: { available: false, availabilityChecked: false },
       chainId: null,
       openModal: null,
+      smartPool: { address: null, name: '' },
       popupList: [],
     })
   })
@@ -28,7 +31,7 @@ describe('application reducer', () => {
       expect(typeof list[0].key).toEqual('string')
       expect(list[0].show).toEqual(true)
       expect(list[0].content).toEqual({ txn: { hash: 'abc' } })
-      expect(list[0].removeAfterMs).toEqual(25000)
+      expect(list[0].removeAfterMs).toEqual(10000)
     })
 
     it('replaces any existing popups with the same key', () => {
@@ -39,7 +42,7 @@ describe('application reducer', () => {
       expect(list[0].key).toEqual('abc')
       expect(list[0].show).toEqual(true)
       expect(list[0].content).toEqual({ txn: { hash: 'def' } })
-      expect(list[0].removeAfterMs).toEqual(25000)
+      expect(list[0].removeAfterMs).toEqual(10000)
     })
   })
 
@@ -63,6 +66,18 @@ describe('application reducer', () => {
       store.dispatch(updateChainId({ chainId: 1 }))
 
       expect(store.getState().chainId).toEqual(1)
+    })
+  })
+
+  describe('setSmartPoolValue', () => {
+    it('sets smart pool address and name', () => {
+      expect(store.getState().smartPool.address).toEqual(null)
+      expect(store.getState().smartPool.name).toEqual('')
+
+      store.dispatch(setSmartPoolValue({ smartPool: { address: '0x01', name: 'a' } }))
+
+      expect(store.getState().smartPool.address).toEqual('0x01')
+      expect(store.getState().smartPool.name).toEqual('a')
     })
   })
 

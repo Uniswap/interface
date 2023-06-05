@@ -1,13 +1,12 @@
 import { parse } from 'qs'
 import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
-import { useAppDispatch } from 'state/hooks'
 
-import { updateUserDarkMode } from '../../state/user/reducer'
+import { ThemeMode, useDarkModeManager } from './ThemeToggle'
 
 export default function DarkModeQueryParamReader(): null {
   const { search } = useLocation()
-  const dispatch = useAppDispatch()
+  const [, updateMode] = useDarkModeManager()
 
   useEffect(() => {
     if (!search) return
@@ -23,11 +22,11 @@ export default function DarkModeQueryParamReader(): null {
     if (typeof theme !== 'string') return
 
     if (theme.toLowerCase() === 'light') {
-      dispatch(updateUserDarkMode({ userDarkMode: false }))
+      updateMode(ThemeMode.LIGHT)
     } else if (theme.toLowerCase() === 'dark') {
-      dispatch(updateUserDarkMode({ userDarkMode: true }))
+      updateMode(ThemeMode.DARK)
     }
-  }, [dispatch, search])
+  }, [search, updateMode])
 
   return null
 }

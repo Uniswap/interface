@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { Trace } from '@uniswap/analytics'
-import { PageName } from '@uniswap/analytics-events'
+import { InterfacePageName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import JSBI from 'jsbi'
@@ -97,14 +97,14 @@ export default function PoolFinder() {
   )
 
   return (
-    <Trace page={PageName.POOL_PAGE} shouldLogImpression>
+    <Trace page={InterfacePageName.POOL_PAGE} shouldLogImpression>
       <>
         <AppBody>
-          <FindPoolTabs origin={query.get('origin') ?? '/pool/v2'} />
+          <FindPoolTabs origin={query.get('origin') ?? '/pools'} />
           <AutoColumn style={{ padding: '1rem' }} gap="md">
             <BlueCard>
               <AutoColumn gap="10px">
-                <ThemedText.DeprecatedLink fontWeight={400} color="deprecated_primaryText1">
+                <ThemedText.DeprecatedLink fontWeight={400} color="accentAction">
                   <Trans>
                     <b>Tip:</b> Use this tool to find v2 pools that don&apos;t automatically appear in the interface.
                   </Trans>
@@ -162,7 +162,7 @@ export default function PoolFinder() {
                 <Text textAlign="center" fontWeight={500}>
                   <Trans>Pool Found!</Trans>
                 </Text>
-                <StyledInternalLink to="/pool/v2">
+                <StyledInternalLink to="pools/v2">
                   <Text textAlign="center">
                     <Trans>Manage this pool.</Trans>
                   </Text>

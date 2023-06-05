@@ -1,26 +1,31 @@
-import { initializeAnalytics, OriginApplication, sendAnalyticsEvent, Trace, user } from '@uniswap/analytics'
-import { CustomUserProperties, EventName, getBrowser, PageName } from '@uniswap/analytics-events'
-import Loader from 'components/Loader'
+import { getDeviceId, sendAnalyticsEvent, Trace, user } from '@uniswap/analytics'
+import { CustomUserProperties, getBrowser, SharedEventName } from '@uniswap/analytics-events'
+import { useWeb3React } from '@web3-react/core'
+import Loader from 'components/Icons/LoadingSpinner'
 import TopLevelModals from 'components/TopLevelModals'
 import { useFeatureFlagsIsLoaded } from 'featureFlags'
-import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
-import { CollectionPageSkeleton } from 'nft/components/collection/CollectionPageSkeleton'
-import { AssetDetailsLoading } from 'nft/components/details/AssetDetailsLoading'
-import { ProfilePageLoadingSkeleton } from 'nft/components/profile/view/ProfilePageLoadingSkeleton'
-import { lazy, Suspense, useEffect, useState } from 'react'
-import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
-import { useIsDarkMode } from 'state/user/hooks'
+import { useAtom } from 'jotai'
+import { useBag } from 'nft/hooks/useBag'
+import { lazy, Suspense, useEffect, useMemo, useState } from 'react'
+import { Navigate, Route, Routes, useLocation, useSearchParams } from 'react-router-dom'
+import { shouldDisableNFTRoutesAtom } from 'state/application/atoms'
+import { StatsigProvider, StatsigUser } from 'statsig-react'
 import styled from 'styled-components/macro'
 import { SpinnerSVG } from 'theme/components'
+import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { flexRowNoWrap } from 'theme/styles'
 import { Z_INDEX } from 'theme/zIndex'
-import { isProductionEnv } from 'utils/env'
+import { STATSIG_DUMMY_KEY } from 'tracing'
+import { getEnvName } from 'utils/env'
+import { retry } from 'utils/retry'
+import { getCurrentPageFromLocation } from 'utils/urlRoutes'
 import { getCLS, getFCP, getFID, getLCP, Metric } from 'web-vitals'
 
 import { useAnalyticsReporter } from '../components/analytics'
 import ErrorBoundary from '../components/ErrorBoundary'
 import MendableSearch from '../components/MendableSearch'
+import { PageTabs } from '../components/NavBar'
 import NavBar from '../components/NavBar'
 import Polling from '../components/Polling'
 import Popups from '../components/Popups'
@@ -31,99 +36,67 @@ import { RedirectDuplicateTokenIds } from './AddLiquidity/redirects'
 import { RedirectDuplicateTokenIdsV2 } from './AddLiquidityV2/redirects'
 import CreatePool from './CreatePool'
 import { PoolPositionPage } from './CreatePool/PoolPositionPage'
-import Earn from './Earn'
-import Manage from './Earn/Manage'
+//import Landing from './Landing'
 import MigrateV2 from './MigrateV2'
 import MigrateV2Pair from './MigrateV2/MigrateV2Pair'
+import NotFound from './NotFound'
 import Pool from './Pool'
-import { PositionPage } from './Pool/PositionPage'
+import PositionPage from './Pool/PositionPage'
 import PoolV2 from './Pool/v2'
 import PoolFinder from './PoolFinder'
 import RemoveLiquidity from './RemoveLiquidity'
 import RemoveLiquidityV3 from './RemoveLiquidity/V3'
 import Stake from './Stake'
 import Swap from './Swap'
-import { OpenClaimAddressModalAndRedirectToSwap, RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
+import { RedirectPathToSwapOnly } from './Swap/redirects'
 import Tokens from './Tokens'
 
-const TokenDetails = lazy(() => import('./TokenDetails'))
-const Vote = lazy(() => import('./Vote'))
-const NftExplore = lazy(() => import('nft/pages/explore'))
-const Collection = lazy(() => import('nft/pages/collection'))
-const Profile = lazy(() => import('nft/pages/profile/profile'))
-const Asset = lazy(() => import('nft/pages/asset/Asset'))
-
-// Placeholder API key. Actual API key used in the proxy server
-const ANALYTICS_DUMMY_KEY = '00000000000000000000000000000000'
-const ANALYTICS_PROXY_URL = process.env.REACT_APP_AMPLITUDE_PROXY_URL
-const COMMIT_HASH = process.env.REACT_APP_GIT_COMMIT_HASH
-initializeAnalytics(ANALYTICS_DUMMY_KEY, OriginApplication.INTERFACE, {
-  proxyUrl: ANALYTICS_PROXY_URL,
-  defaultEventName: EventName.PAGE_VIEWED,
-  commitHash: COMMIT_HASH,
-  isProductionEnv: isProductionEnv(),
-})
-
-const AppWrapper = styled.div`
-  display: flex;
-  flex-flow: column;
-  align-items: flex-start;
-`
+const TokenDetails = lazy(() => retry(() => import('./TokenDetails')))
+const Vote = lazy(() => retry(() => import('./Vote')))
+const NftExplore = lazy(() => retry(() => import('nft/pages/explore')))
+const Collection = lazy(() => retry(() => import('nft/pages/collection')))
+const Profile = lazy(() => retry(() => import('nft/pages/profile/profile')))
+const Asset = lazy(() => retry(() => import('nft/pages/asset/Asset')))
 
 const BodyWrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  padding: 72px 0px 0px 0px;
+  min-height: 100vh;
+  padding: ${({ theme }) => theme.navHeight}px 0px 5rem 0px;
   align-items: center;
   flex: 1;
-  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
-    padding: 52px 0px 16px 0px;
-  `};
 `
 
-const HeaderWrapper = styled.div<{ scrolledState?: boolean }>`
+const MobileBottomBar = styled.div`
+  z-index: ${Z_INDEX.sticky};
+  position: fixed;
+  display: flex;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  width: 100vw;
+  justify-content: space-between;
+  padding: 4px 8px;
+  height: ${({ theme }) => theme.mobileBottomBarHeight}px;
+  background: ${({ theme }) => theme.backgroundSurface};
+  border-top: 1px solid ${({ theme }) => theme.backgroundOutline};
+
+  @media screen and (min-width: ${({ theme }) => theme.breakpoint.md}px) {
+    display: none;
+  }
+`
+
+const HeaderWrapper = styled.div<{ transparent?: boolean }>`
   ${flexRowNoWrap};
-  background-color: ${({ theme, scrolledState }) => scrolledState && theme.backgroundSurface};
-  border-bottom: ${({ theme, scrolledState }) => scrolledState && `1px solid ${theme.backgroundOutline}`};
+  background-color: ${({ theme, transparent }) => !transparent && theme.backgroundSurface};
+  border-bottom: ${({ theme, transparent }) => !transparent && `1px solid ${theme.backgroundOutline}`};
   width: 100%;
   justify-content: space-between;
   position: fixed;
-  transition: ${({ theme }) =>
-    `background-color ${theme.transition.duration.fast} ease-in-out,
-    border-width ${theme.transition.duration.fast} ease-in-out`};
   top: 0;
-  z-index: ${Z_INDEX.sticky};
+  z-index: ${Z_INDEX.dropdown};
 `
-
-const Marginer = styled.div`
-  margin-top: 5rem;
-`
-
-function getCurrentPageFromLocation(locationPathname: string): PageName | undefined {
-  switch (true) {
-    case locationPathname.startsWith('/mint'):
-      return PageName.TOKEN_DETAILS_PAGE
-    case locationPathname.startsWith('/swap'):
-      return PageName.SWAP_PAGE
-    case locationPathname.startsWith('/vote'):
-      return PageName.VOTE_PAGE
-    case locationPathname.startsWith('/pool'):
-      return PageName.POOL_PAGE
-    case locationPathname.startsWith('/tokens'):
-      return PageName.TOKENS_PAGE
-    case locationPathname.startsWith('/nfts/profile'):
-      return PageName.NFT_PROFILE_PAGE
-    case locationPathname.startsWith('/nfts/asset'):
-      return PageName.NFT_DETAILS_PAGE
-    case locationPathname.startsWith('/nfts/collection'):
-      return PageName.NFT_COLLECTION_PAGE
-    case locationPathname.startsWith('/nfts'):
-      return PageName.NFT_EXPLORE_PAGE
-    default:
-      return undefined
-  }
-}
 
 // this is the same svg defined in assets/images/blue-loader.svg
 // it is defined here because the remote asset may not have had time to load when this file is executing
@@ -141,7 +114,7 @@ const LazyLoadSpinner = () => (
 
 export default function App() {
   const isLoaded = useFeatureFlagsIsLoaded()
-  const nftFlag = useNftFlag()
+  const [shouldDisableNFTRoutes, setShouldDisableNFTRoutes] = useAtom(shouldDisableNFTRoutesAtom)
 
   const { pathname } = useLocation()
   const currentPage = getCurrentPageFromLocation(pathname)
@@ -151,29 +124,43 @@ export default function App() {
 
   useAnalyticsReporter()
 
-  const scrollListener = (e: Event) => {
-    if (window.scrollY > 0) {
-      setScrolledState(true)
-    } else {
-      setScrolledState(false)
-    }
-  }
-
   useEffect(() => {
     window.scrollTo(0, 0)
     setScrolledState(false)
   }, [pathname])
 
+  const [searchParams] = useSearchParams()
   useEffect(() => {
-    sendAnalyticsEvent(EventName.APP_LOADED)
+    if (searchParams.get('disableNFTs') === 'true') {
+      setShouldDisableNFTRoutes(true)
+    } else if (searchParams.get('disableNFTs') === 'false') {
+      setShouldDisableNFTRoutes(false)
+    }
+  }, [searchParams, setShouldDisableNFTRoutes])
+
+  useEffect(() => {
+    // User properties *must* be set before sending corresponding event properties,
+    // so that the event contains the correct and up-to-date user properties.
     user.set(CustomUserProperties.USER_AGENT, navigator.userAgent)
     user.set(CustomUserProperties.BROWSER, getBrowser())
     user.set(CustomUserProperties.SCREEN_RESOLUTION_HEIGHT, window.screen.height)
     user.set(CustomUserProperties.SCREEN_RESOLUTION_WIDTH, window.screen.width)
-    getCLS(({ delta }: Metric) => sendAnalyticsEvent(EventName.WEB_VITALS, { cumulative_layout_shift: delta }))
-    getFCP(({ delta }: Metric) => sendAnalyticsEvent(EventName.WEB_VITALS, { first_contentful_paint_ms: delta }))
-    getFID(({ delta }: Metric) => sendAnalyticsEvent(EventName.WEB_VITALS, { first_input_delay_ms: delta }))
-    getLCP(({ delta }: Metric) => sendAnalyticsEvent(EventName.WEB_VITALS, { largest_contentful_paint_ms: delta }))
+
+    // Service Worker analytics
+    const isServiceWorkerInstalled = Boolean(window.navigator.serviceWorker?.controller)
+    const isServiceWorkerHit = Boolean((window as any).__isDocumentCached)
+    const serviceWorkerProperty = isServiceWorkerInstalled ? (isServiceWorkerHit ? 'hit' : 'miss') : 'uninstalled'
+
+    const pageLoadProperties = { service_worker: serviceWorkerProperty }
+    sendAnalyticsEvent(SharedEventName.APP_LOADED, pageLoadProperties)
+    const sendWebVital =
+      (metric: string) =>
+      ({ delta }: Metric) =>
+        sendAnalyticsEvent(SharedEventName.WEB_VITALS, { ...pageLoadProperties, [metric]: delta })
+    getCLS(sendWebVital('cumulative_layout_shift'))
+    getFCP(sendWebVital('first_contentful_paint_ms'))
+    getFID(sendWebVital('first_input_delay_ms'))
+    getLCP(sendWebVital('largest_contentful_paint_ms'))
   }, [])
 
   useEffect(() => {
@@ -185,17 +172,42 @@ export default function App() {
   }, [isExpertMode])
 
   useEffect(() => {
+    const scrollListener = () => {
+      setScrolledState(window.scrollY > 0)
+    }
     window.addEventListener('scroll', scrollListener)
+    return () => window.removeEventListener('scroll', scrollListener)
   }, [])
+
+  const isBagExpanded = useBag((state) => state.bagExpanded)
+  const isHeaderTransparent = !scrolledState && !isBagExpanded
+
+  const { account } = useWeb3React()
+  const statsigUser: StatsigUser = useMemo(
+    () => ({
+      userID: getDeviceId(),
+      customIDs: { address: account ?? '' },
+    }),
+    [account]
+  )
 
   return (
     <ErrorBoundary>
       <DarkModeQueryParamReader />
       <ApeModeQueryParamReader />
-      <AppWrapper>
-        <Trace page={currentPage}>
-          <HeaderWrapper scrolledState={scrolledState}>
-            <NavBar />
+      <Trace page={currentPage}>
+        <StatsigProvider
+          user={statsigUser}
+          // TODO: replace with proxy and cycle key
+          sdkKey={STATSIG_DUMMY_KEY}
+          waitForInitialization={false}
+          options={{
+            environment: { tier: getEnvName() },
+            api: process.env.REACT_APP_STATSIG_PROXY_URL,
+          }}
+        >
+          <HeaderWrapper transparent={isHeaderTransparent}>
+            <NavBar blur={isHeaderTransparent} />
           </HeaderWrapper>
           <BodyWrapper>
             <Popups />
@@ -218,9 +230,6 @@ export default function App() {
                     }
                   />
                   <Route path="create-proposal" element={<Navigate to="/vote/create-proposal" replace />} />
-                  <Route path="claim" element={<OpenClaimAddressModalAndRedirectToSwap />} />
-                  <Route path="uni" element={<Earn />} />
-                  <Route path="uni/:currencyIdA/:currencyIdB" element={<Manage />} />
 
                   <Route path="mint" element={<CreatePool />} />
                   <Route path="smart-pool/:poolAddress" element={<PoolPositionPage />} />
@@ -229,13 +238,17 @@ export default function App() {
                   <Route path="stake" element={<Stake />} />
 
                   <Route path="send" element={<RedirectPathToSwapOnly />} />
-                  <Route path="swap/:outputCurrency" element={<RedirectToSwap />} />
                   <Route path="swap" element={<Swap />} />
 
                   <Route path="pool/v2/find" element={<PoolFinder />} />
                   <Route path="pool/v2" element={<PoolV2 />} />
                   <Route path="pool" element={<Pool />} />
                   <Route path="pool/:tokenId" element={<PositionPage />} />
+
+                  <Route path="pools/v2/find" element={<PoolFinder />} />
+                  <Route path="pools/v2" element={<PoolV2 />} />
+                  <Route path="pools" element={<Pool />} />
+                  <Route path="pools/:tokenId" element={<PositionPage />} />
 
                   <Route path="add/v2" element={<RedirectDuplicateTokenIdsV2 />}>
                     <Route path=":currencyIdA" />
@@ -263,52 +276,68 @@ export default function App() {
 
                   <Route path="*" element={<CreatePool />} />
 
-                  {nftFlag === NftVariant.Enabled && (
+                  {!shouldDisableNFTRoutes && (
                     <>
-                      <Route path="/nfts" element={<NftExplore />} />
+                      <Route
+                        path="/nfts"
+                        element={
+                          <Suspense fallback={null}>
+                            <NftExplore />
+                          </Suspense>
+                        }
+                      />
+
                       <Route
                         path="/nfts/asset/:contractAddress/:tokenId"
                         element={
-                          <Suspense fallback={<AssetDetailsLoading />}>
+                          <Suspense fallback={null}>
                             <Asset />
                           </Suspense>
                         }
                       />
+
                       <Route
                         path="/nfts/profile"
                         element={
-                          <Suspense fallback={<ProfilePageLoadingSkeleton />}>
+                          <Suspense fallback={null}>
                             <Profile />
                           </Suspense>
                         }
                       />
+
                       <Route
                         path="/nfts/collection/:contractAddress"
                         element={
-                          <Suspense fallback={<CollectionPageSkeleton />}>
+                          <Suspense fallback={null}>
                             <Collection />
                           </Suspense>
                         }
                       />
+
                       <Route
                         path="/nfts/collection/:contractAddress/activity"
                         element={
-                          <Suspense fallback={<CollectionPageSkeleton />}>
+                          <Suspense fallback={null}>
                             <Collection />
                           </Suspense>
                         }
                       />
                     </>
                   )}
+
+                  <Route path="*" element={<Navigate to="/not-found" replace />} />
+                  <Route path="/not-found" element={<NotFound />} />
                 </Routes>
               ) : (
                 <Loader />
               )}
             </Suspense>
-            <Marginer />
           </BodyWrapper>
-        </Trace>
-      </AppWrapper>
+          <MobileBottomBar>
+            <PageTabs />
+          </MobileBottomBar>
+        </StatsigProvider>
+      </Trace>
     </ErrorBoundary>
   )
 }

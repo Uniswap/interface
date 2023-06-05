@@ -1,0 +1,194 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AdvancedSwapDetails.tsx matches base snapshot 1`] = `
+<DocumentFragment>
+  .c2 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c3 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c4 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c8 {
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+}
+
+.c6 {
+  color: #7780A0;
+}
+
+.c7 {
+  color: #0D111C;
+}
+
+.c1 {
+  width: 100%;
+  height: 1px;
+  background-color: #D2D9EE;
+}
+
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 12px;
+}
+
+.c5 {
+  display: inline-block;
+  height: inherit;
+}
+
+<div
+    class="c0"
+  >
+    <div
+      class="c1"
+    />
+    <div
+      class="c2 c3 c4"
+    >
+      <div
+        class="c5"
+      >
+        <div>
+          <div
+            class="c6 css-zhpkf8"
+          >
+            Network fee
+          </div>
+        </div>
+      </div>
+      <div
+        class="c7 css-zhpkf8"
+      >
+        ~$1.00
+      </div>
+    </div>
+    <div
+      class="c2 c3 c4"
+    >
+      <div
+        class="c5"
+      >
+        <div>
+          <div
+            class="c6 css-zhpkf8"
+          >
+            Price Impact
+          </div>
+        </div>
+      </div>
+      <div
+        class="c7 css-zhpkf8"
+      >
+        105566.37%
+      </div>
+    </div>
+    <div
+      class="c2 c3 c4"
+    >
+      <div
+        class="c2 c3 c8"
+      >
+        <div
+          class="c5"
+        >
+          <div>
+            <div
+              class="c6 css-zhpkf8"
+            >
+              Minimum output
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="c7 css-zhpkf8"
+      >
+        0.00000000000000098 DEF
+      </div>
+    </div>
+    <div
+      class="c2 c3 c4"
+    >
+      <div
+        class="c2 c3 c8"
+      >
+        <div
+          class="c5"
+        >
+          <div>
+            <div
+              class="c6 css-zhpkf8"
+            >
+              Expected output
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="c7 css-zhpkf8"
+      >
+        0.000000000000001 DEF
+      </div>
+    </div>
+    <div
+      class="c1"
+    />
+    <div
+      class="c2 c3 c4"
+    >
+      <div
+        class="c6 css-zhpkf8"
+      >
+        Order routing
+      </div>
+      <div
+        class="c5"
+      >
+        <div>
+          <div
+            class="c7 css-zhpkf8"
+          >
+            Uniswap API
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;

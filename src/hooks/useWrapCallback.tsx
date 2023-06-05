@@ -1,17 +1,16 @@
 import { Trans } from '@lingui/macro'
 import { sendAnalyticsEvent } from '@uniswap/analytics'
-import { EventName } from '@uniswap/analytics-events'
+import { InterfaceEventName } from '@uniswap/analytics-events'
 import { Currency } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { formatToDecimal, getTokenAddress } from 'lib/utils/analytics'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useMemo, useState } from 'react'
+import { useActiveSmartPool } from 'state/application/hooks'
 
 import { WRAPPED_NATIVE_CURRENCY } from '../constants/tokens'
-import useENS from '../hooks/useENS'
 import { useCurrencyBalance } from '../state/connection/hooks'
-import { useSwapState } from '../state/swap/hooks'
 import { useTransactionAdder } from '../state/transactions/hooks'
 import { TransactionType } from '../state/transactions/types'
 import { usePoolContract, useWETHContract } from './useContract'
@@ -33,7 +32,8 @@ enum WrapInputError {
 }
 
 export function WrapErrorText({ wrapInputError }: { wrapInputError: WrapInputError }) {
-  const native = useNativeCurrency()
+  const { chainId } = useWeb3React()
+  const native = useNativeCurrency(chainId)
   const wrapped = native?.wrapped
 
   switch (wrapInputError) {
@@ -61,16 +61,14 @@ export default function useWrapCallback(
   inputCurrency: Currency | undefined | null,
   outputCurrency: Currency | undefined | null,
   typedValue: string | undefined
-): { wrapType: WrapType; execute?: undefined | (() => Promise<void>); inputError?: WrapInputError } {
+): { wrapType: WrapType; execute?: () => Promise<void>; inputError?: WrapInputError } {
   const { chainId } = useWeb3React()
   const wethContract = useWETHContract()
 
-  const { recipient } = useSwapState()
-  const recipientLookup = useENS(recipient ?? undefined)
-  const poolAddress = recipientLookup.address
-  const poolContract = usePoolContract(poolAddress ?? undefined)
+  const { address: smartPoolAddress } = useActiveSmartPool()
+  const poolContract = usePoolContract(smartPoolAddress ?? undefined)
 
-  const balance = useCurrencyBalance(poolAddress ?? undefined, inputCurrency ?? undefined)
+  const balance = useCurrencyBalance(smartPoolAddress ?? undefined, inputCurrency ?? undefined)
   // we can always parse the amount typed as the input currency, since wrapping is 1:1
   const inputAmount = useMemo(
     () => tryParseCurrencyAmount(typedValue, inputCurrency ?? undefined),
@@ -112,7 +110,7 @@ export default function useWrapCallback(
                     network.chainId !== chainId ||
                     wethContract.address !== WRAPPED_NATIVE_CURRENCY[network.chainId]?.address
                   ) {
-                    sendAnalyticsEvent(EventName.WRAP_TOKEN_TXN_INVALIDATED, {
+                    sendAnalyticsEvent(InterfaceEventName.WRAP_TOKEN_TXN_INVALIDATED, {
                       ...eventProperties,
                       contract_address: wethContract.address,
                       contract_chain_id: network.chainId,
@@ -130,7 +128,10 @@ Please file a bug detailing how this happened - https://github.com/Uniswap/inter
                     currencyAmountRaw: inputAmount?.quotient.toString(),
                     chainId,
                   })
-                  sendAnalyticsEvent(EventName.WRAP_TOKEN_TXN_SUBMITTED, { ...eventProperties, type: WrapType.WRAP })
+                  sendAnalyticsEvent(InterfaceEventName.WRAP_TOKEN_TXN_SUBMITTED, {
+                    ...eventProperties,
+                    type: WrapType.WRAP,
+                  })
                 } catch (error) {
                   console.error('Could not deposit', error)
                 }
@@ -156,7 +157,10 @@ Please file a bug detailing how this happened - https://github.com/Uniswap/inter
                     currencyAmountRaw: inputAmount?.quotient.toString(),
                     chainId,
                   })
-                  sendAnalyticsEvent(EventName.WRAP_TOKEN_TXN_SUBMITTED, { ...eventProperties, type: WrapType.UNWRAP })
+                  sendAnalyticsEvent(InterfaceEventName.WRAP_TOKEN_TXN_SUBMITTED, {
+                    ...eventProperties,
+                    type: WrapType.UNWRAP,
+                  })
                 } catch (error) {
                   console.error('Could not withdraw', error)
                 }

@@ -20,7 +20,7 @@ import { Dots } from '../../components/swap/styleds'
 import { V2_FACTORY_ADDRESSES } from '../../constants/addresses'
 import { useTokenBalancesWithLoadingIndicator } from '../../state/connection/hooks'
 import { toV2LiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks'
-import { BackArrow, StyledInternalLink, ThemedText } from '../../theme'
+import { BackArrowLink, StyledInternalLink, ThemedText } from '../../theme'
 import { BodyWrapper } from '../AppBody'
 
 function EmptyState({ message }: { message: ReactNode }) {
@@ -116,7 +116,7 @@ export default function MigrateV2() {
       <BodyWrapper style={{ padding: 24 }}>
         <AutoColumn gap="16px">
           <AutoRow style={{ alignItems: 'center', justifyContent: 'space-between' }} gap="8px">
-            <BackArrow to="/pool/v2" />
+            <BackArrowLink to="/pools" />
             <ThemedText.DeprecatedMediumHeader>
               <Trans>Migrate V2 Liquidity</Trans>
             </ThemedText.DeprecatedMediumHeader>
@@ -134,13 +134,13 @@ export default function MigrateV2() {
 
           {!account ? (
             <LightCard padding="40px">
-              <ThemedText.DeprecatedBody color={theme.deprecated_text3} textAlign="center">
+              <ThemedText.DeprecatedBody color={theme.textTertiary} textAlign="center">
                 <Trans>Connect to a wallet to view your V2 liquidity.</Trans>
               </ThemedText.DeprecatedBody>
             </LightCard>
           ) : v2IsLoading ? (
             <LightCard padding="40px">
-              <ThemedText.DeprecatedBody color={theme.deprecated_text3} textAlign="center">
+              <ThemedText.DeprecatedBody color={theme.textTertiary} textAlign="center">
                 <Dots>
                   <Trans>Loading</Trans>
                 </Dots>
@@ -173,7 +173,7 @@ export default function MigrateV2() {
             <Text textAlign="center" fontSize={14} style={{ padding: '.5rem 0 .5rem 0' }}>
               <Trans>
                 Don’t see one of your v2 positions?{' '}
-                <StyledInternalLink id="import-pool-link" to="/find?origin=/migrate/v2">
+                <StyledInternalLink id="import-pool-link" to="/pools/v2/find">
                   Import it.
                 </StyledInternalLink>
               </Trans>

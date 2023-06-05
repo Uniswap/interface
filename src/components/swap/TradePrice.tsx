@@ -1,16 +1,15 @@
 import { Trans } from '@lingui/macro'
+import { formatNumber, NumberType } from '@uniswap/conedison/format'
 import { Currency, Price } from '@uniswap/sdk-core'
-import useStablecoinPrice from 'hooks/useStablecoinPrice'
-import { useCallback } from 'react'
-import { Text } from 'rebass'
-import styled, { useTheme } from 'styled-components/macro'
+import { useUSDPrice } from 'hooks/useUSDPrice'
+import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
+import { useCallback, useState } from 'react'
+import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
-import { formatDollar, formatTransactionAmount, priceToPreciseFloat } from 'utils/formatNumbers'
+import { formatTransactionAmount, priceToPreciseFloat } from 'utils/formatNumbers'
 
 interface TradePriceProps {
   price: Price<Currency, Currency>
-  showInverted: boolean
-  setShowInverted: (showInverted: boolean) => void
 }
 
 const StyledPriceContainer = styled.button`
@@ -26,14 +25,14 @@ const StyledPriceContainer = styled.button`
   flex-direction: row;
   text-align: left;
   flex-wrap: wrap;
-  padding: 8px 0;
   user-select: text;
 `
 
-export default function TradePrice({ price, showInverted, setShowInverted }: TradePriceProps) {
-  const theme = useTheme()
+export default function TradePrice({ price }: TradePriceProps) {
+  const [showInverted, setShowInverted] = useState<boolean>(false)
 
-  const usdcPrice = useStablecoinPrice(showInverted ? price.baseCurrency : price.quoteCurrency)
+  const { baseCurrency, quoteCurrency } = price
+  const { data: usdPrice } = useUSDPrice(tryParseCurrencyAmount('1', showInverted ? baseCurrency : quoteCurrency))
 
   let formattedPrice: string
   try {
@@ -58,13 +57,11 @@ export default function TradePrice({ price, showInverted, setShowInverted }: Tra
       }}
       title={text}
     >
-      <Text fontWeight={500} color={theme.deprecated_text1}>
-        {text}
-      </Text>{' '}
-      {usdcPrice && (
-        <ThemedText.DeprecatedDarkGray>
-          <Trans>({formatDollar({ num: priceToPreciseFloat(usdcPrice) })})</Trans>
-        </ThemedText.DeprecatedDarkGray>
+      <ThemedText.BodySmall>{text}</ThemedText.BodySmall>{' '}
+      {usdPrice && (
+        <ThemedText.BodySmall color="textSecondary">
+          <Trans>({formatNumber(usdPrice, NumberType.FiatTokenPrice)})</Trans>
+        </ThemedText.BodySmall>
       )}
     </StyledPriceContainer>
   )

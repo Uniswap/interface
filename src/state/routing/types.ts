@@ -8,12 +8,11 @@ export enum TradeState {
   INVALID,
   NO_ROUTE_FOUND,
   VALID,
-  SYNCING,
 }
 
 // from https://github.com/Uniswap/routing-api/blob/main/lib/handlers/schema.ts
 
-export type TokenInRoute = Pick<Token, 'address' | 'chainId' | 'symbol' | 'decimals'>
+type TokenInRoute = Pick<Token, 'address' | 'chainId' | 'symbol' | 'decimals'>
 
 export type V3PoolInRoute = {
   type: 'v3-pool'
@@ -30,7 +29,7 @@ export type V3PoolInRoute = {
   address?: string
 }
 
-export type V2Reserve = {
+type V2Reserve = {
   token: TokenInRoute
   quotient: string
 }
@@ -49,7 +48,7 @@ export type V2PoolInRoute = {
   address?: string
 }
 
-export interface GetQuoteResult {
+export interface QuoteData {
   quoteId?: string
   blockNumber: string
   amount: string
@@ -68,12 +67,12 @@ export interface GetQuoteResult {
   routeString: string
 }
 
-export class InterfaceTrade<
+export class ClassicTrade<
   TInput extends Currency,
   TOutput extends Currency,
   TTradeType extends TradeType
 > extends Trade<TInput, TOutput, TTradeType> {
-  gasUseEstimateUSD: CurrencyAmount<Token> | null | undefined
+  gasUseEstimateUSD: string | null | undefined
   blockNumber: string | null | undefined
 
   constructor({
@@ -81,8 +80,8 @@ export class InterfaceTrade<
     blockNumber,
     ...routes
   }: {
-    gasUseEstimateUSD?: CurrencyAmount<Token> | undefined | null
-    blockNumber?: string | null | undefined
+    gasUseEstimateUSD?: string | null
+    blockNumber?: string | null
     v2Routes: {
       routev2: V2Route<TInput, TOutput>
       inputAmount: CurrencyAmount<TInput>
@@ -104,4 +103,43 @@ export class InterfaceTrade<
     this.blockNumber = blockNumber
     this.gasUseEstimateUSD = gasUseEstimateUSD
   }
+}
+
+export type InterfaceTrade = ClassicTrade<Currency, Currency, TradeType>
+
+export enum QuoteState {
+  SUCCESS = 'Success',
+  NOT_FOUND = 'Not found',
+}
+
+export type QuoteResult =
+  | {
+      state: QuoteState.NOT_FOUND
+      data?: undefined
+    }
+  | {
+      state: QuoteState.SUCCESS
+      data: QuoteData
+    }
+
+export type TradeResult =
+  | {
+      state: QuoteState.NOT_FOUND
+      trade?: undefined
+    }
+  | {
+      state: QuoteState.SUCCESS
+      trade: InterfaceTrade
+    }
+
+export enum PoolType {
+  V2Pool = 'v2-pool',
+  V3Pool = 'v3-pool',
+}
+
+// swap router API special cases these strings to represent native currencies
+// all chains have "ETH" as native currency symbol except for polygon
+export enum SwapRouterNativeAssets {
+  MATIC = 'MATIC',
+  ETH = 'ETH',
 }

@@ -2,8 +2,6 @@ import { getAddress } from '@ethersproject/address'
 import { AddressZero } from '@ethersproject/constants'
 import { Contract } from '@ethersproject/contracts'
 import type { JsonRpcProvider, JsonRpcSigner } from '@ethersproject/providers'
-import { Token } from '@uniswap/sdk-core'
-import { ChainTokenMap } from 'lib/hooks/useTokenList/utils'
 
 // returns the checksummed address if the address is valid, otherwise returns false
 export function isAddress(value: any): string | false {
@@ -46,8 +44,4 @@ export function getContract(address: string, ABI: any, provider: JsonRpcProvider
 
 export function escapeRegExp(string: string): string {
   return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') // $& means the whole matched string
-}
-
-export function isTokenOnList(chainTokenMap: ChainTokenMap, token?: Token): boolean {
-  return Boolean(token?.isToken && chainTokenMap[token.chainId]?.[token.address])
 }

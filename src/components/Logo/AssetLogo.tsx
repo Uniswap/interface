@@ -1,7 +1,8 @@
+import { getChainInfo } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
 import useTokenLogoSource from 'hooks/useAssetLogoSource'
 import React from 'react'
-import styled from 'styled-components/macro'
+import styled, { css } from 'styled-components/macro'
 
 export const MissingImageLogo = styled.div<{ size?: string }>`
   --size: ${({ size }) => size};
@@ -16,12 +17,17 @@ export const MissingImageLogo = styled.div<{ size?: string }>`
   width: ${({ size }) => size ?? '24px'};
 `
 
-const LogoImage = styled.img<{ size: string }>`
+export const LogoImage = styled.img<{ size: string; useBG?: boolean }>`
   width: ${({ size }) => size};
   height: ${({ size }) => size};
-  background: radial-gradient(white 60%, #ffffff00 calc(70% + 1px));
   border-radius: 50%;
-  box-shadow: 0 0 1px white;
+
+  ${({ useBG }) =>
+    useBG &&
+    css`
+      background: radial-gradient(white 60%, #ffffff00 calc(70% + 1px));
+      box-shadow: 0 0 1px white;
+    `}
 `
 
 export type AssetLogoBaseProps = {
@@ -29,10 +35,28 @@ export type AssetLogoBaseProps = {
   backupImg?: string | null
   size?: string
   style?: React.CSSProperties
+  hideL2Icon?: boolean
 }
 type AssetLogoProps = AssetLogoBaseProps & { isNative?: boolean; address?: string | null; chainId?: number }
 
-// TODO(cartcrom): add prop to optionally render an L2Icon w/ the logo
+const LogoContainer = styled.div`
+  position: relative;
+  display: flex;
+`
+
+const L2NetworkLogo = styled.div<{ networkUrl?: string; parentSize: string }>`
+  --size: ${({ parentSize }) => `calc(${parentSize} / 2)`};
+  width: var(--size);
+  height: var(--size);
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  background: url(${({ networkUrl }) => networkUrl});
+  background-repeat: no-repeat;
+  background-size: ${({ parentSize }) => `calc(${parentSize} / 2) calc(${parentSize} / 2)`};
+  display: ${({ networkUrl }) => !networkUrl && 'none'};
+`
+
 /**
  * Renders an image by prioritizing a list of sources, and then eventually a fallback triangle alert
  */
@@ -44,25 +68,27 @@ export default function AssetLogo({
   backupImg,
   size = '24px',
   style,
-  ...rest
+  hideL2Icon = false,
 }: AssetLogoProps) {
   const imageProps = {
     alt: `${symbol ?? 'token'} logo`,
     size,
-    style,
-    ...rest,
   }
 
   const [src, nextSrc] = useTokenLogoSource(address, chainId, isNative, backupImg)
+  const L2Icon = getChainInfo(chainId)?.circleLogoUrl
 
-  if (src) {
-    return <LogoImage {...imageProps} src={src} onError={nextSrc} />
-  } else {
-    return (
-      <MissingImageLogo size={size}>
-        {/* use only first 3 characters of Symbol for design reasons */}
-        {symbol?.toUpperCase().replace('$', '').replace(/\s+/g, '').slice(0, 3)}
-      </MissingImageLogo>
-    )
-  }
+  return (
+    <LogoContainer style={style}>
+      {src ? (
+        <LogoImage {...imageProps} src={src} onError={nextSrc} useBG={true} />
+      ) : (
+        <MissingImageLogo size={size}>
+          {/* use only first 3 characters of Symbol for design reasons */}
+          {symbol?.toUpperCase().replace('$', '').replace(/\s+/g, '').slice(0, 3)}
+        </MissingImageLogo>
+      )}
+      {!hideL2Icon && <L2NetworkLogo networkUrl={L2Icon} parentSize={size} />}
+    </LogoContainer>
+  )
 }

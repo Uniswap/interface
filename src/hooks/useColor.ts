@@ -37,10 +37,11 @@ async function getColorFromToken(token: Token): Promise<string | null> {
     try {
       logoURI = URIForEthToken(address)
       return await getColorFromUriPath(logoURI)
-    } catch (e) {}
+    } catch (error) {
+      console.warn(`Unable to load logoURI (${token.symbol}): ${logoURI}`)
+      return null
+    }
   }
-
-  return null
 }
 
 async function getColorFromUriPath(uri: string): Promise<string | null> {
@@ -86,29 +87,6 @@ export function useColor(token?: Token) {
       setColor('#2172E5')
     }
   }, [token])
-
-  return color
-}
-
-export function useListColor(listImageUri?: string) {
-  const [color, setColor] = useState('#2172E5')
-
-  useEffect(() => {
-    let stale = false
-
-    if (listImageUri) {
-      getColorFromUriPath(listImageUri).then((color) => {
-        if (!stale && color !== null) {
-          setColor(color)
-        }
-      })
-    }
-
-    return () => {
-      stale = true
-      setColor('#2172E5')
-    }
-  }, [listImageUri])
 
   return color
 }

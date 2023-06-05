@@ -1,8 +1,8 @@
-import { globalStyle, style } from '@vanilla-extract/css'
-import { bodySmall, headlineSmall, subheadSmall } from 'nft/css/common.css'
+import { style } from '@vanilla-extract/css'
+import { headlineSmall, subheadSmall } from 'nft/css/common.css'
 import { loadingAsset, loadingBlock } from 'nft/css/loading.css'
 
-import { breakpoints, sprinkles, themeVars, vars } from '../../css/sprinkles.css'
+import { breakpoints, sprinkles, vars } from '../../css/sprinkles.css'
 
 export const statsText = style([
   sprinkles({
@@ -44,66 +44,6 @@ export const collectionImage = style([
       },
     },
   },
-])
-
-export const nameText = sprinkles({
-  whiteSpace: 'nowrap',
-  overflow: 'hidden',
-  textOverflow: 'ellipsis',
-})
-
-export const description = style([
-  sprinkles({
-    fontSize: '14',
-    display: 'inline-block',
-  }),
-  {
-    maxWidth: 'min(calc(100% - 112px), 600px)',
-    verticalAlign: 'top',
-    lineHeight: '20px',
-  },
-])
-
-globalStyle(`${description} a[href]`, {
-  color: `${themeVars.colors.textSecondary}`,
-  textDecoration: 'none',
-})
-
-globalStyle(`${description} a[href]:hover`, {
-  color: `${themeVars.colors.textSecondary}`,
-  opacity: `${themeVars.opacity.hover}`,
-  textDecoration: 'none',
-})
-
-globalStyle(`${description} a[href]:focus`, {
-  color: `${themeVars.colors.textSecondary}`,
-  opacity: `${themeVars.opacity.pressed}`,
-  textDecoration: 'none',
-})
-
-export const descriptionOpen = style([
-  {
-    whiteSpace: 'normal',
-    verticalAlign: 'top',
-    lineHeight: '20px',
-  },
-  sprinkles({
-    overflow: 'visible',
-    display: 'inline',
-    maxWidth: 'full',
-  }),
-])
-
-export const readMore = style([
-  bodySmall,
-  {
-    verticalAlign: 'top',
-  },
-  sprinkles({
-    color: 'textSecondary',
-    cursor: 'pointer',
-    marginLeft: '4',
-  }),
 ])
 
 export const statsLabel = style([

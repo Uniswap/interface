@@ -15,7 +15,7 @@ const Circle = styled.circle`
   -webkit-animation: ${dash} linear;
   animation: ${dash} linear;
   animation-duration: 160s;
-  stroke: ${({ theme }) => theme.accentActive};
+  stroke: ${({ theme }) => theme.accentAction};
 `
 export const TimedLoader = () => {
   const stroke = 1.5

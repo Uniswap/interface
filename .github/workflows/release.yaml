@@ -1,7 +1,5 @@
 name: Release
 on:
-  schedule:
-    - cron: '0 12 * * 1-4' # every day 12:00 UTC Monday-Thursday
   # manual trigger
   workflow_dispatch:
 
@@ -42,10 +40,11 @@ jobs:
     needs: tag
     if: ${{ needs.tag.outputs.new_tag != null }}
     runs-on: ubuntu-latest
+    environment:
+        name: release
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
-      - run: yarn prepare
       - run: yarn build
 
       - name: Pin to IPFS
@@ -62,7 +61,7 @@ jobs:
         continue-on-error: true
         timeout-minutes: 2
         with:
-          cid: ${{ steps.upload.outputs.hash }}
+          cid: ${{ steps.pinata.outputs.hash }}
           seeds: ${{ secrets.CRUST_SEEDS }}
 
       - name: Convert CIDv0 to CIDv1
@@ -70,29 +69,6 @@ jobs:
         uses: uniswap/convert-cidv0-cidv1@v1.0.0
         with:
           cidv0: ${{ steps.pinata.outputs.hash }}
-
-      - uses: actions/cache@v3
-        id: cypress-cache
-        with:
-          path: /home/runner/.cache/Cypress
-          key: ${{ runner.os }}-cypress-${{ hashFiles('node_modules/cypress') }}
-      - if: steps.cypress-cache.outputs.cache-hit != 'true'
-        run: yarn cypress install
-      - uses: cypress-io/github-action@v4
-        with:
-          install: false
-          browser: chrome
-          config-file: cypress.release.config.ts
-          config: baseUrl=https://cloudflare-ipfs.com/ipfs/${{ steps.pinata.outputs.hash }}
-
-      - name: Update DNS with new IPFS hash
-        env:
-          CLOUDFLARE_TOKEN: ${{ secrets.CLOUDFLARE_TOKEN }}
-          CLOUDFLARE_ZONE_ID: ${{ secrets.CLOUDFLARE_ZONE_ID }}
-          CLOUDFLARE_GATEWAY_ID: ${{ secrets.CLOUDFLARE_GATEWAY_ID }}
-        uses: Uniswap/cloudflare-update-web3-gateway@b3205288b1c6d0acb63fa3bd8fb686c72a9e3f3e
-        with:
-          cid: ${{ steps.pinata.outputs.hash }}
 
       - name: Release
         uses: actions/create-release@v1.1.0
@@ -116,6 +92,32 @@ jobs:
             IPFS gateways:
             - https://${{ steps.convert-cidv0.outputs.cidv1 }}.ipfs.dweb.link/
             - https://${{ steps.convert-cidv0.outputs.cidv1 }}.ipfs.cf-ipfs.com/
-            - [ipfs://${{ steps.upload.outputs.hash }}/](ipfs://${{ steps.pinata.outputs.hash }}/)
+            - [ipfs://${{ steps.pinata.outputs.hash }}/](ipfs://${{ steps.pinata.outputs.hash }}/)
 
             ${{ needs.tag.outputs.changelog }}
+
+      - name: Setup node@16 (required by Cloudflare Pages)
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - name: Update Cloudflare Pages deployment
+        uses: cloudflare/pages-action@364c7ca09a4b57837c5967871d64a2c31adb8c0d
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          projectName: ${{ secrets.CLOUDFLARE_PROJECT_NAME }}
+          directory: build
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload source maps to Sentry
+        uses: getsentry/action-release@4744f6a65149f441c5f396d5b0877307c0db52c7
+        continue-on-error: true
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+        with:
+          environment: production
+          sourcemaps: './build/static/js'
+          url_prefix: '~/static/js'

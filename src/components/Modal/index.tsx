@@ -7,6 +7,8 @@ import { Z_INDEX } from 'theme/zIndex'
 
 import { isMobile } from '../../utils/userAgent'
 
+export const MODAL_TRANSITION_DURATION = 200
+
 const AnimatedDialogOverlay = animated(DialogOverlay)
 
 const StyledDialogOverlay = styled(AnimatedDialogOverlay)<{ $scrollOverlay?: boolean }>`
@@ -17,6 +19,9 @@ const StyledDialogOverlay = styled(AnimatedDialogOverlay)<{ $scrollOverlay?: boo
 
     display: flex;
     align-items: center;
+    @media screen and (max-width: ${({ theme }) => theme.breakpoint.sm}px) {
+      align-items: flex-end;
+    }
     overflow-y: ${({ $scrollOverlay }) => $scrollOverlay && 'scroll'};
     justify-content: center;
 
@@ -29,8 +34,7 @@ type StyledDialogProps = {
   $maxHeight?: number
   $scrollOverlay?: boolean
   $hideBorder?: boolean
-  $maxWidth?: number
-  $mobile?: boolean
+  $maxWidth: number
 }
 
 const AnimatedDialogContent = animated(DialogContent)
@@ -39,15 +43,13 @@ const StyledDialogContent = styled(AnimatedDialogContent)<StyledDialogProps>`
 
   &[data-reach-dialog-content] {
     margin: auto;
-    background-color: ${({ theme }) => theme.deprecated_bg0};
-    border: ${({ theme, $hideBorder }) => !$hideBorder && `1px solid ${theme.deprecated_bg1}`};
+    background-color: ${({ theme }) => theme.backgroundSurface};
+    border: ${({ theme, $hideBorder }) => !$hideBorder && `1px solid ${theme.backgroundOutline}`};
     box-shadow: ${({ theme }) => theme.deepShadow};
     padding: 0px;
     width: 50vw;
     overflow-y: auto;
     overflow-x: hidden;
-
-    align-self: ${({ $mobile }) => $mobile && 'flex-end'};
     max-width: ${({ $maxWidth }) => $maxWidth}px;
     ${({ $maxHeight }) =>
       $maxHeight &&
@@ -61,28 +63,25 @@ const StyledDialogContent = styled(AnimatedDialogContent)<StyledDialogProps>`
       `}
     display: ${({ $scrollOverlay }) => ($scrollOverlay ? 'inline-table' : 'flex')};
     border-radius: 20px;
-    ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
+
+    @media screen and (max-width: ${({ theme }) => theme.breakpoint.md}px) {
       width: 65vw;
-      margin: auto;
-    `}
-    ${({ theme, $mobile }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
-      width:  85vw;
-      ${
-        $mobile &&
-        css`
-          width: 100vw;
-          border-radius: 20px;
-          border-bottom-left-radius: 0;
-          border-bottom-right-radius: 0;
-        `
-      }
-    `}
+    }
+    @media screen and (max-width: ${({ theme }) => theme.breakpoint.sm}px) {
+      margin: 0;
+      width: 100vw;
+      border-radius: 20px;
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+    }
   }
 `
 
 interface ModalProps {
   isOpen: boolean
-  onDismiss: () => void
+  onDismiss?: () => void
+  onSwipe?: () => void
+  height?: number // takes precedence over minHeight and maxHeight
   minHeight?: number | false
   maxHeight?: number
   maxWidth?: number
@@ -98,13 +97,15 @@ export default function Modal({
   minHeight = false,
   maxHeight = 90,
   maxWidth = 420,
+  height,
   initialFocusRef,
   children,
+  onSwipe = onDismiss,
   $scrollOverlay,
   hideBorder = false,
 }: ModalProps) {
   const fadeTransition = useTransition(isOpen, {
-    config: { duration: 200 },
+    config: { duration: MODAL_TRANSITION_DURATION },
     from: { opacity: 0 },
     enter: { opacity: 1 },
     leave: { opacity: 0 },
@@ -117,7 +118,7 @@ export default function Modal({
         y: state.down ? state.movement[1] : 0,
       })
       if (state.movement[1] > 300 || (state.velocity > 3 && state.direction[1] > 0)) {
-        onDismiss()
+        onSwipe?.()
       }
     },
   })
@@ -128,7 +129,6 @@ export default function Modal({
         ({ opacity }, item) =>
           item && (
             <StyledDialogOverlay
-              as={AnimatedDialogOverlay}
               style={{ opacity: opacity.to({ range: [0.0, 1.0], output: [0, 1] }) }}
               onDismiss={onDismiss}
               initialFocusRef={initialFocusRef}
@@ -142,10 +142,9 @@ export default function Modal({
                       style: { transform: y.interpolate((y) => `translateY(${(y as number) > 0 ? y : 0}px)`) },
                     }
                   : {})}
-                aria-label="dialog content"
-                $minHeight={minHeight}
-                $maxHeight={maxHeight}
-                $mobile={isMobile}
+                aria-label="dialog"
+                $minHeight={height ?? minHeight}
+                $maxHeight={height ?? maxHeight}
                 $scrollOverlay={$scrollOverlay}
                 $hideBorder={hideBorder}
                 $maxWidth={maxWidth}

@@ -4,10 +4,10 @@ import styled from 'styled-components/macro'
 
 import { ChartEntry } from './types'
 
-const Path = styled.path<{ fill: string | undefined }>`
+const Path = styled.path<{ fill?: string }>`
   opacity: 0.5;
-  stroke: ${({ fill, theme }) => fill ?? theme.deprecated_blue2};
-  fill: ${({ fill, theme }) => fill ?? theme.deprecated_blue2};
+  stroke: ${({ fill, theme }) => fill ?? theme.accentAction};
+  fill: ${({ fill, theme }) => fill ?? theme.accentAction};
 `
 
 export const Area = ({
@@ -23,7 +23,7 @@ export const Area = ({
   yScale: ScaleLinear<number, number>
   xValue: (d: ChartEntry) => number
   yValue: (d: ChartEntry) => number
-  fill?: string | undefined
+  fill?: string
 }) =>
   useMemo(
     () => (

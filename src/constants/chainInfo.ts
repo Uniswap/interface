@@ -1,11 +1,15 @@
-import bnbCircleLogoUrl from 'assets/images/bnbCircle.png'
+import bnbCircleLogoUrl from 'assets/images/bnbCircle.svg'
 import celoCircleLogoUrl from 'assets/images/celoCircle.png'
 import ethereumLogoUrl from 'assets/images/ethereum-logo.png'
 import polygonCircleLogoUrl from 'assets/images/polygonCircle.png'
 import { default as arbitrumCircleLogoUrl, default as arbitrumLogoUrl } from 'assets/svg/arbitrum_logo.svg'
+import bnbSquareLogoUrl from 'assets/svg/bnb_square_logo.svg'
 import bnbLogo from 'assets/svg/bnb-logo.svg'
 import celoLogo from 'assets/svg/celo_logo.svg'
+import celoSquareLogoUrl from 'assets/svg/celo_square_logo.svg'
+import optimismSquareLogoUrl from 'assets/svg/optimism_square_logo.svg'
 import optimismLogoUrl from 'assets/svg/optimistic_ethereum.svg'
+import polygonSquareLogoUrl from 'assets/svg/polygon_square_logo.svg'
 import polygonMaticLogo from 'assets/svg/polygon-matic-logo.svg'
 import ms from 'ms.macro'
 import { darkTheme } from 'theme/colors'
@@ -13,11 +17,12 @@ import { darkTheme } from 'theme/colors'
 import { SupportedChainId, SupportedL1ChainId, SupportedL2ChainId } from './chains'
 import { ARBITRUM_LIST, CELO_LIST, OPTIMISM_LIST, PLASMA_BNB_LIST } from './lists'
 
+export const AVERAGE_L1_BLOCK_TIME = ms`12s`
+
 export enum NetworkType {
   L1,
   L2,
 }
-
 interface BaseChainInfo {
   readonly networkType: NetworkType
   readonly blockWaitMsBeforeWarning?: number
@@ -27,6 +32,7 @@ interface BaseChainInfo {
   readonly infoLink: string
   readonly logoUrl: string
   readonly circleLogoUrl?: string
+  readonly squareLogoUrl?: string
   readonly label: string
   readonly helpCenterUrl?: string
   readonly nativeCurrency: {
@@ -38,7 +44,7 @@ interface BaseChainInfo {
   readonly backgroundColor?: string
 }
 
-export interface L1ChainInfo extends BaseChainInfo {
+interface L1ChainInfo extends BaseChainInfo {
   readonly networkType: NetworkType.L1
   readonly defaultListUrl?: string
 }
@@ -50,7 +56,7 @@ export interface L2ChainInfo extends BaseChainInfo {
   readonly defaultListUrl: string
 }
 
-export type ChainInfoMap = { readonly [chainId: number]: L1ChainInfo | L2ChainInfo } & {
+type ChainInfoMap = { readonly [chainId: number]: L1ChainInfo | L2ChainInfo } & {
   readonly [chainId in SupportedL2ChainId]: L2ChainInfo
 } & { readonly [chainId in SupportedL1ChainId]: L1ChainInfo }
 
@@ -64,36 +70,6 @@ const CHAIN_INFO: ChainInfoMap = {
     logoUrl: ethereumLogoUrl,
     nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
     color: darkTheme.chain_1,
-  },
-  [SupportedChainId.RINKEBY]: {
-    networkType: NetworkType.L1,
-    docs: 'https://docs.uniswap.org/',
-    explorer: 'https://rinkeby.etherscan.io/',
-    infoLink: 'https://info.uniswap.org/#/',
-    label: 'Rinkeby',
-    logoUrl: ethereumLogoUrl,
-    nativeCurrency: { name: 'Rinkeby Ether', symbol: 'rETH', decimals: 18 },
-    color: darkTheme.chain_4,
-  },
-  [SupportedChainId.ROPSTEN]: {
-    networkType: NetworkType.L1,
-    docs: 'https://docs.uniswap.org/',
-    explorer: 'https://ropsten.etherscan.io/',
-    infoLink: 'https://info.uniswap.org/#/',
-    label: 'Ropsten',
-    logoUrl: ethereumLogoUrl,
-    nativeCurrency: { name: 'Ropsten Ether', symbol: 'ropETH', decimals: 18 },
-    color: darkTheme.chain_3,
-  },
-  [SupportedChainId.KOVAN]: {
-    networkType: NetworkType.L1,
-    docs: 'https://docs.uniswap.org/',
-    explorer: 'https://kovan.etherscan.io/',
-    infoLink: 'https://info.uniswap.org/#/',
-    label: 'Kovan',
-    logoUrl: ethereumLogoUrl,
-    nativeCurrency: { name: 'Kovan Ether', symbol: 'kovETH', decimals: 18 },
-    color: darkTheme.chain_420,
   },
   [SupportedChainId.GOERLI]: {
     networkType: NetworkType.L1,
@@ -117,6 +93,7 @@ const CHAIN_INFO: ChainInfoMap = {
     logoUrl: optimismLogoUrl,
     // Optimism perfers same icon for both
     circleLogoUrl: optimismLogoUrl,
+    squareLogoUrl: optimismSquareLogoUrl,
     statusPage: 'https://optimism.io/status',
     helpCenterUrl: 'https://help.uniswap.org/en/collections/3137778-uniswap-on-optimistic-ethereum-oξ',
     nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
@@ -154,30 +131,31 @@ const CHAIN_INFO: ChainInfoMap = {
     color: darkTheme.chain_42,
     backgroundColor: darkTheme.chain_42161_background,
   },
-  [SupportedChainId.ARBITRUM_RINKEBY]: {
+  [SupportedChainId.ARBITRUM_GOERLI]: {
     networkType: NetworkType.L2,
     blockWaitMsBeforeWarning: ms`10m`,
     bridge: 'https://bridge.arbitrum.io/',
     docs: 'https://offchainlabs.com/',
-    explorer: 'https://rinkeby-explorer.arbitrum.io/',
+    explorer: 'https://goerli.arbiscan.io/',
     infoLink: 'https://info.uniswap.org/#/arbitrum/',
-    label: 'Arbitrum Rinkeby',
+    label: 'Arbitrum Goerli',
     logoUrl: arbitrumLogoUrl,
-    defaultListUrl: ARBITRUM_LIST,
+    defaultListUrl: ARBITRUM_LIST, // TODO: use arbitrum goerli token list
     helpCenterUrl: 'https://help.uniswap.org/en/collections/3137787-uniswap-on-arbitrum',
-    nativeCurrency: { name: 'Rinkeby Arbitrum Ether', symbol: 'rinkArbETH', decimals: 18 },
-    color: darkTheme.chain_421611,
+    nativeCurrency: { name: 'Goerli Arbitrum Ether', symbol: 'goerliArbETH', decimals: 18 },
+    color: darkTheme.chain_421613,
   },
   [SupportedChainId.POLYGON]: {
     networkType: NetworkType.L1,
     blockWaitMsBeforeWarning: ms`10m`,
-    bridge: 'https://wallet.polygon.technology/bridge',
+    bridge: 'https://wallet.polygon.technology/login',
     docs: 'https://polygon.io/',
     explorer: 'https://polygonscan.com/',
     infoLink: 'https://info.uniswap.org/#/polygon/',
     label: 'Polygon',
     logoUrl: polygonMaticLogo,
     circleLogoUrl: polygonCircleLogoUrl,
+    squareLogoUrl: polygonSquareLogoUrl,
     nativeCurrency: { name: 'Polygon Matic', symbol: 'MATIC', decimals: 18 },
     color: darkTheme.chain_137,
     backgroundColor: darkTheme.chain_137_background,
@@ -203,6 +181,7 @@ const CHAIN_INFO: ChainInfoMap = {
     label: 'Celo',
     logoUrl: celoLogo,
     circleLogoUrl: celoCircleLogoUrl,
+    squareLogoUrl: celoSquareLogoUrl,
     nativeCurrency: { name: 'Celo', symbol: 'CELO', decimals: 18 },
     defaultListUrl: CELO_LIST,
   },
@@ -212,7 +191,7 @@ const CHAIN_INFO: ChainInfoMap = {
     bridge: 'https://www.portalbridge.com/#/transfer',
     docs: 'https://docs.celo.org/',
     explorer: 'https://alfajores-blockscout.celo-testnet.org/',
-    infoLink: 'https://info.uniswap.org/#/celo',
+    infoLink: 'https://info.uniswap.org/#/celo/',
     label: 'Celo Alfajores',
     logoUrl: celoLogo,
     nativeCurrency: { name: 'Celo', symbol: 'CELO', decimals: 18 },
@@ -228,6 +207,7 @@ const CHAIN_INFO: ChainInfoMap = {
     label: 'BNB Chain',
     logoUrl: bnbLogo,
     circleLogoUrl: bnbCircleLogoUrl,
+    squareLogoUrl: bnbSquareLogoUrl,
     nativeCurrency: { name: 'BNB', symbol: 'BNB', decimals: 18 },
     defaultListUrl: PLASMA_BNB_LIST,
     color: darkTheme.chain_56,
@@ -257,7 +237,7 @@ export function getChainInfo(chainId: any): any {
   return undefined
 }
 
-export const MAINNET_INFO = CHAIN_INFO[SupportedChainId.MAINNET]
+const MAINNET_INFO = CHAIN_INFO[SupportedChainId.MAINNET]
 export function getChainInfoOrDefault(chainId: number | undefined) {
   return getChainInfo(chainId) ?? MAINNET_INFO
 }

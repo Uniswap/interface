@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { TraceEvent } from '@uniswap/analytics'
-import { BrowserEvent, ElementName, EventName } from '@uniswap/analytics-events'
-import { Currency, CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
+import { BrowserEvent, InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
+import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { AutoColumn } from 'components/Column'
@@ -11,13 +11,13 @@ import { isSupportedChain } from 'constants/chains'
 import { darken } from 'polished'
 import { ReactNode, useCallback, useState } from 'react'
 import { Lock } from 'react-feather'
+import { useActiveSmartPool } from 'state/application/hooks'
 import styled, { useTheme } from 'styled-components/macro'
 import { flexColumnNoWrap, flexRowNoWrap } from 'theme/styles'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
 import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 import { useCurrencyBalance } from '../../state/connection/hooks'
-import { useSwapState } from '../../state/swap/hooks'
 import { ThemedText } from '../../theme'
 import { ButtonGray } from '../Button'
 import DoubleCurrencyLogo from '../DoubleLogo'
@@ -63,7 +63,7 @@ const CurrencySelect = styled(ButtonGray)<{
   background-color: ${({ selected, theme }) => (selected ? theme.backgroundInteractive : theme.accentAction)};
   opacity: ${({ disabled }) => (!disabled ? 1 : 0.4)};
   box-shadow: ${({ selected }) => (selected ? 'none' : '0px 6px 10px rgba(0, 0, 0, 0.075)')};
-  color: ${({ selected, theme }) => (selected ? theme.deprecated_text1 : theme.deprecated_white)};
+  color: ${({ selected, theme }) => (selected ? theme.textPrimary : theme.white)};
   cursor: pointer;
   height: unset;
   border-radius: 16px;
@@ -122,7 +122,7 @@ const LabelRow = styled.div`
 
   span:hover {
     cursor: pointer;
-    color: ${({ theme }) => darken(0.2, theme.deprecated_text2)};
+    color: ${({ theme }) => darken(0.2, theme.textSecondary)};
   }
 `
 
@@ -145,7 +145,7 @@ const StyledDropDown = styled(DropDown)<{ selected: boolean }>`
   margin-left: 8px;
 
   path {
-    stroke: ${({ selected, theme }) => (selected ? theme.deprecated_text1 : theme.deprecated_white)};
+    stroke: ${({ selected, theme }) => (selected ? theme.textPrimary : theme.white)};
     stroke-width: 2px;
   }
 `
@@ -196,7 +196,7 @@ interface SwapCurrencyInputPanelProps {
   pair?: Pair | null
   hideInput?: boolean
   otherCurrency?: Currency | null
-  fiatValue?: CurrencyAmount<Token> | null
+  fiatValue?: { data?: number; isLoading: boolean }
   priceImpact?: Percent
   id: string
   showCommonBases?: boolean
@@ -205,6 +205,7 @@ interface SwapCurrencyInputPanelProps {
   renderBalance?: (amount: CurrencyAmount<Currency>) => ReactNode
   locked?: boolean
   loading?: boolean
+  disabled?: boolean
 }
 
 export default function SwapCurrencyInputPanel({
@@ -227,11 +228,12 @@ export default function SwapCurrencyInputPanel({
   hideInput = false,
   locked = false,
   loading = false,
+  disabled = false,
   ...rest
 }: SwapCurrencyInputPanelProps) {
   const [modalOpen, setModalOpen] = useState(false)
   const { account, chainId } = useWeb3React()
-  const { smartPoolAddress } = useSwapState()
+  const { address: smartPoolAddress } = useActiveSmartPool()
   const selectedCurrencyBalance = useCurrencyBalance(smartPoolAddress ?? undefined, currency ?? undefined)
   const theme = useTheme()
 
@@ -260,13 +262,13 @@ export default function SwapCurrencyInputPanel({
               className="token-amount-input"
               value={value}
               onUserInput={onUserInput}
-              disabled={!chainAllowed}
+              disabled={!chainAllowed || disabled}
               $loading={loading}
             />
           )}
 
           <CurrencySelect
-            disabled={!chainAllowed}
+            disabled={!chainAllowed || disabled}
             visible={currency !== undefined}
             selected={!!currency}
             hideInput={hideInput}
@@ -308,11 +310,12 @@ export default function SwapCurrencyInputPanel({
           <FiatRow>
             <RowBetween>
               <LoadingOpacityContainer $loading={loading}>
-                <FiatValue fiatValue={fiatValue} priceImpact={priceImpact} />
+                {fiatValue && <FiatValue fiatValue={fiatValue} priceImpact={priceImpact} />}
               </LoadingOpacityContainer>
               {account ? (
                 <RowFixed style={{ height: '17px' }}>
                   <ThemedText.DeprecatedBody
+                    data-testid="balance-text"
                     color={theme.textSecondary}
                     fontWeight={400}
                     fontSize={14}
@@ -329,8 +332,8 @@ export default function SwapCurrencyInputPanel({
                   {showMaxButton && selectedCurrencyBalance ? (
                     <TraceEvent
                       events={[BrowserEvent.onClick]}
-                      name={EventName.SWAP_MAX_TOKEN_AMOUNT_SELECTED}
-                      element={ElementName.MAX_TOKEN_AMOUNT_BUTTON}
+                      name={SwapEventName.SWAP_MAX_TOKEN_AMOUNT_SELECTED}
+                      element={InterfaceElementName.MAX_TOKEN_AMOUNT_BUTTON}
                     >
                       <StyledBalanceMax onClick={onMax}>
                         <Trans>Max</Trans>

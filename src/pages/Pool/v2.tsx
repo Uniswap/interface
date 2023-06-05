@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { Trace } from '@uniswap/analytics'
-import { PageName } from '@uniswap/analytics-events'
+import { InterfacePageName } from '@uniswap/analytics-events'
 import { Pair } from '@uniswap/v2-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { UNSUPPORTED_V2POOL_CHAIN_IDS } from 'constants/chains'
@@ -59,6 +59,7 @@ const ButtonRow = styled(RowFixed)`
 `
 
 const ResponsiveButtonPrimary = styled(ButtonPrimary)`
+  height: 40px;
   width: fit-content;
   border-radius: 12px;
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
@@ -67,6 +68,7 @@ const ResponsiveButtonPrimary = styled(ButtonPrimary)`
 `
 
 const ResponsiveButtonSecondary = styled(ButtonSecondary)`
+  height: 40px;
   width: fit-content;
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
     width: 48%;
@@ -140,7 +142,7 @@ export default function Pool() {
   })
 
   return (
-    <Trace page={PageName.POOL_PAGE} shouldLogImpression>
+    <Trace page={InterfacePageName.POOL_PAGE} shouldLogImpression>
       <>
         <PageWrapper>
           <VoteCard>
@@ -162,7 +164,7 @@ export default function Pool() {
                   </ThemedText.DeprecatedWhite>
                 </RowBetween>
                 <ExternalLink
-                  style={{ color: theme.deprecated_white, textDecoration: 'underline' }}
+                  style={{ color: theme.white, textDecoration: 'underline' }}
                   target="_blank"
                   href="https://docs.uniswap.org/protocol/V2/concepts/core-concepts/pools"
                 >
@@ -180,8 +182,8 @@ export default function Pool() {
             <AutoColumn gap="lg" justify="center">
               <AutoColumn gap="md" style={{ width: '100%' }}>
                 <Layer2Prompt>
-                  <ThemedText.DeprecatedBody color={theme.deprecated_text3} textAlign="center">
-                    <Trans>V2 Pool is not available on Layer 2. Switch to Layer 1 Ethereum.</Trans>
+                  <ThemedText.DeprecatedBody color={theme.textTertiary} textAlign="center">
+                    <Trans>Uniswap V2 is not available on this network.</Trans>
                   </ThemedText.DeprecatedBody>
                 </Layer2Prompt>
               </AutoColumn>
@@ -199,7 +201,7 @@ export default function Pool() {
                     <ResponsiveButtonSecondary as={Link} padding="6px 8px" to="/add/v2/ETH">
                       <Trans>Create a pair</Trans>
                     </ResponsiveButtonSecondary>
-                    <ResponsiveButtonPrimary id="find-pool-button" as={Link} to="/pool/v2/find" padding="6px 8px">
+                    <ResponsiveButtonPrimary id="find-pool-button" as={Link} to="/pools/v2/find" padding="6px 8px">
                       <Text fontWeight={500} fontSize={16}>
                         <Trans>Import Pool</Trans>
                       </Text>
@@ -214,13 +216,13 @@ export default function Pool() {
 
                 {!account ? (
                   <Card padding="40px">
-                    <ThemedText.DeprecatedBody color={theme.deprecated_text3} textAlign="center">
+                    <ThemedText.DeprecatedBody color={theme.textTertiary} textAlign="center">
                       <Trans>Connect to a wallet to view your liquidity.</Trans>
                     </ThemedText.DeprecatedBody>
                   </Card>
                 ) : v2IsLoading ? (
                   <EmptyProposals>
-                    <ThemedText.DeprecatedBody color={theme.deprecated_text3} textAlign="center">
+                    <ThemedText.DeprecatedBody color={theme.textTertiary} textAlign="center">
                       <Dots>
                         <Trans>Loading</Trans>
                       </Dots>
@@ -271,7 +273,7 @@ export default function Pool() {
                   </>
                 ) : (
                   <EmptyProposals>
-                    <ThemedText.DeprecatedBody color={theme.deprecated_text3} textAlign="center">
+                    <ThemedText.DeprecatedBody color={theme.textTertiary} textAlign="center">
                       <Trans>No liquidity found.</Trans>
                     </ThemedText.DeprecatedBody>
                   </EmptyProposals>

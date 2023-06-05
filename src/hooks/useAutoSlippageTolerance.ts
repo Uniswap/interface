@@ -11,12 +11,9 @@ import { useMemo } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 
 import useGasPrice from './useGasPrice'
-import useStablecoinPrice, { useStablecoinValue } from './useStablecoinPrice'
+import useStablecoinPrice, { useStablecoinAmountFromFiatValue, useStablecoinValue } from './useStablecoinPrice'
 
-export const V3_SWAP_DEFAULT_SLIPPAGE = new Percent(50, 10_000) // .50%
-const ONE_TENTHS_PERCENT = new Percent(10, 10_000) // .10%
-export const DEFAULT_AUTO_SLIPPAGE = ONE_TENTHS_PERCENT
-const GAS_ESTIMATE_BUFFER = new Percent(10, 100) // 10%
+const DEFAULT_AUTO_SLIPPAGE = new Percent(1, 1000) // .10%
 
 // Base costs regardless of how many hops in the route
 const V3_SWAP_BASE_GAS_ESTIMATE = 100_000
@@ -36,7 +33,7 @@ const V2_SWAP_HOP_GAS_ESTIMATE = 50_000
  * https://github.com/Uniswap/smart-order-router/blob/main/src/routers/alpha-router/gas-models/v2/v2-heuristic-gas-model.ts
  */
 function guesstimateGas(trade: Trade<Currency, Currency, TradeType> | undefined): number | undefined {
-  if (!!trade) {
+  if (trade) {
     let gas = 0
     for (const { route } of trade.swaps) {
       if (route.protocol === Protocol.V2) {
@@ -67,22 +64,23 @@ function guesstimateGas(trade: Trade<Currency, Currency, TradeType> | undefined)
   return undefined
 }
 
-const MIN_AUTO_SLIPPAGE_TOLERANCE = new Percent(5, 1000) // 0.5%
-const MAX_AUTO_SLIPPAGE_TOLERANCE = new Percent(25, 100) // 25%
+const MIN_AUTO_SLIPPAGE_TOLERANCE = DEFAULT_AUTO_SLIPPAGE
+// assuming normal gas speeds, most swaps complete within 3 blocks and
+// there's rarely price movement >5% in that time period
+const MAX_AUTO_SLIPPAGE_TOLERANCE = new Percent(5, 100) // 5%
 
 /**
  * Returns slippage tolerance based on values from current trade, gas estimates from api, and active network.
  */
-export default function useAutoSlippageTolerance(
-  trade: InterfaceTrade<Currency, Currency, TradeType> | undefined
-): Percent {
+export default function useAutoSlippageTolerance(trade?: InterfaceTrade): Percent {
   const { chainId } = useWeb3React()
   const onL2 = chainId && L2_CHAIN_IDS.includes(chainId)
   const outputDollarValue = useStablecoinValue(trade?.outputAmount)
   const nativeGasPrice = useGasPrice()
 
   const gasEstimate = guesstimateGas(trade)
-  const nativeCurrency = useNativeCurrency()
+  const gasEstimateUSD = useStablecoinAmountFromFiatValue(trade?.gasUseEstimateUSD) ?? null
+  const nativeCurrency = useNativeCurrency(chainId)
   const nativeCurrencyPrice = useStablecoinPrice((trade && nativeCurrency) ?? undefined)
 
   return useMemo(() => {
@@ -101,13 +99,11 @@ export default function useAutoSlippageTolerance(
     // NOTE - dont use gas estimate for L2s yet - need to verify accuracy
     // if not, use local heuristic
     const dollarCostToUse =
-      chainId && SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId) && trade?.gasUseEstimateUSD
-        ? trade.gasUseEstimateUSD.multiply(GAS_ESTIMATE_BUFFER)
-        : dollarGasCost?.multiply(GAS_ESTIMATE_BUFFER)
+      chainId && SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId) && gasEstimateUSD ? gasEstimateUSD : dollarGasCost
 
     if (outputDollarValue && dollarCostToUse) {
-      // the rationale is that a user will not want their trade to fail for a loss due to slippage that is less than
-      // the cost of the gas of the failed transaction
+      // optimize for highest possible slippage without getting MEV'd
+      // so set slippage % such that the difference between expected amount out and minimum amount out < gas fee to sandwich the trade
       const fraction = dollarCostToUse.asFraction.divide(outputDollarValue.asFraction)
       const result = new Percent(fraction.numerator, fraction.denominator)
       if (result.greaterThan(MAX_AUTO_SLIPPAGE_TOLERANCE)) {
@@ -121,6 +117,16 @@ export default function useAutoSlippageTolerance(
       return result
     }
 
-    return V3_SWAP_DEFAULT_SLIPPAGE
-  }, [trade, onL2, nativeGasPrice, gasEstimate, nativeCurrency, nativeCurrencyPrice, chainId, outputDollarValue])
+    return DEFAULT_AUTO_SLIPPAGE
+  }, [
+    trade,
+    onL2,
+    nativeGasPrice,
+    gasEstimate,
+    nativeCurrency,
+    nativeCurrencyPrice,
+    chainId,
+    gasEstimateUSD,
+    outputDollarValue,
+  ])
 }

@@ -4,15 +4,10 @@ import useBlockNumber from 'lib/hooks/useBlockNumber'
 import { useEffect, useMemo } from 'react'
 
 import { useAppDispatch, useAppSelector } from '../hooks'
-import { AppState } from '../index'
 import { addListener, removeListener } from './slice'
 import { filterToKey, isHistoricalLog, Log } from './utils'
 
-export function useLogsState(): AppState['logs'] {
-  return useAppSelector((state) => state.logs)
-}
-
-export enum LogsState {
+enum LogsState {
   // The filter is invalid
   INVALID,
   // The logs are being loaded
@@ -25,8 +20,8 @@ export enum LogsState {
   SYNCED,
 }
 
-export interface UseLogsResult {
-  logs: Log[] | undefined
+interface UseLogsResult {
+  logs?: Log[]
   state: LogsState
 }
 

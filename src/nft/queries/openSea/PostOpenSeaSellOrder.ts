@@ -2,7 +2,7 @@ import ms from 'ms.macro'
 
 export async function PostOpenSeaSellOrder(payload?: Record<string, unknown>): Promise<boolean> {
   const body = payload ? JSON.stringify(payload) : undefined
-  const url = `${process.env.REACT_APP_GENIE_V3_API_URL}/postOpenSeaSellOrderWithApiKey`
+  const url = `${process.env.REACT_APP_TEMP_API_URL}/nft/postOpenSeaSellOrderWithApiKey`
   const ac = new AbortController()
   const req = new Request(url, {
     method: 'POST',

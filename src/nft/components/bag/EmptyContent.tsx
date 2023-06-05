@@ -23,10 +23,12 @@ const EmptyState = () => {
         )}
       </Center>
       {isProfilePage ? (
-        <Center className={subhead}>No NFTs selected</Center>
+        <Center data-testid="nft-no-nfts-selected" className={subhead}>
+          No NFTs selected
+        </Center>
       ) : (
         <Column gap="16">
-          <Center className={subhead} style={{ lineHeight: '24px' }}>
+          <Center data-testid="nft-empty-bag" className={subhead} style={{ lineHeight: '24px' }}>
             Your bag is empty
           </Center>
           <Center fontSize="12" fontWeight="normal" color="textSecondary" style={{ lineHeight: '16px' }}>

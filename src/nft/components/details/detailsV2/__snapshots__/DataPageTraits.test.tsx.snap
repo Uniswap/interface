@@ -1,0 +1,266 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`data page trait component does not load with asset with no traits 1`] = `
+<DocumentFragment>
+  .c1 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c2 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c6 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 8px;
+}
+
+.c4 {
+  color: #0D111C;
+}
+
+.c9 {
+  color: #7780A0;
+}
+
+.c7 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c0 {
+  background: #FFFFFF;
+  border: 1px solid #D2D9EE;
+  border-radius: 16px;
+  padding: 16px 20px;
+  width: 100%;
+  -webkit-align-self: flex-start;
+  -ms-flex-item-align: start;
+  align-self: flex-start;
+}
+
+.c3 {
+  gap: 32px;
+  width: 100;
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #D2D9EE;
+}
+
+.c5 {
+  color: #0D111C;
+  line-height: 24px;
+  cursor: default;
+}
+
+.c8 {
+  padding: 0px 12px;
+}
+
+.c10 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  line-height: 20px;
+  color: #7780A0;
+  -webkit-flex: 3;
+  -ms-flex: 3;
+  flex: 3;
+}
+
+.c11 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  line-height: 20px;
+  color: #7780A0;
+  -webkit-flex: 2;
+  -ms-flex: 2;
+  flex: 2;
+}
+
+.c12 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  line-height: 20px;
+  color: #7780A0;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+}
+
+.c13 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  line-height: 20px;
+  color: #7780A0;
+  -webkit-flex: 1.5;
+  -ms-flex: 1.5;
+  flex: 1.5;
+  -webkit-box-pack: end;
+  -webkit-justify-content: flex-end;
+  -ms-flex-pack: end;
+  justify-content: flex-end;
+}
+
+.c14 {
+  position: relative;
+}
+
+.c15 {
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: 412px;
+  width: calc(100% + 6px);
+  -webkit-scrollbar-width: thin;
+  -moz-scrollbar-width: thin;
+  -ms-scrollbar-width: thin;
+  scrollbar-width: thin;
+  -webkit-scrollbar-color: #D2D9EE transparent;
+  -moz-scrollbar-color: #D2D9EE transparent;
+  -ms-scrollbar-color: #D2D9EE transparent;
+  scrollbar-color: #D2D9EE transparent;
+  height: 100%;
+}
+
+.c15::-webkit-scrollbar {
+  background: transparent;
+  width: 4px;
+  overflow-y: scroll;
+}
+
+.c15::-webkit-scrollbar-thumb {
+  background: #D2D9EE;
+  border-radius: 8px;
+}
+
+@media screen and (max-width:640px) {
+  .c10 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+  }
+}
+
+@media screen and (max-width:640px) {
+  .c11 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+  }
+}
+
+@media screen and (max-width:640px) {
+  .c12 {
+    display: none;
+  }
+}
+
+@media screen and (max-width:640px) {
+  .c13 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+  }
+}
+
+<div
+    class="c0"
+  >
+    <div
+      class="c1 c2 c3"
+    >
+      <div
+        class="c4 c5 css-rjqmed"
+      >
+        <div
+          class="c1 c6"
+        >
+          Traits
+        </div>
+      </div>
+    </div>
+    <div
+      class="c7"
+    >
+      <div
+        class="c1 c2 c8"
+      >
+        <div
+          class="c9 c10 css-1aekuku"
+        >
+          Trait
+        </div>
+        <div
+          class="c9 c11 css-1aekuku"
+        >
+          Floor price
+        </div>
+        <div
+          class="c9 c12 css-1aekuku"
+        >
+          Quantity
+        </div>
+        <div
+          class="c9 c13 css-1aekuku"
+        >
+          Rarity
+        </div>
+      </div>
+      <div
+        class="c14"
+      >
+        <div
+          class="c15"
+        />
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;

@@ -2,12 +2,11 @@ import { formatEther } from '@ethersproject/units'
 import { SquareArrowDownIcon, SquareArrowUpIcon, VerifiedIcon } from 'nft/components/icons'
 import { useIsMobile } from 'nft/hooks'
 import { Denomination } from 'nft/types'
-import { volumeFormatter } from 'nft/utils'
+import { ethNumberStandardFormatter, volumeFormatter } from 'nft/utils'
 import { ReactNode } from 'react'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
-import { ethNumberStandardFormatter, formatWeiToDecimal } from '../../../utils/currency'
 import * as styles from './Cells.css'
 
 const TruncatedText = styled.div`
@@ -51,14 +50,14 @@ const RoundedImage = styled.div<{ src?: string }>`
 const ChangeCellContainer = styled.div<{ change: number }>`
   display: flex;
   color: ${({ theme, change }) => (change >= 0 ? theme.accentSuccess : theme.accentFailure)};
-  justify-content: end;
+  justify-content: flex-end;
   align-items: center;
   gap: 2px;
 `
 
 const EthContainer = styled.div`
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
 `
 
 interface CellProps {
@@ -113,10 +112,10 @@ export const EthCell = ({
   denomination: Denomination
   usdPrice?: number
 }) => {
-  const denominatedValue = getDenominatedValue(denomination, true, value, usdPrice)
+  const denominatedValue = getDenominatedValue(denomination, false, value, usdPrice)
   const formattedValue = denominatedValue
     ? denomination === Denomination.ETH
-      ? formatWeiToDecimal(denominatedValue.toString(), true) + ' ETH'
+      ? ethNumberStandardFormatter(denominatedValue.toString(), false, true, false) + ' ETH'
       : ethNumberStandardFormatter(denominatedValue, true, false, true)
     : '-'
 

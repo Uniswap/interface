@@ -6,6 +6,7 @@ import { Trans } from '@lingui/macro'
 import { /*Currency,*/ CurrencyAmount /*, Fraction*/, Percent /*, Price, Token*/ } from '@uniswap/sdk-core'
 //import { NonfungiblePositionManager, Pool, Position } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
+import IconButton, { IconHoverText } from 'components/AccountDrawer/IconButton'
 //import { sendEvent } from 'components/analytics'
 //import Badge from 'components/Badge'
 import { /*ButtonConfirmed, ButtonGray,*/ ButtonPrimary } from 'components/Button'
@@ -24,7 +25,6 @@ import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 //import Toggle from 'components/Toggle'
 import TransactionConfirmationModal, { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
 import DelegateModal from 'components/vote/DelegateModal'
-import IconButton, { IconHoverText } from 'components/WalletDropdown/IconButton'
 import { /*BIG_INT_ZERO,*/ ZERO_ADDRESS } from 'constants/misc'
 import { nativeOnChain } from 'constants/tokens'
 import { useCurrency } from 'hooks/Tokens'
@@ -40,7 +40,6 @@ import { useCallback, useMemo, /*useRef,*/ useState } from 'react'
 import { Copy } from 'react-feather'
 import { Link, useParams } from 'react-router-dom'
 //import { Bound } from 'state/mint/v3/actions'
-import { useToggleWalletModal } from 'state/application/hooks'
 import { PoolInfo } from 'state/buy/hooks'
 //import { useTokenBalance } from 'state/connection/hooks'
 import { useCurrencyBalance } from 'state/connection/hooks'
@@ -97,12 +96,10 @@ const PageWrapper = styled.div`
   `};
 `
 
-/*
-const BadgeText = styled.div`
-  font-weight: 500;
-  font-size: 14px;
-`
-*/
+//const BadgeText = styled.div`
+//  font-weight: 500;
+//  font-size: 14px;
+//`
 
 // responsive text
 // disable the warning because we don't use the end prop, we just want to filter it out
@@ -115,7 +112,7 @@ const Label = styled(({ end, ...props }) => <ThemedText.DeprecatedLabel {...prop
 `
 
 const ExtentsText = styled.span`
-  color: ${({ theme }) => theme.deprecated_text2};
+  color: ${({ theme }) => theme.textSecondary};
   font-size: 14px;
   text-align: center;
   margin-right: 4px;
@@ -124,9 +121,9 @@ const ExtentsText = styled.span`
 
 const HoverText = styled(ThemedText.DeprecatedMain)`
   text-decoration: none;
-  color: ${({ theme }) => theme.deprecated_text3};
+  color: ${({ theme }) => theme.textTertiary};
   :hover {
-    color: ${({ theme }) => theme.deprecated_text1};
+    color: ${({ theme }) => theme.textPrimary};
     text-decoration: none;
   }
 `
@@ -149,12 +146,10 @@ const IconContainer = styled.div`
   justify-content: center;
 `
 
-/*
-const DoubleArrow = styled.span`
-  color: ${({ theme }) => theme.deprecated_text3};
-  margin: 0 1rem;
-`
-*/
+//const DoubleArrow = styled.span`
+//  color: ${({ theme }) => theme.textTertiary};
+//  margin: 0 1rem;
+//`
 
 const ResponsiveRow = styled(RowBetween)`
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
@@ -286,75 +281,18 @@ export function PoolPositionPage() {
   // TODO: pass recipient as optional parameter to check currency balance hook
   const poolInfo = { pool, recipient: account, userPoolBalance, poolPriceAmount: poolPrice, spread } as PoolInfo
   const userBaseTokenBalance = useCurrencyBalance(account ?? undefined, base ?? undefined)
-  const toggleWalletModal = useToggleWalletModal()
-
-  const handleDepositClick = useCallback(() => {
-    if (account) {
-      setShowBuyModal(true)
-    } else {
-      toggleWalletModal()
-    }
-  }, [account, toggleWalletModal])
-
-  const handleWithdrawClick = useCallback(() => {
-    if (account) {
-      setShowSellModal(true)
-    } else {
-      toggleWalletModal()
-    }
-  }, [account, toggleWalletModal])
-
-  const handleSetLockupClick = useCallback(() => {
-    if (account) {
-      setShowSetLockupModal(true)
-    } else {
-      toggleWalletModal()
-    }
-  }, [account, toggleWalletModal])
-
-  const handleSetSpreadClick = useCallback(() => {
-    if (account) {
-      setShowSetSpreadModal(true)
-    } else {
-      toggleWalletModal()
-    }
-  }, [account, toggleWalletModal])
-
-  const handleSetValueClick = useCallback(() => {
-    if (account) {
-      setShowSetValueModal(true)
-    } else {
-      toggleWalletModal()
-    }
-  }, [account, toggleWalletModal])
-
-  const handleStakeClick = useCallback(() => {
-    if (account) {
-      setShowStakeModal(true)
-    } else {
-      toggleWalletModal()
-    }
-  }, [account, toggleWalletModal])
 
   const handleMoveStakeClick = useCallback(() => {
-    if (account) {
-      setShowMoveStakeModal(true)
-      if (deactivate) {
-        setDeactivate(false)
-      }
-    } else {
-      toggleWalletModal()
+    setShowMoveStakeModal(true)
+    if (deactivate) {
+      setDeactivate(false)
     }
-  }, [account, deactivate, toggleWalletModal])
+  }, [deactivate])
 
   const handleDeactivateStakeClick = useCallback(() => {
-    if (account) {
-      setShowMoveStakeModal(true)
-      setDeactivate(true)
-    } else {
-      toggleWalletModal()
-    }
-  }, [account, toggleWalletModal])
+    setShowMoveStakeModal(true)
+    setDeactivate(true)
+  }, [])
 
   function modalHeader() {
     return (
@@ -374,7 +312,7 @@ export function PoolPositionPage() {
           onDismiss={() => setShowConfirm(false)}
           attemptingTxn={showConfirm}
           hash=""
-          content={() => (
+          reviewContent={() => (
             <ConfirmationModalContent
               title={<Trans>Claim fees</Trans>}
               onDismiss={() => setShowConfirm(false)}
@@ -457,7 +395,7 @@ export function PoolPositionPage() {
               )}
               <RowFixed>
                 <ResponsiveButtonPrimary
-                  onClick={handleDepositClick}
+                  onClick={() => setShowBuyModal(true)}
                   width="fit-content"
                   padding="6px 8px"
                   $borderRadius="12px"
@@ -467,7 +405,7 @@ export function PoolPositionPage() {
                 </ResponsiveButtonPrimary>
                 {hasBalance && (
                   <ResponsiveButtonPrimary
-                    onClick={handleWithdrawClick}
+                    onClick={() => setShowSellModal(true)}
                     width="fit-content"
                     padding="6px 8px"
                     $borderRadius="12px"
@@ -524,7 +462,7 @@ export function PoolPositionPage() {
                           <RowFixed>
                             {owner === account && JSBI.greaterThan(poolValue, JSBI.BigInt(0)) ? (
                               <ResponsiveButtonPrimary
-                                onClick={handleSetValueClick}
+                                onClick={() => setShowSetValueModal(true)}
                                 height="1.1em"
                                 width="fit-content"
                                 padding="6px 8px"
@@ -606,7 +544,7 @@ export function PoolPositionPage() {
                             <RowFixed>
                               {owner === account ? (
                                 <ResponsiveButtonPrimary
-                                  onClick={handleSetSpreadClick}
+                                  onClick={() => setShowSetSpreadModal(true)}
                                   height="1.1em"
                                   width="fit-content"
                                   padding="6px 8px"
@@ -646,7 +584,7 @@ export function PoolPositionPage() {
                             <RowFixed>
                               {owner === account ? (
                                 <ResponsiveButtonPrimary
-                                  onClick={handleSetLockupClick}
+                                  onClick={() => setShowSetLockupModal(true)}
                                   height="1.1em"
                                   width="fit-content"
                                   fontSize={4}
@@ -715,7 +653,7 @@ export function PoolPositionPage() {
             <ResponsiveRow>
               <RowFixed>
                 <ResponsiveButtonPrimary
-                  onClick={handleStakeClick}
+                  onClick={() => setShowStakeModal(true)}
                   width="fit-content"
                   padding="6px 8px"
                   $borderRadius="12px"

@@ -13,8 +13,7 @@ import { ZERO_ADDRESS } from '../../constants/misc'
 import { GRG } from '../../constants/tokens'
 import useENS from '../../hooks/useENS'
 //import { useTokenBalance } from '../../state/connection/hooks'
-// TODO: move useCreateCallback ourside of governance hooks
-import { useCreateCallback } from '../../state/governance/hooks'
+import { useCreateCallback } from '../../state/pool/hooks'
 import { ThemedText } from '../../theme'
 import { ButtonGray, ButtonPrimary } from '../Button'
 //import { ButtonError } from '../Button'
@@ -45,11 +44,11 @@ const CurrencySelect = styled(ButtonGray)<{
   disabled?: boolean
 }>`
   align-items: center;
-  background-color: ${({ selected, theme }) => (selected ? theme.deprecated_bg2 : theme.deprecated_primary1)};
+  background-color: ${({ selected, theme }) => (selected ? theme.deprecated_bg3 : theme.deprecated_primary2)};
   opacity: ${({ disabled }) => (!disabled ? 1 : 0.4)};
   box-shadow: ${({ selected }) => (selected ? 'none' : '0px 6px 10px rgba(0, 0, 0, 0.075)')};
   box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.075);
-  color: ${({ selected, theme }) => (selected ? theme.deprecated_text1 : theme.deprecated_white)};
+  color: ${({ selected, theme }) => (selected ? theme.textPrimary : theme.white)};
   cursor: pointer;
   border-radius: 16px;
   outline: none;
@@ -65,7 +64,7 @@ const CurrencySelect = styled(ButtonGray)<{
   :focus,
   :hover {
     background-color: ${({ selected, theme }) =>
-      selected ? theme.deprecated_bg3 : darken(0.05, theme.deprecated_primary1)};
+      selected ? theme.deprecated_bg3 : darken(0.05, theme.deprecated_primary2)};
   }
   visibility: ${({ visible }) => (visible ? 'visible' : 'hidden')};
 `
@@ -81,7 +80,7 @@ const StyledDropDown = styled(DropDown)<{ selected: boolean }>`
   height: 35%;
 
   path {
-    stroke: ${({ selected, theme }) => (selected ? theme.deprecated_text1 : theme.deprecated_white)};
+    stroke: ${({ selected, theme }) => (selected ? theme.textPrimary : theme.white)};
     stroke-width: 1.5px;
   }
 `

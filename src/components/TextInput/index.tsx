@@ -9,7 +9,7 @@ const Input = styled.input<{ error?: boolean; fontSize?: string }>`
   width: 0;
   background-color: ${({ theme }) => theme.deprecated_bg1};
   transition: color 300ms ${({ error }) => (error ? 'step-end' : 'step-start')};
-  color: ${({ error, theme }) => (error ? theme.deprecated_red1 : theme.deprecated_text1)};
+  color: ${({ error, theme }) => (error ? theme.accentFailure : theme.textPrimary)};
   overflow: hidden;
   text-overflow: ellipsis;
   font-weight: 500;
@@ -40,7 +40,7 @@ const TextAreaInput = styled.textarea<{ error?: boolean; fontSize?: string }>`
   resize: none;
   background-color: ${({ theme }) => theme.deprecated_bg1};
   transition: color 300ms ${({ error }) => (error ? 'step-end' : 'step-start')};
-  color: ${({ error, theme }) => (error ? theme.deprecated_red1 : theme.deprecated_text1)};
+  color: ${({ error, theme }) => (error ? theme.accentFailure : theme.textPrimary)};
   overflow: hidden;
   text-overflow: ellipsis;
   font-weight: 500;

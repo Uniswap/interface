@@ -39,15 +39,7 @@ export function LoadingView({ children, onDismiss }: { children: any; onDismiss:
   )
 }
 
-export function SubmittedView({
-  children,
-  onDismiss,
-  hash,
-}: {
-  children: any
-  onDismiss: () => void
-  hash: string | undefined
-}) {
+export function SubmittedView({ children, onDismiss, hash }: { children: any; onDismiss: () => void; hash?: string }) {
   const theme = useTheme()
   const { chainId } = useWeb3React()
 
@@ -58,7 +50,7 @@ export function SubmittedView({
         <CloseIcon onClick={onDismiss} />
       </RowBetween>
       <ConfirmedIcon>
-        <ArrowUpCircle strokeWidth={0.5} size={90} color={theme.deprecated_primary1} />
+        <ArrowUpCircle strokeWidth={0.5} size={90} color={theme.accentAction} />
       </ConfirmedIcon>
       <AutoColumn gap="100px" justify="center">
         {children}

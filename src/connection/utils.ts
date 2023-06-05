@@ -1,66 +1,38 @@
-import { Connector } from '@web3-react/types'
-import {
-  coinbaseWalletConnection,
-  ConnectionType,
-  gnosisSafeConnection,
-  injectedConnection,
-  networkConnection,
-  walletConnectConnection,
-} from 'connection'
+import { Connection, ConnectionType } from 'connection/types'
 
-export function getIsInjected(): boolean {
-  return Boolean(window.ethereum)
+export const getIsInjected = () => Boolean(window.ethereum)
+
+// When using Brave browser, `isMetaMask` is set to true when using the built-in wallet
+// This variable should be true only when using the MetaMask extension
+// https://wallet-docs.brave.com/ethereum/wallet-detection#compatability-with-metamask
+type NonMetaMaskFlag = 'isRabby' | 'isBraveWallet' | 'isTrustWallet' | 'isLedgerConnect'
+const allNonMetamaskFlags: NonMetaMaskFlag[] = ['isRabby', 'isBraveWallet', 'isTrustWallet', 'isLedgerConnect']
+export const getIsMetaMaskWallet = () =>
+  Boolean(window.ethereum?.isMetaMask && !allNonMetamaskFlags.some((flag) => window.ethereum?.[flag]))
+
+export const getIsCoinbaseWallet = () => Boolean(window.ethereum?.isCoinbaseWallet)
+
+// https://eips.ethereum.org/EIPS/eip-1193#provider-errors
+export enum ErrorCode {
+  USER_REJECTED_REQUEST = 4001,
+  UNAUTHORIZED = 4100,
+  UNSUPPORTED_METHOD = 4200,
+  DISCONNECTED = 4900,
+  CHAIN_DISCONNECTED = 4901,
+
+  // https://docs.metamask.io/guide/rpc-api.html#unrestricted-methods
+  CHAIN_NOT_ADDED = 4902,
+  MM_ALREADY_PENDING = -32002,
+
+  WC_MODAL_CLOSED = 'Error: User closed modal',
+  CB_REJECTED_REQUEST = 'Error: User denied account authorization',
 }
 
-export function getIsMetaMask(): boolean {
-  return window.ethereum?.isMetaMask ?? false
-}
-
-export function getIsCoinbaseWallet(): boolean {
-  return window.ethereum?.isCoinbaseWallet ?? false
-}
-
-const CONNECTIONS = [
-  gnosisSafeConnection,
-  injectedConnection,
-  coinbaseWalletConnection,
-  walletConnectConnection,
-  networkConnection,
-]
-export function getConnection(c: Connector | ConnectionType) {
-  if (c instanceof Connector) {
-    const connection = CONNECTIONS.find((connection) => connection.connector === c)
-    if (!connection) {
-      throw Error('unsupported connector')
-    }
-    return connection
-  } else {
-    switch (c) {
-      case ConnectionType.INJECTED:
-        return injectedConnection
-      case ConnectionType.COINBASE_WALLET:
-        return coinbaseWalletConnection
-      case ConnectionType.WALLET_CONNECT:
-        return walletConnectConnection
-      case ConnectionType.NETWORK:
-        return networkConnection
-      case ConnectionType.GNOSIS_SAFE:
-        return gnosisSafeConnection
-    }
-  }
-}
-
-export function getConnectionName(connectionType: ConnectionType, isMetaMask?: boolean) {
-  switch (connectionType) {
-    case ConnectionType.INJECTED:
-      return isMetaMask ? 'MetaMask' : 'Injected'
-    case ConnectionType.COINBASE_WALLET:
-      return 'Coinbase Wallet'
-    case ConnectionType.WALLET_CONNECT:
-      return 'WalletConnect'
-    case ConnectionType.NETWORK:
-      return 'Network'
-    case ConnectionType.GNOSIS_SAFE:
-      return 'Gnosis Safe'
-  }
+// TODO(WEB-3279): merge this function with existing didUserReject for Swap errors
+export function didUserReject(connection: Connection, error: any): boolean {
+  return (
+    error?.code === ErrorCode.USER_REJECTED_REQUEST ||
+    (connection.type === ConnectionType.WALLET_CONNECT && error?.toString?.() === ErrorCode.WC_MODAL_CLOSED) ||
+    (connection.type === ConnectionType.COINBASE_WALLET && error?.toString?.() === ErrorCode.CB_REJECTED_REQUEST)
+  )
 }

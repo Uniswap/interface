@@ -1,26 +1,27 @@
 import { TraceEvent } from '@uniswap/analytics'
-import { BrowserEvent, ElementName, EventName } from '@uniswap/analytics-events'
+import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import Loader from 'components/Icons/LoadingSpinner'
 import TokenSafetyIcon from 'components/TokenSafety/TokenSafetyIcon'
 import { checkWarning } from 'constants/tokenSafety'
 import { CSSProperties, MutableRefObject, useCallback, useMemo } from 'react'
 import { Check } from 'react-feather'
 import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
+import { useActiveSmartPool } from 'state/application/hooks'
 import styled from 'styled-components/macro'
 
 import { useIsUserAddedToken } from '../../../hooks/Tokens'
 import { useCurrencyBalance } from '../../../state/connection/hooks'
 import { WrappedTokenInfo } from '../../../state/lists/wrappedTokenInfo'
-import { useSwapState } from '../../../state/swap/hooks'
 import { ThemedText } from '../../../theme'
 import Column, { AutoColumn } from '../../Column'
-import Loader from '../../Loader'
 import CurrencyLogo from '../../Logo/CurrencyLogo'
 import Row, { RowFixed } from '../../Row'
 import { MouseoverTooltip } from '../../Tooltip'
 import { LoadingRows, MenuItem } from '../styleds'
+import { scrollbarStyle } from './index.css'
 
 function currencyKey(currency: Currency): string {
   return currency.isToken ? currency.address : 'ETHER'
@@ -49,7 +50,7 @@ const CurrencyName = styled(Text)`
 
 const Tag = styled.div`
   background-color: ${({ theme }) => theme.deprecated_bg3};
-  color: ${({ theme }) => theme.deprecated_text2};
+  color: ${({ theme }) => theme.textSecondary};
   font-size: 14px;
   border-radius: 4px;
   padding: 0.25rem 0.3rem 0.25rem 0.3rem;
@@ -61,8 +62,12 @@ const Tag = styled.div`
   margin-right: 4px;
 `
 
-export const WarningContainer = styled.div`
+const WarningContainer = styled.div`
   margin-left: 0.3em;
+`
+
+const ListWrapper = styled.div`
+  padding-right: 0.25rem;
 `
 
 function Balance({ balance }: { balance: CurrencyAmount<Currency> }) {
@@ -125,7 +130,7 @@ export function CurrencyRow({
   const { account } = useWeb3React()
   const key = currencyKey(currency)
   const customAdded = useIsUserAddedToken(currency)
-  const { smartPoolAddress } = useSwapState()
+  const { address: smartPoolAddress } = useActiveSmartPool()
   const balance = useCurrencyBalance(smartPoolAddress ?? undefined, currency)
   const warning = currency.isNative || isSmartPool ? null : checkWarning(currency.address)
   const isBlockedToken = !!warning && !warning.canProceed
@@ -135,9 +140,9 @@ export function CurrencyRow({
   return (
     <TraceEvent
       events={[BrowserEvent.onClick, BrowserEvent.onKeyPress]}
-      name={EventName.TOKEN_SELECTED}
+      name={InterfaceEventName.TOKEN_SELECTED}
       properties={{ is_imported_by_user: customAdded, ...eventProperties }}
-      element={ElementName.TOKEN_SELECTOR_ROW}
+      element={InterfaceElementName.TOKEN_SELECTOR_ROW}
     >
       <MenuItem
         tabIndex={0}
@@ -215,7 +220,7 @@ export const formatAnalyticsEventProperties = (
 })
 
 const LoadingRow = () => (
-  <LoadingRows>
+  <LoadingRows data-testid="loading-rows">
     <div />
     <div />
     <div />
@@ -304,21 +309,34 @@ export default function CurrencyList({
     return currencyKey(currency)
   }, [])
 
-  return isLoading ? (
-    <FixedSizeList height={height} ref={fixedListRef as any} width="100%" itemData={[]} itemCount={10} itemSize={56}>
-      {LoadingRow}
-    </FixedSizeList>
-  ) : (
-    <FixedSizeList
-      height={height}
-      ref={fixedListRef as any}
-      width="100%"
-      itemData={itemData}
-      itemCount={itemData.length}
-      itemSize={56}
-      itemKey={itemKey}
-    >
-      {Row}
-    </FixedSizeList>
+  return (
+    <ListWrapper data-testid="currency-list-wrapper">
+      {isLoading ? (
+        <FixedSizeList
+          className={scrollbarStyle}
+          height={height}
+          ref={fixedListRef as any}
+          width="100%"
+          itemData={[]}
+          itemCount={10}
+          itemSize={56}
+        >
+          {LoadingRow}
+        </FixedSizeList>
+      ) : (
+        <FixedSizeList
+          className={scrollbarStyle}
+          height={height}
+          ref={fixedListRef as any}
+          width="100%"
+          itemData={itemData}
+          itemCount={itemData.length}
+          itemSize={56}
+          itemKey={itemKey}
+        >
+          {Row}
+        </FixedSizeList>
+      )}
+    </ListWrapper>
   )
 }

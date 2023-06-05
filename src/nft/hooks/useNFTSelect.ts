@@ -1,4 +1,4 @@
-import create from 'zustand'
+import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
 
 import { OpenSeaAsset } from '../types'
@@ -25,7 +25,7 @@ export const useNFTSelect = create<SelectNFTState>()(
       selectNFT: (nft) =>
         set(({ selectedNFTs }) => {
           if (selectedNFTs.length === 0) return { selectedNFTs: [nft] }
-          else if (!!selectedNFTs.find((x) => x.id === nft.id))
+          else if (selectedNFTs.some((x) => x.id === nft.id))
             return { selectedNFTs: selectedNFTs.filter((n) => n.id !== nft.id) }
           else return { selectedNFTs: [...selectedNFTs, nft] }
         }),

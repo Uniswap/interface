@@ -12,7 +12,7 @@ const PopoverContainer = styled.div<{ show: boolean }>`
   visibility: ${(props) => (props.show ? 'visible' : 'hidden')};
   opacity: ${(props) => (props.show ? 1 : 0)};
   transition: visibility 150ms linear, opacity 150ms linear;
-  color: ${({ theme }) => theme.deprecated_text2};
+  color: ${({ theme }) => theme.textSecondary};
 `
 
 const ReferenceElement = styled.div`
@@ -33,9 +33,9 @@ const Arrow = styled.div`
     z-index: 9998;
 
     content: '';
-    border: 1px solid ${({ theme }) => theme.deprecated_bg2};
+    border: 1px solid ${({ theme }) => theme.backgroundInteractive};
     transform: rotate(45deg);
-    background: ${({ theme }) => theme.deprecated_bg0};
+    background: ${({ theme }) => theme.backgroundSurface};
   }
 
   &.arrow-top {
@@ -99,8 +99,8 @@ export default function Popover({
   const [popperElement, setPopperElement] = useState<HTMLDivElement | null>(null)
   const [arrowElement, setArrowElement] = useState<HTMLDivElement | null>(null)
 
-  const options = useMemo(
-    (): Options => ({
+  const options: Options = useMemo(
+    () => ({
       placement,
       strategy: 'fixed',
       modifiers: [
@@ -109,7 +109,7 @@ export default function Popover({
         { name: 'preventOverflow', options: { padding: 8 } },
       ],
     }),
-    [arrowElement, offsetX, offsetY, placement]
+    [placement, offsetX, offsetY, arrowElement]
   )
 
   const { styles, update, attributes } = usePopper(referenceElement, popperElement, options)

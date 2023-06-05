@@ -1,16 +1,10 @@
 import { style } from '@vanilla-extract/css'
-import {
-  MAX_WIDTH_MEDIA_BREAKPOINT,
-  MOBILE_MEDIA_BREAKPOINT,
-  SMALL_MEDIA_BREAKPOINT,
-} from 'components/Tokens/constants'
+import { MOBILE_MEDIA_BREAKPOINT, SMALL_MEDIA_BREAKPOINT, XLARGE_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import { buttonTextMedium } from 'nft/css/common.css'
 import { loadingBlock } from 'nft/css/loading.css'
 import { css } from 'styled-components/macro'
 
-import { sprinkles, vars } from '../../css/sprinkles.css'
-
-export const bannerImage = style({ objectFit: 'cover' })
+import { sprinkles } from '../../css/sprinkles.css'
 
 export const baseActivitySwitcherToggle = style([
   buttonTextMedium,
@@ -32,25 +26,6 @@ export const activitySwitcherToggle = style([
   }),
 ])
 
-export const selectedActivitySwitcherToggle = style([
-  baseActivitySwitcherToggle,
-  sprinkles({
-    color: 'textPrimary',
-  }),
-  {
-    ':after': {
-      content: '',
-      position: 'absolute',
-      background: vars.color.genieBlue,
-      width: '100%',
-      height: '2px',
-      left: '0px',
-      right: '0px',
-      bottom: '-8px',
-    },
-  },
-])
-
 export const loadingBanner = style([
   loadingBlock,
   sprinkles({
@@ -66,12 +41,12 @@ export const noCollectionAssets = sprinkles({
 })
 
 export const ScreenBreakpointsPaddings = css`
-  @media screen and (min-width: ${MAX_WIDTH_MEDIA_BREAKPOINT}) {
+  @media screen and (min-width: ${XLARGE_MEDIA_BREAKPOINT}) {
     padding-left: 48px;
     padding-right: 48px;
   }
 
-  @media screen and (max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT}) {
+  @media screen and (max-width: ${XLARGE_MEDIA_BREAKPOINT}) {
     padding-left: 26px;
     padding-right: 26px;
   }

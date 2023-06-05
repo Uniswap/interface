@@ -1,6 +1,5 @@
 import { Interface } from '@ethersproject/abi'
-import { Trans } from '@lingui/macro'
-import { abi as STAKING_REWARDS_ABI } from '@uniswap/liquidity-staker/build/StakingRewards.json'
+import StakingRewardsJSON from '@uniswap/liquidity-staker/build/StakingRewards.json'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { useWeb3React } from '@web3-react/core'
@@ -8,18 +7,15 @@ import { SupportedChainId } from 'constants/chains'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import JSBI from 'jsbi'
 import { NEVER_RELOAD, useMultipleContractSingleData } from 'lib/hooks/multicall'
-import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
-import { ReactNode, useMemo } from 'react'
+import { useMemo } from 'react'
 
 import { DAI, UNI, USDC_MAINNET, USDT, WBTC, WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
 
-const STAKING_REWARDS_INTERFACE = new Interface(STAKING_REWARDS_ABI)
+const STAKING_REWARDS_INTERFACE = new Interface(StakingRewardsJSON.abi)
 
 export const STAKING_GENESIS = 1600387200
 
-export const REWARDS_DURATION_DAYS = 60
-
-export const STAKING_REWARDS_INFO: {
+const STAKING_REWARDS_INFO: {
   [chainId: number]: {
     tokens: [Token, Token]
     stakingRewardAddress: string
@@ -45,7 +41,7 @@ export const STAKING_REWARDS_INFO: {
   ],
 }
 
-export interface StakingInfo {
+interface StakingInfo {
   // the address of the reward contract
   stakingRewardAddress: string
   // the tokens involved in this pair
@@ -62,7 +58,7 @@ export interface StakingInfo {
   // equivalent to percent of total supply * reward rate
   rewardRate: CurrencyAmount<Token>
   // when the period ends
-  periodFinish: Date | undefined
+  periodFinish?: Date
   // if pool is active
   active: boolean
   // calculates a hypothetical amount of token distributed to the active account per second.
@@ -226,36 +222,4 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
     totalSupplies,
     uni,
   ])
-}
-
-// based on typed value
-export function useDerivedStakeInfo(
-  typedValue: string,
-  stakingToken: Token | undefined,
-  userLiquidityUnstaked: CurrencyAmount<Token> | undefined
-): {
-  parsedAmount?: CurrencyAmount<Token>
-  error?: ReactNode
-} {
-  const { account } = useWeb3React()
-
-  const parsedInput: CurrencyAmount<Token> | undefined = tryParseCurrencyAmount(typedValue, stakingToken)
-
-  const parsedAmount =
-    parsedInput && userLiquidityUnstaked && JSBI.lessThanOrEqual(parsedInput.quotient, userLiquidityUnstaked.quotient)
-      ? parsedInput
-      : undefined
-
-  let error: ReactNode | undefined
-  if (!account) {
-    error = <Trans>Connect Wallet</Trans>
-  }
-  if (!parsedAmount) {
-    error = error ?? <Trans>Enter an amount</Trans>
-  }
-
-  return {
-    parsedAmount,
-    error,
-  }
 }

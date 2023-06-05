@@ -20,7 +20,6 @@ import { calculateGasMargin } from 'utils/calculateGasMargin'
 
 import { SupportedChainId } from '../../constants/chains'
 import { CallStateResult, useSingleContractMultipleData } from '../../lib/hooks/multicall'
-import { AppState } from '../index'
 import { useLogs } from '../logs/hooks'
 import { filterToKey } from '../logs/utils'
 import { useTransactionAdder } from '../transactions/hooks'
@@ -29,14 +28,7 @@ import { TransactionType } from '../transactions/types'
 //const PoolInterface = new Interface(POOL_EXTENDED_ABI)
 const RegistryInterface = new Interface(RB_REGISTRY_ABI)
 
-// TODO: create pool state in ../index and create pool reducer if we want to store pool data in state
-// actually we do want to store them in state as we want to query pool address and name from state
-//  check variable renaming to avoid confusion with liquidity pools
-export function usePoolState(): AppState['swap'] {
-  return useAppSelector((state) => state.swap)
-}
-
-export function useRegistryContract(): Contract | null {
+function useRegistryContract(): Contract | null {
   return useContract(RB_REGISTRY_ADDRESSES, RB_REGISTRY_ABI, true)
 }
 
@@ -54,14 +46,6 @@ export interface PoolRegisteredLog {
   name: string
   symbol: string
   id: string
-}
-
-export interface PoolData {
-  name: string
-  symbol: string
-  decimals: number
-  owner: string
-  baseToken: string
 }
 
 function useStartBlock(chainId: number | undefined): number | undefined {
@@ -89,7 +73,7 @@ function useStartBlock(chainId: number | undefined): number | undefined {
 /**
  * Need pool events to get list of pools by owner.
  */
-export function useFormattedPoolCreatedLogs(
+function useFormattedPoolCreatedLogs(
   contract: Contract | null,
   account: string | undefined,
   fromBlock: number
@@ -126,7 +110,7 @@ export function useFormattedPoolCreatedLogs(
   }, [useLogsResult])
 }
 
-export function useAllPoolsData(): { data: PoolRegisteredLog[] | undefined; loading: boolean } {
+export function useAllPoolsData(): { data?: PoolRegisteredLog[]; loading: boolean } {
   const { account, chainId } = useWeb3React()
   const registry = useRegistryContract()
 
@@ -162,7 +146,7 @@ export function useAllPoolsData(): { data: PoolRegisteredLog[] | undefined; load
 
     // prevent display if wallet not connected
     if (!account) {
-      return { data: undefined, loading: false }
+      return { loading: false }
     }
 
     // TODO: check why quicknode returns error on log query, seems app keeps calling infura
@@ -310,7 +294,7 @@ interface StakingPools {
 
 interface UseStakingPools {
   loading: boolean
-  stakingPools: StakingPools[] | undefined
+  stakingPools?: StakingPools[]
 }
 
 export function useStakingPools(addresses: string[] | undefined, poolIds: string[] | undefined): UseStakingPools {
@@ -389,7 +373,7 @@ export function useStakingPools(addresses: string[] | undefined, poolIds: string
       delegatedOwnStake: delegatedOwnStakes[i].poolOwnStake,
     }))
 
-    return poolsInfo?.map((p, i) => {
+    return poolsInfo?.map((p) => {
       // if we want to return NaN when pool has no delegated stake, we can remove the following assertion
       const apr =
         p.delegatedStake.toString() !== BigNumber.from(0).toString()
