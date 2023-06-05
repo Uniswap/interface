@@ -48,6 +48,7 @@ import { usePool } from 'hooks/usePools'
 import { Fraction, Price } from '@uniswap/sdk-core'
 import { DEFAULT_ERC20_DECIMALS } from 'constants/tokens'
 import { formatSymbol } from 'lib/utils/formatSymbol'
+import { TruncatedText } from 'components/swap/styleds'
 
 const Cell = styled.div`
   display: flex;
@@ -63,7 +64,7 @@ const StyledTokenRow = styled.div<{
   background-color: transparent;
   display: grid;
   font-size: 16px;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 0.5fr;
+  grid-template-columns: 1fr 1fr 1fr 0.75fr 1fr 1fr 1fr 0.5fr;
   line-height: 24px;
   max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT};
   min-width: 390px;
@@ -96,15 +97,15 @@ const StyledTokenRow = styled.div<{
   }
 
   @media only screen and (max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT}) {
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 0.5fr;
+    grid-template-columns: 1fr 1fr 1fr 0.75fr 1fr 1fr 1fr 0.5fr;
   }
 
   @media only screen and (max-width: ${LARGE_MEDIA_BREAKPOINT}) {
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 0.5fr;
+    grid-template-columns: 1fr 1fr 1fr 0.75fr 1fr 1fr 1fr 0.5fr;
   }
 
   @media only screen and (max-width: ${MEDIUM_MEDIA_BREAKPOINT}) {
-    grid-template-columns:  1fr 1fr 1fr 1fr 1fr 1fr 1fr 0.5fr;
+    grid-template-columns:  1fr 1fr 1fr 0.75fr 1fr 1fr 1fr 0.5fr;
   }
 
   @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
@@ -715,8 +716,9 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
               <RowBetween>
                 <PositionInfo>
                   <TruncatedTableText>
-                    <GreenText> x{(Math.round(leverageFactor*1000)/1000)}</GreenText> {outputCurrencySymbol}
+                    <GreenText> x{(Math.round(leverageFactor*1000)/1000)}</GreenText> 
                   </TruncatedTableText>
+                  {outputCurrencySymbol}
                 </PositionInfo>
               </RowBetween>
             </ClickableContent>
@@ -724,16 +726,17 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
           value={
             <Trans>
               <TruncatedTableText>
-
-                {(Math.round(Number(position.totalPosition)*10000)/10000)} {outputCurrencySymbol}
+                {(Math.round(Number(position.totalPosition)*10000)/10000)}
               </TruncatedTableText>
+              {outputCurrencySymbol}
             </Trans>
           }
           collateral={
             <Trans>
               <TruncatedTableText>
-                {(Math.round(Number(position.initialCollateral)*10000)/10000)} {inputCurrencySymbol}
+                {(Math.round(Number(position.initialCollateral)*10000)/10000)}
               </TruncatedTableText>
+              {inputCurrencySymbol}
             </Trans>
           }
           repaymentTime={
@@ -768,17 +771,20 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
           }
           entryPrice={
             <Trans>
-              <TruncatedTableText>
-                {(Math.round(Number(entryPrice)*10000)/10000)} {quoteBaseSymbol}
-              </TruncatedTableText>
+              <AutoColumn>
+              <TruncatedText>
+                {(Math.round(Number(entryPrice)*10000)/10000)}
+              </TruncatedText>
+              {quoteBaseSymbol}
+              </AutoColumn>
             </Trans>
           }
           remainingPremium={
             <Trans>
               <TruncatedTableText>
-
-                {(Math.round(Number(position.unusedPremium)*10000)/10000)} {inputCurrencySymbol}
+                {(Math.round(Number(position.unusedPremium)*10000)/10000)}
               </TruncatedTableText>
+              {inputCurrencySymbol}
             </Trans>
           }
           // recentPremium={

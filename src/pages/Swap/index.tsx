@@ -971,7 +971,7 @@ export default function Swap({ className }: { className?: string }) {
   const showBorrowInputApproval = borrowInputApprovalState !== ApprovalState.APPROVED
   const showBorrowOutputApproval = borrowOutputApprovalState !== ApprovalState.APPROVED
 
-  // console.log("borrowManagerAddress: ", borrowManagerAddress)
+  // console.log("borrowPositions: ", borrowPositions)
 
   return (
     <Trace page={InterfacePageName.SWAP_PAGE} shouldLogImpression>

@@ -63,7 +63,7 @@ const StyledTokenRow = styled.div<{
   background-color: transparent;
   display: grid;
   font-size: 16px;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 0.75fr 1fr 1fr 0.3fr;
   line-height: 24px;
   max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT};
   min-width: 390px;
@@ -96,15 +96,15 @@ const StyledTokenRow = styled.div<{
   }
 
   @media only screen and (max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT}) {
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 0.75fr 1fr 1fr 0.3fr;
   }
 
   @media only screen and (max-width: ${LARGE_MEDIA_BREAKPOINT}) {
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 0.75fr 1fr 1fr 0.3fr;
   }
 
   @media only screen and (max-width: ${MEDIUM_MEDIA_BREAKPOINT}) {
-    grid-template-columns:  1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-columns:  1fr 1fr 1fr 0.75fr 1fr 1fr 0.3fr;
   }
 
   @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
@@ -624,9 +624,9 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
 
   const [inputCurrencySymbol, outputCurrencySymbol] = useMemo(() => {
     if (position.isToken0) {
-      return [formatSymbol(token1?.symbol), formatSymbol(token0?.symbol)]
+      return [formatSymbol(token0?.symbol), formatSymbol(token1?.symbol)] 
     } else {
-      return [formatSymbol(token0?.symbol), formatSymbol(token1?.symbol)]
+      return [formatSymbol(token1?.symbol), formatSymbol(token0?.symbol)]
     }
   }, [
     token0,
@@ -661,17 +661,16 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
           ltv={
             <Trans>
               <TruncatedTableText>
-                {(Number(ltv))}
+                {formatNumber(Number(ltv) * 100)}%
                 </TruncatedTableText>
-                {outputCurrencySymbol}
-              
             </Trans>
           }
           borrowedAmount={
             <Trans>
               <TruncatedTableText>
-                {(Number(position.totalDebtInput))} {outputCurrencySymbol}
+                {(Number(position.totalDebtInput))}
               </TruncatedTableText>
+              {outputCurrencySymbol}
             </Trans>
           }
           collateral={
@@ -700,8 +699,9 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
           remainingPremium={
             <Trans>
               <TruncatedTableText>
-                {(Number(position.unusedPremium))} {inputCurrencySymbol}
+                {(Number(position.unusedPremium))}
               </TruncatedTableText>
+              {inputCurrencySymbol}
             </Trans>
           }
           position={position}
