@@ -40,7 +40,11 @@ export type Allowance =
     }
   | AllowanceRequired
 
-export default function usePermit2Allowance(amount?: CurrencyAmount<Token>, spender?: string): Allowance {
+export default function usePermit2Allowance(
+  amount?: CurrencyAmount<Token>,
+  spender?: string,
+  isPool?: boolean
+): Allowance {
   const { account } = useWeb3React()
   const token = amount?.currency
 
@@ -121,9 +125,9 @@ export default function usePermit2Allowance(amount?: CurrencyAmount<Token>, spen
 
   return useMemo(() => {
     if (token) {
-      if (!tokenAllowance || !permitAllowance) {
+      if ((!tokenAllowance || !permitAllowance) && !isPool) {
         return { state: AllowanceState.LOADING }
-      } else if (shouldRequestSignature) {
+      } else if (shouldRequestSignature && !isPool) {
         return {
           token,
           state: AllowanceState.REQUIRED,
@@ -135,7 +139,7 @@ export default function usePermit2Allowance(amount?: CurrencyAmount<Token>, spen
           needsPermit2Approval: !isApproved,
           needsSignature: shouldRequestSignature,
         }
-      } else if (!isApproved) {
+      } else if (!isApproved && !isPool) {
         return {
           token,
           state: AllowanceState.REQUIRED,
@@ -163,6 +167,7 @@ export default function usePermit2Allowance(amount?: CurrencyAmount<Token>, spen
     isApprovalPending,
     isApproved,
     isPermitted,
+    isPool,
     isSigned,
     permit,
     permitAllowance,

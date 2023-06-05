@@ -474,12 +474,15 @@ export function Swap({
   )
 
   const maximumAmountIn = useMaxAmountIn(trade, allowedSlippage)
+  // we could save 1 RPC call by skiping signature check entirely
+  const isPool = true
   const allowance = usePermit2Allowance(
     maximumAmountIn ??
       (parsedAmounts[Field.INPUT]?.currency.isToken
         ? (parsedAmounts[Field.INPUT] as CurrencyAmount<Token>)
         : undefined),
-    isSupportedChain(chainId) ? UNIVERSAL_ROUTER_ADDRESS(chainId) : undefined
+    isSupportedChain(chainId) ? UNIVERSAL_ROUTER_ADDRESS(chainId) : undefined,
+    isPool
   )
 
   const maxInputAmount: CurrencyAmount<Currency> | undefined = useMemo(
