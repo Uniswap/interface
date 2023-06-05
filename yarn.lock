@@ -3292,10 +3292,10 @@
   resolved "https://registry.yarnpkg.com/@looksrare/sdk/-/sdk-0.10.2.tgz#08b14cb6d3a5499ad0417c817dbb2da924477f4f"
   integrity sha512-K3VVq7rpS0hD5IwfhAcAPJZO5IjL0VbL89Zl04x8WnLsFOwXHzsUkxUpRrL8ko2/bgZdgTqWgUWCvbSoVr8hzw==
 
-"@mendable/search@^0.0.93":
-  version "0.0.93"
-  resolved "https://registry.yarnpkg.com/@mendable/search/-/search-0.0.93.tgz#079ff6daa767ec810f6a9fdff4b52d329cc3defd"
-  integrity sha512-MK4WUzp2xz/F/uCC+gNnUCdjD8Mp783uwS2J6N71Pyw2WxE9byg+vx/7yjtS3itW87mIQ8Fo5nWlcEzQlv8zLA==
+"@mendable/search@^0.0.109-beta.2":
+  version "0.0.109-beta.2"
+  resolved "https://registry.yarnpkg.com/@mendable/search/-/search-0.0.109-beta.2.tgz#8a44ba2106581562e3614e748304ae5f9308d111"
+  integrity sha512-y4OGa1praDHsbq3D2v4QaUNmWPTWgYx4owGDmfkrryyk0H9j0cSAUs8Dz6wtwDWC/HHaTVRh6EmiUltSQC+AUg==
   dependencies:
     posthog-js "^1.45.1"
 
