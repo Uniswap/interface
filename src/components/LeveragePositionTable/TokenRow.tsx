@@ -696,6 +696,14 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
     position
   ])
 
+  const remainingPremium = useMemo(() => {
+    if (position) {
+      const timeLeft = moment.duration(moment.unix(Number(position.openTime)).add(1, 'days').diff(now));
+      return position.unusedPremium * (timeLeft.asSeconds() / 86400);
+    }
+    return "-"
+  }, [position, now])
+
   // const token0Quote = useMemo(() => {
   //   return pool?.token0Price?.greaterThan(1)
   // },[pool?.token0Price])
@@ -782,7 +790,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
           remainingPremium={
             <Trans>
               <TruncatedTableText>
-                {(Math.round(Number(position.unusedPremium)*10000)/10000)}
+                {(remainingPremium)}
               </TruncatedTableText>
               {` ${inputCurrencySymbol}`}
             </Trans>

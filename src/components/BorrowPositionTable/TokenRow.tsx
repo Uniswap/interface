@@ -634,6 +634,15 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
     position
   ])
 
+  // unused premium * (
+  const remainingPremium = useMemo(() => {
+    if (position) {
+      const timeLeft = moment.duration(moment.unix(Number(position.openTime)).add(1, 'days').diff(now));
+      return position.unusedPremium * (timeLeft.asSeconds() / 86400);
+    }
+    return "-"
+  }, [position, now])
+
   // TODO: currency logo sizing mobile (32px) vs. desktop (24px)
   return (
     <div ref={ref} data-testid={`token-table-row-${position.tokenId}`}>
@@ -691,7 +700,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
           remainingPremium={
             <Trans>
               <TruncatedTableText>
-                {(Number(position.unusedPremium))}
+                {(remainingPremium)}
               </TruncatedTableText>
               {" " + inputCurrencySymbol}
             </Trans>
