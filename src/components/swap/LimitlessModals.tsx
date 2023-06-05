@@ -10,7 +10,7 @@ import TransactionConfirmationModal, {
 import { AddPremiumLeverageModalFooter, ReduceLeverageModalFooter } from './SwapModalFooter'
 
 import { useLimitlessPositionFromTokenId } from 'hooks/useV3Positions'
-import { CloseLeveragePositionDetails } from './AdvancedSwapDetails'
+import { ReduceLeveragePositionDetails } from './AdvancedSwapDetails'
 import { useLeverageManagerContract } from 'hooks/useContract'
 
 
@@ -48,7 +48,7 @@ export default function ClosePositionModal({
 
   const modalHeader = useCallback(() => {
     return (
-      <CloseLeveragePositionDetails leverageTrade={position}/>
+      <ReduceLeveragePositionDetails leverageTrade={position}/>
     )
   }, [onAcceptChanges, shouldLogModalCloseEvent])
 
@@ -152,7 +152,7 @@ export function AddPremiumModal({
 
   const modalHeader = useCallback(() => {
     return (
-      <CloseLeveragePositionDetails leverageTrade={position}/>
+      <ReduceLeveragePositionDetails leverageTrade={position}/>
     )
   }, [onAcceptChanges, shouldLogModalCloseEvent])
 

@@ -38,6 +38,11 @@ interface AdvancedSwapDetailsProps {
   //leverageTrade: LeverageTrade
 }
 
+const StyledText = styled(ThemedText.DeprecatedBlack)`
+  display: flex;
+  flex-direction: row;
+`
+
 interface AdvancedAddLeverageDetailsProps {
   trade?: InterfaceTrade<Currency, Currency, TradeType>
   allowedSlippage: Percent
@@ -103,13 +108,14 @@ export function AdvancedSwapDetails({
           </RowFixed>
           <TextWithLoadingPlaceholder syncing={syncing} width={65}>
 
-            <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
+            <StyledText textAlign="right" fontSize={14}>
               <TruncatedText>
                 {trade?.outputAmount.toFixed(3)
-                  ? `${trade?.outputAmount.toFixed(3)}  ${trade.outputAmount.currency.symbol}`
+                  ? `${trade?.outputAmount.toFixed(3)}`
                   : '-'}
               </TruncatedText>
-            </ThemedText.DeprecatedBlack>
+              {trade.outputAmount.currency.symbol}
+            </StyledText>
 
 
           </TextWithLoadingPlaceholder>
@@ -196,7 +202,7 @@ export function AdvancedSwapDetails({
   )
 }
 
-export function CloseLeveragePositionDetails({
+export function ReduceLeveragePositionDetails({
   leverageTrade // user defined slippage.
 }: {
   leverageTrade: LimitlessPositionDetails | undefined,
@@ -229,14 +235,15 @@ export function CloseLeveragePositionDetails({
             </MouseoverTooltip>
           </RowFixed>
           <TextWithLoadingPlaceholder syncing={false} width={65}>
-            <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
+            <StyledText textAlign="right" fontSize={14}>
 
               <TruncatedText>
                 {
-                  `${leverageTrade?.totalPosition ?? "-"}  ${inputIsToken0 ? token1?.symbol : token0?.symbol}`
+                  `${leverageTrade?.totalPosition ?? "-"}`
                 }
               </TruncatedText>
-            </ThemedText.DeprecatedBlack>
+              {inputIsToken0 ? token1?.symbol : token0?.symbol}
+            </StyledText>
           </TextWithLoadingPlaceholder>
         </RowBetween>
         <RowBetween>
@@ -252,11 +259,11 @@ export function CloseLeveragePositionDetails({
           </RowFixed>
           <TextWithLoadingPlaceholder syncing={false} width={50}>
 
-            <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
+            <StyledText textAlign="right" fontSize={14}>
               <TruncatedText>
                 {`${Number(leverageTrade?.totalDebtInput) ?? "-"}  ${inputIsToken0 ? token0?.symbol : token1?.symbol}`}
               </TruncatedText>
-            </ThemedText.DeprecatedBlack>
+            </StyledText>
 
 
           </TextWithLoadingPlaceholder>
@@ -339,14 +346,15 @@ export function BorrowPremiumPositionDetails({
             </MouseoverTooltip>
           </RowFixed>
           <TextWithLoadingPlaceholder syncing={false} width={65}>
-            <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
+            <StyledText textAlign="right" fontSize={14}>
 
               <TruncatedText>
                 {
-                  `${position?.initialCollateral ?? "-"}  ${inputIsToken0 ? token0?.symbol : token1?.symbol}`
+                  `${position?.initialCollateral ?? "-"}`
                 }
               </TruncatedText>
-            </ThemedText.DeprecatedBlack>
+              {inputIsToken0 ? token0?.symbol : token1?.symbol}
+            </StyledText>
           </TextWithLoadingPlaceholder>
         </RowBetween>
         <RowBetween>
@@ -362,11 +370,12 @@ export function BorrowPremiumPositionDetails({
           </RowFixed>
           <TextWithLoadingPlaceholder syncing={false} width={50}>
 
-            <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
+            <StyledText textAlign="right" fontSize={14}>
               <TruncatedText>
-                {`${Number(position?.totalDebtInput) ?? "-"}  ${inputIsToken0 ? token1?.symbol : token0?.symbol}`}
+                {`${Number(position?.totalDebtInput) ?? "-"} `}
               </TruncatedText>
-            </ThemedText.DeprecatedBlack>
+              {inputIsToken0 ?  token1?.symbol : token0?.symbol}
+            </StyledText>
 
 
           </TextWithLoadingPlaceholder>

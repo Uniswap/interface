@@ -59,6 +59,8 @@ import { BorrowCreationDetails } from 'state/swap/hooks'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { TransactionType } from 'state/transactions/types'
 import { getPremiumRate } from 'hooks/addPremium'
+import { useWeb3React } from '@web3-react/core'
+import { useCurrencyBalances } from 'lib/hooks/useCurrencyBalance'
 
 const StyledNumericalInput = styled(NumericalInput)`
   width: 70%;
@@ -416,7 +418,7 @@ function useDerivedLeverageReduceInfo(
         Invalid Trade
       </Trans>)
     }
-    
+
     if (contractResult) {
       const { reducePositionResult } = contractResult
       let token0Amount = new BN(reducePositionResult[0].toString()).shiftedBy(-DEFAULT_ERC20_DECIMALS).toFixed(DEFAULT_ERC20_DECIMALS)
@@ -478,12 +480,25 @@ function useDerivedAddLeveragePremiumInfo(
   isToken0: boolean | undefined,
   setState: (state: DerivedInfoState) => void,
 ): {
-  rate: string | undefined
+  tradeInfo: {
+    rate: string
+  } | undefined,
+  inputError: React.ReactNode | undefined
 } {
   const leverageManagerContract = useLeverageManagerContract(leverageManager)
   const [contractResult, setContractResult] = useState<{
     addPremiumResult: any
   }>()
+  const { position } = useLimitlessPositionFromTokenId(tokenId)
+
+  const { account } = useWeb3React()
+  const currency0 = useCurrency(position?.token0Address)
+  const currency1 = useCurrency(position?.token1Address)
+
+  const relevantTokenBalances = useCurrencyBalances(
+    account ?? undefined,
+    useMemo(() => [currency0 ?? undefined, currency1 ?? undefined], [currency0, currency1])
+  )
 
   useEffect(() => {
     const laggedfxn = async () => {
@@ -513,22 +528,39 @@ function useDerivedAddLeveragePremiumInfo(
   }, [leverageManager, trader, tokenId, isToken0])
 
   const info = useMemo(() => {
-    // console.log("addPosition2:", contractResult)
-
     if (contractResult) {
       return {
         rate: (Number(contractResult.addPremiumResult) / (1e16)).toString()//.shiftedBy(-18).toFixed(12)
       }
     } else {
-      return {
-        rate: undefined
-      }
+      return undefined
     }
   }, [
     contractResult
   ])
 
-  return info
+  const inputError = useMemo(() => {
+    if (position) {
+      const isToken0 = position.isToken0
+      const token0Balance = relevantTokenBalances[0]
+      const token1Balance = relevantTokenBalances[1]
+      let inputError
+      if (isToken0 && Number(token1Balance?.toExact()) < position.recentPremium - position.unusedPremium) {
+        inputError = (<Trans>
+          Insufficient {currency1?.symbol} balance
+        </Trans>)
+      } else if (!isToken0 && Number(token0Balance?.toExact()) < position.recentPremium - position.unusedPremium) {
+        inputError = (<Trans>
+          Insufficient {currency0?.symbol} balance
+        </Trans>)
+      }
+
+      return inputError
+    }
+    return undefined
+  }, [relevantTokenBalances, account, position])
+
+  return { tradeInfo: info, inputError }
 }
 
 function useDerivedAddBorrowPremiumInfo(
@@ -538,12 +570,26 @@ function useDerivedAddBorrowPremiumInfo(
   isToken0: boolean | undefined,
   setState: (state: DerivedInfoState) => void,
 ): {
-  rate: string | undefined
+  tradeInfo: {
+    rate: string
+  } | undefined,
+  inputError: React.ReactNode | undefined
 } {
   const borowManagerContract = useLeverageManagerContract(borowManager)
   const [contractResult, setContractResult] = useState<{
     addPremiumResult: any
   }>()
+
+  const { position } = useLimitlessPositionFromTokenId(tokenId)
+
+  const { account } = useWeb3React()
+  const currency0 = useCurrency(position?.token0Address)
+  const currency1 = useCurrency(position?.token1Address)
+
+  const relevantTokenBalances = useCurrencyBalances(
+    account ?? undefined,
+    useMemo(() => [currency0 ?? undefined, currency1 ?? undefined], [currency0, currency1])
+  )
 
   useEffect(() => {
     const laggedfxn = async () => {
@@ -580,15 +626,37 @@ function useDerivedAddBorrowPremiumInfo(
         rate: (Number(contractResult.addPremiumResult) / (1e16)).toString()//.shiftedBy(-18).toFixed(12)
       }
     } else {
-      return {
-        rate: undefined
-      }
+      return undefined
     }
   }, [
     contractResult
   ])
 
-  return info
+  const inputError = useMemo(() => {
+    if (position) {
+      const isToken0 = position.isToken0
+      const token0Balance = relevantTokenBalances[0]
+      const token1Balance = relevantTokenBalances[1]
+      let inputError
+      if (isToken0 && Number(token1Balance?.toExact()) < position.recentPremium - position.unusedPremium) {
+        inputError = (<Trans>
+          Insufficient {currency1?.symbol} balance
+        </Trans>)
+      } else if (!isToken0 && Number(token0Balance?.toExact()) < position.recentPremium - position.unusedPremium) {
+        inputError = (<Trans>
+          Insufficient {currency0?.symbol} balance
+        </Trans>)
+      }
+
+      return inputError
+    }
+    return undefined
+  }, [relevantTokenBalances, account, position])
+
+  return {
+    tradeInfo: info,
+    inputError
+  }
 }
 
 
@@ -613,7 +681,7 @@ export function ReduceLeverageModalFooter({
   const [reduceAmount, setReduceAmount] = useState("")
 
   const leverageManagerContract = useLeverageManagerContract(leverageManagerAddress, true)
-  const addTransaction = useTransactionAdder() 
+  const addTransaction = useTransactionAdder()
 
   const handleReducePosition = useMemo(() => {
     if (leverageManagerContract && position && Number(reduceAmount) > 0 && Number(reduceAmount) <= Number(position.totalPosition)) {
@@ -809,11 +877,11 @@ export function ReduceLeverageModalFooter({
                         <TextWithLoadingPlaceholder syncing={loading} width={65}>
                           <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
                             <TruncatedText>
-                            {
-                              `${inputIsToken0 ? new BN(token1Amount).abs().toString() : new BN(token0Amount).abs().toString()}  ${!inputIsToken0 ? token0?.symbol : token1?.symbol}`
-                            }
+                              {
+                                `${inputIsToken0 ? new BN(token1Amount).abs().toString() : new BN(token0Amount).abs().toString()}  ${!inputIsToken0 ? token0?.symbol : token1?.symbol}`
+                              }
                             </TruncatedText>
-                            
+
                           </ThemedText.DeprecatedBlack>
                         </TextWithLoadingPlaceholder>
                       </RowBetween>
@@ -836,9 +904,9 @@ export function ReduceLeverageModalFooter({
                         <TextWithLoadingPlaceholder syncing={loading} width={65}>
                           <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
                             <TruncatedText>
-                            {
-                              `${inputIsToken0 ? new BN(token0Amount).abs().toString() : new BN(token1Amount).abs().toString()}  ${inputIsToken0 ? token0?.symbol : token1?.symbol}`
-                            }
+                              {
+                                `${inputIsToken0 ? new BN(token0Amount).abs().toString() : new BN(token1Amount).abs().toString()}  ${inputIsToken0 ? token0?.symbol : token1?.symbol}`
+                              }
                             </TruncatedText>
                           </ThemedText.DeprecatedBlack>
                         </TextWithLoadingPlaceholder>
@@ -860,9 +928,9 @@ export function ReduceLeverageModalFooter({
                         <TextWithLoadingPlaceholder syncing={loading} width={65}>
                           <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
                             <TruncatedText>
-                            {
-                              unusedPremium && `${Number(unusedPremium)}  ${inputIsToken0 ? token0?.symbol : token1?.symbol}`
-                            }
+                              {
+                                unusedPremium && `${Number(unusedPremium)}  ${inputIsToken0 ? token0?.symbol : token1?.symbol}`
+                              }
                             </TruncatedText>
                           </ThemedText.DeprecatedBlack>
                         </TextWithLoadingPlaceholder>
@@ -884,9 +952,9 @@ export function ReduceLeverageModalFooter({
                         <TextWithLoadingPlaceholder syncing={loading} width={65}>
                           <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
                             <TruncatedText>
-                            {
-                              premium && `${Number(premium)}  ${inputIsToken0 ? token0?.symbol : token1?.symbol}`
-                            }
+                              {
+                                premium && `${Number(premium)}  ${inputIsToken0 ? token0?.symbol : token1?.symbol}`
+                              }
                             </TruncatedText>
                           </ThemedText.DeprecatedBlack>
                         </TextWithLoadingPlaceholder>
@@ -917,29 +985,29 @@ export function ReduceLeverageModalFooter({
                         </TextWithLoadingPlaceholder>
                       </RowBetween> */}
                       <RowBetween>
-                      <RowFixed>
-                        <MouseoverTooltip
-                          text={
-                            <Trans>
-                              Expected PnL from what you originally paid
-                            </Trans>
-                          }
-                        >
-                          <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
-                            <Trans>Expected PnL</Trans>
-                          </ThemedText.DeprecatedSubHeader>
-                        </MouseoverTooltip>
-                      </RowFixed>
-                      <TextWithLoadingPlaceholder syncing={loading} width={65}>
-                        <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
-                          <TruncatedText>
-                            {
-                              `${(Number(pnl))}  ${inputIsToken0 ? token0?.symbol : token1?.symbol}`
+                        <RowFixed>
+                          <MouseoverTooltip
+                            text={
+                              <Trans>
+                                Expected PnL from what you originally paid
+                              </Trans>
                             }
-                          </TruncatedText>
-                        </ThemedText.DeprecatedBlack>
-                      </TextWithLoadingPlaceholder>
-                    </RowBetween>
+                          >
+                            <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
+                              <Trans>Expected PnL</Trans>
+                            </ThemedText.DeprecatedSubHeader>
+                          </MouseoverTooltip>
+                        </RowFixed>
+                        <TextWithLoadingPlaceholder syncing={loading} width={65}>
+                          <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
+                            <TruncatedText>
+                              {
+                                `${(Number(pnl))}  ${inputIsToken0 ? token0?.symbol : token1?.symbol}`
+                              }
+                            </TruncatedText>
+                          </ThemedText.DeprecatedBlack>
+                        </TextWithLoadingPlaceholder>
+                      </RowBetween>
                     </AutoColumn>
 
                   </StyledCard>
@@ -984,11 +1052,11 @@ export function AddPremiumLeverageModalFooter({
   const { error, position } = useLimitlessPositionFromTokenId(tokenId)
   const token0 = useToken(position?.token0Address)
   const token1 = useToken(position?.token1Address)
-  const { rate } = useDerivedAddLeveragePremiumInfo(leverageManagerAddress, trader, tokenId, position?.isToken0, setDerivedState)
+  const { tradeInfo, inputError } = useDerivedAddLeveragePremiumInfo(leverageManagerAddress, trader, tokenId, position?.isToken0, setDerivedState)
   const inputIsToken0 = !position?.isToken0
   // console.log("rate: ", rate)
 
-  const payment = position?.totalDebtInput && rate ? new BN(position.totalDebtInput).multipliedBy(new BN(rate)).div(100).toString() : "0"
+  const payment = position?.totalDebtInput && tradeInfo ? new BN(position.totalDebtInput).multipliedBy(new BN(tradeInfo.rate)).div(100).toString() : "0"
   const inputCurrency = useCurrency(position?.isToken0 ? position?.token0Address : position?.token1Address)
   const approveAmount = useMemo(() => {
     return position?.totalDebtInput ? new BN(position.totalDebtInput * getPremiumRate()).shiftedBy(18).toFixed(0) : "0"
@@ -997,8 +1065,8 @@ export function AddPremiumLeverageModalFooter({
   const [leverageApprovalState, approveLeverageManager] = useApproveCallback(
     inputCurrency ?
       CurrencyAmount.fromRawAmount(inputCurrency, approveAmount) : undefined,
-      leverageManagerAddress ?? undefined
-    )
+    leverageManagerAddress ?? undefined
+  )
 
   const updateLeverageAllowance = useCallback(async () => {
     try {
@@ -1074,7 +1142,7 @@ export function AddPremiumLeverageModalFooter({
                         <TextWithLoadingPlaceholder syncing={loading} width={65}>
                           <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
                             {
-                              `${rate ? new BN(rate).toString() : "-"}%`
+                              `${tradeInfo ? new BN(tradeInfo.rate).toString() : "-"}%`
                             }
                           </ThemedText.DeprecatedBlack>
                         </TextWithLoadingPlaceholder>
@@ -1141,13 +1209,24 @@ export function AddPremiumLeverageModalFooter({
       ) : (
         <ButtonError
           onClick={handleAddPremium}
-          disabled={false}
+          disabled={!!inputError && derivedState !== DerivedInfoState.VALID}
           style={{ margin: '10px 0 0 0' }}
           id={InterfaceElementName.CONFIRM_SWAP_BUTTON}
         >
-          <Text fontSize={20} fontWeight={500}>
-            <Trans>Add Premium</Trans>
-          </Text>
+          {
+            !!inputError ? (
+              inputError
+            ) : derivedState !== DerivedInfoState.VALID ? (
+              <Trans>
+                Invalid Transaction
+              </Trans>
+            ) : (
+              <Text fontSize={20} fontWeight={500}>
+                <Trans>Add Premium</Trans>
+              </Text>
+            )
+          }
+
         </ButtonError>
       )
       }
@@ -1175,11 +1254,11 @@ export function AddPremiumBorrowModalFooter({
   const { error, position } = useLimitlessPositionFromTokenId(tokenId)
   const token0 = useToken(position?.token0Address)
   const token1 = useToken(position?.token1Address)
-  const { rate } = useDerivedAddBorrowPremiumInfo(borrowManagerAddress, trader, tokenId, position?.isToken0, setDerivedState)
+  const { tradeInfo, inputError } = useDerivedAddBorrowPremiumInfo(borrowManagerAddress, trader, tokenId, position?.isToken0, setDerivedState)
   const inputIsToken0 = !position?.isToken0
 
-  const payment = position?.totalDebtInput && rate ? new BN(position.totalDebtInput).multipliedBy(new BN(rate)).div(100).toString() : "0"
-  
+  const payment = position?.totalDebtInput && tradeInfo ? new BN(position.totalDebtInput).multipliedBy(new BN(tradeInfo.rate)).div(100).toString() : "0"
+
   const outputCurrency = useCurrency(position?.isToken0 ? position?.token1Address : position?.token0Address)
 
   const approveAmount = useMemo(() => {
@@ -1189,8 +1268,8 @@ export function AddPremiumBorrowModalFooter({
   const [approvalState, approveManager] = useApproveCallback(
     outputCurrency ?
       CurrencyAmount.fromRawAmount(outputCurrency, approveAmount) : undefined,
-      borrowManagerAddress ?? undefined
-    )
+    borrowManagerAddress ?? undefined
+  )
 
   const updateAllowance = useCallback(async () => {
     try {
@@ -1220,7 +1299,7 @@ export function AddPremiumBorrowModalFooter({
                 ) : (
                   <HideSmall>
 
-                    <StyledInfoIcon color={ theme.textTertiary } />
+                    <StyledInfoIcon color={theme.textTertiary} />
 
                   </HideSmall>
                 ))}
@@ -1266,7 +1345,7 @@ export function AddPremiumBorrowModalFooter({
                         <TextWithLoadingPlaceholder syncing={loading} width={65}>
                           <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
                             {
-                              `${rate ? new BN(rate).toString() : "-"}%`
+                              `${tradeInfo ? new BN(tradeInfo.rate).toString() : "-"}%`
                             }
                           </ThemedText.DeprecatedBlack>
                         </TextWithLoadingPlaceholder>
@@ -1433,16 +1512,16 @@ export function BorrowModalFooter({
   return (
     <>
       <AutoRow>
-          <ButtonError
-            onClick={onConfirm}
-            disabled={disabledConfirm}
-            style={{ margin: '10px 0 0 0' }}
-            id={InterfaceElementName.CONFIRM_SWAP_BUTTON}
-          >
-            <Text fontSize={20} fontWeight={500}>
-              <Trans>Confirm Borrow</Trans>
-            </Text>
-          </ButtonError>
+        <ButtonError
+          onClick={onConfirm}
+          disabled={disabledConfirm}
+          style={{ margin: '10px 0 0 0' }}
+          id={InterfaceElementName.CONFIRM_SWAP_BUTTON}
+        >
+          <Text fontSize={20} fontWeight={500}>
+            <Trans>Confirm Borrow</Trans>
+          </Text>
+        </ButtonError>
 
         {errorMessage ? <SwapCallbackError error={errorMessage} /> : null}
       </AutoRow>

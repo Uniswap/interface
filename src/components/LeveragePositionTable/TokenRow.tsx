@@ -11,7 +11,7 @@ import { CHAIN_NAME_TO_CHAIN_ID, getTokenDetailsURL, validateUrlChainParam } fro
 import { useAtomValue } from 'jotai/utils'
 import { ForwardedRef, forwardRef, useMemo, useState } from 'react'
 import { CSSProperties, ReactNode } from 'react'
-import { ArrowDown, ArrowUp, Info } from 'react-feather'
+import { ArrowDown, ArrowUp, Edit3, Info } from 'react-feather'
 import { Link, useParams } from 'react-router-dom'
 import styled, { css, useTheme } from 'styled-components/macro'
 import { ClickableStyle, ThemedText } from 'theme'
@@ -36,7 +36,7 @@ import {
 import { ArrowCell, DeltaText, formatDelta, getDeltaArrow } from 'components/Tokens/TokenDetails/PriceChart'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import { useCurrency } from 'hooks/Tokens'
-import { AutoRow, RowBetween, RowFixed } from 'components/Row'
+import Row, { AutoRow, RowBetween, RowFixed } from 'components/Row'
 import { LimitlessPositionDetails } from 'types/leveragePosition'
 import { AutoColumn } from 'components/Column'
 import ReducePositionModal, { AddLeveragePremiumModal } from 'components/swap/CloseLeveragePositionModal'
@@ -49,6 +49,7 @@ import { Fraction, Price } from '@uniswap/sdk-core'
 import { DEFAULT_ERC20_DECIMALS } from 'constants/tokens'
 import { formatSymbol } from 'lib/utils/formatSymbol'
 import { TruncatedText } from 'components/swap/styleds'
+import { EditCell, UnderlineText } from 'components/BorrowPositionTable/TokenRow'
 
 const Cell = styled.div`
   display: flex;
@@ -457,23 +458,23 @@ function PositionRow({
   last?: boolean
   style?: CSSProperties
 }) {
-  const [showClose, setShowClose] = useState(false);
+  const [showReduce, setShowReduce] = useState(false);
   const [showAddPremium, setShowAddPremium] = useState(false);
   const { account } = useWeb3React()
 
   // const collateral = (totalLiquidity - totalDebt)
   const handleConfirmDismiss = () => {
-    setShowClose(false);
+    setShowReduce(false);
   }
   const handlePremiumConfirmDismiss = () => {
     setShowAddPremium(false);
   }
   const actions = (!header ? (
     <ActionsContainer>
-      <ReduceButton width="auto" onClick={() => setShowClose(!showClose)} >
+      <ReduceButton width="auto" onClick={() => setShowReduce(!showReduce)} >
         <Trans>reduce</Trans>
       </ReduceButton>
-      <ReduceButton width="auto" onClick={() => setShowAddPremium(!showClose)} >
+      <ReduceButton width="auto" onClick={() => setShowAddPremium(!showAddPremium)} >
         <Trans>pay</Trans>
       </ReduceButton>
     </ActionsContainer>
@@ -490,9 +491,9 @@ function PositionRow({
   const rowCells = (
     <>
       {/* <ListNumberCell header={header}>{listNumber}</ListNumberCell> */}
-      {showClose && (
+      {showReduce && (
         <ReducePositionModal
-          isOpen={showClose}
+          isOpen={showReduce}
           trader={account}
           leverageManagerAddress={position?.leverageManagerAddress ?? undefined}
           tokenId={position?.tokenId ?? undefined}
@@ -514,7 +515,9 @@ function PositionRow({
       )}
       <NameCell data-testid="name-cell">{positionInfo}</NameCell>
       <PriceCell data-testid="value-cell" sortable={header}>
+        <EditCell onClick={() => {setShowReduce(!showReduce)}} disabled={false}>
         {value}
+        </EditCell>
       </PriceCell>
       <PriceCell data-testid="collateral-cell" sortable={header}>
         {collateral}
@@ -718,7 +721,6 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
       <StyledLoadedRow>
         <PositionRow
           header={false}
-          // listNumber={sortRank}
           positionInfo={
             <ClickableContent>
               <RowBetween>
@@ -732,12 +734,15 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
             </ClickableContent>
           }
           value={
-            <Trans>
-              <TruncatedTableText>
-                {(Math.round(Number(position.totalPosition)*10000)/10000)}
-              </TruncatedTableText>
-              {" " + outputCurrencySymbol}
-            </Trans>
+            <Row width="auto">
+              <UnderlineText>
+                <TruncatedTableText>
+                  {(Math.round(Number(position.totalPosition)*10000)/10000)}
+                </TruncatedTableText>
+                {" " + outputCurrencySymbol}
+              </UnderlineText>
+              <Edit3 size={12}/>
+            </Row>
           }
           collateral={
             <Trans>

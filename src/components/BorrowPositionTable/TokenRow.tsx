@@ -11,7 +11,7 @@ import { CHAIN_NAME_TO_CHAIN_ID, getTokenDetailsURL, validateUrlChainParam } fro
 import { useAtomValue } from 'jotai/utils'
 import { ForwardedRef, forwardRef, useMemo, useState } from 'react'
 import { CSSProperties, ReactNode } from 'react'
-import { ArrowDown, ArrowUp, Info } from 'react-feather'
+import { ArrowDown, ArrowUp, Edit, Edit2, Edit3, Info } from 'react-feather'
 import { Link, useParams } from 'react-router-dom'
 import styled, { css, useTheme } from 'styled-components/macro'
 import { ClickableStyle, ThemedText } from 'theme'
@@ -39,7 +39,7 @@ import { useCurrency } from 'hooks/Tokens'
 import { AutoRow, RowBetween, RowFixed } from 'components/Row'
 import { LimitlessPositionDetails } from 'types/leveragePosition'
 import { AutoColumn } from 'components/Column'
-import ReducePositionModal, { AddLeveragePremiumModal } from 'components/swap/CloseLeveragePositionModal'
+import ReducePositionModal, { AddBorrowPremiumModal } from 'components/swap/CloseLeveragePositionModal'
 import { useWeb3React } from '@web3-react/core'
 import { SmallButtonPrimary } from 'components/Button'
 import { ReduceButton, SmallMaxButton } from 'pages/RemoveLiquidity/styled'
@@ -48,6 +48,7 @@ import { usePool } from 'hooks/usePools'
 import { Fraction, Price } from '@uniswap/sdk-core'
 import { DEFAULT_ERC20_DECIMALS } from 'constants/tokens'
 import { formatSymbol } from 'lib/utils/formatSymbol'
+import Row from 'components/Row'
 
 const Cell = styled.div`
   display: flex;
@@ -63,7 +64,7 @@ const StyledTokenRow = styled.div<{
   background-color: transparent;
   display: grid;
   font-size: 16px;
-  grid-template-columns: 1fr 1fr 1fr 0.75fr 1fr 1fr 0.3fr;
+  grid-template-columns: 1fr 1fr 1fr 0.75fr 1fr 1fr 0.1fr;
   line-height: 24px;
   max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT};
   min-width: 390px;
@@ -96,15 +97,15 @@ const StyledTokenRow = styled.div<{
   }
 
   @media only screen and (max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT}) {
-    grid-template-columns: 1fr 1fr 1fr 0.75fr 1fr 1fr 0.3fr;
+    grid-template-columns: 1fr 1fr 1fr 0.75fr 1fr 1fr 0.1fr;
   }
 
   @media only screen and (max-width: ${LARGE_MEDIA_BREAKPOINT}) {
-    grid-template-columns: 1fr 1fr 1fr 0.75fr 1fr 1fr 0.3fr;
+    grid-template-columns: 1fr 1fr 1fr 0.75fr 1fr 1fr 0.1fr;
   }
 
   @media only screen and (max-width: ${MEDIUM_MEDIA_BREAKPOINT}) {
-    grid-template-columns:  1fr 1fr 1fr 0.75fr 1fr 1fr 0.3fr;
+    grid-template-columns:  1fr 1fr 1fr 0.75fr 1fr 1fr 0.1fr;
   }
 
   @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
@@ -170,6 +171,13 @@ const DataCell = styled(Cell) <{ sortable: boolean }>`
   },
 }) => css`background-color ${duration.medium} ${timing.ease}`};
 `
+
+export const EditCell = styled(RowBetween) <{ disabled: boolean }>`
+  padding: 0;
+  align-items: center;
+  cursor: ${({ disabled }) => (disabled ? 'initial' : 'pointer')};
+`
+
 const TvlCell = styled(DataCell)`
   padding-right: 8px;
   @media only screen and (max-width: ${MEDIUM_MEDIA_BREAKPOINT}) {
@@ -443,23 +451,27 @@ function PositionRow({
   last?: boolean
   style?: CSSProperties
 }) {
-  const [showClose, setShowClose] = useState(false);
+
   const [showAddPremium, setShowAddPremium] = useState(false);
+  const [showReduceCollateral, setShowReduceCollateral] = useState(false);
+  const [showReduceBorrowed, setShowReduceBorrowed] = useState(false);
   const { account } = useWeb3React()
 
   // const collateral = (totalLiquidity - totalDebt)
-  const handleConfirmDismiss = () => {
-    setShowClose(false);
+  const handleReduceCollateral = () => {
+    setShowReduceCollateral(false);
   }
+
+  const handleReduceBorrowed = () => {
+    setShowReduceBorrowed(false);
+  }
+
   const handlePremiumConfirmDismiss = () => {
     setShowAddPremium(false);
   }
   const actions = (!header ? (
     <ActionsContainer>
-      <ReduceButton width="auto" onClick={() => setShowClose(!showClose)} >
-        <Trans>edit</Trans>
-      </ReduceButton>
-      <ReduceButton width="auto" onClick={() => setShowAddPremium(!showClose)} >
+      <ReduceButton width="auto" onClick={() => setShowAddPremium(!showAddPremium)} >
         <Trans>pay</Trans>
       </ReduceButton>
     </ActionsContainer>
@@ -476,23 +488,31 @@ function PositionRow({
   const rowCells = (
     <>
       {/* <ListNumberCell header={header}>{listNumber}</ListNumberCell> */}
-      {showClose && (
-        <ReducePositionModal
-          isOpen={showClose}
-          trader={account}
-          leverageManagerAddress={position?.leverageManagerAddress ?? undefined}
-          tokenId={position?.tokenId ?? undefined}
-          onDismiss={handleConfirmDismiss}
-          onAcceptChanges={() => { }}
-          onConfirm={() => { }}
-        />
+      {showReduceCollateral && (
+        <AddBorrowPremiumModal
+        trader={account}
+        isOpen={showAddPremium}
+        tokenId={position?.tokenId ?? undefined}
+        onDismiss={handlePremiumConfirmDismiss}
+        onAcceptChanges={() => { }}
+        onConfirm={() => { }}
+      />
+      )}
+      {showReduceBorrowed && (
+        <AddBorrowPremiumModal
+        trader={account}
+        isOpen={showAddPremium}
+        tokenId={position?.tokenId ?? undefined}
+        onDismiss={handlePremiumConfirmDismiss}
+        onAcceptChanges={() => { }}
+        onConfirm={() => { }}
+      />
       )}
       {showAddPremium && (
-        <AddLeveragePremiumModal
+        <AddBorrowPremiumModal
           trader={account}
           isOpen={showAddPremium}
           tokenId={position?.tokenId ?? undefined}
-          leverageManagerAddress={position?.leverageManagerAddress ?? undefined}
           onDismiss={handlePremiumConfirmDismiss}
           onAcceptChanges={() => { }}
           onConfirm={() => { }}
@@ -503,7 +523,9 @@ function PositionRow({
         {borrowedAmount}
       </PriceCell>
       <PriceCell data-testid="collateral-cell" sortable={header}>
+        <EditCell onClick={() => {setShowReduceCollateral(true)}} disabled={false}>
         {collateral}
+        </EditCell>
       </PriceCell>
       <PriceCell data-testid="repaymentTime-cell" sortable={header}>
         {repaymentTime}
@@ -576,6 +598,11 @@ overflow: hidden;
 white-space: nowrap;
 text-overflow: ellipsis;
 `
+export const UnderlineText = styled(Row)`
+align-items: flex-start;
+text-decoration: ${({theme}) =>  `underline dashed ${theme.textTertiary}`};
+`
+
 
 /* Loaded State: row component with token information */
 export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HTMLDivElement>) => {
@@ -610,7 +637,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
         return `${token1.symbol}/${token0.symbol}`
       }
     }
-    return '-/-'
+    return ''
   }, [pool, token1, token0])
 
   const ltv = useMemo(() => {
@@ -667,19 +694,26 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
             </Trans>
           }
           borrowedAmount={
-            <Trans>
-              <TruncatedTableText>
-                {(Number(position.totalDebtInput))}
-              </TruncatedTableText>
-              {" " + outputCurrencySymbol}
-            </Trans>
+              <Row width="auto">
+                <UnderlineText>
+                <TruncatedTableText>
+                  {(Number(position.totalDebtInput))}
+                </TruncatedTableText>
+                {" " + outputCurrencySymbol}
+                </UnderlineText>
+                <Edit3 size={12}/>
+              </Row>
           }
           collateral={
-            <Trans>
-              <TruncatedTableText>
-                {(Number(position.initialCollateral))} {inputCurrencySymbol}
+            <Row width="auto">
+              <UnderlineText>
+                <TruncatedTableText>
+                {(Number(position.initialCollateral))}
               </TruncatedTableText>
-            </Trans>
+              {inputCurrencySymbol}
+              </UnderlineText>
+              <Edit3 size={12}/>
+            </Row>
           }
           repaymentTime={
             <Trans>

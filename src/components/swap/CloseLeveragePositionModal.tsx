@@ -15,7 +15,7 @@ import SwapModalFooter, { AddPremiumLeverageModalFooter, ReduceLeverageModalFoot
 import SwapModalHeader, { LeverageModalHeader } from './SwapModalHeader'
 import { LeverageTrade } from 'state/swap/hooks'
 import { useLimitlessPositionFromTokenId } from 'hooks/useV3Positions'
-import { BorrowPremiumPositionDetails, CloseLeveragePositionDetails } from './AdvancedSwapDetails'
+import { BorrowPremiumPositionDetails, ReduceLeveragePositionDetails } from './AdvancedSwapDetails'
 import useDebounce from 'hooks/useDebounce'
 import { useLeverageManagerAddress } from 'hooks/useGetLeverageManager'
 import { useBorrowManagerContract, useLeverageManagerContract } from 'hooks/useContract'
@@ -64,7 +64,7 @@ export default function ReducePositionModal({
 
   const modalHeader = useCallback(() => {
     return (
-      <CloseLeveragePositionDetails leverageTrade={position}/>
+      <ReduceLeveragePositionDetails leverageTrade={position}/>
     )
   }, [onAcceptChanges, shouldLogModalCloseEvent])
 
@@ -173,7 +173,7 @@ export function AddLeveragePremiumModal({
 
   const modalHeader = useCallback(() => {
     return (
-      <CloseLeveragePositionDetails leverageTrade={position}/>
+      <ReduceLeveragePositionDetails leverageTrade={position}/>
     )
   }, [onAcceptChanges, shouldLogModalCloseEvent])
 
@@ -309,6 +309,95 @@ export function AddBorrowPremiumModal({
     [onModalDismiss, modalBottom, modalHeader]
   )
 
+  return (
+    <Trace modal={InterfaceModalName.CONFIRM_SWAP}>
+      <TransactionConfirmationModal
+        isOpen={isOpen}
+        onDismiss={onModalDismiss}
+        attemptingTxn={attemptingTxn}
+        hash={txHash}
+        content={confirmationContent}
+        pendingText={pendingText}
+      />
+    </Trace>
+  )
+}
+
+
+
+// reduceBorrowPosition(bool borrowBelow, bool reduceCollateral, bool getCollateralBack, uint256 reduceAmount)
+/**
+ * 
+ * if reduceCollateral then reduceCollatera
+ * if !reduceCollateral, then repay debt
+ */
+
+export function ReduceBorrowCollateralModal({
+  trader,
+  isOpen,
+  tokenId,
+  onDismiss,
+  onAcceptChanges,
+  onConfirm,
+}: {
+  trader: string | undefined,
+  isOpen: boolean,
+  tokenId: string | undefined,
+  onDismiss: () => void
+  onAcceptChanges: () => void
+  onConfirm: () => void
+}) {
+  // shouldLogModalCloseEvent lets the child SwapModalHeader component know when modal has been closed
+  // and an event triggered by modal closing should be logged.
+  const [shouldLogModalCloseEvent, setShouldLogModalCloseEvent] = useState(false)
+
+
+  const { loading, error, position } = useLimitlessPositionFromTokenId(tokenId)
+  const [txHash, setTxHash] = useState("")
+  const [attemptingTxn, setAttemptingTxn] = useState(false)
+
+
+  const onModalDismiss = useCallback(() => {
+    if (isOpen) setShouldLogModalCloseEvent(true)
+    onDismiss()
+  }, [isOpen, onDismiss])
+
+  const modalHeader = useCallback(() => {
+    return (
+      <ReduceLeveragePositionDetails leverageTrade={position}/>
+    )
+  }, [onAcceptChanges, shouldLogModalCloseEvent])
+
+
+  const modalBottom = useCallback(() => {
+    return (<ReduceLeverageModalFooter 
+      leverageManagerAddress={position?.borrowManagerAddress} tokenId={tokenId} trader={trader}
+      setAttemptingTxn={setAttemptingTxn}
+      setTxHash={setTxHash}
+      />)
+  }, [
+    onConfirm
+  ])
+
+  // text to show while loading
+  const pendingText = (
+    <Trans>
+      Loading...
+    </Trans>
+  )
+
+  const confirmationContent = useCallback(
+    () =>
+      (
+        <ConfirmationModalContent
+          title={<Trans>Reduce Position</Trans>}
+          onDismiss={onModalDismiss}
+          topContent={modalHeader}
+          bottomContent={modalBottom}
+        />
+      ),
+    [onModalDismiss, modalBottom, modalHeader]
+  )
   return (
     <Trace modal={InterfaceModalName.CONFIRM_SWAP}>
       <TransactionConfirmationModal

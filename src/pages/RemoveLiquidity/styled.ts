@@ -18,6 +18,7 @@ export const SmallMaxButton = styled(MaxButton)`
 export const ReduceButton = styled(MaxButton)`
   font-size: 12px;
   padding: 4px;
+  min-width: 50px;
 `
 
 export const ResponsiveHeaderText = styled(Text)`
