@@ -26,7 +26,7 @@ import styled, { css, keyframes } from 'styled-components/macro'
 import { Z_INDEX } from 'theme/zIndex'
 
 import { ReactComponent as TooltipTriangle } from '../../assets/svg/tooltip_triangle.svg'
-import { shortenAddress } from '../../nft/utils/address'
+import { shortenAddress } from '../../utils/addresses'
 import { anonymizeLink } from '../../utils/anonymizeLink'
 
 // TODO: Break this file into a components folder

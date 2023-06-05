@@ -9,7 +9,7 @@ import styled from 'styled-components/macro'
 import { EllipsisStyle, ThemedText } from 'theme'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
-import { shortenAddress } from '../../../../nft/utils/address'
+import { shortenAddress } from '../../../../utils/addresses'
 import { PortfolioLogo } from '../PortfolioLogo'
 import PortfolioRow from '../PortfolioRow'
 import { useTimeSince } from './parseRemote'
