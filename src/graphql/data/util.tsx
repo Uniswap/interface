@@ -56,6 +56,7 @@ export function isPricePoint(p: PricePoint | null): p is PricePoint {
   return p !== null
 }
 
+// TODO(DAT-33) Update when BE adds Ethereum Sepolia to supported chains
 export const CHAIN_ID_TO_BACKEND_NAME: { [key: number]: Chain } = {
   [SupportedChainId.MAINNET]: Chain.Ethereum,
   [SupportedChainId.GOERLI]: Chain.EthereumGoerli,

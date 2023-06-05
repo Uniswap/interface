@@ -4,6 +4,8 @@ import uriToHttp from 'lib/utils/uriToHttp'
 import { useCallback, useEffect, useState } from 'react'
 import { isAddress } from 'utils'
 
+import { checkWarning } from '../constants/tokenSafety'
+
 const BAD_SRCS: { [tokenAddress: string]: true } = {}
 
 // Converts uri's into fetchable urls
@@ -52,13 +54,17 @@ export default function useAssetLogoSource(
   isNative?: boolean,
   backupImg?: string | null
 ): [string | undefined, () => void] {
-  const [current, setCurrent] = useState<string | undefined>(getInitialUrl(address, chainId, isNative))
+  const hasWarning = Boolean(address && checkWarning(address))
+  const [current, setCurrent] = useState<string | undefined>(
+    hasWarning ? undefined : getInitialUrl(address, chainId, isNative)
+  )
   const [fallbackSrcs, setFallbackSrcs] = useState<string[] | undefined>(undefined)
 
   useEffect(() => {
+    if (hasWarning) return
     setCurrent(getInitialUrl(address, chainId, isNative))
     setFallbackSrcs(undefined)
-  }, [address, chainId, isNative])
+  }, [hasWarning, address, chainId, isNative])
 
   const nextSrc = useCallback(() => {
     if (current) {

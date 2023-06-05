@@ -86,7 +86,11 @@ export function useFetchAssets(): () => Promise<void> {
         setBagStatus(nextBagStatus)
 
         if (nextBagStatus === BagStatus.CONFIRMING_IN_WALLET) {
-          purchaseAssets(routeResponse, wishAssetsToBuy, purchasingWithErc20)
+          purchaseAssets({
+            routingData: routeResponse,
+            assetsToBuy: wishAssetsToBuy,
+            purchasingWithErc20,
+          })
           setBagLocked(true)
           return
         }
@@ -142,7 +146,12 @@ export const useBuyAssetCallback = () => {
             return
           }
 
-          purchaseAssets(routeResponse, updatedAssets, false, true)
+          purchaseAssets({
+            routingData: routeResponse,
+            assetsToBuy: updatedAssets,
+            purchasingWithErc20: false,
+            doNotResetBag: true,
+          })
         },
       })
     },
