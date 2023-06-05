@@ -17,7 +17,7 @@ import { useAppSelector } from 'state/hooks'
 import styled from 'styled-components/macro'
 import { colors } from 'theme/colors'
 import { flexRowNoWrap } from 'theme/styles'
-import { shortenAddress } from 'utils/addresses'
+import { shortenAddressIfValid } from 'utils/addresses'
 
 import { isTransactionRecent, useAllTransactions } from '../../state/transactions/hooks'
 import { TransactionDetails } from '../../state/transactions/types'
@@ -206,7 +206,7 @@ function Web3StatusInner() {
             </RowBetween>
           ) : (
             <AddressAndChevronContainer>
-              <Text>{ENSName || shortenAddress(account)}</Text>
+              <Text>{ENSName || shortenAddressIfValid(account)}</Text>
             </AddressAndChevronContainer>
           )}
         </Web3StatusConnected>
