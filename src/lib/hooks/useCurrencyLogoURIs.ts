@@ -53,10 +53,8 @@ function getTokenLogoURI(address: string, chainId: SupportedChainId = SupportedC
     SupportedChainId.OPTIMISM,
     SupportedChainId.BNB,
   ]
-  if (isCelo(chainId)) {
-    if (address === nativeOnChain(chainId).wrapped.address) {
+  if (isCelo(chainId) && address === nativeOnChain(chainId).wrapped.address) {
       return CeloLogo
-    }
   }
 
   if (networksWithUrls.includes(chainId)) {

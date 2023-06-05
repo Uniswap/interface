@@ -44,10 +44,8 @@ function getInitialUrl(address?: string | null, chainId?: number | null, isNativ
   const networkName = chainId ? chainIdToNetworkName(chainId) : 'ethereum'
   const checksummedAddress = isAddress(address)
 
-  if (chainId && isCelo(chainId)) {
-    if (address === nativeOnChain(chainId).wrapped.address) {
-      return celoLogo
-    }
+  if (chainId && isCelo(chainId) && address === nativeOnChain(chainId).wrapped.address) {
+    return celoLogo
   }
 
   if (checksummedAddress) {
