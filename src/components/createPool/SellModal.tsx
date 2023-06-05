@@ -31,7 +31,7 @@ interface PoolModalProps {
   isOpen: boolean
   onDismiss: () => void
   poolInfo?: PoolInfo
-  userBaseTokenBalance?: CurrencyAmount<Currency> | undefined
+  userBaseTokenBalance?: CurrencyAmount<Currency>
 }
 
 export default function SellModal({ isOpen, onDismiss, poolInfo, userBaseTokenBalance }: PoolModalProps) {

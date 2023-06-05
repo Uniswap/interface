@@ -40,6 +40,7 @@ export function useAddRecentlySearchedAsset() {
   )
 }
 
+// eslint-disable-next-line
 export function useRecentlySearchedAssets() {
   const history = useAtomValue(recentlySearchedAssetsAtom)
   const shortenedHistory = useMemo(() => history.slice(0, 4), [history])

@@ -4,7 +4,7 @@ import { useMemo } from 'react'
 // TODO: remove duplicate method definition and reorg code
 import { usePoolExtendedContract } from 'state/pool/hooks'
 
-export interface PoolInitParams {
+interface PoolInitParams {
   name: string
   symbol: string
   decimals: number
@@ -25,13 +25,13 @@ interface PoolTokensInfo {
   totalSupply: BigNumber
 }
 // only value we are missing here is pool Id
-export interface PoolDetails {
+interface PoolDetails {
   poolInitParams: PoolInitParams
   poolVariables: PoolVariables
   poolTokensInfo: PoolTokensInfo
 }
 
-export interface UserAccount {
+interface UserAccount {
   userBalance: BigNumber
   activation: BigNumber
 }

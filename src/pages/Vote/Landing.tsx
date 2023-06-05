@@ -133,17 +133,17 @@ export default function Landing() {
 
   // user data
   //const { loading: loadingAvailableVotes, votes: availableVotes } = useUserVotes()
-  /*const grgBalance: CurrencyAmount<Token> | undefined = useTokenBalance(
-    account ?? undefined,
-    chainId ? GRG[chainId] : undefined
-  )*/
+  //const grgBalance: CurrencyAmount<Token> | undefined = useTokenBalance(
+  //  account ?? undefined,
+  //  chainId ? GRG[chainId] : undefined
+  //)
   // TODO: check if should remove this RPC call
   const userDelegatee: string | undefined = useUserDelegatee()
 
   // show delegation option if they have have a balance, but have not delegated
-  /*const showUnlockVoting = Boolean(
-    grgBalance && JSBI.notEqual(grgBalance.quotient, JSBI.BigInt(0)) && userDelegatee === ZERO_ADDRESS
-  )*/
+  //const showUnlockVoting = Boolean(
+  //  grgBalance && JSBI.notEqual(grgBalance.quotient, JSBI.BigInt(0)) && userDelegatee === ZERO_ADDRESS
+  //)
   const showUnlockVoting = true
   return (
     <>

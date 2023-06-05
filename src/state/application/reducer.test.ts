@@ -18,7 +18,7 @@ describe('application reducer', () => {
       fiatOnramp: { available: false, availabilityChecked: false },
       chainId: null,
       openModal: null,
-      smartPool: { address: null, name: ''},
+      smartPool: { address: null, name: '' },
       popupList: [],
     })
   })

@@ -163,7 +163,7 @@ export function useAllPoolsData(): { data?: PoolRegisteredLog[]; loading: boolea
   }, [account, chainId, formattedLogsV1, registry])
 }
 
-function useCreateCallback(): (
+export function useCreateCallback(): (
   name: string | undefined,
   symbol: string | undefined,
   baseCurrency: string | undefined

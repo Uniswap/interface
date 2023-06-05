@@ -11,16 +11,10 @@ import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import GOVERNANCE_RB_ABI from 'abis/governance.json'
 import POOL_EXTENDED_ABI from 'abis/pool-extended.json'
-import RB_POOL_FACTORY_ABI from 'abis/rb-pool-factory.json'
 import RB_REGISTRY_ABI from 'abis/rb-registry.json'
 import STAKING_ABI from 'abis/staking-impl.json'
 import STAKING_PROXY_ABI from 'abis/staking-proxy.json'
-import {
-  GOVERNANCE_PROXY_ADDRESSES,
-  RB_FACTORY_ADDRESSES,
-  RB_REGISTRY_ADDRESSES,
-  STAKING_PROXY_ADDRESSES,
-} from 'constants/addresses'
+import { GOVERNANCE_PROXY_ADDRESSES, RB_REGISTRY_ADDRESSES, STAKING_PROXY_ADDRESSES } from 'constants/addresses'
 import { SupportedChainId } from 'constants/chains'
 import { LATEST_GOVERNOR_INDEX } from 'constants/governance'
 import { ZERO_ADDRESS } from 'constants/misc'
@@ -66,10 +60,6 @@ export function useStakingContract(): Contract | null {
 
 function useStakingProxyContract(): Contract | null {
   return useContract(STAKING_PROXY_ADDRESSES, STAKING_PROXY_ABI, true)
-}
-
-function usePoolFactoryContract(): Contract | null {
-  return useContract(RB_FACTORY_ADDRESSES, RB_POOL_FACTORY_ABI, true)
 }
 
 export function usePoolExtendedContract(poolAddress: string | undefined): Contract | null {
@@ -438,39 +428,6 @@ export function useStakeBalance(poolId: string | null | undefined): CurrencyAmou
   ])?.result?.[0]
 
   return stake && grg ? CurrencyAmount.fromRawAmount(grg, stake.nextEpochBalance) : undefined
-}
-
-export function useCreateCallback(): (
-  name: string | undefined,
-  symbol: string | undefined,
-  baseCurrency: string | undefined
-) => undefined | Promise<string> {
-  const { account, chainId, provider } = useWeb3React()
-  const addTransaction = useTransactionAdder()
-  const factoryContract = usePoolFactoryContract()
-
-  return useCallback(
-    (name: string | undefined, symbol: string | undefined, baseCurrency: string | undefined) => {
-      //if (!provider || !chainId || !account || name === '' || symbol === '' || !isAddress(baseCurrency ?? ''))
-      if (!provider || !chainId || !account || !name || !symbol || !isAddress(baseCurrency ?? '')) return undefined
-      if (!factoryContract) throw new Error('No Factory Contract!')
-      // TODO: check correctness of asserting is address before returning on no address
-      if (!baseCurrency) return
-      return factoryContract.estimateGas.createPool(name, symbol, baseCurrency, {}).then((estimatedGasLimit) => {
-        return factoryContract
-          .createPool(name, symbol, baseCurrency, { value: null, gasLimit: calculateGasMargin(estimatedGasLimit) })
-          .then((response: TransactionResponse) => {
-            addTransaction(response, {
-              // TODO: define correct transaction type
-              type: TransactionType.DELEGATE,
-              delegatee: baseCurrency,
-            })
-            return response.hash
-          })
-      })
-    },
-    [account, addTransaction, chainId, provider, factoryContract]
-  )
 }
 
 export function useDelegateCallback(): (stakeData: StakeData | undefined) => undefined | Promise<string> {

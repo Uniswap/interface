@@ -84,6 +84,7 @@ const BannerButton = styled(BaseButton)`
   ${OpacityHoverState};
 `
 
+// eslint-disable-next-line
 export default function UniswapWalletBanner() {
   const [hideUniswapWalletBanner, toggleHideUniswapWalletBanner] = useHideUniswapWalletBanner()
   const location = useLocation()
