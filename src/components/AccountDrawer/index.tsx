@@ -184,21 +184,30 @@ function AccountDrawer() {
   }, [walletDrawerOpen, toggleWalletDrawer])
 
   const [yPosition, setYPosition] = useState(0)
+  const [dragStartTop, setDragStartTop] = useState(true)
+
   const bind = useGesture({
     onDrag: (state) => {
       if (
         (state.movement[1] > 300 || (state.velocity > 3 && state.direction[1] > 0)) &&
         walletDrawerOpen &&
-        scrollRef.current?.scrollTop === 0
+        dragStartTop
       ) {
         toggleWalletDrawer()
       }
-      if (walletDrawerOpen && scrollRef.current?.scrollTop === 0 && state.movement[1] > 0) {
+      if (walletDrawerOpen && dragStartTop && state.movement[1] > 0) {
         setYPosition(state.movement[1])
       }
     },
     onDragEnd: (state) => {
       setYPosition(0)
+    },
+    onDragStart: (state) => {
+      if (scrollRef.current?.scrollTop === 0) {
+        setDragStartTop(true)
+      } else {
+        setDragStartTop(false)
+      }
     },
   })
 
