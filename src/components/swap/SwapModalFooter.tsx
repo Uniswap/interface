@@ -107,8 +107,8 @@ export default function SwapModalFooter({
               </Label>
             </MouseoverTooltip>
             <DetailRowValue>
-              {/* TODO (Gouda): update this with actual designs */}
-              {isClassicTrade(trade) ? (trade.gasUseEstimateUSD ? `~$${trade.gasUseEstimateUSD}` : '-') : 'freedotcom'}
+              {/* TODO (Gouda): add new gas *breakdown* tooltip over this component. */}
+              {isClassicTrade(trade) ? (trade.gasUseEstimateUSD ? `~$${trade.gasUseEstimateUSD}` : '-') : '$0.00'}
             </DetailRowValue>
           </Row>
         </ThemedText.BodySmall>

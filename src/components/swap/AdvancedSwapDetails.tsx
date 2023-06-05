@@ -16,6 +16,7 @@ import RouterLabel from '../RouterLabel'
 import { RowBetween, RowFixed } from '../Row'
 import { MouseoverTooltip, TooltipSize } from '../Tooltip'
 import SwapRoute from './SwapRoute'
+import UniswapXGasTooltip from './UniswapXGasTooltip'
 
 interface AdvancedSwapDetailsProps {
   trade: InterfaceTrade
@@ -143,7 +144,17 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
             <RouterLabel />
           </MouseoverTooltip>
         ) : (
-          <RouterLabel />
+          <MouseoverTooltip
+            size={TooltipSize.Small}
+            text={<UniswapXGasTooltip data-testid="swap-route-info" trade={trade} />}
+            onOpen={() => {
+              sendAnalyticsEvent(SwapEventName.SWAP_AUTOROUTER_VISUALIZATION_EXPANDED, {
+                element: InterfaceElementName.AUTOROUTER_VISUALIZATION_ROW,
+              })
+            }}
+          >
+            <RouterLabel />
+          </MouseoverTooltip>
         )}
       </RowBetween>
     </Column>
