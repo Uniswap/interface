@@ -93,7 +93,7 @@ const Buttons = ({
   return warning.canProceed ? (
     <>
       <StyledButton onClick={onContinue}>
-        {warning.level === WARNING_LEVEL.MEDIUM ? <Trans>Continue</Trans> : <Trans>I understand</Trans>}
+        {displayWarningLabel(warning) ? <Trans>Continue</Trans> : <Trans>I understand</Trans>}
       </StyledButton>
       {showCancel && <StyledCancelButton onClick={onCancel}>Cancel</StyledCancelButton>}
     </>
