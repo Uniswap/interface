@@ -334,7 +334,7 @@ export function CopyContractAddress({ address }: { address: string }) {
     [address, setCopied]
   )
 
-  const truncated = shortenAddress(address, 4, 4)
+  const truncated = shortenAddress(address)
   return (
     <CopyContractAddressWrapper onClick={copy}>
       <CopyAddressRow isClicked={isCopied}>
