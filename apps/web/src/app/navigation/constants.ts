@@ -11,6 +11,7 @@ export enum OnboardingRoutes {
 }
 
 export enum AppRoutes {
+  AccountSwitcher = 'account-switcher',
   Home = '',
   Requests = 'requests',
   Settings = 'settings',

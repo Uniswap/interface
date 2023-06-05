@@ -1,7 +1,6 @@
 import { Flex } from 'ui/src/components/layout/Flex'
 import { Text } from 'ui/src/components/text/Text'
-import { PollingInterval } from 'wallet/src/constants/misc'
-import { usePortfolioBalanceQuery } from 'wallet/src/data/__generated__/types-and-hooks'
+import { usePortfolioUSDBalance } from 'wallet/src/features/portfolio/hooks'
 
 type WalletBalanceProps = {
   address: Address
@@ -27,17 +26,7 @@ const TempFakeButton = ({ label }: { label: string }): JSX.Element => {
 }
 
 export function PortfolioBalance({ address }: WalletBalanceProps): JSX.Element {
-  const { data, loading, error } = usePortfolioBalanceQuery({
-    variables: {
-      owner: address,
-    },
-    pollInterval: PollingInterval.Slow,
-  })
-
-  const portfolioBalance = data?.portfolios?.[0]
-  // const portfolioChange =
-  //   portfolioBalance?.tokensTotalDenominatedValueChange?.percentage?.value
-  const totalBalance = portfolioBalance?.tokensTotalDenominatedValue?.value
+  const { portfolioBalanceUSD, loading, error } = usePortfolioUSDBalance(address)
 
   return (
     <Flex gap="$spacing12" paddingHorizontal="$spacing12">
@@ -53,7 +42,7 @@ export function PortfolioBalance({ address }: WalletBalanceProps): JSX.Element {
         <>
           <Flex flexDirection="row">
             <Text fontWeight="600" variant="headlineLarge">
-              ${totalBalance?.toFixed(2)}
+              ${portfolioBalanceUSD?.toFixed(2)}
             </Text>
           </Flex>
           <Flex flexDirection="row" gap="$spacing8">

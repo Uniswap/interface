@@ -3,6 +3,7 @@ import { isAddress } from 'ethers/lib/utils'
 import { svgPaths as containerPaths } from './Container'
 import { svgPaths as emblemPaths } from './Emblem'
 import {
+  blurs,
   gradientEnds,
   gradientStarts,
   UniconAttributeData,
@@ -53,4 +54,59 @@ export const getUniconAttributeData = (
     [UniconAttributes.Container]: containerPaths[attributeIndices[UniconAttributes.Container]],
     [UniconAttributes.Shape]: emblemPaths[attributeIndices[UniconAttributes.Shape]],
   } as UniconAttributeData
+}
+
+export const useUniconColors = (
+  activeAddress: string | undefined
+): {
+  glow: string
+  gradientStart: string
+  gradientEnd: string
+} => {
+  const attributeIndices = deriveUniconAttributeIndices(activeAddress || '')
+  if (!attributeIndices)
+    return {
+      gradientStart: '$accentAction',
+      gradientEnd: '$accentActionSoft',
+      glow: '$accentAction',
+    }
+
+  const attributeData = getUniconAttributeData(attributeIndices)
+  const blurColor = blurs[attributeIndices[UniconAttributes.GradientStart]]
+  if (!blurColor)
+    return {
+      gradientStart: '$accentAction',
+      gradientEnd: '$accentActionSoft',
+      glow: '$accentAction',
+    }
+
+  return {
+    gradientStart: attributeData[UniconAttributes.GradientStart].toString(),
+    gradientEnd: attributeData[UniconAttributes.GradientEnd].toString(),
+    glow: blurColor.toString(),
+  }
+}
+
+// Adapted from https://natclark.com/tutorials/javascript-lighten-darken-hex-color/
+export function adjustColor(hexColor: string, magnitude: number): string {
+  hexColor = hexColor.replace(`#`, ``)
+  if (hexColor.length === 6) {
+    const decimalColor = parseInt(hexColor, 16)
+    // eslint-disable-next-line no-bitwise
+    let r = (decimalColor >> 16) + magnitude
+    r > 255 && (r = 255)
+    r < 0 && (r = 0)
+    // eslint-disable-next-line no-bitwise
+    let g = (decimalColor & 0x0000ff) + magnitude
+    g > 255 && (g = 255)
+    g < 0 && (g = 0)
+    // eslint-disable-next-line no-bitwise
+    let b = ((decimalColor >> 8) & 0x00ff) + magnitude
+    b > 255 && (b = 255)
+    b < 0 && (b = 0)
+    // eslint-disable-next-line no-bitwise
+    return `#${(g | (b << 8) | (r << 16)).toString(16)}`
+  } else {
+    return hexColor
+  }
 }

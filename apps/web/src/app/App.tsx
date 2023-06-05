@@ -1,7 +1,10 @@
 import './App.css'
 
+import { ToastProvider, ToastViewport } from '@tamagui/toast'
 import { createHashRouter, RouterProvider } from 'react-router-dom'
 import { GraphqlProvider } from 'src/app/apollo'
+import { BottomToast } from 'src/app/components/toast/BottomToast'
+import { AccountSwitcherScreen } from 'src/app/features/accounts/AccountSwitcherScreen'
 import { Complete } from 'src/app/features/onboarding/Complete'
 import { ImportMnemonic } from 'src/app/features/onboarding/ImportMnemonic'
 import { IntroScreen } from 'src/app/features/onboarding/IntroScreen'
@@ -59,6 +62,10 @@ const router = createHashRouter([
         element: <MainContent />,
       },
       {
+        path: AppRoutes.AccountSwitcher,
+        element: <AccountSwitcherScreen />,
+      },
+      {
         path: AppRoutes.Settings,
         element: <SettingsScreen />,
         children: [
@@ -84,7 +91,11 @@ function App({ store }: { store: Store }): JSX.Element {
   return (
     <Provider store={store}>
       <GraphqlProvider>
-        <RouterProvider router={router} />
+        <ToastProvider>
+          <RouterProvider router={router} />
+          <ToastViewport bottom={0} flexDirection="column" left={0} right={0} />
+          <BottomToast />
+        </ToastProvider>
       </GraphqlProvider>
     </Provider>
   )

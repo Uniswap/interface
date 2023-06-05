@@ -9644,6 +9644,29 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tamagui/toast@npm:1.16.5":
+  version: 1.16.5
+  resolution: "@tamagui/toast@npm:1.16.5"
+  dependencies:
+    "@tamagui/animate-presence": 1.16.5
+    "@tamagui/compose-refs": 1.16.5
+    "@tamagui/core": 1.16.5
+    "@tamagui/create-context": 1.16.5
+    "@tamagui/dismissable": 1.16.5
+    "@tamagui/polyfill-dev": 1.16.5
+    "@tamagui/portal": 1.16.5
+    "@tamagui/stacks": 1.16.5
+    "@tamagui/text": 1.16.5
+    "@tamagui/use-controllable-state": 1.16.5
+    "@tamagui/visually-hidden": 1.16.5
+  peerDependencies:
+    burnt: ^0.10.0
+    react: "*"
+    react-native: "*"
+  checksum: 1eee18fefa2a26547a55ae1916eefe9ff24d0e50efb9844c4fd08efe375d9d06148886d0e81afffdf8d62910579f2f3fc9d6d0cdf21558c8f58a0c85ff784059
+  languageName: node
+  linkType: hard
+
 "@tamagui/toggle-group@npm:1.16.5":
   version: 1.16.5
   resolution: "@tamagui/toggle-group@npm:1.16.5"
@@ -11224,7 +11247,7 @@ __metadata:
     expo-blur: 12.0.1
     expo-clipboard: 4.1.2
     expo-haptics: 12.0.1
-    expo-linear-gradient: 12.0.1
+    expo-linear-gradient: 12.1.2
     expo-local-authentication: 12.1.0
     expo-modules-core: 1.0.3
     expo-screen-capture: 4.2.0
@@ -11484,11 +11507,13 @@ __metadata:
     "@pmmmwh/react-refresh-webpack-plugin": ^0.5.10
     "@svgr/webpack": 8.0.1
     "@swc/core": ^1.3.39
+    "@tamagui/toast": 1.16.5
     "@types/chrome": 0.0.229
     "@types/jest": 29.5.0
     "@types/react": ^18.0.15
     "@types/react-dom": ^18.0.0
     "@types/uuid": 9.0.1
+    burnt: 0.11.4
     clean-webpack-plugin: ^4.0.0
     copy-webpack-plugin: ^11.0.0
     crypto-browserify: ^3.12.0
@@ -11497,6 +11522,7 @@ __metadata:
     eslint-plugin-prettier: 4.2.1
     eth-rpc-errors: 4.0.3
     ethers: 5.7.2
+    expo-linear-gradient: 12.1.2
     fork-ts-checker-webpack-plugin: ^8.0.0
     fs: ^0.0.1-security
     image-webpack-loader: 8.1.0
@@ -14415,6 +14441,20 @@ __metadata:
   bin:
     bunyan: bin/bunyan
   checksum: a479e0787c3a0b6565b54bd15f0b6c729d624c5aba53523e140e49e279b7a78508df93000e758bf6d02361117d6b4e6e5fc1d5ece05366fb6c4ba41bf1ac7d52
+  languageName: node
+  linkType: hard
+
+"burnt@npm:0.11.4":
+  version: 0.11.4
+  resolution: "burnt@npm:0.11.4"
+  dependencies:
+    sf-symbols-typescript: ^1.0.0
+    sonner: ^0.3.5
+  peerDependencies:
+    expo: "*"
+    react: "*"
+    react-native: "*"
+  checksum: 3082a8716d9ef2d22598d11f3e8776ec7728103e7dfbd2afacc6a8014607e927a92f725b1de7db50c6ee978bafa128568eee7ec757754983b1ef8701347df1fb
   languageName: node
   linkType: hard
 
@@ -19388,12 +19428,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"expo-linear-gradient@npm:12.0.1":
-  version: 12.0.1
-  resolution: "expo-linear-gradient@npm:12.0.1"
+"expo-linear-gradient@npm:12.1.2":
+  version: 12.1.2
+  resolution: "expo-linear-gradient@npm:12.1.2"
   peerDependencies:
     expo: "*"
-  checksum: ef8115405a52cb78f8df8816e7e43f6b0632982d203734a2519dc5dc2712ca2a88bbc40ada401b53d9f160a142071bfa73da20f576917ea4a536883f8e0c507d
+  checksum: 02a8bdd8f27d5f1d41d2ecb4bed60e44e85b3ba22ae9ac70fcadc86d1d8982415adb3ee4568067a3c0a054f86d3f66b5354240cdccbe500f15af6037fc34156e
   languageName: node
   linkType: hard
 
@@ -33743,6 +33783,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"sf-symbols-typescript@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "sf-symbols-typescript@npm:1.0.0"
+  checksum: ab7f427b6145ba308e9ab0357e86a8b32c4bd2ed7d5bba983812483b6f8320097121a7dac1855d344cf8b5a6e45ef9b7e8f121ad640fc7821f3fd433a8280567
+  languageName: node
+  linkType: hard
+
 "sha.js@npm:^2.4.0, sha.js@npm:^2.4.8":
   version: 2.4.11
   resolution: "sha.js@npm:2.4.11"
@@ -34174,6 +34221,16 @@ __metadata:
   dependencies:
     atomic-sleep: ^1.0.0
   checksum: c7f9c89f931d7f60f8e0741551a729f0d81e6dc407a99420fc847a9a4c25af048a615b1188ab3c4f1fb3708fe4904973ddab6ebcc8ed5b78b50ab81a99045910
+  languageName: node
+  linkType: hard
+
+"sonner@npm:^0.3.5":
+  version: 0.3.5
+  resolution: "sonner@npm:0.3.5"
+  peerDependencies:
+    react: ^18.0.0
+    react-dom: ^18.0.0
+  checksum: c0c564eddef03edb61d5a9ba4993d2a2d05a1e24e7ac9bdd4fa461e8b1fceeef69b99d4da0ffa23b3e8cbffdb660eb54327d583a9131aca34eb436a88a063691
   languageName: node
   linkType: hard
 
