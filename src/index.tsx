@@ -18,7 +18,6 @@ import { SystemThemeUpdater } from 'theme/components/ThemeToggle'
 import Web3Provider from './components/Web3Provider'
 import { LanguageProvider } from './i18n'
 import App from './pages/App'
-import * as serviceWorkerRegistration from './serviceWorkerRegistration'
 import store from './state'
 import ApplicationUpdater from './state/application/updater'
 import ListsUpdater from './state/lists/updater'
@@ -75,6 +74,13 @@ createRoot(container).render(
   </StrictMode>
 )
 
-if (process.env.REACT_APP_SERVICE_WORKER !== 'false') {
-  serviceWorkerRegistration.register()
+// Unregister any outstanding service workers.
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.ready
+    .then((registration) => {
+      registration.unregister()
+    })
+    .catch((error) => {
+      console.error(error.message)
+    })
 }

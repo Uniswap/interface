@@ -139,17 +139,11 @@ export default function App() {
     user.set(CustomUserProperties.SCREEN_RESOLUTION_HEIGHT, window.screen.height)
     user.set(CustomUserProperties.SCREEN_RESOLUTION_WIDTH, window.screen.width)
 
-    // Service Worker analytics
-    const isServiceWorkerInstalled = Boolean(window.navigator.serviceWorker?.controller)
-    const isServiceWorkerHit = Boolean((window as any).__isDocumentCached)
-    const serviceWorkerProperty = isServiceWorkerInstalled ? (isServiceWorkerHit ? 'hit' : 'miss') : 'uninstalled'
-
-    const pageLoadProperties = { service_worker: serviceWorkerProperty }
-    sendAnalyticsEvent(SharedEventName.APP_LOADED, pageLoadProperties)
+    sendAnalyticsEvent(SharedEventName.APP_LOADED)
     const sendWebVital =
       (metric: string) =>
       ({ delta }: Metric) =>
-        sendAnalyticsEvent(SharedEventName.WEB_VITALS, { ...pageLoadProperties, [metric]: delta })
+        sendAnalyticsEvent(SharedEventName.WEB_VITALS, { [metric]: delta })
     getCLS(sendWebVital('cumulative_layout_shift'))
     getFCP(sendWebVital('first_contentful_paint_ms'))
     getFID(sendWebVital('first_input_delay_ms'))

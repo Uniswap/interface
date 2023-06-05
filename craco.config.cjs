@@ -6,6 +6,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const path = require('path')
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin')
 const { DefinePlugin, IgnorePlugin, ProvidePlugin } = require('webpack')
+const { WebpackManifestPlugin } = require('webpack-manifest-plugin')
 
 const commitHash = execSync('git rev-parse HEAD').toString().trim()
 const isProduction = process.env.NODE_ENV === 'production'
@@ -127,6 +128,9 @@ module.exports = {
 
           // IgnorePlugin is used to tree-shake moment locales, but we do not use moment in this project.
           if (plugin instanceof IgnorePlugin) return false
+
+          // WebpackManifestPlugin is used to generate a ServiceWorker, but we do not use one in this project.
+          if (plugin instanceof WebpackManifestPlugin) return false
 
           return true
         })

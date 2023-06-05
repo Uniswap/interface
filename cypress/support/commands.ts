@@ -14,7 +14,6 @@ declare global {
       ethereum: Eip1193Bridge
     }
     interface VisitOptions {
-      serviceWorker?: true
       featureFlags?: Array<FeatureFlag>
       /**
        * The mock ethereum provider to inject into the page.
@@ -42,39 +41,36 @@ Cypress.Commands.overwrite(
     let hashUrl = url.startsWith('/') && url.length > 2 && !url.startsWith('/#') ? `/#${url}` : url
     if (options?.ethereum === 'goerli') hashUrl += `${url.includes('?') ? '&' : '?'}chain=goerli`
 
-    return cy
-      .intercept('/service-worker.js', options?.serviceWorker ? undefined : { statusCode: 404 })
-      .provider()
-      .then((provider) =>
-        original({
-          ...options,
-          url: hashUrl,
-          onBeforeLoad(win) {
-            options?.onBeforeLoad?.(win)
+    return cy.provider().then((provider) =>
+      original({
+        ...options,
+        url: hashUrl,
+        onBeforeLoad(win) {
+          options?.onBeforeLoad?.(win)
 
-            // We want to test from a clean state, so we clear the local storage (which clears redux).
-            win.localStorage.clear()
+          // We want to test from a clean state, so we clear the local storage (which clears redux).
+          win.localStorage.clear()
 
-            // Set initial user state.
-            win.localStorage.setItem(
-              'redux_localstorage_simple_user', // storage key for the user reducer using 'redux-localstorage-simple'
-              JSON.stringify(options?.userState ?? CONNECTED_WALLET_USER_STATE)
-            )
+          // Set initial user state.
+          win.localStorage.setItem(
+            'redux_localstorage_simple_user', // storage key for the user reducer using 'redux-localstorage-simple'
+            JSON.stringify(options?.userState ?? CONNECTED_WALLET_USER_STATE)
+          )
 
-            // Set feature flags, if configured.
-            if (options?.featureFlags) {
-              const featureFlags = options.featureFlags.reduce((flags, flag) => ({ ...flags, [flag]: 'enabled' }), {})
-              win.localStorage.setItem('featureFlags', JSON.stringify(featureFlags))
-            }
+          // Set feature flags, if configured.
+          if (options?.featureFlags) {
+            const featureFlags = options.featureFlags.reduce((flags, flag) => ({ ...flags, [flag]: 'enabled' }), {})
+            win.localStorage.setItem('featureFlags', JSON.stringify(featureFlags))
+          }
 
-            // Inject the mock ethereum provider.
-            if (options?.ethereum === 'hardhat') {
-              win.ethereum = provider
-            } else {
-              win.ethereum = injected
-            }
-          },
-        })
-      )
+          // Inject the mock ethereum provider.
+          if (options?.ethereum === 'hardhat') {
+            win.ethereum = provider
+          } else {
+            win.ethereum = injected
+          }
+        },
+      })
+    )
   }
 )
