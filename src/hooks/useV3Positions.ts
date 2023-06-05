@@ -102,18 +102,18 @@ export function useLimitlessPositions(account: string | undefined): {loading: bo
           token0Address: key.token0,
           token1Address: key.token1,
           poolFee: key.fee,
-          totalPosition: convertBNToStr(position.totalPosition, 18),
-          totalDebt: convertBNToStr(position.totalDebt, 18),
-          totalDebtInput: convertBNToStr(position.totalDebtInput, 18),
-          // creationPrice: convertBNToStr(position.creationPrice, 18),
-          initialCollateral: convertBNToStr(position.initCollateral, 18),
-          recentPremium: convertBNToStr(position.recentPremium, 18),
-          unusedPremium: convertBNToStr(position.unusedPremium, 18),
-          totalPremium: convertBNToStr(position.totalPremium, 18),
+          totalPosition: convertBNToNum(position.totalPosition, 18),
+          totalDebt: convertBNToNum(position.totalDebt, 18),
+          totalDebtInput: convertBNToNum(position.totalDebtInput, 18),
+          // creationPrice: convertBNToNum(position.creationPrice, 18),
+          initialCollateral: convertBNToNum(position.initCollateral, 18),
+          recentPremium: convertBNToNum(position.recentPremium, 18),
+          unusedPremium: convertBNToNum(position.unusedPremium, 18),
+          totalPremium: convertBNToNum(position.totalPremium, 18),
           isToken0: position.isToken0,
-          openTime: position.openTime.toString(),
-          repayTime: position.repayTime.toString(),
-          // borrowInfo: position.borrowInfo.map((info: any) => ({ tick: info.tick, liquidity: convertBNToStr(info.liquidity, 18)})),
+          openTime: position.openTime,
+          repayTime: position.repayTime,
+          // borrowInfo: position.borrowInfo.map((info: any) => ({ tick: info.tick, liquidity: convertBNToNum(info.liquidity, 18)})),
         }
       })
 
@@ -131,8 +131,8 @@ export function useLimitlessPositions(account: string | undefined): {loading: bo
 }
 
 
-export function convertBNToStr(num: BigNumber, decimals: number) {
-  return new BN(num.toString()).shiftedBy(-decimals).toFixed(18)
+export function convertBNToNum(num: BigNumber, decimals: number) {
+  return new BN(num.toString()).shiftedBy(-decimals).toNumber()
 }
 
 export enum PositionState {
@@ -171,19 +171,19 @@ export function useLimitlessPositionFromTokenId(tokenId: string | undefined): { 
         token0Address: key.token0,
         token1Address: key.token1,
         poolFee: key.fee,
-        totalPosition: convertBNToStr(position.totalPosition, 18),
-        totalDebt: convertBNToStr(position.totalDebt, 18),
-        totalDebtInput: convertBNToStr(position.totalDebtInput, 18),
-        // creationPrice: convertBNToStr(position.creationPrice, 18),
-        initialCollateral: convertBNToStr(position.initCollateral, 18),
-        recentPremium: convertBNToStr(position.recentPremium, 18),
-        totalPremium: convertBNToStr(position.totalPremium, 18),
-        unusedPremium: convertBNToStr(position.unusedPremium, 18),
+        totalPosition: convertBNToNum(position.totalPosition, 18),
+        totalDebt: convertBNToNum(position.totalDebt, 18),
+        totalDebtInput: convertBNToNum(position.totalDebtInput, 18),
+        // creationPrice: convertBNToNum(position.creationPrice, 18),
+        initialCollateral: convertBNToNum(position.initCollateral, 18),
+        recentPremium: convertBNToNum(position.recentPremium, 18),
+        totalPremium: convertBNToNum(position.totalPremium, 18),
+        unusedPremium: convertBNToNum(position.unusedPremium, 18),
         isToken0: position.isToken0,
         openTime: position.openTime.toString(),
         repayTime: position.repayTime.toString(),
         isBorrow: position.isBorrow
-        // borrowInfo: position.borrowInfo.map((info: any) => convertBNToStr(info, 18)),
+        // borrowInfo: position.borrowInfo.map((info: any) => convertBNToNum(info, 18)),
       }
       return _position
     }

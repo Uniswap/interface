@@ -145,6 +145,16 @@ const TransactionTitleTable: { [key in TransactionType]: { [state in Transaction
     [TransactionStatus.Pending]: t`Reducing leverage`,
     [TransactionStatus.Confirmed]: t`Reduced leverage`,
     [TransactionStatus.Failed]: t`Reduce leverage failed`,
+  },
+  [TransactionType.PREMIUM_BORROW]: {
+    [TransactionStatus.Pending]: t`Paying Premium`,
+    [TransactionStatus.Confirmed]: t`Paid Premium`,
+    [TransactionStatus.Failed]: t`Payment failed`,
+  },
+  [TransactionType.PREMIUM_LEVERAGE]: {
+    [TransactionStatus.Pending]: t`Paying Premium`,
+    [TransactionStatus.Confirmed]: t`Paid Premium`,
+    [TransactionStatus.Failed]: t`Payment failed`,
   }
 }
 

@@ -58,6 +58,7 @@ import { DEFAULT_ERC20_DECIMALS } from 'constants/tokens'
 import { BorrowCreationDetails } from 'state/swap/hooks'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { TransactionType } from 'state/transactions/types'
+import { getPremiumRate } from 'hooks/addPremium'
 
 const StyledNumericalInput = styled(NumericalInput)`
   width: 70%;
@@ -470,7 +471,7 @@ function TextWithLoadingPlaceholder({
   )
 }
 
-function useDerivedAddPremiumInfo(
+function useDerivedAddLeveragePremiumInfo(
   leverageManager: string | undefined,
   trader: string | undefined,
   tokenId: string | undefined,
@@ -510,6 +511,66 @@ function useDerivedAddPremiumInfo(
 
     laggedfxn()
   }, [leverageManager, trader, tokenId, isToken0])
+
+  const info = useMemo(() => {
+    // console.log("addPosition2:", contractResult)
+
+    if (contractResult) {
+      return {
+        rate: (Number(contractResult.addPremiumResult) / (1e16)).toString()//.shiftedBy(-18).toFixed(12)
+      }
+    } else {
+      return {
+        rate: undefined
+      }
+    }
+  }, [
+    contractResult
+  ])
+
+  return info
+}
+
+function useDerivedAddBorrowPremiumInfo(
+  borowManager: string | undefined,
+  trader: string | undefined,
+  tokenId: string | undefined,
+  isToken0: boolean | undefined,
+  setState: (state: DerivedInfoState) => void,
+): {
+  rate: string | undefined
+} {
+  const borowManagerContract = useLeverageManagerContract(borowManager)
+  const [contractResult, setContractResult] = useState<{
+    addPremiumResult: any
+  }>()
+
+  useEffect(() => {
+    const laggedfxn = async () => {
+      if (!borowManagerContract || !tokenId || !trader) {
+        setState(DerivedInfoState.INVALID)
+        return
+      }
+      setState(DerivedInfoState.LOADING)
+
+      try {
+        // const position = await leverageManagerContract.callStatic.getPosition(trader, tokenId)
+
+        const addPremiumResult = await borowManagerContract.callStatic.payPremium(trader, isToken0)
+        setContractResult({
+          addPremiumResult
+        })
+        setState(DerivedInfoState.VALID)
+        // console.log("addPosition:", addPremiumResult)
+
+      } catch (error) {
+        console.error('Failed to get addPremium info', error)
+        setState(DerivedInfoState.INVALID)
+      }
+    }
+
+    laggedfxn()
+  }, [borowManagerContract, trader, tokenId, isToken0])
 
   const info = useMemo(() => {
     // console.log("addPosition2:", contractResult)
@@ -679,7 +740,7 @@ export function ReduceLeverageModalFooter({
                 }}
                 showMaxButton={true}
                 onMax={() => {
-                  setDebouncedReduceAmount(position?.totalPosition ? position?.totalPosition : "")
+                  setDebouncedReduceAmount(position?.totalPosition ? String(position?.totalPosition) : "")
                 }}
                 hideBalance={true}
                 currency={inputIsToken0 ? token1 : token0}
@@ -903,7 +964,7 @@ export function ReduceLeverageModalFooter({
   )
 }
 
-export function AddPremiumModalFooter({
+export function AddPremiumLeverageModalFooter({
   leverageManagerAddress,
   tokenId,
   trader,
@@ -923,16 +984,20 @@ export function AddPremiumModalFooter({
   const { error, position } = useLimitlessPositionFromTokenId(tokenId)
   const token0 = useToken(position?.token0Address)
   const token1 = useToken(position?.token1Address)
-  const { rate } = useDerivedAddPremiumInfo(leverageManagerAddress, trader, tokenId, position?.isToken0, setDerivedState)
+  const { rate } = useDerivedAddLeveragePremiumInfo(leverageManagerAddress, trader, tokenId, position?.isToken0, setDerivedState)
   const inputIsToken0 = !position?.isToken0
   // console.log("rate: ", rate)
 
   const payment = position?.totalDebtInput && rate ? new BN(position.totalDebtInput).multipliedBy(new BN(rate)).div(100).toString() : "0"
   const inputCurrency = useCurrency(position?.isToken0 ? position?.token0Address : position?.token1Address)
+  const approveAmount = useMemo(() => {
+    return position?.totalDebtInput ? new BN(position.totalDebtInput * getPremiumRate()).shiftedBy(18).toFixed(0) : "0"
+  }, [position])
+
   const [leverageApprovalState, approveLeverageManager] = useApproveCallback(
     inputCurrency ?
-      CurrencyAmount.fromRawAmount(inputCurrency, "1") : undefined,
-    leverageManagerAddress ?? undefined
+      CurrencyAmount.fromRawAmount(inputCurrency, approveAmount) : undefined,
+      leverageManagerAddress ?? undefined
     )
 
   const updateLeverageAllowance = useCallback(async () => {
@@ -1052,6 +1117,198 @@ export function AddPremiumModalFooter({
           style={{ gap: 14 }}
         >
           {leverageApprovalState === ApprovalState.PENDING ? (
+            <>
+              <Loader size="20px" />
+              <Trans>Approve pending</Trans>
+            </>
+          ) : (
+            <>
+              <div style={{ height: 20 }}>
+                <MouseoverTooltip
+                  text={
+                    <Trans>
+                      Permission is required.
+                    </Trans>
+                  }
+                >
+                  <Info size={20} />
+                </MouseoverTooltip>
+              </div>
+              <Trans>Approve use of {inputIsToken0 ? token0?.symbol : token1?.symbol}</Trans>
+            </>
+          )}
+        </ButtonPrimary>
+      ) : (
+        <ButtonError
+          onClick={handleAddPremium}
+          disabled={false}
+          style={{ margin: '10px 0 0 0' }}
+          id={InterfaceElementName.CONFIRM_SWAP_BUTTON}
+        >
+          <Text fontSize={20} fontWeight={500}>
+            <Trans>Add Premium</Trans>
+          </Text>
+        </ButtonError>
+      )
+      }
+    </AutoRow>
+  )
+}
+
+export function AddPremiumBorrowModalFooter({
+  borrowManagerAddress,
+  tokenId,
+  trader,
+  handleAddPremium
+}: {
+  borrowManagerAddress: string | undefined
+  tokenId: string | undefined
+  trader: string | undefined
+  handleAddPremium: () => void
+}) {
+
+
+  const [derivedState, setDerivedState] = useState<DerivedInfoState>(DerivedInfoState.INVALID)
+  const [showDetails, setShowDetails] = useState(false)
+  const theme = useTheme()
+
+  const { error, position } = useLimitlessPositionFromTokenId(tokenId)
+  const token0 = useToken(position?.token0Address)
+  const token1 = useToken(position?.token1Address)
+  const { rate } = useDerivedAddBorrowPremiumInfo(borrowManagerAddress, trader, tokenId, position?.isToken0, setDerivedState)
+  const inputIsToken0 = !position?.isToken0
+
+  const payment = position?.totalDebtInput && rate ? new BN(position.totalDebtInput).multipliedBy(new BN(rate)).div(100).toString() : "0"
+  
+  const outputCurrency = useCurrency(position?.isToken0 ? position?.token1Address : position?.token0Address)
+
+  const approveAmount = useMemo(() => {
+    return position?.totalDebtInput ? new BN(position.totalDebtInput * getPremiumRate()).shiftedBy(18).toFixed(0) : "0"
+  }, [position])
+
+  const [approvalState, approveManager] = useApproveCallback(
+    outputCurrency ?
+      CurrencyAmount.fromRawAmount(outputCurrency, approveAmount) : undefined,
+      borrowManagerAddress ?? undefined
+    )
+
+  const updateAllowance = useCallback(async () => {
+    try {
+      await approveManager()
+    } catch (err) {
+      console.log("approveLeverageManager err: ", err)
+    }
+  }, [borrowManagerAddress, approveManager]) // add input to deps.
+
+  const loading = derivedState === DerivedInfoState.LOADING
+  const valid = derivedState === DerivedInfoState.VALID
+
+
+  return (
+    <AutoRow>
+      <TransactionDetails>
+        <Wrapper style={{ marginTop: '0' }}>
+          <AutoColumn gap="sm" style={{ width: '100%', marginBottom: '-8px' }}>
+            <StyledHeaderRow onClick={() => setShowDetails(!showDetails)} disabled={true} open={showDetails}>
+              <RowFixed style={{ position: 'relative' }}>
+                {(loading ? (
+                  <StyledPolling>
+                    <StyledPollingDot>
+                      <Spinner />
+                    </StyledPollingDot>
+                  </StyledPolling>
+                ) : (
+                  <HideSmall>
+
+                    <StyledInfoIcon color={ theme.textTertiary } />
+
+                  </HideSmall>
+                ))}
+                {borrowManagerAddress ? (
+                  loading ? (
+                    <ThemedText.DeprecatedMain fontSize={14}>
+                      <Trans>Fetching expected payment...</Trans>
+                    </ThemedText.DeprecatedMain>
+                  ) : (
+                    <LoadingOpacityContainer $loading={loading}>
+                      Premium Payment Details
+                    </LoadingOpacityContainer>
+                  )
+                ) : null}
+              </RowFixed>
+              <RowFixed>
+                <RotatingArrow
+                  stroke={true ? theme.textTertiary : theme.deprecated_bg3}
+                  open={Boolean(true && showDetails)}
+                />
+              </RowFixed>
+
+            </StyledHeaderRow>
+            <AnimatedDropdown open={showDetails}>
+              <AutoColumn gap="sm" style={{ padding: '0', paddingBottom: '8px' }}>
+                {!loading ? (
+                  <StyledCard>
+                    <AutoColumn gap="sm">
+                      <RowBetween>
+                        <RowFixed>
+                          <MouseoverTooltip
+                            text={
+                              <Trans>
+                                Premium Payment Rate to be multiplied your borrowed amount
+                              </Trans>
+                            }
+                          >
+                            <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
+                              <Trans>Premium Payment Rate</Trans>
+                            </ThemedText.DeprecatedSubHeader>
+                          </MouseoverTooltip>
+                        </RowFixed>
+                        <TextWithLoadingPlaceholder syncing={loading} width={65}>
+                          <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
+                            {
+                              `${rate ? new BN(rate).toString() : "-"}%`
+                            }
+                          </ThemedText.DeprecatedBlack>
+                        </TextWithLoadingPlaceholder>
+                      </RowBetween>
+                      <RowBetween>
+                        <RowFixed>
+                          <MouseoverTooltip
+                            text={
+                              <Trans>
+                                Rate x Debt
+                              </Trans>
+                            }
+                          >
+                            <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
+                              <Trans>Expected Payment</Trans>
+                            </ThemedText.DeprecatedSubHeader>
+                          </MouseoverTooltip>
+                        </RowFixed>
+                        <TextWithLoadingPlaceholder syncing={loading} width={65}>
+                          <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
+                            {
+                              `${new BN(payment).toString()}`
+                            }
+                          </ThemedText.DeprecatedBlack>
+                        </TextWithLoadingPlaceholder>
+                      </RowBetween>
+                    </AutoColumn>
+                  </StyledCard>
+                )
+                  : null}
+              </AutoColumn>
+            </AnimatedDropdown>
+          </AutoColumn>
+        </Wrapper>
+      </TransactionDetails>
+      {approvalState !== ApprovalState.APPROVED ? (
+        <ButtonPrimary
+          onClick={updateAllowance}
+          disabled={approvalState === ApprovalState.PENDING}
+          style={{ gap: 14 }}
+        >
+          {approvalState === ApprovalState.PENDING ? (
             <>
               <Loader size="20px" />
               <Trans>Approve pending</Trans>

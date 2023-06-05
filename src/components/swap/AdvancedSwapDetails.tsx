@@ -22,6 +22,8 @@ import { useCurrency, useToken } from 'hooks/Tokens'
 import { formatNumber } from '@uniswap/conedison/format'
 import { TruncatedText } from './styleds'
 import { Field } from 'state/swap/actions'
+import { DEFAULT_ERC20_DECIMALS } from 'constants/tokens'
+import { usePool } from 'hooks/usePools'
 
 const StyledCard = styled(Card)`
   padding: 0;
@@ -271,6 +273,114 @@ export function CloseLeveragePositionDetails({
                 {leverageTrade?.totalDebtInput && leverageTrade?.initialCollateral
                   ? `${(Number(leverageTrade?.totalDebtInput) + Number(leverageTrade.initialCollateral)) / Number(leverageTrade?.initialCollateral)}`
                   : '-'}
+              </TruncatedText>
+
+            </ThemedText.DeprecatedBlack>
+          </TextWithLoadingPlaceholder>
+        </RowBetween>
+        <Separator />
+      </AutoColumn>
+    </Card>
+  )
+}
+
+export function BorrowPremiumPositionDetails({
+  position // user defined slippage.
+}: {
+  position: LimitlessPositionDetails | undefined,
+  // allowedSlippage: Percent | undefined
+}) {
+  const theme = useTheme()
+  const { chainId } = useWeb3React()
+  const nativeCurrency = useNativeCurrency()
+  const token0 = useToken(position?.token0Address)
+  const token1 = useToken(position?.token1Address)
+  // console.log("leveragePositionClose", leverageTrade)
+
+  const inputIsToken0 = position?.isToken0
+
+  const [poolState, pool] = usePool(token0 ?? undefined, token1 ?? undefined, position?.poolFee)
+
+  const ltv = useMemo(() => {
+    if (position) {
+      const collateralIsToken0 = position.isToken0; // position.isToken0 === position.borrowBelow
+      const price = collateralIsToken0 ? pool?.token0Price.toFixed(DEFAULT_ERC20_DECIMALS) : pool?.token1Price.toFixed(DEFAULT_ERC20_DECIMALS);
+      const ltv = new BN(position.totalDebtInput).div(
+        new BN(position.initialCollateral).multipliedBy(new BN(price ?? "0"))
+      )
+      return ltv.toNumber();
+    }
+    return undefined
+  }, [position, pool])
+
+  return (
+    <Card padding="0" marginTop={"10px"}>
+      <AutoColumn gap="sm">
+        <RowBetween>
+          <RowFixed>
+            <MouseoverTooltip
+              text={
+                <Trans>
+                  Total collateral amount
+                </Trans>
+              }
+            >
+              <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
+                <Trans>Total Collateral</Trans>
+              </ThemedText.DeprecatedSubHeader>
+            </MouseoverTooltip>
+          </RowFixed>
+          <TextWithLoadingPlaceholder syncing={false} width={65}>
+            <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
+
+              <TruncatedText>
+                {
+                  `${position?.initialCollateral ?? "-"}  ${inputIsToken0 ? token0?.symbol : token1?.symbol}`
+                }
+              </TruncatedText>
+            </ThemedText.DeprecatedBlack>
+          </TextWithLoadingPlaceholder>
+        </RowBetween>
+        <RowBetween>
+          <RowFixed>
+            <MouseoverTooltip
+              text={<Trans>Total debt of the position</Trans>}
+            // disableHover={hideInfoTooltips}
+            >
+              <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
+                <Trans>Original Debt</Trans>
+              </ThemedText.DeprecatedSubHeader>
+            </MouseoverTooltip>
+          </RowFixed>
+          <TextWithLoadingPlaceholder syncing={false} width={50}>
+
+            <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
+              <TruncatedText>
+                {`${Number(position?.totalDebtInput) ?? "-"}  ${inputIsToken0 ? token1?.symbol : token0?.symbol}`}
+              </TruncatedText>
+            </ThemedText.DeprecatedBlack>
+
+
+          </TextWithLoadingPlaceholder>
+        </RowBetween>
+        <RowBetween>
+          <RowFixed>
+            <MouseoverTooltip
+              text={
+                <Trans>
+                  Loan-to-Value
+                </Trans>
+              }
+            >
+              <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
+                <Trans>LTV</Trans>
+              </ThemedText.DeprecatedSubHeader>
+            </MouseoverTooltip>
+          </RowFixed>
+          <TextWithLoadingPlaceholder syncing={false} width={65}>
+            <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
+              <TruncatedText>
+                {ltv ? `${formatNumber(ltv)}%` : '-'}
               </TruncatedText>
 
             </ThemedText.DeprecatedBlack>

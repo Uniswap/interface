@@ -45,7 +45,9 @@ export enum TransactionType {
   DEPLOY,
   CANCEL,
   ADD_BORROW,
-  REDUCE_LEVERAGE
+  REDUCE_LEVERAGE,
+  PREMIUM_LEVERAGE,
+  PREMIUM_BORROW
 }
 
 interface BaseTransactionInfo {
@@ -188,6 +190,14 @@ interface SubmitProposalTransactionInfo {
   type: TransactionType.SUBMIT_PROPOSAL
 }
 
+export interface AddLeveragePremiumTransactionInfo {
+  type: TransactionType.PREMIUM_LEVERAGE
+}
+
+export interface AddBorrowPremiumTransactionInfo {
+  type: TransactionType.PREMIUM_BORROW
+}
+
 export type TransactionInfo =
   | ApproveTransactionInfo
   | ExactOutputSwapTransactionInfo
@@ -209,6 +219,8 @@ export type TransactionInfo =
   | SubmitProposalTransactionInfo
   | AddBorrowPositionTransactionInfo
   | ReduceLeveragePositionTransactionInfo
+  | AddLeveragePremiumTransactionInfo
+  | AddBorrowPremiumTransactionInfo
 
 export interface TransactionDetails {
   hash: string

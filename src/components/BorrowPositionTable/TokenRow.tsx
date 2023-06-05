@@ -39,7 +39,7 @@ import { useCurrency } from 'hooks/Tokens'
 import { AutoRow, RowBetween, RowFixed } from 'components/Row'
 import { LimitlessPositionDetails } from 'types/leveragePosition'
 import { AutoColumn } from 'components/Column'
-import ReducePositionModal, { AddPremiumModal } from 'components/swap/CloseLeveragePositionModal'
+import ReducePositionModal, { AddLeveragePremiumModal } from 'components/swap/CloseLeveragePositionModal'
 import { useWeb3React } from '@web3-react/core'
 import { SmallButtonPrimary } from 'components/Button'
 import { ReduceButton, SmallMaxButton } from 'pages/RemoveLiquidity/styled'
@@ -457,7 +457,7 @@ function PositionRow({
   const actions = (!header ? (
     <ActionsContainer>
       <ReduceButton width="auto" onClick={() => setShowClose(!showClose)} >
-        <Trans>reduce</Trans>
+        <Trans>edit</Trans>
       </ReduceButton>
       <ReduceButton width="auto" onClick={() => setShowAddPremium(!showClose)} >
         <Trans>pay</Trans>
@@ -488,7 +488,7 @@ function PositionRow({
         />
       )}
       {showAddPremium && (
-        <AddPremiumModal
+        <AddLeveragePremiumModal
           trader={account}
           isOpen={showAddPremium}
           tokenId={position?.tokenId ?? undefined}
@@ -634,14 +634,6 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
     position
   ])
 
-  // const token0Quote = useMemo(() => {
-  //   return pool?.token0Price?.greaterThan(1)
-  // },[pool?.token0Price])
-
-  // console.log("position: ", position)
-
-  // const arrow = getDeltaArrow(pnl, 18)
-
   // TODO: currency logo sizing mobile (32px) vs. desktop (24px)
   return (
     <div ref={ref} data-testid={`token-table-row-${position.tokenId}`}>
@@ -670,7 +662,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
               <TruncatedTableText>
                 {(Number(position.totalDebtInput))}
               </TruncatedTableText>
-              {outputCurrencySymbol}
+              {" " + outputCurrencySymbol}
             </Trans>
           }
           collateral={
@@ -701,7 +693,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
               <TruncatedTableText>
                 {(Number(position.unusedPremium))}
               </TruncatedTableText>
-              {inputCurrencySymbol}
+              {" " + inputCurrencySymbol}
             </Trans>
           }
           position={position}

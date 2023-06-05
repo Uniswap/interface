@@ -10,17 +10,17 @@ export interface LimitlessPositionDetails {
   token1Address: string | undefined
   poolFee: FeeAmount | undefined
   tokenId: string
-  totalPosition: string // totalPosition
-  totalDebt: string // total debt in output token
-  totalDebtInput: string // total debt in input token
-  initialCollateral: string
+  totalPosition: number // totalPosition
+  totalDebt: number // total debt in output token
+  totalDebtInput: number // total debt in input token
+  initialCollateral: number
   // creationPrice: string,
-  recentPremium: string
-  totalPremium: string,
-  unusedPremium: string,
+  recentPremium: number
+  totalPremium: number,
+  unusedPremium: number,
   isToken0: boolean
-  openTime: string
-  repayTime: string
+  openTime: number
+  repayTime: number
   // borrowInfo: TickLiquidity[]
 }
 // open price == ( totalDebtInput + initialCollateral ) / totalPosition

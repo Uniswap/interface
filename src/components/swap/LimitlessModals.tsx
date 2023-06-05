@@ -7,7 +7,7 @@ import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import TransactionConfirmationModal, {
   ConfirmationModalContent,
 } from '../TransactionConfirmationModal'
-import { AddPremiumModalFooter, ReduceLeverageModalFooter } from './SwapModalFooter'
+import { AddPremiumLeverageModalFooter, ReduceLeverageModalFooter } from './SwapModalFooter'
 
 import { useLimitlessPositionFromTokenId } from 'hooks/useV3Positions'
 import { CloseLeveragePositionDetails } from './AdvancedSwapDetails'
@@ -157,7 +157,7 @@ export function AddPremiumModal({
   }, [onAcceptChanges, shouldLogModalCloseEvent])
 
   const modalBottom = useCallback(() => {
-    return (<AddPremiumModalFooter leverageManagerAddress={leverageManagerAddress} tokenId={tokenId} trader={trader}
+    return (<AddPremiumLeverageModalFooter leverageManagerAddress={leverageManagerAddress} tokenId={tokenId} trader={trader}
     handleAddPremium={handleAddPremium}
     />)
   }, [

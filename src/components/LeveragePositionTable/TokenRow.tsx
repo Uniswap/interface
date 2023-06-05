@@ -39,7 +39,7 @@ import { useCurrency } from 'hooks/Tokens'
 import { AutoRow, RowBetween, RowFixed } from 'components/Row'
 import { LimitlessPositionDetails } from 'types/leveragePosition'
 import { AutoColumn } from 'components/Column'
-import ReducePositionModal, { AddPremiumModal } from 'components/swap/CloseLeveragePositionModal'
+import ReducePositionModal, { AddLeveragePremiumModal } from 'components/swap/CloseLeveragePositionModal'
 import { useWeb3React } from '@web3-react/core'
 import { SmallButtonPrimary } from 'components/Button'
 import { ReduceButton, SmallMaxButton } from 'pages/RemoveLiquidity/styled'
@@ -502,7 +502,7 @@ function PositionRow({
         />
       )}
       {showAddPremium && (
-        <AddPremiumModal
+        <AddLeveragePremiumModal
           trader={account}
           isOpen={showAddPremium}
           tokenId={position?.tokenId ?? undefined}
@@ -718,7 +718,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
                   <TruncatedTableText>
                     <GreenText> x{(Math.round(leverageFactor*1000)/1000)}</GreenText> 
                   </TruncatedTableText>
-                  {outputCurrencySymbol}
+                  {" " + outputCurrencySymbol}
                 </PositionInfo>
               </RowBetween>
             </ClickableContent>
@@ -728,7 +728,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
               <TruncatedTableText>
                 {(Math.round(Number(position.totalPosition)*10000)/10000)}
               </TruncatedTableText>
-              {outputCurrencySymbol}
+              {" " + outputCurrencySymbol}
             </Trans>
           }
           collateral={
@@ -736,7 +736,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
               <TruncatedTableText>
                 {(Math.round(Number(position.initialCollateral)*10000)/10000)}
               </TruncatedTableText>
-              {inputCurrencySymbol}
+              {" " + inputCurrencySymbol}
             </Trans>
           }
           repaymentTime={
@@ -784,7 +784,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
               <TruncatedTableText>
                 {(Math.round(Number(position.unusedPremium)*10000)/10000)}
               </TruncatedTableText>
-              {inputCurrencySymbol}
+              {` ${inputCurrencySymbol}`}
             </Trans>
           }
           // recentPremium={

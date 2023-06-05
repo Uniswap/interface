@@ -11,14 +11,14 @@ import TransactionConfirmationModal, {
   ConfirmationModalContent,
   TransactionErrorContent,
 } from '../TransactionConfirmationModal'
-import SwapModalFooter, { AddPremiumModalFooter, ReduceLeverageModalFooter, LeverageModalFooter } from './SwapModalFooter'
+import SwapModalFooter, { AddPremiumLeverageModalFooter, ReduceLeverageModalFooter, LeverageModalFooter, AddPremiumBorrowModalFooter } from './SwapModalFooter'
 import SwapModalHeader, { LeverageModalHeader } from './SwapModalHeader'
 import { LeverageTrade } from 'state/swap/hooks'
 import { useLimitlessPositionFromTokenId } from 'hooks/useV3Positions'
-import { CloseLeveragePositionDetails } from './AdvancedSwapDetails'
+import { BorrowPremiumPositionDetails, CloseLeveragePositionDetails } from './AdvancedSwapDetails'
 import useDebounce from 'hooks/useDebounce'
 import { useLeverageManagerAddress } from 'hooks/useGetLeverageManager'
-import { useLeverageManagerContract } from 'hooks/useContract'
+import { useBorrowManagerContract, useLeverageManagerContract } from 'hooks/useContract'
 import {BigNumber as BN} from "bignumber.js"
 import useDebouncedChangeHandler from 'hooks/useDebouncedChangeHandler'
 import { LightCard } from 'components/Card'
@@ -27,7 +27,8 @@ import { AutoRow, RowBetween } from 'components/Row'
 import { ThemedText } from 'theme'
 import { ResponsiveHeaderText, SmallMaxButton } from 'pages/RemoveLiquidity/styled'
 import Slider from 'components/Slider'
-
+import { useTransactionAdder } from 'state/transactions/hooks'
+import { TransactionType } from 'state/transactions/types'
 
 export default function ReducePositionModal({
   trader,
@@ -111,7 +112,7 @@ export default function ReducePositionModal({
   )
 }
 
-export function AddPremiumModal({
+export function AddLeveragePremiumModal({
   trader,
   tokenId,
   isOpen,
@@ -139,11 +140,17 @@ export function AddPremiumModal({
   const leverageManagerAddress = position?.leverageManagerAddress;
   const leverageManager = useLeverageManagerContract(position?.leverageManagerAddress, true)
 
+  const addTransaction = useTransactionAdder()
+
+
   const handleAddPremium = useCallback(() => {
     if (leverageManager) {
       setAttemptingTxn(true)
       leverageManager.payPremium(trader, position?.isToken0).then(
         (hash: any) => {
+          addTransaction(hash, {
+            type: TransactionType.PREMIUM_LEVERAGE
+          })
           setAttemptingTxn(false)
           setTxHash(hash)
           console.log("add premium hash: ", hash)
@@ -171,7 +178,111 @@ export function AddPremiumModal({
   }, [onAcceptChanges, shouldLogModalCloseEvent])
 
   const modalBottom = useCallback(() => {
-    return (<AddPremiumModalFooter leverageManagerAddress={leverageManagerAddress} tokenId={tokenId} trader={trader}
+    return (<AddPremiumLeverageModalFooter leverageManagerAddress={leverageManagerAddress} tokenId={tokenId} trader={trader}
+    handleAddPremium={handleAddPremium}
+    />)
+  }, [
+    onConfirm
+  ])
+
+  // text to show while loading
+  const pendingText = (
+    <Trans>
+      Loading...
+    </Trans>
+  )
+
+  const confirmationContent = useCallback(
+    () =>
+      (
+        <ConfirmationModalContent
+          title={<Trans>Add Premium</Trans>}
+          onDismiss={onModalDismiss}
+          topContent={modalHeader}
+          bottomContent={modalBottom}
+        />
+      ),
+    [onModalDismiss, modalBottom, modalHeader]
+  )
+
+  return (
+    <Trace modal={InterfaceModalName.CONFIRM_SWAP}>
+      <TransactionConfirmationModal
+        isOpen={isOpen}
+        onDismiss={onModalDismiss}
+        attemptingTxn={attemptingTxn}
+        hash={txHash}
+        content={confirmationContent}
+        pendingText={pendingText}
+      />
+    </Trace>
+  )
+}
+
+export function AddBorrowPremiumModal({
+  trader,
+  tokenId,
+  isOpen,
+  onDismiss,
+  onAcceptChanges,
+  onConfirm
+}: {
+  trader: string | undefined,
+  isOpen: boolean,
+  tokenId: string | undefined,
+  onDismiss: () => void
+  onAcceptChanges: () => void
+  onConfirm: () => void
+}) {
+  // shouldLogModalCloseEvent lets the child SwapModalHeader component know when modal has been closed
+  // and an event triggered by modal closing should be logged.
+  const [shouldLogModalCloseEvent, setShouldLogModalCloseEvent] = useState(false)
+  const [attemptingTxn, setAttemptingTxn] = useState(false)
+  const [txHash, setTxHash] = useState("")
+
+  // console.log("args: ", trader, isOpen, tokenId, leverageManagerAddress)
+
+  const { loading, error, position} = useLimitlessPositionFromTokenId(tokenId)
+  const borrowManagerAddress = position?.borrowManagerAddress;
+  const borrowManager = useBorrowManagerContract(borrowManagerAddress, true)
+  const addTransaction = useTransactionAdder()
+
+  const handleAddPremium = useCallback(() => {
+    if (borrowManager) {
+      setAttemptingTxn(true)
+      borrowManager.payPremium(trader, position?.isToken0).then(
+        (hash: any) => {
+          addTransaction(hash, {
+            type: TransactionType.PREMIUM_BORROW
+          })
+          setAttemptingTxn(false)
+          setTxHash(hash)
+          console.log("add premium hash: ", hash)
+        }
+      ).catch((err: any) => {
+        setAttemptingTxn(false)
+        console.log("error adding premium: ", err)
+      }
+      )
+    }
+  }, [])
+
+
+  const onModalDismiss = useCallback(() => {
+    if (isOpen) setShouldLogModalCloseEvent(true)
+    onDismiss()
+  }, [isOpen, onDismiss])
+  // console.log("postionState: ", position)
+
+
+  const modalHeader = useCallback(() => {
+    return (
+      <BorrowPremiumPositionDetails position={position}/>
+    )
+  }, [onAcceptChanges, shouldLogModalCloseEvent])
+
+  const modalBottom = useCallback(() => {
+    return (<AddPremiumBorrowModalFooter borrowManagerAddress={borrowManagerAddress} tokenId={tokenId} trader={trader}
     handleAddPremium={handleAddPremium}
     />)
   }, [

@@ -433,7 +433,7 @@ export default function Swap({ className }: { className?: string }) {
       return [
         CurrencyAmount.fromRawAmount(
           inputCurrency,
-          new BN(parsedAmounts[Field.INPUT]?.toExact() ?? 0).multipliedBy(0.002).shiftedBy(18).toFixed(0)
+          new BN(parsedAmounts[Field.INPUT]?.toExact() ?? 0).multipliedBy(1.002).shiftedBy(18).toFixed(0)
         ),
         CurrencyAmount.fromRawAmount(
           outputCurrency,

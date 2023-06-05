@@ -20,7 +20,7 @@ import { abi as IUniswapV3PoolStateABI } from '@uniswap/v3-core/artifacts/contra
 import { Interface } from '@ethersproject/abi'
 import { usePool } from 'hooks/usePools';
 import { useCurrency } from 'hooks/Tokens';
-import { convertBNToStr } from 'hooks/useV3Positions';
+import { convertBNToNum } from 'hooks/useV3Positions';
 import { LoadingRows } from 'components/Loader/styled';
 import { ThemedText } from 'theme';
 import StatsSection from 'components/swap/StatsSection';
@@ -210,7 +210,7 @@ export const PoolDataSection = ({
 					if (token0Price) {
 						setUniswapPoolExists(true)
 						setStats((prev) => ({ ...prev, token0Price: new BN(token0Price.toString()).shiftedBy(18).toNumber() }))
-						setUniswapToken0Price(Number(convertBNToStr(token0Price, 18)))
+						setUniswapToken0Price(convertBNToNum(token0Price, 18))
 					}
 				} catch (err) {
 					// console.log("err: ", err)
