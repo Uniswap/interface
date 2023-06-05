@@ -16,10 +16,10 @@ import { Trace } from 'src/components/telemetry/Trace'
 import TraceTabView from 'src/components/telemetry/TraceTabView'
 import ProfileHeader from 'src/features/externalProfile/ProfileHeader'
 import { SectionName } from 'src/features/telemetry/constants'
-import { useDisplayName } from 'src/features/wallet/hooks'
 import { ExploreModalAwareView } from 'src/screens/ModalAwareView'
 import { Screens } from 'src/screens/Screens'
 import { EMPTY_ARRAY } from 'wallet/src/constants/misc'
+import { useDisplayName } from 'wallet/src/features/wallet/hooks'
 
 type Props = NativeStackScreenProps<AppStackParamList, Screens.ExternalProfile>
 

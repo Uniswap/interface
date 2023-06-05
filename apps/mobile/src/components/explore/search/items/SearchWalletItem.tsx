@@ -10,13 +10,13 @@ import { SearchContext } from 'src/components/explore/search/SearchResultsSectio
 import { Box } from 'src/components/layout'
 import { Flex } from 'src/components/layout/Flex'
 import { Text } from 'src/components/Text'
-import { useENSAvatar, useENSName } from 'src/features/ens/api'
-import { getCompletedENSName } from 'src/features/ens/useENS'
 import { addToSearchHistory, WalletSearchResult } from 'src/features/explore/searchHistorySlice'
 import { useToggleWatchedWalletCallback } from 'src/features/favorites/hooks'
 import { selectWatchedAddressSet } from 'src/features/favorites/selectors'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { ElementName, MobileEventName } from 'src/features/telemetry/constants'
+import { useENSAvatar, useENSName } from 'wallet/src/features/ens/api'
+import { getCompletedENSName } from 'wallet/src/features/ens/useENS'
 import { sanitizeAddressText, shortenAddress } from 'wallet/src/utils/addresses'
 
 type SearchWalletItemProps = {

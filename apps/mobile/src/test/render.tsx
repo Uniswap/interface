@@ -15,11 +15,11 @@ import { ReactTestRendererJSON } from 'react-test-renderer'
 import type { MobileState } from 'src/app/reducer'
 import type { AppStore } from 'src/app/store'
 import { persistedReducer } from 'src/app/store'
-import { ensApi } from 'src/features/ens/api'
 import { routingApi } from 'src/features/routing/routingApi'
 import { theme } from 'src/styles/theme'
 import { setupCache } from 'wallet/src/data/cache'
 import { getErrorLink } from 'wallet/src/data/links'
+import { ensApi } from 'wallet/src/features/ens/api'
 
 // This type interface extends the default options for render from RTL, as well
 // as allows the user to specify other things such as initialState, store.

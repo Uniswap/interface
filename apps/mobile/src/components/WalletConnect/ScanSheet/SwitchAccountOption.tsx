@@ -4,9 +4,9 @@ import { Box, Flex } from 'src/components/layout'
 import { Separator } from 'src/components/layout/Separator'
 import { Text } from 'src/components/Text'
 import { Unicon } from 'src/components/unicons/Unicon'
-import { useDisplayName } from 'src/features/wallet/hooks'
 import Check from 'ui/src/assets/icons/check.svg'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
+import { useDisplayName } from 'wallet/src/features/wallet/hooks'
 import { shortenAddress } from 'wallet/src/utils/addresses'
 
 type Props = {

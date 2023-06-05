@@ -5,14 +5,15 @@ import { AccountIcon } from 'src/components/AccountIcon'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
-import { useENSAvatar } from 'src/features/ens/api'
 import { pushNotification } from 'src/features/notifications/notificationSlice'
 import { AppNotificationType, CopyNotificationType } from 'src/features/notifications/types'
 import { ElementName } from 'src/features/telemetry/constants'
-import { useDisplayName } from 'src/features/wallet/hooks'
+
 import { Theme } from 'src/styles/theme'
 import { setClipboard } from 'src/utils/clipboard'
 import CopyIcon from 'ui/src/assets/icons/copy-sheets.svg'
+import { useENSAvatar } from 'wallet/src/features/ens/api'
+import { useDisplayName } from 'wallet/src/features/wallet/hooks'
 import { sanitizeAddressText, shortenAddress } from 'wallet/src/utils/addresses'
 
 type AddressDisplayProps = {

@@ -1,5 +1,8 @@
+import { useENSName } from 'wallet/src/features/ens/api'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { useAppSelector } from 'wallet/src/state'
+import { getValidAddress, sanitizeAddressText, shortenAddress } from 'wallet/src/utils/addresses'
+import { trimToLength } from 'wallet/src/utils/string'
 import {
   makeSelectAccountNotificationSetting,
   selectActiveAccount,
@@ -11,6 +14,8 @@ import {
   selectSignerMnemonicAccountExists,
   selectViewOnlyAccounts,
 } from './selectors'
+
+const ENS_TRIM_LENGTH = 8
 
 export function useAccounts(): Record<string, Account> {
   return useAppSelector<Record<string, Account>>(selectNonPendingAccounts)
@@ -58,4 +63,40 @@ export function useActiveAccountWithThrow(): Account {
 
 export function useSelectAccountNotificationSetting(address: Address): boolean {
   return useAppSelector(makeSelectAccountNotificationSetting(address))
+}
+
+/**
+ * Displays the ENS name if one is available otherwise displays the local name and if neither are available it shows the address.
+ */
+export function useDisplayName(
+  address: Maybe<string>,
+  showShortenedEns = false
+):
+  | {
+      name: string
+      type: 'local' | 'ens' | 'address'
+    }
+  | undefined {
+  const validated = getValidAddress(address)
+  const ens = useENSName(validated ?? undefined)
+
+  // Need to account for pending accounts for use within onboarding
+  const maybeLocalName = useAccounts()[address ?? '']?.name
+  const maybeLocalNamePending = usePendingAccounts()[address ?? '']?.name
+  const localName = maybeLocalName ?? maybeLocalNamePending
+
+  if (!address) return
+
+  if (ens.data) {
+    return {
+      name: showShortenedEns ? trimToLength(ens.data, ENS_TRIM_LENGTH) : ens.data,
+      type: 'ens',
+    }
+  }
+
+  if (localName) {
+    return { name: localName, type: 'local' }
+  }
+
+  return { name: `${sanitizeAddressText(shortenAddress(address))}`, type: 'address' }
 }

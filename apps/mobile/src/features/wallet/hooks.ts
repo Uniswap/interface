@@ -1,48 +1,6 @@
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert } from 'react-native'
-import { useENSName } from 'src/features/ens/api'
-import { useAccounts, usePendingAccounts } from 'wallet/src/features/wallet/hooks'
-import { getValidAddress, sanitizeAddressText, shortenAddress } from 'wallet/src/utils/addresses'
-import { trimToLength } from 'wallet/src/utils/string'
-
-const ENS_TRIM_LENGTH = 8
-
-/**
- * Displays the ENS name if one is available otherwise displays the local name and if neither are available it shows the address.
- */
-export function useDisplayName(
-  address: Maybe<string>,
-  showShortenedEns = false
-):
-  | {
-      name: string
-      type: 'local' | 'ens' | 'address'
-    }
-  | undefined {
-  const validated = getValidAddress(address)
-  const ens = useENSName(validated ?? undefined)
-
-  // Need to account for pending accounts for use within onboarding
-  const maybeLocalName = useAccounts()[address ?? '']?.name
-  const maybeLocalNamePending = usePendingAccounts()[address ?? '']?.name
-  const localName = maybeLocalName ?? maybeLocalNamePending
-
-  if (!address) return
-
-  if (ens.data) {
-    return {
-      name: showShortenedEns ? trimToLength(ens.data, ENS_TRIM_LENGTH) : ens.data,
-      type: 'ens',
-    }
-  }
-
-  if (localName) {
-    return { name: localName, type: 'local' }
-  }
-
-  return { name: `${sanitizeAddressText(shortenAddress(address))}`, type: 'address' }
-}
 
 export function useWCTimeoutError(timeoutDurationInMs: number): {
   hasScanError: boolean

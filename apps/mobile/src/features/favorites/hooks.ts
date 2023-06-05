@@ -10,7 +10,7 @@ import {
 import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
 import { useCurrencyInfo } from 'src/features/tokens/useCurrencyInfo'
-import { useDisplayName } from 'src/features/wallet/hooks'
+import { useDisplayName } from 'wallet/src/features/wallet/hooks'
 import { CurrencyId, currencyIdToAddress, currencyIdToChain } from 'wallet/src/utils/currencyId'
 
 export function useToggleFavoriteCallback(id: CurrencyId, isFavoriteToken: boolean): () => void {

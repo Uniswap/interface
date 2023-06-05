@@ -11,11 +11,11 @@ import RemoveButton from 'src/components/explore/RemoveButton'
 import { Box, Flex } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { Text } from 'src/components/Text'
-import { useENSAvatar } from 'src/features/ens/api'
 import { removeWatchedAddress } from 'src/features/favorites/slice'
-import { useDisplayName } from 'src/features/wallet/hooks'
 import { flex } from 'src/styles/flex'
 import { theme } from 'src/styles/theme'
+import { useENSAvatar } from 'wallet/src/features/ens/api'
+import { useDisplayName } from 'wallet/src/features/wallet/hooks'
 
 type FavoriteWalletCardProps = {
   address: Address

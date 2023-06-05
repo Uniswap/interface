@@ -13,7 +13,6 @@ import { Flex } from 'src/components/layout/Flex'
 import { Text } from 'src/components/Text'
 import { useUniconColors } from 'src/components/unicons/utils'
 import { useIsDarkMode } from 'src/features/appearance/hooks'
-import { useENSAvatar } from 'src/features/ens/api'
 import { ProfileContextMenu } from 'src/features/externalProfile/ProfileContextMenu'
 import { useToggleWatchedWalletCallback } from 'src/features/favorites/hooks'
 import { selectWatchedAddressSet } from 'src/features/favorites/selectors'
@@ -24,6 +23,7 @@ import { useExtractedColors } from 'src/utils/colors'
 import HeartIcon from 'ui/src/assets/icons/heart.svg'
 import SendIcon from 'ui/src/assets/icons/send-action.svg'
 import { iconSizes } from 'ui/src/theme/iconSizes'
+import { useENSAvatar } from 'wallet/src/features/ens/api'
 
 const HEADER_GRADIENT_HEIGHT = 137
 const HEADER_ICON_SIZE = 72

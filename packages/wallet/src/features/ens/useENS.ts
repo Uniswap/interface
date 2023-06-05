@@ -1,7 +1,7 @@
 // Copied from https://github.com/Uniswap/interface/blob/main/src/hooks/useENS.ts
 
-import { useAddressFromEns, useENSName } from 'src/features/ens/api'
 import { ChainId } from 'wallet/src/constants/chains'
+import { useAddressFromEns, useENSName } from 'wallet/src/features/ens/api'
 import { getValidAddress } from 'wallet/src/utils/addresses'
 import { useDebounce } from 'wallet/src/utils/timing'
 

@@ -17,7 +17,6 @@ import {
 import { AnimatedFlex, Flex } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { Text } from 'src/components/Text'
-import { useENS } from 'src/features/ens/useENS'
 import {
   NFTCollectionSearchResult,
   SearchResult,
@@ -29,6 +28,7 @@ import { useIsSmartContractAddress } from 'src/features/transactions/transfer/ho
 import { ChainId } from 'wallet/src/constants/chains'
 import { EMPTY_ARRAY } from 'wallet/src/constants/misc'
 import { SafetyLevel, useExploreSearchQuery } from 'wallet/src/data/__generated__/types-and-hooks'
+import { useENS } from 'wallet/src/features/ens/useENS'
 import { logger } from 'wallet/src/features/logger/logger'
 import { getValidAddress } from 'wallet/src/utils/addresses'
 

@@ -2,7 +2,6 @@ import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { LogoWithTxStatus } from 'src/components/CurrencyLogo/LogoWithTxStatus'
 import { AssetType } from 'src/entities/assets'
-import { useENS } from 'src/features/ens/useENS'
 import { getFormattedCurrencyAmount } from 'src/features/notifications/utils'
 import { useCurrencyInfo } from 'src/features/tokens/useCurrencyInfo'
 import TransactionSummaryLayout, {
@@ -10,6 +9,7 @@ import TransactionSummaryLayout, {
 } from 'src/features/transactions/SummaryCards/TransactionSummaryLayout'
 import { SendTokenTransactionInfo, TransactionDetails } from 'src/features/transactions/types'
 import { ChainId } from 'wallet/src/constants/chains'
+import { useENS } from 'wallet/src/features/ens/useENS'
 import { shortenAddress } from 'wallet/src/utils/addresses'
 import { buildCurrencyId } from 'wallet/src/utils/currencyId'
 

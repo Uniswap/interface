@@ -54,7 +54,6 @@ import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { initialBiometricsSettingsState } from 'src/features/biometrics/slice'
 import { initialCloudBackupState } from 'src/features/CloudBackup/cloudBackupSlice'
 import { initialPasswordLockoutState } from 'src/features/CloudBackup/passwordLockoutSlice'
-import { ensApi } from 'src/features/ens/api'
 import { initialSearchHistoryState } from 'src/features/explore/searchHistorySlice'
 import { initialFavoritesState } from 'src/features/favorites/slice'
 import { initialModalState } from 'src/features/modals/modalSlice'
@@ -73,6 +72,7 @@ import { account, fiatOnRampTxDetailsFailed, txDetailsConfirmed } from 'src/test
 import { SWAP_ROUTER_ADDRESSES } from 'wallet/src/constants/addresses'
 import { ChainId } from 'wallet/src/constants/chains'
 import { ChainsState, initialChainsState } from 'wallet/src/features/chains/slice'
+import { ensApi } from 'wallet/src/features/ens/api'
 import {
   Account,
   AccountType,
