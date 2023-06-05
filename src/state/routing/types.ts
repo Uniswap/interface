@@ -72,15 +72,22 @@ export interface ClassicQuoteData {
   routeString: string
 }
 
-export type URAQuoteResponse =
-  | {
-      routing: URAQuoteType.CLASSIC
-      quote: ClassicQuoteData
-    }
-  | {
-      routing: URAQuoteType.DUTCH_LIMIT
-      quote: DutchLimitOrderInfoJSON & { quoteId?: string }
-    }
+type DutchLimitOrderInfoData = DutchLimitOrderInfoJSON & { quoteId?: string }
+type URADutchLimitOrderQuoteResponse = {
+  routing: URAQuoteType.DUTCH_LIMIT
+  quote: DutchLimitOrderInfoData
+  allQuotes: Array<URAQuoteResponse>
+}
+type URAClassicQuoteResponse = {
+  routing: URAQuoteType.CLASSIC
+  quote: ClassicQuoteData
+  allQuotes: Array<URAQuoteResponse>
+}
+export type URAQuoteResponse = URAClassicQuoteResponse | URADutchLimitOrderQuoteResponse
+
+export function isClassicQuoteResponse(data: URAQuoteResponse): data is URAClassicQuoteResponse {
+  return data.routing === URAQuoteType.CLASSIC
+}
 
 export enum TradeFillType {
   Classic = 'classic', // Uniswap V1, V2, and V3 trades with on-chain routes
@@ -126,6 +133,8 @@ export class DutchLimitOrderTrade extends IDutchLimitOrderTrade<Currency, Curren
   public readonly fillType = TradeFillType.UniswapX
   quoteId?: string
   needsWrap: boolean
+  // The gas estimate of the reference classic trade, if there is one.
+  gasUseEstimateUSD: string | null | undefined
 
   constructor({
     currencyIn,
@@ -134,6 +143,7 @@ export class DutchLimitOrderTrade extends IDutchLimitOrderTrade<Currency, Curren
     tradeType,
     quoteId,
     needsWrap,
+    gasUseEstimateUSD,
   }: {
     currencyIn: Currency
     currenciesOut: Currency[]
@@ -141,10 +151,12 @@ export class DutchLimitOrderTrade extends IDutchLimitOrderTrade<Currency, Curren
     tradeType: TradeType
     quoteId?: string
     needsWrap: boolean
+    gasUseEstimateUSD?: string | null
   }) {
     super({ currencyIn, currenciesOut, orderInfo, tradeType })
     this.quoteId = quoteId
     this.needsWrap = needsWrap
+    this.gasUseEstimateUSD = gasUseEstimateUSD
   }
 }
 

@@ -16,6 +16,7 @@ import {
   ClassicTrade,
   DutchLimitOrderTrade,
   InterfaceTrade,
+  isClassicQuoteResponse,
   PoolType,
   QuoteState,
   SwapRouterNativeAssets,
@@ -26,6 +27,14 @@ import {
   V2PoolInRoute,
   V3PoolInRoute,
 } from './types'
+
+interface RouteResult {
+  routev3: V3Route<Currency, Currency> | null
+  routev2: V2Route<Currency, Currency> | null
+  mixedRoute: MixedRouteSDK<Currency, Currency> | null
+  inputAmount: CurrencyAmount<Currency>
+  outputAmount: CurrencyAmount<Currency>
+}
 
 const routers = new Map<ChainId, AlphaRouter>()
 export function getRouter(chainId: ChainId): AlphaRouter {
@@ -51,15 +60,7 @@ export function computeRoutes(
   tokenInIsNative: boolean,
   tokenOutIsNative: boolean,
   routes: ClassicQuoteData['route']
-):
-  | {
-      routev3: V3Route<Currency, Currency> | null
-      routev2: V2Route<Currency, Currency> | null
-      mixedRoute: MixedRouteSDK<Currency, Currency> | null
-      inputAmount: CurrencyAmount<Currency>
-      outputAmount: CurrencyAmount<Currency>
-    }[]
-  | undefined {
+): RouteResult[] | undefined {
   if (routes.length === 0) return []
 
   const tokenIn = routes[0]?.[0]?.tokenIn
@@ -159,6 +160,54 @@ export function transformRoutesToTrade(args: GetQuoteArgs, data: URAQuoteRespons
         symbol: tokenOutSymbol,
       })
 
+  let gasUseEstimateUSD
+  let blockNumber
+  let routes: RouteResult[] | undefined
+
+  if (data.routing === URAQuoteType.CLASSIC) {
+    gasUseEstimateUSD = data.quote.gasUseEstimateUSD
+    blockNumber = data.quote.blockNumber
+    routes = computeRoutes(tokenInIsNative, tokenOutIsNative, data.quote.route)
+  } else {
+    const classicAlternative = data.allQuotes.find(isClassicQuoteResponse)
+    gasUseEstimateUSD = classicAlternative?.quote.gasUseEstimateUSD
+    blockNumber = classicAlternative?.quote.blockNumber
+    const route = classicAlternative?.quote.route
+    routes = route ? computeRoutes(tokenInIsNative, tokenOutIsNative, route) : []
+  }
+
+  const classicTrade = new ClassicTrade({
+    v2Routes:
+      routes
+        ?.filter((r): r is RouteResult & { routev2: NonNullable<RouteResult['routev2']> } => r.routev2 !== null)
+        .map(({ routev2, inputAmount, outputAmount }) => ({
+          routev2,
+          inputAmount,
+          outputAmount,
+        })) ?? [],
+    v3Routes:
+      routes
+        ?.filter((r): r is RouteResult & { routev3: NonNullable<RouteResult['routev3']> } => r.routev3 !== null)
+        .map(({ routev3, inputAmount, outputAmount }) => ({
+          routev3,
+          inputAmount,
+          outputAmount,
+        })) ?? [],
+    mixedRoutes:
+      routes
+        ?.filter(
+          (r): r is RouteResult & { mixedRoute: NonNullable<RouteResult['mixedRoute']> } => r.mixedRoute !== null
+        )
+        .map(({ mixedRoute, inputAmount, outputAmount }) => ({
+          mixedRoute,
+          inputAmount,
+          outputAmount,
+        })) ?? [],
+    tradeType,
+    gasUseEstimateUSD: gasUseEstimateUSD ? parseFloat(gasUseEstimateUSD).toFixed(2).toString() : undefined,
+    blockNumber,
+  })
+
   if (data.routing === URAQuoteType.DUTCH_LIMIT) {
     const orderInfo = toDutchLimitOrderInfo(data.quote)
     return {
@@ -169,53 +218,14 @@ export function transformRoutesToTrade(args: GetQuoteArgs, data: URAQuoteRespons
         orderInfo,
         tradeType,
         quoteId: data.quote.quoteId,
+        gasUseEstimateUSD: classicTrade.gasUseEstimateUSD,
         // TODO (Gouda): fix this value for ETH input flow
         needsWrap: false,
       }),
     }
   }
 
-  const { gasUseEstimateUSD, blockNumber } = data.quote
-  const routes = computeRoutes(tokenInIsNative, tokenOutIsNative, data.quote.route)
-
-  const trade = new ClassicTrade({
-    v2Routes:
-      routes
-        ?.filter(
-          (r): r is typeof routes[0] & { routev2: NonNullable<typeof routes[0]['routev2']> } => r.routev2 !== null
-        )
-        .map(({ routev2, inputAmount, outputAmount }) => ({
-          routev2,
-          inputAmount,
-          outputAmount,
-        })) ?? [],
-    v3Routes:
-      routes
-        ?.filter(
-          (r): r is typeof routes[0] & { routev3: NonNullable<typeof routes[0]['routev3']> } => r.routev3 !== null
-        )
-        .map(({ routev3, inputAmount, outputAmount }) => ({
-          routev3,
-          inputAmount,
-          outputAmount,
-        })) ?? [],
-    mixedRoutes:
-      routes
-        ?.filter(
-          (r): r is typeof routes[0] & { mixedRoute: NonNullable<typeof routes[0]['mixedRoute']> } =>
-            r.mixedRoute !== null
-        )
-        .map(({ mixedRoute, inputAmount, outputAmount }) => ({
-          mixedRoute,
-          inputAmount,
-          outputAmount,
-        })) ?? [],
-    tradeType,
-    gasUseEstimateUSD: parseFloat(gasUseEstimateUSD).toFixed(2).toString(),
-    blockNumber,
-  })
-
-  return { state: QuoteState.SUCCESS, trade }
+  return { state: QuoteState.SUCCESS, trade: classicTrade }
 }
 
 function parseToken({ address, chainId, decimals, symbol }: ClassicQuoteData['route'][0][0]['tokenIn']): Token {

@@ -17,7 +17,7 @@ const Gradient = styled.div`
 // Uniswap X SVG icon with gradient, copied from Figma.
 // In order for gradient to work, we must give its definition a unique ID that does not collide
 // with other occurences of this component on the page.
-const UniswapXRouterIcon = () => {
+export const UniswapXRouterIcon = () => {
   const componentIdRef = useRef(uuid())
   const componentId = `AutoRouterIconGradient${componentIdRef.current}`
 

@@ -1,8 +1,9 @@
 import { CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
 import { V3Route } from '@uniswap/smart-order-router'
 import { FeeAmount, Pool } from '@uniswap/v3-sdk'
+import { BigNumber } from 'ethers/lib/ethers'
 import JSBI from 'jsbi'
-import { ClassicTrade } from 'state/routing/types'
+import { ClassicTrade, DutchLimitOrderTrade } from 'state/routing/types'
 
 export const TEST_TOKEN_1 = new Token(1, '0x0000000000000000000000000000000000000001', 18, 'ABC', 'Abc')
 export const TEST_TOKEN_2 = new Token(1, '0x0000000000000000000000000000000000000002', 18, 'DEF', 'Def')
@@ -56,3 +57,30 @@ export const TEST_TRADE_EXACT_OUTPUT = new ClassicTrade({
 })
 
 export const TEST_ALLOWED_SLIPPAGE = new Percent(2, 100)
+
+export const TEST_DUTCH_TRADE = new DutchLimitOrderTrade({
+  currencyIn: TEST_TOKEN_1,
+  currenciesOut: [TEST_TOKEN_2],
+  orderInfo: {
+    reactor: 'test_reactor',
+    offerer: 'test_offerer',
+    nonce: BigNumber.from(1),
+    deadline: 1000,
+    validationContract: 'test_contract',
+    validationData: '0x123',
+    startTime: 0,
+    endTime: 10,
+    exclusiveFiller: '0x3456',
+    exclusivityOverrideBps: BigNumber.from(0),
+    input: {
+      token: TEST_TOKEN_1.address,
+      startAmount: BigNumber.from(1000),
+      endAmount: BigNumber.from(900),
+    },
+    outputs: [],
+  },
+  tradeType: TradeType.EXACT_INPUT,
+  quoteId: '0x0000000',
+  needsWrap: false,
+  gasUseEstimateUSD: '7.87',
+})

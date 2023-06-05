@@ -11,7 +11,6 @@ import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
 import { useState } from 'react'
 import { ChevronDown } from 'react-feather'
 import { InterfaceTrade } from 'state/routing/types'
-import { isClassicTrade } from 'state/routing/utils'
 import styled, { keyframes, useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
@@ -104,8 +103,7 @@ export default function SwapDetailsDropdown({ trade, syncing, loading, allowedSl
   const { chainId } = useWeb3React()
   const [showDetails, setShowDetails] = useState(false)
 
-  const supportsGasEstimate =
-    isClassicTrade(trade) && trade?.gasUseEstimateUSD && chainId && SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId)
+  const supportsGasEstimate = trade?.gasUseEstimateUSD && chainId && SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId)
 
   return (
     <Wrapper>
