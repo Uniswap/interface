@@ -81,6 +81,31 @@ describe('Permit2', () => {
     })
   })
 
+  it('retains modal state when the window loses focus', () => {
+    cy.hardhat().then(({ provider }) => {
+      cy.spy(provider, 'send').as('permitApprovalSpy')
+    })
+    initiateSwap()
+
+    cy.window().trigger('blur')
+
+    cy.contains('Enable spending limits for DAI on Uniswap').should('exist')
+    cy.contains('Approved').should('exist')
+
+    cy.contains('Allow DAI to be used for swapping').should('exist')
+    cy.contains('Confirm Swap').should('exist')
+
+    cy.then(() => {
+      const approvalTime = Date.now()
+
+      cy.contains('Swapped').should('exist')
+
+      expectTokenAllowanceForPermit2ToBeMax()
+      expectPermit2AllowanceForUniversalRouterToBeMax(approvalTime)
+      cy.get('@permitApprovalSpy').should('have.been.calledWith', 'eth_signTypedData_v4')
+    })
+  })
+
   it('swaps after handling user rejection of both approval and signature', () => {
     const USER_REJECTION = { code: 4001 }
     cy.hardhat().then((hardhat) => {
