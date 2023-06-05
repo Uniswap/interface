@@ -50,15 +50,15 @@ const AssetPage = () => {
   return (
     <>
       <Helmet>
-        <meta property="description" content={collectionDescription} />
+        <meta name="description" content={collectionDescription} />
         <title>{asset?.name}</title>
-        <meta property="og:image" content={asset?.imageUrl} />
-        <meta property="og:image:width" content="1200" />
-        <meta property="og:image:height" content="600" />
-        <meta property="og:title" content={asset?.name} />
-        <meta property="og:description" content={collectionDescription} />
-        <meta property="twitter:card" content="summary_large_image" />
-        <meta property="twitter:image" content={asset?.imageUrl} />
+        <meta name="og:image" content={asset?.imageUrl} />
+        <meta name="og:image:width" content="1200" />
+        <meta name="og:image:height" content="600" />
+        <meta name="og:title" content={asset?.name} />
+        <meta name="og:description" content={collectionDescription} />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:image" content={asset?.imageUrl} />
       </Helmet>
       <Trace
         page={InterfacePageName.NFT_DETAILS_PAGE}
