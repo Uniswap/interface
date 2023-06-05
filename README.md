@@ -1,4 +1,4 @@
-# Uniswap Labs Interface
+# Pegasys Interface
 
 [![codecov](https://codecov.io/gh/Uniswap/interface/branch/main/graph/badge.svg?token=YVT2Y86O82)](https://codecov.io/gh/Uniswap/interface)
 
@@ -8,25 +8,23 @@
 [![Release](https://github.com/Uniswap/interface/actions/workflows/release.yaml/badge.svg)](https://github.com/Uniswap/interface/actions/workflows/release.yaml)
 [![Crowdin](https://badges.crowdin.net/uniswap-interface/localized.svg)](https://crowdin.com/project/uniswap-interface)
 
-An open source interface for Uniswap -- a protocol for decentralized exchange of Ethereum tokens.
+An open source interface for Pegasys -- a protocol for decentralized exchange of Ethereum tokens.
 
-- Website: [uniswap.org](https://uniswap.org/)
-- Interface: [app.uniswap.org](https://app.uniswap.org)
-- Docs: [uniswap.org/docs/](https://docs.uniswap.org/)
-- Twitter: [@Uniswap](https://twitter.com/PegasysDEX)
-- Reddit: [/r/Uniswap](https://www.reddit.com/r/Uniswap/)
-- Email: [contact@uniswap.org](mailto:contact@uniswap.org)
-- Discord: [Uniswap](https://discord.com/invite/UzjWbWWERz)
-- Whitepapers:
-  - [V1](https://hackmd.io/C-DvwDSfSxuh-Gd4WKE_ig)
-  - [V2](https://uniswap.org/whitepaper.pdf)
-  - [V3](https://uniswap.org/whitepaper-v3.pdf)
+- Website: [pegasys.fi](https://pegasys.fi/)
+- Interface: [app.pegasys.fi](https://app.pegasys.fi)
+- Docs: [pegasys.fi/docs/](https://docs.pegasys.fi/)
+- Twitter: [@Pegasys](https://twitter.com/PegasysDEX)
+- Email: [pegasys@pollum.io](mailto:pegasys@pollum.io)
+- Discord: [Pegasys](https://discord.gg/UzjWbWWERz)
+- Litepaper:
+  - [Pegasys](https://pegasys.finance/blog/introducing-pegasys/)
+  - [UniV3](https://uniswap.org/whitepaper-v3.pdf)
 
-## Accessing the Uniswap Interface
+## Accessing the Pegasys Interface
 
-To access the Uniswap Interface, use an IPFS gateway link from the
-[latest release](https://github.com/Uniswap/uniswap-interface/releases/latest),
-or visit [app.uniswap.org](https://app.uniswap.org).
+To access the Pegasys Interface, use an IPFS gateway link from the
+[latest release](https://github.com/Pegasys-fi/interface/releases/latest),
+or visit [app.pegasys.fi](https://app.pegasys.fi).
 
 ## Unsupported tokens
 
@@ -65,16 +63,11 @@ Other things to note:
 - Changes will be previewable via vercel. Non-obvious changes should include instructions for how to reproduce them
 
 
-## Accessing Uniswap V2
+## Accessing Pegasys V1
 
-The Uniswap Interface supports swapping, adding liquidity, removing liquidity and migrating liquidity for Uniswap protocol V2.
+The Pegasys Interface supports swapping, adding liquidity, removing liquidity and migrating liquidity for Pegasys protocol V2.
 
-- Swap on Uniswap V2: <https://app.uniswap.org/#/swap?use=v2>
-- View V2 liquidity: <https://app.uniswap.org/#/pools/v2>
-- Add V2 liquidity: <https://app.uniswap.org/#/add/v2>
-- Migrate V2 liquidity to V3: <https://app.uniswap.org/#/migrate/v2>
-
-## Accessing Uniswap V1
-
-The Uniswap V1 interface for mainnet and testnets is accessible via IPFS gateways
-linked from the [v1.0.0 release](https://github.com/Uniswap/uniswap-interface/releases/tag/v1.0.0).
+- Swap on Pegasys V1: <https://v1.app.pegasys.fi/#/swap?use=v2>
+- View V1 liquidity: <https://v1.app.pegasys.fi/#/pools/v2>
+- Add V1 liquidity: <https://v1.app.pegasys.fi/#/add/v2>
+- Migrate V1 liquidity to V2: <https://v1.app.pegasys.fi/#/migrate/v2>
