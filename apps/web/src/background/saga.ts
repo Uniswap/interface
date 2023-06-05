@@ -12,6 +12,7 @@ import {
   importAccountSagaName,
 } from 'wallet/src/features/wallet/import/importAccountSaga'
 import { getMonitoredSagaReducers, MonitoredSaga } from 'wallet/src/state/saga'
+import { keepAliveSaga } from './utils/keepaliveSaga'
 
 // Stateful sagas that are registered with teh store on startup
 export const monitoredSagas: Record<string, MonitoredSaga> = {
@@ -33,6 +34,7 @@ const sagasInitializedOnStartup = [
   dappRequestWatcher,
   dappRequestApprovalWatcher,
   extensionRequestWatcher,
+  keepAliveSaga,
 ] as const
 
 export const monitoredSagaReducers = getMonitoredSagaReducers(monitoredSagas)
