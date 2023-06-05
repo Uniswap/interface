@@ -4,6 +4,7 @@ import application from './application/reducer'
 import burn from './burn/reducer'
 import burnV3 from './burn/v3/reducer'
 import connection from './connection/reducer'
+import poolsList from './lists/poolsList/reducer'
 import lists from './lists/reducer'
 import logs from './logs/slice'
 import mint from './mint/reducer'
@@ -25,6 +26,7 @@ export default {
   burnV3,
   multicall: multicall.reducer,
   lists,
+  poolsList,
   logs,
   [routingApi.reducerPath]: routingApi.reducer,
 }
