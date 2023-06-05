@@ -82,7 +82,7 @@ export const DataPage = ({
         <ContentContainer>
           <LeftColumn>
             {!!asset.traits?.length && <DataPageTraits asset={asset} />}
-            <DataPageDescription collection={collection} tokenId={asset.tokenId} />
+            <DataPageDescription collection={collection} asset={asset} />
           </LeftColumn>
           <DataPageTable asset={asset} />
         </ContentContainer>

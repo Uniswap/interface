@@ -2,17 +2,14 @@ import { Trans } from '@lingui/macro'
 import { DiscordIcon } from 'components/About/Icons'
 import Column from 'components/Column'
 import Row from 'components/Row'
-import { CollectionInfoForAsset } from 'nft/types'
+import { CollectionInfoForAsset, GenieAsset } from 'nft/types'
 import { Globe, Twitter } from 'react-feather'
 import ReactMarkdown from 'react-markdown'
 import styled, { css } from 'styled-components/macro'
-import { ExternalLink } from 'theme'
+import { ExternalLink, ThemedText } from 'theme'
+import { shortenAddress } from 'utils'
 
 import { Tab, TabbedComponent } from './TabbedComponent'
-
-const DescriptionContentContainer = styled.div`
-  height: 252px;
-`
 
 const DescriptionContainer = styled(ReactMarkdown)`
   font-size: 14px;
@@ -89,8 +86,49 @@ const DescriptionContent = ({ collection }: { collection: CollectionInfoForAsset
   )
 }
 
-const DetailsContent = ({ collection, tokenId }: { collection: CollectionInfoForAsset; tokenId: string }) => {
-  return <DescriptionContentContainer>Details Content</DescriptionContentContainer>
+const DetailRow = styled(Row)`
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0px;
+  border-bottom: 1px solid ${({ theme }) => theme.backgroundOutline};
+
+  &:last-child {
+    border-bottom: none;
+  }
+`
+
+const StyledLink = styled(ExternalLink)`
+  color: ${({ theme }) => theme.textPrimary};
+`
+
+const DetailsContent = ({ asset }: { asset: GenieAsset }) => {
+  return (
+    <Column>
+      <DetailRow>
+        <ThemedText.SubHeaderSmall>
+          <Trans>Contract address</Trans>
+        </ThemedText.SubHeaderSmall>
+        <ThemedText.BodyPrimary>
+          <StyledLink href={`https://etherscan.io/address/${asset.address}`}>
+            {shortenAddress(asset.address)}
+          </StyledLink>
+        </ThemedText.BodyPrimary>
+      </DetailRow>
+      <DetailRow>
+        <ThemedText.SubHeaderSmall>
+          <Trans>Token Standard</Trans>
+        </ThemedText.SubHeaderSmall>
+        <ThemedText.BodyPrimary>{asset.tokenType === 'ERC721' ? 'ERC-721' : 'ERC-1155'}</ThemedText.BodyPrimary>
+      </DetailRow>
+      <DetailRow>
+        <ThemedText.SubHeaderSmall>
+          <Trans>Token ID</Trans>
+        </ThemedText.SubHeaderSmall>
+        <ThemedText.BodyPrimary>{asset.tokenId}</ThemedText.BodyPrimary>
+      </DetailRow>
+      {/* TODO(NFT-1140) Add creator royalties when BE adds to Details query */}
+    </Column>
+  )
 }
 
 enum DescriptionTabsKeys {
@@ -100,10 +138,10 @@ enum DescriptionTabsKeys {
 
 export const DataPageDescription = ({
   collection,
-  tokenId,
+  asset,
 }: {
   collection: CollectionInfoForAsset
-  tokenId: string
+  asset: GenieAsset
 }) => {
   const DescriptionTabs: Map<string, Tab> = new Map([
     [
@@ -119,7 +157,7 @@ export const DataPageDescription = ({
       {
         title: <Trans>Details</Trans>,
         key: DescriptionTabsKeys.Details,
-        content: <DetailsContent collection={collection} tokenId={tokenId} />,
+        content: <DetailsContent asset={asset} />,
       },
     ],
   ])
