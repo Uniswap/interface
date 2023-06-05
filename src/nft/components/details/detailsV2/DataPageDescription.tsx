@@ -59,6 +59,8 @@ const StyledTwitter = styled(Twitter)`
 
 const StyledDiscord = styled(DiscordIcon)`
   ${IconStyles}
+  fill: ${({ theme }) => theme.textSecondary};
+  stroke: ${({ theme }) => theme.textSecondary};
 `
 
 const DescriptionContent = ({ collection }: { collection: CollectionInfoForAsset }) => {
