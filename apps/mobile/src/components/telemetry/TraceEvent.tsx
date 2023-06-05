@@ -96,7 +96,13 @@ function getEventHandlers(
       sendAnalyticsEvent(eventName, {
         ...consumedProps,
         ...properties,
-        elementName,
+        /**
+         * For consistency in amplitude, we want all event elements to be labeled with field name 'element'.
+         * This ensures that behavior from 'Trace' component is the same as the approach we use in declarative logging.
+         *
+         * Examples: <TraceEvent elementName={elementName} ... /> will match sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {element: ElementName.Swap} ...)
+         */
+        element: elementName,
       })
     }
   }
