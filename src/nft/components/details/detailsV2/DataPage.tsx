@@ -1,6 +1,6 @@
 import Column from 'components/Column'
 import Row from 'components/Row'
-import { GenieAsset } from 'nft/types'
+import { CollectionInfoForAsset, GenieAsset } from 'nft/types'
 import styled from 'styled-components/macro'
 import { BREAKPOINTS } from 'theme'
 
@@ -64,7 +64,15 @@ const LeftColumn = styled(Column)`
   align-self: flex-start;
 `
 
-export const DataPage = ({ asset, showDataHeader }: { asset: GenieAsset; showDataHeader: boolean }) => {
+export const DataPage = ({
+  asset,
+  collection,
+  showDataHeader,
+}: {
+  asset: GenieAsset
+  collection: CollectionInfoForAsset
+  showDataHeader: boolean
+}) => {
   return (
     <DataPagePaddingContainer>
       <DataPageContainer>
@@ -74,7 +82,7 @@ export const DataPage = ({ asset, showDataHeader }: { asset: GenieAsset; showDat
         <ContentContainer>
           <LeftColumn>
             {!!asset.traits?.length && <DataPageTraits asset={asset} />}
-            <DataPageDescription />
+            <DataPageDescription collection={collection} tokenId={asset.tokenId} />
           </LeftColumn>
           <DataPageTable asset={asset} />
         </ContentContainer>
