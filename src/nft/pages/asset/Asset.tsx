@@ -6,7 +6,6 @@ import { AssetDetails } from 'nft/components/details/AssetDetails'
 import { AssetDetailsLoading } from 'nft/components/details/AssetDetailsLoading'
 import { AssetPriceDetails } from 'nft/components/details/AssetPriceDetails'
 import { NftDetails } from 'nft/components/details/detailsV2/NftDetails'
-import { Helmet } from 'react-helmet'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
@@ -65,15 +64,13 @@ const AssetPage = () => {
   if (loading && !detailsV2Enabled) return <AssetDetailsLoading />
   return (
     <>
-      <Helmet>
-        <OpenGraphImage content={asset?.imageUrl} />
-        <OpenGraphImageWidth content="1200" />
-        <OpenGraphImageHeight content="600" />
-        <OpenGraphTitle content={asset?.name} />
-        <OpenGraphDescription content={collectionDescription} />
-        <TwitterCard content="summary_large_image" />
-        <TwitterImage content={asset?.imageUrl} />
-      </Helmet>
+      <OpenGraphImage content={asset?.imageUrl} />
+      <OpenGraphImageWidth content="1200" />
+      <OpenGraphImageHeight content="600" />
+      <OpenGraphTitle content={asset?.name} />
+      <OpenGraphDescription content={collectionDescription} />
+      <TwitterCard content="summary_large_image" />
+      <TwitterImage content={asset?.imageUrl} />
       <Trace
         page={InterfacePageName.NFT_DETAILS_PAGE}
         properties={{ collection_address: contractAddress, token_id: tokenId }}
