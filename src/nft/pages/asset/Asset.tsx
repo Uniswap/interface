@@ -36,6 +36,22 @@ const AssetPriceDetailsContainer = styled.div`
   }
 `
 
+const OpenGraphImage = styled.meta`
+  property: og:image;`
+const OpenGraphImageWidth = styled.meta`
+  property: og:image:width;`
+const OpenGraphImageHeight = styled.meta`
+  property: og:image:height;`
+const OpenGraphTitle = styled.meta`
+  property: og:title;`
+const OpenGraphDescription = styled.meta`
+  property: og:description;`
+
+const TwitterCard = styled.meta`
+  name: twitter:card;`
+const TwitterImage = styled.meta`
+  name: twitter:image;`
+
 const AssetPage = () => {
   const { tokenId = '', contractAddress = '' } = useParams()
   const { data, loading } = useNftAssetDetails(contractAddress, tokenId)
@@ -43,9 +59,18 @@ const AssetPage = () => {
 
   const [asset, collection] = data
 
+  const collectionDescription = (collection && collection.collectionDescription) || ''
+
   if (loading && !detailsV2Enabled) return <AssetDetailsLoading />
   return (
     <>
+      <OpenGraphImage content={asset?.imageUrl} />
+      <OpenGraphImageWidth content="1200" />
+      <OpenGraphImageHeight content="600" />
+      <OpenGraphTitle content={asset?.name} />
+      <OpenGraphDescription content={collectionDescription} />
+      <TwitterCard content="summary_large_image" />
+      <TwitterImage content={asset?.imageUrl} />
       <Trace
         page={InterfacePageName.NFT_DETAILS_PAGE}
         properties={{ collection_address: contractAddress, token_id: tokenId }}
