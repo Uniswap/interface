@@ -64,7 +64,7 @@ describe('Permit2', () => {
       cy.spy(provider, 'send').as('permitApprovalSpy')
     })
     initiateSwap()
-    cy.contains('Enable spending limits for DAI on Uniswap').should('exist')
+    cy.contains('Enable spending DAI on Uniswap').should('exist')
     cy.contains('Approved').should('exist')
 
     cy.contains('Allow DAI to be used for swapping').should('exist')
@@ -101,7 +101,7 @@ describe('Permit2', () => {
       })
 
       cy.get(getTestSelector('confirm-swap-button')).click()
-      cy.contains('Enable spending limits for DAI on Uniswap').should('exist')
+      cy.contains('Enable spending DAI on Uniswap').should('exist')
       cy.contains('Approved').should('exist')
 
       // permitApprovalStub should reject here, and the modal should revert to the review state.
@@ -205,7 +205,7 @@ describe('Permit2', () => {
       .then(() => {
         initiateSwap()
         const approvalTime = Date.now()
-        cy.contains('Enable spending limits for DAI on Uniswap').should('exist')
+        cy.contains('Enable spending DAI on Uniswap').should('exist')
 
         cy.contains('Confirm Swap').should('exist')
         cy.contains('Swapped').should('exist')
