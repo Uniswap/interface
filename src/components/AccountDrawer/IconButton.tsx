@@ -122,13 +122,13 @@ export const IconWithConfirmTextButton = ({
   onClick,
   ...rest
 }: IconWithTextProps) => {
-  const [showText, _setShowText] = useState(false)
+  const [showText, setShowTextWithoutCallback] = useState(false)
   const frameObserver = useResizeObserver<HTMLElement>()
   const hiddenObserver = useResizeObserver<HTMLElement>()
 
   const setShowText = useCallback(
     (val: boolean) => {
-      _setShowText(val)
+      setShowTextWithoutCallback(val)
       onShowConfirm?.(val)
     },
     [onShowConfirm]
