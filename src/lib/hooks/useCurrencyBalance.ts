@@ -6,10 +6,10 @@ import { Erc20Interface } from 'abis/types/Erc20'
 import JSBI from 'jsbi'
 import { useMultipleContractSingleData, useSingleContractMultipleData } from 'lib/hooks/multicall'
 import { useMemo } from 'react'
+import { isAddress } from 'utils/addresses'
 
 import { nativeOnChain } from '../../constants/tokens'
 import { useInterfaceMulticall } from '../../hooks/useContract'
-import { isAddress } from '../../utils'
 
 /**
  * Returns a map of the given addresses to their eventually consistent ETH balances.

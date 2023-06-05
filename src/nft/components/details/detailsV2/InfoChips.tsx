@@ -13,7 +13,7 @@ import { ChevronDown, DollarSign } from 'react-feather'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { BREAKPOINTS, ClickableStyle, EllipsisStyle, ExternalLink, LinkStyle, ThemedText } from 'theme'
-import { isAddress, shortenAddress } from 'utils'
+import { isAddress, shortenAddressIfValid } from 'utils/addresses'
 import { ExplorerDataType } from 'utils/getExplorerLink'
 import { getExplorerLink } from 'utils/getExplorerLink'
 
@@ -151,7 +151,7 @@ export const InfoChips = ({ asset }: { asset: GenieAsset }) => {
   const checksummedAddress = isChecksummedAddress ? isChecksummedAddress : undefined
   const { ENSName } = useENSName(checksummedAddress)
   const { avatar } = useENSAvatar(checksummedAddress)
-  const shortenedAddress = asset.ownerAddress ? shortenAddress(asset.ownerAddress) : ''
+  const shortenedAddress = asset.ownerAddress ? shortenAddressIfValid(asset.ownerAddress) : ''
   const addressToDisplay = ENSName ?? shortenedAddress
   const avatarToDisplay = avatar ? (
     <img src={avatar} width={24} height={24} />
