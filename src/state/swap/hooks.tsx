@@ -154,7 +154,13 @@ export interface LeverageTrade {
   strikePrice: number | undefined
   quotedPremium: number | undefined
   priceImpact: Percent | undefined
+  remainingPremium: number | undefined
   effectiveLeverage: number | undefined
+  existingPosition: boolean | undefined
+  existingTotalDebtInput: number | undefined
+  existingTotalPosition: number | undefined
+  existingCollateral: number | undefined
+  tokenId: number | undefined // if not existing position then this will be undefined
 }
 
 export interface BorrowCreationDetails {
@@ -165,6 +171,9 @@ export interface BorrowCreationDetails {
   priceImpact: Percent | undefined
   ltv: number | undefined
   state: TradeState
+  existingPosition: boolean | undefined
+  existingTotalDebtInput: number | undefined
+  existingCollateral: number | undefined
 }
 
 // in its return the pos, vars.prevRemainingPremium, vars.premium, the vars.premium is new quoted, prevRemaining is unused amount you get back,
@@ -277,7 +286,6 @@ export function useDerivedBorrowCreationInfo({ allowance: {input: inputAllowance
   )
 
   const { loading, position: existingPosition } = useLimitlessPositionFromKeys(account, borrowManagerAddress ?? undefined, true)
-  // console.log("borrowManagerAddress", borrowManagerAddress)
 
   // TODO calculate slippage from the pool
   const allowedSlippage = new Percent(JSBI.BigInt(3), JSBI.BigInt(100)) // new Percent(JSBI.BigInt(50), JSBI.BigInt(10000))
@@ -339,7 +347,6 @@ export function useDerivedBorrowCreationInfo({ allowance: {input: inputAllowance
       outputCurrency?.wrapped && 
       inputCurrency?.wrapped && 
       debouncedAmount
-      
     ) {
       const position: any = contractResult[0]
       // const expectedOutput = new BN(position.totalPosition.toString()).shiftedBy(-outputCurrency?.wrapped.decimals).toNumber()
@@ -352,15 +359,28 @@ export function useDerivedBorrowCreationInfo({ allowance: {input: inputAllowance
       let t = new BN(strikePrice).minus(initialPrice.toFixed(DEFAULT_ERC20_DECIMALS)).abs().dividedBy(initialPrice.toFixed(DEFAULT_ERC20_DECIMALS)).multipliedBy(1000).toFixed(0)
       const priceImpact = new Percent(t, 1000)
 
+      // existing position
+      let _existingPosition
+      let existingTotalDebtInput
+      let existingCollateral
+      if (existingPosition) {
+        _existingPosition = true
+        existingTotalDebtInput = existingPosition.totalDebtInput
+        existingCollateral = existingPosition.initialCollateral
+      }
+
       return {
         collateralAmount: Number(debouncedAmount.toExact()),
         borrowedAmount, // CurrencyAmount.fromRawAmount(inputCurrency?.wrapped, new BN(borrowedAmount).shiftedBy(inputCurrency?.wrapped.decimals).toFixed(0)),
         state: tradeState,
         unusedPremium,
         strikePrice,
-        quotedPremium,
+        quotedPremium: quotedPremium - unusedPremium,
         priceImpact,
-        ltv: Number(ltv)
+        ltv: Number(ltv),
+        existingPosition: _existingPosition,
+        existingTotalDebtInput,
+        existingCollateral
       }
     } else {
       return {
@@ -371,7 +391,10 @@ export function useDerivedBorrowCreationInfo({ allowance: {input: inputAllowance
         unusedPremium: undefined,
         priceImpact: undefined,
         strikePrice: undefined,
-        ltv: undefined
+        ltv: undefined,
+        existingPosition: undefined,
+        existingTotalDebtInput: undefined,
+        existingCollateral: undefined
       }
     }
   }, [inputAllowance, outputAllowance, ltv, initialPrice, tradeState, contractResult, borrowManager, debouncedAmount, currencies, inputCurrency, outputCurrency])
@@ -391,12 +414,14 @@ export function useDerivedBorrowCreationInfo({ allowance: {input: inputAllowance
       inputError = inputError ?? <Trans>Enter an amount</Trans>
     }
 
-    if (!ltv || Number(ltv) >= 100 || Number(ltv) === 0 ) {
+    if (!ltv || Number(ltv) >= 100 || Number(ltv) === 0 || ltv === "" ) {
       inputError = inputError ?? <Trans>Invalid LTV</Trans>
     }
 
     // compare input balance to max input based on version
     const [balanceIn, amountIn] = [currencyBalances[Field.INPUT], parsedAmount?.toExact()]
+    // const price = inputIsToken0 ? pool.token0Price.toFixed(18) : pool.token1Price.toFixed(18)
+    // new BN(parsedAmount?.toExact() ?? 0).times(ltv ?? "0").times(price).shiftedBy(18).toFixed(0)
     const [balanceOut, premiumAmount] = [currencyBalances[Field.INPUT], parsedAmount?.toExact()]
 
     // TODO add slippage to all the simulations
@@ -404,8 +429,8 @@ export function useDerivedBorrowCreationInfo({ allowance: {input: inputAllowance
       inputError = <Trans>Insufficient {inputCurrency?.symbol} balance</Trans>
     }
 
-    if (balanceOut && premiumAmount && Number(balanceOut.toExact()) < Number(premiumAmount)) {
-      inputError = <Trans>Insufficient {outputCurrency?.symbol} balance</Trans>
+    if (balanceOut && premiumAmount && Number(balanceOut.toExact()) < Number(trade.quotedPremium)) {
+      inputError = inputError ?? <Trans>Insufficient {outputCurrency?.symbol} balance</Trans>
     }
 
     if (trade.state === TradeState.NO_ROUTE_FOUND) {
@@ -509,6 +534,7 @@ export function useDerivedLeverageCreationInfo({ allowance } : { allowance: Appr
 
   const { position: existingPosition } = useLimitlessPositionFromKeys(account, leverageManagerAddress ?? undefined, isLong)
 
+
   // TODO calculate slippage from the pool
   const allowedSlippage = new Percent(JSBI.BigInt(3), JSBI.BigInt(100)) // new Percent(JSBI.BigInt(50), JSBI.BigInt(10000))
 
@@ -562,7 +588,7 @@ export function useDerivedLeverageCreationInfo({ allowance } : { allowance: Appr
   useEffect(() => {
     simulate()
   }, [currencies, leverageManager, leverage, leverageFactor, debouncedAmount, allowance])
-  // console.log("contractResult", pool, contractResult, initialPrice, debouncedAmount)
+
   const trade: LeverageTrade = useMemo(() => {
     if (
       tradeState === LeverageTradeState.VALID && 
@@ -573,8 +599,7 @@ export function useDerivedLeverageCreationInfo({ allowance } : { allowance: Appr
       debouncedAmount
     ) {
       const position: any = contractResult[0]
-      const expectedOutput = existingPosition ? new BN(position.totalPosition.toString()).shiftedBy(-outputCurrency?.wrapped.decimals).toNumber() - Number(existingPosition.totalPosition)
-      : new BN(position.totalPosition.toString()).shiftedBy(-outputCurrency?.wrapped.decimals).toNumber()
+      const expectedOutput = new BN(position.totalPosition.toString()).shiftedBy(-outputCurrency?.wrapped.decimals).toNumber()
       const borrowedAmount = new BN(position.totalDebtInput.toString()).shiftedBy(-inputCurrency?.wrapped.decimals).toNumber()
       const strikePrice = new BN(expectedOutput).div(new BN(borrowedAmount).plus(debouncedAmount.toExact())).toNumber()
 
@@ -586,6 +611,20 @@ export function useDerivedLeverageCreationInfo({ allowance } : { allowance: Appr
       const priceImpact = new Percent(t, 1000)
 
       const effectiveLeverage = new BN((Number(borrowedAmount) + Number(debouncedAmount.toExact()) + Number(quotedPremium)) / (Number(debouncedAmount.toExact()) + Number(quotedPremium))).toNumber()
+
+      // existing position
+      let _existingPosition
+      let existingTotalDebtInput
+      let existingTotalPosition
+      let tokenId
+      let existingCollateral
+      if (existingPosition){
+        _existingPosition = true
+        existingTotalDebtInput = existingPosition.totalDebtInput
+        existingTotalPosition = existingPosition.totalPosition
+        tokenId = Number(existingPosition.tokenId)
+        existingCollateral = existingPosition.initialCollateral
+      }
       
       return {
         inputAmount: debouncedAmount,
@@ -593,9 +632,15 @@ export function useDerivedLeverageCreationInfo({ allowance } : { allowance: Appr
         state: tradeState,
         expectedOutput,
         strikePrice,
-        quotedPremium,
+        quotedPremium: quotedPremium - returnedPremium,
         priceImpact,
-        effectiveLeverage: returnedPremium
+        remainingPremium: returnedPremium,
+        effectiveLeverage: effectiveLeverage,
+        existingPosition: _existingPosition,
+        existingTotalDebtInput,
+        existingTotalPosition,
+        existingCollateral,
+        tokenId
       }
     } else {
       return {
@@ -606,7 +651,13 @@ export function useDerivedLeverageCreationInfo({ allowance } : { allowance: Appr
         strikePrice: undefined,
         quotedPremium: undefined,
         priceImpact: undefined,
-        effectiveLeverage: undefined
+        remainingPremium: undefined,
+        effectiveLeverage: undefined,
+        existingPosition: undefined,
+        existingTotalDebtInput: undefined,
+        existingTotalPosition: undefined,
+        tokenId: undefined,
+        existingCollateral: undefined
       }
     }
   }, [existingPosition, allowance, leverageFactor, initialPrice, tradeState, contractResult, leverageManager, leverage, debouncedAmount, currencies, inputCurrency, outputCurrency])

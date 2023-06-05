@@ -426,18 +426,18 @@ export default function Swap({ className }: { className?: string }) {
       && outputCurrency 
       && pool?.token0Price 
       && pool?.token1Price 
-      && ltv && ltv !== ""
       ) {
       const inputIsToken0 = inputCurrency.wrapped.sortsBefore(outputCurrency.wrapped)
       const price = inputIsToken0 ? pool.token0Price.toFixed(18) : pool.token1Price.toFixed(18)
+      const _ltv = Number((ltv && ltv !== "") ? ltv : 0) / 100;
       return [
         CurrencyAmount.fromRawAmount(
           inputCurrency,
-          new BN(parsedAmounts[Field.INPUT]?.toExact() ?? 0).multipliedBy(1.002).shiftedBy(18).toFixed(0)
+          new BN(parsedAmounts[Field.INPUT]?.toExact() ?? 0).multipliedBy(1.002).multipliedBy(1.1).shiftedBy(18).toFixed(0)
         ),
         CurrencyAmount.fromRawAmount(
           outputCurrency,
-          new BN(parsedAmounts[Field.INPUT]?.toExact() ?? 0).times(ltv ?? "0").times(price).shiftedBy(18).toFixed(0)
+          new BN(parsedAmounts[Field.INPUT]?.toExact() ?? 0).times(_ltv).times(price).shiftedBy(18).toFixed(0)
         )
       ]
     }
@@ -468,7 +468,7 @@ export default function Swap({ className }: { className?: string }) {
   } = useDerivedBorrowCreationInfo({
     allowance: {
       input: borrowInputApprovalState,
-      output: borrowOutputApprovalState
+      output: borrowOutputApprovalState,
     }
   })
 
@@ -967,11 +967,10 @@ export default function Swap({ className }: { className?: string }) {
 
   const [debouncedLTV, debouncedSetLTV] = useDebouncedChangeHandler(ltv ?? "", onLTVChange);
 
-  // console.log("loggingSwap: ", typedValue, formattedAmounts[Field.INPUT], leverageFactor)
+  console.log("borrowTrade: ", leverageTrade)
+
   const showBorrowInputApproval = borrowInputApprovalState !== ApprovalState.APPROVED
   const showBorrowOutputApproval = borrowOutputApprovalState !== ApprovalState.APPROVED
-
-  // console.log("borrowPositions: ", borrowPositions)
 
   return (
     <Trace page={InterfacePageName.SWAP_PAGE} shouldLogImpression>
@@ -1173,9 +1172,12 @@ export default function Swap({ className }: { className?: string }) {
                               (leverageApprovalState === ApprovalState.NOT_APPROVED) ?
                                 "-"
                                 :
-                                !leverage ? formattedAmounts[Field.OUTPUT] :
-                                  leverageTrade?.expectedOutput ?
-                                    formatNumber(leverageTrade?.expectedOutput) : "-"
+                                !leverage ? 
+                                formattedAmounts[Field.OUTPUT] :
+                                  (leverageTrade?.expectedOutput ? (
+                                    leverageTrade?.existingTotalPosition ? 
+                                      String(leverageTrade.expectedOutput - leverageTrade.existingTotalPosition) : String(leverageTrade.expectedOutput)
+                                  ): "-")
                             }
                             onUserInput={handleTypeOutput}
                             label={
@@ -1546,12 +1548,12 @@ export default function Swap({ className }: { className?: string }) {
                         <Trace section={InterfaceSectionName.CURRENCY_OUTPUT_PANEL}>
                           <SwapCurrencyInputPanel
                             value={
-                              (leverageApprovalState === ApprovalState.NOT_APPROVED) ?
+                              (borrowInputApprovalState === ApprovalState.NOT_APPROVED || borrowOutputApprovalState === ApprovalState.NOT_APPROVED) ?
                                 "-"
-                                :
-                                !leverage ? formattedAmounts[Field.OUTPUT] :
-                                  leverageTrade?.expectedOutput ?
-                                    formatNumber(leverageTrade?.expectedOutput) : "-"
+                                :"-"
+                                  // (borrowTrade?.expectedOutput ?
+
+                                  //   formatNumber(leverageTrade?.expectedOutput) : "-")
                             }
                             onUserInput={handleTypeOutput}
                             label={

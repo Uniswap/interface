@@ -4,7 +4,7 @@ import { SwapEventName, SwapPriceUpdateUserResponse } from '@uniswap/analytics-e
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { useUSDPrice } from 'hooks/useUSDPrice'
 import { getPriceUpdateBasisPoints } from 'lib/utils/analytics'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { AlertTriangle, ArrowDown } from 'react-feather'
 import { Text } from 'rebass'
 import { InterfaceTrade } from 'state/routing/types'
@@ -430,6 +430,49 @@ export function LeverageModalHeader({
     setShouldLogModalCloseEvent(false)
   }, [shouldLogModalCloseEvent, showAcceptChanges, setShouldLogModalCloseEvent, trade, priceUpdate])
 
+  const displayValues = useMemo(() => {
+    const {
+      inputAmount,
+      borrowedAmount,
+      existingPosition,
+      existingTotalDebtInput,
+      existingTotalPosition,
+      expectedOutput
+    } = leverageTrade
+    let totalInput = 0
+    let totalOutput = 0
+    if (inputAmount && borrowedAmount) {
+      totalInput = existingPosition && existingTotalDebtInput ? 
+        (
+          Number(inputAmount.toExact()) + Number(borrowedAmount.toExact()) - existingTotalDebtInput
+        ) :
+        (
+          Number(inputAmount.toExact()) + Number(borrowedAmount.toExact())
+        )
+      totalOutput = existingTotalPosition ? 
+        (
+          Number(expectedOutput) - existingTotalPosition
+        ) :
+        (
+          Number(expectedOutput)
+        )
+    }
+
+    return {
+      totalInput,
+      totalOutput
+    }
+
+    
+    // {leverageTrade.borrowedAmount && leverageTrade.inputAmount ? (
+    //   new BN(leverageTrade.borrowedAmount.toExact()).plus(leverageTrade.inputAmount.toExact()).toNumber()
+    // ) :
+    //   (
+    //     "-"
+    //   )
+    // }
+  }, [leverageTrade])
+
   return (
     <AutoColumn gap="4px" style={{ marginTop: '1rem' }}>
       <LightCard padding="0.75rem 1rem">
@@ -441,7 +484,7 @@ export function LeverageModalHeader({
                 fontWeight={500}
                 color={showAcceptChanges && trade.tradeType === TradeType.EXACT_OUTPUT ? theme.accentAction : ''}
               >
-                {leverageTrade.inputAmount?.toSignificant(18)} (+ {leverageTrade?.quotedPremium})
+                {leverageTrade.inputAmount?.toSignificant(18)} (+ {formatNumber(leverageTrade?.quotedPremium)})
               </TruncatedText>
             </RowFixed>
             <RowFixed gap="0px">
@@ -464,13 +507,7 @@ export function LeverageModalHeader({
           <RowBetween align="flex-end">
             <RowFixed gap="0px">
               <TruncatedText fontSize={24} fontWeight={500}>
-                {leverageTrade.borrowedAmount && leverageTrade.inputAmount ? (
-                  new BN(leverageTrade.borrowedAmount.toExact()).plus(leverageTrade.inputAmount.toExact()).toNumber()
-                ) :
-                  (
-                    "-"
-                  )
-                }
+                {displayValues.totalInput}
               </TruncatedText>
             </RowFixed>
             <RowFixed gap="0px">
@@ -496,7 +533,7 @@ export function LeverageModalHeader({
           <RowBetween align="flex-end">
             <RowFixed gap="0px">
               <TruncatedText fontSize={24} fontWeight={500}>
-                {String(Number(leverageTrade.expectedOutput))}
+                {displayValues.totalOutput}
               </TruncatedText>
             </RowFixed>
             <RowFixed gap="0px">
