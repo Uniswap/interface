@@ -12,8 +12,8 @@ import { toContractInput } from 'graphql/data/util'
 import useStablecoinPrice from 'hooks/useStablecoinPrice'
 import { useMemo } from 'react'
 import { NonfungiblePositionManager, UniswapInterfaceMulticall } from 'types/v3'
-import { getContract } from "getContract"
 import { CurrencyKey, currencyKey, currencyKeyFromGraphQL } from 'utils/currencyKey'
+import { getContract } from 'utils/getContract'
 
 import { PositionInfo } from './cache'
 
