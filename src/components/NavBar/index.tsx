@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
+import { useAccountDrawer } from 'components/AccountDrawer'
 import Web3Status from 'components/Web3Status'
 import { chainIdToBackendName } from 'graphql/data/util'
 import { useIsNftPage } from 'hooks/useIsNftPage'
@@ -10,7 +11,7 @@ import { Row } from 'nft/components/Flex'
 import { UniIcon } from 'nft/components/icons'
 import { useProfilePageState } from 'nft/hooks'
 import { ProfilePageStateType } from 'nft/types'
-import { ReactNode } from 'react'
+import { ReactNode, useCallback } from 'react'
 import { NavLink, NavLinkProps, useLocation, useNavigate } from 'react-router-dom'
 import { shouldDisableNFTRoutesAtom } from 'state/application/atoms'
 import styled from 'styled-components/macro'
@@ -93,6 +94,18 @@ const Navbar = ({ blur }: { blur: boolean }) => {
   const navigate = useNavigate()
   const isNavSearchInputVisible = useIsNavSearchInputVisible()
 
+  const [accountDrawerOpen, toggleAccountDrawer] = useAccountDrawer()
+
+  const handleUniIconClick = useCallback(() => {
+    if (accountDrawerOpen) {
+      toggleAccountDrawer()
+    }
+    navigate({
+      pathname: '/',
+      search: '?intro=true',
+    })
+  }, [accountDrawerOpen, navigate, toggleAccountDrawer])
+
   return (
     <>
       {blur && <Blur />}
@@ -105,12 +118,7 @@ const Navbar = ({ blur }: { blur: boolean }) => {
                 height="48"
                 data-testid="uniswap-logo"
                 className={styles.logo}
-                onClick={() => {
-                  navigate({
-                    pathname: '/',
-                    search: '?intro=true',
-                  })
-                }}
+                onClick={handleUniIconClick}
               />
             </Box>
             {!isNftPage && (
