@@ -23,7 +23,6 @@ export function usePollQueryWhileMounted<T, K>(queryResult: QueryResult<T, K>, i
     startPolling(interval)
     return stopPolling
   }, [interval, startPolling, stopPolling])
-
   return queryResult
 }
 
@@ -115,7 +114,7 @@ const URL_CHAIN_PARAM_TO_BACKEND: { [key: string]: Chain } = {
 }
 
 export function validateUrlChainParam(chainName: string | undefined) {
-  return chainName && URL_CHAIN_PARAM_TO_BACKEND[chainName] ? URL_CHAIN_PARAM_TO_BACKEND[chainName] : Chain.Optimism
+  return chainName && URL_CHAIN_PARAM_TO_BACKEND[chainName] ? URL_CHAIN_PARAM_TO_BACKEND[chainName] : Chain.Rollux
 }
 
 // TODO(cartcrom): refactor into safer lookup & replace usage
@@ -129,6 +128,7 @@ export const CHAIN_NAME_TO_CHAIN_ID: { [key in Chain]: SupportedChainId } = {
   [Chain.Arbitrum]: SupportedChainId.ROLLUX,
   [Chain.UnknownChain]: SupportedChainId.ROLLUX,
   [Chain.Bnb]: SupportedChainId.ROLLUX,
+  [Chain.Rollux]: SupportedChainId.ROLLUX,
 }
 
 export function fromGraphQLChain(chain: Chain): SupportedChainId {
@@ -160,6 +160,26 @@ export function unwrapToken<
   if (!token?.address) return token
 
   const address = token.address.toLowerCase()
+  const nativeAddress = WRAPPED_NATIVE_CURRENCY[chainId]?.address.toLowerCase()
+  if (address !== nativeAddress) return token
+
+  const nativeToken = nativeOnChain(chainId)
+  return {
+    ...token,
+    ...nativeToken,
+    address: NATIVE_CHAIN_ID,
+    extensions: undefined, // prevents marking cross-chain wrapped tokens as native
+  }
+}
+
+export function unwrapTokenRollux<
+  T extends {
+    id?: string | null | undefined
+  } | null
+>(chainId: number, token: T): T {
+  if (!token?.id) return token
+
+  const address = token.id.toLowerCase()
   const nativeAddress = WRAPPED_NATIVE_CURRENCY[chainId]?.address.toLowerCase()
   if (address !== nativeAddress) return token
 
