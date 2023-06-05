@@ -3,6 +3,7 @@ import { Row } from 'nft/components/Flex'
 import { useState } from 'react'
 import styled from 'styled-components/macro'
 
+import { ActivityGraph } from './ActivityGraph'
 import { SupportedTimePeriodsType, TimePeriodSwitcher } from './TimePeriodSwitcher'
 
 const TableContentContainer = styled(Row)`
@@ -15,7 +16,7 @@ export const ActivityTableContent = () => {
   const [timePeriod, setTimePeriod] = useState<SupportedTimePeriodsType>(HistoryDuration.Week)
   return (
     <TableContentContainer>
-      <span>Activity Content</span>
+      <ActivityGraph />
       <TimePeriodSwitcher activeTimePeriod={timePeriod} setTimePeriod={setTimePeriod} />
     </TableContentContainer>
   )
