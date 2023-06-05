@@ -1,15 +1,14 @@
 import { createApi, fetchBaseQuery, FetchBaseQueryError } from '@reduxjs/toolkit/query/react'
 import { Protocol } from '@uniswap/router-sdk'
 import { TradeType } from '@uniswap/sdk-core'
-import { AlphaRouter, ChainId } from '@uniswap/smart-order-router'
+import { ChainId } from '@uniswap/smart-order-router'
 import { isUniswapXSupportedChain } from 'constants/chains'
-import { RPC_PROVIDERS } from 'constants/providers'
-import { getClientSideQuote, toSupportedChainId } from 'lib/hooks/routing/clientSideSmartOrderRouter'
+import { getClientSideQuote } from 'lib/hooks/routing/clientSideSmartOrderRouter'
 import ms from 'ms.macro'
 import { trace } from 'tracing/trace'
 
 import { RoutingConfig, SwapRouterNativeAssets, TradeResult, URAQuoteResponse, URAQuoteType } from './types'
-import { isExactInput, transformRoutesToTrade } from './utils'
+import { getRouter, isExactInput, transformRoutesToTrade } from './utils'
 
 export enum RouterPreference {
   X = 'uniswapx',
@@ -20,22 +19,6 @@ export enum RouterPreference {
 // This is excluded from `RouterPreference` enum because it's only used
 // internally for token -> USDC trades to get a USD value.
 export const INTERNAL_ROUTER_PREFERENCE_PRICE = 'price' as const
-
-const routers = new Map<ChainId, AlphaRouter>()
-function getRouter(chainId: ChainId): AlphaRouter {
-  const router = routers.get(chainId)
-  if (router) return router
-
-  const supportedChainId = toSupportedChainId(chainId)
-  if (supportedChainId) {
-    const provider = RPC_PROVIDERS[supportedChainId]
-    const router = new AlphaRouter({ chainId, provider })
-    routers.set(chainId, router)
-    return router
-  }
-
-  throw new Error(`Router does not support this chain (chainId: ${chainId}).`)
-}
 
 const CLIENT_PARAMS = {
   protocols: [Protocol.V2, Protocol.V3, Protocol.MIXED],
@@ -114,8 +97,7 @@ function getConfigByRouterPreference(args: GetAPIOrUniswapXQuoteArgs): RoutingCo
 export const routingApi = createApi({
   reducerPath: 'routingApi',
   baseQuery: fetchBaseQuery({
-    // TODO (Gouda): Update this with final API url
-    baseUrl: 'https://***REMOVED***.execute-api.us-east-2.amazonaws.com/prod',
+    baseUrl: 'https://api.uniswap.org/v2/',
   }),
   endpoints: (build) => ({
     getQuote: build.query<TradeResult, GetQuoteArgs>({
@@ -197,7 +179,9 @@ export const routingApi = createApi({
           const router = getRouter(args.tokenInChainId)
           const quoteResult = await getClientSideQuote(args, router, CLIENT_PARAMS)
           if (quoteResult.state === QuoteState.SUCCESS) {
-            return { data: transformRoutesToTrade(args, { quote: quoteResult.data, routing: URAQuoteType.CLASSIC }) }
+            return {
+              data: transformRoutesToTrade(args, quoteResult.data),
+            }
           } else {
             return { data: quoteResult }
           }

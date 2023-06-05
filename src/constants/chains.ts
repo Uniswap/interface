@@ -9,6 +9,7 @@
 export enum SupportedChainId {
   MAINNET = 1,
   GOERLI = 5,
+  SEPOLIA = 11155111,
 
   ARBITRUM_ONE = 42161,
   ARBITRUM_GOERLI = 421613,
@@ -35,6 +36,7 @@ export const UniWalletSupportedChains = [
 export const CHAIN_IDS_TO_NAMES = {
   [SupportedChainId.MAINNET]: 'mainnet',
   [SupportedChainId.GOERLI]: 'goerli',
+  [SupportedChainId.SEPOLIA]: 'sepolia',
   [SupportedChainId.POLYGON]: 'polygon',
   [SupportedChainId.POLYGON_MUMBAI]: 'polygon_mumbai',
   [SupportedChainId.CELO]: 'celo',
@@ -79,6 +81,7 @@ export const UNSUPPORTED_V2POOL_CHAIN_IDS = [
 
 export const TESTNET_CHAIN_IDS = [
   SupportedChainId.GOERLI,
+  SupportedChainId.SEPOLIA,
   SupportedChainId.POLYGON_MUMBAI,
   SupportedChainId.ARBITRUM_GOERLI,
   SupportedChainId.OPTIMISM_GOERLI,
@@ -92,6 +95,7 @@ export type SupportedTestnetChainId = typeof TESTNET_CHAIN_IDS[number]
 export const L1_CHAIN_IDS = [
   SupportedChainId.MAINNET,
   SupportedChainId.GOERLI,
+  SupportedChainId.SEPOLIA,
   SupportedChainId.POLYGON,
   SupportedChainId.POLYGON_MUMBAI,
   SupportedChainId.CELO,

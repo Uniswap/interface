@@ -9,6 +9,7 @@ import logs from './logs/slice'
 import mint from './mint/reducer'
 import mintV3 from './mint/v3/reducer'
 import { routingApi } from './routing/slice'
+import { routingApiV2 } from './routing/v2Slice'
 import signatures from './signatures/reducer'
 import transactions from './transactions/reducer'
 import user from './user/reducer'
@@ -29,4 +30,5 @@ export default {
   lists,
   logs,
   [routingApi.reducerPath]: routingApi.reducer,
+  [routingApiV2.reducerPath]: routingApiV2.reducer,
 }

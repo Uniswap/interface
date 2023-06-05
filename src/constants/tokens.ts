@@ -25,6 +25,13 @@ const USDC_GOERLI = new Token(
   'USDC',
   'USD//C'
 )
+const USDC_SEPOLIA = new Token(
+  SupportedChainId.SEPOLIA,
+  '0x6f14C02Fc1F78322cFd7d707aB90f18baD3B54f5',
+  6,
+  'USDC',
+  'USD//C'
+)
 export const USDC_OPTIMISM = new Token(
   SupportedChainId.OPTIMISM,
   '0x7F5c764cBc14f9669B88837ca1490cCa17c31607',
@@ -355,8 +362,27 @@ export const BUSD_BSC = new Token(
 export const DAI_BSC = new Token(SupportedChainId.BNB, '0x1AF3F329e8BE154074D8769D1FFa4eE058B1DBc3', 18, 'DAI', 'DAI')
 
 export const UNI: { [chainId: number]: Token } = {
-  [SupportedChainId.MAINNET]: new Token(SupportedChainId.MAINNET, UNI_ADDRESS[1], 18, 'UNI', 'Uniswap'),
-  [SupportedChainId.GOERLI]: new Token(SupportedChainId.GOERLI, UNI_ADDRESS[5], 18, 'UNI', 'Uniswap'),
+  [SupportedChainId.MAINNET]: new Token(
+    SupportedChainId.MAINNET,
+    UNI_ADDRESS[SupportedChainId.MAINNET],
+    18,
+    'UNI',
+    'Uniswap'
+  ),
+  [SupportedChainId.GOERLI]: new Token(
+    SupportedChainId.GOERLI,
+    UNI_ADDRESS[SupportedChainId.GOERLI],
+    18,
+    'UNI',
+    'Uniswap'
+  ),
+  [SupportedChainId.SEPOLIA]: new Token(
+    SupportedChainId.SEPOLIA,
+    UNI_ADDRESS[SupportedChainId.SEPOLIA],
+    18,
+    'UNI',
+    'Uniswap'
+  ),
 }
 
 export const ARB = new Token(
@@ -393,6 +419,13 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token | undefined } =
   [SupportedChainId.ARBITRUM_GOERLI]: new Token(
     SupportedChainId.ARBITRUM_GOERLI,
     '0xe39Ab88f8A4777030A534146A9Ca3B52bd5D43A3',
+    18,
+    'WETH',
+    'Wrapped Ether'
+  ),
+  [SupportedChainId.SEPOLIA]: new Token(
+    SupportedChainId.SEPOLIA,
+    '0xfFf9976782d46CC05630D1f6eBAb18b2324d6B14',
     18,
     'WETH',
     'Wrapped Ether'
@@ -543,5 +576,6 @@ export const TOKEN_SHORTHANDS: { [shorthand: string]: { [chainId in SupportedCha
     [SupportedChainId.CELO]: PORTAL_USDC_CELO.address,
     [SupportedChainId.CELO_ALFAJORES]: PORTAL_USDC_CELO.address,
     [SupportedChainId.GOERLI]: USDC_GOERLI.address,
+    [SupportedChainId.SEPOLIA]: USDC_SEPOLIA.address,
   },
 }

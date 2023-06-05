@@ -162,7 +162,7 @@ export type QuoteResult =
     }
   | {
       state: QuoteState.SUCCESS
-      data: ClassicQuoteData
+      data: URAQuoteResponse
     }
 
 export type TradeResult =

@@ -13,7 +13,7 @@ import { useUniversalRouterSwapCallback } from './useUniversalRouter'
 // returns a function that will execute a swap, if the parameters are all valid
 // and the user has approved the slippage adjusted input amount for the trade
 export function useSwapCallback(
-  trade: InterfaceTrade | undefined,
+  trade: InterfaceTrade | undefined, // trade to execute, required
   fiatValues: { amountIn?: number; amountOut?: number }, // usd values for amount in and out, logged for analytics
   allowedSlippage: Percent, // in bips
   permitSignature: PermitSignature | undefined

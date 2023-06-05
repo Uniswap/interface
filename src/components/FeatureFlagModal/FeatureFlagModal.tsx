@@ -2,7 +2,7 @@ import { BaseVariant, FeatureFlag, featureFlagSettings, useUpdateFlag } from 'fe
 import { UniswapXVariant, useUniswapXFlag } from 'featureFlags/flags/gouda'
 import { DetailsV2Variant, useDetailsV2Flag } from 'featureFlags/flags/nftDetails'
 import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
-import { UnifiedRouterVariant, useUnifiedRoutingAPIFlag } from 'featureFlags/flags/unifiedRouter'
+import { UnifiedRouterVariant, useRoutingAPIV2Flag } from 'featureFlags/flags/unifiedRouter'
 import { useUpdateAtom } from 'jotai/utils'
 import { Children, PropsWithChildren, ReactElement, ReactNode, useCallback, useState } from 'react'
 import { X } from 'react-feather'
@@ -211,7 +211,7 @@ export default function FeatureFlagModal() {
       />
       <FeatureFlagOption
         variant={UnifiedRouterVariant}
-        value={useUnifiedRoutingAPIFlag()}
+        value={useRoutingAPIV2Flag()}
         featureFlag={FeatureFlag.uraEnabled}
         label="Enable the Unified Routing API"
       />
