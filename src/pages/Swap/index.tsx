@@ -13,7 +13,6 @@ import { Currency, CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
 import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { useToggleAccountDrawer } from 'components/AccountDrawer'
-import { sendEvent } from 'components/analytics'
 import { NetworkAlert } from 'components/NetworkAlert/NetworkAlert'
 import PriceImpactModal from 'components/swap/PriceImpactModal'
 import PriceImpactWarning from 'components/swap/PriceImpactWarning'
@@ -25,7 +24,7 @@ import useENSAddress from 'hooks/useENSAddress'
 import { useMaxAmountIn } from 'hooks/useMaxAmountIn'
 import usePermit2Allowance, { AllowanceState } from 'hooks/usePermit2Allowance'
 import usePrevious from 'hooks/usePrevious'
-import { useSwapCallback } from 'hooks/useSwapCallback'
+import { SwapResult, useSwapCallback } from 'hooks/useSwapCallback'
 import { useUSDPrice } from 'hooks/useUSDPrice'
 import JSBI from 'jsbi'
 import { formatSwapQuoteReceivedEventProperties } from 'lib/utils/analytics'
@@ -34,7 +33,7 @@ import { ReactNode } from 'react'
 import { ArrowDown } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
 import { Text } from 'rebass'
-import { InterfaceTrade, TradeFillType } from 'state/routing/types'
+import { InterfaceTrade } from 'state/routing/types'
 import { TradeState } from 'state/routing/types'
 import { isClassicTrade, isUniswapXTrade } from 'state/routing/utils'
 import styled, { useTheme } from 'styled-components/macro'
@@ -258,7 +257,7 @@ export function Swap({
         tradeToConfirm: undefined,
         swapError: undefined,
         showConfirm: false,
-        txHash: undefined,
+        swapResult: undefined,
       })
     }
   }, [connectedChainId, prefilledState, previousConnectedChainId, previousPrefilledState])
@@ -346,16 +345,16 @@ export function Swap({
   }, [navigate])
 
   // modal and loading
-  const [{ showConfirm, tradeToConfirm, swapError, txHash }, setSwapState] = useState<{
+  const [{ showConfirm, tradeToConfirm, swapError, swapResult }, setSwapState] = useState<{
     showConfirm: boolean
     tradeToConfirm?: InterfaceTrade
     swapError?: Error
-    txHash?: string
+    swapResult?: SwapResult
   }>({
     showConfirm: false,
     tradeToConfirm: undefined,
     swapError: undefined,
-    txHash: undefined,
+    swapResult: undefined,
   })
 
   const formattedAmounts = useMemo(
@@ -391,8 +390,8 @@ export function Swap({
   }, [fiatValueTradeInput, fiatValueTradeOutput])
 
   // the callback to execute the swap
-  const { callback: swapCallback } = useSwapCallback(
-    trade?.fillType === TradeFillType.Classic ? trade : undefined,
+  const swapCallback = useSwapCallback(
+    trade,
     swapFiatValues,
     allowedSlippage,
     allowance.state === AllowanceState.ALLOWED ? allowance.permitSignature : undefined
@@ -403,7 +402,7 @@ export function Swap({
       tradeToConfirm: trade,
       swapError: undefined,
       showConfirm: true,
-      txHash: undefined,
+      swapResult: undefined,
     })
   }, [trade])
 
@@ -417,49 +416,24 @@ export function Swap({
     setSwapState((currentState) => ({
       ...currentState,
       swapError: undefined,
-      txHash: undefined,
+      swapResult: undefined,
     }))
     swapCallback()
-      .then((hash) => {
+      .then((result) => {
         setSwapState((currentState) => ({
           ...currentState,
           swapError: undefined,
-          txHash: hash,
+          swapResult: result,
         }))
-        sendEvent({
-          category: 'Swap',
-          action: 'transaction hash',
-          label: hash,
-        })
-        sendEvent({
-          category: 'Swap',
-          action:
-            recipient === null
-              ? 'Swap w/o Send'
-              : (recipientAddress ?? recipient) === account
-              ? 'Swap w/o Send + recipient'
-              : 'Swap w/ Send',
-          label: [TRADE_STRING, trade?.inputAmount?.currency?.symbol, trade?.outputAmount?.currency?.symbol, 'MH'].join(
-            '/'
-          ),
-        })
       })
       .catch((error) => {
         setSwapState((currentState) => ({
           ...currentState,
           swapError: error,
-          txHash: undefined,
+          swapResult: undefined,
         }))
       })
-  }, [
-    swapCallback,
-    stablecoinPriceImpact,
-    recipient,
-    recipientAddress,
-    account,
-    trade?.inputAmount?.currency?.symbol,
-    trade?.outputAmount?.currency?.symbol,
-  ])
+  }, [swapCallback, stablecoinPriceImpact])
 
   // errors
   const [swapQuoteReceivedDate, setSwapQuoteReceivedDate] = useState<Date | undefined>()
@@ -477,11 +451,11 @@ export function Swap({
 
   const handleConfirmDismiss = useCallback(() => {
     setSwapState((currentState) => ({ ...currentState, showConfirm: false }))
-    // if there was a tx hash, we want to clear the input
-    if (txHash) {
+    // If there was a swap, we want to clear the input
+    if (swapResult) {
       onUserInput(Field.INPUT, '')
     }
-  }, [onUserInput, txHash])
+  }, [onUserInput, swapResult])
 
   const handleAcceptChanges = useCallback(() => {
     setSwapState((currentState) => ({ ...currentState, tradeToConfirm: trade }))
@@ -502,10 +476,6 @@ export function Swap({
 
   const handleMaxInput = useCallback(() => {
     maxInputAmount && onUserInput(Field.INPUT, maxInputAmount.toExact())
-    sendEvent({
-      category: 'Swap',
-      action: 'Max',
-    })
   }, [maxInputAmount, onUserInput])
 
   const handleOutputSelect = useCallback(
@@ -554,7 +524,7 @@ export function Swap({
           trade={trade}
           originalTrade={tradeToConfirm}
           onAcceptChanges={handleAcceptChanges}
-          txHash={txHash}
+          swapResult={swapResult}
           allowedSlippage={allowedSlippage}
           onConfirm={handleSwap}
           allowance={allowance}

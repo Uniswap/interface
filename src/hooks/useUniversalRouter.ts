@@ -1,4 +1,3 @@
-import { TransactionResponse } from '@ethersproject/abstract-provider'
 import { BigNumber } from '@ethersproject/bignumber'
 import { t } from '@lingui/macro'
 import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
@@ -9,7 +8,7 @@ import { FeeOptions, toHex } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { formatSwapSignedAnalyticsEventProperties } from 'lib/utils/analytics'
 import { useCallback } from 'react'
-import { ClassicTrade } from 'state/routing/types'
+import { ClassicTrade, TradeFillType } from 'state/routing/types'
 import { trace } from 'tracing/trace'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
 import { UserRejectedRequestError } from 'utils/errors'
@@ -44,7 +43,7 @@ interface SwapOptions {
   feeOptions?: FeeOptions
 }
 
-export function useUniversalRouterSwapCallback(
+export default function useUniversalRouterSwapCallback(
   trade: ClassicTrade | undefined,
   fiatValues: { amountIn?: number; amountOut?: number },
   options: SwapOptions
@@ -52,7 +51,7 @@ export function useUniversalRouterSwapCallback(
   const { account, chainId, provider } = useWeb3React()
   const analyticsContext = useTrace()
 
-  return useCallback(async (): Promise<TransactionResponse> => {
+  return useCallback(async () => {
     return trace('swap.send', async ({ setTraceData, setTraceStatus, setTraceError }) => {
       try {
         if (!account) throw new Error('missing account')
@@ -107,7 +106,10 @@ export function useUniversalRouterSwapCallback(
             }
             return response
           })
-        return response
+        return {
+          type: TradeFillType.Classic as const,
+          response,
+        }
       } catch (swapError: unknown) {
         if (swapError instanceof ModifiedSwapError) throw swapError
 

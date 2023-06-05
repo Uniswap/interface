@@ -6,6 +6,7 @@ import { Percent, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import Column from 'components/Column'
 import { MouseoverTooltip } from 'components/Tooltip'
+import { SwapResult } from 'hooks/useSwapCallback'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { ReactNode } from 'react'
@@ -48,7 +49,7 @@ const DetailRowValue = styled(ThemedText.BodySmall)`
 export default function SwapModalFooter({
   trade,
   allowedSlippage,
-  hash,
+  swapResult,
   onConfirm,
   swapErrorMessage,
   disabledConfirm,
@@ -59,7 +60,7 @@ export default function SwapModalFooter({
   onAcceptChanges,
 }: {
   trade: InterfaceTrade
-  hash?: string
+  swapResult?: SwapResult
   allowedSlippage: Percent
   onConfirm: () => void
   swapErrorMessage?: ReactNode
@@ -181,7 +182,7 @@ export default function SwapModalFooter({
             name={SwapEventName.SWAP_SUBMITTED_BUTTON_CLICKED}
             properties={formatSwapButtonClickEventProperties({
               trade,
-              hash,
+              swapResult,
               allowedSlippage,
               transactionDeadlineSecondsSinceEpoch,
               isAutoSlippage,
