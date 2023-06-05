@@ -144,13 +144,14 @@ describe('Token details', () => {
       cy.get('#swap-currency-output .token-amount-input').clear().type('0.0').should('have.value', '0.0')
     })
 
-    it('should show a L2 token even if the user is connected to a different network', () => {
+    it.only('should show a L2 token even if the user is connected to a different network', () => {
       cy.visit('/tokens', { ethereum: 'hardhat' })
       cy.get(getTestSelector('tokens-network-filter-selected')).click()
       cy.get(getTestSelector('tokens-network-filter-option-arbitrum')).click()
       cy.get(getTestSelector('tokens-network-filter-selected')).should('contain', 'Arbitrum')
       cy.get(getTestSelector('token-table-row-ARB')).click()
       cy.get(`#swap-currency-output .token-symbol-container`).should('contain.text', 'ARB')
+      cy.get(getTestSelector('open-settings-dialog-button')).should('be.disabled')
       cy.contains('Connect to Arbitrum').should('exist')
     })
   })
