@@ -109,22 +109,21 @@ export interface CreateProposalData {
   description: string
 }
 
-// TODO: check if we are using these 2
 enum StakeStatus {
   UNDELEGATED,
   DELEGATED,
 }
 
 interface StakeInfo {
-  stakeStatus: StakeStatus
+  status: StakeStatus
   poolId: string
 }
 
-interface StakeData {
-  amount: string | undefined
+export interface StakeData {
+  amount: string
   pool: string | null
-  fromPoolId?: string | undefined
-  poolId: string | undefined
+  fromPoolId?: string
+  poolId: string
   poolContract?: Contract | null
   stakingPoolExists?: boolean
 }
@@ -415,7 +414,7 @@ export function useUserVotesAsOfBlock(block: number | undefined): CurrencyAmount
 }
 
 export function usePoolIdByAddress(pool: string | undefined): {
-  poolId: string | undefined
+  poolId?: string
   stakingPoolExists: boolean
 } {
   const registryContract = useRegistryContract()
@@ -424,7 +423,8 @@ export function usePoolIdByAddress(pool: string | undefined): {
   const stakingContract = useStakingContract()
   const stakingPool = useSingleCallResult(stakingContract ?? undefined, 'getStakingPool', [poolId])?.result?.[0]
   const stakingPoolExists = stakingPool !== undefined ? stakingPool?.operator !== ZERO_ADDRESS : false
-  return { poolId, stakingPoolExists }
+  if (!poolId) return { stakingPoolExists }
+  else return { poolId, stakingPoolExists }
 }
 
 // TODO: we must return a currency balance
@@ -485,8 +485,8 @@ export function useDelegateCallback(): (stakeData: StakeData | undefined) => und
       //if (!stakeData.amount) return
       const createPoolCall = stakingContract?.interface.encodeFunctionData('createStakingPool', [stakeData.pool])
       const stakeCall = stakingContract?.interface.encodeFunctionData('stake', [stakeData.amount])
-      const fromInfo = { status: '0', poolId: stakeData.poolId }
-      const toInfo = { status: '1', poolId: stakeData.poolId }
+      const fromInfo: StakeInfo = { status: StakeStatus.UNDELEGATED, poolId: stakeData.poolId }
+      const toInfo: StakeInfo = { status: StakeStatus.DELEGATED, poolId: stakeData.poolId }
       const moveStakeCall = stakingContract?.interface.encodeFunctionData('moveStake', [
         fromInfo,
         toInfo,
@@ -555,20 +555,21 @@ export function useMoveStakeCallback(): (stakeData: StakeData | undefined) => un
 
   return useCallback(
     (stakeData: StakeData | undefined) => {
-      if (!provider || !chainId || !account || !stakeData || !isAddress(stakeData.pool ?? '')) return undefined
+      if (!provider || !chainId || !account || !stakeData || !stakeData.fromPoolId || !isAddress(stakeData.pool ?? ''))
+        return undefined
       //if (!stakeData.amount) return
       const createPoolCall = stakingContract?.interface.encodeFunctionData('createStakingPool', [stakeData.pool])
       // until a staking implementation upgrade, moving delegated stake requires batching from pool deactivation
       //  and to pool activation
-      const deactivateFromInfo = { status: '1', poolId: stakeData.fromPoolId }
-      const deactivateToInfo = { status: '0', poolId: stakeData.fromPoolId }
+      const deactivateFromInfo: StakeInfo = { status: StakeStatus.DELEGATED, poolId: stakeData.fromPoolId }
+      const deactivateToInfo: StakeInfo = { status: StakeStatus.UNDELEGATED, poolId: stakeData.fromPoolId }
       const deactivateCall = stakingContract?.interface.encodeFunctionData('moveStake', [
         deactivateFromInfo,
         deactivateToInfo,
         stakeData.amount,
       ])
-      const activateFromInfo = { status: '0', poolId: stakeData.poolId }
-      const activateToInfo = { status: '1', poolId: stakeData.poolId }
+      const activateFromInfo: StakeInfo = { status: StakeStatus.UNDELEGATED, poolId: stakeData.poolId }
+      const activateToInfo: StakeInfo = { status: StakeStatus.DELEGATED, poolId: stakeData.poolId }
       const activateCall = stakingContract?.interface.encodeFunctionData('moveStake', [
         activateFromInfo,
         activateToInfo,
@@ -607,11 +608,13 @@ export function useDeactivateStakeCallback(): (stakeData: StakeData | undefined)
   return useCallback(
     (stakeData: StakeData | undefined) => {
       if (!provider || !chainId || !account || !stakeData || !isAddress(stakeData.pool ?? '')) return undefined
+      const deactivateFromInfo: StakeInfo = { status: StakeStatus.DELEGATED, poolId: stakeData.poolId }
+      const deactivateToInfo: StakeInfo = { status: StakeStatus.UNDELEGATED, poolId: stakeData.poolId }
       //if (!stakeData.amount) return
       // in unstake, we use the same StakeData struct but use stakeData.poolId instead of stakeData.fromPoolId
       const deactivateCall = stakingContract?.interface.encodeFunctionData('moveStake', [
-        { status: '1', poolId: stakeData.poolId },
-        { status: '0', poolId: stakeData.poolId },
+        deactivateFromInfo,
+        deactivateToInfo,
         stakeData.amount,
       ])
       const delegatee = stakeData.pool
@@ -751,11 +754,11 @@ export function useCreateProposalCallback(): (
   )
 }
 
-export function useLatestProposalId(address: string | undefined): string | undefined {
-  const latestGovernanceContract = useLatestGovernanceContract()
-  const res = useSingleCallResult(latestGovernanceContract, 'latestProposalIds', [address])
-  return res?.result?.[0]?.toString()
-}
+//export function useLatestProposalId(address: string | undefined): string | undefined {
+//  const latestGovernanceContract = useLatestGovernanceContract()
+//  const res = useSingleCallResult(latestGovernanceContract, 'latestProposalIds', [address])
+//  return res?.result?.[0]?.toString()
+//}
 
 export function useProposalThreshold(): CurrencyAmount<Token> | undefined {
   const { chainId } = useWeb3React()

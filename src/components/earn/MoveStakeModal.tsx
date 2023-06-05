@@ -17,6 +17,7 @@ import { ResponsiveHeaderText, SmallMaxButton } from '../../pages/RemoveLiquidit
 import { useBurnV3ActionHandlers, useBurnV3State } from '../../state/burn/v3/hooks'
 import { PoolInfo /*,useDerivedPoolInfo*/ } from '../../state/buy/hooks'
 import {
+  StakeData,
   useDeactivateStakeCallback,
   useMoveStakeCallback,
   usePoolIdByAddress,
@@ -43,14 +44,6 @@ const StyledClosed = styled(X)`
     cursor: pointer;
   }
 `
-
-/*
-const TextButton = styled.div`
-  :hover {
-    cursor: pointer;
-  }
-`
-*/
 
 interface MoveStakeModalProps {
   isOpen: boolean
@@ -98,11 +91,12 @@ export default function MoveStakeModal({ isOpen, poolInfo, isDeactivate, onDismi
     )
   )
 
-  const moveStakeData = {
+  // TODO: check if should return if no fromPoolId selected
+  const moveStakeData: StakeData | undefined = {
     amount: parsedAmount?.quotient.toString(),
     pool: poolInfo.pool?.address,
     fromPoolId: fromPoolId ?? defaultPoolId,
-    poolId,
+    poolId: poolId ?? defaultPoolId,
     poolContract: undefined,
     stakingPoolExists,
   }

@@ -3,7 +3,7 @@ import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import JSBI from 'jsbi'
-import { ReactNode, /*useCallback,*/ useState } from 'react'
+import { ReactNode, /*useCallback,*/ useMemo, useState } from 'react'
 import { X } from 'react-feather'
 import styled from 'styled-components/macro'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
@@ -100,13 +100,16 @@ export default function DelegateModal({ isOpen, poolInfo, onDismiss, title }: Vo
     )
   )
 
-  const stakeData = {
-    amount: parsedAmount?.quotient.toString(),
-    pool: parsedAddress,
-    poolId,
-    poolContract: usingDelegate ? poolContract : undefined,
-    stakingPoolExists,
-  }
+  const stakeData = useMemo(() => {
+    if (!poolId) return
+    return {
+      amount: parsedAmount?.quotient.toString(),
+      pool: parsedAddress,
+      poolId,
+      poolContract: usingDelegate ? poolContract : null,
+      stakingPoolExists,
+    }
+  }, [poolId, parsedAmount, parsedAddress, usingDelegate, poolContract, stakingPoolExists])
 
   const delegateUserCallback = useDelegateCallback()
   const delegatePoolCallback = useDelegatePoolCallback()
@@ -136,7 +139,7 @@ export default function DelegateModal({ isOpen, poolInfo, onDismiss, title }: Vo
     if (!delegateCallback || !grgBalance || !stakeData || !currencyValue.isToken) return
 
     // try delegation and store hash
-    const hash = await delegateCallback(stakeData ?? undefined)?.catch((error) => {
+    const hash = await delegateCallback(stakeData)?.catch((error) => {
       setAttempting(false)
       console.log(error)
     })
