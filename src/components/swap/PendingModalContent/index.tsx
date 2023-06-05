@@ -5,9 +5,10 @@ import { ColumnCenter } from 'components/Column'
 import Column from 'components/Column'
 import Row from 'components/Row'
 import { SupportedChainId } from 'constants/chains'
+import { SwapResult } from 'hooks/useSwapCallback'
 import { useUnmountingAnimation } from 'hooks/useUnmountingAnimation'
 import { ReactNode, useRef } from 'react'
-import { InterfaceTrade } from 'state/routing/types'
+import { InterfaceTrade, TradeFillType } from 'state/routing/types'
 import { useIsTransactionConfirmed } from 'state/transactions/hooks'
 import styled, { css, keyframes } from 'styled-components/macro'
 import { ExternalLink } from 'theme'
@@ -102,7 +103,7 @@ interface PendingModalContentProps {
   steps: PendingConfirmModalState[]
   currentStep: PendingConfirmModalState
   trade?: InterfaceTrade
-  swapTxHash?: string
+  swapResult?: SwapResult
   hideStepIndicators?: boolean
   tokenApprovalPending?: boolean
 }
@@ -114,12 +115,12 @@ interface ContentArgs {
   swapConfirmed: boolean
   swapPending: boolean
   tokenApprovalPending: boolean
-  swapTxHash?: string
+  swapResult?: SwapResult
   chainId?: number
 }
 
 function getContent(args: ContentArgs): PendingModalStep {
-  const { step, approvalCurrency, swapConfirmed, swapPending, tokenApprovalPending, trade, swapTxHash, chainId } = args
+  const { step, approvalCurrency, swapConfirmed, swapPending, tokenApprovalPending, trade, swapResult, chainId } = args
   switch (step) {
     case ConfirmModalState.APPROVING_TOKEN:
       return {
@@ -146,13 +147,19 @@ function getContent(args: ContentArgs): PendingModalStep {
         title: swapPending ? t`Transaction submitted` : swapConfirmed ? t`Success` : t`Confirm Swap`,
         subtitle: trade ? <TradeSummary trade={trade} /> : null,
         label:
-          swapConfirmed && swapTxHash && chainId ? (
-            <ExternalLink
-              href={getExplorerLink(chainId, swapTxHash, ExplorerDataType.TRANSACTION)}
-              color="textSecondary"
-            >
-              <Trans>View on Explorer</Trans>
-            </ExternalLink>
+          // TODO(Gouda): Simplify this logic, there are too many nested conditionals
+          swapConfirmed && swapResult && chainId ? (
+            swapResult.type === TradeFillType.Classic ? (
+              <ExternalLink
+                href={getExplorerLink(chainId, swapResult.response.hash, ExplorerDataType.TRANSACTION)}
+                color="textSecondary"
+              >
+                <Trans>View on Explorer</Trans>
+              </ExternalLink>
+            ) : (
+              // TODO(Gouda): Provide link to check UniswapX order on Explorer
+              <div />
+            )
           ) : !swapPending ? (
             t`Proceed in your wallet`
           ) : null,
@@ -164,20 +171,29 @@ export function PendingModalContent({
   steps,
   currentStep,
   trade,
-  swapTxHash,
+  swapResult,
   hideStepIndicators,
   tokenApprovalPending = false,
 }: PendingModalContentProps) {
   const { chainId } = useWeb3React()
-  const swapConfirmed = useIsTransactionConfirmed(swapTxHash)
-  const swapPending = swapTxHash !== undefined && !swapConfirmed
+
+  const classicSwapConfirmed = useIsTransactionConfirmed(
+    swapResult?.type === TradeFillType.Classic ? swapResult.response.hash : undefined
+  )
+  // TODO(Gouda): Support UniswapX status here too
+  const uniswapXSwapConfirmed = Boolean(swapResult)
+
+  const swapConfirmed = TradeFillType.Classic ? classicSwapConfirmed : uniswapXSwapConfirmed
+
+  const swapPending = swapResult !== undefined && !swapConfirmed
+
   const { label, button } = getContent({
     step: currentStep,
     approvalCurrency: trade?.inputAmount.currency,
     swapConfirmed,
     swapPending,
     tokenApprovalPending,
-    swapTxHash,
+    swapResult,
     trade,
     chainId,
   })
@@ -222,7 +238,7 @@ export function PendingModalContent({
               swapConfirmed,
               swapPending,
               tokenApprovalPending,
-              swapTxHash,
+              swapResult,
               trade,
             })
             // We only render one step at a time, but looping through the array allows us to keep

@@ -15,6 +15,7 @@ import { getChainInfo } from 'constants/chainInfo'
 import { useMaxAmountIn } from 'hooks/useMaxAmountIn'
 import { Allowance, AllowanceState } from 'hooks/usePermit2Allowance'
 import usePrevious from 'hooks/usePrevious'
+import { SwapResult } from 'hooks/useSwapCallback'
 import { getPriceUpdateBasisPoints } from 'lib/utils/analytics'
 import { useCallback, useEffect, useState } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
@@ -166,14 +167,14 @@ export default function ConfirmSwapModal({
   onConfirm,
   onDismiss,
   swapError,
-  txHash,
+  swapResult,
   swapQuoteReceivedDate,
   fiatValueInput,
   fiatValueOutput,
 }: {
   trade: InterfaceTrade
   originalTrade?: InterfaceTrade
-  txHash?: string
+  swapResult?: SwapResult
   allowedSlippage: Percent
   allowance: Allowance
   onAcceptChanges: () => void
@@ -248,7 +249,7 @@ export default function ConfirmSwapModal({
             startSwapFlow()
           }}
           trade={trade}
-          hash={txHash}
+          swapResult={swapResult}
           allowedSlippage={allowedSlippage}
           disabledConfirm={showAcceptChanges}
           swapQuoteReceivedDate={swapQuoteReceivedDate}
@@ -266,7 +267,7 @@ export default function ConfirmSwapModal({
         steps={pendingModalSteps}
         currentStep={confirmModalState}
         trade={trade}
-        swapTxHash={txHash}
+        swapResult={swapResult}
         tokenApprovalPending={allowance.state === AllowanceState.REQUIRED && allowance.isApprovalPending}
       />
     )
@@ -275,7 +276,7 @@ export default function ConfirmSwapModal({
     showAcceptChanges,
     pendingModalSteps,
     trade,
-    txHash,
+    swapResult,
     allowance,
     allowedSlippage,
     swapQuoteReceivedDate,

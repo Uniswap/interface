@@ -1,5 +1,6 @@
 import { SwapPriceUpdateUserResponse } from '@uniswap/analytics-events'
 import { Percent } from '@uniswap/sdk-core'
+import { SwapResult } from 'hooks/useSwapCallback'
 import {
   formatPercentInBasisPointsNumber,
   formatPercentNumber,
@@ -8,7 +9,7 @@ import {
   getDurationUntilTimestampSeconds,
   getTokenAddress,
 } from 'lib/utils/analytics'
-import { InterfaceTrade } from 'state/routing/types'
+import { InterfaceTrade, TradeFillType } from 'state/routing/types'
 import { isClassicTrade } from 'state/routing/utils'
 
 import { RoutingDiagramEntry } from './getRoutingDiagramEntries'
@@ -60,7 +61,7 @@ export const formatSwapPriceUpdatedEventProperties = (
 
 interface AnalyticsEventProps {
   trade: InterfaceTrade
-  hash?: string
+  swapResult?: SwapResult
   allowedSlippage: Percent
   transactionDeadlineSecondsSinceEpoch?: number
   isAutoSlippage: boolean
@@ -73,7 +74,7 @@ interface AnalyticsEventProps {
 
 export const formatSwapButtonClickEventProperties = ({
   trade,
-  hash,
+  swapResult,
   allowedSlippage,
   transactionDeadlineSecondsSinceEpoch,
   isAutoSlippage,
@@ -84,7 +85,8 @@ export const formatSwapButtonClickEventProperties = ({
   fiatValueOutput,
 }: AnalyticsEventProps) => ({
   estimated_network_fee_usd: isClassicTrade(trade) ? trade.gasUseEstimateUSD : undefined,
-  transaction_hash: hash,
+  // TODO(Gouda): Update to track orderHash when order is UniswapX
+  transaction_hash: swapResult?.type === TradeFillType.Classic ? swapResult.response.hash : undefined,
   transaction_deadline_seconds: getDurationUntilTimestampSeconds(transactionDeadlineSecondsSinceEpoch),
   token_in_address: trade ? getTokenAddress(trade.inputAmount.currency) : undefined,
   token_out_address: trade ? getTokenAddress(trade.outputAmount.currency) : undefined,
