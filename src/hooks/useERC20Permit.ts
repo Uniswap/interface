@@ -40,6 +40,9 @@ const PERMITTABLE_TOKENS: {
   [SupportedChainId.GOERLI]: {
     [UNI[SupportedChainId.GOERLI].address]: { type: PermitType.AMOUNT, name: 'Uniswap' },
   },
+  [SupportedChainId.SEPOLIA]: {
+    [UNI[SupportedChainId.SEPOLIA].address]: { type: PermitType.AMOUNT, name: 'Uniswap' },
+  },
 }
 
 enum UseERC20PermitState {

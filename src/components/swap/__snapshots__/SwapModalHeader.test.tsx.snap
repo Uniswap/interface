@@ -79,11 +79,16 @@ exports[`SwapModalHeader.tsx matches base snapshot, test trade exact input 1`] =
 }
 
 .c11 {
-  width: 36px;
+  --size: 36px;
+  border-radius: 100px;
+  color: #0D111C;
+  background-color: #E8ECFB;
+  font-size: calc(var(--size) / 3);
+  font-weight: 500;
   height: 36px;
-  border-radius: 50%;
-  background: radial-gradient(white 60%,#ffffff00 calc(70% + 1px));
-  box-shadow: 0 0 1px white;
+  line-height: 36px;
+  text-align: center;
+  width: 36px;
 }
 
 .c10 {
@@ -155,11 +160,11 @@ exports[`SwapModalHeader.tsx matches base snapshot, test trade exact input 1`] =
         <div
           class="c10"
         >
-          <img
-            alt="ABC logo"
+          <div
             class="c11"
-            src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
-          />
+          >
+            ABC
+          </div>
         </div>
       </div>
       <div
@@ -198,11 +203,11 @@ exports[`SwapModalHeader.tsx matches base snapshot, test trade exact input 1`] =
         <div
           class="c10"
         >
-          <img
-            alt="DEF logo"
+          <div
             class="c11"
-            src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
-          />
+          >
+            DEF
+          </div>
         </div>
       </div>
     </div>
@@ -292,11 +297,16 @@ exports[`SwapModalHeader.tsx test trade exact output, no recipient 1`] = `
 }
 
 .c11 {
-  width: 36px;
+  --size: 36px;
+  border-radius: 100px;
+  color: #0D111C;
+  background-color: #E8ECFB;
+  font-size: calc(var(--size) / 3);
+  font-weight: 500;
   height: 36px;
-  border-radius: 50%;
-  background: radial-gradient(white 60%,#ffffff00 calc(70% + 1px));
-  box-shadow: 0 0 1px white;
+  line-height: 36px;
+  text-align: center;
+  width: 36px;
 }
 
 .c10 {
@@ -368,11 +378,11 @@ exports[`SwapModalHeader.tsx test trade exact output, no recipient 1`] = `
         <div
           class="c10"
         >
-          <img
-            alt="ABC logo"
+          <div
             class="c11"
-            src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
-          />
+          >
+            ABC
+          </div>
         </div>
       </div>
       <div
@@ -411,11 +421,11 @@ exports[`SwapModalHeader.tsx test trade exact output, no recipient 1`] = `
         <div
           class="c10"
         >
-          <img
-            alt="GHI logo"
+          <div
             class="c11"
-            src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000003/logo.png"
-          />
+          >
+            GHI
+          </div>
         </div>
       </div>
     </div>
