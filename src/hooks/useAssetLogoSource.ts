@@ -44,7 +44,6 @@ function getInitialUrl(address?: string | null, chainId?: number | null, isNativ
   const networkName = chainId ? chainIdToNetworkName(chainId) : 'ethereum'
   const checksummedAddress = isAddress(address)
 
-  // Celo logo logo is hosted elsewhere.
   if (chainId && isCelo(chainId)) {
     if (address === nativeOnChain(chainId).wrapped.address) {
       return celoLogo

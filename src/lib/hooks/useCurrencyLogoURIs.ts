@@ -53,7 +53,6 @@ function getTokenLogoURI(address: string, chainId: SupportedChainId = SupportedC
     SupportedChainId.OPTIMISM,
     SupportedChainId.BNB,
   ]
-  // Celo logo logo is hosted elsewhere.
   if (isCelo(chainId)) {
     if (address === nativeOnChain(chainId).wrapped.address) {
       return CeloLogo
