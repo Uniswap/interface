@@ -3,17 +3,18 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { t } from '@lingui/macro'
 import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
 import { SwapEventName } from '@uniswap/analytics-events'
-import { Trade } from '@uniswap/router-sdk'
+import { MulticallExtended, PaymentsExtended, SwapRouter, Trade } from '@uniswap/router-sdk'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
-import { SwapRouter, UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
-import { FeeOptions, toHex } from '@uniswap/v3-sdk'
+//import { SwapRouter, UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
+import { FeeOptions } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
+import JSBI from 'jsbi'
 import { formatSwapSignedAnalyticsEventProperties } from 'lib/utils/analytics'
 import { useCallback } from 'react'
 import { trace } from 'tracing/trace'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
 import { UserRejectedRequestError } from 'utils/errors'
-import isZero from 'utils/isZero'
+//import isZero from 'utils/isZero'
 import { didUserReject, swapErrorToUserReadableMessage } from 'utils/swapErrorToUserReadableMessage'
 
 import { PermitSignature } from './usePermitAllowance'
@@ -42,6 +43,7 @@ interface SwapOptions {
   deadline?: BigNumber
   permit?: PermitSignature
   feeOptions?: FeeOptions
+  smartPoolAddress?: string
 }
 
 export function useUniversalRouterSwapCallback(
@@ -61,18 +63,17 @@ export function useUniversalRouterSwapCallback(
         if (!trade) throw new Error('missing trade')
 
         setTraceData('slippageTolerance', options.slippageTolerance.toFixed(2))
-        const { calldata: data, value } = SwapRouter.swapERC20CallParameters(trade, {
+        const { calldata: data, value } = SwapRouter.swapCallParameters(trade, {
           slippageTolerance: options.slippageTolerance,
           deadlineOrPreviousBlockhash: options.deadline?.toString(),
-          inputTokenPermit: options.permit,
           fee: options.feeOptions,
+          recipient: account,
         })
         const tx = {
           from: account,
-          to: UNIVERSAL_ROUTER_ADDRESS(chainId),
-          data,
-          // TODO(https://github.com/Uniswap/universal-router-sdk/issues/113): universal-router-sdk returns a non-hexlified value.
-          ...(value && !isZero(value) ? { value: toHex(value) } : {}),
+          to: options.smartPoolAddress,
+          data: MulticallExtended.encodeMulticall([PaymentsExtended.encodeWrapETH(JSBI.BigInt(value)), data]),
+          value: '0x0',
         }
 
         let gasEstimate: BigNumber
@@ -131,8 +132,8 @@ export function useUniversalRouterSwapCallback(
     fiatValues,
     options.deadline,
     options.feeOptions,
-    options.permit,
     options.slippageTolerance,
+    options.smartPoolAddress,
     provider,
     trade,
   ])

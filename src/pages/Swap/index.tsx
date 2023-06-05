@@ -496,7 +496,7 @@ export function Swap({
     trade,
     swapFiatValues,
     allowedSlippage,
-    smartPoolAddress,
+    smartPoolAddress ?? undefined,
     allowance.state === AllowanceState.ALLOWED ? allowance.permitSignature : undefined
   )
 

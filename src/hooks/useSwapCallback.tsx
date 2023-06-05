@@ -15,7 +15,7 @@ export function useSwapCallback(
   trade: Trade<Currency, Currency, TradeType> | undefined, // trade to execute, required
   fiatValues: { amountIn?: number; amountOut?: number }, // usd values for amount in and out, logged for analytics
   allowedSlippage: Percent, // in bips
-  poolAddress: string | undefined | null,
+  smartPoolAddress: string | undefined,
   permitSignature: PermitSignature | undefined
 ): { callback: null | (() => Promise<string>) } {
   const deadline = useTransactionDeadline()
@@ -26,7 +26,7 @@ export function useSwapCallback(
   const universalRouterSwapCallback = useUniversalRouterSwapCallback(trade, fiatValues, {
     slippageTolerance: allowedSlippage,
     deadline,
-    //poolAddress,
+    smartPoolAddress,
     permit: permitSignature,
   })
   const swapCallback = universalRouterSwapCallback
