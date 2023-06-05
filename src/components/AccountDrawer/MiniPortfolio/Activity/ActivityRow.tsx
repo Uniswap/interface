@@ -9,6 +9,7 @@ import styled from 'styled-components/macro'
 import { EllipsisStyle, ThemedText } from 'theme'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
+import { shortenAddress } from '../../../../nft/utils/address'
 import { PortfolioLogo } from '../PortfolioLogo'
 import PortfolioRow from '../PortfolioRow'
 import { useTimeSince } from './parseRemote'
@@ -52,7 +53,7 @@ export function ActivityRow({
         descriptor={
           <ActivityRowDescriptor color="textSecondary">
             {descriptor}
-            {ENSName ?? otherAccount}
+            {ENSName ?? shortenAddress(otherAccount || '', 4, 4)}
           </ActivityRowDescriptor>
         }
         right={

@@ -1,7 +1,7 @@
 import { isAddress } from '@ethersproject/address'
 
 /**
- * Shortens an Ethereum address by N characters
+ * Shortens an Ethereum address by N characters (search keywords: .slice .truncate)
  * @param address blockchain address
  * @param charsStart amount of character to shorten (from both ends / in the beginning)
  * @param charsEnd amount of characters to shorten in the end

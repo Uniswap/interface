@@ -26,6 +26,7 @@ import styled, { css, keyframes } from 'styled-components/macro'
 import { Z_INDEX } from 'theme/zIndex'
 
 import { ReactComponent as TooltipTriangle } from '../../assets/svg/tooltip_triangle.svg'
+import { shortenAddress } from '../../nft/utils/address'
 import { anonymizeLink } from '../../utils/anonymizeLink'
 
 // TODO: Break this file into a components folder
@@ -333,7 +334,7 @@ export function CopyContractAddress({ address }: { address: string }) {
     [address, setCopied]
   )
 
-  const truncated = `${address.slice(0, 4)}...${address.slice(-3)}`
+  const truncated = shortenAddress(address, 4, 4)
   return (
     <CopyContractAddressWrapper onClick={copy}>
       <CopyAddressRow isClicked={isCopied}>
