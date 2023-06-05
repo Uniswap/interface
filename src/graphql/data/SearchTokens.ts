@@ -50,7 +50,7 @@ function isMoreRevelantToken(current: SearchToken, existing: SearchToken | undef
   if (current.standard === 'NATIVE' && (existing.standard !== 'NATIVE' || current.chain === searchChain)) return true
 
   // Prefer tokens on the searched chain, otherwise prefer mainnet tokens
-  return current.chain === searchChain 
+  return current.chain === searchChain
 }
 
 // Places natives first, wrapped native on current chain next, then sorts by volume
