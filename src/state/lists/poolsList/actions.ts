@@ -6,13 +6,13 @@ export const fetchTokenList: Readonly<{
   fulfilled: ActionCreatorWithPayload<{ url: string; tokenList: TokenList; requestId: string }>
   rejected: ActionCreatorWithPayload<{ url: string; errorMessage: string; requestId: string }>
 }> = {
-  pending: createAction('poolslist/fetchTokenList/pending'),
-  fulfilled: createAction('poolslist/fetchTokenList/fulfilled'),
-  rejected: createAction('poolslist/fetchTokenList/rejected'),
+  pending: createAction('poolsList/fetchTokenList/pending'),
+  fulfilled: createAction('poolsList/fetchTokenList/fulfilled'),
+  rejected: createAction('poolsList/fetchTokenList/rejected'),
 }
 // add and remove from list options
-export const addList = createAction<string>('poolslist/addList')
-export const removeList = createAction<string>('poolslist/removeList')
+export const addList = createAction<string>('poolsList/addList')
+export const removeList = createAction<string>('poolsList/removeList')
 
 // versioning
-export const acceptListUpdate = createAction<string>('poolslist/acceptListUpdate')
+export const acceptListUpdate = createAction<string>('poolsList/acceptListUpdate')

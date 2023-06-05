@@ -9,8 +9,8 @@ type Mutable<T> = {
   -readonly [P in keyof T]: Mutable<T[P]>
 }
 
-export function usePoolsList(): AppState['poolslist']['byUrl'] {
-  return useAppSelector((state) => state.poolslist.byUrl)
+export function usePoolsList(): AppState['poolsList']['byUrl'] {
+  return useAppSelector((state) => state.poolsList.byUrl)
 }
 
 /**
