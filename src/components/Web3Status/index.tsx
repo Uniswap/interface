@@ -20,7 +20,7 @@ import { flexRowNoWrap } from 'theme/styles'
 
 import { isTransactionRecent, useAllTransactions } from '../../state/transactions/hooks'
 import { TransactionDetails } from '../../state/transactions/types'
-import { shortenAddress } from '../../utils'
+import { shortenAddress } from '../../utils/addresses'
 import { ButtonSecondary } from '../Button'
 import StatusIcon from '../Identicon/StatusIcon'
 import { RowBetween } from '../Row'

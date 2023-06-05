@@ -1,4 +1,4 @@
-import { isAddress, shortenAddress } from '.'
+import { isAddress, shortenAddress } from './addresses'
 
 describe('utils', () => {
   describe('#isAddress', () => {
@@ -37,7 +37,9 @@ describe('utils', () => {
     })
 
     it('renders checksummed address', () => {
-      expect(shortenAddress('0x2E1b342132A67Ea578e4E3B814bae2107dc254CC'.toLowerCase())).toBe('0x2E1b...54CC')
+      expect(shortenAddress('0x2E1b342132A67Ea578e4E3B814bae2107dc254CC'.toLowerCase())).toBe(
+        '0x2E1b...54CC'
+      )
     })
   })
 })
