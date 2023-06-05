@@ -24,10 +24,10 @@ import {
 import { Link } from 'react-router-dom'
 import styled, { css, keyframes } from 'styled-components/macro'
 import { Z_INDEX } from 'theme/zIndex'
+import { shortenAddress } from 'utils/addresses'
+import { anonymizeLink } from 'utils/anonymizeLink'
 
 import { ReactComponent as TooltipTriangle } from '../../assets/svg/tooltip_triangle.svg'
-import { shortenAddress } from '../../utils/addresses'
-import { anonymizeLink } from '../../utils/anonymizeLink'
 
 // TODO: Break this file into a components folder
 
