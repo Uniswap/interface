@@ -13,8 +13,8 @@ import {
   useTransferERC20Callback,
   useTransferNFTCallback,
 } from 'src/features/transactions/transfer/hooks'
-import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
+import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 import { currencyAddress } from 'wallet/src/utils/currencyId'
 import { formatCurrencyAmount, formatNumberOrString, NumberType } from 'wallet/src/utils/format'
 

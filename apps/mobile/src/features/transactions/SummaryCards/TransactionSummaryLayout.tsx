@@ -22,13 +22,13 @@ import {
   TransactionStatus,
   TransactionType,
 } from 'src/features/transactions/types'
-import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
 import { Theme } from 'src/styles/theme'
 import { openMoonpayTransactionLink, openTransactionLink } from 'src/utils/linking'
 import AlertTriangle from 'ui/src/assets/icons/alert-triangle.svg'
 import SlashCircleIcon from 'ui/src/assets/icons/slash-circle.svg'
 import { iconSizes } from 'ui/src/theme/iconSizes'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
+import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 
 export const TXN_HISTORY_ICON_SIZE = iconSizes.icon40
 const LOADING_SPINNER_SIZE = 20

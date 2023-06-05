@@ -9,7 +9,6 @@ import { sendTransaction, signAndSendTransaction } from 'src/features/transactio
 import { addTransaction } from 'src/features/transactions/slice'
 import { TransactionStatus } from 'src/features/transactions/types'
 import * as TxnUtils from 'src/features/transactions/utils'
-import { selectAccounts } from 'src/features/wallet/selectors'
 import {
   account,
   provider,
@@ -25,6 +24,7 @@ import {
   getProviderManager,
   getSignerManager,
 } from 'wallet/src/features/wallet/context'
+import { selectAccounts } from 'wallet/src/features/wallet/selectors'
 
 const NEW_UNIQUE_ID = faker.datatype.uuid()
 

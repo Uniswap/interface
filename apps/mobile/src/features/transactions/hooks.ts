@@ -28,10 +28,10 @@ import {
   TransactionStatus,
   TransactionType,
 } from 'src/features/transactions/types'
-import { useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
 import { theme } from 'src/styles/theme'
 import { ChainId } from 'wallet/src/constants/chains'
 import { EMPTY_ARRAY } from 'wallet/src/constants/misc'
+import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 import { currencyAddress } from 'wallet/src/utils/currencyId'
 
 export function usePendingTransactions(

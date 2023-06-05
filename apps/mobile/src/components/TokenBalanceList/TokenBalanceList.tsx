@@ -12,10 +12,6 @@ import { TabProps, TAB_VIEW_SCROLL_THROTTLE } from 'src/components/layout/TabHel
 import { Loader } from 'src/components/loading'
 import { HiddenTokensRow } from 'src/components/TokenBalanceList/HiddenTokensRow'
 import { TokenBalanceItem } from 'src/components/TokenBalanceList/TokenBalanceItem'
-import {
-  makeSelectAccountHideSmallBalances,
-  makeSelectAccountHideSpamTokens,
-} from 'src/features/wallet/selectors'
 import { Screens } from 'src/screens/Screens'
 import { dimensions } from 'src/styles/sizing'
 import { useSuspendUpdatesWhenBlured } from 'src/utils/hooks'
@@ -24,6 +20,10 @@ import { EMPTY_ARRAY } from 'wallet/src/constants/misc'
 import { isError, isNonPollingRequestInFlight, isWarmLoadingStatus } from 'wallet/src/data/utils'
 import { useSortedPortfolioBalances } from 'wallet/src/features/dataApi/balances'
 import { PortfolioBalance } from 'wallet/src/features/dataApi/types'
+import {
+  makeSelectAccountHideSmallBalances,
+  makeSelectAccountHideSpamTokens,
+} from 'wallet/src/features/wallet/selectors'
 import { CurrencyId } from 'wallet/src/utils/currencyId'
 
 type TokenBalanceListProps = TabProps & {

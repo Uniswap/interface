@@ -4,13 +4,13 @@ import { ImportType, OnboardingEntryPoint } from 'src/features/onboarding/utils'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
 import { useTrace } from 'src/features/telemetry/hooks'
-import { usePendingAccounts } from 'src/features/wallet/hooks'
 import {
   pendingAccountActions,
   PendingAccountActions,
 } from 'src/features/wallet/pendingAccountsSaga'
-import { setFinishedOnboarding } from 'src/features/wallet/walletSlice'
 import { Screens } from 'src/screens/Screens'
+import { usePendingAccounts } from 'wallet/src/features/wallet/hooks'
+import { setFinishedOnboarding } from 'wallet/src/features/wallet/slice'
 
 /**
  * Bundles various actions that should be performed to complete onboarding.

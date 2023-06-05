@@ -5,7 +5,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo, SectionList } from 'react-native'
 import { SvgProps } from 'react-native-svg'
-import { useAppDispatch, useAppSelector } from 'src/app/hooks'
+import { useAppDispatch } from 'src/app/hooks'
 import { SettingsStackParamList, useSettingsStackNavigation } from 'src/app/navigation/types'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
@@ -32,12 +32,6 @@ import {
 import { promptPushPermission } from 'src/features/notifications/Onesignal'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
-import { useAccounts, useSelectAccountNotificationSetting } from 'src/features/wallet/hooks'
-import {
-  makeSelectAccountHideSmallBalances,
-  makeSelectAccountHideSpamTokens,
-  selectSortedSignerMnemonicAccounts,
-} from 'src/features/wallet/selectors'
 import { showNotificationSettingsAlert } from 'src/screens/Onboarding/NotificationsSetupScreen'
 import NotificationIcon from 'ui/src/assets/icons/bell.svg'
 import ChartIcon from 'ui/src/assets/icons/chart.svg'
@@ -47,6 +41,13 @@ import GlobalIcon from 'ui/src/assets/icons/global.svg'
 import KeyIcon from 'ui/src/assets/icons/key.svg'
 import ShieldQuestionIcon from 'ui/src/assets/icons/shield-question.svg'
 import { AccountType, BackupType } from 'wallet/src/features/wallet/accounts/types'
+import { useAccounts, useSelectAccountNotificationSetting } from 'wallet/src/features/wallet/hooks'
+import {
+  makeSelectAccountHideSmallBalances,
+  makeSelectAccountHideSpamTokens,
+  selectSortedSignerMnemonicAccounts,
+} from 'wallet/src/features/wallet/selectors'
+import { useAppSelector } from 'wallet/src/state'
 import { Screens } from './Screens'
 
 type Props = NativeStackScreenProps<SettingsStackParamList, Screens.SettingsWallet>

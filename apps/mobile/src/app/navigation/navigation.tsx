@@ -4,7 +4,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { createStackNavigator } from '@react-navigation/stack'
 import React, { useCallback } from 'react'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { useAppSelector, useAppTheme } from 'src/app/hooks'
+import { useAppTheme } from 'src/app/hooks'
 import {
   AppStackParamList,
   AppStackScreenProp,
@@ -23,7 +23,6 @@ import { useExperimentEnabled } from 'src/features/experiments/hooks'
 import { CloudBackupPasswordConfirmScreen } from 'src/features/onboarding/CloudBackupConfirmPasswordConfirm'
 import { OnboardingHeader } from 'src/features/onboarding/OnboardingHeader'
 import { OnboardingEntryPoint } from 'src/features/onboarding/utils'
-import { selectFinishedOnboarding } from 'src/features/wallet/selectors'
 import { DevScreen } from 'src/screens/DevScreen'
 import { EducationScreen } from 'src/screens/EducationScreen'
 import { ExploreScreen } from 'src/screens/ExploreScreen'
@@ -62,6 +61,8 @@ import { SettingsWalletEdit } from 'src/screens/SettingsWalletEdit'
 import { SettingsWalletManageConnection } from 'src/screens/SettingsWalletManageConnection'
 import { TokenDetailsScreen } from 'src/screens/TokenDetailsScreen'
 import { WebViewScreen } from 'src/screens/WebViewScreen'
+import { selectFinishedOnboarding } from 'wallet/src/features/wallet/selectors'
+import { useAppSelector } from 'wallet/src/state'
 
 const OnboardingStack = createStackNavigator<OnboardingStackParamList>()
 const AppStack = createNativeStackNavigator<AppStackParamList>()

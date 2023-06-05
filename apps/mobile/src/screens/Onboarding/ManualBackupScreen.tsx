@@ -26,9 +26,9 @@ import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { ElementName, ManualPageViewScreen, ModalName } from 'src/features/telemetry/constants'
 import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
-import { useActiveAccount } from 'src/features/wallet/hooks'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { BackupType, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
+import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.BackupManual>
 

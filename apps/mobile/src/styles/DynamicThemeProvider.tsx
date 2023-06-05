@@ -1,10 +1,10 @@
 import { ThemeProvider } from '@shopify/restyle'
 import React, { PropsWithChildren, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Appearance, ColorSchemeName } from 'react-native'
-import { useAppSelector } from 'src/app/hooks'
 import { useCurrentAppearanceSetting } from 'src/features/appearance/hooks'
 import { AppearanceSettingType } from 'src/features/appearance/slice'
-import { selectUserPalette } from 'src/features/wallet/selectors'
+import { selectUserPalette } from 'wallet/src/features/wallet/selectors'
+import { useAppSelector } from 'wallet/src/state'
 import { darkTheme, theme as lightTheme, Theme } from './theme'
 
 const COLOR_SCHEME_FLICKER_DELAY_MS = 250

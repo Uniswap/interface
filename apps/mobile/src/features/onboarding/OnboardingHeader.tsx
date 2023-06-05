@@ -4,8 +4,8 @@ import { useOnboardingStackNavigation } from 'src/app/navigation/types'
 import { Indicator } from 'src/components/carousel/Indicator'
 import { useBiometricAppSettings } from 'src/features/biometrics/hooks'
 import { getFlow, getStepNumber, OnboardingEntryPoint } from 'src/features/onboarding/utils'
-import { useNativeAccountExists } from 'src/features/wallet/hooks'
 import { OnboardingScreens } from 'src/screens/Screens'
+import { useNativeAccountExists } from 'wallet/src/features/wallet/hooks'
 
 export const OnboardingHeader = ({ children: routeName }: HeaderTitleProps): JSX.Element | null => {
   const navigation = useOnboardingStackNavigation()

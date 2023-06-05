@@ -1,9 +1,9 @@
 import { useEffect } from 'react'
-import { useActiveAccountAddress } from 'src/features/wallet/hooks'
 import {
   usePortfolioBalancesLazyQuery,
   useTransactionListLazyQuery,
 } from 'wallet/src/data/__generated__/types-and-hooks'
+import { useActiveAccountAddress } from 'wallet/src/features/wallet/hooks'
 
 /** Preloaded home screen queries that reload on active account change */
 export function usePreloadedHomeScreenQueries(): void {

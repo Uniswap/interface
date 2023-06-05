@@ -8,7 +8,7 @@ import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { ElementName } from 'src/features/telemetry/constants'
 import { useAllTransactionsBetweenAddresses } from 'src/features/transactions/hooks'
-import { useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
+import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
 interface RecipientInputPanelProps {
   recipientAddress: string

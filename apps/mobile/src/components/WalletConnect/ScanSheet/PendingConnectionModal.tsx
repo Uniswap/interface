@@ -20,12 +20,6 @@ import { pushNotification } from 'src/features/notifications/notificationSlice'
 import { AppNotificationType } from 'src/features/notifications/types'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { ElementName, MobileEventName, ModalName } from 'src/features/telemetry/constants'
-import {
-  useActiveAccountAddressWithThrow,
-  useActiveAccountWithThrow,
-  useSignerAccounts,
-} from 'src/features/wallet/hooks'
-import { activateAccount } from 'src/features/wallet/walletSlice'
 import { WalletConnectEvent } from 'src/features/walletConnect/saga'
 import { selectDidOpenFromDeepLink } from 'src/features/walletConnect/selectors'
 import { WCEventType, WCRequestOutcome } from 'src/features/walletConnect/types'
@@ -40,6 +34,12 @@ import { getSessionNamespaces } from 'src/features/walletConnectV2/utils'
 import Checkmark from 'ui/src/assets/icons/check.svg'
 import X from 'ui/src/assets/icons/x.svg'
 import { ChainId, CHAIN_INFO } from 'wallet/src/constants/chains'
+import {
+  useActiveAccountAddressWithThrow,
+  useActiveAccountWithThrow,
+  useSignerAccounts,
+} from 'wallet/src/features/wallet/hooks'
+import { activateAccount } from 'wallet/src/features/wallet/slice'
 import { toSupportedChainId } from 'wallet/src/utils/chainId'
 import { ONE_SECOND_MS } from 'wallet/src/utils/time'
 

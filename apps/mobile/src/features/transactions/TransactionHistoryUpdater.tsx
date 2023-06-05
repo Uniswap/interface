@@ -4,7 +4,7 @@ import dayjs from 'dayjs'
 import React, { useEffect, useMemo } from 'react'
 import { View } from 'react-native'
 import { batch } from 'react-redux'
-import { useAppDispatch, useAppSelector } from 'src/app/hooks'
+import { useAppDispatch, useAppSelector as useMobileAppSelector } from 'src/app/hooks'
 import {
   pushNotification,
   setLastTxNotificationUpdate,
@@ -15,11 +15,6 @@ import { buildReceiveNotification } from 'src/features/notifications/utils'
 import { parseDataResponseToTransactionDetails } from 'src/features/transactions/history/utils'
 import { useSelectAddressTransactions } from 'src/features/transactions/hooks'
 import { TransactionStatus, TransactionType } from 'src/features/transactions/types'
-import { useAccounts } from 'src/features/wallet/hooks'
-import {
-  makeSelectAccountHideSpamTokens,
-  selectActiveAccountAddress,
-} from 'src/features/wallet/selectors'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import { useRefetchQueries } from 'wallet/src/data/utils'
 import {
@@ -28,6 +23,12 @@ import {
   useTransactionHistoryUpdaterQuery,
   useTransactionListLazyQuery,
 } from 'wallet/src/data/__generated__/types-and-hooks'
+import { useAccounts } from 'wallet/src/features/wallet/hooks'
+import {
+  makeSelectAccountHideSpamTokens,
+  selectActiveAccountAddress,
+} from 'wallet/src/features/wallet/selectors'
+import { useAppSelector as useRootAppSelector } from 'wallet/src/state'
 import { ONE_SECOND_MS } from 'wallet/src/utils/time'
 
 /**
@@ -86,15 +87,17 @@ function AddressTransactionHistoryUpdater({
 }): JSX.Element | null {
   const dispatch = useAppDispatch()
 
-  const activeAccountAddress = useAppSelector(selectActiveAccountAddress)
+  const activeAccountAddress = useRootAppSelector(selectActiveAccountAddress)
 
   // Current txn count for all addresses
-  const lastTxNotificationUpdateTimestamp = useAppSelector(selectLastTxNotificationUpdate)[address]
+  const lastTxNotificationUpdateTimestamp = useMobileAppSelector(selectLastTxNotificationUpdate)[
+    address
+  ]
 
   const fetchAndDispatchReceiveNotification = useFetchAndDispatchReceiveNotification()
 
   // dont show notifications on spam tokens if setting enabled
-  const hideSpamTokens = useAppSelector<boolean>(makeSelectAccountHideSpamTokens(address))
+  const hideSpamTokens = useRootAppSelector<boolean>(makeSelectAccountHideSpamTokens(address))
 
   const localTransactions = useSelectAddressTransactions(address)
 

@@ -1,9 +1,9 @@
 import { appSelect } from 'src/app/hooks'
 import { getNotificationErrorAction } from 'src/features/notifications/utils'
-import { selectPendingAccounts } from 'src/features/wallet/selectors'
-import { markAsNonPending, removeAccounts } from 'src/features/wallet/walletSlice'
 import { put } from 'typed-redux-saga'
 import { logger } from 'wallet/src/features/logger/logger'
+import { selectPendingAccounts } from 'wallet/src/features/wallet/selectors'
+import { markAsNonPending, removeAccounts } from 'wallet/src/features/wallet/slice'
 import { createMonitoredSaga } from 'wallet/src/utils/saga'
 
 export enum PendingAccountActions {

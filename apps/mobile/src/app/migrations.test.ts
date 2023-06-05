@@ -68,7 +68,6 @@ import {
   TransactionStatus,
   TransactionType,
 } from 'src/features/transactions/types'
-import { initialWalletState } from 'src/features/wallet/walletSlice'
 import { initialWalletConnectState } from 'src/features/walletConnect/walletConnectSlice'
 import { account, fiatOnRampTxDetailsFailed, txDetailsConfirmed } from 'src/test/fixtures'
 import { SWAP_ROUTER_ADDRESSES } from 'wallet/src/constants/addresses'
@@ -79,6 +78,7 @@ import {
   AccountType,
   SignerMnemonicAccount,
 } from 'wallet/src/features/wallet/accounts/types'
+import { initialWalletState } from 'wallet/src/features/wallet/slice'
 
 // helps with object assignement
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

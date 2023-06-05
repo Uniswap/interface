@@ -14,7 +14,6 @@ import { telemetryReducer } from 'src/features/telemetry/slice'
 import { tokensReducer } from 'src/features/tokens/tokensSlice'
 import { transactionReducer } from 'src/features/transactions/slice'
 import { trmApi } from 'src/features/trm/api'
-import { walletReducer } from 'src/features/wallet/walletSlice'
 import { walletConnectReducer } from 'src/features/walletConnect/walletConnectSlice'
 import { gasApi } from 'wallet/src/features/gas/gasApi'
 import { onChainBalanceApi } from 'wallet/src/features/portfolio/api'
@@ -41,7 +40,6 @@ const reducers = {
   telemetry: telemetryReducer,
   tokens: tokensReducer,
   transactions: transactionReducer,
-  wallet: walletReducer,
   walletConnect: walletConnectReducer,
 } as const
 export const mobileReducer = combineReducers(reducers)

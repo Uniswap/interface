@@ -10,8 +10,8 @@ import { DerivedSwapInfo } from 'src/features/transactions/swap/hooks'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
 import { DerivedTransferInfo } from 'src/features/transactions/transfer/hooks'
 import { hasSufficientFundsIncludingGas } from 'src/features/transactions/utils'
-import { useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
 import { useOnChainNativeCurrencyBalance } from 'wallet/src/features/portfolio/api'
+import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
 export function useTransactionGasWarning(
   { chainId, currencyAmounts, currencyBalances }: DerivedSwapInfo | DerivedTransferInfo,

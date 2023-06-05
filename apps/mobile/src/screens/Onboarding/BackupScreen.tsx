@@ -22,13 +22,13 @@ import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { OptionCard } from 'src/features/onboarding/OptionCard'
 import { ImportType } from 'src/features/onboarding/utils'
 import { ElementName } from 'src/features/telemetry/constants'
-import { useActiveAccount } from 'src/features/wallet/hooks'
 import { OnboardingScreens, Screens } from 'src/screens/Screens'
 import { openSettings } from 'src/utils/linking'
 import CloudIcon from 'ui/src/assets/icons/cloud.svg'
 import InfoCircle from 'ui/src/assets/icons/info-circle.svg'
 import PaperIcon from 'ui/src/assets/icons/paper-stack.svg'
 import { BackupType } from 'wallet/src/features/wallet/accounts/types'
+import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
 
 type Props = CompositeScreenProps<
   StackScreenProps<OnboardingStackParamList, OnboardingScreens.Backup>,

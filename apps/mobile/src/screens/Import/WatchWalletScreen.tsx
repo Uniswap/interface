@@ -18,10 +18,10 @@ import { SafeKeyboardOnboardingScreen } from 'src/features/onboarding/SafeKeyboa
 import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { ElementName } from 'src/features/telemetry/constants'
 import { useIsSmartContractAddress } from 'src/features/transactions/transfer/hooks'
-import { useAccounts } from 'src/features/wallet/hooks'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { useAddBackButton } from 'src/utils/useAddBackButton'
 import { ChainId } from 'wallet/src/constants/chains'
+import { useAccounts } from 'wallet/src/features/wallet/hooks'
 import { getValidAddress } from 'wallet/src/utils/addresses'
 import { normalizeTextInput } from 'wallet/src/utils/string'
 

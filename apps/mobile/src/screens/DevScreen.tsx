@@ -11,13 +11,13 @@ import { pushNotification } from 'src/features/notifications/notificationSlice'
 import { AppNotificationType } from 'src/features/notifications/types'
 import { resetDismissedWarnings } from 'src/features/tokens/tokensSlice'
 import { createAccountActions } from 'src/features/wallet/createAccountSaga'
-import { useActiveAccount } from 'src/features/wallet/hooks'
-import { resetWallet } from 'src/features/wallet/walletSlice'
 import { Screens } from 'src/screens/Screens'
 import { ChainId } from 'wallet/src/constants/chains'
 import { useActiveChainIds } from 'wallet/src/features/chains/hooks'
 import { setChainActiveStatus } from 'wallet/src/features/chains/slice'
 import { logger } from 'wallet/src/features/logger/logger'
+import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
+import { resetWallet } from 'wallet/src/features/wallet/slice'
 
 export function DevScreen(): JSX.Element {
   const dispatch = useAppDispatch()

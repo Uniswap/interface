@@ -2,16 +2,16 @@ import dayjs from 'dayjs'
 import { AllEffect, CallEffect, PutEffect } from 'redux-saga/effects'
 import { ImportAccountParams, ImportAccountType } from 'src/features/import/types'
 import { getNotificationErrorAction } from 'src/features/notifications/utils'
+import { generateAndStorePrivateKey, importMnemonic } from 'src/lib/RNEthersRs'
+import { all, call, put, SagaGenerator } from 'typed-redux-saga'
+import { logger } from 'wallet/src/features/logger/logger'
+import { Account, AccountType, BackupType } from 'wallet/src/features/wallet/accounts/types'
 import {
   activateAccount,
   addAccount,
   addAccounts,
   unlockWallet,
-} from 'src/features/wallet/walletSlice'
-import { generateAndStorePrivateKey, importMnemonic } from 'src/lib/RNEthersRs'
-import { all, call, put, SagaGenerator } from 'typed-redux-saga'
-import { logger } from 'wallet/src/features/logger/logger'
-import { Account, AccountType, BackupType } from 'wallet/src/features/wallet/accounts/types'
+} from 'wallet/src/features/wallet/slice'
 import { getValidAddress } from 'wallet/src/utils/addresses'
 import { createMonitoredSaga } from 'wallet/src/utils/saga'
 

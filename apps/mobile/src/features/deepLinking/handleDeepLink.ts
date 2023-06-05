@@ -10,13 +10,13 @@ import { handleSwapLink } from 'src/features/deepLinking/handleSwapLink'
 import { handleTransactionLink } from 'src/features/deepLinking/handleTransactionLink'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
-import { selectAccounts, selectActiveAccount } from 'src/features/wallet/selectors'
-import { activateAccount } from 'src/features/wallet/walletSlice'
 import { connectToApp, isValidWCUrl } from 'src/features/walletConnect/WalletConnect'
 import { setDidOpenFromDeepLink } from 'src/features/walletConnect/walletConnectSlice'
 import { pairWithWalletConnectURI } from 'src/features/walletConnectV2/utils'
 import { call, fork, put, takeLatest } from 'typed-redux-saga'
 import { logger } from 'wallet/src/features/logger/logger'
+import { selectAccounts, selectActiveAccount } from 'wallet/src/features/wallet/selectors'
+import { activateAccount } from 'wallet/src/features/wallet/slice'
 
 export interface DeepLink {
   url: string

@@ -15,11 +15,11 @@ import { backupMnemonicToICloud } from 'src/features/CloudBackup/RNICloudBackups
 import { CloudBackupSetPassword } from 'src/features/onboarding/CloudBackupSetPassword'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
-import { useAccounts } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
 import CloudIcon from 'ui/src/assets/icons/cloud.svg'
 import { logger } from 'wallet/src/features/logger/logger'
 import { BackupType, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
+import { useAccounts } from 'wallet/src/features/wallet/hooks'
 
 type Props = NativeStackScreenProps<SettingsStackParamList, Screens.SettingsCloudBackupScreen>
 

@@ -11,7 +11,8 @@ import {
   TransactionStatus,
   TransactionType,
 } from 'src/features/transactions/types'
-import { useActiveAccountAddressWithThrow, useDisplayName } from 'src/features/wallet/hooks'
+import { useDisplayName } from 'src/features/wallet/hooks'
+import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 import { formatCurrencyAmount, NumberType } from 'wallet/src/utils/format'
 
 type TransferStatusProps = {

@@ -4,9 +4,9 @@ import React from 'react'
 import { AppStackParamList, OnboardingStackParamList } from 'src/app/navigation/types'
 import { Screen } from 'src/components/layout/Screen'
 import { ImportType } from 'src/features/onboarding/utils'
-import { useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
 import { QRAnimation } from 'src/screens/Onboarding/QRAnimation/QRAnimation'
 import { OnboardingScreens, Screens } from 'src/screens/Screens'
+import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
 type Props = CompositeScreenProps<
   NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.QRAnimation>,

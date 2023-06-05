@@ -11,11 +11,6 @@ import { PendingConnectionModal } from 'src/components/WalletConnect/ScanSheet/P
 import { WalletConnectModal } from 'src/components/WalletConnect/ScanSheet/WalletConnectModal'
 import { closeModal } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
-import {
-  useActiveAccount,
-  useActiveAccountAddressWithThrow,
-  useSignerAccounts,
-} from 'src/features/wallet/hooks'
 import { EthMethod } from 'src/features/walletConnect/types'
 import { useWalletConnect } from 'src/features/walletConnect/useWalletConnect'
 import {
@@ -27,6 +22,11 @@ import {
 } from 'src/features/walletConnect/walletConnectSlice'
 import { useAppStateTrigger } from 'src/utils/useAppStateTrigger'
 import EyeIcon from 'ui/src/assets/icons/eye.svg'
+import {
+  useActiveAccount,
+  useActiveAccountAddressWithThrow,
+  useSignerAccounts,
+} from 'wallet/src/features/wallet/hooks'
 import { areAddressesEqual } from 'wallet/src/utils/addresses'
 
 export function WalletConnectModals(): JSX.Element {

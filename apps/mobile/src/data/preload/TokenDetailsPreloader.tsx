@@ -1,7 +1,6 @@
 import React, { memo, useEffect, useState } from 'react'
 import { InteractionManager } from 'react-native'
 import { Delay, Delayed } from 'src/components/layout/Delayed'
-import { useActiveAccount } from 'src/features/wallet/hooks'
 import {
   useTokenDetailsScreenLazyQuery,
   useTokenPriceHistoryLazyQuery,
@@ -9,6 +8,7 @@ import {
 import { useSortedPortfolioBalances } from 'wallet/src/features/dataApi/balances'
 import { PortfolioBalance } from 'wallet/src/features/dataApi/types'
 import { currencyIdToContractInput } from 'wallet/src/features/dataApi/utils'
+import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
 import { CurrencyId } from 'wallet/src/utils/currencyId'
 
 /**

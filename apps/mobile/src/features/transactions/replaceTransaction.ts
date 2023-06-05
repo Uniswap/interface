@@ -11,10 +11,10 @@ import {
   createTransactionId,
   getSerializableTransactionRequest,
 } from 'src/features/transactions/utils'
-import { selectAccounts } from 'src/features/wallet/selectors'
 import { call, put } from 'typed-redux-saga'
 import { logger } from 'wallet/src/features/logger/logger'
 import { getProvider, getSignerManager } from 'wallet/src/features/wallet/context'
+import { selectAccounts } from 'wallet/src/features/wallet/selectors'
 import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
 import { getValidAddress } from 'wallet/src/utils/addresses'
 

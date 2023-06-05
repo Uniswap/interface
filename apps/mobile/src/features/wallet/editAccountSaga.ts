@@ -2,15 +2,15 @@ import { Action } from '@reduxjs/toolkit'
 import { AllEffect, CallEffect, PutEffect, SelectEffect } from 'redux-saga/effects'
 import { appSelect } from 'src/app/hooks'
 import { getNotificationErrorAction } from 'src/features/notifications/utils'
-import { selectAccounts } from 'src/features/wallet/selectors'
-import {
-  editAccount as editInStore,
-  removeAccount as removeInStore,
-} from 'src/features/wallet/walletSlice'
 import { disconnectWCForAccount } from 'src/features/walletConnect/WalletConnect'
 import { all, call, put, SagaGenerator } from 'typed-redux-saga'
 import { logger } from 'wallet/src/features/logger/logger'
 import { Account, AccountType, BackupType } from 'wallet/src/features/wallet/accounts/types'
+import { selectAccounts } from 'wallet/src/features/wallet/selectors'
+import {
+  editAccount as editInStore,
+  removeAccount as removeInStore,
+} from 'wallet/src/features/wallet/slice'
 import { unique } from 'wallet/src/utils/array'
 import { createMonitoredSaga } from 'wallet/src/utils/saga'
 

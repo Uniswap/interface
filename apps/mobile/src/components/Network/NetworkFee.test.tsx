@@ -3,7 +3,7 @@ import { NetworkFee } from 'src/components/Network/NetworkFee'
 import { render } from 'src/test/test-utils'
 import { ChainId } from 'wallet/src/constants/chains'
 
-jest.mock('src/features/wallet/hooks', () => {
+jest.mock('wallet/src/features/wallet/hooks', () => {
   return {
     useActiveAccount: (): undefined => undefined,
   }

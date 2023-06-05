@@ -3,13 +3,13 @@ import { InteractionManager } from 'react-native'
 import { useAppSelector } from 'src/app/hooks'
 import { baseCurrencyIds } from 'src/components/TokenSelector/hooks'
 import { getTokensOrderByValues } from 'src/features/explore/utils'
-import { selectTokensOrderBy } from 'src/features/wallet/selectors'
 import {
   useExploreTokensTabLazyQuery,
   useTokenProjectsLazyQuery,
   useTopTokensLazyQuery,
 } from 'wallet/src/data/__generated__/types-and-hooks'
 import { currencyIdToContractInput } from 'wallet/src/features/dataApi/utils'
+import { selectTokensOrderBy } from 'wallet/src/features/wallet/selectors'
 
 /** Set of queries that should be preloaded, but can wait for idle time. */
 export function useLowPriorityPreloadedQueries(): void {

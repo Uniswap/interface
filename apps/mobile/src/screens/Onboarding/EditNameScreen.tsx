@@ -15,7 +15,6 @@ import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { ImportType } from 'src/features/onboarding/utils'
 import { ElementName } from 'src/features/telemetry/constants'
 import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
-import { usePendingAccounts } from 'src/features/wallet/hooks'
 import {
   PendingAccountActions,
   pendingAccountActions,
@@ -25,6 +24,7 @@ import { useAddBackButton } from 'src/utils/useAddBackButton'
 import PencilIcon from 'ui/src/assets/icons/pencil-detailed.svg'
 import { NICKNAME_MAX_LENGTH } from 'wallet/src/constants/accounts'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
+import { usePendingAccounts } from 'wallet/src/features/wallet/hooks'
 import { shortenAddress } from 'wallet/src/utils/addresses'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.EditName>

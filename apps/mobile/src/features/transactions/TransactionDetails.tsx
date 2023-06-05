@@ -12,11 +12,11 @@ import { getAlertColor } from 'src/components/modals/WarningModal/WarningModal'
 import { NetworkFee } from 'src/components/Network/NetworkFee'
 import { Text } from 'src/components/Text'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
-import { useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
 import AlertTriangle from 'ui/src/assets/icons/alert-triangle.svg'
 import AnglesMaximize from 'ui/src/assets/icons/angles-maximize.svg'
 import AnglesMinimize from 'ui/src/assets/icons/angles-minimize.svg'
 import { ChainId } from 'wallet/src/constants/chains'
+import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
 const ALERT_ICONS_SIZE = 18
 

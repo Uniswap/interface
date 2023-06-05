@@ -46,7 +46,6 @@ import {
   updateExactAmountUSD,
 } from 'src/features/transactions/transactionState/transactionState'
 import { BaseDerivedInfo } from 'src/features/transactions/transactionState/types'
-import { useActiveAccount, useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
 import { toStringish } from 'src/utils/number'
 import ERC20_ABI from 'wallet/src/abis/erc20.json'
 import { Erc20 } from 'wallet/src/abis/types'
@@ -58,6 +57,10 @@ import { GasSpeed } from 'wallet/src/features/gas/types'
 import { logger } from 'wallet/src/features/logger/logger'
 import { useOnChainCurrencyBalance } from 'wallet/src/features/portfolio/api'
 import { useContractManager, useProvider } from 'wallet/src/features/wallet/context'
+import {
+  useActiveAccount,
+  useActiveAccountAddressWithThrow,
+} from 'wallet/src/features/wallet/hooks'
 import { areAddressesEqual } from 'wallet/src/utils/addresses'
 import { buildCurrencyId } from 'wallet/src/utils/currencyId'
 import { formatCurrencyAmount, NumberType } from 'wallet/src/utils/format'

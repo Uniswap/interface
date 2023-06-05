@@ -11,12 +11,12 @@ import { openModal } from 'src/features/modals/modalSlice'
 import { pushNotification } from 'src/features/notifications/notificationSlice'
 import { AppNotificationType, CopyNotificationType } from 'src/features/notifications/types'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
-import { selectActiveAccountAddress } from 'src/features/wallet/selectors'
 import { Screens } from 'src/screens/Screens'
 import { setClipboard } from 'src/utils/clipboard'
 import { isDevBuild } from 'src/utils/version'
 import SettingsIcon from 'ui/src/assets/icons/settings.svg'
 import { iconSizes } from 'ui/src/theme/iconSizes'
+import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
 
 export function AccountHeader(): JSX.Element {
   const theme = useAppTheme()

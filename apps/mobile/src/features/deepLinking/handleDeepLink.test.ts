@@ -7,9 +7,9 @@ import {
 import { handleTransactionLink } from 'src/features/deepLinking/handleTransactionLink'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
-import { activateAccount } from 'src/features/wallet/walletSlice'
 import { account } from 'src/test/fixtures'
 import { logger } from 'wallet/src/features/logger/logger'
+import { activateAccount } from 'wallet/src/features/wallet/slice'
 
 const swapUrl = `https://uniswap.org/app?screen=swap&userAddress=${account.address}`
 const transactionUrl = `https://uniswap.org/app?screen=transaction&userAddress=${account.address}`

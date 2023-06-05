@@ -14,7 +14,6 @@ import {
 import { BaseDerivedInfo } from 'src/features/transactions/transactionState/types'
 import { transferTokenActions } from 'src/features/transactions/transfer/transferTokenSaga'
 import { TransferTokenParams } from 'src/features/transactions/transfer/useTransferTransactionRequest'
-import { useActiveAccount } from 'src/features/wallet/hooks'
 import { ChainId } from 'wallet/src/constants/chains'
 import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
 import {
@@ -22,6 +21,7 @@ import {
   useOnChainNativeCurrencyBalance,
 } from 'wallet/src/features/portfolio/api'
 import { useProvider } from 'wallet/src/features/wallet/context'
+import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
 import { buildCurrencyId } from 'wallet/src/utils/currencyId'
 import { tryParseExactAmount } from 'wallet/src/utils/tryParseAmount'
 

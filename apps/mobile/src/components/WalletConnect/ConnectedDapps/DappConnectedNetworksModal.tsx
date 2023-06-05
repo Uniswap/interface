@@ -12,7 +12,6 @@ import { DappHeaderIcon } from 'src/components/WalletConnect/DappHeaderIcon'
 import { pushNotification } from 'src/features/notifications/notificationSlice'
 import { AppNotificationType } from 'src/features/notifications/types'
 import { ModalName } from 'src/features/telemetry/constants'
-import { useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
 import { WalletConnectEvent } from 'src/features/walletConnect/saga'
 import {
   removeSession,
@@ -21,6 +20,7 @@ import {
 import { wcWeb3Wallet } from 'src/features/walletConnectV2/saga'
 import { CHAIN_INFO } from 'wallet/src/constants/chains'
 import { logger } from 'wallet/src/features/logger/logger'
+import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 import { ONE_SECOND_MS } from 'wallet/src/utils/time'
 interface DappConnectedNetworkModalProps {
   session: WalletConnectSessionV2

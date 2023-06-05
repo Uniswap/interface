@@ -1,11 +1,12 @@
 import { useNetInfo } from '@react-native-community/netinfo'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { useAppSelector, useAppTheme } from 'src/app/hooks'
+import { useAppSelector as useMobileAppSelector, useAppTheme } from 'src/app/hooks'
 import { TabsAwareBottomBanner } from 'src/components/banners/TabsAwareBottomBanner'
 import { selectSomeModalOpen } from 'src/features/modals/modalSlice'
-import { selectFinishedOnboarding } from 'src/features/wallet/selectors'
 import InfoCircle from 'ui/src/assets/icons/info-circle.svg'
+import { selectFinishedOnboarding } from 'wallet/src/features/wallet/selectors'
+import { useAppSelector as useRootAppSelector } from 'wallet/src/state'
 
 export function OfflineBanner(): JSX.Element | null {
   const { t } = useTranslation()
@@ -13,8 +14,8 @@ export function OfflineBanner(): JSX.Element | null {
   const netInfo = useNetInfo()
 
   // don't show the offline banner in onboarding
-  const finishedOnboarding = useAppSelector(selectFinishedOnboarding)
-  const isModalOpen = useAppSelector(selectSomeModalOpen)
+  const finishedOnboarding = useRootAppSelector(selectFinishedOnboarding)
+  const isModalOpen = useMobileAppSelector(selectSomeModalOpen)
 
   // Needs to explicity check for false since `netInfo.isConnected` may be null
   const showBanner = netInfo.isConnected === false && finishedOnboarding && !isModalOpen

@@ -28,13 +28,13 @@ import { MobileEventName } from 'src/features/telemetry/constants'
 import { LocalTransactionUpdater } from 'src/features/transactions/LocalTransactionUpdater'
 import { TransactionHistoryUpdater } from 'src/features/transactions/TransactionHistoryUpdater'
 import { useTrmPrefetch } from 'src/features/trm/api'
-import { useSignerAccounts } from 'src/features/wallet/hooks'
 import { DynamicThemeProvider } from 'src/styles/DynamicThemeProvider'
 import { useAppStateTrigger } from 'src/utils/useAppStateTrigger'
 import { getSentryEnvironment, getStatsigEnvironmentTier } from 'src/utils/version'
 import { StatsigProvider } from 'statsig-react-native'
 import { config } from 'wallet/src/config'
 import { WalletContextProvider } from 'wallet/src/features/wallet/context'
+import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
 
 // Keep the splash screen visible while we fetch resources until one of our landing pages loads
 SplashScreen.preventAutoHideAsync()

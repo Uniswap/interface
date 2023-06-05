@@ -14,10 +14,10 @@ import { APP_STORE_LINK } from 'src/constants/urls'
 import { DYNAMIC_CONFIGS } from 'src/features/experiments/constants'
 import { UpgradeStatus } from 'src/features/forceUpgrade/types'
 import { ModalName } from 'src/features/telemetry/constants'
-import { useNonPendingSignerAccounts } from 'src/features/wallet/hooks'
 import { openUri } from 'src/utils/linking'
 import { Statsig } from 'statsig-react-native'
 import { SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
+import { useNonPendingSignerAccounts } from 'wallet/src/features/wallet/hooks'
 
 export function ForceUpgradeModal(): JSX.Element {
   const { t } = useTranslation()

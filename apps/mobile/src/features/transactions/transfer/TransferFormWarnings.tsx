@@ -8,12 +8,12 @@ import { ModalName } from 'src/features/telemetry/constants'
 import { useAllTransactionsBetweenAddresses } from 'src/features/transactions/hooks'
 import { useIsSmartContractAddress } from 'src/features/transactions/transfer/hooks'
 import { TransferSpeedbump } from 'src/features/transactions/transfer/TransferTokenForm'
+import { useDisplayName } from 'src/features/wallet/hooks'
+import { ChainId } from 'wallet/src/constants/chains'
 import {
   useActiveAccountAddressWithThrow,
-  useDisplayName,
   useSignerAccounts,
-} from 'src/features/wallet/hooks'
-import { ChainId } from 'wallet/src/constants/chains'
+} from 'wallet/src/features/wallet/hooks'
 
 interface TransferFormWarningProps {
   recipient?: string

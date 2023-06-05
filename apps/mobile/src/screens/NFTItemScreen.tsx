@@ -27,7 +27,6 @@ import { NFTTraitList } from 'src/features/nfts/item/traits'
 import { pushNotification } from 'src/features/notifications/notificationSlice'
 import { AppNotificationType, CopyNotificationType } from 'src/features/notifications/types'
 import { ModalName } from 'src/features/telemetry/constants'
-import { useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
 import { ExploreModalAwareView } from 'src/screens/ModalAwareView'
 import { Screens } from 'src/screens/Screens'
 import { darkTheme } from 'src/styles/theme'
@@ -47,6 +46,7 @@ import {
   NftItemScreenQuery,
   useNftItemScreenQuery,
 } from 'wallet/src/data/__generated__/types-and-hooks'
+import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 import { areAddressesEqual } from 'wallet/src/utils/addresses'
 
 const MAX_NFT_IMAGE_HEIGHT = 375

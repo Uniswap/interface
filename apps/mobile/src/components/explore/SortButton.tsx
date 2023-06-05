@@ -12,9 +12,9 @@ import {
 } from 'src/features/explore/utils'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
-import { setTokensOrderBy } from 'src/features/wallet/walletSlice'
 import { TokenSortableField } from 'wallet/src/data/__generated__/types-and-hooks'
 import { logger } from 'wallet/src/features/logger/logger'
+import { setTokensOrderBy } from 'wallet/src/features/wallet/slice'
 import { ClientTokensOrderBy, TokensOrderBy } from 'wallet/src/features/wallet/types'
 interface FilterGroupProps {
   orderBy: TokensOrderBy

@@ -4,8 +4,8 @@ import {
   DappRequestType,
 } from 'src/background/features/dappRequests/dappRequestTypes'
 import { addRequest } from 'src/background/features/dappRequests/saga'
+import { isOnboardedSelector } from 'src/background/utils/onboardingUtils'
 import { PortName } from 'src/types'
-import { isOnboardedSelector } from 'wallet/src/features/wallet/selectors'
 import { initializeStore, WebState } from './store'
 
 // Since we are in a service worker, this is not persistent and this will be

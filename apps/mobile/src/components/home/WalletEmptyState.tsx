@@ -9,7 +9,6 @@ import { Text } from 'src/components/Text'
 import { UNISWAP_HELP_CENTER_WALLET_URL } from 'src/constants/urls'
 import { openModal } from 'src/features/modals/modalSlice'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
-import { useActiveAccount } from 'src/features/wallet/hooks'
 import { opacify } from 'src/utils/colors'
 import { openUri } from 'src/utils/linking'
 import BookIcon from 'ui/src/assets/icons/book.svg'
@@ -19,6 +18,7 @@ import ScanIcon from 'ui/src/assets/icons/scan-receive.svg'
 import { colors } from 'ui/src/theme/color'
 import { iconSizes } from 'ui/src/theme/iconSizes'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
+import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
 
 interface ActionCardItem {
   title: string

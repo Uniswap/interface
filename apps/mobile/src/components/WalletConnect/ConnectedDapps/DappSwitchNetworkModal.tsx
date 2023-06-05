@@ -8,13 +8,13 @@ import { ActionSheetModal } from 'src/components/modals/ActionSheetModal'
 import { useNetworkOptions } from 'src/components/Network/hooks'
 import { Text } from 'src/components/Text'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
-import { useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
 import { changeChainId, disconnectFromApp } from 'src/features/walletConnect/WalletConnect'
 import {
   removeSession,
   WalletConnectSessionV1,
 } from 'src/features/walletConnect/walletConnectSlice'
 import { ChainId } from 'wallet/src/constants/chains'
+import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 import { toSupportedChainId } from 'wallet/src/utils/chainId'
 
 interface DappSwitchNetworkModalProps {

@@ -28,11 +28,11 @@ import { openModal } from 'src/features/modals/modalSlice'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { prepareSwapFormState } from 'src/features/transactions/swap/utils'
-import { useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
 import { Theme } from 'src/styles/theme'
 import SearchIcon from 'ui/src/assets/icons/search.svg'
 import { useHighestBalanceNativeCurrencyId } from 'wallet/src/features/dataApi/balances'
+import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
 export const NAV_BAR_HEIGHT_XS = 52
 export const NAV_BAR_HEIGHT_SM = 72

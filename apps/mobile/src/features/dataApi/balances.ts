@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
-import { useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
 import { usePortfolioBalances } from 'wallet/src/features/dataApi/balances'
 import { PortfolioBalance } from 'wallet/src/features/dataApi/types'
+import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 import { CurrencyId } from 'wallet/src/utils/currencyId'
 
 /** Helper hook to retrieve balances for a set of currencies for the active account. */

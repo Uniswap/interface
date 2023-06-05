@@ -1,10 +1,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { Ether } from '@uniswap/sdk-core'
 import { getNFTAssetKey } from 'src/features/nfts/utils'
-import { removeAccount } from 'src/features/wallet/walletSlice'
 import { ChainId } from 'wallet/src/constants/chains'
 import { WBTC } from 'wallet/src/constants/tokens'
 import { logger } from 'wallet/src/features/logger/logger'
+import { removeAccount } from 'wallet/src/features/wallet/slice'
 import { CurrencyId, currencyId as idFromCurrency } from 'wallet/src/utils/currencyId'
 
 type NftData = {

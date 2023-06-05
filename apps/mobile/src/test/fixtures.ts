@@ -16,7 +16,6 @@ import {
   TransactionStatus,
   TransactionType,
 } from 'src/features/transactions/types'
-import { initialWalletState } from 'src/features/wallet/walletSlice'
 import { WalletConnectEvent } from 'src/features/walletConnect/saga'
 import ERC20_ABI from 'wallet/src/abis/erc20.json'
 import { Erc20, Weth } from 'wallet/src/abis/types'
@@ -31,6 +30,7 @@ import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
 import { Account, AccountType, BackupType } from 'wallet/src/features/wallet/accounts/types'
 import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
+import { initialWalletState } from 'wallet/src/features/wallet/slice'
 import { SAMPLE_SEED_ADDRESS_1, SAMPLE_SEED_ADDRESS_2 } from 'wallet/src/test/fixtures'
 import { currencyId } from 'wallet/src/utils/currencyId'
 

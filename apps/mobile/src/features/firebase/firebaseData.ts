@@ -13,13 +13,16 @@ import {
   editAccountActions,
   TogglePushNotificationParams,
 } from 'src/features/wallet/editAccountSaga'
-import { makeSelectAccountNotificationSetting, selectAccounts } from 'src/features/wallet/selectors'
-import { editAccount } from 'src/features/wallet/walletSlice'
 import { getKeys } from 'src/utils/objects'
 import { call, put, select, takeEvery } from 'typed-redux-saga'
 import { selectTestnetsAreEnabled } from 'wallet/src/features/chains/slice'
 import { logger } from 'wallet/src/features/logger/logger'
 import { Account, AccountType } from 'wallet/src/features/wallet/accounts/types'
+import {
+  makeSelectAccountNotificationSetting,
+  selectAccounts,
+} from 'wallet/src/features/wallet/selectors'
+import { editAccount } from 'wallet/src/features/wallet/slice'
 
 interface AccountMetadata {
   name?: string

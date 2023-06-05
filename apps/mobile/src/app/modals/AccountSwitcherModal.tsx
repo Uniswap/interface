@@ -20,21 +20,25 @@ import { closeModal, selectModalState } from 'src/features/modals/modalSlice'
 import { ImportType, OnboardingEntryPoint } from 'src/features/onboarding/utils'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { createAccountActions } from 'src/features/wallet/createAccountSaga'
-import { useAccounts, useActiveAccount, useNativeAccountExists } from 'src/features/wallet/hooks'
 import {
   PendingAccountActions,
   pendingAccountActions,
 } from 'src/features/wallet/pendingAccountsSaga'
-import {
-  activateAccount,
-  removeAccounts,
-  setFinishedOnboarding,
-} from 'src/features/wallet/walletSlice'
 import { OnboardingScreens, Screens } from 'src/screens/Screens'
 import { dimensions } from 'src/styles/sizing'
 import { openSettings } from 'src/utils/linking'
 import PlusIcon from 'ui/src/assets/icons/plus.svg'
 import { AccountType, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
+import {
+  useAccounts,
+  useActiveAccount,
+  useNativeAccountExists,
+} from 'wallet/src/features/wallet/hooks'
+import {
+  activateAccount,
+  removeAccounts,
+  setFinishedOnboarding,
+} from 'wallet/src/features/wallet/slice'
 
 // This fast-forwards user to the same app state as if
 // they have pressed "Get Started" on Landing and should now see import method view
