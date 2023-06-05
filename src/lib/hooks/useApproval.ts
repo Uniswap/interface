@@ -44,7 +44,7 @@ function useApprovalStateForSpender(
         ? ApprovalState.PENDING
         : ApprovalState.NOT_APPROVED
       : ApprovalState.APPROVED
-  }, [amountToApprove, isRbPool, pendingApproval, spender])
+  }, [amountToApprove, isRbPool, pendingApproval, spender, tokenAllowance])
 }
 
 export function useApproval(

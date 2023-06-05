@@ -83,11 +83,6 @@ export function SmartPoolSearch({
     }
   }, [isAddressSearch])
 
-  //const defaultTokens = useAllTokens()
-  /*const filteredTokens: Token[] = useMemo(() => {
-    return Object.values(defaultTokens).filter(getTokenFilter(debouncedQuery))
-  }, [defaultTokens, debouncedQuery])
-  */
   const filteredTokens = operatedPools
 
   const [balances, balancesAreLoading] = useAllTokenBalances()
@@ -132,31 +127,6 @@ export function SmartPoolSearch({
     if (isOpen) setSearchQuery('')
   }, [isOpen])
 
-  // manage focus on modal show
-  /*const inputRef = useRef<HTMLInputElement>()
-  const handleInput = useCallback((event: ChangeEvent<HTMLInputElement>) => {
-    const input = event.target.value
-    const checksummedInput = isAddress(input)
-    setSearchQuery(checksummedInput || input)
-    fixedList.current?.scrollTo(0)
-  }, [])
-
-  const handleEnter = useCallback(
-    (e: KeyboardEvent<HTMLInputElement>) => {
-      if (e.key === 'Enter') {
-        if (searchCurrencies.length > 0) {
-          if (
-            searchCurrencies[0].symbol?.toLowerCase() === debouncedQuery.trim().toLowerCase() ||
-            searchCurrencies.length === 1
-          ) {
-            handleCurrencySelect(searchCurrencies[0])
-          }
-        }
-      }
-    },
-    [debouncedQuery, searchCurrencies, handleCurrencySelect]
-  )*/
-
   // menu ui
   const [open, toggle] = useToggle(false)
   const node = useRef<HTMLDivElement>()
@@ -177,7 +147,11 @@ export function SmartPoolSearch({
 
   return (
     <ContentWrapper>
-      <Trace name={InterfaceEventName.TOKEN_SELECTOR_OPENED} modal={InterfaceModalName.TOKEN_SELECTOR} shouldLogImpression>
+      <Trace
+        name={InterfaceEventName.TOKEN_SELECTOR_OPENED}
+        modal={InterfaceModalName.TOKEN_SELECTOR}
+        shouldLogImpression
+      >
         <PaddedColumn gap="16px">
           <RowBetween>
             <Text fontWeight={500} fontSize={16}>
