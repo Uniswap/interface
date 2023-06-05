@@ -314,7 +314,7 @@ export function BorrowDetailsDropdown({ trade, tradeState, syncing, loading, all
                       content={
                         <ResponsiveTooltipContainer origin="top right" style={{ padding: '0' }}>
                           <Card padding="12px">
-                            <AdvancedBorrowSwapDetails borrowTrade={trade} tradeState={tradeState} syncing={syncing} />
+                            <AdvancedBorrowSwapDetails borrowTrade={trade} syncing={syncing} />
                           </Card>
                         </ResponsiveTooltipContainer>
                       }
@@ -353,7 +353,7 @@ export function BorrowDetailsDropdown({ trade, tradeState, syncing, loading, all
         <AnimatedDropdown open={showDetails}>
           <AutoColumn gap="sm" style={{ padding: '0', paddingBottom: '8px' }}>
             <StyledCard>
-              <AdvancedBorrowSwapDetails borrowTrade={trade} tradeState={tradeState} syncing={syncing} />
+              <AdvancedBorrowSwapDetails borrowTrade={trade} syncing={syncing} />
             </StyledCard>
           </AutoColumn>
         </AnimatedDropdown>

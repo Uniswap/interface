@@ -309,10 +309,9 @@ export default function Swap({ className }: { className?: string }) {
 
   // HACK
   // const addToken = useAddUserToken()
-  // const fETH = useToken(feth)
-  // const fUSDC = useToken(fusdc)
+  const fETH = useToken(feth)
+  const fUSDC = useToken(fusdc)
 
-  // fake tokens
   // useEffect(() => {
   //   if (fETH && fUSDC) {
   //     if (nonce === 0 && chainId === 80001) {
@@ -340,6 +339,7 @@ export default function Swap({ className }: { className?: string }) {
 
   // dismiss warning if all imported tokens are in active lists
   const defaultTokens = useDefaultActiveTokens()
+
   const importTokensNotInDefault = useMemo(
     () =>
       urlLoadedTokens &&
@@ -421,29 +421,36 @@ export default function Swap({ className }: { className?: string }) {
   )
   
   const [approveInputAmount, approveOutputAmount] = useMemo(() => {
-    if (inputCurrency && parsedAmounts[Field.INPUT] && outputCurrency && pool) {
+    if (inputCurrency 
+      && parsedAmounts[Field.INPUT] 
+      && outputCurrency 
+      && pool?.token0Price 
+      && pool?.token1Price 
+      && ltv && ltv !== ""
+      ) {
       const inputIsToken0 = inputCurrency.wrapped.sortsBefore(outputCurrency.wrapped)
       const price = inputIsToken0 ? pool.token0Price.toFixed(18) : pool.token1Price.toFixed(18)
       return [
         CurrencyAmount.fromRawAmount(
           inputCurrency,
-          new BN(parsedAmounts[Field.INPUT]?.toExact() ?? "").multipliedBy(0.002).shiftedBy(18).toFixed(0)
+          new BN(parsedAmounts[Field.INPUT]?.toExact() ?? 0).multipliedBy(0.002).shiftedBy(18).toFixed(0)
         ),
         CurrencyAmount.fromRawAmount(
           outputCurrency,
-          new BN(parsedAmounts[Field.INPUT]?.toExact() ?? "").times(ltv ?? "0").times(price).shiftedBy(18).toFixed(0)
+          new BN(parsedAmounts[Field.INPUT]?.toExact() ?? 0).times(ltv ?? "0").times(price).shiftedBy(18).toFixed(0)
         )
       ]
     }
     else {
       return [undefined, undefined]
     }
-  }, [inputCurrency, parsedAmounts[Field.INPUT], ltv])
+  }, [inputCurrency, parsedAmounts[Field.INPUT], ltv, pool, outputCurrency])
 
   const [leverageApprovalState, approveLeverageManager] = useApproveCallback(
     approveInputAmount,
     leverageManagerAddress ?? undefined
   )
+
   const {
     trade: leverageTrade,
     inputError,
@@ -492,6 +499,16 @@ export default function Swap({ className }: { className?: string }) {
   )
 
   const { onSwitchTokens, onCurrencySelection, onUserInput, onChangeRecipient, onLeverageFactorChange, onHideClosedLeveragePositions, onLeverageChange, onLeverageManagerAddress, onLTVChange, onBorrowManagerAddress } = useSwapActionHandlers()
+  
+  const [nonce, setNonce] = useState(0)
+  useEffect(() => {
+    if (fETH && fUSDC && nonce === 0 && chainId && account) {
+      onCurrencySelection(Field.INPUT, fUSDC)
+      onCurrencySelection(Field.OUTPUT, fETH)
+      setNonce(1)
+    }
+  }, [chainId, account, nonce])
+  
   const isValid = !swapInputError
   const dependentField: Field = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT
 
@@ -817,7 +834,7 @@ export default function Swap({ className }: { className?: string }) {
       setSwapState({ attemptingTxn: false, tradeToConfirm, showConfirm, swapErrorMessage: undefined, txHash: hash, showLeverageConfirm, showBorrowConfirm: false })
     })
       .catch((error: any) => {
-        console.log("leverageCreationError: ", error)
+        console.log("borrowCreationError: ", error)
         setSwapState({
           attemptingTxn: false,
           tradeToConfirm,
@@ -953,6 +970,8 @@ export default function Swap({ className }: { className?: string }) {
   // console.log("loggingSwap: ", typedValue, formattedAmounts[Field.INPUT], leverageFactor)
   const showBorrowInputApproval = borrowInputApprovalState !== ApprovalState.APPROVED
   const showBorrowOutputApproval = borrowOutputApprovalState !== ApprovalState.APPROVED
+
+  // console.log("borrowManagerAddress: ", borrowManagerAddress)
 
   return (
     <Trace page={InterfacePageName.SWAP_PAGE} shouldLogImpression>
@@ -1679,7 +1698,7 @@ export default function Swap({ className }: { className?: string }) {
                                 </>
                               ) : (
                                 <>
-                                  <div style={{ height: 20 }}>
+                                  {/* <div style={{ height: 20 }}>
                                     <MouseoverTooltip
                                       text={
                                         <Trans>
@@ -1690,7 +1709,7 @@ export default function Swap({ className }: { className?: string }) {
                                     >
                                       <Info size={20} />
                                     </MouseoverTooltip>
-                                  </div>
+                                  </div> */}
                                   <Trans>Approve use of {currencies[Field.INPUT]?.symbol}</Trans>
                                 </>
                               )}
@@ -1709,7 +1728,7 @@ export default function Swap({ className }: { className?: string }) {
                                 </>
                               ) : (
                                 <>
-                                  <div style={{ height: 20 }}>
+                                  {/* <div style={{ height: 20 }}>
                                     <MouseoverTooltip
                                       text={
                                         <Trans>
@@ -1720,7 +1739,7 @@ export default function Swap({ className }: { className?: string }) {
                                     >
                                       <Info size={20} />
                                     </MouseoverTooltip>
-                                  </div>
+                                  </div> */}
                                   <Trans>Approve use of {currencies[Field.OUTPUT]?.symbol}</Trans>
                                 </>
                               )}
@@ -1735,8 +1754,8 @@ export default function Swap({ className }: { className?: string }) {
                                 swapErrorMessage: undefined,
                                 showConfirm: false,
                                 txHash: undefined,
-                                showLeverageConfirm: true,
-                                showBorrowConfirm: false,
+                                showLeverageConfirm: false,
+                                showBorrowConfirm: true,
                               })
                             }}
                             id="borrow-button"

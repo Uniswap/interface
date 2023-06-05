@@ -310,7 +310,7 @@ export function BorrowConfirmModal({
 
   const modalHeader = useCallback(() => {
     return (
-      <BorrowModalHeader trade={borrowTrade}/>
+      <BorrowModalHeader trade={borrowTrade} inputCurrency={inputCurrency ?? undefined} outputCurrency={outputCurrency ?? undefined} recipient={recipient} />
     )
   }, [borrowTrade, allowedSlippage, recipient])
 
@@ -339,7 +339,7 @@ export function BorrowConfirmModal({
         <TransactionErrorContent onDismiss={onModalDismiss} message={errorMessage} />
       ) : (
         <ConfirmationModalContent
-          title={<Trans>Confirm {ltv}% Borrow Position</Trans>}
+          title={<Trans>Confirm {ltv}% LTV Borrow Position</Trans>}
           onDismiss={onModalDismiss}
           topContent={modalHeader}
           bottomContent={modalBottom}

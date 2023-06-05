@@ -142,7 +142,7 @@ export const PoolDataSection = ({
 		if (token0 && token1) {
 			// fetch data and process it
 			const fetch = async () => {
-				console.log("ABC", uniswapPoolAddress?.toLowerCase())
+				// console.log("ABC", uniswapPoolAddress?.toLowerCase())
 				try {
 					if (uniswapPoolAddress) {
 						const startTime = moment().subtract(1, 'days').unix()
@@ -213,7 +213,7 @@ export const PoolDataSection = ({
 						setUniswapToken0Price(Number(convertBNToStr(token0Price, 18)))
 					}
 				} catch (err) {
-					console.log("err: ", err)
+					// console.log("err: ", err)
 				}
 			}
 		}

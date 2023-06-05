@@ -14,6 +14,7 @@ import { defaultAbiCoder } from '@ethersproject/abi'
 import { getCreate2Address } from '@ethersproject/address'
 import { keccak256 } from '@ethersproject/solidity'
 import LeverageManagerData from "../perpspotContracts/LeverageManager.json"
+import BorrowManagerData from "../perpspotContracts/BorrowManager.json"
 import { BigNumber as BN } from "bignumber.js";
 
 import { arrayify } from 'ethers/lib/utils'
@@ -190,12 +191,12 @@ export function useAddBorrowPositionCallback(
   // }
 
   const collateralAmount = new BN(parsedAmount?.toExact() ?? 0).shiftedBy(decimals).toFixed(0)
-  const borrowManagerContract = new Contract(borrowManagerAddress, LeverageManagerData.abi, provider.getSigner())
+  const borrowManagerContract = new Contract(borrowManagerAddress, BorrowManagerData.abi, provider.getSigner())
 
   const formattedLTV = new BN(ltv ?? 0).shiftedBy(16).toFixed(0)
   // console.log("arguments: ", input, allowedSlippage.toFixed(6), slippage, borrowedAmount, isLong)
   return {callback: (): any => {
-    return borrowManagerContract?.addBorrowPosition(
+    return borrowManagerContract.addBorrowPosition(
       borrowBelow,
       collateralAmount,
       formattedLTV,

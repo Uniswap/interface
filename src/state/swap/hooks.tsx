@@ -330,7 +330,7 @@ export function useDerivedBorrowCreationInfo({ allowance: {input: inputAllowance
   useEffect(() => {
     simulate()
   }, [currencies, borrowManager, ltv, debouncedAmount, inputAllowance, outputAllowance])
-  // console.log("contractResult", pool, contractResult, initialPrice, debouncedAmount)
+  // console.log("borrowContractResult", contractResult)
   const trade: BorrowCreationDetails = useMemo(() => {
     if (
       tradeState === TradeState.VALID && 
@@ -345,7 +345,7 @@ export function useDerivedBorrowCreationInfo({ allowance: {input: inputAllowance
       // const expectedOutput = new BN(position.totalPosition.toString()).shiftedBy(-outputCurrency?.wrapped.decimals).toNumber()
       
       const borrowedAmount = new BN(position.totalDebtInput.toString()).shiftedBy(-inputCurrency?.wrapped.decimals).toNumber()
-      const unusedPremium = new BN((contractResult[0] as any).toString()).shiftedBy(-inputCurrency?.wrapped.decimals).toNumber()
+      const unusedPremium = new BN((contractResult[1] as any).toString()).shiftedBy(-inputCurrency?.wrapped.decimals).toNumber()
       const strikePrice = new BN(borrowedAmount).div(debouncedAmount.toExact()).toNumber()
       const quotedPremium = new BN((contractResult[2] as any)
         .toString()).shiftedBy(-inputCurrency?.wrapped.decimals).toNumber()

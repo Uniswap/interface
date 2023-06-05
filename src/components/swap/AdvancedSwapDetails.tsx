@@ -349,13 +349,14 @@ export function AddPremiumDetails({
   )
 }
 
-function ValueLabel({
+export function ValueLabel({
   label,
   description,
   value,
   syncing,
   symbolAppend,
-  hideInfoTooltips = false
+  hideInfoTooltips = false,
+  width=""
 }: {
   description: string,
   label: string,
@@ -363,6 +364,7 @@ function ValueLabel({
   syncing: boolean,
   symbolAppend?: string,
   hideInfoTooltips?: boolean
+  width?: string
 }) {
   const theme = useTheme()
   return (
@@ -385,10 +387,10 @@ function ValueLabel({
           <TextWithLoadingPlaceholder syncing={syncing} width={65}>
             <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
             <RowFixed>
-              <TruncatedText>
+              <TruncatedText width={width}>
                 {value
                   ? `${(value)}`
-                  : '-'}
+                  : '- '}
               </TruncatedText>
               {symbolAppend}
             </RowFixed>
@@ -584,13 +586,13 @@ export function AdvancedLeverageSwapDetails({
 
 export function AdvancedBorrowSwapDetails({
   borrowTrade,
-  tradeState,
   syncing = false,
 }: {
   borrowTrade?: BorrowCreationDetails,
-  tradeState?: TradeState,
   syncing: boolean,
 }) {
+
+  console.log("AdvancedBorrowSwapDetails", borrowTrade, syncing)
   const {
     [Field.INPUT]: { currencyId: inputCurrencyId },
     [Field.OUTPUT]: { currencyId: outputCurrencyId },
@@ -605,10 +607,11 @@ export function AdvancedBorrowSwapDetails({
       <AutoColumn gap="sm">
         <ValueLabel
           description="The borrowed amount you expect to receive at the current market price. You may receive less or more if the market price changes while your transaction is pending."
-          label="Expected Borrowed Amount"
+          label="Borrowed Amount"
           value={borrowTrade?.borrowedAmount}
           syncing={syncing}
           symbolAppend={outputCurrency?.symbol}
+          width={"100px"}
         />
         <Separator />
         <ValueLabel 
@@ -617,14 +620,16 @@ export function AdvancedBorrowSwapDetails({
           value={borrowTrade?.quotedPremium}
           syncing={syncing}
           symbolAppend={inputCurrency?.symbol}
+          width={"100px"}
         />
-        <ValueLabel 
-          description="The quoted premium you are expected to pay within 24hrs."
-          label="Returned Premium"
-          value={borrowTrade?.quotedPremium}
+        {/* <ValueLabel 
+          description="The remaining premium you are expected to pay within 24hrs."
+          label="Remaining Premium"
+          value={borrowTrade?.unusedPremium}
           syncing={syncing}
           symbolAppend={inputCurrency?.symbol}
-        />
+          width={"100px"}
+        /> */}
       </AutoColumn>
     </StyledCard>
   )

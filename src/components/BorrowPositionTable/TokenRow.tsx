@@ -653,9 +653,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
             <ClickableContent>
               <RowBetween>
                 <PositionInfo>
-                  <TruncatedTableText>
-                    {inputCurrencySymbol} {"<->"} {outputCurrencySymbol}
-                  </TruncatedTableText>
+                  {inputCurrencySymbol} {"<->"} {outputCurrencySymbol}
                 </PositionInfo>
               </RowBetween>
             </ClickableContent>
@@ -663,8 +661,10 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
           ltv={
             <Trans>
               <TruncatedTableText>
-                {(Number(ltv))} {outputCurrencySymbol}
-              </TruncatedTableText>
+                {(Number(ltv))}
+                </TruncatedTableText>
+                {outputCurrencySymbol}
+              
             </Trans>
           }
           borrowedAmount={

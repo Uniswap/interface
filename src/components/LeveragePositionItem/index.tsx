@@ -102,10 +102,6 @@ const RangeText = styled(ThemedText.Caption)`
   border-radius: 8px;
 `
 
-const ValueLabel = styled.div`
-
-`
-
 const FeeTierText = styled(ThemedText.UtilityBadge)`
   font-size: 10px !important;
   margin-left: 14px !important;
