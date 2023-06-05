@@ -3,10 +3,10 @@ import { RefObject, useEffect } from 'react'
 /**
  * Checks whether a given node is currently animating.
  *
- * @param {Animatable | Document} node - The node to check for ongoing animations.
- * @returns {boolean} True if the node is animating; false otherwise.
+ * @param node - The node to check for ongoing animations.
+ * @returns - true if the node is animating; false otherwise.
  */
-function isAnimating(node?: Animatable | Document) {
+function isAnimating(node?: Animatable | Document): boolean {
   return (node?.getAnimations?.().length ?? 0) > 0
 }
 
