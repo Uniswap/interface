@@ -188,14 +188,15 @@ function AccountDrawer() {
 
   const bind = useGesture({
     onDrag: (state) => {
-      if (
+      if (state.movement[1] < 0) {
+        setDragStartTop(false)
+      } else if (
         (state.movement[1] > 300 || (state.velocity > 3 && state.direction[1] > 0)) &&
         walletDrawerOpen &&
         dragStartTop
       ) {
         toggleWalletDrawer()
-      }
-      if (walletDrawerOpen && dragStartTop && state.movement[1] > 0) {
+      } else if (walletDrawerOpen && dragStartTop && state.movement[1] > 0) {
         setYPosition(state.movement[1])
       }
     },
