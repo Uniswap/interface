@@ -23,7 +23,7 @@ import {
   useTransactionHistoryUpdaterQuery,
   useTransactionListLazyQuery,
 } from 'wallet/src/data/__generated__/types-and-hooks'
-import { useAccounts } from 'wallet/src/features/wallet/hooks'
+import { useAccounts, useActiveAccountAddress } from 'wallet/src/features/wallet/hooks'
 import {
   makeSelectAccountHideSpamTokens,
   selectActiveAccountAddress,
@@ -36,27 +36,41 @@ import { ONE_SECOND_MS } from 'wallet/src/utils/time'
  * the notification status in redux.
  */
 export function TransactionHistoryUpdater(): JSX.Element | null {
-  const accounts = useAccounts()
-  const addresses = useMemo(() => {
-    return Object.keys(accounts)
-  }, [accounts])
+  const allAccounts = useAccounts()
 
-  const skip = addresses.length === 0
+  const activeAccountAddress = useActiveAccountAddress()
+  const nonActiveAccountAddresses = useMemo(() => {
+    return Object.keys(allAccounts).filter((address) => address !== activeAccountAddress)
+  }, [activeAccountAddress, allAccounts])
 
-  const { data } = useTransactionHistoryUpdaterQuery({
-    variables: { addresses },
-    pollInterval: PollingInterval.Fast,
+  // Poll at different intervals to reduce requests made for non active accounts.
+
+  const { data: activeAccountData } = useTransactionHistoryUpdaterQuery({
+    variables: { addresses: activeAccountAddress ?? [] },
+    pollInterval: PollingInterval.KindaFast,
     fetchPolicy: 'network-only', // Ensure latest data.
-    skip,
+    skip: !activeAccountAddress,
   })
 
-  if (skip || !data?.portfolios?.length) {
+  const { data: nonActiveAccountData } = useTransactionHistoryUpdaterQuery({
+    variables: { addresses: nonActiveAccountAddresses },
+    pollInterval: PollingInterval.Normal,
+    fetchPolicy: 'network-only', // Ensure latest data.
+    skip: nonActiveAccountAddresses.length === 0,
+  })
+
+  const combinedPortfoliosData = [
+    ...(activeAccountData?.portfolios ?? []),
+    ...(nonActiveAccountData?.portfolios ?? []),
+  ]
+
+  if (!combinedPortfoliosData.length) {
     return null
   }
 
   return (
     <>
-      {data.portfolios.map((portfolio) => {
+      {combinedPortfoliosData.map((portfolio) => {
         if (!portfolio?.ownerAddress || !portfolio?.assetActivities) return null
 
         return (
