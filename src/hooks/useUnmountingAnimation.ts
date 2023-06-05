@@ -19,10 +19,10 @@ function isAnimating(node?: Animatable | Document): boolean {
  *
  * After any of the animated elements have completed their animation, `node` is removed from its parent.
  *
- * @param {RefObject<HTMLElement>} node - The node to animate and remove.
- * @param {() => string} getAnimatingClass - A function that returns the CSS class to add to the animating elements.
- * @param {RefObject<HTMLElement>[]} animatedElements - Additional elements to animate.
- * @param {boolean} skip - Whether to skip the animation and remove the node immediately.
+ * @param node - The node to animate and remove.
+ * @param getAnimatingClass - A function that returns the CSS class to add to the animating elements.
+ * @param animatedElements - Additional elements to animate.
+ * @param skip - Whether to skip the animation and remove the node immediately.
  */
 export function useUnmountingAnimation(
   node: RefObject<HTMLElement>,
