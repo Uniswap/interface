@@ -2,7 +2,6 @@ import { TokenAddressMap, tokensToChainTokenMap } from 'lib/hooks/useTokenList/u
 import { useMemo } from 'react'
 import { useAppSelector } from 'state/hooks'
 
-import { POOLS_LIST } from '../../../constants/lists'
 import { AppState } from '../../types'
 
 type Mutable<T> = {
