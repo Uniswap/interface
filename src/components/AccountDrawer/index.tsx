@@ -6,6 +6,7 @@ import { atom } from 'jotai'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { ChevronsRight } from 'react-feather'
+import { useGesture } from 'react-use-gesture'
 import styled from 'styled-components/macro'
 import { BREAKPOINTS, ClickableStyle } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
@@ -183,42 +184,23 @@ function AccountDrawer() {
   }, [walletDrawerOpen, toggleWalletDrawer])
 
   const [yPosition, setYPosition] = useState(0)
-
-  // close on swipe down on mobile
-  useEffect(() => {
-    const touchStartHandler = (event: TouchEvent) => {
-      if (event.touches.length === 1) {
-        const touch = event.touches[0]
-        const startY = touch.clientY
-        const touchMoveHandler = (event: TouchEvent) => {
-          const touch = event.touches[0]
-          const deltaY = touch.clientY - startY
-          if (deltaY > 0) {
-            setYPosition(deltaY)
-          }
-        }
-        const touchEndHandler = (event: TouchEvent) => {
-          const touch = event.changedTouches[0]
-          const deltaY = touch.clientY - startY
-          if (walletDrawerOpen && deltaY > 100) {
-            toggleWalletDrawer()
-          } else {
-            setYPosition(0)
-          }
-          document.removeEventListener('touchmove', touchMoveHandler)
-          document.removeEventListener('touchend', touchEndHandler)
-        }
-        document.addEventListener('touchmove', touchMoveHandler)
-        document.addEventListener('touchend', touchEndHandler)
+  const bind = useGesture({
+    onDrag: (state) => {
+      if (
+        (state.movement[1] > 300 || (state.velocity > 3 && state.direction[1] > 0)) &&
+        walletDrawerOpen &&
+        scrollRef.current?.scrollTop === 0
+      ) {
+        toggleWalletDrawer()
       }
-    }
-
-    document.addEventListener('touchstart', touchStartHandler)
-
-    return () => {
-      document.removeEventListener('touchstart', touchStartHandler)
-    }
-  }, [walletDrawerOpen, toggleWalletDrawer])
+      if (walletDrawerOpen && scrollRef.current?.scrollTop === 0 && state.movement[1] > 0) {
+        setYPosition(state.movement[1])
+      }
+    },
+    onDragEnd: (state) => {
+      setYPosition(0)
+    },
+  })
 
   return (
     <Container>
@@ -238,6 +220,7 @@ function AccountDrawer() {
         open={walletDrawerOpen}
         {...(isMobile
           ? {
+              ...bind(),
               style: { transform: `translateY(${yPosition}px)` },
             }
           : {})}
