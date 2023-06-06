@@ -1,6 +1,6 @@
 import React, { PropsWithChildren } from 'react'
 import { Box } from 'src/components/layout/Box'
-import { Theme } from 'src/styles/theme'
+import { Theme } from 'ui/src/theme/restyle/theme'
 
 interface InsetProps {
   /** applies consistent padding to each side */

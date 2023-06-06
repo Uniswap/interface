@@ -6,8 +6,8 @@ import Markdown from 'react-native-markdown-display'
 import { useAppTheme } from 'src/app/hooks'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
-import { Theme } from 'src/styles/theme'
 import { openUri } from 'src/utils/linking'
+import { Theme } from 'ui/src/theme/restyle/theme'
 
 type LongTextProps = {
   initialDisplayedLines?: number

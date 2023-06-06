@@ -1,4 +1,9 @@
 {
   "extends": "tsconfig/ui.json",
-  "include": ["src"]
+  "include": [
+    "src"
+  ],
+  "exclude": [
+    "**/*.d.ts"
+  ]
 }

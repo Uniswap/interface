@@ -28,7 +28,7 @@ import {
   TransactionStatus,
   TransactionType,
 } from 'src/features/transactions/types'
-import { theme } from 'src/styles/theme'
+import { theme } from 'ui/src/theme/restyle/theme'
 import { ChainId } from 'wallet/src/constants/chains'
 import { EMPTY_ARRAY } from 'wallet/src/constants/misc'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'

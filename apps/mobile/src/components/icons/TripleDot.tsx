@@ -1,6 +1,6 @@
 import React, { memo } from 'react'
 import { Box, Flex } from 'src/components/layout'
-import { Theme } from 'src/styles/theme'
+import { Theme } from 'ui/src/theme/restyle/theme'
 
 type Props = {
   size?: number

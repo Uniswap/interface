@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react'
 import { TAB_BAR_HEIGHT, TAB_VIEW_SCROLL_THROTTLE } from 'src/components/layout/TabHelpers'
-import { dimensions } from 'src/styles/sizing'
+import { dimensions } from 'ui/src/theme/restyle/sizing'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
 
 export function useAdaptiveFooterHeight({ headerHeight }: { headerHeight?: number }): {

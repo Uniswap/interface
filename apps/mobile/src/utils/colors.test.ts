@@ -1,4 +1,3 @@
-import { theme } from 'src/styles/theme'
 import {
   adjustColorVariant,
   AdjustmentType,
@@ -7,6 +6,7 @@ import {
   hexToRGB,
   opacify,
 } from 'src/utils/colors'
+import { theme } from 'ui/src/theme/restyle/theme'
 
 it('returns an hex color with opacity', () => {
   expect(opacify(10, '#000000')).toEqual('#0000001a')

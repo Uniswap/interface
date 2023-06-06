@@ -19,7 +19,7 @@ import {
 } from '@shopify/restyle'
 import React, { forwardRef } from 'react'
 import { TextInput as TextInputBase, TextInputProps as BaseTextInputProps } from 'react-native'
-import { Theme } from 'src/styles/theme'
+import { Theme } from 'ui/src/theme/restyle/theme'
 
 const restyleFunctions = [
   layout,

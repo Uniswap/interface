@@ -25,9 +25,9 @@ import {
   pendingAccountActions,
 } from 'src/features/wallet/pendingAccountsSaga'
 import { OnboardingScreens, Screens } from 'src/screens/Screens'
-import { dimensions } from 'src/styles/sizing'
 import { openSettings } from 'src/utils/linking'
 import PlusIcon from 'ui/src/assets/icons/plus.svg'
+import { dimensions } from 'ui/src/theme/restyle/sizing'
 import { AccountType, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
 import {
   useAccounts,

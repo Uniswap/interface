@@ -7,7 +7,7 @@ import { CarouselContext } from 'src/components/carousel/Carousel'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { OnboardingScreens } from 'src/screens/Screens'
-import { dimensions } from 'src/styles/sizing'
+import { dimensions } from 'ui/src/theme/restyle/sizing'
 
 const { fullWidth } = dimensions
 

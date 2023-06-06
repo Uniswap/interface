@@ -1,7 +1,7 @@
 import React from 'react'
 import { useAppTheme } from 'src/app/hooks'
 import { Box, BoxProps } from 'src/components/layout/Box'
-import { Theme } from 'src/styles/theme'
+import { Theme } from 'ui/src/theme/restyle/theme'
 
 export type SpacerProps = BoxProps & {
   x?: keyof Theme['spacing']

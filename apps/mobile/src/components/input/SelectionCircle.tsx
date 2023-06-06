@@ -1,6 +1,6 @@
 import React from 'react'
 import { Box, Flex } from 'src/components/layout'
-import { Theme, theme } from 'src/styles/theme'
+import { Theme, theme } from 'ui/src/theme/restyle/theme'
 
 interface SelectionCircleProps {
   selected: boolean

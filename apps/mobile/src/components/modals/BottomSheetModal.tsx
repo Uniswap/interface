@@ -16,8 +16,8 @@ import { Trace } from 'src/components/telemetry/Trace'
 import { useIsDarkMode } from 'src/features/appearance/hooks'
 import { ModalName } from 'src/features/telemetry/constants'
 import { TelemetryTraceProps } from 'src/features/telemetry/types'
-import { dimensions } from 'src/styles/sizing'
-import { theme as FixedTheme } from 'src/styles/theme'
+import { dimensions } from 'ui/src/theme/restyle/sizing'
+import { theme as FixedTheme } from 'ui/src/theme/restyle/theme'
 import { spacing } from 'ui/src/theme/spacing'
 
 type Props = PropsWithChildren<{

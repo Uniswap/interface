@@ -1,7 +1,7 @@
 import { createBox } from '@shopify/restyle'
 import { ComponentProps } from 'react'
 import Animated from 'react-native-reanimated'
-import { Theme } from 'src/styles/theme'
+import { Theme } from 'ui/src/theme/restyle/theme'
 
 export type BoxProps = ComponentProps<typeof Box>
 export const Box = createBox<Theme>()

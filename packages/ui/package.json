@@ -29,7 +29,6 @@
   "module:jsx": "src",
   "private": true,
   "scripts": {
-    "build": "tamagui-build",
     "lint": "eslint src",
     "lint:fix": "eslint src --fix",
     "typecheck": "tsc -b",

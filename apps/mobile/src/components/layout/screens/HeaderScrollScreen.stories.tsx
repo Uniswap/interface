@@ -3,8 +3,8 @@ import React from 'react'
 import { Box, Flex } from 'src/components/layout/index'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
 import { Text } from 'src/components/Text'
-import { theme } from 'src/styles/theme'
 import HeartIcon from 'ui/src/assets/icons/heart.svg'
+import { theme } from 'ui/src/theme/restyle/theme'
 
 const CenterElement = <Text variant="headlineLarge">Screen Title</Text>
 

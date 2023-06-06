@@ -4,10 +4,10 @@ import { useEffect, useState } from 'react'
 import { AccessibilityInfo } from 'react-native'
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
 import { SelectEffect } from 'redux-saga/effects'
-import type { Theme } from 'src/styles/theme'
+import type { AppDispatch } from 'src/app/store'
 import { SagaGenerator, select } from 'typed-redux-saga'
+import type { Theme } from 'ui/src/theme/restyle/theme'
 import type { MobileState } from './reducer'
-import type { AppDispatch } from './store'
 
 // Use throughout the app instead of plain `useDispatch` and `useSelector`
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

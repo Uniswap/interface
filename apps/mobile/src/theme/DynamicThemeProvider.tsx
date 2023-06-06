@@ -3,9 +3,9 @@ import React, { PropsWithChildren, useCallback, useEffect, useMemo, useRef, useS
 import { Appearance, ColorSchemeName } from 'react-native'
 import { useCurrentAppearanceSetting } from 'src/features/appearance/hooks'
 import { AppearanceSettingType } from 'src/features/appearance/slice'
+import { darkTheme, theme as lightTheme, Theme } from 'ui/src/theme/restyle/theme'
 import { selectUserPalette } from 'wallet/src/features/wallet/selectors'
 import { useAppSelector } from 'wallet/src/state'
-import { darkTheme, theme as lightTheme, Theme } from './theme'
 
 const COLOR_SCHEME_FLICKER_DELAY_MS = 250
 

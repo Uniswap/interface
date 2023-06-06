@@ -7,8 +7,8 @@ import { TripleDot } from 'src/components/icons/TripleDot'
 import { Box } from 'src/components/layout'
 import { Flex } from 'src/components/layout/Flex'
 import { NFTCollectionData } from 'src/features/nfts/collection/NFTCollectionHeader'
-import { theme as FixedTheme, Theme } from 'src/styles/theme'
 import { getTwitterLink, getUniswapCollectionUrl, openUri } from 'src/utils/linking'
+import { theme as FixedTheme, Theme } from 'ui/src/theme/restyle/theme'
 import { logger } from 'wallet/src/features/logger/logger'
 
 type MenuOption = {

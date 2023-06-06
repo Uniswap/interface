@@ -19,11 +19,11 @@ import {
   pendingAccountActions,
 } from 'src/features/wallet/pendingAccountsSaga'
 import { OnboardingScreens } from 'src/screens/Screens'
-import { Theme } from 'src/styles/theme'
 import { openSettings } from 'src/utils/linking'
 import { useAddBackButton } from 'src/utils/useAddBackButton'
 import EyeIcon from 'ui/src/assets/icons/eye.svg'
 import ImportIcon from 'ui/src/assets/icons/paper-stack.svg'
+import { Theme } from 'ui/src/theme/restyle/theme'
 
 interface ImportMethodOption {
   title: (t: TFunction) => string

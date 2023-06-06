@@ -11,9 +11,9 @@ import { pushNotification } from 'src/features/notifications/notificationSlice'
 import { AppNotificationType, CopyNotificationType } from 'src/features/notifications/types'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { TransactionDetails, TransactionType } from 'src/features/transactions/types'
-import { Theme } from 'src/styles/theme'
 import { setClipboard } from 'src/utils/clipboard'
 import { openMoonpayHelpLink, openUniswapHelpLink } from 'src/utils/linking'
+import { Theme } from 'ui/src/theme/restyle/theme'
 
 function renderOptionItem(
   label: string,

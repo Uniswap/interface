@@ -21,12 +21,12 @@ import {
   pendingAccountActions,
 } from 'src/features/wallet/pendingAccountsSaga'
 import { OnboardingScreens } from 'src/screens/Screens'
-import { Theme } from 'src/styles/theme'
 import { openSettings } from 'src/utils/linking'
 import { useAddBackButton } from 'src/utils/useAddBackButton'
 import ImportIcon from 'ui/src/assets/icons/arrow-rightwards-down.svg'
 import EyeIcon from 'ui/src/assets/icons/eye.svg'
 import SeedPhraseIcon from 'ui/src/assets/icons/pencil.svg'
+import { Theme } from 'ui/src/theme/restyle/theme'
 
 interface ImportMethodOption {
   title: (t: TFunction) => string

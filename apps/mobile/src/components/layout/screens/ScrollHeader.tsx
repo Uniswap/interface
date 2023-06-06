@@ -11,7 +11,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { AnimatedBox, Box, Flex } from 'src/components/layout'
 import { WithScrollToTop } from 'src/components/layout/screens/WithScrollToTop'
-import { Theme, theme } from 'src/styles/theme'
+import { Theme, theme } from 'ui/src/theme/restyle/theme'
 import { zIndices } from 'ui/src/theme/zIndices'
 
 type ScrollHeaderProps = {

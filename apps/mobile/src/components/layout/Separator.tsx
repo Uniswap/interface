@@ -1,7 +1,7 @@
 import { SpacingShorthandProps } from '@shopify/restyle'
 import React from 'react'
 import { Box } from 'src/components/layout'
-import { Theme } from 'src/styles/theme'
+import { Theme } from 'ui/src/theme/restyle/theme'
 
 type SeparatorProps = {
   color?: keyof Theme['colors']

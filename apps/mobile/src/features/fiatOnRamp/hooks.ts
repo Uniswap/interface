@@ -18,7 +18,7 @@ import {
   TransactionType,
 } from 'src/features/transactions/types'
 import { createTransactionId } from 'src/features/transactions/utils'
-import { Theme } from 'src/styles/theme'
+import { Theme } from 'ui/src/theme/restyle/theme'
 import { ChainId } from 'wallet/src/constants/chains'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 import { useDebounce } from 'wallet/src/utils/timing'

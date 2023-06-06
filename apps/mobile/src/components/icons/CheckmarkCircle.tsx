@@ -8,8 +8,8 @@ import {
 import React, { memo } from 'react'
 import { useAppTheme } from 'src/app/hooks'
 import { Box } from 'src/components/layout/Box'
-import { Theme } from 'src/styles/theme'
 import Checkmark from 'ui/src/assets/icons/checkmark.svg'
+import { Theme } from 'ui/src/theme/restyle/theme'
 
 type Props = {
   size: number

@@ -11,9 +11,9 @@ import { Text } from 'src/components/Text'
 import { useIsDarkMode } from 'src/features/appearance/hooks'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
-import { dimensions } from 'src/styles/sizing'
 import SearchIcon from 'ui/src/assets/icons/search.svg'
 import X from 'ui/src/assets/icons/x.svg'
+import { dimensions } from 'ui/src/theme/restyle/sizing'
 
 export const springConfig = {
   stiffness: 1000,

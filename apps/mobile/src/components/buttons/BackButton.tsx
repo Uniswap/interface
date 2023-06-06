@@ -4,7 +4,7 @@ import React from 'react'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { BackButtonView } from 'src/components/layout/BackButtonView'
 import { ElementName } from 'src/features/telemetry/constants'
-import { Theme } from 'src/styles/theme'
+import { Theme } from 'ui/src/theme/restyle/theme'
 
 type Props = {
   size?: number

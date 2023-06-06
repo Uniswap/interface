@@ -29,7 +29,6 @@ import { AppNotificationType, CopyNotificationType } from 'src/features/notifica
 import { ModalName } from 'src/features/telemetry/constants'
 import { ExploreModalAwareView } from 'src/screens/ModalAwareView'
 import { Screens } from 'src/screens/Screens'
-import { darkTheme } from 'src/styles/theme'
 import { setClipboardImage } from 'src/utils/clipboard'
 import {
   MIN_COLOR_CONTRAST_THRESHOLD,
@@ -40,6 +39,7 @@ import EllipsisIcon from 'ui/src/assets/icons/ellipsis.svg'
 import ShareIcon from 'ui/src/assets/icons/share.svg'
 import { colorsDark } from 'ui/src/theme/color'
 import { iconSizes } from 'ui/src/theme/iconSizes'
+import { darkTheme } from 'ui/src/theme/restyle/theme'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import {
   NftActivityType,
