@@ -10,8 +10,6 @@ interface TimestampedAmount {
   currency?: string
 }
 
-const margin = { top: 100, bottom: 48, crosshair: 72 }
-const timeOptionsHeight = 44
 const DATA_EMPTY = { value: 0, timestamp: 0 }
 
 function getPriceBounds(pricePoints: TimestampedAmount[]): [number, number] {
@@ -25,11 +23,11 @@ interface ActivityGraphProps {
   width: number
   height: number
   prices?: TimestampedAmount[]
+  margin?: { top: number; bottom: number }
 }
 
-export function ActivityGraph({ width, height, prices }: ActivityGraphProps) {
-  const graphHeight = height - timeOptionsHeight > 0 ? height - timeOptionsHeight : 0
-  const graphInnerHeight = graphHeight - margin.top - margin.bottom > 0 ? graphHeight - margin.top - margin.bottom : 0
+export function ActivityGraph({ width, height, prices, margin = { top: 0, bottom: 0 } }: ActivityGraphProps) {
+  const graphInnerHeight = height - margin.top - margin.bottom > 0 ? height - margin.top - margin.bottom : 0
 
   const startingPrice = prices?.[0] ?? DATA_EMPTY
   const endingPrice = prices?.[prices.length - 1] ?? DATA_EMPTY
