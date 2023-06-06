@@ -2,17 +2,17 @@ import { AreaClosed } from '@visx/shape'
 import { curveMonotoneX, scaleLinear } from 'd3'
 import { useMemo } from 'react'
 
-import { ActivityChartTestData } from './ActivityChartTestData'
-
 interface TimestampedAmount {
-  id: string
+  id?: string
   timestamp: number
   value: number
-  __typename: string
-  currency: string
+  __typename?: string
+  currency?: string
 }
 
-const activityHistory = ActivityChartTestData.priceHistory
+const margin = { top: 100, bottom: 48, crosshair: 72 }
+const timeOptionsHeight = 44
+const DATA_EMPTY = { value: 0, timestamp: 0 }
 
 function getPriceBounds(pricePoints: TimestampedAmount[]): [number, number] {
   const prices = pricePoints.map((x) => x.value)
@@ -21,21 +21,33 @@ function getPriceBounds(pricePoints: TimestampedAmount[]): [number, number] {
   return [min, max]
 }
 
-export function ActivityGraph() {
-  // Defining scales
-  // x scale
+interface ActivityGraphProps {
+  width: number
+  height: number
+  prices?: TimestampedAmount[]
+}
+
+export function ActivityGraph({ width, height, prices }: ActivityGraphProps) {
+  const graphHeight = height - timeOptionsHeight > 0 ? height - timeOptionsHeight : 0
+  const graphInnerHeight = graphHeight - margin.top - margin.bottom > 0 ? graphHeight - margin.top - margin.bottom : 0
+
+  const startingPrice = prices?.[0] ?? DATA_EMPTY
+  const endingPrice = prices?.[prices.length - 1] ?? DATA_EMPTY
+
   const timeScale = useMemo(
+    () => scaleLinear().domain([startingPrice.timestamp, endingPrice.timestamp]).range([0, width]),
+    [startingPrice, endingPrice, width]
+  )
+  const rdScale = useMemo(
     () =>
       scaleLinear()
-        .domain([activityHistory[0].timestamp, activityHistory[activityHistory.length - 1].timestamp])
-        .range([0, 400]),
-    []
+        .domain(getPriceBounds(prices ?? []))
+        .range([graphInnerHeight, 0]),
+    [prices, graphInnerHeight]
   )
-  // y scale
-  const rdScale = useMemo(() => scaleLinear().domain(getPriceBounds(activityHistory)).range([400, 0]), [])
 
-  const getX = useMemo(() => (p: TimestampedAmount) => timeScale(p.timestamp), [timeScale])
-  const getY = useMemo(() => (p: TimestampedAmount) => rdScale(p.value), [rdScale])
+  const getX = useMemo(() => (d: TimestampedAmount) => timeScale(d.timestamp), [timeScale])
+  const getY = useMemo(() => (d: TimestampedAmount) => rdScale(d.value), [rdScale])
 
   return (
     <div style={{ minWidth: '100%' }}>
@@ -47,7 +59,7 @@ export function ActivityGraph() {
           </linearGradient>
         </defs>
         <AreaClosed<TimestampedAmount>
-          data={activityHistory}
+          data={prices}
           x={(d) => getX(d)}
           y={(d) => getY(d)}
           yScale={rdScale}
