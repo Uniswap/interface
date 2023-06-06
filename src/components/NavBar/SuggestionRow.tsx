@@ -6,7 +6,6 @@ import QueryTokenLogo from 'components/Logo/QueryTokenLogo'
 import TokenSafetyIcon from 'components/TokenSafety/TokenSafetyIcon'
 //import { getChainInfo } from 'constants/chainInfo'
 import { ZERO_ADDRESS } from 'constants/misc'
-import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { checkSearchTokenWarning } from 'constants/tokenSafety'
 import { Chain, TokenStandard } from 'graphql/data/__generated__/types-and-hooks'
 import { SearchToken } from 'graphql/data/SearchTokens'
@@ -231,11 +230,7 @@ export const SkeletonRow = () => {
 }
 
 function getPoolDetailsURL(address: string) {
-  if (address === ZERO_ADDRESS) {
-    return `/smart-pool/${NATIVE_CHAIN_ID}`
-  } else {
-    return `/smart-pool/${address}`
-  }
+  return `/smart-pool/${address}`
 }
 
 // TODO: we should add pool NAV and performance since inception in base currency
