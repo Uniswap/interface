@@ -11,7 +11,6 @@ import {
   NotFoundWarning,
   TOKEN_SAFETY_ARTICLE,
   Warning,
-  WARNING_LEVEL,
 } from 'constants/tokenSafety'
 import { useToken } from 'hooks/Tokens'
 import { ExternalLink as LinkIconFeather } from 'react-feather'
@@ -93,7 +92,7 @@ const Buttons = ({
   return warning.canProceed ? (
     <>
       <StyledButton onClick={onContinue}>
-        {displayWarningLabel(warning) ? <Trans>Continue</Trans> : <Trans>I understand</Trans>}
+        {!displayWarningLabel(warning) ? <Trans>Continue</Trans> : <Trans>I understand</Trans>}
       </StyledButton>
       {showCancel && <StyledCancelButton onClick={onCancel}>Cancel</StyledCancelButton>}
     </>
