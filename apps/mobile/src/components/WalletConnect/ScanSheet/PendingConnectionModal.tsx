@@ -16,6 +16,7 @@ import { DappHeaderIcon } from 'src/components/WalletConnect/DappHeaderIcon'
 import { NetworkLogos } from 'src/components/WalletConnect/NetworkLogos'
 import { PendingConnectionSwitchAccountModal } from 'src/components/WalletConnect/ScanSheet/PendingConnectionSwitchAccountModal'
 import { PendingConnectionSwitchNetworkModal } from 'src/components/WalletConnect/ScanSheet/PendingConnectionSwitchNetworkModal'
+import { truncateDappName } from 'src/components/WalletConnect/ScanSheet/util'
 import { pushNotification } from 'src/features/notifications/notificationSlice'
 import { AppNotificationType } from 'src/features/notifications/types'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
@@ -270,7 +271,6 @@ export const PendingConnectionModal = ({ pendingSession, onClose }: Props): JSX.
     },
     [activeAddress, dispatch, onClose, selectedChainId, pendingSession, didOpenFromDeepLink]
   )
-
   const dappName = pendingSession.dapp.name || pendingSession.dapp.url
 
   return (
@@ -287,7 +287,8 @@ export const PendingConnectionModal = ({ pendingSession, onClose }: Props): JSX.
           <DappHeaderIcon dapp={pendingSession.dapp} showChain={false} />
           <Text textAlign="center" variant="headlineSmall">
             <Trans t={t}>
-              <Text fontWeight="bold">{dappName}</Text> wants to connect to your wallet
+              <Text fontWeight="bold">{truncateDappName(dappName)}</Text> wants to connect to your
+              wallet
             </Trans>
           </Text>
           <LinkButton
