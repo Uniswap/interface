@@ -1,5 +1,6 @@
 import { useWeb3React } from '@web3-react/core'
 import { useGetConnection } from 'connection'
+import { didUserReject } from 'connection/utils'
 import { SupportedChainId } from 'constants/chains'
 import { useCallback } from 'react'
 import { addPopup } from 'state/application/reducer'
@@ -16,12 +17,17 @@ export default function useSelectChain() {
     async (targetChain: SupportedChainId) => {
       if (!connector) return
 
-      const connectionType = getConnection(connector).type
+      const connection = getConnection(connector)
+      const connectionType = connection.type
 
       try {
         dispatch(updateConnectionError({ connectionType, error: undefined }))
         await switchChain(connector, targetChain)
       } catch (error) {
+        if (didUserReject(connection, error)) {
+          return
+        }
+
         console.error('Failed to switch networks', error)
 
         dispatch(updateConnectionError({ connectionType, error: error.message }))
