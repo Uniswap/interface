@@ -1,4 +1,5 @@
 import { getChainInfo } from 'constants/chainInfo'
+import { Chain } from 'graphql/data/Token'
 import { BACKEND_CHAIN_NAMES, CHAIN_NAME_TO_CHAIN_ID, validateUrlChainParam } from 'graphql/data/util'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useRef } from 'react'
@@ -105,7 +106,7 @@ export default function NetworkFilter() {
   const navigate = useNavigate()
 
   const { chainName } = useParams<{ chainName?: string }>()
-  const currentChainName = validateUrlChainParam(chainName)
+  const currentChainName = validateUrlChainParam(chainName) as Chain
 
   const chainInfo = getChainInfo(CHAIN_NAME_TO_CHAIN_ID[currentChainName])
 
