@@ -229,6 +229,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
     fetchPolicy: 'cache-only', // PrefetchBalancesWrapper handles balance fetching/staleness; this component only reads from cache
   })
   const portfolio = portfolioBalances?.portfolios?.[0]
+  // TODO: check why totalBalance is not returned on app.rigoblock.com
   const totalBalance = portfolio?.tokensTotalDenominatedValue?.value
   const absoluteChange = portfolio?.tokensTotalDenominatedValueChange?.absolute?.value
   const percentChange = portfolio?.tokensTotalDenominatedValueChange?.percentage?.value
@@ -264,7 +265,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
         </IconContainer>
       </HeaderWrapper>
       <PortfolioDrawerContainer>
-        {totalBalance !== undefined ? (
+        {totalBalance !== undefined && (
           <FadeInColumn gap="xs">
             <ThemedText.HeadlineLarge fontWeight={500} data-testid="portfolio-total-balance">
               {formatNumber(totalBalance, NumberType.PortfolioBalance)}
@@ -282,11 +283,6 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
               )}
             </AutoRow>
           </FadeInColumn>
-        ) : (
-          <Column gap="xs">
-            <LoadingBubble height="44px" width="170px" />
-            <LoadingBubble height="16px" width="100px" margin="4px 0 20px 0" />
-          </Column>
         )}
         {!shouldDisableNFTRoutes && (
           <HeaderButton

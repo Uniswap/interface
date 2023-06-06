@@ -231,11 +231,7 @@ export const SkeletonRow = () => {
 }
 
 function getPoolDetailsURL(address: string) {
-  if (address === ZERO_ADDRESS) {
-    return `/smart-pool/${NATIVE_CHAIN_ID}`
-  } else {
-    return `/smart-pool/${address}`
-  }
+  return `/smart-pool/${address}`
 }
 
 // TODO: we should add pool NAV and performance since inception in base currency
