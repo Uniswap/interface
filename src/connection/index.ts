@@ -107,7 +107,7 @@ export const uniwalletConnectConnection: Connection = {
   getName: () => 'Uniswap Wallet',
   connector: web3UniwalletConnect,
   hooks: web3UniwalletConnectHooks,
-  type: ConnectionType.UNIWALLET,
+  type: ConnectionType.UNISWAP_WALLET,
   getIcon: () => UNIWALLET_ICON,
   shouldDisplay: () => Boolean(!getIsInjectedMobileBrowser() && !isNonIOSPhone),
   isNew: true,
@@ -175,7 +175,7 @@ export function useGetConnection() {
           return walletConnectConnection
         case ConnectionType.WALLET_CONNECT_V2:
           return walletConnectV2Connection
-        case ConnectionType.UNIWALLET:
+        case ConnectionType.UNISWAP_WALLET:
           return uniwalletConnectConnection
         case ConnectionType.NETWORK:
           return networkConnection

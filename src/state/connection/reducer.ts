@@ -7,7 +7,7 @@ interface ConnectionState {
 
 const initialState: ConnectionState = {
   errorByConnectionType: {
-    [ConnectionType.UNIWALLET]: undefined,
+    [ConnectionType.UNISWAP_WALLET]: undefined,
     [ConnectionType.INJECTED]: undefined,
     [ConnectionType.WALLET_CONNECT]: undefined,
     [ConnectionType.WALLET_CONNECT_V2]: undefined,

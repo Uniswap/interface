@@ -42,10 +42,12 @@ interface ChainSelectorProps {
 // accounts is an array of strings in the format of "eip155:<chainId>:<address>"
 function getChainsFromEIP155Accounts(accounts?: string[]): SupportedChainId[] {
   if (!accounts) return []
-  return accounts.map((account) => {
-    const splitAccount = account.split(':')
-    return parseInt(splitAccount[1])
-  })
+  return accounts
+    .map((account) => {
+      const splitAccount = account.split(':')
+      return splitAccount[1] ? parseInt(splitAccount[1]) : undefined
+    })
+    .filter((x) => x !== undefined) as SupportedChainId[]
 }
 
 function useWalletSupportsChain() {
@@ -58,7 +60,7 @@ function useWalletSupportsChain() {
   switch (connectionType) {
     case ConnectionType.WALLET_CONNECT_V2:
       return getChainsFromEIP155Accounts((connector as WalletConnect).provider?.session?.namespaces.eip155.accounts)
-    case ConnectionType.UNIWALLET:
+    case ConnectionType.UNISWAP_WALLET:
       return UniWalletSupportedChains
     default:
       return NETWORK_SELECTOR_CHAINS
