@@ -2,6 +2,7 @@ import { Currency, CurrencyAmount, NativeCurrency, Percent, Token, TradeType } f
 import useAutoSlippageTolerance from 'hooks/useAutoSlippageTolerance'
 import { useBestTrade } from 'hooks/useBestTrade'
 import { useMemo } from 'react'
+import { RouterPreference } from 'state/routing/slice'
 import { ClassicTrade, TradeState } from 'state/routing/types'
 import { isClassicTrade } from 'state/routing/utils'
 
@@ -14,9 +15,12 @@ export default function useDerivedPayWithAnyTokenSwapInfo(
   maximumAmountIn?: CurrencyAmount<Token>
   allowedSlippage: Percent
 } {
-  // TODO (Gouda): UMMM fix this? probably force the router config here to be Classic ONLY
-  const { state, trade } = useBestTrade(TradeType.EXACT_OUTPUT, parsedOutputAmount, inputCurrency ?? undefined)
-  const classicTrade = trade as ClassicTrade
+  const { state, trade } = useBestTrade(
+    TradeType.EXACT_OUTPUT,
+    parsedOutputAmount,
+    inputCurrency ?? undefined,
+    RouterPreference.API
+  )
 
   const allowedSlippage = useAutoSlippageTolerance(isClassicTrade(trade) ? trade : undefined)
   const maximumAmountIn = useMemo(() => {
@@ -27,9 +31,9 @@ export default function useDerivedPayWithAnyTokenSwapInfo(
   return useMemo(() => {
     return {
       state,
-      trade: classicTrade,
+      trade,
       maximumAmountIn,
       allowedSlippage,
     }
-  }, [allowedSlippage, maximumAmountIn, state, classicTrade])
+  }, [allowedSlippage, maximumAmountIn, state, trade])
 }
