@@ -20,13 +20,17 @@ export default function useSelectChain() {
       try {
         await switchChain(connector, targetChain)
       } catch (error) {
-        if (didUserReject(connection, error)) {
-          return
+        if (!didUserReject(connection, error)) {
+          console.error('Failed to switch networks', error)
+          dispatch(addPopup({ content: { failedSwitchNetwork: targetChain }, key: 'failed-network-switch' }))
         }
 
-        console.error('Failed to switch networks', error)
-
-        dispatch(addPopup({ content: { failedSwitchNetwork: targetChain }, key: 'failed-network-switch' }))
+        // If we failed to switch chains, we should re-activate the connector.
+        try {
+          await connector.activate()
+        } catch (error) {
+          console.error('Failed to re-activate connector', error)
+        }
       }
     },
     [connector, dispatch]
