@@ -69,11 +69,14 @@ exports[`data page trait component does not load with asset with no traits 1`] =
   background: #FFFFFF;
   border: 1px solid #D2D9EE;
   border-radius: 16px;
-  padding: 16px 20px;
+  padding-top: 16px;
+  padding-bottom: 16px;
   width: 100%;
   -webkit-align-self: flex-start;
   -ms-flex-item-align: start;
   align-self: flex-start;
+  padding-left: 20px;
+  padding-right: 20px;
 }
 
 .c3 {
@@ -214,15 +217,19 @@ exports[`data page trait component does not load with asset with no traits 1`] =
     class="c0"
   >
     <div
-      class="c1 c2 c3"
+      class=""
     >
       <div
-        class="c4 c5 css-rjqmed"
+        class="c1 c2 c3"
       >
         <div
-          class="c1 c6"
+          class="c4 c5 css-rjqmed"
         >
-          Traits
+          <div
+            class="c1 c6"
+          >
+            Traits
+          </div>
         </div>
       </div>
     </div>

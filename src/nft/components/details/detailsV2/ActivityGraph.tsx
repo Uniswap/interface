@@ -127,7 +127,7 @@ export function ActivityGraph({
           stroke="#014F5F"
           fill="url(#area-gradient)"
           curve={curveMonotoneX}
-          clip-path="url(#myClip)"
+          clipPath="url(#myClip)"
         />
         {crosshair !== null && (
           <g>
