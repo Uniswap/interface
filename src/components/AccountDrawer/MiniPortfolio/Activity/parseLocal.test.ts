@@ -242,22 +242,7 @@ describe('parseLocalActivity', () => {
       currencies: [MockUSDC_MAINNET, MockDAI],
       descriptor: '1.00 USDC for 1.00 DAI',
       hash: undefined,
-      receipt: {
-        id: '0x123',
-        info: {
-          type: 1,
-          tradeType: MockTradeType.EXACT_INPUT,
-          inputCurrencyId: MockUSDC_MAINNET.address,
-          inputCurrencyAmountRaw: mockCurrencyAmountRawUSDC,
-          outputCurrencyId: MockDAI.address,
-          expectedOutputCurrencyAmountRaw: mockCurrencyAmountRaw,
-          minimumOutputCurrencyAmountRaw: mockCurrencyAmountRaw,
-          isUniswapXOrder: false,
-        },
-        receipt: { status: 1, transactionHash: '0x123' },
-        status: 'CONFIRMED',
-        transactionHash: '0x123',
-      },
+      from: undefined,
       status: 'CONFIRMED',
       timestamp: NaN,
       title: 'Swapped',
@@ -340,10 +325,7 @@ describe('parseLocalActivity', () => {
       descriptor: `1.00 ${MockUSDC_MAINNET.symbol} for 1.00 ${MockDAI.symbol}`,
       hash,
       status: MockTxStatus.Confirmed,
-      receipt: {
-        id: hash,
-        status: MockTxStatus.Confirmed,
-      },
+      from: mockAccount2,
     })
   })
 
@@ -358,10 +340,7 @@ describe('parseLocalActivity', () => {
       descriptor: `1.00 ${MockUSDC_MAINNET.symbol} for 1.00 ${MockDAI.symbol}`,
       hash,
       status: MockTxStatus.Confirmed,
-      receipt: {
-        id: hash,
-        status: MockTxStatus.Confirmed,
-      },
+      from: mockAccount2,
     })
   })
 
@@ -376,10 +355,7 @@ describe('parseLocalActivity', () => {
       descriptor: MockDAI.symbol,
       hash,
       status: MockTxStatus.Confirmed,
-      receipt: {
-        id: hash,
-        status: MockTxStatus.Confirmed,
-      },
+      from: mockAccount2,
     })
   })
 
@@ -396,10 +372,7 @@ describe('parseLocalActivity', () => {
       descriptor: `1.00 ${native.symbol} for 1.00 ${native.wrapped.symbol}`,
       hash,
       status: MockTxStatus.Confirmed,
-      receipt: {
-        id: hash,
-        status: MockTxStatus.Confirmed,
-      },
+      from: mockAccount2,
     })
   })
 
@@ -416,10 +389,7 @@ describe('parseLocalActivity', () => {
       descriptor: `1.00 ${native.wrapped.symbol} for 1.00 ${native.symbol}`,
       hash,
       status: MockTxStatus.Confirmed,
-      receipt: {
-        id: hash,
-        status: MockTxStatus.Confirmed,
-      },
+      from: mockAccount2,
     })
   })
 
@@ -434,10 +404,7 @@ describe('parseLocalActivity', () => {
       descriptor: `1.00 ${MockUSDC_MAINNET.symbol} and 1.00 ${MockDAI.symbol}`,
       hash,
       status: MockTxStatus.Confirmed,
-      receipt: {
-        id: hash,
-        status: MockTxStatus.Confirmed,
-      },
+      from: mockAccount2,
     })
   })
 
@@ -452,10 +419,7 @@ describe('parseLocalActivity', () => {
       descriptor: `1.00 ${MockUSDC_MAINNET.symbol} and 1.00 ${MockDAI.symbol}`,
       hash,
       status: MockTxStatus.Confirmed,
-      receipt: {
-        id: hash,
-        status: MockTxStatus.Confirmed,
-      },
+      from: mockAccount2,
     })
   })
 
@@ -470,10 +434,7 @@ describe('parseLocalActivity', () => {
       descriptor: `1.00 ${MockUSDC_MAINNET.symbol} and 1.00 ${MockDAI.symbol}`,
       hash,
       status: MockTxStatus.Confirmed,
-      receipt: {
-        id: hash,
-        status: MockTxStatus.Confirmed,
-      },
+      from: mockAccount2,
     })
   })
 
@@ -488,10 +449,7 @@ describe('parseLocalActivity', () => {
       descriptor: `1.00 ${MockUSDC_MAINNET.symbol} and 1.00 ${MockDAI.symbol}`,
       hash,
       status: MockTxStatus.Confirmed,
-      receipt: {
-        id: hash,
-        status: MockTxStatus.Confirmed,
-      },
+      from: mockAccount2,
     })
   })
 
@@ -506,10 +464,7 @@ describe('parseLocalActivity', () => {
       descriptor: `${MockUSDC_MAINNET.symbol} and ${MockDAI.symbol}`,
       hash,
       status: MockTxStatus.Confirmed,
-      receipt: {
-        id: hash,
-        status: MockTxStatus.Confirmed,
-      },
+      from: mockAccount2,
     })
   })
 })

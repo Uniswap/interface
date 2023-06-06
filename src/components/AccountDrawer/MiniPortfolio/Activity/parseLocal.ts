@@ -2,6 +2,7 @@ import { t } from '@lingui/macro'
 import { formatCurrencyAmount } from '@uniswap/conedison/format'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { nativeOnChain } from '@uniswap/smart-order-router'
+import UniswapXBolt from 'assets/svg/bolt.svg'
 import { SupportedChainId } from 'constants/chains'
 import { TransactionStatus } from 'graphql/data/__generated__/types-and-hooks'
 import { ChainTokenMap, useAllTokensMultichain } from 'hooks/Tokens'
@@ -143,22 +144,13 @@ export function transactionToActivity(
       ? TransactionStatus.Confirmed
       : TransactionStatus.Failed
 
-    const receipt = details.receipt
-      ? {
-          id: details.receipt.transactionHash,
-          ...details.receipt,
-          ...details,
-          status,
-        }
-      : undefined
-
     const defaultFields = {
       hash: details.hash,
       chainId,
       title: getActivityTitle(details.info.type, status),
       status,
       timestamp: (details.confirmedTime ?? details.addedTime) / 1000,
-      receipt,
+      from: details.from,
       nonce: details.nonce,
     }
 
@@ -203,9 +195,9 @@ function signatureToActivity(signature: SignatureDetails, tokens: ChainTokenMap)
         title,
         status,
         timestamp: signature.addedTime / 1000,
-        // TODO(cartcrom): remove nonce requirements in Activity type refactor
-        nonce: 0,
+        from: signature.offerer,
         statusMessage,
+        prefixIconSrc: UniswapXBolt,
         ...parseSwap(signature.swapInfo, signature.chainId, tokens),
       }
     }

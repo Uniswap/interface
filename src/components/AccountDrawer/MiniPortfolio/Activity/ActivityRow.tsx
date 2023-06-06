@@ -3,6 +3,7 @@ import { BrowserEvent, InterfaceElementName, SharedEventName } from '@uniswap/an
 import Column from 'components/Column'
 import AlertTriangleFilled from 'components/Icons/AlertTriangleFilled'
 import { LoaderV2 } from 'components/Icons/LoadingSpinner'
+import Row from 'components/Row'
 import { TransactionStatus } from 'graphql/data/__generated__/types-and-hooks'
 import useENSName from 'hooks/useENSName'
 import styled from 'styled-components/macro'
@@ -39,7 +40,7 @@ function StatusIndicator({ activity: { status, timestamp } }: { activity: Activi
 }
 
 export function ActivityRow({ activity }: { activity: Activity }) {
-  const { chainId, title, descriptor, logos, otherAccount, currencies, hash } = activity
+  const { chainId, title, descriptor, logos, otherAccount, currencies, hash, prefixIconSrc } = activity
 
   const { ENSName } = useENSName(otherAccount)
   const explorerUrl = getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)
@@ -57,7 +58,12 @@ export function ActivityRow({ activity }: { activity: Activity }) {
             <PortfolioLogo chainId={chainId} currencies={currencies} images={logos} accountAddress={otherAccount} />
           </Column>
         }
-        title={<ThemedText.SubHeader>{title}</ThemedText.SubHeader>}
+        title={
+          <Row gap="4px">
+            {prefixIconSrc && <img height="14px" width="14px" src={prefixIconSrc} alt="" />}
+            <ThemedText.SubHeader>{title}</ThemedText.SubHeader>
+          </Row>
+        }
         descriptor={
           <ActivityRowDescriptor color="textSecondary">
             {descriptor}
