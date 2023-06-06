@@ -59,7 +59,7 @@ function _TracePressEvent(
 ): JSX.Element {
   return (
     <TraceEvent
-      element={props.element}
+      elementName={props.element}
       eventName={SharedEventName.ELEMENT_CLICKED}
       events={onPressEventArray}
       properties={props.properties}>
