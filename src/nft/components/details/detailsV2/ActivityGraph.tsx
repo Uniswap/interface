@@ -42,11 +42,19 @@ export function ActivityGraph({
   margin = { top: 0, bottom: 0, crosshair: 0 },
   timePeriod,
 }: ActivityGraphProps) {
+  const theme = useTheme()
   const locale = useActiveLocale()
 
   const graphInnerHeight = height - margin.top - margin.bottom > 0 ? height - margin.top - margin.bottom : 0
   const startingPrice = prices?.[0] ?? DATA_EMPTY
   const endingPrice = prices?.[prices.length - 1] ?? DATA_EMPTY
+
+  const [crosshair, setCrosshair] = useState<number | null>(null)
+  const [hoveredPrice, setHoveredPrice] = useState<TimestampedAmount>(endingPrice)
+
+  const crosshairDateFormatter = tickFormat(timePeriod, locale, startingPrice, endingPrice)[1]
+  const crosshairEdgeMax = width * 0.85
+  const crosshairAtEdge = !!crosshair && crosshair > crosshairEdgeMax
 
   const timeScale = useMemo(
     () => scaleLinear().domain([startingPrice.timestamp, endingPrice.timestamp]).range([0, width]),
@@ -59,9 +67,6 @@ export function ActivityGraph({
         .range([graphInnerHeight, 0]),
     [prices, graphInnerHeight]
   )
-
-  const [crosshair, setCrosshair] = useState<number | null>(null)
-  const [hoveredPrice, setHoveredPrice] = useState<TimestampedAmount>(endingPrice)
 
   const handleHover = useCallback(
     (event: Element | EventType) => {
@@ -97,14 +102,8 @@ export function ActivityGraph({
     setHoveredPrice(endingPrice)
   }, [endingPrice])
 
-  const crosshairDateFormatter = tickFormat(timePeriod, locale, startingPrice, endingPrice)[1]
-  const crosshairEdgeMax = width * 0.85
-  const crosshairAtEdge = !!crosshair && crosshair > crosshairEdgeMax
-
   const getX = useMemo(() => (d: TimestampedAmount) => timeScale(d.timestamp), [timeScale])
   const getY = useMemo(() => (d: TimestampedAmount) => priceScale(d.value), [priceScale])
-
-  const theme = useTheme()
 
   return (
     <div style={{ minWidth: '100%' }}>
@@ -114,16 +113,21 @@ export function ActivityGraph({
             <stop stopColor="#1A616F8A" />
             <stop offset="1" stopColor="transparent" />
           </linearGradient>
+          <clipPath id="myClip">
+            <rect width={width} height={height + 3} />
+          </clipPath>
         </defs>
         <AreaClosed<TimestampedAmount>
           data={prices}
           x={(d) => getX(d)}
           y={(d) => getY(d)}
+          y0={height + 6}
           yScale={priceScale}
           strokeWidth={3}
           stroke="#014F5F"
           fill="url(#area-gradient)"
           curve={curveMonotoneX}
+          clip-path="url(#myClip)"
         />
         {crosshair !== null && (
           <g>
