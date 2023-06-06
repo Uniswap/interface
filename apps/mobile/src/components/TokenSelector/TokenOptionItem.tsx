@@ -83,7 +83,7 @@ export function TokenOptionItem({
                   <WarningIcon
                     height={theme.iconSizes.icon16}
                     safetyLevel={safetyLevel}
-                    strokeColorOverride="textSecondary"
+                    strokeColorOverride="textTertiary"
                     width={theme.iconSizes.icon16}
                   />
                 )}

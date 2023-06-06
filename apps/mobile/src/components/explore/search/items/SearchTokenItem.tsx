@@ -80,7 +80,7 @@ export function SearchTokenItem({ token, searchContext }: SearchTokenItemProps):
               <WarningIcon
                 height={theme.iconSizes.icon16}
                 safetyLevel={safetyLevel}
-                strokeColorOverride="textSecondary"
+                strokeColorOverride="textTertiary"
                 width={theme.iconSizes.icon16}
               />
             )}

@@ -66,7 +66,7 @@ export default function TokenWarningModal({
   const chainId = currencyIdToChain(currencyId)
   const address = currencyIdToAddress(currencyId)
 
-  const explorerLink = getExplorerLink(chainId, address, ExplorerDataType.ADDRESS)
+  const explorerLink = getExplorerLink(chainId, address, ExplorerDataType.TOKEN)
 
   // always hide accept button if blocked token
   const hideAcceptButton = disableAccept || safetyLevel === SafetyLevel.Blocked
