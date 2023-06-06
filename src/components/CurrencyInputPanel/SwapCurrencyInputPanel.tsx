@@ -258,7 +258,7 @@ export default function SwapCurrencyInputPanel({
           {!hideInput && (
             <StyledNumericalInput
               className="token-amount-input"
-              value={value}
+              value={loading ? '' : value}
               onUserInput={onUserInput}
               disabled={!chainAllowed || disabled}
               $loading={loading}
