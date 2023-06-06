@@ -12,9 +12,9 @@ import { ThemedText } from 'theme'
 
 import { ActivityTab } from './Activity'
 import NFTs from './NFTs'
-import Pools from './Pools'
+//import Pools from './Pools'
 import { PortfolioRowWrapper } from './PortfolioRow'
-import Tokens from './Tokens'
+//import Tokens from './Tokens'
 
 const Wrapper = styled(Column)`
   margin-top: 28px;
