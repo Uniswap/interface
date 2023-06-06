@@ -1,7 +1,7 @@
 import { t } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import { MouseoverTooltip } from 'components/Tooltip'
-import { useGetConnection } from 'connection'
+import { getConnection } from 'connection'
 import { ConnectionType } from 'connection/types'
 import { getChainInfo } from 'constants/chainInfo'
 import { SupportedChainId, UniWalletSupportedChains } from 'constants/chains'
@@ -61,7 +61,6 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
     [selectChain, setIsOpen]
   )
 
-  const getConnection = useGetConnection()
   const connectionType = getConnection(connector).type
   const isUniWallet = connectionType === ConnectionType.UNIWALLET
 
