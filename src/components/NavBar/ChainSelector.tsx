@@ -32,7 +32,7 @@ const NETWORK_SELECTOR_CHAINS = [
 ]
 
 if (!isProductionEnv()) {
-  NETWORK_SELECTOR_CHAINS.push(SupportedChainId.GOERLI)
+  NETWORK_SELECTOR_CHAINS.push(SupportedChainId.)
 }
 
 interface ChainSelectorProps {
