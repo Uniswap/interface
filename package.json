@@ -261,7 +261,7 @@
   },
   "engines": {
     "npm": "please-use-yarn",
-    "node": "14",
+    "node": "18.x",
     "yarn": ">=1.22"
   }
 }
