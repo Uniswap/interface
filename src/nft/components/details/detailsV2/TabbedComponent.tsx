@@ -3,18 +3,25 @@ import { useState } from 'react'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
-import { containerStyles } from './shared'
+import { containerHorizontalPadding, containerStyles } from './shared'
 
-const TabbedComponentContainer = styled.div`
+const TabbedComponentContainer = styled.div<{ disableHorizontalPaddingForContent?: boolean }>`
   ${containerStyles}
+
+  ${({ disableHorizontalPaddingForContent }) =>
+    disableHorizontalPaddingForContent && 'padding-left: 0px; padding-right: 0px;'}
 `
 
-const TabsRow = styled(Row)`
+const TabsRow = styled(Row)<{ horizontalPaddingDisabled?: boolean }>`
   gap: 32px;
   width: 100;
   margin-bottom: 12px;
   padding-bottom: 12px;
   border-bottom: 1px solid ${({ theme }) => theme.backgroundOutline};
+`
+
+const TabRowPadding = styled.div<{ horizontalPaddingDisabled?: boolean }>`
+  ${({ horizontalPaddingDisabled }) => horizontalPaddingDisabled && containerHorizontalPadding}
 `
 
 const Tab = styled(ThemedText.SubHeader)<{ isActive: boolean; numTabs: number }>`
@@ -40,6 +47,7 @@ export interface Tab {
   key: string
   content: JSX.Element
   count?: number
+  disableHorizontalPaddingForContent?: boolean
 }
 
 interface TabbedComponentProps {
@@ -50,25 +58,30 @@ interface TabbedComponentProps {
 export const TabbedComponent = ({ tabs, defaultTabKey }: TabbedComponentProps) => {
   const firstKey = tabs.keys().next().value
   const [activeKey, setActiveKey] = useState(defaultTabKey ?? firstKey)
-  const activeContent = tabs.get(activeKey)?.content
+  const activeTab = tabs.get(activeKey)
+  const activeContent = activeTab?.content
   const tabArray = Array.from(tabs.values())
+  const disableHorizontalPaddingForContent = activeTab?.disableHorizontalPaddingForContent
+
   return (
-    <TabbedComponentContainer>
-      <TabsRow>
-        {tabArray.map((tab) => (
-          <Tab
-            isActive={activeKey === tab.key}
-            numTabs={tabArray.length}
-            onClick={() => setActiveKey(tab.key)}
-            key={tab.key}
-          >
-            <Row gap="8px">
-              {tab.title}
-              {!!tab.count && <TabNumBubble>{tab.count > 10 ? '10+' : tab.count}</TabNumBubble>}
-            </Row>
-          </Tab>
-        ))}
-      </TabsRow>
+    <TabbedComponentContainer disableHorizontalPaddingForContent={disableHorizontalPaddingForContent}>
+      <TabRowPadding horizontalPaddingDisabled={disableHorizontalPaddingForContent}>
+        <TabsRow>
+          {tabArray.map((tab) => (
+            <Tab
+              isActive={activeKey === tab.key}
+              numTabs={tabArray.length}
+              onClick={() => setActiveKey(tab.key)}
+              key={tab.key}
+            >
+              <Row gap="8px">
+                {tab.title}
+                {!!tab.count && <TabNumBubble>{tab.count > 10 ? '10+' : tab.count}</TabNumBubble>}
+              </Row>
+            </Tab>
+          ))}
+        </TabsRow>
+      </TabRowPadding>
       {activeContent}
     </TabbedComponentContainer>
   )

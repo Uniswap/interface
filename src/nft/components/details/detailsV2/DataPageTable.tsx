@@ -23,6 +23,7 @@ export const DataPageTable = ({ asset }: { asset: GenieAsset }) => {
             title: <Trans>Activity</Trans>,
             key: TableTabsKeys.Activity,
             content: <ActivityTableContent />,
+            disableHorizontalPaddingForContent: true,
           },
         ],
         [

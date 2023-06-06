@@ -1,13 +1,21 @@
 import styled, { css } from 'styled-components/macro'
 import { opacify } from 'theme/utils'
 
+export const containerHorizontalPadding = css`
+  padding-left: 20px;
+  padding-right: 20px;
+`
+
 export const containerStyles = css`
   background: ${({ theme }) => theme.backgroundSurface};
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
   border-radius: 16px;
-  padding: 16px 20px;
+  padding-top: 16px;
+  padding-bottom: 16px;
   width: 100%;
   align-self: flex-start;
+
+  ${containerHorizontalPadding}
 `
 
 // Scrim that fades out the top and bottom of the scrollable container, isBottom changes the direction and placement of the fade

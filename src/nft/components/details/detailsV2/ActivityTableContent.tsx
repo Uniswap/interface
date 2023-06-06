@@ -8,6 +8,7 @@ import { ThemedText } from 'theme'
 
 import { ActivityChartTestData } from './ActivityChartTestData'
 import { ActivityGraph } from './ActivityGraph'
+import { containerHorizontalPadding } from './shared'
 import { SupportedTimePeriodsType, TimePeriodSwitcher } from './TimePeriodSwitcher'
 
 const TableContentContainer = styled(Column)`
@@ -17,6 +18,8 @@ const TableContentContainer = styled(Column)`
 const TableHeaderContainer = styled(Row)`
   justify-content: space-between;
   align-items: flex-start;
+
+  ${containerHorizontalPadding}
 `
 
 const activityHistory = ActivityChartTestData.priceHistory
