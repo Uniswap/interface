@@ -7,7 +7,8 @@ import { Line } from '@visx/shape'
 import AnimatedInLineChart from 'components/Charts/AnimatedInLineChart'
 import FadedInLineChart from 'components/Charts/FadeInLineChart'
 import { bisect, curveCardinal, NumberValue, scaleLinear, timeDay, timeHour, timeMinute, timeMonth } from 'd3'
-import { PricePoint } from 'graphql/data/util'
+import { HistoryDuration } from 'graphql/data/__generated__/types-and-hooks'
+import { PricePoint, toHistoryDuration } from 'graphql/data/util'
 import { TimePeriod } from 'graphql/data/util'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
@@ -27,11 +28,67 @@ import { formatDollar } from 'utils/formatNumbers'
 
 const DATA_EMPTY = { value: 0, timestamp: 0 }
 
+interface TimestampedValue {
+  timestamp: number
+  value: number
+}
+
 export function getPriceBounds(pricePoints: PricePoint[]): [number, number] {
   const prices = pricePoints.map((x) => x.value)
   const min = Math.min(...prices)
   const max = Math.max(...prices)
   return [min, max]
+}
+
+export function tickFormat<Type extends TimestampedValue>(
+  timePeriod: HistoryDuration,
+  locale: string,
+  startingPrice: Type,
+  endingPrice: Type
+): [TickFormatter<NumberValue>, (v: number) => string, NumberValue[]] {
+  const offsetTime = (endingPrice.timestamp.valueOf() - startingPrice.timestamp.valueOf()) / 24
+  const startDateWithOffset = new Date((startingPrice.timestamp.valueOf() + offsetTime) * 1000)
+  const endDateWithOffset = new Date((endingPrice.timestamp.valueOf() - offsetTime) * 1000)
+  switch (timePeriod) {
+    case HistoryDuration.Hour:
+      return [
+        hourFormatter(locale),
+        dayHourFormatter(locale),
+        (timeMinute.every(5) ?? timeMinute)
+          .range(startDateWithOffset, endDateWithOffset, 2)
+          .map((x) => x.valueOf() / 1000),
+      ]
+    case HistoryDuration.Day:
+      return [
+        hourFormatter(locale),
+        dayHourFormatter(locale),
+        timeHour.range(startDateWithOffset, endDateWithOffset, 4).map((x) => x.valueOf() / 1000),
+      ]
+    case HistoryDuration.Week:
+      return [
+        weekFormatter(locale),
+        dayHourFormatter(locale),
+        timeDay.range(startDateWithOffset, endDateWithOffset, 1).map((x) => x.valueOf() / 1000),
+      ]
+    case HistoryDuration.Month:
+      return [
+        monthDayFormatter(locale),
+        dayHourFormatter(locale),
+        timeDay.range(startDateWithOffset, endDateWithOffset, 7).map((x) => x.valueOf() / 1000),
+      ]
+    case HistoryDuration.Year:
+      return [
+        monthTickFormatter(locale),
+        monthYearDayFormatter(locale),
+        timeMonth.range(startDateWithOffset, endDateWithOffset, 2).map((x) => x.valueOf() / 1000),
+      ]
+    case HistoryDuration.Max:
+      return [
+        monthTickFormatter(locale),
+        monthYearDayFormatter(locale),
+        timeMonth.range(startDateWithOffset, endDateWithOffset, 2).map((x) => x.valueOf() / 1000),
+      ]
+  }
 }
 
 const StyledUpArrow = styled(ArrowUpRight)`
@@ -178,49 +235,6 @@ export function PriceChart({ width, height, prices: originalPrices, timePeriod }
     [originalPrices, graphInnerHeight]
   )
 
-  function tickFormat(
-    timePeriod: TimePeriod,
-    locale: string
-  ): [TickFormatter<NumberValue>, (v: number) => string, NumberValue[]] {
-    const offsetTime = (endingPrice.timestamp.valueOf() - startingPrice.timestamp.valueOf()) / 24
-    const startDateWithOffset = new Date((startingPrice.timestamp.valueOf() + offsetTime) * 1000)
-    const endDateWithOffset = new Date((endingPrice.timestamp.valueOf() - offsetTime) * 1000)
-    switch (timePeriod) {
-      case TimePeriod.HOUR:
-        return [
-          hourFormatter(locale),
-          dayHourFormatter(locale),
-          (timeMinute.every(5) ?? timeMinute)
-            .range(startDateWithOffset, endDateWithOffset, 2)
-            .map((x) => x.valueOf() / 1000),
-        ]
-      case TimePeriod.DAY:
-        return [
-          hourFormatter(locale),
-          dayHourFormatter(locale),
-          timeHour.range(startDateWithOffset, endDateWithOffset, 4).map((x) => x.valueOf() / 1000),
-        ]
-      case TimePeriod.WEEK:
-        return [
-          weekFormatter(locale),
-          dayHourFormatter(locale),
-          timeDay.range(startDateWithOffset, endDateWithOffset, 1).map((x) => x.valueOf() / 1000),
-        ]
-      case TimePeriod.MONTH:
-        return [
-          monthDayFormatter(locale),
-          dayHourFormatter(locale),
-          timeDay.range(startDateWithOffset, endDateWithOffset, 7).map((x) => x.valueOf() / 1000),
-        ]
-      case TimePeriod.YEAR:
-        return [
-          monthTickFormatter(locale),
-          monthYearDayFormatter(locale),
-          timeMonth.range(startDateWithOffset, endDateWithOffset, 2).map((x) => x.valueOf() / 1000),
-        ]
-    }
-  }
-
   const handleHover = useCallback(
     (event: Element | EventType) => {
       if (!prices) return
@@ -255,7 +269,12 @@ export function PriceChart({ width, height, prices: originalPrices, timePeriod }
     setDisplayPrice(endingPrice)
   }, [setCrosshair, setDisplayPrice, endingPrice])
 
-  const [tickFormatter, crosshairDateFormatter, ticks] = tickFormat(timePeriod, locale)
+  const [tickFormatter, crosshairDateFormatter, ticks] = tickFormat(
+    toHistoryDuration(timePeriod),
+    locale,
+    startingPrice,
+    endingPrice
+  )
   const delta = calculateDelta(startingPrice.value, displayPrice.value)
   const formattedDelta = formatDelta(delta)
   const arrow = getDeltaArrow(delta)

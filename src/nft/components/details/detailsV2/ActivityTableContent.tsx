@@ -33,7 +33,9 @@ export const ActivityTableContent = () => {
         <ThemedText.SubHeaderSmall lineHeight="20px">vs. collection floor</ThemedText.SubHeaderSmall>
         <TimePeriodSwitcher activeTimePeriod={timePeriod} setTimePeriod={setTimePeriod} />
       </TableHeaderContainer>
-      <ParentSize>{({ width }) => <ActivityGraph prices={activityHistory} width={width} height={276} />}</ParentSize>
+      <ParentSize>
+        {({ width }) => <ActivityGraph prices={activityHistory} width={width} height={276} timePeriod={timePeriod} />}
+      </ParentSize>
     </TableContentContainer>
   )
 }
