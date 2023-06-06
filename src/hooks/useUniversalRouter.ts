@@ -5,10 +5,7 @@ import { Trade } from '@pollum-io/router-sdk'
 import { Currency, Percent, TradeType } from '@pollum-io/sdk-core'
 import { SwapRouter, UNIVERSAL_ROUTER_ADDRESS } from '@pollum-io/universal-router-sdk'
 import { FeeOptions, toHex } from '@pollum-io/v2-sdk'
-import { sendAnalyticsEvent } from '@uniswap/analytics'
-import { SwapEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
-import { formatSwapSignedAnalyticsEventProperties } from 'lib/utils/analytics'
 import { useCallback } from 'react'
 import { trace } from 'tracing'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
@@ -90,12 +87,7 @@ export function useUniversalRouterSwapCallback(
             .getSigner()
             .sendTransaction({ ...tx, gasLimit })
             .then((response) => {
-              sendAnalyticsEvent(
-                SwapEventName.SWAP_SIGNED,
-                formatSwapSignedAnalyticsEventProperties({ trade, fiatValues, txHash: response.hash })
-              )
               if (tx.data !== response.data) {
-                sendAnalyticsEvent(SwapEventName.SWAP_MODIFIED_IN_WALLET, { txHash: response.hash })
                 throw new ModifiedSwapError()
               }
               return response

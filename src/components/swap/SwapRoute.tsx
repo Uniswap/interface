@@ -3,8 +3,6 @@ import { Protocol } from '@pollum-io/router-sdk'
 import { Currency, Percent, TradeType } from '@pollum-io/sdk-core'
 import { Pair } from '@pollum-io/v1-sdk'
 import { FeeAmount } from '@pollum-io/v2-sdk'
-import { TraceEvent } from '@uniswap/analytics'
-import { BrowserEvent, InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import AnimatedDropdown from 'components/AnimatedDropdown'
 import { AutoColumn } from 'components/Column'
@@ -64,20 +62,13 @@ export default memo(function SwapRoute({ trade, syncing, fixedOpen = false, ...r
 
   return (
     <Wrapper {...rest} darkMode={darkMode} fixedOpen={fixedOpen}>
-      <TraceEvent
-        events={[BrowserEvent.onClick]}
-        name={SwapEventName.SWAP_AUTOROUTER_VISUALIZATION_EXPANDED}
-        element={InterfaceElementName.AUTOROUTER_VISUALIZATION_ROW}
-        shouldLogImpression={!open}
-      >
-        <RowBetween onClick={() => setOpen(!open)}>
-          <AutoRow gap="4px" width="auto">
-            <AutoRouterLogo />
-            <AutoRouterLabel />
-          </AutoRow>
-          {fixedOpen ? null : <OpenCloseIcon open={open} />}
-        </RowBetween>
-      </TraceEvent>
+      <RowBetween onClick={() => setOpen(!open)}>
+        <AutoRow gap="4px" width="auto">
+          <AutoRouterLogo />
+          <AutoRouterLabel />
+        </AutoRow>
+        {fixedOpen ? null : <OpenCloseIcon open={open} />}
+      </RowBetween>
       <AnimatedDropdown open={open || fixedOpen}>
         <AutoRow gap="4px" width="auto" style={{ paddingTop: '12px', margin: 0 }}>
           {syncing ? (

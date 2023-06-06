@@ -1,6 +1,4 @@
 import { Trans } from '@lingui/macro'
-import { Trace } from '@uniswap/analytics'
-import { InterfacePageName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { useToggleAccountDrawer } from 'components/AccountDrawer'
 import { ButtonPrimary } from 'components/Button'
@@ -81,26 +79,24 @@ const ProfileContent = () => {
   const isListingNfts = sellPageState === ProfilePageStateType.LISTING
 
   return (
-    <Trace page={InterfacePageName.NFT_PROFILE_PAGE} shouldLogImpression>
-      <ProfilePageWrapper>
-        {account ? (
-          <LoadedAccountPage cartExpanded={cartExpanded} isListingNfts={isListingNfts}>
-            {!isListingNfts ? <ProfilePage /> : <ListPage />}
-          </LoadedAccountPage>
-        ) : (
-          <Center>
-            <ThemedText.HeadlineMedium lineHeight="36px" color="textSecondary" fontWeight="600" marginBottom="24px">
-              <Trans>No items to display</Trans>
-            </ThemedText.HeadlineMedium>
-            <ConnectWalletButton onClick={toggleWalletDrawer}>
-              <ThemedText.SubHeader color="white" lineHeight="20px">
-                <Trans>Connect Wallet</Trans>
-              </ThemedText.SubHeader>
-            </ConnectWalletButton>
-          </Center>
-        )}
-      </ProfilePageWrapper>
-    </Trace>
+    <ProfilePageWrapper>
+      {account ? (
+        <LoadedAccountPage cartExpanded={cartExpanded} isListingNfts={isListingNfts}>
+          {!isListingNfts ? <ProfilePage /> : <ListPage />}
+        </LoadedAccountPage>
+      ) : (
+        <Center>
+          <ThemedText.HeadlineMedium lineHeight="36px" color="textSecondary" fontWeight="600" marginBottom="24px">
+            <Trans>No items to display</Trans>
+          </ThemedText.HeadlineMedium>
+          <ConnectWalletButton onClick={toggleWalletDrawer}>
+            <ThemedText.SubHeader color="white" lineHeight="20px">
+              <Trans>Connect Wallet</Trans>
+            </ThemedText.SubHeader>
+          </ConnectWalletButton>
+        </Center>
+      )}
+    </ProfilePageWrapper>
   )
 }
 

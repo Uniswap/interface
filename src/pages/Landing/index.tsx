@@ -1,6 +1,4 @@
 import { Trans } from '@lingui/macro'
-import { Trace, TraceEvent } from '@uniswap/analytics'
-import { BrowserEvent, InterfaceElementName, InterfacePageName, SharedEventName } from '@uniswap/analytics-events'
 import { AboutFooter } from 'components/About/AboutFooter'
 import Card from 'components/About/Card'
 import { MAIN_CARDS } from 'components/About/constants'
@@ -319,25 +317,19 @@ export default function Landing() {
   const shouldDisableNFTRoutes = useAtomValue(shouldDisableNFTRoutesAtom)
 
   return (
-    <Trace page={InterfacePageName.LANDING_PAGE} shouldLogImpression>
+    <>
       {showContent && (
         <PageContainer isDarkMode={isDarkMode} data-testid="landing-page">
           <LandingSwapContainer>
-            <TraceEvent
-              events={[BrowserEvent.onClick]}
-              name={SharedEventName.ELEMENT_CLICKED}
-              element={InterfaceElementName.LANDING_PAGE_SWAP_ELEMENT}
-            >
-              {swapWidgetEnabled ? (
-                <WidgetLandingLink to="/swap">
-                  <Swap />
-                </WidgetLandingLink>
-              ) : (
-                <Link to="/swap">
-                  <LandingSwap />
-                </Link>
-              )}
-            </TraceEvent>
+            {swapWidgetEnabled ? (
+              <WidgetLandingLink to="/swap">
+                <Swap />
+              </WidgetLandingLink>
+            ) : (
+              <Link to="/swap">
+                <LandingSwap />
+              </Link>
+            )}
           </LandingSwapContainer>
           <Gradient isDarkMode={isDarkMode} />
           <GlowContainer>
@@ -361,17 +353,11 @@ export default function Landing() {
               </SubText>
             </SubTextContainer>
             <ActionsContainer>
-              <TraceEvent
-                events={[BrowserEvent.onClick]}
-                name={SharedEventName.ELEMENT_CLICKED}
-                element={InterfaceElementName.CONTINUE_BUTTON}
-              >
-                <ButtonCTA as={Link} to="/swap">
-                  <ButtonCTAText>
-                    <Trans>Get started</Trans>
-                  </ButtonCTAText>
-                </ButtonCTA>
-              </TraceEvent>
+              <ButtonCTA as={Link} to="/swap">
+                <ButtonCTAText>
+                  <Trans>Get started</Trans>
+                </ButtonCTAText>
+              </ButtonCTA>
             </ActionsContainer>
             <LearnMoreContainer
               onClick={() => {
@@ -396,6 +382,6 @@ export default function Landing() {
           </AboutContentContainer>
         </PageContainer>
       )}
-    </Trace>
+    </>
   )
 }

@@ -1,5 +1,3 @@
-import { TraceEvent } from '@uniswap/analytics'
-import { BrowserEvent, SharedEventName } from '@uniswap/analytics-events'
 import { Link } from 'react-router-dom'
 import styled, { DefaultTheme } from 'styled-components/macro'
 import { BREAKPOINTS } from 'theme'
@@ -124,27 +122,25 @@ const Card = ({
 }) => {
   const isDarkMode = useIsDarkMode()
   return (
-    <TraceEvent events={[BrowserEvent.onClick]} name={SharedEventName.ELEMENT_CLICKED} element={elementName}>
-      <StyledCard
-        type={type}
-        as={external ? 'a' : Link}
-        to={external ? undefined : to}
-        href={external ? to : undefined}
-        target={external ? '_blank' : undefined}
-        rel={external ? 'noopenener noreferrer' : undefined}
-        isDarkMode={isDarkMode}
-        backgroundImgSrc={backgroundImgSrc}
-      >
-        <TitleRow>
-          <CardTitle>{title}</CardTitle>
-          {icon}
-        </TitleRow>
-        <CardDescription type={type}>
-          {description}
-          <CardCTA type={type}>{cta}</CardCTA>
-        </CardDescription>
-      </StyledCard>
-    </TraceEvent>
+    <StyledCard
+      type={type}
+      as={external ? 'a' : Link}
+      to={external ? undefined : to}
+      href={external ? to : undefined}
+      target={external ? '_blank' : undefined}
+      rel={external ? 'noopenener noreferrer' : undefined}
+      isDarkMode={isDarkMode}
+      backgroundImgSrc={backgroundImgSrc}
+    >
+      <TitleRow>
+        <CardTitle>{title}</CardTitle>
+        {icon}
+      </TitleRow>
+      <CardDescription type={type}>
+        {description}
+        <CardCTA type={type}>{cta}</CardCTA>
+      </CardDescription>
+    </StyledCard>
   )
 }
 

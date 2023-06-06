@@ -1,6 +1,4 @@
 import { Trans } from '@lingui/macro'
-import { sendAnalyticsEvent, Trace, useTrace } from '@uniswap/analytics'
-import { InterfaceModalName, NFTEventName } from '@uniswap/analytics-events'
 import { formatCurrencyAmount, NumberType } from '@uniswap/conedison/format'
 import { useWeb3React } from '@web3-react/core'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
@@ -47,7 +45,6 @@ const ListModalWrapper = styled.div`
 export const ListModal = ({ overlayClick }: { overlayClick: () => void }) => {
   const { provider } = useWeb3React()
   const signer = provider?.getSigner()
-  const trace = useTrace({ modal: InterfaceModalName.NFT_LISTING })
   const sellAssets = useSellAsset((state) => state.sellAssets)
   const { setListingStatusAndCallback, setLooksRareNonce, getLooksRareNonce, collectionsRequiringApproval, listings } =
     useNFTList(
@@ -93,13 +90,6 @@ export const ListModal = ({ overlayClick }: { overlayClick: () => void }) => {
     for (const listing of listings) {
       await signListingRow(listing, signer, provider, getLooksRareNonce, setLooksRareNonce, setListingStatusAndCallback)
     }
-
-    sendAnalyticsEvent(NFTEventName.NFT_LISTING_COMPLETED, {
-      signatures_approved: listings.filter((asset) => asset.status === ListingStatus.APPROVED),
-      list_quantity: listings.length,
-      usd_value: usdcAmount,
-      ...trace,
-    })
   }
 
   // Once all collections have been approved, go to next section and start signing listings
@@ -122,34 +112,32 @@ export const ListModal = ({ overlayClick }: { overlayClick: () => void }) => {
 
   return (
     <Portal>
-      <Trace modal={InterfaceModalName.NFT_LISTING}>
-        <ListModalWrapper>
-          {allListingsApproved ? (
-            <SuccessScreen overlayClick={closeModalOnClick} />
-          ) : (
-            <>
-              <TitleRow>
-                <ThemedText.HeadlineSmall lineHeight="28px">
-                  <Trans>List NFTs</Trans>
-                </ThemedText.HeadlineSmall>
-                <X size={24} cursor="pointer" onClick={closeModalOnClick} />
-              </TitleRow>
-              <ListModalSection
-                sectionType={Section.APPROVE}
-                active={openSection === Section.APPROVE}
-                content={collectionsRequiringApproval}
-                toggleSection={toggleOpenSection}
-              />
-              <ListModalSection
-                sectionType={Section.SIGN}
-                active={openSection === Section.SIGN}
-                content={listings}
-                toggleSection={toggleOpenSection}
-              />
-            </>
-          )}
-        </ListModalWrapper>
-      </Trace>
+      <ListModalWrapper>
+        {allListingsApproved ? (
+          <SuccessScreen overlayClick={closeModalOnClick} />
+        ) : (
+          <>
+            <TitleRow>
+              <ThemedText.HeadlineSmall lineHeight="28px">
+                <Trans>List NFTs</Trans>
+              </ThemedText.HeadlineSmall>
+              <X size={24} cursor="pointer" onClick={closeModalOnClick} />
+            </TitleRow>
+            <ListModalSection
+              sectionType={Section.APPROVE}
+              active={openSection === Section.APPROVE}
+              content={collectionsRequiringApproval}
+              toggleSection={toggleOpenSection}
+            />
+            <ListModalSection
+              sectionType={Section.SIGN}
+              active={openSection === Section.SIGN}
+              content={listings}
+              toggleSection={toggleOpenSection}
+            />
+          </>
+        )}
+      </ListModalWrapper>
       <Overlay onClick={closeModalOnClick} />
     </Portal>
   )

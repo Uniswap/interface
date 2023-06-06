@@ -1,5 +1,3 @@
-import { sendAnalyticsEvent, user } from '@uniswap/analytics'
-import { CustomUserProperties, InterfaceEventName, WalletConnectionResult } from '@uniswap/analytics-events'
 import { getWalletMeta } from '@uniswap/conedison/provider/meta'
 import { useWeb3React } from '@web3-react/core'
 import { useAccountDrawer } from 'components/AccountDrawer'
@@ -46,32 +44,6 @@ const OptionGrid = styled.div`
 const PrivacyPolicyWrapper = styled.div`
   padding: 0 4px;
 `
-
-const sendAnalyticsEventAndUserInfo = (
-  account: string,
-  walletType: string,
-  chainId: number | undefined,
-  isReconnect: boolean,
-  peerWalletAgent: string | undefined
-) => {
-  // User properties *must* be set before sending corresponding event properties,
-  // so that the event contains the correct and up-to-date user properties.
-  user.set(CustomUserProperties.WALLET_ADDRESS, account)
-  user.set(CustomUserProperties.WALLET_TYPE, walletType)
-  user.set(CustomUserProperties.PEER_WALLET_AGENT, peerWalletAgent ?? '')
-  if (chainId) {
-    user.postInsert(CustomUserProperties.ALL_WALLET_CHAIN_IDS, chainId)
-  }
-  user.postInsert(CustomUserProperties.ALL_WALLET_ADDRESSES_CONNECTED, account)
-
-  sendAnalyticsEvent(InterfaceEventName.WALLET_CONNECT_TXN_COMPLETED, {
-    result: WalletConnectionResult.SUCCEEDED,
-    wallet_address: account,
-    wallet_type: walletType,
-    is_reconnect: isReconnect,
-    peer_wallet_agent: peerWalletAgent,
-  })
-}
 
 function didUserReject(connection: Connection, error: any): boolean {
   return (
@@ -120,7 +92,6 @@ export default function WalletModal({ openSettings }: { openSettings: () => void
       const peerWalletAgent = provider ? getWalletMeta(provider)?.agent : undefined
       const isReconnect =
         connectedWallets.filter((wallet) => wallet.account === account && wallet.walletType === walletName).length > 0
-      sendAnalyticsEventAndUserInfo(account, walletName, chainId, isReconnect, peerWalletAgent)
       if (!isReconnect) addWalletToConnectedWallets({ account, walletType: walletName })
     }
     setLastActiveWalletAddress(account)
@@ -166,11 +137,6 @@ export default function WalletModal({ openSettings }: { openSettings: () => void
           setPendingConnection(undefined)
         } else {
           setPendingError(error)
-
-          sendAnalyticsEvent(InterfaceEventName.WALLET_CONNECT_TXN_COMPLETED, {
-            result: WalletConnectionResult.FAILED,
-            wallet_type: connection.getName(),
-          })
         }
       }
     },

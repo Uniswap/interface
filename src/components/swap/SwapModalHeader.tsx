@@ -1,7 +1,5 @@
 import { Trans } from '@lingui/macro'
 import { Currency, Percent, TradeType } from '@pollum-io/sdk-core'
-import { sendAnalyticsEvent } from '@uniswap/analytics'
-import { SwapEventName, SwapPriceUpdateUserResponse } from '@uniswap/analytics-events'
 import { useUSDPrice } from 'hooks/useUSDPrice'
 import { getPriceUpdateBasisPoints } from 'lib/utils/analytics'
 import { useEffect, useState } from 'react'
@@ -43,14 +41,12 @@ const ArrowWrapper = styled.div`
 
 const formatAnalyticsEventProperties = (
   trade: InterfaceTrade<Currency, Currency, TradeType>,
-  priceUpdate: number | undefined,
-  response: SwapPriceUpdateUserResponse
+  priceUpdate: number | undefined
 ) => ({
   chain_id:
     trade.inputAmount.currency.chainId === trade.outputAmount.currency.chainId
       ? trade.inputAmount.currency.chainId
       : undefined,
-  response,
   token_in_symbol: trade.inputAmount.currency.symbol,
   token_out_symbol: trade.outputAmount.currency.symbol,
   price_update_basis_points: priceUpdate,
@@ -89,12 +85,7 @@ export default function SwapModalHeader({
   }, [lastExecutionPrice, setLastExecutionPrice, trade.executionPrice])
 
   useEffect(() => {
-    if (shouldLogModalCloseEvent && showAcceptChanges)
-      sendAnalyticsEvent(
-        SwapEventName.SWAP_PRICE_UPDATE_ACKNOWLEDGED,
-        formatAnalyticsEventProperties(trade, priceUpdate, SwapPriceUpdateUserResponse.REJECTED)
-      )
-    setShouldLogModalCloseEvent(false)
+    if (shouldLogModalCloseEvent && showAcceptChanges) setShouldLogModalCloseEvent(false)
   }, [shouldLogModalCloseEvent, showAcceptChanges, setShouldLogModalCloseEvent, trade, priceUpdate])
 
   return (

@@ -1,8 +1,5 @@
 import { Trans } from '@lingui/macro'
 import { Currency, Percent, TradeType } from '@pollum-io/sdk-core'
-import { TraceEvent } from '@uniswap/analytics'
-import { BrowserEvent, InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
-import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import {
   formatPercentInBasisPointsNumber,
   formatPercentNumber,
@@ -14,13 +11,12 @@ import {
 import { ReactNode } from 'react'
 import { Text } from 'rebass'
 import { InterfaceTrade } from 'state/routing/types'
-import { useClientSideRouter, useUserSlippageTolerance } from 'state/user/hooks'
 import { computeRealizedPriceImpact } from 'utils/prices'
 
 import { ButtonError } from '../Button'
 import { AutoRow } from '../Row'
 import { SwapCallbackError } from './styleds'
-import { getTokenPath, RoutingDiagramEntry } from './SwapRoute'
+import { RoutingDiagramEntry } from './SwapRoute'
 
 interface AnalyticsEventProps {
   trade: InterfaceTrade<Currency, Currency, TradeType>
@@ -101,15 +97,9 @@ const formatAnalyticsEventProperties = ({
 })
 
 export default function SwapModalFooter({
-  trade,
-  allowedSlippage,
-  hash,
   onConfirm,
   swapErrorMessage,
   disabledConfirm,
-  swapQuoteReceivedDate,
-  fiatValueInput,
-  fiatValueOutput,
 }: {
   trade: InterfaceTrade<Currency, Currency, TradeType>
   hash: string | undefined
@@ -121,42 +111,19 @@ export default function SwapModalFooter({
   fiatValueInput: { data?: number; isLoading: boolean }
   fiatValueOutput: { data?: number; isLoading: boolean }
 }) {
-  const transactionDeadlineSecondsSinceEpoch = useTransactionDeadline()?.toNumber() // in seconds since epoch
-  const isAutoSlippage = useUserSlippageTolerance()[0] === 'auto'
-  const [clientSideRouter] = useClientSideRouter()
-  const routes = getTokenPath(trade)
-
   return (
     <>
       <AutoRow>
-        <TraceEvent
-          events={[BrowserEvent.onClick]}
-          element={InterfaceElementName.CONFIRM_SWAP_BUTTON}
-          name={SwapEventName.SWAP_SUBMITTED_BUTTON_CLICKED}
-          properties={formatAnalyticsEventProperties({
-            trade,
-            hash,
-            allowedSlippage,
-            transactionDeadlineSecondsSinceEpoch,
-            isAutoSlippage,
-            isAutoRouterApi: !clientSideRouter,
-            swapQuoteReceivedDate,
-            routes,
-            fiatValueInput: fiatValueInput.data,
-            fiatValueOutput: fiatValueOutput.data,
-          })}
+        <ButtonError
+          onClick={onConfirm}
+          disabled={disabledConfirm}
+          style={{ margin: '10px 0 0 0' }}
+          id="confirm-swap-or-send"
         >
-          <ButtonError
-            onClick={onConfirm}
-            disabled={disabledConfirm}
-            style={{ margin: '10px 0 0 0' }}
-            id={InterfaceElementName.CONFIRM_SWAP_BUTTON}
-          >
-            <Text fontSize={20} fontWeight={500}>
-              <Trans>Confirm Swap</Trans>
-            </Text>
-          </ButtonError>
-        </TraceEvent>
+          <Text fontSize={20} fontWeight={500}>
+            <Trans>Confirm Swap</Trans>
+          </Text>
+        </ButtonError>
 
         {swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}
       </AutoRow>

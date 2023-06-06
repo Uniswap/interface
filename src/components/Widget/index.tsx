@@ -1,13 +1,13 @@
 import { Trade } from '@pollum-io/router-sdk'
 import { Currency, TradeType } from '@pollum-io/sdk-core'
-import { AddEthereumChainParameter, DialogAnimationType, EMPTY_TOKEN_LIST, OnReviewSwapClick, SwapWidget, SwapWidgetSkeleton } from '@pollum-io/widgets'
-import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
 import {
-  InterfaceEventName,
-  InterfaceSectionName,
-  SwapEventName,
-  SwapPriceUpdateUserResponse,
-} from '@uniswap/analytics-events'
+  AddEthereumChainParameter,
+  DialogAnimationType,
+  EMPTY_TOKEN_LIST,
+  OnReviewSwapClick,
+  SwapWidget,
+  SwapWidgetSkeleton,
+} from '@pollum-io/widgets'
 import { useWeb3React } from '@web3-react/core'
 import { useToggleAccountDrawer } from 'components/AccountDrawer'
 import { useActiveLocale } from 'hooks/useActiveLocale'
@@ -72,24 +72,18 @@ export default function Widget({
     [connector]
   )
 
-  const trace = useTrace({ section: InterfaceSectionName.WIDGET })
   const [initialQuoteDate, setInitialQuoteDate] = useState<Date>()
-  const onInitialSwapQuote = useCallback(
-    (trade: Trade<Currency, Currency, TradeType>) => {
-      setInitialQuoteDate(new Date())
-      const eventProperties = {
-        // TODO(1416): Include undefined values.
-        ...formatSwapQuoteReceivedEventProperties(
-          trade,
-          /* gasUseEstimateUSD= */ undefined,
-          /* fetchingSwapQuoteStartTime= */ undefined
-        ),
-        ...trace,
-      }
-      sendAnalyticsEvent(SwapEventName.SWAP_QUOTE_RECEIVED, eventProperties)
-    },
-    [trace]
-  )
+  const onInitialSwapQuote = useCallback((trade: Trade<Currency, Currency, TradeType>) => {
+    setInitialQuoteDate(new Date())
+    const eventProperties = {
+      // TODO(1416): Include undefined values.
+      ...formatSwapQuoteReceivedEventProperties(
+        trade,
+        /* gasUseEstimateUSD= */ undefined,
+        /* fetchingSwapQuoteStartTime= */ undefined
+      ),
+    }
+  }, [])
   const onApproveToken = useCallback(() => {
     const input = inputs.value.INPUT
     if (!input) return
@@ -97,26 +91,18 @@ export default function Widget({
       chain_id: input.chainId,
       token_symbol: input.symbol,
       token_address: getTokenAddress(input),
-      ...trace,
     }
-    sendAnalyticsEvent(InterfaceEventName.APPROVE_TOKEN_TXN_SUBMITTED, eventProperties)
-  }, [inputs.value.INPUT, trace])
-  const onExpandSwapDetails = useCallback(() => {
-    sendAnalyticsEvent(SwapEventName.SWAP_DETAILS_EXPANDED, { ...trace })
-  }, [trace])
+  }, [inputs.value.INPUT])
   const onSwapPriceUpdateAck = useCallback(
     (stale: Trade<Currency, Currency, TradeType>, update: Trade<Currency, Currency, TradeType>) => {
       const eventProperties = {
         chain_id: update.inputAmount.currency.chainId,
-        response: SwapPriceUpdateUserResponse.ACCEPTED,
         token_in_symbol: update.inputAmount.currency.symbol,
         token_out_symbol: update.outputAmount.currency.symbol,
         price_update_basis_points: getPriceUpdateBasisPoints(stale.executionPrice, update.executionPrice),
-        ...trace,
       }
-      sendAnalyticsEvent(SwapEventName.SWAP_PRICE_UPDATE_ACKNOWLEDGED, eventProperties)
     },
-    [trace]
+    []
   )
   const onSubmitSwapClick = useCallback(
     (trade: Trade<Currency, Currency, TradeType>) => {
@@ -139,11 +125,9 @@ export default function Widget({
         chain_id: trade.inputAmount.currency.chainId,
         duration_from_first_quote_to_swap_submission_milliseconds: getDurationFromDateMilliseconds(initialQuoteDate),
         swap_quote_block_number: undefined,
-        ...trace,
       }
-      sendAnalyticsEvent(SwapEventName.SWAP_SUBMITTED_BUTTON_CLICKED, eventProperties)
     },
-    [initialQuoteDate, trace]
+    [initialQuoteDate]
   )
 
   if (!(inputs.value.INPUT || inputs.value.OUTPUT)) {
@@ -169,7 +153,6 @@ export default function Widget({
           {...inputs}
           {...settings}
           {...transactions}
-          onExpandSwapDetails={onExpandSwapDetails}
           onReviewSwapClick={onReviewSwapClick}
           onSubmitSwapClick={onSubmitSwapClick}
           onSwapApprove={onApproveToken}
@@ -180,7 +163,7 @@ export default function Widget({
             animationType: DialogAnimationType.FADE,
           }}
           onError={(error, errorInfo) => {
-            sendAnalyticsEvent(SwapEventName.SWAP_ERROR, { error, errorInfo, ...trace })
+            console.log(error, errorInfo)
           }}
         />
       </div>

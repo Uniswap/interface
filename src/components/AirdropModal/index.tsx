@@ -1,4 +1,3 @@
-import { BigNumber } from '@ethersproject/bignumber'
 import type { TransactionResponse } from '@ethersproject/providers'
 import { useWeb3React } from '@web3-react/core'
 import uniswapNftAirdropClaim from 'abis/uniswap-nft-airdrop-claim.json'
@@ -12,8 +11,8 @@ import { UNISWAP_NFT_AIRDROP_CLAIM_ADDRESS } from 'constants/addresses'
 import { useContract } from 'hooks/useContract'
 import { ChevronRightIcon } from 'nft/components/icons'
 import { useIsNftClaimAvailable } from 'nft/hooks/useIsNftClaimAvailable'
-import { CollectionRewardsFetcher } from 'nft/queries/genie/GetAirdorpMerkle'
-import { Airdrop, Rewards } from 'nft/types/airdrop'
+// import { CollectionRewardsFetcher } from 'nft/queries/genie/GetAirdorpMerkle'
+import { Rewards } from 'nft/types/airdrop'
 import { useEffect, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
 import { useModalIsOpen, useToggleModal } from 'state/application/hooks'
@@ -209,19 +208,17 @@ const AirdropModal = () => {
     if (account && provider && contract) {
       ;(async () => {
         try {
-          const { data } = await CollectionRewardsFetcher(account)
-          const claim = data.find((claim) => claim?.rewardType === Airdrop.GENIE_UNISWAP_USDC_AIRDROP)
-
-          if (!claim) return
-
-          const [isClaimed] = await contract.connect(provider).functions.isClaimed(claim?.index)
-
-          if (claim && isClaimed === false) {
-            const usdAmount = BigNumber.from(claim.amount).div(10 ** 6)
-            setClaim(claim)
-            setTotalAmount(usdAmount.toNumber())
-            setIsClaimAvailable(true)
-          }
+          // TODO: Review this logic when we want to add NFT support to Pegasys
+          // const { data } = await CollectionRewardsFetcher(account)
+          // const claim = data.find((claim) => claim?.rewardType === Airdrop.GENIE_UNISWAP_USDC_AIRDROP)
+          // if (!claim) return
+          // const [isClaimed] = await contract.connect(provider).functions.isClaimed(claim?.index)
+          // if (claim && isClaimed === false) {
+          //   const usdAmount = BigNumber.from(claim.amount).div(10 ** 6)
+          //   setClaim(claim)
+          //   setTotalAmount(usdAmount.toNumber())
+          //   setIsClaimAvailable(true)
+          // }
         } catch (err) {
           displayError()
         }

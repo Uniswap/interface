@@ -1,7 +1,4 @@
-import { formatEther } from '@ethersproject/units'
 import { Trans } from '@lingui/macro'
-import { Trace, useTrace } from '@uniswap/analytics'
-import { InterfaceModalName, NFTEventName } from '@uniswap/analytics-events'
 import clsx from 'clsx'
 import { OpacityHoverState } from 'components/Common'
 import { Box } from 'nft/components/Box'
@@ -21,7 +18,6 @@ import {
   getSuccessfulImageSize,
   parseTransactionResponse,
 } from 'nft/utils'
-import { formatAssetEventProperties } from 'nft/utils/formatEventProperties'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components/macro'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
@@ -59,7 +55,6 @@ const TxCompleteModal = () => {
   const isMobile = useIsMobile()
   const txHashUrl = getExplorerLink(1, txHash, ExplorerDataType.TRANSACTION)
   const shouldShowModal = (txState === TxStateType.Success || txState === TxStateType.Failed) && txState
-  const trace = useTrace({ modal: InterfaceModalName.NFT_TX_COMPLETE })
   const {
     nftsPurchased,
     nftsNotPurchased,
@@ -110,276 +105,236 @@ const TxCompleteModal = () => {
           <Box className={styles.modalContainer} onClick={closeTxCompleteScreen}>
             {/* Successfully purchased NFTs */}
             {showPurchasedModal && (
-              <Trace
-                name={NFTEventName.NFT_BUY_BAG_SUCCEEDED}
-                properties={{
-                  buy_quantity: nftsPurchased.length,
-                  usd_value: parseFloat(formatEther(totalPurchaseValue)) * ethPrice,
-                  transaction_hash: txHash,
-                  using_erc20: purchasedWithErc20,
-                  ...formatAssetEventProperties(nftsPurchased),
-                  ...trace,
-                }}
-                shouldLogImpression
-              >
-                <Box className={styles.successModal} onClick={stopPropagation}>
-                  <PegasysIcon color={vars.color.pink400} width="36" height="36" className={styles.uniLogo} />
-                  <Box display="flex" flexWrap="wrap" width="full" height="min">
-                    <h1 className={styles.title}>
-                      <Trans>Complete!</Trans>
-                    </h1>
-                    <p className={styles.subHeading}>
-                      <Trans>Uniswap has granted your wish!</Trans>
-                    </p>
-                  </Box>
-                  <UploadLink onClick={shareTweet} target="_blank">
-                    <TwitterIcon width={32} height={32} color={themeVars.colors.textSecondary} />
-                  </UploadLink>
-                  <Box
-                    className={styles.successAssetsContainer}
-                    style={{
-                      maxHeight: nftsPurchased.length > 32 ? (isMobile ? '172px' : '292px') : 'min-content',
-                    }}
-                  >
-                    {[...nftsPurchased].map((nft, index) => (
-                      <img
-                        className={clsx(
-                          styles.successAssetImage,
-                          nftsPurchased.length > 1 && styles.successAssetImageGrid
-                        )}
-                        style={{
-                          maxHeight: `${getSuccessfulImageSize(nftsPurchased.length, isMobile)}px`,
-                          maxWidth: `${getSuccessfulImageSize(nftsPurchased.length, isMobile)}px`,
-                        }}
-                        src={nft.imageUrl}
-                        alt={nft.name}
-                        key={index}
-                      />
-                    ))}
-                  </Box>
-                  {nftsPurchased.length > 32 && <Box className={styles.overflowFade} />}
-                  <Box
-                    display="flex"
-                    width="full"
-                    height="min"
-                    flexDirection="row"
-                    marginTop={{ sm: '20', md: '20' }}
-                    flexWrap={{ sm: 'wrap', md: 'nowrap' }}
-                    alignItems="center"
-                    paddingRight="40"
-                    paddingLeft="40"
-                    className={styles.bottomBar}
-                    justifyContent="space-between"
-                  >
-                    <Row>
-                      <Box marginRight="16">
-                        {nftsPurchased.length} NFT{nftsPurchased.length === 1 ? '' : 's'}
-                      </Box>
-                      <Box>{formatEthPrice(totalPurchaseValue.toString())} ETH</Box>
-                    </Row>
-                    <a href={txHashUrl} target="_blank" rel="noreferrer" style={{ textDecoration: 'none' }}>
-                      <Box color="textSecondary" fontWeight="normal">
-                        <Trans>View on Etherscan</Trans>
-                      </Box>
-                    </a>
-                  </Box>
+              <Box className={styles.successModal} onClick={stopPropagation}>
+                <PegasysIcon color={vars.color.pink400} width="36" height="36" className={styles.uniLogo} />
+                <Box display="flex" flexWrap="wrap" width="full" height="min">
+                  <h1 className={styles.title}>
+                    <Trans>Complete!</Trans>
+                  </h1>
+                  <p className={styles.subHeading}>
+                    <Trans>Uniswap has granted your wish!</Trans>
+                  </p>
                 </Box>
-              </Trace>
+                <UploadLink onClick={shareTweet} target="_blank">
+                  <TwitterIcon width={32} height={32} color={themeVars.colors.textSecondary} />
+                </UploadLink>
+                <Box
+                  className={styles.successAssetsContainer}
+                  style={{
+                    maxHeight: nftsPurchased.length > 32 ? (isMobile ? '172px' : '292px') : 'min-content',
+                  }}
+                >
+                  {[...nftsPurchased].map((nft, index) => (
+                    <img
+                      className={clsx(
+                        styles.successAssetImage,
+                        nftsPurchased.length > 1 && styles.successAssetImageGrid
+                      )}
+                      style={{
+                        maxHeight: `${getSuccessfulImageSize(nftsPurchased.length, isMobile)}px`,
+                        maxWidth: `${getSuccessfulImageSize(nftsPurchased.length, isMobile)}px`,
+                      }}
+                      src={nft.imageUrl}
+                      alt={nft.name}
+                      key={index}
+                    />
+                  ))}
+                </Box>
+                {nftsPurchased.length > 32 && <Box className={styles.overflowFade} />}
+                <Box
+                  display="flex"
+                  width="full"
+                  height="min"
+                  flexDirection="row"
+                  marginTop={{ sm: '20', md: '20' }}
+                  flexWrap={{ sm: 'wrap', md: 'nowrap' }}
+                  alignItems="center"
+                  paddingRight="40"
+                  paddingLeft="40"
+                  className={styles.bottomBar}
+                  justifyContent="space-between"
+                >
+                  <Row>
+                    <Box marginRight="16">
+                      {nftsPurchased.length} NFT{nftsPurchased.length === 1 ? '' : 's'}
+                    </Box>
+                    <Box>{formatEthPrice(totalPurchaseValue.toString())} ETH</Box>
+                  </Row>
+                  <a href={txHashUrl} target="_blank" rel="noreferrer" style={{ textDecoration: 'none' }}>
+                    <Box color="textSecondary" fontWeight="normal">
+                      <Trans>View on Etherscan</Trans>
+                    </Box>
+                  </a>
+                </Box>
+              </Box>
             )}
             {/* NFTs that were not purchased ie Refunds */}
             {showRefundModal &&
               /* Showing both purchases & refunds */
               (showPurchasedModal ? (
-                <Trace
-                  name={NFTEventName.NFT_BUY_BAG_REFUNDED}
-                  properties={{
-                    buy_quantity: nftsPurchased.length,
-                    fail_quantity: nftsNotPurchased.length,
-                    refund_amount_usd: totalUSDRefund,
-                    transaction_hash: txHash,
-                    ...trace,
-                  }}
-                  shouldLogImpression
-                >
-                  <Box className={styles.mixedRefundModal} onClick={stopPropagation}>
+                <Box className={styles.mixedRefundModal} onClick={stopPropagation}>
+                  <Box
+                    display="inline-flex"
+                    flexWrap="wrap"
+                    width={{ sm: 'full', md: 'half' }}
+                    paddingRight={{ sm: '0', md: '32' }}
+                  >
+                    <LightningBoltIcon color="pink" />
+                    <p className={styles.subtitle}>Instant Refund</p>
+                    <p className={styles.interStd}>
+                      Uniswap returned{' '}
+                      <span style={{ fontWeight: '700' }}>{formatEthPrice(totalRefundValue.toString())} ETH</span> back
+                      to your wallet for unavailable items.
+                    </p>
                     <Box
-                      display="inline-flex"
+                      display="flex"
                       flexWrap="wrap"
-                      width={{ sm: 'full', md: 'half' }}
-                      paddingRight={{ sm: '0', md: '32' }}
+                      bottom="24"
+                      width="full"
+                      alignSelf="flex-end"
+                      position={{ sm: 'absolute', md: 'static' }}
                     >
-                      <LightningBoltIcon color="pink" />
-                      <p className={styles.subtitle}>Instant Refund</p>
-                      <p className={styles.interStd}>
-                        Uniswap returned{' '}
-                        <span style={{ fontWeight: '700' }}>{formatEthPrice(totalRefundValue.toString())} ETH</span>{' '}
-                        back to your wallet for unavailable items.
+                      <p className={styles.totalEthCost} style={{ marginBottom: '2px' }}>
+                        {formatEthPrice(totalRefundValue.toString())} ETH
+                      </p>
+                      <p className={styles.totalUsdRefund}>{formatUSDPriceWithCommas(totalUSDRefund)}</p>
+                      <p className={styles.totalEthCost} style={{ width: '100%' }}>
+                        for {nftsNotPurchased.length} unavailable item
+                        {nftsNotPurchased.length === 1 ? '' : 's'}.
                       </p>
                       <Box
-                        display="flex"
-                        flexWrap="wrap"
-                        bottom="24"
-                        width="full"
-                        alignSelf="flex-end"
-                        position={{ sm: 'absolute', md: 'static' }}
+                        position={{ sm: 'absolute', md: 'relative' }}
+                        right={{ sm: '0', md: 'auto' }}
+                        bottom={{ sm: '0', md: 'auto' }}
+                        justifyContent={{ sm: 'flex-end', md: 'flex-start' }}
+                        textAlign={{ sm: 'right', md: 'left' }}
+                        flexShrink="0"
+                        marginRight={{ sm: '40', md: '24' }}
+                        width={{ sm: 'half', md: 'auto' }}
                       >
-                        <p className={styles.totalEthCost} style={{ marginBottom: '2px' }}>
-                          {formatEthPrice(totalRefundValue.toString())} ETH
-                        </p>
-                        <p className={styles.totalUsdRefund}>{formatUSDPriceWithCommas(totalUSDRefund)}</p>
-                        <p className={styles.totalEthCost} style={{ width: '100%' }}>
-                          for {nftsNotPurchased.length} unavailable item
-                          {nftsNotPurchased.length === 1 ? '' : 's'}.
-                        </p>
-                        <Box
-                          position={{ sm: 'absolute', md: 'relative' }}
-                          right={{ sm: '0', md: 'auto' }}
-                          bottom={{ sm: '0', md: 'auto' }}
-                          justifyContent={{ sm: 'flex-end', md: 'flex-start' }}
-                          textAlign={{ sm: 'right', md: 'left' }}
-                          flexShrink="0"
-                          marginRight={{ sm: '40', md: '24' }}
-                          width={{ sm: 'half', md: 'auto' }}
-                        >
-                          <a href={txHashUrl} target="_blank" rel="noreferrer" style={{ textDecoration: 'none' }}>
-                            <Box
-                              fontWeight="normal"
-                              marginTop="16"
-                              color="textSecondary"
-                              className={styles.totalEthCost}
-                            >
-                              View on Etherscan
-                            </Box>
-                          </a>
-                        </Box>
+                        <a href={txHashUrl} target="_blank" rel="noreferrer" style={{ textDecoration: 'none' }}>
+                          <Box fontWeight="normal" marginTop="16" color="textSecondary" className={styles.totalEthCost}>
+                            View on Etherscan
+                          </Box>
+                        </a>
                       </Box>
                     </Box>
-                    <Box className={styles.refundAssetsContainer}>
-                      {nftsNotPurchased.map((nft, index) => (
-                        <Box display="flex" flexWrap="wrap" height="min" width="52" key={index}>
-                          <img className={styles.refundAssetImage} src={nft.imageUrl} alt={nft.name} key={index} />
-                        </Box>
-                      ))}
-                    </Box>
-                    <Box className={styles.refundOverflowFade} />
                   </Box>
-                </Trace>
+                  <Box className={styles.refundAssetsContainer}>
+                    {nftsNotPurchased.map((nft, index) => (
+                      <Box display="flex" flexWrap="wrap" height="min" width="52" key={index}>
+                        <img className={styles.refundAssetImage} src={nft.imageUrl} alt={nft.name} key={index} />
+                      </Box>
+                    ))}
+                  </Box>
+                  <Box className={styles.refundOverflowFade} />
+                </Box>
               ) : (
                 // Only showing when all assets are unavailable
-                <Trace
-                  name={NFTEventName.NFT_BUY_BAG_REFUNDED}
-                  properties={{
-                    buy_quantity: 0,
-                    fail_quantity: nftsNotPurchased.length,
-                    refund_amount_usd: totalUSDRefund,
-                    ...trace,
-                  }}
-                  shouldLogImpression
-                >
-                  <Box className={styles.fullRefundModal} onClick={stopPropagation}>
-                    <Box marginLeft="auto" marginRight="auto" display="flex">
-                      {txState === TxStateType.Success ? (
-                        <>
-                          <LightningBoltIcon />
-                          <h1 className={styles.title}>Instant Refund</h1>
-                        </>
-                      ) : (
-                        <h1 className={styles.title}>Failed Transaction</h1>
-                      )}
-                    </Box>
-                    <p className={styles.bodySmall}>
-                      {txState === TxStateType.Success &&
-                        `Selected item${
-                          nftsPurchased.length === 1 ? ' is' : 's are'
-                        } no longer available. Uniswap instantly refunded you for this incomplete transaction. `}
-                      {formatUsdPrice(txFeeFiat)} was used for gas in attempt to complete this transaction. For support,
-                      please visit our <a href="https://discord.com/invite/UzjWbWWERz">Discord</a>
-                    </p>
-                    <Box className={styles.allUnavailableAssets}>
-                      {nftsNotPurchased.length >= 3 && (
-                        <Box className={styles.toggleUnavailable} onClick={() => toggleShowUnavailable()}>
-                          {!showUnavailable && (
-                            <Box paddingLeft="20" paddingTop="8" paddingBottom="8">
-                              {nftsNotPurchased.slice(0, 3).map((asset, index) => (
-                                <img
-                                  style={{ zIndex: 2 - index }}
-                                  className={styles.unavailableAssetPreview}
-                                  src={asset.imageUrl}
-                                  alt={asset.name}
-                                  key={index}
-                                />
-                              ))}
-                            </Box>
-                          )}
-                          <Box
-                            color={showUnavailable ? 'textPrimary' : 'textSecondary'}
-                            className={styles.unavailableText}
-                          >
-                            Unavailable
-                            <Box className={styles.unavailableItems}>
-                              {nftsNotPurchased.length} item{nftsNotPurchased.length === 1 ? '' : 's'}
-                            </Box>
-                          </Box>
-                          <ChevronUpIcon className={`${!showUnavailable && styles.chevronDown} ${styles.chevron}`} />
-                        </Box>
-                      )}
-                      {(showUnavailable || nftsNotPurchased.length < 3) &&
-                        nftsNotPurchased.map((asset, index) => (
-                          <Box
-                            backgroundColor="backgroundSurface"
-                            display="flex"
-                            padding="4"
-                            marginBottom="1"
-                            borderRadius="8"
-                            key={index}
-                          >
-                            <Box className={styles.assetContainer}>
-                              <img className={styles.fullRefundImage} src={asset.imageUrl} alt={asset.name} />
-                            </Box>
-                            <Box flexWrap="wrap" marginTop="4">
-                              <Box marginLeft="4" width="full" display="flex">
-                                <p className={styles.totalEthCost} style={{ marginBottom: '2px' }}>
-                                  {formatEthPrice(
-                                    asset.updatedPriceInfo ? asset.updatedPriceInfo.ETHPrice : asset.priceInfo.ETHPrice
-                                  )}{' '}
-                                  ETH
-                                </p>
-                              </Box>
-                              <Box color="textPrimary" className={styles.totalUsdRefund}>
-                                {txState === TxStateType.Success ? 'Refunded' : asset.name}
-                              </Box>
-                            </Box>
-                          </Box>
-                        ))}
-                    </Box>
-                    {showUnavailable && <Box className={styles.fullRefundOverflowFade} />}
-                    <p className={styles.totalEthCost} style={{ marginBottom: '2px' }}>
-                      {formatEthPrice(totalRefundValue.toString())} ETH
-                    </p>
-                    <p className={styles.totalUsdRefund}>{formatUSDPriceWithCommas(totalUSDRefund)}</p>
-                    <Box className={styles.walletAddress} marginLeft="auto" marginRight="0">
-                      <a href={txHashUrl} target="_blank" rel="noreferrer">
-                        <Box className={styles.addressHash}>View on Etherscan</Box>
-                      </a>
-                    </Box>
-                    <p className={styles.totalEthCost}>
-                      for {nftsNotPurchased.length} unavailable item
-                      {nftsNotPurchased.length === 1 ? '' : 's'}.
-                    </p>
-                    <Box
-                      as="button"
-                      border="none"
-                      backgroundColor="accentAction"
-                      cursor="pointer"
-                      className={styles.returnButton}
-                      type="button"
-                      onClick={() => closeTxCompleteScreen()}
-                    >
-                      <BackArrowIcon className={styles.fullRefundBackArrow} />
-                      Return to Marketplace
-                    </Box>
+
+                <Box className={styles.fullRefundModal} onClick={stopPropagation}>
+                  <Box marginLeft="auto" marginRight="auto" display="flex">
+                    {txState === TxStateType.Success ? (
+                      <>
+                        <LightningBoltIcon />
+                        <h1 className={styles.title}>Instant Refund</h1>
+                      </>
+                    ) : (
+                      <h1 className={styles.title}>Failed Transaction</h1>
+                    )}
                   </Box>
-                </Trace>
+                  <p className={styles.bodySmall}>
+                    {txState === TxStateType.Success &&
+                      `Selected item${
+                        nftsPurchased.length === 1 ? ' is' : 's are'
+                      } no longer available. Uniswap instantly refunded you for this incomplete transaction. `}
+                    {formatUsdPrice(txFeeFiat)} was used for gas in attempt to complete this transaction. For support,
+                    please visit our <a href="https://discord.com/invite/UzjWbWWERz">Discord</a>
+                  </p>
+                  <Box className={styles.allUnavailableAssets}>
+                    {nftsNotPurchased.length >= 3 && (
+                      <Box className={styles.toggleUnavailable} onClick={() => toggleShowUnavailable()}>
+                        {!showUnavailable && (
+                          <Box paddingLeft="20" paddingTop="8" paddingBottom="8">
+                            {nftsNotPurchased.slice(0, 3).map((asset, index) => (
+                              <img
+                                style={{ zIndex: 2 - index }}
+                                className={styles.unavailableAssetPreview}
+                                src={asset.imageUrl}
+                                alt={asset.name}
+                                key={index}
+                              />
+                            ))}
+                          </Box>
+                        )}
+                        <Box
+                          color={showUnavailable ? 'textPrimary' : 'textSecondary'}
+                          className={styles.unavailableText}
+                        >
+                          Unavailable
+                          <Box className={styles.unavailableItems}>
+                            {nftsNotPurchased.length} item{nftsNotPurchased.length === 1 ? '' : 's'}
+                          </Box>
+                        </Box>
+                        <ChevronUpIcon className={`${!showUnavailable && styles.chevronDown} ${styles.chevron}`} />
+                      </Box>
+                    )}
+                    {(showUnavailable || nftsNotPurchased.length < 3) &&
+                      nftsNotPurchased.map((asset, index) => (
+                        <Box
+                          backgroundColor="backgroundSurface"
+                          display="flex"
+                          padding="4"
+                          marginBottom="1"
+                          borderRadius="8"
+                          key={index}
+                        >
+                          <Box className={styles.assetContainer}>
+                            <img className={styles.fullRefundImage} src={asset.imageUrl} alt={asset.name} />
+                          </Box>
+                          <Box flexWrap="wrap" marginTop="4">
+                            <Box marginLeft="4" width="full" display="flex">
+                              <p className={styles.totalEthCost} style={{ marginBottom: '2px' }}>
+                                {formatEthPrice(
+                                  asset.updatedPriceInfo ? asset.updatedPriceInfo.ETHPrice : asset.priceInfo.ETHPrice
+                                )}{' '}
+                                ETH
+                              </p>
+                            </Box>
+                            <Box color="textPrimary" className={styles.totalUsdRefund}>
+                              {txState === TxStateType.Success ? 'Refunded' : asset.name}
+                            </Box>
+                          </Box>
+                        </Box>
+                      ))}
+                  </Box>
+                  {showUnavailable && <Box className={styles.fullRefundOverflowFade} />}
+                  <p className={styles.totalEthCost} style={{ marginBottom: '2px' }}>
+                    {formatEthPrice(totalRefundValue.toString())} ETH
+                  </p>
+                  <p className={styles.totalUsdRefund}>{formatUSDPriceWithCommas(totalUSDRefund)}</p>
+                  <Box className={styles.walletAddress} marginLeft="auto" marginRight="0">
+                    <a href={txHashUrl} target="_blank" rel="noreferrer">
+                      <Box className={styles.addressHash}>View on Etherscan</Box>
+                    </a>
+                  </Box>
+                  <p className={styles.totalEthCost}>
+                    for {nftsNotPurchased.length} unavailable item
+                    {nftsNotPurchased.length === 1 ? '' : 's'}.
+                  </p>
+                  <Box
+                    as="button"
+                    border="none"
+                    backgroundColor="accentAction"
+                    cursor="pointer"
+                    className={styles.returnButton}
+                    type="button"
+                    onClick={() => closeTxCompleteScreen()}
+                  >
+                    <BackArrowIcon className={styles.fullRefundBackArrow} />
+                    Return to Marketplace
+                  </Box>
+                </Box>
               ))}
           </Box>
         </Portal>

@@ -1,5 +1,3 @@
-import { TraceEvent } from '@uniswap/analytics'
-import { BrowserEvent, InterfaceElementName, SharedEventName } from '@uniswap/analytics-events'
 import styled from 'styled-components/macro'
 import { BREAKPOINTS, ExternalLink, StyledRouterLink } from 'theme'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
@@ -118,15 +116,9 @@ const LogoSectionContent = () => {
         <SocialLink href="https://discord.com/invite/UzjWbWWERz" target="_blank" rel="noopener noreferrer">
           <DiscordIcon size={32} />
         </SocialLink>
-        <TraceEvent
-          events={[BrowserEvent.onClick]}
-          name={SharedEventName.ELEMENT_CLICKED}
-          element={InterfaceElementName.TWITTER_LINK}
-        >
-          <SocialLink href="https://twitter.com/PegasysDEX" target="_blank" rel="noopener noreferrer">
-            <TwitterIcon size={32} />
-          </SocialLink>
-        </TraceEvent>
+        <SocialLink href="https://twitter.com/PegasysDEX" target="_blank" rel="noopener noreferrer">
+          <TwitterIcon size={32} />
+        </SocialLink>
         <SocialLink href="https://github.com/pegasys-fi" target="_blank" rel="noopener noreferrer">
           <GithubIcon size={32} />
         </SocialLink>
@@ -158,15 +150,9 @@ export const AboutFooter = () => {
         </LinkGroup>
         <LinkGroup>
           <LinkGroupTitle>Get Help</LinkGroupTitle>
-          <TraceEvent
-            events={[BrowserEvent.onClick]}
-            name={SharedEventName.ELEMENT_CLICKED}
-            element={InterfaceElementName.SUPPORT_LINK}
-          >
-            <ExternalTextLink href="https://discord.com/invite/UzjWbWWERz" target="_blank" rel="noopener noreferrer">
-              Contact Us
-            </ExternalTextLink>
-          </TraceEvent>
+          <ExternalTextLink href="https://discord.com/invite/UzjWbWWERz" target="_blank" rel="noopener noreferrer">
+            Contact Us
+          </ExternalTextLink>
         </LinkGroup>
       </FooterLinks>
 

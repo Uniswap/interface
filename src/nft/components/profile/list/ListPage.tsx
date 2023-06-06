@@ -1,6 +1,4 @@
 import { Trans } from '@lingui/macro'
-import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
-import { InterfaceModalName, NFTEventName } from '@uniswap/analytics-events'
 import { formatCurrencyAmount, NumberType } from '@uniswap/conedison/format'
 import { useWeb3React } from '@web3-react/core'
 import Column from 'components/Column'
@@ -185,7 +183,6 @@ export const ListPage = () => {
   const { setProfilePageState: setSellPageState } = useProfilePageState()
   const { provider } = useWeb3React()
   const isMobile = useIsMobile()
-  const trace = useTrace({ modal: InterfaceModalName.NFT_LISTING })
   const { setGlobalMarketplaces, sellAssets, issues } = useSellAsset(
     ({ setGlobalMarketplaces, sellAssets, issues }) => ({
       setGlobalMarketplaces,
@@ -226,12 +223,10 @@ export const ListPage = () => {
     marketplaces: Array.from(new Set(listings.map((asset) => asset.marketplace.name))),
     list_quantity: listings.length,
     usd_value: usdcAmount,
-    ...trace,
   }
 
   const startListingFlow = async () => {
     if (!signer) return
-    sendAnalyticsEvent(NFTEventName.NFT_SELL_START_LISTING, { ...startListingEventProperties })
     const signerAddress = await signer.getAddress()
     const nonce = await looksRareNonceFetcher(signerAddress)
     setLooksRareNonce(nonce ?? 0)
