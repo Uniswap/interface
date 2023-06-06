@@ -142,7 +142,7 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
     setShowConfirmation(false)
   }
 
-  const toggleModalOnGaslessChange = () => {
+  const handleGaslessToggle = () => {
     if (gaslessMode) {
       toggleGaslessMode()
       setShowConfirmation(false)
@@ -209,7 +209,7 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
                 <QuestionHelper text={<Trans>Enables gasless transactions by compensating them with KROM.</Trans>} />
               </RowFixed>
               {isGaslessEnabledForNetwork ? (
-                <Toggle id="toggle-expert-mode-button" isActive={gaslessMode} toggle={toggleModalOnGaslessChange} />
+                <Toggle id="toggle-expert-mode-button" isActive={gaslessMode} toggle={handleGaslessToggle} />
               ) : (
                 <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
                   <Trans>Coming Soon</Trans>
