@@ -12,7 +12,7 @@ export enum FeatureFlag {
   detailsV2 = 'details_v2',
   uraEnabled = 'ura_enabled',
   debounceSwapQuote = 'debounce_swap_quote',
-  // TODO: update this when naming is finalized.
+  // TODO (Gouda): update this when naming is finalized.
   uniswapXEnabled = 'gouda_enabled',
 }
 
