@@ -90,7 +90,7 @@ export default function useUniswapXSwapCallback(trade: DutchLimitOrderTrade | un
 
         return {
           type: TradeFillType.UniswapX as const,
-          response: { orderHash: body.hash },
+          response: { orderHash: body.hash, deadline: updatedOrder.info.deadline },
         }
       }),
     [trade, provider, account]
