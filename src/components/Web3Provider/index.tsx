@@ -11,7 +11,9 @@ import useEagerlyConnect from 'hooks/useEagerlyConnect'
 import useOrderedConnections from 'hooks/useOrderedConnections'
 import usePrevious from 'hooks/usePrevious'
 import { ReactNode, useEffect, useMemo } from 'react'
+import { useLocation } from 'react-router-dom'
 import { useConnectedWallets } from 'state/wallets/hooks'
+import { getCurrentPageFromLocation } from 'utils/urlRoutes'
 
 export default function Web3Provider({ children }: { children: ReactNode }) {
   useEagerlyConnect()
@@ -31,6 +33,8 @@ export default function Web3Provider({ children }: { children: ReactNode }) {
 /** A component to run hooks under the Web3ReactProvider context. */
 function Updater() {
   const { account, chainId, connector, provider } = useWeb3React()
+  const { pathname } = useLocation()
+  const currentPage = getCurrentPageFromLocation(pathname)
 
   // Trace RPC calls (for debugging).
   const networkProvider = isSupportedChain(chainId) ? RPC_PROVIDERS[chainId] : undefined
@@ -76,11 +80,22 @@ function Updater() {
         wallet_type: walletType,
         is_reconnect: isReconnect,
         peer_wallet_agent: peerWalletAgent,
+        page: currentPage,
       })
 
       addConnectedWallet({ account, walletType })
     }
-  }, [account, addConnectedWallet, chainId, connectedWallets, connector, getConnection, previousAccount, provider])
+  }, [
+    account,
+    addConnectedWallet,
+    currentPage,
+    chainId,
+    connectedWallets,
+    connector,
+    getConnection,
+    previousAccount,
+    provider,
+  ])
 
   return null
 }

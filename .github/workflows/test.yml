@@ -167,13 +167,6 @@ jobs:
           CYPRESS_PULL_REQUEST_ID: ${{ github.event.pull_request.number }}
           CYPRESS_PULL_REQUEST_URL: ${{ github.event.pull_request.html_url }}
 
-      - uses: codecov/codecov-action@v3
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          fail_ci_if_error: false
-          verbose: true
-          flags: e2e-tests
-
       - if: failure() && github.ref_name == 'main'
         uses: ./.github/actions/report
         with:
