@@ -115,7 +115,7 @@ describe('Token details', () => {
       cy.url().should('not.include', `${UNI_MAINNET.address}`)
     })
 
-    it.only('should not share swap state with the main swap page', () => {
+    it('should not share swap state with the main swap page', () => {
       cy.get(`#swap-currency-output .token-symbol-container`).should('contain.text', 'UNI')
       cy.get(`#swap-currency-input .open-currency-select-button`).click()
       cy.contains('WETH').click()
@@ -144,7 +144,7 @@ describe('Token details', () => {
       cy.get('#swap-currency-output .token-amount-input').clear().type('0.0').should('have.value', '0.0')
     })
 
-    it.only('should show a L2 token even if the user is connected to a different network', () => {
+    it('should show a L2 token even if the user is connected to a different network', () => {
       cy.visit('/tokens', { ethereum: 'hardhat' })
       cy.get(getTestSelector('tokens-network-filter-selected')).click()
       cy.get(getTestSelector('tokens-network-filter-option-arbitrum')).click()
