@@ -384,15 +384,27 @@ export default function Landing() {
               </LearnMoreContainer>
             </ContentContainer>
             <AboutContentContainer isDarkMode={isDarkMode}>
-              <CardGrid cols={2} ref={cardsRef}>
-                {MAIN_CARDS.map(({ darkBackgroundImgSrc, lightBackgroundImgSrc, ...card }) => (
-                  <Card
-                    {...card}
-                    backgroundImgSrc={isDarkMode ? darkBackgroundImgSrc : lightBackgroundImgSrc}
-                    key={card.title}
-                  />
-                ))}
-              </CardGrid>
+              {shouldDisableNFTRoutes ? (
+                <CardGrid cols={1} ref={cardsRef}>
+                  {MAIN_CARDS.slice(0, 1).map(({ darkBackgroundImgSrc, lightBackgroundImgSrc, ...card }) => (
+                    <Card
+                      {...card}
+                      backgroundImgSrc={isDarkMode ? darkBackgroundImgSrc : lightBackgroundImgSrc}
+                      key={card.title}
+                    />
+                  ))}
+                </CardGrid>
+              ) : (
+                <CardGrid cols={2} ref={cardsRef}>
+                  {MAIN_CARDS.map(({ darkBackgroundImgSrc, lightBackgroundImgSrc, ...card }) => (
+                    <Card
+                      {...card}
+                      backgroundImgSrc={isDarkMode ? darkBackgroundImgSrc : lightBackgroundImgSrc}
+                      key={card.title}
+                    />
+                  ))}
+                </CardGrid>
+              )}
               <CardGrid cols={3}>
                 {MORE_CARDS.map(({ darkIcon, lightIcon, ...card }) => (
                   <Card {...card} icon={isDarkMode ? darkIcon : lightIcon} key={card.title} type={CardType.Secondary} />
