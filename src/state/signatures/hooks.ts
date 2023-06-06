@@ -5,7 +5,6 @@ import { useDispatch } from 'react-redux'
 import { useAppSelector } from 'state/hooks'
 
 import { addTransaction } from '../transactions/reducer'
-import { createFakeGoudaOrders } from './dummy_data'
 import { addSignature, updateSignature } from './reducer'
 import { DutchLimitOrderStatus, SignatureDetails, SignatureType, UniswapXOrderDetails } from './types'
 
@@ -24,8 +23,7 @@ function usePendingOrders(): UniswapXOrderDetails[] {
   }, [signatures, account])
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function useAddOrder() {
+export function useAddOrder() {
   const dispatch = useDispatch()
 
   return useCallback(
@@ -77,10 +75,7 @@ function useUpdateOrder() {
 export function useAllSignatures(): { [id: string]: SignatureDetails } {
   const { account } = useWeb3React()
 
-  // TODO: Return signatures from redux store once we have a way to add them
-  const signatures = /* useAppSelector((state) => state.signatures[account]) ?? {} */ createFakeGoudaOrders(
-    account ?? ''
-  )
+  const signatures = useAppSelector((state) => state.signatures) ?? {}
 
   if (!account || !signatures[account]) return {}
 

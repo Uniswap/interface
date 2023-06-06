@@ -1,11 +1,18 @@
 import { Percent, TradeType } from '@uniswap/sdk-core'
+import { useWeb3React } from '@web3-react/core'
 import { PermitSignature } from 'hooks/usePermitAllowance'
 import { useCallback } from 'react'
 import { InterfaceTrade, TradeFillType } from 'state/routing/types'
 import { isClassicTrade, isUniswapXTrade } from 'state/routing/utils'
+import { useAddOrder } from 'state/signatures/hooks'
+import { UniswapXOrderDetails } from 'state/signatures/types'
 
 import { useTransactionAdder } from '../state/transactions/hooks'
-import { TransactionType } from '../state/transactions/types'
+import {
+  ExactInputSwapTransactionInfo,
+  ExactOutputSwapTransactionInfo,
+  TransactionType,
+} from '../state/transactions/types'
 import { currencyId } from '../utils/currencyId'
 import useTransactionDeadline from './useTransactionDeadline'
 import useUniswapXSwapCallback from './useUniswapXSwapCallback'
@@ -24,6 +31,8 @@ export function useSwapCallback(
   const deadline = useTransactionDeadline()
 
   const addTransaction = useTransactionAdder()
+  const addOrder = useAddOrder()
+  const { account, chainId } = useWeb3React()
 
   const uniswapXSwapCallback = useUniswapXSwapCallback(isUniswapXTrade(trade) ? trade : undefined)
 
@@ -41,37 +50,42 @@ export function useSwapCallback(
 
   return useCallback(async () => {
     if (!trade) throw new Error('missing trade')
+    if (!account || !chainId) throw new Error('wallet must be connected to swap')
 
     const result = await swapCallback()
 
-    if (result.type === TradeFillType.UniswapX) {
-      // TODO(Gouda): Add to transaction history here - Carter
-    } else {
-      addTransaction(
-        result.response,
-        trade.tradeType === TradeType.EXACT_INPUT
-          ? {
-              type: TransactionType.SWAP,
-              tradeType: TradeType.EXACT_INPUT,
-              inputCurrencyId: currencyId(trade.inputAmount.currency),
-              inputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
-              expectedOutputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
-              outputCurrencyId: currencyId(trade.outputAmount.currency),
-              minimumOutputCurrencyAmountRaw: trade.minimumAmountOut(allowedSlippage).quotient.toString(),
-              isUniswapXOrder: false,
-            }
-          : {
-              type: TransactionType.SWAP,
-              tradeType: TradeType.EXACT_OUTPUT,
-              inputCurrencyId: currencyId(trade.inputAmount.currency),
-              maximumInputCurrencyAmountRaw: trade.maximumAmountIn(allowedSlippage).quotient.toString(),
-              outputCurrencyId: currencyId(trade.outputAmount.currency),
-              outputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
-              expectedInputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
-              isUniswapXOrder: false,
-            }
-      )
+    const swapInfo: ExactInputSwapTransactionInfo | ExactOutputSwapTransactionInfo = {
+      type: TransactionType.SWAP,
+      inputCurrencyId: currencyId(trade.inputAmount.currency),
+      outputCurrencyId: currencyId(trade.outputAmount.currency),
+      isUniswapXOrder: result.type === TradeFillType.UniswapX,
+      ...(trade.tradeType === TradeType.EXACT_INPUT
+        ? {
+            tradeType: TradeType.EXACT_INPUT,
+            inputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
+            expectedOutputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
+            minimumOutputCurrencyAmountRaw: trade.minimumAmountOut(allowedSlippage).quotient.toString(),
+          }
+        : {
+            tradeType: TradeType.EXACT_OUTPUT,
+            maximumInputCurrencyAmountRaw: trade.maximumAmountIn(allowedSlippage).quotient.toString(),
+            outputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
+            expectedInputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
+          }),
     }
+
+    if (result.type === TradeFillType.UniswapX) {
+      addOrder(
+        account,
+        result.response.orderHash,
+        chainId,
+        result.response.deadline,
+        swapInfo as UniswapXOrderDetails['swapInfo']
+      )
+    } else {
+      addTransaction(result.response, swapInfo)
+    }
+
     return result
-  }, [addTransaction, allowedSlippage, swapCallback, trade])
+  }, [account, addOrder, addTransaction, allowedSlippage, chainId, swapCallback, trade])
 }
