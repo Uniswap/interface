@@ -56,8 +56,8 @@ const AssetPage = () => {
         <meta property="og:image:height" content="600" />
         <meta property="og:title" content={asset?.name} />
         <meta property="og:description" content={collectionDescription} />
-        <meta property="twitter:card" content="summary_large_image" />
-        <meta property="twitter:image" content={asset?.imageUrl} />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:image" content={asset?.imageUrl} />
       </Helmet>
       <Trace
         page={InterfacePageName.NFT_DETAILS_PAGE}
