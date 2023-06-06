@@ -95,19 +95,6 @@ export function getExplorerLink(
   type: ExplorerDataType
 ): string {
   if (!chainId) return ''
-  if (chainId === ChainId.ArbitrumOne) {
-    switch (type) {
-      case ExplorerDataType.TRANSACTION:
-        return `https://arbiscan.io/tx/${data}`
-      case ExplorerDataType.ADDRESS:
-      case ExplorerDataType.TOKEN:
-        return `https://arbiscan.io/address/${data}`
-      case ExplorerDataType.BLOCK:
-        return `https://arbiscan.io/block/${data}`
-      default:
-        return 'https://arbiscan.io/'
-    }
-  }
 
   const prefix = CHAIN_INFO[chainId]?.explorer ?? 'https://etherscan.io/'
 

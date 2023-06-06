@@ -114,7 +114,7 @@ export function TokenDetailsStats({
   const chainId = currencyIdToChain(currencyId)
   const address = currencyIdToAddress(currencyId)
 
-  const explorerLink = getExplorerLink(chainId, address, ExplorerDataType.ADDRESS)
+  const explorerLink = getExplorerLink(chainId, address, ExplorerDataType.TOKEN)
 
   return (
     <Flex gap="spacing24">

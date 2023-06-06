@@ -6,18 +6,18 @@ describe(getExplorerLink, () => {
     expect(getExplorerLink(null, 'hash', ExplorerDataType.ADDRESS)).toEqual('')
   })
 
-  it('handles Arbtrum special casing', () => {
+  it('handles different link cases', () => {
     expect(getExplorerLink(ChainId.ArbitrumOne, 'hash', ExplorerDataType.TRANSACTION)).toEqual(
       'https://arbiscan.io/tx/hash'
     )
-    expect(getExplorerLink(ChainId.ArbitrumOne, 'hash', ExplorerDataType.ADDRESS)).toEqual(
-      'https://arbiscan.io/address/hash'
+    expect(getExplorerLink(ChainId.Mainnet, 'hash', ExplorerDataType.ADDRESS)).toEqual(
+      'https://etherscan.io/address/hash'
     )
-    expect(getExplorerLink(ChainId.ArbitrumOne, 'hash', ExplorerDataType.TOKEN)).toEqual(
-      'https://arbiscan.io/address/hash'
+    expect(getExplorerLink(ChainId.Polygon, 'hash', ExplorerDataType.TOKEN)).toEqual(
+      'https://polygonscan.com/token/hash'
     )
-    expect(getExplorerLink(ChainId.ArbitrumOne, 'hash', ExplorerDataType.BLOCK)).toEqual(
-      'https://arbiscan.io/block/hash'
+    expect(getExplorerLink(ChainId.PolygonMumbai, 'hash', ExplorerDataType.BLOCK)).toEqual(
+      'https://mumbai.polygonscan.com/block/hash'
     )
   })
 
