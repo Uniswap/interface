@@ -10,10 +10,12 @@ const mnemonicPrefix = '.mnemonic.'
 const privateKeyPrefix = '.privateKey.'
 const entireMnemonicPrefix = prefix + mnemonicPrefix
 const entirePrivateKeyPrefix = prefix + privateKeyPrefix
+const passwordKey = '.password.'
 
 enum ErrorType {
   StoreMnemonicError = 'storeMnemonicError',
   RetrieveMnemonicError = 'retrieveMnemonicError',
+  RetrievePasswordError = 'retreivePasswordError',
 }
 
 /**
@@ -24,9 +26,10 @@ enum ErrorType {
  * @link https://github.com/Uniswap/wallet-internal/blob/main/apps/mobile/ios/RNEthersRS.swift
  */
 export class WebKeyring implements IKeyring {
-  private _password: string | null = null
-
-  constructor(private storage = new PersistedStorage()) {
+  constructor(
+    private storage = new PersistedStorage('local'),
+    private session = new PersistedStorage('session')
+  ) {
     this.generateAndStoreMnemonic = this.generateAndStoreMnemonic.bind(this)
     this.generateAndStorePrivateKey = this.generateAndStorePrivateKey.bind(this)
     this.getMnemonicIds = this.getMnemonicIds.bind(this)
@@ -34,6 +37,7 @@ export class WebKeyring implements IKeyring {
     this.keyForMnemonicId = this.keyForMnemonicId.bind(this)
     this.keyForPrivateKey = this.keyForPrivateKey.bind(this)
     this.retrieveMnemonic = this.retrieveMnemonic.bind(this)
+    this.retrieveMnemonicUnlocked = this.retrieveMnemonicUnlocked.bind(this)
     this.storeNewMnemonic = this.storeNewMnemonic.bind(this)
     this.unlock = this.unlock.bind(this)
   }
@@ -69,8 +73,7 @@ export class WebKeyring implements IKeyring {
       return false
     }
 
-    this.password = password
-
+    this.session.setItem(passwordKey, password)
     return true
   }
 
@@ -94,8 +97,7 @@ export class WebKeyring implements IKeyring {
       throw new Error(`${ErrorType.StoreMnemonicError}: Failed to import mnemonic`)
     }
 
-    this.password = password
-
+    await this.session.setItem(passwordKey, password)
     return mnemonicId
   }
 
@@ -114,8 +116,7 @@ export class WebKeyring implements IKeyring {
       throw new Error(`${ErrorType.StoreMnemonicError}: Failed to generate and store mnemonic`)
     }
 
-    this.password = password
-
+    await this.session.setItem(passwordKey, password)
     return address
   }
 
@@ -173,6 +174,29 @@ export class WebKeyring implements IKeyring {
     }
   }
 
+  async retrieveMnemonicUnlocked(mnemonicId: string): Promise<string | undefined> {
+    const password = await this.session.getItem(passwordKey)
+    const key = this.keyForMnemonicId(mnemonicId)
+    const result = await this.storage.getItem(key)
+
+    if (!result) return undefined
+    if (!password) return undefined
+
+    try {
+      const maybeSecretPayload = JSON.parse(result)
+      const mnemonic = await decrypt(password, maybeSecretPayload)
+
+      if (!mnemonic) return undefined
+
+      // validate mnemonic (will throw if invalid)
+      Wallet.fromMnemonic(mnemonic)
+
+      return mnemonic
+    } catch (e) {
+      throw new Error(`${ErrorType.RetrieveMnemonicError}: ${e}`)
+    }
+  }
+
   /**
    * Fetches all public addresses from private keys stored under `privateKeyPrefix` in store.
    * Used from to verify the store has the private key for an account that is attempting create a NativeSigner that calls signing methods
@@ -194,7 +218,11 @@ export class WebKeyring implements IKeyring {
    * @returns public address associated with private key generated from the mnemonic at given derivation index
    */
   async generateAndStorePrivateKey(mnemonicId: string, derivationIndex: number): Promise<string> {
-    const mnemonic = await this.retrieveMnemonic(mnemonicId, this.password)
+    const password = await this.session.getItem(passwordKey)
+    if (!password) {
+      throw new Error(ErrorType.RetrievePasswordError)
+    }
+    const mnemonic = await this.retrieveMnemonic(mnemonicId, password)
 
     if (!mnemonic) {
       throw new Error(ErrorType.RetrieveMnemonicError)
@@ -223,8 +251,13 @@ export class WebKeyring implements IKeyring {
       return address
     }
 
+    const password = await this.session.getItem(passwordKey)
+    if (!password) {
+      throw new Error(ErrorType.RetrievePasswordError)
+    }
+
     try {
-      const secretPayload = await encrypt(privateKey, this.password)
+      const secretPayload = await encrypt(privateKey, password)
 
       const newKey = this.keyForPrivateKey(address)
       await this.storage.setItem(newKey, JSON.stringify(secretPayload))
@@ -243,7 +276,11 @@ export class WebKeyring implements IKeyring {
 
     try {
       const maybeSecretPayload = JSON.parse(result)
-      const privateKey = await decrypt(this.password, maybeSecretPayload)
+      const password = await this.session.getItem(passwordKey)
+      if (!password) {
+        throw new Error(ErrorType.RetrievePasswordError)
+      }
+      const privateKey = await decrypt(password, maybeSecretPayload)
 
       if (!privateKey) return undefined
 
@@ -291,22 +328,6 @@ export class WebKeyring implements IKeyring {
     const signingKey = new SigningKey(privateKey)
     const signature: Signature = signingKey.signDigest(hash)
     return joinSignature(signature)
-  }
-
-  private get password(): string {
-    if (!this._password) {
-      throw new Error('Password is missing')
-    }
-
-    return this._password
-  }
-
-  private set password(password: string) {
-    if (this._password) {
-      logger.warn('Keyring.web', 'setPassword', 'Attempted to set password again')
-    }
-
-    this._password = password
   }
 }
 

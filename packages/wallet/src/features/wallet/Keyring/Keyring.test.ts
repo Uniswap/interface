@@ -7,6 +7,8 @@ const mockStore = async ({ data }: { data: Record<string, string> }): Promise<vo
   await chrome.storage.local.set(data)
 }
 
+const PASSWORD_KEY = '.password.'
+
 describe(WebKeyring, () => {
   beforeEach(() => {
     chrome.storage.local.clear()
@@ -46,6 +48,25 @@ describe(WebKeyring, () => {
       }
 
       await expect(action()).rejects.toThrow()
+    })
+  })
+
+  describe('retrieveMnemonicUnlocked', () => {
+    beforeEach(() => {
+      jest.spyOn(chrome.storage.session, 'get').mockImplementation(() => {
+        return new Promise((resolve) => {
+          resolve({ [PASSWORD_KEY]: SAMPLE_PASSWORD })
+        })
+      })
+    })
+
+    it('returns mnemonic when unlocked', async () => {
+      const keyring = new WebKeyring()
+      await keyring.importMnemonic(SAMPLE_SEED, SAMPLE_PASSWORD)
+      await keyring.unlock(SAMPLE_PASSWORD)
+
+      const mnemonic = await keyring.retrieveMnemonicUnlocked(SAMPLE_SEED_ADDRESS_1)
+      expect(mnemonic).toEqual(SAMPLE_SEED)
     })
   })
 

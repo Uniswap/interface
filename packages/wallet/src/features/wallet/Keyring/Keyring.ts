@@ -67,6 +67,8 @@ export interface IKeyring {
   signMessageForAddress(address: string, message: string): Promise<string>
 
   signHashForAddress(address: string, hash: string, chainId: number): Promise<string>
+
+  retrieveMnemonicUnlocked(address: string): Promise<string | undefined>
 }
 
 /** Dummy Keyring implementation.  */
@@ -82,6 +84,10 @@ class NullKeyring implements IKeyring {
   // returns the mnemonicId (derived address at index 0) of the imported mnemonic
   importMnemonic(): Promise<string> {
     throw new NotImplementedError('importMnemonic')
+  }
+
+  retrieveMnemonicUnlocked(_address: string): Promise<string | undefined> {
+    throw new Error('Method not implemented.')
   }
 
   // returns the mnemonicId (derived address at index 0) of the stored mnemonic

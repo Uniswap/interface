@@ -3,7 +3,13 @@
 const storage = require('mem-storage-area')
 
 global.chrome = {
-  storage, // mem-storage-area is a reimplementation of chrome.storage in memory
+    storage: {
+    ...storage, // mem-storage-area is a reimplementation of chrome.storage in memory
+    session: {
+      set: jest.fn(),
+      get: jest.fn()
+    }
+  },
   runtime: {
     getURL: (path) => `chrome/path/to/${path}`
   }

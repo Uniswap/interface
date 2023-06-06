@@ -11,6 +11,7 @@ import { IntroScreen } from 'src/app/features/onboarding/IntroScreen'
 import { OnboardingWrapper } from 'src/app/features/onboarding/OnboardingWrapper'
 import { Password } from 'src/app/features/onboarding/Password'
 import { SettingsScreen } from 'src/app/features/settings/SettingsScreen'
+import { SettingsViewRecoveryPhraseScreen } from 'src/app/features/settings/SettingsViewRecoveryPhraseScreen'
 import { SettingsWalletEditNicknameScreen } from 'src/app/features/settings/SettingsWalletEditNicknameScreen'
 import { SettingsWalletScreen } from 'src/app/features/settings/SettingsWalletScreen'
 import {
@@ -20,7 +21,6 @@ import {
   SettingsWalletRoutes,
   TopLevelRoutes,
 } from 'src/app/navigation/constants'
-import { Flex } from 'ui/src/components/layout/Flex'
 import { Provider } from 'wallet/src/provider'
 import { Store } from 'webext-redux'
 import { MainContent, WebNavigation } from './navigation'
@@ -79,7 +79,7 @@ const router = createHashRouter([
           },
           {
             path: SettingsRoutes.ViewRecoveryPhrase,
-            element: <Flex />, // TODO: Add ViewRecoveryPhrase screen
+            element: <SettingsViewRecoveryPhraseScreen />,
           },
         ],
       },

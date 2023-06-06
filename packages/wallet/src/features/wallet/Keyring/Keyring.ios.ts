@@ -1,5 +1,6 @@
 // From on https://github.com/Uniswap/wallet-internal/blob/main/apps/mobile/src/lib/RNEthersRs.ts
 import { NativeModules } from 'react-native'
+import { NotImplementedError } from 'wallet/src/utils/errors'
 import { IKeyring } from './Keyring'
 
 const { RNEthersRS } = NativeModules
@@ -19,6 +20,11 @@ class NativeKeyring implements IKeyring {
   // returns the mnemonicId (derived address at index 0) of the imported mnemonic
   importMnemonic(mnemonic: string): Promise<string> {
     return RNEthersRS.importMnemonic(mnemonic)
+  }
+
+  // Not used on mobile
+  retrieveMnemonicUnlocked(_address: string): Promise<string | undefined> {
+    throw new NotImplementedError('retrieveMnemonic')
   }
 
   // returns the mnemonicId (derived address at index 0) of the stored mnemonic

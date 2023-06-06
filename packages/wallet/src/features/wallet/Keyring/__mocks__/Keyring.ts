@@ -24,6 +24,10 @@ class MockKeyring implements IKeyring {
     return Promise.resolve(wallet.address)
   }
 
+  retrieveMnemonicUnlocked(address: string): Promise<string | undefined> {
+    return Promise.resolve(mnemonics[address])
+  }
+
   // returns the mnemonicId (derived address at index 0) of the stored mnemonic
   generateAndStoreMnemonic(): Promise<string> {
     const wallet = Wallet.createRandom()
