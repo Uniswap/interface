@@ -186,14 +186,17 @@ export function PriceChart({ width, height, prices: originalPrices, timePeriod }
     const startDateWithOffset = new Date((startingPrice.timestamp.valueOf() + offsetTime) * 1000)
     const endDateWithOffset = new Date((endingPrice.timestamp.valueOf() - offsetTime) * 1000)
     switch (timePeriod) {
-      case TimePeriod.HOUR:
+      case TimePeriod.HOUR: {
+        const interval = timeMinute.every(5)
+
         return [
           hourFormatter(locale),
           dayHourFormatter(locale),
-          (timeMinute.every(5) ?? timeMinute)
-            .range(startDateWithOffset, endDateWithOffset, 2)
+          (interval ?? timeMinute)
+            .range(startDateWithOffset, endDateWithOffset, interval ? 2 : 10)
             .map((x) => x.valueOf() / 1000),
         ]
+      }
       case TimePeriod.DAY:
         return [
           hourFormatter(locale),
