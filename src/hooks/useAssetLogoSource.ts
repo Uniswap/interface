@@ -2,7 +2,7 @@ import TokenLogoLookupTable from 'constants/TokenLogoLookupTable'
 import { chainIdToNetworkName, getNativeLogoURI } from 'lib/hooks/useCurrencyLogoURIs'
 import uriToHttp from 'lib/utils/uriToHttp'
 import { useCallback, useEffect, useState } from 'react'
-import { isAddress } from 'utils'
+import { isAddress } from 'utils/addresses'
 
 import { checkWarning } from '../constants/tokenSafety'
 

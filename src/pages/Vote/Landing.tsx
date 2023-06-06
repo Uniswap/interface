@@ -25,7 +25,7 @@ import { ProposalData, ProposalState } from 'state/governance/hooks'
 import { useAllProposalData, useUserDelegatee, useUserVotes } from 'state/governance/hooks'
 import styled, { useTheme } from 'styled-components/macro'
 import { ExternalLink, ThemedText } from 'theme'
-import { shortenAddress } from 'utils'
+import { shortenAddress } from 'utils/addresses'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 import { ZERO_ADDRESS } from '../../constants/misc'
