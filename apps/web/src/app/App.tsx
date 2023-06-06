@@ -11,6 +11,7 @@ import { IntroScreen } from 'src/app/features/onboarding/IntroScreen'
 import { OnboardingWrapper } from 'src/app/features/onboarding/OnboardingWrapper'
 import { Password } from 'src/app/features/onboarding/Password'
 import { SettingsScreen } from 'src/app/features/settings/SettingsScreen'
+import { SettingsScreenWrapper } from 'src/app/features/settings/SettingsScreenWrapper'
 import { SettingsViewRecoveryPhraseScreen } from 'src/app/features/settings/SettingsViewRecoveryPhraseScreen'
 import { SettingsWalletEditNicknameScreen } from 'src/app/features/settings/SettingsWalletEditNicknameScreen'
 import { SettingsWalletScreen } from 'src/app/features/settings/SettingsWalletScreen'
@@ -67,8 +68,12 @@ const router = createHashRouter([
       },
       {
         path: AppRoutes.Settings,
-        element: <SettingsScreen />,
+        element: <SettingsScreenWrapper />,
         children: [
+          {
+            path: '',
+            element: <SettingsScreen />,
+          },
           {
             path: SettingsRoutes.Wallet,
             element: <SettingsWalletScreen />,

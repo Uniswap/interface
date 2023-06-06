@@ -12,6 +12,22 @@ const DEFAULT_TOKENS_ORDER_BY = TokenSortableField.Volume
 
 export const selectAccounts = (state: RootState): Record<string, Account> => state.wallet.accounts
 
+// Sorted by signer accounts, then view-only accounts
+export const selectAllAccountsSorted = createSelector(selectAccounts, (accountsMap) => {
+  const accounts = Object.values(accountsMap)
+  const _mnemonicWallets = accounts
+    .filter((a): a is SignerMnemonicAccount => a.type === AccountType.SignerMnemonic)
+    .sort((a, b) => {
+      return a.derivationIndex - b.derivationIndex
+    })
+  const _viewOnlyWallets = accounts
+    .filter((a) => a.type === AccountType.Readonly)
+    .sort((a, b) => {
+      return a.timeImportedMs - b.timeImportedMs
+    })
+  return [..._mnemonicWallets, ..._viewOnlyWallets]
+})
+
 export const selectNonPendingAccounts = createSelector(selectAccounts, (accounts) =>
   Object.fromEntries(Object.entries(accounts).filter((a) => !a[1].pending))
 )
