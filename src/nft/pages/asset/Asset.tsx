@@ -50,6 +50,7 @@ const AssetPage = () => {
   return (
     <>
       <Helmet prioritizeSeoTags>
+        <title>{asset?.name} on Uniswap</title>
         <meta property="og:image" content={asset?.imageUrl} />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="600" />
