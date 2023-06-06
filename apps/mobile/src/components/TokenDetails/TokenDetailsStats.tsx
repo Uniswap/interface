@@ -1,19 +1,24 @@
 import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
+import { ScrollView } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { LongText } from 'src/components/text/LongText'
+import { useIsDarkMode } from 'src/features/appearance/hooks'
 import { ElementName } from 'src/features/telemetry/constants'
 import { ExplorerDataType, getExplorerLink, getTwitterLink } from 'src/utils/linking'
 import StatsIcon from 'ui/src/assets/icons/chart-bar.svg'
 import GlobeIcon from 'ui/src/assets/icons/globe-filled.svg'
-import EtherscanIcon from 'ui/src/assets/icons/sticky-note-text-square.svg'
+import AddressIcon from 'ui/src/assets/icons/sticky-note-text-square.svg'
 import TwitterIcon from 'ui/src/assets/icons/twitter.svg'
+import EtherscanLogoDark from 'ui/src/assets/logos/etherscan-logo-dark.svg'
+import EtherscanLogoLight from 'ui/src/assets/logos/etherscan-logo-light.svg'
 import { TokenDetailsScreenQuery } from 'wallet/src/data/__generated__/types-and-hooks'
+import { sanitizeAddressText, shortenAddress } from 'wallet/src/utils/addresses'
 import { currencyIdToAddress, currencyIdToChain } from 'wallet/src/utils/currencyId'
 import { formatNumber, NumberType } from 'wallet/src/utils/format'
-import { LinkButtonWithIcon } from './LinkButtonWithIcon'
+import { LinkButton, LinkButtonType } from './LinkButton'
 
 function StatsRow({
   label,
@@ -147,30 +152,44 @@ export function TokenDetailsStats({
         <Text color="textTertiary" variant="subheadSmall">
           {t('Links')}
         </Text>
-        <Flex row gap="spacing8">
-          {tokenProjectData?.homepageUrl && (
-            <LinkButtonWithIcon
-              Icon={GlobeIcon}
-              element={ElementName.TokenLinkWebsite}
-              label={t('Website')}
-              url={tokenProjectData.homepageUrl}
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          <Flex row gap="spacing8">
+            {tokenData?.address && (
+              <LinkButton
+                Icon={AddressIcon}
+                buttonType={LinkButtonType.Copy}
+                element={ElementName.TokenAddress}
+                label={sanitizeAddressText(shortenAddress(tokenData?.address)) ?? ''}
+                value={tokenData?.address}
+              />
+            )}
+            {tokenProjectData?.homepageUrl && (
+              <LinkButton
+                Icon={GlobeIcon}
+                buttonType={LinkButtonType.Link}
+                element={ElementName.TokenLinkWebsite}
+                label={t('Website')}
+                value={tokenProjectData.homepageUrl}
+              />
+            )}
+            {tokenProjectData?.twitterName && (
+              <LinkButton
+                Icon={TwitterIcon}
+                buttonType={LinkButtonType.Link}
+                element={ElementName.TokenLinkTwitter}
+                label={t('Twitter')}
+                value={getTwitterLink(tokenProjectData.twitterName)}
+              />
+            )}
+            <LinkButton
+              Icon={useIsDarkMode() ? EtherscanLogoDark : EtherscanLogoLight}
+              buttonType={LinkButtonType.Link}
+              element={ElementName.TokenLinkEtherscan}
+              label={t('Etherscan')}
+              value={explorerLink}
             />
-          )}
-          {tokenProjectData?.twitterName && (
-            <LinkButtonWithIcon
-              Icon={TwitterIcon}
-              element={ElementName.TokenLinkTwitter}
-              label={t('Twitter')}
-              url={getTwitterLink(tokenProjectData.twitterName)}
-            />
-          )}
-          <LinkButtonWithIcon
-            Icon={EtherscanIcon}
-            element={ElementName.TokenLinkEtherscan}
-            label={t('Etherscan')}
-            url={explorerLink}
-          />
-        </Flex>
+          </Flex>
+        </ScrollView>
       </Flex>
     </Flex>
   )

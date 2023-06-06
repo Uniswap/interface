@@ -182,6 +182,7 @@ export const enum ElementName {
   TimeFrame1W = 'time-frame-1W',
   TimeFrame1M = 'time-frame-1M',
   TimeFrame1Y = 'time-frame-1Y',
+  TokenAddress = 'token-address',
   TokenInputSelector = 'token-input-selector',
   TokenLinkEtherscan = 'token-link-etherscan',
   TokenLinkTwitter = 'token-link-twitter',
