@@ -385,7 +385,7 @@ export default function Landing() {
               </LearnMoreContainer>
 
               <DownloadWalletLink href="https://wallet.uniswap.org/">
-                <AppleLogo />
+                <AppleLogo width="20" height="20" />
                 Download the Uniswap Wallet for iOS
               </DownloadWalletLink>
             </ContentContainer>
