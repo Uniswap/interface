@@ -5,6 +5,7 @@ import { AboutFooter } from 'components/About/AboutFooter'
 import Card, { CardType } from 'components/About/Card'
 import { MAIN_CARDS, MORE_CARDS } from 'components/About/constants'
 import ProtocolBanner from 'components/About/ProtocolBanner'
+import { useAccountDrawer } from 'components/AccountDrawer'
 import { BaseButton } from 'components/Button'
 import { useAtomValue } from 'jotai/utils'
 import Swap from 'pages/Swap'
@@ -18,9 +19,10 @@ import { useAppSelector } from 'state/hooks'
 import styled, { css } from 'styled-components/macro'
 import { BREAKPOINTS } from 'theme'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
+import { TRANSITION_DURATIONS } from 'theme/styles'
 import { Z_INDEX } from 'theme/zIndex'
 
-const PageContainer = styled.div<{ isDarkMode: boolean }>`
+const PageContainer = styled.div`
   position: absolute;
   top: 0;
   padding: ${({ theme }) => theme.navHeight}px 0px 0px 0px;
@@ -30,11 +32,6 @@ const PageContainer = styled.div<{ isDarkMode: boolean }>`
   align-items: center;
   scroll-behavior: smooth;
   overflow-x: hidden;
-
-  background: ${({ isDarkMode }) =>
-    isDarkMode
-      ? 'linear-gradient(rgba(8, 10, 24, 0) 0%, rgb(8 10 24 / 100%) 45%)'
-      : 'linear-gradient(rgba(255, 255, 255, 0) 0%, rgb(255 255 255 /100%) 45%)'};
 `
 
 const Gradient = styled.div<{ isDarkMode: boolean }>`
@@ -46,10 +43,14 @@ const Gradient = styled.div<{ isDarkMode: boolean }>`
   bottom: 0;
   width: 100%;
   min-height: 550px;
-  background: ${({ isDarkMode }) =>
+  ${({ isDarkMode }) =>
     isDarkMode
-      ? 'linear-gradient(rgba(8, 10, 24, 0) 0%, rgb(8 10 24 / 100%) 45%)'
-      : 'linear-gradient(rgba(255, 255, 255, 0) 0%, rgb(255 255 255 /100%) 45%)'};
+      ? css`
+          background: linear-gradient(rgba(8, 10, 24, 0) 0%, rgb(8 10 24 / 100%) 45%);
+        `
+      : css`
+          background: linear-gradient(rgba(255, 255, 255, 0) 0%, rgb(255 255 255 /100%) 45%);
+        `};
   z-index: ${Z_INDEX.under_dropdown};
   pointer-events: none;
   height: ${({ theme }) => `calc(100vh - ${theme.mobileBottomBarHeight}px)`};
@@ -111,10 +112,14 @@ const TitleText = styled.h1<{ isDarkMode: boolean }>`
   font-weight: 700;
   text-align: center;
   margin: 0 0 24px;
-  background: ${({ isDarkMode }) =>
+  ${({ isDarkMode }) =>
     isDarkMode
-      ? 'linear-gradient(20deg, rgba(255, 244, 207, 1) 10%, rgba(255, 87, 218, 1) 100%)'
-      : 'linear-gradient(10deg, rgba(255,79,184,1) 0%, rgba(255,159,251,1) 100%)'};
+      ? css`
+          background: linear-gradient(20deg, rgba(255, 244, 207, 1) 10%, rgba(255, 87, 218, 1) 100%);
+        `
+      : css`
+          background: linear-gradient(10deg, rgba(255, 79, 184, 1) 0%, rgba(255, 159, 251, 1) 100%);
+        `};
   background-clip: text;
   -webkit-background-clip: text;
 
@@ -214,10 +219,14 @@ const AboutContentContainer = styled.div<{ isDarkMode: boolean }>`
   align-items: center;
   padding: 0 24px 5rem;
   width: 100%;
-  background: ${({ isDarkMode }) =>
+  ${({ isDarkMode }) =>
     isDarkMode
-      ? 'linear-gradient(179.82deg, rgba(0, 0, 0, 0) 0.16%, #050026 99.85%)'
-      : 'linear-gradient(179.82deg, rgba(255, 255, 255, 0) 0.16%, #eaeaea 99.85%)'};
+      ? css`
+          background: linear-gradient(179.82deg, rgba(0, 0, 0, 0) 0.16%, #050026 99.85%);
+        `
+      : css`
+          background: linear-gradient(179.82deg, rgba(255, 255, 255, 0) 0.16%, #eaeaea 99.85%);
+        `};
   @media screen and (min-width: ${BREAKPOINTS.md}px) {
     padding: 0 96px 5rem;
   }
@@ -301,95 +310,100 @@ export default function Landing() {
     ignoreQueryPrefix: true,
   })
 
-  // This can be simplified significantly once the flag is removed! For now being explicit is clearer.
+  const [accountDrawerOpen] = useAccountDrawer()
   useEffect(() => {
-    if (queryParams.intro || !selectedWallet) {
+    if ((queryParams.intro || !selectedWallet) && !accountDrawerOpen) {
       setShowContent(true)
     } else {
-      navigate('/swap')
+      setShowContent(false)
+      setTimeout(() => {
+        navigate('/swap')
+      }, TRANSITION_DURATIONS.medium)
     }
-  }, [navigate, selectedWallet, queryParams.intro])
+  }, [navigate, selectedWallet, queryParams.intro, accountDrawerOpen])
 
   const shouldDisableNFTRoutes = useAtomValue(shouldDisableNFTRoutesAtom)
 
   return (
     <Trace page={InterfacePageName.LANDING_PAGE} shouldLogImpression>
-      {showContent && (
-        <PageContainer isDarkMode={isDarkMode} data-testid="landing-page">
-          <LandingSwapContainer>
-            <TraceEvent
-              events={[BrowserEvent.onClick]}
-              name={SharedEventName.ELEMENT_CLICKED}
-              element={InterfaceElementName.LANDING_PAGE_SWAP_ELEMENT}
-            >
-              <Link to="/swap">
-                <LandingSwap />
-              </Link>
-            </TraceEvent>
-          </LandingSwapContainer>
-          <Gradient isDarkMode={isDarkMode} />
-          <GlowContainer>
-            <Glow />
-          </GlowContainer>
-          <ContentContainer isDarkMode={isDarkMode}>
-            <TitleText isDarkMode={isDarkMode}>
-              {shouldDisableNFTRoutes ? (
-                <Trans>Trade crypto with confidence</Trans>
-              ) : (
-                <Trans>Trade crypto and NFTs with confidence</Trans>
-              )}
-            </TitleText>
-            <SubTextContainer>
-              <SubText>
+      <PageContainer data-testid="landing-page">
+        <LandingSwapContainer>
+          <TraceEvent
+            events={[BrowserEvent.onClick]}
+            name={SharedEventName.ELEMENT_CLICKED}
+            element={InterfaceElementName.LANDING_PAGE_SWAP_ELEMENT}
+          >
+            <Link to="/swap">
+              <LandingSwap />
+            </Link>
+          </TraceEvent>
+        </LandingSwapContainer>
+        {showContent && (
+          <>
+            <Gradient isDarkMode={isDarkMode} />
+            <GlowContainer>
+              <Glow />
+            </GlowContainer>
+            <ContentContainer isDarkMode={isDarkMode}>
+              <TitleText isDarkMode={isDarkMode}>
                 {shouldDisableNFTRoutes ? (
-                  <Trans>Buy, sell, and explore tokens</Trans>
+                  <Trans>Trade crypto with confidence</Trans>
                 ) : (
-                  <Trans>Buy, sell, and explore tokens and NFTs</Trans>
+                  <Trans>Trade crypto and NFTs with confidence</Trans>
                 )}
-              </SubText>
-            </SubTextContainer>
-            <ActionsContainer>
-              <TraceEvent
-                events={[BrowserEvent.onClick]}
-                name={SharedEventName.ELEMENT_CLICKED}
-                element={InterfaceElementName.CONTINUE_BUTTON}
+              </TitleText>
+              <SubTextContainer>
+                <SubText>
+                  {shouldDisableNFTRoutes ? (
+                    <Trans>Buy, sell, and explore tokens</Trans>
+                  ) : (
+                    <Trans>Buy, sell, and explore tokens and NFTs</Trans>
+                  )}
+                </SubText>
+              </SubTextContainer>
+              <ActionsContainer>
+                <TraceEvent
+                  events={[BrowserEvent.onClick]}
+                  name={SharedEventName.ELEMENT_CLICKED}
+                  element={InterfaceElementName.CONTINUE_BUTTON}
+                >
+                  <ButtonCTA as={Link} to="/swap">
+                    <ButtonCTAText>
+                      <Trans>Get started</Trans>
+                    </ButtonCTAText>
+                  </ButtonCTA>
+                </TraceEvent>
+              </ActionsContainer>
+              <LearnMoreContainer
+                onClick={() => {
+                  cardsRef?.current?.scrollIntoView({ behavior: 'smooth' })
+                }}
               >
-                <ButtonCTA as={Link} to="/swap">
-                  <ButtonCTAText>
-                    <Trans>Get started</Trans>
-                  </ButtonCTAText>
-                </ButtonCTA>
-              </TraceEvent>
-            </ActionsContainer>
-            <LearnMoreContainer
-              onClick={() => {
-                cardsRef?.current?.scrollIntoView({ behavior: 'smooth' })
-              }}
-            >
-              <Trans>Learn more</Trans>
-              <LearnMoreArrow />
-            </LearnMoreContainer>
-          </ContentContainer>
-          <AboutContentContainer isDarkMode={isDarkMode}>
-            <CardGrid cols={2} ref={cardsRef}>
-              {MAIN_CARDS.map(({ darkBackgroundImgSrc, lightBackgroundImgSrc, ...card }) => (
-                <Card
-                  {...card}
-                  backgroundImgSrc={isDarkMode ? darkBackgroundImgSrc : lightBackgroundImgSrc}
-                  key={card.title}
-                />
-              ))}
-            </CardGrid>
-            <CardGrid cols={3}>
-              {MORE_CARDS.map(({ darkIcon, lightIcon, ...card }) => (
-                <Card {...card} icon={isDarkMode ? darkIcon : lightIcon} key={card.title} type={CardType.Secondary} />
-              ))}
-            </CardGrid>
-            <ProtocolBanner />
-            <AboutFooter />
-          </AboutContentContainer>
-        </PageContainer>
-      )}
+                <Trans>Learn more</Trans>
+                <LearnMoreArrow />
+              </LearnMoreContainer>
+            </ContentContainer>
+            <AboutContentContainer isDarkMode={isDarkMode}>
+              <CardGrid cols={2} ref={cardsRef}>
+                {MAIN_CARDS.map(({ darkBackgroundImgSrc, lightBackgroundImgSrc, ...card }) => (
+                  <Card
+                    {...card}
+                    backgroundImgSrc={isDarkMode ? darkBackgroundImgSrc : lightBackgroundImgSrc}
+                    key={card.title}
+                  />
+                ))}
+              </CardGrid>
+              <CardGrid cols={3}>
+                {MORE_CARDS.map(({ darkIcon, lightIcon, ...card }) => (
+                  <Card {...card} icon={isDarkMode ? darkIcon : lightIcon} key={card.title} type={CardType.Secondary} />
+                ))}
+              </CardGrid>
+              <ProtocolBanner />
+              <AboutFooter />
+            </AboutContentContainer>
+          </>
+        )}
+      </PageContainer>
     </Trace>
   )
 }

@@ -1,0 +1,525 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LoadedRow.tsx renders a row 1`] = `
+<DocumentFragment>
+  .c18 {
+  color: #40B66B;
+}
+
+.c19 {
+  color: #40B66B;
+}
+
+.c17 {
+  padding-right: 3px;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.c8 {
+  --size: 24px;
+  border-radius: 100px;
+  color: #0D111C;
+  background-color: #E8ECFB;
+  font-size: calc(var(--size) / 3);
+  font-weight: 500;
+  height: 24px;
+  line-height: 24px;
+  text-align: center;
+  width: 24px;
+}
+
+.c7 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.c9 {
+  --size: calc(24px / 2);
+  width: var(--size);
+  height: var(--size);
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  background: url();
+  background-repeat: no-repeat;
+  background-size: calc(24px / 2) calc(24px / 2);
+  display: none;
+}
+
+.c2 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+
+.c1 {
+  background-color: transparent;
+  display: grid;
+  font-size: 16px;
+  grid-template-columns: 1fr 7fr 4fr 4fr 4fr 4fr 5fr;
+  line-height: 24px;
+  max-width: 1200px;
+  min-width: 390px;
+  height: 72px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 12px;
+  padding-right: 12px;
+  -webkit-transition: background-color 250ms ease;
+  transition: background-color 250ms ease;
+  width: 100%;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+}
+
+.c1:hover {
+  background-color: #98A1C014;
+  border-radius: 0px 0px 8px 8px;
+}
+
+.c5 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: #0D111C;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.c6 {
+  gap: 8px;
+  max-width: 100%;
+}
+
+.c3 {
+  color: #7780A0;
+  min-width: 32px;
+  font-size: 14px;
+}
+
+.c13 {
+  -webkit-box-pack: end;
+  -webkit-justify-content: flex-end;
+  -ms-flex-pack: end;
+  justify-content: flex-end;
+  min-width: 80px;
+  -webkit-user-select: unset;
+  -moz-user-select: unset;
+  -ms-user-select: unset;
+  user-select: unset;
+  -webkit-transition: background-color 250ms ease;
+  transition: background-color 250ms ease;
+}
+
+.c21 {
+  padding-right: 8px;
+}
+
+.c4 {
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  padding: 0px 8px;
+  min-width: 240px;
+  gap: 8px;
+}
+
+.c14 {
+  padding-right: 8px;
+}
+
+.c20 {
+  padding-right: 8px;
+}
+
+.c16 {
+  display: none;
+}
+
+.c15 {
+  -webkit-box-pack: end;
+  -webkit-justify-content: flex-end;
+  -ms-flex-pack: end;
+  justify-content: flex-end;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+}
+
+.c23 {
+  padding: 0px 24px;
+  min-width: 120px;
+}
+
+.c24 {
+  width: 124px;
+  height: 42px;
+}
+
+.c0 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+}
+
+.c10 {
+  gap: 8px;
+  line-height: 24px;
+  font-size: 16px;
+  max-width: inherit;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.c11 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+.c12 {
+  color: #98A1C0;
+  text-transform: uppercase;
+}
+
+.c22 {
+  padding-right: 8px;
+}
+
+@media only screen and (max-width:1200px) {
+  .c1 {
+    grid-template-columns: 1fr 6.5fr 4.5fr 4.5fr 4.5fr 4.5fr 1.7fr;
+  }
+}
+
+@media only screen and (max-width:840px) {
+  .c1 {
+    grid-template-columns: 1fr 7.5fr 4.5fr 4.5fr 4.5fr 1.7fr;
+  }
+}
+
+@media only screen and (max-width:720px) {
+  .c1 {
+    grid-template-columns: 1fr 10fr 5fr 5fr 1.2fr;
+  }
+}
+
+@media only screen and (max-width:540px) {
+  .c1 {
+    grid-template-columns: 2fr 3fr;
+    min-width: unset;
+    border-bottom: 0.5px solid #F5F6FC;
+  }
+
+  .c1:last-of-type {
+    border-bottom: none;
+  }
+}
+
+@media only screen and (max-width:540px) {
+  .c3 {
+    display: none;
+  }
+}
+
+@media only screen and (max-width:720px) {
+  .c21 {
+    display: none;
+  }
+}
+
+@media only screen and (max-width:540px) {
+  .c20 {
+    display: none;
+  }
+}
+
+@media only screen and (max-width:540px) {
+  .c16 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: end;
+    -webkit-justify-content: flex-end;
+    -ms-flex-pack: end;
+    justify-content: flex-end;
+    color: #7780A0;
+    font-size: 12px;
+    line-height: 16px;
+  }
+}
+
+@media only screen and (max-width:540px) {
+  .c15 {
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-align-items: flex-end;
+    -webkit-box-align: flex-end;
+    -ms-flex-align: flex-end;
+    align-items: flex-end;
+  }
+}
+
+@media only screen and (max-width:1200px) {
+  .c23 {
+    display: none;
+  }
+}
+
+@media only screen and (max-width:540px) {
+  .c10 {
+    -webkit-box-pack: start;
+    -webkit-justify-content: flex-start;
+    -ms-flex-pack: start;
+    justify-content: flex-start;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    gap: 0px;
+    width: -webkit-max-content;
+    width: -moz-max-content;
+    width: max-content;
+    font-weight: 500;
+  }
+}
+
+@media only screen and (max-width:540px) {
+  .c12 {
+    font-size: 12px;
+    height: 16px;
+    -webkit-box-pack: start;
+    -webkit-justify-content: flex-start;
+    -ms-flex-pack: start;
+    justify-content: flex-start;
+    width: 100%;
+  }
+}
+
+@media only screen and (max-width:840px) {
+  .c22 {
+    display: none;
+  }
+}
+
+<div
+    data-testid="token-table-row-USDC"
+  >
+    <a
+      class="c0"
+      href="#/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
+    >
+      <div
+        class="c1"
+      >
+        <div
+          class="c2 c3"
+        >
+          2
+        </div>
+        <div
+          class="c2 c4"
+          data-testid="name-cell"
+        >
+          <div
+            class="c5 c6"
+          >
+            <div
+              class="c7"
+            >
+              <div
+                class="c8"
+              >
+                USD
+              </div>
+              <div
+                class="c9"
+              />
+            </div>
+            <div
+              class="7 c2 c10"
+            >
+              <div
+                class="8 c11"
+                data-cy="token-name"
+              >
+                USD Coin
+              </div>
+              <div
+                class="9 c2 c12"
+              >
+                USDC
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="c2 c13 c14"
+          data-testid="price-cell"
+        >
+          <div
+            class="c5"
+          >
+            <div
+              class="2 c2 c15"
+            >
+              $1.00
+              <div
+                class="1 c2 c16"
+              >
+                <div
+                  class="c17"
+                >
+                  <svg
+                    aria-label="up"
+                    class="c18"
+                    fill="none"
+                    height="14"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                    width="14"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <line
+                      x1="7"
+                      x2="17"
+                      y1="17"
+                      y2="7"
+                    />
+                    <polyline
+                      points="7 7 17 7 17 17"
+                    />
+                  </svg>
+                </div>
+                <span
+                  class="c19"
+                >
+                  0.00%
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="0 c2 c13 c20"
+          data-testid="percent-change-cell"
+        >
+          <div
+            class="c5"
+          >
+            <div
+              class="c17"
+            >
+              <svg
+                aria-label="up"
+                class="c18"
+                fill="none"
+                height="20"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <line
+                  x1="7"
+                  x2="17"
+                  y1="17"
+                  y2="7"
+                />
+                <polyline
+                  points="7 7 17 7 17 17"
+                />
+              </svg>
+            </div>
+            <span
+              class="c19"
+            >
+              0.00%
+            </span>
+          </div>
+        </div>
+        <div
+          class="c2 c13 c21"
+          data-testid="tvl-cell"
+        >
+          <div
+            class="c5"
+          >
+            $674.7M
+          </div>
+        </div>
+        <div
+          class="0 c2 c13 c22"
+          data-testid="volume-cell"
+        >
+          <div
+            class="c5"
+          >
+            $444.7M
+          </div>
+        </div>
+        <div
+          class="4 c2 c23"
+        >
+          <div
+            class="5 c2 c24"
+          >
+            <div
+              style="width: 100%; height: 100%;"
+            >
+              <svg
+                height="0"
+                width="0"
+              >
+                <g
+                  class="visx-group"
+                  transform="translate(0, 5)"
+                >
+                  <path
+                    class="visx-linepath"
+                    d="M0,0C0,0,53.166666666666664,11.310946288825667,55,11.810946288825667C56.833333333333336,12.310946288825667,110,30,110,30"
+                    fill="transparent"
+                    stroke="#40B66B"
+                    stroke-linecap="round"
+                    stroke-width="1.5"
+                  />
+                </g>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </a>
+  </div>
+</DocumentFragment>
+`;

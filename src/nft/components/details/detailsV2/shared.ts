@@ -10,10 +10,6 @@ export const containerStyles = css`
   align-self: flex-start;
 `
 
-export const TableContentContainer = styled.div`
-  height: 568px;
-`
-
 // Scrim that fades out the top and bottom of the scrollable container, isBottom changes the direction and placement of the fade
 export const Scrim = styled.div<{ isBottom?: boolean }>`
   position: absolute;
