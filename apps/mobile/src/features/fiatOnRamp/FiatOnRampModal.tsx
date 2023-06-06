@@ -74,8 +74,13 @@ export function FiatOnRampModal(): JSX.Element {
 
   const [showConnectingToMoonpayScreen, setShowConnectingToMoonpayScreen] = useState(false)
 
-  const { showNativeKeyboard, onDecimalPadLayout, isLayoutPending, onInputPanelLayout } =
-    useShouldShowNativeKeyboard()
+  const {
+    showNativeKeyboard,
+    onDecimalPadLayout,
+    isLayoutPending,
+    onInputPanelLayout,
+    maxContentHeight,
+  } = useShouldShowNativeKeyboard()
 
   const [selection, setSelection] = useState<TextInputProps['selection']>()
 
@@ -205,10 +210,10 @@ export function FiatOnRampModal(): JSX.Element {
             px="spacing24"
             style={{ marginBottom: insets.bottom }}
             width="100%">
-            <Text color="textPrimary" variant="subheadLarge">
-              {t('Buy')}
-            </Text>
-            <Flex onLayout={onInputPanelLayout}>
+            <Flex style={{ height: maxContentHeight }} onLayout={onInputPanelLayout}>
+              <Text color="textPrimary" variant="subheadLarge">
+                {t('Buy')}
+              </Text>
               <AnimatedFlex
                 grow
                 alignItems="center"
@@ -261,7 +266,7 @@ export function FiatOnRampModal(): JSX.Element {
                   )}
                 </Box>
               </AnimatedFlex>
-              <Flex centered row>
+              <Flex centered row pb="spacing16">
                 {['100', '300', '1000'].map((amount) => (
                   <PredefinedAmount
                     key={amount}

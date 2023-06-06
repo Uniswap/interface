@@ -329,6 +329,7 @@ export function useShouldShowNativeKeyboard(): {
   onDecimalPadLayout: (event: LayoutChangeEvent) => void
   isLayoutPending: boolean
   showNativeKeyboard: boolean
+  maxContentHeight?: number
 } {
   const [containerHeight, setContainerHeight] = useState<number>()
   const [decimalPadY, setDecimalPadY] = useState<number>()
@@ -357,6 +358,9 @@ export function useShouldShowNativeKeyboard(): {
     onDecimalPadLayout,
     isLayoutPending,
     showNativeKeyboard,
+    // can be used to immitate flexGrow=1 for the input panel
+    maxContentHeight:
+      isLayoutPending || showNativeKeyboard ? undefined : decimalPadY - MIN_INPUT_DECIMALPAD_GAP,
   }
 }
 
