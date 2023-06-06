@@ -76,6 +76,7 @@ export const PoolDataSection = ({
 	const [chartReady, setChartReady] = useState(false);
 	const [chartDataLoading, setChartDataLoading] = useState(true);
 	const [lastUpdate, setLastUpdate] = useState(moment.now())
+	const [,pool] = usePool(token0, token1, fee)
 
 	useEffect(() => {
 		// if longer than 5 seconds w/o update, reload
@@ -161,7 +162,7 @@ export const PoolDataSection = ({
 
 							const data = result.data.poolHourDatas
 
-							let price = data[data.length - 1].token0Price
+							let price = Number(pool?.token0Price.toFixed(20));
 							const invertPrice = price < 1;
 							let price24hAgo = data[0].token0Price
 							let delta;
@@ -198,7 +199,7 @@ export const PoolDataSection = ({
 
 			fetch()
 		}
-	}, [lastUpdate, uniswapPoolAddress, uniswapPoolExists])
+	}, [lastUpdate, uniswapPoolAddress, uniswapPoolExists, pool])
 
 	// console.log("stats: ", stats)
 

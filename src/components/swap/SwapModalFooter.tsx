@@ -1762,7 +1762,7 @@ export function BorrowReduceCollateralModalFooter({
       const formattedReduceAmount = new BN(reduceAmount).shiftedBy(18).toFixed(0);
       return () => {
         setAttemptingTxn(true)
-        borrowManagerContract.reducePosition(
+        borrowManagerContract.reduceBorrowPosition(
           position?.isToken0,
           true,
           recieveCollateral,
@@ -1923,7 +1923,7 @@ export function BorrowReduceCollateralModalFooter({
                           <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
                             <TruncatedText>
                               {
-                                `${inputIsToken0 ? new BN(token1Amount).abs().toString() : new BN(token0Amount).abs().toString()}  ${!inputIsToken0 ? token0?.symbol : token1?.symbol}`
+                                `${inputIsToken0 ? new BN(token1Amount).abs().toString() : new BN(token0Amount).abs().toString()}  ${inputIsToken0 ? token1?.symbol : token0?.symbol}`
                               }
                             </TruncatedText>
 
@@ -2087,7 +2087,7 @@ export function BorrowReduceDebtModalFooter({
       const formattedReduceAmount = new BN(reduceAmount).shiftedBy(18).toFixed(0);
       return () => {
         setAttemptingTxn(true)
-        borrowManagerContract.reducePosition(
+        borrowManagerContract.reduceBorrowPosition(
           position?.isToken0,
           false,
           recieveCollateral,
