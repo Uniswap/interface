@@ -1,4 +1,3 @@
-import { useQuery } from '@apollo/client'
 import {
   filterStringAtom,
   filterTimeAtom,
@@ -16,7 +15,6 @@ import {
   useTopTokens100Query,
   useTopTokensSparklineQuery,
 } from './__generated__/types-and-hooks'
-import { apolloClient } from './apollo'
 import {
   CHAIN_NAME_TO_CHAIN_ID,
   isPricePoint,
@@ -24,28 +22,8 @@ import {
   PricePoint,
   toHistoryDuration,
   unwrapToken,
-  unwrapTokenRollux,
   usePollQueryWhileMounted,
 } from './util'
-
-interface Token {
-  decimals: string
-  feesUSD: string
-  id: string
-  name: string
-  poolCount: string
-  symbol: string
-  totalSupply: string
-  totalValueLocked: string
-  totalValueLockedUSD: string
-  totalValueLockedUSDUntracked: string
-  txCount: string
-  untrackedVolumeUSD: string
-  volume: string
-  volumeUSD: string
-}
-
-type Tokens = Array<Token>
 
 gql`
   query TopTokens100($duration: HistoryDuration!, $chain: Chain!) {
@@ -102,28 +80,6 @@ gql`
           value
         }
       }
-    }
-  }
-`
-
-// We create a query data to get some tokens info on rollux subgraph
-const TOPTOKENS = gql`
-  query TopTokensRollux {
-    tokens(first: 50, orderBy: totalValueLockedUSD, orderDirection: desc, subgraphError: allow) {
-      id
-      symbol
-      name
-      decimals
-      totalSupply
-      volume
-      volumeUSD
-      untrackedVolumeUSD
-      feesUSD
-      txCount
-      poolCount
-      totalValueLocked
-      totalValueLockedUSD
-      totalValueLockedUSDUntracked
     }
   }
 `
@@ -193,22 +149,9 @@ interface UseTopTokensReturnValue {
 export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
   const chainId = CHAIN_NAME_TO_CHAIN_ID[chain]
   const duration = toHistoryDuration(useAtomValue(filterTimeAtom))
-  // console.log('=============duration=======================')
-  // console.log(duration)
-  // console.log('====================================')
 
-  // console.log('===============chain=====================')
-  // console.log(chain)
-  // console.log('====================================')
 
-  const { loading, error, data: tokens } = useQuery<Tokens>(TOPTOKENS, { client: apolloClient })
 
-  // const { loading, error, data: tokensPrice } = useQuery<Tokens>(asd, { client: apolloClient })
-  console.log('=================test query===================')
-  console.log('loading', loading)
-  console.log('error', error)
-  console.log('Test', tokens)
-  console.log('====================================')
 
   const { data: sparklineQuery } = usePollQueryWhileMounted(
     useTopTokensSparklineQuery({
@@ -216,21 +159,6 @@ export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
     }),
     PollingInterval.Slow
   )
-
-  console.log('sparklineQuery', sparklineQuery)
-
-  const sparklinesV2 = useMemo(() => {
-    const unwrappedTokens = tokens?.map((token) => {
-      unwrapTokenRollux(chainId, token)
-    })
-    console.log('unwrappedTokens', unwrappedTokens)
-    const map: SparklineMap = {}
-
-    // unwrappedTokens?.forEach(
-    //   (current) => current?.id && (map[current.id] = current?.market?.priceHistory?.filter(isPricePoint))
-    // )
-    return map
-  }, [chainId, tokens])
 
   const sparklines = useMemo(() => {
     const unwrappedTokens = sparklineQuery?.topTokens?.map((topToken) => unwrapToken(chainId, topToken))

@@ -114,7 +114,7 @@ const URL_CHAIN_PARAM_TO_BACKEND: { [key: string]: Chain } = {
 }
 
 export function validateUrlChainParam(chainName: string | undefined) {
-  return chainName && URL_CHAIN_PARAM_TO_BACKEND[chainName] ? URL_CHAIN_PARAM_TO_BACKEND[chainName] : Chain.Rollux
+  return chainName && URL_CHAIN_PARAM_TO_BACKEND[chainName] ? URL_CHAIN_PARAM_TO_BACKEND[chainName] : Chain.Optimism
 }
 
 // TODO(cartcrom): refactor into safer lookup & replace usage
@@ -128,7 +128,6 @@ export const CHAIN_NAME_TO_CHAIN_ID: { [key in Chain]: SupportedChainId } = {
   [Chain.Arbitrum]: SupportedChainId.ROLLUX,
   [Chain.UnknownChain]: SupportedChainId.ROLLUX,
   [Chain.Bnb]: SupportedChainId.ROLLUX,
-  [Chain.Rollux]: SupportedChainId.ROLLUX,
 }
 
 export function fromGraphQLChain(chain: Chain): SupportedChainId {
