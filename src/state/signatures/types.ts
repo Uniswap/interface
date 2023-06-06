@@ -1,12 +1,12 @@
 import { ExactInputSwapTransactionInfo, ExactOutputSwapTransactionInfo } from '../transactions/types'
 
 export enum DutchLimitOrderStatus {
-  OPEN = 'open',
-  EXPIRED = 'expired',
-  ERROR = 'error',
-  CANCELLED = 'cancelled',
-  FILLED = 'filled',
-  INSUFFICIENT_FUNDS = 'insufficient-funds',
+  OPEN = 'OPEN',
+  EXPIRED = 'EXPIRED',
+  ERROR = 'ERROR',
+  CANCELLED = 'CANCELLED',
+  FILLED = 'FILLED',
+  INSUFFICIENT_FUNDS = 'INSUFFICIENT_FUNDS',
 }
 
 export enum SignatureType {

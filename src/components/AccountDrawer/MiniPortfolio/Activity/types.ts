@@ -1,8 +1,6 @@
 import { Currency } from '@uniswap/sdk-core'
 import { SupportedChainId } from 'constants/chains'
-import { AssetActivityPartsFragment, TransactionStatus } from 'graphql/data/__generated__/types-and-hooks'
-
-type Receipt = AssetActivityPartsFragment['transaction']
+import { TransactionStatus } from 'graphql/data/__generated__/types-and-hooks'
 
 export type Activity = {
   hash: string
@@ -15,8 +13,9 @@ export type Activity = {
   logos?: Array<string | undefined>
   currencies?: Array<Currency | undefined>
   otherAccount?: string
-  receipt?: Omit<Receipt, 'nonce'>
+  from: string
   nonce?: number | null
+  prefixIconSrc?: string
 }
 
 export type ActivityMap = { [id: string]: Activity | undefined }
