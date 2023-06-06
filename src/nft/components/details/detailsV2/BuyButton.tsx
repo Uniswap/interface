@@ -1,21 +1,89 @@
 import { Trans } from '@lingui/macro'
+import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
+import { NFTEventName } from '@uniswap/analytics-events'
 import { formatNumber } from '@uniswap/conedison/format'
+import { useWeb3React } from '@web3-react/core'
+import { useAccountDrawer } from 'components/AccountDrawer'
 import { ButtonPrimary } from 'components/Button'
+import { ButtonGray } from 'components/Button'
 import Loader from 'components/Icons/LoadingSpinner'
+import Row from 'components/Row'
+import { ActivationStatus, useActivationState } from 'connection/activate'
+import { useNftBalance } from 'graphql/data/nft/NftBalance'
+import { atom, useAtom } from 'jotai'
+import { AddToBagIcon, RemoveFromBagIcon } from 'nft/components/icons'
+import { useBag, useProfilePageState, useSellAsset } from 'nft/hooks'
 import { useBuyAssetCallback } from 'nft/hooks/useFetchAssets'
-import { GenieAsset } from 'nft/types'
-import styled from 'styled-components/macro'
+import { useIsAssetInBag } from 'nft/hooks/useIsAssetInBag'
+import { GenieAsset, ProfilePageStateType } from 'nft/types'
+import { MouseEvent, useCallback, useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import styled, { css } from 'styled-components/macro'
+import { BREAKPOINTS } from 'theme'
+import { colors } from 'theme/colors'
+import { shallow } from 'zustand/shallow'
 
-import { OfferButton } from './OfferButton'
-import { ButtonStyles } from './shared'
-
-const StyledBuyButton = styled(ButtonPrimary)`
+const ButtonStyles = css`
+  padding: 16px;
   display: flex;
   flex-direction: row;
-  padding: 16px 24px;
   gap: 8px;
   line-height: 24px;
   white-space: nowrap;
+`
+
+const BaseButton = styled(ButtonPrimary)`
+  background: none;
+  border: none;
+  border-radius: 0px;
+
+  ${ButtonStyles}
+`
+
+const ButtonSeparator = styled.div<{ shouldHide?: boolean }>`
+  height: 24px;
+  width: 0px;
+  border-left: 0.5px solid ${colors.gray50};
+
+  ${({ shouldHide }) => shouldHide && `display: none;`}
+`
+
+const AddToBagButton = styled(BaseButton)<{ isExpanded: boolean; shouldHide: boolean }>`
+  width: ${({ isExpanded }) => (isExpanded ? '100%' : 'min-content')};
+  transition: ${({ theme }) => theme.transition.duration.medium};
+  flex-shrink: 0;
+  will-change: width;
+
+  ${({ shouldHide }) => shouldHide && `width: 0px; padding: 0px;`}
+`
+
+const StyledBuyButton = styled(BaseButton)<{ shouldHide?: boolean }>`
+  min-width: 0px;
+  transition: ${({ theme }) => theme.transition.duration.medium};
+  will-change: width;
+  overflow: hidden;
+
+  ${({ shouldHide }) => shouldHide && `width: 0px; padding: 0px;`}
+  &:disabled {
+    width: 100%;
+  }
+`
+
+const ButtonContainer = styled(Row)<{ dataPage: boolean }>`
+  width: 100%;
+  background-color: ${({ theme }) => theme.accentAction};
+  border-radius: 16px;
+  overflow: hidden;
+  white-space: nowrap;
+
+  @media screen and (min-width: ${BREAKPOINTS.xs}px) {
+    width: ${({ dataPage }) => (dataPage ? 'min-content' : '320px')};
+  }
+`
+
+const NotAvailableButton = styled(ButtonGray)`
+  width: min-content;
+  border-radius: 16px;
 
   ${ButtonStyles}
 `
@@ -24,30 +92,153 @@ const Price = styled.div`
   color: ${({ theme }) => theme.accentTextLightSecondary};
 `
 
-export const BuyButton = ({ asset, onDataPage }: { asset: GenieAsset; onDataPage?: boolean }) => {
-  const { fetchAndPurchaseSingleAsset, isLoading: isLoadingRoute } = useBuyAssetCallback()
-  const price = asset.sellorders?.[0]?.price.value
+const connectingToWalletAtom = atom<boolean>(false)
+connectingToWalletAtom.onMount = (setAtom) => {
+  setAtom(false)
+}
 
-  if (!price) {
-    return <OfferButton />
+export const BuyButton = ({ asset, isOnDataPage }: { asset: GenieAsset; isOnDataPage?: boolean }) => {
+  const { account } = useWeb3React()
+  const [accountDrawerOpen, toggleWalletDrawer] = useAccountDrawer()
+  const { fetchAndPurchaseSingleAsset, isLoading: isLoadingRoute } = useBuyAssetCallback()
+  const [addToBagExpanded, setAddToBagExpanded] = useState(false)
+  const navigate = useNavigate()
+  const trace = useTrace()
+  const setSellPageState = useProfilePageState((state) => state.setProfilePageState)
+  const selectSellAsset = useSellAsset((state) => state.selectSellAsset)
+  const resetSellAssets = useSellAsset((state) => state.reset)
+  const [connectingToWallet, updateConnectingToWallet] = useAtom(connectingToWalletAtom)
+  const { activationState } = useActivationState()
+
+  const { walletAssets } = useNftBalance(account ?? '', [], [{ address: asset.address, tokenId: asset.tokenId }], 1)
+  const walletAsset = walletAssets?.[0]
+
+  const price = asset.sellorders?.[0]?.price.value
+  const ownsAsset = Boolean(walletAsset) && account?.toLowerCase() === asset.ownerAddress?.toLowerCase()
+
+  const assetInBag = useIsAssetInBag(asset)
+  const { addAssetsToBag, removeAssetsFromBag } = useBag(
+    ({ addAssetsToBag, removeAssetsFromBag }) => ({
+      addAssetsToBag,
+      removeAssetsFromBag,
+    }),
+    shallow
+  )
+
+  const navigateToProfile = useCallback(() => {
+    if (!walletAsset) {
+      return
+    }
+
+    resetSellAssets()
+    selectSellAsset(walletAsset)
+    sendAnalyticsEvent(NFTEventName.NFT_SELL_ITEM_ADDED, {
+      collection_address: asset.address,
+      token_id: asset.tokenId,
+      ...trace,
+    })
+    setSellPageState(ProfilePageStateType.LISTING)
+    navigate('/nfts/profile')
+  }, [asset.address, asset.tokenId, navigate, resetSellAssets, selectSellAsset, setSellPageState, trace, walletAsset])
+
+  const oneClickBuyAsset = useCallback(() => {
+    if (!account) {
+      if (!accountDrawerOpen) {
+        toggleWalletDrawer()
+      }
+      updateConnectingToWallet(true)
+      setTimeout(() => updateConnectingToWallet(false), 30000)
+    } else {
+      fetchAndPurchaseSingleAsset(asset)
+    }
+  }, [account, accountDrawerOpen, asset, fetchAndPurchaseSingleAsset, toggleWalletDrawer, updateConnectingToWallet])
+
+  useEffect(() => {
+    if (connectingToWallet && account && activationState.status === ActivationStatus.IDLE) {
+      updateConnectingToWallet(false)
+      fetchAndPurchaseSingleAsset(asset)
+    }
+  }, [
+    connectingToWallet,
+    account,
+    fetchAndPurchaseSingleAsset,
+    asset,
+    updateConnectingToWallet,
+    activationState.status,
+  ])
+
+  if (ownsAsset) {
+    return (
+      <ButtonContainer dataPage={Boolean(isOnDataPage)}>
+        <StyledBuyButton onClick={navigateToProfile}>
+          {price ? (
+            <>
+              <Trans>Edit Listing</Trans>
+              <Price>{formatNumber(price)} ETH</Price>
+            </>
+          ) : (
+            <Trans>List</Trans>
+          )}
+        </StyledBuyButton>
+      </ButtonContainer>
+    )
   }
 
+  if (!price) {
+    return !isOnDataPage ? (
+      <NotAvailableButton disabled>
+        <Trans>Not available for purchase</Trans>
+      </NotAvailableButton>
+    ) : null
+  }
+
+  const secondaryButtonCta = assetInBag ? <Trans>Remove from Bag</Trans> : <Trans>Add to Bag</Trans>
+  const SecondaryButtonIcon = () =>
+    assetInBag ? <RemoveFromBagIcon width="24px" height="24px" /> : <AddToBagIcon width="24px" height="24px" />
+  const secondaryButtonAction = (event: MouseEvent<HTMLButtonElement>) => {
+    assetInBag ? removeAssetsFromBag([asset]) : addAssetsToBag([asset])
+    event.currentTarget.blur()
+  }
+  const secondaryButtonExpanded = addToBagExpanded || Boolean(isOnDataPage)
+  const isDisabled = isLoadingRoute || connectingToWallet
+
   return (
-    <>
-      <StyledBuyButton disabled={isLoadingRoute} onClick={() => fetchAndPurchaseSingleAsset(asset)}>
-        {isLoadingRoute ? (
-          <>
-            <Trans>Fetching Route</Trans>
-            <Loader size="24px" stroke="white" />
-          </>
-        ) : (
-          <>
-            <Trans>Buy</Trans>
-            <Price>{formatNumber(price)} ETH</Price>
-          </>
-        )}
-      </StyledBuyButton>
-      {onDataPage && <OfferButton smallVersion />}
-    </>
+    <ButtonContainer dataPage={Boolean(isOnDataPage)}>
+      {!isOnDataPage && (
+        <>
+          <StyledBuyButton shouldHide={secondaryButtonExpanded} disabled={isDisabled} onClick={oneClickBuyAsset}>
+            {connectingToWallet && (
+              <>
+                <Trans>Connect Wallet</Trans>
+                <Loader size="24px" stroke="white" />
+              </>
+            )}
+            {isLoadingRoute && (
+              <>
+                <Trans>Fetching Route</Trans>
+                <Loader size="24px" stroke="white" />
+              </>
+            )}
+            {!connectingToWallet && !isLoadingRoute && (
+              <>
+                <Trans>Buy</Trans>
+                <Price>{formatNumber(price)} ETH</Price>
+              </>
+            )}
+          </StyledBuyButton>
+          <ButtonSeparator shouldHide={addToBagExpanded || isDisabled} />
+        </>
+      )}
+      <AddToBagButton
+        onMouseEnter={() => setAddToBagExpanded(true)}
+        onMouseLeave={() => setAddToBagExpanded(false)}
+        onClick={secondaryButtonAction}
+        isExpanded={secondaryButtonExpanded}
+        shouldHide={isDisabled}
+      >
+        <SecondaryButtonIcon />
+        {secondaryButtonExpanded && secondaryButtonCta}
+      </AddToBagButton>
+    </ButtonContainer>
   )
 }

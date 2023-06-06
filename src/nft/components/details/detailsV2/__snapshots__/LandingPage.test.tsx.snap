@@ -224,23 +224,22 @@ exports[`LandingPage renders it correctly 1`] = `
   font-weight: 500;
 }
 
-.c27:hover {
-  background-color: #d2daf7;
-}
-
-.c27:active {
-  background-color: #bdc8f3;
-}
-
 .c28 {
-  white-space: nowrap;
   width: -webkit-min-content;
   width: -moz-min-content;
   width: min-content;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
   border-radius: 16px;
+  padding: 16px;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  gap: 8px;
+  line-height: 24px;
+  white-space: nowrap;
 }
 
 .c21 {
@@ -549,8 +548,9 @@ exports[`LandingPage renders it correctly 1`] = `
       </div>
       <button
         class="c25 c26 c27 c28"
+        disabled=""
       >
-        Make an offer
+        Not available for purchase
       </button>
     </div>
   </div>

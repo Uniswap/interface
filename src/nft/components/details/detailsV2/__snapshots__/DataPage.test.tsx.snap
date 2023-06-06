@@ -18,29 +18,6 @@ exports[`data page loads with header showing 1`] = `
   width: min-content;
 }
 
-.c14 {
-  box-sizing: border-box;
-  margin: 0;
-  min-width: 0;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  display: inline-block;
-  text-align: center;
-  line-height: inherit;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  font-size: inherit;
-  padding-left: 16px;
-  padding-right: 16px;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  color: white;
-  background-color: primary;
-  border: 0;
-  border-radius: 4px;
-}
-
 .c5 {
   width: 100%;
   display: -webkit-box;
@@ -96,7 +73,7 @@ exports[`data page loads with header showing 1`] = `
   gap: 12px;
 }
 
-.c23 {
+.c19 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -136,7 +113,7 @@ exports[`data page loads with header showing 1`] = `
   justify-content: flex-start;
 }
 
-.c29 {
+.c25 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -151,7 +128,7 @@ exports[`data page loads with header showing 1`] = `
   gap: 24px;
 }
 
-.c20 {
+.c16 {
   background: #FFFFFF;
   border: 1px solid #D2D9EE;
   border-radius: 16px;
@@ -165,7 +142,7 @@ exports[`data page loads with header showing 1`] = `
   padding-right: 20px;
 }
 
-.c26 {
+.c22 {
   background: #FFFFFF;
   border: 1px solid #D2D9EE;
   border-radius: 16px;
@@ -181,7 +158,7 @@ exports[`data page loads with header showing 1`] = `
   padding-right: 0px;
 }
 
-.c21 {
+.c17 {
   gap: 32px;
   width: 100;
   margin-bottom: 12px;
@@ -189,32 +166,32 @@ exports[`data page loads with header showing 1`] = `
   border-bottom: 1px solid #D2D9EE;
 }
 
-.c27 {
+.c23 {
   padding-left: 20px;
   padding-right: 20px;
 }
 
-.c22 {
+.c18 {
   color: #0D111C;
   line-height: 24px;
   cursor: pointer;
 }
 
-.c22:hover {
+.c18:hover {
   opacity: 0.6;
 }
 
-.c24 {
+.c20 {
   color: #98A1C0;
   line-height: 24px;
   cursor: pointer;
 }
 
-.c24:hover {
+.c20:hover {
   opacity: 0.6;
 }
 
-.c28 {
+.c24 {
   background: #D2D9EE;
   border-radius: 4px;
   padding: 2px 4px;
@@ -222,90 +199,8 @@ exports[`data page loads with header showing 1`] = `
   line-height: 12px;
 }
 
-.c25 {
+.c21 {
   height: 252px;
-}
-
-.c15 {
-  padding: 16px;
-  width: 100%;
-  font-weight: 500;
-  text-align: center;
-  border-radius: 20px;
-  outline: none;
-  border: 1px solid transparent;
-  color: #0D111C;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  -webkit-flex-wrap: nowrap;
-  -ms-flex-wrap: nowrap;
-  flex-wrap: nowrap;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  cursor: pointer;
-  position: relative;
-  z-index: 1;
-  will-change: transform;
-  -webkit-transition: -webkit-transform 450ms ease;
-  -webkit-transition: transform 450ms ease;
-  transition: transform 450ms ease;
-  -webkit-transform: perspective(1px) translateZ(0);
-  -ms-transform: perspective(1px) translateZ(0);
-  transform: perspective(1px) translateZ(0);
-}
-
-.c15:disabled {
-  opacity: 50%;
-  cursor: auto;
-  pointer-events: none;
-}
-
-.c15 > * {
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
-
-.c15 > a {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-}
-
-.c16 {
-  background-color: #F5F6FC;
-  color: #7780A0;
-  font-size: 16px;
-  font-weight: 500;
-}
-
-.c16:hover {
-  background-color: #d2daf7;
-}
-
-.c16:active {
-  background-color: #bdc8f3;
-}
-
-.c17 {
-  white-space: nowrap;
-  width: -webkit-min-content;
-  width: -moz-min-content;
-  width: min-content;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-  border-radius: 16px;
 }
 
 .c6 {
@@ -324,11 +219,11 @@ exports[`data page loads with header showing 1`] = `
   margin-right: auto;
 }
 
-.c32 {
+.c28 {
   position: relative;
 }
 
-.c33 {
+.c29 {
   gap: 4px;
   padding: 8px;
   cursor: pointer;
@@ -347,15 +242,15 @@ exports[`data page loads with header showing 1`] = `
   transition: opacity 250ms ease;
 }
 
-.c33:hover {
+.c29:hover {
   opacity: 0.6;
 }
 
-.c33:active {
+.c29:active {
   opacity: 0.4;
 }
 
-.c34 {
+.c30 {
   height: 16px;
   width: 16px;
   color: #7780A0;
@@ -367,11 +262,11 @@ exports[`data page loads with header showing 1`] = `
   transition: transform 125ms;
 }
 
-.c30 {
+.c26 {
   height: 568px;
 }
 
-.c31 {
+.c27 {
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
   -ms-flex-pack: justify;
@@ -411,12 +306,12 @@ exports[`data page loads with header showing 1`] = `
   opacity: 1;
 }
 
-.c18 {
+.c14 {
   gap: 24px;
   padding-bottom: 45px;
 }
 
-.c19 {
+.c15 {
   gap: 24px;
   width: 100%;
   -webkit-align-self: flex-start;
@@ -455,7 +350,7 @@ exports[`data page loads with header showing 1`] = `
 }
 
 @media screen and (max-width:1024px) {
-  .c18 {
+  .c14 {
     -webkit-flex-wrap: wrap;
     -ms-flex-wrap: wrap;
     flex-wrap: wrap;
@@ -515,44 +410,38 @@ exports[`data page loads with header showing 1`] = `
           <div
             class="c12 c13"
             width="min-content"
-          >
-            <button
-              class="c14 c15 c16 c17"
-            >
-              Make an offer
-            </button>
-          </div>
+          />
         </div>
       </div>
       <div
-        class="c4 c5 c18"
+        class="c4 c5 c14"
       >
         <div
-          class="c1 c19"
+          class="c1 c15"
         >
           <div
-            class="c20"
+            class="c16"
           >
             <div
               class=""
             >
               <div
-                class="c4 c5 c21"
+                class="c4 c5 c17"
               >
                 <div
-                  class="c11 c22 css-rjqmed"
+                  class="c11 c18 css-rjqmed"
                 >
                   <div
-                    class="c4 c23"
+                    class="c4 c19"
                   >
                     Description
                   </div>
                 </div>
                 <div
-                  class="c11 c24 css-rjqmed"
+                  class="c11 c20 css-rjqmed"
                 >
                   <div
-                    class="c4 c23"
+                    class="c4 c19"
                   >
                     Details
                   </div>
@@ -560,49 +449,49 @@ exports[`data page loads with header showing 1`] = `
               </div>
             </div>
             <div
-              class="c25"
+              class="c21"
             >
               Description Content
             </div>
           </div>
         </div>
         <div
-          class="c26"
+          class="c22"
         >
           <div
-            class="c27"
+            class="c23"
           >
             <div
-              class="c4 c5 c21"
+              class="c4 c5 c17"
             >
               <div
-                class="c11 c22 css-rjqmed"
+                class="c11 c18 css-rjqmed"
               >
                 <div
-                  class="c4 c23"
+                  class="c4 c19"
                 >
                   Activity
                 </div>
               </div>
               <div
-                class="c11 c24 css-rjqmed"
+                class="c11 c20 css-rjqmed"
               >
                 <div
-                  class="c4 c23"
+                  class="c4 c19"
                 >
                   Offers
                   <div
-                    class="c28 css-f8aq60"
+                    class="c24 css-f8aq60"
                   >
                     10+
                   </div>
                 </div>
               </div>
               <div
-                class="c11 c24 css-rjqmed"
+                class="c11 c20 css-rjqmed"
               >
                 <div
-                  class="c4 c23"
+                  class="c4 c19"
                 >
                   Listings
                 </div>
@@ -610,10 +499,10 @@ exports[`data page loads with header showing 1`] = `
             </div>
           </div>
           <div
-            class="c29 c30"
+            class="c25 c26"
           >
             <div
-              class="c4 c5 c31"
+              class="c4 c5 c27"
             >
               <div
                 class="c10 css-1c82c04"
@@ -621,10 +510,10 @@ exports[`data page loads with header showing 1`] = `
                 vs. collection floor
               </div>
               <div
-                class="c32"
+                class="c28"
               >
                 <div
-                  class="c4 c5 c33"
+                  class="c4 c5 c29"
                   data-testid="activity-time-period-switcher"
                 >
                   <div
@@ -633,7 +522,7 @@ exports[`data page loads with header showing 1`] = `
                     1 week
                   </div>
                   <svg
-                    class="c34"
+                    class="c30"
                     fill="none"
                     height="24"
                     stroke="currentColor"
@@ -731,29 +620,6 @@ exports[`data page loads without header showing 1`] = `
   width: min-content;
 }
 
-.c14 {
-  box-sizing: border-box;
-  margin: 0;
-  min-width: 0;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  display: inline-block;
-  text-align: center;
-  line-height: inherit;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  font-size: inherit;
-  padding-left: 16px;
-  padding-right: 16px;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  color: white;
-  background-color: primary;
-  border: 0;
-  border-radius: 4px;
-}
-
 .c5 {
   width: 100%;
   display: -webkit-box;
@@ -809,7 +675,7 @@ exports[`data page loads without header showing 1`] = `
   gap: 12px;
 }
 
-.c23 {
+.c19 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -849,7 +715,7 @@ exports[`data page loads without header showing 1`] = `
   justify-content: flex-start;
 }
 
-.c29 {
+.c25 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -864,7 +730,7 @@ exports[`data page loads without header showing 1`] = `
   gap: 24px;
 }
 
-.c20 {
+.c16 {
   background: #FFFFFF;
   border: 1px solid #D2D9EE;
   border-radius: 16px;
@@ -878,7 +744,7 @@ exports[`data page loads without header showing 1`] = `
   padding-right: 20px;
 }
 
-.c26 {
+.c22 {
   background: #FFFFFF;
   border: 1px solid #D2D9EE;
   border-radius: 16px;
@@ -894,7 +760,7 @@ exports[`data page loads without header showing 1`] = `
   padding-right: 0px;
 }
 
-.c21 {
+.c17 {
   gap: 32px;
   width: 100;
   margin-bottom: 12px;
@@ -902,32 +768,32 @@ exports[`data page loads without header showing 1`] = `
   border-bottom: 1px solid #D2D9EE;
 }
 
-.c27 {
+.c23 {
   padding-left: 20px;
   padding-right: 20px;
 }
 
-.c22 {
+.c18 {
   color: #0D111C;
   line-height: 24px;
   cursor: pointer;
 }
 
-.c22:hover {
+.c18:hover {
   opacity: 0.6;
 }
 
-.c24 {
+.c20 {
   color: #98A1C0;
   line-height: 24px;
   cursor: pointer;
 }
 
-.c24:hover {
+.c20:hover {
   opacity: 0.6;
 }
 
-.c28 {
+.c24 {
   background: #D2D9EE;
   border-radius: 4px;
   padding: 2px 4px;
@@ -935,90 +801,8 @@ exports[`data page loads without header showing 1`] = `
   line-height: 12px;
 }
 
-.c25 {
+.c21 {
   height: 252px;
-}
-
-.c15 {
-  padding: 16px;
-  width: 100%;
-  font-weight: 500;
-  text-align: center;
-  border-radius: 20px;
-  outline: none;
-  border: 1px solid transparent;
-  color: #0D111C;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  -webkit-flex-wrap: nowrap;
-  -ms-flex-wrap: nowrap;
-  flex-wrap: nowrap;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  cursor: pointer;
-  position: relative;
-  z-index: 1;
-  will-change: transform;
-  -webkit-transition: -webkit-transform 450ms ease;
-  -webkit-transition: transform 450ms ease;
-  transition: transform 450ms ease;
-  -webkit-transform: perspective(1px) translateZ(0);
-  -ms-transform: perspective(1px) translateZ(0);
-  transform: perspective(1px) translateZ(0);
-}
-
-.c15:disabled {
-  opacity: 50%;
-  cursor: auto;
-  pointer-events: none;
-}
-
-.c15 > * {
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
-
-.c15 > a {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-}
-
-.c16 {
-  background-color: #F5F6FC;
-  color: #7780A0;
-  font-size: 16px;
-  font-weight: 500;
-}
-
-.c16:hover {
-  background-color: #d2daf7;
-}
-
-.c16:active {
-  background-color: #bdc8f3;
-}
-
-.c17 {
-  white-space: nowrap;
-  width: -webkit-min-content;
-  width: -moz-min-content;
-  width: min-content;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-  border-radius: 16px;
 }
 
 .c6 {
@@ -1037,11 +821,11 @@ exports[`data page loads without header showing 1`] = `
   margin-right: auto;
 }
 
-.c32 {
+.c28 {
   position: relative;
 }
 
-.c33 {
+.c29 {
   gap: 4px;
   padding: 8px;
   cursor: pointer;
@@ -1060,15 +844,15 @@ exports[`data page loads without header showing 1`] = `
   transition: opacity 250ms ease;
 }
 
-.c33:hover {
+.c29:hover {
   opacity: 0.6;
 }
 
-.c33:active {
+.c29:active {
   opacity: 0.4;
 }
 
-.c34 {
+.c30 {
   height: 16px;
   width: 16px;
   color: #7780A0;
@@ -1080,11 +864,11 @@ exports[`data page loads without header showing 1`] = `
   transition: transform 125ms;
 }
 
-.c30 {
+.c26 {
   height: 568px;
 }
 
-.c31 {
+.c27 {
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
   -ms-flex-pack: justify;
@@ -1124,12 +908,12 @@ exports[`data page loads without header showing 1`] = `
   opacity: 0;
 }
 
-.c18 {
+.c14 {
   gap: 24px;
   padding-bottom: 45px;
 }
 
-.c19 {
+.c15 {
   gap: 24px;
   width: 100%;
   -webkit-align-self: flex-start;
@@ -1168,7 +952,7 @@ exports[`data page loads without header showing 1`] = `
 }
 
 @media screen and (max-width:1024px) {
-  .c18 {
+  .c14 {
     -webkit-flex-wrap: wrap;
     -ms-flex-wrap: wrap;
     flex-wrap: wrap;
@@ -1228,44 +1012,38 @@ exports[`data page loads without header showing 1`] = `
           <div
             class="c12 c13"
             width="min-content"
-          >
-            <button
-              class="c14 c15 c16 c17"
-            >
-              Make an offer
-            </button>
-          </div>
+          />
         </div>
       </div>
       <div
-        class="c4 c5 c18"
+        class="c4 c5 c14"
       >
         <div
-          class="c1 c19"
+          class="c1 c15"
         >
           <div
-            class="c20"
+            class="c16"
           >
             <div
               class=""
             >
               <div
-                class="c4 c5 c21"
+                class="c4 c5 c17"
               >
                 <div
-                  class="c11 c22 css-rjqmed"
+                  class="c11 c18 css-rjqmed"
                 >
                   <div
-                    class="c4 c23"
+                    class="c4 c19"
                   >
                     Description
                   </div>
                 </div>
                 <div
-                  class="c11 c24 css-rjqmed"
+                  class="c11 c20 css-rjqmed"
                 >
                   <div
-                    class="c4 c23"
+                    class="c4 c19"
                   >
                     Details
                   </div>
@@ -1273,49 +1051,49 @@ exports[`data page loads without header showing 1`] = `
               </div>
             </div>
             <div
-              class="c25"
+              class="c21"
             >
               Description Content
             </div>
           </div>
         </div>
         <div
-          class="c26"
+          class="c22"
         >
           <div
-            class="c27"
+            class="c23"
           >
             <div
-              class="c4 c5 c21"
+              class="c4 c5 c17"
             >
               <div
-                class="c11 c22 css-rjqmed"
+                class="c11 c18 css-rjqmed"
               >
                 <div
-                  class="c4 c23"
+                  class="c4 c19"
                 >
                   Activity
                 </div>
               </div>
               <div
-                class="c11 c24 css-rjqmed"
+                class="c11 c20 css-rjqmed"
               >
                 <div
-                  class="c4 c23"
+                  class="c4 c19"
                 >
                   Offers
                   <div
-                    class="c28 css-f8aq60"
+                    class="c24 css-f8aq60"
                   >
                     10+
                   </div>
                 </div>
               </div>
               <div
-                class="c11 c24 css-rjqmed"
+                class="c11 c20 css-rjqmed"
               >
                 <div
-                  class="c4 c23"
+                  class="c4 c19"
                 >
                   Listings
                 </div>
@@ -1323,10 +1101,10 @@ exports[`data page loads without header showing 1`] = `
             </div>
           </div>
           <div
-            class="c29 c30"
+            class="c25 c26"
           >
             <div
-              class="c4 c5 c31"
+              class="c4 c5 c27"
             >
               <div
                 class="c10 css-1c82c04"
@@ -1334,10 +1112,10 @@ exports[`data page loads without header showing 1`] = `
                 vs. collection floor
               </div>
               <div
-                class="c32"
+                class="c28"
               >
                 <div
-                  class="c4 c5 c33"
+                  class="c4 c5 c29"
                   data-testid="activity-time-period-switcher"
                 >
                   <div
@@ -1346,7 +1124,7 @@ exports[`data page loads without header showing 1`] = `
                     1 week
                   </div>
                   <svg
-                    class="c34"
+                    class="c30"
                     fill="none"
                     height="24"
                     stroke="currentColor"
