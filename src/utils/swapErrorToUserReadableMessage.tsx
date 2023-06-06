@@ -1,8 +1,9 @@
 import { t } from '@lingui/macro'
 
 import { UserRejectedRequestError } from './errors'
+import { swapEthersErrorToUserReadableMessage } from './swapEthersErrorToUserReadableMessage'
 
-function getReason(error: any): string | undefined {
+export function getReason(error: any): string | undefined {
   let reason: string | undefined
   while (error) {
     reason = error.reason ?? error.message ?? reason
@@ -72,7 +73,6 @@ export function swapErrorToUserReadableMessage(error: any): string {
         console.error(error, reason)
         return t`An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3.`
       }
-      return t`${reason ? reason : 'Unknown error.'} Try increasing your slippage tolerance.
-Note: fee-on-transfer and rebase tokens are incompatible with Uniswap V3.`
+      return swapEthersErrorToUserReadableMessage(error)
   }
 }
