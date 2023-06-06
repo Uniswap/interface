@@ -135,7 +135,6 @@ const HeaderWrapper = styled.div`
 
 const CopyText = styled(CopyHelper).attrs({
   InitialIcon: Copy,
-  CopiedIcon: Copy,
   gap: 4,
   iconSize: 14,
   iconPosition: 'right',
