@@ -22,7 +22,7 @@ export function SettingsWalletEditNicknameScreen(): JSX.Element {
   }
 
   return (
-    <YStack backgroundColor="$background0" flexGrow={1} padding="$spacing12">
+    <YStack backgroundColor="$background0" flexGrow={1}>
       <BackButtonHeader headerText={t('Edit nickname')} />
       <YStack flexGrow={1} justifyContent="space-between" padding="$spacing12">
         <YStack gap="$spacing24" justifyContent="center">

@@ -6,10 +6,11 @@ import { shortenAddress } from 'wallet/src/utils/addresses'
 
 type AccountRowItemProps = {
   address: string
+  onPress?: () => void
 }
 
 /** Helper component to display identicon and formatted address */
-export function AccountRowItem({ address }: AccountRowItemProps): JSX.Element {
+export function AccountRowItem({ address, onPress }: AccountRowItemProps): JSX.Element {
   // TODO: Replace with useDisplayName once available
   const name = 'ensname.eth'
   // const { name } = useDisplayName(address)
@@ -26,7 +27,8 @@ export function AccountRowItem({ address }: AccountRowItemProps): JSX.Element {
       flex={1}
       gap="$spacing12"
       justifyContent="space-between"
-      paddingVertical="$spacing12">
+      paddingVertical="$spacing12"
+      onPress={onPress}>
       <XStack alignItems="center" gap="$spacing12">
         {icon}
         <Text variant="bodyLarge">{name}</Text>

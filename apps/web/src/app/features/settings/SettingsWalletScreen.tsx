@@ -1,20 +1,25 @@
 import { useTranslation } from 'react-i18next'
+import { useParams } from 'react-router-dom'
 import { BackButtonHeader } from 'src/app/features/settings/BackButtonHeader'
+import { SettingsWalletRoutes } from 'src/app/navigation/constants'
 import { useExtensionNavigation } from 'src/app/navigation/utils'
 import { Switch, Text, XStack, YStack } from 'ui/src'
 import PencilIcon from 'ui/src/assets/icons/pencil.svg'
 import { Button, LinkButton } from 'ui/src/components/button/Button'
 import { iconSizes } from 'ui/src/theme/iconSizes'
-import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 import { shortenAddress } from 'wallet/src/utils/addresses'
 
 export function SettingsWalletScreen(): JSX.Element {
+  const { address } = useParams()
   const { t } = useTranslation()
-  const { navigateBack, navigateTo } = useExtensionNavigation()
-  const activeAccount = useActiveAccountWithThrow() // TODO: pass in address through navigation since this doesn't have to be active account at all times
-  const address = activeAccount.address
+  const { navigateBack } = useExtensionNavigation()
+
+  if (!address) {
+    throw new Error('Address is required')
+  }
+
   const ensName = undefined // TODO: Add ENS lookup logic
-  const nickname = ensName || activeAccount.name || 'thomasthachil.eth' // TODO: Update after ens is defined
+  const nickname = ensName || 'thomasthachil.eth' // TODO: Update after ens is defined
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleUnknownTokensUpdate = (enabled: boolean): void => {
@@ -27,7 +32,7 @@ export function SettingsWalletScreen(): JSX.Element {
   }
 
   return (
-    <YStack backgroundColor="$background0" flexGrow={1} padding="$spacing12">
+    <YStack backgroundColor="$background0" flex={1}>
       <BackButtonHeader headerText={nickname || shortenAddress(address)} />
       <YStack flexGrow={1} justifyContent="space-between" padding="$spacing12">
         <YStack>
@@ -36,9 +41,7 @@ export function SettingsWalletScreen(): JSX.Element {
               <Text variant="bodyLarge">{t('Edit nickname')}</Text>
               <Text variant="bodyMicro">{nickname}</Text>
             </YStack>
-            <LinkButton
-              to={`settings/wallet:${address}/editNickname`}
-              onPress={(): void => navigateTo(`settings/wallet:${address}/editNickname`)}>
+            <LinkButton to={SettingsWalletRoutes.EditNickname.valueOf()}>
               <PencilIcon height={iconSizes.icon24} width={iconSizes.icon24} />
             </LinkButton>
           </XStack>

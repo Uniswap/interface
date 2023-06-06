@@ -75,11 +75,11 @@ const router = createHashRouter([
             element: <SettingsScreen />,
           },
           {
-            path: SettingsRoutes.Wallet,
+            path: `${SettingsRoutes.Wallet}/:address`,
             element: <SettingsWalletScreen />,
           },
           {
-            path: `${SettingsRoutes.Wallet}/${SettingsWalletRoutes.EditNickname}`,
+            path: `${SettingsRoutes.Wallet}/:address/${SettingsWalletRoutes.EditNickname}`,
             element: <SettingsWalletEditNicknameScreen />,
           },
           {

@@ -39,7 +39,11 @@ export function SettingsScreen(): JSX.Element {
         {allAccountsSorted
           .slice(0, showAll ? allAccountsSorted.length : DEFAULT_ACCOUNTS_TO_DISPLAY)
           .map((account: Account) => (
-            <AccountRowItem key={account.address} address={account.address} />
+            <AccountRowItem
+              key={account.address}
+              address={account.address}
+              onPress={(): void => navigateTo(`${SettingsRoutes.Wallet}/${account.address}`)}
+            />
           ))}
         {showAllWalletsButton ? (
           <Button
