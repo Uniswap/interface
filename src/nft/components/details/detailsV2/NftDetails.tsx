@@ -34,7 +34,7 @@ export const NftDetails = ({ asset, collection }: NftDetailsProps) => {
       {asset.imageUrl && <DetailsBackground backgroundImage={asset.imageUrl} />}
       <DetailsContentContainer>
         <LandingPage asset={asset} collection={collection} setShowDataHeader={setShowDataHeader} />
-        <DataPage asset={asset} showDataHeader={showDataHeader} />
+        <DataPage asset={asset} collection={collection} showDataHeader={showDataHeader} />
       </DetailsContentContainer>
     </>
   )

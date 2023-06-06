@@ -1,4 +1,5 @@
 import { Trans } from '@lingui/macro'
+import { formatUSDPrice } from '@uniswap/conedison/format'
 import { AxisBottom, TickFormatter } from '@visx/axis'
 import { localPoint } from '@visx/event'
 import { EventType } from '@visx/event/lib/types'
@@ -24,7 +25,6 @@ import {
   monthYearDayFormatter,
   weekFormatter,
 } from 'utils/formatChartTimes'
-import { formatDollar } from 'utils/formatNumbers'
 
 const DATA_EMPTY = { value: 0, timestamp: 0 }
 
@@ -295,7 +295,7 @@ export function PriceChart({ width, height, prices: originalPrices, timePeriod }
       <ChartHeader data-cy="chart-header">
         {displayPrice.value ? (
           <>
-            <TokenPrice>{formatDollar({ num: displayPrice.value, isPrice: true })}</TokenPrice>
+            <TokenPrice>{formatUSDPrice(displayPrice.value)}</TokenPrice>
             <DeltaContainer>
               {formattedDelta}
               <ArrowCell>{arrow}</ArrowCell>
