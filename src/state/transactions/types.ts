@@ -47,7 +47,9 @@ export enum TransactionType {
   ADD_BORROW,
   REDUCE_LEVERAGE,
   PREMIUM_LEVERAGE,
-  PREMIUM_BORROW
+  PREMIUM_BORROW,
+  REDUCE_BORROW_COLLATERAL,
+  REDUCE_BORROW_DEBT
 }
 
 interface BaseTransactionInfo {
@@ -198,6 +200,14 @@ export interface AddBorrowPremiumTransactionInfo {
   type: TransactionType.PREMIUM_BORROW
 }
 
+export interface ReduceBorrowCollateralTransactionInfo {
+  type: TransactionType.REDUCE_BORROW_COLLATERAL
+}
+
+export interface ReduceBorrowDebtTransactionInfo {
+  type: TransactionType.REDUCE_BORROW_DEBT
+}
+
 export type TransactionInfo =
   | ApproveTransactionInfo
   | ExactOutputSwapTransactionInfo
@@ -221,6 +231,8 @@ export type TransactionInfo =
   | ReduceLeveragePositionTransactionInfo
   | AddLeveragePremiumTransactionInfo
   | AddBorrowPremiumTransactionInfo
+  | ReduceBorrowCollateralTransactionInfo
+  | ReduceBorrowDebtTransactionInfo
 
 export interface TransactionDetails {
   hash: string

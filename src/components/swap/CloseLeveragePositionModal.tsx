@@ -11,11 +11,11 @@ import TransactionConfirmationModal, {
   ConfirmationModalContent,
   TransactionErrorContent,
 } from '../TransactionConfirmationModal'
-import SwapModalFooter, { AddPremiumLeverageModalFooter, ReduceLeverageModalFooter, LeverageModalFooter, AddPremiumBorrowModalFooter } from './SwapModalFooter'
+import SwapModalFooter, { AddPremiumLeverageModalFooter, ReduceLeverageModalFooter, LeverageModalFooter, AddPremiumBorrowModalFooter, BorrowReduceCollateralModalFooter, BorrowReduceDebtModalFooter } from './SwapModalFooter'
 import SwapModalHeader, { LeverageModalHeader } from './SwapModalHeader'
 import { LeverageTrade } from 'state/swap/hooks'
 import { useLimitlessPositionFromTokenId } from 'hooks/useV3Positions'
-import { BorrowPremiumPositionDetails, ReduceLeveragePositionDetails } from './AdvancedSwapDetails'
+import { BorrowPremiumPositionDetails, ReduceBorrowDetails, ReduceLeveragePositionDetails } from './AdvancedSwapDetails'
 import useDebounce from 'hooks/useDebounce'
 import { useLeverageManagerAddress } from 'hooks/useGetLeverageManager'
 import { useBorrowManagerContract, useLeverageManagerContract } from 'hooks/useContract'
@@ -326,11 +326,6 @@ export function AddBorrowPremiumModal({
 
 
 // reduceBorrowPosition(bool borrowBelow, bool reduceCollateral, bool getCollateralBack, uint256 reduceAmount)
-/**
- * 
- * if reduceCollateral then reduceCollatera
- * if !reduceCollateral, then repay debt
- */
 
 export function ReduceBorrowCollateralModal({
   trader,
@@ -364,14 +359,14 @@ export function ReduceBorrowCollateralModal({
 
   const modalHeader = useCallback(() => {
     return (
-      <ReduceLeveragePositionDetails leverageTrade={position}/>
+      <ReduceBorrowDetails position={position}/>
     )
   }, [onAcceptChanges, shouldLogModalCloseEvent])
 
 
   const modalBottom = useCallback(() => {
-    return (<ReduceLeverageModalFooter 
-      leverageManagerAddress={position?.borrowManagerAddress} tokenId={tokenId} trader={trader}
+    return (<BorrowReduceCollateralModalFooter 
+      tokenId={tokenId} trader={trader}
       setAttemptingTxn={setAttemptingTxn}
       setTxHash={setTxHash}
       />)
@@ -390,7 +385,87 @@ export function ReduceBorrowCollateralModal({
     () =>
       (
         <ConfirmationModalContent
-          title={<Trans>Reduce Position</Trans>}
+          title={<Trans>Reduce Collateral</Trans>}
+          onDismiss={onModalDismiss}
+          topContent={modalHeader}
+          bottomContent={modalBottom}
+        />
+      ),
+    [onModalDismiss, modalBottom, modalHeader]
+  )
+  return (
+    <Trace modal={InterfaceModalName.CONFIRM_SWAP}>
+      <TransactionConfirmationModal
+        isOpen={isOpen}
+        onDismiss={onModalDismiss}
+        attemptingTxn={attemptingTxn}
+        hash={txHash}
+        content={confirmationContent}
+        pendingText={pendingText}
+      />
+    </Trace>
+  )
+}
+
+export function ReduceBorrowDebtModal({
+  trader,
+  isOpen,
+  tokenId,
+  onDismiss,
+  onAcceptChanges,
+  onConfirm,
+}: {
+  trader: string | undefined,
+  isOpen: boolean,
+  tokenId: string | undefined,
+  onDismiss: () => void
+  onAcceptChanges: () => void
+  onConfirm: () => void
+}) {
+  // shouldLogModalCloseEvent lets the child SwapModalHeader component know when modal has been closed
+  // and an event triggered by modal closing should be logged.
+  const [shouldLogModalCloseEvent, setShouldLogModalCloseEvent] = useState(false)
+
+
+  const { loading, error, position } = useLimitlessPositionFromTokenId(tokenId)
+  const [txHash, setTxHash] = useState("")
+  const [attemptingTxn, setAttemptingTxn] = useState(false)
+
+
+  const onModalDismiss = useCallback(() => {
+    if (isOpen) setShouldLogModalCloseEvent(true)
+    onDismiss()
+  }, [isOpen, onDismiss])
+
+  const modalHeader = useCallback(() => {
+    return (
+      <ReduceBorrowDetails position={position}/>
+    )
+  }, [onAcceptChanges, shouldLogModalCloseEvent])
+
+
+  const modalBottom = useCallback(() => {
+    return (<BorrowReduceDebtModalFooter 
+      tokenId={tokenId} trader={trader}
+      setAttemptingTxn={setAttemptingTxn}
+      setTxHash={setTxHash}
+      />)
+  }, [
+    onConfirm
+  ])
+
+  // text to show while loading
+  const pendingText = (
+    <Trans>
+      Loading...
+    </Trans>
+  )
+
+  const confirmationContent = useCallback(
+    () =>
+      (
+        <ConfirmationModalContent
+          title={<Trans>Reduce Debt</Trans>}
           onDismiss={onModalDismiss}
           topContent={modalHeader}
           bottomContent={modalBottom}

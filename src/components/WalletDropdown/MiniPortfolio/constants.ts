@@ -155,6 +155,16 @@ const TransactionTitleTable: { [key in TransactionType]: { [state in Transaction
     [TransactionStatus.Pending]: t`Paying Premium`,
     [TransactionStatus.Confirmed]: t`Paid Premium`,
     [TransactionStatus.Failed]: t`Payment failed`,
+  },
+  [TransactionType.REDUCE_BORROW_DEBT]: {
+    [TransactionStatus.Pending]: t`Reducing borrow debt`,
+    [TransactionStatus.Confirmed]: t`Reduced borrow debt`,
+    [TransactionStatus.Failed]: t`Reduce borrow debt failed`,
+  },
+  [TransactionType.REDUCE_BORROW_COLLATERAL]: {
+    [TransactionStatus.Pending]: t`Reducing borrow collateral`,
+    [TransactionStatus.Confirmed]: t`Reduced borrow collateral`,
+    [TransactionStatus.Failed]: t`Reduce borrow collateral failed`,
   }
 }
 

@@ -734,6 +734,34 @@ export function AdvancedLeverageSwapDetails({
     </StyledCard>
   )
 }
+export function ReduceBorrowDetails({
+  position,
+}: {
+  position?: LimitlessPositionDetails
+}) {
+  const currency0 = useCurrency(position?.token0Address)
+  const currency1 = useCurrency(position?.token1Address)
+  return (
+    <StyledCard marginTop="10px">
+      <AutoColumn gap="md">
+        <ValueLabel
+          description="Existing collateral amount for this position."
+          value={position?.initialCollateral}
+          label={"Current Collateral Amount"}
+          syncing={false}
+          symbolAppend={position?.isToken0 ? currency0?.symbol : currency1?.symbol}
+        />
+        <ValueLabel
+          description="Existing borrowed amount for this position."
+          value={position?.totalDebtInput}
+          label={"Current Borrowed Amount"}
+          syncing={false}
+          symbolAppend={position?.isToken0 ? currency1?.symbol : currency0?.symbol}
+        />
+      </AutoColumn>
+    </StyledCard>
+  )
+}
 
 
 export const DefaultBorrowDetails: BorrowCreationDetails = {

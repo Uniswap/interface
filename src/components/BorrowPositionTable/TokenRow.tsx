@@ -39,7 +39,7 @@ import { useCurrency } from 'hooks/Tokens'
 import { AutoRow, RowBetween, RowFixed } from 'components/Row'
 import { LimitlessPositionDetails } from 'types/leveragePosition'
 import { AutoColumn } from 'components/Column'
-import ReducePositionModal, { AddBorrowPremiumModal } from 'components/swap/CloseLeveragePositionModal'
+import ReducePositionModal, { AddBorrowPremiumModal, ReduceBorrowCollateralModal, ReduceBorrowDebtModal } from 'components/swap/CloseLeveragePositionModal'
 import { useWeb3React } from '@web3-react/core'
 import { SmallButtonPrimary } from 'components/Button'
 import { ReduceButton, SmallMaxButton } from 'pages/RemoveLiquidity/styled'
@@ -458,11 +458,11 @@ function PositionRow({
   const { account } = useWeb3React()
 
   // const collateral = (totalLiquidity - totalDebt)
-  const handleReduceCollateral = () => {
+  const handleReduceCollateralDismiss = () => {
     setShowReduceCollateral(false);
   }
 
-  const handleReduceBorrowed = () => {
+  const handleReduceBorrowedDismiss = () => {
     setShowReduceBorrowed(false);
   }
 
@@ -489,21 +489,21 @@ function PositionRow({
     <>
       {/* <ListNumberCell header={header}>{listNumber}</ListNumberCell> */}
       {showReduceCollateral && (
-        <AddBorrowPremiumModal
+        <ReduceBorrowCollateralModal
         trader={account}
-        isOpen={showAddPremium}
+        isOpen={showReduceCollateral}
         tokenId={position?.tokenId ?? undefined}
-        onDismiss={handlePremiumConfirmDismiss}
+        onDismiss={handleReduceCollateralDismiss}
         onAcceptChanges={() => { }}
         onConfirm={() => { }}
       />
       )}
       {showReduceBorrowed && (
-        <AddBorrowPremiumModal
+        <ReduceBorrowDebtModal
         trader={account}
-        isOpen={showAddPremium}
+        isOpen={showReduceBorrowed}
         tokenId={position?.tokenId ?? undefined}
-        onDismiss={handlePremiumConfirmDismiss}
+        onDismiss={handleReduceBorrowedDismiss}
         onAcceptChanges={() => { }}
         onConfirm={() => { }}
       />
@@ -520,7 +520,9 @@ function PositionRow({
       )}
       <NameCell data-testid="name-cell">{positionInfo}</NameCell>
       <PriceCell data-testid="value-cell" sortable={header}>
+      <EditCell onClick={() => {setShowReduceBorrowed(true)}} disabled={false}>
         {borrowedAmount}
+        </EditCell>
       </PriceCell>
       <PriceCell data-testid="collateral-cell" sortable={header}>
         <EditCell onClick={() => {setShowReduceCollateral(true)}} disabled={false}>

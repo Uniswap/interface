@@ -370,5 +370,13 @@ export function TransactionSummary({ info }: { info: TransactionInfo }) {
       return <Trans>
         Pay Leverage Position Summary
       </Trans>
+    case TransactionType.REDUCE_BORROW_COLLATERAL:
+      return <Trans>
+        Reduce Borrow Collateral Summary
+      </Trans>
+    case TransactionType.REDUCE_BORROW_DEBT:
+      return <Trans>
+        Reduce Borrow Debt Summary
+      </Trans>
   }
 }
