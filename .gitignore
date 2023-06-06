@@ -47,3 +47,4 @@ cypress/videos
 cypress/screenshots
 
 .vercel
+.vscode/symbols.json
