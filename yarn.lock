@@ -6250,22 +6250,7 @@
     eip1193-provider "1.0.1"
     eventemitter3 "4.0.7"
 
-"@walletconnect/ethereum-provider@^2.7.4":
-  version "2.7.7"
-  resolved "https://registry.yarnpkg.com/@walletconnect/ethereum-provider/-/ethereum-provider-2.7.7.tgz#1b7b934c0a4f7a504174d28006c964f48523ee01"
-  integrity sha512-wVVMgpMMcPySBKHAPu7QfL18TMrjAgOePz/mfuOjWal+vT9yVSPA34oFyHlzJKvcQ/abP7Zj3AzDtZbyXWRxwQ==
-  dependencies:
-    "@walletconnect/jsonrpc-http-connection" "^1.0.7"
-    "@walletconnect/jsonrpc-provider" "^1.0.13"
-    "@walletconnect/jsonrpc-types" "^1.0.3"
-    "@walletconnect/jsonrpc-utils" "^1.0.8"
-    "@walletconnect/sign-client" "2.7.7"
-    "@walletconnect/types" "2.7.7"
-    "@walletconnect/universal-provider" "2.7.7"
-    "@walletconnect/utils" "2.7.7"
-    events "^3.3.0"
-
-"@walletconnect/ethereum-provider@^2.7.8":
+"@walletconnect/ethereum-provider@^2.7.4", "@walletconnect/ethereum-provider@^2.7.8":
   version "2.7.8"
   resolved "https://registry.yarnpkg.com/@walletconnect/ethereum-provider/-/ethereum-provider-2.7.8.tgz#1df2fd50eb3cf5a700da571aafb7d24d22c6c3ee"
   integrity sha512-HueJtdhkIu+1U6jOlsFc9F8uZbleiFwZxAGROf7ARhwsPUz9Yd+E0Ct5aNwPwsSDCzUvNpw5/LogFbCVQWWHcA==
