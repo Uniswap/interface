@@ -443,7 +443,7 @@ export function Swap({
       .catch((error) => {
         if (!didUserReject(error)) {
           Sentry.withScope((scope) => {
-            scope.setExtra('swapState', { trade: JSON.stringify(tradeToConfirm), txHash })
+            scope.setExtra('confirmedTrade', tradeToConfirm)
             Sentry.captureException(error)
           })
         }
@@ -462,7 +462,6 @@ export function Swap({
     trade?.inputAmount?.currency?.symbol,
     trade?.outputAmount?.currency?.symbol,
     tradeToConfirm,
-    txHash,
   ])
 
   // errors
