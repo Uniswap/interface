@@ -24,7 +24,7 @@ describe('disconnect wallet', () => {
 })
 
 describe('connect wallet', () => {
-  it.only('should load state', () => {
+  it('should load state', () => {
     cy.visit('/swap', { ethereum: 'hardhat', userState: {} })
 
     // Connect the wallet
