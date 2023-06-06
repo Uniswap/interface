@@ -32,7 +32,7 @@ const NETWORK_SELECTOR_CHAINS = [
 ]
 
 if (!isProductionEnv()) {
-  NETWORK_SELECTOR_CHAINS.push(SupportedChainId.)
+  NETWORK_SELECTOR_CHAINS.push(SupportedChainId.SEPOLIA)
 }
 
 interface ChainSelectorProps {
