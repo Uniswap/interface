@@ -50,7 +50,7 @@ function getChainsFromEIP155Accounts(accounts?: string[]): SupportedChainId[] {
     .filter((x) => x !== undefined) as SupportedChainId[]
 }
 
-function useWalletSupportsChain() {
+function useWalletSupportedChains() {
   const { connector } = useWeb3React()
 
   const getConnection = useGetConnection()
@@ -95,7 +95,7 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
     [selectChain, setIsOpen]
   )
 
-  const walletSupportsChain = useWalletSupportsChain()
+  const walletSupportsChain = useWalletSupportedChains()
 
   if (!chainId) {
     return null
