@@ -9,6 +9,7 @@ export default defineConfig({
   chromeWebSecurity: false,
   experimentalMemoryManagement: true, // better memory management, see https://github.com/cypress-io/cypress/pull/25462
   retries: { runMode: 2 },
+  videoCompression: false,
   e2e: {
     async setupNodeEvents(on, config) {
       await setupHardhatEvents(on, config)

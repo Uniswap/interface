@@ -9,7 +9,7 @@ import CeloLogo from '../../assets/svg/celo_logo.svg'
 import MaticLogo from '../../assets/svg/matic-token-icon.svg'
 import { isCelo, NATIVE_CHAIN_ID, nativeOnChain } from '../../constants/tokens'
 
-type Network = 'ethereum' | 'arbitrum' | 'optimism' | 'polygon' | 'smartchain'
+type Network = 'ethereum' | 'arbitrum' | 'optimism' | 'polygon' | 'smartchain' | 'celo'
 
 export function chainIdToNetworkName(networkId: SupportedChainId): Network {
   switch (networkId) {
@@ -23,6 +23,8 @@ export function chainIdToNetworkName(networkId: SupportedChainId): Network {
       return 'polygon'
     case SupportedChainId.BNB:
       return 'smartchain'
+    case SupportedChainId.CELO:
+      return 'celo'
     default:
       return 'ethereum'
   }
@@ -51,15 +53,12 @@ function getTokenLogoURI(address: string, chainId: SupportedChainId = SupportedC
     SupportedChainId.OPTIMISM,
     SupportedChainId.BNB,
   ]
-  if (networksWithUrls.includes(chainId)) {
-    return `https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/${networkName}/assets/${address}/logo.png`
+  if (isCelo(chainId) && address === nativeOnChain(chainId).wrapped.address) {
+    return CeloLogo
   }
 
-  // Celo logo logo is hosted elsewhere.
-  if (isCelo(chainId)) {
-    if (address === nativeOnChain(chainId).wrapped.address) {
-      return 'https://raw.githubusercontent.com/ubeswap/default-token-list/master/assets/asset_CELO.png'
-    }
+  if (networksWithUrls.includes(chainId)) {
+    return `https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/${networkName}/assets/${address}/logo.png`
   }
 }
 
