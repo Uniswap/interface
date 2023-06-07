@@ -78,6 +78,12 @@ const BlockedWarning: Warning = {
   canProceed: false,
 }
 
+export const NotFoundWarning: Warning = {
+  level: WARNING_LEVEL.UNKNOWN,
+  message: <Trans>Token not found</Trans>,
+  canProceed: false,
+}
+
 export function checkWarning(tokenAddress: string) {
   if (tokenAddress === NATIVE_CHAIN_ID || tokenAddress === ZERO_ADDRESS) {
     return null
@@ -102,4 +108,8 @@ export function checkSearchTokenWarning(token: SearchToken) {
     return token.standard === TokenStandard.Native ? null : StrongWarning
   }
   return checkWarning(token.address)
+}
+
+export function displayWarningLabel(warning: Warning | null) {
+  return warning && warning.level !== WARNING_LEVEL.MEDIUM
 }
