@@ -527,7 +527,10 @@ const BaseThemeButton = styled.button<BaseThemeButtonProps>`
 interface ThemeButtonProps extends React.ComponentPropsWithoutRef<'button'>, BaseThemeButtonProps {}
 type ThemeButtonRef = HTMLButtonElement
 
-export const ThemeButton = forwardRef<ThemeButtonRef, ThemeButtonProps>(({ children, ...rest }, ref) => {
+export const ThemeButton = forwardRef<ThemeButtonRef, ThemeButtonProps>(function ThemeButton(
+  { children, ...rest },
+  ref
+) {
   return (
     <BaseThemeButton {...rest} ref={ref}>
       <ButtonOverlay />
@@ -535,7 +538,6 @@ export const ThemeButton = forwardRef<ThemeButtonRef, ThemeButtonProps>(({ child
     </BaseThemeButton>
   )
 })
-ThemeButton.displayName = 'ThemeButton'
 
 export const ButtonLight = ({ children, ...rest }: BaseButtonProps) => {
   return (
