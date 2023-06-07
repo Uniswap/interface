@@ -6,7 +6,7 @@ import useAutoSlippageTolerance from 'hooks/useAutoSlippageTolerance'
 import { useBestTrade } from 'hooks/useBestTrade'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { ParsedQs } from 'qs'
-import { ReactNode, useCallback, useEffect, useMemo } from 'react'
+import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import { AnyAction } from 'redux'
 import { useAppDispatch } from 'state/hooks'
 import { InterfaceTrade, TradeState } from 'state/routing/types'
@@ -88,6 +88,7 @@ export function useDerivedSwapInfo(
   autoSlippage: Percent
 } {
   const { account } = useWeb3React()
+  const [previouslyInvalid, setPreviouslyInvalid] = useState(false)
 
   const {
     independentField,
@@ -118,6 +119,18 @@ export function useDerivedSwapInfo(
     parsedAmount,
     (isExactIn ? outputCurrency : inputCurrency) ?? undefined
   )
+
+  useEffect(() => {
+    if (trade.state === TradeState.INVALID) {
+      setPreviouslyInvalid(true)
+    } else if (trade.state !== TradeState.LOADING) {
+      setPreviouslyInvalid(false)
+    }
+  }, [trade.state])
+
+  if (trade.state == TradeState.LOADING && previouslyInvalid) {
+    trade.trade = undefined
+  }
 
   const currencyBalances = useMemo(
     () => ({
