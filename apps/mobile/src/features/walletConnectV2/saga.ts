@@ -9,11 +9,7 @@ import { EventChannel, eventChannel } from 'redux-saga'
 import { CallEffect, ForkEffect } from 'redux-saga/effects'
 import { appSelect } from 'src/app/hooks'
 import { i18n } from 'src/app/i18n'
-import { pushNotification } from 'src/features/notifications/notificationSlice'
-import { AppNotificationType } from 'src/features/notifications/types'
 import { registerWCv2ClientForPushNotifications } from 'src/features/walletConnect/api'
-import { WalletConnectEvent } from 'src/features/walletConnect/saga'
-import { EthEvent, EthMethod } from 'src/features/walletConnect/types'
 import {
   addPendingSession,
   addRequest,
@@ -32,7 +28,10 @@ import { call, fork, put, take } from 'typed-redux-saga'
 import { config } from 'wallet/src/config'
 import { ALL_SUPPORTED_CHAIN_IDS, ChainId, CHAIN_INFO } from 'wallet/src/constants/chains'
 import { logger } from 'wallet/src/features/logger/logger'
+import { pushNotification } from 'wallet/src/features/notifications/slice'
+import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { selectAccounts, selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
+import { EthEvent, EthMethod, WalletConnectEvent } from 'wallet/src/features/walletConnect/types'
 import { ONE_SECOND_MS } from 'wallet/src/utils/time'
 
 export let wcWeb3Wallet: IWeb3Wallet

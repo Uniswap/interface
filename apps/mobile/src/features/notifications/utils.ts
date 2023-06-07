@@ -2,25 +2,25 @@ import { Action } from '@reduxjs/toolkit'
 import { BigintIsh, Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import JSBI from 'jsbi'
 import { i18n } from 'src/app/i18n'
-import { AssetType } from 'src/entities/assets'
 import { SpotPrice } from 'src/features/dataApi/spotPricesQuery'
 import { GQLNftAsset } from 'src/features/nfts/hooks'
-import { pushNotification } from 'src/features/notifications/notificationSlice'
+import { CHAIN_INFO } from 'wallet/src/constants/chains'
+import { AssetType } from 'wallet/src/entities/assets'
+import { logger } from 'wallet/src/features/logger/logger'
+import { pushNotification } from 'wallet/src/features/notifications/slice'
 import {
   AppNotificationType,
   ReceiveCurrencyTxNotification,
   ReceiveNFTNotification,
   WalletConnectNotification,
-} from 'src/features/notifications/types'
+} from 'wallet/src/features/notifications/types'
 import {
   NFTTradeType,
   TransactionDetails,
   TransactionStatus,
   TransactionType,
-} from 'src/features/transactions/types'
-import { WalletConnectEvent } from 'src/features/walletConnect/saga'
-import { CHAIN_INFO } from 'wallet/src/constants/chains'
-import { logger } from 'wallet/src/features/logger/logger'
+} from 'wallet/src/features/transactions/types'
+import { WalletConnectEvent } from 'wallet/src/features/walletConnect/types'
 import { getValidAddress, shortenAddress } from 'wallet/src/utils/addresses'
 import { currencyIdToAddress } from 'wallet/src/utils/currencyId'
 import { formatCurrencyAmount, formatUSDPrice } from 'wallet/src/utils/format'

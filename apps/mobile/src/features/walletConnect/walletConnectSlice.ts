@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { ProposalTypes, SessionTypes } from '@walletconnect/types'
+import { ChainId } from 'wallet/src/constants/chains'
 import {
   DappInfo,
   DappInfoV1,
@@ -7,8 +8,7 @@ import {
   EthMethod,
   EthSignMethod,
   EthTransaction,
-} from 'src/features/walletConnect/types'
-import { ChainId } from 'wallet/src/constants/chains'
+} from 'wallet/src/features/walletConnect/types'
 
 export type WalletConnectSessionV1 = {
   id: string

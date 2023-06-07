@@ -3,15 +3,15 @@ import { MobileState } from 'src/app/reducer'
 import { SearchableRecipient } from 'src/components/RecipientSelect/types'
 import { uniqueAddressesOnly } from 'src/components/RecipientSelect/utils'
 import { TransactionState } from 'src/features/transactions/slice'
+import { flattenObjectOfObjects } from 'src/utils/objects'
+import { ChainId } from 'wallet/src/constants/chains'
+import { EMPTY_ARRAY } from 'wallet/src/constants/misc'
 import {
   SendTokenTransactionInfo,
   TransactionDetails,
   TransactionStatus,
   TransactionType,
-} from 'src/features/transactions/types'
-import { flattenObjectOfObjects } from 'src/utils/objects'
-import { ChainId } from 'wallet/src/constants/chains'
-import { EMPTY_ARRAY } from 'wallet/src/constants/misc'
+} from 'wallet/src/features/transactions/types'
 import { unique } from 'wallet/src/utils/array'
 
 export const selectTransactions = (state: MobileState): TransactionState => state.transactions

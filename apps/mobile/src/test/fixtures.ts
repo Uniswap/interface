@@ -6,17 +6,7 @@ import {
 } from '@react-native-community/netinfo'
 import { TradeType } from '@uniswap/sdk-core'
 import { BigNumber, providers } from 'ethers'
-import { AssetType } from 'src/entities/assets'
-import { AppNotificationType } from 'src/features/notifications/types'
 import { finalizeTransaction } from 'src/features/transactions/slice'
-import {
-  ApproveTransactionInfo,
-  FiatPurchaseTransactionInfo,
-  TransactionDetails,
-  TransactionStatus,
-  TransactionType,
-} from 'src/features/transactions/types'
-import { WalletConnectEvent } from 'src/features/walletConnect/saga'
 import ERC20_ABI from 'wallet/src/abis/erc20.json'
 import { Erc20, Weth } from 'wallet/src/abis/types'
 import WETH_ABI from 'wallet/src/abis/weth.json'
@@ -25,12 +15,22 @@ import { NATIVE_ADDRESS, SWAP_ROUTER_ADDRESSES } from 'wallet/src/constants/addr
 import { ChainId } from 'wallet/src/constants/chains'
 import { DAI, DAI_ARBITRUM_ONE, UNI, WRAPPED_NATIVE_CURRENCY } from 'wallet/src/constants/tokens'
 import { SafetyLevel } from 'wallet/src/data/__generated__/types-and-hooks'
+import { AssetType } from 'wallet/src/entities/assets'
 import { ContractManager } from 'wallet/src/features/contracts/ContractManager'
 import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
+import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
+import {
+  ApproveTransactionInfo,
+  FiatPurchaseTransactionInfo,
+  TransactionDetails,
+  TransactionStatus,
+  TransactionType,
+} from 'wallet/src/features/transactions/types'
 import { Account, AccountType, BackupType } from 'wallet/src/features/wallet/accounts/types'
 import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
 import { initialWalletState } from 'wallet/src/features/wallet/slice'
+import { WalletConnectEvent } from 'wallet/src/features/walletConnect/types'
 import { SAMPLE_SEED_ADDRESS_1, SAMPLE_SEED_ADDRESS_2 } from 'wallet/src/test/fixtures'
 import { currencyId } from 'wallet/src/utils/currencyId'
 

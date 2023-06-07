@@ -3,8 +3,8 @@ import React from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { Text } from 'src/components/Text'
 import { truncateDappName } from 'src/components/WalletConnect/ScanSheet/util'
-import { EthMethod } from 'src/features/walletConnect/types'
 import { WalletConnectRequest } from 'src/features/walletConnect/walletConnectSlice'
+import { EthMethod } from 'wallet/src/features/walletConnect/types'
 import { tryParseRawAmount } from 'wallet/src/utils/tryParseAmount'
 
 export function HeaderText({

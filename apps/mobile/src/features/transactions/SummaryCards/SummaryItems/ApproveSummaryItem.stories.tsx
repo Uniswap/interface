@@ -1,13 +1,13 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import React from 'react'
+import { ChainId } from 'wallet/src/constants/chains'
+import { TokenDocument } from 'wallet/src/data/__generated__/types-and-hooks'
 import {
   ApproveTransactionInfo,
   TransactionDetails,
   TransactionStatus,
   TransactionType,
-} from 'src/features/transactions/types'
-import { ChainId } from 'wallet/src/constants/chains'
-import { TokenDocument } from 'wallet/src/data/__generated__/types-and-hooks'
+} from 'wallet/src/features/transactions/types'
 import ApproveSummaryItem from './ApproveSummaryItem'
 
 const meta: Meta<typeof ApproveSummaryItem> = {

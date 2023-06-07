@@ -3,8 +3,8 @@ import { useAppTheme } from 'src/app/hooks'
 import TransactionSummaryLayout, {
   TXN_HISTORY_ICON_SIZE,
 } from 'src/features/transactions/SummaryCards/TransactionSummaryLayout'
-import { TransactionDetails, UnknownTransactionInfo } from 'src/features/transactions/types'
 import UnknownStatus from 'ui/src/assets/icons/contract-interaction.svg'
+import { TransactionDetails, UnknownTransactionInfo } from 'wallet/src/features/transactions/types'
 import { getValidAddress, shortenAddress } from 'wallet/src/utils/addresses'
 
 export default function UnknownSummaryItem({

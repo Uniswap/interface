@@ -4,7 +4,6 @@ import { expectSaga } from 'redux-saga-test-plan'
 import { call } from 'redux-saga/effects'
 import { sendTransaction, signAndSendTransaction } from 'src/features/transactions/sendTransaction'
 import { addTransaction } from 'src/features/transactions/slice'
-import { TransactionStatus } from 'src/features/transactions/types'
 import {
   account,
   provider,
@@ -15,6 +14,7 @@ import {
   txTypeInfo,
 } from 'src/test/fixtures'
 import { ChainId } from 'wallet/src/constants/chains'
+import { TransactionStatus } from 'wallet/src/features/transactions/types'
 import { AccountType, ReadOnlyAccount } from 'wallet/src/features/wallet/accounts/types'
 import {
   getProvider,

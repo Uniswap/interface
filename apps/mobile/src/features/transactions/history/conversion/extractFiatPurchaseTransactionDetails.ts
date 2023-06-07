@@ -1,12 +1,12 @@
-import { MoonpayTransactionsResponse } from 'src/features/fiatOnRamp/types'
+import { ChainId } from 'wallet/src/constants/chains'
+import { MoonpayTransactionsResponse } from 'wallet/src/features/fiatOnRamp/types'
+import { logger } from 'wallet/src/features/logger/logger'
 import {
   FiatPurchaseTransactionInfo,
   TransactionDetails,
   TransactionStatus,
   TransactionType,
-} from 'src/features/transactions/types'
-import { ChainId } from 'wallet/src/constants/chains'
-import { logger } from 'wallet/src/features/logger/logger'
+} from 'wallet/src/features/transactions/types'
 import { toSupportedChainId } from 'wallet/src/utils/chainId'
 import { getNativeCurrencyAddressForChain } from 'wallet/src/utils/currencyId'
 

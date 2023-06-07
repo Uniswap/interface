@@ -24,8 +24,6 @@ import { useNFTMenu } from 'src/features/nfts/hooks'
 import { BlurredImageBackground } from 'src/features/nfts/item/BlurredImageBackground'
 import { CollectionPreviewCard } from 'src/features/nfts/item/CollectionPreviewCard'
 import { NFTTraitList } from 'src/features/nfts/item/traits'
-import { pushNotification } from 'src/features/notifications/notificationSlice'
-import { AppNotificationType, CopyNotificationType } from 'src/features/notifications/types'
 import { ModalName } from 'src/features/telemetry/constants'
 import { ExploreModalAwareView } from 'src/screens/ModalAwareView'
 import { Screens } from 'src/screens/Screens'
@@ -46,6 +44,8 @@ import {
   NftItemScreenQuery,
   useNftItemScreenQuery,
 } from 'wallet/src/data/__generated__/types-and-hooks'
+import { pushNotification } from 'wallet/src/features/notifications/slice'
+import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 import { areAddressesEqual } from 'wallet/src/utils/addresses'
 

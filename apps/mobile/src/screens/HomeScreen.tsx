@@ -45,7 +45,6 @@ import { Text } from 'src/components/Text'
 import { PortfolioBalance } from 'src/features/balances/PortfolioBalance'
 import { openModal } from 'src/features/modals/modalSlice'
 import { useSelectAddressHasNotifications } from 'src/features/notifications/hooks'
-import { setNotificationStatus } from 'src/features/notifications/notificationSlice'
 import {
   ElementName,
   MobileEventName,
@@ -60,6 +59,7 @@ import BuyIcon from 'ui/src/assets/icons/buy.svg'
 import ScanIcon from 'ui/src/assets/icons/scan-receive.svg'
 import SendIcon from 'ui/src/assets/icons/send-action.svg'
 import { dimensions } from 'ui/src/theme/restyle/sizing'
+import { setNotificationStatus } from 'wallet/src/features/notifications/slice'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 import { ONE_SECOND_MS } from 'wallet/src/utils/time'

@@ -3,15 +3,15 @@ import parseNFTMintTransaction from 'src/features/transactions/history/conversio
 import parseReceiveTransaction from 'src/features/transactions/history/conversion/parseReceiveTransaction'
 import parseSendTransaction from 'src/features/transactions/history/conversion/parseSendTransaction'
 import parseTradeTransaction from 'src/features/transactions/history/conversion/parseTradeTransaction'
+import { ChainId } from 'wallet/src/constants/chains'
+import { ActivityType } from 'wallet/src/data/__generated__/types-and-hooks'
 import {
   TransactionDetails,
   TransactionListQueryResponse,
   TransactionStatus,
   TransactionType,
   TransactionTypeInfo,
-} from 'src/features/transactions/types'
-import { ChainId } from 'wallet/src/constants/chains'
-import { ActivityType } from 'wallet/src/data/__generated__/types-and-hooks'
+} from 'wallet/src/features/transactions/types'
 
 /**
  * Parses txn API response item and identifies known txn type. Helps strictly

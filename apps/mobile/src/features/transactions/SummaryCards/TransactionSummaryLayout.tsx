@@ -17,16 +17,16 @@ import { cancelTransaction } from 'src/features/transactions/slice'
 import { CancelConfirmationView } from 'src/features/transactions/SummaryCards/CancelConfirmationView'
 import TransactionActionsModal from 'src/features/transactions/SummaryCards/TransactionActionsModal'
 import { getTransactionSummaryTitle } from 'src/features/transactions/SummaryCards/utils'
-import {
-  TransactionDetails,
-  TransactionStatus,
-  TransactionType,
-} from 'src/features/transactions/types'
 import { openMoonpayTransactionLink, openTransactionLink } from 'src/utils/linking'
 import AlertTriangle from 'ui/src/assets/icons/alert-triangle.svg'
 import SlashCircleIcon from 'ui/src/assets/icons/slash-circle.svg'
 import { iconSizes } from 'ui/src/theme/iconSizes'
 import { Theme } from 'ui/src/theme/restyle/theme'
+import {
+  TransactionDetails,
+  TransactionStatus,
+  TransactionType,
+} from 'wallet/src/features/transactions/types'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 

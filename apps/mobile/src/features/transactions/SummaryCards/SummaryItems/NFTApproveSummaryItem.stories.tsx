@@ -1,12 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import React from 'react'
+import { ChainId } from 'wallet/src/constants/chains'
 import {
   NFTApproveTransactionInfo,
   TransactionDetails,
   TransactionStatus,
   TransactionType,
-} from 'src/features/transactions/types'
-import { ChainId } from 'wallet/src/constants/chains'
+} from 'wallet/src/features/transactions/types'
 import NFTApproveSummaryItem from './NFTApproveSummaryItem'
 
 const meta: Meta<typeof NFTApproveSummaryItem> = {

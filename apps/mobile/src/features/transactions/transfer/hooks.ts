@@ -2,7 +2,6 @@ import { AnyAction } from '@reduxjs/toolkit'
 import { providers } from 'ethers'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useAppDispatch } from 'src/app/hooks'
-import { AssetType } from 'src/entities/assets'
 import { GQLNftAsset, useNFT } from 'src/features/nfts/hooks'
 import { useCurrencyInfo } from 'src/features/tokens/useCurrencyInfo'
 import {
@@ -15,6 +14,7 @@ import { BaseDerivedInfo } from 'src/features/transactions/transactionState/type
 import { transferTokenActions } from 'src/features/transactions/transfer/transferTokenSaga'
 import { TransferTokenParams } from 'src/features/transactions/transfer/useTransferTransactionRequest'
 import { ChainId } from 'wallet/src/constants/chains'
+import { AssetType } from 'wallet/src/entities/assets'
 import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
 import {
   useOnChainCurrencyBalance,

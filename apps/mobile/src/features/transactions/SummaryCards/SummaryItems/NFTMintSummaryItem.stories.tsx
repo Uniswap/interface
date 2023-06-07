@@ -5,7 +5,7 @@ import {
   TransactionDetails,
   TransactionStatus,
   TransactionType,
-} from 'src/features/transactions/types'
+} from 'wallet/src/features/transactions/types'
 import NFTMintSummaryItem from './NFTMintSummaryItem'
 
 const meta: Meta<typeof NFTMintSummaryItem> = {

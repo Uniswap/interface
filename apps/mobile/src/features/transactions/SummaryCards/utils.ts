@@ -4,7 +4,7 @@ import {
   TransactionDetails,
   TransactionStatus,
   TransactionType,
-} from 'src/features/transactions/types'
+} from 'wallet/src/features/transactions/types'
 
 /*
  * Get verb form for transaction type

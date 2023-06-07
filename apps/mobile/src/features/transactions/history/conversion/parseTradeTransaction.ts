@@ -5,6 +5,8 @@ import {
   deriveCurrencyAmountFromAssetResponse,
   parseUSDValueFromAssetChange,
 } from 'src/features/transactions/history/utils'
+import { ChainId } from 'wallet/src/constants/chains'
+import { WRAPPED_NATIVE_CURRENCY } from 'wallet/src/constants/tokens'
 import {
   ExactInputSwapTransactionInfo,
   NFTTradeTransactionInfo,
@@ -12,9 +14,7 @@ import {
   TransactionListQueryResponse,
   TransactionType,
   WrapTransactionInfo,
-} from 'src/features/transactions/types'
-import { ChainId } from 'wallet/src/constants/chains'
-import { WRAPPED_NATIVE_CURRENCY } from 'wallet/src/constants/tokens'
+} from 'wallet/src/features/transactions/types'
 import { buildCurrencyId, buildNativeCurrencyId } from 'wallet/src/utils/currencyId'
 
 export default function parseTradeTransaction(

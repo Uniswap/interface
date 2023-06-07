@@ -3,16 +3,16 @@ import { Contract, providers } from 'ethers'
 import { CallEffect } from 'redux-saga/effects'
 import { getNotificationErrorAction } from 'src/features/notifications/utils'
 import { sendTransaction } from 'src/features/transactions/sendTransaction'
-import {
-  TransactionOptions,
-  TransactionType,
-  TransactionTypeInfo,
-} from 'src/features/transactions/types'
 import { call } from 'typed-redux-saga'
 import { Weth } from 'wallet/src/abis/types'
 import WETH_ABI from 'wallet/src/abis/weth.json'
 import { ChainId } from 'wallet/src/constants/chains'
 import { WRAPPED_NATIVE_CURRENCY } from 'wallet/src/constants/tokens'
+import {
+  TransactionOptions,
+  TransactionType,
+  TransactionTypeInfo,
+} from 'wallet/src/features/transactions/types'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { createMonitoredSaga } from 'wallet/src/utils/saga'
 

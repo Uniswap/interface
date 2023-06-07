@@ -5,16 +5,10 @@ import React, { useEffect, useMemo } from 'react'
 import { View } from 'react-native'
 import { batch } from 'react-redux'
 import { useAppDispatch, useAppSelector as useMobileAppSelector } from 'src/app/hooks'
-import {
-  pushNotification,
-  setLastTxNotificationUpdate,
-  setNotificationStatus,
-} from 'src/features/notifications/notificationSlice'
 import { selectLastTxNotificationUpdate } from 'src/features/notifications/selectors'
 import { buildReceiveNotification } from 'src/features/notifications/utils'
 import { parseDataResponseToTransactionDetails } from 'src/features/transactions/history/utils'
 import { useSelectAddressTransactions } from 'src/features/transactions/hooks'
-import { TransactionStatus, TransactionType } from 'src/features/transactions/types'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import { useRefetchQueries } from 'wallet/src/data/utils'
 import {
@@ -23,6 +17,12 @@ import {
   useTransactionHistoryUpdaterQuery,
   useTransactionListLazyQuery,
 } from 'wallet/src/data/__generated__/types-and-hooks'
+import {
+  pushNotification,
+  setLastTxNotificationUpdate,
+  setNotificationStatus,
+} from 'wallet/src/features/notifications/slice'
+import { TransactionStatus, TransactionType } from 'wallet/src/features/transactions/types'
 import { useAccounts, useActiveAccountAddress } from 'wallet/src/features/wallet/hooks'
 import {
   makeSelectAccountHideSpamTokens,

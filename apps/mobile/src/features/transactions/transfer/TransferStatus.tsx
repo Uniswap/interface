@@ -10,7 +10,7 @@ import {
   TransactionDetails,
   TransactionStatus,
   TransactionType,
-} from 'src/features/transactions/types'
+} from 'wallet/src/features/transactions/types'
 import { useActiveAccountAddressWithThrow, useDisplayName } from 'wallet/src/features/wallet/hooks'
 import { formatCurrencyAmount, NumberType } from 'wallet/src/utils/format'
 

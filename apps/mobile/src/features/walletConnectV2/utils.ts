@@ -1,12 +1,12 @@
 import { PairingTypes, ProposalTypes, SessionTypes, SignClientTypes } from '@walletconnect/types'
 import { Web3WalletTypes } from '@walletconnect/web3wallet'
 import { utils } from 'ethers'
-import { EthMethod, EthSignMethod } from 'src/features/walletConnect/types'
 import { SignRequest, TransactionRequest } from 'src/features/walletConnect/walletConnectSlice'
 import { wcWeb3Wallet } from 'src/features/walletConnectV2/saga'
 import { ChainId } from 'wallet/src/constants/chains'
 import { EMPTY_ARRAY } from 'wallet/src/constants/misc'
 import { logger } from 'wallet/src/features/logger/logger'
+import { EthMethod, EthSignMethod } from 'wallet/src/features/walletConnect/types'
 import { toSupportedChainId } from 'wallet/src/utils/chainId'
 
 /**

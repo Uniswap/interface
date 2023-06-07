@@ -23,12 +23,6 @@ import { BlockedAddressWarning } from 'src/features/trm/BlockedAddressWarning'
 import { useIsBlocked } from 'src/features/trm/hooks'
 import { signWcRequestActions } from 'src/features/walletConnect/saga'
 import { selectDidOpenFromDeepLink } from 'src/features/walletConnect/selectors'
-import {
-  EthMethod,
-  isPrimaryTypePermit,
-  WCEventType,
-  WCRequestOutcome,
-} from 'src/features/walletConnect/types'
 import { rejectRequest, returnToPreviousApp } from 'src/features/walletConnect/WalletConnect'
 import {
   isTransactionRequest,
@@ -44,6 +38,12 @@ import { GasSpeed } from 'wallet/src/features/gas/types'
 import { logger } from 'wallet/src/features/logger/logger'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
 import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
+import {
+  EthMethod,
+  isPrimaryTypePermit,
+  WCEventType,
+  WCRequestOutcome,
+} from 'wallet/src/features/walletConnect/types'
 import { areAddressesEqual } from 'wallet/src/utils/addresses'
 import { buildCurrencyId } from 'wallet/src/utils/currencyId'
 

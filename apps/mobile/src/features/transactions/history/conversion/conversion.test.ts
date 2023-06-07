@@ -5,11 +5,6 @@ import parseNFTMintTransaction from 'src/features/transactions/history/conversio
 import parseReceiveTransaction from 'src/features/transactions/history/conversion/parseReceiveTransaction'
 import parseSendTransaction from 'src/features/transactions/history/conversion/parseSendTransaction'
 import parseTradeTransaction from 'src/features/transactions/history/conversion/parseTradeTransaction'
-import {
-  NFTTradeType,
-  TransactionListQueryResponse,
-  TransactionType,
-} from 'src/features/transactions/types'
 import { NATIVE_ADDRESS } from 'wallet/src/constants/addresses'
 import { ChainId } from 'wallet/src/constants/chains'
 import { WRAPPED_NATIVE_CURRENCY } from 'wallet/src/constants/tokens'
@@ -22,6 +17,11 @@ import {
   TransactionDirection,
   TransactionStatus,
 } from 'wallet/src/data/__generated__/types-and-hooks'
+import {
+  NFTTradeType,
+  TransactionListQueryResponse,
+  TransactionType,
+} from 'wallet/src/features/transactions/types'
 
 /**
  * Testing for API transaction parsing utils.

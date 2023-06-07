@@ -7,7 +7,6 @@ import { call } from 'redux-saga/effects'
 import { attemptReplaceTransaction } from 'src/features/transactions/replaceTransaction'
 import { sendTransaction, signAndSendTransaction } from 'src/features/transactions/sendTransaction'
 import { addTransaction } from 'src/features/transactions/slice'
-import { TransactionStatus } from 'src/features/transactions/types'
 import * as TxnUtils from 'src/features/transactions/utils'
 import {
   account,
@@ -19,6 +18,7 @@ import {
   txResponse,
   txTypeInfo,
 } from 'src/test/fixtures'
+import { TransactionStatus } from 'wallet/src/features/transactions/types'
 import {
   getProvider,
   getProviderManager,

@@ -1,7 +1,6 @@
 import { URL } from 'react-native-url-polyfill'
 import { expectSaga } from 'redux-saga-test-plan'
 import { call } from 'redux-saga/effects'
-import { AssetType } from 'src/entities/assets'
 import { handleSwapLink, parseAndValidateSwapParams } from 'src/features/deepLinking/handleSwapLink'
 import { openModal } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
@@ -12,6 +11,7 @@ import {
 import { account } from 'src/test/fixtures'
 import { ChainId } from 'wallet/src/constants/chains'
 import { DAI, UNI } from 'wallet/src/constants/tokens'
+import { AssetType } from 'wallet/src/entities/assets'
 import { selectActiveChainIds } from 'wallet/src/features/chains/saga'
 
 const formSwapUrl = (

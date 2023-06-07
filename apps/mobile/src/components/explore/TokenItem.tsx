@@ -14,7 +14,6 @@ import { Text } from 'src/components/Text'
 import { RelativeChange } from 'src/components/text/RelativeChange'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import { TokenMetadata } from 'src/components/tokens/TokenMetadata'
-import { AssetType } from 'src/entities/assets'
 import { useToggleFavoriteCallback } from 'src/features/favorites/hooks'
 import { selectHasFavoriteToken } from 'src/features/favorites/selectors'
 import { openModal } from 'src/features/modals/modalSlice'
@@ -30,6 +29,7 @@ import {
   TransactionState,
 } from 'src/features/transactions/transactionState/transactionState'
 import { ChainId } from 'wallet/src/constants/chains'
+import { AssetType } from 'wallet/src/entities/assets'
 import { TokenMetadataDisplayType } from 'wallet/src/features/wallet/types'
 import {
   buildCurrencyId,

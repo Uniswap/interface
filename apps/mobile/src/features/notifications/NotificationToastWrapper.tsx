@@ -1,6 +1,5 @@
 import React from 'react'
 import { useAppSelector } from 'src/app/hooks'
-import { AssetType } from 'src/entities/assets'
 import {
   ApproveNotification,
   CopiedNotification,
@@ -16,8 +15,9 @@ import {
   WrapNotification,
 } from 'src/features/notifications/Notifications'
 import { selectActiveAccountNotifications } from 'src/features/notifications/selectors'
-import { AppNotification, AppNotificationType } from 'src/features/notifications/types'
-import { TransactionType } from 'src/features/transactions/types'
+import { AssetType } from 'wallet/src/entities/assets'
+import { AppNotification, AppNotificationType } from 'wallet/src/features/notifications/types'
+import { TransactionType } from 'wallet/src/features/transactions/types'
 
 export function NotificationToastWrapper(): JSX.Element | null {
   const notifications = useAppSelector(selectActiveAccountNotifications)

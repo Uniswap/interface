@@ -10,14 +10,14 @@ import {
   TransactionState,
   updateTransaction,
 } from 'src/features/transactions/slice'
+import { finalizedTxAction } from 'src/test/fixtures'
+import { ChainId } from 'wallet/src/constants/chains'
 import {
   TransactionOptions,
   TransactionStatus,
   TransactionType,
   TransactionTypeInfo,
-} from 'src/features/transactions/types'
-import { finalizedTxAction } from 'src/test/fixtures'
-import { ChainId } from 'wallet/src/constants/chains'
+} from 'wallet/src/features/transactions/types'
 
 const address = '0x123'
 

@@ -1,10 +1,10 @@
 import React from 'react'
 import { LogoWithTxStatus } from 'src/components/CurrencyLogo/LogoWithTxStatus'
-import { AssetType } from 'src/entities/assets'
 import TransactionSummaryLayout, {
   TXN_HISTORY_ICON_SIZE,
 } from 'src/features/transactions/SummaryCards/TransactionSummaryLayout'
-import { NFTTradeTransactionInfo, TransactionDetails } from 'src/features/transactions/types'
+import { AssetType } from 'wallet/src/entities/assets'
+import { NFTTradeTransactionInfo, TransactionDetails } from 'wallet/src/features/transactions/types'
 
 export default function NFTTradeSummaryItem({
   transaction,

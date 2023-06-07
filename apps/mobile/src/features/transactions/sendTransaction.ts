@@ -6,19 +6,19 @@ import { MobileEventName } from 'src/features/telemetry/constants'
 import { transactionActions } from 'src/features/transactions/slice'
 import { Trade } from 'src/features/transactions/swap/useTrade'
 import {
-  TransactionDetails,
-  TransactionOptions,
-  TransactionStatus,
-  TransactionType,
-  TransactionTypeInfo,
-} from 'src/features/transactions/types'
-import {
   createTransactionId,
   getSerializableTransactionRequest,
 } from 'src/features/transactions/utils'
 import { call, put } from 'typed-redux-saga'
 import { ChainId, CHAIN_INFO } from 'wallet/src/constants/chains'
 import { logger } from 'wallet/src/features/logger/logger'
+import {
+  TransactionDetails,
+  TransactionOptions,
+  TransactionStatus,
+  TransactionType,
+  TransactionTypeInfo,
+} from 'wallet/src/features/transactions/types'
 import { Account, AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { getProvider, getSignerManager } from 'wallet/src/features/wallet/context'
 import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'

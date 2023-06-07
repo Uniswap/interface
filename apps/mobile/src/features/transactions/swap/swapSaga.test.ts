@@ -6,12 +6,15 @@ import { expectSaga } from 'redux-saga-test-plan'
 import { sendTransaction } from 'src/features/transactions/sendTransaction'
 import { approveAndSwap, SwapParams } from 'src/features/transactions/swap/swapSaga'
 import { Trade } from 'src/features/transactions/swap/useTrade'
-import { ExactInputSwapTransactionInfo, TransactionType } from 'src/features/transactions/types'
 import { account, mockProvider } from 'src/test/fixtures'
 import { SWAP_ROUTER_ADDRESSES } from 'wallet/src/constants/addresses'
 import { ChainId } from 'wallet/src/constants/chains'
 import { DAI } from 'wallet/src/constants/tokens'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
+import {
+  ExactInputSwapTransactionInfo,
+  TransactionType,
+} from 'wallet/src/features/transactions/types'
 import { getProvider } from 'wallet/src/features/wallet/context'
 import { currencyId } from 'wallet/src/utils/currencyId'
 

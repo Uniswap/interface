@@ -1,10 +1,12 @@
 import { TradeType } from '@uniswap/sdk-core'
 import { expectSaga } from 'redux-saga-test-plan'
-import { AssetType } from 'src/entities/assets'
-import { pushNotification } from 'src/features/notifications/notificationSlice'
 import { pushTransactionNotification } from 'src/features/notifications/notificationWatcher'
-import { AppNotificationType } from 'src/features/notifications/types'
 import { finalizeTransaction } from 'src/features/transactions/slice'
+import { finalizedTxAction } from 'src/test/fixtures'
+import { NATIVE_ADDRESS } from 'wallet/src/constants/addresses'
+import { AssetType } from 'wallet/src/entities/assets'
+import { pushNotification } from 'wallet/src/features/notifications/slice'
+import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import {
   ApproveTransactionInfo,
   ExactOutputSwapTransactionInfo,
@@ -14,9 +16,7 @@ import {
   TransactionType,
   TransactionTypeInfo,
   UnknownTransactionInfo,
-} from 'src/features/transactions/types'
-import { finalizedTxAction } from 'src/test/fixtures'
-import { NATIVE_ADDRESS } from 'wallet/src/constants/addresses'
+} from 'wallet/src/features/transactions/types'
 
 const txId = 'uuid-4'
 

@@ -2,10 +2,10 @@ import { CurrencyAmount } from '@uniswap/sdk-core'
 import { testSaga } from 'redux-saga-test-plan'
 import { sendTransaction } from 'src/features/transactions/sendTransaction'
 import { Params, wrap } from 'src/features/transactions/swap/wrapSaga'
-import { TransactionType, WrapTransactionInfo } from 'src/features/transactions/types'
 import { account } from 'src/test/fixtures'
 import { ChainId } from 'wallet/src/constants/chains'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
+import { TransactionType, WrapTransactionInfo } from 'wallet/src/features/transactions/types'
 
 const wrapTxInfo: WrapTransactionInfo = {
   type: TransactionType.Wrap,

@@ -5,11 +5,6 @@ import { PutEffect, TakeEffect } from 'redux-saga/effects'
 import { appSelect } from 'src/app/hooks'
 import { i18n } from 'src/app/i18n'
 import { fetchFiatOnRampTransaction } from 'src/features/fiatOnRamp/api'
-import {
-  pushNotification,
-  setNotificationStatus,
-} from 'src/features/notifications/notificationSlice'
-import { AppNotificationType } from 'src/features/notifications/types'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { attemptCancelTransaction } from 'src/features/transactions/cancelTransaction'
 import { attemptReplaceTransaction } from 'src/features/transactions/replaceTransaction'
@@ -23,6 +18,13 @@ import {
   updateTransaction,
   upsertFiatOnRampTransaction,
 } from 'src/features/transactions/slice'
+import { getFinalizedTransactionStatus } from 'src/features/transactions/utils'
+import { call, delay, fork, put, race, take } from 'typed-redux-saga'
+import { ChainId } from 'wallet/src/constants/chains'
+import { PollingInterval } from 'wallet/src/constants/misc'
+import { logger } from 'wallet/src/features/logger/logger'
+import { pushNotification, setNotificationStatus } from 'wallet/src/features/notifications/slice'
+import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import {
   BaseSwapTransactionInfo,
   FinalizedTransactionDetails,
@@ -31,12 +33,7 @@ import {
   TransactionReceipt,
   TransactionStatus,
   TransactionType,
-} from 'src/features/transactions/types'
-import { getFinalizedTransactionStatus } from 'src/features/transactions/utils'
-import { call, delay, fork, put, race, take } from 'typed-redux-saga'
-import { ChainId } from 'wallet/src/constants/chains'
-import { PollingInterval } from 'wallet/src/constants/misc'
-import { logger } from 'wallet/src/features/logger/logger'
+} from 'wallet/src/features/transactions/types'
 import { getProvider } from 'wallet/src/features/wallet/context'
 
 export function* transactionWatcher() {

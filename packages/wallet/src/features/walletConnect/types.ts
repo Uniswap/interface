@@ -1,3 +1,11 @@
+export enum WalletConnectEvent {
+  Connected,
+  Disconnected,
+  NetworkChanged,
+  TransactionConfirmed,
+  TransactionFailed,
+}
+
 // derived from this list https://docs.walletconnect.com/json-rpc-api-methods/ethereum#eth_signtypeddata
 export enum EthMethod {
   EthSign = 'eth_sign',

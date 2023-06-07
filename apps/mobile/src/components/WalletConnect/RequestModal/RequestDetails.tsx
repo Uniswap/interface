@@ -8,7 +8,6 @@ import { LinkButton } from 'src/components/buttons/LinkButton'
 import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { SpendingDetails } from 'src/components/WalletConnect/RequestModal/SpendingDetails'
-import { EthMethod, EthTransaction } from 'src/features/walletConnect/types'
 import {
   isTransactionRequest,
   SignRequest,
@@ -20,6 +19,7 @@ import { Theme } from 'ui/src/theme/restyle/theme'
 import { ChainId } from 'wallet/src/constants/chains'
 import { useENS } from 'wallet/src/features/ens/useENS'
 import { logger } from 'wallet/src/features/logger/logger'
+import { EthMethod, EthTransaction } from 'wallet/src/features/walletConnect/types'
 import { getValidAddress, shortenAddress } from 'wallet/src/utils/addresses'
 
 const getStrMessage = (request: WalletConnectRequest): string => {

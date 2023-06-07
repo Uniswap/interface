@@ -14,10 +14,7 @@ import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { DappHeaderIcon } from 'src/components/WalletConnect/DappHeaderIcon'
 import { NetworkLogos } from 'src/components/WalletConnect/NetworkLogos'
-import { pushNotification } from 'src/features/notifications/notificationSlice'
-import { AppNotificationType } from 'src/features/notifications/types'
 import { ElementName } from 'src/features/telemetry/constants'
-import { WalletConnectEvent } from 'src/features/walletConnect/saga'
 import { disconnectFromApp } from 'src/features/walletConnect/WalletConnect'
 import {
   removeSession,
@@ -27,7 +24,10 @@ import {
 import { wcWeb3Wallet } from 'src/features/walletConnectV2/saga'
 import { CHAIN_INFO } from 'wallet/src/constants/chains'
 import { logger } from 'wallet/src/features/logger/logger'
+import { pushNotification } from 'wallet/src/features/notifications/slice'
+import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
+import { WalletConnectEvent } from 'wallet/src/features/walletConnect/types'
 import { toSupportedChainId } from 'wallet/src/utils/chainId'
 import { ONE_SECOND_MS } from 'wallet/src/utils/time'
 

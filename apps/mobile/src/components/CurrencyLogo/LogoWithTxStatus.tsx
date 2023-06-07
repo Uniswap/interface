@@ -9,9 +9,6 @@ import { NFTViewer } from 'src/components/images/NFTViewer'
 import { RemoteImage } from 'src/components/images/RemoteImage'
 import { Box } from 'src/components/layout/Box'
 import { DappIconPlaceholder } from 'src/components/WalletConnect/DappHeaderIcon'
-import { AssetType } from 'src/entities/assets'
-import { NFTTradeType, TransactionStatus, TransactionType } from 'src/features/transactions/types'
-import { WalletConnectEvent } from 'src/features/walletConnect/saga'
 import AlertTriangle from 'ui/src/assets/icons/alert-triangle.svg'
 import Approve from 'ui/src/assets/icons/approve.svg'
 import IncomingArrow from 'ui/src/assets/icons/arrow-down-in-circle.svg'
@@ -20,8 +17,15 @@ import UnknownStatus from 'ui/src/assets/icons/question-in-circle.svg'
 import WalletConnectLogo from 'ui/src/assets/icons/walletconnect.svg'
 import MoonpayLogo from 'ui/src/assets/logos/moonpay.svg'
 import { ChainId } from 'wallet/src/constants/chains'
+import { AssetType } from 'wallet/src/entities/assets'
 import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
 import { logger } from 'wallet/src/features/logger/logger'
+import {
+  NFTTradeType,
+  TransactionStatus,
+  TransactionType,
+} from 'wallet/src/features/transactions/types'
+import { WalletConnectEvent } from 'wallet/src/features/walletConnect/types'
 
 interface LogoWithTxStatusProps {
   assetType: AssetType

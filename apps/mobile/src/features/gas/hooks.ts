@@ -4,11 +4,11 @@ import { useMemo } from 'react'
 import { TRANSACTION_CANCELLATION_GAS_FACTOR } from 'src/constants/transactions'
 import { FeeDetails, getAdjustedGasFeeDetails } from 'src/features/gas/adjustGasFee'
 import { useUSDCValue } from 'src/features/routing/useUSDCPrice'
-import { TransactionDetails } from 'src/features/transactions/types'
 import { ChainId } from 'wallet/src/constants/chains'
 import { useTransactionGasFee } from 'wallet/src/features/gas/hooks'
 import { FeeType, GasSpeed } from 'wallet/src/features/gas/types'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
+import { TransactionDetails } from 'wallet/src/features/transactions/types'
 
 export function useUSDValue(chainId?: ChainId, ethValueInWei?: string): string | undefined {
   const currencyAmount =

@@ -11,8 +11,8 @@ import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { AnimatedBox, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
-import { popNotification } from 'src/features/notifications/notificationSlice'
 import { selectActiveAccountNotifications } from 'src/features/notifications/selectors'
+import { popNotification } from 'wallet/src/features/notifications/slice'
 import { useTimeout } from 'wallet/src/utils/timing'
 
 const NOTIFICATION_HEIGHT = 64

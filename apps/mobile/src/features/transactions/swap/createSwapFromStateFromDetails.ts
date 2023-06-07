@@ -1,11 +1,11 @@
 import { Currency, TradeType } from '@uniswap/sdk-core'
-import { AssetType, CurrencyAsset } from 'src/entities/assets'
 import {
   CurrencyField,
   TransactionState,
 } from 'src/features/transactions/transactionState/transactionState'
-import { TransactionDetails, TransactionType } from 'src/features/transactions/types'
+import { AssetType, CurrencyAsset } from 'wallet/src/entities/assets'
 import { logger } from 'wallet/src/features/logger/logger'
+import { TransactionDetails, TransactionType } from 'wallet/src/features/transactions/types'
 import { currencyAddress, currencyIdToAddress } from 'wallet/src/utils/currencyId'
 import { tryParseRawAmount } from 'wallet/src/utils/tryParseAmount'
 

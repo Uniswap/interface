@@ -14,7 +14,7 @@ import {
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,
   TransactionDetails,
-} from 'src/features/transactions/types'
+} from 'wallet/src/features/transactions/types'
 
 export default function SwapSummaryItem({
   transaction,

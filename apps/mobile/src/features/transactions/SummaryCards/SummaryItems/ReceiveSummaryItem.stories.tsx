@@ -1,14 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import React from 'react'
-import { AssetType } from 'src/entities/assets'
+import { ChainId } from 'wallet/src/constants/chains'
+import { TokenDocument } from 'wallet/src/data/__generated__/types-and-hooks'
+import { AssetType } from 'wallet/src/entities/assets'
 import {
   ReceiveTokenTransactionInfo,
   TransactionDetails,
   TransactionStatus,
   TransactionType,
-} from 'src/features/transactions/types'
-import { ChainId } from 'wallet/src/constants/chains'
-import { TokenDocument } from 'wallet/src/data/__generated__/types-and-hooks'
+} from 'wallet/src/features/transactions/types'
 import ReceiveSummaryItem from './ReceiveSummaryItem'
 
 const meta: Meta<typeof ReceiveSummaryItem> = {

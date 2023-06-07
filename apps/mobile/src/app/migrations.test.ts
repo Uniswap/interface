@@ -57,22 +57,22 @@ import { initialPasswordLockoutState } from 'src/features/CloudBackup/passwordLo
 import { initialSearchHistoryState } from 'src/features/explore/searchHistorySlice'
 import { initialFavoritesState } from 'src/features/favorites/slice'
 import { initialModalState } from 'src/features/modals/modalSlice'
-import { initialNotificationsState } from 'src/features/notifications/notificationSlice'
 import { ModalName } from 'src/features/telemetry/constants'
 import { initialTelemetryState } from 'src/features/telemetry/slice'
 import { initialTokensState } from 'src/features/tokens/tokensSlice'
 import { initialTransactionsState, TransactionState } from 'src/features/transactions/slice'
-import {
-  TransactionDetails,
-  TransactionStatus,
-  TransactionType,
-} from 'src/features/transactions/types'
 import { initialWalletConnectState } from 'src/features/walletConnect/walletConnectSlice'
 import { account, fiatOnRampTxDetailsFailed, txDetailsConfirmed } from 'src/test/fixtures'
 import { SWAP_ROUTER_ADDRESSES } from 'wallet/src/constants/addresses'
 import { ChainId } from 'wallet/src/constants/chains'
 import { ChainsState, initialChainsState } from 'wallet/src/features/chains/slice'
 import { ensApi } from 'wallet/src/features/ens/api'
+import { initialNotificationsState } from 'wallet/src/features/notifications/slice'
+import {
+  TransactionDetails,
+  TransactionStatus,
+  TransactionType,
+} from 'wallet/src/features/transactions/types'
 import {
   Account,
   AccountType,

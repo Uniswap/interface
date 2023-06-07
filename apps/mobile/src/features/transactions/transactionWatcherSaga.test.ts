@@ -17,7 +17,6 @@ import {
   watchFiatOnRampTransaction,
   watchTransaction,
 } from 'src/features/transactions/transactionWatcherSaga'
-import { TransactionDetails, TransactionStatus } from 'src/features/transactions/types'
 import {
   fiatOnRampTxDetailsPending,
   finalizedTxAction,
@@ -28,6 +27,7 @@ import {
 } from 'src/test/fixtures'
 import { ChainId } from 'wallet/src/constants/chains'
 import { PollingInterval } from 'wallet/src/constants/misc'
+import { TransactionDetails, TransactionStatus } from 'wallet/src/features/transactions/types'
 import { getProvider, getProviderManager } from 'wallet/src/features/wallet/context'
 import { sleep } from 'wallet/src/utils/timing'
 

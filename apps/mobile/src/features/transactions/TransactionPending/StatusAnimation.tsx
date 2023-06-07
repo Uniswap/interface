@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react'
 import Rive, { Alignment, Fit, RiveRef } from 'rive-react-native'
-import { TransactionStatus } from 'src/features/transactions/types'
+import { TransactionStatus } from 'wallet/src/features/transactions/types'
 
 const ANIMATION_WIDTH = 250
 const ANIMATION_HEIGHT = 250

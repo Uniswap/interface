@@ -11,7 +11,6 @@ import { PendingConnectionModal } from 'src/components/WalletConnect/ScanSheet/P
 import { WalletConnectModal } from 'src/components/WalletConnect/ScanSheet/WalletConnectModal'
 import { closeModal } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
-import { EthMethod } from 'src/features/walletConnect/types'
 import { useWalletConnect } from 'src/features/walletConnect/useWalletConnect'
 import {
   removePendingSession,
@@ -27,6 +26,7 @@ import {
   useActiveAccountAddressWithThrow,
   useSignerAccounts,
 } from 'wallet/src/features/wallet/hooks'
+import { EthMethod } from 'wallet/src/features/walletConnect/types'
 import { areAddressesEqual } from 'wallet/src/utils/addresses'
 
 export function WalletConnectModals(): JSX.Element {

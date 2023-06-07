@@ -1,8 +1,6 @@
 import { TradeType } from '@uniswap/sdk-core'
 import JSBI from 'jsbi'
-import { AssetType } from 'src/entities/assets'
 import { createFinalizedTxAction } from 'src/features/notifications/notificationWatcher.test'
-import { AppNotificationType } from 'src/features/notifications/types'
 import {
   buildReceiveNotification,
   convertScientificNotationToNumber,
@@ -11,15 +9,17 @@ import {
   getCurrencySymbol,
   getFormattedCurrencyAmount,
 } from 'src/features/notifications/utils'
+import { account } from 'src/test/fixtures'
+import { ChainId } from 'wallet/src/constants/chains'
+import { DAI, USDC } from 'wallet/src/constants/tokens'
+import { AssetType } from 'wallet/src/entities/assets'
+import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import {
   NFTTradeType,
   ReceiveTokenTransactionInfo,
   TransactionStatus,
   TransactionType,
-} from 'src/features/transactions/types'
-import { account } from 'src/test/fixtures'
-import { ChainId } from 'wallet/src/constants/chains'
-import { DAI, USDC } from 'wallet/src/constants/tokens'
+} from 'wallet/src/features/transactions/types'
 import { SAMPLE_SEED_ADDRESS_1 } from 'wallet/src/test/fixtures'
 
 describe('convertScientificNotationToNumber', () => {

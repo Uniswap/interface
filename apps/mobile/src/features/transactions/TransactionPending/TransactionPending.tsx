@@ -6,9 +6,9 @@ import { AnimatedFlex, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { ElementName } from 'src/features/telemetry/constants'
 import { StatusAnimation } from 'src/features/transactions/TransactionPending/StatusAnimation'
-import { TransactionDetails, TransactionStatus } from 'src/features/transactions/types'
 import { openTransactionLink } from 'src/utils/linking'
 import { ChainId } from 'wallet/src/constants/chains'
+import { TransactionDetails, TransactionStatus } from 'wallet/src/features/transactions/types'
 
 type TransactionStatusProps = {
   transaction: TransactionDetails | undefined

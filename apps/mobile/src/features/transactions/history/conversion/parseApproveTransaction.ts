@@ -3,7 +3,7 @@ import {
   NFTApproveTransactionInfo,
   TransactionListQueryResponse,
   TransactionType,
-} from 'src/features/transactions/types'
+} from 'wallet/src/features/transactions/types'
 
 export default function parseApproveTransaction(
   transaction: TransactionListQueryResponse

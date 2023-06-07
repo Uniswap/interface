@@ -3,7 +3,7 @@ import { DappLogoWithWCBadge } from 'src/components/CurrencyLogo/LogoWithTxStatu
 import TransactionSummaryLayout, {
   TXN_HISTORY_ICON_SIZE,
 } from 'src/features/transactions/SummaryCards/TransactionSummaryLayout'
-import { TransactionDetails, WCConfirmInfo } from 'src/features/transactions/types'
+import { TransactionDetails, WCConfirmInfo } from 'wallet/src/features/transactions/types'
 
 export default function WCSummaryItem({
   transaction,

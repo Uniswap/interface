@@ -4,13 +4,10 @@ import { waitFor } from '@testing-library/react-native'
 import dayjs from 'dayjs'
 import MockDate from 'mockdate'
 import React from 'react'
-import { AssetType } from 'src/entities/assets'
-import { AppNotificationType } from 'src/features/notifications/types'
 import {
   getReceiveNotificationFromData,
   TransactionHistoryUpdater,
 } from 'src/features/transactions/TransactionHistoryUpdater'
-import { TransactionStatus, TransactionType } from 'src/features/transactions/types'
 import { account, account2 } from 'src/test/fixtures'
 import { MAX_FIXTURE_TIMESTAMP, Portfolios, PortfoliosWithReceive } from 'src/test/gqlFixtures'
 import { render } from 'src/test/test-utils'
@@ -19,6 +16,9 @@ import {
   TransactionHistoryUpdaterDocument,
   TransactionHistoryUpdaterQuery,
 } from 'wallet/src/data/__generated__/types-and-hooks'
+import { AssetType } from 'wallet/src/entities/assets'
+import { AppNotificationType } from 'wallet/src/features/notifications/types'
+import { TransactionStatus, TransactionType } from 'wallet/src/features/transactions/types'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { SAMPLE_SEED_ADDRESS_1 } from 'wallet/src/test/fixtures'
 import { ONE_SECOND_MS } from 'wallet/src/utils/time'

@@ -8,13 +8,13 @@ import { DerivedSwapInfo } from 'src/features/transactions/swap/hooks'
 import { WrapType } from 'src/features/transactions/swap/wrapSaga'
 import { TransactionPending } from 'src/features/transactions/TransactionPending/TransactionPending'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
+import { getInputAmountFromTrade, getOutputAmountFromTrade } from 'src/features/transactions/utils'
+import { ChainId } from 'wallet/src/constants/chains'
 import {
   TransactionDetails,
   TransactionStatus,
   TransactionType,
-} from 'src/features/transactions/types'
-import { getInputAmountFromTrade, getOutputAmountFromTrade } from 'src/features/transactions/utils'
-import { ChainId } from 'wallet/src/constants/chains'
+} from 'wallet/src/features/transactions/types'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 import { toSupportedChainId } from 'wallet/src/utils/chainId'
 

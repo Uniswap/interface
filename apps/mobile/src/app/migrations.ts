@@ -8,14 +8,14 @@ import { AccountToNftData } from 'src/features/favorites/slice'
 import { getNFTAssetKey } from 'src/features/nfts/utils'
 import { ModalName } from 'src/features/telemetry/constants'
 import { TransactionState } from 'src/features/transactions/slice'
+import { ChainId } from 'wallet/src/constants/chains'
+import { ChainsState } from 'wallet/src/features/chains/slice'
+import { ensApi } from 'wallet/src/features/ens/api'
 import {
   ChainIdToTxIdToDetails,
   TransactionStatus,
   TransactionType,
-} from 'src/features/transactions/types'
-import { ChainId } from 'wallet/src/constants/chains'
-import { ChainsState } from 'wallet/src/features/chains/slice'
-import { ensApi } from 'wallet/src/features/ens/api'
+} from 'wallet/src/features/transactions/types'
 import { Account, AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { toSupportedChainId } from 'wallet/src/utils/chainId'
 

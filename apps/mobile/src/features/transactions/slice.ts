@@ -9,7 +9,7 @@ import {
   TransactionId,
   TransactionStatus,
   TransactionType,
-} from 'src/features/transactions/types'
+} from 'wallet/src/features/transactions/types'
 import { assert } from 'wallet/src/utils/validation'
 
 export interface TransactionState {

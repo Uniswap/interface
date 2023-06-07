@@ -1,12 +1,15 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { LogoWithTxStatus } from 'src/components/CurrencyLogo/LogoWithTxStatus'
-import { AssetType } from 'src/entities/assets'
 import { useCurrencyInfo } from 'src/features/tokens/useCurrencyInfo'
 import TransactionSummaryLayout, {
   TXN_HISTORY_ICON_SIZE,
 } from 'src/features/transactions/SummaryCards/TransactionSummaryLayout'
-import { FiatPurchaseTransactionInfo, TransactionDetails } from 'src/features/transactions/types'
+import { AssetType } from 'wallet/src/entities/assets'
+import {
+  FiatPurchaseTransactionInfo,
+  TransactionDetails,
+} from 'wallet/src/features/transactions/types'
 import { buildCurrencyId } from 'wallet/src/utils/currencyId'
 import { formatFiatPrice, formatNumber } from 'wallet/src/utils/format'
 

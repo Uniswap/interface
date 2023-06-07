@@ -8,7 +8,7 @@ import {
 import TransactionSummaryLayout, {
   TXN_HISTORY_ICON_SIZE,
 } from 'src/features/transactions/SummaryCards/TransactionSummaryLayout'
-import { TransactionDetails, WrapTransactionInfo } from 'src/features/transactions/types'
+import { TransactionDetails, WrapTransactionInfo } from 'wallet/src/features/transactions/types'
 
 export default function WrapSummaryItem({
   transaction,

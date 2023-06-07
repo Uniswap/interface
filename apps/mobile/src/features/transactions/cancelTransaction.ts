@@ -2,8 +2,8 @@ import { CallEffect, SelectEffect } from 'redux-saga/effects'
 import { appSelect } from 'src/app/hooks'
 import { attemptReplaceTransaction } from 'src/features/transactions/replaceTransaction'
 import { makeSelectTransaction } from 'src/features/transactions/selectors'
-import { TransactionDetails } from 'src/features/transactions/types'
 import { call } from 'typed-redux-saga'
+import { TransactionDetails } from 'wallet/src/features/transactions/types'
 
 // Note, transaction cancellation on Ethereum is inherently flaky
 // The best we can do is replace the transaction and hope the original isn't mined first
