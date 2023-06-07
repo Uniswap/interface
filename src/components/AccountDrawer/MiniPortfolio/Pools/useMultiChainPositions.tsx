@@ -43,11 +43,11 @@ const MAX_UINT128 = BigNumber.from(2).pow(128).sub(1)
 
 const DEFAULT_CHAINS = [
   SupportedChainId.HARMONY,
-  SupportedChainId.MAINNET,
-  SupportedChainId.ARBITRUM_ONE,
-  SupportedChainId.OPTIMISM,
-  SupportedChainId.POLYGON,
-  SupportedChainId.CELO,
+  // SupportedChainId.MAINNET,
+  // SupportedChainId.ARBITRUM_ONE,
+  // SupportedChainId.OPTIMISM,
+  // SupportedChainId.POLYGON,
+  // SupportedChainId.CELO,
 ]
 
 type UseMultiChainPositionsData = { positions?: PositionInfo[]; loading: boolean }

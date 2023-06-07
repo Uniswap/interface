@@ -25,7 +25,7 @@ export enum SupportedChainId {
 
   BNB = 56,
 
-  HARMONY = 1666700000
+  HARMONY = 1666600000
 }
 
 export const UniWalletSupportedChains = [

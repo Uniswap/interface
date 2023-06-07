@@ -46,6 +46,16 @@ export const BRIDGED_USDC_ARBITRUM = new Token(
   'USDC',
   'USD//C'
 )
+
+export const BRIDGED_BUSD = new Token(
+  SupportedChainId.HARMONY,
+  '0xFeee03BFBAA49dc8d11DDAab8592546018dfb709',
+  18,
+  '1BUSD',
+  'USD//C'
+)
+
+
 export const USDC_ARBITRUM = new Token(
   SupportedChainId.ARBITRUM_ONE,
   '0xaf88d065e77c8cC2239327C5EDb3A432268e5831',
@@ -583,6 +593,6 @@ export const TOKEN_SHORTHANDS: { [shorthand: string]: { [chainId in SupportedCha
     [SupportedChainId.CELO]: PORTAL_USDC_CELO.address,
     [SupportedChainId.CELO_ALFAJORES]: PORTAL_USDC_CELO.address,
     [SupportedChainId.GOERLI]: USDC_GOERLI.address,
-    [SupportedChainId.SEPOLIA]: USDC_SEPOLIA.address,
+    // [SupportedChainId.SEPOLIA]: USDC_SEPOLIA.address,
   },
 }
