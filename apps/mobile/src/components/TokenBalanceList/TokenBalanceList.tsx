@@ -88,7 +88,12 @@ export const TokenBalanceList = forwardRef<FlashList<any>, TokenBalanceListProps
         setHiddenTokensExpanded(false)
       }
       // all tokens are hidden
-      if (balancesById && Object.keys(balancesById).length === numHidden && !hiddenTokensExpanded) {
+      if (
+        balancesById &&
+        Object.keys(balancesById).length === numHidden &&
+        !hiddenTokensExpanded &&
+        numHidden !== 0 // only expand if we have hidden tokens
+      ) {
         setHiddenTokensExpanded(true)
       }
     }, [balancesById, hiddenTokensExpanded, numHidden])
