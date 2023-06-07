@@ -183,7 +183,7 @@ export default function App() {
 
   return (
     <ErrorBoundary>
-      <Helmet prioritizeSeoTags={true}>
+      <Helmet prioritizeSeoTags>
         <title>Uniswap Interface</title>
         <meta name="description" content="Swap or provide liquidity on the Uniswap Protocol" />
 

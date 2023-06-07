@@ -52,7 +52,7 @@ const AssetPage = () => {
   if (loading && !detailsV2Enabled) return <AssetDetailsLoading />
   return (
     <>
-      <Helmet prioritizeSeoTags={true}>
+      <Helmet prioritizeSeoTags>
         <title>{asset?.name} on Uniswap</title>
         <meta property="og:image" content={asset?.imageUrl} />
         <meta property="og:image:width" content="1200" />
