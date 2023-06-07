@@ -13,7 +13,7 @@ import { initializeStore, WebState } from './store'
 let isInitialized = false
 
 /** Main entrypoint for intiializing the app. */
-const initApp = async (): Promise<undefined> => {
+const initApp = async (checkOnboardingOpen: boolean): Promise<undefined> => {
   if (isInitialized) {
     notifyStoreInitialized()
     return
@@ -24,15 +24,18 @@ const initApp = async (): Promise<undefined> => {
   const store = await initializeStore()
 
   if (store) {
-    maybeOpenOnboarding(store.getState() as unknown as WebState, store.dispatch)
-    notifyStoreInitialized()
+    if (checkOnboardingOpen) {
+      maybeOpenOnboarding(store.getState() as unknown as WebState, store.dispatch)
+    } else {
+      notifyStoreInitialized()
+    }
   }
 }
 
 // onInstalled is triggered when the extension is installed or updated. We want to
 // open full screen onboarding when the extension is installed so this listener handles that.
 chrome.runtime.onInstalled.addListener(() => {
-  initApp()
+  initApp(true)
 })
 
 // Listen to incoming connections from content scripts or popup.
@@ -44,7 +47,7 @@ chrome.runtime.onConnect.addListener((port) => {
     return
   }
 
-  initApp()
+  initApp(port.name === PortName.Popup)
 })
 
 function maybeOpenOnboarding(state: WebState, dispatch: Dispatch<AnyAction>): void {
