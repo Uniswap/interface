@@ -29,7 +29,6 @@ function TransactionPopupContent({ tx, chainId }: { tx: TransactionDetails; chai
 
   return (
     <PortfolioRow
-      data-testid="transaction-popup"
       left={
         success ? (
           <Column>
