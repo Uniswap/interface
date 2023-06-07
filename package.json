@@ -249,7 +249,7 @@
     "styled-components": "^5.3.5",
     "tiny-invariant": "^1.2.0",
     "ua-parser-js": "^1.0.35",
-    "use-resize-observer": "^9.0.2",
+    "use-resize-observer": "^9.1.0",
     "uuid": "^8.3.2",
     "video-extensions": "^1.2.0",
     "wcag-contrast": "^3.0.0",
