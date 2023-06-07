@@ -2,9 +2,10 @@ import { gql, useQuery } from '@apollo/client'
 import { SupportedChainId } from '@pollum-io/widgets'
 import { useMemo } from 'react'
 
-import { apolloClient } from '../apollo'
-import { unwrapTokenRollux } from '../util'
+import { apolloClient } from '../data/apollo'
+import { unwrapTokenRollux } from '../data/util'
 
+// eslint-disable-next-line import/no-unused-modules
 export const TOP_TOKENS = gql`
   query TopTokensRollux {
     tokens(first: 50, orderBy: totalValueLockedUSD, orderDirection: desc, subgraphError: allow) {
@@ -25,7 +26,7 @@ export const TOP_TOKENS = gql`
     }
   }
 `
-interface Token {
+export interface Token {
   decimals: string
   feesUSD: string
   id: string
@@ -44,7 +45,7 @@ interface Token {
 
 type Tokens = Array<Token>
 
-export function useTopTokenAddresses(): {
+export function useNewTopTokens(): {
   loading: boolean
   error: boolean
   tokens: Tokens | undefined
@@ -52,18 +53,13 @@ export function useTopTokenAddresses(): {
   const { loading, error, data } = useQuery<Tokens>(TOP_TOKENS, { client: apolloClient })
 
   const formattedData = useMemo(() => {
-    if (!data) return undefined
-    const unwrappedTokens = data?.map((token) => {
+    if (!data || !Array.isArray(data)) return undefined
+
+    const unwrappedTokens = data.map((token) => {
       return unwrapTokenRollux(SupportedChainId.ROLLUX, token)
     })
     return unwrappedTokens
   }, [data])
-
-  console.log('=================test query===================')
-  // console.log('loading', loading)
-  // console.log('error', error)
-  // console.log('Test', formattedData)
-  console.log('====================================')
 
   return {
     loading,
