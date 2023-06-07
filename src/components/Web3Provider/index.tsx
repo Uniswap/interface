@@ -84,17 +84,7 @@ function Updater() {
 
       addConnectedWallet({ account, walletType })
     }
-  }, [
-    account,
-    addConnectedWallet,
-    currentPage,
-    chainId,
-    connectedWallets,
-    connector,
-    getConnection,
-    previousAccount,
-    provider,
-  ])
+  }, [account, addConnectedWallet, currentPage, chainId, connectedWallets, connector, previousAccount, provider])
 
   return null
 }

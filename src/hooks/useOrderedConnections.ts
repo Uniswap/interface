@@ -29,5 +29,5 @@ export default function useOrderedConnections() {
     orderedConnectionTypes.push(ConnectionType.NETWORK)
 
     return orderedConnectionTypes.map((connectionType) => getConnection(connectionType))
-  }, [getConnection, selectedWallet])
+  }, [selectedWallet])
 }
