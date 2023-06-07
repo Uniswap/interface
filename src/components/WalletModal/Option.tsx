@@ -46,7 +46,6 @@ const HeaderText = styled.div`
   font-weight: 600;
   padding: 0 8px;
 `
-
 const IconWrapper = styled.div`
   ${flexColumnNoWrap};
   align-items: center;
@@ -114,6 +113,18 @@ const Wrapper = styled.div<{ disabled: boolean }>`
   }
 `
 
+const WCv2Icon = styled.img`
+  height: 20px !important;
+  width: 20px !important;
+`
+const WCv2BodyText = styled(ThemedText.BodyPrimary)`
+  margin-bottom: 4px;
+  text-align: left;
+`
+const WCv2Caption = styled(ThemedText.Caption)`
+  text-align: left;
+`
+
 interface PopupButtonContentProps {
   connection: Connection
   isDarkMode: boolean
@@ -128,15 +139,11 @@ function PopupButtonContent({ connection, isDarkMode, show, onClick, onClose }: 
   return (
     <WCv2PopoverContent onClick={onClick} ref={popoverElement} size={ButtonSize.small} emphasis={ButtonEmphasis.medium}>
       <IconWrapper>
-        <img src={connection.getIcon?.(isDarkMode)} alt="Icon" style={{ height: '20px', width: '20px' }} />
+        <WCv2Icon src={connection.getIcon?.(isDarkMode)} alt={connection.getName()} />
       </IconWrapper>
       <div>
-        <ThemedText.BodyPrimary style={{ marginBottom: '4px', textAlign: 'left' }}>
-          Connect with v2
-        </ThemedText.BodyPrimary>
-        <ThemedText.Caption color="textSecondary" style={{ textAlign: 'left' }}>
-          Under development and unsupported by most wallets
-        </ThemedText.Caption>
+        <WCv2BodyText>Connect with v2</WCv2BodyText>
+        <WCv2Caption color="textSecondary">Under development and unsupported by most wallets</WCv2Caption>
       </div>
     </WCv2PopoverContent>
   )
@@ -187,7 +194,7 @@ export default function Option({ connection }: OptionProps) {
         >
           <OptionCardLeft>
             <IconWrapper>
-              <img src={connection.getIcon?.(isDarkMode)} alt="Icon" />
+              <img src={connection.getIcon?.(isDarkMode)} alt={connection.getName()} />
             </IconWrapper>
             <HeaderText>{connection.getName()}</HeaderText>
             {connection.isNew && <NewBadge />}
