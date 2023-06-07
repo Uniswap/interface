@@ -143,7 +143,7 @@ export function getTokenDetailsURL({
   inputAddress,
 }: {
   address?: string | null
-  chain: Chain
+  chain: Chain | string
   inputAddress?: string | null
 }) {
   const chainName = chain.toLowerCase()

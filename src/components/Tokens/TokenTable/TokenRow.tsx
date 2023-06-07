@@ -7,6 +7,7 @@ import { MouseoverTooltip } from 'components/Tooltip'
 import { Chain } from 'graphql/data/Token'
 import { SparklineMap, TopToken } from 'graphql/data/TopTokens'
 import { CHAIN_NAME_TO_CHAIN_ID, getTokenDetailsURL, validateUrlChainParam } from 'graphql/data/util'
+import { Token } from 'graphql/tokens/NewTopTokens'
 import { useAtomValue } from 'jotai/utils'
 import { ForwardedRef, forwardRef } from 'react'
 import { CSSProperties, ReactNode } from 'react'
@@ -423,7 +424,7 @@ export function LoadingRow(props: { first?: boolean; last?: boolean }) {
 interface LoadedRowProps {
   tokenListIndex: number
   tokenListLength: number
-  token: NonNullable<TopToken>
+  token: NonNullable<TopToken | Token>
   sparklineMap: SparklineMap
   sortRank: number
 }
@@ -436,14 +437,15 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
   const filterNetwork = validateUrlChainParam(useParams<{ chainName?: string }>().chainName?.toUpperCase()) as Chain
   const chainId = CHAIN_NAME_TO_CHAIN_ID[filterNetwork]
   const timePeriod = useAtomValue(filterTimeAtom)
-  const delta = token.market?.pricePercentChange?.value
+  // TODO: verify query to return price percent change on new graphql pegasys
+  const delta = 'market' in token ? token.market?.pricePercentChange?.value : undefined
   const arrow = getDeltaArrow(delta)
   const smallArrow = getDeltaArrow(delta, 14)
   const formattedDelta = formatDelta(delta)
 
   const exploreTokenSelectedEventProperties = {
     chain_id: chainId,
-    token_address: token.address,
+    token_address: token.id,
     token_symbol: token.symbol,
     token_list_index: tokenListIndex,
     token_list_rank: sortRank,
@@ -452,10 +454,15 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
     search_token_address_input: filterString,
   }
 
+  const to = 'chain' in token ? getTokenDetailsURL(token) : getTokenDetailsURL({ address: token.id, chain: '570' })
+  const priceUSD = 'market' in token ? formatUSDPrice(token.market?.price?.value) : 0
+  const tvl = 'market' in token ? formatNumber(token.market?.totalValueLocked?.value, NumberType.FiatTokenStats) : 0
+  const volume = 'market' in token ? formatNumber(token.market?.volume?.value, NumberType.FiatTokenStats) : 0
+
   // TODO: currency logo sizing mobile (32px) vs. desktop (24px)
   return (
     <div ref={ref} data-testid={`token-table-row-${token.symbol}`}>
-      <StyledLink to={getTokenDetailsURL(token)}>
+      <StyledLink to={to}>
         <TokenRow
           header={false}
           listNumber={sortRank}
@@ -471,7 +478,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
           price={
             <ClickableContent>
               <PriceInfoCell>
-                {formatUSDPrice(token.market?.price?.value)}
+                {priceUSD}
                 <PercentChangeInfoCell>
                   <ArrowCell>{smallArrow}</ArrowCell>
                   <DeltaText delta={delta}>{formattedDelta}</DeltaText>
@@ -485,30 +492,28 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
               <DeltaText delta={delta}>{formattedDelta}</DeltaText>
             </ClickableContent>
           }
-          tvl={
-            <ClickableContent>
-              {formatNumber(token.market?.totalValueLocked?.value, NumberType.FiatTokenStats)}
-            </ClickableContent>
-          }
-          volume={
-            <ClickableContent>{formatNumber(token.market?.volume?.value, NumberType.FiatTokenStats)}</ClickableContent>
-          }
+          tvl={<ClickableContent>{tvl}</ClickableContent>}
+          volume={<ClickableContent>{volume}</ClickableContent>}
           sparkLine={
-            <SparkLine>
-              <ParentSize>
-                {({ width, height }) =>
-                  props.sparklineMap && (
-                    <SparklineChart
-                      width={width}
-                      height={height}
-                      tokenData={token}
-                      pricePercentChange={token.market?.pricePercentChange?.value}
-                      sparklineMap={props.sparklineMap}
-                    />
-                  )
-                }
-              </ParentSize>
-            </SparkLine>
+            'market' in token ? (
+              <SparkLine>
+                <ParentSize>
+                  {({ width, height }) =>
+                    props.sparklineMap && (
+                      <SparklineChart
+                        width={width}
+                        height={height}
+                        tokenData={token}
+                        pricePercentChange={token.market?.pricePercentChange?.value}
+                        sparklineMap={props.sparklineMap}
+                      />
+                    )
+                  }
+                </ParentSize>
+              </SparkLine>
+            ) : (
+              <></>
+            )
           }
           first={tokenListIndex === 0}
           last={tokenListIndex === tokenListLength - 1}

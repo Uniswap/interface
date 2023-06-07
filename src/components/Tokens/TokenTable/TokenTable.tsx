@@ -79,6 +79,11 @@ export default function TokenTable() {
   const { tokens, tokenSortRank, loadingTokens, sparklines } = useTopTokens(chainName)
 
   const { loading, error, tokens: newTokens } = useNewTopTokens()
+  console.log('====================================')
+  console.log('loading', loading)
+  console.log('error', error)
+  console.log('newTokens', newTokens)
+  console.log('====================================')
 
   /* loading and error state */
   if (loading && !newTokens) {
