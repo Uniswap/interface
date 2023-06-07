@@ -5,7 +5,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo, SectionList } from 'react-native'
 import { SvgProps } from 'react-native-svg'
-import { useAppDispatch } from 'src/app/hooks'
+import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { SettingsStackParamList, useSettingsStackNavigation } from 'src/app/navigation/types'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
@@ -47,7 +47,6 @@ import {
   makeSelectAccountHideSpamTokens,
   selectSortedSignerMnemonicAccounts,
 } from 'wallet/src/features/wallet/selectors'
-import { useAppSelector } from 'wallet/src/state'
 import { Screens } from './Screens'
 
 type Props = NativeStackScreenProps<SettingsStackParamList, Screens.SettingsWallet>

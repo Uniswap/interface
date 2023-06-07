@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert } from 'react-native'
 import 'react-native-reanimated'
-import { useAppTheme } from 'src/app/hooks'
+import { useAppSelector, useAppTheme } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Flex } from 'src/components/layout'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
@@ -17,7 +17,6 @@ import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import Scan from 'ui/src/assets/icons/receive.svg'
 import ScanQRIcon from 'ui/src/assets/icons/scan.svg'
 import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
-import { useAppSelector } from 'wallet/src/state'
 
 type Props = {
   onClose: () => void

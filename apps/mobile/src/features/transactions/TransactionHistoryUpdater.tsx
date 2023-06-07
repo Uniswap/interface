@@ -4,7 +4,7 @@ import dayjs from 'dayjs'
 import React, { useEffect, useMemo } from 'react'
 import { View } from 'react-native'
 import { batch } from 'react-redux'
-import { useAppDispatch, useAppSelector as useMobileAppSelector } from 'src/app/hooks'
+import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { selectLastTxNotificationUpdate } from 'src/features/notifications/selectors'
 import { buildReceiveNotification } from 'src/features/notifications/utils'
 import { parseDataResponseToTransactionDetails } from 'src/features/transactions/history/utils'
@@ -28,7 +28,6 @@ import {
   makeSelectAccountHideSpamTokens,
   selectActiveAccountAddress,
 } from 'wallet/src/features/wallet/selectors'
-import { useAppSelector as useRootAppSelector } from 'wallet/src/state'
 import { ONE_SECOND_MS } from 'wallet/src/utils/time'
 
 /**
@@ -101,17 +100,15 @@ function AddressTransactionHistoryUpdater({
 }): JSX.Element | null {
   const dispatch = useAppDispatch()
 
-  const activeAccountAddress = useRootAppSelector(selectActiveAccountAddress)
+  const activeAccountAddress = useAppSelector(selectActiveAccountAddress)
 
   // Current txn count for all addresses
-  const lastTxNotificationUpdateTimestamp = useMobileAppSelector(selectLastTxNotificationUpdate)[
-    address
-  ]
+  const lastTxNotificationUpdateTimestamp = useAppSelector(selectLastTxNotificationUpdate)[address]
 
   const fetchAndDispatchReceiveNotification = useFetchAndDispatchReceiveNotification()
 
   // dont show notifications on spam tokens if setting enabled
-  const hideSpamTokens = useRootAppSelector<boolean>(makeSelectAccountHideSpamTokens(address))
+  const hideSpamTokens = useAppSelector<boolean>(makeSelectAccountHideSpamTokens(address))
 
   const localTransactions = useSelectAddressTransactions(address)
 

@@ -4,7 +4,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { createStackNavigator } from '@react-navigation/stack'
 import React, { useCallback } from 'react'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { useAppTheme } from 'src/app/hooks'
+import { useAppSelector, useAppTheme } from 'src/app/hooks'
 import {
   AppStackParamList,
   AppStackScreenProp,
@@ -62,7 +62,6 @@ import { SettingsWalletManageConnection } from 'src/screens/SettingsWalletManage
 import { TokenDetailsScreen } from 'src/screens/TokenDetailsScreen'
 import { WebViewScreen } from 'src/screens/WebViewScreen'
 import { selectFinishedOnboarding } from 'wallet/src/features/wallet/selectors'
-import { useAppSelector } from 'wallet/src/state'
 
 const OnboardingStack = createStackNavigator<OnboardingStackParamList>()
 const AppStack = createNativeStackNavigator<AppStackParamList>()

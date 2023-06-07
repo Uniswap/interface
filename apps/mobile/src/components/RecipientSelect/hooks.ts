@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { DefaultSectionT, SectionListData } from 'react-native'
-import { useAppSelector as useMobileAppSelector } from 'src/app/hooks'
+import { useAppSelector } from 'src/app/hooks'
 import { SearchableRecipient } from 'src/components/RecipientSelect/types'
 import { uniqueAddressesOnly } from 'src/components/RecipientSelect/utils'
 import { selectRecipientsByRecency } from 'src/features/transactions/selectors'
@@ -9,7 +9,6 @@ import { ChainId } from 'wallet/src/constants/chains'
 import { EMPTY_ARRAY } from 'wallet/src/constants/misc'
 import { useENS } from 'wallet/src/features/ens/useENS'
 import { selectInactiveAccounts } from 'wallet/src/features/wallet/selectors'
-import { useAppSelector as useRootAppSelector } from 'wallet/src/state'
 import { getValidAddress } from 'wallet/src/utils/addresses'
 
 const MAX_RECENT_RECIPIENTS = 15
@@ -42,10 +41,11 @@ export function useRecipients(): {
 
   const [pattern, setPattern] = useState<string | null>(null)
 
-  const inactiveLocalAccounts = useRootAppSelector(selectInactiveAccounts) as SearchableRecipient[]
-  const recentRecipients = useMobileAppSelector<SearchableRecipient[]>(
-    selectRecipientsByRecency
-  ).slice(0, MAX_RECENT_RECIPIENTS)
+  const inactiveLocalAccounts = useAppSelector(selectInactiveAccounts) as SearchableRecipient[]
+  const recentRecipients = useAppSelector<SearchableRecipient[]>(selectRecipientsByRecency).slice(
+    0,
+    MAX_RECENT_RECIPIENTS
+  )
 
   const { recipient: validatedAddressRecipient, loading } = useFullAddressRecipient(pattern)
 

@@ -3,7 +3,7 @@ import { BottomSheetFlatList } from '@gorhom/bottom-sheet'
 import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListRenderItem, ListRenderItemInfo } from 'react-native'
-import { useAppSelector as useMobileAppSelector } from 'src/app/hooks'
+import { useAppSelector } from 'src/app/hooks'
 import { FavoriteTokensGrid } from 'src/components/explore/FavoriteTokensGrid'
 import { FavoriteWalletsGrid } from 'src/components/explore/FavoriteWalletsGrid'
 import { SortButton } from 'src/components/explore/SortButton'
@@ -29,7 +29,6 @@ import {
 } from 'wallet/src/data/__generated__/types-and-hooks'
 import { usePersistedError } from 'wallet/src/features/dataApi/utils'
 import { selectTokensOrderBy } from 'wallet/src/features/wallet/selectors'
-import { useAppSelector as useRootAppSelector } from 'wallet/src/state'
 import { areAddressesEqual } from 'wallet/src/utils/addresses'
 import { fromGraphQLChain } from 'wallet/src/utils/chainId'
 import { buildCurrencyId, buildNativeCurrencyId } from 'wallet/src/utils/currencyId'
@@ -42,7 +41,7 @@ export function ExploreSections({ listRef }: ExploreSectionsProps): JSX.Element 
   const { t } = useTranslation()
 
   // Top tokens sorting
-  const orderBy = useRootAppSelector(selectTokensOrderBy)
+  const orderBy = useAppSelector(selectTokensOrderBy)
   const tokenMetadataDisplayType = getTokenMetadataDisplayType(orderBy)
   const { clientOrderBy, serverOrderBy } = getTokensOrderByValues(orderBy)
 
@@ -203,8 +202,8 @@ function gqlTokenToTokenItemData(
 }
 
 function FavoritesSection({ showLoading }: { showLoading: boolean }): JSX.Element | null {
-  const hasFavoritedTokens = useMobileAppSelector(selectHasFavoriteTokens)
-  const hasFavoritedWallets = useMobileAppSelector(selectHasWatchedWallets)
+  const hasFavoritedTokens = useAppSelector(selectHasFavoriteTokens)
+  const hasFavoritedWallets = useAppSelector(selectHasWatchedWallets)
 
   if (!hasFavoritedTokens && !hasFavoritedWallets) return null
 
