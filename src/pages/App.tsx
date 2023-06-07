@@ -7,6 +7,7 @@ import { useFeatureFlagsIsLoaded } from 'featureFlags'
 import { useAtom } from 'jotai'
 import { useBag } from 'nft/hooks/useBag'
 import { lazy, Suspense, useEffect, useMemo, useState } from 'react'
+import { Helmet } from 'react-helmet-async'
 import { Navigate, Route, Routes, useLocation, useSearchParams } from 'react-router-dom'
 import { shouldDisableNFTRoutesAtom } from 'state/application/atoms'
 import { StatsigProvider, StatsigUser } from 'statsig-react'
@@ -182,6 +183,22 @@ export default function App() {
 
   return (
     <ErrorBoundary>
+      <Helmet prioritizeSeoTags>
+        <title>Uniswap Interface</title>
+        <meta name="description" content="Swap or provide liquidity on the Uniswap Protocol" />
+
+        {/* Open Graph / Facebook */}
+        <meta property="og:image" content="%PUBLIC_URL%/images/512x512_App_Icon.png" data-rh="true" />
+        <meta property="og:image:width" content="512" data-rh="true" />
+        <meta property="og:image:height" content="512" data-rh="true" />
+        <meta property="og:title" content="Uniswap Interface" data-rh="true" />
+        <meta property="og:description" content="Swap or provide liquidity on the Uniswap Protocol" data-rh="true" />
+        <meta property="og:url" content="https://app.uniswap.org" data-rh="true" />
+
+        {/* Twitter */}
+        <meta name="twitter:card" content="summary_large_image" data-rh="true" />
+        <meta name="twitter:image" content="%PUBLIC_URL%/images/512x512_App_Icon.png" data-rh="true" />
+      </Helmet>
       <DarkModeQueryParamReader />
       <Trace page={currentPage}>
         <StatsigProvider
