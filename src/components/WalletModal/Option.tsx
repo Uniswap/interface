@@ -71,6 +71,7 @@ const WCv2PopoverContent = styled(ThemeButton)`
   position: absolute;
   z-index: ${Z_INDEX.popover};
 `
+const TOGGLE_SIZE = 24
 const WCv2PopoverToggle = styled.button`
   align-items: center;
   background-color: transparent;
@@ -78,15 +79,15 @@ const WCv2PopoverToggle = styled.button`
   color: ${({ theme }) => theme.textTertiary};
   cursor: pointer;
   display: flex;
-  height: 24px;
+  height: ${TOGGLE_SIZE}px;
   justify-content: center;
   margin: 0;
   max-width: 48px;
   padding: 0;
   position: absolute;
   right: 16px;
-  top: calc(50% - 12px);
-  width: 24px;
+  top: calc(50% - ${TOGGLE_SIZE / 2}px);
+  width: ${TOGGLE_SIZE}px;
 
   &:hover {
     opacity: 0.6;
