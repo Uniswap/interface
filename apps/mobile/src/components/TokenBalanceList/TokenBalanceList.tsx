@@ -1,9 +1,8 @@
 import { FlashList } from '@shopify/flash-list'
 import { ReactNavigationPerformanceView } from '@shopify/react-native-performance-navigation'
-import React, { forwardRef, useEffect, useMemo, useState } from 'react'
+import React, { forwardRef, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FadeInDown, FadeOut } from 'react-native-reanimated'
-import { useAppSelector } from 'src/app/hooks'
 import { useAdaptiveFooterHeight } from 'src/components/home/hooks'
 import { AnimatedBox, Box } from 'src/components/layout'
 import { AnimatedFlashList } from 'src/components/layout/AnimatedFlashList'
@@ -12,18 +11,16 @@ import { TabProps, TAB_VIEW_SCROLL_THROTTLE } from 'src/components/layout/TabHel
 import { Loader } from 'src/components/loading'
 import { HiddenTokensRow } from 'src/components/TokenBalanceList/HiddenTokensRow'
 import { TokenBalanceItem } from 'src/components/TokenBalanceList/TokenBalanceItem'
+import {
+  HIDDEN_TOKEN_BALANCES_ROW,
+  useTokenBalancesGroupedByVisibility,
+} from 'src/features/balances/hooks'
 import { Screens } from 'src/screens/Screens'
-import { useSuspendUpdatesWhenBlured } from 'src/utils/hooks'
 import { dimensions } from 'ui/src/theme/restyle/sizing'
 import { zIndices } from 'ui/src/theme/zIndices'
-import { EMPTY_ARRAY } from 'wallet/src/constants/misc'
 import { isError, isNonPollingRequestInFlight, isWarmLoadingStatus } from 'wallet/src/data/utils'
-import { useSortedPortfolioBalances } from 'wallet/src/features/dataApi/balances'
+import { usePortfolioBalances } from 'wallet/src/features/dataApi/balances'
 import { PortfolioBalance } from 'wallet/src/features/dataApi/types'
-import {
-  makeSelectAccountHideSmallBalances,
-  makeSelectAccountHideSpamTokens,
-} from 'wallet/src/features/wallet/selectors'
 import { CurrencyId } from 'wallet/src/utils/currencyId'
 
 type TokenBalanceListProps = TabProps & {
@@ -33,7 +30,6 @@ type TokenBalanceListProps = TabProps & {
 }
 
 const ESTIMATED_TOKEN_ITEM_HEIGHT = 64
-const HIDDEN_TOKENS_ROW = 'HIDDEN_TOKENS_ROW'
 
 // accept any ref
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -52,15 +48,12 @@ export const TokenBalanceList = forwardRef<FlashList<any>, TokenBalanceListProps
   ) => {
     const { t } = useTranslation()
 
-    const hideSmallBalances: boolean = useAppSelector(makeSelectAccountHideSmallBalances(owner))
-    const hideSpamTokens: boolean = useAppSelector(makeSelectAccountHideSpamTokens(owner))
-
     const { onContentSizeChange, footerHeight, setFooterHeight } = useAdaptiveFooterHeight({
       headerHeight,
     })
 
     // This function gets passed down through:
-    // useSortedPortfolioBalances -> usePortfolioBalances -> the usePortfolioBalancesQuery query's onCompleted argument.
+    // usePortfolioBalances -> the usePortfolioBalancesQuery query's onCompleted argument.
     const onCompleted = function (): void {
       // This is better than using network status to check, because doing it that way we would have to wait
       // for the network status to go back to "ready", which results in the numbers updating, and _then_ the
@@ -68,65 +61,55 @@ export const TokenBalanceList = forwardRef<FlashList<any>, TokenBalanceListProps
       setIsWarmLoading(false)
     }
 
-    const { data, networkStatus, refetch } = useSuspendUpdatesWhenBlured(
-      useSortedPortfolioBalances(
-        owner,
-        /*shouldPoll=*/ true,
-        hideSmallBalances,
-        hideSpamTokens,
-        onCompleted
-      )
+    const {
+      data: balancesById,
+      networkStatus,
+      refetch,
+    } = usePortfolioBalances(
+      owner,
+      /*shouldPoll=*/ true,
+      /*hideSmallBalances=*/ false,
+      /*hideSpamBalances=*/ false,
+      onCompleted
     )
-    const hasOnlyHiddenTokens =
-      !data?.balances.length && (!!data?.smallBalances.length || !!data?.spamBalances.length)
 
     const [isWarmLoading, setIsWarmLoading] = useState(false)
-    const [hiddenTokensExpanded, setHiddenTokensExpanded] = useState(hasOnlyHiddenTokens)
+    const [hiddenTokensExpanded, setHiddenTokensExpanded] = useState(false)
+
+    // re-order token balances to visible and hidden
+    const { tokens, numHidden } = useTokenBalancesGroupedByVisibility({
+      balancesById,
+      expandHiddenTokens: hiddenTokensExpanded,
+      owner,
+    })
 
     useEffect(() => {
-      // Reset hidden tokens expanded state when owner changes
-      // Expand hidden tokens section if there are only hidden tokens
-      setHiddenTokensExpanded(hasOnlyHiddenTokens)
-    }, [hasOnlyHiddenTokens, owner])
+      if (numHidden === 0 && hiddenTokensExpanded) {
+        setHiddenTokensExpanded(false)
+      }
+      // all tokens are hidden
+      if (balancesById && Object.keys(balancesById).length === numHidden && !hiddenTokensExpanded) {
+        setHiddenTokensExpanded(true)
+      }
+    }, [balancesById, hiddenTokensExpanded, numHidden])
 
     useEffect(() => {
-      if (!!data && isWarmLoadingStatus(networkStatus) && !isExternalProfile) {
+      if (!!balancesById && isWarmLoadingStatus(networkStatus) && !isExternalProfile) {
         setIsWarmLoading(true)
       }
-    }, [data, isExternalProfile, networkStatus])
-
-    const listItems: (PortfolioBalance | string)[] = useMemo(() => {
-      if (!data) return EMPTY_ARRAY
-
-      const { balances, smallBalances, spamBalances } = data
-
-      // No balances
-      if (!balances.length && !smallBalances.length && !spamBalances.length) return EMPTY_ARRAY
-
-      // No hidden tokens
-      if (balances.length > 0 && smallBalances.length === 0 && spamBalances.length === 0)
-        return balances
-
-      // Show non-hidden tokens and hidden tokens row
-      if (!hiddenTokensExpanded) return [...balances, HIDDEN_TOKENS_ROW]
-
-      // Show all tokens including hidden
-      return [...balances, HIDDEN_TOKENS_ROW, ...smallBalances, ...spamBalances]
-    }, [data, hiddenTokensExpanded])
-
-    const numHiddenTokens = (data?.smallBalances?.length ?? 0) + (data?.spamBalances?.length ?? 0)
+    }, [balancesById, isExternalProfile, networkStatus])
 
     // Note: `PerformanceView` must wrap the entire return statement to properly track interactive states.
     return (
       <ReactNavigationPerformanceView
-        interactive={data !== undefined}
+        interactive={balancesById !== undefined}
         screenName={
           // Marks the home screen as intereactive when balances are defined
           Screens.Home
         }>
-        {!data ? (
+        {!balancesById ? (
           isNonPollingRequestInFlight(networkStatus) ? (
-            <Box style={containerProps?.loadingContainerStyle}>
+            <Box px="spacing24" style={containerProps?.loadingContainerStyle}>
               <Loader.Token repeat={4} />
             </Box>
           ) : (
@@ -146,7 +129,7 @@ export const TokenBalanceList = forwardRef<FlashList<any>, TokenBalanceListProps
           <AnimatedFlashList
             ref={ref}
             ListEmptyComponent={
-              <Box flexGrow={1} style={containerProps?.emptyContainerStyle}>
+              <Box flexGrow={1} px="spacing24" style={containerProps?.emptyContainerStyle}>
                 {empty}
               </Box>
             }
@@ -155,8 +138,8 @@ export const TokenBalanceList = forwardRef<FlashList<any>, TokenBalanceListProps
             // add negative z index to prevent footer from covering hidden tokens row when minimized
             ListFooterComponentStyle={{ zIndex: zIndices.negative }}
             ListHeaderComponent={
-              isError(networkStatus, !!data) ? (
-                <AnimatedBox entering={FadeInDown} exiting={FadeOut} py="spacing8">
+              isError(networkStatus, !!balancesById) ? (
+                <AnimatedBox entering={FadeInDown} exiting={FadeOut} px="spacing24" py="spacing8">
                   <BaseCard.InlineErrorState
                     title={t('Failed to fetch token balances')}
                     onRetry={refetch}
@@ -164,15 +147,15 @@ export const TokenBalanceList = forwardRef<FlashList<any>, TokenBalanceListProps
                 </AnimatedBox>
               ) : null
             }
-            data={listItems}
+            data={tokens}
             estimatedItemSize={ESTIMATED_TOKEN_ITEM_HEIGHT}
             keyExtractor={key}
             renderItem={({ item }): JSX.Element | null => {
-              if (item === HIDDEN_TOKENS_ROW) {
+              if (item === HIDDEN_TOKEN_BALANCES_ROW) {
                 return (
                   <HiddenTokensRow
                     isExpanded={hiddenTokensExpanded}
-                    numHidden={numHiddenTokens}
+                    numHidden={numHidden}
                     onPress={(): void => {
                       if (hiddenTokensExpanded) {
                         setFooterHeight(dimensions.fullHeight)
