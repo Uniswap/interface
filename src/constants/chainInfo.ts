@@ -1,5 +1,4 @@
 import bnbCircleLogoUrl from 'assets/images/bnbCircle.svg'
-import celoCircleLogoUrl from 'assets/images/celoCircle.png'
 import ethereumLogoUrl from 'assets/images/ethereum-logo.png'
 import polygonCircleLogoUrl from 'assets/images/polygonCircle.png'
 import { default as arbitrumCircleLogoUrl, default as arbitrumLogoUrl } from 'assets/svg/arbitrum_logo.svg'
@@ -190,7 +189,7 @@ const CHAIN_INFO: ChainInfoMap = {
     infoLink: 'https://info.uniswap.org/#/celo/',
     label: 'Celo',
     logoUrl: celoLogo,
-    circleLogoUrl: celoCircleLogoUrl,
+    circleLogoUrl: celoLogo,
     squareLogoUrl: celoSquareLogoUrl,
     nativeCurrency: { name: 'Celo', symbol: 'CELO', decimals: 18 },
     defaultListUrl: CELO_LIST,

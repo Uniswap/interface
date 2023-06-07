@@ -4,11 +4,8 @@ const PUDGY_COLLECTION_ADDRESS = '0xbd3531da5cf5857e7cfaa92426877b022e612cf8'
 const BONSAI_COLLECTION_ADDRESS = '0xec9c519d49856fd2f8133a0741b4dbe002ce211b'
 
 describe('Testing nfts', () => {
-  beforeEach(() => {
-    cy.visit('/')
-  })
-
   it('should load nft leaderboard', () => {
+    cy.visit('/')
     cy.get(getTestSelector('nft-nav')).first().click()
     cy.get(getTestSelector('nft-nav')).first().should('exist')
     cy.get(getTestSelector('nft-nav')).first().click()
@@ -49,15 +46,11 @@ describe('Testing nfts', () => {
     cy.get(getTestSelector('nft-bag')).should('exist')
   })
 
-  it('should navigate to the owned nfts page', () => {
+  it('should navigate to and from the owned nfts page', () => {
+    cy.visit('/')
     cy.get(getTestSelector('web3-status-connected')).click()
-    cy.get(getTestSelector('nft-view-self-nfts')).click()
-  })
-
-  it('should close the sidebar when navigating to NFT details', () => {
-    cy.get(getTestSelector('web3-status-connected')).click()
-    cy.get(getTestSelector('mini-portfolio-nav-nfts')).click()
-    cy.get(getTestSelector('mini-portfolio-nft')).first().click()
-    cy.contains('Buy crypto').should('not.be.visible')
+    cy.get(getTestSelector('mini-portfolio-navbar')).contains('NFTs').click()
+    cy.get(getTestSelector('mini-portfolio-nft')).click()
+    cy.get(getTestSelector('mini-portfolio-navbar')).should('not.be.visible')
   })
 })
