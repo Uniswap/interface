@@ -47,12 +47,12 @@ const AssetPage = () => {
   const collectionDescription =
     (collection && collection?.collectionDescription?.length && collection?.collectionDescription?.length > 150
       ? collection?.collectionDescription?.substring(0, 150) + '...'
-      : collection?.collectionDescription) + '...' || ''
+      : collection?.collectionDescription + '...') || ''
 
   if (loading && !detailsV2Enabled) return <AssetDetailsLoading />
   return (
     <>
-      <Helmet prioritizeSeoTags>
+      <Helmet prioritizeSeoTags={true}>
         <title>{asset?.name} on Uniswap</title>
         <meta property="og:image" content={asset?.imageUrl} />
         <meta property="og:image:width" content="1200" />
