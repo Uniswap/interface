@@ -19,37 +19,31 @@ exports[`Wallet Option renders default state 1`] = `
 }
 
 .c0 {
-  background-color: #F5F6FC;
-  border: none;
-  width: 100% !important;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
+  background-color: unset;
+  border: none;
+  cursor: pointer;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex: 1 1 auto;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
   -ms-flex-pack: justify;
   justify-content: space-between;
+  opacity: 1;
   padding: 18px;
   -webkit-transition: 125ms;
   transition: 125ms;
-  opacity: 1;
-}
-
-.c0:hover {
-  cursor: pointer;
-  background-color: #ADBCFF3d;
-}
-
-.c0:focus {
-  background-color: #ADBCFF3d;
 }
 
 .c3 {
@@ -109,7 +103,7 @@ exports[`Wallet Option renders default state 1`] = `
 
 <button
   class="c0"
-  data-testid="wallet-option-UNIWALLET"
+  data-testid="wallet-option-UNISWAP_WALLET"
 >
   <div
     class="c1"
@@ -118,7 +112,7 @@ exports[`Wallet Option renders default state 1`] = `
       class="c2"
     >
       <img
-        alt="Icon"
+        alt="Mock Connection 1"
         src="uniwallet.png"
       />
     </div>

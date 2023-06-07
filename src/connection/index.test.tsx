@@ -19,7 +19,7 @@ describe('connection utility/metadata tests', () => {
     const getConnection = renderHook(() => useGetConnection()).result.current
     const injected = getConnection(ConnectionType.INJECTED)
     const coinbase = getConnection(ConnectionType.COINBASE_WALLET)
-    const uniswap = getConnection(ConnectionType.UNIWALLET)
+    const uniswap = getConnection(ConnectionType.UNISWAP_WALLET)
     const walletconnect = getConnection(ConnectionType.WALLET_CONNECT)
 
     return { displayed, injected, coinbase, uniswap, walletconnect }
