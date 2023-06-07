@@ -11,13 +11,14 @@ import AccountDetails from '../AccountDetails'
 import PendingView from './PendingView'
 import Option from './Option'
 import { SUPPORTED_WALLETS } from '../../constants'
-import { ExternalLink } from '../../theme'
+import { Button, ExternalLink } from '../../theme'
 import MetamaskIcon from '../../assets/images/metamask.png'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
-import { injected, fortmatic, portis } from '../../connectors'
+import { injected, fortmatic, portis, NETWORK_CHAIN_ID, NETWORK_URL } from '../../connectors'
 import { OVERLAY_READY } from '../../connectors/Fortmatic'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
 import { AbstractConnector } from '@web3-react/abstract-connector'
+import switchNetwork from '../../utils/switchNetwork'
 
 const CloseIcon = styled.div`
   position: absolute;
@@ -297,7 +298,13 @@ export default function WalletModal({
           <HeaderRow>{error instanceof UnsupportedChainIdError ? 'Wrong Network' : 'Error connecting'}</HeaderRow>
           <ContentWrapper>
             {error instanceof UnsupportedChainIdError ? (
-              <h5>Please connect to the appropriate Ethereum network.</h5>
+              <Button
+                onClick={() => {
+                  switchNetwork(NETWORK_CHAIN_ID, 'Taiko', NETWORK_URL as string)
+                }}
+              >
+                Please, connect to Taiko network.
+              </Button>
             ) : (
               'Error connecting. Try refreshing the page.'
             )}
