@@ -69,6 +69,8 @@ const WCv2PopoverContent = styled(ThemeButton)`
   max-width: 240px;
   padding: 16px;
   position: absolute;
+  right: 12px;
+  top: 52px;
   z-index: ${Z_INDEX.popover};
 `
 const TOGGLE_SIZE = 24
@@ -113,41 +115,30 @@ const Wrapper = styled.div<{ disabled: boolean }>`
 `
 
 interface PopupButtonContentProps {
-  children: JSX.Element
   connection: Connection
   isDarkMode: boolean
   show: boolean
   onClick: (e: MouseEvent<HTMLButtonElement>) => void
   onClose: () => void
 }
-function PopupButtonContent({ connection, isDarkMode, show, children, onClick, onClose }: PopupButtonContentProps) {
+function PopupButtonContent({ connection, isDarkMode, show, onClick, onClose }: PopupButtonContentProps) {
   const popoverElement = useRef<HTMLButtonElement>(null)
   useOnClickOutside(popoverElement, onClose)
+  if (!show) return null
   return (
-    <>
-      {children}
-      {show && (
-        <WCv2PopoverContent
-          onClick={onClick}
-          style={{ top: 52, right: 10 }}
-          ref={popoverElement}
-          size={ButtonSize.small}
-          emphasis={ButtonEmphasis.medium}
-        >
-          <IconWrapper>
-            <img src={connection.getIcon?.(isDarkMode)} alt="Icon" style={{ height: '20px', width: '20px' }} />
-          </IconWrapper>
-          <div>
-            <ThemedText.BodyPrimary style={{ marginBottom: '4px', textAlign: 'left' }}>
-              Connect with v2
-            </ThemedText.BodyPrimary>
-            <ThemedText.Caption color="textSecondary" style={{ textAlign: 'left' }}>
-              Under development and unsupported by most wallets
-            </ThemedText.Caption>
-          </div>
-        </WCv2PopoverContent>
-      )}
-    </>
+    <WCv2PopoverContent onClick={onClick} ref={popoverElement} size={ButtonSize.small} emphasis={ButtonEmphasis.medium}>
+      <IconWrapper>
+        <img src={connection.getIcon?.(isDarkMode)} alt="Icon" style={{ height: '20px', width: '20px' }} />
+      </IconWrapper>
+      <div>
+        <ThemedText.BodyPrimary style={{ marginBottom: '4px', textAlign: 'left' }}>
+          Connect with v2
+        </ThemedText.BodyPrimary>
+        <ThemedText.Caption color="textSecondary" style={{ textAlign: 'left' }}>
+          Under development and unsupported by most wallets
+        </ThemedText.Caption>
+      </div>
+    </WCv2PopoverContent>
   )
 }
 
@@ -206,17 +197,18 @@ export default function Option({ connection }: OptionProps) {
       </TraceEvent>
 
       {connection.type === ConnectionType.WALLET_CONNECT && (
-        <PopupButtonContent
-          connection={connection}
-          isDarkMode={isDarkMode}
-          show={WC2PromptOpen}
-          onClick={handleClickConnectViaWCv2}
-          onClose={() => setWC2PromptOpen(false)}
-        >
+        <>
           <WCv2PopoverToggle onClick={handleClickOpenWCv2Tooltip} onMouseDown={handleClickOpenWCv2Tooltip}>
             <MoreHorizontal />
           </WCv2PopoverToggle>
-        </PopupButtonContent>
+          <PopupButtonContent
+            connection={connection}
+            isDarkMode={isDarkMode}
+            show={WC2PromptOpen}
+            onClick={handleClickConnectViaWCv2}
+            onClose={() => setWC2PromptOpen(false)}
+          />
+        </>
       )}
     </Wrapper>
   )
