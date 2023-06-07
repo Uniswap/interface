@@ -368,7 +368,7 @@ PODS:
     - ExpoModulesCore
   - ExpoHaptics (12.0.1):
     - ExpoModulesCore
-  - ExpoLinearGradient (12.0.1):
+  - ExpoLinearGradient (12.1.2):
     - ExpoModulesCore
   - ExpoModulesCore (1.0.3):
     - React-Core
@@ -1313,7 +1313,7 @@ SPEC CHECKSUMS:
   Expo: dedd83acfd4d70cbec6ac2f1b4433462d95c70bc
   ExpoClipboard: 9b87df0ad145e3aa841614fab6aea54b7a604850
   ExpoHaptics: 5a56d30a87ea213dd00b09566dc4b441a4dff97f
-  ExpoLinearGradient: b40c2133ad57ae105b1b12a319e314463c817f6b
+  ExpoLinearGradient: 8eaab76b7f55c612ed8348c8be8c2a18a9b4529f
   ExpoModulesCore: b5d21c8880afda6fb6ee95469f9ac2ec9b98e995
   ExpoWebBrowser: 073e50f16669d498fb49063b9b7fe780b24f7fda
   EXScreenCapture: cbee2204f313038a1819d31ad99a31e15f8e0f59
