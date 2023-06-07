@@ -1,112 +1,17 @@
-diff --git a/node_modules/@uniswap/default-token-list/README.md b/node_modules/@uniswap/default-token-list/README.md
-index 3d70ac3..eecc646 100644
---- a/node_modules/@uniswap/default-token-list/README.md
-+++ b/node_modules/@uniswap/default-token-list/README.md
-@@ -15,4 +15,3 @@ To request that we add a token to the list,
- Note filing an issue does not guarantee addition to this default token list.
- We do not review token addition requests in any particular order, and we do not
- guarantee that we will review your request to add the token to the default list.
--
 diff --git a/node_modules/@uniswap/default-token-list/build/uniswap-default.tokenlist.json b/node_modules/@uniswap/default-token-list/build/uniswap-default.tokenlist.json
-index 3aa9ec6..77261ce 100644
+index ff79fb0..d4f6d9a 100644
 --- a/node_modules/@uniswap/default-token-list/build/uniswap-default.tokenlist.json
 +++ b/node_modules/@uniswap/default-token-list/build/uniswap-default.tokenlist.json
-@@ -1,10 +1,10 @@
- {
-   "name": "Uniswap Default List",
--  "timestamp": "2020-09-17T00:12:46.685Z",
-+  "timestamp": "2020-08-25T15:41:29.665Z",
-   "version": {
-     "major": 1,
--    "minor": 5,
--    "patch": 0
-+    "minor": 3,
-+    "patch": 1
-   },
-   "tags": {},
-   "logoURI": "ipfs://QmNa8mQkrNKp1WEEeGjFezDmDeodkWRevGFN8JCV7b4Xir",
-@@ -909,14 +909,6 @@
-       "chainId": 1,
-       "logoURI": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x04Fa0d235C4abf4BcF4787aF4CF447DE572eF828/logo.png"
-     },
--    {
--      "name": "Uniswap",
--      "address": "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984",
--      "symbol": "UNI",
--      "decimals": 18,
--      "chainId": 1,
--      "logoURI": "ipfs://QmXttGpZrECX5qCyXbBQiqgQNytVGeZW5Anewvh2jc4psg"
--    },
-     {
-       "name": "PieDAO USD++",
-       "address": "0x9A48BD0EC040ea4f1D3147C025cd4076A2e71e3e",
-@@ -1021,14 +1013,6 @@
-       "chainId": 3,
-       "logoURI": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xaD6D458402F60fD3Bd25163575031ACDce07538D/logo.png"
-     },
--    {
--      "name": "Uniswap",
--      "address": "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984",
--      "symbol": "UNI",
--      "decimals": 18,
--      "chainId": 3,
--      "logoURI": "ipfs://QmXttGpZrECX5qCyXbBQiqgQNytVGeZW5Anewvh2jc4psg"
--    },
-     {
-       "name": "Wrapped Ether",
-       "address": "0xc778417E063141139Fce010982780140Aa0cD5Ab",
-@@ -1053,14 +1037,6 @@
-       "chainId": 4,
-       "logoURI": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85/logo.png"
-     },
--    {
--      "name": "Uniswap",
--      "address": "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984",
--      "symbol": "UNI",
--      "decimals": 18,
--      "chainId": 4,
--      "logoURI": "ipfs://QmXttGpZrECX5qCyXbBQiqgQNytVGeZW5Anewvh2jc4psg"
--    },
-     {
-       "name": "Wrapped Ether",
-       "address": "0xc778417E063141139Fce010982780140Aa0cD5Ab",
-@@ -1069,14 +1045,6 @@
-       "chainId": 4,
-       "logoURI": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xc778417E063141139Fce010982780140Aa0cD5Ab/logo.png"
-     },
--    {
--      "name": "Uniswap",
--      "address": "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984",
--      "symbol": "UNI",
--      "decimals": 18,
--      "chainId": 5,
--      "logoURI": "ipfs://QmXttGpZrECX5qCyXbBQiqgQNytVGeZW5Anewvh2jc4psg"
--    },
-     {
-       "name": "Wrapped Ether",
-       "address": "0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6",
-@@ -1102,19 +1070,51 @@
-       "logoURI": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xAaF64BFCC32d0F15873a02163e7E500671a4ffcD/logo.png"
-     },
-     {
--      "name": "Uniswap",
--      "address": "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984",
--      "symbol": "UNI",
-+      "name": "Wrapped Ether",
-+      "address": "0xd0A1E359811322d97991E03f863a0C30C2cF029C",
-+      "symbol": "WETH",
+@@ -1076,6 +1076,54 @@
        "decimals": 18,
        "chainId": 42,
--      "logoURI": "ipfs://QmXttGpZrECX5qCyXbBQiqgQNytVGeZW5Anewvh2jc4psg"
-+      "logoURI": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xd0A1E359811322d97991E03f863a0C30C2cF029C/logo.png"
-     },
-     {
-       "name": "Wrapped Ether",
--      "address": "0xd0A1E359811322d97991E03f863a0C30C2cF029C",
+       "logoURI": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xd0A1E359811322d97991E03f863a0C30C2cF029C/logo.png"
++    },
++    {
++      "name": "Wrapped Ether",
 +      "address": "0xEEbdC6192cB8CD9E27D880Fa0dcEC11a2B407B0C",
-       "symbol": "WETH",
-       "decimals": 18,
--      "chainId": 42,
++      "symbol": "WETH",
++      "decimals": 18,
 +      "chainId": 11155111,
 +      "logoURI": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xd0A1E359811322d97991E03f863a0C30C2cF029C/logo.png"
 +    },
@@ -136,10 +41,20 @@ index 3aa9ec6..77261ce 100644
 +    },
 +    {
 +      "name": "Wrapped Ether",
++      "address": "0xEAC2Bd4753C659c909C92F62b3b3A8836C2bd86c",
++      "symbol": "WETH",
++      "decimals": 18,
++      "chainId": 167004,
++      "logoURI": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xd0A1E359811322d97991E03f863a0C30C2cF029C/logo.png"
++    },
++    {
++      "name": "Wrapped Ether",
 +      "address": "0x1017F42D1D3E7D490eA3CC4C95591c339ba71AC5",
 +      "symbol": "WETH",
 +      "decimals": 18,
 +      "chainId": 167005,
-       "logoURI": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xd0A1E359811322d97991E03f863a0C30C2cF029C/logo.png"
++      "logoURI": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xd0A1E359811322d97991E03f863a0C30C2cF029C/logo.png"
      }
    ]
+ }
+\ No newline at end of file
