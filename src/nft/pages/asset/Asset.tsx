@@ -44,11 +44,10 @@ const AssetPage = () => {
 
   const [asset, collection] = data
 
-  //set collectionDescription to either the first 160 characters (less if less than 160 characters) or the empty string
   const collectionDescription =
-    (collection && collection?.collectionDescription?.length && collection?.collectionDescription?.length > 160
-      ? collection?.collectionDescription?.substring(0, 160)
-      : collection?.collectionDescription) || ''
+    (collection && collection?.collectionDescription?.length && collection?.collectionDescription?.length > 150
+      ? collection?.collectionDescription?.substring(0, 150) + '...'
+      : collection?.collectionDescription) + '...' || ''
 
   if (loading && !detailsV2Enabled) return <AssetDetailsLoading />
   return (
