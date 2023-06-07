@@ -1,6 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { PAGE_SIZE, useTopTokens } from 'graphql/data/TopTokens'
 import { validateUrlChainParam } from 'graphql/data/util'
+import { useNewTopTokens } from 'graphql/tokens/NewTopTokens'
 import { ReactNode } from 'react'
 import { AlertTriangle } from 'react-feather'
 import { useParams } from 'react-router-dom'
@@ -77,10 +78,12 @@ export default function TokenTable() {
   const chainName = validateUrlChainParam(useParams<{ chainName?: string }>().chainName)
   const { tokens, tokenSortRank, loadingTokens, sparklines } = useTopTokens(chainName)
 
+  const { loading, error, tokens: newTokens } = useNewTopTokens()
+
   /* loading and error state */
-  if (loadingTokens && !tokens) {
+  if (loading && !newTokens) {
     return <LoadingTokenTable rowCount={PAGE_SIZE} />
-  } else if (!tokens) {
+  } else if (!newTokens) {
     return (
       <NoTokensState
         message={
@@ -91,23 +94,23 @@ export default function TokenTable() {
         }
       />
     )
-  } else if (tokens?.length === 0) {
+  } else if (newTokens.length === 0) {
     return <NoTokensState message={<Trans>No tokens found</Trans>} />
   } else {
     return (
       <GridContainer>
         <HeaderRow />
         <TokenDataContainer>
-          {tokens.map(
+          {newTokens.map(
             (token, index) =>
-              token?.address && (
+              token?.id && (
                 <LoadedRow
-                  key={token.address}
+                  key={token.id}
                   tokenListIndex={index}
-                  tokenListLength={tokens.length}
+                  tokenListLength={newTokens.length}
                   token={token}
                   sparklineMap={sparklines}
-                  sortRank={tokenSortRank[token.address]}
+                  sortRank={tokenSortRank[token.id]}
                 />
               )
           )}

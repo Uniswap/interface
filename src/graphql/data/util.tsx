@@ -64,8 +64,8 @@ export const CHAIN_ID_TO_BACKEND_NAME: { [key: number]: Chain } = {
   // [SupportedChainId.CELO_ALFAJORES]: Chain.Celo,
   // [SupportedChainId.ARBITRUM_ONE]: Chain.Arbitrum,
   // [SupportedChainId.ARBITRUM_GOERLI]: Chain.Arbitrum,
-  [SupportedChainId.ROLLUX]: Chain.Optimism,
-  [SupportedChainId.ROLLUX_TANENBAUM]: Chain.Optimism,
+  [SupportedChainId.ROLLUX]: Chain.Rollux,
+  [SupportedChainId.ROLLUX_TANENBAUM]: Chain.Rollux,
   // [SupportedChainId.BNB]: Chain.Bnb,
 }
 
@@ -128,6 +128,7 @@ export const CHAIN_NAME_TO_CHAIN_ID: { [key in Chain]: SupportedChainId } = {
   [Chain.Arbitrum]: SupportedChainId.ROLLUX,
   [Chain.UnknownChain]: SupportedChainId.ROLLUX,
   [Chain.Bnb]: SupportedChainId.ROLLUX,
+  [Chain.Rollux]: SupportedChainId.ROLLUX,
 }
 
 export function fromGraphQLChain(chain: Chain): SupportedChainId {
