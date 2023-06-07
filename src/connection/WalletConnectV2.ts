@@ -1,8 +1,6 @@
 import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { WalletConnect, WalletConnectConstructorArgs } from '@web3-react/walletconnect-v2'
-import { SupportedChainId } from 'constants/chains'
-import { L1_CHAIN_IDS } from 'constants/chains'
-import { L2_CHAIN_IDS } from 'constants/chains'
+import { L1_CHAIN_IDS, L2_CHAIN_IDS, SupportedChainId } from 'constants/chains'
 import { Z_INDEX } from 'theme/zIndex'
 
 import { RPC_URLS } from '../constants/networks'
