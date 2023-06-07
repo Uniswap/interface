@@ -33,7 +33,7 @@ export const injected = new InjectedConnector({
 // mainnet only
 export const walletconnect = new WalletConnectConnector({
   rpc: {
-    167005: 'https://rpc.test.taiko.xyz/'
+    [NETWORK_CHAIN_ID]: NETWORK_URL
   },
   bridge: 'https://bridge.walletconnect.org',
   qrcode: true,
