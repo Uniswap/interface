@@ -114,22 +114,29 @@ export function useDerivedSwapInfo(
     [inputCurrency, isExactIn, outputCurrency, typedValue]
   )
 
-  const trade = useBestTrade(
+  let trade = useBestTrade(
     isExactIn ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT,
     parsedAmount,
     (isExactIn ? outputCurrency : inputCurrency) ?? undefined
   )
 
-  useEffect(() => {
+  const nextPreviouslyInvalid = (() => {
     if (trade.state === TradeState.INVALID) {
-      setPreviouslyInvalid(true)
+      return true
     } else if (trade.state !== TradeState.LOADING) {
-      setPreviouslyInvalid(false)
+      return false
     }
-  }, [trade.state])
+    return undefined
+  })()
+  if (typeof nextPreviouslyInvalid === 'boolean' && nextPreviouslyInvalid !== previouslyInvalid) {
+    setPreviouslyInvalid(nextPreviouslyInvalid)
+  }
 
   if (trade.state == TradeState.LOADING && previouslyInvalid) {
-    trade.trade = undefined
+    trade = {
+      ...trade,
+      trade: undefined,
+    }
   }
 
   const currencyBalances = useMemo(
