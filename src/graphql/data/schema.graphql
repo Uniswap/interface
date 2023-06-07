@@ -126,6 +126,7 @@ enum Chain {
   POLYGON
   CELO
   BNB
+  ROLLUX
   UNKNOWN_CHAIN
 }
 
@@ -630,6 +631,23 @@ type Portfolio {
   assetActivities(page: Int, pageSize: Int, includeOffChain: Boolean, _fs: String): [AssetActivity]
 }
 
+type TokenHourData @entity {
+  id: ID!
+  periodStartUnix: Int!
+  token: Token!
+  volume: Int!
+  volumeUSD: Int!
+  untrackedVolumeUSD: Int!
+  totalValueLocked: Int!
+  totalValueLockedUSD: Int!
+  priceUSD: Int!
+  feesUSD: Int!
+  open: Int!
+  high: Int!
+  low: Int!
+  close: Int!
+}
+
 type Query {
   tokens(contracts: [ContractInput!]!, _fs: String): [Token]
   token(chain: Chain!, address: String, _fs: String): Token
@@ -646,6 +664,7 @@ type Query {
   nftBalances(chain: Chain, ownerAddress: String!, filter: NftBalancesFilterInput, after: String, first: Int, before: String, last: Int, _fs: String): NftBalanceConnection
   nftRoute(chain: Chain, senderAddress: String!, nftTrades: [NftTradeInput!]!, tokenTrades: [TokenTradeInput!]): NftRouteResponse
   nftActivity(chain: Chain, filter: NftActivityFilterInput, after: String, first: Int, _fs: String): NftActivityConnection
+  tokenHourDatas(startTime: Int!, skip: Int!, address: String!): TokenHourData
 }
 
 enum SafetyLevel {
