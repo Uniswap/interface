@@ -26,10 +26,10 @@ const ZOOM_LEVELS: Record<FeeAmount, ZoomLevels> = {
     max: 1.5,
   },
   [FeeAmount.LOW]: {
-    initialMin: 0.999,
-    initialMax: 1.001,
+    initialMin: 0.6666,
+    initialMax: 1.5,
     min: 0.00001,
-    max: 1.5,
+    max: 20,
   },
   [FeeAmount.MEDIUM]: {
     initialMin: 0.5,
