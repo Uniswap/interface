@@ -1,4 +1,4 @@
-import { isAddress, shortenAddressIfValid } from './addresses'
+import { isAddress, shortenAddressStrict } from './addresses'
 
 describe('utils', () => {
   describe('#isAddress', () => {
@@ -23,21 +23,21 @@ describe('utils', () => {
     })
   })
 
-  describe('#shortenAddressIfValid', () => {
+  describe('#shortenAddressStrict', () => {
     it('throws on invalid address', () => {
-      expect(() => shortenAddressIfValid('abc')).toThrow("Invalid 'address'")
+      expect(() => shortenAddressStrict('abc')).toThrow("Invalid 'address'")
     })
 
     it('truncates middle characters', () => {
-      expect(shortenAddressIfValid('0xf164fc0ec4e93095b804a4795bbe1e041497b92a')).toBe('0xf164...b92a')
+      expect(shortenAddressStrict('0xf164fc0ec4e93095b804a4795bbe1e041497b92a')).toBe('0xf164...b92a')
     })
 
     it('truncates middle characters even without prefix', () => {
-      expect(shortenAddressIfValid('f164fc0ec4e93095b804a4795bbe1e041497b92a')).toBe('0xf164...b92a')
+      expect(shortenAddressStrict('f164fc0ec4e93095b804a4795bbe1e041497b92a')).toBe('0xf164...b92a')
     })
 
     it('renders checksummed address', () => {
-      expect(shortenAddressIfValid('0x2E1b342132A67Ea578e4E3B814bae2107dc254CC'.toLowerCase())).toBe('0x2E1b...54CC')
+      expect(shortenAddressStrict('0x2E1b342132A67Ea578e4E3B814bae2107dc254CC'.toLowerCase())).toBe('0x2E1b...54CC')
     })
   })
 })
