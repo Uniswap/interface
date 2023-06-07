@@ -1,4 +1,5 @@
 import { parse } from 'qs'
+import { TEST_RECIPIENT_ADDRESS } from 'test-utils/constants'
 
 import { Field } from './actions'
 import { queryParametersToSwapState } from './hooks'
@@ -65,7 +66,7 @@ describe('hooks', () => {
     test('valid recipient', () => {
       expect(
         queryParametersToSwapState(
-          parse('?outputCurrency=eth&exactAmount=20.5&recipient=0x0fF2D1eFd7A57B7562b2bf27F3f37899dB27F4a5', {
+          parse(`?outputCurrency=eth&exactAmount=20.5&recipient=${TEST_RECIPIENT_ADDRESS}`, {
             parseArrays: false,
             ignoreQueryPrefix: true,
           })
@@ -75,7 +76,7 @@ describe('hooks', () => {
         [Field.INPUT]: { currencyId: null },
         typedValue: '20.5',
         independentField: Field.INPUT,
-        recipient: '0x0fF2D1eFd7A57B7562b2bf27F3f37899dB27F4a5',
+        recipient: TEST_RECIPIENT_ADDRESS,
       })
     })
     test('accepts any recipient', () => {

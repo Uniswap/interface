@@ -27,21 +27,26 @@ export function useV3PositionFees(
   // latestBlockNumber is included to ensure data stays up-to-date every block
   const [amounts, setAmounts] = useState<[BigNumber, BigNumber] | undefined>()
   useEffect(() => {
-    if (positionManager && tokenIdHexString && owner) {
-      positionManager.callStatic
-        .collect(
-          {
-            tokenId: tokenIdHexString,
-            recipient: owner, // some tokens might fail if transferred to address(0)
-            amount0Max: MAX_UINT128,
-            amount1Max: MAX_UINT128,
-          },
-          { from: owner } // need to simulate the call as the owner
-        )
-        .then((results) => {
+    ;(async function getFees() {
+      if (positionManager && tokenIdHexString && owner) {
+        try {
+          const results = await positionManager.callStatic.collect(
+            {
+              tokenId: tokenIdHexString,
+              recipient: owner, // some tokens might fail if transferred to address(0)
+              amount0Max: MAX_UINT128,
+              amount1Max: MAX_UINT128,
+            },
+            { from: owner } // need to simulate the call as the owner
+          )
           setAmounts([results.amount0, results.amount1])
-        })
-    }
+        } catch {
+          // If the static call fails, the default state will remain for `amounts`.
+          // This case is handled by returning unclaimed fees as empty.
+          // TODO(INFRA-178): Look into why we have failures with call data being 0x.
+        }
+      }
+    })()
   }, [positionManager, tokenIdHexString, owner, latestBlockNumber])
 
   if (pool && amounts) {

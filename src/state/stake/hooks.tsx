@@ -1,5 +1,5 @@
 import { Interface } from '@ethersproject/abi'
-import { abi as STAKING_REWARDS_ABI } from '@uniswap/liquidity-staker/build/StakingRewards.json'
+import StakingRewardsJSON from '@uniswap/liquidity-staker/build/StakingRewards.json'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { useWeb3React } from '@web3-react/core'
@@ -11,7 +11,7 @@ import { useMemo } from 'react'
 
 import { DAI, UNI, USDC_MAINNET, USDT, WBTC, WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
 
-const STAKING_REWARDS_INTERFACE = new Interface(STAKING_REWARDS_ABI)
+const STAKING_REWARDS_INTERFACE = new Interface(StakingRewardsJSON.abi)
 
 export const STAKING_GENESIS = 1600387200
 
@@ -58,7 +58,7 @@ interface StakingInfo {
   // equivalent to percent of total supply * reward rate
   rewardRate: CurrencyAmount<Token>
   // when the period ends
-  periodFinish: Date | undefined
+  periodFinish?: Date
   // if pool is active
   active: boolean
   // calculates a hypothetical amount of token distributed to the active account per second.

@@ -1,6 +1,5 @@
-import styled, { DefaultTheme } from 'styled-components/macro'
-
-type Gap = keyof DefaultTheme['grids']
+import styled from 'styled-components/macro'
+import { Gap } from 'theme'
 
 export const Column = styled.div<{
   gap?: Gap

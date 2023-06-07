@@ -1,8 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
-import NewBadge from 'components/WalletModal/NewBadge'
+import { useAccountDrawer } from 'components/AccountDrawer'
 import Web3Status from 'components/Web3Status'
-import { useMGTMMicrositeEnabled } from 'featureFlags/flags/mgtm'
 import { chainIdToBackendName } from 'graphql/data/util'
 import { useIsNftPage } from 'hooks/useIsNftPage'
 import { useIsPoolsPage } from 'hooks/useIsPoolsPage'
@@ -12,11 +11,12 @@ import { Row } from 'nft/components/Flex'
 import { UniIcon } from 'nft/components/icons'
 import { useProfilePageState } from 'nft/hooks'
 import { ProfilePageStateType } from 'nft/types'
-import { ReactNode } from 'react'
+import { ReactNode, useCallback } from 'react'
 import { NavLink, NavLinkProps, useLocation, useNavigate } from 'react-router-dom'
 import { shouldDisableNFTRoutesAtom } from 'state/application/atoms'
 import styled from 'styled-components/macro'
 
+import { useIsNavSearchInputVisible } from '../../nft/hooks/useIsNavSearchInputVisible'
 import { Bag } from './Bag'
 import Blur from './Blur'
 import { ChainSelector } from './ChainSelector'
@@ -25,7 +25,7 @@ import { SearchBar } from './SearchBar'
 import * as styles from './style.css'
 
 const Nav = styled.nav`
-  padding: 20px 12px;
+  padding: ${({ theme }) => `${theme.navVerticalPad}px 12px`};
   width: 100%;
   height: ${({ theme }) => theme.navHeight}px;
   z-index: 2;
@@ -60,7 +60,6 @@ export const PageTabs = () => {
 
   const isPoolActive = useIsPoolsPage()
   const isNftPage = useIsNftPage()
-  const micrositeEnabled = useMGTMMicrositeEnabled()
 
   const shouldDisableNFTRoutes = useAtomValue(shouldDisableNFTRoutesAtom)
 
@@ -82,14 +81,6 @@ export const PageTabs = () => {
           <Trans>Pools</Trans>
         </MenuItem>
       </Box>
-      {micrositeEnabled && (
-        <Box display={{ sm: 'none', xxxl: 'flex' }}>
-          <MenuItem href="/wallet" isActive={pathname.startsWith('/wallet')}>
-            <Trans>Wallet</Trans>
-            <NewBadge />
-          </MenuItem>
-        </Box>
-      )}
       <Box marginY={{ sm: '4', md: 'unset' }}>
         <MenuDropdown />
       </Box>
@@ -101,6 +92,19 @@ const Navbar = ({ blur }: { blur: boolean }) => {
   const isNftPage = useIsNftPage()
   const sellPageState = useProfilePageState((state) => state.state)
   const navigate = useNavigate()
+  const isNavSearchInputVisible = useIsNavSearchInputVisible()
+
+  const [accountDrawerOpen, toggleAccountDrawer] = useAccountDrawer()
+
+  const handleUniIconClick = useCallback(() => {
+    if (accountDrawerOpen) {
+      toggleAccountDrawer()
+    }
+    navigate({
+      pathname: '/',
+      search: '?intro=true',
+    })
+  }, [accountDrawerOpen, navigate, toggleAccountDrawer])
 
   return (
     <>
@@ -114,12 +118,7 @@ const Navbar = ({ blur }: { blur: boolean }) => {
                 height="48"
                 data-testid="uniswap-logo"
                 className={styles.logo}
-                onClick={() => {
-                  navigate({
-                    pathname: '/',
-                    search: '?intro=true',
-                  })
-                }}
+                onClick={handleUniIconClick}
               />
             </Box>
             {!isNftPage && (
@@ -131,12 +130,17 @@ const Navbar = ({ blur }: { blur: boolean }) => {
               <PageTabs />
             </Row>
           </Box>
-          <Box className={styles.searchContainer}>
+          <Box
+            className={styles.searchContainer}
+            {...(isNavSearchInputVisible && {
+              display: 'flex',
+            })}
+          >
             <SearchBar />
           </Box>
           <Box className={styles.rightSideContainer}>
             <Row gap="12">
-              <Box position="relative" display={{ sm: 'flex', navSearchInputVisible: 'none' }}>
+              <Box position="relative" display={isNavSearchInputVisible ? 'none' : { sm: 'flex' }}>
                 <SearchBar />
               </Box>
               {isNftPage && sellPageState !== ProfilePageStateType.LISTING && <Bag />}

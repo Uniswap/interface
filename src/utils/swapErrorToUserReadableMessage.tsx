@@ -1,5 +1,7 @@
 import { t } from '@lingui/macro'
 
+import { UserRejectedRequestError } from './errors'
+
 function getReason(error: any): string | undefined {
   let reason: string | undefined
   while (error) {
@@ -26,7 +28,8 @@ export function didUserReject(error: any): boolean {
     // For Coinbase:
     reason?.match(/user denied/i) ||
     // For Fireblocks
-    reason?.match(/user rejected/i)
+    reason?.match(/user rejected/i) ||
+    error instanceof UserRejectedRequestError
   ) {
     return true
   }
@@ -69,7 +72,7 @@ export function swapErrorToUserReadableMessage(error: any): string {
         console.error(error, reason)
         return t`An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3.`
       }
-      return t`${reason ? reason : 'Unknown error'}. Try increasing your slippage tolerance.
+      return t`${reason ? reason : 'Unknown error.'} Try increasing your slippage tolerance.
 Note: fee-on-transfer and rebase tokens are incompatible with Uniswap V3.`
   }
 }

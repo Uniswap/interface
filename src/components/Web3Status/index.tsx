@@ -2,19 +2,18 @@ import { Trans } from '@lingui/macro'
 import { sendAnalyticsEvent, TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
+import PortfolioDrawer, { useAccountDrawer } from 'components/AccountDrawer'
+import PrefetchBalancesWrapper from 'components/AccountDrawer/PrefetchBalancesWrapper'
 import Loader from 'components/Icons/LoadingSpinner'
 import { IconWrapper } from 'components/Identicon/StatusIcon'
-import WalletDropdown, { useWalletDrawer } from 'components/WalletDropdown'
-import PrefetchBalancesWrapper from 'components/WalletDropdown/PrefetchBalancesWrapper'
 import { useGetConnection } from 'connection'
+import { navSearchInputVisibleSize } from 'hooks/useScreenSize'
 import { Portal } from 'nft/components/common/Portal'
 import { useIsNftClaimAvailable } from 'nft/hooks/useIsNftClaimAvailable'
-import { getIsValidSwapQuote } from 'pages/Swap'
 import { darken } from 'polished'
 import { useCallback, useMemo } from 'react'
 import { AlertTriangle } from 'react-feather'
 import { useAppSelector } from 'state/hooks'
-import { useDerivedSwapInfo } from 'state/swap/hooks'
 import styled from 'styled-components/macro'
 import { colors } from 'theme/colors'
 import { flexRowNoWrap } from 'theme/styles'
@@ -109,7 +108,7 @@ const Web3StatusConnected = styled(Web3StatusGeneric)<{
 const AddressAndChevronContainer = styled.div`
   display: flex;
 
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.navSearchInputVisible}px`}) {
+  @media only screen and (max-width: ${navSearchInputVisibleSize}px) {
     display: none;
   }
 `
@@ -153,16 +152,11 @@ function Web3StatusInner() {
   const { account, connector, chainId, ENSName } = useWeb3React()
   const getConnection = useGetConnection()
   const connection = getConnection(connector)
-  const {
-    trade: { state: tradeState, trade },
-    inputError: swapInputError,
-  } = useDerivedSwapInfo()
-  const validSwapQuote = getIsValidSwapQuote(trade, tradeState, swapInputError)
-  const [, toggleWalletDrawer] = useWalletDrawer()
+  const [, toggleAccountDrawer] = useAccountDrawer()
   const handleWalletDropdownClick = useCallback(() => {
     sendAnalyticsEvent(InterfaceEventName.ACCOUNT_DROPDOWN_BUTTON_CLICKED)
-    toggleWalletDrawer()
-  }, [toggleWalletDrawer])
+    toggleAccountDrawer()
+  }, [toggleAccountDrawer])
   const isClaimAvailable = useIsNftClaimAvailable((state) => state.isClaimAvailable)
 
   const error = useAppSelector((state) => state.connection.errorByConnectionType[getConnection(connector).type])
@@ -223,7 +217,6 @@ function Web3StatusInner() {
       <TraceEvent
         events={[BrowserEvent.onClick]}
         name={InterfaceEventName.CONNECT_WALLET_BUTTON_CLICKED}
-        properties={{ received_swap_quote: validSwapQuote }}
         element={InterfaceElementName.CONNECT_WALLET_BUTTON}
       >
         <Web3StatusConnectWrapper
@@ -241,13 +234,12 @@ function Web3StatusInner() {
   }
 }
 
-// eslint-disable-next-line import/no-unused-modules
 export default function Web3Status() {
   return (
     <PrefetchBalancesWrapper>
       <Web3StatusInner />
       <Portal>
-        <WalletDropdown />
+        <PortfolioDrawer />
       </Portal>
     </PrefetchBalancesWrapper>
   )

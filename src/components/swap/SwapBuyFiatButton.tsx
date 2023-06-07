@@ -1,8 +1,10 @@
 import { Trans } from '@lingui/macro'
+import { TraceEvent } from '@uniswap/analytics'
+import { BrowserEvent, InterfaceElementName, SharedEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
+import { useAccountDrawer } from 'components/AccountDrawer'
 import { ButtonText } from 'components/Button'
-import { MouseoverTooltipContent } from 'components/Tooltip'
-import { useWalletDrawer } from 'components/WalletDropdown'
+import { MouseoverTooltip } from 'components/Tooltip'
 import { useCallback, useEffect, useState } from 'react'
 import { useBuyFiatFlowCompleted } from 'state/user/hooks'
 import styled from 'styled-components/macro'
@@ -52,18 +54,16 @@ export default function SwapBuyFiatButton() {
     loading: fiatOnrampAvailabilityLoading,
   } = useFiatOnrampAvailability(checkFiatRegionAvailability)
   const [buyFiatFlowState, setBuyFiatFlowState] = useState(BuyFiatFlowState.INACTIVE)
-  const [walletDrawerOpen, toggleWalletDrawer] = useWalletDrawer()
+  const [walletDrawerOpen, toggleWalletDrawer] = useAccountDrawer()
 
-  /*
-   * Depending on the current state of the buy fiat flow the user is in (buyFiatFlowState),
-   * the desired behavior of clicking the 'Buy' button is different.
-   * 1) Initially upon first click, need to check the availability of the feature in the user's
-   * region, and continue the flow.
-   * 2) If the feature is available in the user's region, need to connect a wallet, and continue
-   * the flow.
-   * 3) If the feature is available and a wallet account is connected, show fiat on ramp modal.
-   * 4) If the feature is unavailable, show feature unavailable tooltip.
-   */
+  // Depending on the current state of the buy fiat flow the user is in (buyFiatFlowState),
+  // the desired behavior of clicking the 'Buy' button is different.
+  // 1) Initially upon first click, need to check the availability of the feature in the user's
+  // region, and continue the flow.
+  // 2) If the feature is available in the user's region, need to connect a wallet, and continue
+  // the flow.
+  // 3) If the feature is available and a wallet account is connected, show fiat on ramp modal.
+  // 4) If the feature is unavailable, show feature unavailable tooltip.
   const handleBuyCrypto = useCallback(() => {
     if (!fiatOnrampAvailabilityChecked) {
       setCheckFiatRegionAvailability(true)
@@ -109,23 +109,35 @@ export default function SwapBuyFiatButton() {
     !fiatOnrampAvailabilityChecked || (fiatOnrampAvailabilityChecked && fiatOnrampAvailable)
 
   return (
-    <MouseoverTooltipContent
-      wrap
-      content={
+    <MouseoverTooltip
+      text={
         <div data-testid="fiat-on-ramp-unavailable-tooltip">
           <Trans>Crypto purchases are not available in your region. </Trans>
-          <ExternalLink href={MOONPAY_REGION_AVAILABILITY_ARTICLE} style={{ paddingLeft: '4px' }}>
-            <Trans>Learn more</Trans>
-          </ExternalLink>
+          <TraceEvent
+            events={[BrowserEvent.onClick]}
+            name={SharedEventName.ELEMENT_CLICKED}
+            element={InterfaceElementName.FIAT_ON_RAMP_LEARN_MORE_LINK}
+          >
+            <ExternalLink href={MOONPAY_REGION_AVAILABILITY_ARTICLE} style={{ paddingLeft: '4px' }}>
+              <Trans>Learn more</Trans>
+            </ExternalLink>
+          </TraceEvent>
         </div>
       }
       placement="bottom"
-      disableHover={fiatOnRampsUnavailableTooltipDisabled}
+      disabled={fiatOnRampsUnavailableTooltipDisabled}
     >
-      <StyledTextButton onClick={handleBuyCrypto} disabled={buyCryptoButtonDisabled} data-testid="buy-fiat-button">
-        <Trans>Buy</Trans>
-        {!buyFiatFlowCompleted && <Dot data-testid="buy-fiat-flow-incomplete-indicator" />}
-      </StyledTextButton>
-    </MouseoverTooltipContent>
+      <TraceEvent
+        events={[BrowserEvent.onClick]}
+        name={SharedEventName.ELEMENT_CLICKED}
+        element={InterfaceElementName.FIAT_ON_RAMP_BUY_BUTTON}
+        properties={{ account_connected: !!account }}
+      >
+        <StyledTextButton onClick={handleBuyCrypto} disabled={buyCryptoButtonDisabled} data-testid="buy-fiat-button">
+          <Trans>Buy</Trans>
+          {!buyFiatFlowCompleted && <Dot data-testid="buy-fiat-flow-incomplete-indicator" />}
+        </StyledTextButton>
+      </TraceEvent>
+    </MouseoverTooltip>
   )
 }

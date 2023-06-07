@@ -2,8 +2,11 @@ import '@sentry/tracing' // required to populate Sentry.startTransaction, which 
 
 import * as Sentry from '@sentry/react'
 import { Transaction } from '@sentry/tracing'
+import { ErrorEvent, EventHint } from '@sentry/types'
 import assert from 'assert'
+import { mocked } from 'test-utils/mocked'
 
+import { beforeSend } from './errors'
 import { trace } from './trace'
 
 jest.mock('@sentry/react', () => {
@@ -11,10 +14,9 @@ jest.mock('@sentry/react', () => {
     startTransaction: jest.fn(),
   }
 })
-const startTransaction = Sentry.startTransaction as jest.Mock
 
 function getTransaction(index = 0): Transaction {
-  const transactions = startTransaction.mock.results.map(({ value }) => value)
+  const transactions = mocked(Sentry.startTransaction).mock.results.map(({ value }) => value)
   expect(transactions).toHaveLength(index + 1)
   const transaction = transactions[index]
   expect(transaction).toBeDefined()
@@ -23,9 +25,8 @@ function getTransaction(index = 0): Transaction {
 
 describe('trace', () => {
   beforeEach(() => {
-    const Sentry = jest.requireActual('@sentry/react')
-    startTransaction.mockReset().mockImplementation((context) => {
-      const transaction: Transaction = Sentry.startTransaction(context)
+    mocked(Sentry.startTransaction).mockImplementation((context) => {
+      const transaction: Transaction = jest.requireActual('@sentry/react').startTransaction(context)
       transaction.initSpanRecorder()
       return transaction
     })
@@ -37,12 +38,13 @@ describe('trace', () => {
   })
 
   it('records transaction', async () => {
-    const metadata = { data: { a: 'a', b: 2 }, tags: { is_widget: true } }
+    const metadata = { data: { a: 'a', b: 2 }, tags: { test_tag: true } }
+    // @ts-ignore test_tag is not an expected key for `tags` but force it for testing purposes
     await trace('test', () => Promise.resolve(), metadata)
     const transaction = getTransaction()
     expect(transaction.name).toBe('test')
     expect(transaction.data).toEqual({ a: 'a', b: 2 })
-    expect(transaction.tags).toEqual({ is_widget: true })
+    expect(transaction.tags).toEqual({ test_tag: true })
   })
 
   describe('defaults status', () => {
@@ -76,11 +78,47 @@ describe('trace', () => {
   describe('setTraceTag', () => {
     it('sets a transaction tag', async () => {
       await trace('test', ({ setTraceTag }) => {
-        setTraceTag('is_widget', true)
+        // @ts-ignore test_tag is not an expected key for `tags` but force it for testing purposes
+        setTraceTag('test_tag', true)
         return Promise.resolve()
       })
       const transaction = getTransaction()
-      expect(transaction.tags).toEqual({ is_widget: true })
+      expect(transaction.tags).toEqual({ test_tag: true })
+    })
+  })
+
+  describe('beforeSend', () => {
+    it('handles no path', async () => {
+      const errorEvent: ErrorEvent = {
+        type: undefined,
+        request: {
+          url: 'https://app.uniswap.org',
+        },
+      }
+      const eventHint: EventHint = {}
+      expect((beforeSend(errorEvent, eventHint) as ErrorEvent)?.request?.url).toEqual('https://app.uniswap.org')
+    })
+
+    it('handles hash with path', async () => {
+      const errorEvent: ErrorEvent = {
+        type: undefined,
+        request: {
+          url: 'https://app.uniswap.org/#/pools',
+        },
+      }
+      const eventHint: EventHint = {}
+      expect((beforeSend(errorEvent, eventHint) as ErrorEvent)?.request?.url).toEqual('https://app.uniswap.org/pools')
+    })
+
+    it('handles just hash', async () => {
+      const errorEvent: ErrorEvent = {
+        type: undefined,
+        request: {
+          url: 'https://app.uniswap.org/#',
+        },
+      }
+      const eventHint: EventHint = {}
+      expect((beforeSend(errorEvent, eventHint) as ErrorEvent)?.request?.url).toEqual('https://app.uniswap.org')
     })
   })
 
@@ -130,7 +168,8 @@ describe('trace', () => {
   describe('traceChild', () => {
     it('starts a span under a transaction', async () => {
       await trace('test', ({ traceChild }) => {
-        traceChild('child', () => Promise.resolve(), { data: { e: 'e' }, tags: { is_widget: true } })
+        // @ts-ignore test_tag is not an expected key for `tags` but force it for testing purposes
+        traceChild('child', () => Promise.resolve(), { data: { e: 'e' }, tags: { test_tag: true } })
         return Promise.resolve()
       })
       const transaction = getTransaction()
@@ -138,7 +177,7 @@ describe('trace', () => {
       assert(span)
       expect(span.op).toBe('child')
       expect(span.data).toEqual({ e: 'e' })
-      expect(span.tags).toEqual({ is_widget: true })
+      expect(span.tags).toEqual({ test_tag: true })
     })
   })
 })

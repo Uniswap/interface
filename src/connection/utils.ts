@@ -1,3 +1,5 @@
+import { Connection, ConnectionType } from 'connection/types'
+
 export const getIsInjected = () => Boolean(window.ethereum)
 
 // When using Brave browser, `isMetaMask` is set to true when using the built-in wallet
@@ -22,6 +24,17 @@ export enum ErrorCode {
   CHAIN_NOT_ADDED = 4902,
   MM_ALREADY_PENDING = -32002,
 
+  WC_V2_MODAL_CLOSED = 'Error: Connection request reset. Please try again.',
   WC_MODAL_CLOSED = 'Error: User closed modal',
   CB_REJECTED_REQUEST = 'Error: User denied account authorization',
+}
+
+// TODO(WEB-3279): merge this function with existing didUserReject for Swap errors
+export function didUserReject(connection: Connection, error: any): boolean {
+  return (
+    error?.code === ErrorCode.USER_REJECTED_REQUEST ||
+    (connection.type === ConnectionType.WALLET_CONNECT_V2 && error?.toString?.() === ErrorCode.WC_V2_MODAL_CLOSED) ||
+    (connection.type === ConnectionType.WALLET_CONNECT && error?.toString?.() === ErrorCode.WC_MODAL_CLOSED) ||
+    (connection.type === ConnectionType.COINBASE_WALLET && error?.toString?.() === ErrorCode.CB_REJECTED_REQUEST)
+  )
 }

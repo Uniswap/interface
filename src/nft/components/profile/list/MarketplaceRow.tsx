@@ -1,17 +1,12 @@
-// eslint-disable-next-line no-restricted-imports
 import { t } from '@lingui/macro'
 import Column from 'components/Column'
 import Row from 'components/Row'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { RowsCollpsedIcon, RowsExpandedIcon } from 'nft/components/icons'
-import {
-  getMarketplaceFee,
-  getRoyalty,
-  useHandleGlobalPriceToggle,
-  useSyncPriceWithGlobalMethod,
-} from 'nft/components/profile/list/utils'
+import { getRoyalty, useHandleGlobalPriceToggle, useSyncPriceWithGlobalMethod } from 'nft/components/profile/list/utils'
 import { useSellAsset } from 'nft/hooks'
 import { ListingMarket, WalletAsset } from 'nft/types'
+import { getMarketplaceIcon } from 'nft/utils'
 import { formatEth, formatUsdPrice } from 'nft/utils/currency'
 import { fetchPrice } from 'nft/utils/fetchPrice'
 import { Dispatch, DispatchWithoutAction, useCallback, useEffect, useMemo, useReducer, useState } from 'react'
@@ -64,11 +59,10 @@ const MarketIconWrapper = styled(Column)`
   cursor: pointer;
 `
 
-const MarketIcon = styled.img<{ index: number }>`
+const MarketIcon = styled.div<{ index: number }>`
   width: 20px;
   height: 20px;
   border-radius: 4px;
-  object-fit: cover;
   z-index: ${({ index }) => 2 - index};
   margin-left: ${({ index }) => `${index === 0 ? 0 : -8}px`};
   outline: 1px solid ${({ theme }) => theme.backgroundInteractive};
@@ -154,17 +148,13 @@ export const MarketplaceRow = ({
   )
 
   const fees = useMemo(() => {
-    if (selectedMarkets.length === 1) {
-      return getRoyalty(selectedMarkets[0], asset) + getMarketplaceFee(selectedMarkets[0], asset)
-    } else {
-      let max = 0
-      for (const selectedMarket of selectedMarkets) {
-        const fee = getRoyalty(selectedMarket, asset) + getMarketplaceFee(selectedMarket, asset)
-        max = Math.max(fee, max)
-      }
-
-      return max
+    let maxFee = 0
+    for (const selectedMarket of selectedMarkets) {
+      const fee = getRoyalty(selectedMarket, asset) + selectedMarket.fee
+      maxFee = Math.max(fee, maxFee)
     }
+
+    return maxFee
   }, [asset, selectedMarkets])
 
   const feeInEth = price && (price * fees) / 100
@@ -214,7 +204,7 @@ export const MarketplaceRow = ({
                   removeMarket && removeMarket()
                 }}
               >
-                <MarketIcon alt={market.name} src={market.icon} index={index} />
+                <MarketIcon index={index}>{getMarketplaceIcon(market.name, '20')}</MarketIcon>
                 <RemoveMarketplaceWrap hovered={marketIconHovered && (expandMarketplaceRows ?? false)}>
                   <img width="20px" src="/nft/svgs/minusCircle.svg" alt="Remove item" />
                 </RemoveMarketplaceWrap>

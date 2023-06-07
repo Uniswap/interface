@@ -195,7 +195,7 @@ interface SwapCurrencyInputPanelProps {
   pair?: Pair | null
   hideInput?: boolean
   otherCurrency?: Currency | null
-  fiatValue: { data?: number; isLoading: boolean }
+  fiatValue?: { data?: number; isLoading: boolean }
   priceImpact?: Percent
   id: string
   showCommonBases?: boolean
@@ -204,6 +204,7 @@ interface SwapCurrencyInputPanelProps {
   renderBalance?: (amount: CurrencyAmount<Currency>) => ReactNode
   locked?: boolean
   loading?: boolean
+  disabled?: boolean
 }
 
 export default function SwapCurrencyInputPanel({
@@ -226,6 +227,7 @@ export default function SwapCurrencyInputPanel({
   hideInput = false,
   locked = false,
   loading = false,
+  disabled = false,
   ...rest
 }: SwapCurrencyInputPanelProps) {
   const [modalOpen, setModalOpen] = useState(false)
@@ -258,13 +260,13 @@ export default function SwapCurrencyInputPanel({
               className="token-amount-input"
               value={value}
               onUserInput={onUserInput}
-              disabled={!chainAllowed}
+              disabled={!chainAllowed || disabled}
               $loading={loading}
             />
           )}
 
           <CurrencySelect
-            disabled={!chainAllowed}
+            disabled={!chainAllowed || disabled}
             visible={currency !== undefined}
             selected={!!currency}
             hideInput={hideInput}
@@ -306,11 +308,12 @@ export default function SwapCurrencyInputPanel({
           <FiatRow>
             <RowBetween>
               <LoadingOpacityContainer $loading={loading}>
-                <FiatValue fiatValue={fiatValue} priceImpact={priceImpact} />
+                {fiatValue && <FiatValue fiatValue={fiatValue} priceImpact={priceImpact} />}
               </LoadingOpacityContainer>
               {account ? (
                 <RowFixed style={{ height: '17px' }}>
                   <ThemedText.DeprecatedBody
+                    data-testid="balance-text"
                     color={theme.textSecondary}
                     fontWeight={400}
                     fontSize={14}

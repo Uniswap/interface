@@ -1,0 +1,2318 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`data page listings table content loads with a given asset 1`] = `
+<DocumentFragment>
+  .c1 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  padding: 6px 6px 6px 0px;
+}
+
+.c2 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  padding: 6px 6px 6px 0px;
+  gap: 12px;
+}
+
+.c4 {
+  color: #7780A0;
+}
+
+.c0 {
+  margin-right: 0;
+}
+
+.c3 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+}
+
+.c5 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  -webkit-box-pack: end;
+  -webkit-justify-content: flex-end;
+  -ms-flex-pack: end;
+  justify-content: flex-end;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+}
+
+@media screen and (max-width:640px) {
+  .c3 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+  }
+}
+
+@media screen and (max-width:640px) {
+  .c5 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+  }
+}
+
+@media screen and (max-width:640px) {
+
+}
+
+@media screen and (max-width:640px) {
+
+}
+
+@media screen and (min-width:1024px) and (max-width:1279px) {
+
+}
+
+<div
+    class="c0"
+  >
+    <div
+      class="c1 c2"
+    >
+      <svg
+        fill="none"
+        height="20"
+        viewBox="0 0 20 20"
+        width="20"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M17.898 7.57097L11.7212 2.49102C10.7237 1.67268 9.27795 1.67185 8.28045 2.49102L2.10379 7.57016C1.83796 7.78932 1.79877 8.18268 2.01794 8.45018C2.2371 8.71768 2.63213 8.75437 2.89796 8.53604L3.54209 8.00605V15.0002C3.54209 17.0152 4.65209 18.1252 6.66709 18.1252H13.3338C15.3488 18.1252 16.4588 17.0152 16.4588 15.0002V8.00605L17.1029 8.53604C17.2195 8.63187 17.3604 8.67845 17.5004 8.67845C17.6804 8.67845 17.8596 8.601 17.9829 8.451C18.2029 8.1835 18.1638 7.79014 17.898 7.57097ZM15.2088 15.0002C15.2088 16.3143 14.6479 16.8752 13.3338 16.8752H6.66709C5.35292 16.8752 4.79209 16.3143 4.79209 15.0002V6.97852L9.07462 3.45771C9.61045 3.01688 10.3913 3.01688 10.9271 3.45771L15.2096 6.97934V15.0002H15.2088ZM6.45875 10.7643C6.45875 12.4493 7.82958 13.8202 9.51458 13.8202C10.1312 13.8202 10.7038 13.6335 11.1838 13.3176L12.4746 14.6085C12.5962 14.7302 12.7563 14.7918 12.9163 14.7918C13.0763 14.7918 13.2363 14.731 13.358 14.6085C13.6021 14.3644 13.6021 13.9685 13.358 13.7243L12.0663 12.4326C12.3813 11.9518 12.568 11.3794 12.568 10.7627C12.568 9.07854 11.1971 7.70688 9.51295 7.70688C7.82962 7.70854 6.45875 9.07933 6.45875 10.7643ZM11.3196 10.7643C11.3196 11.7602 10.5096 12.5702 9.51458 12.5702C8.51875 12.5702 7.70875 11.7602 7.70875 10.7643C7.70875 9.7685 8.51875 8.9585 9.51458 8.9585C10.5096 8.9585 11.3196 9.7685 11.3196 10.7643Z"
+          fill="#7780A0"
+        />
+      </svg>
+      <div
+        class="c3"
+      >
+        <div
+          class="c4 css-1aekuku"
+        >
+          Price
+        </div>
+      </div>
+      <div
+        class="c5"
+      >
+        <div
+          class="c4 css-1aekuku"
+        >
+          Expires in
+        </div>
+      </div>
+      <div
+        class="c3"
+      >
+         
+      </div>
+    </div>
+  </div>
+  .c3 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  padding: 16px 6px 16px 0px;
+}
+
+.c8 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c4 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  padding: 16px 6px 16px 0px;
+  gap: 12px;
+}
+
+.c9 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 8px;
+}
+
+.c15 {
+  color: #7780A0;
+}
+
+.c10 {
+  color: #0D111C;
+}
+
+.c5 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  color: #FB118E;
+  stroke: #FB118E;
+  font-weight: 500;
+}
+
+.c5:hover {
+  opacity: 0.6;
+}
+
+.c5:active {
+  opacity: 0.4;
+}
+
+.c0 {
+  position: relative;
+}
+
+.c1 {
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: 264px;
+  -webkit-scrollbar-width: thin;
+  -moz-scrollbar-width: thin;
+  -ms-scrollbar-width: thin;
+  scrollbar-width: thin;
+  -webkit-scrollbar-color: #D2D9EE transparent;
+  -moz-scrollbar-color: #D2D9EE transparent;
+  -ms-scrollbar-color: #D2D9EE transparent;
+  scrollbar-color: #D2D9EE transparent;
+  height: 100%;
+}
+
+.c1::-webkit-scrollbar {
+  background: transparent;
+  width: 4px;
+  overflow-y: scroll;
+}
+
+.c1::-webkit-scrollbar-thumb {
+  background: #D2D9EE;
+  border-radius: 8px;
+}
+
+.c2 {
+  border-bottom: 1px solid #D2D9EE;
+}
+
+.c2:last-child {
+  border-bottom: none;
+}
+
+.c7 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+}
+
+.c12 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  -webkit-box-pack: end;
+  -webkit-justify-content: flex-end;
+  -ms-flex-pack: end;
+  justify-content: flex-end;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+}
+
+.c13 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+}
+
+.c14 {
+  cursor: pointer;
+  white-space: nowrap;
+  -webkit-transition: opacity 250ms ease;
+  transition: opacity 250ms ease;
+}
+
+.c14:hover {
+  opacity: 0.6;
+}
+
+.c14:active {
+  opacity: 0.4;
+}
+
+.c11 {
+  color: #7780A0;
+  line-height: 20px;
+}
+
+.c6 {
+  height: 20px;
+}
+
+@media screen and (max-width:640px) {
+  .c7 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+  }
+}
+
+@media screen and (max-width:640px) {
+  .c12 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+  }
+}
+
+@media screen and (max-width:640px) {
+  .c13 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+  }
+}
+
+@media screen and (max-width:640px) {
+  .c11 {
+    display: none;
+  }
+}
+
+@media screen and (min-width:1024px) and (max-width:1279px) {
+  .c11 {
+    display: none;
+  }
+}
+
+<div
+    class="c0"
+  >
+    <div
+      class="c1"
+    >
+      <div
+        class="c2"
+      >
+        <div
+          class="c3 c4"
+        >
+          <a
+            class="c5 c6"
+            href="https://opensea.io/assets/0x29d7ebca656665c1a52a92f830e413e394db6b4f/6815"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            <svg
+              fill="none"
+              height="20"
+              viewBox="0 0 360 361"
+              width="20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <g
+                clip-path="url(#clip0_992_26814)"
+              >
+                <rect
+                  fill="#2081E2"
+                  height="360"
+                  rx="48"
+                  width="360"
+                  y="0.5"
+                />
+                <g
+                  clip-path="url(#clip1_992_26814)"
+                >
+                  <path
+                    d="M360 180C360 279.406 279.406 360 180 360C80.5944 360 0 279.406 0 180C0 80.5944 80.5944 0 180 0C279.426 0 360 80.5944 360 180Z"
+                    fill="#2081E2"
+                  />
+                  <path
+                    d="M88.8044 186.048L89.5812 184.828L136.406 111.576C137.09 110.503 138.7 110.614 139.217 111.779C147.04 129.311 153.79 151.114 150.628 164.688C149.278 170.273 145.579 177.837 141.418 184.828C140.882 185.845 140.29 186.844 139.661 187.805C139.365 188.249 138.866 188.508 138.33 188.508H90.1728C88.8784 188.508 88.1204 187.102 88.8044 186.048Z"
+                    fill="white"
+                  />
+                  <path
+                    d="M297.52 199.66V211.255C297.52 211.92 297.113 212.512 296.522 212.771C292.897 214.325 280.488 220.021 275.328 227.196C262.161 245.523 252.1 271.728 229.612 271.728H135.796C102.545 271.728 75.6 244.691 75.6 211.329V210.256C75.6 209.368 76.3212 208.647 77.2092 208.647H129.508C130.544 208.647 131.302 209.609 131.21 210.626C130.84 214.029 131.468 217.506 133.077 220.668C136.184 226.974 142.62 230.913 149.574 230.913H175.464V210.7H149.869C148.556 210.7 147.78 209.184 148.538 208.111C148.815 207.686 149.13 207.242 149.462 206.742C151.885 203.303 155.343 197.958 158.783 191.874C161.132 187.768 163.406 183.385 165.237 178.984C165.607 178.189 165.903 177.375 166.199 176.58C166.698 175.174 167.216 173.861 167.586 172.548C167.956 171.439 168.252 170.274 168.548 169.182C169.417 165.447 169.787 161.489 169.787 157.384C169.787 155.775 169.713 154.092 169.565 152.483C169.491 150.726 169.269 148.969 169.047 147.212C168.899 145.659 168.622 144.124 168.326 142.515C167.956 140.166 167.438 137.836 166.846 135.488L166.643 134.6C166.199 132.991 165.829 131.456 165.311 129.847C163.85 124.798 162.167 119.879 160.392 115.274C159.745 113.444 159.005 111.687 158.265 109.93C157.174 107.285 156.064 104.881 155.048 102.606C154.53 101.571 154.086 100.628 153.642 99.666C153.143 98.5748 152.625 97.484 152.107 96.448C151.737 95.6528 151.312 94.9132 151.016 94.1736L147.854 88.3296C147.41 87.5344 148.15 86.5912 149.018 86.8316L168.806 92.1948H168.862C168.899 92.1948 168.918 92.2132 168.936 92.2132L171.544 92.9344L174.41 93.748L175.464 94.044V82.2824C175.464 76.6048 180.014 72 185.636 72C188.446 72 190.998 73.1464 192.829 75.0144C194.66 76.8824 195.807 79.4344 195.807 82.2824V99.74L197.915 100.332C198.082 100.387 198.248 100.461 198.396 100.572C198.914 100.96 199.653 101.534 200.596 102.236C201.336 102.828 202.132 103.55 203.093 104.289C204.998 105.824 207.272 107.803 209.769 110.078C210.435 110.651 211.082 111.243 211.674 111.835C214.892 114.83 218.498 118.344 221.938 122.228C222.9 123.319 223.843 124.428 224.804 125.594C225.766 126.777 226.783 127.942 227.671 129.108C228.836 130.661 230.093 132.27 231.184 133.953C231.702 134.748 232.294 135.562 232.794 136.357C234.199 138.484 235.438 140.684 236.622 142.885C237.121 143.902 237.639 145.012 238.082 146.103C239.396 149.043 240.431 152.039 241.097 155.035C241.3 155.682 241.448 156.385 241.522 157.014V157.162C241.744 158.05 241.818 158.993 241.892 159.954C242.188 163.024 242.04 166.094 241.374 169.182C241.097 170.496 240.727 171.734 240.283 173.048C239.839 174.305 239.396 175.618 238.822 176.857C237.713 179.428 236.4 181.998 234.846 184.402C234.347 185.29 233.755 186.233 233.163 187.121C232.516 188.064 231.85 188.952 231.258 189.821C230.445 190.931 229.576 192.096 228.688 193.131C227.893 194.222 227.079 195.314 226.191 196.275C224.952 197.736 223.769 199.123 222.53 200.455C221.79 201.324 220.995 202.212 220.181 203.007C219.386 203.894 218.572 204.69 217.832 205.429C216.593 206.668 215.558 207.63 214.688 208.425L212.654 210.293C212.358 210.552 211.97 210.7 211.563 210.7H195.807V230.913H215.632C220.07 230.913 224.286 229.341 227.689 226.456C228.854 225.439 233.94 221.038 239.95 214.399C240.154 214.177 240.413 214.01 240.708 213.936L295.467 198.106C296.484 197.81 297.52 198.587 297.52 199.66Z"
+                    fill="white"
+                  />
+                </g>
+              </g>
+              <defs>
+                <clippath
+                  id="clip0_992_26814"
+                >
+                  <rect
+                    fill="white"
+                    height="360"
+                    rx="48"
+                    width="360"
+                    y="0.5"
+                  />
+                </clippath>
+                <clippath
+                  id="clip1_992_26814"
+                >
+                  <rect
+                    fill="white"
+                    height="360"
+                    width="360"
+                  />
+                </clippath>
+              </defs>
+            </svg>
+          </a>
+          <div
+            class="c7"
+          >
+            <div
+              class="c8 c9"
+            >
+              <div
+                class="c10 css-1adn0z6"
+              >
+                100M
+              </div>
+              <div
+                class="c10 c11 css-zhpkf8"
+              >
+                -
+              </div>
+            </div>
+          </div>
+          <div
+            class="c12"
+          >
+            <div
+              class="c10 css-18hn7mq"
+            >
+              5 months
+            </div>
+          </div>
+          <div
+            class="c13"
+          >
+            <div
+              class="c14"
+            >
+              <div
+                class="c15 css-18hn7mq"
+              >
+                Add to Bag
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`data page offers table content loads with a given asset 1`] = `
+<DocumentFragment>
+  .c1 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  padding: 6px 6px 6px 0px;
+}
+
+.c2 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  padding: 6px 6px 6px 0px;
+  gap: 12px;
+}
+
+.c4 {
+  color: #7780A0;
+}
+
+.c0 {
+  margin-right: 0;
+}
+
+.c3 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+}
+
+.c5 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+}
+
+.c6 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  -webkit-box-pack: end;
+  -webkit-justify-content: flex-end;
+  -ms-flex-pack: end;
+  justify-content: flex-end;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+}
+
+@media screen and (max-width:640px) {
+  .c3 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+  }
+}
+
+@media screen and (max-width:640px) {
+  .c5 {
+    display: none;
+  }
+}
+
+@media screen and (max-width:640px) {
+  .c6 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+  }
+}
+
+@media screen and (max-width:640px) {
+
+}
+
+@media screen and (max-width:640px) {
+
+}
+
+@media screen and (min-width:1024px) and (max-width:1279px) {
+
+}
+
+<div
+    class="c0"
+  >
+    <div
+      class="c1 c2"
+    >
+      <svg
+        fill="none"
+        height="20"
+        viewBox="0 0 20 20"
+        width="20"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M17.898 7.57097L11.7212 2.49102C10.7237 1.67268 9.27795 1.67185 8.28045 2.49102L2.10379 7.57016C1.83796 7.78932 1.79877 8.18268 2.01794 8.45018C2.2371 8.71768 2.63213 8.75437 2.89796 8.53604L3.54209 8.00605V15.0002C3.54209 17.0152 4.65209 18.1252 6.66709 18.1252H13.3338C15.3488 18.1252 16.4588 17.0152 16.4588 15.0002V8.00605L17.1029 8.53604C17.2195 8.63187 17.3604 8.67845 17.5004 8.67845C17.6804 8.67845 17.8596 8.601 17.9829 8.451C18.2029 8.1835 18.1638 7.79014 17.898 7.57097ZM15.2088 15.0002C15.2088 16.3143 14.6479 16.8752 13.3338 16.8752H6.66709C5.35292 16.8752 4.79209 16.3143 4.79209 15.0002V6.97852L9.07462 3.45771C9.61045 3.01688 10.3913 3.01688 10.9271 3.45771L15.2096 6.97934V15.0002H15.2088ZM6.45875 10.7643C6.45875 12.4493 7.82958 13.8202 9.51458 13.8202C10.1312 13.8202 10.7038 13.6335 11.1838 13.3176L12.4746 14.6085C12.5962 14.7302 12.7563 14.7918 12.9163 14.7918C13.0763 14.7918 13.2363 14.731 13.358 14.6085C13.6021 14.3644 13.6021 13.9685 13.358 13.7243L12.0663 12.4326C12.3813 11.9518 12.568 11.3794 12.568 10.7627C12.568 9.07854 11.1971 7.70688 9.51295 7.70688C7.82962 7.70854 6.45875 9.07933 6.45875 10.7643ZM11.3196 10.7643C11.3196 11.7602 10.5096 12.5702 9.51458 12.5702C8.51875 12.5702 7.70875 11.7602 7.70875 10.7643C7.70875 9.7685 8.51875 8.9585 9.51458 8.9585C10.5096 8.9585 11.3196 9.7685 11.3196 10.7643Z"
+          fill="#7780A0"
+        />
+      </svg>
+      <div
+        class="c3"
+      >
+        <div
+          class="c4 css-1aekuku"
+        >
+          Price
+        </div>
+      </div>
+      <div
+        class="c5"
+      >
+        <div
+          class="c4 css-1aekuku"
+        >
+          From
+        </div>
+      </div>
+      <div
+        class="c6"
+      >
+        <div
+          class="c4 css-1aekuku"
+        >
+          Expires in
+        </div>
+      </div>
+      <div
+        class="c3"
+      >
+         
+      </div>
+    </div>
+  </div>
+  .c3 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  padding: 16px 6px 16px 0px;
+}
+
+.c8 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c4 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  padding: 16px 6px 16px 0px;
+  gap: 12px;
+}
+
+.c9 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 8px;
+}
+
+.c16 {
+  color: #7780A0;
+}
+
+.c10 {
+  color: #0D111C;
+}
+
+.c5 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  color: #FB118E;
+  stroke: #FB118E;
+  font-weight: 500;
+}
+
+.c5:hover {
+  opacity: 0.6;
+}
+
+.c5:active {
+  opacity: 0.4;
+}
+
+.c0 {
+  position: relative;
+}
+
+.c1 {
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: 264px;
+  -webkit-scrollbar-width: thin;
+  -moz-scrollbar-width: thin;
+  -ms-scrollbar-width: thin;
+  scrollbar-width: thin;
+  -webkit-scrollbar-color: #D2D9EE transparent;
+  -moz-scrollbar-color: #D2D9EE transparent;
+  -ms-scrollbar-color: #D2D9EE transparent;
+  scrollbar-color: #D2D9EE transparent;
+  height: 100%;
+}
+
+.c1::-webkit-scrollbar {
+  background: transparent;
+  width: 4px;
+  overflow-y: scroll;
+}
+
+.c1::-webkit-scrollbar-thumb {
+  background: #D2D9EE;
+  border-radius: 8px;
+}
+
+.c2 {
+  border-bottom: 1px solid #D2D9EE;
+}
+
+.c2:last-child {
+  border-bottom: none;
+}
+
+.c7 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+}
+
+.c12 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+}
+
+.c13 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  -webkit-box-pack: end;
+  -webkit-justify-content: flex-end;
+  -ms-flex-pack: end;
+  justify-content: flex-end;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+}
+
+.c14 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+}
+
+.c15 {
+  cursor: pointer;
+  white-space: nowrap;
+  -webkit-transition: opacity 250ms ease;
+  transition: opacity 250ms ease;
+}
+
+.c15:hover {
+  opacity: 0.6;
+}
+
+.c15:active {
+  opacity: 0.4;
+}
+
+.c11 {
+  color: #7780A0;
+  line-height: 20px;
+}
+
+.c6 {
+  height: 20px;
+}
+
+@media screen and (max-width:640px) {
+  .c7 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+  }
+}
+
+@media screen and (max-width:640px) {
+  .c12 {
+    display: none;
+  }
+}
+
+@media screen and (max-width:640px) {
+  .c13 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+  }
+}
+
+@media screen and (max-width:640px) {
+  .c14 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+  }
+}
+
+@media screen and (max-width:640px) {
+  .c11 {
+    display: none;
+  }
+}
+
+@media screen and (min-width:1024px) and (max-width:1279px) {
+  .c11 {
+    display: none;
+  }
+}
+
+<div
+    class="c0"
+  >
+    <div
+      class="c1"
+    >
+      <div
+        class="c2"
+      >
+        <div
+          class="c3 c4"
+        >
+          <a
+            class="c5 c6"
+            href="https://opensea.io/assets/0x29d7ebca656665c1a52a92f830e413e394db6b4f/6815"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            <svg
+              fill="none"
+              height="20"
+              viewBox="0 0 360 361"
+              width="20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <g
+                clip-path="url(#clip0_992_26814)"
+              >
+                <rect
+                  fill="#2081E2"
+                  height="360"
+                  rx="48"
+                  width="360"
+                  y="0.5"
+                />
+                <g
+                  clip-path="url(#clip1_992_26814)"
+                >
+                  <path
+                    d="M360 180C360 279.406 279.406 360 180 360C80.5944 360 0 279.406 0 180C0 80.5944 80.5944 0 180 0C279.426 0 360 80.5944 360 180Z"
+                    fill="#2081E2"
+                  />
+                  <path
+                    d="M88.8044 186.048L89.5812 184.828L136.406 111.576C137.09 110.503 138.7 110.614 139.217 111.779C147.04 129.311 153.79 151.114 150.628 164.688C149.278 170.273 145.579 177.837 141.418 184.828C140.882 185.845 140.29 186.844 139.661 187.805C139.365 188.249 138.866 188.508 138.33 188.508H90.1728C88.8784 188.508 88.1204 187.102 88.8044 186.048Z"
+                    fill="white"
+                  />
+                  <path
+                    d="M297.52 199.66V211.255C297.52 211.92 297.113 212.512 296.522 212.771C292.897 214.325 280.488 220.021 275.328 227.196C262.161 245.523 252.1 271.728 229.612 271.728H135.796C102.545 271.728 75.6 244.691 75.6 211.329V210.256C75.6 209.368 76.3212 208.647 77.2092 208.647H129.508C130.544 208.647 131.302 209.609 131.21 210.626C130.84 214.029 131.468 217.506 133.077 220.668C136.184 226.974 142.62 230.913 149.574 230.913H175.464V210.7H149.869C148.556 210.7 147.78 209.184 148.538 208.111C148.815 207.686 149.13 207.242 149.462 206.742C151.885 203.303 155.343 197.958 158.783 191.874C161.132 187.768 163.406 183.385 165.237 178.984C165.607 178.189 165.903 177.375 166.199 176.58C166.698 175.174 167.216 173.861 167.586 172.548C167.956 171.439 168.252 170.274 168.548 169.182C169.417 165.447 169.787 161.489 169.787 157.384C169.787 155.775 169.713 154.092 169.565 152.483C169.491 150.726 169.269 148.969 169.047 147.212C168.899 145.659 168.622 144.124 168.326 142.515C167.956 140.166 167.438 137.836 166.846 135.488L166.643 134.6C166.199 132.991 165.829 131.456 165.311 129.847C163.85 124.798 162.167 119.879 160.392 115.274C159.745 113.444 159.005 111.687 158.265 109.93C157.174 107.285 156.064 104.881 155.048 102.606C154.53 101.571 154.086 100.628 153.642 99.666C153.143 98.5748 152.625 97.484 152.107 96.448C151.737 95.6528 151.312 94.9132 151.016 94.1736L147.854 88.3296C147.41 87.5344 148.15 86.5912 149.018 86.8316L168.806 92.1948H168.862C168.899 92.1948 168.918 92.2132 168.936 92.2132L171.544 92.9344L174.41 93.748L175.464 94.044V82.2824C175.464 76.6048 180.014 72 185.636 72C188.446 72 190.998 73.1464 192.829 75.0144C194.66 76.8824 195.807 79.4344 195.807 82.2824V99.74L197.915 100.332C198.082 100.387 198.248 100.461 198.396 100.572C198.914 100.96 199.653 101.534 200.596 102.236C201.336 102.828 202.132 103.55 203.093 104.289C204.998 105.824 207.272 107.803 209.769 110.078C210.435 110.651 211.082 111.243 211.674 111.835C214.892 114.83 218.498 118.344 221.938 122.228C222.9 123.319 223.843 124.428 224.804 125.594C225.766 126.777 226.783 127.942 227.671 129.108C228.836 130.661 230.093 132.27 231.184 133.953C231.702 134.748 232.294 135.562 232.794 136.357C234.199 138.484 235.438 140.684 236.622 142.885C237.121 143.902 237.639 145.012 238.082 146.103C239.396 149.043 240.431 152.039 241.097 155.035C241.3 155.682 241.448 156.385 241.522 157.014V157.162C241.744 158.05 241.818 158.993 241.892 159.954C242.188 163.024 242.04 166.094 241.374 169.182C241.097 170.496 240.727 171.734 240.283 173.048C239.839 174.305 239.396 175.618 238.822 176.857C237.713 179.428 236.4 181.998 234.846 184.402C234.347 185.29 233.755 186.233 233.163 187.121C232.516 188.064 231.85 188.952 231.258 189.821C230.445 190.931 229.576 192.096 228.688 193.131C227.893 194.222 227.079 195.314 226.191 196.275C224.952 197.736 223.769 199.123 222.53 200.455C221.79 201.324 220.995 202.212 220.181 203.007C219.386 203.894 218.572 204.69 217.832 205.429C216.593 206.668 215.558 207.63 214.688 208.425L212.654 210.293C212.358 210.552 211.97 210.7 211.563 210.7H195.807V230.913H215.632C220.07 230.913 224.286 229.341 227.689 226.456C228.854 225.439 233.94 221.038 239.95 214.399C240.154 214.177 240.413 214.01 240.708 213.936L295.467 198.106C296.484 197.81 297.52 198.587 297.52 199.66Z"
+                    fill="white"
+                  />
+                </g>
+              </g>
+              <defs>
+                <clippath
+                  id="clip0_992_26814"
+                >
+                  <rect
+                    fill="white"
+                    height="360"
+                    rx="48"
+                    width="360"
+                    y="0.5"
+                  />
+                </clippath>
+                <clippath
+                  id="clip1_992_26814"
+                >
+                  <rect
+                    fill="white"
+                    height="360"
+                    width="360"
+                  />
+                </clippath>
+              </defs>
+            </svg>
+          </a>
+          <div
+            class="c7"
+          >
+            <div
+              class="c8 c9"
+            >
+              <div
+                class="c10 css-1adn0z6"
+              >
+                123.456
+              </div>
+              <div
+                class="c10 c11 css-zhpkf8"
+              >
+                -
+              </div>
+            </div>
+          </div>
+          <div
+            class="c12"
+          >
+            <a
+              class="c5 c6"
+              href="https://etherscan.io/address/0x79ea449c3375ed1a9d7d99f8068209ea748c6d42"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              <div
+                class="c10 css-18hn7mq"
+              >
+                0x79ea...6D42
+              </div>
+            </a>
+          </div>
+          <div
+            class="c13"
+          >
+            <div
+              class="c10 css-18hn7mq"
+            >
+              5 months
+            </div>
+          </div>
+          <div
+            class="c14"
+          >
+            <div
+              class="c15"
+            >
+              <div
+                class="c16 css-18hn7mq"
+              >
+                Accept
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="c2"
+      >
+        <div
+          class="c3 c4"
+        >
+          <a
+            class="c5 c6"
+            href="https://opensea.io/assets/0x29d7ebca656665c1a52a92f830e413e394db6b4f/6815"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            <svg
+              fill="none"
+              height="20"
+              viewBox="0 0 360 361"
+              width="20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <g
+                clip-path="url(#clip0_992_26814)"
+              >
+                <rect
+                  fill="#2081E2"
+                  height="360"
+                  rx="48"
+                  width="360"
+                  y="0.5"
+                />
+                <g
+                  clip-path="url(#clip1_992_26814)"
+                >
+                  <path
+                    d="M360 180C360 279.406 279.406 360 180 360C80.5944 360 0 279.406 0 180C0 80.5944 80.5944 0 180 0C279.426 0 360 80.5944 360 180Z"
+                    fill="#2081E2"
+                  />
+                  <path
+                    d="M88.8044 186.048L89.5812 184.828L136.406 111.576C137.09 110.503 138.7 110.614 139.217 111.779C147.04 129.311 153.79 151.114 150.628 164.688C149.278 170.273 145.579 177.837 141.418 184.828C140.882 185.845 140.29 186.844 139.661 187.805C139.365 188.249 138.866 188.508 138.33 188.508H90.1728C88.8784 188.508 88.1204 187.102 88.8044 186.048Z"
+                    fill="white"
+                  />
+                  <path
+                    d="M297.52 199.66V211.255C297.52 211.92 297.113 212.512 296.522 212.771C292.897 214.325 280.488 220.021 275.328 227.196C262.161 245.523 252.1 271.728 229.612 271.728H135.796C102.545 271.728 75.6 244.691 75.6 211.329V210.256C75.6 209.368 76.3212 208.647 77.2092 208.647H129.508C130.544 208.647 131.302 209.609 131.21 210.626C130.84 214.029 131.468 217.506 133.077 220.668C136.184 226.974 142.62 230.913 149.574 230.913H175.464V210.7H149.869C148.556 210.7 147.78 209.184 148.538 208.111C148.815 207.686 149.13 207.242 149.462 206.742C151.885 203.303 155.343 197.958 158.783 191.874C161.132 187.768 163.406 183.385 165.237 178.984C165.607 178.189 165.903 177.375 166.199 176.58C166.698 175.174 167.216 173.861 167.586 172.548C167.956 171.439 168.252 170.274 168.548 169.182C169.417 165.447 169.787 161.489 169.787 157.384C169.787 155.775 169.713 154.092 169.565 152.483C169.491 150.726 169.269 148.969 169.047 147.212C168.899 145.659 168.622 144.124 168.326 142.515C167.956 140.166 167.438 137.836 166.846 135.488L166.643 134.6C166.199 132.991 165.829 131.456 165.311 129.847C163.85 124.798 162.167 119.879 160.392 115.274C159.745 113.444 159.005 111.687 158.265 109.93C157.174 107.285 156.064 104.881 155.048 102.606C154.53 101.571 154.086 100.628 153.642 99.666C153.143 98.5748 152.625 97.484 152.107 96.448C151.737 95.6528 151.312 94.9132 151.016 94.1736L147.854 88.3296C147.41 87.5344 148.15 86.5912 149.018 86.8316L168.806 92.1948H168.862C168.899 92.1948 168.918 92.2132 168.936 92.2132L171.544 92.9344L174.41 93.748L175.464 94.044V82.2824C175.464 76.6048 180.014 72 185.636 72C188.446 72 190.998 73.1464 192.829 75.0144C194.66 76.8824 195.807 79.4344 195.807 82.2824V99.74L197.915 100.332C198.082 100.387 198.248 100.461 198.396 100.572C198.914 100.96 199.653 101.534 200.596 102.236C201.336 102.828 202.132 103.55 203.093 104.289C204.998 105.824 207.272 107.803 209.769 110.078C210.435 110.651 211.082 111.243 211.674 111.835C214.892 114.83 218.498 118.344 221.938 122.228C222.9 123.319 223.843 124.428 224.804 125.594C225.766 126.777 226.783 127.942 227.671 129.108C228.836 130.661 230.093 132.27 231.184 133.953C231.702 134.748 232.294 135.562 232.794 136.357C234.199 138.484 235.438 140.684 236.622 142.885C237.121 143.902 237.639 145.012 238.082 146.103C239.396 149.043 240.431 152.039 241.097 155.035C241.3 155.682 241.448 156.385 241.522 157.014V157.162C241.744 158.05 241.818 158.993 241.892 159.954C242.188 163.024 242.04 166.094 241.374 169.182C241.097 170.496 240.727 171.734 240.283 173.048C239.839 174.305 239.396 175.618 238.822 176.857C237.713 179.428 236.4 181.998 234.846 184.402C234.347 185.29 233.755 186.233 233.163 187.121C232.516 188.064 231.85 188.952 231.258 189.821C230.445 190.931 229.576 192.096 228.688 193.131C227.893 194.222 227.079 195.314 226.191 196.275C224.952 197.736 223.769 199.123 222.53 200.455C221.79 201.324 220.995 202.212 220.181 203.007C219.386 203.894 218.572 204.69 217.832 205.429C216.593 206.668 215.558 207.63 214.688 208.425L212.654 210.293C212.358 210.552 211.97 210.7 211.563 210.7H195.807V230.913H215.632C220.07 230.913 224.286 229.341 227.689 226.456C228.854 225.439 233.94 221.038 239.95 214.399C240.154 214.177 240.413 214.01 240.708 213.936L295.467 198.106C296.484 197.81 297.52 198.587 297.52 199.66Z"
+                    fill="white"
+                  />
+                </g>
+              </g>
+              <defs>
+                <clippath
+                  id="clip0_992_26814"
+                >
+                  <rect
+                    fill="white"
+                    height="360"
+                    rx="48"
+                    width="360"
+                    y="0.5"
+                  />
+                </clippath>
+                <clippath
+                  id="clip1_992_26814"
+                >
+                  <rect
+                    fill="white"
+                    height="360"
+                    width="360"
+                  />
+                </clippath>
+              </defs>
+            </svg>
+          </a>
+          <div
+            class="c7"
+          >
+            <div
+              class="c8 c9"
+            >
+              <div
+                class="c10 css-1adn0z6"
+              >
+                123.456
+              </div>
+              <div
+                class="c10 c11 css-zhpkf8"
+              >
+                -
+              </div>
+            </div>
+          </div>
+          <div
+            class="c12"
+          >
+            <a
+              class="c5 c6"
+              href="https://etherscan.io/address/0x79ea449c3375ed1a9d7d99f8068209ea748c6d42"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              <div
+                class="c10 css-18hn7mq"
+              >
+                0x79ea...6D42
+              </div>
+            </a>
+          </div>
+          <div
+            class="c13"
+          >
+            <div
+              class="c10 css-18hn7mq"
+            >
+              5 months
+            </div>
+          </div>
+          <div
+            class="c14"
+          >
+            <div
+              class="c15"
+            >
+              <div
+                class="c16 css-18hn7mq"
+              >
+                Accept
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="c2"
+      >
+        <div
+          class="c3 c4"
+        >
+          <a
+            class="c5 c6"
+            href="https://opensea.io/assets/0x29d7ebca656665c1a52a92f830e413e394db6b4f/6815"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            <svg
+              fill="none"
+              height="20"
+              viewBox="0 0 360 361"
+              width="20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <g
+                clip-path="url(#clip0_992_26814)"
+              >
+                <rect
+                  fill="#2081E2"
+                  height="360"
+                  rx="48"
+                  width="360"
+                  y="0.5"
+                />
+                <g
+                  clip-path="url(#clip1_992_26814)"
+                >
+                  <path
+                    d="M360 180C360 279.406 279.406 360 180 360C80.5944 360 0 279.406 0 180C0 80.5944 80.5944 0 180 0C279.426 0 360 80.5944 360 180Z"
+                    fill="#2081E2"
+                  />
+                  <path
+                    d="M88.8044 186.048L89.5812 184.828L136.406 111.576C137.09 110.503 138.7 110.614 139.217 111.779C147.04 129.311 153.79 151.114 150.628 164.688C149.278 170.273 145.579 177.837 141.418 184.828C140.882 185.845 140.29 186.844 139.661 187.805C139.365 188.249 138.866 188.508 138.33 188.508H90.1728C88.8784 188.508 88.1204 187.102 88.8044 186.048Z"
+                    fill="white"
+                  />
+                  <path
+                    d="M297.52 199.66V211.255C297.52 211.92 297.113 212.512 296.522 212.771C292.897 214.325 280.488 220.021 275.328 227.196C262.161 245.523 252.1 271.728 229.612 271.728H135.796C102.545 271.728 75.6 244.691 75.6 211.329V210.256C75.6 209.368 76.3212 208.647 77.2092 208.647H129.508C130.544 208.647 131.302 209.609 131.21 210.626C130.84 214.029 131.468 217.506 133.077 220.668C136.184 226.974 142.62 230.913 149.574 230.913H175.464V210.7H149.869C148.556 210.7 147.78 209.184 148.538 208.111C148.815 207.686 149.13 207.242 149.462 206.742C151.885 203.303 155.343 197.958 158.783 191.874C161.132 187.768 163.406 183.385 165.237 178.984C165.607 178.189 165.903 177.375 166.199 176.58C166.698 175.174 167.216 173.861 167.586 172.548C167.956 171.439 168.252 170.274 168.548 169.182C169.417 165.447 169.787 161.489 169.787 157.384C169.787 155.775 169.713 154.092 169.565 152.483C169.491 150.726 169.269 148.969 169.047 147.212C168.899 145.659 168.622 144.124 168.326 142.515C167.956 140.166 167.438 137.836 166.846 135.488L166.643 134.6C166.199 132.991 165.829 131.456 165.311 129.847C163.85 124.798 162.167 119.879 160.392 115.274C159.745 113.444 159.005 111.687 158.265 109.93C157.174 107.285 156.064 104.881 155.048 102.606C154.53 101.571 154.086 100.628 153.642 99.666C153.143 98.5748 152.625 97.484 152.107 96.448C151.737 95.6528 151.312 94.9132 151.016 94.1736L147.854 88.3296C147.41 87.5344 148.15 86.5912 149.018 86.8316L168.806 92.1948H168.862C168.899 92.1948 168.918 92.2132 168.936 92.2132L171.544 92.9344L174.41 93.748L175.464 94.044V82.2824C175.464 76.6048 180.014 72 185.636 72C188.446 72 190.998 73.1464 192.829 75.0144C194.66 76.8824 195.807 79.4344 195.807 82.2824V99.74L197.915 100.332C198.082 100.387 198.248 100.461 198.396 100.572C198.914 100.96 199.653 101.534 200.596 102.236C201.336 102.828 202.132 103.55 203.093 104.289C204.998 105.824 207.272 107.803 209.769 110.078C210.435 110.651 211.082 111.243 211.674 111.835C214.892 114.83 218.498 118.344 221.938 122.228C222.9 123.319 223.843 124.428 224.804 125.594C225.766 126.777 226.783 127.942 227.671 129.108C228.836 130.661 230.093 132.27 231.184 133.953C231.702 134.748 232.294 135.562 232.794 136.357C234.199 138.484 235.438 140.684 236.622 142.885C237.121 143.902 237.639 145.012 238.082 146.103C239.396 149.043 240.431 152.039 241.097 155.035C241.3 155.682 241.448 156.385 241.522 157.014V157.162C241.744 158.05 241.818 158.993 241.892 159.954C242.188 163.024 242.04 166.094 241.374 169.182C241.097 170.496 240.727 171.734 240.283 173.048C239.839 174.305 239.396 175.618 238.822 176.857C237.713 179.428 236.4 181.998 234.846 184.402C234.347 185.29 233.755 186.233 233.163 187.121C232.516 188.064 231.85 188.952 231.258 189.821C230.445 190.931 229.576 192.096 228.688 193.131C227.893 194.222 227.079 195.314 226.191 196.275C224.952 197.736 223.769 199.123 222.53 200.455C221.79 201.324 220.995 202.212 220.181 203.007C219.386 203.894 218.572 204.69 217.832 205.429C216.593 206.668 215.558 207.63 214.688 208.425L212.654 210.293C212.358 210.552 211.97 210.7 211.563 210.7H195.807V230.913H215.632C220.07 230.913 224.286 229.341 227.689 226.456C228.854 225.439 233.94 221.038 239.95 214.399C240.154 214.177 240.413 214.01 240.708 213.936L295.467 198.106C296.484 197.81 297.52 198.587 297.52 199.66Z"
+                    fill="white"
+                  />
+                </g>
+              </g>
+              <defs>
+                <clippath
+                  id="clip0_992_26814"
+                >
+                  <rect
+                    fill="white"
+                    height="360"
+                    rx="48"
+                    width="360"
+                    y="0.5"
+                  />
+                </clippath>
+                <clippath
+                  id="clip1_992_26814"
+                >
+                  <rect
+                    fill="white"
+                    height="360"
+                    width="360"
+                  />
+                </clippath>
+              </defs>
+            </svg>
+          </a>
+          <div
+            class="c7"
+          >
+            <div
+              class="c8 c9"
+            >
+              <div
+                class="c10 css-1adn0z6"
+              >
+                123.456
+              </div>
+              <div
+                class="c10 c11 css-zhpkf8"
+              >
+                -
+              </div>
+            </div>
+          </div>
+          <div
+            class="c12"
+          >
+            <a
+              class="c5 c6"
+              href="https://etherscan.io/address/0x79ea449c3375ed1a9d7d99f8068209ea748c6d42"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              <div
+                class="c10 css-18hn7mq"
+              >
+                0x79ea...6D42
+              </div>
+            </a>
+          </div>
+          <div
+            class="c13"
+          >
+            <div
+              class="c10 css-18hn7mq"
+            >
+              5 months
+            </div>
+          </div>
+          <div
+            class="c14"
+          >
+            <div
+              class="c15"
+            >
+              <div
+                class="c16 css-18hn7mq"
+              >
+                Accept
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="c2"
+      >
+        <div
+          class="c3 c4"
+        >
+          <a
+            class="c5 c6"
+            href="https://opensea.io/assets/0x29d7ebca656665c1a52a92f830e413e394db6b4f/6815"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            <svg
+              fill="none"
+              height="20"
+              viewBox="0 0 360 361"
+              width="20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <g
+                clip-path="url(#clip0_992_26814)"
+              >
+                <rect
+                  fill="#2081E2"
+                  height="360"
+                  rx="48"
+                  width="360"
+                  y="0.5"
+                />
+                <g
+                  clip-path="url(#clip1_992_26814)"
+                >
+                  <path
+                    d="M360 180C360 279.406 279.406 360 180 360C80.5944 360 0 279.406 0 180C0 80.5944 80.5944 0 180 0C279.426 0 360 80.5944 360 180Z"
+                    fill="#2081E2"
+                  />
+                  <path
+                    d="M88.8044 186.048L89.5812 184.828L136.406 111.576C137.09 110.503 138.7 110.614 139.217 111.779C147.04 129.311 153.79 151.114 150.628 164.688C149.278 170.273 145.579 177.837 141.418 184.828C140.882 185.845 140.29 186.844 139.661 187.805C139.365 188.249 138.866 188.508 138.33 188.508H90.1728C88.8784 188.508 88.1204 187.102 88.8044 186.048Z"
+                    fill="white"
+                  />
+                  <path
+                    d="M297.52 199.66V211.255C297.52 211.92 297.113 212.512 296.522 212.771C292.897 214.325 280.488 220.021 275.328 227.196C262.161 245.523 252.1 271.728 229.612 271.728H135.796C102.545 271.728 75.6 244.691 75.6 211.329V210.256C75.6 209.368 76.3212 208.647 77.2092 208.647H129.508C130.544 208.647 131.302 209.609 131.21 210.626C130.84 214.029 131.468 217.506 133.077 220.668C136.184 226.974 142.62 230.913 149.574 230.913H175.464V210.7H149.869C148.556 210.7 147.78 209.184 148.538 208.111C148.815 207.686 149.13 207.242 149.462 206.742C151.885 203.303 155.343 197.958 158.783 191.874C161.132 187.768 163.406 183.385 165.237 178.984C165.607 178.189 165.903 177.375 166.199 176.58C166.698 175.174 167.216 173.861 167.586 172.548C167.956 171.439 168.252 170.274 168.548 169.182C169.417 165.447 169.787 161.489 169.787 157.384C169.787 155.775 169.713 154.092 169.565 152.483C169.491 150.726 169.269 148.969 169.047 147.212C168.899 145.659 168.622 144.124 168.326 142.515C167.956 140.166 167.438 137.836 166.846 135.488L166.643 134.6C166.199 132.991 165.829 131.456 165.311 129.847C163.85 124.798 162.167 119.879 160.392 115.274C159.745 113.444 159.005 111.687 158.265 109.93C157.174 107.285 156.064 104.881 155.048 102.606C154.53 101.571 154.086 100.628 153.642 99.666C153.143 98.5748 152.625 97.484 152.107 96.448C151.737 95.6528 151.312 94.9132 151.016 94.1736L147.854 88.3296C147.41 87.5344 148.15 86.5912 149.018 86.8316L168.806 92.1948H168.862C168.899 92.1948 168.918 92.2132 168.936 92.2132L171.544 92.9344L174.41 93.748L175.464 94.044V82.2824C175.464 76.6048 180.014 72 185.636 72C188.446 72 190.998 73.1464 192.829 75.0144C194.66 76.8824 195.807 79.4344 195.807 82.2824V99.74L197.915 100.332C198.082 100.387 198.248 100.461 198.396 100.572C198.914 100.96 199.653 101.534 200.596 102.236C201.336 102.828 202.132 103.55 203.093 104.289C204.998 105.824 207.272 107.803 209.769 110.078C210.435 110.651 211.082 111.243 211.674 111.835C214.892 114.83 218.498 118.344 221.938 122.228C222.9 123.319 223.843 124.428 224.804 125.594C225.766 126.777 226.783 127.942 227.671 129.108C228.836 130.661 230.093 132.27 231.184 133.953C231.702 134.748 232.294 135.562 232.794 136.357C234.199 138.484 235.438 140.684 236.622 142.885C237.121 143.902 237.639 145.012 238.082 146.103C239.396 149.043 240.431 152.039 241.097 155.035C241.3 155.682 241.448 156.385 241.522 157.014V157.162C241.744 158.05 241.818 158.993 241.892 159.954C242.188 163.024 242.04 166.094 241.374 169.182C241.097 170.496 240.727 171.734 240.283 173.048C239.839 174.305 239.396 175.618 238.822 176.857C237.713 179.428 236.4 181.998 234.846 184.402C234.347 185.29 233.755 186.233 233.163 187.121C232.516 188.064 231.85 188.952 231.258 189.821C230.445 190.931 229.576 192.096 228.688 193.131C227.893 194.222 227.079 195.314 226.191 196.275C224.952 197.736 223.769 199.123 222.53 200.455C221.79 201.324 220.995 202.212 220.181 203.007C219.386 203.894 218.572 204.69 217.832 205.429C216.593 206.668 215.558 207.63 214.688 208.425L212.654 210.293C212.358 210.552 211.97 210.7 211.563 210.7H195.807V230.913H215.632C220.07 230.913 224.286 229.341 227.689 226.456C228.854 225.439 233.94 221.038 239.95 214.399C240.154 214.177 240.413 214.01 240.708 213.936L295.467 198.106C296.484 197.81 297.52 198.587 297.52 199.66Z"
+                    fill="white"
+                  />
+                </g>
+              </g>
+              <defs>
+                <clippath
+                  id="clip0_992_26814"
+                >
+                  <rect
+                    fill="white"
+                    height="360"
+                    rx="48"
+                    width="360"
+                    y="0.5"
+                  />
+                </clippath>
+                <clippath
+                  id="clip1_992_26814"
+                >
+                  <rect
+                    fill="white"
+                    height="360"
+                    width="360"
+                  />
+                </clippath>
+              </defs>
+            </svg>
+          </a>
+          <div
+            class="c7"
+          >
+            <div
+              class="c8 c9"
+            >
+              <div
+                class="c10 css-1adn0z6"
+              >
+                123.456
+              </div>
+              <div
+                class="c10 c11 css-zhpkf8"
+              >
+                -
+              </div>
+            </div>
+          </div>
+          <div
+            class="c12"
+          >
+            <a
+              class="c5 c6"
+              href="https://etherscan.io/address/0x79ea449c3375ed1a9d7d99f8068209ea748c6d42"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              <div
+                class="c10 css-18hn7mq"
+              >
+                0x79ea...6D42
+              </div>
+            </a>
+          </div>
+          <div
+            class="c13"
+          >
+            <div
+              class="c10 css-18hn7mq"
+            >
+              5 months
+            </div>
+          </div>
+          <div
+            class="c14"
+          >
+            <div
+              class="c15"
+            >
+              <div
+                class="c16 css-18hn7mq"
+              >
+                Accept
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="c2"
+      >
+        <div
+          class="c3 c4"
+        >
+          <a
+            class="c5 c6"
+            href="https://opensea.io/assets/0x29d7ebca656665c1a52a92f830e413e394db6b4f/6815"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            <svg
+              fill="none"
+              height="20"
+              viewBox="0 0 360 361"
+              width="20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <g
+                clip-path="url(#clip0_992_26814)"
+              >
+                <rect
+                  fill="#2081E2"
+                  height="360"
+                  rx="48"
+                  width="360"
+                  y="0.5"
+                />
+                <g
+                  clip-path="url(#clip1_992_26814)"
+                >
+                  <path
+                    d="M360 180C360 279.406 279.406 360 180 360C80.5944 360 0 279.406 0 180C0 80.5944 80.5944 0 180 0C279.426 0 360 80.5944 360 180Z"
+                    fill="#2081E2"
+                  />
+                  <path
+                    d="M88.8044 186.048L89.5812 184.828L136.406 111.576C137.09 110.503 138.7 110.614 139.217 111.779C147.04 129.311 153.79 151.114 150.628 164.688C149.278 170.273 145.579 177.837 141.418 184.828C140.882 185.845 140.29 186.844 139.661 187.805C139.365 188.249 138.866 188.508 138.33 188.508H90.1728C88.8784 188.508 88.1204 187.102 88.8044 186.048Z"
+                    fill="white"
+                  />
+                  <path
+                    d="M297.52 199.66V211.255C297.52 211.92 297.113 212.512 296.522 212.771C292.897 214.325 280.488 220.021 275.328 227.196C262.161 245.523 252.1 271.728 229.612 271.728H135.796C102.545 271.728 75.6 244.691 75.6 211.329V210.256C75.6 209.368 76.3212 208.647 77.2092 208.647H129.508C130.544 208.647 131.302 209.609 131.21 210.626C130.84 214.029 131.468 217.506 133.077 220.668C136.184 226.974 142.62 230.913 149.574 230.913H175.464V210.7H149.869C148.556 210.7 147.78 209.184 148.538 208.111C148.815 207.686 149.13 207.242 149.462 206.742C151.885 203.303 155.343 197.958 158.783 191.874C161.132 187.768 163.406 183.385 165.237 178.984C165.607 178.189 165.903 177.375 166.199 176.58C166.698 175.174 167.216 173.861 167.586 172.548C167.956 171.439 168.252 170.274 168.548 169.182C169.417 165.447 169.787 161.489 169.787 157.384C169.787 155.775 169.713 154.092 169.565 152.483C169.491 150.726 169.269 148.969 169.047 147.212C168.899 145.659 168.622 144.124 168.326 142.515C167.956 140.166 167.438 137.836 166.846 135.488L166.643 134.6C166.199 132.991 165.829 131.456 165.311 129.847C163.85 124.798 162.167 119.879 160.392 115.274C159.745 113.444 159.005 111.687 158.265 109.93C157.174 107.285 156.064 104.881 155.048 102.606C154.53 101.571 154.086 100.628 153.642 99.666C153.143 98.5748 152.625 97.484 152.107 96.448C151.737 95.6528 151.312 94.9132 151.016 94.1736L147.854 88.3296C147.41 87.5344 148.15 86.5912 149.018 86.8316L168.806 92.1948H168.862C168.899 92.1948 168.918 92.2132 168.936 92.2132L171.544 92.9344L174.41 93.748L175.464 94.044V82.2824C175.464 76.6048 180.014 72 185.636 72C188.446 72 190.998 73.1464 192.829 75.0144C194.66 76.8824 195.807 79.4344 195.807 82.2824V99.74L197.915 100.332C198.082 100.387 198.248 100.461 198.396 100.572C198.914 100.96 199.653 101.534 200.596 102.236C201.336 102.828 202.132 103.55 203.093 104.289C204.998 105.824 207.272 107.803 209.769 110.078C210.435 110.651 211.082 111.243 211.674 111.835C214.892 114.83 218.498 118.344 221.938 122.228C222.9 123.319 223.843 124.428 224.804 125.594C225.766 126.777 226.783 127.942 227.671 129.108C228.836 130.661 230.093 132.27 231.184 133.953C231.702 134.748 232.294 135.562 232.794 136.357C234.199 138.484 235.438 140.684 236.622 142.885C237.121 143.902 237.639 145.012 238.082 146.103C239.396 149.043 240.431 152.039 241.097 155.035C241.3 155.682 241.448 156.385 241.522 157.014V157.162C241.744 158.05 241.818 158.993 241.892 159.954C242.188 163.024 242.04 166.094 241.374 169.182C241.097 170.496 240.727 171.734 240.283 173.048C239.839 174.305 239.396 175.618 238.822 176.857C237.713 179.428 236.4 181.998 234.846 184.402C234.347 185.29 233.755 186.233 233.163 187.121C232.516 188.064 231.85 188.952 231.258 189.821C230.445 190.931 229.576 192.096 228.688 193.131C227.893 194.222 227.079 195.314 226.191 196.275C224.952 197.736 223.769 199.123 222.53 200.455C221.79 201.324 220.995 202.212 220.181 203.007C219.386 203.894 218.572 204.69 217.832 205.429C216.593 206.668 215.558 207.63 214.688 208.425L212.654 210.293C212.358 210.552 211.97 210.7 211.563 210.7H195.807V230.913H215.632C220.07 230.913 224.286 229.341 227.689 226.456C228.854 225.439 233.94 221.038 239.95 214.399C240.154 214.177 240.413 214.01 240.708 213.936L295.467 198.106C296.484 197.81 297.52 198.587 297.52 199.66Z"
+                    fill="white"
+                  />
+                </g>
+              </g>
+              <defs>
+                <clippath
+                  id="clip0_992_26814"
+                >
+                  <rect
+                    fill="white"
+                    height="360"
+                    rx="48"
+                    width="360"
+                    y="0.5"
+                  />
+                </clippath>
+                <clippath
+                  id="clip1_992_26814"
+                >
+                  <rect
+                    fill="white"
+                    height="360"
+                    width="360"
+                  />
+                </clippath>
+              </defs>
+            </svg>
+          </a>
+          <div
+            class="c7"
+          >
+            <div
+              class="c8 c9"
+            >
+              <div
+                class="c10 css-1adn0z6"
+              >
+                123.456
+              </div>
+              <div
+                class="c10 c11 css-zhpkf8"
+              >
+                -
+              </div>
+            </div>
+          </div>
+          <div
+            class="c12"
+          >
+            <a
+              class="c5 c6"
+              href="https://etherscan.io/address/0x79ea449c3375ed1a9d7d99f8068209ea748c6d42"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              <div
+                class="c10 css-18hn7mq"
+              >
+                0x79ea...6D42
+              </div>
+            </a>
+          </div>
+          <div
+            class="c13"
+          >
+            <div
+              class="c10 css-18hn7mq"
+            >
+              5 months
+            </div>
+          </div>
+          <div
+            class="c14"
+          >
+            <div
+              class="c15"
+            >
+              <div
+                class="c16 css-18hn7mq"
+              >
+                Accept
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="c2"
+      >
+        <div
+          class="c3 c4"
+        >
+          <a
+            class="c5 c6"
+            href="https://opensea.io/assets/0x29d7ebca656665c1a52a92f830e413e394db6b4f/6815"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            <svg
+              fill="none"
+              height="20"
+              viewBox="0 0 360 361"
+              width="20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <g
+                clip-path="url(#clip0_992_26814)"
+              >
+                <rect
+                  fill="#2081E2"
+                  height="360"
+                  rx="48"
+                  width="360"
+                  y="0.5"
+                />
+                <g
+                  clip-path="url(#clip1_992_26814)"
+                >
+                  <path
+                    d="M360 180C360 279.406 279.406 360 180 360C80.5944 360 0 279.406 0 180C0 80.5944 80.5944 0 180 0C279.426 0 360 80.5944 360 180Z"
+                    fill="#2081E2"
+                  />
+                  <path
+                    d="M88.8044 186.048L89.5812 184.828L136.406 111.576C137.09 110.503 138.7 110.614 139.217 111.779C147.04 129.311 153.79 151.114 150.628 164.688C149.278 170.273 145.579 177.837 141.418 184.828C140.882 185.845 140.29 186.844 139.661 187.805C139.365 188.249 138.866 188.508 138.33 188.508H90.1728C88.8784 188.508 88.1204 187.102 88.8044 186.048Z"
+                    fill="white"
+                  />
+                  <path
+                    d="M297.52 199.66V211.255C297.52 211.92 297.113 212.512 296.522 212.771C292.897 214.325 280.488 220.021 275.328 227.196C262.161 245.523 252.1 271.728 229.612 271.728H135.796C102.545 271.728 75.6 244.691 75.6 211.329V210.256C75.6 209.368 76.3212 208.647 77.2092 208.647H129.508C130.544 208.647 131.302 209.609 131.21 210.626C130.84 214.029 131.468 217.506 133.077 220.668C136.184 226.974 142.62 230.913 149.574 230.913H175.464V210.7H149.869C148.556 210.7 147.78 209.184 148.538 208.111C148.815 207.686 149.13 207.242 149.462 206.742C151.885 203.303 155.343 197.958 158.783 191.874C161.132 187.768 163.406 183.385 165.237 178.984C165.607 178.189 165.903 177.375 166.199 176.58C166.698 175.174 167.216 173.861 167.586 172.548C167.956 171.439 168.252 170.274 168.548 169.182C169.417 165.447 169.787 161.489 169.787 157.384C169.787 155.775 169.713 154.092 169.565 152.483C169.491 150.726 169.269 148.969 169.047 147.212C168.899 145.659 168.622 144.124 168.326 142.515C167.956 140.166 167.438 137.836 166.846 135.488L166.643 134.6C166.199 132.991 165.829 131.456 165.311 129.847C163.85 124.798 162.167 119.879 160.392 115.274C159.745 113.444 159.005 111.687 158.265 109.93C157.174 107.285 156.064 104.881 155.048 102.606C154.53 101.571 154.086 100.628 153.642 99.666C153.143 98.5748 152.625 97.484 152.107 96.448C151.737 95.6528 151.312 94.9132 151.016 94.1736L147.854 88.3296C147.41 87.5344 148.15 86.5912 149.018 86.8316L168.806 92.1948H168.862C168.899 92.1948 168.918 92.2132 168.936 92.2132L171.544 92.9344L174.41 93.748L175.464 94.044V82.2824C175.464 76.6048 180.014 72 185.636 72C188.446 72 190.998 73.1464 192.829 75.0144C194.66 76.8824 195.807 79.4344 195.807 82.2824V99.74L197.915 100.332C198.082 100.387 198.248 100.461 198.396 100.572C198.914 100.96 199.653 101.534 200.596 102.236C201.336 102.828 202.132 103.55 203.093 104.289C204.998 105.824 207.272 107.803 209.769 110.078C210.435 110.651 211.082 111.243 211.674 111.835C214.892 114.83 218.498 118.344 221.938 122.228C222.9 123.319 223.843 124.428 224.804 125.594C225.766 126.777 226.783 127.942 227.671 129.108C228.836 130.661 230.093 132.27 231.184 133.953C231.702 134.748 232.294 135.562 232.794 136.357C234.199 138.484 235.438 140.684 236.622 142.885C237.121 143.902 237.639 145.012 238.082 146.103C239.396 149.043 240.431 152.039 241.097 155.035C241.3 155.682 241.448 156.385 241.522 157.014V157.162C241.744 158.05 241.818 158.993 241.892 159.954C242.188 163.024 242.04 166.094 241.374 169.182C241.097 170.496 240.727 171.734 240.283 173.048C239.839 174.305 239.396 175.618 238.822 176.857C237.713 179.428 236.4 181.998 234.846 184.402C234.347 185.29 233.755 186.233 233.163 187.121C232.516 188.064 231.85 188.952 231.258 189.821C230.445 190.931 229.576 192.096 228.688 193.131C227.893 194.222 227.079 195.314 226.191 196.275C224.952 197.736 223.769 199.123 222.53 200.455C221.79 201.324 220.995 202.212 220.181 203.007C219.386 203.894 218.572 204.69 217.832 205.429C216.593 206.668 215.558 207.63 214.688 208.425L212.654 210.293C212.358 210.552 211.97 210.7 211.563 210.7H195.807V230.913H215.632C220.07 230.913 224.286 229.341 227.689 226.456C228.854 225.439 233.94 221.038 239.95 214.399C240.154 214.177 240.413 214.01 240.708 213.936L295.467 198.106C296.484 197.81 297.52 198.587 297.52 199.66Z"
+                    fill="white"
+                  />
+                </g>
+              </g>
+              <defs>
+                <clippath
+                  id="clip0_992_26814"
+                >
+                  <rect
+                    fill="white"
+                    height="360"
+                    rx="48"
+                    width="360"
+                    y="0.5"
+                  />
+                </clippath>
+                <clippath
+                  id="clip1_992_26814"
+                >
+                  <rect
+                    fill="white"
+                    height="360"
+                    width="360"
+                  />
+                </clippath>
+              </defs>
+            </svg>
+          </a>
+          <div
+            class="c7"
+          >
+            <div
+              class="c8 c9"
+            >
+              <div
+                class="c10 css-1adn0z6"
+              >
+                123.456
+              </div>
+              <div
+                class="c10 c11 css-zhpkf8"
+              >
+                -
+              </div>
+            </div>
+          </div>
+          <div
+            class="c12"
+          >
+            <a
+              class="c5 c6"
+              href="https://etherscan.io/address/0x79ea449c3375ed1a9d7d99f8068209ea748c6d42"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              <div
+                class="c10 css-18hn7mq"
+              >
+                0x79ea...6D42
+              </div>
+            </a>
+          </div>
+          <div
+            class="c13"
+          >
+            <div
+              class="c10 css-18hn7mq"
+            >
+              5 months
+            </div>
+          </div>
+          <div
+            class="c14"
+          >
+            <div
+              class="c15"
+            >
+              <div
+                class="c16 css-18hn7mq"
+              >
+                Accept
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="c2"
+      >
+        <div
+          class="c3 c4"
+        >
+          <a
+            class="c5 c6"
+            href="https://opensea.io/assets/0x29d7ebca656665c1a52a92f830e413e394db6b4f/6815"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            <svg
+              fill="none"
+              height="20"
+              viewBox="0 0 360 361"
+              width="20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <g
+                clip-path="url(#clip0_992_26814)"
+              >
+                <rect
+                  fill="#2081E2"
+                  height="360"
+                  rx="48"
+                  width="360"
+                  y="0.5"
+                />
+                <g
+                  clip-path="url(#clip1_992_26814)"
+                >
+                  <path
+                    d="M360 180C360 279.406 279.406 360 180 360C80.5944 360 0 279.406 0 180C0 80.5944 80.5944 0 180 0C279.426 0 360 80.5944 360 180Z"
+                    fill="#2081E2"
+                  />
+                  <path
+                    d="M88.8044 186.048L89.5812 184.828L136.406 111.576C137.09 110.503 138.7 110.614 139.217 111.779C147.04 129.311 153.79 151.114 150.628 164.688C149.278 170.273 145.579 177.837 141.418 184.828C140.882 185.845 140.29 186.844 139.661 187.805C139.365 188.249 138.866 188.508 138.33 188.508H90.1728C88.8784 188.508 88.1204 187.102 88.8044 186.048Z"
+                    fill="white"
+                  />
+                  <path
+                    d="M297.52 199.66V211.255C297.52 211.92 297.113 212.512 296.522 212.771C292.897 214.325 280.488 220.021 275.328 227.196C262.161 245.523 252.1 271.728 229.612 271.728H135.796C102.545 271.728 75.6 244.691 75.6 211.329V210.256C75.6 209.368 76.3212 208.647 77.2092 208.647H129.508C130.544 208.647 131.302 209.609 131.21 210.626C130.84 214.029 131.468 217.506 133.077 220.668C136.184 226.974 142.62 230.913 149.574 230.913H175.464V210.7H149.869C148.556 210.7 147.78 209.184 148.538 208.111C148.815 207.686 149.13 207.242 149.462 206.742C151.885 203.303 155.343 197.958 158.783 191.874C161.132 187.768 163.406 183.385 165.237 178.984C165.607 178.189 165.903 177.375 166.199 176.58C166.698 175.174 167.216 173.861 167.586 172.548C167.956 171.439 168.252 170.274 168.548 169.182C169.417 165.447 169.787 161.489 169.787 157.384C169.787 155.775 169.713 154.092 169.565 152.483C169.491 150.726 169.269 148.969 169.047 147.212C168.899 145.659 168.622 144.124 168.326 142.515C167.956 140.166 167.438 137.836 166.846 135.488L166.643 134.6C166.199 132.991 165.829 131.456 165.311 129.847C163.85 124.798 162.167 119.879 160.392 115.274C159.745 113.444 159.005 111.687 158.265 109.93C157.174 107.285 156.064 104.881 155.048 102.606C154.53 101.571 154.086 100.628 153.642 99.666C153.143 98.5748 152.625 97.484 152.107 96.448C151.737 95.6528 151.312 94.9132 151.016 94.1736L147.854 88.3296C147.41 87.5344 148.15 86.5912 149.018 86.8316L168.806 92.1948H168.862C168.899 92.1948 168.918 92.2132 168.936 92.2132L171.544 92.9344L174.41 93.748L175.464 94.044V82.2824C175.464 76.6048 180.014 72 185.636 72C188.446 72 190.998 73.1464 192.829 75.0144C194.66 76.8824 195.807 79.4344 195.807 82.2824V99.74L197.915 100.332C198.082 100.387 198.248 100.461 198.396 100.572C198.914 100.96 199.653 101.534 200.596 102.236C201.336 102.828 202.132 103.55 203.093 104.289C204.998 105.824 207.272 107.803 209.769 110.078C210.435 110.651 211.082 111.243 211.674 111.835C214.892 114.83 218.498 118.344 221.938 122.228C222.9 123.319 223.843 124.428 224.804 125.594C225.766 126.777 226.783 127.942 227.671 129.108C228.836 130.661 230.093 132.27 231.184 133.953C231.702 134.748 232.294 135.562 232.794 136.357C234.199 138.484 235.438 140.684 236.622 142.885C237.121 143.902 237.639 145.012 238.082 146.103C239.396 149.043 240.431 152.039 241.097 155.035C241.3 155.682 241.448 156.385 241.522 157.014V157.162C241.744 158.05 241.818 158.993 241.892 159.954C242.188 163.024 242.04 166.094 241.374 169.182C241.097 170.496 240.727 171.734 240.283 173.048C239.839 174.305 239.396 175.618 238.822 176.857C237.713 179.428 236.4 181.998 234.846 184.402C234.347 185.29 233.755 186.233 233.163 187.121C232.516 188.064 231.85 188.952 231.258 189.821C230.445 190.931 229.576 192.096 228.688 193.131C227.893 194.222 227.079 195.314 226.191 196.275C224.952 197.736 223.769 199.123 222.53 200.455C221.79 201.324 220.995 202.212 220.181 203.007C219.386 203.894 218.572 204.69 217.832 205.429C216.593 206.668 215.558 207.63 214.688 208.425L212.654 210.293C212.358 210.552 211.97 210.7 211.563 210.7H195.807V230.913H215.632C220.07 230.913 224.286 229.341 227.689 226.456C228.854 225.439 233.94 221.038 239.95 214.399C240.154 214.177 240.413 214.01 240.708 213.936L295.467 198.106C296.484 197.81 297.52 198.587 297.52 199.66Z"
+                    fill="white"
+                  />
+                </g>
+              </g>
+              <defs>
+                <clippath
+                  id="clip0_992_26814"
+                >
+                  <rect
+                    fill="white"
+                    height="360"
+                    rx="48"
+                    width="360"
+                    y="0.5"
+                  />
+                </clippath>
+                <clippath
+                  id="clip1_992_26814"
+                >
+                  <rect
+                    fill="white"
+                    height="360"
+                    width="360"
+                  />
+                </clippath>
+              </defs>
+            </svg>
+          </a>
+          <div
+            class="c7"
+          >
+            <div
+              class="c8 c9"
+            >
+              <div
+                class="c10 css-1adn0z6"
+              >
+                123.456
+              </div>
+              <div
+                class="c10 c11 css-zhpkf8"
+              >
+                -
+              </div>
+            </div>
+          </div>
+          <div
+            class="c12"
+          >
+            <a
+              class="c5 c6"
+              href="https://etherscan.io/address/0x79ea449c3375ed1a9d7d99f8068209ea748c6d42"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              <div
+                class="c10 css-18hn7mq"
+              >
+                0x79ea...6D42
+              </div>
+            </a>
+          </div>
+          <div
+            class="c13"
+          >
+            <div
+              class="c10 css-18hn7mq"
+            >
+              5 months
+            </div>
+          </div>
+          <div
+            class="c14"
+          >
+            <div
+              class="c15"
+            >
+              <div
+                class="c16 css-18hn7mq"
+              >
+                Accept
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="c2"
+      >
+        <div
+          class="c3 c4"
+        >
+          <a
+            class="c5 c6"
+            href="https://opensea.io/assets/0x29d7ebca656665c1a52a92f830e413e394db6b4f/6815"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            <svg
+              fill="none"
+              height="20"
+              viewBox="0 0 360 361"
+              width="20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <g
+                clip-path="url(#clip0_992_26814)"
+              >
+                <rect
+                  fill="#2081E2"
+                  height="360"
+                  rx="48"
+                  width="360"
+                  y="0.5"
+                />
+                <g
+                  clip-path="url(#clip1_992_26814)"
+                >
+                  <path
+                    d="M360 180C360 279.406 279.406 360 180 360C80.5944 360 0 279.406 0 180C0 80.5944 80.5944 0 180 0C279.426 0 360 80.5944 360 180Z"
+                    fill="#2081E2"
+                  />
+                  <path
+                    d="M88.8044 186.048L89.5812 184.828L136.406 111.576C137.09 110.503 138.7 110.614 139.217 111.779C147.04 129.311 153.79 151.114 150.628 164.688C149.278 170.273 145.579 177.837 141.418 184.828C140.882 185.845 140.29 186.844 139.661 187.805C139.365 188.249 138.866 188.508 138.33 188.508H90.1728C88.8784 188.508 88.1204 187.102 88.8044 186.048Z"
+                    fill="white"
+                  />
+                  <path
+                    d="M297.52 199.66V211.255C297.52 211.92 297.113 212.512 296.522 212.771C292.897 214.325 280.488 220.021 275.328 227.196C262.161 245.523 252.1 271.728 229.612 271.728H135.796C102.545 271.728 75.6 244.691 75.6 211.329V210.256C75.6 209.368 76.3212 208.647 77.2092 208.647H129.508C130.544 208.647 131.302 209.609 131.21 210.626C130.84 214.029 131.468 217.506 133.077 220.668C136.184 226.974 142.62 230.913 149.574 230.913H175.464V210.7H149.869C148.556 210.7 147.78 209.184 148.538 208.111C148.815 207.686 149.13 207.242 149.462 206.742C151.885 203.303 155.343 197.958 158.783 191.874C161.132 187.768 163.406 183.385 165.237 178.984C165.607 178.189 165.903 177.375 166.199 176.58C166.698 175.174 167.216 173.861 167.586 172.548C167.956 171.439 168.252 170.274 168.548 169.182C169.417 165.447 169.787 161.489 169.787 157.384C169.787 155.775 169.713 154.092 169.565 152.483C169.491 150.726 169.269 148.969 169.047 147.212C168.899 145.659 168.622 144.124 168.326 142.515C167.956 140.166 167.438 137.836 166.846 135.488L166.643 134.6C166.199 132.991 165.829 131.456 165.311 129.847C163.85 124.798 162.167 119.879 160.392 115.274C159.745 113.444 159.005 111.687 158.265 109.93C157.174 107.285 156.064 104.881 155.048 102.606C154.53 101.571 154.086 100.628 153.642 99.666C153.143 98.5748 152.625 97.484 152.107 96.448C151.737 95.6528 151.312 94.9132 151.016 94.1736L147.854 88.3296C147.41 87.5344 148.15 86.5912 149.018 86.8316L168.806 92.1948H168.862C168.899 92.1948 168.918 92.2132 168.936 92.2132L171.544 92.9344L174.41 93.748L175.464 94.044V82.2824C175.464 76.6048 180.014 72 185.636 72C188.446 72 190.998 73.1464 192.829 75.0144C194.66 76.8824 195.807 79.4344 195.807 82.2824V99.74L197.915 100.332C198.082 100.387 198.248 100.461 198.396 100.572C198.914 100.96 199.653 101.534 200.596 102.236C201.336 102.828 202.132 103.55 203.093 104.289C204.998 105.824 207.272 107.803 209.769 110.078C210.435 110.651 211.082 111.243 211.674 111.835C214.892 114.83 218.498 118.344 221.938 122.228C222.9 123.319 223.843 124.428 224.804 125.594C225.766 126.777 226.783 127.942 227.671 129.108C228.836 130.661 230.093 132.27 231.184 133.953C231.702 134.748 232.294 135.562 232.794 136.357C234.199 138.484 235.438 140.684 236.622 142.885C237.121 143.902 237.639 145.012 238.082 146.103C239.396 149.043 240.431 152.039 241.097 155.035C241.3 155.682 241.448 156.385 241.522 157.014V157.162C241.744 158.05 241.818 158.993 241.892 159.954C242.188 163.024 242.04 166.094 241.374 169.182C241.097 170.496 240.727 171.734 240.283 173.048C239.839 174.305 239.396 175.618 238.822 176.857C237.713 179.428 236.4 181.998 234.846 184.402C234.347 185.29 233.755 186.233 233.163 187.121C232.516 188.064 231.85 188.952 231.258 189.821C230.445 190.931 229.576 192.096 228.688 193.131C227.893 194.222 227.079 195.314 226.191 196.275C224.952 197.736 223.769 199.123 222.53 200.455C221.79 201.324 220.995 202.212 220.181 203.007C219.386 203.894 218.572 204.69 217.832 205.429C216.593 206.668 215.558 207.63 214.688 208.425L212.654 210.293C212.358 210.552 211.97 210.7 211.563 210.7H195.807V230.913H215.632C220.07 230.913 224.286 229.341 227.689 226.456C228.854 225.439 233.94 221.038 239.95 214.399C240.154 214.177 240.413 214.01 240.708 213.936L295.467 198.106C296.484 197.81 297.52 198.587 297.52 199.66Z"
+                    fill="white"
+                  />
+                </g>
+              </g>
+              <defs>
+                <clippath
+                  id="clip0_992_26814"
+                >
+                  <rect
+                    fill="white"
+                    height="360"
+                    rx="48"
+                    width="360"
+                    y="0.5"
+                  />
+                </clippath>
+                <clippath
+                  id="clip1_992_26814"
+                >
+                  <rect
+                    fill="white"
+                    height="360"
+                    width="360"
+                  />
+                </clippath>
+              </defs>
+            </svg>
+          </a>
+          <div
+            class="c7"
+          >
+            <div
+              class="c8 c9"
+            >
+              <div
+                class="c10 css-1adn0z6"
+              >
+                123.456
+              </div>
+              <div
+                class="c10 c11 css-zhpkf8"
+              >
+                -
+              </div>
+            </div>
+          </div>
+          <div
+            class="c12"
+          >
+            <a
+              class="c5 c6"
+              href="https://etherscan.io/address/0x79ea449c3375ed1a9d7d99f8068209ea748c6d42"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              <div
+                class="c10 css-18hn7mq"
+              >
+                0x79ea...6D42
+              </div>
+            </a>
+          </div>
+          <div
+            class="c13"
+          >
+            <div
+              class="c10 css-18hn7mq"
+            >
+              5 months
+            </div>
+          </div>
+          <div
+            class="c14"
+          >
+            <div
+              class="c15"
+            >
+              <div
+                class="c16 css-18hn7mq"
+              >
+                Accept
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="c2"
+      >
+        <div
+          class="c3 c4"
+        >
+          <a
+            class="c5 c6"
+            href="https://opensea.io/assets/0x29d7ebca656665c1a52a92f830e413e394db6b4f/6815"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            <svg
+              fill="none"
+              height="20"
+              viewBox="0 0 360 361"
+              width="20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <g
+                clip-path="url(#clip0_992_26814)"
+              >
+                <rect
+                  fill="#2081E2"
+                  height="360"
+                  rx="48"
+                  width="360"
+                  y="0.5"
+                />
+                <g
+                  clip-path="url(#clip1_992_26814)"
+                >
+                  <path
+                    d="M360 180C360 279.406 279.406 360 180 360C80.5944 360 0 279.406 0 180C0 80.5944 80.5944 0 180 0C279.426 0 360 80.5944 360 180Z"
+                    fill="#2081E2"
+                  />
+                  <path
+                    d="M88.8044 186.048L89.5812 184.828L136.406 111.576C137.09 110.503 138.7 110.614 139.217 111.779C147.04 129.311 153.79 151.114 150.628 164.688C149.278 170.273 145.579 177.837 141.418 184.828C140.882 185.845 140.29 186.844 139.661 187.805C139.365 188.249 138.866 188.508 138.33 188.508H90.1728C88.8784 188.508 88.1204 187.102 88.8044 186.048Z"
+                    fill="white"
+                  />
+                  <path
+                    d="M297.52 199.66V211.255C297.52 211.92 297.113 212.512 296.522 212.771C292.897 214.325 280.488 220.021 275.328 227.196C262.161 245.523 252.1 271.728 229.612 271.728H135.796C102.545 271.728 75.6 244.691 75.6 211.329V210.256C75.6 209.368 76.3212 208.647 77.2092 208.647H129.508C130.544 208.647 131.302 209.609 131.21 210.626C130.84 214.029 131.468 217.506 133.077 220.668C136.184 226.974 142.62 230.913 149.574 230.913H175.464V210.7H149.869C148.556 210.7 147.78 209.184 148.538 208.111C148.815 207.686 149.13 207.242 149.462 206.742C151.885 203.303 155.343 197.958 158.783 191.874C161.132 187.768 163.406 183.385 165.237 178.984C165.607 178.189 165.903 177.375 166.199 176.58C166.698 175.174 167.216 173.861 167.586 172.548C167.956 171.439 168.252 170.274 168.548 169.182C169.417 165.447 169.787 161.489 169.787 157.384C169.787 155.775 169.713 154.092 169.565 152.483C169.491 150.726 169.269 148.969 169.047 147.212C168.899 145.659 168.622 144.124 168.326 142.515C167.956 140.166 167.438 137.836 166.846 135.488L166.643 134.6C166.199 132.991 165.829 131.456 165.311 129.847C163.85 124.798 162.167 119.879 160.392 115.274C159.745 113.444 159.005 111.687 158.265 109.93C157.174 107.285 156.064 104.881 155.048 102.606C154.53 101.571 154.086 100.628 153.642 99.666C153.143 98.5748 152.625 97.484 152.107 96.448C151.737 95.6528 151.312 94.9132 151.016 94.1736L147.854 88.3296C147.41 87.5344 148.15 86.5912 149.018 86.8316L168.806 92.1948H168.862C168.899 92.1948 168.918 92.2132 168.936 92.2132L171.544 92.9344L174.41 93.748L175.464 94.044V82.2824C175.464 76.6048 180.014 72 185.636 72C188.446 72 190.998 73.1464 192.829 75.0144C194.66 76.8824 195.807 79.4344 195.807 82.2824V99.74L197.915 100.332C198.082 100.387 198.248 100.461 198.396 100.572C198.914 100.96 199.653 101.534 200.596 102.236C201.336 102.828 202.132 103.55 203.093 104.289C204.998 105.824 207.272 107.803 209.769 110.078C210.435 110.651 211.082 111.243 211.674 111.835C214.892 114.83 218.498 118.344 221.938 122.228C222.9 123.319 223.843 124.428 224.804 125.594C225.766 126.777 226.783 127.942 227.671 129.108C228.836 130.661 230.093 132.27 231.184 133.953C231.702 134.748 232.294 135.562 232.794 136.357C234.199 138.484 235.438 140.684 236.622 142.885C237.121 143.902 237.639 145.012 238.082 146.103C239.396 149.043 240.431 152.039 241.097 155.035C241.3 155.682 241.448 156.385 241.522 157.014V157.162C241.744 158.05 241.818 158.993 241.892 159.954C242.188 163.024 242.04 166.094 241.374 169.182C241.097 170.496 240.727 171.734 240.283 173.048C239.839 174.305 239.396 175.618 238.822 176.857C237.713 179.428 236.4 181.998 234.846 184.402C234.347 185.29 233.755 186.233 233.163 187.121C232.516 188.064 231.85 188.952 231.258 189.821C230.445 190.931 229.576 192.096 228.688 193.131C227.893 194.222 227.079 195.314 226.191 196.275C224.952 197.736 223.769 199.123 222.53 200.455C221.79 201.324 220.995 202.212 220.181 203.007C219.386 203.894 218.572 204.69 217.832 205.429C216.593 206.668 215.558 207.63 214.688 208.425L212.654 210.293C212.358 210.552 211.97 210.7 211.563 210.7H195.807V230.913H215.632C220.07 230.913 224.286 229.341 227.689 226.456C228.854 225.439 233.94 221.038 239.95 214.399C240.154 214.177 240.413 214.01 240.708 213.936L295.467 198.106C296.484 197.81 297.52 198.587 297.52 199.66Z"
+                    fill="white"
+                  />
+                </g>
+              </g>
+              <defs>
+                <clippath
+                  id="clip0_992_26814"
+                >
+                  <rect
+                    fill="white"
+                    height="360"
+                    rx="48"
+                    width="360"
+                    y="0.5"
+                  />
+                </clippath>
+                <clippath
+                  id="clip1_992_26814"
+                >
+                  <rect
+                    fill="white"
+                    height="360"
+                    width="360"
+                  />
+                </clippath>
+              </defs>
+            </svg>
+          </a>
+          <div
+            class="c7"
+          >
+            <div
+              class="c8 c9"
+            >
+              <div
+                class="c10 css-1adn0z6"
+              >
+                123.456
+              </div>
+              <div
+                class="c10 c11 css-zhpkf8"
+              >
+                -
+              </div>
+            </div>
+          </div>
+          <div
+            class="c12"
+          >
+            <a
+              class="c5 c6"
+              href="https://etherscan.io/address/0x79ea449c3375ed1a9d7d99f8068209ea748c6d42"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              <div
+                class="c10 css-18hn7mq"
+              >
+                0x79ea...6D42
+              </div>
+            </a>
+          </div>
+          <div
+            class="c13"
+          >
+            <div
+              class="c10 css-18hn7mq"
+            >
+              5 months
+            </div>
+          </div>
+          <div
+            class="c14"
+          >
+            <div
+              class="c15"
+            >
+              <div
+                class="c16 css-18hn7mq"
+              >
+                Accept
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="c2"
+      >
+        <div
+          class="c3 c4"
+        >
+          <a
+            class="c5 c6"
+            href="https://opensea.io/assets/0x29d7ebca656665c1a52a92f830e413e394db6b4f/6815"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            <svg
+              fill="none"
+              height="20"
+              viewBox="0 0 360 361"
+              width="20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <g
+                clip-path="url(#clip0_992_26814)"
+              >
+                <rect
+                  fill="#2081E2"
+                  height="360"
+                  rx="48"
+                  width="360"
+                  y="0.5"
+                />
+                <g
+                  clip-path="url(#clip1_992_26814)"
+                >
+                  <path
+                    d="M360 180C360 279.406 279.406 360 180 360C80.5944 360 0 279.406 0 180C0 80.5944 80.5944 0 180 0C279.426 0 360 80.5944 360 180Z"
+                    fill="#2081E2"
+                  />
+                  <path
+                    d="M88.8044 186.048L89.5812 184.828L136.406 111.576C137.09 110.503 138.7 110.614 139.217 111.779C147.04 129.311 153.79 151.114 150.628 164.688C149.278 170.273 145.579 177.837 141.418 184.828C140.882 185.845 140.29 186.844 139.661 187.805C139.365 188.249 138.866 188.508 138.33 188.508H90.1728C88.8784 188.508 88.1204 187.102 88.8044 186.048Z"
+                    fill="white"
+                  />
+                  <path
+                    d="M297.52 199.66V211.255C297.52 211.92 297.113 212.512 296.522 212.771C292.897 214.325 280.488 220.021 275.328 227.196C262.161 245.523 252.1 271.728 229.612 271.728H135.796C102.545 271.728 75.6 244.691 75.6 211.329V210.256C75.6 209.368 76.3212 208.647 77.2092 208.647H129.508C130.544 208.647 131.302 209.609 131.21 210.626C130.84 214.029 131.468 217.506 133.077 220.668C136.184 226.974 142.62 230.913 149.574 230.913H175.464V210.7H149.869C148.556 210.7 147.78 209.184 148.538 208.111C148.815 207.686 149.13 207.242 149.462 206.742C151.885 203.303 155.343 197.958 158.783 191.874C161.132 187.768 163.406 183.385 165.237 178.984C165.607 178.189 165.903 177.375 166.199 176.58C166.698 175.174 167.216 173.861 167.586 172.548C167.956 171.439 168.252 170.274 168.548 169.182C169.417 165.447 169.787 161.489 169.787 157.384C169.787 155.775 169.713 154.092 169.565 152.483C169.491 150.726 169.269 148.969 169.047 147.212C168.899 145.659 168.622 144.124 168.326 142.515C167.956 140.166 167.438 137.836 166.846 135.488L166.643 134.6C166.199 132.991 165.829 131.456 165.311 129.847C163.85 124.798 162.167 119.879 160.392 115.274C159.745 113.444 159.005 111.687 158.265 109.93C157.174 107.285 156.064 104.881 155.048 102.606C154.53 101.571 154.086 100.628 153.642 99.666C153.143 98.5748 152.625 97.484 152.107 96.448C151.737 95.6528 151.312 94.9132 151.016 94.1736L147.854 88.3296C147.41 87.5344 148.15 86.5912 149.018 86.8316L168.806 92.1948H168.862C168.899 92.1948 168.918 92.2132 168.936 92.2132L171.544 92.9344L174.41 93.748L175.464 94.044V82.2824C175.464 76.6048 180.014 72 185.636 72C188.446 72 190.998 73.1464 192.829 75.0144C194.66 76.8824 195.807 79.4344 195.807 82.2824V99.74L197.915 100.332C198.082 100.387 198.248 100.461 198.396 100.572C198.914 100.96 199.653 101.534 200.596 102.236C201.336 102.828 202.132 103.55 203.093 104.289C204.998 105.824 207.272 107.803 209.769 110.078C210.435 110.651 211.082 111.243 211.674 111.835C214.892 114.83 218.498 118.344 221.938 122.228C222.9 123.319 223.843 124.428 224.804 125.594C225.766 126.777 226.783 127.942 227.671 129.108C228.836 130.661 230.093 132.27 231.184 133.953C231.702 134.748 232.294 135.562 232.794 136.357C234.199 138.484 235.438 140.684 236.622 142.885C237.121 143.902 237.639 145.012 238.082 146.103C239.396 149.043 240.431 152.039 241.097 155.035C241.3 155.682 241.448 156.385 241.522 157.014V157.162C241.744 158.05 241.818 158.993 241.892 159.954C242.188 163.024 242.04 166.094 241.374 169.182C241.097 170.496 240.727 171.734 240.283 173.048C239.839 174.305 239.396 175.618 238.822 176.857C237.713 179.428 236.4 181.998 234.846 184.402C234.347 185.29 233.755 186.233 233.163 187.121C232.516 188.064 231.85 188.952 231.258 189.821C230.445 190.931 229.576 192.096 228.688 193.131C227.893 194.222 227.079 195.314 226.191 196.275C224.952 197.736 223.769 199.123 222.53 200.455C221.79 201.324 220.995 202.212 220.181 203.007C219.386 203.894 218.572 204.69 217.832 205.429C216.593 206.668 215.558 207.63 214.688 208.425L212.654 210.293C212.358 210.552 211.97 210.7 211.563 210.7H195.807V230.913H215.632C220.07 230.913 224.286 229.341 227.689 226.456C228.854 225.439 233.94 221.038 239.95 214.399C240.154 214.177 240.413 214.01 240.708 213.936L295.467 198.106C296.484 197.81 297.52 198.587 297.52 199.66Z"
+                    fill="white"
+                  />
+                </g>
+              </g>
+              <defs>
+                <clippath
+                  id="clip0_992_26814"
+                >
+                  <rect
+                    fill="white"
+                    height="360"
+                    rx="48"
+                    width="360"
+                    y="0.5"
+                  />
+                </clippath>
+                <clippath
+                  id="clip1_992_26814"
+                >
+                  <rect
+                    fill="white"
+                    height="360"
+                    width="360"
+                  />
+                </clippath>
+              </defs>
+            </svg>
+          </a>
+          <div
+            class="c7"
+          >
+            <div
+              class="c8 c9"
+            >
+              <div
+                class="c10 css-1adn0z6"
+              >
+                123.456
+              </div>
+              <div
+                class="c10 c11 css-zhpkf8"
+              >
+                -
+              </div>
+            </div>
+          </div>
+          <div
+            class="c12"
+          >
+            <a
+              class="c5 c6"
+              href="https://etherscan.io/address/0x79ea449c3375ed1a9d7d99f8068209ea748c6d42"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              <div
+                class="c10 css-18hn7mq"
+              >
+                0x79ea...6D42
+              </div>
+            </a>
+          </div>
+          <div
+            class="c13"
+          >
+            <div
+              class="c10 css-18hn7mq"
+            >
+              5 months
+            </div>
+          </div>
+          <div
+            class="c14"
+          >
+            <div
+              class="c15"
+            >
+              <div
+                class="c16 css-18hn7mq"
+              >
+                Accept
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="c2"
+      >
+        <div
+          class="c3 c4"
+        >
+          <a
+            class="c5 c6"
+            href="https://opensea.io/assets/0x29d7ebca656665c1a52a92f830e413e394db6b4f/6815"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            <svg
+              fill="none"
+              height="20"
+              viewBox="0 0 360 361"
+              width="20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <g
+                clip-path="url(#clip0_992_26814)"
+              >
+                <rect
+                  fill="#2081E2"
+                  height="360"
+                  rx="48"
+                  width="360"
+                  y="0.5"
+                />
+                <g
+                  clip-path="url(#clip1_992_26814)"
+                >
+                  <path
+                    d="M360 180C360 279.406 279.406 360 180 360C80.5944 360 0 279.406 0 180C0 80.5944 80.5944 0 180 0C279.426 0 360 80.5944 360 180Z"
+                    fill="#2081E2"
+                  />
+                  <path
+                    d="M88.8044 186.048L89.5812 184.828L136.406 111.576C137.09 110.503 138.7 110.614 139.217 111.779C147.04 129.311 153.79 151.114 150.628 164.688C149.278 170.273 145.579 177.837 141.418 184.828C140.882 185.845 140.29 186.844 139.661 187.805C139.365 188.249 138.866 188.508 138.33 188.508H90.1728C88.8784 188.508 88.1204 187.102 88.8044 186.048Z"
+                    fill="white"
+                  />
+                  <path
+                    d="M297.52 199.66V211.255C297.52 211.92 297.113 212.512 296.522 212.771C292.897 214.325 280.488 220.021 275.328 227.196C262.161 245.523 252.1 271.728 229.612 271.728H135.796C102.545 271.728 75.6 244.691 75.6 211.329V210.256C75.6 209.368 76.3212 208.647 77.2092 208.647H129.508C130.544 208.647 131.302 209.609 131.21 210.626C130.84 214.029 131.468 217.506 133.077 220.668C136.184 226.974 142.62 230.913 149.574 230.913H175.464V210.7H149.869C148.556 210.7 147.78 209.184 148.538 208.111C148.815 207.686 149.13 207.242 149.462 206.742C151.885 203.303 155.343 197.958 158.783 191.874C161.132 187.768 163.406 183.385 165.237 178.984C165.607 178.189 165.903 177.375 166.199 176.58C166.698 175.174 167.216 173.861 167.586 172.548C167.956 171.439 168.252 170.274 168.548 169.182C169.417 165.447 169.787 161.489 169.787 157.384C169.787 155.775 169.713 154.092 169.565 152.483C169.491 150.726 169.269 148.969 169.047 147.212C168.899 145.659 168.622 144.124 168.326 142.515C167.956 140.166 167.438 137.836 166.846 135.488L166.643 134.6C166.199 132.991 165.829 131.456 165.311 129.847C163.85 124.798 162.167 119.879 160.392 115.274C159.745 113.444 159.005 111.687 158.265 109.93C157.174 107.285 156.064 104.881 155.048 102.606C154.53 101.571 154.086 100.628 153.642 99.666C153.143 98.5748 152.625 97.484 152.107 96.448C151.737 95.6528 151.312 94.9132 151.016 94.1736L147.854 88.3296C147.41 87.5344 148.15 86.5912 149.018 86.8316L168.806 92.1948H168.862C168.899 92.1948 168.918 92.2132 168.936 92.2132L171.544 92.9344L174.41 93.748L175.464 94.044V82.2824C175.464 76.6048 180.014 72 185.636 72C188.446 72 190.998 73.1464 192.829 75.0144C194.66 76.8824 195.807 79.4344 195.807 82.2824V99.74L197.915 100.332C198.082 100.387 198.248 100.461 198.396 100.572C198.914 100.96 199.653 101.534 200.596 102.236C201.336 102.828 202.132 103.55 203.093 104.289C204.998 105.824 207.272 107.803 209.769 110.078C210.435 110.651 211.082 111.243 211.674 111.835C214.892 114.83 218.498 118.344 221.938 122.228C222.9 123.319 223.843 124.428 224.804 125.594C225.766 126.777 226.783 127.942 227.671 129.108C228.836 130.661 230.093 132.27 231.184 133.953C231.702 134.748 232.294 135.562 232.794 136.357C234.199 138.484 235.438 140.684 236.622 142.885C237.121 143.902 237.639 145.012 238.082 146.103C239.396 149.043 240.431 152.039 241.097 155.035C241.3 155.682 241.448 156.385 241.522 157.014V157.162C241.744 158.05 241.818 158.993 241.892 159.954C242.188 163.024 242.04 166.094 241.374 169.182C241.097 170.496 240.727 171.734 240.283 173.048C239.839 174.305 239.396 175.618 238.822 176.857C237.713 179.428 236.4 181.998 234.846 184.402C234.347 185.29 233.755 186.233 233.163 187.121C232.516 188.064 231.85 188.952 231.258 189.821C230.445 190.931 229.576 192.096 228.688 193.131C227.893 194.222 227.079 195.314 226.191 196.275C224.952 197.736 223.769 199.123 222.53 200.455C221.79 201.324 220.995 202.212 220.181 203.007C219.386 203.894 218.572 204.69 217.832 205.429C216.593 206.668 215.558 207.63 214.688 208.425L212.654 210.293C212.358 210.552 211.97 210.7 211.563 210.7H195.807V230.913H215.632C220.07 230.913 224.286 229.341 227.689 226.456C228.854 225.439 233.94 221.038 239.95 214.399C240.154 214.177 240.413 214.01 240.708 213.936L295.467 198.106C296.484 197.81 297.52 198.587 297.52 199.66Z"
+                    fill="white"
+                  />
+                </g>
+              </g>
+              <defs>
+                <clippath
+                  id="clip0_992_26814"
+                >
+                  <rect
+                    fill="white"
+                    height="360"
+                    rx="48"
+                    width="360"
+                    y="0.5"
+                  />
+                </clippath>
+                <clippath
+                  id="clip1_992_26814"
+                >
+                  <rect
+                    fill="white"
+                    height="360"
+                    width="360"
+                  />
+                </clippath>
+              </defs>
+            </svg>
+          </a>
+          <div
+            class="c7"
+          >
+            <div
+              class="c8 c9"
+            >
+              <div
+                class="c10 css-1adn0z6"
+              >
+                123.456
+              </div>
+              <div
+                class="c10 c11 css-zhpkf8"
+              >
+                -
+              </div>
+            </div>
+          </div>
+          <div
+            class="c12"
+          >
+            <a
+              class="c5 c6"
+              href="https://etherscan.io/address/0x79ea449c3375ed1a9d7d99f8068209ea748c6d42"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              <div
+                class="c10 css-18hn7mq"
+              >
+                0x79ea...6D42
+              </div>
+            </a>
+          </div>
+          <div
+            class="c13"
+          >
+            <div
+              class="c10 css-18hn7mq"
+            >
+              5 months
+            </div>
+          </div>
+          <div
+            class="c14"
+          >
+            <div
+              class="c15"
+            >
+              <div
+                class="c16 css-18hn7mq"
+              >
+                Accept
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;

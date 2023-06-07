@@ -12,7 +12,15 @@ import React, {
   useRef,
   useState,
 } from 'react'
-import { ArrowLeft, CheckCircle, Copy, ExternalLink as ExternalLinkIconFeather, Icon, X } from 'react-feather'
+import {
+  AlertTriangle,
+  ArrowLeft,
+  CheckCircle,
+  Copy,
+  ExternalLink as ExternalLinkIconFeather,
+  Icon,
+  X,
+} from 'react-feather'
 import { Link } from 'react-router-dom'
 import styled, { css, keyframes } from 'styled-components/macro'
 import { Z_INDEX } from 'theme/zIndex'
@@ -459,14 +467,15 @@ export const SpinnerSVG = styled.svg`
   ${SpinnerCss}
 `
 
-const BackArrowLink = styled(StyledInternalLink)`
+const BackArrowIcon = styled(ArrowLeft)`
   color: ${({ theme }) => theme.textPrimary};
 `
-export function BackArrow({ to }: { to: string }) {
+
+export function BackArrowLink({ to }: { to: string }) {
   return (
-    <BackArrowLink to={to}>
-      <ArrowLeft />
-    </BackArrowLink>
+    <StyledInternalLink to={to}>
+      <BackArrowIcon />
+    </StyledInternalLink>
   )
 }
 
@@ -510,4 +519,16 @@ export const Separator = styled.div`
 export const GlowEffect = styled.div`
   border-radius: 32px;
   box-shadow: ${({ theme }) => theme.networkDefaultShadow};
+`
+
+export const CautionTriangle = styled(AlertTriangle)`
+  color: ${({ theme }) => theme.accentWarning};
+`
+
+export const Divider = styled.div`
+  width: 100%;
+  height: 1px;
+  border-width: 0;
+  margin: 0;
+  background-color: ${({ theme }) => theme.backgroundOutline};
 `

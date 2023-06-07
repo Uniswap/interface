@@ -39,8 +39,8 @@ export const formatSwapSignedAnalyticsEventProperties = ({
   fiatValues,
   txHash,
 }: {
-  trade: InterfaceTrade<Currency, Currency, TradeType> | Trade<Currency, Currency, TradeType>
-  fiatValues: { amountIn: number | undefined; amountOut: number | undefined }
+  trade: InterfaceTrade | Trade<Currency, Currency, TradeType>
+  fiatValues: { amountIn?: number; amountOut?: number }
   txHash: string
 }) => ({
   transaction_hash: txHash,
@@ -61,8 +61,7 @@ export const formatSwapSignedAnalyticsEventProperties = ({
 
 export const formatSwapQuoteReceivedEventProperties = (
   trade: Trade<Currency, Currency, TradeType>,
-  gasUseEstimateUSD?: CurrencyAmount<Token>,
-  fetchingSwapQuoteStartTime?: Date
+  gasUseEstimateUSD?: string
 ) => {
   return {
     token_in_symbol: trade.inputAmount.currency.symbol,
@@ -70,15 +69,12 @@ export const formatSwapQuoteReceivedEventProperties = (
     token_in_address: getTokenAddress(trade.inputAmount.currency),
     token_out_address: getTokenAddress(trade.outputAmount.currency),
     price_impact_basis_points: trade ? formatPercentInBasisPointsNumber(computeRealizedPriceImpact(trade)) : undefined,
-    estimated_network_fee_usd: gasUseEstimateUSD ? formatToDecimal(gasUseEstimateUSD, 2) : undefined,
+    estimated_network_fee_usd: gasUseEstimateUSD,
     chain_id:
       trade.inputAmount.currency.chainId === trade.outputAmount.currency.chainId
         ? trade.inputAmount.currency.chainId
         : undefined,
     token_in_amount: formatToDecimal(trade.inputAmount, trade.inputAmount.currency.decimals),
     token_out_amount: formatToDecimal(trade.outputAmount, trade.outputAmount.currency.decimals),
-    quote_latency_milliseconds: fetchingSwapQuoteStartTime
-      ? getDurationFromDateMilliseconds(fetchingSwapQuoteStartTime)
-      : undefined,
   }
 }

@@ -1,10 +1,9 @@
-import { ConnectionType, getConnections, useGetConnection } from 'connection'
-import { renderHook } from 'test-utils'
+import INJECTED_DARK_ICON from 'assets/svg/browser-wallet-dark.svg'
+import INJECTED_LIGHT_ICON from 'assets/svg/browser-wallet-light.svg'
+import { getConnections, useGetConnection } from 'connection'
+import { renderHook } from 'test-utils/render'
 
-beforeEach(() => {
-  jest.resetModules()
-  jest.resetAllMocks()
-})
+import { ConnectionType } from './types'
 
 const UserAgentMock = jest.requireMock('utils/userAgent')
 jest.mock('utils/userAgent', () => ({
@@ -20,7 +19,7 @@ describe('connection utility/metadata tests', () => {
     const getConnection = renderHook(() => useGetConnection()).result.current
     const injected = getConnection(ConnectionType.INJECTED)
     const coinbase = getConnection(ConnectionType.COINBASE_WALLET)
-    const uniswap = getConnection(ConnectionType.UNIWALLET)
+    const uniswap = getConnection(ConnectionType.UNISWAP_WALLET)
     const walletconnect = getConnection(ConnectionType.WALLET_CONNECT)
 
     return { displayed, injected, coinbase, uniswap, walletconnect }
@@ -107,6 +106,9 @@ describe('connection utility/metadata tests', () => {
     expect(displayed.includes(injected)).toBe(true)
     expect(injected.getName()).toBe('Browser Wallet')
     expect(injected.overrideActivate?.()).toBeFalsy()
+
+    expect(injected.getIcon?.(/* isDarkMode */ false)).toBe(INJECTED_LIGHT_ICON)
+    expect(injected.getIcon?.(/* isDarkMode */ true)).toBe(INJECTED_DARK_ICON)
 
     // Ensures we provide multiple connection options if in an unknown injected browser
     expect(displayed.length).toEqual(4)

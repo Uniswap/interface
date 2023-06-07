@@ -1,4 +1,5 @@
 import * as Sentry from '@sentry/react'
+import noop from 'utils/noop'
 
 import { AppState } from './types'
 
@@ -17,7 +18,7 @@ export const sentryEnhancer = Sentry.createReduxEnhancer({
   /**
    * We don't want to store actions as breadcrumbs in Sentry, so we return null to disable the default behavior.
    */
-  actionTransformer: () => null,
+  actionTransformer: noop,
   /**
    * We only want to store a subset of the state in Sentry, containing only the relevant parts for debugging.
    * Note: This function runs on every state update, so we're keeping it as fast as possible by avoiding any function
@@ -36,8 +37,7 @@ export const sentryEnhancer = Sentry.createReduxEnhancer({
         selectedWallet: user.selectedWallet,
         lastUpdateVersionTimestamp: user.lastUpdateVersionTimestamp,
         userLocale: user.userLocale,
-        userExpertMode: user.userExpertMode,
-        userClientSideRouter: user.userClientSideRouter,
+        userRouterPreference: user.userRouterPreference,
         userHideClosedPositions: user.userHideClosedPositions,
         userSlippageTolerance: user.userSlippageTolerance,
         userSlippageToleranceHasBeenMigratedToAuto: user.userSlippageToleranceHasBeenMigratedToAuto,

@@ -1,10 +1,10 @@
-import { ConnectionType } from 'connection'
 import { useGetConnection } from 'connection'
+import { ConnectionType } from 'connection/types'
 import { useMemo } from 'react'
 import { useAppSelector } from 'state/hooks'
 
 const SELECTABLE_WALLETS = [
-  ConnectionType.UNIWALLET,
+  ConnectionType.UNISWAP_WALLET,
   ConnectionType.INJECTED,
   ConnectionType.WALLET_CONNECT,
   ConnectionType.COINBASE_WALLET,

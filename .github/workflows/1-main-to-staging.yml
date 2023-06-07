@@ -1,0 +1,32 @@
+name: 1 | Push main -> staging
+
+# This CI job is responsible for pushing the current contents of the `main` branch to the
+# `releases/staging` branch, which will in turn kick off a deploy to the staging environment.
+
+on:
+  workflow_dispatch:
+
+# https://stackoverflow.com/questions/57921401/push-to-origin-from-github-action
+jobs:
+  push-staging:
+    name: 'Push to staging branch'
+    runs-on: ubuntu-latest
+    environment:
+      name: push/staging
+    steps:
+      - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab
+        with:
+          token: ${{ secrets.RELEASE_SERVICE_ACCESS_TOKEN }}
+          ref: main
+      - name: Git config
+        run: |
+          git config user.name "UL Service Account"
+          git config user.email "hello-happy-puppy@users.noreply.github.com"
+      - name: Add CODEOWNERS file
+        run: |
+          echo "@uniswap/web-admins" > CODEOWNERS
+          git add CODEOWNERS
+          git commit -m "ci: add global CODEOWNERS"
+      - name: Git push
+        run: |
+          git push origin main:releases/staging --force

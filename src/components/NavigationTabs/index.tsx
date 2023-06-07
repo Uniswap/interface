@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { Percent } from '@uniswap/sdk-core'
+import { useWeb3React } from '@web3-react/core'
 import { ReactNode } from 'react'
 import { ArrowLeft } from 'react-feather'
 import { Link as HistoryLink, useLocation } from 'react-router-dom'
@@ -21,7 +22,7 @@ const Tabs = styled.div`
   justify-content: space-evenly;
 `
 
-const StyledHistoryLink = styled(HistoryLink)<{ flex: string | undefined }>`
+const StyledHistoryLink = styled(HistoryLink)<{ flex?: string }>`
   flex: ${({ flex }) => flex ?? 'none'};
 
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
@@ -57,17 +58,18 @@ export function FindPoolTabs({ origin }: { origin: string }) {
 export function AddRemoveTabs({
   adding,
   creating,
-  defaultSlippage,
+  autoSlippage,
   positionID,
   children,
 }: {
   adding: boolean
   creating: boolean
-  defaultSlippage: Percent
-  positionID?: string | undefined
+  autoSlippage: Percent
+  positionID?: string
   showBackLink?: boolean
-  children?: ReactNode | undefined
+  children?: ReactNode
 }) {
+  const { chainId } = useWeb3React()
   const theme = useTheme()
   // reset states on back
   const dispatch = useAppDispatch()
@@ -108,7 +110,7 @@ export function AddRemoveTabs({
           )}
         </ThemedText.DeprecatedMediumHeader>
         <Box style={{ marginRight: '.5rem' }}>{children}</Box>
-        <SettingsTab placeholderSlippage={defaultSlippage} />
+        <SettingsTab autoSlippage={autoSlippage} chainId={chainId} />
       </RowBetween>
     </Tabs>
   )

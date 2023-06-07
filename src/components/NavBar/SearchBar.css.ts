@@ -50,27 +50,24 @@ const baseSearchNftStyle = style([
   },
 ])
 
-export const searchBarContainer = style([
-  sprinkles({
-    right: '0',
-    top: '0',
-    zIndex: '3',
-    display: 'inline-block',
-  }),
-])
-
 export const searchBarContainerNft = style([
   sprinkles({
     right: '0',
     top: '0',
     zIndex: '3',
-    display: 'inline-block',
+    display: 'flex',
+    maxHeight: 'searchResultsMaxHeight',
+    overflow: 'hidden',
   }),
   {
     backdropFilter: 'blur(60px)',
     borderRadius: '12px',
   },
 ])
+
+export const searchBarContainerDisableBlur = style({
+  backdropFilter: 'none',
+})
 
 export const searchBar = style([
   baseSearchStyle,
@@ -117,6 +114,10 @@ export const searchBarDropdownNft = style([
     borderTop: 'none',
   },
 ])
+
+export const searchBarScrollable = sprinkles({
+  overflowY: 'auto',
+})
 
 export const suggestionRow = style([
   sprinkles({

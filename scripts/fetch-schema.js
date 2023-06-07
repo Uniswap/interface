@@ -4,13 +4,13 @@ require('dotenv').config({ path: '.env.production' })
 const child_process = require('child_process')
 const fs = require('fs/promises')
 const { promisify } = require('util')
-const dataConfig = require('../graphql.config')
-const thegraphConfig = require('../graphql_thegraph.config')
+const dataConfig = require('../graphql.data.config')
+const thegraphConfig = require('../graphql.thegraph.config')
 
 const exec = promisify(child_process.exec)
 
 function fetchSchema(url, outputFile) {
-  exec(`npx get-graphql-schema --h Origin=https://app.uniswap.org ${url}`)
+  exec(`yarn --silent get-graphql-schema --h Origin=https://app.uniswap.org ${url}`)
     .then(({ stderr, stdout }) => {
       if (stderr) {
         throw new Error(stderr)

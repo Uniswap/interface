@@ -1,10 +1,10 @@
 import { useWeb3React } from '@web3-react/core'
+import { parseLocalActivity } from 'components/AccountDrawer/MiniPortfolio/Activity/parseLocal'
+import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
+import PortfolioRow from 'components/AccountDrawer/MiniPortfolio/PortfolioRow'
 import Column from 'components/Column'
-import { parseLocalActivity } from 'components/WalletDropdown/MiniPortfolio/Activity/parseLocal'
-import { PortfolioLogo } from 'components/WalletDropdown/MiniPortfolio/PortfolioLogo'
-import PortfolioRow from 'components/WalletDropdown/MiniPortfolio/PortfolioRow'
+import { useAllTokensMultichain } from 'hooks/Tokens'
 import useENSName from 'hooks/useENSName'
-import { useCombinedActiveList } from 'state/lists/hooks'
 import { useTransaction } from 'state/transactions/hooks'
 import { TransactionDetails } from 'state/transactions/types'
 import styled from 'styled-components/macro'
@@ -19,7 +19,7 @@ const Descriptor = styled(ThemedText.BodySmall)`
 
 function TransactionPopupContent({ tx, chainId }: { tx: TransactionDetails; chainId: number }) {
   const success = tx.receipt?.status === 1
-  const tokens = useCombinedActiveList()
+  const tokens = useAllTokensMultichain()
   const activity = parseLocalActivity(tx, chainId, tokens)
   const { ENSName } = useENSName(activity?.otherAccount)
 
@@ -43,7 +43,7 @@ function TransactionPopupContent({ tx, chainId }: { tx: TransactionDetails; chai
           <PopupAlertTriangle />
         )
       }
-      title={<ThemedText.SubHeader fontWeight={500}>{activity.title}</ThemedText.SubHeader>}
+      title={<ThemedText.SubHeader>{activity.title}</ThemedText.SubHeader>}
       descriptor={
         <Descriptor color="textSecondary">
           {activity.descriptor}

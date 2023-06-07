@@ -23,11 +23,11 @@ export const buildNftTradeInputFromBagItems = (itemsInBag: BagItem[]): NftTradeI
   return buildNftTradeInput(assetsToBuy)
 }
 
-const buildNftTradeInput = (assets: UpdatedGenieAsset[]): NftTradeInput[] => {
+export const buildNftTradeInput = (assets: UpdatedGenieAsset[]): NftTradeInput[] => {
   return assets.flatMap((asset) => {
     const { id, address, marketplace, priceInfo, tokenId, tokenType } = asset
 
-    if (!id || !marketplace || !tokenType) return []
+    if (!id || !marketplace) return []
 
     const ethAmountInput: TokenAmountInput = {
       amount: priceInfo.ETHPrice,

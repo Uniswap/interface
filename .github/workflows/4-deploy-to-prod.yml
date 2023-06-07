@@ -1,0 +1,111 @@
+name: 4 | Deploy prod
+on:
+  push:
+    branches:
+      - 'releases/prod'
+
+jobs:
+  deploy-to-prod:
+    runs-on: ubuntu-latest
+    environment:
+      name: deploy/prod
+    steps:
+      - name: Send Slack message that build is starting
+        uses: slackapi/slack-github-action@007b2c3c751a190b6f0f040e47ed024deaa72844
+        continue-on-error: true
+        with:
+          payload: |
+            {
+              "text": "Production deploy started for branch: ${{ github.ref_name }}"
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/setup
+      - run: yarn prepare
+      - run: yarn build
+      - name: Bump and tag
+        id: github-tag-action
+        uses: mathieudutour/github-tag-action@d745f2e74aaf1ee82e747b181f7a0967978abee0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          release_branches: releases/prod
+          default_bump: patch
+
+      - name: Pin to IPFS
+        id: pinata
+        uses: anantaramdas/ipfs-pinata-deploy-action@39bbda1ce1fe24c69c6f57861b8038278d53688d
+        with:
+          pin-name: Uniswap ${{ steps.github-tag-action.outputs.new_tag }}
+          path: './build'
+          pinata-api-key: ${{ secrets.PINATA_API_KEY }}
+          pinata-secret-api-key: ${{ secrets.PINATA_API_SECRET_KEY }}
+
+      - name: Convert CIDv0 to CIDv1
+        id: convert-cidv0
+        uses: uniswap/convert-cidv0-cidv1@v1.0.0
+        with:
+          cidv0: ${{ steps.pinata.outputs.hash }}
+
+      - name: Release
+        uses: actions/create-release@v1.1.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.github-tag-action.outputs.new_tag }}
+          release_name: Release ${{ steps.github-tag-action.outputs.new_tag }}
+          body: |
+            IPFS hash of the deployment:
+            - CIDv0: `${{ steps.pinata.outputs.hash }}`
+            - CIDv1: `${{ steps.convert-cidv0.outputs.cidv1 }}`
+
+            The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
+
+            You can also access the Uniswap Interface from an IPFS gateway.
+            **BEWARE**: The Uniswap interface uses [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) to remember your settings, such as which tokens you have imported.
+            **You should always use an IPFS gateway that enforces origin separation**, or our hosted deployment of the latest release at [app.uniswap.org](https://app.uniswap.org).
+            Your Uniswap settings are never remembered across different URLs.
+
+            IPFS gateways:
+            - https://${{ steps.convert-cidv0.outputs.cidv1 }}.ipfs.dweb.link/
+            - https://${{ steps.convert-cidv0.outputs.cidv1 }}.ipfs.cf-ipfs.com/
+            - [ipfs://${{ steps.pinata.outputs.hash }}/](ipfs://${{ steps.pinata.outputs.hash }}/)
+
+            ${{ steps.github-tag-action.outputs.changelog }}
+
+      - name: Update Cloudflare Pages deployment
+        uses: cloudflare/pages-action@364c7ca09a4b57837c5967871d64a2c31adb8c0d
+        id: pages-deployment
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          projectName: ${{ secrets.CLOUDFLARE_PROJECT_NAME }}
+          directory: build
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+          # Cloudflare uses `main` as the default production branch, so we push using the `main` branch so that it can be aliased by a custom domain.
+          branch: main
+
+      - name: Send Slack message about deployment outcome
+        uses: slackapi/slack-github-action@007b2c3c751a190b6f0f040e47ed024deaa72844
+        continue-on-error: true
+        if: always()
+        with:
+          payload: |
+            {
+              "text": "Production deploy **${{ steps.pages-deployment.outcome }}** for: ${{ github.ref_name }}"
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+      - name: Upload source maps to Sentry
+        uses: getsentry/action-release@4744f6a65149f441c5f396d5b0877307c0db52c7
+        continue-on-error: true
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+        with:
+          environment: production
+          sourcemaps: './build/static/js'
+          url_prefix: '~/static/js'

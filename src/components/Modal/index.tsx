@@ -7,6 +7,8 @@ import { Z_INDEX } from 'theme/zIndex'
 
 import { isMobile } from '../../utils/userAgent'
 
+export const MODAL_TRANSITION_DURATION = 200
+
 const AnimatedDialogOverlay = animated(DialogOverlay)
 
 const StyledDialogOverlay = styled(AnimatedDialogOverlay)<{ $scrollOverlay?: boolean }>`
@@ -79,6 +81,7 @@ interface ModalProps {
   isOpen: boolean
   onDismiss?: () => void
   onSwipe?: () => void
+  height?: number // takes precedence over minHeight and maxHeight
   minHeight?: number | false
   maxHeight?: number
   maxWidth?: number
@@ -94,6 +97,7 @@ export default function Modal({
   minHeight = false,
   maxHeight = 90,
   maxWidth = 420,
+  height,
   initialFocusRef,
   children,
   onSwipe = onDismiss,
@@ -101,7 +105,7 @@ export default function Modal({
   hideBorder = false,
 }: ModalProps) {
   const fadeTransition = useTransition(isOpen, {
-    config: { duration: 200 },
+    config: { duration: MODAL_TRANSITION_DURATION },
     from: { opacity: 0 },
     enter: { opacity: 1 },
     leave: { opacity: 0 },
@@ -139,8 +143,8 @@ export default function Modal({
                     }
                   : {})}
                 aria-label="dialog"
-                $minHeight={minHeight}
-                $maxHeight={maxHeight}
+                $minHeight={height ?? minHeight}
+                $maxHeight={height ?? maxHeight}
                 $scrollOverlay={$scrollOverlay}
                 $hideBorder={hideBorder}
                 $maxWidth={maxWidth}

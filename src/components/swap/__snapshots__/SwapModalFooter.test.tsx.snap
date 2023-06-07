@@ -1,0 +1,338 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SwapModalFooter.tsx matches base snapshot, test trade exact input 1`] = `
+<DocumentFragment>
+  .c3 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c4 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: flex-start;
+  -webkit-box-align: flex-start;
+  -ms-flex-align: flex-start;
+  align-items: flex-start;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.c2 {
+  color: #0D111C;
+}
+
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 12px;
+}
+
+.c7 {
+  display: inline-block;
+  height: inherit;
+}
+
+.c5 {
+  color: #7780A0;
+  margin-right: 8px;
+}
+
+.c8 {
+  cursor: help;
+  color: #7780A0;
+  margin-right: 8px;
+}
+
+.c1 {
+  padding: 0 8px;
+}
+
+.c6 {
+  text-align: right;
+  overflow-wrap: break-word;
+}
+
+<div
+    class="c0 c1"
+  >
+    <div
+      class="c2 css-zhpkf8"
+    >
+      <div
+        class="c3 c4"
+      >
+        <div
+          class="c2 c5 css-zhpkf8"
+        >
+          Exchange rate
+        </div>
+        <div
+          class="c2 c6 css-zhpkf8"
+        >
+          1 DEF = 1.00 ABC 
+        </div>
+      </div>
+    </div>
+    <div
+      class="c2 css-zhpkf8"
+    >
+      <div
+        class="c3 c4"
+      >
+        <div
+          class="c7"
+        >
+          <div>
+            <div
+              class="c2 c8 css-zhpkf8"
+              cursor="help"
+            >
+              Network fee
+            </div>
+          </div>
+        </div>
+        <div
+          class="c2 c6 css-zhpkf8"
+        >
+          ~$1.00
+        </div>
+      </div>
+    </div>
+    <div
+      class="c2 css-zhpkf8"
+    >
+      <div
+        class="c3 c4"
+      >
+        <div
+          class="c7"
+        >
+          <div>
+            <div
+              class="c2 c8 css-zhpkf8"
+              cursor="help"
+            >
+              Price impact
+            </div>
+          </div>
+        </div>
+        <div
+          class="c6 css-zhpkf8"
+        >
+          105566.373%
+        </div>
+      </div>
+    </div>
+    <div
+      class="c2 css-zhpkf8"
+    >
+      <div
+        class="c3 c4"
+      >
+        <div
+          class="c7"
+        >
+          <div>
+            <div
+              class="c2 c8 css-zhpkf8"
+              cursor="help"
+            >
+              Minimum received
+            </div>
+          </div>
+        </div>
+        <div
+          class="c2 c6 css-zhpkf8"
+        >
+          0.00000000000000098 DEF
+        </div>
+      </div>
+    </div>
+  </div>
+  .c0 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c3 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  display: inline-block;
+  text-align: center;
+  line-height: inherit;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  font-size: inherit;
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  color: white;
+  background-color: primary;
+  border: 0;
+  border-radius: 4px;
+}
+
+.c1 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c2 {
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+}
+
+.c2 > * {
+  margin: !important;
+}
+
+.c7 {
+  color: #F5F6FC;
+}
+
+.c4 {
+  padding: 16px;
+  width: 100%;
+  font-weight: 500;
+  text-align: center;
+  border-radius: 20px;
+  outline: none;
+  border: 1px solid transparent;
+  color: #0D111C;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
+  will-change: transform;
+  -webkit-transition: -webkit-transform 450ms ease;
+  -webkit-transition: transform 450ms ease;
+  transition: transform 450ms ease;
+  -webkit-transform: perspective(1px) translateZ(0);
+  -ms-transform: perspective(1px) translateZ(0);
+  transform: perspective(1px) translateZ(0);
+}
+
+.c4:disabled {
+  opacity: 50%;
+  cursor: auto;
+  pointer-events: none;
+}
+
+.c4 > * {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.c4 > a {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+}
+
+.c5 {
+  background-color: #FB118E;
+  font-size: 20px;
+  font-weight: 600;
+  padding: 16px;
+  color: #F5F6FC;
+}
+
+.c5:focus {
+  box-shadow: 0 0 0 1pt #ee0481;
+  background-color: #ee0481;
+}
+
+.c5:hover {
+  background-color: #ee0481;
+}
+
+.c5:active {
+  box-shadow: 0 0 0 1pt #d50474;
+  background-color: #d50474;
+}
+
+.c5:disabled {
+  background-color: #E8ECFB;
+  color: #7780A0;
+  cursor: auto;
+  box-shadow: none;
+  border: 1px solid transparent;
+  outline: none;
+}
+
+.c6 {
+  height: 56px;
+  margin-top: 10px;
+}
+
+<div
+    class="c0 c1 c2"
+  >
+    <button
+      class="c3 c4 c5 c6"
+      data-testid="confirm-swap-button"
+      id="confirm-swap-or-send"
+    >
+      <div
+        class="c7 css-iapcxi"
+      >
+        Confirm swap
+      </div>
+    </button>
+  </div>
+</DocumentFragment>
+`;

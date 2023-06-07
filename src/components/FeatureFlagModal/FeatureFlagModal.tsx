@@ -1,10 +1,8 @@
-import { BaseVariant, FeatureFlag, featureFlagSettings, useBaseFlag, useUpdateFlag } from 'featureFlags'
-import { MgtmVariant, useMgtmFlag } from 'featureFlags/flags/mgtm'
-import { useMiniPortfolioFlag } from 'featureFlags/flags/miniPortfolio'
-import { NftGraphqlVariant, useNftGraphqlFlag } from 'featureFlags/flags/nftlGraphql'
-import { PayWithAnyTokenVariant, usePayWithAnyTokenFlag } from 'featureFlags/flags/payWithAnyToken'
-import { SwapWidgetVariant, useSwapWidgetFlag } from 'featureFlags/flags/swapWidget'
+import { BaseVariant, FeatureFlag, featureFlagSettings, useUpdateFlag } from 'featureFlags'
+import { useNativeUSDCArbitrumFlag } from 'featureFlags/flags/nativeUsdcArbitrum'
+import { DetailsV2Variant, useDetailsV2Flag } from 'featureFlags/flags/nftDetails'
 import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
+import { UnifiedRouterVariant, useRoutingAPIV2Flag } from 'featureFlags/flags/unifiedRouter'
 import { useUpdateAtom } from 'jotai/utils'
 import { Children, PropsWithChildren, ReactElement, ReactNode, useCallback, useState } from 'react'
 import { X } from 'react-feather'
@@ -206,40 +204,22 @@ export default function FeatureFlagModal() {
         </CloseButton>
       </Header>
       <FeatureFlagOption
-        variant={MgtmVariant}
-        value={useMgtmFlag()}
-        featureFlag={FeatureFlag.mgtm}
-        label="Mobile Wallet go-to-market assets"
+        variant={DetailsV2Variant}
+        value={useDetailsV2Flag()}
+        featureFlag={FeatureFlag.detailsV2}
+        label="Use the new details page for nfts"
+      />
+      <FeatureFlagOption
+        variant={UnifiedRouterVariant}
+        value={useRoutingAPIV2Flag()}
+        featureFlag={FeatureFlag.uraEnabled}
+        label="Enable the Unified Routing API"
       />
       <FeatureFlagOption
         variant={BaseVariant}
-        value={useBaseFlag(FeatureFlag.walletMicrosite)}
-        featureFlag={FeatureFlag.walletMicrosite}
-        label="Mobile Wallet microsite (requires mgtm to also be enabled)"
-      />
-      <FeatureFlagOption
-        variant={BaseVariant}
-        value={useMiniPortfolioFlag()}
-        featureFlag={FeatureFlag.miniPortfolio}
-        label="MiniPortfolio"
-      />
-      <FeatureFlagOption
-        variant={PayWithAnyTokenVariant}
-        value={usePayWithAnyTokenFlag()}
-        featureFlag={FeatureFlag.payWithAnyToken}
-        label="Pay With Any Token"
-      />
-      <FeatureFlagOption
-        variant={SwapWidgetVariant}
-        value={useSwapWidgetFlag()}
-        featureFlag={FeatureFlag.swapWidget}
-        label="Swap Widget"
-      />
-      <FeatureFlagOption
-        variant={NftGraphqlVariant}
-        value={useNftGraphqlFlag()}
-        featureFlag={FeatureFlag.nftGraphql}
-        label="Migrate NFT read endpoints to GQL"
+        value={useNativeUSDCArbitrumFlag()}
+        featureFlag={FeatureFlag.nativeUsdcArbitrum}
+        label="Enable Circle native USDC on Arbitrum"
       />
       <FeatureFlagGroup name="Debug">
         <FeatureFlagOption

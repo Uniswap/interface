@@ -68,9 +68,9 @@ const ResourcesContainer = styled.div`
 type AboutSectionProps = {
   address: string
   chainId: SupportedChainId
-  description?: string | null | undefined
-  homepageUrl?: string | null | undefined
-  twitterName?: string | null | undefined
+  description?: string | null
+  homepageUrl?: string | null
+  twitterName?: string | null
 }
 
 export function AboutSection({ address, chainId, description, homepageUrl, twitterName }: AboutSectionProps) {

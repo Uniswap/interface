@@ -1,15 +1,16 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { ConnectionType } from 'connection'
+import { ConnectionType } from 'connection/types'
 import { SupportedLocale } from 'constants/locales'
+import { RouterPreference } from 'state/routing/slice'
 
 import { DEFAULT_DEADLINE_FROM_NOW } from '../../constants/misc'
 import { updateVersion } from '../global/actions'
-import { SerializedPair, SerializedToken } from './types'
+import { SerializedPair, SerializedToken, SlippageTolerance } from './types'
 
 const currentTimestamp = () => new Date().getTime()
 
 export interface UserState {
-  buyFiatFlowCompleted: boolean | undefined
+  buyFiatFlowCompleted?: boolean
 
   selectedWallet?: ConnectionType
 
@@ -18,16 +19,17 @@ export interface UserState {
 
   userLocale: SupportedLocale | null
 
-  userExpertMode: boolean
-
-  userClientSideRouter: boolean // whether routes should be calculated with the client side router only
+  // which router should be used to calculate trades
+  userRouterPreference: RouterPreference
 
   // hides closed (inactive) positions across the app
   userHideClosedPositions: boolean
 
   // user defined slippage tolerance in bips, used in all txns
-  userSlippageTolerance: number | 'auto'
-  userSlippageToleranceHasBeenMigratedToAuto: boolean // temporary flag for migration status
+  userSlippageTolerance: number | SlippageTolerance.Auto
+
+  // flag to indicate whether the user has been migrated from the old slippage tolerance values
+  userSlippageToleranceHasBeenMigratedToAuto: boolean
 
   // deadline set by user in minutes, used in all txns
   userDeadline: number
@@ -49,7 +51,7 @@ export interface UserState {
   URLWarningVisible: boolean
   hideUniswapWalletBanner: boolean
   // undefined means has not gone through A/B split yet
-  showSurveyPopup: boolean | undefined
+  showSurveyPopup?: boolean
 }
 
 function pairKey(token0Address: string, token1Address: string) {
@@ -59,11 +61,10 @@ function pairKey(token0Address: string, token1Address: string) {
 export const initialState: UserState = {
   buyFiatFlowCompleted: undefined,
   selectedWallet: undefined,
-  userExpertMode: false,
   userLocale: null,
-  userClientSideRouter: false,
+  userRouterPreference: RouterPreference.AUTO,
   userHideClosedPositions: false,
-  userSlippageTolerance: 'auto',
+  userSlippageTolerance: SlippageTolerance.Auto,
   userSlippageToleranceHasBeenMigratedToAuto: true,
   userDeadline: DEFAULT_DEADLINE_FROM_NOW,
   tokens: {},
@@ -84,10 +85,6 @@ const userSlice = createSlice({
     updateSelectedWallet(state, { payload: { wallet } }) {
       state.selectedWallet = wallet
     },
-    updateUserExpertMode(state, action) {
-      state.userExpertMode = action.payload.userExpertMode
-      state.timestamp = currentTimestamp()
-    },
     updateUserLocale(state, action) {
       state.userLocale = action.payload.userLocale
       state.timestamp = currentTimestamp()
@@ -100,8 +97,8 @@ const userSlice = createSlice({
       state.userDeadline = action.payload.userDeadline
       state.timestamp = currentTimestamp()
     },
-    updateUserClientSideRouter(state, action) {
-      state.userClientSideRouter = action.payload.userClientSideRouter
+    updateUserRouterPreference(state, action) {
+      state.userRouterPreference = action.payload.userRouterPreference
     },
     updateHideClosedPositions(state, action) {
       state.userHideClosedPositions = action.payload.userHideClosedPositions
@@ -130,28 +127,29 @@ const userSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
+    // After adding a new property to the state, its value will be `undefined` (instead of the default)
+    // for all existing users with a previous version of the state in their localStorage.
+    // In order to avoid this, we need to set a default value for each new property manually during hydration.
     builder.addCase(updateVersion, (state) => {
-      // slippage isnt being tracked in local storage, reset to default
-      // noinspection SuspiciousTypeOfGuard
+      // If `userSlippageTolerance` is not present or its value is invalid, reset to default
       if (
         typeof state.userSlippageTolerance !== 'number' ||
         !Number.isInteger(state.userSlippageTolerance) ||
         state.userSlippageTolerance < 0 ||
         state.userSlippageTolerance > 5000
       ) {
-        state.userSlippageTolerance = 'auto'
+        state.userSlippageTolerance = SlippageTolerance.Auto
       } else {
         if (
           !state.userSlippageToleranceHasBeenMigratedToAuto &&
           [10, 50, 100].indexOf(state.userSlippageTolerance) !== -1
         ) {
-          state.userSlippageTolerance = 'auto'
+          state.userSlippageTolerance = SlippageTolerance.Auto
           state.userSlippageToleranceHasBeenMigratedToAuto = true
         }
       }
 
-      // deadline isnt being tracked in local storage, reset to default
-      // noinspection SuspiciousTypeOfGuard
+      // If `userDeadline` is not present or its value is invalid, reset to default
       if (
         typeof state.userDeadline !== 'number' ||
         !Number.isInteger(state.userDeadline) ||
@@ -159,6 +157,11 @@ const userSlice = createSlice({
         state.userDeadline > 180 * 60
       ) {
         state.userDeadline = DEFAULT_DEADLINE_FROM_NOW
+      }
+
+      // If `userRouterPreference` is not present, reset to default
+      if (typeof state.userRouterPreference !== 'string') {
+        state.userRouterPreference = RouterPreference.AUTO
       }
 
       state.lastUpdateVersionTimestamp = currentTimestamp()
@@ -172,9 +175,8 @@ export const {
   updateUserBuyFiatFlowCompleted,
   updateSelectedWallet,
   updateHideClosedPositions,
-  updateUserClientSideRouter,
+  updateUserRouterPreference,
   updateUserDeadline,
-  updateUserExpertMode,
   updateUserLocale,
   updateUserSlippageTolerance,
   updateHideUniswapWalletBanner,

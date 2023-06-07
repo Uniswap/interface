@@ -31,7 +31,8 @@ enum WrapInputError {
 }
 
 export function WrapErrorText({ wrapInputError }: { wrapInputError: WrapInputError }) {
-  const native = useNativeCurrency()
+  const { chainId } = useWeb3React()
+  const native = useNativeCurrency(chainId)
   const wrapped = native?.wrapped
 
   switch (wrapInputError) {
@@ -59,7 +60,7 @@ export default function useWrapCallback(
   inputCurrency: Currency | undefined | null,
   outputCurrency: Currency | undefined | null,
   typedValue: string | undefined
-): { wrapType: WrapType; execute?: undefined | (() => Promise<void>); inputError?: WrapInputError } {
+): { wrapType: WrapType; execute?: () => Promise<void>; inputError?: WrapInputError } {
   const { chainId, account } = useWeb3React()
   const wethContract = useWETHContract()
   const balance = useCurrencyBalance(account ?? undefined, inputCurrency ?? undefined)

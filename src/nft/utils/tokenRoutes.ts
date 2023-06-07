@@ -1,5 +1,5 @@
 import { IRoute, Protocol } from '@uniswap/router-sdk'
-import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { Pool } from '@uniswap/v3-sdk'
 import { TokenAmountInput, TokenTradeRouteInput, TradePoolInput } from 'graphql/data/__generated__/types-and-hooks'
@@ -108,10 +108,10 @@ function buildTradeRouteInput(swap: Swap): TokenTradeRouteInput {
   }
 }
 
-export function buildAllTradeRouteInputs(trade: InterfaceTrade<Currency, Currency, TradeType>): {
-  mixedTokenTradeRouteInputs: TokenTradeRouteInput[] | undefined
-  v2TokenTradeRouteInputs: TokenTradeRouteInput[] | undefined
-  v3TokenTradeRouteInputs: TokenTradeRouteInput[] | undefined
+export function buildAllTradeRouteInputs(trade: InterfaceTrade): {
+  mixedTokenTradeRouteInputs?: TokenTradeRouteInput[]
+  v2TokenTradeRouteInputs?: TokenTradeRouteInput[]
+  v3TokenTradeRouteInputs?: TokenTradeRouteInput[]
 } {
   const mixedTokenTradeRouteInputs: TokenTradeRouteInput[] = []
   const v2TokenTradeRouteInputs: TokenTradeRouteInput[] = []

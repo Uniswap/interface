@@ -5,24 +5,43 @@ import { ALL_SUPPORTED_CHAIN_IDS, SupportedChainId } from 'constants/chains'
 import { useCallback, useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 
-import { addTransaction } from './reducer'
+import { addTransaction, removeTransaction } from './reducer'
 import { TransactionDetails, TransactionInfo, TransactionType } from './types'
 
 // helper that can take a ethers library transaction response and add it to the list of transactions
-export function useTransactionAdder(): (response: TransactionResponse, info: TransactionInfo) => void {
+export function useTransactionAdder(): (
+  response: TransactionResponse,
+  info: TransactionInfo,
+  deadline?: number
+) => void {
   const { chainId, account } = useWeb3React()
   const dispatch = useAppDispatch()
 
   return useCallback(
-    (response: TransactionResponse, info: TransactionInfo) => {
+    (response: TransactionResponse, info: TransactionInfo, deadline?: number) => {
       if (!account) return
       if (!chainId) return
 
-      const { hash } = response
+      const { hash, nonce } = response
       if (!hash) {
         throw Error('No transaction hash found.')
       }
-      dispatch(addTransaction({ hash, from: account, info, chainId }))
+      dispatch(addTransaction({ hash, from: account, info, chainId, nonce, deadline }))
+    },
+    [account, chainId, dispatch]
+  )
+}
+
+export function useTransactionRemover() {
+  const { chainId, account } = useWeb3React()
+  const dispatch = useAppDispatch()
+
+  return useCallback(
+    (hash: string) => {
+      if (!account) return
+      if (!chainId) return
+
+      dispatch(removeTransaction({ hash, chainId }))
     },
     [account, chainId, dispatch]
   )

@@ -1,10 +1,14 @@
 import { TransactionReceipt } from '@ethersproject/abstract-provider'
 import { useWeb3React } from '@web3-react/core'
 import { SupportedChainId } from 'constants/chains'
+import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import useBlockNumber, { useFastForwardBlockNumber } from 'lib/hooks/useBlockNumber'
 import ms from 'ms.macro'
 import { useCallback, useEffect } from 'react'
-import { retry, RetryableError, RetryOptions } from 'utils/retry'
+import { useTransactionRemover } from 'state/transactions/hooks'
+import { TransactionDetails } from 'state/transactions/types'
+
+import { CanceledError, retry, RetryableError, RetryOptions } from './retry'
 
 interface Transaction {
   addedTime: number
@@ -39,16 +43,18 @@ const RETRY_OPTIONS_BY_CHAIN_ID: { [chainId: number]: RetryOptions } = {
 const DEFAULT_RETRY_OPTIONS: RetryOptions = { n: 1, minWait: 0, maxWait: 0 }
 
 interface UpdaterProps {
-  pendingTransactions: { [hash: string]: Transaction }
+  pendingTransactions: { [hash: string]: TransactionDetails }
   onCheck: (tx: { chainId: number; hash: string; blockNumber: number }) => void
   onReceipt: (tx: { chainId: number; hash: string; receipt: TransactionReceipt }) => void
 }
 
 export default function Updater({ pendingTransactions, onCheck, onReceipt }: UpdaterProps): null {
-  const { chainId, provider } = useWeb3React()
+  const { account, chainId, provider } = useWeb3React()
 
   const lastBlockNumber = useBlockNumber()
   const fastForwardBlockNumber = useFastForwardBlockNumber()
+  const removeTransaction = useTransactionRemover()
+  const blockTimestamp = useCurrentBlockTimestamp()
 
   const getReceipt = useCallback(
     (hash: string) => {
@@ -56,9 +62,20 @@ export default function Updater({ pendingTransactions, onCheck, onReceipt }: Upd
       const retryOptions = RETRY_OPTIONS_BY_CHAIN_ID[chainId] ?? DEFAULT_RETRY_OPTIONS
       return retry(
         () =>
-          provider.getTransactionReceipt(hash).then((receipt) => {
+          provider.getTransactionReceipt(hash).then(async (receipt) => {
             if (receipt === null) {
-              console.debug(`Retrying tranasaction receipt for ${hash}`)
+              if (account) {
+                const tx = pendingTransactions[hash]
+                // Remove transactions past their deadline or - if there is no deadline - older than 6 hours.
+                if (tx.deadline) {
+                  // Deadlines are expressed as seconds since epoch, as they are used on-chain.
+                  if (blockTimestamp && tx.deadline < blockTimestamp.toNumber()) {
+                    removeTransaction(hash)
+                  }
+                } else if (tx.addedTime + ms`6h` < Date.now()) {
+                  removeTransaction(hash)
+                }
+              }
               throw new RetryableError()
             }
             return receipt
@@ -66,7 +83,7 @@ export default function Updater({ pendingTransactions, onCheck, onReceipt }: Upd
         retryOptions
       )
     },
-    [chainId, provider]
+    [account, blockTimestamp, chainId, pendingTransactions, provider, removeTransaction]
   )
 
   useEffect(() => {
@@ -78,17 +95,12 @@ export default function Updater({ pendingTransactions, onCheck, onReceipt }: Upd
         const { promise, cancel } = getReceipt(hash)
         promise
           .then((receipt) => {
-            if (receipt) {
-              fastForwardBlockNumber(receipt.blockNumber)
-              onReceipt({ chainId, hash, receipt })
-            } else {
-              onCheck({ chainId, hash, blockNumber: lastBlockNumber })
-            }
+            fastForwardBlockNumber(receipt.blockNumber)
+            onReceipt({ chainId, hash, receipt })
           })
           .catch((error) => {
-            if (!error.isCancelledError) {
-              console.warn(`Failed to get transaction receipt for ${hash}`, error)
-            }
+            if (error instanceof CanceledError) return
+            onCheck({ chainId, hash, blockNumber: lastBlockNumber })
           })
         return cancel
       })
