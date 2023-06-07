@@ -1,6 +1,6 @@
 import { getTestSelector } from '../../utils'
 
-describe.skip('disconnect wallet', () => {
+describe('disconnect wallet', () => {
   it('should clear state', () => {
     cy.visit('/swap', { ethereum: 'hardhat' })
     cy.get('#swap-currency-input .token-amount-input').clear().type('1')
@@ -11,6 +11,8 @@ describe.skip('disconnect wallet', () => {
 
     // Disconnect the wallet
     cy.hardhat().then((hardhat) => cy.contains(hardhat.wallet.address.substring(0, 6)).click())
+    cy.get(getTestSelector('wallet-disconnect')).click()
+    cy.get(getTestSelector('wallet-disconnect')).contains('Disconnect')
     cy.get(getTestSelector('wallet-disconnect')).click()
 
     // Verify wallet has disconnected
