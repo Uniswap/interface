@@ -40,6 +40,7 @@ export function useBestTrade(
     useMemo(() => [amountSpecified, otherCurrency], [amountSpecified, otherCurrency]),
     useDebounceSwapQuoteFlag() === DebounceSwapQuoteVariant.Enabled ? DEBOUNCE_TIME_INCREASED : DEBOUNCE_TIME
   )
+  const inDebounce = (!debouncedAmount || !debouncedOtherCurrency) && Boolean(amountSpecified) && Boolean(otherCurrency)
 
   const isAWrapTransaction = useMemo(() => {
     if (!chainId || !amountSpecified || !debouncedOtherCurrency) return false
@@ -60,7 +61,7 @@ export function useBestTrade(
     routerPreference
   )
 
-  const isLoading = routingAPITrade.state === TradeState.LOADING
+  const isLoading = routingAPITrade.state === TradeState.LOADING || inDebounce
   const useFallback = (!autoRouterSupported || routingAPITrade.state === TradeState.NO_ROUTE_FOUND) && shouldGetTrade
 
   // only use client side router if routing api trade failed or is not supported
