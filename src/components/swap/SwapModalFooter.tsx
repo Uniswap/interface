@@ -388,11 +388,14 @@ function useDerivedLeverageReduceInfo(
 
       const formattedSlippage = new BN(allowedSlippage).plus(100).shiftedBy(16).toFixed(0)
       const formattedReduceAmount = new BN(reduceAmount).shiftedBy(18).toFixed(0);
+      const inputReduceAmount =
+      Number(position.totalPositionRaw)== Number(formattedReduceAmount)
+      ? position.totalPositionRaw : formattedReduceAmount
       setState(DerivedInfoState.LOADING)
 
       try {
-        console.log('reducePositionArgs', position, position.isToken0, position.totalPosition, formattedSlippage, formattedReduceAmount)
-        const reducePositionResult = await leverageManagerContract.callStatic.reducePosition(position?.isToken0, formattedSlippage, formattedReduceAmount)
+        console.log('reducePositionArgs', position, position.isToken0, position.totalPosition,position.totalPositionRaw, formattedSlippage, inputReduceAmount)
+        const reducePositionResult = await leverageManagerContract.callStatic.reducePosition(position?.isToken0, formattedSlippage, inputReduceAmount)
         console.log('reducePosition', reducePositionResult, tokenId, formattedSlippage);
         setContractResult({
           reducePositionResult
@@ -885,13 +888,16 @@ export function ReduceLeverageModalFooter({
     if (leverageManagerContract && position && Number(reduceAmount) > 0 && Number(reduceAmount) <= Number(position.totalPosition)) {
       const formattedSlippage = new BN(slippage).plus(100).shiftedBy(16).toFixed(0)
       const formattedReduceAmount = new BN(reduceAmount).shiftedBy(18).toFixed(0);
-
+      const inputReduceAmount =
+      Number(position.totalPositionRaw)== Number(formattedReduceAmount)
+      ? position.totalPositionRaw : formattedReduceAmount
+      
       return () => {
         setAttemptingTxn(true)
         leverageManagerContract.reducePosition(
           position?.isToken0,
           formattedSlippage,
-          formattedReduceAmount
+          inputReduceAmount
         ).then((hash: any) => {
           addTransaction(hash, {
             type: TransactionType.REDUCE_LEVERAGE
@@ -939,7 +945,6 @@ export function ReduceLeverageModalFooter({
   const initCollateral = position?.initialCollateral;
   const received = inputIsToken0 ? (Math.abs(Number(token0Amount)) - Number(debt))
     : (Math.abs(Number(token1Amount)) - Number(debt))
-
   return (
     <AutoRow>
       <DarkCard marginTop="5px" padding="5px">
@@ -999,6 +1004,7 @@ export function ReduceLeverageModalFooter({
                       setDebouncedReduceAmount("")
                     } else if (new BN(str).isGreaterThan(new BN(position?.totalPosition))) {
                       return
+                      // setDebouncedReduceAmount(String(position?.totalPosition))
                     } else {
                       setDebouncedReduceAmount(str)
                     }

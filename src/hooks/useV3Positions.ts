@@ -172,6 +172,7 @@ export function useLimitlessPositionFromTokenId(tokenId: string | undefined): { 
         token1Address: key.token1,
         poolFee: key.fee,
         totalPosition: convertBNToNum(position.totalPosition, 18),
+        totalPositionRaw: position.totalPosition.toString(), 
         totalDebt: convertBNToNum(position.totalDebt, 18),
         totalDebtInput: convertBNToNum(position.totalDebtInput, 18),
         // creationPrice: convertBNToNum(position.creationPrice, 18),

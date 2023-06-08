@@ -615,7 +615,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
 
   const now = moment();
   const [timeLeft, isOverDue] = useMemo(() => {
-    const duration = moment.duration(moment.unix(Number(position.openTime)).add(1, 'days').diff(now))
+    const duration = moment.duration(moment.unix(Number(position.repayTime)).add(1, 'days').diff(now))
     const hours = duration.hours();
     const isNegative = hours < 0;
     const minutes = duration.minutes()
@@ -701,7 +701,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
 
   const remainingPremium = useMemo(() => {
     if (position) {
-      const timeLeft = moment.duration(moment.unix(Number(position.openTime)).add(1, 'days').diff(now));
+      const timeLeft = moment.duration(moment.unix(Number(position.repayTime)).add(1, 'days').diff(now));
       return position.unusedPremium * (timeLeft.asSeconds() / 86400);
     }
     return "-"
@@ -714,6 +714,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
   // console.log("position: ", position)
 
   const arrow = getDeltaArrow(pnl, 18)
+  // console.log('leverageFactor', leverageFactor, initialCollateral, totalDebtInput)
 
   // TODO: currency logo sizing mobile (32px) vs. desktop (24px)
   return (
@@ -726,7 +727,10 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
               <RowBetween>
                 <PositionInfo>
                   <TruncatedTableText>
-                    <GreenText> x{(Math.round(leverageFactor*1000)/1000)}</GreenText> 
+                    <GreenText> x{
+                      // leverageFactor
+                      (Math.round(leverageFactor*1000)/1000)
+                    }</GreenText> 
                   </TruncatedTableText>
                   {" " + outputCurrencySymbol}
                 </PositionInfo>

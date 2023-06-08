@@ -21,6 +21,7 @@ export interface LimitlessPositionDetails {
   isToken0: boolean
   openTime: number
   repayTime: number
+  totalPositionRaw?:string;
   // borrowInfo: TickLiquidity[]
 }
 // open price == ( totalDebtInput + initialCollateral ) / totalPosition
