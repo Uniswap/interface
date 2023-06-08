@@ -2,10 +2,10 @@ import { OpacityHoverState } from 'components/Common'
 import useCopyClipboard from 'hooks/useCopyClipboard'
 import { CollectionInfoForAsset, GenieAsset } from 'nft/types'
 import { putCommas } from 'nft/utils'
-import { shortenAddress } from 'utils/addresses'
 import { useCallback } from 'react'
 import { Copy } from 'react-feather'
 import styled from 'styled-components/macro'
+import { shortenAddress } from 'utils/addresses'
 
 const Details = styled.div`
   display: grid;

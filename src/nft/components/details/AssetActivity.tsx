@@ -4,11 +4,11 @@ import { LoadingBubble } from 'components/Tokens/loading'
 import { EventCell } from 'nft/components/collection/ActivityCells'
 import { ActivityEvent } from 'nft/types'
 import { getMarketplaceIcon } from 'nft/utils'
-import { shortenAddress } from 'utils/addresses'
 import { formatEth } from 'nft/utils/currency'
 import { getTimeDifference } from 'nft/utils/date'
 import { ReactNode } from 'react'
 import styled from 'styled-components/macro'
+import { shortenAddress } from 'utils/addresses'
 
 const TR = styled.tr`
   border-bottom: ${({ theme }) => `1px solid ${theme.backgroundOutline}`};
