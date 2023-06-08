@@ -48,7 +48,7 @@ export function useUpdateTokenAllowance(
       if (!contract) throw new Error('missing contract')
       if (!spender) throw new Error('missing spender')
 
-      const allowance: string = MaxUint256.toString()
+      const allowance = MaxUint256.toString()
       const response = await contract.approve(spender, allowance)
       return {
         response,

@@ -83,9 +83,11 @@ function parseApproval(
   const currency = getCurrency(approval.tokenAddress, chainId, tokens)
   const descriptor = currency?.symbol ?? currency?.name ?? t`Unknown`
   return {
-    title: BigNumber.from(approval.amount).eq(0)
-      ? t`Revoked approval`
-      : getActivityTitle(TransactionType.APPROVAL, status),
+    title: getActivityTitle(
+      TransactionType.APPROVAL,
+      status,
+      BigNumber.from(approval.amount).eq(0) /* use alternate if it's a revoke */
+    ),
     descriptor,
     currencies: [currency],
   }
