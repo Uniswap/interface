@@ -1,6 +1,5 @@
 import { Currency, TradeType } from '@uniswap/sdk-core'
 import { providers } from 'ethers'
-import { CallEffect, PutEffect } from 'redux-saga/effects'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
 import { transactionActions } from 'src/features/transactions/slice'
@@ -39,8 +38,8 @@ export interface SendTransactionParams {
 
 // A utility for sagas to send transactions
 // All outgoing transactions should go through here
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function* sendTransaction(params: SendTransactionParams): Generator<any> {
+
+export function* sendTransaction(params: SendTransactionParams) {
   const { chainId, account, options } = params
   const request = options.request
 
@@ -90,15 +89,7 @@ function* addTransaction(
   { chainId, typeInfo, account, options, txId, trade }: SendTransactionParams,
   hash: string,
   populatedRequest: providers.TransactionRequest
-): Generator<
-  | CallEffect<never>
-  | PutEffect<{
-      payload: TransactionDetails
-      type: string
-    }>,
-  void,
-  unknown
-> {
+) {
   const id = txId ?? createTransactionId()
   const request = getSerializableTransactionRequest(populatedRequest, chainId)
 

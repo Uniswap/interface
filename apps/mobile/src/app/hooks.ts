@@ -3,7 +3,6 @@ import { useTheme } from '@shopify/restyle'
 import { useEffect, useState } from 'react'
 import { AccessibilityInfo } from 'react-native'
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
-import { SelectEffect } from 'redux-saga/effects'
 import type { AppDispatch } from 'src/app/store'
 import { SagaGenerator, select } from 'typed-redux-saga'
 import type { Theme } from 'ui/src/theme/restyle/theme'
@@ -18,7 +17,7 @@ export const useAppSelector: TypedUseSelectorHook<MobileState> = useSelector
 export const useAppTheme = (): Theme => useTheme<Theme>()
 
 // Use in sagas for better typing when selecting from redux state
-export function* appSelect<T>(fn: (state: MobileState) => T): SagaGenerator<T, SelectEffect> {
+export function* appSelect<T>(fn: (state: MobileState) => T): SagaGenerator<T> {
   const state = yield* select(fn)
   return state
 }

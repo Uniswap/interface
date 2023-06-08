@@ -1,7 +1,7 @@
 import { call, put } from '@redux-saga/core/effects'
 import { expectSaga } from 'redux-saga-test-plan'
 import { navigate } from 'src/app/navigation/rootNavigation'
-import { handleTransactionLink } from 'src/features/deepLinking/handleTransactionLink'
+import { handleTransactionLink } from 'src/features/deepLinking/handleTransactionLinkSaga'
 import { closeAllModals } from 'src/features/modals/modalSlice'
 import { TabIndex } from 'src/screens/HomeScreen'
 import { Screens } from 'src/screens/Screens'

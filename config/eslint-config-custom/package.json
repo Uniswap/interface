@@ -2,6 +2,7 @@
   "name": "eslint-config-custom",
   "version": "0.0.0",
   "dependencies": {
+    "@jambit/eslint-plugin-typed-redux-saga": "0.4.0",
     "@react-native-community/eslint-config": "3.0.3",
     "eslint": "8.21.0",
     "eslint-config-next": "^13.1.3",

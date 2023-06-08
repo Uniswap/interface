@@ -1,6 +1,6 @@
 import { CurrencyAmount } from '@uniswap/sdk-core'
 import { testSaga } from 'redux-saga-test-plan'
-import { sendTransaction } from 'src/features/transactions/sendTransaction'
+import { sendTransaction } from 'src/features/transactions/sendTransactionSaga'
 import { Params, wrap } from 'src/features/transactions/swap/wrapSaga'
 import { account } from 'src/test/fixtures'
 import { ChainId } from 'wallet/src/constants/chains'

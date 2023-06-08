@@ -6,7 +6,6 @@ import { buildApprovedNamespaces, getSdkError } from '@walletconnect/utils'
 import { IWeb3Wallet, Web3Wallet, Web3WalletTypes } from '@walletconnect/web3wallet'
 import { Alert } from 'react-native'
 import { EventChannel, eventChannel } from 'redux-saga'
-import { CallEffect, ForkEffect } from 'redux-saga/effects'
 import { appSelect } from 'src/app/hooks'
 import { i18n } from 'src/app/i18n'
 import { registerWCv2ClientForPushNotifications } from 'src/features/walletConnect/api'
@@ -373,11 +372,7 @@ export function* fetchPendingSessionRequests() {
   }
 }
 
-export function* walletConnectV2Saga(): Generator<
-  CallEffect<void> | ForkEffect<void>,
-  void,
-  unknown
-> {
+export function* walletConnectV2Saga() {
   yield* call(initializeWeb3Wallet)
   yield* call(populateActiveSessions)
   yield* fork(fetchPendingSessionProposals)

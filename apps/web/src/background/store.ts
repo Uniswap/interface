@@ -1,7 +1,6 @@
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
 import { combineReducers } from 'redux'
 import { persistReducer, persistStore } from 'redux-persist'
-import { SelectEffect } from 'redux-saga/effects'
 import { dappReducer } from 'src/background/features/dapp/slice'
 
 import { dappRequestReducer } from 'src/background/features/dappRequests/slice'
@@ -55,7 +54,7 @@ export const useAppDispatch: () => AppDispatch = useDispatch
 export const useAppSelector: TypedUseSelectorHook<WebState> = useSelector
 
 // Use in sagas for better typing when selecting from redux state
-export function* appSelect<T>(fn: (state: WebState) => T): SagaGenerator<T, SelectEffect> {
+export function* appSelect<T>(fn: (state: WebState) => T): SagaGenerator<T> {
   const state = yield* select(fn)
   return state
 }

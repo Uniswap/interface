@@ -2,12 +2,11 @@ import { createAction } from '@reduxjs/toolkit'
 import { parseUri } from '@walletconnect/utils'
 import { Alert } from 'react-native'
 import { URL } from 'react-native-url-polyfill'
-import { ForkEffect } from 'redux-saga/effects'
 import { appSelect } from 'src/app/hooks'
 import { i18n } from 'src/app/i18n'
-import { handleMoonpayReturnLink } from 'src/features/deepLinking/handleMoonpayReturnLink'
-import { handleSwapLink } from 'src/features/deepLinking/handleSwapLink'
-import { handleTransactionLink } from 'src/features/deepLinking/handleTransactionLink'
+import { handleMoonpayReturnLink } from 'src/features/deepLinking/handleMoonpayReturnLinkSaga'
+import { handleSwapLink } from 'src/features/deepLinking/handleSwapLinkSaga'
+import { handleTransactionLink } from 'src/features/deepLinking/handleTransactionLinkSaga'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
 import { connectToApp, isValidWCUrl } from 'src/features/walletConnect/WalletConnect'
@@ -28,7 +27,7 @@ const UNISWAP_URL_SCHEME_WALLETCONNECT = 'uniswap://wc?uri='
 
 export const openDeepLink = createAction<DeepLink>('deeplink/open')
 
-export function* deepLinkWatcher(): Generator<ForkEffect<never>, void, unknown> {
+export function* deepLinkWatcher() {
   yield* takeLatest(openDeepLink.type, handleDeepLink)
 }
 

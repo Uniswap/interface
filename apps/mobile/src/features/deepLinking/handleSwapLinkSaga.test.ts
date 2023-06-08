@@ -1,7 +1,10 @@
 import { URL } from 'react-native-url-polyfill'
 import { expectSaga } from 'redux-saga-test-plan'
 import { call } from 'redux-saga/effects'
-import { handleSwapLink, parseAndValidateSwapParams } from 'src/features/deepLinking/handleSwapLink'
+import {
+  handleSwapLink,
+  parseAndValidateSwapParams,
+} from 'src/features/deepLinking/handleSwapLinkSaga'
 import { openModal } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
 import {

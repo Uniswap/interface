@@ -1,6 +1,6 @@
 import { TradeType } from '@uniswap/sdk-core'
 import JSBI from 'jsbi'
-import { createFinalizedTxAction } from 'src/features/notifications/notificationWatcher.test'
+import { createFinalizedTxAction } from 'src/features/notifications/notificationWatcherSaga.test'
 import {
   buildReceiveNotification,
   convertScientificNotationToNumber,

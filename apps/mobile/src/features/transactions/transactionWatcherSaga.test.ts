@@ -1,7 +1,7 @@
 import { expectSaga } from 'redux-saga-test-plan'
 import { call, delay } from 'redux-saga/effects'
 import { fetchFiatOnRampTransaction } from 'src/features/fiatOnRamp/api'
-import { attemptCancelTransaction } from 'src/features/transactions/cancelTransaction'
+import { attemptCancelTransaction } from 'src/features/transactions/cancelTransactionSaga'
 import {
   addTransaction,
   cancelTransaction,

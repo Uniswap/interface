@@ -1,7 +1,7 @@
 import { call, put } from '@redux-saga/core/effects'
 import { expectSaga } from 'redux-saga-test-plan'
 import { navigate } from 'src/app/navigation/rootNavigation'
-import { handleMoonpayReturnLink } from 'src/features/deepLinking/handleMoonpayReturnLink'
+import { handleMoonpayReturnLink } from 'src/features/deepLinking/handleMoonpayReturnLinkSaga'
 import { forceFetchFiatOnRampTransactions } from 'src/features/transactions/slice'
 import { TabIndex } from 'src/screens/HomeScreen'
 import { Screens } from 'src/screens/Screens'

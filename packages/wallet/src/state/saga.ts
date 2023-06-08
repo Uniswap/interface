@@ -31,6 +31,6 @@ export function getMonitoredSagaReducers(
 
 export function* rootSaga() {
   for (const s of sharedSagas) {
-    yield spawn(s)
+    yield* spawn(s)
   }
 }

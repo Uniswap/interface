@@ -1,13 +1,12 @@
 import { SwapEventName } from '@uniswap/analytics-events'
 import { TradeType } from '@uniswap/sdk-core'
 import { BigNumberish, providers } from 'ethers'
-import { PutEffect, TakeEffect } from 'redux-saga/effects'
 import { appSelect } from 'src/app/hooks'
 import { i18n } from 'src/app/i18n'
 import { fetchFiatOnRampTransaction } from 'src/features/fiatOnRamp/api'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
-import { attemptCancelTransaction } from 'src/features/transactions/cancelTransaction'
-import { attemptReplaceTransaction } from 'src/features/transactions/replaceTransaction'
+import { attemptCancelTransaction } from 'src/features/transactions/cancelTransactionSaga'
+import { attemptReplaceTransaction } from 'src/features/transactions/replaceTransactionSaga'
 import { selectIncompleteTransactions } from 'src/features/transactions/selectors'
 import {
   addTransaction,
@@ -27,9 +26,7 @@ import { pushNotification, setNotificationStatus } from 'wallet/src/features/not
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import {
   BaseSwapTransactionInfo,
-  FinalizedTransactionDetails,
   TransactionDetails,
-  TransactionId,
   TransactionReceipt,
   TransactionStatus,
   TransactionType,
@@ -82,8 +79,7 @@ export function* transactionWatcher() {
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function* watchFiatOnRampTransaction(transaction: TransactionDetails): Generator<any> {
+export function* watchFiatOnRampTransaction(transaction: TransactionDetails) {
   // id represents `externalTransactionId` sent to Moonpay
   const { id } = transaction
 
@@ -203,28 +199,14 @@ export async function waitForReceipt(
   return txReceipt
 }
 
-function* waitForCancellation(
-  chainId: ChainId,
-  id: string
-): Generator<TakeEffect, boolean, unknown> {
+function* waitForCancellation(chainId: ChainId, id: string) {
   while (true) {
     const { payload } = yield* take<ReturnType<typeof cancelTransaction>>(cancelTransaction.type)
     if (payload.cancelRequest && payload.chainId === chainId && payload.id === id) return true
   }
 }
 
-function* waitForReplacement(
-  chainId: ChainId,
-  id: string
-): Generator<
-  TakeEffect,
-  TransactionId & {
-    newTxParams: providers.TransactionRequest
-  } & {
-    address: string
-  },
-  unknown
-> {
+function* waitForReplacement(chainId: ChainId, id: string) {
   while (true) {
     const { payload } = yield* take<ReturnType<typeof replaceTransaction>>(replaceTransaction.type)
     if (payload.chainId === chainId && payload.id === id) return payload
@@ -238,7 +220,7 @@ export function* waitForTxnInvalidated(
   chainId: ChainId,
   id: string,
   nonce: BigNumberish | undefined
-): Generator<TakeEffect, boolean, unknown> {
+) {
   while (true) {
     const { payload } = yield* take<ReturnType<typeof transactionActions.finalizeTransaction>>(
       transactionActions.finalizeTransaction.type
@@ -303,22 +285,7 @@ function* finalizeTransaction(
   transaction: TransactionDetails,
   ethersReceipt?: providers.TransactionReceipt | null,
   statusOverride?: StatusOverride
-): Generator<
-  | PutEffect<{
-      payload: FinalizedTransactionDetails
-      type: string
-    }>
-  | PutEffect<{
-      payload: TransactionDetails
-      type: string
-    }>
-  | PutEffect<{
-      payload: { address: string; hasNotifications: boolean }
-      type: string
-    }>,
-  void,
-  unknown
-> {
+) {
   const status =
     statusOverride ?? getFinalizedTransactionStatus(transaction.status, ethersReceipt?.status)
 
@@ -351,14 +318,7 @@ function* finalizeTransaction(
  * be monitored. Often used when txn is replaced or cancelled.
  * @param transaction txn to delete from state
  */
-export function* deleteTransaction(transaction: TransactionDetails): Generator<
-  PutEffect<{
-    payload: { address: string }
-    type: string
-  }>,
-  void,
-  unknown
-> {
+export function* deleteTransaction(transaction: TransactionDetails) {
   yield* put(
     transactionActions.deleteTransaction({
       address: transaction.from,

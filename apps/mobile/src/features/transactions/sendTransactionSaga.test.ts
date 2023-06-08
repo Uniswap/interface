@@ -2,7 +2,10 @@ import dayjs from 'dayjs'
 import { BigNumber, providers } from 'ethers'
 import { expectSaga } from 'redux-saga-test-plan'
 import { call } from 'redux-saga/effects'
-import { sendTransaction, signAndSendTransaction } from 'src/features/transactions/sendTransaction'
+import {
+  sendTransaction,
+  signAndSendTransaction,
+} from 'src/features/transactions/sendTransactionSaga'
 import { addTransaction } from 'src/features/transactions/slice'
 import {
   account,

@@ -1,20 +1,14 @@
 import firebase from '@react-native-firebase/app'
 import '@react-native-firebase/auth'
-import { FirebaseAuthTypes } from '@react-native-firebase/auth'
-import { CallEffect } from 'redux-saga/effects'
 import { call } from 'typed-redux-saga'
 import { logger } from 'wallet/src/features/logger/logger'
 
-export function* initFirebase(): Generator<CallEffect<void>, void, unknown> {
+export function* initFirebase() {
   yield* call(anonFirebaseSignIn)
   logger.debug('initFirebaseSaga', 'initFirebase', 'Firebase initialization successful')
 }
 
-function* anonFirebaseSignIn(): Generator<
-  CallEffect<FirebaseAuthTypes.UserCredential>,
-  void,
-  unknown
-> {
+function* anonFirebaseSignIn() {
   try {
     const firebaseAuth = firebase.app().auth()
     yield* call([firebaseAuth, 'signInAnonymously'])

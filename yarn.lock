@@ -4495,6 +4495,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@jambit/eslint-plugin-typed-redux-saga@npm:0.4.0":
+  version: 0.4.0
+  resolution: "@jambit/eslint-plugin-typed-redux-saga@npm:0.4.0"
+  checksum: 4d4bd498b13a17d6afaae7790872fccdc02ef7142a43f18f3cd38a71bb1edc880d8f1923097388e16c6cc6642cd77366e4cf34f30ad41cb3444dfd4420490c32
+  languageName: node
+  linkType: hard
+
 "@jest/console@npm:^27.5.1":
   version: 27.5.1
   resolution: "@jest/console@npm:27.5.1"
@@ -18376,6 +18383,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "eslint-config-custom@workspace:config/eslint-config-custom"
   dependencies:
+    "@jambit/eslint-plugin-typed-redux-saga": 0.4.0
     "@react-native-community/eslint-config": 3.0.3
     eslint: 8.21.0
     eslint-config-next: ^13.1.3

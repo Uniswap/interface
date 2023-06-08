@@ -1,4 +1,3 @@
-import { CallEffect, ForkEffect, PutEffect, SelectEffect } from 'redux-saga/effects'
 import { appSelect } from 'src/app/hooks'
 import { buildReceiveNotification } from 'src/features/notifications/utils'
 import { selectTransactions } from 'src/features/transactions/selectors'
@@ -8,25 +7,15 @@ import { call, put, takeLatest } from 'typed-redux-saga'
 import { ChainId } from 'wallet/src/constants/chains'
 import { AssetType } from 'wallet/src/entities/assets'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
-import { AppNotification, AppNotificationType } from 'wallet/src/features/notifications/types'
+import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { TransactionType } from 'wallet/src/features/transactions/types'
 import { WalletConnectEvent } from 'wallet/src/features/walletConnect/types'
 
-export function* notificationWatcher(): Generator<ForkEffect<never>, void, unknown> {
+export function* notificationWatcher() {
   yield* takeLatest(finalizeTransaction.type, pushTransactionNotification)
 }
 
-export function* pushTransactionNotification(
-  action: ReturnType<typeof finalizeTransaction>
-): Generator<
-  | PutEffect<{
-      payload: AppNotification
-      type: string
-    }>
-  | CallEffect<boolean>,
-  void,
-  unknown
-> {
+export function* pushTransactionNotification(action: ReturnType<typeof finalizeTransaction>) {
   const { chainId, status, typeInfo, hash, id, from, addedTime } = action.payload
 
   const baseNotificationData = {
@@ -142,7 +131,7 @@ function* suppressApproveNotification(
   address: Address,
   chainId: ChainId,
   approveAddedTime: number
-): Generator<SelectEffect, boolean, unknown> {
+) {
   const transactions = (yield* appSelect(selectTransactions))?.[address]?.[chainId]
   const transactionDetails = Object.values(transactions ?? {})
   const foundSwapTx = transactionDetails.find((tx) => {

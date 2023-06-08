@@ -2,9 +2,11 @@ import { Action } from '@reduxjs/toolkit'
 import { providers } from 'ethers'
 import { NativeEventEmitter, NativeModules } from 'react-native'
 import { EventChannel, eventChannel } from 'redux-saga'
-import { CallEffect, ChannelTakeEffect, ForkEffect, PutEffect } from 'redux-saga/effects'
 import { i18n } from 'src/app/i18n'
-import { sendTransaction, SendTransactionParams } from 'src/features/transactions/sendTransaction'
+import {
+  sendTransaction,
+  SendTransactionParams,
+} from 'src/features/transactions/sendTransactionSaga'
 import {
   deregisterWcPushNotifications,
   registerWcPushNotifications,
@@ -27,7 +29,7 @@ import { call, fork, put, take } from 'typed-redux-saga'
 import { ChainId } from 'wallet/src/constants/chains'
 import { logger } from 'wallet/src/features/logger/logger'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
-import { AppNotification, AppNotificationType } from 'wallet/src/features/notifications/types'
+import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { TransactionType } from 'wallet/src/features/transactions/types'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { getSignerManager } from 'wallet/src/features/wallet/context'
@@ -247,23 +249,13 @@ function createWalletConnectChannel(
   })
 }
 
-export function* walletConnectSaga(): Generator<
-  CallEffect<void> | ForkEffect<void>,
-  void,
-  unknown
-> {
+export function* walletConnectSaga() {
   yield* call(initializeWalletConnect)
   yield* call(reconnectAccountSessions)
   yield* fork(watchWalletConnectEvents)
 }
 
-export function* watchWalletConnectEvents(): Generator<
-  | CallEffect<EventChannel<Action<unknown>>>
-  | ChannelTakeEffect<Action<unknown>>
-  | PutEffect<Action<unknown>>,
-  void,
-  unknown
-> {
+export function* watchWalletConnectEvents() {
   const wcEvents = new NativeEventEmitter(NativeModules.RNWalletConnect)
   const wcChannel = yield* call(createWalletConnectChannel, wcEvents)
 
@@ -299,16 +291,7 @@ type SignTransactionParams = {
   version: '1' | '2'
 }
 
-export function* signWcRequest(params: SignMessageParams | SignTransactionParams): Generator<
-  | void
-  | CallEffect<unknown>
-  | PutEffect<{
-      payload: AppNotification
-      type: string
-    }>,
-  void,
-  unknown
-> {
+export function* signWcRequest(params: SignMessageParams | SignTransactionParams) {
   const { sessionId, requestInternalId, account, method, chainId, version } = params
   try {
     const signerManager = yield* call(getSignerManager)

@@ -1,7 +1,6 @@
 import { BigNumber, BigNumberish, providers } from 'ethers'
-import { CallEffect } from 'redux-saga/effects'
 import { getNotificationErrorAction } from 'src/features/notifications/utils'
-import { sendTransaction } from 'src/features/transactions/sendTransaction'
+import { sendTransaction } from 'src/features/transactions/sendTransactionSaga'
 import { TransferTokenParams } from 'src/features/transactions/transfer/useTransferTransactionRequest'
 import { call } from 'typed-redux-saga'
 import ERC1155_ABI from 'wallet/src/abis/erc1155.json'
@@ -9,7 +8,6 @@ import ERC20_ABI from 'wallet/src/abis/erc20.json'
 import ERC721_ABI from 'wallet/src/abis/erc721.json'
 import { Erc1155, Erc20, Erc721 } from 'wallet/src/abis/types'
 import { AssetType } from 'wallet/src/entities/assets'
-import { ContractManager } from 'wallet/src/features/contracts/ContractManager'
 import { logger } from 'wallet/src/features/logger/logger'
 import { SendTokenTransactionInfo, TransactionType } from 'wallet/src/features/transactions/types'
 import { getContractManager, getProvider } from 'wallet/src/features/wallet/context'
@@ -21,14 +19,7 @@ type Params = {
   txRequest: providers.TransactionRequest
 }
 
-export function* transferToken(params: Params): Generator<
-  | CallEffect<void>
-  | CallEffect<{
-      transactionResponse: providers.TransactionResponse
-    }>,
-  void,
-  unknown
-> {
+export function* transferToken(params: Params) {
   const { transferTokenParams, txRequest } = params
   const { txId, account, chainId } = transferTokenParams
   const typeInfo = getTransferTypeInfo(transferTokenParams)
@@ -56,13 +47,7 @@ function validateTransferAmount(amountInWei: string, currentBalance: BigNumberis
   }
 }
 
-export function* validateTransfer(
-  transferTokenParams: TransferTokenParams
-): Generator<
-  CallEffect<providers.JsonRpcProvider> | CallEffect<ContractManager> | CallEffect<BigNumber>,
-  void,
-  unknown
-> {
+export function* validateTransfer(transferTokenParams: TransferTokenParams) {
   const { type, chainId, tokenAddress, account } = transferTokenParams
   const contractManager = yield* call(getContractManager)
   const provider = yield* call(getProvider, chainId)

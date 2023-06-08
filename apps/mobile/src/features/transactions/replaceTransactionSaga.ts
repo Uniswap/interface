@@ -1,8 +1,7 @@
 import { BigNumber, providers } from 'ethers'
-import { CallEffect, PutEffect, SelectEffect } from 'redux-saga/effects'
 import { appSelect } from 'src/app/hooks'
 import { i18n } from 'src/app/i18n'
-import { signAndSendTransaction } from 'src/features/transactions/sendTransaction'
+import { signAndSendTransaction } from 'src/features/transactions/sendTransactionSaga'
 import { addTransaction, deleteTransaction } from 'src/features/transactions/slice'
 import {
   createTransactionId,
@@ -11,40 +10,17 @@ import {
 import { call, put } from 'typed-redux-saga'
 import { logger } from 'wallet/src/features/logger/logger'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
-import { AppNotification, AppNotificationType } from 'wallet/src/features/notifications/types'
+import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { TransactionDetails, TransactionStatus } from 'wallet/src/features/transactions/types'
 import { getProvider, getSignerManager } from 'wallet/src/features/wallet/context'
 import { selectAccounts } from 'wallet/src/features/wallet/selectors'
-import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
 import { getValidAddress } from 'wallet/src/utils/addresses'
 
 export function* attemptReplaceTransaction(
   transaction: TransactionDetails,
   newTxRequest: providers.TransactionRequest,
   isCancellation = false
-): Generator<
-  | SelectEffect
-  | CallEffect<providers.JsonRpcProvider>
-  | CallEffect<SignerManager>
-  | CallEffect<{
-      transactionResponse: providers.TransactionResponse
-      populatedRequest: providers.TransactionRequest
-    }>
-  | PutEffect<{
-      payload: TransactionDetails
-      type: string
-    }>
-  | PutEffect<{
-      payload: { address: string }
-      type: string
-    }>
-  | PutEffect<{
-      payload: AppNotification
-      type: string
-    }>,
-  void,
-  unknown
-> {
+) {
   const { chainId, hash, options } = transaction
   logger.debug('replaceTransaction', '', 'Attempting tx replacement', hash)
   const replacementTxnId = createTransactionId()

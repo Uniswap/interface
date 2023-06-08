@@ -1,6 +1,5 @@
 import firebase from '@react-native-firebase/app'
 import firestore from '@react-native-firebase/firestore'
-import { CallEffect, ForkEffect, PutEffect, SelectEffect } from 'redux-saga/effects'
 import { appSelect } from 'src/app/hooks'
 import {
   getFirebaseUidOrError,
@@ -32,13 +31,11 @@ interface AccountMetadata {
 }
 
 // Can't merge with `editAccountSaga` because it can't handle simultaneous actions
-export function* firebaseDataWatcher(): Generator<ForkEffect<never>, void, unknown> {
+export function* firebaseDataWatcher() {
   yield* takeEvery(editAccountActions.trigger, editAccountDataInFirebase)
 }
 
-function* editAccountDataInFirebase(
-  actionData: ReturnType<typeof editAccountActions.trigger>
-): Generator<CallEffect<void>, void, unknown> {
+function* editAccountDataInFirebase(actionData: ReturnType<typeof editAccountActions.trigger>) {
   const { payload } = actionData
   const { type, address } = payload
 
@@ -60,9 +57,7 @@ function* editAccountDataInFirebase(
   }
 }
 
-function* addAccountToFirebase(
-  account: Account
-): Generator<SelectEffect | CallEffect<void>, void, unknown> {
+function* addAccountToFirebase(account: Account) {
   const { name, type, address } = account
   const testnetsEnabled = yield* select(selectTestnetsAreEnabled)
 
@@ -74,10 +69,7 @@ function* addAccountToFirebase(
   }
 }
 
-export function* removeAccountFromFirebase(
-  address: Address,
-  notificationsEnabled: boolean
-): Generator<CallEffect<void>, void, unknown> {
+export function* removeAccountFromFirebase(address: Address, notificationsEnabled: boolean) {
   try {
     if (!notificationsEnabled) return
     yield* call(deleteFirebaseMetadata, address)
@@ -87,10 +79,7 @@ export function* removeAccountFromFirebase(
   }
 }
 
-export function* renameAccountInFirebase(
-  address: Address,
-  newName: string
-): Generator<SelectEffect | CallEffect<void>, void, unknown> {
+export function* renameAccountInFirebase(address: Address, newName: string) {
   try {
     const notificationsEnabled = yield* appSelect(makeSelectAccountNotificationSetting(address))
     if (!notificationsEnabled) return
@@ -103,19 +92,7 @@ export function* renameAccountInFirebase(
 export function* toggleFirebaseNotificationSettings({
   address,
   enabled,
-}: TogglePushNotificationParams): Generator<
-  | SelectEffect
-  | CallEffect<void>
-  | PutEffect<{
-      payload: {
-        address: string
-        updatedAccount: Account
-      }
-      type: string
-    }>,
-  void,
-  unknown
-> {
+}: TogglePushNotificationParams) {
   try {
     const accounts = yield* appSelect(selectAccounts)
     const account = accounts[address]

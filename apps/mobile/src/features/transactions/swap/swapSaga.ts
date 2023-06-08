@@ -1,6 +1,6 @@
 import { providers } from 'ethers'
 import { getNotificationErrorAction } from 'src/features/notifications/utils'
-import { sendTransaction } from 'src/features/transactions/sendTransaction'
+import { sendTransaction } from 'src/features/transactions/sendTransactionSaga'
 import { Trade } from 'src/features/transactions/swap/useTrade'
 import { tradeToTransactionInfo } from 'src/features/transactions/swap/utils'
 import { call } from 'typed-redux-saga'

@@ -1,7 +1,6 @@
 import { Action } from '@reduxjs/toolkit'
 import { NativeEventEmitter, NativeModules } from 'react-native'
-import { EventChannel, eventChannel } from 'redux-saga'
-import { CallEffect, ChannelTakeEffect, ForkEffect, PutEffect } from 'redux-saga/effects'
+import { eventChannel } from 'redux-saga'
 import { foundCloudBackup } from 'src/features/CloudBackup/cloudBackupSlice'
 import { ICloudBackupsManagerEventType, ICloudMnemonicBackup } from 'src/features/CloudBackup/types'
 import { call, fork, put, take } from 'typed-redux-saga'
@@ -35,17 +34,11 @@ function createICloudBackupManagerChannel(eventEmitter: NativeEventEmitter) {
   })
 }
 
-export function* cloudBackupsManagerSaga(): Generator<ForkEffect<void>, void, unknown> {
+export function* cloudBackupsManagerSaga() {
   yield* fork(watchICloudBackupEvents)
 }
 
-export function* watchICloudBackupEvents(): Generator<
-  | CallEffect<EventChannel<Action<unknown>>>
-  | ChannelTakeEffect<Action<unknown>>
-  | PutEffect<Action<unknown>>,
-  void,
-  unknown
-> {
+export function* watchICloudBackupEvents() {
   const iCloudManagerEvents = new NativeEventEmitter(NativeModules.RNICloudBackupsManager)
   const channel = yield* call(createICloudBackupManagerChannel, iCloudManagerEvents)
 

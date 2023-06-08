@@ -4,8 +4,11 @@ import { BigNumber, providers } from 'ethers'
 import MockDate from 'mockdate'
 import { expectSaga } from 'redux-saga-test-plan'
 import { call } from 'redux-saga/effects'
-import { attemptReplaceTransaction } from 'src/features/transactions/replaceTransaction'
-import { sendTransaction, signAndSendTransaction } from 'src/features/transactions/sendTransaction'
+import { attemptReplaceTransaction } from 'src/features/transactions/replaceTransactionSaga'
+import {
+  sendTransaction,
+  signAndSendTransaction,
+} from 'src/features/transactions/sendTransactionSaga'
 import { addTransaction } from 'src/features/transactions/slice'
 import * as TxnUtils from 'src/features/transactions/utils'
 import {

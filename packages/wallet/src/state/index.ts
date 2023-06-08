@@ -2,7 +2,6 @@ import type { Middleware, PreloadedState, Reducer } from '@reduxjs/toolkit'
 import { configureStore } from '@reduxjs/toolkit'
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
 import createSagaMiddleware, { Saga } from 'redux-saga'
-import { SelectEffect } from 'redux-saga/effects'
 import { SagaGenerator, select } from 'typed-redux-saga'
 import { loggerMiddleware } from 'wallet/src/features/logger/middleware'
 import { walletContextValue } from 'wallet/src/features/wallet/context'
@@ -78,7 +77,7 @@ export const useAppDispatch: () => AppDispatch = useDispatch
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector
 
 // Use in sagas for better typing when selecting from redux state
-export function* appSelect<T>(fn: (state: RootState) => T): SagaGenerator<T, SelectEffect> {
+export function* appSelect<T>(fn: (state: RootState) => T): SagaGenerator<T> {
   const state = yield* select(fn)
   return state
 }

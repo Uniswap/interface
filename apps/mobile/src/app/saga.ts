@@ -1,6 +1,6 @@
 import { cloudBackupsManagerSaga } from 'src/features/CloudBackup/saga'
-import { deepLinkWatcher } from 'src/features/deepLinking/handleDeepLink'
-import { firebaseDataWatcher } from 'src/features/firebase/firebaseData'
+import { deepLinkWatcher } from 'src/features/deepLinking/handleDeepLinkSaga'
+import { firebaseDataWatcher } from 'src/features/firebase/firebaseDataSaga'
 import { initFirebase } from 'src/features/firebase/initFirebaseSaga'
 import {
   importAccountActions,
@@ -8,7 +8,7 @@ import {
   importAccountSaga,
   importAccountSagaName,
 } from 'src/features/import/importAccountSaga'
-import { notificationWatcher } from 'src/features/notifications/notificationWatcher'
+import { notificationWatcher } from 'src/features/notifications/notificationWatcherSaga'
 import { telemetrySaga } from 'src/features/telemetry/saga'
 import {
   swapActions,

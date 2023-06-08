@@ -2,7 +2,7 @@ import { call } from '@redux-saga/core/effects'
 import { BigNumber } from 'ethers'
 import { expectSaga } from 'redux-saga-test-plan'
 import * as matchers from 'redux-saga-test-plan/matchers'
-import { sendTransaction } from 'src/features/transactions/sendTransaction'
+import { sendTransaction } from 'src/features/transactions/sendTransactionSaga'
 import { transferToken } from 'src/features/transactions/transfer/transferTokenSaga'
 import {
   TransferCurrencyParams,

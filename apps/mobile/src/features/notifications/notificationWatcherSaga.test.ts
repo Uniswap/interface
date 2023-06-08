@@ -1,6 +1,6 @@
 import { TradeType } from '@uniswap/sdk-core'
 import { expectSaga } from 'redux-saga-test-plan'
-import { pushTransactionNotification } from 'src/features/notifications/notificationWatcher'
+import { pushTransactionNotification } from 'src/features/notifications/notificationWatcherSaga'
 import { finalizeTransaction } from 'src/features/transactions/slice'
 import { finalizedTxAction } from 'src/test/fixtures'
 import { NATIVE_ADDRESS } from 'wallet/src/constants/addresses'

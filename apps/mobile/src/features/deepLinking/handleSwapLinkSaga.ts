@@ -1,35 +1,18 @@
 import { BigNumber } from 'ethers'
-import { CallEffect, put, PutEffect } from 'redux-saga/effects'
-import { openModal, OpenModalParams } from 'src/features/modals/modalSlice'
+import { openModal } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
 import {
   CurrencyField,
   TransactionState,
 } from 'src/features/transactions/transactionState/transactionState'
-import { call } from 'typed-redux-saga'
-import { ChainId } from 'wallet/src/constants/chains'
+import { call, put } from 'typed-redux-saga'
 import { AssetType, CurrencyAsset } from 'wallet/src/entities/assets'
 import { selectActiveChainIds } from 'wallet/src/features/chains/saga'
 import { logger } from 'wallet/src/features/logger/logger'
 import { getValidAddress } from 'wallet/src/utils/addresses'
 import { currencyIdToAddress, currencyIdToChain } from 'wallet/src/utils/currencyId'
 
-export function* handleSwapLink(url: URL): Generator<
-  | CallEffect<{
-      inputChain: ChainId
-      inputAddress: string
-      outputChain: ChainId
-      outputAddress: string
-      exactCurrencyField: CurrencyField
-      exactAmountToken: string
-    }>
-  | PutEffect<{
-      payload: OpenModalParams
-      type: string
-    }>,
-  void,
-  unknown
-> {
+export function* handleSwapLink(url: URL) {
   try {
     const {
       inputChain,
@@ -59,26 +42,15 @@ export function* handleSwapLink(url: URL): Generator<
       exactAmountToken,
     }
 
-    yield put(openModal({ name: ModalName.Swap, initialState: swapFormState }))
+    yield* put(openModal({ name: ModalName.Swap, initialState: swapFormState }))
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     logger.error('handleSwapLink', 'handleSwapLink', error?.message)
-    yield put(openModal({ name: ModalName.Swap }))
+    yield* put(openModal({ name: ModalName.Swap }))
   }
 }
 
-export function* parseAndValidateSwapParams(url: URL): Generator<
-  CallEffect<ChainId[]>,
-  {
-    inputChain: ChainId
-    inputAddress: string
-    outputChain: ChainId
-    outputAddress: string
-    exactCurrencyField: CurrencyField
-    exactAmountToken: string
-  },
-  unknown
-> {
+export function* parseAndValidateSwapParams(url: URL) {
   const inputCurrencyId = url.searchParams.get('inputCurrencyId')
   const outputCurrencyId = url.searchParams.get('outputCurrencyId')
   const currencyField = url.searchParams.get('currencyField')

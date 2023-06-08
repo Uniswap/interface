@@ -3,8 +3,8 @@ import {
   handleDeepLink,
   handleWalletConnectDeepLink,
   parseAndValidateUserAddress,
-} from 'src/features/deepLinking/handleDeepLink'
-import { handleTransactionLink } from 'src/features/deepLinking/handleTransactionLink'
+} from 'src/features/deepLinking/handleDeepLinkSaga'
+import { handleTransactionLink } from 'src/features/deepLinking/handleTransactionLinkSaga'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
 import { account } from 'src/test/fixtures'
