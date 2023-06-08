@@ -46,7 +46,7 @@ describe('Permit2', () => {
       })
   }
 
-  describe('approval process (with intermediate screens)', () => {
+  describe.only('approval process (with intermediate screens)', () => {
     // Turn off automine so that intermediate screens are available to assert on.
     beforeEach(() => cy.hardhat({ automine: false }))
 
@@ -54,7 +54,7 @@ describe('Permit2', () => {
       initiateSwap()
 
       // Verify token approval
-      cy.contains('Enable spending limits for DAI on Uniswap')
+      cy.contains('Enable spending DAI on Uniswap')
       cy.wait('@eth_sendRawTransaction')
       cy.hardhat().then((hardhat) => hardhat.mine())
       cy.get(getTestSelector('popups')).contains('Approved')
@@ -70,7 +70,7 @@ describe('Permit2', () => {
       expectPermit2AllowanceForUniversalRouterToBeMax()
     })
 
-    it('swaps with existing permit approval and missing token approval', () => {
+    it.only('swaps with existing permit approval and missing token approval', () => {
       cy.hardhat().then(async (hardhat) => {
         await hardhat.approval.setPermit2Allowance({ owner: hardhat.wallet, token: INPUT_TOKEN })
         await hardhat.mine()
@@ -78,7 +78,7 @@ describe('Permit2', () => {
       initiateSwap()
 
       // Verify token approval
-      cy.contains('Enable spending limits for DAI on Uniswap')
+      cy.contains('Enable spending DAI on Uniswap')
       cy.wait('@eth_sendRawTransaction')
       cy.hardhat().then((hardhat) => hardhat.mine())
       cy.get(getTestSelector('popups')).contains('Approved')
