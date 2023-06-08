@@ -38,8 +38,7 @@ flag_management:
           target: 0%
 
 comment:
-  layout: "flags, files"
-  behavior: default
+  layout: "flags, files, footer"
 
 github_checks:
   # Turn off GitHub Check annotations, as they make it more difficult to review code.
