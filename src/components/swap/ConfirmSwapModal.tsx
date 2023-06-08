@@ -34,6 +34,7 @@ import SwapModalHeader from './SwapModalHeader'
 
 export enum ConfirmModalState {
   REVIEWING,
+  RESETTING_USDT,
   APPROVING_TOKEN,
   PERMITTING,
   PENDING_CONFIRMATION,
@@ -49,7 +50,11 @@ const StyledL2Logo = styled.img`
 `
 
 function isInApprovalPhase(confirmModalState: ConfirmModalState) {
-  return confirmModalState === ConfirmModalState.APPROVING_TOKEN || confirmModalState === ConfirmModalState.PERMITTING
+  return (
+    confirmModalState === ConfirmModalState.RESETTING_USDT ||
+    confirmModalState === ConfirmModalState.APPROVING_TOKEN ||
+    confirmModalState === ConfirmModalState.PERMITTING
+  )
 }
 
 function useConfirmModalState({
@@ -74,6 +79,14 @@ function useConfirmModalState({
   // at the bottom of the modal, even after they complete steps 1 and 2.
   const generateRequiredSteps = useCallback(() => {
     const steps: PendingConfirmModalState[] = []
+    // Any existing USDT allowance needs to be reset before we can approve the new amount.
+    if (
+      allowance.state === AllowanceState.REQUIRED &&
+      allowance.token.symbol === 'USDT' &&
+      allowance.allowedAmount.greaterThan(0)
+    ) {
+      steps.push(ConfirmModalState.RESETTING_USDT)
+    }
     if (allowance.state === AllowanceState.REQUIRED && allowance.needsSetupApproval) {
       steps.push(ConfirmModalState.APPROVING_TOKEN)
     }
@@ -98,6 +111,11 @@ function useConfirmModalState({
   const performStep = useCallback(
     async (step: ConfirmModalState) => {
       switch (step) {
+        case ConfirmModalState.RESETTING_USDT:
+          setConfirmModalState(ConfirmModalState.RESETTING_USDT)
+          invariant(allowance.state === AllowanceState.REQUIRED, 'Allowance should be required')
+          await allowance.revoke().catch((e) => catchUserReject(e, PendingModalError.TOKEN_APPROVAL_ERROR))
+          break
         case ConfirmModalState.APPROVING_TOKEN:
           setConfirmModalState(ConfirmModalState.APPROVING_TOKEN)
           invariant(allowance.state === AllowanceState.REQUIRED, 'Allowance should be required')
@@ -282,6 +300,7 @@ export default function ConfirmSwapModal({
         trade={trade}
         swapTxHash={txHash}
         tokenApprovalPending={allowance.state === AllowanceState.REQUIRED && allowance.isApprovalPending}
+        revocationPending={allowance.state === AllowanceState.REQUIRED && allowance.isRevocationPending}
       />
     )
   }, [
