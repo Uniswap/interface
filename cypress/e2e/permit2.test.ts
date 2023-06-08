@@ -54,7 +54,7 @@ describe('Permit2', () => {
       initiateSwap()
 
       // Verify token approval
-      cy.contains('Enable spending limits for DAI on Uniswap')
+      cy.contains('Enable spending DAI on Uniswap')
       cy.wait('@eth_sendRawTransaction')
       cy.hardhat().then((hardhat) => hardhat.mine())
       cy.get(getTestSelector('popups')).contains('Approved')
@@ -78,7 +78,7 @@ describe('Permit2', () => {
       initiateSwap()
 
       // Verify token approval
-      cy.contains('Enable spending limits for DAI on Uniswap')
+      cy.contains('Enable spending DAI on Uniswap')
       cy.wait('@eth_sendRawTransaction')
       cy.hardhat().then((hardhat) => hardhat.mine())
       cy.get(getTestSelector('popups')).contains('Approved')
@@ -107,28 +107,25 @@ describe('Permit2', () => {
   })
 
   it('retains modal state when the window loses focus', () => {
-    cy.hardhat().then(({ provider }) => {
-      cy.spy(provider, 'send').as('permitApprovalSpy')
-    })
     initiateSwap()
 
     cy.window().trigger('blur')
 
-    cy.contains('Enable spending limits for DAI on Uniswap').should('exist')
-    cy.contains('Approved').should('exist')
+    // Verify token approval
+    cy.contains('Enable spending DAI on Uniswap')
+    cy.wait('@eth_sendRawTransaction')
+    cy.hardhat().then((hardhat) => hardhat.mine())
+    cy.get(getTestSelector('popups')).contains('Approved')
+    expectTokenAllowanceForPermit2ToBeMax()
 
-    cy.contains('Allow DAI to be used for swapping').should('exist')
-    cy.contains('Confirm Swap').should('exist')
-
-    cy.then(() => {
-      const approvalTime = Date.now()
-
-      cy.contains('Swapped').should('exist')
-
-      expectTokenAllowanceForPermit2ToBeMax()
-      expectPermit2AllowanceForUniversalRouterToBeMax(approvalTime)
-      cy.get('@permitApprovalSpy').should('have.been.calledWith', 'eth_signTypedData_v4')
-    })
+    // Verify permit2 approval
+    cy.contains('Allow DAI to be used for swapping')
+    cy.wait('@eth_signTypedData_v4')
+    cy.wait('@eth_sendRawTransaction')
+    cy.hardhat().then((hardhat) => hardhat.mine())
+    cy.contains('Success')
+    cy.get(getTestSelector('popups')).contains('Swapped')
+    expectPermit2AllowanceForUniversalRouterToBeMax()
   })
 
   it('swaps after handling user rejection of both approval and signature', () => {

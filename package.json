@@ -186,7 +186,7 @@
     "@visx/react-spring": "^2.12.2",
     "@visx/responsive": "^2.10.0",
     "@visx/shape": "^2.11.1",
-    "@walletconnect/ethereum-provider": "^1.8.0",
+    "@walletconnect/ethereum-provider": "^2.7.8",
     "@web3-react/coinbase-wallet": "^8.2.0",
     "@web3-react/core": "^8.2.0",
     "@web3-react/eip1193": "^8.2.0",
@@ -197,6 +197,7 @@
     "@web3-react/types": "^8.2.0",
     "@web3-react/url": "^8.2.0",
     "@web3-react/walletconnect": "^8.2.0",
+    "@web3-react/walletconnect-v2": "^8.3.1",
     "ajv": "^8.11.0",
     "ajv-formats": "^2.1.1",
     "array.prototype.flat": "^1.2.4",
@@ -248,7 +249,7 @@
     "styled-components": "^5.3.5",
     "tiny-invariant": "^1.2.0",
     "ua-parser-js": "^1.0.35",
-    "use-resize-observer": "^9.0.2",
+    "use-resize-observer": "^9.1.0",
     "uuid": "^8.3.2",
     "video-extensions": "^1.2.0",
     "wcag-contrast": "^3.0.0",
@@ -261,7 +262,7 @@
   },
   "engines": {
     "npm": "please-use-yarn",
-    "node": "14",
+    "node": "18.x",
     "yarn": ">=1.22"
   }
 }

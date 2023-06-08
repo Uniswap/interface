@@ -1,4 +1,5 @@
 import { darken } from 'polished'
+import { forwardRef } from 'react'
 import { Check, ChevronDown } from 'react-feather'
 import { Button as RebassButton, ButtonProps as ButtonPropsOriginal } from 'rebass/styled-components'
 import styled, { DefaultTheme, useTheme } from 'styled-components/macro'
@@ -524,15 +525,19 @@ const BaseThemeButton = styled.button<BaseThemeButtonProps>`
 `
 
 interface ThemeButtonProps extends React.ComponentPropsWithoutRef<'button'>, BaseThemeButtonProps {}
+type ThemeButtonRef = HTMLButtonElement
 
-export const ThemeButton = ({ children, ...rest }: ThemeButtonProps) => {
+export const ThemeButton = forwardRef<ThemeButtonRef, ThemeButtonProps>(function ThemeButton(
+  { children, ...rest },
+  ref
+) {
   return (
-    <BaseThemeButton {...rest}>
+    <BaseThemeButton {...rest} ref={ref}>
       <ButtonOverlay />
       {children}
     </BaseThemeButton>
   )
-}
+})
 
 export const ButtonLight = ({ children, ...rest }: BaseButtonProps) => {
   return (

@@ -65,6 +65,10 @@ export const searchBarContainerNft = style([
   },
 ])
 
+export const searchBarContainerDisableBlur = style({
+  backdropFilter: 'none',
+})
+
 export const searchBar = style([
   baseSearchStyle,
   sprinkles({

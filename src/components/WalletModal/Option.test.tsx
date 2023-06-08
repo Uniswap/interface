@@ -1,6 +1,6 @@
 import { Connector } from '@web3-react/types'
 import UNIWALLET_ICON from 'assets/images/uniwallet.png'
-import { useCloseAccountDrawer } from 'components/AccountDrawer'
+import { useAccountDrawer } from 'components/AccountDrawer'
 import { Connection, ConnectionType } from 'connection/types'
 import { mocked } from 'test-utils/mocked'
 import { createDeferredPromise } from 'test-utils/promise'
@@ -8,12 +8,12 @@ import { act, render } from 'test-utils/render'
 
 import Option from './Option'
 
-const mockCloseDrawer = jest.fn()
+const mockToggleDrawer = jest.fn()
 jest.mock('components/AccountDrawer')
 
 beforeEach(() => {
   jest.spyOn(console, 'debug').mockReturnValue()
-  mocked(useCloseAccountDrawer).mockReturnValue(mockCloseDrawer)
+  mocked(useAccountDrawer).mockReturnValue([true, mockToggleDrawer])
 })
 
 const mockConnection1: Connection = {
@@ -23,7 +23,7 @@ const mockConnection1: Connection = {
     deactivate: jest.fn(),
   } as unknown as Connector,
   getIcon: () => UNIWALLET_ICON,
-  type: ConnectionType.UNIWALLET,
+  type: ConnectionType.UNISWAP_WALLET,
 } as unknown as Connection
 
 const mockConnection2: Connection = {
@@ -39,7 +39,7 @@ const mockConnection2: Connection = {
 describe('Wallet Option', () => {
   it('renders default state', () => {
     const component = render(<Option connection={mockConnection1} />)
-    const option = component.getByTestId('wallet-option-UNIWALLET')
+    const option = component.getByTestId('wallet-option-UNISWAP_WALLET')
     expect(option).toBeEnabled()
     expect(option).toHaveProperty('selected', false)
 
@@ -56,7 +56,7 @@ describe('Wallet Option', () => {
         <Option connection={mockConnection2} />
       </>
     )
-    const option1 = component.getByTestId('wallet-option-UNIWALLET')
+    const option1 = component.getByTestId('wallet-option-UNISWAP_WALLET')
     const option2 = component.getByTestId('wallet-option-INJECTED')
 
     expect(option1).toBeEnabled()
@@ -71,11 +71,7 @@ describe('Wallet Option', () => {
     expect(option2).toBeDisabled()
     expect(option2).toHaveProperty('selected', false)
 
-    expect(mockCloseDrawer).toHaveBeenCalledTimes(0)
-
     await act(async () => activationResponse.resolve())
-
-    expect(mockCloseDrawer).toHaveBeenCalledTimes(1)
 
     expect(option1).toBeEnabled()
     expect(option1).toHaveProperty('selected', false)
