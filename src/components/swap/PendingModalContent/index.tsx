@@ -27,7 +27,7 @@ import {
 import { TradeSummary } from './TradeSummary'
 
 export const PendingModalContainer = styled(ColumnCenter)`
-  margin: 48px 0 28px;
+  margin: 48px 0 8px;
 `
 
 const HeaderContainer = styled(ColumnCenter)<{ $disabled?: boolean }>`
