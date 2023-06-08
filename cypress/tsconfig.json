@@ -7,7 +7,8 @@
     "strict": true,
     "target": "ES5",
     "tsBuildInfoFile": "../node_modules/.cache/tsbuildinfo/cypress", // avoid clobbering the build tsbuildinfo
-    "types": ["cypress", "node"]
+    "types": ["cypress", "node"],
+    "jsx": "react"
   },
   "exclude": ["node_modules"],
   "include": ["**/*.ts"],

@@ -729,7 +729,7 @@ export default function MigrateV2Pair() {
           <ThemedText.DeprecatedMediumHeader>
             <Trans>Migrate V2 Liquidity</Trans>
           </ThemedText.DeprecatedMediumHeader>
-          <SettingsTab autoSlippage={DEFAULT_MIGRATE_SLIPPAGE_TOLERANCE} />
+          <SettingsTab autoSlippage={DEFAULT_MIGRATE_SLIPPAGE_TOLERANCE} chainId={chainId} />
         </AutoRow>
 
         {!account ? (

@@ -1,4 +1,5 @@
 import { Trans } from '@lingui/macro'
+import * as Sentry from '@sentry/react'
 import { sendAnalyticsEvent, Trace, TraceEvent, useTrace } from '@uniswap/analytics'
 import {
   BrowserEvent,
@@ -29,13 +30,11 @@ import { useSwapCallback } from 'hooks/useSwapCallback'
 import { useUSDPrice } from 'hooks/useUSDPrice'
 import JSBI from 'jsbi'
 import { formatSwapQuoteReceivedEventProperties } from 'lib/utils/analytics'
-import { useCallback, useEffect, useMemo, useReducer, useState } from 'react'
-import { ReactNode } from 'react'
+import { ReactNode, useCallback, useEffect, useMemo, useReducer, useState } from 'react'
 import { ArrowDown } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
 import { Text } from 'rebass'
-import { InterfaceTrade } from 'state/routing/types'
-import { TradeState } from 'state/routing/types'
+import { InterfaceTrade, TradeState } from 'state/routing/types'
 import styled, { useTheme } from 'styled-components/macro'
 import { currencyAmountToPreciseFloat, formatTransactionAmount } from 'utils/formatNumbers'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
@@ -440,6 +439,12 @@ export function Swap({
         })
       })
       .catch((error) => {
+        if (!didUserReject(error)) {
+          Sentry.withScope((scope) => {
+            scope.setExtra('confirmedTrade', tradeToConfirm)
+            Sentry.captureException(error)
+          })
+        }
         setSwapState((currentState) => ({
           ...currentState,
           swapError: error,
@@ -454,6 +459,7 @@ export function Swap({
     account,
     trade?.inputAmount?.currency?.symbol,
     trade?.outputAmount?.currency?.symbol,
+    tradeToConfirm,
   ])
 
   // errors
@@ -539,7 +545,7 @@ export function Swap({
         onCancel={handleDismissTokenWarning}
         showCancel={true}
       />
-      <SwapHeader autoSlippage={autoSlippage} />
+      <SwapHeader autoSlippage={autoSlippage} chainId={chainId} />
       {trade && showConfirm && (
         <ConfirmSwapModal
           trade={trade}

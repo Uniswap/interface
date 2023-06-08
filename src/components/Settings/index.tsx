@@ -41,8 +41,8 @@ const MenuFlyout = styled(AutoColumn)`
   padding: 1rem;
 `
 
-export default function SettingsTab({ autoSlippage }: { autoSlippage: Percent }) {
-  const { chainId } = useWeb3React()
+export default function SettingsTab({ autoSlippage, chainId }: { autoSlippage: Percent; chainId?: number }) {
+  const { chainId: connectedChainId } = useWeb3React()
   const showDeadlineSettings = Boolean(chainId && !L2_CHAIN_IDS.includes(chainId))
 
   const node = useRef<HTMLDivElement | null>(null)
@@ -55,7 +55,7 @@ export default function SettingsTab({ autoSlippage }: { autoSlippage: Percent })
 
   return (
     <Menu ref={node}>
-      <MenuButton disabled={!isSupportedChain} isActive={isOpen} onClick={toggleMenu} />
+      <MenuButton disabled={!isSupportedChain || chainId !== connectedChainId} isActive={isOpen} onClick={toggleMenu} />
       {isOpen && (
         <MenuFlyout>
           <RouterPreferenceSettings />
