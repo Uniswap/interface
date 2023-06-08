@@ -1,7 +1,8 @@
 import React from 'react'
-import { SharedValue, useAnimatedStyle, useDerivedValue } from 'react-native-reanimated'
+import { SharedValue, useAnimatedStyle } from 'react-native-reanimated'
 import { useLineChartDatetime } from 'react-native-wagmi-charts'
 import { useAppTheme } from 'src/app/hooks'
+import { AnimatedCaretChange } from 'src/components/icons/Caret'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { AnimatedText } from 'src/components/text/AnimatedText'
@@ -28,10 +29,15 @@ export function RelativeChangeText({
   const theme = useAppTheme()
 
   const relativeChange = useLineChartRelativeChange({ spotRelativeChange })
-  const icon = useDerivedValue(() => (relativeChange.value.value > 0 ? '↗' : '↘'))
+
   const styles = useAnimatedStyle(() => ({
     color:
       relativeChange.value.value > 0 ? theme.colors.accentSuccess : theme.colors.accentCritical,
+  }))
+  const caretStyle = useAnimatedStyle(() => ({
+    color:
+      relativeChange.value.value > 0 ? theme.colors.accentSuccess : theme.colors.accentCritical,
+    transform: [{ rotate: relativeChange.value.value > 0 ? '180deg' : '0deg' }],
   }))
 
   if (loading) {
@@ -39,8 +45,13 @@ export function RelativeChangeText({
   }
 
   return (
-    <Flex row gap="spacing2">
-      <AnimatedText style={styles} testID="relative-change-icon" text={icon} variant="bodyLarge" />
+    <Flex row alignItems="flex-end" gap="spacing2">
+      <AnimatedCaretChange
+        height={theme.iconSizes.icon16}
+        strokeWidth={2}
+        style={caretStyle}
+        width={theme.iconSizes.icon16}
+      />
       <AnimatedText
         style={styles}
         testID="relative-change-text"

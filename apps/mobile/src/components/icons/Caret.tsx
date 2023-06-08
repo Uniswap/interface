@@ -1,5 +1,6 @@
 import React, { memo } from 'react'
 import { useAppTheme } from 'src/app/hooks'
+import { withAnimated } from 'src/components/animated'
 import CaretChange from 'ui/src/assets/icons/arrow-change.svg'
 
 type Props = {
@@ -34,3 +35,5 @@ export function _Caret({ size = 24, color, direction = 'n' }: Props): JSX.Elemen
 }
 
 export const Caret = memo(_Caret)
+
+export const AnimatedCaretChange = withAnimated(CaretChange)

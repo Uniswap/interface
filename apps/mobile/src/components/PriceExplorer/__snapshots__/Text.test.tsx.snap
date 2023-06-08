@@ -318,7 +318,7 @@ exports[`RelativeChangeText renders without error 1`] = `
   style={
     [
       {
-        "alignItems": "stretch",
+        "alignItems": "flex-end",
         "display": "flex",
         "flexDirection": "row",
         "justifyContent": "flex-start",
@@ -326,33 +326,21 @@ exports[`RelativeChangeText renders without error 1`] = `
     ]
   }
 >
-  <TextInput
-    allowFontScaling={true}
-    animatedProps={
-      {
-        "text": "↗",
-      }
-    }
-    editable={false}
-    maxFontSizeMultiplier={1.4}
+  <svg
+    data-file-name="SvgArrowChange"
+    height={16}
+    strokeWidth={2}
     style={
-      [
-        [
+      {
+        "color": "#40B66B",
+        "transform": [
           {
-            "color": "#0E1524",
-            "fontFamily": "Inter-Medium",
-            "fontSize": 17,
-            "lineHeight": 24,
-          },
-          {
-            "color": "#40B66B",
+            "rotate": "180deg",
           },
         ],
-      ]
+      }
     }
-    testID="relative-change-icon"
-    underlineColorAndroid="transparent"
-    value="↗"
+    width={16}
   />
   <View
     style={
