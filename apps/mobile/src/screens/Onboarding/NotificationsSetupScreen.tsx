@@ -108,8 +108,9 @@ export function NotificationsSetupScreen({ navigation, route: { params } }: Prop
           })
         )
       )
-      navigateToNextScreen()
     }, showNotificationSettingsAlert)
+
+    navigateToNextScreen()
   }
 
   return (
