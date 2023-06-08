@@ -153,9 +153,8 @@ export function QRAnimation({
 
   // used throughout the page the get the size of the QR code container
   // setting as a constant so that it doesn't get defined by padding and screen size and give us less design control
-  const QR_CONTAINER_SIZE = 242
-  const QR_CODE_SIZE = 190
-
+  const QR_CONTAINER_SIZE = useResponsiveProp({ xs: 160, sm: 242 }) || 242
+  const QR_CODE_SIZE = useResponsiveProp({ xs: 140, sm: 190 }) || 190
   const UNICON_SIZE = 64
 
   const finalTitleMaxFontSizeMultiplier = useResponsiveProp({
@@ -166,6 +165,16 @@ export function QRAnimation({
   const finalBodyMaxFontSizeMultiplier = useResponsiveProp({
     xs: 1.1,
     sm: theme.textVariants.bodyLarge.maxFontSizeMultiplier,
+  })
+
+  const titleSize = useResponsiveProp({
+    xs: 'subheadSmall',
+    sm: 'subheadLarge',
+  })
+
+  const bodySize = useResponsiveProp({
+    xs: 'bodyMicro',
+    sm: 'bodySmall',
   })
 
   return (
@@ -281,14 +290,14 @@ export function QRAnimation({
               maxFontSizeMultiplier={finalTitleMaxFontSizeMultiplier}
               pb="spacing12"
               textAlign="center"
-              variant="subheadLarge">
+              variant={titleSize}>
               {t('Welcome to your new wallet')}
             </Text>
             <Text
               color="textSecondary"
               maxFontSizeMultiplier={finalBodyMaxFontSizeMultiplier}
               textAlign="center"
-              variant="bodySmall">
+              variant={bodySize}>
               {isNewWallet
                 ? t('This is your personal bank vault for tokens, NFTs, and all your trades.')
                 : t(
