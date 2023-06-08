@@ -142,6 +142,7 @@ jest.mock('../../../../state/transactions/hooks', () => {
             type: MockTxType.APPROVAL,
             tokenAddress: MockDAI.address,
             spender: mockSpenderAddress,
+            amount: '10000000',
           },
           '0xapproval'
         ),
