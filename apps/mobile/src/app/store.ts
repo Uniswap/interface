@@ -8,7 +8,6 @@ import { fiatOnRampApi } from 'src/features/fiatOnRamp/api'
 import { routingApi } from 'src/features/routing/routingApi'
 import { trmApi } from 'src/features/trm/api'
 import { ensApi } from 'wallet/src/features/ens/api'
-import { gasApi } from 'wallet/src/features/gas/gasApi'
 import { logger } from 'wallet/src/features/logger/logger'
 import { onChainBalanceApi } from 'wallet/src/features/portfolio/api'
 import { createStore } from 'wallet/src/state'
@@ -112,7 +111,6 @@ export const setupStore = (
     middlewareAfter: [
       ensApi.middleware,
       fiatOnRampApi.middleware,
-      gasApi.middleware,
       onChainBalanceApi.middleware,
       routingApi.middleware,
       rtkQueryErrorLogger,

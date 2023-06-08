@@ -5,7 +5,7 @@ import { MMKV } from 'react-native-mmkv'
 import { initAndPersistCache } from 'src/data/cache'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
-import { getErrorLink, getHttpLink, getPerformanceLink } from 'wallet/src/data/links'
+import { getErrorLink, getHttpLink, getPerformanceLink, getRestLink } from 'wallet/src/data/links'
 import { isNonJestDev } from 'wallet/src/utils/environment'
 
 const mmkv = new MMKV()
@@ -32,6 +32,7 @@ export const usePersistedApolloClient = (): ApolloClient<NormalizedCacheObject> 
             getPerformanceLink((args: any) =>
               sendAnalyticsEvent(MobileEventName.PerformanceGraphql, args)
             ),
+            getRestLink(),
             getHttpLink(),
           ]),
           cache,

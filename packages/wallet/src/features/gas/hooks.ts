@@ -1,8 +1,6 @@
-import { skipToken } from '@reduxjs/toolkit/dist/query'
 import { providers } from 'ethers'
 import { useMemo } from 'react'
-import { getPollingIntervalByBlocktime } from 'wallet/src/features/chains/utils'
-import { useGasFeeQuery } from 'wallet/src/features/gas/gasApi'
+import { useGasFeeQuery } from 'wallet/src/features/gas/api'
 import { FeeType, GasSpeed, TransactionGasFeeInfo } from 'wallet/src/features/gas/types'
 
 export function useTransactionGasFee(
@@ -11,9 +9,7 @@ export function useTransactionGasFee(
   skip?: boolean
 ): TransactionGasFeeInfo | undefined {
   // TODO: [MOB-650] Handle error responses from gas endpoint
-  const { data } = useGasFeeQuery((!skip && tx) || skipToken, {
-    pollingInterval: getPollingIntervalByBlocktime(tx?.chainId),
-  })
+  const { data } = useGasFeeQuery(tx, skip)
 
   return useMemo(() => {
     if (!data) return undefined

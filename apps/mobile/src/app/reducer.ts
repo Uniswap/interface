@@ -14,7 +14,6 @@ import { transactionReducer } from 'src/features/transactions/slice'
 import { trmApi } from 'src/features/trm/api'
 import { walletConnectReducer } from 'src/features/walletConnect/walletConnectSlice'
 import { ensApi } from 'wallet/src/features/ens/api'
-import { gasApi } from 'wallet/src/features/gas/gasApi'
 import { onChainBalanceApi } from 'wallet/src/features/portfolio/api'
 import { sharedReducers } from 'wallet/src/state/reducer'
 import { monitoredSagaReducers } from './saga'
@@ -23,7 +22,6 @@ const reducers = {
   ...sharedReducers,
   [ensApi.reducerPath]: ensApi.reducer,
   [fiatOnRampApi.reducerPath]: fiatOnRampApi.reducer,
-  [gasApi.reducerPath]: gasApi.reducer,
   [onChainBalanceApi.reducerPath]: onChainBalanceApi.reducer,
   [routingApi.reducerPath]: routingApi.reducer,
   [trmApi.reducerPath]: trmApi.reducer,

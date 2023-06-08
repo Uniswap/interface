@@ -12737,6 +12737,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"apollo-link-rest@npm:0.9.0":
+  version: 0.9.0
+  resolution: "apollo-link-rest@npm:0.9.0"
+  peerDependencies:
+    "@apollo/client": ">=3"
+    graphql: ">=0.11"
+    qs: ">=6"
+  checksum: 1aa2ca1311597a125dfd0ae08a8edce95e32b7e6f661a5bd980305e7c9fa0bf8d833d510407a7c93fc45a5ed85cb649d42918a4149c160d184348e43d7475abe
+  languageName: node
+  linkType: hard
+
 "apollo3-cache-persist@npm:0.14.1":
   version: 0.14.1
   resolution: "apollo3-cache-persist@npm:0.14.1"
@@ -37632,6 +37643,7 @@ __metadata:
     "@types/redux-logger": 3.0.9
     "@types/sinon-chrome": 2.2.11
     "@uniswap/sdk-core": 3.2.2
+    apollo-link-rest: 0.9.0
     dayjs: 1.11.7
     eslint: 8.21.0
     ethers: 5.7.2

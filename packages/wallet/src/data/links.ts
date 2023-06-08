@@ -1,8 +1,19 @@
 import { ApolloLink, createHttpLink } from '@apollo/client'
 import { onError } from '@apollo/client/link/error'
+import { RestLink } from 'apollo-link-rest'
 import { config } from 'wallet/src/config'
 import { uniswapUrls } from 'wallet/src/constants/urls'
 import { logger } from 'wallet/src/features/logger/logger'
+
+export const getRestLink = (): ApolloLink =>
+  new RestLink({
+    uri: uniswapUrls.apiBaseUrl,
+    headers: {
+      'Content-Type': 'application/json',
+      'X-API-KEY': config.uniswapApiKey,
+      Origin: config.uniswapAppUrl,
+    },
+  })
 
 export const getHttpLink = (): ApolloLink =>
   createHttpLink({
