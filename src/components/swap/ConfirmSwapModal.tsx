@@ -12,7 +12,7 @@ import Badge from 'components/Badge'
 import Modal, { MODAL_TRANSITION_DURATION } from 'components/Modal'
 import { RowFixed } from 'components/Row'
 import { getChainInfo } from 'constants/chainInfo'
-import { USDT } from 'constants/tokens'
+import { USDT as USDT_MAINNET } from 'constants/tokens'
 import { useMaxAmountIn } from 'hooks/useMaxAmountIn'
 import { Allowance, AllowanceState } from 'hooks/usePermit2Allowance'
 import usePrevious from 'hooks/usePrevious'
@@ -84,7 +84,7 @@ function useConfirmModalState({
     // See the `approve` function here: https://etherscan.io/address/0xdAC17F958D2ee523a2206206994597C13D831ec7#code
     if (
       allowance.state === AllowanceState.REQUIRED &&
-      allowance.token.equals(USDT) &&
+      allowance.token.equals(USDT_MAINNET) &&
       allowance.allowedAmount.greaterThan(0)
     ) {
       steps.push(ConfirmModalState.RESETTING_USDT)
