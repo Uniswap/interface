@@ -1,14 +1,19 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { Currency, CurrencyAmount, NativeCurrency as NativeCurrencyClass } from '@uniswap/sdk-core'
+import { providers as ethersProviders } from 'ethers'
 import { useMemo } from 'react'
 import ERC20_ABI from 'wallet/src/abis/erc20.json'
+import { config } from 'wallet/src/config'
 import { ChainId } from 'wallet/src/constants/chains'
+import { useRestQuery } from 'wallet/src/data/rest'
+import { getEthersProvider } from 'wallet/src/features/providers/getEthersProvider'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
 import { walletContextValue } from 'wallet/src/features/wallet/context'
 import { getPollingIntervalByBlocktime } from 'wallet/src/utils/chainId'
 import { currencyAddress as getCurrencyAddress } from 'wallet/src/utils/currencyId'
 
-const BALANCES_REDUCER_NAME = 'onchain-balances'
+// stub endpoint to conform to REST endpoint styles
+// Rest link should intercept and use custom fetcher instead
+export const STUB_ONCHAIN_BALANCES_ENDPOINT = '/onchain-balances'
 
 export type BalanceLookupParams = {
   currencyAddress?: Address
@@ -17,62 +22,54 @@ export type BalanceLookupParams = {
   accountAddress?: string
 }
 
-export const onChainBalanceApi = createApi({
-  reducerPath: BALANCES_REDUCER_NAME,
-  baseQuery: fetchBaseQuery({ baseUrl: '/' }),
-  endpoints: (builder) => ({
-    balance: builder.query<string | undefined, BalanceLookupParams>({
-      queryFn: async (params: BalanceLookupParams) => {
-        const { currencyAddress, chainId, currencyIsNative, accountAddress } = params
-        try {
-          if (!currencyAddress || !chainId || !accountAddress)
-            return {
-              error: {
-                status: 400,
-                data: `currencyAddress, chainId, or accountAddress is not defined`,
-              },
-            }
+/** Custom fetcher that uses an ethers provider to fetch. */
+export const getOnChainBalancesFetch = async (params: BalanceLookupParams): Promise<Response> => {
+  const { currencyAddress, chainId, currencyIsNative, accountAddress } = params
+  if (!currencyAddress || !chainId || !accountAddress) {
+    throw new Error(`currencyAddress, chainId, or accountAddress is not defined`)
+  }
 
-          const provider = walletContextValue.providers.getProvider(chainId)
+  // attemps to get initialized provider from context, but in some situation
+  // the provider may not be available (e.g. different thread)
+  let provider: ethersProviders.JsonRpcProvider | null = null
+  try {
+    provider = walletContextValue.providers.getProvider(chainId)
+  } catch {
+    provider = getEthersProvider(chainId, config)
+  }
 
-          // native amount lookup
-          if (currencyIsNative) {
-            const nativeBalance = await provider.getBalance(accountAddress)
-            return { data: nativeBalance?.toString() }
-          }
+  // native amount lookup
+  if (currencyIsNative) {
+    const nativeBalance = await provider.getBalance(accountAddress)
+    return new Response(JSON.stringify({ balance: nativeBalance?.toString() }))
+  }
 
-          // erc20 lookup
-          const erc20Contract = walletContextValue.contracts.getOrCreateContract(
-            chainId,
-            currencyAddress,
-            provider,
-            ERC20_ABI
-          )
-          const balance = await erc20Contract.callStatic.balanceOf?.(accountAddress)
-          return { data: balance.toString() }
-        } catch (e: unknown) {
-          return { error: { status: 500, data: e } }
-        }
-      },
-    }),
-  }),
-})
-
-const { useBalanceQuery } = onChainBalanceApi
+  // erc20 lookup
+  const erc20Contract = walletContextValue.contracts.getOrCreateContract(
+    chainId,
+    currencyAddress,
+    provider,
+    ERC20_ABI
+  )
+  const balance = await erc20Contract.callStatic.balanceOf?.(accountAddress)
+  return new Response(JSON.stringify({ balance: balance.toString() }))
+}
 
 export function useOnChainCurrencyBalance(
   currency?: Currency | null,
   accountAddress?: Address
 ): { balance: CurrencyAmount<Currency> | undefined; isLoading: boolean; error: unknown } {
-  const { currentData, isLoading, error } = useBalanceQuery(
+  const { data, error } = useRestQuery<{ balance?: string }, BalanceLookupParams>(
+    STUB_ONCHAIN_BALANCES_ENDPOINT,
     {
       currencyAddress: currency ? getCurrencyAddress(currency) : undefined,
       chainId: currency?.chainId,
       currencyIsNative: currency?.isNative,
       accountAddress,
     },
+    ['balance'],
     {
-      pollingInterval: getPollingIntervalByBlocktime(currency?.chainId),
+      pollInterval: getPollingIntervalByBlocktime(currency?.chainId),
       skip: !currency,
     }
   )
@@ -80,11 +77,13 @@ export function useOnChainCurrencyBalance(
   return useMemo(
     () => ({
       balance:
-        currency && currentData ? CurrencyAmount.fromRawAmount(currency, currentData) : undefined,
-      isLoading,
+        currency && data?.balance
+          ? CurrencyAmount.fromRawAmount(currency, data?.balance)
+          : undefined,
+      isLoading: !data?.balance,
       error,
     }),
-    [currentData, isLoading, currency, error]
+    [data, currency, error]
   )
 }
 

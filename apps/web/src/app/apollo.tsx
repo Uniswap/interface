@@ -1,10 +1,10 @@
 import { ApolloClient, ApolloProvider, from } from '@apollo/client'
 import { PropsWithChildren } from 'react'
 import { setupCache } from 'wallet/src/data/cache'
-import { getHttpLink, getRestLink } from 'wallet/src/data/links'
+import { getGraphqlHttpLink, getRestLink } from 'wallet/src/data/links'
 
 const client = new ApolloClient({
-  link: from([getRestLink(), getHttpLink()]),
+  link: from([getRestLink(), getGraphqlHttpLink()]),
   cache: setupCache(),
 })
 

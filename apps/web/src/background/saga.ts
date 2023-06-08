@@ -11,6 +11,7 @@ import {
 } from 'src/background/features/dappRequests/saga'
 import { spawn } from 'typed-redux-saga'
 import { authActions, authReducer, authSaga, authSagaName } from 'wallet/src/features/auth/saga'
+import { initProviders } from 'wallet/src/features/providers'
 import {
   createAccountActions,
   createAccountReducer,
@@ -71,6 +72,7 @@ const sagasInitializedOnStartup = [
   dappRequestApprovalWatcher,
   extensionRequestWatcher,
   keepAliveSaga,
+  initProviders,
 ] as const
 
 export const monitoredSagaReducers = getMonitoredSagaReducers(monitoredSagas)

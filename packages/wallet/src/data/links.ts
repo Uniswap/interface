@@ -4,9 +4,36 @@ import { RestLink } from 'apollo-link-rest'
 import { config } from 'wallet/src/config'
 import { uniswapUrls } from 'wallet/src/constants/urls'
 import { logger } from 'wallet/src/features/logger/logger'
+import {
+  getOnChainBalancesFetch,
+  STUB_ONCHAIN_BALANCES_ENDPOINT,
+} from 'wallet/src/features/portfolio/api'
 
-export const getRestLink = (): ApolloLink =>
-  new RestLink({
+const REST_API_URL = uniswapUrls.apiBaseUrl
+
+// mapping from endpoint to custom fetcher, when needed
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const ENDPOINT_TO_FETCHER: Record<string, (body: any) => Promise<Response>> = {
+  [REST_API_URL + STUB_ONCHAIN_BALANCES_ENDPOINT]: getOnChainBalancesFetch,
+}
+// Handles fetching data from REST APIs
+// Responses will be stored in graphql cache
+export const getRestLink = (): ApolloLink => {
+  // On-chain balances are fetched with ethers.provider
+  // When we detect a request to the balances endpoint, we provide a custom fetcher.
+  const customFetch: RestLink.CustomFetch = (uri, options) => {
+    const customFetcher = ENDPOINT_TO_FETCHER[uri.toString()]
+
+    if (customFetcher) {
+      return customFetcher(JSON.parse(options.body?.toString() ?? ''))
+    }
+
+    // Otherwise, use regular browser fetch
+    return fetch(uri, options)
+  }
+
+  return new RestLink({
+    customFetch,
     uri: uniswapUrls.apiBaseUrl,
     headers: {
       'Content-Type': 'application/json',
@@ -14,10 +41,11 @@ export const getRestLink = (): ApolloLink =>
       Origin: config.uniswapAppUrl,
     },
   })
+}
 
-export const getHttpLink = (): ApolloLink =>
+export const getGraphqlHttpLink = (): ApolloLink =>
   createHttpLink({
-    uri: uniswapUrls.graphQLUrl,
+    uri: REST_API_URL,
     headers: {
       'Content-Type': 'application/json',
       'X-API-KEY': config.uniswapApiKey,

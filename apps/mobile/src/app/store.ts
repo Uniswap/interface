@@ -9,7 +9,6 @@ import { routingApi } from 'src/features/routing/routingApi'
 import { trmApi } from 'src/features/trm/api'
 import { ensApi } from 'wallet/src/features/ens/api'
 import { logger } from 'wallet/src/features/logger/logger'
-import { onChainBalanceApi } from 'wallet/src/features/portfolio/api'
 import { createStore } from 'wallet/src/state'
 import { RootReducerNames } from 'wallet/src/state/reducer'
 import { isNonJestDev } from 'wallet/src/utils/environment'
@@ -111,7 +110,6 @@ export const setupStore = (
     middlewareAfter: [
       ensApi.middleware,
       fiatOnRampApi.middleware,
-      onChainBalanceApi.middleware,
       routingApi.middleware,
       rtkQueryErrorLogger,
       trmApi.middleware,
