@@ -53,6 +53,9 @@ describe('Permit2', () => {
     it('swaps after completing full permit2 approval process', () => {
       initiateSwap()
 
+      // verify that the modal retains its state when the window loses focus
+      cy.window().trigger('blur')
+
       // Verify token approval
       cy.contains('Enable spending DAI on Uniswap')
       cy.wait('@eth_sendRawTransaction')
@@ -89,28 +92,6 @@ describe('Permit2', () => {
       cy.hardhat().then((hardhat) => hardhat.mine())
       cy.contains('Success')
       cy.get(getTestSelector('popups')).contains('Swapped')
-    })
-
-    it('retains modal state when the window loses focus', () => {
-      initiateSwap()
-
-      cy.window().trigger('blur')
-
-      // Verify token approval
-      cy.contains('Enable spending DAI on Uniswap')
-      cy.wait('@eth_sendRawTransaction')
-      cy.hardhat().then((hardhat) => hardhat.mine())
-      cy.get(getTestSelector('popups')).contains('Approved')
-      expectTokenAllowanceForPermit2ToBeMax()
-
-      // Verify permit2 approval
-      cy.contains('Allow DAI to be used for swapping')
-      cy.wait('@eth_signTypedData_v4')
-      cy.wait('@eth_sendRawTransaction')
-      cy.hardhat().then((hardhat) => hardhat.mine())
-      cy.contains('Success')
-      cy.get(getTestSelector('popups')).contains('Swapped')
-      expectPermit2AllowanceForUniversalRouterToBeMax()
     })
   })
 
