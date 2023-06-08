@@ -1,5 +1,4 @@
 import bnbCircleLogoUrl from 'assets/images/bnbCircle.svg'
-import celoCircleLogoUrl from 'assets/images/celoCircle.png'
 import ethereumLogoUrl from 'assets/images/ethereum-logo.png'
 import polygonCircleLogoUrl from 'assets/images/polygonCircle.png'
 import { default as arbitrumCircleLogoUrl, default as arbitrumLogoUrl } from 'assets/svg/arbitrum_logo.svg'
@@ -81,6 +80,16 @@ const CHAIN_INFO: ChainInfoMap = {
     nativeCurrency: { name: 'Görli Ether', symbol: 'görETH', decimals: 18 },
     color: darkTheme.chain_5,
   },
+  [SupportedChainId.SEPOLIA]: {
+    networkType: NetworkType.L1,
+    docs: 'https://docs.uniswap.org/',
+    explorer: 'https://sepolia.etherscan.io/',
+    infoLink: 'https://info.uniswap.org/#/',
+    label: 'Sepolia',
+    logoUrl: ethereumLogoUrl,
+    nativeCurrency: { name: 'Sepolia Ether', symbol: 'SepoliaETH', decimals: 18 },
+    color: darkTheme.chain_5,
+  },
   [SupportedChainId.OPTIMISM]: {
     networkType: NetworkType.L2,
     blockWaitMsBeforeWarning: ms`25m`,
@@ -148,7 +157,7 @@ const CHAIN_INFO: ChainInfoMap = {
   [SupportedChainId.POLYGON]: {
     networkType: NetworkType.L1,
     blockWaitMsBeforeWarning: ms`10m`,
-    bridge: 'https://wallet.polygon.technology/login',
+    bridge: 'https://wallet.polygon.technology/polygon/bridge',
     docs: 'https://polygon.io/',
     explorer: 'https://polygonscan.com/',
     infoLink: 'https://info.uniswap.org/#/polygon/',
@@ -180,7 +189,7 @@ const CHAIN_INFO: ChainInfoMap = {
     infoLink: 'https://info.uniswap.org/#/celo/',
     label: 'Celo',
     logoUrl: celoLogo,
-    circleLogoUrl: celoCircleLogoUrl,
+    circleLogoUrl: celoLogo,
     squareLogoUrl: celoSquareLogoUrl,
     nativeCurrency: { name: 'Celo', symbol: 'CELO', decimals: 18 },
     defaultListUrl: CELO_LIST,

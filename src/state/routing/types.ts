@@ -3,6 +3,8 @@ import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { Route as V2Route } from '@uniswap/v2-sdk'
 import { Route as V3Route } from '@uniswap/v3-sdk'
 
+import { RouterPreference } from './slice'
+
 export enum TradeState {
   LOADING,
   INVALID,
@@ -65,6 +67,11 @@ export interface QuoteData {
   quoteGasAdjustedDecimals: string
   route: Array<(V3PoolInRoute | V2PoolInRoute)[]>
   routeString: string
+}
+
+export type QuoteDataV2 = {
+  routing: RouterPreference.API
+  quote: QuoteData
 }
 
 export class ClassicTrade<
@@ -138,8 +145,10 @@ export enum PoolType {
 }
 
 // swap router API special cases these strings to represent native currencies
-// all chains have "ETH" as native currency symbol except for polygon
+// all chains except for bnb chain and polygon
+// have "ETH" as native currency symbol
 export enum SwapRouterNativeAssets {
   MATIC = 'MATIC',
+  BNB = 'BNB',
   ETH = 'ETH',
 }

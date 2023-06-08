@@ -1,7 +1,5 @@
 name: Release
 on:
-  schedule:
-    - cron: '0 16 * * 1-4' # every day 16:00 UTC Monday-Thursday
   # manual trigger
   workflow_dispatch:
 
@@ -97,11 +95,6 @@ jobs:
             - [ipfs://${{ steps.pinata.outputs.hash }}/](ipfs://${{ steps.pinata.outputs.hash }}/)
 
             ${{ needs.tag.outputs.changelog }}
-
-      - name: Setup node@16 (required by Cloudflare Pages)
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
 
       - name: Update Cloudflare Pages deployment
         uses: cloudflare/pages-action@364c7ca09a4b57837c5967871d64a2c31adb8c0d

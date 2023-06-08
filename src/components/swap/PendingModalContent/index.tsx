@@ -123,7 +123,7 @@ function getContent(args: ContentArgs): PendingModalStep {
   switch (step) {
     case ConfirmModalState.APPROVING_TOKEN:
       return {
-        title: t`Enable spending limits for ${approvalCurrency?.symbol ?? 'this token'} on Uniswap`,
+        title: t`Enable spending ${approvalCurrency?.symbol ?? 'this token'} on Uniswap`,
         subtitle: (
           <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/8120520483085">
             <Trans>Why is this required?</Trans>
