@@ -46,7 +46,7 @@ describe('Permit2', () => {
       })
   }
 
-  describe.only('approval process (with intermediate screens)', () => {
+  describe('approval process (with intermediate screens)', () => {
     // Turn off automine so that intermediate screens are available to assert on.
     beforeEach(() => cy.hardhat({ automine: false }))
 
@@ -70,7 +70,7 @@ describe('Permit2', () => {
       expectPermit2AllowanceForUniversalRouterToBeMax()
     })
 
-    it.only('swaps with existing permit approval and missing token approval', () => {
+    it('swaps with existing permit approval and missing token approval', () => {
       cy.hardhat().then(async (hardhat) => {
         await hardhat.approval.setPermit2Allowance({ owner: hardhat.wallet, token: INPUT_TOKEN })
         await hardhat.mine()
