@@ -29,9 +29,19 @@ import {
 } from 'wallet/src/features/transactions/types'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
+import { ONE_MINUTE_MS } from 'wallet/src/utils/time'
+import { useInterval } from 'wallet/src/utils/timing'
 
 export const TXN_HISTORY_ICON_SIZE = iconSizes.icon40
 const LOADING_SPINNER_SIZE = 20
+
+function useForceUpdateEveryMinute(): number {
+  const [unixTime, setUnixTime] = useState(Date.now())
+  useInterval(() => {
+    setUnixTime(Date.now())
+  }, ONE_MINUTE_MS)
+  return unixTime
+}
 
 function TransactionSummaryLayout({
   transaction,
@@ -104,16 +114,20 @@ function TransactionSummaryLayout({
     }
   }
 
+  // we need to update formattedAddedTime every minute as it can be relative
+  const unixTime = useForceUpdateEveryMinute()
+
   const formattedAddedTime = useMemo(() => {
     const wrappedAddedTime = dayjs(transaction.addedTime)
     return dayjs().isBefore(wrappedAddedTime.add(59, 'minute'), 'minute')
       ? // We do not use dayjs.duration() as it uses Math.round under the hood,
         // so for the first 30s it would show 0 minutes
-        `${Math.ceil(dayjs().diff(wrappedAddedTime) / 60000)}m` // withing an hour
+        `${Math.ceil(dayjs().diff(wrappedAddedTime) / ONE_MINUTE_MS)}m` // within an hour
       : dayjs().isBefore(wrappedAddedTime.add(24, 'hour'))
-      ? wrappedAddedTime.format('h:mma') // withing last 24 hours
+      ? wrappedAddedTime.format('h:mma') // within last 24 hours
       : wrappedAddedTime.format('MMM D') // current year
-  }, [transaction.addedTime])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [transaction.addedTime, unixTime])
 
   const statusIconSize = theme.iconSizes.icon16
   const statusIconFill = theme.colors.background0
