@@ -203,6 +203,7 @@ export interface TransactionDetails {
   lastCheckedBlockNumber?: number
   addedTime: number
   confirmedTime?: number
+  deadline?: number
   from: string
   info: TransactionInfo
   nonce?: number

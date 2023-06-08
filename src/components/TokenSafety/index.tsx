@@ -4,7 +4,14 @@ import { ButtonPrimary } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import TokenSafetyLabel from 'components/TokenSafety/TokenSafetyLabel'
-import { checkWarning, getWarningCopy, TOKEN_SAFETY_ARTICLE, Warning, WARNING_LEVEL } from 'constants/tokenSafety'
+import {
+  checkWarning,
+  displayWarningLabel,
+  getWarningCopy,
+  NotFoundWarning,
+  TOKEN_SAFETY_ARTICLE,
+  Warning,
+} from 'constants/tokenSafety'
 import { useToken } from 'hooks/Tokens'
 import { ExternalLink as LinkIconFeather } from 'react-feather'
 import { Text } from 'rebass'
@@ -23,7 +30,7 @@ const Wrapper = styled.div`
 
 const Container = styled.div`
   width: 100%;
-  padding: 32px 50px;
+  padding: 32px 40px;
   display: flex;
   flex-flow: column;
   align-items: center;
@@ -85,7 +92,7 @@ const Buttons = ({
   return warning.canProceed ? (
     <>
       <StyledButton onClick={onContinue}>
-        <Trans>I understand</Trans>
+        {!displayWarningLabel(warning) ? <Trans>Continue</Trans> : <Trans>I understand</Trans>}
       </StyledButton>
       {showCancel && <StyledCancelButton onClick={onCancel}>Cancel</StyledCancelButton>}
     </>
@@ -183,7 +190,7 @@ function ExplorerView({ token }: { token: Token }) {
 }
 
 const StyledExternalLink = styled(ExternalLink)`
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.accentAction};
   stroke: currentColor;
   font-weight: 600;
 `
@@ -251,11 +258,6 @@ export default function TokenSafety({
       <Trans>Learn more</Trans>
     </StyledExternalLink>
   )
-  const tokenNotFoundWarning = {
-    level: WARNING_LEVEL.UNKNOWN,
-    message: <Trans>Token not found</Trans>,
-    canProceed: false,
-  }
 
   return displayWarning ? (
     <Wrapper data-testid="TokenSafetyWrapper">
@@ -263,9 +265,11 @@ export default function TokenSafety({
         <AutoColumn>
           <LogoContainer>{logos}</LogoContainer>
         </AutoColumn>
-        <ShortColumn>
-          <SafetyLabel warning={displayWarning} />
-        </ShortColumn>
+        {displayWarningLabel(displayWarning) && (
+          <ShortColumn>
+            <SafetyLabel warning={displayWarning} />
+          </ShortColumn>
+        )}
         <ShortColumn>
           <InfoText>
             {heading} {description} {learnMoreUrl}
@@ -285,14 +289,14 @@ export default function TokenSafety({
     <Wrapper>
       <Container>
         <ShortColumn>
-          <SafetyLabel warning={tokenNotFoundWarning} />
+          <SafetyLabel warning={NotFoundWarning} />
         </ShortColumn>
         <ShortColumn>
           <InfoText>
             {heading} {description} {learnMoreUrl}
           </InfoText>
         </ShortColumn>
-        <Buttons warning={tokenNotFoundWarning} onCancel={onCancel} showCancel={true} />
+        <Buttons warning={NotFoundWarning} onCancel={onCancel} showCancel={true} />
       </Container>
     </Wrapper>
   )

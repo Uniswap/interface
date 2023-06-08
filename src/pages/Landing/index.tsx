@@ -7,6 +7,7 @@ import { MAIN_CARDS, MORE_CARDS } from 'components/About/constants'
 import ProtocolBanner from 'components/About/ProtocolBanner'
 import { useAccountDrawer } from 'components/AccountDrawer'
 import { BaseButton } from 'components/Button'
+import { AppleLogo } from 'components/Logo/AppleLogo'
 import { useAtomValue } from 'jotai/utils'
 import Swap from 'pages/Swap'
 import { parse } from 'qs'
@@ -193,7 +194,7 @@ const LearnMoreContainer = styled.div`
   cursor: pointer;
   font-size: 20px;
   font-weight: 600;
-  margin: 36px 0 0;
+  margin: 36px 0;
   display: flex;
   visibility: hidden;
   pointer-events: auto;
@@ -382,6 +383,11 @@ export default function Landing() {
                 <Trans>Learn more</Trans>
                 <LearnMoreArrow />
               </LearnMoreContainer>
+
+              <DownloadWalletLink href="https://wallet.uniswap.org/">
+                <AppleLogo width="20" height="20" />
+                Download the Uniswap Wallet for iOS
+              </DownloadWalletLink>
             </ContentContainer>
             <AboutContentContainer isDarkMode={isDarkMode}>
               <CardGrid cols={2} ref={cardsRef}>
@@ -407,3 +413,18 @@ export default function Landing() {
     </Trace>
   )
 }
+
+const DownloadWalletLink = styled.a`
+  display: inline-flex;
+  gap: 8px;
+  color: ${({ theme }) => theme.textSecondary};
+  text-decoration: none;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 500;
+  text-align: center;
+
+  :hover {
+    color: ${({ theme }) => theme.textTertiary};
+  }
+`

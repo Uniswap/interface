@@ -12,6 +12,8 @@ describe('disconnect wallet', () => {
     // Disconnect the wallet
     cy.hardhat().then((hardhat) => cy.contains(hardhat.wallet.address.substring(0, 6)).click())
     cy.get(getTestSelector('wallet-disconnect')).click()
+    cy.get(getTestSelector('wallet-disconnect')).contains('Disconnect')
+    cy.get(getTestSelector('wallet-disconnect')).click()
 
     // Verify wallet has disconnected
     cy.contains('Connect a wallet').should('exist')

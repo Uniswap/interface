@@ -489,7 +489,7 @@ function getCeloNativeCurrency(chainId: number) {
   }
 }
 
-function isMatic(chainId: number): chainId is SupportedChainId.POLYGON | SupportedChainId.POLYGON_MUMBAI {
+export function isMatic(chainId: number): chainId is SupportedChainId.POLYGON | SupportedChainId.POLYGON_MUMBAI {
   return chainId === SupportedChainId.POLYGON_MUMBAI || chainId === SupportedChainId.POLYGON
 }
 
@@ -511,7 +511,7 @@ class MaticNativeCurrency extends NativeCurrency {
   }
 }
 
-function isBsc(chainId: number): chainId is SupportedChainId.BNB {
+export function isBsc(chainId: number): chainId is SupportedChainId.BNB {
   return chainId === SupportedChainId.BNB
 }
 

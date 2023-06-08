@@ -1,5 +1,6 @@
 import { t } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
+import { WalletConnect } from '@web3-react/walletconnect-v2'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { useGetConnection } from 'connection'
 import { ConnectionType } from 'connection/types'
@@ -15,6 +16,7 @@ import { useIsMobile } from 'nft/hooks'
 import { useCallback, useRef, useState } from 'react'
 import { AlertTriangle, ChevronDown, ChevronUp } from 'react-feather'
 import { useTheme } from 'styled-components/macro'
+import { isProductionEnv } from 'utils/env'
 
 import * as styles from './ChainSelector.css'
 import ChainSelectorRow from './ChainSelectorRow'
@@ -29,12 +31,44 @@ const NETWORK_SELECTOR_CHAINS = [
   SupportedChainId.BNB,
 ]
 
+if (!isProductionEnv()) {
+  NETWORK_SELECTOR_CHAINS.push(SupportedChainId.SEPOLIA)
+}
+
 interface ChainSelectorProps {
   leftAlign?: boolean
 }
 
+// accounts is an array of strings in the format of "eip155:<chainId>:<address>"
+function getChainsFromEIP155Accounts(accounts?: string[]): SupportedChainId[] {
+  if (!accounts) return []
+  return accounts
+    .map((account) => {
+      const splitAccount = account.split(':')
+      return splitAccount[1] ? parseInt(splitAccount[1]) : undefined
+    })
+    .filter((x) => x !== undefined) as SupportedChainId[]
+}
+
+function useWalletSupportedChains() {
+  const { connector } = useWeb3React()
+
+  const getConnection = useGetConnection()
+
+  const connectionType = getConnection(connector).type
+
+  switch (connectionType) {
+    case ConnectionType.WALLET_CONNECT_V2:
+      return getChainsFromEIP155Accounts((connector as WalletConnect).provider?.session?.namespaces.eip155.accounts)
+    case ConnectionType.UNISWAP_WALLET:
+      return UniWalletSupportedChains
+    default:
+      return NETWORK_SELECTOR_CHAINS
+  }
+}
+
 export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
-  const { chainId, connector } = useWeb3React()
+  const { chainId } = useWeb3React()
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const isMobile = useIsMobile()
 
@@ -61,9 +95,7 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
     [selectChain, setIsOpen]
   )
 
-  const getConnection = useGetConnection()
-  const connectionType = getConnection(connector).type
-  const isUniWallet = connectionType === ConnectionType.UNIWALLET
+  const walletSupportsChain = useWalletSupportedChains()
 
   if (!chainId) {
     return null
@@ -74,13 +106,13 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
   const dropdown = (
     <NavDropdown top="56" left={leftAlign ? '0' : 'auto'} right={leftAlign ? 'auto' : '0'} ref={modalRef}>
       <Column paddingX="8">
-        {NETWORK_SELECTOR_CHAINS.map((chainId: SupportedChainId) => (
+        {NETWORK_SELECTOR_CHAINS.map((selectorChain: SupportedChainId) => (
           <ChainSelectorRow
-            disabled={isUniWallet && !UniWalletSupportedChains.includes(chainId)}
+            disabled={!walletSupportsChain.includes(selectorChain)}
             onSelectChain={onSelectChain}
-            targetChain={chainId}
-            key={chainId}
-            isPending={chainId === pendingChainId}
+            targetChain={selectorChain}
+            key={selectorChain}
+            isPending={selectorChain === pendingChainId}
           />
         ))}
       </Column>

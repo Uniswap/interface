@@ -41,29 +41,35 @@ describe('Swap', () => {
       cy.visit('/swap', { ethereum: 'hardhat' })
       cy.hardhat({ automine: false })
       getBalance(USDC_MAINNET).then((initialBalance) => {
+        // Select USDC
         cy.get('#swap-currency-output .open-currency-select-button').click()
-        cy.get(getTestSelector('token-search-input')).clear().type(USDC_MAINNET.address)
+        cy.get(getTestSelector('token-search-input')).type(USDC_MAINNET.address)
         cy.contains('USDC').click()
-        cy.get('#swap-currency-output .token-amount-input').clear().type('1').should('have.value', '1')
+
+        // Enter amount to swap
+        cy.get('#swap-currency-output .token-amount-input').type('1').should('have.value', '1')
         cy.get('#swap-currency-input .token-amount-input').should('not.have.value', '')
+
+        // Submit transaction
         cy.get('#swap-button').click()
-        cy.get('#confirm-swap-or-send').click()
+        cy.contains('Review swap')
+        cy.contains('Confirm swap').click()
+        cy.wait('@eth_estimateGas').wait('@eth_sendRawTransaction').wait('@eth_getTransactionReceipt')
+        cy.contains('Transaction submitted')
         cy.get(getTestSelector('confirmation-close-icon')).click()
-
-        // The pending transaction indicator should reflect the state.
+        cy.contains('Transaction submitted').should('not.exist')
         cy.get(getTestSelector('web3-status-connected')).should('contain', '1 Pending')
+
+        // Mine transaction
         cy.hardhat().then((hardhat) => hardhat.mine())
+        cy.wait('@eth_getTransactionReceipt')
+
+        // Verify transaction
         cy.get(getTestSelector('web3-status-connected')).should('not.contain', 'Pending')
-
-        // TODO(WEB-2085): Fix this test - transaction popups are flakey.
-        // cy.get(getTestSelector('transaction-popup')).contains('Swapped')
-
-        // Verify the balance is updated.
-        cy.get('#swap-currency-output [data-testid="balance-text"]').should(
-          'have.text',
-          `Balance: ${initialBalance + 1}`
-        )
-        getBalance(USDC_MAINNET).should('eq', initialBalance + 1)
+        cy.get(getTestSelector('popups')).contains('Swapped')
+        const finalBalance = initialBalance + 1
+        cy.get('#swap-currency-output').contains(`Balance: ${finalBalance}`)
+        getBalance(USDC_MAINNET).should('eq', finalBalance)
       })
     })
   })
