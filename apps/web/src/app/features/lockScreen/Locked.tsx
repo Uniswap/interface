@@ -5,7 +5,7 @@ import { Image, Input, InputProps, Stack, Text, YStack } from 'ui/src'
 import { UNISWAP_LOGO } from 'ui/src/assets'
 import { Button, ButtonSize } from 'ui/src/components/button/Button'
 import { authActions, authSagaName } from 'wallet/src/features/auth/saga'
-import { AuthType } from 'wallet/src/features/auth/types'
+import { AuthActionType, AuthSagaError } from 'wallet/src/features/auth/types'
 import { SagaStatus } from 'wallet/src/utils/saga'
 
 const ICON_SIZE = 64
@@ -30,18 +30,19 @@ function Locked(): JSX.Element {
   const dispatch = useAppDispatch()
   const passwordInputProps = usePasswordInput()
 
-  const { status } = useSagaStatus(authSagaName, undefined, false)
+  const { status, error } = useSagaStatus(authSagaName, undefined, false)
 
   const onPress = (): void => {
     dispatch(
       authActions.trigger({
-        type: AuthType.Password,
+        type: AuthActionType.Unlock,
         password: passwordInputProps.value,
       })
     )
   }
 
-  const isIncorrectPassword = status === SagaStatus.Failure
+  const isIncorrectPassword =
+    status === SagaStatus.Failure && error === AuthSagaError.InvalidPassword
 
   return (
     <Stack flexGrow={1} padding="$spacing24" space="$spacing12">

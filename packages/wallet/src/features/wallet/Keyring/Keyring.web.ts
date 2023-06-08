@@ -40,6 +40,7 @@ export class WebKeyring implements IKeyring {
     this.retrieveMnemonicUnlocked = this.retrieveMnemonicUnlocked.bind(this)
     this.storeNewMnemonic = this.storeNewMnemonic.bind(this)
     this.unlock = this.unlock.bind(this)
+    this.lock = this.lock.bind(this)
   }
 
   /**
@@ -74,6 +75,11 @@ export class WebKeyring implements IKeyring {
     }
 
     this.session.setItem(passwordKey, password)
+    return true
+  }
+
+  async lock(): Promise<boolean> {
+    this.session.removeItem(passwordKey) // Clear password
     return true
   }
 

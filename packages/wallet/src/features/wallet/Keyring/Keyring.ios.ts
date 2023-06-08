@@ -13,6 +13,10 @@ class NativeKeyring implements IKeyring {
     return Promise.resolve(true)
   }
 
+  lock(): Promise<boolean> {
+    return Promise.resolve(true)
+  }
+
   getMnemonicIds(): Promise<string[]> {
     return RNEthersRS.getMnemonicIds()
   }

@@ -1,13 +1,34 @@
-import { call } from 'typed-redux-saga'
+import { call, put } from 'typed-redux-saga'
 import { logger } from 'wallet/src/features/logger/logger'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
+import { lockWallet, unlockWallet } from 'wallet/src/features/wallet/slice'
 import { createMonitoredSaga } from 'wallet/src/utils/saga'
-import { AuthParams } from './types'
+import { AuthActionType, AuthBaseParams, AuthSagaError, UnlockParams } from './types'
 
-function* auth({ password }: AuthParams) {
-  logger.debug('authSaga', 'auth', `Logging in with password`)
+function* auth(params: AuthBaseParams) {
+  logger.debug('authSaga', 'auth', `Using monitored auth saga`)
 
-  return yield* call(Keyring.unlock, password)
+  if (params.type === AuthActionType.Unlock) {
+    return yield* call(unlock, params as UnlockParams)
+  } else if (params.type === AuthActionType.Lock) {
+    return yield* call(lock)
+  }
+}
+
+function* unlock({ password }: UnlockParams) {
+  logger.debug('authSaga', 'unlock', `Unlocking wallet`)
+  const success = yield* call(Keyring.unlock, password)
+  if (success) {
+    yield* put(unlockWallet())
+  } else {
+    throw new Error(AuthSagaError.InvalidPassword)
+  }
+}
+
+function* lock() {
+  logger.debug('authSaga', 'lock', `Locking wallet`)
+  yield* call(Keyring.lock)
+  yield* put(lockWallet())
 }
 
 export const {
@@ -15,4 +36,4 @@ export const {
   wrappedSaga: authSaga,
   reducer: authReducer,
   actions: authActions,
-} = createMonitoredSaga<AuthParams>(auth, 'auth', { showErrorNotification: false })
+} = createMonitoredSaga<AuthBaseParams>(auth, 'auth', { showErrorNotification: false })

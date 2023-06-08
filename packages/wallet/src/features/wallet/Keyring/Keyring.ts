@@ -8,6 +8,9 @@ export interface IKeyring {
   /** @returns true if password can successfully decrypt mnemonics stored in storage. */
   unlock(password: string): Promise<boolean>
 
+  /** Locks keyring */
+  lock(): Promise<boolean>
+
   /**
    * Fetches all mnemonic IDs, which are used as keys to access the actual mnemonics
    * in key-value store.
@@ -74,6 +77,10 @@ export interface IKeyring {
 /** Dummy Keyring implementation.  */
 class NullKeyring implements IKeyring {
   unlock(): Promise<boolean> {
+    return Promise.resolve(true)
+  }
+
+  lock(): Promise<boolean> {
     return Promise.resolve(true)
   }
 

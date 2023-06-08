@@ -94,6 +94,9 @@ const slice = createSlice({
     unlockWallet: (state) => {
       state.isUnlocked = true
     },
+    lockWallet: (state) => {
+      state.isUnlocked = false
+    },
     setFinishedOnboarding: (
       state,
       { payload: { finishedOnboarding } }: PayloadAction<{ finishedOnboarding: boolean }>
@@ -123,6 +126,7 @@ export const {
   editAccount,
   activateAccount,
   unlockWallet,
+  lockWallet,
   resetWallet,
   setFinishedOnboarding,
   setNFTViewType,

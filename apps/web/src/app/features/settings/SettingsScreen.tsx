@@ -4,13 +4,15 @@ import { AccountRowItem } from 'src/app/features/accounts/AccountRowItem'
 import { BackButtonHeader } from 'src/app/features/settings/BackButtonHeader'
 import { SettingsRoutes } from 'src/app/navigation/constants'
 import { useExtensionNavigation } from 'src/app/navigation/utils'
-import { useAppSelector } from 'src/background/store'
+import { useAppDispatch, useAppSelector } from 'src/background/store'
 import { ListItem, ScrollView, Text, YGroup, YStack } from 'ui/src'
 import HelpCenterIcon from 'ui/src/assets/icons/help-center.svg'
 import RecoveryPhraseIcon from 'ui/src/assets/icons/view-phrase.svg'
 import { Button } from 'ui/src/components/button/Button'
 import { colorsDark } from 'ui/src/theme/color'
 import { iconSizes } from 'ui/src/theme/iconSizes'
+import { authActions } from 'wallet/src/features/auth/saga'
+import { AuthActionType } from 'wallet/src/features/auth/types'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { selectAllAccountsSorted } from 'wallet/src/features/wallet/selectors'
 
@@ -18,7 +20,9 @@ const DEFAULT_ACCOUNTS_TO_DISPLAY = 3
 
 export function SettingsScreen(): JSX.Element {
   const { t } = useTranslation()
+  const dispatch = useAppDispatch()
   const { navigateTo } = useExtensionNavigation()
+
   const allAccountsSorted: Account[] = useAppSelector(selectAllAccountsSorted)
 
   // TODO: Add better dynamic logic for showing the show all button based on height once Tamagui supports ref.height
@@ -26,7 +30,7 @@ export function SettingsScreen(): JSX.Element {
   const [showAll, setShowAll] = useState(false)
 
   const onPressLockWallet = (): void => {
-    // TODO: Add logic to unlock wallet
+    dispatch(authActions.trigger({ type: AuthActionType.Lock }))
   }
 
   return (

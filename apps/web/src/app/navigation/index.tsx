@@ -4,11 +4,8 @@ import Locked from 'src/app/features/lockScreen/Locked'
 import { DappRequestContent } from 'src/background/features/dappRequests/DappRequestContent'
 import { useAppSelector } from 'src/background/store'
 import { isOnboardedSelector } from 'src/background/utils/onboardingUtils'
-import { useSagaStatus } from 'src/background/utils/useSagaStatus'
 import { YStack } from 'ui/src'
 import { Flex } from 'ui/src/components/layout/Flex'
-import { authSagaName } from 'wallet/src/features/auth/saga'
-import { SagaStatus } from 'wallet/src/utils/saga'
 
 export function MainContent(): JSX.Element {
   const pendingDappRequests = useAppSelector((state) => state.dappRequests.pending)
@@ -27,7 +24,7 @@ export function MainContent(): JSX.Element {
 const CONTENT_MIN_HEIGHT = 576 // Subtract 2 * $spacing12 from 600 height
 
 export function WebNavigation(): JSX.Element {
-  const isLoggedIn = useSagaStatus(authSagaName, undefined, false).status === SagaStatus.Success
+  const isLoggedIn = useAppSelector((state) => state.wallet.isUnlocked)
   return (
     <YStack backgroundColor="$background2">
       <YStack

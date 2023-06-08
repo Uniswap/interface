@@ -13,6 +13,10 @@ class MockKeyring implements IKeyring {
     return Promise.resolve(password === p)
   }
 
+  lock(): Promise<boolean> {
+    return Promise.resolve(true)
+  }
+
   getMnemonicIds(): Promise<string[]> {
     return Promise.resolve(Object.keys(mnemonics))
   }
