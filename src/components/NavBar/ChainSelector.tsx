@@ -2,7 +2,7 @@ import { t } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import { WalletConnect } from '@web3-react/walletconnect-v2'
 import { MouseoverTooltip } from 'components/Tooltip'
-import { useGetConnection } from 'connection'
+import { getConnection } from 'connection'
 import { ConnectionType } from 'connection/types'
 import { getChainInfo } from 'constants/chainInfo'
 import { SupportedChainId, UniWalletSupportedChains } from 'constants/chains'
@@ -52,8 +52,6 @@ function getChainsFromEIP155Accounts(accounts?: string[]): SupportedChainId[] {
 
 function useWalletSupportedChains() {
   const { connector } = useWeb3React()
-
-  const getConnection = useGetConnection()
 
   const connectionType = getConnection(connector).type
 
