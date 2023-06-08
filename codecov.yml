@@ -10,16 +10,21 @@ ignore:
   - "constants/**/*"
 
 flag_management:
-  default_rules:
-    statuses:
-      - type: project
-        target: auto
-        threshold: 1%
-        if_ci_failed: error
-      - type: patch
-        target: 80%
   individual_flags:
+    - name: unit-tests
+      statuses:
+        - type: project
+          target: auto
+          threshold: 1%
+          removed_code_behavior: adjust_base
+          if_ci_failed: error
+        - type: patch
+          target: 80%
     - name: e2e-tests
+      after_n_builds: 4
       statuses:
         - type: patch
           target: 0%
+
+github_checks:
+  annotations: false

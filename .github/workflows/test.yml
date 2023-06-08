@@ -78,7 +78,6 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: false
-          verbose: true
           flags: unit-tests
       - if: failure() && github.ref_name == 'main'
         uses: ./.github/actions/report
@@ -179,5 +178,10 @@ jobs:
     needs: [cypress-test-matrix]
     runs-on: ubuntu-latest
     steps:
+      - uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: false
+          flags: e2e-tests
       - if: needs.cypress-test-matrix.result != 'success'
         run: exit 1
