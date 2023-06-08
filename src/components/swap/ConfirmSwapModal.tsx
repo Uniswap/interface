@@ -174,14 +174,6 @@ function useConfirmModalState({
     }
   }, [allowance, performStep, previousSetupApprovalNeeded])
 
-  const previousResetPending = usePrevious(allowance.state === AllowanceState.REQUIRED && allowance.isResetPending)
-  useEffect(() => {
-    const currentResetPending = allowance.state === AllowanceState.REQUIRED && allowance.isResetPending
-    if (previousResetPending && !currentResetPending) {
-      performStep(ConfirmModalState.APPROVING_TOKEN)
-    }
-  }, [allowance, performStep, previousResetPending])
-
   useEffect(() => {
     // Automatically triggers the next phase if the local modal state still thinks we're in the approval phase,
     // but the allowance has been set. This will automaticaly trigger the swap.
