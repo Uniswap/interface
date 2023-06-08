@@ -10,21 +10,26 @@ ignore:
   - "constants/**/*"
 
 flag_management:
+  # Specify flags individually. Avoid using defaults so that a global result is not reported,
+  # as we are only interested in flag-scoped results.
   individual_flags:
     - name: unit-tests
       statuses:
         - type: project
           target: auto
           threshold: 1%
+          # Adjust the base when removing code to avoid penalizing tech debt payback / dead code removal.
           removed_code_behavior: adjust_base
           if_ci_failed: error
         - type: patch
           target: 80%
     - name: e2e-tests
+      # e2e tests run across a matrix - wait until all machines have reported coverage.
       after_n_builds: 4
       statuses:
         - type: patch
           target: 0%
 
 github_checks:
+  # Turn off GitHub Check annotations, as they make it more difficult to review code.
   annotations: false

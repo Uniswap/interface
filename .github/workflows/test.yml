@@ -165,7 +165,11 @@ jobs:
           COMMIT_INFO_TIMESTAMP: ${{ github.event.pull_request.updated_at || github.event.head_commit.timestamp }}
           CYPRESS_PULL_REQUEST_ID: ${{ github.event.pull_request.number }}
           CYPRESS_PULL_REQUEST_URL: ${{ github.event.pull_request.html_url }}
-
+      - uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: false
+          flags: e2e-tests
       - if: failure() && github.ref_name == 'main'
         uses: ./.github/actions/report
         with:
@@ -178,10 +182,5 @@ jobs:
     needs: [cypress-test-matrix]
     runs-on: ubuntu-latest
     steps:
-      - uses: codecov/codecov-action@v3
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          fail_ci_if_error: false
-          flags: e2e-tests
       - if: needs.cypress-test-matrix.result != 'success'
         run: exit 1
