@@ -54,6 +54,9 @@ if (!__DEV__) {
     },
     integrations: [
       new Sentry.ReactNativeTracing({
+        enableUserInteractionTracing: true,
+        enableNativeFramesTracking: true,
+        enableStallTracking: true,
         // Pass instrumentation to be used as `routingInstrumentation`
         routingInstrumentation,
       }),

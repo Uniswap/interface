@@ -1,4 +1,4 @@
-import type { Middleware, PreloadedState, Reducer } from '@reduxjs/toolkit'
+import type { Middleware, PreloadedState, Reducer, StoreEnhancer } from '@reduxjs/toolkit'
 import { configureStore } from '@reduxjs/toolkit'
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
 import createSagaMiddleware, { Saga } from 'redux-saga'
@@ -14,6 +14,7 @@ interface CreateStoreProps {
   // sagas to load in addition to the shared ones
   // can be used for app-specific sagas
   additionalSagas?: Array<Saga<unknown[]>>
+  enhancers?: Array<StoreEnhancer>
   // middlewares to add after the default middleware
   // recommended over `middlewareBefore`
   middlewareAfter?: Array<Middleware<unknown>>
@@ -27,6 +28,7 @@ export function createStore({
   middlewareAfter = [],
   middlewareBefore = [],
   preloadedState = {},
+  enhancers = [],
   reducer,
 }: CreateStoreProps): ReturnType<typeof configureStore> {
   const sagaMiddleware = createSagaMiddleware({
@@ -40,6 +42,7 @@ export function createStore({
   const store = configureStore({
     reducer,
     preloadedState,
+    enhancers,
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({
         // required for rtk-query

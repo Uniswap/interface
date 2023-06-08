@@ -1,10 +1,12 @@
 import type { Middleware, PayloadAction, PreloadedState } from '@reduxjs/toolkit'
 import { isRejectedWithValue } from '@reduxjs/toolkit'
+import * as Sentry from '@sentry/react'
 import { MMKV } from 'react-native-mmkv'
 import { persistReducer, persistStore, Storage } from 'redux-persist'
 import createMigrate from 'src/app/createMigrate'
 import { migrations } from 'src/app/migrations'
 import { fiatOnRampApi } from 'src/features/fiatOnRamp/api'
+import { importAccountSagaName } from 'src/features/import/importAccountSaga'
 import { routingApi } from 'src/features/routing/routingApi'
 import { trmApi } from 'src/features/trm/api'
 import { ensApi } from 'wallet/src/features/ens/api'
@@ -93,6 +95,18 @@ export const persistConfig = {
 
 export const persistedReducer = persistReducer(persistConfig, mobileReducer)
 
+const sentryReduxEnhancer = Sentry.createReduxEnhancer({
+  // Add any restrictions here for when the enhancer should not be used
+  actionTransformer: (action) => {
+    if (action.type === `${importAccountSagaName}/trigger`) {
+      // Return null in the case of importing an account, as the payload could contain the mnemonic
+      return null
+    }
+
+    return action
+  },
+})
+
 const middlewares: Middleware[] = []
 if (isNonJestDev()) {
   const createDebugger = require('redux-flipper').default
@@ -115,6 +129,7 @@ export const setupStore = (
       trmApi.middleware,
       ...middlewares,
     ],
+    enhancers: [sentryReduxEnhancer],
   })
 }
 export const store = setupStore()
