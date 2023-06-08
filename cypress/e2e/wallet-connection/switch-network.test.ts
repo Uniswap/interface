@@ -32,7 +32,7 @@ describe('network switching', () => {
     })
   })
 
-  it.skip('should add missing chain', () => {
+  it('should add missing chain', () => {
     cy.hardhat().then((hardhat) => {
       // https://docs.metamask.io/guide/rpc-api.html#unrestricted-methods
       const CHAIN_NOT_ADDED = { code: 4902 } // missing message in useSelectChain
@@ -40,7 +40,9 @@ describe('network switching', () => {
       // Reject network switch with CHAIN_NOT_ADDED
       const switchChainStub = cy.stub(hardhat.provider, 'send').log(false)
       switchChainStub.withArgs('wallet_switchEthereumChain').rejects(CHAIN_NOT_ADDED)
-      switchChainStub.withArgs('wallet_addEthereumChain').resolves(null)
+      switchChainStub.withArgs('wallet_addEthereumChain').callsFake(() => {
+        switchChainStub.restore()
+      })
       switchChainStub.callThrough() // allows other calls to return non-stubbed values
 
       // Switch network
@@ -58,13 +60,7 @@ describe('network switching', () => {
           rpcUrls: ['https://polygon-rpc.com/'],
         },
       ])
-
-      cy.then(() => switchChainStub.restore())
     })
-
-    // Switch network
-    getChainSelector('Ethereum').click()
-    cy.contains('Polygon').click()
 
     // Verify network switch
     cy.wait('@wallet_switchEthereumChain')
@@ -93,7 +89,7 @@ describe('network switching', () => {
     })
   })
 
-  it.skip('should switch networks', () => {
+  it('should switch networks', () => {
     // Select an output currency
     cy.get('#swap-currency-output .open-currency-select-button').click()
     cy.contains('USDC').click()
