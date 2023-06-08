@@ -37,6 +37,10 @@ flag_management:
         - type: patch
           target: 0%
 
+comment:
+  layout: "flags, files"
+  behavior: default
+
 github_checks:
   # Turn off GitHub Check annotations, as they make it more difficult to review code.
   annotations: false
