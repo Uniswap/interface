@@ -1,3 +1,4 @@
+import { BigNumber } from '@ethersproject/bignumber'
 import type { TransactionResponse } from '@ethersproject/providers'
 import { Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
@@ -99,8 +100,7 @@ export function isTransactionRecent(tx: TransactionDetails): boolean {
   return new Date().getTime() - tx.addedTime < 86_400_000
 }
 
-// returns whether a token has a pending approval transaction
-export function useHasPendingApproval(token?: Token, spender?: string): boolean {
+function useHasPendingApprovalChange(token?: Token, spender?: string, approvalType?: 'approve' | 'revoke'): boolean {
   const allTransactions = useAllTransactions()
   return useMemo(
     () =>
@@ -113,9 +113,24 @@ export function useHasPendingApproval(token?: Token, spender?: string): boolean 
           return false
         } else {
           if (tx.info.type !== TransactionType.APPROVAL) return false
-          return tx.info.spender === spender && tx.info.tokenAddress === token.address && isTransactionRecent(tx)
+          const isPendingApproveOrRevoke =
+            tx.info.spender === spender && tx.info.tokenAddress === token.address && isTransactionRecent(tx)
+          if (approvalType === 'revoke') {
+            return BigNumber.from(tx.info.amount)?.eq(0) && isPendingApproveOrRevoke
+          } else {
+            return BigNumber.from(tx.info.amount)?.gt(0) && isPendingApproveOrRevoke
+          }
         }
       }),
-    [allTransactions, spender, token?.address]
+    [allTransactions, approvalType, spender, token?.address]
   )
+}
+
+// returns whether a token has a pending approval transaction
+export function useHasPendingApproval(token?: Token, spender?: string): boolean {
+  return useHasPendingApprovalChange(token, spender, 'approve')
+}
+
+export function useHasPendingRevoke(token?: Token, spender?: string): boolean {
+  return useHasPendingApprovalChange(token, spender, 'revoke')
 }
