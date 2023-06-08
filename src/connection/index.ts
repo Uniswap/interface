@@ -13,7 +13,6 @@ import INJECTED_DARK_ICON from 'assets/svg/browser-wallet-dark.svg'
 import INJECTED_LIGHT_ICON from 'assets/svg/browser-wallet-light.svg'
 import UNISWAP_LOGO from 'assets/svg/logo.svg'
 import { SupportedChainId } from 'constants/chains'
-import { useCallback } from 'react'
 import { isMobile, isNonIOSPhone } from 'utils/userAgent'
 
 import { RPC_URLS } from '../constants/networks'
@@ -157,31 +156,29 @@ export function getConnections() {
   ]
 }
 
-export function useGetConnection() {
-  return useCallback((c: Connector | ConnectionType) => {
-    if (c instanceof Connector) {
-      const connection = getConnections().find((connection) => connection.connector === c)
-      if (!connection) {
-        throw Error('unsupported connector')
-      }
-      return connection
-    } else {
-      switch (c) {
-        case ConnectionType.INJECTED:
-          return injectedConnection
-        case ConnectionType.COINBASE_WALLET:
-          return coinbaseWalletConnection
-        case ConnectionType.WALLET_CONNECT:
-          return walletConnectConnection
-        case ConnectionType.WALLET_CONNECT_V2:
-          return walletConnectV2Connection
-        case ConnectionType.UNISWAP_WALLET:
-          return uniwalletConnectConnection
-        case ConnectionType.NETWORK:
-          return networkConnection
-        case ConnectionType.GNOSIS_SAFE:
-          return gnosisSafeConnection
-      }
+export function getConnection(c: Connector | ConnectionType) {
+  if (c instanceof Connector) {
+    const connection = getConnections().find((connection) => connection.connector === c)
+    if (!connection) {
+      throw Error('unsupported connector')
     }
-  }, [])
+    return connection
+  } else {
+    switch (c) {
+      case ConnectionType.INJECTED:
+        return injectedConnection
+      case ConnectionType.COINBASE_WALLET:
+        return coinbaseWalletConnection
+      case ConnectionType.WALLET_CONNECT:
+        return walletConnectConnection
+      case ConnectionType.WALLET_CONNECT_V2:
+        return walletConnectV2Connection
+      case ConnectionType.UNISWAP_WALLET:
+        return uniwalletConnectConnection
+      case ConnectionType.NETWORK:
+        return networkConnection
+      case ConnectionType.GNOSIS_SAFE:
+        return gnosisSafeConnection
+    }
+  }
 }

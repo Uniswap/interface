@@ -1,7 +1,6 @@
 import INJECTED_DARK_ICON from 'assets/svg/browser-wallet-dark.svg'
 import INJECTED_LIGHT_ICON from 'assets/svg/browser-wallet-light.svg'
-import { getConnections, useGetConnection } from 'connection'
-import { renderHook } from 'test-utils/render'
+import { getConnection, getConnections } from 'connection'
 
 import { ConnectionType } from './types'
 
@@ -16,7 +15,6 @@ describe('connection utility/metadata tests', () => {
     global.window.ethereum = ethereum
 
     const displayed = getConnections().filter((c) => c.shouldDisplay())
-    const getConnection = renderHook(() => useGetConnection()).result.current
     const injected = getConnection(ConnectionType.INJECTED)
     const coinbase = getConnection(ConnectionType.COINBASE_WALLET)
     const uniswap = getConnection(ConnectionType.UNISWAP_WALLET)

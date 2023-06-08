@@ -1,5 +1,5 @@
 import { useWeb3React } from '@web3-react/core'
-import { useGetConnection } from 'connection'
+import { getConnection } from 'connection'
 import { didUserReject } from 'connection/utils'
 import { SupportedChainId } from 'constants/chains'
 import { useCallback } from 'react'
@@ -10,7 +10,6 @@ import { switchChain } from 'utils/switchChain'
 export default function useSelectChain() {
   const dispatch = useAppDispatch()
   const { connector } = useWeb3React()
-  const getConnection = useGetConnection()
 
   return useCallback(
     async (targetChain: SupportedChainId) => {
@@ -30,6 +29,6 @@ export default function useSelectChain() {
         dispatch(addPopup({ content: { failedSwitchNetwork: targetChain }, key: 'failed-network-switch' }))
       }
     },
-    [connector, dispatch, getConnection]
+    [connector, dispatch]
   )
 }
