@@ -11,28 +11,25 @@ ignore:
 
 coverage:
   status:
-    project:
-      # Omit reporting the default project: unit/e2e tests should be treated separately.
+    # Omit merging unit/e2e reports into the defaults, as it is nonsensical.
+    patch:
       default: off
-      unit-tests:
-        flags:
-          - unit-tests
-      e2e-tests:
-        flags:
-          - e2e-tests
+    project:
+      default: off
 
 flag_management:
+  default_rules:
+    statuses:
+      - type: project
+        target: auto
+        threshold: 1%
+        # Adjust the base when removing code to avoid penalizing tech debt payback / dead code removal.
+        removed_code_behavior: adjust_base
+        if_ci_failed: error
+      - type: patch
+        target: 80%
   individual_flags:
     - name: unit-tests
-      statuses:
-        - type: project
-          target: auto
-          threshold: 1%
-          # Adjust the base when removing code to avoid penalizing tech debt payback / dead code removal.
-          removed_code_behavior: adjust_base
-          if_ci_failed: error
-        - type: patch
-          target: 80%
     - name: e2e-tests
       # e2e tests run across a matrix - wait until all machines have reported coverage.
       after_n_builds: 4
