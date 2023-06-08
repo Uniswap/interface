@@ -1,11 +1,11 @@
 import { PortfolioHeader } from 'src/app/features/home/PortfolioHeader'
+import { useAppDispatch } from 'src/background/store'
 import { Text } from 'ui/src'
 import { Flex } from 'ui/src/components/layout/Flex'
 import { authActions } from 'wallet/src/features/auth/saga'
 import { PortfolioBalance } from 'wallet/src/features/portfolio/PortfolioBalance'
 import { TokenBalanceList } from 'wallet/src/features/portfolio/TokenBalanceList'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
-import { useAppDispatch } from 'wallet/src/state'
 
 export function HomeScreen(): JSX.Element {
   const address = useActiveAccountAddressWithThrow()

@@ -1,6 +1,5 @@
 import dayjs from 'dayjs'
 import { ImportAccountParams, ImportAccountType } from 'src/features/import/types'
-import { getNotificationErrorAction } from 'src/features/notifications/utils'
 import { generateAndStorePrivateKey, importMnemonic } from 'src/lib/RNEthersRs'
 import { all, call, put } from 'typed-redux-saga'
 import { logger } from 'wallet/src/features/logger/logger'
@@ -135,6 +134,4 @@ export const {
   wrappedSaga: importAccountSaga,
   reducer: importAccountReducer,
   actions: importAccountActions,
-} = createMonitoredSaga<ImportAccountParams>(importAccount, 'importAccount', {
-  onErrorAction: getNotificationErrorAction,
-})
+} = createMonitoredSaga<ImportAccountParams>(importAccount, 'importAccount')

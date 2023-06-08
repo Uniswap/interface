@@ -13,12 +13,12 @@ import { Unicon } from 'src/components/unicons/Unicon'
 import { useCloudBackups } from 'src/features/CloudBackup/hooks'
 import { ICloudMnemonicBackup } from 'src/features/CloudBackup/types'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
+import { OnboardingScreens } from 'src/screens/Screens'
+import { useAddBackButton } from 'src/utils/useAddBackButton'
 import {
   PendingAccountActions,
   pendingAccountActions,
-} from 'src/features/wallet/pendingAccountsSaga'
-import { OnboardingScreens } from 'src/screens/Screens'
-import { useAddBackButton } from 'src/utils/useAddBackButton'
+} from 'wallet/src/features/wallet/create/pendingAccountsSaga'
 import { shortenAddress } from 'wallet/src/utils/addresses'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.RestoreCloudBackup>

@@ -15,10 +15,6 @@ import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { ImportType } from 'src/features/onboarding/utils'
 import { ElementName } from 'src/features/telemetry/constants'
 import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
-import {
-  PendingAccountActions,
-  pendingAccountActions,
-} from 'src/features/wallet/pendingAccountsSaga'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { EMPTY_ARRAY } from 'wallet/src/constants/misc'
 import { useSelectWalletScreenQuery } from 'wallet/src/data/__generated__/types-and-hooks'
@@ -27,6 +23,10 @@ import {
   AccountType,
   SignerMnemonicAccount,
 } from 'wallet/src/features/wallet/accounts/types'
+import {
+  PendingAccountActions,
+  pendingAccountActions,
+} from 'wallet/src/features/wallet/create/pendingAccountsSaga'
 import { useAccounts, usePendingAccounts } from 'wallet/src/features/wallet/hooks'
 import { activateAccount } from 'wallet/src/features/wallet/slice'
 import { ONE_SECOND_MS } from 'wallet/src/utils/time'

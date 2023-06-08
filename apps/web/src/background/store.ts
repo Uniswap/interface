@@ -2,7 +2,6 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
 import { combineReducers } from 'redux'
 import { persistReducer, persistStore } from 'redux-persist'
 import { dappReducer } from 'src/background/features/dapp/slice'
-
 import { dappRequestReducer } from 'src/background/features/dappRequests/slice'
 import { PortName } from 'src/types'
 import { SagaGenerator, select } from 'typed-redux-saga'

@@ -19,16 +19,16 @@ import { isICloudAvailable } from 'src/features/CloudBackup/RNICloudBackupsManag
 import { closeModal, selectModalState } from 'src/features/modals/modalSlice'
 import { ImportType, OnboardingEntryPoint } from 'src/features/onboarding/utils'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
-import { createAccountActions } from 'src/features/wallet/createAccountSaga'
-import {
-  PendingAccountActions,
-  pendingAccountActions,
-} from 'src/features/wallet/pendingAccountsSaga'
 import { OnboardingScreens, Screens } from 'src/screens/Screens'
 import { openSettings } from 'src/utils/linking'
 import PlusIcon from 'ui/src/assets/icons/plus.svg'
 import { dimensions } from 'ui/src/theme/restyle/sizing'
 import { AccountType, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
+import { createAccountActions } from 'wallet/src/features/wallet/create/createAccountSaga'
+import {
+  PendingAccountActions,
+  pendingAccountActions,
+} from 'wallet/src/features/wallet/create/pendingAccountsSaga'
 import {
   useAccounts,
   useActiveAccount,

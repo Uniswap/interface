@@ -15,4 +15,4 @@ export const {
   wrappedSaga: authSaga,
   reducer: authReducer,
   actions: authActions,
-} = createMonitoredSaga<AuthParams>(auth, 'auth')
+} = createMonitoredSaga<AuthParams>(auth, 'auth', { showErrorNotification: false })

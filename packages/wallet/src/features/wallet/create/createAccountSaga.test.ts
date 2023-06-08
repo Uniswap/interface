@@ -1,12 +1,14 @@
 import dayjs from 'dayjs'
 import { expectSaga } from 'redux-saga-test-plan'
-import { mobileReducer } from 'src/app/reducer'
-import { createAccount } from 'src/features/wallet/createAccountSaga'
 import {
   Account,
   AccountType,
   SignerMnemonicAccount,
 } from 'wallet/src/features/wallet/accounts/types'
+import { createAccount } from 'wallet/src/features/wallet/create/createAccountSaga'
+import { sharedRootReducer } from 'wallet/src/state/reducer'
+
+jest.mock('wallet/src/features/wallet/Keyring/Keyring')
 
 const createNativeAccount = async (
   initialAccounts = {},
@@ -17,7 +19,7 @@ const createNativeAccount = async (
   }
 }> => {
   const { storeState } = await expectSaga(createAccount)
-    .withReducer(mobileReducer)
+    .withReducer(sharedRootReducer)
     .withState({
       wallet: {
         accounts: initialAccounts as { [key: string]: Account },

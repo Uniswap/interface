@@ -4,11 +4,11 @@ import { ImportType, OnboardingEntryPoint } from 'src/features/onboarding/utils'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
 import { useTrace } from 'src/features/telemetry/hooks'
+import { Screens } from 'src/screens/Screens'
 import {
   pendingAccountActions,
   PendingAccountActions,
-} from 'src/features/wallet/pendingAccountsSaga'
-import { Screens } from 'src/screens/Screens'
+} from 'wallet/src/features/wallet/create/pendingAccountsSaga'
 import { usePendingAccounts } from 'wallet/src/features/wallet/hooks'
 import { setFinishedOnboarding } from 'wallet/src/features/wallet/slice'
 

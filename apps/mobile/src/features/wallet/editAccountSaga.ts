@@ -1,5 +1,4 @@
 import { appSelect } from 'src/app/hooks'
-import { getNotificationErrorAction } from 'src/features/notifications/utils'
 import { disconnectWCForAccount } from 'src/features/walletConnect/WalletConnect'
 import { all, call, put } from 'typed-redux-saga'
 import { logger } from 'wallet/src/features/logger/logger'
@@ -234,6 +233,4 @@ export const {
   wrappedSaga: editAccountSaga,
   reducer: editAccountReducer,
   actions: editAccountActions,
-} = createMonitoredSaga<EditAccountParams>(editAccount, 'editAccount', {
-  onErrorAction: getNotificationErrorAction,
-})
+} = createMonitoredSaga<EditAccountParams>(editAccount, 'editAccount')

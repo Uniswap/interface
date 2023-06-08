@@ -1,5 +1,4 @@
 import { BigNumber, BigNumberish, providers } from 'ethers'
-import { getNotificationErrorAction } from 'src/features/notifications/utils'
 import { sendTransaction } from 'src/features/transactions/sendTransactionSaga'
 import { TransferTokenParams } from 'src/features/transactions/transfer/useTransferTransactionRequest'
 import { call } from 'typed-redux-saga'
@@ -123,6 +122,4 @@ export const {
   wrappedSaga: transferTokenSaga,
   reducer: transferTokenReducer,
   actions: transferTokenActions,
-} = createMonitoredSaga<Params>(transferToken, 'transferToken', {
-  onErrorAction: getNotificationErrorAction,
-})
+} = createMonitoredSaga<Params>(transferToken, 'transferToken')

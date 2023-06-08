@@ -15,11 +15,6 @@ import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { ImportType, OnboardingEntryPoint } from 'src/features/onboarding/utils'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { ElementName } from 'src/features/telemetry/constants'
-import { createAccountActions } from 'src/features/wallet/createAccountSaga'
-import {
-  PendingAccountActions,
-  pendingAccountActions,
-} from 'src/features/wallet/pendingAccountsSaga'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { openSettings } from 'src/utils/linking'
 import { useAddBackButton } from 'src/utils/useAddBackButton'
@@ -27,6 +22,11 @@ import ImportIcon from 'ui/src/assets/icons/arrow-rightwards-down.svg'
 import EyeIcon from 'ui/src/assets/icons/eye.svg'
 import SeedPhraseIcon from 'ui/src/assets/icons/pencil.svg'
 import { Theme } from 'ui/src/theme/restyle/theme'
+import { createAccountActions } from 'wallet/src/features/wallet/create/createAccountSaga'
+import {
+  PendingAccountActions,
+  pendingAccountActions,
+} from 'wallet/src/features/wallet/create/pendingAccountsSaga'
 
 interface ImportMethodOption {
   title: (t: TFunction) => string

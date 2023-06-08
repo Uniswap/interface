@@ -1,3 +1,9 @@
+import {
+  createAndActivateAccountActions,
+  createAndActivateAccountReducer,
+  createAndActivateAccountSaga,
+  createAndActivateAccountSagaName,
+} from 'src/app/features/accounts/createAndActivateAccountSaga'
 import { dappRequestApprovalWatcher } from 'src/background/features/dappRequests/dappRequestApprovalWatcherSaga'
 import {
   dappRequestWatcher,
@@ -5,6 +11,18 @@ import {
 } from 'src/background/features/dappRequests/saga'
 import { spawn } from 'typed-redux-saga'
 import { authActions, authReducer, authSaga, authSagaName } from 'wallet/src/features/auth/saga'
+import {
+  createAccountActions,
+  createAccountReducer,
+  createAccountSaga,
+  createAccountSagaName,
+} from 'wallet/src/features/wallet/create/createAccountSaga'
+import {
+  pendingAccountActions,
+  pendingAccountReducer,
+  pendingAccountSaga,
+  pendingAccountSagaName,
+} from 'wallet/src/features/wallet/create/pendingAccountsSaga'
 import {
   importAccountActions,
   importAccountReducer,
@@ -14,13 +32,31 @@ import {
 import { getMonitoredSagaReducers, MonitoredSaga } from 'wallet/src/state/saga'
 import { keepAliveSaga } from './utils/keepaliveSaga'
 
-// Stateful sagas that are registered with teh store on startup
+// Stateful sagas that are registered with the store on startup
 export const monitoredSagas: Record<string, MonitoredSaga> = {
   [importAccountSagaName]: {
     name: importAccountSagaName,
     wrappedSaga: importAccountSaga,
     reducer: importAccountReducer,
     actions: importAccountActions,
+  },
+  [createAccountSagaName]: {
+    name: createAccountSagaName,
+    wrappedSaga: createAccountSaga,
+    reducer: createAccountReducer,
+    actions: createAccountActions,
+  },
+  [createAndActivateAccountSagaName]: {
+    name: createAndActivateAccountSagaName,
+    wrappedSaga: createAndActivateAccountSaga,
+    reducer: createAndActivateAccountReducer,
+    actions: createAndActivateAccountActions,
+  },
+  [pendingAccountSagaName]: {
+    name: pendingAccountSagaName,
+    wrappedSaga: pendingAccountSaga,
+    reducer: pendingAccountReducer,
+    actions: pendingAccountActions,
   },
   [authSagaName]: {
     name: authSagaName,

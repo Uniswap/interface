@@ -30,26 +30,26 @@ import {
   transferTokenSagaName,
 } from 'src/features/transactions/transfer/transferTokenSaga'
 import {
-  createAccountActions,
-  createAccountReducer,
-  createAccountSaga,
-  createAccountSagaName,
-} from 'src/features/wallet/createAccountSaga'
-import {
   editAccountActions,
   editAccountReducer,
   editAccountSaga,
   editAccountSagaName,
 } from 'src/features/wallet/editAccountSaga'
+import { signWcRequestSaga, walletConnectSaga } from 'src/features/walletConnect/saga'
+import { walletConnectV2Saga } from 'src/features/walletConnectV2/saga'
+import { spawn } from 'typed-redux-saga'
+import {
+  createAccountActions,
+  createAccountReducer,
+  createAccountSaga,
+  createAccountSagaName,
+} from 'wallet/src/features/wallet/create/createAccountSaga'
 import {
   pendingAccountActions,
   pendingAccountReducer,
   pendingAccountSaga,
   pendingAccountSagaName,
-} from 'src/features/wallet/pendingAccountsSaga'
-import { signWcRequestSaga, walletConnectSaga } from 'src/features/walletConnect/saga'
-import { walletConnectV2Saga } from 'src/features/walletConnectV2/saga'
-import { spawn } from 'typed-redux-saga'
+} from 'wallet/src/features/wallet/create/pendingAccountsSaga'
 import { getMonitoredSagaReducers, MonitoredSaga } from 'wallet/src/state/saga'
 
 // All regular sagas must be included here

@@ -121,5 +121,5 @@ class NullKeyring implements IKeyring {
   }
 }
 
-// Will be overriden by the compiler with platform-specific Keyring
+// Will be overridden by the compiler with platform-specific Keyring
 export const Keyring = new NullKeyring()

@@ -1,7 +1,4 @@
 import dayjs from 'dayjs'
-import { appSelect } from 'src/app/hooks'
-import { getNotificationErrorAction } from 'src/features/notifications/utils'
-import { generateAndStoreMnemonic, generateAndStorePrivateKey } from 'src/lib/RNEthersRs'
 import { call, put } from 'typed-redux-saga'
 import { logger } from 'wallet/src/features/logger/logger'
 import {
@@ -9,8 +6,10 @@ import {
   BackupType,
   SignerMnemonicAccount,
 } from 'wallet/src/features/wallet/accounts/types'
+import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import { selectSortedSignerMnemonicAccounts } from 'wallet/src/features/wallet/selectors'
 import { activateAccount, addAccount } from 'wallet/src/features/wallet/slice'
+import { appSelect } from 'wallet/src/state'
 import { createMonitoredSaga } from 'wallet/src/utils/saga'
 
 export function* createAccount() {
@@ -21,7 +20,7 @@ export function* createAccount() {
     getNewAccountParams,
     sortedMnemonicAccounts
   )
-  const address = yield* call(generateAndStorePrivateKey, mnemonicId, nextDerivationIndex)
+  const address = yield* call(Keyring.generateAndStorePrivateKey, mnemonicId, nextDerivationIndex)
 
   yield* put(
     addAccount({
@@ -44,7 +43,7 @@ async function getNewAccountParams(sortedAccounts: SignerMnemonicAccount[]): Pro
   existingBackups?: BackupType[]
 }> {
   if (sortedAccounts.length === 0 || !sortedAccounts[0]) {
-    const mnemonicId = await generateAndStoreMnemonic()
+    const mnemonicId = await Keyring.generateAndStoreMnemonic()
     return { nextDerivationIndex: 0, mnemonicId }
   }
   return {
@@ -72,6 +71,4 @@ export const {
   wrappedSaga: createAccountSaga,
   reducer: createAccountReducer,
   actions: createAccountActions,
-} = createMonitoredSaga(createAccount, 'createAccount', {
-  onErrorAction: getNotificationErrorAction,
-})
+} = createMonitoredSaga(createAccount, 'createAccount')

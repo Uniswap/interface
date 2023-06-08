@@ -1,6 +1,5 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { Contract, providers } from 'ethers'
-import { getNotificationErrorAction } from 'src/features/notifications/utils'
 import { sendTransaction } from 'src/features/transactions/sendTransactionSaga'
 import { call } from 'typed-redux-saga'
 import { Weth } from 'wallet/src/abis/types'
@@ -71,6 +70,4 @@ export const {
   wrappedSaga: tokenWrapSaga,
   reducer: tokenWrapReducer,
   actions: tokenWrapActions,
-} = createMonitoredSaga<Params>(wrap, 'wrap', {
-  onErrorAction: getNotificationErrorAction,
-})
+} = createMonitoredSaga<Params>(wrap, 'wrap')

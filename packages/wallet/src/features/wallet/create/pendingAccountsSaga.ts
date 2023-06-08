@@ -1,9 +1,8 @@
-import { appSelect } from 'src/app/hooks'
-import { getNotificationErrorAction } from 'src/features/notifications/utils'
 import { put } from 'typed-redux-saga'
 import { logger } from 'wallet/src/features/logger/logger'
 import { selectPendingAccounts } from 'wallet/src/features/wallet/selectors'
 import { markAsNonPending, removeAccounts } from 'wallet/src/features/wallet/slice'
+import { appSelect } from 'wallet/src/state'
 import { createMonitoredSaga } from 'wallet/src/utils/saga'
 
 export enum PendingAccountActions {
@@ -38,6 +37,4 @@ export const {
   wrappedSaga: pendingAccountSaga,
   reducer: pendingAccountReducer,
   actions: pendingAccountActions,
-} = createMonitoredSaga<PendingAccountActions>(managePendingAccounts, 'managePendingAccounts', {
-  onErrorAction: getNotificationErrorAction,
-})
+} = createMonitoredSaga(managePendingAccounts, 'managePendingAccounts')

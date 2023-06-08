@@ -1,6 +1,13 @@
 import { LinearGradient } from '@tamagui/linear-gradient'
+import { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { AccountItem } from 'src/app/features/accounts/AccountItem'
+import {
+  createAndActivateAccountActions,
+  createAndActivateAccountSagaName,
+} from 'src/app/features/accounts/createAndActivateAccountSaga'
+import { useAppDispatch } from 'src/background/store'
+import { useSagaStatus } from 'src/background/utils/useSagaStatus'
 import { ScrollView, Text, XStack, YStack } from 'ui/src'
 import XIcon from 'ui/src/assets/icons/x.svg'
 import { Flex } from 'ui/src/components/layout/Flex'
@@ -9,7 +16,6 @@ import { colorsDark } from 'ui/src/theme/color'
 import { iconSizes } from 'ui/src/theme/iconSizes'
 import { useAccounts, useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 import { activateAccount } from 'wallet/src/features/wallet/slice'
-import { useAppDispatch } from 'wallet/src/state'
 
 export function AccountSwitcherScreen(): JSX.Element {
   const navigate = useNavigate()
@@ -17,14 +23,23 @@ export function AccountSwitcherScreen(): JSX.Element {
 
   const activeAddress = useActiveAccountAddressWithThrow()
   const accounts = useAccounts()
-  const accountAddresses = Object.keys(accounts)
+
+  const accountAddresses = useMemo(() => {
+    const addresses = Object.keys(accounts)
+    addresses.sort((a: Address, b: Address) => {
+      return a === activeAddress ? -1 : b === activeAddress ? 1 : 0
+    })
+    return addresses
+  }, [accounts, activeAddress])
 
   const { glow } = useUniconColors(activeAddress)
 
-  const onCreateWallet = (): void => {
-    // TODO: create a new wallet
-    // TODO: switch to the new wallet
+  useSagaStatus(createAndActivateAccountSagaName, () => {
     navigate(-1)
+  })
+
+  const onCreateWallet = (): void => {
+    dispatch(createAndActivateAccountActions.trigger())
   }
 
   const onClose = (): void => {

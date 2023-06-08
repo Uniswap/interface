@@ -174,4 +174,6 @@ export const {
   wrappedSaga: importAccountSaga,
   reducer: importAccountReducer,
   actions: importAccountActions,
-} = createMonitoredSaga<ImportAccountParams>(importAccount, 'importAccount')
+} = createMonitoredSaga<ImportAccountParams>(importAccount, 'importAccount', {
+  showErrorNotification: false,
+})
