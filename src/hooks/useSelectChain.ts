@@ -4,7 +4,6 @@ import { didUserReject } from 'connection/utils'
 import { SupportedChainId } from 'constants/chains'
 import { useCallback } from 'react'
 import { addPopup } from 'state/application/reducer'
-import { updateConnectionError } from 'state/connection/reducer'
 import { useAppDispatch } from 'state/hooks'
 import { switchChain } from 'utils/switchChain'
 
@@ -18,10 +17,8 @@ export default function useSelectChain() {
       if (!connector) return
 
       const connection = getConnection(connector)
-      const connectionType = connection.type
 
       try {
-        dispatch(updateConnectionError({ connectionType, error: undefined }))
         await switchChain(connector, targetChain)
       } catch (error) {
         if (didUserReject(connection, error)) {
@@ -30,7 +27,6 @@ export default function useSelectChain() {
 
         console.error('Failed to switch networks', error)
 
-        dispatch(updateConnectionError({ connectionType, error: error.message }))
         dispatch(addPopup({ content: { failedSwitchNetwork: targetChain }, key: 'failed-network-switch' }))
       }
     },
