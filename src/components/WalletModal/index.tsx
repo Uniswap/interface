@@ -303,7 +303,7 @@ export default function WalletModal({
                   switchNetwork(NETWORK_CHAIN_ID, 'Taiko', NETWORK_URL as string)
                 }}
               >
-                Please, connect to Taiko network.
+                Connect to Taiko network
               </Button>
             ) : (
               'Error connecting. Try refreshing the page.'

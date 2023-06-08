@@ -3,7 +3,7 @@ import React, { useCallback, useContext, useEffect, useMemo, useState } from 're
 import { ArrowDown } from 'react-feather'
 import ReactGA from 'react-ga'
 import { Text } from 'rebass'
-import { ThemeContext } from 'styled-components'
+import styled, { ThemeContext } from 'styled-components'
 import AddressInputPanel from '../../components/AddressInputPanel'
 import { ButtonError, ButtonLight, ButtonPrimary, ButtonConfirmed } from '../../components/Button'
 import Card, { GreyCard } from '../../components/Card'
@@ -38,15 +38,36 @@ import {
   useSwapState
 } from '../../state/swap/hooks'
 import { useExpertModeManager, useUserDeadline, useUserSlippageTolerance } from '../../state/user/hooks'
-import { LinkStyledButton, TYPE } from '../../theme'
+import { Button, LinkStyledButton, TYPE } from '../../theme'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
 import AppBody from '../AppBody'
 import { ClickableText } from '../Pool/styleds'
 import Loader from '../../components/Loader'
+import isTaikoChain from '../../utils/isTaikoChain'
+import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
+import switchNetwork from '../../utils/switchNetwork'
+import { NETWORK_CHAIN_ID, NETWORK_URL } from '../../connectors'
+
+const MaskBlock = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 9999;
+  border-radius: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 20px;
+`
 
 export default function Swap() {
   const loadedUrlParams = useDefaultsFromURLSearch()
+  const { chainId, error } = useWeb3React()
+  const showMask = !isTaikoChain(chainId) || error instanceof UnsupportedChainIdError
 
   // token warning stuff
   const [loadedInputCurrency, loadedOutputCurrency] = [
@@ -278,6 +299,17 @@ export default function Swap() {
         onConfirm={handleConfirmTokenWarning}
       />
       <AppBody>
+        {showMask && (
+          <MaskBlock>
+            <Button
+              onClick={() => {
+                switchNetwork(NETWORK_CHAIN_ID, 'Taiko', NETWORK_URL as string)
+              }}
+            >
+              Connect to Taiko network
+            </Button>
+          </MaskBlock>
+        )}
         <SwapPoolTabs active={'swap'} />
         <Wrapper id="swap-page">
           <ConfirmSwapModal
