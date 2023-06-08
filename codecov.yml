@@ -9,9 +9,19 @@ ignore:
   - "**/constants/**/*"
   - "constants/**/*"
 
+coverage:
+  status:
+    project:
+      # Omit reporting the default project: unit/e2e tests should be treated separately.
+      default: off
+      unit-tests:
+        flags:
+          - unit-tests
+      e2e-tests:
+        flags:
+          - e2e-tests
+
 flag_management:
-  # Specify flags individually. Avoid using defaults so that a global result is not reported,
-  # as we are only interested in flag-scoped results.
   individual_flags:
     - name: unit-tests
       statuses:
