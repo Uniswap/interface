@@ -10,7 +10,7 @@ import { BaseButton } from 'components/Button'
 import { useAtomValue } from 'jotai/utils'
 import Swap from 'pages/Swap'
 import { parse } from 'qs'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { ArrowDownCircle } from 'react-feather'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { Link as NativeLink } from 'react-router-dom'
@@ -324,6 +324,11 @@ export default function Landing() {
 
   const shouldDisableNFTRoutes = useAtomValue(shouldDisableNFTRoutesAtom)
 
+  const cards = useMemo(
+    () => MAIN_CARDS.filter((card) => (shouldDisableNFTRoutes ? !card.to.startsWith('/nft') : true)),
+    [shouldDisableNFTRoutes]
+  )
+
   return (
     <Trace page={InterfacePageName.LANDING_PAGE} shouldLogImpression>
       <PageContainer data-testid="landing-page">
@@ -384,27 +389,15 @@ export default function Landing() {
               </LearnMoreContainer>
             </ContentContainer>
             <AboutContentContainer isDarkMode={isDarkMode}>
-              {shouldDisableNFTRoutes ? (
-                <CardGrid cols={1} ref={cardsRef}>
-                  {MAIN_CARDS.slice(0, 1).map(({ darkBackgroundImgSrc, lightBackgroundImgSrc, ...card }) => (
-                    <Card
-                      {...card}
-                      backgroundImgSrc={isDarkMode ? darkBackgroundImgSrc : lightBackgroundImgSrc}
-                      key={card.title}
-                    />
-                  ))}
-                </CardGrid>
-              ) : (
-                <CardGrid cols={2} ref={cardsRef}>
-                  {MAIN_CARDS.map(({ darkBackgroundImgSrc, lightBackgroundImgSrc, ...card }) => (
-                    <Card
-                      {...card}
-                      backgroundImgSrc={isDarkMode ? darkBackgroundImgSrc : lightBackgroundImgSrc}
-                      key={card.title}
-                    />
-                  ))}
-                </CardGrid>
-              )}
+              <CardGrid cols={cards.length} ref={cardsRef}>
+                {cards.map(({ darkBackgroundImgSrc, lightBackgroundImgSrc, ...card }) => (
+                  <Card
+                    {...card}
+                    backgroundImgSrc={isDarkMode ? darkBackgroundImgSrc : lightBackgroundImgSrc}
+                    key={card.title}
+                  />
+                ))}
+              </CardGrid>
               <CardGrid cols={3}>
                 {MORE_CARDS.map(({ darkIcon, lightIcon, ...card }) => (
                   <Card {...card} icon={isDarkMode ? darkIcon : lightIcon} key={card.title} type={CardType.Secondary} />

@@ -105,11 +105,7 @@ export const SearchBar = () => {
     ...trace,
   }
   const placeholderText = useMemo(() => {
-    return isMobileOrTablet
-      ? t`Search`
-      : shouldDisableNFTRoutes
-      ? t`Search tokens`
-      : t`Search tokens and NFT collections`
+    return isMobileOrTablet ? t`Search` : t`Search tokens and NFT collections`
   }, [isMobileOrTablet])
 
   const handleKeyPress = useCallback(
