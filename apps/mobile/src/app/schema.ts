@@ -291,6 +291,14 @@ export const { providers, ...v44Schema } = {
   ...v43Schema,
 }
 
+export const v45Schema = {
+  ...v44Schema,
+  favorites: {
+    ...v44Schema.favorites,
+    tokensVisibility: {},
+  },
+}
+
 // TODO: [MOB-201] use function with typed output when API reducers are removed from rootReducer
 // export const getSchema = (): RootState => v0Schema
-export const getSchema = (): typeof v43Schema => v43Schema
+export const getSchema = (): typeof v45Schema => v45Schema

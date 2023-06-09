@@ -1,6 +1,6 @@
 import { createSelector } from '@reduxjs/toolkit'
 import { MobileState } from 'src/app/reducer'
-import { AccountToNftData } from 'src/features/favorites/slice'
+import { AccountToNftData, AccountToTokenVisibility } from 'src/features/favorites/slice'
 
 const selectFavoriteTokens = (state: MobileState): string[] => state.favorites.tokens
 
@@ -29,3 +29,5 @@ export const selectHasWatchedWallets = createSelector(selectWatchedAddresses, (w
 )
 
 export const selectNftsData = (state: MobileState): AccountToNftData => state.favorites.nftsData
+export const selectTokensVisibility = (state: MobileState): AccountToTokenVisibility =>
+  state.favorites.tokensVisibility

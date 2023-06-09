@@ -8,7 +8,7 @@ import { NoTransactions } from 'src/components/icons/NoTransactions'
 import { Box, Flex } from 'src/components/layout'
 import { AnimatedFlashList } from 'src/components/layout/AnimatedFlashList'
 import { BaseCard } from 'src/components/layout/BaseCard'
-import { TabProps, TAB_STYLES } from 'src/components/layout/TabHelpers'
+import { TabProps } from 'src/components/layout/TabHelpers'
 import { Loader } from 'src/components/loading'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { Text } from 'src/components/Text'
@@ -252,7 +252,7 @@ export const ActivityTab = forwardRef<FlashList<unknown>, TabProps>(
     }
 
     return (
-      <Flex grow style={TAB_STYLES.tabListContainer}>
+      <Flex grow paddingHorizontal="spacing24">
         <AnimatedFlashList
           ref={ref}
           ListEmptyComponent={

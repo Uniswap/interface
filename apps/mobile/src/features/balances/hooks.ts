@@ -1,11 +1,29 @@
-import { useMemo } from 'react'
-import { useAppSelector } from 'src/app/hooks'
+import { useCallback, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
+import { LayoutAnimation, NativeSyntheticEvent } from 'react-native'
+import { ContextMenuAction, ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view'
+import { useAppDispatch, useAppSelector } from 'src/app/hooks'
+import { selectTokensVisibility } from 'src/features/favorites/selectors'
+import { toggleTokenVisibility, TokenVisibility } from 'src/features/favorites/slice'
+import { makeSentAndSwappedLocallyCurrencyIds } from 'src/features/transactions/selectors'
 import { EMPTY_ARRAY } from 'wallet/src/constants/misc'
 import { PortfolioBalance } from 'wallet/src/features/dataApi/types'
+import { pushNotification } from 'wallet/src/features/notifications/slice'
+import { AppNotificationType } from 'wallet/src/features/notifications/types'
+import { useAccounts } from 'wallet/src/features/wallet/hooks'
 import {
   makeSelectAccountHideSmallBalances,
   makeSelectAccountHideSpamTokens,
 } from 'wallet/src/features/wallet/selectors'
+import { CurrencyId } from 'wallet/src/utils/currencyId'
+
+interface TokenMenuParams {
+  currencyId: CurrencyId
+  owner: Address
+  showNotification?: boolean
+  isSpam: Maybe<boolean>
+  balanceUSD: Maybe<number>
+}
 
 const HIDE_SMALL_USD_BALANCES_THRESHOLD = 1
 
@@ -18,6 +36,8 @@ export const HIDDEN_TOKEN_BALANCES_ROW = 'HIDDEN_TOKEN_BALANCES_ROW'
  * @param hideSmallBalances - Indicates whether to hide tokens with small balances.
  * @param isSpam - The spam status of the token, which could be undefined.
  * @param balanceUSD - The balance of the token in USD, which could be undefined.
+ * @param tokenVisibility - Optional parameter that includes data about token's visibility.
+ * @param isSentOrSwappedLocally - Indicates if the token has been sent or swapped locally.
  *
  * @returns {boolean} - Returns true if the token balance should be hidden, false otherwise.
  *
@@ -29,28 +49,115 @@ function isTokenBalanceHidden({
   hideSmallBalances,
   isSpam,
   balanceUSD,
+  tokenVisibility,
+  isSentOrSwappedLocally,
 }: {
   hideSpamTokens: boolean
   hideSmallBalances: boolean
   isSpam: Maybe<boolean>
   balanceUSD: Maybe<number>
+  tokenVisibility?: TokenVisibility
+  isSentOrSwappedLocally: Maybe<boolean>
 }): boolean {
   const shouldHideSpam = hideSpamTokens && isSpam
   const isSmallBalance = !balanceUSD || balanceUSD < HIDE_SMALL_USD_BALANCES_THRESHOLD
   const shouldHideSmallBalance = hideSmallBalances && isSmallBalance
-  return shouldHideSpam || shouldHideSmallBalance
+  if (tokenVisibility !== undefined) {
+    return !tokenVisibility.isVisible
+  } else if (isSentOrSwappedLocally) {
+    return false
+  } else {
+    return shouldHideSpam || shouldHideSmallBalance
+  }
 }
 
-function useGetTokenVisibility(owner: Address): {
+function useAccountTokensVisiblitySettings(owner: Address): {
   hideSpamTokens: boolean
   hideSmallBalances: boolean
+  accountTokensVisibility?: Record<string, TokenVisibility>
+  sentOrSwappedLocally: Record<string, boolean>
 } {
   const hideSmallBalances: boolean = useAppSelector(makeSelectAccountHideSmallBalances(owner))
   const hideSpamTokens: boolean = useAppSelector(makeSelectAccountHideSpamTokens(owner))
+  const tokensVisibility = useAppSelector(selectTokensVisibility)
+  const sentOrSwappedLocally = useAppSelector(makeSentAndSwappedLocallyCurrencyIds(owner))
   return {
     hideSmallBalances,
     hideSpamTokens,
+    accountTokensVisibility: tokensVisibility[owner],
+    sentOrSwappedLocally,
   }
+}
+
+// Provide context menu related data for token balance
+export function useTokenBalanceContextMenu({
+  currencyId,
+  owner,
+  isSpam,
+  balanceUSD,
+  showNotification = false,
+}: TokenMenuParams): {
+  menuActions: Array<ContextMenuAction & { onPress: () => void }>
+  onContextMenuPress: (e: NativeSyntheticEvent<ContextMenuOnPressNativeEvent>) => void
+} {
+  const { t } = useTranslation()
+  const dispatch = useAppDispatch()
+  const { hideSmallBalances, hideSpamTokens, accountTokensVisibility, sentOrSwappedLocally } =
+    useAccountTokensVisiblitySettings(owner)
+  const isHidden = isTokenBalanceHidden({
+    tokenVisibility: accountTokensVisibility?.[currencyId],
+    isSentOrSwappedLocally: sentOrSwappedLocally[currencyId],
+    hideSpamTokens,
+    hideSmallBalances,
+    isSpam,
+    balanceUSD,
+  })
+
+  const accounts = useAccounts()
+  const isLocalAccount = !!accounts[owner]
+
+  const menuActions = useMemo(
+    () => [
+      ...(isLocalAccount
+        ? [
+            {
+              title: isHidden ? t('Unhide Token') : t('Hide Token'),
+              systemIcon: isHidden ? 'eye' : 'eye.slash',
+              destructive: !isHidden,
+              onPress: (): void => {
+                LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+                dispatch(
+                  toggleTokenVisibility({
+                    owner,
+                    currencyId: currencyId.toLowerCase(),
+                    currentlyVisible: !isHidden,
+                  })
+                )
+                if (showNotification) {
+                  dispatch(
+                    pushNotification({
+                      type: AppNotificationType.NFTVisibility,
+                      visible: !isHidden,
+                      hideDelay: 2000,
+                    })
+                  )
+                }
+              },
+            },
+          ]
+        : []),
+    ],
+    [t, isLocalAccount, isHidden, dispatch, owner, currencyId, showNotification]
+  )
+
+  const onContextMenuPress = useCallback(
+    (e: NativeSyntheticEvent<ContextMenuOnPressNativeEvent>): void => {
+      menuActions[e.nativeEvent.index]?.onPress?.()
+    },
+    [menuActions]
+  )
+
+  return { menuActions, onContextMenuPress }
 }
 
 /**
@@ -79,7 +186,8 @@ export function useTokenBalancesGroupedByVisibility({
   tokens: Array<PortfolioBalance | string>
   numHidden: number
 } {
-  const { hideSmallBalances, hideSpamTokens } = useGetTokenVisibility(owner)
+  const { hideSmallBalances, hideSpamTokens, accountTokensVisibility, sentOrSwappedLocally } =
+    useAccountTokensVisiblitySettings(owner)
 
   return useMemo(() => {
     if (!balancesById) {
@@ -92,6 +200,8 @@ export function useTokenBalancesGroupedByVisibility({
     }>(
       (acc, balance) => {
         const isHidden = isTokenBalanceHidden({
+          tokenVisibility: accountTokensVisibility?.[balance.currencyInfo.currencyId],
+          isSentOrSwappedLocally: sentOrSwappedLocally[balance.currencyInfo.currencyId],
           hideSpamTokens,
           hideSmallBalances,
           balanceUSD: balance.balanceUSD,
@@ -115,5 +225,12 @@ export function useTokenBalancesGroupedByVisibility({
       ],
       numHidden: hidden.length,
     }
-  }, [balancesById, expandHiddenTokens, hideSpamTokens, hideSmallBalances])
+  }, [
+    balancesById,
+    expandHiddenTokens,
+    accountTokensVisibility,
+    sentOrSwappedLocally,
+    hideSpamTokens,
+    hideSmallBalances,
+  ])
 }

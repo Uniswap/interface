@@ -10,8 +10,6 @@ exports[`ActivityTab renders without error 1`] = `
         "flexDirection": "column",
         "flexGrow": 1,
         "justifyContent": "flex-start",
-      },
-      {
         "paddingHorizontal": 24,
       },
     ]
@@ -268,8 +266,6 @@ exports[`ActivityTab renders without error 2`] = `
         "flexDirection": "column",
         "flexGrow": 1,
         "justifyContent": "flex-start",
-      },
-      {
         "paddingHorizontal": 24,
       },
     ]

@@ -42,6 +42,7 @@ import {
   v41Schema,
   v42Schema,
   v43Schema,
+  v44Schema,
   v4Schema,
   v5Schema,
   v6Schema,
@@ -1133,5 +1134,13 @@ describe('Redux state migrations', () => {
     const v44 = migrations[44](v43Stub)
 
     expect(v44.providers).toBeUndefined()
+  })
+
+  it('migrates from v44 to 45', () => {
+    const v44Stub = { ...v44Schema }
+
+    const v45 = migrations[45](v44Stub)
+
+    expect(v45.favorites.tokensVisibility).toEqual({})
   })
 })

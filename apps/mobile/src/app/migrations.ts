@@ -617,4 +617,14 @@ export const migrations = {
 
     return newState
   },
+
+  45: function addTokensData(state: any) {
+    const newState = { ...state }
+
+    newState.favorites = {
+      ...state.favorites,
+      tokensVisibility: {},
+    }
+    return newState
+  },
 }

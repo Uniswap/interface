@@ -11,11 +11,22 @@ type NftData = {
   isSpamIgnored?: boolean
   isHidden?: boolean
 }
-export type AccountToNftData = Record<Address, Record<ReturnType<typeof getNFTAssetKey>, NftData>>
+
+export type TokenVisibility = { isVisible: boolean }
+
+type AccountToData<K extends string, T> = Record<Address, Record<K, T>>
+
+export type AccountToNftData = AccountToData<ReturnType<typeof getNFTAssetKey>, NftData>
+
+export type AccountToTokenVisibility = AccountToData<CurrencyId, TokenVisibility>
 
 export interface FavoritesState {
+  // to store if a token is favorited across all wallets
   tokens: CurrencyId[]
+  // to store tokens visibility per wallet
+  tokensVisibility: AccountToTokenVisibility
   watchedAddresses: Address[]
+  // to store if a NFT is hidden, or its spam field should be ignored per wallet
   nftsData: AccountToNftData
   // add other types of assets here, e.g. nfts
 }
@@ -30,6 +41,7 @@ const HAYDEN_ETH_ADDRESS = '0x50EC05ADe8280758E2077fcBC08D878D4aef79C3'
 export const initialFavoritesState: FavoritesState = {
   tokens: [ETH_CURRENCY_ID, WBTC_CURRENCY_ID],
   watchedAddresses: [VITALIK_ETH_ADDRESS, HAYDEN_ETH_ADDRESS],
+  tokensVisibility: {},
   nftsData: {},
 }
 
@@ -98,6 +110,29 @@ export const slice = createSlice({
       }
       state.watchedAddresses = newWatched
     },
+    // if user has ever toggled token visibility manually, record it here
+    // and use it instead of dynamic visibility filtering
+    toggleTokenVisibility: (
+      state,
+      {
+        payload: { currencyId, owner, currentlyVisible },
+      }: PayloadAction<{
+        currencyId: string
+        owner: Address
+        currentlyVisible: boolean
+      }>
+    ) => {
+      state.tokensVisibility[owner] ??= {}
+      const ownerTokensData = state.tokensVisibility[owner] ?? {}
+      const tokenData = ownerTokensData[currencyId]
+      // flip existing or create new visibility record
+      if (tokenData) {
+        tokenData.isVisible = !tokenData.isVisible
+      } else {
+        ownerTokensData[currencyId] = { isVisible: !currentlyVisible }
+      }
+    },
+
     toggleNftVisibility: (
       state,
       {
@@ -136,6 +171,7 @@ export const slice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(removeAccount, (state, { payload: owner }) => {
       delete state.nftsData[owner]
+      delete state.tokensVisibility[owner]
     })
   },
 })
@@ -146,5 +182,6 @@ export const {
   addWatchedAddress,
   removeWatchedAddress,
   toggleNftVisibility,
+  toggleTokenVisibility,
 } = slice.actions
 export const { reducer: favoritesReducer } = slice

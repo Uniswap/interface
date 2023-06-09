@@ -559,5 +559,7 @@
   "Hide unknown tokens": "Hide unknown tokens",
   "Security": "Security",
   "Remove": "Remove",
-  "Unknown token": "Unknown token"
+  "Unknown token": "Unknown token",
+  "Hide Token": "Hide Token",
+  "Unhide Token": "Unhide Token"
 }

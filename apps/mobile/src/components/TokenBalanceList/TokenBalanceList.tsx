@@ -173,6 +173,7 @@ export const TokenBalanceList = forwardRef<FlashList<any>, TokenBalanceListProps
                 return (
                   <TokenBalanceItem
                     isWarmLoading={isWarmLoading}
+                    owner={owner}
                     portfolioBalance={item}
                     onPressToken={onPressToken}
                   />

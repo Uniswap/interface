@@ -38,7 +38,13 @@ export function HiddenTokensRow({
 
   return (
     <TouchableArea hapticFeedback hapticStyle={ImpactFeedbackStyle.Light} onPress={onPressRow}>
-      <Flex row alignItems="center" justifyContent="space-between" mb="spacing4" mt="spacing8">
+      <Flex
+        row
+        alignItems="center"
+        justifyContent="space-between"
+        mb="spacing4"
+        mt="spacing8"
+        px="spacing24">
         <Text color="textSecondary" variant="subheadSmall">
           {t('Hidden ({{numHidden}})', { numHidden })}
         </Text>

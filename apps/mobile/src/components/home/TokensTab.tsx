@@ -6,7 +6,7 @@ import { WalletEmptyState } from 'src/components/home/WalletEmptyState'
 import { NoTokens } from 'src/components/icons/NoTokens'
 import { Flex } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
-import { TabContentProps, TabProps, TAB_STYLES } from 'src/components/layout/TabHelpers'
+import { TabContentProps, TabProps } from 'src/components/layout/TabHelpers'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { TokenBalanceList } from 'src/components/TokenBalanceList/TokenBalanceList'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
@@ -44,7 +44,7 @@ export const TokensTab = forwardRef<FlashList<any>, TabProps & { isExternalProfi
     }
 
     return (
-      <Flex grow bg="background0" style={TAB_STYLES.tabListContainer}>
+      <Flex grow bg="background0">
         <TokenBalanceList
           ref={ref}
           containerProps={formattedContainerProps}

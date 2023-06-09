@@ -14,6 +14,7 @@ describe(favoritesReducer, () => {
       tokens: [],
       watchedAddresses: [],
       nftsData: {},
+      tokensVisibility: {},
     })
   })
 

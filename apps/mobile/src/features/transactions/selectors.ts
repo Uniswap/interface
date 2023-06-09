@@ -13,6 +13,7 @@ import {
   TransactionType,
 } from 'wallet/src/features/transactions/types'
 import { unique } from 'wallet/src/utils/array'
+import { buildCurrencyId } from 'wallet/src/utils/currencyId'
 
 export const selectTransactions = (state: MobileState): TransactionState => state.transactions
 
@@ -44,6 +45,27 @@ export const makeSelectAddressTransactions = (
       }
       return true
     })
+  })
+
+export const makeSentAndSwappedLocallyCurrencyIds = (
+  address: Address | null
+): Selector<MobileState, Record<string, boolean>> =>
+  createSelector(selectTransactions, (transactions) => {
+    const addressTransactions = address && transactions[address]
+    if (!addressTransactions) return {}
+
+    return flattenObjectOfObjects(addressTransactions).reduce<Record<string, boolean>>(
+      (acc, tx) => {
+        if (tx.typeInfo.type === TransactionType.Send) {
+          acc[buildCurrencyId(tx.chainId, tx.typeInfo.tokenAddress.toLowerCase())] = true
+        } else if (tx.typeInfo.type === TransactionType.Swap) {
+          acc[tx.typeInfo.inputCurrencyId.toLowerCase()] = true
+          acc[tx.typeInfo.outputCurrencyId.toLowerCase()] = true
+        }
+        return acc
+      },
+      {}
+    )
   })
 
 export const makeSelectTransaction = (

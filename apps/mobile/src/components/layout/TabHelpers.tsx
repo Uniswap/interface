@@ -59,10 +59,6 @@ export const TAB_STYLES = StyleSheet.create({
     shadowRadius: 0,
     top: 0,
   },
-  // For container components that wrap lists within tabs.
-  tabListContainer: {
-    paddingHorizontal: FixedTheme.spacing.spacing24,
-  },
   // For padding on the list components themselves within tabs.
   tabListInner: {
     paddingBottom: FixedTheme.spacing.spacing12,
