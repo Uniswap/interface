@@ -3,7 +3,7 @@ import { Currency } from '@uniswap/sdk-core'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { chainIdToBackendName } from 'graphql/data/util'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { Link, Twitter } from 'react-feather'
 import { useModalIsOpen, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
@@ -12,6 +12,7 @@ import { ClickableStyle, CopyHelperRefType } from 'theme'
 import { colors } from 'theme/colors'
 import { opacify } from 'theme/utils'
 import { Z_INDEX } from 'theme/zIndex'
+import { isMobile } from 'utils/userAgent'
 
 import { ReactComponent as ShareIcon } from '../../../assets/svg/share.svg'
 import { CopyHelper } from '../../../theme'
@@ -86,6 +87,18 @@ export default function ShareButton({ currency }: { currency: Currency }) {
       `left=${positionX}, top=${positionY}, width=${TWITTER_WIDTH}, height=${TWITTER_HEIGHT}`
     )
   }
+
+  useEffect(() => {
+    if (open && isMobile) {
+      document.body.style.position = 'fixed'
+      document.body.style.top = `-${window.scrollY}px`
+    } else if (isMobile) {
+      const scrollY = document.body.style.top
+      document.body.style.position = ''
+      document.body.style.top = ''
+      window.scrollTo(0, parseInt(scrollY || '0') * -1)
+    }
+  }, [open])
 
   const copyHelperRef = useRef<CopyHelperRefType>(null)
 

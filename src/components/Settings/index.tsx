@@ -5,11 +5,12 @@ import { AutoColumn } from 'components/Column'
 import { L2_CHAIN_IDS } from 'constants/chains'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { isSupportedChainId } from 'lib/hooks/routing/clientSideSmartOrderRouter'
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { useModalIsOpen, useToggleSettingsMenu } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import styled from 'styled-components/macro'
 import { Divider } from 'theme'
+import { isMobile } from 'utils/userAgent'
 
 import MaxSlippageSettings from './MaxSlippageSettings'
 import MenuButton from './MenuButton'
@@ -50,6 +51,19 @@ export default function SettingsTab({ autoSlippage, chainId }: { autoSlippage: P
 
   const toggleMenu = useToggleSettingsMenu()
   useOnClickOutside(node, isOpen ? toggleMenu : undefined)
+
+  useEffect(() => {
+    if (isOpen && isMobile) {
+      document.body.style.position = 'fixed'
+      document.body.style.top = `-${window.scrollY}px`
+      document.body.style.width = '100%'
+    } else if (isMobile) {
+      const scrollY = document.body.style.top
+      document.body.style.position = ''
+      document.body.style.top = ''
+      window.scrollTo(0, parseInt(scrollY || '0') * -1)
+    }
+  }, [isOpen])
 
   const isSupportedChain = isSupportedChainId(chainId)
 
