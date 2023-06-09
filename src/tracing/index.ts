@@ -4,8 +4,7 @@ import * as Sentry from '@sentry/react'
 import { BrowserTracing } from '@sentry/tracing'
 import { initializeAnalytics, OriginApplication } from '@uniswap/analytics'
 import { SharedEventName } from '@uniswap/analytics-events'
-import { isSentryEnabled } from 'utils/env'
-import { getEnvName, isProductionEnv } from 'utils/env'
+import { getEnvName, isProductionEnv, isSentryEnabled } from 'utils'
 
 import { beforeSend } from './errors'
 

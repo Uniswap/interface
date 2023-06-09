@@ -8,7 +8,7 @@ import { useAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
 import { useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { getNativeTokenDBAddress } from 'utils/nativeTokens'
+import { getNativeTokenDBAddress } from 'utils'
 
 export const pageTimePeriodAtom = atomWithStorage<TimePeriod>('tokenDetailsTimePeriod', TimePeriod.DAY)
 

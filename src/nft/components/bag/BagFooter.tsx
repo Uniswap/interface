@@ -37,7 +37,7 @@ import { AlertTriangle, ChevronDown } from 'react-feather'
 import { InterfaceTrade, TradeState } from 'state/routing/types'
 import styled, { useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
-import { switchChain } from 'utils/switchChain'
+import { switchChain } from 'utils'
 import { shallow } from 'zustand/shallow'
 
 import { BuyButtonStateData, BuyButtonStates, getBuyButtonStateData } from './ButtonStates'

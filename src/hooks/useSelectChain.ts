@@ -5,7 +5,7 @@ import { useCallback } from 'react'
 import { addPopup } from 'state/application/reducer'
 import { updateConnectionError } from 'state/connection/reducer'
 import { useAppDispatch } from 'state/hooks'
-import { switchChain } from 'utils/switchChain'
+import { switchChain } from 'utils'
 
 export default function useSelectChain() {
   const dispatch = useAppDispatch()

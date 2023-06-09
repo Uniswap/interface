@@ -4,7 +4,7 @@ import { SupportedChainId } from 'constants/chains'
 import { NATIVE_CHAIN_ID, nativeOnChain, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import ms from 'ms.macro'
 import { useEffect } from 'react'
-import { getNativeTokenDBAddress } from 'utils/nativeTokens'
+import { getNativeTokenDBAddress } from 'utils'
 
 import { Chain, ContractInput, HistoryDuration, TokenStandard } from './__generated__/types-and-hooks'
 

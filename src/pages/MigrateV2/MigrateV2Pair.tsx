@@ -31,9 +31,7 @@ import { useRangeHopCallbacks, useV3DerivedMintInfo, useV3MintActionHandlers } f
 import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'
 import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
 import { useTheme } from 'styled-components/macro'
-import { isAddress } from 'utils/addresses'
-import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
-import { unwrappedToken } from 'utils/unwrappedToken'
+import { formatCurrencyAmount, isAddress, unwrappedToken } from 'utils'
 
 import { AutoColumn } from '../../components/Column'
 import FormattedCurrencyAmount from '../../components/FormattedCurrencyAmount'

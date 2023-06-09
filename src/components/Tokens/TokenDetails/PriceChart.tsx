@@ -23,7 +23,7 @@ import {
   monthTickFormatter,
   monthYearDayFormatter,
   weekFormatter,
-} from 'utils/formatChartTimes'
+} from 'utils'
 
 const DATA_EMPTY = { value: 0, timestamp: 0 }
 

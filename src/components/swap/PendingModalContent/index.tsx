@@ -12,8 +12,8 @@ import { useIsTransactionConfirmed } from 'state/transactions/hooks'
 import styled, { css, keyframes } from 'styled-components/macro'
 import { ExternalLink } from 'theme'
 import { ThemedText } from 'theme/components/text'
-import { getExplorerLink } from 'utils/getExplorerLink'
-import { ExplorerDataType } from 'utils/getExplorerLink'
+import { getExplorerLink } from 'utils'
+import { ExplorerDataType } from 'utils'
 
 import { ConfirmModalState } from '../ConfirmSwapModal'
 import {

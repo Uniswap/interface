@@ -35,7 +35,7 @@ import {
 } from 'make-plural/plurals'
 import { PluralCategory } from 'make-plural/plurals'
 import { ReactNode, useEffect } from 'react'
-import { retry } from 'utils/retry'
+import { retry } from 'utils'
 
 type LocalePlural = {
   [key in SupportedLocale]: (n: number | string, ord?: boolean) => PluralCategory

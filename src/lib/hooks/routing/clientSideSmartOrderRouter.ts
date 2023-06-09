@@ -7,7 +7,7 @@ import { nativeOnChain } from 'constants/tokens'
 import JSBI from 'jsbi'
 import { GetQuoteArgs } from 'state/routing/slice'
 import { QuoteResult, QuoteState, SwapRouterNativeAssets } from 'state/routing/types'
-import { transformSwapRouteToGetQuoteResult } from 'utils/transformSwapRouteToGetQuoteResult'
+import { transformSwapRouteToGetQuoteResult } from 'utils'
 
 export function toSupportedChainId(chainId: ChainId): SupportedChainId | undefined {
   const numericChainId: number = chainId

@@ -5,7 +5,7 @@ import { atomWithStorage, useAtomValue, useUpdateAtom } from 'jotai/utils'
 import ms from 'ms.macro'
 import { useCallback, useEffect, useMemo } from 'react'
 import { Moon, Sun } from 'react-feather'
-import { addMediaQueryListener, removeMediaQueryListener } from 'utils/matchMedia'
+import { addMediaQueryListener, removeMediaQueryListener } from 'utils'
 
 import { Segment, SegmentedControl } from './SegmentedControl'
 import { ThemedText } from './text'

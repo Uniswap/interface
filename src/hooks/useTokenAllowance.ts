@@ -5,8 +5,7 @@ import { useTokenContract } from 'hooks/useContract'
 import { useSingleCallResult } from 'lib/hooks/multicall'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ApproveTransactionInfo, TransactionType } from 'state/transactions/types'
-import { UserRejectedRequestError } from 'utils/errors'
-import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
+import { didUserReject, UserRejectedRequestError } from 'utils'
 
 export function useTokenAllowance(
   token?: Token,

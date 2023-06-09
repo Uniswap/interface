@@ -11,7 +11,7 @@ import ms from 'ms.macro'
 import { useEffect, useMemo, useState } from 'react'
 import styled, { keyframes } from 'styled-components/macro'
 import { ExternalLink, ThemedText } from 'theme'
-import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
+import { ExplorerDataType, getExplorerLink } from 'utils'
 
 import { MouseoverTooltip } from '../Tooltip'
 import { ChainConnectivityWarning } from './ChainConnectivityWarning'

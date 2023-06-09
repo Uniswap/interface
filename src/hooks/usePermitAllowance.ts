@@ -8,8 +8,7 @@ import { useContract } from 'hooks/useContract'
 import { useSingleCallResult } from 'lib/hooks/multicall'
 import ms from 'ms.macro'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { UserRejectedRequestError } from 'utils/errors'
-import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
+import { didUserReject, UserRejectedRequestError } from 'utils'
 
 const PERMIT_EXPIRATION = ms`30d`
 const PERMIT_SIG_EXPIRATION = ms`30m`

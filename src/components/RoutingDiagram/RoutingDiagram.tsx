@@ -11,7 +11,7 @@ import { Box } from 'rebass'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
-import { RoutingDiagramEntry } from 'utils/getRoutingDiagramEntries'
+import { RoutingDiagramEntry } from 'utils'
 
 import { ReactComponent as DotLine } from '../../assets/svg/dot_line.svg'
 import { MouseoverTooltip } from '../Tooltip'

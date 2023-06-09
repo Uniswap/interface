@@ -3,7 +3,7 @@ import { InterfaceElementName, InterfaceEventName, SharedEventName } from '@unis
 import { PropsWithChildren, useCallback } from 'react'
 import styled from 'styled-components/macro'
 import { ClickableStyle } from 'theme'
-import { isIOS } from 'utils/userAgent'
+import { isIOS } from 'utils'
 
 const StyledButton = styled.button<{ padded?: boolean; branded?: boolean }>`
   ${ClickableStyle}

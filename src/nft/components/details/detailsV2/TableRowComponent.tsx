@@ -13,7 +13,7 @@ import { Offer, SellOrder } from 'nft/types'
 import { formatEth, getMarketplaceIcon, timeUntil } from 'nft/utils'
 import styled from 'styled-components/macro'
 import { BREAKPOINTS, ExternalLink, ThemedText } from 'theme'
-import { shortenAddressStrict } from 'utils/addresses'
+import { shortenAddressStrict } from 'utils'
 
 import { TableTabsKeys } from './DataPageTable'
 

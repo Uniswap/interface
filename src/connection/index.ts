@@ -14,7 +14,7 @@ import INJECTED_LIGHT_ICON from 'assets/svg/browser-wallet-light.svg'
 import UNISWAP_LOGO from 'assets/svg/logo.svg'
 import { SupportedChainId } from 'constants/chains'
 import { useCallback } from 'react'
-import { isMobile, isNonIOSPhone } from 'utils/userAgent'
+import { isMobile, isNonIOSPhone } from 'utils'
 
 import { RPC_URLS } from '../constants/networks'
 import { RPC_PROVIDERS } from '../constants/providers'

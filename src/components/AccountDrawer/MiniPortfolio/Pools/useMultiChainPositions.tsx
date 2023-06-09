@@ -10,7 +10,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { PositionDetails } from 'types/position'
 import { NonfungiblePositionManager, UniswapInterfaceMulticall } from 'types/v3'
 import { UniswapV3PoolInterface } from 'types/v3/UniswapV3Pool'
-import { currencyKey } from 'utils/currencyKey'
+import { currencyKey } from 'utils'
 
 import { PositionInfo, useCachedPositions, useGetCachedTokens, usePoolAddressCache } from './cache'
 import { Call, DEFAULT_GAS_LIMIT } from './getTokensAsync'

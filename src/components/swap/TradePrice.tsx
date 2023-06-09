@@ -6,7 +6,7 @@ import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useCallback, useState } from 'react'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
-import { formatTransactionAmount, priceToPreciseFloat } from 'utils/formatNumbers'
+import { formatTransactionAmount, priceToPreciseFloat } from 'utils'
 
 interface TradePriceProps {
   price: Price<Currency, Currency>

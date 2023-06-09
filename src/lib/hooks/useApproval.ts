@@ -8,7 +8,7 @@ import { useTokenContract } from 'hooks/useContract'
 import { useTokenAllowance } from 'hooks/useTokenAllowance'
 import { getTokenAddress } from 'lib/utils/analytics'
 import { useCallback, useMemo } from 'react'
-import { calculateGasMargin } from 'utils/calculateGasMargin'
+import { calculateGasMargin } from 'utils'
 
 export enum ApprovalState {
   UNKNOWN = 'UNKNOWN',

@@ -10,7 +10,7 @@ import { useTokenInfoFromActiveList } from 'hooks/useTokenInfoFromActiveList'
 import { getTokenAddress } from 'lib/utils/analytics'
 import { Text } from 'rebass'
 import styled from 'styled-components/macro'
-import { currencyId } from 'utils/currencyId'
+import { currencyId } from 'utils'
 
 const MobileWrapper = styled(AutoColumn)`
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`

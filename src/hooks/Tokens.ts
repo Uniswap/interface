@@ -8,7 +8,7 @@ import { getTokenFilter } from 'lib/hooks/useTokenList/filtering'
 import { TokenAddressMap } from 'lib/hooks/useTokenList/utils'
 import { useMemo } from 'react'
 import { useAppSelector } from 'state/hooks'
-import { isL2ChainId } from 'utils/chains'
+import { isL2ChainId } from 'utils'
 
 import { useAllLists, useCombinedActiveList, useCombinedTokenMapFromUrls } from '../state/lists/hooks'
 import { WrappedTokenInfo } from '../state/lists/wrappedTokenInfo'

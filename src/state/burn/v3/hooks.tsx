@@ -8,7 +8,7 @@ import { useV3PositionFees } from 'hooks/useV3PositionFees'
 import { ReactNode, useCallback, useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { PositionDetails } from 'types/position'
-import { unwrappedToken } from 'utils/unwrappedToken'
+import { unwrappedToken } from 'utils'
 
 import { AppState } from '../../types'
 import { selectPercent } from './actions'

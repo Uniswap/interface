@@ -3,7 +3,7 @@ import { Percent } from '@uniswap/sdk-core'
 import { OutlineCard } from 'components/Card'
 import styled, { useTheme } from 'styled-components/macro'
 import { opacify } from 'theme/utils'
-import formatPriceImpact from 'utils/formatPriceImpact'
+import formatPriceImpact from 'utils'
 
 import { ThemedText } from '../../theme'
 import { AutoColumn } from '../Column'

@@ -13,7 +13,7 @@ import usePrevious from 'hooks/usePrevious'
 import { ReactNode, useEffect, useMemo } from 'react'
 import { useLocation } from 'react-router-dom'
 import { useConnectedWallets } from 'state/wallets/hooks'
-import { getCurrentPageFromLocation } from 'utils/urlRoutes'
+import { getCurrentPageFromLocation } from 'utils'
 
 export default function Web3Provider({ children }: { children: ReactNode }) {
   useEagerlyConnect()

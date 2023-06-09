@@ -14,7 +14,7 @@ import { useHideUniswapWalletBanner } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
-import { isIOS, isMobileSafari } from 'utils/userAgent'
+import { isIOS, isMobileSafari } from 'utils'
 
 const PopupContainer = styled.div<{ show: boolean }>`
   display: flex;

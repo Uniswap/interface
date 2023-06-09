@@ -1,7 +1,7 @@
 import { SupportedChainId } from 'constants/chains'
 import useHttpLocations from 'hooks/useHttpLocations'
 import { useMemo } from 'react'
-import { isAddress } from 'utils/addresses'
+import { isAddress } from 'utils'
 
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
 import BnbLogo from '../../assets/svg/bnb-logo.svg'

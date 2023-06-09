@@ -2,7 +2,7 @@ import { Percent } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 import { useTheme } from 'styled-components/macro'
-import { computeRealizedPriceImpact, getPriceImpactWarning } from 'utils/prices'
+import { computeRealizedPriceImpact, getPriceImpactWarning } from 'utils'
 
 export interface PriceImpact {
   priceImpactSeverity: PriceImpactSeverity

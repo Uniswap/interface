@@ -11,10 +11,13 @@ import { useWeb3React } from '@web3-react/core'
 import { formatSwapSignedAnalyticsEventProperties } from 'lib/utils/analytics'
 import { useCallback } from 'react'
 import { trace } from 'tracing/trace'
-import { calculateGasMargin } from 'utils/calculateGasMargin'
-import { UserRejectedRequestError } from 'utils/errors'
-import isZero from 'utils/isZero'
-import { didUserReject, swapErrorToUserReadableMessage } from 'utils/swapErrorToUserReadableMessage'
+import {
+  calculateGasMargin,
+  didUserReject,
+  isZero,
+  swapErrorToUserReadableMessage,
+  UserRejectedRequestError,
+} from 'utils'
 
 import { PermitSignature } from './usePermitAllowance'
 
