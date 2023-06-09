@@ -1,15 +1,17 @@
 import { Currency } from '@uniswap/sdk-core'
 import React, { memo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { FadeIn, FadeOut } from 'react-native-reanimated'
+import { useAppTheme } from 'src/app/hooks'
 import { SearchContext } from 'src/components/explore/search/SearchResultsSection'
-import { AnimatedFlex } from 'src/components/layout'
+import { Flex } from 'src/components/layout'
+import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { Trace } from 'src/components/telemetry/Trace'
 import { useFilterCallbacks } from 'src/components/TokenSelector/hooks'
 import { SearchBar } from 'src/components/TokenSelector/SearchBar'
 import { TokenSearchResultList } from 'src/components/TokenSelector/TokenSearchResultList'
 import { ElementName, ModalName, SectionName } from 'src/features/telemetry/constants'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
+import { ChainId } from 'wallet/src/constants/chains'
 
 export enum TokenSelectorVariation {
   // used for Send flow, only show currencies with a balance
@@ -39,65 +41,72 @@ export function flowToModalName(flow: TokenSelectorFlow): ModalName | undefined 
 }
 
 interface TokenSelectorProps {
-  currencyField?: CurrencyField
+  currencyField: CurrencyField
   flow: TokenSelectorFlow
-  otherCurrency?: Currency | null
-  selectedCurrency?: Currency | null
+  chainId?: ChainId
   variation: TokenSelectorVariation
-  onBack: () => void
-  onSelectCurrency: (currency: Currency, context: SearchContext) => void
+  onClose: () => void
+  onSelectCurrency: (
+    currency: Currency,
+    currencyField: CurrencyField,
+    context: SearchContext
+  ) => void
 }
 
-function _TokenSelector({
+function _TokenSelectorModal({
   currencyField,
   flow,
   onSelectCurrency,
-  otherCurrency,
-  onBack,
+  chainId,
+  onClose,
   variation,
 }: TokenSelectorProps): JSX.Element {
   const { onChangeChainFilter, onChangeText, searchFilter, chainFilter } = useFilterCallbacks(
-    otherCurrency?.chainId ?? null,
+    chainId ?? null,
     flow
   )
 
   const { t } = useTranslation()
+  const theme = useAppTheme()
 
-  // Handle logging if this is for input or output
-  const currencyFieldName = currencyField
-    ? currencyField === CurrencyField.INPUT
-      ? ElementName.TokenInputSelector
-      : ElementName.TokenOutputSelector
-    : undefined
+  // Log currency field only for Swap as for Transfer it's always input
+  const currencyFieldName =
+    flow === TokenSelectorFlow.Swap
+      ? currencyField === CurrencyField.INPUT
+        ? ElementName.TokenInputSelector
+        : ElementName.TokenOutputSelector
+      : undefined
 
   return (
-    <Trace logImpression element={currencyFieldName} section={SectionName.TokenSelector}>
-      <AnimatedFlex
-        entering={FadeIn}
-        exiting={FadeOut}
-        gap="spacing12"
-        overflow="hidden"
-        px="spacing16"
-        width="100%">
-        <SearchBar
-          autoFocus
-          backgroundColor="background2"
-          placeholder={t('Search tokens')}
-          value={searchFilter ?? ''}
-          onBack={onBack}
-          onChangeText={onChangeText}
-        />
-        <TokenSearchResultList
-          chainFilter={chainFilter}
-          flow={flow}
-          searchFilter={searchFilter}
-          variation={variation}
-          onChangeChainFilter={onChangeChainFilter}
-          onSelectCurrency={onSelectCurrency}
-        />
-      </AnimatedFlex>
-    </Trace>
+    <BottomSheetModal
+      fullScreen
+      backgroundColor={theme.colors.background1}
+      name={ModalName.TokenSelector}
+      snapPoints={['95%']}
+      onClose={onClose}>
+      <Trace logImpression element={currencyFieldName} section={SectionName.TokenSelector}>
+        <Flex grow pb="spacing16" px="spacing16">
+          <SearchBar
+            autoFocus
+            backgroundColor="background2"
+            placeholder={t('Search tokens')}
+            value={searchFilter ?? ''}
+            onChangeText={onChangeText}
+          />
+          <TokenSearchResultList
+            chainFilter={chainFilter}
+            flow={flow}
+            searchFilter={searchFilter}
+            variation={variation}
+            onChangeChainFilter={onChangeChainFilter}
+            onSelectCurrency={(currency: Currency, context: SearchContext): void => {
+              onSelectCurrency(currency, currencyField, context)
+            }}
+          />
+        </Flex>
+      </Trace>
+    </BottomSheetModal>
   )
 }
 
-export const TokenSelector = memo(_TokenSelector)
+export const TokenSelectorModal = memo(_TokenSelectorModal)

@@ -88,6 +88,7 @@ export const enum ModalName {
   SwapSettings = 'swap-settings-modal',
   SwapWarning = 'swap-warning-modal',
   GasEstimateWarning = 'gas-estimate-warning-modal',
+  TokenSelector = 'token-selector',
   TokenWarningModal = 'token-warning-modal',
   TooltipContent = 'tooltip-content',
   TransactionActions = 'transaction-actions',

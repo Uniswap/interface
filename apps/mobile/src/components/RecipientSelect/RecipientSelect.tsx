@@ -71,10 +71,9 @@ export function _RecipientSelect({
           autoFocus
           backgroundColor="background2"
           endAdornment={<QRScannerIconButton onPress={onPressQRScanner} />}
-          hideBackButton={!recipient}
           placeholder={t('Search addresses or ENS names')}
           value={pattern ?? ''}
-          onBack={onToggleShowRecipientSelector}
+          onBack={recipient ? onToggleShowRecipientSelector : undefined}
           onChangeText={onChangePattern}
         />
         {noResults ? (

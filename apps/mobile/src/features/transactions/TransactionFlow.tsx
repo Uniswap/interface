@@ -23,13 +23,13 @@ import { DerivedTransferInfo } from 'src/features/transactions/transfer/hooks'
 import { TransferReview } from 'src/features/transactions/transfer/TransferReview'
 import { TransferStatus } from 'src/features/transactions/transfer/TransferStatus'
 import { TransferTokenForm } from 'src/features/transactions/transfer/TransferTokenForm'
+import { ANIMATE_SPRING_CONFIG } from 'src/features/transactions/utils'
 import DollarSign from 'ui/src/assets/icons/dollar.svg'
 import EyeIcon from 'ui/src/assets/icons/eye.svg'
 import SettingsIcon from 'ui/src/assets/icons/settings.svg'
 import { dimensions } from 'ui/src/theme/restyle/sizing'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
-import { ANIMATE_SPRING_CONFIG } from './utils'
 
 export enum TransactionStep {
   FORM,
@@ -39,9 +39,7 @@ export enum TransactionStep {
 
 interface TransactionFlowProps {
   dispatch: Dispatch<AnyAction>
-  showTokenSelector: boolean
   showRecipientSelector?: boolean
-  tokenSelector: JSX.Element
   recipientSelector?: JSX.Element
   flowName: string
   derivedInfo: DerivedTransferInfo | DerivedSwapInfo
@@ -91,9 +89,7 @@ function isSwapInfo(
 
 export function TransactionFlow({
   flowName,
-  showTokenSelector,
   showRecipientSelector,
-  tokenSelector,
   recipientSelector,
   derivedInfo,
   approveTxRequest,
@@ -117,20 +113,19 @@ export function TransactionFlow({
   const [showSettingsModal, setShowSettingsModal] = useState(false)
 
   const isSwap = isSwapInfo(derivedInfo)
-  const hideInnerContentRouter = showTokenSelector || showRecipientSelector
 
   // optimisation for not rendering InnerContent initially,
   // when modal is opened with recipient or token selector presented
-  const [renderInnerContentRouter, setRenderInnerContentRouter] = useState(!hideInnerContentRouter)
+  const [renderInnerContentRouter, setRenderInnerContentRouter] = useState(!showRecipientSelector)
   useEffect(() => {
-    setRenderInnerContentRouter(renderInnerContentRouter || !hideInnerContentRouter)
-  }, [showTokenSelector, showRecipientSelector, renderInnerContentRouter, hideInnerContentRouter])
+    setRenderInnerContentRouter(renderInnerContentRouter || !showRecipientSelector)
+  }, [renderInnerContentRouter, showRecipientSelector])
 
-  const screenXOffset = useSharedValue(hideInnerContentRouter ? -dimensions.fullWidth : 0)
+  const screenXOffset = useSharedValue(showRecipientSelector ? -dimensions.fullWidth : 0)
   useEffect(() => {
-    const screenOffset = hideInnerContentRouter ? 1 : 0
+    const screenOffset = showRecipientSelector ? 1 : 0
     screenXOffset.value = withSpring(-(dimensions.fullWidth * screenOffset), ANIMATE_SPRING_CONFIG)
-  }, [screenXOffset, showTokenSelector, showRecipientSelector, hideInnerContentRouter])
+  }, [screenXOffset, showRecipientSelector])
 
   const wrapperStyle = useAnimatedStyle(() => ({
     transform: [{ translateX: screenXOffset.value }],
@@ -165,7 +160,7 @@ export function TransactionFlow({
               exactValue={exactValue}
               gasFallbackUsed={gasFallbackUsed}
               setStep={setStep}
-              showingSelectorScreen={showRecipientSelector || showTokenSelector}
+              showingSelectorScreen={!!showRecipientSelector}
               step={step}
               totalGasFee={totalGasFee}
               txRequest={txRequest}
@@ -205,7 +200,7 @@ export function TransactionFlow({
             }}
           />
         ) : null}
-        {showTokenSelector ? tokenSelector : null}
+
         {showRecipientSelector && recipientSelector ? recipientSelector : null}
       </AnimatedFlex>
     </TouchableWithoutFeedback>
