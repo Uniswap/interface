@@ -41,7 +41,8 @@ export function WaveLoader(): JSX.Element {
       flexGrow={1}
       gap="none"
       height={CHART_HEIGHT}
-      justifyContent="center">
+      justifyContent="center"
+      sentry-label="WaveLoader">
       <Animated.View style={[StyleSheet.absoluteFill, animatedStyle]}>
         <Flex row alignItems="center" flexGrow={1} gap="none" height="100%" justifyContent="center">
           <Wave color={theme.colors.background3} />

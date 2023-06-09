@@ -19,7 +19,8 @@ export function WalletLoader({ opacity }: Props): JSX.Element {
       opacity={opacity}
       overflow="hidden"
       px="spacing16"
-      py="spacing16">
+      py="spacing16"
+      sentry-label="WalletLoader">
       <Flex row alignItems="center" gap="spacing12" height={ADDRESS_WRAPPER_HEIGHT}>
         <Box bg="background3" borderRadius="roundedFull" height={32} width={32} />
         <Flex alignItems="flex-start" gap="none" width="100%">

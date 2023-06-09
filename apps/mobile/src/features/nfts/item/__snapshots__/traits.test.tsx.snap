@@ -2,6 +2,7 @@
 
 exports[`renders trait card 1`] = `
 <View
+  sentry-label="Flex"
   style={
     [
       {

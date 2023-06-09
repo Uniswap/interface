@@ -76,6 +76,7 @@ exports[`AccountList renders without error 1`] = `
           }
         >
           <View
+            sentry-label="Flex"
             style={
               [
                 {
@@ -89,6 +90,7 @@ exports[`AccountList renders without error 1`] = `
             testID="account_item/0x82D56A352367453f74FC0dC7B071b311da373Fa6"
           >
             <View
+              sentry-label="Flex"
               style={
                 [
                   {
@@ -295,6 +297,7 @@ exports[`AccountList renders without error 1`] = `
                 }
               />
               <View
+                sentry-label="Flex"
                 style={
                   [
                     {
@@ -370,6 +373,7 @@ exports[`AccountList renders without error 1`] = `
               }
             />
             <View
+              sentry-label="Flex"
               style={
                 [
                   {

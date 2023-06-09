@@ -49,6 +49,8 @@ if (!__DEV__) {
   Sentry.init({
     environment: getSentryEnvironment(),
     dsn: config.sentryDsn,
+    attachViewHierarchy: true,
+    enableCaptureFailedRequests: true,
     tracesSampler: (_) => {
       return 0.2
     },
@@ -115,13 +117,15 @@ function App(): JSX.Element | null {
                       <WalletContextProvider>
                         <BiometricContextProvider>
                           <LockScreenContextProvider>
-                            <DataUpdaters />
-                            <BottomSheetModalProvider>
-                              <AppModals />
-                              <PerformanceProfiler onReportPrepared={onReportPrepared}>
-                                <AppInner />
-                              </PerformanceProfiler>
-                            </BottomSheetModalProvider>
+                            <Sentry.TouchEventBoundary>
+                              <DataUpdaters />
+                              <BottomSheetModalProvider>
+                                <AppModals />
+                                <PerformanceProfiler onReportPrepared={onReportPrepared}>
+                                  <AppInner />
+                                </PerformanceProfiler>
+                              </BottomSheetModalProvider>
+                            </Sentry.TouchEventBoundary>
                           </LockScreenContextProvider>
                         </BiometricContextProvider>
                       </WalletContextProvider>

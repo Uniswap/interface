@@ -2,6 +2,7 @@
 
 exports[`renders selection circle 1`] = `
 <View
+  sentry-label="Flex"
   style={
     [
       {

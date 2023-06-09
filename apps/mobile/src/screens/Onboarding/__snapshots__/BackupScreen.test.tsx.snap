@@ -2,6 +2,7 @@
 
 exports[`BackupScreen renders backup options when none are completed 1`] = `
 <View
+  sentry-label="Screen"
   style={
     [
       {
@@ -35,6 +36,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
     }
   >
     <View
+      sentry-label="Flex"
       style={
         [
           {
@@ -50,6 +52,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
       }
     >
       <View
+        sentry-label="Flex"
         style={
           [
             {
@@ -125,6 +128,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
         }
       />
       <View
+        sentry-label="Flex"
         style={
           [
             {
@@ -139,6 +143,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
         }
       >
         <View
+          sentry-label="Flex"
           style={
             [
               {
@@ -152,6 +157,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
           }
         >
           <View
+            sentry-label="Flex"
             style={
               [
                 {
@@ -196,6 +202,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
               testID="add-icloud-backup"
             >
               <View
+                sentry-label="Flex"
                 style={
                   [
                     {
@@ -244,6 +251,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                   }
                 />
                 <View
+                  sentry-label="Flex"
                   style={
                     [
                       {
@@ -257,6 +265,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                   }
                 >
                   <View
+                    sentry-label="Flex"
                     style={
                       [
                         {
@@ -270,6 +279,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                     }
                   >
                     <View
+                      sentry-label="Flex"
                       style={
                         [
                           {
@@ -377,6 +387,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
               testID="add-manual-backup"
             >
               <View
+                sentry-label="Flex"
                 style={
                   [
                     {
@@ -425,6 +436,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                   }
                 />
                 <View
+                  sentry-label="Flex"
                   style={
                     [
                       {
@@ -438,6 +450,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                   }
                 >
                   <View
+                    sentry-label="Flex"
                     style={
                       [
                         {
@@ -451,6 +464,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                     }
                   >
                     <View
+                      sentry-label="Flex"
                       style={
                         [
                           {
@@ -527,6 +541,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
             }
           />
           <View
+            sentry-label="Flex"
             style={
               [
                 {
@@ -568,6 +583,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
               }
             >
               <View
+                sentry-label="Flex"
                 style={
                   [
                     {
@@ -667,6 +683,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
               testID="next"
             >
               <View
+                sentry-label="Flex"
                 style={
                   [
                     {
@@ -710,6 +727,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
 
 exports[`BackupScreen renders backup options when some are completed 1`] = `
 <View
+  sentry-label="Screen"
   style={
     [
       {
@@ -743,6 +761,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
     }
   >
     <View
+      sentry-label="Flex"
       style={
         [
           {
@@ -758,6 +777,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
       }
     >
       <View
+        sentry-label="Flex"
         style={
           [
             {
@@ -833,6 +853,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
         }
       />
       <View
+        sentry-label="Flex"
         style={
           [
             {
@@ -847,6 +868,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
         }
       >
         <View
+          sentry-label="Flex"
           style={
             [
               {
@@ -860,6 +882,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
           }
         >
           <View
+            sentry-label="Flex"
             style={
               [
                 {
@@ -909,6 +932,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
               testID="add-icloud-backup"
             >
               <View
+                sentry-label="Flex"
                 style={
                   [
                     {
@@ -957,6 +981,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                   }
                 />
                 <View
+                  sentry-label="Flex"
                   style={
                     [
                       {
@@ -970,6 +995,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                   }
                 >
                   <View
+                    sentry-label="Flex"
                     style={
                       [
                         {
@@ -983,6 +1009,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                     }
                   >
                     <View
+                      sentry-label="Flex"
                       style={
                         [
                           {
@@ -1095,6 +1122,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
               testID="add-manual-backup"
             >
               <View
+                sentry-label="Flex"
                 style={
                   [
                     {
@@ -1143,6 +1171,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                   }
                 />
                 <View
+                  sentry-label="Flex"
                   style={
                     [
                       {
@@ -1156,6 +1185,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                   }
                 >
                   <View
+                    sentry-label="Flex"
                     style={
                       [
                         {
@@ -1169,6 +1199,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                     }
                   >
                     <View
+                      sentry-label="Flex"
                       style={
                         [
                           {
@@ -1245,6 +1276,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
             }
           />
           <View
+            sentry-label="Flex"
             style={
               [
                 {
@@ -1286,6 +1318,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
               }
             >
               <View
+                sentry-label="Flex"
                 style={
                   [
                     {
@@ -1385,6 +1418,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
               testID="next"
             >
               <View
+                sentry-label="Flex"
                 style={
                   [
                     {

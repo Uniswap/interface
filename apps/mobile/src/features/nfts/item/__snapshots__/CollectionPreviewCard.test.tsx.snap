@@ -33,6 +33,7 @@ exports[`renders collection preview card 1`] = `
   }
 >
   <View
+    sentry-label="Flex"
     style={
       [
         {
@@ -49,6 +50,7 @@ exports[`renders collection preview card 1`] = `
     }
   >
     <View
+      sentry-label="Flex"
       style={
         [
           {
@@ -123,6 +125,7 @@ exports[`renders collection preview card 1`] = `
         }
       />
       <View
+        sentry-label="Flex"
         style={
           [
             {
@@ -136,6 +139,7 @@ exports[`renders collection preview card 1`] = `
         }
       >
         <View
+          sentry-label="Flex"
           style={
             [
               {

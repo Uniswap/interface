@@ -3,6 +3,7 @@
 exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
 <View
   onTouchEnd={[Function]}
+  sentry-label="Flex"
   style={
     [
       {
@@ -15,6 +16,7 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
   }
 >
   <View
+    sentry-label="Flex"
     style={
       [
         {
@@ -99,6 +101,7 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
     />
     <View
       onLayout={[Function]}
+      sentry-label="Flex"
       style={
         [
           {
@@ -185,6 +188,7 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
         }
       >
         <View
+          sentry-label="Flex"
           style={
             [
               {
@@ -288,6 +292,7 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
     }
   />
   <View
+    sentry-label="Flex"
     style={
       [
         {

@@ -9,7 +9,7 @@ interface TransactionLoaderProps {
 
 export function TransactionLoader({ opacity }: TransactionLoaderProps): JSX.Element {
   return (
-    <Flex opacity={opacity} overflow="hidden">
+    <Flex opacity={opacity} overflow="hidden" sentry-label="TransactionLoader">
       <Flex
         grow
         row

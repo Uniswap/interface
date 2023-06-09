@@ -48,6 +48,7 @@ export function Shimmer({ children }: Props): JSX.Element {
   return (
     <MaskedView
       maskElement={children}
+      sentry-label="Shimmer"
       style={{
         width: layout.width,
         height: layout.height,

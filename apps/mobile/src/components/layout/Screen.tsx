@@ -59,7 +59,7 @@ function SafeAreaWithInsets({ children, edges, ...rest }: ScreenProps): JSX.Elem
 
 export function Screen({ bg = 'background0', children, ...rest }: ScreenProps): JSX.Element {
   return (
-    <SafeAreaWithInsets bg={bg} flex={1} {...rest}>
+    <SafeAreaWithInsets bg={bg} flex={1} sentry-label="Screen" {...rest}>
       {children}
     </SafeAreaWithInsets>
   )

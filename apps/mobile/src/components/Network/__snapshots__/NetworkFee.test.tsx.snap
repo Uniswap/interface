@@ -2,6 +2,7 @@
 
 exports[`NetworkFee renders a NetworkFee in a loading state 1`] = `
 <View
+  sentry-label="Flex"
   style={
     [
       {
@@ -44,6 +45,7 @@ exports[`NetworkFee renders a NetworkFee in a loading state 1`] = `
     }
   />
   <View
+    sentry-label="Flex"
     style={
       [
         {
@@ -56,6 +58,7 @@ exports[`NetworkFee renders a NetworkFee in a loading state 1`] = `
     }
   >
     <View
+      sentry-label="Flex"
       style={
         [
           {
@@ -141,6 +144,7 @@ exports[`NetworkFee renders a NetworkFee in a loading state 1`] = `
       }
     />
     <View
+      sentry-label="SpinningLoader"
       style={
         [
           {
@@ -171,6 +175,7 @@ exports[`NetworkFee renders a NetworkFee in a loading state 1`] = `
 
 exports[`NetworkFee renders a NetworkFee normally 1`] = `
 <View
+  sentry-label="Flex"
   style={
     [
       {
@@ -213,6 +218,7 @@ exports[`NetworkFee renders a NetworkFee normally 1`] = `
     }
   />
   <View
+    sentry-label="Flex"
     style={
       [
         {
@@ -225,6 +231,7 @@ exports[`NetworkFee renders a NetworkFee normally 1`] = `
     }
   >
     <View
+      sentry-label="Flex"
       style={
         [
           {
@@ -310,6 +317,7 @@ exports[`NetworkFee renders a NetworkFee normally 1`] = `
       }
     />
     <View
+      sentry-label="SpinningLoader"
       style={
         [
           {
@@ -340,6 +348,7 @@ exports[`NetworkFee renders a NetworkFee normally 1`] = `
 
 exports[`NetworkFee renders a NetworkFee with a warning 1`] = `
 <View
+  sentry-label="Flex"
   style={
     [
       {
@@ -382,6 +391,7 @@ exports[`NetworkFee renders a NetworkFee with a warning 1`] = `
     }
   />
   <View
+    sentry-label="Flex"
     style={
       [
         {
@@ -394,6 +404,7 @@ exports[`NetworkFee renders a NetworkFee with a warning 1`] = `
     }
   >
     <View
+      sentry-label="Flex"
       style={
         [
           {
@@ -479,6 +490,7 @@ exports[`NetworkFee renders a NetworkFee with a warning 1`] = `
       }
     />
     <View
+      sentry-label="SpinningLoader"
       style={
         [
           {

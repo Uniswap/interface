@@ -47,6 +47,7 @@ exports[`AccountHeader renders without error 1`] = `
     testID="manage"
   >
     <View
+      sentry-label="Flex"
       style={
         [
           {
@@ -59,6 +60,7 @@ exports[`AccountHeader renders without error 1`] = `
       }
     >
       <View
+        sentry-label="Flex"
         style={
           [
             {
@@ -72,6 +74,7 @@ exports[`AccountHeader renders without error 1`] = `
         }
       >
         <View
+          sentry-label="Flex"
           style={
             [
               {
@@ -275,6 +278,7 @@ exports[`AccountHeader renders without error 1`] = `
             }
           >
             <View
+              sentry-label="Flex"
               style={
                 [
                   {

@@ -5,6 +5,7 @@ exports[`PortfolioBalance renders without error 1`] = `
   onLayout={[Function]}
 >
   <View
+    sentry-label="Flex"
     style={
       [
         {
@@ -100,6 +101,7 @@ exports[`PortfolioBalance renders without error 1`] = `
       }
     />
     <View
+      sentry-label="Flex"
       style={
         [
           {
@@ -189,6 +191,7 @@ exports[`PortfolioBalance renders without error 2`] = `
   onLayout={[Function]}
 >
   <View
+    sentry-label="Flex"
     style={
       [
         {
@@ -251,6 +254,7 @@ exports[`PortfolioBalance renders without error 2`] = `
       }
     />
     <View
+      sentry-label="Flex"
       style={
         [
           {

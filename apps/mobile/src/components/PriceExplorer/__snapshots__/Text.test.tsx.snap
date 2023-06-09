@@ -315,6 +315,7 @@ exports[`RelativeChangeText renders loading state 1`] = `
 
 exports[`RelativeChangeText renders without error 1`] = `
 <View
+  sentry-label="Flex"
   style={
     [
       {

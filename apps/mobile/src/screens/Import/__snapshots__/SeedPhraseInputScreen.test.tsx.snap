@@ -2,6 +2,7 @@
 
 exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
 <View
+  sentry-label="Screen"
   style={
     [
       {
@@ -41,6 +42,7 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
     >
       <View>
         <View
+          sentry-label="Flex"
           style={
             [
               {
@@ -64,6 +66,7 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
           }
         >
           <View
+            sentry-label="Flex"
             style={
               [
                 {
@@ -139,6 +142,7 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
             }
           />
           <View
+            sentry-label="Flex"
             style={
               [
                 {
@@ -152,6 +156,7 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
             }
           >
             <View
+              sentry-label="Flex"
               style={
                 [
                   {
@@ -165,6 +170,7 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
             >
               <View
                 onTouchEnd={[Function]}
+                sentry-label="Flex"
                 style={
                   [
                     {
@@ -177,6 +183,7 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                 }
               >
                 <View
+                  sentry-label="Flex"
                   style={
                     [
                       {
@@ -261,6 +268,7 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                   />
                   <View
                     onLayout={[Function]}
+                    sentry-label="Flex"
                     style={
                       [
                         {
@@ -347,6 +355,7 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                       }
                     >
                       <View
+                        sentry-label="Flex"
                         style={
                           [
                             {
@@ -450,6 +459,7 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                   }
                 />
                 <View
+                  sentry-label="Flex"
                   style={
                     [
                       {
@@ -475,6 +485,7 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                 }
               />
               <View
+                sentry-label="Flex"
                 style={
                   [
                     {
@@ -583,6 +594,7 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
               testID="next"
             >
               <View
+                sentry-label="Flex"
                 style={
                   [
                     {

@@ -2,6 +2,7 @@
 
 exports[`renders a LongText 1`] = `
 <View
+  sentry-label="Flex"
   style={
     [
       {

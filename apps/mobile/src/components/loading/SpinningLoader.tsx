@@ -50,7 +50,7 @@ export function SpinningLoader({
     return <EmptySpinner color={theme.colors.textTertiary} height={size} width={size} />
   }
   return (
-    <AnimatedBox style={[animatedStyles]}>
+    <AnimatedBox sentry-label="SpinningLoader" style={[animatedStyles]}>
       <Loader color={theme.colors[color ?? 'textPrimary']} height={size} width={size} />
     </AnimatedBox>
   )

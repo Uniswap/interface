@@ -2,6 +2,7 @@
 
 exports[`renders a relative change 1`] = `
 <View
+  sentry-label="Flex"
   style={
     [
       {
@@ -64,6 +65,7 @@ exports[`renders a relative change 1`] = `
 
 exports[`renders placeholders with absolute change 1`] = `
 <View
+  sentry-label="Flex"
   style={
     [
       {
@@ -126,6 +128,7 @@ exports[`renders placeholders with absolute change 1`] = `
 
 exports[`renders placeholders without a change 1`] = `
 <View
+  sentry-label="Flex"
   style={
     [
       {

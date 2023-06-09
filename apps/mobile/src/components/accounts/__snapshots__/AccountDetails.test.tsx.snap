@@ -2,6 +2,7 @@
 
 exports[`AccountDetails renders without error 1`] = `
 <View
+  sentry-label="Flex"
   style={
     [
       {
@@ -15,6 +16,7 @@ exports[`AccountDetails renders without error 1`] = `
   }
 >
   <View
+    sentry-label="Flex"
     style={
       [
         {
@@ -29,6 +31,7 @@ exports[`AccountDetails renders without error 1`] = `
     }
   >
     <View
+      sentry-label="Flex"
       style={
         [
           {
@@ -232,6 +235,7 @@ exports[`AccountDetails renders without error 1`] = `
         }
       >
         <View
+          sentry-label="Flex"
           style={
             [
               {
@@ -281,6 +285,7 @@ exports[`AccountDetails renders without error 1`] = `
     }
   />
   <View
+    sentry-label="Flex"
     style={
       [
         {
@@ -317,6 +322,7 @@ exports[`AccountDetails renders without error 1`] = `
 
 exports[`AccountDetails renders without error with chevron 1`] = `
 <View
+  sentry-label="Flex"
   style={
     [
       {
@@ -330,6 +336,7 @@ exports[`AccountDetails renders without error with chevron 1`] = `
   }
 >
   <View
+    sentry-label="Flex"
     style={
       [
         {
@@ -344,6 +351,7 @@ exports[`AccountDetails renders without error with chevron 1`] = `
     }
   >
     <View
+      sentry-label="Flex"
       style={
         [
           {
@@ -547,6 +555,7 @@ exports[`AccountDetails renders without error with chevron 1`] = `
         }
       >
         <View
+          sentry-label="Flex"
           style={
             [
               {
@@ -596,6 +605,7 @@ exports[`AccountDetails renders without error with chevron 1`] = `
     }
   />
   <View
+    sentry-label="Flex"
     style={
       [
         {

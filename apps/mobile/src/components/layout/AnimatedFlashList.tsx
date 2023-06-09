@@ -17,5 +17,5 @@ export const AnimatedFlashList = forwardRef<
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     Pick<FlashListProps<any>, 'estimatedItemSize' | 'estimatedListSize' | 'getItemType'>
 >(({ ...restProps }, ref) => {
-  return <ReanimatedFlashList ref={ref} {...restProps} />
+  return <ReanimatedFlashList ref={ref} sentry-label="ReanimatedFlashList" {...restProps} />
 })

@@ -243,7 +243,7 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
         <Box pb="spacing4">
           <PortfolioBalance owner={activeAccount.address} />
         </Box>
-        <QuickActions />
+        <QuickActions sentry-label="QuickActions" />
       </Flex>
     )
   }, [activeAccount.address])
@@ -474,6 +474,7 @@ function QuickActions(): JSX.Element {
           flex={1}
           label={t('Buy')}
           name={ElementName.Buy}
+          sentry-label="BuyActionButton"
           onPress={onPressBuy}
         />
       ) : null}
@@ -482,6 +483,7 @@ function QuickActions(): JSX.Element {
         flex={1}
         label={t('Send')}
         name={ElementName.Send}
+        sentry-label="SendActionButton"
         onPress={onPressSend}
       />
       <ActionButton
@@ -489,6 +491,7 @@ function QuickActions(): JSX.Element {
         flex={1}
         label={t('Scan')}
         name={ElementName.WalletConnectScan}
+        sentry-label="ScanActionButton"
         onPress={onPressScan}
       />
     </Flex>

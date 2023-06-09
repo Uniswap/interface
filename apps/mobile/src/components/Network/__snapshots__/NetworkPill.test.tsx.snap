@@ -2,6 +2,7 @@
 
 exports[`NetworkPill renders a NetworkPill with border 1`] = `
 <View
+  sentry-label="Flex"
   style={
     [
       {
@@ -47,6 +48,7 @@ exports[`NetworkPill renders a NetworkPill with border 1`] = `
 
 exports[`NetworkPill renders a NetworkPill without image 1`] = `
 <View
+  sentry-label="Flex"
   style={
     [
       {
@@ -92,6 +94,7 @@ exports[`NetworkPill renders a NetworkPill without image 1`] = `
 
 exports[`NetworkPill renders an InlineNetworkPill 1`] = `
 <View
+  sentry-label="Flex"
   style={
     [
       {

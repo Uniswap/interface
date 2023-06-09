@@ -34,6 +34,7 @@ exports[`renders wallet preview card 1`] = `
   }
 >
   <View
+    sentry-label="Flex"
     style={
       [
         {
@@ -46,6 +47,7 @@ exports[`renders wallet preview card 1`] = `
     }
   >
     <View
+      sentry-label="Flex"
       style={
         [
           {
@@ -263,6 +265,7 @@ exports[`renders wallet preview card 1`] = `
       }
     />
     <View
+      sentry-label="Flex"
       style={
         [
           {

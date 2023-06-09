@@ -74,6 +74,7 @@ export function Flex({
       flexShrink={shrink ? 1 : flexShrink}
       flexWrap={flexWrap}
       justifyContent={centered ? 'center' : justifyContent}
+      sentry-label="Flex"
       {...boxProps}>
       {childrenArr.map((child, index, array) => (
         <React.Fragment key={index}>

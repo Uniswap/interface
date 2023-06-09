@@ -64,5 +64,10 @@ export const AnimatedBottomSheetFlatList = forwardRef<
   Animated.FlatList<any>,
   ReanimatedFlatlistProps<any>
 >((props, ref) => (
-  <AnimatedFlatList {...props} ref={ref} FlatListComponent={ReanimatedBottomSheetFlatList} />
+  <AnimatedFlatList
+    sentry-label="AnimatedBottomSheetFlatList"
+    {...props}
+    ref={ref}
+    FlatListComponent={ReanimatedBottomSheetFlatList}
+  />
 ))

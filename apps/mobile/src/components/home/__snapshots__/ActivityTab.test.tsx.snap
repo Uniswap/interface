@@ -2,6 +2,7 @@
 
 exports[`ActivityTab renders without error 1`] = `
 <View
+  sentry-label="Flex"
   style={
     [
       {
@@ -165,6 +166,7 @@ exports[`ActivityTab renders without error 1`] = `
             "onContentSizeChange": undefined,
             "onScroll": [Function],
             "renderItem": [Function],
+            "sentry-label": "ReanimatedFlashList",
             "showsVerticalScrollIndicator": false,
           },
           "shouldRefreshWithAnchoring": true,
@@ -206,6 +208,7 @@ exports[`ActivityTab renders without error 1`] = `
           },
         }
       }
+      sentry-label="ReanimatedFlashList"
       showsVerticalScrollIndicator={false}
       style={
         {
@@ -258,6 +261,7 @@ exports[`ActivityTab renders without error 1`] = `
 
 exports[`ActivityTab renders without error 2`] = `
 <View
+  sentry-label="Flex"
   style={
     [
       {
@@ -515,6 +519,7 @@ exports[`ActivityTab renders without error 2`] = `
             "onContentSizeChange": undefined,
             "onScroll": [Function],
             "renderItem": [Function],
+            "sentry-label": "ReanimatedFlashList",
             "showsVerticalScrollIndicator": false,
           },
           "shouldRefreshWithAnchoring": true,
@@ -556,6 +561,7 @@ exports[`ActivityTab renders without error 2`] = `
           },
         }
       }
+      sentry-label="ReanimatedFlashList"
       showsVerticalScrollIndicator={false}
       style={
         {

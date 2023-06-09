@@ -2,6 +2,7 @@
 
 exports[`RestoreCloudBackupScreen renders correctly 1`] = `
 <View
+  sentry-label="Screen"
   style={
     [
       {
@@ -35,6 +36,7 @@ exports[`RestoreCloudBackupScreen renders correctly 1`] = `
     }
   >
     <View
+      sentry-label="Flex"
       style={
         [
           {
@@ -50,6 +52,7 @@ exports[`RestoreCloudBackupScreen renders correctly 1`] = `
       }
     >
       <View
+        sentry-label="Flex"
         style={
           [
             {
@@ -125,6 +128,7 @@ exports[`RestoreCloudBackupScreen renders correctly 1`] = `
         }
       />
       <View
+        sentry-label="Flex"
         style={
           [
             {
@@ -154,6 +158,7 @@ exports[`RestoreCloudBackupScreen renders correctly 1`] = `
         >
           <View>
             <View
+              sentry-label="Flex"
               style={
                 [
                   {

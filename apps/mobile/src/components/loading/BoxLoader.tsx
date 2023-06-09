@@ -12,7 +12,7 @@ export function BoxLoader({
   ...props
 }: BoxLoaderProps): JSX.Element {
   return (
-    <Box>
+    <Box sentry-label="BoxLoader">
       {new Array(repeat).fill(null).map((_, i) => (
         <React.Fragment key={i}>
           <Box
