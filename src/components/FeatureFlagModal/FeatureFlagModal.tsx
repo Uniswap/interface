@@ -1,5 +1,6 @@
 import { BaseVariant, FeatureFlag, featureFlagSettings, useUpdateFlag } from 'featureFlags'
 import { UniswapXVariant, useUniswapXFlag } from 'featureFlags/flags/gouda'
+import { useNativeUSDCArbitrumFlag } from 'featureFlags/flags/nativeUsdcArbitrum'
 import { DetailsV2Variant, useDetailsV2Flag } from 'featureFlags/flags/nftDetails'
 import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
 import { UnifiedRouterVariant, useRoutingAPIV2Flag } from 'featureFlags/flags/unifiedRouter'
@@ -220,6 +221,12 @@ export default function FeatureFlagModal() {
         value={useUniswapXFlag()}
         featureFlag={FeatureFlag.uniswapXEnabled}
         label="Enable UniswapX"
+      />
+      <FeatureFlagOption
+        variant={BaseVariant}
+        value={useNativeUSDCArbitrumFlag()}
+        featureFlag={FeatureFlag.nativeUsdcArbitrum}
+        label="Enable Circle native USDC on Arbitrum"
       />
       <FeatureFlagGroup name="Debug">
         <FeatureFlagOption
