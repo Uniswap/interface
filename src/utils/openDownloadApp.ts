@@ -33,7 +33,7 @@ const openAppStore = (link: string) => {
   window.open(link, /* target = */ 'uniswap_wallet_appstore')
 }
 
-export const openWalletMicrosite = (link: string) => {
+export const openWalletMicrosite = (link = MICROSITE_LINK) => {
   sendAnalyticsEvent(InterfaceEventName.UNISWAP_WALLET_MICROSITE_OPENED)
   window.open(link, /* target = */ 'uniswap_wallet_microsite')
 }
