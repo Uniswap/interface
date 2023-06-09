@@ -5,16 +5,16 @@ import { ContextMenuAction, ContextMenuOnPressNativeEvent } from 'react-native-c
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { selectTokensVisibility } from 'src/features/favorites/selectors'
 import { toggleTokenVisibility, TokenVisibility } from 'src/features/favorites/slice'
-import { makeSentAndSwappedLocallyCurrencyIds } from 'src/features/transactions/selectors'
+import { useSelectLocalTxCurrencyIds } from 'src/features/transactions/hooks'
 import { EMPTY_ARRAY } from 'wallet/src/constants/misc'
 import { PortfolioBalance } from 'wallet/src/features/dataApi/types'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
-import { useAccounts } from 'wallet/src/features/wallet/hooks'
 import {
-  makeSelectAccountHideSmallBalances,
-  makeSelectAccountHideSpamTokens,
-} from 'wallet/src/features/wallet/selectors'
+  useAccounts,
+  useSelectAccountHideSmallBalances,
+  useSelectAccountHideSpamTokens,
+} from 'wallet/src/features/wallet/hooks'
 import { CurrencyId } from 'wallet/src/utils/currencyId'
 import { ONE_SECOND_MS } from 'wallet/src/utils/time'
 
@@ -78,10 +78,10 @@ function useAccountTokensVisiblitySettings(owner: Address): {
   accountTokensVisibility?: Record<string, TokenVisibility>
   sentOrSwappedLocally: Record<string, boolean>
 } {
-  const hideSmallBalances: boolean = useAppSelector(makeSelectAccountHideSmallBalances(owner))
-  const hideSpamTokens: boolean = useAppSelector(makeSelectAccountHideSpamTokens(owner))
+  const hideSmallBalances = useSelectAccountHideSmallBalances(owner)
+  const hideSpamTokens = useSelectAccountHideSpamTokens(owner)
+  const sentOrSwappedLocally = useSelectLocalTxCurrencyIds(owner)
   const tokensVisibility = useAppSelector(selectTokensVisibility)
-  const sentOrSwappedLocally = useAppSelector(makeSentAndSwappedLocallyCurrencyIds(owner))
   return {
     hideSmallBalances,
     hideSpamTokens,

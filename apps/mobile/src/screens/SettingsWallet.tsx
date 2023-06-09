@@ -44,12 +44,13 @@ import {
   editAccountActions,
 } from 'wallet/src/features/wallet/accounts/editAccountSaga'
 import { AccountType, BackupType } from 'wallet/src/features/wallet/accounts/types'
-import { useAccounts, useSelectAccountNotificationSetting } from 'wallet/src/features/wallet/hooks'
 import {
-  makeSelectAccountHideSmallBalances,
-  makeSelectAccountHideSpamTokens,
-  selectSortedSignerMnemonicAccounts,
-} from 'wallet/src/features/wallet/selectors'
+  useAccounts,
+  useSelectAccountHideSmallBalances,
+  useSelectAccountHideSpamTokens,
+  useSelectAccountNotificationSetting,
+} from 'wallet/src/features/wallet/hooks'
+import { selectSortedSignerMnemonicAccounts } from 'wallet/src/features/wallet/selectors'
 import { Screens } from './Screens'
 
 type Props = NativeStackScreenProps<SettingsStackParamList, Screens.SettingsWallet>
@@ -75,8 +76,8 @@ export function SettingsWallet({
     Object.values(addressToAccount).length === 1 ||
     (mnemonicWallets.length === 1 && currentAccount?.type === AccountType.SignerMnemonic)
 
-  const hideSmallBalances: boolean = useAppSelector(makeSelectAccountHideSmallBalances(address))
-  const hideSpamTokens: boolean = useAppSelector(makeSelectAccountHideSpamTokens(address))
+  const hideSmallBalances = useSelectAccountHideSmallBalances(address)
+  const hideSpamTokens = useSelectAccountHideSpamTokens(address)
   const notificationOSPermission = useNotificationOSPermissionsEnabled()
   const notificationsEnabledOnFirebase = useSelectAccountNotificationSetting(address)
   const [notificationSwitchEnabled, setNotificationSwitchEnabled] = useState<boolean>(

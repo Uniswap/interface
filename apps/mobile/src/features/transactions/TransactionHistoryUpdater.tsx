@@ -23,11 +23,12 @@ import {
   setNotificationStatus,
 } from 'wallet/src/features/notifications/slice'
 import { TransactionStatus, TransactionType } from 'wallet/src/features/transactions/types'
-import { useAccounts, useActiveAccountAddress } from 'wallet/src/features/wallet/hooks'
 import {
-  makeSelectAccountHideSpamTokens,
-  selectActiveAccountAddress,
-} from 'wallet/src/features/wallet/selectors'
+  useAccounts,
+  useActiveAccountAddress,
+  useSelectAccountHideSpamTokens,
+} from 'wallet/src/features/wallet/hooks'
+import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
 import { ONE_SECOND_MS } from 'wallet/src/utils/time'
 
 /**
@@ -108,7 +109,7 @@ function AddressTransactionHistoryUpdater({
   const fetchAndDispatchReceiveNotification = useFetchAndDispatchReceiveNotification()
 
   // dont show notifications on spam tokens if setting enabled
-  const hideSpamTokens = useAppSelector<boolean>(makeSelectAccountHideSpamTokens(address))
+  const hideSpamTokens = useSelectAccountHideSpamTokens(address)
 
   const localTransactions = useSelectAddressTransactions(address)
 

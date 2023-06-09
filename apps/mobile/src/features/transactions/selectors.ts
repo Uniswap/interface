@@ -47,7 +47,7 @@ export const makeSelectAddressTransactions = (
     })
   })
 
-export const makeSentAndSwappedLocallyCurrencyIds = (
+export const makeSelectLocalTxCurrencyIds = (
   address: Address | null
 ): Selector<MobileState, Record<string, boolean>> =>
   createSelector(selectTransactions, (transactions) => {

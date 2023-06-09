@@ -2,7 +2,7 @@ import { NetworkStatus } from '@apollo/client'
 import { FlashList } from '@shopify/flash-list'
 import React, { createElement, forwardRef, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useAppDispatch, useAppSelector } from 'src/app/hooks'
+import { useAppDispatch } from 'src/app/hooks'
 import { useAdaptiveFooterHeight } from 'src/components/home/hooks'
 import { NoTransactions } from 'src/components/icons/NoTransactions'
 import { Box, Flex } from 'src/components/layout'
@@ -36,8 +36,10 @@ import { isNonPollingRequestInFlight } from 'wallet/src/data/utils'
 import { useTransactionListQuery } from 'wallet/src/data/__generated__/types-and-hooks'
 import { usePersistedError } from 'wallet/src/features/dataApi/utils'
 import { TransactionDetails, TransactionType } from 'wallet/src/features/transactions/types'
-import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
-import { makeSelectAccountHideSpamTokens } from 'wallet/src/features/wallet/selectors'
+import {
+  useActiveAccountWithThrow,
+  useSelectAccountHideSpamTokens,
+} from 'wallet/src/features/wallet/hooks'
 
 type LoadingItem = {
   itemType: 'LOADING'
@@ -173,9 +175,7 @@ export const ActivityTab = forwardRef<FlashList<unknown>, TabProps>(
 
     // Hide all spam transactions if active wallet has enabled setting.
     const activeAccount = useActiveAccountWithThrow()
-    const hideSpamTokens = useAppSelector<boolean>(
-      makeSelectAccountHideSpamTokens(activeAccount.address)
-    )
+    const hideSpamTokens = useSelectAccountHideSpamTokens(activeAccount.address)
 
     const formattedTransactions = useMemo(() => {
       if (!data) return EMPTY_ARRAY

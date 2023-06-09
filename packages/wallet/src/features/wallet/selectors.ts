@@ -99,7 +99,7 @@ export const makeSelectAccountNotificationSetting = (
 export const makeSelectAccountHideSmallBalances = (
   address: Address
 ): Selector<RootState, boolean> =>
-  createSelector(selectAccounts, (accounts) => !accounts[address]?.showSmallBalances)
+  createSelector(selectAccounts, (accounts) => accounts?.[address]?.showSmallBalances ?? true)
 
 export const makeSelectAccountHideSpamTokens = (address: Address): Selector<RootState, boolean> =>
-  createSelector(selectAccounts, (accounts) => !accounts[address]?.showSpamTokens)
+  createSelector(selectAccounts, (accounts) => accounts?.[address]?.showSpamTokens ?? true)

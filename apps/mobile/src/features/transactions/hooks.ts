@@ -11,6 +11,7 @@ import { MobileEventName } from 'src/features/telemetry/constants'
 import { useCurrencyInfo } from 'src/features/tokens/useCurrencyInfo'
 import {
   makeSelectAddressTransactions,
+  makeSelectLocalTxCurrencyIds,
   makeSelectTransaction,
 } from 'src/features/transactions/selectors'
 import {
@@ -72,6 +73,10 @@ export function useSelectTransaction(
 
 export function useSelectAddressTransactions(address: Address | null): TransactionDetails[] {
   return useAppSelector(makeSelectAddressTransactions(address))
+}
+
+export function useSelectLocalTxCurrencyIds(address: Address | null): Record<string, boolean> {
+  return useAppSelector(makeSelectLocalTxCurrencyIds(address))
 }
 
 export function useCreateSwapFormState(

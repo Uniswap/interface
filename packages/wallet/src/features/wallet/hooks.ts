@@ -4,6 +4,8 @@ import { useAppSelector } from 'wallet/src/state'
 import { getValidAddress, sanitizeAddressText, shortenAddress } from 'wallet/src/utils/addresses'
 import { trimToLength } from 'wallet/src/utils/string'
 import {
+  makeSelectAccountHideSmallBalances,
+  makeSelectAccountHideSpamTokens,
   makeSelectAccountNotificationSetting,
   selectAccounts,
   selectActiveAccount,
@@ -70,6 +72,14 @@ export function useActiveAccountWithThrow(): Account {
 
 export function useSelectAccountNotificationSetting(address: Address): boolean {
   return useAppSelector(makeSelectAccountNotificationSetting(address))
+}
+
+export function useSelectAccountHideSmallBalances(address: string): boolean {
+  return useAppSelector(makeSelectAccountHideSmallBalances(address))
+}
+
+export function useSelectAccountHideSpamTokens(address: string): boolean {
+  return useAppSelector(makeSelectAccountHideSpamTokens(address))
 }
 
 /**
