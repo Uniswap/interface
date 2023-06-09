@@ -5,6 +5,8 @@ import { InterfaceEventName, InterfaceModalName } from '@uniswap/analytics-event
 import { Currency, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { sendEvent } from 'components/analytics'
+import { usePortfolioBalancesQuery } from 'graphql/data/__generated__/types-and-hooks'
+import { fromGraphQLChain } from 'graphql/data/util'
 import useDebounce from 'hooks/useDebounce'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useToggle from 'hooks/useToggle'
@@ -15,7 +17,6 @@ import { ChangeEvent, KeyboardEvent, RefObject, useCallback, useEffect, useMemo,
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
-import { useAllTokenBalances } from 'state/connection/hooks'
 import styled, { useTheme } from 'styled-components/macro'
 import { UserAddedToken } from 'types/tokens'
 
@@ -61,7 +62,7 @@ export function CurrencySearch({
   isOpen,
   onlyShowCurrenciesWithBalance,
 }: CurrencySearchProps) {
-  const { chainId } = useWeb3React()
+  const { chainId, account } = useWeb3React()
   const theme = useTheme()
 
   const [tokenLoaderTimerElapsed, setTokenLoaderTimerElapsed] = useState(false)
@@ -90,33 +91,55 @@ export function CurrencySearch({
     return Object.values(defaultTokens).filter(getTokenFilter(debouncedQuery))
   }, [defaultTokens, debouncedQuery])
 
-  const [balances, balancesAreLoading] = useAllTokenBalances()
+  const { data, loading: balancesAreLoading } = usePortfolioBalancesQuery({
+    skip: !account,
+    variables: { ownerAddress: account ?? '' },
+    fetchPolicy: 'cache-only', // PrefetchBalancesWrapper handles balance fetching/staleness; this component only reads from cache
+    errorPolicy: 'all',
+  })
+  const usdBalances = useMemo(() => {
+    return (
+      data?.portfolios?.[0].tokenBalances?.reduce((balanceMap, tokenBalance) => {
+        if (
+          tokenBalance.token?.chain &&
+          fromGraphQLChain(tokenBalance.token?.chain) === chainId &&
+          tokenBalance.token?.address !== undefined &&
+          tokenBalance.denominatedValue?.value !== undefined
+        ) {
+          const address = tokenBalance.token?.standard === 'ERC20' ? tokenBalance.token?.address : 'ETH'
+          balanceMap[address] = tokenBalance.denominatedValue?.value ?? 0
+        }
+        return balanceMap
+      }, {} as { [address: string]: number }) ?? {}
+    )
+  }, [chainId, data?.portfolios])
+
   const sortedTokens: Token[] = useMemo(
     () =>
       !balancesAreLoading
         ? filteredTokens
             .filter((token) => {
               if (onlyShowCurrenciesWithBalance) {
-                return balances[token.address]?.greaterThan(0)
+                return usdBalances[token.address] > 0
               }
 
               // If there is no query, filter out unselected user-added tokens with no balance.
               if (!debouncedQuery && token instanceof UserAddedToken) {
                 if (selectedCurrency?.equals(token) || otherSelectedCurrency?.equals(token)) return true
-                return balances[token.address]?.greaterThan(0)
+                return usdBalances[token.address.toLowerCase()] > 0
               }
               return true
             })
-            .sort(tokenComparator.bind(null, balances))
+            .sort(tokenComparator.bind(null, usdBalances))
         : [],
     [
-      balances,
       balancesAreLoading,
-      debouncedQuery,
       filteredTokens,
-      otherSelectedCurrency,
-      selectedCurrency,
+      usdBalances,
       onlyShowCurrenciesWithBalance,
+      debouncedQuery,
+      selectedCurrency,
+      otherSelectedCurrency,
     ]
   )
   const isLoading = Boolean(balancesAreLoading && !tokenLoaderTimerElapsed)
@@ -131,7 +154,7 @@ export function CurrencySearch({
 
     const tokens = filteredSortedTokens.filter((t) => !(t.equals(wrapped) || (disableNonToken && t.isNative)))
     const shouldShowWrapped =
-      !onlyShowCurrenciesWithBalance || (!balancesAreLoading && balances[wrapped.address]?.greaterThan(0))
+      !onlyShowCurrenciesWithBalance || (!balancesAreLoading && usdBalances[wrapped.address] > 0)
     const natives = (
       disableNonToken || native.equals(wrapped) ? [wrapped] : shouldShowWrapped ? [native, wrapped] : [native]
     ).filter((n) => n.symbol?.toLowerCase()?.indexOf(s) !== -1 || n.name?.toLowerCase()?.indexOf(s) !== -1)
@@ -142,7 +165,7 @@ export function CurrencySearch({
     filteredSortedTokens,
     onlyShowCurrenciesWithBalance,
     balancesAreLoading,
-    balances,
+    usdBalances,
     wrapped,
     disableNonToken,
     native,
