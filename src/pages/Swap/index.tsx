@@ -133,7 +133,7 @@ function largerPercentValue(a?: Percent, b?: Percent) {
 
 const TRADE_STRING = 'SwapRouter'
 
-export default function SwapPage({ className }: { className?: string }) {
+export default function SwapPage({ className, switchLocaleOff }: { className?: string; switchLocaleOff?: boolean }) {
   const { chainId: connectedChainId } = useWeb3React()
   const loadedUrlParams = useDefaultsFromURLSearch()
   return (
@@ -149,7 +149,7 @@ export default function SwapPage({ className }: { className?: string }) {
         />
         <NetworkAlert />
       </PageWrapper>
-      <SwitchLocaleLink />
+      {!switchLocaleOff && <SwitchLocaleLink />}
     </Trace>
   )
 }
