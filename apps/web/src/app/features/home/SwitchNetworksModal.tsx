@@ -6,12 +6,7 @@ import { Circle, Image, Popover, Text, XStack, YStack } from 'ui/src'
 import PowerIcon from 'ui/src/assets/icons/power.svg'
 import { Button } from 'ui/src/components/button/Button'
 import { iconSizes } from 'ui/src/theme/iconSizes'
-import {
-  ALL_SUPPORTED_CHAIN_IDS,
-  ChainId,
-  CHAIN_ID_TO_LOGO,
-  CHAIN_INFO,
-} from 'wallet/src/constants/chains'
+import { ALL_SUPPORTED_CHAIN_IDS, ChainId, CHAIN_INFO } from 'wallet/src/constants/chains'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
 export function SwitchNetworksModal(): JSX.Element {
@@ -60,7 +55,7 @@ export function SwitchNetworksModal(): JSX.Element {
               <XStack alignItems="center" flex={1} gap="$spacing12" paddingRight="$spacing8">
                 <Image
                   height={iconSizes.icon28}
-                  source={CHAIN_ID_TO_LOGO[chain]}
+                  source={CHAIN_INFO[chain].logo}
                   width={iconSizes.icon28}
                 />
                 <Text color="$white" variant="subheadLarge">

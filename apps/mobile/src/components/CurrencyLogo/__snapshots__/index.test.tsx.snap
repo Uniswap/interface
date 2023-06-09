@@ -54,18 +54,7 @@ exports[`renders a currency logo with network logo 1`] = `
         },
       ]
     }
-  >
-    <View
-      style={
-        [
-          {
-            "borderRadius": 999999,
-            "display": "flex",
-          },
-        ]
-      }
-    />
-  </View>
+  />
 </View>
 `;
 

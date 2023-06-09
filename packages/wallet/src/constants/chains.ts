@@ -162,15 +162,6 @@ export function isPolygonChain(
   return chainId === ChainId.PolygonMumbai || chainId === ChainId.Polygon
 }
 
-export const CHAIN_ID_TO_LOGO: Record<ChainId, ImageSourcePropType> = {
-  [ChainId.Mainnet]: ETHEREUM_LOGO,
-  [ChainId.Goerli]: GOERLI_LOGO,
-  [ChainId.Optimism]: OPTIMISM_LOGO,
-  [ChainId.ArbitrumOne]: ARBITRUM_LOGO,
-  [ChainId.Polygon]: POLYGON_LOGO,
-  [ChainId.PolygonMumbai]: POLYGON_LOGO,
-}
-
 export function getChainIdFromString(input: string): ChainId | undefined {
   const parsedInput = parseInt(input, 16)
   switch (parsedInput) {

@@ -1,9 +1,8 @@
 import { SpacingProps, SpacingShorthandProps } from '@shopify/restyle'
 import React from 'react'
-import { Image } from 'react-native'
+import { Image, StyleSheet } from 'react-native'
 import { style } from 'src/components/CurrencyLogo/styles'
 import { Box } from 'src/components/layout/Box'
-import { getNetworkColorKey } from 'src/utils/colors'
 import { iconSizes } from 'ui/src/theme/iconSizes'
 import { Theme } from 'ui/src/theme/restyle/theme'
 import { ChainId, CHAIN_INFO } from 'wallet/src/constants/chains'
@@ -11,62 +10,45 @@ import { ChainId, CHAIN_INFO } from 'wallet/src/constants/chains'
 type NetworkLogoProps = {
   chainId: ChainId
   size?: number
+  shape?: 'circle' | 'square'
 } & SpacingProps<Theme> &
   SpacingShorthandProps<Theme>
+
+export const SQUARE_BORDER_RADIUS = 6
 
 export function TransactionSummaryNetworkLogo({
   chainId,
   size = iconSizes.icon20,
 }: Pick<NetworkLogoProps, 'chainId' | 'size'>): JSX.Element {
-  const { logo } = CHAIN_INFO[chainId]
-  const backgroundColor = getNetworkColorKey(chainId)
-
-  // We need to wrap the network logo because it's a circle, but we need a rectangle,
-  // but we can use border and background color on the same view, as for some reason
-  // background color is visible through the border on the outline
-  // Similiar issue: https://stackoverflow.com/questions/43756623/react-native-border-radius-makes-outline
   return (
-    <Box borderColor="background0" borderRadius="rounded8" borderWidth={2}>
-      <Box backgroundColor={backgroundColor} borderColor="background0" style={style.innerWrapper}>
-        {logo && (
-          <Image
-            source={logo}
-            style={[
-              style.image,
-              {
-                width: size,
-                height: size,
-              },
-            ]}
-          />
-        )}
-      </Box>
+    <Box borderColor="background0" style={styles.squareLogoOutline}>
+      <NetworkLogo chainId={chainId} shape="square" size={size} />
     </Box>
   )
 }
 
-export function NetworkLogo({
+function _NetworkLogo({
   chainId,
+  shape = 'circle',
   size = iconSizes.icon20,
-  ...rest
-}: NetworkLogoProps): JSX.Element {
+}: NetworkLogoProps): JSX.Element | null {
   const { logo } = CHAIN_INFO[chainId]
-
-  return (
-    <Box borderRadius="roundedFull" {...rest}>
-      {logo && (
-        <Image
-          source={logo}
-          style={[
-            style.image,
-            {
-              width: size,
-              height: size,
-              borderRadius: size / 2,
-            },
-          ]}
-        />
-      )}
+  const borderRadius = shape === 'circle' ? size / 2 : SQUARE_BORDER_RADIUS
+  return logo ? (
+    <Box style={[{ borderRadius }, styles.iconWrapper]}>
+      <Image source={logo} style={[style.image, { width: size, height: size }]} />
     </Box>
-  )
+  ) : null
 }
+
+export const NetworkLogo = React.memo(_NetworkLogo)
+
+const styles = StyleSheet.create({
+  iconWrapper: {
+    overflow: 'hidden',
+  },
+  squareLogoOutline: {
+    borderRadius: 7, // when inner icon borderRadius = 6 and size = 20
+    borderWidth: 2,
+  },
+})
