@@ -36,11 +36,11 @@ export function useBestTrade(
   const autoRouterSupported = useAutoRouterSupported()
   const isWindowVisible = useIsWindowVisible()
 
+  const debouncedSwapQuoteFlagEnabled = useDebounceSwapQuoteFlag() === DebounceSwapQuoteVariant.Enabled
   const [debouncedAmount, debouncedOtherCurrency] = useDebounce(
     useMemo(() => [amountSpecified, otherCurrency], [amountSpecified, otherCurrency]),
-    useDebounceSwapQuoteFlag() === DebounceSwapQuoteVariant.Enabled ? DEBOUNCE_TIME_INCREASED : DEBOUNCE_TIME
+    debouncedSwapQuoteFlagEnabled ? DEBOUNCE_TIME_INCREASED : DEBOUNCE_TIME
   )
-  const inDebounce = (!debouncedAmount || !debouncedOtherCurrency) && Boolean(amountSpecified) && Boolean(otherCurrency)
 
   const isAWrapTransaction = useMemo(() => {
     if (!chainId || !amountSpecified || !debouncedOtherCurrency) return false
@@ -61,6 +61,8 @@ export function useBestTrade(
     routerPreference
   )
 
+  const inDebounce =
+    (!debouncedAmount && Boolean(amountSpecified)) || (!debouncedOtherCurrency && Boolean(otherCurrency))
   const isLoading = routingAPITrade.state === TradeState.LOADING || inDebounce
   const useFallback = (!autoRouterSupported || routingAPITrade.state === TradeState.NO_ROUTE_FOUND) && shouldGetTrade
 
