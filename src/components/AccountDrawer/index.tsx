@@ -183,11 +183,15 @@ function AccountDrawer() {
     }
   }, [walletDrawerOpen, toggleWalletDrawer])
 
+  // useStates for detecting swipe gestures
   const [yPosition, setYPosition] = useState(0)
   const [dragStartTop, setDragStartTop] = useState(true)
 
+  // useGesture hook for detecting swipe gestures
   const bind = useGesture({
+    // if the drawer is open and the user is dragging down, close the drawer
     onDrag: (state) => {
+      // if the user is dragging up, set dragStartTop to false
       if (state.movement[1] < 0) {
         setDragStartTop(false)
       } else if (
@@ -200,9 +204,11 @@ function AccountDrawer() {
         setYPosition(state.movement[1])
       }
     },
+    // reset the yPosition when the user stops dragging
     onDragEnd: (state) => {
       setYPosition(0)
     },
+    // set dragStartTop to true if the user starts dragging from the top of the drawer
     onDragStart: (state) => {
       if (scrollRef.current?.scrollTop === 0) {
         setDragStartTop(true)
