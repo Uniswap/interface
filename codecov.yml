@@ -29,7 +29,7 @@ flag_management:
   individual_flags:
     - name: unit-tests
     - name: e2e-tests
-      # e2e tests run across a matrix - wait until all machines have reported coverage.
+      # Wait until all machines have reported coverage - e2e tests run across 4 machines.
       after_n_builds: 4
       statuses:
         - type: patch
@@ -37,6 +37,8 @@ flag_management:
 
 comment:
   layout: flags
+  # Wait until all machines have reported coverage - e2e tests run across 4 machines + unit tests across 1.
+  after_n_builds: 5
   hide_comment_details: false
 
 github_checks:
