@@ -1,13 +1,17 @@
 import { getTestSelector } from '../utils'
 
 describe('Universal search bar', () => {
-  before(() => {
-    cy.visit('/')
+  function openSearch() {
     cy.get('[data-cy="magnifying-icon"]')
       .parent()
       .then(($navIcon) => {
         $navIcon.click()
       })
+  }
+
+  beforeEach(() => {
+    cy.visit('/')
+    openSearch()
   })
 
   it('should yield clickable result for regular token or nft collection search term', () => {
@@ -33,6 +37,36 @@ describe('Universal search bar', () => {
     // About section should have description of token.
     cy.get(getTestSelector('token-details-about-section')).should('exist')
     cy.contains('UNI is the governance token for Uniswap').should('exist')
+  })
+
+  it('should go to the right result when recent results are shown and you search something new', () => {
+    // Search for uni token by name.
+    cy.get('[data-cy="search-bar-input"]').last().clear().type('uni')
+    cy.get('[data-cy="searchbar-token-row-UNI"]')
+      .should('contain.text', 'Uniswap')
+      .and('contain.text', 'UNI')
+      .and('contain.text', '$')
+      .and('contain.text', '%')
+
+    // Clear search
+    cy.get('[data-cy="search-bar-input"]').last().clear()
+
+    // Close search
+    cy.get('[data-cy="search-bar-input"]').last().type('{esc}')
+
+    openSearch()
+
+    // Search a different token by name.
+    cy.get('[data-cy="search-bar-input"]').last().type('eth')
+
+    // Validate ETH result now exists.
+    cy.get('[data-cy="searchbar-token-row-ETH"]').contains('Ether').should('exist')
+
+    // Hit enter
+    cy.get('[data-cy="search-bar-input"]').last().type('{enter}')
+
+    // Validate we went to ethereum address
+    cy.url().should('contain', 'tokens/ethereum/NATIVE')
   })
 
   it.skip('should show recent tokens and popular tokens with empty search term', () => {
