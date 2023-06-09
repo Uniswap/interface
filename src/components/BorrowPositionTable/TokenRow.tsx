@@ -624,7 +624,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
 
   const now = moment();
   const [timeLeft, isOverDue] = useMemo(() => {
-    const duration = moment.duration(moment.unix(Number(position.openTime)).add(1, 'days').diff(now))
+    const duration = moment.duration(moment.unix(Number(position.repayTime)).add(1, 'days').diff(now))
     const hours = duration.hours();
     const isNegative = hours < 0;
     const minutes = duration.minutes()
@@ -666,7 +666,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
   // unused premium * (
   const remainingPremium = useMemo(() => {
     if (position) {
-      const timeLeft = moment.duration(moment.unix(Number(position.openTime)).add(1, 'days').diff(now));
+      const timeLeft = moment.duration(moment.unix(Number(position.repayTime)).add(1, 'days').diff(now));
       return position.unusedPremium * (timeLeft.asSeconds() / 86400);
     }
     return "-"
@@ -738,7 +738,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
               <TruncatedTableText>
                 {(remainingPremium)}
               </TruncatedTableText>
-              {" " + inputCurrencySymbol}
+              {" " + outputCurrencySymbol}
             </Trans>
           }
           position={position}

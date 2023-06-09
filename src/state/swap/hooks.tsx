@@ -598,21 +598,7 @@ export function useDerivedLeverageCreationInfo({ allowance } : { allowance: Appr
       inputCurrency?.wrapped && 
       debouncedAmount
     ) {
-      const position: any = contractResult[0]
-      const expectedOutput = new BN(position.totalPosition.toString()).shiftedBy(-outputCurrency?.wrapped.decimals).toNumber()
-      const borrowedAmount = new BN(position.totalDebtInput.toString()).shiftedBy(-inputCurrency?.wrapped.decimals).toNumber()
-      const strikePrice = new BN(expectedOutput).div(new BN(borrowedAmount).plus(debouncedAmount.toExact())).toNumber()
-
-      const quotedPremium = new BN((contractResult[2] as any)
-        .toString()).shiftedBy(-inputCurrency?.wrapped.decimals).toNumber()
-      const returnedPremium = new BN((contractResult[1] as any)
-        .toString()).shiftedBy(-inputCurrency?.wrapped.decimals).toNumber()
-      let t = new BN(strikePrice).minus(initialPrice.toFixed(DEFAULT_ERC20_DECIMALS)).abs().dividedBy(initialPrice.toFixed(DEFAULT_ERC20_DECIMALS)).multipliedBy(1000).toFixed(0)
-      const priceImpact = new Percent(t, 1000)
-
-      const effectiveLeverage = new BN((Number(borrowedAmount) + Number(debouncedAmount.toExact()) + Number(quotedPremium)) / (Number(debouncedAmount.toExact()) + Number(quotedPremium))).toNumber()
-
-      // existing position
+            // existing position
       let _existingPosition
       let existingTotalDebtInput
       let existingTotalPosition
@@ -625,6 +611,22 @@ export function useDerivedLeverageCreationInfo({ allowance } : { allowance: Appr
         tokenId = Number(existingPosition.tokenId)
         existingCollateral = existingPosition.initialCollateral
       }
+
+      const position: any = contractResult[0]
+      const expectedOutput = new BN(position.totalPosition.toString()).shiftedBy(-outputCurrency?.wrapped.decimals).toNumber()
+      const borrowedAmount = new BN(position.totalDebtInput.toString()).shiftedBy(-inputCurrency?.wrapped.decimals).toNumber()
+      const strikePrice = new BN(expectedOutput).div(new BN(borrowedAmount ).plus(debouncedAmount.toExact() )).toNumber()
+
+      const quotedPremium = new BN((contractResult[2] as any)
+        .toString()).shiftedBy(-inputCurrency?.wrapped.decimals).toNumber()
+      const returnedPremium = new BN((contractResult[1] as any)
+        .toString()).shiftedBy(-inputCurrency?.wrapped.decimals).toNumber()
+      let t = new BN(strikePrice).minus(initialPrice.toFixed(DEFAULT_ERC20_DECIMALS)).abs().dividedBy(initialPrice.toFixed(DEFAULT_ERC20_DECIMALS)).multipliedBy(1000).toFixed(0)
+      const priceImpact = new Percent(t, 1000)
+
+      const effectiveLeverage = new BN((Number(borrowedAmount) + Number(debouncedAmount.toExact()) + Number(quotedPremium)) / (Number(debouncedAmount.toExact()) + Number(quotedPremium))).toNumber()
+
+
       
       return {
         inputAmount: debouncedAmount,
@@ -632,7 +634,7 @@ export function useDerivedLeverageCreationInfo({ allowance } : { allowance: Appr
         state: tradeState,
         expectedOutput,
         strikePrice,
-        quotedPremium: quotedPremium - returnedPremium,
+        quotedPremium: quotedPremium, //- returnedPremium,
         priceImpact,
         remainingPremium: returnedPremium,
         effectiveLeverage: effectiveLeverage,

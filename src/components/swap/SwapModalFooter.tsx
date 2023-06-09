@@ -389,7 +389,7 @@ function useDerivedLeverageReduceInfo(
       const formattedSlippage = new BN(allowedSlippage).plus(100).shiftedBy(16).toFixed(0)
       const formattedReduceAmount = new BN(reduceAmount).shiftedBy(18).toFixed(0);
       const inputReduceAmount =
-      Number(position.totalPositionRaw)== Number(formattedReduceAmount)
+      Number(position.totalPositionRaw) <= Number(formattedReduceAmount)
       ? position.totalPositionRaw : formattedReduceAmount
       setState(DerivedInfoState.LOADING)
 
@@ -891,7 +891,6 @@ export function ReduceLeverageModalFooter({
       const inputReduceAmount =
       Number(position.totalPositionRaw)== Number(formattedReduceAmount)
       ? position.totalPositionRaw : formattedReduceAmount
-      
       return () => {
         setAttemptingTxn(true)
         leverageManagerContract.reducePosition(
@@ -1082,7 +1081,7 @@ export function ReduceLeverageModalFooter({
                           <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
                             <TruncatedText>
                               {
-                                `${inputIsToken0 ? new BN(token1Amount).abs().toString() : new BN(token0Amount).abs().toString()}  ${!inputIsToken0 ? token0?.symbol : token1?.symbol}`
+                                `${inputIsToken0 ? new BN(reduceAmount).abs().toString() : new BN(reduceAmount).abs().toString()}  ${!inputIsToken0 ? token0?.symbol : token1?.symbol}`
                               }
                             </TruncatedText>
                           </ThemedText.DeprecatedBlack>
@@ -1119,7 +1118,7 @@ export function ReduceLeverageModalFooter({
                           <MouseoverTooltip
                             text={
                               <Trans>
-                                The amount of debt automatically repaid when closing
+                                Premium remaining returned from last payment 
                               </Trans>
                             }
                           >
@@ -1143,7 +1142,7 @@ export function ReduceLeverageModalFooter({
                           <MouseoverTooltip
                             text={
                               <Trans>
-                                The amount of debt automatically repaid when closing
+                                The new quoted premium to pay
                               </Trans>
                             }
                           >
@@ -1162,7 +1161,30 @@ export function ReduceLeverageModalFooter({
                           </ThemedText.DeprecatedBlack>
                         </TextWithLoadingPlaceholder>
                       </RowBetween>
-
+                      <RowBetween>
+                        <RowFixed>
+                          <MouseoverTooltip
+                            text={
+                              <Trans>
+                                Trade asset left after repaying debt
+                              </Trans>
+                            }
+                          >
+                            <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
+                              <Trans>Returned Amount</Trans>
+                            </ThemedText.DeprecatedSubHeader>
+                          </MouseoverTooltip>
+                        </RowFixed>
+                        <TextWithLoadingPlaceholder syncing={loading} width={65}>
+                          <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
+                            <TruncatedText>
+                              {
+                                returnedAmount && `${Number(returnedAmount)}  ${inputIsToken0 ? token1?.symbol : token0?.symbol}`
+                              }
+                            </TruncatedText>
+                          </ThemedText.DeprecatedBlack>
+                        </TextWithLoadingPlaceholder>
+                      </RowBetween>
                       {/*<RowBetween>
                         <RowFixed>
                           <MouseoverTooltip
@@ -1205,8 +1227,15 @@ export function ReduceLeverageModalFooter({
                           <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
                             <TruncatedText>
                               {
-                                `${(Number(pnl))}  ${inputIsToken0 ? token0?.symbol : token1?.symbol}`
+                                `${(Math.round(Number(pnl)*1000)/1000)}  ${inputIsToken0 ? token0?.symbol : token1?.symbol}`
+
                               }
+                            </TruncatedText>
+                            <TruncatedText>
+                              ({
+                                `${100* (Math.round(Number(pnl)*1000)/1000)/(Number(initCollateral))} %`
+
+                              })
                             </TruncatedText>
                           </ThemedText.DeprecatedBlack>
                         </TextWithLoadingPlaceholder>
@@ -1980,7 +2009,7 @@ export function BorrowReduceCollateralModalFooter({
                           <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
                             <TruncatedText>
                               {
-                                unusedPremium && `${Number(unusedPremium)}  ${inputIsToken0 ? token0?.symbol : token1?.symbol}`
+                                unusedPremium && `${Number(unusedPremium)}  ${inputIsToken0 ? token1?.symbol : token0?.symbol}`
                               }
                             </TruncatedText>
                           </ThemedText.DeprecatedBlack>
@@ -2089,7 +2118,9 @@ export function BorrowReduceDebtModalFooter({
   const addTransaction = useTransactionAdder()
 
   const handleReducePosition = useMemo(() => {
-    if (borrowManagerContract && position && Number(reduceAmount) > 0 && Number(reduceAmount) <= Number(position.initialCollateral)) {
+    console.log('wtf???', borrowManagerContract, position,Number(reduceAmount), Number(position?.initialCollateral) )
+
+    if (borrowManagerContract && position && Number(reduceAmount) > 0 && Number(reduceAmount) <= Number(position.totalDebtInput)) {
       const formattedReduceAmount = new BN(reduceAmount).shiftedBy(18).toFixed(0);
       return () => {
         setAttemptingTxn(true)
@@ -2242,12 +2273,12 @@ export function BorrowReduceDebtModalFooter({
                           <MouseoverTooltip
                             text={
                               <Trans>
-                                The amount of position you are closing
+                                The amount repaying
                               </Trans>
                             }
                           >
                             <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
-                              <Trans>Position to close</Trans>
+                              <Trans>Repay Amount</Trans>
                             </ThemedText.DeprecatedSubHeader>
                           </MouseoverTooltip>
                         </RowFixed>
@@ -2255,7 +2286,7 @@ export function BorrowReduceDebtModalFooter({
                           <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
                             <TruncatedText>
                               {
-                                `${inputIsToken0 ? new BN(token1Amount).abs().toString() : new BN(token0Amount).abs().toString()}  ${!inputIsToken0 ? token0?.symbol : token1?.symbol}`
+                                `${inputIsToken0 ? new BN(reduceAmount).abs().toString() : new BN(reduceAmount).abs().toString()}  ${!inputIsToken0 ? token0?.symbol : token1?.symbol}`
                               }
                             </TruncatedText>
 
@@ -2263,7 +2294,7 @@ export function BorrowReduceDebtModalFooter({
                         </TextWithLoadingPlaceholder>
                       </RowBetween>
                       <Separator />
-                      <RowBetween>
+                      {/*<RowBetween>
                         <RowFixed>
                           <MouseoverTooltip
                             text={
@@ -2287,13 +2318,13 @@ export function BorrowReduceDebtModalFooter({
                             </TruncatedText>
                           </ThemedText.DeprecatedBlack>
                         </TextWithLoadingPlaceholder>
-                      </RowBetween>
+                      </RowBetween>*/}
                       <RowBetween>
                         <RowFixed>
                           <MouseoverTooltip
                             text={
                               <Trans>
-                                The amount of debt automatically repaid when closing
+                                The amount of premiums returned
                               </Trans>
                             }
                           >
@@ -2306,7 +2337,7 @@ export function BorrowReduceDebtModalFooter({
                           <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
                             <TruncatedText>
                               {
-                                unusedPremium && `${Number(unusedPremium)}  ${inputIsToken0 ? token0?.symbol : token1?.symbol}`
+                                unusedPremium && `${Number(unusedPremium)}  ${inputIsToken0 ? token1?.symbol : token0?.symbol}`
                               }
                             </TruncatedText>
                           </ThemedText.DeprecatedBlack>
@@ -2317,7 +2348,7 @@ export function BorrowReduceDebtModalFooter({
                           <MouseoverTooltip
                             text={
                               <Trans>
-                                The amount of debt automatically repaid when closing
+                                The new premiums to be paid
                               </Trans>
                             }
                           >
@@ -2336,30 +2367,7 @@ export function BorrowReduceDebtModalFooter({
                           </ThemedText.DeprecatedBlack>
                         </TextWithLoadingPlaceholder>
                       </RowBetween>
-                      <RowBetween>
-                        <RowFixed>
-                          <MouseoverTooltip
-                            text={
-                              <Trans>
-                                Expected PnL from what you originally paid
-                              </Trans>
-                            }
-                          >
-                            <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
-                              <Trans>Expected PnL</Trans>
-                            </ThemedText.DeprecatedSubHeader>
-                          </MouseoverTooltip>
-                        </RowFixed>
-                        <TextWithLoadingPlaceholder syncing={loading} width={65}>
-                          <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
-                            <TruncatedText>
-                              {
-                                `${(Number(pnl))}  ${inputIsToken0 ? token0?.symbol : token1?.symbol}`
-                              }
-                            </TruncatedText>
-                          </ThemedText.DeprecatedBlack>
-                        </TextWithLoadingPlaceholder>
-                      </RowBetween>
+                      
                     </AutoColumn>
 
                   </StyledCard>
