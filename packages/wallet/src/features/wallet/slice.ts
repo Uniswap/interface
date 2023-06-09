@@ -112,7 +112,6 @@ const slice = createSlice({
     ) => {
       state.settings.tokensOrderBy = newTokensOrderBy
     },
-
     resetWallet: () => initialWalletState,
   },
 })

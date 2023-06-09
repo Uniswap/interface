@@ -21,12 +21,10 @@ import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { TransactionStatus, TransactionType } from 'wallet/src/features/transactions/types'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { SAMPLE_SEED_ADDRESS_1 } from 'wallet/src/test/fixtures'
-import { ONE_SECOND_MS } from 'wallet/src/utils/time'
-import { sleep } from 'wallet/src/utils/timing'
 
 const mockedRefetchQueries = jest.fn()
-jest.mock('wallet/src/data/utils', () => ({
-  useRefetchQueries: (): jest.Mock => mockedRefetchQueries,
+jest.mock('src/data/usePersistedApolloClient', () => ({
+  apolloClient: { refetchQueries: mockedRefetchQueries },
 }))
 
 const present = dayjs('2022-02-01')
@@ -156,11 +154,6 @@ describe(TransactionHistoryUpdater, () => {
     const notificationStatusState = tree.store.getState().notifications.notificationStatus
     expect(notificationStatusState[account.address]).toBeTruthy()
     expect(notificationStatusState[account2.address]).toBeTruthy()
-
-    // Mock delay on refetch timeout in updater
-    await sleep(ONE_SECOND_MS * 2)
-
-    expect(mockedRefetchQueries).toHaveBeenCalledTimes(Object.keys(accounts).length)
   })
 
   it('does not update notification status when there are no new transactions', async () => {

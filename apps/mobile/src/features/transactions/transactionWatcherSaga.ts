@@ -4,6 +4,8 @@ import { BigNumberish, providers } from 'ethers'
 import appsFlyer from 'react-native-appsflyer'
 import { appSelect } from 'src/app/hooks'
 import { i18n } from 'src/app/i18n'
+import { GQLQueries } from 'src/data/queries'
+import { apolloClient } from 'src/data/usePersistedApolloClient'
 import { fetchFiatOnRampTransaction } from 'src/features/fiatOnRamp/api'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { attemptCancelTransaction } from 'src/features/transactions/cancelTransactionSaga'
@@ -36,6 +38,7 @@ import {
   TransactionType,
 } from 'wallet/src/features/transactions/types'
 import { getProvider } from 'wallet/src/features/wallet/context'
+import { ONE_SECOND_MS } from 'wallet/src/utils/time'
 
 export function* transactionWatcher() {
   logger.debug('transactionWatcherSaga', 'transactionWatcher', 'Starting tx watcher')
@@ -313,6 +316,17 @@ function* finalizeTransaction(
     })
   )
 
+  // Flip status to true so we can render Notification badge on home
+  yield* put(setNotificationStatus({ address: transaction.from, hasNotifications: true }))
+  // Trigger a refetch of queries so balances is updated on home screen when a local tx is finalized
+  setTimeout(
+    () =>
+      apolloClient?.refetchQueries({
+        include: [GQLQueries.PortfolioBalances, GQLQueries.TransactionList],
+      }),
+    ONE_SECOND_MS // Delay by 1s to give a buffer for data sources to synchronize
+  )
+
   if (transaction.typeInfo.type === TransactionType.Swap) {
     const hasDoneASwap = yield* select(selectHasDoneASwap)
     if (!hasDoneASwap) {
@@ -320,9 +334,6 @@ function* finalizeTransaction(
       appsFlyer.logEvent('swap_completed', {})
     }
   }
-
-  // Flip status to true so we can render Notification badge on home
-  yield* put(setNotificationStatus({ address: transaction.from, hasNotifications: true }))
 }
 
 /**

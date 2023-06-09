@@ -1,7 +1,10 @@
 import { Linking } from 'react-native'
 import OneSignal, { NotificationReceivedEvent, OpenedEvent } from 'react-native-onesignal'
+import { GQLQueries } from 'src/data/queries'
+import { apolloClient } from 'src/data/usePersistedApolloClient'
 import { config } from 'wallet/src/config'
 import { logger } from 'wallet/src/features/logger/logger'
+import { ONE_SECOND_MS } from 'wallet/src/utils/time'
 
 export const initOneSignal = (): void => {
   OneSignal.setLogLevel(6, 0)
@@ -17,6 +20,14 @@ export const initOneSignal = (): void => {
       'Onesignal',
       'setNotificationOpenedHandler',
       `Notification opened: ${event.notification}`
+    )
+
+    setTimeout(
+      () =>
+        apolloClient?.refetchQueries({
+          include: [GQLQueries.PortfolioBalances, GQLQueries.TransactionList],
+        }),
+      ONE_SECOND_MS // Delay by 1s to give a buffer for data sources to synchronize
     )
 
     // This emits a url event when coldStart = false. Don't call openURI because that will

@@ -5,12 +5,13 @@ import React, { useEffect, useMemo } from 'react'
 import { View } from 'react-native'
 import { batch } from 'react-redux'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
+import { GQLQueries } from 'src/data/queries'
+import { apolloClient } from 'src/data/usePersistedApolloClient'
 import { selectLastTxNotificationUpdate } from 'src/features/notifications/selectors'
 import { buildReceiveNotification } from 'src/features/notifications/utils'
 import { parseDataResponseToTransactionDetails } from 'src/features/transactions/history/utils'
 import { useSelectAddressTransactions } from 'src/features/transactions/hooks'
 import { PollingInterval } from 'wallet/src/constants/misc'
-import { useRefetchQueries } from 'wallet/src/data/utils'
 import {
   TransactionHistoryUpdaterQueryResult,
   TransactionListQuery,
@@ -113,8 +114,6 @@ function AddressTransactionHistoryUpdater({
 
   const localTransactions = useSelectAddressTransactions(address)
 
-  const refetchQueries = useRefetchQueries()
-
   useEffect(() => {
     batch(async () => {
       let newTransactionsFound = false
@@ -158,14 +157,9 @@ function AddressTransactionHistoryUpdater({
           )
         }
 
-        // Delay 1s to ensure NXYZ balances sync after we detect this new txn. (As balances pulled
-        // from different data source)
-        setTimeout(
-          // NOTE: every wallet may call this on new transaction.
-          // It may be better to batch this action, or target specific queries.
-          refetchQueries,
-          ONE_SECOND_MS
-        )
+        apolloClient?.refetchQueries({
+          include: [GQLQueries.PortfolioBalances, GQLQueries.TransactionList],
+        })
       }
     })
   }, [
@@ -177,7 +171,6 @@ function AddressTransactionHistoryUpdater({
     hideSpamTokens,
     lastTxNotificationUpdateTimestamp,
     localTransactions,
-    refetchQueries,
   ])
 
   return null
@@ -185,11 +178,11 @@ function AddressTransactionHistoryUpdater({
 
 /*
  * Fetch and search recent transactions for receive txn. If confirmed since the last status update timestamp,
- * dispatch notification update. We specical case here because receive is never initiated within app.
+ * dispatch notification update. We special case here because receive is never initiated within app.
  *
  * Note: we opt for a waterfall request here because full transaction data is a large query that we dont
  * want to submit every polling interval - only fetch this data if new txn is detected. This ideally gets
- * replaced with a subcription to new transactions with more full txn data.
+ * replaced with a subscription to new transactions with more full txn data.
  */
 export function useFetchAndDispatchReceiveNotification(): (
   address: string,

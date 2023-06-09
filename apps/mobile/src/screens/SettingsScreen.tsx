@@ -87,7 +87,7 @@ export function SettingsScreen(): JSX.Element {
               <FaceIdIcon {...iconProps} />
             ),
           },
-          // @TODO: [MOB-250] add back testnet toggle once nxyz supports testnets
+          // @TODO: [MOB-250] add back testnet toggle once we support testnets
         ],
       },
       {

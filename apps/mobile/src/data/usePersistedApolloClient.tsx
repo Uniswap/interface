@@ -13,6 +13,8 @@ import {
 } from 'wallet/src/data/links'
 import { isNonJestDev } from 'wallet/src/utils/environment'
 
+export let apolloClient: ApolloClient<NormalizedCacheObject> | null = null
+
 const mmkv = new MMKV()
 if (isNonJestDev()) {
   // requires Flipper plugin `react-native-mmkv` to be installed
@@ -28,31 +30,32 @@ export const usePersistedApolloClient = (): ApolloClient<NormalizedCacheObject> 
       const storage = new MMKVWrapper(mmkv)
       const cache = await initAndPersistCache(storage)
 
-      setClient(
-        new ApolloClient({
-          link: from([
-            getErrorLink(),
-            // requires typing outside of wallet package
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            getPerformanceLink((args: any) =>
-              sendAnalyticsEvent(MobileEventName.PerformanceGraphql, args)
-            ),
-            getRestLink(),
-            getGraphqlHttpLink(),
-          ]),
-          cache,
-          defaultOptions: {
-            watchQuery: {
-              // NOTE: when polling is enabled, if there is cached data, the first request is skipped.
-              // `cache-and-network` ensures we send a request on first query, keeping queries
-              // across the app in sync.
-              fetchPolicy: 'cache-and-network',
-              // ensures query is returning data even if some fields errored out
-              errorPolicy: 'all',
-            },
+      const newClient = new ApolloClient({
+        link: from([
+          getErrorLink(),
+          // requires typing outside of wallet package
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          getPerformanceLink((args: any) =>
+            sendAnalyticsEvent(MobileEventName.PerformanceGraphql, args)
+          ),
+          getRestLink(),
+          getGraphqlHttpLink(),
+        ]),
+        cache,
+        defaultOptions: {
+          watchQuery: {
+            // NOTE: when polling is enabled, if there is cached data, the first request is skipped.
+            // `cache-and-network` ensures we send a request on first query, keeping queries
+            // across the app in sync.
+            fetchPolicy: 'cache-and-network',
+            // ensures query is returning data even if some fields errored out
+            errorPolicy: 'all',
           },
-        })
-      )
+        },
+      })
+
+      apolloClient = newClient
+      setClient(newClient)
     }
 
     init()
