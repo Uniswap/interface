@@ -83,9 +83,9 @@ export function useSwapCallback(
         swapInfo as UniswapXOrderDetails['swapInfo']
       )
     } else {
-      addTransaction(result.response, swapInfo)
+      addTransaction(result.response, swapInfo, deadline?.toNumber())
     }
 
     return result
-  }, [account, addOrder, addTransaction, allowedSlippage, chainId, swapCallback, trade])
+  }, [account, addOrder, addTransaction, allowedSlippage, chainId, deadline, swapCallback, trade])
 }

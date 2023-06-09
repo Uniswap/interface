@@ -21,26 +21,53 @@ describe('application reducer', () => {
     })
   })
 
-  describe('addPopup', () => {
-    it('adds the popup to list with a generated id', () => {
-      store.dispatch(addPopup({ content: { txn: { hash: 'abc' } } }))
-      const list = store.getState().popupList
-      expect(list).toHaveLength(1)
-      expect(typeof list[0].key).toEqual('string')
-      expect(list[0].show).toEqual(true)
-      expect(list[0].content).toEqual({ txn: { hash: 'abc' } })
-      expect(list[0].removeAfterMs).toEqual(10000)
+  describe('popupList', () => {
+    describe('addPopup', () => {
+      it('adds the popup to list with a generated id', () => {
+        store.dispatch(addPopup({ content: { txn: { hash: 'abc' } } }))
+        const list = store.getState().popupList
+        expect(list).toEqual([
+          {
+            key: expect.any(String),
+            show: true,
+            content: { txn: { hash: 'abc' } },
+            removeAfterMs: 10000,
+          },
+        ])
+      })
+
+      it('replaces any existing popups with the same key', () => {
+        store.dispatch(addPopup({ key: 'abc', content: { txn: { hash: 'abc' } } }))
+        store.dispatch(addPopup({ key: 'abc', content: { txn: { hash: 'def' } } }))
+        const list = store.getState().popupList
+        expect(list).toEqual([
+          {
+            key: 'abc',
+            show: true,
+            content: { txn: { hash: 'def' } },
+            removeAfterMs: 10000,
+          },
+        ])
+      })
     })
 
-    it('replaces any existing popups with the same key', () => {
-      store.dispatch(addPopup({ key: 'abc', content: { txn: { hash: 'abc' } } }))
-      store.dispatch(addPopup({ key: 'abc', content: { txn: { hash: 'def' } } }))
-      const list = store.getState().popupList
-      expect(list).toHaveLength(1)
-      expect(list[0].key).toEqual('abc')
-      expect(list[0].show).toEqual(true)
-      expect(list[0].content).toEqual({ txn: { hash: 'def' } })
-      expect(list[0].removeAfterMs).toEqual(10000)
+    describe('removePopup', () => {
+      beforeEach(() => {
+        store.dispatch(addPopup({ key: 'abc', content: { txn: { hash: 'abc' } } }))
+      })
+
+      it('hides the popup', () => {
+        store.dispatch(removePopup({ key: 'abc' }))
+        const list = store.getState().popupList
+        expect(list).toEqual([
+          {
+            key: 'abc',
+            show: false,
+            content: { txn: { hash: 'abc' } },
+            removeAfterMs: 10000,
+          },
+        ])
+      })
     })
   })
 
@@ -64,18 +91,6 @@ describe('application reducer', () => {
       store.dispatch(updateChainId({ chainId: 1 }))
 
       expect(store.getState().chainId).toEqual(1)
-    })
-  })
-
-  describe('removePopup', () => {
-    beforeEach(() => {
-      store.dispatch(addPopup({ key: 'abc', content: { txn: { hash: 'abc' } } }))
-    })
-    it('hides the popup', () => {
-      expect(store.getState().popupList[0].show).toBe(true)
-      store.dispatch(removePopup({ key: 'abc' }))
-      expect(store.getState().popupList).toHaveLength(1)
-      expect(store.getState().popupList[0].show).toBe(false)
     })
   })
 })
