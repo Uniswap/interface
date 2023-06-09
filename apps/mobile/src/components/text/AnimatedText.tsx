@@ -17,8 +17,8 @@ import {
 } from 'react-native'
 import Animated, { useAnimatedProps } from 'react-native-reanimated'
 import { DEFAULT_FONT_SCALE } from 'src/components/Text'
-import { textVariants } from 'ui/src/theme/restyle/font'
-import { Theme } from 'ui/src/theme/restyle/theme'
+import { textVariants } from 'ui/theme/restyle/font'
+import { Theme } from 'ui/theme/restyle/theme'
 
 // base animated text component using a TextInput
 // forked from https://github.com/wcandillon/react-native-redash/blob/master/src/ReText.tsx

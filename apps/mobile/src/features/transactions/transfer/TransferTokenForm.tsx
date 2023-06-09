@@ -39,8 +39,8 @@ import { TransferFormSpeedbumps } from 'src/features/transactions/transfer/Trans
 import { createTransactionId } from 'src/features/transactions/utils'
 import { BlockedAddressWarning } from 'src/features/trm/BlockedAddressWarning'
 import { useIsBlockedActiveAddress } from 'src/features/trm/hooks'
-import AlertTriangleIcon from 'ui/src/assets/icons/alert-triangle.svg'
-import { dimensions } from 'ui/src/theme/restyle/sizing'
+import AlertTriangleIcon from 'ui/assets/icons/alert-triangle.svg'
+import { dimensions } from 'ui/theme/restyle/sizing'
 import { usePrevious } from 'wallet/src/utils/hooks'
 
 interface TransferTokenProps {

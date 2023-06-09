@@ -5,8 +5,8 @@ import Animated from 'react-native-reanimated'
 import { Box } from 'src/components/layout'
 import { Shimmer } from 'src/components/loading/Shimmer'
 import { HiddenFromScreenReaders } from 'src/components/text/HiddenFromScreenReaders'
-import { textVariants } from 'ui/src/theme/restyle/font'
-import { Theme } from 'ui/src/theme/restyle/theme'
+import { textVariants } from 'ui/theme/restyle/font'
+import { Theme } from 'ui/theme/restyle/theme'
 
 export const DEFAULT_FONT_SCALE = 1
 

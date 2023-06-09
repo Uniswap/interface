@@ -15,8 +15,8 @@ import { Box, Flex } from 'src/components/layout'
 import { Trace } from 'src/components/telemetry/Trace'
 import { Text } from 'src/components/Text'
 import { SectionName } from 'src/features/telemetry/constants'
-import AlertTriangle from 'ui/src/assets/icons/alert-triangle.svg'
-import { Theme } from 'ui/src/theme/restyle/theme'
+import AlertTriangle from 'ui/assets/icons/alert-triangle.svg'
+import { Theme } from 'ui/theme/restyle/theme'
 
 interface Props {
   value: string | undefined

@@ -31,8 +31,8 @@ import {
   WalletConnectRequest,
 } from 'src/features/walletConnect/walletConnectSlice'
 import { wcWeb3Wallet } from 'src/features/walletConnectV2/saga'
-import AlertTriangle from 'ui/src/assets/icons/alert-triangle.svg'
-import { iconSizes } from 'ui/src/theme/iconSizes'
+import AlertTriangle from 'ui/assets/icons/alert-triangle.svg'
+import { iconSizes } from 'ui/theme/iconSizes'
 import { useTransactionGasFee } from 'wallet/src/features/gas/hooks'
 import { GasSpeed } from 'wallet/src/features/gas/types'
 import { logger } from 'wallet/src/features/logger/logger'

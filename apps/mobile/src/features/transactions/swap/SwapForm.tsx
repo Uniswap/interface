@@ -42,8 +42,8 @@ import { CurrencyField } from 'src/features/transactions/transactionState/transa
 import { createTransactionId } from 'src/features/transactions/utils'
 import { BlockedAddressWarning } from 'src/features/trm/BlockedAddressWarning'
 import { useIsBlockedActiveAddress } from 'src/features/trm/hooks'
-import AlertTriangleIcon from 'ui/src/assets/icons/alert-triangle.svg'
-import InfoCircle from 'ui/src/assets/icons/info.svg'
+import AlertTriangleIcon from 'ui/assets/icons/alert-triangle.svg'
+import InfoCircle from 'ui/assets/icons/info.svg'
 import { formatCurrencyAmount, formatPrice, NumberType } from 'wallet/src/utils/format'
 
 interface SwapFormProps {

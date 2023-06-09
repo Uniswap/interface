@@ -7,8 +7,8 @@ import { Chevron } from 'src/components/icons/Chevron'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { ElementName } from 'src/features/telemetry/constants'
-import { iconSizes } from 'ui/src/theme/iconSizes'
-import { Theme } from 'ui/src/theme/restyle/theme'
+import { iconSizes } from 'ui/theme/iconSizes'
+import { Theme } from 'ui/theme/restyle/theme'
 import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
 
 interface SelectTokenButtonProps {

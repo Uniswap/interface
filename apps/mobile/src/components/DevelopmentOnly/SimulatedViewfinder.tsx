@@ -1,7 +1,7 @@
 import React, { useReducer } from 'react'
 import { StyleSheet } from 'react-native'
 import { Flex } from 'src/components/layout'
-import { colors } from 'ui/src/theme/color'
+import { colors } from 'ui/theme/color'
 import { useInterval } from 'wallet/src/utils/timing'
 
 const possibleColors = [

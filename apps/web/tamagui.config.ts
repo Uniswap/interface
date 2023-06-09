@@ -1,3 +1,3 @@
-import { config } from 'ui/src'
+import { config } from 'ui'
 
 export default config

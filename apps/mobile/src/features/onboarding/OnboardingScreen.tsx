@@ -8,7 +8,7 @@ import { useAppTheme } from 'src/app/hooks'
 import { AnimatedFlex, Flex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
 import { Text } from 'src/components/Text'
-import { Theme } from 'ui/src/theme/restyle/theme'
+import { Theme } from 'ui/theme/restyle/theme'
 
 type OnboardingScreenProps = {
   subtitle?: string

@@ -1,5 +1,5 @@
 import { Toast, useToastState } from '@tamagui/toast'
-import { Text, XStack } from 'ui/src'
+import { Text, XStack } from 'ui'
 
 export function BottomToast(): JSX.Element | null {
   const toastData = useToastState()

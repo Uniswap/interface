@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import LockIcon from 'ui/src/assets/icons/lock.svg'
+import LockIcon from 'ui/assets/icons/lock.svg'
 
 import { useResponsiveProp } from '@shopify/restyle'
 import { SharedEventName } from '@uniswap/analytics-events'

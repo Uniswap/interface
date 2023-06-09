@@ -1,8 +1,8 @@
 // Tamagui syntax for defining sub-themes
 
 import { createTheme } from 'tamagui'
-import { tamaguiDark as colorsDark, tamaguiLight as colorsLight } from 'ui/src/theme/color'
-import { opacify } from 'ui/src/theme/color/utils'
+import { tamaguiDark as colorsDark, tamaguiLight as colorsLight } from 'ui/theme/color'
+import { opacify } from 'ui/theme/color/utils'
 
 // TODO: systematize hover and focus states. requires consolidating mobile and web design systems (they have different button styles right now)
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

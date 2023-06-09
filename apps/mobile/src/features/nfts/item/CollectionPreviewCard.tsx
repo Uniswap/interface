@@ -8,9 +8,9 @@ import { Box, Flex } from 'src/components/layout'
 import { Loader } from 'src/components/loading'
 import { Text } from 'src/components/Text'
 import { PriceAmount } from 'src/features/nfts/collection/ListPriceCard'
-import VerifiedIcon from 'ui/src/assets/icons/verified.svg'
-import { iconSizes } from 'ui/src/theme/iconSizes'
-import { imageSizes } from 'ui/src/theme/imageSizes'
+import VerifiedIcon from 'ui/assets/icons/verified.svg'
+import { iconSizes } from 'ui/theme/iconSizes'
+import { imageSizes } from 'ui/theme/imageSizes'
 import { Currency, NftItemScreenQuery } from 'wallet/src/data/__generated__/types-and-hooks'
 
 export type Collection = NonNullable<

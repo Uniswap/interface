@@ -1,13 +1,13 @@
 // TODO: rename to /theme/index.ts and move all other theme files to ui package
 import { createTheme } from '@shopify/restyle'
-import { borderRadii } from 'ui/src/theme/borderRadii'
-import { colorsDark, colorsLight } from 'ui/src/theme/color'
-import { opacify } from 'ui/src/theme/color/utils'
-import { iconSizes } from 'ui/src/theme/iconSizes'
-import { imageSizes } from 'ui/src/theme/imageSizes'
-import { textVariants } from 'ui/src/theme/restyle/font'
-import { spacing } from 'ui/src/theme/spacing'
-import { zIndices } from 'ui/src/theme/zIndices'
+import { borderRadii } from 'ui/theme/borderRadii'
+import { colorsDark, colorsLight } from 'ui/theme/color'
+import { opacify } from 'ui/theme/color/utils'
+import { iconSizes } from 'ui/theme/iconSizes'
+import { imageSizes } from 'ui/theme/imageSizes'
+import { textVariants } from 'ui/theme/restyle/font'
+import { spacing } from 'ui/theme/spacing'
+import { zIndices } from 'ui/theme/zIndices'
 
 // TODO: move all of these tokens to shared theme files
 export const theme = createTheme({

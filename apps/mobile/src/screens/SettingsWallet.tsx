@@ -32,13 +32,13 @@ import {
 import { promptPushPermission } from 'src/features/notifications/Onesignal'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { showNotificationSettingsAlert } from 'src/screens/Onboarding/NotificationsSetupScreen'
-import NotificationIcon from 'ui/src/assets/icons/bell.svg'
-import ChartIcon from 'ui/src/assets/icons/chart.svg'
-import CloudIcon from 'ui/src/assets/icons/cloud.svg'
-import EditIcon from 'ui/src/assets/icons/edit.svg'
-import GlobalIcon from 'ui/src/assets/icons/global.svg'
-import KeyIcon from 'ui/src/assets/icons/key.svg'
-import ShieldQuestionIcon from 'ui/src/assets/icons/shield-question.svg'
+import NotificationIcon from 'ui/assets/icons/bell.svg'
+import ChartIcon from 'ui/assets/icons/chart.svg'
+import CloudIcon from 'ui/assets/icons/cloud.svg'
+import EditIcon from 'ui/assets/icons/edit.svg'
+import GlobalIcon from 'ui/assets/icons/global.svg'
+import KeyIcon from 'ui/assets/icons/key.svg'
+import ShieldQuestionIcon from 'ui/assets/icons/shield-question.svg'
 import {
   EditAccountAction,
   editAccountActions,
