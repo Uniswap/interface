@@ -352,7 +352,11 @@ function _TokenSearchResultList({
         windowSize={5}
       />
       <Box position="absolute" right={0}>
-        <NetworkFilter selectedChain={chainFilter} onPressChain={onChangeChainFilter} />
+        <NetworkFilter
+          includeAllNetworks
+          selectedChain={chainFilter}
+          onPressChain={onChangeChainFilter}
+        />
       </Box>
     </Box>
   )

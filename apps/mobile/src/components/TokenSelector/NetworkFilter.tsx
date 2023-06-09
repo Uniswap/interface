@@ -1,81 +1,111 @@
 import { ImpactFeedbackStyle, selectionAsync } from 'expo-haptics'
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Keyboard } from 'react-native'
+import { Keyboard, LayoutAnimation } from 'react-native'
+import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useAppTheme } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { NetworkLogo } from 'src/components/CurrencyLogo/NetworkLogo'
+import {
+  NetworkLogo,
+  SQUARE_BORDER_RADIUS as NETWORK_LOGO_SQUARE_BORDER_RADIUS,
+} from 'src/components/CurrencyLogo/NetworkLogo'
 import { Chevron } from 'src/components/icons/Chevron'
-import { Flex } from 'src/components/layout'
-import { Box } from 'src/components/layout/Box'
-import { Separator } from 'src/components/layout/Separator'
+import { AnimatedFlex, Box, Flex } from 'src/components/layout'
 import { ActionSheetModal } from 'src/components/modals/ActionSheetModal'
 import { useNetworkOptions } from 'src/components/Network/hooks'
 import { Text } from 'src/components/Text'
-import { ElementName, ModalName } from 'src/features/telemetry/constants'
-import Check from 'ui/src/assets/icons/check.svg'
+import { ModalName } from 'src/features/telemetry/constants'
+import EllipsisIcon from 'ui/src/assets/icons/ellipsis.svg'
+import { colors } from 'ui/src/theme/color'
 import { iconSizes } from 'ui/src/theme/iconSizes'
-import { ChainId, CHAIN_INFO } from 'wallet/src/constants/chains'
+import { ChainId } from 'wallet/src/constants/chains'
+import { useActiveChainIds } from 'wallet/src/features/chains/hooks'
+
+const ELLIPSIS = 'ellipsis'
+const NETWORK_ICON_SIZE = iconSizes.icon20
 
 interface NetworkFilterProps {
   selectedChain: ChainId | null
   onPressChain: (chainId: ChainId | null) => void
+  includeAllNetworks?: boolean
+  showEllipsisInitially?: boolean
 }
 
-export function NetworkFilter({ selectedChain, onPressChain }: NetworkFilterProps): JSX.Element {
+type EllipsisPosition = 'start' | 'end'
+
+function NetworksInSeries({
+  networks,
+  ellipsisPosition,
+}: {
+  networks: ChainId[]
+  ellipsisPosition?: EllipsisPosition
+}): JSX.Element {
+  const items = [
+    ...(ellipsisPosition === 'start' ? [ELLIPSIS] : []),
+    ...networks,
+    ...(ellipsisPosition === 'end' ? [ELLIPSIS] : []),
+  ] as Array<ChainId | typeof ELLIPSIS>
+
+  return (
+    <AnimatedFlex row entering={FadeIn} exiting={FadeOut} gap="none">
+      {items.map((chainId) => (
+        <Box borderColor="background1" style={styles.networksInSeriesIcon}>
+          {chainId === ELLIPSIS ? (
+            <Flex
+              centered
+              backgroundColor="textTertiary"
+              height={NETWORK_ICON_SIZE}
+              style={styles.ellipsisIcon}
+              width={NETWORK_ICON_SIZE}>
+              <EllipsisIcon
+                color={colors.white}
+                height={iconSizes.icon12}
+                width={iconSizes.icon12}
+              />
+            </Flex>
+          ) : (
+            <NetworkLogo chainId={chainId} shape="square" size={NETWORK_ICON_SIZE} />
+          )}
+        </Box>
+      ))}
+    </AnimatedFlex>
+  )
+}
+
+export function NetworkFilter({
+  selectedChain,
+  onPressChain,
+  includeAllNetworks,
+  showEllipsisInitially,
+}: NetworkFilterProps): JSX.Element {
   const theme = useAppTheme()
   const { t } = useTranslation()
   const [showModal, setShowModal] = useState(false)
+  // TODO: remove the comment below once we add it to the main swap screen
+  // we would need this later, when we add it to the main swap screen
+  const [showEllipsisIcon, setShowEllipsisIcon] = useState(showEllipsisInitially ?? false)
 
   const onPress = useCallback(
     (chainId: ChainId | null) => {
+      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
       selectionAsync()
       setShowModal(false)
+      if (showEllipsisIcon && chainId !== selectedChain) {
+        setShowEllipsisIcon(false)
+      }
       onPressChain(chainId)
     },
-    [setShowModal, onPressChain]
+    [showEllipsisIcon, selectedChain, onPressChain]
   )
 
-  const networkOptions = useNetworkOptions(selectedChain, onPress)
-
-  const options = useMemo(
-    () =>
-      [
-        {
-          key: `${ElementName.NetworkButton}-all`,
-          onPress: (): void => {
-            setShowModal(false)
-            onPressChain(null)
-          },
-          render: () => (
-            <>
-              <Separator />
-              <Flex
-                row
-                alignItems="center"
-                justifyContent="space-between"
-                px="spacing24"
-                py="spacing16">
-                <Box height={iconSizes.icon24} width={iconSizes.icon24} />
-                <Text color="textPrimary" variant="bodyLarge">
-                  {t('All networks')}
-                </Text>
-                <Box height={iconSizes.icon24} width={iconSizes.icon24}>
-                  {!selectedChain && (
-                    <Check
-                      color={theme.colors.accentActive}
-                      height={iconSizes.icon24}
-                      width={iconSizes.icon24}
-                    />
-                  )}
-                </Box>
-              </Flex>
-            </>
-          ),
-        },
-      ].concat(...networkOptions),
-    [networkOptions, onPressChain, selectedChain, t, theme.colors.accentActive]
+  const activeChains = useActiveChainIds()
+  // design wants to limit amount of networks shown in the network filter,
+  // when all networks is selected and for now we show all, but Arbitrum
+  const activeChainsWithoutArbitrum = activeChains.filter(
+    (chainId) => chainId !== ChainId.ArbitrumOne
   )
+
+  const networkOptions = useNetworkOptions({ selectedChain, onPress, includeAllNetworks })
 
   return (
     <>
@@ -87,12 +117,19 @@ export function NetworkFilter({ selectedChain, onPressChain }: NetworkFilterProp
           Keyboard.dismiss()
           setShowModal(true)
         }}>
-        <Flex centered row bg="background2" borderRadius="rounded20" gap="spacing4" p="spacing8">
-          {selectedChain && <NetworkLogo chainId={selectedChain} size={iconSizes.icon16} />}
-          <Text color="textSecondary" pl="spacing2" textAlign="center" variant="buttonLabelSmall">
-            {selectedChain ? CHAIN_INFO[selectedChain].label : t('All networks')}
-          </Text>
-          <Chevron color={theme.colors.textSecondary} direction="s" height={16} width={16} />
+        <Flex centered row gap="spacing4" py="spacing8">
+          <NetworksInSeries
+            // show ellipsis as the last item when all networks is selected
+            ellipsisPosition={!selectedChain ? 'end' : undefined}
+            // show specific network or all
+            networks={selectedChain ? [selectedChain] : activeChainsWithoutArbitrum}
+          />
+          <Chevron
+            color={theme.colors.textTertiary}
+            direction="s"
+            height={theme.iconSizes.icon20}
+            width={theme.iconSizes.icon20}
+          />
         </Flex>
       </TouchableArea>
 
@@ -104,9 +141,20 @@ export function NetworkFilter({ selectedChain, onPressChain }: NetworkFilterProp
         }
         isVisible={showModal}
         name={ModalName.NetworkSelector}
-        options={options}
+        options={networkOptions}
         onClose={(): void => setShowModal(false)}
       />
     </>
   )
+}
+
+const styles = {
+  ellipsisIcon: {
+    borderRadius: NETWORK_LOGO_SQUARE_BORDER_RADIUS,
+  },
+  networksInSeriesIcon: {
+    marginLeft: -10,
+    borderWidth: 2,
+    borderRadius: 8,
+  },
 }
