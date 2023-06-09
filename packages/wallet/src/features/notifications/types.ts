@@ -12,7 +12,7 @@ export enum AppNotificationType {
   Favorites,
   Copied,
   SwapNetwork,
-  NFTVisibility,
+  AssetVisibility, // could be token or NFT
 }
 
 interface AppNotificationBase {
@@ -137,9 +137,10 @@ export interface SwapNetworkNotification extends AppNotificationBase {
   chainId: ChainId
 }
 
-export interface ChangeNFTVisibilityNotification extends AppNotificationBase {
-  type: AppNotificationType.NFTVisibility
+export interface ChangeAssetVisibilityNotification extends AppNotificationBase {
+  type: AppNotificationType.AssetVisibility
   visible: boolean
+  assetName: string
 }
 
 export type AppNotification =
@@ -149,4 +150,4 @@ export type AppNotification =
   | WalletConnectNotification
   | TransactionNotification
   | SwapNetworkNotification
-  | ChangeNFTVisibilityNotification
+  | ChangeAssetVisibilityNotification

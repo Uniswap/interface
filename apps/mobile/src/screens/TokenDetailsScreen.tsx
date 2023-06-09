@@ -2,6 +2,7 @@ import { ReactNavigationPerformanceView } from '@shopify/react-native-performanc
 import { useResponsiveProp } from '@shopify/restyle'
 import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import ContextMenu from 'react-native-context-menu-view'
 import { FadeInDown, FadeOutDown } from 'react-native-reanimated'
 import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
 import { AppStackScreenProp } from 'src/app/navigation/types'
@@ -20,6 +21,8 @@ import { TokenDetailsFavoriteButton } from 'src/components/TokenDetails/TokenDet
 import { TokenDetailsHeader } from 'src/components/TokenDetails/TokenDetailsHeader'
 import { TokenDetailsStats } from 'src/components/TokenDetails/TokenDetailsStats'
 import TokenWarningModal from 'src/components/tokens/TokenWarningModal'
+import { useIsDarkMode } from 'src/features/appearance/hooks'
+import { useTokenBalanceContextMenu } from 'src/features/balances/hooks'
 import { openModal, selectModalState } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
 import { useTokenWarningDismissed } from 'src/features/tokens/safetyHooks'
@@ -29,6 +32,7 @@ import {
 } from 'src/features/transactions/transactionState/transactionState'
 import { Screens } from 'src/screens/Screens'
 import { useExtractedTokenColor } from 'src/utils/colors'
+import EllipsisIcon from 'ui/src/assets/icons/ellipsis.svg'
 import { iconSizes } from 'ui/src/theme/iconSizes'
 import { ChainId } from 'wallet/src/constants/chains'
 import { PollingInterval } from 'wallet/src/constants/misc'
@@ -40,6 +44,7 @@ import {
 } from 'wallet/src/data/__generated__/types-and-hooks'
 import { AssetType } from 'wallet/src/entities/assets'
 import { currencyIdToContractInput } from 'wallet/src/features/dataApi/utils'
+import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 import { fromGraphQLChain } from 'wallet/src/utils/chainId'
 import { currencyIdToAddress, currencyIdToChain } from 'wallet/src/utils/currencyId'
 import { formatUSDPrice } from 'wallet/src/utils/format'
@@ -153,6 +158,8 @@ function TokenDetails({
 }): JSX.Element {
   const dispatch = useAppDispatch()
   const theme = useAppTheme()
+
+  const activeAccountAddress = useActiveAccountAddressWithThrow()
 
   const currencyChainId = currencyIdToChain(_currencyId) ?? ChainId.Mainnet
   const currencyAddress = currencyIdToAddress(_currencyId)
@@ -271,12 +278,35 @@ function TokenDetails({
 
   const inModal = useAppSelector(selectModalState(ModalName.Explore)).isOpen
 
+  const { menuActions, onContextMenuPress } = useTokenBalanceContextMenu({
+    currencyId: _currencyId,
+    owner: activeAccountAddress,
+    isSpam: currentChainBalance?.currencyInfo.isSpam,
+    balanceUSD: currentChainBalance?.balanceUSD,
+    tokenSymbolForNotification: data?.token?.symbol,
+  })
+
+  const isDarkMode = useIsDarkMode()
+  // shall be the same color as heart icon in not favorited state next to it
+  const ellipsisColor = isDarkMode ? theme.colors.textTertiary : theme.colors.backgroundOutline
+
   return (
     <Trace screen={Screens.TokenDetails}>
       <HeaderScrollScreen
         centerElement={<HeaderTitleElement data={data} />}
         renderedInModal={inModal}
-        rightElement={<TokenDetailsFavoriteButton currencyId={_currencyId} />}
+        rightElement={
+          <Flex row alignItems="center">
+            <ContextMenu dropdownMenuMode actions={menuActions} onPress={onContextMenuPress}>
+              <EllipsisIcon
+                color={ellipsisColor}
+                height={iconSizes.icon16}
+                width={iconSizes.icon16}
+              />
+            </ContextMenu>
+            <TokenDetailsFavoriteButton currencyId={_currencyId} />
+          </Flex>
+        }
         showHandleBar={inModal}>
         <Flex gap="spacing36" my="spacing8" pb="spacing16">
           <Flex gap="spacing4">

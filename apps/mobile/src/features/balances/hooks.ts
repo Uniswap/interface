@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { LayoutAnimation, NativeSyntheticEvent } from 'react-native'
+import { NativeSyntheticEvent } from 'react-native'
 import { ContextMenuAction, ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { selectTokensVisibility } from 'src/features/favorites/selectors'
@@ -16,13 +16,14 @@ import {
   makeSelectAccountHideSpamTokens,
 } from 'wallet/src/features/wallet/selectors'
 import { CurrencyId } from 'wallet/src/utils/currencyId'
+import { ONE_SECOND_MS } from 'wallet/src/utils/time'
 
 interface TokenMenuParams {
   currencyId: CurrencyId
   owner: Address
-  showNotification?: boolean
   isSpam: Maybe<boolean>
   balanceUSD: Maybe<number>
+  tokenSymbolForNotification?: Nullable<string>
 }
 
 const HIDE_SMALL_USD_BALANCES_THRESHOLD = 1
@@ -95,7 +96,7 @@ export function useTokenBalanceContextMenu({
   owner,
   isSpam,
   balanceUSD,
-  showNotification = false,
+  tokenSymbolForNotification,
 }: TokenMenuParams): {
   menuActions: Array<ContextMenuAction & { onPress: () => void }>
   onContextMenuPress: (e: NativeSyntheticEvent<ContextMenuOnPressNativeEvent>) => void
@@ -125,7 +126,6 @@ export function useTokenBalanceContextMenu({
               systemIcon: isHidden ? 'eye' : 'eye.slash',
               destructive: !isHidden,
               onPress: (): void => {
-                LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
                 dispatch(
                   toggleTokenVisibility({
                     owner,
@@ -133,12 +133,13 @@ export function useTokenBalanceContextMenu({
                     currentlyVisible: !isHidden,
                   })
                 )
-                if (showNotification) {
+                if (tokenSymbolForNotification) {
                   dispatch(
                     pushNotification({
-                      type: AppNotificationType.NFTVisibility,
+                      type: AppNotificationType.AssetVisibility,
                       visible: !isHidden,
-                      hideDelay: 2000,
+                      hideDelay: 2 * ONE_SECOND_MS,
+                      assetName: tokenSymbolForNotification,
                     })
                   )
                 }
@@ -147,7 +148,7 @@ export function useTokenBalanceContextMenu({
           ]
         : []),
     ],
-    [t, isLocalAccount, isHidden, dispatch, owner, currencyId, showNotification]
+    [isLocalAccount, isHidden, t, dispatch, owner, currencyId, tokenSymbolForNotification]
   )
 
   const onContextMenuPress = useCallback(

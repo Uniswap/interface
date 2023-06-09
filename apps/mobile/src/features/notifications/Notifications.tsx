@@ -43,7 +43,7 @@ import {
   AppErrorNotification,
   AppNotificationDefault,
   ApproveTxNotification,
-  ChangeNFTVisibilityNotification,
+  ChangeAssetVisibilityNotification as ChangeAssetVisibilityNotificationType,
   CopyNotification,
   CopyNotificationType,
   SwapNetworkNotification as SwapNetworkNotificationType,
@@ -511,10 +511,10 @@ export function SwapNetworkNotification({
   )
 }
 
-export function NftVisibilityChangeNotification({
-  notification: { visible, hideDelay },
+export function ChangeAssetVisibilityNotification({
+  notification: { visible, hideDelay, assetName },
 }: {
-  notification: ChangeNFTVisibilityNotification
+  notification: ChangeAssetVisibilityNotificationType
 }): JSX.Element {
   const { t } = useTranslation()
   const theme = useAppTheme()
@@ -538,7 +538,11 @@ export function NftVisibilityChangeNotification({
           />
         )
       }
-      title={visible ? t('NFT hidden') : t('NFT unhidden')}
+      title={
+        visible
+          ? t('{{assetName}} hidden', { assetName })
+          : t('{{assetName}} unhidden', { assetName })
+      }
     />
   )
 }
