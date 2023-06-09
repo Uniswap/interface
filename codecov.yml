@@ -36,7 +36,7 @@ flag_management:
           target: 0%
 
 comment:
-  layout: "flags"
+  layout: flags
   hide_comment_details: false
 
 github_checks:
