@@ -14,13 +14,15 @@ import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { subheadSmall } from 'nft/css/common.css'
 import { GenieCollection, TrendingCollection } from 'nft/types'
-import React, { Suspense, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
 import BnbLogoURI from '../../assets/svg/bnb-logo.svg'
 import { ClockIcon, TrendingArrow } from '../../nft/components/icons'
+import { Suspend } from '../Suspense/Suspend'
+import { SuspenseFallbackToPreviousContents } from '../Suspense/SuspenseFallbackToPreviousContents'
 import { useRecentlySearchedAssets } from './RecentlySearchedAssets'
 import * as styles from './SearchBar.css'
 import { CollectionRow, SkeletonRow, TokenRow } from './SuggestionRow'
@@ -170,35 +172,6 @@ export const SearchBarDropdown = (props: SearchBarDropdownProps) => {
       </Box>
     </Column>
   )
-}
-
-const useSuspendWhen = (shouldSuspend = false) => {
-  const [resolve, setResolve] = useState<((val?: unknown) => void) | undefined>()
-
-  if (!resolve && shouldSuspend) {
-    const promise = new Promise((res) => {
-      setResolve(res)
-    })
-    throw promise
-  } else if (resolve && !shouldSuspend) {
-    resolve()
-    setResolve(undefined)
-  }
-}
-
-const Suspend = (props: { when: boolean; children: React.ReactNode }) => {
-  useSuspendWhen(props.when)
-  return <>{props.children}</>
-}
-
-const SuspenseFallbackToPreviousContents = (props: { children: React.ReactNode }) => {
-  const lastContents = useRef(props.children)
-
-  useEffect(() => {
-    lastContents.current = props.children
-  }, [props.children])
-
-  return <Suspense fallback={lastContents.current}>{props.children}</Suspense>
 }
 
 const SearchBarDropdownContents = ({
