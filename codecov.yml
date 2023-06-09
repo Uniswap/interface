@@ -12,10 +12,11 @@ ignore:
 coverage:
   status:
     # Omit merging unit/e2e reports into the defaults, as it is nonsensical.
-    patch:
-      default: off
     project:
       default: off
+    patch:
+      default: off
+    changes: off
 
 flag_management:
   default_rules:
@@ -36,9 +37,6 @@ flag_management:
       statuses:
         - type: patch
           target: 0%
-
-comment:
-  layout: "flags, files, footer"
 
 github_checks:
   # Turn off GitHub Check annotations, as they make it more difficult to review code.
