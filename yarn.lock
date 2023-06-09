@@ -11257,6 +11257,7 @@ __metadata:
     react-i18next: 11.18.6
     react-native: 0.70.8
     react-native-apollo-devtools-client: 1.0.4
+    react-native-appsflyer: 6.10.3
     react-native-clean-project: 4.0.1
     react-native-context-menu-view: 1.6.0
     react-native-device-info: 10.0.2
@@ -31137,6 +31138,13 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: d663f6c02a8aa378991e8abd7514390359d8d8a7e601a52d54a353d3d37e57a5b105522b5af5eeb815b7a200b5f41372d9b174c1ce141c50a5f6d40a836717bb
+  languageName: node
+  linkType: hard
+
+"react-native-appsflyer@npm:6.10.3":
+  version: 6.10.3
+  resolution: "react-native-appsflyer@npm:6.10.3"
+  checksum: 65298ce7e399b2e222b6dcb3a925ec39bf49e7bc82f6bf7df37e7e367c322f49089de099eb6d51a30e35edcd449d907ffdad5f438c2d7abb2070aee1653c3594
   languageName: node
   linkType: hard
 

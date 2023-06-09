@@ -17,6 +17,7 @@ jest.mock('react-native-device-info', () => ({
   getUniqueId: (): Promise<string> => {
     throw new Error('Prevent re-render')
   },
+  getBundleId: (): string => '.dev',
 }))
 
 it('renders correctly', () => {

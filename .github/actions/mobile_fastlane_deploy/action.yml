@@ -171,6 +171,8 @@ runs:
         MOONPAY_API_KEY: ${{ inputs.moonpay-api-key }}
         MOONPAY_API_URL: ${{ inputs.moonpay-api-url }}
         MOONPAY_WIDGET_API_URL: ${{ inputs.moonpay-widget-api-url }}
+        APPSFLYER_API_KEY: ${{ inputs.appsflyer-api-key }}
+        APPSFLYER_APP_ID: ${{ inputs.appsflyer-app-id }}
         ONESIGNAL_APP_ID: ${{ inputs.onesignal-app-id }}
         WALLETCONNECT_PROJECT_ID: ${{ inputs.walletconnect-project-id }}
         APP_IDENTIFIER: ${{ inputs.app-identifier }}

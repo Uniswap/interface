@@ -18,6 +18,7 @@ import { OfflineBanner } from 'src/components/banners/OfflineBanner'
 import { Trace } from 'src/components/telemetry/Trace'
 import { TraceUserProperties } from 'src/components/telemetry/TraceUserProperties'
 import { usePersistedApolloClient } from 'src/data/usePersistedApolloClient'
+import { initAppsFlyer } from 'src/features/analytics/appsflyer'
 import { useIsDarkMode } from 'src/features/appearance/hooks'
 import { LockScreenContextProvider } from 'src/features/authentication/lockScreenContext'
 import { BiometricContextProvider } from 'src/features/biometrics/context'
@@ -67,6 +68,7 @@ if (!__DEV__) {
 }
 
 initOneSignal()
+initAppsFlyer()
 
 function App(): JSX.Element | null {
   const client = usePersistedApolloClient()

@@ -1,3 +1,4 @@
+import appsFlyer from 'react-native-appsflyer'
 import { useAppDispatch } from 'src/app/hooks'
 import { useOnboardingStackNavigation } from 'src/app/navigation/types'
 import { ImportType, OnboardingEntryPoint } from 'src/features/onboarding/utils'
@@ -38,6 +39,11 @@ export function useCompleteOnboardingCallback(
         ...parentTrace,
       }
     )
+
+    if (entryPoint === OnboardingEntryPoint.FreshInstallOrReplace) {
+      appsFlyer.logEvent('onboarding_complete', { importType })
+    }
+
     // Remove pending flag from all new accounts.
     dispatch(pendingAccountActions.trigger(PendingAccountActions.ACTIVATE))
 

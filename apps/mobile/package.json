@@ -115,6 +115,7 @@
     "react": "18.2.0",
     "react-i18next": "11.18.6",
     "react-native": "0.70.8",
+    "react-native-appsflyer": "6.10.3",
     "react-native-context-menu-view": "1.6.0",
     "react-native-device-info": "10.0.2",
     "react-native-fast-image": "8.6.3",

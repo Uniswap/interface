@@ -17,6 +17,12 @@ import { buildCurrencyId } from 'wallet/src/utils/currencyId'
 
 export const selectTransactions = (state: MobileState): TransactionState => state.transactions
 
+export const selectHasDoneASwap = createSelector(selectTransactions, (transactions) => {
+  const txs = flattenObjectOfObjects(transactions)
+  const txDetails = txs.map((txObj) => Object.values(txObj)[0])
+  return !!txDetails.find((tx) => tx?.typeInfo.type === TransactionType.Swap)
+})
+
 export const makeSelectAddressTransactions = (
   address: Address | null
 ): Selector<MobileState, TransactionDetails[]> =>

@@ -17,7 +17,7 @@ jobs:
           token: ${{ secrets.SERVICE_ACCOUNT_PAT }}
           ref: ${{ github.ref }}
 
-      - name:  📲 Fastlane Deploy Prod
+      - name: 📲 Fastlane Deploy Prod
         uses: ./.github/actions/mobile_fastlane_deploy
         with:
           branch: ${{ github.ref }}
@@ -25,6 +25,8 @@ jobs:
           sentry-env: production
           apple-app-id: ${{ secrets.APPLE_APP_ID_PROD }}
           app-identifier: ${{ secrets.APP_IDENTIFIER_PROD }}
+          appsflyer-api-key: ${{ secrets.APPSFLYER_API_KEY }}
+          appsflyer-app-id: ${{ secrets.APPSFLYER_APP_ID }}
           onesignal-app-id: ${{ secrets.ONESIGNAL_APP_ID }}
           uniswap-api-key: ${{ secrets.UNISWAP_API_KEY }}
           sentry-dsn: ${{ secrets.SENTRY_DSN }}

@@ -109,6 +109,12 @@ jest.mock('react-native-onesignal', () => {
   }
 })
 
+jest.mock('react-native-appsflyer', () => {
+  return {
+    initSdk: jest.fn(),
+  }
+})
+
 jest.mock('react-native/Libraries/EventEmitter/NativeEventEmitter')
 jest.mock('react-native-permissions', () => ({}))
 jest.mock('react-native-device-info', () => mockRNDeviceInfo)

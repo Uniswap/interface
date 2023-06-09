@@ -59,6 +59,8 @@
 			</dict>
 		</dict>
 	</dict>
+  <key>NSAdvertisingAttributionReportEndpoint</key>
+	<string>https://appsflyer-skadnetwork.com/</string>
 	<key>NSCameraUsageDescription</key>
 	<string>$(PRODUCT_NAME) Wallet needs access to your Camera to scan QR codes</string>
 	<key>NSFaceIDUsageDescription</key>

@@ -25,6 +25,8 @@ jobs:
           sentry-env: beta
           apple-app-id: ${{ secrets.APPLE_APP_ID_BETA }}
           app-identifier: ${{ secrets.APP_IDENTIFIER_BETA }}
+          appsflyer-api-key: ${{ secrets.APPSFLYER_API_KEY }}
+          appsflyer-app-id: ${{ secrets.APPSFLYER_APP_ID }}
           onesignal-app-id: ${{ secrets.ONESIGNAL_APP_ID_BETA }}
           uniswap-api-key: ${{ secrets.UNISWAP_API_KEY }}
           sentry-dsn: ${{ secrets.SENTRY_DSN }}

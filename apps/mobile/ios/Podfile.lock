@@ -340,6 +340,9 @@ PODS:
     - abseil/meta/type_traits
   - amplitude-react-native (0.5.0):
     - React-Core
+  - AppsFlyerFramework (6.10.1):
+    - AppsFlyerFramework/Main (= 6.10.1)
+  - AppsFlyerFramework/Main (6.10.1)
   - Argon2Swift (1.0.3)
   - boost (1.76.0)
   - BoringSSL-GRPC (0.0.7):
@@ -776,6 +779,9 @@ PODS:
   - React-jsinspector (0.70.8)
   - React-logger (0.70.8):
     - glog
+  - react-native-appsflyer (6.10.3):
+    - AppsFlyerFramework (= 6.10.1)
+    - React
   - react-native-context-menu-view (1.6.0):
     - React
   - react-native-flipper-performance-plugin (0.3.1):
@@ -1041,6 +1047,7 @@ DEPENDENCIES:
   - React-jsiexecutor (from `../../../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../../../node_modules/react-native/ReactCommon/jsinspector`)
   - React-logger (from `../../../node_modules/react-native/ReactCommon/logger`)
+  - react-native-appsflyer (from `../../../node_modules/react-native-appsflyer`)
   - react-native-context-menu-view (from `../../../node_modules/react-native-context-menu-view`)
   - react-native-flipper-performance-plugin (from `../../../node_modules/react-native-flipper-performance-plugin`)
   - react-native-get-random-values (from `../../../node_modules/react-native-get-random-values`)
@@ -1091,6 +1098,7 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - abseil
+    - AppsFlyerFramework
     - Argon2Swift
     - BoringSSL-GRPC
     - CryptoSwift
@@ -1208,6 +1216,8 @@ EXTERNAL SOURCES:
     :path: "../../../node_modules/react-native/ReactCommon/jsinspector"
   React-logger:
     :path: "../../../node_modules/react-native/ReactCommon/logger"
+  react-native-appsflyer:
+    :path: "../../../node_modules/react-native-appsflyer"
   react-native-context-menu-view:
     :path: "../../../node_modules/react-native-context-menu-view"
   react-native-flipper-performance-plugin:
@@ -1302,6 +1312,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   abseil: 6c8eb7892aefa08d929b39f9bb108e5367e3228f
   amplitude-react-native: ad975c1f96cb5cbb22029bb57fd0e37d6a19bf33
+  AppsFlyerFramework: 88a6eed37ad52bcee4ad74232efa8e22809d06c9
   Argon2Swift: 99482c1b8122a03524b61e41c4903a9548e7c33b
   boost: a7c83b31436843459a1961bfd74b96033dc77234
   BoringSSL-GRPC: 8edf627ee524575e2f8d19d56f068b448eea3879
@@ -1371,6 +1382,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: bc8556d76f83a1a9075cdee207aad7c0b7b30a33
   React-jsinspector: 5e5497c844f2381e8648ec3a7d0ad25b3f27f23e
   React-logger: b277ad8f4473f2506fb30b762b6348534a3de10e
+  react-native-appsflyer: 153e96b97ecc0c26b14fc79911675e51cfd35b36
   react-native-context-menu-view: d3b3e77985d5b05674a70f8e7eafe404dfa5bbcc
   react-native-flipper-performance-plugin: 2b873b68da3e368afeaf29c9c7a8c2b0ff908c4f
   react-native-get-random-values: a6ea6a8a65dc93e96e24a11105b1a9c8cfe1d72a

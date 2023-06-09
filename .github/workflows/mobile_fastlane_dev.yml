@@ -16,7 +16,7 @@ jobs:
           token: ${{ secrets.SERVICE_ACCOUNT_PAT }}
           ref: releases/dev
 
-      - name:  📲 Fastlane Deploy Dev
+      - name: 📲 Fastlane Deploy Dev
         uses: ./.github/actions/mobile_fastlane_deploy
         with:
           branch: releases/dev
@@ -24,6 +24,8 @@ jobs:
           sentry-env: development
           apple-app-id: ${{ secrets.APPLE_APP_ID_DEV }}
           app-identifier: ${{ secrets.APP_IDENTIFIER_DEV }}
+          appsflyer-api-key: ${{ secrets.APPSFLYER_API_KEY }}
+          appsflyer-app-id: ${{ secrets.APPSFLYER_APP_ID }}
           onesignal-app-id: ${{ secrets.ONESIGNAL_APP_ID_DEV }}
           uniswap-api-key: ${{ secrets.UNISWAP_API_KEY }}
           sentry-dsn: ${{ secrets.SENTRY_DSN }}

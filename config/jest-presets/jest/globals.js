@@ -2,6 +2,8 @@ module.exports = {
   globals: {
     ALCHEMY_API_KEY: 123,
     AMPLITUDE_EXPERIMENTS_DEPLOYMENT_KEY: 123,
+    APPSFLYER_API_KEY: 'key',
+    APPSFLYER_APP_ID: 123,
     MOONPAY_API_KEY: 123,
     MOONPAY_API_URL: 'https://api.moonpay.com',
     MOONPAY_WIDGET_API_URL: 'https://api.moonpay.com',
