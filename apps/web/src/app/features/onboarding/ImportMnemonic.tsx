@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { OnboardingRoutes } from 'src/app/navigation/constants'
+import { ImportOnboardingRoutes } from 'src/app/navigation/constants'
 import { Input, Stack, XStack, YStack } from 'tamagui'
 import { Text } from 'ui/src'
 import { Button, LinkButton } from 'ui/src/components/button/Button'
@@ -56,9 +56,9 @@ export function ImportMnemonic(): JSX.Element {
           flexGrow={1}
           // this applies to the Link component itself
           linkStyleProps={{ style: { flexGrow: 1 } }}
-          state={{ data: { mnemonic, from: OnboardingRoutes.Import } }}
+          state={{ data: { mnemonic, from: ImportOnboardingRoutes.Mnemonic } }}
           theme="primary"
-          to={`../${OnboardingRoutes.Password}`}
+          to={`../${ImportOnboardingRoutes.Password}`}
           onClick={handleClick}>
           Next
         </LinkButton>

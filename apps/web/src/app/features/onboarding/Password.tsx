@@ -1,6 +1,6 @@
 import { useLocation, useNavigate } from 'react-router-dom'
 import { usePasswordInput } from 'src/app/features/lockScreen/Locked'
-import { OnboardingRoutes } from 'src/app/navigation/constants'
+import { CreateOnboardingRoutes, ImportOnboardingRoutes } from 'src/app/navigation/constants'
 import { useAppDispatch } from 'src/background/store'
 import { useSagaStatus } from 'src/background/utils/useSagaStatus'
 import { Input, Stack, XStack, YStack } from 'tamagui'
@@ -21,7 +21,7 @@ export function Password(): JSX.Element {
   const { state } = useLocation()
   const { mnemonic, from } = state.data as {
     mnemonic: string
-    from: OnboardingRoutes
+    from: ImportOnboardingRoutes | CreateOnboardingRoutes
   }
 
   const passwordInputProps = usePasswordInput()
@@ -30,9 +30,11 @@ export function Password(): JSX.Element {
     // TODO(EXT-131): abstract into navigate util with consistent params and types
     navigate(
       `../${
-        from === OnboardingRoutes.Import ? OnboardingRoutes.Complete : OnboardingRoutes.Backup
+        from === ImportOnboardingRoutes.Mnemonic
+          ? ImportOnboardingRoutes.Complete
+          : CreateOnboardingRoutes.Backup
       }`,
-      { state: { data: { mnemonic, from: OnboardingRoutes.Import } } }
+      { state: { data: { mnemonic, from: ImportOnboardingRoutes.Mnemonic } } }
     )
   })
 

@@ -1,3 +1,4 @@
+import { ImportOnboardingRoutes, OnboardingRoutes } from 'src/app/navigation/constants'
 import { Circle, Image, Stack, Text, XStack, YStack } from 'ui/src'
 import { UNISWAP_LOGO } from 'ui/src/assets'
 import BoltIcon from 'ui/src/assets/icons/bolt.svg'
@@ -44,7 +45,13 @@ function InfoRow({
 
 export function IntroScreen(): JSX.Element {
   return (
-    <XStack gap={100}>
+    <XStack
+      alignItems="center"
+      flexGrow={1}
+      gap={100}
+      justifyContent="center"
+      marginBottom="$spacing60"
+      width="100%">
       <YStack gap="$spacing12" maxWidth={320}>
         <Stack alignItems="center" justifyContent="center" paddingBottom="$spacing8">
           <Stack
@@ -65,7 +72,10 @@ export function IntroScreen(): JSX.Element {
         <Text marginBottom="$spacing48" textAlign="center" variant="headlineMedium">
           Get started with Uniswap Wallet
         </Text>
-        <LinkButton flexGrow={1} theme="secondary" to="import">
+        <LinkButton
+          flexGrow={1}
+          theme="secondary"
+          to={`${OnboardingRoutes.Import}/${ImportOnboardingRoutes.Mnemonic}`}>
           I already have a wallet
         </LinkButton>
         <LinkButton flexGrow={1} theme="primary" to="create">

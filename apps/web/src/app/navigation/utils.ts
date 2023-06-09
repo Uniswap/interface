@@ -1,4 +1,10 @@
-import { To, useNavigate } from 'react-router-dom'
+import { matchPath, To, useLocation, useNavigate } from 'react-router-dom'
+
+export function useRouteMatch(pathToMatch: string): boolean {
+  const { pathname } = useLocation()
+
+  return !!matchPath(pathToMatch, pathname)
+}
 
 export const useExtensionNavigation = (): {
   navigateTo: (path: To) => void

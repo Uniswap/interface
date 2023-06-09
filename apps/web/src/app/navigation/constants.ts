@@ -4,11 +4,27 @@ export enum TopLevelRoutes {
 }
 
 export enum OnboardingRoutes {
+  Import = 'import',
+  Create = 'create',
+}
+
+export enum CreateOnboardingRoutes {
+  Backup = 'backup',
+}
+
+export enum ImportOnboardingRoutes {
+  Mnemonic = 'mnemonic',
+  Password = 'password',
   Backup = 'backup',
   Complete = 'complete',
-  Import = 'import',
-  Password = 'password',
 }
+
+// in order, so they can be mapped through for progress indicators
+export const importOnboardingSteps = [
+  ImportOnboardingRoutes.Mnemonic,
+  ImportOnboardingRoutes.Password,
+  ImportOnboardingRoutes.Complete,
+]
 
 export enum AppRoutes {
   AccountSwitcher = 'account-switcher',

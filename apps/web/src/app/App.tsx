@@ -7,6 +7,7 @@ import { BottomToast } from 'src/app/components/toast/BottomToast'
 import { AccountSwitcherScreen } from 'src/app/features/accounts/AccountSwitcherScreen'
 import { Complete } from 'src/app/features/onboarding/Complete'
 import { ImportMnemonic } from 'src/app/features/onboarding/ImportMnemonic'
+import { ImportOnboardingWrapper } from 'src/app/features/onboarding/ImportOnboardingWrapper'
 import { IntroScreen } from 'src/app/features/onboarding/IntroScreen'
 import { OnboardingWrapper } from 'src/app/features/onboarding/OnboardingWrapper'
 import { Password } from 'src/app/features/onboarding/Password'
@@ -17,6 +18,7 @@ import { SettingsWalletEditNicknameScreen } from 'src/app/features/settings/Sett
 import { SettingsWalletScreen } from 'src/app/features/settings/SettingsWalletScreen'
 import {
   AppRoutes,
+  ImportOnboardingRoutes,
   OnboardingRoutes,
   SettingsRoutes,
   SettingsWalletRoutes,
@@ -32,20 +34,26 @@ const router = createHashRouter([
     element: <OnboardingWrapper />,
     children: [
       {
-        path: OnboardingRoutes.Import,
-        element: <ImportMnemonic />,
-      },
-      {
-        path: OnboardingRoutes.Password,
-        element: <Password />,
-      },
-      {
-        path: OnboardingRoutes.Complete,
-        element: <Complete />,
-      },
-      {
         path: '',
         element: <IntroScreen />,
+      },
+      {
+        path: OnboardingRoutes.Import,
+        element: <ImportOnboardingWrapper />,
+        children: [
+          {
+            path: ImportOnboardingRoutes.Mnemonic,
+            element: <ImportMnemonic />,
+          },
+          {
+            path: ImportOnboardingRoutes.Password,
+            element: <Password />,
+          },
+          {
+            path: ImportOnboardingRoutes.Complete,
+            element: <Complete />,
+          },
+        ],
       },
     ],
   },
