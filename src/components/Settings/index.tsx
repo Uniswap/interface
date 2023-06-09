@@ -128,17 +128,33 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
   const [gaslessMode, toggleGaslessMode] = useGaslessModeManager()
 
   // FIXME enable for Polygon first
-  const isGaslessEnabledForNetwork = chainId !== SupportedChainId.MAINNET
+  const isGaslessEnabledForNetwork = chainId == SupportedChainId.POLYGON || chainId == SupportedChainId.ARBITRUM_ONE
 
   // show confirmation view before turning on
   const [showConfirmation, setShowConfirmation] = useState(false)
 
   useOnClickOutside(node, open ? toggle : undefined)
 
+  const handleGaslessConfirm = () => setShowConfirmation(false)
+
+  const handleGaslessDismiss = () => {
+    toggleGaslessMode()
+    setShowConfirmation(false)
+  }
+
+  const handleGaslessToggle = () => {
+    if (gaslessMode) {
+      toggleGaslessMode()
+      setShowConfirmation(false)
+    } else {
+      toggleGaslessMode()
+      setShowConfirmation(true)
+    }
+  }
+
   return (
-    // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/30451
     <StyledMenu ref={node as any}>
-      <Modal isOpen={showConfirmation} onDismiss={() => setShowConfirmation(false)} maxHeight={100}>
+      <Modal isOpen={showConfirmation} onDismiss={handleGaslessDismiss} maxHeight={100}>
         <ModalContentWrapper>
           <AutoColumn gap="lg">
             <RowBetween style={{ padding: '0 2rem' }}>
@@ -146,7 +162,7 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
               <Text fontWeight={400} fontSize={16}>
                 <Trans>Are you sure?</Trans>
               </Text>
-              <StyledCloseIcon onClick={() => setShowConfirmation(false)} />
+              <StyledCloseIcon onClick={handleGaslessDismiss} />
             </RowBetween>
             <Break />
             <AutoColumn gap="lg" style={{ padding: '0 2rem' }}>
@@ -158,16 +174,7 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
               <Text fontWeight={600} fontSize={20}>
                 <Trans>BETA FEATURE. Use at own risk.</Trans>
               </Text>
-              <ButtonError
-                padding={'12px'}
-                onClick={() => {
-                  const confirmWord = t`gasless`
-                  if (window.prompt(t`Please type the word "${confirmWord}" to enable gasless mode.`) === confirmWord) {
-                    toggleGaslessMode()
-                    setShowConfirmation(false)
-                  }
-                }}
-              >
+              <ButtonError padding={'12px'} onClick={handleGaslessConfirm}>
                 <Text fontSize={16} fontWeight={500} id="confirm-expert-mode">
                   <Trans>Turn On Gasless Mode</Trans>
                 </Text>
@@ -201,21 +208,7 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
                 <QuestionHelper text={<Trans>Enables gasless transactions by compensating them with KROM.</Trans>} />
               </RowFixed>
               {isGaslessEnabledForNetwork ? (
-                <Toggle
-                  id="toggle-expert-mode-button"
-                  isActive={gaslessMode}
-                  toggle={
-                    gaslessMode
-                      ? () => {
-                          toggleGaslessMode()
-                          setShowConfirmation(false)
-                        }
-                      : () => {
-                          toggle()
-                          setShowConfirmation(true)
-                        }
-                  }
-                />
+                <Toggle id="toggle-expert-mode-button" isActive={gaslessMode} toggle={handleGaslessToggle} />
               ) : (
                 <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
                   <Trans>Coming Soon</Trans>
@@ -231,22 +224,7 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
               </RowFixed>
               <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
                 <Trans>Coming Soon</Trans>
-              </TYPE.black>
-              {/* <Toggle
-                id="toggle-expert-mode-button"
-                isActive={expertMode}
-                toggle={
-                  expertMode
-                    ? () => {
-                        toggleExpertMode()
-                        setShowConfirmation(false)
-                      }
-                    : () => {
-                        toggle()
-                        setShowConfirmation(true)
-                      }
-                }
-              /> */}
+              </TYPE.black>{' '}
             </RowBetween>
           </AutoColumn>
         </MenuFlyout>
