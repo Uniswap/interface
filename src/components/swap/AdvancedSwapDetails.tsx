@@ -558,19 +558,24 @@ export function AdvancedLeverageSwapDetails({
 
   const { 
     existingTotalPosition, 
-    expectedOutput,
     existingPosition,
     existingTotalDebtInput,
-    existingCollateral
+    existingCollateral, 
+    expectedOutput, 
+    borrowedAmount, 
+    inputAmount
   } = leverageTrade;
-
+  const price = (Number(expectedOutput ) - Number(existingTotalPosition))
+  / (Number(borrowedAmount?.toExact()) - Number(existingTotalDebtInput) + Number(inputAmount?.toExact())  )
 
   const fees = (Number(leverageTrade?.borrowedAmount?.toExact()) + Number(leverageTrade?.inputAmount?.toExact())) * 0.0005
+  console.log('leverageTrade', inputAmount?.toExact(),existingCollateral, leverageTrade, price,Number(expectedOutput ) - Number(existingTotalPosition)
 
+   , Number(borrowedAmount?.toExact()) - Number(existingTotalDebtInput),Number(inputAmount?.toExact()) - Number(existingCollateral) )
   return !trade ? null : (
     <StyledCard>
       <AutoColumn gap="sm">
-        {existingTotalPosition && 
+        {/*{existingTotalPosition && 
         <ValueLabel 
           description='The size of the current position'
           label='Existing Position'
@@ -586,7 +591,7 @@ export function AdvancedLeverageSwapDetails({
           symbolAppend={trade.inputAmount.currency.symbol}
           syncing={syncing}
         />
-        )}
+        )} */}
         <ValueLabel
           description='The amount you expect to receive at the current market price. You may receive less or more if the market price changes while your transaction is pending.'
           label={existingPosition ? 'Added Position' : 'Expected Output'}
@@ -601,9 +606,9 @@ export function AdvancedLeverageSwapDetails({
         <ValueLabel
           description="Amount In / Amount Out"
           label="Quoted Price"
-          value={Math.round(Number(leverageTrade?.strikePrice) * 1000000) / 1000000}
+          value={Math.round(Number(price) * 1000000) / 1000000}
           syncing={syncing}
-          symbolAppend={`${trade.inputAmount.currency.symbol} / ${trade.outputAmount.currency.symbol}`}
+          symbolAppend={`${trade.outputAmount.currency.symbol} / ${trade.inputAmount.currency.symbol}`}
         />
         <ValueLabel
           description="The first premium payment required to open this position"
@@ -627,7 +632,7 @@ export function AdvancedLeverageSwapDetails({
           symbolAppend={trade.inputAmount.currency.symbol}
         />
         
-        <RowBetween>
+        {/*<RowBetween>
           <RowFixed>
             <MouseoverTooltip
               text={
@@ -651,7 +656,7 @@ export function AdvancedLeverageSwapDetails({
               </ThemedText.DeprecatedBlack>
             </TruncatedText>
           </TextWithLoadingPlaceholder>
-        </RowBetween>
+        </RowBetween>*/}
         <RowBetween>
           <RowFixed>
             <MouseoverTooltip
@@ -833,7 +838,7 @@ export function AdvancedBorrowSwapDetails({
   return (
     <StyledCard>
       <AutoColumn gap="sm">
-        {borrowTrade?.existingPosition &&
+        {/*borrowTrade?.existingPosition &&
         <ValueLabel 
           description="The existing collateral in your position"
           label="Existing Collateral"
@@ -849,7 +854,7 @@ export function AdvancedBorrowSwapDetails({
             syncing={syncing}
             symbolAppend={outputCurrency?.symbol}
           />
-        }
+        */}
         <ValueLabel
           description={borrowTrade?.existingPosition ? "Collateral Added to Borrow Position" : "Net collateral for the transaction"}
           label={borrowTrade?.existingPosition ? "Additonal Collateral" : "Total Collateral"}
@@ -868,9 +873,17 @@ export function AdvancedBorrowSwapDetails({
         />
         <Separator />
         <ValueLabel 
-          description="The quoted premium you are expected to pay within 24hrs."
+          description="The quoted premium you are expected to pay, which depletes in 24hrs."
           label="Quoted Premium"
           value={borrowTrade?.quotedPremium}
+          syncing={syncing}
+          symbolAppend={outputCurrency?.symbol}
+          width={"100px"}
+        />
+        <ValueLabel 
+          description="The remaining premium returned."
+          label="Returned Premium"
+          value={borrowTrade?.unusedPremium?borrowTrade?.unusedPremium:0 }
           syncing={syncing}
           symbolAppend={outputCurrency?.symbol}
           width={"100px"}

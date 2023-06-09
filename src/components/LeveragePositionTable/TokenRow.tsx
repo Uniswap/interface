@@ -378,7 +378,7 @@ export const HEADER_DESCRIPTIONS: Record<PositionSortMethod, ReactNode | undefin
   ),
   [PositionSortMethod.PNL]: (
     <Trans>
-      Profit/Loss
+      Profit/Loss excluding slippage+fees, loss may be greater than collateral 
     </Trans>
   ),
   [PositionSortMethod.REMAINING]: (
@@ -765,7 +765,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
                   </GreenText>
                 ) : (
                   <RedText>
-                    -{timeLeft}
+                    -{0}
                   </RedText>
                 )
                 }
@@ -799,7 +799,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
           remainingPremium={
             <Trans>
               <TruncatedTableText>
-                {(remainingPremium)}
+                {(remainingPremium > 0? remainingPremium: 0)}
               </TruncatedTableText>
               {` ${inputCurrencySymbol}`}
             </Trans>
