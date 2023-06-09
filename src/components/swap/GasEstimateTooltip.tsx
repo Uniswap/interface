@@ -69,7 +69,7 @@ export default function GasEstimateTooltip({ trade, loading }: { trade: Interfac
       <LoadingOpacityContainer $loading={loading}>
         <RowFixed gap="xs">
           <UniswapXRouterIcon />
-          <ThemedText.BodySmall color="textSecondary">{formattedGasPriceString}</ThemedText.BodySmall>
+          <ThemedText.BodySmall color="textSecondary">$0.00</ThemedText.BodySmall>
         </RowFixed>
       </LoadingOpacityContainer>
     </MouseoverTooltip>
