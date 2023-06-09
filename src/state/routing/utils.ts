@@ -187,8 +187,11 @@ export function currencyAddressForSwapQuote(currency: Currency): string {
   return currency.address
 }
 
-export function shouldUseAPIRouter(
-  routerPreference?: RouterPreference | typeof INTERNAL_ROUTER_PREFERENCE_PRICE
-): boolean {
+export function shouldUseAPIRouter(args: GetQuoteArgs): boolean {
+  const { routerPreference, isRoutingAPIPrice } = args
+  if (routerPreference === INTERNAL_ROUTER_PREFERENCE_PRICE && isRoutingAPIPrice) {
+    return true
+  }
+
   return routerPreference === RouterPreference.API || routerPreference === RouterPreference.AUTO
 }
