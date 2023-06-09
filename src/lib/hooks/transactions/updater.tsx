@@ -1,13 +1,14 @@
 import { TransactionReceipt } from '@ethersproject/abstract-provider'
 import { useWeb3React } from '@web3-react/core'
 import { SupportedChainId } from 'constants/chains'
+import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import useBlockNumber, { useFastForwardBlockNumber } from 'lib/hooks/useBlockNumber'
 import ms from 'ms.macro'
 import { useCallback, useEffect } from 'react'
 import { useTransactionRemover } from 'state/transactions/hooks'
 import { TransactionDetails } from 'state/transactions/types'
 
-import { retry, RetryableError, RetryOptions } from './retry'
+import { CanceledError, retry, RetryableError, RetryOptions } from './retry'
 
 interface Transaction {
   addedTime: number
@@ -53,6 +54,7 @@ export default function Updater({ pendingTransactions, onCheck, onReceipt }: Upd
   const lastBlockNumber = useBlockNumber()
   const fastForwardBlockNumber = useFastForwardBlockNumber()
   const removeTransaction = useTransactionRemover()
+  const blockTimestamp = useCurrentBlockTimestamp()
 
   const getReceipt = useCallback(
     (hash: string) => {
@@ -63,16 +65,17 @@ export default function Updater({ pendingTransactions, onCheck, onReceipt }: Upd
           provider.getTransactionReceipt(hash).then(async (receipt) => {
             if (receipt === null) {
               if (account) {
-                const transactionCount = await provider.getTransactionCount(account)
                 const tx = pendingTransactions[hash]
-                // We check for the presence of a nonce because we haven't always saved them,
-                //   so this code may run against old store state where nonce is undefined.
-                if (tx.nonce && tx.nonce < transactionCount) {
-                  // We remove pending transactions from redux if they are no longer the latest nonce.
+                // Remove transactions past their deadline or - if there is no deadline - older than 6 hours.
+                if (tx.deadline) {
+                  // Deadlines are expressed as seconds since epoch, as they are used on-chain.
+                  if (blockTimestamp && tx.deadline < blockTimestamp.toNumber()) {
+                    removeTransaction(hash)
+                  }
+                } else if (tx.addedTime + ms`6h` < Date.now()) {
                   removeTransaction(hash)
                 }
               }
-              console.debug(`Retrying tranasaction receipt for ${hash}`)
               throw new RetryableError()
             }
             return receipt
@@ -80,7 +83,7 @@ export default function Updater({ pendingTransactions, onCheck, onReceipt }: Upd
         retryOptions
       )
     },
-    [account, chainId, pendingTransactions, provider, removeTransaction]
+    [account, blockTimestamp, chainId, pendingTransactions, provider, removeTransaction]
   )
 
   useEffect(() => {
@@ -92,17 +95,12 @@ export default function Updater({ pendingTransactions, onCheck, onReceipt }: Upd
         const { promise, cancel } = getReceipt(hash)
         promise
           .then((receipt) => {
-            if (receipt) {
-              fastForwardBlockNumber(receipt.blockNumber)
-              onReceipt({ chainId, hash, receipt })
-            } else {
-              onCheck({ chainId, hash, blockNumber: lastBlockNumber })
-            }
+            fastForwardBlockNumber(receipt.blockNumber)
+            onReceipt({ chainId, hash, receipt })
           })
           .catch((error) => {
-            if (!error.isCancelledError) {
-              console.warn(`Failed to get transaction receipt for ${hash}`, error)
-            }
+            if (error instanceof CanceledError) return
+            onCheck({ chainId, hash, blockNumber: lastBlockNumber })
           })
         return cancel
       })

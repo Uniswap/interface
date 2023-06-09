@@ -13,7 +13,6 @@ import INJECTED_DARK_ICON from 'assets/svg/browser-wallet-dark.svg'
 import INJECTED_LIGHT_ICON from 'assets/svg/browser-wallet-light.svg'
 import UNISWAP_LOGO from 'assets/svg/logo.svg'
 import { SupportedChainId } from 'constants/chains'
-import { useCallback } from 'react'
 import { isMobile, isNonIOSPhone } from 'utils'
 
 import { RPC_URLS } from '../constants/networks'
@@ -21,6 +20,7 @@ import { RPC_PROVIDERS } from '../constants/providers'
 import { Connection, ConnectionType } from './types'
 import { getIsCoinbaseWallet, getIsInjected, getIsMetaMaskWallet } from './utils'
 import { UniwalletConnect, WalletConnectPopup } from './WalletConnect'
+import { WalletConnectV2Popup } from './WalletConnectV2'
 
 function onError(error: Error) {
   console.debug(`web3-react error: ${error}`)
@@ -87,6 +87,18 @@ export const walletConnectConnection: Connection = {
   shouldDisplay: () => !getIsInjectedMobileBrowser(),
 }
 
+const [web3WalletConnectV2, web3WalletConnectV2Hooks] = initializeConnector<WalletConnectV2Popup>(
+  (actions) => new WalletConnectV2Popup({ actions, onError })
+)
+export const walletConnectV2Connection: Connection = {
+  getName: () => 'WalletConnectV2',
+  connector: web3WalletConnectV2,
+  hooks: web3WalletConnectV2Hooks,
+  type: ConnectionType.WALLET_CONNECT_V2,
+  getIcon: () => WALLET_CONNECT_ICON,
+  shouldDisplay: () => false,
+}
+
 const [web3UniwalletConnect, web3UniwalletConnectHooks] = initializeConnector<UniwalletConnect>(
   (actions) => new UniwalletConnect({ actions, onError })
 )
@@ -94,7 +106,7 @@ export const uniwalletConnectConnection: Connection = {
   getName: () => 'Uniswap Wallet',
   connector: web3UniwalletConnect,
   hooks: web3UniwalletConnectHooks,
-  type: ConnectionType.UNIWALLET,
+  type: ConnectionType.UNISWAP_WALLET,
   getIcon: () => UNIWALLET_ICON,
   shouldDisplay: () => Boolean(!getIsInjectedMobileBrowser() && !isNonIOSPhone),
   isNew: true,
@@ -137,35 +149,36 @@ export function getConnections() {
     uniwalletConnectConnection,
     injectedConnection,
     walletConnectConnection,
+    walletConnectV2Connection,
     coinbaseWalletConnection,
     gnosisSafeConnection,
     networkConnection,
   ]
 }
 
-export function useGetConnection() {
-  return useCallback((c: Connector | ConnectionType) => {
-    if (c instanceof Connector) {
-      const connection = getConnections().find((connection) => connection.connector === c)
-      if (!connection) {
-        throw Error('unsupported connector')
-      }
-      return connection
-    } else {
-      switch (c) {
-        case ConnectionType.INJECTED:
-          return injectedConnection
-        case ConnectionType.COINBASE_WALLET:
-          return coinbaseWalletConnection
-        case ConnectionType.WALLET_CONNECT:
-          return walletConnectConnection
-        case ConnectionType.UNIWALLET:
-          return uniwalletConnectConnection
-        case ConnectionType.NETWORK:
-          return networkConnection
-        case ConnectionType.GNOSIS_SAFE:
-          return gnosisSafeConnection
-      }
+export function getConnection(c: Connector | ConnectionType) {
+  if (c instanceof Connector) {
+    const connection = getConnections().find((connection) => connection.connector === c)
+    if (!connection) {
+      throw Error('unsupported connector')
     }
-  }, [])
+    return connection
+  } else {
+    switch (c) {
+      case ConnectionType.INJECTED:
+        return injectedConnection
+      case ConnectionType.COINBASE_WALLET:
+        return coinbaseWalletConnection
+      case ConnectionType.WALLET_CONNECT:
+        return walletConnectConnection
+      case ConnectionType.WALLET_CONNECT_V2:
+        return walletConnectV2Connection
+      case ConnectionType.UNISWAP_WALLET:
+        return uniwalletConnectConnection
+      case ConnectionType.NETWORK:
+        return networkConnection
+      case ConnectionType.GNOSIS_SAFE:
+        return gnosisSafeConnection
+    }
+  }
 }

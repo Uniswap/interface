@@ -10,14 +10,14 @@ import { AutoRow } from 'components/Row'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { formatDelta } from 'components/Tokens/TokenDetails/PriceChart'
 import Tooltip from 'components/Tooltip'
-import { useGetConnection } from 'connection'
+import { getConnection } from 'connection'
 import { usePortfolioBalancesQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { useAtomValue } from 'jotai/utils'
 import { useProfilePageState, useSellAsset, useWalletCollections } from 'nft/hooks'
 import { useIsNftClaimAvailable } from 'nft/hooks/useIsNftClaimAvailable'
 import { ProfilePageStateType } from 'nft/types'
 import { useCallback, useState } from 'react'
-import { ArrowDownRight, ArrowUpRight, Copy, CreditCard, IconProps, Info, Power, Settings } from 'react-feather'
+import { ArrowDownRight, ArrowUpRight, Copy, CreditCard, IconProps, Info, LogOut, Settings } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
 import { shouldDisableNFTRoutesAtom } from 'state/application/atoms'
 import { useAppDispatch } from 'state/hooks'
@@ -31,7 +31,7 @@ import { ApplicationModal } from '../../state/application/reducer'
 import { useUserHasAvailableClaim, useUserUnclaimedAmount } from '../../state/claim/hooks'
 import StatusIcon from '../Identicon/StatusIcon'
 import { useToggleAccountDrawer } from '.'
-import IconButton, { IconHoverText } from './IconButton'
+import IconButton, { IconHoverText, IconWithConfirmTextButton } from './IconButton'
 import MiniPortfolio from './MiniPortfolio'
 import { portfolioFadeInAnimation } from './MiniPortfolio/PortfolioRow'
 
@@ -103,7 +103,9 @@ const FiatOnrampAvailabilityExternalLink = styled(ExternalLink)`
 const StatusWrapper = styled.div`
   display: inline-block;
   width: 70%;
-  padding-right: 4px;
+  max-width: 70%;
+  overflow: hidden;
+  padding-right: 14px;
   display: inline-flex;
 `
 
@@ -158,6 +160,10 @@ export function PortfolioArrow({ change, ...rest }: { change: number } & IconPro
   )
 }
 
+const LogOutCentered = styled(LogOut)`
+  transform: translateX(2px);
+`
+
 export default function AuthenticatedHeader({ account, openSettings }: { account: string; openSettings: () => void }) {
   const { connector, ENSName } = useWeb3React()
   const dispatch = useAppDispatch()
@@ -172,7 +178,6 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
 
   const unclaimedAmount: CurrencyAmount<Token> | undefined = useUserUnclaimedAmount(account)
   const isUnclaimed = useUserHasAvailableClaim(account)
-  const getConnection = useGetConnection()
   const connection = getConnection(connector)
   const openClaimModal = useToggleModal(ApplicationModal.ADDRESS_CLAIM)
   const openNftModal = useToggleModal(ApplicationModal.UNISWAP_NFT_AIRDROP_CLAIM)
@@ -232,6 +237,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
   const totalBalance = portfolio?.tokensTotalDenominatedValue?.value
   const absoluteChange = portfolio?.tokensTotalDenominatedValueChange?.absolute?.value
   const percentChange = portfolio?.tokensTotalDenominatedValueChange?.percentage?.value
+  const [showDisconnectConfirm, setShowDisconnectConfirm] = useState(false)
 
   return (
     <AuthenticatedHeaderWrapper>
@@ -253,13 +259,21 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
           )}
         </StatusWrapper>
         <IconContainer>
-          <IconButton data-testid="wallet-settings" onClick={openSettings} Icon={Settings} />
+          {!showDisconnectConfirm && (
+            <IconButton data-testid="wallet-settings" onClick={openSettings} Icon={Settings} />
+          )}
           <TraceEvent
             events={[BrowserEvent.onClick]}
             name={SharedEventName.ELEMENT_CLICKED}
             element={InterfaceElementName.DISCONNECT_WALLET_BUTTON}
           >
-            <IconButton data-testid="wallet-disconnect" onClick={disconnect} Icon={Power} />
+            <IconWithConfirmTextButton
+              data-testid="wallet-disconnect"
+              onConfirm={disconnect}
+              onShowConfirm={setShowDisconnectConfirm}
+              Icon={LogOutCentered}
+              text="Disconnect"
+            />
           </TraceEvent>
         </IconContainer>
       </HeaderWrapper>

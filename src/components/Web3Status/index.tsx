@@ -6,7 +6,7 @@ import PortfolioDrawer, { useAccountDrawer } from 'components/AccountDrawer'
 import PrefetchBalancesWrapper from 'components/AccountDrawer/PrefetchBalancesWrapper'
 import Loader from 'components/Icons/LoadingSpinner'
 import { IconWrapper } from 'components/Identicon/StatusIcon'
-import { useGetConnection } from 'connection'
+import { getConnection } from 'connection'
 import { navSearchInputVisibleSize } from 'hooks/useScreenSize'
 import { Portal } from 'nft/components/common/Portal'
 import { useIsNftClaimAvailable } from 'nft/hooks/useIsNftClaimAvailable'
@@ -150,7 +150,6 @@ const StyledConnectButton = styled.button`
 
 function Web3StatusInner() {
   const { account, connector, chainId, ENSName } = useWeb3React()
-  const getConnection = useGetConnection()
   const connection = getConnection(connector)
   const [, toggleAccountDrawer] = useAccountDrawer()
   const handleWalletDropdownClick = useCallback(() => {

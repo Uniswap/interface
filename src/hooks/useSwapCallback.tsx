@@ -4,7 +4,7 @@ import { PermitSignature } from 'hooks/usePermitAllowance'
 import { useMemo } from 'react'
 
 import { useTransactionAdder } from '../state/transactions/hooks'
-import { TransactionType } from '../state/transactions/types'
+import { TransactionInfo, TransactionType } from '../state/transactions/types'
 import { currencyId } from '../utils/currencyId'
 import useTransactionDeadline from './useTransactionDeadline'
 import { useUniversalRouterSwapCallback } from './useUniversalRouter'
@@ -30,33 +30,30 @@ export function useSwapCallback(
 
   const callback = useMemo(() => {
     if (!trade || !swapCallback) return null
+    const info: TransactionInfo = {
+      type: TransactionType.SWAP,
+      inputCurrencyId: currencyId(trade.inputAmount.currency),
+      outputCurrencyId: currencyId(trade.outputAmount.currency),
+      ...(trade.tradeType === TradeType.EXACT_INPUT
+        ? {
+            tradeType: TradeType.EXACT_INPUT,
+            inputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
+            expectedOutputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
+            minimumOutputCurrencyAmountRaw: trade.minimumAmountOut(allowedSlippage).quotient.toString(),
+          }
+        : {
+            tradeType: TradeType.EXACT_OUTPUT,
+            maximumInputCurrencyAmountRaw: trade.maximumAmountIn(allowedSlippage).quotient.toString(),
+            outputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
+            expectedInputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
+          }),
+    }
     return () =>
       swapCallback().then((response) => {
-        addTransaction(
-          response,
-          trade.tradeType === TradeType.EXACT_INPUT
-            ? {
-                type: TransactionType.SWAP,
-                tradeType: TradeType.EXACT_INPUT,
-                inputCurrencyId: currencyId(trade.inputAmount.currency),
-                inputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
-                expectedOutputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
-                outputCurrencyId: currencyId(trade.outputAmount.currency),
-                minimumOutputCurrencyAmountRaw: trade.minimumAmountOut(allowedSlippage).quotient.toString(),
-              }
-            : {
-                type: TransactionType.SWAP,
-                tradeType: TradeType.EXACT_OUTPUT,
-                inputCurrencyId: currencyId(trade.inputAmount.currency),
-                maximumInputCurrencyAmountRaw: trade.maximumAmountIn(allowedSlippage).quotient.toString(),
-                outputCurrencyId: currencyId(trade.outputAmount.currency),
-                outputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
-                expectedInputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
-              }
-        )
+        addTransaction(response, info, deadline?.toNumber())
         return response.hash
       })
-  }, [addTransaction, allowedSlippage, swapCallback, trade])
+  }, [addTransaction, allowedSlippage, deadline, swapCallback, trade])
 
   return {
     callback,

@@ -1,5 +1,10 @@
 import { Connector } from '@web3-react/types'
-import { networkConnection, uniwalletConnectConnection, walletConnectConnection } from 'connection'
+import {
+  networkConnection,
+  uniwalletConnectConnection,
+  walletConnectConnection,
+  walletConnectV2Connection,
+} from 'connection'
 import { getChainInfo } from 'constants/chainInfo'
 import { isSupportedChain, SupportedChainId } from 'constants/chains'
 import { FALLBACK_URLS, RPC_URLS } from 'constants/networks'
@@ -22,9 +27,12 @@ export const switchChain = async (connector: Connector, chainId: SupportedChainI
   if (!isSupportedChain(chainId)) {
     throw new Error(`Chain ${chainId} not supported for connector (${typeof connector})`)
   } else if (
-    connector === walletConnectConnection.connector ||
-    connector === uniwalletConnectConnection.connector ||
-    connector === networkConnection.connector
+    [
+      walletConnectV2Connection.connector,
+      walletConnectConnection.connector,
+      uniwalletConnectConnection.connector,
+      networkConnection.connector,
+    ].includes(connector)
   ) {
     await connector.activate(chainId)
   } else {
