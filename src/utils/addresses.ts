@@ -20,8 +20,9 @@ export function isAddress(value: any): string | false {
  */
 export function shortenAddress(address: string, charsStart = 4, charsEnd?: number): string {
   const parsed = isAddress(address)
-  if (!parsed) return ''
-
+  if (!parsed) {
+    return ''
+  }
   return `${address.substring(0, charsStart + 2)}...${address.substring(42 - (charsEnd || charsStart))}`
 }
 
