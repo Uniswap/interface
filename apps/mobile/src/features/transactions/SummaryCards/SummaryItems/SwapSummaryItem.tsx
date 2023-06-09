@@ -1,20 +1,36 @@
 import { TradeType } from '@uniswap/sdk-core'
 import React, { useCallback, useMemo } from 'react'
-import { useAppDispatch } from 'src/app/hooks'
+import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { SplitLogo } from 'src/components/CurrencyLogo/SplitLogo'
 import { openModal } from 'src/features/modals/modalSlice'
 import { getFormattedCurrencyAmount } from 'src/features/notifications/utils'
 import { ModalName } from 'src/features/telemetry/constants'
 import { useCurrencyInfo } from 'src/features/tokens/useCurrencyInfo'
 import { useCreateSwapFormState } from 'src/features/transactions/hooks'
+import { selectTransactions } from 'src/features/transactions/selectors'
 import TransactionSummaryLayout, {
   TXN_HISTORY_ICON_SIZE,
 } from 'src/features/transactions/SummaryCards/TransactionSummaryLayout'
+import { flattenObjectOfObjects } from 'src/utils/objects'
 import {
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,
   TransactionDetails,
+  TransactionType,
 } from 'wallet/src/features/transactions/types'
+import { ONE_MINUTE_MS } from 'wallet/src/utils/time'
+
+const MAX_SHOW_RETRY_TIME = 15 * ONE_MINUTE_MS
+
+function useMostRecentSwapTx(address: Address): TransactionDetails | undefined {
+  const transactions = useAppSelector(selectTransactions)
+  const addressTransactions = transactions[address]
+  if (addressTransactions) {
+    return flattenObjectOfObjects(addressTransactions)
+      .filter((tx) => tx.typeInfo.type === TransactionType.Swap)
+      .sort((a, b) => b.addedTime - a.addedTime)[0]
+  }
+}
 
 export default function SwapSummaryItem({
   transaction,
@@ -58,6 +74,12 @@ export default function SwapSummaryItem({
     transaction.id
   )
 
+  const latestSwapTx = useMostRecentSwapTx(transaction.from)
+  const isTheLatestSwap = latestSwapTx && latestSwapTx.id === transaction.id
+  // if this is the latest tx or it was added within the last 15 minutes, show the retry button
+  const shouldShowRetry =
+    isTheLatestSwap || Date.now() - transaction.addedTime < MAX_SHOW_RETRY_TIME
+
   const onRetry = useCallback(() => {
     dispatch(openModal({ name: ModalName.Swap, initialState: swapFormState }))
   }, [dispatch, swapFormState])
@@ -74,7 +96,7 @@ export default function SwapSummaryItem({
         />
       }
       transaction={transaction}
-      onRetry={swapFormState && onRetry}
+      onRetry={swapFormState && shouldShowRetry ? onRetry : undefined}
     />
   )
 }
