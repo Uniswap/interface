@@ -1,11 +1,11 @@
-import React, { Suspense, useEffect, useRef } from 'react';
+import React, { Suspense, useEffect, useRef } from 'react'
 
-export const SuspenseFallbackToPreviousContents = (props: { children: React.ReactNode; }) => {
-  const lastContents = useRef(props.children);
+export const SuspenseFallbackToPreviousContents = (props: { children: React.ReactNode }) => {
+  const lastContents = useRef(props.children)
 
   useEffect(() => {
-    lastContents.current = props.children;
-  }, [props.children]);
+    lastContents.current = props.children
+  }, [props.children])
 
-  return <Suspense fallback={lastContents.current}>{props.children}</Suspense>;
-};
+  return <Suspense fallback={lastContents.current}>{props.children}</Suspense>
+}
