@@ -45,19 +45,25 @@ export interface Token {
 
 type Tokens = Array<Token>
 
+interface TokensResponse {
+  tokens: Tokens
+}
+
 export function useNewTopTokens(): {
   loading: boolean
   error: boolean
   tokens: Tokens | undefined
 } {
-  const { loading, error, data } = useQuery<Tokens>(TOP_TOKENS, { client: apolloClient })
+  const { loading, error, data } = useQuery<TokensResponse>(TOP_TOKENS, { client: apolloClient })
+
 
   const formattedData = useMemo(() => {
-    if (!data || !Array.isArray(data)) return undefined
+    if (!data) return undefined
 
-    const unwrappedTokens = data.map((token) => {
+    const unwrappedTokens = data?.tokens.map((token) => {
       return unwrapTokenRollux(SupportedChainId.ROLLUX, token)
     })
+   
     return unwrappedTokens
   }, [data])
 
