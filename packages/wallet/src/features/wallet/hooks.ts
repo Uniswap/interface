@@ -5,6 +5,7 @@ import { getValidAddress, sanitizeAddressText, shortenAddress } from 'wallet/src
 import { trimToLength } from 'wallet/src/utils/string'
 import {
   makeSelectAccountNotificationSetting,
+  selectAccounts,
   selectActiveAccount,
   selectActiveAccountAddress,
   selectNonPendingAccounts,
@@ -19,6 +20,12 @@ const ENS_TRIM_LENGTH = 8
 
 export function useAccounts(): Record<string, Account> {
   return useAppSelector<Record<string, Account>>(selectNonPendingAccounts)
+}
+
+export function useAccount(address: Address): Account {
+  const account = useAppSelector<Record<string, Account>>(selectAccounts)[address]
+  if (!account) throw new Error(`No account found for address ${address}`)
+  return account
 }
 
 export function usePendingAccounts(): AddressTo<Account> {

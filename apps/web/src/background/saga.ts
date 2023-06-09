@@ -13,6 +13,12 @@ import { spawn } from 'typed-redux-saga'
 import { authActions, authReducer, authSaga, authSagaName } from 'wallet/src/features/auth/saga'
 import { initProviders } from 'wallet/src/features/providers'
 import {
+  editAccountActions,
+  editAccountReducer,
+  editAccountSaga,
+  editAccountSagaName,
+} from 'wallet/src/features/wallet/accounts/editAccountSaga'
+import {
   createAccountActions,
   createAccountReducer,
   createAccountSaga,
@@ -35,12 +41,13 @@ import { keepAliveSaga } from './utils/keepaliveSaga'
 
 // Stateful sagas that are registered with the store on startup
 export const monitoredSagas: Record<string, MonitoredSaga> = {
-  [importAccountSagaName]: {
-    name: importAccountSagaName,
-    wrappedSaga: importAccountSaga,
-    reducer: importAccountReducer,
-    actions: importAccountActions,
+  [authSagaName]: {
+    name: authSagaName,
+    wrappedSaga: authSaga,
+    reducer: authReducer,
+    actions: authActions,
   },
+
   [createAccountSagaName]: {
     name: createAccountSagaName,
     wrappedSaga: createAccountSaga,
@@ -53,17 +60,23 @@ export const monitoredSagas: Record<string, MonitoredSaga> = {
     reducer: createAndActivateAccountReducer,
     actions: createAndActivateAccountActions,
   },
+  [editAccountSagaName]: {
+    name: editAccountSagaName,
+    wrappedSaga: editAccountSaga,
+    reducer: editAccountReducer,
+    actions: editAccountActions,
+  },
+  [importAccountSagaName]: {
+    name: importAccountSagaName,
+    wrappedSaga: importAccountSaga,
+    reducer: importAccountReducer,
+    actions: importAccountActions,
+  },
   [pendingAccountSagaName]: {
     name: pendingAccountSagaName,
     wrappedSaga: pendingAccountSaga,
     reducer: pendingAccountReducer,
     actions: pendingAccountActions,
-  },
-  [authSagaName]: {
-    name: authSagaName,
-    wrappedSaga: authSaga,
-    reducer: authReducer,
-    actions: authActions,
   },
 } as const
 
