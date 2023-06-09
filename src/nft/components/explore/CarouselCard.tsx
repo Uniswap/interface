@@ -291,7 +291,7 @@ const DEFAULT_TABLE_ELEMENTS = 12
 const LoadingTable = () => {
   return (
     <>
-      {[...Array(DEFAULT_TABLE_ELEMENTS)].map((index) => (
+      {Array.from({ length: DEFAULT_TABLE_ELEMENTS }, (_, i) => i + 1).map((_, index) => (
         <LoadingTableElement key={index} />
       ))}
     </>

@@ -148,8 +148,8 @@ export function Table<D extends Record<string, unknown>>({
     <GlowEffect>
       <table {...getTableProps()} className={styles.table}>
         <thead className={styles.thead}>
-          {headerGroups.map((headerGroup) => (
-            <tr {...headerGroup.getHeaderGroupProps()} key={headerGroup.id}>
+          {headerGroups.map((headerGroup, index) => (
+            <tr {...headerGroup.getHeaderGroupProps()} key={index}>
               {headerGroup.headers.map((column, index) => {
                 return (
                   <StyledHeader
@@ -160,7 +160,7 @@ export function Table<D extends Record<string, unknown>>({
                       paddingLeft: index === 0 ? (isMobile ? '16px' : '52px') : 0,
                     }}
                     disabled={column.disableSortBy}
-                    key={index}
+                    key={column.id}
                   >
                     <Box as="span" color="accentAction" position="relative">
                       {column.isSorted ? (
@@ -245,8 +245,8 @@ function LoadingTable({ headerGroups, visibleColumns, ...props }: LoadingTablePr
     <GlowEffect>
       <table {...props} className={styles.table}>
         <thead className={styles.thead}>
-          {headerGroups.map((headerGroup) => (
-            <tr {...headerGroup.getHeaderGroupProps()} key={headerGroup.id}>
+          {headerGroups.map((headerGroup, index) => (
+            <tr {...headerGroup.getHeaderGroupProps()} key={index}>
               {headerGroup.headers.map((column, index) => {
                 return (
                   <StyledHeader
@@ -257,7 +257,7 @@ function LoadingTable({ headerGroups, visibleColumns, ...props }: LoadingTablePr
                       paddingLeft: index === 0 ? '52px' : 0,
                     }}
                     disabled={index === 0}
-                    key={index}
+                    key={column.id}
                   >
                     <Box as="span" color="accentAction" position="relative">
                       {column.isSorted ? (
@@ -280,7 +280,7 @@ function LoadingTable({ headerGroups, visibleColumns, ...props }: LoadingTablePr
           ))}
         </thead>
         <tbody {...props}>
-          {[...Array(DEFAULT_TRENDING_TABLE_QUERY_AMOUNT)].map((_, index) => (
+          {Array.from({ length: DEFAULT_TRENDING_TABLE_QUERY_AMOUNT }, (_, i) => i + 1).map((_, index) => (
             <StyledLoadingRow key={index}>
               {[...Array(visibleColumns.length)].map((_, cellIndex) => {
                 return (
