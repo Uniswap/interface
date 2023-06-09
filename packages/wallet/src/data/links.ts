@@ -45,7 +45,7 @@ export const getRestLink = (): ApolloLink => {
 
 export const getGraphqlHttpLink = (): ApolloLink =>
   createHttpLink({
-    uri: REST_API_URL,
+    uri: uniswapUrls.graphQLUrl,
     headers: {
       'Content-Type': 'application/json',
       'X-API-KEY': config.uniswapApiKey,
