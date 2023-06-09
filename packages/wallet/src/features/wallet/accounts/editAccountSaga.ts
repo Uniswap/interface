@@ -1,5 +1,3 @@
-import { appSelect } from 'src/app/hooks'
-import { disconnectWCForAccount } from 'src/features/walletConnect/WalletConnect'
 import { all, call, put } from 'typed-redux-saga'
 import { logger } from 'wallet/src/features/logger/logger'
 import { Account, AccountType, BackupType } from 'wallet/src/features/wallet/accounts/types'
@@ -8,6 +6,7 @@ import {
   editAccount as editInStore,
   removeAccount as removeInStore,
 } from 'wallet/src/features/wallet/slice'
+import { appSelect } from 'wallet/src/state'
 import { unique } from 'wallet/src/utils/array'
 import { createMonitoredSaga } from 'wallet/src/utils/saga'
 
@@ -128,7 +127,6 @@ function* removeAccount(params: RemoveParams) {
   logger.debug('editAccountSaga', 'removeAccount', 'Removing account', address)
   // TODO [MOB-243] cleanup account artifacts in native-land (i.e. keystore)
   yield* put(removeInStore(address))
-  yield* call(disconnectWCForAccount, address)
 }
 
 // Adds the backup to all accounts that share the same seed phrase

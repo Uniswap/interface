@@ -9,9 +9,12 @@ import { Flex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
 import { Text } from 'src/components/Text'
 import { backupMnemonicToICloud } from 'src/features/CloudBackup/RNICloudBackupsManager'
-import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { logger } from 'wallet/src/features/logger/logger'
+import {
+  EditAccountAction,
+  editAccountActions,
+} from 'wallet/src/features/wallet/accounts/editAccountSaga'
 import { BackupType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
 import { ONE_SECOND_MS } from 'wallet/src/utils/time'

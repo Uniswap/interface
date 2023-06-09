@@ -1,3 +1,4 @@
+import { accountCleanupWatcher } from 'src/features/accounts/accountWatcherSaga'
 import { cloudBackupsManagerSaga } from 'src/features/CloudBackup/saga'
 import { deepLinkWatcher } from 'src/features/deepLinking/handleDeepLinkSaga'
 import { firebaseDataWatcher } from 'src/features/firebase/firebaseDataSaga'
@@ -29,15 +30,15 @@ import {
   transferTokenSaga,
   transferTokenSagaName,
 } from 'src/features/transactions/transfer/transferTokenSaga'
+import { signWcRequestSaga, walletConnectSaga } from 'src/features/walletConnect/saga'
+import { walletConnectV2Saga } from 'src/features/walletConnectV2/saga'
+import { spawn } from 'typed-redux-saga'
 import {
   editAccountActions,
   editAccountReducer,
   editAccountSaga,
   editAccountSagaName,
-} from 'src/features/wallet/editAccountSaga'
-import { signWcRequestSaga, walletConnectSaga } from 'src/features/walletConnect/saga'
-import { walletConnectV2Saga } from 'src/features/walletConnectV2/saga'
-import { spawn } from 'typed-redux-saga'
+} from 'wallet/src/features/wallet/accounts/editAccountSaga'
 import {
   createAccountActions,
   createAccountReducer,
@@ -54,6 +55,7 @@ import { getMonitoredSagaReducers, MonitoredSaga } from 'wallet/src/state/saga'
 
 // All regular sagas must be included here
 const sagas = [
+  accountCleanupWatcher,
   telemetrySaga,
   initFirebase,
   deepLinkWatcher,

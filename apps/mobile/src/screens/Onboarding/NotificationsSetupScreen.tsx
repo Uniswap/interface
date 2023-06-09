@@ -18,10 +18,13 @@ import { useCompleteOnboardingCallback } from 'src/features/onboarding/hooks'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { ImportType, OnboardingEntryPoint } from 'src/features/onboarding/utils'
 import { ElementName } from 'src/features/telemetry/constants'
-import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { openSettings } from 'src/utils/linking'
 import { ONBOARDING_NOTIFICATIONS_DARK, ONBOARDING_NOTIFICATIONS_LIGHT } from 'ui/src/assets'
+import {
+  EditAccountAction,
+  editAccountActions,
+} from 'wallet/src/features/wallet/accounts/editAccountSaga'
 import { useNativeAccountExists } from 'wallet/src/features/wallet/hooks'
 import { selectAccounts } from 'wallet/src/features/wallet/selectors'
 

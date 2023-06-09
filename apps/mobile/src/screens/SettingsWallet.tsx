@@ -31,7 +31,6 @@ import {
 } from 'src/features/notifications/hooks'
 import { promptPushPermission } from 'src/features/notifications/Onesignal'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
-import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
 import { showNotificationSettingsAlert } from 'src/screens/Onboarding/NotificationsSetupScreen'
 import NotificationIcon from 'ui/src/assets/icons/bell.svg'
 import ChartIcon from 'ui/src/assets/icons/chart.svg'
@@ -40,6 +39,10 @@ import EditIcon from 'ui/src/assets/icons/edit.svg'
 import GlobalIcon from 'ui/src/assets/icons/global.svg'
 import KeyIcon from 'ui/src/assets/icons/key.svg'
 import ShieldQuestionIcon from 'ui/src/assets/icons/shield-question.svg'
+import {
+  EditAccountAction,
+  editAccountActions,
+} from 'wallet/src/features/wallet/accounts/editAccountSaga'
 import { AccountType, BackupType } from 'wallet/src/features/wallet/accounts/types'
 import { useAccounts, useSelectAccountNotificationSetting } from 'wallet/src/features/wallet/hooks'
 import {

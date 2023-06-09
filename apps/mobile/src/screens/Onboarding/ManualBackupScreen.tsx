@@ -25,8 +25,11 @@ import { useLockScreenOnBlur } from 'src/features/authentication/lockScreenConte
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { ElementName, ManualPageViewScreen, ModalName } from 'src/features/telemetry/constants'
-import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
 import { OnboardingScreens } from 'src/screens/Screens'
+import {
+  EditAccountAction,
+  editAccountActions,
+} from 'wallet/src/features/wallet/accounts/editAccountSaga'
 import { BackupType, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
 

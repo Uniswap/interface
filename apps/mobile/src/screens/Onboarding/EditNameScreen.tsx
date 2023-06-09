@@ -14,11 +14,14 @@ import { Text } from 'src/components/Text'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { ImportType } from 'src/features/onboarding/utils'
 import { ElementName } from 'src/features/telemetry/constants'
-import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { useAddBackButton } from 'src/utils/useAddBackButton'
 import PencilIcon from 'ui/src/assets/icons/pencil-detailed.svg'
 import { NICKNAME_MAX_LENGTH } from 'wallet/src/constants/accounts'
+import {
+  EditAccountAction,
+  editAccountActions,
+} from 'wallet/src/features/wallet/accounts/editAccountSaga'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import {
   PendingAccountActions,
