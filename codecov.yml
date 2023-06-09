@@ -12,10 +12,8 @@ ignore:
 coverage:
   status:
     # Omit merging unit/e2e reports into the defaults, as it is nonsensical.
-    project:
-      default: off
-    patch:
-      default: off
+    project: off
+    patch: off
     changes: off
 
 flag_management:
