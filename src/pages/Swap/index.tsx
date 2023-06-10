@@ -27,6 +27,7 @@ import { useMaxAmountIn } from 'hooks/useMaxAmountIn'
 import usePermit2Allowance, { AllowanceState } from 'hooks/usePermit2Allowance'
 import usePrevious from 'hooks/usePrevious'
 import { useSwapCallback } from 'hooks/useSwapCallback'
+import { useSwitchChain } from 'hooks/useSwitchChain'
 import { useUSDPrice } from 'hooks/useUSDPrice'
 import JSBI from 'jsbi'
 import { formatSwapQuoteReceivedEventProperties } from 'lib/utils/analytics'
@@ -34,11 +35,11 @@ import { ReactNode, useCallback, useEffect, useMemo, useReducer, useState } from
 import { ArrowDown } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
 import { Text } from 'rebass'
+import { useAppSelector } from 'state/hooks'
 import { InterfaceTrade, TradeState } from 'state/routing/types'
 import styled, { useTheme } from 'styled-components/macro'
 import { currencyAmountToPreciseFloat, formatTransactionAmount } from 'utils/formatNumbers'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
-import { switchChain } from 'utils/switchChain'
 
 import AddressInputPanel from '../../components/AddressInputPanel'
 import { ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
@@ -535,6 +536,9 @@ export function Swap({
     !showWrap && userHasSpecifiedInputOutput && (trade || routeIsLoading || routeIsSyncing)
   )
 
+  const switchChain = useSwitchChain()
+  const switchingChain = useAppSelector((state) => state.wallets.switchingChain)
+
   return (
     <SwapWrapper chainId={chainId} className={className} id="swap-page">
       <TokenSafetyModal
@@ -669,16 +673,22 @@ export function Swap({
               </ThemedText.DeprecatedMain>
             </ButtonPrimary>
           ) : !account ? (
-            <TraceEvent
-              events={[BrowserEvent.onClick]}
-              name={InterfaceEventName.CONNECT_WALLET_BUTTON_CLICKED}
-              properties={{ received_swap_quote: getIsValidSwapQuote(trade, tradeState, swapInputError) }}
-              element={InterfaceElementName.CONNECT_WALLET_BUTTON}
-            >
-              <ButtonLight onClick={toggleWalletDrawer} fontWeight={600}>
-                <Trans>Connect Wallet</Trans>
-              </ButtonLight>
-            </TraceEvent>
+            !switchingChain ? (
+              <TraceEvent
+                events={[BrowserEvent.onClick]}
+                name={InterfaceEventName.CONNECT_WALLET_BUTTON_CLICKED}
+                properties={{ received_swap_quote: getIsValidSwapQuote(trade, tradeState, swapInputError) }}
+                element={InterfaceElementName.CONNECT_WALLET_BUTTON}
+              >
+                <ButtonLight onClick={toggleWalletDrawer} fontWeight={600}>
+                  <Trans>Connect Wallet</Trans>
+                </ButtonLight>
+              </TraceEvent>
+            ) : (
+              <ButtonPrimary disabled={true}>
+                <Trans>Connecting to {getChainInfo(switchingChain)?.label}</Trans>
+              </ButtonPrimary>
+            )
           ) : chainId && chainId !== connectedChainId ? (
             <ButtonPrimary
               onClick={async () => {

@@ -1,3 +1,4 @@
+import { createDeferredPromise } from '../../../src/test-utils/promise'
 import { getTestSelector } from '../../utils'
 
 function getChainSelector(activeChain: string) {
@@ -7,29 +8,36 @@ function getChainSelector(activeChain: string) {
 describe('network switching', () => {
   beforeEach(() => {
     cy.visit('/swap', { ethereum: 'hardhat' })
+    cy.get(getTestSelector('web3-status-connected'))
   })
 
-  it('should not display error on user rejection', () => {
+  function rejectsNetworkSwitchWith(rejection: unknown) {
     cy.hardhat().then((hardhat) => {
-      const USER_REJECTION = { code: 4001 }
-
-      // Reject network switch with USER_REJECTION
-      const switchChainStub = cy.stub(hardhat.provider, 'send').log(false)
-      switchChainStub.withArgs('wallet_switchEthereumChain').rejects(USER_REJECTION)
-      switchChainStub.withArgs('wallet_addEthereumChain').resolves(null)
+      // Reject network switch
+      const switchChainStub = cy.stub(hardhat.provider, 'send').log(false).as('switch')
+      switchChainStub.withArgs('wallet_switchEthereumChain').rejects(rejection)
       switchChainStub.callThrough() // allows other calls to return non-stubbed values
-
-      // Switch network
-      getChainSelector('Ethereum').click()
-      cy.contains('Polygon').click()
-
-      // Verify rejected network switch
-      getChainSelector('Ethereum')
-      cy.get(getTestSelector('web3-status-connected'))
-      cy.get(getTestSelector('popups')).should('not.contain', 'Failed to switch networks')
-      cy.wrap(switchChainStub).should('have.been.calledWith', 'wallet_switchEthereumChain', [{ chainId: '0x89' }])
-      cy.wrap(switchChainStub).should('not.have.been.calledWith', 'wallet_addEthereumChain')
     })
+
+    // Switch network
+    getChainSelector('Ethereum').click()
+    cy.contains('Polygon').click()
+
+    // Verify rejected network switch
+    cy.get('@switch').should('have.been.calledWith', 'wallet_switchEthereumChain')
+    getChainSelector('Ethereum')
+    cy.get(getTestSelector('web3-status-connected'))
+  }
+
+  it('should not display message on user rejection', () => {
+    const USER_REJECTION = { code: 4001 }
+    rejectsNetworkSwitchWith(USER_REJECTION)
+    cy.get(getTestSelector('popups')).should('not.contain', 'Failed to switch networks')
+  })
+
+  it('should display message on unknown error', () => {
+    rejectsNetworkSwitchWith(new Error('Unknown error'))
+    cy.get(getTestSelector('popups')).contains('Failed to switch networks')
   })
 
   it('should add missing chain', () => {
@@ -38,55 +46,54 @@ describe('network switching', () => {
       const CHAIN_NOT_ADDED = { code: 4902 } // missing message in useSelectChain
 
       // Reject network switch with CHAIN_NOT_ADDED
-      const switchChainStub = cy.stub(hardhat.provider, 'send').log(false)
-      switchChainStub.withArgs('wallet_switchEthereumChain').rejects(CHAIN_NOT_ADDED)
+      const switchChainStub = cy.stub(hardhat.provider, 'send').log(false).as('switch')
+      let added = false
+      switchChainStub
+        .withArgs('wallet_switchEthereumChain')
+        .callsFake(() => (added ? Promise.resolve(null) : Promise.reject(CHAIN_NOT_ADDED)))
       switchChainStub.withArgs('wallet_addEthereumChain').callsFake(() => {
-        switchChainStub.restore()
+        added = true
+        return Promise.resolve(null)
       })
       switchChainStub.callThrough() // allows other calls to return non-stubbed values
-
-      // Switch network
-      getChainSelector('Ethereum').click()
-      cy.contains('Polygon').click()
-
-      // Verify the network was added
-      cy.wrap(switchChainStub).should('have.been.calledWith', 'wallet_switchEthereumChain', [{ chainId: '0x89' }])
-      cy.wrap(switchChainStub).should('have.been.calledWith', 'wallet_addEthereumChain', [
-        {
-          blockExplorerUrls: ['https://polygonscan.com/'],
-          chainId: '0x89',
-          chainName: 'Polygon',
-          nativeCurrency: { name: 'Polygon Matic', symbol: 'MATIC', decimals: 18 },
-          rpcUrls: ['https://polygon-rpc.com/'],
-        },
-      ])
     })
 
-    // Verify network switch
-    cy.wait('@wallet_switchEthereumChain')
-    getChainSelector('Polygon')
-    cy.get(getTestSelector('web3-status-connected'))
+    // Switch network
+    getChainSelector('Ethereum').click()
+    cy.contains('Polygon').click()
+
+    // Verify the network was added
+    cy.get('@switch').should('have.been.calledWith', 'wallet_switchEthereumChain')
+    cy.get('@switch').should('have.been.calledWith', 'wallet_addEthereumChain', [
+      {
+        blockExplorerUrls: ['https://polygonscan.com/'],
+        chainId: '0x89',
+        chainName: 'Polygon',
+        nativeCurrency: { name: 'Polygon Matic', symbol: 'MATIC', decimals: 18 },
+        rpcUrls: ['https://polygon-rpc.com/'],
+      },
+    ])
   })
 
-  it('should display error on unknown error', () => {
+  it('should not disconnect while switching', () => {
+    const promise = createDeferredPromise()
+
     cy.hardhat().then((hardhat) => {
-      // Reject network switch
-      const switchChainStub = cy.stub(hardhat.provider, 'send').log(false)
-      switchChainStub.withArgs('wallet_switchEthereumChain').rejects(new Error('Unknown error'))
-      switchChainStub.withArgs('wallet_addEthereumChain').resolves(null)
+      // Reject network switch with CHAIN_NOT_ADDED
+      const switchChainStub = cy.stub(hardhat.provider, 'send').log(false).as('switch')
+      switchChainStub.withArgs('wallet_switchEthereumChain').returns(promise)
       switchChainStub.callThrough() // allows other calls to return non-stubbed values
-
-      // Switch network
-      getChainSelector('Ethereum').click()
-      cy.contains('Polygon').click()
-
-      // Verify rejected network switch
-      getChainSelector('Ethereum')
-      cy.get(getTestSelector('web3-status')).contains('Error')
-      cy.get(getTestSelector('popups')).contains('Failed to switch networks')
-      cy.wrap(switchChainStub).should('have.been.calledWith', 'wallet_switchEthereumChain', [{ chainId: '0x89' }])
-      cy.wrap(switchChainStub).should('not.have.been.calledWith', 'wallet_addEthereumChain')
     })
+
+    // Switch network
+    getChainSelector('Ethereum').click()
+    cy.contains('Polygon').click()
+
+    // Verify there is no disconnection
+    cy.get('@switch').should('have.been.calledWith', 'wallet_switchEthereumChain')
+    cy.contains('Connecting to Polygon')
+    cy.get(getTestSelector('web3-status-connected')).should('be.disabled')
+    promise.resolve()
   })
 
   it('should switch networks', () => {

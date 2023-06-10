@@ -7,11 +7,13 @@ import PrefetchBalancesWrapper from 'components/AccountDrawer/PrefetchBalancesWr
 import Loader from 'components/Icons/LoadingSpinner'
 import { IconWrapper } from 'components/Identicon/StatusIcon'
 import { getConnection } from 'connection'
+import useLast from 'hooks/useLast'
 import { navSearchInputVisibleSize } from 'hooks/useScreenSize'
 import { Portal } from 'nft/components/common/Portal'
 import { useIsNftClaimAvailable } from 'nft/hooks/useIsNftClaimAvailable'
 import { darken } from 'polished'
 import { useCallback, useMemo } from 'react'
+import { useAppSelector } from 'state/hooks'
 import styled from 'styled-components/macro'
 import { colors } from 'theme/colors'
 import { flexRowNoWrap } from 'theme/styles'
@@ -42,7 +44,7 @@ const Web3StatusGeneric = styled(ButtonSecondary)`
   }
 `
 
-const Web3StatusConnectWrapper = styled.div<{ faded?: boolean }>`
+const Web3StatusConnectWrapper = styled.div`
   ${flexRowNoWrap};
   align-items: center;
   background-color: ${({ theme }) => theme.accentActionSoft};
@@ -130,8 +132,11 @@ const StyledConnectButton = styled.button`
 `
 
 function Web3StatusInner() {
-  const { account, connector, chainId, ENSName } = useWeb3React()
+  const switchingChain = useAppSelector((state) => state.wallets.switchingChain)
+  const ignoreWhileSwitchingChain = useCallback(() => !switchingChain, [switchingChain])
+  const { account, connector, ENSName } = useLast(useWeb3React(), ignoreWhileSwitchingChain)
   const connection = getConnection(connector)
+
   const [, toggleAccountDrawer] = useAccountDrawer()
   const handleWalletDropdownClick = useCallback(() => {
     sendAnalyticsEvent(InterfaceEventName.ACCOUNT_DROPDOWN_BUTTON_CLICKED)
@@ -150,9 +155,7 @@ function Web3StatusInner() {
 
   const hasPendingTransactions = !!pending.length
 
-  if (!chainId) {
-    return null
-  } else if (account) {
+  if (account) {
     return (
       <TraceEvent
         events={[BrowserEvent.onClick]}
@@ -160,12 +163,15 @@ function Web3StatusInner() {
         properties={{ type: 'open' }}
       >
         <Web3StatusConnected
+          disabled={Boolean(switchingChain)}
           data-testid="web3-status-connected"
           onClick={handleWalletDropdownClick}
           pending={hasPendingTransactions}
           isClaimAvailable={isClaimAvailable}
         >
-          {!hasPendingTransactions && <StatusIcon size={24} connection={connection} showMiniIcons={false} />}
+          {!hasPendingTransactions && (
+            <StatusIcon size={24} account={account} connection={connection} showMiniIcons={false} />
+          )}
           {hasPendingTransactions ? (
             <RowBetween>
               <Text>
@@ -190,7 +196,6 @@ function Web3StatusInner() {
       >
         <Web3StatusConnectWrapper
           tabIndex={0}
-          faded={!account}
           onKeyPress={(e) => e.key === 'Enter' && handleWalletDropdownClick()}
           onClick={handleWalletDropdownClick}
         >
