@@ -817,7 +817,7 @@ export function AdvancedBorrowSwapDetails({
     let additionalCollateral = 0
     let totalExistingCollateral = 0
     let totalExistingBorrowed = 0
-    let additionalBorrowed = 0
+    let _borrowedAmount = 0
     if (borrowTrade) {
       const { collateralAmount, borrowedAmount, existingCollateral, existingTotalDebtInput } = borrowTrade
       if (
@@ -827,16 +827,14 @@ export function AdvancedBorrowSwapDetails({
         totalExistingCollateral = existingCollateral ?? 0
         totalExistingBorrowed = existingTotalDebtInput ?? 0
         additionalCollateral = collateralAmount
-        additionalBorrowed = existingTotalDebtInput ? (
-          borrowedAmount - existingTotalDebtInput
-        ) : borrowedAmount
+        _borrowedAmount = borrowedAmount ?? 0
       }
     }
     return {
       additionalCollateral,
       totalExistingCollateral,
       totalExistingBorrowed,
-      additionalBorrowed,
+      borrowedAmount: _borrowedAmount,
     }
   }, [borrowTrade])
   return (
@@ -870,7 +868,7 @@ export function AdvancedBorrowSwapDetails({
         <ValueLabel
           description={borrowTrade?.existingPosition ? "Additional borrowed amount" : "The borrowed amount you expect to receive at the current market price."}
           label={"Amount to Borrow"}
-          value={displayValues.additionalBorrowed}
+          value={displayValues.borrowedAmount}
           syncing={syncing}
           symbolAppend={outputCurrency?.symbol}
           width={"100px"}
