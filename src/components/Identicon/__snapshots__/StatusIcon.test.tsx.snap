@@ -121,7 +121,7 @@ exports[`StatusIcon with account renders children in correct order 1`] = `
   >
     <span>
       <div
-        style="border-radius: 50px; overflow: hidden; padding: 0px; margin: 0px; width: 16px; height: 16px; display: inline-block; background: rgb(1, 142, 114);"
+        style="border-radius: 50px; overflow: hidden; padding: 0px; margin: 0px; width: 16px; height: 16px; display: inline-block; background: rgb(24, 151, 242);"
       >
         <svg
           height="16"
@@ -130,25 +130,25 @@ exports[`StatusIcon with account renders children in correct order 1`] = `
           y="0"
         >
           <rect
-            fill="#2392E1"
+            fill="#2362E1"
             height="16"
-            transform="translate(-2.3133027096725978 4.697080312784296) rotate(160.7 8 8)"
+            transform="translate(1.7946650923962586 -2.667155311616761) rotate(458.4 8 8)"
             width="16"
             x="0"
             y="0"
           />
           <rect
-            fill="#FB1895"
+            fill="#F94301"
             height="16"
-            transform="translate(-8.001736856572315 5.2625070066797255) rotate(299.1 8 8)"
+            transform="translate(-7.681729644825104 3.9961758177433153) rotate(268.8 8 8)"
             width="16"
             x="0"
             y="0"
           />
           <rect
-            fill="#F90501"
+            fill="#FA7900"
             height="16"
-            transform="translate(-10.68845745466197 0.5127796994888634) rotate(211.8 8 8)"
+            transform="translate(-4.538127039650711 14.740007940341687) rotate(117.3 8 8)"
             width="16"
             x="0"
             y="0"
@@ -178,6 +178,14 @@ exports[`StatusIcon with account renders children in correct order 1`] = `
 `;
 
 exports[`StatusIcon with no account renders children in correct order 1`] = `
+.c1 {
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  background-color: #98A1C0;
+  font-size: initial;
+}
+
 .c0 {
   position: relative;
   display: -webkit-box;
@@ -204,7 +212,7 @@ exports[`StatusIcon with no account renders children in correct order 1`] = `
   width: 16px;
 }
 
-.c1 {
+.c2 {
   position: absolute;
   display: -webkit-box;
   display: -webkit-flex;
@@ -229,7 +237,7 @@ exports[`StatusIcon with no account renders children in correct order 1`] = `
   overflow: hidden;
 }
 
-.c3 {
+.c4 {
   position: absolute;
   display: -webkit-box;
   display: -webkit-flex;
@@ -254,7 +262,7 @@ exports[`StatusIcon with no account renders children in correct order 1`] = `
   overflow: hidden;
 }
 
-.c2 {
+.c3 {
   width: 16px;
   height: 16px;
 }
@@ -269,13 +277,13 @@ exports[`StatusIcon with no account renders children in correct order 1`] = `
 }
 
 @supports (overflow:clip) {
-  .c1 {
+  .c2 {
     overflow: clip;
   }
 }
 
 @supports (overflow:clip) {
-  .c3 {
+  .c4 {
     overflow: clip;
   }
 }
@@ -288,17 +296,58 @@ exports[`StatusIcon with no account renders children in correct order 1`] = `
   <div
     class="c1"
   >
+    <span>
+      <div
+        style="border-radius: 50px; overflow: hidden; padding: 0px; margin: 0px; width: 16px; height: 16px; display: inline-block; background: rgb(24, 151, 242);"
+      >
+        <svg
+          height="16"
+          width="16"
+          x="0"
+          y="0"
+        >
+          <rect
+            fill="#2362E1"
+            height="16"
+            transform="translate(1.7946650923962586 -2.667155311616761) rotate(458.4 8 8)"
+            width="16"
+            x="0"
+            y="0"
+          />
+          <rect
+            fill="#F94301"
+            height="16"
+            transform="translate(-7.681729644825104 3.9961758177433153) rotate(268.8 8 8)"
+            width="16"
+            x="0"
+            y="0"
+          />
+          <rect
+            fill="#FA7900"
+            height="16"
+            transform="translate(-4.538127039650711 14.740007940341687) rotate(117.3 8 8)"
+            width="16"
+            x="0"
+            y="0"
+          />
+        </svg>
+      </div>
+    </span>
+  </div>
+  <div
+    class="c2"
+  >
     <img
       alt="MetaMask icon"
-      class="c2"
+      class="c3"
       src="metamask.svg"
     />
   </div>
   <div
-    class="c3"
+    class="c4"
   >
     <img
-      class="c2"
+      class="c3"
       src="socks.svg"
     />
   </div>
