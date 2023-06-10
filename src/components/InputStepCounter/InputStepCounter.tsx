@@ -151,7 +151,7 @@ const StepCounter = ({
           {!locked && (
             <SmallButton onClick={handleDecrement} disabled={decrementDisabled}>
               <ButtonLabel disabled={decrementDisabled} fontSize="12px">
-                <Minus size={18} />
+                <Minus size={14} />
               </ButtonLabel>
             </SmallButton>
           )}
@@ -159,7 +159,7 @@ const StepCounter = ({
           <StyledInput
             className="rate-input-0"
             value={localValue}
-            fontSize="20px"
+            fontSize="14px"
             disabled={locked}
             onUserInput={(val) => {
               setLocalValue(val)
@@ -169,7 +169,7 @@ const StepCounter = ({
           {!locked && (
             <SmallButton onClick={handleIncrement} disabled={incrementDisabled}>
               <ButtonLabel disabled={incrementDisabled} fontSize="12px">
-                <Plus size={18} />
+                <Plus size={14} />
               </ButtonLabel>
             </SmallButton>
           )}

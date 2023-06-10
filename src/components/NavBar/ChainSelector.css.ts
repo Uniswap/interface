@@ -12,12 +12,15 @@ export const ChainSelector = style([
     border: 'none',
     color: 'textPrimary',
     background: 'none',
+    padding: '4'
   }),
 ])
 
 export const Image = style([
   sprinkles({
     width: '20',
+    minWidth: '20',
     height: '20',
-  }),
+    marginRight: '4'
+    }),
 ])

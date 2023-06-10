@@ -92,13 +92,13 @@ const ResponsiveColumn = styled(AutoColumn)`
 export default function CTACards() {
   return (
     <CTASection>
-      <CTA1 href="https://support.uniswap.org/hc/en-us/categories/8122334631437-Providing-Liquidity-">
+      <CTA1 href="https://docs.forge.trade/resources/concepts/concentrated-liquidity">
         <ResponsiveColumn>
           <HeaderText>
-            <Trans>Learn about providing liquidity</Trans> ↗
+            <Trans>Learn about providing liquidity on Forge</Trans> ↗
           </HeaderText>
           <ThemedText.DeprecatedBody fontWeight={400} style={{ alignItems: 'center', display: 'flex' }}>
-            <Trans>Check out our v3 LP walkthrough and migration guides.</Trans>
+            <Trans>Learn how to leverage concentrated liquidity.</Trans>
           </ThemedText.DeprecatedBody>
         </ResponsiveColumn>
       </CTA1>
