@@ -2,7 +2,8 @@ import { createDeferredPromise } from '../../../src/test-utils/promise'
 import { getTestSelector } from '../../utils'
 
 function getChainSelector(activeChain: string) {
-  return cy.get(`${getTestSelector('chain-selector')} > [alt="${activeChain}"]`).eq(1)
+  cy.get(getTestSelector('chain-selector-logo')).invoke('attr', 'alt').should('eq', activeChain)
+  return cy.get(getTestSelector('chain-selector')).eq(1)
 }
 
 describe('network switching', () => {

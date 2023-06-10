@@ -672,23 +672,21 @@ export function Swap({
                 <Trans>Unsupported Asset</Trans>
               </ThemedText.DeprecatedMain>
             </ButtonPrimary>
+          ) : switchingChain ? (
+            <ButtonPrimary disabled={true}>
+              <Trans>Connecting to {getChainInfo(switchingChain)?.label}</Trans>
+            </ButtonPrimary>
           ) : !account ? (
-            !switchingChain ? (
-              <TraceEvent
-                events={[BrowserEvent.onClick]}
-                name={InterfaceEventName.CONNECT_WALLET_BUTTON_CLICKED}
-                properties={{ received_swap_quote: getIsValidSwapQuote(trade, tradeState, swapInputError) }}
-                element={InterfaceElementName.CONNECT_WALLET_BUTTON}
-              >
-                <ButtonLight onClick={toggleWalletDrawer} fontWeight={600}>
-                  <Trans>Connect Wallet</Trans>
-                </ButtonLight>
-              </TraceEvent>
-            ) : (
-              <ButtonPrimary disabled={true}>
-                <Trans>Connecting to {getChainInfo(switchingChain)?.label}</Trans>
-              </ButtonPrimary>
-            )
+            <TraceEvent
+              events={[BrowserEvent.onClick]}
+              name={InterfaceEventName.CONNECT_WALLET_BUTTON_CLICKED}
+              properties={{ received_swap_quote: getIsValidSwapQuote(trade, tradeState, swapInputError) }}
+              element={InterfaceElementName.CONNECT_WALLET_BUTTON}
+            >
+              <ButtonLight onClick={toggleWalletDrawer} fontWeight={600}>
+                <Trans>Connect Wallet</Trans>
+              </ButtonLight>
+            </TraceEvent>
           ) : chainId && chainId !== connectedChainId ? (
             <ButtonPrimary
               onClick={async () => {
