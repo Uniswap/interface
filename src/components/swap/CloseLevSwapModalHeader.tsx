@@ -180,11 +180,14 @@ export default function CloseLevSwapModalHeader({
         {trade.tradeType === TradeType.EXACT_INPUT ? (
           <ThemedText.DeprecatedItalic fontWeight={400} textAlign="left" style={{ width: '100%' }}>
             <Trans>
-              Output is estimated. You will receive at least{' '}
+              Output is estimated. Your total position will be at least{' '}
               <b>
                 {trade.minimumAmountOut(allowedSlippage).toSignificant(6)} {trade.outputAmount.currency.symbol}
               </b>{' '}
               or the transaction will revert.
+            </Trans>
+            <Trans>
+            In total, you are paying Collateral + Quoted Premium - Returned Premium for this trade
             </Trans>
           </ThemedText.DeprecatedItalic>
         ) : (

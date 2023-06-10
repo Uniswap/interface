@@ -230,7 +230,7 @@ export function ReduceLeveragePositionDetails({
               }
             >
               <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
-                <Trans>Original Position</Trans>
+                <Trans>Position</Trans>
               </ThemedText.DeprecatedSubHeader>
             </MouseoverTooltip>
           </RowFixed>
@@ -278,7 +278,7 @@ export function ReduceLeveragePositionDetails({
               }
             >
               <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
-                <Trans>Effective Leverage</Trans>
+                <Trans>Leverage</Trans>
               </ThemedText.DeprecatedSubHeader>
             </MouseoverTooltip>
           </RowFixed>
@@ -364,7 +364,7 @@ export function BorrowPremiumPositionDetails({
             // disableHover={hideInfoTooltips}
             >
               <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
-                <Trans>Original Debt</Trans>
+                <Trans>Debt</Trans>
               </ThemedText.DeprecatedSubHeader>
             </MouseoverTooltip>
           </RowFixed>
@@ -397,7 +397,7 @@ export function BorrowPremiumPositionDetails({
           <TextWithLoadingPlaceholder syncing={false} width={65}>
             <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
               <TruncatedText>
-                {ltv ? `${formatNumber(ltv)}%` : '-'}
+                {ltv ? `${formatNumber(ltv*100)}%` : '-'}
               </TruncatedText>
 
             </ThemedText.DeprecatedBlack>
@@ -565,10 +565,13 @@ export function AdvancedLeverageSwapDetails({
     borrowedAmount, 
     inputAmount
   } = leverageTrade;
-  const price = (Number(expectedOutput ) - Number(existingTotalPosition))
+  const price = existingTotalPosition?(Number(expectedOutput ) - Number(existingTotalPosition))
   / (Number(borrowedAmount?.toExact()) - Number(existingTotalDebtInput) + Number(inputAmount?.toExact())  )
-
+  : Number(expectedOutput )/(Number(borrowedAmount?.toExact()) + Number(inputAmount?.toExact()))
   const fees = (Number(leverageTrade?.borrowedAmount?.toExact()) + Number(leverageTrade?.inputAmount?.toExact())) * 0.0005
+  const addedOutput = (expectedOutput) ? (
+              existingPosition && existingTotalPosition ? expectedOutput -  existingTotalPosition : expectedOutput
+              ) : 0
   console.log('leverageTrade', inputAmount?.toExact(),existingCollateral, leverageTrade, price,Number(expectedOutput ) - Number(existingTotalPosition)
 
    , Number(borrowedAmount?.toExact()) - Number(existingTotalDebtInput),Number(inputAmount?.toExact()) - Number(existingCollateral) )
@@ -596,9 +599,7 @@ export function AdvancedLeverageSwapDetails({
           description='The amount you expect to receive at the current market price. You may receive less or more if the market price changes while your transaction is pending.'
           label={existingPosition ? 'Added Position' : 'Expected Output'}
           value={
-            (expectedOutput) ? (
-              existingPosition && existingTotalPosition ? expectedOutput -  existingTotalPosition : expectedOutput
-              ) : 0
+            addedOutput
           }
           syncing={syncing}
           symbolAppend={trade.outputAmount.currency.symbol}
@@ -625,7 +626,7 @@ export function AdvancedLeverageSwapDetails({
           symbolAppend={leverageTrade?.remainingPremium!=0? trade.inputAmount.currency.symbol:""}
         />
         <ValueLabel
-          description="The fees you pay for swaps"
+          description="Fees paid for trade "
           label="Fees"
           value={Math.round(Number(fees) * 100000) / 100000}
           syncing={syncing}
@@ -657,7 +658,7 @@ export function AdvancedLeverageSwapDetails({
             </TruncatedText>
           </TextWithLoadingPlaceholder>
         </RowBetween>*/}
-        <RowBetween>
+        {/*<RowBetween>
           <RowFixed>
             <MouseoverTooltip
               text={<Trans>The impact your trade has on the market price of this pool.</Trans>}
@@ -672,10 +673,11 @@ export function AdvancedLeverageSwapDetails({
             <TruncatedText>
               <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
                 <FormattedPriceImpact priceImpact={leverageTrade?.priceImpact} />
+
               </ThemedText.DeprecatedBlack>
             </TruncatedText>
           </TextWithLoadingPlaceholder>
-        </RowBetween>
+        </RowBetween>*/}
         <Separator />
         <RowBetween>
           <RowFixed style={{ marginRight: '20px' }}>
@@ -703,7 +705,7 @@ export function AdvancedLeverageSwapDetails({
             <ThemedText.DeprecatedBlack textAlign="right" fontSize={14} color={theme.textTertiary}>
               <TruncatedText>
                 {trade.tradeType === TradeType.EXACT_INPUT
-                  ? `${(leverageTrade?.expectedOutput) ?? "-"}  ${trade.outputAmount.currency.symbol}`
+                  ? `${(addedOutput) ?? "-"}  ${trade.outputAmount.currency.symbol}`
                   : '-'
 
                   // ? `${Number(leverageFactor) * Number(trade.minimumAmountOut(allowedSlippage).toSignificant(6))} ${trade.outputAmount.currency.symbol}`

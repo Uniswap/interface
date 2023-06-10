@@ -1621,11 +1621,11 @@ export default function Swap({ className }: { className?: string }) {
                                     />
                                   </LeverageInputSection>
                                   <AutoRow gap="4px" justify="flex-end">
-                                    <SmallMaxButton onClick={() => debouncedSetLTV("10")} width="20%">
-                                      <Trans>10%</Trans>
-                                    </SmallMaxButton>
                                     <SmallMaxButton onClick={() => debouncedSetLTV("50")} width="20%">
                                       <Trans>50%</Trans>
+                                    </SmallMaxButton>
+                                    <SmallMaxButton onClick={() => debouncedSetLTV("75")} width="20%">
+                                      <Trans>75%</Trans>
                                     </SmallMaxButton>
                                     <SmallMaxButton onClick={() => debouncedSetLTV("99")} width="20%">
                                       <Trans>99%</Trans>
@@ -1635,7 +1635,7 @@ export default function Swap({ className }: { className?: string }) {
                                 <Slider
                                   value={debouncedLTV === "" ? 0 : parseFloat(debouncedLTV)}
                                   onChange={(val) => debouncedSetLTV(val.toString())}
-                                  min={0.0}
+                                  min={50.0}
                                   max={100.0}
                                   step={0.01}
                                   float={true}
