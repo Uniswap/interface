@@ -14,7 +14,8 @@ export const InformationBanner = ({ text }: { text: string | React.ReactNode }) 
         borderRadius: '0.375rem',
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginTop: '10px',
+        marginTop: '1.5rem',
+        marginBottom: '1.5rem',
       }}
     >
       <div

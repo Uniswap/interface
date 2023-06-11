@@ -57,7 +57,7 @@ const ApproveText = styled.div`
 const Logo = styled.img`
   height: ${LOGO_SIZE}px;
   width: ${LOGO_SIZE}px;
-  margin-right: 12px;
+  margin-right: 30px;
 `
 
 export default function ChainSelectorRow({

@@ -240,7 +240,7 @@ export default function Pool() {
           <BookOpen size={16} />
         </PoolMenuItem>
       ),
-      link: 'https://docs.uniswap.org/',
+      link: 'https://docs.forge.trade',
       external: true,
     },
   ]

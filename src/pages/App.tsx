@@ -39,10 +39,14 @@ const BodyWrapper = styled.div`
   flex-direction: column;
   width: 100%;
   min-height: 100vh;
-  padding: ${({ theme }) => theme.navHeight}px 0px 5rem 0px;
   align-items: center;
   flex: 1;
+  padding: ${({ theme }) => theme.navHeight + 36}px 0px 5rem 0px;
+  @media only screen and (max-width: ${({ theme }) => theme.breakpoint.sm}px) {
+    padding: 144px 0px 5rem 0px;
+  }
 `
+// ^ Remove extra 36px padding and css media query  when not using info banner
 
 const MobileBottomBar = styled.div`
   z-index: ${Z_INDEX.sticky};
