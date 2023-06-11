@@ -24,7 +24,10 @@ import headerBG from './images/forge-header.png'
 const PageContainer = styled.div<{ isDarkMode: boolean }>`
   position: absolute;
   top: 0;
-  padding: ${({ theme }) => theme.navHeight}px 0px 0px 0px;
+  padding: ${({ theme }) => theme.navHeight + 36}px 0px 5rem 0px;
+  @media only screen and (max-width: ${({ theme }) => theme.breakpoint.sm}px) {
+    padding: 144px 0px 5rem 0px;
+  }
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -33,6 +36,7 @@ const PageContainer = styled.div<{ isDarkMode: boolean }>`
   overflow-x: hidden;
   background: linear-gradient(0deg, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0.7));
 `
+// ^ Remove extra 36px padding and css media query  when not using info banner
 
 const Gradient = styled.div<{ isDarkMode: boolean }>`
   position: absolute;
