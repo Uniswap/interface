@@ -129,14 +129,14 @@ const Navbar = () => {
         <InformationBanner
           text={
             <>
-            <style>
-              {`
+              <style>
+                {`
               .infoBtn:hover{outline:1.5px solid #0b0a09c2}
               @media only screen and (max-width: 640px){
                 .learnBtn{display:none !important}
               }
               `}
-            </style>
+              </style>
 
               <div
                 style={{
@@ -146,49 +146,48 @@ const Navbar = () => {
                 }}
               >
                 Join the Inferno Incentives program to earn Evmos and Stride rewards!{' '}
-
-                  <a
-                    style={{
-                      display: 'inline-block',
-                      color: 'rgb(250, 241, 228)',
-                      fontWeight: 600,
-                      paddingTop: '0.375rem',
-                      paddingBottom: '0.375rem',
-                      paddingRight: '1.25rem',
-                      paddingLeft: '1.25rem',
-                      backgroundColor: 'rgb(237, 78, 51)',
-                      borderRadius: '0.25rem',
-                      marginLeft: '0.8rem',
-                      marginTop: '0.15rem',
-                    }}
-                    href="https://revert.finance/#/incentives/evmos"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="infoBtn rounded bg-red p-5 py-1.5 my-1 font-semibold text-pearl"
-                  >
-                    Check Incentives Now 🔥
-                  </a>
-                  <a
-                    style={{
-                      display: 'inline-block',
-                      color: 'rgb(250, 241, 228)',
-                      fontWeight: 600,
-                      paddingTop: '0.375rem',
-                      paddingBottom: '0.375rem',
-                      paddingRight: '1.25rem',
-                      paddingLeft: '1.25rem',
-                      backgroundColor: 'rgb(79, 71, 64)',
-                      borderRadius: '0.25rem',
-                      marginLeft: '0.8rem',
-                      marginTop: '0.15rem',
-                    }}
-                    href="https://docs.forge.trade/resources/launch"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="infoBtn learnBtn rounded bg-red p-5 py-1.5 font-semibold text-pearl"
-                  >
-                    Learn More 🌋
-                  </a>
+                <a
+                  style={{
+                    display: 'inline-block',
+                    color: 'rgb(250, 241, 228)',
+                    fontWeight: 600,
+                    paddingTop: '0.375rem',
+                    paddingBottom: '0.375rem',
+                    paddingRight: '1.25rem',
+                    paddingLeft: '1.25rem',
+                    backgroundColor: 'rgb(237, 78, 51)',
+                    borderRadius: '0.25rem',
+                    marginLeft: '0.8rem',
+                    marginTop: '0.15rem',
+                  }}
+                  href="https://revert.finance/#/incentives/evmos"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="infoBtn rounded bg-red p-5 py-1.5 my-1 font-semibold text-pearl"
+                >
+                  Check Incentives Now 🔥
+                </a>
+                <a
+                  style={{
+                    display: 'inline-block',
+                    color: 'rgb(250, 241, 228)',
+                    fontWeight: 600,
+                    paddingTop: '0.375rem',
+                    paddingBottom: '0.375rem',
+                    paddingRight: '1.25rem',
+                    paddingLeft: '1.25rem',
+                    backgroundColor: 'rgb(79, 71, 64)',
+                    borderRadius: '0.25rem',
+                    marginLeft: '0.8rem',
+                    marginTop: '0.15rem',
+                  }}
+                  href="https://docs.forge.trade/resources/launch"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="infoBtn learnBtn rounded bg-red p-5 py-1.5 font-semibold text-pearl"
+                >
+                  Learn More 🌋
+                </a>
               </div>
             </>
           }

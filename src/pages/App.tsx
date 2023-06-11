@@ -34,7 +34,6 @@ const Swap = React.lazy(() => import('./Swap'))
 const Pools = React.lazy(() => import('./Pools'))
 const Pool = React.lazy(() => import('./Pool'))
 
-
 const BodyWrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -43,7 +42,7 @@ const BodyWrapper = styled.div`
   align-items: center;
   flex: 1;
   padding: ${({ theme }) => theme.navHeight + 36}px 0px 5rem 0px;
-  @media only screen and (max-width: ${({ theme }) => theme.breakpoint.sm}px){
+  @media only screen and (max-width: ${({ theme }) => theme.breakpoint.sm}px) {
     padding: 144px 0px 5rem 0px;
   }
 `
