@@ -1,6 +1,7 @@
 import { sendAnalyticsEvent } from '@uniswap/analytics'
+import { ChainId } from '@uniswap/sdk-core'
 import { WalletConnect, WalletConnectConstructorArgs } from '@web3-react/walletconnect-v2'
-import { L1_CHAIN_IDS, L2_CHAIN_IDS, SupportedChainId } from 'constants/chains'
+import { L1_CHAIN_IDS, L2_CHAIN_IDS } from 'constants/chains'
 import { Z_INDEX } from 'theme/zIndex'
 
 import { RPC_URLS } from '../constants/networks'
@@ -14,7 +15,7 @@ const RPC_URLS_WITHOUT_FALLBACKS = Object.entries(RPC_URLS).reduce(
   }),
   {}
 )
-const optionalChains = [...L1_CHAIN_IDS, ...L2_CHAIN_IDS].filter((x) => x !== SupportedChainId.MAINNET)
+const optionalChains = [...L1_CHAIN_IDS, ...L2_CHAIN_IDS].filter((x) => x !== ChainId.MAINNET)
 
 export class WalletConnectV2Popup extends WalletConnect {
   ANALYTICS_EVENT = 'Wallet Connect QR Scan'
@@ -29,7 +30,7 @@ export class WalletConnectV2Popup extends WalletConnect {
       options: {
         projectId: process.env.REACT_APP_WALLET_CONNECT_PROJECT_ID as string,
         optionalChains,
-        chains: [SupportedChainId.MAINNET],
+        chains: [ChainId.MAINNET],
         showQrModal: qrcode,
         rpcMap: RPC_URLS_WITHOUT_FALLBACKS,
         qrModalOptions: {

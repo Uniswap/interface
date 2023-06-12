@@ -4,7 +4,7 @@ import { useWeb3React } from '@web3-react/core'
 import { AutoColumn } from 'components/Column'
 import { L2_CHAIN_IDS } from 'constants/chains'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
-import { isSupportedChainId } from 'lib/hooks/routing/clientSideSmartOrderRouter'
+import { isChainId } from 'lib/hooks/routing/clientSideSmartOrderRouter'
 import { useRef } from 'react'
 import { useModalIsOpen, useToggleSettingsMenu } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
@@ -51,7 +51,7 @@ export default function SettingsTab({ autoSlippage, chainId }: { autoSlippage: P
   const toggleMenu = useToggleSettingsMenu()
   useOnClickOutside(node, isOpen ? toggleMenu : undefined)
 
-  const isSupportedChain = isSupportedChainId(chainId)
+  const isSupportedChain = isChainId(chainId)
 
   return (
     <Menu ref={node}>

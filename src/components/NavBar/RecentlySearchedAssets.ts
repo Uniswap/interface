@@ -1,4 +1,4 @@
-import { SupportedChainId } from 'constants/chains'
+import { ChainId } from '@uniswap/sdk-core'
 import { NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
 import { Chain, NftCollection, useRecentlySearchedAssetsQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { SearchToken } from 'graphql/data/SearchTokens'
@@ -86,7 +86,7 @@ export function useRecentlySearchedAssets() {
     shortenedHistory.forEach((asset) => {
       if (asset.address === 'NATIVE') {
         // Handles special case where wMATIC data needs to be used for MATIC
-        const native = nativeOnChain(CHAIN_NAME_TO_CHAIN_ID[asset.chain] ?? SupportedChainId.MAINNET)
+        const native = nativeOnChain(CHAIN_NAME_TO_CHAIN_ID[asset.chain] ?? ChainId.MAINNET)
         const queryAddress = getQueryAddress(asset.chain)?.toLowerCase() ?? `NATIVE-${asset.chain}`
         const result = resultsMap[queryAddress]
         if (result) data.push({ ...result, address: 'NATIVE', ...native })

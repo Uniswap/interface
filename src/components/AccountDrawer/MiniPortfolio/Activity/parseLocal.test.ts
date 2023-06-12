@@ -1,4 +1,4 @@
-import { SupportedChainId, Token, TradeType as MockTradeType } from '@uniswap/sdk-core'
+import { ChainId, Token, TradeType as MockTradeType } from '@uniswap/sdk-core'
 import { PERMIT2_ADDRESS } from '@uniswap/universal-router-sdk'
 import { DAI as MockDAI, nativeOnChain, USDC_MAINNET as MockUSDC_MAINNET } from 'constants/tokens'
 import { TransactionStatus as MockTxStatus } from 'graphql/data/__generated__/types-and-hooks'
@@ -46,7 +46,7 @@ function mockSwapInfo(
 
 const mockAccount1 = '0x000000000000000000000000000000000000000001'
 const mockAccount2 = '0x000000000000000000000000000000000000000002'
-const mockChainId = SupportedChainId.MAINNET
+const mockChainId = ChainId.MAINNET
 const mockSpenderAddress = PERMIT2_ADDRESS[mockChainId]
 const mockCurrencyAmountRaw = '1000000000000000000'
 const mockCurrencyAmountRawUSDC = '1000000'
@@ -234,7 +234,7 @@ describe('parseLocalActivity', () => {
         status: 1,
       },
     } as TransactionDetails
-    const chainId = SupportedChainId.MAINNET
+    const chainId = ChainId.MAINNET
     expect(parseLocalActivity(details, chainId, mockTokenAddressMap)).toEqual({
       chainId: 1,
       currencies: [MockUSDC_MAINNET, MockDAI],
@@ -275,7 +275,7 @@ describe('parseLocalActivity', () => {
         status: 1,
       },
     } as TransactionDetails
-    const chainId = SupportedChainId.MAINNET
+    const chainId = ChainId.MAINNET
     expect(parseLocalActivity(details, chainId, mockTokenAddressMap)).toMatchObject({
       chainId: 1,
       currencies: [MockUSDC_MAINNET, MockDAI],
@@ -299,7 +299,7 @@ describe('parseLocalActivity', () => {
         status: 1,
       },
     } as TransactionDetails
-    const chainId = SupportedChainId.MAINNET
+    const chainId = ChainId.MAINNET
     const tokens = {} as ChainTokenMap
     expect(parseLocalActivity(details, chainId, tokens)).toMatchObject({
       chainId: 1,

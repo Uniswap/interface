@@ -1,5 +1,5 @@
 import type { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
-import { addressesByNetwork, SupportedChainId } from '@looksrare/sdk'
+import { addressesByNetwork, ChainId } from '@looksrare/sdk'
 import { NftStandard } from 'graphql/data/__generated__/types-and-hooks'
 import ms from 'ms.macro'
 import { SetPriceMethod, WarningType } from 'nft/components/profile/list/shared'
@@ -28,7 +28,7 @@ export async function approveCollectionRow(
   const callback = () => approveCollectionRow(collectionRow, signer, setCollectionStatusAndCallback)
   setCollectionStatusAndCallback(collectionRow, ListingStatus.SIGNING, callback)
   const { marketplace, collectionAddress, nftStandard } = collectionRow
-  const addresses = addressesByNetwork[SupportedChainId.MAINNET]
+  const addresses = addressesByNetwork[ChainId.MAINNET]
   const spender =
     marketplace.name === 'OpenSea'
       ? OPENSEA_CROSS_CHAIN_CONDUIT

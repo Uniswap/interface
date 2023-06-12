@@ -1,6 +1,6 @@
 import { QueryResult } from '@apollo/client'
 import { Currency, Token } from '@uniswap/sdk-core'
-import { SupportedChainId } from 'constants/chains'
+import { ChainId } from '@uniswap/sdk-core'
 import { NATIVE_CHAIN_ID, nativeOnChain, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import ms from 'ms.macro'
 import { useEffect } from 'react'
@@ -58,34 +58,28 @@ export function isPricePoint(p: PricePoint | null): p is PricePoint {
 
 // TODO(DAT-33) Update when BE adds Ethereum Sepolia to supported chains
 export const CHAIN_ID_TO_BACKEND_NAME: { [key: number]: Chain } = {
-  [SupportedChainId.MAINNET]: Chain.Ethereum,
-  [SupportedChainId.GOERLI]: Chain.EthereumGoerli,
-  [SupportedChainId.POLYGON]: Chain.Polygon,
-  [SupportedChainId.POLYGON_MUMBAI]: Chain.Polygon,
-  [SupportedChainId.CELO]: Chain.Celo,
-  [SupportedChainId.CELO_ALFAJORES]: Chain.Celo,
-  [SupportedChainId.ARBITRUM_ONE]: Chain.Arbitrum,
-  [SupportedChainId.ARBITRUM_GOERLI]: Chain.Arbitrum,
-  [SupportedChainId.OPTIMISM]: Chain.Optimism,
-  [SupportedChainId.OPTIMISM_GOERLI]: Chain.Optimism,
-  [SupportedChainId.BNB]: Chain.Bnb,
+  [ChainId.MAINNET]: Chain.Ethereum,
+  [ChainId.GOERLI]: Chain.EthereumGoerli,
+  [ChainId.POLYGON]: Chain.Polygon,
+  [ChainId.POLYGON_MUMBAI]: Chain.Polygon,
+  [ChainId.CELO]: Chain.Celo,
+  [ChainId.CELO_ALFAJORES]: Chain.Celo,
+  [ChainId.ARBITRUM_ONE]: Chain.Arbitrum,
+  [ChainId.ARBITRUM_GOERLI]: Chain.Arbitrum,
+  [ChainId.OPTIMISM]: Chain.Optimism,
+  [ChainId.OPTIMISM_GOERLI]: Chain.Optimism,
+  [ChainId.BNB]: Chain.Bnb,
 }
 
 export function chainIdToBackendName(chainId: number | undefined) {
   return chainId && CHAIN_ID_TO_BACKEND_NAME[chainId]
     ? CHAIN_ID_TO_BACKEND_NAME[chainId]
-    : CHAIN_ID_TO_BACKEND_NAME[SupportedChainId.MAINNET]
+    : CHAIN_ID_TO_BACKEND_NAME[ChainId.MAINNET]
 }
 
-const GQL_CHAINS: number[] = [
-  SupportedChainId.MAINNET,
-  SupportedChainId.OPTIMISM,
-  SupportedChainId.POLYGON,
-  SupportedChainId.ARBITRUM_ONE,
-  SupportedChainId.CELO,
-]
+const GQL_CHAINS: number[] = [ChainId.MAINNET, ChainId.OPTIMISM, ChainId.POLYGON, ChainId.ARBITRUM_ONE, ChainId.CELO]
 
-export function isGqlSupportedChain(chainId: number | undefined): chainId is SupportedChainId {
+export function isGqlSupportedChain(chainId: number | undefined): chainId is ChainId {
   return !!chainId && GQL_CHAINS.includes(chainId)
 }
 export function toContractInput(currency: Currency): ContractInput {
@@ -120,19 +114,19 @@ export function validateUrlChainParam(chainName: string | undefined) {
 }
 
 // TODO(cartcrom): refactor into safer lookup & replace usage
-export const CHAIN_NAME_TO_CHAIN_ID: { [key in Chain]: SupportedChainId } = {
-  [Chain.Ethereum]: SupportedChainId.MAINNET,
-  [Chain.EthereumGoerli]: SupportedChainId.GOERLI,
-  [Chain.EthereumSepolia]: SupportedChainId.SEPOLIA,
-  [Chain.Polygon]: SupportedChainId.POLYGON,
-  [Chain.Celo]: SupportedChainId.CELO,
-  [Chain.Optimism]: SupportedChainId.OPTIMISM,
-  [Chain.Arbitrum]: SupportedChainId.ARBITRUM_ONE,
-  [Chain.UnknownChain]: SupportedChainId.MAINNET,
-  [Chain.Bnb]: SupportedChainId.BNB,
+export const CHAIN_NAME_TO_CHAIN_ID: { [key in Chain]: ChainId } = {
+  [Chain.Ethereum]: ChainId.MAINNET,
+  [Chain.EthereumGoerli]: ChainId.GOERLI,
+  [Chain.EthereumSepolia]: ChainId.SEPOLIA,
+  [Chain.Polygon]: ChainId.POLYGON,
+  [Chain.Celo]: ChainId.CELO,
+  [Chain.Optimism]: ChainId.OPTIMISM,
+  [Chain.Arbitrum]: ChainId.ARBITRUM_ONE,
+  [Chain.UnknownChain]: ChainId.MAINNET,
+  [Chain.Bnb]: ChainId.BNB,
 }
 
-export function fromGraphQLChain(chain: Chain): SupportedChainId {
+export function fromGraphQLChain(chain: Chain): ChainId {
   return CHAIN_NAME_TO_CHAIN_ID[chain]
 }
 

@@ -1,7 +1,7 @@
 import { Currency, Token } from '@uniswap/sdk-core'
 import { FeeAmount, Pool } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
-import { SupportedChainId } from 'constants/chains'
+import { ChainId } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 
 import { useAllCurrencyCombinations } from './useAllCurrencyCombinations'
@@ -26,7 +26,7 @@ export function useV3SwapPools(
   const allCurrencyCombinationsWithAllFees: [Token, Token, FeeAmount][] = useMemo(
     () =>
       allCurrencyCombinations.reduce<[Token, Token, FeeAmount][]>((list, [tokenA, tokenB]) => {
-        return chainId === SupportedChainId.MAINNET
+        return chainId === ChainId.MAINNET
           ? list.concat([
               [tokenA, tokenB, FeeAmount.LOW],
               [tokenA, tokenB, FeeAmount.MEDIUM],

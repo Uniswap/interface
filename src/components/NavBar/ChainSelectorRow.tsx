@@ -1,8 +1,8 @@
 import { Trans } from '@lingui/macro'
+import { ChainId } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import Loader from 'components/Icons/LoadingSpinner'
 import { getChainInfo } from 'constants/chainInfo'
-import { SupportedChainId } from 'constants/chains'
 import { CheckMarkIcon } from 'nft/components/icons'
 import styled, { useTheme } from 'styled-components/macro'
 
@@ -63,7 +63,7 @@ const Logo = styled.img`
 `
 interface ChainSelectorRowProps {
   disabled?: boolean
-  targetChain: SupportedChainId
+  targetChain: ChainId
   onSelectChain: (targetChain: number) => void
   isPending: boolean
 }

@@ -12,7 +12,7 @@ import WALLET_CONNECT_ICON from 'assets/images/walletConnectIcon.svg'
 import INJECTED_DARK_ICON from 'assets/svg/browser-wallet-dark.svg'
 import INJECTED_LIGHT_ICON from 'assets/svg/browser-wallet-light.svg'
 import UNISWAP_LOGO from 'assets/svg/logo.svg'
-import { SupportedChainId } from 'constants/chains'
+import { ChainId } from '@uniswap/sdk-core'
 import { isMobile, isNonIOSPhone } from 'utils/userAgent'
 
 import { RPC_URLS } from '../constants/networks'
@@ -117,7 +117,7 @@ const [web3CoinbaseWallet, web3CoinbaseWalletHooks] = initializeConnector<Coinba
     new CoinbaseWallet({
       actions,
       options: {
-        url: RPC_URLS[SupportedChainId.MAINNET][0],
+        url: RPC_URLS[ChainId.MAINNET][0],
         appName: 'Uniswap',
         appLogoUrl: UNISWAP_LOGO,
         reloadOnDisconnect: false,

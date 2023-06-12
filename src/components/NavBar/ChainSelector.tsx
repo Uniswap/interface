@@ -1,11 +1,12 @@
 import { t } from '@lingui/macro'
+import { ChainId } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { WalletConnect } from '@web3-react/walletconnect-v2'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { getConnection } from 'connection'
 import { ConnectionType } from 'connection/types'
 import { getChainInfo } from 'constants/chainInfo'
-import { SupportedChainId, UniWalletSupportedChains } from 'constants/chains'
+import { UniWalletSupportedChains } from 'constants/chains'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useSelectChain from 'hooks/useSelectChain'
 import useSyncChainQuery from 'hooks/useSyncChainQuery'
@@ -23,16 +24,16 @@ import ChainSelectorRow from './ChainSelectorRow'
 import { NavDropdown } from './NavDropdown'
 
 const NETWORK_SELECTOR_CHAINS = [
-  SupportedChainId.MAINNET,
-  SupportedChainId.POLYGON,
-  SupportedChainId.OPTIMISM,
-  SupportedChainId.ARBITRUM_ONE,
-  SupportedChainId.CELO,
-  SupportedChainId.BNB,
+  ChainId.MAINNET,
+  ChainId.POLYGON,
+  ChainId.OPTIMISM,
+  ChainId.ARBITRUM_ONE,
+  ChainId.CELO,
+  ChainId.BNB,
 ]
 
 if (!isProductionEnv()) {
-  NETWORK_SELECTOR_CHAINS.push(SupportedChainId.SEPOLIA)
+  NETWORK_SELECTOR_CHAINS.push(ChainId.SEPOLIA)
 }
 
 interface ChainSelectorProps {
@@ -40,14 +41,14 @@ interface ChainSelectorProps {
 }
 
 // accounts is an array of strings in the format of "eip155:<chainId>:<address>"
-function getChainsFromEIP155Accounts(accounts?: string[]): SupportedChainId[] {
+function getChainsFromEIP155Accounts(accounts?: string[]): ChainId[] {
   if (!accounts) return []
   return accounts
     .map((account) => {
       const splitAccount = account.split(':')
       return splitAccount[1] ? parseInt(splitAccount[1]) : undefined
     })
-    .filter((x) => x !== undefined) as SupportedChainId[]
+    .filter((x) => x !== undefined) as ChainId[]
 }
 
 function useWalletSupportedChains() {
@@ -81,10 +82,10 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
   const selectChain = useSelectChain()
   useSyncChainQuery()
 
-  const [pendingChainId, setPendingChainId] = useState<SupportedChainId | undefined>(undefined)
+  const [pendingChainId, setPendingChainId] = useState<ChainId | undefined>(undefined)
 
   const onSelectChain = useCallback(
-    async (targetChainId: SupportedChainId) => {
+    async (targetChainId: ChainId) => {
       setPendingChainId(targetChainId)
       await selectChain(targetChainId)
       setPendingChainId(undefined)
@@ -104,7 +105,7 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
   const dropdown = (
     <NavDropdown top="56" left={leftAlign ? '0' : 'auto'} right={leftAlign ? 'auto' : '0'} ref={modalRef}>
       <Column paddingX="8">
-        {NETWORK_SELECTOR_CHAINS.map((selectorChain: SupportedChainId) => (
+        {NETWORK_SELECTOR_CHAINS.map((selectorChain: ChainId) => (
           <ChainSelectorRow
             disabled={!walletSupportsChain.includes(selectorChain)}
             onSelectChain={onSelectChain}

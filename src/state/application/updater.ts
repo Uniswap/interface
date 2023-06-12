@@ -3,7 +3,7 @@ import useDebounce from 'hooks/useDebounce'
 import useIsWindowVisible from 'hooks/useIsWindowVisible'
 import { useEffect, useRef, useState } from 'react'
 import { useAppDispatch } from 'state/hooks'
-import { supportedChainId } from 'utils/supportedChainId'
+import { ChainId } from 'utils/ChainId'
 
 import { useCloseModal } from './hooks'
 import { updateChainId } from './reducer'
@@ -33,7 +33,7 @@ export default function Updater(): null {
   const debouncedChainId = useDebounce(activeChainId, 100)
 
   useEffect(() => {
-    const chainId = debouncedChainId ? supportedChainId(debouncedChainId) ?? null : null
+    const chainId = debouncedChainId ? ChainId(debouncedChainId) ?? null : null
     dispatch(updateChainId({ chainId }))
   }, [dispatch, debouncedChainId])
 

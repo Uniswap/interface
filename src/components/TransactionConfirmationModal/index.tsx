@@ -3,7 +3,7 @@ import { Currency } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import Badge from 'components/Badge'
 import { getChainInfo } from 'constants/chainInfo'
-import { SupportedChainId, SupportedL2ChainId } from 'constants/chains'
+import { ChainId, SupportedL2ChainId } from 'constants/chains'
 import useCurrencyLogoURIs from 'lib/hooks/useCurrencyLogoURIs'
 import { ReactNode, useCallback, useState } from 'react'
 import { AlertCircle, ArrowUpCircle, CheckCircle } from 'react-feather'
@@ -158,7 +158,7 @@ function TransactionSubmittedContent({
           {chainId && hash && (
             <ExternalLink href={getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)}>
               <ThemedText.Link color={theme.accentAction}>
-                <Trans>View on {chainId === SupportedChainId.MAINNET ? 'Etherscan' : 'Block Explorer'}</Trans>
+                <Trans>View on {chainId === ChainId.MAINNET ? 'Etherscan' : 'Block Explorer'}</Trans>
               </ThemedText.Link>
             </ExternalLink>
           )}
