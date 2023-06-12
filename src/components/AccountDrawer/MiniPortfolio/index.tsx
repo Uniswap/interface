@@ -6,7 +6,7 @@ import { LoaderV2 } from 'components/Icons/LoadingSpinner'
 import { AutoRow } from 'components/Row'
 import { useIsNftPage } from 'hooks/useIsNftPage'
 import { useAtomValue } from 'jotai/utils'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { shouldDisableNFTRoutesAtom } from 'state/application/atoms'
 import { useAllTransactions } from 'state/transactions/hooks'
 import styled from 'styled-components/macro'
@@ -94,6 +94,7 @@ const Pages: Array<Page> = [
 export default function MiniPortfolio({ account }: { account: string }) {
   const isNftPage = useIsNftPage()
   const [currentPage, setCurrentPage] = useState(isNftPage ? 1 : 0)
+  const [activityUnread, setActivityUnread] = useState(false)
   const shouldDisableNFTRoutes = useAtomValue(shouldDisableNFTRoutesAtom)
 
   const { component: Page, key: currentKey } = Pages[currentPage]
@@ -102,15 +103,23 @@ export default function MiniPortfolio({ account }: { account: string }) {
   const hasPendingTransactions = useMemo(() => {
     return Object.values(allTransactions).filter((tx) => !tx.receipt).length > 0
   }, [allTransactions])
+
+  useEffect(() => {
+    if (hasPendingTransactions && currentKey !== 'activity') setActivityUnread(true)
+  }, [currentKey, hasPendingTransactions])
+
   return (
     <Trace section={InterfaceSectionName.MINI_PORTFOLIO}>
       <Wrapper>
         <Nav data-testid="mini-portfolio-navbar">
           {Pages.map(({ title, loggingElementName, key }, index) => {
             if (shouldDisableNFTRoutes && loggingElementName.includes('nft')) return null
-            const showPendingActivitySpinner = Boolean(
-              key === 'activity' && hasPendingTransactions && currentKey !== 'activity'
-            )
+            const isActivity = key === 'activity' && currentKey !== 'activity'
+            const showActivityIndicator = isActivity && (hasPendingTransactions || activityUnread)
+            const handleNavItemClick = () => {
+              setCurrentPage(index)
+              if (key === 'activity') setActivityUnread(false)
+            }
             return (
               <TraceEvent
                 events={[BrowserEvent.onClick]}
@@ -118,12 +127,18 @@ export default function MiniPortfolio({ account }: { account: string }) {
                 element={loggingElementName}
                 key={index}
               >
-                <NavItem onClick={() => setCurrentPage(index)} active={currentPage === index} key={key}>
-                  <span>{title}</span>{' '}
-                  {showPendingActivitySpinner && (
+                <NavItem onClick={handleNavItemClick} active={currentPage === index} key={key}>
+                  <span>{title}</span>
+                  {showActivityIndicator && (
                     <>
                       &nbsp;
-                      <LoaderV2 />
+                      {hasPendingTransactions ? (
+                        <LoaderV2 />
+                      ) : (
+                        <svg width="8" height="8" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <circle cx="4" cy="4" r="4" fill="#4C82FB" />
+                        </svg>
+                      )}
                     </>
                   )}
                 </NavItem>
