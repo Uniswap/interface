@@ -87,7 +87,7 @@ describe('connection utility/metadata tests', () => {
   })
 
   it('Rabby Wallet Injected Desktop', async () => {
-    const { displayed, injected } = createWalletEnvironment({ isRabby: true })
+    const { displayed, injected } = createWalletEnvironment({ isRabby: true, isMetaMask: true }) // Rabby sets isMetaMask to true
 
     expect(displayed.includes(injected)).toBe(true)
     expect(injected.getName()).toBe('Rabby')
