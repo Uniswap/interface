@@ -2,8 +2,8 @@ import { namehash } from '@ethersproject/hash'
 import { useSingleCallResult } from 'lib/hooks/multicall'
 import { useMemo } from 'react'
 import { isAddress } from 'utils'
-
 import { isZero } from 'utils'
+
 import { useENSRegistrarContract, useENSResolverContract } from './useContract'
 import useDebounce from './useDebounce'
 import useENSAddress from './useENSAddress'
