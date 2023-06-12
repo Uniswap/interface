@@ -1,5 +1,5 @@
 import { render, screen } from 'test-utils/render'
-import noop from 'utils'
+import { noop } from 'utils'
 
 import { ConfirmationModalContent } from '.'
 
