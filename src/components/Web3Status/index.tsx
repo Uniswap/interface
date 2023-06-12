@@ -14,6 +14,7 @@ import { darken } from 'polished'
 import { useCallback, useMemo } from 'react'
 import { AlertTriangle } from 'react-feather'
 import { useAppSelector } from 'state/hooks'
+import { usePendingOrders } from 'state/signatures/hooks'
 import styled from 'styled-components/macro'
 import { colors } from 'theme/colors'
 import { flexRowNoWrap } from 'theme/styles'
@@ -168,9 +169,11 @@ function Web3StatusInner() {
     return txs.filter(isTransactionRecent).sort(newTransactionsFirst)
   }, [allTransactions])
 
-  const pending = sortedRecentTransactions.filter((tx) => !tx.receipt).map((tx) => tx.hash)
+  const pendingOrders = usePendingOrders()
 
-  const hasPendingTransactions = !!pending.length
+  const pendingTxs = sortedRecentTransactions.filter((tx) => !tx.receipt).map((tx) => tx.hash)
+
+  const hasPendingActivity = !!pendingTxs.length || !!pendingOrders.length
 
   if (!chainId) {
     return null
@@ -193,14 +196,14 @@ function Web3StatusInner() {
         <Web3StatusConnected
           data-testid="web3-status-connected"
           onClick={handleWalletDropdownClick}
-          pending={hasPendingTransactions}
+          pending={hasPendingActivity}
           isClaimAvailable={isClaimAvailable}
         >
-          {!hasPendingTransactions && <StatusIcon size={24} connection={connection} showMiniIcons={false} />}
-          {hasPendingTransactions ? (
+          {!hasPendingActivity && <StatusIcon size={24} connection={connection} showMiniIcons={false} />}
+          {hasPendingActivity ? (
             <RowBetween>
               <Text>
-                <Trans>{pending?.length} Pending</Trans>
+                <Trans>{pendingTxs.length + pendingOrders.length} Pending</Trans>
               </Text>{' '}
               <Loader stroke="white" />
             </RowBetween>

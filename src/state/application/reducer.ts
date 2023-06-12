@@ -2,14 +2,24 @@ import { createSlice, nanoid } from '@reduxjs/toolkit'
 import { SupportedChainId } from 'constants/chains'
 import { DEFAULT_TXN_DISMISS_MS } from 'constants/misc'
 
+export enum PopupType {
+  Transaction = 'transaction',
+  Order = 'order',
+  FailedSwitchNetwork = 'failedSwitchNetwork',
+}
+
 export type PopupContent =
   | {
-      txn: {
-        hash: string
-      }
+      type: PopupType.Transaction
+      hash: string
     }
   | {
-      failedSwitchNetwork: SupportedChainId
+      type: PopupType.Order
+      orderHash: string
+    }
+  | {
+      type: PopupType.FailedSwitchNetwork
+      chainId: SupportedChainId
     }
 
 export enum ApplicationModal {

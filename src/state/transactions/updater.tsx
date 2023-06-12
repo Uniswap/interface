@@ -2,6 +2,7 @@ import { useWeb3React } from '@web3-react/core'
 import { DEFAULT_TXN_DISMISS_MS, L2_TXN_DISMISS_MS } from 'constants/misc'
 import LibUpdater from 'lib/hooks/transactions/updater'
 import { useCallback, useMemo } from 'react'
+import { PopupType } from 'state/application/reducer'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 
 import { L2_CHAIN_IDS } from '../../constants/chains'
@@ -50,7 +51,8 @@ export default function Updater() {
 
       addPopup(
         {
-          txn: { hash },
+          type: PopupType.Transaction,
+          hash,
         },
         hash,
         isL2 ? L2_TXN_DISMISS_MS : DEFAULT_TXN_DISMISS_MS
