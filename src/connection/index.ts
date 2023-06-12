@@ -48,7 +48,7 @@ const getIsGenericInjector = () => getIsInjected() && !getIsMetaMaskWallet() && 
 const [web3Injected, web3InjectedHooks] = initializeConnector<MetaMask>((actions) => new MetaMask({ actions, onError }))
 
 const injectedConnection: Connection = {
-  // TODO(WEB-3131) re-add "Install MetaMask" string when no injector is present
+  // TODO(WEB-1831) re-add "Install MetaMask" string when no injector is present
   getName: () => (getIsGenericInjector() ? 'Browser Wallet' : 'MetaMask'),
   connector: web3Injected,
   hooks: web3InjectedHooks,

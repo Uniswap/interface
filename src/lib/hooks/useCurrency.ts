@@ -40,7 +40,7 @@ export function useTokenFromActiveNetwork(tokenAddress: string | undefined): Tok
   const tokenContract = useTokenContract(formattedAddress ? formattedAddress : undefined, false)
   const tokenContractBytes32 = useBytes32TokenContract(formattedAddress ? formattedAddress : undefined, false)
 
-  // TODO (WEB-3009): reduce this to one RPC call instead of 5
+  // TODO (WEB-1709): reduce this to one RPC call instead of 5
   // TODO: Fix redux-multicall so that these values do not reload.
   const tokenName = useSingleCallResult(tokenContract, 'name', undefined, NEVER_RELOAD)
   const tokenNameBytes32 = useSingleCallResult(tokenContractBytes32, 'name', undefined, NEVER_RELOAD)
