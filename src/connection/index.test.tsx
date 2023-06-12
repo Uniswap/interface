@@ -68,7 +68,7 @@ describe('connection utility/metadata tests', () => {
   })
 
   it('Generic Injected Desktop', async () => {
-    const { displayed, injected } = createWalletEnvironment({ isTrustWallet: true })
+    const { displayed, injected } = createWalletEnvironment({ isTrust: true })
 
     expect(displayed.includes(injected)).toBe(true)
     expect(injected.getName()).toBe('Browser Wallet')
@@ -93,7 +93,7 @@ describe('connection utility/metadata tests', () => {
     expect(injected.getName()).toBe('MetaMask')
     expect(injected.overrideActivate?.()).toBeTruthy()
 
-    createWalletEnvironment({ isTrustWallet: true })
+    createWalletEnvironment({ isTrust: true })
 
     expect(injected.getName()).toBe('Browser Wallet')
     expect(injected.overrideActivate?.()).toBeFalsy()
