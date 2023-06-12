@@ -80,7 +80,10 @@ export const routingApiV2 = createApi({
                 // cast as any here because we do a runtime check on it being an object before indexing into .errorCode
                 const errorData = response.error.data as any
                 // NO_ROUTE should be treated as a valid response to prevent retries.
-                if (typeof errorData === 'object' && errorData?.errorCode === 'NO_ROUTE') {
+                if (
+                  typeof errorData === 'object' &&
+                  (errorData?.errorCode === 'NO_ROUTE' || errorData?.detail === 'No quotes available')
+                ) {
                   return { data: { state: QuoteState.NOT_FOUND } }
                 }
               } catch {
