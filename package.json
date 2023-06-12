@@ -98,7 +98,7 @@
     "@types/ua-parser-js": "^0.7.36",
     "@types/uuid": "^8.3.4",
     "@types/wcag-contrast": "^3.0.0",
-    "@uniswap/default-token-list": "^9.6.0",
+    "@uniswap/default-token-list": "^11.1.0",
     "@uniswap/eslint-config": "^1.2.0",
     "@vanilla-extract/babel-plugin": "^1.1.7",
     "@vanilla-extract/jest-transform": "^1.1.1",

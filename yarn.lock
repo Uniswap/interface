@@ -5555,15 +5555,15 @@
   resolved "https://registry.yarnpkg.com/@uniswap/conedison/-/conedison-1.7.1.tgz#10076d57fe111abff106d3cd3704f02c37eb0c8e"
   integrity sha512-iFH36R4cPy2daffrHoJ5/iLhgUFUVbNXujd7dYWPzAaS7XOleQ0tHrRmoUcwnO5Z50jDyZC0A86+yOs3UGj8bw==
 
+"@uniswap/default-token-list@^11.1.0":
+  version "11.1.0"
+  resolved "https://registry.yarnpkg.com/@uniswap/default-token-list/-/default-token-list-11.1.0.tgz#8ca3f7bee47487bfef9a6018c36959f34c361804"
+  integrity sha512-yiEZoYXp4H0xPCiUMsxzJWs23ZGowoJQDzGZqIC9ALU/dFkATi0/+3OAtKxFOvOPoQUH4O0QcIZqHnGcAEw/UA==
+
 "@uniswap/default-token-list@^2.0.0":
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/@uniswap/default-token-list/-/default-token-list-2.2.0.tgz#d85a5c2520f57f4920bd989dfc9f01e1b701a567"
   integrity sha512-vFPWoGzDjHP4i2l7yLaober/lZMmzOZXXirVF8XNyfNzRxgmYCWKO6SzKtfEUwxpd3/KUebgdK55II4Mnak62A==
-
-"@uniswap/default-token-list@^9.6.0":
-  version "9.6.0"
-  resolved "https://registry.yarnpkg.com/@uniswap/default-token-list/-/default-token-list-9.6.0.tgz#641176b482f5f7dcae37b39c073ea26dad3667c3"
-  integrity sha512-uUHykitpCom9xngh9fst6xqOKe3p3rdBRW17+sRkU7ukWIRRIwQ/YxxC6+zVlo0YMpMMkKMJ4oTVmCqtSNnhxw==
 
 "@uniswap/eslint-config@^1.2.0":
   version "1.2.0"
