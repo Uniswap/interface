@@ -12,8 +12,7 @@ function isPendingOrder(signature: SignatureDetails): signature is UniswapXOrder
   return signature.type === SignatureType.SIGN_UNISWAPX_ORDER && signature.status === DutchLimitOrderStatus.OPEN
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function usePendingOrders(): UniswapXOrderDetails[] {
+export function usePendingOrders(): UniswapXOrderDetails[] {
   const { account } = useWeb3React()
   const signatures = useAppSelector((state) => state.signatures)
 
@@ -21,6 +20,18 @@ function usePendingOrders(): UniswapXOrderDetails[] {
     if (!account || !signatures[account]) return []
     return Object.values(signatures[account]).filter(isPendingOrder)
   }, [signatures, account])
+}
+
+export function useOrder(orderHash: string): UniswapXOrderDetails | undefined {
+  const { account } = useWeb3React()
+  const signatures = useAppSelector((state) => state.signatures)
+
+  return useMemo(() => {
+    if (!account || !signatures[account]) return undefined
+    const order = signatures[account][orderHash]
+    if (!order || order.type !== SignatureType.SIGN_UNISWAPX_ORDER) return undefined
+    return order
+  }, [account, signatures, orderHash])
 }
 
 export function useAddOrder() {
@@ -52,12 +63,15 @@ export function useAddOrder() {
   )
 }
 
+export function isFinalizedOrder(orderStatus: DutchLimitOrderStatus) {
+  return orderStatus !== DutchLimitOrderStatus.OPEN
+}
+
 export function isOnChainOrder(orderStatus: DutchLimitOrderStatus) {
   return orderStatus === DutchLimitOrderStatus.FILLED || orderStatus === DutchLimitOrderStatus.CANCELLED
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function useUpdateOrder() {
+export function useUpdateOrder() {
   const dispatch = useDispatch()
 
   return useCallback(

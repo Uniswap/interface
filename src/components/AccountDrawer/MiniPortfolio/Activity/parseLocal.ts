@@ -61,6 +61,7 @@ function parseSwap(
   return {
     descriptor: buildCurrencyDescriptor(tokenIn, inputRaw, tokenOut, outputRaw),
     currencies: [tokenIn, tokenOut],
+    prefixIconSrc: swap.isUniswapXOrder ? UniswapXBolt : undefined,
   }
 }
 
@@ -181,7 +182,7 @@ export function transactionToActivity(
   }
 }
 
-function signatureToActivity(signature: SignatureDetails, tokens: ChainTokenMap): Activity | undefined {
+export function signatureToActivity(signature: SignatureDetails, tokens: ChainTokenMap): Activity | undefined {
   switch (signature.type) {
     case SignatureType.SIGN_UNISWAPX_ORDER: {
       // Only returns Activity items for orders that don't have an on-chain counterpart
