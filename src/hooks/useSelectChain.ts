@@ -1,11 +1,11 @@
 import { useWeb3React } from '@web3-react/core'
 import { getConnection } from 'connection'
+import { switchChain } from 'connection'
 import { didUserReject } from 'connection/utils'
 import { SupportedChainId } from 'constants/chains'
 import { useCallback } from 'react'
 import { addPopup } from 'state/application/reducer'
 import { useAppDispatch } from 'state/hooks'
-import { switchChain } from 'utils'
 
 export default function useSelectChain() {
   const dispatch = useAppDispatch()

@@ -1,5 +1,7 @@
 import { SwapPriceUpdateUserResponse } from '@uniswap/analytics-events'
 import { Percent } from '@uniswap/sdk-core'
+import { InterfaceTrade } from 'state/routing/types'
+
 import {
   formatPercentInBasisPointsNumber,
   formatPercentNumber,
@@ -7,9 +9,7 @@ import {
   getDurationFromDateMilliseconds,
   getDurationUntilTimestampSeconds,
   getTokenAddress,
-} from 'lib/utils/analytics'
-import { InterfaceTrade } from 'state/routing/types'
-
+} from './analytics'
 import { RoutingDiagramEntry } from './getRoutingDiagramEntries'
 import { computeRealizedPriceImpact } from './prices'
 

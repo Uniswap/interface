@@ -12,15 +12,55 @@ import WALLET_CONNECT_ICON from 'assets/images/walletConnectIcon.svg'
 import INJECTED_DARK_ICON from 'assets/svg/browser-wallet-dark.svg'
 import INJECTED_LIGHT_ICON from 'assets/svg/browser-wallet-light.svg'
 import UNISWAP_LOGO from 'assets/svg/logo.svg'
-import { SupportedChainId } from 'constants/chains'
-import { isMobile, isNonIOSPhone } from 'utils'
+import { getChainInfo } from 'constants/chainInfo'
+import { isSupportedChain, SupportedChainId } from 'constants/chains'
+import { FALLBACK_URLS, RPC_URLS } from 'constants/networks'
+import { isMobile, isNonIOSPhone } from 'utils/userAgent'
 
-import { RPC_URLS } from '../constants/networks'
 import { RPC_PROVIDERS } from '../constants/providers'
 import { Connection, ConnectionType } from './types'
 import { getIsCoinbaseWallet, getIsInjected, getIsMetaMaskWallet } from './utils'
 import { UniwalletConnect, WalletConnectPopup } from './WalletConnect'
 import { WalletConnectV2Popup } from './WalletConnectV2'
+
+function getRpcUrl(chainId: SupportedChainId): string {
+  switch (chainId) {
+    case SupportedChainId.MAINNET:
+    case SupportedChainId.GOERLI:
+    case SupportedChainId.SEPOLIA:
+      return RPC_URLS[chainId][0]
+    // Attempting to add a chain using an infura URL will not work, as the URL will be unreachable from the MetaMask background page.
+    // MetaMask allows switching to any publicly reachable URL, but for novel chains, it will display a warning if it is not on the "Safe" list.
+    // See the definition of FALLBACK_URLS for more details.
+    default:
+      return FALLBACK_URLS[chainId][0]
+  }
+}
+
+export const switchChain = async (connector: Connector, chainId: SupportedChainId) => {
+  if (!isSupportedChain(chainId)) {
+    throw new Error(`Chain ${chainId} not supported for connector (${typeof connector})`)
+  } else if (
+    [
+      walletConnectV2Connection.connector,
+      walletConnectConnection.connector,
+      uniwalletConnectConnection.connector,
+      networkConnection.connector,
+    ].includes(connector)
+  ) {
+    await connector.activate(chainId)
+  } else {
+    const info = getChainInfo(chainId)
+    const addChainParameter = {
+      chainId,
+      chainName: info.label,
+      rpcUrls: [getRpcUrl(chainId)],
+      nativeCurrency: info.nativeCurrency,
+      blockExplorerUrls: [info.explorer],
+    }
+    await connector.activate(addChainParameter)
+  }
+}
 
 function onError(error: Error) {
   console.debug(`web3-react error: ${error}`)
@@ -78,7 +118,7 @@ export const gnosisSafeConnection: Connection = {
 const [web3WalletConnect, web3WalletConnectHooks] = initializeConnector<WalletConnectPopup>(
   (actions) => new WalletConnectPopup({ actions, onError })
 )
-export const walletConnectConnection: Connection = {
+const walletConnectConnection: Connection = {
   getName: () => 'WalletConnect',
   connector: web3WalletConnect,
   hooks: web3WalletConnectHooks,

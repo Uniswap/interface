@@ -83,6 +83,7 @@ const IMPACT_TIERS = [
 ]
 
 type WarningSeverity = 0 | 1 | 2 | 3 | 4
+
 export function warningSeverity(priceImpact: Percent | undefined): WarningSeverity {
   if (!priceImpact) return 0
   // This function is used to calculate the Severity level for % changes in USD value and Price Impact.
