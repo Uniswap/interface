@@ -33,6 +33,7 @@ export class WalletConnectV2Popup extends WalletConnect {
         showQrModal: qrcode,
         rpcMap: RPC_URLS_WITHOUT_FALLBACKS,
         qrModalOptions: {
+          chainImages: undefined,
           themeMode: darkmode ? 'dark' : 'light',
           themeVariables: {
             '--w3m-font-family': '"Inter custom", sans-serif',
