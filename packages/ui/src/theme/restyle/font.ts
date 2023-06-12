@@ -1,4 +1,4 @@
-import { fonts } from 'ui/theme/fonts'
+import { fonts } from 'ui/src/theme/fonts'
 
 export const fontFamily = {
   serif: 'serif',

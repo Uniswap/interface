@@ -1,6 +1,6 @@
 import { ShadowProps } from '@shopify/restyle'
 import { ImageResizeMode, StyleSheet } from 'react-native'
-import { Theme } from 'ui/theme/restyle/theme'
+import { Theme } from 'ui/src/theme/restyle/theme'
 
 const RESIZE_MODE_CONTAIN: ImageResizeMode = 'contain'
 

@@ -8,7 +8,7 @@ import { Box } from 'src/components/layout'
 import { Flex } from 'src/components/layout/Flex'
 import { NFTCollectionData } from 'src/features/nfts/collection/NFTCollectionHeader'
 import { getTwitterLink, getUniswapCollectionUrl, openUri } from 'src/utils/linking'
-import { theme as FixedTheme, Theme } from 'ui/theme/restyle/theme'
+import { theme as FixedTheme, Theme } from 'ui/src/theme/restyle/theme'
 import { logger } from 'wallet/src/features/logger/logger'
 
 type MenuOption = {

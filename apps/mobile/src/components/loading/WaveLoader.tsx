@@ -10,7 +10,7 @@ import Animated, {
 import { useAppTheme } from 'src/app/hooks'
 import { Flex } from 'src/components/layout'
 import { CHART_HEIGHT } from 'src/components/PriceExplorer/constants'
-import Wave from 'ui/assets/backgrounds/wave.svg'
+import Wave from 'ui/src/assets/backgrounds/wave.svg'
 
 const WAVE_WIDTH = 416
 const WAVE_DURATION = 2000

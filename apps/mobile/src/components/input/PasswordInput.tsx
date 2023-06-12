@@ -4,8 +4,8 @@ import { useAppTheme } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { TextInput, TextInputProps } from 'src/components/input/TextInput'
 import { AnimatedFlex, Flex } from 'src/components/layout'
-import EyeOffIcon from 'ui/assets/icons/eye-off.svg'
-import EyeIcon from 'ui/assets/icons/eye.svg'
+import EyeOffIcon from 'ui/src/assets/icons/eye-off.svg'
+import EyeIcon from 'ui/src/assets/icons/eye.svg'
 
 export const PasswordInput = forwardRef<NativeTextInput, TextInputProps>((props, ref) => {
   const theme = useAppTheme()

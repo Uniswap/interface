@@ -15,7 +15,7 @@ import {
 } from 'src/features/walletConnect/walletConnectSlice'
 import { ExplorerDataType, getExplorerLink } from 'src/utils/linking'
 import { useNoYoloParser } from 'src/utils/useNoYoloParser'
-import { Theme } from 'ui/theme/restyle/theme'
+import { Theme } from 'ui/src/theme/restyle/theme'
 import { ChainId } from 'wallet/src/constants/chains'
 import { useENS } from 'wallet/src/features/ens/useENS'
 import { logger } from 'wallet/src/features/logger/logger'

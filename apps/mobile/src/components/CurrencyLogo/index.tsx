@@ -1,6 +1,6 @@
 import React from 'react'
 import { TokenLogo } from 'src/components/CurrencyLogo/TokenLogo'
-import { iconSizes } from 'ui/theme/iconSizes'
+import { iconSizes } from 'ui/src/theme/iconSizes'
 import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
 
 interface CurrencyLogoProps {

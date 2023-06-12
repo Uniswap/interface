@@ -9,9 +9,9 @@ import {
 } from 'react-native-reanimated'
 import { useAppTheme } from 'src/app/hooks'
 import { AnimatedBox } from 'src/components/layout'
-import Loader from 'ui/assets/icons/circle-spinner.svg'
-import EmptySpinner from 'ui/assets/icons/empty-spinner.svg'
-import { Theme } from 'ui/theme/restyle/theme'
+import Loader from 'ui/src/assets/icons/circle-spinner.svg'
+import EmptySpinner from 'ui/src/assets/icons/empty-spinner.svg'
+import { Theme } from 'ui/src/theme/restyle/theme'
 
 export function SpinningLoader({
   size = 20,

@@ -42,7 +42,7 @@
         "packages/wallet/*"
       ],
       "ui/*": [
-        "packages/ui/src/*"
+        "packages/ui/*"
       ]
     }
   }

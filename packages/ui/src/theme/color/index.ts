@@ -1,5 +1,5 @@
 import { createTheme } from 'tamagui'
-import { opacify } from 'ui/theme/color/utils'
+import { opacify } from 'ui/src/theme/color/utils'
 
 export const colors = {
   white: '#FFFFFF',

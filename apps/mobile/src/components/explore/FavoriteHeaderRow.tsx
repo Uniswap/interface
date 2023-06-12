@@ -5,7 +5,7 @@ import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { ElementName } from 'src/features/telemetry/constants'
-import TripleDots from 'ui/assets/icons/triple-dots.svg'
+import TripleDots from 'ui/src/assets/icons/triple-dots.svg'
 
 export function FavoriteHeaderRow({
   title,

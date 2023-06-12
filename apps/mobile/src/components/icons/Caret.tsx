@@ -1,7 +1,7 @@
 import React, { memo } from 'react'
 import { useAppTheme } from 'src/app/hooks'
 import { withAnimated } from 'src/components/animated'
-import CaretChange from 'ui/assets/icons/arrow-change.svg'
+import CaretChange from 'ui/src/assets/icons/arrow-change.svg'
 
 type Props = {
   size?: number

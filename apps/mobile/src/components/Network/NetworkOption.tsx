@@ -5,8 +5,8 @@ import { NetworkLogo } from 'src/components/CurrencyLogo/NetworkLogo'
 import { Flex } from 'src/components/layout'
 import { Separator } from 'src/components/layout/Separator'
 import { Text } from 'src/components/Text'
-import Check from 'ui/assets/icons/check.svg'
-import { iconSizes } from 'ui/theme/iconSizes'
+import Check from 'ui/src/assets/icons/check.svg'
+import { iconSizes } from 'ui/src/theme/iconSizes'
 import { ChainId, CHAIN_INFO } from 'wallet/src/constants/chains'
 
 const NETWORK_OPTION_ICON_SIZE = iconSizes.icon24

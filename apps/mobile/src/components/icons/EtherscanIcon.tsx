@@ -1,7 +1,7 @@
 import React from 'react'
 import { useIsDarkMode } from 'src/features/appearance/hooks'
-import EtherscanLogoDark from 'ui/assets/logos/etherscan-logo-dark.svg'
-import EtherscanLogoLight from 'ui/assets/logos/etherscan-logo-light.svg'
+import EtherscanLogoDark from 'ui/src/assets/logos/etherscan-logo-dark.svg'
+import EtherscanLogoLight from 'ui/src/assets/logos/etherscan-logo-light.svg'
 
 type Props = {
   size: number

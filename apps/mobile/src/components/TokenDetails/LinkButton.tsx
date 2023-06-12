@@ -9,7 +9,7 @@ import { Text } from 'src/components/Text'
 import { ElementName } from 'src/features/telemetry/constants'
 import { setClipboard } from 'src/utils/clipboard'
 import { openUri } from 'src/utils/linking'
-import CopyIcon from 'ui/assets/icons/copy-sheets.svg'
+import CopyIcon from 'ui/src/assets/icons/copy-sheets.svg'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
 

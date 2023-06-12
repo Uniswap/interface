@@ -13,8 +13,8 @@ import { withAnimated } from 'src/components/animated'
 import { TraceEvent } from 'src/components/telemetry/TraceEvent'
 import { ReactNativeEvent } from 'src/features/telemetry/constants'
 import { TelemetryEventProps } from 'src/features/telemetry/types'
-import { defaultHitslopInset } from 'ui/theme/restyle/sizing'
-import { Theme } from 'ui/theme/restyle/theme'
+import { defaultHitslopInset } from 'ui/src/theme/restyle/sizing'
+import { Theme } from 'ui/src/theme/restyle/theme'
 
 const TouchableBox = createBox<Theme, TouchableOpacityProps>(TouchableOpacity)
 const AnimatedTouchableBox = withAnimated(TouchableBox)

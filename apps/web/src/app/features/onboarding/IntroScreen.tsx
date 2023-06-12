@@ -1,13 +1,13 @@
 import { ImportOnboardingRoutes, OnboardingRoutes } from 'src/app/navigation/constants'
-import { Circle, Image, Stack, Text, XStack, YStack } from 'ui'
-import { UNISWAP_LOGO } from 'ui/assets'
-import BoltIcon from 'ui/assets/icons/bolt.svg'
-import BookIcon from 'ui/assets/icons/book.svg'
-import MultichainIcon from 'ui/assets/icons/multichain.svg'
-import { LinkButton } from 'ui/components/button/Button'
-import { Flex } from 'ui/components/layout/Flex'
-import { opacify } from 'ui/theme/color/utils'
-import { iconSizes } from 'ui/theme/iconSizes'
+import { Circle, Image, Stack, Text, XStack, YStack } from 'ui/src'
+import { UNISWAP_LOGO } from 'ui/src/assets'
+import BoltIcon from 'ui/src/assets/icons/bolt.svg'
+import BookIcon from 'ui/src/assets/icons/book.svg'
+import MultichainIcon from 'ui/src/assets/icons/multichain.svg'
+import { LinkButton } from 'ui/src/components/button/Button'
+import { Flex } from 'ui/src/components/layout/Flex'
+import { opacify } from 'ui/src/theme/color/utils'
+import { iconSizes } from 'ui/src/theme/iconSizes'
 
 function InfoRow({
   primaryText,

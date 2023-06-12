@@ -4,7 +4,7 @@ import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { DynamicHeartIcon } from 'src/features/externalProfile/ProfileHeader'
 import { useToggleFavoriteCallback } from 'src/features/favorites/hooks'
 import { selectFavoriteTokensSet } from 'src/features/favorites/selectors'
-import { iconSizes } from 'ui/theme/iconSizes'
+import { iconSizes } from 'ui/src/theme/iconSizes'
 
 export function TokenDetailsFavoriteButton({ currencyId }: { currencyId: string }): JSX.Element {
   const id = currencyId.toLowerCase()

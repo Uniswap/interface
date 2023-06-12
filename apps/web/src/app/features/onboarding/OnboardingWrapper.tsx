@@ -1,6 +1,6 @@
 import { Outlet } from 'react-router-dom'
-import { Stack } from 'ui'
-import { UniswapLogo } from 'ui/assets/icons/UniswapLogo'
+import { Stack } from 'ui/src'
+import { UniswapLogo } from 'ui/src/assets/icons/UniswapLogo'
 
 export function OnboardingWrapper(): JSX.Element {
   return (

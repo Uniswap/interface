@@ -1,11 +1,12 @@
 import { createMedia } from '@tamagui/react-native-media-driver'
 import { createTamagui } from 'tamagui'
-import { animations } from 'ui/theme/animations'
-import { bodyFont, headingFont } from 'ui/theme/fonts'
-import { themes } from 'ui/theme/themes'
-import { tokens } from 'ui/theme/tokens'
+import { TamaguiInternalConfig } from 'ui/src'
+import { animations } from 'ui/src/theme/animations'
+import { bodyFont, headingFont } from 'ui/src/theme/fonts'
+import { themes } from 'ui/src/theme/themes'
+import { tokens } from 'ui/src/theme/tokens'
 
-export const config = createTamagui({
+export const config: TamaguiInternalConfig = createTamagui({
   animations,
   shouldAddPrefersColorThemes: true,
   themeClassNameOnRoot: true,
