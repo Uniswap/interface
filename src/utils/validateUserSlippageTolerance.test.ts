@@ -1,9 +1,10 @@
 import { Percent } from '@uniswap/sdk-core'
 
-import validateUserSlippageTolerance, {
+import {
   MAXIMUM_RECOMMENDED_SLIPPAGE,
   MINIMUM_RECOMMENDED_SLIPPAGE,
   SlippageValidationResult,
+  validateUserSlippageTolerance,
 } from './validateUserSlippageTolerance'
 
 describe('validateUserSlippageTolerance', () => {
