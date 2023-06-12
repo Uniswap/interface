@@ -78,7 +78,6 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: false
-          verbose: true
           flags: unit-tests
       - if: failure() && github.ref_name == 'main'
         uses: ./.github/actions/report
@@ -100,7 +99,7 @@ jobs:
       - run: yarn build:e2e
         env:
           NODE_OPTIONS: "--max_old_space_size=4096"
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         with:
           name: build-e2e
           path: build
@@ -166,7 +165,11 @@ jobs:
           COMMIT_INFO_TIMESTAMP: ${{ github.event.pull_request.updated_at || github.event.head_commit.timestamp }}
           CYPRESS_PULL_REQUEST_ID: ${{ github.event.pull_request.number }}
           CYPRESS_PULL_REQUEST_URL: ${{ github.event.pull_request.html_url }}
-
+      - uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: false
+          flags: e2e-tests
       - if: failure() && github.ref_name == 'main'
         uses: ./.github/actions/report
         with:
