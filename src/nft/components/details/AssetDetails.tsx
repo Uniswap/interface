@@ -427,7 +427,7 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
               target="_blank"
               rel="noopener noreferrer"
             >
-              {shortenAddress(asset.creator.address, 2, 4)}
+              {shortenAddress(asset.creator.address)}
             </AddressTextLink>
           )}
 

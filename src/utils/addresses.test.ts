@@ -43,7 +43,7 @@ describe('utils', () => {
 
   describe('#shortenAddress', () => {
     it('doesnt throw on invalid address', () => {
-      expect(() => shortenAddress('abc')).toEqual('')
+      expect(shortenAddress('abc123')).toEqual('')
     })
 
     it('truncates middle characters', () => {

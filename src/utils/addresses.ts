@@ -11,26 +11,42 @@ export function isAddress(value: any): string | false {
   }
 }
 
-/**
- * Shortens an Ethereum address by N characters (search keywords: .slice .truncate)
- * @param address blockchain address
- * @param charsStart amount of character to shorten (from both ends / in the beginning)
- * @param charsEnd amount of characters to shorten in the end
- * @returns formatted string
- */
-export function shortenAddress(address: string, charsStart = 4, charsEnd?: number): string {
+// Shortens an Ethereum address
+export function shortenAddress(address: string): string {
   const parsed = isAddress(address)
-  if (!parsed) {
-    return ''
-  }
-  return `${address.substring(0, charsStart + 2)}...${address.substring(42 - (charsEnd || charsStart))}`
+  if (!parsed) return ''
+  return ellipseAddressAdd0x(parsed)
 }
 
-// shorten the checksummed version of the input address to have 0x + 4 characters at start and end
-export function shortenAddressStrict(address: string, chars = 4): string {
+// Shorten the checksummed version of the input address to have 0x + 4 characters at start and end
+export function shortenAddressStrict(address: string): string {
   const parsed = isAddress(address)
   if (!parsed) {
     throw Error(`Invalid 'address' parameter '${address}'.`)
   }
-  return `${parsed.substring(0, chars + 2)}...${parsed.substring(42 - chars)}`
+  return ellipseAddressAdd0x(parsed)
+}
+
+/**
+ * Shorten an address and add 0x to the start if missing
+ * @param target
+ * @param charsStart amount of character to shorten (from both ends / in the beginning)
+ * @param charsEnd amount of characters to shorten in the end
+ * @returns formatted string
+ */
+function ellipseAddressAdd0x(address: string, charsStart = 4, charsEnd = 4): string {
+  const hasPrefix = address.startsWith('0x')
+  const prefix = hasPrefix ? '' : '0x'
+  return ellipseMiddle(prefix + address, charsStart + 2, charsEnd)
+}
+
+/**
+ * Shorten a string with "..." in the middle
+ * @param target
+ * @param charsStart amount of character to shorten (from both ends / in the beginning)
+ * @param charsEnd amount of characters to shorten in the end
+ * @returns formatted string
+ */
+function ellipseMiddle(target: string, charsStart = 4, charsEnd = 4): string {
+  return `${target.slice(0, charsStart)}...${target.slice(target.length - charsEnd)}`
 }
