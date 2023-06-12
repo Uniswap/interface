@@ -2,9 +2,20 @@
 directive @defer on FIELD
 
 """
-Tells the service this field/object has access authorized by a Lambda Authorizer.
+Tells the service which subscriptions will be published to when this mutation is
+called. This directive is deprecated use @aws_susbscribe directive instead.
 """
-directive @aws_lambda on OBJECT | FIELD_DEFINITION
+directive @aws_publish(
+  """
+  List of subscriptions which will be published to when this mutation is called.
+  """
+  subscriptions: [String]
+) on FIELD_DEFINITION
+
+"""
+Tells the service this field/object has access authorized by an OIDC token.
+"""
+directive @aws_oidc on OBJECT | FIELD_DEFINITION
 
 """
 Tells the service this field/object has access authorized by a Cognito User Pools token.
@@ -15,20 +26,20 @@ directive @aws_cognito_user_pools(
 ) on OBJECT | FIELD_DEFINITION
 
 """
-Tells the service this field/object has access authorized by an OIDC token.
+Tells the service this field/object has access authorized by a Lambda Authorizer.
 """
-directive @aws_oidc on OBJECT | FIELD_DEFINITION
-
-"""
-Tells the service this field/object has access authorized by an API key.
-"""
-directive @aws_api_key on OBJECT | FIELD_DEFINITION
+directive @aws_lambda on OBJECT | FIELD_DEFINITION
 
 """Directs the schema to enforce authorization on a field"""
 directive @aws_auth(
   """List of cognito user pool groups which have access on this field"""
   cognito_groups: [String]
 ) on FIELD_DEFINITION
+
+"""
+Tells the service this field/object has access authorized by an API key.
+"""
+directive @aws_api_key on OBJECT | FIELD_DEFINITION
 
 """
 Tells the service this field/object has access authorized by sigv4 signing.
@@ -43,17 +54,9 @@ directive @aws_subscribe(
   mutations: [String]
 ) on FIELD_DEFINITION
 
-"""
-Tells the service which subscriptions will be published to when this mutation is
-called. This directive is deprecated use @aws_susbscribe directive instead.
-"""
-directive @aws_publish(
-  """
-  List of subscriptions which will be published to when this mutation is called.
-  """
-  subscriptions: [String]
-) on FIELD_DEFINITION
+union ActivityDetails = TransactionDetails | SwapOrderDetails
 
+"""  deprecated and replaced with TransactionType, please do not use this"""
 enum ActivityType {
   APPROVE
   CANCEL
@@ -75,6 +78,7 @@ enum ActivityType {
   Staking
   STAKE
   UNSTAKE
+  SWAP_ORDER
 }
 
 type Amount implements IAmount {
@@ -92,11 +96,12 @@ type AmountChange {
 type AssetActivity {
   id: ID!
   timestamp: Int!
-  type: ActivityType!
+  type: ActivityType! @deprecated(reason: "use type field in details")
   chain: Chain!
-  gasUsed: Float
-  transaction: Transaction!
-  assetChanges: [AssetChange]!
+  gasUsed: Float @deprecated(reason: "not required, remove usage")
+  transaction: Transaction! @deprecated(reason: "use fields from details")
+  assetChanges: [AssetChange]! @deprecated(reason: "use assetChanges field in details")
+  details: ActivityDetails!
 }
 
 union AssetChange = TokenTransfer | NftTransfer | TokenApproval | NftApproval | NftApproveForAll
@@ -117,6 +122,7 @@ enum Chain {
   ARBITRUM
   ETHEREUM
   ETHEREUM_GOERLI
+  ETHEREUM_SEPOLIA
   OPTIMISM
   POLYGON
   CELO
@@ -650,6 +656,24 @@ enum SafetyLevel {
   BLOCKED
 }
 
+type SwapOrderDetails {
+  id: ID!
+  offerer: String!
+  hash: String!
+  status: SwapOrderStatus!
+  inputToken: Token!
+  inputTokenQuantity: String!
+  outputToken: Token!
+  outputTokenQuantity: String!
+}
+
+enum SwapOrderStatus {
+  OPEN
+  EXPIRED
+  ERROR
+  INSUFFICIENT_FUNDS
+}
+
 type TimestampedAmount implements IAmount {
   id: ID!
   currency: Currency
@@ -815,6 +839,17 @@ type Transaction {
   status: TransactionStatus!
 }
 
+type TransactionDetails {
+  id: ID!
+  type: TransactionType!
+  assetChanges: [AssetChange]!
+  from: String!
+  to: String!
+  hash: String!
+  status: TransactionStatus!
+  nonce: Int!
+}
+
 enum TransactionDirection {
   IN
   OUT
@@ -825,5 +860,15 @@ enum TransactionStatus {
   FAILED
   CONFIRMED
   PENDING
+}
+
+enum TransactionType {
+  SEND
+  RECEIVE
+  SWAP
+  SWAP_ORDER
+  MINT
+  APPROVE
+  UNKNOWN
 }
 
