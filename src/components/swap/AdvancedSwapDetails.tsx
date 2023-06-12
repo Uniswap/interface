@@ -7,7 +7,7 @@ import { LoadingRows } from 'components/Loader/styled'
 import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { InterfaceTrade } from 'state/routing/types'
-import formatPriceImpact from 'utils'
+import { formatPriceImpact } from 'utils'
 
 import { Separator, ThemedText } from '../../theme'
 import Column from '../Column'

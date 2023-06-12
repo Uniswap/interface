@@ -19,7 +19,7 @@ const ERC20_INTERFACE = new Interface([
   },
 ]) as Erc20Interface
 
-export default function approveAmountCalldata(
+export function approveAmountCalldata(
   amount: CurrencyAmount<Currency>,
   spender: string
 ): { to: string; data: string; value: '0x0' } {

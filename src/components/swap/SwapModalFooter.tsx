@@ -15,10 +15,13 @@ import { InterfaceTrade } from 'state/routing/types'
 import { useRouterPreference, useUserSlippageTolerance } from 'state/user/hooks'
 import styled, { useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
-import { formatTransactionAmount, priceToPreciseFloat } from 'utils'
-import getRoutingDiagramEntries from 'utils'
-import { formatSwapButtonClickEventProperties } from 'utils'
-import { getPriceImpactWarning } from 'utils'
+import {
+  formatSwapButtonClickEventProperties,
+  formatTransactionAmount,
+  getPriceImpactWarning,
+  getRoutingDiagramEntries,
+  priceToPreciseFloat,
+} from 'utils'
 
 import { ButtonError, SmallButtonPrimary } from '../Button'
 import Row, { AutoRow, RowBetween, RowFixed } from '../Row'

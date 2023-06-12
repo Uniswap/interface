@@ -1,6 +1,6 @@
 import { Percent } from '@uniswap/sdk-core'
 
-import formatPriceImpact from './formatPriceImpact'
+import { formatPriceImpact } from './formatPriceImpact'
 
 describe('formatPriceImpact', () => {
   it('formats price impact', () => {

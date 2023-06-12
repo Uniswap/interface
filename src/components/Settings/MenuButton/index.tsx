@@ -5,7 +5,7 @@ import { useUserSlippageTolerance } from 'state/user/hooks'
 import { SlippageTolerance } from 'state/user/types'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
-import validateUserSlippageTolerance, { SlippageValidationResult } from 'utils'
+import { SlippageValidationResult, validateUserSlippageTolerance } from 'utils'
 
 const Icon = styled(Settings)`
   height: 20px;
