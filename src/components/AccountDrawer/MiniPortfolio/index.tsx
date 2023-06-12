@@ -96,7 +96,7 @@ export default function MiniPortfolio({ account }: { account: string }) {
   const [currentPage, setCurrentPage] = useState(isNftPage ? 1 : 0)
   const shouldDisableNFTRoutes = useAtomValue(shouldDisableNFTRoutesAtom)
 
-  const Page = Pages[currentPage].component
+  const { component: Page, key: currentKey } = Pages[currentPage]
 
   const allTransactions = useAllTransactions()
   const hasPendingTransactions = useMemo(() => {
@@ -108,7 +108,9 @@ export default function MiniPortfolio({ account }: { account: string }) {
         <Nav data-testid="mini-portfolio-navbar">
           {Pages.map(({ title, loggingElementName, key }, index) => {
             if (shouldDisableNFTRoutes && loggingElementName.includes('nft')) return null
-            const showPendingActivitySpinner = Boolean(key === 'activity' && hasPendingTransactions)
+            const showPendingActivitySpinner = Boolean(
+              key === 'activity' && hasPendingTransactions && currentKey !== 'activity'
+            )
             return (
               <TraceEvent
                 events={[BrowserEvent.onClick]}
