@@ -17,6 +17,12 @@ const InjectedWalletTable: { [key in keyof NonNullable<Window['ethereum']>]?: { 
   isLedgerConnect: { name: 'Ledger', icon: LEDGER_ICON },
 }
 
+/**
+ * Checks the window object for the presence of a known injectors and returns the most relevant injector name and icon.
+ * Returns a default metamask installation object if no wallet is detected.
+ *
+ * @param isDarkMode - optional parameter to determine which color mode of the
+ */
 export function getInjection(isDarkMode?: boolean): { name: string; icon: string } {
   for (const key in window.ethereum) {
     const detectedWallet = InjectedWalletTable[key as keyof Window['ethereum']]
@@ -31,9 +37,7 @@ export function getInjection(isDarkMode?: boolean): { name: string; icon: string
   if (window.ethereum?.isMetaMask) return { name: 'MetaMask', icon: METAMASK_ICON }
 
   // Prompt metamask installation when there is no injection present or the only injection detected is coinbase
-  if (!window.ethereum || window.ethereum.isCoinbaseWallet) {
-    return { name: 'Install MetaMask', icon: METAMASK_ICON }
-  }
+  if (!window.ethereum || window.ethereum.isCoinbaseWallet) return { name: 'Install MetaMask', icon: METAMASK_ICON }
 
   // Use a generic icon when injection is present but no known non-coinbase wallet is detected
   return { name: 'Browser Wallet', icon: isDarkMode ? INJECTED_DARK_ICON : INJECTED_LIGHT_ICON }
