@@ -148,8 +148,9 @@ export function Table<D extends Record<string, unknown>>({
     <GlowEffect>
       <table {...getTableProps()} className={styles.table}>
         <thead className={styles.thead}>
-          {headerGroups.map((headerGroup, index) => (
-            <tr {...headerGroup.getHeaderGroupProps()} key={index}>
+          {headerGroups.map((headerGroup) => (
+            // eslint-disable-next-line react/jsx-key
+            <tr {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map((column, index) => {
                 return (
                   <StyledHeader
@@ -245,8 +246,9 @@ function LoadingTable({ headerGroups, visibleColumns, ...props }: LoadingTablePr
     <GlowEffect>
       <table {...props} className={styles.table}>
         <thead className={styles.thead}>
-          {headerGroups.map((headerGroup, index) => (
-            <tr {...headerGroup.getHeaderGroupProps()} key={index}>
+          {headerGroups.map((headerGroup) => (
+            // eslint-disable-next-line react/jsx-key
+            <tr {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map((column, index) => {
                 return (
                   <StyledHeader
