@@ -10,7 +10,7 @@ import { AutoRow } from 'components/Row'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { formatDelta } from 'components/Tokens/TokenDetails/PriceChart'
 import Tooltip from 'components/Tooltip'
-import { useGetConnection } from 'connection'
+import { getConnection } from 'connection'
 import { usePortfolioBalancesQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { useAtomValue } from 'jotai/utils'
 import { useProfilePageState, useSellAsset, useWalletCollections } from 'nft/hooks'
@@ -178,7 +178,6 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
 
   const unclaimedAmount: CurrencyAmount<Token> | undefined = useUserUnclaimedAmount(account)
   const isUnclaimed = useUserHasAvailableClaim(account)
-  const getConnection = useGetConnection()
   const connection = getConnection(connector)
   const openClaimModal = useToggleModal(ApplicationModal.ADDRESS_CLAIM)
   const openNftModal = useToggleModal(ApplicationModal.UNISWAP_NFT_AIRDROP_CLAIM)

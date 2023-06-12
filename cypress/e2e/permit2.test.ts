@@ -53,6 +53,9 @@ describe('Permit2', () => {
     it('swaps after completing full permit2 approval process', () => {
       initiateSwap()
 
+      // verify that the modal retains its state when the window loses focus
+      cy.window().trigger('blur')
+
       // Verify token approval
       cy.contains('Enable spending DAI on Uniswap')
       cy.wait('@eth_sendRawTransaction')

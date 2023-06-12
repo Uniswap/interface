@@ -249,7 +249,7 @@ export function PendingModalContent({
         </Row>
       </HeaderContainer>
       {button && <Row justify="center">{button}</Row>}
-      {!hideStepIndicators && (
+      {!hideStepIndicators && !showSuccess && (
         <Row gap="14px" justify="center">
           {steps.map((_, i) => {
             return <StepCircle key={i} active={steps.indexOf(currentStep) === i} />
