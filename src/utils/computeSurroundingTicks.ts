@@ -1,9 +1,16 @@
 import { Token } from '@uniswap/sdk-core'
 import { tickToPrice } from '@uniswap/v3-sdk'
-import { TickProcessed } from 'hooks/usePoolTickData'
 import JSBI from 'jsbi'
 
 import { Ticks } from '../graphql/thegraph/AllV3TicksQuery'
+
+// Tick with fields parsed to JSBIs, and active liquidity computed.
+export interface TickProcessed {
+  tick: number
+  liquidityActive: JSBI
+  liquidityNet: JSBI
+  price0: string
+}
 
 const PRICE_FIXED_DIGITS = 8
 

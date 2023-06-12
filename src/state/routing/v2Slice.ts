@@ -4,8 +4,8 @@ import { getClientSideQuote } from 'lib/hooks/routing/clientSideSmartOrderRouter
 import ms from 'ms.macro'
 import { trace } from 'tracing/trace'
 
-import { GetQuoteArgs, INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference } from './slice'
-import { QuoteDataV2, QuoteState, TradeResult } from './types'
+import { GetQuoteArgs, INTERNAL_ROUTER_PREFERENCE_PRICE } from './slice'
+import { QuoteDataV2, QuoteState, RouterPreference, TradeResult } from './types'
 import { getRouter, isExactInput, shouldUseAPIRouter, transformRoutesToTrade } from './utils'
 
 const CLIENT_PARAMS = {

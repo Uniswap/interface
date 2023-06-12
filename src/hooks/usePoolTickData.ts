@@ -10,7 +10,7 @@ import JSBI from 'jsbi'
 import { useSingleContractMultipleData } from 'lib/hooks/multicall'
 import ms from 'ms.macro'
 import { useEffect, useMemo, useState } from 'react'
-import { computeSurroundingTicks } from 'utils'
+import { computeSurroundingTicks, TickProcessed } from 'utils'
 
 import { V3_CORE_FACTORY_ADDRESSES } from '../constants/addresses'
 import { useTickLens } from './useContract'
@@ -18,14 +18,6 @@ import { PoolState, usePool } from './usePools'
 
 const PRICE_FIXED_DIGITS = 8
 const CHAIN_IDS_MISSING_SUBGRAPH_DATA = [SupportedChainId.ARBITRUM_ONE, SupportedChainId.ARBITRUM_GOERLI]
-
-// Tick with fields parsed to JSBIs, and active liquidity computed.
-export interface TickProcessed {
-  tick: number
-  liquidityActive: JSBI
-  liquidityNet: JSBI
-  price0: string
-}
 
 const REFRESH_FREQUENCY = { blocksPerFetch: 2 }
 

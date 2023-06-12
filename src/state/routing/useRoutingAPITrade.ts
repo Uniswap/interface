@@ -7,10 +7,10 @@ import { useRoutingAPIV2Enabled } from 'featureFlags/flags/unifiedRouter'
 import { useRoutingAPIArguments } from 'lib/hooks/routing/useRoutingAPIArguments'
 import ms from 'ms.macro'
 import { useMemo } from 'react'
-import { INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference, useGetQuoteQuery } from 'state/routing/slice'
+import { INTERNAL_ROUTER_PREFERENCE_PRICE, useGetQuoteQuery } from 'state/routing/slice'
 import { useGetQuoteQuery as useGetQuoteQueryV2 } from 'state/routing/v2Slice'
 
-import { InterfaceTrade, QuoteState, TradeState } from './types'
+import { InterfaceTrade, QuoteState, RouterPreference, TradeState } from './types'
 
 const TRADE_NOT_FOUND = { state: TradeState.NO_ROUTE_FOUND, trade: undefined } as const
 const TRADE_LOADING = { state: TradeState.LOADING, trade: undefined } as const

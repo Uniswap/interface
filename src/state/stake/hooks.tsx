@@ -13,8 +13,6 @@ import { DAI, UNI, USDC_MAINNET, USDT, WBTC, WRAPPED_NATIVE_CURRENCY } from '../
 
 const STAKING_REWARDS_INTERFACE = new Interface(StakingRewardsJSON.abi)
 
-export const STAKING_GENESIS = 1600387200
-
 const STAKING_REWARDS_INFO: {
   [chainId: number]: {
     tokens: [Token, Token]

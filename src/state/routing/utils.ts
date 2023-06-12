@@ -7,12 +7,13 @@ import { RPC_PROVIDERS } from 'constants/providers'
 import { isBsc, isMatic, nativeOnChain } from 'constants/tokens'
 import { toSupportedChainId } from 'lib/hooks/routing/clientSideSmartOrderRouter'
 
-import { GetQuoteArgs, INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference } from './slice'
+import { GetQuoteArgs, INTERNAL_ROUTER_PREFERENCE_PRICE } from './slice'
 import {
   ClassicTrade,
   PoolType,
   QuoteData,
   QuoteState,
+  RouterPreference,
   SwapRouterNativeAssets,
   TradeResult,
   V2PoolInRoute,

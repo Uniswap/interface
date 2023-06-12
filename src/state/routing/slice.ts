@@ -7,14 +7,8 @@ import ms from 'ms.macro'
 import qs from 'qs'
 import { trace } from 'tracing/trace'
 
-import { QuoteData, TradeResult } from './types'
+import { QuoteData, RouterPreference, TradeResult } from './types'
 import { getRouter, isExactInput, shouldUseAPIRouter, transformRoutesToTrade } from './utils'
-
-export enum RouterPreference {
-  AUTO = 'auto',
-  API = 'api',
-  CLIENT = 'client',
-}
 
 // This is excluded from `RouterPreference` enum because it's only used
 // internally for token -> USDC trades to get a USD value.

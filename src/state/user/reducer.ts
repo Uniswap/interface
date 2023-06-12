@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { ConnectionType } from 'connection/types'
 import { SupportedLocale } from 'constants/locales'
-import { RouterPreference } from 'state/routing/slice'
+import { RouterPreference } from 'state/routing/types'
 
 import { DEFAULT_DEADLINE_FROM_NOW } from '../../constants/misc'
 import { updateVersion } from '../global/actions'

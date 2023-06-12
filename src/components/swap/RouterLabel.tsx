@@ -1,4 +1,4 @@
-import { RouterPreference } from 'state/routing/slice'
+import { RouterPreference } from 'state/routing/types'
 import { useRouterPreference } from 'state/user/hooks'
 import { ThemedText } from 'theme'
 
