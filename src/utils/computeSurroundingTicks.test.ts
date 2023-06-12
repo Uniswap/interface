@@ -4,7 +4,7 @@ import { TickData } from 'graphql/thegraph/AllV3TicksQuery'
 import { TickProcessed } from 'hooks/usePoolTickData'
 import JSBI from 'jsbi'
 
-import computeSurroundingTicks from './computeSurroundingTicks'
+import { computeSurroundingTicks } from './computeSurroundingTicks'
 
 const getV3Tick = (tick: number, liquidityNet: number): TickData => ({
   tick,

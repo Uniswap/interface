@@ -8,7 +8,7 @@ import { Ticks } from '../graphql/thegraph/AllV3TicksQuery'
 const PRICE_FIXED_DIGITS = 8
 
 // Computes the numSurroundingTicks above or below the active tick.
-export default function computeSurroundingTicks(
+export function computeSurroundingTicks(
   token0: Token,
   token1: Token,
   activeTickProcessed: TickProcessed,
