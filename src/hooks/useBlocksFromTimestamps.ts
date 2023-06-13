@@ -1,11 +1,11 @@
-import gql from 'graphql-tag'
-import { useState, useEffect, useMemo } from 'react'
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
-import { blockClient } from 'graphql/data/apollo'
-import { SupportedChainId } from 'constants/chains'
 import { START_BLOCKS } from 'constants/blocks'
+import { blockClient } from 'graphql/data/apollo'
+import gql from 'graphql-tag'
+import { useEffect, useMemo, useState } from 'react'
 import { splitQuery } from 'utils/queries'
 
+// eslint-disable-next-line import/no-unused-modules
 export const GET_BLOCKS = (timestamps: string[]) => {
   let queryString = 'query blocks {'
   queryString += timestamps.map((timestamp) => {
@@ -35,20 +35,19 @@ export function useBlocksFromTimestamps(
     | undefined
   error: boolean
 } {
-
   const [blocks, setBlocks] = useState<any>()
   const [error, setError] = useState(false)
- 
+
   const activeBlockClient = blockClientOverride ?? blockClient
 
   // derive blocks based on active network
-  const networkBlocks = blocks?.[SupportedChainId.ROLLUX]
+  const networkBlocks = blocks?.[570]
 
   useEffect(() => {
     async function fetchData() {
       const results = await splitQuery(GET_BLOCKS, activeBlockClient, [], timestamps)
       if (results) {
-        setBlocks({ ...(blocks ?? {}), [SupportedChainId.ROLLUX]: results })
+        setBlocks({ ...(blocks ?? {}), [570]: results })
       } else {
         setError(true)
       }
@@ -59,13 +58,17 @@ export function useBlocksFromTimestamps(
   })
 
   const blocksFormatted = useMemo(() => {
-    if (blocks?.[SupportedChainId.ROLLUX]) {
-      const networkBlocks = blocks?.[SupportedChainId.ROLLUX]
+    if (blocks?.[570]) {
+      const networkBlocks = blocks?.[570]
+
       const formatted = []
-      for (const t in networkBlocks) {
-        if (networkBlocks[t].length > 0) {
-          const number = networkBlocks[t][0]['number']
-          const deploymentBlock = START_BLOCKS[SupportedChainId.ROLLUX]
+      const deploymentBlock = START_BLOCKS[570]
+
+      for (const [t, networkBlock] of Object.entries(networkBlocks)) {
+        const nb = networkBlock as any[]
+
+        if (nb.length > 0) {
+          const number = nb[0]['number']
           const adjustedNumber = number > deploymentBlock ? number : deploymentBlock
 
           formatted.push({
@@ -77,7 +80,7 @@ export function useBlocksFromTimestamps(
       return formatted
     }
     return undefined
-  }, [SupportedChainId.ROLLUX, blocks])
+  }, [blocks])
 
   return {
     blocks: blocksFormatted,
