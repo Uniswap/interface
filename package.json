@@ -19,7 +19,7 @@
     "i18n:compile": "lingui compile",
     "i18n": "yarn i18n:extract --clean && yarn i18n:compile",
     "prepare": "concurrently \"npm:ajv\" \"npm:contracts\" \"npm:graphql\" \"npm:i18n\"",
-    "start": "craco start",
+    "start": "PORT=3001 craco start",
     "build": "craco build",
     "build:e2e": "REACT_APP_CSP_ALLOW_UNSAFE_EVAL=true REACT_APP_ADD_COVERAGE_INSTRUMENTATION=true craco build",
     "analyze": "source-map-explorer 'build/static/js/*.js' --only-mapped",
