@@ -4,15 +4,13 @@ import { ParentSize } from '@visx/responsive'
 import SparklineChart from 'components/Charts/SparklineChart'
 import QueryTokenLogo from 'components/Logo/QueryTokenLogo'
 import { MouseoverTooltip } from 'components/Tooltip'
-import { Chain } from 'graphql/data/Token'
-import { SparklineMap, TopToken } from 'graphql/data/TopTokens'
-import { CHAIN_NAME_TO_CHAIN_ID, getTokenDetailsURL, validateUrlChainParam } from 'graphql/data/util'
-import { Token } from 'graphql/tokens/NewTopTokens'
+import { getTokenDetailsURL } from 'graphql/data/util'
+import { TokenData } from 'graphql/tokens/TokenData'
 import { useAtomValue } from 'jotai/utils'
 import { ForwardedRef, forwardRef } from 'react'
 import { CSSProperties, ReactNode } from 'react'
 import { ArrowDown, ArrowUp, Info } from 'react-feather'
-import { Link, useParams } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import styled, { css, useTheme } from 'styled-components/macro'
 import { ClickableStyle } from 'theme'
 
@@ -23,14 +21,7 @@ import {
   SMALL_MEDIA_BREAKPOINT,
 } from '../constants'
 import { LoadingBubble } from '../loading'
-import {
-  filterStringAtom,
-  filterTimeAtom,
-  sortAscendingAtom,
-  sortMethodAtom,
-  TokenSortMethod,
-  useSetSortMethod,
-} from '../state'
+import { filterTimeAtom, sortAscendingAtom, sortMethodAtom, TokenSortMethod, useSetSortMethod } from '../state'
 import { ArrowCell, DeltaText, formatDelta, getDeltaArrow } from '../TokenDetails/PriceChart'
 
 const Cell = styled.div`
@@ -424,40 +415,25 @@ export function LoadingRow(props: { first?: boolean; last?: boolean }) {
 interface LoadedRowProps {
   tokenListIndex: number
   tokenListLength: number
-  token: NonNullable<TopToken | Token>
-  sparklineMap: SparklineMap
+  token: NonNullable<TokenData>
   sortRank: number
 }
 
 /* Loaded State: row component with token information */
 export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HTMLDivElement>) => {
   const { tokenListIndex, tokenListLength, token, sortRank } = props
-  const filterString = useAtomValue(filterStringAtom)
-
-  const filterNetwork = validateUrlChainParam(useParams<{ chainName?: string }>().chainName?.toUpperCase()) as Chain
-  const chainId = CHAIN_NAME_TO_CHAIN_ID[filterNetwork]
   const timePeriod = useAtomValue(filterTimeAtom)
+
   // TODO: verify query to return price percent change on new graphql pegasys
-  const delta = 'market' in token ? token.market?.pricePercentChange?.value : undefined
+  const delta = timePeriod === 0 ? token.priceUSDChange : token.priceUSDChangeWeek
   const arrow = getDeltaArrow(delta)
   const smallArrow = getDeltaArrow(delta, 14)
   const formattedDelta = formatDelta(delta)
 
-  const exploreTokenSelectedEventProperties = {
-    chain_id: chainId,
-    token_address: token.id,
-    token_symbol: token.symbol,
-    token_list_index: tokenListIndex,
-    token_list_rank: sortRank,
-    token_list_length: tokenListLength,
-    time_frame: timePeriod,
-    search_token_address_input: filterString,
-  }
-
-  const to = 'chain' in token ? getTokenDetailsURL(token) : getTokenDetailsURL({ address: token.id, chain: '570' })
-  const priceUSD = 'market' in token ? formatUSDPrice(token.market?.price?.value) : 0
-  const tvl = 'market' in token ? formatNumber(token.market?.totalValueLocked?.value, NumberType.FiatTokenStats) : 0
-  const volume = 'market' in token ? formatNumber(token.market?.volume?.value, NumberType.FiatTokenStats) : 0
+  const to = getTokenDetailsURL({ address: token.address, chain: '570' })
+  const priceUSD = formatUSDPrice(timePeriod === 0 ? token.priceUSD : token.priceUSDChangeWeek)
+  const tvl = formatNumber(token.tvlToken, NumberType.FiatTokenStats)
+  const volume = formatNumber(timePeriod === 0 ? token.volumeUSD : token.volumeUSDWeek, NumberType.FiatTokenStats)
 
   // TODO: currency logo sizing mobile (32px) vs. desktop (24px)
   return (
@@ -495,25 +471,18 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
           tvl={<ClickableContent>{tvl}</ClickableContent>}
           volume={<ClickableContent>{volume}</ClickableContent>}
           sparkLine={
-            'market' in token ? (
-              <SparkLine>
-                <ParentSize>
-                  {({ width, height }) =>
-                    props.sparklineMap && (
-                      <SparklineChart
-                        width={width}
-                        height={height}
-                        tokenData={token}
-                        pricePercentChange={token.market?.pricePercentChange?.value}
-                        sparklineMap={props.sparklineMap}
-                      />
-                    )
-                  }
-                </ParentSize>
-              </SparkLine>
-            ) : (
-              <></>
-            )
+            <SparkLine>
+              <ParentSize>
+                {({ width, height }) => (
+                  <SparklineChart
+                    width={width}
+                    height={height}
+                    tokenData={token}
+                    pricePercentChange={token.priceUSDChange}
+                  />
+                )}
+              </ParentSize>
+            </SparkLine>
           }
           first={tokenListIndex === 0}
           last={tokenListIndex === tokenListLength - 1}

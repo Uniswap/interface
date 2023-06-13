@@ -8,7 +8,7 @@ import { PriceChartEntry } from 'types/chart'
 import { apolloClient, blockClient } from '../data/apollo'
 
 const PRICE_CHART = gql`
-  query tokenHourDatas($startTime: Int!, $skip: Int!, $address: Int!) {
+  query tokenHourDatas($startTime: Int!, $skip: Int!, $address: Bytes!) {
     tokenHourDatas(
       first: 100
       skip: $skip
@@ -24,12 +24,21 @@ const PRICE_CHART = gql`
     }
   }
 `
+interface PriceResults {
+  tokenHourDatas: {
+    periodStartUnix: number
+    high: string
+    low: string
+    open: string
+    close: string
+  }[]
+}
 
 // format dayjs with the libraries that we need
 dayjs.extend(utc)
 dayjs.extend(weekOfYear)
 
-async function fetchTokenPriceData(
+export async function fetchTokenPriceData(
   address: string,
   interval: number,
   startTimestamp: number
@@ -68,6 +77,7 @@ async function fetchTokenPriceData(
 
     // fetch blocks based on timestamp
     const blocks = await getBlocksFromTimestamps(timestamps, blockClient, 500)
+
     if (!blocks || blocks.length === 0) {
       console.log('Error fetching blocks')
       return {
@@ -90,7 +100,7 @@ async function fetchTokenPriceData(
         data: priceData,
         errors,
         loading,
-      } = await apolloClient.query<any>({
+      } = await apolloClient.query<PriceResults>({
         query: PRICE_CHART,
         variables: {
           address,

@@ -26,6 +26,7 @@ export const TOP_TOKENS = gql`
     }
   }
 `
+
 export interface Token {
   decimals: string
   feesUSD: string
@@ -55,7 +56,6 @@ export function useNewTopTokens(): {
   tokens: Tokens | undefined
 } {
   const { loading, error, data } = useQuery<TokensResponse>(TOP_TOKENS, { client: apolloClient })
-
 
   const formattedData = useMemo(() => {
     if (!data) return undefined

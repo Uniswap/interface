@@ -2,6 +2,7 @@ import { Trans } from '@lingui/macro'
 import { PAGE_SIZE, useTopTokens } from 'graphql/data/TopTokens'
 import { validateUrlChainParam } from 'graphql/data/util'
 import { useNewTopTokens } from 'graphql/tokens/NewTopTokens'
+import { useFetchedTokenDatas } from 'graphql/tokens/TokenData'
 import { ReactNode } from 'react'
 import { AlertTriangle } from 'react-feather'
 import { useParams } from 'react-router-dom'
@@ -76,19 +77,17 @@ function LoadingTokenTable({ rowCount = PAGE_SIZE }: { rowCount?: number }) {
 
 export default function TokenTable() {
   const chainName = validateUrlChainParam(useParams<{ chainName?: string }>().chainName)
-  const { tokens, tokenSortRank, loadingTokens, sparklines } = useTopTokens(chainName)
+  const { tokenSortRank } = useTopTokens(chainName)
 
-  const { loading, error, tokens: newTokens } = useNewTopTokens()
-  console.log('====================================')
-  console.log('loading', loading)
-  console.log('error', error)
-  console.log('newTokens', newTokens)
-  console.log('====================================')
+  const { loading, tokens: newTokens } = useNewTopTokens()
+  const tokensAddress = newTokens?.map((token) => token.id) || []
+
+  const { loading: tokenDataLoading, data: tokenDatas } = useFetchedTokenDatas(tokensAddress)
 
   /* loading and error state */
-  if (loading && !newTokens) {
+  if (loading && tokenDataLoading && !newTokens && !tokenDatas) {
     return <LoadingTokenTable rowCount={PAGE_SIZE} />
-  } else if (!newTokens) {
+  } else if (!tokenDatas) {
     return (
       <NoTokensState
         message={
@@ -99,23 +98,20 @@ export default function TokenTable() {
         }
       />
     )
-  } else if (newTokens.length === 0) {
-    return <NoTokensState message={<Trans>No tokens found</Trans>} />
   } else {
     return (
       <GridContainer>
         <HeaderRow />
         <TokenDataContainer>
-          {newTokens.map(
+          {tokenDatas?.map(
             (token, index) =>
-              token?.id && (
+              token?.address && (
                 <LoadedRow
-                  key={token.id}
+                  key={token.address}
                   tokenListIndex={index}
-                  tokenListLength={newTokens.length}
+                  tokenListLength={tokenDatas.length}
                   token={token}
-                  sparklineMap={sparklines}
-                  sortRank={tokenSortRank[token.id]}
+                  sortRank={tokenSortRank[token.address]}
                 />
               )
           )}
