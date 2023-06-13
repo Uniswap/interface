@@ -220,18 +220,12 @@ describe('transaction reducer', () => {
         })
       )
       expect(Object.keys(store.getState())).toHaveLength(2)
-      expect(Object.keys(store.getState())).toEqual([
-        String(ChainId.MAINNET),
-        String(ChainId.OPTIMISM),
-      ])
+      expect(Object.keys(store.getState())).toEqual([String(ChainId.MAINNET), String(ChainId.OPTIMISM)])
       expect(Object.keys(store.getState()[ChainId.MAINNET] ?? {})).toEqual(['0x0'])
       expect(Object.keys(store.getState()[ChainId.OPTIMISM] ?? {})).toEqual(['0x1'])
       store.dispatch(clearAllTransactions({ chainId: ChainId.MAINNET }))
       expect(Object.keys(store.getState())).toHaveLength(2)
-      expect(Object.keys(store.getState())).toEqual([
-        String(ChainId.MAINNET),
-        String(ChainId.OPTIMISM),
-      ])
+      expect(Object.keys(store.getState())).toEqual([String(ChainId.MAINNET), String(ChainId.OPTIMISM)])
       expect(Object.keys(store.getState()[ChainId.MAINNET] ?? {})).toEqual([])
       expect(Object.keys(store.getState()[ChainId.OPTIMISM] ?? {})).toEqual(['0x1'])
     })
