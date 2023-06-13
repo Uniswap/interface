@@ -10,15 +10,12 @@ import { FeeOptions, toHex } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { useCallback } from 'react'
 import { trace } from 'tracing/trace'
-import {
-  calculateGasMargin,
-  didUserReject,
-  isZero,
-  swapErrorToUserReadableMessage,
-  UserRejectedRequestError,
-} from 'utils'
 import { formatSwapSignedAnalyticsEventProperties } from 'utils/formatSwap'
 
+import { calculateGasMargin } from '../utils/calculateGasMargin'
+import { UserRejectedRequestError } from '../utils/errors'
+import { isZero } from '../utils/isZero'
+import { didUserReject, swapErrorToUserReadableMessage } from '../utils/swapErrorToUserReadableMessage'
 import { PermitSignature } from './usePermitAllowance'
 
 /** Thrown when gas estimation fails. This class of error usually requires an emulator to determine the root cause. */

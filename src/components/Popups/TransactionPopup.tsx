@@ -9,7 +9,7 @@ import { useTransaction } from 'state/transactions/hooks'
 import { TransactionDetails } from 'state/transactions/types'
 import styled from 'styled-components/macro'
 import { EllipsisStyle, ThemedText } from 'theme'
-import { ExplorerDataType, getExplorerLink } from 'utils'
+import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 import { PopupAlertTriangle } from './FailedNetworkSwitchPopup'
 

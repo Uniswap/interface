@@ -2,7 +2,7 @@ import { Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { useMemo } from 'react'
 import { PositionDetails } from 'types/position'
-import { hasURL } from 'utils'
+import { hasURL } from 'utils/urlChecks'
 
 import { useDefaultActiveTokens } from './Tokens'
 import { useTokenContractsConstant } from './useTokenContractsConstant'

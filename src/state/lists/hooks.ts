@@ -1,9 +1,9 @@
 import { TokenAddressMap, tokensToChainTokenMap } from 'lib/hooks/useTokenList/utils'
 import { useMemo } from 'react'
 import { useAppSelector } from 'state/hooks'
-import { sortByListPriority } from 'utils'
 
 import BROKEN_LIST from '../../constants/tokenLists/broken.tokenlist.json'
+import { sortByListPriority } from '../../utils/listSort'
 import { AppState } from '../types'
 import { DEFAULT_ACTIVE_LIST_URLS, UNSUPPORTED_LIST_URLS } from './../../constants/lists'
 

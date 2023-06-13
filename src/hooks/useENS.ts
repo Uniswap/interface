@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { isAddress } from 'utils'
+import { isAddress } from 'utils/addresses'
 
 import useENSAddress from './useENSAddress'
 import useENSName from './useENSName'

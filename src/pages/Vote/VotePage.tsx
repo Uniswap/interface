@@ -16,7 +16,6 @@ import { ArrowLeft } from 'react-feather'
 import ReactMarkdown from 'react-markdown'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components/macro'
-import { isAddress } from 'utils'
 
 import { ButtonPrimary } from '../../components/Button'
 import { GrayCard } from '../../components/Card'
@@ -52,6 +51,7 @@ import {
 } from '../../state/governance/hooks'
 import { VoteOption } from '../../state/governance/types'
 import { ExternalLink, StyledInternalLink, ThemedText } from '../../theme'
+import { isAddress } from '../../utils/addresses'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import { ProposalStatus } from './styled'
 

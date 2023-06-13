@@ -3,7 +3,7 @@ import { isCelo, nativeOnChain } from 'constants/tokens'
 import { chainIdToNetworkName, getNativeLogoURI } from 'lib/hooks/useCurrencyLogoURIs'
 import uriToHttp from 'lib/utils/uriToHttp'
 import { useCallback, useEffect, useState } from 'react'
-import { isAddress } from 'utils'
+import { isAddress } from 'utils/addresses'
 
 import celoLogo from '../assets/svg/celo_logo.svg'
 import { checkWarning } from '../constants/tokenSafety'

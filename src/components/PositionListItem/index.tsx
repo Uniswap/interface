@@ -15,8 +15,8 @@ import { Link } from 'react-router-dom'
 import { Bound } from 'state/mint/v3/actions'
 import styled from 'styled-components/macro'
 import { HideSmall, MEDIA_WIDTHS, SmallOnly, ThemedText } from 'theme'
-import { formatTickPrice } from 'utils'
-import { unwrappedToken } from 'utils'
+import { formatTickPrice } from 'utils/formatTickPrice'
+import { unwrappedToken } from 'utils/unwrappedToken'
 
 import { DAI, USDC_MAINNET, USDT, WBTC, WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
 

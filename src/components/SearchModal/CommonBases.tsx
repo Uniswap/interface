@@ -9,8 +9,9 @@ import { useNativeUSDCArbitrumEnabled } from 'featureFlags/flags/nativeUsdcArbit
 import { useTokenInfoFromActiveList } from 'hooks/useTokenInfoFromActiveList'
 import { Text } from 'rebass'
 import styled from 'styled-components/macro'
-import { currencyId } from 'utils'
-import { getTokenAddress } from 'utils'
+import { currencyId } from 'utils/currencyId'
+
+import { getTokenAddress } from '../../utils/analytics'
 
 const MobileWrapper = styled(AutoColumn)`
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`

@@ -10,19 +10,15 @@ import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { ReactNode } from 'react'
 import { AlertTriangle } from 'react-feather'
-import { RouterPreference } from 'state/routing/types'
-import { InterfaceTrade } from 'state/routing/types'
+import { InterfaceTrade, RouterPreference } from 'state/routing/types'
 import { useRouterPreference, useUserSlippageTolerance } from 'state/user/hooks'
 import styled, { useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
-import {
-  formatSwapButtonClickEventProperties,
-  formatTransactionAmount,
-  getPriceImpactWarning,
-  getRoutingDiagramEntries,
-  priceToPreciseFloat,
-} from 'utils'
 
+import { formatTransactionAmount, priceToPreciseFloat } from '../../utils/formatNumbers'
+import { getRoutingDiagramEntries } from '../../utils/getRoutingDiagramEntries'
+import { formatSwapButtonClickEventProperties } from '../../utils/loggingFormatters'
+import { getPriceImpactWarning } from '../../utils/prices'
 import { ButtonError, SmallButtonPrimary } from '../Button'
 import Row, { AutoRow, RowBetween, RowFixed } from '../Row'
 import { SwapCallbackError, SwapShowAcceptChanges } from './styleds'

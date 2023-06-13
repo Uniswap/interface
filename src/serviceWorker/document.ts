@@ -1,4 +1,4 @@
-import { isAppUniswapOrg, isAppUniswapStagingOrg } from 'utils'
+import { isAppUniswapOrg, isAppUniswapStagingOrg } from 'utils/env'
 import { RouteHandlerCallbackOptions, RouteMatchCallbackOptions } from 'workbox-core'
 import { getCacheKeyForURL, matchPrecache } from 'workbox-precaching'
 import { Route } from 'workbox-routing'

@@ -9,8 +9,8 @@ import { useCallback } from 'react'
 import { deserializeToken, serializeToken } from 'state/user/hooks'
 import { SerializedToken } from 'state/user/types'
 import { PositionDetails } from 'types/position'
-import { buildCurrencyKey, currencyKey } from 'utils'
 
+import { buildCurrencyKey, currencyKey } from '../../../../utils/currencyKey'
 import { getTokensAsync } from './getTokensAsync'
 import { useInterfaceMulticallContracts } from './hooks'
 

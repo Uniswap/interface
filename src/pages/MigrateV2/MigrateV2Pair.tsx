@@ -31,7 +31,6 @@ import { useRangeHopCallbacks, useV3DerivedMintInfo, useV3MintActionHandlers } f
 import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'
 import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
 import { useTheme } from 'styled-components/macro'
-import { formatCurrencyAmount, isAddress, unwrappedToken } from 'utils'
 
 import { AutoColumn } from '../../components/Column'
 import FormattedCurrencyAmount from '../../components/FormattedCurrencyAmount'
@@ -46,9 +45,12 @@ import { useTotalSupply } from '../../hooks/useTotalSupply'
 import { useTokenBalance } from '../../state/connection/hooks'
 import { TransactionType } from '../../state/transactions/types'
 import { BackArrowLink, ExternalLink, ThemedText } from '../../theme'
+import { isAddress } from '../../utils/addresses'
 import { calculateGasMargin } from '../../utils/calculateGasMargin'
 import { currencyId } from '../../utils/currencyId'
+import { formatCurrencyAmount } from '../../utils/formatCurrencyAmount'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
+import { unwrappedToken } from '../../utils/unwrappedToken'
 import { BodyWrapper } from '../AppBody'
 
 const ZERO = JSBI.BigInt(0)

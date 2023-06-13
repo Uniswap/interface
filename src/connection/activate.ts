@@ -7,8 +7,8 @@ import { useCallback } from 'react'
 import { useLocation } from 'react-router-dom'
 import { useAppDispatch } from 'state/hooks'
 import { updateSelectedWallet } from 'state/user/reducer'
-import { getCurrentPageFromLocation } from 'utils'
 
+import { getCurrentPageFromLocation } from '../utils/urlRoutes'
 import { didUserReject } from './utils'
 
 export enum ActivationStatus {

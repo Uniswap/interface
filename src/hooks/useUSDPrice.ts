@@ -6,8 +6,8 @@ import { chainIdToBackendName, isGqlSupportedChain, PollingInterval } from 'grap
 import { INTERNAL_ROUTER_PREFERENCE_PRICE } from 'state/routing/slice'
 import { TradeState } from 'state/routing/types'
 import { useRoutingAPITrade } from 'state/routing/useRoutingAPITrade'
-import { getNativeTokenDBAddress } from 'utils'
 
+import { getNativeTokenDBAddress } from '../utils/nativeTokens'
 import useStablecoinPrice from './useStablecoinPrice'
 
 // ETH amounts used when calculating spot price for a given currency.

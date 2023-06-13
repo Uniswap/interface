@@ -1,6 +1,6 @@
 import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { URI_AVAILABLE, WalletConnect, WalletConnectConstructorArgs } from '@web3-react/walletconnect'
-import { isIOS } from 'utils'
+import { isIOS } from 'utils/env'
 
 import { RPC_URLS } from '../constants/networks'
 

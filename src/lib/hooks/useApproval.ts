@@ -7,8 +7,8 @@ import { useWeb3React } from '@web3-react/core'
 import { useTokenContract } from 'hooks/useContract'
 import { useTokenAllowance } from 'hooks/useTokenAllowance'
 import { useCallback, useMemo } from 'react'
-import { calculateGasMargin } from 'utils'
 import { getTokenAddress } from 'utils/analytics'
+import { calculateGasMargin } from 'utils/calculateGasMargin'
 
 export enum ApprovalState {
   UNKNOWN = 'UNKNOWN',

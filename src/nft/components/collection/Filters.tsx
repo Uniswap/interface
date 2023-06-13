@@ -10,7 +10,7 @@ import { Trait } from 'nft/hooks/useCollectionFilters'
 import { TraitPosition } from 'nft/hooks/useTraitsOpen'
 import { DropDownOption } from 'nft/types'
 import { useMemo, useReducer } from 'react'
-import { isMobile } from 'utils'
+import { isMobile } from 'utils/env'
 
 import { FilterSortDropdown } from '../common/SortDropdown'
 import { getSortDropdownOptions } from './CollectionNfts'

@@ -10,9 +10,10 @@ import JSBI from 'jsbi'
 import { useSingleContractMultipleData } from 'lib/hooks/multicall'
 import ms from 'ms.macro'
 import { useEffect, useMemo, useState } from 'react'
-import { computeSurroundingTicks, TickProcessed } from 'utils'
+import { TickProcessed } from 'utils/computeSurroundingTicks'
 
-import { V3_CORE_FACTORY_ADDRESSES } from '../constants/addresses'
+import * as addresses from '../constants/addresses'
+import { computeSurroundingTicks } from '../utils/computeSurroundingTicks'
 import { useTickLens } from './useContract'
 import { PoolState, usePool } from './usePools'
 
@@ -52,7 +53,7 @@ function useTicksFromTickLens(
           currencyB?.wrapped,
           feeAmount,
           undefined,
-          chainId ? V3_CORE_FACTORY_ADDRESSES[chainId] : undefined
+          chainId ? addresses.V3_CORE_FACTORY_ADDRESSES[chainId] : undefined
         )
       : undefined
 
@@ -145,7 +146,7 @@ function useTicksFromSubgraph(
           currencyB?.wrapped,
           feeAmount,
           undefined,
-          chainId ? V3_CORE_FACTORY_ADDRESSES[chainId] : undefined
+          chainId ? addresses.V3_CORE_FACTORY_ADDRESSES[chainId] : undefined
         )
       : undefined
 

@@ -14,7 +14,9 @@ import { ReactNode, useCallback, useState } from 'react'
 import { Bound } from 'state/mint/v3/actions'
 import { useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
-import { formatTickPrice, unwrappedToken } from 'utils'
+
+import { formatTickPrice } from '../../utils/formatTickPrice'
+import { unwrappedToken } from '../../utils/unwrappedToken'
 
 export const PositionPreview = ({
   position,

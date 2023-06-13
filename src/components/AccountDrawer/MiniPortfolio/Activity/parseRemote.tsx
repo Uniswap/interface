@@ -17,7 +17,7 @@ import {
 import { fromGraphQLChain } from 'graphql/data/util'
 import ms from 'ms.macro'
 import { useEffect, useState } from 'react'
-import { isAddress } from 'utils'
+import { isAddress } from 'utils/addresses'
 
 import { MOONPAY_SENDER_ADDRESSES } from '../constants'
 import { Activity } from './types'

@@ -36,7 +36,7 @@ import { useNavigate } from 'react-router-dom'
 import { Text } from 'rebass'
 import { InterfaceTrade, TradeState } from 'state/routing/types'
 import styled, { useTheme } from 'styled-components/macro'
-import { currencyAmountToPreciseFloat, didUserReject, formatTransactionAmount } from 'utils'
+import { currencyAmountToPreciseFloat, formatTransactionAmount } from 'utils/formatNumbers'
 import { formatSwapQuoteReceivedEventProperties } from 'utils/formatSwap'
 
 import AddressInputPanel from '../../components/AddressInputPanel'
@@ -62,6 +62,7 @@ import { computeFiatValuePriceImpact } from '../../utils/computeFiatValuePriceIm
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { computeRealizedPriceImpact, warningSeverity } from '../../utils/prices'
 import { supportedChainId } from '../../utils/supportedChainId'
+import { didUserReject } from '../../utils/swapErrorToUserReadableMessage'
 
 export const ArrowContainer = styled.div`
   display: inline-flex;

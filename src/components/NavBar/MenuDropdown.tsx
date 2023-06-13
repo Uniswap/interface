@@ -21,7 +21,7 @@ import { ReactNode, useReducer, useRef } from 'react'
 import { NavLink, NavLinkProps } from 'react-router-dom'
 import { useToggleModal } from 'state/application/hooks'
 import styled, { useTheme } from 'styled-components/macro'
-import { isDevelopmentEnv, isStagingEnv } from 'utils'
+import { isDevelopmentEnv, isStagingEnv } from 'utils/env'
 
 import { ReactComponent as AppleLogo } from '../../assets/svg/apple_logo.svg'
 import { ApplicationModal } from '../../state/application/reducer'

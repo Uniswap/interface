@@ -6,7 +6,7 @@ import { MERKLE_DISTRIBUTOR_ADDRESS } from 'constants/addresses'
 import JSBI from 'jsbi'
 import { useSingleCallResult } from 'lib/hooks/multicall'
 import { useEffect, useState } from 'react'
-import { isAddress } from 'utils'
+import { isAddress } from 'utils/addresses'
 
 import { UNI } from '../../constants/tokens'
 import { useContract } from '../../hooks/useContract'

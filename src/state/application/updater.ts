@@ -3,7 +3,7 @@ import useDebounce from 'hooks/useDebounce'
 import useIsWindowVisible from 'hooks/useIsWindowVisible'
 import { useEffect, useRef, useState } from 'react'
 import { useAppDispatch } from 'state/hooks'
-import { supportedChainId } from 'utils'
+import { supportedChainId } from 'utils/supportedChainId'
 
 import { useCloseModal } from './hooks'
 import { updateChainId } from './reducer'

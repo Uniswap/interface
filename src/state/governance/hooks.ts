@@ -23,7 +23,7 @@ import { UNISWAP_GRANTS_PROPOSAL_DESCRIPTION } from 'constants/proposals/uniswap
 import { useContract } from 'hooks/useContract'
 import { useSingleCallResult, useSingleContractMultipleData } from 'lib/hooks/multicall'
 import { useCallback, useMemo } from 'react'
-import { calculateGasMargin } from 'utils'
+import { calculateGasMargin } from 'utils/calculateGasMargin'
 
 import {
   BRAVO_START_BLOCK,

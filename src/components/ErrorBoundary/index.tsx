@@ -7,7 +7,7 @@ import { useIsMobile } from 'nft/hooks'
 import React, { PropsWithChildren, useState } from 'react'
 import { Copy } from 'react-feather'
 import styled from 'styled-components/macro'
-import { isSentryEnabled } from 'utils'
+import { isSentryEnabled } from 'utils/env'
 
 import { CopyToClipboard, ExternalLink, ThemedText } from '../../theme'
 import { Column } from '../Column'
