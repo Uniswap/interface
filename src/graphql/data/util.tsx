@@ -27,25 +27,25 @@ export function usePollQueryWhileMounted<T, K>(queryResult: QueryResult<T, K>, i
 }
 
 export enum TimePeriod {
-  HOUR,
+  // HOUR,
   DAY,
   WEEK,
-  MONTH,
-  YEAR,
+  // MONTH,
+  // YEAR,
 }
 
 export function toHistoryDuration(timePeriod: TimePeriod): HistoryDuration {
   switch (timePeriod) {
-    case TimePeriod.HOUR:
-      return HistoryDuration.Hour
+    // case TimePeriod.HOUR:
+    //   return HistoryDuration.Hour
     case TimePeriod.DAY:
       return HistoryDuration.Day
     case TimePeriod.WEEK:
       return HistoryDuration.Week
-    case TimePeriod.MONTH:
-      return HistoryDuration.Month
-    case TimePeriod.YEAR:
-      return HistoryDuration.Year
+    // case TimePeriod.MONTH:
+    //   return HistoryDuration.Month
+    // case TimePeriod.YEAR:
+    //   return HistoryDuration.Year
   }
 }
 

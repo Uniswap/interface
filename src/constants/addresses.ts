@@ -71,7 +71,7 @@ export const NONFUNGIBLE_POSITION_MANAGER_ADDRESSES: AddressMap = {
 
 export const ENS_REGISTRAR_ADDRESSES: AddressMap = {}
 
-export const SOCKS_CONTROLLER_ADDRESSES: AddressMap = {}
+// export const SOCKS_CONTROLLER_ADDRESSES: AddressMap = {}
 
 export const TICK_LENS_ADDRESSES: AddressMap = {
   ...constructSameAddressMap('0x36975dfB9B2b1c858f77c6797cf7454ACC57816f'),
