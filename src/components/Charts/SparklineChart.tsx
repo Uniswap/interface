@@ -1,9 +1,13 @@
 import { SparkLineLoadingBubble } from 'components/Tokens/TokenTable/TokenRow'
 import { curveCardinal, scaleLinear } from 'd3'
-import { SparklineMap, TopToken } from 'graphql/data/TopTokens'
+import dayjs from 'dayjs'
 import { PricePoint } from 'graphql/data/util'
-import { memo } from 'react'
+import { fetchTokenPriceData } from 'graphql/tokens/NewTokenPrice'
+import { TokenData } from 'graphql/tokens/TokenData'
+import { memo, useEffect, useState } from 'react'
 import styled, { useTheme } from 'styled-components/macro'
+import { PriceChartEntry } from 'types/chart'
+import { ONE_HOUR_SECONDS } from 'utils/intervals'
 
 import { getPriceBounds } from '../Tokens/TokenDetails/PriceChart'
 import LineChart from './LineChart'
@@ -18,15 +22,34 @@ const LoadingContainer = styled.div`
 interface SparklineChartProps {
   width: number
   height: number
-  tokenData: TopToken
+  tokenData: TokenData
   pricePercentChange: number | undefined | null
-  sparklineMap: SparklineMap
 }
 
-function _SparklineChart({ width, height, tokenData, pricePercentChange, sparklineMap }: SparklineChartProps) {
+function _SparklineChart({ width, height, tokenData, pricePercentChange }: SparklineChartProps) {
   const theme = useTheme()
   // for sparkline
-  const pricePoints = tokenData?.address ? sparklineMap[tokenData.address] : null
+
+  const utcCurrentTime = dayjs()
+  const startTimestamp = utcCurrentTime.subtract(1, 'week').startOf('hour').unix()
+  const [data, setData] = useState<PriceChartEntry[]>([])
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const { data } = await fetchTokenPriceData(tokenData.address, ONE_HOUR_SECONDS, startTimestamp)
+      setData(data)
+    }
+
+    fetchData()
+  }, [startTimestamp, tokenData.address])
+
+  const pricePoint = [] as PricePoint[]
+  data.map((price) => {
+    pricePoint.push({ timestamp: price.time, value: price.open })
+    pricePoint.push({ timestamp: price.time, value: price.close })
+  })
+
+  const pricePoints = tokenData?.address ? pricePoint : null
 
   // Don't display if there's one or less pricepoints
   if (!pricePoints || pricePoints.length <= 1) {
