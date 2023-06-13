@@ -6,6 +6,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const path = require('path')
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin')
 const { DefinePlugin, IgnorePlugin, ProvidePlugin } = require('webpack')
+const { SwcMinifyWebpackPlugin } = require('swc-minify-webpack-plugin')
 
 const commitHash = execSync('git rev-parse HEAD').toString().trim()
 const isProduction = process.env.NODE_ENV === 'production'
@@ -177,6 +178,7 @@ module.exports = {
                 // Optimize over all chunks, instead of async chunks (the default), so that initial chunks are also optimized.
                 chunks: 'all',
               },
+              minimizer: [new SwcMinifyWebpackPlugin()],
             }
           : {}
       )
