@@ -88,17 +88,11 @@ function useConfirmModalState({
   const trace = useTrace()
   const maximumAmountIn = useMaxAmountIn(trade, allowedSlippage)
 
-  const catchUserReject = async (action: () => Promise<void>, onRealError: () => void) => {
-    try {
-      await action()
-    } catch (e) {
-      setConfirmModalState(ConfirmModalState.REVIEWING)
-      if (didUserReject(e)) {
-        return
-      }
-      console.error(e)
-      onRealError()
-    }
+  const catchUserReject = async (e: any, errorType: PendingModalError) => {
+    setConfirmModalState(ConfirmModalState.REVIEWING)
+    if (didUserReject(e)) return
+    console.error(e)
+    setApprovalError(errorType)
   }
 
   const performStep = useCallback(
@@ -107,43 +101,30 @@ function useConfirmModalState({
         case ConfirmModalState.APPROVING_TOKEN:
           setConfirmModalState(ConfirmModalState.APPROVING_TOKEN)
           invariant(allowance.state === AllowanceState.REQUIRED, 'Allowance should be required')
-          await catchUserReject(
-            async () => {
-              await allowance.approve()
+          await allowance
+            .approve()
+            .then(() => {
               sendAnalyticsEvent(InterfaceEventName.APPROVE_TOKEN_TXN_SUBMITTED, {
                 chain_id: chainId,
                 token_symbol: maximumAmountIn?.currency.symbol,
                 token_address: maximumAmountIn?.currency.address,
                 ...trace,
               })
-            },
-            function onRealError() {
-              setApprovalError(PendingModalError.TOKEN_APPROVAL_ERROR)
-            }
-          )
+            })
+            .catch((e) => catchUserReject(e, PendingModalError.TOKEN_APPROVAL_ERROR))
           break
         case ConfirmModalState.PERMITTING:
           setConfirmModalState(ConfirmModalState.PERMITTING)
           invariant(allowance.state === AllowanceState.REQUIRED, 'Allowance should be required')
-          await catchUserReject(
-            async () => {
-              await allowance.permit()
-            },
-            function onRealError() {
-              setApprovalError(PendingModalError.TOKEN_APPROVAL_ERROR)
-            }
-          )
+          await allowance.permit().catch((e) => catchUserReject(e, PendingModalError.TOKEN_APPROVAL_ERROR))
           break
         case ConfirmModalState.PENDING_CONFIRMATION:
-          await catchUserReject(
-            async () => {
-              setConfirmModalState(ConfirmModalState.PENDING_CONFIRMATION)
-              onSwap()
-            },
-            function onRealError() {
-              setApprovalError(PendingModalError.CONFIRMATION_ERROR)
-            }
-          )
+          setConfirmModalState(ConfirmModalState.PENDING_CONFIRMATION)
+          try {
+            onSwap()
+          } catch (e) {
+            catchUserReject(e, PendingModalError.CONFIRMATION_ERROR)
+          }
           break
         default:
           setConfirmModalState(ConfirmModalState.REVIEWING)
