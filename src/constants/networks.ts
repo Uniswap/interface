@@ -100,6 +100,7 @@ export const FALLBACK_URLS = {
     'https://bsc-dataseed4.defibit.io',
     'https://rpc.ankr.com/bsc',
   ],
+  [ChainId.AVALANCHE]: [], // TODO
 }
 
 /**
