@@ -22,6 +22,10 @@ export function isSupportedChain(chainId: number | null | undefined | ChainId): 
   return !!chainId && SUPPORTED_CHAINS.indexOf(chainId) > 0
 }
 
+export function toSupportedChain(chainId: number | null | undefined | ChainId): SupportedChainsType | undefined {
+  return isSupportedChain(chainId) ? chainId : undefined
+}
+
 export const SUPPORTED_GAS_ESTIMATE_CHAIN_IDS = [
   ChainId.MAINNET,
   ChainId.POLYGON,
