@@ -6,7 +6,7 @@ import { GlyphCircle } from '@visx/glyph'
 import { Line } from '@visx/shape'
 import AnimatedInLineChart from 'components/Charts/AnimatedInLineChart'
 import FadedInLineChart from 'components/Charts/FadeInLineChart'
-import { bisect, curveCardinal, NumberValue, scaleLinear, timeDay, timeHour, timeMinute, timeMonth } from 'd3'
+import { bisect, curveCardinal, NumberValue, scaleLinear, timeDay, timeHour } from 'd3'
 import { PricePoint } from 'graphql/data/util'
 import { TimePeriod } from 'graphql/data/util'
 import { useActiveLocale } from 'hooks/useActiveLocale'
@@ -15,14 +15,7 @@ import { ArrowDownRight, ArrowUpRight, TrendingUp } from 'react-feather'
 import styled, { useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { textFadeIn } from 'theme/styles'
-import {
-  dayHourFormatter,
-  hourFormatter,
-  monthDayFormatter,
-  monthTickFormatter,
-  monthYearDayFormatter,
-  weekFormatter,
-} from 'utils/formatChartTimes'
+import { dayHourFormatter, hourFormatter, weekFormatter } from 'utils/formatChartTimes'
 import { formatDollar } from 'utils/formatNumbers'
 
 const DATA_EMPTY = { value: 0, timestamp: 0 }
@@ -188,14 +181,14 @@ export function PriceChart({ width, height, prices: originalPrices, timePeriod }
     const startDateWithOffset = new Date((startingPrice.timestamp.valueOf() + offsetTime) * 1000)
     const endDateWithOffset = new Date((endingPrice.timestamp.valueOf() - offsetTime) * 1000)
     switch (timePeriod) {
-      case TimePeriod.HOUR:
-        return [
-          hourFormatter(locale),
-          dayHourFormatter(locale),
-          (timeMinute.every(5) ?? timeMinute)
-            .range(startDateWithOffset, endDateWithOffset, 2)
-            .map((x) => x.valueOf() / 1000),
-        ]
+      // case TimePeriod.HOUR:
+      //   return [
+      //     hourFormatter(locale),
+      //     dayHourFormatter(locale),
+      //     (timeMinute.every(5) ?? timeMinute)
+      //       .range(startDateWithOffset, endDateWithOffset, 2)
+      //       .map((x) => x.valueOf() / 1000),
+      //   ]
       case TimePeriod.DAY:
         return [
           hourFormatter(locale),
@@ -208,18 +201,18 @@ export function PriceChart({ width, height, prices: originalPrices, timePeriod }
           dayHourFormatter(locale),
           timeDay.range(startDateWithOffset, endDateWithOffset, 1).map((x) => x.valueOf() / 1000),
         ]
-      case TimePeriod.MONTH:
-        return [
-          monthDayFormatter(locale),
-          dayHourFormatter(locale),
-          timeDay.range(startDateWithOffset, endDateWithOffset, 7).map((x) => x.valueOf() / 1000),
-        ]
-      case TimePeriod.YEAR:
-        return [
-          monthTickFormatter(locale),
-          monthYearDayFormatter(locale),
-          timeMonth.range(startDateWithOffset, endDateWithOffset, 2).map((x) => x.valueOf() / 1000),
-        ]
+      // case TimePeriod.MONTH:
+      //   return [
+      //     monthDayFormatter(locale),
+      //     dayHourFormatter(locale),
+      //     timeDay.range(startDateWithOffset, endDateWithOffset, 7).map((x) => x.valueOf() / 1000),
+      //   ]
+      // case TimePeriod.YEAR:
+      //   return [
+      //     monthTickFormatter(locale),
+      //     monthYearDayFormatter(locale),
+      //     timeMonth.range(startDateWithOffset, endDateWithOffset, 2).map((x) => x.valueOf() / 1000),
+      //   ]
     }
   }
 
@@ -269,7 +262,8 @@ export function PriceChart({ width, height, prices: originalPrices, timePeriod }
    * Higher values make the curve more rigid, lower values smooth the curve but make it less "sticky" to real data points,
    * making it unacceptable for shorter durations / smaller variances.
    */
-  const curveTension = timePeriod === TimePeriod.HOUR ? 1 : 0.9
+  // const curveTension = timePeriod === TimePeriod.HOUR ? 1 : 0.9
+  const curveTension = 0.9
 
   const getX = useMemo(() => (p: PricePoint) => timeScale(p.timestamp), [timeScale])
   const getY = useMemo(() => (p: PricePoint) => rdScale(p.value), [rdScale])
