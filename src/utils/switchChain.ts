@@ -41,7 +41,7 @@ export const switchChain = async (connector: Connector, chainId: ChainId) => {
     const addChainParameter = {
       chainId,
       chainName: info.label,
-      rpcUrls: [getRpcUrl(chainId)],
+      rpcUrls: [getRpcUrl(chainId as SupportedChainsType)],
       nativeCurrency: info.nativeCurrency,
       blockExplorerUrls: [info.explorer],
     }
