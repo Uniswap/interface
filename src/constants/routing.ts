@@ -1,10 +1,8 @@
 // a list of tokens by chain
-import { Currency, Token } from '@uniswap/sdk-core'
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId, Currency, Token } from '@uniswap/sdk-core'
 
 import {
   AMPL,
-  BRIDGED_USDC_ARBITRUM,
   BTC_BSC,
   BUSD_BSC,
   CAKE_BSC,
@@ -70,19 +68,8 @@ const WRAPPED_NATIVE_CURRENCIES_ONLY: ChainTokenList = Object.fromEntries(
 // used to construct intermediary pairs for trading
 export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
   ...WRAPPED_NATIVE_CURRENCIES_ONLY,
-  [ChainId.MAINNET]: [
-    ...WRAPPED_NATIVE_CURRENCIES_ONLY[ChainId.MAINNET],
-    DAI,
-    USDC_MAINNET,
-    USDT,
-    WBTC,
-  ],
-  [ChainId.OPTIMISM]: [
-    ...WRAPPED_NATIVE_CURRENCIES_ONLY[ChainId.OPTIMISM],
-    DAI_OPTIMISM,
-    USDT_OPTIMISM,
-    WBTC_OPTIMISM,
-  ],
+  [ChainId.MAINNET]: [...WRAPPED_NATIVE_CURRENCIES_ONLY[ChainId.MAINNET], DAI, USDC_MAINNET, USDT, WBTC],
+  [ChainId.OPTIMISM]: [...WRAPPED_NATIVE_CURRENCIES_ONLY[ChainId.OPTIMISM], DAI_OPTIMISM, USDT_OPTIMISM, WBTC_OPTIMISM],
   [ChainId.ARBITRUM_ONE]: [
     ...WRAPPED_NATIVE_CURRENCIES_ONLY[ChainId.ARBITRUM_ONE],
     DAI_ARBITRUM_ONE,
@@ -143,18 +130,12 @@ export const COMMON_BASES: ChainCurrencyList = {
     WBTC,
     WRAPPED_NATIVE_CURRENCY[ChainId.MAINNET] as Token,
   ],
-  [ChainId.GOERLI]: [
-    nativeOnChain(ChainId.GOERLI),
-    WRAPPED_NATIVE_CURRENCY[ChainId.GOERLI] as Token,
-  ],
-  [ChainId.SEPOLIA]: [
-    nativeOnChain(ChainId.SEPOLIA),
-    WRAPPED_NATIVE_CURRENCY[ChainId.SEPOLIA] as Token,
-  ],
+  [ChainId.GOERLI]: [nativeOnChain(ChainId.GOERLI), WRAPPED_NATIVE_CURRENCY[ChainId.GOERLI] as Token],
+  [ChainId.SEPOLIA]: [nativeOnChain(ChainId.SEPOLIA), WRAPPED_NATIVE_CURRENCY[ChainId.SEPOLIA] as Token],
   [ChainId.ARBITRUM_ONE]: [
     nativeOnChain(ChainId.ARBITRUM_ONE),
     DAI_ARBITRUM_ONE,
-    BRIDGED_USDC_ARBITRUM,
+    USDC_ARBITRUM,
     USDT_ARBITRUM_ONE,
     WBTC_ARBITRUM_ONE,
     WRAPPED_NATIVE_CURRENCY[ChainId.ARBITRUM_ONE] as Token,
@@ -164,13 +145,7 @@ export const COMMON_BASES: ChainCurrencyList = {
     WRAPPED_NATIVE_CURRENCY[ChainId.ARBITRUM_GOERLI] as Token,
     USDC_ARBITRUM_GOERLI,
   ],
-  [ChainId.OPTIMISM]: [
-    nativeOnChain(ChainId.OPTIMISM),
-    DAI_OPTIMISM,
-    USDC_OPTIMISM,
-    USDT_OPTIMISM,
-    WBTC_OPTIMISM,
-  ],
+  [ChainId.OPTIMISM]: [nativeOnChain(ChainId.OPTIMISM), DAI_OPTIMISM, USDC_OPTIMISM, USDT_OPTIMISM, WBTC_OPTIMISM],
   [ChainId.OPTIMISM_GOERLI]: [nativeOnChain(ChainId.OPTIMISM_GOERLI)],
   [ChainId.POLYGON]: [
     nativeOnChain(ChainId.POLYGON),
@@ -186,54 +161,16 @@ export const COMMON_BASES: ChainCurrencyList = {
     WETH_POLYGON_MUMBAI,
   ],
 
-  [ChainId.CELO]: [
-    nativeOnChain(ChainId.CELO),
-    CEUR_CELO,
-    CUSD_CELO,
-    PORTAL_ETH_CELO,
-    PORTAL_USDC_CELO,
-    CMC02_CELO,
-  ],
-  [ChainId.CELO_ALFAJORES]: [
-    nativeOnChain(ChainId.CELO_ALFAJORES),
-    CUSD_CELO_ALFAJORES,
-    CEUR_CELO_ALFAJORES,
-  ],
+  [ChainId.CELO]: [nativeOnChain(ChainId.CELO), CEUR_CELO, CUSD_CELO, PORTAL_ETH_CELO, PORTAL_USDC_CELO, CMC02_CELO],
+  [ChainId.CELO_ALFAJORES]: [nativeOnChain(ChainId.CELO_ALFAJORES), CUSD_CELO_ALFAJORES, CEUR_CELO_ALFAJORES],
 
-  [ChainId.BNB]: [
-    nativeOnChain(ChainId.BNB),
-    DAI_BSC,
-    USDC_BSC,
-    USDT_BSC,
-    ETH_BSC,
-    BTC_BSC,
-    BUSD_BSC,
-  ],
-}
-
-// This is the same as COMMON_BASES except it swaps out Bridged USDC on arbitrum for native USDC.
-export const COMMON_BASES_V2: ChainCurrencyList = {
-  ...COMMON_BASES,
-  [ChainId.ARBITRUM_ONE]: [
-    nativeOnChain(ChainId.ARBITRUM_ONE),
-    DAI_ARBITRUM_ONE,
-    USDC_ARBITRUM,
-    USDT_ARBITRUM_ONE,
-    WBTC_ARBITRUM_ONE,
-    WRAPPED_NATIVE_CURRENCY[ChainId.ARBITRUM_ONE] as Token,
-  ],
+  [ChainId.BNB]: [nativeOnChain(ChainId.BNB), DAI_BSC, USDC_BSC, USDT_BSC, ETH_BSC, BTC_BSC, BUSD_BSC],
 }
 
 // used to construct the list of all pairs we consider by default in the frontend
 export const BASES_TO_TRACK_LIQUIDITY_FOR: ChainTokenList = {
   ...WRAPPED_NATIVE_CURRENCIES_ONLY,
-  [ChainId.MAINNET]: [
-    ...WRAPPED_NATIVE_CURRENCIES_ONLY[ChainId.MAINNET],
-    DAI,
-    USDC_MAINNET,
-    USDT,
-    WBTC,
-  ],
+  [ChainId.MAINNET]: [...WRAPPED_NATIVE_CURRENCIES_ONLY[ChainId.MAINNET], DAI, USDC_MAINNET, USDT, WBTC],
   [ChainId.BNB]: [
     ...WRAPPED_NATIVE_CURRENCIES_ONLY[ChainId.BNB],
     DAI_BSC,
@@ -248,13 +185,7 @@ export const PINNED_PAIRS: { readonly [chainId: number]: [Token, Token][] } = {
   [ChainId.MAINNET]: [
     [
       new Token(ChainId.MAINNET, '0x5d3a536E4D6DbD6114cc1Ead35777bAB948E3643', 8, 'cDAI', 'Compound Dai'),
-      new Token(
-        ChainId.MAINNET,
-        '0x39AA39c021dfbaE8faC545936693aC917d5E7563',
-        8,
-        'cUSDC',
-        'Compound USD Coin'
-      ),
+      new Token(ChainId.MAINNET, '0x39AA39c021dfbaE8faC545936693aC917d5E7563', 8, 'cUSDC', 'Compound USD Coin'),
     ],
     [USDC_MAINNET, USDT],
     [DAI, USDT],
