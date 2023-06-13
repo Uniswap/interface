@@ -1,6 +1,6 @@
 import { nanoid } from '@reduxjs/toolkit'
-import { TokenList } from '@uniswap/token-lists'
 import { ChainId } from '@uniswap/sdk-core'
+import { TokenList } from '@uniswap/token-lists'
 import { RPC_PROVIDERS } from 'constants/providers'
 import getTokenList from 'lib/hooks/useTokenList/fetchTokenList'
 import resolveENSContentHash from 'lib/utils/resolveENSContentHash'

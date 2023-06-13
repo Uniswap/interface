@@ -5,7 +5,7 @@ import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
 import { FeeAmount, Pool, Route as V3Route } from '@uniswap/v3-sdk'
 import { RPC_PROVIDERS } from 'constants/providers'
 import { isBsc, isMatic, nativeOnChain } from 'constants/tokens'
-import { toChainId } from 'lib/hooks/routing/clientSideSmartOrderRouter'
+import { toSupportedChainId } from 'lib/hooks/routing/clientSideSmartOrderRouter'
 
 import { GetQuoteArgs, INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference } from './slice'
 import {
@@ -24,7 +24,7 @@ export function getRouter(chainId: ChainId): AlphaRouter {
   const router = routers.get(chainId)
   if (router) return router
 
-  const ChainId = toChainId(chainId)
+  const ChainId = toSupportedChainId(chainId)
   if (ChainId) {
     const provider = RPC_PROVIDERS[ChainId]
     const router = new AlphaRouter({ chainId, provider })

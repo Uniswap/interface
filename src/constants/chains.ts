@@ -15,6 +15,7 @@ export const CHAIN_IDS_TO_NAMES = {
   [ChainId.OPTIMISM]: 'optimism',
   [ChainId.OPTIMISM_GOERLI]: 'optimism_goerli',
   [ChainId.BNB]: 'bnb',
+  [ChainId.AVALANCHE]: 'avalanche',
 }
 type AddressMap = { [chainId: number]: string }
 
@@ -25,13 +26,6 @@ const V3_CORE_FACTORY_ADDRESSES: AddressMap = {
   }, {}),
 }
 console.log('V3_CORE_FACTORY_ADDRESSES', V3_CORE_FACTORY_ADDRESSES)
-
-/**
- * Array of all the supported chain IDs
- */
-export const ALL_SUPPORTED_CHAIN_IDS: ChainId[] = Object.values(ChainId).filter(
-  (id) => typeof id === 'number'
-) as ChainId[]
 
 export function isSupportedChain(chainId: number | null | undefined): chainId is ChainId {
   return !!chainId && !!SUPPORTED_CHAINS[chainId]

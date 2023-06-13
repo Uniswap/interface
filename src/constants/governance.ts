@@ -1,3 +1,5 @@
+import { ChainId } from '@uniswap/sdk-core'
+
 import {
   GOVERNANCE_ALPHA_V0_ADDRESSES,
   GOVERNANCE_ALPHA_V1_ADDRESSES,
@@ -5,7 +7,6 @@ import {
   TIMELOCK_ADDRESS,
   UNI_ADDRESS,
 } from './addresses'
-import { ChainId } from './chains'
 
 export const COMMON_CONTRACT_NAMES: Record<number, { [address: string]: string }> = {
   [ChainId.MAINNET]: {

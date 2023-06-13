@@ -3,7 +3,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
 import type { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 import { parseEther } from '@ethersproject/units'
-import { addressesByNetwork, MakerOrder, signMakerOrder, ChainId } from '@looksrare/sdk'
+import { addressesByNetwork, MakerOrder, signMakerOrder, SupportedChainId } from '@looksrare/sdk'
 import { Seaport } from '@opensea/seaport-js'
 import { ItemType } from '@opensea/seaport-js/lib/constants'
 import { ConsiderationInputItem } from '@opensea/seaport-js/lib/types'
@@ -167,7 +167,7 @@ export async function signListing(
         return false
       }
     case 'LooksRare': {
-      const addresses = addressesByNetwork[ChainId.MAINNET]
+      const addresses = addressesByNetwork[SupportedChainId.MAINNET]
       const currentTime = Math.round(Date.now() / 1000)
       const makerOrder: MakerOrder = {
         // true --> ask / false --> bid
@@ -204,7 +204,7 @@ export async function signListing(
       try {
         const signatureHash = await signMakerOrder(
           signer,
-          ChainId.MAINNET,
+          SupportedChainId.MAINNET,
           makerOrder,
           LOOKSRARE_MARKETPLACE_CONTRACT_721
         )

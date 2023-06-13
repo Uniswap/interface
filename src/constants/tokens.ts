@@ -1,8 +1,8 @@
 import { Currency, Ether, NativeCurrency, Token, WETH9 } from '@uniswap/sdk-core'
+import { ChainId } from '@uniswap/sdk-core'
 import invariant from 'tiny-invariant'
 
 import { UNI_ADDRESS } from './addresses'
-import { ChainId } from './chains'
 
 export const NATIVE_CHAIN_ID = 'NATIVE'
 
@@ -18,20 +18,8 @@ export const USDC_MAINNET = new Token(
   'USDC',
   'USD//C'
 )
-const USDC_GOERLI = new Token(
-  ChainId.GOERLI,
-  '0x07865c6e87b9f70255377e024ace6630c1eaa37f',
-  6,
-  'USDC',
-  'USD//C'
-)
-const USDC_SEPOLIA = new Token(
-  ChainId.SEPOLIA,
-  '0x6f14C02Fc1F78322cFd7d707aB90f18baD3B54f5',
-  6,
-  'USDC',
-  'USD//C'
-)
+const USDC_GOERLI = new Token(ChainId.GOERLI, '0x07865c6e87b9f70255377e024ace6630c1eaa37f', 6, 'USDC', 'USD//C')
+const USDC_SEPOLIA = new Token(ChainId.SEPOLIA, '0x6f14C02Fc1F78322cFd7d707aB90f18baD3B54f5', 6, 'USDC', 'USD//C')
 export const USDC_OPTIMISM = new Token(
   ChainId.OPTIMISM,
   '0x7F5c764cBc14f9669B88837ca1490cCa17c31607',
@@ -88,20 +76,8 @@ export const PORTAL_USDC_CELO = new Token(
   'USDCet',
   'USDC (Portal from Ethereum)'
 )
-export const AMPL = new Token(
-  ChainId.MAINNET,
-  '0xD46bA6D942050d489DBd938a2C909A5d5039A161',
-  9,
-  'AMPL',
-  'Ampleforth'
-)
-export const DAI = new Token(
-  ChainId.MAINNET,
-  '0x6B175474E89094C44Da98b954EedeAC495271d0F',
-  18,
-  'DAI',
-  'Dai Stablecoin'
-)
+export const AMPL = new Token(ChainId.MAINNET, '0xD46bA6D942050d489DBd938a2C909A5d5039A161', 9, 'AMPL', 'Ampleforth')
+export const DAI = new Token(ChainId.MAINNET, '0x6B175474E89094C44Da98b954EedeAC495271d0F', 18, 'DAI', 'Dai Stablecoin')
 export const DAI_ARBITRUM_ONE = new Token(
   ChainId.ARBITRUM_ONE,
   '0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1',
@@ -137,13 +113,7 @@ export const WBTC_POLYGON = new Token(
   'WBTC',
   'Wrapped BTC'
 )
-export const USDT = new Token(
-  ChainId.MAINNET,
-  '0xdAC17F958D2ee523a2206206994597C13D831ec7',
-  6,
-  'USDT',
-  'Tether USD'
-)
+export const USDT = new Token(ChainId.MAINNET, '0xdAC17F958D2ee523a2206206994597C13D831ec7', 6, 'USDT', 'Tether USD')
 export const USDT_ARBITRUM_ONE = new Token(
   ChainId.ARBITRUM_ONE,
   '0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9',
@@ -158,13 +128,7 @@ export const USDT_OPTIMISM = new Token(
   'USDT',
   'Tether USD'
 )
-export const WBTC = new Token(
-  ChainId.MAINNET,
-  '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599',
-  8,
-  'WBTC',
-  'Wrapped BTC'
-)
+export const WBTC = new Token(ChainId.MAINNET, '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599', 8, 'WBTC', 'Wrapped BTC')
 export const WBTC_ARBITRUM_ONE = new Token(
   ChainId.ARBITRUM_ONE,
   '0x2f2a2543B76A4166549F7aaB2e75Bef0aefC5B0f',
@@ -179,41 +143,11 @@ export const WBTC_OPTIMISM = new Token(
   'WBTC',
   'Wrapped BTC'
 )
-export const FEI = new Token(
-  ChainId.MAINNET,
-  '0x956F47F50A910163D8BF957Cf5846D573E7f87CA',
-  18,
-  'FEI',
-  'Fei USD'
-)
-export const TRIBE = new Token(
-  ChainId.MAINNET,
-  '0xc7283b66Eb1EB5FB86327f08e1B5816b0720212B',
-  18,
-  'TRIBE',
-  'Tribe'
-)
-export const FRAX = new Token(
-  ChainId.MAINNET,
-  '0x853d955aCEf822Db058eb8505911ED77F175b99e',
-  18,
-  'FRAX',
-  'Frax'
-)
-export const FXS = new Token(
-  ChainId.MAINNET,
-  '0x3432B6A60D23Ca0dFCa7761B7ab56459D9C964D0',
-  18,
-  'FXS',
-  'Frax Share'
-)
-export const renBTC = new Token(
-  ChainId.MAINNET,
-  '0xEB4C2781e4ebA804CE9a9803C67d0893436bB27D',
-  8,
-  'renBTC',
-  'renBTC'
-)
+export const FEI = new Token(ChainId.MAINNET, '0x956F47F50A910163D8BF957Cf5846D573E7f87CA', 18, 'FEI', 'Fei USD')
+export const TRIBE = new Token(ChainId.MAINNET, '0xc7283b66Eb1EB5FB86327f08e1B5816b0720212B', 18, 'TRIBE', 'Tribe')
+export const FRAX = new Token(ChainId.MAINNET, '0x853d955aCEf822Db058eb8505911ED77F175b99e', 18, 'FRAX', 'Frax')
+export const FXS = new Token(ChainId.MAINNET, '0x3432B6A60D23Ca0dFCa7761B7ab56459D9C964D0', 18, 'FXS', 'Frax Share')
+export const renBTC = new Token(ChainId.MAINNET, '0xEB4C2781e4ebA804CE9a9803C67d0893436bB27D', 8, 'renBTC', 'renBTC')
 export const ETH2X_FLI = new Token(
   ChainId.MAINNET,
   '0xAa6E8127831c9DE45ae56bB1b0d4D4Da6e5665BD',
@@ -235,13 +169,7 @@ export const rETH2 = new Token(
   'rETH2',
   'StakeWise Reward ETH2'
 )
-export const SWISE = new Token(
-  ChainId.MAINNET,
-  '0x48C3399719B582dD63eB5AADf12A40B4C3f52FA2',
-  18,
-  'SWISE',
-  'StakeWise'
-)
+export const SWISE = new Token(ChainId.MAINNET, '0x48C3399719B582dD63eB5AADf12A40B4C3f52FA2', 18, 'SWISE', 'StakeWise')
 export const WETH_POLYGON_MUMBAI = new Token(
   ChainId.POLYGON_MUMBAI,
   '0xa6fa4fb5f76172d178d61b04b0ecd319c5d1c0aa',
@@ -308,97 +236,31 @@ export const CEUR_CELO_ALFAJORES = new Token(
   'Celo Euro Stablecoin'
 )
 
-export const USDC_BSC = new Token(
-  ChainId.BNB,
-  '0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d',
-  18,
-  'USDC',
-  'USDC'
-)
+export const USDC_BSC = new Token(ChainId.BNB, '0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d', 18, 'USDC', 'USDC')
 
-export const USDT_BSC = new Token(
-  ChainId.BNB,
-  '0x55d398326f99059fF775485246999027B3197955',
-  18,
-  'USDT',
-  'USDT'
-)
+export const USDT_BSC = new Token(ChainId.BNB, '0x55d398326f99059fF775485246999027B3197955', 18, 'USDT', 'USDT')
 
-export const ETH_BSC = new Token(
-  ChainId.BNB,
-  '0x2170Ed0880ac9A755fd29B2688956BD959F933F8',
-  18,
-  'ETH',
-  'Ethereum'
-)
+export const ETH_BSC = new Token(ChainId.BNB, '0x2170Ed0880ac9A755fd29B2688956BD959F933F8', 18, 'ETH', 'Ethereum')
 
-export const MATIC_BSC = new Token(
-  ChainId.BNB,
-  '0xCC42724C6683B7E57334c4E856f4c9965ED682bD',
-  18,
-  'MATIC',
-  'Matic'
-)
+export const MATIC_BSC = new Token(ChainId.BNB, '0xCC42724C6683B7E57334c4E856f4c9965ED682bD', 18, 'MATIC', 'Matic')
 
-export const FRAX_BSC = new Token(
-  ChainId.BNB,
-  '0x90C97F71E18723b0Cf0dfa30ee176Ab653E89F40',
-  18,
-  'FRAX',
-  'FRAX'
-)
+export const FRAX_BSC = new Token(ChainId.BNB, '0x90C97F71E18723b0Cf0dfa30ee176Ab653E89F40', 18, 'FRAX', 'FRAX')
 
 export const BTC_BSC = new Token(ChainId.BNB, '0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c', 18, 'BTCB', 'BTCB')
 
-export const CAKE_BSC = new Token(
-  ChainId.BNB,
-  '0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82',
-  18,
-  'CAKE',
-  'Cake'
-)
+export const CAKE_BSC = new Token(ChainId.BNB, '0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82', 18, 'CAKE', 'Cake')
 
-export const BUSD_BSC = new Token(
-  ChainId.BNB,
-  '0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56',
-  18,
-  'BUSD',
-  'BUSD'
-)
+export const BUSD_BSC = new Token(ChainId.BNB, '0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56', 18, 'BUSD', 'BUSD')
 
 export const DAI_BSC = new Token(ChainId.BNB, '0x1AF3F329e8BE154074D8769D1FFa4eE058B1DBc3', 18, 'DAI', 'DAI')
 
 export const UNI: { [chainId: number]: Token } = {
-  [ChainId.MAINNET]: new Token(
-    ChainId.MAINNET,
-    UNI_ADDRESS[ChainId.MAINNET],
-    18,
-    'UNI',
-    'Uniswap'
-  ),
-  [ChainId.GOERLI]: new Token(
-    ChainId.GOERLI,
-    UNI_ADDRESS[ChainId.GOERLI],
-    18,
-    'UNI',
-    'Uniswap'
-  ),
-  [ChainId.SEPOLIA]: new Token(
-    ChainId.SEPOLIA,
-    UNI_ADDRESS[ChainId.SEPOLIA],
-    18,
-    'UNI',
-    'Uniswap'
-  ),
+  [ChainId.MAINNET]: new Token(ChainId.MAINNET, UNI_ADDRESS[ChainId.MAINNET], 18, 'UNI', 'Uniswap'),
+  [ChainId.GOERLI]: new Token(ChainId.GOERLI, UNI_ADDRESS[ChainId.GOERLI], 18, 'UNI', 'Uniswap'),
+  [ChainId.SEPOLIA]: new Token(ChainId.SEPOLIA, UNI_ADDRESS[ChainId.SEPOLIA], 18, 'UNI', 'Uniswap'),
 }
 
-export const ARB = new Token(
-  ChainId.ARBITRUM_ONE,
-  '0x912CE59144191C1204E64559FE8253a0e49E6548',
-  18,
-  'ARB',
-  'Arbitrum'
-)
+export const ARB = new Token(ChainId.ARBITRUM_ONE, '0x912CE59144191C1204E64559FE8253a0e49E6548', 18, 'ARB', 'Arbitrum')
 
 export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token | undefined } = {
   ...(WETH9 as Record<ChainId, Token>),
@@ -465,13 +327,7 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token | undefined } =
     'CELO',
     'Celo native asset'
   ),
-  [ChainId.BNB]: new Token(
-    ChainId.BNB,
-    '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
-    18,
-    'WBNB',
-    'Wrapped BNB'
-  ),
+  [ChainId.BNB]: new Token(ChainId.BNB, '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c', 18, 'WBNB', 'Wrapped BNB'),
 }
 
 export function isCelo(chainId: number): chainId is ChainId.CELO | ChainId.CELO_ALFAJORES {

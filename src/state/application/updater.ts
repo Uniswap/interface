@@ -1,9 +1,9 @@
+import { SUPPORTED_CHAINS } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import useDebounce from 'hooks/useDebounce'
 import useIsWindowVisible from 'hooks/useIsWindowVisible'
 import { useEffect, useRef, useState } from 'react'
 import { useAppDispatch } from 'state/hooks'
-import { ChainId } from 'utils/ChainId'
 
 import { useCloseModal } from './hooks'
 import { updateChainId } from './reducer'
@@ -33,7 +33,7 @@ export default function Updater(): null {
   const debouncedChainId = useDebounce(activeChainId, 100)
 
   useEffect(() => {
-    const chainId = debouncedChainId ? ChainId(debouncedChainId) ?? null : null
+    const chainId = debouncedChainId ? SUPPORTED_CHAINS[debouncedChainId] ?? null : null
     dispatch(updateChainId({ chainId }))
   }, [dispatch, debouncedChainId])
 

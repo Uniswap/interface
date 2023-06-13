@@ -1,22 +1,22 @@
 import { BigintIsh, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
+import { SUPPORTED_CHAINS, SupportedChainsType } from '@uniswap/sdk-core'
 // This file is lazy-loaded, so the import of smart-order-router is intentional.
 // eslint-disable-next-line no-restricted-imports
 import { AlphaRouter, AlphaRouterConfig, ChainId } from '@uniswap/smart-order-router'
-import { ChainId } from '@uniswap/sdk-core'
 import { nativeOnChain } from 'constants/tokens'
 import JSBI from 'jsbi'
 import { GetQuoteArgs } from 'state/routing/slice'
 import { QuoteResult, QuoteState, SwapRouterNativeAssets } from 'state/routing/types'
 import { transformSwapRouteToGetQuoteResult } from 'utils/transformSwapRouteToGetQuoteResult'
 
-export function toChainId(chainId: ChainId): ChainId | undefined {
+export function toSupportedChainId(chainId: ChainId): SupportedChainsType | undefined {
   const numericChainId: number = chainId
-  if (ChainId[numericChainId]) return numericChainId
+  if (SUPPORTED_CHAINS[numericChainId]) return numericChainId
   return undefined
 }
-export function isChainId(chainId: ChainId | undefined): boolean {
+export function isSupportedChainId(chainId: ChainId | undefined): boolean {
   if (chainId === undefined) return false
-  return toChainId(chainId) !== undefined
+  return toSupportedChainId(chainId) !== undefined
 }
 
 async function getQuote(

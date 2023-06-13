@@ -1,6 +1,7 @@
 import { sendAnalyticsEvent, user } from '@uniswap/analytics'
 import { CustomUserProperties, InterfaceEventName, WalletConnectionResult } from '@uniswap/analytics-events'
 import { getWalletMeta } from '@uniswap/conedison/provider/meta'
+import { SupportedChainsType } from '@uniswap/sdk-core'
 import { useWeb3React, Web3ReactHooks, Web3ReactProvider } from '@web3-react/core'
 import { Connector } from '@web3-react/types'
 import { getConnection } from 'connection'
@@ -37,7 +38,7 @@ function Updater() {
   const currentPage = getCurrentPageFromLocation(pathname)
 
   // Trace RPC calls (for debugging).
-  const networkProvider = isSupportedChain(chainId) ? RPC_PROVIDERS[chainId] : undefined
+  const networkProvider = isSupportedChain(chainId) ? RPC_PROVIDERS[chainId as SupportedChainsType] : undefined
   const shouldTrace = useTraceJsonRpcFlag() === TraceJsonRpcVariant.Enabled
   useEffect(() => {
     if (shouldTrace) {
