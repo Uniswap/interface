@@ -73,29 +73,5 @@ export function useRevokeTokenAllowance(
   token: Token | undefined,
   spender: string
 ): () => Promise<{ response: ContractTransaction; info: ApproveTransactionInfo }> {
-  const contract = useTokenContract(token?.address)
-
-  return useCallback(async () => {
-    try {
-      if (!contract) throw new Error('missing contract')
-      if (!spender) throw new Error('missing spender')
-
-      const response = await contract.approve(spender, 0)
-      return {
-        response,
-        info: {
-          type: TransactionType.APPROVAL,
-          tokenAddress: contract.address,
-          spender,
-          amount: '0',
-        },
-      }
-    } catch (e: unknown) {
-      const symbol = token?.symbol ?? 'Token'
-      if (didUserReject(e)) {
-        throw new UserRejectedRequestError(`${symbol} token allowance failed: User rejected`)
-      }
-      throw new Error(`${symbol} token allowance failed: ${e instanceof Error ? e.message : e}`)
-    }
-  }, [contract, spender, token])
+  return useUpdateTokenAllowance(token ? CurrencyAmount.fromRawAmount(token, 0) : token, spender)
 }
