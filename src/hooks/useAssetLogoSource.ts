@@ -30,7 +30,6 @@ function prioritizeLogoSources(uris: string[]) {
       preferredUris.push(uri)
     }
   })
-  console.log('coingeckoUrl', coingeckoUrl, preferredUris)
   // Places coingecko urls in the back of the source array
   return coingeckoUrl ? [...preferredUris, coingeckoUrl] : preferredUris
 }

@@ -5,11 +5,11 @@ import { SearchToken } from 'graphql/data/SearchTokens'
 import { TokenQueryData } from 'graphql/data/Token'
 import { TopToken } from 'graphql/data/TopTokens'
 import { CHAIN_NAME_TO_CHAIN_ID } from 'graphql/data/util'
-import { Token } from 'graphql/tokens/NewTopTokens'
+import { TokenData } from 'graphql/tokens/TokenData'
 
 import AssetLogo, { AssetLogoBaseProps } from './AssetLogo'
 
-function getChainId(token?: TopToken | TokenQueryData | SearchToken | Token): SupportedChainId | undefined {
+function getChainId(token?: TopToken | TokenQueryData | SearchToken | TokenData): SupportedChainId | undefined {
   if (token && 'chain' in token) {
     return token?.chain ? CHAIN_NAME_TO_CHAIN_ID[token?.chain] : undefined
   } else {
@@ -17,8 +17,8 @@ function getChainId(token?: TopToken | TokenQueryData | SearchToken | Token): Su
   }
 }
 
-function isNativeToken(token?: TopToken | TokenQueryData | SearchToken | Token): boolean {
-  if (token && 'address' in token) {
+function isNativeToken(token?: TopToken | TokenQueryData | SearchToken | TokenData): boolean {
+  if (token && 'address' in token && 'standard' in token) {
     return !token?.address || token?.standard === TokenStandard.Native || token?.address === NATIVE_CHAIN_ID
   } else {
     // TODO check if token rollux is native token
@@ -27,7 +27,7 @@ function isNativeToken(token?: TopToken | TokenQueryData | SearchToken | Token):
 }
 export default function QueryTokenLogo(
   props: AssetLogoBaseProps & {
-    token?: TopToken | TokenQueryData | SearchToken | Token
+    token?: TopToken | TokenQueryData | SearchToken | TokenData
   }
 ) {
   const { token } = props
