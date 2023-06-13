@@ -213,7 +213,7 @@ export function PendingModalContent({
           <LoadingIndicatorOverlay />
         )}
       </LogoContainer>
-      <HeaderContainer gap="md" $disabled={tokenApprovalPending || swapPending}>
+      <HeaderContainer gap="md" $disabled={tokenApprovalPending || (swapPending && !showSuccess)}>
         <AnimationWrapper>
           {steps.map((step) => {
             const { title, subtitle } = getContent({

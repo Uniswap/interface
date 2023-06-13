@@ -144,6 +144,11 @@ const AlternateTransactionTitleTable: { [key in TransactionType]?: { [state in T
     [TransactionStatus.Confirmed]: t`Unwrapped`,
     [TransactionStatus.Failed]: t`Unwrap failed`,
   },
+  [TransactionType.APPROVAL]: {
+    [TransactionStatus.Pending]: t`Revoking approval`,
+    [TransactionStatus.Confirmed]: t`Revoked approval`,
+    [TransactionStatus.Failed]: t`Revoke approval failed`,
+  },
 }
 
 export function getActivityTitle(type: TransactionType, status: TransactionStatus, alternate?: boolean) {
