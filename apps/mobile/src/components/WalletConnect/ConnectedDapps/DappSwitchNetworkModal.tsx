@@ -40,10 +40,10 @@ export function DappSwitchNetworkModal({
     [selectedSession.id, onClose]
   )
 
-  const networkOptions = useNetworkOptions({
-    selectedChain: toSupportedChainId(selectedSession.dapp.chain_id),
-    onPress,
-  })
+  const networkOptions = useNetworkOptions(
+    toSupportedChainId(selectedSession.dapp.chain_id),
+    onPress
+  )
 
   const options = useMemo(
     () =>

@@ -1,9 +1,11 @@
-import React, { useEffect, useMemo, useReducer, useState } from 'react'
+import { Currency } from '@uniswap/sdk-core'
+import React, { useCallback, useEffect, useMemo, useReducer, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { SearchContext } from 'src/components/explore/search/SearchResultsSection'
 import { WarningAction } from 'src/components/modals/WarningModal/types'
 import {
+  TokenSelector,
   TokenSelectorFlow,
-  TokenSelectorModal,
   TokenSelectorVariation,
 } from 'src/components/TokenSelector/TokenSelector'
 import { useTokenSelectorActionHandlers } from 'src/features/transactions/hooks'
@@ -65,38 +67,48 @@ export function SwapFlow({ prefilledState, onClose }: SwapFormProps): JSX.Elemen
     }
   }, [selectingCurrencyField])
 
+  const onTokenSelectorSelectCurrency = useCallback(
+    (currency: Currency, context: SearchContext) => {
+      selectingCurrencyField && onSelectCurrency(currency, selectingCurrencyField, context)
+    },
+    [selectingCurrencyField, onSelectCurrency]
+  )
+
   const exactValue = state.isUSDInput ? state.exactAmountUSD : state.exactAmountToken
 
-  const otherCurrencyChainId = selectingCurrencyField
-    ? currencies[otherCurrencyField(selectingCurrencyField)]?.currency.chainId
+  const selectedCurrency = selectingCurrencyField
+    ? currencies[selectingCurrencyField]?.currency
+    : undefined
+  const otherCurrency = selectingCurrencyField
+    ? currencies[otherCurrencyField(selectingCurrencyField)]?.currency
     : undefined
 
   return (
-    <>
-      <TransactionFlow
-        approveTxRequest={approveTxRequest}
-        derivedInfo={derivedSwapInfo}
-        dispatch={dispatch}
-        exactValue={exactValue ?? ''}
-        flowName={t('Swap')}
-        gasFallbackUsed={gasFallbackUsed}
-        setStep={setStep}
-        step={step}
-        totalGasFee={totalGasFee}
-        txRequest={txRequest}
-        warnings={allWarnings}
-        onClose={onClose}
-      />
-      {!!selectingCurrencyField && (
-        <TokenSelectorModal
-          chainId={otherCurrencyChainId}
+    <TransactionFlow
+      approveTxRequest={approveTxRequest}
+      derivedInfo={derivedSwapInfo}
+      dispatch={dispatch}
+      exactValue={exactValue ?? ''}
+      flowName={t('Swap')}
+      gasFallbackUsed={gasFallbackUsed}
+      setStep={setStep}
+      showTokenSelector={!!selectingCurrencyField}
+      step={step}
+      tokenSelector={
+        <TokenSelector
           currencyField={selectingCurrencyField}
           flow={TokenSelectorFlow.Swap}
+          otherCurrency={otherCurrency}
+          selectedCurrency={selectedCurrency}
           variation={listVariation}
-          onClose={onHideTokenSelector}
-          onSelectCurrency={onSelectCurrency}
+          onBack={onHideTokenSelector}
+          onSelectCurrency={onTokenSelectorSelectCurrency}
         />
-      )}
-    </>
+      }
+      totalGasFee={totalGasFee}
+      txRequest={txRequest}
+      warnings={allWarnings}
+      onClose={onClose}
+    />
   )
 }
