@@ -18,8 +18,8 @@ export const CHAIN_IDS_TO_NAMES = {
   [ChainId.AVALANCHE]: 'avalanche',
 }
 
-export function isSupportedChain(chainId: number | null | undefined): chainId is SupportedChainsType {
-  return !!chainId && !!SUPPORTED_CHAINS[chainId]
+export function isSupportedChain(chainId: number | null | undefined | ChainId): chainId is SupportedChainsType {
+  return !!chainId && SUPPORTED_CHAINS.indexOf(chainId) > 0
 }
 
 export const SUPPORTED_GAS_ESTIMATE_CHAIN_IDS = [

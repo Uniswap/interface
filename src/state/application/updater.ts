@@ -1,5 +1,5 @@
-import { SUPPORTED_CHAINS } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { isSupportedChain } from 'constants/chains'
 import useDebounce from 'hooks/useDebounce'
 import useIsWindowVisible from 'hooks/useIsWindowVisible'
 import { useEffect, useRef, useState } from 'react'
@@ -33,7 +33,7 @@ export default function Updater(): null {
   const debouncedChainId = useDebounce(activeChainId, 100)
 
   useEffect(() => {
-    const chainId = debouncedChainId ? SUPPORTED_CHAINS[debouncedChainId] ?? null : null
+    const chainId = debouncedChainId && isSupportedChain(debouncedChainId) ? debouncedChainId : null
     dispatch(updateChainId({ chainId }))
   }, [dispatch, debouncedChainId])
 
