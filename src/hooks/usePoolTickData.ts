@@ -1,7 +1,6 @@
-import { Currency } from '@uniswap/sdk-core'
+import { ChainId, Currency } from '@uniswap/sdk-core'
 import { FeeAmount, nearestUsableTick, Pool, TICK_SPACINGS, tickToPrice } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
-import { ChainId } from '@uniswap/sdk-core'
 import { ZERO_ADDRESS } from 'constants/misc'
 import { useAllV3TicksQuery } from 'graphql/thegraph/__generated__/types-and-hooks'
 import { TickData, Ticks } from 'graphql/thegraph/AllV3TicksQuery'

@@ -47,12 +47,7 @@ export function getNativeLogoURI(chainId: ChainId = ChainId.MAINNET): string {
 
 function getTokenLogoURI(address: string, chainId: ChainId = ChainId.MAINNET): string | void {
   const networkName = chainIdToNetworkName(chainId)
-  const networksWithUrls = [
-    ChainId.ARBITRUM_ONE,
-    ChainId.MAINNET,
-    ChainId.OPTIMISM,
-    ChainId.BNB,
-  ]
+  const networksWithUrls = [ChainId.ARBITRUM_ONE, ChainId.MAINNET, ChainId.OPTIMISM, ChainId.BNB]
   if (isCelo(chainId) && address === nativeOnChain(chainId).wrapped.address) {
     return CeloLogo
   }

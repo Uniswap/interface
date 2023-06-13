@@ -1,6 +1,6 @@
 import { TransactionReceipt } from '@ethersproject/abstract-provider'
-import { useWeb3React } from '@web3-react/core'
 import { ChainId } from '@uniswap/sdk-core'
+import { useWeb3React } from '@web3-react/core'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import useBlockNumber, { useFastForwardBlockNumber } from 'lib/hooks/useBlockNumber'
 import ms from 'ms.macro'

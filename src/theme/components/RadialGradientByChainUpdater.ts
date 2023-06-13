@@ -1,5 +1,5 @@
-import { useWeb3React } from '@web3-react/core'
 import { ChainId } from '@uniswap/sdk-core'
+import { useWeb3React } from '@web3-react/core'
 import { useIsNftPage } from 'hooks/useIsNftPage'
 import { useEffect } from 'react'
 import { useDarkModeManager } from 'theme/components/ThemeToggle'
