@@ -3,7 +3,7 @@ import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { AVERAGE_L1_BLOCK_TIME } from 'constants/chainInfo'
 import { PermitSignature, usePermitAllowance, useUpdatePermitAllowance } from 'hooks/usePermitAllowance'
-import { useResetTokenAllowance, useTokenAllowance, useUpdateTokenAllowance } from 'hooks/useTokenAllowance'
+import { useRevokeTokenAllowance, useTokenAllowance, useUpdateTokenAllowance } from 'hooks/useTokenAllowance'
 import useInterval from 'lib/hooks/useInterval'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useHasPendingApproval, useHasPendingRevoke, useTransactionAdder } from 'state/transactions/hooks'
@@ -25,11 +25,11 @@ interface AllowanceRequired {
   token: Token
   isApprovalLoading: boolean
   isApprovalPending: boolean
-  isResetPending: boolean
+  isRevokePending: boolean
   approveAndPermit: () => Promise<void>
   approve: () => Promise<void>
   permit: () => Promise<void>
-  reset: () => Promise<void>
+  revoke: () => Promise<void>
   needsPermit2Approval: boolean
   needsSignature: boolean
   allowedAmount: CurrencyAmount<Token>
@@ -49,7 +49,7 @@ export default function usePermit2Allowance(amount?: CurrencyAmount<Token>, spen
 
   const { tokenAllowance, isSyncing: isApprovalSyncing } = useTokenAllowance(token, account, PERMIT2_ADDRESS)
   const updateTokenAllowance = useUpdateTokenAllowance(amount, PERMIT2_ADDRESS)
-  const resetTokenAllowance = useResetTokenAllowance(token, PERMIT2_ADDRESS)
+  const revokeTokenAllowance = useRevokeTokenAllowance(token, PERMIT2_ADDRESS)
   const isApproved = useMemo(() => {
     if (!amount || !tokenAllowance) return false
     return tokenAllowance.greaterThan(amount) || tokenAllowance.equalTo(amount)
@@ -121,10 +121,10 @@ export default function usePermit2Allowance(amount?: CurrencyAmount<Token>, spen
     await updatePermitAllowance()
   }, [updatePermitAllowance])
 
-  const reset = useCallback(async () => {
-    const { response, info } = await resetTokenAllowance()
+  const revoke = useCallback(async () => {
+    const { response, info } = await revokeTokenAllowance()
     addTransaction(response, info)
-  }, [addTransaction, resetTokenAllowance])
+  }, [addTransaction, revokeTokenAllowance])
 
   return useMemo(() => {
     if (token) {
@@ -136,11 +136,11 @@ export default function usePermit2Allowance(amount?: CurrencyAmount<Token>, spen
           state: AllowanceState.REQUIRED,
           isApprovalLoading: false,
           isApprovalPending,
-          isResetPending: isRevokePending,
+          isRevokePending,
           approveAndPermit,
           approve,
           permit,
-          reset,
+          revoke,
           needsPermit2Approval: !isApproved,
           needsSignature: shouldRequestSignature,
           allowedAmount: tokenAllowance,
@@ -151,11 +151,11 @@ export default function usePermit2Allowance(amount?: CurrencyAmount<Token>, spen
           state: AllowanceState.REQUIRED,
           isApprovalLoading,
           isApprovalPending,
-          isResetPending: isRevokePending,
+          isRevokePending,
           approveAndPermit,
           approve,
           permit,
-          reset,
+          revoke,
           needsPermit2Approval: true,
           needsSignature: shouldRequestSignature,
           allowedAmount: tokenAllowance,
@@ -179,7 +179,7 @@ export default function usePermit2Allowance(amount?: CurrencyAmount<Token>, spen
     isSigned,
     permit,
     permitAllowance,
-    reset,
+    revoke,
     isRevokePending,
     shouldRequestSignature,
     signature,
