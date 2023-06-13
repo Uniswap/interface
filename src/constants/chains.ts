@@ -1,4 +1,4 @@
-import { CHAIN_TO_ADDRESSES_MAP, ChainId, SUPPORTED_CHAINS } from '@uniswap/sdk-core'
+import { ChainId, SUPPORTED_CHAINS } from '@uniswap/sdk-core'
 
 export const UniWalletSupportedChains = [ChainId.MAINNET, ChainId.ARBITRUM_ONE, ChainId.OPTIMISM, ChainId.POLYGON]
 
@@ -17,15 +17,6 @@ export const CHAIN_IDS_TO_NAMES = {
   [ChainId.BNB]: 'bnb',
   [ChainId.AVALANCHE]: 'avalanche',
 }
-type AddressMap = { [chainId: number]: string }
-
-const V3_CORE_FACTORY_ADDRESSES: AddressMap = {
-  ...SUPPORTED_CHAINS.reduce<AddressMap>((memo, chainId) => {
-    memo[chainId] = CHAIN_TO_ADDRESSES_MAP[chainId].v3CoreFactoryAddress
-    return memo
-  }, {}),
-}
-console.log('V3_CORE_FACTORY_ADDRESSES', V3_CORE_FACTORY_ADDRESSES)
 
 export function isSupportedChain(chainId: number | null | undefined): chainId is ChainId {
   return !!chainId && !!SUPPORTED_CHAINS[chainId]
