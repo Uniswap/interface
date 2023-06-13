@@ -108,7 +108,6 @@ const Card = ({
   external,
   backgroundImgSrc,
   icon,
-  elementName,
 }: {
   type?: CardType
   title: string
@@ -118,7 +117,6 @@ const Card = ({
   external?: boolean
   backgroundImgSrc?: string
   icon?: React.ReactNode
-  elementName?: string
 }) => {
   const isDarkMode = useIsDarkMode()
   return (
