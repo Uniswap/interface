@@ -1,5 +1,4 @@
-import { BigintIsh, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
-import { SUPPORTED_CHAINS, SupportedChainsType } from '@uniswap/sdk-core'
+import { BigintIsh, CurrencyAmount, SUPPORTED_CHAINS, SupportedChainsType, Token, TradeType } from '@uniswap/sdk-core'
 // This file is lazy-loaded, so the import of smart-order-router is intentional.
 // eslint-disable-next-line no-restricted-imports
 import { AlphaRouter, AlphaRouterConfig, ChainId } from '@uniswap/smart-order-router'

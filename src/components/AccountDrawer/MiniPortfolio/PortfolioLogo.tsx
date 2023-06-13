@@ -1,5 +1,4 @@
-import { Currency } from '@uniswap/sdk-core'
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId, Currency } from '@uniswap/sdk-core'
 import blankTokenUrl from 'assets/svg/blank_token.svg'
 import { ReactComponent as UnknownStatus } from 'assets/svg/contract-interaction.svg'
 import { LogoImage, MissingImageLogo } from 'components/Logo/AssetLogo'

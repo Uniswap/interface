@@ -1,6 +1,5 @@
 import type { TransactionResponse } from '@ethersproject/providers'
-import { Token } from '@uniswap/sdk-core'
-import { ChainId, SUPPORTED_CHAINS } from '@uniswap/sdk-core'
+import { ChainId, SUPPORTED_CHAINS, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { useCallback, useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'

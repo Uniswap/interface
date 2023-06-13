@@ -1,5 +1,4 @@
-import { Currency } from '@uniswap/sdk-core'
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId, Currency } from '@uniswap/sdk-core'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { TokenStandard } from 'graphql/data/__generated__/types-and-hooks'
 import { Chain } from 'graphql/data/Token'
