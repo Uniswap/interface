@@ -1,5 +1,4 @@
 import { BaseVariant, FeatureFlag, featureFlagSettings, useUpdateFlag } from 'featureFlags'
-import { useNativeUSDCArbitrumFlag } from 'featureFlags/flags/nativeUsdcArbitrum'
 import { DetailsV2Variant, useDetailsV2Flag } from 'featureFlags/flags/nftDetails'
 import { useRoutingAPIForPriceFlag } from 'featureFlags/flags/priceRoutingApi'
 import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
@@ -215,12 +214,6 @@ export default function FeatureFlagModal() {
         value={useRoutingAPIV2Flag()}
         featureFlag={FeatureFlag.uraEnabled}
         label="Enable the Unified Routing API"
-      />
-      <FeatureFlagOption
-        variant={BaseVariant}
-        value={useNativeUSDCArbitrumFlag()}
-        featureFlag={FeatureFlag.nativeUsdcArbitrum}
-        label="Enable Circle native USDC on Arbitrum"
       />
       <FeatureFlagOption
         variant={BaseVariant}
