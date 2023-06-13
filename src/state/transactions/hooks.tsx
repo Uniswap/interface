@@ -119,3 +119,10 @@ export function useHasPendingApproval(token?: Token, spender?: string): boolean 
     [allTransactions, spender, token?.address]
   )
 }
+
+export function useHasPendingTransactions() {
+  const allTransactions = useAllTransactions()
+  return useMemo(() => {
+    return Object.values(allTransactions).filter((tx) => !tx.receipt).length > 0
+  }, [allTransactions])
+}
