@@ -13,7 +13,7 @@ import Row from 'components/Row'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { MouseoverTooltip } from 'components/Tooltip'
-import { SupportedChainId } from 'constants/chains'
+import { isSupportedChain, SupportedChainId } from 'constants/chains'
 import { useNftUniversalRouterAddress } from 'graphql/data/nft/NftUniversalRouterAddress'
 import { useCurrency } from 'hooks/Tokens'
 import { AllowanceState } from 'hooks/usePermit2Allowance'
@@ -454,6 +454,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
     using_erc20: !!inputCurrency,
     ...eventProperties,
   }
+  const chainAllowed = isSupportedChain(chainId)
 
   return (
     <FooterContainer>
@@ -466,7 +467,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
               </ThemedText.SubHeaderSmall>
               <CurrencyInput
                 onClick={() => {
-                  if (!bagIsLocked) {
+                  if (!bagIsLocked && chainAllowed) {
                     setTokenSelectorOpen(true)
                     sendAnalyticsEvent(NFTEventName.NFT_BUY_TOKEN_SELECTOR_CLICKED)
                   }
