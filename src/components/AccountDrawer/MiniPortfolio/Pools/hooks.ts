@@ -1,4 +1,4 @@
-import { SupportedChainsType, Token } from '@uniswap/sdk-core'
+import { Token } from '@uniswap/sdk-core'
 import { ChainId } from '@uniswap/sdk-core'
 import { AddressMap } from '@uniswap/smart-order-router'
 import MulticallJSON from '@uniswap/v3-periphery/artifacts/contracts/lens/UniswapInterfaceMulticall.sol/UniswapInterfaceMulticall.json'
@@ -37,8 +37,14 @@ function useContractMultichain<T extends BaseContract>(
 
     return relevantChains.reduce((acc: ContractMap<T>, chainId) => {
       const provider =
-        walletProvider && walletChainId === chainId ? walletProvider : RPC_PROVIDERS[chainId as SupportedChainsType]
-      acc[chainId] = getContract(addressMap[chainId], ABI, provider) as T
+        walletProvider && walletChainId === chainId
+          ? walletProvider
+          : isSupportedChain(chainId)
+          ? RPC_PROVIDERS[chainId]
+          : undefined
+      if (provider) {
+        acc[chainId] = getContract(addressMap[chainId], ABI, provider) as T
+      }
       return acc
     }, {})
   }, [ABI, addressMap, chainIds, walletChainId, walletProvider])

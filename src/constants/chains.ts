@@ -1,4 +1,4 @@
-import { ChainId, SUPPORTED_CHAINS } from '@uniswap/sdk-core'
+import { ChainId, SUPPORTED_CHAINS, SupportedChainsType } from '@uniswap/sdk-core'
 
 export const UniWalletSupportedChains = [ChainId.MAINNET, ChainId.ARBITRUM_ONE, ChainId.OPTIMISM, ChainId.POLYGON]
 
@@ -18,7 +18,7 @@ export const CHAIN_IDS_TO_NAMES = {
   [ChainId.AVALANCHE]: 'avalanche',
 }
 
-export function isSupportedChain(chainId: number | null | undefined): chainId is ChainId {
+export function isSupportedChain(chainId: number | null | undefined): chainId is SupportedChainsType {
   return !!chainId && !!SUPPORTED_CHAINS[chainId]
 }
 
