@@ -77,9 +77,10 @@ export function chainIdToBackendName(chainId: number | undefined) {
     : CHAIN_ID_TO_BACKEND_NAME[ChainId.MAINNET]
 }
 
-const GQL_CHAINS: number[] = [ChainId.MAINNET, ChainId.OPTIMISM, ChainId.POLYGON, ChainId.ARBITRUM_ONE, ChainId.CELO]
+const GQL_CHAINS = [ChainId.MAINNET, ChainId.OPTIMISM, ChainId.POLYGON, ChainId.ARBITRUM_ONE, ChainId.CELO] as const
+type GqlChainsType = typeof GQL_CHAINS[number]
 
-export function isGqlSupportedChain(chainId: number | undefined): chainId is ChainId {
+export function isGqlSupportedChain(chainId: number | undefined): chainId is GqlChainsType {
   return !!chainId && GQL_CHAINS.includes(chainId)
 }
 export function toContractInput(currency: Currency): ContractInput {
