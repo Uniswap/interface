@@ -42,7 +42,7 @@ export function getEtherscanLink(chainId: ChainId, data: string, type: 'transact
       prefix = 'https://explorer.internal.taiko.xyz'
       break
     case ChainId.TAIKO_TESTNET:
-      prefix = 'https://explorer.test.taiko.xyz'
+      prefix = 'https://test.taikoscan.io'
       break
   }
 
