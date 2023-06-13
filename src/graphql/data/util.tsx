@@ -114,7 +114,7 @@ const URL_CHAIN_PARAM_TO_BACKEND: { [key: string]: Chain } = {
 }
 
 export function validateUrlChainParam(chainName: string | undefined) {
-  return chainName && URL_CHAIN_PARAM_TO_BACKEND[chainName] ? URL_CHAIN_PARAM_TO_BACKEND[chainName] : Chain.Optimism
+  return chainName && URL_CHAIN_PARAM_TO_BACKEND[chainName] ? URL_CHAIN_PARAM_TO_BACKEND[chainName] : Chain.Rollux
 }
 
 // TODO(cartcrom): refactor into safer lookup & replace usage

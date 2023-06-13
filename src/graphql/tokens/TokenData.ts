@@ -87,7 +87,7 @@ interface TokenDataResponse {
 /**
  * Fetch top addresses by volume
  */
-export function useFetchedTokenDatas(tokenAddresses: string[]): {
+export function useFetchedTokenData(tokenAddresses: string[]): {
   loading: boolean
   error: boolean
   data: TokenData[] | undefined

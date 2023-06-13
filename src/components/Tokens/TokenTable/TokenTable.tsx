@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 import { PAGE_SIZE, useTopTokens } from 'graphql/data/TopTokens'
 import { validateUrlChainParam } from 'graphql/data/util'
 import { useNewTopTokens } from 'graphql/tokens/NewTopTokens'
-import { useFetchedTokenDatas } from 'graphql/tokens/TokenData'
+import { useFetchedTokenData } from 'graphql/tokens/TokenData'
 import { ReactNode } from 'react'
 import { AlertTriangle } from 'react-feather'
 import { useParams } from 'react-router-dom'
@@ -82,7 +82,7 @@ export default function TokenTable() {
   const { loading, tokens: newTokens } = useNewTopTokens()
   const tokensAddress = newTokens?.map((token) => token.id) || []
 
-  const { loading: tokenDataLoading, data: tokenDatas } = useFetchedTokenDatas(tokensAddress)
+  const { loading: tokenDataLoading, data: tokenDatas } = useFetchedTokenData(tokensAddress)
 
   /* loading and error state */
   if (loading && tokenDataLoading && !newTokens && !tokenDatas) {
