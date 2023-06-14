@@ -1,4 +1,3 @@
-import { BigNumberish } from '@ethersproject/bignumber'
 import { ContractTransaction } from '@ethersproject/contracts'
 import { CurrencyAmount, MaxUint256, Token } from '@uniswap/sdk-core'
 import { useTokenContract } from 'hooks/useContract'
@@ -49,7 +48,7 @@ export function useUpdateTokenAllowance(
       if (!contract) throw new Error('missing contract')
       if (!spender) throw new Error('missing spender')
 
-      const allowance: BigNumberish = MaxUint256.toString()
+      const allowance = MaxUint256.toString()
       const response = await contract.approve(spender, allowance)
       return {
         response,
@@ -57,6 +56,7 @@ export function useUpdateTokenAllowance(
           type: TransactionType.APPROVAL,
           tokenAddress: contract.address,
           spender,
+          amount: allowance,
         },
       }
     } catch (e: unknown) {
