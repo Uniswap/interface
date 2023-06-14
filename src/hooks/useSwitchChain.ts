@@ -57,7 +57,9 @@ export function useSwitchChain() {
             await connector.activate(addChainParameter)
           }
         } catch (error) {
-          // If we failed to switch chains, we should re-activate the connector.
+          // In activating a new chain, the connector passes through a deactivated state.
+          // If we fail to switch chains, it may remain in this state, and no longer be usable.
+          // We defensively re-activate the connector to ensure the user does not notice any change.
           try {
             await connector.activate()
           } catch (error) {
