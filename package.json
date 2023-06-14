@@ -108,6 +108,7 @@
     "concurrently": "^8.0.1",
     "cypress": "12.12.0",
     "cypress-hardhat": "^2.3.0",
+    "docusaurus-node-polyfills": "^1.0.0",
     "env-cmd": "^10.1.0",
     "eslint": "^7.11.0",
     "eslint-plugin-import": "^2.27",
