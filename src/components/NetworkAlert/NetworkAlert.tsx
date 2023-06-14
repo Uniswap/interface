@@ -39,10 +39,12 @@ const SHOULD_SHOW_ALERT = {
   [ChainId.CELO]: true,
   [ChainId.CELO_ALFAJORES]: true,
   [ChainId.BNB]: true,
+  [ChainId.AVALANCHE]: true,
 }
 
 type NetworkAlertChains = keyof typeof SHOULD_SHOW_ALERT
 
+// TODO: (AVAX) waiting on design
 const BG_COLORS_BY_DARK_MODE_AND_CHAIN_ID: {
   [darkMode in 'dark' | 'light']: { [chainId in NetworkAlertChains]: string }
 } = {
@@ -65,6 +67,7 @@ const BG_COLORS_BY_DARK_MODE_AND_CHAIN_ID: {
       'radial-gradient(285% 8200% at 30% 50%, rgba(40, 160, 240, 0.01) 0%, rgba(219, 255, 0, 0) 100%),radial-gradient(75% 75% at 0% 0%, rgba(150, 190, 220, 0.05) 0%, rgba(33, 114, 229, 0.05) 100%), hsla(0, 0%, 100%, 0.05)',
     [ChainId.ARBITRUM_GOERLI]:
       'radial-gradient(285% 8200% at 30% 50%, rgba(40, 160, 240, 0.05) 0%, rgba(219, 255, 0, 0) 100%),radial-gradient(75% 75% at 0% 0%, rgba(150, 190, 220, 0.05) 0%, rgba(33, 114, 229, 0.1) 100%), hsla(0, 0%, 100%, 0.05)',
+    [ChainId.AVALANCHE]: '',
   },
   light: {
     [ChainId.POLYGON]:
@@ -85,6 +88,7 @@ const BG_COLORS_BY_DARK_MODE_AND_CHAIN_ID: {
       'radial-gradient(285% 8200% at 30% 50%, rgba(40, 160, 240, 0.1) 0%, rgba(219, 255, 0, 0) 100%),radial-gradient(circle at top left, hsla(206, 50%, 75%, 0.01), hsla(215, 79%, 51%, 0.12)), hsla(0, 0%, 100%, 0.1)',
     [ChainId.ARBITRUM_GOERLI]:
       'radial-gradient(285% 8200% at 30% 50%, rgba(40, 160, 240, 0.1) 0%, rgba(219, 255, 0, 0) 100%),radial-gradient(circle at top left, hsla(206, 50%, 75%, 0.01), hsla(215, 79%, 51%, 0.12)), hsla(0, 0%, 100%, 0.1)',
+    [ChainId.AVALANCHE]: '',
   },
 }
 
@@ -134,6 +138,7 @@ const StyledArrowUpRight = styled(ArrowUpRight)`
   height: 24px;
 `
 
+// TODO: (AVAX) waiting on design
 const TEXT_COLORS: { [chainId in NetworkAlertChains]: string } = {
   [ChainId.POLYGON]: 'rgba(130, 71, 229)',
   [ChainId.POLYGON_MUMBAI]: 'rgba(130, 71, 229)',
@@ -144,6 +149,7 @@ const TEXT_COLORS: { [chainId in NetworkAlertChains]: string } = {
   [ChainId.ARBITRUM_ONE]: '#0490ed',
   [ChainId.BNB]: colors.gold400,
   [ChainId.ARBITRUM_GOERLI]: '#0490ed',
+  [ChainId.AVALANCHE]: '',
 }
 
 function shouldShowAlert(chainId: number | undefined): chainId is NetworkAlertChains {

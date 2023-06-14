@@ -30,6 +30,7 @@ const NETWORK_SELECTOR_CHAINS = [
   ChainId.ARBITRUM_ONE,
   ChainId.CELO,
   ChainId.BNB,
+  ChainId.AVALANCHE,
 ]
 
 if (!isProductionEnv()) {
