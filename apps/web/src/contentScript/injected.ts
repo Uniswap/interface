@@ -5,13 +5,19 @@ import {
   Message,
 } from 'src/background/features/dappRequests/dappRequestTypes'
 import { PortName } from 'src/types'
-import { ExtensionToContentScriptRequestType } from 'src/types/requests'
+import {
+  DappToExtensionRequestType,
+  ExtensionRequestType,
+  ExtensionToContentScriptRequestType,
+} from 'src/types/requests'
 import { logger } from 'wallet/src/features/logger/logger'
 import { InjectedAssetsManager } from './InjectedAssetsManager'
 
 InjectedAssetsManager.init()
 
-addDappRequestListener()
+// TODO: Migrate these to onConnect listeners to avoid sendResponse problems when multiple listeners are active
+addDappToExtensionRoundtripListener()
+addDappToExtensionOneWayListener()
 addExtensionRequestListener()
 
 chrome.runtime.connect({ name: PortName.ContentScript })
@@ -67,7 +73,15 @@ function dappRequestListener(event: MessageEvent): void {
   }
 }
 
-function addDappRequestListener(): void {
+function addDappToExtensionOneWayListener(): void {
+  window.addEventListener('message', (event) => {
+    if (event?.data?.type === DappToExtensionRequestType.ConnectionStatus) {
+      chrome.runtime.sendMessage(event?.data)
+    }
+  })
+}
+
+function addDappToExtensionRoundtripListener(): void {
   window.addEventListener('message', dappRequestListener)
 }
 
@@ -84,13 +98,18 @@ function addExtensionRequestListener(): void {
         'Message from background is: ',
         message
       )
-      if (Object.values(ExtensionToContentScriptRequestType).includes(message.data.type)) {
-        switch (message.data.type) {
+
+      if (Object.values(ExtensionRequestType).includes(message?.type)) {
+        window.postMessage(message)
+      }
+
+      if (Object.values(ExtensionToContentScriptRequestType).includes(message?.type)) {
+        switch (message.type) {
           case ExtensionToContentScriptRequestType.InjectAsset:
-            InjectedAssetsManager.injectFrame(message.data.filename)
+            InjectedAssetsManager.injectFrame(message.filename)
             break
           case ExtensionToContentScriptRequestType.InjectedAssetRemove:
-            InjectedAssetsManager.removeFrame(message.data.filename)
+            InjectedAssetsManager.removeFrame(message.filename)
             break
           default:
             throw new Error('Unhandled extension request type ' + message.data.type)

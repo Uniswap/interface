@@ -27,6 +27,7 @@ import {
 } from 'src/background/features/dappRequests/dappRequestTypes'
 import {
   BaseExtensionRequest,
+  DappToExtensionRequestType,
   ExtensionChainChange,
   ExtensionRequestType,
 } from 'src/types/requests'
@@ -134,13 +135,14 @@ export class InjectedProvider extends EventEmitter {
     this.isUniswapWallet = true
     this.publicKey = null
 
-    this.initExtensionListener()
+    this.initExtensionToDappOneWayListener()
+    this.initExtensionToDappRoundtripListener()
   }
 
   /**
    * Initialize a listener for messages posted from the Uniswap Wallet extension.
    */
-  initExtensionListener = (): void => {
+  initExtensionToDappOneWayListener = (): void => {
     const handleDappRequest = (event: MessageEvent<BaseExtensionRequest>): void => {
       const messageData = event.data
       switch (messageData?.type) {
@@ -161,6 +163,29 @@ export class InjectedProvider extends EventEmitter {
     // This listener isn't removed because it's needed for the lifetime of the app
     // TODO: Check for active tab when listening to events
     window.addEventListener('message', handleDappRequest)
+  }
+
+  /**
+   * Initialize a listener for messages posted from the Uniswap Wallet extension that also require a response
+   */
+  initExtensionToDappRoundtripListener = (): void => {
+    const handleRoundTripRequest = (event: MessageEvent<BaseExtensionRequest>): void => {
+      const request = event.data as BaseExtensionRequest
+      switch (request?.type) {
+        case ExtensionRequestType.GetConnectionStatus: {
+          const response = {
+            type: DappToExtensionRequestType.ConnectionStatus,
+            connected: this.isConnected(),
+          }
+
+          window.postMessage(response)
+        }
+      }
+    }
+
+    // This listener isn't removed because it's needed for the lifetime of the app
+    // TODO: Check for active tab when listening to events
+    window.addEventListener('message', handleRoundTripRequest)
   }
 
   setState = (updatedState: BaseProviderState): void => {

@@ -1,16 +1,18 @@
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { SwitchNetworksModal } from 'src/app/features/home/SwitchNetworksModal'
 import { AppRoutes } from 'src/app/navigation/constants'
-import { Popover, XStack } from 'ui'
-import GlobeIcon from 'ui/assets/icons/globe.svg'
-import SettingsIcon from 'ui/assets/icons/settings.svg'
-import { LinkButton } from 'ui/components/button/Button'
-import { Chevron } from 'ui/components/icons/Chevron'
-import { Flex } from 'ui/components/layout/Flex'
-import { Text } from 'ui/components/text/Text'
-import { Unicon } from 'ui/components/Unicon'
-import { colorsDark } from 'ui/theme/color'
-import { iconSizes } from 'ui/theme/iconSizes'
+import { useDappContext } from 'src/background/features/dapp/hooks'
+import { Popover, XStack } from 'ui/src'
+import GlobeIcon from 'ui/src/assets/icons/globe.svg'
+import SettingsIcon from 'ui/src/assets/icons/settings.svg'
+import { LinkButton } from 'ui/src/components/button/Button'
+import { Chevron } from 'ui/src/components/icons/Chevron'
+import { Flex } from 'ui/src/components/layout/Flex'
+import { Text } from 'ui/src/components/text/Text'
+import { Unicon } from 'ui/src/components/Unicon'
+import { colorsDark } from 'ui/src/theme/color'
+import { iconSizes } from 'ui/src/theme/iconSizes'
 import { sanitizeAddressText, shortenAddress } from 'wallet/src/utils/addresses'
 
 type PortfolioHeaderProps = {
@@ -25,7 +27,9 @@ export function PortfolioHeader({ address }: PortfolioHeaderProps): JSX.Element 
     navigate(AppRoutes.AccountSwitcher.valueOf())
   }
 
-  // TODO: Add dapp connection status to store to show/hide switch networks modal
+  // Value does not matter, only used as a trigger to re-render the component when the dapp connection status changes
+  const [updateConnectionStatus, setUpdateConnectionStatus] = useState(false)
+  const { dappConnected } = useDappContext(updateConnectionStatus)
 
   return (
     <XStack alignItems="center" justifyContent="space-between" padding="$spacing16">
@@ -45,18 +49,21 @@ export function PortfolioHeader({ address }: PortfolioHeaderProps): JSX.Element 
         />
       </Flex>
       <XStack alignItems="center" gap="$spacing16" justifyContent="space-around">
-        <Popover>
-          <Popover.Trigger>
-            <GlobeIcon
-              color={colorsDark.textSecondary}
-              height={iconSizes.icon24}
-              width={iconSizes.icon24}
-            />
-          </Popover.Trigger>
-          <Popover.Content borderRadius="$rounded12">
-            <SwitchNetworksModal />
-          </Popover.Content>
-        </Popover>
+        {dappConnected ? (
+          <Popover>
+            <Popover.Trigger
+              onTouchEnd={(): void => setUpdateConnectionStatus(!updateConnectionStatus)}>
+              <GlobeIcon
+                color={colorsDark.textSecondary}
+                height={iconSizes.icon24}
+                width={iconSizes.icon24}
+              />
+            </Popover.Trigger>
+            <Popover.Content borderRadius="$rounded12">
+              <SwitchNetworksModal />
+            </Popover.Content>
+          </Popover>
+        ) : null}
         <LinkButton
           icon={
             <SettingsIcon

@@ -46,7 +46,7 @@ export function openDockedWindow(): void {
     assetType: 'frame',
     filename: 'index.html',
   }
-  sendMessageToActiveTab({ data: message })
+  sendMessageToActiveTab(message)
 }
 
 /** Closes docked window in dapp if injected. */
@@ -56,7 +56,7 @@ export function closeDockedWindow(): void {
     assetType: 'frame',
     filename: 'index.html',
   }
-  sendMessageToActiveTab({ data: message })
+  sendMessageToActiveTab(message)
 }
 
 /**

@@ -1,4 +1,4 @@
-import { useDappInfo } from 'src/background/features/dapp/hooks'
+import { useDappContext } from 'src/background/features/dapp/hooks'
 import { selectChainByDappAndWallet } from 'src/background/features/dapp/selectors'
 import { disconnectAction, saveChainAction } from 'src/background/features/dappRequests/saga'
 import { useAppDispatch, useAppSelector } from 'src/background/store'
@@ -11,7 +11,7 @@ import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hoo
 
 export function SwitchNetworksModal(): JSX.Element {
   const dispatch = useAppDispatch()
-  const { dappUrl, dappName } = useDappInfo()
+  const { dappUrl, dappName } = useDappContext()
   const activeWalletAddress = useActiveAccountAddressWithThrow()
   const activeChain = useAppSelector(selectChainByDappAndWallet(activeWalletAddress, dappUrl))
 
