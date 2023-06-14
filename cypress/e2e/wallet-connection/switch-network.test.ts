@@ -1,9 +1,13 @@
 import { createDeferredPromise } from '../../../src/test-utils/promise'
 import { getTestSelector } from '../../utils'
 
-function getChainSelector(activeChain: string) {
-  cy.get(getTestSelector('chain-selector-logo')).invoke('attr', 'alt').should('eq', activeChain)
-  return cy.get(getTestSelector('chain-selector')).eq(1)
+function waitsForActiveChain(chain: string) {
+  cy.get(getTestSelector('chain-selector-logo')).invoke('attr', 'alt').should('eq', chain)
+}
+
+function switchChain(chain: string) {
+  cy.get(getTestSelector('chain-selector')).eq(1)
+  cy.contains(chain).click()
 }
 
 describe('network switching', () => {
@@ -20,13 +24,11 @@ describe('network switching', () => {
       switchChainStub.callThrough() // allows other calls to return non-stubbed values
     })
 
-    // Switch network
-    getChainSelector('Ethereum').click()
-    cy.contains('Polygon').click()
+    switchChain('Polygon')
 
     // Verify rejected network switch
     cy.get('@switch').should('have.been.calledWith', 'wallet_switchEthereumChain')
-    getChainSelector('Ethereum')
+    waitsForActiveChain('Ethereum')
     cy.get(getTestSelector('web3-status-connected'))
   }
 
@@ -59,9 +61,7 @@ describe('network switching', () => {
       switchChainStub.callThrough() // allows other calls to return non-stubbed values
     })
 
-    // Switch network
-    getChainSelector('Ethereum').click()
-    cy.contains('Polygon').click()
+    switchChain('Polygon')
 
     // Verify the network was added
     cy.get('@switch').should('have.been.calledWith', 'wallet_switchEthereumChain')
@@ -86,9 +86,7 @@ describe('network switching', () => {
       switchChainStub.callThrough() // allows other calls to return non-stubbed values
     })
 
-    // Switch network
-    getChainSelector('Ethereum').click()
-    cy.contains('Polygon').click()
+    switchChain('Polygon')
 
     // Verify there is no disconnection
     cy.get('@switch').should('have.been.calledWith', 'wallet_switchEthereumChain')
@@ -107,12 +105,11 @@ describe('network switching', () => {
     cy.get('#swap-currency-output .token-amount-input').should('not.equal', '')
 
     // Switch network
-    getChainSelector('Ethereum').click()
-    cy.contains('Polygon').click()
+    switchChain('Polygon')
 
     // Verify network switch
     cy.wait('@wallet_switchEthereumChain')
-    getChainSelector('Polygon')
+    waitsForActiveChain('Polygon')
     cy.get(getTestSelector('web3-status-connected'))
 
     // Verify that the input/output fields were reset
