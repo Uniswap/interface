@@ -19,8 +19,8 @@ import { RPC_URLS } from '../constants/networks'
 import { RPC_PROVIDERS } from '../constants/providers'
 import { Connection, ConnectionType } from './types'
 import { getIsCoinbaseWallet, getIsInjected, getIsMetaMaskWallet } from './utils'
-import { UniwalletConnect, WalletConnectPopup } from './WalletConnect'
-import { WalletConnectV2Popup } from './WalletConnectV2'
+import { WalletConnectPopup } from './WalletConnect'
+import { UniwalletConnect, WalletConnectV2Popup } from './WalletConnectV2'
 
 function onError(error: Error) {
   console.debug(`web3-react error: ${error}`)

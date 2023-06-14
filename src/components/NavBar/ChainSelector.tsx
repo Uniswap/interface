@@ -5,7 +5,7 @@ import { MouseoverTooltip } from 'components/Tooltip'
 import { getConnection } from 'connection'
 import { ConnectionType } from 'connection/types'
 import { getChainInfo } from 'constants/chainInfo'
-import { SupportedChainId, UniWalletSupportedChains } from 'constants/chains'
+import { SupportedChainId } from 'constants/chains'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useSelectChain from 'hooks/useSelectChain'
 import useSyncChainQuery from 'hooks/useSyncChainQuery'
@@ -57,9 +57,8 @@ function useWalletSupportedChains() {
 
   switch (connectionType) {
     case ConnectionType.WALLET_CONNECT_V2:
-      return getChainsFromEIP155Accounts((connector as WalletConnect).provider?.session?.namespaces.eip155.accounts)
     case ConnectionType.UNISWAP_WALLET:
-      return UniWalletSupportedChains
+      return getChainsFromEIP155Accounts((connector as WalletConnect).provider?.session?.namespaces.eip155.accounts)
     default:
       return NETWORK_SELECTOR_CHAINS
   }
