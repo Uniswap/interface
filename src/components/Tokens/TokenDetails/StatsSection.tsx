@@ -103,10 +103,10 @@ export default function StatsSection(props: StatsSectionProps) {
               title={<Trans>24H volume</Trans>}
             />
           </StatPair>
-          <StatPair>
+          {/* <StatPair>
             <Stat dataCy="52w-low" value={priceLow52W} title={<Trans>52W low</Trans>} />
             <Stat dataCy="52w-high" value={priceHigh52W} title={<Trans>52W high</Trans>} />
-          </StatPair>
+          </StatPair> */}
         </TokenStatsSection>
       </StatsWrapper>
     )

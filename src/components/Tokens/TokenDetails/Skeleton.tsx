@@ -11,6 +11,7 @@ import { BreadcrumbNavLink } from './BreadcrumbNavLink'
 import { TokenPrice } from './PriceChart'
 import { StatPair, StatsWrapper, StatWrapper } from './StatsSection'
 
+// eslint-disable-next-line import/no-unused-modules
 export const Hr = styled.hr`
   background-color: ${({ theme }) => theme.backgroundOutline};
   border: none;

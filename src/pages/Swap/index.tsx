@@ -25,7 +25,7 @@ import JSBI from 'jsbi'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ReactNode } from 'react'
 import { ArrowDown, Info, RefreshCcw } from 'react-feather'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { Text } from 'rebass'
 import { InterfaceTrade } from 'state/routing/types'
 import { TradeState } from 'state/routing/types'
@@ -464,6 +464,9 @@ export default function Swap({ className }: { className?: string }) {
     !showWrap && userHasSpecifiedInputOutput && (trade || routeIsLoading || routeIsSyncing)
   )
 
+  const location = useLocation()
+  const isOnSwapPage = location.pathname.includes('/swap')
+
   return (
     <>
       <TokenSafetyModal
@@ -474,7 +477,7 @@ export default function Swap({ className }: { className?: string }) {
         onCancel={handleDismissTokenWarning}
         showCancel={true}
       />
-      <PageWrapper>
+      <PageWrapper isOnSwapPage={isOnSwapPage}>
         {swapWidgetEnabled ? (
           <Widget
             defaultTokens={{

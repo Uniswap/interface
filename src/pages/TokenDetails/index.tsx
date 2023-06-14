@@ -1,9 +1,9 @@
 import TokenDetails from 'components/Tokens/TokenDetails'
 import { TokenDetailsPageSkeleton } from 'components/Tokens/TokenDetails/Skeleton'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
-import { useTokenPriceQuery, useTokenQuery } from 'graphql/data/__generated__/types-and-hooks'
+import { useTokenPriceQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { TimePeriod, toHistoryDuration, validateUrlChainParam } from 'graphql/data/util'
-import useParsedQueryString from 'hooks/useParsedQueryString'
+import { useFetchedTokenData } from 'graphql/tokens/TokenData'
 import { useAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
 import { useEffect, useMemo, useState } from 'react'
@@ -27,20 +27,6 @@ export default function TokenDetailsPage() {
     [chain, isNative, timePeriod, tokenAddress]
   )
 
-  const parsedQs = useParsedQueryString()
-
-  const parsedInputTokenAddress: string | undefined = useMemo(() => {
-    return typeof parsedQs.inputCurrency === 'string' ? (parsedQs.inputCurrency as string) : undefined
-  }, [parsedQs])
-
-  const { data: tokenQuery } = useTokenQuery({
-    variables: {
-      address: detailedTokenAddress,
-      chain,
-    },
-    errorPolicy: 'all',
-  })
-
   const { data: tokenPriceQuery } = useTokenPriceQuery({
     variables: {
       address: detailedTokenAddress,
@@ -50,22 +36,24 @@ export default function TokenDetailsPage() {
     errorPolicy: 'all',
   })
 
+  const { data: tokenData } = useFetchedTokenData([detailedTokenAddress ?? ''])
+
   // Saves already-loaded chart data into state to display while tokenPriceQuery is undefined timePeriod input changes
   const [currentPriceQuery, setCurrentPriceQuery] = useState(tokenPriceQuery)
+
   useEffect(() => {
     if (tokenPriceQuery) setCurrentPriceQuery(tokenPriceQuery)
   }, [setCurrentPriceQuery, tokenPriceQuery])
 
-  if (!tokenQuery) return <TokenDetailsPageSkeleton />
+  if (!tokenData) return <TokenDetailsPageSkeleton />
 
   return (
     <TokenDetails
       urlAddress={tokenAddress}
       chain={chain}
-      tokenQuery={tokenQuery}
       tokenPriceQuery={currentPriceQuery}
+      tokenData={tokenData[0]}
       onChangeTimePeriod={setTimePeriod}
-      inputTokenAddress={parsedInputTokenAddress}
     />
   )
 }

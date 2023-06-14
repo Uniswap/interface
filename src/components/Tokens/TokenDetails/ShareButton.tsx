@@ -3,7 +3,7 @@ import { Currency } from '@pollum-io/sdk-core'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { chainIdToBackendName } from 'graphql/data/util'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
-import { useRef } from 'react'
+import { useMemo, useRef } from 'react'
 import { Link, Twitter } from 'react-feather'
 import { useModalIsOpen, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
@@ -72,7 +72,15 @@ export default function ShareButton({ currency }: { currency: Currency }) {
   useOnClickOutside(node, open ? toggleShare : undefined)
   const positionX = (window.screen.width - TWITTER_WIDTH) / 2
   const positionY = (window.screen.height - TWITTER_HEIGHT) / 2
-  const address = currency.isNative ? NATIVE_CHAIN_ID : currency.wrapped.address
+  const addressReceived = useMemo(() => {
+    if ('address' in currency) {
+      return currency.address
+    } else {
+      return currency.wrapped.address
+    }
+  }, [currency])
+
+  const address = currency.isNative ? NATIVE_CHAIN_ID : addressReceived
 
   const shareTweet = () => {
     toggleShare()

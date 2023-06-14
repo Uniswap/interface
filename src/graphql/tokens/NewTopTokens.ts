@@ -63,7 +63,7 @@ export function useNewTopTokens(): {
     const unwrappedTokens = data?.tokens.map((token) => {
       return unwrapTokenRollux(SupportedChainId.ROLLUX, token)
     })
-   
+
     return unwrappedTokens
   }, [data])
 
