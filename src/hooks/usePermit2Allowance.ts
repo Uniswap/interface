@@ -3,10 +3,10 @@ import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { AVERAGE_L1_BLOCK_TIME } from 'constants/chainInfo'
 import { PermitSignature, usePermitAllowance, useUpdatePermitAllowance } from 'hooks/usePermitAllowance'
-import { useTokenAllowance, useUpdateTokenAllowance } from 'hooks/useTokenAllowance'
+import { useRevokeTokenAllowance, useTokenAllowance, useUpdateTokenAllowance } from 'hooks/useTokenAllowance'
 import useInterval from 'lib/hooks/useInterval'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { useHasPendingApproval, useTransactionAdder } from 'state/transactions/hooks'
+import { useHasPendingApproval, useHasPendingRevocation, useTransactionAdder } from 'state/transactions/hooks'
 
 enum ApprovalState {
   PENDING,
@@ -25,11 +25,14 @@ interface AllowanceRequired {
   token: Token
   isApprovalLoading: boolean
   isApprovalPending: boolean
+  isRevocationPending: boolean
   approveAndPermit: () => Promise<void>
   approve: () => Promise<void>
   permit: () => Promise<void>
+  revoke: () => Promise<void>
   needsPermit2Approval: boolean
   needsSignature: boolean
+  allowedAmount: CurrencyAmount<Token>
 }
 
 export type Allowance =
@@ -46,6 +49,7 @@ export default function usePermit2Allowance(amount?: CurrencyAmount<Token>, spen
 
   const { tokenAllowance, isSyncing: isApprovalSyncing } = useTokenAllowance(token, account, PERMIT2_ADDRESS)
   const updateTokenAllowance = useUpdateTokenAllowance(amount, PERMIT2_ADDRESS)
+  const revokeTokenAllowance = useRevokeTokenAllowance(token, PERMIT2_ADDRESS)
   const isApproved = useMemo(() => {
     if (!amount || !tokenAllowance) return false
     return tokenAllowance.greaterThan(amount) || tokenAllowance.equalTo(amount)
@@ -57,6 +61,8 @@ export default function usePermit2Allowance(amount?: CurrencyAmount<Token>, spen
   const [approvalState, setApprovalState] = useState(ApprovalState.SYNCED)
   const isApprovalLoading = approvalState !== ApprovalState.SYNCED
   const isApprovalPending = useHasPendingApproval(token, PERMIT2_ADDRESS)
+  const isRevocationPending = useHasPendingRevocation(token, PERMIT2_ADDRESS)
+
   useEffect(() => {
     if (isApprovalPending) {
       setApprovalState(ApprovalState.PENDING)
@@ -107,17 +113,14 @@ export default function usePermit2Allowance(amount?: CurrencyAmount<Token>, spen
   }, [addTransaction, shouldRequestApproval, shouldRequestSignature, updatePermitAllowance, updateTokenAllowance])
 
   const approve = useCallback(async () => {
-    if (shouldRequestApproval) {
-      const { response, info } = await updateTokenAllowance()
-      addTransaction(response, info)
-    }
-  }, [addTransaction, shouldRequestApproval, updateTokenAllowance])
+    const { response, info } = await updateTokenAllowance()
+    addTransaction(response, info)
+  }, [addTransaction, updateTokenAllowance])
 
-  const permit = useCallback(async () => {
-    if (shouldRequestSignature) {
-      await updatePermitAllowance()
-    }
-  }, [shouldRequestSignature, updatePermitAllowance])
+  const revoke = useCallback(async () => {
+    const { response, info } = await revokeTokenAllowance()
+    addTransaction(response, info)
+  }, [addTransaction, revokeTokenAllowance])
 
   return useMemo(() => {
     if (token) {
@@ -129,11 +132,14 @@ export default function usePermit2Allowance(amount?: CurrencyAmount<Token>, spen
           state: AllowanceState.REQUIRED,
           isApprovalLoading: false,
           isApprovalPending,
+          isRevocationPending,
           approveAndPermit,
           approve,
-          permit,
+          permit: updatePermitAllowance,
+          revoke,
           needsPermit2Approval: !isApproved,
           needsSignature: shouldRequestSignature,
+          allowedAmount: tokenAllowance,
         }
       } else if (!isApproved) {
         return {
@@ -141,11 +147,14 @@ export default function usePermit2Allowance(amount?: CurrencyAmount<Token>, spen
           state: AllowanceState.REQUIRED,
           isApprovalLoading,
           isApprovalPending,
+          isRevocationPending,
           approveAndPermit,
           approve,
-          permit,
+          permit: updatePermitAllowance,
+          revoke,
           needsPermit2Approval: true,
           needsSignature: shouldRequestSignature,
+          allowedAmount: tokenAllowance,
         }
       }
     }
@@ -153,8 +162,8 @@ export default function usePermit2Allowance(amount?: CurrencyAmount<Token>, spen
       token,
       state: AllowanceState.ALLOWED,
       permitSignature: !isPermitted && isSigned ? signature : undefined,
-      needsPermit2Approval: false,
-      needsSignature: false,
+      needsSetupApproval: false,
+      needsPermitSignature: false,
     }
   }, [
     approve,
@@ -164,8 +173,10 @@ export default function usePermit2Allowance(amount?: CurrencyAmount<Token>, spen
     isApproved,
     isPermitted,
     isSigned,
-    permit,
+    updatePermitAllowance,
     permitAllowance,
+    revoke,
+    isRevocationPending,
     shouldRequestSignature,
     signature,
     token,

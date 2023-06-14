@@ -68,3 +68,10 @@ export function useUpdateTokenAllowance(
     }
   }, [amount, contract, spender])
 }
+
+export function useRevokeTokenAllowance(
+  token: Token | undefined,
+  spender: string
+): () => Promise<{ response: ContractTransaction; info: ApproveTransactionInfo }> {
+  return useUpdateTokenAllowance(token ? CurrencyAmount.fromRawAmount(token, 0) : undefined, spender)
+}

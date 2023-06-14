@@ -1,3 +1,4 @@
+import { BigNumber } from '@ethersproject/bignumber'
 import type { TransactionResponse } from '@ethersproject/providers'
 import { Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
@@ -99,23 +100,28 @@ export function isTransactionRecent(tx: TransactionDetails): boolean {
   return new Date().getTime() - tx.addedTime < 86_400_000
 }
 
+function usePendingApprovalAmount(token?: Token, spender?: string): BigNumber | undefined {
+  const allTransactions = useAllTransactions()
+  return useMemo(() => {
+    if (typeof token?.address !== 'string' || typeof spender !== 'string') {
+      return undefined
+    }
+    for (const txHash in allTransactions) {
+      const tx = allTransactions[txHash]
+      if (!tx || tx.receipt || tx.info.type !== TransactionType.APPROVAL) continue
+      if (tx.info.spender === spender && tx.info.tokenAddress === token.address && isTransactionRecent(tx)) {
+        return BigNumber.from(tx.info.amount)
+      }
+    }
+    return undefined
+  }, [allTransactions, spender, token?.address])
+}
+
 // returns whether a token has a pending approval transaction
 export function useHasPendingApproval(token?: Token, spender?: string): boolean {
-  const allTransactions = useAllTransactions()
-  return useMemo(
-    () =>
-      typeof token?.address === 'string' &&
-      typeof spender === 'string' &&
-      Object.keys(allTransactions).some((hash) => {
-        const tx = allTransactions[hash]
-        if (!tx) return false
-        if (tx.receipt) {
-          return false
-        } else {
-          if (tx.info.type !== TransactionType.APPROVAL) return false
-          return tx.info.spender === spender && tx.info.tokenAddress === token.address && isTransactionRecent(tx)
-        }
-      }),
-    [allTransactions, spender, token?.address]
-  )
+  return usePendingApprovalAmount(token, spender)?.gt(0) ?? false
+}
+
+export function useHasPendingRevocation(token?: Token, spender?: string): boolean {
+  return usePendingApprovalAmount(token, spender)?.eq(0) ?? false
 }

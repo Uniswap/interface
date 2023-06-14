@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { parseEther } from '@ethersproject/units'
-import { Percent, SupportedChainId } from '@uniswap/sdk-core'
+import { CurrencyAmount, Percent, SupportedChainId } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { nativeOnChain } from 'constants/tokens'
 import { useNftUniversalRouterAddress } from 'graphql/data/nft/NftUniversalRouterAddress'
@@ -347,8 +347,11 @@ describe('BagFooter.tsx', () => {
         approveAndPermit: () => Promise.resolve(),
         approve: () => Promise.resolve(),
         permit: () => Promise.resolve(),
+        revoke: () => Promise.resolve(),
         needsPermit2Approval: false,
         needsSignature: false,
+        isRevocationPending: false,
+        allowedAmount: CurrencyAmount.fromRawAmount(TEST_TOKEN_1, 0),
       },
       isAllowancePending: false,
       isApprovalLoading: true,
@@ -372,8 +375,11 @@ describe('BagFooter.tsx', () => {
         approveAndPermit: () => Promise.resolve(),
         approve: () => Promise.resolve(),
         permit: () => Promise.resolve(),
+        revoke: () => Promise.resolve(),
         needsPermit2Approval: false,
         needsSignature: false,
+        isRevocationPending: false,
+        allowedAmount: CurrencyAmount.fromRawAmount(TEST_TOKEN_1, 0),
       },
       isAllowancePending: true,
       isApprovalLoading: false,
@@ -397,8 +403,11 @@ describe('BagFooter.tsx', () => {
         approveAndPermit: () => Promise.resolve(),
         approve: () => Promise.resolve(),
         permit: () => Promise.resolve(),
+        revoke: () => Promise.resolve(),
         needsPermit2Approval: false,
         needsSignature: false,
+        isRevocationPending: false,
+        allowedAmount: CurrencyAmount.fromRawAmount(TEST_TOKEN_1, 0),
       },
       isAllowancePending: false,
       isApprovalLoading: false,
