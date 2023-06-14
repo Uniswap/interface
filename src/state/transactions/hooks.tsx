@@ -100,37 +100,34 @@ export function isTransactionRecent(tx: TransactionDetails): boolean {
   return new Date().getTime() - tx.addedTime < 86_400_000
 }
 
-function useHasPendingApprovalChange(token?: Token, spender?: string, approvalType?: 'approve' | 'revoke'): boolean {
+function usePendingApprovalAmount(token?: Token, spender?: string): BigNumber | undefined {
   const allTransactions = useAllTransactions()
-  return useMemo(
-    () =>
-      typeof token?.address === 'string' &&
-      typeof spender === 'string' &&
-      Object.keys(allTransactions).some((hash) => {
-        const tx = allTransactions[hash]
-        if (!tx) return false
-        if (tx.receipt) {
-          return false
-        } else {
-          if (tx.info.type !== TransactionType.APPROVAL) return false
-          const isPendingApproveOrRevoke =
-            tx.info.spender === spender && tx.info.tokenAddress === token.address && isTransactionRecent(tx)
-          if (approvalType === 'revoke') {
-            return BigNumber.from(tx.info.amount)?.eq(0) && isPendingApproveOrRevoke
-          } else {
-            return BigNumber.from(tx.info.amount)?.gt(0) && isPendingApproveOrRevoke
-          }
+  return useMemo(() => {
+    if (typeof token?.address !== 'string' || typeof spender !== 'string') {
+      return undefined
+    }
+    for (const txHash in allTransactions) {
+      const tx = allTransactions[txHash]
+      if (!tx) continue
+      if (tx.receipt) {
+        continue
+      } else {
+        if (tx.info.type !== TransactionType.APPROVAL) continue
+        if (!(tx.info.spender === spender && tx.info.tokenAddress === token.address && isTransactionRecent(tx))) {
+          continue
         }
-      }),
-    [allTransactions, approvalType, spender, token?.address]
-  )
+        return BigNumber.from(tx.info.amount)
+      }
+    }
+    return undefined
+  }, [allTransactions, spender, token?.address])
 }
 
 // returns whether a token has a pending approval transaction
 export function useHasPendingApproval(token?: Token, spender?: string): boolean {
-  return useHasPendingApprovalChange(token, spender, 'approve')
+  return usePendingApprovalAmount(token, spender)?.gt(0) ?? false
 }
 
-export function useHasPendingRevoke(token?: Token, spender?: string): boolean {
-  return useHasPendingApprovalChange(token, spender, 'revoke')
+export function useHasPendingRevocation(token?: Token, spender?: string): boolean {
+  return usePendingApprovalAmount(token, spender)?.eq(0) ?? false
 }
