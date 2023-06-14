@@ -1,20 +1,40 @@
 /* eslint-disable import/no-unused-modules */
 import { ApolloClient, InMemoryCache } from '@apollo/client'
 
-import { AssetDocument } from '../../../src/graphql/data/__generated__/types-and-hooks'
+import { TokenDocument } from '../../src/graphql/data/__generated__/types-and-hooks'
+
+export function networkNameToID(networkName: string) {
+  switch (networkName) {
+    case 'mainnet':
+      return 1
+    case 'goerli':
+      return 5
+    case 'sepolia':
+      return 11155111
+    case 'polygon':
+      return 137
+    case 'celo':
+      return 42220
+    case 'optimism':
+      return 10
+    case 'arbitrum':
+      return 42161
+    case 'bnb':
+      return 56
+    default:
+      return 1
+  }
+} 
 
 const GRAPHQL_ENDPOINT = 'https://api.uniswap.org/v1/graphql'
 
 type MetaTagInjectorInput = {
-  id: any
-  tokenId: any
-  address: any
   name: any
+  network: any
+  price: any
   image: any
-  collectionName: any
-  rarity: any
   uniswapUrl: any
-  listing: any
+  symbol: any
 }
 
 class MetaTagInjector {
@@ -30,7 +50,7 @@ class MetaTagInjector {
       html: true,
     })
     element.append(
-      `<meta property="og:description" content = "Token #${this.input.tokenId} from ${this.input.collectionName}. Rarity Rank #${this.input.rarity}. ${this.input.listing}."/>`,
+      `<meta property="og:description" content = "${this.input.name} on the ${this.input.network} network. 1 ${this.input.symbol} = $${this.input.price}."/>`,
       {
         html: true,
       }
@@ -61,7 +81,7 @@ class MetaTagInjector {
       html: true,
     })
     element.append(
-      `<meta property="twitter:description" content = "Token #${this.input.tokenId} from ${this.input.collectionName}. Rarity Rank #${this.input.rarity}. ${this.input.listing}."/>`,
+      `<meta property="twitter:description" content = "${this.input.name} on the ${this.input.network} network. 1 ${this.input.symbol} = $${this.input.price}."/>`,
       {
         html: true,
       }
@@ -80,8 +100,8 @@ class MetaTagInjector {
 
 export const onRequest: PagesFunction<{}> = async ({ params, request, env, next }) => {
   const { index } = params
-  const collectionAddress = String(index[0])
-  const tokenId = String(index[1])
+  const networkName = String(index[0]).toUpperCase()
+  const tokenAddress = String(index[1])
   try {
     const client = new ApolloClient({
       connectToDevTools: true,
@@ -100,32 +120,24 @@ export const onRequest: PagesFunction<{}> = async ({ params, request, env, next 
       },
     })
     const { data } = await client.query({
-      query: AssetDocument,
+      query: TokenDocument,
       variables: {
-        address: collectionAddress,
-        filter: {
-          tokenIds: [tokenId],
-        },
+        chain: networkName,
+        address: tokenAddress,
       },
     })
-    const asset = data?.nftAssets?.edges[0]?.node
+    const asset = data?.token
     if (!asset) {
       return await next()
     }
-    const listing = asset.listings.edges[0]?.node
-    const listingInfo = listing
-      ? `Currently listed on ${listing.marketplace} for ${listing.price.value} ETH`
-      : 'Not currently listed'
+    console.log(asset)
     const formattedAsset = {
-      id: asset.id,
-      tokenId: asset.tokenId,
-      address: collectionAddress,
       name: asset.name,
-      image: asset.image?.url,
-      collectionName: asset.collection?.name,
-      rarity: asset.rarities?.[0]?.rank,
+      network: networkName,
+      price: asset.market?.price?.value ? asset.market.price.value : 0, 
+      image: asset.project?.logoUrl,
       uniswapUrl: request.url,
-      listing: listingInfo,
+      symbol: asset.symbol,
     }
     return new HTMLRewriter().on('head', new MetaTagInjector(formattedAsset)).transform(await next())
   } catch (e) {
