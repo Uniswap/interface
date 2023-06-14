@@ -3,6 +3,10 @@ import { Connector } from '@web3-react/types'
 
 export enum ConnectionType {
   UNISWAP_WALLET = 'UNISWAP_WALLET',
+  /**
+   * @deprecated
+   */
+  UNIWALLET = 'UNIWALLET',
   INJECTED = 'INJECTED',
   COINBASE_WALLET = 'COINBASE_WALLET',
   WALLET_CONNECT = 'WALLET_CONNECT',

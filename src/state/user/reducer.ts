@@ -132,7 +132,6 @@ const userSlice = createSlice({
     // In order to avoid this, we need to set a default value for each new property manually during hydration.
     builder.addCase(updateVersion, (state) => {
       // If `selectedWallet` is ConnectionType.UNI_WALLET (deprecated) switch it to ConnectionType.UNISWAP_WALLET
-      // @ts-ignore
       if (state.selectedWallet === 'UNIWALLET') {
         state.selectedWallet = ConnectionType.UNISWAP_WALLET
       }
