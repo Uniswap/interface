@@ -25,10 +25,10 @@ import { ElementName } from 'src/features/telemetry/constants'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { opacify } from 'src/utils/colors'
 import { openSettings } from 'src/utils/linking'
-import { SECURITY_SCREEN_BACKGROUND_DARK, SECURITY_SCREEN_BACKGROUND_LIGHT } from 'ui/src/assets'
-import FaceIcon from 'ui/src/assets/icons/faceid-thin.svg'
-import FingerprintIcon from 'ui/src/assets/icons/fingerprint.svg'
-import { theme as FixedTheme } from 'ui/src/theme/restyle/theme'
+import { SECURITY_SCREEN_BACKGROUND_DARK, SECURITY_SCREEN_BACKGROUND_LIGHT } from 'ui/assets'
+import FaceIcon from 'ui/assets/icons/faceid-thin.svg'
+import FingerprintIcon from 'ui/assets/icons/fingerprint.svg'
+import { theme as FixedTheme } from 'ui/theme/restyle/theme'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.Security>
 

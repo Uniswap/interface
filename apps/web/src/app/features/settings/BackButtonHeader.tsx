@@ -1,8 +1,8 @@
 import { useNavigate } from 'react-router-dom'
-import { Text, XStack } from 'ui/src'
-import Chevron from 'ui/src/assets/icons/chevron-left.svg'
-import { Flex } from 'ui/src/components/layout/Flex'
-import { iconSizes } from 'ui/src/theme/iconSizes'
+import { Text, XStack } from 'ui'
+import Chevron from 'ui/assets/icons/chevron-left.svg'
+import { Flex } from 'ui/components/layout/Flex'
+import { iconSizes } from 'ui/theme/iconSizes'
 
 type Props = {
   headerText: string

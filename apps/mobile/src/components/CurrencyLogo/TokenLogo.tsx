@@ -6,7 +6,7 @@ import { NetworkLogo } from 'src/components/CurrencyLogo/NetworkLogo'
 import { SHADOW_OFFSET, style, THIN_BORDER } from 'src/components/CurrencyLogo/styles'
 import { Box } from 'src/components/layout/Box'
 import { Text } from 'src/components/Text'
-import { iconSizes } from 'ui/src/theme/iconSizes'
+import { iconSizes } from 'ui/theme/iconSizes'
 import { ChainId } from 'wallet/src/constants/chains'
 
 interface TokenLogoProps {

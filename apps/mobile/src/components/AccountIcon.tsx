@@ -7,8 +7,8 @@ import { Box } from 'src/components/layout'
 import { Unicon } from 'src/components/unicons/Unicon'
 import { useUniconColors } from 'src/components/unicons/utils'
 import { useIsDarkMode } from 'src/features/appearance/hooks'
-import Eye from 'ui/src/assets/icons/eye.svg'
-import { theme as FixedTheme } from 'ui/src/theme/restyle/theme'
+import Eye from 'ui/assets/icons/eye.svg'
+import { theme as FixedTheme } from 'ui/theme/restyle/theme'
 
 interface Props {
   size: number

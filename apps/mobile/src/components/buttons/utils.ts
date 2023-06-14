@@ -1,5 +1,5 @@
 import { ButtonEmphasis, ButtonSize } from 'src/components/buttons/Button'
-import { Theme } from 'ui/src/theme/restyle/theme'
+import { Theme } from 'ui/theme/restyle/theme'
 
 function getButtonColor(emphasis: ButtonEmphasis): keyof Theme['colors'] {
   switch (emphasis) {

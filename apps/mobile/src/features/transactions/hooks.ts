@@ -23,7 +23,7 @@ import {
   TransactionState,
   transactionStateActions,
 } from 'src/features/transactions/transactionState/transactionState'
-import { theme } from 'ui/src/theme/restyle/theme'
+import { theme } from 'ui/theme/restyle/theme'
 import { ChainId } from 'wallet/src/constants/chains'
 import { EMPTY_ARRAY } from 'wallet/src/constants/misc'
 import { AssetType } from 'wallet/src/entities/assets'

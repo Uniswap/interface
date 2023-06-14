@@ -1,5 +1,5 @@
 import React, { memo } from 'react'
-import ArrowDown from 'ui/src/assets/icons/arrow-down.svg'
+import ArrowDown from 'ui/assets/icons/arrow-down.svg'
 
 type Props = {
   size?: number

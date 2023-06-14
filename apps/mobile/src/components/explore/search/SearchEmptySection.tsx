@@ -16,8 +16,8 @@ import {
   selectSearchHistory,
   WalletSearchResult,
 } from 'src/features/explore/searchHistorySlice'
-import ClockIcon from 'ui/src/assets/icons/clock.svg'
-import TrendArrowIcon from 'ui/src/assets/icons/trend-up.svg'
+import ClockIcon from 'ui/assets/icons/clock.svg'
+import TrendArrowIcon from 'ui/assets/icons/trend-up.svg'
 
 export const SUGGESTED_WALLETS: WalletSearchResult[] = [
   {

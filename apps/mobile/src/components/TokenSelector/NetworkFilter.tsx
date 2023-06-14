@@ -13,8 +13,8 @@ import { ActionSheetModal } from 'src/components/modals/ActionSheetModal'
 import { useNetworkOptions } from 'src/components/Network/hooks'
 import { Text } from 'src/components/Text'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
-import Check from 'ui/src/assets/icons/check.svg'
-import { iconSizes } from 'ui/src/theme/iconSizes'
+import Check from 'ui/assets/icons/check.svg'
+import { iconSizes } from 'ui/theme/iconSizes'
 import { ChainId, CHAIN_INFO } from 'wallet/src/constants/chains'
 
 interface NetworkFilterProps {

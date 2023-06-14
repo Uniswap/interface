@@ -8,7 +8,7 @@ import { Box, BoxProps, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { openModal } from 'src/features/modals/modalSlice'
 import { MobileEventName, ModalName } from 'src/features/telemetry/constants'
-import FiatOnRampBackground from 'ui/src/assets/backgrounds/fiat-onramp-banner.svg'
+import FiatOnRampBackground from 'ui/assets/backgrounds/fiat-onramp-banner.svg'
 
 export function FiatOnRampBanner(props: BoxProps): JSX.Element {
   const { t } = useTranslation()

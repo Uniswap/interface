@@ -4,8 +4,8 @@ import Locked from 'src/app/features/lockScreen/Locked'
 import { DappRequestContent } from 'src/background/features/dappRequests/DappRequestContent'
 import { useAppSelector } from 'src/background/store'
 import { isOnboardedSelector } from 'src/background/utils/onboardingUtils'
-import { YStack } from 'ui/src'
-import { Flex } from 'ui/src/components/layout/Flex'
+import { YStack } from 'ui'
+import { Flex } from 'ui/components/layout/Flex'
 
 export function MainContent(): JSX.Element {
   const pendingDappRequests = useAppSelector((state) => state.dappRequests.pending)

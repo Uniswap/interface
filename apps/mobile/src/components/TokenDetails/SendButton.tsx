@@ -2,8 +2,8 @@ import React from 'react'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Flex } from 'src/components/layout'
 import { ElementName } from 'src/features/telemetry/constants'
-import SendIcon from 'ui/src/assets/icons/send-action.svg'
-import { iconSizes } from 'ui/src/theme/iconSizes'
+import SendIcon from 'ui/assets/icons/send-action.svg'
+import { iconSizes } from 'ui/theme/iconSizes'
 
 type Props = {
   onPress: () => void

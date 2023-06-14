@@ -17,7 +17,7 @@
         "../../packages/wallet/*"
       ],
       "ui/*": [
-        "../../packages/ui/*"
+        "../../packages/ui/src/*"
       ]
     },
     "allowJs": true,

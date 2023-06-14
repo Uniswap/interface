@@ -1,6 +1,6 @@
 import * as WebBrowser from 'expo-web-browser'
 import { Linking } from 'react-native'
-import { theme } from 'ui/src/theme/restyle/theme'
+import { theme } from 'ui/theme/restyle/theme'
 import { ChainId, CHAIN_INFO } from 'wallet/src/constants/chains'
 import { uniswapUrls } from 'wallet/src/constants/urls'
 import { logger } from 'wallet/src/features/logger/logger'

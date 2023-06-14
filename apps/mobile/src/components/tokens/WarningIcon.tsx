@@ -2,8 +2,8 @@ import React from 'react'
 import { SvgProps } from 'react-native-svg'
 import { useAppTheme } from 'src/app/hooks'
 import { useTokenSafetyLevelColors } from 'src/features/tokens/safetyHooks'
-import AlertTriangle from 'ui/src/assets/icons/alert-triangle.svg'
-import XOctagon from 'ui/src/assets/icons/x-octagon.svg'
+import AlertTriangle from 'ui/assets/icons/alert-triangle.svg'
+import XOctagon from 'ui/assets/icons/x-octagon.svg'
 import { SafetyLevel } from 'wallet/src/data/__generated__/types-and-hooks'
 
 interface Props {

@@ -1,6 +1,6 @@
 import { memo } from 'react'
 import { Path, Svg } from 'react-native-svg'
-import { Flex } from 'ui/src/components/layout/Flex'
+import { Flex } from 'ui/components/layout/Flex'
 
 type Props = {
   width?: string | number

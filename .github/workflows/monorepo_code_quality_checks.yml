@@ -29,14 +29,14 @@ jobs:
       - name: 📥 Install
         uses: ./.github/actions/monorepo_yarn_install
 
+      - name: 🏗  Build
+        run: yarn g:build
+
       - name: 🕵️  Typecheck
         run: yarn g:typecheck
 
       - name: 🔬 Lint
         run: yarn g:lint
-
-      - name: 🏗  Build
-        run: yarn g:build
 
       - name: 🧪 Unit Tests
         run: yarn g:test

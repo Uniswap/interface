@@ -8,9 +8,9 @@ import { Box, BoxProps, Flex } from 'src/components/layout'
 import { Trace } from 'src/components/telemetry/Trace'
 import { Text } from 'src/components/Text'
 import { useIsDarkMode } from 'src/features/appearance/hooks'
-import AlertTriangle from 'ui/src/assets/icons/alert-triangle.svg'
-import { opacify } from 'ui/src/theme/color/utils'
-import { Theme } from 'ui/src/theme/restyle/theme'
+import AlertTriangle from 'ui/assets/icons/alert-triangle.svg'
+import { opacify } from 'ui/theme/color/utils'
+import { Theme } from 'ui/theme/restyle/theme'
 
 const SHADOW_OFFSET: ShadowProps<Theme>['shadowOffset'] = { width: 4, height: 8 }
 export const SHADOW_OFFSET_SMALL: ShadowProps<Theme>['shadowOffset'] = { width: 0, height: 2 }

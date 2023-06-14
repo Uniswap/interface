@@ -16,8 +16,8 @@ import {
   useTokenBalancesGroupedByVisibility,
 } from 'src/features/balances/hooks'
 import { Screens } from 'src/screens/Screens'
-import { dimensions } from 'ui/src/theme/restyle/sizing'
-import { zIndices } from 'ui/src/theme/zIndices'
+import { dimensions } from 'ui/theme/restyle/sizing'
+import { zIndices } from 'ui/theme/zIndices'
 import { isError, isNonPollingRequestInFlight, isWarmLoadingStatus } from 'wallet/src/data/utils'
 import { usePortfolioBalances } from 'wallet/src/features/dataApi/balances'
 import { PortfolioBalance } from 'wallet/src/features/dataApi/types'

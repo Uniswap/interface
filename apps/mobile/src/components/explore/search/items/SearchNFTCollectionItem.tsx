@@ -15,8 +15,8 @@ import {
 import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { ElementName, MobileEventName } from 'src/features/telemetry/constants'
 import { Screens } from 'src/screens/Screens'
-import VerifiedIcon from 'ui/src/assets/icons/verified.svg'
-import { iconSizes } from 'ui/src/theme/iconSizes'
+import VerifiedIcon from 'ui/assets/icons/verified.svg'
+import { iconSizes } from 'ui/theme/iconSizes'
 
 type NFTCollectionItemProps = {
   collection: NFTCollectionSearchResult

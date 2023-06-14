@@ -4,7 +4,7 @@ import { Appearance, ColorSchemeName } from 'react-native'
 import { useAppSelector } from 'src/app/hooks'
 import { useCurrentAppearanceSetting } from 'src/features/appearance/hooks'
 import { AppearanceSettingType } from 'src/features/appearance/slice'
-import { darkTheme, theme as lightTheme, Theme } from 'ui/src/theme/restyle/theme'
+import { darkTheme, theme as lightTheme, Theme } from 'ui/theme/restyle/theme'
 import { selectUserPalette } from 'wallet/src/features/wallet/selectors'
 
 const COLOR_SCHEME_FLICKER_DELAY_MS = 250

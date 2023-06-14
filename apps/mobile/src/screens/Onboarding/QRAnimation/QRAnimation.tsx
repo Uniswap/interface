@@ -47,10 +47,10 @@ import {
   textSlideUpAtEnd,
   videoFadeOut,
 } from 'src/screens/Onboarding/QRAnimation/animations'
-import { ONBOARDING_QR_ETCHING_VIDEO_DARK, ONBOARDING_QR_ETCHING_VIDEO_LIGHT } from 'ui/src/assets'
-import LockIcon from 'ui/src/assets/icons/lock.svg'
-import { opacify } from 'ui/src/theme/color/utils'
-import { flex } from 'ui/src/theme/restyle/flex'
+import { ONBOARDING_QR_ETCHING_VIDEO_DARK, ONBOARDING_QR_ETCHING_VIDEO_LIGHT } from 'ui/assets'
+import LockIcon from 'ui/assets/icons/lock.svg'
+import { opacify } from 'ui/theme/color/utils'
+import { flex } from 'ui/theme/restyle/flex'
 
 export function QRAnimation({
   activeAddress,

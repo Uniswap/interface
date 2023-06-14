@@ -3,8 +3,8 @@ import React from 'react'
 import { Image, StyleSheet } from 'react-native'
 import { style } from 'src/components/CurrencyLogo/styles'
 import { Box } from 'src/components/layout/Box'
-import { iconSizes } from 'ui/src/theme/iconSizes'
-import { Theme } from 'ui/src/theme/restyle/theme'
+import { iconSizes } from 'ui/theme/iconSizes'
+import { Theme } from 'ui/theme/restyle/theme'
 import { ChainId, CHAIN_INFO } from 'wallet/src/constants/chains'
 
 type NetworkLogoProps = {

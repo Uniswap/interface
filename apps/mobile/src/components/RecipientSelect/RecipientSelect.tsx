@@ -13,7 +13,7 @@ import { filterSections } from 'src/components/RecipientSelect/utils'
 import { Text } from 'src/components/Text'
 import { SearchBar } from 'src/components/TokenSelector/SearchBar'
 import { ElementName } from 'src/features/telemetry/constants'
-import ScanQRIcon from 'ui/src/assets/icons/scan.svg'
+import ScanQRIcon from 'ui/assets/icons/scan.svg'
 
 interface RecipientSelectProps {
   onSelectRecipient: (newRecipientAddress: string) => void

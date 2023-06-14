@@ -1,11 +1,11 @@
 import { createTokens } from 'tamagui'
-import { borderRadii } from 'ui/src/theme/borderRadii'
-import { colors as color } from 'ui/src/theme/color'
-import { fonts } from 'ui/src/theme/fonts'
-import { iconSizes } from 'ui/src/theme/iconSizes'
-import { imageSizes } from 'ui/src/theme/imageSizes'
-import { spacing } from 'ui/src/theme/spacing'
-import { zIndices } from 'ui/src/theme/zIndices'
+import { borderRadii } from 'ui/theme/borderRadii'
+import { colors as color } from 'ui/theme/color'
+import { fonts } from 'ui/theme/fonts'
+import { iconSizes } from 'ui/theme/iconSizes'
+import { imageSizes } from 'ui/theme/imageSizes'
+import { spacing } from 'ui/theme/spacing'
+import { zIndices } from 'ui/theme/zIndices'
 
 const space = { ...spacing, true: 8 }
 

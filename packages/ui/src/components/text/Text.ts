@@ -1,5 +1,5 @@
 import { styled, Text as TamaguiText } from 'tamagui'
-import { fonts } from 'ui/src/theme/fonts'
+import { fonts } from 'ui/theme/fonts'
 
 export const Text = styled(TamaguiText, {
   name: 'Text',

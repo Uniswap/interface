@@ -8,7 +8,7 @@ import {
   MUMBAI_LOGO,
   OPTIMISM_LOGO,
   POLYGON_LOGO,
-} from 'ui/src/assets'
+} from 'ui/assets'
 
 export interface ChainState {
   isActive: boolean

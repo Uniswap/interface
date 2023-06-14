@@ -5,7 +5,7 @@ import { Box } from 'src/components/layout/Box'
 import { Separator } from 'src/components/layout/Separator'
 import { Text } from 'src/components/Text'
 import { ElementName } from 'src/features/telemetry/constants'
-import { iconSizes } from 'ui/src/theme/iconSizes'
+import { iconSizes } from 'ui/theme/iconSizes'
 import { ChainId, CHAIN_INFO } from 'wallet/src/constants/chains'
 import { useActiveChainIds } from 'wallet/src/features/chains/hooks'
 

@@ -8,8 +8,8 @@ import { WarningColor, WarningSeverity } from 'src/components/modals/WarningModa
 import { Text } from 'src/components/Text'
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
-import AlertTriangleIcon from 'ui/src/assets/icons/alert-triangle.svg'
-import { opacify } from 'ui/src/theme/color/utils'
+import AlertTriangleIcon from 'ui/assets/icons/alert-triangle.svg'
+import { opacify } from 'ui/theme/color/utils'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 
 export type WarningModalProps = {
