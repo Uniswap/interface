@@ -4,7 +4,7 @@ import { AutoColumn } from 'components/Column'
 import { AutoRow } from 'components/Row'
 import { getConnections, networkConnection } from 'connection'
 import { ActivationStatus, useActivationState } from 'connection/activate'
-import { toSupportedChain } from 'constants/chains'
+import { asSupportedChain } from 'constants/chains'
 import { useEffect } from 'react'
 import { Settings } from 'react-feather'
 import styled from 'styled-components/macro'
@@ -47,7 +47,7 @@ export default function WalletModal({ openSettings }: { openSettings: () => void
   // Keep the network connector in sync with any active user connector to prevent chain-switching on wallet disconnection.
   useEffect(() => {
     if (chainId && connector !== networkConnection.connector) {
-      networkConnection.connector.activate(toSupportedChain(chainId))
+      networkConnection.connector.activate(asSupportedChain(chainId))
     }
   }, [chainId, connector])
 

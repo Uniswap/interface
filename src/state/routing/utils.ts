@@ -3,7 +3,7 @@ import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { AlphaRouter, ChainId } from '@uniswap/smart-order-router'
 import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
 import { FeeAmount, Pool, Route as V3Route } from '@uniswap/v3-sdk'
-import { toSupportedChain } from 'constants/chains'
+import { asSupportedChain } from 'constants/chains'
 import { RPC_PROVIDERS } from 'constants/providers'
 import { isBsc, isMatic, nativeOnChain } from 'constants/tokens'
 
@@ -24,7 +24,7 @@ export function getRouter(chainId: ChainId): AlphaRouter {
   const router = routers.get(chainId)
   if (router) return router
 
-  const ChainId = toSupportedChain(chainId)
+  const ChainId = asSupportedChain(chainId)
   if (ChainId) {
     const provider = RPC_PROVIDERS[ChainId]
     const router = new AlphaRouter({ chainId, provider })

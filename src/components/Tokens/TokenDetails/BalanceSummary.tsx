@@ -4,7 +4,7 @@ import { ChainId, Currency } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { getChainInfo } from 'constants/chainInfo'
-import { toSupportedChain } from 'constants/chains'
+import { asSupportedChain } from 'constants/chains'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import useCurrencyBalance from 'lib/hooks/useCurrencyBalance'
 import styled, { useTheme } from 'styled-components/macro'
@@ -66,7 +66,7 @@ const StyledNetworkLabel = styled.div`
 export default function BalanceSummary({ token }: { token: Currency }) {
   const { account, chainId } = useWeb3React()
   const theme = useTheme()
-  const { label, color } = getChainInfo(toSupportedChain(chainId) ?? ChainId.MAINNET)
+  const { label, color } = getChainInfo(asSupportedChain(chainId) ?? ChainId.MAINNET)
   const balance = useCurrencyBalance(account, token)
   const formattedBalance = formatCurrencyAmount(balance, NumberType.TokenNonTx)
   const formattedUsdValue = formatCurrencyAmount(useStablecoinValue(balance), NumberType.FiatTokenStats)

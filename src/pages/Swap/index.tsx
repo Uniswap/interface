@@ -21,7 +21,7 @@ import PriceImpactWarning from 'components/swap/PriceImpactWarning'
 import SwapDetailsDropdown from 'components/swap/SwapDetailsDropdown'
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import { getChainInfo } from 'constants/chainInfo'
-import { isSupportedChain, toSupportedChain } from 'constants/chains'
+import { isSupportedChain, asSupportedChain } from 'constants/chains'
 import useENSAddress from 'hooks/useENSAddress'
 import { useMaxAmountIn } from 'hooks/useMaxAmountIn'
 import usePermit2Allowance, { AllowanceState } from 'hooks/usePermit2Allowance'
@@ -210,7 +210,7 @@ export function Swap({
         })
         .filter((token: Token) => {
           // Any token addresses that are loaded from the shorthands map do not need to show the import URL
-          const supported = toSupportedChain(chainId)
+          const supported = asSupportedChain(chainId)
           if (!supported) return true
           return !Object.keys(TOKEN_SHORTHANDS).some((shorthand) => {
             const shorthandTokenAddress = TOKEN_SHORTHANDS[shorthand][supported]

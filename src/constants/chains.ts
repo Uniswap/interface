@@ -16,13 +16,13 @@ export const CHAIN_IDS_TO_NAMES = {
   [ChainId.OPTIMISM_GOERLI]: 'optimism_goerli',
   [ChainId.BNB]: 'bnb',
   [ChainId.AVALANCHE]: 'avalanche',
-}
+} as const
 
 export function isSupportedChain(chainId: number | null | undefined | ChainId): chainId is SupportedChainsType {
-  return !!chainId && SUPPORTED_CHAINS.indexOf(chainId) > 0
+  return !!chainId && SUPPORTED_CHAINS.indexOf(chainId) !== -1
 }
 
-export function toSupportedChain(chainId: number | null | undefined | ChainId): SupportedChainsType | undefined {
+export function asSupportedChain(chainId: number | null | undefined | ChainId): SupportedChainsType | undefined {
   return isSupportedChain(chainId) ? chainId : undefined
 }
 

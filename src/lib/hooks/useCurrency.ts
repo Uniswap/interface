@@ -2,7 +2,7 @@ import { arrayify } from '@ethersproject/bytes'
 import { parseBytes32String } from '@ethersproject/strings'
 import { ChainId, Currency, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { isSupportedChain, toSupportedChain } from 'constants/chains'
+import { isSupportedChain, asSupportedChain } from 'constants/chains'
 import { useBytes32TokenContract, useTokenContract } from 'hooks/useContract'
 import { NEVER_RELOAD, useSingleCallResult } from 'lib/hooks/multicall'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
@@ -99,7 +99,7 @@ export function useCurrencyFromMap(
   const nativeCurrency = useNativeCurrency(chainId)
   const isNative = Boolean(nativeCurrency && currencyId?.toUpperCase() === 'ETH')
   const shorthandMatchAddress = useMemo(() => {
-    const chain = toSupportedChain(chainId)
+    const chain = asSupportedChain(chainId)
     return chain && currencyId ? TOKEN_SHORTHANDS[currencyId.toUpperCase()]?.[chain] : undefined
   }, [chainId, currencyId])
 
