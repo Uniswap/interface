@@ -164,7 +164,13 @@ exports[`ActivityTab renders without error 1`] = `
             "keyExtractor": [Function],
             "numColumns": 1,
             "onContentSizeChange": undefined,
+            "onRefresh": undefined,
             "onScroll": [Function],
+            "refreshControl": <RefreshControlMock
+              refreshing={false}
+              tintColor="#888FAB"
+            />,
+            "refreshing": undefined,
             "renderItem": [Function],
             "sentry-label": "ReanimatedFlashList",
             "showsVerticalScrollIndicator": false,
@@ -183,6 +189,12 @@ exports[`ActivityTab renders without error 1`] = `
       onScrollBeginDrag={[Function]}
       onSizeChanged={[Function]}
       onVisibleIndicesChanged={[Function]}
+      refreshControl={
+        <RefreshControlMock
+          refreshing={false}
+          tintColor="#888FAB"
+        />
+      }
       removeClippedSubviews={false}
       renderAheadOffset={0}
       renderAheadStep={250}
@@ -201,7 +213,10 @@ exports[`ActivityTab renders without error 1`] = `
           },
           "onLayout": [Function],
           "onScrollBeginDrag": [Function],
-          "refreshControl": undefined,
+          "refreshControl": <RefreshControlMock
+            refreshing={false}
+            tintColor="#888FAB"
+          />,
           "style": {
             "minHeight": 1,
             "minWidth": 1,
@@ -229,6 +244,7 @@ exports[`ActivityTab renders without error 1`] = `
         }
       }
     >
+      <RCTRefreshControl />
       <View>
         <View
           style={
@@ -517,7 +533,13 @@ exports[`ActivityTab renders without error 2`] = `
             "keyExtractor": [Function],
             "numColumns": 1,
             "onContentSizeChange": undefined,
+            "onRefresh": undefined,
             "onScroll": [Function],
+            "refreshControl": <RefreshControlMock
+              refreshing={false}
+              tintColor="#888FAB"
+            />,
+            "refreshing": undefined,
             "renderItem": [Function],
             "sentry-label": "ReanimatedFlashList",
             "showsVerticalScrollIndicator": false,
@@ -536,6 +558,12 @@ exports[`ActivityTab renders without error 2`] = `
       onScrollBeginDrag={[Function]}
       onSizeChanged={[Function]}
       onVisibleIndicesChanged={[Function]}
+      refreshControl={
+        <RefreshControlMock
+          refreshing={false}
+          tintColor="#888FAB"
+        />
+      }
       removeClippedSubviews={false}
       renderAheadOffset={0}
       renderAheadStep={250}
@@ -554,7 +582,10 @@ exports[`ActivityTab renders without error 2`] = `
           },
           "onLayout": [Function],
           "onScrollBeginDrag": [Function],
-          "refreshControl": undefined,
+          "refreshControl": <RefreshControlMock
+            refreshing={false}
+            tintColor="#888FAB"
+          />,
           "style": {
             "minHeight": 1,
             "minWidth": 1,
@@ -582,6 +613,7 @@ exports[`ActivityTab renders without error 2`] = `
         }
       }
     >
+      <RCTRefreshControl />
       <View>
         <View
           style={

@@ -1,10 +1,11 @@
 import { NetworkStatus } from '@apollo/client'
 import { FlashList } from '@shopify/flash-list'
 import { ImpactFeedbackStyle } from 'expo-haptics'
-import React, { forwardRef, useCallback, useEffect, useState } from 'react'
+import React, { forwardRef, useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ListRenderItemInfo, View } from 'react-native'
+import { ListRenderItemInfo, RefreshControl, View } from 'react-native'
 import ContextMenu from 'react-native-context-menu-view'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { useAppStackNavigation } from 'src/app/navigation/types'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
@@ -17,6 +18,7 @@ import { TabProps } from 'src/components/layout/TabHelpers'
 import { Loader } from 'src/components/loading'
 import { HiddenNftsRowLeft, HiddenNftsRowRight } from 'src/components/NFT/NFTHiddenRow'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
+import { GQLQueries } from 'src/data/queries'
 import { openModal } from 'src/features/modals/modalSlice'
 import {
   EMPTY_NFT_ITEM,
@@ -36,6 +38,8 @@ import { EMPTY_ARRAY } from 'wallet/src/constants/misc'
 import { isError, isNonPollingRequestInFlight } from 'wallet/src/data/utils'
 import { NftsTabQuery, useNftsTabQuery } from 'wallet/src/data/__generated__/types-and-hooks'
 import { useAdaptiveFooterHeight } from './hooks'
+
+export const NFTS_TAB_DATA_DEPENDENCIES = [GQLQueries.NftsTab]
 
 const MAX_NFT_IMAGE_SIZE = 375
 const ESTIMATED_ITEM_SIZE = 251 // heuristic provided by FlashList
@@ -128,10 +132,22 @@ function NftView({ owner, item }: { owner: Address; item: NFTItem }): JSX.Elemen
 }
 
 export const NftsTab = forwardRef<FlashList<unknown>, TabProps>(
-  ({ owner, containerProps, scrollHandler, headerHeight, isExternalProfile = false }, ref) => {
+  (
+    {
+      owner,
+      containerProps,
+      scrollHandler,
+      headerHeight,
+      isExternalProfile = false,
+      refreshing,
+      onRefresh,
+    },
+    ref
+  ) => {
     const { t } = useTranslation()
     const theme = useAppTheme()
     const dispatch = useAppDispatch()
+    const insets = useSafeAreaInsets()
 
     const [hiddenNftsExpanded, setHiddenNftsExpanded] = useState(false)
 
@@ -210,6 +226,17 @@ export const NftsTab = forwardRef<FlashList<unknown>, TabProps>(
       [hiddenNftsExpanded, numHidden, onHiddenRowPressed, owner]
     )
 
+    const refreshControl = useMemo(() => {
+      return (
+        <RefreshControl
+          progressViewOffset={insets.top}
+          refreshing={refreshing ?? false}
+          tintColor={theme.colors.textTertiary}
+          onRefresh={onRefresh}
+        />
+      )
+    }, [refreshing, onRefresh, theme.colors.textTertiary, insets.top])
+
     const onRetry = useCallback(() => refetch(), [refetch])
 
     return (
@@ -264,11 +291,14 @@ export const NftsTab = forwardRef<FlashList<unknown>, TabProps>(
           estimatedItemSize={ESTIMATED_ITEM_SIZE}
           keyExtractor={keyExtractor}
           numColumns={2}
+          refreshControl={refreshControl}
+          refreshing={refreshing}
           renderItem={renderItem}
           showsVerticalScrollIndicator={false}
           onContentSizeChange={onContentSizeChange}
           onEndReached={onListEndReached}
           onEndReachedThreshold={PREFETCH_ITEMS_THRESHOLD}
+          onRefresh={onRefresh}
           onScroll={scrollHandler}
           {...containerProps}
         />

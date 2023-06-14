@@ -83,6 +83,8 @@ export type TabProps = {
   scrollHandler?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void
   headerHeight?: number
   isExternalProfile?: boolean
+  refreshing?: boolean
+  onRefresh?: () => void
 }
 
 export type TabContentProps = Partial<FlatListProps<unknown>> & {

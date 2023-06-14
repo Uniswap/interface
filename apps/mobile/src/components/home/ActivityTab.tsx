@@ -2,7 +2,9 @@ import { NetworkStatus } from '@apollo/client'
 import { FlashList } from '@shopify/flash-list'
 import React, { createElement, forwardRef, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useAppDispatch } from 'src/app/hooks'
+import { RefreshControl } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { useAdaptiveFooterHeight } from 'src/components/home/hooks'
 import { NoTransactions } from 'src/components/icons/NoTransactions'
 import { Box, Flex } from 'src/components/layout'
@@ -12,6 +14,7 @@ import { TabProps } from 'src/components/layout/TabHelpers'
 import { Loader } from 'src/components/loading'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { Text } from 'src/components/Text'
+import { GQLQueries } from 'src/data/queries'
 import { openModal } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
 import {
@@ -40,6 +43,8 @@ import {
   useActiveAccountWithThrow,
   useSelectAccountHideSpamTokens,
 } from 'wallet/src/features/wallet/hooks'
+
+export const ACTVITIY_TAB_DATA_DEPENDENCIES = [GQLQueries.TransactionList]
 
 type LoadingItem = {
   itemType: 'LOADING'
@@ -136,9 +141,22 @@ function getItemType(item: TransactionDetails | SectionHeader | LoadingItem): st
 }
 
 export const ActivityTab = forwardRef<FlashList<unknown>, TabProps>(
-  ({ owner, containerProps, scrollHandler, headerHeight, isExternalProfile = false }, ref) => {
+  (
+    {
+      owner,
+      containerProps,
+      scrollHandler,
+      headerHeight,
+      isExternalProfile = false,
+      refreshing,
+      onRefresh,
+    },
+    ref
+  ) => {
     const { t } = useTranslation()
     const dispatch = useAppDispatch()
+    const theme = useAppTheme()
+    const insets = useSafeAreaInsets()
 
     const { onContentSizeChange, footerHeight } = useAdaptiveFooterHeight({
       headerHeight,
@@ -239,6 +257,17 @@ export const ActivityTab = forwardRef<FlashList<unknown>, TabProps>(
       )
     }
 
+    const refreshControl = useMemo(() => {
+      return (
+        <RefreshControl
+          progressViewOffset={insets.top}
+          refreshing={refreshing ?? false}
+          tintColor={theme.colors.textTertiary}
+          onRefresh={onRefresh}
+        />
+      )
+    }, [refreshing, onRefresh, theme.colors.textTertiary, insets.top])
+
     if (!hasData && isError) {
       return (
         <Flex grow style={containerProps?.emptyContainerStyle}>
@@ -302,9 +331,12 @@ export const ActivityTab = forwardRef<FlashList<unknown>, TabProps>(
           getItemType={getItemType}
           keyExtractor={keyExtractor}
           numColumns={1}
+          refreshControl={refreshControl}
+          refreshing={refreshing}
           renderItem={renderActivityItem}
           showsVerticalScrollIndicator={false}
           onContentSizeChange={onContentSizeChange}
+          onRefresh={onRefresh}
           onScroll={scrollHandler}
           {...containerProps}
         />

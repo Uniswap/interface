@@ -10,14 +10,28 @@ import { TabContentProps, TabProps } from 'src/components/layout/TabHelpers'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { TokenBalanceList } from 'src/components/TokenBalanceList/TokenBalanceList'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
+import { GQLQueries } from 'src/data/queries'
 import { openModal } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
 import { CurrencyId } from 'wallet/src/utils/currencyId'
 
+export const TOKENS_TAB_DATA_DEPENDENCIES = [GQLQueries.PortfolioBalances]
+
 // ignore ref type
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const TokensTab = forwardRef<FlashList<any>, TabProps & { isExternalProfile?: boolean }>(
-  ({ owner, containerProps, scrollHandler, isExternalProfile = false, headerHeight }, ref) => {
+  (
+    {
+      owner,
+      containerProps,
+      scrollHandler,
+      isExternalProfile = false,
+      headerHeight,
+      onRefresh,
+      refreshing,
+    },
+    ref
+  ) => {
     const { t } = useTranslation()
     const dispatch = useAppDispatch()
     const tokenDetailsNavigation = useTokenDetailsNavigation()
@@ -64,8 +78,10 @@ export const TokensTab = forwardRef<FlashList<any>, TabProps & { isExternalProfi
           headerHeight={headerHeight}
           isExternalProfile={isExternalProfile}
           owner={owner}
+          refreshing={refreshing}
           scrollHandler={scrollHandler}
           onPressToken={onPressToken}
+          onRefresh={onRefresh}
         />
       </Flex>
     )

@@ -22,9 +22,9 @@ import { NavBar, SWAP_BUTTON_HEIGHT } from 'src/app/navigation/NavBar'
 import { AppStackScreenProp } from 'src/app/navigation/types'
 import { AccountHeader } from 'src/components/accounts/AccountHeader'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { ActivityTab } from 'src/components/home/ActivityTab'
-import { NftsTab } from 'src/components/home/NftsTab'
-import { TokensTab } from 'src/components/home/TokensTab'
+import { ActivityTab, ACTVITIY_TAB_DATA_DEPENDENCIES } from 'src/components/home/ActivityTab'
+import { NftsTab, NFTS_TAB_DATA_DEPENDENCIES } from 'src/components/home/NftsTab'
+import { TokensTab, TOKENS_TAB_DATA_DEPENDENCIES } from 'src/components/home/TokensTab'
 import { AnimatedBox, Box, Flex } from 'src/components/layout'
 import { SHADOW_OFFSET_SMALL } from 'src/components/layout/BaseCard'
 import { Delay, Delayed } from 'src/components/layout/Delayed'
@@ -42,6 +42,7 @@ import {
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import TraceTabView from 'src/components/telemetry/TraceTabView'
 import { Text } from 'src/components/Text'
+import { apolloClient } from 'src/data/usePersistedApolloClient'
 import { PortfolioBalance } from 'src/features/balances/PortfolioBalance'
 import { openModal } from 'src/features/modals/modalSlice'
 import { useSelectAddressHasNotifications } from 'src/features/notifications/hooks'
@@ -207,9 +208,10 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
       },
     })
   )
+
   const translateY = useDerivedValue(() => {
-    const offset = -Math.min(сurrentScrollValue.value, headerHeightDiff)
-    return offset > 0 ? 0 : offset
+    // Allow header to scroll vertically with list
+    return -Math.min(сurrentScrollValue.value, headerHeightDiff)
   })
 
   const translatedStyle = useAnimatedStyle(() => ({
@@ -352,6 +354,23 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
     ]
   )
 
+  const [refreshing, setRefreshing] = useState(false)
+
+  const onRefreshHomeData = useCallback(() => {
+    setRefreshing(true)
+    apolloClient?.refetchQueries({
+      include: [
+        ...TOKENS_TAB_DATA_DEPENDENCIES,
+        ...NFTS_TAB_DATA_DEPENDENCIES,
+        ...ACTVITIY_TAB_DATA_DEPENDENCIES,
+      ],
+    })
+    // Artificially delay 0.5 second to show the refresh animation
+    setTimeout(() => {
+      setRefreshing(false)
+    }, 500)
+  }, [])
+
   const renderTab = useCallback(
     ({
       route,
@@ -369,7 +388,9 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
               containerProps={sharedProps}
               headerHeight={headerHeight}
               owner={activeAccount?.address}
+              refreshing={refreshing}
               scrollHandler={tokensTabScrollHandler}
+              onRefresh={onRefreshHomeData}
             />
           )
         case SectionName.HomeNFTsTab:
@@ -380,7 +401,9 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
                 containerProps={sharedProps}
                 headerHeight={headerHeight}
                 owner={activeAccount?.address}
+                refreshing={refreshing}
                 scrollHandler={nftsTabScrollHandler}
+                onRefresh={onRefreshHomeData}
               />
             </Delayed>
           )
@@ -392,7 +415,9 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
                 containerProps={sharedProps}
                 headerHeight={headerHeight}
                 owner={activeAccount?.address}
+                refreshing={refreshing}
                 scrollHandler={activityTabScrollHandler}
+                onRefresh={onRefreshHomeData}
               />
             </Delayed>
           )
@@ -409,6 +434,8 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
       sharedProps,
       tokensTabScrollHandler,
       tokensTabScrollRef,
+      refreshing,
+      onRefreshHomeData,
     ]
   )
 
