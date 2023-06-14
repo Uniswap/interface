@@ -354,6 +354,7 @@ export const SearchBarDropdown = ({
     trace,
     searchHistory,
     trendingCollectionsAreLoading,
+    shouldDisableNFTRoutes,
   ])
 
   const showBNBComingSoonBadge = chainId === SupportedChainId.BNB && !isLoading
