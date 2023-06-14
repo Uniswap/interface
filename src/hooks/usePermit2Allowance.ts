@@ -30,8 +30,8 @@ interface AllowanceRequired {
   approve: () => Promise<void>
   permit: () => Promise<void>
   revoke: () => Promise<void>
-  needsPermit2Approval: boolean
-  needsSignature: boolean
+  needsSetupApproval: boolean
+  needsPermitSignature: boolean
   allowedAmount: CurrencyAmount<Token>
 }
 
@@ -137,8 +137,8 @@ export default function usePermit2Allowance(amount?: CurrencyAmount<Token>, spen
           approve,
           permit: updatePermitAllowance,
           revoke,
-          needsPermit2Approval: !isApproved,
-          needsSignature: shouldRequestSignature,
+          needsSetupApproval: !isApproved,
+          needsPermitSignature: shouldRequestSignature,
           allowedAmount: tokenAllowance,
         }
       } else if (!isApproved) {
@@ -152,8 +152,8 @@ export default function usePermit2Allowance(amount?: CurrencyAmount<Token>, spen
           approve,
           permit: updatePermitAllowance,
           revoke,
-          needsPermit2Approval: true,
-          needsSignature: shouldRequestSignature,
+          needsSetupApproval: true,
+          needsPermitSignature: shouldRequestSignature,
           allowedAmount: tokenAllowance,
         }
       }
