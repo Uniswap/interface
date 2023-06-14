@@ -2,7 +2,7 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, ButtonEmphasis, ButtonSize } from 'src/components/buttons/Button'
 import { getClipboard } from 'src/utils/clipboard'
-import PasteIcon from 'ui/assets/icons/paste.svg'
+import PasteIcon from 'ui/src/assets/icons/paste.svg'
 
 export default function PasteButton({
   onPress,

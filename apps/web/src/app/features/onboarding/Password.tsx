@@ -4,8 +4,8 @@ import { CreateOnboardingRoutes, ImportOnboardingRoutes } from 'src/app/navigati
 import { useAppDispatch } from 'src/background/store'
 import { useSagaStatus } from 'src/background/utils/useSagaStatus'
 import { Input, Stack, XStack, YStack } from 'tamagui'
-import { Text } from 'ui'
-import { Button } from 'ui/components/button/Button'
+import { Text } from 'ui/src'
+import { Button } from 'ui/src/components/button/Button'
 import { logger } from 'wallet/src/features/logger/logger'
 import {
   importAccountActions,

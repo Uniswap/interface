@@ -20,7 +20,7 @@ import {
   WalletConnectRequest,
 } from 'src/features/walletConnect/walletConnectSlice'
 import { useAppStateTrigger } from 'src/utils/useAppStateTrigger'
-import EyeIcon from 'ui/assets/icons/eye.svg'
+import EyeIcon from 'ui/src/assets/icons/eye.svg'
 import {
   useActiveAccount,
   useActiveAccountAddressWithThrow,

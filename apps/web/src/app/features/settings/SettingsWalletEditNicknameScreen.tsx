@@ -4,8 +4,8 @@ import { useParams } from 'react-router-dom'
 import { BackButtonHeader } from 'src/app/features/settings/BackButtonHeader'
 import { useExtensionNavigation } from 'src/app/navigation/utils'
 import { useAppDispatch } from 'src/background/store'
-import { Input, Text, YStack } from 'ui'
-import { Button } from 'ui/components/button/Button'
+import { Input, Text, YStack } from 'ui/src'
+import { Button } from 'ui/src/components/button/Button'
 import {
   EditAccountAction,
   editAccountActions,

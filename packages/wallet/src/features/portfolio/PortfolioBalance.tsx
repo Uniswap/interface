@@ -1,5 +1,5 @@
-import { Flex } from 'ui/components/layout/Flex'
-import { Text } from 'ui/components/text/Text'
+import { Flex } from 'ui/src/components/layout/Flex'
+import { Text } from 'ui/src/components/text/Text'
 import { usePortfolioUSDBalance } from 'wallet/src/features/portfolio/hooks'
 
 type WalletBalanceProps = {

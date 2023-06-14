@@ -2,7 +2,7 @@ import { ComponentMeta, ComponentStory } from '@storybook/react'
 import React from 'react'
 import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
-import Check from 'ui/assets/icons/check.svg'
+import Check from 'ui/src/assets/icons/check.svg'
 import { ActionSheetModalContent } from './ActionSheetModal'
 
 const options = [

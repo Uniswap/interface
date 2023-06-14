@@ -12,7 +12,7 @@ import {
 } from 'src/features/fiatOnRamp/api'
 import { addTransaction } from 'src/features/transactions/slice'
 import { createTransactionId } from 'src/features/transactions/utils'
-import { Theme } from 'ui/theme/restyle/theme'
+import { Theme } from 'ui/src/theme/restyle/theme'
 import { ChainId } from 'wallet/src/constants/chains'
 import { MoonpayCurrency } from 'wallet/src/features/fiatOnRamp/types'
 import {

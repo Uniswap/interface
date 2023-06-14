@@ -19,9 +19,9 @@ import { AnimatedFlex, Box, Flex } from 'src/components/layout'
 import { SpinningLoader } from 'src/components/loading/SpinningLoader'
 import { Text } from 'src/components/Text'
 import { openSettings } from 'src/utils/linking'
-import CameraScan from 'ui/assets/icons/camera-scan.svg'
-import GlobalIcon from 'ui/assets/icons/global.svg'
-import { dimensions } from 'ui/theme/restyle/sizing'
+import CameraScan from 'ui/src/assets/icons/camera-scan.svg'
+import GlobalIcon from 'ui/src/assets/icons/global.svg'
+import { dimensions } from 'ui/src/theme/restyle/sizing'
 import { Barcode, BarcodeFormat, scanBarcodes } from 'vision-camera-code-scanner'
 
 type QRCodeScannerProps = {

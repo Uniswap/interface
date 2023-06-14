@@ -1,7 +1,7 @@
 import { RequestDisplayDetails } from 'src/background/features/dappRequests/DappRequestContent'
 import { SignTypedDataRequest } from 'src/background/features/dappRequests/dappRequestTypes'
-import { Text, XStack, YStack } from 'ui'
-import { Unicon } from 'ui/components/Unicon'
+import { Text, XStack, YStack } from 'ui/src'
+import { Unicon } from 'ui/src/components/Unicon'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 
 export const SignTypedDataDetails = ({

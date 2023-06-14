@@ -26,8 +26,6 @@ module.exports = {
   // changedSince: 'master',
   // https://github.com/facebook/jest/issues/2663#issuecomment-341384494
   moduleNameMapper: {
-    '^ui/(.*)$': '<rootDir>/../../packages/ui/src/$1',
-    '^wallet/src/(.*)$': '<rootDir>/../../packages/wallet/src/$1',
     '.+\\.(css|style|less|sass|scss|png|jpg|ttf|woff|woff2)$': 'jest-transform-stub',
   },
   transform: {

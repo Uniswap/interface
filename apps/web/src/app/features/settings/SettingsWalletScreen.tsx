@@ -4,10 +4,10 @@ import { BackButtonHeader } from 'src/app/features/settings/BackButtonHeader'
 import { SettingsWalletRoutes } from 'src/app/navigation/constants'
 import { useExtensionNavigation } from 'src/app/navigation/utils'
 import { useAppDispatch } from 'src/background/store'
-import { Switch, Text, XStack, YStack } from 'ui'
-import PencilIcon from 'ui/assets/icons/pencil.svg'
-import { Button, LinkButton } from 'ui/components/button/Button'
-import { iconSizes } from 'ui/theme/iconSizes'
+import { Switch, Text, XStack, YStack } from 'ui/src'
+import PencilIcon from 'ui/src/assets/icons/pencil.svg'
+import { Button, LinkButton } from 'ui/src/components/button/Button'
+import { iconSizes } from 'ui/src/theme/iconSizes'
 import {
   EditAccountAction,
   editAccountActions,

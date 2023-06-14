@@ -4,7 +4,7 @@ import {
   OnboardingRoutes,
   TopLevelRoutes,
 } from 'src/app/navigation/constants'
-import { Circle, Stack, XStack } from 'ui'
+import { Circle, Stack, XStack } from 'ui/src'
 
 export function ImportOnboardingWrapper(): JSX.Element {
   return (

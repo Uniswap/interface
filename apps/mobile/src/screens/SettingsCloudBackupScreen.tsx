@@ -15,7 +15,7 @@ import { backupMnemonicToICloud } from 'src/features/CloudBackup/RNICloudBackups
 import { CloudBackupSetPassword } from 'src/features/onboarding/CloudBackupSetPassword'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { Screens } from 'src/screens/Screens'
-import CloudIcon from 'ui/assets/icons/cloud.svg'
+import CloudIcon from 'ui/src/assets/icons/cloud.svg'
 import { logger } from 'wallet/src/features/logger/logger'
 import {
   EditAccountAction,

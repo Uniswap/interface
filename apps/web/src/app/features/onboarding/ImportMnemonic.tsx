@@ -2,8 +2,8 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ImportOnboardingRoutes } from 'src/app/navigation/constants'
 import { Input, Stack, XStack, YStack } from 'tamagui'
-import { Text } from 'ui'
-import { Button, LinkButton } from 'ui/components/button/Button'
+import { Text } from 'ui/src'
+import { Button, LinkButton } from 'ui/src/components/button/Button'
 import { validateMnemonic } from 'wallet/src/utils/mnemonics'
 
 export function ImportMnemonic(): JSX.Element {

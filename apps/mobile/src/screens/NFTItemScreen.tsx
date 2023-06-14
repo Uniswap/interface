@@ -33,11 +33,11 @@ import {
   passesContrast,
   useNearestThemeColorFromImageUri,
 } from 'src/utils/colors'
-import EllipsisIcon from 'ui/assets/icons/ellipsis.svg'
-import ShareIcon from 'ui/assets/icons/share.svg'
-import { colorsDark } from 'ui/theme/color'
-import { iconSizes } from 'ui/theme/iconSizes'
-import { darkTheme } from 'ui/theme/restyle/theme'
+import EllipsisIcon from 'ui/src/assets/icons/ellipsis.svg'
+import ShareIcon from 'ui/src/assets/icons/share.svg'
+import { colorsDark } from 'ui/src/theme/color'
+import { iconSizes } from 'ui/src/theme/iconSizes'
+import { darkTheme } from 'ui/src/theme/restyle/theme'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import {
   NftActivityType,

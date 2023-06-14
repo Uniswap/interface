@@ -1,5 +1,4 @@
 const { NODE_ENV } = process.env
-const { join } = require('path')
 
 const inProduction = NODE_ENV === 'production'
 
@@ -7,16 +6,6 @@ module.exports = function (api) {
   api.cache.using(() => process.env.NODE_ENV)
 
   var plugins = [
-    [
-      'module-resolver',
-      {
-        alias: {
-          // This needs to be mirrored in tsconfig.json
-          ui: join(require.resolve('ui'), '..'),
-        },
-      },
-    ],
-
     [
       'module:react-native-dotenv',
       {

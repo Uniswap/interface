@@ -1,6 +1,6 @@
 import { Store } from '@reduxjs/toolkit'
 import { Provider as ReduxProvider } from 'react-redux'
-import { TamaguiProviderProps } from 'ui'
+import { TamaguiProviderProps } from 'ui/src'
 import { Provider as TamaguiProvider } from './tamagui-provider'
 
 export function Provider({

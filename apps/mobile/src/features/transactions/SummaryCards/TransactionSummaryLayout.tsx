@@ -18,10 +18,10 @@ import { CancelConfirmationView } from 'src/features/transactions/SummaryCards/C
 import TransactionActionsModal from 'src/features/transactions/SummaryCards/TransactionActionsModal'
 import { getTransactionSummaryTitle } from 'src/features/transactions/SummaryCards/utils'
 import { openMoonpayTransactionLink, openTransactionLink } from 'src/utils/linking'
-import AlertTriangle from 'ui/assets/icons/alert-triangle.svg'
-import SlashCircleIcon from 'ui/assets/icons/slash-circle.svg'
-import { iconSizes } from 'ui/theme/iconSizes'
-import { Theme } from 'ui/theme/restyle/theme'
+import AlertTriangle from 'ui/src/assets/icons/alert-triangle.svg'
+import SlashCircleIcon from 'ui/src/assets/icons/slash-circle.svg'
+import { iconSizes } from 'ui/src/theme/iconSizes'
+import { Theme } from 'ui/src/theme/restyle/theme'
 import {
   TransactionDetails,
   TransactionStatus,

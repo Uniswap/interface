@@ -20,9 +20,9 @@ import { openModal } from 'src/features/modals/modalSlice'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
 import { useExtractedColors } from 'src/utils/colors'
-import HeartIcon from 'ui/assets/icons/heart.svg'
-import SendIcon from 'ui/assets/icons/send-action.svg'
-import { iconSizes } from 'ui/theme/iconSizes'
+import HeartIcon from 'ui/src/assets/icons/heart.svg'
+import SendIcon from 'ui/src/assets/icons/send-action.svg'
+import { iconSizes } from 'ui/src/theme/iconSizes'
 import { useENSAvatar } from 'wallet/src/features/ens/api'
 
 const HEADER_GRADIENT_HEIGHT = 137

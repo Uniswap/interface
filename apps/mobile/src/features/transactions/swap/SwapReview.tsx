@@ -23,7 +23,7 @@ import {
 import { TransactionDetails } from 'src/features/transactions/TransactionDetails'
 import { TransactionReview } from 'src/features/transactions/TransactionReview'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
-import InfoCircleSVG from 'ui/assets/icons/info-circle.svg'
+import InfoCircleSVG from 'ui/src/assets/icons/info-circle.svg'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 import { formatCurrencyAmount, formatNumberOrString, NumberType } from 'wallet/src/utils/format'
@@ -64,7 +64,7 @@ export function SwapReview({
     chainId,
     currencies,
     currencyAmounts,
-    trade: { trade },
+    trade: { trade: trade },
     wrapType,
     exactCurrencyField,
     txId,

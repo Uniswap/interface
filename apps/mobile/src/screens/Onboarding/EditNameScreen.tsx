@@ -16,7 +16,7 @@ import { ImportType } from 'src/features/onboarding/utils'
 import { ElementName } from 'src/features/telemetry/constants'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { useAddBackButton } from 'src/utils/useAddBackButton'
-import PencilIcon from 'ui/assets/icons/pencil-detailed.svg'
+import PencilIcon from 'ui/src/assets/icons/pencil-detailed.svg'
 import { NICKNAME_MAX_LENGTH } from 'wallet/src/constants/accounts'
 import {
   EditAccountAction,
