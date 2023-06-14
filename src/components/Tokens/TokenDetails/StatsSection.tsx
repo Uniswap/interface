@@ -80,10 +80,8 @@ type StatsSectionProps = {
 export default function StatsSection(props: StatsSectionProps) {
   const { chainId, address, priceLow52W, priceHigh52W, TVL, volume24H, volume7D, fee24H } = props
   const { label, infoLink } = getChainInfo(chainId)
-  console.log('infoLink', infoLink)
-  console.log('label', label)
 
-  if (TVL || volume24H || priceLow52W || priceHigh52W) {
+  if (TVL || volume24H || priceLow52W || priceHigh52W || volume7D || fee24H) {
     return (
       <StatsWrapper data-testid="token-details-stats">
         <Header>

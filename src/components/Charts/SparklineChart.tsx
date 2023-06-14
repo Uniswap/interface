@@ -45,7 +45,6 @@ function _SparklineChart({ width, height, tokenData, pricePercentChange }: Spark
 
   const pricePoint = [] as PricePoint[]
   data.map((price) => {
-    pricePoint.push({ timestamp: price.time, value: price.open })
     pricePoint.push({ timestamp: price.time, value: price.close })
   })
 

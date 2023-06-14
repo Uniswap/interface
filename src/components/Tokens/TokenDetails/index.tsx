@@ -15,7 +15,6 @@ import TokenSafetyMessage from 'components/TokenSafety/TokenSafetyMessage'
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { checkWarning } from 'constants/tokenSafety'
-import { TokenPriceQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { Chain } from 'graphql/data/Token'
 import { CHAIN_NAME_TO_CHAIN_ID } from 'graphql/data/util'
 import { TokenData } from 'graphql/tokens/TokenData'
@@ -72,18 +71,11 @@ const Link = styled(NativeLink)`
 type TokenDetailsProps = {
   urlAddress: string | undefined
   chain: Chain
-  tokenPriceQuery?: TokenPriceQuery
   tokenData: TokenData
   onChangeTimePeriod: OnChangeTimePeriod
 }
 
-export default function TokenDetails({
-  urlAddress,
-  chain,
-  tokenPriceQuery,
-  tokenData,
-  onChangeTimePeriod,
-}: TokenDetailsProps) {
+export default function TokenDetails({ urlAddress, chain, tokenData, onChangeTimePeriod }: TokenDetailsProps) {
   if (!urlAddress) {
     throw new Error('Invalid token details route: tokenAddress param is undefined')
   }
@@ -133,7 +125,7 @@ export default function TokenDetails({
               <ShareButton currency={currencyToken} />
             </TokenActions>
           </TokenInfoContainer>
-          <ChartSection tokenPriceQuery={tokenPriceQuery} onChangeTimePeriod={onChangeTimePeriod} />
+          <ChartSection tokenData={tokenData} onChangeTimePeriod={onChangeTimePeriod} />
 
           <StatsSection
             chainId={pageChainId}
