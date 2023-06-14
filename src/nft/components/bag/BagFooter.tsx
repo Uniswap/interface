@@ -462,23 +462,27 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
         <FooterHeader gap="xs">
           <CurrencyRow>
             <Column gap="xs">
-              <ThemedText.SubHeaderSmall>
-                <Trans>Pay with</Trans>
-              </ThemedText.SubHeaderSmall>
-              <CurrencyInput
-                onClick={() => {
-                  if (!bagIsLocked && chainAllowed) {
-                    setTokenSelectorOpen(true)
-                    sendAnalyticsEvent(NFTEventName.NFT_BUY_TOKEN_SELECTOR_CLICKED)
-                  }
-                }}
-              >
-                <CurrencyLogo currency={activeCurrency} size="24px" />
-                <ThemedText.HeadlineSmall fontWeight={500} lineHeight="24px">
-                  {activeCurrency?.symbol}
-                </ThemedText.HeadlineSmall>
-                <ChevronDown size={20} color={theme.textSecondary} />
-              </CurrencyInput>
+              {chainAllowed && (
+                <>
+                  <ThemedText.SubHeaderSmall>
+                    <Trans>Pay with</Trans>
+                  </ThemedText.SubHeaderSmall>
+                  <CurrencyInput
+                    onClick={() => {
+                      if (!bagIsLocked) {
+                        setTokenSelectorOpen(true)
+                        sendAnalyticsEvent(NFTEventName.NFT_BUY_TOKEN_SELECTOR_CLICKED)
+                      }
+                    }}
+                  >
+                    <CurrencyLogo currency={activeCurrency} size="24px" />
+                    <ThemedText.HeadlineSmall fontWeight={500} lineHeight="24px">
+                      {activeCurrency?.symbol}
+                    </ThemedText.HeadlineSmall>
+                    <ChevronDown size={20} color={theme.textSecondary} />
+                  </CurrencyInput>
+                </>
+              )}
             </Column>
             <TotalColumn gap="xs">
               <ThemedText.SubHeaderSmall marginBottom="4px">
