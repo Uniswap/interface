@@ -19,9 +19,9 @@ describe('network switching', () => {
   function rejectsNetworkSwitchWith(rejection: unknown) {
     cy.hardhat().then((hardhat) => {
       // Reject network switch
-      const switchChainStub = cy.stub(hardhat.provider, 'send').log(false).as('switch')
-      switchChainStub.withArgs('wallet_switchEthereumChain').rejects(rejection)
-      switchChainStub.callThrough() // allows other calls to return non-stubbed values
+      const sendStub = cy.stub(hardhat.provider, 'send').log(false).as('switch')
+      sendStub.withArgs('wallet_switchEthereumChain').rejects(rejection)
+      sendStub.callThrough() // allows other calls to return non-stubbed values
     })
 
     switchChain('Polygon')
@@ -49,16 +49,16 @@ describe('network switching', () => {
       const CHAIN_NOT_ADDED = { code: 4902 } // missing message in useSelectChain
 
       // Reject network switch with CHAIN_NOT_ADDED
-      const switchChainStub = cy.stub(hardhat.provider, 'send').log(false).as('switch')
+      const sendStub = cy.stub(hardhat.provider, 'send').log(false).as('switch')
       let added = false
-      switchChainStub
+      sendStub
         .withArgs('wallet_switchEthereumChain')
         .callsFake(() => (added ? Promise.resolve(null) : Promise.reject(CHAIN_NOT_ADDED)))
-      switchChainStub.withArgs('wallet_addEthereumChain').callsFake(() => {
+      sendStub.withArgs('wallet_addEthereumChain').callsFake(() => {
         added = true
         return Promise.resolve(null)
       })
-      switchChainStub.callThrough() // allows other calls to return non-stubbed values
+      sendStub.callThrough() // allows other calls to return non-stubbed values
     })
 
     switchChain('Polygon')
@@ -81,9 +81,9 @@ describe('network switching', () => {
 
     cy.hardhat().then((hardhat) => {
       // Reject network switch with CHAIN_NOT_ADDED
-      const switchChainStub = cy.stub(hardhat.provider, 'send').log(false).as('switch')
-      switchChainStub.withArgs('wallet_switchEthereumChain').returns(promise)
-      switchChainStub.callThrough() // allows other calls to return non-stubbed values
+      const sendStub = cy.stub(hardhat.provider, 'send').log(false).as('switch')
+      sendStub.withArgs('wallet_switchEthereumChain').returns(promise)
+      sendStub.callThrough() // allows other calls to return non-stubbed values
     })
 
     switchChain('Polygon')
