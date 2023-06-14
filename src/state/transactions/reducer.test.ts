@@ -58,6 +58,7 @@ describe('transaction reducer', () => {
             type: TransactionType.APPROVAL,
             tokenAddress: 'abc',
             spender: 'def',
+            amount: '10000',
           },
         })
       )
@@ -73,6 +74,7 @@ describe('transaction reducer', () => {
         type: TransactionType.APPROVAL,
         tokenAddress: 'abc',
         spender: 'def',
+        amount: '10000',
       })
     })
   })
@@ -103,7 +105,7 @@ describe('transaction reducer', () => {
           hash: '0x0',
           chainId: SupportedChainId.MAINNET,
           nonce: 2,
-          info: { type: TransactionType.APPROVAL, spender: '0x0', tokenAddress: '0x0' },
+          info: { type: TransactionType.APPROVAL, spender: '0x0', tokenAddress: '0x0', amount: '10000' },
           from: '0x0',
         })
       )
@@ -156,7 +158,7 @@ describe('transaction reducer', () => {
           hash: '0x0',
           chainId: SupportedChainId.MAINNET,
           nonce: 3,
-          info: { type: TransactionType.APPROVAL, spender: '0x0', tokenAddress: '0x0' },
+          info: { type: TransactionType.APPROVAL, spender: '0x0', tokenAddress: '0x0', amount: '10000' },
           from: '0x0',
         })
       )
@@ -176,7 +178,7 @@ describe('transaction reducer', () => {
           hash: '0x0',
           chainId: SupportedChainId.MAINNET,
           nonce: 4,
-          info: { type: TransactionType.APPROVAL, spender: '0x0', tokenAddress: '0x0' },
+          info: { type: TransactionType.APPROVAL, spender: '0x0', tokenAddress: '0x0', amount: '10000' },
           from: '0x0',
         })
       )
@@ -206,7 +208,7 @@ describe('transaction reducer', () => {
           chainId: SupportedChainId.MAINNET,
           hash: '0x0',
           nonce: 5,
-          info: { type: TransactionType.APPROVAL, spender: 'abc', tokenAddress: 'def' },
+          info: { type: TransactionType.APPROVAL, spender: 'abc', tokenAddress: 'def', amount: '10000' },
           from: 'abc',
         })
       )
@@ -215,7 +217,7 @@ describe('transaction reducer', () => {
           chainId: SupportedChainId.OPTIMISM,
           nonce: 6,
           hash: '0x1',
-          info: { type: TransactionType.APPROVAL, spender: 'abc', tokenAddress: 'def' },
+          info: { type: TransactionType.APPROVAL, spender: 'abc', tokenAddress: 'def', amount: '10000' },
           from: 'abc',
         })
       )

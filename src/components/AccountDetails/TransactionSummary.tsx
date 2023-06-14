@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { Fraction, TradeType } from '@uniswap/sdk-core'
+import { BigNumber } from 'ethers/lib/ethers'
 import JSBI from 'jsbi'
 
 import { nativeOnChain } from '../../constants/tokens'
@@ -87,7 +88,11 @@ function SubmitProposalTransactionSummary() {
 function ApprovalSummary({ info }: { info: ApproveTransactionInfo }) {
   const token = useToken(info.tokenAddress)
 
-  return <Trans>Approve {token?.symbol}</Trans>
+  return BigNumber.from(info.amount)?.eq(0) ? (
+    <Trans>Revoke {token?.symbol}</Trans>
+  ) : (
+    <Trans>Approve {token?.symbol}</Trans>
+  )
 }
 
 function VoteSummary({ info }: { info: VoteTransactionInfo }) {
