@@ -258,6 +258,7 @@ export function PriceChart({ width, height, prices: originalPrices, timePeriod }
     setDisplayPrice(endingPrice)
   }, [setCrosshair, setDisplayPrice, endingPrice])
 
+  // Resets the crosshair when the time period is changed, to avoid stale UI
   useEffect(() => {
     setCrosshair(null)
   }, [timePeriod])
