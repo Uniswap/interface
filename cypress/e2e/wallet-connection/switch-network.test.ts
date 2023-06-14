@@ -6,7 +6,7 @@ function waitsForActiveChain(chain: string) {
 }
 
 function switchChain(chain: string) {
-  cy.get(getTestSelector('chain-selector')).eq(1)
+  cy.get(getTestSelector('chain-selector')).eq(1).click()
   cy.contains(chain).click()
 }
 
