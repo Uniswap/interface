@@ -173,6 +173,7 @@ export function getConnection(c: Connector | ConnectionType) {
         return walletConnectConnection
       case ConnectionType.WALLET_CONNECT_V2:
         return walletConnectV2Connection
+      case ConnectionType.UNIWALLET:
       case ConnectionType.UNISWAP_WALLET:
         return uniwalletConnectConnection
       case ConnectionType.NETWORK:
