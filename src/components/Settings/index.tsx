@@ -1,8 +1,8 @@
-// eslint-disable-next-line no-restricted-imports
 import { Percent } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { AutoColumn } from 'components/Column'
 import { isSupportedChain as isSupportedChainId, L2_CHAIN_IDS } from 'constants/chains'
+import useDisableScrolling from 'hooks/useDisableScrolling'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useRef } from 'react'
 import { useModalIsOpen, useToggleSettingsMenu } from 'state/application/hooks'
@@ -49,6 +49,8 @@ export default function SettingsTab({ autoSlippage, chainId }: { autoSlippage: P
 
   const toggleMenu = useToggleSettingsMenu()
   useOnClickOutside(node, isOpen ? toggleMenu : undefined)
+
+  useDisableScrolling(isOpen)
 
   const isSupportedChain = isSupportedChainId(chainId)
 
