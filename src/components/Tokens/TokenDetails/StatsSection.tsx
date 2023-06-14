@@ -73,10 +73,15 @@ type StatsSectionProps = {
   priceHigh52W?: NumericStat
   TVL?: NumericStat
   volume24H?: NumericStat
+  volume7D?: NumericStat
+  fee24H?: NumericStat
 }
+
 export default function StatsSection(props: StatsSectionProps) {
-  const { chainId, address, priceLow52W, priceHigh52W, TVL, volume24H } = props
+  const { chainId, address, priceLow52W, priceHigh52W, TVL, volume24H, volume7D, fee24H } = props
   const { label, infoLink } = getChainInfo(chainId)
+  console.log('infoLink', infoLink)
+  console.log('label', label)
 
   if (TVL || volume24H || priceLow52W || priceHigh52W) {
     return (
@@ -97,7 +102,7 @@ export default function StatsSection(props: StatsSectionProps) {
               value={volume24H}
               description={
                 <Trans>
-                  24H volume is the amount of the asset that has been traded on Uniswap v3 during the past 24 hours.
+                  24H volume is the amount of the asset that has been traded on Pegasys v3 during the past 24 hours.
                 </Trans>
               }
               title={<Trans>24H volume</Trans>}
@@ -107,6 +112,10 @@ export default function StatsSection(props: StatsSectionProps) {
             <Stat dataCy="52w-low" value={priceLow52W} title={<Trans>52W low</Trans>} />
             <Stat dataCy="52w-high" value={priceHigh52W} title={<Trans>52W high</Trans>} />
           </StatPair> */}
+          <StatPair>
+            <Stat dataCy="volume-7d" value={volume7D} title={<Trans>7D volume</Trans>} />
+            <Stat dataCy="fee-24h" value={fee24H} title={<Trans>24H Fee</Trans>} />
+          </StatPair>
         </TokenStatsSection>
       </StatsWrapper>
     )

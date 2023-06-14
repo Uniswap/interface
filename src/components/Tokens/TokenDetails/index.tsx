@@ -140,8 +140,8 @@ export default function TokenDetails({
             address={address}
             TVL={tokenData.tvlUSD}
             volume24H={tokenData?.volumeUSD}
-            // priceHigh52W={tokenQueryData?.market?.priceHigh52W?.value}
-            // priceLow52W={tokenQueryData?.market?.priceLow52W?.value}
+            volume7D={tokenData?.volumeUSDWeek}
+            fee24H={tokenData?.feesUSD}
           />
           {/* <Hr /> */}
           {/* <AboutSection
