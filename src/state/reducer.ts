@@ -3,7 +3,6 @@ import multicall from 'lib/state/multicall'
 import application from './application/reducer'
 import burn from './burn/reducer'
 import burnV3 from './burn/v3/reducer'
-import connection from './connection/reducer'
 import lists from './lists/reducer'
 import logs from './logs/slice'
 import mint from './mint/reducer'
@@ -17,7 +16,6 @@ import wallets from './wallets/reducer'
 export default {
   application,
   user,
-  connection,
   transactions,
   wallets,
   mint,

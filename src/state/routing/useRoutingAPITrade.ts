@@ -12,7 +12,6 @@ import { useGetQuoteQuery as useGetQuoteQueryV2 } from 'state/routing/v2Slice'
 
 import { InterfaceTrade, QuoteState, TradeState } from './types'
 
-const TRADE_INVALID = { state: TradeState.INVALID, trade: undefined } as const
 const TRADE_NOT_FOUND = { state: TradeState.NO_ROUTE_FOUND, trade: undefined } as const
 const TRADE_LOADING = { state: TradeState.LOADING, trade: undefined } as const
 
@@ -79,7 +78,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
 
   return useMemo(() => {
     if (!amountSpecified || isError || !queryArgs) {
-      return TRADE_INVALID
+      return { state: TradeState.INVALID, trade: tradeResult?.trade }
     } else if (tradeResult?.state === QuoteState.NOT_FOUND && isCurrent) {
       return TRADE_NOT_FOUND
     } else if (!tradeResult?.trade) {

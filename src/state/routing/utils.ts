@@ -3,9 +3,8 @@ import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { AlphaRouter, ChainId } from '@uniswap/smart-order-router'
 import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
 import { FeeAmount, Pool, Route as V3Route } from '@uniswap/v3-sdk'
-import { isPolygonChain } from 'constants/chains'
 import { RPC_PROVIDERS } from 'constants/providers'
-import { nativeOnChain } from 'constants/tokens'
+import { isBsc, isMatic, nativeOnChain } from 'constants/tokens'
 import { toSupportedChainId } from 'lib/hooks/routing/clientSideSmartOrderRouter'
 
 import { GetQuoteArgs, INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference } from './slice'
@@ -180,14 +179,19 @@ export function isExactInput(tradeType: TradeType): boolean {
 
 export function currencyAddressForSwapQuote(currency: Currency): string {
   if (currency.isNative) {
-    return isPolygonChain(currency.chainId) ? SwapRouterNativeAssets.MATIC : SwapRouterNativeAssets.ETH
+    if (isMatic(currency.chainId)) return SwapRouterNativeAssets.MATIC
+    if (isBsc(currency.chainId)) return SwapRouterNativeAssets.BNB
+    return SwapRouterNativeAssets.ETH
   }
 
   return currency.address
 }
 
-export function shouldUseAPIRouter(
-  routerPreference?: RouterPreference | typeof INTERNAL_ROUTER_PREFERENCE_PRICE
-): boolean {
+export function shouldUseAPIRouter(args: GetQuoteArgs): boolean {
+  const { routerPreference, isRoutingAPIPrice } = args
+  if (routerPreference === INTERNAL_ROUTER_PREFERENCE_PRICE && isRoutingAPIPrice) {
+    return true
+  }
+
   return routerPreference === RouterPreference.API || routerPreference === RouterPreference.AUTO
 }

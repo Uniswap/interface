@@ -1,6 +1,6 @@
 import { SupportedChainId, Token, TradeType as MockTradeType } from '@uniswap/sdk-core'
 import { PERMIT2_ADDRESS } from '@uniswap/universal-router-sdk'
-import { DAI as MockDAI, nativeOnChain, USDC_MAINNET as MockUSDC_MAINNET } from 'constants/tokens'
+import { DAI as MockDAI, nativeOnChain, USDC_MAINNET as MockUSDC_MAINNET, USDT as MockUSDT } from 'constants/tokens'
 import { TransactionStatus as MockTxStatus } from 'graphql/data/__generated__/types-and-hooks'
 import { ChainTokenMap } from 'hooks/Tokens'
 import {
@@ -50,6 +50,7 @@ const mockChainId = SupportedChainId.MAINNET
 const mockSpenderAddress = PERMIT2_ADDRESS[mockChainId]
 const mockCurrencyAmountRaw = '1000000000000000000'
 const mockCurrencyAmountRawUSDC = '1000000'
+const mockApprovalAmountRaw = '10000000'
 
 function mockHash(id: string, status: MockTxStatus = MockTxStatus.Confirmed) {
   return id + status
@@ -93,6 +94,7 @@ const mockTokenAddressMap: ChainTokenMap = {
   [mockChainId]: {
     [MockDAI.address]: MockDAI,
     [MockUSDC_MAINNET.address]: MockUSDC_MAINNET,
+    [MockUSDT.address]: MockUSDT,
   },
 }
 
@@ -142,8 +144,18 @@ jest.mock('../../../../state/transactions/hooks', () => {
             type: MockTxType.APPROVAL,
             tokenAddress: MockDAI.address,
             spender: mockSpenderAddress,
+            amount: mockApprovalAmountRaw,
           },
           '0xapproval'
+        ),
+        ...mockMultiStatus(
+          {
+            type: MockTxType.APPROVAL,
+            tokenAddress: MockUSDT.address,
+            spender: mockSpenderAddress,
+            amount: '0',
+          },
+          '0xrevoke_approval'
         ),
         ...mockMultiStatus(
           {
@@ -315,7 +327,7 @@ describe('parseLocalActivity', () => {
     const account2Activites = renderHook(() => useLocalActivities(mockAccount2)).result.current
 
     expect(Object.values(account1Activites)).toHaveLength(1)
-    expect(Object.values(account2Activites)).toHaveLength(30)
+    expect(Object.values(account2Activites)).toHaveLength(33)
   })
 
   it('Properly uses correct tense of activity title based on tx status', () => {
@@ -371,6 +383,23 @@ describe('parseLocalActivity', () => {
       currencies: [MockDAI],
       title: 'Approved',
       descriptor: MockDAI.symbol,
+      hash,
+      status: MockTxStatus.Confirmed,
+      receipt: {
+        id: hash,
+        status: MockTxStatus.Confirmed,
+      },
+    })
+  })
+
+  it('Adapts Revoke Approval to Activity type', () => {
+    const hash = mockHash('0xrevoke_approval')
+    const activity = renderHook(() => useLocalActivities(mockAccount2)).result.current[hash]
+    expect(activity).toMatchObject({
+      chainId: mockChainId,
+      currencies: [MockUSDT],
+      title: 'Revoked approval',
+      descriptor: MockUSDT.symbol,
       hash,
       status: MockTxStatus.Confirmed,
       receipt: {

@@ -131,7 +131,7 @@ export const MenuDropdown = () => {
 
   return (
     <>
-      <Box position="relative" ref={ref}>
+      <Box position="relative" ref={ref} marginRight="4">
         <NavIcon isActive={isOpen} onClick={toggleOpen} label={isOpen ? t`Show resources` : t`Hide resources`}>
           <EllipsisIcon viewBox="0 0 20 20" width={24} height={24} />
         </NavIcon>
