@@ -9109,10 +9109,10 @@ csstype@^3.0.2, csstype@^3.0.7:
   resolved "https://registry.yarnpkg.com/csstype/-/csstype-3.1.0.tgz#4ddcac3718d787cf9df0d1b7d15033925c8f29f2"
   integrity sha512-uX1KG+x9h5hIJsaKR9xHUeUraxf8IODOwq9JLNPq6BwB04a/xgpq3rcx47l5BZu5zBPlgD342tdke3Hom/nJRA==
 
-cypress-hardhat@^2.4.0:
-  version "2.4.0"
-  resolved "https://registry.yarnpkg.com/cypress-hardhat/-/cypress-hardhat-2.4.0.tgz#f18f11e6cc2bbb3a16a6fe6f62f7c474ccb5169e"
-  integrity sha512-S562nE4IJSW9ZA5BfYnbNgdPkS9HGflvzUXyaJyMiaMzfyxg8BzzSrwUNbpP+O2eR5ORYb45Ip+KaaiAyIkfVQ==
+cypress-hardhat@^2.4.1:
+  version "2.4.1"
+  resolved "https://registry.yarnpkg.com/cypress-hardhat/-/cypress-hardhat-2.4.1.tgz#dff41b06a85c4a572d43ae662f2a0cd03c29c4d7"
+  integrity sha512-D9keayw+9C1YGPTXEfkXDGmPusMoA5Sg2fiRoaBgKHO53UUFQRKnwa6HCTkCxcd0t+Hh8UcwpFwkxtlXh5QtjA==
   dependencies:
     "@uniswap/permit2-sdk" "^1.2.0"
     "@uniswap/sdk-core" "^3.0.1"
