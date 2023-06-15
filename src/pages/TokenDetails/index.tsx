@@ -3,13 +3,12 @@ import { TokenDetailsPageSkeleton } from 'components/Tokens/TokenDetails/Skeleto
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { useTokenPriceQuery, useTokenQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { TimePeriod, toHistoryDuration, validateUrlChainParam } from 'graphql/data/util'
+import { getNativeTokenDBAddress } from 'graphql/data/util'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import { useAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
 import { useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
-
-import { getNativeTokenDBAddress } from '../../utils/nativeTokens'
 
 export const pageTimePeriodAtom = atomWithStorage<TimePeriod>('tokenDetailsTimePeriod', TimePeriod.DAY)
 

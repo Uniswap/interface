@@ -3,11 +3,11 @@ import { Currency, CurrencyAmount, Price, SupportedChainId, TradeType } from '@u
 import { nativeOnChain } from 'constants/tokens'
 import { Chain, useTokenSpotPriceQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { chainIdToBackendName, isGqlSupportedChain, PollingInterval } from 'graphql/data/util'
+import { getNativeTokenDBAddress } from 'graphql/data/util'
 import { INTERNAL_ROUTER_PREFERENCE_PRICE } from 'state/routing/slice'
 import { TradeState } from 'state/routing/types'
 import { useRoutingAPITrade } from 'state/routing/useRoutingAPITrade'
 
-import { getNativeTokenDBAddress } from '../utils/nativeTokens'
 import useStablecoinPrice from './useStablecoinPrice'
 
 // ETH amounts used when calculating spot price for a given currency.

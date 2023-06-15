@@ -5,7 +5,6 @@ import { NATIVE_CHAIN_ID, nativeOnChain, WRAPPED_NATIVE_CURRENCY } from 'constan
 import ms from 'ms.macro'
 import { useEffect } from 'react'
 
-import { getNativeTokenDBAddress } from '../../utils/nativeTokens'
 import { Chain, ContractInput, HistoryDuration, TokenStandard } from './__generated__/types-and-hooks'
 
 export enum PollingInterval {
@@ -170,5 +169,23 @@ export function unwrapToken<
     ...nativeToken,
     address: NATIVE_CHAIN_ID,
     extensions: undefined, // prevents marking cross-chain wrapped tokens as native
+  }
+}
+
+export function getNativeTokenDBAddress(chain: Chain): string | undefined {
+  const pageChainId = CHAIN_NAME_TO_CHAIN_ID[chain]
+  if (pageChainId === undefined) {
+    return undefined
+  }
+  switch (chain) {
+    case Chain.Celo:
+    case Chain.Polygon:
+      return nativeOnChain(pageChainId).wrapped.address
+    case Chain.Ethereum:
+    case Chain.Arbitrum:
+    case Chain.EthereumGoerli:
+    case Chain.Optimism:
+    default:
+      return undefined
   }
 }

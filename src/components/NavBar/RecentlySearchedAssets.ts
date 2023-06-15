@@ -3,11 +3,11 @@ import { NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
 import { Chain, NftCollection, useRecentlySearchedAssetsQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { SearchToken } from 'graphql/data/SearchTokens'
 import { CHAIN_NAME_TO_CHAIN_ID } from 'graphql/data/util'
+import { getNativeTokenDBAddress } from 'graphql/data/util'
 import { useAtom } from 'jotai'
 import { atomWithStorage, useAtomValue } from 'jotai/utils'
 import { GenieCollection } from 'nft/types'
 import { useCallback, useMemo } from 'react'
-import { getNativeTokenDBAddress } from 'utils/nativeTokens'
 
 type RecentlySearchedAsset = {
   isNft?: boolean
