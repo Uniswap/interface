@@ -41,7 +41,7 @@ describe('Universal search bar', () => {
 
   it('should go to the selected result when recent results are shown', () => {
     // Search for uni token by name.
-    cy.get('[data-cy="search-bar-input"]').last().clear().type('uni')
+    cy.get('[data-cy="search-bar-input"]').last().type('uni')
     cy.get('[data-cy="searchbar-token-row-UNI"]')
       .should('contain.text', 'Uniswap')
       .and('contain.text', 'UNI')
