@@ -4,21 +4,18 @@ import { GnosisSafe } from '@web3-react/gnosis-safe'
 import { MetaMask } from '@web3-react/metamask'
 import { Network } from '@web3-react/network'
 import { Connector } from '@web3-react/types'
-import COINBASE_ICON from 'assets/images/coinbaseWalletIcon.svg'
 import GNOSIS_ICON from 'assets/images/gnosis.png'
-import METAMASK_ICON from 'assets/images/metamask.svg'
-import UNIWALLET_ICON from 'assets/images/uniwallet.png'
-import WALLET_CONNECT_ICON from 'assets/images/walletConnectIcon.svg'
-import INJECTED_DARK_ICON from 'assets/svg/browser-wallet-dark.svg'
-import INJECTED_LIGHT_ICON from 'assets/svg/browser-wallet-light.svg'
 import UNISWAP_LOGO from 'assets/svg/logo.svg'
+import COINBASE_ICON from 'assets/wallets/coinbase-icon.svg'
+import UNIWALLET_ICON from 'assets/wallets/uniswap-wallet-icon.png'
+import WALLET_CONNECT_ICON from 'assets/wallets/walletconnect-icon.svg'
 import { SupportedChainId } from 'constants/chains'
 import { isMobile, isNonIOSPhone } from 'utils/userAgent'
 
 import { RPC_URLS } from '../constants/networks'
 import { RPC_PROVIDERS } from '../constants/providers'
 import { Connection, ConnectionType } from './types'
-import { getIsCoinbaseWallet, getIsInjected, getIsMetaMaskWallet } from './utils'
+import { getInjection, getIsCoinbaseWallet, getIsInjected, getIsMetaMaskWallet } from './utils'
 import { UniwalletConnect, WalletConnectPopup } from './WalletConnect'
 import { WalletConnectV2Popup } from './WalletConnectV2'
 
@@ -48,13 +45,11 @@ const getIsGenericInjector = () => getIsInjected() && !getIsMetaMaskWallet() && 
 const [web3Injected, web3InjectedHooks] = initializeConnector<MetaMask>((actions) => new MetaMask({ actions, onError }))
 
 const injectedConnection: Connection = {
-  // TODO(WEB-3131) re-add "Install MetaMask" string when no injector is present
-  getName: () => (getIsGenericInjector() ? 'Browser Wallet' : 'MetaMask'),
+  getName: () => getInjection().name,
   connector: web3Injected,
   hooks: web3InjectedHooks,
   type: ConnectionType.INJECTED,
-  getIcon: (isDarkMode: boolean) =>
-    getIsGenericInjector() ? (isDarkMode ? INJECTED_DARK_ICON : INJECTED_LIGHT_ICON) : METAMASK_ICON,
+  getIcon: (isDarkMode: boolean) => getInjection(isDarkMode).icon,
   shouldDisplay: () => getIsMetaMaskWallet() || getShouldAdvertiseMetaMask() || getIsGenericInjector(),
   // If on non-injected, non-mobile browser, prompt user to install Metamask
   overrideActivate: () => {
