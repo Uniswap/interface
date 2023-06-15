@@ -80,7 +80,7 @@ const DetailsContainer = ({ asset, collection }: { asset: GenieAsset; collection
         header="Contract address"
         body={
           <Center onClick={copy}>
-            {shortenAddress(address, 2, 4)} <CopyIcon size={13} />
+            {shortenAddress(address)} <CopyIcon size={13} />
           </Center>
         }
       />
@@ -97,7 +97,7 @@ const DetailsContainer = ({ asset, collection }: { asset: GenieAsset; collection
               rel="noopener noreferrer"
               target="_blank"
             >
-              {shortenAddress(creator.address, 2, 4)}
+              {shortenAddress(creator.address)}
             </CreatorLink>
           )
         }

@@ -247,12 +247,12 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
           {account && (
             <AccountNamesWrapper>
               <ThemedText.SubHeader>
-                <CopyText toCopy={ENSName ?? account}>{ENSName ?? shortenAddress(account, 4, 4)}</CopyText>
+                <CopyText toCopy={ENSName ?? account}>{ENSName ?? shortenAddress(account)}</CopyText>
               </ThemedText.SubHeader>
               {/* Displays smaller view of account if ENS name was rendered above */}
               {ENSName && (
                 <ThemedText.BodySmall color="textTertiary">
-                  <CopyText toCopy={account}>{shortenAddress(account, 4, 4)}</CopyText>
+                  <CopyText toCopy={account}>{shortenAddress(account)}</CopyText>
                 </ThemedText.BodySmall>
               )}
             </AccountNamesWrapper>

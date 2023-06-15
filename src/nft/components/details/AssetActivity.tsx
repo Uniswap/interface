@@ -177,7 +177,7 @@ const AssetActivity = ({ events }: { events?: ActivityEvent[] }) => {
               <TD>
                 {fromAddress && (
                   <Link href={`https://etherscan.io/address/${fromAddress}`} target="_blank" rel="noopener noreferrer">
-                    {shortenAddress(fromAddress, 2, 4)}
+                    {shortenAddress(fromAddress)}
                   </Link>
                 )}
               </TD>
@@ -185,7 +185,7 @@ const AssetActivity = ({ events }: { events?: ActivityEvent[] }) => {
               <TD>
                 {toAddress && (
                   <Link href={`https://etherscan.io/address/${toAddress}`} target="_blank" rel="noopener noreferrer">
-                    {shortenAddress(toAddress, 2, 4)}
+                    {shortenAddress(toAddress)}
                   </Link>
                 )}
               </TD>
