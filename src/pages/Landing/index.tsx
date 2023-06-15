@@ -8,7 +8,7 @@ import ProtocolBanner from 'components/About/ProtocolBanner'
 import { useAccountDrawer } from 'components/AccountDrawer'
 import { BaseButton } from 'components/Button'
 import { AppleLogo } from 'components/Logo/AppleLogo'
-import { useShouldDisableNFTRoutes } from 'hooks/useShouldDisableNFTRoutes'
+import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
 import Swap from 'pages/Swap'
 import { parse } from 'qs'
 import { useEffect, useMemo, useRef, useState } from 'react'
@@ -322,7 +322,7 @@ export default function Landing() {
     }
   }, [navigate, selectedWallet, queryParams.intro, accountDrawerOpen])
 
-  const shouldDisableNFTRoutes = useShouldDisableNFTRoutes()
+  const shouldDisableNFTRoutes = useDisableNFTRoutes()
 
   const cards = useMemo(
     () => MAIN_CARDS.filter((card) => (shouldDisableNFTRoutes ? !card.to.startsWith('/nft') : true)),

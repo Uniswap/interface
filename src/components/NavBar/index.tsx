@@ -3,9 +3,9 @@ import { useWeb3React } from '@web3-react/core'
 import { useAccountDrawer } from 'components/AccountDrawer'
 import Web3Status from 'components/Web3Status'
 import { chainIdToBackendName } from 'graphql/data/util'
+import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
 import { useIsNftPage } from 'hooks/useIsNftPage'
 import { useIsPoolsPage } from 'hooks/useIsPoolsPage'
-import { useShouldDisableNFTRoutes } from 'hooks/useShouldDisableNFTRoutes'
 import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
 import { UniIcon } from 'nft/components/icons'
@@ -60,7 +60,7 @@ export const PageTabs = () => {
   const isPoolActive = useIsPoolsPage()
   const isNftPage = useIsNftPage()
 
-  const shouldDisableNFTRoutes = useShouldDisableNFTRoutes()
+  const shouldDisableNFTRoutes = useDisableNFTRoutes()
 
   return (
     <>

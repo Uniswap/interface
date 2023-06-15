@@ -9,8 +9,8 @@ import { HistoryDuration, SafetyLevel } from 'graphql/data/__generated__/types-a
 import { useTrendingCollections } from 'graphql/data/nft/TrendingCollections'
 import { SearchToken } from 'graphql/data/SearchTokens'
 import useTrendingTokens from 'graphql/data/TrendingTokens'
+import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
 import { useIsNftPage } from 'hooks/useIsNftPage'
-import { useShouldDisableNFTRoutes } from 'hooks/useShouldDisableNFTRoutes'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { subheadSmall } from 'nft/css/common.css'
@@ -149,7 +149,7 @@ export const SearchBarDropdown = ({
   const isNFTPage = useIsNftPage()
   const isTokenPage = pathname.includes('/tokens')
   const [resultsState, setResultsState] = useState<ReactNode>()
-  const shouldDisableNFTRoutes = useShouldDisableNFTRoutes()
+  const shouldDisableNFTRoutes = useDisableNFTRoutes()
 
   const { data: trendingCollections, loading: trendingCollectionsAreLoading } = useTrendingCollections(
     3,

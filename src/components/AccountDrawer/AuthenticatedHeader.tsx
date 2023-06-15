@@ -12,7 +12,7 @@ import { formatDelta } from 'components/Tokens/TokenDetails/PriceChart'
 import Tooltip from 'components/Tooltip'
 import { getConnection } from 'connection'
 import { usePortfolioBalancesQuery } from 'graphql/data/__generated__/types-and-hooks'
-import { useShouldDisableNFTRoutes } from 'hooks/useShouldDisableNFTRoutes'
+import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
 import { useProfilePageState, useSellAsset, useWalletCollections } from 'nft/hooks'
 import { useIsNftClaimAvailable } from 'nft/hooks/useIsNftClaimAvailable'
 import { ProfilePageStateType } from 'nft/types'
@@ -173,7 +173,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
   const clearCollectionFilters = useWalletCollections((state) => state.clearCollectionFilters)
   const isClaimAvailable = useIsNftClaimAvailable((state) => state.isClaimAvailable)
 
-  const shouldDisableNFTRoutes = useShouldDisableNFTRoutes()
+  const shouldDisableNFTRoutes = useDisableNFTRoutes()
 
   const unclaimedAmount: CurrencyAmount<Token> | undefined = useUserUnclaimedAmount(account)
   const isUnclaimed = useUserHasAvailableClaim(account)

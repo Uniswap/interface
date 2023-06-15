@@ -7,9 +7,9 @@ import clsx from 'clsx'
 import { useCollectionSearch } from 'graphql/data/nft/CollectionSearch'
 import { useSearchTokens } from 'graphql/data/SearchTokens'
 import useDebounce from 'hooks/useDebounce'
+import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
 import { useIsNftPage } from 'hooks/useIsNftPage'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
-import { useShouldDisableNFTRoutes } from 'hooks/useShouldDisableNFTRoutes'
 import { organizeSearchResults } from 'lib/utils/searchBar'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
@@ -51,7 +51,7 @@ export const SearchBar = () => {
   const isMobile = useIsMobile()
   const isTablet = useIsTablet()
   const isNavSearchInputVisible = useIsNavSearchInputVisible()
-  const shouldDisableNFTRoutes = useShouldDisableNFTRoutes()
+  const shouldDisableNFTRoutes = useDisableNFTRoutes()
 
   useOnClickOutside(searchRef, () => {
     isOpen && toggleOpen()

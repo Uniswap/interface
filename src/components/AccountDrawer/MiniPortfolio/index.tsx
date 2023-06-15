@@ -3,8 +3,8 @@ import { Trace, TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, InterfaceSectionName, SharedEventName } from '@uniswap/analytics-events'
 import Column from 'components/Column'
 import { AutoRow } from 'components/Row'
+import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
 import { useIsNftPage } from 'hooks/useIsNftPage'
-import { useShouldDisableNFTRoutes } from 'hooks/useShouldDisableNFTRoutes'
 import { useState } from 'react'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
@@ -88,7 +88,7 @@ const Pages: Array<Page> = [
 export default function MiniPortfolio({ account }: { account: string }) {
   const isNftPage = useIsNftPage()
   const [currentPage, setCurrentPage] = useState(isNftPage ? 1 : 0)
-  const shouldDisableNFTRoutes = useShouldDisableNFTRoutes()
+  const shouldDisableNFTRoutes = useDisableNFTRoutes()
 
   const Page = Pages[currentPage].component
   return (
