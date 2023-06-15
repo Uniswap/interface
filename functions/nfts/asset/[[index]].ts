@@ -26,15 +26,15 @@ class MetaTagInjector {
 
   element(element) {
     //Open Graph Tags
-    element.append(`<meta property="og:title" content = "${this.input.name} on Uniswap"/>`, {
+    element.append(`<meta property="og:title" content = "${this.input.name}"/>`, {
       html: true,
     })
-    element.append(
-      `<meta property="og:description" content = "Token #${this.input.tokenId} from ${this.input.collectionName}. Rarity Rank #${this.input.rarity}. ${this.input.listing}."/>`,
-      {
-        html: true,
-      }
-    )
+    // element.append(
+    //   `<meta property="og:description" content = "Token #${this.input.tokenId} from ${this.input.collectionName}. Rarity Rank #${this.input.rarity}. ${this.input.listing}."/>`,
+    //   {
+    //     html: true,
+    //   }
+    // )
     element.append(`<meta property="og:image" content = "${this.input.image}"/>`, {
       html: true,
     })
@@ -57,15 +57,15 @@ class MetaTagInjector {
     element.append(`<meta property="twitter:card" content = "summary_large_image"/>`, {
       html: true,
     })
-    element.append(`<meta property="twitter:title" content = "${this.input.name} on Uniswap"/>`, {
+    element.append(`<meta property="twitter:title" content = "${this.input.name}"/>`, {
       html: true,
     })
-    element.append(
-      `<meta property="twitter:description" content = "Token #${this.input.tokenId} from ${this.input.collectionName}. Rarity Rank #${this.input.rarity}. ${this.input.listing}."/>`,
-      {
-        html: true,
-      }
-    )
+    // element.append(
+    //   `<meta property="twitter:description" content = "Token #${this.input.tokenId} from ${this.input.collectionName}. Rarity Rank #${this.input.rarity}. ${this.input.listing}."/>`,
+    //   {
+    //     html: true,
+    //   }
+    // )
     element.append(`<meta property="twitter:image" content = "${this.input.image}"/>`, {
       html: true,
     })

@@ -24,7 +24,7 @@ export function networkNameToID(networkName: string) {
     default:
       return 1
   }
-} 
+}
 
 const GRAPHQL_ENDPOINT = 'https://api.uniswap.org/v1/graphql'
 
@@ -46,15 +46,15 @@ class MetaTagInjector {
 
   element(element) {
     //Open Graph Tags
-    element.append(`<meta property="og:title" content = "${this.input.name} on Uniswap"/>`, {
+    element.append(`<meta property="og:title" content = "Get ${this.input.symbol} on Uniswap"/>`, {
       html: true,
     })
-    element.append(
-      `<meta property="og:description" content = "${this.input.name} on the ${this.input.network} network. 1 ${this.input.symbol} = $${this.input.price}."/>`,
-      {
-        html: true,
-      }
-    )
+    // element.append(
+    //   `<meta property="og:description" content = "${this.input.name} on the ${this.input.network} network. 1 ${this.input.symbol} = $${this.input.price}."/>`,
+    //   {
+    //     html: true,
+    //   }
+    // )
     element.append(`<meta property="og:image" content = "${this.input.image}"/>`, {
       html: true,
     })
@@ -77,15 +77,15 @@ class MetaTagInjector {
     element.append(`<meta property="twitter:card" content = "summary_large_image"/>`, {
       html: true,
     })
-    element.append(`<meta property="twitter:title" content = "${this.input.name} on Uniswap"/>`, {
+    element.append(`<meta property="twitter:title" content = "Get ${this.input.symbol} on Uniswap"/>`, {
       html: true,
     })
-    element.append(
-      `<meta property="twitter:description" content = "${this.input.name} on the ${this.input.network} network. 1 ${this.input.symbol} = $${this.input.price}."/>`,
-      {
-        html: true,
-      }
-    )
+    // element.append(
+    //   `<meta property="twitter:description" content = "${this.input.name} on the ${this.input.network} network. 1 ${this.input.symbol} = $${this.input.price}."/>`,
+    //   {
+    //     html: true,
+    //   }
+    // )
     element.append(`<meta property="twitter:image" content = "${this.input.image}"/>`, {
       html: true,
     })
@@ -134,7 +134,7 @@ export const onRequest: PagesFunction<{}> = async ({ params, request, env, next 
     const formattedAsset = {
       name: asset.name,
       network: networkName,
-      price: asset.market?.price?.value ? asset.market.price.value : 0, 
+      price: asset.market?.price?.value ? asset.market.price.value : 0,
       image: asset.project?.logoUrl,
       uniswapUrl: request.url,
       symbol: asset.symbol,
