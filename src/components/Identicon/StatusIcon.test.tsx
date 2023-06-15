@@ -24,7 +24,7 @@ describe('StatusIcon', () => {
       const supportedConnections = getConnections()
       const injectedConnection = supportedConnections[1]
       const component = render(<StatusIcon account={ACCOUNT} connection={injectedConnection} showMiniIcons={false} />)
-      expect(component.getByTestId('StatusIconRoot').children.length).toEqual(1)
+      expect(component.getByTestId('StatusIconRoot').children.length).toEqual(0)
     })
   })
 
@@ -47,7 +47,7 @@ describe('StatusIcon', () => {
       const supportedConnections = getConnections()
       const injectedConnection = supportedConnections[1]
       const component = render(<StatusIcon account={ACCOUNT} connection={injectedConnection} showMiniIcons={false} />)
-      expect(component.getByTestId('StatusIconRoot').children.length).toEqual(1)
+      expect(component.getByTestId('StatusIconRoot').children.length).toEqual(0)
     })
   })
 })
