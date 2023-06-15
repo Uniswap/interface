@@ -2,11 +2,7 @@ import { getTestSelector } from '../utils'
 
 describe('Universal search bar', () => {
   function openSearch() {
-    cy.get('[data-cy="magnifying-icon"]')
-      .parent()
-      .then(($navIcon) => {
-        $navIcon.click()
-      })
+    cy.get('body').type('/')
   }
 
   beforeEach(() => {
