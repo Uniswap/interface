@@ -136,6 +136,7 @@ function useFilteredTokens(tokens: TopTokens100Query['topTokens']) {
 
 // Number of items to render in each fetch in infinite scroll.
 export const PAGE_SIZE = 20
+// eslint-disable-next-line import/no-unused-modules
 export type SparklineMap = { [key: string]: PricePoint[] | undefined }
 export type TopToken = NonNullable<NonNullable<TopTokens100Query>['topTokens']>[number]
 

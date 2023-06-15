@@ -40,8 +40,10 @@ function getInitialUrl(address?: string | null, chainId?: number | null, isNativ
   // const networkName = chainId ? chainIdToNetworkName(chainId) : 'ethereum'
 
   const checksummedAddress = isAddress(address)
+  // TODO: review check raw
   if (checksummedAddress) {
-    return `https://raw.githubusercontent.com/pollum-io/pegasys-tokenlists/master/logos/${checksummedAddress}/logo.png`
+    // return `https://raw.githubusercontent.com/pegasys-fi/pegasys-tokenlists/master/${chainId}/${checksummedAddress}/logo.png`
+    return `https://raw.githubusercontent.com/pegasys-fi/pegasys-tokenlists/master/57000/${checksummedAddress}/logo.png`
   } else {
     return undefined
   }

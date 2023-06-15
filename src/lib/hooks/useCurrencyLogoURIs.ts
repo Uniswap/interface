@@ -7,6 +7,7 @@ import EthereumLogo from '../../assets/images/ethereum-logo.png'
 import { NATIVE_CHAIN_ID } from '../../constants/tokens'
 
 type Network = 'rollux' | 'rollux_tanenbaum'
+// eslint-disable-next-line import/no-unused-modules
 export function chainIdToNetworkName(networkId: SupportedChainId): Network {
   switch (networkId) {
     // case SupportedChainId.MAINNET:
@@ -42,15 +43,18 @@ export function getNativeLogoURI(chainId: SupportedChainId = SupportedChainId.RO
 }
 
 function getTokenLogoURI(address: string, chainId: SupportedChainId = SupportedChainId.ROLLUX): string | void {
-  const networkName = chainIdToNetworkName(chainId)
-  const networksWithUrls = [
-    // SupportedChainId.ARBITRUM_ONE,
-    // SupportedChainId.MAINNET,
-    SupportedChainId.ROLLUX,
-    // SupportedChainId.BNB,
-  ]
-  if (networksWithUrls.includes(chainId)) {
-    return `https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/${networkName}/assets/${address}/logo.png`
+  // const networkName = chainIdToNetworkName(chainId)
+  // const networksWithUrls = [
+  //   // SupportedChainId.ARBITRUM_ONE,
+  //   // SupportedChainId.MAINNET,
+  //   SupportedChainId.ROLLUX,
+  //   SupportedChainId.ROLLUX_TANENBAUM,
+  //   // SupportedChainId.BNB,
+  // ]
+  if (chainId === 570) {
+    return `https://raw.githubusercontent.com/pegasys-fi/pegasys-tokenlists/master/${chainId}/${address}/logo.png`
+  } else {
+    return `https://raw.githubusercontent.com/pegasys-fi/pegasys-tokenlists/master/57000/${address}/logo.png`
   }
 
   // Celo logo logo is hosted elsewhere.

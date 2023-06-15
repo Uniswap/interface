@@ -27,7 +27,7 @@ function isNativeToken(token?: TopToken | TokenQueryData | SearchToken | TokenDa
 }
 export default function QueryTokenLogo(
   props: AssetLogoBaseProps & {
-    token?: TopToken | TokenQueryData | SearchToken | TokenData
+    token?: TokenData | TokenQueryData | SearchToken | TokenData
   }
 ) {
   const { token } = props
@@ -35,7 +35,7 @@ export default function QueryTokenLogo(
   const isNative = isNativeToken(token)
 
   const address = token && 'address' in token ? token.address : token && 'id' in token ? token.id : undefined
-  const backupImg = token && 'project' in token && token?.project ? token.project.logoUrl : undefined
+  const backupImg = `https://raw.githubusercontent.com/pegasys-fi/pegasys-tokenlists/master/${chainId}/${address}/logo.png`
 
   return (
     <AssetLogo
