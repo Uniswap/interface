@@ -9,7 +9,7 @@ import { LoadingOpacityContainer } from 'components/Loader/styled'
 import { RowBetween, RowFixed } from 'components/Row'
 import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
 import { formatEventPropertiesForTrade } from 'lib/utils/analytics'
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import { ChevronDown } from 'react-feather'
 import { InterfaceTrade } from 'state/routing/types'
 import styled, { keyframes, useTheme } from 'styled-components/macro'
@@ -105,21 +105,16 @@ export default function SwapDetailsDropdown({ trade, syncing, loading, allowedSl
   const [showDetails, setShowDetails] = useState(false)
   const trace = useTrace()
 
-  const analyticsProps = useMemo(
-    () => ({
-      ...(trade ? formatEventPropertiesForTrade(trade, allowedSlippage) : {}),
-      ...trace,
-    }),
-    [allowedSlippage, trace, trade]
-  )
-
   return (
     <Wrapper>
       <TraceEvent
         events={[BrowserEvent.onClick]}
         name={SwapEventName.SWAP_DETAILS_EXPANDED}
         element={InterfaceElementName.SWAP_DETAILS_DROPDOWN}
-        properties={analyticsProps}
+        properties={{
+          ...(trade ? formatEventPropertiesForTrade(trade, allowedSlippage) : {}),
+          ...trace,
+        }}
         shouldLogImpression={!showDetails}
       >
         <StyledHeaderRow

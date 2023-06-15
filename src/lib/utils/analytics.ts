@@ -70,5 +70,6 @@ export const formatEventPropertiesForTrade = (
     token_in_amount: formatToDecimal(trade.inputAmount, trade.inputAmount.currency.decimals),
     token_out_amount: formatToDecimal(trade.outputAmount, trade.outputAmount.currency.decimals),
     minimum_output_after_slippage: trade.minimumAmountOut(allowedSlippage).toSignificant(6),
+    allowed_slippage: formatPercentNumber(allowedSlippage),
   }
 }
