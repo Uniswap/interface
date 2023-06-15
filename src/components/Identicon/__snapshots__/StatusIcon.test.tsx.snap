@@ -1,14 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`StatusIcon with account renders children in correct order 1`] = `
-.c1 {
-  height: 16px;
-  width: 16px;
-  border-radius: 50%;
-  background-color: #98A1C0;
-  font-size: initial;
-}
-
 .c0 {
   position: relative;
   display: -webkit-box;
@@ -35,7 +27,7 @@ exports[`StatusIcon with account renders children in correct order 1`] = `
   width: 16px;
 }
 
-.c2 {
+.c1 {
   position: absolute;
   display: -webkit-box;
   display: -webkit-flex;
@@ -60,7 +52,7 @@ exports[`StatusIcon with account renders children in correct order 1`] = `
   overflow: hidden;
 }
 
-.c4 {
+.c3 {
   position: absolute;
   display: -webkit-box;
   display: -webkit-flex;
@@ -85,7 +77,7 @@ exports[`StatusIcon with account renders children in correct order 1`] = `
   overflow: hidden;
 }
 
-.c3 {
+.c2 {
   width: 16px;
   height: 16px;
 }
@@ -100,13 +92,13 @@ exports[`StatusIcon with account renders children in correct order 1`] = `
 }
 
 @supports (overflow:clip) {
-  .c2 {
+  .c1 {
     overflow: clip;
   }
 }
 
 @supports (overflow:clip) {
-  .c4 {
+  .c3 {
     overflow: clip;
   }
 }
@@ -117,60 +109,161 @@ exports[`StatusIcon with account renders children in correct order 1`] = `
   size="16"
 >
   <div
-    class="c1"
+    style="height: 16px; width: 16px; position: relative;"
   >
-    <span>
-      <div
-        style="border-radius: 50px; overflow: hidden; padding: 0px; margin: 0px; width: 16px; height: 16px; display: inline-block; background: rgb(1, 142, 114);"
+    <div
+      style="height: 16px; width: 16px; overflow: visible; position: absolute;"
+    >
+      <svg
+        viewBox="0 0 16 16"
       >
-        <svg
-          height="16"
-          width="16"
-          x="0"
-          y="0"
+        <defs>
+          <defs>
+            <mask
+              id="container-mask0x52270d8234b864dcAC9947f510CE9275A8a116Db16"
+            >
+              <rect
+                fill="white"
+                height="100%"
+                width="100%"
+                x="0"
+                y="0"
+              />
+              <g
+                transform="scale(0.4444444444444444) 
+ translate(0, 0)"
+              >
+                <path
+                  d="M18.1309 3.25957C9.91898 3.40293 3.14567 10.1762 3.00231 18.3882C2.85896 26.6001 9.39985 33.141 17.6118 32.9977C25.8238 32.8543 32.5971 26.081 32.7404 17.8691L33 3L18.1309 3.25957Z"
+                  fill="black"
+                />
+              </g>
+            </mask>
+            <mask
+              id="shape-mask0x52270d8234b864dcAC9947f510CE9275A8a116Db16"
+            >
+              <rect
+                fill="white"
+                height="100%"
+                width="100%"
+                x="0"
+                y="0"
+              />
+              <g
+                transform="scale(0.4444444444444444) 
+ translate(10, 10)"
+              >
+                <path
+                  clip-rule="evenodd"
+                  d="M13.6569 13.6568C12.0059 10.0663 12.0059 5.93368 13.6569 2.34314C10.0663 3.99414 5.93368 3.99414 2.34315 2.34314C3.99414 5.93368 3.99414 10.0663 2.34315 13.6568C5.93368 12.0059 10.0663 12.0059 13.6569 13.6568ZM8 11C9.65685 11 11 9.65686 11 8.00001C11 6.34315 9.65685 5.00001 8 5.00001C6.34315 5.00001 5 6.34315 5 8.00001C5 9.65686 6.34315 11 8 11Z"
+                  fill="black"
+                  fill-rule="evenodd"
+                />
+              </g>
+            </mask>
+            <mask
+              id="mask0x52270d8234b864dcAC9947f510CE9275A8a116Db16"
+            >
+              <g
+                fill="white"
+              >
+                <g
+                  mask="url(#shape-mask0x52270d8234b864dcAC9947f510CE9275A8a116Db16)"
+                >
+                  <g
+                    transform="scale(0.4444444444444444)"
+                  >
+                    <path
+                      d="M18.1309 3.25957C9.91898 3.40293 3.14567 10.1762 3.00231 18.3882C2.85896 26.6001 9.39985 33.141 17.6118 32.9977C25.8238 32.8543 32.5971 26.081 32.7404 17.8691L33 3L18.1309 3.25957Z"
+                    />
+                  </g>
+                </g>
+                <g
+                  mask="url(#container-mask0x52270d8234b864dcAC9947f510CE9275A8a116Db16)"
+                >
+                  <g
+                    transform="scale(0.4444444444444444)
+        translate(10, 10)"
+                  >
+                    <path
+                      clip-rule="evenodd"
+                      d="M13.6569 13.6568C12.0059 10.0663 12.0059 5.93368 13.6569 2.34314C10.0663 3.99414 5.93368 3.99414 2.34315 2.34314C3.99414 5.93368 3.99414 10.0663 2.34315 13.6568C5.93368 12.0059 10.0663 12.0059 13.6569 13.6568ZM8 11C9.65685 11 11 9.65686 11 8.00001C11 6.34315 9.65685 5.00001 8 5.00001C6.34315 5.00001 5 6.34315 5 8.00001C5 9.65686 6.34315 11 8 11Z"
+                      fill-rule="evenodd"
+                    />
+                  </g>
+                </g>
+              </g>
+            </mask>
+          </defs>
+          <lineargradient
+            id="gradient0x52270d8234b864dcAC9947f510CE9275A8a116Db16"
+          >
+            <stop
+              offset="0%"
+              stop-color="#36DBFF"
+            />
+            <stop
+              offset="100%"
+              stop-color="#B8C3B7"
+            />
+          </lineargradient>
+          <filter
+            height="200%"
+            id="blur0x52270d8234b864dcAC9947f510CE9275A8a116Db16"
+            width="200%"
+            x="-50%"
+            y="-50%"
+          >
+            <fegaussianblur
+              in="SourceGraphic"
+              stdDeviation="5.333333333333333"
+            />
+          </filter>
+        </defs>
+        <g
+          mask="url(#mask0x52270d8234b864dcAC9947f510CE9275A8a116Db16)"
         >
           <rect
-            fill="#2392E1"
-            height="16"
-            transform="translate(-2.3133027096725978 4.697080312784296) rotate(160.7 8 8)"
-            width="16"
+            fill="url(#gradient0x52270d8234b864dcAC9947f510CE9275A8a116Db16)"
+            height="100%"
+            width="100%"
             x="0"
             y="0"
           />
           <rect
-            fill="#FB1895"
-            height="16"
-            transform="translate(-8.001736856572315 5.2625070066797255) rotate(299.1 8 8)"
-            width="16"
+            fill="black"
+            height="100%"
+            opacity="0.08"
+            width="100%"
             x="0"
             y="0"
           />
-          <rect
-            fill="#F90501"
-            height="16"
-            transform="translate(-10.68845745466197 0.5127796994888634) rotate(211.8 8 8)"
-            width="16"
-            x="0"
-            y="0"
+          <ellipse
+            cx="8"
+            cy="0"
+            fill="#9D99F5"
+            filter="url(#blur0x52270d8234b864dcAC9947f510CE9275A8a116Db16)"
+            rx="8"
+            ry="8"
           />
-        </svg>
-      </div>
-    </span>
+        </g>
+      </svg>
+    </div>
   </div>
   <div
-    class="c2"
+    class="c1"
   >
     <img
-      alt="MetaMask icon"
-      class="c3"
-      src="metamask.svg"
+      alt="Install MetaMask icon"
+      class="c2"
+      src="metamask-icon.svg"
     />
   </div>
   <div
-    class="c4"
+    class="c3"
   >
     <img
-      class="c3"
+      class="c2"
       src="socks.svg"
     />
   </div>
@@ -289,9 +382,9 @@ exports[`StatusIcon with no account renders children in correct order 1`] = `
     class="c1"
   >
     <img
-      alt="MetaMask icon"
+      alt="Install MetaMask icon"
       class="c2"
-      src="metamask.svg"
+      src="metamask-icon.svg"
     />
   </div>
   <div
