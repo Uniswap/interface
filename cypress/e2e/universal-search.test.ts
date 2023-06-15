@@ -39,7 +39,7 @@ describe('Universal search bar', () => {
     cy.contains('UNI is the governance token for Uniswap').should('exist')
   })
 
-  it('should go to the right result when recent results are shown and you search something new', () => {
+  it('should go to the selected result when recent results are shown', () => {
     // Search for uni token by name.
     cy.get('[data-cy="search-bar-input"]').last().clear().type('uni')
     cy.get('[data-cy="searchbar-token-row-UNI"]')
