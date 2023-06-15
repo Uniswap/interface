@@ -1,6 +1,7 @@
 import { MaxUint160, MaxUint256 } from '@uniswap/permit2-sdk'
+import { CurrencyAmount } from '@uniswap/sdk-core'
 
-import { DAI, USDC_MAINNET } from '../../src/constants/tokens'
+import { DAI, USDC_MAINNET, USDT } from '../../src/constants/tokens'
 import { getTestSelector } from '../utils'
 
 /** Initiates a swap. */
@@ -82,6 +83,41 @@ describe('Permit2', () => {
 
       // Verify token approval
       cy.contains('Enable spending DAI on Uniswap')
+      cy.wait('@eth_sendRawTransaction')
+      cy.hardhat().then((hardhat) => hardhat.mine())
+      cy.get(getTestSelector('popups')).contains('Approved')
+      expectTokenAllowanceForPermit2ToBeMax()
+
+      // Verify transaction
+      cy.wait('@eth_sendRawTransaction')
+      cy.hardhat().then((hardhat) => hardhat.mine())
+      cy.contains('Success')
+      cy.get(getTestSelector('popups')).contains('Swapped')
+    })
+
+    it('swaps USDT with existing permit, and existing but insufficient token approval', () => {
+      cy.hardhat().then(async (hardhat) => {
+        // fund with 2 USDT
+        await hardhat.fund(hardhat.wallet, CurrencyAmount.fromRawAmount(USDT, 2e6))
+        // set token allowance to 1 USDT
+        await hardhat.approval.setTokenAllowanceForPermit2({ owner: hardhat.wallet, token: USDT }, 1)
+        // set permit2 allowance to max
+        await hardhat.approval.setPermit2Allowance({ owner: hardhat.wallet, token: USDT })
+      })
+      cy.visit(`/swap/?inputCurrency=${USDT.address}&outputCurrency=${OUTPUT_TOKEN.address}`, {
+        ethereum: 'hardhat',
+      })
+      initiateSwap()
+      // Verify allowance revocation
+      cy.contains('Reset USDT')
+      cy.wait('@eth_sendRawTransaction')
+      cy.hardhat().then((hardhat) => hardhat.mine())
+      cy.hardhat()
+        .then(({ approval, wallet }) => approval.getTokenAllowanceForPermit2({ owner: wallet, token: USDT }))
+        .should('equal', 0)
+
+      // Verify token approval
+      cy.contains('Enable spending USDT on Uniswap')
       cy.wait('@eth_sendRawTransaction')
       cy.hardhat().then((hardhat) => hardhat.mine())
       cy.get(getTestSelector('popups')).contains('Approved')
