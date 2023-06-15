@@ -2308,12 +2308,6 @@ exports[`disable nft on landing page does not render nft information and card 1`
             </a>
             <a
               class="1 c91 c92"
-              href="#/nfts"
-            >
-              NFTs
-            </a>
-            <a
-              class="1 c91 c92"
               href="#/pools"
             >
               Pools

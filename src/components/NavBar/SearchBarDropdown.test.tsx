@@ -1,9 +1,10 @@
-//import { useAtomValue } from 'jotai/utils'
+import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
+import { mocked } from 'test-utils/mocked'
 import { render } from 'test-utils/render'
 
 import { SearchBarDropdown } from './SearchBarDropdown'
 
-//jest.mock('jotai/utils')
+jest.mock('hooks/useDisableNFTRoutes')
 
 const SearchBarDropdownProps = {
   toggleOpen: () => {},
@@ -16,13 +17,16 @@ const SearchBarDropdownProps = {
 
 describe('disable nft on searchbar dropdown', () => {
   it('should render popular nft collections', () => {
-    //render SearchBarDropdown with props defined in SearchBarDropdownProps
+    mocked(useDisableNFTRoutes).mockReturnValue(false)
     const { container } = render(<SearchBarDropdown {...SearchBarDropdownProps} />)
     expect(container).toMatchSnapshot()
+    expect(container).toHaveTextContent('Popular NFT collections')
   })
   it('should not render popular nft collections', () => {
-    //mocked(useAtomValue).mockReturnValue(true)
+    mocked(useDisableNFTRoutes).mockReturnValue(true)
     const { container } = render(<SearchBarDropdown {...SearchBarDropdownProps} />)
     expect(container).toMatchSnapshot()
+    expect(container).not.toHaveTextContent('Popular NFT collections')
+    expect(container).not.toHaveTextContent('NFT')
   })
 })
