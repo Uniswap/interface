@@ -4,6 +4,7 @@ import ethereumLogoUrl from 'assets/images/ethereum-logo.png'
 import polygonCircleLogoUrl from 'assets/images/polygonCircle.png'
 import { default as arbitrumCircleLogoUrl, default as arbitrumLogoUrl } from 'assets/svg/arbitrum_logo.svg'
 import avaxLogo from 'assets/svg/avax_logo.svg'
+import avaxSquareLogo from 'assets/svg/avax_square_logo.svg'
 import bnbSquareLogoUrl from 'assets/svg/bnb_square_logo.svg'
 import bnbLogo from 'assets/svg/bnb-logo.svg'
 import celoLogo from 'assets/svg/celo_logo.svg'
@@ -234,7 +235,7 @@ const CHAIN_INFO: ChainInfoMap = {
     label: 'Avalanche',
     logoUrl: avaxLogo,
     circleLogoUrl: avaxLogo,
-    // squareLogoUrl: , TODO(AVAX):  waiting on design
+    squareLogoUrl: avaxSquareLogo,
     nativeCurrency: { name: 'AVAX', symbol: 'AVAX', decimals: 18 },
     defaultListUrl: AVALANCHE_LIST,
     color: darkTheme.chain_43114,
