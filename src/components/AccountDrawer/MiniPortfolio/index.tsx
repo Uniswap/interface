@@ -4,9 +4,8 @@ import { BrowserEvent, InterfaceElementName, InterfaceSectionName, SharedEventNa
 import Column from 'components/Column'
 import { AutoRow } from 'components/Row'
 import { useIsNftPage } from 'hooks/useIsNftPage'
-import { useAtomValue } from 'jotai/utils'
+import { useShouldDisableNFTRoutes } from 'hooks/useShouldDisableNFTRoutes'
 import { useState } from 'react'
-import { shouldDisableNFTRoutesAtom } from 'state/application/atoms'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
@@ -89,7 +88,7 @@ const Pages: Array<Page> = [
 export default function MiniPortfolio({ account }: { account: string }) {
   const isNftPage = useIsNftPage()
   const [currentPage, setCurrentPage] = useState(isNftPage ? 1 : 0)
-  const shouldDisableNFTRoutes = useAtomValue(shouldDisableNFTRoutesAtom)
+  const shouldDisableNFTRoutes = useShouldDisableNFTRoutes()
 
   const Page = Pages[currentPage].component
   return (

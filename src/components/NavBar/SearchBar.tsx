@@ -9,7 +9,7 @@ import { useSearchTokens } from 'graphql/data/SearchTokens'
 import useDebounce from 'hooks/useDebounce'
 import { useIsNftPage } from 'hooks/useIsNftPage'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
-import { useAtomValue } from 'jotai/utils'
+import { useShouldDisableNFTRoutes } from 'hooks/useShouldDisableNFTRoutes'
 import { organizeSearchResults } from 'lib/utils/searchBar'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
@@ -18,7 +18,6 @@ import { useIsMobile, useIsTablet } from 'nft/hooks'
 import { useIsNavSearchInputVisible } from 'nft/hooks/useIsNavSearchInputVisible'
 import { ChangeEvent, useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react'
 import { useLocation } from 'react-router-dom'
-import { shouldDisableNFTRoutesAtom } from 'state/application/atoms'
 import styled from 'styled-components/macro'
 
 import { ChevronLeftIcon, MagnifyingGlassIcon, NavMagnifyingGlassIcon } from '../../nft/components/icons'
@@ -52,7 +51,7 @@ export const SearchBar = () => {
   const isMobile = useIsMobile()
   const isTablet = useIsTablet()
   const isNavSearchInputVisible = useIsNavSearchInputVisible()
-  const shouldDisableNFTRoutes = useAtomValue(shouldDisableNFTRoutesAtom)
+  const shouldDisableNFTRoutes = useShouldDisableNFTRoutes()
 
   useOnClickOutside(searchRef, () => {
     isOpen && toggleOpen()

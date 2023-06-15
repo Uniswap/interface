@@ -5,7 +5,7 @@ import Web3Status from 'components/Web3Status'
 import { chainIdToBackendName } from 'graphql/data/util'
 import { useIsNftPage } from 'hooks/useIsNftPage'
 import { useIsPoolsPage } from 'hooks/useIsPoolsPage'
-import { useAtomValue } from 'jotai/utils'
+import { useShouldDisableNFTRoutes } from 'hooks/useShouldDisableNFTRoutes'
 import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
 import { UniIcon } from 'nft/components/icons'
@@ -13,7 +13,6 @@ import { useProfilePageState } from 'nft/hooks'
 import { ProfilePageStateType } from 'nft/types'
 import { ReactNode, useCallback } from 'react'
 import { NavLink, NavLinkProps, useLocation, useNavigate } from 'react-router-dom'
-import { shouldDisableNFTRoutesAtom } from 'state/application/atoms'
 import styled from 'styled-components/macro'
 
 import { useIsNavSearchInputVisible } from '../../nft/hooks/useIsNavSearchInputVisible'
@@ -61,7 +60,7 @@ export const PageTabs = () => {
   const isPoolActive = useIsPoolsPage()
   const isNftPage = useIsNftPage()
 
-  const shouldDisableNFTRoutes = useAtomValue(shouldDisableNFTRoutesAtom)
+  const shouldDisableNFTRoutes = useShouldDisableNFTRoutes()
 
   return (
     <>
