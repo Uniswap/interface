@@ -2,6 +2,7 @@ import { Trans } from '@lingui/macro'
 import { Currency } from '@uniswap/sdk-core'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { chainIdToBackendName } from 'graphql/data/util'
+import useDisableScrolling from 'hooks/useDisableScrolling'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useRef } from 'react'
 import { Link, Twitter } from 'react-feather'
@@ -73,6 +74,7 @@ export default function ShareButton({ currency }: { currency: Currency }) {
   const positionX = (window.screen.width - TWITTER_WIDTH) / 2
   const positionY = (window.screen.height - TWITTER_HEIGHT) / 2
   const address = currency.isNative ? NATIVE_CHAIN_ID : currency.wrapped.address
+  useDisableScrolling(open)
 
   const shareTweet = () => {
     toggleShare()
