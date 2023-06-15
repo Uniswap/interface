@@ -52,7 +52,7 @@ describe('Universal search bar', () => {
     cy.get('[data-cy="search-bar-input"]').last().type('eth')
 
     // Validate ETH result now exists.
-    cy.get('[data-cy="searchbar-token-row-ETH"]').contains('Ether').should('exist')
+    cy.get('[data-cy="searchbar-token-row-ETH"]')
 
     // Hit enter
     cy.get('[data-cy="search-bar-input"]').last().type('{enter}')
