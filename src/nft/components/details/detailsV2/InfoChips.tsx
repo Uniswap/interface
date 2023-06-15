@@ -13,7 +13,7 @@ import { ChevronDown, DollarSign } from 'react-feather'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { BREAKPOINTS, ClickableStyle, EllipsisStyle, ExternalLink, LinkStyle, ThemedText } from 'theme'
-import { isAddress, shortenAddressStrict } from 'utils/addresses'
+import { isAddress, shortenAddressStrict } from 'utils'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 const StyledBubble = styled(Row)`

@@ -15,7 +15,7 @@ import { useCallback, useMemo } from 'react'
 import styled from 'styled-components/macro'
 import { colors } from 'theme/colors'
 import { flexRowNoWrap } from 'theme/styles'
-import { shortenAddressStrict } from 'utils/addresses'
+import { shortenAddressStrict } from 'utils'
 
 import { isTransactionRecent, useAllTransactions } from '../../state/transactions/hooks'
 import { TransactionDetails } from '../../state/transactions/types'
