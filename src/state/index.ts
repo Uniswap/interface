@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { setupListeners } from '@reduxjs/toolkit/query/react'
 import { load, save } from 'redux-localstorage-simple'
-import { isTestEnv } from 'utils/env'
+import { isTestEnv } from 'utils'
 
 import { updateVersion } from './global/actions'
 import { sentryEnhancer } from './logging'

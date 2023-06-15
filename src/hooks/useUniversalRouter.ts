@@ -10,7 +10,7 @@ import { FeeOptions, toHex } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { useCallback } from 'react'
 import { trace } from 'tracing/trace'
-import { formatSwapSignedAnalyticsEventProperties } from 'utils/formatSwap'
+import { formatSwapSignedAnalyticsEventProperties } from 'utils'
 
 import { calculateGasMargin } from '../utils/calculateGasMargin'
 import { UserRejectedRequestError } from '../utils/errors'

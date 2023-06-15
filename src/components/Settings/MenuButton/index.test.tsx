@@ -4,7 +4,7 @@ import { SlippageTolerance } from 'state/user/types'
 import { mocked } from 'test-utils/mocked'
 import { render, screen } from 'test-utils/render'
 import { lightTheme } from 'theme/colors'
-import { noop } from 'utils/noop'
+import { noop } from 'utils'
 
 import MenuButton from '.'
 

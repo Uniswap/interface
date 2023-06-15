@@ -7,7 +7,7 @@ import { MouseoverTooltip } from 'components/Tooltip'
 import { useMemo } from 'react'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
-import { warningSeverity } from 'utils/prices'
+import { warningSeverity } from 'utils'
 
 const FiatLoadingBubble = styled(LoadingBubble)`
   border-radius: 4px;

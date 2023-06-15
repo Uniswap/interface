@@ -24,7 +24,7 @@ import {
 import { formatAssetEventProperties } from 'nft/utils/formatEventProperties'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components/macro'
-import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
+import { ExplorerDataType, getExplorerLink } from 'utils'
 
 import * as styles from './TransactionCompleteModal.css'
 

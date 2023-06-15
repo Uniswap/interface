@@ -3,7 +3,7 @@ import { Token } from '@uniswap/sdk-core'
 import { useUnsupportedTokens } from 'hooks/Tokens'
 import { mocked } from 'test-utils/mocked'
 import { act, render, screen, waitForElementToBeRemoved, within } from 'test-utils/render'
-import { getExplorerLink } from 'utils/getExplorerLink'
+import { getExplorerLink } from 'utils'
 
 import UnsupportedCurrencyFooter from './UnsupportedCurrencyFooter'
 

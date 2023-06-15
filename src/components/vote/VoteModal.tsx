@@ -3,7 +3,7 @@ import { useWeb3React } from '@web3-react/core'
 import { useState } from 'react'
 import { ArrowUpCircle, X } from 'react-feather'
 import styled, { useTheme } from 'styled-components/macro'
-import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
+import { formatCurrencyAmount } from 'utils'
 
 import Circle from '../../assets/images/blue-loader.svg'
 import { useUserVotes, useVoteCallback } from '../../state/governance/hooks'

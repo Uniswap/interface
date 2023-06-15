@@ -14,7 +14,7 @@ import { Link } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { BREAKPOINTS, ClickableStyle, EllipsisStyle, ExternalLink, LinkStyle, ThemedText } from 'theme'
 import { isAddress, shortenAddressStrict } from 'utils'
-import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
+import { ExplorerDataType, getExplorerLink } from 'utils'
 
 const StyledBubble = styled(Row)`
   background-color: ${({ theme }) => theme.backgroundSurface};

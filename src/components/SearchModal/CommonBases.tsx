@@ -8,7 +8,7 @@ import { COMMON_BASES } from 'constants/routing'
 import { useTokenInfoFromActiveList } from 'hooks/useTokenInfoFromActiveList'
 import { Text } from 'rebass'
 import styled from 'styled-components/macro'
-import { currencyId } from 'utils/currencyId'
+import { currencyId } from 'utils'
 
 import { getTokenAddress } from '../../utils/analytics'
 

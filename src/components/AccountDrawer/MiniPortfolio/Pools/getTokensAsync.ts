@@ -6,9 +6,9 @@ import { SupportedChainId } from 'constants/chains'
 import { DEFAULT_ERC20_DECIMALS } from 'constants/tokens'
 import { Interface } from 'ethers/lib/utils'
 import { UniswapInterfaceMulticall } from 'types/v3'
-import { isAddress } from 'utils/addresses'
-import { arrayToSlices } from 'utils/arrays'
-import { buildCurrencyKey, CurrencyKey, currencyKey } from 'utils/currencyKey'
+import { isAddress } from 'utils'
+import { arrayToSlices } from 'utils'
+import { buildCurrencyKey, CurrencyKey, currencyKey } from 'utils'
 
 type TokenMap = { [address: string]: Token | undefined }
 export type Call = { target: string; callData: string; gasLimit: number }

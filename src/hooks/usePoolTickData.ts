@@ -10,7 +10,7 @@ import JSBI from 'jsbi'
 import { useSingleContractMultipleData } from 'lib/hooks/multicall'
 import ms from 'ms.macro'
 import { useEffect, useMemo, useState } from 'react'
-import { TickProcessed } from 'utils/computeSurroundingTicks'
+import { TickProcessed } from 'utils'
 
 import * as addresses from '../constants/addresses'
 import { computeSurroundingTicks } from '../utils/computeSurroundingTicks'

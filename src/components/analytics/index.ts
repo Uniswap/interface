@@ -2,7 +2,7 @@ import { useWeb3React } from '@web3-react/core'
 import { useEffect } from 'react'
 import { UaEventOptions } from 'react-ga4/types/ga4'
 import { useLocation } from 'react-router-dom'
-import { isMobile } from 'utils/userAgent'
+import { isMobile } from 'utils'
 import { getCLS, getFCP, getFID, getLCP, Metric } from 'web-vitals'
 
 import GoogleAnalyticsProvider from './GoogleAnalyticsProvider'

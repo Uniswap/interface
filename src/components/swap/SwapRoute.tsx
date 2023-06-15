@@ -7,7 +7,7 @@ import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
 import useAutoRouterSupported from 'hooks/useAutoRouterSupported'
 import { InterfaceTrade } from 'state/routing/types'
 import { Separator, ThemedText } from 'theme'
-import { getRoutingDiagramEntries } from 'utils/getRoutingDiagramEntries'
+import { getRoutingDiagramEntries } from 'utils'
 
 import RouterLabel from './RouterLabel'
 

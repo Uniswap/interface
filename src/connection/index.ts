@@ -12,7 +12,7 @@ import WALLET_CONNECT_ICON from 'assets/wallets/walletconnect-icon.svg'
 import { getChainInfo } from 'constants/chainInfo'
 import { isSupportedChain, SupportedChainId } from 'constants/chains'
 import { FALLBACK_URLS, RPC_URLS } from 'constants/networks'
-import { isMobile, isNonIOSPhone } from 'utils/userAgent'
+import { isMobile, isNonIOSPhone } from 'utils'
 
 import { RPC_PROVIDERS } from '../constants/providers'
 import { Connection, ConnectionType } from './types'

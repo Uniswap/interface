@@ -18,7 +18,7 @@ import { Text } from 'rebass'
 import { useAddUserToken } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 import { ButtonText, CopyLinkIcon, ExternalLink } from 'theme'
-import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
+import { ExplorerDataType, getExplorerLink } from 'utils'
 
 const Wrapper = styled.div`
   width: 100%;

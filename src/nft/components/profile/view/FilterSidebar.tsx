@@ -28,7 +28,7 @@ import InfiniteLoader from 'react-window-infinite-loader'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { TRANSITION_DURATIONS } from 'theme/styles'
-import { noop } from 'utils/noop'
+import { noop } from 'utils'
 
 import { WALLET_COLLECTIONS_PAGINATION_LIMIT } from './ProfilePage'
 import * as styles from './ProfilePage.css'
