@@ -265,6 +265,7 @@ function countToIndices(count: number | undefined, skip = 0) {
 // get data for all past and active proposals
 export function useAllProposalData(): { data: ProposalData[]; loading: boolean } {
   const { chainId } = useWeb3React()
+  const blockNumber = useBlockNumber()
   const gov = useGovernanceProxyContract()
 
   const proposalCount = useProposalCount(gov)
@@ -295,8 +296,7 @@ export function useAllProposalData(): { data: ProposalData[]; loading: boolean }
     govStartBlock = 39249858
   } else if (chainId === SupportedChainId.BNB) {
     // since bsc enpoints will return an end on historical logs, we try to get proposal logs in the last 40k blocks
-    const blockNumber = useBlockNumber()
-    govStartBlock = typeof blockNumber === 'number' ? blockNumber - 40000 : 29095808
+    govStartBlock = typeof blockNumber === 'number' ? blockNumber - 40000 : blockNumber //29095808
   }
 
   const formattedLogsV1 = useFormattedProposalCreatedLogs(gov, govProposalIndexes, govStartBlock)
