@@ -116,7 +116,7 @@ function useConfirmModalState({
         case ConfirmModalState.RESETTING_USDT:
           setConfirmModalState(ConfirmModalState.RESETTING_USDT)
           invariant(allowance.state === AllowanceState.REQUIRED, 'Allowance should be required')
-          await allowance.revoke().catch((e) => catchUserReject(e, PendingModalError.TOKEN_APPROVAL_ERROR))
+          allowance.revoke().catch((e) => catchUserReject(e, PendingModalError.TOKEN_APPROVAL_ERROR))
           break
         case ConfirmModalState.APPROVING_TOKEN:
           setConfirmModalState(ConfirmModalState.APPROVING_TOKEN)
