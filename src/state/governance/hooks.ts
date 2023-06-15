@@ -22,6 +22,7 @@ import { POLYGON_PROPOSAL_TITLE } from 'constants/proposals/polygon_proposal_tit
 import { UNISWAP_GRANTS_PROPOSAL_DESCRIPTION } from 'constants/proposals/uniswap_grants_proposal_description'
 import { useContract } from 'hooks/useContract'
 import { useSingleCallResult, useSingleContractMultipleData } from 'lib/hooks/multicall'
+import useBlockNumber from 'lib/hooks/useBlockNumber'
 import { useCallback, useMemo } from 'react'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
 
@@ -156,6 +157,7 @@ const FOUR_BYTES_DIR: { [sig: string]: string } = {
   '0x095ea7b3': 'approve(address,uint256)',
   '0x7b1837de': 'fund(address,uint256)',
   '0x332f6465': 'setAdapter(address,bool)',
+  '0xd784d426': 'setImplementation(address)',
 }
 
 /**
@@ -292,10 +294,12 @@ export function useAllProposalData(): { data: ProposalData[]; loading: boolean }
   } else if (chainId === SupportedChainId.POLYGON) {
     govStartBlock = 39249858
   } else if (chainId === SupportedChainId.BNB) {
-    govStartBlock = 29095808
+    // since bsc enpoints will return an end on historical logs, we try to get proposal logs in the last 40k blocks
+    const blockNumber = useBlockNumber()
+    govStartBlock = typeof blockNumber === 'number' ? blockNumber - 40000 : 29095808
   }
 
-  const formattedLogsV1 = useFormattedProposalCreatedLogs(gov, govProposalIndexes, govStartBlock, 29095810)
+  const formattedLogsV1 = useFormattedProposalCreatedLogs(gov, govProposalIndexes, govStartBlock)
 
   // TODO: we must use staked GRG instead
   const grg = useMemo(() => (chainId ? GRG[chainId] : undefined), [chainId])
@@ -331,19 +335,36 @@ export function useAllProposalData(): { data: ProposalData[]; loading: boolean }
           title = POLYGON_PROPOSAL_TITLE
         }
 
+        const details = proposal?.result?.proposalWrapper?.proposedAction.map((action: ProposedAction) => {
+          let calldata = action.data
+
+          const fourbyte = calldata.slice(0, 10)
+          const sig = FOUR_BYTES_DIR[fourbyte] ?? 'UNKNOWN()'
+          if (!sig) throw new Error('Missing four byte sig')
+          const [name, types] = sig.substring(0, sig.length - 1).split('(')
+          calldata = `0x${calldata.slice(10)}`
+
+          const decoded = defaultAbiCoder.decode(types.split(','), calldata)
+          return {
+            target: action.target,
+            functionSig: name,
+            callData: decoded.join(', '),
+          }
+        })
+
         // TODO: amend block to time
         return {
-          id: formattedLogs[i].proposalId.toString(), //proposal?.result?.proposalId.toString(),
+          id: (i + 1).toString(), //formattedLogs[i]?.proposalId?.toString(),
           title: title ?? t`Untitled`,
           description: description ?? t`No description.`,
-          proposer: formattedLogs[i].proposer, //proposal?.result?.proposer,
+          proposer: formattedLogs[i]?.proposer, //proposal?.result?.proposer,
           status: proposalStatesCallData[i]?.result?.[0] ?? ProposalState.UNDETERMINED,
           forCount: CurrencyAmount.fromRawAmount(grg, proposal?.result?.proposalWrapper?.proposal?.votesFor),
           againstCount: CurrencyAmount.fromRawAmount(grg, proposal?.result?.proposalWrapper?.proposal?.votesAgainst),
           startBlock,
           endBlock: parseInt(proposal?.result?.proposalWrapper?.proposal?.endBlockOrTime?.toString()),
           eta: BigNumber.from(0), //proposal?.result?.eta,
-          details: formattedLogs[i]?.details,
+          details, //: formattedLogs[i]?.details,
           governorIndex: 1,
         }
       }),
