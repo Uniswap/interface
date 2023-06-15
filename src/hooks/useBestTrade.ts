@@ -59,7 +59,7 @@ export function useBestTrade(
     debouncedAmount,
     debouncedOtherCurrency,
     routerPreference,
-    shouldGetTrade
+    autoRouterSupported && shouldGetTrade
   )
 
   const inDebounce =

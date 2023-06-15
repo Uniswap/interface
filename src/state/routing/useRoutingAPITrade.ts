@@ -42,7 +42,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
   const queryArgs = useRoutingAPIArguments({
     tokenIn: currencyIn,
     tokenOut: currencyOut,
-    amount: amountSpecified,
+    amount: shouldGetTrade ? amountSpecified : undefined,
     tradeType,
     routerPreference,
   })
@@ -78,9 +78,9 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
   const isCurrent = currentTradeResult === tradeResult
 
   return useMemo(() => {
-    if (!shouldGetTrade) {
-      // If we don't want to fetch new trades, return the stale trade.
-      return { state: TradeState.INVALID, trade: tradeResult?.trade }
+    if (!shouldGetTrade && amountSpecified) {
+      // If we don't want to fetch new trades, but have valid inputs, return the stale trade.
+      return { state: TradeState.STALE, trade: tradeResult?.trade }
     } else if (!amountSpecified || isError || !queryArgs) {
       return { state: TradeState.INVALID, trade: undefined }
     } else if (tradeResult?.state === QuoteState.NOT_FOUND && isCurrent) {
