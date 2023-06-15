@@ -18,15 +18,28 @@ jobs:
         with:
           token: ${{ secrets.RELEASE_SERVICE_ACCESS_TOKEN }}
           ref: main
-      - name: Git config
+      - name: git config
         run: |
           git config user.name "UL Service Account"
           git config user.email "hello-happy-puppy@users.noreply.github.com"
-      - name: Add CODEOWNERS file
+      - name: Download translations
+        uses: crowdin/github-action@3133cc916c35590475cf6705f482fb653d8e36e9
+        with:
+          upload_sources: false
+          download_translations: true
+          project_id: 458284
+          token: ${{ secrets.CROWDIN_PERSONAL_TOKEN_SECRET }}
+          source: 'src/locales/en-US.po'
+          translation: 'src/locales/%locale%.po'
+          push_translations: true
+          commit_message: 'chore(i18n): synchronize translations from crowdin [skip ci]'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Add CODEOWNERS
         run: |
           echo "@uniswap/web-admins" > CODEOWNERS
           git add CODEOWNERS
           git commit -m "ci: add global CODEOWNERS"
-      - name: Git push
+      - name: git push
         run: |
           git push origin main:releases/staging --force
