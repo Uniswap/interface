@@ -3,6 +3,7 @@ import { Percent } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { AutoColumn } from 'components/Column'
 import { L2_CHAIN_IDS } from 'constants/chains'
+import useDisableScrolling from 'hooks/useDisableScrolling'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { isSupportedChainId } from 'lib/hooks/routing/clientSideSmartOrderRouter'
 import { useRef } from 'react'
@@ -50,6 +51,8 @@ export default function SettingsTab({ autoSlippage, chainId }: { autoSlippage: P
 
   const toggleMenu = useToggleSettingsMenu()
   useOnClickOutside(node, isOpen ? toggleMenu : undefined)
+
+  useDisableScrolling(isOpen)
 
   const isSupportedChain = isSupportedChainId(chainId)
 

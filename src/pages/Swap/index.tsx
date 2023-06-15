@@ -1,5 +1,4 @@
 import { Trans } from '@lingui/macro'
-import * as Sentry from '@sentry/react'
 import { sendAnalyticsEvent, Trace, TraceEvent, useTrace } from '@uniswap/analytics'
 import {
   BrowserEvent,
@@ -442,12 +441,6 @@ export function Swap({
         })
       })
       .catch((error) => {
-        if (!didUserReject(error)) {
-          Sentry.withScope((scope) => {
-            scope.setExtra('confirmedTrade', tradeToConfirm)
-            Sentry.captureException(error)
-          })
-        }
         setSwapState((currentState) => ({
           ...currentState,
           swapError: error,
@@ -462,7 +455,6 @@ export function Swap({
     account,
     trade?.inputAmount?.currency?.symbol,
     trade?.outputAmount?.currency?.symbol,
-    tradeToConfirm,
   ])
 
   // errors
