@@ -18,6 +18,7 @@ jobs:
         with:
           token: ${{ secrets.RELEASE_SERVICE_ACCESS_TOKEN }}
           ref: main
+      - uses: ./.github/actions/setup
       - name: Git config
         run: |
           git config user.name "UL Service Account"
