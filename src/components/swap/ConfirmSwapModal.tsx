@@ -73,10 +73,10 @@ function useConfirmModalState({
   // at the bottom of the modal, even after they complete steps 1 and 2.
   const prepareSwapFlow = useCallback(() => {
     const steps: PendingConfirmModalState[] = []
-    if (allowance.state === AllowanceState.REQUIRED && allowance.needsPermit2Approval) {
+    if (allowance.state === AllowanceState.REQUIRED && allowance.needsSetupApproval) {
       steps.push(ConfirmModalState.APPROVING_TOKEN)
     }
-    if (allowance.state === AllowanceState.REQUIRED && allowance.needsSignature) {
+    if (allowance.state === AllowanceState.REQUIRED && allowance.needsPermitSignature) {
       steps.push(ConfirmModalState.PERMITTING)
     }
     steps.push(ConfirmModalState.PENDING_CONFIRMATION)
@@ -92,7 +92,7 @@ function useConfirmModalState({
     if (allowance.state === AllowanceState.REQUIRED) {
       // Starts the approval process, by triggering either the Token Approval or the Permit signature.
       try {
-        if (allowance.needsPermit2Approval) {
+        if (allowance.needsSetupApproval) {
           setConfirmModalState(ConfirmModalState.APPROVING_TOKEN)
           await allowance.approve()
           sendAnalyticsEvent(InterfaceEventName.APPROVE_TOKEN_TXN_SUBMITTED, {
@@ -112,7 +112,7 @@ function useConfirmModalState({
         }
         console.error(e)
         setApprovalError(
-          allowance.needsPermit2Approval ? PendingModalError.TOKEN_APPROVAL_ERROR : PendingModalError.PERMIT_ERROR
+          allowance.needsSetupApproval ? PendingModalError.TOKEN_APPROVAL_ERROR : PendingModalError.PERMIT_ERROR
         )
       }
     } else {
@@ -122,14 +122,14 @@ function useConfirmModalState({
   }, [allowance, chainId, maximumAmountIn?.currency.address, maximumAmountIn?.currency.symbol, onSwap, trace])
 
   const previousPermitNeeded = usePrevious(
-    allowance.state === AllowanceState.REQUIRED ? allowance.needsPermit2Approval : undefined
+    allowance.state === AllowanceState.REQUIRED ? allowance.needsSetupApproval : undefined
   )
   useEffect(() => {
     if (
       allowance.state === AllowanceState.REQUIRED &&
-      allowance.needsSignature &&
+      allowance.needsPermitSignature &&
       // If the token approval switched from missing to fulfilled, trigger the next step (permit2 signature).
-      !allowance.needsPermit2Approval &&
+      !allowance.needsSetupApproval &&
       previousPermitNeeded
     ) {
       startSwapFlow()

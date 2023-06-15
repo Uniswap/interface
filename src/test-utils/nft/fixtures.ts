@@ -6,6 +6,7 @@ import {
   OrderStatus,
   OrderType,
 } from 'graphql/data/__generated__/types-and-hooks'
+import ms from 'ms.macro'
 import { ActivityEvent, CollectionInfoForAsset, GenieAsset, Markets, Offer, SellOrder, WalletAsset } from 'nft/types'
 
 export const TEST_NFT_ASSET: GenieAsset = {
@@ -220,10 +221,12 @@ export const TEST_NFT_COLLECTION_INFO_FOR_ASSET: CollectionInfoForAsset = {
   totalSupply: 10000,
 }
 
+const FIVE_MONTHS_MILLISECONDS = ms`165 days`
+
 export const TEST_SELL_ORDER: SellOrder = {
   address: '0x29d7ebca656665c1a52a92f830e413e394db6b4f',
   createdAt: 1683561510000,
-  endAt: 1699528045000,
+  endAt: Date.now() + FIVE_MONTHS_MILLISECONDS,
   id: 'TmZ0T3JkZXI6MHgyOWQ3ZWJjYTY1NjY2NWMxYTUyYTkyZjgzMGU0MTNlMzk0ZGI2YjRmXzY4MTVfMHg3OWVhNDQ5YzMzNzVlZDFhOWQ3ZDk5ZjgwNjgyMDllYTc0OGM2ZDQyXzQ5NzAwMDAwMDAwMDAwMDAwMDAwMF9vcGVuc2VhX01vbiBNYXkgMDggMjAyMyAxNTo1ODozMCBHTVQrMDAwMCAoQ29vcmRpbmF0ZWQgVW5pdmVyc2FsIFRpbWUp',
   maker: '0x79ea449c3375ed1a9d7d99f8068209ea748c6d42',
   marketplace: NftMarketplace.Opensea,
@@ -241,7 +244,7 @@ export const TEST_SELL_ORDER: SellOrder = {
 
 export const TEST_OFFER: Offer = {
   createdAt: 1683561510000,
-  endAt: 1699528045000,
+  endAt: Date.now() + FIVE_MONTHS_MILLISECONDS,
   id: 'TmZ0T3JkZXI6MHgyOWQ3ZWJjYTY1NjY2NWMxYTUyYTkyZjgzMGU0MTNlMzk0ZGI2YjRmXzY4MTVfMHg3OWVhNDQ5YzMzNzVlZDFhOWQ3ZDk5ZjgwNjgyMDllYTc0OGM2ZDQyXzQ5NzAwMDAwMDAwMDAwMDAwMDAwMF9vcGVuc2VhX01vbiBNYXkgMDggMjAyMyAxNTo1ODozMCBHTVQrMDAwMCAoQ29vcmRpbmF0ZWQgVW5pdmVyc2FsIFRpbWUp',
   maker: '0x79ea449c3375ed1a9d7d99f8068209ea748c6d42',
   marketplace: NftMarketplace.Opensea,

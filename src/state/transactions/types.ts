@@ -79,6 +79,7 @@ export interface ApproveTransactionInfo extends BaseTransactionInfo {
   type: TransactionType.APPROVAL
   tokenAddress: string
   spender: string
+  amount: string
 }
 
 interface BaseSwapTransactionInfo extends BaseTransactionInfo {

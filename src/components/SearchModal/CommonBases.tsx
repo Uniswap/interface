@@ -4,8 +4,7 @@ import { Currency } from '@uniswap/sdk-core'
 import { AutoColumn } from 'components/Column'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { AutoRow } from 'components/Row'
-import { COMMON_BASES, COMMON_BASES_V2 } from 'constants/routing'
-import { useNativeUSDCArbitrumEnabled } from 'featureFlags/flags/nativeUsdcArbitrum'
+import { COMMON_BASES } from 'constants/routing'
 import { useTokenInfoFromActiveList } from 'hooks/useTokenInfoFromActiveList'
 import { Text } from 'rebass'
 import styled from 'styled-components/macro'
@@ -61,9 +60,7 @@ export default function CommonBases({
   searchQuery: string
   isAddressSearch: string | false
 }) {
-  const nativeUsdcArbitrumEnabled = useNativeUSDCArbitrumEnabled()
-  const commonBases = nativeUsdcArbitrumEnabled ? COMMON_BASES_V2 : COMMON_BASES
-  const bases = chainId !== undefined ? commonBases[chainId] ?? [] : []
+  const bases = chainId !== undefined ? COMMON_BASES[chainId] ?? [] : []
 
   return bases.length > 0 ? (
     <MobileWrapper gap="md">
