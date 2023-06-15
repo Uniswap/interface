@@ -54,7 +54,7 @@ describe('#useBestV3Trade ExactIn', () => {
       USDCAmount,
       DAI,
       RouterPreference.CLIENT,
-      false // shouldGetTrade
+      true // skipFetch
     )
     expect(useClientSideV3Trade).toHaveBeenCalledWith(TradeType.EXACT_INPUT, USDCAmount, DAI)
     expect(result.current).toEqual({ state: TradeState.VALID, trade: undefined })
@@ -72,7 +72,7 @@ describe('#useBestV3Trade ExactIn', () => {
       USDCAmount,
       DAI,
       RouterPreference.CLIENT,
-      false // shouldGetTrade
+      true // skipFetch
     )
     expect(result.current).toEqual({ state: TradeState.NO_ROUTE_FOUND, trade: undefined })
   })
@@ -132,7 +132,7 @@ describe('#useBestV3Trade ExactOut', () => {
       DAIAmount,
       USDC_MAINNET,
       RouterPreference.CLIENT,
-      false // shouldGetTrade
+      true // skipFetch
     )
     expect(useClientSideV3Trade).toHaveBeenCalledWith(TradeType.EXACT_OUTPUT, DAIAmount, USDC_MAINNET)
     expect(result.current).toEqual({ state: TradeState.VALID, trade: undefined })
@@ -150,7 +150,7 @@ describe('#useBestV3Trade ExactOut', () => {
       DAIAmount,
       USDC_MAINNET,
       RouterPreference.CLIENT,
-      false // shouldGetTrade
+      true // skipFetch
     )
     expect(result.current).toEqual({ state: TradeState.NO_ROUTE_FOUND, trade: undefined })
   })
