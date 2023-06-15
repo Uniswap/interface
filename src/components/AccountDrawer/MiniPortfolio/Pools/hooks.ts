@@ -7,12 +7,12 @@ import { MULTICALL_ADDRESS, NONFUNGIBLE_POSITION_MANAGER_ADDRESSES as V3NFT_ADDR
 import { isSupportedChain, SupportedChainId } from 'constants/chains'
 import { RPC_PROVIDERS } from 'constants/providers'
 import { BaseContract } from 'ethers/lib/ethers'
-import { getContract } from 'getContract'
 import { ContractInput, useUniswapPricesQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { toContractInput } from 'graphql/data/util'
 import useStablecoinPrice from 'hooks/useStablecoinPrice'
 import { useMemo } from 'react'
 import { NonfungiblePositionManager, UniswapInterfaceMulticall } from 'types/v3'
+import { getContract } from 'utils'
 import { CurrencyKey, currencyKey, currencyKeyFromGraphQL } from 'utils'
 
 import { PositionInfo } from './cache'
