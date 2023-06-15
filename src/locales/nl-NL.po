@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2023-05-22 22:30+0000\n"
+"POT-Creation-Date: 2023-06-13 20:57+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -8,7 +8,7 @@ msgstr ""
 "Language: nl\n"
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2023-05-23 20:46\n"
+"PO-Revision-Date: 2023-06-13 21:34\n"
 "Last-Translator: \n"
 "Language-Team: Dutch\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -51,6 +51,18 @@ msgstr "+ Nieuwe functie"
 #: src/pages/Swap/index.tsx
 msgid "- Remove recipient"
 msgstr "- Ontvanger verwijderen"
+
+#: src/nft/components/details/detailsV2/TimePeriodSwitcher.tsx
+msgid "1 month"
+msgstr "1 maand"
+
+#: src/nft/components/details/detailsV2/TimePeriodSwitcher.tsx
+msgid "1 week"
+msgstr "1 week"
+
+#: src/nft/components/details/detailsV2/TimePeriodSwitcher.tsx
+msgid "1 year"
+msgstr "1 jaar"
 
 #: src/components/Tokens/TokenDetails/StatsSection.tsx
 msgid "24H volume"
@@ -239,9 +251,17 @@ msgstr "Adres heeft geen beschikbare claim"
 msgid "Against"
 msgstr "Tegen"
 
+#: src/nft/components/details/detailsV2/TimePeriodSwitcher.tsx
+msgid "All time"
+msgstr "Altijd"
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allow LP token migration"
 msgstr "LP token migratie toestaan"
+
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Allow {0} to be used for swapping"
+msgstr "Sta toe dat {0} wordt gebruikt voor het wisselen"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allowed"
@@ -260,7 +280,7 @@ msgstr "Voer altijd uw eigen onderzoek uit voordat u gaat handelen."
 msgid "Amount"
 msgstr "Bedrag"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "An approval is needed to use this token."
 msgstr "Er is een goedkeuring nodig om dit token te gebruiken."
 
@@ -276,12 +296,11 @@ msgstr "Er is een fout opgetreden bij het uitvoeren van deze swap. Mogelijk moet
 msgid "Approval failed"
 msgstr "Goedkeuring mislukt"
 
-#: src/nft/components/bag/BagFooter.tsx
-#: src/pages/Swap/index.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Approval pending"
 msgstr "In afwachting van goedkeuring"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 #: src/nft/components/profile/list/Modal/ListModalSection.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
@@ -295,14 +314,9 @@ msgstr "Token goedkeuren"
 msgid "Approve in wallet"
 msgstr "Goedkeuren in portemonnee"
 
-#: src/nft/components/bag/BagFooter.tsx
-#: src/pages/Swap/index.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Approve in your wallet"
 msgstr "Goedkeuren in uw portemonnee"
-
-#: src/pages/Swap/index.tsx
-msgid "Approve use of {0}"
-msgstr "Gebruik van {0}goedkeuren"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -463,6 +477,10 @@ msgstr "Door liquiditeit toe te voegen, verdient u 0,3% van alle transacties op 
 #: src/components/WalletModal/PrivacyPolicyNotice.tsx
 msgid "By connecting a wallet, you agree to Uniswap Labs'"
 msgstr "Door een portemonnee aan te sluiten, gaat u akkoord met Uniswap Labs'"
+
+#: src/components/swap/PriceImpactModal.tsx
+msgid "Cancel"
+msgstr "Annuleren"
 
 #: src/components/AccountDrawer/MiniPortfolio/constants.ts
 msgid "Cancel failed"
@@ -625,6 +643,14 @@ msgstr "Bevestigen"
 msgid "Confirm Supply"
 msgstr "Bevestig levering"
 
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Confirm Swap"
+msgstr "Bevestig wissel"
+
+#: src/components/swap/SwapModalFooter.tsx
+msgid "Confirm swap"
+msgstr "Bevestig ruilen"
+
 #: src/components/ModalViews/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
@@ -671,7 +697,7 @@ msgstr "Maak verbinding met een portemonnee om uw V2 liquiditeit te bekijken."
 msgid "Connect to a wallet to view your liquidity."
 msgstr "Maak verbinding met een portemonnee om uw liquiditeit te bekijken."
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Connect wallet"
 msgstr "Verbind portemonnee"
 
@@ -679,6 +705,8 @@ msgstr "Verbind portemonnee"
 msgid "Content not"
 msgstr "Inhoud niet"
 
+#: src/components/TokenSafety/index.tsx
+#: src/components/swap/PriceImpactModal.tsx
 #: src/nft/components/bag/Bag.tsx
 #: src/nft/components/profile/list/Modal/BelowFloorWarningModal.tsx
 msgid "Continue"
@@ -843,7 +871,6 @@ msgstr "Gedetailleerd"
 msgid "Details"
 msgstr "Details"
 
-#: src/components/TransactionConfirmationModal/index.tsx
 #: src/nft/components/profile/list/PriceTextInput.tsx
 msgid "Dismiss"
 msgstr "Afwijzen"
@@ -892,6 +919,10 @@ msgstr "Bewerking"
 msgid "Edit listings"
 msgstr "Lijsten bewerken"
 
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Enable spending {0} on Uniswap"
+msgstr "Schakel {0} uitgeven op Uniswap in"
+
 #: src/state/burn/v3/hooks.tsx
 msgid "Enter a percent"
 msgstr "Voer een percentage in"
@@ -917,8 +948,6 @@ msgid "Enter {0} amount"
 msgstr "Vul {0} bedrag in"
 
 #: src/components/TransactionConfirmationModal/index.tsx
-#: src/components/TransactionConfirmationModal/index.tsx
-#: src/components/Web3Status/index.tsx
 msgid "Error"
 msgstr "Foutmelding"
 
@@ -1038,7 +1067,7 @@ msgstr "Feedback"
 msgid "Fees"
 msgstr "Vergoedingen"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 #: src/nft/components/details/detailsV2/BuyButton.tsx
 msgid "Fetching Route"
 msgstr "Route ophalen"
@@ -1164,11 +1193,11 @@ msgstr "Initiële prijzen en poolaandeel"
 msgid "Input is estimated. You will sell at most <0>{0} {1}</0> or the transaction will revert."
 msgstr "Invoer wordt ingeschat. U verkoopt maximaal <0>{0} {1}</0> of de transactie wordt teruggedraaid."
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Insufficient funds"
 msgstr "Onvoldoende fondsen"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Insufficient liquidity"
 msgstr "Onvoldoende liquiditeit"
 
@@ -1176,7 +1205,7 @@ msgstr "Onvoldoende liquiditeit"
 msgid "Insufficient liquidity for this trade."
 msgstr "Onvoldoende liquiditeit voor deze transactie."
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Insufficient pool liquidity to complete transaction"
 msgstr "Onvoldoende poolliquiditeit om transactie te voltooien"
 
@@ -1298,7 +1327,7 @@ msgstr "Vermeldingen"
 msgid "Loading"
 msgstr "Aan het laden"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Loading Allowance"
 msgstr "Toeslag laden"
 
@@ -1576,6 +1605,10 @@ msgstr "Niet beschikbaar in uw regio"
 msgid "Not created"
 msgstr "Niet gemaakt"
 
+#: src/components/CurrencyInputPanel/FiatValue.tsx
+msgid "Not enough liquidity to show accurate USD value."
+msgstr "Onvoldoende liquiditeit om de juiste waarde in USD weer te geven."
+
 #: src/nft/components/collection/CollectionAsset.tsx
 msgid "Not listed"
 msgstr "Niet op de lijst"
@@ -1631,14 +1664,14 @@ msgstr "Eigenaar"
 msgid "Page not found!"
 msgstr "Pagina niet gevonden!"
 
-#: src/nft/components/bag/BagFooter.tsx
-#: src/nft/components/bag/BagFooter.tsx
-#: src/nft/components/bag/BagFooter.tsx
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
+#: src/nft/components/bag/ButtonStates.tsx
+#: src/nft/components/bag/ButtonStates.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Pay"
 msgstr "Betalen"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Pay Anyway"
 msgstr "Hoe dan ook betalen"
 
@@ -1651,13 +1684,21 @@ msgstr "Betaal met"
 msgid "Pending"
 msgstr "In behandeling"
 
-#: src/pages/Swap/index.tsx
-msgid "Permission is required for Uniswap to swap each token. This will expire after one month for your security."
-msgstr "Toestemming is vereist voor Uniswap om elk token te ruilen. Deze vervalt voor uw veiligheid na een maand."
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Pending..."
+msgstr "In behandeling..."
+
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
+msgid "Permit approval failed"
+msgstr "Goedkeuring van de vergunning is mislukt"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
 msgid "Permit2"
 msgstr "Vergunning2"
+
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
+msgid "Permit2 allows token approvals to be shared and managed across different applications."
+msgstr "Met Permit2 kunnen tokengoedkeuringen worden gedeeld en beheerd tussen verschillende applicaties."
 
 #: src/components/vote/ProposalEmptyState.tsx
 msgid "Please connect to Layer 1 Ethereum"
@@ -1729,16 +1770,12 @@ msgstr "Prijsverschil:"
 msgid "Price Impact"
 msgstr "Prijsimpact"
 
-#: src/pages/Swap/index.tsx
-msgid "Price Impact Too High"
-msgstr "Prijsimpact te hoog"
-
 #: src/components/swap/SwapModalFooter.tsx
 msgid "Price impact"
 msgstr "Prijsimpact"
 
 #: src/components/swap/PriceImpactWarning.tsx
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Price impact warning"
 msgstr "Waarschuwing voor prijsimpact"
 
@@ -1747,7 +1784,7 @@ msgid "Price range"
 msgstr "Prijsbereik"
 
 #: src/components/swap/SwapModalFooter.tsx
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Price updated"
 msgstr "Prijs bijgewerkt"
 
@@ -1767,10 +1804,16 @@ msgstr "Privacybeleid"
 msgid "Privacy Policy."
 msgstr "Privacybeleid."
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 #: src/nft/components/profile/list/Modal/ContentRow.tsx
 msgid "Proceed in wallet"
 msgstr "Ga verder in portemonnee"
+
+#: src/components/swap/PendingModalContent/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Proceed in your wallet"
+msgstr "Ga verder in uw portemonnee"
 
 #: src/nft/components/profile/list/Modal/SuccessScreen.tsx
 msgid "Proceeds if sold"
@@ -1807,6 +1850,10 @@ msgstr "Indiener voorstel"
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
 msgid "Public Resolver"
 msgstr "Openbare oplosser"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+msgid "Purchased"
+msgstr "Gekocht"
 
 #: src/nft/components/details/detailsV2/DataPageTraits.tsx
 #: src/nft/components/details/detailsV2/TableRowComponent.tsx
@@ -1892,7 +1939,7 @@ msgstr "Recente zoekopdrachten"
 msgid "Recipient"
 msgstr "Ontvanger"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Refunds for unavailable items will be given in ETH"
 msgstr "Restituties voor niet-beschikbare items worden gegeven in ETH"
 
@@ -1981,6 +2028,7 @@ msgstr "Terugbetalen"
 msgid "Resolve {issues} issues"
 msgstr "Los {issues} problemen op"
 
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
 #: src/nft/components/profile/list/Modal/ContentRow.tsx
 msgid "Retry"
 msgstr "Opnieuw proberen"
@@ -2000,12 +2048,28 @@ msgid "Reverse Registrar"
 msgstr "Omgekeerde griffier"
 
 #: src/components/swap/ConfirmSwapModal.tsx
-msgid "Review Swap"
-msgstr "Beoordeel Swap"
+msgid "Review swap"
+msgstr "Review swap"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Revoke approval failed"
+msgstr "Goedkeuring intrekken mislukt"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Revoke {0}"
+msgstr "{0}intrekken"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
 msgid "Revoked Approval"
 msgstr "Goedkeuring ingetrokken"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Revoked approval"
+msgstr "Goedkeuring ingetrokken"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Revoking approval"
+msgstr "Goedkeuring intrekken"
 
 #: src/nft/components/profile/list/NFTListingsGrid.tsx
 msgid "Same Price"
@@ -2015,17 +2079,9 @@ msgstr "Zelfde prijs"
 msgid "Scan with Uniswap Wallet"
 msgstr "Scannen met Uniswap Wallet"
 
-#: src/components/NavBar/SearchBar.tsx
-msgid "Search"
-msgstr "Zoekopdracht"
-
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "Search name or paste address"
 msgstr "Zoek naam of plak adres"
-
-#: src/components/NavBar/SearchBar.tsx
-msgid "Search tokens and NFT collections"
-msgstr "Zoek tokens en NFT-collecties"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Select Pair"
@@ -2167,11 +2223,11 @@ msgstr "Sommige activa zijn niet beschikbaar via deze interface omdat ze mogelij
 
 #: src/components/ErrorBoundary/index.tsx
 #: src/components/ErrorBoundary/index.tsx
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Something went wrong"
 msgstr "Er is iets fout gegaan"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Something went wrong. Please try again."
 msgstr "Er is iets fout gegaan. Probeer het opnieuw."
 
@@ -2221,6 +2277,7 @@ msgid "Succeeded"
 msgstr "Geslaagd"
 
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
 msgid "Success"
 msgstr "Succes"
 
@@ -2239,7 +2296,6 @@ msgstr "{0} {1} en {2} {3} aanbieden"
 #: src/components/NavBar/index.tsx
 #: src/components/Tokens/TokenDetails/MobileBalanceSummaryFooter.tsx
 #: src/components/swap/SwapHeader.tsx
-#: src/components/swap/SwapModalFooter.tsx
 #: src/components/swap/SwapSkeleton.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
@@ -2259,6 +2315,7 @@ msgid "Swap exactly <0/> for <1/>"
 msgstr "Ruil precies <0/> voor <1/>"
 
 #: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
 msgid "Swap failed"
 msgstr "Wisselen is mislukt"
 
@@ -2271,15 +2328,11 @@ msgstr "Verwisseld"
 msgid "Swapping"
 msgstr "Ruilen"
 
-#: src/components/swap/ConfirmSwapModal.tsx
-msgid "Swapping {0} {1} for {2} {3}"
-msgstr "{0} {1} ruilen voor {2} {3}"
-
 #: src/nft/components/collection/Sweep.tsx
 msgid "Sweep"
 msgstr "Vegen"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Switch networks"
 msgstr "Wissel van netwerk"
 
@@ -2427,6 +2480,10 @@ msgstr "Deze pool moet worden geïnitialiseerd voordat u liquiditeit kunt toevoe
 msgid "This proposal may be executed after {0}."
 msgstr "Dit voorstel kan worden uitgevoerd na {0}."
 
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
+msgid "This provides the Uniswap protocol access to your token for trading. For security, this will expire after 30 days."
+msgstr "Dit geeft het Uniswap-protocol toegang tot uw token om te handelen. Om veiligheidsredenen vervalt deze na 30 dagen."
+
 #: src/components/swap/SwapRoute.tsx
 msgid "This route optimizes your total output by considering split routes, multiple hops, and the gas cost of each step."
 msgstr "Deze route optimaliseert uw totale output door rekening te houden met gesplitste routes, meerdere hops en de gaskosten van elke stap."
@@ -2458,6 +2515,10 @@ msgstr "Deze transactie zal niet slagen vanwege prijsbewegingen. Probeer uw slip
 #: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance."
 msgstr "Deze transactie zal niet slagen vanwege prijsbewegingen of kosten bij overdracht. Probeer uw slipping tolerantie te vergroten."
+
+#: src/components/swap/PriceImpactModal.tsx
+msgid "This transaction will result in a <0>{0}</0> price impact on the market price of this pool. Do you wish to continue?"
+msgstr "Deze transactie zal resulteren in een prijsimpact van <0>{0}</0> op de marktprijs van deze pool. Wilt u doorgaan?"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/index.tsx
 msgid "This week"
@@ -2494,11 +2555,15 @@ msgstr "Om een positie te bekijken, moet u verbonden zijn met het netwerk waarto
 msgid "Today"
 msgstr "Vandaag"
 
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
+msgid "Token approval failed"
+msgstr "Tokengoedkeuring mislukt"
+
 #: src/components/Tokens/TokenTable/TokenRow.tsx
 msgid "Token name"
 msgstr "Tokennaam"
 
-#: src/components/TokenSafety/index.tsx
+#: src/constants/tokenSafety.tsx
 msgid "Token not found"
 msgstr "Token niet gevonden"
 
@@ -2571,7 +2636,7 @@ msgstr "Transactie voltooid in"
 msgid "Transaction deadline"
 msgstr "Transactiedeadline"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Transaction pending"
 msgstr "Transactie in behandeling"
 
@@ -2580,6 +2645,7 @@ msgid "Transaction rejected"
 msgstr "Transactie afgewezen"
 
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
 msgid "Transaction submitted"
 msgstr "Transactie ingediend"
 
@@ -2790,6 +2856,7 @@ msgid "View on Etherscan"
 msgstr "Bekijk op Etherscan"
 
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
 msgid "View on Explorer"
 msgstr "Weergeven op Verkenner"
 
@@ -2893,6 +2960,7 @@ msgid "Wallet Address or ENS name"
 msgstr "Wallet-adres of ENS-naam"
 
 #: src/components/addLiquidity/OwnershipWarning.tsx
+#: src/components/swap/PriceImpactModal.tsx
 #: src/constants/tokenSafety.tsx
 msgid "Warning"
 msgstr "Waarschuwing"
@@ -2901,9 +2969,22 @@ msgstr "Waarschuwing"
 msgid "Welcome to team Unicorn :)"
 msgstr "Welkom bij team Unicorn :)"
 
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
+msgid "Why are approvals required?"
+msgstr "Waarom zijn goedkeuringen vereist?"
+
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
+msgid "Why are permits required?"
+msgstr "Waarom zijn vergunningen nodig?"
+
 #: src/nft/components/profile/list/Modal/ListModalSection.tsx
 msgid "Why is a transaction required?"
 msgstr "Waarom is een transactie vereist?"
+
+#: src/components/swap/PendingModalContent/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Why is this required?"
+msgstr "Waarom is dit vereist?"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Withdraw deposited liquidity"
@@ -2942,7 +3023,7 @@ msgstr "Verpakt"
 msgid "Wrapping"
 msgstr "Inpakken"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Wrong network"
 msgstr "Verkeerd netwerk"
 
@@ -3137,6 +3218,7 @@ msgid "fee"
 msgstr "tarief"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseLocal.ts
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
 msgid "for"
 msgstr "voor"
 
