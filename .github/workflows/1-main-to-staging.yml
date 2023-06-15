@@ -18,7 +18,7 @@ jobs:
         with:
           token: ${{ secrets.RELEASE_SERVICE_ACCESS_TOKEN }}
           ref: main
-      - name: git config
+      - name: Git config
         run: |
           git config user.name "UL Service Account"
           git config user.email "hello-happy-puppy@users.noreply.github.com"
@@ -40,6 +40,6 @@ jobs:
           echo "@uniswap/web-admins" > CODEOWNERS
           git add CODEOWNERS
           git commit -m "ci: add global CODEOWNERS"
-      - name: git push
+      - name: Git push
         run: |
           git push origin main:test/t9n --force
