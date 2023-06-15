@@ -4,6 +4,7 @@ import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { BreadcrumbNavLink } from 'components/Tokens/TokenDetails/BreadcrumbNavLink'
 import ChartSection from 'components/Tokens/TokenDetails/ChartSection'
 import TokenDetailsSkeleton, {
+  Hr,
   LeftPanel,
   RightPanel,
   TokenDetailsLayout,
@@ -25,6 +26,8 @@ import { Link as NativeLink } from 'react-router-dom'
 import styled, { css } from 'styled-components/macro'
 import { isAddress } from 'utils'
 
+import { AboutSection } from './About'
+import AddressSection from './AddressSection'
 import BalanceSummary from './BalanceSummary'
 import { OnChangeTimePeriod } from './ChartSection'
 import InvalidTokenDetails from './InvalidTokenDetails'
@@ -89,7 +92,13 @@ export default function TokenDetails({ urlAddress, chain, tokenData, onChangeTim
   const tokenWarning = address ? checkWarning(address) : null
   const isBlockedToken = tokenWarning?.canProceed === false
 
-  const currencyToken = { address: tokenData.address, symbol: tokenData.symbol, isNative: false } as Currency
+  const currencyToken = {
+    address: tokenData.address,
+    symbol: tokenData.symbol,
+    isNative: false,
+    name: tokenData.name,
+    chainId: pageChainId,
+  } as Currency
 
   const [continueSwap, setContinueSwap] = useState<{ resolve: (value: boolean | PromiseLike<boolean>) => void }>()
 
@@ -135,15 +144,15 @@ export default function TokenDetails({ urlAddress, chain, tokenData, onChangeTim
             volume7D={tokenData?.volumeUSDWeek}
             fee24H={tokenData?.feesUSD}
           />
-          {/* <Hr /> */}
-          {/* <AboutSection
+          <Hr />
+          <AboutSection
             address={address}
             chainId={pageChainId}
-            description={tokenQueryData?.project?.description}
-            homepageUrl={tokenQueryData?.project?.homepageUrl}
-            twitterName={tokenQueryData?.project?.twitterName}
-          /> */}
-          {/* {!detailedToken.isNative && <AddressSection address={address} />} */}
+            // description={tokenQueryData?.project?.description}
+            // homepageUrl={tokenQueryData?.project?.homepageUrl}
+            // twitterName={tokenQueryData?.project?.twitterName}
+          />
+          {address && <AddressSection address={address} />}
         </LeftPanel>
       ) : (
         <TokenDetailsSkeleton />

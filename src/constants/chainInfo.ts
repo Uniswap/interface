@@ -58,7 +58,7 @@ const CHAIN_INFO: ChainInfoMap = {
     defaultListUrl: ROLLUX_LIST,
     docs: 'https://rollux.com/',
     explorer: 'https://explorer.rollux.com/',
-    infoLink: 'https://info.pegasys.fi/#/rollux/',
+    infoLink: 'https://staging.info.pegasys.fi/#/',
     label: 'Rollux',
     logoUrl: rolluxLogoUrl,
     // Optimism perfers same icon for both
@@ -76,7 +76,7 @@ const CHAIN_INFO: ChainInfoMap = {
     defaultListUrl: ROLLUX_TANENBAUM_LIST,
     docs: 'https://rollux.com/',
     explorer: 'https://rollux.tanenbaum.io/',
-    infoLink: 'https://info.pegasys.fi/#/rollux/',
+    infoLink: 'https://staging.info.pegasys.fi/#/',
     label: 'Rollux Tanenbaum',
     logoUrl: rolluxTennenbalLogoUrl,
     statusPage: 'https://rollux.com/',

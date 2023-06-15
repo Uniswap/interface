@@ -83,7 +83,7 @@ export function AboutSection({ address, chainId, description, homepageUrl, twitt
 
   return (
     <AboutContainer data-testid="token-details-about-section">
-      <AboutHeader>
+      {/* <AboutHeader>
         <Trans>About</Trans>
       </AboutHeader>
       <TokenDescriptionContainer>
@@ -98,8 +98,8 @@ export function AboutSection({ address, chainId, description, homepageUrl, twitt
             {isDescriptionTruncated ? <Trans>Show more</Trans> : <Trans>Hide</Trans>}
           </TruncateDescriptionButton>
         )}
-      </TokenDescriptionContainer>
-      <br />
+      </TokenDescriptionContainer> */}
+      {/* <br /> */}
       <ThemedText.SubHeaderSmall>
         <Trans>Links</Trans>
       </ThemedText.SubHeaderSmall>

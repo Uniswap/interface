@@ -58,6 +58,7 @@ const SearchInput = styled.input`
   }
 `
 
+// eslint-disable-next-line import/no-unused-modules
 export default function SearchBar() {
   const currentString = useAtomValue(filterStringAtom)
   const [localFilterString, setLocalFilterString] = useState(currentString)
