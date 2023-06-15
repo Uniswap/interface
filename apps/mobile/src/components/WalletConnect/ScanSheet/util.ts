@@ -37,6 +37,13 @@ export async function getSupportedURI(uri: string): Promise<URIFormat | undefine
     return { type: URIType.Address, value: maybeMetamaskAddress }
   }
 
+  // The hello_uniwallet check must be before the parseUri version 2 check because
+  // parseUri(hello_uniwallet:[valid_wc_uri]) also returns version 2
+  const { uri: maybeCustomWcUri, type } = (await getCustomUniswapWcCode(uri)) || {}
+  if (maybeCustomWcUri && type) {
+    return { type, value: maybeCustomWcUri }
+  }
+
   if (await isValidWCUrl(uri)) {
     return { type: URIType.WalletConnectURL, value: uri }
   }
@@ -45,24 +52,24 @@ export async function getSupportedURI(uri: string): Promise<URIFormat | undefine
     return { type: URIType.WalletConnectV2URL, value: uri }
   }
 
-  const maybeCustomWcUri = await getCustomUniswapWcCode(uri)
-  if (maybeCustomWcUri) {
-    return { type: URIType.WalletConnectURL, value: maybeCustomWcUri }
-  }
-
   if (uri === EASTER_EGG_QR_CODE) {
     return { type: URIType.EasterEgg, value: uri }
   }
 }
 
-async function getCustomUniswapWcCode(uri: string): Promise<string | null> {
+async function getCustomUniswapWcCode(uri: string): Promise<{ uri: string; type: URIType } | null> {
   if (uri.indexOf(CUSTOM_UNI_QR_CODE_PREFIX) !== 0) {
     return null
   }
 
   const maybeWcUri = uri.slice(CUSTOM_UNI_QR_CODE_PREFIX.length)
+
   if (await isValidWCUrl(maybeWcUri)) {
-    return maybeWcUri
+    return { uri: maybeWcUri, type: URIType.WalletConnectURL }
+  }
+
+  if (parseUri(maybeWcUri).version === 2) {
+    return { uri: maybeWcUri, type: URIType.WalletConnectV2URL }
   }
 
   return null
