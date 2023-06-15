@@ -114,6 +114,7 @@ export function validateUrlChainParam(chainName: string | undefined) {
 }
 
 // TODO(cartcrom): refactor into safer lookup & replace usage
+// TODO(AVAX): add AVAX to this list when BE supports
 export const CHAIN_NAME_TO_CHAIN_ID: { [key in Chain]: ChainId } = {
   [Chain.Ethereum]: ChainId.MAINNET,
   [Chain.EthereumGoerli]: ChainId.GOERLI,

@@ -9,12 +9,14 @@ const multicall = createMulticall()
 
 export default multicall
 
+// TODO(AVAX): How can I check this?
 function getBlocksPerFetchForChainId(chainId: number | undefined): number {
   switch (chainId) {
     case ChainId.ARBITRUM_ONE:
     case ChainId.OPTIMISM:
       return 15
     case ChainId.BNB:
+    case ChainId.AVALANCHE:
     case ChainId.CELO:
     case ChainId.CELO_ALFAJORES:
       return 5
