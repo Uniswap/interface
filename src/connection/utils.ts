@@ -24,13 +24,11 @@ const InjectedWalletTable: { [key in keyof NonNullable<Window['ethereum']>]?: { 
  * @param isDarkMode - optional parameter to determine which color mode of the
  */
 export function getInjection(isDarkMode?: boolean): { name: string; icon: string } {
-  for (const key in window.ethereum) {
-    const detectedWallet = InjectedWalletTable[key as keyof Window['ethereum']]
-
-    if (detectedWallet) return detectedWallet
+  for (const [key, wallet] of Object.entries(InjectedWalletTable)) {
+    if (window.ethereum?.[key as keyof Window['ethereum']]) return wallet
   }
 
-  // Phantom sets it's flag in a different part of the window object
+  // Phantom sets its flag in a different part of the window object
   if (window.phantom?.ethereum?.isPhantom) return { name: 'Phantom', icon: PHANTOM_ICON }
 
   // Check for MetaMask last, as other injectors will also set this flag, i.e. Brave browser and Phantom wallet
