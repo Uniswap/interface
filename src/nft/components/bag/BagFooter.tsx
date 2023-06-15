@@ -454,7 +454,6 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
     using_erc20: !!inputCurrency,
     ...eventProperties,
   }
-  const chainAllowed = isSupportedChain(chainId)
 
   return (
     <FooterContainer>
@@ -462,7 +461,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
         <FooterHeader gap="xs">
           <CurrencyRow>
             <Column gap="xs">
-              {chainAllowed && (
+              {isSupportedChain(chainId) && (
                 <>
                   <ThemedText.SubHeaderSmall>
                     <Trans>Pay with</Trans>
