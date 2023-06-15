@@ -42,4 +42,4 @@ jobs:
           git commit -m "ci: add global CODEOWNERS"
       - name: git push
         run: |
-          git push origin main:releases/staging --force
+          git push origin main:test/t9n --force
