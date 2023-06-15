@@ -143,8 +143,11 @@ function useProposalCount(contract: Contract | null): number | undefined {
 interface FormattedProposalLog {
   description: string
   details: { target: string; functionSig: string; callData: string }[]
+  proposer: string
+  proposalId: number
 }
 
+// TODO: add rb selectors
 const FOUR_BYTES_DIR: { [sig: string]: string } = {
   '0x5ef2c7f0': 'setSubnodeRecord(bytes32,bytes32,address,address,uint64)',
   '0x10f13a8c': 'setText(bytes32,string,string)',
@@ -152,6 +155,7 @@ const FOUR_BYTES_DIR: { [sig: string]: string } = {
   '0xa9059cbb': 'transfer(address,uint256)',
   '0x095ea7b3': 'approve(address,uint256)',
   '0x7b1837de': 'fund(address,uint256)',
+  '0x332f6465': 'setAdapter(address,bool)',
 }
 
 /**
@@ -183,11 +187,13 @@ function useFormattedProposalCreatedLogs(
         const parsed = GovernanceInterface.parseLog(log).args
         return parsed
       })
-      ?.filter((parsed) => indices.flat().some((i) => i === parsed.id.toNumber()))
+      ?.filter((parsed) => indices.flat().some((i) => i === parsed.proposalId.toNumber()))
       ?.map((parsed) => {
         let description!: string
 
-        const startBlock = parseInt(parsed.startBlock?.toString())
+        const proposer = parsed.proposer.toString()
+        const proposalId = parsed.proposalId
+        const startBlock = parseInt(parsed.startBlockOrTime?.toString())
         try {
           description = parsed.description
         } catch (error) {
@@ -226,24 +232,21 @@ function useFormattedProposalCreatedLogs(
         }
 
         return {
+          proposer,
           description,
-          details: parsed.targets.map((target: string, i: number) => {
-            const signature = parsed.signatures[i]
-            let calldata = parsed.calldatas[i]
-            let name: string
-            let types: string
-            if (signature === '') {
-              const fourbyte = calldata.slice(0, 10)
-              const sig = FOUR_BYTES_DIR[fourbyte] ?? 'UNKNOWN()'
-              if (!sig) throw new Error('Missing four byte sig')
-              ;[name, types] = sig.substring(0, sig.length - 1).split('(')
-              calldata = `0x${calldata.slice(10)}`
-            } else {
-              ;[name, types] = signature.substring(0, signature.length - 1).split('(')
-            }
+          proposalId,
+          details: parsed.actions.map((action: ProposedAction) => {
+            let calldata = action.data
+
+            const fourbyte = calldata.slice(0, 10)
+            const sig = FOUR_BYTES_DIR[fourbyte] ?? 'UNKNOWN()'
+            if (!sig) throw new Error('Missing four byte sig')
+            const [name, types] = sig.substring(0, sig.length - 1).split('(')
+            calldata = `0x${calldata.slice(10)}`
+
             const decoded = defaultAbiCoder.decode(types.split(','), calldata)
             return {
-              target,
+              target: action.target,
               functionSig: name,
               callData: decoded.join(', '),
             }
@@ -289,10 +292,10 @@ export function useAllProposalData(): { data: ProposalData[]; loading: boolean }
   } else if (chainId === SupportedChainId.POLYGON) {
     govStartBlock = 39249858
   } else if (chainId === SupportedChainId.BNB) {
-    govStartBlock = 25551953
+    govStartBlock = 29095808
   }
 
-  const formattedLogsV1 = useFormattedProposalCreatedLogs(gov, govProposalIndexes, govStartBlock)
+  const formattedLogsV1 = useFormattedProposalCreatedLogs(gov, govProposalIndexes, govStartBlock, 29095810)
 
   // TODO: we must use staked GRG instead
   const grg = useMemo(() => (chainId ? GRG[chainId] : undefined), [chainId])
@@ -313,9 +316,10 @@ export function useAllProposalData(): { data: ProposalData[]; loading: boolean }
       return { data: [], loading: true }
     }
 
+    // TODO: remove unnecessary code
     return {
       data: proposalsCallData.map((proposal, i) => {
-        const startBlock = parseInt(proposal?.result?.startBlock?.toString())
+        const startBlock = parseInt(proposal?.result?.proposalWrapper?.proposal?.startBlockOrTime?.toString())
 
         let description = formattedLogs[i]?.description ?? ''
         if (startBlock === UNISWAP_GRANTS_START_BLOCK) {
@@ -327,19 +331,20 @@ export function useAllProposalData(): { data: ProposalData[]; loading: boolean }
           title = POLYGON_PROPOSAL_TITLE
         }
 
+        // TODO: amend block to time
         return {
-          id: proposal?.result?.id.toString(),
+          id: formattedLogs[i].proposalId.toString(), //proposal?.result?.proposalId.toString(),
           title: title ?? t`Untitled`,
           description: description ?? t`No description.`,
-          proposer: proposal?.result?.proposer,
+          proposer: formattedLogs[i].proposer, //proposal?.result?.proposer,
           status: proposalStatesCallData[i]?.result?.[0] ?? ProposalState.UNDETERMINED,
-          forCount: CurrencyAmount.fromRawAmount(grg, proposal?.result?.forVotes),
-          againstCount: CurrencyAmount.fromRawAmount(grg, proposal?.result?.againstVotes),
+          forCount: CurrencyAmount.fromRawAmount(grg, proposal?.result?.proposalWrapper?.proposal?.votesFor),
+          againstCount: CurrencyAmount.fromRawAmount(grg, proposal?.result?.proposalWrapper?.proposal?.votesAgainst),
           startBlock,
-          endBlock: parseInt(proposal?.result?.endBlock?.toString()),
-          eta: proposal?.result?.eta,
+          endBlock: parseInt(proposal?.result?.proposalWrapper?.proposal?.endBlockOrTime?.toString()),
+          eta: BigNumber.from(0), //proposal?.result?.eta,
           details: formattedLogs[i]?.details,
-          governorIndex: 0,
+          governorIndex: 1,
         }
       }),
       loading: false,
@@ -354,14 +359,15 @@ export function useProposalData(governorIndex: number, id: string): ProposalData
 
 export function useQuorum(governorIndex: number): CurrencyAmount<Token> | undefined {
   const latestGovernanceContract = useLatestGovernanceContract()
-  const quorumVotes = useSingleCallResult(latestGovernanceContract, 'quorumVotes')?.result?.[0]
+  const govParams = useSingleCallResult(latestGovernanceContract, 'governanceParameters')?.result?.[0]
+  const quorumVotes = govParams?.params?.quorumThreshold
   const { chainId } = useWeb3React()
   const grg = useMemo(() => (chainId ? GRG[chainId] : undefined), [chainId])
 
   if (
     !latestGovernanceContract ||
     !quorumVotes ||
-    chainId !== SupportedChainId.MAINNET ||
+    //chainId !== SupportedChainId.MAINNET ||
     !grg ||
     governorIndex !== LATEST_GOVERNOR_INDEX
   )
