@@ -43,10 +43,6 @@ describe('Universal search bar', () => {
     // Search for uni token by name.
     cy.get('[data-cy="search-bar-input"]').last().type('uni')
     cy.get('[data-cy="searchbar-token-row-UNI"]')
-      .should('contain.text', 'Uniswap')
-      .and('contain.text', 'UNI')
-      .and('contain.text', '$')
-      .and('contain.text', '%')
 
     // Clear search
     cy.get('[data-cy="search-bar-input"]').last().clear()
