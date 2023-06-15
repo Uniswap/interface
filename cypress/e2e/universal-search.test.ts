@@ -71,12 +71,13 @@ describe('Universal search bar', () => {
     cy.get('[data-cy="search-bar-input"]').last().clear()
     cy.get('[data-cy="searchbar-dropdown"]')
       .contains('[data-cy="searchbar-dropdown"]', 'Recent searches')
-      .get('[data-cy="searchbar-token-row-UNI"]')
+      .find('[data-cy="searchbar-token-row-UNI"]')
+      .should('exist')
 
     // Most popular 3 tokens should be shown.
     cy.get('[data-cy="searchbar-dropdown"]')
       .contains('[data-cy="searchbar-dropdown"]', 'Popular tokens')
-      .get('[data-cy^="searchbar-token-row"]')
+      .find('[data-cy^="searchbar-token-row"]')
       .its('length')
       .should('be.eq', 3)
   })
