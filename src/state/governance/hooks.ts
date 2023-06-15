@@ -148,7 +148,6 @@ interface FormattedProposalLog {
   proposalId: number
 }
 
-// TODO: add rb selectors
 const FOUR_BYTES_DIR: { [sig: string]: string } = {
   '0x5ef2c7f0': 'setSubnodeRecord(bytes32,bytes32,address,address,uint64)',
   '0x10f13a8c': 'setText(bytes32,string,string)',
@@ -158,6 +157,22 @@ const FOUR_BYTES_DIR: { [sig: string]: string } = {
   '0x7b1837de': 'fund(address,uint256)',
   '0x332f6465': 'setAdapter(address,bool)',
   '0xd784d426': 'setImplementation(address)',
+  '0x83f94db7': 'upgradeImplementation(address)',
+  '0x42f1181e': 'addAuthorizedAddress(address)',
+  '0x37b006a6': 'detachStakingContract',
+  '0x66615d56': 'attachStakingContract(address)',
+  '0x70712939': 'removeAuthorizedAddress(address)',
+  '0xf2fde38b': 'transferOwnership(address)',
+  '0xc14b8e9c': 'updateThresholds(uint256,uin256)',
+  '0x3f4350a5': 'upgradeStrategy(address)',
+  '0xa91ee0dc': 'setRegistry(address)',
+  '0x7a9e5e4b': 'setAuthority(address)',
+  '0xb516e6e1': 'setRigoblockDao(address)',
+  '0xc91b0149': 'setWhitelister(address,bool)',
+  '0x13af4035': 'setOwner(address)',
+  '0x71013c10': 'setFactory(address)',
+  '0xcd29d473': 'addMethod(bytes4,address)',
+  '0xd9efcc1e': 'removeMethod(bytes4,address)',
 }
 
 /**
