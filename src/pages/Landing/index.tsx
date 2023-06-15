@@ -335,7 +335,7 @@ export default function Landing() {
             element={InterfaceElementName.LANDING_PAGE_SWAP_ELEMENT}
           >
             <Link to="/swap">
-              <LandingSwap switchLocaleOff />
+              <LandingSwap />
             </Link>
           </TraceEvent>
         </LandingSwapContainer>

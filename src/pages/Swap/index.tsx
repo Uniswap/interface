@@ -32,7 +32,7 @@ import JSBI from 'jsbi'
 import { formatSwapQuoteReceivedEventProperties } from 'lib/utils/analytics'
 import { ReactNode, useCallback, useEffect, useMemo, useReducer, useState } from 'react'
 import { ArrowDown } from 'react-feather'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { Text } from 'rebass'
 import { InterfaceTrade, TradeState } from 'state/routing/types'
 import styled, { useTheme } from 'styled-components/macro'
@@ -133,9 +133,12 @@ function largerPercentValue(a?: Percent, b?: Percent) {
 
 const TRADE_STRING = 'SwapRouter'
 
-export default function SwapPage({ className, switchLocaleOff }: { className?: string; switchLocaleOff?: boolean }) {
+export default function SwapPage({ className }: { className?: string }) {
   const { chainId: connectedChainId } = useWeb3React()
   const loadedUrlParams = useDefaultsFromURLSearch()
+
+  const location = useLocation()
+
   return (
     <Trace page={InterfacePageName.SWAP_PAGE} shouldLogImpression>
       <PageWrapper>
@@ -149,7 +152,7 @@ export default function SwapPage({ className, switchLocaleOff }: { className?: s
         />
         <NetworkAlert />
       </PageWrapper>
-      {!switchLocaleOff && <SwitchLocaleLink />}
+      {location.pathname === '/swap' && <SwitchLocaleLink />}
     </Trace>
   )
 }
