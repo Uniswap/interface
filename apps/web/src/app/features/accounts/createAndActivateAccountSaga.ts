@@ -8,7 +8,7 @@ import {
 import { createMonitoredSaga } from 'wallet/src/utils/saga'
 
 /**
- * Create and active an account in a single step
+ * Create and activate an account in a single step
  */
 function* createAndActivateAccount() {
   yield* call(createAccount)

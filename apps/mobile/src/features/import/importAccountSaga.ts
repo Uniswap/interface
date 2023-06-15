@@ -13,8 +13,6 @@ import {
 import { getValidAddress } from 'wallet/src/utils/addresses'
 import { createMonitoredSaga } from 'wallet/src/utils/saga'
 
-export const IMPORT_WALLET_AMOUNT = 10
-
 export function* importAccount(params: ImportAccountParams) {
   const { type, name } = params
   logger.debug('importAccountSaga', 'importAccount', 'Importing type:', type)

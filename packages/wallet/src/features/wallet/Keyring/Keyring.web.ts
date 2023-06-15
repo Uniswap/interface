@@ -152,7 +152,7 @@ export class WebKeyring implements IKeyring {
   }
 
   private keyForMnemonicId(mnemonicId: string): string {
-    // NOTE: small difference with mobile implementation--native keychain prepends a custom prefix, but we missed do it ourselves here.
+    // NOTE: small difference with mobile implementation--native keychain prepends a custom prefix, but we must do it ourselves here.
     return entireMnemonicPrefix + mnemonicId
   }
 

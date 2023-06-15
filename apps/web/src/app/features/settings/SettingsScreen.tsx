@@ -57,9 +57,8 @@ export function SettingsScreen(): JSX.Element {
             onPress={(): void => setShowAll(!showAll)}>
             {showAll
               ? t('Hide wallets')
-              : t(`Show all {{numberWallets}} wallets`, {
-                  numberWallets: allAccountsSorted.length,
-                })}
+              : // TODO(EXT-178): add back t() wrapper and figure out why {{}} is not working
+                `Show all ${allAccountsSorted.length} wallets`}
           </Button>
         ) : null}
         <YGroup>

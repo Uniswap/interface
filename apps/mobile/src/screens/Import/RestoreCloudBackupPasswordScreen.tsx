@@ -16,13 +16,14 @@ import {
 } from 'src/features/CloudBackup/passwordLockoutSlice'
 import { restoreMnemonicFromICloud } from 'src/features/CloudBackup/RNICloudBackupsManager'
 import { selectLockoutEndTime, selectPasswordAttempts } from 'src/features/CloudBackup/selectors'
-import { importAccountActions, IMPORT_WALLET_AMOUNT } from 'src/features/import/importAccountSaga'
+import { importAccountActions } from 'src/features/import/importAccountSaga'
 import { ImportAccountType } from 'src/features/import/types'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { PasswordError } from 'src/features/onboarding/PasswordError'
 import { ElementName } from 'src/features/telemetry/constants'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { useAddBackButton } from 'src/utils/useAddBackButton'
+import { NUMBER_OF_WALLETS_TO_IMPORT } from 'wallet/src/features/wallet/import/utils'
 import { ONE_HOUR_MS, ONE_MINUTE_MS } from 'wallet/src/utils/time'
 
 type Props = NativeStackScreenProps<
@@ -117,7 +118,7 @@ export function RestoreCloudBackupPasswordScreen({
           importAccountActions.trigger({
             type: ImportAccountType.RestoreBackup,
             mnemonicId: params.mnemonicId,
-            indexes: Array.from(Array(IMPORT_WALLET_AMOUNT).keys()),
+            indexes: Array.from(Array(NUMBER_OF_WALLETS_TO_IMPORT).keys()),
           })
         )
         dispatch(resetPasswordAttempts())

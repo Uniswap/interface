@@ -75,7 +75,7 @@ export function IntroScreen(): JSX.Element {
         <LinkButton
           flexGrow={1}
           theme="secondary"
-          to={`${OnboardingRoutes.Import}/${ImportOnboardingRoutes.Mnemonic}`}>
+          to={`${OnboardingRoutes.Import}/${ImportOnboardingRoutes.Password}`}>
           I already have a wallet
         </LinkButton>
         <LinkButton flexGrow={1} theme="primary" to="create">

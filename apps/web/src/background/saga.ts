@@ -47,7 +47,6 @@ export const monitoredSagas: Record<string, MonitoredSaga> = {
     reducer: authReducer,
     actions: authActions,
   },
-
   [createAccountSagaName]: {
     name: createAccountSagaName,
     wrappedSaga: createAccountSaga,

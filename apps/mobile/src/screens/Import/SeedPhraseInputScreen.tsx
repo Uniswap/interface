@@ -12,13 +12,14 @@ import { Text } from 'src/components/Text'
 import { RECOVERY_PHRASE_HELP_URL } from 'src/constants/urls'
 import { useLockScreenOnBlur } from 'src/features/authentication/lockScreenContext'
 import { GenericImportForm } from 'src/features/import/GenericImportForm'
-import { importAccountActions, IMPORT_WALLET_AMOUNT } from 'src/features/import/importAccountSaga'
+import { importAccountActions } from 'src/features/import/importAccountSaga'
 import { ImportAccountType } from 'src/features/import/types'
 import { SafeKeyboardOnboardingScreen } from 'src/features/onboarding/SafeKeyboardOnboardingScreen'
 import { ElementName } from 'src/features/telemetry/constants'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { openUri } from 'src/utils/linking'
 import { useAddBackButton } from 'src/utils/useAddBackButton'
+import { NUMBER_OF_WALLETS_TO_IMPORT } from 'wallet/src/features/wallet/import/utils'
 import {
   MnemonicValidationError,
   translateMnemonicErrorMessage,
@@ -63,7 +64,7 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props):
       importAccountActions.trigger({
         type: ImportAccountType.Mnemonic,
         validatedMnemonic: validMnemonic,
-        indexes: Array.from(Array(IMPORT_WALLET_AMOUNT).keys()),
+        indexes: Array.from(Array(NUMBER_OF_WALLETS_TO_IMPORT).keys()),
       })
     )
     navigation.navigate({ name: OnboardingScreens.SelectWallet, params, merge: true })

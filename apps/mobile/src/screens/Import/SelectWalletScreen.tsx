@@ -8,7 +8,7 @@ import { Button } from 'src/components/buttons/Button'
 import { Box, Flex } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { Loader } from 'src/components/loading'
-import { importAccountActions, IMPORT_WALLET_AMOUNT } from 'src/features/import/importAccountSaga'
+import { importAccountActions } from 'src/features/import/importAccountSaga'
 import { ImportAccountType } from 'src/features/import/types'
 import WalletPreviewCard from 'src/features/import/WalletPreviewCard'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
@@ -31,6 +31,7 @@ import {
   pendingAccountActions,
 } from 'wallet/src/features/wallet/create/pendingAccountsSaga'
 import { useAccounts, usePendingAccounts } from 'wallet/src/features/wallet/hooks'
+import { NUMBER_OF_WALLETS_TO_IMPORT } from 'wallet/src/features/wallet/import/utils'
 import { activateAccount } from 'wallet/src/features/wallet/slice'
 import { ONE_SECOND_MS } from 'wallet/src/utils/time'
 import { useTimeout } from 'wallet/src/utils/timing'
@@ -58,7 +59,7 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props): JS
     )
     .map((account) => account.address)
 
-  const isImportingAccounts = addresses.length !== IMPORT_WALLET_AMOUNT
+  const isImportingAccounts = addresses.length !== NUMBER_OF_WALLETS_TO_IMPORT
 
   const { data, loading, refetch, error } = useSelectWalletScreenQuery({
     variables: { ownerAddresses: addresses },

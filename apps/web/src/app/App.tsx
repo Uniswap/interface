@@ -11,6 +11,7 @@ import { ImportOnboardingWrapper } from 'src/app/features/onboarding/ImportOnboa
 import { IntroScreen } from 'src/app/features/onboarding/IntroScreen'
 import { OnboardingWrapper } from 'src/app/features/onboarding/OnboardingWrapper'
 import { Password } from 'src/app/features/onboarding/Password'
+import { SelectWallets } from 'src/app/features/onboarding/SelectWallets'
 import { SettingsScreen } from 'src/app/features/settings/SettingsScreen'
 import { SettingsScreenWrapper } from 'src/app/features/settings/SettingsScreenWrapper'
 import { SettingsViewRecoveryPhraseScreen } from 'src/app/features/settings/SettingsViewRecoveryPhraseScreen'
@@ -42,12 +43,16 @@ const router = createHashRouter([
         element: <ImportOnboardingWrapper />,
         children: [
           {
+            path: ImportOnboardingRoutes.Password,
+            element: <Password />,
+          },
+          {
             path: ImportOnboardingRoutes.Mnemonic,
             element: <ImportMnemonic />,
           },
           {
-            path: ImportOnboardingRoutes.Password,
-            element: <Password />,
+            path: ImportOnboardingRoutes.Select,
+            element: <SelectWallets />,
           },
           {
             path: ImportOnboardingRoutes.Complete,

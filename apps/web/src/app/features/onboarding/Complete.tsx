@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { ONBOARDING_CONTENT_WIDTH } from 'src/app/features/onboarding/utils'
 import { Circle, Image, Stack, Theme, XStack, YStack } from 'tamagui'
 import { Text } from 'ui/src'
 import { UNISWAP_LOGO } from 'ui/src/assets'
@@ -45,7 +46,7 @@ export function Complete(): JSX.Element {
   }, [])
   return (
     <>
-      <Stack alignItems="center" minWidth={450}>
+      <Stack alignItems="center" width={ONBOARDING_CONTENT_WIDTH}>
         <YStack gap="$spacing12">
           <YStack alignItems="center" gap="$spacing12">
             {/* TODO: use AddressDisplay here */}

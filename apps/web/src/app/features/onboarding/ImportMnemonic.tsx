@@ -1,67 +1,104 @@
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { ImportOnboardingRoutes } from 'src/app/navigation/constants'
+import { useOnboardingContext } from 'src/app/features/onboarding/OnboardingContextProvider'
+import { OnboardingInputError } from 'src/app/features/onboarding/OnboardingInputError'
+import { ONBOARDING_CONTENT_WIDTH } from 'src/app/features/onboarding/utils'
+import {
+  ImportOnboardingRoutes,
+  OnboardingRoutes,
+  TopLevelRoutes,
+} from 'src/app/navigation/constants'
+import { useAppDispatch } from 'src/background/store'
 import { Input, Stack, XStack, YStack } from 'tamagui'
 import { Text } from 'ui/src'
-import { Button, LinkButton } from 'ui/src/components/button/Button'
+import { Button } from 'ui/src/components/button/Button'
+import { importAccountActions } from 'wallet/src/features/wallet/import/importAccountSaga'
+import { ImportAccountType } from 'wallet/src/features/wallet/import/types'
+import { NUMBER_OF_WALLETS_TO_IMPORT } from 'wallet/src/features/wallet/import/utils'
 import { validateMnemonic } from 'wallet/src/utils/mnemonics'
 
 export function ImportMnemonic(): JSX.Element {
   const navigate = useNavigate()
+  const dispatch = useAppDispatch()
 
   const [mnemonic, setMnemonic] = useState('')
+  const { password } = useOnboardingContext()
+  const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined)
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleClick = (e: any): void => {
-    // TODO: validate mnemonic and give the button a disabled state when there is no mnemonic
-    // Consider reusing logic from apps/mobile/**/SeedPhraseInputScreen
-    if (!validateMnemonic(mnemonic)) {
-      e.preventDefault()
+  // Add all accounts from mnemonic.
+  const handleClick = useCallback(() => {
+    // Check phrase validation
+    const {
+      validMnemonic,
+      error,
+      // invalidWord
+    } = validateMnemonic(mnemonic)
+
+    if (error) {
+      // TODO: better error handling
+      setErrorMessage(`Invalid recovery phrase: ${error}`)
+      return
     }
-  }
+    try {
+      dispatch(
+        importAccountActions.trigger({
+          type: ImportAccountType.Mnemonic,
+          validatedMnemonic: validMnemonic,
+          validatedPassword: password,
+          indexes: Array.from(Array(NUMBER_OF_WALLETS_TO_IMPORT).keys()),
+        })
+      )
+    } catch (e) {
+      setErrorMessage(`Error importing mnemonic: ${e}`)
+    }
+    navigate(
+      `/${TopLevelRoutes.Onboarding}/${OnboardingRoutes.Import}/${ImportOnboardingRoutes.Select}`
+    )
+  }, [mnemonic, navigate, dispatch, password])
 
   return (
-    <Stack alignItems="center" gap="$spacing36" minWidth={450}>
+    <Stack alignItems="center" gap="$spacing36" width={ONBOARDING_CONTENT_WIDTH}>
       <YStack alignItems="center" gap="$spacing8">
         <Text variant="headlineMedium">Enter your recovery phrase</Text>
         <Text variant="subheadSmall">
           Your recovery phrase will only be stored locally on your browser
         </Text>
       </YStack>
-      <Input
-        secureTextEntry
-        backgroundColor="$background1"
-        borderColor="$backgroundOutline"
-        borderRadius="$rounded12"
-        borderWidth={1}
-        focusStyle={styles.inputFocus}
-        height="auto"
-        hoverStyle={styles.inputHover}
-        id="mnemonic"
-        paddingHorizontal="$spacing16"
-        paddingVertical="$spacing12"
-        placeholder="word1 word2 word3 word4 word5 word6 word7 word8 word9 word10 word11 word12"
-        placeholderTextColor="$textTertiary"
-        value={mnemonic}
-        width="100%"
-        onChangeText={setMnemonic}
-      />
+      <YStack alignItems="center" gap="$spacing8" width="100%">
+        <Input
+          secureTextEntry
+          backgroundColor="$background1"
+          borderColor="$backgroundOutline"
+          borderRadius="$rounded12"
+          borderWidth={1}
+          focusStyle={styles.inputFocus}
+          height="auto"
+          hoverStyle={styles.inputHover}
+          id="mnemonic"
+          paddingHorizontal="$spacing16"
+          paddingVertical="$spacing12"
+          placeholder="word1 word2 word3 word4 word5 word6 word7 word8 word9 word10 word11 word12"
+          placeholderTextColor="$textTertiary"
+          value={mnemonic}
+          width="100%"
+          onChange={(): void => {
+            setErrorMessage(undefined)
+          }}
+          onChangeText={setMnemonic}
+        />
+        {errorMessage && <OnboardingInputError error={errorMessage} />}
+      </YStack>
       <XStack gap="$spacing12" width="100%">
         <Button flexGrow={1} theme="secondary" onPress={(): void => navigate(-1)}>
           Back
         </Button>
-        <LinkButton
-          disabled={!mnemonic}
-          // this gets passed down to the button component the Link wraps
+        <Button
+          disabled={!mnemonic || !!errorMessage}
           flexGrow={1}
-          // this applies to the Link component itself
-          linkStyleProps={{ style: { flexGrow: 1 } }}
-          state={{ data: { mnemonic, from: ImportOnboardingRoutes.Mnemonic } }}
           theme="primary"
-          to={`../${ImportOnboardingRoutes.Password}`}
-          onClick={handleClick}>
+          onPress={handleClick}>
           Next
-        </LinkButton>
+        </Button>
       </XStack>
     </Stack>
   )
