@@ -11,18 +11,8 @@ jobs:
   push-staging:
     name: 'Push to staging branch'
     runs-on: ubuntu-latest
-    environment:
-      name: push/staging
     steps:
       - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab
-        with:
-          token: ${{ secrets.RELEASE_SERVICE_ACCESS_TOKEN }}
-          ref: main
-      - uses: ./.github/actions/setup
-      - name: Git config
-        run: |
-          git config user.name "UL Service Account"
-          git config user.email "hello-happy-puppy@users.noreply.github.com"
       - name: Download translations
         uses: crowdin/github-action@3133cc916c35590475cf6705f482fb653d8e36e9
         with:
@@ -32,8 +22,10 @@ jobs:
           token: ${{ secrets.CROWDIN_PERSONAL_TOKEN_SECRET }}
           source: 'src/locales/en-US.po'
           translation: 'src/locales/%locale%.po'
-          push_translations: true
+          localization_branch_name: t9n/download
           commit_message: 'chore(i18n): synchronize translations from crowdin [skip ci]'
+          create_pull_request: false
+          push_translations: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Add CODEOWNERS
