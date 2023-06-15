@@ -16,7 +16,7 @@ const CHAIN_SUBGRAPH_URL: Record<number, string> = {
 
   [ChainId.BNB]: 'https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-v3-bsc',
 
-  [ChainId.AVALANCHE]: 'https://thegraph.com/explorer/subgraph/lynnshaoyu/avalanche-blocks',
+  [ChainId.AVALANCHE]: 'https://api.thegraph.com/subgraphs/name/lynnshaoyu/uniswap-v3-avax',
 }
 
 const httpLink = new HttpLink({ uri: CHAIN_SUBGRAPH_URL[ChainId.MAINNET] })
