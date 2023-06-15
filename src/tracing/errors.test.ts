@@ -76,15 +76,27 @@ describe('beforeSend', () => {
     expect(beforeSend(ERROR, { originalException })).toBeNull()
   })
 
-  it('filters chrome-extension errors', () => {
-    const originalException = new Error()
-    originalException.stack = ` 
-      TypeError: Cannot create proxy with a non-object as target or handler
-        at pa(chrome-extension://kbjhmlgclljgdhmhffjofbobmficicjp/proxy-window-evm.a5430696.js:22:216604)
-        at da(chrome-extension://kbjhmlgclljgdhmhffjofbobmficicjp/proxy-window-evm.a5430696.js:22:212968)
-        at a(../../../../src/helpers.ts:98:1)
-    `
-    expect(beforeSend(ERROR, { originalException })).toBeNull()
+  describe('filters browser extension errors', () => {
+    it('filters chrome-extension errors', () => {
+      const originalException = new Error()
+      originalException.stack = ` 
+        TypeError: Cannot create proxy with a non-object as target or handler
+          at pa(chrome-extension://kbjhmlgclljgdhmhffjofbobmficicjp/proxy-window-evm.a5430696.js:22:216604)
+          at da(chrome-extension://kbjhmlgclljgdhmhffjofbobmficicjp/proxy-window-evm.a5430696.js:22:212968)
+          at a(../../../../src/helpers.ts:98:1)
+      `
+      expect(beforeSend(ERROR, { originalException })).toBeNull()
+    })
+
+    it('filters moz-extension errors', () => {
+      const originalException = new Error()
+      originalException.stack = ` 
+        Error: Permission denied to access property "apply"
+          at WINDOW.onunhandledrejection(../node_modules/@sentry/src/instrument.ts:610:1)
+          at y/h.onunhandledrejection(moz-extension://95cafb7b-6038-4bdd-b832-d3a58544601d/content_script/inpage_sol.js:143:16274)
+      `
+      expect(beforeSend(ERROR, { originalException })).toBeNull()
+    })
   })
 
   describe('OneKey', () => {
