@@ -26,8 +26,6 @@ export function networkNameToID(networkName: string) {
   }
 }
 
-const GRAPHQL_ENDPOINT = 'https://api.uniswap.org/v1/graphql'
-
 type MetaTagInjectorInput = {
   name: any
   network: any
