@@ -8,8 +8,7 @@ import { useContract } from 'hooks/useContract'
 import { useSingleCallResult } from 'lib/hooks/multicall'
 import ms from 'ms.macro'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { UserRejectedRequestError } from 'utils/errors'
-import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
+import { throwReadableError } from 'utils/errors'
 
 const PERMIT_EXPIRATION = ms`30d`
 const PERMIT_SIG_EXPIRATION = ms`30m`
@@ -83,10 +82,7 @@ export function useUpdatePermitAllowance(
       return
     } catch (e: unknown) {
       const symbol = token?.symbol ?? 'Token'
-      if (didUserReject(e)) {
-        throw new UserRejectedRequestError(`${symbol} permit allowance failed: User rejected signature`)
-      }
-      throw new Error(`${symbol} permit allowance failed: ${e instanceof Error ? e.message : e}`)
+      throwReadableError(`${symbol} permit allowance failed:`, e)
     }
   }, [account, chainId, nonce, onPermitSignature, provider, spender, token])
 }
