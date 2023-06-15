@@ -15,10 +15,10 @@ import { useCallback, useMemo } from 'react'
 import styled from 'styled-components/macro'
 import { colors } from 'theme/colors'
 import { flexRowNoWrap } from 'theme/styles'
+import { shortenAddressStrict } from 'utils'
 
 import { isTransactionRecent, useAllTransactions } from '../../state/transactions/hooks'
 import { TransactionDetails } from '../../state/transactions/types'
-import { shortenAddress } from '../../utils'
 import { ButtonSecondary } from '../Button'
 import StatusIcon from '../Identicon/StatusIcon'
 import { RowBetween } from '../Row'
@@ -175,7 +175,7 @@ function Web3StatusInner() {
             </RowBetween>
           ) : (
             <AddressAndChevronContainer>
-              <Text>{ENSName || shortenAddress(account)}</Text>
+              <Text>{ENSName || shortenAddressStrict(account)}</Text>
             </AddressAndChevronContainer>
           )}
         </Web3StatusConnected>

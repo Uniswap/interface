@@ -25,7 +25,6 @@ import {
   TokenRarity,
 } from 'nft/types'
 import { getMarketplaceIcon } from 'nft/utils'
-import { shortenAddress } from 'nft/utils/address'
 import { buildActivityAsset } from 'nft/utils/buildActivityAsset'
 import { formatEth } from 'nft/utils/currency'
 import { getTimeDifference } from 'nft/utils/date'
@@ -33,6 +32,7 @@ import { putCommas } from 'nft/utils/putCommas'
 import { MouseEvent, ReactNode, useMemo, useState } from 'react'
 import styled from 'styled-components/macro'
 import { ExternalLink } from 'theme'
+import { shortenAddress } from 'utils'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 import * as styles from './Activity.css'

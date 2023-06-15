@@ -16,7 +16,7 @@ import {
   timeLeft,
   useUsdPrice,
 } from 'nft/utils'
-import { shortenAddress } from 'nft/utils/address'
+import { shortenAddress } from 'utils/addresses'
 import { useMemo } from 'react'
 import { Upload } from 'react-feather'
 import { useQuery } from 'react-query'
