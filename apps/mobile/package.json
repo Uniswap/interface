@@ -180,6 +180,7 @@
     "babel-jest": "27.2.3",
     "babel-loader": "8.2.3",
     "babel-plugin-react-native-web": "0.17.5",
+    "babel-plugin-react-require": "4.0.0",
     "chromatic": "6.3.4",
     "cross-env": "7.0.3",
     "detox": "19.7.0",

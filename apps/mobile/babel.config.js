@@ -29,6 +29,8 @@ module.exports = function (api) {
     '@babel/plugin-proposal-logical-assignment-operators',
     // metro doesn't like these
     '@babel/plugin-proposal-numeric-separator',
+    // automatically require React when using JSX
+    'react-require',
   ]
 
   if (inProduction) {
