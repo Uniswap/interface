@@ -45,15 +45,11 @@ const SectionTitle = styled(ThemedText.SubHeader)`
   padding-bottom: 24px;
 `
 
-const ThemeToggleContainer = styled.div`
-  margin: 0 0 6px;
-`
-
-const ToggleContainer = styled.div`
-  padding: 16px 0 0 0;
-  &:last-child {
-    margin-bottom: 24px;
-  }
+const ToggleWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
 `
 
 export default function SettingsMenu({ onClose }: { onClose: () => void }) {
@@ -64,17 +60,11 @@ export default function SettingsMenu({ onClose }: { onClose: () => void }) {
       <SectionTitle>
         <Trans>Preferences</Trans>
       </SectionTitle>
-      <div>
-        <ThemeToggleContainer>
-          <ThemeToggle />
-        </ThemeToggleContainer>
-        <ToggleContainer>
-          <SmallBalanceToggle />
-        </ToggleContainer>
-        <ToggleContainer>
-          <TestnetsToggle />
-        </ToggleContainer>
-      </div>
+      <ToggleWrapper>
+        <ThemeToggle />
+        <SmallBalanceToggle />
+        <TestnetsToggle />
+      </ToggleWrapper>
 
       <SectionTitle data-testid="wallet-header">
         <Trans>Language</Trans>
