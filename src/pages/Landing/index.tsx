@@ -325,7 +325,7 @@ export default function Landing() {
   const shouldDisableNFTRoutes = useDisableNFTRoutes()
 
   const cards = useMemo(
-    () => MAIN_CARDS.filter((card) => (shouldDisableNFTRoutes ? !card.to.startsWith('/nft') : true)),
+    () => MAIN_CARDS.filter((card) => !(shouldDisableNFTRoutes && card.to.startsWith('/nft'))),
     [shouldDisableNFTRoutes]
   )
 
