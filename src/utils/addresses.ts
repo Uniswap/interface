@@ -18,15 +18,6 @@ export function shortenAddress(address = '', charsStart = 4, charsEnd = 4): stri
   return ellipseAddressAdd0x(parsed, charsStart, charsEnd)
 }
 
-// Shorten the checksummed version of the input address to have 0x + 4 characters at start and end
-export function shortenAddressStrict(address = '', charsStart = 4, charsEnd = 4): string {
-  const parsed = isAddress(address)
-  if (!parsed) {
-    throw Error(`Invalid 'address' parameter '${address}'.`)
-  }
-  return ellipseAddressAdd0x(parsed, charsStart, charsEnd)
-}
-
 /**
  * Shorten an address and add 0x to the start if missing
  * @param targetAddress

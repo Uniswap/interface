@@ -5,7 +5,7 @@ import { useWeb3React } from '@web3-react/core'
 import { useState } from 'react'
 import { Text } from 'rebass'
 import styled from 'styled-components/macro'
-import { shortenAddressStrict } from 'utils'
+import { shortenAddress } from 'utils'
 
 import Circle from '../../assets/images/blue-loader.svg'
 import tokenLogo from '../../assets/images/token-logo.png'
@@ -167,7 +167,7 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
               )}
               {parsedAddress && (
                 <ThemedText.DeprecatedLargeHeader fontWeight={600} color="black">
-                  <Trans>for {shortenAddressStrict(parsedAddress)}</Trans>
+                  <Trans>for {shortenAddress(parsedAddress)}</Trans>
                 </ThemedText.DeprecatedLargeHeader>
               )}
             </AutoColumn>

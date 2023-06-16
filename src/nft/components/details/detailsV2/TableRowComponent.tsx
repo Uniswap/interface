@@ -13,7 +13,7 @@ import { Offer, SellOrder } from 'nft/types'
 import { formatEth, getMarketplaceIcon, timeUntil } from 'nft/utils'
 import styled from 'styled-components/macro'
 import { BREAKPOINTS, ExternalLink, ThemedText } from 'theme'
-import { shortenAddressStrict } from 'utils'
+import { shortenAddress } from 'utils'
 
 import { TableTabsKeys } from './DataPageTable'
 
@@ -137,7 +137,7 @@ export const ContentRow = ({
       {(!isSellOrder || is1155) && (
         <TableCell hideOnSmall={true}>
           <Link href={`https://etherscan.io/address/${content.maker}`}>
-            <ThemedText.LabelSmall color="textPrimary">{shortenAddressStrict(content.maker)}</ThemedText.LabelSmall>
+            <ThemedText.LabelSmall color="textPrimary">{shortenAddress(content.maker)}</ThemedText.LabelSmall>
           </Link>
         </TableCell>
       )}
