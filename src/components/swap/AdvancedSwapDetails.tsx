@@ -1,13 +1,13 @@
 import { Trans } from '@lingui/macro'
 import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
+import { formatCurrencyAmount, formatPriceImpact, formatUSDPrice, NumberType } from '@uniswap/conedison/format'
 import { Percent, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { LoadingRows } from 'components/Loader/styled'
 import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { InterfaceTrade } from 'state/routing/types'
-import formatPriceImpact from 'utils/formatPriceImpact'
 
 import { Separator, ThemedText } from '../../theme'
 import Column from '../Column'
@@ -61,7 +61,7 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
             </ThemedText.BodySmall>
           </MouseoverTooltip>
           <TextWithLoadingPlaceholder syncing={syncing} width={50}>
-            <ThemedText.BodySmall>~${trade.gasUseEstimateUSD}</ThemedText.BodySmall>
+            <ThemedText.BodySmall>~{formatUSDPrice(trade.gasUseEstimateUSD)}</ThemedText.BodySmall>
           </TextWithLoadingPlaceholder>
         </RowBetween>
       )}
@@ -93,7 +93,9 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
         <TextWithLoadingPlaceholder syncing={syncing} width={70}>
           <ThemedText.BodySmall>
             {trade.tradeType === TradeType.EXACT_INPUT
-              ? `${trade.minimumAmountOut(allowedSlippage).toSignificant(6)} ${trade.outputAmount.currency.symbol}`
+              ? `${formatCurrencyAmount(trade.minimumAmountOut(allowedSlippage), NumberType.SwapTradeAmount)} ${
+                  trade.outputAmount.currency.symbol
+                }`
               : `${trade.maximumAmountIn(allowedSlippage).toSignificant(6)} ${trade.inputAmount.currency.symbol}`}
           </ThemedText.BodySmall>
         </TextWithLoadingPlaceholder>
@@ -115,7 +117,9 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
         </RowFixed>
         <TextWithLoadingPlaceholder syncing={syncing} width={65}>
           <ThemedText.BodySmall>
-            {`${trade.outputAmount.toSignificant(6)} ${trade.outputAmount.currency.symbol}`}
+            {`${formatCurrencyAmount(trade.outputAmount, NumberType.SwapTradeAmount)} ${
+              trade.outputAmount.currency.symbol
+            }`}
           </ThemedText.BodySmall>
         </TextWithLoadingPlaceholder>
       </RowBetween>
