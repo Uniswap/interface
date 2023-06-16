@@ -29,6 +29,7 @@ jobs:
           push_translations: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - run: git status
       - name: Git push
         run: |
           git push origin t9n/download:t9n/test --force
