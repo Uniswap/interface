@@ -43,6 +43,7 @@ jobs:
 
       - name: Add translations
         run: |
+          rm src/locales/en-US.po
           git add src/locales/*.po
           git commit -m 'ci(t9n): download translations from crowdin'
 
