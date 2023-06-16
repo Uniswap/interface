@@ -3,6 +3,8 @@ import { ApolloClient, InMemoryCache } from '@apollo/client'
 
 import { AssetDocument } from '../../../src/graphql/data/__generated__/types-and-hooks'
 
+const GRAPHQL_ENDPOINT = 'https://api.uniswap.org/v1/graphql'
+
 type MetaTagInjectorInput = {
   id: any
   tokenId: any

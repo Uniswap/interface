@@ -1,4 +1,5 @@
 const { setup: setupDevServer } = require('jest-dev-server')
+const portReady = require('port-ready')
 
 module.exports = async function globalSetup() {
   globalThis.servers = await setupDevServer({
@@ -6,4 +7,5 @@ module.exports = async function globalSetup() {
     launchTimeout: 50000,
     port: 3000,
   })
+  await portReady(3000)
 }
