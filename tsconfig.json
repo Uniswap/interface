@@ -27,7 +27,7 @@
     "strictNullChecks": true,
     "target": "ESNext",
     "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo/build", // avoid clobbering the cypress tsbuildinfo
-    "types": ["jest"],
+    "types": ["jest", "@cloudflare/workers-types", "jest-environment-miniflare/globals"],
     "useUnknownInCatchVariables": false
   },
   "exclude": ["node_modules"],
