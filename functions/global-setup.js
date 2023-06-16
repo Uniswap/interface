@@ -7,5 +7,6 @@ module.exports = async function globalSetup() {
     launchTimeout: 50000,
     port: 3000,
   })
-  await portReady(3000)
+  //await portReady(3000)
+  await new Promise((r) => setTimeout(r, 30000))
 }

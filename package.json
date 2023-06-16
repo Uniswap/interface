@@ -264,7 +264,7 @@
     "workbox-navigation-preload": "^6.1.0",
     "workbox-precaching": "^6.1.0",
     "workbox-routing": "^6.1.0",
-    "wrangler": "2.20.0",
+    "wrangler": "https://prerelease-registry.devprod.cloudflare.dev/workers-sdk/runs/4925945367/npm-package-wrangler-3048",
     "zustand": "^4.3.6"
   },
   "engines": {
