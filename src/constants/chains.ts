@@ -87,6 +87,16 @@ export const TESTNET_CHAIN_IDS = [
   SupportedChainId.OPTIMISM_GOERLI,
 ] as const
 
+export const TESTNET_SET = new Set([
+  SupportedChainId.GOERLI,
+  SupportedChainId.SEPOLIA,
+  SupportedChainId.ARBITRUM_GOERLI,
+  SupportedChainId.OPTIMISM_GOERLI,
+  SupportedChainId.POLYGON_MUMBAI,
+  SupportedChainId.POLYGON_MUMBAI,
+  SupportedChainId.CELO_ALFAJORES,
+])
+
 export type SupportedTestnetChainId = typeof TESTNET_CHAIN_IDS[number]
 
 /**
