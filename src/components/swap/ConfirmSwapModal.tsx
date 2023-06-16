@@ -12,6 +12,7 @@ import Badge from 'components/Badge'
 import Modal, { MODAL_TRANSITION_DURATION } from 'components/Modal'
 import { RowFixed } from 'components/Row'
 import { getChainInfo } from 'constants/chainInfo'
+import { USDT as USDT_MAINNET } from 'constants/tokens'
 import { useMaxAmountIn } from 'hooks/useMaxAmountIn'
 import { Allowance, AllowanceState } from 'hooks/usePermit2Allowance'
 import usePrevious from 'hooks/usePrevious'
@@ -34,6 +35,7 @@ import SwapModalHeader from './SwapModalHeader'
 
 export enum ConfirmModalState {
   REVIEWING,
+  RESETTING_USDT,
   APPROVING_TOKEN,
   PERMITTING,
   PENDING_CONFIRMATION,
@@ -49,7 +51,11 @@ const StyledL2Logo = styled.img`
 `
 
 function isInApprovalPhase(confirmModalState: ConfirmModalState) {
-  return confirmModalState === ConfirmModalState.APPROVING_TOKEN || confirmModalState === ConfirmModalState.PERMITTING
+  return (
+    confirmModalState === ConfirmModalState.RESETTING_USDT ||
+    confirmModalState === ConfirmModalState.APPROVING_TOKEN ||
+    confirmModalState === ConfirmModalState.PERMITTING
+  )
 }
 
 function useConfirmModalState({
@@ -74,6 +80,15 @@ function useConfirmModalState({
   // at the bottom of the modal, even after they complete steps 1 and 2.
   const generateRequiredSteps = useCallback(() => {
     const steps: PendingConfirmModalState[] = []
+    // Any existing USDT allowance needs to be reset before we can approve the new amount (mainnet only).
+    // See the `approve` function here: https://etherscan.io/address/0xdAC17F958D2ee523a2206206994597C13D831ec7#code
+    if (
+      allowance.state === AllowanceState.REQUIRED &&
+      allowance.token.equals(USDT_MAINNET) &&
+      allowance.allowedAmount.greaterThan(0)
+    ) {
+      steps.push(ConfirmModalState.RESETTING_USDT)
+    }
     if (allowance.state === AllowanceState.REQUIRED && allowance.needsSetupApproval) {
       steps.push(ConfirmModalState.APPROVING_TOKEN)
     }
@@ -98,6 +113,11 @@ function useConfirmModalState({
   const performStep = useCallback(
     async (step: ConfirmModalState) => {
       switch (step) {
+        case ConfirmModalState.RESETTING_USDT:
+          setConfirmModalState(ConfirmModalState.RESETTING_USDT)
+          invariant(allowance.state === AllowanceState.REQUIRED, 'Allowance should be required')
+          allowance.revoke().catch((e) => catchUserReject(e, PendingModalError.TOKEN_APPROVAL_ERROR))
+          break
         case ConfirmModalState.APPROVING_TOKEN:
           setConfirmModalState(ConfirmModalState.APPROVING_TOKEN)
           invariant(allowance.state === AllowanceState.REQUIRED, 'Allowance should be required')
@@ -154,6 +174,15 @@ function useConfirmModalState({
       performStep(ConfirmModalState.PERMITTING)
     }
   }, [allowance, performStep, previousSetupApprovalNeeded])
+
+  const previousRevocationPending = usePrevious(
+    allowance.state === AllowanceState.REQUIRED && allowance.isRevocationPending
+  )
+  useEffect(() => {
+    if (allowance.state === AllowanceState.REQUIRED && previousRevocationPending && !allowance.isRevocationPending) {
+      performStep(ConfirmModalState.APPROVING_TOKEN)
+    }
+  }, [allowance, performStep, previousRevocationPending])
 
   useEffect(() => {
     // Automatically triggers the next phase if the local modal state still thinks we're in the approval phase,
@@ -282,6 +311,7 @@ export default function ConfirmSwapModal({
         trade={trade}
         swapTxHash={txHash}
         tokenApprovalPending={allowance.state === AllowanceState.REQUIRED && allowance.isApprovalPending}
+        revocationPending={allowance.state === AllowanceState.REQUIRED && allowance.isRevocationPending}
       />
     )
   }, [
