@@ -5585,10 +5585,10 @@
     eslint-plugin-unused-imports "^2.0.0"
     prettier "^2.8.0"
 
-"@uniswap/gouda-sdk@^0.9.4":
-  version "0.9.4"
-  resolved "https://registry.yarnpkg.com/@uniswap/gouda-sdk/-/gouda-sdk-0.9.4.tgz#9e28747999b59c29555293ab01a3d97903c2e4ad"
-  integrity sha512-9yG14v4H4ZtBSHRqIZpv9GypylQFcPY+73P62J1RwkfpHmTEh9G4IGoW9pFdTjsVMD25aYbSwEVuWa6qr6t3Cw==
+"@uniswap/gouda-sdk@^1.0.0-alpha.3":
+  version "1.0.0-alpha.3"
+  resolved "https://registry.yarnpkg.com/@uniswap/gouda-sdk/-/gouda-sdk-1.0.0-alpha.3.tgz#121b3dc82fd5c3fb32aa579ebe3b8a38c21d20f4"
+  integrity sha512-akpLcL3Dj9bOyprd2NbvH5fLTO7p5LdeQiHvn1jT/CDNQkf9r2TezkyzzvBeG1Q+tr51GCR/KlZzNzhoIHLQCg==
   dependencies:
     "@ethersproject/bytes" "^5.7.0"
     "@ethersproject/providers" "^5.7.0"

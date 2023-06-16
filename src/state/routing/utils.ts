@@ -1,5 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { DutchLimitOrderInfo, DutchLimitOrderInfoJSON } from '@uniswap/gouda-sdk'
+import { DutchOrderInfo, DutchOrderInfoJSON } from '@uniswap/gouda-sdk'
 import { MixedRouteSDK } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { AlphaRouter, ChainId } from '@uniswap/smart-order-router'
@@ -13,7 +13,7 @@ import { GetQuoteArgs, INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference } from
 import {
   ClassicQuoteData,
   ClassicTrade,
-  DutchLimitOrderTrade,
+  DutchOrderTrade,
   InterfaceTrade,
   isClassicQuoteResponse,
   PoolType,
@@ -112,7 +112,7 @@ function isVersionedRoute<T extends V2PoolInRoute | V3PoolInRoute>(
   return route.every((pool) => pool.type === type)
 }
 
-function toDutchLimitOrderInfo(orderInfoJSON: DutchLimitOrderInfoJSON): DutchLimitOrderInfo {
+function toDutchOrderInfo(orderInfoJSON: DutchOrderInfoJSON): DutchOrderInfo {
   const { nonce, input, outputs, exclusivityOverrideBps } = orderInfoJSON
   return {
     ...orderInfoJSON,
@@ -208,10 +208,10 @@ export function transformRoutesToTrade(args: GetQuoteArgs, data: URAQuoteRespons
   })
 
   if (data.routing === URAQuoteType.DUTCH_LIMIT) {
-    const orderInfo = toDutchLimitOrderInfo(data.quote)
+    const orderInfo = toDutchOrderInfo(data.quote)
     return {
       state: QuoteState.SUCCESS,
-      trade: new DutchLimitOrderTrade({
+      trade: new DutchOrderTrade({
         currencyIn,
         currenciesOut: [currencyOut],
         orderInfo,
@@ -267,7 +267,7 @@ export function isClassicTrade(trade?: InterfaceTrade): trade is ClassicTrade {
   return trade?.fillType === TradeFillType.Classic
 }
 
-export function isUniswapXTrade(trade?: InterfaceTrade): trade is DutchLimitOrderTrade {
+export function isUniswapXTrade(trade?: InterfaceTrade): trade is DutchOrderTrade {
   return trade?.fillType === TradeFillType.UniswapX
 }
 

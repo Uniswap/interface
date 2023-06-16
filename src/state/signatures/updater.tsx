@@ -8,7 +8,7 @@ import { useAppSelector } from 'state/hooks'
 import { L2_CHAIN_IDS } from '../../constants/chains'
 import { useAddPopup } from '../application/hooks'
 import { useUpdateOrder } from './hooks'
-import { DutchLimitOrderStatus, SignatureType, UniswapXOrderDetails } from './types'
+import { DutchOrderStatus, SignatureType, UniswapXOrderDetails } from './types'
 
 export default function Updater() {
   const { account, chainId } = useWeb3React()
@@ -18,15 +18,14 @@ export default function Updater() {
   const pendingOrders = useMemo(() => {
     if (!account || !signatures[account]) return []
     return Object.values(signatures[account]).filter(
-      (signature) =>
-        signature.type === SignatureType.SIGN_UNISWAPX_ORDER && signature.status === DutchLimitOrderStatus.OPEN
+      (signature) => signature.type === SignatureType.SIGN_UNISWAPX_ORDER && signature.status === DutchOrderStatus.OPEN
     ) as UniswapXOrderDetails[]
   }, [account, signatures])
 
   const updateOrder = useUpdateOrder()
 
   const onOrderUpdate = useCallback(
-    (order: UniswapXOrderDetails, updatedStatus: DutchLimitOrderStatus, txHash?: string) => {
+    (order: UniswapXOrderDetails, updatedStatus: DutchOrderStatus, txHash?: string) => {
       if (order.status === updatedStatus) return
 
       updateOrder(order, updatedStatus, txHash)

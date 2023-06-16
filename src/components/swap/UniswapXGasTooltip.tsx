@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import Column from 'components/Column'
 import Row from 'components/Row'
-import { DutchLimitOrderTrade } from 'state/routing/types'
+import { DutchOrderTrade } from 'state/routing/types'
 import styled from 'styled-components/macro'
 import { Divider, ThemedText } from 'theme'
 
@@ -29,7 +29,7 @@ const InlineCaption = styled(ThemedText.Caption)`
   display: inline;
 `
 
-export default function UniswapXGasTooltip({ trade }: { trade: DutchLimitOrderTrade }) {
+export default function UniswapXGasTooltip({ trade }: { trade: DutchOrderTrade }) {
   const formattedGasPriceString = trade?.gasUseEstimateUSD
     ? trade.gasUseEstimateUSD === '0.00'
       ? '<$0.01'
