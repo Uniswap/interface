@@ -1,7 +1,7 @@
 import { t } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import { WalletConnect } from '@web3-react/walletconnect-v2'
-import { hideTestnetsAtom } from 'components/AccountDrawer/TestnetsToggle'
+import { showTestnetsAtom } from 'components/AccountDrawer/TestnetsToggle'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { getConnection } from 'connection'
 import { ConnectionType } from 'connection/types'
@@ -71,12 +71,10 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
   const theme = useTheme()
 
   const [chains, setChains] = useState(NETWORK_SELECTOR_CHAINS)
-  const hideTestnets = useAtomValue(hideTestnetsAtom)
+  const showTestnets = useAtomValue(showTestnetsAtom)
   useEffect(() => {
-    if (hideTestnets) {
-      setChains(NETWORK_SELECTOR_CHAINS.filter((chain) => chain !== SupportedChainId.SEPOLIA))
-    }
-  }, [hideTestnets])
+    setChains(NETWORK_SELECTOR_CHAINS.filter((chain) => !(chain === SupportedChainId.SEPOLIA && !showTestnets)))
+  }, [showTestnets])
 
   const ref = useRef<HTMLDivElement>(null)
   const modalRef = useRef<HTMLDivElement>(null)
