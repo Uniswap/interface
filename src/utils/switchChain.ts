@@ -2,8 +2,8 @@ import { Connector } from '@web3-react/types'
 import {
   networkConnection,
   uniwalletConnectConnection,
-  walletConnectConnection,
   walletConnectV1Connection,
+  walletConnectV2Connection,
 } from 'connection'
 import { getChainInfo } from 'constants/chainInfo'
 import { isSupportedChain, SupportedChainId } from 'constants/chains'
@@ -29,7 +29,7 @@ export const switchChain = async (connector: Connector, chainId: SupportedChainI
   } else if (
     [
       walletConnectV1Connection.connector,
-      walletConnectConnection.connector,
+      walletConnectV2Connection.connector,
       uniwalletConnectConnection.connector,
       networkConnection.connector,
     ].includes(connector)

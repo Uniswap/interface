@@ -85,7 +85,7 @@ export const walletConnectV1Connection: Connection = {
 const [web3WalletConnectV2, web3WalletConnectV2Hooks] = initializeConnector<WalletConnectV2>(
   (actions) => new WalletConnectV2({ actions, onError })
 )
-export const walletConnectConnection: Connection = {
+export const walletConnectV2Connection: Connection = {
   getName: () => 'WalletConnect',
   connector: web3WalletConnectV2,
   hooks: web3WalletConnectV2Hooks,
@@ -143,7 +143,7 @@ export function getConnections() {
   return [
     uniwalletConnectConnection,
     injectedConnection,
-    walletConnectConnection,
+    walletConnectV2Connection,
     walletConnectV1Connection,
     coinbaseWalletConnection,
     gnosisSafeConnection,
@@ -167,7 +167,7 @@ export function getConnection(c: Connector | ConnectionType) {
       case ConnectionType.WALLET_CONNECT:
         return walletConnectV1Connection
       case ConnectionType.WALLET_CONNECT_V2:
-        return walletConnectConnection
+        return walletConnectV2Connection
       case ConnectionType.UNIWALLET:
       case ConnectionType.UNISWAP_WALLET:
         return uniwalletConnectConnection
