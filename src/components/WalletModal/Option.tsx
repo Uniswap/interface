@@ -182,6 +182,8 @@ export default function Option({ connection }: OptionProps) {
     setWC1PromptOpen(true)
   }
 
+  const showExtraMenuToggle = connection.type === ConnectionType.WALLET_CONNECT_V2 && !isCurrentOptionPending
+
   return (
     <Wrapper disabled={isSomeOptionPending}>
       <TraceEvent
@@ -207,7 +209,7 @@ export default function Option({ connection }: OptionProps) {
         </OptionCardClickable>
       </TraceEvent>
 
-      {connection.type === ConnectionType.WALLET_CONNECT_V2 && (
+      {showExtraMenuToggle && (
         <>
           <WCv1PopoverToggle onClick={handleClickOpenWCv1Tooltip} onMouseDown={handleClickOpenWCv1Tooltip}>
             <MoreHorizontal />
