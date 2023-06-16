@@ -9,8 +9,7 @@ import {
   OnboardingRoutes,
   TopLevelRoutes,
 } from 'src/app/navigation/constants'
-import { Input, Stack, XStack, YStack } from 'tamagui'
-import { Text } from 'ui/src'
+import { Input, Stack, Text, XStack, YStack } from 'ui/src'
 import { Button } from 'ui/src/components/button/Button'
 import { logger } from 'wallet/src/features/logger/logger'
 import { isValidPassword } from 'wallet/src/utils/password'
@@ -25,7 +24,7 @@ export function Password(): JSX.Element {
 
   const enteredPassword = passwordInputProps.value
 
-  const onPress = (): void => {
+  const onSubmit = (): void => {
     if (isValidPassword(enteredPassword)) {
       setPassword(enteredPassword)
       setPasswordError(undefined)
@@ -46,6 +45,7 @@ export function Password(): JSX.Element {
       </YStack>
       <YStack alignItems="center" gap="$spacing8" width="100%">
         <Input
+          autoFocus
           secureTextEntry
           backgroundColor="$background1"
           borderColor="$backgroundOutline"
@@ -63,6 +63,7 @@ export function Password(): JSX.Element {
           onChange={(): void => {
             setPasswordError(undefined)
           }}
+          onSubmitEditing={onSubmit}
           {...passwordInputProps}
         />
         {passwordError && <OnboardingInputError error={passwordError} />}
@@ -75,7 +76,7 @@ export function Password(): JSX.Element {
           disabled={!passwordInputProps.value || !!passwordError}
           flexGrow={1}
           theme="primary"
-          onPress={onPress}>
+          onPress={onSubmit}>
           Next
         </Button>
       </XStack>

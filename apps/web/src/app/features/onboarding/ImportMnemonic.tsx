@@ -9,8 +9,7 @@ import {
   TopLevelRoutes,
 } from 'src/app/navigation/constants'
 import { useAppDispatch } from 'src/background/store'
-import { Input, Stack, XStack, YStack } from 'tamagui'
-import { Text } from 'ui/src'
+import { Input, Stack, Text, XStack, YStack } from 'ui/src'
 import { Button } from 'ui/src/components/button/Button'
 import { importAccountActions } from 'wallet/src/features/wallet/import/importAccountSaga'
 import { ImportAccountType } from 'wallet/src/features/wallet/import/types'
@@ -26,7 +25,7 @@ export function ImportMnemonic(): JSX.Element {
   const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined)
 
   // Add all accounts from mnemonic.
-  const handleClick = useCallback(() => {
+  const onSubmit = useCallback(() => {
     // Check phrase validation
     const {
       validMnemonic,
@@ -66,6 +65,7 @@ export function ImportMnemonic(): JSX.Element {
       </YStack>
       <YStack alignItems="center" gap="$spacing8" width="100%">
         <Input
+          autoFocus
           secureTextEntry
           backgroundColor="$background1"
           borderColor="$backgroundOutline"
@@ -85,6 +85,7 @@ export function ImportMnemonic(): JSX.Element {
             setErrorMessage(undefined)
           }}
           onChangeText={setMnemonic}
+          onSubmitEditing={onSubmit}
         />
         {errorMessage && <OnboardingInputError error={errorMessage} />}
       </YStack>
@@ -96,7 +97,7 @@ export function ImportMnemonic(): JSX.Element {
           disabled={!mnemonic || !!errorMessage}
           flexGrow={1}
           theme="primary"
-          onPress={handleClick}>
+          onPress={onSubmit}>
           Next
         </Button>
       </XStack>

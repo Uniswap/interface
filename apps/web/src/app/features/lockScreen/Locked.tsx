@@ -76,6 +76,7 @@ function Locked(): JSX.Element {
           </Text>
         )}
         <Input
+          autoFocus
           secureTextEntry
           borderColor={isIncorrectPassword ? '$accentCritical' : '$backgroundOutline'}
           borderRadius={100}
@@ -87,6 +88,7 @@ function Locked(): JSX.Element {
           paddingVertical="$spacing16"
           placeholder="Enter password to unlock"
           placeholderTextColor="$textTertiary"
+          onSubmitEditing={onPress}
           {...passwordInputProps}
           backgroundColor={isIncorrectPassword ? '$accentCriticalSoft' : '$backgroundScrim'}
           color="$textPrimary"

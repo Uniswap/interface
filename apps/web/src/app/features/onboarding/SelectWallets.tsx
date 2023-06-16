@@ -178,7 +178,6 @@ export function SelectWallets(): JSX.Element {
         <Text variant="headlineMedium">{title}</Text>
         <Text variant="subheadSmall">{subtitle}</Text>
       </YStack>
-      {/* TODO: add loading state */}
       <ScrollView height={180} showsVerticalScrollIndicator={false} width="100%">
         {isLoading ? (
           <YStack gap="$spacing12">
@@ -214,7 +213,7 @@ export function SelectWallets(): JSX.Element {
           flexGrow={1}
           theme="primary"
           onPress={onSubmit}>
-          Continue
+          Finish
         </Button>
       </XStack>
     </Stack>
