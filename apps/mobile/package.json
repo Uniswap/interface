@@ -22,6 +22,7 @@
     "ios:smol": "SKIP_BUNDLING=1 react-native run-ios --simulator=\"iPhone SE (3rd generation)\"",
     "ios:dev:release": "react-native run-ios --configuration Dev",
     "ios:beta": "react-native run-ios --configuration Beta",
+    "ios:bundle": "react-native bundle --entry-file='index.js' --bundle-output='./ios/main.jsbundle' --dev=false --platform='ios' --assets-dest='./ios'",
     "ios:release": "react-native run-ios --configuration Release",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx && eslint src/locales/en/translation.json",
     "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix && eslint src/locales/en/translation.json --fix",
