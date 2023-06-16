@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2023-05-22 22:30+0000\n"
+"POT-Creation-Date: 2023-06-16 00:13+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -8,7 +8,7 @@ msgstr ""
 "Language: id\n"
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2023-05-23 20:46\n"
+"PO-Revision-Date: 2023-06-16 00:15\n"
 "Last-Translator: \n"
 "Language-Team: Indonesian\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -51,6 +51,18 @@ msgstr "+ Posisi baru"
 #: src/pages/Swap/index.tsx
 msgid "- Remove recipient"
 msgstr "- Hapus penerima"
+
+#: src/nft/components/details/detailsV2/TimePeriodSwitcher.tsx
+msgid "1 month"
+msgstr "1 bulan"
+
+#: src/nft/components/details/detailsV2/TimePeriodSwitcher.tsx
+msgid "1 week"
+msgstr "1 minggu"
+
+#: src/nft/components/details/detailsV2/TimePeriodSwitcher.tsx
+msgid "1 year"
+msgstr "1 tahun"
 
 #: src/components/Tokens/TokenDetails/StatsSection.tsx
 msgid "24H volume"
@@ -239,9 +251,17 @@ msgstr "Alamat tidak memiliki klaim yang tersedia"
 msgid "Against"
 msgstr "Melawan"
 
+#: src/nft/components/details/detailsV2/TimePeriodSwitcher.tsx
+msgid "All time"
+msgstr "Sepanjang waktu"
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allow LP token migration"
 msgstr "Izinkan migrasi token LP"
+
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Allow {0} to be used for swapping"
+msgstr "Biarkan {0} digunakan untuk bertukar"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allowed"
@@ -260,7 +280,7 @@ msgstr "Selalu lakukan riset Anda sendiri sebelum berdagang."
 msgid "Amount"
 msgstr "Jumlah"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "An approval is needed to use this token."
 msgstr "Persetujuan diperlukan untuk menggunakan token ini."
 
@@ -276,12 +296,11 @@ msgstr "Terjadi kesalahan saat mengeksekusi swap ini. Anda mungkin memerlukan pe
 msgid "Approval failed"
 msgstr "Persetujuan gagal"
 
-#: src/nft/components/bag/BagFooter.tsx
-#: src/pages/Swap/index.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Approval pending"
 msgstr "Persetujuan Tertunda"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 #: src/nft/components/profile/list/Modal/ListModalSection.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
@@ -295,14 +314,9 @@ msgstr "Setujui Token"
 msgid "Approve in wallet"
 msgstr "Setujui di dompet"
 
-#: src/nft/components/bag/BagFooter.tsx
-#: src/pages/Swap/index.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Approve in your wallet"
 msgstr "Setujui di dompet Anda"
-
-#: src/pages/Swap/index.tsx
-msgid "Approve use of {0}"
-msgstr "Menyetujui penggunaan {0}"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -463,6 +477,10 @@ msgstr "Dengan menambahkan likuiditas, Anda akan mendapatkan 0,3% dari semua per
 #: src/components/WalletModal/PrivacyPolicyNotice.tsx
 msgid "By connecting a wallet, you agree to Uniswap Labs'"
 msgstr "Dengan menghubungkan dompet, Anda menyetujui Uniswap Labs"
+
+#: src/components/swap/PriceImpactModal.tsx
+msgid "Cancel"
+msgstr "Membatalkan"
 
 #: src/components/AccountDrawer/MiniPortfolio/constants.ts
 msgid "Cancel failed"
@@ -625,6 +643,14 @@ msgstr "Konfirmasikan"
 msgid "Confirm Supply"
 msgstr "Konfirmasikan Pasokan"
 
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Confirm Swap"
+msgstr "Konfirmasikan Swap"
+
+#: src/components/swap/SwapModalFooter.tsx
+msgid "Confirm swap"
+msgstr "Konfirmasi tukar"
+
 #: src/components/ModalViews/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
@@ -671,7 +697,7 @@ msgstr "Hubungkan ke dompet untuk melihat likuiditas V2 Anda."
 msgid "Connect to a wallet to view your liquidity."
 msgstr "Hubungkan ke dompet untuk melihat likuiditas Anda."
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Connect wallet"
 msgstr "Hubungkan dompet"
 
@@ -679,6 +705,8 @@ msgstr "Hubungkan dompet"
 msgid "Content not"
 msgstr "Konten tidak"
 
+#: src/components/TokenSafety/index.tsx
+#: src/components/swap/PriceImpactModal.tsx
 #: src/nft/components/bag/Bag.tsx
 #: src/nft/components/profile/list/Modal/BelowFloorWarningModal.tsx
 msgid "Continue"
@@ -843,7 +871,6 @@ msgstr "Terperinci"
 msgid "Details"
 msgstr "Perincian"
 
-#: src/components/TransactionConfirmationModal/index.tsx
 #: src/nft/components/profile/list/PriceTextInput.tsx
 msgid "Dismiss"
 msgstr "Buang"
@@ -892,6 +919,10 @@ msgstr "Ubah"
 msgid "Edit listings"
 msgstr "Mengedit daftar"
 
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Enable spending {0} on Uniswap"
+msgstr "Aktifkan pembelanjaan {0} di Uniswap"
+
 #: src/state/burn/v3/hooks.tsx
 msgid "Enter a percent"
 msgstr "Masukkan persen"
@@ -917,8 +948,6 @@ msgid "Enter {0} amount"
 msgstr "Masukkan {0} jumlah"
 
 #: src/components/TransactionConfirmationModal/index.tsx
-#: src/components/TransactionConfirmationModal/index.tsx
-#: src/components/Web3Status/index.tsx
 msgid "Error"
 msgstr "Kesalahan"
 
@@ -1038,7 +1067,7 @@ msgstr "Masukan"
 msgid "Fees"
 msgstr "Biaya"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 #: src/nft/components/details/detailsV2/BuyButton.tsx
 msgid "Fetching Route"
 msgstr "Mengambil Rute"
@@ -1164,11 +1193,11 @@ msgstr "Harga awal dan bagian pool"
 msgid "Input is estimated. You will sell at most <0>{0} {1}</0> or the transaction will revert."
 msgstr "Input diperkirakan. Anda akan menjual paling banyak <0>{0} {1}</0> atau transaksi akan dikembalikan."
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Insufficient funds"
 msgstr "Dana tidak mencukupi"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Insufficient liquidity"
 msgstr "Likuiditas tidak mencukupi"
 
@@ -1176,7 +1205,7 @@ msgstr "Likuiditas tidak mencukupi"
 msgid "Insufficient liquidity for this trade."
 msgstr "Likuiditas tidak cukup untuk perdagangan ini."
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Insufficient pool liquidity to complete transaction"
 msgstr "Likuiditas kumpulan tidak cukup untuk menyelesaikan transaksi"
 
@@ -1298,7 +1327,7 @@ msgstr "Daftar"
 msgid "Loading"
 msgstr "Memuat"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Loading Allowance"
 msgstr "Memuat Tunjangan"
 
@@ -1576,6 +1605,10 @@ msgstr "Tidak tersedia di wilayah Anda"
 msgid "Not created"
 msgstr "Belum dibuat"
 
+#: src/components/CurrencyInputPanel/FiatValue.tsx
+msgid "Not enough liquidity to show accurate USD value."
+msgstr "Likuiditas tidak cukup untuk menunjukkan nilai USD yang akurat."
+
 #: src/nft/components/collection/CollectionAsset.tsx
 msgid "Not listed"
 msgstr "Tidak terdaftar"
@@ -1631,14 +1664,14 @@ msgstr "Pemilik"
 msgid "Page not found!"
 msgstr "Halaman tidak ditemukan!"
 
-#: src/nft/components/bag/BagFooter.tsx
-#: src/nft/components/bag/BagFooter.tsx
-#: src/nft/components/bag/BagFooter.tsx
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
+#: src/nft/components/bag/ButtonStates.tsx
+#: src/nft/components/bag/ButtonStates.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Pay"
 msgstr "Membayar"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Pay Anyway"
 msgstr "Bayar Pokoknya"
 
@@ -1651,13 +1684,22 @@ msgstr "Bayar menggunakan"
 msgid "Pending"
 msgstr "Tertunda"
 
-#: src/pages/Swap/index.tsx
-msgid "Permission is required for Uniswap to swap each token. This will expire after one month for your security."
-msgstr "Izin diperlukan untuk Uniswap untuk menukar setiap token. Ini akan kedaluwarsa setelah satu bulan untuk keamanan Anda."
+#: src/components/swap/PendingModalContent/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Pending..."
+msgstr "Tertunda..."
+
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
+msgid "Permit approval failed"
+msgstr "Persetujuan izin gagal"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
 msgid "Permit2"
 msgstr "Izin2"
+
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
+msgid "Permit2 allows token approvals to be shared and managed across different applications."
+msgstr "Permit2 memungkinkan persetujuan token untuk dibagikan dan dikelola di berbagai aplikasi."
 
 #: src/components/vote/ProposalEmptyState.tsx
 msgid "Please connect to Layer 1 Ethereum"
@@ -1729,16 +1771,12 @@ msgstr "Selisih Harga:"
 msgid "Price Impact"
 msgstr "Dampak Harga"
 
-#: src/pages/Swap/index.tsx
-msgid "Price Impact Too High"
-msgstr "Dampak Harga Terlalu Tinggi"
-
 #: src/components/swap/SwapModalFooter.tsx
 msgid "Price impact"
 msgstr "Dampak harga"
 
 #: src/components/swap/PriceImpactWarning.tsx
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Price impact warning"
 msgstr "Peringatan dampak harga"
 
@@ -1747,7 +1785,7 @@ msgid "Price range"
 msgstr "Rentang harga"
 
 #: src/components/swap/SwapModalFooter.tsx
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Price updated"
 msgstr "Harga diperbarui"
 
@@ -1767,10 +1805,17 @@ msgstr "Kebijakan pribadi"
 msgid "Privacy Policy."
 msgstr "Kebijakan pribadi."
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 #: src/nft/components/profile/list/Modal/ContentRow.tsx
 msgid "Proceed in wallet"
 msgstr "Lanjutkan di dompet"
+
+#: src/components/swap/PendingModalContent/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Proceed in your wallet"
+msgstr "Lanjutkan di dompet Anda"
 
 #: src/nft/components/profile/list/Modal/SuccessScreen.tsx
 msgid "Proceeds if sold"
@@ -1807,6 +1852,10 @@ msgstr "Pengusul"
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
 msgid "Public Resolver"
 msgstr "Penyelesai Publik"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+msgid "Purchased"
+msgstr "Dibeli"
 
 #: src/nft/components/details/detailsV2/DataPageTraits.tsx
 #: src/nft/components/details/detailsV2/TableRowComponent.tsx
@@ -1892,7 +1941,7 @@ msgstr "Pencarian terkini"
 msgid "Recipient"
 msgstr "Penerima"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Refunds for unavailable items will be given in ETH"
 msgstr "Pengembalian uang untuk item yang tidak tersedia akan diberikan dalam ETH"
 
@@ -1977,10 +2026,15 @@ msgstr "Pembayaran gagal"
 msgid "Repaying"
 msgstr "Membayar kembali"
 
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Reset USDT"
+msgstr "Setel ulang USDT"
+
 #: src/nft/components/profile/list/ListingButton.tsx
 msgid "Resolve {issues} issues"
 msgstr "Selesaikan {issues} masalah"
 
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
 #: src/nft/components/profile/list/Modal/ContentRow.tsx
 msgid "Retry"
 msgstr "Mencoba kembali"
@@ -2000,12 +2054,28 @@ msgid "Reverse Registrar"
 msgstr "Pencatat Terbalik"
 
 #: src/components/swap/ConfirmSwapModal.tsx
-msgid "Review Swap"
-msgstr "Tukar Tinjauan"
+msgid "Review swap"
+msgstr "Tukar ulasan"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Revoke approval failed"
+msgstr "Pencabutan persetujuan gagal"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Revoke {0}"
+msgstr "Cabut {0}"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
 msgid "Revoked Approval"
 msgstr "Persetujuan Dicabut"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Revoked approval"
+msgstr "Persetujuan dicabut"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Revoking approval"
+msgstr "Mencabut persetujuan"
 
 #: src/nft/components/profile/list/NFTListingsGrid.tsx
 msgid "Same Price"
@@ -2015,17 +2085,9 @@ msgstr "Harga sama"
 msgid "Scan with Uniswap Wallet"
 msgstr "Pindai dengan Dompet Uniswap"
 
-#: src/components/NavBar/SearchBar.tsx
-msgid "Search"
-msgstr "Mencari"
-
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "Search name or paste address"
 msgstr "Cari nama atau tempel alamat"
-
-#: src/components/NavBar/SearchBar.tsx
-msgid "Search tokens and NFT collections"
-msgstr "Cari token dan koleksi NFT"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Select Pair"
@@ -2167,11 +2229,11 @@ msgstr "Sejumlah aset tidak tersedia melalui antarmuka ini karena mereka mungkin
 
 #: src/components/ErrorBoundary/index.tsx
 #: src/components/ErrorBoundary/index.tsx
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Something went wrong"
 msgstr "Ada yang salah"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Something went wrong. Please try again."
 msgstr "Ada yang salah. Silakan coba lagi."
 
@@ -2221,6 +2283,7 @@ msgid "Succeeded"
 msgstr "Berhasil"
 
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
 msgid "Success"
 msgstr "Berhasil"
 
@@ -2239,7 +2302,6 @@ msgstr "Memasok {0} {1} dan {2} {3}"
 #: src/components/NavBar/index.tsx
 #: src/components/Tokens/TokenDetails/MobileBalanceSummaryFooter.tsx
 #: src/components/swap/SwapHeader.tsx
-#: src/components/swap/SwapModalFooter.tsx
 #: src/components/swap/SwapSkeleton.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
@@ -2259,6 +2321,7 @@ msgid "Swap exactly <0/> for <1/>"
 msgstr "Tukar persis <0/> dengan <1/>"
 
 #: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
 msgid "Swap failed"
 msgstr "Tukar gagal"
 
@@ -2271,15 +2334,11 @@ msgstr "Tertukar"
 msgid "Swapping"
 msgstr "Bertukar"
 
-#: src/components/swap/ConfirmSwapModal.tsx
-msgid "Swapping {0} {1} for {2} {3}"
-msgstr "Menukar {0} {1} untuk {2} {3}"
-
 #: src/nft/components/collection/Sweep.tsx
 msgid "Sweep"
 msgstr "Menyapu"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Switch networks"
 msgstr "Beralih jaringan"
 
@@ -2427,6 +2486,10 @@ msgstr "Pool ini harus diinisialisasi sebelum Anda dapat menambahkan likuiditas.
 msgid "This proposal may be executed after {0}."
 msgstr "Proposal ini dapat dijalankan setelah {0}."
 
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
+msgid "This provides the Uniswap protocol access to your token for trading. For security, this will expire after 30 days."
+msgstr "Ini memberikan akses protokol Uniswap ke token Anda untuk berdagang. Untuk keamanan, ini akan kedaluwarsa setelah 30 hari."
+
 #: src/components/swap/SwapRoute.tsx
 msgid "This route optimizes your total output by considering split routes, multiple hops, and the gas cost of each step."
 msgstr "Rute ini mengoptimalkan output total Anda dengan mempertimbangkan rute terpisah, beberapa lompatan, dan biaya bahan bakar untuk setiap langkah."
@@ -2458,6 +2521,10 @@ msgstr "Transaksi ini tidak akan berhasil karena pergerakan harga. Coba tingkatk
 #: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance."
 msgstr "Transaksi ini tidak akan berhasil baik karena pergerakan harga atau biaya transfer. Coba tingkatkan toleransi selip Anda."
+
+#: src/components/swap/PriceImpactModal.tsx
+msgid "This transaction will result in a <0>{0}</0> price impact on the market price of this pool. Do you wish to continue?"
+msgstr "Transaksi ini akan menghasilkan dampak harga <0>{0}</0> pada harga pasar kumpulan ini. Apakah Anda ingin melanjutkan?"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/index.tsx
 msgid "This week"
@@ -2494,11 +2561,15 @@ msgstr "Untuk melihat posisi, Anda harus terhubung ke jaringan tempatnya berada.
 msgid "Today"
 msgstr "Hari ini"
 
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
+msgid "Token approval failed"
+msgstr "Persetujuan token gagal"
+
 #: src/components/Tokens/TokenTable/TokenRow.tsx
 msgid "Token name"
 msgstr "Nama token"
 
-#: src/components/TokenSafety/index.tsx
+#: src/constants/tokenSafety.tsx
 msgid "Token not found"
 msgstr "Token tidak ditemukan"
 
@@ -2571,7 +2642,7 @@ msgstr "Transaksi selesai pada"
 msgid "Transaction deadline"
 msgstr "Batas waktu transaksi"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Transaction pending"
 msgstr "Transaksi tertunda"
 
@@ -2580,6 +2651,7 @@ msgid "Transaction rejected"
 msgstr "Transaksi ditolak"
 
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
 msgid "Transaction submitted"
 msgstr "Transaksi terkirim"
 
@@ -2606,6 +2678,10 @@ msgstr "Token UNI menunjukkan hak suara dalam pengaturan Uniswap. Anda dapat mem
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "UNI {0}/{1} Burned"
 msgstr "UNI {0}/{1} Terbakar"
+
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "USDT requires resetting approval when spending limits are too low."
+msgstr "USDT memerlukan persetujuan pengaturan ulang ketika batas pengeluaran terlalu rendah."
 
 #: src/nft/components/collection/ActivityCells.tsx
 msgid "Unavailable"
@@ -2790,6 +2866,7 @@ msgid "View on Etherscan"
 msgstr "Lihat di Etherscan"
 
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
 msgid "View on Explorer"
 msgstr "Lihat di Explorer"
 
@@ -2893,6 +2970,7 @@ msgid "Wallet Address or ENS name"
 msgstr "Alamat Dompet atau nama ENS"
 
 #: src/components/addLiquidity/OwnershipWarning.tsx
+#: src/components/swap/PriceImpactModal.tsx
 #: src/constants/tokenSafety.tsx
 msgid "Warning"
 msgstr "Peringatan"
@@ -2901,9 +2979,22 @@ msgstr "Peringatan"
 msgid "Welcome to team Unicorn :)"
 msgstr "Selamat datang di tim Unicorn :)"
 
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
+msgid "Why are approvals required?"
+msgstr "Mengapa diperlukan persetujuan?"
+
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
+msgid "Why are permits required?"
+msgstr "Mengapa diperlukan izin?"
+
 #: src/nft/components/profile/list/Modal/ListModalSection.tsx
 msgid "Why is a transaction required?"
 msgstr "Mengapa diperlukan transaksi?"
+
+#: src/components/swap/PendingModalContent/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Why is this required?"
+msgstr "Mengapa ini diperlukan?"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Withdraw deposited liquidity"
@@ -2942,7 +3033,7 @@ msgstr "Dibungkus"
 msgid "Wrapping"
 msgstr "Pembungkus"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Wrong network"
 msgstr "Salah jaringan"
 
@@ -3137,6 +3228,7 @@ msgid "fee"
 msgstr "biaya"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseLocal.ts
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
 msgid "for"
 msgstr "untuk"
 

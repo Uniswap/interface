@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2023-05-22 22:30+0000\n"
+"POT-Creation-Date: 2023-06-16 00:13+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -8,7 +8,7 @@ msgstr ""
 "Language: el\n"
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2023-05-23 20:46\n"
+"PO-Revision-Date: 2023-06-16 00:15\n"
 "Last-Translator: \n"
 "Language-Team: Greek\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -51,6 +51,18 @@ msgstr "+ Νέα θέση"
 #: src/pages/Swap/index.tsx
 msgid "- Remove recipient"
 msgstr "- Αφαιρέστε τον παραλήπτη"
+
+#: src/nft/components/details/detailsV2/TimePeriodSwitcher.tsx
+msgid "1 month"
+msgstr "1 μήνα"
+
+#: src/nft/components/details/detailsV2/TimePeriodSwitcher.tsx
+msgid "1 week"
+msgstr "1 εβδομάδα"
+
+#: src/nft/components/details/detailsV2/TimePeriodSwitcher.tsx
+msgid "1 year"
+msgstr "1 χρόνος"
 
 #: src/components/Tokens/TokenDetails/StatsSection.tsx
 msgid "24H volume"
@@ -239,9 +251,17 @@ msgstr "Η διεύθυνση δεν έχει διαθέσιμη διεκδίκ�
 msgid "Against"
 msgstr "Εναντίον"
 
+#: src/nft/components/details/detailsV2/TimePeriodSwitcher.tsx
+msgid "All time"
+msgstr "Συνεχώς"
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allow LP token migration"
 msgstr "Επιτρέψτε τη μεταφορά μάρκας παρόχου ρευστότητας (LP)"
+
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Allow {0} to be used for swapping"
+msgstr "Αφήστε {0} να χρησιμοποιηθεί για εναλλαγή"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allowed"
@@ -260,7 +280,7 @@ msgstr "Πάντα να κάνετε τη δική σας έρευνα πριν 
 msgid "Amount"
 msgstr "Ποσό"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "An approval is needed to use this token."
 msgstr "Απαιτείται έγκριση για τη χρήση αυτού του διακριτικού."
 
@@ -276,12 +296,11 @@ msgstr "Παρουσιάστηκε σφάλμα κατά την προσπάθε
 msgid "Approval failed"
 msgstr "Η έγκριση απέτυχε"
 
-#: src/nft/components/bag/BagFooter.tsx
-#: src/pages/Swap/index.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Approval pending"
 msgstr "Η έγκριση εκκρεμεί"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 #: src/nft/components/profile/list/Modal/ListModalSection.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
@@ -295,14 +314,9 @@ msgstr "Έγκριση διακριτικού"
 msgid "Approve in wallet"
 msgstr "Έγκριση στο πορτοφόλι"
 
-#: src/nft/components/bag/BagFooter.tsx
-#: src/pages/Swap/index.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Approve in your wallet"
 msgstr "Έγκριση στο πορτοφόλι σας"
-
-#: src/pages/Swap/index.tsx
-msgid "Approve use of {0}"
-msgstr "Εγκρίνετε τη χρήση του {0}"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -463,6 +477,10 @@ msgstr "Προσθέτοντας ρευστότητα θα κερδίσετε τ
 #: src/components/WalletModal/PrivacyPolicyNotice.tsx
 msgid "By connecting a wallet, you agree to Uniswap Labs'"
 msgstr "Συνδέοντας ένα πορτοφόλι, συμφωνείτε με την Uniswap Labs'"
+
+#: src/components/swap/PriceImpactModal.tsx
+msgid "Cancel"
+msgstr "Ματαίωση"
 
 #: src/components/AccountDrawer/MiniPortfolio/constants.ts
 msgid "Cancel failed"
@@ -625,6 +643,14 @@ msgstr "Επιβεβαίωση"
 msgid "Confirm Supply"
 msgstr "Επιβεβαίωση Παροχής"
 
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Confirm Swap"
+msgstr "Επιβεβαίωση ανταλλαγής"
+
+#: src/components/swap/SwapModalFooter.tsx
+msgid "Confirm swap"
+msgstr "Επιβεβαίωση ανταλλαγής"
+
 #: src/components/ModalViews/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
@@ -671,7 +697,7 @@ msgstr "Συνδεθείτε σε ένα πορτοφόλι για να δείτ
 msgid "Connect to a wallet to view your liquidity."
 msgstr "Συνδεθείτε σε ένα πορτοφόλι για να δείτε την ρευστότητά σας."
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Connect wallet"
 msgstr "Σύνδεση πορτοφολιού"
 
@@ -679,6 +705,8 @@ msgstr "Σύνδεση πορτοφολιού"
 msgid "Content not"
 msgstr "Περιεχόμενο όχι"
 
+#: src/components/TokenSafety/index.tsx
+#: src/components/swap/PriceImpactModal.tsx
 #: src/nft/components/bag/Bag.tsx
 #: src/nft/components/profile/list/Modal/BelowFloorWarningModal.tsx
 msgid "Continue"
@@ -843,7 +871,6 @@ msgstr "Λεπτομερής"
 msgid "Details"
 msgstr "Λεπτομέρειες"
 
-#: src/components/TransactionConfirmationModal/index.tsx
 #: src/nft/components/profile/list/PriceTextInput.tsx
 msgid "Dismiss"
 msgstr "Απόρριψη"
@@ -892,6 +919,10 @@ msgstr "Επεξεργασία"
 msgid "Edit listings"
 msgstr "Επεξεργασία καταχωρίσεων"
 
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Enable spending {0} on Uniswap"
+msgstr "Ενεργοποιήστε τη δαπάνη {0} στο Uniswap"
+
 #: src/state/burn/v3/hooks.tsx
 msgid "Enter a percent"
 msgstr "Εισαγωγή ποσοστού"
@@ -917,8 +948,6 @@ msgid "Enter {0} amount"
 msgstr "Εισαγάγετε {0} ποσό"
 
 #: src/components/TransactionConfirmationModal/index.tsx
-#: src/components/TransactionConfirmationModal/index.tsx
-#: src/components/Web3Status/index.tsx
 msgid "Error"
 msgstr "Σφάλμα"
 
@@ -1038,7 +1067,7 @@ msgstr "Ανατροφοδότηση"
 msgid "Fees"
 msgstr "Αμοιβές"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 #: src/nft/components/details/detailsV2/BuyButton.tsx
 msgid "Fetching Route"
 msgstr "Λήψη διαδρομής"
@@ -1164,11 +1193,11 @@ msgstr "Αρχικές τιμές και μερίδιο δεξαμενής"
 msgid "Input is estimated. You will sell at most <0>{0} {1}</0> or the transaction will revert."
 msgstr "Η τιμή που εισάγετε εκτιμήθηκε. Θα πουλήσετε το πολύ <0>{0} {1}</0> ή η συναλλαγή θα υπαναχωρήσει."
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Insufficient funds"
 msgstr "Ανεπαρκείς πόροι"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Insufficient liquidity"
 msgstr "Ανεπαρκής ρευστότητα"
 
@@ -1176,7 +1205,7 @@ msgstr "Ανεπαρκής ρευστότητα"
 msgid "Insufficient liquidity for this trade."
 msgstr "Ανεπαρκής ρευστότητα για αυτή τη διαπραγμάτευση."
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Insufficient pool liquidity to complete transaction"
 msgstr "Ανεπαρκής συγκέντρωση ρευστότητας για την ολοκλήρωση της συναλλαγής"
 
@@ -1298,7 +1327,7 @@ msgstr "Καταχωρίσεις"
 msgid "Loading"
 msgstr "Φόρτωση"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Loading Allowance"
 msgstr "Επίδομα φόρτωσης"
 
@@ -1576,6 +1605,10 @@ msgstr "Δεν είναι διαθέσιμο στην περιοχή σας"
 msgid "Not created"
 msgstr "Δεν δημιουργήθηκε"
 
+#: src/components/CurrencyInputPanel/FiatValue.tsx
+msgid "Not enough liquidity to show accurate USD value."
+msgstr "Δεν υπάρχει αρκετή ρευστότητα για να εμφανιστεί η ακριβής αξία του USD."
+
 #: src/nft/components/collection/CollectionAsset.tsx
 msgid "Not listed"
 msgstr "Μη καταχωρημένος"
@@ -1631,14 +1664,14 @@ msgstr "Ιδιοκτήτης"
 msgid "Page not found!"
 msgstr "Η σελίδα δεν βρέθηκε!"
 
-#: src/nft/components/bag/BagFooter.tsx
-#: src/nft/components/bag/BagFooter.tsx
-#: src/nft/components/bag/BagFooter.tsx
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
+#: src/nft/components/bag/ButtonStates.tsx
+#: src/nft/components/bag/ButtonStates.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Pay"
 msgstr "Πληρωμή"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Pay Anyway"
 msgstr "Πληρώστε πάντως"
 
@@ -1651,13 +1684,22 @@ msgstr "Πληρώνω με"
 msgid "Pending"
 msgstr "εκκρεμής"
 
-#: src/pages/Swap/index.tsx
-msgid "Permission is required for Uniswap to swap each token. This will expire after one month for your security."
-msgstr "Απαιτείται άδεια για το Uniswap να ανταλλάξει κάθε διακριτικό. Αυτό θα λήξει μετά από ένα μήνα για την ασφάλειά σας."
+#: src/components/swap/PendingModalContent/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Pending..."
+msgstr "Εκκρεμής..."
+
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
+msgid "Permit approval failed"
+msgstr "Η έγκριση άδειας απέτυχε"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
 msgid "Permit2"
 msgstr "Άδεια 2"
+
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
+msgid "Permit2 allows token approvals to be shared and managed across different applications."
+msgstr "Το Permit2 επιτρέπει την κοινή χρήση και τη διαχείριση των εγκρίσεων διακριτικών σε διαφορετικές εφαρμογές."
 
 #: src/components/vote/ProposalEmptyState.tsx
 msgid "Please connect to Layer 1 Ethereum"
@@ -1729,16 +1771,12 @@ msgstr "Διαφορά Τιμής:"
 msgid "Price Impact"
 msgstr "Επιδράσεις τιμής"
 
-#: src/pages/Swap/index.tsx
-msgid "Price Impact Too High"
-msgstr "Πολύ υψηλή επίδραση σε τιμή"
-
 #: src/components/swap/SwapModalFooter.tsx
 msgid "Price impact"
 msgstr "Επίπτωση στην τιμή"
 
 #: src/components/swap/PriceImpactWarning.tsx
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Price impact warning"
 msgstr "Προειδοποίηση επίπτωσης στην τιμή"
 
@@ -1747,7 +1785,7 @@ msgid "Price range"
 msgstr "Εύρος τιμών"
 
 #: src/components/swap/SwapModalFooter.tsx
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Price updated"
 msgstr "Η τιμή ενημερώθηκε"
 
@@ -1767,10 +1805,17 @@ msgstr "Πολιτική Απορρήτου"
 msgid "Privacy Policy."
 msgstr "Πολιτική Απορρήτου."
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 #: src/nft/components/profile/list/Modal/ContentRow.tsx
 msgid "Proceed in wallet"
 msgstr "Προχωρήστε στο πορτοφόλι"
+
+#: src/components/swap/PendingModalContent/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Proceed in your wallet"
+msgstr "Συνεχίστε στο πορτοφόλι σας"
 
 #: src/nft/components/profile/list/Modal/SuccessScreen.tsx
 msgid "Proceeds if sold"
@@ -1807,6 +1852,10 @@ msgstr "Άτομο που κάνει προτάσεις"
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
 msgid "Public Resolver"
 msgstr "Public Resolver"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+msgid "Purchased"
+msgstr "Αγορασμένο"
 
 #: src/nft/components/details/detailsV2/DataPageTraits.tsx
 #: src/nft/components/details/detailsV2/TableRowComponent.tsx
@@ -1892,7 +1941,7 @@ msgstr "Πρόσφατες αναζητήσεις"
 msgid "Recipient"
 msgstr "Παραλήπτης"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Refunds for unavailable items will be given in ETH"
 msgstr "Οι επιστροφές χρημάτων για μη διαθέσιμα στοιχεία θα δίνονται σε ETH"
 
@@ -1977,10 +2026,15 @@ msgstr "Η αποπληρωμή απέτυχε"
 msgid "Repaying"
 msgstr "Αποπληρωμή"
 
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Reset USDT"
+msgstr "Επαναφορά USDT"
+
 #: src/nft/components/profile/list/ListingButton.tsx
 msgid "Resolve {issues} issues"
 msgstr "Επίλυση {issues} ζητημάτων"
 
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
 #: src/nft/components/profile/list/Modal/ContentRow.tsx
 msgid "Retry"
 msgstr "Ξαναδοκιμάσετε"
@@ -2000,12 +2054,28 @@ msgid "Reverse Registrar"
 msgstr "Αντίστροφος Καταχωρητής"
 
 #: src/components/swap/ConfirmSwapModal.tsx
-msgid "Review Swap"
+msgid "Review swap"
 msgstr "Ανταλλαγή κριτικής"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Revoke approval failed"
+msgstr "Η ανάκληση της έγκρισης απέτυχε"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Revoke {0}"
+msgstr "Ανάκληση {0}"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
 msgid "Revoked Approval"
 msgstr "Ανακλήθηκε Έγκριση"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Revoked approval"
+msgstr "Ανάκληση έγκρισης"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Revoking approval"
+msgstr "Ανάκληση έγκρισης"
 
 #: src/nft/components/profile/list/NFTListingsGrid.tsx
 msgid "Same Price"
@@ -2015,17 +2085,9 @@ msgstr "Ιδια τιμή"
 msgid "Scan with Uniswap Wallet"
 msgstr "Σάρωση με Uniswap Wallet"
 
-#: src/components/NavBar/SearchBar.tsx
-msgid "Search"
-msgstr "Αναζήτηση"
-
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "Search name or paste address"
 msgstr "Αναζήτηση ονόματος ή επικόλλησης διεύθυνσης"
-
-#: src/components/NavBar/SearchBar.tsx
-msgid "Search tokens and NFT collections"
-msgstr "Αναζήτηση διακριτικών και συλλογών NFT"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Select Pair"
@@ -2167,11 +2229,11 @@ msgstr "Ορισμένα περιουσιακά στοιχεία δεν είνα
 
 #: src/components/ErrorBoundary/index.tsx
 #: src/components/ErrorBoundary/index.tsx
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Something went wrong"
 msgstr "Κάτι πήγε στραβά"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Something went wrong. Please try again."
 msgstr "Κάτι πήγε στραβά. ΠΑΡΑΚΑΛΩ προσπαθησε ξανα."
 
@@ -2221,6 +2283,7 @@ msgid "Succeeded"
 msgstr "Πέτυχε"
 
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
 msgid "Success"
 msgstr "Επιτυχία"
 
@@ -2239,7 +2302,6 @@ msgstr "Γίνεται παροχή {0} {1} και {2} {3}"
 #: src/components/NavBar/index.tsx
 #: src/components/Tokens/TokenDetails/MobileBalanceSummaryFooter.tsx
 #: src/components/swap/SwapHeader.tsx
-#: src/components/swap/SwapModalFooter.tsx
 #: src/components/swap/SwapSkeleton.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
@@ -2259,6 +2321,7 @@ msgid "Swap exactly <0/> for <1/>"
 msgstr "Αλλάξτε ακριβώς <0/> με <1/>"
 
 #: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
 msgid "Swap failed"
 msgstr "Η ανταλλαγή απέτυχε"
 
@@ -2271,15 +2334,11 @@ msgstr "Ανταλλάχθηκε"
 msgid "Swapping"
 msgstr "Ανταλλαγή"
 
-#: src/components/swap/ConfirmSwapModal.tsx
-msgid "Swapping {0} {1} for {2} {3}"
-msgstr "Ανταλλαγή {0} {1} για {2} {3}"
-
 #: src/nft/components/collection/Sweep.tsx
 msgid "Sweep"
 msgstr "Σκούπισμα"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Switch networks"
 msgstr "Εναλλαγή δικτύων"
 
@@ -2427,6 +2486,10 @@ msgstr "Αυτή η ομάδα πρέπει να προετοιμαστεί γι
 msgid "This proposal may be executed after {0}."
 msgstr "Αυτή η πρόταση μπορεί να εκτελεστεί μετά {0}."
 
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
+msgid "This provides the Uniswap protocol access to your token for trading. For security, this will expire after 30 days."
+msgstr "Αυτό παρέχει το πρωτόκολλο Uniswap πρόσβαση στο διακριτικό σας για συναλλαγές. Για ασφάλεια, αυτό θα λήξει μετά από 30 ημέρες."
+
 #: src/components/swap/SwapRoute.tsx
 msgid "This route optimizes your total output by considering split routes, multiple hops, and the gas cost of each step."
 msgstr "Αυτή η διαδρομή βελτιστοποιεί τη συνολική σας απόδοση λαμβάνοντας υπόψη τις διαιρούμενες διαδρομές, τα πολλαπλά άλματα και το κόστος αερίου κάθε βήματος."
@@ -2458,6 +2521,10 @@ msgstr "Αυτή η συναλλαγή δεν θα πετύχει λόγω τη�
 #: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance."
 msgstr "Αυτή η συναλλαγή δεν θα πετύχει είτε λόγω της κίνησης των τιμών είτε της χρέωσης κατά τη μεταφορά. Δοκιμάστε να αυξήσετε την ανοχή ολίσθησης."
+
+#: src/components/swap/PriceImpactModal.tsx
+msgid "This transaction will result in a <0>{0}</0> price impact on the market price of this pool. Do you wish to continue?"
+msgstr "Αυτή η συναλλαγή θα έχει ως αποτέλεσμα <0>{0}</0> αντίκτυπο της τιμής στην τιμή αγοράς αυτής της ομάδας. Θέλετε να συνεχίσετε;"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/index.tsx
 msgid "This week"
@@ -2494,11 +2561,15 @@ msgstr "Για να δείτε μια θέση, πρέπει να είστε σ�
 msgid "Today"
 msgstr "Σήμερα"
 
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
+msgid "Token approval failed"
+msgstr "Η έγκριση διακριτικού απέτυχε"
+
 #: src/components/Tokens/TokenTable/TokenRow.tsx
 msgid "Token name"
 msgstr "Συμβολικό όνομα"
 
-#: src/components/TokenSafety/index.tsx
+#: src/constants/tokenSafety.tsx
 msgid "Token not found"
 msgstr "Το διακριτικό δεν βρέθηκε"
 
@@ -2571,7 +2642,7 @@ msgstr "Η συναλλαγή ολοκληρώθηκε το"
 msgid "Transaction deadline"
 msgstr "Προθεσμία συναλλαγής"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Transaction pending"
 msgstr "Συναλλαγή σε εκκρεμότητα"
 
@@ -2580,6 +2651,7 @@ msgid "Transaction rejected"
 msgstr "Η συναλλαγή απορρίφθηκε"
 
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
 msgid "Transaction submitted"
 msgstr "Η συναλλαγή υποβλήθηκε"
 
@@ -2606,6 +2678,10 @@ msgstr "Οι μάρκες UNI αντιπροσωπεύουν μετοχές με
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "UNI {0}/{1} Burned"
 msgstr "UNI {0}/{1} \"Κάηκαν\""
+
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "USDT requires resetting approval when spending limits are too low."
+msgstr "Το USDT απαιτεί έγκριση επαναφοράς όταν τα όρια δαπανών είναι πολύ χαμηλά."
 
 #: src/nft/components/collection/ActivityCells.tsx
 msgid "Unavailable"
@@ -2790,6 +2866,7 @@ msgid "View on Etherscan"
 msgstr "Θέα στο Ethercan"
 
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
 msgid "View on Explorer"
 msgstr "Προβολή στον Explorer"
 
@@ -2893,6 +2970,7 @@ msgid "Wallet Address or ENS name"
 msgstr "Διεύθυνση Πορτοφολιού ή όνομα ENS"
 
 #: src/components/addLiquidity/OwnershipWarning.tsx
+#: src/components/swap/PriceImpactModal.tsx
 #: src/constants/tokenSafety.tsx
 msgid "Warning"
 msgstr "Προειδοποίηση"
@@ -2901,9 +2979,22 @@ msgstr "Προειδοποίηση"
 msgid "Welcome to team Unicorn :)"
 msgstr "Καλώς ήρθατε στην ομάδα Unicorn :)"
 
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
+msgid "Why are approvals required?"
+msgstr "Γιατί απαιτούνται εγκρίσεις;"
+
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
+msgid "Why are permits required?"
+msgstr "Γιατί απαιτούνται άδειες;"
+
 #: src/nft/components/profile/list/Modal/ListModalSection.tsx
 msgid "Why is a transaction required?"
 msgstr "Γιατί απαιτείται συναλλαγή;"
+
+#: src/components/swap/PendingModalContent/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Why is this required?"
+msgstr "Γιατί απαιτείται αυτό;"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Withdraw deposited liquidity"
@@ -2942,7 +3033,7 @@ msgstr "Τυλιγμένο"
 msgid "Wrapping"
 msgstr "Τύλιγμα"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Wrong network"
 msgstr "Λάθος δίκτυο"
 
@@ -3137,6 +3228,7 @@ msgid "fee"
 msgstr "τέλη"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseLocal.ts
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
 msgid "for"
 msgstr "Για"
 
