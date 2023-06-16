@@ -16,7 +16,7 @@ const RPC_URLS_WITHOUT_FALLBACKS = Object.entries(RPC_URLS).reduce(
 )
 const optionalChains = [...L1_CHAIN_IDS, ...L2_CHAIN_IDS].filter((x) => x !== SupportedChainId.MAINNET)
 
-export class WalletConnectV2WithAnalytics extends WalletConnect {
+export class WalletConnectV2 extends WalletConnect {
   ANALYTICS_EVENT = 'Wallet Connect QR Scan'
   constructor({
     actions,
@@ -32,6 +32,8 @@ export class WalletConnectV2WithAnalytics extends WalletConnect {
         chains: [SupportedChainId.MAINNET],
         showQrModal: qrcode,
         rpcMap: RPC_URLS_WITHOUT_FALLBACKS,
+        // as of 6/16/2023 there are no docs for `optionalMethods`
+        // this set of optional methods fixes a bug we encountered where permit2 signatures were never received from the connected wallet
         optionalMethods: ['eth_signTypedData', 'eth_signTypedData_v4', 'eth_sign'],
         qrModalOptions: {
           chainImages: undefined,
