@@ -17,7 +17,7 @@ import { RPC_PROVIDERS } from '../constants/providers'
 import { Connection, ConnectionType } from './types'
 import { getInjection, getIsCoinbaseWallet, getIsInjected, getIsMetaMaskWallet } from './utils'
 import { UniwalletConnect, WalletConnectPopup } from './WalletConnect'
-import { WalletConnectV2Popup } from './WalletConnectV2'
+import { WalletConnectV2WithAnalytics } from './WalletConnectV2'
 
 function onError(error: Error) {
   console.debug(`web3-react error: ${error}`)
@@ -82,8 +82,8 @@ export const walletConnectConnection: Connection = {
   shouldDisplay: () => !getIsInjectedMobileBrowser(),
 }
 
-const [web3WalletConnectV2, web3WalletConnectV2Hooks] = initializeConnector<WalletConnectV2Popup>(
-  (actions) => new WalletConnectV2Popup({ actions, onError })
+const [web3WalletConnectV2, web3WalletConnectV2Hooks] = initializeConnector<WalletConnectV2WithAnalytics>(
+  (actions) => new WalletConnectV2WithAnalytics({ actions, onError })
 )
 export const walletConnectV2Connection: Connection = {
   getName: () => 'WalletConnectV2',
