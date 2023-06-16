@@ -8,14 +8,12 @@ import ProtocolBanner from 'components/About/ProtocolBanner'
 import { useAccountDrawer } from 'components/AccountDrawer'
 import { BaseButton } from 'components/Button'
 import { AppleLogo } from 'components/Logo/AppleLogo'
-import { useAtomValue } from 'jotai/utils'
 import Swap from 'pages/Swap'
 import { parse } from 'qs'
 import { useEffect, useRef, useState } from 'react'
 import { ArrowDownCircle } from 'react-feather'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { Link as NativeLink } from 'react-router-dom'
-import { shouldDisableNFTRoutesAtom } from 'state/application/atoms'
 import { useAppSelector } from 'state/hooks'
 import styled, { css } from 'styled-components/macro'
 import { BREAKPOINTS } from 'theme'
@@ -323,8 +321,6 @@ export default function Landing() {
     }
   }, [navigate, selectedWallet, queryParams.intro, accountDrawerOpen])
 
-  const shouldDisableNFTRoutes = useAtomValue(shouldDisableNFTRoutesAtom)
-
   return (
     <Trace page={InterfacePageName.LANDING_PAGE} shouldLogImpression>
       <PageContainer data-testid="landing-page">
@@ -347,19 +343,11 @@ export default function Landing() {
             </GlowContainer>
             <ContentContainer isDarkMode={isDarkMode}>
               <TitleText isDarkMode={isDarkMode}>
-                {shouldDisableNFTRoutes ? (
-                  <Trans>Trade crypto with confidence</Trans>
-                ) : (
-                  <Trans>Trade crypto and NFTs with confidence</Trans>
-                )}
+                <Trans>Welcome to Soroswap</Trans>
               </TitleText>
               <SubTextContainer>
                 <SubText>
-                  {shouldDisableNFTRoutes ? (
-                    <Trans>Buy, sell, and explore tokens</Trans>
-                  ) : (
-                    <Trans>Buy, sell, and explore tokens and NFTs</Trans>
-                  )}
+                  <Trans>Buy, sell, and explore tokens on Soroban network</Trans>
                 </SubText>
               </SubTextContainer>
               <ActionsContainer>
