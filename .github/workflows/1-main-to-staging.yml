@@ -13,6 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab
+      - run: touch src/locales/en-US.po
       - name: Download translations
         uses: crowdin/github-action@3133cc916c35590475cf6705f482fb653d8e36e9
         with:
