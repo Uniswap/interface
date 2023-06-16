@@ -11,6 +11,7 @@ import ThemeToggle from 'theme/components/ThemeToggle'
 import { GitVersionRow } from './GitVersionRow'
 import { SlideOutMenu } from './SlideOutMenu'
 import { SmallBalanceToggle } from './SmallBalanceToggle'
+import { TestnetsToggle } from './TestnetsToggle'
 
 const InternalLinkMenuItem = styled(Link)`
   ${ClickableStyle}
@@ -48,9 +49,11 @@ const ThemeToggleContainer = styled.div`
   margin: 0 0 6px;
 `
 
-const BalanceToggleContainer = styled.div`
-  padding: 16px 0;
-  margin-bottom: 26px;
+const ToggleContainer = styled.div`
+  padding: 16px 0 0 0;
+  &:last-child {
+    margin-bottom: 24px;
+  }
 `
 
 export default function SettingsMenu({ onClose }: { onClose: () => void }) {
@@ -61,12 +64,17 @@ export default function SettingsMenu({ onClose }: { onClose: () => void }) {
       <SectionTitle>
         <Trans>Preferences</Trans>
       </SectionTitle>
-      <ThemeToggleContainer>
-        <ThemeToggle />
-      </ThemeToggleContainer>
-      <BalanceToggleContainer>
-        <SmallBalanceToggle />
-      </BalanceToggleContainer>
+      <div>
+        <ThemeToggleContainer>
+          <ThemeToggle />
+        </ThemeToggleContainer>
+        <ToggleContainer>
+          <SmallBalanceToggle />
+        </ToggleContainer>
+        <ToggleContainer>
+          <TestnetsToggle />
+        </ToggleContainer>
+      </div>
 
       <SectionTitle data-testid="wallet-header">
         <Trans>Language</Trans>

@@ -1,6 +1,7 @@
 import { t } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import { WalletConnect } from '@web3-react/walletconnect-v2'
+import { hideTestnetsAtom } from 'components/AccountDrawer/TestnetsToggle'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { getConnection } from 'connection'
 import { ConnectionType } from 'connection/types'
@@ -9,14 +10,14 @@ import { SupportedChainId, UniWalletSupportedChains } from 'constants/chains'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useSelectChain from 'hooks/useSelectChain'
 import useSyncChainQuery from 'hooks/useSyncChainQuery'
+import { useAtomValue } from 'jotai/utils'
 import { Box } from 'nft/components/Box'
 import { Portal } from 'nft/components/common/Portal'
 import { Column, Row } from 'nft/components/Flex'
 import { useIsMobile } from 'nft/hooks'
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { AlertTriangle, ChevronDown, ChevronUp } from 'react-feather'
 import { useTheme } from 'styled-components/macro'
-import { isProductionEnv } from 'utils/env'
 
 import * as styles from './ChainSelector.css'
 import ChainSelectorRow from './ChainSelectorRow'
@@ -29,11 +30,8 @@ const NETWORK_SELECTOR_CHAINS = [
   SupportedChainId.ARBITRUM_ONE,
   SupportedChainId.CELO,
   SupportedChainId.BNB,
+  SupportedChainId.SEPOLIA,
 ]
-
-if (!isProductionEnv()) {
-  NETWORK_SELECTOR_CHAINS.push(SupportedChainId.SEPOLIA)
-}
 
 interface ChainSelectorProps {
   leftAlign?: boolean
@@ -72,6 +70,14 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
 
   const theme = useTheme()
 
+  const [chains, setChains] = useState(NETWORK_SELECTOR_CHAINS)
+  const hideTestnets = useAtomValue(hideTestnetsAtom)
+  useEffect(() => {
+    if (hideTestnets) {
+      setChains(NETWORK_SELECTOR_CHAINS.filter((chain) => chain !== SupportedChainId.SEPOLIA))
+    }
+  }, [hideTestnets])
+
   const ref = useRef<HTMLDivElement>(null)
   const modalRef = useRef<HTMLDivElement>(null)
   useOnClickOutside(ref, () => setIsOpen(false), [modalRef])
@@ -104,7 +110,7 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
   const dropdown = (
     <NavDropdown top="56" left={leftAlign ? '0' : 'auto'} right={leftAlign ? 'auto' : '0'} ref={modalRef}>
       <Column paddingX="8">
-        {NETWORK_SELECTOR_CHAINS.map((selectorChain: SupportedChainId) => (
+        {chains.map((selectorChain: SupportedChainId) => (
           <ChainSelectorRow
             disabled={!walletSupportsChain.includes(selectorChain)}
             onSelectChain={onSelectChain}
