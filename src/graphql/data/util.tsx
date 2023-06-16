@@ -30,8 +30,8 @@ export enum TimePeriod {
   // HOUR,
   DAY,
   WEEK,
-  // MONTH,
-  // YEAR,
+  MONTH,
+  YEAR,
 }
 
 export function toHistoryDuration(timePeriod: TimePeriod): HistoryDuration {
@@ -42,10 +42,10 @@ export function toHistoryDuration(timePeriod: TimePeriod): HistoryDuration {
       return HistoryDuration.Day
     case TimePeriod.WEEK:
       return HistoryDuration.Week
-    // case TimePeriod.MONTH:
-    //   return HistoryDuration.Month
-    // case TimePeriod.YEAR:
-    //   return HistoryDuration.Year
+    case TimePeriod.MONTH:
+      return HistoryDuration.Month
+    case TimePeriod.YEAR:
+      return HistoryDuration.Year
   }
 }
 

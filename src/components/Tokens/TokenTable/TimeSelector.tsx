@@ -15,16 +15,16 @@ export const DISPLAYS: Record<TimePeriod, string> = {
   // [TimePeriod.HOUR]: '1H',
   [TimePeriod.DAY]: '1D',
   [TimePeriod.WEEK]: '1W',
-  // [TimePeriod.MONTH]: '1M',
-  // [TimePeriod.YEAR]: '1Y',
+  [TimePeriod.MONTH]: '1M',
+  [TimePeriod.YEAR]: '1Y',
 }
 
 export const ORDERED_TIMES: TimePeriod[] = [
   // TimePeriod.HOUR,
   TimePeriod.DAY,
   TimePeriod.WEEK,
-  // TimePeriod.MONTH,
-  // TimePeriod.YEAR,
+  TimePeriod.MONTH,
+  TimePeriod.YEAR,
 ]
 
 const InternalMenuItem = styled.div`

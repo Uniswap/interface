@@ -14,11 +14,24 @@ import { ONE_HOUR_SECONDS } from 'utils/intervals'
 import { PriceChart } from './PriceChart'
 import TimePeriodSelector from './TimeSelector'
 
-function usePriceHistory(tokenData: TokenData): PricePoint[] | undefined {
+function usePriceHistory(tokenData: TokenData, timePeriod: TimePeriod): PricePoint[] | undefined {
   // Appends the current price to the end of the priceHistory array
 
   const utcCurrentTime = dayjs()
-  const startTimestamp = utcCurrentTime.subtract(1, 'week').startOf('hour').unix()
+
+  const startTimestamp = useMemo(() => {
+    switch (timePeriod) {
+      case TimePeriod.DAY:
+        return utcCurrentTime.subtract(1, 'day').startOf('minute').unix()
+      case TimePeriod.WEEK:
+        return utcCurrentTime.subtract(1, 'week').startOf('hour').unix()
+      case TimePeriod.MONTH:
+        return utcCurrentTime.subtract(1, 'month').startOf('hour').unix()
+      case TimePeriod.YEAR:
+        return utcCurrentTime.subtract(1, 'year').startOf('day').unix()
+    }
+  }, [timePeriod, utcCurrentTime])
+
   const [data, setData] = useState<PriceChartEntry[]>([])
 
   useEffect(() => {
@@ -70,14 +83,15 @@ export default function ChartSection({
 
 export type OnChangeTimePeriod = (t: TimePeriod) => void
 function Chart({ tokenData, onChangeTimePeriod }: { tokenData: TokenData; onChangeTimePeriod: OnChangeTimePeriod }) {
-  const prices = usePriceHistory(tokenData)
-  // Initializes time period to global & maintain separate time period for subsequent changes
   const timePeriod = useAtomValue(pageTimePeriodAtom)
+
+  const prices = usePriceHistory(tokenData, timePeriod)
+  // Initializes time period to global & maintain separate time period for subsequent changes
 
   return (
     <ChartContainer data-testid="chart-container">
       <ParentSize>
-        {({ width }) => <PriceChart prices={prices ?? null} width={width} height={436} timePeriod={timePeriod} />}
+        {({ width }) => <PriceChart prices={prices} width={width} height={436} timePeriod={timePeriod} />}
       </ParentSize>
       <TimePeriodSelector
         currentTimePeriod={timePeriod}
