@@ -119,9 +119,11 @@ export function validateUrlChainParam(chainName: string | undefined) {
 }
 
 // TODO(cartcrom): refactor into safer lookup & replace usage
+// TODO: add support for sepolia, routing sepolia to goerli to fix required field in "Chain"
 export const CHAIN_NAME_TO_CHAIN_ID: { [key in Chain]: SupportedChainId } = {
   [Chain.Ethereum]: SupportedChainId.MAINNET,
   [Chain.EthereumGoerli]: SupportedChainId.GOERLI,
+  [Chain.EthereumSepolia]: SupportedChainId.GOERLI,
   [Chain.Polygon]: SupportedChainId.POLYGON,
   [Chain.Celo]: SupportedChainId.CELO,
   [Chain.Optimism]: SupportedChainId.OPTIMISM,
