@@ -18,15 +18,40 @@ jobs:
         with:
           token: ${{ secrets.RELEASE_SERVICE_ACCESS_TOKEN }}
           ref: main
+
+      # The source file must exist for the corresponding translation messages to be downloaded.
+      - run: touch src/locales/en-US.po
+      - name: Download translations
+        uses: crowdin/github-action@3133cc916c35590475cf6705f482fb653d8e36e9
+        with:
+          upload_sources: false
+          download_translations: true
+          project_id: 458284
+          token: ${{ secrets.CROWDIN_PERSONAL_TOKEN_SECRET }}
+          source: 'src/locales/en-US.po'
+          translation: 'src/locales/%locale%.po'
+          localization_branch_name: main
+          create_pull_request: false
+          push_translations: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Git config
         run: |
-          git config user.name "UL Service Account"
-          git config user.email "hello-happy-puppy@users.noreply.github.com"
-      - name: Add CODEOWNERS file
+          git config user.name 'UL Service Account'
+          git config user.email 'hello-happy-puppy@users.noreply.github.com'
+
+      - name: Add translations
         run: |
-          echo "@uniswap/web-admins" > CODEOWNERS
+          git add src/locales/*.po
+          git commit -m 'ci(t9n): download translations from crowdin'
+
+      - name: Add CODEOWNERS
+        run: |
+          echo '@uniswap/web-admins' > CODEOWNERS
           git add CODEOWNERS
-          git commit -m "ci: add global CODEOWNERS"
+          git commit -m 'ci: add global CODEOWNERS'
+
       - name: Git push
         run: |
           git push origin main:releases/staging --force
