@@ -54,6 +54,7 @@ export interface PoolRegisteredLog {
 
 function useStartBlock(chainId: number | undefined): number | undefined {
   let registryStartBlock
+  const blockNumber = useBlockNumber()
 
   if (chainId === SupportedChainId.MAINNET) {
     registryStartBlock = 15834693
@@ -66,7 +67,7 @@ function useStartBlock(chainId: number | undefined): number | undefined {
   } else if (chainId === SupportedChainId.POLYGON) {
     registryStartBlock = 35228892
   } else if (chainId === SupportedChainId.BNB) {
-    registryStartBlock = 25549625
+    registryStartBlock = typeof blockNumber === 'number' ? blockNumber - 40000 : blockNumber //28843676
   } else {
     registryStartBlock = undefined
   }

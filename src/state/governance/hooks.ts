@@ -22,6 +22,7 @@ import { POLYGON_PROPOSAL_TITLE } from 'constants/proposals/polygon_proposal_tit
 import { UNISWAP_GRANTS_PROPOSAL_DESCRIPTION } from 'constants/proposals/uniswap_grants_proposal_description'
 import { useContract } from 'hooks/useContract'
 import { useSingleCallResult, useSingleContractMultipleData } from 'lib/hooks/multicall'
+import useBlockNumber from 'lib/hooks/useBlockNumber'
 import { useCallback, useMemo } from 'react'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
 
@@ -143,6 +144,8 @@ function useProposalCount(contract: Contract | null): number | undefined {
 interface FormattedProposalLog {
   description: string
   details: { target: string; functionSig: string; callData: string }[]
+  proposer: string
+  proposalId: number
 }
 
 const FOUR_BYTES_DIR: { [sig: string]: string } = {
@@ -152,6 +155,24 @@ const FOUR_BYTES_DIR: { [sig: string]: string } = {
   '0xa9059cbb': 'transfer(address,uint256)',
   '0x095ea7b3': 'approve(address,uint256)',
   '0x7b1837de': 'fund(address,uint256)',
+  '0x332f6465': 'setAdapter(address,bool)',
+  '0xd784d426': 'setImplementation(address)',
+  '0x83f94db7': 'upgradeImplementation(address)',
+  '0x42f1181e': 'addAuthorizedAddress(address)',
+  '0x37b006a6': 'detachStakingContract',
+  '0x66615d56': 'attachStakingContract(address)',
+  '0x70712939': 'removeAuthorizedAddress(address)',
+  '0xf2fde38b': 'transferOwnership(address)',
+  '0xc14b8e9c': 'updateThresholds(uint256,uin256)',
+  '0x3f4350a5': 'upgradeStrategy(address)',
+  '0xa91ee0dc': 'setRegistry(address)',
+  '0x7a9e5e4b': 'setAuthority(address)',
+  '0xb516e6e1': 'setRigoblockDao(address)',
+  '0xc91b0149': 'setWhitelister(address,bool)',
+  '0x13af4035': 'setOwner(address)',
+  '0x71013c10': 'setFactory(address)',
+  '0xcd29d473': 'addMethod(bytes4,address)',
+  '0xd9efcc1e': 'removeMethod(bytes4,address)',
 }
 
 /**
@@ -183,11 +204,13 @@ function useFormattedProposalCreatedLogs(
         const parsed = GovernanceInterface.parseLog(log).args
         return parsed
       })
-      ?.filter((parsed) => indices.flat().some((i) => i === parsed.id.toNumber()))
+      ?.filter((parsed) => indices.flat().some((i) => i === parsed.proposalId.toNumber()))
       ?.map((parsed) => {
         let description!: string
 
-        const startBlock = parseInt(parsed.startBlock?.toString())
+        const proposer = parsed.proposer.toString()
+        const proposalId = parsed.proposalId
+        const startBlock = parseInt(parsed.startBlockOrTime?.toString())
         try {
           description = parsed.description
         } catch (error) {
@@ -226,24 +249,21 @@ function useFormattedProposalCreatedLogs(
         }
 
         return {
+          proposer,
           description,
-          details: parsed.targets.map((target: string, i: number) => {
-            const signature = parsed.signatures[i]
-            let calldata = parsed.calldatas[i]
-            let name: string
-            let types: string
-            if (signature === '') {
-              const fourbyte = calldata.slice(0, 10)
-              const sig = FOUR_BYTES_DIR[fourbyte] ?? 'UNKNOWN()'
-              if (!sig) throw new Error('Missing four byte sig')
-              ;[name, types] = sig.substring(0, sig.length - 1).split('(')
-              calldata = `0x${calldata.slice(10)}`
-            } else {
-              ;[name, types] = signature.substring(0, signature.length - 1).split('(')
-            }
+          proposalId,
+          details: parsed.actions.map((action: ProposedAction) => {
+            let calldata = action.data
+
+            const fourbyte = calldata.slice(0, 10)
+            const sig = FOUR_BYTES_DIR[fourbyte] ?? 'UNKNOWN()'
+            if (!sig) throw new Error('Missing four byte sig')
+            const [name, types] = sig.substring(0, sig.length - 1).split('(')
+            calldata = `0x${calldata.slice(10)}`
+
             const decoded = defaultAbiCoder.decode(types.split(','), calldata)
             return {
-              target,
+              target: action.target,
               functionSig: name,
               callData: decoded.join(', '),
             }
@@ -260,6 +280,7 @@ function countToIndices(count: number | undefined, skip = 0) {
 // get data for all past and active proposals
 export function useAllProposalData(): { data: ProposalData[]; loading: boolean } {
   const { chainId } = useWeb3React()
+  const blockNumber = useBlockNumber()
   const gov = useGovernanceProxyContract()
 
   const proposalCount = useProposalCount(gov)
@@ -289,7 +310,8 @@ export function useAllProposalData(): { data: ProposalData[]; loading: boolean }
   } else if (chainId === SupportedChainId.POLYGON) {
     govStartBlock = 39249858
   } else if (chainId === SupportedChainId.BNB) {
-    govStartBlock = 25551953
+    // since bsc enpoints will return an end on historical logs, we try to get proposal logs in the last 40k blocks
+    govStartBlock = typeof blockNumber === 'number' ? blockNumber - 40000 : blockNumber //29095808
   }
 
   const formattedLogsV1 = useFormattedProposalCreatedLogs(gov, govProposalIndexes, govStartBlock)
@@ -313,9 +335,10 @@ export function useAllProposalData(): { data: ProposalData[]; loading: boolean }
       return { data: [], loading: true }
     }
 
+    // TODO: remove unnecessary code
     return {
       data: proposalsCallData.map((proposal, i) => {
-        const startBlock = parseInt(proposal?.result?.startBlock?.toString())
+        const startBlock = parseInt(proposal?.result?.proposalWrapper?.proposal?.startBlockOrTime?.toString())
 
         let description = formattedLogs[i]?.description ?? ''
         if (startBlock === UNISWAP_GRANTS_START_BLOCK) {
@@ -327,19 +350,37 @@ export function useAllProposalData(): { data: ProposalData[]; loading: boolean }
           title = POLYGON_PROPOSAL_TITLE
         }
 
+        const details = proposal?.result?.proposalWrapper?.proposedAction.map((action: ProposedAction) => {
+          let calldata = action.data
+
+          const fourbyte = calldata.slice(0, 10)
+          const sig = FOUR_BYTES_DIR[fourbyte] ?? 'UNKNOWN()'
+          if (!sig) throw new Error('Missing four byte sig')
+          const [name, types] = sig.substring(0, sig.length - 1).split('(')
+          calldata = `0x${calldata.slice(10)}`
+
+          const decoded = defaultAbiCoder.decode(types.split(','), calldata)
+          return {
+            target: action.target,
+            functionSig: name,
+            callData: decoded.join(', '),
+          }
+        })
+
+        // TODO: amend block to time
         return {
-          id: proposal?.result?.id.toString(),
+          id: (i + 1).toString(), //formattedLogs[i]?.proposalId?.toString(),
           title: title ?? t`Untitled`,
           description: description ?? t`No description.`,
-          proposer: proposal?.result?.proposer,
+          proposer: formattedLogs[i]?.proposer, //proposal?.result?.proposer,
           status: proposalStatesCallData[i]?.result?.[0] ?? ProposalState.UNDETERMINED,
-          forCount: CurrencyAmount.fromRawAmount(grg, proposal?.result?.forVotes),
-          againstCount: CurrencyAmount.fromRawAmount(grg, proposal?.result?.againstVotes),
+          forCount: CurrencyAmount.fromRawAmount(grg, proposal?.result?.proposalWrapper?.proposal?.votesFor),
+          againstCount: CurrencyAmount.fromRawAmount(grg, proposal?.result?.proposalWrapper?.proposal?.votesAgainst),
           startBlock,
-          endBlock: parseInt(proposal?.result?.endBlock?.toString()),
-          eta: proposal?.result?.eta,
-          details: formattedLogs[i]?.details,
-          governorIndex: 0,
+          endBlock: parseInt(proposal?.result?.proposalWrapper?.proposal?.endBlockOrTime?.toString()),
+          eta: BigNumber.from(0), //proposal?.result?.eta,
+          details, //: formattedLogs[i]?.details,
+          governorIndex: 1,
         }
       }),
       loading: false,
@@ -354,14 +395,15 @@ export function useProposalData(governorIndex: number, id: string): ProposalData
 
 export function useQuorum(governorIndex: number): CurrencyAmount<Token> | undefined {
   const latestGovernanceContract = useLatestGovernanceContract()
-  const quorumVotes = useSingleCallResult(latestGovernanceContract, 'quorumVotes')?.result?.[0]
+  const govParams = useSingleCallResult(latestGovernanceContract, 'governanceParameters')?.result?.[0]
+  const quorumVotes = govParams?.params?.quorumThreshold
   const { chainId } = useWeb3React()
   const grg = useMemo(() => (chainId ? GRG[chainId] : undefined), [chainId])
 
   if (
     !latestGovernanceContract ||
     !quorumVotes ||
-    chainId !== SupportedChainId.MAINNET ||
+    //chainId !== SupportedChainId.MAINNET ||
     !grg ||
     governorIndex !== LATEST_GOVERNOR_INDEX
   )

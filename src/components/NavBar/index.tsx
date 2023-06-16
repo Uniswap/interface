@@ -1,5 +1,4 @@
 import { Trans } from '@lingui/macro'
-import { useWeb3React } from '@web3-react/core'
 import Web3Status from 'components/Web3Status'
 //import { chainIdToBackendName } from 'graphql/data/util'
 import { useIsNftPage } from 'hooks/useIsNftPage'
@@ -53,8 +52,6 @@ const MenuItem = ({ href, dataTestId, id, isActive, children }: MenuItemProps) =
 
 export const PageTabs = () => {
   const { pathname } = useLocation()
-  const { chainId: connectedChainId } = useWeb3React()
-  //const chainName = chainIdToBackendName(connectedChainId)
 
   const isPoolActive = useIsPoolsPage()
   const isNftPage = useIsNftPage()
@@ -66,11 +63,9 @@ export const PageTabs = () => {
       <MenuItem href="/mint" isActive={pathname.startsWith('/mint')}>
         <Trans>Mint</Trans>
       </MenuItem>
-      {connectedChainId !== 56 && (
-        <MenuItem href="/swap" isActive={pathname.startsWith('/swap')}>
-          <Trans>Swap</Trans>
-        </MenuItem>
-      )}
+      <MenuItem href="/swap" isActive={pathname.startsWith('/swap')}>
+        <Trans>Swap</Trans>
+      </MenuItem>
       {/*
       <MenuItem href={`/tokens/${chainName.toLowerCase()}`} isActive={pathname.startsWith('/tokens')}>
         <Trans>Tokens</Trans>
@@ -81,11 +76,9 @@ export const PageTabs = () => {
           <Trans>NFTs</Trans>
         </MenuItem>
       )}
-      {connectedChainId !== 56 && (
-        <MenuItem href="/pool" id="pool-nav-link" isActive={isPoolActive}>
-          <Trans>Liquidity</Trans>
-        </MenuItem>
-      )}
+      <MenuItem href="/pool" id="pool-nav-link" isActive={isPoolActive}>
+        <Trans>Liquidity</Trans>
+      </MenuItem>
       <Box display={{ sm: 'flex', lg: 'none', xxl: 'flex' }} width="full">
         <MenuItem href="/stake" isActive={pathname.startsWith('/stake')}>
           <Trans>Staking</Trans>

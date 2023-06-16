@@ -210,7 +210,7 @@ export default function CreateProposal() {
 ${bodyValue}
 `
 
-    let values: string[][]
+    let values: (string | boolean)[][]
     let methods: string[]
     let targets: string[]
     let interfaces: Interface[]
@@ -265,7 +265,7 @@ ${bodyValue}
 
       // any non-empty string for the boolean value will result in adding an adapter
       case ProposalAction.ADD_ADAPTER: {
-        values = [[getAddress(toAddressValue), 'true']]
+        values = [[getAddress(toAddressValue), true]]
         interfaces = [new Interface(AUTHORITY_ABI)]
         targets = [AUTHORITY_ADDRESSES[chainId ?? 1]]
         methods = ['setAdapter']
@@ -274,7 +274,7 @@ ${bodyValue}
 
       // an empty string for the boolean value will result in removing an adapter
       case ProposalAction.REMOVE_ADAPTER: {
-        values = [[getAddress(toAddressValue), '']]
+        values = [[getAddress(toAddressValue), false]]
         interfaces = [new Interface(AUTHORITY_ABI)]
         targets = [AUTHORITY_ADDRESSES[chainId ?? 1]]
         methods = ['setAdapter']
