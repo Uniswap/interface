@@ -25,7 +25,8 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
   tradeType: TTradeType,
   amountSpecified: CurrencyAmount<Currency> | undefined,
   otherCurrency: Currency | undefined,
-  routerPreference: RouterPreference | typeof INTERNAL_ROUTER_PREFERENCE_PRICE
+  routerPreference: RouterPreference | typeof INTERNAL_ROUTER_PREFERENCE_PRICE,
+  skipFetch = false
 ): {
   state: TradeState
   trade?: InterfaceTrade
@@ -41,7 +42,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
   const queryArgs = useRoutingAPIArguments({
     tokenIn: currencyIn,
     tokenOut: currencyOut,
-    amount: amountSpecified,
+    amount: skipFetch ? undefined : amountSpecified,
     tradeType,
     routerPreference,
   })
@@ -77,8 +78,11 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
   const isCurrent = currentTradeResult === tradeResult
 
   return useMemo(() => {
-    if (!amountSpecified || isError || !queryArgs) {
-      return { state: TradeState.INVALID, trade: tradeResult?.trade }
+    if (skipFetch && amountSpecified) {
+      // If we don't want to fetch new trades, but have valid inputs, return the stale trade.
+      return { state: TradeState.STALE, trade: tradeResult?.trade }
+    } else if (!amountSpecified || isError || !queryArgs) {
+      return { state: TradeState.INVALID, trade: undefined }
     } else if (tradeResult?.state === QuoteState.NOT_FOUND && isCurrent) {
       return TRADE_NOT_FOUND
     } else if (!tradeResult?.trade) {
@@ -90,7 +94,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
         trade: tradeResult.trade,
       }
     }
-  }, [amountSpecified, isCurrent, isError, queryArgs, tradeResult])
+  }, [amountSpecified, isCurrent, isError, queryArgs, skipFetch, tradeResult?.state, tradeResult?.trade])
 }
 
 // only want to enable this when app hook called

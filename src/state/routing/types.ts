@@ -8,6 +8,7 @@ import { RouterPreference } from './slice'
 export enum TradeState {
   LOADING,
   INVALID,
+  STALE,
   NO_ROUTE_FOUND,
   VALID,
 }

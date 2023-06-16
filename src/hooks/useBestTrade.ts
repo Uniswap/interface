@@ -56,9 +56,10 @@ export function useBestTrade(
   const [routerPreference] = useRouterPreference()
   const routingAPITrade = useRoutingAPITrade(
     tradeType,
-    autoRouterSupported && shouldGetTrade ? debouncedAmount : undefined,
+    amountSpecified ? debouncedAmount : undefined,
     debouncedOtherCurrency,
-    routerPreference
+    routerPreference,
+    !(autoRouterSupported && shouldGetTrade) // skip fetching
   )
 
   const inDebounce =
