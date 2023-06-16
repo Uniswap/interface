@@ -28,11 +28,6 @@ jobs:
           push_translations: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Add CODEOWNERS
-        run: |
-          echo "@uniswap/web-admins" > CODEOWNERS
-          git add CODEOWNERS
-          git commit -m "ci: add global CODEOWNERS"
       - name: Git push
         run: |
           git push origin t9n/download:t9n/test --force
