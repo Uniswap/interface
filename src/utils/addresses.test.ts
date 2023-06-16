@@ -44,5 +44,12 @@ describe('utils', () => {
     it('allows undefined', () => {
       expect(shortenAddress()).toBe('')
     })
+
+    it('allows custom amounts of start/end chars', () => {
+      expect(shortenAddress('0x2E1b342132A67Ea578e4E3B814bae2107dc254CC', 2)).toBe('0x2E...54CC')
+      expect(shortenAddress('0x2E1b342132A67Ea578e4E3B814bae2107dc254CC', 6)).toBe('0x2E1b34...54CC')
+      expect(shortenAddress('0x2E1b342132A67Ea578e4E3B814bae2107dc254CC', 2, 2)).toBe('0x2E...CC')
+      expect(shortenAddress('0x2E1b342132A67Ea578e4E3B814bae2107dc254CC', 2, 6)).toBe('0x2E...c254CC')
+    })
   })
 })
