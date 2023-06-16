@@ -3,7 +3,7 @@ import {
   networkConnection,
   uniwalletConnectConnection,
   walletConnectConnection,
-  walletConnectV2Connection,
+  walletConnectV1Connection,
 } from 'connection'
 import { getChainInfo } from 'constants/chainInfo'
 import { isSupportedChain, SupportedChainId } from 'constants/chains'
@@ -28,7 +28,7 @@ export const switchChain = async (connector: Connector, chainId: SupportedChainI
     throw new Error(`Chain ${chainId} not supported for connector (${typeof connector})`)
   } else if (
     [
-      walletConnectV2Connection.connector,
+      walletConnectV1Connection.connector,
       walletConnectConnection.connector,
       uniwalletConnectConnection.connector,
       networkConnection.connector,
