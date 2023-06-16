@@ -53,7 +53,7 @@ export function ActivityRow({
         descriptor={
           <ActivityRowDescriptor color="textSecondary">
             {descriptor}
-            {ENSName ?? shortenAddress(otherAccount ?? '')}
+            {ENSName ?? shortenAddress(otherAccount)}
           </ActivityRowDescriptor>
         }
         right={

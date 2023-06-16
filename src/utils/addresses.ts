@@ -12,14 +12,14 @@ export function isAddress(value: any): string | false {
 }
 
 // Shortens an Ethereum address
-export function shortenAddress(address: string, charsStart = 4, charsEnd = 4): string {
+export function shortenAddress(address = '', charsStart = 4, charsEnd = 4): string {
   const parsed = isAddress(address)
   if (!parsed) return ''
   return ellipseAddressAdd0x(parsed, charsStart, charsEnd)
 }
 
 // Shorten the checksummed version of the input address to have 0x + 4 characters at start and end
-export function shortenAddressStrict(address: string, charsStart = 4, charsEnd = 4): string {
+export function shortenAddressStrict(address = '', charsStart = 4, charsEnd = 4): string {
   const parsed = isAddress(address)
   if (!parsed) {
     throw Error(`Invalid 'address' parameter '${address}'.`)
@@ -35,9 +35,9 @@ export function shortenAddressStrict(address: string, charsStart = 4, charsEnd =
  * @returns formatted string
  */
 function ellipseAddressAdd0x(targetAddress: string, charsStart = 4, charsEnd = 4): string {
-  const hasPrefix = address.startsWith('0x')
+  const hasPrefix = targetAddress.startsWith('0x')
   const prefix = hasPrefix ? '' : '0x'
-  return ellipseMiddle(prefix + address, charsStart + 2, charsEnd)
+  return ellipseMiddle(prefix + targetAddress, charsStart + 2, charsEnd)
 }
 
 /**
