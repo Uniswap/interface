@@ -1,5 +1,4 @@
 import { Trans } from '@lingui/macro'
-import * as Sentry from '@sentry/react'
 import { sendAnalyticsEvent, Trace, TraceEvent, useTrace } from '@uniswap/analytics'
 import {
   BrowserEvent,
@@ -33,7 +32,7 @@ import JSBI from 'jsbi'
 import { formatSwapQuoteReceivedEventProperties } from 'lib/utils/analytics'
 import { ReactNode, useCallback, useEffect, useMemo, useReducer, useState } from 'react'
 import { ArrowDown } from 'react-feather'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { Text } from 'rebass'
 import { InterfaceTrade, TradeState } from 'state/routing/types'
 import styled, { useTheme } from 'styled-components/macro'
@@ -136,6 +135,9 @@ const TRADE_STRING = 'SwapRouter'
 export default function SwapPage({ className }: { className?: string }) {
   const { chainId: connectedChainId } = useWeb3React()
   const loadedUrlParams = useDefaultsFromURLSearch()
+
+  const location = useLocation()
+
   return (
     <Trace page={InterfacePageName.SWAP_PAGE} shouldLogImpression>
       <PageWrapper>
@@ -149,7 +151,7 @@ export default function SwapPage({ className }: { className?: string }) {
         />
         <NetworkAlert />
       </PageWrapper>
-      <SwitchLocaleLink />
+      {location.pathname === '/swap' && <SwitchLocaleLink />}
     </Trace>
   )
 }
@@ -439,12 +441,6 @@ export function Swap({
         })
       })
       .catch((error) => {
-        if (!didUserReject(error)) {
-          Sentry.withScope((scope) => {
-            scope.setExtra('confirmedTrade', tradeToConfirm)
-            Sentry.captureException(error)
-          })
-        }
         setSwapState((currentState) => ({
           ...currentState,
           swapError: error,
@@ -459,7 +455,6 @@ export function Swap({
     account,
     trade?.inputAmount?.currency?.symbol,
     trade?.outputAmount?.currency?.symbol,
-    tradeToConfirm,
   ])
 
   // errors
