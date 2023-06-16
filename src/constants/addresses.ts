@@ -30,7 +30,14 @@ export const UNISWAP_NFT_AIRDROP_CLAIM_ADDRESS = '0x8B799381ac40b838BBA4131ffB26
 export const V2_FACTORY_ADDRESSES: AddressMap = constructSameAddressMap(V2_FACTORY_ADDRESS)
 export const V2_ROUTER_ADDRESS: AddressMap = constructSameAddressMap('0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D')
 
-export const AUTHORITY_ADDRESSES: AddressMap = constructSameAddressMap('0xe35129A1E0BdB913CF6Fd8332E9d3533b5F41472')
+export const AUTHORITY_ADDRESSES: AddressMap = constructSameAddressMap('0xe35129A1E0BdB913CF6Fd8332E9d3533b5F41472', [
+  SupportedChainId.MAINNET,
+  SupportedChainId.GOERLI,
+  SupportedChainId.OPTIMISM,
+  SupportedChainId.ARBITRUM_ONE,
+  SupportedChainId.POLYGON,
+  SupportedChainId.BNB,
+])
 
 // celo v3 addresses
 const CELO_V3_CORE_FACTORY_ADDRESSES = '0xAfE208a311B21f13EF87E33A90049fC17A7acDEc'
