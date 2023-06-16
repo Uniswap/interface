@@ -8,6 +8,7 @@ import { CHAIN_NAME_TO_CHAIN_ID } from 'graphql/data/util'
 import { TokenData } from 'graphql/tokens/TokenData'
 
 import AssetLogo, { AssetLogoBaseProps } from './AssetLogo'
+import { Token } from '@pollum-io/sdk-core'
 
 function getChainId(token?: TopToken | TokenQueryData | SearchToken | TokenData): SupportedChainId | undefined {
   if (token && 'chain' in token) {
@@ -35,6 +36,29 @@ export default function QueryTokenLogo(
   const isNative = isNativeToken(token)
 
   const address = token && 'address' in token ? token.address : token && 'id' in token ? token.id : undefined
+  const backupImg = `https://raw.githubusercontent.com/pegasys-fi/pegasys-tokenlists/master/${chainId}/${address}/logo.png`
+
+  return (
+    <AssetLogo
+      isNative={isNative}
+      chainId={chainId}
+      address={address}
+      symbol={token?.symbol}
+      backupImg={backupImg}
+      {...props}
+    />
+  )
+}
+
+export function QueryTokenLogoSDK(
+  props: AssetLogoBaseProps & {
+    token?: Token
+  }
+) {
+  const { token } = props
+  const chainId = token?.chainId
+  const isNative = token?.isNative
+  const address =  token?.address 
   const backupImg = `https://raw.githubusercontent.com/pegasys-fi/pegasys-tokenlists/master/${chainId}/${address}/logo.png`
 
   return (

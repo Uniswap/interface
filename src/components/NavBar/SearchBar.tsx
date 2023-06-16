@@ -19,11 +19,15 @@ import { ChangeEvent, useCallback, useEffect, useMemo, useReducer, useRef, useSt
 import { useQuery } from 'react-query'
 import { useLocation } from 'react-router-dom'
 import styled, { useTheme } from 'styled-components/macro'
+import { useDefaultActiveTokens } from '../../hooks/Tokens'
 
 import { ChevronLeftIcon, MagnifyingGlassIcon, NavMagnifyingGlassIcon } from '../../nft/components/icons'
 import { NavIcon } from './NavIcon'
 import * as styles from './SearchBar.css'
 import { SearchBarDropdown } from './SearchBarDropdown'
+import { Token } from '@pollum-io/sdk-core'
+import { getTokenFilter } from 'lib/hooks/useTokenList/filtering'
+import { useNewTopTokens } from 'graphql/tokens/NewTopTokens'
 
 const KeyShortCut = styled.div`
   background-color: ${({ theme }) => theme.hoverState};
@@ -50,7 +54,7 @@ export const SearchBar = () => {
   const { pathname } = useLocation()
   const isMobile = useIsMobile()
   const isTablet = useIsTablet()
-  const isNftGraphqlEnabled = useNftGraphqlEnabled()
+  // const isNftGraphqlEnabled = useNftGraphqlEnabled()
   const isNavSearchInputVisible = useIsNavSearchInputVisible()
   const theme = useTheme()
 
@@ -58,37 +62,40 @@ export const SearchBar = () => {
     isOpen && toggleOpen()
   })
 
-  const { data: queryCollections, isLoading: queryCollectionsAreLoading } = useQuery(
-    ['searchCollections', debouncedSearchValue],
-    () => fetchSearchCollections(debouncedSearchValue),
-    {
-      refetchOnWindowFocus: false,
-      refetchOnMount: false,
-      refetchOnReconnect: false,
-      enabled: !!debouncedSearchValue.length,
-    }
-  )
+  // const { data: queryCollections, isLoading: queryCollectionsAreLoading } = useQuery(
+  //   ['searchCollections', debouncedSearchValue],
+  //   () => fetchSearchCollections(debouncedSearchValue),
+  //   {
+  //     refetchOnWindowFocus: false,
+  //     refetchOnMount: false,
+  //     refetchOnReconnect: false,
+  //     enabled: !!debouncedSearchValue.length,
+  //   }
+  // )
 
-  const { data: gqlCollections, loading: gqlCollectionsAreLoading } = useCollectionSearch(debouncedSearchValue)
+  // const { data: gqlCollections, loading: gqlCollectionsAreLoading } = useCollectionSearch(debouncedSearchValue)
 
-  const { gatedCollections, gatedCollectionsAreLoading } = useMemo(() => {
-    return isNftGraphqlEnabled
-      ? {
-          gatedCollections: gqlCollections,
-          gatedCollectionsAreLoading: gqlCollectionsAreLoading,
-        }
-      : {
-          gatedCollections: queryCollections,
-          gatedCollectionsAreLoading: queryCollectionsAreLoading,
-        }
-  }, [gqlCollections, gqlCollectionsAreLoading, isNftGraphqlEnabled, queryCollections, queryCollectionsAreLoading])
+  // const { gatedCollections, gatedCollectionsAreLoading } = useMemo(() => {
+  //   return isNftGraphqlEnabled
+  //     ? {
+  //         gatedCollections: gqlCollections,
+  //         gatedCollectionsAreLoading: gqlCollectionsAreLoading,
+  //       }
+  //     : {
+  //         gatedCollections: queryCollections,
+  //         gatedCollectionsAreLoading: queryCollectionsAreLoading,
+  //       }
+  // }, [gqlCollections, gqlCollectionsAreLoading, isNftGraphqlEnabled, queryCollections, queryCollectionsAreLoading])
 
-  const { chainId } = useWeb3React()
-  const { data: tokens, loading: tokensAreLoading } = useSearchTokens(debouncedSearchValue, chainId ?? 1)
+  // const { chainId } = useWeb3React()
+  const  tokens = useDefaultActiveTokens()
+  // const { loading, tokens: newTokens } = useNewTopTokens() // TODO: change the call and interfaces for use this
 
-  const isNFTPage = useIsNftPage()
+  const reducedTokens: Token[] = useMemo(() => {
+    return Object.values(tokens).filter(getTokenFilter(debouncedSearchValue))
+  }, [tokens, debouncedSearchValue])
 
-  const [reducedTokens, reducedCollections] = organizeSearchResults(isNFTPage, tokens ?? [], gatedCollections ?? [])
+  // const isNFTPage = useIsNftPage()
 
   // close dropdown on escape
   useEffect(() => {
@@ -104,7 +111,7 @@ export const SearchBar = () => {
     return () => {
       document.removeEventListener('keydown', escapeKeyDownHandler)
     }
-  }, [isOpen, toggleOpen, gatedCollections])
+  }, [isOpen, toggleOpen ])
 
   // clear searchbar when changing pages
   useEffect(() => {
@@ -120,10 +127,10 @@ export const SearchBar = () => {
 
   const isMobileOrTablet = isMobile || isTablet || !isNavSearchInputVisible
 
-  const navbarSearchEventProperties = {
-    navbar_search_input_text: debouncedSearchValue,
-    hasInput: debouncedSearchValue && debouncedSearchValue.length > 0,
-  }
+  // const navbarSearchEventProperties = {
+  //   navbar_search_input_text: debouncedSearchValue,
+  //   hasInput: debouncedSearchValue && debouncedSearchValue.length > 0,
+  // }
   const placeholderText = useMemo(() => {
     return isMobileOrTablet ? t`Search` : t`Search tokens`
   }, [isMobileOrTablet])
@@ -211,10 +218,10 @@ export const SearchBar = () => {
             <SearchBarDropdown
               toggleOpen={toggleOpen}
               tokens={reducedTokens}
-              collections={reducedCollections}
+              // collections={reducedCollections}
               queryText={debouncedSearchValue}
               hasInput={debouncedSearchValue.length > 0}
-              isLoading={tokensAreLoading || gatedCollectionsAreLoading}
+              isLoading={false}
             />
           )}
         </Box>
