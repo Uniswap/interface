@@ -425,7 +425,7 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
             {asset.tokenType === 'ERC1155' ? (
               ''
             ) : (
-              <span> {isOwner ? 'You' : asset.ownerAddress && shortenAddress(asset.ownerAddress)}</span>
+              <span> {isOwner ? 'You' : asset.ownerAddress && shortenAddress(asset.ownerAddress, 2)}</span>
             )}
           </OwnerText>
         </OwnerInformationContainer>
