@@ -6,7 +6,13 @@ import { MouseoverTooltip } from 'components/Tooltip'
 import { getConnection } from 'connection'
 import { ConnectionType } from 'connection/types'
 import { getChainInfo } from 'constants/chainInfo'
-import { L1_CHAIN_IDS, L2_CHAIN_IDS, SupportedChainId, TESTNET_SET, UniWalletSupportedChains } from 'constants/chains'
+import {
+  L1_CHAIN_IDS,
+  L2_CHAIN_IDS,
+  SupportedChainId,
+  TESTNET_CHAIN_IDS,
+  UniWalletSupportedChains,
+} from 'constants/chains'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useSelectChain from 'hooks/useSelectChain'
 import useSyncChainQuery from 'hooks/useSyncChainQuery'
@@ -65,7 +71,7 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
   const showTestnets = useAtomValue(showTestnetsAtom)
   const chains = showTestnets
     ? NETWORK_SELECTOR_CHAINS
-    : NETWORK_SELECTOR_CHAINS.filter((chain) => !TESTNET_SET.has(chain))
+    : NETWORK_SELECTOR_CHAINS.filter((chain) => !TESTNET_CHAIN_IDS.has(chain))
 
   const ref = useRef<HTMLDivElement>(null)
   const modalRef = useRef<HTMLDivElement>(null)

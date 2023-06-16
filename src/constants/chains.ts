@@ -79,15 +79,7 @@ export const UNSUPPORTED_V2POOL_CHAIN_IDS = [
   SupportedChainId.ARBITRUM_GOERLI,
 ] as const
 
-export const TESTNET_CHAIN_IDS = [
-  SupportedChainId.GOERLI,
-  SupportedChainId.SEPOLIA,
-  SupportedChainId.POLYGON_MUMBAI,
-  SupportedChainId.ARBITRUM_GOERLI,
-  SupportedChainId.OPTIMISM_GOERLI,
-] as const
-
-export const TESTNET_SET = new Set([
+export const TESTNET_CHAIN_IDS = new Set([
   SupportedChainId.GOERLI,
   SupportedChainId.SEPOLIA,
   SupportedChainId.ARBITRUM_GOERLI,
@@ -96,8 +88,6 @@ export const TESTNET_SET = new Set([
   SupportedChainId.POLYGON_MUMBAI,
   SupportedChainId.CELO_ALFAJORES,
 ])
-
-export type SupportedTestnetChainId = typeof TESTNET_CHAIN_IDS[number]
 
 /**
  * All the chain IDs that are running the Ethereum protocol.
