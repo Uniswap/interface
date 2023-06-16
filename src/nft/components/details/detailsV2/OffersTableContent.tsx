@@ -11,7 +11,7 @@ import { TableContentComponent } from './TableContentComponent'
 import { ContentRow, HeaderRow } from './TableRowComponent'
 
 export const OffersTableContent = ({ asset }: { asset: GenieAsset }) => {
-  // TODO(NFT-1189) Replace with real offer data when BE supports
+  // TODO(NFT-1114) Replace with real offer data when BE supports
   const mockOffers = new Array(11).fill(TEST_OFFER)
   const isMobile = useIsMobile()
   const theme = useTheme()

@@ -2,7 +2,7 @@ import { TokenInfo, TokenList } from '@uniswap/token-lists'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 
 type TokenMap = Readonly<{ [tokenAddress: string]: { token: WrappedTokenInfo; list?: TokenList } }>
-// TODO(INFRA-164): replace usage of the misnomered TokenAddressMap w/ ChainTokenMap from src/hooks/Tokens.ts
+// TODO(WEB-2347): replace usage of the misnomered TokenAddressMap w/ ChainTokenMap from src/hooks/Tokens.ts
 export type TokenAddressMap = Readonly<{ [chainId: number]: TokenMap }>
 
 type Mutable<T> = {
