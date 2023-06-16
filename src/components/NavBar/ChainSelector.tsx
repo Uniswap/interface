@@ -63,7 +63,7 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
   const theme = useTheme()
 
   const showTestnets = useAtomValue(showTestnetsAtom)
-  const chains = NETWORK_SELECTOR_CHAINS.filter((chain) => !(TESTNET_SET.has(chain) && !showTestnets))
+  const chains = showTestnets ? NETWORK_SELECTOR_CHAINS : NETWORK_SELECTOR_CHAINS.filter(chain => !TESTNET_SET.has(chain))
 
   const ref = useRef<HTMLDivElement>(null)
   const modalRef = useRef<HTMLDivElement>(null)
