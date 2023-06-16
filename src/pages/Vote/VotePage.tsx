@@ -47,7 +47,7 @@ import {
   useProposalData,
   useQuorum,
   useUserDelegatee,
-  useUserVotesAsOfBlock,
+  useUserVotes,
 } from '../../state/governance/hooks'
 import { VoteOption } from '../../state/governance/types'
 import { ExternalLink, StyledInternalLink, ThemedText } from '../../theme'
@@ -233,9 +233,7 @@ export default function VotePage() {
     ? proposalData?.forCount?.asFraction?.divide(totalVotes.asFraction)?.multiply(100)
     : undefined
   const againstPercentage = forPercentage ? new Fraction(100).subtract(forPercentage) : undefined
-
-  // only count available votes as of the proposal start block
-  const availableVotes: CurrencyAmount<Token> | undefined = useUserVotesAsOfBlock(proposalData?.startBlock ?? undefined)
+  const { votes: availableVotes } = useUserVotes()
 
   // only show voting if user has > 0 votes at proposal start block and proposal is active,
   const showVotingButtons =
@@ -330,8 +328,8 @@ export default function VotePage() {
                 <GrayCard>
                   <ThemedText.DeprecatedBlack>
                     <Trans>
-                      Only GRG tokens that were actively staked to a Rigoblock Pool before block{' '}
-                      {proposalData.startBlock} are eligible for voting.
+                      Only GRG tokens that were actively staked to a Rigoblock Pool before{' '}
+                      {startDate?.toLocaleString(locale, dateFormat)} are eligible for voting.
                     </Trans>{' '}
                     {showLinkForUnlock && (
                       <span>
