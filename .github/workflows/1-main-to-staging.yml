@@ -26,7 +26,7 @@ jobs:
           localization_branch_name: t9n/download
           commit_message: 'chore(i18n): synchronize translations from crowdin [skip ci]'
           create_pull_request: false
-          push_translations: false
+          push_translations: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - run: git status
