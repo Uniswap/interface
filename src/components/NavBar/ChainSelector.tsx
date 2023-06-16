@@ -6,7 +6,7 @@ import { MouseoverTooltip } from 'components/Tooltip'
 import { getConnection } from 'connection'
 import { ConnectionType } from 'connection/types'
 import { getChainInfo } from 'constants/chainInfo'
-import { SupportedChainId, UniWalletSupportedChains } from 'constants/chains'
+import { L1_CHAIN_IDS, L2_CHAIN_IDS, SupportedChainId, TESTNET_SET, UniWalletSupportedChains } from 'constants/chains'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useSelectChain from 'hooks/useSelectChain'
 import useSyncChainQuery from 'hooks/useSyncChainQuery'
@@ -23,15 +23,7 @@ import * as styles from './ChainSelector.css'
 import ChainSelectorRow from './ChainSelectorRow'
 import { NavDropdown } from './NavDropdown'
 
-const NETWORK_SELECTOR_CHAINS = [
-  SupportedChainId.MAINNET,
-  SupportedChainId.POLYGON,
-  SupportedChainId.OPTIMISM,
-  SupportedChainId.ARBITRUM_ONE,
-  SupportedChainId.CELO,
-  SupportedChainId.BNB,
-  SupportedChainId.SEPOLIA,
-]
+const NETWORK_SELECTOR_CHAINS = [...L1_CHAIN_IDS, ...L2_CHAIN_IDS]
 
 interface ChainSelectorProps {
   leftAlign?: boolean
@@ -71,7 +63,7 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
   const theme = useTheme()
 
   const showTestnets = useAtomValue(showTestnetsAtom)
-  const chains = NETWORK_SELECTOR_CHAINS.filter((chain) => !(chain === SupportedChainId.SEPOLIA && !showTestnets))
+  const chains = NETWORK_SELECTOR_CHAINS.filter((chain) => !(TESTNET_SET.has(chain) && !showTestnets))
 
   const ref = useRef<HTMLDivElement>(null)
   const modalRef = useRef<HTMLDivElement>(null)
