@@ -3,7 +3,6 @@ import { configureStore } from '@reduxjs/toolkit'
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
 import createSagaMiddleware, { Saga } from 'redux-saga'
 import { SagaGenerator, select } from 'typed-redux-saga'
-import { loggerMiddleware } from 'wallet/src/features/logger/middleware'
 import { walletContextValue } from 'wallet/src/features/wallet/context'
 import { SagaState } from 'wallet/src/utils/saga'
 import { sharedRootReducer } from './reducer'
@@ -57,7 +56,7 @@ export function createStore({
         immutableCheck: false,
       })
         .prepend(middlewareBefore)
-        .concat(loggerMiddleware, sagaMiddleware)
+        .concat(sagaMiddleware)
         .concat(middlewareAfter),
     devTools: __DEV__,
   })
