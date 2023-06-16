@@ -23,7 +23,7 @@ describe('connection utility/metadata tests', () => {
     const injected = getConnection(ConnectionType.INJECTED)
     const coinbase = getConnection(ConnectionType.COINBASE_WALLET)
     const uniswap = getConnection(ConnectionType.UNISWAP_WALLET)
-    const walletconnect = getConnection(ConnectionType.WALLET_CONNECT)
+    const walletconnect = getConnection(ConnectionType.WALLET_CONNECT_V2)
 
     return { displayed, injected, coinbase, uniswap, walletconnect }
   }
