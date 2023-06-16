@@ -217,7 +217,7 @@ export function transformRoutesToTrade(args: GetQuoteArgs, data: URAQuoteRespons
         orderInfo,
         tradeType,
         quoteId: data.quote.quoteId,
-        gasUseEstimateUSD: classicTrade.gasUseEstimateUSD,
+        classicGasUseEstimateUSD: classicTrade.gasUseEstimateUSD,
         // TODO (Gouda): fix this value for ETH input flow
         needsWrap: false,
       }),

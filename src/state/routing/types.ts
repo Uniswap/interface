@@ -130,7 +130,7 @@ export class DutchOrderTrade extends IDutchOrderTrade<Currency, Currency, TradeT
   quoteId?: string
   needsWrap: boolean
   // The gas estimate of the reference classic trade, if there is one.
-  gasUseEstimateUSD: string | null | undefined
+  classicGasUseEstimateUSD: string | null | undefined
 
   constructor({
     currencyIn,
@@ -139,7 +139,7 @@ export class DutchOrderTrade extends IDutchOrderTrade<Currency, Currency, TradeT
     tradeType,
     quoteId,
     needsWrap,
-    gasUseEstimateUSD,
+    classicGasUseEstimateUSD,
   }: {
     currencyIn: Currency
     currenciesOut: Currency[]
@@ -147,12 +147,12 @@ export class DutchOrderTrade extends IDutchOrderTrade<Currency, Currency, TradeT
     tradeType: TradeType
     quoteId?: string
     needsWrap: boolean
-    gasUseEstimateUSD?: string | null
+    classicGasUseEstimateUSD?: string | null
   }) {
     super({ currencyIn, currenciesOut, orderInfo, tradeType })
     this.quoteId = quoteId
     this.needsWrap = needsWrap
-    this.gasUseEstimateUSD = gasUseEstimateUSD
+    this.classicGasUseEstimateUSD = classicGasUseEstimateUSD
   }
 }
 
