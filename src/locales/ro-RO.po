@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2023-05-22 22:30+0000\n"
+"POT-Creation-Date: 2023-06-16 19:10+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -8,7 +8,7 @@ msgstr ""
 "Language: ro\n"
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2023-05-23 20:46\n"
+"PO-Revision-Date: 2023-06-16 19:49\n"
 "Last-Translator: \n"
 "Language-Team: Romanian\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100>0 && n%100<20)) ? 1 : 2);\n"
@@ -51,6 +51,18 @@ msgstr "+ Poziție nouă"
 #: src/pages/Swap/index.tsx
 msgid "- Remove recipient"
 msgstr "- Eliminați destinatarul"
+
+#: src/nft/components/details/detailsV2/TimePeriodSwitcher.tsx
+msgid "1 month"
+msgstr "1 lună"
+
+#: src/nft/components/details/detailsV2/TimePeriodSwitcher.tsx
+msgid "1 week"
+msgstr "1 săptămână"
+
+#: src/nft/components/details/detailsV2/TimePeriodSwitcher.tsx
+msgid "1 year"
+msgstr "1 an"
 
 #: src/components/Tokens/TokenDetails/StatsSection.tsx
 msgid "24H volume"
@@ -239,9 +251,17 @@ msgstr "Adresa nu are nici o cerere disponibilă"
 msgid "Against"
 msgstr "Împotrivă"
 
+#: src/nft/components/details/detailsV2/TimePeriodSwitcher.tsx
+msgid "All time"
+msgstr "Tot timpul"
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allow LP token migration"
 msgstr "Permite migrarea token-ului LP"
+
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Allow {0} to be used for swapping"
+msgstr "Permiteți ca {0} să fie folosit pentru schimbare"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allowed"
@@ -260,7 +280,7 @@ msgstr "Efectuați întotdeauna propria cercetare înainte de a tranzacționa."
 msgid "Amount"
 msgstr "Sumă"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "An approval is needed to use this token."
 msgstr "Este necesară o aprobare pentru a utiliza acest simbol."
 
@@ -276,12 +296,11 @@ msgstr "A apărut o eroare la încercarea de a executa acest swap. Este posibil 
 msgid "Approval failed"
 msgstr "Aprobarea nu a reușit"
 
-#: src/nft/components/bag/BagFooter.tsx
-#: src/pages/Swap/index.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Approval pending"
 msgstr "În curs de aprobare"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 #: src/nft/components/profile/list/Modal/ListModalSection.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
@@ -295,14 +314,9 @@ msgstr "Aprobați Token"
 msgid "Approve in wallet"
 msgstr "Aprobați în portofel"
 
-#: src/nft/components/bag/BagFooter.tsx
-#: src/pages/Swap/index.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Approve in your wallet"
 msgstr "Aprobați în portofel"
-
-#: src/pages/Swap/index.tsx
-msgid "Approve use of {0}"
-msgstr "Aprobați utilizarea lui {0}"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -463,6 +477,10 @@ msgstr "Prin adăugarea de lichidități vei câștiga 0.3% din toate tranzacți
 #: src/components/WalletModal/PrivacyPolicyNotice.tsx
 msgid "By connecting a wallet, you agree to Uniswap Labs'"
 msgstr "Conectând un portofel, sunteți de acord cu Uniswap Labs"
+
+#: src/components/swap/PriceImpactModal.tsx
+msgid "Cancel"
+msgstr "Anulare"
 
 #: src/components/AccountDrawer/MiniPortfolio/constants.ts
 msgid "Cancel failed"
@@ -625,6 +643,14 @@ msgstr "Confirmare"
 msgid "Confirm Supply"
 msgstr "Confirmă Aprovizionarea"
 
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Confirm Swap"
+msgstr "Confirmă Schimbul"
+
+#: src/components/swap/SwapModalFooter.tsx
+msgid "Confirm swap"
+msgstr "Confirmați schimbul"
+
 #: src/components/ModalViews/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
@@ -671,7 +697,7 @@ msgstr "Conectează-te la un portofel pentru a vizualiza lichiditatea V2 a ta."
 msgid "Connect to a wallet to view your liquidity."
 msgstr "Conectează-te la un portofel pentru a vizualiza lichiditatea ta."
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Connect wallet"
 msgstr "Conectare la portofel"
 
@@ -679,6 +705,8 @@ msgstr "Conectare la portofel"
 msgid "Content not"
 msgstr "Conținut nu"
 
+#: src/components/TokenSafety/index.tsx
+#: src/components/swap/PriceImpactModal.tsx
 #: src/nft/components/bag/Bag.tsx
 #: src/nft/components/profile/list/Modal/BelowFloorWarningModal.tsx
 msgid "Continue"
@@ -843,7 +871,6 @@ msgstr "Detaliat"
 msgid "Details"
 msgstr "Detalii"
 
-#: src/components/TransactionConfirmationModal/index.tsx
 #: src/nft/components/profile/list/PriceTextInput.tsx
 msgid "Dismiss"
 msgstr "Respinge"
@@ -892,6 +919,10 @@ msgstr "Editați | ×"
 msgid "Edit listings"
 msgstr "Editați listele"
 
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Enable spending {0} on Uniswap"
+msgstr "Activați cheltuirea {0} pe Uniswap"
+
 #: src/state/burn/v3/hooks.tsx
 msgid "Enter a percent"
 msgstr "Introdu un procent"
@@ -917,8 +948,6 @@ msgid "Enter {0} amount"
 msgstr "Introduceți {0} sumă"
 
 #: src/components/TransactionConfirmationModal/index.tsx
-#: src/components/TransactionConfirmationModal/index.tsx
-#: src/components/Web3Status/index.tsx
 msgid "Error"
 msgstr "Eroare"
 
@@ -1038,7 +1067,7 @@ msgstr "Părere"
 msgid "Fees"
 msgstr "Taxe"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 #: src/nft/components/details/detailsV2/BuyButton.tsx
 msgid "Fetching Route"
 msgstr "Preluare traseu"
@@ -1164,11 +1193,11 @@ msgstr "Prețurile inițiale și cota din grup"
 msgid "Input is estimated. You will sell at most <0>{0} {1}</0> or the transaction will revert."
 msgstr "Intrarea este estimată. Vei vinde cel mult <0>{0} {1}</0> sau tranzacția se va relua."
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Insufficient funds"
 msgstr "Fonduri insuficiente"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Insufficient liquidity"
 msgstr "Lichiditate insuficientă"
 
@@ -1176,7 +1205,7 @@ msgstr "Lichiditate insuficientă"
 msgid "Insufficient liquidity for this trade."
 msgstr "Lichiditate insuficientă pentru această tranzacție."
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Insufficient pool liquidity to complete transaction"
 msgstr "Lichiditatea pool-ului insuficientă pentru a finaliza tranzacția"
 
@@ -1298,7 +1327,7 @@ msgstr "Listări"
 msgid "Loading"
 msgstr "Se încarcă"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Loading Allowance"
 msgstr "Indemnizație de încărcare"
 
@@ -1576,6 +1605,10 @@ msgstr "Nu este disponibil în regiunea dvs"
 msgid "Not created"
 msgstr "Nu este creat"
 
+#: src/components/CurrencyInputPanel/FiatValue.tsx
+msgid "Not enough liquidity to show accurate USD value."
+msgstr "Lichiditate insuficientă pentru a afișa valoarea exactă a USD."
+
 #: src/nft/components/collection/CollectionAsset.tsx
 msgid "Not listed"
 msgstr "Nu e in lista"
@@ -1631,14 +1664,14 @@ msgstr "Proprietar"
 msgid "Page not found!"
 msgstr "Pagina nu a fost gasita!"
 
-#: src/nft/components/bag/BagFooter.tsx
-#: src/nft/components/bag/BagFooter.tsx
-#: src/nft/components/bag/BagFooter.tsx
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
+#: src/nft/components/bag/ButtonStates.tsx
+#: src/nft/components/bag/ButtonStates.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Pay"
 msgstr "A plati"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Pay Anyway"
 msgstr "Plătește oricum"
 
@@ -1651,13 +1684,22 @@ msgstr "Plateste cu"
 msgid "Pending"
 msgstr "In asteptarea"
 
-#: src/pages/Swap/index.tsx
-msgid "Permission is required for Uniswap to swap each token. This will expire after one month for your security."
-msgstr "Este necesară permisiunea pentru ca Uniswap să schimbe fiecare token. Acesta va expira după o lună pentru securitatea dvs."
+#: src/components/swap/PendingModalContent/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Pending..."
+msgstr "In asteptarea..."
+
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
+msgid "Permit approval failed"
+msgstr "Aprobarea permisului a eșuat"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
 msgid "Permit2"
 msgstr "Permisul 2"
+
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
+msgid "Permit2 allows token approvals to be shared and managed across different applications."
+msgstr "Permisul2 permite aprobările jetonelor să fie partajate și gestionate în diferite aplicații."
 
 #: src/components/vote/ProposalEmptyState.tsx
 msgid "Please connect to Layer 1 Ethereum"
@@ -1729,16 +1771,12 @@ msgstr "Diferență de Preț:"
 msgid "Price Impact"
 msgstr "Impactul Prețului"
 
-#: src/pages/Swap/index.tsx
-msgid "Price Impact Too High"
-msgstr "Impact de Preț este Prea Mare"
-
 #: src/components/swap/SwapModalFooter.tsx
 msgid "Price impact"
 msgstr "Impactul prețului"
 
 #: src/components/swap/PriceImpactWarning.tsx
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Price impact warning"
 msgstr "Avertisment de impact asupra prețului"
 
@@ -1747,7 +1785,7 @@ msgid "Price range"
 msgstr "Interval de preț"
 
 #: src/components/swap/SwapModalFooter.tsx
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Price updated"
 msgstr "Preț actualizat"
 
@@ -1767,9 +1805,16 @@ msgstr "Politica de confidențialitate"
 msgid "Privacy Policy."
 msgstr "Politica de confidențialitate."
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 #: src/nft/components/profile/list/Modal/ContentRow.tsx
 msgid "Proceed in wallet"
+msgstr "Continuați în portofel"
+
+#: src/components/swap/PendingModalContent/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Proceed in your wallet"
 msgstr "Continuați în portofel"
 
 #: src/nft/components/profile/list/Modal/SuccessScreen.tsx
@@ -1807,6 +1852,10 @@ msgstr "Propunător"
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
 msgid "Public Resolver"
 msgstr "Rezolvant public"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+msgid "Purchased"
+msgstr "Cumparat"
 
 #: src/nft/components/details/detailsV2/DataPageTraits.tsx
 #: src/nft/components/details/detailsV2/TableRowComponent.tsx
@@ -1892,7 +1941,7 @@ msgstr "Căutări recente"
 msgid "Recipient"
 msgstr "Destinatar"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Refunds for unavailable items will be given in ETH"
 msgstr "Rambursările pentru articolele indisponibile vor fi acordate în ETH"
 
@@ -1977,10 +2026,15 @@ msgstr "Rambursarea eșuată"
 msgid "Repaying"
 msgstr "Rambursare"
 
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Reset USDT"
+msgstr "Resetați USDT"
+
 #: src/nft/components/profile/list/ListingButton.tsx
 msgid "Resolve {issues} issues"
 msgstr "Rezolvați {issues} probleme"
 
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
 #: src/nft/components/profile/list/Modal/ContentRow.tsx
 msgid "Retry"
 msgstr "Reîncercați"
@@ -2000,12 +2054,28 @@ msgid "Reverse Registrar"
 msgstr "Registrator invers"
 
 #: src/components/swap/ConfirmSwapModal.tsx
-msgid "Review Swap"
+msgid "Review swap"
 msgstr "Schimb de recenzii"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Revoke approval failed"
+msgstr "Revocarea aprobării a eșuat"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Revoke {0}"
+msgstr "Revoca {0}"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
 msgid "Revoked Approval"
 msgstr "Aprobare revocată"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Revoked approval"
+msgstr "Aprobare revocată"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+msgid "Revoking approval"
+msgstr "Revocarea aprobării"
 
 #: src/nft/components/profile/list/NFTListingsGrid.tsx
 msgid "Same Price"
@@ -2015,17 +2085,9 @@ msgstr "Același preț"
 msgid "Scan with Uniswap Wallet"
 msgstr "Scanați cu Uniswap Wallet"
 
-#: src/components/NavBar/SearchBar.tsx
-msgid "Search"
-msgstr "Căutare"
-
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "Search name or paste address"
 msgstr "Caută nume sau lipește adresa"
-
-#: src/components/NavBar/SearchBar.tsx
-msgid "Search tokens and NFT collections"
-msgstr "Căutați jetoane și colecții NFT"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Select Pair"
@@ -2144,6 +2206,10 @@ msgstr "Afișați mai multe"
 msgid "Show resources"
 msgstr "Afișați resurse"
 
+#: src/components/AccountDrawer/TestnetsToggle.tsx
+msgid "Show testnets"
+msgstr "Afișați rețelele de testare"
+
 #: src/nft/components/profile/list/Modal/ListModalSection.tsx
 msgid "Sign"
 msgstr "Semn"
@@ -2167,11 +2233,11 @@ msgstr "Unele active nu sunt disponibile prin intermediul acestei interfețe deo
 
 #: src/components/ErrorBoundary/index.tsx
 #: src/components/ErrorBoundary/index.tsx
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Something went wrong"
 msgstr "Ceva nu a funcţionat corect"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Something went wrong. Please try again."
 msgstr "Ceva n-a mers bine. Vă rugăm să încercați din nou."
 
@@ -2221,6 +2287,7 @@ msgid "Succeeded"
 msgstr "Reușit"
 
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
 msgid "Success"
 msgstr "Succes"
 
@@ -2239,7 +2306,6 @@ msgstr "Se furnizează {0} {1} și {2} {3}"
 #: src/components/NavBar/index.tsx
 #: src/components/Tokens/TokenDetails/MobileBalanceSummaryFooter.tsx
 #: src/components/swap/SwapHeader.tsx
-#: src/components/swap/SwapModalFooter.tsx
 #: src/components/swap/SwapSkeleton.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
@@ -2259,6 +2325,7 @@ msgid "Swap exactly <0/> for <1/>"
 msgstr "Schimbați exact <0/> cu <1/>"
 
 #: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
 msgid "Swap failed"
 msgstr "Schimbarea a eșuat"
 
@@ -2271,15 +2338,11 @@ msgstr "Schimbat"
 msgid "Swapping"
 msgstr "Schimbarea"
 
-#: src/components/swap/ConfirmSwapModal.tsx
-msgid "Swapping {0} {1} for {2} {3}"
-msgstr "Se schimbă {0} {1} cu {2} {3}"
-
 #: src/nft/components/collection/Sweep.tsx
 msgid "Sweep"
 msgstr "Mătura"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Switch networks"
 msgstr "Schimbați rețele"
 
@@ -2427,6 +2490,10 @@ msgstr "Acest pool trebuie inițializat înainte de a putea adăuga lichiditate.
 msgid "This proposal may be executed after {0}."
 msgstr "Această propunere poate fi executată după {0}."
 
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
+msgid "This provides the Uniswap protocol access to your token for trading. For security, this will expire after 30 days."
+msgstr "Acest lucru oferă protocolul Uniswap acces la tokenul dvs. pentru tranzacționare. Pentru securitate, acesta va expira după 30 de zile."
+
 #: src/components/swap/SwapRoute.tsx
 msgid "This route optimizes your total output by considering split routes, multiple hops, and the gas cost of each step."
 msgstr "Această rută vă optimizează producția totală, luând în considerare rutele împărțite, mai multe salturi și costul gazului pentru fiecare pas."
@@ -2458,6 +2525,10 @@ msgstr "Această tranzacție nu va reuși din cauza mișcării prețurilor. Înc
 #: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance."
 msgstr "Această tranzacție nu va reuși nici din cauza mișcării prețului, nici a comisioanelor la transfer. Încearcă să îți sporești toleranța la alunecare."
+
+#: src/components/swap/PriceImpactModal.tsx
+msgid "This transaction will result in a <0>{0}</0> price impact on the market price of this pool. Do you wish to continue?"
+msgstr "Această tranzacție va avea ca rezultat un impact de preț <0>{0}</0> asupra prețului de piață al acestui pool. Vrei sa continui?"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/index.tsx
 msgid "This week"
@@ -2494,11 +2565,15 @@ msgstr "Pentru a vizualiza o poziție, trebuie să fiți conectat la rețeaua c�
 msgid "Today"
 msgstr "Astăzi"
 
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
+msgid "Token approval failed"
+msgstr "Aprobarea simbolului nu a reușit"
+
 #: src/components/Tokens/TokenTable/TokenRow.tsx
 msgid "Token name"
 msgstr "Nume simbol"
 
-#: src/components/TokenSafety/index.tsx
+#: src/constants/tokenSafety.tsx
 msgid "Token not found"
 msgstr "Tokenul nu a fost găsit"
 
@@ -2571,7 +2646,7 @@ msgstr "Tranzacție finalizată în"
 msgid "Transaction deadline"
 msgstr "Termen limită tranzacție"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Transaction pending"
 msgstr "Tranzacție în așteptare"
 
@@ -2580,6 +2655,7 @@ msgid "Transaction rejected"
 msgstr "Tranzacție respinsă"
 
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
 msgid "Transaction submitted"
 msgstr "Tranzacție trimisă"
 
@@ -2606,6 +2682,10 @@ msgstr "Jetoanele UNI reprezintă acțiunile cu drept de vot în guvernarea Unis
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "UNI {0}/{1} Burned"
 msgstr "UNI {0}/{1} Ars(e)"
+
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "USDT requires resetting approval when spending limits are too low."
+msgstr "USDT necesită aprobare de resetare atunci când limitele de cheltuieli sunt prea mici."
 
 #: src/nft/components/collection/ActivityCells.tsx
 msgid "Unavailable"
@@ -2790,6 +2870,7 @@ msgid "View on Etherscan"
 msgstr "Vizualizare pe Etherscan"
 
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
 msgid "View on Explorer"
 msgstr "Vizualizează pe Explorer"
 
@@ -2893,6 +2974,7 @@ msgid "Wallet Address or ENS name"
 msgstr "Adresa portofel sau numele ENS"
 
 #: src/components/addLiquidity/OwnershipWarning.tsx
+#: src/components/swap/PriceImpactModal.tsx
 #: src/constants/tokenSafety.tsx
 msgid "Warning"
 msgstr "Avertizare"
@@ -2901,9 +2983,22 @@ msgstr "Avertizare"
 msgid "Welcome to team Unicorn :)"
 msgstr "Bine ai venit la echipa Unicorn :)"
 
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
+msgid "Why are approvals required?"
+msgstr "De ce sunt necesare aprobări?"
+
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
+msgid "Why are permits required?"
+msgstr "De ce sunt necesare permise?"
+
 #: src/nft/components/profile/list/Modal/ListModalSection.tsx
 msgid "Why is a transaction required?"
 msgstr "De ce este necesară o tranzacție?"
+
+#: src/components/swap/PendingModalContent/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Why is this required?"
+msgstr "De ce este necesar acest lucru?"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Withdraw deposited liquidity"
@@ -2942,7 +3037,7 @@ msgstr "Înfășurat"
 msgid "Wrapping"
 msgstr "Ambalaj"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Wrong network"
 msgstr "Rețea greșită"
 
@@ -3137,6 +3232,7 @@ msgid "fee"
 msgstr "taxa"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseLocal.ts
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
 msgid "for"
 msgstr "pentru"
 
