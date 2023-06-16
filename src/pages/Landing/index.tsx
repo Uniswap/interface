@@ -4,7 +4,6 @@ import { BrowserEvent, InterfaceElementName, InterfacePageName, SharedEventName 
 import { AboutFooter } from 'components/About/AboutFooter'
 import Card, { CardType } from 'components/About/Card'
 import { MORE_CARDS } from 'components/About/constants'
-import ProtocolBanner from 'components/About/ProtocolBanner'
 import { useAccountDrawer } from 'components/AccountDrawer'
 import { BaseButton } from 'components/Button'
 import Swap from 'pages/Swap'
@@ -377,7 +376,7 @@ export default function Landing() {
                   <Card {...card} icon={isDarkMode ? darkIcon : lightIcon} key={card.title} type={CardType.Secondary} />
                 ))}
               </CardGrid>
-              <ProtocolBanner />
+              <div style={{ marginBottom: '40px' }} /> {/* Add space using margin-bottom */}
               <AboutFooter />
             </AboutContentContainer>
           </>
