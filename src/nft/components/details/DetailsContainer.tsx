@@ -97,7 +97,7 @@ const DetailsContainer = ({ asset, collection }: { asset: GenieAsset; collection
               rel="noopener noreferrer"
               target="_blank"
             >
-              {shortenAddress(creator.address)}
+              {shortenAddress(creator.address, 2)}
             </CreatorLink>
           )
         }
