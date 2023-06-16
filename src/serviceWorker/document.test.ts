@@ -22,7 +22,10 @@ describe('document', () => {
       [{ request: {}, url: { hostname: 'app.rigoblock-staging.com', pathname: '' } }, false],
       [{ request: { mode: 'navigate' }, url: { hostname: 'app.rigoblock-staging.com', pathname: '' } }, true],
       [{ request: { mode: 'navigate' }, url: { hostname: 'app.rigoblock-staging.com', pathname: '/#/swap' } }, true],
-      [{ request: { mode: 'navigate' }, url: { hostname: 'app.rigoblock-staging.com', pathname: '/asset.gif' } }, false],
+      [
+        { request: { mode: 'navigate' }, url: { hostname: 'app.rigoblock-staging.com', pathname: '/asset.gif' } },
+        false,
+      ],
       [{ request: {}, url: { hostname: 'localhost', pathname: '' } }, false],
       [{ request: { mode: 'navigate' }, url: { hostname: 'localhost', pathname: '' } }, true],
       [{ request: { mode: 'navigate' }, url: { hostname: 'localhost', pathname: '/#/swap' } }, true],
