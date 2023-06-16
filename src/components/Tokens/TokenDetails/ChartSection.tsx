@@ -32,16 +32,29 @@ function usePriceHistory(tokenData: TokenData, timePeriod: TimePeriod): PricePoi
     }
   }, [timePeriod, utcCurrentTime])
 
+  const qtyDataPerTime = useMemo(() => {
+    switch (timePeriod) {
+      case TimePeriod.DAY:
+        return 24
+      case TimePeriod.WEEK:
+        return 168
+      case TimePeriod.MONTH:
+        return 730
+      case TimePeriod.YEAR:
+        return 8760
+    }
+  }, [timePeriod])
+
   const [data, setData] = useState<PriceChartEntry[]>([])
 
   useEffect(() => {
     const fetchData = async () => {
-      const { data } = await fetchTokenPriceData(tokenData.address, ONE_HOUR_SECONDS, startTimestamp)
+      const { data } = await fetchTokenPriceData(tokenData.address, ONE_HOUR_SECONDS, startTimestamp, qtyDataPerTime)
       setData(data)
     }
 
     fetchData()
-  }, [startTimestamp, tokenData.address])
+  }, [qtyDataPerTime, startTimestamp, tokenData.address])
 
   const priceHistory = useMemo(() => {
     const currentPrice = tokenData?.priceUSD

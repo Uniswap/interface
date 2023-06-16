@@ -1,10 +1,12 @@
+import { filterTimeAtom } from 'components/Tokens/state'
 import { SparkLineLoadingBubble } from 'components/Tokens/TokenTable/TokenRow'
 import { curveCardinal, scaleLinear } from 'd3'
 import dayjs from 'dayjs'
-import { PricePoint } from 'graphql/data/util'
+import { PricePoint, TimePeriod } from 'graphql/data/util'
 import { fetchTokenPriceData } from 'graphql/tokens/NewTokenPrice'
 import { TokenData } from 'graphql/tokens/TokenData'
-import { memo, useEffect, useState } from 'react'
+import { useAtomValue } from 'jotai/utils'
+import { memo, useEffect, useMemo, useState } from 'react'
 import styled, { useTheme } from 'styled-components/macro'
 import { PriceChartEntry } from 'types/chart'
 import { ONE_HOUR_SECONDS } from 'utils/intervals'
@@ -28,20 +30,46 @@ interface SparklineChartProps {
 
 function _SparklineChart({ width, height, tokenData, pricePercentChange }: SparklineChartProps) {
   const theme = useTheme()
+  const timePeriod = useAtomValue(filterTimeAtom)
   // for sparkline
 
   const utcCurrentTime = dayjs()
-  const startTimestamp = utcCurrentTime.subtract(1, 'week').startOf('hour').unix()
+  const startTimestamp = useMemo(() => {
+    switch (timePeriod) {
+      case TimePeriod.DAY:
+        return utcCurrentTime.subtract(1, 'day').startOf('minute').unix()
+      case TimePeriod.WEEK:
+        return utcCurrentTime.subtract(1, 'week').startOf('hour').unix()
+      case TimePeriod.MONTH:
+        return utcCurrentTime.subtract(1, 'month').startOf('hour').unix()
+      case TimePeriod.YEAR:
+        return utcCurrentTime.subtract(1, 'year').startOf('day').unix()
+    }
+  }, [timePeriod, utcCurrentTime])
+
+  const qtyDataPerTime = useMemo(() => {
+    switch (timePeriod) {
+      case TimePeriod.DAY:
+        return 24
+      case TimePeriod.WEEK:
+        return 168
+      case TimePeriod.MONTH:
+        return 730
+      case TimePeriod.YEAR:
+        return 8760
+    }
+  }, [timePeriod])
+
   const [data, setData] = useState<PriceChartEntry[]>([])
 
   useEffect(() => {
     const fetchData = async () => {
-      const { data } = await fetchTokenPriceData(tokenData.address, ONE_HOUR_SECONDS, startTimestamp)
+      const { data } = await fetchTokenPriceData(tokenData.address, ONE_HOUR_SECONDS, startTimestamp, qtyDataPerTime)
       setData(data)
     }
 
     fetchData()
-  }, [startTimestamp, tokenData.address])
+  }, [startTimestamp, tokenData.address, qtyDataPerTime])
 
   const pricePoint = [] as PricePoint[]
   data.map((price) => {

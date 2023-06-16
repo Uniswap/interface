@@ -8,9 +8,27 @@ import { PriceChartEntry } from 'types/chart'
 import { apolloClient, blockClient } from '../data/apollo'
 
 const PRICE_CHART = gql`
-  query tokenHourDatas($startTime: Int!, $skip: Int!, $address: Bytes!) {
+  query tokenHourData($startTime: Int!, $skip: Int!, $address: Bytes!, $qtyDataPerTime: Int!) {
     tokenHourDatas(
-      first: 100
+      first: $qtyDataPerTime
+      skip: $skip
+      where: { token: $address, periodStartUnix_gt: $startTime }
+      orderBy: periodStartUnix
+      orderDirection: asc
+    ) {
+      periodStartUnix
+      high
+      low
+      open
+      close
+    }
+  }
+`
+
+const PRICE_DAY_CHART = gql`
+  query tokenDayData($startTime: Int!, $skip: Int!, $address: Bytes!) {
+    tokenHourDatas(
+      first: 365
       skip: $skip
       where: { token: $address, periodStartUnix_gt: $startTime }
       orderBy: periodStartUnix
@@ -41,7 +59,8 @@ dayjs.extend(weekOfYear)
 export async function fetchTokenPriceData(
   address: string,
   interval: number,
-  startTimestamp: number
+  startTimestamp: number,
+  qtyDataPerTime: number
 ): Promise<{
   data: PriceChartEntry[]
   error: boolean
@@ -100,15 +119,26 @@ export async function fetchTokenPriceData(
         data: priceData,
         errors,
         loading,
-      } = await apolloClient.query<PriceResults>({
-        query: PRICE_CHART,
-        variables: {
-          address,
-          startTime: startTimestamp,
-          skip,
-        },
-        fetchPolicy: 'no-cache',
-      })
+      } = qtyDataPerTime < 1000
+        ? await apolloClient.query<PriceResults>({
+            query: PRICE_CHART,
+            variables: {
+              address,
+              startTime: startTimestamp,
+              skip,
+              qtyDataPerTime,
+            },
+            fetchPolicy: 'no-cache',
+          })
+        : await apolloClient.query<PriceResults>({
+            query: PRICE_DAY_CHART,
+            variables: {
+              address,
+              startTime: startTimestamp,
+              skip,
+            },
+            fetchPolicy: 'no-cache',
+          })
 
       if (!loading) {
         skip += 100
