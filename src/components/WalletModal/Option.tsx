@@ -50,6 +50,10 @@ const IconWrapper = styled.div`
   ${flexColumnNoWrap};
   align-items: center;
   justify-content: center;
+  img {
+    ${({ theme }) => !theme.darkMode && `border: 1px solid ${theme.backgroundOutline}`};
+    border-radius: 12px;
+  }
   & > img,
   span {
     height: 40px;
