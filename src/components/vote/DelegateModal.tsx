@@ -151,7 +151,7 @@ export default function DelegateModal({ isOpen, poolInfo, onDismiss, title }: Vo
 
   // usingDelegate equals isRbPool
   const [approval, approveCallback] = useApproveCallback(
-    grgBalance ?? undefined,
+    parsedAmount ?? undefined,
     GRG_TRANSFER_PROXY_ADDRESSES[chainId ?? 1] ?? undefined,
     usingDelegate
   )

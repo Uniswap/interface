@@ -143,17 +143,22 @@ const ProposerAddressLink = styled(ExternalLink)`
   word-break: break-all;
 `
 
-function getDateFromBlock(
-  targetBlock: number | undefined,
+function getDateFromBlockOrTime(
+  targetBlockOrTime: number | undefined,
   currentBlock: number | undefined,
   averageBlockTimeInSeconds: number | undefined,
-  currentTimestamp: BigNumber | undefined
+  currentTimestamp: BigNumber | undefined,
+  isTimestamp?: boolean
 ): Date | undefined {
-  if (targetBlock && currentBlock && averageBlockTimeInSeconds && currentTimestamp) {
+  if (targetBlockOrTime && currentBlock && averageBlockTimeInSeconds && currentTimestamp) {
     const date = new Date()
+    if (isTimestamp) {
+      date.setTime(BigNumber.from(targetBlockOrTime).toNumber() * ms`1 second`)
+      return date
+    }
     date.setTime(
       currentTimestamp
-        .add(BigNumber.from(averageBlockTimeInSeconds).mul(BigNumber.from(targetBlock - currentBlock)))
+        .add(BigNumber.from(averageBlockTimeInSeconds).mul(BigNumber.from(targetBlockOrTime - currentBlock)))
         .toNumber() * ms`1 second`
     )
     return date
@@ -195,17 +200,19 @@ export default function VotePage() {
   // get and format date from data
   const currentTimestamp = useCurrentBlockTimestamp()
   const currentBlock = useBlockNumber()
-  const startDate = getDateFromBlock(
+  const startDate = getDateFromBlockOrTime(
     proposalData?.startBlock,
     currentBlock,
     (chainId && AVERAGE_BLOCK_TIME_IN_SECS[chainId]) ?? DEFAULT_AVERAGE_BLOCK_TIME_IN_SECS,
-    currentTimestamp
+    currentTimestamp,
+    true
   )
-  const endDate = getDateFromBlock(
+  const endDate = getDateFromBlockOrTime(
     proposalData?.endBlock,
     currentBlock,
     (chainId && AVERAGE_BLOCK_TIME_IN_SECS[chainId]) ?? DEFAULT_AVERAGE_BLOCK_TIME_IN_SECS,
-    currentTimestamp
+    currentTimestamp,
+    true
   )
   const now = new Date()
   const locale = useActiveLocale()

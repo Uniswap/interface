@@ -9,13 +9,17 @@ import POOL_EXTENDED_ABI from 'abis/pool-extended.json'
 import RB_POOL_FACTORY_ABI from 'abis/rb-pool-factory.json'
 import RB_REGISTRY_ABI from 'abis/rb-registry.json'
 import { RB_FACTORY_ADDRESSES, RB_REGISTRY_ADDRESSES } from 'constants/addresses'
+import { POOLS_LIST } from 'constants/lists'
 import { GRG } from 'constants/tokens'
+import { ChainTokenMap } from 'hooks/Tokens'
 import { useContract } from 'hooks/useContract'
 import { useTotalSupply } from 'hooks/useTotalSupply'
+import useBlockNumber from 'lib/hooks/useBlockNumber'
 import { useCallback, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import { useStakingContract } from 'state/governance/hooks'
 import { useAppSelector } from 'state/hooks'
+import { usePoolMapFromUrl } from 'state/lists/poolsList/hooks'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
 
 import { SupportedChainId } from '../../constants/chains'
@@ -50,6 +54,7 @@ export interface PoolRegisteredLog {
 
 function useStartBlock(chainId: number | undefined): number | undefined {
   let registryStartBlock
+  const blockNumber = useBlockNumber()
 
   if (chainId === SupportedChainId.MAINNET) {
     registryStartBlock = 15834693
@@ -62,7 +67,7 @@ function useStartBlock(chainId: number | undefined): number | undefined {
   } else if (chainId === SupportedChainId.POLYGON) {
     registryStartBlock = 35228892
   } else if (chainId === SupportedChainId.BNB) {
-    registryStartBlock = 25549625
+    registryStartBlock = typeof blockNumber === 'number' ? blockNumber - 40000 : blockNumber //28843676
   } else {
     registryStartBlock = undefined
   }
@@ -113,6 +118,7 @@ function useFormattedPoolCreatedLogs(
 export function useAllPoolsData(): { data?: PoolRegisteredLog[]; loading: boolean } {
   const { account, chainId } = useWeb3React()
   const registry = useRegistryContract()
+  const blockNumber = useBlockNumber()
 
   // get metadata from past events
   let registryStartBlock
@@ -128,7 +134,7 @@ export function useAllPoolsData(): { data?: PoolRegisteredLog[]; loading: boolea
   } else if (chainId === SupportedChainId.POLYGON) {
     registryStartBlock = 35228892
   } else if (chainId === SupportedChainId.BNB) {
-    registryStartBlock = 25549625
+    registryStartBlock = typeof blockNumber === 'number' ? blockNumber - 40000 : 28843676
   } else {
     registryStartBlock = 1
   }
@@ -140,6 +146,8 @@ export function useAllPoolsData(): { data?: PoolRegisteredLog[]; loading: boolea
     registryStartBlock
   )
 
+  const bscPools = useBscPools()
+
   // early return until events are fetched
   return useMemo(() => {
     //const formattedLogs = [...(formattedLogsV1 ?? [])]
@@ -149,9 +157,10 @@ export function useAllPoolsData(): { data?: PoolRegisteredLog[]; loading: boolea
       return { loading: false }
     }
 
-    // TODO: check why quicknode returns error on log query, seems app keeps calling infura
-    // prevent display of bsc loader until fix quicknode rpc returned error
+    // TODO: we want to append pools from enpoint here and remove !formattedLogsV1 assertion
     if (chainId === 56 && registry && !formattedLogsV1) {
+      // eslint-disable-next-line
+      const pools = ([...(formattedLogsV1 ?? []), bscPools ?? []])
       return { data: [], loading: false }
     }
 
@@ -160,7 +169,29 @@ export function useAllPoolsData(): { data?: PoolRegisteredLog[]; loading: boolea
     }
 
     return { data: formattedLogsV1, loading: false }
-  }, [account, chainId, formattedLogsV1, registry])
+  }, [account, chainId, formattedLogsV1, registry, bscPools])
+}
+
+// Bsc endpoints have eth_getLogs limit, so we query pools before recent history from pools list endpoint
+function useBscPools(): ChainTokenMap {
+  const allPoolsFromList = usePoolMapFromUrl(POOLS_LIST)
+
+  return useMemo(() => {
+    const chainTokenMap: ChainTokenMap = {}
+
+    Object.keys(allPoolsFromList).forEach((key) => {
+      const chainId = Number(key)
+      const tokenMap = chainTokenMap[chainId] ?? {}
+      Object.values(allPoolsFromList[chainId]).forEach(({ token }) => {
+        tokenMap[token.address] = token
+      })
+      if (chainId === SupportedChainId.BNB) {
+        chainTokenMap[chainId] = tokenMap
+      }
+    })
+
+    return chainTokenMap
+  }, [allPoolsFromList])
 }
 
 export function useCreateCallback(): (

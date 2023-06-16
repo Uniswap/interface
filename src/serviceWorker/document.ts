@@ -1,4 +1,4 @@
-import { isAppUniswapOrg, isAppUniswapStagingOrg } from 'utils/env'
+import { isAppRigoblockCom, isAppRigoblockStagingCom } from 'utils/env'
 import { RouteHandlerCallbackOptions, RouteMatchCallbackOptions } from 'workbox-core'
 import { getCacheKeyForURL, matchPrecache } from 'workbox-precaching'
 import { Route } from 'workbox-routing'
@@ -23,9 +23,9 @@ export function matchDocument({ request, url }: RouteMatchCallbackOptions) {
     return false
   }
 
-  // If this isn't app.uniswap.org (or a local build), skip.
+  // If this isn't app.rigoblock.com (or a local build), skip.
   // IPFS gateways may not have domain separation, so they cannot use document caching.
-  if (!(isDevelopment() || isAppUniswapStagingOrg(url) || isAppUniswapOrg(url))) {
+  if (!(isDevelopment() || isAppRigoblockStagingCom(url) || isAppRigoblockCom(url))) {
     return false
   }
 
