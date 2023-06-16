@@ -109,7 +109,7 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
 
   const dropdown = (
     <NavDropdown top="56" left={leftAlign ? '0' : 'auto'} right={leftAlign ? 'auto' : '0'} ref={modalRef}>
-      <Column paddingX="8">
+      <Column paddingX="8" data-testid="chain-selector-options">
         {chains.map((selectorChain: SupportedChainId) => (
           <ChainSelectorRow
             disabled={!walletSupportsChain.includes(selectorChain)}
@@ -133,6 +133,7 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
     <Box position="relative" ref={ref}>
       <MouseoverTooltip text={t`Your wallet's current network is unsupported.`} disabled={isSupported}>
         <Row
+          data-testid="chain-selector"
           as="button"
           gap="8"
           className={styles.ChainSelector}

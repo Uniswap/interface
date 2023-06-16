@@ -19,6 +19,7 @@ export function TestnetsToggle() {
       </Row>
       <Row width="50%" justify="flex-end">
         <Toggle
+          id="testnets-toggle"
           isActive={hideTestnets}
           toggle={() => {
             updateHideTestnets(!hideTestnets)
