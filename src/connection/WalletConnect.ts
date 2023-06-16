@@ -13,7 +13,7 @@ const RPC_URLS_WITHOUT_FALLBACKS = Object.entries(RPC_URLS).reduce(
   {}
 )
 
-export class WalletConnectPopup extends WalletConnect {
+export class WalletConnectV1 extends WalletConnect {
   ANALYTICS_EVENT = 'Wallet Connect QR Scan'
   constructor({
     actions,
