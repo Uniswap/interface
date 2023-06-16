@@ -1,7 +1,7 @@
-//import { MendableSearchBar } from '@mendable/search'
+import { MendableSearchBar } from '@mendable/search'
 import { RowFixed } from 'components/Row'
 import styled from 'styled-components/macro'
-//import { useIsDarkMode } from 'theme/components/ThemeToggle'
+import { useIsDarkMode } from 'theme/components/ThemeToggle'
 
 const StyledSearch = styled.div`
   position: fixed;
@@ -18,22 +18,19 @@ const StyledSearch = styled.div`
   `}
 `
 
-// TODO: try upgrade @mendable/search
 export default function MendableSearch() {
-  //const isDarkMode = useIsDarkMode()
+  const isDarkMode = useIsDarkMode()
 
   return (
     <>
       <RowFixed>
         <StyledSearch>
-          {/*
           <MendableSearchBar
-            style={{ darkMode: false, accentColor: '#8559F4' }}
+            style={{ darkMode: isDarkMode, accentColor: '#8559F4' }}
             placeholder="Ask me anything"
             dialogPlaceholder="What are you looking for?"
             anon_key="eea51742-1c13-4611-90b1-581dce6ca930"
           />
-          */}
         </StyledSearch>
       </RowFixed>
     </>
