@@ -82,5 +82,5 @@ export const TEST_DUTCH_TRADE = new DutchOrderTrade({
   tradeType: TradeType.EXACT_INPUT,
   quoteId: '0x0000000',
   needsWrap: false,
-  gasUseEstimateUSD: '7.87',
+  classicGasUseEstimateUSD: '7.87',
 })

@@ -1,9 +1,11 @@
 import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
+import { useWeb3React } from '@web3-react/core'
 import { LoadingOpacityContainer } from 'components/Loader/styled'
 import { UniswapXRouterIcon } from 'components/RouterLabel/UniswapXRouterLabel'
 import { RowFixed } from 'components/Row'
 import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
+import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
 import { InterfaceTrade } from 'state/routing/types'
 import { isClassicTrade } from 'state/routing/utils'
 import styled from 'styled-components/macro'
@@ -22,14 +24,20 @@ const StyledGasIcon = styled(GasIcon)`
   }
 `
 
-export default function GasEstimateTooltip({ trade, loading }: { trade: InterfaceTrade; loading: boolean }) {
-  const formattedGasPriceString = trade?.gasUseEstimateUSD
-    ? trade.gasUseEstimateUSD === '0.00'
-      ? '<$0.01'
-      : '$' + trade.gasUseEstimateUSD
-    : undefined
+export default function GasEstimateTooltip({ trade, loading }: { trade?: InterfaceTrade; loading: boolean }) {
+  const { chainId } = useWeb3React()
+
+  if (!trade || !chainId || !SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId)) {
+    return null
+  }
 
   if (isClassicTrade(trade)) {
+    if (!trade?.gasUseEstimateUSD) {
+      return null
+    }
+
+    const formattedGasPriceString = trade.gasUseEstimateUSD === '0.00' ? '<$0.01' : '$' + trade.gasUseEstimateUSD
+
     return (
       <MouseoverTooltip
         size={TooltipSize.Large}
