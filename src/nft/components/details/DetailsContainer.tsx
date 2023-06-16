@@ -80,7 +80,7 @@ const DetailsContainer = ({ asset, collection }: { asset: GenieAsset; collection
         header="Contract address"
         body={
           <Center onClick={copy}>
-            {shortenAddress(address)} <CopyIcon size={13} />
+            {shortenAddress(address, 2)} <CopyIcon size={13} />
           </Center>
         }
       />
