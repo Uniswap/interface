@@ -15,7 +15,7 @@ import { Box } from 'nft/components/Box'
 import { Portal } from 'nft/components/common/Portal'
 import { Column, Row } from 'nft/components/Flex'
 import { useIsMobile } from 'nft/hooks'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import { AlertTriangle, ChevronDown, ChevronUp } from 'react-feather'
 import { useTheme } from 'styled-components/macro'
 
@@ -70,11 +70,8 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
 
   const theme = useTheme()
 
-  const [chains, setChains] = useState(NETWORK_SELECTOR_CHAINS)
   const showTestnets = useAtomValue(showTestnetsAtom)
-  useEffect(() => {
-    setChains(NETWORK_SELECTOR_CHAINS.filter((chain) => !(chain === SupportedChainId.SEPOLIA && !showTestnets)))
-  }, [showTestnets])
+  const chains = NETWORK_SELECTOR_CHAINS.filter((chain) => !(chain === SupportedChainId.SEPOLIA && !showTestnets))
 
   const ref = useRef<HTMLDivElement>(null)
   const modalRef = useRef<HTMLDivElement>(null)
