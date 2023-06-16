@@ -17,7 +17,7 @@ import { useProfilePageState, useSellAsset, useWalletCollections } from 'nft/hoo
 import { useIsNftClaimAvailable } from 'nft/hooks/useIsNftClaimAvailable'
 import { ProfilePageStateType } from 'nft/types'
 import { useCallback, useState } from 'react'
-import { ArrowDownRight, ArrowUpRight, Copy, CreditCard, IconProps, Info, LogOut, Settings } from 'react-feather'
+import { ArrowDownRight, ArrowUpRight, CreditCard, IconProps, Info, LogOut, Settings } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
 import { shouldDisableNFTRoutesAtom } from 'state/application/atoms'
 import { useAppDispatch } from 'state/hooks'
@@ -136,9 +136,6 @@ const HeaderWrapper = styled.div`
 `
 
 const CopyText = styled(CopyHelper).attrs({
-  InitialIcon: Copy,
-  CopiedIcon: Copy,
-  gap: 4,
   iconSize: 14,
   iconPosition: 'right',
 })``

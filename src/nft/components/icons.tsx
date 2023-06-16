@@ -846,8 +846,8 @@ export const SquareLooksRareMarketplaceIcon = (props: SVGProps) => (
   </svg>
 )
 
-export const SquareLooksX2Y2MarketplaceIcon = (props: SVGProps) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="360" height="361" viewBox="0 0 360 361" fill="none" {...props}>
+export const SquareLooksX2Y2MarketplaceIcon = ({ gradientId, ...rest }: SVGProps) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="360" height="361" viewBox="0 0 360 361" fill="none" {...rest}>
     <g clipPath="url(#clip0_992_26815)">
       <rect y="0.5" width="360" height="360" rx="48" fill="white" />
       <g clipPath="url(#clip1_992_26815)">
@@ -857,23 +857,23 @@ export const SquareLooksX2Y2MarketplaceIcon = (props: SVGProps) => (
         />
         <path
           d="M294.337 92.4489C272.272 70.8879 242.087 57.6 208.8 57.6C141.2 57.6 86.4 112.4 86.4 180C86.4 247.6 141.2 302.4 208.8 302.4C242.087 302.4 272.272 289.112 294.337 267.551C268.016 301.872 226.592 324 180 324C100.471 324 36 259.529 36 180C36 100.471 100.471 36 180 36C226.592 36 268.016 58.1282 294.337 92.4489Z"
-          fill={`url(#${props.gradientId}paint0_linear_992_26815)`}
+          fill={`url(#${gradientId}paint0_linear_992_26815)`}
         />
         <path
           d="M117.33 250.042C134.983 267.29 159.13 277.92 185.76 277.92C239.84 277.92 283.68 234.08 283.68 180C283.68 125.92 239.84 82.08 185.76 82.08C159.13 82.08 134.983 92.7099 117.33 109.958C138.387 82.5025 171.526 64.8 208.8 64.8C272.423 64.8 324 116.377 324 180C324 243.623 272.423 295.2 208.8 295.2C171.526 295.2 138.387 277.497 117.33 250.042Z"
-          fill={`url(#${props.gradientId}paint1_linear_992_26815)`}
+          fill={`url(#${gradientId}paint1_linear_992_26815)`}
         />
         <path
           fillRule="evenodd"
           clipRule="evenodd"
           d="M266.4 180C266.4 227.717 227.717 266.4 180 266.4C132.283 266.4 93.6 227.717 93.6 180C93.6 132.283 132.283 93.6 180 93.6C227.717 93.6 266.4 132.283 266.4 180ZM237.6 180C237.6 211.811 211.811 237.6 180 237.6C148.189 237.6 122.4 211.811 122.4 180C122.4 148.189 148.189 122.4 180 122.4C211.811 122.4 237.6 148.189 237.6 180Z"
-          fill={`url(#${props.gradientId}paint2_linear_992_26815)`}
+          fill={`url(#${gradientId}paint2_linear_992_26815)`}
         />
       </g>
     </g>
     <defs>
       <linearGradient
-        id={`${props.gradientId}paint0_linear_992_26815`}
+        id={`${gradientId}paint0_linear_992_26815`}
         x1="36"
         y1="175.035"
         x2="324"
@@ -884,7 +884,7 @@ export const SquareLooksX2Y2MarketplaceIcon = (props: SVGProps) => (
         <stop offset="1" stopColor="#562EC8" />
       </linearGradient>
       <linearGradient
-        id={`${props.gradientId}paint1_linear_992_26815`}
+        id={`${gradientId}paint1_linear_992_26815`}
         x1="36"
         y1="175.035"
         x2="324"
@@ -895,7 +895,7 @@ export const SquareLooksX2Y2MarketplaceIcon = (props: SVGProps) => (
         <stop offset="1" stopColor="#562EC8" />
       </linearGradient>
       <linearGradient
-        id={`${props.gradientId}paint2_linear_992_26815`}
+        id={`${gradientId}paint2_linear_992_26815`}
         x1="36"
         y1="175.035"
         x2="324"
@@ -997,13 +997,13 @@ export const SquareSudoSwapMarketplaceIcon = (props: SVGProps) => (
   </svg>
 )
 
-export const SquareNftXMarketplaceIcon = (props: SVGProps) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="360" height="361" viewBox="0 0 360 361" fill="none" {...props}>
+export const SquareNftXMarketplaceIcon = ({ gradientId, ...rest }: SVGProps) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="360" height="361" viewBox="0 0 360 361" fill="none" {...rest}>
     <rect y="0.5" width="360" height="360" rx="48" fill="white" />
     <g clipPath="url(#clip0_992_26819)">
       <path
         d="M180 60L88.0715 151.929L180 240.007L271.929 151.929L180 60Z"
-        fill={`url(#${props.gradientId}paint0_linear_992_26819)`}
+        fill={`url(#${gradientId}paint0_linear_992_26819)`}
       />
       <path
         d="M133.737 230.155C135.761 227.445 137.679 224.871 139.977 222.37C112.347 229.029 93.3206 242.973 93.3206 259.111C93.3206 259.713 93.3531 260.311 93.4046 260.904C96.1148 259.875 98.9743 258.645 102.012 257.151C120.262 248.186 127.421 238.606 133.737 230.155Z"
@@ -1024,12 +1024,12 @@ export const SquareNftXMarketplaceIcon = (props: SVGProps) => (
       <path
         opacity="0.5"
         d="M180 151.929H88.0715L180 60V151.929Z"
-        fill={`url(#${props.gradientId}paint1_linear_992_26819)`}
+        fill={`url(#${gradientId}paint1_linear_992_26819)`}
       />
     </g>
     <defs>
       <linearGradient
-        id={`${props.gradientId}paint0_linear_992_26819`}
+        id={`${gradientId}paint0_linear_992_26819`}
         x1="224.308"
         y1="107.621"
         x2="138.982"
@@ -1041,7 +1041,7 @@ export const SquareNftXMarketplaceIcon = (props: SVGProps) => (
         <stop offset="1" stopColor="#FA297F" />
       </linearGradient>
       <linearGradient
-        id={`${props.gradientId}paint1_linear_992_26819`}
+        id={`${gradientId}paint1_linear_992_26819`}
         x1="200.673"
         y1="85.2926"
         x2="114.996"
@@ -1063,28 +1063,28 @@ export const SquareNftXMarketplaceIcon = (props: SVGProps) => (
   </svg>
 )
 
-export const SquareGemMarketplaceIcon = (props: SVGProps) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="360" height="361" viewBox="0 0 360 361" fill="none" {...props}>
+export const SquareGemMarketplaceIcon = ({ gradientId, ...rest }: SVGProps) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="360" height="361" viewBox="0 0 360 361" fill="none" {...rest}>
     <g clipPath="url(#clip0_992_26820)">
       <path
         d="M120.925 -208L-186 323.611L-88.8168 379.717L218.108 -151.892L120.925 -208Z"
-        fill={`url(#${props.gradientId}paint0_linear_992_26820)`}
+        fill={`url(#${gradientId}paint0_linear_992_26820)`}
       />
       <path
         d="M206.116 -158.82L-100.809 372.791L-5.832 427.626L301.093 -103.985L206.116 -158.82Z"
-        fill={`url(#${props.gradientId}paint1_linear_992_26820)`}
+        fill={`url(#${gradientId}paint1_linear_992_26820)`}
       />
       <path
         d="M291.285 -109.641L-15.6418 421.97L82.2684 478.498L389.195 -53.1126L291.285 -109.641Z"
-        fill={`url(#${props.gradientId}paint2_linear_992_26820)`}
+        fill={`url(#${gradientId}paint2_linear_992_26820)`}
       />
       <path
         d="M376.478 -60.4641L69.5518 471.147L169.353 528.769L476.279 -2.84365L376.478 -60.4641Z"
-        fill={`url(#${props.gradientId}paint3_linear_992_26820)`}
+        fill={`url(#${gradientId}paint3_linear_992_26820)`}
       />
       <path
         d="M461.641 -11.2825L154.716 520.327L239.895 569.506L546.82 37.896L461.641 -11.2825Z"
-        fill={`url(#${props.gradientId}paint4_linear_992_26820)`}
+        fill={`url(#${gradientId}paint4_linear_992_26820)`}
       />
       <path
         d="M301.251 214.115V214.119V214.152C301.251 214.9 300.844 215.562 300.146 215.853C296.333 217.486 283.758 223.305 278.515 230.607C265.021 249.396 254.708 278.957 231.664 278.957H135.509C101.466 278.957 72.9645 251.931 73 215.939C73 215.038 73.7503 214.302 74.6508 214.302H120.227C121.785 214.302 123.048 215.566 123.048 217.125V225.922C123.048 230.599 126.84 234.39 131.516 234.39L166.085 234.379V214.272H142.46C156.032 197.059 164.135 175.336 164.135 151.716C164.135 125.329 154.026 101.305 137.474 83.2967C147.486 84.4559 157.057 86.4494 166.085 89.1117V83.5189C166.085 77.7087 170.795 73 176.605 73C182.415 73 187.125 77.7099 187.125 83.5189V97.012C219.409 112.073 240.525 137.064 240.525 165.35C240.525 181.934 233.264 197.387 220.749 210.371C218.341 212.869 215.004 214.274 211.535 214.274H187.125V234.377L217.735 234.369C224.347 234.369 236.187 221.857 241.809 214.306C241.809 214.306 242.048 213.931 242.694 213.744C243.34 213.558 298.919 200.793 298.919 200.793C300.075 200.47 301.251 201.355 301.251 202.563V214.115Z"
@@ -1097,7 +1097,7 @@ export const SquareGemMarketplaceIcon = (props: SVGProps) => (
     </g>
     <defs>
       <linearGradient
-        id={`${props.gradientId}paint0_linear_992_26820`}
+        id={`${gradientId}paint0_linear_992_26820`}
         x1="-22.6145"
         y1="34.8522"
         x2="50.9502"
@@ -1108,7 +1108,7 @@ export const SquareGemMarketplaceIcon = (props: SVGProps) => (
         <stop offset="0.995" stopColor="#E15BD3" />
       </linearGradient>
       <linearGradient
-        id={`${props.gradientId}paint1_linear_992_26820`}
+        id={`${gradientId}paint1_linear_992_26820`}
         x1="161.807"
         y1="111.959"
         x2="13.6812"
@@ -1124,7 +1124,7 @@ export const SquareGemMarketplaceIcon = (props: SVGProps) => (
         <stop offset="1" stopColor="#E05ADD" />
       </linearGradient>
       <linearGradient
-        id={`${props.gradientId}paint2_linear_992_26820`}
+        id={`${gradientId}paint2_linear_992_26820`}
         x1="134.637"
         y1="106.681"
         x2="225.152"
@@ -1135,7 +1135,7 @@ export const SquareGemMarketplaceIcon = (props: SVGProps) => (
         <stop offset="1" stopColor="#F76DA1" />
       </linearGradient>
       <linearGradient
-        id={`${props.gradientId}paint3_linear_992_26820`}
+        id={`${gradientId}paint3_linear_992_26820`}
         x1="214.871"
         y1="145.838"
         x2="310.344"
@@ -1146,7 +1146,7 @@ export const SquareGemMarketplaceIcon = (props: SVGProps) => (
         <stop offset="1" stopColor="#F771A2" />
       </linearGradient>
       <linearGradient
-        id={`${props.gradientId}paint4_linear_992_26820`}
+        id={`${gradientId}paint4_linear_992_26820`}
         x1="306.109"
         y1="229.415"
         x2="390.15"
@@ -1163,25 +1163,25 @@ export const SquareGemMarketplaceIcon = (props: SVGProps) => (
   </svg>
 )
 
-export const SquareZoraMarketplaceIcon = (props: SVGProps) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="360" height="361" viewBox="0 0 360 361" fill="none" {...props}>
+export const SquareZoraMarketplaceIcon = ({ gradientId, ...rest }: SVGProps) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="360" height="361" viewBox="0 0 360 361" fill="none" {...rest}>
     <g clipPath="url(#clip0_992_26823)">
       <path
         d="M0 180C0 279.267 80.734 360 180 360C279.266 360 360 279.267 360 180C359.909 80.734 279.174 0 180 0C80.734 0 0 80.734 0 180Z"
-        fill={`url(#${props.gradientId}paint0_radial_992_26823)`}
+        fill={`url(#${gradientId}paint0_radial_992_26823)`}
       />
       <path
         d="M0 180C0 279.267 80.734 360 180 360C279.266 360 360 279.267 360 180C359.909 80.734 279.174 0 180 0C80.734 0 0 80.734 0 180Z"
-        fill={`url(#${props.gradientId}paint1_radial_992_26823)`}
+        fill={`url(#${gradientId}paint1_radial_992_26823)`}
       />
       <path
         d="M0 180C0 279.267 80.734 360 180 360C279.266 360 360 279.267 360 180C359.909 80.734 279.174 0 180 0C80.734 0 0 80.734 0 180Z"
-        fill={`url(#${props.gradientId}paint2_radial_992_26823)`}
+        fill={`url(#${gradientId}paint2_radial_992_26823)`}
       />
     </g>
     <defs>
       <radialGradient
-        id={`${props.gradientId}paint0_radial_992_26823`}
+        id={`${gradientId}paint0_radial_992_26823`}
         cx="0"
         cy="0"
         r="1"
@@ -1194,7 +1194,7 @@ export const SquareZoraMarketplaceIcon = (props: SVGProps) => (
         <stop offset="1" stopColor="#4B4C3C" />
       </radialGradient>
       <radialGradient
-        id={`${props.gradientId}paint1_radial_992_26823`}
+        id={`${gradientId}paint1_radial_992_26823`}
         cx="0"
         cy="0"
         r="1"
@@ -1207,7 +1207,7 @@ export const SquareZoraMarketplaceIcon = (props: SVGProps) => (
         <stop offset="1" stopColor="#4B4C3C" />
       </radialGradient>
       <radialGradient
-        id={`${props.gradientId}paint2_radial_992_26823`}
+        id={`${gradientId}paint2_radial_992_26823`}
         cx="0"
         cy="0"
         r="1"
@@ -1229,13 +1229,13 @@ export const SquareZoraMarketplaceIcon = (props: SVGProps) => (
   </svg>
 )
 
-export const SquareEnsVisionMarketplaceIcon = (props: SVGProps) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="360" height="361" viewBox="0 0 360 361" fill="none" {...props}>
+export const SquareEnsVisionMarketplaceIcon = ({ gradientId, ...rest }: SVGProps) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="360" height="361" viewBox="0 0 360 361" fill="none" {...rest}>
     <rect y="0.5" width="360" height="360" rx="48" fill="#1E1E1E" />
     <g clipPath="url(#clip0_992_26817)">
       <path
         d="M179.922 299.993C113.794 299.993 59.9961 246.195 59.9961 180.067C59.9961 104.175 127.963 51.3302 196.801 61.178C187.547 72.135 181.883 85.8809 180.521 96.7767C135.175 96.4473 96.6574 133.127 96.6574 180.067C96.6574 225.979 134.009 263.33 179.92 263.33C227.542 263.33 264.367 223.775 263.195 177.926C275.845 175.801 288.256 169.93 298.347 161.114C309.99 234.255 253.267 299.993 179.922 299.993Z"
-        fill={`url(#${props.gradientId}paint0_linear_992_26817)`}
+        fill={`url(#${gradientId}paint0_linear_992_26817)`}
       />
       <path
         d="M216.842 163.824V163.833C228.618 193.261 207.245 220.395 179.927 220.395C140.143 220.395 124.494 168.534 157.615 146.513C179.728 131.818 207.319 142.206 216.842 163.824ZM225.582 95.0598C238.724 68.0697 279.697 77.3379 279.743 107.386C279.743 124.206 265.63 136.385 250.546 135.927C243.586 124.753 234.06 115.402 222.76 108.65C222.548 103.955 223.519 99.2819 225.582 95.0598Z"
@@ -1244,7 +1244,7 @@ export const SquareEnsVisionMarketplaceIcon = (props: SVGProps) => (
     </g>
     <defs>
       <linearGradient
-        id={`${props.gradientId}paint0_linear_992_26817`}
+        id={`${gradientId}paint0_linear_992_26817`}
         x1="194.663"
         y1="57.5714"
         x2="299.868"

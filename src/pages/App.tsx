@@ -9,6 +9,7 @@ import { useBag } from 'nft/hooks/useBag'
 import { lazy, Suspense, useEffect, useMemo, useState } from 'react'
 import { Navigate, Route, Routes, useLocation, useSearchParams } from 'react-router-dom'
 import { shouldDisableNFTRoutesAtom } from 'state/application/atoms'
+import { useRouterPreference } from 'state/user/hooks'
 import { StatsigProvider, StatsigUser } from 'statsig-react'
 import styled from 'styled-components/macro'
 import { SpinnerSVG } from 'theme/components'
@@ -113,6 +114,7 @@ export default function App() {
   const { pathname } = useLocation()
   const currentPage = getCurrentPageFromLocation(pathname)
   const isDarkMode = useIsDarkMode()
+  const [routerPreference] = useRouterPreference()
   const [scrolledState, setScrolledState] = useState(false)
 
   useAnalyticsReporter()
@@ -159,6 +161,10 @@ export default function App() {
   useEffect(() => {
     user.set(CustomUserProperties.DARK_MODE, isDarkMode)
   }, [isDarkMode])
+
+  useEffect(() => {
+    user.set(CustomUserProperties.ROUTER_PREFERENCE, routerPreference)
+  }, [routerPreference])
 
   useEffect(() => {
     const scrollListener = () => {
