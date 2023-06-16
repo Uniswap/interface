@@ -1,5 +1,4 @@
 {
-  "testEnvironment": "miniflare",
   "globalSetup": "<rootDir>/global-setup.js",
   "globalTeardown": "<rootDir>/global-teardown.js"
 }
