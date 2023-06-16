@@ -79,7 +79,7 @@ export const UNSUPPORTED_V2POOL_CHAIN_IDS = [
   SupportedChainId.ARBITRUM_GOERLI,
 ] as const
 
-export const TESTNET_SET = new Set([
+export const TESTNET_CHAIN_IDS = new Set([
   SupportedChainId.GOERLI,
   SupportedChainId.SEPOLIA,
   SupportedChainId.ARBITRUM_GOERLI,
