@@ -442,6 +442,11 @@ export function Swap({
         })
       })
       .catch((error) => {
+        if (!didUserReject(error)) {
+          sendAnalyticsEvent(SwapEventName.SWAP_ERROR, {
+            confirmedTrade: tradeToConfirm,
+          })
+        }
         setSwapState((currentState) => ({
           ...currentState,
           swapError: error,
@@ -456,6 +461,7 @@ export function Swap({
     account,
     trade?.inputAmount?.currency?.symbol,
     trade?.outputAmount?.currency?.symbol,
+    tradeToConfirm,
   ])
 
   // errors

@@ -16,8 +16,8 @@ import { RPC_URLS } from '../constants/networks'
 import { RPC_PROVIDERS } from '../constants/providers'
 import { Connection, ConnectionType } from './types'
 import { getInjection, getIsCoinbaseWallet, getIsInjected, getIsMetaMaskWallet } from './utils'
-import { UniwalletConnect, WalletConnectPopup } from './WalletConnect'
-import { WalletConnectV2Popup } from './WalletConnectV2'
+import { UniwalletConnect, WalletConnectV1 } from './WalletConnect'
+import { WalletConnectV2 } from './WalletConnectV2'
 
 function onError(error: Error) {
   console.debug(`web3-react error: ${error}`)
@@ -70,28 +70,28 @@ export const gnosisSafeConnection: Connection = {
   shouldDisplay: () => false,
 }
 
-const [web3WalletConnect, web3WalletConnectHooks] = initializeConnector<WalletConnectPopup>(
-  (actions) => new WalletConnectPopup({ actions, onError })
+const [web3WalletConnect, web3WalletConnectHooks] = initializeConnector<WalletConnectV1>(
+  (actions) => new WalletConnectV1({ actions, onError })
 )
-export const walletConnectConnection: Connection = {
-  getName: () => 'WalletConnect',
+export const walletConnectV1Connection: Connection = {
+  getName: () => 'WalletConnectV1',
   connector: web3WalletConnect,
   hooks: web3WalletConnectHooks,
   type: ConnectionType.WALLET_CONNECT,
   getIcon: () => WALLET_CONNECT_ICON,
-  shouldDisplay: () => !getIsInjectedMobileBrowser(),
+  shouldDisplay: () => false,
 }
 
-const [web3WalletConnectV2, web3WalletConnectV2Hooks] = initializeConnector<WalletConnectV2Popup>(
-  (actions) => new WalletConnectV2Popup({ actions, onError })
+const [web3WalletConnectV2, web3WalletConnectV2Hooks] = initializeConnector<WalletConnectV2>(
+  (actions) => new WalletConnectV2({ actions, onError })
 )
 export const walletConnectV2Connection: Connection = {
-  getName: () => 'WalletConnectV2',
+  getName: () => 'WalletConnect',
   connector: web3WalletConnectV2,
   hooks: web3WalletConnectV2Hooks,
   type: ConnectionType.WALLET_CONNECT_V2,
   getIcon: () => WALLET_CONNECT_ICON,
-  shouldDisplay: () => false,
+  shouldDisplay: () => !getIsInjectedMobileBrowser(),
 }
 
 const [web3UniwalletConnect, web3UniwalletConnectHooks] = initializeConnector<UniwalletConnect>(
@@ -143,8 +143,8 @@ export function getConnections() {
   return [
     uniwalletConnectConnection,
     injectedConnection,
-    walletConnectConnection,
     walletConnectV2Connection,
+    walletConnectV1Connection,
     coinbaseWalletConnection,
     gnosisSafeConnection,
     networkConnection,
@@ -165,7 +165,7 @@ export function getConnection(c: Connector | ConnectionType) {
       case ConnectionType.COINBASE_WALLET:
         return coinbaseWalletConnection
       case ConnectionType.WALLET_CONNECT:
-        return walletConnectConnection
+        return walletConnectV1Connection
       case ConnectionType.WALLET_CONNECT_V2:
         return walletConnectV2Connection
       case ConnectionType.UNIWALLET:

@@ -18,7 +18,7 @@ export default function SwapRoute({ trade, syncing }: { trade: InterfaceTrade; s
   const routes = getRoutingDiagramEntries(trade)
 
   const gasPrice =
-    // TODO(WEB-3303)
+    // TODO(WEB-2022)
     // Can `trade.gasUseEstimateUSD` be defined when `chainId` is not in `SUPPORTED_GAS_ESTIMATE_CHAIN_IDS`?
     trade.gasUseEstimateUSD && chainId && SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId)
       ? trade.gasUseEstimateUSD === '0.00'
