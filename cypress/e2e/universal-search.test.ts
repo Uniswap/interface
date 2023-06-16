@@ -36,29 +36,33 @@ describe('Universal search bar', () => {
   })
 
   it('should go to the selected result when recent results are shown', () => {
-    // Search for uni token by name.
-    cy.get('[data-cy="search-bar-input"]').last().type('uni')
-    cy.get('[data-cy="searchbar-token-row-UNI"]')
+    cy.get('[data-cy="search-bar-input"]')
+      .last()
+      .then((searchBar) => {
+        // Search for uni token by name.
+        cy.wrap(searchBar).type('uni')
+        cy.get('[data-cy="searchbar-token-row-UNI"]')
 
-    // Clear search
-    cy.get('[data-cy="search-bar-input"]').last().clear()
+        // Clear search
+        cy.wrap(searchBar).clear()
 
-    // Close search
-    cy.get('[data-cy="search-bar-input"]').last().type('{esc}')
+        // Close search
+        cy.wrap(searchBar).type('{esc}')
 
-    openSearch()
+        openSearch()
 
-    // Search a different token by name.
-    cy.get('[data-cy="search-bar-input"]').last().type('eth')
+        // Search a different token by name.
+        cy.wrap(searchBar).type('eth')
 
-    // Validate ETH result now exists.
-    cy.get('[data-cy="searchbar-token-row-ETH"]')
+        // Validate ETH result now exists.
+        cy.get('[data-cy="searchbar-token-row-ETH"]')
 
-    // Hit enter
-    cy.get('[data-cy="search-bar-input"]').last().type('{enter}')
+        // Hit enter
+        cy.wrap(searchBar).type('{enter}')
 
-    // Validate we went to ethereum address
-    cy.url().should('contain', 'tokens/ethereum/NATIVE')
+        // Validate we went to ethereum address
+        cy.url().should('contain', 'tokens/ethereum/NATIVE')
+      })
   })
 
   it.skip('should show recent tokens and popular tokens with empty search term', () => {
