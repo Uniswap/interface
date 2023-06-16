@@ -12,7 +12,7 @@ import {
 
 type FullRange = true
 
-interface MintState {
+export interface MintState {
   readonly independentField: Field
   readonly typedValue: string
   readonly startPriceTypedValue: string // for the case when there's no liquidity

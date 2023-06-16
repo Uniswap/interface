@@ -243,7 +243,7 @@
     "react-window-infinite-loader": "^1.0.8",
     "rebass": "^4.0.7",
     "redux": "^4.1.2",
-    "redux-localstorage-simple": "^2.3.1",
+    "redux-persist": "^6.0.0",
     "statsig-react": "^1.22.0",
     "styled-components": "^5.3.5",
     "tiny-invariant": "^1.2.0",

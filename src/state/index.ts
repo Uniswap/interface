@@ -1,15 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { setupListeners } from '@reduxjs/toolkit/query/react'
-import { load, save } from 'redux-localstorage-simple'
-import { isTestEnv } from 'utils/env'
 
 import { updateVersion } from './global/actions'
 import { sentryEnhancer } from './logging'
 import reducer from './reducer'
 import { routingApi } from './routing/slice'
 import { routingApiV2 } from './routing/v2Slice'
-
-const PERSISTED_KEYS: string[] = ['user', 'transactions', 'lists']
 
 const store = configureStore({
   reducer,
@@ -25,9 +21,7 @@ const store = configureStore({
       },
     })
       .concat(routingApi.middleware)
-      .concat(routingApiV2.middleware)
-      .concat(save({ states: PERSISTED_KEYS, debounce: 1000 })),
-  preloadedState: load({ states: PERSISTED_KEYS, disableWarnings: isTestEnv() }),
+      .concat(routingApiV2.middleware),
 })
 
 store.dispatch(updateVersion())
