@@ -3,7 +3,7 @@ import { createStore, Store } from 'redux'
 
 import { TransactionType } from '../transactions/types'
 import reducer, { addSignature, initialState, removeSignature, SignatureState, updateSignature } from './reducer'
-import { DutchLimitOrderStatus, SignatureDetails, SignatureType } from './types'
+import { DutchOrderStatus, SignatureDetails, SignatureType } from './types'
 
 const account = '0xabc'
 
@@ -11,7 +11,7 @@ const signature: SignatureDetails = {
   id: '0x0',
   addedTime: 0,
   expiry: 0,
-  status: DutchLimitOrderStatus.OPEN,
+  status: DutchOrderStatus.OPEN,
   type: SignatureType.SIGN_UNISWAPX_ORDER,
   chainId: 1,
   orderHash: '0x0',
@@ -55,7 +55,7 @@ describe('signature reducer', () => {
   describe('updateSignature', () => {
     it('updates the signature', () => {
       store.dispatch(addSignature(signature))
-      const updatedSignature = { ...signature, status: DutchLimitOrderStatus.CANCELLED }
+      const updatedSignature = { ...signature, status: DutchOrderStatus.CANCELLED }
       store.dispatch(updateSignature(updatedSignature))
 
       const txs = store.getState()

@@ -1,7 +1,7 @@
 import { useWeb3React } from '@web3-react/core'
 import { useEffect } from 'react'
 import { isFinalizedOrder } from 'state/signatures/hooks'
-import { DutchLimitOrderStatus, UniswapXOrderDetails } from 'state/signatures/types'
+import { DutchOrderStatus, UniswapXOrderDetails } from 'state/signatures/types'
 
 const UNISWAPX_API_URL = process.env.REACT_APP_UNISWAPX_API_URL
 if (UNISWAPX_API_URL === undefined) {
@@ -13,21 +13,21 @@ function fetchOrderStatuses(account: string, orders: UniswapXOrderDetails[]) {
   return global.fetch(`${UNISWAPX_API_URL}/orders?offerer=${account}&orderHashes=${orderHashes}`)
 }
 
-/* Converts string from gouda backend's order status type to the GQL-compatible frontend DutchLimitOrderStatus enum */
-function toDutchOrderStatus(orderStatus: string): DutchLimitOrderStatus {
+/* Converts string from gouda backend's order status type to the GQL-compatible frontend DutchOrderStatus enum */
+function toDutchOrderStatus(orderStatus: string): DutchOrderStatus {
   switch (orderStatus) {
     case 'open':
-      return DutchLimitOrderStatus.OPEN
+      return DutchOrderStatus.OPEN
     case 'expired':
-      return DutchLimitOrderStatus.EXPIRED
+      return DutchOrderStatus.EXPIRED
     case 'error':
-      return DutchLimitOrderStatus.ERROR
+      return DutchOrderStatus.ERROR
     case 'cancelled':
-      return DutchLimitOrderStatus.CANCELLED
+      return DutchOrderStatus.CANCELLED
     case 'filled':
-      return DutchLimitOrderStatus.FILLED
+      return DutchOrderStatus.FILLED
     case 'insufficient-funds':
-      return DutchLimitOrderStatus.INSUFFICIENT_FUNDS
+      return DutchOrderStatus.INSUFFICIENT_FUNDS
     default:
       throw new Error(`Unknown order status: ${orderStatus}`)
   }
@@ -46,7 +46,7 @@ type OrderStatusResponse = {
 
 interface UpdaterProps {
   pendingOrders: UniswapXOrderDetails[]
-  onOrderUpdate: (order: UniswapXOrderDetails, status: DutchLimitOrderStatus, txHash?: string) => void
+  onOrderUpdate: (order: UniswapXOrderDetails, status: DutchOrderStatus, txHash?: string) => void
 }
 
 export default function OrderUpdater({ pendingOrders, onOrderUpdate }: UpdaterProps): null {

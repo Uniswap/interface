@@ -1,9 +1,9 @@
 import { signTypedData } from '@uniswap/conedison/provider/signing'
-import { DutchLimitOrder, DutchLimitOrderBuilder } from '@uniswap/gouda-sdk'
+import { DutchOrder, DutchOrderBuilder } from '@uniswap/gouda-sdk'
 import { useWeb3React } from '@web3-react/core'
 import ms from 'ms.macro'
 import { useCallback } from 'react'
-import { DutchLimitOrderTrade, TradeFillType } from 'state/routing/types'
+import { DutchOrderTrade, TradeFillType } from 'state/routing/types'
 import { trace } from 'tracing/trace'
 import { UserRejectedRequestError } from 'utils/errors'
 import { didUserReject, swapErrorToUserReadableMessage } from 'utils/swapErrorToUserReadableMessage'
@@ -20,7 +20,7 @@ type DutchAuctionOrderResponse = DutchAuctionOrderError | DutchAuctionOrderSucce
 const isErrorResponse = (res: Response, order: DutchAuctionOrderResponse): order is DutchAuctionOrderError =>
   res.status < 200 || res.status > 202
 
-export default function useUniswapXSwapCallback(trade: DutchLimitOrderTrade | undefined) {
+export default function useUniswapXSwapCallback(trade: DutchOrderTrade | undefined) {
   const { account, provider } = useWeb3React()
 
   return useCallback(
@@ -30,7 +30,7 @@ export default function useUniswapXSwapCallback(trade: DutchLimitOrderTrade | un
         if (!provider) throw new Error('missing provider')
         if (!trade) throw new Error('missing trade')
 
-        const signDutchOrder = async (): Promise<{ signature: string; updatedOrder: DutchLimitOrder }> => {
+        const signDutchOrder = async (): Promise<{ signature: string; updatedOrder: DutchOrder }> => {
           const startTime = offsetDate(Date.now(), DEFAULT_START_TIME_PADDING)
           setTraceData('startTime', startTime)
 
@@ -41,7 +41,7 @@ export default function useUniswapXSwapCallback(trade: DutchLimitOrderTrade | un
           setTraceData('deadline', deadline)
 
           // Set timestamp and account based values when the user clicks 'swap' to make them as recent as possible
-          const updatedOrder = DutchLimitOrderBuilder.fromOrder(trade.order)
+          const updatedOrder = DutchOrderBuilder.fromOrder(trade.order)
             .startTime(startTime)
             .endTime(endTime)
             .deadline(deadline)

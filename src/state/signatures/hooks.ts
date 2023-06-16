@@ -6,10 +6,10 @@ import { useAppSelector } from 'state/hooks'
 
 import { addTransaction } from '../transactions/reducer'
 import { addSignature, updateSignature } from './reducer'
-import { DutchLimitOrderStatus, SignatureDetails, SignatureType, UniswapXOrderDetails } from './types'
+import { DutchOrderStatus, SignatureDetails, SignatureType, UniswapXOrderDetails } from './types'
 
 function isPendingOrder(signature: SignatureDetails): signature is UniswapXOrderDetails {
-  return signature.type === SignatureType.SIGN_UNISWAPX_ORDER && signature.status === DutchLimitOrderStatus.OPEN
+  return signature.type === SignatureType.SIGN_UNISWAPX_ORDER && signature.status === DutchOrderStatus.OPEN
 }
 
 export function usePendingOrders(): UniswapXOrderDetails[] {
@@ -54,7 +54,7 @@ export function useAddOrder() {
           expiry,
           orderHash,
           swapInfo,
-          status: DutchLimitOrderStatus.OPEN,
+          status: DutchOrderStatus.OPEN,
           addedTime: Date.now(),
         })
       )
@@ -63,19 +63,19 @@ export function useAddOrder() {
   )
 }
 
-export function isFinalizedOrder(orderStatus: DutchLimitOrderStatus) {
-  return orderStatus !== DutchLimitOrderStatus.OPEN
+export function isFinalizedOrder(orderStatus: DutchOrderStatus) {
+  return orderStatus !== DutchOrderStatus.OPEN
 }
 
-export function isOnChainOrder(orderStatus: DutchLimitOrderStatus) {
-  return orderStatus === DutchLimitOrderStatus.FILLED || orderStatus === DutchLimitOrderStatus.CANCELLED
+export function isOnChainOrder(orderStatus: DutchOrderStatus) {
+  return orderStatus === DutchOrderStatus.FILLED || orderStatus === DutchOrderStatus.CANCELLED
 }
 
 export function useUpdateOrder() {
   const dispatch = useDispatch()
 
   return useCallback(
-    (order: UniswapXOrderDetails, status: DutchLimitOrderStatus, txHash?: string) => {
+    (order: UniswapXOrderDetails, status: DutchOrderStatus, txHash?: string) => {
       if (txHash && isOnChainOrder(status)) {
         // Creates an entry for the transaction which resulted from the order
         dispatch(addTransaction({ chainId: order.chainId, from: order.offerer, hash: txHash, info: order.swapInfo }))

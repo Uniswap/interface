@@ -1,8 +1,4 @@
-import {
-  DutchLimitOrderInfo,
-  DutchLimitOrderInfoJSON,
-  DutchLimitOrderTrade as IDutchLimitOrderTrade,
-} from '@uniswap/gouda-sdk'
+import { DutchOrderInfo, DutchOrderInfoJSON, DutchOrderTrade as IDutchOrderTrade } from '@uniswap/gouda-sdk'
 import { MixedRouteSDK, Protocol, Trade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { Route as V2Route } from '@uniswap/v2-sdk'
@@ -72,10 +68,10 @@ export interface ClassicQuoteData {
   routeString: string
 }
 
-type DutchLimitOrderInfoData = DutchLimitOrderInfoJSON & { quoteId?: string }
-type URADutchLimitOrderQuoteResponse = {
+type DutchOrderInfoData = DutchOrderInfoJSON & { quoteId?: string }
+type URADutchOrderQuoteResponse = {
   routing: URAQuoteType.DUTCH_LIMIT
-  quote: DutchLimitOrderInfoData
+  quote: DutchOrderInfoData
   allQuotes: Array<URAQuoteResponse>
 }
 type URAClassicQuoteResponse = {
@@ -83,7 +79,7 @@ type URAClassicQuoteResponse = {
   quote: ClassicQuoteData
   allQuotes: Array<URAQuoteResponse>
 }
-export type URAQuoteResponse = URAClassicQuoteResponse | URADutchLimitOrderQuoteResponse
+export type URAQuoteResponse = URAClassicQuoteResponse | URADutchOrderQuoteResponse
 
 export function isClassicQuoteResponse(data: URAQuoteResponse): data is URAClassicQuoteResponse {
   return data.routing === URAQuoteType.CLASSIC
@@ -129,7 +125,7 @@ export class ClassicTrade extends Trade<Currency, Currency, TradeType> {
   }
 }
 
-export class DutchLimitOrderTrade extends IDutchLimitOrderTrade<Currency, Currency, TradeType> {
+export class DutchOrderTrade extends IDutchOrderTrade<Currency, Currency, TradeType> {
   public readonly fillType = TradeFillType.UniswapX
   quoteId?: string
   needsWrap: boolean
@@ -147,7 +143,7 @@ export class DutchLimitOrderTrade extends IDutchLimitOrderTrade<Currency, Curren
   }: {
     currencyIn: Currency
     currenciesOut: Currency[]
-    orderInfo: DutchLimitOrderInfo
+    orderInfo: DutchOrderInfo
     tradeType: TradeType
     quoteId?: string
     needsWrap: boolean
@@ -160,7 +156,7 @@ export class DutchLimitOrderTrade extends IDutchLimitOrderTrade<Currency, Curren
   }
 }
 
-export type InterfaceTrade = ClassicTrade | DutchLimitOrderTrade
+export type InterfaceTrade = ClassicTrade | DutchOrderTrade
 
 export enum QuoteState {
   SUCCESS = 'Success',

@@ -3,7 +3,7 @@ import { V3Route } from '@uniswap/smart-order-router'
 import { FeeAmount, Pool } from '@uniswap/v3-sdk'
 import { BigNumber } from 'ethers/lib/ethers'
 import JSBI from 'jsbi'
-import { ClassicTrade, DutchLimitOrderTrade } from 'state/routing/types'
+import { ClassicTrade, DutchOrderTrade } from 'state/routing/types'
 
 export const TEST_TOKEN_1 = new Token(1, '0x0000000000000000000000000000000000000001', 18, 'ABC', 'Abc')
 export const TEST_TOKEN_2 = new Token(1, '0x0000000000000000000000000000000000000002', 18, 'DEF', 'Def')
@@ -58,7 +58,7 @@ export const TEST_TRADE_EXACT_OUTPUT = new ClassicTrade({
 
 export const TEST_ALLOWED_SLIPPAGE = new Percent(2, 100)
 
-export const TEST_DUTCH_TRADE = new DutchLimitOrderTrade({
+export const TEST_DUTCH_TRADE = new DutchOrderTrade({
   currencyIn: TEST_TOKEN_1,
   currenciesOut: [TEST_TOKEN_2],
   orderInfo: {
