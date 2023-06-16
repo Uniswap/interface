@@ -3,6 +3,7 @@ import { combineReducers } from 'redux'
 import { persistReducer, persistStore } from 'redux-persist'
 import { dappReducer } from 'src/background/features/dapp/slice'
 import { dappRequestReducer } from 'src/background/features/dappRequests/slice'
+import { loggerMiddleware } from 'src/background/utils/loggerMiddleware'
 import { PortName } from 'src/types'
 import { SagaGenerator, select } from 'typed-redux-saga'
 import { createStore, RootState } from 'wallet/src/state'
@@ -27,6 +28,7 @@ export function initializeStore(
     const store = createStore({
       reducer: webReducer,
       additionalSagas: [webRootSaga],
+      middlewareBefore: [loggerMiddleware],
     })
 
     // https://github.com/tshaddix/webext-redux/issues/286#issuecomment-1347985776
