@@ -3,7 +3,7 @@ import { Trace, TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, InterfacePageName, SharedEventName } from '@uniswap/analytics-events'
 import { AboutFooter } from 'components/About/AboutFooter'
 import Card, { CardType } from 'components/About/Card'
-import { MAIN_CARDS, MORE_CARDS } from 'components/About/constants'
+import { MORE_CARDS } from 'components/About/constants'
 import ProtocolBanner from 'components/About/ProtocolBanner'
 import { useAccountDrawer } from 'components/AccountDrawer'
 import { BaseButton } from 'components/Button'
@@ -372,15 +372,6 @@ export default function Landing() {
               </LearnMoreContainer>
             </ContentContainer>
             <AboutContentContainer isDarkMode={isDarkMode}>
-              <CardGrid cols={2} ref={cardsRef}>
-                {MAIN_CARDS.map(({ darkBackgroundImgSrc, lightBackgroundImgSrc, ...card }) => (
-                  <Card
-                    {...card}
-                    backgroundImgSrc={isDarkMode ? darkBackgroundImgSrc : lightBackgroundImgSrc}
-                    key={card.title}
-                  />
-                ))}
-              </CardGrid>
               <CardGrid cols={3}>
                 {MORE_CARDS.map(({ darkIcon, lightIcon, ...card }) => (
                   <Card {...card} icon={isDarkMode ? darkIcon : lightIcon} key={card.title} type={CardType.Secondary} />
