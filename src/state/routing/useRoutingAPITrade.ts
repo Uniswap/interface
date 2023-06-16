@@ -12,7 +12,6 @@ import { useGetQuoteQuery as useGetQuoteQueryV2 } from 'state/routing/v2Slice'
 
 import { InterfaceTrade, QuoteState, TradeState } from './types'
 
-const TRADE_INVALID = { state: TradeState.INVALID, trade: undefined } as const
 const TRADE_NOT_FOUND = { state: TradeState.NO_ROUTE_FOUND, trade: undefined } as const
 const TRADE_LOADING = { state: TradeState.LOADING, trade: undefined } as const
 
@@ -26,7 +25,8 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
   tradeType: TTradeType,
   amountSpecified: CurrencyAmount<Currency> | undefined,
   otherCurrency: Currency | undefined,
-  routerPreference: RouterPreference | typeof INTERNAL_ROUTER_PREFERENCE_PRICE
+  routerPreference: RouterPreference | typeof INTERNAL_ROUTER_PREFERENCE_PRICE,
+  skipFetch = false
 ): {
   state: TradeState
   trade?: InterfaceTrade
@@ -42,7 +42,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
   const queryArgs = useRoutingAPIArguments({
     tokenIn: currencyIn,
     tokenOut: currencyOut,
-    amount: amountSpecified,
+    amount: skipFetch ? undefined : amountSpecified,
     tradeType,
     routerPreference,
   })
@@ -71,15 +71,18 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
     refetchOnMountOrArgChange: 2 * 60,
   })
 
-  const tradeResult = v2TradeResult ?? legacyAPITradeResult
-  const currentTradeResult = currentLegacyAPITradeResult ?? currentV2TradeResult
-  const isError = isLegacyAPIError || isV2APIError
+  const [tradeResult, currentTradeResult, isError] = shouldUseRoutingApiV2
+    ? [v2TradeResult, currentV2TradeResult, isV2APIError]
+    : [legacyAPITradeResult, currentLegacyAPITradeResult, isLegacyAPIError]
 
   const isCurrent = currentTradeResult === tradeResult
 
   return useMemo(() => {
-    if (!amountSpecified || isError || !queryArgs) {
-      return TRADE_INVALID
+    if (skipFetch && amountSpecified) {
+      // If we don't want to fetch new trades, but have valid inputs, return the stale trade.
+      return { state: TradeState.STALE, trade: tradeResult?.trade }
+    } else if (!amountSpecified || isError || !queryArgs) {
+      return { state: TradeState.INVALID, trade: undefined }
     } else if (tradeResult?.state === QuoteState.NOT_FOUND && isCurrent) {
       return TRADE_NOT_FOUND
     } else if (!tradeResult?.trade) {
@@ -91,7 +94,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
         trade: tradeResult.trade,
       }
     }
-  }, [amountSpecified, isCurrent, isError, queryArgs, tradeResult])
+  }, [amountSpecified, isCurrent, isError, queryArgs, skipFetch, tradeResult?.state, tradeResult?.trade])
 }
 
 // only want to enable this when app hook called
@@ -102,6 +105,10 @@ class GAMetric extends IMetric {
 
   putMetric(key: string, value: number, unit?: MetricLoggerUnit) {
     sendTiming('Routing API', `${key} | ${unit}`, value, 'client')
+  }
+
+  setProperty() {
+    return
   }
 }
 

@@ -96,7 +96,7 @@ export default function ChainSelectorRow({ disabled, targetChain, onSelectChain,
       )}
       <Status>
         {active && <CheckMarkIcon width={LOGO_SIZE} height={LOGO_SIZE} color={theme.accentActive} />}
-        {isPending && <Loader width={LOGO_SIZE} height={LOGO_SIZE} />}
+        {!active && isPending && <Loader width={LOGO_SIZE} height={LOGO_SIZE} />}
       </Status>
     </Container>
   )

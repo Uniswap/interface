@@ -59,7 +59,7 @@ export default function CommonBases({
   searchQuery: string
   isAddressSearch: string | false
 }) {
-  const bases = typeof chainId !== 'undefined' ? COMMON_BASES[chainId] ?? [] : []
+  const bases = chainId !== undefined ? COMMON_BASES[chainId] ?? [] : []
 
   return bases.length > 0 ? (
     <MobileWrapper gap="md">

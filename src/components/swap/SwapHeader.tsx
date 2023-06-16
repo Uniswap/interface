@@ -18,7 +18,7 @@ const HeaderButtonContainer = styled(RowFixed)`
   gap: 16px;
 `
 
-export default function SwapHeader({ autoSlippage }: { autoSlippage: Percent }) {
+export default function SwapHeader({ autoSlippage, chainId }: { autoSlippage: Percent; chainId?: number }) {
   const fiatOnRampButtonEnabled = useFiatOnRampButtonEnabled()
 
   return (
@@ -30,7 +30,7 @@ export default function SwapHeader({ autoSlippage }: { autoSlippage: Percent }) 
         {fiatOnRampButtonEnabled && <SwapBuyFiatButton />}
       </HeaderButtonContainer>
       <RowFixed>
-        <SettingsTab autoSlippage={autoSlippage} />
+        <SettingsTab autoSlippage={autoSlippage} chainId={chainId} />
       </RowFixed>
     </StyledSwapHeader>
   )

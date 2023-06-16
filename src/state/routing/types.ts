@@ -8,6 +8,7 @@ import { RouterPreference } from './slice'
 export enum TradeState {
   LOADING,
   INVALID,
+  STALE,
   NO_ROUTE_FOUND,
   VALID,
 }
@@ -145,8 +146,10 @@ export enum PoolType {
 }
 
 // swap router API special cases these strings to represent native currencies
-// all chains have "ETH" as native currency symbol except for polygon
+// all chains except for bnb chain and polygon
+// have "ETH" as native currency symbol
 export enum SwapRouterNativeAssets {
   MATIC = 'MATIC',
+  BNB = 'BNB',
   ETH = 'ETH',
 }

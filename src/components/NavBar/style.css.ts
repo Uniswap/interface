@@ -41,7 +41,7 @@ export const searchContainer = style([
     flex: '1',
     flexShrink: '1',
     justifyContent: { lg: 'flex-end', xl: 'center' },
-    display: { sm: 'none', navSearchInputVisible: 'flex' },
+    display: { sm: 'none' },
     alignSelf: 'center',
     height: '48',
     alignItems: 'flex-start',

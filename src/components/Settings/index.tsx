@@ -3,6 +3,7 @@ import { Percent } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { AutoColumn } from 'components/Column'
 import { L2_CHAIN_IDS } from 'constants/chains'
+import useDisableScrolling from 'hooks/useDisableScrolling'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { isSupportedChainId } from 'lib/hooks/routing/clientSideSmartOrderRouter'
 import { useRef } from 'react'
@@ -41,8 +42,8 @@ const MenuFlyout = styled(AutoColumn)`
   padding: 1rem;
 `
 
-export default function SettingsTab({ autoSlippage }: { autoSlippage: Percent }) {
-  const { chainId } = useWeb3React()
+export default function SettingsTab({ autoSlippage, chainId }: { autoSlippage: Percent; chainId?: number }) {
+  const { chainId: connectedChainId } = useWeb3React()
   const showDeadlineSettings = Boolean(chainId && !L2_CHAIN_IDS.includes(chainId))
 
   const node = useRef<HTMLDivElement | null>(null)
@@ -51,11 +52,13 @@ export default function SettingsTab({ autoSlippage }: { autoSlippage: Percent })
   const toggleMenu = useToggleSettingsMenu()
   useOnClickOutside(node, isOpen ? toggleMenu : undefined)
 
+  useDisableScrolling(isOpen)
+
   const isSupportedChain = isSupportedChainId(chainId)
 
   return (
     <Menu ref={node}>
-      <MenuButton disabled={!isSupportedChain} isActive={isOpen} onClick={toggleMenu} />
+      <MenuButton disabled={!isSupportedChain || chainId !== connectedChainId} isActive={isOpen} onClick={toggleMenu} />
       {isOpen && (
         <MenuFlyout>
           <RouterPreferenceSettings />

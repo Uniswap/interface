@@ -1,12 +1,7 @@
 import { CurrencyAmount, Price } from '@uniswap/sdk-core'
 import { renBTC, USDC_MAINNET } from 'constants/tokens'
 
-import {
-  currencyAmountToPreciseFloat,
-  formatDollar,
-  formatTransactionAmount,
-  priceToPreciseFloat,
-} from './formatNumbers'
+import { currencyAmountToPreciseFloat, formatTransactionAmount, priceToPreciseFloat } from './formatNumbers'
 
 describe('currencyAmountToPreciseFloat', () => {
   it('small number', () => {
@@ -90,65 +85,5 @@ describe('formatTransactionAmount', () => {
   it('Number ≥ 1M extra long', () => {
     // eslint-disable-next-line @typescript-eslint/no-loss-of-precision
     expect(formatTransactionAmount(1234567890123456.789)).toEqual('1.234568e+15')
-  })
-})
-
-describe('formatDollar for a price', () => {
-  const isPrice = true
-  it('undefined or null', () => {
-    expect(formatDollar({ num: undefined, isPrice })).toEqual('-')
-    expect(formatDollar({ num: null, isPrice })).toEqual('-')
-  })
-  it('0', () => {
-    expect(formatDollar({ num: 0, isPrice })).toEqual('$0.00')
-  })
-  it('< 0.000001', () => {
-    expect(formatDollar({ num: 0.00000000011231231432, isPrice })).toEqual('$1.12e-10')
-  })
-  it('num >= 0.000001 && num < 0.1', () => {
-    expect(formatDollar({ num: 0.00123123124, isPrice })).toEqual('$0.00123')
-  })
-  it('num >= 0.1 && num < 1.05', () => {
-    expect(formatDollar({ num: 0.812831, isPrice })).toEqual('$0.813')
-  })
-  it('lessPreciseStablecoinValues number less than 1, rounds to 0.999', () => {
-    expect(formatDollar({ num: 0.9994, isPrice, lessPreciseStablecoinValues: true })).toEqual('$0.999')
-  })
-  it('lessPreciseStablecoinValues number less than, rounds to 1.00', () => {
-    expect(formatDollar({ num: 0.9995, isPrice, lessPreciseStablecoinValues: true })).toEqual('$1.00')
-  })
-  it('lessPreciseStablecoinValues number greater than 1', () => {
-    expect(formatDollar({ num: 1.0000001, isPrice, lessPreciseStablecoinValues: true })).toEqual('$1.00')
-  })
-  it('number is greater than 1 million', () => {
-    expect(formatDollar({ num: 11192312.408, isPrice })).toEqual('$1.12e+7')
-  })
-  it('number in the thousands', () => {
-    expect(formatDollar({ num: 1234.408, isPrice })).toEqual('$1,234.41')
-  })
-  it('number is greater than 1.05', () => {
-    expect(formatDollar({ num: 102312.408, isPrice })).toEqual('$102,312.41')
-  })
-})
-
-describe('formatDollar for a non-price amount', () => {
-  it('undefined or null', () => {
-    expect(formatDollar({ num: undefined })).toEqual('-')
-    expect(formatDollar({ num: null })).toEqual('-')
-  })
-  it('0', () => {
-    expect(formatDollar({ num: 0 })).toEqual('$0.00')
-  })
-  it('< 0.000001', () => {
-    expect(formatDollar({ num: 0.0000000001 })).toEqual('$<0.000001')
-  })
-  it('num >= 0.000001 && num < 0.1', () => {
-    expect(formatDollar({ num: 0.00123123124 })).toEqual('$0.00123')
-  })
-  it('num >= 0.1 && num < 1.05', () => {
-    expect(formatDollar({ num: 0.812831 })).toEqual('$0.813')
-  })
-  it('number is greater than 1.05', () => {
-    expect(formatDollar({ num: 102312.408 })).toEqual('$102.31K')
   })
 })

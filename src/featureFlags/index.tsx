@@ -12,6 +12,8 @@ export enum FeatureFlag {
   detailsV2 = 'details_v2',
   uraEnabled = 'ura_enabled',
   debounceSwapQuote = 'debounce_swap_quote',
+  nativeUsdcArbitrum = 'web_usdc_arbitrum',
+  routingAPIPrice = 'routing_api_price',
 }
 
 interface FeatureFlagsContextType {

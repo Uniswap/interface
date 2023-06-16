@@ -6,13 +6,12 @@ import PortfolioDrawer, { useAccountDrawer } from 'components/AccountDrawer'
 import PrefetchBalancesWrapper from 'components/AccountDrawer/PrefetchBalancesWrapper'
 import Loader from 'components/Icons/LoadingSpinner'
 import { IconWrapper } from 'components/Identicon/StatusIcon'
-import { useGetConnection } from 'connection'
+import { getConnection } from 'connection'
+import { navSearchInputVisibleSize } from 'hooks/useScreenSize'
 import { Portal } from 'nft/components/common/Portal'
 import { useIsNftClaimAvailable } from 'nft/hooks/useIsNftClaimAvailable'
 import { darken } from 'polished'
 import { useCallback, useMemo } from 'react'
-import { AlertTriangle } from 'react-feather'
-import { useAppSelector } from 'state/hooks'
 import styled from 'styled-components/macro'
 import { colors } from 'theme/colors'
 import { flexRowNoWrap } from 'theme/styles'
@@ -40,16 +39,6 @@ const Web3StatusGeneric = styled(ButtonSecondary)`
   margin-left: 2px;
   :focus {
     outline: none;
-  }
-`
-const Web3StatusError = styled(Web3StatusGeneric)`
-  background-color: ${({ theme }) => theme.accentFailure};
-  border: 1px solid ${({ theme }) => theme.accentFailure};
-  color: ${({ theme }) => theme.white};
-  font-weight: 500;
-  :hover,
-  :focus {
-    background-color: ${({ theme }) => darken(0.1, theme.accentFailure)};
   }
 `
 
@@ -107,7 +96,7 @@ const Web3StatusConnected = styled(Web3StatusGeneric)<{
 const AddressAndChevronContainer = styled.div`
   display: flex;
 
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.navSearchInputVisible}px`}) {
+  @media only screen and (max-width: ${navSearchInputVisibleSize}px) {
     display: none;
   }
 `
@@ -121,13 +110,6 @@ const Text = styled.p`
   font-size: 1rem;
   width: fit-content;
   font-weight: 500;
-`
-
-const NetworkIcon = styled(AlertTriangle)`
-  margin-left: 0.25rem;
-  margin-right: 0.5rem;
-  width: 16px;
-  height: 16px;
 `
 
 // we want the latest one to come first, so return negative if a is after b
@@ -149,7 +131,6 @@ const StyledConnectButton = styled.button`
 
 function Web3StatusInner() {
   const { account, connector, chainId, ENSName } = useWeb3React()
-  const getConnection = useGetConnection()
   const connection = getConnection(connector)
   const [, toggleAccountDrawer] = useAccountDrawer()
   const handleWalletDropdownClick = useCallback(() => {
@@ -157,8 +138,6 @@ function Web3StatusInner() {
     toggleAccountDrawer()
   }, [toggleAccountDrawer])
   const isClaimAvailable = useIsNftClaimAvailable((state) => state.isClaimAvailable)
-
-  const error = useAppSelector((state) => state.connection.errorByConnectionType[getConnection(connector).type])
 
   const allTransactions = useAllTransactions()
 
@@ -173,15 +152,6 @@ function Web3StatusInner() {
 
   if (!chainId) {
     return null
-  } else if (error) {
-    return (
-      <Web3StatusError onClick={handleWalletDropdownClick}>
-        <NetworkIcon />
-        <Text>
-          <Trans>Error</Trans>
-        </Text>
-      </Web3StatusError>
-    )
   } else if (account) {
     return (
       <TraceEvent

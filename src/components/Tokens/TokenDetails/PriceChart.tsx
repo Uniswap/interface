@@ -1,4 +1,5 @@
 import { Trans } from '@lingui/macro'
+import { formatUSDPrice } from '@uniswap/conedison/format'
 import { AxisBottom, TickFormatter } from '@visx/axis'
 import { localPoint } from '@visx/event'
 import { EventType } from '@visx/event/lib/types'
@@ -23,7 +24,6 @@ import {
   monthYearDayFormatter,
   weekFormatter,
 } from 'utils/formatChartTimes'
-import { formatDollar } from 'utils/formatNumbers'
 
 const DATA_EMPTY = { value: 0, timestamp: 0 }
 
@@ -186,14 +186,17 @@ export function PriceChart({ width, height, prices: originalPrices, timePeriod }
     const startDateWithOffset = new Date((startingPrice.timestamp.valueOf() + offsetTime) * 1000)
     const endDateWithOffset = new Date((endingPrice.timestamp.valueOf() - offsetTime) * 1000)
     switch (timePeriod) {
-      case TimePeriod.HOUR:
+      case TimePeriod.HOUR: {
+        const interval = timeMinute.every(5)
+
         return [
           hourFormatter(locale),
           dayHourFormatter(locale),
-          (timeMinute.every(5) ?? timeMinute)
-            .range(startDateWithOffset, endDateWithOffset, 2)
+          (interval ?? timeMinute)
+            .range(startDateWithOffset, endDateWithOffset, interval ? 2 : 10)
             .map((x) => x.valueOf() / 1000),
         ]
+      }
       case TimePeriod.DAY:
         return [
           hourFormatter(locale),
@@ -255,7 +258,24 @@ export function PriceChart({ width, height, prices: originalPrices, timePeriod }
     setDisplayPrice(endingPrice)
   }, [setCrosshair, setDisplayPrice, endingPrice])
 
+  // Resets the crosshair when the time period is changed, to avoid stale UI
+  useEffect(() => {
+    setCrosshair(null)
+  }, [timePeriod])
+
   const [tickFormatter, crosshairDateFormatter, ticks] = tickFormat(timePeriod, locale)
+  //max ticks based on screen size
+  const maxTicks = Math.floor(width / 100)
+  function calculateTicks(ticks: NumberValue[]) {
+    const newTicks = []
+    const tickSpacing = Math.floor(ticks.length / maxTicks)
+    for (let i = 1; i < ticks.length; i += tickSpacing) {
+      newTicks.push(ticks[i])
+    }
+    return newTicks
+  }
+
+  const updatedTicks = maxTicks > 0 ? (ticks.length > maxTicks ? calculateTicks(ticks) : ticks) : []
   const delta = calculateDelta(startingPrice.value, displayPrice.value)
   const formattedDelta = formatDelta(delta)
   const arrow = getDeltaArrow(delta)
@@ -276,7 +296,7 @@ export function PriceChart({ width, height, prices: originalPrices, timePeriod }
       <ChartHeader data-cy="chart-header">
         {displayPrice.value ? (
           <>
-            <TokenPrice>{formatDollar({ num: displayPrice.value, isPrice: true })}</TokenPrice>
+            <TokenPrice>{formatUSDPrice(displayPrice.value)}</TokenPrice>
             <DeltaContainer>
               {formattedDelta}
               <ArrowCell>{arrow}</ArrowCell>
@@ -324,7 +344,7 @@ export function PriceChart({ width, height, prices: originalPrices, timePeriod }
                 tickLength={4}
                 hideTicks={true}
                 tickTransform="translate(0 -5)"
-                tickValues={ticks}
+                tickValues={updatedTicks}
                 top={graphHeight - 1}
                 tickLabelProps={() => ({
                   fill: theme.textSecondary,

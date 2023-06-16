@@ -19,7 +19,7 @@ export const useTokenWarningColor = (level: WARNING_LEVEL) => {
 
   switch (level) {
     case WARNING_LEVEL.MEDIUM:
-      return theme.accentWarningSoft
+      return theme.backgroundFloating
     case WARNING_LEVEL.UNKNOWN:
       return theme.accentFailureSoft
     case WARNING_LEVEL.BLOCKED:
