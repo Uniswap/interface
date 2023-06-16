@@ -268,7 +268,7 @@ ${bodyValue}
         values = [[getAddress(toAddressValue), true]]
         interfaces = [new Interface(AUTHORITY_ABI)]
         targets = [AUTHORITY_ADDRESSES[chainId ?? 1]]
-        methods = ['setAdapter']
+        methods = ['setAdapter(address,bool)']
         break
       }
 
@@ -277,7 +277,7 @@ ${bodyValue}
         values = [[getAddress(toAddressValue), false]]
         interfaces = [new Interface(AUTHORITY_ABI)]
         targets = [AUTHORITY_ADDRESSES[chainId ?? 1]]
-        methods = ['setAdapter']
+        methods = ['setAdapter(address,bool)']
         break
       }
     }
