@@ -29,12 +29,12 @@ export function shortenAddressStrict(address: string): string {
 
 /**
  * Shorten an address and add 0x to the start if missing
- * @param target
+ * @param targetAddress
  * @param charsStart amount of character to shorten (from both ends / in the beginning)
  * @param charsEnd amount of characters to shorten in the end
  * @returns formatted string
  */
-function ellipseAddressAdd0x(address: string, charsStart = 4, charsEnd = 4): string {
+function ellipseAddressAdd0x(targetAddress: string, charsStart = 4, charsEnd = 4): string {
   const hasPrefix = address.startsWith('0x')
   const prefix = hasPrefix ? '' : '0x'
   return ellipseMiddle(prefix + address, charsStart + 2, charsEnd)
