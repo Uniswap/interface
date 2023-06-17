@@ -226,7 +226,6 @@
     "numbro": "^2.3.6",
     "polished": "^3.3.2",
     "polyfill-object.fromentries": "^1.0.1",
-    "port-ready": "^0.1.0",
     "qrcode.react": "^3.1.0",
     "qs": "^6.9.4",
     "rc-slider": "^10.0.1",
