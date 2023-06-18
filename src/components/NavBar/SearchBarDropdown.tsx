@@ -2,8 +2,6 @@ import { Trans } from '@lingui/macro'
 import { useTrace } from '@uniswap/analytics'
 import { InterfaceSectionName, NavBarSearchTypes } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
-import Badge from 'components/Badge'
-import { SupportedChainId } from 'constants/chains'
 import { HistoryDuration, SafetyLevel } from 'graphql/data/__generated__/types-and-hooks'
 import { useTrendingCollections } from 'graphql/data/nft/TrendingCollections'
 import { SearchToken } from 'graphql/data/SearchTokens'
@@ -16,10 +14,7 @@ import { GenieCollection, TrendingCollection } from 'nft/types'
 import { ReactNode, useEffect, useMemo, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { shouldDisableNFTRoutesAtom } from 'state/application/atoms'
-import styled from 'styled-components/macro'
-import { ThemedText } from 'theme'
 
-import BnbLogoURI from '../../assets/svg/bnb-logo.svg'
 import { ClockIcon, TrendingArrow } from '../../nft/components/icons'
 //import { useRecentlySearchedAssets } from './RecentlySearchedAssets'
 import * as styles from './SearchBar.css'
@@ -123,24 +118,6 @@ function isKnownToken(token: SearchToken) {
   return token.project?.safetyLevel == SafetyLevel.Verified || token.project?.safetyLevel == SafetyLevel.MediumWarning
 }
 
-const BNBLogo = styled.img`
-  height: 20px;
-  width: 20px;
-  margin-right: 8px;
-`
-const BNBComingSoonBadge = styled(Badge)`
-  align-items: center;
-  background-color: ${({ theme }) => theme.backgroundModule};
-  color: ${({ theme }) => theme.textSecondary};
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  opacity: 1;
-  padding: 8px;
-  margin: 16px 16px 4px;
-  width: calc(100% - 32px);
-`
-
 // TODO: we can pass pools as just Token[]
 interface SearchBarDropdownProps {
   toggleOpen: () => void
@@ -175,7 +152,6 @@ export const SearchBarDropdown = ({
   }, [searchHistory])
 
   const { pathname } = useLocation()
-  const { chainId } = useWeb3React()
   const isNFTPage = useIsNftPage()
   const isTokenPage = pathname.includes('/tokens')
   const [resultsState, setResultsState] = useState<ReactNode>()
@@ -414,20 +390,10 @@ export const SearchBarDropdown = ({
     trendingCollectionsAreLoading,
   ])
 
-  const showBNBComingSoonBadge = chainId === SupportedChainId.BNB && !isLoading
-
   return (
     <Box className={styles.searchBarDropdownNft}>
       <Box opacity={isLoading ? '0.3' : '1'} transition="125">
         {resultsState}
-        {showBNBComingSoonBadge && (
-          <BNBComingSoonBadge>
-            <BNBLogo src={BnbLogoURI} />
-            <ThemedText.BodySmall color="textSecondary" fontSize="14px" fontWeight="400" lineHeight="20px">
-              <Trans>Coming soon: search and explore tokens on BNB Chain</Trans>
-            </ThemedText.BodySmall>
-          </BNBComingSoonBadge>
-        )}
       </Box>
     </Box>
   )

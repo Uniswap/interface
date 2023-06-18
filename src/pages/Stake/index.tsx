@@ -1,4 +1,6 @@
 import { Trans } from '@lingui/macro'
+import { useWeb3React } from '@web3-react/core'
+import { SupportedChainId } from 'constants/chains'
 import { useMemo, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 //import { useInfiniteQuery } from 'react-query'
@@ -83,9 +85,11 @@ export default function Stake() {
   const smartPoolsLogs = useRegisteredPools()
   const registry = useRegistryContract()
   const bscPools = useBscPools(registry)
+  const { chainId } = useWeb3React()
   const allPools: PoolRegisteredLog[] = useMemo(() => {
-    return [...(smartPoolsLogs ?? []), ...(bscPools ?? [])]
-  }, [smartPoolsLogs, bscPools])
+    if (chainId === SupportedChainId.BNB) return [...(smartPoolsLogs ?? []), ...(bscPools ?? [])]
+    return [...(smartPoolsLogs ?? [])]
+  }, [chainId, smartPoolsLogs, bscPools])
   // TODO: order all pools by apr
   const loadingPools = false
 

@@ -5,6 +5,7 @@ import { BrowserEvent, InterfaceElementName, InterfaceEventName, InterfaceSectio
 import { Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import clsx from 'clsx'
+import { SupportedChainId } from 'constants/chains'
 import { ZERO_ADDRESS } from 'constants/misc'
 import { Chain } from 'graphql/data/__generated__/types-and-hooks'
 import { useCollectionSearch } from 'graphql/data/nft/CollectionSearch'
@@ -71,8 +72,9 @@ export const SearchBar = () => {
   const registry = useRegistryContract()
   const bscPools = useBscPools(registry)
   const allPools: PoolRegisteredLog[] = useMemo(() => {
-    return [...(smartPoolsLogs ?? []), ...(bscPools ?? [])]
-  }, [smartPoolsLogs, bscPools])
+    if (chainId === SupportedChainId.BNB) return [...(smartPoolsLogs ?? []), ...(bscPools ?? [])]
+    return [...(smartPoolsLogs ?? [])]
+  }, [chainId, smartPoolsLogs, bscPools])
 
   const smartPools: Token[] = useMemo(() => {
     const mockToken = new Token(1, ZERO_ADDRESS, 0, '', '')

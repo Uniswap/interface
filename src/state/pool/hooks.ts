@@ -159,7 +159,7 @@ export function useAllPoolsData(): { data?: PoolRegisteredLog[]; loading: boolea
 
     // TODO: check remove !formattedLogsV1 assertion
     // TODO: we might have duplicate non-identical pools as group is empty in pools from endpoint
-    if (chainId === 56 && registry /*&& !formattedLogsV1*/) {
+    if (chainId === SupportedChainId.BNB && registry /*&& !formattedLogsV1*/) {
       // eslint-disable-next-line
       const pools: PoolRegisteredLog[] | undefined = ([...(formattedLogsV1 ?? []), ...(bscPools ?? [])])
       return { data: pools, loading: false }
@@ -179,8 +179,9 @@ export function useBscPools(regitry: Contract | null): PoolRegisteredLog[] | und
   const poolAddresses = useMemo(() => (bscPools ? bscPools.map((p) => [p.address]) : []), [bscPools])
   const result = useSingleContractMultipleData(regitry, 'getPoolIdFromAddress', poolAddresses)
   const poolsLoading = useMemo(() => result.some(({ loading }) => loading), [result])
+  const poolsError = useMemo(() => result.some(({ error }) => error), [result])
   return useMemo(() => {
-    if (poolsLoading) return undefined
+    if (poolsLoading || poolsError) return undefined
     const poolIds = result.map((call) => {
       const result = call.result as CallStateResult
       return result[0]
@@ -194,7 +195,7 @@ export function useBscPools(regitry: Contract | null): PoolRegisteredLog[] | und
 
       return { group, pool, name, symbol, id }
     })
-  }, [bscPools, poolsLoading, result])
+  }, [bscPools, poolsLoading, poolsError, result])
 }
 
 export function useCreateCallback(): (
