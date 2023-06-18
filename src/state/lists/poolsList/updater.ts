@@ -7,7 +7,7 @@ import { useCallback, useEffect } from 'react'
 import { useAppDispatch } from 'state/hooks'
 import { usePoolsList } from 'state/lists/poolsList/hooks'
 
-import { useFetchListCallback } from '../../../hooks/useFetchListCallback'
+import { useFetchPoolListCallback } from '../../../hooks/useFetchPoolListCallback'
 import useIsWindowVisible from '../../../hooks/useIsWindowVisible'
 import { acceptListUpdate } from './actions'
 import { shouldAcceptVersionUpdate } from './utils'
@@ -20,7 +20,7 @@ export default function Updater(): null {
   // get all loaded lists, and the active urls
   const lists = usePoolsList()
 
-  const fetchList = useFetchListCallback()
+  const fetchList = useFetchPoolListCallback()
   const fetchAllListsCallback = useCallback(() => {
     if (!isWindowVisible) return
     POOLS_LIST.forEach((url) => {

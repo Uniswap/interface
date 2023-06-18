@@ -53,3 +53,12 @@ export function usePoolMapFromUrl(urls: string[] | undefined): TokenAddressMap {
     }, {})
   }, [lists, urls])
 }
+
+// TODO: define TokenInfo | undefined returned type
+export function useBscPoolsList(urls: string[] | undefined) {
+  const lists = usePoolsList()
+  return useMemo(() => {
+    if (!urls) return []
+    return lists[urls[0]]?.current?.tokens?.filter((n) => n.chainId === 56)
+  }, [lists, urls])
+}

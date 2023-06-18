@@ -5,6 +5,7 @@ import { BrowserEvent, InterfaceElementName, InterfaceEventName, InterfaceSectio
 import { Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import clsx from 'clsx'
+import { SupportedChainId } from 'constants/chains'
 import { ZERO_ADDRESS } from 'constants/misc'
 import { Chain } from 'graphql/data/__generated__/types-and-hooks'
 import { useCollectionSearch } from 'graphql/data/nft/CollectionSearch'
@@ -22,7 +23,7 @@ import { useIsMobile, useIsTablet } from 'nft/hooks'
 import { useIsNavSearchInputVisible } from 'nft/hooks/useIsNavSearchInputVisible'
 import { ChangeEvent, useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react'
 import { useLocation } from 'react-router-dom'
-import { useRegisteredPools } from 'state/pool/hooks'
+import { PoolRegisteredLog, useBscPools, useRegisteredPools, useRegistryContract } from 'state/pool/hooks'
 import styled from 'styled-components/macro'
 
 import { ChevronLeftIcon, MagnifyingGlassIcon, NavMagnifyingGlassIcon } from '../../nft/components/icons'
@@ -68,15 +69,22 @@ export const SearchBar = () => {
 
   // TODO: check if we already store all pools' data in state, so can return a richer pool struct
   const smartPoolsLogs = useRegisteredPools()
+  const registry = useRegistryContract()
+  const bscPools = useBscPools(registry)
+  const allPools: PoolRegisteredLog[] = useMemo(() => {
+    if (chainId === SupportedChainId.BNB) return [...(smartPoolsLogs ?? []), ...(bscPools ?? [])]
+    return [...(smartPoolsLogs ?? [])]
+  }, [chainId, smartPoolsLogs, bscPools])
+
   const smartPools: Token[] = useMemo(() => {
     const mockToken = new Token(1, ZERO_ADDRESS, 0, '', '')
-    if (!smartPoolsLogs || !chainId) return [mockToken]
-    return smartPoolsLogs.map((p) => {
+    if (!allPools || !chainId) return [mockToken]
+    return allPools.map((p) => {
       const { name, symbol, pool: address } = p
       //if (!name || !symbol || !address) return
       return new Token(chainId ?? 1, address ?? undefined, 18, symbol ?? 'NAN', name ?? '')
     })
-  }, [chainId, smartPoolsLogs])
+  }, [chainId, allPools])
   const filteredPools: Token[] = useMemo(() => {
     return Object.values(smartPools).filter(getTokenFilter(debouncedSearchValue))
   }, [smartPools, debouncedSearchValue])

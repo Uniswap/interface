@@ -21,6 +21,7 @@ import App from './pages/App'
 import * as serviceWorkerRegistration from './serviceWorkerRegistration'
 import store from './state'
 import ApplicationUpdater from './state/application/updater'
+import PoolListUpdater from './state/lists/poolsList/updater'
 import ListsUpdater from './state/lists/updater'
 import LogsUpdater from './state/logs/updater'
 import TransactionUpdater from './state/transactions/updater'
@@ -36,6 +37,7 @@ function Updaters() {
     <>
       <RadialGradientByChainUpdater />
       <ListsUpdater />
+      <PoolListUpdater />
       <SystemThemeUpdater />
       <ApplicationUpdater />
       <TransactionUpdater />
