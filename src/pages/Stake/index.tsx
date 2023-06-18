@@ -17,7 +17,7 @@ import { RowBetween } from '../../components/Row'
 import { Center } from '../../nft/components/Flex'
 import { useModalIsOpen, useToggleCreateModal } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
-import { PoolRegisteredLog, useRegisteredPools } from '../../state/pool/hooks'
+import { PoolRegisteredLog, useBscPools, useRegisteredPools, useRegistryContract } from '../../state/pool/hooks'
 import { ThemedText } from '../../theme'
 //import { PoolPositionDetails } from '../../types/position'
 
@@ -80,7 +80,12 @@ export default function Stake() {
   const [records, setRecords] = useState(itemsPerPage)
 
   // TODO: return loading
-  const allPools = useRegisteredPools()
+  const smartPoolsLogs = useRegisteredPools()
+  const registry = useRegistryContract()
+  const bscPools = useBscPools(registry)
+  const allPools: PoolRegisteredLog[] = useMemo(() => {
+    return [...(smartPoolsLogs ?? []), ...(bscPools ?? [])]
+  }, [smartPoolsLogs, bscPools])
   // TODO: order all pools by apr
   const loadingPools = false
 

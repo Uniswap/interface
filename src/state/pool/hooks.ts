@@ -11,7 +11,6 @@ import RB_REGISTRY_ABI from 'abis/rb-registry.json'
 import { RB_FACTORY_ADDRESSES, RB_REGISTRY_ADDRESSES } from 'constants/addresses'
 import { POOLS_LIST } from 'constants/lists'
 import { GRG } from 'constants/tokens'
-import { ChainTokenMap } from 'hooks/Tokens'
 import { useContract } from 'hooks/useContract'
 import { useTotalSupply } from 'hooks/useTotalSupply'
 import useBlockNumber from 'lib/hooks/useBlockNumber'
@@ -19,7 +18,7 @@ import { useCallback, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import { useStakingContract } from 'state/governance/hooks'
 import { useAppSelector } from 'state/hooks'
-import { usePoolMapFromUrl } from 'state/lists/poolsList/hooks'
+import { useBscPoolsList } from 'state/lists/poolsList/hooks'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
 
 import { SupportedChainId } from '../../constants/chains'
@@ -32,7 +31,7 @@ import { TransactionType } from '../transactions/types'
 //const PoolInterface = new Interface(POOL_EXTENDED_ABI)
 const RegistryInterface = new Interface(RB_REGISTRY_ABI)
 
-function useRegistryContract(): Contract | null {
+export function useRegistryContract(): Contract | null {
   return useContract(RB_REGISTRY_ADDRESSES, RB_REGISTRY_ABI, true)
 }
 
@@ -44,6 +43,7 @@ export function usePoolExtendedContract(poolAddress: string | undefined): Contra
   return useContract(poolAddress, POOL_EXTENDED_ABI, true)
 }
 
+// TODO: check make optional params and update derived type with optional params
 export interface PoolRegisteredLog {
   group: string
   pool: string
@@ -146,7 +146,7 @@ export function useAllPoolsData(): { data?: PoolRegisteredLog[]; loading: boolea
     registryStartBlock
   )
 
-  const bscPools = useBscPools()
+  const bscPools = useBscPools(registry)
 
   // early return until events are fetched
   return useMemo(() => {
@@ -157,11 +157,12 @@ export function useAllPoolsData(): { data?: PoolRegisteredLog[]; loading: boolea
       return { loading: false }
     }
 
-    // TODO: we want to append pools from enpoint here and remove !formattedLogsV1 assertion
-    if (chainId === 56 && registry && !formattedLogsV1) {
+    // TODO: check remove !formattedLogsV1 assertion
+    // TODO: we might have duplicate non-identical pools as group is empty in pools from endpoint
+    if (chainId === 56 && registry /*&& !formattedLogsV1*/) {
       // eslint-disable-next-line
-      const pools = ([...(formattedLogsV1 ?? []), bscPools ?? []])
-      return { data: [], loading: false }
+      const pools: PoolRegisteredLog[] | undefined = ([...(formattedLogsV1 ?? []), ...(bscPools ?? [])])
+      return { data: pools, loading: false }
     }
 
     if (registry && !formattedLogsV1) {
@@ -173,25 +174,27 @@ export function useAllPoolsData(): { data?: PoolRegisteredLog[]; loading: boolea
 }
 
 // Bsc endpoints have eth_getLogs limit, so we query pools before recent history from pools list endpoint
-function useBscPools(): ChainTokenMap {
-  const allPoolsFromList = usePoolMapFromUrl(POOLS_LIST)
-
+export function useBscPools(regitry: Contract | null): PoolRegisteredLog[] | undefined {
+  const bscPools = useBscPoolsList(POOLS_LIST)
+  const poolAddresses = useMemo(() => (bscPools ? bscPools.map((p) => [p.address]) : []), [bscPools])
+  const result = useSingleContractMultipleData(regitry, 'getPoolIdFromAddress', poolAddresses)
+  const poolsLoading = useMemo(() => result.some(({ loading }) => loading), [result])
   return useMemo(() => {
-    const chainTokenMap: ChainTokenMap = {}
-
-    Object.keys(allPoolsFromList).forEach((key) => {
-      const chainId = Number(key)
-      const tokenMap = chainTokenMap[chainId] ?? {}
-      Object.values(allPoolsFromList[chainId]).forEach(({ token }) => {
-        tokenMap[token.address] = token
-      })
-      if (chainId === SupportedChainId.BNB) {
-        chainTokenMap[chainId] = tokenMap
-      }
+    if (poolsLoading) return undefined
+    const poolIds = result.map((call) => {
+      const result = call.result as CallStateResult
+      return result[0]
     })
+    return bscPools?.map((p, i) => {
+      const group = '' //mock group
+      const pool = p.address
+      const name = p.name
+      const symbol = p.symbol
+      const id = poolIds[i]
 
-    return chainTokenMap
-  }, [allPoolsFromList])
+      return { group, pool, name, symbol, id }
+    })
+  }, [bscPools, poolsLoading, result])
 }
 
 export function useCreateCallback(): (
