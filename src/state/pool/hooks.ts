@@ -43,9 +43,8 @@ export function usePoolExtendedContract(poolAddress: string | undefined): Contra
   return useContract(poolAddress, POOL_EXTENDED_ABI, true)
 }
 
-// TODO: check make optional params and update derived type with optional params
 export interface PoolRegisteredLog {
-  group: string
+  group?: string
   pool: string
   name: string
   symbol: string
@@ -157,11 +156,10 @@ export function useAllPoolsData(): { data?: PoolRegisteredLog[]; loading: boolea
       return { loading: false }
     }
 
-    // TODO: check remove !formattedLogsV1 assertion
-    // TODO: we might have duplicate non-identical pools as group is empty in pools from endpoint
-    if (chainId === SupportedChainId.BNB && registry /*&& !formattedLogsV1*/) {
+    // TODO: we might have temporary duplicate non-identical pools as group is empty in pools from endpoint
+    if (chainId === SupportedChainId.BNB && registry) {
       // eslint-disable-next-line
-      const pools: PoolRegisteredLog[] | undefined = ([...(formattedLogsV1 ?? []), ...(bscPools ?? [])])
+      const pools: PoolRegisteredLog[] = ([...(formattedLogsV1 ?? []), ...(bscPools ?? [])])
       return { data: pools, loading: false }
     }
 
@@ -187,13 +185,12 @@ export function useBscPools(regitry: Contract | null): PoolRegisteredLog[] | und
       return result[0]
     })
     return bscPools?.map((p, i) => {
-      const group = '' //mock group
       const pool = p.address
       const name = p.name
       const symbol = p.symbol
       const id = poolIds[i]
 
-      return { group, pool, name, symbol, id }
+      return { pool, name, symbol, id }
     })
   }, [bscPools, poolsLoading, poolsError, result])
 }
