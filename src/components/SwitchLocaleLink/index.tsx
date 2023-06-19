@@ -39,7 +39,7 @@ export function SwitchLocaleLink() {
   return (
     <Container>
       <Trans>
-        RAMM available in:{' '}
+        Limitless available in:{' '}
         <StyledInternalLink onClick={onClick} to={to}>
           {LOCALE_LABEL[targetLocale]}
         </StyledInternalLink>

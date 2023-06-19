@@ -817,8 +817,8 @@ export function AdvancedBorrowSwapDetails({
           width={"100px"}
         />
         <ValueLabel
-          description={borrowTrade?.existingPosition ? "Additional borrowed amount" : "The borrowed amount you expect to receive at the current market price."}
-          label={"Amount to Borrow"}
+          description={borrowTrade?.existingPosition ? "Total Borrow Position, added to your previous position" : "The borrowed amount you expect to receive at the current market price."}
+          label={"Total Borrow Amount"}
           value={displayValues.borrowedAmount}
           syncing={syncing}
           symbolAppend={outputCurrency?.symbol}

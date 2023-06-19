@@ -966,12 +966,22 @@ export default function Swap({ className }: { className?: string }) {
   // part of borrow integration
 
   const [debouncedLTV, debouncedSetLTV] = useDebouncedChangeHandler(ltv ?? "", onLTVChange);
-
+  const isBorrowTab = ActiveSwapTab.BORROW == activeTab 
   console.log("leverageTrade: ", leverageTrade)
+  console.log('borrowTrade', borrowTrade, isBorrowTab); 
 
   const showBorrowInputApproval = borrowInputApprovalState !== ApprovalState.APPROVED
   const showBorrowOutputApproval = borrowOutputApprovalState !== ApprovalState.APPROVED
-
+  console.log('??', borrowTrade?.borrowedAmount ? (
+                          borrowTrade?.existingTotalDebtInput ? 
+                          String(borrowTrade.borrowedAmount - borrowTrade.existingTotalDebtInput) : String(borrowTrade.borrowedAmount)
+                    ) :"no" 
+  )
+  // const borrowAmount = isBorrowTab
+  //                     ?borrowTrade?.borrowedAmount ? (
+  //                         borrowTrade?.existingTotalDebtInput ? 
+  //                         String(borrowTrade.borrowedAmount - borrowTrade.existingTotalDebtInput) : String(borrowTrade.borrowedAmount)
+  //                                 ) :"-" :""
   return (
     <Trace page={InterfacePageName.SWAP_PAGE} shouldLogImpression>
       <>
@@ -1171,13 +1181,21 @@ export default function Swap({ className }: { className?: string }) {
                             value={
                               (leverageApprovalState === ApprovalState.NOT_APPROVED) ?
                                 "-"
+                                
                                 :
                                 !leverage ? 
                                 formattedAmounts[Field.OUTPUT] :
-                                  (leverageTrade?.expectedOutput ? (
+                                isBorrowTab
+                      ?borrowTrade?.borrowedAmount ? (
+                          borrowTrade?.existingTotalDebtInput ? 
+                          String(borrowTrade.borrowedAmount - borrowTrade.existingTotalDebtInput) : String(borrowTrade.borrowedAmount)
+                                  ) :"-" :
+                                  ( 
+                                    leverageTrade?.expectedOutput ? (
                                     leverageTrade?.existingTotalPosition ? 
                                       String(leverageTrade.expectedOutput - leverageTrade.existingTotalPosition) : String(leverageTrade.expectedOutput)
-                                  ): "-")
+                                  ): "-"
+                                )
                             }
                             onUserInput={handleTypeOutput}
                             label={
@@ -1241,7 +1259,7 @@ export default function Swap({ className }: { className?: string }) {
                                       onUserInput={(str: string) => {
                                         if (str === "") {
                                           onDebouncedLeverageFactor("")
-                                        } else if (new BN(str).isGreaterThan(new BN("1000"))) {
+                                        } else if (new BN(str).isGreaterThan(new BN("500"))) {
                                           return
                                         } else if (new BN(str).dp() as number > 1) {
                                           onDebouncedLeverageFactor(String(new BN(str).decimalPlaces(1, BN.ROUND_DOWN)))
@@ -1259,18 +1277,18 @@ export default function Swap({ className }: { className?: string }) {
                                     <SmallMaxButton onClick={() => onLeverageFactorChange("100")} width="20%">
                                       <Trans>100</Trans>
                                     </SmallMaxButton>
-                                    <SmallMaxButton onClick={() => onLeverageFactorChange("1000")} width="20%">
-                                      <Trans>1000</Trans>
+                                    <SmallMaxButton onClick={() => onLeverageFactorChange("500")} width="20%">
+                                      <Trans>500</Trans>
                                     </SmallMaxButton>
                                   </AutoRow>
 
                                 </RowBetween>
                                 <Slider
-                                  value={sliderLeverageFactor === "" ? 1.0 : parseFloat(sliderLeverageFactor)}
+                                  value={sliderLeverageFactor === "" ? 1.1 : parseFloat(sliderLeverageFactor)}
                                   onChange={(val) => setSliderLeverageFactor(val.toString())}
-                                  min={1.0}
-                                  max={1000.0}
-                                  step={1}
+                                  min={1.1}
+                                  max={500.0}
+                                  step={0.5}
                                   float={true}
                                 />
                               </>
@@ -1554,7 +1572,10 @@ export default function Swap({ className }: { className?: string }) {
                             value={
                               (borrowInputApprovalState === ApprovalState.NOT_APPROVED || borrowOutputApprovalState === ApprovalState.NOT_APPROVED) ?
                                 "-"
-                                :"-"
+                                :borrowTrade?.borrowedAmount ? (
+                          borrowTrade?.existingTotalDebtInput ? 
+                          String(borrowTrade.borrowedAmount - borrowTrade.existingTotalDebtInput) : String(borrowTrade.borrowedAmount)
+                                  ) :"-" 
                                   // (borrowTrade?.expectedOutput ?
 
                                   //   formatNumber(leverageTrade?.expectedOutput) : "-")
@@ -1795,9 +1816,9 @@ export default function Swap({ className }: { className?: string }) {
               </SwapWrapper>
             </MainSwapContainer>
           )}
-          <NetworkAlert />
+          {/*<NetworkAlert /> */}
         </PageWrapper>
-        <SwitchLocaleLink />
+        {/*<SwitchLocaleLink />*/}
         {!swapIsUnsupported ? null : (
           <UnsupportedCurrencyFooter
             show={swapIsUnsupported}

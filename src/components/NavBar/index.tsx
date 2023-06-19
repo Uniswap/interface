@@ -79,10 +79,10 @@ export const PageTabs = () => {
           <Trans>NFTs</Trans>
         </MenuItem>
       )}
-        <MenuItem href="/pools" dataTestId="pool-nav-link" isActive={isPoolActive}>
+       {/* <MenuItem href="/pools" dataTestId="pool-nav-link" isActive={isPoolActive}>
           <Trans>Pools</Trans>
         </MenuItem>
-
+      */}
         <MenuItem href="/faucet" dataTestId="pool-nav-link" isActive={isPoolActive}>
           <Trans>Faucets</Trans>
         </MenuItem>
