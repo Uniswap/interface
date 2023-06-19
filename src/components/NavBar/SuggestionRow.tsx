@@ -1,6 +1,6 @@
 import { formatUSDPrice } from '@uniswap/conedison/format'
 import clsx from 'clsx'
-import { QueryTokenLogoSDK} from 'components/Logo/QueryTokenLogo'
+import QueryTokenLogo from 'components/Logo/QueryTokenLogo'
 import TokenSafetyIcon from 'components/TokenSafety/TokenSafetyIcon'
 import { checkSearchTokenWarning } from 'constants/tokenSafety'
 import { Chain, TokenStandard } from 'graphql/data/__generated__/types-and-hooks'
@@ -22,6 +22,7 @@ import { DeltaText, getDeltaArrow } from '../Tokens/TokenDetails/PriceChart'
 import { useAddRecentlySearchedAsset } from './RecentlySearchedAssets'
 import * as styles from './SearchBar.css'
 import { Token } from '@pollum-io/sdk-core'
+import { TokenData } from 'graphql/tokens/TokenData'
 
 const PriceChangeContainer = styled.div`
   display: flex;
@@ -118,7 +119,7 @@ export const CollectionRow = ({
 }
 
 interface TokenRowProps {
-  token: Token
+  token: TokenData
   isHovered: boolean
   setHoveredIndex: (index: number | undefined) => void
   toggleOpen: () => void
@@ -132,13 +133,13 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index,
 
   const handleClick = useCallback(() => {
     const address = !token.address
-     && token.isNative ? 'NATIVE' : token.address
+     && token.address  == "0x4200000000000000000000000000000000000006" ? 'NATIVE' : token.address
     address && addRecentlySearchedAsset({ address, chain: Chain.Rollux })
 
     toggleOpen()
   }, [addRecentlySearchedAsset, token, toggleOpen, eventProperties])
 
-  const tokenDetailsPath = getTokenDetailsURL({ address: token.address.toLowerCase(), chain:token.chainId.toString() })
+  const tokenDetailsPath = getTokenDetailsURL({ address: token.address.toLowerCase(), chain:Chain.Rollux })
   // Close the modal on escape
   useEffect(() => {
     const keyDownHandler = (event: KeyboardEvent) => {
@@ -154,7 +155,7 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index,
     }
   }, [toggleOpen, isHovered, token, navigate, handleClick, tokenDetailsPath])
 
-  // const arrow = getDeltaArrow(token.market?.pricePercentChange?.value, 18)
+  const arrow = getDeltaArrow(token.priceUSDChange, 18)
 
   return (
     <Link
@@ -167,7 +168,7 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index,
       style={{ background: isHovered ? vars.color.lightGrayOverlay : 'none' }}
     >
       <Row style={{ width: '65%' }}>
-        <QueryTokenLogoSDK
+        <QueryTokenLogo
           token={token}
           symbol={token.symbol}
           size="36px"
@@ -182,23 +183,23 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index,
         </Column>
       </Row>
 
-      {/* <Column className={styles.suggestionSecondaryContainer}>
-        {!!token.market?.price?.value && (
+      <Column className={styles.suggestionSecondaryContainer}>
+        {!!token.priceUSD && (
           <>
             <Row gap="4">
-              <Box className={styles.primaryText}>{formatUSDPrice(token.market.price.value)}</Box>
+              <Box className={styles.primaryText}>{formatUSDPrice(token.priceUSD)}</Box>
             </Row>
             <PriceChangeContainer>
               <ArrowCell>{arrow}</ArrowCell>
               <ThemedText.BodySmall>
-                <DeltaText delta={token.market?.pricePercentChange?.value}>
-                  {Math.abs(token.market?.pricePercentChange?.value ?? 0).toFixed(2)}%
+                <DeltaText delta={token.priceUSDChange}>
+                  {Math.abs(token.priceUSDChange ?? 0).toFixed(2)}%
                 </DeltaText>
               </ThemedText.BodySmall>
             </PriceChangeContainer>
           </>
         )}
-      </Column> */}
+      </Column>
     </Link>
   )
 }

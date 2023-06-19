@@ -5,7 +5,7 @@ import { SearchToken } from 'graphql/data/SearchTokens'
 import { ZERO_ADDRESS } from './misc'
 import { NATIVE_CHAIN_ID } from './tokens'
 import WarningCache, { TOKEN_LIST_TYPES } from './TokenSafetyLookupTable'
-import { Token } from '@pollum-io/sdk-core'
+import { TokenData } from 'graphql/tokens/TokenData'
 
 export const TOKEN_SAFETY_ARTICLE = 'https://docs.pegasys.fi/'
 
@@ -100,9 +100,9 @@ export function checkWarning(tokenAddress: string) {
 }
 
 // TODO(cartcrom): Replace all usage of WARNING_LEVEL with SafetyLevel
-export function checkSearchTokenWarning(token: Token) {
+export function checkSearchTokenWarning(token: TokenData) {
   if (!token.address) {
-    return token.isNative  ? null : StrongWarning
+    return token.address == "0x4200000000000000000000000000000000000006"  ? null : StrongWarning
   }
   return checkWarning(token.address)
 }

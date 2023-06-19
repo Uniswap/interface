@@ -28,6 +28,7 @@ import { SearchBarDropdown } from './SearchBarDropdown'
 import { Token } from '@pollum-io/sdk-core'
 import { getTokenFilter } from 'lib/hooks/useTokenList/filtering'
 import { useNewTopTokens } from 'graphql/tokens/NewTopTokens'
+import { TokenData, useFetchedTokenData } from 'graphql/tokens/TokenData'
 
 const KeyShortCut = styled.div`
   background-color: ${({ theme }) => theme.hoverState};
@@ -88,10 +89,13 @@ export const SearchBar = () => {
   // }, [gqlCollections, gqlCollectionsAreLoading, isNftGraphqlEnabled, queryCollections, queryCollectionsAreLoading])
 
   // const { chainId } = useWeb3React()
-  const  tokens = useDefaultActiveTokens()
-  // const { loading, tokens: newTokens } = useNewTopTokens() // TODO: change the call and interfaces for use this
 
-  const reducedTokens: Token[] = useMemo(() => {
+  const { loading, tokens: newTokens } = useNewTopTokens()
+  const tokensAddress = newTokens?.map((token) => token.id) || []
+  const { loading: tokenDataLoading, data: tokens } = useFetchedTokenData(tokensAddress)
+
+  const reducedTokens: TokenData[] = useMemo(() => {
+    if (!tokens) return []
     return Object.values(tokens).filter(getTokenFilter(debouncedSearchValue))
   }, [tokens, debouncedSearchValue])
 
@@ -221,7 +225,7 @@ export const SearchBar = () => {
               // collections={reducedCollections}
               queryText={debouncedSearchValue}
               hasInput={debouncedSearchValue.length > 0}
-              isLoading={false}
+              isLoading={loading && tokenDataLoading}
             />
           )}
         </Box>

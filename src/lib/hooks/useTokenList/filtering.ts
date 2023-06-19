@@ -1,12 +1,13 @@
 import { NativeCurrency, Token } from '@pollum-io/sdk-core'
 import { TokenInfo } from '@uniswap/token-lists'
+import { TokenData } from 'graphql/tokens/TokenData'
 
 import { isAddress } from '../../../utils'
 
 const alwaysTrue = () => true
 
 /** Creates a filter function that filters tokens that do not match the query. */
-export function getTokenFilter<T extends Token | TokenInfo>(query: string): (token: T | NativeCurrency) => boolean {
+export function getTokenFilter<T extends Token | TokenInfo | TokenData>(query: string): (token: T | NativeCurrency) => boolean {
   const searchingAddress = isAddress(query)
 
   if (searchingAddress) {

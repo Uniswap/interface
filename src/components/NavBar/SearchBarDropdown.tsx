@@ -17,7 +17,7 @@ import { ReactNode, useEffect, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useLocation } from 'react-router-dom'
 import styled from 'styled-components/macro'
-
+import { TokenData } from 'graphql/tokens/TokenData'
 import { ClockIcon, TrendingArrow } from '../../nft/components/icons'
 import { useRecentlySearchedAssets } from './RecentlySearchedAssets'
 import * as styles from './SearchBar.css'
@@ -30,7 +30,7 @@ function isCollection(suggestion: GenieCollection | SearchToken | TrendingCollec
 
 interface SearchBarDropdownSectionProps {
   toggleOpen: () => void
-  suggestions:Token[]
+  suggestions:TokenData[]
   header: JSX.Element
   headerIcon?: JSX.Element
   hoveredIndex: number | undefined
@@ -64,7 +64,7 @@ const SearchBarDropdownSection = ({
           ) : (
             <TokenRow
               key={suggestion.address}
-              token={suggestion as Token}
+              token={suggestion as TokenData}
               isHovered={hoveredIndex === index + startingIndex}
               setHoveredIndex={setHoveredIndex}
               toggleOpen={toggleOpen}
@@ -87,27 +87,27 @@ function isKnownToken(token: SearchToken) {
   return token.project?.safetyLevel == SafetyLevel.Verified || token.project?.safetyLevel == SafetyLevel.MediumWarning
 }
 
-const BNBLogo = styled.img`
-  height: 20px;
-  width: 20px;
-  margin-right: 8px;
-`
-const BNBComingSoonBadge = styled(Badge)`
-  align-items: center;
-  background-color: ${({ theme }) => theme.backgroundModule};
-  color: ${({ theme }) => theme.textSecondary};
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  opacity: 1;
-  padding: 8px;
-  margin: 16px 16px 4px;
-  width: calc(100% - 32px);
-`
+// const BNBLogo = styled.img`
+//   height: 20px;
+//   width: 20px;
+//   margin-right: 8px;
+// `
+// const BNBComingSoonBadge = styled(Badge)`
+//   align-items: center;
+//   background-color: ${({ theme }) => theme.backgroundModule};
+//   color: ${({ theme }) => theme.textSecondary};
+//   display: flex;
+//   flex-direction: row;
+//   justify-content: flex-start;
+//   opacity: 1;
+//   padding: 8px;
+//   margin: 16px 16px 4px;
+//   width: calc(100% - 32px);
+// `
 
 interface SearchBarDropdownProps {
   toggleOpen: () => void
-  tokens: Token[]
+  tokens: TokenData[]
   // collections: GenieCollection[]
   queryText: string
   hasInput: boolean
@@ -208,7 +208,7 @@ export const SearchBarDropdown = ({
   // const showCollectionsFirst =
   //   (isNFTPage && (hasVerifiedCollection || !hasKnownToken)) || (!isNFTPage && !hasKnownToken && hasVerifiedCollection)
 
-  const suggestions = tokens.filter((token) => token.symbol === 'PSYS' || token.symbol === 'USDC')
+  const suggestions = tokens.filter((token) => token.symbol === 'PSYS')
 
   useEffect(() => {
     const eventProperties = { total_suggestions: totalSuggestions, query_text: queryText }

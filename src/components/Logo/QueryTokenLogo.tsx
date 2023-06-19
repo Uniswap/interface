@@ -49,26 +49,3 @@ export default function QueryTokenLogo(
     />
   )
 }
-
-export function QueryTokenLogoSDK(
-  props: AssetLogoBaseProps & {
-    token?: Token
-  }
-) {
-  const { token } = props
-  const chainId = token?.chainId
-  const isNative = token?.isNative
-  const address =  token?.address 
-  const backupImg = `https://raw.githubusercontent.com/pegasys-fi/pegasys-tokenlists/master/${chainId}/${address}/logo.png`
-
-  return (
-    <AssetLogo
-      isNative={isNative}
-      chainId={chainId}
-      address={address}
-      symbol={token?.symbol}
-      backupImg={backupImg}
-      {...props}
-    />
-  )
-}
