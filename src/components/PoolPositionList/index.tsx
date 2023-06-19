@@ -129,7 +129,11 @@ export default function PoolPositionList({ positions, filterByOperator }: PoolPo
       </DesktopHeader>
       <MobileHeader>
         <div>{filterByOperator ? <Trans>Operated pools</Trans> : <Trans>Loaded pools</Trans>}</div>
-        <div>{!filterByOperator && <Trans>apr</Trans>}</div>
+        {!filterByOperator && (
+          <div>
+            <Trans>irr&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;apr</Trans>
+          </div>
+        )}
       </MobileHeader>
       {operatedPools.length !== 0 ? (
         operatedPools.sort(highestAprFirst).map((p: any) => {
