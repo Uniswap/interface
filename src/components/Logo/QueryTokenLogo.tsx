@@ -8,7 +8,6 @@ import { CHAIN_NAME_TO_CHAIN_ID } from 'graphql/data/util'
 import { TokenData } from 'graphql/tokens/TokenData'
 
 import AssetLogo, { AssetLogoBaseProps } from './AssetLogo'
-import { Token } from '@pollum-io/sdk-core'
 
 function getChainId(token?: TopToken | TokenQueryData | SearchToken | TokenData): SupportedChainId | undefined {
   if (token && 'chain' in token) {

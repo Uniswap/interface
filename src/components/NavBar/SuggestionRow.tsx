@@ -3,9 +3,9 @@ import clsx from 'clsx'
 import QueryTokenLogo from 'components/Logo/QueryTokenLogo'
 import TokenSafetyIcon from 'components/TokenSafety/TokenSafetyIcon'
 import { checkSearchTokenWarning } from 'constants/tokenSafety'
-import { Chain, TokenStandard } from 'graphql/data/__generated__/types-and-hooks'
-import { SearchToken } from 'graphql/data/SearchTokens'
+import { Chain } from 'graphql/data/__generated__/types-and-hooks'
 import { getTokenDetailsURL } from 'graphql/data/util'
+import { TokenData } from 'graphql/tokens/TokenData'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { VerifiedIcon } from 'nft/components/icons'
@@ -21,8 +21,6 @@ import { ThemedText } from 'theme'
 import { DeltaText, getDeltaArrow } from '../Tokens/TokenDetails/PriceChart'
 import { useAddRecentlySearchedAsset } from './RecentlySearchedAssets'
 import * as styles from './SearchBar.css'
-import { Token } from '@pollum-io/sdk-core'
-import { TokenData } from 'graphql/tokens/TokenData'
 
 const PriceChangeContainer = styled.div`
   display: flex;
@@ -61,20 +59,6 @@ export const CollectionRow = ({
     // addRecentlySearchedAsset({ ...collection, isNft: true, chain: Chain.Rollux })
     toggleOpen()
   }, [addRecentlySearchedAsset, collection, toggleOpen, eventProperties])
-
-  // useEffect(() => {
-  //   const keyDownHandler = (event: KeyboardEvent) => {
-  //     if (event.key === 'Enter' && isHovered) {
-  //       event.preventDefault()
-  //       navigate(`/nfts/collection/${collection.address}`)
-  //       handleClick()
-  //     }
-  //   }
-  //   document.addEventListener('keydown', keyDownHandler)
-  //   return () => {
-  //     document.removeEventListener('keydown', keyDownHandler)
-  //   }
-  // }, [toggleOpen, isHovered, collection, navigate, handleClick])
 
   return (
     <Link
@@ -132,14 +116,14 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index,
   const navigate = useNavigate()
 
   const handleClick = useCallback(() => {
-    const address = !token.address
-     && token.address  == "0x4200000000000000000000000000000000000006" ? 'NATIVE' : token.address
+    const address =
+      !token.address && token.address == '0x4200000000000000000000000000000000000006' ? 'NATIVE' : token.address
     address && addRecentlySearchedAsset({ address, chain: Chain.Rollux })
 
     toggleOpen()
   }, [addRecentlySearchedAsset, token, toggleOpen, eventProperties])
 
-  const tokenDetailsPath = getTokenDetailsURL({ address: token.address.toLowerCase(), chain:Chain.Rollux })
+  const tokenDetailsPath = getTokenDetailsURL({ address: token.address.toLowerCase(), chain: Chain.Rollux })
   // Close the modal on escape
   useEffect(() => {
     const keyDownHandler = (event: KeyboardEvent) => {
@@ -168,12 +152,7 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index,
       style={{ background: isHovered ? vars.color.lightGrayOverlay : 'none' }}
     >
       <Row style={{ width: '65%' }}>
-        <QueryTokenLogo
-          token={token}
-          symbol={token.symbol}
-          size="36px"
-          style={{ paddingRight: '8px' }}
-        />
+        <QueryTokenLogo token={token} symbol={token.symbol} size="36px" style={{ paddingRight: '8px' }} />
         <Column className={styles.suggestionPrimaryContainer}>
           <Row gap="4" width="full">
             <Box className={styles.primaryText}>{token.name}</Box>
@@ -192,9 +171,7 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index,
             <PriceChangeContainer>
               <ArrowCell>{arrow}</ArrowCell>
               <ThemedText.BodySmall>
-                <DeltaText delta={token.priceUSDChange}>
-                  {Math.abs(token.priceUSDChange ?? 0).toFixed(2)}%
-                </DeltaText>
+                <DeltaText delta={token.priceUSDChange}>{Math.abs(token.priceUSDChange ?? 0).toFixed(2)}%</DeltaText>
               </ThemedText.BodySmall>
             </PriceChangeContainer>
           </>

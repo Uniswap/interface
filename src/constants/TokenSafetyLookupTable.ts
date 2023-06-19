@@ -1,7 +1,7 @@
 import { TokenInfo } from '@uniswap/token-lists'
 
 import store from '../state'
-import { ROLLUX_LIST,ROLLUX_TANENBAUM_LIST, UNSUPPORTED_LIST_URLS } from './lists'
+import { ROLLUX_LIST, ROLLUX_TANENBAUM_LIST, UNSUPPORTED_LIST_URLS } from './lists'
 import brokenTokenList from './tokenLists/broken.tokenlist.json'
 import { NATIVE_CHAIN_ID } from './tokens'
 
@@ -57,7 +57,7 @@ class TokenSafetyLookupTable {
     if (address === NATIVE_CHAIN_ID.toLowerCase()) {
       return TOKEN_LIST_TYPES.ROLLUX_LIST
     }
-    
+
     return this.dict[address] ?? TOKEN_LIST_TYPES.UNKNOWN
   }
 }
