@@ -1,28 +1,24 @@
-import { Trans } from '@lingui/macro'
+import { Token } from '@pollum-io/sdk-core'
 import { formatNumber, NumberType } from '@uniswap/conedison/format'
 import { useWeb3React } from '@web3-react/core'
-import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button'
 import Column from 'components/Column'
 import { AutoRow } from 'components/Row'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { formatDelta } from 'components/Tokens/TokenDetails/PriceChart'
 import { useGetConnection } from 'connection'
 import { usePortfolioBalancesQuery } from 'graphql/data/__generated__/types-and-hooks'
-import { useAtomValue } from 'jotai/utils'
-import { useProfilePageState, useSellAsset, useWalletCollections } from 'nft/hooks'
-import { ProfilePageStateType } from 'nft/types'
+import { useNewTopTokens } from 'graphql/tokens/NewTopTokens'
+// import { useCurrencies } from 'hooks/Tokens'
+import { useTokenBalances } from 'lib/hooks/useCurrencyBalance'
 import { useCallback } from 'react'
 import { ArrowDownRight, ArrowUpRight, Copy, IconProps, Power, Settings } from 'react-feather'
-import { shouldDisableNFTRoutesAtom } from 'state/application/atoms'
 import { useAppDispatch } from 'state/hooks'
 import { updateSelectedWallet } from 'state/user/reducer'
 import styled, { useTheme } from 'styled-components/macro'
 import { CopyHelper, ThemedText } from 'theme'
 
 import { shortenAddress } from '../../nft/utils/address'
-import { useCloseModal } from '../../state/application/hooks'
 import StatusIcon from '../Identicon/StatusIcon'
-import { useToggleAccountDrawer } from '.'
 import IconButton, { IconHoverText } from './IconButton'
 import MiniPortfolio from './MiniPortfolio'
 import { portfolioFadeInAnimation } from './MiniPortfolio/PortfolioRow'
@@ -32,15 +28,6 @@ const AuthenticatedHeaderWrapper = styled.div`
   display: flex;
   flex-direction: column;
   flex: 1;
-`
-
-const HeaderButton = styled(ThemeButton)`
-  border-color: transparent;
-  border-radius: 12px;
-  border-style: solid;
-  border-width: 1px;
-  height: 40px;
-  margin-top: 8px;
 `
 
 const IconContainer = styled.div`
@@ -111,12 +98,6 @@ export function PortfolioArrow({ change, ...rest }: { change: number } & IconPro
 export default function AuthenticatedHeader({ account, openSettings }: { account: string; openSettings: () => void }) {
   const { connector, ENSName } = useWeb3React()
   const dispatch = useAppDispatch()
-  const closeModal = useCloseModal()
-  const setSellPageState = useProfilePageState((state) => state.setProfilePageState)
-  const resetSellAssets = useSellAsset((state) => state.reset)
-  const clearCollectionFilters = useWalletCollections((state) => state.clearCollectionFilters)
-
-  const shouldDisableNFTRoutes = useAtomValue(shouldDisableNFTRoutesAtom)
 
   const getConnection = useGetConnection()
   const connection = getConnection(connector)
@@ -128,21 +109,21 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
     dispatch(updateSelectedWallet({ wallet: undefined }))
   }, [connector, dispatch])
 
-  const toggleWalletDrawer = useToggleAccountDrawer()
-
-  const navigateToProfile = useCallback(() => {
-    toggleWalletDrawer()
-    resetSellAssets()
-    setSellPageState(ProfilePageStateType.VIEWING)
-    clearCollectionFilters()
-    closeModal()
-  }, [clearCollectionFilters, closeModal, resetSellAssets, setSellPageState, toggleWalletDrawer])
-
   // TODO: verify portifolio from ownerAddress like a swap page
   const { data: portfolioBalances } = usePortfolioBalancesQuery({
     variables: { ownerAddress: account ?? '' },
     fetchPolicy: 'cache-only', // PrefetchBalancesWrapper handles balance fetching/staleness; this component only reads from cache
   })
+  const { tokens } = useNewTopTokens()
+
+  const ERC20Tokens: Token[] = []
+  tokens?.map((token) => ERC20Tokens.push({ address: token.id } as Token)) || []
+
+  const tokenBalances = useTokenBalances(account, ERC20Tokens)
+  console.log('tokenBalances', tokenBalances)
+
+  // console.log('tokenBalances', relevantTokenBalances)
+  // const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, currency ?? undefined)
   const portfolio = portfolioBalances?.portfolios?.[0]
   const totalBalance = portfolio?.tokensTotalDenominatedValue?.value
   const absoluteChange = portfolio?.tokensTotalDenominatedValueChange?.absolute?.value
@@ -196,16 +177,6 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
             <LoadingBubble height="44px" width="170px" />
             <LoadingBubble height="16px" width="100px" margin="4px 0 20px 0" />
           </Column>
-        )}
-        {!shouldDisableNFTRoutes && (
-          <HeaderButton
-            data-testid="nft-view-self-nfts"
-            onClick={navigateToProfile}
-            size={ButtonSize.medium}
-            emphasis={ButtonEmphasis.medium}
-          >
-            <Trans>View and sell NFTs</Trans>
-          </HeaderButton>
         )}
 
         <MiniPortfolio account={account} />

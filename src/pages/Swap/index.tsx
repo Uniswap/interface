@@ -23,11 +23,9 @@ import { useSwapCallback } from 'hooks/useSwapCallback'
 import { useUSDPrice } from 'hooks/useUSDPrice'
 import JSBI from 'jsbi'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { ReactNode } from 'react'
 import { ArrowDown, Info, RefreshCcw } from 'react-feather'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { Text } from 'rebass'
-import { InterfaceTrade } from 'state/routing/types'
 import { TradeState } from 'state/routing/types'
 import styled, { useTheme } from 'styled-components/macro'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
@@ -120,13 +118,13 @@ const DetailsSwapSection = styled(SwapSection)`
   border-top-right-radius: 0;
 `
 
-function getIsValidSwapQuote(
-  trade: InterfaceTrade<Currency, Currency, TradeType> | undefined,
-  tradeState: TradeState,
-  swapInputError?: ReactNode
-): boolean {
-  return !!swapInputError && !!trade && (tradeState === TradeState.VALID || tradeState === TradeState.SYNCING)
-}
+// function getIsValidSwapQuote(
+//   trade: InterfaceTrade<Currency, Currency, TradeType> | undefined,
+//   tradeState: TradeState,
+//   swapInputError?: ReactNode
+// ): boolean {
+//   return !!swapInputError && !!trade && (tradeState === TradeState.VALID || tradeState === TradeState.SYNCING)
+// }
 
 function largerPercentValue(a?: Percent, b?: Percent) {
   if (a && b) {
@@ -320,7 +318,7 @@ export default function Swap({ className }: { className?: string }) {
     } finally {
       setIsAllowancePending(false)
     }
-  }, [allowance, chainId, maximumAmountIn?.currency.address, maximumAmountIn?.currency.symbol])
+  }, [allowance])
 
   const maxInputAmount: CurrencyAmount<Currency> | undefined = useMemo(
     () => maxAmountSpend(currencyBalances[Field.INPUT]),
