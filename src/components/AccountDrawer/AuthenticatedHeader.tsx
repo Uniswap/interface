@@ -167,6 +167,8 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
   const resetSellAssets = useSellAsset((state) => state.reset)
   const clearCollectionFilters = useWalletCollections((state) => state.clearCollectionFilters)
   const isClaimAvailable = useIsNftClaimAvailable((state) => state.isClaimAvailable)
+  // TODO: remove to display fiat onramp
+  const displayFiatOnramp = false
 
   const shouldDisableNFTRoutes = useAtomValue(shouldDisableNFTRoutesAtom)
 
@@ -294,26 +296,28 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
             <Trans>View and sell NFTs</Trans>
           </HeaderButton>
         )}
-        <HeaderButton
-          size={ButtonSize.medium}
-          emphasis={ButtonEmphasis.medium}
-          onClick={handleBuyCryptoClick}
-          disabled={disableBuyCryptoButton}
-          data-testid="wallet-buy-crypto"
-        >
-          {error ? (
-            <ThemedText.BodyPrimary>{error}</ThemedText.BodyPrimary>
-          ) : (
-            <>
-              {fiatOnrampAvailabilityLoading ? (
-                <StyledLoadingButtonSpinner />
-              ) : (
-                <CreditCard height="20px" width="20px" />
-              )}{' '}
-              <Trans>Buy crypto</Trans>
-            </>
-          )}
-        </HeaderButton>
+        {displayFiatOnramp && (
+          <HeaderButton
+            size={ButtonSize.medium}
+            emphasis={ButtonEmphasis.medium}
+            onClick={handleBuyCryptoClick}
+            disabled={disableBuyCryptoButton}
+            data-testid="wallet-buy-crypto"
+          >
+            {error ? (
+              <ThemedText.BodyPrimary>{error}</ThemedText.BodyPrimary>
+            ) : (
+              <>
+                {fiatOnrampAvailabilityLoading ? (
+                  <StyledLoadingButtonSpinner />
+                ) : (
+                  <CreditCard height="20px" width="20px" />
+                )}{' '}
+                <Trans>Buy crypto</Trans>
+              </>
+            )}
+          </HeaderButton>
+        )}
         {Boolean(!fiatOnrampAvailable && fiatOnrampAvailabilityChecked) && (
           <FiatOnrampNotAvailableText marginTop="8px">
             <Trans>Not available in your region</Trans>
