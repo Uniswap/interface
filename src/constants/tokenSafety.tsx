@@ -1,6 +1,5 @@
 import { Plural, Trans } from '@lingui/macro'
-import { TokenStandard } from 'graphql/data/__generated__/types-and-hooks'
-import { SearchToken } from 'graphql/data/SearchTokens'
+import { TokenData } from 'graphql/tokens/TokenData'
 
 import { ZERO_ADDRESS } from './misc'
 import { NATIVE_CHAIN_ID } from './tokens'
@@ -84,7 +83,8 @@ export function checkWarning(tokenAddress: string) {
     return null
   }
   switch (WarningCache.checkToken(tokenAddress.toLowerCase())) {
-    case TOKEN_LIST_TYPES.UNI_DEFAULT:
+    case TOKEN_LIST_TYPES.ROLLUX_LIST:
+    case TOKEN_LIST_TYPES.ROLLUX_TANENBAUM_LIST:
       return null
     case TOKEN_LIST_TYPES.UNI_EXTENDED:
       return MediumWarning
@@ -98,9 +98,9 @@ export function checkWarning(tokenAddress: string) {
 }
 
 // TODO(cartcrom): Replace all usage of WARNING_LEVEL with SafetyLevel
-export function checkSearchTokenWarning(token: SearchToken) {
+export function checkSearchTokenWarning(token: TokenData) {
   if (!token.address) {
-    return token.standard === TokenStandard.Native ? null : StrongWarning
+    return token.address == '0x4200000000000000000000000000000000000006' ? null : StrongWarning
   }
   return checkWarning(token.address)
 }
