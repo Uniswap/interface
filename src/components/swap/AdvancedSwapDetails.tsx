@@ -286,7 +286,7 @@ export function ReduceLeveragePositionDetails({
             <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
               <TruncatedText>
                 {leverageTrade?.totalDebtInput && leverageTrade?.initialCollateral
-                  ? `${(Number(leverageTrade?.totalDebtInput) + Number(leverageTrade.initialCollateral)) / Number(leverageTrade?.initialCollateral)}`
+                  ? `${(Number(leverageTrade?.totalDebtInput) + Number(leverageTrade.initialCollateral)) / Number(leverageTrade?.initialCollateral)}x`
                   : '-'}
               </TruncatedText>
 
