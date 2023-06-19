@@ -34,7 +34,7 @@ import { ChevronDown, Info } from 'react-feather'
 import { MouseoverTooltip, MouseoverTooltipContent } from 'components/Tooltip'
 import AnimatedDropdown from 'components/AnimatedDropdown'
 import useDebounce from 'hooks/useDebounce'
-import { useBorrowManagerContract, useLeverageManagerContract } from 'hooks/useContract'
+import { useBorrowManagerContract, useLeverageManagerContract, useLiquidityManagerContract } from 'hooks/useContract'
 import { useSingleCallResult } from 'lib/hooks/multicall'
 import { BigNumber as BN } from "bignumber.js"
 import TradePrice from './TradePrice'
@@ -689,7 +689,7 @@ function useDerivedAddLeveragePremiumInfo(
   } | undefined,
   inputError: React.ReactNode | undefined
 } {
-  const liquidityManagerContract = useLeverageManagerContract(liquidityManagerAddress)
+  const liquidityManagerContract = useLiquidityManagerContract(liquidityManagerAddress)
   const [contractResult, setContractResult] = useState<{
     addPremiumResult: any
   }>()
@@ -714,13 +714,13 @@ function useDerivedAddLeveragePremiumInfo(
 
       try {
         // const position = await leverageManagerContract.callStatic.getPosition(trader, tokenId)
-
+        // payPremium(address trader, bool isBorrow, bool isToken0)
         const addPremiumResult = await liquidityManagerContract.callStatic.payPremium(trader, false, isToken0)
         setContractResult({
           addPremiumResult
         })
         setState(DerivedInfoState.VALID)
-        // console.log("addPosition:", addPremiumResult)
+        console.log("addPosition:", addPremiumResult)
 
       } catch (error) {
         console.error('Failed to get addPremium info', error)
@@ -783,7 +783,7 @@ function useDerivedAddBorrowPremiumInfo(
   } | undefined,
   inputError: React.ReactNode | undefined
 } {
-  const liquidityManagerContract = useLeverageManagerContract(liquidityManagerAddress)
+  const liquidityManagerContract = useLiquidityManagerContract(liquidityManagerAddress)
   const [contractResult, setContractResult] = useState<{
     addPremiumResult: any
   }>()
@@ -1307,7 +1307,7 @@ export function AddPremiumLeverageModalFooter({
   const token1 = useToken(position?.token1Address)
   const { tradeInfo, inputError } = useDerivedAddLeveragePremiumInfo(liquidityManagerAddress, trader, tokenId, position?.isToken0, setDerivedState)
   const inputIsToken0 = !position?.isToken0
-  // console.log("rate: ", tradeInfo); 
+  console.log("tradeInfo: ", tradeInfo); 
 
   const inputCurrency = useCurrency(position?.isToken0 ? position?.token0Address : position?.token1Address)
   const outputCurrency = useCurrency(position?.isToken0 ? position?.token1Address : position?.token0Address)
