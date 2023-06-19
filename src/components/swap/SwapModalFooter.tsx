@@ -389,14 +389,14 @@ function useDerivedLeverageReduceInfo(
       const formattedSlippage = new BN(allowedSlippage).plus(100).shiftedBy(16).toFixed(0)
       const formattedReduceAmount = new BN(reduceAmount).shiftedBy(18).toFixed(0);
       const inputReduceAmount =
-        Math.abs(Number(position.totalPositionRaw) - Number(formattedReduceAmount))< 1e8
-     // Number(position.totalPositionRaw) <= Number(formattedReduceAmount)
-      ? position.totalPositionRaw : formattedReduceAmount
+        Math.abs(Number(position.totalPositionRaw) - Number(formattedReduceAmount)) < 1e8
+          // Number(position.totalPositionRaw) <= Number(formattedReduceAmount)
+          ? position.totalPositionRaw : formattedReduceAmount
 
       setState(DerivedInfoState.LOADING)
 
       try {
-        console.log('reducePositionArgs', Math.abs(Number(position.totalPositionRaw) - Number(formattedReduceAmount)), position, position.isToken0, position.totalPosition,position.totalPositionRaw, formattedSlippage, inputReduceAmount)
+        console.log('reducePositionArgs', Math.abs(Number(position.totalPositionRaw) - Number(formattedReduceAmount)), position, position.isToken0, position.totalPosition, position.totalPositionRaw, formattedSlippage, inputReduceAmount)
         const reducePositionResult = await leverageManagerContract.callStatic.reducePosition(position?.isToken0, formattedSlippage, inputReduceAmount)
         console.log('reducePosition', reducePositionResult, tokenId, formattedSlippage);
         setContractResult({
@@ -494,7 +494,7 @@ function useDerivedBorrowReduceCollateralInfo(
       try {
         console.log('reducePositionArgs', position, position.isToken0, position.totalPosition, formattedReduceAmount)
         const reducePositionResult = await borrowManagerContract.callStatic.reduceBorrowPosition(
-          position?.isToken0, true, 
+          position?.isToken0, true,
           recieveCollateral,
           formattedReduceAmount
         )
@@ -594,8 +594,8 @@ function useDerivedBorrowReduceDebtInfo(
       try {
         console.log('reducePositionArgs', position, position.isToken0, position.totalPosition, formattedReduceAmount)
         const reducePositionResult = await borrowManagerContract.callStatic.reduceBorrowPosition(
-          position?.isToken0, 
-          false, 
+          position?.isToken0,
+          false,
           recieveCollateral,
           formattedReduceAmount
         )
@@ -677,18 +677,19 @@ function TextWithLoadingPlaceholder({
 }
 
 function useDerivedAddLeveragePremiumInfo(
-  leverageManager: string | undefined,
+  liquidityManagerAddress: string | undefined,
   trader: string | undefined,
   tokenId: string | undefined,
   isToken0: boolean | undefined,
   setState: (state: DerivedInfoState) => void,
 ): {
   tradeInfo: {
-    rate: string
+    remainingPremium: number,
+    totalPremium: number
   } | undefined,
   inputError: React.ReactNode | undefined
 } {
-  const leverageManagerContract = useLeverageManagerContract(leverageManager)
+  const liquidityManagerContract = useLeverageManagerContract(liquidityManagerAddress)
   const [contractResult, setContractResult] = useState<{
     addPremiumResult: any
   }>()
@@ -705,7 +706,7 @@ function useDerivedAddLeveragePremiumInfo(
 
   useEffect(() => {
     const laggedfxn = async () => {
-      if (!leverageManagerContract || !tokenId || !trader) {
+      if (!liquidityManagerContract || !tokenId || !trader) {
         setState(DerivedInfoState.INVALID)
         return
       }
@@ -714,7 +715,7 @@ function useDerivedAddLeveragePremiumInfo(
       try {
         // const position = await leverageManagerContract.callStatic.getPosition(trader, tokenId)
 
-        const addPremiumResult = await leverageManagerContract.callStatic.payPremium(trader, isToken0)
+        const addPremiumResult = await liquidityManagerContract.callStatic.payPremium(trader, false, isToken0)
         setContractResult({
           addPremiumResult
         })
@@ -728,12 +729,14 @@ function useDerivedAddLeveragePremiumInfo(
     }
 
     laggedfxn()
-  }, [leverageManager, trader, tokenId, isToken0])
+  }, [liquidityManagerContract, trader, tokenId, isToken0])
 
   const info = useMemo(() => {
     if (contractResult) {
+      const addPremiumResult = contractResult.addPremiumResult
       return {
-        rate: (Number(contractResult.addPremiumResult) / (1e16)).toString()//.shiftedBy(-18).toFixed(12)
+        totalPremium: new BN(addPremiumResult[0]).shiftedBy(-18).toNumber(),
+        remainingPremium: new BN(addPremiumResult[1]).shiftedBy(-18).toNumber()
       }
     } else {
       return undefined
@@ -767,18 +770,20 @@ function useDerivedAddLeveragePremiumInfo(
 }
 
 function useDerivedAddBorrowPremiumInfo(
-  borowManager: string | undefined,
+  liquidityManagerAddress: string | undefined,
   trader: string | undefined,
   tokenId: string | undefined,
   isToken0: boolean | undefined,
   setState: (state: DerivedInfoState) => void,
 ): {
   tradeInfo: {
-    rate: string
+    // rate: string,
+    totalPremium: number,
+    remainingPremium: number
   } | undefined,
   inputError: React.ReactNode | undefined
 } {
-  const borowManagerContract = useLeverageManagerContract(borowManager)
+  const liquidityManagerContract = useLeverageManagerContract(liquidityManagerAddress)
   const [contractResult, setContractResult] = useState<{
     addPremiumResult: any
   }>()
@@ -796,7 +801,7 @@ function useDerivedAddBorrowPremiumInfo(
 
   useEffect(() => {
     const laggedfxn = async () => {
-      if (!borowManagerContract || !tokenId || !trader) {
+      if (!liquidityManagerContract || !tokenId || !trader) {
         setState(DerivedInfoState.INVALID)
         return
       }
@@ -805,7 +810,7 @@ function useDerivedAddBorrowPremiumInfo(
       try {
         // const position = await leverageManagerContract.callStatic.getPosition(trader, tokenId)
 
-        const addPremiumResult = await borowManagerContract.callStatic.payPremium(trader, isToken0)
+        const addPremiumResult = await liquidityManagerContract.callStatic.payPremium(trader, true, isToken0)
         setContractResult({
           addPremiumResult
         })
@@ -819,14 +824,18 @@ function useDerivedAddBorrowPremiumInfo(
     }
 
     laggedfxn()
-  }, [borowManagerContract, trader, tokenId, isToken0])
+  }, [liquidityManagerContract, trader, tokenId, isToken0])
 
   const info = useMemo(() => {
     // console.log("addPosition2:", contractResult)
 
+
     if (contractResult) {
+      const addPremiumResult = contractResult.addPremiumResult
       return {
-        rate: (Number(contractResult.addPremiumResult) / (1e16)).toString()//.shiftedBy(-18).toFixed(12)
+        // rate: (Number(contractResult.addPremiumResult) / (1e16)).toString()//.shiftedBy(-18).toFixed(12)
+        remainingPremium: new BN(addPremiumResult[1].toString()).shiftedBy(-18).toNumber(),
+        totalPremium: new BN(addPremiumResult[0].toString()).shiftedBy(-18).toNumber()
       }
     } else {
       return undefined
@@ -891,9 +900,9 @@ export function ReduceLeverageModalFooter({
       const formattedSlippage = new BN(slippage).plus(100).shiftedBy(16).toFixed(0)
       const formattedReduceAmount = new BN(reduceAmount).shiftedBy(18).toFixed(0);
       const inputReduceAmount =
-        Math.abs(Number(position.totalPositionRaw) - Number(formattedReduceAmount))< 1e8
-     // Number(position.totalPositionRaw) <= Number(formattedReduceAmount)
-      ? position.totalPositionRaw : formattedReduceAmount
+        Math.abs(Number(position.totalPositionRaw) - Number(formattedReduceAmount)) < 1e8
+          // Number(position.totalPositionRaw) <= Number(formattedReduceAmount)
+          ? position.totalPositionRaw : formattedReduceAmount
       return () => {
         setAttemptingTxn(true)
         leverageManagerContract.reducePosition(
@@ -1121,7 +1130,7 @@ export function ReduceLeverageModalFooter({
                           <MouseoverTooltip
                             text={
                               <Trans>
-                                Premium remaining returned from last payment 
+                                Premium remaining returned from last payment
                               </Trans>
                             }
                           >
@@ -1230,13 +1239,13 @@ export function ReduceLeverageModalFooter({
                           <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
                             <TruncatedText>
                               {
-                                `${(Math.round(Number(pnl)*1000)/1000)}  ${inputIsToken0 ? token0?.symbol : token1?.symbol}`
+                                `${(Math.round(Number(pnl) * 1000) / 1000)}  ${inputIsToken0 ? token0?.symbol : token1?.symbol}`
 
                               }
                             </TruncatedText>
                             <TruncatedText>
                               ({
-                                `${100* (Math.round(Number(pnl)*1000)/1000)/(Number(initCollateral))} %`
+                                `${100 * (Math.round(Number(pnl) * 1000) / 1000) / (Number(initCollateral))} %`
 
                               })
                             </TruncatedText>
@@ -1259,17 +1268,17 @@ export function ReduceLeverageModalFooter({
         style={{ margin: '10px 0 0 0' }}
         id={InterfaceElementName.CONFIRM_SWAP_BUTTON}
       >
-        { inputError ? (
+        {inputError ? (
           inputError
         ) : derivedState !== DerivedInfoState.VALID ? (
           <Trans>
             Invalid Transaction
           </Trans>
-          ) : (
-            <Text fontSize={20} fontWeight={500}>
+        ) : (
+          <Text fontSize={20} fontWeight={500}>
             <Trans>Reduce Position</Trans>
           </Text>
-          )
+        )
         }
       </ButtonError>
     </AutoRow>
@@ -1277,12 +1286,12 @@ export function ReduceLeverageModalFooter({
 }
 
 export function AddPremiumLeverageModalFooter({
-  leverageManagerAddress,
+  liquidityManagerAddress,
   tokenId,
   trader,
   handleAddPremium
 }: {
-  leverageManagerAddress: string | undefined
+  liquidityManagerAddress: string | undefined,
   tokenId: string | undefined
   trader: string | undefined
   handleAddPremium: () => void
@@ -1296,11 +1305,10 @@ export function AddPremiumLeverageModalFooter({
   const { error, position } = useLimitlessPositionFromTokenId(tokenId)
   const token0 = useToken(position?.token0Address)
   const token1 = useToken(position?.token1Address)
-  const { tradeInfo, inputError } = useDerivedAddLeveragePremiumInfo(leverageManagerAddress, trader, tokenId, position?.isToken0, setDerivedState)
+  const { tradeInfo, inputError } = useDerivedAddLeveragePremiumInfo(liquidityManagerAddress, trader, tokenId, position?.isToken0, setDerivedState)
   const inputIsToken0 = !position?.isToken0
-  console.log("rate: ", tradeInfo); 
+  // console.log("rate: ", tradeInfo); 
 
-  const payment = position?.totalDebtInput && tradeInfo ? new BN(position.totalDebtInput).multipliedBy(new BN(tradeInfo.rate)).div(100).toString() : "0"
   const inputCurrency = useCurrency(position?.isToken0 ? position?.token0Address : position?.token1Address)
   const outputCurrency = useCurrency(position?.isToken0 ? position?.token1Address : position?.token0Address)
   const approveAmount = useMemo(() => {
@@ -1310,7 +1318,7 @@ export function AddPremiumLeverageModalFooter({
   const [leverageApprovalState, approveLeverageManager] = useApproveCallback(
     inputCurrency ?
       CurrencyAmount.fromRawAmount(inputCurrency, approveAmount) : undefined,
-    leverageManagerAddress ?? undefined
+    position?.leverageManagerAddress ?? undefined
   )
 
   const updateLeverageAllowance = useCallback(async () => {
@@ -1319,7 +1327,7 @@ export function AddPremiumLeverageModalFooter({
     } catch (err) {
       console.log("approveLeverageManager err: ", err)
     }
-  }, [leverageManagerAddress, approveLeverageManager]) // add input to deps.
+  }, [position, approveLeverageManager]) // add input to deps.
 
   const loading = derivedState === DerivedInfoState.LOADING
   const valid = derivedState === DerivedInfoState.VALID
@@ -1341,11 +1349,11 @@ export function AddPremiumLeverageModalFooter({
                 ) : (
                   <HideSmall>
 
-                    <StyledInfoIcon color={leverageManagerAddress ? theme.textTertiary : theme.deprecated_bg3} />
+                    <StyledInfoIcon color={liquidityManagerAddress ? theme.textTertiary : theme.deprecated_bg3} />
 
                   </HideSmall>
                 ))}
-                {leverageManagerAddress ? (
+                {liquidityManagerAddress ? (
                   loading ? (
                     <ThemedText.DeprecatedMain fontSize={14}>
                       <Trans>Fetching expected payment...</Trans>
@@ -1375,19 +1383,19 @@ export function AddPremiumLeverageModalFooter({
                           <MouseoverTooltip
                             text={
                               <Trans>
-                                Premium Payment Rate to be multiplied your borrowed amount
+                                Expected Total Premium
                               </Trans>
                             }
                           >
                             <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
-                              <Trans>Premium Payment Rate</Trans>
+                              <Trans>Total Premium</Trans>
                             </ThemedText.DeprecatedSubHeader>
                           </MouseoverTooltip>
                         </RowFixed>
                         <TextWithLoadingPlaceholder syncing={loading} width={65}>
                           <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
                             {
-                              `${tradeInfo ? new BN(tradeInfo.rate).toString() : "-"}%`
+                              `${tradeInfo ? new BN(tradeInfo.totalPremium).toString() : "-"}%`
                             }
                           </ThemedText.DeprecatedBlack>
                         </TextWithLoadingPlaceholder>
@@ -1397,41 +1405,19 @@ export function AddPremiumLeverageModalFooter({
                           <MouseoverTooltip
                             text={
                               <Trans>
-                                Rate x Debt
+                                Expected Remaining Premium
                               </Trans>
                             }
                           >
                             <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
-                              <Trans>Expected Payment</Trans>
+                              <Trans>Remaining Premium</Trans>
                             </ThemedText.DeprecatedSubHeader>
                           </MouseoverTooltip>
                         </RowFixed>
                         <TextWithLoadingPlaceholder syncing={loading} width={65}>
                           <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
                             {
-                              `${new BN(Math.round(Number(payment)*10000)/10000).toString()}`+outputCurrency?.symbol
-                            }
-                          </ThemedText.DeprecatedBlack>
-                        </TextWithLoadingPlaceholder>
-                      </RowBetween>
-                      <RowBetween>
-                        <RowFixed>
-                          <MouseoverTooltip
-                            text={
-                              <Trans>
-                                Unused Premium Returned
-                              </Trans>
-                            }
-                          >
-                            <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
-                              <Trans>Expected Returned</Trans>
-                            </ThemedText.DeprecatedSubHeader>
-                          </MouseoverTooltip>
-                        </RowFixed>
-                        <TextWithLoadingPlaceholder syncing={loading} width={65}>
-                          <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
-                            {
-                              `${new BN(Math.round(Number(payment)*10000)/10000).toString()}` +outputCurrency?.symbol
+                              `${tradeInfo ? new BN(tradeInfo.remainingPremium).toString() : "-"}` + outputCurrency?.symbol
                             }
                           </ThemedText.DeprecatedBlack>
                         </TextWithLoadingPlaceholder>
@@ -1502,18 +1488,16 @@ export function AddPremiumLeverageModalFooter({
 }
 
 export function AddPremiumBorrowModalFooter({
-  borrowManagerAddress,
+  liquidityManagerAddress,
   tokenId,
   trader,
   handleAddPremium
 }: {
-  borrowManagerAddress: string | undefined
+  liquidityManagerAddress: string | undefined
   tokenId: string | undefined
   trader: string | undefined
   handleAddPremium: () => void
 }) {
-
-
   const [derivedState, setDerivedState] = useState<DerivedInfoState>(DerivedInfoState.INVALID)
   const [showDetails, setShowDetails] = useState(false)
   const theme = useTheme()
@@ -1521,10 +1505,8 @@ export function AddPremiumBorrowModalFooter({
   const { error, position } = useLimitlessPositionFromTokenId(tokenId)
   const token0 = useToken(position?.token0Address)
   const token1 = useToken(position?.token1Address)
-  const { tradeInfo, inputError } = useDerivedAddBorrowPremiumInfo(borrowManagerAddress, trader, tokenId, position?.isToken0, setDerivedState)
+  const { tradeInfo, inputError } = useDerivedAddBorrowPremiumInfo(liquidityManagerAddress, trader, tokenId, position?.isToken0, setDerivedState)
   const inputIsToken0 = !position?.isToken0
-
-  const payment = position?.totalDebtInput && tradeInfo ? new BN(position.totalDebtInput).multipliedBy(new BN(tradeInfo.rate)).div(100).toString() : "0"
 
   const outputCurrency = useCurrency(position?.isToken0 ? position?.token1Address : position?.token0Address)
   // const outputCurrency = useCurrency(position?.isToken0 ? position?.token1Address : position?.token0Address)
@@ -1536,7 +1518,7 @@ export function AddPremiumBorrowModalFooter({
   const [approvalState, approveManager] = useApproveCallback(
     outputCurrency ?
       CurrencyAmount.fromRawAmount(outputCurrency, approveAmount) : undefined,
-    borrowManagerAddress ?? undefined
+    position?.borrowManagerAddress ?? undefined
   )
 
   const updateAllowance = useCallback(async () => {
@@ -1545,7 +1527,7 @@ export function AddPremiumBorrowModalFooter({
     } catch (err) {
       console.log("approveLeverageManager err: ", err)
     }
-  }, [borrowManagerAddress, approveManager]) // add input to deps.
+  }, [position, approveManager]) // add input to deps.
 
   const loading = derivedState === DerivedInfoState.LOADING
   const valid = derivedState === DerivedInfoState.VALID
@@ -1571,7 +1553,7 @@ export function AddPremiumBorrowModalFooter({
 
                   </HideSmall>
                 ))}
-                {borrowManagerAddress ? (
+                {liquidityManagerAddress ? (
                   loading ? (
                     <ThemedText.DeprecatedMain fontSize={14}>
                       <Trans>Fetching expected payment...</Trans>
@@ -1592,80 +1574,51 @@ export function AddPremiumBorrowModalFooter({
 
             </StyledHeaderRow>
             <AnimatedDropdown open={showDetails}>
-              <AutoColumn gap="sm" style={{ padding: '0', paddingBottom: '8px' }}>
-                {!loading ? (
-                  <StyledCard>
-                    <AutoColumn gap="sm">
-                      <RowBetween>
-                        <RowFixed>
-                          <MouseoverTooltip
-                            text={
-                              <Trans>
-                                Premium Payment Rate to be multiplied your borrowed amount
-                              </Trans>
-                            }
-                          >
-                            <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
-                              <Trans>Premium Payment Rate</Trans>
-                            </ThemedText.DeprecatedSubHeader>
-                          </MouseoverTooltip>
-                        </RowFixed>
-                        <TextWithLoadingPlaceholder syncing={loading} width={65}>
-                          <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
-                            {
-                              `${tradeInfo ? new BN(tradeInfo.rate).toString() : "-"}%`
-                            }
-                          </ThemedText.DeprecatedBlack>
-                        </TextWithLoadingPlaceholder>
-                      </RowBetween>
-                      <RowBetween>
-                        <RowFixed>
-                          <MouseoverTooltip
-                            text={
-                              <Trans>
-                                Rate x Debt
-                              </Trans>
-                            }
-                          >
-                            <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
-                              <Trans>Expected Payment</Trans>
-                            </ThemedText.DeprecatedSubHeader>
-                          </MouseoverTooltip>
-                        </RowFixed>
-                        <TextWithLoadingPlaceholder syncing={loading} width={65}>
-                          <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
-                            {
-                              `${new BN(Math.round(Number(payment)*10000)/10000).toString()}`+outputCurrency?.symbol
-                            }
-                          </ThemedText.DeprecatedBlack>
-                        </TextWithLoadingPlaceholder>
-                      </RowBetween>
-                    </AutoColumn>
-                     <RowBetween>
-                        <RowFixed>
-                          <MouseoverTooltip
-                            text={
-                              <Trans>
-                                Unused Premium Returned
-                              </Trans>
-                            }
-                          >
-                            <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
-                              <Trans>Expected Returned</Trans>
-                            </ThemedText.DeprecatedSubHeader>
-                          </MouseoverTooltip>
-                        </RowFixed>
-                        <TextWithLoadingPlaceholder syncing={loading} width={65}>
-                          <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
-                            {
-                              `${new BN(Math.round(Number(payment)*10000)/10000).toString()}` +outputCurrency?.symbol
-                            }
-                          </ThemedText.DeprecatedBlack>
-                        </TextWithLoadingPlaceholder>
-                      </RowBetween>
-                  </StyledCard>
-                )
-                  : null}
+              <AutoColumn gap="sm">
+                <RowBetween>
+                  <RowFixed>
+                    <MouseoverTooltip
+                      text={
+                        <Trans>
+                          Expected Total Premium
+                        </Trans>
+                      }
+                    >
+                      <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
+                        <Trans>Total Premium</Trans>
+                      </ThemedText.DeprecatedSubHeader>
+                    </MouseoverTooltip>
+                  </RowFixed>
+                  <TextWithLoadingPlaceholder syncing={loading} width={65}>
+                    <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
+                      {
+                        `${tradeInfo ? new BN(tradeInfo.totalPremium).toString() : "-"}%`
+                      }
+                    </ThemedText.DeprecatedBlack>
+                  </TextWithLoadingPlaceholder>
+                </RowBetween>
+                <RowBetween>
+                  <RowFixed>
+                    <MouseoverTooltip
+                      text={
+                        <Trans>
+                          Expected Remaining Premium
+                        </Trans>
+                      }
+                    >
+                      <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
+                        <Trans>Remaining Premium</Trans>
+                      </ThemedText.DeprecatedSubHeader>
+                    </MouseoverTooltip>
+                  </RowFixed>
+                  <TextWithLoadingPlaceholder syncing={loading} width={65}>
+                    <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
+                      {
+                        `${tradeInfo ? new BN(tradeInfo.remainingPremium).toString() : "-"}` + outputCurrency?.symbol
+                      }
+                    </ThemedText.DeprecatedBlack>
+                  </TextWithLoadingPlaceholder>
+                </RowBetween>
               </AutoColumn>
             </AnimatedDropdown>
           </AutoColumn>
@@ -1905,10 +1858,10 @@ export function BorrowReduceCollateralModalFooter({
             <ThemedText.DeprecatedMain fontWeight={400}>
               <Trans>Recieve Collateral</Trans>
             </ThemedText.DeprecatedMain>
-            <Checkbox hovered={false} checked={recieveCollateral} 
-            onClick={() => {
-              setRecieveCollateral(!recieveCollateral)
-            }}><div></div></Checkbox>
+            <Checkbox hovered={false} checked={recieveCollateral}
+              onClick={() => {
+                setRecieveCollateral(!recieveCollateral)
+              }}><div></div></Checkbox>
           </RowBetween>
         </AutoColumn>
       </DarkCard>
@@ -2128,17 +2081,17 @@ export function BorrowReduceCollateralModalFooter({
         style={{ margin: '10px 0 0 0' }}
         id={InterfaceElementName.CONFIRM_SWAP_BUTTON}
       >
-        { inputError ? (
+        {inputError ? (
           inputError
         ) : derivedState !== DerivedInfoState.VALID ? (
           <Trans>
             Invalid Transaction
           </Trans>
-          ) : (
-            <Text fontSize={20} fontWeight={500}>
+        ) : (
+          <Text fontSize={20} fontWeight={500}>
             <Trans>Reduce Position</Trans>
           </Text>
-          )
+        )
         }
       </ButtonError>
     </AutoRow>
@@ -2167,7 +2120,7 @@ export function BorrowReduceDebtModalFooter({
   const addTransaction = useTransactionAdder()
 
   const handleReducePosition = useMemo(() => {
-    console.log('wtf???', borrowManagerContract, position,Number(reduceAmount), Number(position?.initialCollateral) )
+    console.log('wtf???', borrowManagerContract, position, Number(reduceAmount), Number(position?.initialCollateral))
 
     if (borrowManagerContract && position && Number(reduceAmount) > 0 && Number(reduceAmount) <= Number(position.totalDebtInput)) {
       const formattedReduceAmount = new BN(reduceAmount).shiftedBy(18).toFixed(0);
@@ -2233,10 +2186,10 @@ export function BorrowReduceDebtModalFooter({
             <ThemedText.DeprecatedMain fontWeight={400}>
               <Trans>Recieve Collateral</Trans>
             </ThemedText.DeprecatedMain>
-            <Checkbox hovered={false} checked={recieveCollateral} 
-            onClick={() => {
-              setRecieveCollateral(!recieveCollateral)
-            }}><div></div></Checkbox>
+            <Checkbox hovered={false} checked={recieveCollateral}
+              onClick={() => {
+                setRecieveCollateral(!recieveCollateral)
+              }}><div></div></Checkbox>
           </RowBetween>
         </AutoColumn>
       </DarkCard>
@@ -2440,7 +2393,7 @@ export function BorrowReduceDebtModalFooter({
                           </ThemedText.DeprecatedBlack>
                         </TextWithLoadingPlaceholder>
                       </RowBetween>
-                      
+
                     </AutoColumn>
 
                   </StyledCard>
@@ -2457,17 +2410,17 @@ export function BorrowReduceDebtModalFooter({
         style={{ margin: '10px 0 0 0' }}
         id={InterfaceElementName.CONFIRM_SWAP_BUTTON}
       >
-        { inputError ? (
+        {inputError ? (
           inputError
         ) : derivedState !== DerivedInfoState.VALID ? (
           <Trans>
             Invalid Transaction
           </Trans>
-          ) : (
-            <Text fontSize={20} fontWeight={500}>
+        ) : (
+          <Text fontSize={20} fontWeight={500}>
             <Trans>Reduce Position</Trans>
           </Text>
-          )
+        )
         }
       </ButtonError>
     </AutoRow>

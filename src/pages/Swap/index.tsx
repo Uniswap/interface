@@ -512,7 +512,7 @@ export default function Swap({ className }: { className?: string }) {
   const isValid = !swapInputError
   const dependentField: Field = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT
 
-  const lmtIsValid = !inputError
+  const lmtIsValid = !inputError && !lmtRouteIsLoading && !lmtRouteNotFound
 
   const borrowIsValid = !borrowInputError
 
@@ -967,7 +967,7 @@ export default function Swap({ className }: { className?: string }) {
 
   const [debouncedLTV, debouncedSetLTV] = useDebouncedChangeHandler(ltv ?? "", onLTVChange);
 
-  console.log("borrowTrade: ", leverageTrade)
+  console.log("leverageTrade: ", leverageTrade)
 
   const showBorrowInputApproval = borrowInputApprovalState !== ApprovalState.APPROVED
   const showBorrowOutputApproval = borrowOutputApprovalState !== ApprovalState.APPROVED
@@ -1469,11 +1469,15 @@ export default function Swap({ className }: { className?: string }) {
                           id="leverage-button"
                           disabled={
                             !!inputError || !!contractError ||
-                            priceImpactTooHigh
+                            priceImpactTooHigh || !lmtIsValid
                           }
                         >
                           <Text fontSize={20} fontWeight={600}>
-                            {inputError ? (
+                            {!lmtIsValid ? (
+                               <Trans>
+                                Invalid
+                               </Trans>
+                              ) : inputError ? (
                               inputError
                             ) : contractError ? (
                               contractError

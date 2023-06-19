@@ -29,7 +29,7 @@ import { monthYearDayFormatter } from 'utils/formatChartTimes'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import moment from "moment"
 import { BigNumber as BN } from "bignumber.js"
-import ClosePositionModal, { AddLeveragePremiumModal } from 'components/swap/CloseLeveragePositionModal'
+import ClosePositionModal, { AddLeveragePremiumModal } from 'components/swap/LMTModals'
 import { useWeb3React } from '@web3-react/core'
 import {  useLimitlessPositionFromTokenId } from 'hooks/useV3Positions'
 

@@ -18,7 +18,7 @@ import { useLimitlessPositionFromTokenId } from 'hooks/useV3Positions'
 import { BorrowPremiumPositionDetails, ReduceBorrowDetails, ReduceLeveragePositionDetails } from './AdvancedSwapDetails'
 import useDebounce from 'hooks/useDebounce'
 import { useLeverageManagerAddress } from 'hooks/useGetLeverageManager'
-import { useBorrowManagerContract, useLeverageManagerContract } from 'hooks/useContract'
+import { useBorrowManagerContract, useLeverageManagerContract, useLiquidityManagerContract } from 'hooks/useContract'
 import {BigNumber as BN} from "bignumber.js"
 import useDebouncedChangeHandler from 'hooks/useDebouncedChangeHandler'
 import { LightCard } from 'components/Card'
@@ -137,16 +137,17 @@ export function AddLeveragePremiumModal({
   // console.log("args: ", trader, isOpen, tokenId, leverageManagerAddress)
 
   const { loading, error, position} = useLimitlessPositionFromTokenId(tokenId)
-  const leverageManagerAddress = position?.leverageManagerAddress;
-  const leverageManager = useLeverageManagerContract(position?.leverageManagerAddress, true)
+  const liquidityManagerAddress = position?.liquidityManagerAddress;
+  const liquidityManager = useLiquidityManagerContract(position?.liquidityManagerAddress, true)
 
   const addTransaction = useTransactionAdder()
 
 
   const handleAddPremium = useCallback(() => {
-    if (leverageManager) {
+    if (liquidityManager) {
       setAttemptingTxn(true)
-      leverageManager.payPremium(trader, position?.isToken0).then(
+      // payPremium(address trader, bool isBorrow, bool isToken0)
+      liquidityManager.payPremium(trader, false, position?.isToken0).then(
         (hash: any) => {
           addTransaction(hash, {
             type: TransactionType.PREMIUM_LEVERAGE
@@ -178,7 +179,7 @@ export function AddLeveragePremiumModal({
   }, [onAcceptChanges, shouldLogModalCloseEvent])
 
   const modalBottom = useCallback(() => {
-    return (<AddPremiumLeverageModalFooter leverageManagerAddress={leverageManagerAddress} tokenId={tokenId} trader={trader}
+    return (<AddPremiumLeverageModalFooter liquidityManagerAddress={liquidityManagerAddress} tokenId={tokenId} trader={trader}
     handleAddPremium={handleAddPremium}
     />)
   }, [
@@ -243,14 +244,14 @@ export function AddBorrowPremiumModal({
   // console.log("args: ", trader, isOpen, tokenId, leverageManagerAddress)
 
   const { loading, error, position} = useLimitlessPositionFromTokenId(tokenId)
-  const borrowManagerAddress = position?.borrowManagerAddress;
-  const borrowManager = useBorrowManagerContract(borrowManagerAddress, true)
+  const liquidityManagerAddress = position?.liquidityManagerAddress;
+  const liquidityManager = useLiquidityManagerContract(liquidityManagerAddress, true)
   const addTransaction = useTransactionAdder()
 
   const handleAddPremium = useCallback(() => {
-    if (borrowManager) {
+    if (liquidityManager) {
       setAttemptingTxn(true)
-      borrowManager.payPremium(trader, position?.isToken0).then(
+      liquidityManager.payPremium(trader, true, position?.isToken0).then(
         (hash: any) => {
           addTransaction(hash, {
             type: TransactionType.PREMIUM_BORROW
@@ -282,7 +283,7 @@ export function AddBorrowPremiumModal({
   }, [onAcceptChanges, shouldLogModalCloseEvent])
 
   const modalBottom = useCallback(() => {
-    return (<AddPremiumBorrowModalFooter borrowManagerAddress={borrowManagerAddress} tokenId={tokenId} trader={trader}
+    return (<AddPremiumBorrowModalFooter liquidityManagerAddress={liquidityManagerAddress} tokenId={tokenId} trader={trader}
     handleAddPremium={handleAddPremium}
     />)
   }, [

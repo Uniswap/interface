@@ -230,7 +230,7 @@ export function ReduceLeveragePositionDetails({
               }
             >
               <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
-                <Trans>Position</Trans>
+                <Trans>Total Output Position</Trans>
               </ThemedText.DeprecatedSubHeader>
             </MouseoverTooltip>
           </RowFixed>
@@ -632,52 +632,6 @@ export function AdvancedLeverageSwapDetails({
           syncing={syncing}
           symbolAppend={trade.inputAmount.currency.symbol}
         />
-        
-        {/*<RowBetween>
-          <RowFixed>
-            <MouseoverTooltip
-              text={
-                <Trans>
-                  The real leverage after adding the first premium to your collateral: (borrow amount + collateral + premium)/(collateral+premium)
-                </Trans>
-              }
-              disableHover={hideInfoTooltips}
-            >
-              <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
-                <Trans>Effective Leverage</Trans>
-              </ThemedText.DeprecatedSubHeader>
-            </MouseoverTooltip>
-          </RowFixed>
-          <TextWithLoadingPlaceholder syncing={syncing} width={65}>
-            <TruncatedText>
-              <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
-                {
-                  leverageTrade?.effectiveLeverage ? `${(leverageTrade?.effectiveLeverage)}`
-                    : '-'}
-              </ThemedText.DeprecatedBlack>
-            </TruncatedText>
-          </TextWithLoadingPlaceholder>
-        </RowBetween>*/}
-        {/*<RowBetween>
-          <RowFixed>
-            <MouseoverTooltip
-              text={<Trans>The impact your trade has on the market price of this pool.</Trans>}
-              disableHover={hideInfoTooltips}
-            >
-              <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
-                <Trans>Price Impact</Trans>
-              </ThemedText.DeprecatedSubHeader>
-            </MouseoverTooltip>
-          </RowFixed>
-          <TextWithLoadingPlaceholder syncing={syncing} width={50}>
-            <TruncatedText>
-              <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
-                <FormattedPriceImpact priceImpact={leverageTrade?.priceImpact} />
-
-              </ThemedText.DeprecatedBlack>
-            </TruncatedText>
-          </TextWithLoadingPlaceholder>
-        </RowBetween>*/}
         <Separator />
         <RowBetween>
           <RowFixed style={{ marginRight: '20px' }}>
@@ -707,9 +661,6 @@ export function AdvancedLeverageSwapDetails({
                 {trade.tradeType === TradeType.EXACT_INPUT
                   ? `${(addedOutput) ?? "-"}  ${trade.outputAmount.currency.symbol}`
                   : '-'
-
-                  // ? `${Number(leverageFactor) * Number(trade.minimumAmountOut(allowedSlippage).toSignificant(6))} ${trade.outputAmount.currency.symbol}`
-                  // : `${trade.maximumAmountIn(allowedSlippage).toSignificant(6)} ${trade.inputAmount.currency.symbol}`
                 }
               </TruncatedText>
             </ThemedText.DeprecatedBlack>

@@ -9,8 +9,8 @@ import { BigNumber as BN } from "bignumber.js"
 import { Currency, Field } from '@uniswap/widgets'
 import { useCurrency, useToken } from './Tokens'
 import { FeeAmount } from '@uniswap/v3-sdk'
-import { computeBorrowManagerAddress, computeLeverageManagerAddress, usePool } from './usePools'
-import { BORROW_MANAGER_FACTORY_ADDRESSES, LEVERAGE_MANAGER_FACTORY_ADDRESSES } from 'constants/addresses'
+import { computeBorrowManagerAddress, computeLeverageManagerAddress, computeLiquidityManagerAddress, usePool } from './usePools'
+import { BORROW_MANAGER_FACTORY_ADDRESSES, LEVERAGE_MANAGER_FACTORY_ADDRESSES, LIQUIDITY_MANAGER_FACTORY_ADDRESSES } from 'constants/addresses'
 import { useWeb3React } from '@web3-react/core'
 import _ from 'lodash'
 
@@ -98,6 +98,12 @@ export function useLimitlessPositions(account: string | undefined): {loading: bo
             tokenB: key.token1,
             fee: (key.fee),
           }),
+          liquidityManagerAddress: computeLiquidityManagerAddress({
+            factoryAddress: LIQUIDITY_MANAGER_FACTORY_ADDRESSES[chainId ?? 80001],
+            tokenA: key.token0,
+            tokenB: key.token1,
+            fee: (key.fee)
+          }),
           isBorrow: position.isBorrow,
           token0Address: key.token0,
           token1Address: key.token1,
@@ -167,6 +173,12 @@ export function useLimitlessPositionFromTokenId(tokenId: string | undefined): { 
           tokenA: key.token0,
           tokenB: key.token1,
           fee: (key.fee),
+        }),
+        liquidityManagerAddress: computeLiquidityManagerAddress({
+          factoryAddress: LIQUIDITY_MANAGER_FACTORY_ADDRESSES[chainId ?? 80001],
+          tokenA: key.token0,
+          tokenB: key.token1,
+          fee: (key.fee)
         }),
         token0Address: key.token0,
         token1Address: key.token1,

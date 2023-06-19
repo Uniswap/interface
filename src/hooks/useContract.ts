@@ -39,6 +39,7 @@ import { abi as testTokenAbi } from "../perpspotContracts/TestToken.json"
 import { abi as PoolAbi } from "../perpspotContracts/UniswapV3Pool.json"
 import { abi as GlobalStorageAbi } from "../perpspotContracts/GlobalStorage.json"
 import { abi as BorrowManagerAbi } from "../perpspotContracts/BorrowManager.json"
+import { abi as LiquidityManagerAbi } from "../perpspotContracts/LiquidityManager.json"
 import { getContract } from '../utils'
 
 const { abi: IUniswapV2PairABI } = IUniswapV2PairJson
@@ -83,6 +84,10 @@ export function useTokenContract(tokenAddress?: string, withSignerIfPossible?: b
 
 export function useLeverageManagerContract(leverageManagerAddress?: string, withSignerIfPossible?: boolean) {
   return useContract(leverageManagerAddress, LeverageManagerAbi, withSignerIfPossible)
+}
+
+export function useLiquidityManagerContract(liquidityManagerAddress?: string, withSignerIfPossible?: boolean) {
+  return useContract(liquidityManagerAddress, LiquidityManagerAbi, withSignerIfPossible)
 }
 
 export function useBorrowManagerContract(borrowManagerAddress?: string, withSignerIfPossible?: boolean) {

@@ -488,6 +488,9 @@ export function LeverageModalHeader({
               </TruncatedText>
             </RowFixed>
             <RowFixed gap="0px">
+              <Text fontSize={12} fontWeight={300} marginRight="2px">
+                {"Payment"}
+              </Text>
               <CurrencyLogo currency={trade.inputAmount.currency} size="20px" style={{ marginRight: '12px' }} />
               <Text fontSize={20} fontWeight={500}>
                 {trade.inputAmount.currency.symbol}

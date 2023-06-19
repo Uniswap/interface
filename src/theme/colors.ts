@@ -129,9 +129,7 @@ const commonTheme = {
 
 export const darkTheme = {
   ...commonTheme,
-
   userThemeColor: colors.magentaVibrant,
-
   background: colors.gray800,
   backgroundBackdrop: colors.gray950,
   backgroundSurface: colors.gray900,
@@ -141,11 +139,9 @@ export const darkTheme = {
   backgroundOutline: opacify(24, colors.gray300),
   backgroundScrim: opacify(72, colors.gray900),
   backgroundScrolledSurface: opacify(72, colors.gray900),
-
   textPrimary: colors.white,
   textSecondary: colors.gray300,
   textTertiary: colors.gray500,
-
   accentAction: colors.blue400,
   accentActive: colors.blue400,
   accentSuccess: colors.green200,

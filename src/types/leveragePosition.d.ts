@@ -5,6 +5,7 @@ import { FeeAmount, Pool } from '@uniswap/v3-sdk'
 export interface LimitlessPositionDetails {
   leverageManagerAddress: string | undefined
   borrowManagerAddress: string | undefined
+  liquidityManagerAddress: string | undefined
   isBorrow: boolean
   token0Address: string | undefined
   token1Address: string | undefined
