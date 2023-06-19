@@ -65,7 +65,7 @@ const StyledTokenRow = styled.div<{
   background-color: transparent;
   display: grid;
   font-size: 16px;
-  grid-template-columns: 1fr 1fr 1fr 0.75fr 1fr 1fr 1fr 0.5fr;
+  grid-template-columns: 0.7fr 1fr 1fr 0.75fr 1fr 1fr 1fr 0.5fr;
   line-height: 24px;
   max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT};
   min-width: 390px;
@@ -98,15 +98,15 @@ const StyledTokenRow = styled.div<{
   }
 
   @media only screen and (max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT}) {
-    grid-template-columns: 1fr 1fr 1fr 0.75fr 1fr 1fr 1fr 0.5fr;
+    grid-template-columns: 0.7fr 1fr 1fr 0.75fr 1fr 1fr 1fr 0.5fr;
   }
 
   @media only screen and (max-width: ${LARGE_MEDIA_BREAKPOINT}) {
-    grid-template-columns: 1fr 1fr 1fr 0.75fr 1fr 1fr 1fr 0.5fr;
+    grid-template-columns: 0.7fr 1fr 1fr 0.75fr 1fr 1fr 1fr 0.5fr;
   }
 
   @media only screen and (max-width: ${MEDIUM_MEDIA_BREAKPOINT}) {
-    grid-template-columns:  1fr 1fr 1fr 0.75fr 1fr 1fr 1fr 0.5fr;
+    grid-template-columns:  0.7fr 1fr 1fr 0.75fr 1fr 1fr 1fr 0.5fr;
   }
 
   @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
@@ -704,7 +704,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
       const timeLeft = moment.duration(moment.unix(Number(position.repayTime)).add(1, 'days').diff(now));
       return position.unusedPremium * (timeLeft.asSeconds() / 86400);
     }
-    return "-"
+    return undefined
   }, [position, now])
 
   // const token0Quote = useMemo(() => {
@@ -774,16 +774,22 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
           }
           PnL={
             <Trans>
-              <TruncatedTableText>
-                <AutoRow>
+              <AutoRow>
+              <RowBetween>
                   <ArrowCell>
                     {arrow}
                   </ArrowCell>
+                  
+                  <TruncatedTableText>
                   <DeltaText delta={Number(pnl)}>
-                    {pnl ? ((Math.round(Number(pnl)*10000)/10000)) : "-"} {inputCurrencySymbol}
+                    {pnl ? ((Math.round(Number(pnl)*10000)/10000)) : "-"} 
                   </DeltaText>
-                </AutoRow>
-              </TruncatedTableText>
+                  </TruncatedTableText>
+                  {inputCurrencySymbol}               
+                </RowBetween>
+              
+              </AutoRow>
+                
             </Trans>
           }
           entryPrice={
@@ -799,7 +805,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
           remainingPremium={
             <Trans>
               <TruncatedTableText>
-                {(remainingPremium > 0? remainingPremium: 0)}
+                {(remainingPremium ? remainingPremium: 0)}
               </TruncatedTableText>
               {` ${inputCurrencySymbol}`}
             </Trans>

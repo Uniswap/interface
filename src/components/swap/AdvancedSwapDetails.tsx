@@ -831,14 +831,14 @@ export function AdvancedBorrowSwapDetails({
           symbolAppend={outputCurrency?.symbol}
           width={"100px"}
         />
-        <ValueLabel 
+        {/* <ValueLabel 
           description="The remaining premium returned."
           label="Returned Premium"
           value={borrowTrade?.unusedPremium?borrowTrade?.unusedPremium:0 }
           syncing={syncing}
           symbolAppend={outputCurrency?.symbol}
           width={"100px"}
-        />
+        /> */}
       </AutoColumn>
     </StyledCard>
   )
