@@ -4,13 +4,14 @@ import { HistoryCallback, PeriodParams, ResolutionString, SubscribeBarsCallback,
 import { useEffect, useMemo, useRef } from "react";
 
 import _ from "lodash";
-import { fetchPoolPriceData } from "graphql/limitlessGraph/poolPriceData";
-import { client as UniswapClient, arbitrumClient } from "graphql/limitlessGraph/uniswapClients";
+import { PriceChartEntry, fetchLiveBar, fetchPoolPriceData } from "graphql/limitlessGraph/poolPriceData";
+import { uniswapClient } from "graphql/limitlessGraph/uniswapClients";
 import { limitlessClient } from "graphql/limitlessGraph/limitlessClients";
 import { useWeb3React } from "@web3-react/core";
 import { Pool } from "@uniswap/v3-sdk";
+import { Bar } from "public/charting_library/datafeed-api";
 
-arbitrumClient
+
 
 export const SUPPORTED_RESOLUTIONS = { 60: "1h", 240: "4h", "1D": "1d" };
 
@@ -105,7 +106,8 @@ export default function useDatafeed(
 
 
           try {
-            let { data, error } = await fetchPoolPriceData(poolAddress, from, to, countBack, invertPrice, useUniswapSubgraph ? arbitrumClient : limitlessClient);
+            let { data, error } = await fetchPoolPriceData(poolAddress, from, to, countBack, invertPrice, useUniswapSubgraph ? uniswapClient : limitlessClient);
+            console.log("data", data)
             const noData = !data || data.length === 0;
             if (error) {
               console.error("subgraph error: ", error, data);
@@ -124,10 +126,29 @@ export default function useDatafeed(
           _subscribeUID: string,
           onResetCacheNeededCallback: () => void
         ) => {
-          // console.log('[subscribeBars]: Method call with subscriberUID:', _subscribeUID);
+          const {
+            useUniswapSubgraph,
+            invertPrice,
+            poolAddress
+          } = symbolInfo
+          console.log("[subscribe bars]", useUniswapSubgraph)
+          intervalRef.current && clearInterval(intervalRef.current);
+          intervalRef.current = setInterval(function () {
+            fetchLiveBar(
+              chainId, 
+              poolAddress, 
+              invertPrice, 
+              useUniswapSubgraph, 
+              useUniswapSubgraph ? uniswapClient : limitlessClient
+              ).then((bar) => {
+              if (bar) {
+                onRealtimeCallback((bar));
+              }
+            });
+          }, 500);
         },
-        unsubscribeBars: (subscriberUID: any) => {
-          // console.log('[unsubscribeBars]: Method call with subscriberUID:', subscriberUID);
+        unsubscribeBars: () => {
+          intervalRef.current && clearInterval(intervalRef.current);
         },
       }
     }

@@ -572,9 +572,6 @@ export function AdvancedLeverageSwapDetails({
   const addedOutput = (expectedOutput) ? (
               existingPosition && existingTotalPosition ? expectedOutput -  existingTotalPosition : expectedOutput
               ) : 0
-  console.log('leverageTrade', inputAmount?.toExact(),existingCollateral, leverageTrade, price,Number(expectedOutput ) - Number(existingTotalPosition)
-
-   , Number(borrowedAmount?.toExact()) - Number(existingTotalDebtInput),Number(inputAmount?.toExact()) - Number(existingCollateral) )
   return !trade ? null : (
     <StyledCard>
       <AutoColumn gap="sm">
@@ -692,6 +689,7 @@ export function AdvancedLeverageSwapDetails({
     </StyledCard>
   )
 }
+
 export function ReduceBorrowDetails({
   position,
 }: {

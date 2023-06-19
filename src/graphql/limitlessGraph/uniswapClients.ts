@@ -23,7 +23,7 @@ export const blockClient = new ApolloClient({
   },
 })
 
-export const client = new ApolloClient({
+export const uniswapClient = new ApolloClient({
   uri: 'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3',
   cache: new InMemoryCache({
     typePolicies: {
@@ -271,7 +271,7 @@ export function useUniswapSubgraph(): ApolloClient<NormalizedCacheObject> {
   const { chainId } = useWeb3React()
   switch (chainId) {
     case SupportedChainId.MAINNET://SupportedNetwork.ETHEREUM:
-      return client
+      return uniswapClient
     case SupportedChainId.ARBITRUM_ONE://SupportedNetwork.ARBITRUM:
       return arbitrumClient
     case SupportedChainId.OPTIMISM://SupportedNetwork.OPTIMISM:
@@ -283,6 +283,6 @@ export function useUniswapSubgraph(): ApolloClient<NormalizedCacheObject> {
     case SupportedChainId.BNB://SupportedNetwork.BNB:
       return bscClient
     default:
-      return client
+      return uniswapClient
   }
 }

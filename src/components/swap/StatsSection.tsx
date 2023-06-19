@@ -12,6 +12,7 @@ import { ReactNode } from 'react'
 import styled from 'styled-components/macro'
 import { ExternalLink, ThemedText } from 'theme'
 import { textFadeIn } from 'theme/styles'
+import { BigNumber as BN } from "bignumber.js"
 
 export const UNSUPPORTED_METADATA_CHAINS = [SupportedChainId.BNB]
 
@@ -97,17 +98,14 @@ export default function StatsSection(props: StatsSectionProps) {
   const { chainId, address, priceHigh24H, priceLow24H, delta, price, inversePrice, token0Symbol, token1Symbol } = props
   const { label, infoLink } = getChainInfo(chainId)
 
-  // console.log('delta', delta)
-
   // if inversePrice then token0 is base token, otherwise token0 is quote token
   const arrow = getDeltaArrow(delta, 18)
+
+  const baseQuoteSymbol = inversePrice ? `${token0Symbol} / ${token1Symbol}` : `${token1Symbol} / ${token0Symbol}`
 
   if (priceHigh24H || priceLow24H || delta || price) {
     return (
       <StatsWrapper data-testid="token-details-stats">
-        {/* <Header>
-          <Trans>Pool Stats</Trans>
-        </Header> */}
         <TokenStatsSection>
           <StatPair>
             <Stat
@@ -120,7 +118,7 @@ export default function StatsSection(props: StatsSectionProps) {
               }
               isPrice={true}
               baseTokenSymbol={inversePrice ? token0Symbol : token1Symbol}
-              title={<Trans>Current Price</Trans>}
+              title={<Trans>Current Price ({baseQuoteSymbol})</Trans>}
             />
             <StatWrapper data-cy={"delta-24h"}>
               <MouseoverTooltip text={<Trans>
@@ -132,30 +130,19 @@ export default function StatsSection(props: StatsSectionProps) {
                     {arrow}
                   </ArrowCell>
                   <DeltaText delta={Number(delta)}>
-                    {delta ? formatNumber(delta, NumberType.FiatTokenPrice).replace(/\$/g, '') : "-"}%
+                    {delta ? formatNumber(delta, NumberType.SwapTradeAmount) : "-"}%
                   </DeltaText>
                 </AutoRow>
-
               </StatPrice>
             </StatWrapper>
-            {/* <Stat
-              dataCy="delta-24h"
-              value={delta}
-              description={
-                <Trans>
-                  24H volume is the amount of the asset that has been traded on Uniswap v3 during the past 24 hours.
-                </Trans>
-              }
-              title={<Trans>24h Change</Trans>}
-            /> */}
           </StatPair>
           <StatPair>
             <Stat dataCy="24h-low" value={
               priceLow24H
-            } title={<Trans>24h low</Trans>} />
+            } title={<Trans>24h lowm ({baseQuoteSymbol})</Trans>} />
             <Stat dataCy="24h-high" value={
               priceHigh24H
-            } title={<Trans>24h high</Trans>} />
+            } title={<Trans>24h high ({baseQuoteSymbol})</Trans>} />
           </StatPair>
         </TokenStatsSection>
       </StatsWrapper>

@@ -433,7 +433,7 @@ export default function Swap({ className }: { className?: string }) {
       return [
         CurrencyAmount.fromRawAmount(
           inputCurrency,
-          new BN(parsedAmounts[Field.INPUT]?.toExact() ?? 0).multipliedBy(1.002).multipliedBy(1.1).shiftedBy(18).toFixed(0)
+          new BN(parsedAmounts[Field.INPUT]?.toExact() ?? 0).shiftedBy(18).toFixed(0)
         ),
         CurrencyAmount.fromRawAmount(
           outputCurrency,
@@ -460,6 +460,8 @@ export default function Swap({ className }: { className?: string }) {
 
   const [borrowInputApprovalState, approveInputBorrowManager] = useApproveCallback(approveInputAmount, borrowManagerAddress ?? undefined)
   const [borrowOutputApprovalState, approveOutputBorrowManager] = useApproveCallback(approveOutputAmount, borrowManagerAddress ?? undefined)
+  console.log("borrowInputApprovalState", borrowInputApprovalState, borrowOutputApprovalState, approveOutputAmount?.toExact())
+  
   const {
     trade: borrowTrade,
     inputError: borrowInputError,
@@ -512,7 +514,8 @@ export default function Swap({ className }: { className?: string }) {
   const isValid = !swapInputError
   const dependentField: Field = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT
 
-  const lmtIsValid = !inputError && !lmtRouteIsLoading && !lmtRouteNotFound
+  // valid user input
+  const lmtIsValid = !inputError
 
   const borrowIsValid = !borrowInputError
 
@@ -700,11 +703,6 @@ export default function Swap({ className }: { className?: string }) {
     allowedSlippage,
     allowance.state === AllowanceState.ALLOWED ? allowance.permitSignature : undefined
   )
-  // const inputIsToken0 = useMemo(() => {
-  //   if (currencies && currencies[Field.INPUT] && currencies[Field.OUTPUT]) {
-  //     return currencies[Field.INPUT]?.wrapped.sortsBefore(currencies[Field.OUTPUT]?.wrapped)
-  //   }
-  // }, [currencies])
 
   const handleSwap = useCallback(() => {
     if (!swapCallback) {
@@ -758,7 +756,6 @@ export default function Swap({ className }: { className?: string }) {
     trade?.outputAmount?.currency?.symbol,
   ])
 
-  // console.log("leverageAllowedSlippage: ", leverageAllowedSlippage.toFixed(6))
   const { callback: leverageCallback } = useAddLeveragePositionCallback(
     leverageManagerAddress ?? undefined,
     trade,
@@ -967,7 +964,7 @@ export default function Swap({ className }: { className?: string }) {
 
   const [debouncedLTV, debouncedSetLTV] = useDebouncedChangeHandler(ltv ?? "", onLTVChange);
 
-  console.log("leverageTrade: ", leverageTrade)
+  // console.log("leverageTrade: ", leverageTrade)
 
   const showBorrowInputApproval = borrowInputApprovalState !== ApprovalState.APPROVED
   const showBorrowOutputApproval = borrowOutputApprovalState !== ApprovalState.APPROVED
@@ -1113,6 +1110,7 @@ export default function Swap({ className }: { className?: string }) {
                         />
                       </Trace>
                     </InputSection>
+
                     {leverage && <InputLeverageSection>
                       <Trace section={InterfaceSectionName.CURRENCY_INPUT_PANEL}>
                         <LeveragedOutputPanel
@@ -1418,7 +1416,7 @@ export default function Swap({ className }: { className?: string }) {
                             <Trans>Connect Wallet</Trans>
                           </ButtonLight>
                         </TraceEvent>
-                      ) : ((routeNotFound || lmtRouteNotFound) && userHasSpecifiedInputOutput && !lmtRouteIsLoading ? (
+                      ) : (lmtRouteNotFound && userHasSpecifiedInputOutput && !lmtRouteIsLoading ? (
                         <GrayCard style={{ textAlign: 'center' }}>
                           <ThemedText.DeprecatedMain mb="4px">
                             <Trans>Insufficient liquidity for this trade.</Trans>
@@ -1473,11 +1471,7 @@ export default function Swap({ className }: { className?: string }) {
                           }
                         >
                           <Text fontSize={20} fontWeight={600}>
-                            {!lmtIsValid ? (
-                               <Trans>
-                                Invalid
-                               </Trans>
-                              ) : inputError ? (
+                            {inputError ? (
                               inputError
                             ) : contractError ? (
                               contractError
@@ -1554,10 +1548,7 @@ export default function Swap({ className }: { className?: string }) {
                             value={
                               (borrowInputApprovalState === ApprovalState.NOT_APPROVED || borrowOutputApprovalState === ApprovalState.NOT_APPROVED) ?
                                 "-"
-                                :"-"
-                                  // (borrowTrade?.expectedOutput ?
-
-                                  //   formatNumber(leverageTrade?.expectedOutput) : "-")
+                                : "-"
                             }
                             onUserInput={handleTypeOutput}
                             label={

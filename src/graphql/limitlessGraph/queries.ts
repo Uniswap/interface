@@ -5,7 +5,7 @@ query poolHourDatas($startTime: Int!, $address: String!) {
   poolHourDatas(
     where: { pool: $address, periodStartUnix_gt: $startTime }
     orderBy: periodStartUnix
-    orderDirection: asc
+    orderDirection: desc
   ) {
     periodStartUnix
     token0Price

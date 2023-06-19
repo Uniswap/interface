@@ -1307,7 +1307,7 @@ export function AddPremiumLeverageModalFooter({
   const token1 = useToken(position?.token1Address)
   const { tradeInfo, inputError } = useDerivedAddLeveragePremiumInfo(liquidityManagerAddress, trader, tokenId, position?.isToken0, setDerivedState)
   const inputIsToken0 = !position?.isToken0
-  console.log("tradeInfo: ", tradeInfo); 
+  // console.log("tradeInfo: ", tradeInfo); 
 
   const inputCurrency = useCurrency(position?.isToken0 ? position?.token0Address : position?.token1Address)
   const outputCurrency = useCurrency(position?.isToken0 ? position?.token1Address : position?.token0Address)
@@ -1331,6 +1331,8 @@ export function AddPremiumLeverageModalFooter({
 
   const loading = derivedState === DerivedInfoState.LOADING
   const valid = derivedState === DerivedInfoState.VALID
+
+  console.log("tradeInfo", tradeInfo)
 
 
   return (
@@ -1395,7 +1397,7 @@ export function AddPremiumLeverageModalFooter({
                         <TextWithLoadingPlaceholder syncing={loading} width={65}>
                           <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
                             {
-                              `${tradeInfo ? new BN(tradeInfo.totalPremium).toString() : "-"}%`
+                              `${tradeInfo ? new BN(tradeInfo.totalPremium).toString() : "-"}`
                             }
                           </ThemedText.DeprecatedBlack>
                         </TextWithLoadingPlaceholder>
@@ -1592,7 +1594,7 @@ export function AddPremiumBorrowModalFooter({
                   <TextWithLoadingPlaceholder syncing={loading} width={65}>
                     <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
                       {
-                        `${tradeInfo ? new BN(tradeInfo.totalPremium).toString() : "-"}%`
+                        `${tradeInfo ? new BN(tradeInfo.totalPremium).toString() : "-"}`
                       }
                     </ThemedText.DeprecatedBlack>
                   </TextWithLoadingPlaceholder>

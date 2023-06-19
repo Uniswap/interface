@@ -11,7 +11,7 @@ import { defaultChartProps, DEFAULT_PERIOD, disabledFeaturesOnMobile } from "./c
 import useDatafeed from "./useDataFeed";
 import { FeeAmount, Pool, computePoolAddress } from '@uniswap/v3-sdk';
 import { Currency, Token } from '@uniswap/sdk-core';
-import { arbitrumClient, useUniswapSubgraph } from 'graphql/limitlessGraph/uniswapClients';
+import { uniswapClient, useUniswapSubgraph } from 'graphql/limitlessGraph/uniswapClients';
 import { useLimitlessSubgraph, limitlessClient } from 'graphql/limitlessGraph/limitlessClients';
 import { V3_CORE_FACTORY_ADDRESSES as UNISWAP_FACTORIES } from "constants/addresses-uniswap"
 import { V3_CORE_FACTORY_ADDRESSES as LIMITLESS_FACTORIES, POOL_INIT_CODE_HASH, UNISWAP_POOL_INIT_CODE_HASH, feth, fusdc } from "constants/addresses"
@@ -29,6 +29,7 @@ import moment from "moment"
 import { POOL_STATS_QUERY } from 'graphql/limitlessGraph/queries';
 import { BigNumber as BN } from "bignumber.js"
 import styled from 'styled-components';
+import { LATEST_POOL_DAY_QUERY, LATEST_POOL_INFO_QUERY } from 'graphql/limitlessGraph/poolPriceData';
 
 const POOL_STATE_INTERFACE = new Interface(IUniswapV3PoolStateABI)
 
@@ -79,28 +80,31 @@ export const PoolDataSection = ({
 	const [,pool] = usePool(token0, token1, fee)
 
 	useEffect(() => {
-		// if longer than 5 seconds w/o update, reload
-		if (lastUpdate < moment.now() - 1000 * 5) {
+		// if longer than 1 seconds w/o update, reload
+		if (lastUpdate < moment.now() - 1000 * 1) {
 			setLastUpdate(moment.now())
 		}
 	})
 
 	const uniswapPoolAddress = useMemo(() => {
 		if (chainId && token0 && token1 && fee) {
+
 			if (token0?.address.toLowerCase() === fusdc.toLowerCase() && token1?.address.toLowerCase() === feth.toLowerCase()) {
-				return "0xc31e54c7a869b9fcbecc14363cf510d1c41fa443";
+				return "0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640";
 			}
 
-			return computePoolAddress({
-				factoryAddress: UNISWAP_FACTORIES[42161],
-				tokenA: token0,
-				tokenB: token1,
-				fee,
-				initCodeHashManualOverride: UNISWAP_POOL_INIT_CODE_HASH
-			}).toLowerCase()
+			// return computePoolAddress({
+			// 	factoryAddress: UNISWAP_FACTORIES[1],
+			// 	tokenA: token0,
+			// 	tokenB: token1,
+			// 	fee,
+			// 	initCodeHashManualOverride: UNISWAP_POOL_INIT_CODE_HASH
+			// }).toLowerCase()
 		}
 		return undefined
 	}, [chainId, token0, token1, fee])
+
+	// console.log("uniswapPoolAddress", uniswapPoolAddress)
 
 	const limitlessPoolAddress = useMemo(() => {
 		if (chainId && token0 && token1 && fee) {
@@ -146,38 +150,52 @@ export const PoolDataSection = ({
 				// console.log("ABC", uniswapPoolAddress?.toLowerCase())
 				try {
 					if (uniswapPoolAddress) {
-						const startTime = moment().subtract(1, 'days').unix()
-						// console.log("startTime: ", startTime)
-						const result = await arbitrumClient.query(
+						const result = await uniswapClient.query(
 							{
-								query: POOL_STATS_QUERY,
+								query: LATEST_POOL_DAY_QUERY,
 								variables: {
 									address: uniswapPoolAddress,
-									startTime: startTime,
 								},
-								fetchPolicy: 'cache-first',
+								fetchPolicy: 'network-only',
 							}
 						)
-						if (!result.error && !result.loading) {
 
-							const data = result.data.poolHourDatas
+						const priceQuery = await uniswapClient.query(
+							{
+								query: LATEST_POOL_INFO_QUERY,
+								variables: {
+									address: uniswapPoolAddress
+								},
+								fetchPolicy: 'network-only'
+							}
+						)
 
-							let price = Number(pool?.token0Price.toFixed(20));
+						console.log("afs", priceQuery, result)
+
+						if (!result.error && !result.loading && !priceQuery.error && !priceQuery.loading) {
+							const data = result.data.poolDayDatas
+
+							let price = priceQuery.data.pool.token0Price;
+
 							const invertPrice = price < 1;
-							let price24hAgo = data[0].token0Price
+							const {
+								high,
+								low,
+								open
+							} = data[0]
 							let delta;
 							let price24hHigh;
 							let price24hLow;
 							if (invertPrice) {
 								price = 1 / price;
-								price24hAgo = 1 / price24hAgo;
+								let price24hAgo = 1 / open;
 								delta = (Number(price) - Number(price24hAgo)) / Number(price24hAgo) * 100
-								price24hHigh = Math.max(...data.map((item: any) => 1 / Number(item.high)))
-								price24hLow = Math.min(...data.map((item: any) => 1 / Number(item.low)))
+								price24hHigh = 1 / Number(low) // Math.max(...data.map((item: any) => 1 / Number(item.high)))
+								price24hLow = 1 / Number(high) // Math.min(...data.map((item: any) => 1 / Number(item.low)))
 							} else {
-								delta = (Number(price) - Number(price24hAgo)) / Number(price24hAgo) * 100
-								price24hHigh = Math.max(...data.map((item: any) => Number(item.high)))
-								price24hLow = Math.min(...data.map((item: any) => Number(item.low)))
+								delta = (Number(price) - Number(open)) / (Number(open)) * 100
+								price24hHigh = Number(high)
+								price24hLow = Number(low)
 							}
 							setStats(
 								{
@@ -189,8 +207,6 @@ export const PoolDataSection = ({
 								}
 							)
 						}
-
-						// console.log("ExchangeResult ", result)
 					}
 				} catch (err) {
 					console.log("subgraph error: ", err)
@@ -226,10 +242,10 @@ export const PoolDataSection = ({
 		if (token0?.address.toLowerCase() === fusdc.toLowerCase() && token1?.address.toLowerCase() === feth.toLowerCase()) {
 			setSymbol(JSON.stringify(
 				{
-					poolAddress: "0xC31E54c7a869B9FcBEcc14363CF510d1c41fa443",
+					poolAddress: "0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640",
 					baseSymbol: "fETH",
 					quoteSymbol: "fUSDC",
-					invertPrice: true,
+					invertPrice: false,
 					useUniswapSubgraph: true
 				}
 			))
