@@ -389,7 +389,7 @@ function useDerivedLeverageReduceInfo(
       const formattedSlippage = new BN(allowedSlippage).plus(100).shiftedBy(16).toFixed(0)
       const formattedReduceAmount = new BN(reduceAmount).shiftedBy(18).toFixed(0);
       const inputReduceAmount =
-        Math.abs(Number(position.totalPositionRaw) - Number(formattedReduceAmount)) < 1e8
+        Math.abs(Number(position.totalPositionRaw) - Number(formattedReduceAmount)) < 1e12
           // Number(position.totalPositionRaw) <= Number(formattedReduceAmount)
           ? position.totalPositionRaw : formattedReduceAmount
 
@@ -479,7 +479,7 @@ function useDerivedBorrowReduceCollateralInfo(
     reducePositionResult: any
   }>()
 
-  console.log('useDerivedBorrowReduceCollateralInfo', position?.borrowManagerAddress, borrowManagerContract)
+  console.log('useDerivedBorrowReduceDebtlInfo', position?.borrowManagerAddress, borrowManagerContract)
 
   useEffect(() => {
     const laggedfxn = async () => {
@@ -492,7 +492,7 @@ function useDerivedBorrowReduceCollateralInfo(
       setState(DerivedInfoState.LOADING)
 
       try {
-        console.log('reducePositionArgs', position, position.isToken0, position.totalPosition, formattedReduceAmount)
+        console.log('reducePositionArgsss', position, position.isToken0, position.totalPosition, formattedReduceAmount)
         const reducePositionResult = await borrowManagerContract.callStatic.reduceBorrowPosition(
           position?.isToken0, true,
           recieveCollateral,
@@ -579,7 +579,7 @@ function useDerivedBorrowReduceDebtInfo(
     reducePositionResult: any
   }>()
 
-  console.log('useDerivedBorrowReduceCollateralInfo', position?.borrowManagerAddress, borrowManagerContract)
+  console.log('useDerivedBorrowReduceDebtInfo', position, position?.borrowManagerAddress, borrowManagerContract)
 
   useEffect(() => {
     const laggedfxn = async () => {
@@ -588,16 +588,21 @@ function useDerivedBorrowReduceDebtInfo(
         return
       }
 
-      const formattedReduceAmount = new BN(reduceAmount).shiftedBy(18).toFixed(0);
+      const formattedReduceAmount = String(Number(reduceAmount) * 1e18) //new BN(reduceAmount).shiftedBy(18).toFixed(0);
+      const inputReduceAmount =
+        Math.abs(Number(position.totalPositionRaw) - Number(formattedReduceAmount)) < 1e12
+          // Number(position.totalPositionRaw) <= Number(formattedReduceAmount)
+          ? position.totalPositionRaw : formattedReduceAmount
+
       setState(DerivedInfoState.LOADING)
 
       try {
-        console.log('reducePositionArgs', position, position.isToken0, position.totalPosition, formattedReduceAmount)
+        console.log('reducePositionArgsss', position, recieveCollateral, position.isToken0, inputReduceAmount, formattedReduceAmount)
         const reducePositionResult = await borrowManagerContract.callStatic.reduceBorrowPosition(
           position?.isToken0,
           false,
           recieveCollateral,
-          formattedReduceAmount
+          inputReduceAmount
         )
         console.log('reducePosition', reducePositionResult, tokenId);
         setContractResult({
@@ -703,7 +708,7 @@ function useDerivedAddLeveragePremiumInfo(
     account ?? undefined,
     useMemo(() => [currency0 ?? undefined, currency1 ?? undefined], [currency0, currency1])
   )
-
+  console.log('liqmanageradress', liquidityManagerAddress, isToken0)
   useEffect(() => {
     const laggedfxn = async () => {
       if (!liquidityManagerContract || !tokenId || !trader) {
@@ -716,11 +721,12 @@ function useDerivedAddLeveragePremiumInfo(
         // const position = await leverageManagerContract.callStatic.getPosition(trader, tokenId)
         // payPremium(address trader, bool isBorrow, bool isToken0)
         const addPremiumResult = await liquidityManagerContract.callStatic.payPremium(trader, false, isToken0)
+          console.log("addPosition:", addPremiumResult, new BN(addPremiumResult[0]).shiftedBy(-18).toString(), addPremiumResult[1].toString())
+
         setContractResult({
           addPremiumResult
         })
         setState(DerivedInfoState.VALID)
-        console.log("addPosition:", addPremiumResult)
 
       } catch (error) {
         console.error('Failed to get addPremium info', error)
@@ -735,8 +741,9 @@ function useDerivedAddLeveragePremiumInfo(
     if (contractResult) {
       const addPremiumResult = contractResult.addPremiumResult
       return {
-        totalPremium: new BN(addPremiumResult[0]).shiftedBy(-18).toNumber(),
-        remainingPremium: new BN(addPremiumResult[1]).shiftedBy(-18).toNumber()
+        totalPremium: Number(addPremiumResult[0].toString())/1e18,
+        remainingPremium: Number(addPremiumResult[1].toString())/1e18
+       // remainingPremium: Number(new BN(addPremiumResult[1]).shiftedBy(-18).toString())
       }
     } else {
       return undefined
@@ -900,7 +907,7 @@ export function ReduceLeverageModalFooter({
       const formattedSlippage = new BN(slippage).plus(100).shiftedBy(16).toFixed(0)
       const formattedReduceAmount = new BN(reduceAmount).shiftedBy(18).toFixed(0);
       const inputReduceAmount =
-        Math.abs(Number(position.totalPositionRaw) - Number(formattedReduceAmount)) < 1e8
+        Math.abs(Number(position.totalPositionRaw) - Number(formattedReduceAmount)) < 1e12
           // Number(position.totalPositionRaw) <= Number(formattedReduceAmount)
           ? position.totalPositionRaw : formattedReduceAmount
       return () => {
@@ -1332,7 +1339,7 @@ export function AddPremiumLeverageModalFooter({
   const loading = derivedState === DerivedInfoState.LOADING
   const valid = derivedState === DerivedInfoState.VALID
 
-  console.log("tradeInfo", tradeInfo)
+  // console.log("tradeInfo", tradeInfo)
 
 
   return (
@@ -1390,14 +1397,14 @@ export function AddPremiumLeverageModalFooter({
                             }
                           >
                             <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
-                              <Trans>Total Premium</Trans>
+                              <Trans>Premium To Pay</Trans>
                             </ThemedText.DeprecatedSubHeader>
                           </MouseoverTooltip>
                         </RowFixed>
                         <TextWithLoadingPlaceholder syncing={loading} width={65}>
                           <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
                             {
-                              `${tradeInfo ? new BN(tradeInfo.totalPremium).toString() : "-"}`
+                              `${tradeInfo ? new BN(tradeInfo.totalPremium).toString() : "-"}` + outputCurrency?.symbol
                             }
                           </ThemedText.DeprecatedBlack>
                         </TextWithLoadingPlaceholder>
@@ -1407,12 +1414,12 @@ export function AddPremiumLeverageModalFooter({
                           <MouseoverTooltip
                             text={
                               <Trans>
-                                Expected Remaining Premium
+                                Expected Returned Premium
                               </Trans>
                             }
                           >
                             <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
-                              <Trans>Remaining Premium</Trans>
+                              <Trans>Returned Premium</Trans>
                             </ThemedText.DeprecatedSubHeader>
                           </MouseoverTooltip>
                         </RowFixed>
@@ -1587,14 +1594,14 @@ export function AddPremiumBorrowModalFooter({
                       }
                     >
                       <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
-                        <Trans>Total Premium</Trans>
+                        <Trans>Premium To Pay</Trans>
                       </ThemedText.DeprecatedSubHeader>
                     </MouseoverTooltip>
                   </RowFixed>
                   <TextWithLoadingPlaceholder syncing={loading} width={65}>
                     <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
                       {
-                        `${tradeInfo ? new BN(tradeInfo.totalPremium).toString() : "-"}`
+                        `${tradeInfo ? new BN(tradeInfo.totalPremium).toString() : "-"}` + outputCurrency?.symbol
                       }
                     </ThemedText.DeprecatedBlack>
                   </TextWithLoadingPlaceholder>
@@ -1609,7 +1616,7 @@ export function AddPremiumBorrowModalFooter({
                       }
                     >
                       <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
-                        <Trans>Remaining Premium</Trans>
+                        <Trans>Returned Premium</Trans>
                       </ThemedText.DeprecatedSubHeader>
                     </MouseoverTooltip>
                   </RowFixed>
@@ -2126,13 +2133,16 @@ export function BorrowReduceDebtModalFooter({
 
     if (borrowManagerContract && position && Number(reduceAmount) > 0 && Number(reduceAmount) <= Number(position.totalDebtInput)) {
       const formattedReduceAmount = new BN(reduceAmount).shiftedBy(18).toFixed(0);
+      const inputReduceAmount =
+        Math.abs(Number(position.totalPositionRaw) - Number(formattedReduceAmount)) < 1e12
+          ? position.totalPositionRaw : formattedReduceAmount
       return () => {
         setAttemptingTxn(true)
         borrowManagerContract.reduceBorrowPosition(
           position?.isToken0,
           false,
           recieveCollateral,
-          formattedReduceAmount
+          inputReduceAmount
         ).then((hash: any) => {
           addTransaction(hash, {
             type: TransactionType.REDUCE_LEVERAGE
@@ -2179,7 +2189,7 @@ export function BorrowReduceDebtModalFooter({
   const initCollateral = position?.initialCollateral;
   const received = inputIsToken0 ? (Math.abs(Number(token0Amount)) - Number(debt))
     : (Math.abs(Number(token1Amount)) - Number(debt))
-
+  console.log('returned amount', returnedAmount)
   return (
     <AutoRow>
       <DarkCard marginTop="5px" padding="5px">

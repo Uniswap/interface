@@ -129,7 +129,7 @@ export const SearchBar = () => {
     ...trace,
   }
   const placeholderText = useMemo(() => {
-    return isMobileOrTablet ? t`Search` : t`Search Trading Pairs and Tokens`
+    return isMobileOrTablet ? t`Search` : t`Search Pairs`
   }, [isMobileOrTablet])
 
   const handleKeyPress = useCallback(

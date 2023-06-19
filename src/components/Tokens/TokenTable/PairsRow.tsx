@@ -533,7 +533,7 @@ export const PLoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<H
           price={
             <ClickableContent>
               <PriceInfoCell>
-                {currentPrice &&(currentPrice+" " + token0.symbol +"/"+token1.symbol)}
+                {currentPrice &&((1/Number(currentPrice)).toString()+" " + token0.symbol +"/"+token1.symbol)}
                 <PercentChangeInfoCell>
                   <ArrowCell>{smallArrow}</ArrowCell>
                   <DeltaText delta={delta}>{formattedDelta}</DeltaText>
@@ -549,7 +549,7 @@ export const PLoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<H
           }
           tvl={
             <ClickableContent>
-              {formatNumber(2323420, NumberType.FiatTokenStats)}
+              {formatNumber(2323420000, NumberType.FiatTokenStats)}
             </ClickableContent>
           }
           volume={

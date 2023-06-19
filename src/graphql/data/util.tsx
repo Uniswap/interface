@@ -119,6 +119,7 @@ export function validateUrlChainParam(chainName: string | undefined) {
 }
 
 // TODO(cartcrom): refactor into safer lookup & replace usage
+// @ts-ignore
 export const CHAIN_NAME_TO_CHAIN_ID: { [key in Chain]: SupportedChainId } = {
   [Chain.Ethereum]: SupportedChainId.MAINNET,
   [Chain.EthereumGoerli]: SupportedChainId.GOERLI,

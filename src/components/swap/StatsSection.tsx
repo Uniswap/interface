@@ -122,7 +122,7 @@ export default function StatsSection(props: StatsSectionProps) {
             />
             <StatWrapper data-cy={"delta-24h"}>
               <MouseoverTooltip text={<Trans>
-                24H volume is the amount of the asset that has been traded on Uniswap v3 during the past 24 hours.
+                The amount percentage change in asset over last 24 hours. 
               </Trans>}>{<Trans>24h Change</Trans>}</MouseoverTooltip>
               <StatPrice>
                 <AutoRow>

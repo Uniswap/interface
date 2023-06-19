@@ -265,7 +265,7 @@ export default function SwapCurrencyInputPanel({
       {isTrade? (
         <Trans>{isInput ? "What you pay" : (isLevered ? "Total Output Position" : "What you get")}</Trans>
         ): (
-        <Trans>{isInput? "Collateral Amount": "Borrowed Amount"}</Trans>
+        <Trans>{isInput? "Collateral Amount": "Added Debt"}</Trans>
           )
         }
         

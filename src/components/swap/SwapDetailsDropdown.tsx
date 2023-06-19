@@ -128,14 +128,14 @@ interface BorrowDetailsDropdownProps {
 export default function SwapDetailsDropdown({ trade, syncing, loading, allowedSlippage, leverageTrade }: SwapDetailsInlineProps) {
   const theme = useTheme()
   const { chainId } = useWeb3React()
-  const [showDetails, setShowDetails] = useState(false)
+  const [showDetails, setShowDetails] = useState(true)
   const { leverage } = useSwapState()
 
-  useEffect(() => {
-    if (leverage && leverageTrade.state !== LeverageTradeState.VALID) {
-      setShowDetails(false)
-    }
-  }, [leverageTrade, leverage])
+  // useEffect(() => {
+  //   if (leverage && leverageTrade.state !== LeverageTradeState.VALID) {
+  //     setShowDetails(false)
+  //   }
+  // }, [leverageTrade, leverage])
 
   const disabled = (!leverage && !trade) || (leverage && leverageTrade.state !== LeverageTradeState.VALID)
   // console.log('leverageTrade.state', leverageTrade.state, disabled, leverage)
@@ -285,7 +285,7 @@ export default function SwapDetailsDropdown({ trade, syncing, loading, allowedSl
 export function BorrowDetailsDropdown({ trade, tradeState, syncing, loading, allowedSlippage }: BorrowDetailsDropdownProps) {
   const theme = useTheme()
   const { chainId } = useWeb3React()
-  const [showDetails, setShowDetails] = useState(false)
+  const [showDetails, setShowDetails] = useState(true)
   const { ltv } = useSwapState()
 
   const disabled = tradeState !== TradeState.VALID
