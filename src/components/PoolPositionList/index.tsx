@@ -3,6 +3,7 @@ import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import POOL_EXTENDED_ABI from 'abis/pool-extended.json'
 import PoolPositionListItem from 'components/PoolPositionListItem'
+import { MouseoverTooltip } from 'components/Tooltip'
 import { useMultipleContractSingleData } from 'lib/hooks/multicall'
 import React, { useMemo } from 'react'
 import { useStakingPools } from 'state/pool/hooks'
@@ -68,6 +69,7 @@ export default function PoolPositionList({ positions, filterByOperator }: PoolPo
   const stakingPools = useStakingPools(poolAddresses, poolIds)
   // TODO: can define more variables here {aprs, stake, ownStake}
   const aprs = stakingPools?.stakingPools?.map((p) => p.apr)
+  const irrs = stakingPools?.stakingPools?.map((p) => p.irr)
   const PoolInterface = new Interface(POOL_EXTENDED_ABI)
   // TODO: check how many times we are making this rpc call
   const results = useMultipleContractSingleData(poolAddresses, PoolInterface, 'getPool')
@@ -77,15 +79,17 @@ export default function PoolPositionList({ positions, filterByOperator }: PoolPo
     return results
       .map((result, i) => {
         const { result: pools, loading } = result
-        if (!chainId || loading || !pools || !pools?.[0] || !aprs) return ''
+        if (!chainId || loading || !pools || !pools?.[0] || !aprs || !irrs) return ''
         const { name, symbol, decimals, owner } = pools?.[0]
         const isPoolOperator = owner === account
         if (filterByOperator && !isPoolOperator) return ''
         const address = poolAddresses[i]
         const apr = aprs[i]
+        const irr = irrs[i]
         return {
           ...result,
           apr,
+          irr,
           address,
           decimals,
           symbol,
@@ -94,7 +98,7 @@ export default function PoolPositionList({ positions, filterByOperator }: PoolPo
         }
       })
       .filter((p) => p !== '')
-  }, [account, chainId, filterByOperator, poolAddresses, aprs, results])
+  }, [account, chainId, filterByOperator, poolAddresses, aprs, irrs, results])
 
   return (
     <>
@@ -103,7 +107,25 @@ export default function PoolPositionList({ positions, filterByOperator }: PoolPo
           {filterByOperator ? <Trans>Operated pools</Trans> : <Trans>Loaded pools</Trans>}
           {positions && ' (' + operatedPools.length + ')'}
         </div>
-        <div>{!filterByOperator && <Trans>apr</Trans>}</div>
+        {!filterByOperator && (
+          <div>
+            <MouseoverTooltip
+              text={<Trans>The pool operator&apos;s annualized yield. Increases as more stakers join the pool.</Trans>}
+            >
+              irr&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+            </MouseoverTooltip>
+            <MouseoverTooltip
+              text={
+                <Trans>
+                  The stakers&apos; annualized yield. Increases as the pool increases its own stake or as the pool
+                  operator increases the percent of rewards shared.
+                </Trans>
+              }
+            >
+              apr&ensp;
+            </MouseoverTooltip>
+          </div>
+        )}
       </DesktopHeader>
       <MobileHeader>
         <div>{filterByOperator ? <Trans>Operated pools</Trans> : <Trans>Loaded pools</Trans>}</div>

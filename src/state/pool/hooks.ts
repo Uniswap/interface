@@ -320,6 +320,7 @@ interface StakingPools {
   id: string
   operatorShare: number
   apr: number
+  irr?: number
   delegatedStake: BigNumber
   poolOwnStake: BigNumber
 }
@@ -395,7 +396,7 @@ export function useStakingPools(addresses: string[] | undefined, poolIds: string
   const { chainId } = useWeb3React()
   const supplyAmount = useTotalSupply(GRG[chainId ?? 1])
 
-  const aprs = useMemo(() => {
+  const yieldData = useMemo(() => {
     if (!delegatedStakes || !delegatedOwnStakes || !totalDelegatedStake || !totalPoolsOwnStake || !supplyAmount)
       return undefined
     const poolsInfo = stakingPools?.map((pool, i) => ({
@@ -407,15 +408,19 @@ export function useStakingPools(addresses: string[] | undefined, poolIds: string
 
     return poolsInfo?.map((p) => {
       // if we want to return NaN when pool has no delegated stake, we can remove the following assertion
+      const reward =
+        Math.pow(p.delegatedOwnStake / totalPoolsOwnStake, 2 / 3) *
+        Math.pow(p.delegatedStake / totalDelegatedStake, 1 / 3) *
+        ((Number(supplyAmount?.quotient) * 2) / 100)
       const apr =
         p.delegatedStake.toString() !== BigNumber.from(0).toString()
-          ? (Math.pow(p.delegatedOwnStake / totalPoolsOwnStake, 2 / 3) *
-              Math.pow(p.delegatedStake / totalDelegatedStake, 1 / 3) *
-              ((1_000_000 - p.operatorShare) / 1_000_000) *
-              ((Number(supplyAmount?.quotient) * 2) / 100)) /
-            p.delegatedStake
+          ? (reward * ((1_000_000 - p.operatorShare) / 1_000_000)) / p.delegatedStake
           : 0
-      return apr
+      const irr =
+        p.delegatedOwnStake.toString() !== BigNumber.from(0).toString()
+          ? (reward * (p.operatorShare / 1_000_000)) / p.delegatedOwnStake
+          : 0
+      return { apr, irr }
     })
   }, [delegatedStakes, delegatedOwnStakes, stakingPools, supplyAmount, totalDelegatedStake, totalPoolsOwnStake])
 
@@ -426,7 +431,8 @@ export function useStakingPools(addresses: string[] | undefined, poolIds: string
     stakingPools: stakingPools?.map((pool, i) => ({
       ...pool,
       id: inputs[i][0],
-      apr: aprs ? aprs[i] : 0,
+      apr: yieldData ? yieldData[i]?.apr : 0,
+      irr: yieldData ? yieldData[i]?.irr : 0,
       operatorShare: stakingPools[i].operatorShare,
       delegatedStake: delegatedStakes ? delegatedStakes[i].delegatedStake : 0,
       poolOwnStake: delegatedOwnStakes ? delegatedOwnStakes[i].poolOwnStake : 0,
