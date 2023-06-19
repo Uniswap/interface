@@ -114,13 +114,24 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
     variables: { ownerAddress: account ?? '' },
     fetchPolicy: 'cache-only', // PrefetchBalancesWrapper handles balance fetching/staleness; this component only reads from cache
   })
+
   const { tokens } = useNewTopTokens()
+  const { chainId } = useWeb3React()
 
   const ERC20Tokens: Token[] = []
-  tokens?.map((token) => ERC20Tokens.push({ address: token.id } as Token)) || []
+  if (tokens && tokens?.length > 0)
+    tokens?.map((token) =>
+      ERC20Tokens.push({
+        address: token.id,
+        chainId,
+        symbol: token.symbol,
+        name: token.name,
+        decimals: Number(token.decimals),
+      } as Token)
+    )
 
   const tokenBalances = useTokenBalances(account, ERC20Tokens)
-  console.log('tokenBalances', tokenBalances)
+  // console.log('tokenBalances', tokenBalances)
 
   // console.log('tokenBalances', relevantTokenBalances)
   // const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, currency ?? undefined)

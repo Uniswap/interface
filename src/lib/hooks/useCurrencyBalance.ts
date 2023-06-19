@@ -3,6 +3,7 @@ import { Currency, CurrencyAmount, Token } from '@pollum-io/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import ERC20ABI from 'abis/erc20.json'
 import { Erc20Interface } from 'abis/types/Erc20'
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import JSBI from 'jsbi'
 import { useMultipleContractSingleData, useSingleContractMultipleData } from 'lib/hooks/multicall'
 import { useMemo } from 'react'
@@ -99,6 +100,7 @@ export function useTokenBalances(
 }
 
 // get the balance for a single token/account combo
+// eslint-disable-next-line import/no-unused-modules
 export function useTokenBalance(account?: string, token?: Token): CurrencyAmount<Token> | undefined {
   const tokenBalances = useTokenBalances(
     account,

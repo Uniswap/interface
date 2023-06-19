@@ -25,6 +25,7 @@ function parseStringOrBytes32(str: string | undefined, bytes32: string | undefin
     : defaultValue
 }
 
+// eslint-disable-next-line import/no-unused-modules
 export const UNKNOWN_TOKEN_SYMBOL = 'UNKNOWN'
 const UNKNOWN_TOKEN_NAME = 'Unknown Token'
 
@@ -111,34 +112,4 @@ export function useCurrencyFromMap(tokens: TokenMap, currencyId?: string | null)
   if (wrappedNative?.address?.toUpperCase() === currencyId?.toUpperCase()) return wrappedNative
 
   return isNative ? nativeCurrency : token
-}
-
-export function useCurrenciesFromMap(
-  tokens: TokenMap,
-  currencyIds?: (string | null)[]
-): (Currency | null | undefined)[] {
-  const nativeCurrency = useNativeCurrency()
-  const { chainId } = useWeb3React()
-
-  const currencies = currencyIds?.map((currencyId) => {
-    const isNative = Boolean(nativeCurrency && currencyId?.toUpperCase() === 'ETH')
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    const shorthandMatchAddress = useMemo(() => {
-      const chain = supportedChainId(chainId)
-      return chain && currencyId ? TOKEN_SHORTHANDS[currencyId.toUpperCase()]?.[chain] : undefined
-    }, [currencyId])
-
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    const token = useTokenFromMapOrNetwork(tokens, isNative ? undefined : shorthandMatchAddress ?? currencyId)
-
-    if (currencyId === null || currencyId === undefined || !isSupportedChain(chainId)) return null
-
-    // this case so we use our builtin wrapped token instead of wrapped tokens on token lists
-    const wrappedNative = nativeCurrency?.wrapped
-    if (wrappedNative?.address?.toUpperCase() === currencyId?.toUpperCase()) return wrappedNative
-
-    return isNative ? nativeCurrency : token
-  })
-
-  return currencies || []
 }

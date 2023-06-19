@@ -2,7 +2,6 @@ import { Trans } from '@lingui/macro'
 import Column from 'components/Column'
 import { AutoRow } from 'components/Row'
 import { useMiniPortfolioEnabled } from 'featureFlags/flags/miniPortfolio'
-import { useIsNftPage } from 'hooks/useIsNftPage'
 import { useState } from 'react'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
@@ -60,12 +59,6 @@ const Pages: Array<Page> = [
     key: 'tokens',
     component: Tokens,
   },
-  // {
-  //   title: <Trans>NFTs</Trans>,
-  //   key: 'nfts',
-  //   component: NFTs,
-  //   loggingElementName: InterfaceElementName.MINI_PORTFOLIO_NFT_TAB,
-  // },
   {
     title: <Trans>Pools</Trans>,
     key: 'pools',
@@ -79,8 +72,7 @@ const Pages: Array<Page> = [
 ]
 
 function MiniPortfolio({ account }: { account: string }) {
-  const isNftPage = useIsNftPage()
-  const [currentPage, setCurrentPage] = useState(isNftPage ? 1 : 0)
+  const [currentPage, setCurrentPage] = useState(0)
 
   const Page = Pages[currentPage].component
   return (
