@@ -69,6 +69,7 @@ export const L1_CHAIN_IDS = [
   ChainId.CELO,
   ChainId.CELO_ALFAJORES,
   ChainId.BNB,
+  ChainId.AVALANCHE,
 ] as const
 
 export type SupportedL1ChainId = typeof L1_CHAIN_IDS[number]
