@@ -53,19 +53,16 @@ export function swapEthersErrorToUserReadableMessage(error: any): string {
       break
     //Blockchain Errors
     case 'CALL_EXCEPTION':
-      messageString =
-        'Call exception. Please check your input data. Try increasing your slippage tolerance. Note: fee-on-transfer and rebase tokens are incompatible with Uniswap V3.'
+      messageString = 'Call exception. Please check your input data.'
       break
     case 'INSUFFICIENT_FUNDS':
       messageString = 'Insufficient funds in your account. Please check your balance before submitting again.'
       break
     case 'NONCE_EXPIRED':
-      messageString =
-        'Nonce expired. Resubmit your transaction with a new nonce. Try increasing your slippage tolerance. Note: fee-on-transfer and rebase tokens are incompatible with Uniswap V3.'
+      messageString = 'Nonce expired. Resubmit your transaction with a new nonce.'
       break
     case 'REPLACEMENT_UNDERPRICED':
-      messageString =
-        'Replacement transaction underpriced. Please resubmit your transaction with a higher gas price. Try increasing your slippage tolerance. Note: fee-on-transfer and rebase tokens are incompatible with Uniswap V3.'
+      messageString = 'Replacement transaction underpriced. Please resubmit your transaction with a higher gas price.'
       break
     case 'TRANSACTION_REPLACED':
       messageString = 'Transaction replaced with another.'
@@ -77,17 +74,12 @@ export function swapEthersErrorToUserReadableMessage(error: any): string {
       messageString = 'Offchain fault.'
       break
     case 'UNPREDICTABLE_GAS_LIMIT':
-      messageString =
-        'Unpredictable gas limit. Please check your gas limit and try again. Try increasing your slippage tolerance. Note: fee-on-transfer and rebase tokens are incompatible with Uniswap V3.'
+      messageString = 'Unpredictable gas limit. Please check your gas limit and try again.'
       break
     case 'ACTION_REJECTED':
       messageString = 'Action rejected by user.'
       break
-    default:
-      messageString =
-        'Try increasing your slippage tolerance. Note: fee-on-transfer and rebase tokens are incompatible with Uniswap V3.'
-      break
   }
 
-  return `${reasonString} ${messageString}`
+  return `${reasonString} ${messageString} Try increasing your slippage tolerance. Note: fee-on-transfer and rebase tokens are incompatible with Uniswap V3.`
 }
