@@ -278,13 +278,6 @@ export const WBTC_AVALANCHE = new Token(
   'WBTC',
   'Wrapped BTC'
 )
-export const BUSD_AVALANCHE = new Token(
-  ChainId.AVALANCHE,
-  '0x19860CCB0A68fd4213aB9D8266F7bBf05A8dDe98',
-  18,
-  'BUSD',
-  'Binance USD'
-)
 
 export const UNI: { [chainId: number]: Token } = {
   [ChainId.MAINNET]: new Token(ChainId.MAINNET, UNI_ADDRESSES[ChainId.MAINNET], 18, 'UNI', 'Uniswap'),

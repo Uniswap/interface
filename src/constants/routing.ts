@@ -4,7 +4,6 @@ import { ChainId, Currency, Token } from '@uniswap/sdk-core'
 import {
   AMPL,
   BTC_BSC,
-  BUSD_AVALANCHE,
   BUSD_BSC,
   CAKE_BSC,
   CEUR_CELO,
@@ -104,7 +103,6 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
     DAI_AVALANCHE,
     USDC_AVALANCHE,
     USDT_AVALANCHE,
-    BUSD_AVALANCHE,
     WETH_AVALANCHE,
     WBTC_AVALANCHE,
   ],
@@ -187,7 +185,6 @@ export const COMMON_BASES: ChainCurrencyList = {
     USDT_AVALANCHE,
     WETH_AVALANCHE,
     WBTC_AVALANCHE,
-    BUSD_AVALANCHE,
   ],
 }
 
@@ -210,7 +207,6 @@ export const BASES_TO_TRACK_LIQUIDITY_FOR: ChainTokenList = {
     USDC_AVALANCHE,
     USDT_AVALANCHE,
     WBTC_AVALANCHE,
-    BUSD_AVALANCHE,
     WETH_AVALANCHE,
   ],
 }
