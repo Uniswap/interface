@@ -41,10 +41,30 @@ describe('Wallet Dropdown', () => {
     itShouldChangeTheLanguage()
   })
 
+  describe('testnet toggle', () => {
+    beforeEach(() => {
+      cy.visit('/swap')
+    })
+    it('should toggle testnet visibility', () => {
+      cy.get(getTestSelector('chain-selector')).last().click()
+      cy.get(getTestSelector('chain-selector-options')).should('not.contain.text', 'Sepolia')
+
+      cy.get(getTestSelector('web3-status-connected')).click()
+      cy.get(getTestSelector('wallet-settings')).click()
+      cy.get('#testnets-toggle').click()
+      cy.get(getTestSelector('close-account-drawer')).click()
+      cy.get(getTestSelector('chain-selector')).last().click()
+      cy.get(getTestSelector('chain-selector-options')).should('contain.text', 'Sepolia')
+    })
+  })
+
   describe('disconnected', () => {
     beforeEach(() => {
       cy.visit('/')
       cy.get(getTestSelector('web3-status-connected')).click()
+      // click twice, first time to show confirmation, second to confirm
+      cy.get(getTestSelector('wallet-disconnect')).click()
+      cy.get(getTestSelector('wallet-disconnect')).should('contain', 'Disconnect')
       cy.get(getTestSelector('wallet-disconnect')).click()
       cy.get(getTestSelector('wallet-settings')).click()
     })

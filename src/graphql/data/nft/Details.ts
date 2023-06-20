@@ -1,6 +1,7 @@
 import { parseEther } from '@ethersproject/units'
 import gql from 'graphql-tag'
 import { CollectionInfoForAsset, GenieAsset, Markets, SellOrder } from 'nft/types'
+import { wrapScientificNotation } from 'nft/utils'
 import { useMemo } from 'react'
 
 import { NftAsset, useDetailsQuery } from '../__generated__/types-and-hooks'
@@ -105,7 +106,7 @@ export function useNftAssetDetails(
   const asset = queryData?.nftAssets?.edges[0]?.node as NonNullable<NftAsset> | undefined
   const collection = asset?.collection
   const listing = asset?.listings?.edges[0]?.node
-  const ethPrice = parseEther(listing?.price?.value?.toString() ?? '0').toString()
+  const ethPrice = parseEther(wrapScientificNotation(listing?.price?.value?.toString() ?? '0')).toString()
 
   return useMemo(
     () => ({
