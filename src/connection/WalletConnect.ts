@@ -14,7 +14,7 @@ const RPC_URLS_WITHOUT_FALLBACKS = Object.entries(RPC_URLS).reduce(
   {}
 )
 
-export class WalletConnectPopup extends WalletConnect {
+export class WalletConnectV1 extends WalletConnect {
   ANALYTICS_EVENT = 'Wallet Connect QR Scan'
   constructor({
     actions,
@@ -31,7 +31,7 @@ export class WalletConnectPopup extends WalletConnect {
 }
 
 // Custom class for Uniswap Wallet specific functionality
-export class UniwalletConnect extends WalletConnectPopup {
+export class UniwalletConnect extends WalletConnectV1 {
   ANALYTICS_EVENT = 'Uniswap Wallet QR Scan'
   static UNI_URI_AVAILABLE = 'uni_uri_available'
 

@@ -43,7 +43,7 @@ export function useV3PositionFees(
         } catch {
           // If the static call fails, the default state will remain for `amounts`.
           // This case is handled by returning unclaimed fees as empty.
-          // TODO(INFRA-178): Look into why we have failures with call data being 0x.
+          // TODO(WEB-2283): Look into why we have failures with call data being 0x.
         }
       }
     })()

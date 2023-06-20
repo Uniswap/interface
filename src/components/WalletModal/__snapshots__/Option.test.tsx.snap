@@ -86,6 +86,11 @@ exports[`Wallet Option renders default state 1`] = `
   justify-content: center;
 }
 
+.c2 img {
+  border: 1px solid #D2D9EE;
+  border-radius: 12px;
+}
+
 .c2 > img,
 .c2 span {
   height: 40px;

@@ -64,7 +64,7 @@ export function ErrorModalContent({ errorType, onRetry }: ErrorModalContentProps
         </Row>
       </ColumnCenter>
       <Row justify="center">
-        <ButtonPrimary marginX="24px" onClick={onRetry}>
+        <ButtonPrimary marginX="24px" marginBottom="16px" onClick={onRetry}>
           <Trans>Retry</Trans>
         </ButtonPrimary>
       </Row>

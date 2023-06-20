@@ -1,6 +1,6 @@
 import { BaseVariant, FeatureFlag, featureFlagSettings, useUpdateFlag } from 'featureFlags'
-import { useNativeUSDCArbitrumFlag } from 'featureFlags/flags/nativeUsdcArbitrum'
 import { DetailsV2Variant, useDetailsV2Flag } from 'featureFlags/flags/nftDetails'
+import { useRoutingAPIForPriceFlag } from 'featureFlags/flags/priceRoutingApi'
 import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
 import { UnifiedRouterVariant, useRoutingAPIV2Flag } from 'featureFlags/flags/unifiedRouter'
 import { useUpdateAtom } from 'jotai/utils'
@@ -217,9 +217,9 @@ export default function FeatureFlagModal() {
       />
       <FeatureFlagOption
         variant={BaseVariant}
-        value={useNativeUSDCArbitrumFlag()}
-        featureFlag={FeatureFlag.nativeUsdcArbitrum}
-        label="Enable Circle native USDC on Arbitrum"
+        value={useRoutingAPIForPriceFlag()}
+        featureFlag={FeatureFlag.routingAPIPrice}
+        label="Use the URA or routing-api for price fetches"
       />
       <FeatureFlagGroup name="Debug">
         <FeatureFlagOption
