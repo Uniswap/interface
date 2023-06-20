@@ -1,10 +1,12 @@
+import { t } from '@lingui/macro'
+
 import { getReason } from './swapErrorToUserReadableMessage'
 
 export function swapEthersErrorToUserReadableMessage(error: any): string {
   const reason = getReason(error)
   const errorCode = error?.code
 
-  const reasonString = 'Error Message: ' + `${reason ? reason : 'unknown error'}` + '.'
+  const reasonString = t`${reason ? reason : 'Unknown error.'}.`
   let messageString = ''
   switch (errorCode) {
     //Generic Errors
