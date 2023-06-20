@@ -4,11 +4,11 @@ import { LoadingBubble } from 'components/Tokens/loading'
 import { EventCell } from 'nft/components/collection/ActivityCells'
 import { ActivityEvent } from 'nft/types'
 import { getMarketplaceIcon } from 'nft/utils'
-import { shortenAddress } from 'nft/utils/address'
 import { formatEth } from 'nft/utils/currency'
 import { getTimeDifference } from 'nft/utils/date'
 import { ReactNode } from 'react'
 import styled from 'styled-components/macro'
+import { shortenAddress } from 'utils'
 
 const TR = styled.tr`
   border-bottom: ${({ theme }) => `1px solid ${theme.backgroundOutline}`};
@@ -177,7 +177,7 @@ const AssetActivity = ({ events }: { events?: ActivityEvent[] }) => {
               <TD>
                 {fromAddress && (
                   <Link href={`https://etherscan.io/address/${fromAddress}`} target="_blank" rel="noopener noreferrer">
-                    {shortenAddress(fromAddress, 2, 4)}
+                    {shortenAddress(fromAddress, 2)}
                   </Link>
                 )}
               </TD>
@@ -185,7 +185,7 @@ const AssetActivity = ({ events }: { events?: ActivityEvent[] }) => {
               <TD>
                 {toAddress && (
                   <Link href={`https://etherscan.io/address/${toAddress}`} target="_blank" rel="noopener noreferrer">
-                    {shortenAddress(toAddress, 2, 4)}
+                    {shortenAddress(toAddress, 2)}
                   </Link>
                 )}
               </TD>
