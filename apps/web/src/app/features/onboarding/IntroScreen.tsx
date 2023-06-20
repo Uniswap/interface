@@ -1,9 +1,6 @@
 import { ImportOnboardingRoutes, OnboardingRoutes } from 'src/app/navigation/constants'
-import { Circle, Image, Stack, Text, XStack, YStack } from 'ui/src'
+import { Circle, Icons, Image, Stack, Text, XStack, YStack } from 'ui/src'
 import { UNISWAP_LOGO } from 'ui/src/assets'
-import BoltIcon from 'ui/src/assets/icons/bolt.svg'
-import BookIcon from 'ui/src/assets/icons/book.svg'
-import MultichainIcon from 'ui/src/assets/icons/multichain.svg'
 import { LinkButton } from 'ui/src/components/button/Button'
 import { Flex } from 'ui/src/components/layout/Flex'
 import { opacify } from 'ui/src/theme/color/utils'
@@ -85,19 +82,19 @@ export function IntroScreen(): JSX.Element {
       <YStack alignItems="flex-start" gap="$spacing24" justifyContent="center">
         <InfoRow
           backgroundColor={opacify(10, '$green200')}
-          icon={<BoltIcon height={iconSizes.icon20} width={iconSizes.icon20} />}
+          icon={<Icons.Bolt size="$icon.20" />}
           primaryText="Supercharge your swaps"
           secondaryText="1-click checkout"
         />
         <InfoRow
           backgroundColor="$pink200"
-          icon={<MultichainIcon width={iconSizes.icon20} />}
+          icon={<Icons.Multichain size="$icon.20" />}
           primaryText="Multichain experience"
           secondaryText="Say goodbye to switching chains"
         />
         <InfoRow
           backgroundColor="$blue200"
-          icon={<BookIcon height={iconSizes.icon20} width={iconSizes.icon20} />}
+          icon={<Icons.Book size="$icon.20" />}
           primaryText="Human readable transactions"
           secondaryText="Blockchain activity you can understand"
         />
