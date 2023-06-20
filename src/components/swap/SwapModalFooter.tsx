@@ -709,7 +709,6 @@ function useDerivedAddLeveragePremiumInfo(
     account ?? undefined,
     useMemo(() => [currency0 ?? undefined, currency1 ?? undefined], [currency0, currency1])
   )
-  console.log('liqmanageradress', liquidityManagerAddress, isToken0)
   useEffect(() => {
     const laggedfxn = async () => {
       if (!liquidityManagerContract || !tokenId || !trader) {
@@ -1340,6 +1339,8 @@ export function AddPremiumLeverageModalFooter({
     position?.leverageManagerAddress ?? undefined
   )
 
+  // console.log("leverageApprovalState", leverageApprovalState, approveAmount)
+
   const updateLeverageAllowance = useCallback(async () => {
     try {
       await approveLeverageManager()
@@ -1483,7 +1484,7 @@ export function AddPremiumLeverageModalFooter({
       ) : (
         <ButtonError
           onClick={handleAddPremium}
-          disabled={!!inputError && derivedState !== DerivedInfoState.VALID}
+          disabled={!!inputError || derivedState !== DerivedInfoState.VALID}
           style={{ margin: '10px 0 0 0' }}
           id={InterfaceElementName.CONFIRM_SWAP_BUTTON}
         >

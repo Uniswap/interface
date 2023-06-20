@@ -397,7 +397,7 @@ export function BorrowPremiumPositionDetails({
           <TextWithLoadingPlaceholder syncing={false} width={65}>
             <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
               <TruncatedText>
-                {ltv ? `${formatNumber(ltv*100)}%` : '-'}
+                {ltv ? `${new BN(ltv*100).toString()}%` : '-'}
               </TruncatedText>
 
             </ThemedText.DeprecatedBlack>

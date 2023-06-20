@@ -67,6 +67,8 @@ export default function useDatafeed(
             invertPrice,
             useUniswapSubgraph
           } = JSON.parse(symbolName);
+
+          console.log("resolveSymbol", symbolName)
           const symbolInfo = {
             name: baseSymbol + "/" + quoteSymbol,
             type: "crypto",
@@ -132,20 +134,20 @@ export default function useDatafeed(
             poolAddress
           } = symbolInfo
           console.log("[subscribe bars]", useUniswapSubgraph)
-          intervalRef.current && clearInterval(intervalRef.current);
-          intervalRef.current = setInterval(function () {
-            fetchLiveBar(
-              chainId, 
-              poolAddress, 
-              invertPrice, 
-              useUniswapSubgraph, 
-              useUniswapSubgraph ? uniswapClient : limitlessClient
-              ).then((bar) => {
-              if (bar) {
-                onRealtimeCallback((bar));
-              }
-            });
-          }, 500);
+          // intervalRef.current && clearInterval(intervalRef.current);
+          // intervalRef.current = setInterval(function () {
+          //   fetchLiveBar(
+          //     chainId, 
+          //     poolAddress, 
+          //     invertPrice, 
+          //     useUniswapSubgraph, 
+          //     useUniswapSubgraph ? uniswapClient : limitlessClient
+          //     ).then((bar) => {
+          //     if (bar) {
+          //       onRealtimeCallback((bar));
+          //     }
+          //   });
+          // }, 5000);
         },
         unsubscribeBars: () => {
           intervalRef.current && clearInterval(intervalRef.current);

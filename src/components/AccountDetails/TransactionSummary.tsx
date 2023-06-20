@@ -378,5 +378,9 @@ export function TransactionSummary({ info }: { info: TransactionInfo }) {
       return <Trans>
         Reduce Borrow Debt Summary
       </Trans>
+    case TransactionType.ADD_LEVERAGE:
+      return <Trans>
+        Add Leverage Summary
+      </Trans>
   }
 }

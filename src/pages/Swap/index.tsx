@@ -460,7 +460,7 @@ export default function Swap({ className }: { className?: string }) {
 
   const [borrowInputApprovalState, approveInputBorrowManager] = useApproveCallback(approveInputAmount, borrowManagerAddress ?? undefined)
   const [borrowOutputApprovalState, approveOutputBorrowManager] = useApproveCallback(approveOutputAmount, borrowManagerAddress ?? undefined)
-  console.log("borrowInputApprovalState", borrowInputApprovalState, borrowOutputApprovalState, approveOutputAmount?.toExact())
+  // console.log("borrowInputApprovalState", borrowInputApprovalState, borrowOutputApprovalState, approveOutputAmount?.toExact())
   
   const {
     trade: borrowTrade,
@@ -959,7 +959,7 @@ export default function Swap({ className }: { className?: string }) {
   const [debouncedLeverageFactor, onDebouncedLeverageFactor] = useDebouncedChangeHandler(leverageFactor ?? "1", onLeverageFactorChange);
 
   // usePool(currencies.INPUT ?? undefined, currencies.OUTPUT ?? undefined, FeeAmount.LOW)
-
+    console.log("leveragePositions: ", leveragePositions)
   // part of borrow integration
 
   const [debouncedLTV, debouncedSetLTV] = useDebouncedChangeHandler(ltv ?? "", onLTVChange);

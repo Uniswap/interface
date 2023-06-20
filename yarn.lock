@@ -1815,11 +1815,6 @@
     "@ethersproject/properties" "^5.7.0"
     "@ethersproject/strings" "^5.7.0"
 
-"@fontsource/akaya-kanadaka@^5.0.3":
-  version "5.0.3"
-  resolved "https://registry.yarnpkg.com/@fontsource/akaya-kanadaka/-/akaya-kanadaka-5.0.3.tgz#b96ab87228b7d9d76617b93335f7b9a2dad0f47f"
-  integrity sha512-M+nglF5/5w0WL9L4FtI1qU3s5g/E4EoHdVbPbRNnnMgneu1ZVqZ1Rdn6ClCr35KqlRbz7UsF4m8x6RPUl5D3KA==
-
 "@fontsource/ibm-plex-mono@^4.5.1":
   version "4.5.1"
   resolved "https://registry.yarnpkg.com/@fontsource/ibm-plex-mono/-/ibm-plex-mono-4.5.1.tgz#f09822dc9d143710687ff8bd05248a86cc2dc4d1"

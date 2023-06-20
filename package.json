@@ -118,7 +118,6 @@
     "@apollo/client": "^3.7.2",
     "@coinbase/wallet-sdk": "^3.6.4",
     "@cypress/code-coverage": "^3.10.0",
-    "@fontsource/akaya-kanadaka": "^5.0.3",
     "@fontsource/ibm-plex-mono": "^4.5.1",
     "@fontsource/inter": "^4.5.1",
     "@graphql-codegen/cli": "^2.15.0",

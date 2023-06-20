@@ -691,7 +691,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
           ltv={
             <Trans>
               <TruncatedTableText>
-                {formatNumber(Number(ltv) * 100)}%
+                {new BN((Number(ltv) * 100)).toString()}%
                 </TruncatedTableText>
             </Trans>
           }

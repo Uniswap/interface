@@ -156,7 +156,7 @@ export const PoolDataSection = ({
 								variables: {
 									address: uniswapPoolAddress,
 								},
-								fetchPolicy: 'network-only',
+								fetchPolicy: 'standby',
 							}
 						)
 
@@ -166,11 +166,9 @@ export const PoolDataSection = ({
 								variables: {
 									address: uniswapPoolAddress
 								},
-								fetchPolicy: 'network-only'
+								fetchPolicy: 'standby'
 							}
 						)
-
-						console.log("afs", priceQuery, result)
 
 						if (!result.error && !result.loading && !priceQuery.error && !priceQuery.loading) {
 							const data = result.data.poolDayDatas
@@ -219,24 +217,24 @@ export const PoolDataSection = ({
 
 	// console.log("stats: ", stats)
 
-	useEffect(() => {
-		async function fetch() {
-			if (uniswapPoolAddress && uniswapPoolContract) {
-				try {
-					const token0Price = await uniswapPoolContract.callStatic.token0Price()
-					if (token0Price) {
-						setUniswapPoolExists(true)
-						setStats((prev) => ({ ...prev, token0Price: new BN(token0Price.toString()).shiftedBy(18).toNumber() }))
-						setUniswapToken0Price(convertBNToNum(token0Price, 18))
-					}
-				} catch (err) {
-					// console.log("err: ", err)
-				}
-			}
-		}
+	// useEffect(() => {
+	// 	async function fetch() {
+	// 		if (uniswapPoolAddress && uniswapPoolContract) {
+	// 			try {
+	// 				const token0Price = await uniswapPoolContract.callStatic.token0Price()
+	// 				if (token0Price) {
+	// 					setUniswapPoolExists(true)
+	// 					setStats((prev) => ({ ...prev, token0Price: new BN(token0Price.toString()).shiftedBy(18).toNumber() }))
+	// 					setUniswapToken0Price(convertBNToNum(token0Price, 18))
+	// 				}
+	// 			} catch (err) {
+	// 				// console.log("err: ", err)
+	// 			}
+	// 		}
+	// 	}
 
-		fetch()
-	})
+	// 	fetch()
+	// })
 
 	useEffect(() => {
 		if (token0?.address.toLowerCase() === fusdc.toLowerCase() && token1?.address.toLowerCase() === feth.toLowerCase()) {

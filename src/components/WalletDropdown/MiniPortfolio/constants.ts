@@ -165,6 +165,11 @@ const TransactionTitleTable: { [key in TransactionType]: { [state in Transaction
     [TransactionStatus.Pending]: t`Reducing borrow collateral`,
     [TransactionStatus.Confirmed]: t`Reduced borrow collateral`,
     [TransactionStatus.Failed]: t`Reduce borrow collateral failed`,
+  },
+  [TransactionType.ADD_LEVERAGE]: {
+    [TransactionStatus.Pending]: t`Adding Leverage Position`,
+    [TransactionStatus.Confirmed]: t`Added Leverage Position`,
+    [TransactionStatus.Failed]: t`Leverage Creation Failed`,
   }
 }
 

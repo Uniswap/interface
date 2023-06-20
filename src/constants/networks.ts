@@ -122,7 +122,8 @@ export const RPC_URLS = {
     ...FALLBACK_URLS[SupportedChainId.POLYGON],
   ],
   [SupportedChainId.POLYGON_MUMBAI]: [
-    `https://polygon-mumbai.infura.io/v3/${INFURA_KEY}`,
+    // `https://polygon-mainnet.infura.io/v3/51c02664ce4c4612af6ff1f8518900ad`,
+    // `https://polygon-mumbai.infura.io/v3/${INFURA_KEY}`,
     ...FALLBACK_URLS[SupportedChainId.POLYGON_MUMBAI],
   ],
   [SupportedChainId.CELO]: FALLBACK_URLS[SupportedChainId.CELO],

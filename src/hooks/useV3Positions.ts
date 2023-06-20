@@ -41,6 +41,8 @@ export function useLimitlessPositions(account: string | undefined): {loading: bo
     account ?? undefined,
   ])
 
+  console.log("limitless", balanceLoading, balanceResult)
+
   // we don't expect any account balance to ever exceed the bounds of max safe int
   const accountBalance: number | undefined = balanceResult?.[0]?.toNumber()
 
