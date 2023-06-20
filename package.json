@@ -60,6 +60,7 @@
     "react-native-svg": "13.8.0",
     "react-native-web": "0.18.12",
     "react-refresh": "^0.14.0",
+    "semver": "7.5.2",
     "typescript": "4.9.4",
     "ua-parser-js": "0.7.33",
     "webpack": "^5.74.0",
