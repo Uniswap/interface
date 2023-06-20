@@ -271,13 +271,6 @@ export const DAI_AVALANCHE = new Token(
   'DAI',
   'Dai Stablecoin'
 )
-export const WBTC_AVALANCHE = new Token(
-  ChainId.AVALANCHE,
-  '0x408D4cD0ADb7ceBd1F1A1C33A0Ba2098E1295bAB',
-  8,
-  'WBTC',
-  'Wrapped BTC'
-)
 
 export const UNI: { [chainId: number]: Token } = {
   [ChainId.MAINNET]: new Token(ChainId.MAINNET, UNI_ADDRESSES[ChainId.MAINNET], 18, 'UNI', 'Uniswap'),
