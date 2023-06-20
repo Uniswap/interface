@@ -147,7 +147,7 @@ function PopupButtonContent({ connection, isDarkMode, show, onClick, onClose }: 
       </IconWrapper>
       <div>
         <WCv1BodyText>Connect with v1</WCv1BodyText>
-        <WCv1Caption color="textSecondary">Support for v1 will be discontinued very soon.</WCv1Caption>
+        <WCv1Caption color="textSecondary">Support for v1 will be discontinued June 28.</WCv1Caption>
       </div>
     </WCv1PopoverContent>
   )
