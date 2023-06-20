@@ -1,5 +1,4 @@
 import { BigintIsh, Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
-import JSBI from 'jsbi'
 import { i18n } from 'src/app/i18n'
 import { SpotPrice } from 'src/features/dataApi/spotPricesQuery'
 import { GQLNftAsset } from 'src/features/nfts/hooks'
@@ -20,6 +19,7 @@ import {
 } from 'wallet/src/features/transactions/types'
 import { WalletConnectEvent } from 'wallet/src/features/walletConnect/types'
 import { getValidAddress, shortenAddress } from 'wallet/src/utils/addresses'
+import { convertScientificNotationToNumber } from 'wallet/src/utils/convertScientificNotation'
 import { currencyIdToAddress } from 'wallet/src/utils/currencyId'
 import { formatCurrencyAmount, formatUSDPrice } from 'wallet/src/utils/format'
 
@@ -281,40 +281,6 @@ export const createBalanceUpdate = ({
   }
 }
 
-export function convertScientificNotationToNumber(value: string): string | JSBI {
-  let convertedValue: string | BigintIsh = value
-
-  // Convert scientific notation into number format so it can be parsed by BigInt properly
-  if (value.includes('e')) {
-    const [xStr, eStr] = value.split('e')
-    let x = Number(xStr)
-    let e = Number(eStr)
-    if (xStr?.includes('.')) {
-      const splitX = xStr.split('.')
-      const decimalPlaces = splitX[1]?.split('').length ?? 0
-      e -= decimalPlaces
-      x *= Math.pow(10, decimalPlaces)
-    }
-    try {
-      convertedValue = JSBI.multiply(
-        JSBI.BigInt(x),
-        JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(e))
-      )
-    } catch (error) {
-      // If the numbers can't be converted to BigInts then just do regular arithmetic (i.e. when the exponent is negative)
-      logger.debug(
-        'notifications/utils',
-        'convertScientificNotationToNumber',
-        'BigInt arithmetic unsuccessful',
-        e
-      )
-      convertedValue = (x * Math.pow(10, e)).toString()
-    }
-  }
-
-  return convertedValue
-}
-
 export const getFormattedCurrencyAmount = (
   currency: Maybe<Currency>,
   currencyAmountRaw: string,
@@ -370,7 +336,7 @@ const getShortenedAddressOrEns = (addressOrENS: string): string => {
 }
 
 /**
- * Based on noticiation type info, returns an AppNotification object for either NFT or Currency receive.
+ * Based on notification type info, returns an AppNotification object for either NFT or Currency receive.
  * Must be a 'Receive' type transaction.
  *
  * Returns undefined if not all data is found for either Currency or NFT case, or if transaction is not
@@ -382,7 +348,7 @@ export function buildReceiveNotification(
 ): ReceiveNFTNotification | ReceiveCurrencyTxNotification | undefined {
   const { typeInfo, status, chainId, hash, id } = transactionDetails
 
-  // Only build notification object on succesful receive transactions.
+  // Only build notification object on successful receive transactions.
   if (status !== TransactionStatus.Success || typeInfo.type !== TransactionType.Receive) {
     return undefined
   }

@@ -1,9 +1,7 @@
 import { TradeType } from '@uniswap/sdk-core'
-import JSBI from 'jsbi'
 import { createFinalizedTxAction } from 'src/features/notifications/notificationWatcherSaga.test'
 import {
   buildReceiveNotification,
-  convertScientificNotationToNumber,
   createBalanceUpdate,
   formSwapNotificationTitle,
   getCurrencySymbol,
@@ -21,30 +19,6 @@ import {
   TransactionType,
 } from 'wallet/src/features/transactions/types'
 import { SAMPLE_SEED_ADDRESS_1 } from 'wallet/src/test/fixtures'
-
-describe('convertScientificNotationToNumber', () => {
-  it('does not do anything to a regular number', () => {
-    expect(convertScientificNotationToNumber('123456')).toBe('123456')
-  })
-
-  it('converts a small number', () => {
-    expect(convertScientificNotationToNumber('3e-2')).toBe('0.03')
-  })
-
-  it('converts a large number', () => {
-    expect(convertScientificNotationToNumber('3e+21')).toEqual(
-      JSBI.BigInt('3000000000000000000000')
-    )
-    expect(convertScientificNotationToNumber('3e+2')).toEqual(JSBI.BigInt('300'))
-  })
-
-  it('converts a number with decimal places', () => {
-    expect(convertScientificNotationToNumber('3.023e10')).toEqual(JSBI.BigInt('30230000000'))
-    expect(convertScientificNotationToNumber('1.0254e+22')).toEqual(
-      JSBI.BigInt('10254000000000000000000')
-    )
-  })
-})
 
 describe(formSwapNotificationTitle, () => {
   it('formats succesful swap title', () => {
