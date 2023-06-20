@@ -6,12 +6,15 @@ import { GraphqlProvider } from 'src/app/apollo'
 import { BottomToast } from 'src/app/components/toast/BottomToast'
 import { AccountSwitcherScreen } from 'src/app/features/accounts/AccountSwitcherScreen'
 import { Complete } from 'src/app/features/onboarding/Complete'
-import { ImportMnemonic } from 'src/app/features/onboarding/ImportMnemonic'
-import { ImportOnboardingWrapper } from 'src/app/features/onboarding/ImportOnboardingWrapper'
+import { NameWallet } from 'src/app/features/onboarding/create/NameWallet'
+import { TestMnemonic } from 'src/app/features/onboarding/create/TestMnemonic'
+import { ViewMnemonic } from 'src/app/features/onboarding/create/ViewMnemonic'
+import { ImportMnemonic } from 'src/app/features/onboarding/import/ImportMnemonic'
+import { SelectWallets } from 'src/app/features/onboarding/import/SelectWallets'
 import { IntroScreen } from 'src/app/features/onboarding/IntroScreen'
+import { OnboardingStepWrapper } from 'src/app/features/onboarding/OnboardingStepWrapper'
 import { OnboardingWrapper } from 'src/app/features/onboarding/OnboardingWrapper'
 import { Password } from 'src/app/features/onboarding/Password'
-import { SelectWallets } from 'src/app/features/onboarding/SelectWallets'
 import { SettingsScreen } from 'src/app/features/settings/SettingsScreen'
 import { SettingsScreenWrapper } from 'src/app/features/settings/SettingsScreenWrapper'
 import { SettingsViewRecoveryPhraseScreen } from 'src/app/features/settings/SettingsViewRecoveryPhraseScreen'
@@ -19,7 +22,10 @@ import { SettingsWalletEditNicknameScreen } from 'src/app/features/settings/Sett
 import { SettingsWalletScreen } from 'src/app/features/settings/SettingsWalletScreen'
 import {
   AppRoutes,
+  CreateOnboardingRoutes,
+  createOnboardingSteps,
   ImportOnboardingRoutes,
+  importOnboardingSteps,
   OnboardingRoutes,
   SettingsRoutes,
   SettingsWalletRoutes,
@@ -39,12 +45,52 @@ const router = createHashRouter([
         element: <IntroScreen />,
       },
       {
+        path: OnboardingRoutes.Create,
+        element: (
+          <OnboardingStepWrapper
+            methodRoute={OnboardingRoutes.Create}
+            steps={createOnboardingSteps}
+          />
+        ),
+        children: [
+          {
+            path: CreateOnboardingRoutes.Password,
+            element: (
+              <Password
+                nextPath={`/${TopLevelRoutes.Onboarding}/${OnboardingRoutes.Create}/${CreateOnboardingRoutes.ViewMnemonic}`}
+              />
+            ),
+          },
+          {
+            path: CreateOnboardingRoutes.ViewMnemonic,
+            element: <ViewMnemonic />,
+          },
+          {
+            path: CreateOnboardingRoutes.TestMnemonic,
+            element: <TestMnemonic />,
+          },
+          {
+            path: CreateOnboardingRoutes.Naming,
+            element: <NameWallet />,
+          },
+        ],
+      },
+      {
         path: OnboardingRoutes.Import,
-        element: <ImportOnboardingWrapper />,
+        element: (
+          <OnboardingStepWrapper
+            methodRoute={OnboardingRoutes.Import}
+            steps={importOnboardingSteps}
+          />
+        ),
         children: [
           {
             path: ImportOnboardingRoutes.Password,
-            element: <Password />,
+            element: (
+              <Password
+                nextPath={`/${TopLevelRoutes.Onboarding}/${OnboardingRoutes.Import}/${ImportOnboardingRoutes.Mnemonic}`}
+              />
+            ),
           },
           {
             path: ImportOnboardingRoutes.Mnemonic,

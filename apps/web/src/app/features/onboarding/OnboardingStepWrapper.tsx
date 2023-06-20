@@ -1,23 +1,24 @@
 import { Outlet, useLocation } from 'react-router-dom'
-import {
-  importOnboardingSteps,
-  OnboardingRoutes,
-  TopLevelRoutes,
-} from 'src/app/navigation/constants'
+import { TopLevelRoutes } from 'src/app/navigation/constants'
 import { Circle, Stack, XStack } from 'ui/src'
 
-export function ImportOnboardingWrapper(): JSX.Element {
+type OnboardingStepsProps = {
+  methodRoute?: string
+  steps: string[]
+}
+
+export function OnboardingStepWrapper({ steps, methodRoute }: OnboardingStepsProps): JSX.Element {
   return (
     <>
       <Stack alignItems="center" flexGrow={1} justifyContent="center" width="100%">
         <Outlet />
       </Stack>
-      <OnboardingStepIndicator steps={importOnboardingSteps} />
+      <OnboardingStepIndicator methodRoute={methodRoute} steps={steps} />
     </>
   )
 }
 
-function OnboardingStepIndicator({ steps }: { steps: string[] }): JSX.Element | null {
+function OnboardingStepIndicator({ steps, methodRoute }: OnboardingStepsProps): JSX.Element | null {
   if (steps.length === 0) {
     return null
   }
@@ -27,8 +28,7 @@ function OnboardingStepIndicator({ steps }: { steps: string[] }): JSX.Element | 
       {steps.map((step) => (
         <StepCircle
           key={step}
-          // TODO: make more generic
-          route={`/${TopLevelRoutes.Onboarding}/${OnboardingRoutes.Import}/${step}`}
+          route={methodRoute ? `/${TopLevelRoutes.Onboarding}/${methodRoute}/${step}` : ''}
         />
       ))}
     </XStack>

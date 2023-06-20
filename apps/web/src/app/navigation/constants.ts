@@ -9,7 +9,10 @@ export enum OnboardingRoutes {
 }
 
 export enum CreateOnboardingRoutes {
-  Backup = 'backup',
+  Password = 'password',
+  ViewMnemonic = 'mnemonic',
+  TestMnemonic = 'testMnemonic',
+  Naming = 'naming',
 }
 
 export enum ImportOnboardingRoutes {
@@ -21,6 +24,12 @@ export enum ImportOnboardingRoutes {
 }
 
 // in order, so they can be mapped through for progress indicators
+export const createOnboardingSteps = [
+  CreateOnboardingRoutes.Password,
+  CreateOnboardingRoutes.ViewMnemonic,
+  CreateOnboardingRoutes.TestMnemonic,
+  CreateOnboardingRoutes.Naming,
+]
 export const importOnboardingSteps = [
   ImportOnboardingRoutes.Password,
   ImportOnboardingRoutes.Mnemonic,

@@ -1,4 +1,8 @@
-import { ImportOnboardingRoutes, OnboardingRoutes } from 'src/app/navigation/constants'
+import {
+  CreateOnboardingRoutes,
+  ImportOnboardingRoutes,
+  OnboardingRoutes,
+} from 'src/app/navigation/constants'
 import { Circle, Icons, Image, Stack, Text, XStack, YStack } from 'ui/src'
 import { UNISWAP_LOGO } from 'ui/src/assets'
 import { LinkButton } from 'ui/src/components/button/Button'
@@ -75,7 +79,10 @@ export function IntroScreen(): JSX.Element {
           to={`${OnboardingRoutes.Import}/${ImportOnboardingRoutes.Password}`}>
           I already have a wallet
         </LinkButton>
-        <LinkButton flexGrow={1} theme="primary" to="create">
+        <LinkButton
+          flexGrow={1}
+          theme="primary"
+          to={`${OnboardingRoutes.Create}/${CreateOnboardingRoutes.Password}`}>
           Create a new wallet
         </LinkButton>
       </YStack>

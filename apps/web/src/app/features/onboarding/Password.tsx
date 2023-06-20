@@ -4,17 +4,11 @@ import { usePasswordInput } from 'src/app/features/lockScreen/Locked'
 import { useOnboardingContext } from 'src/app/features/onboarding/OnboardingContextProvider'
 import { OnboardingInputError } from 'src/app/features/onboarding/OnboardingInputError'
 import { ONBOARDING_CONTENT_WIDTH } from 'src/app/features/onboarding/utils'
-import {
-  ImportOnboardingRoutes,
-  OnboardingRoutes,
-  TopLevelRoutes,
-} from 'src/app/navigation/constants'
 import { Input, Stack, Text, XStack, YStack } from 'ui/src'
 import { Button } from 'ui/src/components/button/Button'
-import { logger } from 'wallet/src/features/logger/logger'
 import { isValidPassword } from 'wallet/src/utils/password'
 
-export function Password(): JSX.Element {
+export function Password({ nextPath }: { nextPath: string }): JSX.Element {
   const navigate = useNavigate()
 
   const [passwordError, setPasswordError] = useState<string | undefined>(undefined)
@@ -28,12 +22,7 @@ export function Password(): JSX.Element {
     if (isValidPassword(enteredPassword)) {
       setPassword(enteredPassword)
       setPasswordError(undefined)
-      navigate(
-        `/${TopLevelRoutes.Onboarding}/${OnboardingRoutes.Import}/${ImportOnboardingRoutes.Mnemonic}`
-      )
-    } else {
-      logger.error('Password', 'onPress', 'Invalid password.')
-      setPasswordError('Password is too short. Please make it at least 8 characters long.')
+      navigate(nextPath)
     }
   }
 
