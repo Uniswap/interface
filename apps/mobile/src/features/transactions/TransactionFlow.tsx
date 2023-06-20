@@ -77,8 +77,10 @@ type InnerContentProps = Pick<
 
 type HeaderContentProps = Pick<
   TransactionFlowProps,
-  'dispatch' | 'derivedInfo' | 'flowName' | 'step' | 'showUSDToggle' | 'isUSDInput'
+  'dispatch' | 'flowName' | 'step' | 'showUSDToggle' | 'isUSDInput'
 > & {
+  isSwap: boolean
+  customSlippageTolerance: number | undefined
   setShowViewOnlyModal: Dispatch<SetStateAction<boolean>>
   setShowSettingsModal: Dispatch<SetStateAction<boolean>>
 }
@@ -117,9 +119,12 @@ export function TransactionFlow({
   const [showSettingsModal, setShowSettingsModal] = useState(false)
 
   const isSwap = isSwapInfo(derivedInfo)
+  const derivedSwapInfo = isSwap ? derivedInfo : undefined
+  const { customSlippageTolerance } = derivedSwapInfo ?? {}
+
   const hideInnerContentRouter = showTokenSelector || showRecipientSelector
 
-  // optimisation for not rendering InnerContent initially,
+  // optimization for not rendering InnerContent initially,
   // when modal is opened with recipient or token selector presented
   const [renderInnerContentRouter, setRenderInnerContentRouter] = useState(!hideInnerContentRouter)
   useEffect(() => {
@@ -147,9 +152,10 @@ export function TransactionFlow({
           width="100%">
           {step !== TransactionStep.SUBMITTED && (
             <HeaderContent
-              derivedInfo={derivedInfo}
+              customSlippageTolerance={customSlippageTolerance}
               dispatch={dispatch}
               flowName={flowName}
+              isSwap={isSwap}
               isUSDInput={isUSDInput}
               setShowSettingsModal={setShowSettingsModal}
               setShowViewOnlyModal={setShowViewOnlyModal}
@@ -214,7 +220,8 @@ export function TransactionFlow({
 
 function HeaderContent({
   dispatch,
-  derivedInfo,
+  isSwap,
+  customSlippageTolerance,
   flowName,
   step,
   showUSDToggle,
@@ -231,10 +238,6 @@ function HeaderContent({
     setShowSettingsModal(true)
     Keyboard.dismiss()
   }
-
-  const isSwap = isSwapInfo(derivedInfo)
-  const derivedSwapInfo = isSwap ? derivedInfo : undefined
-  const { customSlippageTolerance } = derivedSwapInfo ?? {}
 
   const isViewOnlyWallet = account?.type === AccountType.Readonly
 
