@@ -2,14 +2,16 @@ import { t } from '@lingui/macro'
 import { ChainId } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { WalletConnect } from '@web3-react/walletconnect-v2'
+import { showTestnetsAtom } from 'components/AccountDrawer/TestnetsToggle'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { getConnection } from 'connection'
 import { ConnectionType } from 'connection/types'
 import { getChainInfo } from 'constants/chainInfo'
-import { UniWalletSupportedChains } from 'constants/chains'
+import { L1_CHAIN_IDS, L2_CHAIN_IDS, TESTNET_CHAIN_IDS, UniWalletSupportedChains } from 'constants/chains'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useSelectChain from 'hooks/useSelectChain'
 import useSyncChainQuery from 'hooks/useSyncChainQuery'
+import { useAtomValue } from 'jotai/utils'
 import { Box } from 'nft/components/Box'
 import { Portal } from 'nft/components/common/Portal'
 import { Column, Row } from 'nft/components/Flex'
@@ -17,25 +19,12 @@ import { useIsMobile } from 'nft/hooks'
 import { useCallback, useRef, useState } from 'react'
 import { AlertTriangle, ChevronDown, ChevronUp } from 'react-feather'
 import { useTheme } from 'styled-components/macro'
-import { isProductionEnv } from 'utils/env'
 
 import * as styles from './ChainSelector.css'
 import ChainSelectorRow from './ChainSelectorRow'
 import { NavDropdown } from './NavDropdown'
 
-const NETWORK_SELECTOR_CHAINS = [
-  ChainId.MAINNET,
-  ChainId.POLYGON,
-  ChainId.OPTIMISM,
-  ChainId.ARBITRUM_ONE,
-  ChainId.CELO,
-  ChainId.BNB,
-  ChainId.AVALANCHE,
-]
-
-if (!isProductionEnv()) {
-  NETWORK_SELECTOR_CHAINS.push(ChainId.SEPOLIA)
-}
+const NETWORK_SELECTOR_CHAINS = [...L1_CHAIN_IDS, ...L2_CHAIN_IDS]
 
 interface ChainSelectorProps {
   leftAlign?: boolean
@@ -74,6 +63,11 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
 
   const theme = useTheme()
 
+  const showTestnets = useAtomValue(showTestnetsAtom)
+  const chains = showTestnets
+    ? NETWORK_SELECTOR_CHAINS
+    : NETWORK_SELECTOR_CHAINS.filter((chain: number) => !TESTNET_CHAIN_IDS.includes(chain))
+
   const ref = useRef<HTMLDivElement>(null)
   const modalRef = useRef<HTMLDivElement>(null)
   useOnClickOutside(ref, () => setIsOpen(false), [modalRef])
@@ -105,8 +99,8 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
 
   const dropdown = (
     <NavDropdown top="56" left={leftAlign ? '0' : 'auto'} right={leftAlign ? 'auto' : '0'} ref={modalRef}>
-      <Column paddingX="8">
-        {NETWORK_SELECTOR_CHAINS.map((selectorChain: ChainId) => (
+      <Column paddingX="8" data-testid="chain-selector-options">
+        {chains.map((selectorChain: ChainId) => (
           <ChainSelectorRow
             disabled={!walletSupportsChain.includes(selectorChain)}
             onSelectChain={onSelectChain}
@@ -129,6 +123,7 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
     <Box position="relative" ref={ref}>
       <MouseoverTooltip text={t`Your wallet's current network is unsupported.`} disabled={isSupported}>
         <Row
+          data-testid="chain-selector"
           as="button"
           gap="8"
           className={styles.ChainSelector}

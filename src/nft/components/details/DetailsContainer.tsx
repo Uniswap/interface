@@ -2,10 +2,10 @@ import { OpacityHoverState } from 'components/Common'
 import useCopyClipboard from 'hooks/useCopyClipboard'
 import { CollectionInfoForAsset, GenieAsset } from 'nft/types'
 import { putCommas } from 'nft/utils'
-import { shortenAddress } from 'nft/utils/address'
 import { useCallback } from 'react'
 import { Copy } from 'react-feather'
 import styled from 'styled-components/macro'
+import { shortenAddress } from 'utils'
 
 const Details = styled.div`
   display: grid;
@@ -80,7 +80,7 @@ const DetailsContainer = ({ asset, collection }: { asset: GenieAsset; collection
         header="Contract address"
         body={
           <Center onClick={copy}>
-            {shortenAddress(address, 2, 4)} <CopyIcon size={13} />
+            {shortenAddress(address, 2)} <CopyIcon size={13} />
           </Center>
         }
       />
@@ -97,7 +97,7 @@ const DetailsContainer = ({ asset, collection }: { asset: GenieAsset; collection
               rel="noopener noreferrer"
               target="_blank"
             >
-              {shortenAddress(creator.address, 2, 4)}
+              {shortenAddress(creator.address, 2)}
             </CreatorLink>
           )
         }

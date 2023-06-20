@@ -86,7 +86,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
     } else if (tradeResult?.state === QuoteState.NOT_FOUND && isCurrent) {
       return TRADE_NOT_FOUND
     } else if (!tradeResult?.trade) {
-      // TODO(WEB-3307): use `isLoading` returned by rtk-query hook instead of checking for `trade` status
+      // TODO(WEB-1985): use `isLoading` returned by rtk-query hook instead of checking for `trade` status
       return TRADE_LOADING
     } else {
       return {

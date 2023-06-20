@@ -14,7 +14,7 @@ jobs:
       - run: yarn i18n:extract
 
       - name: Upload Crowdin sources
-        uses: crowdin/github-action@1.1.0
+        uses: crowdin/github-action@3133cc916c35590475cf6705f482fb653d8e36e9
         with:
           upload_sources: true
           download_translations: false

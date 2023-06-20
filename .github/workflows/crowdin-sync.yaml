@@ -17,7 +17,7 @@ jobs:
       - run: yarn i18n:extract
 
       - name: Download Crowdin translations
-        uses: crowdin/github-action@1.4.9
+        uses: crowdin/github-action@3133cc916c35590475cf6705f482fb653d8e36e9
         with:
           upload_sources: false
           download_translations: true
