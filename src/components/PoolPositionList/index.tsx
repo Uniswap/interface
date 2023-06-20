@@ -3,6 +3,7 @@ import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import POOL_EXTENDED_ABI from 'abis/pool-extended.json'
 import PoolPositionListItem from 'components/PoolPositionListItem'
+import { RowFixed } from 'components/Row'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { useMultipleContractSingleData } from 'lib/hooks/multicall'
 import React, { useMemo } from 'react'
@@ -108,11 +109,11 @@ export default function PoolPositionList({ positions, filterByOperator }: PoolPo
           {positions && ' (' + operatedPools.length + ')'}
         </div>
         {!filterByOperator && (
-          <div>
+          <RowFixed style={{ gap: '40px' }}>
             <MouseoverTooltip
               text={<Trans>The pool operator&apos;s annualized yield. Increases as more stakers join the pool.</Trans>}
             >
-              irr&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+              irr&ensp;
             </MouseoverTooltip>
             <MouseoverTooltip
               text={
@@ -124,15 +125,16 @@ export default function PoolPositionList({ positions, filterByOperator }: PoolPo
             >
               apr&ensp;
             </MouseoverTooltip>
-          </div>
+          </RowFixed>
         )}
       </DesktopHeader>
       <MobileHeader>
         <div>{filterByOperator ? <Trans>Operated pools</Trans> : <Trans>Loaded pools</Trans>}</div>
         {!filterByOperator && (
-          <div>
-            <Trans>irr&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;apr</Trans>
-          </div>
+          <RowFixed style={{ gap: '40px' }}>
+            <div><Trans>irr&ensp;</Trans></div>
+            <div><Trans>apr&ensp;</Trans></div>
+          </RowFixed>
         )}
       </MobileHeader>
       {operatedPools.length !== 0 ? (

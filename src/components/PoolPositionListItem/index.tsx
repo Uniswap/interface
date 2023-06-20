@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 //import Badge from 'components/Badge'
 //import RangeBadge from 'components/Badge/RangeBadge'
 //import Loader from 'components/Loader'
-import { RowBetween } from 'components/Row'
+import { RowBetween, RowFixed } from 'components/Row'
 //import { useToken } from 'hooks/Tokens'
 //import { useMemo } from 'react'
 import { Link } from 'react-router-dom'
@@ -108,9 +108,14 @@ export default function PoolPositionListItem({ positionDetails, returnPage }: Po
         {returnPage === 'mint' ? (
           <DataText>{symbol}</DataText>
         ) : (
-          <DataText>
-            {(Number(irr) * 100).toFixed(1)}%&ensp;&ensp;{(Number(apr) * 100).toFixed(1)}%
-          </DataText>
+          <RowFixed style={{ gap: '20px' }}>
+            <DataText>
+              {(Number(irr) * 100).toFixed(1)}%
+            </DataText>
+            <DataText>
+              {(Number(apr) * 100).toFixed(1)}%
+            </DataText>
+          </RowFixed>
         )}
       </RowBetween>
       <RangeLineItem>
