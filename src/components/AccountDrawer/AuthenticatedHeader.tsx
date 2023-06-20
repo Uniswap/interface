@@ -2,13 +2,10 @@ import { Token } from '@pollum-io/sdk-core'
 import { formatNumber, NumberType } from '@uniswap/conedison/format'
 import { useWeb3React } from '@web3-react/core'
 import Column from 'components/Column'
-import { AutoRow } from 'components/Row'
 import { LoadingBubble } from 'components/Tokens/loading'
-import { formatDelta } from 'components/Tokens/TokenDetails/PriceChart'
 import { useGetConnection } from 'connection'
-import { usePortfolioBalancesQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { useNewTopTokens } from 'graphql/tokens/NewTopTokens'
-// import { useCurrencies } from 'hooks/Tokens'
+import { useFetchedTokenData } from 'graphql/tokens/TokenData'
 import { useTokenBalances } from 'lib/hooks/useCurrencyBalance'
 import { useCallback } from 'react'
 import { ArrowDownRight, ArrowUpRight, Copy, IconProps, Power, Settings } from 'react-feather'
@@ -109,15 +106,10 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
     dispatch(updateSelectedWallet({ wallet: undefined }))
   }, [connector, dispatch])
 
-  // TODO: verify portifolio from ownerAddress like a swap page
-  const { data: portfolioBalances } = usePortfolioBalancesQuery({
-    variables: { ownerAddress: account ?? '' },
-    fetchPolicy: 'cache-only', // PrefetchBalancesWrapper handles balance fetching/staleness; this component only reads from cache
-  })
-
   const { tokens } = useNewTopTokens()
   const { chainId } = useWeb3React()
 
+  const tokensAddress = tokens?.map((token) => token.id) || []
   const ERC20Tokens: Token[] = []
   if (tokens && tokens?.length > 0)
     tokens?.map((token) =>
@@ -131,14 +123,19 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
     )
 
   const tokenBalances = useTokenBalances(account, ERC20Tokens)
-  // console.log('tokenBalances', tokenBalances)
+  const tokenBalanceEntries = Object.entries(tokenBalances)
 
-  // console.log('tokenBalances', relevantTokenBalances)
-  // const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, currency ?? undefined)
-  const portfolio = portfolioBalances?.portfolios?.[0]
-  const totalBalance = portfolio?.tokensTotalDenominatedValue?.value
-  const absoluteChange = portfolio?.tokensTotalDenominatedValueChange?.absolute?.value
-  const percentChange = portfolio?.tokensTotalDenominatedValueChange?.percentage?.value
+  const { loading: tokenDataLoading, data: tokenData } = useFetchedTokenData(tokensAddress)
+
+  const tokenDataMap = tokenData ? Object.fromEntries(tokenData.map((token) => [token.address, token])) : {}
+
+  let totalBalance = 0
+  for (const [tokenAddress, balance] of tokenBalanceEntries) {
+    const tokenData = tokenDataMap[tokenAddress]
+    if (tokenData && balance) {
+      totalBalance += parseFloat(balance?.toExact()) * tokenData.priceUSD
+    }
+  }
 
   return (
     <AuthenticatedHeaderWrapper>
@@ -165,12 +162,12 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
         </IconContainer>
       </HeaderWrapper>
       <PortfolioDrawerContainer>
-        {totalBalance !== undefined ? (
+        {!tokenDataLoading ? (
           <FadeInColumn gap="xs">
             <ThemedText.HeadlineLarge fontWeight={500}>
               {formatNumber(totalBalance, NumberType.PortfolioBalance)}
             </ThemedText.HeadlineLarge>
-            <AutoRow marginBottom="20px">
+            {/* <AutoRow marginBottom="20px">
               {absoluteChange !== 0 && percentChange && (
                 <>
                   <PortfolioArrow change={absoluteChange as number} />
@@ -181,7 +178,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
                   </ThemedText.BodySecondary>
                 </>
               )}
-            </AutoRow>
+            </AutoRow> */}
           </FadeInColumn>
         ) : (
           <Column gap="xs">
