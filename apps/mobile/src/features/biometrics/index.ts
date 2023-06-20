@@ -40,8 +40,14 @@ export async function tryLocalAuthenticate(
     }
 
     return BiometricAuthenticationStatus.Authenticated
-  } catch (e) {
-    logger.error('biometrics/index', 'tryLocalAuthenticate', `Failed to authenticate: ${e}`)
+  } catch (error) {
+    logger.error('Failed biometrics authentication', {
+      tags: {
+        file: 'biometrics/index',
+        function: 'tryLocalAuthenticate',
+        error: JSON.stringify(error),
+      },
+    })
 
     return BiometricAuthenticationStatus.Rejected
   }

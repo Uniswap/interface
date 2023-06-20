@@ -1,8 +1,14 @@
 /* eslint-disable no-console */
 
+import { Primitive, ScopeContext } from '@sentry/types'
+import { errorToString } from 'wallet/src/utils/validation'
 import { Sentry } from './Sentry'
 
 type LogLevel = 'debug' | 'info' | 'warn' | 'error'
+
+export type LoggerErrorContext = Partial<ScopeContext> & {
+  tags: { file: string; function: string; [key: string]: Primitive }
+}
 
 /**
  * Logs a message to console. Additionally sends log to Sentry if using 'error', 'warn', or 'info'.
@@ -22,8 +28,8 @@ export const logger = {
     logMessage('info', fileName, functionName, message, ...args),
   warn: (fileName: string, functionName: string, message: string, ...args: unknown[]): void =>
     logMessage('warn', fileName, functionName, message, ...args),
-  error: (fileName: string, functionName: string, message: string, ...args: unknown[]): void =>
-    logMessage('error', fileName, functionName, message, ...args),
+  error: (error: unknown, captureContext: LoggerErrorContext): void =>
+    logException(error, captureContext),
 }
 
 function logMessage(
@@ -33,26 +39,29 @@ function logMessage(
   message: string,
   ...args: unknown[] // arbitrary extra data - ideally formatted as key value pairs
 ): void {
-  if (!fileName || !message) {
-    console.warn('Invalid log message format, skipping')
-    return
-  }
-  functionName ||= fileName // To allow omitting function when it's same as file
-  const formatted = formatMessage(fileName, functionName, message)
-
   if (__DEV__) {
-    console[level](formatted, ...args)
+    console[level](formatMessage(fileName, functionName, message), ...args)
     return
   }
 
-  // Send error, warn, info logs to Sentry
-  if (level === 'error') {
-    Sentry.captureException(`${fileName}#${functionName}`, message, ...args)
-  } else if (level === 'warn') {
+  if (level === 'warn') {
     Sentry.captureMessage('warning', `${fileName}#${functionName}`, message, ...args)
   } else if (level === 'info') {
     Sentry.captureMessage('info', `${fileName}#${functionName}`, message, ...args)
   }
+}
+
+function logException(error: unknown, captureContext: LoggerErrorContext): void {
+  const errorMessage = errorToString(error)
+  const fileName = captureContext?.tags.file ?? ''
+  const functionName = captureContext?.tags.function ?? ''
+
+  if (__DEV__) {
+    console.error(formatMessage(fileName, functionName, errorMessage), captureContext)
+    return
+  }
+
+  Sentry.captureException(errorMessage, captureContext)
 }
 
 function formatMessage(fileName: string, functionName: string, message: string): string {

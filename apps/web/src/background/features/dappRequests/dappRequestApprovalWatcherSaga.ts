@@ -93,13 +93,13 @@ export function* dappRequestApprovalWatcher() {
         )
       }
     } catch (error) {
-      logger.error(
-        'wallet',
-        'dappRequestApprovalWatcher',
-        'Error while watching transaction requests',
-        request,
-        error
-      )
+      logger.error('Error while watching dapp requests', {
+        tags: {
+          file: 'dappRequestApprovalWatcherSaga',
+          function: 'dappRequestApprovalWatcher',
+          error: JSON.stringify(error),
+        },
+      })
     } finally {
       yield* put(dappRequestActions.remove(request.dappRequest.requestId))
       yield* call(closeDockedWindow)

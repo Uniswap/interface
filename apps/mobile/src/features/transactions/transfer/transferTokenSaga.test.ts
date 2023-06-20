@@ -13,6 +13,7 @@ import { NATIVE_ADDRESS } from 'wallet/src/constants/addresses'
 import { ChainId } from 'wallet/src/constants/chains'
 import { DAI } from 'wallet/src/constants/tokens'
 import { AssetType } from 'wallet/src/entities/assets'
+import { logger } from 'wallet/src/features/logger/logger'
 import { SendTokenTransactionInfo, TransactionType } from 'wallet/src/features/transactions/types'
 import { getContractManager, getProvider } from 'wallet/src/features/wallet/context'
 
@@ -163,7 +164,13 @@ describe('transferTokenSaga', () => {
         [call(getProvider, nativeTranferParams.chainId), provider],
         [call(getContractManager), mockContractManager],
       ])
-      .throws(new Error('Insufficient balance'))
+      .call(logger.error, 'Transfer failed', {
+        tags: {
+          file: 'transferTokenSaga',
+          function: 'transferToken',
+          error: JSON.stringify(new Error('Balance insufficient for transfer')),
+        },
+      })
       .silentRun()
   })
 })

@@ -330,8 +330,14 @@ export const getFormattedCurrencyAmount = (
     const currencyAmount = CurrencyAmount.fromRawAmount<Currency>(currency, parsedCurrencyAmountRaw)
     const formattedAmount = formatCurrencyAmount(currencyAmount)
     return isApproximateAmount ? `~${formattedAmount} ` : `${formattedAmount} `
-  } catch (e) {
-    logger.error('notifications/utils', 'getFormattedCurrencyAmount', 'could not format amount', e)
+  } catch (error) {
+    logger.error('Could not format currency amount', {
+      tags: {
+        file: 'notifications/utils',
+        function: 'getFormattedCurrencyAmount',
+        error: JSON.stringify(error),
+      },
+    })
     return ''
   }
 }

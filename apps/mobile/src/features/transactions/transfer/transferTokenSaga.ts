@@ -19,34 +19,41 @@ type Params = {
 }
 
 export function* transferToken(params: Params) {
-  const { transferTokenParams, txRequest } = params
-  const { txId, account, chainId } = transferTokenParams
-  const typeInfo = getTransferTypeInfo(transferTokenParams)
-  yield* call(validateTransfer, transferTokenParams)
-  yield* call(sendTransaction, {
-    txId,
-    chainId,
-    account,
-    options: { request: txRequest },
-    typeInfo,
-  })
-
-  logger.debug('transferToken', '', 'Transfer complete')
+  try {
+    const { transferTokenParams, txRequest } = params
+    const { txId, account, chainId } = transferTokenParams
+    const typeInfo = getTransferTypeInfo(transferTokenParams)
+    yield* call(validateTransfer, transferTokenParams)
+    yield* call(sendTransaction, {
+      txId,
+      chainId,
+      account,
+      options: { request: txRequest },
+      typeInfo,
+    })
+    logger.debug('transferTokenSaga', 'transferToken', 'Transfer complete')
+  } catch (error) {
+    yield* call(logger.error, 'Transfer failed', {
+      tags: {
+        file: 'transferTokenSaga',
+        function: 'transferToken',
+        error: JSON.stringify(error),
+      },
+    })
+  }
 }
 
 function validateTransferAmount(amountInWei: string, currentBalance: BigNumberish): void {
   const amount = BigNumber.from(amountInWei)
   if (amount.lte(0)) {
-    logger.error('transferToken', 'validateTransferAmount', 'Invalid transfer amount')
     throw new Error('Invalid transfer amount')
   }
   if (BigNumber.from(amountInWei).gt(currentBalance)) {
-    logger.error('transferToken', 'validateTransferAmount', 'Balance insufficient for transfer')
-    throw new Error('Insufficient balance')
+    throw new Error('Balance insufficient for transfer')
   }
 }
 
-export function* validateTransfer(transferTokenParams: TransferTokenParams) {
+function* validateTransfer(transferTokenParams: TransferTokenParams) {
   const { type, chainId, tokenAddress, account } = transferTokenParams
   const contractManager = yield* call(getContractManager)
   const provider = yield* call(getProvider, chainId)

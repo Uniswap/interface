@@ -71,15 +71,14 @@ export function DappConnectionItem({
             hideDelay: 3 * ONE_SECOND_MS,
           })
         )
-      } catch (e) {
-        if (e instanceof Error) {
-          logger.error(
-            'DappConnectionItem',
-            'onDisconnect',
-            'Failed to disconnect session',
-            e.message
-          )
-        }
+      } catch (error) {
+        logger.error(error, {
+          tags: {
+            file: 'DappConnectionItem',
+            function: 'onDisconnect',
+            error: JSON.stringify(error),
+          },
+        })
       }
     }
   }

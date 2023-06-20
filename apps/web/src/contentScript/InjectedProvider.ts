@@ -319,7 +319,13 @@ export class InjectedProvider extends EventEmitter {
       try {
         rpcResult = await func(...(<[]>(params ? params : [])))
       } catch (error) {
-        logger.error('UniswapInjectedProvider', 'rpc response error', `${error}`)
+        logger.error('RPC response error', {
+          tags: {
+            file: 'InjectedProvider',
+            function: 'request',
+            error: JSON.stringify(error),
+          },
+        })
         return reject(error)
       }
       return resolve(rpcResult)

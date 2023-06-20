@@ -15,7 +15,7 @@ const ALLOWED_EXTERNAL_URI_SCHEMES = ['http://', 'https://']
  *
  * @param openExternalBrowser whether to leave the app and open in system browser. default is false, opens in-app browser window
  * @param isSafeUri whether to bypass ALLOWED_EXTERNAL_URI_SCHEMES check
- * @param controlscolor When opening in an in-app browser, determines the controls color
+ * @param controlsColor When opening in an in-app browser, determines the controls color
  **/
 export async function openUri(
   uri: string,
@@ -27,7 +27,13 @@ export async function openUri(
   const trimmedURI = uri.trim()
   if (!isSafeUri && !ALLOWED_EXTERNAL_URI_SCHEMES.some((scheme) => trimmedURI.startsWith(scheme))) {
     // TODO: [MOB-253] show a visual warning that the link cannot be opened.
-    logger.error('linking', 'openUri', `potentially unsafe URI scheme provided ${uri}`)
+    logger.error('User attempted to open potentially unsafe url', {
+      tags: {
+        file: 'linking',
+        function: 'openUri',
+        uri,
+      },
+    })
     return
   }
 
@@ -47,7 +53,13 @@ export async function openUri(
       })
     }
   } catch (error) {
-    logger.error('linking', 'openUri', `${error}`)
+    logger.error('Unable to open url', {
+      tags: {
+        file: 'linking',
+        function: 'openUri',
+        error: JSON.stringify(error),
+      },
+    })
   }
 }
 

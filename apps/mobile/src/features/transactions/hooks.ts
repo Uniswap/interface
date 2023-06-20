@@ -15,9 +15,9 @@ import {
   makeSelectTransaction,
 } from 'src/features/transactions/selectors'
 import {
-  createSwapFromStateFromDetails,
-  createWrapFormStateFromDetails,
-} from 'src/features/transactions/swap/createSwapFromStateFromDetails'
+  createSwapFormFromTxDetails,
+  createWrapFormFromTxDetails,
+} from 'src/features/transactions/swap/createSwapFormFromTxDetails'
 import {
   CurrencyField,
   TransactionState,
@@ -104,7 +104,7 @@ export function useCreateSwapFormState(
       return undefined
     }
 
-    return createSwapFromStateFromDetails({
+    return createSwapFormFromTxDetails({
       transactionDetails: transaction,
       inputCurrency: inputCurrencyInfo?.currency,
       outputCurrency: outputCurrencyInfo?.currency,
@@ -126,7 +126,7 @@ export function useCreateWrapFormState(
       return undefined
     }
 
-    return createWrapFormStateFromDetails({
+    return createWrapFormFromTxDetails({
       transactionDetails: transaction,
       inputCurrency,
       outputCurrency,

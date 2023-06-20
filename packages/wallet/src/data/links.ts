@@ -76,18 +76,29 @@ export function getErrorLink(
       graphQLErrors.forEach(({ message, locations, path }) => {
         sample(
           () =>
-            logger.error(
-              'data/hooks',
-              '',
-              `[GraphQL Error]: Message: ${message}, Location: ${locations}, Path: ${path}`
-            ),
+            logger.error('GraphQL error', {
+              tags: {
+                file: 'data/links',
+                function: 'getErrorLink',
+                message,
+                locations: JSON.stringify(locations),
+                path: JSON.stringify(path),
+              },
+            }),
           graphqlErrorSamplingRate
         )
       })
     }
     if (networkError) {
       sample(
-        () => logger.error('data/hooks', '', `[Network error]: ${networkError}`),
+        () =>
+          logger.error('Network error', {
+            tags: {
+              file: 'data/links',
+              function: 'getErrorLink',
+              error: JSON.stringify(networkError),
+            },
+          }),
         networkErrorSamplingRate
       )
     }

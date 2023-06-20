@@ -77,8 +77,14 @@ const getPermitInfo = (request: WalletConnectRequest): PermitInfo | undefined =>
     const amount = permitPayload.value
 
     return { currencyId, amount }
-  } catch (e) {
-    logger.error('WalletConnectRequestModal', 'getPermitInfo', 'invalid JSON message', e)
+  } catch (error) {
+    logger.error('Invalid WalletConnect permit info', {
+      tags: {
+        file: 'WalletConnectRequestModal',
+        function: 'getPermitInfo',
+        error: JSON.stringify(error),
+      },
+    })
     return undefined
   }
 }

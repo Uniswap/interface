@@ -67,14 +67,15 @@ export function* transactionWatcher() {
         yield* fork(watchTransaction, transaction)
       }
     } catch (error) {
-      const { hash } = transaction
-      logger.error(
-        'transactionWatcherSaga',
-        'watchTransaction',
-        'Error while watching transaction',
-        hash,
-        error
-      )
+      logger.error('Failed to fork a transaction watcher', {
+        tags: {
+          file: 'transactionWatcherSaga',
+          function: 'watchTransaction',
+          txHash: transaction.hash,
+          error: JSON.stringify(error),
+        },
+      })
+
       yield* put(
         pushNotification({
           type: AppNotificationType.Error,
@@ -137,13 +138,14 @@ export function* watchFiatOnRampTransaction(transaction: TransactionDetails) {
         timeout: delay(PollingInterval.Normal),
       })
     }
-  } catch (e) {
-    logger.error(
-      'transactionWatcherSaga',
-      'watchFiatOnRampTranasction',
-      'Failed to fetch details',
-      e
-    )
+  } catch (error) {
+    logger.error('Failed while watching for a fiat on-ramp transaction', {
+      tags: {
+        file: 'transactionWatcherSaga',
+        function: 'watchFiatOnRampTransaction',
+        error: JSON.stringify(error),
+      },
+    })
   }
 }
 

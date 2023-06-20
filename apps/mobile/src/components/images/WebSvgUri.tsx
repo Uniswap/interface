@@ -66,7 +66,9 @@ export function WebSvgUri({ autoplay, maxHeight, uri }: SvgUriProps): JSX.Elemen
         if (Object.prototype.hasOwnProperty.call(err, 'name') && err.name === 'AbortError') {
           return // expect AbortError on unmount
         }
-        logger.error('SvgUri', 'fetchSvg', 'Failed to fetch remote SVG content', err)
+        logger.error('Failed to fetch remote SVG content', {
+          tags: { file: 'WebSvgUri', function: 'fetchSvg' },
+        })
       }
     }
 

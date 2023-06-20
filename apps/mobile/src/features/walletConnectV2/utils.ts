@@ -185,14 +185,15 @@ export function getAddressAndMessageToSign(
 export async function pairWithWalletConnectURI(uri: string): Promise<void | PairingTypes.Struct> {
   try {
     return await wcWeb3Wallet.core.pairing.pair({ uri })
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } catch (e: any) {
-    const errorMessage = typeof e === 'object' ? e?.message : ''
-    logger.error(
-      'walletConnectV2',
-      'pairWithWalletConnectURI',
-      `Error with new WalletConnect v2 pairing: ${errorMessage}`
-    )
-    return Promise.reject(errorMessage)
+  } catch (error) {
+    logger.error('Error with new WalletConnect v2 pairing', {
+      tags: {
+        file: 'walletConnectV2/utils',
+        function: 'pairWithWalletConnectURI',
+        error: JSON.stringify(error),
+      },
+    })
+
+    return Promise.reject(error instanceof Error ? error.message : '')
   }
 }

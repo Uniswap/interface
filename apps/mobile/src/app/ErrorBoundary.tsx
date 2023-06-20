@@ -25,7 +25,14 @@ export class ErrorBoundary extends React.Component<PropsWithChildren<unknown>, E
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
-    logger.error('ErrorBoundary', 'componentDidCatch', 'Error caught by boundary', error, errorInfo)
+    logger.error(error, {
+      level: 'fatal',
+      tags: {
+        file: 'ErrorBoundary',
+        function: 'componentDidCatch',
+        componentStack: errorInfo.componentStack,
+      },
+    })
   }
 
   render(): React.ReactNode {

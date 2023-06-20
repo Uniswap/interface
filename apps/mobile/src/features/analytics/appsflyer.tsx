@@ -17,7 +17,13 @@ export function initAppsFlyer(): void {
       logger.debug('appsflyer', 'initAppsFlyer', 'Result:', result)
     },
     (error) => {
-      logger.error('appsflyer', 'initAppsFlyer', 'Error:', error)
+      logger.error('Unable to init AppsFlyer', {
+        tags: {
+          file: 'appsflyer',
+          function: 'initAppsFlyer',
+          error: JSON.stringify(error),
+        },
+      })
     }
   )
 }

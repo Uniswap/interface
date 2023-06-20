@@ -53,8 +53,14 @@ export function NFTCollectionContextMenu({
       await Share.share({
         message: shareURL,
       })
-    } catch (e) {
-      logger.error('NFTCollectionScreen', 'onShare', (e as unknown as Error).message)
+    } catch (error) {
+      logger.error('Unable to share NFT URL', {
+        tags: {
+          file: 'NFTCollectionContextMenu',
+          function: 'onSharePress',
+          error: JSON.stringify(error),
+        },
+      })
     }
   }, [shareURL])
 

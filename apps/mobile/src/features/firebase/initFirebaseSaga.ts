@@ -12,13 +12,13 @@ function* anonFirebaseSignIn() {
   try {
     const firebaseAuth = firebase.app().auth()
     yield* call([firebaseAuth, 'signInAnonymously'])
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } catch (error: any) {
-    logger.error(
-      'initFirebaseSaga',
-      'anonFirebaseSignIn',
-      `Error signing into Firebase anonymously: ${error?.message}`
-    )
-    throw new Error('Was not able to initialize Firebase user')
+  } catch (error) {
+    logger.error('Error signing into Firebase anonymously', {
+      tags: {
+        file: 'initFirebaseSaga',
+        function: 'anonFirebaseSignIn',
+        error: JSON.stringify(error),
+      },
+    })
   }
 }

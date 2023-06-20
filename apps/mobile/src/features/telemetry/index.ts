@@ -36,8 +36,14 @@ export async function initAnalytics(): Promise<void> {
       }
     )
     setDeviceId(await getUniqueId()) // Ensure we're using the same deviceId across Amplitude and Statsig
-  } catch (err) {
-    logger.error('telemetry/index', 'initiAnalytics', `${err}`)
+  } catch (error) {
+    logger.error('Error initializing analytics', {
+      tags: {
+        file: 'telemetry/index',
+        function: 'initAnalytics',
+        error: JSON.stringify(error),
+      },
+    })
   }
 }
 

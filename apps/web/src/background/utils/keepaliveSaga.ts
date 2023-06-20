@@ -100,7 +100,12 @@ function doWork(): void {
           'expected disconnect -- server worker should still be running'
         )
       } else {
-        logger.error('background', 'doWork:onDisconnect', 'port disconnected unexpectedly')
+        logger.error('Port disconnected unexpectedly', {
+          tags: {
+            file: 'keepaliveSaga',
+            function: 'doWork',
+          },
+        })
       }
 
       alivePort = null
@@ -112,7 +117,13 @@ function doWork(): void {
     alivePort.postMessage(KEEP_ALIVE_PING)
 
     if (chrome.runtime.lastError) {
-      logger.error('background', 'doWork:postmessage error', `${chrome.runtime.lastError}`)
+      logger.error('Port message error', {
+        tags: {
+          file: 'keepaliveSaga',
+          function: 'doWork',
+          error: JSON.stringify(chrome.runtime.lastError),
+        },
+      })
     } else {
       // no-op.
       logger.debug('background', 'doWork:postmessage', `ping sent through ${alivePort.name}`)

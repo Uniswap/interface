@@ -695,7 +695,13 @@ export function useSwapCallback(
   return useMemo(() => {
     if (!account || !swapTxRequest || !trade || !totalGasFee) {
       return () => {
-        logger.error('hooks', 'useSwapCallback', 'Missing swapTx')
+        logger.error('Attempted swap with missing required parameters', {
+          tags: {
+            file: 'swap/hooks',
+            function: 'useSwapCallback',
+            params: JSON.stringify({ account, swapTxRequest, trade, totalGasFee }),
+          },
+        })
       }
     }
 
@@ -759,18 +765,25 @@ export function useWrapCallback(
     if (!isWrapAction(wrapType)) {
       return {
         wrapCallback: (): void =>
-          logger.error('hooks', 'useWrapCallback', 'Wrap callback invoked for non-wrap actions'),
+          logger.error('Attempted wrap on a non-wrap transaction', {
+            tags: {
+              file: 'swap/hooks',
+              function: 'useWrapCallback',
+            },
+          }),
       }
     }
 
     if (!account || !inputCurrencyAmount || !txRequest) {
       return {
         wrapCallback: (): void =>
-          logger.error(
-            'hooks',
-            'useWrapCallback',
-            'Wrap callback invoked without active account, input currency or valid transaction request'
-          ),
+          logger.error('Attempted wrap with missing required parameters', {
+            tags: {
+              file: 'swap/hooks',
+              function: 'useWrapCallback',
+              parameters: JSON.stringify({ account, inputCurrencyAmount, txRequest }),
+            },
+          }),
       }
     }
 

@@ -110,8 +110,14 @@ export function useNFTMenu({
                   await Share.share({
                     message: `${uniswapUrls.nftUrl}/asset/${contractAddress}/${tokenId}`,
                   })
-                } catch (e) {
-                  logger.error('NFTItemScreen', 'onShare', (e as unknown as Error).message)
+                } catch (error) {
+                  logger.error('Unable to share NFT url', {
+                    tags: {
+                      file: 'nfts/hooks',
+                      function: 'useNFTMenu',
+                      error: JSON.stringify(error),
+                    },
+                  })
                 }
               },
             },

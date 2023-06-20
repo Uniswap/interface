@@ -46,8 +46,14 @@ export function* watchICloudBackupEvents() {
     try {
       const payload = yield* take(channel)
       yield* put(payload)
-    } catch (err) {
-      logger.error('CloudBackupsManagerSaga', 'watchICloudBackupEvents', 'channel error: ', err)
+    } catch (error) {
+      logger.error('ICloud backup saga channel error', {
+        tags: {
+          file: 'CloudBackup/saga',
+          function: 'watchICloudBackupEvents',
+          error: JSON.stringify(error),
+        },
+      })
     }
   }
 }

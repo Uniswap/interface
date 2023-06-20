@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React, { useCallback, useEffect, useReducer } from 'react'
+import React, { useEffect, useReducer } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, Alert } from 'react-native'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
@@ -39,29 +39,6 @@ export function CloudBackupProcessingScreen({
 
   const [processing, doneProcessing] = useReducer(() => false, true)
 
-  const handleBackupError = useCallback(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (error: any) => {
-      logger.error('CloudBackupProcessingScreen', 'handleBackupError', error)
-      Alert.alert(
-        t('iCloud error'),
-        t(
-          'Unable to backup recovery phrase to iCloud. Please ensure you have iCloud enabled with available storage space and try again.'
-        ),
-        [
-          {
-            text: t('OK'),
-            style: 'default',
-            onPress: (): void => {
-              navigation.goBack()
-            },
-          },
-        ]
-      )
-    },
-    [t, navigation]
-  )
-
   // Handle finished backing up to Cloud
   useEffect(() => {
     if (activeAccount?.backups?.includes(BackupType.Cloud)) {
@@ -99,13 +76,34 @@ export function CloudBackupProcessingScreen({
           })
         )
       } catch (error) {
-        logger.debug('CloudBackupProcessingScreen', 'backupMnemonicToICloud', 'Error', error)
-        handleBackupError(error)
+        logger.error('Unable to backup to iCloud', {
+          tags: {
+            file: 'CloudBackupProcessingScreen',
+            function: 'onPressNext',
+            error: JSON.stringify(error),
+          },
+        })
+
+        Alert.alert(
+          t('iCloud error'),
+          t(
+            'Unable to backup recovery phrase to iCloud. Please ensure you have iCloud enabled with available storage space and try again.'
+          ),
+          [
+            {
+              text: t('OK'),
+              style: 'default',
+              onPress: (): void => {
+                navigation.goBack()
+              },
+            },
+          ]
+        )
       }
     }
 
     backup()
-  }, [activeAccount?.address, dispatch, handleBackupError, password])
+  }, [activeAccount?.address, dispatch, password, t, navigation])
 
   return (
     <Screen>

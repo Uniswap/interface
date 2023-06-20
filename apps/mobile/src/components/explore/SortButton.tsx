@@ -64,7 +64,9 @@ function _SortButton({ orderBy }: FilterGroupProps): JSX.Element {
         const selectedMenuAction = menuActions[e.nativeEvent.index]
         // Handle switching selected sort option
         if (!selectedMenuAction) {
-          logger.error('SortButtonContextMenu', 'onPress', `Unexpected context menu index selected`)
+          logger.error('Unexpected context menu index selected', {
+            tags: { file: 'SortButton', function: 'SortButtonContextMenu:onPress' },
+          })
           return
         }
 

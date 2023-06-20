@@ -78,8 +78,8 @@ export async function decrypt(
       ciphertext
     )
     return new TextDecoder().decode(result)
-  } catch (e) {
-    logger.error('crypto', 'decryptPassword', 'incorrect password')
+  } catch (error) {
+    logger.debug('crypto', 'decryptPassword', 'incorrect password')
     return undefined
   }
 }

@@ -40,12 +40,14 @@ function* initProvider(chainId: ChainId, manager: ProviderManager) {
     }
     yield* call(createProvider, chainId, manager)
   } catch (error) {
-    logger.error(
-      'providerSaga',
-      'initProvider',
-      `Error while initializing provider ${chainId}`,
-      error
-    )
+    logger.error('Failed to initialize provider', {
+      tags: {
+        file: 'providers/saga',
+        function: 'initProvider',
+        chainId,
+        error: JSON.stringify(error),
+      },
+    })
   }
 }
 
@@ -68,12 +70,14 @@ function* modifyProviders(action: PayloadAction<{ chainId: ChainId; isActive: bo
       destroyProvider(chainId, manager)
     }
   } catch (error) {
-    logger.error(
-      'providerSaga',
-      'modifyProviders',
-      `Error while modifying provider ${chainId}`,
-      error
-    )
+    logger.error('Error while modifying provider', {
+      tags: {
+        file: 'providers/saga',
+        function: 'modifyProviders',
+        chainId,
+        error: JSON.stringify(error),
+      },
+    })
   }
 }
 

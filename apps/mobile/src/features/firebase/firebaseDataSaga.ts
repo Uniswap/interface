@@ -65,7 +65,13 @@ function* addAccountToFirebase(account: Account) {
     yield* call(mapFirebaseUidToAddresses, [address])
     yield* call(updateFirebaseMetadata, address, { type, name, testnetsEnabled })
   } catch (error) {
-    logger.error('firebaseData', 'addAccountToFirebase', 'Error:', error)
+    logger.error('Unable to add account to Firebase', {
+      tags: {
+        file: 'firebaseDataSaga',
+        function: 'addAccountToFirebase',
+        error: JSON.stringify(error),
+      },
+    })
   }
 }
 
@@ -75,7 +81,13 @@ export function* removeAccountFromFirebase(address: Address, notificationsEnable
     yield* call(deleteFirebaseMetadata, address)
     yield* call(disassociateFirebaseUidFromAddresses, [address])
   } catch (error) {
-    logger.error('firebaseData', 'removeAccountFromFirebase', 'Error:', error)
+    logger.error('Unable to remove account from Firebase', {
+      tags: {
+        file: 'firebaseDataSaga',
+        function: 'removeAccountFromFirebase',
+        error: JSON.stringify(error),
+      },
+    })
   }
 }
 
@@ -85,7 +97,13 @@ export function* renameAccountInFirebase(address: Address, newName: string) {
     if (!notificationsEnabled) return
     yield* call(updateFirebaseMetadata, address, { name: newName })
   } catch (error) {
-    logger.error('firebaseData', 'renameAccountInFirebase', 'Error:', error)
+    logger.error('Unable to rename account in Firebase', {
+      tags: {
+        file: 'firebaseDataSaga',
+        function: 'renameAccountInFirebase',
+        error: JSON.stringify(error),
+      },
+    })
   }
 }
 
@@ -114,7 +132,13 @@ export function* toggleFirebaseNotificationSettings({
       })
     )
   } catch (error) {
-    logger.error('firebaseData', 'toggleFirebaseNotificationSettings', 'Error:', error)
+    logger.error('Unable to toggle notification settings in Firebase', {
+      tags: {
+        file: 'firebaseDataSaga',
+        function: 'toggleFirebaseNotificationSettings',
+        error: JSON.stringify(error),
+      },
+    })
   }
 }
 
@@ -160,7 +184,13 @@ async function updateFirebaseMetadata(address: Address, metadata: AccountMetadat
 
     await metadataRef.set(metadataWithDefinedPropsOnly, { merge: true })
   } catch (error) {
-    logger.error('firebaseData', 'updateFirebaseMetadata', 'Error:', error)
+    logger.error('Unable to update Firebase metadata', {
+      tags: {
+        file: 'firebaseDataSaga',
+        function: 'updateFirebaseMetadata',
+        error: JSON.stringify(error),
+      },
+    })
   }
 }
 

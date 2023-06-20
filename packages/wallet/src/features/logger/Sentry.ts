@@ -1,9 +1,10 @@
 import { SeverityLevel } from '@sentry/types'
+import { LoggerErrorContext } from 'wallet/src/features/logger/logger'
 import { NotImplementedError } from 'wallet/src/utils/errors'
 
-/** Dummy Sentry logging class. Overriden by mobile or extension related code. */
+/** Dummy Sentry logging class. Overridden by mobile or extension related code. */
 export interface ISentry {
-  captureException(context: string, error: unknown, ...extraArgs: unknown[]): void
+  captureException(errorMessage: string, captureContext: LoggerErrorContext): void
   captureMessage(
     level: SeverityLevel,
     context: string,
@@ -12,7 +13,7 @@ export interface ISentry {
   ): void
 }
 
-/** This will be overriden by the compiler with platform-specific Sentry file. */
+/** This will be overridden by the compiler with platform-specific Sentry file. */
 export const Sentry: ISentry = {
   captureException: () => {
     throw new NotImplementedError('Sentry not implemented')

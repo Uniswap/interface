@@ -92,7 +92,7 @@ function createWalletConnectV2Channel(): EventChannel<AnyAction> {
   })
 }
 
-export function* watchWalletConnectV2Events() {
+function* watchWalletConnectV2Events() {
   const wcV2Channel = yield* call(createWalletConnectV2Channel)
 
   while (true) {
@@ -105,13 +105,19 @@ export function* watchWalletConnectV2Events() {
       } else if (event.type === 'session_delete') {
         yield* call(handleSessionDelete, event.session)
       }
-    } catch (err) {
-      logger.error('wcV2Saga', 'watchWalletConnectSessions', 'channel error: ', err)
+    } catch (error) {
+      logger.error('WalletConnect V2 event channel error', {
+        tags: {
+          file: 'walletConnectV2/saga',
+          function: 'watchWalletConnectV2Events',
+          error: JSON.stringify(error),
+        },
+      })
     }
   }
 }
 
-export function* handleSessionProposal(proposal: ProposalTypes.Struct) {
+function* handleSessionProposal(proposal: ProposalTypes.Struct) {
   const activeAccountAddress = yield* appSelect(selectActiveAccountAddress)
 
   const {
@@ -205,7 +211,7 @@ export function* handleSessionProposal(proposal: ProposalTypes.Struct) {
   }
 }
 
-export function* handleSessionRequest(sessionRequest: PendingRequestTypes.Struct) {
+function* handleSessionRequest(sessionRequest: PendingRequestTypes.Struct) {
   const { topic, params, id } = sessionRequest
   const { request: wcRequest, chainId: wcChainId } = params
   const { method, params: requestParams } = wcRequest
@@ -269,29 +275,19 @@ export function* handleSessionRequest(sessionRequest: PendingRequestTypes.Struct
   }
 }
 
-export function* handleSessionDelete(event: Web3WalletTypes.SessionDelete) {
+function* handleSessionDelete(event: Web3WalletTypes.SessionDelete) {
   const { topic } = event
   const session = wcWeb3Wallet.engine.signClient.session.get(topic)
   const dapp = session.peer.metadata
   const account = session.namespaces.eip155?.accounts[0]
 
   if (!account) {
-    logger.error(
-      'WalletConnectV2Saga',
-      'sessionDeleteHandler',
-      'Account not found in session namespaces'
-    )
-    return
+    throw new Error('Unable to delete session because account not found in namespaces')
   }
 
   const address = getAccountAddressFromEIP155String(account)
   if (!address) {
-    logger.error(
-      'WalletConnectV2Saga',
-      'sessionDeleteHandler',
-      'Unable to parse account address from session namespaces'
-    )
-    return
+    throw new Error('Unable to delete session because address was not parsable in namespaces')
   }
 
   yield* put(removeSession({ account: address, sessionId: event.topic }))
@@ -307,7 +303,7 @@ export function* handleSessionDelete(event: Web3WalletTypes.SessionDelete) {
   )
 }
 
-export function* populateActiveSessions() {
+function* populateActiveSessions() {
   // Fetch all active sessions and add to store
   const sessions = wcWeb3Wallet.getActiveSessions()
 
@@ -357,7 +353,7 @@ export function* populateActiveSessions() {
 }
 
 // Load any existing pending session proposals from the WC connection
-export function* fetchPendingSessionProposals() {
+function* fetchPendingSessionProposals() {
   const pendingSessionProposals = wcWeb3Wallet.getPendingSessionProposals()
   for (const proposal of Object.values(pendingSessionProposals)) {
     yield* call(handleSessionProposal, proposal)
@@ -365,7 +361,7 @@ export function* fetchPendingSessionProposals() {
 }
 
 // Load any existing pending session requests from the WC connection
-export function* fetchPendingSessionRequests() {
+function* fetchPendingSessionRequests() {
   const pendingSessionRequests = wcWeb3Wallet.getPendingSessionRequests()
   for (const sessionRequest of Object.values(pendingSessionRequests)) {
     yield* call(handleSessionRequest, sessionRequest)

@@ -114,16 +114,14 @@ export const routingApi = createApi({
         })}`,
       transformErrorResponse: (error, _, args) => {
         if (!args.loggingProperties.isUSDQuote) {
-          logger.error(
-            'routingApi',
-            'quote',
-            JSON.stringify(error.data),
-            `params:${JSON.stringify({
-              currencyIdIn: `${args.tokenInChainId}-${args.tokenInAddress}`,
-              currencyIdOut: `${args.tokenOutChainId}-${args.tokenOutAddress}`,
-              amount: args.amount,
-            })}`
-          )
+          logger.error('Error in Routing API response', {
+            tags: {
+              file: 'routingApi',
+              function: 'quote',
+              args: JSON.stringify(args),
+              error: JSON.stringify(error.data),
+            },
+          })
         }
       },
       transformResponse: (result: QuoteResult, _, arg): TradeQuoteResult => {

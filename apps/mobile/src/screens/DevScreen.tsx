@@ -46,7 +46,7 @@ export function DevScreen(): JSX.Element {
   const onPressShowError = (): void => {
     const address = activeAccount?.address
     if (!address) {
-      logger.error(
+      logger.debug(
         'DevScreen',
         'onPressShowError',
         'Cannot show error if activeAccount is undefined'

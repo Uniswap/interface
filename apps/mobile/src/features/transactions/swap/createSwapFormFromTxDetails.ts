@@ -18,7 +18,7 @@ interface Props {
 /**
  * Used to synchronously create swap form state given a transaction and relevant currencies.
  */
-export function createSwapFromStateFromDetails({
+export function createSwapFormFromTxDetails({
   transactionDetails,
   inputCurrency,
   outputCurrency,
@@ -77,17 +77,21 @@ export function createSwapFromStateFromDetails({
     }
 
     return swapFormState
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } catch (error: any) {
-    logger.error('hooks', 'useRecreateSwapFormState', error?.message)
-    return undefined
+  } catch (error) {
+    logger.error('Failed to create swap form from tx details', {
+      tags: {
+        file: 'createSwapFormFromTxDetails',
+        function: 'createSwapFormFromTxDetails',
+        error: JSON.stringify(error),
+      },
+    })
   }
 }
 
 /**
  * Used to synchronously create wrap form state given a transaction and relevant currencies.
  */
-export function createWrapFormStateFromDetails({
+export function createWrapFormFromTxDetails({
   transactionDetails,
   inputCurrency,
   outputCurrency,
@@ -133,9 +137,13 @@ export function createWrapFormStateFromDetails({
     }
 
     return swapFormState
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } catch (error: any) {
-    logger.error('hooks', 'useCreateWrapFormState', error?.message)
-    return undefined
+  } catch (error) {
+    logger.error('Failed to create wrap form from tx details', {
+      tags: {
+        file: 'createSwapFormFromTxDetails',
+        function: 'createWrapFormFromTxDetails',
+        error: JSON.stringify(error),
+      },
+    })
   }
 }

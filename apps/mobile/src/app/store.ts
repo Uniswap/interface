@@ -35,7 +35,7 @@ export const reduxStorage: Storage = {
 }
 
 // list of apis to ignore when logging errors, i.e. logging is handled by api
-const rtkQueryErrorLoggerIgnorelist: Array<ReducerNames> = [
+const rtkQueryErrorLoggerIgnoreList: Array<ReducerNames> = [
   ensApi.reducerPath, // verbose
   routingApi.reducerPath, // verbose, handled in routing hook
 ]
@@ -44,26 +44,27 @@ const rtkQueryErrorLogger: Middleware = () => (next) => (action: PayloadAction<u
     return next(action)
   }
 
-  const shouldSkipErrorLogging = rtkQueryErrorLoggerIgnorelist.some((reducerName) =>
+  const shouldSkipErrorLogging = rtkQueryErrorLoggerIgnoreList.some((reducerName) =>
     action.type.startsWith(reducerName)
   )
   if (shouldSkipErrorLogging) {
-    // still log in debug to ensure those errors are surfaced, but avoids polutting sentry
+    // still log in debug to ensure those errors are surfaced, but avoids polluting sentry
     logger.debug('store', 'rtkQueryErrorLogger', JSON.stringify(action))
   } else {
-    logger.error(
-      'store',
-      'rtkQueryErrorLogger',
-      // extract specific properties to avoid PII
-      JSON.stringify({
-        type: action.type,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        endpointName: (action.meta as any)?.arg?.endpointName,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        status: (action.payload as any)?.status,
-        error: action.error,
-      })
-    )
+    logger.error(action.error, {
+      tags: {
+        file: 'store',
+        function: 'rtkQueryErrorLogger',
+        error: JSON.stringify({
+          type: action.type,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          endpointName: (action.meta as any)?.arg?.endpointName,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          status: (action.payload as any)?.status,
+          error: action.error,
+        }),
+      },
+    })
   }
 
   return next(action)

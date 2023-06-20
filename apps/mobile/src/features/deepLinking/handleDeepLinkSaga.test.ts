@@ -74,12 +74,13 @@ describe(handleDeepLink, () => {
           activeAccountAddress: account.address,
         },
       })
-      .call(
-        logger.error,
-        'handleDeepLink',
-        'handleDeepLink',
-        `Error handling deep link ${unsupportedScreenDeepLinkPayload.url}: Invalid or unsupported screen`
-      )
+      .call(logger.error, 'Error handling deep link', {
+        tags: {
+          file: 'handleDeepLinkSaga',
+          function: 'handleDeepLink',
+          error: JSON.stringify(new Error('Invalid or unsupported screen')),
+        },
+      })
       .silentRun()
   })
 

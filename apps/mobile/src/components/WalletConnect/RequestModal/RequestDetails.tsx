@@ -199,8 +199,14 @@ function RequestDetailsContent({ request }: Props): JSX.Element {
     try {
       const data = JSON.parse(request.rawMessage)
       return getParsedObjectDisplay(request.chainId, data.message, 0)
-    } catch (e) {
-      logger.error('WalletConnectRequestModal', 'getMessage', 'invalid JSON message', e)
+    } catch (error) {
+      logger.error('Invalid WalletConnect request', {
+        tags: {
+          file: 'RequestDetails',
+          function: 'RequestDetailsContent',
+          error: JSON.stringify(error),
+        },
+      })
       return <Text />
     }
   }

@@ -55,15 +55,14 @@ export function DappConnectedNetworkModal({
         })
       )
       onClose()
-    } catch (e) {
-      if (e instanceof Error) {
-        logger.error(
-          'DappConnectionItem',
-          'onDisconnect',
-          `Failed to disconnect session with ${dapp.name}`,
-          e.message
-        )
-      }
+    } catch (error) {
+      logger.error('Unable to disconnect WalletConnect session', {
+        tags: {
+          file: 'DappConnectedNetworkModal',
+          function: 'onDisconnect',
+          error: JSON.stringify(error),
+        },
+      })
     }
   }
 

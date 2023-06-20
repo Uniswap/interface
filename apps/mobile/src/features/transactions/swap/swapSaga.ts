@@ -58,8 +58,14 @@ export function* approveAndSwap(params: SwapParams) {
       typeInfo: swapTypeInfo,
       trade,
     })
-  } catch (e) {
-    logger.error('swapSaga', 'approveAndSwap', 'Failed:', e)
+  } catch (error) {
+    logger.error('Swap failed', {
+      tags: {
+        file: 'swapSaga',
+        function: 'approveAndSwap',
+        error: JSON.stringify(error),
+      },
+    })
   }
 }
 

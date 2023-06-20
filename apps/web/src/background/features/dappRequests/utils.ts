@@ -96,7 +96,13 @@ export function extractBaseUrl(url?: string): string | undefined {
       parsedUrl.port ? ':' + parsedUrl.port : ''
     }`
   } catch (error) {
-    logger.error('utils', 'extractBaseUrl', 'Error parsing url', error)
-    return undefined
+    logger.error('Error parsing url', {
+      tags: {
+        file: 'dappRequests/utils',
+        function: 'extractBaseUrl',
+        url,
+        error: JSON.stringify(error),
+      },
+    })
   }
 }

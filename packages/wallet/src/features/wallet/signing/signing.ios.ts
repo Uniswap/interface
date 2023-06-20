@@ -17,7 +17,14 @@ export async function signMessage(
 ): Promise<string> {
   const signer = await signerManager.getSignerForAccount(account)
   if (!signer) {
-    logger.error('signers', 'signMessage', `no signer found for ${account}`)
+    logger.error('Error signing signing message', {
+      tags: {
+        file: 'signing.ios',
+        function: 'signMessage',
+        message,
+        account: JSON.stringify(account),
+      },
+    })
     return ''
   }
 
@@ -43,7 +50,12 @@ export async function signTypedData(
   // https://github.com/LedgerHQ/ledgerjs/issues/86
   // Ledger does not support signTypedData yet
   if (!(signer instanceof NativeSigner) && !(signer instanceof Wallet)) {
-    logger.error('signers', 'signTypedData', 'cannot sign typed data')
+    logger.error('Error signing typed data with account', {
+      tags: {
+        file: 'signing.ios',
+        function: 'signTypedData',
+      },
+    })
     return ''
   }
 

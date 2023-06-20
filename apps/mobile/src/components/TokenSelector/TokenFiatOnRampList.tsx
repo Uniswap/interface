@@ -18,7 +18,6 @@ import { ChainId } from 'wallet/src/constants/chains'
 import { EMPTY_ARRAY } from 'wallet/src/constants/misc'
 import { CurrencyInfo, GqlResult } from 'wallet/src/features/dataApi/types'
 import { MoonpayCurrency } from 'wallet/src/features/fiatOnRamp/types'
-import { logger } from 'wallet/src/features/logger/logger'
 import { fromMoonpayNetwork } from 'wallet/src/utils/chainId'
 import { CurrencyId } from 'wallet/src/utils/currencyId'
 
@@ -31,23 +30,16 @@ const findTokenOptionForMoonpayCurrency = (
   commonBaseCurrencies: CurrencyInfo[] | undefined,
   moonpayCurrency: MoonpayCurrency
 ): Maybe<CurrencyInfo> => {
-  return (
-    (commonBaseCurrencies || []).find((item) => {
-      const [code, network] = moonpayCurrency.code.split('_') ?? [undefined, undefined]
-      try {
-        const chainId = fromMoonpayNetwork(network)
-        return (
-          item &&
-          code &&
-          code === item.currency.symbol?.toLowerCase() &&
-          chainId === item.currency.chainId
-        )
-      } catch (error) {
-        logger.error('TokenFiatOnRampList', 'findTokenOptionForMoonpayCurrency', `${error}`)
-        return false
-      }
-    }) ?? null
-  )
+  return (commonBaseCurrencies || []).find((item) => {
+    const [code, network] = moonpayCurrency.code.split('_') ?? [undefined, undefined]
+    const chainId = fromMoonpayNetwork(network)
+    return (
+      item &&
+      code &&
+      code === item.currency.symbol?.toLowerCase() &&
+      chainId === item.currency.chainId
+    )
+  })
 }
 
 function useFiatOnRampTokenList(

@@ -1,5 +1,5 @@
 import * as SentryRN from '@sentry/react-native'
-import { SeverityLevel } from '@sentry/types'
+import { CaptureContext, SeverityLevel } from '@sentry/types'
 
 import { ISentry } from './Sentry'
 
@@ -11,11 +11,8 @@ import { ISentry } from './Sentry'
  * @param extraArgs Key/value pairs to enrich logging and allow filtering.
  *                  More info here: https://docs.sentry.io/platforms/react-native/enriching-events/context/
  */
-export function captureException(context: string, error: unknown, ...extraArgs: unknown[]): void {
-  SentryRN.captureException(error, {
-    ...(extraArgs ? { extra: { data: extraArgs } } : {}),
-    tags: { mobileContext: context },
-  })
+export function captureException(errorMessage: string, captureContext?: CaptureContext): void {
+  SentryRN.captureException(errorMessage, captureContext)
 }
 
 /**

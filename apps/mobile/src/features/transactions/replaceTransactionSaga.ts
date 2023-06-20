@@ -76,7 +76,14 @@ export function* attemptReplaceTransaction(
     // Add new transaction for monitoring after submitting on chain
     yield* put(addTransaction(replacementTransaction))
   } catch (error) {
-    logger.error('replaceTransaction', '', 'Error while attempting tx replacement', hash, error)
+    logger.error('Unable to replace transaction', {
+      tags: {
+        file: 'replaceTransactionSaga',
+        function: 'attemptReplaceTransaction',
+        txHash: hash,
+        error: JSON.stringify(error),
+      },
+    })
 
     // Unable to submit txn on chain, delete from state. This can sometimes be the case where we
     // attempt to replace a txn that has already been mined. Delete new txn in case it was added

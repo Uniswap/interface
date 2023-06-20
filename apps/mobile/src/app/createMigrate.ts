@@ -51,9 +51,11 @@ export default function createMigrate(
       )
 
       return Promise.resolve(migratedState)
-    } catch (err) {
-      logger.error('redux-persist', 'createMigrate', 'Error:', err)
-      return Promise.reject(err)
+    } catch (error) {
+      logger.error('Redux migration error', {
+        tags: { file: 'redux-persist', function: 'createMigrate', error: JSON.stringify(error) },
+      })
+      return Promise.reject(error)
     }
   }
 }

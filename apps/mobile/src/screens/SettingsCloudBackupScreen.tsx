@@ -56,7 +56,14 @@ export function SettingsCloudBackupScreen({
         })
       )
     } catch (error) {
-      logger.error('SettingsCloudBackupScreen', 'onPressNext', `${error}`)
+      logger.error('Unable to backup to iCloud', {
+        tags: {
+          file: 'SettingsCloudBackupScreen',
+          function: 'onPressNext',
+          error: JSON.stringify(error),
+        },
+      })
+
       Alert.alert(
         t('iCloud error'),
         t(

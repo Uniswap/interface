@@ -2,6 +2,7 @@ import { BigNumberish } from 'ethers'
 import { ChainId, isL2Chain, TESTNET_CHAIN_IDS } from 'wallet/src/constants/chains'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import { Chain } from 'wallet/src/data/__generated__/types-and-hooks'
+import { logger } from 'wallet/src/features/logger/logger'
 
 const supportedChains = Object.values(ChainId).map((c) => c.toString())
 
@@ -66,7 +67,7 @@ export function getPollingIntervalByBlocktime(chainId?: ChainId): PollingInterva
   return isL2Chain(chainId) ? PollingInterval.LightningMcQueen : PollingInterval.Fast
 }
 
-export function fromMoonpayNetwork(moonpayNetwork: string | undefined): ChainId {
+export function fromMoonpayNetwork(moonpayNetwork: string | undefined): ChainId | undefined {
   switch (moonpayNetwork) {
     case Chain.Arbitrum.toLowerCase():
       return ChainId.ArbitrumOne
@@ -77,6 +78,12 @@ export function fromMoonpayNetwork(moonpayNetwork: string | undefined): ChainId 
     case undefined:
       return ChainId.Mainnet
     default:
-      throw new Error(`Moonpay network "${moonpayNetwork}" can not be mapped`)
+      logger.error('Error parsing Moonpay network', {
+        tags: {
+          file: 'utils/chainId',
+          function: 'fromMoonpayNetwork',
+          network: moonpayNetwork,
+        },
+      })
   }
 }

@@ -5,7 +5,13 @@ export function setClipboard(value: string): void {
   try {
     Clipboard.setStringAsync(value)
   } catch (error) {
-    logger.error('clipboard', 'setClipboard', 'Unable to set clipboard string', error)
+    logger.error('Unable to set clipboard value', {
+      tags: {
+        file: 'clipboard',
+        function: 'setClipboard',
+        error: JSON.stringify(error),
+      },
+    })
   }
 }
 
@@ -14,7 +20,13 @@ export async function getClipboard(): Promise<string | void> {
     const value = await Clipboard.getStringAsync()
     return value
   } catch (error) {
-    logger.error('clipboard', 'getClipboard', 'Unable to get clipboard string', error)
+    logger.error('Unable to get clipboard value', {
+      tags: {
+        file: 'clipboard',
+        function: 'getClipboard',
+        error: JSON.stringify(error),
+      },
+    })
   }
 }
 
@@ -39,13 +51,15 @@ export async function setClipboardImage(imageUrl: string | undefined): Promise<v
     if (formattedEncoding) {
       Clipboard.setImageAsync(formattedEncoding)
     }
-  } catch (e) {
-    logger.error(
-      'clipboard',
-      'setClipboardImage',
-      `Unable to set clipboard image url: ${imageUrl}`,
-      e
-    )
+  } catch (error) {
+    logger.error('Unable to set clipboard image', {
+      tags: {
+        file: 'clipboard',
+        function: 'setClipboardImage',
+        error: JSON.stringify(error),
+        imageUrl,
+      },
+    })
   }
 }
 

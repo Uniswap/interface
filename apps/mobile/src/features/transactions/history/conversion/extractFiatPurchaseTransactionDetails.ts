@@ -76,7 +76,7 @@ function moonpayStatusToTransactionInfoStatus(
 
 // MoonPay does not always (ever?) return the transaction id inside `returnUrl`
 //  returnUrl": "https://buy-sandbox.moonpay.com/transaction_receipt
-// This adds `transactinId` param if required
+// This adds `transactionId` param if required
 function formatReturnUrl(
   providedReturnUrl: string | undefined,
   id: string | undefined
@@ -113,8 +113,13 @@ export function extractFiatOnRampTransactionDetails(
       typeInfo,
       options: { request: {} },
     }
-  } catch (e) {
-    logger.error('extractFiatPurchaseTransactionDetails', '', `Failed to parse transaction: ${e}`)
-    return
+  } catch (error) {
+    logger.error('Failed to extract fiat on-ramp transaction details', {
+      tags: {
+        file: 'extractFiatPurchaseTransactionDetails',
+        function: 'extractFiatOnRampTransactionDetails',
+        error: JSON.stringify(error),
+      },
+    })
   }
 }

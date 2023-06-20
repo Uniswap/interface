@@ -16,8 +16,14 @@ export async function initAndPersistCache(storage: MMKVWrapper): Promise<InMemor
       cache,
       storage,
     })
-  } catch (e) {
-    logger.error('data/cache', 'setupCache', `Non-fatal error while restoring Apollo cache: ${e}`)
+  } catch (error) {
+    logger.error('Unable to persist cache', {
+      tags: {
+        file: 'cache',
+        function: 'initAndPersistCache',
+        error: JSON.stringify(error),
+      },
+    })
   }
 
   return cache
