@@ -1,13 +1,14 @@
-// const child_process = require('child_process')
-// const { promisify } = require('util')
-// const portReady = require('port-ready')
+/* eslint-disable */
+const waitPort = require('wait-port')
 
-// const exec = promisify(child_process.exec)
+const params = {
+  port: 3001,
+  host: 'localhost',
+}
 
-// beforeAll(async () => {
-//   await exec('NODE_OPTIONS=--dns-result-order=ipv4first npx wrangler pages dev --proxy=3001 --port=3000 -- yarn start')
-//   return portReady({ port: 3000 })
-// }, 60000)
+beforeAll(async () => {
+  await waitPort(params)
+}, 60000)
 
 test('should inject metadata for valid nft', async () => {
   const req = new Request('http://127.0.0.1:3000/nfts/asset/0xed5af388653567af2f388e6224dc7c4b3241c544/2550')
