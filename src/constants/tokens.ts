@@ -245,52 +245,45 @@ export const DAI_BSC = new Token(ChainId.BNB, '0x1AF3F329e8BE154074D8769D1FFa4eE
 
 export const USDC_AVALANCHE = new Token(
   ChainId.AVALANCHE,
-  '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
+  '0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E',
   6,
   'USDC',
   'USD//C'
 )
 export const USDT_AVALANCHE = new Token(
   ChainId.AVALANCHE,
-  '0xdAC17F958D2ee523a2206206994597C13D831ec7',
+  '0x9702230A8Ea53601f5cD2dc00fDBc13d4dF4A8c7',
   6,
   'USDT',
   'Tether USD'
 )
 export const WETH_AVALANCHE = new Token(
   ChainId.AVALANCHE,
-  '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
+  '0x49D5c2BdFfac6CE2BFdB6640F4F80f226bc10bAB',
   18,
   'WETH',
   'Wrapped Ether'
 )
 export const DAI_AVALANCHE = new Token(
   ChainId.AVALANCHE,
-  '0x6B175474E89094C44Da98b954EedeAC495271d0F',
+  '0xd586E7F844cEa2F87f50152665BCbc2C279D8d70',
   18,
   'DAI',
   'Dai Stablecoin'
 )
 export const WBTC_AVALANCHE = new Token(
   ChainId.AVALANCHE,
-  '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599',
+  '0x408D4cD0ADb7ceBd1F1A1C33A0Ba2098E1295bAB',
   8,
   'WBTC',
   'Wrapped BTC'
 )
 export const BUSD_AVALANCHE = new Token(
   ChainId.AVALANCHE,
-  '0x4Fabb145d64652a948d72533023f6E7A623C7C53',
+  '0x19860CCB0A68fd4213aB9D8266F7bBf05A8dDe98',
   18,
   'BUSD',
   'Binance USD'
-)
-export const LINK_AVALANCHE = new Token(
-  ChainId.AVALANCHE,
-  '0x514910771AF9Ca656af840dff83E8264EcF986CA',
-  18,
-  'LINK',
-  'ChainLink Token'
 )
 
 export const UNI: { [chainId: number]: Token } = {
