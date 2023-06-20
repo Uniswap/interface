@@ -1,12 +1,9 @@
-import { t } from '@lingui/macro'
-
 import { getReason } from './swapErrorToUserReadableMessage'
 
 export function swapEthersErrorToUserReadableMessage(error: any): string {
   const reason = getReason(error)
   const errorCode = error?.code
 
-  const reasonString = t`${reason ? reason : 'Unknown error.'}.`
   let messageString = ''
   switch (errorCode) {
     //Generic Errors
@@ -49,7 +46,7 @@ export function swapEthersErrorToUserReadableMessage(error: any): string {
       messageString = 'Unexpected argument in transaction.'
       break
     case 'VALUE_MISMATCH':
-      messageString = 'Value mismatch.'
+      messageString = 'Value mismatch. Please check your input data.'
       break
     //Blockchain Errors
     case 'CALL_EXCEPTION':
@@ -65,21 +62,24 @@ export function swapEthersErrorToUserReadableMessage(error: any): string {
       messageString = 'Replacement transaction underpriced. Please resubmit your transaction with a higher gas price.'
       break
     case 'TRANSACTION_REPLACED':
-      messageString = 'Transaction replaced with another.'
+      messageString = 'Transaction replaced with another. Please check your transaction status.'
       break
     case 'UNCONFIGURED_NAME':
-      messageString = 'Unconfigured name.'
+      messageString = 'Unconfigured name. Please check your input data.'
       break
     case 'OFFCHAIN_FAULT':
-      messageString = 'Offchain fault.'
+      messageString = 'Offchain fault. Please check your input data.'
       break
     case 'UNPREDICTABLE_GAS_LIMIT':
       messageString = 'Unpredictable gas limit. Please check your gas limit and try again.'
       break
     case 'ACTION_REJECTED':
-      messageString = 'Action rejected by user.'
+      messageString = 'Action rejected by user. You may have rejected a transaction signature request.'
+      break
+    default:
+      messageString = 'Unknown error.'
       break
   }
 
-  return `${reasonString} ${messageString} Try increasing your slippage tolerance. Note: fee-on-transfer and rebase tokens are incompatible with Uniswap V3.`
+  return `${messageString} Try increasing your slippage tolerance. Note: fee-on-transfer and rebase tokens are incompatible with Uniswap V3.`
 }
