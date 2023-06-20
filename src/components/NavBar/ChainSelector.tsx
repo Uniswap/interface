@@ -24,6 +24,7 @@ import { useIsMobile } from 'nft/hooks'
 import { useCallback, useRef, useState } from 'react'
 import { AlertTriangle, ChevronDown, ChevronUp } from 'react-feather'
 import { useTheme } from 'styled-components/macro'
+import { getSupportedChainIdFromWalletConnectSession } from 'utils/getSupportedChainIdFromWalletConnectSession'
 
 import * as styles from './ChainSelector.css'
 import ChainSelectorRow from './ChainSelectorRow'
@@ -35,17 +36,6 @@ interface ChainSelectorProps {
   leftAlign?: boolean
 }
 
-// accounts is an array of strings in the format of "eip155:<chainId>:<address>"
-function getChainsFromEIP155Accounts(accounts?: string[]): SupportedChainId[] {
-  if (!accounts) return []
-  return accounts
-    .map((account) => {
-      const splitAccount = account.split(':')
-      return splitAccount[1] ? parseInt(splitAccount[1]) : undefined
-    })
-    .filter((x) => x !== undefined) as SupportedChainId[]
-}
-
 function useWalletSupportedChains() {
   const { connector } = useWeb3React()
 
@@ -53,7 +43,7 @@ function useWalletSupportedChains() {
 
   switch (connectionType) {
     case ConnectionType.WALLET_CONNECT_V2:
-      return getChainsFromEIP155Accounts((connector as WalletConnect).provider?.session?.namespaces.eip155.accounts)
+      return getSupportedChainIdFromWalletConnectSession((connector as WalletConnect).provider?.session)
     case ConnectionType.UNISWAP_WALLET:
       return UniWalletSupportedChains
     default:
