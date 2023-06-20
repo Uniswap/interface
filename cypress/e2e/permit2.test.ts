@@ -94,15 +94,20 @@ describe('Permit2', () => {
       cy.get(getTestSelector('popups')).contains('Swapped')
     })
 
+    /**
+     * On mainnet, you have to revoke USDT approval before increasing it.
+     * From the token contract:
+     *   To change the approve amount you first have to reduce the addresses`
+     *   allowance to zero by calling `approve(_spender, 0)` if it is not
+     *   already 0 to mitigate the race condition described here:
+     *   https://github.com/ethereum/EIPs/issues/20#issuecomment-263524729
+     */
     it('swaps USDT with existing permit, and existing but insufficient token approval', () => {
       cy.hardhat().then(async (hardhat) => {
-        // fund with 2 USDT
         await hardhat.fund(hardhat.wallet, CurrencyAmount.fromRawAmount(USDT, 2e6))
         await hardhat.mine()
-        // set token allowance to 1 USDT
         await hardhat.approval.setTokenAllowanceForPermit2({ owner: hardhat.wallet, token: USDT }, 1e6)
         await hardhat.mine()
-        // set permit2 allowance to max
         await hardhat.approval.setPermit2Allowance({ owner: hardhat.wallet, token: USDT })
         await hardhat.mine()
       })
