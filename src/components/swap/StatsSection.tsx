@@ -139,7 +139,7 @@ export default function StatsSection(props: StatsSectionProps) {
           <StatPair>
             <Stat dataCy="24h-low" value={
               priceLow24H
-            } title={<Trans>24h lowm ({baseQuoteSymbol})</Trans>} />
+            } title={<Trans>24h low ({baseQuoteSymbol})</Trans>} />
             <Stat dataCy="24h-high" value={
               priceHigh24H
             } title={<Trans>24h high ({baseQuoteSymbol})</Trans>} />

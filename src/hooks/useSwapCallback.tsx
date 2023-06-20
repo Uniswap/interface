@@ -8,7 +8,7 @@ import { TransactionType } from '../state/transactions/types'
 import { currencyId } from '../utils/currencyId'
 import useTransactionDeadline from './useTransactionDeadline'
 import { useUniversalRouterSwapCallback } from './useUniversalRouter'
-import {Contract } from "ethers"
+import { Contract } from "ethers"
 import { useWeb3React } from '@web3-react/core'
 import { defaultAbiCoder } from '@ethersproject/abi'
 import { getCreate2Address } from '@ethersproject/address'
@@ -45,30 +45,30 @@ export function useSwapCallback(
 
   const callback = useMemo(() => {
     if (!trade || !swapCallback) return null
-    
+
     return () =>
       swapCallback().then((response) => {
         addTransaction(
           response,
           trade.tradeType === TradeType.EXACT_INPUT
             ? {
-                type: TransactionType.SWAP,
-                tradeType: TradeType.EXACT_INPUT,
-                inputCurrencyId: currencyId(trade.inputAmount.currency),
-                inputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
-                expectedOutputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
-                outputCurrencyId: currencyId(trade.outputAmount.currency),
-                minimumOutputCurrencyAmountRaw: trade.minimumAmountOut(allowedSlippage).quotient.toString(),
-              }
+              type: TransactionType.SWAP,
+              tradeType: TradeType.EXACT_INPUT,
+              inputCurrencyId: currencyId(trade.inputAmount.currency),
+              inputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
+              expectedOutputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
+              outputCurrencyId: currencyId(trade.outputAmount.currency),
+              minimumOutputCurrencyAmountRaw: trade.minimumAmountOut(allowedSlippage).quotient.toString(),
+            }
             : {
-                type: TransactionType.SWAP,
-                tradeType: TradeType.EXACT_OUTPUT,
-                inputCurrencyId: currencyId(trade.inputAmount.currency),
-                maximumInputCurrencyAmountRaw: trade.maximumAmountIn(allowedSlippage).quotient.toString(),
-                outputCurrencyId: currencyId(trade.outputAmount.currency),
-                outputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
-                expectedInputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
-              }
+              type: TransactionType.SWAP,
+              tradeType: TradeType.EXACT_OUTPUT,
+              inputCurrencyId: currencyId(trade.inputAmount.currency),
+              maximumInputCurrencyAmountRaw: trade.maximumAmountIn(allowedSlippage).quotient.toString(),
+              outputCurrencyId: currencyId(trade.outputAmount.currency),
+              outputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
+              expectedInputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
+            }
         )
         return response.hash
       })
@@ -89,17 +89,17 @@ export function useSwapCallback(
 
 export function useAddLeveragePositionCallback(
   leverageManagerAddress: string | undefined,
-  trade: Trade<Currency, Currency, TradeType> | undefined,  
+  trade: Trade<Currency, Currency, TradeType> | undefined,
   allowedSlippage: Percent, // in bips
   leverageFactor: string | undefined
-): {callback: null | (()=> Promise<string>)} {
+): { callback: null | (() => Promise<string>) } {
   // const deadline = useTransactionDeadline()
   const { account, chainId, provider } = useWeb3React()
 
   const addTransaction = useTransactionAdder()
-  
-  if (!leverageManagerAddress) return {callback: null}
-  if (!trade) return {callback: null}
+
+  if (!leverageManagerAddress) return { callback: null }
+  if (!trade) return { callback: null }
   if (!account) throw new Error('missing account')
   if (!chainId) throw new Error('missing chainId')
   if (!provider) throw new Error('missing provider')
@@ -117,38 +117,26 @@ export function useAddLeveragePositionCallback(
   const leverageManagerContract = new Contract(leverageManagerAddress, LeverageManagerData.abi, provider.getSigner())
   let slippage = new BN(1 + Number(allowedSlippage.toFixed(6)) / 100).shiftedBy(decimals).toFixed(0)
   // console.log("arguments: ", input, allowedSlippage.toFixed(6), slippage, borrowedAmount, isLong)
-  return {callback: (): any => {
-    return leverageManagerContract.addPosition(
-      input,
-      slippage,
-      borrowedAmount,
-      isLong
-    ).then((response: any) => {
-      addTransaction(
-        response,
-        trade.tradeType === TradeType.EXACT_INPUT
-          ? {
-              type: TransactionType.SWAP,
-              tradeType: TradeType.EXACT_INPUT,
-              inputCurrencyId: currencyId(trade.inputAmount.currency),
-              inputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
-              expectedOutputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
-              outputCurrencyId: currencyId(trade.outputAmount.currency),
-              minimumOutputCurrencyAmountRaw: trade.minimumAmountOut(allowedSlippage).quotient.toString(),
-            }
-          : {
-              type: TransactionType.SWAP,
-              tradeType: TradeType.EXACT_OUTPUT,
-              inputCurrencyId: currencyId(trade.inputAmount.currency),
-              maximumInputCurrencyAmountRaw: trade.maximumAmountIn(allowedSlippage).quotient.toString(),
-              outputCurrencyId: currencyId(trade.outputAmount.currency),
-              outputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
-              expectedInputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
-            }
-      )
-      return response.hash
-    })
-  }}
+  return {
+    callback: (): any => {
+      return leverageManagerContract.addPosition(
+        input,
+        slippage,
+        borrowedAmount,
+        isLong
+      ).then((response: any) => {
+        addTransaction(
+          response,
+          {
+            type: TransactionType.ADD_LEVERAGE,
+            inputCurrencyId: currencyId(trade.inputAmount.currency),
+            outputCurrencyId: currencyId(trade.outputAmount.currency)
+          }
+        )
+        return response.hash
+      })
+    }
+  }
 }
 
 export function useAddBorrowPositionCallback(
@@ -159,14 +147,14 @@ export function useAddBorrowPositionCallback(
   inputCurrency: Currency | undefined,
   outputCurrency: Currency | undefined,
   borrowTrade: BorrowCreationDetails | undefined
-) : { callback: null | (() => Promise<string>) } {
+): { callback: null | (() => Promise<string>) } {
   // const deadline = useTransactionDeadline()
   const { account, chainId, provider } = useWeb3React()
 
 
   const addTransaction = useTransactionAdder()
-  
-  if (!borrowManagerAddress || !borrowTrade || borrowTrade.state !== TradeState.VALID) return { callback: null }
+
+  if (!borrowManagerAddress || !borrowTrade || borrowTrade.state !== TradeState.VALID || !inputCurrency || !outputCurrency) return { callback: null }
   if (!account) throw new Error('missing account')
   if (!chainId) throw new Error('missing chainId')
   if (!provider) throw new Error('missing provider')
@@ -176,41 +164,39 @@ export function useAddBorrowPositionCallback(
   // borrowBelow is true if input currency is token0.
   let borrowBelow = true
   if (
-    inputCurrency?.isToken && 
+    inputCurrency?.isToken &&
     outputCurrency?.isToken &&
     inputCurrency?.wrapped &&
     outputCurrency?.wrapped
-    ) {
+  ) {
     borrowBelow = inputCurrency?.wrapped.sortsBefore(outputCurrency?.wrapped)
   }
-
-  // if (trade?.inputAmount.currency.isToken && trade?.outputAmount.currency.isToken) {
-  //   if (trade.inputAmount.currency.sortsBefore(trade.outputAmount.currency)) {
-  //     isLong = false
-  //   }
-  // }
 
   const collateralAmount = new BN(parsedAmount?.toExact() ?? 0).shiftedBy(decimals).toFixed(0)
   const borrowManagerContract = new Contract(borrowManagerAddress, BorrowManagerData.abi, provider.getSigner())
 
   const formattedLTV = new BN(ltv ?? 0).shiftedBy(16).toFixed(0)
-  // console.log("arguments: ", input, allowedSlippage.toFixed(6), slippage, borrowedAmount, isLong)
-  return {callback: (): any => {
-    return borrowManagerContract.addBorrowPosition(
-      borrowBelow,
-      collateralAmount,
-      formattedLTV,
-      []
-    ).then((response:any) => {
-      addTransaction(
-        response,
-        {
-          type: TransactionType.ADD_BORROW,
-          amount: "0"
-        }
-          
-      )
-      return response.hash
-    })
-  }}
+
+  return {
+    callback: (): any => {
+      return borrowManagerContract.addBorrowPosition(
+        borrowBelow,
+        collateralAmount,
+        formattedLTV,
+        []
+      ).then((response: any) => {
+        addTransaction(
+          response,
+          {
+            type: TransactionType.ADD_BORROW,
+            collateralAmount,
+            inputCurrencyId: currencyId(inputCurrency),
+            outputCurrencyId: currencyId(outputCurrency)
+          }
+
+        )
+        return response.hash
+      })
+    }
+  }
 }

@@ -61,6 +61,7 @@ import { TransactionType } from 'state/transactions/types'
 import { getPremiumRate } from 'hooks/addPremium'
 import { useWeb3React } from '@web3-react/core'
 import { useCurrencyBalances } from 'lib/hooks/useCurrencyBalance'
+import { currencyId } from 'utils/currencyId'
 
 const StyledNumericalInput = styled(NumericalInput)`
   width: 70%;
@@ -901,9 +902,15 @@ export function ReduceLeverageModalFooter({
 
   const leverageManagerContract = useLeverageManagerContract(leverageManagerAddress, true)
   const addTransaction = useTransactionAdder()
+  const token0 = useCurrency(position?.token0Address)
+  const token1 = useCurrency(position?.token1Address)
+  const inputIsToken0 = !position?.isToken0
 
   const handleReducePosition = useMemo(() => {
-    if (leverageManagerContract && position && Number(reduceAmount) > 0 && Number(reduceAmount) <= Number(position.totalPosition)) {
+    if (
+      leverageManagerContract && position && Number(reduceAmount) > 0 && Number(reduceAmount) <= Number(position.totalPosition) &&
+      token0 && token1
+      ) {
       const formattedSlippage = new BN(slippage).plus(100).shiftedBy(16).toFixed(0)
       const formattedReduceAmount = new BN(reduceAmount).shiftedBy(18).toFixed(0);
       const inputReduceAmount =
@@ -918,7 +925,10 @@ export function ReduceLeverageModalFooter({
           inputReduceAmount
         ).then((hash: any) => {
           addTransaction(hash, {
-            type: TransactionType.REDUCE_LEVERAGE
+            type: TransactionType.REDUCE_LEVERAGE,
+            reduceAmount: inputReduceAmount ?? "",
+            inputCurrencyId: inputIsToken0 ? currencyId(token0) : currencyId(token1),
+            outputCurrencyId: !inputIsToken0 ? currencyId(token0) : currencyId(token1)
           })
           setTxHash(hash)
           setAttemptingTxn(false)
@@ -929,7 +939,12 @@ export function ReduceLeverageModalFooter({
       }
     }
     return () => { }
-  }, [leverageManagerAddress, slippage, tokenId, trader, position, reduceAmount])
+  }, [
+    leverageManagerAddress, slippage, tokenId, trader, position, reduceAmount,
+    token0,
+    token1,
+    inputIsToken0
+  ])
 
   const [derivedState, setDerivedState] = useState<DerivedInfoState>(DerivedInfoState.INVALID)
   const [showDetails, setShowDetails] = useState(false)
@@ -951,13 +966,10 @@ export function ReduceLeverageModalFooter({
     inputError
   } = useDerivedLeverageReduceInfo(leverageManagerAddress, trader, tokenId, debouncedSlippage, position, debouncedReduceAmount, setDerivedState)
 
-  const token0 = useCurrency(position?.token0Address)
-  const token1 = useCurrency(position?.token1Address)
+
 
   const loading = useMemo(() => derivedState === DerivedInfoState.LOADING, [derivedState])
-  // console.log("here: ", token0Amount, token1Amount)
-
-  const inputIsToken0 = !position?.isToken0
+  // console.log("here: ", token0Amount, token1Amount
 
   const debt = position?.totalDebtInput;
   const initCollateral = position?.initialCollateral;
@@ -1803,8 +1815,16 @@ export function BorrowReduceCollateralModalFooter({
   const borrowManagerContract = useBorrowManagerContract(position?.borrowManagerAddress, true)
   const addTransaction = useTransactionAdder()
 
+
+  const token0 = useCurrency(position?.token0Address)
+  const token1 = useCurrency(position?.token1Address)
+  const inputIsToken0 = position?.isToken0
+
   const handleReducePosition = useMemo(() => {
-    if (borrowManagerContract && position && Number(reduceAmount) > 0 && Number(reduceAmount) <= Number(position.initialCollateral)) {
+    if (
+      borrowManagerContract && position && Number(reduceAmount) > 0 && Number(reduceAmount) <= Number(position.initialCollateral) &&
+      token0 && token1
+    ) {
       const formattedReduceAmount = new BN(reduceAmount).shiftedBy(18).toFixed(0);
       return () => {
         setAttemptingTxn(true)
@@ -1815,7 +1835,9 @@ export function BorrowReduceCollateralModalFooter({
           formattedReduceAmount
         ).then((hash: any) => {
           addTransaction(hash, {
-            type: TransactionType.REDUCE_BORROW_COLLATERAL
+            type: TransactionType.REDUCE_BORROW_COLLATERAL,
+            inputCurrencyId: inputIsToken0 ? currencyId(token1) : currencyId(token0),
+            outputCurrencyId: !inputIsToken0 ? currencyId(token1) : currencyId(token0)
           })
           setTxHash(hash)
           setAttemptingTxn(false)
@@ -1846,13 +1868,9 @@ export function BorrowReduceCollateralModalFooter({
     inputError
   } = useDerivedBorrowReduceCollateralInfo(trader, tokenId, position, debouncedReduceAmount, recieveCollateral, setDerivedState)
 
-  const token0 = useCurrency(position?.token0Address)
-  const token1 = useCurrency(position?.token1Address)
 
   const loading = useMemo(() => derivedState === DerivedInfoState.LOADING, [derivedState])
-  // console.log("here: ", token0Amount, token1Amount)
-
-  const inputIsToken0 = position?.isToken0
+  // console.log("here: ", token0Amount, token1Amount
 
   const debt = position?.totalDebtInput;
   const initCollateral = position?.initialCollateral;
@@ -2128,10 +2146,17 @@ export function BorrowReduceDebtModalFooter({
   const borrowManagerContract = useBorrowManagerContract(position?.borrowManagerAddress, true)
   const addTransaction = useTransactionAdder()
 
-  const handleReducePosition = useMemo(() => {
-    console.log('wtf???', borrowManagerContract, position, Number(reduceAmount), Number(position?.initialCollateral))
+  const token0 = useCurrency(position?.token0Address)
+  const token1 = useCurrency(position?.token1Address)
+  const inputIsToken0 = position?.isToken0
 
-    if (borrowManagerContract && position && Number(reduceAmount) > 0 && Number(reduceAmount) <= Number(position.totalDebtInput)) {
+  const handleReducePosition = useMemo(() => {
+    // console.log('wtf???', borrowManagerContract, position, Number(reduceAmount), Number(position?.initialCollateral))
+
+    if (
+      borrowManagerContract && position && Number(reduceAmount) > 0 && Number(reduceAmount) <= Number(position.totalDebtInput) &&
+      token0 && token1
+      ) {
       const formattedReduceAmount = new BN(reduceAmount).shiftedBy(18).toFixed(0);
       const inputReduceAmount =
         Math.abs(Number(position.totalPositionRaw) - Number(formattedReduceAmount)) < 1e12
@@ -2145,7 +2170,9 @@ export function BorrowReduceDebtModalFooter({
           inputReduceAmount
         ).then((hash: any) => {
           addTransaction(hash, {
-            type: TransactionType.REDUCE_LEVERAGE
+            type: TransactionType.REDUCE_BORROW_DEBT,
+            inputCurrencyId: inputIsToken0 ? currencyId(token0) : currencyId(token1),
+            outputCurrencyId: !inputIsToken0 ? currencyId(token0) : currencyId(token1)
           })
           setTxHash(hash)
           setAttemptingTxn(false)
@@ -2156,7 +2183,7 @@ export function BorrowReduceDebtModalFooter({
       }
     }
     return () => { }
-  }, [recieveCollateral, tokenId, trader, position, reduceAmount])
+  }, [recieveCollateral, tokenId, trader, position, reduceAmount, token0, token1])
 
   const [derivedState, setDerivedState] = useState<DerivedInfoState>(DerivedInfoState.INVALID)
   const [showDetails, setShowDetails] = useState(false)
@@ -2177,13 +2204,10 @@ export function BorrowReduceDebtModalFooter({
     inputError
   } = useDerivedBorrowReduceDebtInfo(trader, tokenId, position, debouncedReduceAmount, recieveCollateral, setDerivedState)
 
-  const token0 = useCurrency(position?.token0Address)
-  const token1 = useCurrency(position?.token1Address)
-
   const loading = useMemo(() => derivedState === DerivedInfoState.LOADING, [derivedState])
   // console.log("here: ", token0Amount, token1Amount)
 
-  const inputIsToken0 = position?.isToken0
+
 
   const debt = position?.totalDebtInput;
   const initCollateral = position?.initialCollateral;
@@ -2332,31 +2356,6 @@ export function BorrowReduceDebtModalFooter({
                           </ThemedText.DeprecatedBlack>
                         </TextWithLoadingPlaceholder>
                       </RowBetween>
-                      {/*<RowBetween>
-                        <RowFixed>
-                          <MouseoverTooltip
-                            text={
-                              <Trans>
-                                The amount entire position swaps to at the current market price. May receive less or more if the
-                                market price changes while your transaction is pending.
-                              </Trans>
-                            }
-                          >
-                            <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
-                              <Trans>Expected Output</Trans>
-                            </ThemedText.DeprecatedSubHeader>
-                          </MouseoverTooltip>
-                        </RowFixed>
-                        <TextWithLoadingPlaceholder syncing={loading} width={65}>
-                          <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
-                            <TruncatedText>
-                              {
-                                `${inputIsToken0 ? new BN(token0Amount).abs().toString() : new BN(token1Amount).abs().toString()}  ${inputIsToken0 ? token0?.symbol : token1?.symbol}`
-                              }
-                            </TruncatedText>
-                          </ThemedText.DeprecatedBlack>
-                        </TextWithLoadingPlaceholder>
-                      </RowBetween>*/}
                       <RowBetween>
                         <RowFixed>
                           <MouseoverTooltip

@@ -296,7 +296,7 @@ export function useDerivedBorrowCreationInfo({ allowance: {input: inputAllowance
     // checks if the leverageManager exists
     if (borrowManager) {
       try {
-        borrowManager.callStatic.liquidityManager()
+        borrowManager.callStatic.globalStorage()
       } catch (err) {
         setTradeState(TradeState.NO_ROUTE_FOUND)
         console.log("no route found", err)
@@ -544,7 +544,7 @@ export function useDerivedLeverageCreationInfo({ allowance } : { allowance: Appr
     // checks if the leverageManager exists
     if (leverageManager) {
       try {
-        leverageManager.callStatic.liquidityManager()
+        leverageManager.callStatic.globalStorage()
       } catch (err) {
         setTradeState(LeverageTradeState.NO_ROUTE_FOUND)
         console.log("no route found", err)

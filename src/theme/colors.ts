@@ -97,12 +97,37 @@ export const colors = {
   networkEthereumSoft: 'rgba(98, 126, 234, 0.16)',
 }
 
+// /* CSS HEX */
+// --dark-purple: #201426ff;
+// --black: #040505ff;
+// --rich-black: #05051Bff;
+// --white: #FFFFFFff;
+// --russian-violet: #23113Bff;
+
+// /* SCSS Gradient */
+// $gradient-top: linear-gradient(0deg, #201426ff, #040505ff, #05051Bff, #FFFFFFff, #23113Bff);
+// $gradient-right: linear-gradient(90deg, #201426ff, #040505ff, #05051Bff, #FFFFFFff, #23113Bff);
+// $gradient-bottom: linear-gradient(180deg, #201426ff, #040505ff, #05051Bff, #FFFFFFff, #23113Bff);
+// $gradient-left: linear-gradient(270deg, #201426ff, #040505ff, #05051Bff, #FFFFFFff, #23113Bff);
+// $gradient-top-right: linear-gradient(45deg, #201426ff, #040505ff, #05051Bff, #FFFFFFff, #23113Bff);
+// $gradient-bottom-right: linear-gradient(135deg, #201426ff, #040505ff, #05051Bff, #FFFFFFff, #23113Bff);
+// $gradient-top-left: linear-gradient(225deg, #201426ff, #040505ff, #05051Bff, #FFFFFFff, #23113Bff);
+// $gradient-bottom-left: linear-gradient(315deg, #201426ff, #040505ff, #05051Bff, #FFFFFFff, #23113Bff);
+// $gradient-radial: radial-gradient(#201426ff, #040505ff, #05051Bff, #FFFFFFff, #23113Bff);
+export const limitlessColors = {
+  darkPurple: "#201426ff",
+  black: "#040505ff",
+  richBlack: "05051Bff",
+  white: "#FFFFFFff",
+  russianViolet: "#23113Bff"
+}
+
+
 type Theme = typeof darkTheme
 
 const commonTheme = {
   white: colors.white,
   black: colors.black,
-
   chain_1: colors.networkEthereum,
   chain_3: colors.yellow400,
   chain_4: colors.pink400,
@@ -132,6 +157,7 @@ export const darkTheme = {
   userThemeColor: colors.magentaVibrant,
   background: colors.gray800,
   backgroundBackdrop: colors.gray950,
+  // backgroundSurface: limitlessColors.darkPurple,
   backgroundSurface: colors.gray900,
   backgroundModule: colors.gray800,
   backgroundInteractive: colors.gray700,

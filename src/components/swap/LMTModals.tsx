@@ -241,8 +241,6 @@ export function AddBorrowPremiumModal({
   const [attemptingTxn, setAttemptingTxn] = useState(false)
   const [txHash, setTxHash] = useState("")
 
-  // console.log("args: ", trader, isOpen, tokenId, leverageManagerAddress)
-
   const { loading, error, position} = useLimitlessPositionFromTokenId(tokenId)
   const liquidityManagerAddress = position?.liquidityManagerAddress;
   const liquidityManager = useLiquidityManagerContract(liquidityManagerAddress, true)

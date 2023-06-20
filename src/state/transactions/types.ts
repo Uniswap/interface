@@ -44,7 +44,10 @@ export enum TransactionType {
   REPAY,
   DEPLOY,
   CANCEL,
+
+  // limitless actions
   ADD_BORROW,
+  ADD_LEVERAGE,
   REDUCE_LEVERAGE,
   PREMIUM_LEVERAGE,
   PREMIUM_BORROW,
@@ -179,21 +182,29 @@ export interface RemoveLiquidityV3TransactionInfo {
   expectedAmountQuoteRaw: string
 }
 
-export interface AddBorrowPositionTransactionInfo {
-  type: TransactionType.ADD_BORROW,
-  amount: string
-}
-
-export interface ReduceLeveragePositionTransactionInfo {
-  type: TransactionType.REDUCE_LEVERAGE
-}
 
 interface SubmitProposalTransactionInfo {
   type: TransactionType.SUBMIT_PROPOSAL
 }
 
+// LIMITLESS INFO
+
+export interface AddBorrowPositionTransactionInfo {
+  type: TransactionType.ADD_BORROW,
+  collateralAmount: string,
+  inputCurrencyId: string,
+  outputCurrencyId: string
+}
+
+export interface ReduceLeveragePositionTransactionInfo {
+  type: TransactionType.REDUCE_LEVERAGE,
+  reduceAmount: string
+  inputCurrencyId: string
+  outputCurrencyId: string
+}
+
 export interface AddLeveragePremiumTransactionInfo {
-  type: TransactionType.PREMIUM_LEVERAGE
+  type: TransactionType.PREMIUM_LEVERAGE,
 }
 
 export interface AddBorrowPremiumTransactionInfo {
@@ -202,10 +213,20 @@ export interface AddBorrowPremiumTransactionInfo {
 
 export interface ReduceBorrowCollateralTransactionInfo {
   type: TransactionType.REDUCE_BORROW_COLLATERAL
+  inputCurrencyId: string
+  outputCurrencyId: string
 }
 
 export interface ReduceBorrowDebtTransactionInfo {
   type: TransactionType.REDUCE_BORROW_DEBT
+  inputCurrencyId: string
+  outputCurrencyId: string
+}
+
+export interface AddLeverageTransactionInfo {
+  type: TransactionType.ADD_LEVERAGE
+  inputCurrencyId: string
+  outputCurrencyId: string
 }
 
 export type TransactionInfo =
@@ -233,6 +254,7 @@ export type TransactionInfo =
   | AddBorrowPremiumTransactionInfo
   | ReduceBorrowCollateralTransactionInfo
   | ReduceBorrowDebtTransactionInfo
+  | AddLeverageTransactionInfo
 
 export interface TransactionDetails {
   hash: string
