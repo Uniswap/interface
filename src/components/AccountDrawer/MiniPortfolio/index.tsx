@@ -11,6 +11,7 @@ import { shouldDisableNFTRoutesAtom } from 'state/application/atoms'
 import { useHasPendingTransactions } from 'state/transactions/hooks'
 import styled, { useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
+import { isMobile } from 'utils/userAgent'
 
 import { ActivityTab } from './Activity'
 import NFTs from './NFTs'
@@ -24,6 +25,7 @@ const Wrapper = styled(Column)`
   flex-direction: column;
   height: 100%;
   gap: 12px;
+  margin-bottom: ${isMobile ? '48px' : '0px'};
 
   ${PortfolioRowWrapper} {
     &:hover {
