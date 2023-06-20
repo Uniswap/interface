@@ -176,7 +176,7 @@ function useAllV3Ticks(
   error: unknown
   ticks: TickData[] | undefined
 } {
-  const useSubgraph = currencyA ? !CHAIN_IDS_MISSING_SUBGRAPH_DATA.includes(currencyA.chainId) : true
+  const useSubgraph = false //currencyA ? !CHAIN_IDS_MISSING_SUBGRAPH_DATA.includes(currencyA.chainId) : true
 
   const tickLensTickData = useTicksFromTickLens(!useSubgraph ? currencyA : undefined, currencyB, feeAmount)
 
