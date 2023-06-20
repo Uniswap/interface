@@ -24,7 +24,7 @@ import { useIsMobile } from 'nft/hooks'
 import { useCallback, useRef, useState } from 'react'
 import { AlertTriangle, ChevronDown, ChevronUp } from 'react-feather'
 import { useTheme } from 'styled-components/macro'
-import { getSupportedChainIdFromWalletConnectSession } from 'utils/getSupportedChainIdFromWalletConnectSession'
+import { getSupportedChainIdsFromWalletConnectSession } from 'utils/getSupportedChainIdsFromWalletConnectSession'
 
 import * as styles from './ChainSelector.css'
 import ChainSelectorRow from './ChainSelectorRow'
@@ -36,14 +36,14 @@ interface ChainSelectorProps {
   leftAlign?: boolean
 }
 
-function useWalletSupportedChains() {
+function useWalletSupportedChains(): SupportedChainId[] {
   const { connector } = useWeb3React()
 
   const connectionType = getConnection(connector).type
 
   switch (connectionType) {
     case ConnectionType.WALLET_CONNECT_V2:
-      return getSupportedChainIdFromWalletConnectSession((connector as WalletConnect).provider?.session)
+      return getSupportedChainIdsFromWalletConnectSession((connector as WalletConnect).provider?.session)
     case ConnectionType.UNISWAP_WALLET:
       return UniWalletSupportedChains
     default:

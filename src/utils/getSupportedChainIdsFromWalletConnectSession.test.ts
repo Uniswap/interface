@@ -1,6 +1,6 @@
 import { SessionTypes } from '@walletconnect/types'
 
-import { getSupportedChainIdFromWalletConnectSession } from './getSupportedChainIdFromWalletConnectSession'
+import { getSupportedChainIdsFromWalletConnectSession } from './getSupportedChainIdsFromWalletConnectSession'
 
 const testSession: SessionTypes.Struct = {
   topic: 'string',
@@ -54,7 +54,7 @@ const testSession: SessionTypes.Struct = {
     },
   },
 }
-describe('getSupportedChainIdFromWalletConnectSession', () => {
+describe('getSupportedChainIdsFromWalletConnectSession', () => {
   it('supports eip155:<chain> namespaces', () => {
     const namespaces = {
       'eip155:1': {
@@ -74,10 +74,25 @@ describe('getSupportedChainIdFromWalletConnectSession', () => {
       ...testSession,
       namespaces,
     }
-    const result = getSupportedChainIdFromWalletConnectSession(session)
+    const result = getSupportedChainIdsFromWalletConnectSession(session)
     expect(result).toEqual([1, 137])
   })
-  it('supports eip155 namespaces', () => {
+  it('supports eip155 namespaces without chains field', () => {
+    const namespaces = {
+      eip155: {
+        accounts: ['eip155:1:0xc0ffee254729296a45a3885639AC7E10F9d54979', 'eip155:137:address'],
+        methods: [],
+        events: [],
+      },
+    }
+    const session = {
+      ...testSession,
+      namespaces,
+    }
+    const result = getSupportedChainIdsFromWalletConnectSession(session)
+    expect(result).toEqual([1, 137])
+  })
+  it('supports eip155 namespaces with chains field', () => {
     const namespaces = {
       eip155: {
         chains: ['1', '137'],
@@ -90,7 +105,7 @@ describe('getSupportedChainIdFromWalletConnectSession', () => {
       ...testSession,
       namespaces,
     }
-    const result = getSupportedChainIdFromWalletConnectSession(session)
+    const result = getSupportedChainIdsFromWalletConnectSession(session)
     expect(result).toEqual([1, 137])
   })
 })

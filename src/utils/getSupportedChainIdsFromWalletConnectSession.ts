@@ -3,11 +3,11 @@ import { SupportedChainId } from 'constants/chains'
 
 // Helper function to extract chainId from string in format 'eip155:{chainId}'
 function getChainIdFromFormattedString(item: string): number | null {
-  const splitItem = item.split(':')
+  const splitItem = item.startsWith('eip155:') ? item.split(':') : []
   return splitItem.length > 1 && !isNaN(Number(splitItem[1])) ? Number(splitItem[1]) : null
 }
 
-export function getSupportedChainIdFromWalletConnectSession(session?: SessionTypes.Struct): SupportedChainId[] {
+export function getSupportedChainIdsFromWalletConnectSession(session?: SessionTypes.Struct): SupportedChainId[] {
   if (!session?.namespaces) return []
 
   const eip155Keys = Object.keys(session.namespaces)
