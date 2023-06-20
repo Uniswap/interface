@@ -3,6 +3,8 @@ import { ApolloClient, InMemoryCache } from '@apollo/client'
 
 import { AssetDocument } from '../../../src/graphql/data/__generated__/types-and-hooks'
 
+const GRAPHQL_ENDPOINT = 'https://api.uniswap.org/v1/graphql'
+
 type MetaTagInjectorInput = {
   id: any
   tokenId: any
@@ -27,12 +29,6 @@ class MetaTagInjector {
     element.append(`<meta property="og:title" content = "${this.input.name}"/>`, {
       html: true,
     })
-    // element.append(
-    //   `<meta property="og:description" content = "Token #${this.input.tokenId} from ${this.input.collectionName}. Rarity Rank #${this.input.rarity}. ${this.input.listing}."/>`,
-    //   {
-    //     html: true,
-    //   }
-    // )
     element.append(`<meta property="og:image" content = "${this.input.image}"/>`, {
       html: true,
     })
@@ -58,12 +54,6 @@ class MetaTagInjector {
     element.append(`<meta property="twitter:title" content = "${this.input.name}"/>`, {
       html: true,
     })
-    // element.append(
-    //   `<meta property="twitter:description" content = "Token #${this.input.tokenId} from ${this.input.collectionName}. Rarity Rank #${this.input.rarity}. ${this.input.listing}."/>`,
-    //   {
-    //     html: true,
-    //   }
-    // )
     element.append(`<meta property="twitter:image" content = "${this.input.image}"/>`, {
       html: true,
     })
@@ -118,7 +108,7 @@ export const onRequest: PagesFunction<{}> = async ({ params, request, env, next 
       id: asset.id,
       tokenId: asset.tokenId,
       address: collectionAddress,
-      name: asset.name,
+      name: asset.name ? asset.name : asset.collection?.name + ' #' + asset.tokenId,
       image: asset.image?.url,
       collectionName: asset.collection?.name,
       rarity: asset.rarities?.[0]?.rank,

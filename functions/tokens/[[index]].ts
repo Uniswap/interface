@@ -3,6 +3,8 @@ import { ApolloClient, InMemoryCache } from '@apollo/client'
 
 import { TokenDocument } from '../../src/graphql/data/__generated__/types-and-hooks'
 
+const GRAPHQL_ENDPOINT = 'https://api.uniswap.org/v1/graphql'
+
 export function networkNameToID(networkName: string) {
   switch (networkName) {
     case 'mainnet':
@@ -47,12 +49,6 @@ class MetaTagInjector {
     element.append(`<meta property="og:title" content = "Get ${this.input.symbol} on Uniswap"/>`, {
       html: true,
     })
-    // element.append(
-    //   `<meta property="og:description" content = "${this.input.name} on the ${this.input.network} network. 1 ${this.input.symbol} = $${this.input.price}."/>`,
-    //   {
-    //     html: true,
-    //   }
-    // )
     element.append(`<meta property="og:image" content = "${this.input.image}"/>`, {
       html: true,
     })
@@ -78,12 +74,6 @@ class MetaTagInjector {
     element.append(`<meta property="twitter:title" content = "Get ${this.input.symbol} on Uniswap"/>`, {
       html: true,
     })
-    // element.append(
-    //   `<meta property="twitter:description" content = "${this.input.name} on the ${this.input.network} network. 1 ${this.input.symbol} = $${this.input.price}."/>`,
-    //   {
-    //     html: true,
-    //   }
-    // )
     element.append(`<meta property="twitter:image" content = "${this.input.image}"/>`, {
       html: true,
     })
@@ -99,7 +89,11 @@ class MetaTagInjector {
 export const onRequest: PagesFunction<{}> = async ({ params, request, env, next }) => {
   const { index } = params
   const networkName = String(index[0]).toUpperCase()
-  const tokenAddress = String(index[1])
+  let tokenAddress = String(index[1])
+  tokenAddress =
+    tokenAddress !== 'undefined' && tokenAddress === 'NATIVE'
+      ? '0x0000000000000000000000000000000000000000'
+      : tokenAddress
   try {
     const client = new ApolloClient({
       connectToDevTools: true,
@@ -128,7 +122,6 @@ export const onRequest: PagesFunction<{}> = async ({ params, request, env, next 
     if (!asset) {
       return await next()
     }
-    console.log(asset)
     const formattedAsset = {
       name: asset.name,
       network: networkName,
