@@ -52,6 +52,9 @@ export const TESTNET_CHAIN_IDS = [
   ChainId.POLYGON_MUMBAI,
   ChainId.ARBITRUM_GOERLI,
   ChainId.OPTIMISM_GOERLI,
+  ChainId.POLYGON_MUMBAI,
+  ChainId.POLYGON_MUMBAI,
+  ChainId.CELO_ALFAJORES,
 ] as const
 
 export type SupportedTestnetChainId = typeof TESTNET_CHAIN_IDS[number]

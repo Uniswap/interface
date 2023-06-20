@@ -7,6 +7,7 @@ import { TransactionStatus } from 'graphql/data/__generated__/types-and-hooks'
 import useENSName from 'hooks/useENSName'
 import styled from 'styled-components/macro'
 import { EllipsisStyle, ThemedText } from 'theme'
+import { shortenAddress } from 'utils'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 import { PortfolioLogo } from '../PortfolioLogo'
@@ -52,7 +53,7 @@ export function ActivityRow({
         descriptor={
           <ActivityRowDescriptor color="textSecondary">
             {descriptor}
-            {ENSName ?? otherAccount}
+            {ENSName ?? shortenAddress(otherAccount)}
           </ActivityRowDescriptor>
         }
         right={
