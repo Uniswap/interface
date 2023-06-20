@@ -4,6 +4,7 @@ import { SupportedChainId } from 'constants/chains'
 import { useMemo, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 //import { useInfiniteQuery } from 'react-query'
+import { useStakingPools } from 'state/pool/hooks'
 import styled from 'styled-components/macro'
 
 //import { ButtonPrimary } from '../../components/Button'
@@ -73,6 +74,10 @@ flex-direction: column;
 `};
 `
 
+function highestAprFirst(a: any, b: any) {
+  return b.apr - a.apr
+}
+
 export default function Stake() {
   const showDelegateModal = useModalIsOpen(ApplicationModal.CREATE)
   const toggleCreateModal = useToggleCreateModal()
@@ -86,17 +91,36 @@ export default function Stake() {
   const registry = useRegistryContract()
   const bscPools = useBscPools(registry)
   const { chainId } = useWeb3React()
+
   const allPools: PoolRegisteredLog[] = useMemo(() => {
     if (chainId === SupportedChainId.BNB) return [...(smartPoolsLogs ?? []), ...(bscPools ?? [])]
     return [...(smartPoolsLogs ?? [])]
   }, [chainId, smartPoolsLogs, bscPools])
-  // TODO: order all pools by apr
-  const loadingPools = false
 
+  const poolAddresses = allPools.map((p) => p.pool)
+  const poolIds = allPools.map((p) => p.id)
+  const { stakingPools, loading: loadingPools } = useStakingPools(poolAddresses, poolIds)
+
+  // TODO: check PoolPositionDetails type as irr and apr are number not string
+  const poolsWithStats: PoolRegisteredLog[] = useMemo(() => {
+    return allPools
+      .map((p, i) => {
+        const apr = stakingPools?.[i].apr
+        const irr = stakingPools?.[i].irr
+        return {
+          ...p,
+          irr,
+          apr,
+        }
+      })
+      .sort(highestAprFirst)
+  }, [allPools, stakingPools])
+
+  // TODO: useStakingPools hook also returns stake, ownStake, can use as filter and add stake to page
   //const [activeFilters, filtersDispatch] = useReducer(reduceFilters, initialFilterState)
 
   const fetchMoreData = () => {
-    if (allPools && records === allPools.length) {
+    if (poolsWithStats && records === poolsWithStats.length) {
       setHasMore(false)
     } else {
       setTimeout(() => {
@@ -105,12 +129,12 @@ export default function Stake() {
     }
   }
 
-  const showItems = (records: number, allPools: PoolRegisteredLog[]) => {
+  const showItems = (records: number, poolsWithStats: PoolRegisteredLog[]) => {
     const items: PoolRegisteredLog[] = []
 
     for (let i = 0; i < records; i++) {
-      if (allPools[i] !== undefined) {
-        items.push(allPools[i])
+      if (poolsWithStats[i] !== undefined) {
+        items.push(poolsWithStats[i])
       }
     }
 
@@ -118,9 +142,9 @@ export default function Stake() {
   }
 
   const items = useMemo(() => {
-    if (!allPools) return []
-    return showItems(records, allPools)
-  }, [records, allPools])
+    if (!poolsWithStats) return []
+    return showItems(records, poolsWithStats)
+  }, [records, poolsWithStats])
 
   return (
     <PageWrapper gap="lg" justify="center">
@@ -161,13 +185,13 @@ export default function Stake() {
 
         <MainContentWrapper>
           {/* TODO: check why on some mobile wallets pool list not rendered */}
-          {!allPools ? (
+          {!poolsWithStats ? (
             <OutlineCard>
               <Trans>Please connect your wallet</Trans>
             </OutlineCard>
           ) : loadingPools ? (
             <Loader style={{ margin: 'auto' }} />
-          ) : allPools?.length > 0 ? (
+          ) : poolsWithStats?.length > 0 ? (
             <InfiniteScroll
               next={fetchMoreData}
               hasMore={!!hasMore}
@@ -178,12 +202,12 @@ export default function Stake() {
                   </Center>
                 ) : null
               }
-              dataLength={allPools.length}
+              dataLength={poolsWithStats.length}
               style={{ overflow: 'unset' }}
             >
               <PoolPositionList positions={items} filterByOperator={false} />
             </InfiniteScroll>
-          ) : allPools?.length === 0 ? (
+          ) : poolsWithStats?.length === 0 ? (
             <OutlineCard>
               <Trans>No pool found</Trans>
             </OutlineCard>
