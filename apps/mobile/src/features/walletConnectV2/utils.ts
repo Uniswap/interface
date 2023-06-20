@@ -5,9 +5,9 @@ import { SignRequest, TransactionRequest } from 'src/features/walletConnect/wall
 import { wcWeb3Wallet } from 'src/features/walletConnectV2/saga'
 import { ChainId } from 'wallet/src/constants/chains'
 import { EMPTY_ARRAY } from 'wallet/src/constants/misc'
+import { toSupportedChainId } from 'wallet/src/features/chains/utils'
 import { logger } from 'wallet/src/features/logger/logger'
 import { EthMethod, EthSignMethod } from 'wallet/src/features/walletConnect/types'
-import { toSupportedChainId } from 'wallet/src/utils/chainId'
 
 /**
  * Construct WalletConnect 2.0 session namespaces to complete a new pairing. Used when approving a new pairing request.

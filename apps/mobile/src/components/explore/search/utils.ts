@@ -10,7 +10,7 @@ import {
 } from 'src/features/explore/searchHistorySlice'
 import { EMPTY_ARRAY } from 'wallet/src/constants/misc'
 import { Chain, ExploreSearchQuery } from 'wallet/src/data/__generated__/types-and-hooks'
-import { fromGraphQLChain } from 'wallet/src/utils/chainId'
+import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 
 const MAX_TOKEN_RESULTS_COUNT = 4
 

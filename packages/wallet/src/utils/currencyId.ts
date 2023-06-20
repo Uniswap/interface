@@ -1,8 +1,8 @@
 import { Currency } from '@uniswap/sdk-core'
 import { NATIVE_ADDRESS, NATIVE_ADDRESS_ALT } from 'wallet/src/constants/addresses'
 import { ChainId, isPolygonChain } from 'wallet/src/constants/chains'
+import { toSupportedChainId } from 'wallet/src/features/chains/utils'
 import { areAddressesEqual } from './addresses'
-import { toSupportedChainId } from './chainId'
 
 export type CurrencyId = string
 

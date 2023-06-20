@@ -1,4 +1,5 @@
 import { ChainId } from 'wallet/src/constants/chains'
+import { toSupportedChainId } from 'wallet/src/features/chains/utils'
 import { MoonpayTransactionsResponse } from 'wallet/src/features/fiatOnRamp/types'
 import { logger } from 'wallet/src/features/logger/logger'
 import {
@@ -7,7 +8,6 @@ import {
   TransactionStatus,
   TransactionType,
 } from 'wallet/src/features/transactions/types'
-import { toSupportedChainId } from 'wallet/src/utils/chainId'
 import { getNativeCurrencyAddressForChain } from 'wallet/src/utils/currencyId'
 
 const MOONPAY_ETH_CONTRACT_ADDRESS = '0x0000000000000000000000000000000000000000'

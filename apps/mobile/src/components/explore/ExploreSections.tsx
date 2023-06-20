@@ -27,10 +27,10 @@ import {
   ExploreTokensTabQuery,
   useExploreTokensTabQuery,
 } from 'wallet/src/data/__generated__/types-and-hooks'
+import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 import { usePersistedError } from 'wallet/src/features/dataApi/utils'
 import { selectTokensOrderBy } from 'wallet/src/features/wallet/selectors'
 import { areAddressesEqual } from 'wallet/src/utils/addresses'
-import { fromGraphQLChain } from 'wallet/src/utils/chainId'
 import { buildCurrencyId, buildNativeCurrencyId } from 'wallet/src/utils/currencyId'
 
 type ExploreSectionsProps = {

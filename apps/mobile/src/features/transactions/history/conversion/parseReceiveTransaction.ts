@@ -5,6 +5,7 @@ import {
 } from 'src/features/transactions/history/utils'
 import { SpamCode } from 'wallet/src/data/types'
 import { AssetType } from 'wallet/src/entities/assets'
+import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 import {
   FiatPurchaseTransactionInfo,
   ReceiveTokenTransactionInfo,
@@ -12,7 +13,6 @@ import {
   TransactionType,
 } from 'wallet/src/features/transactions/types'
 import { areAddressesEqual } from 'wallet/src/utils/addresses'
-import { fromGraphQLChain } from 'wallet/src/utils/chainId'
 
 // Non-exhaustive list of addresses Moonpay uses when sending purchased tokens
 const MOONPAY_SENDER_ADDRESSES = [

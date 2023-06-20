@@ -5,10 +5,10 @@ import ERC20_ABI from 'wallet/src/abis/erc20.json'
 import { config } from 'wallet/src/config'
 import { ChainId } from 'wallet/src/constants/chains'
 import { useRestQuery } from 'wallet/src/data/rest'
+import { getPollingIntervalByBlocktime } from 'wallet/src/features/chains/utils'
 import { getEthersProvider } from 'wallet/src/features/providers/getEthersProvider'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
 import { walletContextValue } from 'wallet/src/features/wallet/context'
-import { getPollingIntervalByBlocktime } from 'wallet/src/utils/chainId'
 import { currencyAddress as getCurrencyAddress } from 'wallet/src/utils/currencyId'
 
 // stub endpoint to conform to REST endpoint styles

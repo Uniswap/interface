@@ -29,8 +29,8 @@ import { PollingInterval } from 'wallet/src/constants/misc'
 import { isNonPollingRequestInFlight } from 'wallet/src/data/utils'
 import { useFavoriteTokenCardQuery } from 'wallet/src/data/__generated__/types-and-hooks'
 import { AssetType } from 'wallet/src/entities/assets'
+import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 import { currencyIdToContractInput } from 'wallet/src/features/dataApi/utils'
-import { fromGraphQLChain } from 'wallet/src/utils/chainId'
 import { formatUSDPrice } from 'wallet/src/utils/format'
 
 export const FAVORITE_TOKEN_CARD_LOADER_HEIGHT = 102

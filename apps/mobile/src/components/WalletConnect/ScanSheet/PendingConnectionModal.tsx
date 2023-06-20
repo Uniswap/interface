@@ -31,6 +31,7 @@ import { getSessionNamespaces } from 'src/features/walletConnectV2/utils'
 import Checkmark from 'ui/src/assets/icons/check.svg'
 import X from 'ui/src/assets/icons/x.svg'
 import { ChainId, CHAIN_INFO } from 'wallet/src/constants/chains'
+import { toSupportedChainId } from 'wallet/src/features/chains/utils'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import {
@@ -44,7 +45,6 @@ import {
   WCEventType,
   WCRequestOutcome,
 } from 'wallet/src/features/walletConnect/types'
-import { toSupportedChainId } from 'wallet/src/utils/chainId'
 import { ONE_SECOND_MS } from 'wallet/src/utils/time'
 
 type Props = {

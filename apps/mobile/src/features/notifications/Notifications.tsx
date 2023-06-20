@@ -38,6 +38,7 @@ import EyeIcon from 'ui/src/assets/icons/eye.svg'
 import { iconSizes } from 'ui/src/theme/iconSizes'
 import { CHAIN_INFO } from 'wallet/src/constants/chains'
 import { AssetType } from 'wallet/src/entities/assets'
+import { toSupportedChainId } from 'wallet/src/features/chains/utils'
 import { useENS } from 'wallet/src/features/ens/useENS'
 import {
   AppErrorNotification,
@@ -57,7 +58,6 @@ import {
 import { TransactionStatus, TransactionType } from 'wallet/src/features/transactions/types'
 import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
 import { WalletConnectEvent } from 'wallet/src/features/walletConnect/types'
-import { toSupportedChainId } from 'wallet/src/utils/chainId'
 import { buildCurrencyId } from 'wallet/src/utils/currencyId'
 
 export const NOTIFICATION_ICON_SIZE = iconSizes.icon36

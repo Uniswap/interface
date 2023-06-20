@@ -13,8 +13,8 @@ import {
   SearchPopularTokensQuery,
   useSearchPopularTokensQuery,
 } from 'wallet/src/data/__generated__/types-and-hooks'
+import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 import { areAddressesEqual } from 'wallet/src/utils/addresses'
-import { fromGraphQLChain } from 'wallet/src/utils/chainId'
 
 export function SearchPopularTokens(): JSX.Element {
   // Load popular tokens by top Uniswap trading volume

@@ -4,9 +4,9 @@ import {
   TokenSortableField,
   useTopTokensQuery,
 } from 'wallet/src/data/__generated__/types-and-hooks'
+import { toGraphQLChain } from 'wallet/src/features/chains/utils'
 import { CurrencyInfo, GqlResult } from 'wallet/src/features/dataApi/types'
 import { gqlTokenToCurrencyInfo, usePersistedError } from 'wallet/src/features/dataApi/utils'
-import { toGraphQLChain } from 'wallet/src/utils/chainId'
 
 export function usePopularTokens(chainFilter: ChainId): GqlResult<CurrencyInfo[]> {
   const gqlChainFilter = toGraphQLChain(chainFilter)

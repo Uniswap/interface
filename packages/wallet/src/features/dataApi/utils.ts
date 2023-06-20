@@ -8,8 +8,8 @@ import {
   TokenProjectsQuery,
   TopTokensQuery,
 } from 'wallet/src/data/__generated__/types-and-hooks'
+import { fromGraphQLChain, toGraphQLChain } from 'wallet/src/features/chains/utils'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
-import { fromGraphQLChain, toGraphQLChain } from 'wallet/src/utils/chainId'
 import {
   currencyId,
   CurrencyId,

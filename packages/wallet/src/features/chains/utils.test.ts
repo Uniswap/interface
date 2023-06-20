@@ -1,8 +1,16 @@
 import { BigNumber } from 'ethers'
 import { ChainId, TESTNET_CHAIN_IDS } from 'wallet/src/constants/chains'
 import { PollingInterval } from 'wallet/src/constants/misc'
-import { isTestnet, parseActiveChains, toSupportedChainId } from 'wallet/src/utils/chainId'
-import { getPollingIntervalByBlocktime } from './utils'
+import { Chain } from 'wallet/src/data/__generated__/types-and-hooks'
+import {
+  fromGraphQLChain,
+  fromMoonpayNetwork,
+  getPollingIntervalByBlocktime,
+  isTestnet,
+  parseActiveChains,
+  toGraphQLChain,
+  toSupportedChainId,
+} from './utils'
 
 describe(toSupportedChainId, () => {
   it('handles undefined input', () => {
@@ -43,6 +51,45 @@ describe(isTestnet, () => {
 
   it('handles testnet', () => {
     expect(isTestnet(TESTNET_CHAIN_IDS[0])).toEqual(true)
+  })
+})
+
+describe(fromGraphQLChain, () => {
+  it('handles undefined', () => {
+    expect(fromGraphQLChain(undefined)).toEqual(null)
+  })
+
+  it('handles supported chain', () => {
+    expect(fromGraphQLChain(Chain.Arbitrum)).toEqual(ChainId.ArbitrumOne)
+  })
+
+  it('handles unsupported chain', () => {
+    expect(fromGraphQLChain(Chain.Celo)).toEqual(null)
+  })
+})
+
+describe(toGraphQLChain, () => {
+  it('handles supported chain', () => {
+    expect(toGraphQLChain(ChainId.Mainnet)).toEqual(Chain.Ethereum)
+  })
+
+  it('handle unsupported chain', () => {
+    expect(toGraphQLChain(ChainId.PolygonMumbai)).toEqual(null)
+  })
+})
+
+describe(fromMoonpayNetwork, () => {
+  it('handles supported chain', () => {
+    expect(fromMoonpayNetwork(undefined)).toEqual(ChainId.Mainnet)
+    expect(fromMoonpayNetwork(Chain.Arbitrum.toLowerCase())).toEqual(ChainId.ArbitrumOne)
+    expect(fromMoonpayNetwork(Chain.Optimism.toLowerCase())).toEqual(ChainId.Optimism)
+    expect(fromMoonpayNetwork(Chain.Polygon.toLowerCase())).toEqual(ChainId.Polygon)
+  })
+
+  it('handle unsupported chain', () => {
+    expect(() => fromMoonpayNetwork('unkwnown')).toThrow(
+      'Moonpay network "unkwnown" can not be mapped'
+    )
   })
 })
 

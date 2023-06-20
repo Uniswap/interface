@@ -3,9 +3,9 @@ import { _TypedDataEncoder } from '@ethersproject/hash'
 import { Bytes, providers, Signer, UnsignedTransaction, utils } from 'ethers'
 import { hexlify } from 'ethers/lib/utils'
 import { ChainId } from 'wallet/src/constants/chains'
+import { toSupportedChainId } from 'wallet/src/features/chains/utils'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring.ios'
 import { areAddressesEqual } from 'wallet/src/utils/addresses'
-import { toSupportedChainId } from 'wallet/src/utils/chainId'
 
 // A signer that uses native keystore to access keys
 export class NativeSigner extends Signer {

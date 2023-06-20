@@ -8,9 +8,9 @@ import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { borderRadii } from 'ui/src/theme/borderRadii'
 import { iconSizes } from 'ui/src/theme/iconSizes'
+import { toSupportedChainId } from 'wallet/src/features/chains/utils'
 import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
 import { DappInfo } from 'wallet/src/features/walletConnect/types'
-import { toSupportedChainId } from 'wallet/src/utils/chainId'
 
 export function DappHeaderIcon({
   dapp,
