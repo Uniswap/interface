@@ -132,8 +132,12 @@ export default function PoolPositionList({ positions, filterByOperator }: PoolPo
         <div>{filterByOperator ? <Trans>Operated pools</Trans> : <Trans>Loaded pools</Trans>}</div>
         {!filterByOperator && (
           <RowFixed style={{ gap: '40px' }}>
-            <div><Trans>irr&ensp;</Trans></div>
-            <div><Trans>apr&ensp;</Trans></div>
+            <div>
+              <Trans>irr&ensp;</Trans>
+            </div>
+            <div>
+              <Trans>apr&ensp;</Trans>
+            </div>
           </RowFixed>
         )}
       </MobileHeader>

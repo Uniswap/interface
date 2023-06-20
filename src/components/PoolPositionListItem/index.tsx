@@ -109,12 +109,8 @@ export default function PoolPositionListItem({ positionDetails, returnPage }: Po
           <DataText>{symbol}</DataText>
         ) : (
           <RowFixed style={{ gap: '20px' }}>
-            <DataText>
-              {(Number(irr) * 100).toFixed(1)}%
-            </DataText>
-            <DataText>
-              {(Number(apr) * 100).toFixed(1)}%
-            </DataText>
+            <DataText>{(Number(irr) * 100).toFixed(1)}%</DataText>
+            <DataText>{(Number(apr) * 100).toFixed(1)}%</DataText>
           </RowFixed>
         )}
       </RowBetween>
