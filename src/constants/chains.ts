@@ -57,8 +57,6 @@ export const TESTNET_CHAIN_IDS = [
   ChainId.CELO_ALFAJORES,
 ] as const
 
-export type SupportedTestnetChainId = typeof TESTNET_CHAIN_IDS[number]
-
 /**
  * All the chain IDs that are running the Ethereum protocol.
  */
