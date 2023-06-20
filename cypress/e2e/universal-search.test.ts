@@ -2,7 +2,8 @@ import { getTestSelector } from '../utils'
 
 describe('Universal search bar', () => {
   function openSearch() {
-    cy.get('body').type('/')
+    // can't just type "/" because on mobile it doesn't respond to that
+    cy.get('[data-cy="magnifying-icon"]').parent().last().click()
   }
 
   beforeEach(() => {
