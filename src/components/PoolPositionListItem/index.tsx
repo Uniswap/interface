@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 //import Badge from 'components/Badge'
 //import RangeBadge from 'components/Badge/RangeBadge'
 //import Loader from 'components/Loader'
-import { RowBetween } from 'components/Row'
+import { RowBetween, RowFixed } from 'components/Row'
 //import { useToken } from 'hooks/Tokens'
 //import { useMemo } from 'react'
 import { Link } from 'react-router-dom'
@@ -90,7 +90,7 @@ interface PoolPositionListItemProps {
 }
 
 export default function PoolPositionListItem({ positionDetails, returnPage }: PoolPositionListItemProps) {
-  const { name, symbol, apr } = positionDetails
+  const { name, symbol, apr, irr } = positionDetails
 
   //const position = useMemo(() => {
   //  return new PoolPosition({ name, symbol, pool, id })
@@ -105,7 +105,14 @@ export default function PoolPositionListItem({ positionDetails, returnPage }: Po
         <PrimaryPositionIdData>
           <DataText>{name}</DataText>
         </PrimaryPositionIdData>
-        {returnPage === 'mint' ? <DataText>{symbol}</DataText> : <DataText>{(Number(apr) * 100).toFixed(1)}%</DataText>}
+        {returnPage === 'mint' ? (
+          <DataText>{symbol}</DataText>
+        ) : (
+          <RowFixed style={{ gap: '20px' }}>
+            <DataText>{(Number(irr) * 100).toFixed(1)}%</DataText>
+            <DataText>{(Number(apr) * 100).toFixed(1)}%</DataText>
+          </RowFixed>
+        )}
       </RowBetween>
       <RangeLineItem>
         <RangeText>

@@ -20,6 +20,8 @@ const HeaderButtonContainer = styled(RowFixed)`
 
 export default function SwapHeader({ autoSlippage }: { autoSlippage: Percent }) {
   const fiatOnRampButtonEnabled = useFiatOnRampButtonEnabled()
+  // TODO: remove to display fiat onramp
+  const displayFiatOnramp = false
 
   return (
     <StyledSwapHeader>
@@ -27,7 +29,7 @@ export default function SwapHeader({ autoSlippage }: { autoSlippage: Percent }) 
         <ThemedText.SubHeader>
           <Trans>Swap</Trans>
         </ThemedText.SubHeader>
-        {fiatOnRampButtonEnabled && <SwapBuyFiatButton />}
+        {displayFiatOnramp && fiatOnRampButtonEnabled && <SwapBuyFiatButton />}
       </HeaderButtonContainer>
       <RowFixed>
         <SettingsTab autoSlippage={autoSlippage} />
