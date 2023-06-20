@@ -53,11 +53,11 @@ export const CollectionRow = ({
   const [loaded, setLoaded] = useState(false)
 
   const addRecentlySearchedAsset = useAddRecentlySearchedAsset()
-  const navigate = useNavigate()
 
   const handleClick = useCallback(() => {
     // addRecentlySearchedAsset({ ...collection, isNft: true, chain: Chain.Rollux })
     toggleOpen()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [addRecentlySearchedAsset, collection, toggleOpen, eventProperties])
 
   return (
@@ -121,6 +121,7 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index,
     address && addRecentlySearchedAsset({ address, chain: Chain.Rollux })
 
     toggleOpen()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [addRecentlySearchedAsset, token, toggleOpen, eventProperties])
 
   const tokenDetailsPath = getTokenDetailsURL({ address: token.address.toLowerCase(), chain: Chain.Rollux })

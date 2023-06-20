@@ -451,6 +451,7 @@ const SpinnerCss = css`
   animation: 2s ${rotate} linear infinite;
 `
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const Spinner = styled.img`
   ${SpinnerCss}
   width: 16px;
