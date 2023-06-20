@@ -10,9 +10,13 @@ describe('Universal search bar', () => {
     openSearch()
   })
 
+  function getSearchBar() {
+    return cy.get('[data-cy="search-bar-input"]').last()
+  }
+
   it('should yield clickable result for regular token or nft collection search term', () => {
     // Search for uni token by name.
-    cy.get('[data-cy="search-bar-input"]').last().clear().type('uni')
+    getSearchBar().clear().type('uni')
     cy.get('[data-cy="searchbar-token-row-UNI"]')
       .should('contain.text', 'Uniswap')
       .and('contain.text', 'UNI')
@@ -37,25 +41,25 @@ describe('Universal search bar', () => {
 
   it('should go to the selected result when recent results are shown', () => {
     // Search for uni token by name.
-    cy.get('[data-cy="search-bar-input"]').last().type('uni')
+    getSearchBar().type('uni')
     cy.get('[data-cy="searchbar-token-row-UNI"]')
 
     // Clear search
-    cy.get('[data-cy="search-bar-input"]').last().clear()
+    getSearchBar().clear()
 
     // Close search
-    cy.get('[data-cy="search-bar-input"]').last().type('{esc}')
+    getSearchBar().type('{esc}')
 
     openSearch()
 
     // Search a different token by name.
-    cy.get('[data-cy="search-bar-input"]').last().type('eth')
+    getSearchBar().type('eth')
 
     // Validate ETH result now exists.
     cy.get('[data-cy="searchbar-token-row-ETH"]')
 
     // Hit enter
-    cy.get('[data-cy="search-bar-input"]').last().type('{enter}')
+    getSearchBar().type('{enter}')
 
     // Validate we went to ethereum address
     cy.url().should('contain', 'tokens/ethereum/NATIVE')
@@ -68,7 +72,7 @@ describe('Universal search bar', () => {
         $navIcon.click()
       })
     // Recently searched UNI token should exist.
-    cy.get('[data-cy="search-bar-input"]').last().clear()
+    getSearchBar().clear()
     cy.get('[data-cy="searchbar-dropdown"]')
       .contains('[data-cy="searchbar-dropdown"]', 'Recent searches')
       .find('[data-cy="searchbar-token-row-UNI"]')
@@ -84,7 +88,7 @@ describe('Universal search bar', () => {
 
   it.skip('should show blocked badge when blocked token is searched for', () => {
     // Search for mTSLA, which is a blocked token.
-    cy.get('[data-cy="search-bar-input"]').last().clear().type('mtsla')
+    getSearchBar().clear().type('mtsla')
     cy.get('[data-cy="searchbar-token-row-mTSLA"]').find('[data-cy="blocked-icon"]').should('exist')
   })
 })
