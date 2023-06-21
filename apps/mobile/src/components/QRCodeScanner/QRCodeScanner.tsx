@@ -1,20 +1,15 @@
 import MaskedView from '@react-native-masked-view/masked-view'
+import { BarCodeScanner, BarCodeScannerResult } from 'expo-barcode-scanner'
+import { PermissionStatus } from 'expo-modules-core'
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert, LayoutChangeEvent, LayoutRectangle, StyleSheet, ViewStyle } from 'react-native'
-import { FadeIn, FadeOut, runOnJS } from 'react-native-reanimated'
+import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { Defs, LinearGradient, Rect, Stop, Svg } from 'react-native-svg'
-import {
-  Camera,
-  CameraPermissionRequestResult,
-  useCameraDevices,
-  useFrameProcessor,
-} from 'react-native-vision-camera'
 import { useAppTheme } from 'src/app/hooks'
 import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import PasteButton from 'src/components/buttons/PasteButton'
 import { DevelopmentOnly } from 'src/components/DevelopmentOnly/DevelopmentOnly'
-import { SimulatedViewfinder } from 'src/components/DevelopmentOnly/SimulatedViewfinder'
 import { AnimatedFlex, Box, Flex } from 'src/components/layout'
 import { SpinningLoader } from 'src/components/loading/SpinningLoader'
 import { Text } from 'src/components/Text'
@@ -22,7 +17,7 @@ import { openSettings } from 'src/utils/linking'
 import CameraScan from 'ui/src/assets/icons/camera-scan.svg'
 import GlobalIcon from 'ui/src/assets/icons/global.svg'
 import { dimensions } from 'ui/src/theme/restyle/sizing'
-import { Barcode, BarcodeFormat, scanBarcodes } from 'vision-camera-code-scanner'
+import { theme as FixedTheme } from 'ui/src/theme/restyle/theme'
 
 type QRCodeScannerProps = {
   onScanCode: (data: string) => void
@@ -40,6 +35,9 @@ function isWalletConnect(props: QRCodeScannerProps | WCScannerProps): props is W
 const SCAN_ICON_WIDTH_RATIO = 0.7
 const SCAN_ICON_MASK_OFFSET = 10 // used for mask to match spacing in CameraScan SVG
 
+const LOADER_SIZE = FixedTheme.iconSizes.icon40
+const SCANNER_SIZE = dimensions.fullWidth * SCAN_ICON_WIDTH_RATIO
+
 export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.Element {
   const { onScanCode, shouldFreezeCamera } = props
   const isWalletConnectModal = isWalletConnect(props)
@@ -47,37 +45,32 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
   const { t } = useTranslation()
   const theme = useAppTheme()
 
-  // restricted is an iOS-only permission status: https://mrousavy.com/react-native-vision-camera/docs/guides
-  const [permission, setPermission] = useState<CameraPermissionRequestResult | null | 'restricted'>(
-    null
-  )
+  // const [permissionStatus, setPermissionStatus] = useState<Nullable<PermissionStatus>>(null)
+  const [permissionResponse, requestPermissionResponse] = BarCodeScanner.usePermissions()
+  const permissionStatus = permissionResponse?.status
 
-  const devices = useCameraDevices()
-  const backCamera = devices.back
+  console.log('-----------------', permissionStatus)
 
   // QR codes are a "type" of Barcode in the scanning library
-  const [barcodes, setBarcodes] = useState<Barcode[]>([])
-  const data = barcodes[0]?.content.data.toString()
+  const [barcodes, setBarcodes] = useState<BarCodeScannerResult[]>([])
+  const data = barcodes[0]?.data
+
   const [infoLayout, setInfoLayout] = useState<LayoutRectangle | null>()
   const [connectionLayout, setConnectionLayout] = useState<LayoutRectangle | null>()
 
-  useEffect(() => {
-    async function getPermissionStatuses(): Promise<void> {
-      const status = await Camera.getCameraPermissionStatus()
+  const handleBarCodeScanned = (result: BarCodeScannerResult): void => {
+    setBarcodes([result])
+  }
 
-      if (status === 'not-determined') {
-        const perm = await Camera.requestCameraPermission()
-        setPermission(perm)
-      } else {
-        setPermission(status)
-      }
+  // Check for camera permissions, handle cases where not granted or undetermined
+  useEffect(() => {
+    const getPermissionStatuses = async (): Promise<void> => {
+      await requestPermissionResponse()
     }
-
-    getPermissionStatuses()
-  }, [])
-
-  useEffect(() => {
-    if (permission === 'denied') {
+    if (permissionStatus === PermissionStatus.UNDETERMINED) {
+      getPermissionStatuses()
+    }
+    if (permissionStatus === PermissionStatus.DENIED) {
       Alert.alert(
         t('Camera is disabled'),
         t('To scan a code, allow Camera access in system settings'),
@@ -89,21 +82,12 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
         ]
       )
     }
-  }, [permission, t])
+  }, [permissionStatus, requestPermissionResponse, t])
 
   useEffect(() => {
     if (!data) return
     onScanCode(data)
   }, [data, onScanCode])
-
-  const frameProcessor = useFrameProcessor((frame) => {
-    'worklet'
-    const detectedBarcodes = scanBarcodes(frame, [BarcodeFormat.QR_CODE])
-    runOnJS(setBarcodes)(detectedBarcodes)
-  }, [])
-
-  const LOADER_SIZE = theme.iconSizes.icon40
-  const SCANNER_SIZE = dimensions.fullWidth * SCAN_ICON_WIDTH_RATIO
 
   return (
     <AnimatedFlex
@@ -132,20 +116,13 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
           </Box>
         }
         style={StyleSheet.absoluteFill}>
-        {backCamera ? (
-          // show the camera viewfinder if there's a camera available
-          <Camera
-            device={backCamera}
-            frameProcessor={frameProcessor}
-            isActive={!shouldFreezeCamera}
-            style={StyleSheet.absoluteFill}
-            zoom={backCamera.neutralZoom}
+        {permissionStatus === PermissionStatus.GRANTED && (
+          <BarCodeScanner
+            barCodeTypes={[BarCodeScanner.Constants.BarCodeType.qr]}
+            style={StyleSheet.absoluteFillObject}
+            type={BarCodeScanner.Constants.Type.back}
+            onBarCodeScanned={handleBarCodeScanned}
           />
-        ) : (
-          // otherwise (only in dev mode) show a simulated viewfinder (cycles through different colors)
-          <DevelopmentOnly>
-            <SimulatedViewfinder />
-          </DevelopmentOnly>
         )}
         <Svg height="100%" width="100%">
           <Defs>
@@ -223,17 +200,21 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
           )}
           <DevelopmentOnly>
             {/* when in development mode AND there's no camera (using iOS Simulator), add a paste button */}
-            {!backCamera && !shouldFreezeCamera ? (
+            {!shouldFreezeCamera ? (
               <Flex
                 centered
                 height={dimensions.fullWidth * SCAN_ICON_WIDTH_RATIO}
-                p="spacing24"
                 style={[StyleSheet.absoluteFill]}
                 width={dimensions.fullWidth * SCAN_ICON_WIDTH_RATIO}>
-                <Flex gap="spacing24" px="spacing12">
+                <Flex
+                  backgroundColor="background1"
+                  borderRadius="rounded16"
+                  gap="spacing24"
+                  m="spacing12"
+                  opacity={0.6}
+                  p="spacing12">
                   <Text color="textPrimary" textAlign="center" variant="bodyLarge">
-                    This paste button and the rainbow colors will only show up in development mode
-                    when the back camera isn't available
+                    This paste button will only show up in development mode
                   </Text>
                   <PasteButton onPress={onScanCode} />
                 </Flex>

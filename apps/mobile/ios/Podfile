@@ -9,7 +9,7 @@ $FirebaseSDKVersion = '8.8.0'
 $RNFirebaseAnalyticsWithoutAdIdSupport=true
 
 target 'Uniswap' do
-  use_expo_modules!(exclude: ['expo-constants','expo-file-system', 'expo-image-loader', 'expo-font', 'expo-keep-awake', 'expo-error-recovery'])
+  use_expo_modules!(exclude: ['expo-constants','expo-file-system', 'expo-font', 'expo-keep-awake', 'expo-error-recovery'])
   config = use_native_modules!
 
   use_react_native!(

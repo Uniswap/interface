@@ -54,9 +54,6 @@ jest.mock('redux-persist', () => {
   }
 })
 
-// Mock vision lib due to native deps
-jest.mock('react-native-vision-camera', () => ({}))
-
 // Mock expo clipboard lib due to native deps
 jest.mock('expo-clipboard', () => ({
   setString: jest.fn(),
@@ -64,6 +61,7 @@ jest.mock('expo-clipboard', () => ({
   getStringAsync: () => Promise.resolve(),
 }))
 jest.mock('expo-blur', () => ({ BlurView: {} }))
+jest.mock('expo-barcode-scanner', () => ({}))
 jest.mock('expo-av', () => ({}))
 jest.mock('expo-haptics', () => ({ impactAsync: jest.fn(), ImpactFeedbackStyle: jest.fn() }))
 jest.mock('expo-linear-gradient', () => ({ LinearGradient: () => 'ExpoLinearGradient' }))
