@@ -68,10 +68,15 @@ export interface ClassicQuoteData {
   routeString: string
 }
 
-type DutchOrderInfoData = DutchOrderInfoJSON & { quoteId?: string }
 type URADutchOrderQuoteResponse = {
   routing: URAQuoteType.DUTCH_LIMIT
-  quote: DutchOrderInfoData
+  quote: {
+    auctionPeriodSecs: number
+    orderInfo: DutchOrderInfoJSON
+    quoteId?: string
+    requestId?: string
+    slippageTolerance: string
+  }
   allQuotes: Array<URAQuoteResponse>
 }
 type URAClassicQuoteResponse = {

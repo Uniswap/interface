@@ -5,7 +5,7 @@ export function useRoutingAPIV2Flag(): BaseVariant {
 }
 
 export function useRoutingAPIV2Enabled(): boolean {
-  return useRoutingAPIV2Flag() === BaseVariant.Enabled
+  return false
 }
 
 export { BaseVariant as UnifiedRouterVariant }

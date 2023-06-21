@@ -208,7 +208,7 @@ export function transformRoutesToTrade(args: GetQuoteArgs, data: URAQuoteRespons
   })
 
   if (data.routing === URAQuoteType.DUTCH_LIMIT) {
-    const orderInfo = toDutchOrderInfo(data.quote)
+    const orderInfo = toDutchOrderInfo(data.quote.orderInfo)
     return {
       state: QuoteState.SUCCESS,
       trade: new DutchOrderTrade({
