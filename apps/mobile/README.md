@@ -125,6 +125,10 @@ Once all the steps above are completed, you're ready to try running the app loca
 
 Clone this repository locally to your machine if you haven't already.
 
+### Bootstrap
+
+Run `yarn` and then `yarn bootstrap` to set up the repo.
+
 ### Environment variables
 
 Note: The app will likely have limited functionality when running it locally with the default environment variables.
@@ -133,7 +137,7 @@ Use the environment variables defined in the `.env.defaults.local` file to run t
 
 ### Compile contract ABI types
 
-Before the code will compile you need to generate types for the smart contracts the wallet interacts with. Run `yarn contracts:compile` at the top level. Re-run this if the ABIs are ever changed.
+This is done in bootstrap but good to know about. Before the code will compile you need to generate types for the smart contracts the wallet interacts with. Run `yarn contracts:compile` at the top level. Re-run this if the ABIs are ever changed.
 
 ### Run the app
 
