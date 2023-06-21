@@ -268,8 +268,8 @@ export const DAI_AVALANCHE = new Token(
   ChainId.AVALANCHE,
   '0xd586E7F844cEa2F87f50152665BCbc2C279D8d70',
   18,
-  'DAI',
-  'Dai Stablecoin'
+  'DAI.e',
+  'Dai.e Token'
 )
 
 export const UNI: { [chainId: number]: Token } = {
