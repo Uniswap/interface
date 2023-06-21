@@ -21,7 +21,7 @@ import { Box } from 'nft/components/Box'
 import { Portal } from 'nft/components/common/Portal'
 import { Column, Row } from 'nft/components/Flex'
 import { useIsMobile } from 'nft/hooks'
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useMemo, useRef, useState } from 'react'
 import { AlertTriangle, ChevronDown, ChevronUp } from 'react-feather'
 import { useTheme } from 'styled-components/macro'
 
@@ -69,9 +69,15 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
   const theme = useTheme()
 
   const showTestnets = useAtomValue(showTestnetsAtom)
-  const chains = showTestnets
-    ? NETWORK_SELECTOR_CHAINS
-    : NETWORK_SELECTOR_CHAINS.filter((chain) => !TESTNET_CHAIN_IDS.has(chain))
+  const walletSupportsChain = useWalletSupportedChains()
+
+  const chains = useMemo(
+    () =>
+      NETWORK_SELECTOR_CHAINS.filter((chain) => showTestnets || !TESTNET_CHAIN_IDS.has(chain)).sort((a) =>
+        walletSupportsChain.includes(a) ? -1 : 1
+      ),
+    [showTestnets, walletSupportsChain]
+  )
 
   const ref = useRef<HTMLDivElement>(null)
   const modalRef = useRef<HTMLDivElement>(null)
@@ -93,8 +99,6 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
     },
     [selectChain, setIsOpen]
   )
-
-  const walletSupportsChain = useWalletSupportedChains()
 
   if (!chainId) {
     return null
