@@ -5,8 +5,8 @@ import { useWeb3React } from '@web3-react/core'
 import Loader from 'components/Icons/LoadingSpinner'
 import TokenSafetyIcon from 'components/TokenSafety/TokenSafetyIcon'
 import { checkWarning } from 'constants/tokenSafety'
-import { parseUnits } from 'ethers/lib/utils'
 import { TokenBalances } from 'lib/hooks/useTokenList/sorting'
+import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { CSSProperties, MutableRefObject, useCallback, useMemo } from 'react'
 import { Check } from 'react-feather'
 import { FixedSizeList } from 'react-window'
@@ -264,12 +264,10 @@ export default function CurrencyList({
       const row: Currency = data[index]
 
       const currency = row
-      const balance = CurrencyAmount.fromRawAmount(
-        currency,
-        parseUnits(
-          String(balances[currency.isNative ? 'ETH' : currency.address?.toLowerCase()]?.balance ?? 0),
-          currency.decimals
-        ).toString()
+
+      const balance = tryParseCurrencyAmount(
+        String(balances[currency.isNative ? 'ETH' : currency.address?.toLowerCase()]?.balance ?? 0),
+        currency
       )
       const isSelected = Boolean(currency && selectedCurrency && selectedCurrency.equals(currency))
       const otherSelected = Boolean(currency && otherCurrency && otherCurrency.equals(currency))
