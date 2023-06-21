@@ -79,9 +79,6 @@ const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    updateUserBuyFiatFlowCompleted(state, action) {
-      state.buyFiatFlowCompleted = action.payload
-    },
     updateSelectedWallet(state, { payload: { wallet } }) {
       state.selectedWallet = wallet
     },
@@ -177,7 +174,6 @@ const userSlice = createSlice({
 export const {
   addSerializedPair,
   addSerializedToken,
-  updateUserBuyFiatFlowCompleted,
   updateSelectedWallet,
   updateHideClosedPositions,
   updateUserRouterPreference,
