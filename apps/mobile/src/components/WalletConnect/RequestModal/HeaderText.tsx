@@ -5,7 +5,7 @@ import { Text } from 'src/components/Text'
 import { truncateDappName } from 'src/components/WalletConnect/ScanSheet/util'
 import { WalletConnectRequest } from 'src/features/walletConnect/walletConnectSlice'
 import { EthMethod } from 'wallet/src/features/walletConnect/types'
-import { tryParseRawAmount } from 'wallet/src/utils/tryParseAmount'
+import { getCurrencyAmount, ValueType } from 'wallet/src/utils/getCurrencyAmount'
 
 export function HeaderText({
   request,
@@ -20,10 +20,11 @@ export function HeaderText({
   const { dapp, type: method } = request
 
   if (permitCurrency) {
-    const readablePermitAmount = tryParseRawAmount(
-      permitAmount?.toString(),
-      permitCurrency
-    )?.toExact()
+    const readablePermitAmount = getCurrencyAmount({
+      value: permitAmount?.toString(),
+      valueType: ValueType.Raw,
+      currency: permitCurrency,
+    })?.toExact()
 
     return readablePermitAmount ? (
       <Trans t={t}>

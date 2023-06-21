@@ -7,7 +7,7 @@ import { AssetType, CurrencyAsset } from 'wallet/src/entities/assets'
 import { logger } from 'wallet/src/features/logger/logger'
 import { TransactionDetails, TransactionType } from 'wallet/src/features/transactions/types'
 import { currencyAddress, currencyIdToAddress } from 'wallet/src/utils/currencyId'
-import { tryParseRawAmount } from 'wallet/src/utils/tryParseAmount'
+import { getCurrencyAmount, ValueType } from 'wallet/src/utils/getCurrencyAmount'
 
 interface Props {
   transactionDetails: TransactionDetails
@@ -64,10 +64,12 @@ export function createSwapFormFromTxDetails({
     const exactCurrencyField =
       typeInfo.tradeType === TradeType.EXACT_INPUT ? CurrencyField.INPUT : CurrencyField.OUTPUT
 
-    const exactAmount =
+    const { value, currency } =
       exactCurrencyField === CurrencyField.INPUT
-        ? tryParseRawAmount(inputCurrencyAmountRaw, inputCurrency)
-        : tryParseRawAmount(outputCurrencyAmountRaw, outputCurrency)
+        ? { value: inputCurrencyAmountRaw, currency: inputCurrency }
+        : { value: outputCurrencyAmountRaw, currency: outputCurrency }
+
+    const exactAmount = getCurrencyAmount({ value, valueType: ValueType.Raw, currency })
 
     const swapFormState: TransactionState = {
       [CurrencyField.INPUT]: inputAsset,
@@ -127,7 +129,11 @@ export function createWrapFormFromTxDetails({
       type: AssetType.Currency,
     }
 
-    const exactAmount = tryParseRawAmount(currencyAmountRaw, inputCurrency)
+    const exactAmount = getCurrencyAmount({
+      value: currencyAmountRaw,
+      valueType: ValueType.Raw,
+      currency: inputCurrency,
+    })
 
     const swapFormState: TransactionState = {
       [CurrencyField.INPUT]: inputAsset,

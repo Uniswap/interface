@@ -23,7 +23,7 @@ import {
 import { useProvider } from 'wallet/src/features/wallet/context'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
 import { buildCurrencyId } from 'wallet/src/utils/currencyId'
-import { tryParseExactAmount } from 'wallet/src/utils/tryParseAmount'
+import { getCurrencyAmount, ValueType } from 'wallet/src/utils/getCurrencyAmount'
 
 export type DerivedTransferInfo = BaseDerivedInfo<CurrencyInfo | GQLNftAsset> & {
   currencyTypes: { [CurrencyField.INPUT]?: AssetType }
@@ -83,7 +83,12 @@ export function useDerivedTransferInfo(state: TransactionState): DerivedTransfer
   )
 
   const amountSpecified = useMemo(
-    () => tryParseExactAmount(exactAmountToken, currencyIn),
+    () =>
+      getCurrencyAmount({
+        value: exactAmountToken,
+        valueType: ValueType.Exact,
+        currency: currencyIn,
+      }),
     [currencyIn, exactAmountToken]
   )
   const currencyAmounts = useMemo(

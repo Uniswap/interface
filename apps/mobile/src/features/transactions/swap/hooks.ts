@@ -64,8 +64,8 @@ import {
 import { areAddressesEqual } from 'wallet/src/utils/addresses'
 import { buildCurrencyId } from 'wallet/src/utils/currencyId'
 import { formatCurrencyAmount, NumberType } from 'wallet/src/utils/format'
+import { getCurrencyAmount, ValueType } from 'wallet/src/utils/getCurrencyAmount'
 import { useAsyncData, usePrevious } from 'wallet/src/utils/hooks'
-import { tryParseExactAmount } from 'wallet/src/utils/tryParseAmount'
 
 const NUM_USD_DECIMALS_DISPLAY = 2
 
@@ -148,7 +148,11 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
 
   // amountSpecified, otherCurrency, tradeType fully defines a trade
   const amountSpecified = useMemo(() => {
-    return tryParseExactAmount(exactAmountToken, exactCurrency)
+    return getCurrencyAmount({
+      value: exactAmountToken,
+      valueType: ValueType.Exact,
+      currency: exactCurrency,
+    })
   }, [exactAmountToken, exactCurrency])
 
   const shouldGetQuote = !isWrapAction(wrapType)
@@ -265,10 +269,12 @@ export function useUSDTokenUpdater(
     if (!exactCurrency || !price) return
 
     if (shouldUseUSDRef.current) {
-      const stablecoinAmount = tryParseExactAmount(
-        exactAmountUSD,
-        STABLECOIN_AMOUNT_OUT[exactCurrency.chainId]?.currency
-      )
+      const stablecoinAmount = getCurrencyAmount({
+        value: exactAmountUSD,
+        valueType: ValueType.Exact,
+        currency: STABLECOIN_AMOUNT_OUT[exactCurrency.chainId]?.currency,
+      })
+
       const currencyAmount = stablecoinAmount ? price?.invert().quote(stablecoinAmount) : undefined
 
       return dispatch(
@@ -278,7 +284,11 @@ export function useUSDTokenUpdater(
       )
     }
 
-    const exactCurrencyAmount = tryParseExactAmount(exactAmountToken, exactCurrency)
+    const exactCurrencyAmount = getCurrencyAmount({
+      value: exactAmountToken,
+      valueType: ValueType.Exact,
+      currency: exactCurrency,
+    })
     const usdPrice = exactCurrencyAmount ? price?.quote(exactCurrencyAmount) : undefined
     return dispatch(
       updateExactAmountUSD({ amount: usdPrice?.toFixed(NUM_USD_DECIMALS_DISPLAY) || '' })
