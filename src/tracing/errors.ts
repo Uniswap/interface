@@ -88,6 +88,9 @@ function shouldRejectError(error: EventHint['originalException']) {
 
     // These are caused by user navigation away from the page before a request has finished.
     if (error instanceof DOMException && error.name === 'AbortError') return true
+
+    // Caused by a WalletConnect dependency. These don't create a customer facing issue, so they can be ignored.
+    if (error.message.match(/^No matching key\. (\w+): (.+)$/)) return true
   }
 
   return false

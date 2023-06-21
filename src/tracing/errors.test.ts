@@ -163,4 +163,18 @@ describe('beforeSend', () => {
       expect(beforeSend(ERROR, { originalException })).toBeNull()
     })
   })
+
+  describe('matching key WalletConnect errors', () => {
+    it('filters keychain errors', () => {
+      const originalException = new TypeError(
+        'No matching key. keychain: 426c1cdfb685ab9bcfc38b605c99af185ce4dfd69770d6dce15fa1edcfbc9f0d'
+      )
+      expect(beforeSend(ERROR, { originalException })).toBeNull()
+    })
+
+    const originalException = new Error('No matching key. proposal: 1687374037823867')
+    it('filters proposal errors', () => {
+      expect(beforeSend(ERROR, { originalException })).toBeNull()
+    })
+  })
 })
