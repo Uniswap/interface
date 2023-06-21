@@ -8,7 +8,7 @@ import Card, { OutlineCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
 import { LoadingOpacityContainer } from 'components/Loader/styled'
 import Row, { RowBetween, RowFixed } from 'components/Row'
-import { MouseoverTooltipContent } from 'components/Tooltip'
+import Tooltip, { MouseoverTooltipContent } from 'components/Tooltip'
 import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
 import { useEffect, useState } from 'react'
 import { ChevronDown, Info } from 'react-feather'
@@ -22,8 +22,9 @@ import { ResponsiveTooltipContainer } from './styleds'
 import SwapRoute from './SwapRoute'
 import TradePrice from './TradePrice'
 import { BorrowCreationDetails, LeverageTrade, useSwapState } from 'state/swap/hooks'
-import { useCurrency } from 'hooks/Tokens'
-import { Field } from 'state/swap/actions'
+// import { useCurrency } from 'hooks/Tokens'
+// import { Field } from 'state/swap/actions'
+import GasEstimateTooltip from './GasEstimateTooltip'
 
 const Wrapper = styled(Row)`
   width: 100%;
@@ -32,6 +33,10 @@ const Wrapper = styled(Row)`
   padding: 8px 12px;
   margin-top: 0;
   min-height: 32px;
+`
+
+const SwapDetailsWrapper = styled.div`
+  padding-top: ${({ theme }) => theme.grids.md};
 `
 
 const StyledInfoIcon = styled(Info)`
@@ -138,147 +143,131 @@ export default function SwapDetailsDropdown({ trade, syncing, loading, allowedSl
   // }, [leverageTrade, leverage])
 
   const disabled = (!leverage && !trade) || (leverage && leverageTrade.state !== LeverageTradeState.VALID)
-  // console.log('leverageTrade.state', leverageTrade.state, disabled, leverage)
+  // console.log('leverageTrade.state', leverageTrade.state, disabled, leverage, leverageTrade)
   return (
-    <Wrapper style={{ marginTop: '0' }}>
-      <AutoColumn gap="sm" style={{ width: '100%', marginBottom: '-8px' }}>
+    (!leverage ? (
+      <Wrapper>
+        <AutoColumn gap="sm" style={{ width: '100%', marginBottom: '-8px' }}>
         <TraceEvent
           events={[BrowserEvent.onClick]}
           name={SwapEventName.SWAP_DETAILS_EXPANDED}
           element={InterfaceElementName.SWAP_DETAILS_DROPDOWN}
           shouldLogImpression={!showDetails}
         >
-          <StyledHeaderRow onClick={() => !disabled ? setShowDetails(!showDetails) : null } disabled={disabled} open={showDetails}>
-            <RowFixed style={{ position: 'relative' }}>
-              {!leverage ? (loading || syncing ? (
+          <StyledHeaderRow
+            data-testid="swap-details-header-row"
+            onClick={() => setShowDetails(!showDetails)}
+            disabled={!trade}
+            open={showDetails}
+          >
+            <RowFixed>
+              {Boolean(loading || syncing) && (
                 <StyledPolling>
                   <StyledPollingDot>
                     <Spinner />
                   </StyledPollingDot>
                 </StyledPolling>
-              ) : (
-                <HideSmall>
-                  <MouseoverTooltipContent
-                    wrap={false}
-                    content={
-                      <ResponsiveTooltipContainer origin="top right" style={{ padding: '0' }}>
-                        <Card padding="12px">
-                          <AdvancedSwapDetails
-                            trade={trade}
-                            allowedSlippage={allowedSlippage}
-                            syncing={syncing}
-                            hideInfoTooltips={true}
-                          />
-                        </Card>
-                      </ResponsiveTooltipContainer>
-                    }
-                    placement="bottom"
-                    disableHover={
-                      //showDetails
-                      true
-                    }
-                  >
-                    <StyledInfoIcon color={trade ? theme.textTertiary : theme.deprecated_bg3} />
-                  </MouseoverTooltipContent>
-                </HideSmall>
-              )) : (
-                (leverageTrade.state === LeverageTradeState.LOADING || leverageTrade.state === LeverageTradeState.SYNCING) ? (
-                  <StyledPolling>
-                    <StyledPollingDot>
-                      <Spinner />
-                    </StyledPollingDot>
-                  </StyledPolling>
-                ) : (
-                  <HideSmall>
-                    <MouseoverTooltipContent
-                      wrap={false}
-                      content={
-                        <ResponsiveTooltipContainer origin="top right" style={{ padding: '0' }}>
-                          <Card padding="12px">
-                            <AdvancedLeverageSwapDetails
-                              leverageTrade={leverageTrade}
-                              trade={trade}
-                              allowedSlippage={allowedSlippage}
-                              syncing={syncing}
-                              hideInfoTooltips={true}
-                            />
-                          </Card>
-                        </ResponsiveTooltipContainer>
-                      }
-                      placement="bottom"
-                      disableHover={
-                        //showDetails
-                        true
-                      }
-                    >
-                      <StyledInfoIcon color={trade ? theme.textTertiary : theme.deprecated_bg3} />
-                    </MouseoverTooltipContent>
-                  </HideSmall>
-                )
               )}
-              {trade ? (!leverage ? (
-                loading || syncing ? (
-                  <ThemedText.DeprecatedMain fontSize={14}>
-                    <Trans>Fetching best price...</Trans>
-                  </ThemedText.DeprecatedMain>
-                ) : (
-                  <LoadingOpacityContainer $loading={syncing}>
-                    <TradePrice price={trade.executionPrice} />
-                  </LoadingOpacityContainer>
-                )
-              ) : (
-                leverageTrade.state === LeverageTradeState.LOADING ? (
-                  <ThemedText.DeprecatedMain fontSize={14}>
-                    <Trans>Simulating position ...</Trans>
-                  </ThemedText.DeprecatedMain>
-                ) : (
-                  <LoadingOpacityContainer $loading={syncing}>
-                    Trade Details
-                  </LoadingOpacityContainer>
-                )
-              )) : null}
+              {trade ? (
+                <LoadingOpacityContainer $loading={syncing} data-testid="trade-price-container">
+                  <TradePrice price={trade.executionPrice} />
+                </LoadingOpacityContainer>
+              ) : loading || syncing ? (
+                <ThemedText.DeprecatedMain fontSize={14}>
+                  <Trans>Fetching best price...</Trans>
+                </ThemedText.DeprecatedMain>
+              ) : null}
             </RowFixed>
             <RowFixed>
               {!trade?.gasUseEstimateUSD ||
                 showDetails ||
                 !chainId ||
                 !SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId) ? null : (
-                <GasEstimateBadge
-                  trade={trade}
-                  loading={syncing || loading}
-                  showRoute={!showDetails}
-                  disableHover={showDetails}
-                />
+                <GasEstimateTooltip trade={trade} loading={syncing || loading} disabled={showDetails} />
               )}
               <RotatingArrow
                 stroke={trade ? theme.textTertiary : theme.deprecated_bg3}
                 open={Boolean(trade && showDetails)}
               />
-
             </RowFixed>
-
           </StyledHeaderRow>
         </TraceEvent>
-        <AnimatedDropdown open={showDetails}>
-          <AutoColumn gap="sm" style={{ padding: '0', paddingBottom: '8px' }}>
-            {trade ? (
-              !leverage ? (
-                <StyledCard>
-                  <AdvancedSwapDetails trade={trade} allowedSlippage={allowedSlippage} syncing={syncing} />
-                </StyledCard>
-              ) : (
+        {trade && (
+          <AnimatedDropdown open={showDetails}>
+            <SwapDetailsWrapper data-testid="advanced-swap-details">
+              <AdvancedSwapDetails trade={trade} allowedSlippage={allowedSlippage} syncing={syncing} />
+            </SwapDetailsWrapper>
+          </AnimatedDropdown>
+        )}
+        </AutoColumn>
+      </Wrapper>
+    ) : (
+      <Wrapper style={{ marginTop: '0' }}>
+        <AutoColumn gap="sm" style={{ width: '100%', marginBottom: '-8px' }}>
+          <TraceEvent
+            events={[BrowserEvent.onClick]}
+            name={SwapEventName.SWAP_DETAILS_EXPANDED}
+            element={InterfaceElementName.SWAP_DETAILS_DROPDOWN}
+            shouldLogImpression={!showDetails}
+          >
+            <StyledHeaderRow onClick={() => !disabled ? setShowDetails(!showDetails) : null} disabled={disabled} open={showDetails}>
+              <RowFixed style={{ position: 'relative' }}>
+
+                {Boolean(leverageTrade.state === LeverageTradeState.LOADING || leverageTrade.state === LeverageTradeState.SYNCING) && (
+                  <StyledPolling>
+                    <StyledPollingDot>
+                      <Spinner />
+                    </StyledPollingDot>
+                  </StyledPolling>
+                )}
+                {
+                  leverageTrade.state === LeverageTradeState.LOADING ? (
+                    <ThemedText.DeprecatedMain fontSize={14}>
+                      <Trans>Simulating position ...</Trans>
+                    </ThemedText.DeprecatedMain>
+                  ) : leverageTrade.state === LeverageTradeState.VALID ? (
+                    <LoadingOpacityContainer $loading={syncing}>
+                      <RowFixed>
+                        <Info size={12} />
+                        <ThemedText.DeprecatedMain marginLeft="5px">Trade Details</ThemedText.DeprecatedMain>
+                      </RowFixed>
+                    </LoadingOpacityContainer>
+                  )
+                    : null}
+              </RowFixed>
+              <RowFixed>
+                {!trade?.gasUseEstimateUSD ||
+                  showDetails ||
+                  !chainId ||
+                  !SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId) ? null : (
+                  <GasEstimateBadge
+                    trade={trade}
+                    loading={syncing || loading}
+                    showRoute={!showDetails}
+                    disableHover={showDetails}
+                  />
+                )}
+                <RotatingArrow
+                  stroke={trade ? theme.textTertiary : theme.deprecated_bg3}
+                  open={Boolean(trade && showDetails)}
+                />
+              </RowFixed>
+            </StyledHeaderRow>
+          </TraceEvent>
+          <AnimatedDropdown open={showDetails}>
+            <AutoColumn gap="sm" style={{ padding: '0', paddingBottom: '8px' }}>
+              {leverageTrade.state === LeverageTradeState.VALID ? (
                 <StyledCard>
                   <AdvancedLeverageSwapDetails leverageTrade={leverageTrade} trade={trade} allowedSlippage={allowedSlippage} syncing={syncing} />
                 </StyledCard>
               )
-            ) : null}
+                : null}
+            </AutoColumn>
+          </AnimatedDropdown>
+        </AutoColumn>
+      </Wrapper>
+    ))
 
-
-            {/*trade ? <SwapRoute trade={trade} syncing={syncing} /> : null*/}
-          </AutoColumn>
-        </AnimatedDropdown>
-      </AutoColumn>
-    </Wrapper>
   )
 }
 
@@ -293,51 +282,51 @@ export function BorrowDetailsDropdown({ trade, tradeState, syncing, loading, all
   return (
     <Wrapper style={{ marginTop: '0' }}>
       <AutoColumn gap="sm" style={{ width: '100%', marginBottom: '-8px' }}>
-      <TraceEvent
+        <TraceEvent
           events={[BrowserEvent.onClick]}
           name={SwapEventName.SWAP_DETAILS_EXPANDED}
           element={InterfaceElementName.SWAP_DETAILS_DROPDOWN}
           shouldLogImpression={!showDetails}
         >
-          <StyledHeaderRow onClick={() => !disabled ? setShowDetails(!showDetails) : null } disabled={disabled} open={showDetails}>
+          <StyledHeaderRow onClick={() => !disabled ? setShowDetails(!showDetails) : null} disabled={disabled} open={showDetails}>
             <RowFixed style={{ position: 'relative' }}>
-              { (trade.state === TradeState.LOADING || trade.state === TradeState.SYNCING) ? (
-                  <StyledPolling>
-                    <StyledPollingDot>
-                      <Spinner />
-                    </StyledPollingDot>
-                  </StyledPolling>
-                ) : (
-                  <HideSmall>
-                    <MouseoverTooltipContent
-                      wrap={false}
-                      content={
-                        <ResponsiveTooltipContainer origin="top right" style={{ padding: '0' }}>
-                          <Card padding="12px">
-                            <AdvancedBorrowSwapDetails borrowTrade={trade} syncing={syncing} />
-                          </Card>
-                        </ResponsiveTooltipContainer>
-                      }
-                      placement="bottom"
-                      disableHover={
-                        //showDetails
-                        true
-                      }
-                    >
-                      <StyledInfoIcon color={trade ? theme.textTertiary : theme.deprecated_bg3} />
-                    </MouseoverTooltipContent>
-                  </HideSmall>
-                )
+              {(trade.state === TradeState.LOADING || trade.state === TradeState.SYNCING) ? (
+                <StyledPolling>
+                  <StyledPollingDot>
+                    <Spinner />
+                  </StyledPollingDot>
+                </StyledPolling>
+              ) : (
+                <HideSmall>
+                  <MouseoverTooltipContent
+                    wrap={false}
+                    content={
+                      <ResponsiveTooltipContainer origin="top right" style={{ padding: '0' }}>
+                        <Card padding="12px">
+                          <AdvancedBorrowSwapDetails borrowTrade={trade} syncing={syncing} />
+                        </Card>
+                      </ResponsiveTooltipContainer>
+                    }
+                    placement="bottom"
+                    disableHover={
+                      //showDetails
+                      true
+                    }
+                  >
+                    <StyledInfoIcon color={trade ? theme.textTertiary : theme.deprecated_bg3} />
+                  </MouseoverTooltipContent>
+                </HideSmall>
+              )
               }
-              { trade.state === TradeState.LOADING ? (
-                  <ThemedText.DeprecatedMain fontSize={14}>
-                    <Trans>Simulating position ...</Trans>
-                  </ThemedText.DeprecatedMain>
-                ) : (
-                  <LoadingOpacityContainer $loading={loading}>
-                    Trade Details
-                  </LoadingOpacityContainer>
-                )
+              {trade.state === TradeState.LOADING ? (
+                <ThemedText.DeprecatedMain fontSize={14}>
+                  <Trans>Simulating position ...</Trans>
+                </ThemedText.DeprecatedMain>
+              ) : (
+                <LoadingOpacityContainer $loading={loading}>
+                  Trade Details
+                </LoadingOpacityContainer>
+              )
               }
             </RowFixed>
             <RowFixed>

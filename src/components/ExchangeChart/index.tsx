@@ -156,7 +156,7 @@ export const PoolDataSection = ({
 								variables: {
 									address: uniswapPoolAddress,
 								},
-								fetchPolicy: 'standby',
+								fetchPolicy: 'cache-first',
 							}
 						)
 
@@ -166,9 +166,11 @@ export const PoolDataSection = ({
 								variables: {
 									address: uniswapPoolAddress
 								},
-								fetchPolicy: 'standby'
+								fetchPolicy: 'cache-first'
 							}
 						)
+
+						console.log("priceQuery", priceQuery, result)
 
 						if (!result.error && !result.loading && !priceQuery.error && !priceQuery.loading) {
 							const data = result.data.poolDayDatas

@@ -515,7 +515,7 @@ export function ValueLabel({
             <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
             <RowFixed>
               <TruncatedText width={width}>
-                {value
+                {typeof value === 'number'
                   ? `${(value)}`
                   : '- '}
               </TruncatedText>
@@ -572,26 +572,9 @@ export function AdvancedLeverageSwapDetails({
   const addedOutput = (expectedOutput) ? (
               existingPosition && existingTotalPosition ? expectedOutput -  existingTotalPosition : expectedOutput
               ) : 0
-  return !trade ? null : (
+  return (
     <StyledCard>
       <AutoColumn gap="sm">
-        {/*{existingTotalPosition && 
-        <ValueLabel 
-          description='The size of the current position'
-          label='Existing Position'
-          value={existingTotalPosition}
-          symbolAppend={trade.outputAmount.currency.symbol}
-          syncing={syncing}
-        />}
-        {existingCollateral && (
-          <ValueLabel 
-          description='The amount of debt for the selected position'
-          label='Existing Collateral'
-          value={existingCollateral}
-          symbolAppend={trade.inputAmount.currency.symbol}
-          syncing={syncing}
-        />
-        )} */}
         <ValueLabel
           description='The amount you expect to receive at the current market price. You may receive less or more if the market price changes while your transaction is pending.'
           label={existingPosition ? 'Added Position' : 'Expected Output'}
@@ -599,35 +582,35 @@ export function AdvancedLeverageSwapDetails({
             addedOutput
           }
           syncing={syncing}
-          symbolAppend={trade.outputAmount.currency.symbol}
+          symbolAppend={trade?.outputAmount.currency.symbol}
         />
         <ValueLabel
           description="Amount In / Amount Out"
           label="Quoted Price"
           value={Math.round(Number(price) * 1000000) / 1000000}
           syncing={syncing}
-          symbolAppend={`${trade.outputAmount.currency.symbol} / ${trade.inputAmount.currency.symbol}`}
+          symbolAppend={`${trade?.outputAmount.currency.symbol} / ${trade?.inputAmount.currency.symbol}`}
         />
         <ValueLabel
           description="The first premium payment required to open this position"
           label="Quoted Premium"
           value={Math.round(Number(leverageTrade?.quotedPremium) * 100000) / 100000}
           syncing={syncing}
-          symbolAppend={trade.inputAmount.currency.symbol}
+          symbolAppend={trade?.inputAmount.currency.symbol}
         />
         <ValueLabel
           description="The premium refunded from your old payment"
           label="Returned premium"
           value={Math.round(Number(leverageTrade?.remainingPremium) ) }
           syncing={syncing}
-          symbolAppend={leverageTrade?.remainingPremium!=0? trade.inputAmount.currency.symbol:""}
+          symbolAppend={leverageTrade?.remainingPremium!=0? trade?.inputAmount.currency.symbol:""}
         />
         <ValueLabel
           description="Fees paid for trade "
           label="Fees"
           value={Math.round(Number(fees) * 100000) / 100000}
           syncing={syncing}
-          symbolAppend={trade.inputAmount.currency.symbol}
+          symbolAppend={trade?.inputAmount.currency.symbol}
         />
         <Separator />
         <RowBetween>
@@ -642,7 +625,7 @@ export function AdvancedLeverageSwapDetails({
               disableHover={hideInfoTooltips}
             >
               <ThemedText.DeprecatedSubHeader color={theme.textTertiary}>
-                {trade.tradeType === TradeType.EXACT_INPUT ? (
+                {trade?.tradeType === TradeType.EXACT_INPUT ? (
                   <Trans>Minimum output</Trans>
                 ) : (
                   <Trans>Maximum sent</Trans>
@@ -655,8 +638,8 @@ export function AdvancedLeverageSwapDetails({
 
             <ThemedText.DeprecatedBlack textAlign="right" fontSize={14} color={theme.textTertiary}>
               <TruncatedText>
-                {trade.tradeType === TradeType.EXACT_INPUT
-                  ? `${(addedOutput) ?? "-"}  ${trade.outputAmount.currency.symbol}`
+                {trade?.tradeType === TradeType.EXACT_INPUT
+                  ? `${(addedOutput) ?? "-"}  ${trade?.outputAmount.currency.symbol}`
                   : '-'
                 }
               </TruncatedText>

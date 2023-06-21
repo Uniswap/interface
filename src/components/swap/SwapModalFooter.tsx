@@ -758,11 +758,11 @@ function useDerivedAddLeveragePremiumInfo(
       const token0Balance = relevantTokenBalances[0]
       const token1Balance = relevantTokenBalances[1]
       let inputError
-      if (isToken0 && Number(token1Balance?.toExact()) < position.recentPremium - position.unusedPremium) {
+      if (isToken0 && Number(token0Balance?.toExact()) < position.totalDebtInput * 0.002) {
         inputError = (<Trans>
           Insufficient {currency1?.symbol} balance
         </Trans>)
-      } else if (!isToken0 && Number(token0Balance?.toExact()) < position.recentPremium - position.unusedPremium) {
+      } else if (!isToken0 && Number(token1Balance?.toExact()) < position.totalDebtInput * 0.002) {
         inputError = (<Trans>
           Insufficient {currency0?.symbol} balance
         </Trans>)
@@ -857,11 +857,11 @@ function useDerivedAddBorrowPremiumInfo(
       const token0Balance = relevantTokenBalances[0]
       const token1Balance = relevantTokenBalances[1]
       let inputError
-      if (isToken0 && Number(token1Balance?.toExact()) < position.recentPremium - position.unusedPremium) {
+      if (isToken0 && Number(token1Balance?.toExact()) < position.totalDebtInput * 0.002) {
         inputError = (<Trans>
           Insufficient {currency1?.symbol} balance
         </Trans>)
-      } else if (!isToken0 && Number(token0Balance?.toExact()) < position.recentPremium - position.unusedPremium) {
+      } else if (!isToken0 && Number(token0Balance?.toExact()) < position.totalDebtInput * 0.002) {
         inputError = (<Trans>
           Insufficient {currency0?.symbol} balance
         </Trans>)
@@ -1327,10 +1327,10 @@ export function AddPremiumLeverageModalFooter({
   const inputIsToken0 = !position?.isToken0
   // console.log("tradeInfo: ", tradeInfo); 
 
-  const inputCurrency = useCurrency(position?.isToken0 ? position?.token0Address : position?.token1Address)
-  const outputCurrency = useCurrency(position?.isToken0 ? position?.token1Address : position?.token0Address)
+  const inputCurrency = useCurrency(position?.isToken0 ? position?.token1Address : position?.token0Address)
+  const outputCurrency = useCurrency(position?.isToken0 ? position?.token0Address : position?.token1Address)
   const approveAmount = useMemo(() => {
-    return position?.totalDebtInput ? new BN(position.totalDebtInput * getPremiumRate()).shiftedBy(18).toFixed(0) : "0"
+    return position?.totalDebtInput ? new BN(position.totalDebtInput * 0.002).shiftedBy(18).toFixed(0) : "0"
   }, [position])
 
   const [leverageApprovalState, approveLeverageManager] = useApproveCallback(
@@ -1339,7 +1339,6 @@ export function AddPremiumLeverageModalFooter({
     position?.leverageManagerAddress ?? undefined
   )
 
-  // console.log("leverageApprovalState", leverageApprovalState, approveAmount)
 
   const updateLeverageAllowance = useCallback(async () => {
     try {
@@ -1352,8 +1351,7 @@ export function AddPremiumLeverageModalFooter({
   const loading = derivedState === DerivedInfoState.LOADING
   const valid = derivedState === DerivedInfoState.VALID
 
-  // console.log("tradeInfo", tradeInfo)
-
+  // console.log("tradeInfo", approveAmount)
 
   return (
     <AutoRow>
@@ -1417,7 +1415,7 @@ export function AddPremiumLeverageModalFooter({
                         <TextWithLoadingPlaceholder syncing={loading} width={65}>
                           <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
                             {
-                              `${tradeInfo ? new BN(tradeInfo.totalPremium).toString() : "-"}` + outputCurrency?.symbol
+                              `${tradeInfo ? new BN(tradeInfo.totalPremium).toString() : "-"}` + inputCurrency?.symbol
                             }
                           </ThemedText.DeprecatedBlack>
                         </TextWithLoadingPlaceholder>
@@ -1439,7 +1437,7 @@ export function AddPremiumLeverageModalFooter({
                         <TextWithLoadingPlaceholder syncing={loading} width={65}>
                           <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
                             {
-                              `${tradeInfo ? new BN(tradeInfo.remainingPremium).toString() : "-"}` + outputCurrency?.symbol
+                              `${tradeInfo ? new BN(tradeInfo.remainingPremium).toString() : "-"}` + inputCurrency?.symbol
                             }
                           </ThemedText.DeprecatedBlack>
                         </TextWithLoadingPlaceholder>

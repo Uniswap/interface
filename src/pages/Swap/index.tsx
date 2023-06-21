@@ -115,7 +115,7 @@ import { PoolDataSection } from 'components/ExchangeChart'
 import _ from 'lodash'
 import { FakeTokens } from "constants/fake-tokens"
 import { formatNumber, NumberType } from '@uniswap/conedison/format'
-import { TabContent } from 'components/Tabs'
+import { TabContent, TabNavItem } from 'components/Tabs'
 import BorrowPositionsTable from "components/BorrowPositionTable/TokenTable"
 
 
@@ -487,10 +487,10 @@ export default function Swap({ className }: { className?: string }) {
   } = useDerivedLeverageCreationInfo({ allowance: leverageApprovalState })
 
   console.log("premium:", 
-    // leverageApproveAmount?.toExact(), 
-    // borrowInputApproveAmount?.toExact(), 
-    // borrowOutputApproveAmount?.toExact(), 
-    // premium
+    leverageApproveAmount?.toExact(), 
+    borrowInputApproveAmount?.toExact(), 
+    borrowOutputApproveAmount?.toExact(), 
+    premium
   )
 
   const [borrowInputApprovalState, approveInputBorrowManager] = useApproveCallback(borrowInputApproveAmount, borrowManagerAddress ?? undefined)
@@ -821,6 +821,8 @@ export default function Swap({ className }: { className?: string }) {
     // if there was a tx hash, we want to clear the input
     if (txHash) {
       onUserInput(Field.INPUT, '')
+      onLeverageFactorChange('1')
+      onLTVChange('')
     }
   }, [attemptingTxn, onUserInput, swapErrorMessage, tradeToConfirm, txHash])
 
@@ -997,23 +999,13 @@ export default function Swap({ className }: { className?: string }) {
 
   const [debouncedLTV, debouncedSetLTV] = useDebouncedChangeHandler(ltv ?? "", onLTVChange);
   const isBorrowTab = ActiveSwapTab.BORROW == activeTab 
-  // console.log("leverageTrade: ", leverageTrade)
-  // console.log('borrowTrade', borrowTrade, isBorrowTab); 
 
   const showBorrowInputApproval = borrowInputApprovalState !== ApprovalState.APPROVED
   const showBorrowOutputApproval = borrowOutputApprovalState !== ApprovalState.APPROVED
-  // console.log('??', borrowTrade?.borrowedAmount ? (
-  //                         borrowTrade?.existingTotalDebtInput ? 
-  //                         String(borrowTrade.borrowedAmount - borrowTrade.existingTotalDebtInput) : String(borrowTrade.borrowedAmount)
-  //                   ) :"no" 
-  // )
-  // const borrowAmount = isBorrowTab
-  //                     ?borrowTrade?.borrowedAmount ? (
-  //                         borrowTrade?.existingTotalDebtInput ? 
-  //                         String(borrowTrade.borrowedAmount - borrowTrade.existingTotalDebtInput) : String(borrowTrade.borrowedAmount)
-  //                                 ) :"-" :""
 
-  // console.log("borrowAddress: ", borrowManagerAddress)
+  // console.log("borrowTrade", borrowInputApproveAmount?.toExact(), borrowOutputApproveAmount?.toExact(), borrowInputApprovalState, borrowOutputApprovalState)
+    console.log("leverageTrade", leverageApproveAmount?.toExact(), leverageApprovalState)
+
   return (
     <Trace page={InterfacePageName.SWAP_PAGE} shouldLogImpression>
       <>
@@ -1211,19 +1203,37 @@ export default function Swap({ className }: { className?: string }) {
                     <div>
                       <OutputSwapSection showDetailsDropdown={showDetailsDropdown}>
                         <Trace section={InterfaceSectionName.CURRENCY_OUTPUT_PANEL}>
-                          <SwapCurrencyInputPanel
+                        {!leverage && activeTab === ActiveSwapTab.TRADE && <SwapCurrencyInputPanel
                             value={
-                              (leverageApprovalState === ApprovalState.NOT_APPROVED) ?
+                              formattedAmounts[Field.OUTPUT]
+                            }
+                            onUserInput={handleTypeOutput}
+                            label={
+                              independentField === Field.INPUT && !showWrap ? (
+                                <Trans>To (at least)</Trans>
+                              ) : (
+                                <Trans>To</Trans>
+                              )
+                            }
+                            showMaxButton={false}
+                            hideBalance={false}
+                            fiatValue={fiatValueOutput}
+                            priceImpact={stablecoinPriceImpact}
+                            currency={currencies[Field.OUTPUT] ?? null}
+                            onCurrencySelect={handleOutputSelect}
+                            otherCurrency={currencies[Field.INPUT]}
+                            showCommonBases={true}
+                            id={InterfaceSectionName.CURRENCY_OUTPUT_PANEL}
+                            loading={independentField === Field.INPUT && routeIsSyncing}
+                            isInput={false}
+                            isLevered={leverage}
+                            disabled={leverage}
+                          />}
+                          {leverage && <SwapCurrencyInputPanel
+                            value={
+                              (leverageTrade.state !== LeverageTradeState.VALID) ?
                                 "-"
-                                
                                 :
-                                !leverage ? 
-                                formattedAmounts[Field.OUTPUT] :
-                                isBorrowTab
-                      ?borrowTrade?.borrowedAmount ? (
-                          borrowTrade?.existingTotalDebtInput ? 
-                          String(borrowTrade.borrowedAmount - borrowTrade.existingTotalDebtInput) : String(borrowTrade.borrowedAmount)
-                                  ) :"-" :
                                   ( 
                                     leverageTrade?.expectedOutput ? (
                                     leverageTrade?.existingTotalPosition ? 
@@ -1251,8 +1261,38 @@ export default function Swap({ className }: { className?: string }) {
                             loading={independentField === Field.INPUT && routeIsSyncing}
                             isInput={false}
                             isLevered={leverage}
-                            disabled={leverage}
-                          />
+                            disabled={true}
+                          />}
+                          {activeTab === ActiveSwapTab.BORROW && <SwapCurrencyInputPanel
+                            value={
+                              (borrowTrade?.borrowedAmount ? (
+                          borrowTrade?.existingTotalDebtInput ? 
+                          String(borrowTrade.borrowedAmount - borrowTrade.existingTotalDebtInput) : String(borrowTrade.borrowedAmount)
+                                  ) :"-" 
+                                )
+                            }
+                            onUserInput={handleTypeOutput}
+                            label={
+                              independentField === Field.INPUT && !showWrap ? (
+                                <Trans>To (at least)</Trans>
+                              ) : (
+                                <Trans>To</Trans>
+                              )
+                            }
+                            showMaxButton={false}
+                            hideBalance={false}
+                            fiatValue={fiatValueOutput}
+                            priceImpact={stablecoinPriceImpact}
+                            currency={currencies[Field.OUTPUT] ?? null}
+                            onCurrencySelect={handleOutputSelect}
+                            otherCurrency={currencies[Field.INPUT]}
+                            showCommonBases={true}
+                            id={InterfaceSectionName.CURRENCY_OUTPUT_PANEL}
+                            loading={independentField === Field.INPUT && routeIsSyncing}
+                            isInput={false}
+                            isLevered={leverage}
+                            disabled={true}
+                          />}
                         </Trace>
 
                         {recipient !== null && !showWrap ? (
@@ -1476,20 +1516,7 @@ export default function Swap({ className }: { className?: string }) {
                             <Trans>Insufficient liquidity for this trade.</Trans>
                           </ThemedText.DeprecatedMain>
                         </GrayCard>
-                      ) ? !lmtIsValid : (
-                        <ButtonError
-                          onClick={() => {
-                          }}
-                          id="leverage-button"
-                          disabled={
-                            true
-                          }
-                        >
-                          <Text fontSize={20} fontWeight={600}>
-                            {inputError}
-                          </Text>
-                        </ButtonError>
-                      ) : (leverageApprovalState !== ApprovalState.APPROVED) ? (
+                      ) : lmtIsValid && (leverageApprovalState !== ApprovalState.APPROVED) ? (
                         <ButtonPrimary
                           onClick={updateLeverageAllowance}
                           style={{ gap: 14 }}

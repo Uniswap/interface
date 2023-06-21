@@ -21,6 +21,11 @@ export const TooltipContainer = styled.div`
   box-shadow: 0 4px 8px 0 ${({ theme }) => transparentize(0.9, theme.shadow1)};
 `
 
+export enum TooltipSize {
+  Small = '256px',
+  Large = '400px',
+}
+
 interface TooltipProps extends Omit<PopoverProps, 'content'> {
   text: ReactNode
   open?: () => void
@@ -56,6 +61,8 @@ export default function Tooltip({ text, open, close, noOp, disableHover, ...rest
 function TooltipContent({ content, wrap = false, ...rest }: TooltipContentProps) {
   return <Popover content={wrap ? <TooltipContainer>{content}</TooltipContainer> : content} {...rest} />
 }
+
+
 
 /** Standard text tooltip. */
 export function MouseoverTooltip({ text, disableHover, children, timeout, ...rest }: Omit<TooltipProps, 'show'>) {
