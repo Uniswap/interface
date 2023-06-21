@@ -108,4 +108,24 @@ describe('getSupportedChainIdsFromWalletConnectSession', () => {
     const result = getSupportedChainIdsFromWalletConnectSession(session)
     expect(result).toEqual([1, 137])
   })
+  it('supports eip155:<chain> namespaces without a chain property', () => {
+    const namespaces = {
+      'eip155:1': {
+        accounts: ['eip155:1:0xc0ffee254729296a45a3885639AC7E10F9d54979'],
+        methods: [],
+        events: [],
+      },
+      'eip155:137': {
+        accounts: ['eip155:137:0xdeadbeef'],
+        methods: [],
+        events: [],
+      },
+    }
+    const session = {
+      ...testSession,
+      namespaces,
+    }
+    const result = getSupportedChainIdsFromWalletConnectSession(session)
+    expect(result).toEqual([1, 137])
+  })
 })
