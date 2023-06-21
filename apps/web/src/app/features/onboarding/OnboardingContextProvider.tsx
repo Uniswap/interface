@@ -2,7 +2,11 @@ import { createContext, Dispatch, ReactNode, SetStateAction, useContext, useStat
 
 type OnboardingContextState = {
   password: string | undefined
+  pendingAddress: string | undefined
+  pendingMnemonic: string[] | undefined
   setPassword: Dispatch<SetStateAction<string | undefined>>
+  setPendingAddress: Dispatch<SetStateAction<string | undefined>>
+  setPendingMnemonic: Dispatch<SetStateAction<string[] | undefined>>
 }
 
 /**
@@ -13,9 +17,19 @@ export const OnboardingContext = createContext<OnboardingContextState | undefine
 
 export const OnboardingContextProvider = ({ children }: { children: ReactNode }): JSX.Element => {
   const [password, setPassword] = useState<string | undefined>(undefined)
+  const [pendingAddress, setPendingAddress] = useState<string | undefined>(undefined)
+  const [pendingMnemonic, setPendingMnemonic] = useState<string[] | undefined>(undefined)
 
   return (
-    <OnboardingContext.Provider value={{ password, setPassword }}>
+    <OnboardingContext.Provider
+      value={{
+        password,
+        pendingAddress,
+        pendingMnemonic,
+        setPassword,
+        setPendingAddress,
+        setPendingMnemonic,
+      }}>
       {children}
     </OnboardingContext.Provider>
   )

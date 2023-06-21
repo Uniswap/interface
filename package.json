@@ -84,6 +84,7 @@
     "mobile": "yarn workspace @uniswap/mobile",
     "postinstall": "husky install",
     "staged:lint:fix": "eslint --fix",
+    "ui:build:icons": "yarn workspace ui build:icons",
     "upgrade:next": "manypkg upgrade next && manypkg upgrade eslint-config-next",
     "upgrade:rnw": "manypkg upgrade react-native-web",
     "upgrade:tamagui": "manypkg upgrade tamagui && manypkg upgrade @tamagui && manypkg upgrade tamagui-loader && manypkg upgrade react-native-web-lite",

@@ -1,12 +1,10 @@
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { HideContentShield } from 'src/app/components/hideContent/HideContentShield'
 import { BackButtonHeader } from 'src/app/features/settings/BackButtonHeader'
 import { Text, XStack, YStack } from 'ui/src'
 import AlertTriangleIcon from 'ui/src/assets/icons/alert-triangle.svg'
-import EyeOffIcon from 'ui/src/assets/icons/eye-off.svg'
-import { Button } from 'ui/src/components/button/Button'
 import { Flex } from 'ui/src/components/layout/Flex'
-import { colorsDark } from 'ui/src/theme/color'
 import { iconSizes } from 'ui/src/theme/iconSizes'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
@@ -45,30 +43,11 @@ export function SettingsViewRecoveryPhraseScreen(): JSX.Element {
               <SeedPhraseColumn indexOffset={halfLength + 1} words={secondHalfWords} />
             </XStack>
           </YStack>
-          <Flex
-            alignItems="center"
-            backgroundColor="$background1"
-            borderRadius="$rounded16"
-            gap="$spacing16"
-            height="100%"
-            justifyContent="center"
-            opacity={showPhrase ? 0 : 1}
-            position="absolute"
-            width="100%">
-            <EyeOffIcon
-              color={colorsDark.textSecondary}
-              height={iconSizes.icon64}
-              width={iconSizes.icon64}
-            />
-            <Button
-              backgroundColor={colorsDark.background3}
-              borderRadius="$rounded12"
-              paddingHorizontal="$spacing12"
-              paddingVertical="$spacing4"
-              onPress={(): void => setShowPhrase(true)}>
-              {t('Reveal')}
-            </Button>
-          </Flex>
+          <HideContentShield
+            color="$background1"
+            visibility={showPhrase}
+            onShowContent={(): void => setShowPhrase(true)}
+          />
         </Flex>
 
         <YStack alignItems="center" gap="$spacing8">

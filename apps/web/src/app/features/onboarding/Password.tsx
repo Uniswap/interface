@@ -4,7 +4,8 @@ import { usePasswordInput } from 'src/app/features/lockScreen/Locked'
 import { useOnboardingContext } from 'src/app/features/onboarding/OnboardingContextProvider'
 import { OnboardingInputError } from 'src/app/features/onboarding/OnboardingInputError'
 import { ONBOARDING_CONTENT_WIDTH } from 'src/app/features/onboarding/utils'
-import { Input, Stack, Text, XStack, YStack } from 'ui/src'
+import { Input, Stack, XStack, YStack } from 'tamagui'
+import { Text } from 'ui/src'
 import { Button } from 'ui/src/components/button/Button'
 import { isValidPassword } from 'wallet/src/utils/password'
 
@@ -12,7 +13,7 @@ export function Password({ nextPath }: { nextPath: string }): JSX.Element {
   const navigate = useNavigate()
 
   const [passwordError, setPasswordError] = useState<string | undefined>(undefined)
-  const { setPassword } = useOnboardingContext()
+  const { setPassword, setPendingAddress: setCreatedAddress } = useOnboardingContext()
 
   const passwordInputProps = usePasswordInput()
 
@@ -22,6 +23,7 @@ export function Password({ nextPath }: { nextPath: string }): JSX.Element {
     if (isValidPassword(enteredPassword)) {
       setPassword(enteredPassword)
       setPasswordError(undefined)
+      setCreatedAddress(undefined)
       navigate(nextPath)
     }
   }
