@@ -47,6 +47,7 @@ test('should inject metadata for valid nfts', async () => {
     expect(body).toContain(`<meta property="twitter:card" content = "summary_large_image"/>`)
     expect(body).toContain(`<meta property="twitter:title" content = "${nft.collectionName} on Uniswap"/>`)
     expect(body).toContain(`<meta property="twitter:image" content = "${nft.image}"/>`)
+    expect(body).toContain(`<meta property="twitter:image:alt" content = "https://app.uniswap.org/images/512x512_App_Icon.png"/>`)
   }
 })
 
@@ -65,6 +66,7 @@ test('should not inject metadata for invalid calls', async () => {
   expect(baseBody).not.toContain('twitter:card')
   expect(baseBody).not.toContain('twitter:title')
   expect(baseBody).not.toContain('twitter:image')
+  expect(baseBody).not.toContain('twitter:image:alt')
   const urls = [
     'http://127.0.0.1:3000/nfts/collection/0xed5af388653567af2f388e6224dc7c4b3241c545/10',
     'http://127.0.0.1:3000/nfts/collection/0xed5af388653567af2f388e6224dc7c4b3241c545//',

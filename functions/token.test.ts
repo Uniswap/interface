@@ -62,6 +62,7 @@ test('should inject metadata for valid tokens', async () => {
     expect(body).toContain(`<meta property="twitter:card" content = "summary_large_image"/>`)
     expect(body).toContain(`<meta property="twitter:title" content = "Get ${token.symbol} on Uniswap"/>`)
     expect(body).toContain(`<meta property="twitter:image" content = "${token.image}"/>`)
+    expect(body).toContain(`<meta property="twitter:image:alt" content = "https://app.uniswap.org/images/512x512_App_Icon.png"/>`)
   }
 })
 
@@ -80,6 +81,7 @@ test('should not inject metadata for invalid calls', async () => {
   expect(baseBody).not.toContain('twitter:card')
   expect(baseBody).not.toContain('twitter:title')
   expect(baseBody).not.toContain('twitter:image')
+  expect(baseBody).not.toContain('twitter:image:alt')
   const urls = [
     'http://127.0.0.1:3000/tokens/ethereum',
     'http://127.0.0.1:3000/tokens/ethereun',
