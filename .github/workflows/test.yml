@@ -1,7 +1,7 @@
 name: Test
 
 # Many build steps have their own caches, so each job has its own cache to improve subsequent build times.
-# Build tools are configured to cache cache to node_modules/.cache, so this is cached independently of node_modules.
+# Build tools are configured to cache to node_modules/.cache, so they are cached independently of node_modules.
 # Caches are saved every run (by keying on github.run_id), and the most recent available cache is loaded.
 # See https://jongleberry.medium.com/speed-up-your-ci-and-dx-with-node-modules-cache-ac8df82b7bb0.
 
@@ -10,8 +10,6 @@ on:
     branches:
       - main
   pull_request:
-  # manual trigger
-  workflow_dispatch:
 
 jobs:
   lint:
@@ -175,12 +173,3 @@ jobs:
         with:
           name: Cypress tests
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_TEST_REPORTER_WEBHOOK }}
-
-  # Included as a single job to check for cypress-test-matrix success, as a matrix cannot be checked.
-  cypress-tests:
-    if: always()
-    needs: [cypress-test-matrix]
-    runs-on: ubuntu-latest
-    steps:
-      - if: needs.cypress-test-matrix.result != 'success'
-        run: exit 1
