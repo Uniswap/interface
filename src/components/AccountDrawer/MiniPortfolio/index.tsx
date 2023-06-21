@@ -2,12 +2,14 @@ import { Trans } from '@lingui/macro'
 import { Trace, TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, InterfaceSectionName, SharedEventName } from '@uniswap/analytics-events'
 import Column from 'components/Column'
+import { LoaderV2 } from 'components/Icons/LoadingSpinner'
 import { AutoRow } from 'components/Row'
 import { useIsNftPage } from 'hooks/useIsNftPage'
 import { useAtomValue } from 'jotai/utils'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { shouldDisableNFTRoutesAtom } from 'state/application/atoms'
-import styled from 'styled-components/macro'
+import { useHasPendingTransactions } from 'state/transactions/hooks'
+import styled, { useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
 import { ActivityTab } from './Activity'
@@ -35,12 +37,15 @@ const Nav = styled(AutoRow)`
 `
 
 const NavItem = styled(ThemedText.SubHeader)<{ active?: boolean }>`
+  align-items: center;
   color: ${({ theme, active }) => (active ? theme.textPrimary : theme.textTertiary)};
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
   transition: ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.ease} color`};
 
   &:hover {
     ${({ theme, active }) => !active && `color: ${theme.textSecondary}`};
-    cursor: pointer;
   }
 `
 
@@ -88,16 +93,31 @@ const Pages: Array<Page> = [
 
 export default function MiniPortfolio({ account }: { account: string }) {
   const isNftPage = useIsNftPage()
+  const theme = useTheme()
   const [currentPage, setCurrentPage] = useState(isNftPage ? 1 : 0)
+  const [activityUnread, setActivityUnread] = useState(false)
   const shouldDisableNFTRoutes = useAtomValue(shouldDisableNFTRoutesAtom)
 
-  const Page = Pages[currentPage].component
+  const { component: Page, key: currentKey } = Pages[currentPage]
+
+  const hasPendingTransactions = useHasPendingTransactions()
+
+  useEffect(() => {
+    if (hasPendingTransactions && currentKey !== 'activity') setActivityUnread(true)
+  }, [currentKey, hasPendingTransactions])
+
   return (
     <Trace section={InterfaceSectionName.MINI_PORTFOLIO}>
       <Wrapper>
         <Nav data-testid="mini-portfolio-navbar">
           {Pages.map(({ title, loggingElementName, key }, index) => {
             if (shouldDisableNFTRoutes && loggingElementName.includes('nft')) return null
+            const isUnselectedActivity = key === 'activity' && currentKey !== 'activity'
+            const showActivityIndicator = isUnselectedActivity && (hasPendingTransactions || activityUnread)
+            const handleNavItemClick = () => {
+              setCurrentPage(index)
+              if (key === 'activity') setActivityUnread(false)
+            }
             return (
               <TraceEvent
                 events={[BrowserEvent.onClick]}
@@ -105,8 +125,20 @@ export default function MiniPortfolio({ account }: { account: string }) {
                 element={loggingElementName}
                 key={index}
               >
-                <NavItem onClick={() => setCurrentPage(index)} active={currentPage === index} key={key}>
-                  {title}
+                <NavItem onClick={handleNavItemClick} active={currentPage === index} key={key}>
+                  <span>{title}</span>
+                  {showActivityIndicator && (
+                    <>
+                      &nbsp;
+                      {hasPendingTransactions ? (
+                        <LoaderV2 />
+                      ) : (
+                        <svg width="8" height="8" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <circle cx="4" cy="4" r="4" fill={theme.accentAction} />
+                        </svg>
+                      )}
+                    </>
+                  )}
                 </NavItem>
               </TraceEvent>
             )

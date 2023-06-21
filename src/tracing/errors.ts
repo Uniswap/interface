@@ -58,9 +58,9 @@ function shouldRejectError(error: EventHint['originalException']) {
     // Therefore, this can be ignored.
     if (error.message.match(/Unexpected token '<'/)) return true
 
-    // Errors coming from a Chrome Extension can be ignored for now. These errors are usually caused by extensions injecting
+    // Errors coming from a browser extension can be ignored. These errors are usually caused by extensions injecting
     // scripts into the page, which we cannot control.
-    if (error.stack?.match(/chrome-extension:\/\//i)) return true
+    if (error.stack?.match(/-extension:\/\//i)) return true
 
     // Errors coming from OneKey (a desktop wallet) can be ignored for now.
     // These errors are either application-specific, or they will be thrown separately outside of OneKey.
@@ -68,7 +68,7 @@ function shouldRejectError(error: EventHint['originalException']) {
 
     // Content security policy 'unsafe-eval' errors can be filtered out because there are expected failures.
     // For example, if a user runs an eval statement in console this error would still get thrown.
-    // TODO(INFRA-176): We should extend this to filter out any type of CSP error.
+    // TODO(WEB-2348): We should extend this to filter out any type of CSP error.
     if (error.message.match(/'unsafe-eval'.*content security policy/i)) {
       return true
     }
