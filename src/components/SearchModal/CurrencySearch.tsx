@@ -4,8 +4,8 @@ import { Trace } from '@uniswap/analytics'
 import { InterfaceEventName, InterfaceModalName } from '@uniswap/analytics-events'
 import { Currency, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { useCachedPortfolioBalancesQuery } from 'components/AccountDrawer/PrefetchBalancesWrapper'
 import { sendEvent } from 'components/analytics'
-import { usePortfolioBalancesQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'graphql/data/util'
 import useDebounce from 'hooks/useDebounce'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
@@ -91,12 +91,7 @@ export function CurrencySearch({
     return Object.values(defaultTokens).filter(getTokenFilter(debouncedQuery))
   }, [defaultTokens, debouncedQuery])
 
-  const { data, loading: balancesAreLoading } = usePortfolioBalancesQuery({
-    skip: !account,
-    variables: { ownerAddress: account ?? '' },
-    fetchPolicy: 'cache-only', // PrefetchBalancesWrapper handles balance fetching/staleness; this component only reads from cache
-    errorPolicy: 'all',
-  })
+  const { data, loading: balancesAreLoading } = useCachedPortfolioBalancesQuery({ account })
   const balances: TokenBalances = useMemo(() => {
     return (
       data?.portfolios?.[0].tokenBalances?.reduce((balanceMap, tokenBalance) => {

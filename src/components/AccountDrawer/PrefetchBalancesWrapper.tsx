@@ -1,5 +1,5 @@
 import { useWeb3React } from '@web3-react/core'
-import { usePortfolioBalancesLazyQuery } from 'graphql/data/__generated__/types-and-hooks'
+import { usePortfolioBalancesLazyQuery, usePortfolioBalancesQuery } from 'graphql/data/__generated__/types-and-hooks'
 import usePrevious from 'hooks/usePrevious'
 import { atom, useAtom } from 'jotai'
 import { PropsWithChildren, useCallback, useEffect, useMemo } from 'react'
@@ -32,6 +32,15 @@ function useHasUpdatedTx(account: string | undefined) {
       [currentChainTxs, previousPendingTxs]
     )
   }, [account, currentChainTxs, previousPendingTxs])
+}
+
+export function useCachedPortfolioBalancesQuery({ account }: { account?: string }) {
+  return usePortfolioBalancesQuery({
+    skip: !account,
+    variables: { ownerAddress: account ?? '' },
+    fetchPolicy: 'cache-only', // PrefetchBalancesWrapper handles balance fetching/staleness; this component only reads from cache
+    errorPolicy: 'all',
+  })
 }
 
 const hasUnfetchedBalancesAtom = atom<boolean>(true)
