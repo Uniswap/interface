@@ -31,7 +31,7 @@ export function useRoutingAPIArguments({
             account,
             amount: amount.quotient.toString(),
             tokenInAddress: currencyAddressForSwapQuote(tokenIn),
-            tokenInChainId: tokenIn.wrapped.chainId,
+            tokenInChainId: tokenIn.chainId,
             tokenInDecimals: tokenIn.wrapped.decimals,
             tokenInSymbol: tokenIn.wrapped.symbol,
             tokenOutAddress: currencyAddressForSwapQuote(tokenOut),
@@ -40,6 +40,7 @@ export function useRoutingAPIArguments({
             tokenOutSymbol: tokenOut.wrapped.symbol,
             routerPreference,
             tradeType,
+            needsWrapIfUniswapX: tokenIn.isNative,
           },
     [account, amount, routerPreference, tokenIn, tokenOut, tradeType]
   )

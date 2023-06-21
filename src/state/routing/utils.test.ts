@@ -16,12 +16,12 @@ const amount = (raw: TemplateStringsArray) => (parseInt(raw[0]) * 1e6).toString(
 
 describe('#useRoute', () => {
   it('handles empty edges and nodes', () => {
-    const result = computeRoutes(false, false, [])
+    const result = computeRoutes(USDC, DAI, [])
     expect(result).toEqual([])
   })
 
   it('handles a single route trade from DAI to USDC from v3', () => {
-    const result = computeRoutes(false, false, [
+    const result = computeRoutes(DAI, USDC, [
       [
         {
           type: 'v3-pool',
@@ -51,7 +51,7 @@ describe('#useRoute', () => {
   })
 
   it('handles a single route trade from DAI to USDC from v2', () => {
-    const result = computeRoutes(false, false, [
+    const result = computeRoutes(DAI, USDC, [
       [
         {
           type: 'v2-pool',
@@ -85,7 +85,7 @@ describe('#useRoute', () => {
   })
 
   it('handles a multi-route trade from DAI to USDC', () => {
-    const result = computeRoutes(false, false, [
+    const result = computeRoutes(DAI, USDC, [
       [
         {
           type: 'v2-pool',
@@ -152,7 +152,7 @@ describe('#useRoute', () => {
   })
 
   it('handles a single route trade with same token pair, different fee tiers', () => {
-    const result = computeRoutes(false, false, [
+    const result = computeRoutes(DAI, USDC, [
       [
         {
           type: 'v3-pool',
@@ -192,7 +192,7 @@ describe('#useRoute', () => {
   })
 
   it('computes mixed routes correctly', () => {
-    const result = computeRoutes(false, false, [
+    const result = computeRoutes(DAI, MKR, [
       [
         {
           type: PoolType.V3Pool,
@@ -237,7 +237,7 @@ describe('#useRoute', () => {
     it('outputs native ETH as input currency', () => {
       const WETH = ETH.wrapped
 
-      const result = computeRoutes(true, false, [
+      const result = computeRoutes(ETH, USDC, [
         [
           {
             type: 'v3-pool',
@@ -264,7 +264,7 @@ describe('#useRoute', () => {
 
     it('outputs native ETH as output currency', () => {
       const WETH = new Token(1, ETH.wrapped.address, 18, 'WETH')
-      const result = computeRoutes(false, true, [
+      const result = computeRoutes(USDC, ETH, [
         [
           {
             type: 'v3-pool',
@@ -291,7 +291,7 @@ describe('#useRoute', () => {
     it('outputs native ETH as input currency for v2 routes', () => {
       const WETH = ETH.wrapped
 
-      const result = computeRoutes(true, false, [
+      const result = computeRoutes(ETH, USDC, [
         [
           {
             type: 'v2-pool',
@@ -322,7 +322,7 @@ describe('#useRoute', () => {
 
     it('outputs native ETH as output currency for v2 routes', () => {
       const WETH = new Token(1, ETH.wrapped.address, 18, 'WETH')
-      const result = computeRoutes(false, true, [
+      const result = computeRoutes(USDC, ETH, [
         [
           {
             type: 'v2-pool',

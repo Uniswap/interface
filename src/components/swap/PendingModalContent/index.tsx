@@ -88,7 +88,10 @@ const StepTitleAnimationContainer = styled(Column)<{ disableEntranceAnimation?: 
 // This component is used for all steps after ConfirmModalState.REVIEWING
 export type PendingConfirmModalState = Extract<
   ConfirmModalState,
-  ConfirmModalState.APPROVING_TOKEN | ConfirmModalState.PERMITTING | ConfirmModalState.PENDING_CONFIRMATION
+  | ConfirmModalState.APPROVING_TOKEN
+  | ConfirmModalState.PERMITTING
+  | ConfirmModalState.PENDING_CONFIRMATION
+  | ConfirmModalState.WRAPPING
 >
 
 interface PendingModalStep {
@@ -104,6 +107,7 @@ interface PendingModalContentProps {
   currentStep: PendingConfirmModalState
   trade?: InterfaceTrade
   swapResult?: SwapResult
+  wrapTxHash?: string
   hideStepIndicators?: boolean
   tokenApprovalPending?: boolean
 }
@@ -114,14 +118,37 @@ interface ContentArgs {
   trade?: InterfaceTrade
   swapConfirmed: boolean
   swapPending: boolean
+  wrapPending: boolean
   tokenApprovalPending: boolean
   swapResult?: SwapResult
   chainId?: number
 }
 
 function getContent(args: ContentArgs): PendingModalStep {
-  const { step, approvalCurrency, swapConfirmed, swapPending, tokenApprovalPending, trade, swapResult, chainId } = args
+  const {
+    step,
+    wrapPending,
+    approvalCurrency,
+    swapConfirmed,
+    swapPending,
+    tokenApprovalPending,
+    trade,
+    swapResult,
+    chainId,
+  } = args
+
   switch (step) {
+    case ConfirmModalState.WRAPPING:
+      // TODO (Gouda): Update this with final UI (eddie)
+      return {
+        title: t`Wrap`,
+        subtitle: (
+          <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/8120520483085">
+            <Trans>Why is this required?</Trans>
+          </ExternalLink>
+        ),
+        label: wrapPending ? t`Pending...` : t`Proceed in your wallet`,
+      }
     case ConfirmModalState.APPROVING_TOKEN:
       return {
         title: t`Enable spending limits for ${approvalCurrency?.symbol ?? 'this token'} on Uniswap`,
@@ -172,6 +199,7 @@ export function PendingModalContent({
   currentStep,
   trade,
   swapResult,
+  wrapTxHash,
   hideStepIndicators,
   tokenApprovalPending = false,
 }: PendingModalContentProps) {
@@ -180,18 +208,21 @@ export function PendingModalContent({
   const classicSwapConfirmed = useIsTransactionConfirmed(
     swapResult?.type === TradeFillType.Classic ? swapResult.response.hash : undefined
   )
+  const wrapConfirmed = useIsTransactionConfirmed(wrapTxHash)
   // TODO(Gouda): Support UniswapX status here too
   const uniswapXSwapConfirmed = Boolean(swapResult)
 
   const swapConfirmed = TradeFillType.Classic ? classicSwapConfirmed : uniswapXSwapConfirmed
 
   const swapPending = swapResult !== undefined && !swapConfirmed
+  const wrapPending = wrapTxHash != undefined && !wrapConfirmed
 
   const { label, button } = getContent({
     step: currentStep,
     approvalCurrency: trade?.inputAmount.currency,
     swapConfirmed,
     swapPending,
+    wrapPending,
     tokenApprovalPending,
     swapResult,
     trade,
@@ -237,6 +268,7 @@ export function PendingModalContent({
               approvalCurrency: trade?.inputAmount.currency,
               swapConfirmed,
               swapPending,
+              wrapPending,
               tokenApprovalPending,
               swapResult,
               trade,

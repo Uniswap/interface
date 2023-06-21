@@ -1,6 +1,8 @@
 import { CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
 import { V3Route } from '@uniswap/smart-order-router'
 import { FeeAmount, Pool } from '@uniswap/v3-sdk'
+import { SupportedChainId } from 'constants/chains'
+import { nativeOnChain } from 'constants/tokens'
 import { BigNumber } from 'ethers/lib/ethers'
 import JSBI from 'jsbi'
 import { ClassicTrade, DutchOrderTrade } from 'state/routing/types'
@@ -9,6 +11,7 @@ export const TEST_TOKEN_1 = new Token(1, '0x000000000000000000000000000000000000
 export const TEST_TOKEN_2 = new Token(1, '0x0000000000000000000000000000000000000002', 18, 'DEF', 'Def')
 export const TEST_TOKEN_3 = new Token(1, '0x0000000000000000000000000000000000000003', 18, 'GHI', 'Ghi')
 export const TEST_RECIPIENT_ADDRESS = '0x0000000000000000000000000000000000000004'
+export const ETH_MAINNET = nativeOnChain(SupportedChainId.MAINNET)
 
 export const TEST_POOL_12 = new Pool(
   TEST_TOKEN_1,
@@ -82,5 +85,39 @@ export const TEST_DUTCH_TRADE = new DutchOrderTrade({
   tradeType: TradeType.EXACT_INPUT,
   quoteId: '0x0000000',
   needsWrap: false,
+  classicGasUseEstimateUSD: '7.87',
+})
+
+export const TEST_DUTCH_TRADE_ETH_INPUT = new DutchOrderTrade({
+  currencyIn: ETH_MAINNET.wrapped,
+  currenciesOut: [TEST_TOKEN_2],
+  orderInfo: {
+    reactor: 'test_reactor',
+    offerer: 'test_offerer',
+    nonce: BigNumber.from(1),
+    deadline: 1000,
+    validationContract: 'test_contract',
+    validationData: '0x123',
+    startTime: 0,
+    endTime: 10,
+    exclusiveFiller: '0x3456',
+    exclusivityOverrideBps: BigNumber.from(0),
+    input: {
+      token: ETH_MAINNET.wrapped.address,
+      startAmount: BigNumber.from(1000),
+      endAmount: BigNumber.from(900),
+    },
+    outputs: [
+      {
+        token: TEST_TOKEN_2.address,
+        startAmount: BigNumber.from(1000),
+        endAmount: BigNumber.from(900),
+        recipient: '0x0',
+      },
+    ],
+  },
+  tradeType: TradeType.EXACT_INPUT,
+  quoteId: '0x0000000',
+  needsWrap: true,
   classicGasUseEstimateUSD: '7.87',
 })
