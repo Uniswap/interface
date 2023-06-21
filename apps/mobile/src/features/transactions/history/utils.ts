@@ -1,8 +1,6 @@
+import { Token } from '@uniswap/sdk-core'
 import dayjs from 'dayjs'
-import { BigNumber } from 'ethers'
-import { parseUnits } from 'ethers/lib/utils'
 import extractTransactionDetails from 'src/features/transactions/history/conversion/extractTransactionDetails'
-import { ChainId } from 'wallet/src/constants/chains'
 import {
   Amount,
   Chain,
@@ -18,6 +16,7 @@ import {
   TransactionType,
 } from 'wallet/src/features/transactions/types'
 import { getNativeCurrencyAddressForChain } from 'wallet/src/utils/currencyId'
+import { getCurrencyAmount, ValueType } from 'wallet/src/utils/getCurrencyAmount'
 
 export interface AllFormattedTransactions {
   last24hTransactionList: TransactionDetails[]
@@ -117,23 +116,34 @@ export function parseDataResponseToTransactionDetails(
  * Constructs a CurrencyAmount based on asset details and quantity. Checks if token is native
  * or ERC20 to determine decimal amount.
  * @param tokenStandard token standard type from api query
- * @param quantity // formatted amount of asset transfered
+ * @param quantity // formatted amount of asset transferred
  * @param decimals // decimals ((optional) if native token)
  * @returns
  */
 export function deriveCurrencyAmountFromAssetResponse(
   tokenStandard: TokenStandard,
-  quantity: string,
-  decimals: Maybe<number>
+  chain: Chain,
+  address: Maybe<string>,
+  decimals: Maybe<number>,
+  quantity: string
 ): string {
-  return parseUnits(
-    quantity,
+  const chainId = fromGraphQLChain(chain)
+  if (!chainId) return ''
+
+  const currency =
     tokenStandard === TokenStandard.Native
-      ? BigNumber.from(NativeCurrency.onChain(ChainId.Mainnet).decimals)
-      : decimals
-      ? BigNumber.from(decimals)
+      ? NativeCurrency.onChain(chainId)
+      : address && decimals
+      ? new Token(chainId, address, decimals)
       : undefined
-  ).toString()
+
+  const currencyAmount = getCurrencyAmount({
+    value: quantity,
+    valueType: ValueType.Exact,
+    currency,
+  })
+
+  return currencyAmount?.quotient.toString() ?? ''
 }
 
 /**

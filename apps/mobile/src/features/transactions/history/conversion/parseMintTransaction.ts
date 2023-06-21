@@ -1,8 +1,8 @@
-import { BigNumber } from 'ethers'
-import { parseUnits } from 'ethers/lib/utils'
-import { parseUSDValueFromAssetChange } from 'src/features/transactions/history/utils'
+import {
+  deriveCurrencyAmountFromAssetResponse,
+  parseUSDValueFromAssetChange,
+} from 'src/features/transactions/history/utils'
 import { ChainId } from 'wallet/src/constants/chains'
-import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
 import {
   NFTMintTransactionInfo,
   TransactionListQueryResponse,
@@ -13,7 +13,6 @@ import { buildCurrencyId, buildNativeCurrencyId } from 'wallet/src/utils/currenc
 export default function parseNFTMintTransaction(
   transaction: TransactionListQueryResponse
 ): NFTMintTransactionInfo | undefined {
-  const nativeCurrency = NativeCurrency.onChain(ChainId.Mainnet)
   const tokenChange = transaction?.assetChanges.find(
     (change) => change?.__typename === 'TokenTransfer'
   )
@@ -39,14 +38,13 @@ export default function parseNFTMintTransaction(
         : tokenChange.asset?.address
         ? buildCurrencyId(ChainId.Mainnet, tokenChange.asset.address)
         : undefined
-    purchaseCurrencyAmountRaw = parseUnits(
-      tokenChange.quantity,
-      BigNumber.from(
-        tokenChange.tokenStandard === 'NATIVE'
-          ? nativeCurrency.decimals
-          : tokenChange.asset.decimals
-      )
-    ).toString()
+    purchaseCurrencyAmountRaw = deriveCurrencyAmountFromAssetResponse(
+      tokenChange.tokenStandard,
+      tokenChange.asset.chain,
+      tokenChange.asset.address,
+      tokenChange.asset.decimals,
+      tokenChange.quantity
+    )
 
     transactedUSDValue = parseUSDValueFromAssetChange(tokenChange.transactedValue)
   }

@@ -71,9 +71,12 @@ export default function parseReceiveTransaction(
 
     const currencyAmountRaw = deriveCurrencyAmountFromAssetResponse(
       change.tokenStandard,
-      change.quantity,
-      change.asset.decimals
+      change.asset.chain,
+      change.asset.address,
+      change.asset.decimals,
+      change.quantity
     )
+
     const transactedUSDValue = parseUSDValueFromAssetChange(change.transactedValue)
 
     // Filter out receive transactions with tokens that are either marked `isSpam` or with spam code 2 (token with URL name)

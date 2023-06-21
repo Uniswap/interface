@@ -68,13 +68,17 @@ export default function parseTradeTransaction(
         : null
     const inputCurrencyAmountRaw = deriveCurrencyAmountFromAssetResponse(
       sent.tokenStandard,
-      sent.quantity,
-      sent.asset.decimals
+      sent.asset.chain,
+      sent.asset.address,
+      sent.asset.decimals,
+      sent.quantity
     )
     const expectedOutputCurrencyAmountRaw = deriveCurrencyAmountFromAssetResponse(
       received.tokenStandard,
-      received.quantity,
-      received.asset.decimals
+      received.asset.chain,
+      received.asset.address,
+      received.asset.decimals,
+      received.quantity
     )
 
     const transactedUSDValue = parseUSDValueFromAssetChange(sent.transactedValue)
@@ -128,8 +132,10 @@ export default function parseTradeTransaction(
         : undefined
     const purchaseCurrencyAmountRaw = deriveCurrencyAmountFromAssetResponse(
       tokenChange.tokenStandard,
-      tokenChange.quantity,
-      tokenChange.asset?.decimals
+      tokenChange.asset.chain,
+      tokenChange.asset.address,
+      tokenChange.asset.decimals,
+      tokenChange.quantity
     )
     const tradeType = nftChange.direction === 'IN' ? NFTTradeType.BUY : NFTTradeType.SELL
 

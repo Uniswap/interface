@@ -40,12 +40,12 @@ function getNativeCurrencyTotalSpend(
 ): Maybe<CurrencyAmount<NativeCurrency>> {
   if (!gasFee || !nativeCurrency) return value
 
-  const gasFeeAmount =
-    getCurrencyAmount({
-      value: gasFee,
-      valueType: ValueType.Raw,
-      currency: nativeCurrency,
-    }) ?? undefined
+  const gasFeeAmount = getCurrencyAmount({
+    value: gasFee,
+    valueType: ValueType.Raw,
+    currency: nativeCurrency,
+  })
+
   return value && gasFeeAmount ? gasFeeAmount.add(value) : gasFeeAmount
 }
 

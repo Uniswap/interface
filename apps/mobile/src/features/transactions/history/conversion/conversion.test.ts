@@ -7,7 +7,7 @@ import parseSendTransaction from 'src/features/transactions/history/conversion/p
 import parseTradeTransaction from 'src/features/transactions/history/conversion/parseTradeTransaction'
 import { NATIVE_ADDRESS } from 'wallet/src/constants/addresses'
 import { ChainId } from 'wallet/src/constants/chains'
-import { WRAPPED_NATIVE_CURRENCY } from 'wallet/src/constants/tokens'
+import { DAI, WRAPPED_NATIVE_CURRENCY } from 'wallet/src/constants/tokens'
 import {
   ActivityType,
   Chain,
@@ -22,16 +22,17 @@ import {
   TransactionListQueryResponse,
   TransactionType,
 } from 'wallet/src/features/transactions/types'
+import { SAMPLE_SEED_ADDRESS_1, SAMPLE_SEED_ADDRESS_2 } from 'wallet/src/test/fixtures'
 
 /**
  * Testing for API transaction parsing utils.
  */
 
 const ASSET_CHANGE_ID = 'TEST_ID'
-const FROM_ADDRESS = '0x12'
-const TO_ADDRESS = '0x23'
+const FROM_ADDRESS = SAMPLE_SEED_ADDRESS_1
+const TO_ADDRESS = SAMPLE_SEED_ADDRESS_2
 const TEST_HASH = '0x00'
-const ERC20_ASSET_ADDRESS = '0x34'
+const ERC20_ASSET_ADDRESS = DAI.address
 const WRAPPED_NATIVE_ADDRESS = WRAPPED_NATIVE_CURRENCY[ChainId.Mainnet].address
 
 const RESPONSE_BASE = {

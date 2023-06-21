@@ -11,11 +11,10 @@ import { TransactionDetails } from 'wallet/src/features/transactions/types'
 import { getCurrencyAmount, ValueType } from 'wallet/src/utils/getCurrencyAmount'
 
 export function useUSDValue(chainId?: ChainId, ethValueInWei?: string): string | undefined {
-  const currency = chainId ? NativeCurrency.onChain(chainId) : undefined
   const currencyAmount = getCurrencyAmount({
     value: ethValueInWei,
     valueType: ValueType.Raw,
-    currency,
+    currency: chainId ? NativeCurrency.onChain(chainId) : undefined,
   })
 
   return useUSDCValue(currencyAmount)?.toExact()

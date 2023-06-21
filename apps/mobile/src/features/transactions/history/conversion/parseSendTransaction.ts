@@ -54,8 +54,10 @@ export default function parseSendTransaction(
     const recipient = change.recipient
     const currencyAmountRaw = deriveCurrencyAmountFromAssetResponse(
       change.tokenStandard,
-      change.quantity,
-      change.asset.decimals
+      change.asset.chain,
+      change.asset.address,
+      change.asset.decimals,
+      change.quantity
     )
     const transactedUSDValue = parseUSDValueFromAssetChange(change.transactedValue)
 

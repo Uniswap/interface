@@ -29,8 +29,8 @@ export const MIN_OPTIMISM_FOR_GAS: JSBI = MIN_ARBITRUM_FOR_GAS
  * @param currencyAmount to return max of
  */
 export function maxAmountSpend(
-  currencyAmount?: CurrencyAmount<Currency> | null
-): CurrencyAmount<Currency> | undefined {
+  currencyAmount: Maybe<CurrencyAmount<Currency>>
+): Maybe<CurrencyAmount<Currency>> {
   if (!currencyAmount) return undefined
   if (!currencyAmount.currency.isNative) return currencyAmount
 
@@ -57,11 +57,9 @@ export function maxAmountSpend(
     ? JSBI.subtract(currencyAmount.quotient, minAmount).toString()
     : '0'
 
-  return (
-    getCurrencyAmount({
-      value: amount,
-      valueType: ValueType.Raw,
-      currency: currencyAmount.currency,
-    }) ?? undefined
-  )
+  return getCurrencyAmount({
+    value: amount,
+    valueType: ValueType.Raw,
+    currency: currencyAmount.currency,
+  })
 }
