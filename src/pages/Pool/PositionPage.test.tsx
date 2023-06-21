@@ -7,7 +7,7 @@ import { PoolState, usePool } from 'hooks/usePools'
 import { useV3PositionFees } from 'hooks/useV3PositionFees'
 import * as useV3Positions from 'hooks/useV3Positions'
 import { mocked } from 'test-utils/mocked'
-import { render, screen } from 'test-utils/render'
+import { fireEvent, render, screen } from 'test-utils/render'
 import { PositionDetails } from 'types/position'
 
 import PositionPage from './PositionPage'
@@ -72,5 +72,10 @@ describe('position page', () => {
     const collectFeesButton = screen.queryByTestId('collect-fees-button') as HTMLButtonElement
     expect(collectFeesButton).toBeInTheDocument()
     expect(screen.getByText('Collect fees')).toBeInTheDocument()
+    fireEvent.click(collectFeesButton)
+    expect(screen.getByText('Collecting fees will withdraw currently available fees for you.')).toBeInTheDocument()
+    const modalCollectFeesButton = screen.queryByTestId('modal-collect-fees-button') as HTMLButtonElement
+    expect(modalCollectFeesButton).toBeInTheDocument()
+    fireEvent.click(modalCollectFeesButton)
   })
 })
