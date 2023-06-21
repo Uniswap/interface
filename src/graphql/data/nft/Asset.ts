@@ -34,6 +34,7 @@ gql`
       after: $after
       last: $last
       before: $before
+      _fs: "DATASOURCE:ALTERNATE"
     ) {
       edges {
         node {
@@ -56,7 +57,7 @@ gql`
               standard
             }
           }
-          listings(first: 1) {
+          listings(first: 1, _fs: "DATASOURCE:ALTERNATE") {
             edges {
               node {
                 address
