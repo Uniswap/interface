@@ -203,7 +203,6 @@ export const BASES_TO_TRACK_LIQUIDITY_FOR: ChainTokenList = {
     DAI_AVALANCHE,
     USDC_AVALANCHE,
     USDT_AVALANCHE,
-
     WETH_AVALANCHE,
   ],
 }
