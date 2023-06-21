@@ -45,7 +45,7 @@ class MetaTagInjector {
     element.append(`<meta property="twitter:card" content = "summary_large_image"/>`, {
       html: true,
     })
-    element.append(`<meta property="twitter:title" content = "${this.input.name}"/>`, {
+    element.append(`<meta property="twitter:title" content = "${this.input.name} on Uniswap"/>`, {
       html: true,
     })
     element.append(`<meta property="twitter:image" content = "${this.input.image}"/>`, {
