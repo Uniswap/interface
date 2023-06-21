@@ -92,9 +92,10 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
       return {
         state: isCurrent ? TradeState.VALID : TradeState.LOADING,
         trade: tradeResult.trade,
+        method: tradeResult?.method
       }
     }
-  }, [amountSpecified, isCurrent, isError, queryArgs, skipFetch, tradeResult?.state, tradeResult?.trade])
+  }, [amountSpecified, isCurrent, isError, queryArgs, skipFetch, tradeResult?.state, tradeResult?.trade, tradeResult?.method])
 }
 
 // only want to enable this when app hook called

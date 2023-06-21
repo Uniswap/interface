@@ -13,6 +13,12 @@ export enum TradeState {
   VALID,
 }
 
+export enum QuoteMethod {
+  ROUTING_API,
+  CLIENT_SIDE,
+  CLIENT_SIDE_FALLBACK,
+}
+
 // from https://github.com/Uniswap/routing-api/blob/main/lib/handlers/schema.ts
 
 type TokenInRoute = Pick<Token, 'address' | 'chainId' | 'symbol' | 'decimals'>
@@ -133,11 +139,13 @@ export type QuoteResult =
 export type TradeResult =
   | {
       state: QuoteState.NOT_FOUND
-      trade?: undefined
+      trade?: undefined,
+      method?: QuoteMethod
     }
   | {
       state: QuoteState.SUCCESS
-      trade: InterfaceTrade
+      trade: InterfaceTrade,
+      method?: QuoteMethod,
     }
 
 export enum PoolType {
