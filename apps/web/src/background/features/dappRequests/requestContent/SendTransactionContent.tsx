@@ -1,7 +1,11 @@
+import { useDappContext } from 'src/background/features/dapp/hooks'
+import { selectChainByDappAndWallet } from 'src/background/features/dapp/selectors'
 import { RequestDisplayDetails } from 'src/background/features/dappRequests/DappRequestContent'
 import { SendTransactionRequest } from 'src/background/features/dappRequests/dappRequestTypes'
+import { useAppSelector } from 'src/background/store'
 import { Text, XStack, YStack } from 'ui/src'
 import { Unicon } from 'ui/src/components/Unicon'
+import { useTransactionGasFee } from 'wallet/src/features/gas/hooks'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 
 export const SendTransactionDetails = ({
@@ -15,7 +19,16 @@ export const SendTransactionDetails = ({
   const sending = sendTransactionRequest.transaction.value
 
   const toAddress = sendTransactionRequest.transaction.to
-  const networkFee = '$123.45' // TODO: Update with real network fee
+
+  const dappUrl = useDappContext().dappUrl
+  const chainId = useAppSelector(selectChainByDappAndWallet(activeAccount.address, dappUrl))
+
+  //TODO(EXT-157): convert to USD
+  const networkFee = useTransactionGasFee({
+    chainId,
+    ...sendTransactionRequest.transaction,
+  })?.gasFee
+
   const contractFunction = sendTransactionRequest.transaction.type
   return (
     <YStack>
