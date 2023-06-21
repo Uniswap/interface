@@ -39,9 +39,13 @@ interface AmountProps {
   label: ReactNode
   amount?: CurrencyAmount<Currency>
   usdAmount?: number
+  // The currency used here can be different than the currency denoted in the `amount` prop
+  // For Gouda ETH input trades, the trade object will have WETH as the amount.currency, but
+  // the user's real input currency is ETH, so show ETH instead
+  currency: Currency
 }
 
-export function SwapModalHeaderAmount({ tooltipText, label, amount, usdAmount, field }: AmountProps) {
+export function SwapModalHeaderAmount({ tooltipText, label, amount, usdAmount, field, currency }: AmountProps) {
   let formattedAmount = formatCurrencyAmount(amount, NumberType.TokenTx)
   if (formattedAmount.length > MAX_AMOUNT_STR_LENGTH) {
     formattedAmount = formatCurrencyAmount(amount, NumberType.SwapTradeAmount)
@@ -57,7 +61,7 @@ export function SwapModalHeaderAmount({ tooltipText, label, amount, usdAmount, f
         </ThemedText.BodySecondary>
         <Column gap="xs">
           <ResponsiveHeadline data-testid={`${field}-amount`}>
-            {formattedAmount} {amount?.currency.symbol}
+            {formattedAmount} {currency?.symbol}
           </ResponsiveHeadline>
           {usdAmount && (
             <ThemedText.BodySmall color="textTertiary">
@@ -66,7 +70,7 @@ export function SwapModalHeaderAmount({ tooltipText, label, amount, usdAmount, f
           )}
         </Column>
       </Column>
-      {amount?.currency && <CurrencyLogo currency={amount.currency} size="36px" />}
+      <CurrencyLogo currency={currency} size="36px" />
     </Row>
   )
 }

@@ -56,8 +56,8 @@ export function getRouter(chainId: ChainId): AlphaRouter {
  * create a `Trade`.
  */
 export function computeRoutes(
-  tokenInIsNative: boolean,
-  tokenOutIsNative: boolean,
+  currencyIn: Currency,
+  currencyOut: Currency,
   routes: ClassicQuoteData['route']
 ): RouteResult[] | undefined {
   if (routes.length === 0) return []
@@ -65,9 +65,6 @@ export function computeRoutes(
   const tokenIn = routes[0]?.[0]?.tokenIn
   const tokenOut = routes[0]?.[routes[0]?.length - 1]?.tokenOut
   if (!tokenIn || !tokenOut) throw new Error('Expected both tokenIn and tokenOut to be present')
-
-  const parsedCurrencyIn = tokenInIsNative ? nativeOnChain(tokenIn.chainId) : parseToken(tokenIn)
-  const parsedCurrencyOut = tokenOutIsNative ? nativeOnChain(tokenOut.chainId) : parseToken(tokenOut)
 
   try {
     return routes.map((route) => {
@@ -85,14 +82,12 @@ export function computeRoutes(
       const isOnlyV3 = isVersionedRoute<V3PoolInRoute>(PoolType.V3Pool, route)
 
       return {
-        routev3: isOnlyV3 ? new V3Route(route.map(parsePool), parsedCurrencyIn, parsedCurrencyOut) : null,
-        routev2: isOnlyV2 ? new V2Route(route.map(parsePair), parsedCurrencyIn, parsedCurrencyOut) : null,
+        routev3: isOnlyV3 ? new V3Route(route.map(parsePool), currencyIn, currencyOut) : null,
+        routev2: isOnlyV2 ? new V2Route(route.map(parsePair), currencyIn, currencyOut) : null,
         mixedRoute:
-          !isOnlyV3 && !isOnlyV2
-            ? new MixedRouteSDK(route.map(parsePoolOrPair), parsedCurrencyIn, parsedCurrencyOut)
-            : null,
-        inputAmount: CurrencyAmount.fromRawAmount(parsedCurrencyIn, rawAmountIn),
-        outputAmount: CurrencyAmount.fromRawAmount(parsedCurrencyOut, rawAmountOut),
+          !isOnlyV3 && !isOnlyV2 ? new MixedRouteSDK(route.map(parsePoolOrPair), currencyIn, currencyOut) : null,
+        inputAmount: CurrencyAmount.fromRawAmount(currencyIn, rawAmountIn),
+        outputAmount: CurrencyAmount.fromRawAmount(currencyOut, rawAmountOut),
       }
     })
   } catch (e) {
@@ -131,7 +126,10 @@ function toDutchOrderInfo(orderInfoJSON: DutchOrderInfoJSON): DutchOrderInfo {
   }
 }
 
-export function transformRoutesToTrade(args: GetQuoteArgs, data: URAQuoteResponse): TradeResult {
+// Prepares the currencies used for the actual Swap (either Gouda or Universal Router)
+// May not match `currencyIn` that the user selected because for ETH inputs in Gouda, the actual
+// swap will use WETH.
+function getTradeCurrencies(args: GetQuoteArgs, data: URAQuoteResponse): [Currency, Currency] {
   const {
     tokenInAddress,
     tokenInChainId,
@@ -141,7 +139,6 @@ export function transformRoutesToTrade(args: GetQuoteArgs, data: URAQuoteRespons
     tokenOutChainId,
     tokenOutDecimals,
     tokenOutSymbol,
-    tradeType,
   } = args
 
   const tokenInIsNative = Object.values(SwapRouterNativeAssets).includes(tokenInAddress as SwapRouterNativeAssets)
@@ -159,6 +156,18 @@ export function transformRoutesToTrade(args: GetQuoteArgs, data: URAQuoteRespons
         symbol: tokenOutSymbol,
       })
 
+  if (data.routing === URAQuoteType.CLASSIC) {
+    return [currencyIn, currencyOut]
+  }
+
+  return [currencyIn.isNative ? currencyIn.wrapped : currencyIn, currencyOut]
+}
+
+export function transformRoutesToTrade(args: GetQuoteArgs, data: URAQuoteResponse): TradeResult {
+  const { tradeType, needsWrapIfUniswapX } = args
+
+  const [currencyIn, currencyOut] = getTradeCurrencies(args, data)
+
   let gasUseEstimateUSD
   let blockNumber
   let routes: RouteResult[] | undefined
@@ -166,13 +175,13 @@ export function transformRoutesToTrade(args: GetQuoteArgs, data: URAQuoteRespons
   if (data.routing === URAQuoteType.CLASSIC) {
     gasUseEstimateUSD = data.quote.gasUseEstimateUSD
     blockNumber = data.quote.blockNumber
-    routes = computeRoutes(tokenInIsNative, tokenOutIsNative, data.quote.route)
+    routes = computeRoutes(currencyIn, currencyOut, data.quote.route)
   } else {
     const classicAlternative = data.allQuotes.find(isClassicQuoteResponse)
     gasUseEstimateUSD = classicAlternative?.quote.gasUseEstimateUSD
     blockNumber = classicAlternative?.quote.blockNumber
     const route = classicAlternative?.quote.route
-    routes = route ? computeRoutes(tokenInIsNative, tokenOutIsNative, route) : []
+    routes = route ? computeRoutes(currencyIn, currencyOut, route) : []
   }
 
   const classicTrade = new ClassicTrade({
@@ -218,8 +227,7 @@ export function transformRoutesToTrade(args: GetQuoteArgs, data: URAQuoteRespons
         tradeType,
         quoteId: data.quote.quoteId,
         classicGasUseEstimateUSD: classicTrade.gasUseEstimateUSD,
-        // TODO (Gouda): fix this value for ETH input flow
-        needsWrap: false,
+        needsWrap: needsWrapIfUniswapX,
       }),
     }
   }

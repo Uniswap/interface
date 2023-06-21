@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
-import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
+import { ONE } from '@uniswap/router-sdk'
+import { Currency, CurrencyAmount, Fraction, Percent, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { SupportedChainId } from 'constants/chains'
 import useAutoSlippageTolerance from 'hooks/useAutoSlippageTolerance'
@@ -70,6 +71,18 @@ const BAD_RECIPIENT_ADDRESSES: { [address: string]: true } = {
   '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f': true, // v2 factory
   '0xf164fC0Ec4E93095b804a4795bBe1e041497b92a': true, // v2 router 01
   '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D': true, // v2 router 02
+}
+
+// similar to trade.maximumAmountIn except you can customize the input currency you want
+function getMaximumAmountIn(
+  currencyAmount: CurrencyAmount<Currency>,
+  slippageTolerance: Percent,
+  tradeType: TradeType
+) {
+  if (tradeType === TradeType.EXACT_INPUT) return currencyAmount
+
+  const slippageAdjustedAmountIn = new Fraction(ONE).add(slippageTolerance).multiply(currencyAmount.quotient).quotient
+  return CurrencyAmount.fromRawAmount(currencyAmount.currency, slippageAdjustedAmountIn)
 }
 
 // from the current swap inputs, compute the best trade and return it.
@@ -165,10 +178,15 @@ export function useDerivedSwapInfo(
     }
 
     // compare input balance to max input based on version
-    const [balanceIn, amountIn] = [currencyBalances[Field.INPUT], trade.trade?.maximumAmountIn(allowedSlippage)]
+    const [balanceIn, maxAmountIn] = [
+      currencyBalances[Field.INPUT],
+      // derive maxAmountIn from input currency instead of trade's input currency because the trade currency could refer
+      // to the currency post-wrap (for Gouda ETH inputs)
+      parsedAmount && trade?.trade && getMaximumAmountIn(parsedAmount, allowedSlippage, trade.trade.tradeType),
+    ]
 
-    if (balanceIn && amountIn && balanceIn.lessThan(amountIn)) {
-      inputError = <Trans>Insufficient {amountIn.currency.symbol} balance</Trans>
+    if (balanceIn && maxAmountIn && balanceIn.lessThan(maxAmountIn)) {
+      inputError = <Trans>Insufficient {maxAmountIn.currency.symbol} balance</Trans>
     }
 
     return inputError
