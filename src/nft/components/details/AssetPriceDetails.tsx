@@ -16,13 +16,13 @@ import {
   timeLeft,
   useUsdPrice,
 } from 'nft/utils'
-import { shortenAddress } from 'nft/utils/address'
 import { useMemo } from 'react'
 import { Upload } from 'react-feather'
 import { useQuery } from 'react-query'
 import { Link, useNavigate } from 'react-router-dom'
 import styled, { css, useTheme } from 'styled-components/macro'
 import { ExternalLink, ThemedText } from 'theme'
+import { shortenAddress } from 'utils/addresses'
 
 const TWITTER_WIDTH = 560
 const TWITTER_HEIGHT = 480
@@ -425,7 +425,7 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
             {asset.tokenType === 'ERC1155' ? (
               ''
             ) : (
-              <span> {isOwner ? 'You' : asset.ownerAddress && shortenAddress(asset.ownerAddress, 2, 4)}</span>
+              <span> {isOwner ? 'You' : asset.ownerAddress && shortenAddress(asset.ownerAddress, 2)}</span>
             )}
           </OwnerText>
         </OwnerInformationContainer>

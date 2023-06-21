@@ -15,7 +15,6 @@
     "graphql:generate": "yarn graphql:generate:data && yarn graphql:generate:thegraph",
     "graphql": "yarn graphql:fetch && yarn graphql:generate",
     "i18n:extract": "lingui extract --locale en-US",
-    "i18n:pseudo": "lingui extract --locale pseudo",
     "i18n:compile": "lingui compile",
     "i18n": "yarn i18n:extract --clean && yarn i18n:compile",
     "prepare": "concurrently \"npm:ajv\" \"npm:contracts\" \"npm:graphql\" \"npm:i18n\"",
