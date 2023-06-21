@@ -1,7 +1,7 @@
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Percent, Price, Token, TradeType } from '@uniswap/sdk-core'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
-import { InterfaceTrade } from 'state/routing/types'
+import { InterfaceTrade, QuoteMethod } from 'state/routing/types'
 import { computeRealizedPriceImpact } from 'utils/prices'
 
 export const getDurationUntilTimestampSeconds = (futureTimestampInSecondsSinceEpoch?: number): number | undefined => {
@@ -38,10 +38,12 @@ export const formatSwapSignedAnalyticsEventProperties = ({
   trade,
   fiatValues,
   txHash,
+  method,
 }: {
   trade: InterfaceTrade | Trade<Currency, Currency, TradeType>
   fiatValues: { amountIn?: number; amountOut?: number }
   txHash: string
+  method: QuoteMethod
 }) => ({
   transaction_hash: txHash,
   token_in_address: getTokenAddress(trade.inputAmount.currency),
@@ -57,6 +59,7 @@ export const formatSwapSignedAnalyticsEventProperties = ({
     trade.inputAmount.currency.chainId === trade.outputAmount.currency.chainId
       ? trade.inputAmount.currency.chainId
       : undefined,
+  method,
 })
 
 export const formatSwapQuoteReceivedEventProperties = (

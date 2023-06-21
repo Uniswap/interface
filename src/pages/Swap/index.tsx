@@ -264,7 +264,7 @@ export function Swap({
   }, [connectedChainId, prefilledState, previousConnectedChainId, previousPrefilledState])
 
   const {
-    trade: { state: tradeState, trade },
+    trade: { state: tradeState, trade, method },
     allowedSlippage,
     autoSlippage,
     currencyBalances,
@@ -527,10 +527,10 @@ export function Swap({
 
     setSwapQuoteReceivedDate(new Date())
     sendAnalyticsEvent(SwapEventName.SWAP_QUOTE_RECEIVED, {
-      ...formatSwapQuoteReceivedEventProperties(trade, trade.gasUseEstimateUSD ?? undefined),
+      ...formatSwapQuoteReceivedEventProperties(trade, trade.gasUseEstimateUSD ?? undefined, method),
       ...trace,
     })
-  }, [prevTrade, trade, trace])
+  }, [prevTrade, trade, trace, method])
 
   const showDetailsDropdown = Boolean(
     !showWrap && userHasSpecifiedInputOutput && (trade || routeIsLoading || routeIsSyncing)
