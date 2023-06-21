@@ -1093,6 +1093,7 @@ export default function Swap({ className }: { className?: string }) {
                   onDismiss={handleConfirmDismiss}
                   errorMessage={undefined}
                 />
+
                 <TabContent id={ActiveSwapTab.TRADE} activeTab={activeTab}>
                   <div style={{ display: 'relative' }}>
                     <InputSection leverage={leverage}>
