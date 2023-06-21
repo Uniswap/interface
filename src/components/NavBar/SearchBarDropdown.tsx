@@ -5,11 +5,13 @@ import { ChainId } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import clsx from 'clsx'
 import Badge from 'components/Badge'
+import { BACKEND_UNSUPPORTED_CHAINS } from 'constants/chains'
 import { HistoryDuration, SafetyLevel } from 'graphql/data/__generated__/types-and-hooks'
 import { useTrendingCollections } from 'graphql/data/nft/TrendingCollections'
 import { SearchToken } from 'graphql/data/SearchTokens'
 import useTrendingTokens from 'graphql/data/TrendingTokens'
 import { useIsNftPage } from 'hooks/useIsNftPage'
+import { getNativeLogoURI } from 'lib/hooks/useCurrencyLogoURIs'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { subheadSmall } from 'nft/css/common.css'
@@ -19,7 +21,6 @@ import { useLocation } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
-import BnbLogoURI from '../../assets/svg/bnb-logo.svg'
 import { ClockIcon, TrendingArrow } from '../../nft/components/icons'
 import { useRecentlySearchedAssets } from './RecentlySearchedAssets'
 import * as styles from './SearchBar.css'
@@ -103,12 +104,12 @@ function isKnownToken(token: SearchToken) {
   return token.project?.safetyLevel == SafetyLevel.Verified || token.project?.safetyLevel == SafetyLevel.MediumWarning
 }
 
-const BNBLogo = styled.img`
+const ChainLogo = styled.img`
   height: 20px;
   width: 20px;
   margin-right: 8px;
 `
-const BNBComingSoonBadge = styled(Badge)`
+const ChainComingSoonBadge = styled(Badge)`
   align-items: center;
   background-color: ${({ theme }) => theme.backgroundModule};
   color: ${({ theme }) => theme.textSecondary};
@@ -353,19 +354,31 @@ export const SearchBarDropdown = ({
     trendingCollectionsAreLoading,
   ])
 
-  const showBNBComingSoonBadge = chainId === ChainId.BNB && !isLoading
+  const showChainComingSoonBadge = chainId && BACKEND_UNSUPPORTED_CHAINS.includes(chainId) && !isLoading
+  const logoUri = getNativeLogoURI(chainId)
+  let comingSoonText
+  switch (chainId) {
+    case ChainId.BNB:
+      comingSoonText = <Trans>Coming soon: search and explore tokens on BNB Chain</Trans>
+      break
+    case ChainId.AVALANCHE:
+      comingSoonText = <Trans>Coming soon: search and explore tokens on Avalanche Chain</Trans>
+      break
+    default:
+      break
+  }
 
   return (
     <Column overflow="hidden" className={clsx(styles.searchBarDropdownNft, styles.searchBarScrollable)}>
       <Box opacity={isLoading ? '0.3' : '1'} transition="125">
         {resultsState}
-        {showBNBComingSoonBadge && (
-          <BNBComingSoonBadge>
-            <BNBLogo src={BnbLogoURI} />
+        {showChainComingSoonBadge && (
+          <ChainComingSoonBadge>
+            <ChainLogo src={logoUri} />
             <ThemedText.BodySmall color="textSecondary" fontSize="14px" fontWeight="400" lineHeight="20px">
-              <Trans>Coming soon: search and explore tokens on BNB Chain</Trans>
+              {comingSoonText}
             </ThemedText.BodySmall>
-          </BNBComingSoonBadge>
+          </ChainComingSoonBadge>
         )}
       </Box>
     </Column>

@@ -59,6 +59,8 @@ export const TESTNET_CHAIN_IDS = [
   ChainId.CELO_ALFAJORES,
 ] as const
 
+export const BACKEND_UNSUPPORTED_CHAINS = [ChainId.BNB, ChainId.AVALANCHE] as const
+
 /**
  * All the chain IDs that are running the Ethereum protocol.
  */
