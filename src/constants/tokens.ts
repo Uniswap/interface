@@ -400,6 +400,14 @@ export const ARB = new Token(
   'Arbitrum'
 )
 
+export const OP = new Token(
+  SupportedChainId.OPTIMISM,
+  '0x4200000000000000000000000000000000000042',
+  18,
+  'OP',
+  'Optimism'
+)
+
 export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token | undefined } = {
   ...(WETH9 as Record<SupportedChainId, Token>),
   [SupportedChainId.OPTIMISM]: new Token(

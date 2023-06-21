@@ -4,6 +4,7 @@ import { SupportedChainId } from 'constants/chains'
 
 import {
   AMPL,
+  ARB,
   BTC_BSC,
   BUSD_BSC,
   CAKE_BSC,
@@ -25,6 +26,7 @@ import {
   FXS,
   MATIC_BSC,
   nativeOnChain,
+  OP,
   PORTAL_ETH_CELO,
   PORTAL_USDC_CELO,
   renBTC,
@@ -152,6 +154,7 @@ export const COMMON_BASES: ChainCurrencyList = {
   ],
   [SupportedChainId.ARBITRUM_ONE]: [
     nativeOnChain(SupportedChainId.ARBITRUM_ONE),
+    ARB,
     DAI_ARBITRUM_ONE,
     USDC_ARBITRUM,
     USDT_ARBITRUM_ONE,
@@ -165,6 +168,7 @@ export const COMMON_BASES: ChainCurrencyList = {
   ],
   [SupportedChainId.OPTIMISM]: [
     nativeOnChain(SupportedChainId.OPTIMISM),
+    OP,
     DAI_OPTIMISM,
     USDC_OPTIMISM,
     USDT_OPTIMISM,
