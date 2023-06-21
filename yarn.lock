@@ -9735,10 +9735,10 @@ cwd@^0.10.0:
     find-pkg "^0.1.2"
     fs-exists-sync "^0.1.0"
 
-cypress-hardhat@^2.3.0:
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/cypress-hardhat/-/cypress-hardhat-2.3.0.tgz#646b35d57490d060e3fd4441e76e4d91b4ff4ec7"
-  integrity sha512-Sj437lFrUZ9UJGXS5a+DLQPBoyaWUxJafEiydNqKKpViKswBiylHD3ZJu2mrtQ/fhp7lgOPpMP72IQX4Ncwzdg==
+cypress-hardhat@^2.4.1:
+  version "2.4.1"
+  resolved "https://registry.yarnpkg.com/cypress-hardhat/-/cypress-hardhat-2.4.1.tgz#dff41b06a85c4a572d43ae662f2a0cd03c29c4d7"
+  integrity sha512-D9keayw+9C1YGPTXEfkXDGmPusMoA5Sg2fiRoaBgKHO53UUFQRKnwa6HCTkCxcd0t+Hh8UcwpFwkxtlXh5QtjA==
   dependencies:
     "@uniswap/permit2-sdk" "^1.2.0"
     "@uniswap/sdk-core" "^3.0.1"

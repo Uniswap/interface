@@ -18,6 +18,7 @@ import { useNftUniversalRouterAddress } from 'graphql/data/nft/NftUniversalRoute
 import { useCurrency } from 'hooks/Tokens'
 import { AllowanceState } from 'hooks/usePermit2Allowance'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
+import { useSwitchChain } from 'hooks/useSwitchChain'
 import { useTokenBalance } from 'lib/hooks/useCurrencyBalance'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useBag } from 'nft/hooks/useBag'
@@ -37,7 +38,6 @@ import { AlertTriangle, ChevronDown } from 'react-feather'
 import { InterfaceTrade, TradeState } from 'state/routing/types'
 import styled, { useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
-import { switchChain } from 'utils/switchChain'
 import { shallow } from 'zustand/shallow'
 
 import { BuyButtonStateData, BuyButtonStates, getBuyButtonStateData } from './ButtonStates'
@@ -348,6 +348,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
     setBagStatus(BagStatus.ADDING_TO_BAG)
   }, [inputCurrency, setBagStatus])
 
+  const switchChain = useSwitchChain()
   const {
     buttonText,
     buttonTextColor,
@@ -441,6 +442,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
     priceImpact,
     theme,
     fetchAssets,
+    switchChain,
     connector,
     toggleWalletDrawer,
     setBagExpanded,

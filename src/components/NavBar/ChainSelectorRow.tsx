@@ -80,7 +80,6 @@ export default function ChainSelectorRow({ disabled, targetChain, onSelectChain,
       onClick={() => {
         if (!disabled) onSelectChain(targetChain)
       }}
-      data-testid={`chain-selector-option-${label.toLowerCase()}`}
     >
       <Logo src={logoUrl} alt={label} />
       <Label>{label}</Label>
