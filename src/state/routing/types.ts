@@ -139,13 +139,13 @@ export type QuoteResult =
 export type TradeResult =
   | {
       state: QuoteState.NOT_FOUND
-      trade?: undefined,
+      trade?: undefined
       method?: QuoteMethod
     }
   | {
       state: QuoteState.SUCCESS
-      trade: InterfaceTrade,
-      method?: QuoteMethod,
+      trade: InterfaceTrade
+      method?: QuoteMethod
     }
 
 export enum PoolType {
