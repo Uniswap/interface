@@ -10,7 +10,7 @@ import { HistoryDuration, SafetyLevel } from 'graphql/data/__generated__/types-a
 import { useTrendingCollections } from 'graphql/data/nft/TrendingCollections'
 import { SearchToken } from 'graphql/data/SearchTokens'
 import useTrendingTokens from 'graphql/data/TrendingTokens'
-import { BACKEND_UNSUPPORTED_CHAIN_NAMES } from 'graphql/data/util'
+import { BACKEND_UNSUPPORTED_CHAIN_IDS } from 'graphql/data/util'
 import { useIsNftPage } from 'hooks/useIsNftPage'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
@@ -354,7 +354,7 @@ export const SearchBarDropdown = ({
     trendingCollectionsAreLoading,
   ])
 
-  const showChainComingSoonBadge = chainId && BACKEND_UNSUPPORTED_CHAIN_NAMES.includes(chainId) && !isLoading
+  const showChainComingSoonBadge = chainId && BACKEND_UNSUPPORTED_CHAIN_IDS.includes(chainId) && !isLoading
   const logoUri = getChainInfo(chainId)?.logoUrl
   let comingSoonText
   switch (chainId) {
