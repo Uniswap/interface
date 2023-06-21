@@ -131,7 +131,8 @@ export function fromGraphQLChain(chain: Chain): ChainId {
   return CHAIN_NAME_TO_CHAIN_ID[chain]
 }
 
-export const BACKEND_CHAIN_NAMES: Chain[] = [Chain.Ethereum, Chain.Polygon, Chain.Optimism, Chain.Arbitrum, Chain.Celo]
+export const BACKEND_CHAIN_NAMES = [Chain.Ethereum, Chain.Polygon, Chain.Optimism, Chain.Arbitrum, Chain.Celo] as const
+export const BACKEND_UNSUPPORTED_CHAIN_NAMES = [ChainId.BNB, ChainId.AVALANCHE] as const
 
 export function getTokenDetailsURL({
   address,

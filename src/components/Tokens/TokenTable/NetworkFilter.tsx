@@ -1,6 +1,11 @@
 import Badge from 'components/Badge'
 import { getChainInfo } from 'constants/chainInfo'
-import { BACKEND_CHAIN_NAMES, CHAIN_NAME_TO_CHAIN_ID, validateUrlChainParam } from 'graphql/data/util'
+import {
+  BACKEND_CHAIN_NAMES,
+  BACKEND_UNSUPPORTED_CHAIN_NAMES,
+  CHAIN_NAME_TO_CHAIN_ID,
+  validateUrlChainParam,
+} from 'graphql/data/util'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useRef } from 'react'
 import { Check, ChevronDown, ChevronUp } from 'react-feather'
@@ -117,7 +122,6 @@ export default function NetworkFilter() {
   const currentChainName = validateUrlChainParam(chainName)
 
   const chainInfo = getChainInfo(CHAIN_NAME_TO_CHAIN_ID[currentChainName])
-  const BNBChainInfo = getChainInfo(CHAIN_NAME_TO_CHAIN_ID.BNB)
 
   return (
     <StyledMenu ref={node}>
@@ -166,13 +170,22 @@ export default function NetworkFilter() {
               </InternalLinkMenuItem>
             )
           })}
-          <InternalLinkMenuItem data-testid="tokens-network-filter-option-bnb-chain" disabled>
-            <NetworkLabel>
-              <Logo src={BNBChainInfo.logoUrl} />
-              {BNBChainInfo.label}
-            </NetworkLabel>
-            <Tag>Coming soon</Tag>
-          </InternalLinkMenuItem>
+          {BACKEND_UNSUPPORTED_CHAIN_NAMES.map((network) => {
+            const chainInfo = getChainInfo(network)
+            return (
+              <InternalLinkMenuItem
+                key={network}
+                data-testid={`tokens-network-filter-option-${network}-chain`}
+                disabled
+              >
+                <NetworkLabel>
+                  <Logo src={chainInfo.logoUrl} />
+                  {chainInfo.label}
+                </NetworkLabel>
+                <Tag>Coming soon</Tag>
+              </InternalLinkMenuItem>
+            )
+          })}
         </MenuTimeFlyout>
       )}
     </StyledMenu>

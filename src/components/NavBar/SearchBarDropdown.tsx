@@ -5,13 +5,13 @@ import { ChainId } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import clsx from 'clsx'
 import Badge from 'components/Badge'
-import { BACKEND_UNSUPPORTED_CHAINS } from 'constants/chains'
+import { getChainInfo } from 'constants/chainInfo'
 import { HistoryDuration, SafetyLevel } from 'graphql/data/__generated__/types-and-hooks'
 import { useTrendingCollections } from 'graphql/data/nft/TrendingCollections'
 import { SearchToken } from 'graphql/data/SearchTokens'
 import useTrendingTokens from 'graphql/data/TrendingTokens'
+import { BACKEND_UNSUPPORTED_CHAIN_NAMES } from 'graphql/data/util'
 import { useIsNftPage } from 'hooks/useIsNftPage'
-import { getNativeLogoURI } from 'lib/hooks/useCurrencyLogoURIs'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { subheadSmall } from 'nft/css/common.css'
@@ -354,8 +354,8 @@ export const SearchBarDropdown = ({
     trendingCollectionsAreLoading,
   ])
 
-  const showChainComingSoonBadge = chainId && BACKEND_UNSUPPORTED_CHAINS.includes(chainId) && !isLoading
-  const logoUri = getNativeLogoURI(chainId)
+  const showChainComingSoonBadge = chainId && BACKEND_UNSUPPORTED_CHAIN_NAMES.includes(chainId) && !isLoading
+  const logoUri = getChainInfo(chainId)?.logoUrl
   let comingSoonText
   switch (chainId) {
     case ChainId.BNB:
