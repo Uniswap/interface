@@ -135,7 +135,6 @@ export default function SwapBuyFiatButton() {
       >
         <StyledTextButton onClick={handleBuyCrypto} disabled={buyCryptoButtonDisabled} data-testid="buy-fiat-button">
           <Trans>Buy</Trans>
-          {!buyFiatFlowCompleted && <Dot data-testid="buy-fiat-flow-incomplete-indicator" />}
         </StyledTextButton>
       </TraceEvent>
     </MouseoverTooltip>
