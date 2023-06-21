@@ -3,7 +3,7 @@ import { t } from '@lingui/macro'
 import { UserRejectedRequestError } from './errors'
 import { swapEthersErrorToUserReadableMessage } from './swapEthersErrorToUserReadableMessage'
 
-export function getReason(error: any): string | undefined {
+function getReason(error: any): string | undefined {
   let reason: string | undefined
   while (error) {
     reason = error.reason ?? error.message ?? reason

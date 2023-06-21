@@ -1,7 +1,4 @@
-import { getReason } from './swapErrorToUserReadableMessage'
-
 export function swapEthersErrorToUserReadableMessage(error: any): string {
-  const reason = getReason(error)
   const errorCode = error?.code
 
   let messageString = ''
