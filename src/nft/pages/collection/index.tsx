@@ -120,149 +120,149 @@ const IconWrapper = styled.button`
   ${OpacityHoverState}
 `
 
-const Collection = () => {
-  const { contractAddress } = useParams()
-  const isMobile = useIsMobile()
-  const [isFiltersExpanded, setFiltersExpanded] = useFiltersExpanded()
-  const { pathname } = useLocation()
-  const navigate = useNavigate()
-  const isActivityToggled = pathname.includes('/activity')
-  const setMarketCount = useCollectionFilters((state) => state.setMarketCount)
-  const isBagExpanded = useBag((state) => state.bagExpanded)
-  const setBagExpanded = useBag((state) => state.setBagExpanded)
-  const { chainId } = useWeb3React()
-  const screenSize = useScreenSize()
+// const Collection = () => {
+//   const { contractAddress } = useParams()
+//   const isMobile = useIsMobile()
+//   const [isFiltersExpanded, setFiltersExpanded] = useFiltersExpanded()
+//   const { pathname } = useLocation()
+//   const navigate = useNavigate()
+//   const isActivityToggled = pathname.includes('/activity')
+//   const setMarketCount = useCollectionFilters((state) => state.setMarketCount)
+//   const isBagExpanded = useBag((state) => state.bagExpanded)
+//   const setBagExpanded = useBag((state) => state.setBagExpanded)
+//   const { chainId } = useWeb3React()
+//   const screenSize = useScreenSize()
 
-  const { data: collectionStats, loading } = useCollection(contractAddress as string)
+//   const { data: collectionStats, loading } = useCollection(contractAddress as string)
 
-  const { CollectionContainerWidthChange } = useSpring({
-    CollectionContainerWidthChange:
-      isBagExpanded && !isMobile ? (screenSize['xxxl'] ? XXXL_BAG_WIDTH : BAG_WIDTH) + 16 : 0,
-    config: {
-      duration: TRANSITION_DURATIONS.medium,
-      easing: easings.easeOutSine,
-    },
-  })
+//   const { CollectionContainerWidthChange } = useSpring({
+//     CollectionContainerWidthChange:
+//       isBagExpanded && !isMobile ? (screenSize['xxxl'] ? XXXL_BAG_WIDTH : BAG_WIDTH) + 16 : 0,
+//     config: {
+//       duration: TRANSITION_DURATIONS.medium,
+//       easing: easings.easeOutSine,
+//     },
+//   })
 
-  const { gridWidthOffset } = useSpring({
-    gridWidthOffset: isFiltersExpanded && !isMobile ? FILTER_WIDTH : 0,
-    config: {
-      duration: TRANSITION_DURATIONS.medium,
-      easing: easings.easeOutSine,
-    },
-  })
+//   const { gridWidthOffset } = useSpring({
+//     gridWidthOffset: isFiltersExpanded && !isMobile ? FILTER_WIDTH : 0,
+//     config: {
+//       duration: TRANSITION_DURATIONS.medium,
+//       easing: easings.easeOutSine,
+//     },
+//   })
 
-  useEffect(() => {
-    const marketCount: Record<string, number> = {}
-    collectionStats?.marketplaceCount?.forEach(({ marketplace, count }) => {
-      marketCount[marketplace] = count
-    })
-    setMarketCount(marketCount)
-  }, [collectionStats?.marketplaceCount, setMarketCount])
+//   useEffect(() => {
+//     const marketCount: Record<string, number> = {}
+//     collectionStats?.marketplaceCount?.forEach(({ marketplace, count }) => {
+//       marketCount[marketplace] = count
+//     })
+//     setMarketCount(marketCount)
+//   }, [collectionStats?.marketplaceCount, setMarketCount])
 
-  useEffect(() => {
-    if (isBagExpanded && isFiltersExpanded && !screenSize['xl']) setFiltersExpanded(false)
-  }, [isBagExpanded, isFiltersExpanded, screenSize, setFiltersExpanded])
+//   useEffect(() => {
+//     if (isBagExpanded && isFiltersExpanded && !screenSize['xl']) setFiltersExpanded(false)
+//   }, [isBagExpanded, isFiltersExpanded, screenSize, setFiltersExpanded])
 
-  useEffect(() => {
-    setBagExpanded({ bagExpanded: false, manualClose: false })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+//   useEffect(() => {
+//     setBagExpanded({ bagExpanded: false, manualClose: false })
+//     // eslint-disable-next-line react-hooks/exhaustive-deps
+//   }, [])
 
-  if (loading) return <CollectionPageSkeleton />
+//   if (loading) return <CollectionPageSkeleton />
 
-  const toggleActivity = () => {
-    isActivityToggled
-      ? navigate(`/nfts/collection/${contractAddress}`)
-      : navigate(`/nfts/collection/${contractAddress}/activity`)
-  }
+//   const toggleActivity = () => {
+//     isActivityToggled
+//       ? navigate(`/nfts/collection/${contractAddress}`)
+//       : navigate(`/nfts/collection/${contractAddress}/activity`)
+//   }
 
-  return (
-    <>
-      <Trace
-        page={InterfacePageName.NFT_COLLECTION_PAGE}
-        properties={{ collection_address: contractAddress, chain_id: chainId, is_activity_view: isActivityToggled }}
-        shouldLogImpression
-      >
-        <AnimatedCollectionContainer
-          style={{
-            width: CollectionContainerWidthChange.to((x) => `calc(100% - ${x as number}px)`),
-          }}
-        >
-          {contractAddress && !blocklistedCollections.includes(contractAddress) ? (
-            <>
-              <BannerWrapper>
-                <Banner
-                  src={
-                    collectionStats?.bannerImageUrl ? `${collectionStats.bannerImageUrl}?w=${window.innerWidth}` : ''
-                  }
-                />
-              </BannerWrapper>
-              <CollectionDescriptionSection>
-                {collectionStats && <CollectionStats stats={collectionStats} isMobile={isMobile} />}
-                <div id="nft-anchor" />
-                <ActivitySwitcher
-                  showActivity={isActivityToggled}
-                  toggleActivity={() => {
-                    isFiltersExpanded && setFiltersExpanded(false)
-                    toggleActivity()
-                  }}
-                />
-              </CollectionDescriptionSection>
-              <CollectionDisplaySection>
-                <FiltersContainer isMobile={isMobile} isFiltersExpanded={isFiltersExpanded}>
-                  {isFiltersExpanded && (
-                    <>
-                      {isMobile && (
-                        <MobileFilterHeader>
-                          <ThemedText.HeadlineSmall>Filter</ThemedText.HeadlineSmall>
-                          <IconWrapper onClick={() => setFiltersExpanded(false)}>
-                            <BagCloseIcon />
-                          </IconWrapper>
-                        </MobileFilterHeader>
-                      )}
-                      <Filters traitsByGroup={collectionStats?.traits ?? EMPTY_TRAIT_OBJ} />
-                    </>
-                  )}
-                </FiltersContainer>
+//   return (
+//     <>
+//       <Trace
+//         page={InterfacePageName.NFT_COLLECTION_PAGE}
+//         properties={{ collection_address: contractAddress, chain_id: chainId, is_activity_view: isActivityToggled }}
+//         shouldLogImpression
+//       >
+//         <AnimatedCollectionContainer
+//           style={{
+//             width: CollectionContainerWidthChange.to((x) => `calc(100% - ${x as number}px)`),
+//           }}
+//         >
+//           {contractAddress && !blocklistedCollections.includes(contractAddress) ? (
+//             <>
+//               <BannerWrapper>
+//                 <Banner
+//                   src={
+//                     collectionStats?.bannerImageUrl ? `${collectionStats.bannerImageUrl}?w=${window.innerWidth}` : ''
+//                   }
+//                 />
+//               </BannerWrapper>
+//               <CollectionDescriptionSection>
+//                 {collectionStats && <CollectionStats stats={collectionStats} isMobile={isMobile} />}
+//                 <div id="nft-anchor" />
+//                 <ActivitySwitcher
+//                   showActivity={isActivityToggled}
+//                   toggleActivity={() => {
+//                     isFiltersExpanded && setFiltersExpanded(false)
+//                     toggleActivity()
+//                   }}
+//                 />
+//               </CollectionDescriptionSection>
+//               <CollectionDisplaySection>
+//                 <FiltersContainer isMobile={isMobile} isFiltersExpanded={isFiltersExpanded}>
+//                   {isFiltersExpanded && (
+//                     <>
+//                       {isMobile && (
+//                         <MobileFilterHeader>
+//                           <ThemedText.HeadlineSmall>Filter</ThemedText.HeadlineSmall>
+//                           <IconWrapper onClick={() => setFiltersExpanded(false)}>
+//                             <BagCloseIcon />
+//                           </IconWrapper>
+//                         </MobileFilterHeader>
+//                       )}
+//                       <Filters traitsByGroup={collectionStats?.traits ?? EMPTY_TRAIT_OBJ} />
+//                     </>
+//                   )}
+//                 </FiltersContainer>
 
-                <AnimatedCollectionAssetsContainer
-                  hideUnderneath={isMobile && (isFiltersExpanded || isBagExpanded)}
-                  style={{
-                    transform: gridWidthOffset.to((x) => `translate(${x as number}px)`),
-                    width: gridWidthOffset.to((x) => `calc(100% - ${x as number}px)`),
-                  }}
-                >
-                  {isActivityToggled
-                    ? contractAddress && (
-                        <Activity
-                          contractAddress={contractAddress}
-                          rarityVerified={collectionStats?.rarityVerified ?? false}
-                          collectionName={collectionStats?.name ?? ''}
-                          chainId={chainId}
-                        />
-                      )
-                    : contractAddress &&
-                      collectionStats && (
-                        <Suspense fallback={<CollectionNftsAndMenuLoading />}>
-                          <CollectionNfts
-                            collectionStats={collectionStats}
-                            contractAddress={contractAddress}
-                            rarityVerified={collectionStats?.rarityVerified}
-                          />
-                        </Suspense>
-                      )}
-                </AnimatedCollectionAssetsContainer>
-              </CollectionDisplaySection>
-            </>
-          ) : (
-            <div className={styles.noCollectionAssets}>No collection assets exist at this address</div>
-          )}
-        </AnimatedCollectionContainer>
-      </Trace>
-      <MobileHoverBag />
-    </>
-  )
-}
+//                 <AnimatedCollectionAssetsContainer
+//                   hideUnderneath={isMobile && (isFiltersExpanded || isBagExpanded)}
+//                   style={{
+//                     transform: gridWidthOffset.to((x) => `translate(${x as number}px)`),
+//                     width: gridWidthOffset.to((x) => `calc(100% - ${x as number}px)`),
+//                   }}
+//                 >
+//                   {isActivityToggled
+//                     ? contractAddress && (
+//                         <Activity
+//                           contractAddress={contractAddress}
+//                           rarityVerified={collectionStats?.rarityVerified ?? false}
+//                           collectionName={collectionStats?.name ?? ''}
+//                           chainId={chainId}
+//                         />
+//                       )
+//                     : contractAddress &&
+//                       collectionStats && (
+//                         <Suspense fallback={<CollectionNftsAndMenuLoading />}>
+//                           <CollectionNfts
+//                             collectionStats={collectionStats}
+//                             contractAddress={contractAddress}
+//                             rarityVerified={collectionStats?.rarityVerified}
+//                           />
+//                         </Suspense>
+//                       )}
+//                 </AnimatedCollectionAssetsContainer>
+//               </CollectionDisplaySection>
+//             </>
+//           ) : (
+//             <div className={styles.noCollectionAssets}>No collection assets exist at this address</div>
+//           )}
+//         </AnimatedCollectionContainer>
+//       </Trace>
+//       <MobileHoverBag />
+//     </>
+//   )
+// }
 
-export default Collection
+// export default Collection

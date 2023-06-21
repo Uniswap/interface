@@ -5,6 +5,7 @@
   "homepage": ".",
   "license": "GPL-3.0-or-later",
   "scripts": {
+    "analyze": "source-map-explorer 'build/static/js/*.js'",
     "contracts:compile:abi": "typechain --target ethers-v5 --out-dir src/abis/types \"./src/abis/**/*.json\"",
     "contracts:compile:v3": "typechain --target ethers-v5 --out-dir src/types/v3 \"./node_modules/@uniswap/**/artifacts/contracts/**/*[!dbg].json\"",
     "contracts:compile": "yarn contracts:compile:abi && yarn contracts:compile:v3",
@@ -230,6 +231,7 @@
     "rebass": "^4.0.7",
     "redux": "^4.1.2",
     "redux-localstorage-simple": "^2.3.1",
+    "source-map-explorer": "^2.5.3",
     "statsig-react": "^1.22.0",
     "styled-components": "^5.3.5",
     "tiny-invariant": "^1.2.0",

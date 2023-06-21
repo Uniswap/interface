@@ -17,7 +17,7 @@ import useParsedQueryString from '../../hooks/useParsedQueryString'
 import { isAddress } from '../../utils'
 import { useCurrencyBalances } from '../connection/hooks'
 import { AppState } from '../types'
-import { Field, replaceSwapState, selectCurrency, setHideClosedLeveragePositions, setLeverageFactor, setRecipient, switchCurrencies, typeInput, setLeverage, setLeverageManagerAddress, ActiveSwapTab, setActiveTab, setBorrowManagerAddress, setLTV } from './actions'
+import { Field, replaceSwapState, selectCurrency, setHideClosedLeveragePositions, setLeverageFactor, setRecipient, switchCurrencies, typeInput, setLeverage, setLeverageManagerAddress, ActiveSwapTab, setActiveTab, setBorrowManagerAddress, setLTV, setPremium } from './actions'
 import { SwapState } from './reducer'
 import { useBorrowManagerContract, useLeverageManagerContract } from "../../hooks/useContract"
 import { BigNumber as BN } from "bignumber.js";
@@ -51,6 +51,7 @@ export function useSwapActionHandlers(): {
   onActiveTabChange: (activeTab: ActiveSwapTab) => void
   onLTVChange: (ltv: string) => void
   onBorrowManagerAddress: (borrowManagerAddress: string) => void
+  onPremiumChange: (premium: string) => void
 } {
   const dispatch = useAppDispatch()
   const onCurrencySelection = useCallback(
@@ -125,6 +126,12 @@ export function useSwapActionHandlers(): {
       dispatch(setBorrowManagerAddress({ borrowManagerAddress: borrowManagerAddress }))
     }, [dispatch])
 
+  const onPremiumChange = useCallback(
+    (premium: string) => {
+      dispatch(setPremium({ premium: premium }))
+    }, 
+    [dispatch])
+
   return {
     onSwitchTokens,
     onCurrencySelection,
@@ -136,7 +143,8 @@ export function useSwapActionHandlers(): {
     onLeverageManagerAddress,
     onActiveTabChange,
     onLTVChange,
-    onBorrowManagerAddress
+    onBorrowManagerAddress,
+    onPremiumChange
   }
 }
 
@@ -237,7 +245,8 @@ export function useDerivedBorrowCreationInfo({ allowance: {input: inputAllowance
     [Field.INPUT]: { currencyId: inputCurrencyId },
     [Field.OUTPUT]: { currencyId: outputCurrencyId },
     ltv,
-    borrowManagerAddress
+    borrowManagerAddress,
+    premium
   } = useSwapState()
 
   const inputCurrency = useCurrency(inputCurrencyId)
@@ -375,7 +384,7 @@ export function useDerivedBorrowCreationInfo({ allowance: {input: inputAllowance
         state: tradeState,
         unusedPremium,
         strikePrice,
-        quotedPremium: quotedPremium - unusedPremium,
+        quotedPremium: quotedPremium, // quotedPremium - unusedPremium,
         priceImpact,
         ltv: Number(ltv),
         existingPosition: _existingPosition,
@@ -429,7 +438,7 @@ export function useDerivedBorrowCreationInfo({ allowance: {input: inputAllowance
       inputError = <Trans>Insufficient {inputCurrency?.symbol} balance</Trans>
     }
 
-    if (balanceOut && premiumAmount && Number(balanceOut.toExact()) < Number(trade.quotedPremium)) {
+    if (balanceOut && premiumAmount && Number(balanceOut.toExact()) < Number(premium)) {
       inputError = inputError ?? <Trans>Insufficient {outputCurrency?.symbol} balance</Trans>
     }
 
@@ -454,7 +463,7 @@ export function useDerivedBorrowCreationInfo({ allowance: {input: inputAllowance
     currencies,
     currencyBalances,
     parsedAmount,
-    inputError: inputError,
+    inputError,
     allowedSlippage,
     contractError
   }
@@ -470,10 +479,10 @@ export function useDerivedLeverageCreationInfo({ allowance } : { allowance: Appr
     allowedSlippage: Percent
     contractError?: ReactNode
   } {
+
   const { account } = useWeb3React()
   const [tradeState, setTradeState] = useState<LeverageTradeState>(LeverageTradeState.LOADING)
   const [contractResult, setContractResult] = useState()
-  // const [contractError, setContractError] = useState()
 
   const {
     typedValue,
@@ -482,12 +491,11 @@ export function useDerivedLeverageCreationInfo({ allowance } : { allowance: Appr
     leverage,
     leverageFactor,
     leverageManagerAddress,
+    premium
   } = useSwapState()
 
   const inputCurrency = useCurrency(inputCurrencyId)
   const outputCurrency = useCurrency(outputCurrencyId)
-
-
 
   // TODO: need to algoritmically calculate the best pool for the user
   // let poolAddress = useBestPoolAddress(inputCurrency ?? undefined, outputCurrency ?? undefined)
@@ -625,8 +633,6 @@ export function useDerivedLeverageCreationInfo({ allowance } : { allowance: Appr
       const priceImpact = new Percent(t, 1000)
 
       const effectiveLeverage = new BN((Number(borrowedAmount) + Number(debouncedAmount.toExact()) + Number(quotedPremium)) / (Number(debouncedAmount.toExact()) + Number(quotedPremium))).toNumber()
-
-
       
       return {
         inputAmount: debouncedAmount,
@@ -666,7 +672,6 @@ export function useDerivedLeverageCreationInfo({ allowance } : { allowance: Appr
 
   const inputError = useMemo(() => {
     let inputError: ReactNode | undefined
-
     if (!account) {
       inputError = <Trans>Connect Wallet</Trans>
     }
@@ -687,7 +692,7 @@ export function useDerivedLeverageCreationInfo({ allowance } : { allowance: Appr
     const [balanceIn, amountIn] = [currencyBalances[Field.INPUT], parsedAmount?.toExact()]
 
     // TODO add slippage to all the simulations
-    if (balanceIn && amountIn && Number(balanceIn.toExact()) < Number(amountIn)) {
+    if (balanceIn && amountIn && Number(balanceIn.toExact()) < Number(amountIn) + Number(premium)) {
       inputError = <Trans>Insufficient {inputCurrency?.symbol} balance</Trans>
     }
 
@@ -696,7 +701,7 @@ export function useDerivedLeverageCreationInfo({ allowance } : { allowance: Appr
     }
 
     return inputError
-  }, [allowance, account, allowedSlippage, currencies, currencyBalances, parsedAmount, leverage, leverageFactor, inputCurrency, trade])
+  }, [premium, allowance, account, allowedSlippage, currencies, currencyBalances, parsedAmount, leverage, leverageFactor, inputCurrency, trade])
 
   const contractError = useMemo(() => {
     let _contractError;
@@ -898,7 +903,8 @@ export function queryParametersToSwapState(parsedQs: ParsedQs): SwapState {
     leverageManagerAddress: null,
     activeTab: ActiveSwapTab.TRADE,
     ltv: null,
-    borrowManagerAddress: null
+    borrowManagerAddress: null,
+    premium: null
   }
 }
 

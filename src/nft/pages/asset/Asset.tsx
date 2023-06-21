@@ -1,10 +1,10 @@
-import { Trace } from '@uniswap/analytics'
-import { InterfacePageName } from '@uniswap/analytics-events'
-import { useNftAssetDetails } from 'graphql/data/nft/Details'
-import { AssetDetails } from 'nft/components/details/AssetDetails'
-import { AssetDetailsLoading } from 'nft/components/details/AssetDetailsLoading'
-import { AssetPriceDetails } from 'nft/components/details/AssetPriceDetails'
-import { useParams } from 'react-router-dom'
+// import { Trace } from '@uniswap/analytics'
+// import { InterfacePageName } from '@uniswap/analytics-events'
+// import { useNftAssetDetails } from 'graphql/data/nft/Details'
+// import { AssetDetails } from 'nft/components/details/AssetDetails'
+// import { AssetDetailsLoading } from 'nft/components/details/AssetDetailsLoading'
+// import { AssetPriceDetails } from 'nft/components/details/AssetPriceDetails'
+// import { useParams } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
 const AssetContainer = styled.div`
@@ -34,32 +34,32 @@ const AssetPriceDetailsContainer = styled.div`
   }
 `
 
-const AssetPage = () => {
-  const { tokenId = '', contractAddress = '' } = useParams()
-  const { data, loading } = useNftAssetDetails(contractAddress, tokenId)
+// const AssetPage = () => {
+//   const { tokenId = '', contractAddress = '' } = useParams()
+//   const { data, loading } = useNftAssetDetails(contractAddress, tokenId)
 
-  const [asset, collection] = data
+//   const [asset, collection] = data
 
-  if (loading) return <AssetDetailsLoading />
+//   if (loading) return <AssetDetailsLoading />
 
-  return (
-    <>
-      <Trace
-        page={InterfacePageName.NFT_DETAILS_PAGE}
-        properties={{ collection_address: contractAddress, token_id: tokenId }}
-        shouldLogImpression
-      >
-        {!!asset && !!collection && (
-          <AssetContainer>
-            <AssetDetails collection={collection} asset={asset} />
-            <AssetPriceDetailsContainer>
-              <AssetPriceDetails collection={collection} asset={asset} />
-            </AssetPriceDetailsContainer>
-          </AssetContainer>
-        )}
-      </Trace>
-    </>
-  )
-}
+//   return (
+//     <>
+//       <Trace
+//         page={InterfacePageName.NFT_DETAILS_PAGE}
+//         properties={{ collection_address: contractAddress, token_id: tokenId }}
+//         shouldLogImpression
+//       >
+//         {!!asset && !!collection && (
+//           <AssetContainer>
+//             <AssetDetails collection={collection} asset={asset} />
+//             <AssetPriceDetailsContainer>
+//               <AssetPriceDetails collection={collection} asset={asset} />
+//             </AssetPriceDetailsContainer>
+//           </AssetContainer>
+//         )}
+//       </Trace>
+//     </>
+//   )
+// }
 
-export default AssetPage
+// export default AssetPage

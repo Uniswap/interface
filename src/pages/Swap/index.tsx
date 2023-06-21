@@ -307,6 +307,13 @@ export default function Swap({ className }: { className?: string }) {
   const [fetchingSwapQuoteStartTime, setFetchingSwapQuoteStartTime] = useState<Date | undefined>()
   const swapWidgetEnabled = useSwapWidgetEnabled()
 
+  const { 
+    onSwitchTokens, onCurrencySelection, onUserInput, 
+    onChangeRecipient, onLeverageFactorChange, 
+    onLeverageChange, onLeverageManagerAddress, onLTVChange, onBorrowManagerAddress,
+    onPremiumChange
+   } = useSwapActionHandlers()
+
   // HACK
   // const addToken = useAddUserToken()
   const fETH = useToken(feth)
@@ -333,6 +340,7 @@ export default function Swap({ className }: { className?: string }) {
     () => [loadedInputCurrency, loadedOutputCurrency]?.filter((c): c is Token => c?.isToken ?? false) ?? [],
     [loadedInputCurrency, loadedOutputCurrency]
   )
+
   const handleConfirmTokenWarning = useCallback(() => {
     setDismissTokenWarning(true)
   }, [])
@@ -380,23 +388,20 @@ export default function Swap({ className }: { className?: string }) {
 
   // for expert mode
   const [isExpertMode] = useExpertModeManager()
+
   // swap state
-  const { independentField,
+  const {
+    independentField,
     typedValue,
     recipient,
     leverageFactor,
-    hideClosedLeveragePositions,
     leverage,
     leverageManagerAddress,
     activeTab,
     ltv,
-    borrowManagerAddress
+    borrowManagerAddress,
+    premium
   } = useSwapState()
-
-  // console.log("tradeState", tradeState)
-  // console.log("trade", trade)
-  // console.log("allowedSlippage", allowedSlippage)
-  // console.log("currenciesswap", currencies)
 
   const {
     wrapType,
@@ -419,35 +424,58 @@ export default function Swap({ className }: { className?: string }) {
         },
     [currencies, independentField, parsedAmount, showWrap, trade]
   )
+
+  useEffect(() => {
+    if (
+      inputCurrency &&
+      outputCurrency &&
+      pool?.token0Price &&
+      pool?.token1Price &&
+      parsedAmounts[Field.INPUT]
+    ) {
+      if (activeTab === ActiveSwapTab.TRADE) {
+        // leverage premium, in input currency amount
+        onPremiumChange(String(Number(parsedAmounts[Field.INPUT]?.toExact()) * 0.002))
+      } else {
+        // borrow premium, in output currency amount
+        const inputIsToken0 = inputCurrency.wrapped.sortsBefore(outputCurrency.wrapped)
+        const price = inputIsToken0 ? pool.token0Price.toFixed(18) : pool.token1Price.toFixed(18)
+        const _ltv = Number(ltv) / 100;
+        onPremiumChange(
+          String( Number(parsedAmounts[Field.INPUT]?.toExact()) * _ltv * Number(price) * 0.002 )
+        )
+      }
+    }
+  }, [parsedAmounts[Field.INPUT], inputCurrency, outputCurrency, ltv, pool, leverage, activeTab])
   
-  const [approveInputAmount, approveOutputAmount] = useMemo(() => {
+  const [leverageApproveAmount, borrowInputApproveAmount, borrowOutputApproveAmount] = useMemo(() => {
     if (inputCurrency 
-      && parsedAmounts[Field.INPUT] 
-      && outputCurrency 
-      && pool?.token0Price 
-      && pool?.token1Price 
+      && parsedAmounts[Field.INPUT]
+      && outputCurrency
+      && premium
       ) {
-      const inputIsToken0 = inputCurrency.wrapped.sortsBefore(outputCurrency.wrapped)
-      const price = inputIsToken0 ? pool.token0Price.toFixed(18) : pool.token1Price.toFixed(18)
-      const _ltv = Number((ltv && ltv !== "") ? ltv : 0) / 100;
       return [
+        CurrencyAmount.fromRawAmount(
+          inputCurrency,
+          new BN(parsedAmounts[Field.INPUT]?.toExact() ?? 0).plus(premium).shiftedBy(18).toFixed(0)
+        ),
         CurrencyAmount.fromRawAmount(
           inputCurrency,
           new BN(parsedAmounts[Field.INPUT]?.toExact() ?? 0).shiftedBy(18).toFixed(0)
         ),
         CurrencyAmount.fromRawAmount(
           outputCurrency,
-          new BN(parsedAmounts[Field.INPUT]?.toExact() ?? 0).times(_ltv).times(price).shiftedBy(18).toFixed(0)
+          new BN(premium).shiftedBy(18).toFixed(0)
         )
       ]
     }
     else {
       return [undefined, undefined]
     }
-  }, [inputCurrency, parsedAmounts[Field.INPUT], ltv, pool, outputCurrency])
+  }, [inputCurrency, parsedAmounts[Field.INPUT], ltv, pool, outputCurrency, premium])
 
   const [leverageApprovalState, approveLeverageManager] = useApproveCallback(
-    approveInputAmount,
+    leverageApproveAmount,
     leverageManagerAddress ?? undefined
   )
 
@@ -458,9 +486,15 @@ export default function Swap({ className }: { className?: string }) {
     contractError
   } = useDerivedLeverageCreationInfo({ allowance: leverageApprovalState })
 
-  const [borrowInputApprovalState, approveInputBorrowManager] = useApproveCallback(approveInputAmount, borrowManagerAddress ?? undefined)
-  const [borrowOutputApprovalState, approveOutputBorrowManager] = useApproveCallback(approveOutputAmount, borrowManagerAddress ?? undefined)
-  // console.log("borrowInputApprovalState", borrowInputApprovalState, borrowOutputApprovalState, approveOutputAmount?.toExact())
+  console.log("premium:", 
+    // leverageApproveAmount?.toExact(), 
+    // borrowInputApproveAmount?.toExact(), 
+    // borrowOutputApproveAmount?.toExact(), 
+    // premium
+  )
+
+  const [borrowInputApprovalState, approveInputBorrowManager] = useApproveCallback(borrowInputApproveAmount, borrowManagerAddress ?? undefined)
+  const [borrowOutputApprovalState, approveOutputBorrowManager] = useApproveCallback(borrowOutputApproveAmount, borrowManagerAddress ?? undefined)
   
   const {
     trade: borrowTrade,
@@ -499,8 +533,6 @@ export default function Swap({ className }: { className?: string }) {
         : computeFiatValuePriceImpact(fiatValueTradeInput.data, fiatValueTradeOutput.data),
     [fiatValueTradeInput, fiatValueTradeOutput, routeIsSyncing, trade]
   )
-
-  const { onSwitchTokens, onCurrencySelection, onUserInput, onChangeRecipient, onLeverageFactorChange, onHideClosedLeveragePositions, onLeverageChange, onLeverageManagerAddress, onLTVChange, onBorrowManagerAddress } = useSwapActionHandlers()
   
   const [nonce, setNonce] = useState(0)
   useEffect(() => {
@@ -537,6 +569,8 @@ export default function Swap({ className }: { className?: string }) {
     setDismissTokenWarning(true)
     navigate('/swap/')
   }, [navigate])
+
+  // console.log("valid borrow", borrowIsValid)
 
   // modal and loading
   const [{ showConfirm, tradeToConfirm, swapErrorMessage, attemptingTxn, txHash, showLeverageConfirm, showBorrowConfirm }, setSwapState] = useState<{
@@ -610,6 +644,7 @@ export default function Swap({ className }: { className?: string }) {
 
   const isApprovalLoading = allowance.state === AllowanceState.REQUIRED && allowance.isApprovalLoading
   const [isAllowancePending, setIsAllowancePending] = useState(false)
+  
   const updateAllowance = useCallback(async () => {
     invariant(allowance.state === AllowanceState.REQUIRED)
     setIsAllowancePending(true)
@@ -650,7 +685,6 @@ export default function Swap({ className }: { className?: string }) {
       console.log('err', err)
     }
 
-    // loadedInputCurrency, loadedOutputCurrency
   }, [currencies])
 
   const faucetOut = useCallback(async () => {
@@ -959,7 +993,6 @@ export default function Swap({ className }: { className?: string }) {
   const [debouncedLeverageFactor, onDebouncedLeverageFactor] = useDebouncedChangeHandler(leverageFactor ?? "1", onLeverageFactorChange);
 
   // usePool(currencies.INPUT ?? undefined, currencies.OUTPUT ?? undefined, FeeAmount.LOW)
-    console.log("leveragePositions: ", leveragePositions)
   // part of borrow integration
 
   const [debouncedLTV, debouncedSetLTV] = useDebouncedChangeHandler(ltv ?? "", onLTVChange);
@@ -979,6 +1012,8 @@ export default function Swap({ className }: { className?: string }) {
   //                         borrowTrade?.existingTotalDebtInput ? 
   //                         String(borrowTrade.borrowedAmount - borrowTrade.existingTotalDebtInput) : String(borrowTrade.borrowedAmount)
   //                                 ) :"-" :""
+
+  // console.log("borrowAddress: ", borrowManagerAddress)
   return (
     <Trace page={InterfacePageName.SWAP_PAGE} shouldLogImpression>
       <>
@@ -1441,7 +1476,20 @@ export default function Swap({ className }: { className?: string }) {
                             <Trans>Insufficient liquidity for this trade.</Trans>
                           </ThemedText.DeprecatedMain>
                         </GrayCard>
-                      ) : lmtIsValid && leverageApprovalState !== ApprovalState.APPROVED ? (
+                      ) ? !lmtIsValid : (
+                        <ButtonError
+                          onClick={() => {
+                          }}
+                          id="leverage-button"
+                          disabled={
+                            true
+                          }
+                        >
+                          <Text fontSize={20} fontWeight={600}>
+                            {inputError}
+                          </Text>
+                        </ButtonError>
+                      ) : (leverageApprovalState !== ApprovalState.APPROVED) ? (
                         <ButtonPrimary
                           onClick={updateLeverageAllowance}
                           style={{ gap: 14 }}
@@ -1702,7 +1750,20 @@ export default function Swap({ className }: { className?: string }) {
                               <Trans>Insufficient liquidity for this trade.</Trans>
                             </ThemedText.DeprecatedMain>
                           </GrayCard>
-                        ) : borrowIsValid && (
+                        ) : !borrowIsValid ? (
+                          <ButtonError
+                            onClick={() => {}}
+                            id="borrow-button"
+                            disabled={
+                              true
+                            }
+                          >
+                            <Text fontSize={20} fontWeight={600}>
+                              {borrowInputError}
+                            </Text>
+                          </ButtonError>
+                        ) : 
+                        (
                           borrowInputApprovalState !== ApprovalState.APPROVED || borrowOutputApprovalState !== ApprovalState.APPROVED
                         ) ? (
                           <RowBetween>
@@ -1750,18 +1811,6 @@ export default function Swap({ className }: { className?: string }) {
                                 </>
                               ) : (
                                 <>
-                                  {/* <div style={{ height: 20 }}>
-                                    <MouseoverTooltip
-                                      text={
-                                        <Trans>
-                                          Permission is required for Uniswap to swap each token. This will expire after one
-                                          month for your security.
-                                        </Trans>
-                                      }
-                                    >
-                                      <Info size={20} />
-                                    </MouseoverTooltip>
-                                  </div> */}
                                   <Trans>Approve use of {currencies[Field.OUTPUT]?.symbol}</Trans>
                                 </>
                               )}
@@ -1787,9 +1836,7 @@ export default function Swap({ className }: { className?: string }) {
                             }
                           >
                             <Text fontSize={20} fontWeight={600}>
-                              {borrowInputError ? (
-                                borrowInputError
-                              ) : borrowContractError ? (
+                              {borrowContractError ? (
                                 borrowContractError
                               ) : borrowRouteIsLoading ? (
                                 <Trans>Borrow</Trans>

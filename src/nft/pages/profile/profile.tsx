@@ -59,57 +59,57 @@ const ConnectWalletButton = styled(ButtonPrimary)`
   border: none;
 `
 
-const ProfileContent = () => {
-  const sellPageState = useProfilePageState((state) => state.state)
-  const setSellPageState = useProfilePageState((state) => state.setProfilePageState)
-  const resetSellAssets = useSellAsset((state) => state.reset)
-  const clearCollectionFilters = useWalletCollections((state) => state.clearCollectionFilters)
+// const ProfileContent = () => {
+//   const sellPageState = useProfilePageState((state) => state.state)
+//   const setSellPageState = useProfilePageState((state) => state.setProfilePageState)
+//   const resetSellAssets = useSellAsset((state) => state.reset)
+//   const clearCollectionFilters = useWalletCollections((state) => state.clearCollectionFilters)
 
-  const { account } = useWeb3React()
-  const accountRef = useRef(account)
-  const toggleWalletDrawer = useToggleWalletDrawer()
+//   const { account } = useWeb3React()
+//   const accountRef = useRef(account)
+//   const toggleWalletDrawer = useToggleWalletDrawer()
 
-  useEffect(() => {
-    if (accountRef.current !== account) {
-      accountRef.current = account
-      resetSellAssets()
-      setSellPageState(ProfilePageStateType.VIEWING)
-      clearCollectionFilters()
-    }
-  }, [account, resetSellAssets, setSellPageState, clearCollectionFilters])
-  const cartExpanded = useBag((state) => state.bagExpanded)
-  const isListingNfts = sellPageState === ProfilePageStateType.LISTING
+//   useEffect(() => {
+//     if (accountRef.current !== account) {
+//       accountRef.current = account
+//       resetSellAssets()
+//       setSellPageState(ProfilePageStateType.VIEWING)
+//       clearCollectionFilters()
+//     }
+//   }, [account, resetSellAssets, setSellPageState, clearCollectionFilters])
+//   const cartExpanded = useBag((state) => state.bagExpanded)
+//   const isListingNfts = sellPageState === ProfilePageStateType.LISTING
 
-  return (
-    <Trace page={InterfacePageName.NFT_PROFILE_PAGE} shouldLogImpression>
-      <ProfilePageWrapper>
-        {account ? (
-          <LoadedAccountPage cartExpanded={cartExpanded} isListingNfts={isListingNfts}>
-            {!isListingNfts ? <ProfilePage /> : <ListPage />}
-          </LoadedAccountPage>
-        ) : (
-          <Center>
-            <ThemedText.HeadlineMedium lineHeight="36px" color="textSecondary" fontWeight="600" marginBottom="24px">
-              <Trans>No items to display</Trans>
-            </ThemedText.HeadlineMedium>
-            <ConnectWalletButton onClick={toggleWalletDrawer}>
-              <ThemedText.SubHeader color="white" lineHeight="20px">
-                <Trans>Connect Wallet</Trans>
-              </ThemedText.SubHeader>
-            </ConnectWalletButton>
-          </Center>
-        )}
-      </ProfilePageWrapper>
-    </Trace>
-  )
-}
+//   return (
+//     <Trace page={InterfacePageName.NFT_PROFILE_PAGE} shouldLogImpression>
+//       <ProfilePageWrapper>
+//         {account ? (
+//           <LoadedAccountPage cartExpanded={cartExpanded} isListingNfts={isListingNfts}>
+//             {!isListingNfts ? <ProfilePage /> : <ListPage />}
+//           </LoadedAccountPage>
+//         ) : (
+//           <Center>
+//             <ThemedText.HeadlineMedium lineHeight="36px" color="textSecondary" fontWeight="600" marginBottom="24px">
+//               <Trans>No items to display</Trans>
+//             </ThemedText.HeadlineMedium>
+//             <ConnectWalletButton onClick={toggleWalletDrawer}>
+//               <ThemedText.SubHeader color="white" lineHeight="20px">
+//                 <Trans>Connect Wallet</Trans>
+//               </ThemedText.SubHeader>
+//             </ConnectWalletButton>
+//           </Center>
+//         )}
+//       </ProfilePageWrapper>
+//     </Trace>
+//   )
+// }
 
-const Profile = () => {
-  return (
-    <Suspense fallback={<ProfilePageLoadingSkeleton />}>
-      <ProfileContent />
-    </Suspense>
-  )
-}
+// const Profile = () => {
+//   return (
+//     <Suspense fallback={<ProfilePageLoadingSkeleton />}>
+//       <ProfileContent />
+//     </Suspense>
+//   )
+// }
 
-export default Profile
+// export default Profile

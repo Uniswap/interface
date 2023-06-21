@@ -51,10 +51,10 @@ import FaucetsPage from './Faucet'
 const TokenDetails = lazy(() => import('./TokenDetails'))
 const Vote = lazy(() => import('./Vote'))
 const Wallet = lazy(() => import('./Wallet'))
-const NftExplore = lazy(() => import('nft/pages/explore'))
-const Collection = lazy(() => import('nft/pages/collection'))
-const Profile = lazy(() => import('nft/pages/profile/profile'))
-const Asset = lazy(() => import('nft/pages/asset/Asset'))
+// const NftExplore = lazy(() => import('nft/pages/explore'))
+// const Collection = lazy(() => import('nft/pages/collection'))
+// const Profile = lazy(() => import('nft/pages/profile/profile'))
+// const Asset = lazy(() => import('nft/pages/asset/Asset'))
 
 const BodyWrapper = styled.div`
   display: flex;
@@ -285,55 +285,6 @@ export default function App() {
 
                   <Route path="migrate/v2" element={<MigrateV2 />} />
                   <Route path="migrate/v2/:address" element={<MigrateV2Pair />} />
-
-                  {false && (
-                    <>
-                      <Route
-                        path="/nfts"
-                        element={
-                          <Suspense fallback={null}>
-                            <NftExplore />
-                          </Suspense>
-                        }
-                      />
-
-                      <Route
-                        path="/nfts/asset/:contractAddress/:tokenId"
-                        element={
-                          <Suspense fallback={null}>
-                            <Asset />
-                          </Suspense>
-                        }
-                      />
-
-                      <Route
-                        path="/nfts/profile"
-                        element={
-                          <Suspense fallback={null}>
-                            <Profile />
-                          </Suspense>
-                        }
-                      />
-
-                      <Route
-                        path="/nfts/collection/:contractAddress"
-                        element={
-                          <Suspense fallback={null}>
-                            <Collection />
-                          </Suspense>
-                        }
-                      />
-
-                      <Route
-                        path="/nfts/collection/:contractAddress/activity"
-                        element={
-                          <Suspense fallback={null}>
-                            <Collection />
-                          </Suspense>
-                        }
-                      />
-                    </>
-                  )}
 
                   <Route path="*" element={<Navigate to="/not-found" replace />} />
                   <Route path="/not-found" element={<NotFound />} />

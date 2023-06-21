@@ -117,44 +117,44 @@ const BuyNowLoadingMobile = styled(Column)`
   }
 `
 
-export const AssetDetailsLoading = () => {
-  const theme = useTheme()
+// export const AssetDetailsLoading = () => {
+//   const theme = useTheme()
 
-  return (
-    <LoadingContainer>
-      <StyledColumn>
-        <LoaderContainer>
-          <Loader stroke={theme.accentAction} size="40px" />
-        </LoaderContainer>
-        <BuyNowLoadingMobile>
-          <Column>
-            <Title />
-            <SubTitle />
-          </Column>
-          <BuyNowContainer />
-          <Column>
-            <Seller />
-            <SellerAddress />
-          </Column>
-        </BuyNowLoadingMobile>
-        <PrimaryContent>
-          <PrimaryBody />
-          <ActivityLoader />
-          <PrimaryBody />
-          <PrimaryBody />
-        </PrimaryContent>
-      </StyledColumn>
-      <BuyNowLoadingDesktop>
-        <Column>
-          <Title />
-          <SubTitle />
-        </Column>
-        <BuyNowContainer />
-        <Column>
-          <Seller />
-          <SellerAddress />
-        </Column>
-      </BuyNowLoadingDesktop>
-    </LoadingContainer>
-  )
-}
+//   return (
+//     <LoadingContainer>
+//       <StyledColumn>
+//         <LoaderContainer>
+//           <Loader stroke={theme.accentAction} size="40px" />
+//         </LoaderContainer>
+//         <BuyNowLoadingMobile>
+//           <Column>
+//             <Title />
+//             <SubTitle />
+//           </Column>
+//           <BuyNowContainer />
+//           <Column>
+//             <Seller />
+//             <SellerAddress />
+//           </Column>
+//         </BuyNowLoadingMobile>
+//         <PrimaryContent>
+//           <PrimaryBody />
+//           <ActivityLoader />
+//           <PrimaryBody />
+//           <PrimaryBody />
+//         </PrimaryContent>
+//       </StyledColumn>
+//       <BuyNowLoadingDesktop>
+//         <Column>
+//           <Title />
+//           <SubTitle />
+//         </Column>
+//         <BuyNowContainer />
+//         <Column>
+//           <Seller />
+//           <SellerAddress />
+//         </Column>
+//       </BuyNowLoadingDesktop>
+//     </LoadingContainer>
+//   )
+// }

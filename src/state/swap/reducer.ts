@@ -1,7 +1,7 @@
 import { createReducer } from '@reduxjs/toolkit'
 import { parsedQueryString } from 'hooks/useParsedQueryString'
 
-import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies, typeInput, setLeverageFactor, setHideClosedLeveragePositions, setLeverage, setLeverageManagerAddress, ActiveSwapTab, setActiveTab, setLTV, setBorrowManagerAddress } from './actions'
+import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies, typeInput, setLeverageFactor, setHideClosedLeveragePositions, setLeverage, setLeverageManagerAddress, ActiveSwapTab, setActiveTab, setLTV, setBorrowManagerAddress, setPremium } from './actions'
 import { queryParametersToSwapState } from './hooks'
 import { statsText } from 'nft/components/collection/CollectionStats.css'
 
@@ -23,6 +23,7 @@ export interface SwapState {
   readonly activeTab: ActiveSwapTab
   readonly ltv: string | undefined | null
   readonly borrowManagerAddress: string | undefined | null
+  readonly premium: string | undefined | null
 }
 
 const initialState: SwapState = queryParametersToSwapState(parsedQueryString())
@@ -31,7 +32,13 @@ export default createReducer<SwapState>(initialState, (builder) =>
   builder
     .addCase(
       replaceSwapState,
-      (state, { payload: { typedValue, recipient, field, inputCurrencyId, outputCurrencyId, leverage, leverageFactor, hideClosedLeveragePositions, leverageManagerAddress, activeTab, ltv, borrowManagerAddress } }) => {
+      (state, { payload: { 
+        typedValue, recipient, field, inputCurrencyId, 
+        outputCurrencyId, leverage, leverageFactor, 
+        hideClosedLeveragePositions, leverageManagerAddress, 
+        activeTab, ltv, borrowManagerAddress,
+        premium
+      } }) => {
         return {
           [Field.INPUT]: {
             currencyId: inputCurrencyId ?? null,
@@ -48,7 +55,8 @@ export default createReducer<SwapState>(initialState, (builder) =>
           leverageManagerAddress: leverageManagerAddress ?? null,
           activeTab: activeTab,
           ltv: ltv ?? null,
-          borrowManagerAddress: borrowManagerAddress ?? null
+          borrowManagerAddress: borrowManagerAddress ?? null,
+          premium: premium ?? null
         }
       }
     )
@@ -129,5 +137,9 @@ export default createReducer<SwapState>(initialState, (builder) =>
     .addCase(setBorrowManagerAddress, (state, { payload: { borrowManagerAddress } }) => ({
       ...state,
       borrowManagerAddress
+    }))
+    .addCase(setPremium, (state, { payload: { premium } }) => ({
+      ...state,
+      premium
     }))
 )
