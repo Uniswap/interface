@@ -209,8 +209,9 @@ function Web3StatusInner() {
 }
 
 export default function Web3Status() {
+  const [isDrawerOpen] = useAccountDrawer()
   return (
-    <PrefetchBalancesWrapper>
+    <PrefetchBalancesWrapper shouldFetchOnAccountUpdate={isDrawerOpen}>
       <Web3StatusInner />
       <Portal>
         <PortfolioDrawer />

@@ -5,6 +5,8 @@ import { useWeb3React } from '@web3-react/core'
 import Loader from 'components/Icons/LoadingSpinner'
 import TokenSafetyIcon from 'components/TokenSafety/TokenSafetyIcon'
 import { checkWarning } from 'constants/tokenSafety'
+import { parseUnits } from 'ethers/lib/utils'
+import { TokenBalances } from 'lib/hooks/useTokenList/sorting'
 import { CSSProperties, MutableRefObject, useCallback, useMemo } from 'react'
 import { Check } from 'react-feather'
 import { FixedSizeList } from 'react-window'
@@ -12,7 +14,6 @@ import { Text } from 'rebass'
 import styled from 'styled-components/macro'
 
 import { useIsUserAddedToken } from '../../../hooks/Tokens'
-import { useCurrencyBalance } from '../../../state/connection/hooks'
 import { WrappedTokenInfo } from '../../../state/lists/wrappedTokenInfo'
 import { ThemedText } from '../../../theme'
 import Column, { AutoColumn } from '../../Column'
@@ -115,6 +116,7 @@ export function CurrencyRow({
   style,
   showCurrencyAmount,
   eventProperties,
+  balance,
 }: {
   currency: Currency
   onSelect: (hasWarning: boolean) => void
@@ -123,11 +125,11 @@ export function CurrencyRow({
   style?: CSSProperties
   showCurrencyAmount?: boolean
   eventProperties: Record<string, unknown>
+  balance?: CurrencyAmount<Currency>
 }) {
   const { account } = useWeb3React()
   const key = currencyKey(currency)
   const customAdded = useIsUserAddedToken(currency)
-  const balance = useCurrencyBalance(account ?? undefined, currency)
   const warning = currency.isNative ? null : checkWarning(currency.address)
   const isBlockedToken = !!warning && !warning.canProceed
   const blockedTokenOpacity = '0.6'
@@ -235,6 +237,7 @@ export default function CurrencyList({
   isLoading,
   searchQuery,
   isAddressSearch,
+  balances,
 }: {
   height: number
   currencies: Currency[]
@@ -247,6 +250,7 @@ export default function CurrencyList({
   isLoading: boolean
   searchQuery: string
   isAddressSearch: string | false
+  balances: TokenBalances
 }) {
   const itemData: Currency[] = useMemo(() => {
     if (otherListTokens && otherListTokens?.length > 0) {
@@ -260,7 +264,13 @@ export default function CurrencyList({
       const row: Currency = data[index]
 
       const currency = row
-
+      const balance = CurrencyAmount.fromRawAmount(
+        currency,
+        parseUnits(
+          String(balances[currency.isNative ? 'ETH' : currency.address?.toLowerCase()]?.balance ?? 0),
+          currency.decimals
+        ).toString()
+      )
       const isSelected = Boolean(currency && selectedCurrency && selectedCurrency.equals(currency))
       const otherSelected = Boolean(currency && otherCurrency && otherCurrency.equals(currency))
       const handleSelect = (hasWarning: boolean) => currency && onCurrencySelect(currency, hasWarning)
@@ -279,13 +289,23 @@ export default function CurrencyList({
             otherSelected={otherSelected}
             showCurrencyAmount={showCurrencyAmount}
             eventProperties={formatAnalyticsEventProperties(token, index, data, searchQuery, isAddressSearch)}
+            balance={balance}
           />
         )
       } else {
         return null
       }
     },
-    [onCurrencySelect, otherCurrency, selectedCurrency, showCurrencyAmount, isLoading, isAddressSearch, searchQuery]
+    [
+      selectedCurrency,
+      otherCurrency,
+      isLoading,
+      onCurrencySelect,
+      showCurrencyAmount,
+      searchQuery,
+      isAddressSearch,
+      balances,
+    ]
   )
 
   const itemKey = useCallback((index: number, data: typeof itemData) => {

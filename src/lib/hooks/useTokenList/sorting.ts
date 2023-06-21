@@ -14,12 +14,15 @@ function balanceComparator(a?: number, b?: number) {
   return 0
 }
 
-type TokenBalances = { [tokenAddress: string]: number }
+export type TokenBalances = { [tokenAddress: string]: { usdValue: number; balance: number } }
 
 /** Sorts tokens by currency amount (descending), then safety, then symbol (ascending). */
 export function tokenComparator(balances: TokenBalances, a: Token, b: Token) {
   // Sorts by balances
-  const balanceComparison = balanceComparator(balances[a.address.toLowerCase()], balances[b.address.toLowerCase()])
+  const balanceComparison = balanceComparator(
+    balances[a.address.toLowerCase()]?.usdValue,
+    balances[b.address.toLowerCase()]?.usdValue
+  )
   if (balanceComparison !== 0) return balanceComparison
 
   // Sorts by symbol

@@ -12,7 +12,7 @@ import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useToggle from 'hooks/useToggle'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { getTokenFilter } from 'lib/hooks/useTokenList/filtering'
-import { tokenComparator, useSortTokensByQuery } from 'lib/hooks/useTokenList/sorting'
+import { TokenBalances, tokenComparator, useSortTokensByQuery } from 'lib/hooks/useTokenList/sorting'
 import { ChangeEvent, KeyboardEvent, RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { FixedSizeList } from 'react-window'
@@ -97,7 +97,7 @@ export function CurrencySearch({
     fetchPolicy: 'cache-only', // PrefetchBalancesWrapper handles balance fetching/staleness; this component only reads from cache
     errorPolicy: 'all',
   })
-  const usdBalances = useMemo(() => {
+  const balances: TokenBalances = useMemo(() => {
     return (
       data?.portfolios?.[0].tokenBalances?.reduce((balanceMap, tokenBalance) => {
         if (
@@ -106,11 +106,13 @@ export function CurrencySearch({
           tokenBalance.token?.address !== undefined &&
           tokenBalance.denominatedValue?.value !== undefined
         ) {
-          const address = tokenBalance.token?.standard === 'ERC20' ? tokenBalance.token?.address : 'ETH'
-          balanceMap[address] = tokenBalance.denominatedValue?.value ?? 0
+          const address = tokenBalance.token?.standard === 'ERC20' ? tokenBalance.token?.address?.toLowerCase() : 'ETH'
+          const usdValue = tokenBalance.denominatedValue?.value
+          const balance = tokenBalance.quantity
+          balanceMap[address] = { usdValue, balance: balance ?? 0 }
         }
         return balanceMap
-      }, {} as { [address: string]: number }) ?? {}
+      }, {} as TokenBalances) ?? {}
     )
   }, [chainId, data?.portfolios])
 
@@ -120,22 +122,22 @@ export function CurrencySearch({
         ? filteredTokens
             .filter((token) => {
               if (onlyShowCurrenciesWithBalance) {
-                return usdBalances[token.address] > 0
+                return balances[token.address?.toLowerCase()]?.usdValue > 0
               }
 
               // If there is no query, filter out unselected user-added tokens with no balance.
               if (!debouncedQuery && token instanceof UserAddedToken) {
                 if (selectedCurrency?.equals(token) || otherSelectedCurrency?.equals(token)) return true
-                return usdBalances[token.address.toLowerCase()] > 0
+                return balances[token.address.toLowerCase()]?.usdValue > 0
               }
               return true
             })
-            .sort(tokenComparator.bind(null, usdBalances))
+            .sort(tokenComparator.bind(null, balances))
         : [],
     [
       balancesAreLoading,
       filteredTokens,
-      usdBalances,
+      balances,
       onlyShowCurrenciesWithBalance,
       debouncedQuery,
       selectedCurrency,
@@ -154,7 +156,7 @@ export function CurrencySearch({
 
     const tokens = filteredSortedTokens.filter((t) => !(t.equals(wrapped) || (disableNonToken && t.isNative)))
     const shouldShowWrapped =
-      !onlyShowCurrenciesWithBalance || (!balancesAreLoading && usdBalances[wrapped.address] > 0)
+      !onlyShowCurrenciesWithBalance || (!balancesAreLoading && balances[wrapped.address]?.usdValue > 0)
     const natives = (
       disableNonToken || native.equals(wrapped) ? [wrapped] : shouldShowWrapped ? [native, wrapped] : [native]
     ).filter((n) => n.symbol?.toLowerCase()?.indexOf(s) !== -1 || n.name?.toLowerCase()?.indexOf(s) !== -1)
@@ -165,7 +167,7 @@ export function CurrencySearch({
     filteredSortedTokens,
     onlyShowCurrenciesWithBalance,
     balancesAreLoading,
-    usdBalances,
+    balances,
     wrapped,
     disableNonToken,
     native,
@@ -303,6 +305,7 @@ export function CurrencySearch({
                   isLoading={isLoading}
                   searchQuery={searchQuery}
                   isAddressSearch={isAddressSearch}
+                  balances={balances}
                 />
               )}
             </AutoSizer>

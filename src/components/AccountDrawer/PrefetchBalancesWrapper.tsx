@@ -1,11 +1,10 @@
 import { useWeb3React } from '@web3-react/core'
 import { usePortfolioBalancesLazyQuery } from 'graphql/data/__generated__/types-and-hooks'
 import usePrevious from 'hooks/usePrevious'
-import { PropsWithChildren, useCallback, useEffect, useMemo, useState } from 'react'
+import { atom, useAtom } from 'jotai'
+import { PropsWithChildren, useCallback, useEffect, useMemo } from 'react'
 import { useAllTransactions } from 'state/transactions/hooks'
 import { TransactionDetails } from 'state/transactions/types'
-
-import { useAccountDrawer } from '.'
 
 const isTxPending = (tx: TransactionDetails) => !tx.receipt
 function wasPending(previousTxs: { [hash: string]: TransactionDetails | undefined }, current: TransactionDetails) {
@@ -35,19 +34,23 @@ function useHasUpdatedTx(account: string | undefined) {
   }, [account, currentChainTxs, previousPendingTxs])
 }
 
+const hasUnfetchedBalancesAtom = atom<boolean>(true)
+
 /* Prefetches & caches portfolio balances when the wrapped component is hovered or the user completes a transaction */
-export default function PrefetchBalancesWrapper({ children }: PropsWithChildren) {
+export default function PrefetchBalancesWrapper({
+  children,
+  shouldFetchOnAccountUpdate,
+}: PropsWithChildren<{ shouldFetchOnAccountUpdate: boolean }>) {
   const { account } = useWeb3React()
   const [prefetchPortfolioBalances] = usePortfolioBalancesLazyQuery()
-  const [drawerOpen] = useAccountDrawer()
 
-  const [hasUnfetchedBalances, setHasUnfetchedBalances] = useState(true)
+  const [hasUnfetchedBalances, setHasUnfetchedBalances] = useAtom(hasUnfetchedBalancesAtom)
   const fetchBalances = useCallback(() => {
     if (account) {
       prefetchPortfolioBalances({ variables: { ownerAddress: account } })
       setHasUnfetchedBalances(false)
     }
-  }, [account, prefetchPortfolioBalances])
+  }, [account, prefetchPortfolioBalances, setHasUnfetchedBalances])
 
   const prevAccount = usePrevious(account)
 
@@ -57,14 +60,15 @@ export default function PrefetchBalancesWrapper({ children }: PropsWithChildren)
   useEffect(() => {
     const accountChanged = prevAccount !== undefined && prevAccount !== account
     if (hasUpdatedTx || accountChanged) {
-      // If the drawer is open, fetch balances immediately, else set a flag to fetch on next hover
-      if (drawerOpen) {
+      // The parent configures whether these conditions should trigger an immediate fetch,
+      // if not, we set a flag to fetch on next hover.
+      if (shouldFetchOnAccountUpdate) {
         fetchBalances()
       } else {
         setHasUnfetchedBalances(true)
       }
     }
-  }, [account, prevAccount, drawerOpen, fetchBalances, hasUpdatedTx])
+  }, [account, prevAccount, shouldFetchOnAccountUpdate, fetchBalances, hasUpdatedTx, setHasUnfetchedBalances])
 
   const onHover = useCallback(() => {
     if (hasUnfetchedBalances) fetchBalances()

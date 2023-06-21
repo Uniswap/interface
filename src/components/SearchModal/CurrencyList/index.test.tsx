@@ -42,6 +42,7 @@ it('renders loading rows when isLoading is true', () => {
       isLoading={true}
       searchQuery=""
       isAddressSearch=""
+      balances={{}}
     />
   )
   expect(component.findByTestId('loading-rows')).toBeTruthy()
@@ -61,6 +62,7 @@ it('renders currency rows correctly when currencies list is non-empty', () => {
       isLoading={false}
       searchQuery=""
       isAddressSearch=""
+      balances={{}}
     />
   )
   expect(screen.getByText('Wrapped BTC')).toBeInTheDocument()
