@@ -54,7 +54,6 @@ export default function PrefetchBalancesWrapper({
 
   const prevAccount = usePrevious(account)
 
-  // TODO(cartcrom): add delay for refetching on optimism, as there is high latency in new balances being available
   const hasUpdatedTx = useHasUpdatedTx(account)
   // Listens for account changes & recently updated transactions to keep portfolio balances fresh in apollo cache
   useEffect(() => {
