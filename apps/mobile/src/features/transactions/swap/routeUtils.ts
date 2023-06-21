@@ -7,6 +7,7 @@ import { PoolType, QuoteResult, V2PoolInRoute, V3PoolInRoute } from 'src/feature
 import { Trade } from 'src/features/transactions/swap/useTrade'
 import { EMPTY_ARRAY } from 'wallet/src/constants/misc'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
+import { getCurrencyAmount, ValueType } from 'wallet/src/utils/getCurrencyAmount'
 
 export function transformQuoteToTrade(
   tokenInIsNative: boolean,
@@ -95,10 +96,20 @@ export function computeRoutes(
       if (route.length === 0) {
         throw new Error('Expected route to have at least one pair or pool')
       }
-      const rawAmountIn = route[0]?.amountIn
-      const rawAmountOut = route[route.length - 1]?.amountOut
 
-      if (!rawAmountIn || !rawAmountOut) {
+      const inputAmount = getCurrencyAmount({
+        value: route[0]?.amountIn,
+        valueType: ValueType.Raw,
+        currency: parsedCurrencyIn,
+      })
+
+      const outputAmount = getCurrencyAmount({
+        value: route[route.length - 1]?.amountOut,
+        valueType: ValueType.Raw,
+        currency: parsedCurrencyOut,
+      })
+
+      if (!inputAmount || !outputAmount) {
         throw new Error('Expected both amountIn and amountOut to be present')
       }
 
@@ -116,8 +127,8 @@ export function computeRoutes(
           !isOnlyV3 && !isOnlyV2
             ? new MixedRouteSDK(route.map(parsePoolOrPair), parsedCurrencyIn, parsedCurrencyOut)
             : null,
-        inputAmount: CurrencyAmount.fromRawAmount(parsedCurrencyIn, rawAmountIn),
-        outputAmount: CurrencyAmount.fromRawAmount(parsedCurrencyOut, rawAmountOut),
+        inputAmount,
+        outputAmount,
       }
     })
   } catch (e) {

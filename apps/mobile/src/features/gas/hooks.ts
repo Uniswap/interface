@@ -1,4 +1,3 @@
-import { CurrencyAmount } from '@uniswap/sdk-core'
 import { BigNumber, providers } from 'ethers'
 import { useMemo } from 'react'
 import { TRANSACTION_CANCELLATION_GAS_FACTOR } from 'src/constants/transactions'
@@ -9,12 +8,15 @@ import { useTransactionGasFee } from 'wallet/src/features/gas/hooks'
 import { FeeType, GasSpeed } from 'wallet/src/features/gas/types'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
 import { TransactionDetails } from 'wallet/src/features/transactions/types'
+import { getCurrencyAmount, ValueType } from 'wallet/src/utils/getCurrencyAmount'
 
 export function useUSDValue(chainId?: ChainId, ethValueInWei?: string): string | undefined {
-  const currencyAmount =
-    ethValueInWei && chainId
-      ? CurrencyAmount.fromRawAmount(NativeCurrency.onChain(chainId), ethValueInWei)
-      : undefined
+  const currency = chainId ? NativeCurrency.onChain(chainId) : undefined
+  const currencyAmount = getCurrencyAmount({
+    value: ethValueInWei,
+    valueType: ValueType.Raw,
+    currency,
+  })
 
   return useUSDCValue(currencyAmount)?.toExact()
 }

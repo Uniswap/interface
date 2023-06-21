@@ -1,10 +1,10 @@
-import { CurrencyAmount } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { hasSufficientFundsIncludingGas } from 'src/features/transactions/utils'
 import { ChainId } from 'wallet/src/constants/chains'
 import { TransactionGasFeeInfo } from 'wallet/src/features/gas/types'
 import { useOnChainNativeCurrencyBalance } from 'wallet/src/features/portfolio/api'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
+import { getCurrencyAmount, ValueType } from 'wallet/src/utils/getCurrencyAmount'
 
 export function useHasSufficientFunds({
   account,
@@ -24,9 +24,12 @@ export function useHasSufficientFunds({
   )
 
   const hasSufficientFunds = useMemo(() => {
-    const transactionAmount = value
-      ? CurrencyAmount.fromRawAmount(nativeCurrency, value)
-      : undefined
+    const transactionAmount =
+      getCurrencyAmount({
+        value,
+        valueType: ValueType.Raw,
+        currency: nativeCurrency,
+      }) ?? undefined
 
     return hasSufficientFundsIncludingGas({
       transactionAmount,

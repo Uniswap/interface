@@ -1,6 +1,7 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import JSBI from 'jsbi'
 import { ChainId } from 'wallet/src/constants/chains'
+import { getCurrencyAmount, ValueType } from 'wallet/src/utils/getCurrencyAmount'
 
 const NATIVE_CURRENCY_DECIMALS = 18
 
@@ -31,31 +32,36 @@ export function maxAmountSpend(
   currencyAmount?: CurrencyAmount<Currency> | null
 ): CurrencyAmount<Currency> | undefined {
   if (!currencyAmount) return undefined
-  if (currencyAmount.currency.isNative) {
-    let minAmount
-    switch (currencyAmount.currency.chainId) {
-      case ChainId.Mainnet:
-        minAmount = MIN_ETH_FOR_GAS
-        break
-      case ChainId.Polygon:
-        minAmount = MIN_POLYGON_FOR_GAS
-        break
-      case ChainId.ArbitrumOne:
-        minAmount = MIN_ARBITRUM_FOR_GAS
-        break
-      case ChainId.Optimism:
-        minAmount = MIN_OPTIMISM_FOR_GAS
-        break
-    }
-    if (!minAmount) return undefined
-    if (JSBI.greaterThan(currencyAmount.quotient, minAmount)) {
-      return CurrencyAmount.fromRawAmount(
-        currencyAmount.currency,
-        JSBI.subtract(currencyAmount.quotient, minAmount)
-      )
-    } else {
-      return CurrencyAmount.fromRawAmount(currencyAmount.currency, JSBI.BigInt(0))
-    }
+  if (!currencyAmount.currency.isNative) return currencyAmount
+
+  let minAmount
+  switch (currencyAmount.currency.chainId) {
+    case ChainId.Mainnet:
+      minAmount = MIN_ETH_FOR_GAS
+      break
+    case ChainId.Polygon:
+      minAmount = MIN_POLYGON_FOR_GAS
+      break
+    case ChainId.ArbitrumOne:
+      minAmount = MIN_ARBITRUM_FOR_GAS
+      break
+    case ChainId.Optimism:
+      minAmount = MIN_OPTIMISM_FOR_GAS
+      break
+    default:
+      return undefined
   }
-  return currencyAmount
+
+  // If amount is negative then set it to 0
+  const amount = JSBI.greaterThan(currencyAmount.quotient, minAmount)
+    ? JSBI.subtract(currencyAmount.quotient, minAmount).toString()
+    : '0'
+
+  return (
+    getCurrencyAmount({
+      value: amount,
+      valueType: ValueType.Raw,
+      currency: currencyAmount.currency,
+    }) ?? undefined
+  )
 }

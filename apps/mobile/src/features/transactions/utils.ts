@@ -9,6 +9,7 @@ import {
   FinalizedTransactionStatus,
   TransactionStatus,
 } from 'wallet/src/features/transactions/types'
+import { getCurrencyAmount, ValueType } from 'wallet/src/utils/getCurrencyAmount'
 
 export function getSerializableTransactionRequest(
   request: providers.TransactionRequest,
@@ -39,8 +40,13 @@ function getNativeCurrencyTotalSpend(
 ): Maybe<CurrencyAmount<NativeCurrency>> {
   if (!gasFee || !nativeCurrency) return value
 
-  const gasFeeAmount = CurrencyAmount.fromRawAmount(nativeCurrency, gasFee)
-  return value ? gasFeeAmount.add(value) : gasFeeAmount
+  const gasFeeAmount =
+    getCurrencyAmount({
+      value: gasFee,
+      valueType: ValueType.Raw,
+      currency: nativeCurrency,
+    }) ?? undefined
+  return value && gasFeeAmount ? gasFeeAmount.add(value) : gasFeeAmount
 }
 
 export function hasSufficientFundsIncludingGas(params: {
