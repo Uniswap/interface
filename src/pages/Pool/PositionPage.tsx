@@ -827,6 +827,7 @@ function PositionPageContent() {
                         {ownsNFT &&
                         (feeValue0?.greaterThan(0) || feeValue1?.greaterThan(0) || !!collectMigrationHash) ? (
                           <ResponsiveButtonConfirmed
+                            data-testid="collect-fees-button"
                             disabled={collecting || !!collectMigrationHash}
                             confirmed={!!collectMigrationHash && !isCollectPending}
                             width="fit-content"
