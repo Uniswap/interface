@@ -18,7 +18,7 @@ const Container = styled.button<{ disabled: boolean }>`
   display: grid;
   grid-template-columns: min-content 1fr min-content;
   justify-content: space-between;
-  line-height: 24px;
+  line-height: 20px;
   opacity: ${({ disabled }) => (disabled ? 0.6 : 1)};
   padding: 10px 8px;
   text-align: left;

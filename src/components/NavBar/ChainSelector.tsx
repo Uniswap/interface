@@ -71,11 +71,13 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
   const showTestnets = useAtomValue(showTestnetsAtom)
   const walletSupportsChain = useWalletSupportedChains()
 
-  const chains = useMemo(() => {
-    return (
-      showTestnets ? NETWORK_SELECTOR_CHAINS : NETWORK_SELECTOR_CHAINS.filter((chain) => !TESTNET_CHAIN_IDS.has(chain))
-    ).sort((a) => (walletSupportsChain.includes(a) ? -1 : 1))
-  }, [showTestnets, walletSupportsChain])
+  const chains = useMemo(
+    () =>
+      NETWORK_SELECTOR_CHAINS.filter((chain) => showTestnets || !TESTNET_CHAIN_IDS.has(chain)).sort((a) =>
+        walletSupportsChain.includes(a) ? -1 : 1
+      ),
+    [showTestnets, walletSupportsChain]
+  )
 
   const ref = useRef<HTMLDivElement>(null)
   const modalRef = useRef<HTMLDivElement>(null)
