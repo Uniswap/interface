@@ -248,7 +248,7 @@ export const USDC_AVALANCHE = new Token(
   '0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E',
   6,
   'USDC',
-  'USD//C'
+  'USDC Token'
 )
 export const USDT_AVALANCHE = new Token(
   ChainId.AVALANCHE,
@@ -268,8 +268,8 @@ export const DAI_AVALANCHE = new Token(
   ChainId.AVALANCHE,
   '0xd586E7F844cEa2F87f50152665BCbc2C279D8d70',
   18,
-  'DAI',
-  'Dai Stablecoin'
+  'DAI.e',
+  'Dai.e Token'
 )
 
 export const UNI: { [chainId: number]: Token } = {
