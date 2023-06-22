@@ -163,6 +163,11 @@ const userSlice = createSlice({
         state.userRouterPreference = RouterPreference.AUTO
       }
 
+      //If `buyFiatFlowCompleted` is present, delete it
+      if ('buyFiatFlowCompleted' in state) {
+        delete state.buyFiatFlowCompleted
+      }
+
       state.lastUpdateVersionTimestamp = currentTimestamp()
     })
   },
