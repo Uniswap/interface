@@ -19,7 +19,7 @@ runs:
         path: |
           node_modules
           !node_modules/.cache
-        key: ${{ runner.os }}-install-${{ hashFiles('**/yarn.lock') }}
+        key: ${{ runner.os }}-install-${{ hashFiles('yarn.lock') }}
     - if: steps.install-cache.outputs.cache-hit != 'true'
       run: yarn install --frozen-lockfile --ignore-scripts
       shell: bash

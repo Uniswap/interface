@@ -22,8 +22,8 @@ jobs:
       - uses: ./.github/actions/cache-on-main
         with:
           path: node_modules/.cache
-          key: ${{ runner.os }}-eslint-${{ hashFiles('**/yarn.lock') }}-${{ github.run_id }}
-          restore-keys: ${{ runner.os }}-eslint-${{ hashFiles('**/yarn.lock') }}-
+          key: ${{ runner.os }}-eslint-${{ hashFiles('yarn.lock') }}-${{ github.run_id }}
+          restore-keys: ${{ runner.os }}-eslint-${{ hashFiles('yarn.lock') }}-
       - run: yarn lint
       - if: failure() && github.ref_name == 'main'
         uses: ./.github/actions/report
@@ -39,8 +39,8 @@ jobs:
       - uses: ./.github/actions/cache-on-main
         with:
           path: node_modules/.cache
-          key: ${{ runner.os }}-tsc-${{ hashFiles('**/yarn.lock') }}-${{ github.run_id }}
-          restore-keys: ${{ runner.os }}-tsc-${{ hashFiles('**/yarn.lock') }}-
+          key: ${{ runner.os }}-tsc-${{ hashFiles('yarn.lock') }}-${{ github.run_id }}
+          restore-keys: ${{ runner.os }}-tsc-${{ hashFiles('yarn.lock') }}-
       - run: yarn typecheck
       - if: failure() && github.ref_name == 'main'
         uses: ./.github/actions/report
@@ -68,8 +68,8 @@ jobs:
       - uses: ./.github/actions/cache-on-main
         with:
           path: node_modules/.cache
-          key: ${{ runner.os }}-jest-${{ hashFiles('**/yarn.lock') }}-${{ github.run_id }}
-          restore-keys: ${{ runner.os }}-jest-${{ hashFiles('**/yarn.lock') }}-
+          key: ${{ runner.os }}-jest-${{ hashFiles('yarn.lock') }}-${{ github.run_id }}
+          restore-keys: ${{ runner.os }}-jest-${{ hashFiles('yarn.lock') }}-
       - run: yarn test --coverage --maxWorkers=100%
       - uses: codecov/codecov-action@v3
         with:
@@ -90,8 +90,8 @@ jobs:
       - uses: ./.github/actions/cache-on-main
         with:
           path: node_modules/.cache
-          key: ${{ runner.os }}-build-e2e-${{ hashFiles('**/yarn.lock') }}-${{ github.run_id }}
-          restore-keys: ${{ runner.os }}-build-e2e-${{ hashFiles('**/yarn.lock') }}-
+          key: ${{ runner.os }}-build-e2e-${{ hashFiles('yarn.lock') }}-${{ github.run_id }}
+          restore-keys: ${{ runner.os }}-build-e2e-${{ hashFiles('yarn.lock') }}-
       - run: yarn build:e2e
         env:
           NODE_OPTIONS: "--max_old_space_size=4096"
