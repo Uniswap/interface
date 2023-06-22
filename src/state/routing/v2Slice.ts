@@ -5,7 +5,7 @@ import ms from 'ms.macro'
 import { trace } from 'tracing/trace'
 
 import { GetQuoteArgs, INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference } from './slice'
-import { QuoteDataV2, QuoteState, TradeResult } from './types'
+import { QuoteDataV2, QuoteMethod, QuoteState, TradeResult } from './types'
 import { getRouter, isExactInput, shouldUseAPIRouter, transformRoutesToTrade } from './utils'
 
 const CLIENT_PARAMS = {
@@ -54,6 +54,7 @@ export const routingApiV2 = createApi({
         )
       },
       async queryFn(args: GetQuoteArgs, _api, _extraOptions, fetch) {
+        const fellBack = false
         if (shouldUseAPIRouter(args)) {
           try {
             const { tokenInAddress, tokenInChainId, tokenOutAddress, tokenOutChainId, amount, tradeType } = args
@@ -94,7 +95,7 @@ export const routingApiV2 = createApi({
             const quoteData = response.data as QuoteDataV2
             const tradeResult = transformRoutesToTrade(args, quoteData.quote)
 
-            return { data: tradeResult }
+            return { data: tradeResult, method: QuoteMethod.ROUTING_API }
           } catch (error: any) {
             console.warn(
               `GetQuote failed on API v2, falling back to client: ${error?.message ?? error?.detail ?? error}`
@@ -102,10 +103,11 @@ export const routingApiV2 = createApi({
           }
         }
         try {
+          const method = fellBack ? QuoteMethod.CLIENT_SIDE_FALLBACK : QuoteMethod.CLIENT_SIDE
           const router = getRouter(args.tokenInChainId)
           const quoteResult = await getClientSideQuote(args, router, CLIENT_PARAMS)
           if (quoteResult.state === QuoteState.SUCCESS) {
-            return { data: transformRoutesToTrade(args, quoteResult.data) }
+            return { data: transformRoutesToTrade(args, quoteResult.data), method }
           } else {
             return { data: quoteResult }
           }
