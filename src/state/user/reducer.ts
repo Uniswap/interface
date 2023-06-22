@@ -138,7 +138,7 @@ const userSlice = createSlice({
       // WALLET_CONNECT (v1) has been deprecated
       // @ts-expect-error
       if (state.selectedWallet === 'WALLET_CONNECT') {
-        state.selectedWallet = ConnectionType.UNISWAP_WALLET
+        state.selectedWallet = undefined
       }
 
       // If `userSlippageTolerance` is not present or its value is invalid, reset to default
