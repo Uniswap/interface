@@ -9,7 +9,7 @@ import { ParsedQs } from 'qs'
 import { ReactNode, useCallback, useEffect, useMemo } from 'react'
 import { AnyAction } from 'redux'
 import { useAppDispatch } from 'state/hooks'
-import { InterfaceTrade, TradeState } from 'state/routing/types'
+import { InterfaceTrade, QuoteMethod, TradeState } from 'state/routing/types'
 import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
 
 import { TOKEN_SHORTHANDS } from '../../constants/tokens'
@@ -83,6 +83,7 @@ export function useDerivedSwapInfo(
   trade: {
     trade?: InterfaceTrade
     state: TradeState
+    method?: QuoteMethod
   }
   allowedSlippage: Percent
   autoSlippage: Percent

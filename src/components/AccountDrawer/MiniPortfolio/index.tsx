@@ -10,7 +10,7 @@ import { useEffect, useState } from 'react'
 import { shouldDisableNFTRoutesAtom } from 'state/application/atoms'
 import { useHasPendingTransactions } from 'state/transactions/hooks'
 import styled, { useTheme } from 'styled-components/macro'
-import { ThemedText } from 'theme'
+import { BREAKPOINTS, ThemedText } from 'theme'
 
 import { ActivityTab } from './Activity'
 import NFTs from './NFTs'
@@ -24,6 +24,10 @@ const Wrapper = styled(Column)`
   flex-direction: column;
   height: 100%;
   gap: 12px;
+
+  @media screen and (max-width: ${BREAKPOINTS.sm}px) {
+    margin-bottom: 48px;
+  }
 
   ${PortfolioRowWrapper} {
     &:hover {
