@@ -1,7 +1,7 @@
 import { Currency, CurrencyAmount, Percent, Price, Token } from '@uniswap/sdk-core'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
-import { ClassicTrade, InterfaceTrade } from 'state/routing/types'
-import { isClassicTrade } from 'state/routing/utils'
+import { InterfaceTrade } from 'state/routing/types'
+import { isClassicTrade, isUniswapXTrade } from 'state/routing/utils'
 import { computeRealizedPriceImpact } from 'utils/prices'
 
 export const getDurationUntilTimestampSeconds = (futureTimestampInSecondsSinceEpoch?: number): number | undefined => {
@@ -34,6 +34,29 @@ export const getPriceUpdateBasisPoints = (
   return formatPercentInBasisPointsNumber(changePercentage)
 }
 
+function formatCommonPropertiesForTrade(trade: InterfaceTrade) {
+  return {
+    routing: trade.fillType,
+    type: trade.tradeType,
+    ura_quote_id: isUniswapXTrade(trade) ? trade.quoteId : undefined,
+    ura_request_id: trade.requestId,
+    token_in_address: getTokenAddress(trade.inputAmount.currency),
+    token_out_address: getTokenAddress(trade.outputAmount.currency),
+    token_in_symbol: trade.inputAmount.currency.symbol,
+    token_out_symbol: trade.outputAmount.currency.symbol,
+    token_in_amount: formatToDecimal(trade.inputAmount, trade.inputAmount.currency.decimals),
+    token_out_amount: formatToDecimal(trade.outputAmount, trade.outputAmount.currency.decimals),
+    price_impact_basis_points: isClassicTrade(trade)
+      ? formatPercentInBasisPointsNumber(computeRealizedPriceImpact(trade))
+      : undefined,
+    chain_id:
+      trade.inputAmount.currency.chainId === trade.outputAmount.currency.chainId
+        ? trade.inputAmount.currency.chainId
+        : undefined,
+    estimated_network_fee_usd: isClassicTrade(trade) ? trade.gasUseEstimateUSD : trade.classicGasUseEstimateUSD,
+  }
+}
+
 export const formatSwapSignedAnalyticsEventProperties = ({
   trade,
   fiatValues,
@@ -44,36 +67,22 @@ export const formatSwapSignedAnalyticsEventProperties = ({
   txHash: string
 }) => ({
   transaction_hash: txHash,
-  token_in_address: getTokenAddress(trade.inputAmount.currency),
-  token_out_address: getTokenAddress(trade.outputAmount.currency),
-  token_in_symbol: trade.inputAmount.currency.symbol,
-  token_out_symbol: trade.outputAmount.currency.symbol,
-  token_in_amount: formatToDecimal(trade.inputAmount, trade.inputAmount.currency.decimals),
-  token_out_amount: formatToDecimal(trade.outputAmount, trade.outputAmount.currency.decimals),
   token_in_amount_usd: fiatValues.amountIn,
   token_out_amount_usd: fiatValues.amountOut,
-  price_impact_basis_points: isClassicTrade(trade)
-    ? formatPercentInBasisPointsNumber(computeRealizedPriceImpact(trade))
-    : undefined,
-  chain_id:
-    trade.inputAmount.currency.chainId === trade.outputAmount.currency.chainId
-      ? trade.inputAmount.currency.chainId
-      : undefined,
+  ...formatCommonPropertiesForTrade(trade),
 })
 
-export const formatSwapQuoteReceivedEventProperties = (trade: ClassicTrade, gasUseEstimateUSD?: string) => {
+export const formatSwapQuoteReceivedEventProperties = (
+  trade: InterfaceTrade,
+  allowedSlippage: Percent,
+  swapQuoteReceivedDate: Date
+) => {
   return {
-    token_in_symbol: trade.inputAmount.currency.symbol,
-    token_out_symbol: trade.outputAmount.currency.symbol,
-    token_in_address: getTokenAddress(trade.inputAmount.currency),
-    token_out_address: getTokenAddress(trade.outputAmount.currency),
-    price_impact_basis_points: trade ? formatPercentInBasisPointsNumber(computeRealizedPriceImpact(trade)) : undefined,
-    estimated_network_fee_usd: gasUseEstimateUSD,
-    chain_id:
-      trade.inputAmount.currency.chainId === trade.outputAmount.currency.chainId
-        ? trade.inputAmount.currency.chainId
-        : undefined,
-    token_in_amount: formatToDecimal(trade.inputAmount, trade.inputAmount.currency.decimals),
-    token_out_amount: formatToDecimal(trade.outputAmount, trade.outputAmount.currency.decimals),
+    ...formatCommonPropertiesForTrade(trade),
+    swap_quote_block_number: isClassicTrade(trade) ? trade.blockNumber : undefined,
+    swap_quote_received_timestamp: swapQuoteReceivedDate.getTime(),
+    allowed_slippage_basis_points: formatPercentInBasisPointsNumber(allowedSlippage),
+    token_in_amount_max: trade.maximumAmountIn(allowedSlippage),
+    token_out_amount_min: trade.minimumAmountOut(allowedSlippage),
   }
 }

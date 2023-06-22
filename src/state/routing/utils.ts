@@ -218,6 +218,7 @@ export function transformRoutesToTrade(
     tradeType,
     gasUseEstimateUSD: gasUseEstimateUSD ? parseFloat(gasUseEstimateUSD).toFixed(2).toString() : undefined,
     blockNumber,
+    requestId: data.quote.requestId,
     fromClientRouter,
   })
 
@@ -231,6 +232,7 @@ export function transformRoutesToTrade(
         orderInfo,
         tradeType,
         quoteId: data.quote.quoteId,
+        requestId: data.quote.requestId,
         classicGasUseEstimateUSD: classicTrade.gasUseEstimateUSD,
         needsWrap: needsWrapIfUniswapX,
       }),
