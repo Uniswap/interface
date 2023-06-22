@@ -7,14 +7,14 @@
 // } from '@uniswap/analytics-events'
 // import { Trade } from '@uniswap/router-sdk'
 // import { Currency, TradeType } from '@uniswap/sdk-core'
-import {
-  // AddEthereumChainParameter,
-  // DialogAnimationType,
-  // EMPTY_TOKEN_LIST,
-  // OnReviewSwapClick,
-  // SwapWidget,
-  SwapWidgetSkeleton,
-} from '@uniswap/widgets'
+// import {
+//   AddEthereumChainParameter,
+//   DialogAnimationType,
+//   EMPTY_TOKEN_LIST,
+//   OnReviewSwapClick,
+//   SwapWidget,
+//   SwapWidgetSkeleton,
+// } from '@uniswap/widgets'
 // import { useWeb3React } from '@web3-react/core'
 // import { useToggleWalletDrawer } from 'components/WalletDropdown'
 // import { useActiveLocale } from 'hooks/useActiveLocale'
@@ -33,16 +33,16 @@ import { useIsDarkMode } from 'theme/components/ThemeToggle'
 
 // import { DefaultTokens, SwapTokens, useSyncWidgetInputs } from './inputs'
 // import { useSyncWidgetSettings } from './settings'
-import { DARK_THEME, LIGHT_THEME } from './theme'
+// import { DARK_THEME, LIGHT_THEME } from './theme'
 // import { useSyncWidgetTransactions } from './transactions'
 
 export const DEFAULT_WIDGET_WIDTH = 360
 
 const WIDGET_ROUTER_URL = 'https://api.uniswap.org/v1/'
 
-function useWidgetTheme() {
-  return useIsDarkMode() ? DARK_THEME : LIGHT_THEME
-}
+// function useWidgetTheme() {
+//   return useIsDarkMode() ? DARK_THEME : LIGHT_THEME
+// }
 
 // interface WidgetProps {
 //   defaultTokens: DefaultTokens
@@ -196,7 +196,7 @@ function useWidgetTheme() {
 //   )
 // }
 
-export function WidgetSkeleton({ width = DEFAULT_WIDGET_WIDTH }: { width?: number | string }) {
-  const theme = useWidgetTheme()
-  return <SwapWidgetSkeleton theme={theme} width={width} />
-}
+// export function WidgetSkeleton({ width = DEFAULT_WIDGET_WIDTH }: { width?: number | string }) {
+//   const theme = useWidgetTheme()
+//   return <SwapWidgetSkeleton theme={theme} width={width} />
+// }

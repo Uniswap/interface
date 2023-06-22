@@ -99,9 +99,9 @@ export default function useDatafeed(
           onErrorCallback: (error: string) => void
         ) => {
           // console.log('[getBars]: Method call', symbolInfo, periodParams);
-          if (Object.values(SUPPORTED_RESOLUTIONS).find(str => str === resolution) === undefined) {
-            return onErrorCallback("[getBars] Invalid resolution");
-          }
+          // if (Object.values(SUPPORTED_RESOLUTIONS).find(str => str === resolution) === undefined) {
+          //   return onErrorCallback("[getBars] Invalid resolution");
+          // }
           const { poolAddress, invertPrice, useUniswapSubgraph } = symbolInfo;
           const { from, to, countBack } = periodParams;
 

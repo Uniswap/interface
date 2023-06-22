@@ -4,7 +4,7 @@ import { InterfacePageName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { ButtonPrimary } from 'components/Button'
 import { useToggleWalletDrawer } from 'components/WalletDropdown'
-import { XXXL_BAG_WIDTH } from 'nft/components/bag/Bag'
+// import { XXXL_BAG_WIDTH } from 'nft/components/bag/Bag'
 import { ListPage } from 'nft/components/profile/list/ListPage'
 import { ProfilePage } from 'nft/components/profile/view/ProfilePage'
 import { ProfilePageLoadingSkeleton } from 'nft/components/profile/view/ProfilePageLoadingSkeleton'
@@ -16,29 +16,29 @@ import { BREAKPOINTS, ThemedText } from 'theme'
 
 import { LIST_PAGE_MARGIN, LIST_PAGE_MARGIN_MOBILE } from './shared'
 
-const ProfilePageWrapper = styled.div`
-  height: 100%;
-  width: 100%;
-  scrollbar-width: none;
+// const ProfilePageWrapper = styled.div`
+//   height: 100%;
+//   width: 100%;
+//   scrollbar-width: none;
 
-  @media screen and (min-width: ${BREAKPOINTS.lg}px) {
-    height: auto;
-  }
-`
+//   @media screen and (min-width: ${BREAKPOINTS.lg}px) {
+//     height: auto;
+//   }
+// `
 
-const LoadedAccountPage = styled.div<{ cartExpanded: boolean; isListingNfts: boolean }>`
-  width: calc(
-    100% -
-      ${({ cartExpanded, isListingNfts }) =>
-        isListingNfts ? LIST_PAGE_MARGIN * 2 : cartExpanded ? XXXL_BAG_WIDTH : 0}px
-  );
-  margin: 0px ${({ isListingNfts }) => (isListingNfts ? LIST_PAGE_MARGIN : 0)}px;
+// const LoadedAccountPage = styled.div<{ cartExpanded: boolean; isListingNfts: boolean }>`
+//   width: calc(
+//     100% -
+//       ${({ cartExpanded, isListingNfts }) =>
+//         isListingNfts ? LIST_PAGE_MARGIN * 2 : cartExpanded ? XXXL_BAG_WIDTH : 0}px
+//   );
+//   margin: 0px ${({ isListingNfts }) => (isListingNfts ? LIST_PAGE_MARGIN : 0)}px;
 
-  @media screen and (max-width: ${BREAKPOINTS.sm}px) {
-    width: calc(100% - ${({ isListingNfts }) => (isListingNfts ? LIST_PAGE_MARGIN_MOBILE * 2 : 0)}px);
-    margin: 0px ${({ isListingNfts }) => (isListingNfts ? LIST_PAGE_MARGIN_MOBILE : 0)}px;
-  }
-`
+//   @media screen and (max-width: ${BREAKPOINTS.sm}px) {
+//     width: calc(100% - ${({ isListingNfts }) => (isListingNfts ? LIST_PAGE_MARGIN_MOBILE * 2 : 0)}px);
+//     margin: 0px ${({ isListingNfts }) => (isListingNfts ? LIST_PAGE_MARGIN_MOBILE : 0)}px;
+//   }
+// `
 
 const Center = styled.div`
   left: 50%;

@@ -6,7 +6,7 @@ import { InterfacePageName } from '@uniswap/analytics-events'
 import { formatPrice, NumberType } from '@uniswap/conedison/format'
 import { Currency, CurrencyAmount, Fraction, Percent, Price, Token } from '@uniswap/sdk-core'
 import { NonfungiblePositionManager, Pool, Position } from '@uniswap/v3-sdk'
-import { SupportedChainId } from '@uniswap/widgets'
+// import { SupportedChainId } from '@uniswap/widgets'
 import { useWeb3React } from '@web3-react/core'
 import { sendEvent } from 'components/analytics'
 import Badge from 'components/Badge'
@@ -53,7 +53,7 @@ import { calculateGasMargin } from '../../utils/calculateGasMargin'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import { LoadingRows } from './styleds'
 
-const getTokenLink = (chainId: SupportedChainId, address: string) => {
+const getTokenLink = (chainId: any, address: string) => {
   if (isGqlSupportedChain(chainId)) {
     const chainName = CHAIN_IDS_TO_NAMES[chainId]
     return `${window.location.origin}/#/tokens/${chainName}/${address}`

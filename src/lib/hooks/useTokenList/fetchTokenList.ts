@@ -1,5 +1,5 @@
 import type { TokenList } from '@uniswap/token-lists'
-import { validateTokenList } from '@uniswap/widgets'
+// import { validateTokenList } from '@uniswap/widgets'
 import contenthashToUri from 'lib/utils/contenthashToUri'
 import parseENSAddress from 'lib/utils/parseENSAddress'
 import uriToHttp from 'lib/utils/uriToHttp'
@@ -64,7 +64,8 @@ export default async function fetchTokenList(
     }
 
     const json = await response.json()
-    const list = skipValidation ? json : await validateTokenList(json)
+    // const list = skipValidation ? json : await validateTokenList(json)
+    const list = json
     listCache?.set(listUrl, list)
     return list
   }
