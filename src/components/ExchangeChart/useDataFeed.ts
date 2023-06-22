@@ -134,20 +134,20 @@ export default function useDatafeed(
             poolAddress
           } = symbolInfo
           console.log("[subscribe bars]", useUniswapSubgraph)
-          // intervalRef.current && clearInterval(intervalRef.current);
-          // intervalRef.current = setInterval(function () {
-          //   fetchLiveBar(
-          //     chainId, 
-          //     poolAddress, 
-          //     invertPrice, 
-          //     useUniswapSubgraph, 
-          //     useUniswapSubgraph ? uniswapClient : limitlessClient
-          //     ).then((bar) => {
-          //     if (bar) {
-          //       onRealtimeCallback((bar));
-          //     }
-          //   });
-          // }, 1000);
+          intervalRef.current && clearInterval(intervalRef.current);
+          intervalRef.current = setInterval(function () {
+            fetchLiveBar(
+              chainId, 
+              poolAddress, 
+              invertPrice, 
+              useUniswapSubgraph, 
+              useUniswapSubgraph ? uniswapClient : limitlessClient
+              ).then((bar) => {
+              if (bar) {
+                onRealtimeCallback((bar));
+              }
+            });
+          }, 1000);
         },
         unsubscribeBars: () => {
           intervalRef.current && clearInterval(intervalRef.current);

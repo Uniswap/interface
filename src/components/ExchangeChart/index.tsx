@@ -81,7 +81,7 @@ export const PoolDataSection = ({
 
 	useEffect(() => {
 		// if longer than 1 seconds w/o update, reload
-		if (lastUpdate < moment.now() - 1000 * 1) {
+		if (lastUpdate < moment.now() - 5000 * 1) {
 			setLastUpdate(moment.now())
 		}
 	})
@@ -156,7 +156,7 @@ export const PoolDataSection = ({
 								variables: {
 									address: uniswapPoolAddress,
 								},
-								fetchPolicy: 'cache-first',
+								fetchPolicy: 'network-only',
 							}
 						)
 
@@ -166,7 +166,7 @@ export const PoolDataSection = ({
 								variables: {
 									address: uniswapPoolAddress
 								},
-								fetchPolicy: 'cache-first'
+								fetchPolicy: 'network-only'
 							}
 						)
 
