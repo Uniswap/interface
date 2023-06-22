@@ -431,7 +431,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
   const formattedDelta = formatDelta(delta)
 
   const to = getTokenDetailsURL({ address: token.address, chain: '570' })
-  const priceUSD = formatUSDPrice(timePeriod === 0 ? token.priceUSD : token.priceUSDChangeWeek)
+  const priceUSD = formatUSDPrice(token.priceUSD)
   const tvl = formatNumber(token.tvlUSD, NumberType.FiatTokenStats)
   const volume = formatNumber(timePeriod === 0 ? token.volumeUSD : token.volumeUSDWeek, NumberType.FiatTokenStats)
 
