@@ -910,7 +910,7 @@ PODS:
     - RNFBApp
   - RNFlashList (1.3.1):
     - React-Core
-  - RNGestureHandler (2.6.0):
+  - RNGestureHandler (2.9.0):
     - React-Core
   - RNImageColors (1.5.2):
     - React-Core
@@ -918,11 +918,12 @@ PODS:
     - React-Core
   - RNPermissions (3.6.0):
     - React-Core
-  - RNReanimated (2.14.4):
+  - RNReanimated (3.3.0):
     - DoubleConversion
     - FBLazyVector
     - FBReactNativeSpec
     - glog
+    - hermes-engine
     - RCT-Folly
     - RCTRequired
     - RCTTypeSafety
@@ -932,6 +933,7 @@ PODS:
     - React-Core/RCTWebSocket
     - React-CoreModules
     - React-cxxreact
+    - React-hermes
     - React-jsi
     - React-jsiexecutor
     - React-jsinspector
@@ -1376,11 +1378,11 @@ SPEC CHECKSUMS:
   RNFBFirestore: 4019488f872b1423a79c91ea25e54c570f6b6c1c
   RNFBRemoteConfig: a735b4f7a4ef15adb57b51f0041cfba2925a4393
   RNFlashList: 18d906a373da5ff16776e5013df9495d826edc7e
-  RNGestureHandler: 920eb17f5b1e15dae6e5ed1904045f8f90e0b11e
+  RNGestureHandler: 071d7a9ad81e8b83fe7663b303d132406a7d8f39
   RNImageColors: 9ac05083b52d5c350e6972650ae3ba0e556466c1
   RNLocalize: d4b8af4e442d4bcca54e68fc687a2129b4d71a81
   RNPermissions: de7b7c3fe1680d974ac7a85e3e97aa539c0e68ea
-  RNReanimated: bcb43d166a452cbdbb5e66eab23ff5dec63741f6
+  RNReanimated: 8a716f2c3d0075d3ac3902e1a5cfe604a046010f
   RNScreens: 34cc502acf1b916c582c60003dc3089fa01dc66d
   RNSentry: 4fb2cd7d2d6cb94423c24884488206ef881da136
   RNSVG: c1e76b81c76cdcd34b4e1188852892dc280eb902

@@ -42,6 +42,8 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
     >
       <View>
         <View
+          entering={BaseAnimationMock {}}
+          exiting={BaseAnimationMock {}}
           sentry-label="Flex"
           style={
             [

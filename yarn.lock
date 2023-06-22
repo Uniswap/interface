@@ -11402,7 +11402,7 @@ __metadata:
     react-native-fast-image: 8.6.3
     react-native-flipper: 0.173.0
     react-native-flipper-performance-plugin: 0.3.1
-    react-native-gesture-handler: 2.6.0
+    react-native-gesture-handler: 2.9.0
     react-native-get-random-values: 1.8.0
     react-native-image-colors: 1.5.2
     react-native-localize: ^2.2.6
@@ -11412,7 +11412,7 @@ __metadata:
     react-native-onesignal: 4.3.7
     react-native-pager-view: 6.0.1
     react-native-permissions: 3.6.0
-    react-native-reanimated: 2.14.4
+    react-native-reanimated: 3.3.0
     react-native-restart: 0.0.24
     react-native-safe-area-context: 4.5.0
     react-native-screens: 3.18.2
@@ -11652,7 +11652,7 @@ __metadata:
     react: 18.2.0
     react-dom: 18.2.0
     react-native: 0.70.8
-    react-native-reanimated: 2.14.4
+    react-native-reanimated: 3.3.0
     react-native-web: 0.18.12
     react-native-web-lite: ^1.35.3
     react-redux: 8.0.5
@@ -31349,9 +31349,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-gesture-handler@npm:2.6.0":
-  version: 2.6.0
-  resolution: "react-native-gesture-handler@npm:2.6.0"
+"react-native-gesture-handler@npm:2.9.0":
+  version: 2.9.0
+  resolution: "react-native-gesture-handler@npm:2.9.0"
   dependencies:
     "@egjs/hammerjs": ^2.0.17
     hoist-non-react-statics: ^3.3.0
@@ -31361,7 +31361,7 @@ __metadata:
   peerDependencies:
     react: "*"
     react-native: "*"
-  checksum: c9b9564698ca61cca2cc173a1191ea2f2c2dfc54afac457e239449742cda7245a2bf335ec5a1613bc5d7079df31b7a0a18ae0951a122005de2d65b98ccdfcdfc
+  checksum: 6bfdd9d23486193424dcfb0073dd821a216c2783dde746d73a3441e920602343f09efa10261c6f09fcbcb645d029a95305c86f61997053c01ad89751c8c6d236
   languageName: node
   linkType: hard
 
@@ -31480,22 +31480,24 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-reanimated@npm:2.14.4":
-  version: 2.14.4
-  resolution: "react-native-reanimated@npm:2.14.4"
+"react-native-reanimated@npm:3.3.0":
+  version: 3.3.0
+  resolution: "react-native-reanimated@npm:3.3.0"
   dependencies:
     "@babel/plugin-transform-object-assign": ^7.16.7
     "@babel/preset-typescript": ^7.16.7
-    convert-source-map: ^1.7.0
+    convert-source-map: ^2.0.0
     invariant: ^2.2.4
-    lodash.isequal: ^4.5.0
-    setimmediate: ^1.0.5
-    string-hash-64: ^1.0.3
   peerDependencies:
     "@babel/core": ^7.0.0-0
+    "@babel/plugin-proposal-nullish-coalescing-operator": ^7.0.0-0
+    "@babel/plugin-proposal-optional-chaining": ^7.0.0-0
+    "@babel/plugin-transform-arrow-functions": ^7.0.0-0
+    "@babel/plugin-transform-shorthand-properties": ^7.0.0-0
+    "@babel/plugin-transform-template-literals": ^7.0.0-0
     react: "*"
     react-native: "*"
-  checksum: ec24225a145a8636065b464660256bed99ba5f50c7f6c74899838f5563e59a342ea217c285a06be8bdd5549e2faaf1ebdac6986011a767ba814a4cf469ed9bdb
+  checksum: 58096b28caef8af261c446eccb91a5a74caa303ba3520b1a2767c5b922b3d19b9a58612ab9b517a959c1b562b2e76e4cf4a8ffb21136960ed63375f6a4c37d1e
   languageName: node
   linkType: hard
 
@@ -34576,13 +34578,6 @@ __metadata:
   version: 1.0.1
   resolution: "string-env-interpolation@npm:1.0.1"
   checksum: d126329587f635bee65300e4451e7352b9b67e03daeb62f006ca84244cac12a1f6e45176b018653ba0c3ec3b5d980f9ca59d2eeed99cf799501cdaa7f871dc6f
-  languageName: node
-  linkType: hard
-
-"string-hash-64@npm:^1.0.3":
-  version: 1.0.3
-  resolution: "string-hash-64@npm:1.0.3"
-  checksum: 79de8431b4fa3e85a2429cd52a34f7948221ff167b7a094e05d6bcfd0173474b232e0c9845c96f74b0d7b6b0c8bbe2c3532a4cacb21635293ef0cf3cc8e77f06
   languageName: node
   linkType: hard
 

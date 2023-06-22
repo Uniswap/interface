@@ -70,7 +70,8 @@ jest.mock('expo-screen-capture', () => ({ addScreenshotListener: jest.fn() }))
 // Setup Async Storage mocking: https://react-native-async-storage.github.io/async-storage/docs/advanced/jest/
 jest.mock('@react-native-async-storage/async-storage', () => mockAsyncStorage)
 
-require('react-native-reanimated/lib/reanimated2/jestUtils').setUpTests()
+require('react-native-reanimated/src/reanimated2/jestUtils').setUpTests()
+
 // Disables animated driver warning
 jest.mock('react-native/Libraries/Animated/NativeAnimatedHelper')
 

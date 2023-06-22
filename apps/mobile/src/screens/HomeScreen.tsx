@@ -140,6 +140,7 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
     (event) => (nftsTabScrollValue.value = event.contentOffset.y)
   )
   const activityTabScrollValue = useSharedValue(0)
+
   const activityTabScrollHandler = useAnimatedScrollHandler(
     (event) => (activityTabScrollValue.value = event.contentOffset.y)
   )
@@ -151,7 +152,7 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const activityTabScrollRef = useAnimatedRef<FlashList<any>>()
 
-  const сurrentScrollValue = useDerivedValue(() => {
+  const currentScrollValue = useDerivedValue(() => {
     if (tabIndex === TabIndex.Tokens) {
       return tokensTabScrollValue.value
     } else if (tabIndex === TabIndex.NFTs) {
@@ -211,7 +212,7 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
 
   const translateY = useDerivedValue(() => {
     // Allow header to scroll vertically with list
-    return -Math.min(сurrentScrollValue.value, headerHeightDiff)
+    return -Math.min(currentScrollValue.value, headerHeightDiff)
   })
 
   const translatedStyle = useAnimatedStyle(() => ({
@@ -304,7 +305,7 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
 
   const statusBarStyle = useAnimatedStyle(() => ({
     backgroundColor: interpolateColor(
-      сurrentScrollValue.value,
+      currentScrollValue.value,
       [0, headerHeightDiff],
       [theme.colors.background0, theme.colors.background0]
     ),

@@ -36,6 +36,8 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
     }
   >
     <View
+      entering={BaseAnimationMock {}}
+      exiting={BaseAnimationMock {}}
       sentry-label="Flex"
       style={
         [
@@ -761,6 +763,8 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
     }
   >
     <View
+      entering={BaseAnimationMock {}}
+      exiting={BaseAnimationMock {}}
       sentry-label="Flex"
       style={
         [
