@@ -104,7 +104,6 @@ export const routingApiV2 = createApi({
           }
         }
         try {
-          console.log('in fallback case')
           const method = fellBack ? QuoteMethod.CLIENT_SIDE_FALLBACK : QuoteMethod.CLIENT_SIDE
           const router = getRouter(args.tokenInChainId)
           const quoteResult = await getClientSideQuote(args, router, CLIENT_PARAMS)
