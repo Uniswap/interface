@@ -26,11 +26,6 @@ import {
   formWrapNotificationTitle,
 } from 'src/features/notifications/utils'
 import { ModalName } from 'src/features/telemetry/constants'
-import {
-  useCurrencyInfo,
-  useNativeCurrencyInfo,
-  useWrappedNativeCurrencyInfo,
-} from 'src/features/tokens/useCurrencyInfo'
 import { useCreateSwapFormState, useCreateWrapFormState } from 'src/features/transactions/hooks'
 import CheckCircle from 'ui/src/assets/icons/check-circle.svg'
 import EyeOffIcon from 'ui/src/assets/icons/eye-off.svg'
@@ -55,6 +50,11 @@ import {
   WalletConnectNotification,
   WrapTxNotification,
 } from 'wallet/src/features/notifications/types'
+import {
+  useCurrencyInfo,
+  useNativeCurrencyInfo,
+  useWrappedNativeCurrencyInfo,
+} from 'wallet/src/features/tokens/useCurrencyInfo'
 import { TransactionStatus, TransactionType } from 'wallet/src/features/transactions/types'
 import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
 import { WalletConnectEvent } from 'wallet/src/features/walletConnect/types'

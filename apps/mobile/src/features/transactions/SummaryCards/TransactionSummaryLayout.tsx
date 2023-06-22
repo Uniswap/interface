@@ -35,6 +35,15 @@ import { useInterval } from 'wallet/src/utils/timing'
 export const TXN_HISTORY_ICON_SIZE = iconSizes.icon40
 const LOADING_SPINNER_SIZE = 20
 
+export interface TransactionSummaryLayoutProps {
+  transaction: TransactionDetails
+  title?: string
+  caption: string
+  bg?: ResponsiveValue<keyof Theme['colors'], Theme>
+  icon?: JSX.Element
+  onRetry?: () => void
+}
+
 function useForceUpdateEveryMinute(): number {
   const [unixTime, setUnixTime] = useState(Date.now())
   useInterval(() => {
@@ -50,14 +59,7 @@ function TransactionSummaryLayout({
   bg,
   icon,
   onRetry,
-}: {
-  transaction: TransactionDetails
-  title?: string
-  caption: string
-  bg?: ResponsiveValue<keyof Theme['colors'], Theme>
-  icon?: JSX.Element
-  onRetry?: () => void
-}): JSX.Element {
+}: TransactionSummaryLayoutProps): JSX.Element {
   const { t } = useTranslation()
   const theme = useAppTheme()
 

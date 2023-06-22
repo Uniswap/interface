@@ -19,7 +19,6 @@ import {
   useUSDCValue,
 } from 'src/features/routing/useUSDCPrice'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
-import { useCurrencyInfo } from 'src/features/tokens/useCurrencyInfo'
 import { PERMITTABLE_TOKENS } from 'src/features/transactions/permit/permittableTokens'
 import { usePermitSignature } from 'src/features/transactions/permit/usePermitSignature'
 import { getBaseTradeAnalyticsProperties } from 'src/features/transactions/swap/analytics'
@@ -56,6 +55,7 @@ import { logger } from 'wallet/src/features/logger/logger'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { useOnChainCurrencyBalance } from 'wallet/src/features/portfolio/api'
+import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
 import { useContractManager, useProvider } from 'wallet/src/features/wallet/context'
 import {
   useActiveAccount,

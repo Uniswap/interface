@@ -1,6 +1,5 @@
-import { NetworkStatus } from '@apollo/client'
 import { FlashList } from '@shopify/flash-list'
-import React, { createElement, forwardRef, useCallback, useMemo } from 'react'
+import React, { createElement, forwardRef, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { RefreshControl } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -17,10 +16,6 @@ import { Text } from 'src/components/Text'
 import { GQLQueries } from 'src/data/queries'
 import { openModal } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
-import {
-  formatTransactionsByDate,
-  parseDataResponseToTransactionDetails,
-} from 'src/features/transactions/history/utils'
 import { useMergeLocalAndRemoteTransactions } from 'src/features/transactions/hooks'
 import ApproveSummaryItem from 'src/features/transactions/SummaryCards/SummaryItems/ApproveSummaryItem'
 import FiatPurchaseSummaryItem from 'src/features/transactions/SummaryCards/SummaryItems/FiatPurchaseSummaryItem'
@@ -34,10 +29,14 @@ import UnknownSummaryItem from 'src/features/transactions/SummaryCards/SummaryIt
 import WCSummaryItem from 'src/features/transactions/SummaryCards/SummaryItems/WCSummaryItem'
 import WrapSummaryItem from 'src/features/transactions/SummaryCards/SummaryItems/WrapSummaryItem'
 import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
-import { EMPTY_ARRAY } from 'wallet/src/constants/misc'
-import { isNonPollingRequestInFlight } from 'wallet/src/data/utils'
-import { useTransactionListQuery } from 'wallet/src/data/__generated__/types-and-hooks'
-import { usePersistedError } from 'wallet/src/features/dataApi/utils'
+import { useFormattedTransactionDataForActivity } from 'wallet/src/features/activity/hooks'
+import {
+  getActivityItemType,
+  isLoadingItem,
+  isSectionHeader,
+  LoadingItem,
+  SectionHeader,
+} from 'wallet/src/features/activity/utils'
 import { TransactionDetails, TransactionType } from 'wallet/src/features/transactions/types'
 import {
   useActiveAccountWithThrow,
@@ -45,23 +44,6 @@ import {
 } from 'wallet/src/features/wallet/hooks'
 
 export const ACTVITIY_TAB_DATA_DEPENDENCIES = [GQLQueries.TransactionList]
-
-type LoadingItem = {
-  itemType: 'LOADING'
-  id: number
-}
-const isLoadingItem = (x: TransactionDetails | SectionHeader | LoadingItem): x is LoadingItem =>
-  'itemType' in x && x.itemType === 'LOADING'
-
-type SectionHeader = {
-  itemType: 'HEADER'
-  title: string
-}
-const isSectionHeader = (x: TransactionDetails | SectionHeader | LoadingItem): x is SectionHeader =>
-  'itemType' in x && x.itemType === 'HEADER'
-
-const LOADING_ITEM = (index: number): LoadingItem => ({ itemType: 'LOADING', id: index })
-const LOADING_DATA = [LOADING_ITEM(1), LOADING_ITEM(2), LOADING_ITEM(3), LOADING_ITEM(4)]
 
 const ESTIMATED_ITEM_SIZE = 92
 
@@ -130,16 +112,6 @@ const renderActivityItem = ({
   )
 }
 
-function getItemType(item: TransactionDetails | SectionHeader | LoadingItem): string {
-  if (isLoadingItem(item)) {
-    return `loading`
-  } else if (isSectionHeader(item)) {
-    return `sectionHeader`
-  } else {
-    return `activity`
-  }
-}
-
 export const ActivityTab = forwardRef<FlashList<unknown>, TabProps>(
   (
     {
@@ -162,92 +134,16 @@ export const ActivityTab = forwardRef<FlashList<unknown>, TabProps>(
       headerHeight,
     })
 
-    const keyExtractor = useCallback(
-      (info: TransactionDetails | SectionHeader | LoadingItem) => {
-        // for loading items, use the index as the key
-        if (isLoadingItem(info)) {
-          return `${owner}-${info.id}`
-        }
-        // for section headers, use the title as the key
-        if (isSectionHeader(info)) {
-          return `${owner}-${info.title}`
-        }
-        // for transactions, use the transaction hash as the key
-        return info.id
-      },
-      [owner]
-    )
-
-    const {
-      refetch,
-      networkStatus,
-      loading: requestLoading,
-      data,
-      error: requestError,
-    } = useTransactionListQuery({
-      variables: { address: owner },
-      notifyOnNetworkStatusChange: true,
-      // rely on TransactionHistoryUpdater for polling
-      pollInterval: undefined,
-    })
-
     // Hide all spam transactions if active wallet has enabled setting.
     const activeAccount = useActiveAccountWithThrow()
     const hideSpamTokens = useSelectAccountHideSpamTokens(activeAccount.address)
 
-    const formattedTransactions = useMemo(() => {
-      if (!data) return EMPTY_ARRAY
-      return parseDataResponseToTransactionDetails(data, hideSpamTokens)
-    }, [data, hideSpamTokens])
-
-    const transactions = useMergeLocalAndRemoteTransactions(owner, formattedTransactions)
-
-    // Format transactions for section list
-    const { pending, last24hTransactionList, priorByMonthTransactionList } = useMemo(
-      () => formatTransactionsByDate(transactions),
-      [transactions]
-    )
-
-    const hasTransactions = transactions?.length > 0
-
-    const hasData = !!data?.portfolios?.[0]?.assetActivities
-    const isLoading = isNonPollingRequestInFlight(networkStatus)
-    const isError = usePersistedError(requestLoading, requestError)
-
-    // show loading if no data and fetching, or refetching when there is error (for UX when "retry" is clicked).
-    const showLoading =
-      (!hasData && isLoading) || (Boolean(isError) && networkStatus === NetworkStatus.refetch)
-
-    const sectionData: Array<TransactionDetails | SectionHeader | LoadingItem> = useMemo(() => {
-      if (showLoading) {
-        return LOADING_DATA
-      }
-
-      if (!hasTransactions) {
-        return EMPTY_ARRAY
-      }
-      return [
-        ...pending,
-        ...last24hTransactionList,
-        // for each month prior, detect length and render if includes transactions
-        ...Object.keys(priorByMonthTransactionList).reduce(
-          (accum: (TransactionDetails | SectionHeader | LoadingItem)[], month) => {
-            const transactionList = priorByMonthTransactionList[month]
-            if (transactionList && transactionList.length > 0) {
-              accum.push({ itemType: 'HEADER', title: month }, ...transactionList)
-            }
-            return accum
-          },
-          []
-        ),
-      ]
-    }, [showLoading, hasTransactions, pending, last24hTransactionList, priorByMonthTransactionList])
-
-    const onRetry = useCallback(() => {
-      refetch({
-        address: owner,
-      })
-    }, [owner, refetch])
+    const { onRetry, hasData, isLoading, isError, sectionData, keyExtractor } =
+      useFormattedTransactionDataForActivity(
+        owner,
+        hideSpamTokens,
+        useMergeLocalAndRemoteTransactions
+      )
 
     const onPressReceive = (): void => {
       // in case we received a pending session from a previous scan after closing modal
@@ -256,6 +152,16 @@ export const ActivityTab = forwardRef<FlashList<unknown>, TabProps>(
         openModal({ name: ModalName.WalletConnectScan, initialState: ScannerModalState.WalletQr })
       )
     }
+
+    const errorCard = (
+      <Flex grow style={containerProps?.emptyContainerStyle}>
+        <BaseCard.ErrorState
+          retryButtonLabel={t('Retry')}
+          title={t('Couldn’t load activity')}
+          onRetry={onRetry}
+        />
+      </Flex>
+    )
 
     const refreshControl = useMemo(() => {
       return (
@@ -269,15 +175,7 @@ export const ActivityTab = forwardRef<FlashList<unknown>, TabProps>(
     }, [refreshing, onRefresh, theme.colors.textTertiary, insets.top])
 
     if (!hasData && isError) {
-      return (
-        <Flex grow style={containerProps?.emptyContainerStyle}>
-          <BaseCard.ErrorState
-            retryButtonLabel={t('Retry')}
-            title={t('Couldn’t load activity')}
-            onRetry={onRetry}
-          />
-        </Flex>
-      )
+      return errorCard
     }
 
     return (
@@ -286,35 +184,27 @@ export const ActivityTab = forwardRef<FlashList<unknown>, TabProps>(
           ref={ref}
           ListEmptyComponent={
             // error view
-            !hasData && isError ? (
-              <Flex grow style={containerProps?.emptyContainerStyle}>
-                <BaseCard.ErrorState
-                  retryButtonLabel={t('Retry')}
-                  title={t('Couldn’t load activity')}
-                  onRetry={onRetry}
-                />
-              </Flex>
-            ) : (
-              // empty view
-              (!isLoading && (
-                <Box flexGrow={1} style={containerProps?.emptyContainerStyle}>
-                  <BaseCard.EmptyState
-                    buttonLabel={isExternalProfile ? undefined : 'Receive tokens or NFTs'}
-                    description={
-                      isExternalProfile
-                        ? t('When this wallet makes transactions, they’ll appear here.')
-                        : t(
-                            'When you approve, trade, or transfer tokens or NFTs, your transactions will appear here.'
-                          )
-                    }
-                    icon={<NoTransactions />}
-                    title={t('No activity yet')}
-                    onPress={onPressReceive}
-                  />
-                </Box>
-              )) ||
-              null
-            )
+            !hasData && isError
+              ? errorCard
+              : // empty view
+                (!isLoading && (
+                  <Box flexGrow={1} style={containerProps?.emptyContainerStyle}>
+                    <BaseCard.EmptyState
+                      buttonLabel={isExternalProfile ? undefined : 'Receive tokens or NFTs'}
+                      description={
+                        isExternalProfile
+                          ? t('When this wallet makes transactions, they’ll appear here.')
+                          : t(
+                              'When you approve, trade, or transfer tokens or NFTs, your transactions will appear here.'
+                            )
+                      }
+                      icon={<NoTransactions />}
+                      title={t('No activity yet')}
+                      onPress={onPressReceive}
+                    />
+                  </Box>
+                )) ||
+                null
             // initial loading is implemented inside sectionData
           }
           // we add a footer to cover any possible space, so user can scroll the top menu all the way to the top
@@ -328,7 +218,7 @@ export const ActivityTab = forwardRef<FlashList<unknown>, TabProps>(
           estimatedItemSize={ESTIMATED_ITEM_SIZE}
           // To achieve better performance, specify the type based on the item
           // https://shopify.github.io/flash-list/docs/fundamentals/performant-components#getitemtype
-          getItemType={getItemType}
+          getItemType={getActivityItemType}
           keyExtractor={keyExtractor}
           numColumns={1}
           refreshControl={refreshControl}

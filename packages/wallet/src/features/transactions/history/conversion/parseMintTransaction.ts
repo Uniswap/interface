@@ -1,8 +1,8 @@
+import { ChainId } from 'wallet/src/constants/chains'
 import {
   deriveCurrencyAmountFromAssetResponse,
   parseUSDValueFromAssetChange,
-} from 'src/features/transactions/history/utils'
-import { ChainId } from 'wallet/src/constants/chains'
+} from 'wallet/src/features/transactions/history/utils'
 import {
   NFTMintTransactionInfo,
   TransactionListQueryResponse,

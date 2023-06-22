@@ -1,10 +1,4 @@
 import { TradeType } from '@uniswap/sdk-core'
-import extractTransactionDetails from 'src/features/transactions/history/conversion/extractTransactionDetails'
-import parseApproveTransaction from 'src/features/transactions/history/conversion/parseApproveTransaction'
-import parseNFTMintTransaction from 'src/features/transactions/history/conversion/parseMintTransaction'
-import parseReceiveTransaction from 'src/features/transactions/history/conversion/parseReceiveTransaction'
-import parseSendTransaction from 'src/features/transactions/history/conversion/parseSendTransaction'
-import parseTradeTransaction from 'src/features/transactions/history/conversion/parseTradeTransaction'
 import { NATIVE_ADDRESS } from 'wallet/src/constants/addresses'
 import { ChainId } from 'wallet/src/constants/chains'
 import { DAI, WRAPPED_NATIVE_CURRENCY } from 'wallet/src/constants/tokens'
@@ -23,6 +17,12 @@ import {
   TransactionType,
 } from 'wallet/src/features/transactions/types'
 import { SAMPLE_SEED_ADDRESS_1, SAMPLE_SEED_ADDRESS_2 } from 'wallet/src/test/fixtures'
+import extractTransactionDetails from './extractTransactionDetails'
+import parseApproveTransaction from './parseApproveTransaction'
+import parseNFTMintTransaction from './parseMintTransaction'
+import parseReceiveTransaction from './parseReceiveTransaction'
+import parseSendTransaction from './parseSendTransaction'
+import parseTradeTransaction from './parseTradeTransaction'
 
 /**
  * Testing for API transaction parsing utils.

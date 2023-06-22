@@ -2,13 +2,13 @@ import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { LogoWithTxStatus } from 'src/components/CurrencyLogo/LogoWithTxStatus'
 import { getFormattedCurrencyAmount } from 'src/features/notifications/utils'
-import { useCurrencyInfo } from 'src/features/tokens/useCurrencyInfo'
 import TransactionSummaryLayout, {
   TXN_HISTORY_ICON_SIZE,
 } from 'src/features/transactions/SummaryCards/TransactionSummaryLayout'
 import { ChainId } from 'wallet/src/constants/chains'
 import { AssetType } from 'wallet/src/entities/assets'
 import { useENS } from 'wallet/src/features/ens/useENS'
+import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
 import {
   SendTokenTransactionInfo,
   TransactionDetails,

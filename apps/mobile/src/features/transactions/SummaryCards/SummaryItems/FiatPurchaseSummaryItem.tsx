@@ -1,11 +1,11 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { LogoWithTxStatus } from 'src/components/CurrencyLogo/LogoWithTxStatus'
-import { useCurrencyInfo } from 'src/features/tokens/useCurrencyInfo'
 import TransactionSummaryLayout, {
   TXN_HISTORY_ICON_SIZE,
 } from 'src/features/transactions/SummaryCards/TransactionSummaryLayout'
 import { AssetType } from 'wallet/src/entities/assets'
+import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
 import {
   FiatPurchaseTransactionInfo,
   TransactionDetails,

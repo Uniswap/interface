@@ -1,13 +1,13 @@
 import React, { useMemo } from 'react'
 import { SplitLogo } from 'src/components/CurrencyLogo/SplitLogo'
 import { getFormattedCurrencyAmount } from 'src/features/notifications/utils'
-import {
-  useNativeCurrencyInfo,
-  useWrappedNativeCurrencyInfo,
-} from 'src/features/tokens/useCurrencyInfo'
 import TransactionSummaryLayout, {
   TXN_HISTORY_ICON_SIZE,
 } from 'src/features/transactions/SummaryCards/TransactionSummaryLayout'
+import {
+  useNativeCurrencyInfo,
+  useWrappedNativeCurrencyInfo,
+} from 'wallet/src/features/tokens/useCurrencyInfo'
 import { TransactionDetails, WrapTransactionInfo } from 'wallet/src/features/transactions/types'
 
 export default function WrapSummaryItem({

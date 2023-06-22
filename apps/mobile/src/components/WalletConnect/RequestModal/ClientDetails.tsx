@@ -4,8 +4,8 @@ import { LinkButton } from 'src/components/buttons/LinkButton'
 import { Flex } from 'src/components/layout'
 import { DappHeaderIcon } from 'src/components/WalletConnect/DappHeaderIcon'
 import { HeaderText } from 'src/components/WalletConnect/RequestModal/HeaderText'
-import { useCurrencyInfo } from 'src/features/tokens/useCurrencyInfo'
 import { WalletConnectRequest } from 'src/features/walletConnect/walletConnectSlice'
+import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
 
 export interface PermitInfo {
   currencyId: string

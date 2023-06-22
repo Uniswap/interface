@@ -1,6 +1,5 @@
 import { Token } from '@uniswap/sdk-core'
 import dayjs from 'dayjs'
-import extractTransactionDetails from 'src/features/transactions/history/conversion/extractTransactionDetails'
 import {
   Amount,
   Chain,
@@ -10,6 +9,7 @@ import {
 } from 'wallet/src/data/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
+import extractTransactionDetails from 'wallet/src/features/transactions/history/conversion/extractTransactionDetails'
 import {
   TransactionDetails,
   TransactionStatus,

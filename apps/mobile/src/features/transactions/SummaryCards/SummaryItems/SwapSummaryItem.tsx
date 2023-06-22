@@ -5,13 +5,13 @@ import { SplitLogo } from 'src/components/CurrencyLogo/SplitLogo'
 import { openModal } from 'src/features/modals/modalSlice'
 import { getFormattedCurrencyAmount } from 'src/features/notifications/utils'
 import { ModalName } from 'src/features/telemetry/constants'
-import { useCurrencyInfo } from 'src/features/tokens/useCurrencyInfo'
 import { useCreateSwapFormState } from 'src/features/transactions/hooks'
 import { selectTransactions } from 'src/features/transactions/selectors'
 import TransactionSummaryLayout, {
   TXN_HISTORY_ICON_SIZE,
 } from 'src/features/transactions/SummaryCards/TransactionSummaryLayout'
 import { flattenObjectOfObjects } from 'src/utils/objects'
+import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
 import {
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,

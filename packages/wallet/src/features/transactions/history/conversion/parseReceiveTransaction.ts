@@ -1,11 +1,11 @@
+import { SpamCode } from 'wallet/src/data/types'
+import { AssetType } from 'wallet/src/entities/assets'
+import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 import {
   deriveCurrencyAmountFromAssetResponse,
   getAddressFromAsset,
   parseUSDValueFromAssetChange,
-} from 'src/features/transactions/history/utils'
-import { SpamCode } from 'wallet/src/data/types'
-import { AssetType } from 'wallet/src/entities/assets'
-import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
+} from 'wallet/src/features/transactions/history/utils'
 import {
   FiatPurchaseTransactionInfo,
   ReceiveTokenTransactionInfo,

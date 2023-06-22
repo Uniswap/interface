@@ -1,12 +1,12 @@
 // TODO(MOB-203): reduce component complexity
 /* eslint-disable complexity */
 import { TradeType } from '@uniswap/sdk-core'
+import { ChainId } from 'wallet/src/constants/chains'
+import { WRAPPED_NATIVE_CURRENCY } from 'wallet/src/constants/tokens'
 import {
   deriveCurrencyAmountFromAssetResponse,
   parseUSDValueFromAssetChange,
-} from 'src/features/transactions/history/utils'
-import { ChainId } from 'wallet/src/constants/chains'
-import { WRAPPED_NATIVE_CURRENCY } from 'wallet/src/constants/tokens'
+} from 'wallet/src/features/transactions/history/utils'
 import {
   ExactInputSwapTransactionInfo,
   NFTTradeTransactionInfo,

@@ -9,7 +9,6 @@ import { GQLQueries } from 'src/data/queries'
 import { apolloClient } from 'src/data/usePersistedApolloClient'
 import { selectLastTxNotificationUpdate } from 'src/features/notifications/selectors'
 import { buildReceiveNotification } from 'src/features/notifications/utils'
-import { parseDataResponseToTransactionDetails } from 'src/features/transactions/history/utils'
 import { useSelectAddressTransactions } from 'src/features/transactions/hooks'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import {
@@ -23,6 +22,7 @@ import {
   setLastTxNotificationUpdate,
   setNotificationStatus,
 } from 'wallet/src/features/notifications/slice'
+import { parseDataResponseToTransactionDetails } from 'wallet/src/features/transactions/history/utils'
 import { TransactionStatus, TransactionType } from 'wallet/src/features/transactions/types'
 import {
   useAccounts,

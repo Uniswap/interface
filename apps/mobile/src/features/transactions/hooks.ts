@@ -8,7 +8,6 @@ import { SearchContext } from 'src/components/explore/search/SearchResultsSectio
 import { flowToModalName, TokenSelectorFlow } from 'src/components/TokenSelector/TokenSelector'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
-import { useCurrencyInfo } from 'src/features/tokens/useCurrencyInfo'
 import {
   makeSelectAddressTransactions,
   makeSelectLocalTxCurrencyIds,
@@ -27,6 +26,7 @@ import { theme } from 'ui/src/theme/restyle/theme'
 import { ChainId } from 'wallet/src/constants/chains'
 import { EMPTY_ARRAY } from 'wallet/src/constants/misc'
 import { AssetType } from 'wallet/src/entities/assets'
+import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
 import {
   TransactionDetails,
   TransactionStatus,
