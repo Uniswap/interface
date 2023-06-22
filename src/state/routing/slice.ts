@@ -105,7 +105,7 @@ export const routingApi = createApi({
                 const errorData = response.error.data as any
                 // NO_ROUTE should be treated as a valid response to prevent retries.
                 if (typeof errorData === 'object' && errorData?.errorCode === 'NO_ROUTE') {
-                  return { data: { state: QuoteState.NOT_FOUND, method: QuoteMethod.ROUTING_API } }
+                  return { data: { state: QuoteState.NOT_FOUND } }
                 }
               } catch {
                 throw response.error
@@ -128,7 +128,7 @@ export const routingApi = createApi({
           if (quoteResult.state === QuoteState.SUCCESS) {
             return { data: { ...transformRoutesToTrade(args, quoteResult.data), method } }
           } else {
-            return { data: { ...quoteResult, method } }
+            return { data: quoteResult }
           }
         } catch (error: any) {
           console.warn(`GetQuote failed on client: ${error}`)
