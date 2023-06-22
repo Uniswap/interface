@@ -170,7 +170,7 @@ export const PoolDataSection = ({
 							}
 						)
 
-						console.log("priceQuery", priceQuery, result)
+						// console.log("priceQuery", priceQuery, result)
 
 						if (!result.error && !result.loading && !priceQuery.error && !priceQuery.loading) {
 							const data = result.data.poolDayDatas

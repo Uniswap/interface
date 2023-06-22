@@ -689,6 +689,7 @@ function useDerivedAddLeveragePremiumInfo(
   tokenId: string | undefined,
   isToken0: boolean | undefined,
   setState: (state: DerivedInfoState) => void,
+  approvalState: ApprovalState,
 ): {
   tradeInfo: {
     remainingPremium: number,
@@ -736,7 +737,7 @@ function useDerivedAddLeveragePremiumInfo(
     }
 
     laggedfxn()
-  }, [liquidityManagerContract, trader, tokenId, isToken0])
+  }, [liquidityManagerContract, trader, tokenId, isToken0, approvalState])
 
   const info = useMemo(() => {
     if (contractResult) {
@@ -750,7 +751,7 @@ function useDerivedAddLeveragePremiumInfo(
       return undefined
     }
   }, [
-    contractResult
+    contractResult, approvalState
   ])
 
   const inputError = useMemo(() => {
@@ -772,7 +773,7 @@ function useDerivedAddLeveragePremiumInfo(
       return inputError
     }
     return undefined
-  }, [relevantTokenBalances, account, position])
+  }, [relevantTokenBalances, account, position, approvalState])
 
   return { tradeInfo: info, inputError }
 }
@@ -783,6 +784,7 @@ function useDerivedAddBorrowPremiumInfo(
   tokenId: string | undefined,
   isToken0: boolean | undefined,
   setState: (state: DerivedInfoState) => void,
+  approvalState: ApprovalState,
 ): {
   tradeInfo: {
     // rate: string,
@@ -832,7 +834,7 @@ function useDerivedAddBorrowPremiumInfo(
     }
 
     laggedfxn()
-  }, [liquidityManagerContract, trader, tokenId, isToken0])
+  }, [liquidityManagerContract, trader, tokenId, isToken0, approvalState])
 
   const info = useMemo(() => {
     // console.log("addPosition2:", contractResult)
@@ -849,7 +851,7 @@ function useDerivedAddBorrowPremiumInfo(
       return undefined
     }
   }, [
-    contractResult
+    contractResult, approvalState
   ])
 
   const inputError = useMemo(() => {
@@ -871,7 +873,7 @@ function useDerivedAddBorrowPremiumInfo(
       return inputError
     }
     return undefined
-  }, [relevantTokenBalances, account, position])
+  }, [relevantTokenBalances, account, position, approvalState])
 
   return {
     tradeInfo: info,
@@ -964,7 +966,7 @@ export function ReduceLeverageModalFooter({
     unusedPremium,
     premium,
     inputError
-  } = useDerivedLeverageReduceInfo(leverageManagerAddress, trader, tokenId, debouncedSlippage, position, debouncedReduceAmount, setDerivedState)
+  } = useDerivedLeverageReduceInfo(leverageManagerAddress, trader, tokenId, debouncedSlippage, position, debouncedReduceAmount, setDerivedState, )
 
 
 
@@ -1324,12 +1326,7 @@ export function AddPremiumLeverageModalFooter({
   const { error, position } = useLimitlessPositionFromTokenId(tokenId)
   const token0 = useToken(position?.token0Address)
   const token1 = useToken(position?.token1Address)
-  const { tradeInfo, inputError } = useDerivedAddLeveragePremiumInfo(liquidityManagerAddress, trader, tokenId, position?.isToken0, setDerivedState)
-  const inputIsToken0 = !position?.isToken0
-  // console.log("tradeInfo: ", tradeInfo); 
-
   const inputCurrency = useCurrency(position?.isToken0 ? position?.token1Address : position?.token0Address)
-  const outputCurrency = useCurrency(position?.isToken0 ? position?.token0Address : position?.token1Address)
   const approveAmount = useMemo(() => {
     return position?.totalDebtInput ? new BN(position.totalDebtInput * 0.002).shiftedBy(18).toFixed(0) : "0"
   }, [position])
@@ -1339,6 +1336,11 @@ export function AddPremiumLeverageModalFooter({
       CurrencyAmount.fromRawAmount(inputCurrency, approveAmount) : undefined,
     position?.leverageManagerAddress ?? undefined
   )
+  const { tradeInfo, inputError } = useDerivedAddLeveragePremiumInfo(liquidityManagerAddress, trader, tokenId, position?.isToken0, setDerivedState, leverageApprovalState)
+  const inputIsToken0 = !position?.isToken0
+  // console.log("tradeInfo: ", tradeInfo); 
+
+
 
 
   const updateLeverageAllowance = useCallback(async () => {
@@ -1521,30 +1523,31 @@ export function AddPremiumBorrowModalFooter({
 }) {
   const [derivedState, setDerivedState] = useState<DerivedInfoState>(DerivedInfoState.INVALID)
   const [showDetails, setShowDetails] = useState(false)
-  const theme = useTheme()
-
   const { error, position } = useLimitlessPositionFromTokenId(tokenId)
-  const token0 = useCurrency(position?.token0Address)
-  const token1 = useCurrency(position?.token1Address)
-  const [,pool] = usePool(token0 ?? undefined, token1 ?? undefined, position?.poolFee)
-  const { tradeInfo, inputError } = useDerivedAddBorrowPremiumInfo(liquidityManagerAddress, trader, tokenId, position?.isToken0, setDerivedState)
-  const inputIsToken0 = !position?.isToken0
-
   const outputCurrency = useCurrency(position?.isToken0 ? position?.token1Address : position?.token0Address)
-  // const outputCurrency = useCurrency(position?.isToken0 ? position?.token1Address : position?.token0Address)
-
+  const theme = useTheme()
   const approveAmount = useMemo(() => {
     if (position) {
       return new BN(position.totalDebtInput * 0.002).shiftedBy(18).toFixed(0)
     }
     return 0
-  }, [position, pool])
+  }, [position])
 
   const [approvalState, approveManager] = useApproveCallback(
     outputCurrency ?
       CurrencyAmount.fromRawAmount(outputCurrency, approveAmount) : undefined,
     position?.borrowManagerAddress ?? undefined
   )
+  const token0 = useCurrency(position?.token0Address)
+  const token1 = useCurrency(position?.token1Address)
+  const [,pool] = usePool(token0 ?? undefined, token1 ?? undefined, position?.poolFee)
+  const { tradeInfo, inputError } = useDerivedAddBorrowPremiumInfo(liquidityManagerAddress, trader, tokenId, position?.isToken0, setDerivedState, approvalState)
+  const inputIsToken0 = !position?.isToken0
+
+
+  // const outputCurrency = useCurrency(position?.isToken0 ? position?.token1Address : position?.token0Address)
+
+
 
   const updateAllowance = useCallback(async () => {
     try {
@@ -1556,14 +1559,19 @@ export function AddPremiumBorrowModalFooter({
 
   const loading = derivedState === DerivedInfoState.LOADING
 
-  console.log("tradeInfo: ", inputError, approvalState, approveAmount, tradeInfo)
+  console.log("tradeInfo: ", !!inputError || !tradeInfo, inputError, approvalState, approveAmount, tradeInfo)
 
   return (
     <AutoRow>
       <TransactionDetails>
         <Wrapper style={{ marginTop: '0' }}>
           <AutoColumn gap="sm" style={{ width: '100%', marginBottom: '-8px' }}>
-            <StyledHeaderRow onClick={() => setShowDetails(!showDetails)} disabled={true} open={showDetails}>
+            <StyledHeaderRow onClick={() => {
+              if (!!inputError || !tradeInfo) {
+                return
+              }
+              setShowDetails(!showDetails)
+            }} disabled={!!inputError || !tradeInfo} open={showDetails}>
               <RowFixed style={{ position: 'relative' }}>
                 {(loading ? (
                   <StyledPolling>
@@ -1593,7 +1601,7 @@ export function AddPremiumBorrowModalFooter({
               <RowFixed>
                 <RotatingArrow
                   stroke={true ? theme.textTertiary : theme.deprecated_bg3}
-                  open={Boolean(true && showDetails)}
+                  open={Boolean(showDetails)}
                 />
               </RowFixed>
 
