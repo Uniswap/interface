@@ -1,3 +1,4 @@
+import { t, Trans } from '@lingui/macro'
 import { TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import { useAccountDrawer } from 'components/AccountDrawer'
@@ -150,11 +151,13 @@ function PopupButtonContent({ connection, isDarkMode, show, onClick, onClose }: 
         <WCv1Icon src={connection.getIcon?.(isDarkMode)} alt={connection.getName()} />
       </IconWrapper>
       <div>
-        <WCv1BodyText>Connect with {walletConnectV2AsDefault ? 'v1' : 'v2'}</WCv1BodyText>
+        <WCv1BodyText>
+          <Trans>Connect with {walletConnectV2AsDefault ? t`v1` : t`v2`}</Trans>
+        </WCv1BodyText>
         <WCv1Caption color="textSecondary">
           {walletConnectV2AsDefault
-            ? 'Support for v1 will be discontinued June 28.'
-            : 'Under development and unsupported by most wallets'}
+            ? t`Support for v1 will be discontinued June 28.`
+            : t`Under development and unsupported by most wallets`}
         </WCv1Caption>
       </div>
     </WCv1PopoverContent>
