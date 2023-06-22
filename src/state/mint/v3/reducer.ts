@@ -10,7 +10,7 @@ import {
   typeStartPriceInput,
 } from './actions'
 
-type FullRange = true
+export type FullRange = true
 
 export interface MintState {
   readonly independentField: Field

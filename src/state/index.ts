@@ -18,6 +18,11 @@ const store = configureStore({
         // because we are not adding it into any persisted store that requires serialization (e.g. localStorage)
         ignoredActionPaths: ['meta.arg', 'meta.baseQueryMeta', 'payload.trade'],
         ignoredPaths: [routingApi.reducerPath, routingApiV2.reducerPath],
+        ignoredActions: [
+          // ignore the redux-persist actions
+          'persist/PERSIST',
+          'persist/REHYDRATE',
+        ],
       },
     })
       .concat(routingApi.middleware)
