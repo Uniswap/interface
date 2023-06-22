@@ -1142,7 +1142,7 @@ export type PortfolioBalancesQueryVariables = Exact<{
 }>;
 
 
-export type PortfolioBalancesQuery = { __typename?: 'Query', portfolios?: Array<{ __typename?: 'Portfolio', id: string, tokensTotalDenominatedValue?: { __typename?: 'Amount', id: string, value: number } | null, tokensTotalDenominatedValueChange?: { __typename?: 'AmountChange', absolute?: { __typename?: 'Amount', id: string, value: number } | null, percentage?: { __typename?: 'Amount', id: string, value: number } | null } | null, tokenBalances?: Array<{ __typename?: 'TokenBalance', id: string, quantity?: number | null, denominatedValue?: { __typename?: 'Amount', id: string, currency?: Currency | null, value: number } | null, token?: { __typename?: 'Token', id: string, chain: Chain, address?: string | null, symbol?: string | null, decimals?: number | null, project?: { __typename?: 'TokenProject', id: string, name?: string | null, logoUrl?: string | null, safetyLevel?: SafetyLevel | null, isSpam?: boolean | null } | null } | null, tokenProjectMarket?: { __typename?: 'TokenProjectMarket', relativeChange24?: { __typename?: 'Amount', id: string, value: number } | null } | null } | null> | null } | null> | null };
+export type PortfolioBalancesQuery = { __typename?: 'Query', portfolios?: Array<{ __typename?: 'Portfolio', id: string, tokensTotalDenominatedValue?: { __typename?: 'Amount', id: string, value: number } | null, tokensTotalDenominatedValueChange?: { __typename?: 'AmountChange', absolute?: { __typename?: 'Amount', id: string, value: number } | null, percentage?: { __typename?: 'Amount', id: string, value: number } | null } | null, tokenBalances?: Array<{ __typename?: 'TokenBalance', id: string, quantity?: number | null, denominatedValue?: { __typename?: 'Amount', id: string, currency?: Currency | null, value: number } | null, token?: { __typename?: 'Token', chain: Chain, address?: string | null, symbol?: string | null, decimals?: number | null, project?: { __typename?: 'TokenProject', id: string, name?: string | null, logoUrl?: string | null, safetyLevel?: SafetyLevel | null, isSpam?: boolean | null } | null } | null, tokenProjectMarket?: { __typename?: 'TokenProjectMarket', relativeChange24?: { __typename?: 'Amount', id: string, value: number } | null } | null } | null> | null } | null> | null };
 
 export type SelectWalletScreenQueryVariables = Exact<{
   ownerAddresses: Array<Scalars['String']> | Scalars['String'];
@@ -1164,7 +1164,7 @@ export type TokenQueryVariables = Exact<{
 }>;
 
 
-export type TokenQuery = { __typename?: 'Query', token?: { __typename?: 'Token', id: string, symbol?: string | null, decimals?: number | null, chain: Chain, address?: string | null, project?: { __typename?: 'TokenProject', id: string, name?: string | null, logoUrl?: string | null, safetyLevel?: SafetyLevel | null, isSpam?: boolean | null } | null } | null };
+export type TokenQuery = { __typename?: 'Query', token?: { __typename?: 'Token', symbol?: string | null, decimals?: number | null, chain: Chain, address?: string | null, project?: { __typename?: 'TokenProject', id: string, name?: string | null, logoUrl?: string | null, safetyLevel?: SafetyLevel | null, isSpam?: boolean | null } | null } | null };
 
 export type TokenDetailsScreenQueryVariables = Exact<{
   chain: Chain;
@@ -1172,14 +1172,14 @@ export type TokenDetailsScreenQueryVariables = Exact<{
 }>;
 
 
-export type TokenDetailsScreenQuery = { __typename?: 'Query', token?: { __typename?: 'Token', id: string, address?: string | null, chain: Chain, symbol?: string | null, market?: { __typename?: 'TokenMarket', id: string, volume?: { __typename?: 'Amount', id: string, value: number } | null } | null, project?: { __typename?: 'TokenProject', id: string, name?: string | null, description?: string | null, homepageUrl?: string | null, twitterName?: string | null, safetyLevel?: SafetyLevel | null, logoUrl?: string | null, markets?: Array<{ __typename?: 'TokenProjectMarket', id: string, price?: { __typename?: 'Amount', id: string, value: number } | null, marketCap?: { __typename?: 'Amount', id: string, value: number } | null, priceHigh52W?: { __typename?: 'Amount', id: string, value: number } | null, priceLow52W?: { __typename?: 'Amount', id: string, value: number } | null } | null> | null, tokens: Array<{ __typename?: 'Token', id: string, chain: Chain, address?: string | null }> } | null } | null };
+export type TokenDetailsScreenQuery = { __typename?: 'Query', token?: { __typename?: 'Token', address?: string | null, chain: Chain, symbol?: string | null, market?: { __typename?: 'TokenMarket', id: string, volume?: { __typename?: 'Amount', id: string, value: number } | null } | null, project?: { __typename?: 'TokenProject', id: string, name?: string | null, description?: string | null, homepageUrl?: string | null, twitterName?: string | null, safetyLevel?: SafetyLevel | null, logoUrl?: string | null, markets?: Array<{ __typename?: 'TokenProjectMarket', id: string, price?: { __typename?: 'Amount', id: string, value: number } | null, marketCap?: { __typename?: 'Amount', id: string, value: number } | null, priceHigh52W?: { __typename?: 'Amount', id: string, value: number } | null, priceLow52W?: { __typename?: 'Amount', id: string, value: number } | null } | null> | null, tokens: Array<{ __typename?: 'Token', chain: Chain, address?: string | null }> } | null } | null };
 
 export type TokenProjectsQueryVariables = Exact<{
   contracts: Array<ContractInput> | ContractInput;
 }>;
 
 
-export type TokenProjectsQuery = { __typename?: 'Query', tokenProjects?: Array<{ __typename?: 'TokenProject', id: string, name?: string | null, logoUrl?: string | null, safetyLevel?: SafetyLevel | null, tokens: Array<{ __typename?: 'Token', id: string, chain: Chain, address?: string | null, decimals?: number | null, symbol?: string | null }> } | null> | null };
+export type TokenProjectsQuery = { __typename?: 'Query', tokenProjects?: Array<{ __typename?: 'TokenProject', id: string, name?: string | null, logoUrl?: string | null, safetyLevel?: SafetyLevel | null, tokens: Array<{ __typename?: 'Token', chain: Chain, address?: string | null, decimals?: number | null, symbol?: string | null }> } | null> | null };
 
 export type TransactionListQueryVariables = Exact<{
   address: Scalars['String'];
@@ -1196,7 +1196,7 @@ export type TopTokensQueryVariables = Exact<{
 }>;
 
 
-export type TopTokensQuery = { __typename?: 'Query', topTokens?: Array<{ __typename?: 'Token', id: string, address?: string | null, chain: Chain, decimals?: number | null, symbol?: string | null, project?: { __typename?: 'TokenProject', id: string, name?: string | null, isSpam?: boolean | null, logoUrl?: string | null, safetyLevel?: SafetyLevel | null } | null } | null> | null };
+export type TopTokensQuery = { __typename?: 'Query', topTokens?: Array<{ __typename?: 'Token', address?: string | null, chain: Chain, decimals?: number | null, symbol?: string | null, project?: { __typename?: 'TokenProject', id: string, name?: string | null, isSpam?: boolean | null, logoUrl?: string | null, safetyLevel?: SafetyLevel | null } | null } | null> | null };
 
 export type SearchTokensQueryVariables = Exact<{
   searchQuery: Scalars['String'];
@@ -1211,7 +1211,7 @@ export type ExploreSearchQueryVariables = Exact<{
 }>;
 
 
-export type ExploreSearchQuery = { __typename?: 'Query', searchTokens?: Array<{ __typename?: 'Token', id: string, chain: Chain, address?: string | null, decimals?: number | null, symbol?: string | null, market?: { __typename?: 'TokenMarket', volume?: { __typename?: 'Amount', id: string, value: number } | null } | null, project?: { __typename?: 'TokenProject', id: string, name?: string | null, logoUrl?: string | null, safetyLevel?: SafetyLevel | null } | null } | null> | null, nftCollections?: { __typename?: 'NftCollectionConnection', edges: Array<{ __typename?: 'NftCollectionEdge', node: { __typename?: 'NftCollection', id: string, name?: string | null, collectionId: string, isVerified?: boolean | null, nftContracts?: Array<{ __typename?: 'NftContract', id: string, chain: Chain, address: string }> | null, image?: { __typename?: 'Image', id: string, url: string } | null } }> } | null };
+export type ExploreSearchQuery = { __typename?: 'Query', searchTokens?: Array<{ __typename?: 'Token', chain: Chain, address?: string | null, decimals?: number | null, symbol?: string | null, market?: { __typename?: 'TokenMarket', volume?: { __typename?: 'Amount', id: string, value: number } | null } | null, project?: { __typename?: 'TokenProject', id: string, name?: string | null, logoUrl?: string | null, safetyLevel?: SafetyLevel | null } | null } | null> | null, nftCollections?: { __typename?: 'NftCollectionConnection', edges: Array<{ __typename?: 'NftCollectionEdge', node: { __typename?: 'NftCollection', id: string, name?: string | null, collectionId: string, isVerified?: boolean | null, nftContracts?: Array<{ __typename?: 'NftContract', id: string, chain: Chain, address: string }> | null, image?: { __typename?: 'Image', id: string, url: string } | null } }> } | null };
 
 export type SpotPricesQueryVariables = Exact<{
   contracts: Array<ContractInput> | ContractInput;
@@ -1220,14 +1220,14 @@ export type SpotPricesQueryVariables = Exact<{
 
 export type SpotPricesQuery = { __typename?: 'Query', tokenProjects?: Array<{ __typename?: 'TokenProject', id: string, markets?: Array<{ __typename?: 'TokenProjectMarket', id: string, price?: { __typename?: 'Amount', id: string, value: number } | null, pricePercentChange24h?: { __typename?: 'Amount', id: string, value: number } | null } | null> | null } | null> | null };
 
-export type TopTokenPartsFragment = { __typename?: 'Token', id: string, symbol?: string | null, chain: Chain, address?: string | null, market?: { __typename?: 'TokenMarket', id: string, totalValueLocked?: { __typename?: 'Amount', id: string, value: number } | null, volume?: { __typename?: 'Amount', id: string, value: number } | null } | null, project?: { __typename?: 'TokenProject', id: string, name?: string | null, logoUrl?: string | null, markets?: Array<{ __typename?: 'TokenProjectMarket', id: string, price?: { __typename?: 'Amount', id: string, value: number } | null, pricePercentChange24h?: { __typename?: 'Amount', id: string, value: number } | null, marketCap?: { __typename?: 'Amount', id: string, value: number } | null } | null> | null } | null };
+export type TopTokenPartsFragment = { __typename?: 'Token', symbol?: string | null, chain: Chain, address?: string | null, market?: { __typename?: 'TokenMarket', id: string, totalValueLocked?: { __typename?: 'Amount', id: string, value: number } | null, volume?: { __typename?: 'Amount', id: string, value: number } | null } | null, project?: { __typename?: 'TokenProject', id: string, name?: string | null, logoUrl?: string | null, markets?: Array<{ __typename?: 'TokenProjectMarket', id: string, price?: { __typename?: 'Amount', id: string, value: number } | null, pricePercentChange24h?: { __typename?: 'Amount', id: string, value: number } | null, marketCap?: { __typename?: 'Amount', id: string, value: number } | null } | null> | null } | null };
 
 export type ExploreTokensTabQueryVariables = Exact<{
   topTokensOrderBy: TokenSortableField;
 }>;
 
 
-export type ExploreTokensTabQuery = { __typename?: 'Query', topTokens?: Array<{ __typename?: 'Token', id: string, symbol?: string | null, chain: Chain, address?: string | null, market?: { __typename?: 'TokenMarket', id: string, totalValueLocked?: { __typename?: 'Amount', id: string, value: number } | null, volume?: { __typename?: 'Amount', id: string, value: number } | null } | null, project?: { __typename?: 'TokenProject', id: string, name?: string | null, logoUrl?: string | null, markets?: Array<{ __typename?: 'TokenProjectMarket', id: string, price?: { __typename?: 'Amount', id: string, value: number } | null, pricePercentChange24h?: { __typename?: 'Amount', id: string, value: number } | null, marketCap?: { __typename?: 'Amount', id: string, value: number } | null } | null> | null } | null } | null> | null, eth?: { __typename?: 'Token', id: string, symbol?: string | null, chain: Chain, address?: string | null, market?: { __typename?: 'TokenMarket', id: string, totalValueLocked?: { __typename?: 'Amount', id: string, value: number } | null, volume?: { __typename?: 'Amount', id: string, value: number } | null } | null, project?: { __typename?: 'TokenProject', id: string, name?: string | null, logoUrl?: string | null, markets?: Array<{ __typename?: 'TokenProjectMarket', id: string, price?: { __typename?: 'Amount', id: string, value: number } | null, pricePercentChange24h?: { __typename?: 'Amount', id: string, value: number } | null, marketCap?: { __typename?: 'Amount', id: string, value: number } | null } | null> | null } | null } | null };
+export type ExploreTokensTabQuery = { __typename?: 'Query', topTokens?: Array<{ __typename?: 'Token', symbol?: string | null, chain: Chain, address?: string | null, market?: { __typename?: 'TokenMarket', id: string, totalValueLocked?: { __typename?: 'Amount', id: string, value: number } | null, volume?: { __typename?: 'Amount', id: string, value: number } | null } | null, project?: { __typename?: 'TokenProject', id: string, name?: string | null, logoUrl?: string | null, markets?: Array<{ __typename?: 'TokenProjectMarket', id: string, price?: { __typename?: 'Amount', id: string, value: number } | null, pricePercentChange24h?: { __typename?: 'Amount', id: string, value: number } | null, marketCap?: { __typename?: 'Amount', id: string, value: number } | null } | null> | null } | null } | null> | null, eth?: { __typename?: 'Token', symbol?: string | null, chain: Chain, address?: string | null, market?: { __typename?: 'TokenMarket', id: string, totalValueLocked?: { __typename?: 'Amount', id: string, value: number } | null, volume?: { __typename?: 'Amount', id: string, value: number } | null } | null, project?: { __typename?: 'TokenProject', id: string, name?: string | null, logoUrl?: string | null, markets?: Array<{ __typename?: 'TokenProjectMarket', id: string, price?: { __typename?: 'Amount', id: string, value: number } | null, pricePercentChange24h?: { __typename?: 'Amount', id: string, value: number } | null, marketCap?: { __typename?: 'Amount', id: string, value: number } | null } | null> | null } | null } | null };
 
 export type FavoriteTokenCardQueryVariables = Exact<{
   chain: Chain;
@@ -1235,7 +1235,7 @@ export type FavoriteTokenCardQueryVariables = Exact<{
 }>;
 
 
-export type FavoriteTokenCardQuery = { __typename?: 'Query', token?: { __typename?: 'Token', id: string, symbol?: string | null, chain: Chain, address?: string | null, project?: { __typename?: 'TokenProject', id: string, name?: string | null, logoUrl?: string | null, markets?: Array<{ __typename?: 'TokenProjectMarket', id: string, price?: { __typename?: 'Amount', id: string, value: number } | null, pricePercentChange24h?: { __typename?: 'Amount', id: string, value: number } | null } | null> | null } | null } | null };
+export type FavoriteTokenCardQuery = { __typename?: 'Query', token?: { __typename?: 'Token', symbol?: string | null, chain: Chain, address?: string | null, project?: { __typename?: 'TokenProject', id: string, name?: string | null, logoUrl?: string | null, markets?: Array<{ __typename?: 'TokenProjectMarket', id: string, price?: { __typename?: 'Amount', id: string, value: number } | null, pricePercentChange24h?: { __typename?: 'Amount', id: string, value: number } | null } | null> | null } | null } | null };
 
 export type PortfolioBalanceQueryVariables = Exact<{
   owner: Scalars['String'];
@@ -1253,7 +1253,6 @@ export type PortfolioTokenBalancesQuery = { __typename?: 'Query', portfolios?: A
 
 export const TopTokenPartsFragmentDoc = gql`
     fragment TopTokenParts on Token {
-  id
   symbol
   chain
   address
@@ -1934,7 +1933,6 @@ export const PortfolioBalancesDocument = gql`
         value
       }
       token {
-        id
         chain
         address
         symbol
@@ -2072,7 +2070,6 @@ export type TransactionHistoryUpdaterQueryResult = Apollo.QueryResult<Transactio
 export const TokenDocument = gql`
     query Token($chain: Chain!, $address: String) {
   token(chain: $chain, address: $address) {
-    id
     symbol
     decimals
     chain
@@ -2119,7 +2116,6 @@ export type TokenQueryResult = Apollo.QueryResult<TokenQuery, TokenQueryVariable
 export const TokenDetailsScreenDocument = gql`
     query TokenDetailsScreen($chain: Chain!, $address: String) {
   token(chain: $chain, address: $address) {
-    id
     address
     chain
     symbol
@@ -2158,7 +2154,6 @@ export const TokenDetailsScreenDocument = gql`
         }
       }
       tokens {
-        id
         chain
         address
       }
@@ -2203,7 +2198,6 @@ export const TokenProjectsDocument = gql`
     logoUrl
     safetyLevel
     tokens {
-      id
       chain
       address
       decimals
@@ -2356,7 +2350,6 @@ export type TransactionListQueryResult = Apollo.QueryResult<TransactionListQuery
 export const TopTokensDocument = gql`
     query TopTokens($chain: Chain, $page: Int = 1, $pageSize: Int = 100, $orderBy: TokenSortableField = POPULARITY) {
   topTokens(chain: $chain, page: $page, pageSize: $pageSize, orderBy: $orderBy) {
-    id
     address
     chain
     decimals
@@ -2450,7 +2443,6 @@ export type SearchTokensQueryResult = Apollo.QueryResult<SearchTokensQuery, Sear
 export const ExploreSearchDocument = gql`
     query ExploreSearch($searchQuery: String!, $nftCollectionsFilter: NftCollectionsFilterInput!) {
   searchTokens(searchQuery: $searchQuery) {
-    id
     chain
     address
     decimals
@@ -2605,7 +2597,6 @@ export type ExploreTokensTabQueryResult = Apollo.QueryResult<ExploreTokensTabQue
 export const FavoriteTokenCardDocument = gql`
     query FavoriteTokenCard($chain: Chain!, $address: String) {
   token(chain: $chain, address: $address) {
-    id
     symbol
     chain
     address
