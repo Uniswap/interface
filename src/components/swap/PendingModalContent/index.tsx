@@ -139,11 +139,10 @@ function getContent(args: ContentArgs): PendingModalStep {
 
   switch (step) {
     case ConfirmModalState.WRAPPING:
-      // TODO (Gouda): Update this with final UI (eddie)
       return {
-        title: t`Wrap`,
+        title: t`Wrap ETH`,
         subtitle: (
-          <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/8120520483085">
+          <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/16015852009997">
             <Trans>Why is this required?</Trans>
           </ExternalLink>
         ),
@@ -256,11 +255,11 @@ export function PendingModalContent({
         {currentStep === ConfirmModalState.PENDING_CONFIRMATION && showSuccess && <AnimatedEntranceConfirmationIcon />}
         {/* Scales in for the first step if the approval is pending onchain confirmation. */}
         {/* Scales in for the third step if the swap is pending user signature or onchain confirmation. */}
-        {((currentStep === ConfirmModalState.PENDING_CONFIRMATION && !showSuccess) || tokenApprovalPending) && (
-          <LoadingIndicatorOverlay />
-        )}
+        {((currentStep === ConfirmModalState.PENDING_CONFIRMATION && !showSuccess) ||
+          tokenApprovalPending ||
+          wrapPending) && <LoadingIndicatorOverlay />}
       </LogoContainer>
-      <HeaderContainer gap="md" $disabled={tokenApprovalPending || swapPending}>
+      <HeaderContainer gap="md" $disabled={tokenApprovalPending || swapPending || wrapPending}>
         <AnimationWrapper>
           {steps.map((step) => {
             const { title, subtitle } = getContent({
