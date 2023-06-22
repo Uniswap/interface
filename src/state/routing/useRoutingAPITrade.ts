@@ -10,7 +10,7 @@ import { useMemo } from 'react'
 import { INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference, useGetQuoteQuery } from 'state/routing/slice'
 import { useGetQuoteQuery as useGetQuoteQueryV2 } from 'state/routing/v2Slice'
 
-import { InterfaceTrade, QuoteState, TradeState } from './types'
+import { InterfaceTrade, QuoteMethod, QuoteState, TradeState } from './types'
 
 const TRADE_NOT_FOUND = { state: TradeState.NO_ROUTE_FOUND, trade: undefined } as const
 const TRADE_LOADING = { state: TradeState.LOADING, trade: undefined } as const
@@ -30,6 +30,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
 ): {
   state: TradeState
   trade?: InterfaceTrade
+  method?: QuoteMethod
 } {
   const [currencyIn, currencyOut]: [Currency | undefined, Currency | undefined] = useMemo(
     () =>
@@ -92,9 +93,19 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
       return {
         state: isCurrent ? TradeState.VALID : TradeState.LOADING,
         trade: tradeResult.trade,
+        method: tradeResult?.method,
       }
     }
-  }, [amountSpecified, isCurrent, isError, queryArgs, skipFetch, tradeResult?.state, tradeResult?.trade])
+  }, [
+    amountSpecified,
+    isCurrent,
+    isError,
+    queryArgs,
+    skipFetch,
+    tradeResult?.state,
+    tradeResult?.trade,
+    tradeResult?.method,
+  ])
 }
 
 // only want to enable this when app hook called
