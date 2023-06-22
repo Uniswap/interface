@@ -28,7 +28,6 @@ import usePrevious from 'hooks/usePrevious'
 import { useSwapCallback } from 'hooks/useSwapCallback'
 import { useUSDPrice } from 'hooks/useUSDPrice'
 import JSBI from 'jsbi'
-import { formatSwapQuoteReceivedEventProperties } from 'lib/utils/analytics'
 import { ReactNode, useCallback, useEffect, useMemo, useReducer, useState } from 'react'
 import { ArrowDown } from 'react-feather'
 import { useLocation, useNavigate } from 'react-router-dom'
@@ -527,10 +526,10 @@ export function Swap({
 
     setSwapQuoteReceivedDate(new Date())
     sendAnalyticsEvent(SwapEventName.SWAP_QUOTE_RECEIVED, {
-      ...formatEventPropertiesForTrade(trade, allowedSlippage, trade.gasUseEstimateUSD ?? undefined, method),
+      ...formatEventPropertiesForTrade(trade, trade.gasUseEstimateUSD ?? undefined, method),
       ...trace,
     })
-  }, [prevTrade, trade, trace, allowedSlippage, method])
+  }, [prevTrade, trade, trace, method])
 
   const showDetailsDropdown = Boolean(
     !showWrap && userHasSpecifiedInputOutput && (trade || routeIsLoading || routeIsSyncing)
