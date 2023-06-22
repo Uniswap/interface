@@ -1,4 +1,4 @@
-import { BlurView } from 'expo-blur'
+import { BlurView } from '@react-native-community/blur'
 import React from 'react'
 import { StyleSheet } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
@@ -8,8 +8,6 @@ import EthereumLogo from 'ui/src/assets/logos/ethereum.svg'
 import { theme as FixedTheme, Theme } from 'ui/src/theme/restyle/theme'
 import { Amount } from 'wallet/src/data/__generated__/types-and-hooks'
 import { formatNumber, NumberType } from 'wallet/src/utils/format'
-
-const BLUR_INTENSITY = 35
 
 interface ListPriceProps extends BoxProps {
   price: Amount
@@ -23,7 +21,12 @@ interface ListPriceProps extends BoxProps {
 export function ListPriceBadge(props: ListPriceProps): JSX.Element {
   return (
     <Box alignItems="center" {...props}>
-      <BlurView intensity={BLUR_INTENSITY} style={Styles.blurView} tint="dark">
+      <BlurView
+        blurAmount={20}
+        blurType="light"
+        reducedTransparencyFallbackColor="black"
+        style={Styles.blurView}>
+        <Flex bg="black" bottom={0} left={0} opacity={0.25} position="absolute" right={0} top={0} />
         <PriceAmount {...props} />
       </BlurView>
     </Box>

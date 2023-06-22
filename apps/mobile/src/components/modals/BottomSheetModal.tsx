@@ -5,8 +5,8 @@ import {
   BottomSheetView,
   useBottomSheetDynamicSnapPoints,
 } from '@gorhom/bottom-sheet'
+import { BlurView } from '@react-native-community/blur'
 import { useResponsiveProp } from '@shopify/restyle'
-import { BlurView } from 'expo-blur'
 import React, { ComponentProps, PropsWithChildren, useCallback, useEffect, useRef } from 'react'
 import { Keyboard, StyleSheet } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -130,9 +130,10 @@ export function BottomSheetModal({
   const renderBlurredBg = useCallback(
     () => (
       <BlurView
-        intensity={90}
+        blurAmount={5}
+        blurType={isDarkMode ? 'dark' : 'xlight'}
+        reducedTransparencyFallbackColor={isDarkMode ? 'black' : 'white'}
         style={[BlurViewStyle.base, { borderRadius }]}
-        tint={isDarkMode ? 'dark' : 'light'}
       />
     ),
     [borderRadius, isDarkMode]

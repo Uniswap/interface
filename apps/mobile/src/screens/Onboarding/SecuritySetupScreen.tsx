@@ -1,6 +1,6 @@
+import { BlurView } from '@react-native-community/blur'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { SharedEventName } from '@uniswap/analytics-events'
-import { BlurView } from 'expo-blur'
 import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert, Image, StyleSheet } from 'react-native'
@@ -114,7 +114,12 @@ export function SecuritySetupScreen({ route: { params } }: Props): JSX.Element {
               backgroundColor: opacify(35, theme.colors.background0),
             }}
             top={0}>
-            <BlurView intensity={20} style={styles.blurView} tint="dark" />
+            <BlurView
+              blurAmount={5}
+              blurType="dark"
+              reducedTransparencyFallbackColor="black"
+              style={styles.blurView}
+            />
             {isTouchIdDevice ? (
               <FingerprintIcon
                 color={theme.colors.textPrimary}

@@ -364,8 +364,6 @@ PODS:
     - ExpoModulesCore
     - ZXingObjC/OneD
     - ZXingObjC/PDF417
-  - EXBlur (12.0.1):
-    - ExpoModulesCore
   - EXImageLoader (4.1.1):
     - ExpoModulesCore
     - React-Core
@@ -753,6 +751,8 @@ PODS:
   - react-native-appsflyer (6.10.3):
     - AppsFlyerFramework (= 6.10.1)
     - React
+  - react-native-blur (4.3.2):
+    - React-Core
   - react-native-context-menu-view (1.6.0):
     - React
   - react-native-flipper-performance-plugin (0.3.1):
@@ -984,7 +984,6 @@ DEPENDENCIES:
   - EXApplication (from `../../../node_modules/expo-application/ios`)
   - EXAV (from `../../../node_modules/expo-av/ios`)
   - EXBarCodeScanner (from `../../../node_modules/expo-barcode-scanner/ios`)
-  - EXBlur (from `../../../node_modules/expo-blur/ios`)
   - EXImageLoader (from `../../../node_modules/expo-image-loader/ios`)
   - EXLocalAuthentication (from `../../../node_modules/expo-local-authentication/ios`)
   - "experiment-react-native-client (from `../../../node_modules/@amplitude/experiment-react-native-client`)"
@@ -1021,6 +1020,7 @@ DEPENDENCIES:
   - React-jsinspector (from `../../../node_modules/react-native/ReactCommon/jsinspector`)
   - React-logger (from `../../../node_modules/react-native/ReactCommon/logger`)
   - react-native-appsflyer (from `../../../node_modules/react-native-appsflyer`)
+  - "react-native-blur (from `../../../node_modules/@react-native-community/blur`)"
   - react-native-context-menu-view (from `../../../node_modules/react-native-context-menu-view`)
   - react-native-flipper-performance-plugin (from `../../../node_modules/react-native-flipper-performance-plugin`)
   - react-native-get-random-values (from `../../../node_modules/react-native-get-random-values`)
@@ -1119,8 +1119,6 @@ EXTERNAL SOURCES:
     :path: "../../../node_modules/expo-av/ios"
   EXBarCodeScanner:
     :path: "../../../node_modules/expo-barcode-scanner/ios"
-  EXBlur:
-    :path: "../../../node_modules/expo-blur/ios"
   EXImageLoader:
     :path: "../../../node_modules/expo-image-loader/ios"
   EXLocalAuthentication:
@@ -1187,6 +1185,8 @@ EXTERNAL SOURCES:
     :path: "../../../node_modules/react-native/ReactCommon/logger"
   react-native-appsflyer:
     :path: "../../../node_modules/react-native-appsflyer"
+  react-native-blur:
+    :path: "../../../node_modules/@react-native-community/blur"
   react-native-context-menu-view:
     :path: "../../../node_modules/react-native-context-menu-view"
   react-native-flipper-performance-plugin:
@@ -1287,7 +1287,6 @@ SPEC CHECKSUMS:
   EXApplication: 034b1c40a8e9fe1bff76a1e511ee90dff64ad834
   EXAV: 9a45d37772c5329294c054a041dcc39931fc5032
   EXBarCodeScanner: 8e23fae8d267dbef9f04817833a494200f1fce35
-  EXBlur: d87af64a1b4ae264059983bf54baca72be2cbc7d
   EXImageLoader: fd053169a8ee932dd83bf1fe5487a50c26d27c2b
   EXLocalAuthentication: 4c7166ed3133d2c75586093833936652e7d2c7fc
   experiment-react-native-client: c2af8630b6209c5d4dcebdcd71ba7ad38abdcc38
@@ -1343,6 +1342,7 @@ SPEC CHECKSUMS:
   React-jsinspector: 5e5497c844f2381e8648ec3a7d0ad25b3f27f23e
   React-logger: b277ad8f4473f2506fb30b762b6348534a3de10e
   react-native-appsflyer: 153e96b97ecc0c26b14fc79911675e51cfd35b36
+  react-native-blur: cfdad7b3c01d725ab62a8a729f42ea463998afa2
   react-native-context-menu-view: d3b3e77985d5b05674a70f8e7eafe404dfa5bbcc
   react-native-flipper-performance-plugin: 2b873b68da3e368afeaf29c9c7a8c2b0ff908c4f
   react-native-get-random-values: a6ea6a8a65dc93e96e24a11105b1a9c8cfe1d72a

@@ -1,4 +1,4 @@
-import { BlurView } from 'expo-blur'
+import { BlurView } from '@react-native-community/blur'
 import React from 'react'
 import { StyleSheet, View } from 'react-native'
 import { FadeIn } from 'react-native-reanimated'
@@ -27,8 +27,9 @@ export const BlurredImageBackground = ({
           <NFTViewer squareGridView uri={imageUri} />
         </AnimatedFlex>
       ) : null}
-      <BlurView intensity={99} style={StyleSheet.absoluteFill} />
-      <Box opacity={0.8} style={[StyleSheet.absoluteFill, { backgroundColor }]} />
+      <BlurView blurAmount={25} blurType="light" style={StyleSheet.absoluteFill}>
+        <Box opacity={0.65} style={[StyleSheet.absoluteFill, { backgroundColor }]} />
+      </BlurView>
     </View>
   )
 }

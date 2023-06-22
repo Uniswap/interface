@@ -5933,6 +5933,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@react-native-community/blur@npm:4.3.2":
+  version: 4.3.2
+  resolution: "@react-native-community/blur@npm:4.3.2"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: 4f7ed6a3bb58cd53346bb7d5755bb2733e8401fdae86334fde4f2fa0c554734e9bb52175c1f9ef1d99766aeb7a4991ac5dfe428c92da518d0353a1a6e5c3d39c
+  languageName: node
+  linkType: hard
+
 "@react-native-community/cli-clean@npm:^9.2.1":
   version: 9.2.1
   resolution: "@react-native-community/cli-clean@npm:9.2.1"
@@ -11289,6 +11299,7 @@ __metadata:
     "@formatjs/intl-relativetimeformat": 11.1.2
     "@gorhom/bottom-sheet": 4.4.5
     "@react-native-async-storage/async-storage": 1.17.10
+    "@react-native-community/blur": 4.3.2
     "@react-native-community/eslint-config": 3.0.3
     "@react-native-community/netinfo": 9.3.0
     "@react-native-firebase/app": 14.12.0
@@ -11362,7 +11373,6 @@ __metadata:
     expo: 47.0.11
     expo-av: 13.0.2
     expo-barcode-scanner: 12.3.2
-    expo-blur: 12.0.1
     expo-clipboard: 4.1.2
     expo-haptics: 12.0.1
     expo-linear-gradient: 12.1.2
@@ -19375,15 +19385,6 @@ __metadata:
   peerDependencies:
     expo: "*"
   checksum: b07831a8b7205c838be54268ac927ca4ce431065f55f551d37e9957e3b2bae0c6b208fee278d846a9f06d9cd9e71d54f3821818c80327fa8387a7b56ee1291af
-  languageName: node
-  linkType: hard
-
-"expo-blur@npm:12.0.1":
-  version: 12.0.1
-  resolution: "expo-blur@npm:12.0.1"
-  peerDependencies:
-    expo: "*"
-  checksum: 4b76c5618fdc390d7cb2468f0f6fa8e5a1fe44c11706f8ee4002dd2ffb79eaae940b3956cf04bf67fcfaa088b9d82f1c732467ada7a8be8a586dfd775292633c
   languageName: node
   linkType: hard
 

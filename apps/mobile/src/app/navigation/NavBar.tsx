@@ -1,6 +1,6 @@
+import { BlurView } from '@react-native-community/blur'
 import { ShadowProps, useResponsiveProp } from '@shopify/restyle'
 import { SharedEventName } from '@uniswap/analytics-events'
-import { BlurView } from 'expo-blur'
 import { impactAsync } from 'expo-haptics'
 import React, { memo, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -231,7 +231,7 @@ function ExploreTabBarButton({ activeScale = 0.98 }: ExploreTabBarButtonProps): 
       onPress={onPress}>
       <TapGestureHandler onGestureEvent={onGestureEvent}>
         <AnimatedFlex borderRadius="roundedFull" overflow="hidden" style={animatedStyle}>
-          <BlurView intensity={100}>
+          <BlurView blurAmount={32} blurType={isDarkMode ? 'dark' : 'light'}>
             <Flex
               grow
               row
