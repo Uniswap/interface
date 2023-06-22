@@ -95,7 +95,7 @@ export const routingApiV2 = createApi({
             const quoteData = response.data as QuoteDataV2
             const tradeResult = transformRoutesToTrade(args, quoteData.quote)
 
-            return { data: tradeResult, method: QuoteMethod.ROUTING_API }
+            return { data: { ...tradeResult, method: QuoteMethod.ROUTING_API } }
           } catch (error: any) {
             console.warn(
               `GetQuote failed on API v2, falling back to client: ${error?.message ?? error?.detail ?? error}`
@@ -103,11 +103,12 @@ export const routingApiV2 = createApi({
           }
         }
         try {
+          console.log('in fallback case')
           const method = fellBack ? QuoteMethod.CLIENT_SIDE_FALLBACK : QuoteMethod.CLIENT_SIDE
           const router = getRouter(args.tokenInChainId)
           const quoteResult = await getClientSideQuote(args, router, CLIENT_PARAMS)
           if (quoteResult.state === QuoteState.SUCCESS) {
-            return { data: transformRoutesToTrade(args, quoteResult.data), method }
+            return { data: { ...transformRoutesToTrade(args, quoteResult.data), method } }
           } else {
             return { data: quoteResult }
           }
