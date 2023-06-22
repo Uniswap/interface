@@ -6,22 +6,6 @@ import { initialState as initialListsState } from './lists/reducer'
 import { initialState as initialTransactionsState } from './transactions/reducer'
 import { initialState as initialUserState } from './user/reducer'
 
-// // Mock redux-persist storage
-// jest.mock('redux-persist/lib/storage', () => {
-//   const storage: Record<string, string> = {}
-//   return {
-//     setItem: (key: string, value: string) =>
-//       Promise.resolve().then(() => {
-//         storage[key] = value
-//       }),
-//     getItem: (key: string) => Promise.resolve().then(() => storage[key]),
-//     removeItem: (key: string) =>
-//       Promise.resolve().then(() => {
-//         delete storage[key]
-//       }),
-//   }
-// })
-
 const defaultState = {
   lists: {},
   transactions: {},
@@ -125,13 +109,6 @@ describe('redux migrations', () => {
     expect(localStorage.getItem('redux_localstorage_simple_user')).toBeNull()
     expect(localStorage.getItem('redux_localstorage_simple_lists')).toBeNull()
 
-    // todo: test the new persisted values after mocking localStorage
-    // expect(JSON.parse(localStorage.getItem('persist:root') ?? '{}')).toMatchObject({
-    //   user: state.user,
-    //   transactions: state.transactions,
-    //   lists: state.lists,
-    // })
-
     const state = store.getState()
     expect(state).toMatchObject({
       ...defaultState,
@@ -154,13 +131,6 @@ describe('redux migrations', () => {
     await new Promise((resolve) => setTimeout(resolve, 0))
     const state = store.getState()
     expect(state).toMatchObject(defaultState)
-
-    // todo: test the new persisted values after mocking localStorage
-    // expect(JSON.parse(localStorage.getItem('persist:root') ?? '{}')).toMatchObject({
-    //   user: state.user,
-    //   transactions: state.transactions,
-    //   lists: state.lists,
-    // })
   })
 
   it('migrates from a previous version of the state type', async () => {
@@ -180,12 +150,5 @@ describe('redux migrations', () => {
 
     const state = store.getState()
     expect(state).toMatchObject(defaultState)
-
-    // todo: test the new persisted values after mocking localStorage
-    // expect(JSON.parse(localStorage.getItem('persist:root') ?? '{}')).toMatchObject({
-    //   user: state.user,
-    //   transactions: state.transactions,
-    //   lists: state.lists,
-    // })
   })
 })
