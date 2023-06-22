@@ -63,6 +63,8 @@ export function useBestTrade(
     !(autoRouterSupported && shouldGetTrade) // skip fetching
   )
 
+  console.log(routingAPITrade, 'routing api trade')
+
   const inDebounce =
     (!debouncedAmount && Boolean(amountSpecified)) || (!debouncedOtherCurrency && Boolean(otherCurrency))
   const isLoading = routingAPITrade.state === TradeState.LOADING || inDebounce
