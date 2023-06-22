@@ -514,7 +514,7 @@ exports[`SearchPopularTokens renders without error 2`] = `
       {
         "address": null,
         "chainId": 1,
-        "logoUrl": "ethlogo.png",
+        "logoUrl": "https://loremflickr.com/640/480",
         "name": "Ethereum",
         "symbol": "ETH",
         "type": 1,
@@ -522,7 +522,7 @@ exports[`SearchPopularTokens renders without error 2`] = `
       {
         "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
         "chainId": 1,
-        "logoUrl": "usdclogo.png",
+        "logoUrl": "https://loremflickr.com/640/480",
         "name": "USD Coin",
         "symbol": "USDC",
         "type": 1,
@@ -609,7 +609,7 @@ exports[`SearchPopularTokens renders without error 2`] = `
             <Image
               source={
                 {
-                  "uri": "ethlogo.png",
+                  "uri": "https://loremflickr.com/640/480",
                 }
               }
               style={
@@ -813,7 +813,7 @@ exports[`SearchPopularTokens renders without error 2`] = `
             <Image
               source={
                 {
-                  "uri": "usdclogo.png",
+                  "uri": "https://loremflickr.com/640/480",
                 }
               }
               style={

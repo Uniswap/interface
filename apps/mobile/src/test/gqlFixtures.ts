@@ -419,7 +419,7 @@ export const EthToken: [Token] = [
     symbol: 'ETH',
     project: {
       id: faker.datatype.uuid(),
-      logoUrl: 'ethlogo.png',
+      logoUrl: faker.image.imageUrl(),
       name: 'Ethereum',
       tokens: [],
     },
@@ -471,7 +471,7 @@ export const TopTokens: [Token, Token] = [
     symbol: 'WETH',
     project: {
       id: faker.datatype.uuid(),
-      logoUrl: 'wethlogo.png',
+      logoUrl: faker.image.imageUrl(),
       name: 'Wrapped Ether',
       tokens: [],
     },
@@ -483,7 +483,7 @@ export const TopTokens: [Token, Token] = [
     symbol: 'USDC',
     project: {
       id: faker.datatype.uuid(),
-      logoUrl: 'usdclogo.png',
+      logoUrl: faker.image.imageUrl(),
       name: 'USD Coin',
       tokens: [],
     },

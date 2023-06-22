@@ -36,16 +36,17 @@ export function formatTokenSearchResults(
       if (!chainId || !project) return tokensMap
 
       const { name, safetyLevel, logoUrl } = project
-      const tokenResult = {
+
+      const tokenResult: TokenSearchResult & { volume1Y: number } = {
         type: SearchResultType.Token,
         chainId,
-        address,
-        name,
+        address: address ?? null,
+        name: name ?? null,
         symbol: symbol ?? '',
-        safetyLevel,
-        logoUrl,
+        safetyLevel: safetyLevel ?? null,
+        logoUrl: logoUrl ?? null,
         volume1Y: market?.volume?.value ?? 0,
-      } as TokenSearchResult & { volume1Y: number }
+      }
 
       // For token results that share the same TokenProject id, use the token with highest volume
       const currentTokenResult = tokensMap[project.id]
@@ -75,7 +76,7 @@ export function formatTokenSearchResults(
 
 function isExactTokenSearchResultMatch(searchResult: TokenSearchResult, query: string): boolean {
   return (
-    searchResult.name.toLowerCase() === query.toLowerCase() ||
+    searchResult.name?.toLowerCase() === query.toLowerCase() ||
     searchResult.symbol.toLowerCase() === query.toLowerCase()
   )
 }

@@ -27,11 +27,11 @@ export interface WalletSearchResult extends SearchResultBase {
 export interface TokenSearchResult extends SearchResultBase {
   type: SearchResultType.Token
   chainId: ChainId
-  address: Address | null
-  name: string
   symbol: string
+  address: Address | null
+  name: string | null
   logoUrl: string | null
-  safetyLevel: SafetyLevel
+  safetyLevel: SafetyLevel | null
 }
 
 export interface NFTCollectionSearchResult extends SearchResultBase {

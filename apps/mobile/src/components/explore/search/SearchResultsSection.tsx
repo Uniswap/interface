@@ -77,12 +77,12 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }): 
     variables: { searchQuery, nftCollectionsFilter: { nameQuery: searchQuery } },
   })
 
-  const tokenResults = useMemo(() => {
+  const tokenResults = useMemo<TokenSearchResult[]>(() => {
     if (!searchResultsData || !searchResultsData.searchTokens) return EMPTY_ARRAY
     return formatTokenSearchResults(searchResultsData.searchTokens, searchQuery)
   }, [searchQuery, searchResultsData])
 
-  const nftCollectionResults = useMemo(() => {
+  const nftCollectionResults = useMemo<NFTCollectionSearchResult[]>(() => {
     if (!searchResultsData || !searchResultsData.nftCollections) return EMPTY_ARRAY
     return formatNFTCollectionSearchResults(searchResultsData.nftCollections)
   }, [searchResultsData])
@@ -277,7 +277,7 @@ export const renderSearchItem = ({
 
 function isPrefixTokenMatch(searchResult: TokenSearchResult, query: string): boolean {
   return (
-    searchResult.name.toLowerCase().startsWith(query.toLowerCase()) ||
+    searchResult.name?.toLowerCase().startsWith(query.toLowerCase()) ||
     searchResult.symbol.toLowerCase().startsWith(query.toLowerCase())
   )
 }

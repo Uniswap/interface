@@ -37,7 +37,7 @@ export function SearchTokenItem({ token, searchContext }: SearchTokenItemProps):
     if (searchContext) {
       sendAnalyticsEvent(MobileEventName.ExploreSearchResultClicked, {
         query: searchContext.query,
-        name,
+        name: name ?? '',
         chain: token.chainId,
         address: address ?? '',
         type: 'token',

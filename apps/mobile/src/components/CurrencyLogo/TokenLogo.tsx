@@ -8,6 +8,7 @@ import { Box } from 'src/components/layout/Box'
 import { Text } from 'src/components/Text'
 import { iconSizes } from 'ui/src/theme/iconSizes'
 import { ChainId } from 'wallet/src/constants/chains'
+import { uriToHttp } from 'wallet/src/utils/uriToHttp'
 
 interface TokenLogoProps {
   url?: string | null
@@ -26,12 +27,13 @@ export function TokenLogo({
 }: TokenLogoProps): JSX.Element {
   const theme = useAppTheme()
   const showNetworkLogo = !hideNetworkLogo && chainId && chainId !== ChainId.Mainnet
+  const httpUri = url ? uriToHttp(url)[0] : null
 
   return (
     <Box alignItems="center" height={size} justifyContent="center" width={size}>
-      {url ? (
+      {httpUri ? (
         <Image
-          source={{ uri: url }}
+          source={{ uri: httpUri }}
           style={[
             style.image,
             {
