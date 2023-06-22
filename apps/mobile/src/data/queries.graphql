@@ -555,7 +555,6 @@ query TopTokens(
     pageSize: $pageSize
     orderBy: $orderBy
   ) {
-    id
     address
     chain
     decimals
