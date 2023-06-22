@@ -10,7 +10,7 @@ import { Button } from 'ui/src/components/button/Button'
 import { Flex } from 'ui/src/components/layout/Flex'
 import { Unicon } from 'ui/src/components/Unicon'
 import { iconSizes } from 'ui/src/theme/iconSizes'
-import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
+import { useAccount, useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 import { sanitizeAddressText, shortenAddress } from 'wallet/src/utils/addresses'
 
 const POPUP_WIDTH = 400
@@ -23,6 +23,11 @@ const PINNED_CHECK_FREQUENCY_IN_MS = 750
 
 export function Complete(): JSX.Element {
   const address = useActiveAccountAddressWithThrow()
+
+  // TODO(EXT-186): handle default naming better
+  const account = useAccount(address)
+  const ensName = undefined // TODO: Add ENS lookup logic
+  const nickname = ensName || account.name || 'Wallet 1' // TODO: Update after ens is defined
 
   if (!address) {
     throw new Error('No address found')
@@ -52,7 +57,7 @@ export function Complete(): JSX.Element {
             {/* TODO: use AddressDisplay here */}
             <Unicon address={address} size={iconSizes.icon64} />
             <Text color="$textPrimary" variant="headlineLarge">
-              Wallet 1
+              {nickname}
             </Text>
             <Text color="$textSecondary" variant="subheadSmall">
               {sanitizeAddressText(shortenAddress(address))}

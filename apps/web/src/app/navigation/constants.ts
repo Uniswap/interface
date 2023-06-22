@@ -13,6 +13,7 @@ export enum CreateOnboardingRoutes {
   ViewMnemonic = 'mnemonic',
   TestMnemonic = 'testMnemonic',
   Naming = 'naming',
+  Complete = 'complete',
 }
 
 export enum ImportOnboardingRoutes {
@@ -29,6 +30,7 @@ export const createOnboardingSteps = [
   CreateOnboardingRoutes.ViewMnemonic,
   CreateOnboardingRoutes.TestMnemonic,
   CreateOnboardingRoutes.Naming,
+  CreateOnboardingRoutes.Complete,
 ]
 export const importOnboardingSteps = [
   ImportOnboardingRoutes.Password,

@@ -57,6 +57,7 @@ const router = createHashRouter([
             path: CreateOnboardingRoutes.Password,
             element: (
               <Password
+                createAccountOnNext
                 nextPath={`/${TopLevelRoutes.Onboarding}/${OnboardingRoutes.Create}/${CreateOnboardingRoutes.ViewMnemonic}`}
               />
             ),
@@ -71,7 +72,15 @@ const router = createHashRouter([
           },
           {
             path: CreateOnboardingRoutes.Naming,
-            element: <NameWallet />,
+            element: (
+              <NameWallet
+                nextPath={`/${TopLevelRoutes.Onboarding}/${OnboardingRoutes.Create}/${CreateOnboardingRoutes.Complete}`}
+              />
+            ),
+          },
+          {
+            path: CreateOnboardingRoutes.Complete,
+            element: <Complete />,
           },
         ],
       },

@@ -4,16 +4,30 @@ import { usePasswordInput } from 'src/app/features/lockScreen/Locked'
 import { useOnboardingContext } from 'src/app/features/onboarding/OnboardingContextProvider'
 import { OnboardingInputError } from 'src/app/features/onboarding/OnboardingInputError'
 import { ONBOARDING_CONTENT_WIDTH } from 'src/app/features/onboarding/utils'
+import { useAppDispatch } from 'src/background/store'
 import { Input, Stack, XStack, YStack } from 'tamagui'
 import { Text } from 'ui/src'
 import { Button } from 'ui/src/components/button/Button'
+import { inputStyles } from 'ui/src/components/input/utils'
+import { createAccountActions } from 'wallet/src/features/wallet/create/createAccountSaga'
+import {
+  PendingAccountActions,
+  pendingAccountActions,
+} from 'wallet/src/features/wallet/create/pendingAccountsSaga'
 import { isValidPassword } from 'wallet/src/utils/password'
 
-export function Password({ nextPath }: { nextPath: string }): JSX.Element {
+export function Password({
+  nextPath,
+  createAccountOnNext,
+}: {
+  nextPath: string
+  createAccountOnNext?: boolean
+}): JSX.Element {
+  const dispatch = useAppDispatch()
   const navigate = useNavigate()
 
   const [passwordError, setPasswordError] = useState<string | undefined>(undefined)
-  const { setPassword, setPendingAddress: setCreatedAddress } = useOnboardingContext()
+  const { setPassword } = useOnboardingContext()
 
   const passwordInputProps = usePasswordInput()
 
@@ -23,8 +37,14 @@ export function Password({ nextPath }: { nextPath: string }): JSX.Element {
     if (isValidPassword(enteredPassword)) {
       setPassword(enteredPassword)
       setPasswordError(undefined)
-      setCreatedAddress(undefined)
       navigate(nextPath)
+
+      // in import flow, we create the account later in the flow
+      // in create flow, we need to create it here
+      if (createAccountOnNext) {
+        dispatch(pendingAccountActions.trigger(PendingAccountActions.DELETE))
+        dispatch(createAccountActions.trigger({ validatedPassword: enteredPassword }))
+      }
     }
   }
 
@@ -42,9 +62,9 @@ export function Password({ nextPath }: { nextPath: string }): JSX.Element {
           borderColor="$backgroundOutline"
           borderRadius="$rounded12"
           borderWidth={1}
-          focusStyle={styles.inputFocus}
+          focusStyle={inputStyles.inputFocus}
           height="auto"
-          hoverStyle={styles.inputHover}
+          hoverStyle={inputStyles.inputHover}
           id="password"
           paddingHorizontal="$spacing16"
           paddingVertical="$spacing12"
@@ -73,9 +93,4 @@ export function Password({ nextPath }: { nextPath: string }): JSX.Element {
       </XStack>
     </Stack>
   )
-}
-
-const styles = {
-  inputFocus: { borderWidth: 1, borderColor: '$textTertiary', outlineWidth: 0 },
-  inputHover: { borderWidth: 1, borderColor: '$background3', outlineWidth: 0 },
 }

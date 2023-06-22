@@ -4,9 +4,11 @@ type OnboardingContextState = {
   password: string | undefined
   pendingAddress: string | undefined
   pendingMnemonic: string[] | undefined
+  walletName: string | undefined
   setPassword: Dispatch<SetStateAction<string | undefined>>
   setPendingAddress: Dispatch<SetStateAction<string | undefined>>
   setPendingMnemonic: Dispatch<SetStateAction<string[] | undefined>>
+  setWalletName: Dispatch<SetStateAction<string | undefined>>
 }
 
 /**
@@ -19,6 +21,7 @@ export const OnboardingContextProvider = ({ children }: { children: ReactNode })
   const [password, setPassword] = useState<string | undefined>(undefined)
   const [pendingAddress, setPendingAddress] = useState<string | undefined>(undefined)
   const [pendingMnemonic, setPendingMnemonic] = useState<string[] | undefined>(undefined)
+  const [walletName, setWalletName] = useState<string | undefined>(undefined)
 
   return (
     <OnboardingContext.Provider
@@ -26,9 +29,11 @@ export const OnboardingContextProvider = ({ children }: { children: ReactNode })
         password,
         pendingAddress,
         pendingMnemonic,
+        walletName,
         setPassword,
         setPendingAddress,
         setPendingMnemonic,
+        setWalletName,
       }}>
       {children}
     </OnboardingContext.Provider>

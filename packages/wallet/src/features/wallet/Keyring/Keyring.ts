@@ -98,7 +98,7 @@ class NullKeyring implements IKeyring {
   }
 
   // returns the mnemonicId (derived address at index 0) of the stored mnemonic
-  generateAndStoreMnemonic(): Promise<string> {
+  generateAndStoreMnemonic(_password?: string): Promise<string> {
     throw new NotImplementedError('generateAndStoreMnemonic')
   }
 

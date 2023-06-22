@@ -11,6 +11,7 @@ import {
 import { useAppDispatch } from 'src/background/store'
 import { Input, Stack, Text, XStack, YStack } from 'ui/src'
 import { Button } from 'ui/src/components/button/Button'
+import { inputStyles } from 'ui/src/components/input/utils'
 import { importAccountActions } from 'wallet/src/features/wallet/import/importAccountSaga'
 import { ImportAccountType } from 'wallet/src/features/wallet/import/types'
 import { NUMBER_OF_WALLETS_TO_IMPORT } from 'wallet/src/features/wallet/import/utils'
@@ -71,9 +72,9 @@ export function ImportMnemonic(): JSX.Element {
           borderColor="$backgroundOutline"
           borderRadius="$rounded12"
           borderWidth={1}
-          focusStyle={styles.inputFocus}
+          focusStyle={inputStyles.inputFocus}
           height="auto"
-          hoverStyle={styles.inputHover}
+          hoverStyle={inputStyles.inputHover}
           id="mnemonic"
           paddingHorizontal="$spacing16"
           paddingVertical="$spacing12"
@@ -103,9 +104,4 @@ export function ImportMnemonic(): JSX.Element {
       </XStack>
     </Stack>
   )
-}
-
-const styles = {
-  inputFocus: { borderWidth: 1, borderColor: '$textTertiary', outlineWidth: 0 },
-  inputHover: { borderWidth: 1, borderColor: '$background3', outlineWidth: 0 },
 }

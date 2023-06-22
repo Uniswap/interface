@@ -7,13 +7,17 @@ import {
   OnboardingRoutes,
   TopLevelRoutes,
 } from 'src/app/navigation/constants'
-import { Stack, XStack } from 'tamagui'
-import { Input, Text } from 'ui/src'
+import { useAppDispatch } from 'src/background/store'
+import { Input, Stack, Text, XStack } from 'ui/src'
 import { Button } from 'ui/src/components/button/Button'
+import { inputStyles } from 'ui/src/components/input/utils'
 import { EMPTY_ARRAY } from 'wallet/src/constants/misc'
+import { activateAccount } from 'wallet/src/features/wallet/slice'
 
 export function TestMnemonic({ numberOfTests = 4 }: { numberOfTests?: number }): JSX.Element {
   const navigate = useNavigate()
+  const dispatch = useAppDispatch()
+
   const { pendingAddress: createdAddress, pendingMnemonic: createdMnemonic } =
     useOnboardingContext()
   const [completedTests, markTestCompleted] = useReducer((v: number) => v + 1, 0)
@@ -39,12 +43,12 @@ export function TestMnemonic({ numberOfTests = 4 }: { numberOfTests?: number }):
   const nextWordNumber = nextWordIndex + 1
 
   const onNext = useCallback((): void => {
-    if (!createdMnemonic) {
+    if (!createdMnemonic || !createdAddress) {
       return
     }
     const validWord = userWordInput === createdMnemonic[nextWordIndex]
     if (validWord && isLastTest()) {
-      // TODO create account here now that the user has validated as we go to next step to name wallet
+      dispatch(activateAccount(createdAddress))
       navigate(
         `/${TopLevelRoutes.Onboarding}/${OnboardingRoutes.Create}/${CreateOnboardingRoutes.Naming}`
       )
@@ -54,7 +58,15 @@ export function TestMnemonic({ numberOfTests = 4 }: { numberOfTests?: number }):
     } else {
       // TODO error state / notify user in some way, not yet designed
     }
-  }, [createdMnemonic, isLastTest, navigate, nextWordIndex, userWordInput])
+  }, [
+    createdAddress,
+    createdMnemonic,
+    dispatch,
+    isLastTest,
+    navigate,
+    nextWordIndex,
+    userWordInput,
+  ])
 
   return (
     <Stack alignItems="center" gap="$spacing36" minWidth={450}>
@@ -70,8 +82,8 @@ export function TestMnemonic({ numberOfTests = 4 }: { numberOfTests?: number }):
         borderColor="$backgroundOutline"
         borderRadius="$rounded12"
         borderWidth={1}
-        focusStyle={styles.inputFocus}
-        hoverStyle={styles.inputHover}>
+        focusStyle={inputStyles.inputFocus}
+        hoverStyle={inputStyles.inputHover}>
         <Text
           color="$textTertiary"
           paddingHorizontal="$spacing16"
@@ -85,9 +97,9 @@ export function TestMnemonic({ numberOfTests = 4 }: { numberOfTests?: number }):
           borderColor="$backgroundOutline"
           borderRadius="$rounded12"
           borderWidth={0}
-          focusStyle={styles.noOutline}
+          focusStyle={inputStyles.noOutline}
           height="auto"
-          hoverStyle={styles.noOutline}
+          hoverStyle={inputStyles.noOutline}
           paddingHorizontal="$spacing16"
           paddingVertical="$spacing12"
           placeholder=""
@@ -121,10 +133,4 @@ function selectRandomNumbers(maxNumber: number, numberOfNumbers: number): number
   const selectedIndexes = shuffledIndexes.slice(0, numberOfNumbers)
   selectedIndexes.sort((a, b) => a - b)
   return selectedIndexes
-}
-
-const styles = {
-  noOutline: { outlineWidth: 0 },
-  inputFocus: { borderWidth: 1, borderColor: '$textTertiary', outlineWidth: 0 },
-  inputHover: { borderWidth: 1, borderColor: '$background3', outlineWidth: 0 },
 }

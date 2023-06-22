@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { HideContentShield } from 'src/app/components/hideContent/HideContentShield'
 import { useOnboardingContext } from 'src/app/features/onboarding/OnboardingContextProvider'
 import { UniconWithLockIcon } from 'src/app/features/onboarding/UniconWithLockIcon'
+import { ONBOARDING_CONTENT_WIDTH } from 'src/app/features/onboarding/utils'
 import {
   CreateOnboardingRoutes,
   OnboardingRoutes,
@@ -13,7 +14,8 @@ import { Text, YStack } from 'ui/src'
 import { Button } from 'ui/src/components/button/Button'
 import { Flex } from 'ui/src/components/layout/Flex'
 import { colorsDark } from 'ui/src/theme/color'
-import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring.web'
+import { usePendingAccounts } from 'wallet/src/features/wallet/hooks'
+import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 
 const ROW_SIZE = 3
 const NUM_ROWS = 4
@@ -39,28 +41,39 @@ export function ViewMnemonic(): JSX.Element {
     })
   }, [createdMnemonic])
 
-  // Generate a mnemonic and address if none exist but there's a password
+  const pendingAccountAddress = Object.values(usePendingAccounts())?.[0]?.address
+
   useEffect(() => {
-    async function generateNewWallet(): Promise<void> {
-      if (!password) {
-        // TODO handle this case better
-        // navigate back if there's no password available (should always be once we get to this screen)
-        navigate(-1)
-        return
-      }
-      if (!createdAddress) {
-        const newAddress = await Keyring.generateAndStoreMnemonic(password)
-        setCreatedAddress(newAddress)
-        const mnemonicString = await Keyring.retrieveMnemonicUnlocked(newAddress)
+    // TODO: potentially do this in the createAccountOnNext function of Password.tsx and set mnemonic as onboarding context value instead of in a useEffect on this page
+
+    // retrieve mnemonic and split by space to get array of words
+    async function splitMnemonicIntoWordArray(): Promise<void> {
+      if (pendingAccountAddress) {
+        setCreatedAddress(pendingAccountAddress)
+        const mnemonicString = await Keyring.retrieveMnemonicUnlocked(pendingAccountAddress)
         setCreatedMnemonic(mnemonicString?.split(' '))
       }
     }
+    splitMnemonicIntoWordArray()
+  }, [
+    pendingAccountAddress,
+    createdAddress,
+    navigate,
+    password,
+    setCreatedAddress,
+    setCreatedMnemonic,
+  ])
 
-    generateNewWallet()
-  }, [createdAddress, navigate, password, setCreatedAddress, setCreatedMnemonic])
+  const onSubmit = (): void => {
+    if (createdAddress) {
+      navigate(
+        `/${TopLevelRoutes.Onboarding}/${OnboardingRoutes.Create}/${CreateOnboardingRoutes.TestMnemonic}`
+      )
+    }
+  }
 
   return (
-    <Stack alignItems="center" minWidth={450}>
+    <Stack alignItems="center" minWidth={ONBOARDING_CONTENT_WIDTH}>
       {createdAddress ? <UniconWithLockIcon address={createdAddress} /> : null}
       <Text variant="headlineSmall">Write down your recovery phrase</Text>
       <Text color={colorsDark.textTertiary} variant="bodySmall">
@@ -92,14 +105,7 @@ export function ViewMnemonic(): JSX.Element {
         <Button flexGrow={1} theme="secondary" onPress={(): void => navigate(-1)}>
           Back
         </Button>
-        <Button
-          flexGrow={1}
-          theme="primary"
-          onPress={(): void => {
-            navigate(
-              `/${TopLevelRoutes.Onboarding}/${OnboardingRoutes.Create}/${CreateOnboardingRoutes.TestMnemonic}`
-            )
-          }}>
+        <Button flexGrow={1} theme="primary" onPress={onSubmit}>
           Next
         </Button>
       </XStack>

@@ -7,6 +7,7 @@ import {
 } from 'wallet/src/features/wallet/accounts/types'
 import { createAccount } from 'wallet/src/features/wallet/create/createAccountSaga'
 import { sharedRootReducer } from 'wallet/src/state/reducer'
+import { SAMPLE_PASSWORD } from 'wallet/src/test/fixtures'
 
 jest.mock('wallet/src/features/wallet/Keyring/Keyring')
 
@@ -18,7 +19,7 @@ const createNativeAccount = async (
     accounts: Account
   }
 }> => {
-  const { storeState } = await expectSaga(createAccount)
+  const { storeState } = await expectSaga(createAccount, { validatedPassword: SAMPLE_PASSWORD })
     .withReducer(sharedRootReducer)
     .withState({
       wallet: {
