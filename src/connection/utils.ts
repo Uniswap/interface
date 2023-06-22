@@ -65,7 +65,6 @@ export enum ErrorCode {
   MM_ALREADY_PENDING = -32002,
 
   WC_V2_MODAL_CLOSED = 'Error: Connection request reset. Please try again.',
-  WC_MODAL_CLOSED = 'Error: User closed modal',
   CB_REJECTED_REQUEST = 'Error: User denied account authorization',
 }
 
