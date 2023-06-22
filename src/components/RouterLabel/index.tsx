@@ -1,22 +1,19 @@
-import { RouterPreference } from 'state/routing/slice'
-import { useRouterPreference } from 'state/user/hooks'
+import { InterfaceTrade } from 'state/routing/types'
+import { isUniswapXTrade } from 'state/routing/utils'
 import { ThemedText } from 'theme'
 
 import UniswapXRouterLabel from './UniswapXRouterLabel'
 
-export default function RouterLabel() {
-  const [routerPreference] = useRouterPreference()
-
-  switch (routerPreference) {
-    case RouterPreference.API:
-      return <ThemedText.BodySmall>Uniswap API</ThemedText.BodySmall>
-    case RouterPreference.CLIENT:
-      return <ThemedText.BodySmall>Uniswap Client</ThemedText.BodySmall>
-    case RouterPreference.X:
-      return (
-        <UniswapXRouterLabel>
-          <ThemedText.BodySmall>Uniswap X</ThemedText.BodySmall>
-        </UniswapXRouterLabel>
-      )
+export default function RouterLabel({ trade }: { trade: InterfaceTrade }) {
+  if (isUniswapXTrade(trade)) {
+    return (
+      <UniswapXRouterLabel>
+        <ThemedText.BodySmall>Uniswap X</ThemedText.BodySmall>
+      </UniswapXRouterLabel>
+    )
   }
+  if (trade.fromClientRouter) {
+    return <ThemedText.BodySmall>Uniswap Client</ThemedText.BodySmall>
+  }
+  return <ThemedText.BodySmall>Uniswap API</ThemedText.BodySmall>
 }

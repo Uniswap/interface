@@ -141,7 +141,7 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
               })
             }}
           >
-            <RouterLabel />
+            <RouterLabel trade={trade} />
           </MouseoverTooltip>
         ) : (
           <MouseoverTooltip
@@ -153,7 +153,7 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
               })
             }}
           >
-            <RouterLabel />
+            <RouterLabel trade={trade} />
           </MouseoverTooltip>
         )}
       </RowBetween>

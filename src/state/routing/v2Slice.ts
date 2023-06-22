@@ -89,7 +89,7 @@ export const routingApiV2 = createApi({
             }
 
             const quoteData = response.data as URAQuoteResponse
-            const tradeResult = transformRoutesToTrade(args, quoteData)
+            const tradeResult = transformRoutesToTrade(args, quoteData, false)
 
             return { data: tradeResult }
           } catch (error: any) {
@@ -102,7 +102,7 @@ export const routingApiV2 = createApi({
           const router = getRouter(args.tokenInChainId)
           const quoteResult = await getClientSideQuote(args, router, CLIENT_PARAMS)
           if (quoteResult.state === QuoteState.SUCCESS) {
-            return { data: transformRoutesToTrade(args, quoteResult.data) }
+            return { data: transformRoutesToTrade(args, quoteResult.data, true) }
           } else {
             return { data: quoteResult }
           }
