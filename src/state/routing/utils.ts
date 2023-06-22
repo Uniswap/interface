@@ -1,6 +1,6 @@
 import { MixedRouteSDK } from '@uniswap/router-sdk'
-import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
-import { AlphaRouter, ChainId } from '@uniswap/smart-order-router'
+import { ChainId, Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
+import { AlphaRouter } from '@uniswap/smart-order-router'
 import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
 import { FeeAmount, Pool, Route as V3Route } from '@uniswap/v3-sdk'
 import { asSupportedChain } from 'constants/chains'

@@ -46,7 +46,7 @@ function useContractMultichain<T extends BaseContract>(
           ? RPC_PROVIDERS[chainId]
           : undefined
       if (provider) {
-        acc[chainId] = getContract(addressMap[chainId], ABI, provider) as T
+        acc[chainId] = getContract(addressMap[chainId] ?? '', ABI, provider) as T
       }
       return acc
     }, {})

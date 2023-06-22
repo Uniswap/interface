@@ -104,7 +104,6 @@ const StatusWrapper = styled.div`
   display: inline-block;
   width: 70%;
   max-width: 70%;
-  overflow: hidden;
   padding-right: 14px;
   display: inline-flex;
 `
@@ -240,7 +239,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
     <AuthenticatedHeaderWrapper>
       <HeaderWrapper>
         <StatusWrapper>
-          <StatusIcon connection={connection} size={40} />
+          <StatusIcon account={account} connection={connection} size={40} />
           {account && (
             <AccountNamesWrapper>
               <ThemedText.SubHeader>

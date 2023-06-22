@@ -16,9 +16,10 @@ import { Box } from 'nft/components/Box'
 import { Portal } from 'nft/components/common/Portal'
 import { Column, Row } from 'nft/components/Flex'
 import { useIsMobile } from 'nft/hooks'
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useMemo, useRef, useState } from 'react'
 import { AlertTriangle, ChevronDown, ChevronUp } from 'react-feather'
 import { useTheme } from 'styled-components/macro'
+import { getSupportedChainIdsFromWalletConnectSession } from 'utils/getSupportedChainIdsFromWalletConnectSession'
 
 import * as styles from './ChainSelector.css'
 import ChainSelectorRow from './ChainSelectorRow'
@@ -30,25 +31,14 @@ interface ChainSelectorProps {
   leftAlign?: boolean
 }
 
-// accounts is an array of strings in the format of "eip155:<chainId>:<address>"
-function getChainsFromEIP155Accounts(accounts?: string[]): ChainId[] {
-  if (!accounts) return []
-  return accounts
-    .map((account) => {
-      const splitAccount = account.split(':')
-      return splitAccount[1] ? parseInt(splitAccount[1]) : undefined
-    })
-    .filter((x) => x !== undefined) as ChainId[]
-}
-
-function useWalletSupportedChains() {
+function useWalletSupportedChains(): ChainId[] {
   const { connector } = useWeb3React()
 
   const connectionType = getConnection(connector).type
 
   switch (connectionType) {
     case ConnectionType.WALLET_CONNECT_V2:
-      return getChainsFromEIP155Accounts((connector as WalletConnect).provider?.session?.namespaces.eip155.accounts)
+      return getSupportedChainIdsFromWalletConnectSession((connector as WalletConnect).provider?.session)
     case ConnectionType.UNISWAP_WALLET:
       return UniWalletSupportedChains
     default:
@@ -64,9 +54,15 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
   const theme = useTheme()
 
   const showTestnets = useAtomValue(showTestnetsAtom)
-  const chains = showTestnets
-    ? NETWORK_SELECTOR_CHAINS
-    : NETWORK_SELECTOR_CHAINS.filter((chain: number) => !TESTNET_CHAIN_IDS.includes(chain))
+  const walletSupportsChain = useWalletSupportedChains()
+
+  const chains = useMemo(
+    () =>
+      NETWORK_SELECTOR_CHAINS.filter((chain: number) => showTestnets || !TESTNET_CHAIN_IDS.includes(chain)).sort((a) =>
+        walletSupportsChain.includes(a) ? -1 : 1
+      ),
+    [showTestnets, walletSupportsChain]
+  )
 
   const ref = useRef<HTMLDivElement>(null)
   const modalRef = useRef<HTMLDivElement>(null)
@@ -88,8 +84,6 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
     },
     [selectChain, setIsOpen]
   )
-
-  const walletSupportsChain = useWalletSupportedChains()
 
   if (!chainId) {
     return null

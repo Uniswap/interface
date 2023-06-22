@@ -1,5 +1,4 @@
 import jazzicon from '@metamask/jazzicon'
-import { useWeb3React } from '@web3-react/core'
 import useENSAvatar from 'hooks/useENSAvatar'
 import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components/macro'
@@ -18,8 +17,7 @@ const StyledAvatar = styled.img`
   border-radius: inherit;
 `
 
-export default function Identicon({ size }: { size?: number }) {
-  const { account } = useWeb3React()
+export default function Identicon({ account, size }: { account: string; size?: number }) {
   const { avatar } = useENSAvatar(account ?? undefined)
   const [fetchable, setFetchable] = useState(true)
   const iconSize = size ?? 24
