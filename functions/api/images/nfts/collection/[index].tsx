@@ -1,7 +1,6 @@
 /* eslint-disable import/no-unused-modules */
 import { ApolloClient, InMemoryCache } from '@apollo/client'
 import { ImageResponse } from '@vercel/og'
-import Vibrant from 'node-vibrant'
 import React from 'react'
 
 import { CollectionDocument } from '../../../../../src/graphql/data/__generated__/types-and-hooks'
@@ -48,13 +47,6 @@ export async function onRequestGet({ params, request }) {
 
     const name = collection.name
     const image = collection.image?.url
-
-    try {
-      const palette = await Vibrant.from(image).getPalette()
-      console.log(palette)
-    } catch (e) {
-      console.log(e)
-    }
     //const isVerified = collection.isVerified
 
     return new ImageResponse(
