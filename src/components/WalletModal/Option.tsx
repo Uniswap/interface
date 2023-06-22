@@ -1,11 +1,13 @@
+import { t, Trans } from '@lingui/macro'
 import { TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import { useAccountDrawer } from 'components/AccountDrawer'
 import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button'
 import Loader from 'components/Icons/LoadingSpinner'
-import { walletConnectV1Connection } from 'connection'
+import { walletConnectV1Connection, walletConnectV2Connection } from 'connection'
 import { ActivationStatus, useActivationState } from 'connection/activate'
 import { Connection, ConnectionType } from 'connection/types'
+import { useWalletConnectV2AsDefault } from 'featureFlags/flags/walletConnectV2'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { MouseEvent, useEffect, useRef, useState } from 'react'
 import { MoreHorizontal } from 'react-feather'
@@ -138,7 +140,10 @@ interface PopupButtonContentProps {
 }
 function PopupButtonContent({ connection, isDarkMode, show, onClick, onClose }: PopupButtonContentProps) {
   const popoverElement = useRef<HTMLButtonElement>(null)
+  const walletConnectV2AsDefault = useWalletConnectV2AsDefault()
+
   useOnClickOutside(popoverElement, onClose)
+
   if (!show) return null
   return (
     <WCv1PopoverContent onClick={onClick} ref={popoverElement} size={ButtonSize.small} emphasis={ButtonEmphasis.medium}>
@@ -146,8 +151,14 @@ function PopupButtonContent({ connection, isDarkMode, show, onClick, onClose }: 
         <WCv1Icon src={connection.getIcon?.(isDarkMode)} alt={connection.getName()} />
       </IconWrapper>
       <div>
-        <WCv1BodyText>Connect with v1</WCv1BodyText>
-        <WCv1Caption color="textSecondary">Support for v1 will be discontinued June 28.</WCv1Caption>
+        <WCv1BodyText>
+          <Trans>Connect with {walletConnectV2AsDefault ? t`v1` : t`v2`}</Trans>
+        </WCv1BodyText>
+        <WCv1Caption color="textSecondary">
+          {walletConnectV2AsDefault
+            ? t`Support for v1 will be discontinued June 28.`
+            : t`Under development and unsupported by most wallets`}
+        </WCv1Caption>
       </div>
     </WCv1PopoverContent>
   )
@@ -170,9 +181,11 @@ export default function Option({ connection }: OptionProps) {
   const isCurrentOptionPending = isSomeOptionPending && activationState.connection.type === connection.type
   const isDarkMode = useIsDarkMode()
 
+  const walletConnectV2AsDefault = useWalletConnectV2AsDefault()
+
   const handleClickConnectViaWCv1 = (e: MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation()
-    tryActivation(walletConnectV1Connection, () => {
+    tryActivation(walletConnectV2AsDefault ? walletConnectV1Connection : walletConnectV2Connection, () => {
       setWC1PromptOpen(false)
       toggleAccountDrawerOpen()
     })
@@ -182,7 +195,9 @@ export default function Option({ connection }: OptionProps) {
     setWC1PromptOpen(true)
   }
 
-  const showExtraMenuToggle = connection.type === ConnectionType.WALLET_CONNECT_V2 && !isCurrentOptionPending
+  const isWalletConnect =
+    connection.type === ConnectionType.WALLET_CONNECT || connection.type === ConnectionType.WALLET_CONNECT_V2
+  const showExtraMenuToggle = isWalletConnect && !isCurrentOptionPending
 
   return (
     <Wrapper disabled={isSomeOptionPending}>
