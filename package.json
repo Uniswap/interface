@@ -102,6 +102,7 @@
     "@vanilla-extract/babel-plugin": "^1.1.7",
     "@vanilla-extract/jest-transform": "^1.1.1",
     "@vanilla-extract/webpack-plugin": "^2.1.11",
+    "@walletconnect/types": "^2.8.1",
     "babel-plugin-istanbul": "^6.1.1",
     "buffer": "^6.0.3",
     "concurrently": "^8.0.1",

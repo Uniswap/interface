@@ -104,7 +104,6 @@ const StatusWrapper = styled.div`
   display: inline-block;
   width: 70%;
   max-width: 70%;
-  overflow: hidden;
   padding-right: 14px;
   display: inline-flex;
 `
