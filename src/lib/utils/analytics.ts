@@ -1,7 +1,7 @@
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Percent, Price, Token, TradeType } from '@uniswap/sdk-core'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
-import { InterfaceTrade } from 'state/routing/types'
+import { InterfaceTrade, QuoteMethod } from 'state/routing/types'
 import { computeRealizedPriceImpact } from 'utils/prices'
 
 export const getDurationUntilTimestampSeconds = (futureTimestampInSecondsSinceEpoch?: number): number | undefined => {
@@ -61,7 +61,9 @@ export const formatSwapSignedAnalyticsEventProperties = ({
 
 export const formatSwapQuoteReceivedEventProperties = (
   trade: Trade<Currency, Currency, TradeType>,
-  gasUseEstimateUSD?: string
+  allowedSlippage: Percent,
+  gasUseEstimateUSD?: string,
+  method?: QuoteMethod
 ) => {
   return {
     token_in_symbol: trade.inputAmount.currency.symbol,
@@ -76,5 +78,8 @@ export const formatSwapQuoteReceivedEventProperties = (
         : undefined,
     token_in_amount: formatToDecimal(trade.inputAmount, trade.inputAmount.currency.decimals),
     token_out_amount: formatToDecimal(trade.outputAmount, trade.outputAmount.currency.decimals),
+    minimum_output_after_slippage: trade.minimumAmountOut(allowedSlippage).toSignificant(6),
+    allowed_slippage: formatPercentNumber(allowedSlippage),
+    method,
   }
 }
