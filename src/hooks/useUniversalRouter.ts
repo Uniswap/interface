@@ -93,6 +93,7 @@ export function useUniversalRouterSwapCallback(
             sendAnalyticsEvent(SwapEventName.SWAP_SIGNED, {
               ...formatSwapSignedAnalyticsEventProperties({
                 trade,
+                allowedSlippage: options.slippageTolerance,
                 fiatValues,
                 txHash: response.hash,
               }),
