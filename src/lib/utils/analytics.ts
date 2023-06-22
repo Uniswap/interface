@@ -36,35 +36,28 @@ export const getPriceUpdateBasisPoints = (
 
 export const formatSwapSignedAnalyticsEventProperties = ({
   trade,
+  allowedSlippage,
   fiatValues,
   txHash,
   method,
 }: {
   trade: InterfaceTrade | Trade<Currency, Currency, TradeType>
+  allowedSlippage: Percent
   fiatValues: { amountIn?: number; amountOut?: number }
   txHash: string
   method: QuoteMethod
 }) => ({
   transaction_hash: txHash,
-  token_in_address: getTokenAddress(trade.inputAmount.currency),
-  token_out_address: getTokenAddress(trade.outputAmount.currency),
-  token_in_symbol: trade.inputAmount.currency.symbol,
-  token_out_symbol: trade.outputAmount.currency.symbol,
-  token_in_amount: formatToDecimal(trade.inputAmount, trade.inputAmount.currency.decimals),
-  token_out_amount: formatToDecimal(trade.outputAmount, trade.outputAmount.currency.decimals),
   token_in_amount_usd: fiatValues.amountIn,
   token_out_amount_usd: fiatValues.amountOut,
-  price_impact_basis_points: formatPercentInBasisPointsNumber(computeRealizedPriceImpact(trade)),
-  chain_id:
-    trade.inputAmount.currency.chainId === trade.outputAmount.currency.chainId
-      ? trade.inputAmount.currency.chainId
-      : undefined,
-  method,
+  ...formatEventPropertiesForTrade(trade, allowedSlippage),
 })
 
-export const formatSwapQuoteReceivedEventProperties = (
+export const formatEventPropertiesForTrade = (
   trade: Trade<Currency, Currency, TradeType>,
-  gasUseEstimateUSD?: string
+  allowedSlippage: Percent,
+  gasUseEstimateUSD?: string,
+  method?: QuoteMethod
 ) => {
   return {
     token_in_symbol: trade.inputAmount.currency.symbol,
@@ -79,5 +72,8 @@ export const formatSwapQuoteReceivedEventProperties = (
         : undefined,
     token_in_amount: formatToDecimal(trade.inputAmount, trade.inputAmount.currency.decimals),
     token_out_amount: formatToDecimal(trade.outputAmount, trade.outputAmount.currency.decimals),
+    minimum_output_after_slippage: trade.minimumAmountOut(allowedSlippage).toSignificant(6),
+    allowed_slippage: formatPercentNumber(allowedSlippage),
+    method,
   }
 }
