@@ -10,8 +10,6 @@ import { SerializedPair, SerializedToken, SlippageTolerance } from './types'
 const currentTimestamp = () => new Date().getTime()
 
 export interface UserState {
-  buyFiatFlowCompleted?: boolean
-
   selectedWallet?: ConnectionType
 
   // the timestamp of the last updateVersion action
@@ -59,7 +57,6 @@ function pairKey(token0Address: string, token1Address: string) {
 }
 
 export const initialState: UserState = {
-  buyFiatFlowCompleted: undefined,
   selectedWallet: undefined,
   userLocale: null,
   userRouterPreference: RouterPreference.AUTO,
@@ -164,6 +161,11 @@ const userSlice = createSlice({
       // If `userRouterPreference` is not present, reset to default
       if (typeof state.userRouterPreference !== 'string') {
         state.userRouterPreference = RouterPreference.AUTO
+      }
+
+      //If `buyFiatFlowCompleted` is present, delete it
+      if ('buyFiatFlowCompleted' in state) {
+        delete state.buyFiatFlowCompleted
       }
 
       state.lastUpdateVersionTimestamp = currentTimestamp()
