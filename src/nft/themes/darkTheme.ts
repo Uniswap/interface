@@ -14,7 +14,7 @@ export const darkTheme: Theme = {
     violet: vars.color.violet200,
 
     backgroundFloating: '0000000C',
-    backgroundInteractive: vars.color.gray700,
+    backgroundInteractive: "#181926",// vars.color.gray700,
     backgroundModule: vars.color.gray800,
     backgroundOutline: vars.color.backgroundInteractive,
     backgroundSurface: vars.color.gray900,

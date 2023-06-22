@@ -33,6 +33,7 @@ const Wrapper = styled(Row)`
   padding: 8px 12px;
   margin-top: 0;
   min-height: 32px;
+  margin-bottom: 8px;
 `
 
 const SwapDetailsWrapper = styled.div`

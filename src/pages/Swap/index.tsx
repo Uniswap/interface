@@ -157,7 +157,7 @@ const LeverageInputSection = styled(ResponsiveHeaderText)`
 const SwapSection = styled.div`
   position: relative;
   background-color: ${({ theme }) => theme.backgroundModule};
-  border-radius: 12px;
+  border-radius: 0px;
   padding: 16px;
   color: ${({ theme }) => theme.textSecondary};
   font-size: 14px;

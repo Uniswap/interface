@@ -72,8 +72,9 @@ export default function RadialGradientByChainUpdater(): null {
         setBackground(backgroundResetStyles)
         const polygonLightGradient =
           'radial-gradient(100% 100% at 50% 0%, rgba(130, 71, 229, 0.2) 0%, rgba(200, 168, 255, 0.05) 52.6%, rgba(0, 0, 0, 0) 100%), #FFFFFF'
-        const polygonDarkGradient =
-          'radial-gradient(100% 100% at 50% 0%, rgba(130, 71, 229, 0.2) 0%, rgba(200, 168, 255, 0.05) 52.6%, rgba(0, 0, 0, 0) 100%), #0D0E0E'
+          // 'radial-gradient(100% 93.36% at 0% 6.64%, rgba(32,38,46,1.000) 0%, rgba(84,15,40,1.000) 100%)',
+          const polygonDarkGradient = 'radial-gradient(100% 100% at 50% 0%, rgba(130, 71, 229, 0.2) 0%, rgba(200, 168, 255, 0.05) 52.6%, rgba(0, 0, 0, 0) 100%), #0D0E0E'
+          //  'radial-gradient(100% 100% at 50% 0%, rgba(41,6,19, 0.05) 2%, rgba(59,8,26, 0.5) 52.6%, rgba(0, 0, 0, 0) 100%), #0D0E0E'
         // const polygonDarkGradient = 
         //   `radial-gradient(100% 100% at 50% 0%, rgba(32, 20, 38, 1) 0%, rgba(4, 5, 5, 1) 52.6%, rgba(0, 0, 0, 0) 100%), #0D0E0E`
         backgroundRadialGradientElement.style.background = darkMode ? polygonDarkGradient : polygonLightGradient

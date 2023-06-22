@@ -50,6 +50,7 @@ const BG_COLORS_BY_DARK_MODE_AND_CHAIN_ID: {
       'radial-gradient(100% 93.36% at 0% 6.64%, rgba(160, 108, 247, 0.1) 0%, rgba(82, 32, 166, 0.1) 100%)',
     [SupportedChainId.POLYGON_MUMBAI]:
       'radial-gradient(100% 93.36% at 0% 6.64%, rgba(160, 108, 247, 0.1) 0%, rgba(82, 32, 166, 0.1) 100%)',
+      // 'radial-gradient(100% 93.36% at 0% 6.64%, rgba(32,38,46,1.000) 0%, rgba(84,15,40,1.000) 100%)',
     [SupportedChainId.CELO]:
       'radial-gradient(182.71% 150.59% at 2.81% 7.69%, rgba(90, 190, 170, 0.15) 0%, rgba(80, 160, 40, 0.15) 100%)',
     [SupportedChainId.CELO_ALFAJORES]:

@@ -95,6 +95,9 @@ export const colors = {
   networkBsc: '#F0B90B',
   networkPolygonSoft: 'rgba(164, 87, 255, 0.16)',
   networkEthereumSoft: 'rgba(98, 126, 234, 0.16)',
+
+  //limitless colors
+  purple700: '#210f2e',
 }
 
 // /* CSS HEX */
@@ -158,8 +161,8 @@ export const darkTheme = {
   background: colors.gray800,
   backgroundBackdrop: colors.gray950,
   // backgroundSurface: limitlessColors.darkPurple,
-  backgroundSurface: colors.gray900,
-  backgroundModule: colors.gray800,
+  backgroundSurface: "#030216", //"#0d0517", //colors.black,// colors.gray900
+  backgroundModule: "#181926", // colors.gray800
   backgroundInteractive: colors.gray700,
   backgroundFloating: opacify(12, colors.black),
   backgroundOutline: opacify(24, colors.gray300),
