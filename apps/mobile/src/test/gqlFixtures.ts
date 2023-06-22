@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker'
 import { ChainId } from 'wallet/src/constants/chains'
-import { DAI, USDC, WRAPPED_NATIVE_CURRENCY } from 'wallet/src/constants/tokens'
+import { DAI, USDC } from 'wallet/src/constants/tokens'
 import {
   ActivityType,
   Amount,
@@ -22,6 +22,7 @@ import {
   TransactionStatus,
 } from 'wallet/src/data/__generated__/types-and-hooks'
 import { FAKER_SEED, SAMPLE_SEED_ADDRESS_1, SAMPLE_SEED_ADDRESS_2 } from 'wallet/src/test/fixtures'
+import { getWrappedNativeCurrencyAddressForChain } from 'wallet/src/utils/currencyId'
 
 faker.seed(FAKER_SEED)
 
@@ -466,7 +467,7 @@ export const TopNFTCollections: [NftCollection, NftCollection] = [
 export const TopTokens: [Token, Token] = [
   {
     id: faker.datatype.uuid(),
-    address: WRAPPED_NATIVE_CURRENCY[ChainId.Mainnet].address,
+    address: getWrappedNativeCurrencyAddressForChain(ChainId.Mainnet),
     chain: Chain.Ethereum,
     symbol: 'WETH',
     project: {

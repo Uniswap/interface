@@ -18,6 +18,13 @@ export const MATIC_MAINNET_ADDRESS = '0x7d1afa7b718fb893db30a3abc0cfc608aacfebb0
 /** Alternative address used to denote a native currency (e.g. MATIC on Polygon) */
 export const NATIVE_ADDRESS_ALT = '0x0000000000000000000000000000000000001010'
 
+export const WRAPPED_MAINNET_ETH = '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2'
+export const WRAPPED_GOERLI_ETH = '0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6'
+export const WRAPPED_OPTIMISTIC_ETH = '0x4200000000000000000000000000000000000006'
+export const WRAPPED_ARBITRUM_ETH = '0x82af49447d8a07e3bd95bd0d56f35241523fbab1'
+export const WRAPPED_MAINNET_POLYGON = '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270'
+export const WRAPPED_MUMBAI_POLYGON = '0x9c3c9283d3e44854697cd22d3faa240cfb032889'
+
 export const UNI_ADDRESS = constructSameAddressMap(
   '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984'
 ) as AddressMap<typeof L1_CHAIN_IDS>

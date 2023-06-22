@@ -7,7 +7,6 @@ import { Loader } from 'src/components/loading'
 import { SearchResultType, TokenSearchResult } from 'src/features/explore/searchHistorySlice'
 import { ChainId } from 'wallet/src/constants/chains'
 import { EMPTY_ARRAY } from 'wallet/src/constants/misc'
-import { WRAPPED_NATIVE_CURRENCY } from 'wallet/src/constants/tokens'
 import {
   Chain,
   SearchPopularTokensQuery,
@@ -15,6 +14,7 @@ import {
 } from 'wallet/src/data/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 import { areAddressesEqual } from 'wallet/src/utils/addresses'
+import { getWrappedNativeCurrencyAddressForChain } from 'wallet/src/utils/currencyId'
 
 export function SearchPopularTokens(): JSX.Element {
   // Load popular tokens by top Uniswap trading volume
@@ -27,14 +27,14 @@ export function SearchPopularTokens(): JSX.Element {
     // eth will be defined only if all the required data is available
     // when eth data is not fully available, we do not replace weth with eth
     const eth = data?.eth && data?.eth.length > 0 && data?.eth?.[0]?.project ? data.eth[0] : null
-    const weth = WRAPPED_NATIVE_CURRENCY[ChainId.Mainnet]
+    const wethAddress = getWrappedNativeCurrencyAddressForChain(ChainId.Mainnet)
 
     return data.topTokens
       .map((token) => {
         if (!token) return
 
         const isWeth =
-          areAddressesEqual(token.address, weth.address) && token?.chain === Chain.Ethereum
+          areAddressesEqual(token.address, wethAddress) && token?.chain === Chain.Ethereum
 
         // manually replace weth with eth given backend only returns eth data as a proxy for eth
         if (isWeth && eth) {

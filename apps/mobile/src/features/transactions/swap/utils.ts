@@ -16,7 +16,6 @@ import {
   TransactionState,
 } from 'src/features/transactions/transactionState/transactionState'
 import { ChainId } from 'wallet/src/constants/chains'
-import { WRAPPED_NATIVE_CURRENCY } from 'wallet/src/constants/tokens'
 import { AssetType } from 'wallet/src/entities/assets'
 import {
   ExactInputSwapTransactionInfo,
@@ -26,6 +25,7 @@ import {
 import { areAddressesEqual } from 'wallet/src/utils/addresses'
 import {
   areCurrencyIdsEqual,
+  buildWrappedNativeCurrencyId,
   CurrencyId,
   currencyId,
   currencyIdToAddress,
@@ -51,13 +51,17 @@ export function getWrapType(
     return WrapType.NotApplicable
   }
 
-  const weth = WRAPPED_NATIVE_CURRENCY[inputCurrency.chainId as ChainId]
+  const inputChainId = inputCurrency.chainId as ChainId
+  const wrappedCurrencyId = buildWrappedNativeCurrencyId(inputChainId)
 
-  if (inputCurrency.isNative && areCurrencyIdsEqual(currencyId(outputCurrency), currencyId(weth))) {
+  if (
+    inputCurrency.isNative &&
+    areCurrencyIdsEqual(currencyId(outputCurrency), wrappedCurrencyId)
+  ) {
     return WrapType.Wrap
   } else if (
     outputCurrency.isNative &&
-    areCurrencyIdsEqual(currencyId(inputCurrency), currencyId(weth))
+    areCurrencyIdsEqual(currencyId(inputCurrency), wrappedCurrencyId)
   ) {
     return WrapType.Unwrap
   }

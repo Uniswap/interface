@@ -2,7 +2,6 @@
 /* eslint-disable complexity */
 import { TradeType } from '@uniswap/sdk-core'
 import { ChainId } from 'wallet/src/constants/chains'
-import { WRAPPED_NATIVE_CURRENCY } from 'wallet/src/constants/tokens'
 import {
   deriveCurrencyAmountFromAssetResponse,
   parseUSDValueFromAssetChange,
@@ -15,17 +14,18 @@ import {
   TransactionType,
   WrapTransactionInfo,
 } from 'wallet/src/features/transactions/types'
-import { buildCurrencyId, buildNativeCurrencyId } from 'wallet/src/utils/currencyId'
+import {
+  buildCurrencyId,
+  buildNativeCurrencyId,
+  buildWrappedNativeCurrencyId,
+} from 'wallet/src/utils/currencyId'
 
 export default function parseTradeTransaction(
   transaction: TransactionListQueryResponse
 ): ExactInputSwapTransactionInfo | NFTTradeTransactionInfo | WrapTransactionInfo | undefined {
   // for detecting wraps
   const nativeCurrencyID = buildNativeCurrencyId(ChainId.Mainnet).toLocaleLowerCase()
-  const wrappedCurrencyID = buildCurrencyId(
-    ChainId.Mainnet,
-    WRAPPED_NATIVE_CURRENCY[ChainId.Mainnet].address
-  ).toLocaleLowerCase()
+  const wrappedCurrencyID = buildWrappedNativeCurrencyId(ChainId.Mainnet).toLocaleLowerCase()
 
   const sent = transaction?.assetChanges.find((t) => {
     return (

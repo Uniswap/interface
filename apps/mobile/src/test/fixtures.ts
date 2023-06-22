@@ -13,7 +13,7 @@ import WETH_ABI from 'wallet/src/abis/weth.json'
 import { config } from 'wallet/src/config'
 import { NATIVE_ADDRESS, SWAP_ROUTER_ADDRESSES } from 'wallet/src/constants/addresses'
 import { ChainId } from 'wallet/src/constants/chains'
-import { DAI, DAI_ARBITRUM_ONE, UNI, WRAPPED_NATIVE_CURRENCY } from 'wallet/src/constants/tokens'
+import { DAI, DAI_ARBITRUM_ONE, UNI } from 'wallet/src/constants/tokens'
 import { SafetyLevel } from 'wallet/src/data/__generated__/types-and-hooks'
 import { AssetType } from 'wallet/src/entities/assets'
 import { ContractManager } from 'wallet/src/features/contracts/ContractManager'
@@ -32,7 +32,7 @@ import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
 import { initialWalletState } from 'wallet/src/features/wallet/slice'
 import { WalletConnectEvent } from 'wallet/src/features/walletConnect/types'
 import { SAMPLE_SEED_ADDRESS_1, SAMPLE_SEED_ADDRESS_2 } from 'wallet/src/test/fixtures'
-import { currencyId } from 'wallet/src/utils/currencyId'
+import { currencyId, getWrappedNativeCurrencyAddressForChain } from 'wallet/src/utils/currencyId'
 
 export const account: Account = {
   type: AccountType.SignerMnemonic,
@@ -97,14 +97,14 @@ export const contractManager = new ContractManager()
 contractManager.getOrCreateContract(ChainId.Goerli, DAI.address, provider, ERC20_ABI)
 contractManager.getOrCreateContract(
   ChainId.Goerli,
-  WRAPPED_NATIVE_CURRENCY[ChainId.Goerli].address,
+  getWrappedNativeCurrencyAddressForChain(ChainId.Goerli),
   provider,
   WETH_ABI
 )
 export const tokenContract = contractManager.getContract(ChainId.Goerli, DAI.address) as Erc20
 export const wethContract = contractManager.getContract(
   ChainId.Goerli,
-  WRAPPED_NATIVE_CURRENCY[ChainId.Goerli].address
+  getWrappedNativeCurrencyAddressForChain(ChainId.Goerli)
 ) as Weth
 
 /**
