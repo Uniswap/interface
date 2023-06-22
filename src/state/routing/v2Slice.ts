@@ -54,8 +54,9 @@ export const routingApiV2 = createApi({
         )
       },
       async queryFn(args: GetQuoteArgs, _api, _extraOptions, fetch) {
-        const fellBack = false
+        let fellBack = false
         if (shouldUseAPIRouter(args)) {
+          fellBack = true
           try {
             const { tokenInAddress, tokenInChainId, tokenOutAddress, tokenOutChainId, amount, tradeType } = args
             const type = isExactInput(tradeType) ? 'EXACT_INPUT' : 'EXACT_OUTPUT'
