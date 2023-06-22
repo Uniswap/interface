@@ -802,8 +802,6 @@ function useDerivedAddBorrowPremiumInfo(
   const currency0 = useCurrency(position?.token0Address)
   const currency1 = useCurrency(position?.token1Address)
 
-  const [,pool] = usePool(currency0 ?? undefined, currency1 ?? undefined, position?.poolFee)
-
   const relevantTokenBalances = useCurrencyBalances(
     account ?? undefined,
     useMemo(() => [currency0 ?? undefined, currency1 ?? undefined], [currency0, currency1])
@@ -855,17 +853,16 @@ function useDerivedAddBorrowPremiumInfo(
   ])
 
   const inputError = useMemo(() => {
-    if (position && pool) {
+    if (position ) {
       const isToken0 = position.isToken0
       const token0Balance = relevantTokenBalances[0]
       const token1Balance = relevantTokenBalances[1]
       let inputError
-      const price = position?.isToken0 ? pool?.token0Price?.toFixed(18) : pool?.token1Price?.toFixed(18)
-      if (isToken0 && Number(token1Balance?.toExact()) < position.totalDebtInput * Number(price) *  0.002) {
+      if (isToken0 && Number(token1Balance?.toExact()) < position.totalDebtInput *  0.002) {
         inputError = (<Trans>
           Insufficient {currency1?.symbol} balance
         </Trans>)
-      } else if (!isToken0 && Number(token0Balance?.toExact()) < position.totalDebtInput * Number(price) * 0.002) {
+      } else if (!isToken0 && Number(token0Balance?.toExact()) < position.totalDebtInput * 0.002) {
         inputError = (<Trans>
           Insufficient {currency0?.symbol} balance
         </Trans>)
@@ -874,7 +871,7 @@ function useDerivedAddBorrowPremiumInfo(
       return inputError
     }
     return undefined
-  }, [relevantTokenBalances, account, position, pool])
+  }, [relevantTokenBalances, account, position])
 
   return {
     tradeInfo: info,
@@ -1537,9 +1534,8 @@ export function AddPremiumBorrowModalFooter({
   // const outputCurrency = useCurrency(position?.isToken0 ? position?.token1Address : position?.token0Address)
 
   const approveAmount = useMemo(() => {
-    if (pool?.token0Price && pool?.token1Price && position) {
-      const price = position.isToken0 ? pool.token0Price?.toFixed(18) : pool.token1Price?.toFixed(18)
-      return position.totalDebtInput * Number(price) * 0.002
+    if (position) {
+      return new BN(position.totalDebtInput * 0.002).shiftedBy(18).toFixed(0)
     }
     return 0
   }, [position, pool])
@@ -1559,6 +1555,8 @@ export function AddPremiumBorrowModalFooter({
   }, [position, approveManager]) // add input to deps.
 
   const loading = derivedState === DerivedInfoState.LOADING
+
+  console.log("tradeInfo: ", inputError, approvalState, approveAmount, tradeInfo)
 
   return (
     <AutoRow>
@@ -1686,7 +1684,7 @@ export function AddPremiumBorrowModalFooter({
       ) : (
         <ButtonError
           onClick={handleAddPremium}
-          disabled={!inputError || !tradeInfo}
+          disabled={!!inputError || !tradeInfo}
           style={{ margin: '10px 0 0 0' }}
           id={InterfaceElementName.CONFIRM_SWAP_BUTTON}
         >
