@@ -99,14 +99,17 @@ export class ClassicTrade extends Trade<Currency, Currency, TradeType> {
   public readonly fillType = TradeFillType.Classic
   gasUseEstimateUSD: string | null | undefined
   blockNumber: string | null | undefined
+  fromClientRouter: boolean | undefined
 
   constructor({
     gasUseEstimateUSD,
     blockNumber,
+    fromClientRouter,
     ...routes
   }: {
     gasUseEstimateUSD?: string | null
     blockNumber?: string | null
+    fromClientRouter?: boolean
     v2Routes: {
       routev2: V2Route<Currency, Currency>
       inputAmount: CurrencyAmount<Currency>
@@ -127,6 +130,7 @@ export class ClassicTrade extends Trade<Currency, Currency, TradeType> {
     super(routes)
     this.blockNumber = blockNumber
     this.gasUseEstimateUSD = gasUseEstimateUSD
+    this.fromClientRouter = fromClientRouter
   }
 }
 

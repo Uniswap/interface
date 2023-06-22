@@ -163,7 +163,7 @@ export const routingApi = createApi({
             }
 
             const uraQuoteResponse = response.data as URAQuoteResponse
-            const tradeResult = transformRoutesToTrade(args, uraQuoteResponse)
+            const tradeResult = transformRoutesToTrade(args, uraQuoteResponse, false /* fromClientRouter */)
 
             return { data: tradeResult }
           } catch (error: any) {
@@ -179,7 +179,7 @@ export const routingApi = createApi({
           const quoteResult = await getClientSideQuote(args, router, CLIENT_PARAMS)
           if (quoteResult.state === QuoteState.SUCCESS) {
             return {
-              data: transformRoutesToTrade(args, quoteResult.data),
+              data: transformRoutesToTrade(args, quoteResult.data, true /* fromClientRouter */),
             }
           } else {
             return { data: quoteResult }

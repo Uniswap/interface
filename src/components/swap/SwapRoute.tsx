@@ -28,7 +28,7 @@ export default function SwapRoute({ trade, syncing }: { trade: ClassicTrade; syn
 
   return (
     <Column gap="md">
-      <RouterLabel />
+      <RouterLabel trade={trade} />
       <Separator />
       {syncing ? (
         <LoadingRows>

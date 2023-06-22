@@ -163,7 +163,11 @@ function getTradeCurrencies(args: GetQuoteArgs, data: URAQuoteResponse): [Curren
   return [currencyIn.isNative ? currencyIn.wrapped : currencyIn, currencyOut]
 }
 
-export function transformRoutesToTrade(args: GetQuoteArgs, data: URAQuoteResponse): TradeResult {
+export function transformRoutesToTrade(
+  args: GetQuoteArgs,
+  data: URAQuoteResponse,
+  fromClientRouter: boolean
+): TradeResult {
   const { tradeType, needsWrapIfUniswapX } = args
 
   const [currencyIn, currencyOut] = getTradeCurrencies(args, data)
@@ -214,6 +218,7 @@ export function transformRoutesToTrade(args: GetQuoteArgs, data: URAQuoteRespons
     tradeType,
     gasUseEstimateUSD: gasUseEstimateUSD ? parseFloat(gasUseEstimateUSD).toFixed(2).toString() : undefined,
     blockNumber,
+    fromClientRouter,
   })
 
   if (data.routing === URAQuoteType.DUTCH_LIMIT) {
