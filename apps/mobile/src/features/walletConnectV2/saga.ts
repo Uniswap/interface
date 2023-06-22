@@ -8,6 +8,7 @@ import { Alert } from 'react-native'
 import { EventChannel, eventChannel } from 'redux-saga'
 import { appSelect } from 'src/app/hooks'
 import { i18n } from 'src/app/i18n'
+import { store } from 'src/app/store'
 import { registerWCv2ClientForPushNotifications } from 'src/features/walletConnect/api'
 import {
   addPendingSession,
@@ -192,8 +193,8 @@ function* handleSessionProposal(proposal: ProposalTypes.Struct) {
       [
         {
           text: 'OK',
-          onPress: function* onPress(): Generator {
-            yield* put(setHasPendingSessionError(false))
+          onPress: (): void => {
+            store.dispatch(setHasPendingSessionError(false))
           },
         },
       ]
