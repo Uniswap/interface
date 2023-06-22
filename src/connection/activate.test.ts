@@ -230,7 +230,7 @@ describe('Should gracefully handle intentional user-rejection errors', () => {
         .mockImplementationOnce(() => Promise.reject(ErrorCode.WC_MODAL_CLOSED))
         .mockImplementationOnce(() => Promise.resolve),
       jest.fn(),
-      ConnectionType.WALLET_CONNECT
+      ConnectionType.WALLET_CONNECT_V2
     )
 
     const onSuccess = jest.fn()
