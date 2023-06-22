@@ -42,7 +42,7 @@ export type AppState = ReturnType<typeof appReducer>
 const persistConfig = {
   key: 'root',
   version: 0, // see migrations.ts for more details about this version
-  storage, // defaults to localStorage
+  storage,
   migrate: customCreateMigrate(migrations, { debug: false }),
   whitelist: Object.keys(persistedReducers),
   throttle: 1000, // ms

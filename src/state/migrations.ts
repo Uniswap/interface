@@ -1,6 +1,10 @@
 import { createMigrate, MigrationManifest, PersistedState, PersistMigrate } from 'redux-persist'
 import { MigrationConfig } from 'redux-persist/es/createMigrate'
 
+import { initialState as initialListsState } from './lists/reducer'
+import { initialState as initialTransactionsState } from './transactions/reducer'
+import { initialState as initialUserState } from './user/reducer'
+
 /**
  * These run once per state re-hydration when a version mismatch is detected.
  * Keep them as lightweight as possible.
@@ -11,17 +15,17 @@ import { MigrationConfig } from 'redux-persist/es/createMigrate'
 
 // The target version number is the key
 export const migrations: MigrationManifest = {
-  0: (state: PersistedState) => {
+  0: () => {
     const oldTransactions = localStorage.getItem('redux_localstorage_simple_transactions')
     const oldUser = localStorage.getItem('redux_localstorage_simple_user')
     const oldLists = localStorage.getItem('redux_localstorage_simple_lists')
 
-    const previousState = state as any
     try {
       const result = {
-        user: JSON.parse(oldUser ?? '{}'),
-        transactions: JSON.parse(oldTransactions ?? '{}'),
-        lists: JSON.parse(oldLists ?? '{}'),
+        user: oldUser ? JSON.parse(oldUser) : initialUserState,
+        transactions: oldTransactions ? JSON.parse(oldTransactions) : initialTransactionsState,
+        lists: oldLists ? JSON.parse(oldLists) : initialListsState,
+        _persist: { version: 0, rehydrated: true },
       }
 
       localStorage.removeItem('redux_localstorage_simple_transactions')
@@ -29,8 +33,13 @@ export const migrations: MigrationManifest = {
       localStorage.removeItem('redux_localstorage_simple_lists')
       return result
     } catch (e) {
-      // JSON parsing failed, use an empty state for the initial version.
-      return previousState ?? {}
+      // JSON parsing failed, use the default initial states.
+      return {
+        user: initialUserState,
+        transactions: initialTransactionsState,
+        lists: initialListsState,
+        _persist: { version: 0, rehydrated: true },
+      }
     }
   },
 }
