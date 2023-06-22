@@ -15,7 +15,7 @@ jobs:
         with:
           payload: |
             {
-              "text": "Production deploy started for branch: ${{ github.ref_name }}"
+              "text": "Deploy _started_ for ${{ github.ref_name }}"
             }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
@@ -92,7 +92,7 @@ jobs:
         with:
           payload: |
             {
-              "text": "Production deploy **${{ steps.pages-deployment.outcome }}** for: ${{ github.ref_name }}"
+              "text": "Deploy *${{ steps.pages-deployment.outcome }}* for ${{ github.ref_name }}"
             }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
