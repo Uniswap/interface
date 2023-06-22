@@ -971,7 +971,6 @@ export function ReduceLeverageModalFooter({
 
 
   const loading = useMemo(() => derivedState === DerivedInfoState.LOADING, [derivedState])
-  // console.log("here: ", token0Amount, token1Amount
 
   const debt = position?.totalDebtInput;
   const initCollateral = position?.initialCollateral;
