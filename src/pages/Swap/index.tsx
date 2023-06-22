@@ -28,6 +28,7 @@ import usePrevious from 'hooks/usePrevious'
 import { useSwapCallback } from 'hooks/useSwapCallback'
 import { useUSDPrice } from 'hooks/useUSDPrice'
 import JSBI from 'jsbi'
+import { formatSwapQuoteReceivedEventProperties } from 'lib/utils/analytics'
 import { ReactNode, useCallback, useEffect, useMemo, useReducer, useState } from 'react'
 import { ArrowDown } from 'react-feather'
 import { useLocation, useNavigate } from 'react-router-dom'
@@ -526,7 +527,7 @@ export function Swap({
 
     setSwapQuoteReceivedDate(new Date())
     sendAnalyticsEvent(SwapEventName.SWAP_QUOTE_RECEIVED, {
-      ...formatEventPropertiesForTrade(trade, trade.gasUseEstimateUSD ?? undefined, method),
+      ...formatSwapQuoteReceivedEventProperties(trade, trade.gasUseEstimateUSD ?? undefined, method),
       ...trace,
     })
   }, [prevTrade, trade, trace, method])
