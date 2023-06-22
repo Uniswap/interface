@@ -1,5 +1,6 @@
 import { useWeb3React } from '@web3-react/core'
 import { DEFAULT_TXN_DISMISS_MS, L2_TXN_DISMISS_MS } from 'constants/misc'
+import { UniswapXBackendOrder, UniswapXOrderStatus } from 'lib/hooks/orders/types'
 import OrderUpdater from 'lib/hooks/orders/updater'
 import { useCallback, useMemo } from 'react'
 import { PopupType } from 'state/application/reducer'
@@ -8,7 +9,7 @@ import { useAppSelector } from 'state/hooks'
 import { L2_CHAIN_IDS } from '../../constants/chains'
 import { useAddPopup } from '../application/hooks'
 import { useUpdateOrder } from './hooks'
-import { DutchOrderStatus, SignatureType, UniswapXOrderDetails } from './types'
+import { SignatureType, UniswapXOrderDetails } from './types'
 
 export default function Updater() {
   const { account, chainId } = useWeb3React()
@@ -18,17 +19,19 @@ export default function Updater() {
   const pendingOrders = useMemo(() => {
     if (!account || !signatures[account]) return []
     return Object.values(signatures[account]).filter(
-      (signature) => signature.type === SignatureType.SIGN_UNISWAPX_ORDER && signature.status === DutchOrderStatus.OPEN
+      (signature) =>
+        signature.type === SignatureType.SIGN_UNISWAPX_ORDER && signature.status === UniswapXOrderStatus.OPEN
     ) as UniswapXOrderDetails[]
   }, [account, signatures])
 
   const updateOrder = useUpdateOrder()
 
   const onOrderUpdate = useCallback(
-    (order: UniswapXOrderDetails, updatedStatus: DutchOrderStatus, txHash?: string) => {
-      if (order.status === updatedStatus) return
+    (order: UniswapXOrderDetails, backendUpdate: UniswapXBackendOrder) => {
+      const txHash = backendUpdate.orderStatus === UniswapXOrderStatus.FILLED ? backendUpdate.txHash : undefined
+      if (order.status === backendUpdate.orderStatus) return
 
-      updateOrder(order, updatedStatus, txHash)
+      updateOrder(order, backendUpdate.orderStatus, txHash)
 
       // speed up popup dismisall time if on L2
       const isL2 = Boolean(chainId && L2_CHAIN_IDS.includes(chainId))

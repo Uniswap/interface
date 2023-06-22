@@ -1,9 +1,10 @@
 import { TradeType } from '@uniswap/sdk-core'
+import { UniswapXOrderStatus } from 'lib/hooks/orders/types'
 import { createStore, Store } from 'redux'
 
 import { TransactionType } from '../transactions/types'
 import reducer, { addSignature, initialState, removeSignature, SignatureState, updateSignature } from './reducer'
-import { DutchOrderStatus, SignatureDetails, SignatureType } from './types'
+import { SignatureDetails, SignatureType } from './types'
 
 const account = '0xabc'
 
@@ -11,7 +12,7 @@ const signature: SignatureDetails = {
   id: '0x0',
   addedTime: 0,
   expiry: 0,
-  status: DutchOrderStatus.OPEN,
+  status: UniswapXOrderStatus.OPEN,
   type: SignatureType.SIGN_UNISWAPX_ORDER,
   chainId: 1,
   orderHash: '0x0',
@@ -55,7 +56,7 @@ describe('signature reducer', () => {
   describe('updateSignature', () => {
     it('updates the signature', () => {
       store.dispatch(addSignature(signature))
-      const updatedSignature = { ...signature, status: DutchOrderStatus.CANCELLED }
+      const updatedSignature = { ...signature, status: UniswapXOrderStatus.CANCELLED }
       store.dispatch(updateSignature(updatedSignature))
 
       const txs = store.getState()

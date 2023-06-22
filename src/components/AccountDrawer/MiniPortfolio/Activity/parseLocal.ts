@@ -195,6 +195,7 @@ export function signatureToActivity(signature: SignatureDetails, tokens: ChainTo
         chainId: signature.chainId,
         title,
         status,
+        offchainOrderStatus: signature.status,
         timestamp: signature.addedTime / 1000,
         from: signature.offerer,
         statusMessage,

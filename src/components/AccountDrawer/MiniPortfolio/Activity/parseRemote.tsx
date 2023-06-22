@@ -23,7 +23,7 @@ import ms from 'ms.macro'
 import { useEffect, useState } from 'react'
 import { isAddress } from 'utils'
 
-import { MOONPAY_SENDER_ADDRESSES, OrderTextTable } from '../constants'
+import { MOONPAY_SENDER_ADDRESSES, OrderStatusTable, OrderTextTable } from '../constants'
 import { Activity } from './types'
 
 type TransactionChanges = {
@@ -278,7 +278,8 @@ function getLogoSrcs(changes: TransactionChanges): string[] {
 
 function parseUniswapXOrder({ details, chain, timestamp }: OrderActivity): Activity {
   const { inputToken, inputTokenQuantity, outputToken, outputTokenQuantity, orderStatus } = details
-  const { status, statusMessage, title } = OrderTextTable[orderStatus]
+  const uniswapXOrderStatus = OrderStatusTable[orderStatus]
+  const { status, statusMessage, title } = OrderTextTable[uniswapXOrderStatus]
   const descriptor = getSwapDescriptor(inputToken, inputTokenQuantity, outputToken, outputTokenQuantity)
 
   return {
@@ -286,6 +287,7 @@ function parseUniswapXOrder({ details, chain, timestamp }: OrderActivity): Activ
     chainId: fromGraphQLChain(chain),
     status,
     statusMessage,
+    offchainOrderStatus: uniswapXOrderStatus,
     timestamp,
     logos: [inputToken.project?.logo?.url, outputToken.project?.logo?.url],
     title,
