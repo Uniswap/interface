@@ -493,14 +493,15 @@ export function Swap({
 
   const prevTrade = usePrevious(trade)
   useEffect(() => {
-    if (!isClassicTrade(trade) || prevTrade === trade) return // no new swap quote to log
+    if (!trade || prevTrade === trade) return // no new swap quote to log
 
-    setSwapQuoteReceivedDate(new Date())
+    const receivedDate = new Date()
+    setSwapQuoteReceivedDate(receivedDate)
     sendAnalyticsEvent(SwapEventName.SWAP_QUOTE_RECEIVED, {
-      ...formatSwapQuoteReceivedEventProperties(trade, trade.gasUseEstimateUSD ?? undefined),
+      ...formatSwapQuoteReceivedEventProperties(trade, allowedSlippage, receivedDate),
       ...trace,
     })
-  }, [prevTrade, trade, trace])
+  }, [prevTrade, trade, trace, allowedSlippage])
 
   const showDetailsDropdown = Boolean(
     !showWrap && userHasSpecifiedInputOutput && (trade || routeIsLoading || routeIsSyncing)

@@ -51,6 +51,7 @@ export type V2PoolInRoute = {
 
 export interface ClassicQuoteData {
   quoteId?: string
+  requestId?: string
   blockNumber: string
   amount: string
   amountDecimals: string
@@ -100,15 +101,18 @@ export class ClassicTrade extends Trade<Currency, Currency, TradeType> {
   gasUseEstimateUSD: string | null | undefined
   blockNumber: string | null | undefined
   fromClientRouter: boolean | undefined
+  requestId: string | undefined
 
   constructor({
     gasUseEstimateUSD,
     blockNumber,
+    requestId,
     fromClientRouter,
     ...routes
   }: {
     gasUseEstimateUSD?: string | null
     blockNumber?: string | null
+    requestId?: string
     fromClientRouter?: boolean
     v2Routes: {
       routev2: V2Route<Currency, Currency>
@@ -130,6 +134,7 @@ export class ClassicTrade extends Trade<Currency, Currency, TradeType> {
     super(routes)
     this.blockNumber = blockNumber
     this.gasUseEstimateUSD = gasUseEstimateUSD
+    this.requestId = requestId
     this.fromClientRouter = fromClientRouter
   }
 }
@@ -137,6 +142,7 @@ export class ClassicTrade extends Trade<Currency, Currency, TradeType> {
 export class DutchOrderTrade extends IDutchOrderTrade<Currency, Currency, TradeType> {
   public readonly fillType = TradeFillType.UniswapX
   quoteId?: string
+  requestId?: string
   needsWrap: boolean
   // The gas estimate of the reference classic trade, if there is one.
   classicGasUseEstimateUSD: string | null | undefined
@@ -147,6 +153,7 @@ export class DutchOrderTrade extends IDutchOrderTrade<Currency, Currency, TradeT
     orderInfo,
     tradeType,
     quoteId,
+    requestId,
     needsWrap,
     classicGasUseEstimateUSD,
   }: {
@@ -155,11 +162,13 @@ export class DutchOrderTrade extends IDutchOrderTrade<Currency, Currency, TradeT
     orderInfo: DutchOrderInfo
     tradeType: TradeType
     quoteId?: string
+    requestId?: string
     needsWrap: boolean
     classicGasUseEstimateUSD?: string | null
   }) {
     super({ currencyIn, currenciesOut, orderInfo, tradeType })
     this.quoteId = quoteId
+    this.requestId = requestId
     this.needsWrap = needsWrap
     this.classicGasUseEstimateUSD = classicGasUseEstimateUSD
   }
