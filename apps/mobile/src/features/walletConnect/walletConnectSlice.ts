@@ -117,12 +117,26 @@ const slice = createSlice({
       }
     },
 
-    removeSession: (state, action: PayloadAction<{ account: string; sessionId: string }>) => {
+    removeSession: (state, action: PayloadAction<{ sessionId: string; account?: string }>) => {
       const { sessionId, account } = action.payload
-      const wcAccount = state.byAccount[account]
-      if (wcAccount) {
-        delete wcAccount.sessions[sessionId]
+
+      // If account address is known, delete directly
+      if (account) {
+        const wcAccount = state.byAccount[account]
+        if (wcAccount) {
+          delete wcAccount.sessions[sessionId]
+        }
+        return
       }
+
+      // If account address is not known (handling `session_delete` events),
+      // iterate over each account and delete the sessionId
+      Object.keys(state.byAccount).forEach((accountAddress) => {
+        const wcAccount = state.byAccount[accountAddress]
+        if (wcAccount && wcAccount.sessions[sessionId]) {
+          delete wcAccount.sessions[sessionId]
+        }
+      })
     },
 
     addPendingSession: (

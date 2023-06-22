@@ -28,11 +28,8 @@ import { call, fork, put, take } from 'typed-redux-saga'
 import { config } from 'wallet/src/config'
 import { ALL_SUPPORTED_CHAIN_IDS, ChainId, CHAIN_INFO } from 'wallet/src/constants/chains'
 import { logger } from 'wallet/src/features/logger/logger'
-import { pushNotification } from 'wallet/src/features/notifications/slice'
-import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { selectAccounts, selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
-import { EthEvent, EthMethod, WalletConnectEvent } from 'wallet/src/features/walletConnect/types'
-import { ONE_SECOND_MS } from 'wallet/src/utils/time'
+import { EthEvent, EthMethod } from 'wallet/src/features/walletConnect/types'
 
 export let wcWeb3Wallet: IWeb3Wallet
 
@@ -278,30 +275,8 @@ function* handleSessionRequest(sessionRequest: PendingRequestTypes.Struct) {
 
 function* handleSessionDelete(event: Web3WalletTypes.SessionDelete) {
   const { topic } = event
-  const session = wcWeb3Wallet.engine.signClient.session.get(topic)
-  const dapp = session.peer.metadata
-  const account = session.namespaces.eip155?.accounts[0]
 
-  if (!account) {
-    throw new Error('Unable to delete session because account not found in namespaces')
-  }
-
-  const address = getAccountAddressFromEIP155String(account)
-  if (!address) {
-    throw new Error('Unable to delete session because address was not parsable in namespaces')
-  }
-
-  yield* put(removeSession({ account: address, sessionId: event.topic }))
-  yield* put(
-    pushNotification({
-      type: AppNotificationType.WalletConnect,
-      address,
-      dappName: dapp.name,
-      event: WalletConnectEvent.Disconnected,
-      imageUrl: dapp.icons[0] ?? null,
-      hideDelay: 3 * ONE_SECOND_MS,
-    })
-  )
+  yield* put(removeSession({ sessionId: topic }))
 }
 
 function* populateActiveSessions() {
