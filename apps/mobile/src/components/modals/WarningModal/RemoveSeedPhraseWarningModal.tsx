@@ -77,7 +77,7 @@ export default function RemoveSeedPhraseWarningModal({
       backgroundColor={theme.colors.background1}
       name={ModalName.RemoveSeedPhraseWarningModal}
       onClose={onClose}>
-      <Flex centered gap="spacing16" height="100%" mb="spacing24" p="spacing24">
+      <Flex centered gap="spacing16" height="100%" mb="spacing24" p="spacing24" paddingTop="none">
         <Flex
           centered
           borderRadius="rounded12"
@@ -119,7 +119,7 @@ export default function RemoveSeedPhraseWarningModal({
           ) : (
             <Trans t={t}>
               Make sure you’ve written down your recovery phrase or backed it up on iCloud.{' '}
-              <Text color="textSecondary" variant="buttonLabelSmall">
+              <Text color="textSecondary" maxFontSizeMultiplier={1.4} variant="buttonLabelSmall">
                 You will not be able to access your funds otherwise.
               </Text>
             </Trans>
