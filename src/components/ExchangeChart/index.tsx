@@ -156,7 +156,7 @@ export const PoolDataSection = ({
 								variables: {
 									address: uniswapPoolAddress,
 								},
-								fetchPolicy: 'network-only',
+								fetchPolicy: 'cache-first',
 							}
 						)
 
@@ -166,7 +166,7 @@ export const PoolDataSection = ({
 								variables: {
 									address: uniswapPoolAddress
 								},
-								fetchPolicy: 'network-only'
+								fetchPolicy: 'cache-first'
 							}
 						)
 

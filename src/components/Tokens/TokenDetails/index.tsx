@@ -22,8 +22,8 @@ import TokenDetailsSkeleton, {
 import StatsSection from 'components/Tokens/TokenDetails/StatsSection'
 import TokenSafetyMessage from 'components/TokenSafety/TokenSafetyMessage'
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
-import Widget from 'components/Widget'
-import { SwapTokens } from 'components/Widget/inputs'
+// import Widget from 'components/Widget'
+// import { SwapTokens } from 'components/Widget/inputs'
 import { NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
 import { checkWarning } from 'constants/tokenSafety'
 import { TokenPriceQuery } from 'graphql/data/__generated__/types-and-hooks'
@@ -124,10 +124,10 @@ export default function TokenDetails({
   )
 
   const { token: detailedToken, didFetchFromChain } = useRelevantToken(address, pageChainId, tokenQueryData)
-  const { token: inputToken } = useRelevantToken(inputTokenAddress, pageChainId, undefined)
+  // const { token: inputToken } = useRelevantToken(inputTokenAddress, pageChainId, undefined)
 
   const tokenWarning = address ? checkWarning(address) : null
-  const isBlockedToken = tokenWarning?.canProceed === false
+  // const isBlockedToken = tokenWarning?.canProceed === false
   const navigate = useNavigate()
 
   // Wrapping navigate in a transition prevents Suspense from unnecessarily showing fallbacks again.
@@ -146,22 +146,22 @@ export default function TokenDetails({
   )
   useOnGlobalChainSwitch(navigateToTokenForChain)
 
-  const navigateToWidgetSelectedToken = useCallback(
-    (tokens: SwapTokens) => {
-      const newDefaultToken = tokens[Field.OUTPUT] ?? tokens.default
-      const address = newDefaultToken?.isNative ? NATIVE_CHAIN_ID : newDefaultToken?.address
-      startTokenTransition(() =>
-        navigate(
-          getTokenDetailsURL({
-            address,
-            chain,
-            inputAddress: tokens[Field.INPUT] ? getTokenAddress(tokens[Field.INPUT] as Currency) : null,
-          })
-        )
-      )
-    },
-    [chain, navigate]
-  )
+  // const navigateToWidgetSelectedToken = useCallback(
+  //   (tokens: SwapTokens) => {
+  //     const newDefaultToken = tokens[Field.OUTPUT] ?? tokens.default
+  //     const address = newDefaultToken?.isNative ? NATIVE_CHAIN_ID : newDefaultToken?.address
+  //     startTokenTransition(() =>
+  //       navigate(
+  //         getTokenDetailsURL({
+  //           address,
+  //           chain,
+  //           inputAddress: tokens[Field.INPUT] ? getTokenAddress(tokens[Field.INPUT] as Currency) : null,
+  //         })
+  //       )
+  //     )
+  //   },
+  //   [chain, navigate]
+  // )
 
   const [continueSwap, setContinueSwap] = useState<{ resolve: (value: boolean | PromiseLike<boolean>) => void }>()
 
@@ -232,7 +232,7 @@ export default function TokenDetails({
           <TokenDetailsSkeleton />
         )}
 
-        <RightPanel onClick={() => isBlockedToken && setOpenTokenSafetyModal(true)}>
+        {/* <RightPanel onClick={() => isBlockedToken && setOpenTokenSafetyModal(true)}>
           <div style={{ pointerEvents: isBlockedToken ? 'none' : 'auto' }}>
             <Widget
               defaultTokens={{
@@ -245,7 +245,7 @@ export default function TokenDetails({
           </div>
           {tokenWarning && <TokenSafetyMessage tokenAddress={address} warning={tokenWarning} />}
           {detailedToken && <BalanceSummary token={detailedToken} />}
-        </RightPanel>
+        </RightPanel> */}
         {detailedToken && <MobileBalanceSummaryFooter token={detailedToken} />}
 
         <TokenSafetyModal

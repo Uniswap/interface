@@ -3,7 +3,6 @@ import { HistoryCallback, PeriodParams, ResolutionString, SubscribeBarsCallback,
 
 import { useEffect, useMemo, useRef } from "react";
 
-import _ from "lodash";
 import { PriceChartEntry, fetchLiveBar, fetchPoolPriceData } from "graphql/limitlessGraph/poolPriceData";
 import { uniswapClient } from "graphql/limitlessGraph/uniswapClients";
 import { limitlessClient } from "graphql/limitlessGraph/limitlessClients";
@@ -100,7 +99,7 @@ export default function useDatafeed(
           onErrorCallback: (error: string) => void
         ) => {
           // console.log('[getBars]: Method call', symbolInfo, periodParams);
-          if (!_.has(SUPPORTED_RESOLUTIONS, resolution)) {
+          if (Object.values(SUPPORTED_RESOLUTIONS).find(str => str === resolution) === undefined) {
             return onErrorCallback("[getBars] Invalid resolution");
           }
           const { poolAddress, invertPrice, useUniswapSubgraph } = symbolInfo;
