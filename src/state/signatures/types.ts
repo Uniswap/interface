@@ -1,13 +1,6 @@
-import { ExactInputSwapTransactionInfo, ExactOutputSwapTransactionInfo } from '../transactions/types'
+import { UniswapXOrderStatus } from 'lib/hooks/orders/types'
 
-export enum DutchOrderStatus {
-  OPEN = 'OPEN',
-  EXPIRED = 'EXPIRED',
-  ERROR = 'ERROR',
-  CANCELLED = 'CANCELLED',
-  FILLED = 'FILLED',
-  INSUFFICIENT_FUNDS = 'INSUFFICIENT_FUNDS',
-}
+import { ExactInputSwapTransactionInfo, ExactOutputSwapTransactionInfo } from '../transactions/types'
 
 export enum SignatureType {
   SIGN_UNISWAPX_ORDER = 'signUniswapXOrder',
@@ -26,7 +19,7 @@ interface BaseSignatureFields {
 export interface UniswapXOrderDetails extends BaseSignatureFields {
   type: SignatureType.SIGN_UNISWAPX_ORDER
   orderHash: string
-  status: DutchOrderStatus
+  status: UniswapXOrderStatus
   swapInfo: (ExactInputSwapTransactionInfo | ExactOutputSwapTransactionInfo) & { isUniswapXOrder: true }
   txHash?: string
 }

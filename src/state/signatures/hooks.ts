@@ -1,15 +1,16 @@
 import { useWeb3React } from '@web3-react/core'
 import { SupportedChainId } from 'constants/chains'
+import { UniswapXOrderStatus } from 'lib/hooks/orders/types'
 import { useCallback, useMemo } from 'react'
 import { useDispatch } from 'react-redux'
 import { useAppSelector } from 'state/hooks'
 
 import { addTransaction } from '../transactions/reducer'
 import { addSignature, updateSignature } from './reducer'
-import { DutchOrderStatus, SignatureDetails, SignatureType, UniswapXOrderDetails } from './types'
+import { SignatureDetails, SignatureType, UniswapXOrderDetails } from './types'
 
 function isPendingOrder(signature: SignatureDetails): signature is UniswapXOrderDetails {
-  return signature.type === SignatureType.SIGN_UNISWAPX_ORDER && signature.status === DutchOrderStatus.OPEN
+  return signature.type === SignatureType.SIGN_UNISWAPX_ORDER && signature.status === UniswapXOrderStatus.OPEN
 }
 
 export function usePendingOrders(): UniswapXOrderDetails[] {
@@ -54,7 +55,7 @@ export function useAddOrder() {
           expiry,
           orderHash,
           swapInfo,
-          status: DutchOrderStatus.OPEN,
+          status: UniswapXOrderStatus.OPEN,
           addedTime: Date.now(),
         })
       )
@@ -63,19 +64,19 @@ export function useAddOrder() {
   )
 }
 
-export function isFinalizedOrder(orderStatus: DutchOrderStatus) {
-  return orderStatus !== DutchOrderStatus.OPEN
+export function isFinalizedOrder(orderStatus: UniswapXOrderStatus) {
+  return orderStatus !== UniswapXOrderStatus.OPEN
 }
 
-export function isOnChainOrder(orderStatus: DutchOrderStatus) {
-  return orderStatus === DutchOrderStatus.FILLED || orderStatus === DutchOrderStatus.CANCELLED
+export function isOnChainOrder(orderStatus: UniswapXOrderStatus) {
+  return orderStatus === UniswapXOrderStatus.FILLED || orderStatus === UniswapXOrderStatus.CANCELLED
 }
 
 export function useUpdateOrder() {
   const dispatch = useDispatch()
 
   return useCallback(
-    (order: UniswapXOrderDetails, status: DutchOrderStatus, txHash?: string) => {
+    (order: UniswapXOrderDetails, status: UniswapXOrderStatus, txHash?: string) => {
       if (txHash && isOnChainOrder(status)) {
         // Creates an entry for the transaction which resulted from the order
         dispatch(addTransaction({ chainId: order.chainId, from: order.offerer, hash: txHash, info: order.swapInfo }))

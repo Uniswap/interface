@@ -6,12 +6,14 @@ import { LoaderV2 } from 'components/Icons/LoadingSpinner'
 import Row from 'components/Row'
 import { TransactionStatus } from 'graphql/data/__generated__/types-and-hooks'
 import useENSName from 'hooks/useENSName'
+import { useCallback } from 'react'
 import styled from 'styled-components/macro'
 import { EllipsisStyle, ThemedText } from 'theme'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 import { PortfolioLogo } from '../PortfolioLogo'
 import PortfolioRow from '../PortfolioRow'
+import { useOpenOffchainActivityModal } from './OffchainActivityModal'
 import { useTimeSince } from './parseRemote'
 import { Activity } from './types'
 
@@ -40,10 +42,21 @@ function StatusIndicator({ activity: { status, timestamp } }: { activity: Activi
 }
 
 export function ActivityRow({ activity }: { activity: Activity }) {
-  const { chainId, title, descriptor, logos, otherAccount, currencies, hash, prefixIconSrc } = activity
+  const { chainId, title, descriptor, logos, otherAccount, currencies, hash, prefixIconSrc, offchainOrderStatus } =
+    activity
+  const openOffchainActivityModal = useOpenOffchainActivityModal()
 
   const { ENSName } = useENSName(otherAccount)
   const explorerUrl = getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)
+
+  const onClick = useCallback(() => {
+    if (offchainOrderStatus) {
+      openOffchainActivityModal({ orderHash: hash, status: offchainOrderStatus })
+      return
+    }
+
+    window.open(getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION), '_blank')
+  }, [offchainOrderStatus, chainId, hash, openOffchainActivityModal])
 
   return (
     <TraceEvent
@@ -71,7 +84,7 @@ export function ActivityRow({ activity }: { activity: Activity }) {
           </ActivityRowDescriptor>
         }
         right={<StatusIndicator activity={activity} />}
-        onClick={() => window.open(explorerUrl, '_blank')}
+        onClick={onClick}
       />
     </TraceEvent>
   )

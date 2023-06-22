@@ -1,6 +1,6 @@
 import { t } from '@lingui/macro'
-import { TransactionStatus } from 'graphql/data/__generated__/types-and-hooks'
-import { DutchOrderStatus } from 'state/signatures/types'
+import { SwapOrderStatus, TransactionStatus } from 'graphql/data/__generated__/types-and-hooks'
+import { UniswapXOrderStatus } from 'lib/hooks/orders/types'
 import { TransactionType } from 'state/transactions/types'
 
 // use even number because rows are in groups of 2
@@ -157,31 +157,31 @@ export function getActivityTitle(type: TransactionType, status: TransactionStatu
 
 const SwapTitleTable = TransactionTitleTable[TransactionType.SWAP]
 export const OrderTextTable: {
-  [status in DutchOrderStatus]: { title: string; status: TransactionStatus; statusMessage?: string }
+  [status in UniswapXOrderStatus]: { title: string; status: TransactionStatus; statusMessage?: string }
 } = {
-  [DutchOrderStatus.OPEN]: {
+  [UniswapXOrderStatus.OPEN]: {
     title: SwapTitleTable.PENDING,
     status: TransactionStatus.Pending,
   },
-  [DutchOrderStatus.FILLED]: {
+  [UniswapXOrderStatus.FILLED]: {
     title: SwapTitleTable.CONFIRMED,
     status: TransactionStatus.Confirmed,
   },
-  [DutchOrderStatus.EXPIRED]: {
+  [UniswapXOrderStatus.EXPIRED]: {
     title: t`Swap expired`,
     statusMessage: t`Your swap could not be fulfilled at this time. Please try again.`,
     status: TransactionStatus.Failed,
   },
-  [DutchOrderStatus.ERROR]: {
+  [UniswapXOrderStatus.ERROR]: {
     title: SwapTitleTable.FAILED,
     status: TransactionStatus.Failed,
   },
-  [DutchOrderStatus.INSUFFICIENT_FUNDS]: {
+  [UniswapXOrderStatus.INSUFFICIENT_FUNDS]: {
     title: SwapTitleTable.FAILED,
     statusMessage: t`Your account had insufficent funds to complete this swap.`,
     status: TransactionStatus.Failed,
   },
-  [DutchOrderStatus.CANCELLED]: {
+  [UniswapXOrderStatus.CANCELLED]: {
     title: t`Swap cancelled`,
     status: TransactionStatus.Failed,
   },
@@ -194,3 +194,11 @@ export const MOONPAY_SENDER_ADDRESSES = [
   '0xb287eac48ab21c5fb1d3723830d60b4c797555b0',
   '0xd108fd0e8c8e71552a167e7a44ff1d345d233ba6',
 ]
+
+// Converts GQL backend orderStatus enum to the enum used by the frontend and gouda backend
+export const OrderStatusTable: { [key in SwapOrderStatus]: UniswapXOrderStatus } = {
+  [SwapOrderStatus.Open]: UniswapXOrderStatus.OPEN,
+  [SwapOrderStatus.Expired]: UniswapXOrderStatus.EXPIRED,
+  [SwapOrderStatus.Error]: UniswapXOrderStatus.ERROR,
+  [SwapOrderStatus.InsufficientFunds]: UniswapXOrderStatus.INSUFFICIENT_FUNDS,
+}
