@@ -18,6 +18,7 @@ import SetLockupModal from 'components/createPool/SetLockupModal'
 import SetSpreadModal from 'components/createPool/SetSpreadModal'
 import SetValueModal from 'components/createPool/SetValueModal'
 import MoveStakeModal from 'components/earn/MoveStakeModal'
+import UnstakeModal from 'components/earn/UnstakeModal'
 //import Loader from 'components/Loader'
 import { RowBetween, RowFixed } from 'components/Row'
 //import { Dots } from 'components/swap/styleds'
@@ -240,6 +241,7 @@ export function PoolPositionPage() {
   const [showSetValueModal, setShowSetValueModal] = useState(false)
   const [showStakeModal, setShowStakeModal] = useState(false)
   const [showMoveStakeModal, setShowMoveStakeModal] = useState(false)
+  const [showUnstakeModal, setShowUnstakeModal] = useState(false)
   const [deactivate, setDeactivate] = useState(false)
 
   // TODO: check how can reduce number of calls by limit update of poolStorage
@@ -363,7 +365,13 @@ export function PoolPositionPage() {
               poolInfo={poolInfo}
               isDeactivate={deactivate}
               onDismiss={() => setShowMoveStakeModal(false)}
-              title={<Trans>Move Stake</Trans>}
+              title={!deactivate ? <Trans>Move Stake</Trans> : <Trans>Deactivate Stake</Trans>}
+            />
+            <UnstakeModal
+              isOpen={showUnstakeModal}
+              isPool={true}
+              onDismiss={() => setShowUnstakeModal(false)}
+              title={<Trans>Withdraw</Trans>}
             />
           </>
         )}
@@ -679,6 +687,17 @@ export function PoolPositionPage() {
                 >
                   <Trans>Disable</Trans>
                 </ResponsiveButtonPrimary>
+                {owner === account && (
+                  <ResponsiveButtonPrimary
+                    style={{ marginRight: '8px' }}
+                    width="fit-content"
+                    padding="6px 8px"
+                    $borderRadius="12px"
+                    onClick={() => setShowUnstakeModal(true)}
+                  >
+                    <Trans>Unstake</Trans>
+                  </ResponsiveButtonPrimary>
+                )}
               </RowFixed>
             </ResponsiveRow>
           </AutoColumn>

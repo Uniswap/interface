@@ -100,7 +100,7 @@ export interface CreateProposalData {
   description: string
 }
 
-enum StakeStatus {
+export enum StakeStatus {
   UNDELEGATED,
   DELEGATED,
 }

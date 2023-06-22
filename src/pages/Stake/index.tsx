@@ -7,15 +7,16 @@ import InfiniteScroll from 'react-infinite-scroll-component'
 import { useStakingPools } from 'state/pool/hooks'
 import styled from 'styled-components/macro'
 
-//import { ButtonPrimary } from '../../components/Button'
+import { ButtonPrimary } from '../../components/Button'
 import { OutlineCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
 import CreateModal from '../../components/createPool/CreateModal'
 //import PoolCard from '../../components/earn/PoolCard'
 import { CardBGImage, CardNoise, CardSection, DataCard } from '../../components/earn/styled'
+import UnstakeModal from '../../components/earn/UnstakeModal'
 import Loader from '../../components/Loader'
 import PoolPositionList from '../../components/PoolPositionList'
-import { RowBetween } from '../../components/Row'
+import { RowBetween, RowFixed } from '../../components/Row'
 //import { LoadingSparkle } from '../../nft/components/common/Loading/LoadingSparkle'
 import { Center } from '../../nft/components/Flex'
 import { useModalIsOpen, useToggleCreateModal } from '../../state/application/hooks'
@@ -81,6 +82,7 @@ function highestAprFirst(a: any, b: any) {
 export default function Stake() {
   const showDelegateModal = useModalIsOpen(ApplicationModal.CREATE)
   const toggleCreateModal = useToggleCreateModal()
+  const [showUnstakeModal, setShowUnstakeModal] = useState(false)
 
   const itemsPerPage = 10
   const [hasMore, setHasMore] = useState(true)
@@ -176,11 +178,25 @@ export default function Stake() {
           <ThemedText.DeprecatedMediumHeader style={{ marginTop: '0.5rem' }}>
             <Trans>All Pools</Trans>
           </ThemedText.DeprecatedMediumHeader>
-          {/* TODO: must add stake modal to stake for user or for pool */}
-          <CreateModal isOpen={showDelegateModal} onDismiss={toggleCreateModal} title={<Trans>Stake</Trans>} />
-          {/*<ButtonPrimary style={{ width: 'fit-content' }} padding="8px" $borderRadius="8px" onClick={toggleCreateModal}>
-            <Trans>Stake</Trans>
-          </ButtonPrimary>*/}
+          <CreateModal isOpen={showDelegateModal} onDismiss={toggleCreateModal} title={<Trans>Harvest</Trans>} />
+          <UnstakeModal
+            isOpen={showUnstakeModal}
+            onDismiss={() => setShowUnstakeModal(false)}
+            title={<Trans>Withdraw</Trans>}
+          />
+          <RowFixed gap="8px" style={{ marginRight: '4px' }}>
+            <ButtonPrimary style={{ width: 'fit-content' }} padding="8px" $borderRadius="8px" onClick={toggleCreateModal}>
+              <Trans>Harvest</Trans>
+            </ButtonPrimary>
+            <ButtonPrimary
+              style={{ width: 'fit-content' }}
+              padding="8px"
+              $borderRadius="8px"
+              onClick={() => setShowUnstakeModal(true)}
+            >
+              <Trans>Unstake</Trans>
+            </ButtonPrimary>
+          </RowFixed>
         </DataRow>
 
         <MainContentWrapper>

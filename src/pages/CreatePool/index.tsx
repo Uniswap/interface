@@ -9,7 +9,7 @@ import CreateModal from '../../components/createPool/CreateModal'
 import { CardBGImage, CardNoise, CardSection, DataCard } from '../../components/earn/styled'
 import Loader from '../../components/Loader'
 import PoolPositionList from '../../components/PoolPositionList'
-import { RowBetween } from '../../components/Row'
+import { RowBetween, RowFixed } from '../../components/Row'
 import { useModalIsOpen, useToggleCreateModal } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
 import { useAllPoolsData } from '../../state/pool/hooks'
@@ -97,9 +97,11 @@ export default function CreatePool() {
             <Trans>Pools</Trans>
           </ThemedText.DeprecatedMediumHeader>
           <CreateModal isOpen={showDelegateModal} onDismiss={toggleCreateModal} title={<Trans>Create Pool</Trans>} />
-          <ButtonPrimary style={{ width: 'fit-content' }} padding="8px" $borderRadius="8px" onClick={toggleCreateModal}>
-            <Trans>Create Pool</Trans>
-          </ButtonPrimary>
+          <RowFixed gap="8px" style={{ marginRight: '4px' }}>
+            <ButtonPrimary style={{ width: 'fit-content' }} padding="8px" $borderRadius="8px" onClick={toggleCreateModal}>
+              <Trans>Create Pool</Trans>
+            </ButtonPrimary>
+          </RowFixed>
         </DataRow>
 
         <MainContentWrapper>

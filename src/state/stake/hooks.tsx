@@ -1,13 +1,18 @@
 import { Interface } from '@ethersproject/abi'
 import StakingRewardsJSON from '@uniswap/liquidity-staker/build/StakingRewards.json'
-import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { SupportedChainId } from 'constants/chains'
+import { GRG } from 'constants/tokens'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import JSBI from 'jsbi'
-import { NEVER_RELOAD, useMultipleContractSingleData } from 'lib/hooks/multicall'
-import { useMemo } from 'react'
+import { NEVER_RELOAD, useMultipleContractSingleData, useSingleCallResult } from 'lib/hooks/multicall'
+import { useCallback, useMemo } from 'react'
+import { useParams } from 'react-router-dom'
+import { StakeStatus, useStakingContract } from 'state/governance/hooks'
+import { usePoolExtendedContract } from 'state/pool/hooks'
+import { calculateGasMargin } from 'utils/calculateGasMargin'
 
 import { DAI, UNI, USDC_MAINNET, USDT, WBTC, WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
 
@@ -222,4 +227,52 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
     totalSupplies,
     uni,
   ])
+}
+
+export function useFreeStakeBalance(): CurrencyAmount<Currency> | undefined {
+  const { account, chainId } = useWeb3React()
+  const grg = useMemo(() => (chainId ? GRG[chainId] : undefined), [chainId])
+  const stakingContract = useStakingContract()
+  const { poolAddress: poolAddressFromUrl } = useParams<{ poolAddress?: string }>()
+  // TODO: check if can improve as whenever there is an address in the url the pool's balance will be checked
+  const freeStake = useSingleCallResult(stakingContract ?? undefined, 'getOwnerStakeByStatus', [
+    poolAddressFromUrl ?? account,
+    StakeStatus.UNDELEGATED,
+  ])?.result?.[0]
+
+  return freeStake && grg ? CurrencyAmount.fromRawAmount(grg, freeStake.currentEpochBalance) : undefined
+}
+
+export function useUnstakeCallback(): (
+  amount: CurrencyAmount<Currency>,
+  isPool?: boolean
+) => undefined | Promise<string> {
+  const { account, chainId, provider } = useWeb3React()
+  const stakingContract = useStakingContract()
+  const { poolAddress: poolAddressFromUrl } = useParams<{ poolAddress?: string }>()
+  const poolContract = usePoolExtendedContract(poolAddressFromUrl ?? undefined)
+
+  return useCallback(
+    (amount: CurrencyAmount<Currency>, isPool?: boolean) => {
+      if (!provider || !chainId || !account) return undefined
+      if (!stakingContract) throw new Error('No Staking Proxy Contract!')
+      if (isPool && !poolContract) throw new Error('No Pool Contract!')
+      if (!isPool) {
+        return stakingContract.estimateGas.unstake(amount.quotient.toString(), {}).then((estimatedGasLimit) => {
+          return stakingContract.unstake(amount.quotient.toString(), {
+            value: null,
+            gasLimit: calculateGasMargin(estimatedGasLimit),
+          })
+        })
+      } else {
+        return poolContract?.estimateGas.unstake(amount.quotient.toString(), {}).then((estimatedGasLimit) => {
+          return poolContract?.unstake(amount.quotient.toString(), {
+            value: null,
+            gasLimit: calculateGasMargin(estimatedGasLimit),
+          })
+        })
+      }
+    },
+    [account, chainId, provider, poolContract, stakingContract]
+  )
 }
