@@ -73,16 +73,10 @@ export const PageTabs = () => {
       <MenuItem href="/swap" isActive={pathname.startsWith('/swap')}>
         <Trans>Trade</Trans>
       </MenuItem>
-
-      {false && (
-        <MenuItem dataTestId="nft-nav" href="/nfts" isActive={isNftPage}>
-          <Trans>NFTs</Trans>
-        </MenuItem>
-      )}
-       {/* <MenuItem href="/pools" dataTestId="pool-nav-link" isActive={isPoolActive}>
+       <MenuItem href="/pools" dataTestId="pool-nav-link" isActive={isPoolActive}>
           <Trans>Pools</Trans>
         </MenuItem>
-      */}
+     
         <MenuItem href="/faucet" dataTestId="pool-nav-link" isActive={isPoolActive}>
           <Trans>Faucets</Trans>
         </MenuItem>

@@ -127,7 +127,7 @@ export function useLimitlessPositions(account: string | undefined): {loading: bo
       return activePositions
     }
     return undefined
-  }, [loading, error, results, tokenIds])
+  }, [results, tokenIds])
   return {
     loading: false,
     positions: positions ?? []
@@ -273,7 +273,7 @@ export function useV3Positions(account: string | null | undefined): UseV3Positio
     account ?? undefined,
   ])
 
-  console.log('balanceResult', balanceLoading, balanceResult)
+  // console.log('balanceResult', balanceLoading, balanceResult)
 
   // we don't expect any account balance to ever exceed the bounds of max safe int
   const accountBalance: number | undefined = balanceResult?.[0]?.toNumber()
