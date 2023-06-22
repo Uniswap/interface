@@ -35,7 +35,7 @@ class MetaTagInjector {
     element.append(`<meta property="og:image:width" content = "1200"/>`, {
       html: true,
     })
-    element.append(`<meta property="og:image:height" content = "600"/>`, {
+    element.append(`<meta property="og:image:height" content = "630"/>`, {
       html: true,
     })
     element.append('<meta property="og:type" content = "website"/>', {
