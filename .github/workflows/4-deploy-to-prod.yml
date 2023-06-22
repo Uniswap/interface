@@ -10,8 +10,7 @@ jobs:
     environment:
       name: deploy/prod
     steps:
-      - name: Send Slack message that build is starting
-        uses: slackapi/slack-github-action@007b2c3c751a190b6f0f040e47ed024deaa72844
+      - uses: slackapi/slack-github-action@007b2c3c751a190b6f0f040e47ed024deaa72844
         continue-on-error: true
         with:
           payload: |
@@ -21,10 +20,11 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
-      - run: yarn prepare
       - run: yarn build
+
       - name: Bump and tag
         id: github-tag-action
         uses: mathieudutour/github-tag-action@d745f2e74aaf1ee82e747b181f7a0967978abee0
@@ -48,7 +48,7 @@ jobs:
         with:
           cidv0: ${{ steps.pinata.outputs.hash }}
 
-      - name: Release
+      - name: Publish release
         uses: actions/create-release@v1.1.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -86,8 +86,7 @@ jobs:
           # Cloudflare uses `main` as the default production branch, so we push using the `main` branch so that it can be aliased by a custom domain.
           branch: main
 
-      - name: Send Slack message about deployment outcome
-        uses: slackapi/slack-github-action@007b2c3c751a190b6f0f040e47ed024deaa72844
+      - uses: slackapi/slack-github-action@007b2c3c751a190b6f0f040e47ed024deaa72844
         continue-on-error: true
         if: always()
         with:
@@ -98,6 +97,7 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+
       - name: Upload source maps to Sentry
         uses: getsentry/action-release@4744f6a65149f441c5f396d5b0877307c0db52c7
         continue-on-error: true
