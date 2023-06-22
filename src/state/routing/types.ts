@@ -16,7 +16,7 @@ export enum TradeState {
 export enum QuoteMethod {
   ROUTING_API,
   CLIENT_SIDE,
-  CLIENT_SIDE_FALLBACK,
+  CLIENT_SIDE_FALLBACK, // If client-side was used after the routing-api call failed.
 }
 
 // from https://github.com/Uniswap/routing-api/blob/main/lib/handlers/schema.ts
