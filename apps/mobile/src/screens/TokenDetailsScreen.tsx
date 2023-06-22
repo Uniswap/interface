@@ -70,7 +70,8 @@ function HeaderTitleElement({ data }: { data: TokenDetailsScreenQuery | undefine
   const tokenProject = token?.project
 
   return (
-    <Flex alignItems="center" gap="none" justifyContent="space-between">
+    // ml="spacing32" is needed to compensate `...` menu, so the header is centered
+    <Flex alignItems="center" gap="none" justifyContent="space-between" ml="spacing32">
       <HeaderPriceLabel price={tokenProject?.markets?.[0]?.price} />
       <Flex centered row gap="spacing4">
         <TokenLogo
