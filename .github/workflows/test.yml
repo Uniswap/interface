@@ -150,7 +150,7 @@ jobs:
           parallel: true
           start: yarn serve
           wait-on: 'http://localhost:3000'
-          browser: chrome
+          browser: electron
           group: e2e
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
