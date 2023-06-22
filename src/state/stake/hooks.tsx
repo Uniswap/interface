@@ -1,6 +1,6 @@
 import { Interface } from '@ethersproject/abi'
 import StakingRewardsJSON from '@uniswap/liquidity-staker/build/StakingRewards.json'
-import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { SupportedChainId } from 'constants/chains'
@@ -229,7 +229,7 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
   ])
 }
 
-export function useFreeStakeBalance(): CurrencyAmount<Currency> | undefined {
+export function useFreeStakeBalance(): CurrencyAmount<Token> | undefined {
   const { account, chainId } = useWeb3React()
   const grg = useMemo(() => (chainId ? GRG[chainId] : undefined), [chainId])
   const stakingContract = useStakingContract()
@@ -243,17 +243,14 @@ export function useFreeStakeBalance(): CurrencyAmount<Currency> | undefined {
   return freeStake && grg ? CurrencyAmount.fromRawAmount(grg, freeStake.currentEpochBalance) : undefined
 }
 
-export function useUnstakeCallback(): (
-  amount: CurrencyAmount<Currency>,
-  isPool?: boolean
-) => undefined | Promise<string> {
+export function useUnstakeCallback(): (amount: CurrencyAmount<Token>, isPool?: boolean) => undefined | Promise<string> {
   const { account, chainId, provider } = useWeb3React()
   const stakingContract = useStakingContract()
   const { poolAddress: poolAddressFromUrl } = useParams<{ poolAddress?: string }>()
   const poolContract = usePoolExtendedContract(poolAddressFromUrl ?? undefined)
 
   return useCallback(
-    (amount: CurrencyAmount<Currency>, isPool?: boolean) => {
+    (amount: CurrencyAmount<Token>, isPool?: boolean) => {
       if (!provider || !chainId || !account) return undefined
       if (!stakingContract) throw new Error('No Staking Proxy Contract!')
       if (isPool && !poolContract) throw new Error('No Pool Contract!')

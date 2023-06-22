@@ -1,10 +1,12 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import { SupportedChainId } from 'constants/chains'
+import JSBI from 'jsbi'
 import { useMemo, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 //import { useInfiniteQuery } from 'react-query'
 import { useStakingPools } from 'state/pool/hooks'
+import { useFreeStakeBalance } from 'state/stake/hooks'
 import styled from 'styled-components/macro'
 
 import { ButtonPrimary } from '../../components/Button'
@@ -92,7 +94,10 @@ export default function Stake() {
   const smartPoolsLogs = useRegisteredPools()
   const registry = useRegistryContract()
   const bscPools = useBscPools(registry)
+
   const { chainId } = useWeb3React()
+  const freeStakeBalance = useFreeStakeBalance()
+  const hasFreeStake = JSBI.greaterThan(freeStakeBalance ? freeStakeBalance.quotient : JSBI.BigInt(0), JSBI.BigInt(0))
 
   const allPools: PoolRegisteredLog[] = useMemo(() => {
     if (chainId === SupportedChainId.BNB) return [...(smartPoolsLogs ?? []), ...(bscPools ?? [])]
@@ -181,21 +186,29 @@ export default function Stake() {
           <CreateModal isOpen={showDelegateModal} onDismiss={toggleCreateModal} title={<Trans>Harvest</Trans>} />
           <UnstakeModal
             isOpen={showUnstakeModal}
+            freeStakeBalance={freeStakeBalance}
             onDismiss={() => setShowUnstakeModal(false)}
             title={<Trans>Withdraw</Trans>}
           />
           <RowFixed gap="8px" style={{ marginRight: '4px' }}>
-            <ButtonPrimary style={{ width: 'fit-content' }} padding="8px" $borderRadius="8px" onClick={toggleCreateModal}>
-              <Trans>Harvest</Trans>
-            </ButtonPrimary>
             <ButtonPrimary
               style={{ width: 'fit-content' }}
               padding="8px"
               $borderRadius="8px"
-              onClick={() => setShowUnstakeModal(true)}
+              onClick={toggleCreateModal}
             >
-              <Trans>Unstake</Trans>
+              <Trans>Harvest</Trans>
             </ButtonPrimary>
+            {hasFreeStake && (
+              <ButtonPrimary
+                style={{ width: 'fit-content' }}
+                padding="8px"
+                $borderRadius="8px"
+                onClick={() => setShowUnstakeModal(true)}
+              >
+                <Trans>Unstake</Trans>
+              </ButtonPrimary>
+            )}
           </RowFixed>
         </DataRow>
 

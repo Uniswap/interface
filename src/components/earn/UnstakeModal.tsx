@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import JSBI from 'jsbi'
 import { ReactNode, /*useCallback,*/ useState } from 'react'
@@ -12,7 +12,7 @@ import useDebouncedChangeHandler from '../../hooks/useDebouncedChangeHandler'
 import { ResponsiveHeaderText, SmallMaxButton } from '../../pages/RemoveLiquidity/styled'
 // TODO: check if should write into state stake hooks
 import { useBurnV3ActionHandlers, useBurnV3State } from '../../state/burn/v3/hooks'
-import { useFreeStakeBalance, useUnstakeCallback } from '../../state/stake/hooks'
+import { useUnstakeCallback } from '../../state/stake/hooks'
 import { ThemedText } from '../../theme'
 import { /*ButtonConfirmed,*/ ButtonPrimary } from '../Button'
 //import { ButtonError } from '../Button'
@@ -37,21 +37,20 @@ const StyledClosed = styled(X)`
 interface MoveStakeModalProps {
   isOpen: boolean
   isPool?: boolean
+  freeStakeBalance?: CurrencyAmount<Token>
   onDismiss: () => void
   title: ReactNode
 }
 
 // TODO: add balance input to display amount when withdrawing
-export default function UnstakeModal({ isOpen, isPool, onDismiss, title }: MoveStakeModalProps) {
+export default function UnstakeModal({ isOpen, isPool, freeStakeBalance, onDismiss, title }: MoveStakeModalProps) {
   const { chainId } = useWeb3React()
 
   // state for delegate input
-  const [currencyValue] = useState<Currency>(GRG[chainId ?? 1])
+  const [currencyValue] = useState<Token>(GRG[chainId ?? 1])
 
   const { percent } = useBurnV3State()
   const { onPercentSelect } = useBurnV3ActionHandlers()
-
-  const freeStakeBalance = useFreeStakeBalance()
 
   // boilerplate for the slider
   const [percentForSlider, onPercentSelectForSlider] = useDebouncedChangeHandler(percent, onPercentSelect)
@@ -68,7 +67,7 @@ export default function UnstakeModal({ isOpen, isPool, onDismiss, title }: MoveS
   // monitor call to help UI loading state
   const [hash, setHash] = useState<string | undefined>()
   const [attempting, setAttempting] = useState(false)
-  const [stakeAmount, setStakeAmount] = useState<CurrencyAmount<Currency>>()
+  const [stakeAmount, setStakeAmount] = useState<CurrencyAmount<Token>>()
 
   // wrapper to reset state on modal close
   function wrappedOnDismiss() {

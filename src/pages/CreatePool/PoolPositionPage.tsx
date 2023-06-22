@@ -44,6 +44,7 @@ import { Link, useParams } from 'react-router-dom'
 import { PoolInfo } from 'state/buy/hooks'
 //import { useTokenBalance } from 'state/connection/hooks'
 import { useCurrencyBalance } from 'state/connection/hooks'
+import { useFreeStakeBalance } from 'state/stake/hooks'
 //import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'
 import styled /*, { useTheme }*/ from 'styled-components/macro'
 import { ExternalLink, /*HideExtraSmall,*/ ThemedText } from 'theme'
@@ -284,6 +285,10 @@ export function PoolPositionPage() {
   const poolInfo = { pool, recipient: account, userPoolBalance, poolPriceAmount: poolPrice, spread } as PoolInfo
   const userBaseTokenBalance = useCurrencyBalance(account ?? undefined, base ?? undefined)
 
+  // TODO: check how improve efficiency as this method is called each time a pool is loaded
+  const freeStakeBalance = useFreeStakeBalance()
+  const hasFreeStake = JSBI.greaterThan(freeStakeBalance ? freeStakeBalance.quotient : JSBI.BigInt(0), JSBI.BigInt(0))
+
   const handleMoveStakeClick = useCallback(() => {
     setShowMoveStakeModal(true)
     if (deactivate) {
@@ -370,6 +375,7 @@ export function PoolPositionPage() {
             <UnstakeModal
               isOpen={showUnstakeModal}
               isPool={true}
+              freeStakeBalance={freeStakeBalance}
               onDismiss={() => setShowUnstakeModal(false)}
               title={<Trans>Withdraw</Trans>}
             />
@@ -687,7 +693,7 @@ export function PoolPositionPage() {
                 >
                   <Trans>Disable</Trans>
                 </ResponsiveButtonPrimary>
-                {owner === account && (
+                {owner === account && hasFreeStake && (
                   <ResponsiveButtonPrimary
                     style={{ marginRight: '8px' }}
                     width="fit-content"
