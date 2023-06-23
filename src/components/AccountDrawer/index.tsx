@@ -210,6 +210,9 @@ function AccountDrawer() {
     // reset the yPosition when the user stops dragging
     onDragEnd: (state) => {
       setYPosition(0)
+      if (!dragStartTop) {
+        scrollRef.current?.scrollTo({ top: 0 })
+      }
     },
     // set dragStartTop to true if the user starts dragging from the top of the drawer
     onDragStart: (state) => {
