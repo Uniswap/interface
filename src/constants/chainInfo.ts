@@ -230,7 +230,7 @@ const CHAIN_INFO: ChainInfoMap = {
     blockWaitMsBeforeWarning: ms`10m`,
     bridge: 'https://core.app/bridge/',
     docs: 'https://docs.avax.network/',
-    explorer: 'https://avascan.info/',
+    explorer: 'https://snowtrace.io/',
     infoLink: 'https://info.uniswap.org/#/avax/', // TODO(WEB-2336): Add avax support to info site
     label: 'Avalanche',
     logoUrl: avaxLogo,

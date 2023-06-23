@@ -32,7 +32,7 @@ describe('#getExplorerLink', () => {
   })
   it('avalanche', () => {
     expect(getExplorerLink(ChainId.AVALANCHE, 'abc', ExplorerDataType.ADDRESS)).toEqual(
-      'https://avascan.info/address/abc'
+      'https://snowtrace.io/address/abc'
     )
   })
 })
