@@ -5,6 +5,7 @@ import {
   sortMethodAtom,
   TokenSortMethod,
 } from 'components/Tokens/state'
+import { SupportedChainId } from 'constants/chains'
 import gql from 'graphql-tag'
 import { useAtomValue } from 'jotai/utils'
 import { useMemo } from 'react'
@@ -147,7 +148,7 @@ interface UseTopTokensReturnValue {
 }
 
 export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
-  const chainId = CHAIN_NAME_TO_CHAIN_ID[chain]
+  const chainId = CHAIN_NAME_TO_CHAIN_ID[chain] ?? SupportedChainId.MAINNET
   const duration = toHistoryDuration(useAtomValue(filterTimeAtom))
 
   const { data: sparklineQuery } = usePollQueryWhileMounted(

@@ -168,8 +168,8 @@ export default function NetworkFilter() {
           })}
           <InternalLinkMenuItem data-testid="tokens-network-filter-option-bnb-chain" disabled>
             <NetworkLabel>
-              <Logo src={BNBChainInfo.logoUrl} />
-              {BNBChainInfo.label}
+              <Logo src={BNBChainInfo?.logoUrl} />
+              {BNBChainInfo?.label}
             </NetworkLabel>
             <Tag>Coming soon</Tag>
           </InternalLinkMenuItem>

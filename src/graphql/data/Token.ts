@@ -1,3 +1,4 @@
+import { SupportedChainId } from 'constants/chains'
 import { DEFAULT_ERC20_DECIMALS } from 'constants/tokens'
 import gql from 'graphql-tag'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
@@ -71,7 +72,7 @@ export type TokenQueryData = TokenQuery['token']
 export class QueryToken extends WrappedTokenInfo {
   constructor(address: string, data: NonNullable<TokenQueryData>, logoSrc?: string) {
     super({
-      chainId: CHAIN_NAME_TO_CHAIN_ID[data.chain],
+      chainId: CHAIN_NAME_TO_CHAIN_ID[data.chain] ?? SupportedChainId.MAINNET,
       address,
       decimals: data.decimals ?? DEFAULT_ERC20_DECIMALS,
       symbol: data.symbol ?? '',

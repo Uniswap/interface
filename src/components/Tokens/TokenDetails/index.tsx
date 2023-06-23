@@ -21,6 +21,7 @@ import TokenDetailsSkeleton, {
 import StatsSection from 'components/Tokens/TokenDetails/StatsSection'
 import TokenSafetyMessage from 'components/TokenSafety/TokenSafetyMessage'
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
+import { SupportedChainId } from 'constants/chains'
 import { NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
 import { checkWarning } from 'constants/tokenSafety'
 import { TokenPriceQuery } from 'graphql/data/__generated__/types-and-hooks'
@@ -111,7 +112,7 @@ export default function TokenDetails({
   )
 
   const { chainId: connectedChainId } = useWeb3React()
-  const pageChainId = CHAIN_NAME_TO_CHAIN_ID[chain]
+  const pageChainId = CHAIN_NAME_TO_CHAIN_ID[chain] ?? SupportedChainId.MAINNET
 
   const tokenQueryData = tokenQuery.token
   const crossChainMap = useMemo(
