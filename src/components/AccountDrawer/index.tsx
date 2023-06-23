@@ -189,6 +189,14 @@ function AccountDrawer() {
   const [dragStartTop, setDragStartTop] = useState(true)
   useDisableScrolling(walletDrawerOpen)
 
+  if (scrollRef.current) {
+    scrollRef.current.onscroll = (e) => {
+      if (dragStartTop) {
+        e.preventDefault()
+      }
+    }
+  }
+
   // useGesture hook for detecting swipe gestures
   const bind = useGesture({
     // if the drawer is open and the user is dragging down, close the drawer
@@ -204,7 +212,6 @@ function AccountDrawer() {
         toggleWalletDrawer()
       } else if (walletDrawerOpen && dragStartTop && state.movement[1] > 0) {
         setYPosition(state.movement[1])
-        document.body.style.overflow = 'hidden'
       }
     },
     // reset the yPosition when the user stops dragging
