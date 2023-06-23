@@ -16,7 +16,7 @@ const defaultDownloadAppOptions = {
 }
 
 /**
- * Note: openDownloadApp and getDownloadAppLink are equivalent functions, one just runs imperatively
+ * Note: openDownloadApp and getDownloadAppLink are equivalent functions, the first just runs imperatively
  * and adds an analytics event, where the other only returns a link. Typically you'll use both:
  *
  * <a href={getDownloadAppLink(options)} onClick={() => openDownloadApp(options)} />
