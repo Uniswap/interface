@@ -236,6 +236,12 @@ function AccountDrawer() {
       <Scrim onClick={toggleWalletDrawer} open={walletDrawerOpen} />
       <AccountDrawerWrapper
         open={walletDrawerOpen}
+        onScroll={() => {
+          if (dragStartTop) {
+            //disable scrolling when the user is dragging from the top of the drawer
+            scrollRef.current?.scrollTo({ top: 0, behavior: 'smooth' })
+          }
+        }}
         {...(isMobile
           ? {
               ...bind(),
