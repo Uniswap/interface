@@ -1,9 +1,5 @@
-import {
-  EXPERIMENT_NAMES,
-  EXPERIMENT_PARAMS,
-  FEATURE_FLAGS,
-} from 'src/features/experiments/constants'
 import { useExperiment, useGate } from 'statsig-react-native'
+import { EXPERIMENT_NAMES, EXPERIMENT_PARAMS, FEATURE_FLAGS } from './constants'
 
 /**
  * Returns feature flag (gate) value from Statsig

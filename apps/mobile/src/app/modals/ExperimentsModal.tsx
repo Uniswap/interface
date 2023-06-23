@@ -5,11 +5,11 @@ import { Switch } from 'src/components/buttons/Switch'
 import { Flex } from 'src/components/layout/Flex'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { Text } from 'src/components/Text'
-import { FEATURE_FLAGS } from 'src/features/experiments/constants'
-import { useFeatureFlag } from 'src/features/experiments/hooks'
 import { closeModal } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
 import { Statsig } from 'statsig-react'
+import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
+import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
 
 export function ExperimentsModal(): JSX.Element {
   const dispatch = useAppDispatch()

@@ -9,7 +9,7 @@ jest.mock('wallet/src/features/wallet/hooks', () => {
   }
 })
 
-jest.mock('src/features/experiments/hooks', () => {
+jest.mock('wallet/src/features/experiments/hooks', () => {
   return {
     useFeatureFlag: (): undefined => undefined,
   }
