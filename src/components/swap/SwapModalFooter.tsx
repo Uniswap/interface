@@ -472,7 +472,7 @@ function useDerivedBorrowReduceCollateralInfo(
     }
     return error;
 
-  }, [relevantTokenBalances, position])
+  }, [relevantTokenBalances, position, reduceAmount, approvalState])
 
   return {
     transactionInfo,
@@ -551,7 +551,7 @@ function useDerivedBorrowReduceDebtInfo(
     }
 
     laggedfxn()
-  }, [borrowManagerContract, trader, tokenId, recieveCollateral, reduceAmount])
+  }, [borrowManagerContract, trader, tokenId, recieveCollateral, reduceAmount, approvalState])
 
   const transactionInfo = useMemo(() => {
     if (contractResult) {
@@ -596,7 +596,7 @@ function useDerivedBorrowReduceDebtInfo(
     }
 
     return error
-  }, [relevantTokenBalances, position])
+  }, [relevantTokenBalances, position, reduceAmount, approvalState])
 
   return {
     transactionInfo,

@@ -111,7 +111,7 @@ function useDerivedLeverageReduceInfo(
     }
 
     laggedfxn()
-  }, [leverageManager, trader, tokenId, allowedSlippage, reduceAmount])
+  }, [leverageManager, trader, tokenId, allowedSlippage, reduceAmount, approvalState])
 
   const transactionInfo = useMemo(() => {
     if (contractResult) {
@@ -161,7 +161,7 @@ function useDerivedLeverageReduceInfo(
       }
     }
     return error
-  }, [position, relevantTokenBalances])
+  }, [position, relevantTokenBalances, reduceAmount, approvalState])
 
   return {
     transactionInfo,
@@ -265,8 +265,10 @@ export function ReduceLeverageModalFooter({
 
   const debt = position?.totalDebtInput;
   const initCollateral = position?.initialCollateral;
-  const received = inputIsToken0 ? (Math.abs(Number(transactionInfo?.token0Amount)) - Number(debt))
-    : (Math.abs(Number(transactionInfo?.token1Amount)) - Number(debt))
+  // const received = inputIsToken0 ? (Math.abs(Number(transactionInfo?.token0Amount)) - Number(debt))
+  //   : (Math.abs(Number(transactionInfo?.token1Amount)) - Number(debt))
+
+  console.log("footer: ", derivedState, userError, transactionInfo, )
   return (
     <AutoRow>
       <DarkCard marginTop="5px" padding="5px">
@@ -622,7 +624,7 @@ export function ReduceLeverageModalFooter({
             userError
            ) : transactionInfo ? (
             <Text fontSize={20} fontWeight={500}>
-              <Trans>Add Premium</Trans>
+              <Trans>Reduce Position</Trans>
             </Text>
           ) : (
             <Text fontSize={20} fontWeight={500}>
