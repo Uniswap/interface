@@ -78,6 +78,13 @@ flex-direction: column;
 `};
 `
 
+const WrapSmall = styled(RowBetween)`
+  margin-bottom: 1rem;
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
+    flex-wrap: wrap;
+  `};
+`
+
 function highestAprFirst(a: any, b: any) {
   return b.apr - a.apr
 }
@@ -194,9 +201,6 @@ export default function Stake() {
 
       <AutoColumn gap="lg" style={{ width: '100%', maxWidth: '720px' }}>
         <DataRow style={{ alignItems: 'baseline' }}>
-          <ThemedText.DeprecatedMediumHeader style={{ marginTop: '0.5rem' }}>
-            <Trans>All Pools</Trans>
-          </ThemedText.DeprecatedMediumHeader>
           <HarvestYieldModal
             isOpen={showHarvestYieldModal}
             yieldAmount={yieldAmount}
@@ -210,28 +214,33 @@ export default function Stake() {
             onDismiss={() => setShowUnstakeModal(false)}
             title={<Trans>Withdraw</Trans>}
           />
-          <RowFixed gap="8px" style={{ marginRight: '4px' }}>
-            {yieldAmount && (
-              <ButtonPrimary
-                style={{ width: 'fit-content' }}
-                padding="8px"
-                $borderRadius="8px"
-                onClick={() => setShowHarvestYieldModal(true)}
-              >
-                <Trans>Harvest</Trans>
-              </ButtonPrimary>
-            )}
-            {hasFreeStake && (
-              <ButtonPrimary
-                style={{ width: 'fit-content' }}
-                padding="8px"
-                $borderRadius="8px"
-                onClick={() => setShowUnstakeModal(true)}
-              >
-                <Trans>Unstake</Trans>
-              </ButtonPrimary>
-            )}
-          </RowFixed>
+          <WrapSmall>
+            <ThemedText.DeprecatedMediumHeader style={{ marginTop: '0.5rem' }}>
+              <Trans>All Pools</Trans>
+            </ThemedText.DeprecatedMediumHeader>
+            <RowFixed gap="8px" style={{ marginRight: '4px' }}>
+              {yieldAmount && (
+                <ButtonPrimary
+                  style={{ width: 'fit-content', height: '40px' }}
+                  padding="8px"
+                  $borderRadius="8px"
+                  onClick={() => setShowHarvestYieldModal(true)}
+                >
+                  <Trans>Harvest</Trans>
+                </ButtonPrimary>
+              )}
+              {hasFreeStake && (
+                <ButtonPrimary
+                  style={{ width: 'fit-content', height: '40px' }}
+                  padding="8px"
+                  $borderRadius="8px"
+                  onClick={() => setShowUnstakeModal(true)}
+                >
+                  <Trans>Unstake</Trans>
+                </ButtonPrimary>
+              )}
+            </RowFixed>
+          </WrapSmall>
         </DataRow>
 
         <MainContentWrapper>

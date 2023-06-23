@@ -60,6 +60,13 @@ flex-direction: column;
 `};
 `
 
+const WrapSmall = styled(RowBetween)`
+  margin-bottom: 1rem;
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
+    flex-wrap: wrap;
+  `};
+`
+
 export default function CreatePool() {
   const showDelegateModal = useModalIsOpen(ApplicationModal.CREATE)
   const toggleCreateModal = useToggleCreateModal()
@@ -93,15 +100,22 @@ export default function CreatePool() {
 
       <AutoColumn gap="lg" style={{ width: '100%', maxWidth: '720px' }}>
         <DataRow style={{ alignItems: 'baseline' }}>
-          <ThemedText.DeprecatedMediumHeader style={{ marginTop: '0.5rem' }}>
-            <Trans>Pools</Trans>
-          </ThemedText.DeprecatedMediumHeader>
           <CreateModal isOpen={showDelegateModal} onDismiss={toggleCreateModal} title={<Trans>Create Pool</Trans>} />
-          <RowFixed gap="8px" style={{ marginRight: '4px' }}>
-            <ButtonPrimary style={{ width: 'fit-content' }} padding="8px" $borderRadius="8px" onClick={toggleCreateModal}>
-              <Trans>Create Pool</Trans>
-            </ButtonPrimary>
-          </RowFixed>
+          <WrapSmall>
+            <ThemedText.DeprecatedMediumHeader style={{ marginTop: '0.5rem' }}>
+              <Trans>Pools</Trans>
+            </ThemedText.DeprecatedMediumHeader>
+            <RowFixed gap="8px" style={{ marginRight: '4px' }}>
+              <ButtonPrimary
+                style={{ width: 'fit-content', height: '40px' }}
+                padding="8px"
+                $borderRadius="8px"
+                onClick={toggleCreateModal}
+              >
+                <Trans>Create Pool</Trans>
+              </ButtonPrimary>
+            </RowFixed>
+          </WrapSmall>
         </DataRow>
 
         <MainContentWrapper>
