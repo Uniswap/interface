@@ -196,6 +196,7 @@ function AccountDrawer() {
       // if the user is dragging up, set dragStartTop to false
       if (state.movement[1] < 0) {
         setDragStartTop(false)
+        scrollRef.current?.setAttribute('overflow', 'auto')
       } else if (
         (state.movement[1] > 300 || (state.velocity > 3 && state.direction[1] > 0)) &&
         walletDrawerOpen &&
@@ -204,7 +205,6 @@ function AccountDrawer() {
         toggleWalletDrawer()
       } else if (walletDrawerOpen && dragStartTop && state.movement[1] > 0) {
         setYPosition(state.movement[1])
-        scrollRef.current?.scrollTo({ top: state.movement[1], behavior: 'smooth' })
       }
     },
     // reset the yPosition when the user stops dragging
@@ -215,8 +215,10 @@ function AccountDrawer() {
     onDragStart: (state) => {
       if (scrollRef.current?.scrollTop === 0) {
         setDragStartTop(true)
+        scrollRef.current?.setAttribute('overflow', 'hidden')
       } else {
         setDragStartTop(false)
+        scrollRef.current?.setAttribute('overflow', 'auto')
       }
     },
   })
