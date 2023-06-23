@@ -4,7 +4,6 @@ import { InterfacePageName } from '@uniswap/analytics-events'
 import { ButtonPrimary } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import { CardBGImage, CardNoise, CardSection, DataCard } from 'components/earn/styled'
-import FormattedCurrencyAmount from 'components/FormattedCurrencyAmount'
 import Loader from 'components/Icons/LoadingSpinner'
 import { AutoRow, RowBetween } from 'components/Row'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
@@ -22,6 +21,7 @@ import { ProposalData, ProposalState } from 'state/governance/hooks'
 import { useAllProposalData, useUserVotes } from 'state/governance/hooks'
 import styled, { useTheme } from 'styled-components/macro'
 import { ExternalLink, ThemedText } from 'theme'
+import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
 import { ProposalStatus } from './styled'
 
@@ -170,9 +170,7 @@ export default function Landing() {
                     {showUnlockVoting ? (
                       <Trans>Unlock Votes</Trans>
                     ) : availableVotes ? (
-                      <Trans>
-                        <FormattedCurrencyAmount currencyAmount={availableVotes} /> Votes
-                      </Trans>
+                      <Trans>{formatCurrencyAmount(availableVotes, 4)} Votes</Trans>
                     ) : (
                       ''
                     )}

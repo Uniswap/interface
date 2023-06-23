@@ -1,6 +1,5 @@
-import { isAddress } from '@ethersproject/address'
 import { Trans } from '@lingui/macro'
-import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import JSBI from 'jsbi'
 import { ReactNode, /*useCallback,*/ useState } from 'react'
@@ -8,23 +7,13 @@ import { X } from 'react-feather'
 import styled from 'styled-components/macro'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
-import { ZERO_ADDRESS } from '../../constants/misc'
 import { GRG } from '../../constants/tokens'
 import useDebouncedChangeHandler from '../../hooks/useDebouncedChangeHandler'
-import useENS from '../../hooks/useENS'
 import { ResponsiveHeaderText, SmallMaxButton } from '../../pages/RemoveLiquidity/styled'
 // TODO: check if should write into state stake hooks
 import { useBurnV3ActionHandlers, useBurnV3State } from '../../state/burn/v3/hooks'
-import { PoolInfo /*,useDerivedPoolInfo*/ } from '../../state/buy/hooks'
-import {
-  StakeData,
-  useDeactivateStakeCallback,
-  useMoveStakeCallback,
-  usePoolIdByAddress,
-  useStakeBalance,
-} from '../../state/governance/hooks'
+import { useUnstakeCallback } from '../../state/stake/hooks'
 import { ThemedText } from '../../theme'
-import AddressInputPanel from '../AddressInputPanel'
 import { /*ButtonConfirmed,*/ ButtonPrimary } from '../Button'
 //import { ButtonError } from '../Button'
 import { LightCard } from '../Card'
@@ -45,69 +34,40 @@ const StyledClosed = styled(X)`
   }
 `
 
-interface MoveStakeModalProps {
+interface UnstakeModalProps {
   isOpen: boolean
-  poolInfo: PoolInfo
-  isDeactivate?: boolean
+  isPool?: boolean
+  freeStakeBalance?: CurrencyAmount<Token>
   onDismiss: () => void
   title: ReactNode
 }
 
-export default function MoveStakeModal({ isOpen, poolInfo, isDeactivate, onDismiss, title }: MoveStakeModalProps) {
+// TODO: add balance input to display amount when withdrawing
+export default function UnstakeModal({ isOpen, isPool, freeStakeBalance, onDismiss, title }: UnstakeModalProps) {
   const { chainId } = useWeb3React()
 
-  // state for delegate input
-  const [currencyValue] = useState<Currency>(GRG[chainId ?? 1])
-  const [typed, setTyped] = useState('')
-
-  function handleFromPoolType(val: string) {
-    setTyped(val)
-  }
+  // state for unstake input
+  const [currencyValue] = useState<Token>(GRG[chainId ?? 1])
 
   const { percent } = useBurnV3State()
   const { onPercentSelect } = useBurnV3ActionHandlers()
 
-  const fromPoolAddress = typed ?? ZERO_ADDRESS
-  const { address: parsedAddress } = useENS(fromPoolAddress)
-
-  // TODO: we can save 1 rpc call here by using multicall
-  const fromPoolId = usePoolIdByAddress(parsedAddress ?? undefined).poolId
-  const { poolId, stakingPoolExists } = usePoolIdByAddress(poolInfo.pool?.address)
-  // hack to allow moving stake from deprecated pool
-  const defaultPoolId = '0x0000000000000000000000000000000000000000000000000000000000000021'
-  const fromPoolStakeBalance = useStakeBalance(isDeactivate ? poolId : fromPoolId ?? defaultPoolId)
-
   // boilerplate for the slider
   const [percentForSlider, onPercentSelectForSlider] = useDebouncedChangeHandler(percent, onPercentSelect)
-  //CurrencyAmount.fromRawAmount(currency, JSBI.BigInt(typedValueParsed))
   const parsedAmount = CurrencyAmount.fromRawAmount(
     currencyValue,
     JSBI.divide(
-      JSBI.multiply(
-        fromPoolStakeBalance ? fromPoolStakeBalance.quotient : JSBI.BigInt(0),
-        JSBI.BigInt(percentForSlider)
-      ),
+      JSBI.multiply(freeStakeBalance ? freeStakeBalance.quotient : JSBI.BigInt(0), JSBI.BigInt(percentForSlider)),
       JSBI.BigInt(100)
     )
   )
 
-  // TODO: check if should return if no fromPoolId selected
-  const moveStakeData: StakeData | undefined = {
-    amount: parsedAmount?.quotient.toString(),
-    pool: poolInfo.pool?.address,
-    fromPoolId: fromPoolId ?? defaultPoolId,
-    poolId: poolId ?? defaultPoolId,
-    poolContract: undefined,
-    stakingPoolExists,
-  }
-
-  const moveStakeCallback = useMoveStakeCallback()
-  const deactivateStakeCallback = useDeactivateStakeCallback()
+  const unstakeCallback = useUnstakeCallback()
 
   // monitor call to help UI loading state
   const [hash, setHash] = useState<string | undefined>()
   const [attempting, setAttempting] = useState(false)
-  const [stakeAmount, setStakeAmount] = useState<CurrencyAmount<Currency>>()
+  const [stakeAmount, setStakeAmount] = useState<CurrencyAmount<Token>>()
 
   // wrapper to reset state on modal close
   function wrappedOnDismiss() {
@@ -120,16 +80,15 @@ export default function MoveStakeModal({ isOpen, poolInfo, isDeactivate, onDismi
     onDismiss()
   }
 
-  async function onMoveStake() {
+  async function onUnstake() {
     setAttempting(true)
     setStakeAmount(parsedAmount)
 
     // if callback not returned properly ignore
-    if (!moveStakeCallback || !fromPoolStakeBalance || !moveStakeData || !currencyValue.isToken) return
-    const moveCallback = !isDeactivate ? moveStakeCallback : deactivateStakeCallback
+    if (!unstakeCallback || !freeStakeBalance || !parsedAmount || !currencyValue.isToken) return
 
     // try delegation and store hash
-    const hash = await moveCallback(moveStakeData ?? undefined)?.catch((error) => {
+    const hash = await unstakeCallback(parsedAmount)?.catch((error) => {
       setAttempting(false)
       console.log(error)
     })
@@ -148,17 +107,9 @@ export default function MoveStakeModal({ isOpen, poolInfo, isDeactivate, onDismi
               <ThemedText.DeprecatedMediumHeader fontWeight={500}>{title}</ThemedText.DeprecatedMediumHeader>
               <StyledClosed stroke="black" onClick={wrappedOnDismiss} />
             </RowBetween>
-            {!isDeactivate && (
-              <>
-                <ThemedText.DeprecatedBody>
-                  <Trans>Move stake to the pools that maximize your APR, Your voting power will be unaffected.</Trans>
-                </ThemedText.DeprecatedBody>
-                <ThemedText.DeprecatedBody>
-                  <Trans>Please input the pool you want to move your stake from.</Trans>
-                </ThemedText.DeprecatedBody>
-                <AddressInputPanel value={typed} onChange={handleFromPoolType} />
-              </>
-            )}
+            <RowBetween>
+              {isPool ? <Trans>Unstaking smart pool free stake.</Trans> : <Trans>Unstaking your free stake.</Trans>}
+            </RowBetween>
             <RowBetween>
               <ResponsiveHeaderText>
                 <Trans>{percentForSlider}%</Trans>
@@ -183,20 +134,14 @@ export default function MoveStakeModal({ isOpen, poolInfo, isDeactivate, onDismi
               <AutoColumn gap="md">
                 <RowBetween>
                   <ThemedText.DeprecatedBody fontSize={16} fontWeight={500}>
-                    {!isDeactivate ? <Trans>Moving</Trans> : <Trans>Deactivating</Trans>}{' '}
-                    <Trans>{formatCurrencyAmount(parsedAmount, 4)} GRG Stake</Trans>
+                    <Trans>Withdrawing {formatCurrencyAmount(parsedAmount, 4)} GRG</Trans>
                   </ThemedText.DeprecatedBody>
                 </RowBetween>
               </AutoColumn>
             </LightCard>
-            <ButtonPrimary
-              disabled={
-                formatCurrencyAmount(parsedAmount, 4) === '0' || (typed !== '' && !isAddress(parsedAddress ?? ''))
-              }
-              onClick={onMoveStake}
-            >
+            <ButtonPrimary disabled={formatCurrencyAmount(parsedAmount, 4) === '0'} onClick={onUnstake}>
               <ThemedText.DeprecatedMediumHeader color="white">
-                {!isDeactivate ? <Trans>Move Stake</Trans> : <Trans>Deactivate Stake</Trans>}{' '}
+                <Trans>Unstake</Trans>{' '}
               </ThemedText.DeprecatedMediumHeader>
             </ButtonPrimary>
           </AutoColumn>
@@ -206,7 +151,7 @@ export default function MoveStakeModal({ isOpen, poolInfo, isDeactivate, onDismi
         <LoadingView onDismiss={wrappedOnDismiss}>
           <AutoColumn gap="12px" justify="center">
             <ThemedText.DeprecatedLargeHeader>
-              {!isDeactivate ? <Trans>Moving Stake</Trans> : <Trans>Deactivating Stake</Trans>}{' '}
+              <Trans>Withdrawing Stake</Trans>
             </ThemedText.DeprecatedLargeHeader>
             <ThemedText.DeprecatedMain fontSize={36}>{formatCurrencyAmount(parsedAmount, 4)}</ThemedText.DeprecatedMain>
           </AutoColumn>

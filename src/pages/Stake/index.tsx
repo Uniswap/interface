@@ -1,26 +1,30 @@
 import { Trans } from '@lingui/macro'
+import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { SupportedChainId } from 'constants/chains'
+import { GRG } from 'constants/tokens'
+import JSBI from 'jsbi'
 import { useMemo, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 //import { useInfiniteQuery } from 'react-query'
 import { useStakingPools } from 'state/pool/hooks'
+import { useFreeStakeBalance } from 'state/stake/hooks'
 import styled from 'styled-components/macro'
 
-//import { ButtonPrimary } from '../../components/Button'
+import { ButtonPrimary } from '../../components/Button'
 import { OutlineCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
-import CreateModal from '../../components/createPool/CreateModal'
+import HarvestYieldModal from '../../components/earn/HarvestYieldModal'
 //import PoolCard from '../../components/earn/PoolCard'
 import { CardBGImage, CardNoise, CardSection, DataCard } from '../../components/earn/styled'
+import UnstakeModal from '../../components/earn/UnstakeModal'
 import Loader from '../../components/Loader'
 import PoolPositionList from '../../components/PoolPositionList'
-import { RowBetween } from '../../components/Row'
+import { RowBetween, RowFixed } from '../../components/Row'
 //import { LoadingSparkle } from '../../nft/components/common/Loading/LoadingSparkle'
 import { Center } from '../../nft/components/Flex'
-import { useModalIsOpen, useToggleCreateModal } from '../../state/application/hooks'
-import { ApplicationModal } from '../../state/application/reducer'
 import { PoolRegisteredLog, useBscPools, useRegisteredPools, useRegistryContract } from '../../state/pool/hooks'
+import { useUnclaimedRewards } from '../../state/stake/hooks'
 import { ThemedText } from '../../theme'
 //import { PoolPositionDetails } from '../../types/position'
 
@@ -74,13 +78,20 @@ flex-direction: column;
 `};
 `
 
+const WrapSmall = styled(RowBetween)`
+  margin-bottom: 1rem;
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
+    flex-wrap: wrap;
+  `};
+`
+
 function highestAprFirst(a: any, b: any) {
   return b.apr - a.apr
 }
 
 export default function Stake() {
-  const showDelegateModal = useModalIsOpen(ApplicationModal.CREATE)
-  const toggleCreateModal = useToggleCreateModal()
+  const [showHarvestYieldModal, setShowHarvestYieldModal] = useState(false)
+  const [showUnstakeModal, setShowUnstakeModal] = useState(false)
 
   const itemsPerPage = 10
   const [hasMore, setHasMore] = useState(true)
@@ -90,7 +101,10 @@ export default function Stake() {
   const smartPoolsLogs = useRegisteredPools()
   const registry = useRegistryContract()
   const bscPools = useBscPools(registry)
+
   const { chainId } = useWeb3React()
+  const freeStakeBalance = useFreeStakeBalance()
+  const hasFreeStake = JSBI.greaterThan(freeStakeBalance ? freeStakeBalance.quotient : JSBI.BigInt(0), JSBI.BigInt(0))
 
   const allPools: PoolRegisteredLog[] = useMemo(() => {
     if (chainId === SupportedChainId.BNB) return [...(smartPoolsLogs ?? []), ...(bscPools ?? [])]
@@ -100,6 +114,20 @@ export default function Stake() {
   const poolAddresses = allPools.map((p) => p.pool)
   const poolIds = allPools.map((p) => p.id)
   const { stakingPools, loading: loadingPools } = useStakingPools(poolAddresses, poolIds)
+  const grg = useMemo(() => (chainId ? GRG[chainId] : undefined), [chainId])
+  const unclaimedRewards = useUnclaimedRewards(poolIds)
+  // TODO: check if want to return null, but returning undefined will simplify displaying only if positive reward
+  const yieldAmount: CurrencyAmount<Token> | undefined = useMemo(() => {
+    if (!grg || !unclaimedRewards || unclaimedRewards?.length === 0) return undefined
+    const yieldBigint = unclaimedRewards
+      .map((reward) => reward.yieldAmount.quotient)
+      .reduce((acc, value) => JSBI.add(acc, value))
+    return CurrencyAmount.fromRawAmount(grg, yieldBigint ?? undefined)
+  }, [grg, unclaimedRewards])
+  const farmingPoolIds = useMemo(() => {
+    const ids = unclaimedRewards?.map((reward) => reward?.yieldPoolId)
+    return ids && ids?.length > 0 ? ids : undefined
+  }, [unclaimedRewards])
 
   // TODO: check PoolPositionDetails type as irr and apr are number not string
   const poolsWithStats: PoolRegisteredLog[] = useMemo(() => {
@@ -173,14 +201,46 @@ export default function Stake() {
 
       <AutoColumn gap="lg" style={{ width: '100%', maxWidth: '720px' }}>
         <DataRow style={{ alignItems: 'baseline' }}>
-          <ThemedText.DeprecatedMediumHeader style={{ marginTop: '0.5rem' }}>
-            <Trans>All Pools</Trans>
-          </ThemedText.DeprecatedMediumHeader>
-          {/* TODO: must add stake modal to stake for user or for pool */}
-          <CreateModal isOpen={showDelegateModal} onDismiss={toggleCreateModal} title={<Trans>Stake</Trans>} />
-          {/*<ButtonPrimary style={{ width: 'fit-content' }} padding="8px" $borderRadius="8px" onClick={toggleCreateModal}>
-            <Trans>Stake</Trans>
-          </ButtonPrimary>*/}
+          <HarvestYieldModal
+            isOpen={showHarvestYieldModal}
+            yieldAmount={yieldAmount}
+            poolIds={farmingPoolIds}
+            onDismiss={() => setShowHarvestYieldModal(false)}
+            title={<Trans>Harvest</Trans>}
+          />
+          <UnstakeModal
+            isOpen={showUnstakeModal}
+            freeStakeBalance={freeStakeBalance}
+            onDismiss={() => setShowUnstakeModal(false)}
+            title={<Trans>Withdraw</Trans>}
+          />
+          <WrapSmall>
+            <ThemedText.DeprecatedMediumHeader style={{ marginTop: '0.5rem' }}>
+              <Trans>All Pools</Trans>
+            </ThemedText.DeprecatedMediumHeader>
+            <RowFixed gap="8px" style={{ marginRight: '4px' }}>
+              {yieldAmount && (
+                <ButtonPrimary
+                  style={{ width: 'fit-content', height: '40px' }}
+                  padding="8px"
+                  $borderRadius="8px"
+                  onClick={() => setShowHarvestYieldModal(true)}
+                >
+                  <Trans>Harvest</Trans>
+                </ButtonPrimary>
+              )}
+              {hasFreeStake && (
+                <ButtonPrimary
+                  style={{ width: 'fit-content', height: '40px' }}
+                  padding="8px"
+                  $borderRadius="8px"
+                  onClick={() => setShowUnstakeModal(true)}
+                >
+                  <Trans>Unstake</Trans>
+                </ButtonPrimary>
+              )}
+            </RowFixed>
+          </WrapSmall>
         </DataRow>
 
         <MainContentWrapper>

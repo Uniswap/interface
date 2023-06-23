@@ -18,6 +18,7 @@ import SetLockupModal from 'components/createPool/SetLockupModal'
 import SetSpreadModal from 'components/createPool/SetSpreadModal'
 import SetValueModal from 'components/createPool/SetValueModal'
 import MoveStakeModal from 'components/earn/MoveStakeModal'
+import UnstakeModal from 'components/earn/UnstakeModal'
 //import Loader from 'components/Loader'
 import { RowBetween, RowFixed } from 'components/Row'
 //import { Dots } from 'components/swap/styleds'
@@ -43,6 +44,7 @@ import { Link, useParams } from 'react-router-dom'
 import { PoolInfo } from 'state/buy/hooks'
 //import { useTokenBalance } from 'state/connection/hooks'
 import { useCurrencyBalance } from 'state/connection/hooks'
+import { useFreeStakeBalance } from 'state/stake/hooks'
 //import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'
 import styled /*, { useTheme }*/ from 'styled-components/macro'
 import { ExternalLink, /*HideExtraSmall,*/ ThemedText } from 'theme'
@@ -240,6 +242,7 @@ export function PoolPositionPage() {
   const [showSetValueModal, setShowSetValueModal] = useState(false)
   const [showStakeModal, setShowStakeModal] = useState(false)
   const [showMoveStakeModal, setShowMoveStakeModal] = useState(false)
+  const [showUnstakeModal, setShowUnstakeModal] = useState(false)
   const [deactivate, setDeactivate] = useState(false)
 
   // TODO: check how can reduce number of calls by limit update of poolStorage
@@ -281,6 +284,10 @@ export function PoolPositionPage() {
   // TODO: pass recipient as optional parameter to check currency balance hook
   const poolInfo = { pool, recipient: account, userPoolBalance, poolPriceAmount: poolPrice, spread } as PoolInfo
   const userBaseTokenBalance = useCurrencyBalance(account ?? undefined, base ?? undefined)
+
+  // TODO: check how improve efficiency as this method is called each time a pool is loaded
+  const freeStakeBalance = useFreeStakeBalance()
+  const hasFreeStake = JSBI.greaterThan(freeStakeBalance ? freeStakeBalance.quotient : JSBI.BigInt(0), JSBI.BigInt(0))
 
   const handleMoveStakeClick = useCallback(() => {
     setShowMoveStakeModal(true)
@@ -363,7 +370,14 @@ export function PoolPositionPage() {
               poolInfo={poolInfo}
               isDeactivate={deactivate}
               onDismiss={() => setShowMoveStakeModal(false)}
-              title={<Trans>Move Stake</Trans>}
+              title={!deactivate ? <Trans>Move Stake</Trans> : <Trans>Deactivate Stake</Trans>}
+            />
+            <UnstakeModal
+              isOpen={showUnstakeModal}
+              isPool={true}
+              freeStakeBalance={freeStakeBalance}
+              onDismiss={() => setShowUnstakeModal(false)}
+              title={<Trans>Withdraw</Trans>}
             />
           </>
         )}
@@ -679,6 +693,17 @@ export function PoolPositionPage() {
                 >
                   <Trans>Disable</Trans>
                 </ResponsiveButtonPrimary>
+                {owner === account && hasFreeStake && (
+                  <ResponsiveButtonPrimary
+                    style={{ marginRight: '8px' }}
+                    width="fit-content"
+                    padding="6px 8px"
+                    $borderRadius="12px"
+                    onClick={() => setShowUnstakeModal(true)}
+                  >
+                    <Trans>Unstake</Trans>
+                  </ResponsiveButtonPrimary>
+                )}
               </RowFixed>
             </ResponsiveRow>
           </AutoColumn>
