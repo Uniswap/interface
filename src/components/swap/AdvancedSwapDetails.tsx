@@ -618,7 +618,7 @@ export function AdvancedLeverageSwapDetails({
         <ValueLabel
           description="The premium refunded from your old payment"
           label="Returned premium"
-          value={Math.round(Number(leverageTrade?.remainingPremium) ) }
+          value={Math.round(Number(leverageTrade?.remainingPremium)* 100000 )/ 100000 }
           syncing={syncing}
           symbolAppend={leverageTrade?.remainingPremium!=0? trade.inputAmount.currency.symbol:""}
         />
