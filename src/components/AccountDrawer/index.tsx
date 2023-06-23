@@ -216,7 +216,7 @@ function AccountDrawer() {
     },
     // set dragStartTop to true if the user starts dragging from the top of the drawer
     onDragStart: (state) => {
-      if (!scrollRef.current?.scrollTop || scrollRef.current?.scrollTop < 10) {
+      if (!scrollRef.current?.scrollTop || scrollRef.current?.scrollTop < 30) {
         setDragStartTop(true)
         scrollRef.current?.setAttribute('overflow', 'hidden')
       } else {
@@ -241,6 +241,11 @@ function AccountDrawer() {
       )}
       <Scrim onClick={toggleWalletDrawer} open={walletDrawerOpen} />
       <AccountDrawerWrapper
+        onScroll={(e) => {
+          if (dragStartTop) {
+            e.preventDefault()
+          }
+        }}
         open={walletDrawerOpen}
         {...(isMobile
           ? {
