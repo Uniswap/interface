@@ -196,7 +196,6 @@ function AccountDrawer() {
       // if the user is dragging up, set dragStartTop to false
       if (state.movement[1] < 0) {
         setDragStartTop(false)
-        document.body.style.overflow = 'auto'
       } else if (
         (state.movement[1] > 300 || (state.velocity > 3 && state.direction[1] > 0)) &&
         walletDrawerOpen &&
@@ -215,10 +214,8 @@ function AccountDrawer() {
     onDragStart: (state) => {
       if (scrollRef.current?.scrollTop === 0) {
         setDragStartTop(true)
-        document.body.style.overflow = 'hidden'
       } else {
         setDragStartTop(false)
-        document.body.style.overflow = 'auto'
       }
     },
   })
