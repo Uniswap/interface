@@ -151,19 +151,19 @@ const commonTheme = {
 
   brandedGradient: colors.networkBsc,
   promotionalGradient: colors.networkBsc,
-  
+
   hoverState: opacify(24, colors.blue200),
   hoverDefault: opacify(8, colors.gray300),
 }
 
 export const darkTheme = {
   ...commonTheme,
-  userThemeColor: colors.magentaVibrant,
+  userThemeColor: colors.gray900,
   background: colors.gray800,
   backgroundBackdrop: colors.gray950,
 
   // backgroundSurface: limitlessColors.darkPurple,
-  backgroundSurface: colors.gray900,//"#030216", //"#0d0517", //colors.black,// colors.gray900
+ backgroundSurface: colors.gray900,//"#030216", //"#0d0517", //colors.black,// colors.gray900
   backgroundModule: "#181926", // colors.gray800
   backgroundInteractive: colors.gray700,
   backgroundFloating: opacify(12, colors.black),
