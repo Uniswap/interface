@@ -100,6 +100,15 @@ export const FALLBACK_URLS = {
     'https://bsc-dataseed4.defibit.io',
     'https://rpc.ankr.com/bsc',
   ],
+  [SupportedChainId.AVALANCHE]: [
+    // "Safe" URLs
+    'https://api.avax.network/ext/bc/C/rpc',
+    'https://rpc.ankr.com/avalanche',
+    'https://avalanche.blockpi.network/v1/rpc/public',
+    'https://avalanche-c-chain.publicnode.com',
+    'https://endpoints.omniatech.io/v1/avax/mainnet/public',
+    'https://ava-mainnet.public.blastapi.io/ext/bc/C/rpc',
+  ],
 }
 
 /**
@@ -143,4 +152,8 @@ export const RPC_URLS = {
   [SupportedChainId.CELO]: FALLBACK_URLS[SupportedChainId.CELO],
   [SupportedChainId.CELO_ALFAJORES]: FALLBACK_URLS[SupportedChainId.CELO_ALFAJORES],
   [SupportedChainId.BNB]: [QUICKNODE_RPC_URL, ...FALLBACK_URLS[SupportedChainId.BNB]],
+  [SupportedChainId.AVALANCHE]: [
+    `https://avalanche-mainnet.infura.io/v3/${INFURA_KEY}`,
+    ...FALLBACK_URLS[SupportedChainId.AVALANCHE],
+  ],
 }
