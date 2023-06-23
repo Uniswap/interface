@@ -63,8 +63,12 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
 
   const chains = useMemo(
     () =>
-      NETWORK_SELECTOR_CHAINS.filter((chain) => showTestnets || !TESTNET_CHAIN_IDS.has(chain)).sort((a) =>
-        walletSupportsChain.includes(a) ? -1 : 1
+      NETWORK_SELECTOR_CHAINS.filter((chain) => showTestnets || !TESTNET_CHAIN_IDS.has(chain)).sort((a, b) =>
+        walletSupportsChain.includes(a) && walletSupportsChain.includes(b)
+          ? 0
+          : walletSupportsChain.includes(a)
+          ? 1
+          : -1
       ),
     [showTestnets, walletSupportsChain]
   )
