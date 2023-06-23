@@ -5,7 +5,7 @@ import ms from 'ms.macro'
 import { trace } from 'tracing/trace'
 
 import { GetQuoteArgs, INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference } from './slice'
-import { QuoteDataV2, QuoteState, TradeResult } from './types'
+import { QuoteDataV2, QuoteMethod, QuoteState, TradeResult } from './types'
 import { getRouter, isExactInput, shouldUseAPIRouter, transformRoutesToTrade } from './utils'
 
 const CLIENT_PARAMS = {
@@ -54,8 +54,9 @@ export const routingApiV2 = createApi({
         )
       },
       async queryFn(args: GetQuoteArgs, _api, _extraOptions, fetch) {
-        const routerPreference = args.routerPreference
-        if (shouldUseAPIRouter(routerPreference)) {
+        let fellBack = false
+        if (shouldUseAPIRouter(args)) {
+          fellBack = true
           try {
             const { tokenInAddress, tokenInChainId, tokenOutAddress, tokenOutChainId, amount, tradeType } = args
             const type = isExactInput(tradeType) ? 'EXACT_INPUT' : 'EXACT_OUTPUT'
@@ -81,7 +82,10 @@ export const routingApiV2 = createApi({
                 // cast as any here because we do a runtime check on it being an object before indexing into .errorCode
                 const errorData = response.error.data as any
                 // NO_ROUTE should be treated as a valid response to prevent retries.
-                if (typeof errorData === 'object' && errorData?.errorCode === 'NO_ROUTE') {
+                if (
+                  typeof errorData === 'object' &&
+                  (errorData?.errorCode === 'NO_ROUTE' || errorData?.detail === 'No quotes available')
+                ) {
                   return { data: { state: QuoteState.NOT_FOUND } }
                 }
               } catch {
@@ -92,7 +96,7 @@ export const routingApiV2 = createApi({
             const quoteData = response.data as QuoteDataV2
             const tradeResult = transformRoutesToTrade(args, quoteData.quote)
 
-            return { data: tradeResult }
+            return { data: { ...tradeResult, method: QuoteMethod.ROUTING_API } }
           } catch (error: any) {
             console.warn(
               `GetQuote failed on API v2, falling back to client: ${error?.message ?? error?.detail ?? error}`
@@ -100,10 +104,11 @@ export const routingApiV2 = createApi({
           }
         }
         try {
+          const method = fellBack ? QuoteMethod.CLIENT_SIDE_FALLBACK : QuoteMethod.CLIENT_SIDE
           const router = getRouter(args.tokenInChainId)
           const quoteResult = await getClientSideQuote(args, router, CLIENT_PARAMS)
           if (quoteResult.state === QuoteState.SUCCESS) {
-            return { data: transformRoutesToTrade(args, quoteResult.data) }
+            return { data: { ...transformRoutesToTrade(args, quoteResult.data), method } }
           } else {
             return { data: quoteResult }
           }

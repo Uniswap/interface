@@ -1,4 +1,3 @@
-import { BigNumberish } from '@ethersproject/bignumber'
 import { ContractTransaction } from '@ethersproject/contracts'
 import { CurrencyAmount, MaxUint256, Token } from '@uniswap/sdk-core'
 import { useTokenContract } from 'hooks/useContract'
@@ -7,6 +6,8 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ApproveTransactionInfo, TransactionType } from 'state/transactions/types'
 import { UserRejectedRequestError } from 'utils/errors'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
+
+const MAX_ALLOWANCE = MaxUint256.toString()
 
 export function useTokenAllowance(
   token?: Token,
@@ -49,7 +50,7 @@ export function useUpdateTokenAllowance(
       if (!contract) throw new Error('missing contract')
       if (!spender) throw new Error('missing spender')
 
-      const allowance: BigNumberish = MaxUint256.toString()
+      const allowance = amount.equalTo(0) ? '0' : MAX_ALLOWANCE
       const response = await contract.approve(spender, allowance)
       return {
         response,
@@ -57,6 +58,7 @@ export function useUpdateTokenAllowance(
           type: TransactionType.APPROVAL,
           tokenAddress: contract.address,
           spender,
+          amount: allowance,
         },
       }
     } catch (e: unknown) {
@@ -67,4 +69,11 @@ export function useUpdateTokenAllowance(
       throw new Error(`${symbol} token allowance failed: ${e instanceof Error ? e.message : e}`)
     }
   }, [amount, contract, spender])
+}
+
+export function useRevokeTokenAllowance(
+  token: Token | undefined,
+  spender: string
+): () => Promise<{ response: ContractTransaction; info: ApproveTransactionInfo }> {
+  return useUpdateTokenAllowance(token ? CurrencyAmount.fromRawAmount(token, 0) : undefined, spender)
 }

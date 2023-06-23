@@ -7,7 +7,7 @@ import ms from 'ms.macro'
 import qs from 'qs'
 import { trace } from 'tracing/trace'
 
-import { QuoteData, TradeResult } from './types'
+import { QuoteData, QuoteMethod, TradeResult } from './types'
 import { getRouter, isExactInput, shouldUseAPIRouter, transformRoutesToTrade } from './utils'
 
 export enum RouterPreference {
@@ -40,6 +40,7 @@ export interface GetQuoteArgs {
   amount: string
   routerPreference: RouterPreference | typeof INTERNAL_ROUTER_PREFERENCE_PRICE
   tradeType: TradeType
+  isRoutingAPIPrice?: boolean
 }
 
 enum QuoteState {
@@ -83,7 +84,8 @@ export const routingApi = createApi({
         )
       },
       async queryFn(args, _api, _extraOptions, fetch) {
-        if (shouldUseAPIRouter(args.routerPreference)) {
+        const fellBack = false
+        if (shouldUseAPIRouter(args)) {
           try {
             const { tokenInAddress, tokenInChainId, tokenOutAddress, tokenOutChainId, amount, tradeType } = args
             const type = isExactInput(tradeType) ? 'exactIn' : 'exactOut'
@@ -112,7 +114,7 @@ export const routingApi = createApi({
 
             const quoteData = response.data as QuoteData
             const tradeResult = transformRoutesToTrade(args, quoteData)
-            return { data: tradeResult }
+            return { data: { ...tradeResult, method: QuoteMethod.ROUTING_API } }
           } catch (error: any) {
             console.warn(
               `GetQuote failed on routing API, falling back to client: ${error?.message ?? error?.detail ?? error}`
@@ -120,10 +122,11 @@ export const routingApi = createApi({
           }
         }
         try {
+          const method = fellBack ? QuoteMethod.CLIENT_SIDE_FALLBACK : QuoteMethod.CLIENT_SIDE
           const router = getRouter(args.tokenInChainId)
           const quoteResult = await getClientSideQuote(args, router, CLIENT_PARAMS)
           if (quoteResult.state === QuoteState.SUCCESS) {
-            return { data: transformRoutesToTrade(args, quoteResult.data) }
+            return { data: { ...transformRoutesToTrade(args, quoteResult.data), method } }
           } else {
             return { data: quoteResult }
           }

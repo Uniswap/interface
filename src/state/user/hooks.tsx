@@ -103,7 +103,7 @@ export function useUserSlippageTolerance(): [
     return state.user.userSlippageTolerance
   })
 
-  // TODO(WEB-3291): Keep `userSlippageTolerance` as Percent in Redux store and remove this conversion
+  // TODO(WEB-1985): Keep `userSlippageTolerance` as Percent in Redux store and remove this conversion
   const userSlippageTolerance = useMemo(
     () =>
       userSlippageToleranceRaw === SlippageTolerance.Auto

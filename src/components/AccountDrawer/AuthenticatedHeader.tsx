@@ -17,15 +17,15 @@ import { useProfilePageState, useSellAsset, useWalletCollections } from 'nft/hoo
 import { useIsNftClaimAvailable } from 'nft/hooks/useIsNftClaimAvailable'
 import { ProfilePageStateType } from 'nft/types'
 import { useCallback, useState } from 'react'
-import { ArrowDownRight, ArrowUpRight, Copy, CreditCard, IconProps, Info, LogOut, Settings } from 'react-feather'
+import { ArrowDownRight, ArrowUpRight, CreditCard, IconProps, Info, LogOut, Settings } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
 import { shouldDisableNFTRoutesAtom } from 'state/application/atoms'
 import { useAppDispatch } from 'state/hooks'
 import { updateSelectedWallet } from 'state/user/reducer'
 import styled, { useTheme } from 'styled-components/macro'
 import { CopyHelper, ExternalLink, ThemedText } from 'theme'
+import { shortenAddress } from 'utils'
 
-import { shortenAddress } from '../../nft/utils/address'
 import { useCloseModal, useFiatOnrampAvailability, useOpenModal, useToggleModal } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
 import { useUserHasAvailableClaim, useUserUnclaimedAmount } from '../../state/claim/hooks'
@@ -40,6 +40,7 @@ const AuthenticatedHeaderWrapper = styled.div`
   display: flex;
   flex-direction: column;
   flex: 1;
+  overflow: auto;
 `
 
 const HeaderButton = styled(ThemeButton)`
@@ -104,7 +105,6 @@ const StatusWrapper = styled.div`
   display: inline-block;
   width: 70%;
   max-width: 70%;
-  overflow: hidden;
   padding-right: 14px;
   display: inline-flex;
 `
@@ -136,9 +136,6 @@ const HeaderWrapper = styled.div`
 `
 
 const CopyText = styled(CopyHelper).attrs({
-  InitialIcon: Copy,
-  CopiedIcon: Copy,
-  gap: 4,
   iconSize: 14,
   iconPosition: 'right',
 })``
@@ -243,16 +240,16 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
     <AuthenticatedHeaderWrapper>
       <HeaderWrapper>
         <StatusWrapper>
-          <StatusIcon connection={connection} size={40} />
+          <StatusIcon account={account} connection={connection} size={40} />
           {account && (
             <AccountNamesWrapper>
               <ThemedText.SubHeader>
-                <CopyText toCopy={ENSName ?? account}>{ENSName ?? shortenAddress(account, 4, 4)}</CopyText>
+                <CopyText toCopy={ENSName ?? account}>{ENSName ?? shortenAddress(account)}</CopyText>
               </ThemedText.SubHeader>
               {/* Displays smaller view of account if ENS name was rendered above */}
               {ENSName && (
                 <ThemedText.BodySmall color="textTertiary">
-                  <CopyText toCopy={account}>{shortenAddress(account, 4, 4)}</CopyText>
+                  <CopyText toCopy={account}>{shortenAddress(account)}</CopyText>
                 </ThemedText.BodySmall>
               )}
             </AccountNamesWrapper>

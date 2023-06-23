@@ -8,8 +8,15 @@ import { RouterPreference } from './slice'
 export enum TradeState {
   LOADING,
   INVALID,
+  STALE,
   NO_ROUTE_FOUND,
   VALID,
+}
+
+export enum QuoteMethod {
+  ROUTING_API = 'ROUTING_API',
+  CLIENT_SIDE = 'CLIENT_SIDE',
+  CLIENT_SIDE_FALLBACK = 'CLIENT_SIDE_FALLBACK', // If client-side was used after the routing-api call failed.
 }
 
 // from https://github.com/Uniswap/routing-api/blob/main/lib/handlers/schema.ts
@@ -133,10 +140,12 @@ export type TradeResult =
   | {
       state: QuoteState.NOT_FOUND
       trade?: undefined
+      method?: QuoteMethod
     }
   | {
       state: QuoteState.SUCCESS
       trade: InterfaceTrade
+      method?: QuoteMethod
     }
 
 export enum PoolType {

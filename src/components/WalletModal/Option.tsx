@@ -1,11 +1,13 @@
+import { t, Trans } from '@lingui/macro'
 import { TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import { useAccountDrawer } from 'components/AccountDrawer'
 import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button'
 import Loader from 'components/Icons/LoadingSpinner'
-import { walletConnectV2Connection } from 'connection'
+import { walletConnectV1Connection, walletConnectV2Connection } from 'connection'
 import { ActivationStatus, useActivationState } from 'connection/activate'
 import { Connection, ConnectionType } from 'connection/types'
+import { useWalletConnectV2AsDefault } from 'featureFlags/flags/walletConnectV2'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { MouseEvent, useEffect, useRef, useState } from 'react'
 import { MoreHorizontal } from 'react-feather'
@@ -50,6 +52,10 @@ const IconWrapper = styled.div`
   ${flexColumnNoWrap};
   align-items: center;
   justify-content: center;
+  img {
+    ${({ theme }) => !theme.darkMode && `border: 1px solid ${theme.backgroundOutline}`};
+    border-radius: 12px;
+  }
   & > img,
   span {
     height: 40px;
@@ -59,7 +65,7 @@ const IconWrapper = styled.div`
     align-items: flex-end;
   `};
 `
-const WCv2PopoverContent = styled(ThemeButton)`
+const WCv1PopoverContent = styled(ThemeButton)`
   background: ${({ theme }) => theme.backgroundSurface};
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
   border-radius: 12px;
@@ -73,7 +79,7 @@ const WCv2PopoverContent = styled(ThemeButton)`
   z-index: ${Z_INDEX.popover};
 `
 const TOGGLE_SIZE = 24
-const WCv2PopoverToggle = styled.button`
+const WCv1PopoverToggle = styled.button`
   align-items: center;
   background-color: transparent;
   border: none;
@@ -113,15 +119,15 @@ const Wrapper = styled.div<{ disabled: boolean }>`
   }
 `
 
-const WCv2Icon = styled.img`
+const WCv1Icon = styled.img`
   height: 20px !important;
   width: 20px !important;
 `
-const WCv2BodyText = styled(ThemedText.BodyPrimary)`
-  margin-bottom: 4px;
+const WCv1BodyText = styled(ThemedText.BodyPrimary)`
+  margin-bottom: 4px !important;
   text-align: left;
 `
-const WCv2Caption = styled(ThemedText.Caption)`
+const WCv1Caption = styled(ThemedText.Caption)`
   text-align: left;
 `
 
@@ -134,18 +140,27 @@ interface PopupButtonContentProps {
 }
 function PopupButtonContent({ connection, isDarkMode, show, onClick, onClose }: PopupButtonContentProps) {
   const popoverElement = useRef<HTMLButtonElement>(null)
+  const walletConnectV2AsDefault = useWalletConnectV2AsDefault()
+
   useOnClickOutside(popoverElement, onClose)
+
   if (!show) return null
   return (
-    <WCv2PopoverContent onClick={onClick} ref={popoverElement} size={ButtonSize.small} emphasis={ButtonEmphasis.medium}>
+    <WCv1PopoverContent onClick={onClick} ref={popoverElement} size={ButtonSize.small} emphasis={ButtonEmphasis.medium}>
       <IconWrapper>
-        <WCv2Icon src={connection.getIcon?.(isDarkMode)} alt={connection.getName()} />
+        <WCv1Icon src={connection.getIcon?.(isDarkMode)} alt={connection.getName()} />
       </IconWrapper>
       <div>
-        <WCv2BodyText>Connect with v2</WCv2BodyText>
-        <WCv2Caption color="textSecondary">Under development and unsupported by most wallets</WCv2Caption>
+        <WCv1BodyText>
+          <Trans>Connect with {walletConnectV2AsDefault ? t`v1` : t`v2`}</Trans>
+        </WCv1BodyText>
+        <WCv1Caption color="textSecondary">
+          {walletConnectV2AsDefault
+            ? t`Support for v1 will be discontinued June 28.`
+            : t`Under development and unsupported by most wallets`}
+        </WCv1Caption>
       </div>
-    </WCv2PopoverContent>
+    </WCv1PopoverContent>
   )
 }
 
@@ -154,29 +169,35 @@ interface OptionProps {
 }
 export default function Option({ connection }: OptionProps) {
   const { activationState, tryActivation } = useActivationState()
-  const [WC2PromptOpen, setWC2PromptOpen] = useState(false)
+  const [WC1PromptOpen, setWC1PromptOpen] = useState(false)
   const [accountDrawerOpen, toggleAccountDrawerOpen] = useAccountDrawer()
   const activate = () => tryActivation(connection, toggleAccountDrawerOpen)
 
   useEffect(() => {
-    if (!accountDrawerOpen) setWC2PromptOpen(false)
+    if (!accountDrawerOpen) setWC1PromptOpen(false)
   }, [accountDrawerOpen])
 
   const isSomeOptionPending = activationState.status === ActivationStatus.PENDING
   const isCurrentOptionPending = isSomeOptionPending && activationState.connection.type === connection.type
   const isDarkMode = useIsDarkMode()
 
-  const handleClickConnectViaWCv2 = (e: MouseEvent<HTMLButtonElement>) => {
+  const walletConnectV2AsDefault = useWalletConnectV2AsDefault()
+
+  const handleClickConnectViaWCv1 = (e: MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation()
-    tryActivation(walletConnectV2Connection, () => {
-      setWC2PromptOpen(false)
+    tryActivation(walletConnectV2AsDefault ? walletConnectV1Connection : walletConnectV2Connection, () => {
+      setWC1PromptOpen(false)
       toggleAccountDrawerOpen()
     })
   }
-  const handleClickOpenWCv2Tooltip = (e: MouseEvent<HTMLButtonElement>) => {
+  const handleClickOpenWCv1Tooltip = (e: MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation()
-    setWC2PromptOpen(true)
+    setWC1PromptOpen(true)
   }
+
+  const isWalletConnect =
+    connection.type === ConnectionType.WALLET_CONNECT || connection.type === ConnectionType.WALLET_CONNECT_V2
+  const showExtraMenuToggle = isWalletConnect && !isCurrentOptionPending
 
   return (
     <Wrapper disabled={isSomeOptionPending}>
@@ -203,17 +224,17 @@ export default function Option({ connection }: OptionProps) {
         </OptionCardClickable>
       </TraceEvent>
 
-      {connection.type === ConnectionType.WALLET_CONNECT && (
+      {showExtraMenuToggle && (
         <>
-          <WCv2PopoverToggle onClick={handleClickOpenWCv2Tooltip} onMouseDown={handleClickOpenWCv2Tooltip}>
+          <WCv1PopoverToggle onClick={handleClickOpenWCv1Tooltip} onMouseDown={handleClickOpenWCv1Tooltip}>
             <MoreHorizontal />
-          </WCv2PopoverToggle>
+          </WCv1PopoverToggle>
           <PopupButtonContent
             connection={connection}
             isDarkMode={isDarkMode}
-            show={WC2PromptOpen}
-            onClick={handleClickConnectViaWCv2}
-            onClose={() => setWC2PromptOpen(false)}
+            show={WC1PromptOpen}
+            onClick={handleClickConnectViaWCv1}
+            onClose={() => setWC1PromptOpen(false)}
           />
         </>
       )}

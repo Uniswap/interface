@@ -3,7 +3,7 @@ import { useWeb3React } from '@web3-react/core'
 import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { DebounceSwapQuoteVariant, useDebounceSwapQuoteFlag } from 'featureFlags/flags/debounceSwapQuote'
 import { useMemo } from 'react'
-import { InterfaceTrade, TradeState } from 'state/routing/types'
+import { InterfaceTrade, QuoteMethod, TradeState } from 'state/routing/types'
 import { useRoutingAPITrade } from 'state/routing/useRoutingAPITrade'
 import { useRouterPreference } from 'state/user/hooks'
 
@@ -31,14 +31,16 @@ export function useBestTrade(
 ): {
   state: TradeState
   trade?: InterfaceTrade
+  method?: QuoteMethod
 } {
   const { chainId } = useWeb3React()
   const autoRouterSupported = useAutoRouterSupported()
   const isWindowVisible = useIsWindowVisible()
 
+  const debouncedSwapQuoteFlagEnabled = useDebounceSwapQuoteFlag() === DebounceSwapQuoteVariant.Enabled
   const [debouncedAmount, debouncedOtherCurrency] = useDebounce(
     useMemo(() => [amountSpecified, otherCurrency], [amountSpecified, otherCurrency]),
-    useDebounceSwapQuoteFlag() === DebounceSwapQuoteVariant.Enabled ? DEBOUNCE_TIME_INCREASED : DEBOUNCE_TIME
+    debouncedSwapQuoteFlagEnabled ? DEBOUNCE_TIME_INCREASED : DEBOUNCE_TIME
   )
 
   const isAWrapTransaction = useMemo(() => {
@@ -55,12 +57,15 @@ export function useBestTrade(
   const [routerPreference] = useRouterPreference()
   const routingAPITrade = useRoutingAPITrade(
     tradeType,
-    autoRouterSupported && shouldGetTrade ? debouncedAmount : undefined,
+    amountSpecified ? debouncedAmount : undefined,
     debouncedOtherCurrency,
-    routerPreference
+    routerPreference,
+    !(autoRouterSupported && shouldGetTrade) // skip fetching
   )
 
-  const isLoading = routingAPITrade.state === TradeState.LOADING
+  const inDebounce =
+    (!debouncedAmount && Boolean(amountSpecified)) || (!debouncedOtherCurrency && Boolean(otherCurrency))
+  const isLoading = routingAPITrade.state === TradeState.LOADING || inDebounce
   const useFallback = (!autoRouterSupported || routingAPITrade.state === TradeState.NO_ROUTE_FOUND) && shouldGetTrade
 
   // only use client side router if routing api trade failed or is not supported
