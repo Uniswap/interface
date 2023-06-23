@@ -73,6 +73,7 @@ type URADutchOrderQuoteResponse = {
   routing: URAQuoteType.DUTCH_LIMIT
   quote: {
     auctionPeriodSecs: number
+    deadlineBufferSecs: number
     orderInfo: DutchOrderInfoJSON
     quoteId?: string
     requestId?: string
@@ -146,6 +147,8 @@ export class DutchOrderTrade extends IDutchOrderTrade<Currency, Currency, TradeT
   needsWrap: boolean
   // The gas estimate of the reference classic trade, if there is one.
   classicGasUseEstimateUSD: string | null | undefined
+  auctionPeriodSecs: number
+  deadlineBufferSecs: number
 
   constructor({
     currencyIn,
@@ -156,6 +159,8 @@ export class DutchOrderTrade extends IDutchOrderTrade<Currency, Currency, TradeT
     requestId,
     needsWrap,
     classicGasUseEstimateUSD,
+    auctionPeriodSecs,
+    deadlineBufferSecs,
   }: {
     currencyIn: Currency
     currenciesOut: Currency[]
@@ -165,12 +170,16 @@ export class DutchOrderTrade extends IDutchOrderTrade<Currency, Currency, TradeT
     requestId?: string
     needsWrap: boolean
     classicGasUseEstimateUSD?: string | null
+    auctionPeriodSecs: number
+    deadlineBufferSecs: number
   }) {
     super({ currencyIn, currenciesOut, orderInfo, tradeType })
     this.quoteId = quoteId
     this.requestId = requestId
     this.needsWrap = needsWrap
     this.classicGasUseEstimateUSD = classicGasUseEstimateUSD
+    this.auctionPeriodSecs = auctionPeriodSecs
+    this.deadlineBufferSecs = deadlineBufferSecs
   }
 }
 

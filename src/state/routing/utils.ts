@@ -235,6 +235,8 @@ export function transformRoutesToTrade(
         requestId: data.quote.requestId,
         classicGasUseEstimateUSD: classicTrade.gasUseEstimateUSD,
         needsWrap: needsWrapIfUniswapX,
+        auctionPeriodSecs: data.quote.auctionPeriodSecs,
+        deadlineBufferSecs: data.quote.deadlineBufferSecs,
       }),
     }
   }

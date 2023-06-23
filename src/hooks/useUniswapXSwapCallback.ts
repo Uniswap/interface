@@ -1,17 +1,13 @@
 import { signTypedData } from '@uniswap/conedison/provider/signing'
 import { DutchOrder, DutchOrderBuilder } from '@uniswap/gouda-sdk'
 import { useWeb3React } from '@web3-react/core'
-import ms from 'ms.macro'
 import { useCallback } from 'react'
 import { DutchOrderTrade, TradeFillType } from 'state/routing/types'
 import { trace } from 'tracing/trace'
 import { UserRejectedRequestError } from 'utils/errors'
 import { didUserReject, swapErrorToUserReadableMessage } from 'utils/swapErrorToUserReadableMessage'
 
-const offsetDate = (date: number, deadline: number): number => Math.floor((date + deadline) / 1000)
-
-const DEFAULT_DEADLINE_PADDING = ms`90s`
-const DEFAULT_START_TIME_PADDING = ms`30s`
+const DEFAULT_START_TIME_PADDING_SECONDS = 30
 
 type DutchAuctionOrderError = { errorCode?: number; detail?: string }
 type DutchAuctionOrderSuccess = { hash: string }
@@ -31,13 +27,13 @@ export default function useUniswapXSwapCallback(trade: DutchOrderTrade | undefin
         if (!trade) throw new Error('missing trade')
 
         const signDutchOrder = async (): Promise<{ signature: string; updatedOrder: DutchOrder }> => {
-          const startTime = offsetDate(Date.now(), DEFAULT_START_TIME_PADDING)
+          const startTime = Math.floor(Date.now() / 1000) + DEFAULT_START_TIME_PADDING_SECONDS
           setTraceData('startTime', startTime)
 
-          const endTime = offsetDate(Date.now(), DEFAULT_DEADLINE_PADDING)
+          const endTime = startTime + trade.auctionPeriodSecs
           setTraceData('endTime', endTime)
 
-          const deadline = endTime
+          const deadline = endTime + trade.deadlineBufferSecs
           setTraceData('deadline', deadline)
 
           // Set timestamp and account based values when the user clicks 'swap' to make them as recent as possible
