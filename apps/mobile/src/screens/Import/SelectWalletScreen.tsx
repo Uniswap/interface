@@ -115,7 +115,7 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props): JS
   useEffect(() => {
     const beforeRemoveListener = (): void => {
       // Remove all pending signer accounts when navigating back
-      dispatch(pendingAccountActions.trigger(PendingAccountActions.DELETE))
+      dispatch(pendingAccountActions.trigger(PendingAccountActions.Delete))
       /**
        * When we go back and exit onboarding, we re-add any initial view-only wallets
        * that were overwritten during the import flow. (Due to how our redux account store is setup,
@@ -131,7 +131,7 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props): JS
               address: viewOnlyWallet.address,
             })
           )
-          dispatch(pendingAccountActions.trigger(PendingAccountActions.ACTIVATE))
+          dispatch(pendingAccountActions.trigger(PendingAccountActions.Activate))
         }
       }
     }

@@ -96,7 +96,7 @@ export function ImportMethodScreenNew({ navigation, route: { params } }: Props):
 
   const handleOnPress = (nav: OnboardingScreens, importType: ImportType): void => {
     // Delete any pending accounts before entering flow.
-    dispatch(pendingAccountActions.trigger(PendingAccountActions.DELETE))
+    dispatch(pendingAccountActions.trigger(PendingAccountActions.Delete))
 
     if (importType === ImportType.Restore) {
       handleOnPressRestoreBackup()

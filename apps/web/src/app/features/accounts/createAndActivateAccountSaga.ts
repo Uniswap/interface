@@ -12,7 +12,7 @@ import { createMonitoredSaga } from 'wallet/src/utils/saga'
  */
 function* createAndActivateAccount(validatedPassword: string) {
   yield* call(createAccount, { validatedPassword })
-  yield* call(managePendingAccounts, PendingAccountActions.ACTIVATE)
+  yield* call(managePendingAccounts, PendingAccountActions.ActivateAndSelect)
   logger.debug(
     'createAndActivateAccountSaga',
     'createAndActivateAccount',

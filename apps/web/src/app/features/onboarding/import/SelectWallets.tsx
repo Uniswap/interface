@@ -151,7 +151,7 @@ export function SelectWallets(): JSX.Element {
         }
       }
     })
-    dispatch(pendingAccountActions.trigger(PendingAccountActions.ACTIVATE))
+    dispatch(pendingAccountActions.trigger(PendingAccountActions.Activate))
     navigate(
       `/${TopLevelRoutes.Onboarding}/${OnboardingRoutes.Import}/${ImportOnboardingRoutes.Complete}`
     )

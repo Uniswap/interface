@@ -167,7 +167,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
   const addWalletOptions = useMemo<MenuItemProp[]>(() => {
     const onPressCreateNewWallet = (): void => {
       // Clear any existing pending accounts first.
-      dispatch(pendingAccountActions.trigger(PendingAccountActions.DELETE))
+      dispatch(pendingAccountActions.trigger(PendingAccountActions.Delete))
       dispatch(createAccountActions.trigger())
 
       navigate(Screens.OnboardingStack, {

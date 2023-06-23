@@ -32,7 +32,7 @@ export function RestoreCloudBackupScreen({ navigation, route: { params } }: Prop
 
   const onPressRestoreBackup = async (backup: ICloudMnemonicBackup): Promise<void> => {
     // Clear any existing pending accounts
-    dispatch(pendingAccountActions.trigger(PendingAccountActions.DELETE))
+    dispatch(pendingAccountActions.trigger(PendingAccountActions.Delete))
 
     navigation.navigate({
       name: OnboardingScreens.RestoreCloudBackupPassword,

@@ -43,7 +43,7 @@ export function Password({
       // in import flow, we create the account later in the flow
       // in create flow, we need to create it here
       if (createAccountOnNext) {
-        dispatch(pendingAccountActions.trigger(PendingAccountActions.DELETE))
+        dispatch(pendingAccountActions.trigger(PendingAccountActions.Delete))
         dispatch(createAccountActions.trigger({ validatedPassword: enteredPassword }))
       }
     } else {

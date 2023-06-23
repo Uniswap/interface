@@ -1,13 +1,14 @@
 import { put } from 'typed-redux-saga'
 import { logger } from 'wallet/src/features/logger/logger'
 import { selectPendingAccounts } from 'wallet/src/features/wallet/selectors'
-import { markAsNonPending, removeAccounts } from 'wallet/src/features/wallet/slice'
+import { activateAccount, markAsNonPending, removeAccounts } from 'wallet/src/features/wallet/slice'
 import { appSelect } from 'wallet/src/state'
 import { createMonitoredSaga } from 'wallet/src/utils/saga'
 
 export enum PendingAccountActions {
-  ACTIVATE = 'ACTIVATE',
-  DELETE = 'DELETE',
+  Activate = 'Activate',
+  ActivateAndSelect = 'ActivateAndSelect',
+  Delete = 'Delete',
 }
 
 /**
@@ -22,9 +23,14 @@ export function* managePendingAccounts(pendingAccountAction: PendingAccountActio
     logger.debug('pendingAccountsSaga', 'managePendingAccounts', 'No pending accounts found.')
     return
   }
-  if (pendingAccountAction === PendingAccountActions.ACTIVATE) {
+  if (pendingAccountAction === PendingAccountActions.Activate) {
     yield* put(markAsNonPending(pendingAddresses))
-  } else if (pendingAccountAction === PendingAccountActions.DELETE) {
+  } else if (pendingAccountAction === PendingAccountActions.ActivateAndSelect) {
+    yield* put(markAsNonPending(pendingAddresses))
+    if (pendingAddresses[0]) {
+      yield* put(activateAccount(pendingAddresses[0]))
+    }
+  } else if (pendingAccountAction === PendingAccountActions.Delete) {
     // TODO: [MOB-244] cleanup low level RS key storage.
     yield* put(removeAccounts(pendingAddresses))
   }

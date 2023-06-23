@@ -32,7 +32,7 @@ export function LandingScreen({ navigation }: Props): JSX.Element {
   const isDarkMode = useIsDarkMode()
 
   const onPressGetStarted = (): void => {
-    dispatch(pendingAccountActions.trigger(PendingAccountActions.DELETE))
+    dispatch(pendingAccountActions.trigger(PendingAccountActions.Delete))
     navigation.navigate(OnboardingScreens.ImportMethod, {
       importType: ImportType.NotYetSelected,
       entryPoint: OnboardingEntryPoint.FreshInstallOrReplace,

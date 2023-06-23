@@ -38,7 +38,7 @@ export function LandingScreenNew({ navigation }: Props): JSX.Element {
   const isDarkMode = useIsDarkMode()
 
   const onPressCreateWallet = (): void => {
-    dispatch(pendingAccountActions.trigger(PendingAccountActions.DELETE))
+    dispatch(pendingAccountActions.trigger(PendingAccountActions.Delete))
     dispatch(createAccountActions.trigger())
     navigation.navigate(OnboardingScreens.EditName, {
       importType: ImportType.CreateNew,

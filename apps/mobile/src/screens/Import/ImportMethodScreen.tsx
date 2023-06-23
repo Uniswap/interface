@@ -110,7 +110,7 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props): JS
     elementName: ElementName
   ): void => {
     // Delete any pending accounts before entering flow.
-    dispatch(pendingAccountActions.trigger(PendingAccountActions.DELETE))
+    dispatch(pendingAccountActions.trigger(PendingAccountActions.Delete))
     if (importType === ImportType.CreateNew) {
       dispatch(createAccountActions.trigger())
     }

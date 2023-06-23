@@ -61,7 +61,7 @@ export function EditNameScreen({ navigation, route: { params } }: Props): JSX.El
 
   useEffect(() => {
     const beforeRemoveListener = (): void => {
-      dispatch(pendingAccountActions.trigger(PendingAccountActions.DELETE))
+      dispatch(pendingAccountActions.trigger(PendingAccountActions.Delete))
     }
     navigation.addListener('beforeRemove', beforeRemoveListener)
 

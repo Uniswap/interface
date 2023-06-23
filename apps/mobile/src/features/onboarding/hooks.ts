@@ -45,7 +45,7 @@ export function useCompleteOnboardingCallback(
     }
 
     // Remove pending flag from all new accounts.
-    dispatch(pendingAccountActions.trigger(PendingAccountActions.ACTIVATE))
+    dispatch(pendingAccountActions.trigger(PendingAccountActions.Activate))
 
     // Exit flow
     dispatch(setFinishedOnboarding({ finishedOnboarding: true }))
