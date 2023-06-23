@@ -40,6 +40,7 @@ const AuthenticatedHeaderWrapper = styled.div`
   display: flex;
   flex-direction: column;
   flex: 1;
+  overflow: auto;
 `
 
 const HeaderButton = styled(ThemeButton)`
@@ -104,7 +105,6 @@ const StatusWrapper = styled.div`
   display: inline-block;
   width: 70%;
   max-width: 70%;
-  overflow: hidden;
   padding-right: 14px;
   display: inline-flex;
 `

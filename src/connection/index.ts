@@ -74,12 +74,12 @@ const [web3WalletConnect, web3WalletConnectHooks] = initializeConnector<WalletCo
   (actions) => new WalletConnectV1({ actions, onError })
 )
 export const walletConnectV1Connection: Connection = {
-  getName: () => 'WalletConnectV1',
+  getName: () => 'WalletConnect',
   connector: web3WalletConnect,
   hooks: web3WalletConnectHooks,
   type: ConnectionType.WALLET_CONNECT,
   getIcon: () => WALLET_CONNECT_ICON,
-  shouldDisplay: () => false,
+  shouldDisplay: () => !getIsInjectedMobileBrowser(),
 }
 
 const [web3WalletConnectV2, web3WalletConnectV2Hooks] = initializeConnector<WalletConnectV2>(

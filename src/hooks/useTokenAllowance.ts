@@ -7,6 +7,8 @@ import { ApproveTransactionInfo, TransactionType } from 'state/transactions/type
 import { UserRejectedRequestError } from 'utils/errors'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 
+const MAX_ALLOWANCE = MaxUint256.toString()
+
 export function useTokenAllowance(
   token?: Token,
   owner?: string,
@@ -48,8 +50,7 @@ export function useUpdateTokenAllowance(
       if (!contract) throw new Error('missing contract')
       if (!spender) throw new Error('missing spender')
 
-      const maxAllowance = MaxUint256.toString()
-      const allowance = amount.equalTo(0) ? '0' : maxAllowance
+      const allowance = amount.equalTo(0) ? '0' : MAX_ALLOWANCE
       const response = await contract.approve(spender, allowance)
       return {
         response,
