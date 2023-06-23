@@ -112,7 +112,7 @@ function addExtensionRequestListener(): void {
             InjectedAssetsManager.removeFrame(message.filename)
             break
           default:
-            throw new Error('Unhandled extension request type ' + message.data.type)
+            throw new Error('Unhandled extension request type ' + message.type)
         }
       }
     }

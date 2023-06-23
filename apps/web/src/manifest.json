@@ -29,12 +29,7 @@
   ],
   "content_scripts": [
     {
-      "matches": [
-        "https://opensea.io/*",
-        "http://localhost:3000/*",
-        "https://*.vercel.app/*",
-        "https://app.uniswap.org/*"
-      ],
+      "matches": [ "<all_urls>"],
       "js": [
         "injected.js"
       ]
@@ -46,12 +41,7 @@
         "index.html",
         "ethereum.js"
       ],
-      "matches": [
-        "https://opensea.io/*",
-        "http://localhost:3000/*",
-        "https://*.vercel.app/*",
-        "https://app.uniswap.org/*"
-      ]
+      "matches": [ "<all_urls>" ]
     }
   ]
 }
