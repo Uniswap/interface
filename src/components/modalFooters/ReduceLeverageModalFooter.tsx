@@ -35,6 +35,12 @@ import { TransactionType } from 'state/transactions/types'
 import { currencyId } from 'utils/currencyId'
 import {DerivedInfoState, SliderText, TransactionDetails, Wrapper, StyledHeaderRow, StyledPollingDot, StyledInfoIcon, Spinner, StyledPolling, RotatingArrow, TextWithLoadingPlaceholder, StyledCard, TruncatedText } from './common'
 import { useLeverageManagerContract } from 'hooks/useContract'
+import { CurrencyAmount } from '@uniswap/sdk-core'
+import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
+import { useWeb3React } from '@web3-react/core'
+import { useCurrencyBalances } from 'lib/hooks/useCurrencyBalance'
+import { Info } from 'react-feather'
+import Loader from 'components/Icons/LoadingSpinner'
 
 
 function useDerivedLeverageReduceInfo(
@@ -46,20 +52,32 @@ function useDerivedLeverageReduceInfo(
   reduceAmount: string | undefined,
   //newTotalPosition: string | undefined,
   setState: (state: DerivedInfoState) => void,
+  approvalState: ApprovalState
 ): {
-  token0Amount: string | undefined
-  token1Amount: string | undefined
-  pnl: string | undefined
-  returnedAmount: string | undefined
-  unusedPremium: string | undefined
-  premium: string | undefined,
-  inputError: React.ReactNode | undefined
+  transactionInfo: {
+    token0Amount: string
+    token1Amount: string
+    pnl: string
+    returnedAmount: string
+    unusedPremium: string
+    premium: string,
+  } | undefined,
+  userError: React.ReactNode | undefined
 } {
   const leverageManagerContract = useLeverageManagerContract(leverageManager)
 
   const [contractResult, setContractResult] = useState<{
     reducePositionResult: any
   }>()
+
+  const { account } = useWeb3React()
+  const currency0 = useCurrency(position?.token0Address)
+  const currency1 = useCurrency(position?.token1Address)
+
+  const relevantTokenBalances = useCurrencyBalances(
+    account ?? undefined,
+    useMemo(() => [currency0 ?? undefined, currency1 ?? undefined], [currency0, currency1])
+  )
 
   useEffect(() => {
     const laggedfxn = async () => {
@@ -95,14 +113,7 @@ function useDerivedLeverageReduceInfo(
     laggedfxn()
   }, [leverageManager, trader, tokenId, allowedSlippage, reduceAmount])
 
-  const info = useMemo(() => {
-    let inputError;
-    if (!reduceAmount || !contractResult) {
-      inputError = (<Trans>
-        Invalid Trade
-      </Trans>)
-    }
-
+  const transactionInfo = useMemo(() => {
     if (contractResult) {
       const { reducePositionResult } = contractResult
       let token0Amount = new BN(reducePositionResult[0].toString()).shiftedBy(-DEFAULT_ERC20_DECIMALS).toFixed(DEFAULT_ERC20_DECIMALS)
@@ -118,25 +129,44 @@ function useDerivedLeverageReduceInfo(
         pnl,
         returnedAmount,
         unusedPremium,
-        premium,
-        inputError
+        premium
       }
     } else {
-      return {
-        token0Amount: undefined,
-        token1Amount: undefined,
-        pnl: undefined,
-        returnedAmount: undefined,
-        unusedPremium: undefined,
-        premium: undefined,
-        inputError
-      }
+      return undefined
     }
   }, [
     contractResult
   ])
 
-  return info
+  const userError = useMemo(() => {
+    let error;
+    if (!reduceAmount) {
+      error = (<Trans>
+        Invalid Amount
+      </Trans>)
+    }
+
+    if (position) {
+      const isToken0 = position.isToken0
+      const token0Balance = relevantTokenBalances[0]
+      const token1Balance = relevantTokenBalances[1]
+      if (isToken0 && Number(token0Balance?.toExact()) < position.totalDebtInput * 0.002) {
+        error = (<Trans>
+          Insufficient {currency0?.symbol} balance
+        </Trans>)
+      } else if (!isToken0 && Number(token1Balance?.toExact()) < position.totalDebtInput * 0.002) {
+        error = (<Trans>
+          Insufficient {currency1?.symbol} balance
+        </Trans>)
+      }
+    }
+    return error
+  }, [position, relevantTokenBalances])
+
+  return {
+    transactionInfo,
+    userError
+  }
 }
 
 export function ReduceLeverageModalFooter({
@@ -209,21 +239,25 @@ export function ReduceLeverageModalFooter({
   const [showDetails, setShowDetails] = useState(false)
   const theme = useTheme()
 
-  // what do we need for the simulation
-
   const [debouncedSlippage, setDebouncedSlippage] = useDebouncedChangeHandler(slippage, setSlippage)
   const [debouncedReduceAmount, setDebouncedReduceAmount] = useDebouncedChangeHandler(reduceAmount, setReduceAmount);
-  // console.log("nonce: ", nonce, slippage)
+
+  const approveAmount = useMemo(() => {
+    return position?.totalDebtInput ? new BN(position.totalDebtInput * 0.002).shiftedBy(18).toFixed(0) : "0"
+  }, [position])
+
+  const inputCurrency = useCurrency(position?.isToken0 ? position?.token0Address : position?.token1Address)
+
+  const [approvalState, approveManager] = useApproveCallback(
+    inputCurrency ?
+      CurrencyAmount.fromRawAmount(inputCurrency, approveAmount) : undefined,
+    position?.leverageManagerAddress ?? undefined
+  )
 
   const {
-    token0Amount,
-    token1Amount,
-    pnl,
-    returnedAmount,
-    unusedPremium,
-    premium,
-    inputError
-  } = useDerivedLeverageReduceInfo(leverageManagerAddress, trader, tokenId, debouncedSlippage, position, debouncedReduceAmount, setDerivedState, )
+    transactionInfo,
+    userError
+  } = useDerivedLeverageReduceInfo(leverageManagerAddress, trader, tokenId, debouncedSlippage, position, debouncedReduceAmount, setDerivedState, approvalState)
 
 
 
@@ -231,8 +265,8 @@ export function ReduceLeverageModalFooter({
 
   const debt = position?.totalDebtInput;
   const initCollateral = position?.initialCollateral;
-  const received = inputIsToken0 ? (Math.abs(Number(token0Amount)) - Number(debt))
-    : (Math.abs(Number(token1Amount)) - Number(debt))
+  const received = inputIsToken0 ? (Math.abs(Number(transactionInfo?.token0Amount)) - Number(debt))
+    : (Math.abs(Number(transactionInfo?.token1Amount)) - Number(debt))
   return (
     <AutoRow>
       <DarkCard marginTop="5px" padding="5px">
@@ -349,7 +383,7 @@ export function ReduceLeverageModalFooter({
             </StyledHeaderRow>
             <AnimatedDropdown open={showDetails}>
               <AutoColumn gap="sm" style={{ padding: '0', paddingBottom: '8px' }}>
-                {!loading && token0Amount && token1Amount ? (
+                {!loading && transactionInfo ? (
                   <StyledCard>
                     <AutoColumn gap="sm">
                       <RowBetween>
@@ -396,7 +430,7 @@ export function ReduceLeverageModalFooter({
                           <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
                             <TruncatedText>
                               {
-                                `${inputIsToken0 ? new BN(token0Amount).abs().toString() : new BN(token1Amount).abs().toString()}  ${inputIsToken0 ? token0?.symbol : token1?.symbol}`
+                                `${inputIsToken0 ? new BN(transactionInfo?.token0Amount).abs().toString() : new BN(transactionInfo?.token1Amount).abs().toString()}  ${inputIsToken0 ? token0?.symbol : token1?.symbol}`
                               }
                             </TruncatedText>
                           </ThemedText.DeprecatedBlack>
@@ -420,7 +454,7 @@ export function ReduceLeverageModalFooter({
                           <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
                             <TruncatedText>
                               {
-                                unusedPremium && `${Number(unusedPremium)}  ${inputIsToken0 ? token0?.symbol : token1?.symbol}`
+                                `${Number(transactionInfo?.unusedPremium)}  ${inputIsToken0 ? token0?.symbol : token1?.symbol}`
                               }
                             </TruncatedText>
                           </ThemedText.DeprecatedBlack>
@@ -444,7 +478,7 @@ export function ReduceLeverageModalFooter({
                           <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
                             <TruncatedText>
                               {
-                                premium && `${Number(premium)}  ${inputIsToken0 ? token0?.symbol : token1?.symbol}`
+                                 `${Number(transactionInfo?.premium)}  ${inputIsToken0 ? token0?.symbol : token1?.symbol}`
                               }
                             </TruncatedText>
                           </ThemedText.DeprecatedBlack>
@@ -468,7 +502,7 @@ export function ReduceLeverageModalFooter({
                           <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
                             <TruncatedText>
                               {
-                                returnedAmount && `${Number(returnedAmount)}  ${inputIsToken0 ? token1?.symbol : token0?.symbol}`
+                                `${Number(transactionInfo?.returnedAmount)}  ${inputIsToken0 ? token1?.symbol : token0?.symbol}`
                               }
                             </TruncatedText>
                           </ThemedText.DeprecatedBlack>
@@ -516,13 +550,13 @@ export function ReduceLeverageModalFooter({
                           <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
                             <TruncatedText>
                               {
-                                `${(Math.round(Number(pnl) * 1000) / 1000)}  ${inputIsToken0 ? token0?.symbol : token1?.symbol}`
+                                `${(Math.round(Number(transactionInfo?.pnl) * 1000) / 1000)}  ${inputIsToken0 ? token0?.symbol : token1?.symbol}`
 
                               }
                             </TruncatedText>
                             <TruncatedText>
                               ({
-                                `${100 * (Math.round(Number(pnl) * 1000) / 1000) / (Number(initCollateral))} %`
+                                `${100 * (Math.round(Number(transactionInfo?.pnl) * 1000) / 1000) / (Number(initCollateral))} %`
 
                               })
                             </TruncatedText>
@@ -541,12 +575,65 @@ export function ReduceLeverageModalFooter({
       </TransactionDetails>
       <ButtonError
         onClick={handleReducePosition}
-        disabled={!!inputError || derivedState !== DerivedInfoState.VALID}
+        disabled={!!userError || derivedState !== DerivedInfoState.VALID}
         style={{ margin: '10px 0 0 0' }}
         id={InterfaceElementName.CONFIRM_SWAP_BUTTON}
       >
-        {inputError ? (
-          inputError
+        {approvalState !== ApprovalState.APPROVED ? (
+        <ButtonPrimary
+          onClick={approveManager}
+          disabled={!!userError || approvalState === ApprovalState.PENDING}
+          style={{ gap: 14 }}
+        >
+          {!!userError ? (
+            <Trans>
+              {userError}
+            </Trans>
+          ) : approvalState === ApprovalState.PENDING ? (
+            <>
+              <Loader size="20px" />
+              <Trans>Approve pending</Trans>
+            </>
+          ) : (
+            <>
+              <div style={{ height: 20 }}>
+                <MouseoverTooltip
+                  text={
+                    <Trans>
+                      Permission is required.
+                    </Trans>
+                  }
+                >
+                  <Info size={20} />
+                </MouseoverTooltip>
+              </div>
+              <Trans>Approve use of {inputIsToken0 ? token0?.symbol : token1?.symbol}</Trans>
+            </>
+          )}
+        </ButtonPrimary>
+      ) : (
+        <ButtonError
+          onClick={handleReducePosition}
+          disabled={!!userError || !transactionInfo}
+          style={{ margin: '10px 0 0 0' }}
+          id={InterfaceElementName.CONFIRM_SWAP_BUTTON}
+        >
+          {!!userError ? (
+            userError
+           ) : transactionInfo ? (
+            <Text fontSize={20} fontWeight={500}>
+              <Trans>Add Premium</Trans>
+            </Text>
+          ) : (
+            <Text fontSize={20} fontWeight={500}>
+              <Trans>Invalid</Trans>
+            </Text>
+          )}
+        </ButtonError>
+      )
+      }
+        {/* {userError ? (
+          userError
         ) : derivedState !== DerivedInfoState.VALID ? (
           <Trans>
             Invalid Transaction
@@ -556,7 +643,7 @@ export function ReduceLeverageModalFooter({
             <Trans>Reduce Position</Trans>
           </Text>
         )
-        }
+        } */}
       </ButtonError>
     </AutoRow>
   )

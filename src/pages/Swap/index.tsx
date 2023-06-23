@@ -466,12 +466,12 @@ export default function Swap({ className }: { className?: string }) {
     contractError
   } = useDerivedLeverageCreationInfo({ allowance: leverageApprovalState })
 
-  console.log("premium:",
-    leverageApproveAmount?.toExact(),
-    borrowInputApproveAmount?.toExact(),
-    borrowOutputApproveAmount?.toExact(),
-    premium
-  )
+  // console.log("premium:",
+  //   leverageApproveAmount?.toExact(),
+  //   borrowInputApproveAmount?.toExact(),
+  //   borrowOutputApproveAmount?.toExact(),
+  //   premium
+  // )
 
   const [borrowInputApprovalState, approveInputBorrowManager] = useApproveCallback(borrowInputApproveAmount, borrowManagerAddress ?? undefined)
   const [borrowOutputApprovalState, approveOutputBorrowManager] = useApproveCallback(borrowOutputApproveAmount, borrowManagerAddress ?? undefined)
