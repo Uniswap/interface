@@ -212,7 +212,6 @@ function AccountDrawer() {
       setYPosition(0)
       if (!setDragStartTop) {
         scrollRef.current?.scrollTo({ top: 0, behavior: 'smooth' })
-        scrollRef.current?.setAttribute('overflow', 'auto')
       }
     },
     // set dragStartTop to true if the user starts dragging from the top of the drawer
