@@ -5643,7 +5643,7 @@
     tiny-invariant "^1.1.0"
     toformat "^2.0.0"
 
-"@uniswap/smart-order-router@^3.13.4":
+"@uniswap/smart-order-router@3.13.5":
   version "3.13.5"
   resolved "https://registry.yarnpkg.com/@uniswap/smart-order-router/-/smart-order-router-3.13.5.tgz#a6db511b46db5716aa9002060992f2326682d7a5"
   integrity sha512-U+XG9Wgzzpii8LLFLUu86pUjxp+JsL0sCkuCYr+arV9KbNWUhhNQi1gTia7VYCs9+EUaVwulRoC9eWytCxobcw==
