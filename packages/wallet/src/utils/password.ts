@@ -1,5 +1,18 @@
 const PASSWORD_LENGTH_MIN = 8
 
-export function isValidPassword(password: string): boolean {
-  return password.length >= PASSWORD_LENGTH_MIN
+interface PasswordValidationResult {
+  valid: boolean
+  validationErrorString?: string
+}
+
+export function isValidPassword(password: string): PasswordValidationResult {
+  const validLength = password.length >= PASSWORD_LENGTH_MIN
+  if (validLength) {
+    return { valid: true }
+  } else {
+    return {
+      valid: false,
+      validationErrorString: 'Password is too short.',
+    }
+  }
 }

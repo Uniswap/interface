@@ -34,7 +34,8 @@ export function Password({
   const enteredPassword = passwordInputProps.value
 
   const onSubmit = (): void => {
-    if (isValidPassword(enteredPassword)) {
+    const passwordValidationResult = isValidPassword(enteredPassword)
+    if (passwordValidationResult.valid) {
       setPassword(enteredPassword)
       setPasswordError(undefined)
       navigate(nextPath)
@@ -45,6 +46,8 @@ export function Password({
         dispatch(pendingAccountActions.trigger(PendingAccountActions.DELETE))
         dispatch(createAccountActions.trigger({ validatedPassword: enteredPassword }))
       }
+    } else {
+      setPasswordError(passwordValidationResult.validationErrorString)
     }
   }
 
