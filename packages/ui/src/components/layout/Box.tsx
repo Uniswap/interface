@@ -1,3 +1,3 @@
-import { Stack } from 'tamagui'
+import { YStack } from 'tamagui'
 
-export const Box = Stack
+export const Box = YStack

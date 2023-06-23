@@ -1,4 +1,5 @@
 import { createMedia } from '@tamagui/react-native-media-driver'
+import { shorthands } from '@tamagui/shorthands'
 import { createTamagui } from 'tamagui'
 import { animations } from 'ui/src/theme/animations'
 import { bodyFont, headingFont } from 'ui/src/theme/fonts'
@@ -9,7 +10,7 @@ export const config = createTamagui({
   animations,
   shouldAddPrefersColorThemes: true,
   themeClassNameOnRoot: true,
-  // shorthands,
+  shorthands,
   fonts: {
     heading: headingFont,
     body: bodyFont,
