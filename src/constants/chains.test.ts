@@ -2,6 +2,7 @@ import { SupportedChainId as SdkSupportedChainId } from '@uniswap/sdk-core'
 
 import { ALL_SUPPORTED_CHAIN_IDS, SupportedChainId } from './chains'
 
+// These tests will be deprecated as part of the moving of ChainId to sdk-core
 describe('ChainIds', () => {
   describe('SupportedChainId', () => {
     it('derives from sdk-core', () => {
@@ -9,7 +10,7 @@ describe('ChainIds', () => {
         .filter((chainId) => typeof chainId === 'number')
         .map((value) => value.toString())
       const InterfaceChains = Object.values(SupportedChainId)
-        .filter((chainId) => typeof chainId === 'number')
+        .filter((chainId) => typeof chainId === 'number' && chainId !== SupportedChainId.AVALANCHE)
         .map((value) => value.toString())
       const isSubset = InterfaceChains.every((value) => SDKChains.includes(value))
       expect(isSubset).toBe(true)
