@@ -13,6 +13,10 @@
     <link rel="shortcut icon" type="image/png" href="%PUBLIC_URL%/favicon.png" />
     <link rel="apple-touch-icon" sizes="192x192" href="%PUBLIC_URL%/images/192x192_App_Icon.png" />
     <link rel="apple-touch-icon" sizes="512x512" href="%PUBLIC_URL%/images/512x512_App_Icon.png" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
     <script src="%PUBLIC_URL%/datafeeds/udf/dist/bundle.js"></script>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
@@ -31,18 +35,19 @@
     <link rel="preconnect" href="https://www.google-analytics.com/" />
 
     <link rel="preload" href="%PUBLIC_URL%/fonts/Inter-roman.var.woff2" as="font" type="font/woff2" crossorigin />
+  
 
     <style>
       * {
-        font-family: 'custom font', sans-serif;
+        font-family: 'Roboto', sans-serif;
         box-sizing: border-box;
       }
 
       /**
           Explicitly load Inter var from public/ so it does not block LCP's critical path.
         */
-      @font-face {
-        font-family: 'Inter custom';
+      /* @font-face {
+        font-family: 'Montserrat-Light';
         font-weight: 100 900;
         font-style: normal;
         font-display: block;
@@ -51,10 +56,14 @@
           url(%PUBLIC_URL%/fonts/Inter-roman.var.woff2) format('woff2-variations'),
           url(%PUBLIC_URL%/fonts/Inter-roman.var.woff2) format('woff2');
       }
+      @font-face {
+        font-family: 'Montserrat-Light';
+        src: url(%PUBLIC_URL%/fonts/Montserrat-Medium.ttf) format("truetype");
+      } */
 
       @supports (font-variation-settings: normal) {
         * {
-          font-family: 'Inter custom', sans-serif;
+          font-family: 'Roboto', sans-serif;
         }
       }
 

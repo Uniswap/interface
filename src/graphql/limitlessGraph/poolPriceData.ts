@@ -213,7 +213,7 @@ export async function fetchLiveBar(
         variables: {
           address: poolAddress.toLowerCase()
         },
-        fetchPolicy: 'standby',
+        fetchPolicy: 'network-only',
       }
     )
     const price = await dataClient.query(
@@ -222,7 +222,7 @@ export async function fetchLiveBar(
         variables: {
           address: poolAddress.toLowerCase()
         },
-        fetchPolicy: 'standby'
+        fetchPolicy: 'network-only'
       }
     )
 

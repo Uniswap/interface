@@ -9,7 +9,6 @@ import { BigNumber as BN } from "bignumber.js"
 import { computeBorrowManagerAddress, computeLeverageManagerAddress, computeLiquidityManagerAddress, usePool } from './usePools'
 import { BORROW_MANAGER_FACTORY_ADDRESSES, LEVERAGE_MANAGER_FACTORY_ADDRESSES, LIQUIDITY_MANAGER_FACTORY_ADDRESSES } from 'constants/addresses'
 import { useWeb3React } from '@web3-react/core'
-import _ from 'lodash'
 
 
 interface UseV3PositionsResults {
@@ -38,7 +37,7 @@ export function useLimitlessPositions(account: string | undefined): {loading: bo
     account ?? undefined,
   ])
 
-  console.log("limitless", balanceLoading, balanceResult)
+  // console.log("limitless", balanceLoading, balanceResult)
 
   // we don't expect any account balance to ever exceed the bounds of max safe int
   const accountBalance: number | undefined = balanceResult?.[0]?.toNumber()
@@ -78,7 +77,7 @@ export function useLimitlessPositions(account: string | undefined): {loading: bo
 
   const positions = useMemo(() => {
     if (!loading && !error && tokenIds) {
-      let allPositions =  _.map(results, (call, i ) => {
+      let allPositions =  results.map((call, i ) => {
         const tokenId = tokenIds[i]
         const result = call.result as CallStateResult
         const key = result.key
@@ -122,13 +121,13 @@ export function useLimitlessPositions(account: string | undefined): {loading: bo
         }
       })
 
-      let activePositions = _.filter(allPositions, (position) => {
+      let activePositions = allPositions.filter((position) => {
         return Number(position.openTime) !== 0
-      })
+      }) 
       return activePositions
     }
     return undefined
-  }, [loading, error, results, tokenIds])
+  }, [results, tokenIds])
   return {
     loading: false,
     positions: positions ?? []
@@ -274,7 +273,7 @@ export function useV3Positions(account: string | null | undefined): UseV3Positio
     account ?? undefined,
   ])
 
-  console.log('balanceResult', balanceLoading, balanceResult)
+  // console.log('balanceResult', balanceLoading, balanceResult)
 
   // we don't expect any account balance to ever exceed the bounds of max safe int
   const accountBalance: number | undefined = balanceResult?.[0]?.toNumber()

@@ -548,7 +548,6 @@ export function useDerivedLeverageCreationInfo({ allowance } : { allowance: Appr
 
   // retrieves the trade object
   const simulate = useCallback(async () => {
-    
     // checks if the leverageManager exists
     if (leverageManager) {
       try {
@@ -591,7 +590,7 @@ export function useDerivedLeverageCreationInfo({ allowance } : { allowance: Appr
     }
   }, [currencies, leverageManager, leverage, leverageFactor, debouncedAmount])
 
-  //console.log("contractResultPost/tradestate", contractResult, tradeState)
+  console.log("contractResultPost/tradestate", contractResult, tradeState, parsedAmount?.toExact())
 
   useEffect(() => {
     simulate()

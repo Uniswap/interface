@@ -81,7 +81,7 @@ export const PoolDataSection = ({
 
 	useEffect(() => {
 		// if longer than 1 seconds w/o update, reload
-		if (lastUpdate < moment.now() - 1000 * 1) {
+		if (lastUpdate < moment.now() - 5000 * 1) {
 			setLastUpdate(moment.now())
 		}
 	})
@@ -156,7 +156,7 @@ export const PoolDataSection = ({
 								variables: {
 									address: uniswapPoolAddress,
 								},
-								fetchPolicy: 'standby',
+								fetchPolicy: 'cache-first',
 							}
 						)
 
@@ -166,9 +166,11 @@ export const PoolDataSection = ({
 								variables: {
 									address: uniswapPoolAddress
 								},
-								fetchPolicy: 'standby'
+								fetchPolicy: 'cache-first'
 							}
 						)
+
+						// console.log("priceQuery", priceQuery, result)
 
 						if (!result.error && !result.loading && !priceQuery.error && !priceQuery.loading) {
 							const data = result.data.poolDayDatas

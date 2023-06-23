@@ -1,4 +1,4 @@
-import { WidgetSkeleton } from 'components/Widget'
+// import { WidgetSkeleton } from 'components/Widget'
 import { DEFAULT_WIDGET_WIDTH } from 'components/Widget'
 import { ArrowLeft } from 'react-feather'
 import { useParams } from 'react-router-dom'
@@ -259,9 +259,9 @@ export function TokenDetailsPageSkeleton() {
   return (
     <TokenDetailsLayout>
       <TokenDetailsSkeleton />
-      <RightPanel>
+      {/* <RightPanel>
         <WidgetSkeleton />
-      </RightPanel>
+      </RightPanel> */}
     </TokenDetailsLayout>
   )
 }

@@ -22,7 +22,7 @@ import { RowBetween, RowFixed } from '../Row'
 import TradePrice from '../swap/TradePrice'
 import { AdvancedBorrowSwapDetails, AdvancedLeverageSwapDetails, AdvancedSwapDetails, ValueLabel } from './AdvancedSwapDetails'
 import { SwapShowAcceptChanges, TruncatedText } from './styleds'
-import { BorrowCreationDetails, LeverageTrade } from 'state/swap/hooks'
+import { BorrowCreationDetails, LeverageTrade, useSwapState } from 'state/swap/hooks'
 import { DEFAULT_ERC20_DECIMALS } from 'constants/tokens'
 import { formatNumber, formatNumberOrString } from '@uniswap/conedison/format'
 import { BigNumber as BN } from "bignumber.js"
@@ -442,13 +442,14 @@ export function LeverageModalHeader({
     let totalInput = 0
     let totalOutput = 0
     if (inputAmount && borrowedAmount) {
-      totalInput = existingPosition && existingTotalDebtInput ? 
-        (
-          Number(inputAmount.toExact()) + Number(borrowedAmount.toExact()) - existingTotalDebtInput
-        ) :
-        (
-          Number(inputAmount.toExact()) + Number(borrowedAmount.toExact())
-        )
+      totalInput = Number(inputAmount.toExact()) * leverageFactor
+      // totalInput = existingPosition && existingTotalDebtInput ? 
+      //   (
+      //     Number(inputAmount.toExact()) + Number(borrowedAmount.toExact()) - existingTotalDebtInput
+      //   ) :
+      //   (
+      //     Number(inputAmount.toExact()) + Number(borrowedAmount.toExact())
+      //   )
       totalOutput = existingTotalPosition ? 
         (
           Number(expectedOutput) - existingTotalPosition
@@ -471,7 +472,7 @@ export function LeverageModalHeader({
     //     "-"
     //   )
     // }
-  }, [leverageTrade])
+  }, [leverageTrade, leverageFactor])
 
   return (
     <AutoColumn gap="4px" style={{ marginTop: '1rem' }}>
