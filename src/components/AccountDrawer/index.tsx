@@ -212,7 +212,6 @@ function AccountDrawer() {
     },
     // set dragStartTop to true if the user starts dragging from the top of the drawer
     onDragStart: (state) => {
-      console.log(scrollRef.current?.scrollTop)
       if (scrollRef.current?.scrollTop === 0) {
         setDragStartTop(true)
       } else {
