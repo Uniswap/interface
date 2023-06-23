@@ -25,7 +25,7 @@ import { LoadingRows } from './styleds'
 
 const PageWrapper = styled(AutoColumn)`
   padding: 68px 8px 0px;
-  max-width: 870px;
+  max-width: 1200px;
   width: 100%;
 
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
@@ -172,7 +172,7 @@ function WrongNetworkCard() {
           <AutoColumn gap="lg" style={{ width: '100%' }}>
             <TitleRow padding="0">
               <ThemedText.LargeHeader>
-                <Trans>Pools</Trans>
+                <Trans>Liquidity Positions</Trans>
               </ThemedText.LargeHeader>
             </TitleRow>
 
@@ -263,9 +263,9 @@ export default function Pool() {
         <AutoColumn gap="lg" justify="center">
           <AutoColumn gap="lg" style={{ width: '100%' }}>
             <TitleRow padding="0">
-              <ThemedText.LargeHeader>
-                <Trans>Pools</Trans>
-              </ThemedText.LargeHeader>
+              {/*<ThemedText.LargeHeader>
+                <Trans>Liquidity Positions</Trans>
+              </ThemedText.LargeHeader>*/}
               <ButtonRow>
                 {showV2Features && (
                   <PoolMenu
@@ -282,7 +282,7 @@ export default function Pool() {
                   />
                 )}
                 <ResponsiveButtonPrimary data-cy="join-pool-button" id="join-pool-button" as={Link} to="/add/ETH">
-                  + <Trans>New Position</Trans>
+                   <Trans>Add New Position</Trans>
                 </ResponsiveButtonPrimary>
               </ButtonRow>
             </TitleRow>
@@ -299,9 +299,9 @@ export default function Pool() {
               ) : (
                 <ErrorContainer>
                   <ThemedText.DeprecatedBody color={theme.textTertiary} textAlign="center">
-                    <InboxIcon strokeWidth={1} style={{ marginTop: '2em' }} />
+                    {/*<InboxIcon strokeWidth={1} style={{ marginTop: '2em' }} /> */}
                     <div>
-                      <Trans>Your active V3 liquidity positions will appear here.</Trans>
+                      <Trans>Your liquidity positions will appear here.</Trans>
                     </div>
                   </ThemedText.DeprecatedBody>
                   {!showConnectAWallet && closedPositions.length > 0 && (
@@ -331,12 +331,12 @@ export default function Pool() {
               )}
             </MainContentWrapper>
             <HideSmall>
-              <CTACards />
+              {/*<CTACards /> */}
             </HideSmall>
           </AutoColumn>
         </AutoColumn>
       </PageWrapper>
-      <SwitchLocaleLink />
+      {/*<SwitchLocaleLink /> */}
     </Trace>
   )
 }

@@ -170,6 +170,7 @@ const CHAIN_INFO: ChainInfoMap = {
     infoLink: 'https://info.uniswap.org/#/polygon/',
     label: 'Polygon Mumbai',
     logoUrl: polygonMaticLogo,
+    color: darkTheme.chain_56,
     nativeCurrency: { name: 'Polygon Mumbai Matic', symbol: 'mMATIC', decimals: 18 },
   },
   [SupportedChainId.CELO]: {

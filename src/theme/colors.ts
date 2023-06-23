@@ -128,6 +128,7 @@ export const limitlessColors = {
 
 type Theme = typeof darkTheme
 
+
 const commonTheme = {
   white: colors.white,
   black: colors.black,
@@ -148,9 +149,9 @@ const commonTheme = {
   chain_42161_background: colors.blue900,
   chain_56_background: colors.networkBsc,
 
-  brandedGradient: 'linear-gradient(139.57deg, #FF79C9 4.35%, #FFB8E2 96.44%);',
-  promotionalGradient: 'radial-gradient(101.8% 4091.31% at 0% 0%, #4673FA 0%, #9646FA 100%);',
-
+  brandedGradient: colors.networkBsc,
+  promotionalGradient: colors.networkBsc,
+  
   hoverState: opacify(24, colors.blue200),
   hoverDefault: opacify(8, colors.gray300),
 }
@@ -160,18 +161,19 @@ export const darkTheme = {
   userThemeColor: colors.magentaVibrant,
   background: colors.gray800,
   backgroundBackdrop: colors.gray950,
+
   // backgroundSurface: limitlessColors.darkPurple,
-  backgroundSurface: "#030216", //"#0d0517", //colors.black,// colors.gray900
+  backgroundSurface: colors.gray900,//"#030216", //"#0d0517", //colors.black,// colors.gray900
   backgroundModule: "#181926", // colors.gray800
   backgroundInteractive: colors.gray700,
   backgroundFloating: opacify(12, colors.black),
-  backgroundOutline: opacify(24, colors.gray300),
+  backgroundOutline: opacify(24, colors.gray900),
   backgroundScrim: opacify(72, colors.gray900),
   backgroundScrolledSurface: opacify(72, colors.gray900),
-  textPrimary: colors.white,
-  textSecondary: colors.gray300,
+  textPrimary: colors.gray200,
+  textSecondary: colors.gray50,
   textTertiary: colors.gray500,
-  accentAction: colors.blue400,
+  accentAction: colors.gray700,
   accentActive: colors.blue400,
   accentSuccess: colors.green200,
   accentWarning: colors.gold200,
@@ -217,7 +219,7 @@ export const lightTheme = {
   backgroundOutline: opacify(24, colors.gray300),
   backgroundScrim: opacify(72, colors.gray900),
   backgroundScrolledSurface: opacify(72, colors.gray900),
-  textPrimary: colors.white,
+  textPrimary: colors.gray200,
   textSecondary: colors.gray300,
   textTertiary: colors.gray500,
   accentAction: colors.blue400,

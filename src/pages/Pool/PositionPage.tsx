@@ -985,7 +985,7 @@ export function PositionPage() {
             </DarkCard>
           </AutoColumn>
         </PageWrapper>
-        <SwitchLocaleLink />
+        {/*<SwitchLocaleLink /> */}
       </>
     </Trace>
   )

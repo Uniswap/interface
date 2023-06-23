@@ -9,9 +9,9 @@ import { ExternalLink } from '../../theme'
 
 const CTASection = styled.section`
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: 8px;
-  opacity: 0.8;
+  opacity: 1;
 
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
     grid-template-columns: auto;

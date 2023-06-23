@@ -218,9 +218,9 @@ export default function PositionListItem({
             &nbsp;{currencyQuote?.symbol}&nbsp;/&nbsp;{currencyBase?.symbol}
           </ThemedText.SubHeader>
 
-          <FeeTierText>
+          {/*<FeeTierText>
             <Trans>{new Percent(feeAmount, 1_000_000).toSignificant()}%</Trans>
-          </FeeTierText>
+          </FeeTierText> */}
         </PrimaryPositionIdData>
         <RangeBadge removed={removed} inRange={!outOfRange} />
       </RowBetween>
