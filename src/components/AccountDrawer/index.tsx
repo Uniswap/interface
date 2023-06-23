@@ -210,7 +210,7 @@ function AccountDrawer() {
     // reset the yPosition when the user stops dragging
     onDragEnd: (state) => {
       setYPosition(0)
-      if (!dragStartTop) {
+      if (dragStartTop) {
         scrollRef.current?.scrollTo({ top: 0 })
       }
     },
