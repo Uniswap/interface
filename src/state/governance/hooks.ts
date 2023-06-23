@@ -59,7 +59,7 @@ export function useStakingContract(): Contract | null {
   return useContract(STAKING_PROXY_ADDRESSES, STAKING_ABI, true)
 }
 
-function useStakingProxyContract(): Contract | null {
+export function useStakingProxyContract(): Contract | null {
   return useContract(STAKING_PROXY_ADDRESSES, STAKING_PROXY_ABI, true)
 }
 

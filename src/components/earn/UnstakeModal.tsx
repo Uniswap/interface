@@ -34,7 +34,7 @@ const StyledClosed = styled(X)`
   }
 `
 
-interface MoveStakeModalProps {
+interface UnstakeModalProps {
   isOpen: boolean
   isPool?: boolean
   freeStakeBalance?: CurrencyAmount<Token>
@@ -43,10 +43,10 @@ interface MoveStakeModalProps {
 }
 
 // TODO: add balance input to display amount when withdrawing
-export default function UnstakeModal({ isOpen, isPool, freeStakeBalance, onDismiss, title }: MoveStakeModalProps) {
+export default function UnstakeModal({ isOpen, isPool, freeStakeBalance, onDismiss, title }: UnstakeModalProps) {
   const { chainId } = useWeb3React()
 
-  // state for delegate input
+  // state for unstake input
   const [currencyValue] = useState<Token>(GRG[chainId ?? 1])
 
   const { percent } = useBurnV3State()

@@ -7,10 +7,15 @@ import { SupportedChainId } from 'constants/chains'
 import { GRG } from 'constants/tokens'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import JSBI from 'jsbi'
-import { NEVER_RELOAD, useMultipleContractSingleData, useSingleCallResult } from 'lib/hooks/multicall'
+import {
+  NEVER_RELOAD,
+  useMultipleContractSingleData,
+  useSingleCallResult,
+  useSingleContractMultipleData,
+} from 'lib/hooks/multicall'
 import { useCallback, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
-import { StakeStatus, useStakingContract } from 'state/governance/hooks'
+import { StakeStatus, useStakingContract, useStakingProxyContract } from 'state/governance/hooks'
 import { usePoolExtendedContract } from 'state/pool/hooks'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
 
@@ -243,6 +248,48 @@ export function useFreeStakeBalance(): CurrencyAmount<Token> | undefined {
   return freeStake && grg ? CurrencyAmount.fromRawAmount(grg, freeStake.currentEpochBalance) : undefined
 }
 
+interface UnclaimedRewardsData {
+  yieldAmount: CurrencyAmount<Token>
+  yieldPoolId: string
+}
+
+export function useUnclaimedRewards(poolIds: string[]): UnclaimedRewardsData[] | undefined {
+  const { account, chainId } = useWeb3React()
+  const grg = useMemo(() => (chainId ? GRG[chainId] : undefined), [chainId])
+  const stakingContract = useStakingContract()
+  const { poolAddress: poolAddressFromUrl } = useParams<{ poolAddress?: string }>()
+  //const members = Array(poolIds.length).fill(poolAddressFromUrl ?? account)
+  const farmer = poolAddressFromUrl ?? account
+  // TODO: check if can improve as whenever there is an address in the url the pool's balance will be checked
+  //  we should check the logic of appending pool address as we should also append its pool id, but will result
+  //  in a duplicate id, however the positive reward filter will return that id either for user or for pool, never both
+  //  [poolIds, poolAddressFromUrl ? [...members, ...poolAddressFromUrl] : members]
+  const inputs = useMemo(() => {
+    return poolIds.map((poolId) => {
+      return [poolId, farmer]
+    })
+  }, [farmer, poolIds])
+
+  const unclaimedRewards = useSingleContractMultipleData(
+    stakingContract ?? undefined,
+    'computeRewardBalanceOfDelegator',
+    inputs
+  )
+
+  return useMemo(() => {
+    if (!unclaimedRewards || !grg) return undefined
+    return unclaimedRewards
+      .map((reward, i) => {
+        const value = reward?.result?.[0]
+        return {
+          yieldAmount: CurrencyAmount.fromRawAmount(grg, value ?? JSBI.BigInt(0)),
+          yieldPoolId: poolIds[i],
+        }
+      })
+      .filter((p) => JSBI.greaterThan(p.yieldAmount.quotient, JSBI.BigInt(0)))
+  }, [grg, unclaimedRewards, poolIds])
+}
+
 export function useUnstakeCallback(): (amount: CurrencyAmount<Token>, isPool?: boolean) => undefined | Promise<string> {
   const { account, chainId, provider } = useWeb3React()
   const stakingContract = useStakingContract()
@@ -271,5 +318,47 @@ export function useUnstakeCallback(): (amount: CurrencyAmount<Token>, isPool?: b
       }
     },
     [account, chainId, provider, poolContract, stakingContract]
+  )
+}
+
+export function useHarvestCallback(): (poolIds: string[], isPool?: boolean) => undefined | Promise<string> {
+  const { account, chainId, provider } = useWeb3React()
+  const stakingContract = useStakingContract()
+  const stakingProxy = useStakingProxyContract()
+  const { poolAddress: poolAddressFromUrl } = useParams<{ poolAddress?: string }>()
+  const poolContract = usePoolExtendedContract(poolAddressFromUrl ?? undefined)
+  // TODO: encode transaction and batch execute for user
+
+  return useCallback(
+    (poolIds: string[], isPool?: boolean) => {
+      if (!provider || !chainId || !account) return undefined
+      if (!stakingContract || !stakingProxy) throw new Error('No Staking Proxy Contract!')
+      if (isPool && !poolContract) throw new Error('No Pool Contract!')
+      const harvestCalls: string[] = []
+      // when withdrawing pool rewards we will pass an array of only 1 pool ids
+      for (const poolId of poolIds) {
+        const harvestCall = !isPool
+          ? stakingContract.interface.encodeFunctionData('withdrawDelegatorRewards', [poolId])
+          : poolContract?.interface.encodeFunctionData('withdrawDelegatorRewards', [poolId])
+        if (harvestCall) harvestCalls.push(harvestCall)
+      }
+      //console.log(harvestCalls)
+      if (!isPool) {
+        return stakingProxy.estimateGas.batchExecute(harvestCalls, {}).then((estimatedGasLimit) => {
+          return stakingProxy.batchExecute(harvestCalls, {
+            value: null,
+            gasLimit: calculateGasMargin(estimatedGasLimit),
+          })
+        })
+      } else {
+        return poolContract?.estimateGas.multicall(harvestCalls, {}).then((estimatedGasLimit) => {
+          return poolContract?.multicall(harvestCalls, {
+            value: null,
+            gasLimit: calculateGasMargin(estimatedGasLimit),
+          })
+        })
+      }
+    },
+    [account, chainId, provider, poolContract, stakingContract, stakingProxy]
   )
 }
