@@ -12,7 +12,7 @@ import { Input, Stack, Text, XStack } from 'ui/src'
 import { Button } from 'ui/src/components/button/Button'
 import { inputStyles } from 'ui/src/components/input/utils'
 import { EMPTY_ARRAY } from 'wallet/src/constants/misc'
-import { activateAccount } from 'wallet/src/features/wallet/slice'
+import { activateAccount, markAsNonPending } from 'wallet/src/features/wallet/slice'
 
 export function TestMnemonic({ numberOfTests = 4 }: { numberOfTests?: number }): JSX.Element {
   const navigate = useNavigate()
@@ -48,6 +48,7 @@ export function TestMnemonic({ numberOfTests = 4 }: { numberOfTests?: number }):
     }
     const validWord = userWordInput === createdMnemonic[nextWordIndex]
     if (validWord && isLastTest()) {
+      dispatch(markAsNonPending([createdAddress]))
       dispatch(activateAccount(createdAddress))
       navigate(
         `/${TopLevelRoutes.Onboarding}/${OnboardingRoutes.Create}/${CreateOnboardingRoutes.Naming}`
