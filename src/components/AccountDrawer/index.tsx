@@ -1,6 +1,7 @@
 import { TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceEventName } from '@uniswap/analytics-events'
 import { ScrollBarStyles } from 'components/Common'
+import useDisableScrolling from 'hooks/useDisableScrolling'
 import { useWindowSize } from 'hooks/useWindowSize'
 import { atom } from 'jotai'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
@@ -186,6 +187,7 @@ function AccountDrawer() {
   // useStates for detecting swipe gestures
   const [yPosition, setYPosition] = useState(0)
   const [dragStartTop, setDragStartTop] = useState(true)
+  useDisableScrolling(dragStartTop)
 
   // useGesture hook for detecting swipe gestures
   const bind = useGesture({
@@ -210,6 +212,7 @@ function AccountDrawer() {
     },
     // set dragStartTop to true if the user starts dragging from the top of the drawer
     onDragStart: (state) => {
+      console.log(scrollRef.current?.scrollTop)
       if (scrollRef.current?.scrollTop === 0) {
         setDragStartTop(true)
       } else {
