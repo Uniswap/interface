@@ -21,7 +21,9 @@ export function PoolPriceBar({
   price?: Price<Currency, Currency>
 }) {
   const theme = useTheme()
-  const canInvertPrice = Boolean(price?.baseCurrency && price.quoteCurrency && !price.baseCurrency.equals(price.quoteCurrency))
+  const canInvertPrice = Boolean(
+    price && price.baseCurrency && price.quoteCurrency && !price.baseCurrency.equals(price.quoteCurrency)
+  )
   const invertedPrice = canInvertPrice ? price?.invert()?.toSignificant(6) : undefined
 
   return (
