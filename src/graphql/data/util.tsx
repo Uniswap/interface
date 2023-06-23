@@ -120,7 +120,7 @@ export function validateUrlChainParam(chainName: string | undefined) {
 }
 
 // TODO(cartcrom): refactor into safer lookup & replace usage
-export const CHAIN_NAME_TO_CHAIN_ID: { [key in Chain]: SupportedChainId } = {
+export const CHAIN_NAME_TO_CHAIN_ID: { [chain: string]: SupportedChainId } = {
   [Chain.Ethereum]: SupportedChainId.MAINNET,
   [Chain.EthereumGoerli]: SupportedChainId.GOERLI,
   [Chain.EthereumSepolia]: SupportedChainId.SEPOLIA,
@@ -133,7 +133,9 @@ export const CHAIN_NAME_TO_CHAIN_ID: { [key in Chain]: SupportedChainId } = {
 }
 
 export function fromGraphQLChain(chain: Chain): SupportedChainId {
-  return CHAIN_NAME_TO_CHAIN_ID[chain]
+  const chainId = CHAIN_NAME_TO_CHAIN_ID[chain]
+  if (!chainId) throw new Error(`Unknown chain: ${chain}`)
+  return chainId
 }
 
 export const BACKEND_CHAIN_NAMES: Chain[] = [Chain.Ethereum, Chain.Polygon, Chain.Optimism, Chain.Arbitrum, Chain.Celo]
