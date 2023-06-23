@@ -17,12 +17,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
-      - uses: actions/cache@v3
-        id: eslint-cache
+      - uses: ./.github/actions/cache-on-main
         with:
           path: node_modules/.cache
-          key: ${{ runner.os }}-eslint-${{ hashFiles('**/yarn.lock') }}-${{ github.run_id }}
-          restore-keys: ${{ runner.os }}-eslint-${{ hashFiles('**/yarn.lock') }}-
+          key: ${{ runner.os }}-eslint-${{ github.run_id }}
+          restore-keys: ${{ runner.os }}-eslint-
       - run: yarn lint
       - if: failure() && github.ref_name == 'main'
         uses: ./.github/actions/report
@@ -35,12 +34,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
-      - uses: actions/cache@v3
-        id: tsc-cache
+      - uses: ./.github/actions/cache-on-main
         with:
           path: node_modules/.cache
-          key: ${{ runner.os }}-tsc-${{ hashFiles('**/yarn.lock') }}-${{ github.run_id }}
-          restore-keys: ${{ runner.os }}-tsc-${{ hashFiles('**/yarn.lock') }}-
+          key: ${{ runner.os }}-tsc-${{ github.run_id }}
+          restore-keys: ${{ runner.os }}-tsc-
       - run: yarn typecheck
       - if: failure() && github.ref_name == 'main'
         uses: ./.github/actions/report
@@ -65,12 +63,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
-      - uses: actions/cache@v3
-        id: jest-cache
+      - uses: ./.github/actions/cache-on-main
         with:
           path: node_modules/.cache
-          key: ${{ runner.os }}-jest-${{ hashFiles('**/yarn.lock') }}-${{ github.run_id }}
-          restore-keys: ${{ runner.os }}-jest-${{ hashFiles('**/yarn.lock') }}-
+          key: ${{ runner.os }}-jest-${{ github.run_id }}
+          restore-keys: ${{ runner.os }}-jest-
       - run: yarn test --coverage --maxWorkers=100%
       - uses: codecov/codecov-action@v3
         with:
@@ -88,12 +85,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
-      - uses: actions/cache@v3
-        id: build-e2e-cache
+      - uses: ./.github/actions/cache-on-main
         with:
           path: node_modules/.cache
-          key: ${{ runner.os }}-build-e2e-${{ hashFiles('**/yarn.lock') }}-${{ github.run_id }}
-          restore-keys: ${{ runner.os }}-build-e2e-${{ hashFiles('**/yarn.lock') }}-
+          key: ${{ runner.os }}-build-e2e-${{ github.run_id }}
+          restore-keys: ${{ runner.os }}-build-e2e-
       - run: yarn build:e2e
         env:
           NODE_OPTIONS: "--max_old_space_size=4096"
@@ -120,8 +116,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
-      - uses: actions/cache@v3
-        id: cypress-cache
+      - uses: ./.github/actions/cache-on-main
         with:
           path: /root/.cache/Cypress
           key: ${{ runner.os }}-cypress-${{ hashFiles('**/node_modules/cypress/package.json') }}
@@ -134,8 +129,7 @@ jobs:
           name: build-e2e
           path: build
 
-      - uses: actions/cache@v3
-        id: hardhat-cache
+      - uses: ./.github/actions/cache-on-main
         with:
           path: cache
           key: ${{ runner.os }}-hardhat-${{ hashFiles('hardhat.config.js') }}-${{ github.run_id }}
