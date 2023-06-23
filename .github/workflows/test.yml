@@ -185,7 +185,7 @@ jobs:
               repo: context.repo.repo,
               sha: '${{ github.event.pull_request.head.sha || github.event.head_commit.sha }}',
               state: 'pending',
-              context: 'Test',
+              context: 'Test / promotion',
               description: 'Running tests…',
               target_url: 'https://github.com/Uniswap/interface/actions/runs/${{ github.run_id }}',
             })
@@ -203,8 +203,8 @@ jobs:
               repo: context.repo.repo,
               sha: '${{ github.event.pull_request.head.sha || github.event.head_commit.sha }}',
               state: ${{ env.STATUS }} ? 'success' : 'failure',
-              context: 'Test',
-              description: ${{ env.STATUS }} ? 'All tests passed' : 'One or more tests failed',
+              context: 'Test / promotion',
+              description: ${{ env.STATUS }} ? 'All tests passed' : 'One or more tests failed and are blocking promotion',
               target_url: 'https://github.com/Uniswap/interface/actions/runs/${{ github.run_id }}'
             })
         env:
