@@ -540,7 +540,7 @@ export function AddPremiumDetails({
           <TextWithLoadingPlaceholder syncing={false} width={65}>
             <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
               {leverageTrade?.totalPosition
-                ? `${new BN(leverageTrade?.totalPosition ?? "").toString()}  ${inputIsToken0 ? token1?.symbol : token0?.symbol}`
+                ? `${leverageTrade?.totalPosition}  ${inputIsToken0 ? token1?.symbol : token0?.symbol}`
                 : '-'}
             </ThemedText.DeprecatedBlack>
           </TextWithLoadingPlaceholder>
@@ -559,7 +559,7 @@ export function AddPremiumDetails({
           <TextWithLoadingPlaceholder syncing={false} width={50}>
             <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
               {leverageTrade?.totalDebtInput
-                ? `${new BN(leverageTrade?.totalDebtInput ?? "").toString()}  ${inputIsToken0 ? token0?.symbol : token1?.symbol}`
+                ? `${leverageTrade?.totalDebtInput ?? ""}  ${inputIsToken0 ? token0?.symbol : token1?.symbol}`
                 : '-'}
             </ThemedText.DeprecatedBlack>
           </TextWithLoadingPlaceholder>
@@ -866,25 +866,8 @@ export function AdvancedBorrowSwapDetails({
   return (
     <StyledCard>
       <AutoColumn gap="sm">
-        {/*borrowTrade?.existingPosition &&
-        <ValueLabel 
-          description="The existing collateral in your position"
-          label="Existing Collateral"
-          value={displayValues.totalExistingCollateral}
-          syncing={syncing}
-          symbolAppend={inputCurrency?.symbol}
-        />}
-        {borrowTrade?.existingPosition &&
-          <ValueLabel
-            description="The existing borrowed amount in your position"
-            label="Existing Borrowed"
-            value={displayValues.totalExistingBorrowed}
-            syncing={syncing}
-            symbolAppend={outputCurrency?.symbol}
-          />
-        */}
         <ValueLabel
-          description={borrowTrade?.existingPosition ? "Collateral Added to Borrow Position" : "Net collateral for the transaction"}
+          description={borrowTrade?.existingPosition ? "Collateral Added to Position" : "Net collateral for the transaction"}
           label={borrowTrade?.existingPosition ? "Additonal Collateral" : "Total Collateral"}
           value={displayValues.additionalCollateral}
           syncing={syncing}
