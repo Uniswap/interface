@@ -18,6 +18,10 @@ import {
   editAccountActions,
 } from 'wallet/src/features/wallet/accounts/editAccountSaga'
 import { AccountType, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
+import {
+  PendingAccountActions,
+  pendingAccountActions,
+} from 'wallet/src/features/wallet/create/pendingAccountsSaga'
 import { usePendingAccounts } from 'wallet/src/features/wallet/hooks'
 import { NUMBER_OF_WALLETS_TO_IMPORT } from 'wallet/src/features/wallet/import/utils'
 import { activateAccount } from 'wallet/src/features/wallet/slice'
@@ -147,6 +151,7 @@ export function SelectWallets(): JSX.Element {
         }
       }
     })
+    dispatch(pendingAccountActions.trigger(PendingAccountActions.ACTIVATE))
     navigate(
       `/${TopLevelRoutes.Onboarding}/${OnboardingRoutes.Import}/${ImportOnboardingRoutes.Complete}`
     )
