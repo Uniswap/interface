@@ -24,7 +24,6 @@ export const baseCurrencyIds = [
   currencyId(USDC),
   currencyId(USDT),
   currencyId(WBTC),
-  currencyId(DAI),
   buildWrappedNativeCurrencyId(ChainId.Mainnet),
 ]
 

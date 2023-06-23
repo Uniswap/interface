@@ -107,6 +107,10 @@ export type EventProperties = {
     operationName: string
     operationType?: string
   }
+  [MobileEventName.PortfolioBalanceFreshnessLag]: {
+    freshnessLag: number
+    updatedCurrencies: string[]
+  }
   [MobileEventName.SwapSubmitted]: {
     transaction_hash: string
   } & SwapTradeBaseProperties

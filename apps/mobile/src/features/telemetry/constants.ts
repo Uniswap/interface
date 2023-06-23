@@ -24,6 +24,7 @@ export enum MobileEventName {
   OnboardingCompleted = 'Onboarding Completed',
   PerformanceReport = 'Performance Report',
   PerformanceGraphql = 'Performance GraphQL',
+  PortfolioBalanceFreshnessLag = 'Portfolio Balance Freshness Lag',
   SwapSubmitted = 'Swap Submitted to Provider',
   TokenDetailsOtherChainButtonPressed = 'Token Details Other Chain Button Pressed',
   TokenSelected = 'Token Selected',
