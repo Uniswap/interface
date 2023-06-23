@@ -699,13 +699,13 @@ function useDerivedAddLeveragePremiumInfo(
       const token0Balance = relevantTokenBalances[0]
       const token1Balance = relevantTokenBalances[1]
       let inputError
-      if (isToken0 && Number(token0Balance?.toExact()) < position.totalDebtInput * 0.002) {
-        inputError = (<Trans>
-          Insufficient {currency0?.symbol} balance
-        </Trans>)
-      } else if (!isToken0 && Number(token1Balance?.toExact()) < position.totalDebtInput * 0.002) {
+      if (isToken0 && Number(token1Balance?.toExact()) < position.totalDebtInput * 0.002) {
         inputError = (<Trans>
           Insufficient {currency1?.symbol} balance
+        </Trans>)
+      } else if (!isToken0 && Number(token0Balance?.toExact()) < position.totalDebtInput * 0.002) {
+        inputError = (<Trans>
+          Insufficient {currency0?.symbol} balance
         </Trans>)
       }
 
@@ -1057,9 +1057,9 @@ export function AddPremiumBorrowModalFooter({
   )
   const token0 = useCurrency(position?.token0Address)
   const token1 = useCurrency(position?.token1Address)
-  const [, pool] = usePool(token0 ?? undefined, token1 ?? undefined, position?.poolFee)
+
   const { tradeInfo, inputError } = useDerivedAddBorrowPremiumInfo(liquidityManagerAddress, trader, tokenId, position?.isToken0, setDerivedState, approvalState)
-  const inputIsToken0 = !position?.isToken0
+  const inputIsToken0 = position?.isToken0
 
 
   // const outputCurrency = useCurrency(position?.isToken0 ? position?.token1Address : position?.token0Address)

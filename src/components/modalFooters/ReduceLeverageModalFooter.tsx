@@ -150,13 +150,13 @@ function useDerivedLeverageReduceInfo(
       const isToken0 = position.isToken0
       const token0Balance = relevantTokenBalances[0]
       const token1Balance = relevantTokenBalances[1]
-      if (isToken0 && Number(token0Balance?.toExact()) < position.totalDebtInput * 0.002) {
-        error = (<Trans>
-          Insufficient {currency0?.symbol} balance
-        </Trans>)
-      } else if (!isToken0 && Number(token1Balance?.toExact()) < position.totalDebtInput * 0.002) {
+      if (isToken0 && Number(token1Balance?.toExact()) < position.totalDebtInput * 0.002) {
         error = (<Trans>
           Insufficient {currency1?.symbol} balance
+        </Trans>)
+      } else if (!isToken0 && Number(token0Balance?.toExact()) < position.totalDebtInput * 0.002) {
+        error = (<Trans>
+          Insufficient {currency0?.symbol} balance
         </Trans>)
       }
     }
@@ -246,7 +246,7 @@ export function ReduceLeverageModalFooter({
     return position?.totalDebtInput ? new BN(position.totalDebtInput * 0.002).shiftedBy(18).toFixed(0) : "0"
   }, [position])
 
-  const inputCurrency = useCurrency(position?.isToken0 ? position?.token0Address : position?.token1Address)
+  const inputCurrency = useCurrency(position?.isToken0 ? position?.token1Address : position?.token0Address)
 
   const [approvalState, approveManager] = useApproveCallback(
     inputCurrency ?
