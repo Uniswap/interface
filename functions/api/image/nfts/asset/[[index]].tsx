@@ -6,15 +6,16 @@ import React from 'react'
 import { AssetDocument } from '../../../../../src/graphql/data/__generated__/types-and-hooks'
 
 const GRAPHQL_ENDPOINT = 'https://api.uniswap.org/v1/graphql'
-
-const font = fetch(
-  new URL('https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZFhjQ.ttf'),
-  import.meta.url
-).then((res) => res.arrayBuffer())
-
 export async function onRequestGet({ params, request }) {
   try {
+    const font = fetch(
+      new URL('https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZFhjQ.ttf'),
+      import.meta.url
+    ).then((res) => res.arrayBuffer())
     const fontData = await font
+
+    const origin = new URL(request.url).origin
+    const watermark = origin + '/images/640x125_App_Watermark.png'
 
     const { index } = params
     const collectionAddress = String(index[0])
@@ -70,15 +71,11 @@ export async function onRequestGet({ params, request }) {
               position: 'absolute',
               bottom: '72px',
               right: '72px',
-              fontSize: '60px',
-              fontFamily: 'Inter',
-              color: 'black',
               display: 'flex',
               gap: '24px',
             }}
           >
-            <img src="https://app.uniswap.org/favicon.png" width="60px" height="60px" />
-            Uniswap
+            <img src={watermark} height="72px" />
           </div>
         </div>
       ),

@@ -1,20 +1,23 @@
 /* eslint-disable import/no-unused-modules */
 import { ApolloClient, InMemoryCache } from '@apollo/client'
 import { ImageResponse } from '@vercel/og'
+import Vibrant from 'node-vibrant/lib/bundle.js'
 import React from 'react'
 
 import { CollectionDocument } from '../../../../../src/graphql/data/__generated__/types-and-hooks'
 
 const GRAPHQL_ENDPOINT = 'https://api.uniswap.org/v1/graphql'
 
-const font = fetch(
-  new URL('https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZFhjQ.ttf'),
-  import.meta.url
-).then((res) => res.arrayBuffer())
-
 export async function onRequestGet({ params, request }) {
   try {
+    const font = fetch(
+      new URL('https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZFhjQ.ttf'),
+      import.meta.url
+    ).then((res) => res.arrayBuffer())
     const fontData = await font
+
+    const origin = new URL(request.url).origin
+    const watermark = origin + '/images/640x125_App_Watermark.png'
 
     const { index } = params
     const collectionAddress = String(index)
@@ -47,6 +50,12 @@ export async function onRequestGet({ params, request }) {
 
     const name = collection.name
     const image = collection.image?.url
+    try {
+      const palette = await Vibrant.from(image).getPalette()
+      console.log(palette)
+    } catch (e) {
+      console.log(e)
+    }
     //const isVerified = collection.isVerified
 
     return new ImageResponse(
@@ -57,7 +66,7 @@ export async function onRequestGet({ params, request }) {
             width: '1200px',
             height: '630px',
             alignItems: 'center',
-            backgroundColor: 'white',
+            backgroundColor: 'black',
           }}
         >
           <img
@@ -75,7 +84,7 @@ export async function onRequestGet({ params, request }) {
               position: 'absolute',
               bottom: '72px',
               left: '644px',
-              color: 'black',
+              color: 'white',
               display: 'flex',
               flexDirection: 'column',
               gap: '32px',
@@ -93,20 +102,7 @@ export async function onRequestGet({ params, request }) {
             >
               {name}
             </div>
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '24px',
-                flexDirection: 'row',
-                color: 'rgb(0, 0, 0, 0.8)',
-                fontSize: '60px',
-                fontFamily: 'Inter',
-              }}
-            >
-              <img src="https://app.uniswap.org/favicon.png" width="60px" height="60px" />
-              Uniswap
-            </div>
+            <img src={watermark} height="60px" />
           </div>
         </div>
       ),
