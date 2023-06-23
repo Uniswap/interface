@@ -49,8 +49,6 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
   const [permissionResponse, requestPermissionResponse] = BarCodeScanner.usePermissions()
   const permissionStatus = permissionResponse?.status
 
-  console.log('-----------------', permissionStatus)
-
   // QR codes are a "type" of Barcode in the scanning library
   const [barcodes, setBarcodes] = useState<BarCodeScannerResult[]>([])
   const data = barcodes[0]?.data
