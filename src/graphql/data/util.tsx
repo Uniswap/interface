@@ -114,7 +114,6 @@ export function validateUrlChainParam(chainName: string | undefined) {
 }
 
 // TODO(cartcrom): refactor into safer lookup & replace usage
-// TODO(AVAX): add AVAX to this list when BE supports
 export const CHAIN_NAME_TO_CHAIN_ID: { [key in Chain]: ChainId } = {
   [Chain.Ethereum]: ChainId.MAINNET,
   [Chain.EthereumGoerli]: ChainId.GOERLI,
@@ -125,6 +124,7 @@ export const CHAIN_NAME_TO_CHAIN_ID: { [key in Chain]: ChainId } = {
   [Chain.Arbitrum]: ChainId.ARBITRUM_ONE,
   [Chain.UnknownChain]: ChainId.MAINNET,
   [Chain.Bnb]: ChainId.BNB,
+  [Chain.Avalanche]: ChainId.AVALANCHE,
 }
 
 export function fromGraphQLChain(chain: Chain): ChainId {
@@ -132,7 +132,7 @@ export function fromGraphQLChain(chain: Chain): ChainId {
 }
 
 export const BACKEND_CHAIN_NAMES = [Chain.Ethereum, Chain.Polygon, Chain.Optimism, Chain.Arbitrum, Chain.Celo] as const
-export const BACKEND_UNSUPPORTED_CHAIN_IDS = [ChainId.BNB, ChainId.AVALANCHE] as const
+export const BACKEND_UNSUPPORTED_CHAIN_IDS = [ChainId.BNB] as const
 
 export function getTokenDetailsURL({
   address,
