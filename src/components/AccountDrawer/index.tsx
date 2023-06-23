@@ -197,6 +197,7 @@ function AccountDrawer() {
       if (state.movement[1] < 0) {
         setDragStartTop(false)
         scrollRef.current?.setAttribute('overflow', 'auto')
+        scrollRef.current?.scrollTo({ top: 0, behavior: 'smooth' })
       } else if (
         (state.movement[1] > 300 || (state.velocity > 3 && state.direction[1] > 0)) &&
         walletDrawerOpen &&
@@ -213,7 +214,7 @@ function AccountDrawer() {
     },
     // set dragStartTop to true if the user starts dragging from the top of the drawer
     onDragStart: (state) => {
-      if (scrollRef.current?.scrollTop === 0) {
+      if (scrollRef.current?.scrollTop && scrollRef.current?.scrollTop < 10) {
         setDragStartTop(true)
         scrollRef.current?.setAttribute('overflow', 'hidden')
       } else {
