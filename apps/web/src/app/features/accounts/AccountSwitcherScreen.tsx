@@ -8,11 +8,9 @@ import {
 } from 'src/app/features/accounts/createAndActivateAccountSaga'
 import { useAppDispatch } from 'src/background/store'
 import { useSagaStatus } from 'src/background/utils/useSagaStatus'
-import { ScrollView, Text, XStack, YStack } from 'ui/src'
-import XIcon from 'ui/src/assets/icons/x.svg'
+import { Icons, ScrollView, Text, XStack, YStack } from 'ui/src'
 import { Flex } from 'ui/src/components/layout/Flex'
 import { adjustColor, useUniconColors } from 'ui/src/components/Unicon/utils'
-import { colorsDark } from 'ui/src/theme/color'
 import { iconSizes } from 'ui/src/theme/iconSizes'
 import { useAccounts, useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 import { activateAccount } from 'wallet/src/features/wallet/slice'
@@ -62,22 +60,14 @@ export function AccountSwitcherScreen(): JSX.Element {
         paddingHorizontal="$spacing12"
         paddingTop="$spacing16">
         <Flex onPress={onClose}>
-          <XIcon
-            color={colorsDark.textSecondary}
-            height={iconSizes.icon20}
-            width={iconSizes.icon20}
-          />
+          <Icons.X color="$textSecondary" height={iconSizes.icon20} width={iconSizes.icon20} />
         </Flex>
         <Flex alignItems="center" flexGrow={1}>
           <Text variant="bodyLarge">Your wallets</Text>
         </Flex>
         {/* have an invisible X component so the title is center aligned. */}
         <Flex opacity={0}>
-          <XIcon
-            color={colorsDark.textSecondary}
-            height={iconSizes.icon20}
-            width={iconSizes.icon20}
-          />
+          <Icons.X height={iconSizes.icon20} width={iconSizes.icon20} />
         </Flex>
       </XStack>
 

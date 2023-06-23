@@ -13,7 +13,6 @@ import { Stack, XStack } from 'tamagui'
 import { Text, YStack } from 'ui/src'
 import { Button } from 'ui/src/components/button/Button'
 import { Flex } from 'ui/src/components/layout/Flex'
-import { colorsDark } from 'ui/src/theme/color'
 import { usePendingAccounts } from 'wallet/src/features/wallet/hooks'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 
@@ -76,10 +75,10 @@ export function ViewMnemonic(): JSX.Element {
     <Stack alignItems="center" minWidth={ONBOARDING_CONTENT_WIDTH}>
       {createdAddress ? <UniconWithLockIcon address={createdAddress} /> : null}
       <Text variant="headlineSmall">Write down your recovery phrase</Text>
-      <Text color={colorsDark.textTertiary} variant="bodySmall">
+      <Text color="$textTertiary" variant="bodySmall">
         This is the only way you can restore your wallet.
       </Text>
-      <Text color={colorsDark.accentCritical} variant="bodySmall">
+      <Text color="$accentCritical" variant="bodySmall">
         Do not view or share with anyone
       </Text>
       <Flex margin="$spacing16" onHoverOut={(): void => setShowPhrase(false)}>
@@ -127,7 +126,7 @@ function SeedPhraseRow({
           key={index}
           alignContent="center"
           alignItems="center"
-          backgroundColor={colorsDark.background2}
+          backgroundColor="$background2"
           borderRadius="$spacing16"
           gap="$spacing16"
           height={48}

@@ -67,6 +67,7 @@ export function AccountItem({
                 {sanitizeAddressText(shortenAddress(address))}
               </Text>
               <Flex onPress={copyAddress}>
+                {/* TODO convert icon and remove dark mode color hardcoding */}
                 <CopyIcon
                   color={colorsDark.textSecondary}
                   height={iconSizes.icon12}

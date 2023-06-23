@@ -1,7 +1,6 @@
 import { Icons } from 'ui/src'
 import { Flex } from 'ui/src/components/layout/Flex'
 import { Unicon } from 'ui/src/components/Unicon'
-import { colorsDark } from 'ui/src/theme/color'
 import { iconSizes } from 'ui/src/theme/iconSizes'
 
 export function UniconWithLockIcon({ address }: { address: Address }): JSX.Element {
@@ -15,7 +14,7 @@ export function UniconWithLockIcon({ address }: { address: Address }): JSX.Eleme
         padding="$spacing8"
         position="absolute"
         right={-4}>
-        <Icons.FileListLock color={colorsDark.magentaVibrant} size={iconSizes.icon16} />
+        <Icons.FileListLock color="$magentaVibrant" size={iconSizes.icon16} />
       </Flex>
     </Flex>
   )

@@ -1,5 +1,5 @@
 import { memo } from 'react'
-import { Path, Svg } from 'react-native-svg'
+import { Icons } from 'ui/src'
 import { Flex } from 'ui/src/components/layout/Flex'
 
 type Props = {
@@ -41,15 +41,7 @@ function _Chevron({
       justifyContent="center"
       rotate={degree}
       {...rest}>
-      <Svg fill="none" height={height} viewBox="0 0 26 24" width={width}>
-        <Path
-          d="M15 6L9 12L15 18"
-          stroke={color || '#000000'}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="3"
-        />
-      </Svg>
+      <Icons.ChevronLeft color={color} height={height} width={width} />
     </Flex>
   )
 }

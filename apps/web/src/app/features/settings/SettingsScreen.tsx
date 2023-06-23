@@ -5,11 +5,8 @@ import { BackButtonHeader } from 'src/app/features/settings/BackButtonHeader'
 import { SettingsRoutes } from 'src/app/navigation/constants'
 import { useExtensionNavigation } from 'src/app/navigation/utils'
 import { useAppDispatch, useAppSelector } from 'src/background/store'
-import { ListItem, ScrollView, Text, YGroup, YStack } from 'ui/src'
-import HelpCenterIcon from 'ui/src/assets/icons/help-center.svg'
-import RecoveryPhraseIcon from 'ui/src/assets/icons/view-phrase.svg'
+import { Icons, ListItem, ScrollView, Text, YGroup, YStack } from 'ui/src'
 import { Button } from 'ui/src/components/button/Button'
-import { colorsDark } from 'ui/src/theme/color'
 import { iconSizes } from 'ui/src/theme/iconSizes'
 import { authActions } from 'wallet/src/features/auth/saga'
 import { AuthActionType } from 'wallet/src/features/auth/types'
@@ -51,7 +48,7 @@ export function SettingsScreen(): JSX.Element {
           ))}
         {showAllWalletsButton ? (
           <Button
-            backgroundColor={colorsDark.textOnDimPrimary}
+            backgroundColor="$textOnDimPrimary"
             borderRadius="$roundedFull"
             padding="$spacing4"
             onPress={(): void => setShowAll(!showAll)}>
@@ -67,8 +64,8 @@ export function SettingsScreen(): JSX.Element {
               hoverTheme
               flexShrink={1}
               iconAfter={
-                <RecoveryPhraseIcon
-                  color={colorsDark.textSecondary}
+                <Icons.FileListLock
+                  color="$textSecondary"
                   height={iconSizes.icon20}
                   width={iconSizes.icon20}
                 />
@@ -84,8 +81,8 @@ export function SettingsScreen(): JSX.Element {
               hoverTheme
               flexShrink={1}
               iconAfter={
-                <HelpCenterIcon
-                  color={colorsDark.textSecondary}
+                <Icons.HelpCenter
+                  color="$textSecondary"
                   height={iconSizes.icon20}
                   width={iconSizes.icon20}
                 />

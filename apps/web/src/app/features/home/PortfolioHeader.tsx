@@ -3,15 +3,12 @@ import { useNavigate } from 'react-router-dom'
 import { SwitchNetworksModal } from 'src/app/features/home/SwitchNetworksModal'
 import { AppRoutes } from 'src/app/navigation/constants'
 import { useDappContext } from 'src/background/features/dapp/hooks'
-import { Popover, XStack } from 'ui/src'
-import GlobeIcon from 'ui/src/assets/icons/globe.svg'
-import SettingsIcon from 'ui/src/assets/icons/settings.svg'
+import { Icons, Popover, XStack } from 'ui/src'
 import { LinkButton } from 'ui/src/components/button/Button'
 import { Chevron } from 'ui/src/components/icons/Chevron'
 import { Flex } from 'ui/src/components/layout/Flex'
 import { Text } from 'ui/src/components/text/Text'
 import { Unicon } from 'ui/src/components/Unicon'
-import { colorsDark } from 'ui/src/theme/color'
 import { iconSizes } from 'ui/src/theme/iconSizes'
 import { sanitizeAddressText, shortenAddress } from 'wallet/src/utils/addresses'
 
@@ -42,7 +39,7 @@ export function PortfolioHeader({ address }: PortfolioHeaderProps): JSX.Element 
         <Unicon address={address} size={iconSizes.icon36} />
         <Text variant="subheadSmall">{sanitizeAddressText(shortenAddress(address))}</Text>
         <Chevron
-          color={colorsDark.textSecondary}
+          color="$textSecondary"
           direction="s"
           height={iconSizes.icon20}
           width={iconSizes.icon20}
@@ -53,10 +50,10 @@ export function PortfolioHeader({ address }: PortfolioHeaderProps): JSX.Element 
           <Popover>
             <Popover.Trigger
               onTouchEnd={(): void => setUpdateConnectionStatus(!updateConnectionStatus)}>
-              <GlobeIcon
-                color={colorsDark.textSecondary}
-                height={iconSizes.icon24}
-                width={iconSizes.icon24}
+              <Icons.Globe
+                color="$textSecondary"
+                height={iconSizes.icon20}
+                width={iconSizes.icon20}
               />
             </Popover.Trigger>
             <Popover.Content borderRadius="$rounded12">
@@ -66,8 +63,8 @@ export function PortfolioHeader({ address }: PortfolioHeaderProps): JSX.Element 
         ) : null}
         <LinkButton
           icon={
-            <SettingsIcon
-              color={colorsDark.textSecondary}
+            <Icons.Settings
+              color="$textSecondary"
               height={iconSizes.icon24}
               width={iconSizes.icon24}
             />
