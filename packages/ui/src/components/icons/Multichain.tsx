@@ -1,9 +1,9 @@
 import type { IconProps } from '@tamagui/helpers-icon'
-import React, { memo } from 'react'
+import { forwardRef, memo } from 'react'
 import { Path, Svg } from 'react-native-svg'
 import { getTokenValue, useTheme } from 'tamagui'
 
-const Icon: React.FC<IconProps> = (props) => {
+const Icon = forwardRef<Svg, IconProps>((props, ref) => {
   // isWeb currentColor to maintain backwards compat a bit better, on native uses theme color
   const {
     color: colorProp = '#FC72FF',
@@ -18,7 +18,9 @@ const Icon: React.FC<IconProps> = (props) => {
   const strokeWidth =
     typeof strokeWidthProp === 'string' ? getTokenValue(strokeWidthProp, 'size') : strokeWidthProp
 
-  const color = colorProp ?? theme.color.get()
+  const color =
+    // @ts-expect-error its fine to access colorProp undefined
+    theme[colorProp]?.get() ?? colorProp ?? theme.color.get()
 
   const svgProps = {
     ...restProps,
@@ -28,7 +30,7 @@ const Icon: React.FC<IconProps> = (props) => {
   }
 
   return (
-    <Svg fill="none" height={size} viewBox="0 0 22 21" width={size} {...svgProps}>
+    <Svg ref={ref} fill="none" height={size} viewBox="0 0 22 21" width={size} {...svgProps}>
       <Path
         d="M13.5906 13.7387C13.4248 13.7387 13.259 13.6756 13.1329 13.5487L8.40881 8.82463L3.68472 13.5487C3.43167 13.8017 3.02144 13.8017 2.7684 13.5487C2.51535 13.2956 2.51535 12.8854 2.7684 12.6323L7.95022 7.45053C8.20326 7.19748 8.61349 7.19748 8.86654 7.45053L13.5906 12.1746L18.3147 7.45053C18.5678 7.19748 18.978 7.19748 19.231 7.45053C19.4841 7.70357 19.4841 8.11383 19.231 8.36687L14.0492 13.5487C13.9223 13.6756 13.7564 13.7387 13.5906 13.7387Z"
         fill={color ?? '#FC72FF'}
@@ -52,7 +54,7 @@ const Icon: React.FC<IconProps> = (props) => {
       />
     </Svg>
   )
-}
+})
 
 Icon.displayName = 'Multichain'
 

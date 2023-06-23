@@ -122,7 +122,7 @@ async function run(): Promise<void> {
       const defaultFill = foundFills[1]
 
       let element = `
-import React, { memo } from 'react'
+import React, { memo, forwardRef } from 'react'
 import PropTypes from 'prop-types'
 import type { IconProps } from '@tamagui/helpers-icon'
 import { useTheme, isWeb, getTokenValue } from 'tamagui'
@@ -146,7 +146,7 @@ import {
 } from 'react-native-svg'
 import { themed } from '@tamagui/helpers-icon'
 
-const Icon: React.FC<IconProps> = (props) => {
+const Icon = forwardRef<Svg, IconProps>((props, ref) => {
   // isWeb currentColor to maintain backwards compat a bit better, on native uses theme color
   const {
     color: colorProp = ${defaultFill ? `'${defaultFill}'` : `isWeb ? 'currentColor' : undefined`},
@@ -163,7 +163,10 @@ const Icon: React.FC<IconProps> = (props) => {
       ? getTokenValue(strokeWidthProp, 'size')
       : strokeWidthProp
 
-  const color = colorProp ?? theme.color.get()
+  const color = 
+    // @ts-expect-error its fine to access colorProp undefined
+    theme[colorProp]?.get() 
+    ?? colorProp ?? theme.color.get()
 
   const svgProps = {
     ...restProps,
@@ -173,9 +176,11 @@ const Icon: React.FC<IconProps> = (props) => {
   }
 
   return (
-    ${parsedSvgToReact.replace('otherProps="..."', '{...svgProps}')}
+    ${parsedSvgToReact
+      .replace(`<Svg `, `<Svg ref={ref} `)
+      .replace('otherProps="..."', '{...svgProps}')}
   )
-}
+})
 
 Icon.displayName = '${cname}'
 

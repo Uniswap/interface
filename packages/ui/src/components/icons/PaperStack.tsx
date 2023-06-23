@@ -1,9 +1,9 @@
 import type { IconProps } from '@tamagui/helpers-icon'
-import React, { memo } from 'react'
+import { forwardRef, memo } from 'react'
 import { Path, Svg } from 'react-native-svg'
 import { getTokenValue, isWeb, useTheme } from 'tamagui'
 
-const Icon: React.FC<IconProps> = (props) => {
+const Icon = forwardRef<Svg, IconProps>((props, ref) => {
   // isWeb currentColor to maintain backwards compat a bit better, on native uses theme color
   const {
     color: colorProp = isWeb ? 'currentColor' : undefined,
@@ -18,7 +18,9 @@ const Icon: React.FC<IconProps> = (props) => {
   const strokeWidth =
     typeof strokeWidthProp === 'string' ? getTokenValue(strokeWidthProp, 'size') : strokeWidthProp
 
-  const color = colorProp ?? theme.color.get()
+  const color =
+    // @ts-expect-error its fine to access colorProp undefined
+    theme[colorProp]?.get() ?? colorProp ?? theme.color.get()
 
   const svgProps = {
     ...restProps,
@@ -28,7 +30,7 @@ const Icon: React.FC<IconProps> = (props) => {
   }
 
   return (
-    <Svg fill="none" height={size} viewBox="0 0 14 14" width={size} {...svgProps}>
+    <Svg ref={ref} fill="none" height={size} viewBox="0 0 14 14" width={size} {...svgProps}>
       <Path
         d="M5.29469 10.272C3.83536 10.0146 3.23479 9.15664 3.49212 7.69731L4.38747 2.62L4.3847 2.61597L1.85882 3.06067C0.399486 3.32 -0.200644 4.1793 0.058689 5.63863L1.0888 11.476C1.3408 12.9353 2.2001 13.5353 3.65944 13.276L8.03737 12.5053C9.05937 12.32 9.66751 11.8387 9.83017 11.068L9.82545 11.06C9.77345 11.0526 9.72678 11.0527 9.67278 11.0433L5.29469 10.272Z"
         fill={color}
@@ -42,7 +44,7 @@ const Icon: React.FC<IconProps> = (props) => {
       />
     </Svg>
   )
-}
+})
 
 Icon.displayName = 'PaperStack'
 

@@ -1,9 +1,9 @@
 import type { IconProps } from '@tamagui/helpers-icon'
-import React, { memo } from 'react'
+import { forwardRef, memo } from 'react'
 import { Path, Svg } from 'react-native-svg'
 import { getTokenValue, isWeb, useTheme } from 'tamagui'
 
-const Icon: React.FC<IconProps> = (props) => {
+const Icon = forwardRef<Svg, IconProps>((props, ref) => {
   // isWeb currentColor to maintain backwards compat a bit better, on native uses theme color
   const {
     color: colorProp = isWeb ? 'currentColor' : undefined,
@@ -18,7 +18,9 @@ const Icon: React.FC<IconProps> = (props) => {
   const strokeWidth =
     typeof strokeWidthProp === 'string' ? getTokenValue(strokeWidthProp, 'size') : strokeWidthProp
 
-  const color = colorProp ?? theme.color.get()
+  const color =
+    // @ts-expect-error its fine to access colorProp undefined
+    theme[colorProp]?.get() ?? colorProp ?? theme.color.get()
 
   const svgProps = {
     ...restProps,
@@ -28,7 +30,7 @@ const Icon: React.FC<IconProps> = (props) => {
   }
 
   return (
-    <Svg fill="none" height={size} viewBox="0 0 21 20" width={size} {...svgProps}>
+    <Svg ref={ref} fill="none" height={size} viewBox="0 0 21 20" width={size} {...svgProps}>
       <Path
         d="M6.33221 1H3.33221C2.80178 1 2.29307 1.21071 1.918 1.58579C1.54293 1.96086 1.33221 2.46957 1.33221 3V6M19.3322 6V3C19.3322 2.46957 19.1215 1.96086 18.7464 1.58579C18.3714 1.21071 17.8626 1 17.3322 1H14.3322M14.3322 19H17.3322C17.8626 19 18.3714 18.7893 18.7464 18.4142C19.1215 18.0391 19.3322 17.5304 19.3322 17V14M1.33221 14V17C1.33221 17.5304 1.54293 18.0391 1.918 18.4142C2.29307 18.7893 2.80178 19 3.33221 19H6.33221"
         stroke={color}
@@ -54,7 +56,7 @@ const Icon: React.FC<IconProps> = (props) => {
       />
     </Svg>
   )
-}
+})
 
 Icon.displayName = 'ScanReceive'
 
