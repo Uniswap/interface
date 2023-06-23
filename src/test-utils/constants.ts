@@ -86,6 +86,8 @@ export const TEST_DUTCH_TRADE = new DutchOrderTrade({
   quoteId: '0x0000000',
   needsWrap: false,
   classicGasUseEstimateUSD: '7.87',
+  auctionPeriodSecs: 120,
+  deadlineBufferSecs: 30,
 })
 
 export const TEST_DUTCH_TRADE_ETH_INPUT = new DutchOrderTrade({
@@ -120,4 +122,6 @@ export const TEST_DUTCH_TRADE_ETH_INPUT = new DutchOrderTrade({
   quoteId: '0x0000000',
   needsWrap: true,
   classicGasUseEstimateUSD: '7.87',
+  auctionPeriodSecs: 120,
+  deadlineBufferSecs: 30,
 })
