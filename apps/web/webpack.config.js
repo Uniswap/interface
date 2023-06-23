@@ -1,7 +1,6 @@
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const { ProgressPlugin, ProvidePlugin, DefinePlugin } = require('webpack')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
-const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const path = require('path')
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin')
@@ -122,13 +121,12 @@ const {
       },
       devtool: 'cheap-module-source-map',
       plugins: [
-        new ForkTsCheckerWebpackPlugin(),
         new ReactRefreshWebpackPlugin(),
       ],
     }
   : {
       dir: 'build',
-      plugins: [new ForkTsCheckerWebpackPlugin()],
+      plugins: [],
     }
 
 const options = {
