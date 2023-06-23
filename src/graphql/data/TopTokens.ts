@@ -5,7 +5,6 @@ import {
   sortMethodAtom,
   TokenSortMethod,
 } from 'components/Tokens/state'
-import { SupportedChainId } from 'constants/chains'
 import gql from 'graphql-tag'
 import { useAtomValue } from 'jotai/utils'
 import { useMemo } from 'react'
@@ -17,7 +16,7 @@ import {
   useTopTokensSparklineQuery,
 } from './__generated__/types-and-hooks'
 import {
-  CHAIN_NAME_TO_CHAIN_ID,
+  fromGraphQLChain,
   isPricePoint,
   PollingInterval,
   PricePoint,
@@ -148,7 +147,7 @@ interface UseTopTokensReturnValue {
 }
 
 export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
-  const chainId = CHAIN_NAME_TO_CHAIN_ID[chain] ?? SupportedChainId.MAINNET
+  const chainId = fromGraphQLChain(chain)
   const duration = toHistoryDuration(useAtomValue(filterTimeAtom))
 
   const { data: sparklineQuery } = usePollQueryWhileMounted(

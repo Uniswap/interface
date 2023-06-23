@@ -1,10 +1,9 @@
-import { SupportedChainId } from 'constants/chains'
 import { DEFAULT_ERC20_DECIMALS } from 'constants/tokens'
 import gql from 'graphql-tag'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 
 import { TokenQuery } from './__generated__/types-and-hooks'
-import { CHAIN_NAME_TO_CHAIN_ID } from './util'
+import { fromGraphQLChain } from './util'
 
 // The difference between Token and TokenProject:
 // Token: an on-chain entity referring to a contract (e.g. uni token on ethereum 0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984)
@@ -72,7 +71,7 @@ export type TokenQueryData = TokenQuery['token']
 export class QueryToken extends WrappedTokenInfo {
   constructor(address: string, data: NonNullable<TokenQueryData>, logoSrc?: string) {
     super({
-      chainId: CHAIN_NAME_TO_CHAIN_ID[data.chain] ?? SupportedChainId.MAINNET,
+      chainId: fromGraphQLChain(data.chain),
       address,
       decimals: data.decimals ?? DEFAULT_ERC20_DECIMALS,
       symbol: data.symbol ?? '',
