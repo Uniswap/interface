@@ -79,6 +79,7 @@ export interface ApproveTransactionInfo extends BaseTransactionInfo {
   type: TransactionType.APPROVAL
   tokenAddress: string
   spender: string
+  amount: string
 }
 
 interface BaseSwapTransactionInfo extends BaseTransactionInfo {
@@ -203,6 +204,7 @@ export interface TransactionDetails {
   lastCheckedBlockNumber?: number
   addedTime: number
   confirmedTime?: number
+  deadline?: number
   from: string
   info: TransactionInfo
   nonce?: number

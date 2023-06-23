@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { Percent } from '@uniswap/sdk-core'
+import { useWeb3React } from '@web3-react/core'
 import { ReactNode } from 'react'
 import { ArrowLeft } from 'react-feather'
 import { Link as HistoryLink, useLocation } from 'react-router-dom'
@@ -68,6 +69,7 @@ export function AddRemoveTabs({
   showBackLink?: boolean
   children?: ReactNode
 }) {
+  const { chainId } = useWeb3React()
   const theme = useTheme()
   // reset states on back
   const dispatch = useAppDispatch()
@@ -108,7 +110,7 @@ export function AddRemoveTabs({
           )}
         </ThemedText.DeprecatedMediumHeader>
         <Box style={{ marginRight: '.5rem' }}>{children}</Box>
-        <SettingsTab autoSlippage={autoSlippage} />
+        <SettingsTab autoSlippage={autoSlippage} chainId={chainId} />
       </RowBetween>
     </Tabs>
   )

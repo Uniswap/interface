@@ -1,5 +1,6 @@
 // @ts-ignore
 import TokenListJSON from '@uniswap/default-token-list'
+import { CyHttpMessages } from 'cypress/types/net-stubbing'
 
 beforeEach(() => {
   // Many API calls enforce that requests come from our app, so we must mock Origin and Referer.
@@ -15,6 +16,9 @@ beforeEach(() => {
     req.alias = req.body.method
     req.continue()
   })
+
+  // Log requests to hardhat.
+  cy.intercept(/:8545/, logJsonRpc)
 
   // Mock analytics responses to avoid analytics in tests.
   cy.intercept('https://api.uniswap.org/v1/amplitude-proxy', (req) => {
@@ -39,3 +43,21 @@ beforeEach(() => {
   // This resets the fork, as well as options like automine.
   cy.hardhat().then((hardhat) => hardhat.reset())
 })
+
+function logJsonRpc(req: CyHttpMessages.IncomingHttpRequest) {
+  req.alias = req.body.method
+  const log = Cypress.log({
+    autoEnd: false,
+    name: req.body.method,
+    message: req.body.params?.map((param: unknown) =>
+      typeof param === 'object' ? '{...}' : param?.toString().substring(0, 10)
+    ),
+  })
+  req.on('after:response', (res) => {
+    if (res.statusCode === 200) {
+      log.end()
+    } else {
+      log.error(new Error(`${res.statusCode}: ${res.statusMessage}`))
+    }
+  })
+}

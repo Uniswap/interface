@@ -56,7 +56,7 @@ function useTryActivation() {
           return
         }
 
-        // TODO(WEB-3162): re-add special treatment for already-pending injected errors & move debug to after didUserReject() check
+        // TODO(WEB-1859): re-add special treatment for already-pending injected errors & move debug to after didUserReject() check
         console.debug(`Connection failed: ${connection.getName()}`)
         console.error(error)
 

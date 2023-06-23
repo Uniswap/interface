@@ -1,5 +1,5 @@
 // eslint-disable-next-line no-restricted-imports
-import { t, Trans } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 import { sendAnalyticsEvent, Trace, TraceEvent, useTrace } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName, InterfaceSectionName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
@@ -102,7 +102,7 @@ export const SearchBar = () => {
     ...trace,
   }
   const placeholderText = useMemo(() => {
-    return isMobileOrTablet ? t`Search` : t`Search tokens and NFT collections`
+    return isMobileOrTablet ? `Search` : `Search tokens and NFT collections`
   }, [isMobileOrTablet])
 
   const handleKeyPress = useCallback(
@@ -134,11 +134,17 @@ export const SearchBar = () => {
     <Trace section={InterfaceSectionName.NAVBAR_SEARCH}>
       <Column
         data-cy="search-bar"
-        position={{ sm: 'fixed', md: 'absolute', xl: 'relative' }}
+        position={{ sm: 'fixed', md: 'absolute' }}
         width={{ sm: isOpen ? 'viewWidth' : 'auto', md: 'auto' }}
         ref={searchRef}
-        className={styles.searchBarContainerNft}
+        className={clsx(styles.searchBarContainerNft, {
+          searchBarContainerDisableBlur: isNavSearchInputVisible,
+        })}
         display={{ sm: isOpen ? 'flex' : 'none', xl: 'flex' }}
+        {...(isNavSearchInputVisible && {
+          position: 'relative',
+          display: 'flex',
+        })}
       >
         <Row
           className={clsx(

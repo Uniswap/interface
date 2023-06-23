@@ -1,7 +1,9 @@
 import { BaseVariant, FeatureFlag, featureFlagSettings, useUpdateFlag } from 'featureFlags'
 import { DetailsV2Variant, useDetailsV2Flag } from 'featureFlags/flags/nftDetails'
+import { useRoutingAPIForPriceFlag } from 'featureFlags/flags/priceRoutingApi'
 import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
-import { UnifiedRouterVariant, useUnifiedRoutingAPIFlag } from 'featureFlags/flags/unifiedRouter'
+import { UnifiedRouterVariant, useRoutingAPIV2Flag } from 'featureFlags/flags/unifiedRouter'
+import { useWalletConnectV2Flag } from 'featureFlags/flags/walletConnectV2'
 import { useUpdateAtom } from 'jotai/utils'
 import { Children, PropsWithChildren, ReactElement, ReactNode, useCallback, useState } from 'react'
 import { X } from 'react-feather'
@@ -210,9 +212,21 @@ export default function FeatureFlagModal() {
       />
       <FeatureFlagOption
         variant={UnifiedRouterVariant}
-        value={useUnifiedRoutingAPIFlag()}
+        value={useRoutingAPIV2Flag()}
         featureFlag={FeatureFlag.uraEnabled}
         label="Enable the Unified Routing API"
+      />
+      <FeatureFlagOption
+        variant={BaseVariant}
+        value={useRoutingAPIForPriceFlag()}
+        featureFlag={FeatureFlag.routingAPIPrice}
+        label="Use the URA or routing-api for price fetches"
+      />
+      <FeatureFlagOption
+        variant={BaseVariant}
+        value={useWalletConnectV2Flag()}
+        featureFlag={FeatureFlag.walletConnectV2}
+        label="Uses WalletConnect V2 as default wallet connect connection"
       />
       <FeatureFlagGroup name="Debug">
         <FeatureFlagOption
