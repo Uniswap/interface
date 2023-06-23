@@ -204,15 +204,12 @@ function AccountDrawer() {
         toggleWalletDrawer()
       } else if (walletDrawerOpen && dragStartTop && state.movement[1] > 0) {
         setYPosition(state.movement[1])
-        scrollRef.current?.scrollTo({ top: state.movement[1], behavior: 'smooth' })
+        scrollRef.current?.scrollTo({ top: 0 })
       }
     },
     // reset the yPosition when the user stops dragging
     onDragEnd: (state) => {
       setYPosition(0)
-      if (!setDragStartTop) {
-        scrollRef.current?.scrollTo({ top: 0, behavior: 'smooth' })
-      }
     },
     // set dragStartTop to true if the user starts dragging from the top of the drawer
     onDragStart: (state) => {
@@ -240,9 +237,6 @@ function AccountDrawer() {
       <Scrim onClick={toggleWalletDrawer} open={walletDrawerOpen} />
       <AccountDrawerWrapper
         open={walletDrawerOpen}
-        onScroll={(e) => {
-          console.log(e)
-        }}
         {...(isMobile
           ? {
               ...bind(),
