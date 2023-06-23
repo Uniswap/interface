@@ -22,7 +22,7 @@ import { BREAKPOINTS } from 'theme'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { TRANSITION_DURATIONS } from 'theme/styles'
 import { Z_INDEX } from 'theme/zIndex'
-import { getDownloadAppLink, openDownloadApp } from 'utils/openDownloadApp'
+import { getDownloadAppLinkProps } from 'utils/openDownloadApp'
 
 const PageContainer = styled.div`
   position: absolute;
@@ -386,12 +386,10 @@ export default function Landing() {
               </LearnMoreContainer>
 
               <DownloadWalletLink
-                href={getDownloadAppLink(downloadLinkOptions)}
-                onClick={(e) => {
-                  // prevent and run command to send analytics events, but keep href for browsers to show right link
-                  e.preventDefault()
-                  openDownloadApp(undefined, downloadLinkOptions)
-                }}
+                {...getDownloadAppLinkProps({
+                  microSiteParams: `utm_source=home_page&utm_medium=webapp&utm_campaign=wallet_microsite&utm_id=1`,
+                  appStoreParams: `ct=Uniswap-Home-Page&mt=8`,
+                })}
               >
                 <AppleLogo width="20" height="20" />
                 Download the Uniswap Wallet for iOS
@@ -420,11 +418,6 @@ export default function Landing() {
       </PageContainer>
     </Trace>
   )
-}
-
-const downloadLinkOptions = {
-  microSiteParams: `?utm_source=home_page&utm_medium=webapp&utm_campaign=wallet_microsite&utm_id=1`,
-  appStoreParams: `?ct=Uniswap-Home-Page&mt=8`,
 }
 
 const DownloadWalletLink = styled.a`

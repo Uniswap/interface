@@ -6,37 +6,64 @@ const APP_STORE_LINK = 'https://apps.apple.com/app/apple-store/id6443944476'
 const MICROSITE_LINK = 'https://wallet.uniswap.org/'
 
 type OpenDownloadAppOptions = {
+  element?: InterfaceElementName
   appStoreParams?: string
   microSiteParams?: string
-  analyticsEventName?: SharedEventName
 }
 
 const defaultDownloadAppOptions = {
-  appStoreParams: `?pt=123625782&ct=In-App-Banners&mt=8`,
-  analyticsEventName: SharedEventName.ELEMENT_CLICKED,
+  appStoreParams: `pt=123625782&ct=In-App-Banners&mt=8`,
 }
 
-export function openDownloadApp(
-  element?: InterfaceElementName,
-  options: OpenDownloadAppOptions = defaultDownloadAppOptions
-) {
-  sendAnalyticsEvent(options.analyticsEventName ?? SharedEventName.ELEMENT_CLICKED, { element })
-  const link = getDownloadAppLink(options)
+/**
+ * Note: openDownloadApp and getDownloadAppLink are equivalent functions, one just runs imperatively
+ * and adds an analytics event, where the other only returns a link. Typically you'll use both:
+ *
+ * <a href={getDownloadAppLink(options)} onClick={() => openDownloadApp(options)} />
+ *
+ * This way with JS disabled and when hovering the <a /> you see and nav to the full href properly,
+ * but with JS on it will send the analytics event before navigating to the href.
+ *
+ * I've added a helper `getDownloadAppLinkProps` that unifies this behavior into one thing.
+ */
+
+export function openDownloadApp(options: OpenDownloadAppOptions = defaultDownloadAppOptions) {
   if (isIOS) {
-    openAppStore(link)
+    openAppStore({ element: options?.element, params: options.appStoreParams })
   } else {
-    openWalletMicrosite(link)
+    openWalletMicrosite({ element: options?.element, params: options.appStoreParams })
   }
 }
 
-const openAppStore = (link: string) => {
-  window.open(link, /* target = */ 'uniswap_wallet_appstore')
+// if you need this by itself can add export, not used externally for now
+const getDownloadAppLink = (options: OpenDownloadAppOptions = defaultDownloadAppOptions) =>
+  isIOS
+    ? linkWithParams(APP_STORE_LINK, options?.appStoreParams)
+    : linkWithParams(MICROSITE_LINK, options?.microSiteParams)
+
+export const getDownloadAppLinkProps = (options: OpenDownloadAppOptions = defaultDownloadAppOptions) => {
+  return {
+    href: getDownloadAppLink(options),
+    onClick(e) {
+      e.preventDefault()
+      openDownloadApp(options)
+    },
+  }
 }
 
-export const openWalletMicrosite = (link = MICROSITE_LINK) => {
-  sendAnalyticsEvent(InterfaceEventName.UNISWAP_WALLET_MICROSITE_OPENED)
-  window.open(link, /* target = */ 'uniswap_wallet_microsite')
+type AnalyticsLinkOptions = {
+  element?: InterfaceElementName
+  params?: string
 }
 
-export const getDownloadAppLink = (options: OpenDownloadAppOptions = defaultDownloadAppOptions) =>
-  isIOS ? APP_STORE_LINK + (options.appStoreParams || '') : MICROSITE_LINK + (options.microSiteParams || '')
+const openAppStore = (options?: AnalyticsLinkOptions) => {
+  sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, { element: options?.element })
+  window.open(linkWithParams(APP_STORE_LINK, options?.params), /* target = */ 'uniswap_wallet_appstore')
+}
+
+export const openWalletMicrosite = (options?: AnalyticsLinkOptions) => {
+  sendAnalyticsEvent(InterfaceEventName.UNISWAP_WALLET_MICROSITE_OPENED, { element: options?.element })
+  window.open(linkWithParams(MICROSITE_LINK, options?.params), /* target = */ 'uniswap_wallet_microsite')
+}
+
+const linkWithParams = (link: string, params?: string) => link + (params ? `?${params}` : '')
