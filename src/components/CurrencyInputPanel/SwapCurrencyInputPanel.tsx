@@ -265,7 +265,7 @@ export default function SwapCurrencyInputPanel({
               $loading={loading}
             />
           )}
-          <PrefetchBalancesWrapper shouldFetchOnAccountUpdate={true}>
+          <PrefetchBalancesWrapper shouldFetchOnAccountUpdate={modalOpen}>
             <CurrencySelect
               disabled={!chainAllowed || disabled}
               visible={currency !== undefined}
