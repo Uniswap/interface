@@ -1,6 +1,6 @@
 import { TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
-import { useAccountDrawer } from 'components/AccountDrawer'
+import { useToggleAccountDrawer } from 'components/AccountDrawer'
 import Loader from 'components/Icons/LoadingSpinner'
 import { ActivationStatus, useActivationState } from 'connection/activate'
 import { Connection } from 'connection/types'
@@ -80,7 +80,7 @@ interface OptionProps {
 }
 export default function Option({ connection }: OptionProps) {
   const { activationState, tryActivation } = useActivationState()
-  const [, toggleAccountDrawerOpen] = useAccountDrawer()
+  const toggleAccountDrawerOpen = useToggleAccountDrawer()
   const activate = () => tryActivation(connection, toggleAccountDrawerOpen)
 
   const isSomeOptionPending = activationState.status === ActivationStatus.PENDING
