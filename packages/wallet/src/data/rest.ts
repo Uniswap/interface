@@ -23,7 +23,6 @@ export function useRestQuery<
       }
     }
   `
-
   const result = useQuery(document, { variables: { input: variables }, ...options })
 
   return useMemo(() => {

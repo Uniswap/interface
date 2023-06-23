@@ -11,7 +11,6 @@ import { routingApi } from 'src/features/routing/routingApi'
 import { telemetryReducer } from 'src/features/telemetry/slice'
 import { tokensReducer } from 'src/features/tokens/tokensSlice'
 import { transactionReducer } from 'src/features/transactions/slice'
-import { trmApi } from 'src/features/trm/api'
 import { walletConnectReducer } from 'src/features/walletConnect/walletConnectSlice'
 import { ensApi } from 'wallet/src/features/ens/api'
 import { sharedReducers } from 'wallet/src/state/reducer'
@@ -22,7 +21,6 @@ const reducers = {
   [ensApi.reducerPath]: ensApi.reducer,
   [fiatOnRampApi.reducerPath]: fiatOnRampApi.reducer,
   [routingApi.reducerPath]: routingApi.reducer,
-  [trmApi.reducerPath]: trmApi.reducer,
   appearanceSettings: appearanceSettingsReducer,
   biometricSettings: biometricSettingsReducer,
   cloudBackup: cloudBackupReducer,

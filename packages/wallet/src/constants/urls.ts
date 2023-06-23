@@ -4,10 +4,10 @@ export const uniswapUrls = {
   helpUrl: 'https://support.uniswap.org',
   apiBaseUrl: getUniswapApiBaseUrl(),
   appBaseUrl: 'https://uniswap.org/app',
-  gasServiceUrl: getUniswapGasServiceUrl(),
+  gasServicePath: getUniswapGasServicePath(),
   routingApiUrl: getUniswapRoutingApiUrl(),
   graphQLUrl: getUniswapGraphQLUrl(),
-  trmUrl: getUniswapTrmUrl(),
+  trmPath: getUniswapTrmPath(),
   amplitudeProxyUrl: getUniswapAmplitudeProxyUrl(),
   termsOfServiceUrl: 'https://uniswap.org/terms-of-service',
   privacyPolicyUrl: 'https://uniswap.org/privacy-policy',
@@ -22,16 +22,16 @@ function getUniswapRoutingApiUrl(): string {
   return `${config.uniswapApiBaseUrl}/v1`
 }
 
-function getUniswapGasServiceUrl(): string {
-  return `${config.uniswapApiBaseUrl}/v1/gas-fee`
+function getUniswapGasServicePath(): string {
+  return '/v1/gas-fee'
 }
 
 function getUniswapGraphQLUrl(): string {
   return `${config.uniswapApiBaseUrl}/v1/graphql`
 }
 
-function getUniswapTrmUrl(): string {
-  return `${config.uniswapApiBaseUrl}/v1/screen`
+function getUniswapTrmPath(): string {
+  return '/v1/screen'
 }
 
 function getUniswapAmplitudeProxyUrl(): string {

@@ -1,4 +1,4 @@
-import { useTrmQueryResult } from 'src/features/trm/api'
+import { useTrmQuery } from 'wallet/src/features/trm/api'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
 
@@ -9,11 +9,11 @@ interface IsBlockedResult {
 
 /** Returns TRM status for an address that has been passed in. */
 export function useIsBlocked(address?: string, isViewOnly = false): IsBlockedResult {
-  const { data, isLoading } = useTrmQueryResult(address, isViewOnly)
+  const { data, loading } = useTrmQuery(isViewOnly ? undefined : address)
 
   return {
     isBlocked: data?.block || false,
-    isBlockedLoading: isLoading,
+    isBlockedLoading: loading,
   }
 }
 

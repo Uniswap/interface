@@ -27,6 +27,7 @@
     "storage",
     "tabs"
   ],
+  "host_permissions": ["https://api.uniswap.org/*"],
   "content_scripts": [
     {
       "matches": [ "<all_urls>"],

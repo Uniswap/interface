@@ -34,7 +34,7 @@ export const getRestLink = (): ApolloLink => {
 
   return new RestLink({
     customFetch,
-    uri: uniswapUrls.apiBaseUrl,
+    uri: REST_API_URL,
     headers: {
       'Content-Type': 'application/json',
       'X-API-KEY': config.uniswapApiKey,

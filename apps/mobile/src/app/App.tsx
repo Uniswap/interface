@@ -27,14 +27,14 @@ import { initOneSignal } from 'src/features/notifications/Onesignal'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
 import { TransactionHistoryUpdater } from 'src/features/transactions/TransactionHistoryUpdater'
-import { useTrmPrefetch } from 'src/features/trm/api'
 import { DynamicThemeProvider } from 'src/theme/DynamicThemeProvider'
-import { useAppStateTrigger } from 'src/utils/useAppStateTrigger'
 import { getSentryEnvironment, getStatsigEnvironmentTier } from 'src/utils/version'
 import { StatsigProvider } from 'statsig-react-native'
 import { config } from 'wallet/src/config'
+import { useTrmQuery } from 'wallet/src/features/trm/api'
+import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { WalletContextProvider } from 'wallet/src/features/wallet/context'
-import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
+import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
 
 // Keep the splash screen visible while we fetch resources until one of our landing pages loads
 SplashScreen.preventAutoHideAsync()
@@ -148,26 +148,13 @@ function AppInner(): JSX.Element {
   return <NavStack isDarkMode={isDarkMode} />
 }
 
-const PREFETCH_OPTIONS = {
-  ifOlderThan: 60 * 15, // cache results for 15 minutes
-}
-
 function DataUpdaters(): JSX.Element {
-  const signerAccounts = useSignerAccounts()
-  const prefetchTrm = useTrmPrefetch()
-
-  const prefetchTrmData = useCallback(
-    () =>
-      signerAccounts.forEach((account) => {
-        prefetchTrm(account.address, PREFETCH_OPTIONS)
-      }),
-    [prefetchTrm, signerAccounts]
+  const activeAccount = useActiveAccount()
+  useTrmQuery(
+    activeAccount && activeAccount.type === AccountType.SignerMnemonic
+      ? activeAccount.address
+      : undefined
   )
-
-  // Prefetch TRM data on app start (either cold or warm)
-  useEffect(prefetchTrmData, [prefetchTrmData])
-  useAppStateTrigger('background', 'active', prefetchTrmData)
-  useAppStateTrigger('inactive', 'active', prefetchTrmData)
 
   return (
     <>

@@ -1,4 +1,5 @@
 import { providers } from 'ethers'
+import { uniswapUrls } from 'wallet/src/constants/urls'
 import { useRestQuery } from 'wallet/src/data/rest'
 import { getPollingIntervalByBlocktime } from 'wallet/src/features/chains/utils'
 import { GasFeeResponse } from 'wallet/src/features/gas/types'
@@ -8,7 +9,7 @@ export function useGasFeeQuery(
   skip?: boolean
 ): ReturnType<typeof useRestQuery<GasFeeResponse>> {
   return useRestQuery<GasFeeResponse, providers.TransactionRequest>(
-    '/v1/gas-fee',
+    uniswapUrls.gasServicePath,
     // type cast only necessary for typing. `skip` check below will skip query
     // if `tx` is undefined.
     tx as providers.TransactionRequest,

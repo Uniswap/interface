@@ -20,7 +20,6 @@ import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biomet
 import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { ElementName, MobileEventName, ModalName } from 'src/features/telemetry/constants'
 import { BlockedAddressWarning } from 'src/features/trm/BlockedAddressWarning'
-import { useIsBlocked } from 'src/features/trm/hooks'
 import { signWcRequestActions } from 'src/features/walletConnect/saga'
 import { selectDidOpenFromDeepLink } from 'src/features/walletConnect/selectors'
 import { rejectRequest, returnToPreviousApp } from 'src/features/walletConnect/WalletConnect'
@@ -37,6 +36,7 @@ import { useTransactionGasFee } from 'wallet/src/features/gas/hooks'
 import { GasSpeed } from 'wallet/src/features/gas/types'
 import { logger } from 'wallet/src/features/logger/logger'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
+import { useIsBlocked } from 'wallet/src/features/trm/hooks'
 import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
 import {
   EthMethod,

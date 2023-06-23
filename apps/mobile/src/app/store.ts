@@ -8,7 +8,6 @@ import { migrations } from 'src/app/migrations'
 import { fiatOnRampApi } from 'src/features/fiatOnRamp/api'
 import { importAccountSagaName } from 'src/features/import/importAccountSaga'
 import { routingApi } from 'src/features/routing/routingApi'
-import { trmApi } from 'src/features/trm/api'
 import { ensApi } from 'wallet/src/features/ens/api'
 import { logger } from 'wallet/src/features/logger/logger'
 import { createStore } from 'wallet/src/state'
@@ -83,7 +82,6 @@ const whitelist: Array<ReducerNames | RootReducerNames> = [
   'transactions',
   'wallet',
   ensApi.reducerPath,
-  trmApi.reducerPath,
 ]
 
 export const persistConfig = {
@@ -127,7 +125,6 @@ export const setupStore = (
       fiatOnRampApi.middleware,
       routingApi.middleware,
       rtkQueryErrorLogger,
-      trmApi.middleware,
       ...middlewares,
     ],
     enhancers: [sentryReduxEnhancer],
