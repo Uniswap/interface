@@ -197,7 +197,6 @@ function AccountDrawer() {
       if (state.movement[1] < 0) {
         setDragStartTop(false)
         scrollRef.current?.setAttribute('overflow', 'auto')
-        scrollRef.current?.scrollTo({ top: 0, behavior: 'smooth' })
       } else if (
         (state.movement[1] > 300 || (state.velocity > 3 && state.direction[1] > 0)) &&
         walletDrawerOpen &&
