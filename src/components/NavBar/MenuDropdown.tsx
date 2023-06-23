@@ -1,7 +1,7 @@
 import { t, Trans } from '@lingui/macro'
 import FeatureFlagModal from 'components/FeatureFlagModal/FeatureFlagModal'
+import { PaliMobileModal } from 'components/PaliMobile'
 import { PrivacyPolicyModal } from 'components/PrivacyPolicy'
-import { useMgtmEnabled } from 'featureFlags/flags/mgtm'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
@@ -95,6 +95,23 @@ const SecondaryLinkedText = ({
   )
 }
 
+const PaliButtonText = ({ href, onClick, children }: { href?: string; onClick?: () => void; children: ReactNode }) => {
+  return (
+    <Box
+      as="a"
+      href={href ?? undefined}
+      target={href ? '_blank' : undefined}
+      rel={href ? 'noopener noreferrer' : undefined}
+      className={styles.MenuRow}
+      style={{ cursor: 'pointer' }}
+      onClick={onClick}
+      cursor="pointer"
+    >
+      {children}
+    </Box>
+  )
+}
+
 const Separator = () => {
   return <Box className={styles.Separator} />
 }
@@ -103,7 +120,7 @@ const IconRow = ({ children }: { children: ReactNode }) => {
   return <Row className={styles.IconRow}>{children}</Row>
 }
 
-const Icon = ({ href, children }: { href?: string; children: ReactNode }) => {
+export const Icon = ({ href, children }: { href?: string; children: ReactNode }) => {
   return (
     <>
       <Box
@@ -131,10 +148,9 @@ export const MenuDropdown = () => {
   const [isOpen, toggleOpen] = useReducer((s) => !s, false)
   const togglePrivacyPolicy = useToggleModal(ApplicationModal.PRIVACY_POLICY)
   const openFeatureFlagsModal = useToggleModal(ApplicationModal.FEATURE_FLAGS)
+  const togglePaliMobile = useToggleModal(ApplicationModal.PALI_MOBILE)
   const ref = useRef<HTMLDivElement>(null)
   useOnClickOutside(ref, isOpen ? toggleOpen : undefined)
-
-  const mgtmEnabled = useMgtmEnabled()
 
   return (
     <>
@@ -167,18 +183,18 @@ export const MenuDropdown = () => {
                     </PrimaryMenuRow.Text>
                   </PrimaryMenuRow>
                 </Box>
-                <Box display={mgtmEnabled ? 'flex' : 'none'}>
-                  <PrimaryMenuRow close={toggleOpen}>
+                <PaliButtonText onClick={() => togglePaliMobile()}>
+                  <Box display="flex">
                     <Icon>
                       <PaliLogo width="24px" height="24px" />
                     </Icon>
                     <PrimaryMenuRow.Text>
                       <Trans>Download Pali Mobile Wallet</Trans>
                     </PrimaryMenuRow.Text>
-                  </PrimaryMenuRow>
-                </Box>
-                {/* TODO: review analytics */}
-                <PrimaryMenuRow href="https://info.uniswap.org/#/" disabled={true}>
+                  </Box>
+                </PaliButtonText>
+                {/* TODO: analytics link */}
+                <PrimaryMenuRow href="https://info.uniswap.org/#/">
                   <Icon>
                     <BarChartIcon width={24} height={24} color={theme.textPrimary} />
                   </Icon>
@@ -232,6 +248,7 @@ export const MenuDropdown = () => {
       </Box>
       <PrivacyPolicyModal />
       <FeatureFlagModal />
+      <PaliMobileModal />
     </>
   )
 }
