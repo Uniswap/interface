@@ -14,7 +14,6 @@ export enum FeatureFlag {
   debounceSwapQuote = 'debounce_swap_quote',
   nativeUsdcArbitrum = 'web_usdc_arbitrum',
   routingAPIPrice = 'routing_api_price',
-  walletConnectV2 = 'walletconnect_v2',
 }
 
 interface FeatureFlagsContextType {
