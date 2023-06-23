@@ -29,9 +29,9 @@ const defaultDownloadAppOptions = {
 
 export function openDownloadApp(options: OpenDownloadAppOptions = defaultDownloadAppOptions) {
   if (isIOS) {
-    openAppStore({ element: options?.element, params: options.appStoreParams })
+    openAppStore({ element: options?.element, urlParamString: options.appStoreParams })
   } else {
-    openWalletMicrosite({ element: options?.element, params: options.appStoreParams })
+    openWalletMicrosite({ element: options?.element, urlParamString: options.appStoreParams })
   }
 }
 
@@ -44,7 +44,7 @@ const getDownloadAppLink = (options: OpenDownloadAppOptions = defaultDownloadApp
 export const getDownloadAppLinkProps = (options: OpenDownloadAppOptions = defaultDownloadAppOptions) => {
   return {
     href: getDownloadAppLink(options),
-    onClick(e) {
+    onClick(e: MouseEvent) {
       e.preventDefault()
       openDownloadApp(options)
     },
@@ -53,17 +53,17 @@ export const getDownloadAppLinkProps = (options: OpenDownloadAppOptions = defaul
 
 type AnalyticsLinkOptions = {
   element?: InterfaceElementName
-  params?: string
+  urlParamString?: string
 }
 
 const openAppStore = (options?: AnalyticsLinkOptions) => {
   sendAnalyticsEvent(InterfaceEventName.UNISWAP_WALLET_APP_DOWNLOAD_OPENED, { element: options?.element })
-  window.open(linkWithParams(APP_STORE_LINK, options?.params), /* target = */ 'uniswap_wallet_appstore')
+  window.open(linkWithParams(APP_STORE_LINK, options?.urlParamString), /* target = */ 'uniswap_wallet_appstore')
 }
 
 export const openWalletMicrosite = (options?: AnalyticsLinkOptions) => {
   sendAnalyticsEvent(InterfaceEventName.UNISWAP_WALLET_MICROSITE_OPENED, { element: options?.element })
-  window.open(linkWithParams(MICROSITE_LINK, options?.params), /* target = */ 'uniswap_wallet_microsite')
+  window.open(linkWithParams(MICROSITE_LINK, options?.urlParamString), /* target = */ 'uniswap_wallet_microsite')
 }
 
 const linkWithParams = (link: string, params?: string) => link + (params ? `?${params}` : '')

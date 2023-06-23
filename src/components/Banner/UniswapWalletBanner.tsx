@@ -119,7 +119,11 @@ export default function UniswapWalletBanner() {
           <>
             <BannerButton
               backgroundColor="white"
-              onClick={() => openDownloadApp(InterfaceElementName.UNISWAP_WALLET_BANNER_DOWNLOAD_BUTTON)}
+              onClick={() =>
+                openDownloadApp({
+                  element: InterfaceElementName.UNISWAP_WALLET_BANNER_DOWNLOAD_BUTTON,
+                })
+              }
             >
               <AppleLogo width={14} height={14} />
               <ThemedText.LabelSmall color="black" marginLeft="5px">
