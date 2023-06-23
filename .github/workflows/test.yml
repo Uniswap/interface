@@ -186,7 +186,7 @@ jobs:
               sha: '${{ github.event.pull_request.head.sha || github.event.head_commit.sha }}',
               state: 'pending',
               context: 'Test / promotion',
-              description: 'Running tests…',
+              description: 'Running tests...',
               target_url: 'https://github.com/Uniswap/interface/actions/runs/${{ github.run_id }}',
             })
 
