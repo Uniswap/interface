@@ -17,7 +17,9 @@ export function SwapModal(): JSX.Element {
   return (
     <BottomSheetModal
       fullScreen
+      hideHandlebar
       hideKeyboardOnDismiss
+      renderBehindInset
       backgroundColor={theme.colors.background1}
       name={ModalName.Swap}
       onClose={onClose}>

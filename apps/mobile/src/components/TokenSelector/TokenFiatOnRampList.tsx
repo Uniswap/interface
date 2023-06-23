@@ -74,6 +74,37 @@ function useFiatOnRampTokenList(
   )
 }
 
+function TokenOptionItemWrapper({
+  currency,
+  onSelectCurrency,
+}: {
+  currency: FiatOnRampCurrency
+  onSelectCurrency: (currency: FiatOnRampCurrency) => void
+}): JSX.Element | null {
+  const { currencyInfo } = currency
+
+  const option = useMemo(
+    // we need to convert to TokenOption without quantity and balanceUSD
+    // to use in Token Selector
+    () => (currencyInfo ? { currencyInfo, quantity: 0, balanceUSD: 0 } : null),
+    [currencyInfo]
+  )
+  const onPress = useCallback(() => onSelectCurrency?.(currency), [currency, onSelectCurrency])
+
+  if (!option) {
+    return null
+  }
+
+  return (
+    <TokenOptionItem
+      option={option}
+      showNetworkPill={currencyInfo?.currency.chainId !== ChainId.Mainnet}
+      showWarnings={true}
+      onPress={onPress}
+    />
+  )
+}
+
 function _TokenFiatOnRampList({ onSelectCurrency, onBack }: Props): JSX.Element {
   const { t } = useTranslation()
 
@@ -90,17 +121,7 @@ function _TokenFiatOnRampList({ onSelectCurrency, onBack }: Props): JSX.Element 
 
   const renderItem = useCallback(
     ({ item: currency }: ListRenderItemInfo<FiatOnRampCurrency>) => {
-      if (!currency.currencyInfo) {
-        return null
-      }
-      return (
-        <TokenOptionItem
-          option={{ currencyInfo: currency.currencyInfo, quantity: 0, balanceUSD: 0 }}
-          showNetworkPill={currency.currencyInfo.currency.chainId !== ChainId.Mainnet}
-          showWarnings={true}
-          onPress={(): void => onSelectCurrency?.(currency)}
-        />
-      )
+      return <TokenOptionItemWrapper currency={currency} onSelectCurrency={onSelectCurrency} />
     },
     [onSelectCurrency]
   )

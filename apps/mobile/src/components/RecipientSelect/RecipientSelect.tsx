@@ -66,15 +66,20 @@ export function _RecipientSelect({
 
   return (
     <>
-      <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="spacing12" px="spacing16" width="100%">
+      <AnimatedFlex
+        entering={FadeIn}
+        exiting={FadeOut}
+        gap="spacing12"
+        mt="spacing16"
+        px="spacing16"
+        width="100%">
         <SearchBar
           autoFocus
           backgroundColor="background2"
           endAdornment={<QRScannerIconButton onPress={onPressQRScanner} />}
-          hideBackButton={!recipient}
           placeholder={t('Search addresses or ENS names')}
           value={pattern ?? ''}
-          onBack={onToggleShowRecipientSelector}
+          onBack={recipient ? onToggleShowRecipientSelector : undefined}
           onChangeText={onChangePattern}
         />
         {noResults ? (

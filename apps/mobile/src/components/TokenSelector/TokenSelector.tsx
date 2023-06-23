@@ -1,15 +1,22 @@
 import { Currency } from '@uniswap/sdk-core'
-import React, { memo } from 'react'
+import React, { memo, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { FadeIn, FadeOut } from 'react-native-reanimated'
+import { useAppTheme } from 'src/app/hooks'
 import { SearchContext } from 'src/components/explore/search/SearchResultsSection'
-import { AnimatedFlex } from 'src/components/layout'
+import { Box, Flex } from 'src/components/layout'
+import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { Trace } from 'src/components/telemetry/Trace'
 import { useFilterCallbacks } from 'src/components/TokenSelector/hooks'
+import { NetworkFilter } from 'src/components/TokenSelector/NetworkFilter'
 import { SearchBar } from 'src/components/TokenSelector/SearchBar'
-import { TokenSearchResultList } from 'src/components/TokenSelector/TokenSearchResultList'
+import { TokenSection } from 'src/components/TokenSelector/TokenSelectorList'
+import { TokenSelectorSearchResultsList } from 'src/components/TokenSelector/TokenSelectorSearchResultsList'
+import { TokenSelectorSendList } from 'src/components/TokenSelector/TokenSelectorSendList'
+import { TokenSelectorSwapInputList } from 'src/components/TokenSelector/TokenSelectorSwapInputList'
+import { TokenSelectorSwapOutputList } from 'src/components/TokenSelector/TokenSelectorSwapOutputList'
 import { ElementName, ModalName, SectionName } from 'src/features/telemetry/constants'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
+import { ChainId } from 'wallet/src/constants/chains'
 
 export enum TokenSelectorVariation {
   // used for Send flow, only show currencies with a balance
@@ -18,8 +25,8 @@ export enum TokenSelectorVariation {
   // used for Swap input. tokens with balances + popular
   BalancesAndPopular = 'balances-and-popular',
 
-  // used for Swap output. tokens with balances, favorites, common + popular
-  SuggestedAndPopular = 'suggested-and-popular',
+  // used for Swap output. suggested (common bases), favorites + popular (top tokens)
+  SuggestedAndFavoritesAndPopular = 'suggested-and-favorites-and-popular',
 }
 
 export enum TokenSelectorFlow {
@@ -39,65 +46,110 @@ export function flowToModalName(flow: TokenSelectorFlow): ModalName | undefined 
 }
 
 interface TokenSelectorProps {
-  currencyField?: CurrencyField
+  currencyField: CurrencyField
   flow: TokenSelectorFlow
-  otherCurrency?: Currency | null
-  selectedCurrency?: Currency | null
+  chainId?: ChainId
   variation: TokenSelectorVariation
-  onBack: () => void
-  onSelectCurrency: (currency: Currency, context: SearchContext) => void
+  onClose: () => void
+  onSelectCurrency: (
+    currency: Currency,
+    currencyField: CurrencyField,
+    context: SearchContext
+  ) => void
 }
 
-function _TokenSelector({
+function _TokenSelectorModal({
   currencyField,
   flow,
   onSelectCurrency,
-  otherCurrency,
-  onBack,
+  chainId,
+  onClose,
   variation,
 }: TokenSelectorProps): JSX.Element {
   const { onChangeChainFilter, onChangeText, searchFilter, chainFilter } = useFilterCallbacks(
-    otherCurrency?.chainId ?? null,
+    chainId ?? null,
     flow
   )
 
   const { t } = useTranslation()
+  const theme = useAppTheme()
 
-  // Handle logging if this is for input or output
-  const currencyFieldName = currencyField
-    ? currencyField === CurrencyField.INPUT
-      ? ElementName.TokenInputSelector
-      : ElementName.TokenOutputSelector
-    : undefined
+  // Log currency field only for Swap as for Transfer it's always input
+  const currencyFieldName =
+    flow === TokenSelectorFlow.Swap
+      ? currencyField === CurrencyField.INPUT
+        ? ElementName.TokenInputSelector
+        : ElementName.TokenOutputSelector
+      : undefined
+
+  const onSelectCurrencyCallback = useCallback(
+    (currency: Currency, section: TokenSection, index: number): void => {
+      const searchContext: SearchContext = {
+        category: section.title,
+        query: searchFilter ?? undefined,
+        position: index + 1,
+        suggestionCount: section.data.length,
+      }
+
+      onSelectCurrency(currency, currencyField, searchContext)
+    },
+    [currencyField, onSelectCurrency, searchFilter]
+  )
 
   return (
-    <Trace logImpression element={currencyFieldName} section={SectionName.TokenSelector}>
-      <AnimatedFlex
-        entering={FadeIn}
-        exiting={FadeOut}
-        gap="spacing12"
-        overflow="hidden"
-        px="spacing16"
-        width="100%">
-        <SearchBar
-          autoFocus
-          backgroundColor="background2"
-          placeholder={t('Search tokens')}
-          value={searchFilter ?? ''}
-          onBack={onBack}
-          onChangeText={onChangeText}
-        />
-        <TokenSearchResultList
-          chainFilter={chainFilter}
-          flow={flow}
-          searchFilter={searchFilter}
-          variation={variation}
-          onChangeChainFilter={onChangeChainFilter}
-          onSelectCurrency={onSelectCurrency}
-        />
-      </AnimatedFlex>
-    </Trace>
+    <BottomSheetModal
+      extendOnKeyboardVisible
+      fullScreen
+      hideKeyboardOnDismiss
+      backgroundColor={theme.colors.background1}
+      name={ModalName.TokenSelector}
+      snapPoints={['65%', 'CONTENT_HEIGHT']}
+      onClose={onClose}>
+      <Trace logImpression element={currencyFieldName} section={SectionName.TokenSelector}>
+        <Flex grow pb="spacing16" px="spacing16">
+          <SearchBar
+            backgroundColor="background2"
+            placeholder={t('Search tokens')}
+            value={searchFilter ?? ''}
+            onChangeText={onChangeText}
+          />
+          <Box flexGrow={1}>
+            {searchFilter ? (
+              <TokenSelectorSearchResultsList
+                chainFilter={chainFilter}
+                isBalancesOnlySearch={variation === TokenSelectorVariation.BalancesOnly}
+                searchFilter={searchFilter}
+                onSelectCurrency={onSelectCurrencyCallback}
+              />
+            ) : variation === TokenSelectorVariation.BalancesOnly ? (
+              <TokenSelectorSendList
+                chainFilter={chainFilter}
+                onClose={onClose}
+                onSelectCurrency={onSelectCurrencyCallback}
+              />
+            ) : variation === TokenSelectorVariation.BalancesAndPopular ? (
+              <TokenSelectorSwapInputList
+                chainFilter={chainFilter}
+                onSelectCurrency={onSelectCurrencyCallback}
+              />
+            ) : variation === TokenSelectorVariation.SuggestedAndFavoritesAndPopular ? (
+              <TokenSelectorSwapOutputList
+                chainFilter={chainFilter}
+                onSelectCurrency={onSelectCurrencyCallback}
+              />
+            ) : null}
+            <Box position="absolute" right={0}>
+              <NetworkFilter
+                includeAllNetworks
+                selectedChain={chainFilter}
+                onPressChain={onChangeChainFilter}
+              />
+            </Box>
+          </Box>
+        </Flex>
+      </Trace>
+    </BottomSheetModal>
   )
 }
 
-export const TokenSelector = memo(_TokenSelector)
+export const TokenSelectorModal = memo(_TokenSelectorModal)

@@ -1,13 +1,10 @@
 import { createSelector } from '@reduxjs/toolkit'
 import { MobileState } from 'src/app/reducer'
 import { AccountToNftData, AccountToTokenVisibility } from 'src/features/favorites/slice'
+import { unique } from 'wallet/src/utils/array'
 
-const selectFavoriteTokens = (state: MobileState): string[] => state.favorites.tokens
+export const selectFavoriteTokens = (state: MobileState): string[] => unique(state.favorites.tokens)
 
-export const selectFavoriteTokensSet = createSelector(
-  selectFavoriteTokens,
-  (tokens) => new Set(tokens)
-)
 export const selectHasFavoriteTokens = createSelector(selectFavoriteTokens, (tokens) =>
   Boolean(tokens?.length > 0)
 )

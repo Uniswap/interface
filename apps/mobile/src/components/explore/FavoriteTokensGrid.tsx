@@ -1,4 +1,4 @@
-import { default as React, useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FadeIn } from 'react-native-reanimated'
 import { useAppSelector } from 'src/app/hooks'
@@ -8,7 +8,7 @@ import FavoriteTokenCard, {
 } from 'src/components/explore/FavoriteTokenCard'
 import { AnimatedBox, Box, Flex } from 'src/components/layout'
 import { Loader } from 'src/components/loading'
-import { selectFavoriteTokensSet } from 'src/features/favorites/selectors'
+import { selectFavoriteTokens } from 'src/features/favorites/selectors'
 
 const NUM_COLUMNS = 2
 const ITEM_FLEX = { flex: 1 / NUM_COLUMNS }
@@ -19,15 +19,14 @@ export function FavoriteTokensGrid({ showLoading }: { showLoading: boolean }): J
   const { t } = useTranslation()
 
   const [isEditing, setIsEditing] = useState(false)
-  const favoriteCurrencyIdsSet = useAppSelector(selectFavoriteTokensSet)
-  const currencyIds = useMemo(() => Array.from(favoriteCurrencyIdsSet), [favoriteCurrencyIdsSet])
+  const favoriteCurrencyIds = useAppSelector(selectFavoriteTokens)
 
   // Reset edit mode when there are no favorite tokens
   useEffect(() => {
-    if (favoriteCurrencyIdsSet.size === 0) {
+    if (favoriteCurrencyIds.length === 0) {
       setIsEditing(false)
     }
-  }, [favoriteCurrencyIdsSet.size])
+  }, [favoriteCurrencyIds.length])
 
   return (
     <AnimatedBox entering={FadeIn}>
@@ -41,7 +40,7 @@ export function FavoriteTokensGrid({ showLoading }: { showLoading: boolean }): J
         <FavoriteTokensGridLoader />
       ) : (
         <Box flexDirection="row" flexWrap="wrap">
-          {currencyIds.map((currencyId) => (
+          {favoriteCurrencyIds.map((currencyId) => (
             <FavoriteTokenCard
               key={currencyId}
               currencyId={currencyId}

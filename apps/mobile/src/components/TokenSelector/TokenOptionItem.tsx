@@ -21,7 +21,7 @@ interface OptionProps {
   onPress: () => void
 }
 
-export function TokenOptionItem({
+function _TokenOptionItem({
   option,
   showNetworkPill,
   showWarnings,
@@ -48,7 +48,7 @@ export function TokenOptionItem({
     }
 
     onPress()
-  }, [onPress, safetyLevel, tokenWarningDismissed, showWarnings])
+  }, [showWarnings, safetyLevel, tokenWarningDismissed, onPress])
 
   const onAcceptTokenWarning = useCallback(() => {
     dismissWarningCallback()
@@ -121,3 +121,5 @@ export function TokenOptionItem({
     </>
   )
 }
+
+export const TokenOptionItem = React.memo(_TokenOptionItem)

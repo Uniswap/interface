@@ -1,7 +1,9 @@
 import { TokenOption } from 'src/components/TokenSelector/types'
+import { EMPTY_ARRAY } from 'wallet/src/constants/misc'
 import { CurrencyInfo, PortfolioBalance } from 'wallet/src/features/dataApi/types'
 import { differenceWith } from 'wallet/src/utils/array'
 import { areCurrencyIdsEqual } from 'wallet/src/utils/currencyId'
+import { TokenSection } from './TokenSelectorList'
 
 export function createEmptyBalanceOption(currencyInfo: CurrencyInfo): TokenOption {
   return {
@@ -64,4 +66,18 @@ function isExactTokenOptionMatch(searchResult: TokenOption, query: string): bool
     searchResult.currencyInfo.currency.name?.toLowerCase() === query.toLowerCase() ||
     searchResult.currencyInfo.currency.symbol?.toLowerCase() === query.toLowerCase()
   )
+}
+
+export function getTokenOptionsSection(
+  title: string,
+  tokenOptions: TokenOption[] | undefined
+): TokenSection[] {
+  return tokenOptions?.length
+    ? [
+        {
+          title,
+          data: tokenOptions,
+        },
+      ]
+    : EMPTY_ARRAY
 }

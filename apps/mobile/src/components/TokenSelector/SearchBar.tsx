@@ -7,16 +7,15 @@ import { Flex } from 'src/components/layout'
 import { ElementName } from 'src/features/telemetry/constants'
 
 interface SearchBarProps extends SearchTextInputProps {
-  onBack: () => void
-  hideBackButton?: boolean
+  onBack?: () => void
 }
 
 // Use instead of SearchTextInput when you need back button functionality outside of nav stack (i.e., inside BottomSheetModals)
-export function SearchBar({ onBack, hideBackButton, ...rest }: SearchBarProps): JSX.Element {
+export function SearchBar({ onBack, ...rest }: SearchBarProps): JSX.Element {
   const theme = useAppTheme()
   return (
     <Flex centered row gap="spacing12">
-      {!hideBackButton && (
+      {onBack && (
         <TouchableArea name={ElementName.Back} testID={ElementName.Back} onPress={onBack}>
           <Chevron color={theme.colors.textPrimary} />
         </TouchableArea>

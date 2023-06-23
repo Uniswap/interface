@@ -16,6 +16,7 @@ import { Trace } from 'src/components/telemetry/Trace'
 import { useIsDarkMode } from 'src/features/appearance/hooks'
 import { ModalName } from 'src/features/telemetry/constants'
 import { TelemetryTraceProps } from 'src/features/telemetry/types'
+import { useKeyboardLayout } from 'src/utils/useKeyboardLayout'
 import { dimensions } from 'ui/src/theme/restyle/sizing'
 import { theme as FixedTheme } from 'ui/src/theme/restyle/theme'
 import { spacing } from 'ui/src/theme/spacing'
@@ -33,17 +34,19 @@ type Props = PropsWithChildren<{
   isDismissible?: boolean
   renderBehindInset?: boolean
   hideKeyboardOnDismiss?: boolean
+  // extend the sheet to its maximum snap point when keyboard is visible
+  extendOnKeyboardVisible?: boolean
 }> &
   TelemetryTraceProps
 
-const APPEARS_ON_INDEX = 0
+const BACKDROP_APPEARS_ON_INDEX = 0
 const DISAPPEARS_ON_INDEX = -1
 
 const Backdrop = (props: BottomSheetBackdropProps): JSX.Element => {
   return (
     <BottomSheetBackdrop
       {...props}
-      appearsOnIndex={APPEARS_ON_INDEX}
+      appearsOnIndex={BACKDROP_APPEARS_ON_INDEX}
       disappearsOnIndex={DISAPPEARS_ON_INDEX}
       opacity={0.4}
     />
@@ -67,9 +70,20 @@ export function BottomSheetModal({
   isDismissible = true,
   renderBehindInset = false,
   hideKeyboardOnDismiss = false,
+  // keyboardBehavior="extend" does not work and it's hard to figure why,
+  // probably it requires usage of <BottomSheetTextInput>
+  extendOnKeyboardVisible = false,
 }: Props): JSX.Element {
   const insets = useSafeAreaInsets()
   const modalRef = useRef<BaseModal>(null)
+
+  const keyboard = useKeyboardLayout()
+  useEffect(() => {
+    if (extendOnKeyboardVisible && keyboard.isVisible) {
+      modalRef.current?.expand()
+    }
+  }, [extendOnKeyboardVisible, keyboard.isVisible])
+
   const { animatedHandleHeight, animatedSnapPoints, animatedContentHeight, handleContentLayout } =
     useBottomSheetDynamicSnapPoints(snapPoints)
   const theme = useAppTheme()
@@ -84,7 +98,7 @@ export function BottomSheetModal({
     (props: any) => (
       <BottomSheetBackdrop
         {...props}
-        appearsOnIndex={APPEARS_ON_INDEX}
+        appearsOnIndex={BACKDROP_APPEARS_ON_INDEX}
         disappearsOnIndex={DISAPPEARS_ON_INDEX}
         opacity={blurredBackground ? 0.2 : 0.4}
         pressBehavior={isDismissible ? 'close' : 'none'}
@@ -149,11 +163,7 @@ export function BottomSheetModal({
   // onDismiss on the other hand is called when a sheet is already closed, hence too late for us here.
   const onAnimate = useCallback(
     (fromIndex: number, toIndex: number): void => {
-      if (
-        hideKeyboardOnDismiss &&
-        fromIndex === APPEARS_ON_INDEX &&
-        toIndex === DISAPPEARS_ON_INDEX
-      ) {
+      if (hideKeyboardOnDismiss && toIndex === DISAPPEARS_ON_INDEX) {
         Keyboard.dismiss()
       }
     },

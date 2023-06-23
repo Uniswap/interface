@@ -3,12 +3,12 @@ import { useAppSelector } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { DynamicHeartIcon } from 'src/features/externalProfile/ProfileHeader'
 import { useToggleFavoriteCallback } from 'src/features/favorites/hooks'
-import { selectFavoriteTokensSet } from 'src/features/favorites/selectors'
+import { selectFavoriteTokens } from 'src/features/favorites/selectors'
 import { iconSizes } from 'ui/src/theme/iconSizes'
 
 export function TokenDetailsFavoriteButton({ currencyId }: { currencyId: string }): JSX.Element {
   const id = currencyId.toLowerCase()
-  const isFavoriteToken = useAppSelector(selectFavoriteTokensSet).has(id)
+  const isFavoriteToken = useAppSelector(selectFavoriteTokens).indexOf(id) !== -1
   const onFavoritePress = useToggleFavoriteCallback(id, isFavoriteToken)
 
   return (
