@@ -1,6 +1,7 @@
 import { Warning, WARNING_LEVEL } from 'constants/tokenSafety'
 import { AlertTriangle, Slash } from 'react-feather'
 import styled, { css } from 'styled-components/macro'
+import { ThemedText } from 'theme'
 
 const WarningContainer = styled.div`
   margin-left: 4px;
@@ -13,7 +14,7 @@ const WarningIconStyle = css<{ size?: string }>`
   height: ${({ size }) => size ?? '1em'};
 `
 
-const WarningIcon = styled(AlertTriangle)`
+export const WarningIcon = styled(AlertTriangle)`
   ${WarningIconStyle};
   color: ${({ theme }) => theme.textTertiary};
 `
@@ -40,4 +41,15 @@ export default function TokenSafetyIcon({ warning }: { warning: Warning | null }
     default:
       return null
   }
+}
+
+export function AllowanceWarning({currencySymbol}:{currencySymbol: string}) {
+  return (
+    <WarningContainer>
+      <WarningIcon size="1.25em" />
+      <ThemedText.DeprecatedError error={true}>
+        Approve {currencySymbol}
+      </ThemedText.DeprecatedError>
+    </WarningContainer>
+  )
 }

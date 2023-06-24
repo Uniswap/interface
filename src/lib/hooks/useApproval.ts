@@ -115,6 +115,76 @@ export function useApproval(
   return [approvalState, approve]
 }
 
+export function useMaxApproval(
+  amountToApprove: CurrencyAmount<Currency> | undefined,
+  spender: string | undefined,
+  useIsPendingApproval: (token?: Token, spender?: string) => boolean
+): [
+  ApprovalState,
+  () => Promise<{ response: TransactionResponse; tokenAddress: string; spenderAddress: string } | undefined>
+] {
+  const { chainId } = useWeb3React()
+  const token = amountToApprove?.currency?.isToken ? amountToApprove.currency : undefined
+
+  // check the current approval status
+  const approvalState = useApprovalStateForSpender(amountToApprove, spender, useIsPendingApproval)
+
+  const tokenContract = useTokenContract(token?.address)
+
+  const approve = useCallback(async () => {
+    function logFailure(error: Error | string): undefined {
+      console.warn(`${token?.symbol || 'Token'} approval failed:`, error)
+      return
+    }
+
+    // Bail early if there is an issue.
+    if (approvalState !== ApprovalState.NOT_APPROVED) {
+      return logFailure('approve was called unnecessarily')
+    } else if (!chainId) {
+      return logFailure('no chainId')
+    } else if (!token) {
+      return logFailure('no token')
+    } else if (!tokenContract) {
+      return logFailure('tokenContract is null')
+    } else if (!amountToApprove) {
+      return logFailure('missing amount to approve')
+    } else if (!spender) {
+      return logFailure('no spender')
+    }
+
+    let useExact = false
+    const estimatedGas = await tokenContract.estimateGas.approve(spender, MaxUint256).catch(() => {
+      // general fallback for tokens which restrict approval amounts
+      useExact = true
+      return tokenContract.estimateGas.approve(spender, amountToApprove.quotient.toString())
+    })
+
+    return tokenContract
+      .approve(spender, MaxUint256, {
+        gasLimit: calculateGasMargin(estimatedGas),
+      })
+      .then((response) => {
+        const eventProperties = {
+          chain_id: chainId,
+          token_symbol: token?.symbol,
+          token_address: getTokenAddress(token),
+        }
+        sendAnalyticsEvent(InterfaceEventName.APPROVE_TOKEN_TXN_SUBMITTED, eventProperties)
+        return {
+          response,
+          tokenAddress: token.address,
+          spenderAddress: spender,
+        }
+      })
+      .catch((error: Error) => {
+        logFailure(error)
+        throw error
+      })
+  }, [approvalState, token, tokenContract, amountToApprove, spender, chainId])
+
+  return [approvalState, approve]
+}
+
 export function useFaucet(
   token: Token |undefined, 
   // amountToApprove: CurrencyAmount<Currency> | undefined,

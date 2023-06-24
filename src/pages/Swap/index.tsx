@@ -9,7 +9,7 @@ import {
   SwapEventName,
 } from '@uniswap/analytics-events'
 import { Trade } from '@uniswap/router-sdk'
-import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, MaxUint256, Percent, Token, TradeType } from '@uniswap/sdk-core'
 import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { sendEvent } from 'components/analytics'
@@ -86,8 +86,8 @@ import { Checkbox } from 'nft/components/layout/Checkbox'
 import { BORROW_MANAGER_FACTORY_ADDRESSES, feth, fusdc, GlOBAL_STORAGE_ADDRESS, LEVERAGE_MANAGER_FACTORY_ADDRESSES, PS_ROUTER, V3_CORE_FACTORY_ADDRESSES } from 'constants/addresses'
 import { computeBorrowManagerAddress, computeLeverageManagerAddress, computePoolAddress, usePool } from 'hooks/usePools'
 import { useTokenAllowance } from 'hooks/useTokenAllowance'
-import { ApprovalState, useApproval } from 'lib/hooks/useApproval'
-import { useApproveCallback, useFaucetCallback } from 'hooks/useApproveCallback'
+import { ApprovalState } from 'lib/hooks/useApproval'
+import { useApproveCallback, useFaucetCallback, useMaxApproveCallback } from 'hooks/useApproveCallback'
 import { BigNumber as BN } from "bignumber.js";
 import { useLimitlessPositionFromKeys, useLimitlessPositions } from 'hooks/useV3Positions'
 import { Input as NumericalInput } from 'components/NumericalInput'
@@ -97,6 +97,7 @@ import { PoolDataSection } from 'components/ExchangeChart'
 import { FakeTokens } from "constants/fake-tokens"
 import { TabContent, TabNavItem } from 'components/Tabs'
 import BorrowPositionsTable from "components/BorrowPositionTable/TokenTable"
+import { AllowanceWarning, WarningIcon } from 'components/TokenSafety/TokenSafetyIcon'
 
 
 const Hr = styled.hr`
@@ -382,6 +383,8 @@ export default function Swap({ className }: { className?: string }) {
     borrowManagerAddress,
     premium
   } = useSwapState()
+  const isBorrowTab = ActiveSwapTab.BORROW == activeTab
+
 
   const {
     wrapType,
@@ -439,14 +442,14 @@ export default function Swap({ className }: { className?: string }) {
         const price = inputIsToken0 ? pool.token0Price.toFixed(18) : pool.token1Price.toFixed(18)
         const _ltv = Number(ltv) / 100;
         if (existingPosition && Number(_ltv) > 0 && amount) {
-          let addedDebt = Number(amount) * _ltv * Number(price);
+          let addedDebt = Number(amount) * Number(price);
           onPremiumChange(
             new BN(( addedDebt + Number(existingPosition?.totalDebtInput) ) * 0.002).toFixed(18)
           )
           return
         } else if (Number(_ltv) > 0 && amount) {
           // console.log("lmt" , Number(amount) * _ltv * Number(price) * 0.002)
-          onPremiumChange(new BN(Number(amount) * _ltv * Number(price) * 0.002).toFixed(18))
+          onPremiumChange(new BN(Number(amount) * Number(price) * 0.002).toFixed(18))
           return
         }
       }
@@ -454,8 +457,8 @@ export default function Swap({ className }: { className?: string }) {
     onPremiumChange("0")
   }, [typedValue, parsedAmounts[Field.INPUT], ltv, pool, leverage, activeTab, leverage, leverageFactor, existingPosition])
 
-console.log("premium: ", Number(premium))
-
+  const [inputApprovalState, inputApprove] = useMaxApproveCallback(inputCurrency ? CurrencyAmount.fromRawAmount(inputCurrency, MaxUint256) : undefined, isBorrowTab ? borrowManagerAddress ?? undefined : leverageManagerAddress ?? undefined)
+  const [outputApprovalState, outputApprove] = useMaxApproveCallback(outputCurrency ? CurrencyAmount.fromRawAmount(outputCurrency, MaxUint256) : undefined, isBorrowTab ? borrowManagerAddress ?? undefined : leverageManagerAddress ?? undefined)
   const [leverageApproveAmount, borrowInputApproveAmount, borrowOutputApproveAmount] = useMemo(() => {
     if (inputCurrency
       && parsedAmounts[Field.INPUT]
@@ -465,15 +468,18 @@ console.log("premium: ", Number(premium))
       return [
         CurrencyAmount.fromRawAmount(
           inputCurrency,
-          new BN(parsedAmounts[Field.INPUT]?.toExact() ?? 0).plus(premium).shiftedBy(18).toFixed(0)
+          0
+          // new BN(parsedAmounts[Field.INPUT]?.toExact() ?? 0).plus(premium).shiftedBy(18).toFixed(0)
         ),
         CurrencyAmount.fromRawAmount(
           inputCurrency,
-          new BN(parsedAmounts[Field.INPUT]?.toExact() ?? 0).shiftedBy(18).toFixed(0)
+          0
+          // new BN(parsedAmounts[Field.INPUT]?.toExact() ?? 0).shiftedBy(18).toFixed(0)
         ),
         CurrencyAmount.fromRawAmount(
           outputCurrency,
-          new BN(premium).shiftedBy(18).toFixed(0)
+          0
+          // new BN(premium).shiftedBy(18).toFixed(0)
         )
       ]
     }
@@ -497,7 +503,7 @@ console.log("premium: ", Number(premium))
   const [borrowInputApprovalState, approveInputBorrowManager] = useApproveCallback(borrowInputApproveAmount, borrowManagerAddress ?? undefined)
   const [borrowOutputApprovalState, approveOutputBorrowManager] = useApproveCallback(borrowOutputApproveAmount, borrowManagerAddress ?? undefined)
 
-  console.log("lmt: ", borrowInputApprovalState, borrowOutputApprovalState )
+  // console.log("lmt: ", borrowInputApprovalState, borrowOutputApprovalState )
 
   const {
     trade: borrowTrade,
@@ -665,40 +671,40 @@ console.log("premium: ", Number(premium))
     }
   }, [allowance, chainId, maximumAmountIn?.currency.address, maximumAmountIn?.currency.symbol])
 
-  const inputToken = (currencies?.INPUT?.isToken ? (currencies?.INPUT as Token) : undefined)
-  const outputToken = (currencies?.OUTPUT?.isToken ? (currencies?.OUTPUT as Token) : undefined)
+  // const inputToken = (currencies?.INPUT?.isToken ? (currencies?.INPUT as Token) : undefined)
+  // const outputToken = (currencies?.OUTPUT?.isToken ? (currencies?.OUTPUT as Token) : undefined)
 
-  const faucetin = useFaucetCallback(inputToken, account)
-  const faucetout = useFaucetCallback(outputToken, account)
+  // const faucetin = useFaucetCallback(inputToken, account)
+  // const faucetout = useFaucetCallback(outputToken, account)
 
-  const [showInputFaucet, showOutputFaucet] = useMemo(() => {
-    const inputResult = FakeTokens.find((token: Token) => {
-      return token.address === inputToken?.address
-    }) 
+  // const [showInputFaucet, showOutputFaucet] = useMemo(() => {
+  //   const inputResult = FakeTokens.find((token: Token) => {
+  //     return token.address === inputToken?.address
+  //   }) 
 
-    const outputResult = FakeTokens.find((token: Token) => {
-      return token.address === outputToken?.address
-    })
-    return [inputResult, outputResult]
-  }, [inputToken, outputToken]);
+  //   const outputResult = FakeTokens.find((token: Token) => {
+  //     return token.address === outputToken?.address
+  //   })
+  //   return [inputResult, outputResult]
+  // }, [inputToken, outputToken]);
 
-  const faucetIn = useCallback(async () => {
-    try {
-      faucetin()
-    } catch (err) {
-      console.log('err', err)
-    }
+  // const faucetIn = useCallback(async () => {
+  //   try {
+  //     faucetin()
+  //   } catch (err) {
+  //     console.log('err', err)
+  //   }
 
-  }, [currencies])
+  // }, [currencies])
 
-  const faucetOut = useCallback(async () => {
-    try {
-      faucetout()
-    } catch (err) {
-      console.log('err', err)
-    }
+  // const faucetOut = useCallback(async () => {
+  //   try {
+  //     faucetout()
+  //   } catch (err) {
+  //     console.log('err', err)
+  //   }
 
-  }, [currencies])
+  // }, [currencies])
 
   const updateLeverageAllowance = useCallback(async () => {
     try {
@@ -1003,7 +1009,6 @@ console.log("premium: ", Number(premium))
   // part of borrow integration
 
   const [debouncedLTV, debouncedSetLTV] = useDebouncedChangeHandler(ltv ?? "", onLTVChange);
-  const isBorrowTab = ActiveSwapTab.BORROW == activeTab
 
   const showBorrowInputApproval = borrowInputApprovalState !== ApprovalState.APPROVED
   const showBorrowOutputApproval = borrowOutputApprovalState !== ApprovalState.APPROVED
@@ -1032,7 +1037,14 @@ console.log("premium: ", Number(premium))
                     {inputCurrency && outputCurrency
                       ? <ThemedText.LargeHeader>{(outputCurrency.symbol)}/{(inputCurrency.symbol)}</ThemedText.LargeHeader>
                       : <ThemedText.LargeHeader>Pair not found</ThemedText.LargeHeader>}
-                    {
+                      
+                      {inputApprovalState !== ApprovalState.APPROVED  && <SmallMaxButton onClick={() => inputApprove()} width="10%">
+                          <Trans><WarningIcon size="1.25em" />Approve Default Max {inputCurrency?.symbol}</Trans>
+                      </SmallMaxButton>}
+                      {outputApprovalState !== ApprovalState.APPROVED && <SmallMaxButton onClick={() => outputApprove()} width="10%">
+                          <Trans><WarningIcon size="1.25em" /> Approve Default Max {outputCurrency?.symbol}</Trans>
+                      </SmallMaxButton>}
+                    {/* {
                       showInputFaucet && (
                         <SmallMaxButton onClick={() => faucetIn()} width="10%">
                           <Trans>Faucet {inputCurrency?.symbol}</Trans>
@@ -1045,7 +1057,7 @@ console.log("premium: ", Number(premium))
                           <Trans>Faucet {outputCurrency?.symbol}</Trans>
                         </SmallMaxButton>
                       )
-                    }
+                    } */}
                   </TokenNameCell>
                 </TokenInfoContainer>
                 <PoolDataSection

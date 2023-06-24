@@ -845,7 +845,8 @@ export function AddPremiumLeverageModalFooter({
   const token1 = useToken(position?.token1Address)
   const inputCurrency = useCurrency(position?.isToken0 ? position?.token1Address : position?.token0Address)
   const approveAmount = useMemo(() => {
-    return position?.totalDebtInput ? new BN(position.totalDebtInput * 0.002).shiftedBy(18).toFixed(0) : "0"
+    // return position?.totalDebtInput ? new BN(position.totalDebtInput * 0.002).shiftedBy(18).toFixed(0) : "0"
+    return 0
   }, [position])
 
   const [leverageApprovalState, approveLeverageManager] = useApproveCallback(
@@ -1044,9 +1045,9 @@ export function AddPremiumBorrowModalFooter({
   const theme = useTheme()
   const outputCurrency = useCurrency(position?.isToken0 ? position?.token1Address : position?.token0Address)
   const approveAmount = useMemo(() => {
-    if (position) {
-      return new BN(position.totalDebtInput * 0.002).shiftedBy(18).toFixed(0)
-    }
+    // if (position) {
+    //   return new BN(position.totalDebtInput * 0.002).shiftedBy(18).toFixed(0)
+    // }
     return 0
   }, [position])
 
@@ -1074,7 +1075,7 @@ export function AddPremiumBorrowModalFooter({
 
   const loading = derivedState === DerivedInfoState.LOADING
 
-  console.log("tradeInfo: ", !!inputError || !tradeInfo, inputError, approvalState, approveAmount, tradeInfo)
+  // console.log("tradeInfo: ", !!inputError || !tradeInfo, inputError, approvalState, approveAmount, tradeInfo)
 
   return (
     <AutoRow>
@@ -1396,12 +1397,13 @@ export function BorrowReduceCollateralModalFooter({
   const [debouncedReduceAmount, setDebouncedReduceAmount] = useDebouncedChangeHandler(reduceAmount, setReduceAmount);
 
   const approvalAmount = useMemo(() => {
-    if (position && token1 && token0) {
-      return position.isToken0 ?
-        CurrencyAmount.fromRawAmount(token1, position.totalDebtInput * 0.002) :
-        CurrencyAmount.fromRawAmount(token0, position.totalDebtInput * 0.002)
-    }
-    return undefined
+    // if (position && token1 && token0) {
+    //   return position.isToken0 ?
+    //     CurrencyAmount.fromRawAmount(token1, position.totalDebtInput * 0.002) :
+    //     CurrencyAmount.fromRawAmount(token0, position.totalDebtInput * 0.002)
+    // }
+    return token0 ? CurrencyAmount.fromRawAmount(token0, 0) : undefined
+    // return undefined
   }, [position])
 
   const [approvalState, approveManager] = useApproveCallback(approvalAmount, position?.borrowManagerAddress);
@@ -1768,12 +1770,13 @@ export function BorrowReduceDebtModalFooter({
   const theme = useTheme()
 
   const approvalAmount = useMemo(() => {
-    if (position && token1 && token0) {
-      return position.isToken0 ?
-        CurrencyAmount.fromRawAmount(token1, position.totalDebtInput * 0.002) :
-        CurrencyAmount.fromRawAmount(token0, position.totalDebtInput * 0.002)
-    }
-    return undefined
+    // if (position && token1 && token0) {
+    //   return position.isToken0 ?
+    //     CurrencyAmount.fromRawAmount(token1, position.totalDebtInput * 0.002) :
+    //     CurrencyAmount.fromRawAmount(token0, position.totalDebtInput * 0.002)
+    // }
+    // return undefined
+    return token1 ? CurrencyAmount.fromRawAmount(token1, 0) : undefined
   }, [position])
 
   const [approvalState, approveManager] = useApproveCallback(approvalAmount, position?.borrowManagerAddress);

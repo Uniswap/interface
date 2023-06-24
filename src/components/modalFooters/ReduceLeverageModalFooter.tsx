@@ -196,6 +196,7 @@ export function ReduceLeverageModalFooter({
   const inputIsToken0 = !position?.isToken0
 
   // const [, pool] = usePool(token0, token1, position?.poolFee)
+
   const handleReducePosition = useMemo(() => {
     if (
       leverageManagerContract && position && Number(reduceAmount) > 0 && Number(reduceAmount) <= Number(position.totalPosition) &&
@@ -244,7 +245,8 @@ export function ReduceLeverageModalFooter({
   const [debouncedReduceAmount, setDebouncedReduceAmount] = useDebouncedChangeHandler(reduceAmount, setReduceAmount);
 
   const approveAmount = useMemo(() => {
-    return position?.totalDebtInput ? new BN(( position.totalDebtInput - Number(reduceAmount)) * 0.002).shiftedBy(18).toFixed(0) : "0"
+    // return position?.totalDebtInput ? new BN(( position.totalDebtInput - Number(reduceAmount)) * 0.002).shiftedBy(18).toFixed(0) : "0"
+    return 0
   }, [position, reduceAmount])
 
   // console.log("approveAmount", approveAmount)
@@ -261,8 +263,6 @@ export function ReduceLeverageModalFooter({
     transactionInfo,
     userError
   } = useDerivedLeverageReduceInfo(leverageManagerAddress, trader, tokenId, debouncedSlippage, position, debouncedReduceAmount, setDerivedState, approvalState)
-
-
 
   const loading = useMemo(() => derivedState === DerivedInfoState.LOADING, [derivedState])
 
