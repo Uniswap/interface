@@ -128,7 +128,7 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
   const [gaslessMode, toggleGaslessMode] = useGaslessModeManager()
 
   // FIXME enable for Polygon first
-  const isGaslessEnabledForNetwork = chainId == SupportedChainId.POLYGON || chainId == SupportedChainId.ARBITRUM_ONE
+  const isGaslessEnabledForNetwork = chainId !== SupportedChainId.MAINNET && chainId !== SupportedChainId.OPTIMISM
 
   // show confirmation view before turning on
   const [showConfirmation, setShowConfirmation] = useState(false)
@@ -153,7 +153,6 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
   }
 
   return (
-    // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/30451
     <StyledMenu ref={node as any}>
       <Modal isOpen={showConfirmation} onDismiss={handleGaslessDismiss} maxHeight={100}>
         <ModalContentWrapper>
@@ -225,22 +224,7 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
               </RowFixed>
               <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
                 <Trans>Coming Soon</Trans>
-              </TYPE.black>
-              {/* <Toggle
-                id="toggle-expert-mode-button"
-                isActive={expertMode}
-                toggle={
-                  expertMode
-                    ? () => {
-                        toggleExpertMode()
-                        setShowConfirmation(false)
-                      }
-                    : () => {
-                        toggle()
-                        setShowConfirmation(true)
-                      }
-                }
-              /> */}
+              </TYPE.black>{' '}
             </RowBetween>
           </AutoColumn>
         </MenuFlyout>

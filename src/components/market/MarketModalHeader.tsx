@@ -116,7 +116,7 @@ export default function MarketModalHeader({
     : +trade.minimumAmountOut(allowedSlippage).toSignificant(6)
 
   const isGaslessMode =
-    useIsGaslessMode() && (chainId == SupportedChainId.POLYGON || chainId == SupportedChainId.ARBITRUM_ONE)
+    useIsGaslessMode() && chainId !== SupportedChainId.MAINNET && chainId !== SupportedChainId.OPTIMISM
 
   return (
     <AutoColumn gap={'6px'} style={{ marginTop: '1rem' }}>

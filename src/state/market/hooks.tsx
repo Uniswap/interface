@@ -149,7 +149,7 @@ export function useDerivedMarketInfo(
 } {
   const { account, chainId } = useActiveWeb3React()
   const isGaslessMode =
-    useIsGaslessMode() && (chainId == SupportedChainId.POLYGON || chainId == SupportedChainId.ARBITRUM_ONE)
+    useIsGaslessMode() && chainId !== SupportedChainId.MAINNET && chainId !== SupportedChainId.OPTIMISM
 
   const {
     independentField,

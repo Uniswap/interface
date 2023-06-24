@@ -55,7 +55,7 @@ export function AdvancedMarketDetails({
   const theme = useContext(ThemeContext)
   const { chainId } = useActiveWeb3React()
   const isGaslessMode =
-    useIsGaslessMode() && (chainId == SupportedChainId.POLYGON || chainId == SupportedChainId.ARBITRUM_ONE)
+    useIsGaslessMode() && chainId !== SupportedChainId.MAINNET && chainId !== SupportedChainId.OPTIMISM
 
   return !trade ? null : (
     <AutoColumn gap="8px">
