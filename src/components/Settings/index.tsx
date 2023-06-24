@@ -128,7 +128,7 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
   const [gaslessMode, toggleGaslessMode] = useGaslessModeManager()
 
   // FIXME enable for Polygon first
-  const isGaslessEnabledForNetwork = chainId !== SupportedChainId.MAINNET
+  const isGaslessEnabledForNetwork = chainId !== SupportedChainId.MAINNET && chainId !== SupportedChainId.OPTIMISM
 
   // show confirmation view before turning on
   const [showConfirmation, setShowConfirmation] = useState(false)

@@ -148,7 +148,8 @@ export function useDerivedMarketInfo(
   inputTokenShouldBeWrapped: boolean
 } {
   const { account, chainId } = useActiveWeb3React()
-  const isGaslessMode = useIsGaslessMode() && chainId !== SupportedChainId.MAINNET
+  const isGaslessMode =
+    useIsGaslessMode() && chainId !== SupportedChainId.MAINNET && chainId !== SupportedChainId.OPTIMISM
 
   const {
     independentField,
