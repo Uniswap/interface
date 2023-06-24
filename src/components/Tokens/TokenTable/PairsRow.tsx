@@ -19,6 +19,7 @@ import { Currency, Token } from '@uniswap/sdk-core'
 import { Field } from '../../../state/swap/actions'
 import { usePool } from 'hooks/usePools'
 import { FeeAmount } from '@uniswap/v3-sdk'
+import { ButtonPrimary,ButtonSecondary} from '../../Button'
 
 import { useCallback, 
   //useEffect, useMemo, useState 
@@ -62,18 +63,18 @@ const StyledTokenRow = styled.div<{
 }>`
   background-color: transparent;
   display: grid;
-  font-size: 16px;
-  grid-template-columns: 1fr 7fr 4fr 4fr 4fr 4fr 5fr;
+  font-size: 18px;
+  grid-template-columns: 1fr 7fr 4fr 4fr 4fr 4fr 5fr 5fr;
   line-height: 24px;
   max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT};
   min-width: 390px;
   ${({ first, last }) => css`
     height: ${first || last ? '72px' : '64px'};
-    padding-top: ${first ? '8px' : '0px'};
-    padding-bottom: ${last ? '8px' : '0px'};
+    padding-top: ${first ? '14px' : '0px'};
+    padding-bottom: ${last ? '14px' : '0px'};
   `}
-  padding-left: 12px;
-  padding-right: 12px;
+  padding-left: 20px;
+  padding-right: 20px;
   transition: ${({
     theme: {
       transition: { duration, timing },
@@ -86,7 +87,7 @@ const StyledTokenRow = styled.div<{
     ${({ loading, theme }) =>
       !loading &&
       css`
-        background-color: ${theme.hoverDefault};
+        background-color: ${theme.stateOverlayHover};
       `}
     ${({ last }) =>
       last &&
@@ -135,7 +136,7 @@ const StyledHeaderRow = styled(StyledTokenRow)`
   border-radius: 8px 8px 0px 0px;
   color: ${({ theme }) => theme.textSecondary};
   font-size: 14px;
-  height: 48px;
+  height: 64px;
   line-height: 16px;
   padding: 0px 12px;
   width: 100%;
@@ -380,6 +381,7 @@ function TokenRow({
     <>
       <ListNumberCell header={header}>{listNumber}</ListNumberCell>
       <NameCell data-testid="name-cell">{tokenInfo}</NameCell>
+
       <PriceCell data-testid="price-cell" sortable={header}>
         {price}
       </PriceCell>
@@ -392,6 +394,10 @@ function TokenRow({
       <VolumeCell data-testid="volume-cell" sortable={header}>
         {volume}
       </VolumeCell>
+      <VolumeCell data-testid="volume-cell" sortable={header}>
+        {volume}
+      </VolumeCell>
+
       <SparkLineCell>{sparkLine}</SparkLineCell>
     </>
   )
@@ -405,7 +411,7 @@ export function PHeaderRow() {
     <TokenRow
       header={true}
       listNumber="#"
-      tokenInfo={<Trans>Pair name</Trans>}
+      tokenInfo={<Trans>Pair</Trans>}
       price={<HeaderCell category={TokenSortMethod.PRICE} />}
       percentChange={<HeaderCell category={TokenSortMethod.PERCENT_CHANGE} />}
       tvl={<HeaderCell category={TokenSortMethod.TOTAL_VALUE_LOCKED} />}
@@ -518,6 +524,7 @@ export const PLoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<H
           // sendAnalyticsEvent(InterfaceEventName.EXPLORE_TOKEN_ROW_CLICKED, exploreTokenSelectedEventProperties)
         }
       > 
+
         <TokenRow
           header={false}
           listNumber={sortRank}
@@ -555,6 +562,7 @@ export const PLoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<H
           volume={
             <ClickableContent>{formatNumber(null, NumberType.FiatTokenStats)}</ClickableContent>
           }
+
           // sparkLine={
           //   <SparkLine>
           //     <ParentSize>
@@ -574,8 +582,11 @@ export const PLoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<H
           // }
           first={tokenListIndex === 0}
           last={tokenListIndex === tokenListLength - 1}
+
         />
+
       </ClickableContent>
+
     </div>
   )
 })

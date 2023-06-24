@@ -88,6 +88,7 @@ export const PositionPreview = ({
               <ThemedText.DeprecatedLabel mr="8px">{position.amount0.toSignificant(4)}</ThemedText.DeprecatedLabel>
             </RowFixed>
           </RowBetween>
+          <Break />
           <RowBetween>
             <RowFixed>
               <CurrencyLogo currency={currency1} />
@@ -97,19 +98,18 @@ export const PositionPreview = ({
               <ThemedText.DeprecatedLabel mr="8px">{position.amount1.toSignificant(4)}</ThemedText.DeprecatedLabel>
             </RowFixed>
           </RowBetween>
-          <Break />
-          <RowBetween>
+          {/*<Break />*/}
+          {/*<RowBetween>
             <ThemedText.DeprecatedLabel>
               <Trans>Fee Tier</Trans>
             </ThemedText.DeprecatedLabel>
             <ThemedText.DeprecatedLabel>
               <Trans>{position?.pool?.fee / 10000}%</Trans>
             </ThemedText.DeprecatedLabel>
-          </RowBetween>
+          </RowBetween>*/}
         </AutoColumn>
-      </LightCard>
 
-      <AutoColumn gap="md">
+      </LightCard>
         <RowBetween>
           {title ? <ThemedText.DeprecatedMain>{title}</ThemedText.DeprecatedMain> : <div />}
           <RateToggle
@@ -118,6 +118,22 @@ export const PositionPreview = ({
             handleRateToggle={handleRateChange}
           />
         </RowBetween>
+
+        <LightCard padding="12px ">
+          <AutoColumn gap="4px" justify="center">
+            <ThemedText.DeprecatedMain fontSize="12px">
+              <Trans>Current price</Trans>
+            </ThemedText.DeprecatedMain>
+            <ThemedText.DeprecatedMediumHeader>{`${price.toSignificant(5)} `}</ThemedText.DeprecatedMediumHeader>
+            <ThemedText.DeprecatedMain textAlign="center" fontSize="12px">
+              <Trans>
+                {quoteCurrency.symbol} per {baseCurrency.symbol}
+              </Trans>
+            </ThemedText.DeprecatedMain>
+          </AutoColumn>
+        </LightCard>
+
+      <AutoColumn gap="md">
 
         <RowBetween>
           <LightCard width="48%" padding="8px">
@@ -166,7 +182,7 @@ export const PositionPreview = ({
             </AutoColumn>
           </LightCard>
         </RowBetween>
-        <LightCard padding="12px ">
+        {/*<LightCard padding="12px ">
           <AutoColumn gap="4px" justify="center">
             <ThemedText.DeprecatedMain fontSize="12px">
               <Trans>Current price</Trans>
@@ -178,7 +194,7 @@ export const PositionPreview = ({
               </Trans>
             </ThemedText.DeprecatedMain>
           </AutoColumn>
-        </LightCard>
+        </LightCard> */}
       </AutoColumn>
     </AutoColumn>
   )

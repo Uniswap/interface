@@ -625,17 +625,17 @@ export function ReduceLeverageModalFooter({
         <ButtonError
           onClick={handleReducePosition}
           disabled={!!userError || !transactionInfo}
-          style={{ margin: '10px 0 0 0' }}
+          style={{ margin: '0px 0 0 0' }}
           id={InterfaceElementName.CONFIRM_SWAP_BUTTON}
         >
           {!!userError ? (
             userError
            ) : transactionInfo ? (
-            <Text fontSize={20} fontWeight={500}>
+            <Text fontSize={18} fontWeight={500}>
               <Trans>Reduce Position</Trans>
             </Text>
           ) : (
-            <Text fontSize={20} fontWeight={500}>
+            <Text fontSize={18} fontWeight={500}>
               <Trans>Invalid</Trans>
             </Text>
           )}

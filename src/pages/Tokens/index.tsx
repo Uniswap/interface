@@ -79,15 +79,15 @@ const Tokens = () => {
       <ExploreContainer>
         <TitleContainer>
           <MouseoverTooltip
-            text={<Trans>This table contains the top tokens by Uniswap volume, sorted based on your input.</Trans>}
+            text={<Trans>This table contains the top pairs by volume, sorted based on your input.</Trans>}
             placement="bottom"
           >
-            <ThemedText.LargeHeader>
-              <Trans>Top Pools</Trans>
-            </ThemedText.LargeHeader>
+            <ThemedText.HeadlineLarge>
+              {<Trans>Pairs</Trans>}
+            </ThemedText.HeadlineLarge>
           </MouseoverTooltip>
         </TitleContainer>
-        <FiltersWrapper>
+        {/*<FiltersWrapper>
           <FiltersContainer>
             <NetworkFilter />
             <TimeSelector />
@@ -95,7 +95,7 @@ const Tokens = () => {
           <SearchContainer>
             <SearchBar />
           </SearchContainer>
-        </FiltersWrapper>
+        </FiltersWrapper> */}
         <TokenTable />
       </ExploreContainer>
     </Trace>
