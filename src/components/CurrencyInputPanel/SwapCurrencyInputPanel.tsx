@@ -208,7 +208,8 @@ interface SwapCurrencyInputPanelProps {
   isTrade?: boolean
   isLevered?: boolean
   leverageFactor?: string
-  disabled?: boolean  
+  disabled?: boolean
+  premium?: string
 }
 
 export default function SwapCurrencyInputPanel({
@@ -236,6 +237,7 @@ export default function SwapCurrencyInputPanel({
   isLevered = false,
   leverageFactor = "1",
   disabled = false,
+  premium,
   ...rest
 }: SwapCurrencyInputPanelProps) {
   const [modalOpen, setModalOpen] = useState(false)
@@ -262,10 +264,12 @@ export default function SwapCurrencyInputPanel({
         </FixedContainer>
       )}
       <Container hideInput={hideInput}>
-      {isTrade? (
-        <Trans>{isInput ? "What you pay" : (isLevered ? "Total Output Position" : "What you get")}</Trans>
+      {isTrade ? (
+        <Trans>{isInput ? (isLevered && Number(premium) > 0 ? `What you pay (+ ${premium} ${currency?.symbol} premium)` : "What you pay") :
+        (isLevered ? "Total Output Position" : "What you get")
+        }</Trans>
         ): (
-        <Trans>{isInput? "Collateral Amount": "Added Debt"}</Trans>
+        <Trans>{isInput? "Collateral Amount": (Number(premium) > 0 ? `Added Debt (- ${premium} ${currency?.symbol} premium)` : 'Added Debt')}</Trans>
           )
         }
         

@@ -119,7 +119,7 @@ export const PoolDataSection = ({
 		return undefined
 	}, [chainId, token0, token1, fee])
 
-	const uniswapPoolContract = useContract(uniswapPoolAddress, POOL_STATE_INTERFACE)
+	// const uniswapPoolContract = useContract(uniswapPoolAddress, POOL_STATE_INTERFACE)
 
 	const [uniswapPoolExists, setUniswapPoolExists] = useState(false)
 	const [uniswapToken0Price, setUniswapToken0Price] = useState<number | undefined>()
@@ -287,7 +287,7 @@ export const PoolDataSection = ({
 	useEffect(() => {
 		// console.log("symbolExchangeChart: ", symbol)
 		const widgetOptions = {
-			debug: true,
+			debug: false,
 			symbol: !symbol ? "missing pool" : symbol,
 			datafeed: datafeed,
 			theme: defaultChartProps.theme,

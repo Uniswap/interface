@@ -610,7 +610,7 @@ export function ValueLabel({
             <RowFixed>
               <TruncatedText width={width}>
                 {typeof value === 'number'
-                  ? `${(value)}`
+                  ? `${(value.toString())}`
                   : '- '}
               </TruncatedText>
               {symbolAppend}
@@ -662,7 +662,7 @@ export function AdvancedLeverageSwapDetails({
   const price = existingTotalPosition?(Number(expectedOutput ) - Number(existingTotalPosition))
   / (Number(borrowedAmount?.toExact()) - Number(existingTotalDebtInput) + Number(inputAmount?.toExact())  )
   : Number(expectedOutput )/(Number(borrowedAmount?.toExact()) + Number(inputAmount?.toExact()))
-  const fees = (Number(leverageTrade?.borrowedAmount?.toExact()) + Number(leverageTrade?.inputAmount?.toExact())) * 0.0005
+  // const fees = (Number(leverageTrade?.borrowedAmount?.toExact()) + Number(leverageTrade?.inputAmount?.toExact())) * 0.0005
   const addedOutput = (expectedOutput) ? (
               existingPosition && existingTotalPosition ? expectedOutput -  existingTotalPosition : expectedOutput
               ) : 0
@@ -692,20 +692,20 @@ export function AdvancedLeverageSwapDetails({
           syncing={syncing}
           symbolAppend={trade?.inputAmount.currency.symbol}
         />
-        <ValueLabel
+        {leverageTrade.existingPosition && <ValueLabel
           description="The premium refunded from your old payment"
           label="Returned premium"
           value={Math.round(Number(leverageTrade?.remainingPremium)* 100000 )/ 100000 }
           syncing={syncing}
-          symbolAppend={leverageTrade?.remainingPremium!=0? trade?.inputAmount.currency.symbol:""}
-        />
-        <ValueLabel
+          symbolAppend={trade?.inputAmount.currency.symbol}
+        />}
+        {/* <ValueLabel
           description="Fees paid for trade "
           label="Fees"
           value={Math.round(Number(fees) * 100000) / 100000}
           syncing={syncing}
           symbolAppend={trade?.inputAmount.currency.symbol}
-        />
+        /> */}
         <Separator />
         <RowBetween>
           <RowFixed style={{ marginRight: '20px' }}>
@@ -863,6 +863,8 @@ export function AdvancedBorrowSwapDetails({
       borrowedAmount: _borrowedAmount,
     }
   }, [borrowTrade])
+
+  console.log("quotedPremium: ", borrowTrade?.quotedPremium)
   return (
     <StyledCard>
       <AutoColumn gap="sm">

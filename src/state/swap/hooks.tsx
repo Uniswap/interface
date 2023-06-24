@@ -32,6 +32,7 @@ import { POOL_INIT_CODE_HASH, V3_CORE_FACTORY_ADDRESSES, feth } from 'constants/
 import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
 import { useLimitlessPositionFromKeys } from 'hooks/useV3Positions'
 import { AllowanceState } from 'hooks/usePermit2Allowance'
+import { useSingleCallResult } from 'lib/hooks/multicall'
 
 // import { useLeveragePosition } from 'hooks/useV3Positions'
 
@@ -294,6 +295,14 @@ export function useDerivedBorrowCreationInfo({ allowance: {input: inputAllowance
     200
   )
 
+  const globalStorageAddress = useSingleCallResult(borrowManager, 'globalStorage');
+
+  useEffect(() => {
+    if (!globalStorageAddress) {
+      setTradeState(TradeState.NO_ROUTE_FOUND)
+    }
+  }, [globalStorageAddress])
+
   const { loading, position: existingPosition } = useLimitlessPositionFromKeys(account, borrowManagerAddress ?? undefined, true)
 
   // TODO calculate slippage from the pool
@@ -301,18 +310,6 @@ export function useDerivedBorrowCreationInfo({ allowance: {input: inputAllowance
 
   // retrieves the trade object
   const simulate = useCallback(async () => {
-    
-    // checks if the leverageManager exists
-    if (borrowManager) {
-      try {
-        borrowManager.callStatic.globalStorage()
-      } catch (err) {
-        setTradeState(TradeState.NO_ROUTE_FOUND)
-        console.log("no route found", err)
-        return
-      }
-    }
-
     // simulate the trade
     if (borrowManager && debouncedAmount && ltv && Number(ltv) > 0
       && outputCurrency?.wrapped && inputCurrency?.wrapped
@@ -546,22 +543,21 @@ export function useDerivedLeverageCreationInfo({ allowance } : { allowance: Appr
   // TODO calculate slippage from the pool
   const allowedSlippage = new Percent(JSBI.BigInt(3), JSBI.BigInt(100)) // new Percent(JSBI.BigInt(50), JSBI.BigInt(10000))
 
+  const globalStorageAddress = useSingleCallResult(leverageManager, 'globalStorage');
+
+  useEffect(() => {
+    if (!globalStorageAddress) {
+      setTradeState(LeverageTradeState.NO_ROUTE_FOUND)
+    }
+  }, [globalStorageAddress])
+
   // retrieves the trade object
   const simulate = useCallback(async () => {
     // checks if the leverageManager exists
-    if (leverageManager) {
-      try {
-        leverageManager.callStatic.globalStorage()
-      } catch (err) {
-        setTradeState(LeverageTradeState.NO_ROUTE_FOUND)
-        console.log("no route found", err)
-        return
-      }
-    }
 
     // simulate the trade
     if (leverageManager && debouncedAmount && leverage && Number(leverageFactor) > 1
-      && outputCurrency?.wrapped && inputCurrency?.wrapped
+      && outputCurrency?.wrapped && inputCurrency?.wrapped && allowance === ApprovalState.APPROVED
     ) {
       try {
         // borrowing token1 to buy token0
@@ -588,9 +584,9 @@ export function useDerivedLeverageCreationInfo({ allowance } : { allowance: Appr
     } else {
       setTradeState(LeverageTradeState.INVALID)
     }
-  }, [currencies, leverageManager, leverage, leverageFactor, debouncedAmount])
+  }, [currencies, leverageManager, leverage, leverageFactor, debouncedAmount, allowance])
 
-  console.log("contractResultPost/tradestate", contractResult, tradeState, parsedAmount?.toExact())
+  // console.log("contractResultPost/tradestate", contractResult, tradeState, parsedAmount?.toExact())
 
   useEffect(() => {
     simulate()
