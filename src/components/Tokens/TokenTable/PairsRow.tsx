@@ -87,7 +87,7 @@ const StyledTokenRow = styled.div<{
     ${({ loading, theme }) =>
       !loading &&
       css`
-        background-color: ${theme.background};
+        background-color: ${theme.stateOverlayHover};
       `}
     ${({ last }) =>
       last &&
@@ -406,7 +406,7 @@ export function PHeaderRow() {
     <TokenRow
       header={true}
       listNumber="#"
-      tokenInfo={<Trans>Pair name</Trans>}
+      tokenInfo={<Trans>Pair</Trans>}
       price={<HeaderCell category={TokenSortMethod.PRICE} />}
       percentChange={<HeaderCell category={TokenSortMethod.PERCENT_CHANGE} />}
       tvl={<HeaderCell category={TokenSortMethod.TOTAL_VALUE_LOCKED} />}

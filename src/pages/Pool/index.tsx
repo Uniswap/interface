@@ -138,10 +138,10 @@ const MainContentWrapper = styled.main`
   margin-right: 10px;
   margin-left: 10px;
 
-  background-color: ${({ theme }) => theme.backgroundBackdrop};
-  border: 2px solid ${({ theme }) => theme.backgroundBackdrop};
+  background-color: ${({ theme }) => theme.searchBackground};
+  border: 2px solid ${({ theme }) => theme.searchBackground};
   padding: 10px;
-  border-radius: 4px;
+  border-radius: 32px;
   display: flex;
   flex-direction: column;
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),

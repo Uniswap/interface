@@ -265,11 +265,11 @@ export default function SwapCurrencyInputPanel({
       )}
       <Container hideInput={hideInput}>
       {isTrade ? (
-        <Trans>{isInput ? (isLevered && Number(premium) > 0 ? `What you pay (+ ${premium} ${currency?.symbol} premium)` : "What you pay") :
+        <Trans>{isInput ? (isLevered && false ? `What you pay (+ ${premium} ${currency?.symbol} premium)` : "What you pay") :
         (isLevered ? "Total Output Position" : "What you get")
         }</Trans>
         ): (
-        <Trans>{isInput? "Collateral Amount": (Number(premium) > 0 ? `Added Debt (- ${premium} ${currency?.symbol} premium)` : 'Added Debt')}</Trans>
+        <Trans>{isInput? "Collateral Amount": 'Added Debt'}</Trans>
           )
         }
         

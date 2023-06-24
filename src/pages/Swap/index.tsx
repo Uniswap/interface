@@ -137,7 +137,7 @@ const LeverageInputSection = styled(ResponsiveHeaderText)`
 
 const SwapSection = styled.div`
   position: relative;
-  background-color: ${({ theme }) => theme.backgroundModule};
+  background-color: ${({ theme }) => theme.background};
   border-radius: 0px;
   padding: 16px;
   color: ${({ theme }) => theme.textSecondary};
@@ -226,10 +226,17 @@ const ChartContainer = styled(AutoColumn)`
 const PositionsContainer = styled.div`
   margin-right: 20px;
   margin-top: 15px;
+  background-color: ${({ theme }) => theme.backgroundSurface};
+  border-radius: 32px;
+  padding: 32px;
 `
 
 const StatsContainer = styled.div`
-  margin-top: 20px;
+  background-color: ${({ theme }) => theme.background};
+  border-radius: 32px;
+  padding: 32px;
+
+  margin-top: 0px;
   margin-right: 20px;
 `
 
@@ -1030,8 +1037,10 @@ export default function Swap({ className }: { className?: string }) {
         <PageWrapper>
           <MainSwapContainer>
             <LeftContainer>
+
               <StatsContainer>
                 <TokenInfoContainer data-testid="token-info-container">
+                          
                   <TokenNameCell>
                     {inputCurrency && outputCurrency && <DoubleCurrencyLogo currency0={inputCurrency as Currency} currency1={outputCurrency as Currency} size={40} margin />}
                     {inputCurrency && outputCurrency
@@ -1039,10 +1048,10 @@ export default function Swap({ className }: { className?: string }) {
                       : <ThemedText.LargeHeader>Pair not found</ThemedText.LargeHeader>}
                       
                       {inputApprovalState !== ApprovalState.APPROVED  && <SmallMaxButton onClick={() => inputApprove()} width="10%">
-                          <Trans><WarningIcon size="1.25em" />Approve Default Max {inputCurrency?.symbol}</Trans>
+                          <Trans><WarningIcon size="1.25em" />Approve {inputCurrency?.symbol}</Trans>
                       </SmallMaxButton>}
                       {outputApprovalState !== ApprovalState.APPROVED && <SmallMaxButton onClick={() => outputApprove()} width="10%">
-                          <Trans><WarningIcon size="1.25em" /> Approve Default Max {outputCurrency?.symbol}</Trans>
+                          <Trans><WarningIcon size="1.25em" /> Approve {outputCurrency?.symbol}</Trans>
                       </SmallMaxButton>}
                     {/* {
                       showInputFaucet && (
@@ -1059,6 +1068,8 @@ export default function Swap({ className }: { className?: string }) {
                       )
                     } */}
                   </TokenNameCell>
+                                             
+
                 </TokenInfoContainer>
                 <PoolDataSection
                   chainId={chainId ?? 80001}
@@ -1071,8 +1082,7 @@ export default function Swap({ className }: { className?: string }) {
               <PositionsContainer>
                 <ThemedText.MediumHeader>Leverage Positions</ThemedText.MediumHeader>
                 <LeveragePositionsTable positions={leveragePositions} loading={limitlessPositionsLoading} />
-              </PositionsContainer>
-              <PositionsContainer>
+                <ThemedText.MediumHeader></ThemedText.MediumHeader>
                 <ThemedText.MediumHeader>Borrow Positions</ThemedText.MediumHeader>
                 <BorrowPositionsTable positions={borrowPositions} loading={limitlessPositionsLoading} />
               </PositionsContainer>

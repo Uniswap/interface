@@ -174,7 +174,7 @@ export const darkTheme = {
   textSecondary: colors.gray50,
   textTertiary: colors.gray500,
   accentAction: colors.gray700,
-  accentActive: colors.blue400,
+  accentActive: colors.gray400,
   accentSuccess: colors.green200,
   accentWarning: colors.gold200,
   accentFailure: colors.red300,
