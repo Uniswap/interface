@@ -49,7 +49,7 @@ interface AdvancedAddLeverageDetailsProps {
   syncing?: boolean
   hideInfoTooltips?: boolean
   leverageFactor?: number
-  leverageTrade: LeverageTrade
+  leverageTrade?: LeverageTrade
 }
 
 function TextWithLoadingPlaceholder({
@@ -621,22 +621,22 @@ export function ValueLabel({
   )
 }
 
-export const DefaultLeverageTrade: LeverageTrade = {
-  inputAmount:  undefined,
-  borrowedAmount:  undefined,
-  state: LeverageTradeState.INVALID,
-  expectedOutput: undefined, // new output. i.e. new position - existing position.
-  strikePrice:  undefined,
-  quotedPremium:  undefined,
-  priceImpact:  undefined,
-  remainingPremium:  undefined,
-  effectiveLeverage:  undefined,
-  existingPosition: undefined,
-  existingTotalDebtInput:  undefined,
-  existingTotalPosition: undefined,
-  tokenId: undefined,
-  existingCollateral: undefined
-}
+// export const DefaultLeverageTrade: LeverageTrade = {
+//   inputAmount:  undefined,
+//   borrowedAmount:  undefined,
+//   state: LeverageTradeState.INVALID,
+//   expectedOutput: undefined, // new output. i.e. new position - existing position.
+//   strikePrice:  undefined,
+//   quotedPremium:  undefined,
+//   priceImpact:  undefined,
+//   remainingPremium:  undefined,
+//   effectiveLeverage:  undefined,
+//   existingPosition: undefined,
+//   existingTotalDebtInput:  undefined,
+//   existingTotalPosition: undefined,
+//   tokenId: undefined,
+//   existingCollateral: undefined
+// }
 
 export function AdvancedLeverageSwapDetails({
   trade,
@@ -644,34 +644,34 @@ export function AdvancedLeverageSwapDetails({
   syncing = false,
   hideInfoTooltips = false,
   leverageFactor,
-  leverageTrade = DefaultLeverageTrade
+  leverageTrade
 }: AdvancedAddLeverageDetailsProps) {
   const theme = useTheme()
   const { chainId } = useWeb3React()
   const nativeCurrency = useNativeCurrency()
 
-  const { 
-    existingTotalPosition, 
-    existingPosition,
-    existingTotalDebtInput,
-    existingCollateral, 
-    expectedOutput, 
-    borrowedAmount, 
-    inputAmount
-  } = leverageTrade;
-  const price = existingTotalPosition?(Number(expectedOutput ) - Number(existingTotalPosition))
-  / (Number(borrowedAmount?.toExact()) - Number(existingTotalDebtInput) + Number(inputAmount?.toExact())  )
-  : Number(expectedOutput )/(Number(borrowedAmount?.toExact()) + Number(inputAmount?.toExact()))
+  // const { 
+  //   existingTotalPosition, 
+  //   existingPosition,
+  //   existingTotalDebtInput,
+  //   existingCollateral, 
+  //   expectedOutput, 
+  //   borrowedAmount, 
+  //   inputAmount
+  // } = leverageTrade;
+  const price = leverageTrade?.existingTotalPosition?(Number(leverageTrade?.expectedOutput ) - Number(leverageTrade?.existingTotalPosition))
+  / (Number(leverageTrade?.borrowedAmount?.toExact()) - Number(leverageTrade?.existingTotalDebtInput) + Number(leverageTrade?.inputAmount?.toExact())  )
+  : Number(leverageTrade?.expectedOutput )/(Number(leverageTrade?.borrowedAmount?.toExact()) + Number(leverageTrade?.inputAmount?.toExact()))
   // const fees = (Number(leverageTrade?.borrowedAmount?.toExact()) + Number(leverageTrade?.inputAmount?.toExact())) * 0.0005
-  const addedOutput = (expectedOutput) ? (
-              existingPosition && existingTotalPosition ? expectedOutput -  existingTotalPosition : expectedOutput
+  const addedOutput = (leverageTrade?.expectedOutput) ? (
+    leverageTrade?.existingPosition && leverageTrade?.existingTotalPosition ? leverageTrade?.expectedOutput -  leverageTrade?.existingTotalPosition : leverageTrade?.expectedOutput
               ) : 0
   return (
     <StyledCard>
       <AutoColumn gap="sm">
         <ValueLabel
           description='The amount you expect to receive at the current market price. You may receive less or more if the market price changes while your transaction is pending.'
-          label={existingPosition ? 'Added Position' : 'Expected Output'}
+          label={leverageTrade?.existingPosition ? 'Added Position' : 'Expected Output'}
           value={
             addedOutput
           }
@@ -692,7 +692,7 @@ export function AdvancedLeverageSwapDetails({
           syncing={syncing}
           symbolAppend={trade?.inputAmount.currency.symbol}
         />
-        {leverageTrade.existingPosition && <ValueLabel
+        {leverageTrade?.existingPosition && <ValueLabel
           description="The premium refunded from your old payment"
           label="Returned premium"
           value={Math.round(Number(leverageTrade?.remainingPremium)* 100000 )/ 100000 }
@@ -797,18 +797,18 @@ export function ReduceBorrowDetails({
 }
 
 
-export const DefaultBorrowDetails: BorrowCreationDetails = {
-  collateralAmount: undefined,
-  borrowedAmount: undefined,
-  quotedPremium: undefined,
-  unusedPremium: undefined,
-  priceImpact: undefined,
-  ltv: undefined,
-  state: TradeState.INVALID,
-  existingPosition: false,
-  existingTotalDebtInput: undefined,
-  existingCollateral: undefined,
-}
+// export const DefaultBorrowDetails: BorrowCreationDetails = {
+//   collateralAmount: undefined,
+//   borrowedAmount: undefined,
+//   quotedPremium: undefined,
+//   unusedPremium: undefined,
+//   priceImpact: undefined,
+//   ltv: undefined,
+//   state: TradeState.INVALID,
+//   existingPosition: false,
+//   existingTotalDebtInput: undefined,
+//   existingCollateral: undefined,
+// }
 
 // collateralAmount: number | undefined// CurrencyAmount<Currency> | undefined
 // borrowedAmount: number | undefined // totalDebtInput
@@ -822,7 +822,7 @@ export const DefaultBorrowDetails: BorrowCreationDetails = {
 // existingCollateral: number | undefined
 
 export function AdvancedBorrowSwapDetails({
-  borrowTrade=DefaultBorrowDetails,
+  borrowTrade,
   syncing = false,
 }: {
   borrowTrade?: BorrowCreationDetails,

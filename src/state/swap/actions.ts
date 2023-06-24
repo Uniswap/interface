@@ -28,7 +28,7 @@ export const replaceSwapState = createAction<{
   activeTab: ActiveSwapTab
   ltv?: string
   borrowManagerAddress?: string
-  premium?: string
+  premium?: number
 }>('swap/replaceSwapState')
 export const setRecipient = createAction<{ recipient: string | null }>('swap/setRecipient')
 export const setLeverageFactor = createAction<{ leverageFactor: string }>('swap/setLeverageFactor')
@@ -38,4 +38,4 @@ export const setLeverageManagerAddress = createAction<{ leverageManagerAddress: 
 export const setActiveTab = createAction<{ activeTab: ActiveSwapTab}>('swap/setActiveTab')
 export const setLTV = createAction<{ ltv: string }>('swap/setLTV')
 export const setBorrowManagerAddress = createAction<{ borrowManagerAddress: string }>('swap/setBorrowManagerAddress')
-export const setPremium = createAction<{premium: string }>('swap/setPremium')
+export const setPremium = createAction<{premium: number }>('swap/setPremium')

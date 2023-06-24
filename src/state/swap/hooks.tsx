@@ -52,7 +52,7 @@ export function useSwapActionHandlers(): {
   onActiveTabChange: (activeTab: ActiveSwapTab) => void
   onLTVChange: (ltv: string) => void
   onBorrowManagerAddress: (borrowManagerAddress: string) => void
-  onPremiumChange: (premium: string) => void
+  onPremiumChange: (premium: number) => void
 } {
   const dispatch = useAppDispatch()
   const onCurrencySelection = useCallback(
@@ -128,7 +128,7 @@ export function useSwapActionHandlers(): {
     }, [dispatch])
 
   const onPremiumChange = useCallback(
-    (premium: string) => {
+    (premium: number) => {
       dispatch(setPremium({ premium: premium }))
     }, 
     [dispatch])
@@ -156,33 +156,32 @@ const BAD_RECIPIENT_ADDRESSES: { [address: string]: true } = {
 }
 
 export interface LeverageTrade {
-  inputAmount: CurrencyAmount<Currency> | undefined
-  borrowedAmount: CurrencyAmount<Currency> | undefined
-  state: LeverageTradeState
-  expectedOutput: number | undefined // new output. i.e. new position - existing position.
-  strikePrice: number | undefined
-  quotedPremium: number | undefined
-  priceImpact: Percent | undefined
-  remainingPremium: number | undefined
-  effectiveLeverage: number | undefined
-  existingPosition: boolean | undefined
-  existingTotalDebtInput: number | undefined
-  existingTotalPosition: number | undefined
-  existingCollateral: number | undefined
-  tokenId: number | undefined // if not existing position then this will be undefined
+  inputAmount: CurrencyAmount<Currency>
+  borrowedAmount: CurrencyAmount<Currency>
+  expectedOutput: number // new output. i.e. new position - existing position.
+  strikePrice: number
+  quotedPremium: number
+  priceImpact: Percent
+  remainingPremium: number
+  effectiveLeverage: number
+  existingPosition: boolean
+  existingTotalDebtInput?: number
+  existingTotalPosition?: number
+  existingCollateral?: number
+  tokenId?: number // if not existing position then this will be undefined
 }
 
 export interface BorrowCreationDetails {
-  collateralAmount: number | undefined// CurrencyAmount<Currency> | undefined
-  borrowedAmount: number | undefined // totalDebtInput
-  quotedPremium: number | undefined
-  unusedPremium: number | undefined
-  priceImpact: Percent | undefined
-  ltv: number | undefined
-  state: TradeState
-  existingPosition: boolean | undefined
-  existingTotalDebtInput: number | undefined
-  existingCollateral: number | undefined
+  collateralAmount: number// CurrencyAmount<Currency> | undefined
+  borrowedAmount: number // totalDebtInput
+  quotedPremium: number
+  unusedPremium: number
+  priceImpact: Percent
+  ltv: number
+  // state: TradeState
+  existingPosition: boolean
+  existingTotalDebtInput?: number
+  existingCollateral?: number
 }
 
 // in its return the pos, vars.prevRemainingPremium, vars.premium, the vars.premium is new quoted, prevRemaining is unused amount you get back,
@@ -232,7 +231,8 @@ export function useDerivedBorrowCreationInfo({ allowance: {input: inputAllowance
     currencyBalances: { [field in Field]?: CurrencyAmount<Currency> }
     parsedAmount: CurrencyAmount<Currency> | undefined
     inputError?: ReactNode
-    trade: BorrowCreationDetails
+    trade?: BorrowCreationDetails
+    state: TradeState
     allowedSlippage: Percent
     contractError?: ReactNode
   } {
@@ -247,8 +247,11 @@ export function useDerivedBorrowCreationInfo({ allowance: {input: inputAllowance
     [Field.OUTPUT]: { currencyId: outputCurrencyId },
     ltv,
     borrowManagerAddress,
-    premium
+    premium,
+    activeTab
   } = useSwapState()
+
+  const { onPremiumChange } = useSwapActionHandlers()
 
   const inputCurrency = useCurrency(inputCurrencyId)
   const outputCurrency = useCurrency(outputCurrencyId)
@@ -342,10 +345,11 @@ export function useDerivedBorrowCreationInfo({ allowance: {input: inputAllowance
   //console.log("contractResultPost/tradestate", contractResult, tradeState)
 
   useEffect(() => {
-    simulate()
-  }, [currencies, borrowManager, ltv, debouncedAmount, inputAllowance, outputAllowance])
+    activeTab === ActiveSwapTab.BORROW && simulate()
+  }, [activeTab, currencies, borrowManager, ltv, debouncedAmount, inputAllowance, outputAllowance])
   // console.log("borrowContractResult", contractResult)
-  const trade: BorrowCreationDetails = useMemo(() => {
+
+  const trade = useMemo(() => {
     if (
       tradeState === TradeState.VALID && 
       initialPrice && 
@@ -366,14 +370,14 @@ export function useDerivedBorrowCreationInfo({ allowance: {input: inputAllowance
       const priceImpact = new Percent(t, 1000)
 
       // existing position
-      let _existingPosition
-      let existingTotalDebtInput
-      let existingCollateral
-      if (existingPosition) {
-        _existingPosition = true
-        existingTotalDebtInput = existingPosition.totalDebtInput
-        existingCollateral = existingPosition.initialCollateral
-      }
+      let _existingPosition = !!existingPosition
+      let existingTotalDebtInput = existingPosition?.totalDebtInput
+      let existingCollateral = existingPosition?.initialCollateral
+      // if (existingPosition) {
+      //   _existingPosition = true
+      //   existingTotalDebtInput = 
+      //   existingCollateral = existingPosition.initialCollateral
+      // }
 
       return {
         collateralAmount: Number(debouncedAmount.toExact()),
@@ -389,21 +393,29 @@ export function useDerivedBorrowCreationInfo({ allowance: {input: inputAllowance
         existingCollateral
       }
     } else {
-      return {
-        collateralAmount: undefined,
-        borrowedAmount: undefined,
-        state: tradeState,
-        quotedPremium: undefined,
-        unusedPremium: undefined,
-        priceImpact: undefined,
-        strikePrice: undefined,
-        ltv: undefined,
-        existingPosition: undefined,
-        existingTotalDebtInput: undefined,
-        existingCollateral: undefined
-      }
+      return undefined
     }
   }, [inputAllowance, outputAllowance, ltv, initialPrice, tradeState, contractResult, borrowManager, debouncedAmount, currencies, inputCurrency, outputCurrency])
+
+  useEffect(() => {
+    if (activeTab === ActiveSwapTab.BORROW) {
+      const amount = Number(typedValue)
+      const price = inputIsToken0 ? pool?.token0Price.toFixed(18) : pool?.token1Price.toFixed(18)
+      const _ltv = Number(ltv) / 100;
+      if (tradeState === TradeState.VALID && trade) {
+        onPremiumChange(trade.quotedPremium)
+      } else if (existingPosition && amount && Number(_ltv) > 0) {
+        let addedDebt = Number(amount) * Number(price);
+        onPremiumChange(
+          ( addedDebt + Number(existingPosition?.totalDebtInput) ) * 0.002
+        )
+      } else if (Number(_ltv) > 0 && amount) {
+        onPremiumChange(Number(amount) * Number(price) * 0.002)
+      } else {
+        onPremiumChange(0)
+      }
+    }
+  }, [activeTab, tradeState, trade, typedValue, pool])
 
   const inputError = useMemo(() => {
     let inputError: ReactNode | undefined
@@ -439,7 +451,7 @@ export function useDerivedBorrowCreationInfo({ allowance: {input: inputAllowance
       inputError = inputError ?? <Trans>Insufficient {outputCurrency?.symbol} balance</Trans>
     }
 
-    if (trade.state === TradeState.NO_ROUTE_FOUND) {
+    if (tradeState === TradeState.NO_ROUTE_FOUND) {
       inputError = inputError ?? <Trans>Insufficient Liquidity</Trans>
     }
 
@@ -449,7 +461,7 @@ export function useDerivedBorrowCreationInfo({ allowance: {input: inputAllowance
   const contractError = useMemo(() => {
     let _contractError;
 
-    if (trade.state === TradeState.INVALID) {
+    if (tradeState === TradeState.INVALID) {
       _contractError = _contractError ?? <Trans>Invalid Trade</Trans>
     }
     return _contractError
@@ -457,6 +469,7 @@ export function useDerivedBorrowCreationInfo({ allowance: {input: inputAllowance
 
   return {
     trade,
+    state: tradeState,
     currencies,
     currencyBalances,
     parsedAmount,
@@ -466,13 +479,14 @@ export function useDerivedBorrowCreationInfo({ allowance: {input: inputAllowance
   }
 }
 
-export function useDerivedLeverageCreationInfo({ allowance } : { allowance: ApprovalState })
+export function useDerivedLeverageCreationInfo()
   : {
     currencies: { [field in Field]?: Currency | null }
     currencyBalances: { [field in Field]?: CurrencyAmount<Currency> }
     parsedAmount: CurrencyAmount<Currency> | undefined
     inputError?: ReactNode
-    trade: LeverageTrade
+    trade: LeverageTrade | undefined
+    state: LeverageTradeState
     allowedSlippage: Percent
     contractError?: ReactNode
   } {
@@ -488,8 +502,11 @@ export function useDerivedLeverageCreationInfo({ allowance } : { allowance: Appr
     leverage,
     leverageFactor,
     leverageManagerAddress,
-    premium
+    premium,
+    activeTab
   } = useSwapState()
+
+  const { onPremiumChange } = useSwapActionHandlers()
 
   const inputCurrency = useCurrency(inputCurrencyId)
   const outputCurrency = useCurrency(outputCurrencyId)
@@ -501,6 +518,25 @@ export function useDerivedLeverageCreationInfo({ allowance } : { allowance: Appr
   const parsedAmount = useMemo(
     () => tryParseCurrencyAmount(typedValue, (inputCurrency) ?? undefined),
     [inputCurrency, outputCurrency, typedValue, leverage, leverageFactor]
+  )
+  const leverageApproveAmount = useMemo(() => {
+    if (inputCurrency
+      && parsedAmount
+      && outputCurrency
+      && premium
+    ) {
+      return CurrencyAmount.fromRawAmount(
+        inputCurrency,
+        new BN(parsedAmount?.toExact() ?? 0).plus(premium).shiftedBy(18).toFixed(0)
+      )
+    }
+    else {
+      return undefined
+    }
+  }, [inputCurrency, outputCurrency, premium])
+  const [allowance, ] = useApproveCallback(
+    leverageApproveAmount,
+    leverageManagerAddress ?? undefined
   )
 
   const relevantTokenBalances = useCurrencyBalances(
@@ -525,7 +561,6 @@ export function useDerivedLeverageCreationInfo({ allowance } : { allowance: Appr
   )
 
   const [_, pool] = usePool(inputCurrency ?? undefined, outputCurrency?? undefined, 500)
-  // console.log("pool: ", pool, inputCurrency, outputCurrency)
 
   const leverageManager = useLeverageManagerContract(leverageManagerAddress ?? undefined, true)
   const inputIsToken0 = outputCurrency?.wrapped ? inputCurrency?.wrapped.sortsBefore(outputCurrency?.wrapped) : false; //inputCurrency?.wrapped.address === pool?.token0.address
@@ -589,10 +624,10 @@ export function useDerivedLeverageCreationInfo({ allowance } : { allowance: Appr
   // console.log("contractResultPost/tradestate", contractResult, tradeState, parsedAmount?.toExact())
 
   useEffect(() => {
-    simulate()
-  }, [currencies, leverageManager, leverage, leverageFactor, debouncedAmount, allowance])
+    activeTab === ActiveSwapTab.TRADE && simulate()
+  }, [activeTab, currencies, leverageManager, leverage, leverageFactor, debouncedAmount, allowance])
 
-  const trade: LeverageTrade = useMemo(() => {
+  const trade = useMemo(() => {
     if (
       tradeState === LeverageTradeState.VALID && 
       initialPrice && 
@@ -602,7 +637,7 @@ export function useDerivedLeverageCreationInfo({ allowance } : { allowance: Appr
       debouncedAmount
     ) {
             // existing position
-      let _existingPosition
+      let _existingPosition = false
       let existingTotalDebtInput
       let existingTotalPosition
       let tokenId
@@ -632,7 +667,6 @@ export function useDerivedLeverageCreationInfo({ allowance } : { allowance: Appr
       return {
         inputAmount: debouncedAmount,
         borrowedAmount: CurrencyAmount.fromRawAmount(inputCurrency?.wrapped, new BN(borrowedAmount).shiftedBy(inputCurrency?.wrapped.decimals).toFixed(0)),
-        state: tradeState,
         expectedOutput,
         strikePrice,
         quotedPremium: quotedPremium, //- returnedPremium,
@@ -646,24 +680,31 @@ export function useDerivedLeverageCreationInfo({ allowance } : { allowance: Appr
         tokenId
       }
     } else {
-      return {
-        inputAmount: undefined,
-        borrowedAmount: undefined,
-        state: tradeState,
-        expectedOutput: undefined,
-        strikePrice: undefined,
-        quotedPremium: undefined,
-        priceImpact: undefined,
-        remainingPremium: undefined,
-        effectiveLeverage: undefined,
-        existingPosition: undefined,
-        existingTotalDebtInput: undefined,
-        existingTotalPosition: undefined,
-        tokenId: undefined,
-        existingCollateral: undefined
-      }
+      return undefined
     }
   }, [existingPosition, allowance, leverageFactor, initialPrice, tradeState, contractResult, leverageManager, leverage, debouncedAmount, currencies, inputCurrency, outputCurrency])
+
+  useEffect(() => {
+    if ( activeTab === ActiveSwapTab.TRADE) {
+      let amount = Number(typedValue);
+      // leverage premium, in input currency amount
+      if (tradeState === LeverageTradeState.VALID && trade) {
+        onPremiumChange((trade.quotedPremium))
+        return
+      } else if (existingPosition && Number(leverageFactor) > 1 && amount) {
+        let addedDebt = Number(amount) * (Number(leverageFactor) - 1);
+        onPremiumChange(
+          ( addedDebt + Number(existingPosition.totalDebtInput) ) * 0.002
+        )
+        return
+      } else if (Number(leverageFactor) > 1 && amount) {
+        onPremiumChange((Number(amount) * (Number(leverageFactor) - 1) * 0.002 ))
+        return
+      } else {
+        onPremiumChange(0)
+      }
+    }
+  }, [tradeState, typedValue, activeTab, leverage, leverageFactor, existingPosition])
 
   const inputError = useMemo(() => {
     let inputError: ReactNode | undefined
@@ -691,24 +732,25 @@ export function useDerivedLeverageCreationInfo({ allowance } : { allowance: Appr
       inputError = <Trans>Insufficient {inputCurrency?.symbol} balance</Trans>
     }
 
-    if (trade.state === LeverageTradeState.NO_ROUTE_FOUND) {
+    if (tradeState === LeverageTradeState.NO_ROUTE_FOUND) {
       inputError = inputError ?? <Trans>Insufficient Liquidity</Trans>
     }
 
     return inputError
-  }, [premium, allowance, account, allowedSlippage, currencies, currencyBalances, parsedAmount, leverage, leverageFactor, inputCurrency, trade])
+  }, [trade, premium, allowance, account, allowedSlippage, currencies, currencyBalances, parsedAmount, leverage, leverageFactor, inputCurrency, trade])
 
   const contractError = useMemo(() => {
     let _contractError;
 
-    if (trade.state === LeverageTradeState.INVALID) {
+    if (tradeState === LeverageTradeState.INVALID) {
       _contractError = _contractError ?? <Trans>Invalid Trade</Trans>
     }
     return _contractError
-  }, [allowance, account, allowedSlippage, currencies, currencyBalances, parsedAmount, leverage, leverageFactor, inputCurrency, trade])
+  }, [tradeState, allowance, account, allowedSlippage, currencies, currencyBalances, parsedAmount, leverage, leverageFactor, inputCurrency, trade])
 
   return {
     trade,
+    state: tradeState,
     currencies,
     currencyBalances,
     parsedAmount,

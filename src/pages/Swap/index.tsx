@@ -416,46 +416,47 @@ export default function Swap({ className }: { className?: string }) {
     activeTab === ActiveSwapTab.TRADE ? !inputIsToken0 : inputIsToken0
   )
 
-  useEffect(() => {
-    if (
-      inputCurrency &&
-      outputCurrency &&
-      pool?.token0Price &&
-      pool?.token1Price &&
-      parsedAmounts[Field.INPUT]
-    ) {
-      let amount = Number(parsedAmounts[Field.INPUT]?.toExact());
-      if (activeTab === ActiveSwapTab.TRADE) {
-        // leverage premium, in input currency amount
-        if (existingPosition && Number(leverageFactor) > 1 && amount) {
-          let addedDebt = Number(amount) * (Number(leverageFactor) - 1);
-          onPremiumChange(
-            String(( addedDebt + Number(existingPosition?.totalDebtInput) ) * 0.002)
-          )
-          return
-        } else if (Number(leverageFactor) > 1 && amount) {
-          onPremiumChange(String(Number(amount) * (Number(leverageFactor) - 1) * 0.002 ))
-          return
-        }
-      } else if(activeTab === ActiveSwapTab.BORROW) {
-        // borrow premium, in output currency amount
-        const price = inputIsToken0 ? pool.token0Price.toFixed(18) : pool.token1Price.toFixed(18)
-        const _ltv = Number(ltv) / 100;
-        if (existingPosition && Number(_ltv) > 0 && amount) {
-          let addedDebt = Number(amount) * Number(price);
-          onPremiumChange(
-            new BN(( addedDebt + Number(existingPosition?.totalDebtInput) ) * 0.002).toFixed(18)
-          )
-          return
-        } else if (Number(_ltv) > 0 && amount) {
-          // console.log("lmt" , Number(amount) * _ltv * Number(price) * 0.002)
-          onPremiumChange(new BN(Number(amount) * Number(price) * 0.002).toFixed(18))
-          return
-        }
-      }
-    }
-    onPremiumChange("0")
-  }, [typedValue, parsedAmounts[Field.INPUT], ltv, pool, leverage, activeTab, leverage, leverageFactor, existingPosition])
+  // useEffect(() => {
+  //   if (
+  //     inputCurrency &&
+  //     outputCurrency &&
+  //     pool?.token0Price &&
+  //     pool?.token1Price &&
+  //     parsedAmounts[Field.INPUT]
+  //   ) {
+  //     let amount = Number(parsedAmounts[Field.INPUT]?.toExact());
+  //     if (activeTab === ActiveSwapTab.TRADE) {
+  //       // leverage premium, in input currency amount
+  //       if (existingPosition && Number(leverageFactor) > 1 && amount) {
+  //         let addedDebt = Number(amount) * (Number(leverageFactor) - 1);
+  //         onPremiumChange(
+  //           String(( addedDebt + Number(existingPosition?.totalDebtInput) ) * 0.002)
+  //         )
+  //         return
+  //       } else if (Number(leverageFactor) > 1 && amount) {
+  //         onPremiumChange(String(Number(amount) * (Number(leverageFactor) - 1) * 0.002 ))
+  //         return
+  //       }
+  //     } else if(activeTab === ActiveSwapTab.BORROW) {
+  //       // borrow premium, in output currency amount
+  //       const price = inputIsToken0 ? pool.token0Price.toFixed(18) : pool.token1Price.toFixed(18)
+  //       const _ltv = Number(ltv) / 100;
+  //       if (existingPosition && Number(_ltv) > 0 && amount) {
+  //         let addedDebt = Number(amount) * Number(price);
+  //         onPremiumChange(
+  //           new BN(( addedDebt + Number(existingPosition?.totalDebtInput) ) * 0.002).toFixed(18)
+  //         )
+  //         return
+  //       } else if (Number(_ltv) > 0 && amount) {
+  //         // console.log("lmt" , Number(amount) * _ltv * Number(price) * 0.002)
+  //         onPremiumChange(new BN(Number(amount) * Number(price) * 0.002).toFixed(18))
+  //         return
+  //       }
+  //     }
+  //   }
+  //   onPremiumChange("0")
+  // }, [typedValue, parsedAmounts[Field.INPUT], ltv, pool, leverage, activeTab, leverage, leverageFactor, existingPosition])
+
 
   const [inputApprovalState, inputApprove] = useMaxApproveCallback(inputCurrency ? CurrencyAmount.fromRawAmount(inputCurrency, MaxUint256) : undefined, isBorrowTab ? borrowManagerAddress ?? undefined : leverageManagerAddress ?? undefined)
   const [outputApprovalState, outputApprove] = useMaxApproveCallback(outputCurrency ? CurrencyAmount.fromRawAmount(outputCurrency, MaxUint256) : undefined, isBorrowTab ? borrowManagerAddress ?? undefined : leverageManagerAddress ?? undefined)
@@ -468,18 +469,15 @@ export default function Swap({ className }: { className?: string }) {
       return [
         CurrencyAmount.fromRawAmount(
           inputCurrency,
-          0
-          // new BN(parsedAmounts[Field.INPUT]?.toExact() ?? 0).plus(premium).shiftedBy(18).toFixed(0)
+          new BN(parsedAmounts[Field.INPUT]?.toExact() ?? 0).plus(premium).shiftedBy(18).toFixed(0)
         ),
         CurrencyAmount.fromRawAmount(
           inputCurrency,
-          0
-          // new BN(parsedAmounts[Field.INPUT]?.toExact() ?? 0).shiftedBy(18).toFixed(0)
+          new BN(parsedAmounts[Field.INPUT]?.toExact() ?? 0).shiftedBy(18).toFixed(0)
         ),
         CurrencyAmount.fromRawAmount(
           outputCurrency,
-          0
-          // new BN(premium).shiftedBy(18).toFixed(0)
+          new BN(premium).shiftedBy(18).toFixed(0)
         )
       ]
     }
@@ -495,10 +493,11 @@ export default function Swap({ className }: { className?: string }) {
 
   const {
     trade: leverageTrade,
+    state: leverageState,
     inputError,
     allowedSlippage: leverageAllowedSlippage,
     contractError
-  } = useDerivedLeverageCreationInfo({ allowance: leverageApprovalState })
+  } = useDerivedLeverageCreationInfo()
 
   const [borrowInputApprovalState, approveInputBorrowManager] = useApproveCallback(borrowInputApproveAmount, borrowManagerAddress ?? undefined)
   const [borrowOutputApprovalState, approveOutputBorrowManager] = useApproveCallback(borrowOutputApproveAmount, borrowManagerAddress ?? undefined)
@@ -507,6 +506,7 @@ export default function Swap({ className }: { className?: string }) {
 
   const {
     trade: borrowTrade,
+    state: borrowState,
     inputError: borrowInputError,
     allowedSlippage: borrowAllowedSlippage,
     contractError: borrowContractError
@@ -526,12 +526,12 @@ export default function Swap({ className }: { className?: string }) {
   )
 
   const [borrowRouteNotFound, borrowRouteIsLoading] = useMemo(
-    () => [borrowTrade.state === TradeState.NO_ROUTE_FOUND, borrowTrade.state === TradeState.LOADING]
+    () => [borrowState === TradeState.NO_ROUTE_FOUND, borrowState === TradeState.LOADING]
     , [borrowTrade])
 
   const [lmtRouteNotFound, lmtRouteIsLoading] = useMemo(
-    () => [leverageTrade.state === LeverageTradeState.NO_ROUTE_FOUND, leverageTrade.state === LeverageTradeState.LOADING]
-    , [leverageTrade])
+    () => [leverageState === LeverageTradeState.NO_ROUTE_FOUND, leverageState === LeverageTradeState.LOADING]
+    , [leverageState])
 
   const fiatValueTradeInput = useUSDPrice(trade?.inputAmount)
   const fiatValueTradeOutput = useUSDPrice(trade?.outputAmount)
@@ -814,6 +814,7 @@ export default function Swap({ className }: { className?: string }) {
     parsedAmount,
     inputCurrency ?? undefined,
     outputCurrency ?? undefined,
+    borrowState,
     borrowTrade
   )
 
@@ -833,7 +834,7 @@ export default function Swap({ className }: { className?: string }) {
       onUserInput(Field.INPUT, '')
       onLeverageFactorChange('1')
       onLTVChange('')
-      onPremiumChange('0')
+      onPremiumChange(0)
     }
   }, [attemptingTxn, onUserInput, swapErrorMessage, tradeToConfirm, txHash])
 
@@ -1044,20 +1045,6 @@ export default function Swap({ className }: { className?: string }) {
                       {outputApprovalState !== ApprovalState.APPROVED && <SmallMaxButton onClick={() => outputApprove()} width="10%">
                           <Trans><WarningIcon size="1.25em" /> Approve Default Max {outputCurrency?.symbol}</Trans>
                       </SmallMaxButton>}
-                    {/* {
-                      showInputFaucet && (
-                        <SmallMaxButton onClick={() => faucetIn()} width="10%">
-                          <Trans>Faucet {inputCurrency?.symbol}</Trans>
-                        </SmallMaxButton>
-                      )
-                    }
-                    {
-                      showOutputFaucet && (
-                        <SmallMaxButton onClick={() => faucetOut()} width="10%">
-                          <Trans>Faucet {outputCurrency?.symbol}</Trans>
-                        </SmallMaxButton>
-                      )
-                    } */}
                   </TokenNameCell>
                 </TokenInfoContainer>
                 <PoolDataSection
@@ -1153,7 +1140,7 @@ export default function Swap({ className }: { className?: string }) {
                         id={InterfaceSectionName.CURRENCY_INPUT_PANEL}
                         loading={independentField === Field.OUTPUT && routeIsSyncing}
                         isInput={true}
-                        premium={premium ?? undefined}
+                        premium={String(premium) ?? undefined}
                         isLevered={leverage}
                       />
                     </Trace>
@@ -1241,7 +1228,7 @@ export default function Swap({ className }: { className?: string }) {
                         />}
                         {leverage && <SwapCurrencyInputPanel
                           value={
-                            (leverageTrade.state !== LeverageTradeState.VALID) ?
+                            (leverageState !== LeverageTradeState.VALID) ?
                               "-"
                               :
                               (
@@ -1386,6 +1373,7 @@ export default function Swap({ className }: { className?: string }) {
                         loading={routeIsLoading}
                         allowedSlippage={allowedSlippage}
                         leverageTrade={leverageTrade}
+                        leverageState={leverageState}
                       />
                     </DetailsSwapSection>
 
@@ -1677,7 +1665,7 @@ export default function Swap({ className }: { className?: string }) {
                           isLevered={leverage}
                           disabled={leverage}
                           isTrade={false}
-                          premium={premium ?? undefined}
+                          premium={String(premium) ?? undefined}
                         />
                       </Trace>
 
@@ -1753,7 +1741,7 @@ export default function Swap({ className }: { className?: string }) {
                     <DetailsSwapSection>
                       <BorrowDetailsDropdown
                         trade={borrowTrade}
-                        tradeState={borrowTrade.state}
+                        tradeState={borrowState}
                         syncing={false}
                         loading={borrowRouteIsLoading}
                         allowedSlippage={borrowAllowedSlippage}

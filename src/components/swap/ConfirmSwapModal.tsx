@@ -173,7 +173,7 @@ export function LeverageConfirmModal({
   fiatValueInput: { data?: number; isLoading: boolean }
   fiatValueOutput: { data?: number; isLoading: boolean }
   leverageFactor: string | undefined
-  leverageTrade: LeverageTrade
+  leverageTrade: LeverageTrade | undefined
 }) {
   // shouldLogModalCloseEvent lets the child SwapModalHeader component know when modal has been closed
   // and an event triggered by modal closing should be logged.
@@ -282,7 +282,7 @@ export function BorrowConfirmModal({
   // fiatValueInput,
   // fiatValueOutput,
 }: {
-  borrowTrade: BorrowCreationDetails | undefined
+  borrowTrade?: BorrowCreationDetails
   isOpen: boolean
   attemptingTxn: boolean
   txHash: string | undefined

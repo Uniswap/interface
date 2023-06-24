@@ -23,7 +23,7 @@ export interface SwapState {
   readonly activeTab: ActiveSwapTab
   readonly ltv: string | undefined | null
   readonly borrowManagerAddress: string | undefined | null
-  readonly premium: string | undefined | null
+  readonly premium: number | undefined | null
 }
 
 const initialState: SwapState = queryParametersToSwapState(parsedQueryString())

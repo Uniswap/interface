@@ -53,7 +53,8 @@ function useDerivedLeverageReduceInfo(
   reduceAmount: string | undefined,
   //newTotalPosition: string | undefined,
   setState: (state: DerivedInfoState) => void,
-  approvalState: ApprovalState
+  approvalState: ApprovalState,
+  premium?: number
 ): {
   transactionInfo: {
     token0Amount: string
@@ -146,22 +147,22 @@ function useDerivedLeverageReduceInfo(
       </Trans>)
     }
 
-    if (position) {
+    if (position && premium) {
       const isToken0 = position.isToken0
       const token0Balance = relevantTokenBalances[0]
       const token1Balance = relevantTokenBalances[1]
-      if (isToken0 && Number(token1Balance?.toExact()) < position.totalDebtInput * 0.002) {
+      if (isToken0 && Number(token1Balance?.toExact()) < premium) {
         error = (<Trans>
           Insufficient {currency1?.symbol} balance
         </Trans>)
-      } else if (!isToken0 && Number(token0Balance?.toExact()) < position.totalDebtInput * 0.002) {
+      } else if (!isToken0 && Number(token0Balance?.toExact()) < premium) {
         error = (<Trans>
           Insufficient {currency0?.symbol} balance
         </Trans>)
       }
     }
     return error
-  }, [position, relevantTokenBalances, reduceAmount, approvalState])
+  }, [premium, position, relevantTokenBalances, reduceAmount, approvalState])
 
   return {
     transactionInfo,
@@ -241,32 +242,38 @@ export function ReduceLeverageModalFooter({
   const [showDetails, setShowDetails] = useState(false)
   const theme = useTheme()
 
+  const [, pool] = usePool(token0 ?? undefined, token1 ?? undefined, position?.poolFee)
+
   const [debouncedSlippage, setDebouncedSlippage] = useDebouncedChangeHandler(slippage, setSlippage)
   const [debouncedReduceAmount, setDebouncedReduceAmount] = useDebouncedChangeHandler(reduceAmount, setReduceAmount);
 
-  const approveAmount = useMemo(() => {
-    // return position?.totalDebtInput ? new BN(( position.totalDebtInput - Number(reduceAmount)) * 0.002).shiftedBy(18).toFixed(0) : "0"
+
+  const premium = useMemo(() => {
+
+    if (pool && position) {
+      const price = position.isToken0 ? Number(pool.token1Price.toFixed(18)) : Number(pool.token0Price.toFixed(18))
+      const amount =  (position.totalPosition - Number(reduceAmount)) * price
+      return amount < 0 ? 0 : amount
+    }
     return 0
   }, [position, reduceAmount])
-
-  // console.log("approveAmount", approveAmount)
 
   const inputCurrency = useCurrency(position?.isToken0 ? position?.token1Address : position?.token0Address)
 
   const [approvalState, approveManager] = useApproveCallback(
     inputCurrency ?
-      CurrencyAmount.fromRawAmount(inputCurrency, approveAmount) : undefined,
+      CurrencyAmount.fromRawAmount(inputCurrency, new BN(premium).shiftedBy(18).toFixed(0)) : undefined,
     position?.leverageManagerAddress ?? undefined
   )
 
   const {
     transactionInfo,
     userError
-  } = useDerivedLeverageReduceInfo(leverageManagerAddress, trader, tokenId, debouncedSlippage, position, debouncedReduceAmount, setDerivedState, approvalState)
+  } = useDerivedLeverageReduceInfo(leverageManagerAddress, trader, tokenId, debouncedSlippage, position, debouncedReduceAmount, setDerivedState, approvalState, premium)
 
   const loading = useMemo(() => derivedState === DerivedInfoState.LOADING, [derivedState])
 
-  const debt = position?.totalDebtInput;
+  // const debt = position?.totalDebtInput;
   const initCollateral = position?.initialCollateral;
   // const received = inputIsToken0 ? (Math.abs(Number(transactionInfo?.token0Amount)) - Number(debt))
   //   : (Math.abs(Number(transactionInfo?.token1Amount)) - Number(debt))

@@ -146,7 +146,8 @@ export function useAddBorrowPositionCallback(
   parsedAmount: CurrencyAmount<Currency> | undefined,
   inputCurrency: Currency | undefined,
   outputCurrency: Currency | undefined,
-  borrowTrade: BorrowCreationDetails | undefined
+  borrowState: TradeState,
+  borrowTrade?: BorrowCreationDetails
 ): { callback: null | (() => Promise<string>) } {
   // const deadline = useTransactionDeadline()
   const { account, chainId, provider } = useWeb3React()
@@ -154,7 +155,7 @@ export function useAddBorrowPositionCallback(
 
   const addTransaction = useTransactionAdder()
 
-  if (!borrowManagerAddress || !borrowTrade || borrowTrade.state !== TradeState.VALID || !inputCurrency || !outputCurrency) return { callback: null }
+  if (!borrowManagerAddress || !borrowTrade || borrowState !== TradeState.VALID || !inputCurrency || !outputCurrency) return { callback: null }
   if (!account) throw new Error('missing account')
   if (!chainId) throw new Error('missing chainId')
   if (!provider) throw new Error('missing provider')

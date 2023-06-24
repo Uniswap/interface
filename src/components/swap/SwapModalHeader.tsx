@@ -404,7 +404,7 @@ export function LeverageModalHeader({
   showAcceptChanges: boolean
   onAcceptChanges: () => void
   leverageFactor: number,
-  leverageTrade: LeverageTrade
+  leverageTrade?: LeverageTrade
 }) {
   const theme = useTheme()
 
@@ -431,47 +431,42 @@ export function LeverageModalHeader({
   }, [shouldLogModalCloseEvent, showAcceptChanges, setShouldLogModalCloseEvent, trade, priceUpdate])
 
   const displayValues = useMemo(() => {
-    const {
-      inputAmount,
-      borrowedAmount,
-      existingPosition,
-      existingTotalDebtInput,
-      existingTotalPosition,
-      expectedOutput
-    } = leverageTrade
+
     let totalInput = 0
     let totalOutput = 0
-    if (inputAmount && borrowedAmount) {
-      totalInput = Number(inputAmount.toExact()) * leverageFactor
-      // totalInput = existingPosition && existingTotalDebtInput ? 
-      //   (
-      //     Number(inputAmount.toExact()) + Number(borrowedAmount.toExact()) - existingTotalDebtInput
-      //   ) :
-      //   (
-      //     Number(inputAmount.toExact()) + Number(borrowedAmount.toExact())
-      //   )
-      totalOutput = existingTotalPosition ? 
-        (
-          Number(expectedOutput) - existingTotalPosition
-        ) :
-        (
-          Number(expectedOutput)
-        )
+    if (leverageTrade) {
+      const {
+        inputAmount,
+        borrowedAmount,
+        existingPosition,
+        existingTotalDebtInput,
+        existingTotalPosition,
+        expectedOutput
+      } = leverageTrade
+      if (inputAmount && borrowedAmount) {
+        totalInput = Number(inputAmount.toExact()) * leverageFactor
+        // totalInput = existingPosition && existingTotalDebtInput ? 
+        //   (
+        //     Number(inputAmount.toExact()) + Number(borrowedAmount.toExact()) - existingTotalDebtInput
+        //   ) :
+        //   (
+        //     Number(inputAmount.toExact()) + Number(borrowedAmount.toExact())
+        //   )
+        totalOutput = existingTotalPosition ? 
+          (
+            Number(expectedOutput) - existingTotalPosition
+          ) :
+          (
+            Number(expectedOutput)
+          )
+      }
     }
+    
 
     return {
       totalInput,
       totalOutput
     }
-
-    
-    // {leverageTrade.borrowedAmount && leverageTrade.inputAmount ? (
-    //   new BN(leverageTrade.borrowedAmount.toExact()).plus(leverageTrade.inputAmount.toExact()).toNumber()
-    // ) :
-    //   (
-    //     "-"
-    //   )
-    // }
   }, [leverageTrade, leverageFactor])
 
   return (
@@ -485,7 +480,7 @@ export function LeverageModalHeader({
                 fontWeight={500}
                 color={showAcceptChanges && trade.tradeType === TradeType.EXACT_OUTPUT ? theme.accentAction : ''}
               >
-                {leverageTrade.inputAmount?.toSignificant(18)} (+ {formatNumber(leverageTrade?.quotedPremium)})
+                {leverageTrade?.inputAmount?.toSignificant(18)} (+ {formatNumber(leverageTrade?.quotedPremium)})
               </TruncatedText>
             </RowFixed>
             <RowFixed gap="0px">

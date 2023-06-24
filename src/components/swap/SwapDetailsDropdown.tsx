@@ -120,18 +120,19 @@ interface SwapDetailsInlineProps {
   syncing: boolean
   loading: boolean
   allowedSlippage: Percent
-  leverageTrade: LeverageTrade
+  leverageTrade?: LeverageTrade
+  leverageState: LeverageTradeState
 }
 
 interface BorrowDetailsDropdownProps {
-  trade: BorrowCreationDetails
+  trade?: BorrowCreationDetails
   tradeState: TradeState
   syncing: boolean
   loading: boolean
   allowedSlippage: Percent
 }
 
-export default function SwapDetailsDropdown({ trade, syncing, loading, allowedSlippage, leverageTrade }: SwapDetailsInlineProps) {
+export default function SwapDetailsDropdown({ trade, syncing, loading, allowedSlippage, leverageTrade, leverageState }: SwapDetailsInlineProps) {
   const theme = useTheme()
   const { chainId } = useWeb3React()
   const [showDetails, setShowDetails] = useState(false)
@@ -143,7 +144,7 @@ export default function SwapDetailsDropdown({ trade, syncing, loading, allowedSl
   //   }
   // }, [leverageTrade, leverage])
 
-  const disabled = (!leverage && !trade) || (leverage && leverageTrade.state !== LeverageTradeState.VALID)
+  const disabled = (!leverage && !trade) || (leverage && leverageState!== LeverageTradeState.VALID)
   // console.log('leverageTrade.state', leverageTrade.state, disabled, leverage, leverageTrade)
   return (
     (!leverage ? (
@@ -214,7 +215,7 @@ export default function SwapDetailsDropdown({ trade, syncing, loading, allowedSl
             <StyledHeaderRow onClick={() => !disabled ? setShowDetails(!showDetails) : null} disabled={disabled} open={showDetails}>
               <RowFixed style={{ position: 'relative' }}>
 
-                {Boolean(leverageTrade.state === LeverageTradeState.LOADING || leverageTrade.state === LeverageTradeState.SYNCING) && (
+                {Boolean(leverageState === LeverageTradeState.LOADING || leverageState === LeverageTradeState.SYNCING) && (
                   <StyledPolling>
                     <StyledPollingDot>
                       <Spinner />
@@ -222,11 +223,11 @@ export default function SwapDetailsDropdown({ trade, syncing, loading, allowedSl
                   </StyledPolling>
                 )}
                 {
-                  leverageTrade.state === LeverageTradeState.LOADING ? (
+                  leverageState === LeverageTradeState.LOADING ? (
                     <ThemedText.DeprecatedMain fontSize={14}>
                       <Trans>Simulating position ...</Trans>
                     </ThemedText.DeprecatedMain>
-                  ) : leverageTrade.state === LeverageTradeState.VALID ? (
+                  ) : leverageState === LeverageTradeState.VALID ? (
                     <LoadingOpacityContainer $loading={syncing}>
                       <RowFixed>
                         <Info size={12} />
@@ -257,7 +258,7 @@ export default function SwapDetailsDropdown({ trade, syncing, loading, allowedSl
           </TraceEvent>
           <AnimatedDropdown open={showDetails}>
             <AutoColumn gap="sm" style={{ padding: '0', paddingBottom: '8px' }}>
-              {leverageTrade.state === LeverageTradeState.VALID ? (
+              {leverageState === LeverageTradeState.VALID ? (
                 <StyledCard>
                   <AdvancedLeverageSwapDetails leverageTrade={leverageTrade} trade={trade} allowedSlippage={allowedSlippage} syncing={syncing} />
                 </StyledCard>
@@ -319,7 +320,7 @@ export function BorrowDetailsDropdown({ trade, tradeState, syncing, loading, all
                 </HideSmall>
               )
               } */}
-              {Boolean(trade.state === TradeState.LOADING || trade.state === TradeState.SYNCING) && (
+              {Boolean(tradeState === TradeState.LOADING || tradeState === TradeState.SYNCING) && (
                   <StyledPolling>
                     <StyledPollingDot>
                       <Spinner />
@@ -327,11 +328,11 @@ export function BorrowDetailsDropdown({ trade, tradeState, syncing, loading, all
                   </StyledPolling>
                 )}
                 {
-                  trade.state === TradeState.LOADING ? (
+                  tradeState === TradeState.LOADING ? (
                     <ThemedText.DeprecatedMain fontSize={14}>
                       <Trans>Simulating position ...</Trans>
                     </ThemedText.DeprecatedMain>
-                  ) : trade.state === TradeState.VALID ? (
+                  ) : tradeState === TradeState.VALID ? (
                     <LoadingOpacityContainer $loading={syncing}>
                       <RowFixed>
                         <Info size={12} />
@@ -354,7 +355,7 @@ export function BorrowDetailsDropdown({ trade, tradeState, syncing, loading, all
         <AnimatedDropdown open={showDetails}>
           <AutoColumn gap="sm" style={{ padding: '0', paddingBottom: '8px' }}>
             <StyledCard>
-              {trade.state === TradeState.VALID ? (
+              {tradeState === TradeState.VALID ? (
                  <AdvancedBorrowSwapDetails borrowTrade={trade} syncing={syncing} />
               ) : null }
             </StyledCard>

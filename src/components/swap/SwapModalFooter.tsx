@@ -845,8 +845,8 @@ export function AddPremiumLeverageModalFooter({
   const token1 = useToken(position?.token1Address)
   const inputCurrency = useCurrency(position?.isToken0 ? position?.token1Address : position?.token0Address)
   const approveAmount = useMemo(() => {
-    // return position?.totalDebtInput ? new BN(position.totalDebtInput * 0.002).shiftedBy(18).toFixed(0) : "0"
-    return 0
+    return position?.totalDebtInput ? new BN(position.totalDebtInput * 0.002).shiftedBy(18).toFixed(0) : "0"
+    // return 0
   }, [position])
 
   const [leverageApprovalState, approveLeverageManager] = useApproveCallback(
@@ -1045,9 +1045,9 @@ export function AddPremiumBorrowModalFooter({
   const theme = useTheme()
   const outputCurrency = useCurrency(position?.isToken0 ? position?.token1Address : position?.token0Address)
   const approveAmount = useMemo(() => {
-    // if (position) {
-    //   return new BN(position.totalDebtInput * 0.002).shiftedBy(18).toFixed(0)
-    // }
+    if (position) {
+      return new BN(position.totalDebtInput * 0.002).shiftedBy(18).toFixed(0)
+    }
     return 0
   }, [position])
 
