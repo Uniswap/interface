@@ -248,9 +248,6 @@ const LeftContainer = styled.div`
   width:95%;
 `
 
-
-
-// background-color: ${({ theme }) => theme.backgroundSurface};
 const LeveragePositionsWrapper = styled.main`
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
   padding: 4px;
@@ -307,15 +304,6 @@ export default function Swap({ className }: { className?: string }) {
   const fETH = useToken(feth)
   const fUSDC = useToken(fusdc)
 
-  // useEffect(() => {
-  //   if (fETH && fUSDC) {
-  //     if (nonce === 0 && chainId === 80001) {
-  //       nonce = 1
-  //       addToken(fUSDC as Token)
-  //       addToken(fETH as Token)
-  //     }
-  //   }
-  // }, [chainId, account])
 
   // console.log("loadedUrlParams", loadedUrlParams)
   // token warning stuff
@@ -551,6 +539,7 @@ export default function Swap({ className }: { className?: string }) {
   )
 
   const [nonce, setNonce] = useState(0)
+
   useEffect(() => {
     if (fETH && fUSDC && nonce === 0 && chainId && account) {
       onCurrencySelection(Field.INPUT, fUSDC)

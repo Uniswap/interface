@@ -63,7 +63,7 @@ import { useWeb3React } from '@web3-react/core'
 import { useCurrencyBalances } from 'lib/hooks/useCurrencyBalance'
 import { currencyId } from 'utils/currencyId'
 import { usePool } from 'hooks/usePools'
-import { ValueLabel } from './AdvancedSwapDetails'
+import { MouseoverValueLabel, ValueLabel } from './AdvancedSwapDetails'
 
 const StyledNumericalInput = styled(NumericalInput)`
   width: 70%;
@@ -492,11 +492,11 @@ function useDerivedBorrowReduceDebtInfo(
   premium?: number
 ): {
   transactionInfo: {
-    token0Amount: string 
-    token1Amount: string 
-    pnl: string 
-    returnedAmount: string 
-    unusedPremium: string 
+    token0Amount: string
+    token1Amount: string
+    pnl: string
+    returnedAmount: string
+    unusedPremium: string
     premium: string
   } | undefined,
   userError: React.ReactNode | undefined
@@ -564,7 +564,7 @@ function useDerivedBorrowReduceDebtInfo(
       let returnedAmount = new BN(reducePositionResult[3].toString()).shiftedBy(-DEFAULT_ERC20_DECIMALS).toFixed(DEFAULT_ERC20_DECIMALS)
       let unusedPremium = new BN(reducePositionResult[4].toString()).shiftedBy(-DEFAULT_ERC20_DECIMALS).toFixed(DEFAULT_ERC20_DECIMALS)
       let premium = new BN(reducePositionResult[5].toString()).shiftedBy(-DEFAULT_ERC20_DECIMALS).toFixed(DEFAULT_ERC20_DECIMALS)
-
+      console.log("premium: ", premium)
       return {
         token0Amount,
         token1Amount,
@@ -873,15 +873,15 @@ export function AddPremiumLeverageModalFooter({
 
   return (
     <AutoRow>
-      <ValueLabel 
-        value={premium}
-        label={"Expected Premium"}
-        description={"Expected Premium Amount"}
-        syncing={false}
-        symbolAppend={
-          position?.isToken0 ? token1?.symbol : token0?.symbol
-        }
-      />
+      <Card padding="0" marginTop="12px">
+        <MouseoverValueLabel 
+          value={premium}
+          label={"Expected Premium Payment"}
+          description="expected premium payment"
+          syncing={false}
+          appendSymbol={position?.isToken0 ? token1?.symbol : token0?.symbol}
+        />
+      </Card>
       <TransactionDetails>
         <Wrapper style={{ marginTop: '0' }}>
           <AutoColumn gap="sm" style={{ width: '100%', marginBottom: '-8px' }}>
@@ -1002,7 +1002,7 @@ export function AddPremiumLeverageModalFooter({
                   <Info size={20} />
                 </MouseoverTooltip>
               </div>
-              <Trans>Approve use of {inputIsToken0 ? token0?.symbol : token1?.symbol}</Trans>
+              <Trans>Approval needed for {inputIsToken0 ? token0?.symbol : token1?.symbol} premium payment</Trans>
             </>
           )}
         </ButtonPrimary>
@@ -1083,11 +1083,11 @@ export function AddPremiumBorrowModalFooter({
 
   return (
     <AutoRow>
-      <ValueLabel 
-        label={"Expected Premium"} 
-        description={"Expected Premium Amount"} 
-        value={premium} 
-        syncing={false} 
+      <ValueLabel
+        label={"Premium Payment"}
+        description={"Premium Payment Amount"}
+        value={premium}
+        syncing={false}
         symbolAppend={position?.isToken0 ? token1?.symbol : token0?.symbol} />
       <TransactionDetails>
         <Wrapper style={{ marginTop: '0' }}>
@@ -1224,7 +1224,7 @@ export function AddPremiumBorrowModalFooter({
         >
           {!!inputError ? (
             inputError
-           ) : tradeInfo ? (
+          ) : tradeInfo ? (
             <Text fontSize={20} fontWeight={500}>
               <Trans>Add Premium</Trans>
             </Text>
@@ -1593,7 +1593,7 @@ export function BorrowReduceCollateralModalFooter({
                           <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
                             <TruncatedText>
                               {
-                                 `${Number(transactionInfo.unusedPremium)}  ${inputIsToken0 ? token1?.symbol : token0?.symbol}`
+                                `${Number(transactionInfo.unusedPremium)}  ${inputIsToken0 ? token1?.symbol : token0?.symbol}`
                               }
                             </TruncatedText>
                           </ThemedText.DeprecatedBlack>
@@ -1699,7 +1699,7 @@ export function BorrowReduceCollateralModalFooter({
         >
           {userError ? (
             userError
-           ) : transactionInfo ? (
+          ) : transactionInfo ? (
             <Text fontSize={20} fontWeight={500}>
               <Trans>Reduce Position</Trans>
             </Text>
@@ -1714,6 +1714,36 @@ export function BorrowReduceCollateralModalFooter({
     </AutoRow>
   )
 }
+
+// function DetailsRow({ label, value, description, appendSymbol, loading }: { label: string, value?: number, description, appendSymbol?: string, loading? : boolean }) {
+//   return (
+//     <RowBetween>
+//       <RowFixed>
+//         <MouseoverTooltip
+//           text={
+//             <Trans>
+//               {description}
+//             </Trans>
+//           }
+//         >
+//           <ThemedText.DeprecatedSubHeader>
+//             <Trans>{label}</Trans>
+//           </ThemedText.DeprecatedSubHeader>
+//         </MouseoverTooltip>
+//       </RowFixed>
+//       <TextWithLoadingPlaceholder syncing={Boolean(loading)} width={65}>
+//         <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
+//           <TruncatedText>
+//             {
+//               value
+//             }
+//           </TruncatedText>
+//           {appendSymbol}
+//         </ThemedText.DeprecatedBlack>
+//       </TextWithLoadingPlaceholder>
+//     </RowBetween>
+//   )
+// }
 
 export function BorrowReduceDebtModalFooter({
   tokenId,
@@ -1742,7 +1772,6 @@ export function BorrowReduceDebtModalFooter({
 
   const handleReducePosition = useMemo(() => {
     // console.log('wtf???', borrowManagerContract, position, Number(reduceAmount), Number(position?.initialCollateral))
-
     if (
       borrowManagerContract && position && Number(reduceAmount) > 0 && Number(reduceAmount) <= Number(position.totalDebtInput) &&
       token0 && token1
@@ -1787,11 +1816,11 @@ export function BorrowReduceDebtModalFooter({
   }, [position, reduceAmount, token0, token1])
 
   const [approvalState, approveManager] = useApproveCallback(
-    position?.isToken0 && token1 ? 
-    CurrencyAmount.fromRawAmount(token1, new BN(premium).shiftedBy(18).toFixed(0)) : token0 ? 
-    CurrencyAmount.fromRawAmount(token0, new BN(premium).shiftedBy(18).toFixed(0)) : undefined
+    position?.isToken0 && token1 ?
+      CurrencyAmount.fromRawAmount(token1, new BN(premium).shiftedBy(18).toFixed(0)) : token0 ?
+        CurrencyAmount.fromRawAmount(token0, new BN(premium).shiftedBy(18).toFixed(0)) : undefined
     , position?.borrowManagerAddress
-    );
+  );
 
   // what do we need for the simulation
 
@@ -1805,15 +1834,33 @@ export function BorrowReduceDebtModalFooter({
 
   const loading = useMemo(() => derivedState === DerivedInfoState.LOADING, [derivedState])
 
+  const handleApprove = useCallback(async () => {
+    try {
+      await approveManager()
+    } catch (err) {
+      console.log("approve err: ", err)
+    }
+  }, [approveManager])
 
-
-  const debt = position?.totalDebtInput;
+  // const debt = position?.totalDebtInput;
   // const initCollateral = position?.initialCollateral;
   // const received = inputIsToken0 ? (Math.abs(Number(transactionInfo?.token0Amount)) - Number(debt))
   //   : (Math.abs(Number(transactionInfo?.token1Amount)) - Number(debt))
   // console.log('returned amount', returnedAmount)
+
   return (
     <AutoRow>
+      <Card padding="0" marginTop="12px">
+        <ValueLabel 
+          value={premium}
+          label="Expected Premium Payment"
+          description="Premium paid on reducing the position"
+          symbolAppend={
+            position?.isToken0 ? token1?.symbol : token0?.symbol
+          }
+          syncing={false}
+        />
+      </Card>
       <DarkCard marginTop="5px" padding="5px">
         <AutoColumn gap="4px">
           <RowBetween>
@@ -1852,7 +1899,7 @@ export function BorrowReduceDebtModalFooter({
                 }}
                 showMaxButton={true}
                 onMax={() => {
-                  setDebouncedReduceAmount(position?.totalDebtInput ? String(position?.totalDebtInput) : "")
+                  setDebouncedReduceAmount(position?.totalDebtInput ? position?.totalDebtInput.toFixed(18) : "")
                 }}
                 hideBalance={true}
                 currency={!inputIsToken0 ? token0 : token1}
@@ -1860,20 +1907,11 @@ export function BorrowReduceDebtModalFooter({
             </AutoColumn>
           </>
         </AutoColumn>
-        <ValueLabel 
-          label={"Expected Premium"}
-          value={premium}
-          description={"Expected Premium Amount"}
-          syncing={false}
-          symbolAppend={
-            position?.isToken0 ? token1?.symbol : token0?.symbol
-          }
-        />
       </DarkCard>
       <TransactionDetails>
         <Wrapper style={{ marginTop: '0' }}>
           <AutoColumn gap="sm" style={{ width: '100%', marginBottom: '-8px' }}>
-            <StyledHeaderRow onClick={() => setShowDetails(!showDetails)} disabled={!position?.token0Address} open={showDetails}>
+            <StyledHeaderRow onClick={() => setShowDetails(!showDetails)} disabled={false} open={showDetails}>
               <RowFixed style={{ position: 'relative' }}>
                 {(loading ? (
                   <StyledPolling>
@@ -1883,15 +1921,13 @@ export function BorrowReduceDebtModalFooter({
                   </StyledPolling>
                 ) : (
                   <HideSmall>
-
                     <StyledInfoIcon color={theme.deprecated_bg3} />
-
                   </HideSmall>
                 ))}
                 {position?.borrowManagerAddress ? (
                   loading ? (
                     <ThemedText.DeprecatedMain fontSize={14}>
-                      <Trans>Fetching returns...</Trans>
+                      <Trans>Fetching details...</Trans>
                     </ThemedText.DeprecatedMain>
                   ) : (
                     <LoadingOpacityContainer $loading={loading}>
@@ -1906,39 +1942,12 @@ export function BorrowReduceDebtModalFooter({
                   open={Boolean(position?.token0Address && showDetails)}
                 />
               </RowFixed>
-
             </StyledHeaderRow>
             <AnimatedDropdown open={showDetails}>
               <AutoColumn gap="sm" style={{ padding: '0', paddingBottom: '8px' }}>
                 {!loading && transactionInfo ? (
                   <StyledCard>
                     <AutoColumn gap="sm">
-                      <RowBetween>
-                        <RowFixed>
-                          <MouseoverTooltip
-                            text={
-                              <Trans>
-                                The amount repaying
-                              </Trans>
-                            }
-                          >
-                            <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
-                              <Trans>Repay Amount</Trans>
-                            </ThemedText.DeprecatedSubHeader>
-                          </MouseoverTooltip>
-                        </RowFixed>
-                        <TextWithLoadingPlaceholder syncing={loading} width={65}>
-                          <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
-                            <TruncatedText>
-                              {
-                                `${inputIsToken0 ? new BN(reduceAmount).abs().toString() : new BN(reduceAmount).abs().toString()}  ${!inputIsToken0 ? token0?.symbol : token1?.symbol}`
-                              }
-                            </TruncatedText>
-
-                          </ThemedText.DeprecatedBlack>
-                        </TextWithLoadingPlaceholder>
-                      </RowBetween>
-                      <Separator />
                       <RowBetween>
                         <RowFixed>
                           <MouseoverTooltip
@@ -1987,17 +1996,17 @@ export function BorrowReduceDebtModalFooter({
                           </ThemedText.DeprecatedBlack>
                         </TextWithLoadingPlaceholder>
                       </RowBetween>
-                      {/* <RowBetween>
+                      <RowBetween>
                         <RowFixed>
                           <MouseoverTooltip
                             text={
                               <Trans>
-                                The new premiums to be paid
+                                The amount of premiums returned
                               </Trans>
                             }
                           >
                             <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
-                              <Trans>Premium To Pay</Trans>
+                              <Trans>Premium Payment</Trans>
                             </ThemedText.DeprecatedSubHeader>
                           </MouseoverTooltip>
                         </RowFixed>
@@ -2005,13 +2014,12 @@ export function BorrowReduceDebtModalFooter({
                           <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
                             <TruncatedText>
                               {
-                                `${Number(transactionInfo?.premium)}  ${inputIsToken0 ? token1?.symbol : token0?.symbol}`
+                                transactionInfo && `${Number(transactionInfo?.premium)}  ${inputIsToken0 ? token1?.symbol : token0?.symbol}`
                               }
                             </TruncatedText>
                           </ThemedText.DeprecatedBlack>
                         </TextWithLoadingPlaceholder>
-                      </RowBetween> */}
-
+                      </RowBetween>
                     </AutoColumn>
 
                   </StyledCard>
@@ -2024,7 +2032,7 @@ export function BorrowReduceDebtModalFooter({
       </TransactionDetails>
       {approvalState !== ApprovalState.APPROVED ? (
         <ButtonPrimary
-          onClick={approveManager}
+          onClick={handleApprove}
           disabled={!!userError || approvalState === ApprovalState.PENDING}
           style={{ gap: 14 }}
         >
@@ -2050,7 +2058,7 @@ export function BorrowReduceDebtModalFooter({
                   <Info size={20} />
                 </MouseoverTooltip>
               </div>
-              <Trans>Approve use of {inputIsToken0 ? token1?.symbol : token0?.symbol}</Trans>
+              <Trans>Allowance needed for {inputIsToken0 ? token1?.symbol : token0?.symbol} premium payment</Trans>
             </>
           )}
         </ButtonPrimary>
@@ -2063,7 +2071,7 @@ export function BorrowReduceDebtModalFooter({
         >
           {userError ? (
             userError
-           ) : transactionInfo ? (
+          ) : transactionInfo ? (
             <Text fontSize={20} fontWeight={500}>
               <Trans>Reduce Position</Trans>
             </Text>

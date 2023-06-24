@@ -227,7 +227,7 @@ export function AdvancedSwapDetails({
   )
 }
 
-function MouseoverValueLabel({description, label, value, appendSymbol, syncing}: {description: string, label: React.ReactNode, value: React.ReactNode | string, appendSymbol?: string, syncing?: boolean}) {
+export function MouseoverValueLabel({description, label, value, appendSymbol, syncing}: {description: string, label: React.ReactNode, value: React.ReactNode | string, appendSymbol?: string, syncing?: boolean}) {
   return (
     <RowBetween>
           <RowFixed>

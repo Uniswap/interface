@@ -44,6 +44,7 @@ import Loader from 'components/Icons/LoadingSpinner'
 import { usePool } from 'hooks/usePools'
 import { useSingleCallResult } from 'lib/hooks/multicall'
 import { QuoterV2 } from 'types/v3'
+import { MouseoverValueLabel } from 'components/swap/AdvancedSwapDetails'
 
 
 function useDerivedLeverageReduceInfo(
@@ -303,9 +304,17 @@ export function ReduceLeverageModalFooter({
   // const received = inputIsToken0 ? (Math.abs(Number(transactionInfo?.token0Amount)) - Number(debt))
   //   : (Math.abs(Number(transactionInfo?.token1Amount)) - Number(debt))
 
-  console.log("premium: ", premium)
   return (
     <AutoRow>
+      <Card padding="0" marginTop="12px">
+        <MouseoverValueLabel 
+          description="Estimated Premium Payment"
+          value={premium}
+          syncing={false}
+          label={"Expected Premium Payment"}
+          appendSymbol={position?.isToken0 ? token1?.symbol : token0?.symbol}
+        />
+      </Card>
       <DarkCard marginTop="5px" padding="5px">
         <AutoColumn gap="4px">
           <RowBetween>
@@ -543,30 +552,6 @@ export function ReduceLeverageModalFooter({
                           </ThemedText.DeprecatedBlack>
                         </TextWithLoadingPlaceholder>
                       </RowBetween>
-                      {/*<RowBetween>
-                        <RowFixed>
-                          <MouseoverTooltip
-                            text={
-                              <Trans>
-                                The total amount you get after closing position and repaying debt.
-                              </Trans>
-                            }
-                          >
-                            <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
-                              <Trans>Expected PnL %</Trans>
-                            </ThemedText.DeprecatedSubHeader>
-                          </MouseoverTooltip>
-                        </RowFixed>
-                        <TextWithLoadingPlaceholder syncing={loading} width={65}>
-                          <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
-                            <TruncatedText>
-                            {
-                              `${(Number(pnl))}  ${inputIsToken0 ? token0?.symbol : token1?.symbol}`
-                            }
-                            </TruncatedText>
-                          </ThemedText.DeprecatedBlack>
-                        </TextWithLoadingPlaceholder>
-                      </RowBetween> */}
                       <RowBetween>
                         <RowFixed>
                           <MouseoverTooltip
@@ -642,7 +627,8 @@ export function ReduceLeverageModalFooter({
                   <Info size={20} />
                 </MouseoverTooltip>
               </div>
-              <Trans>Approve use of {inputIsToken0 ? token0?.symbol : token1?.symbol}</Trans>
+              
+              <Trans>Approval needed for {inputIsToken0 ? token0?.symbol : token1?.symbol} premium payment</Trans>
             </>
           )}
         </ButtonPrimary>
