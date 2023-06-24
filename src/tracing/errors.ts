@@ -1,4 +1,5 @@
 import { ClientOptions, ErrorEvent, EventHint } from '@sentry/types'
+import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 
 // `responseStatus` is only currently supported on certain browsers.
 // see: https://caniuse.com/mdn-api_performanceresourcetiming_responsestatus
@@ -49,6 +50,10 @@ function shouldRejectError(error: EventHint['originalException']) {
       const method = JSON.parse(error.requestBody).method
       if (method === 'eth_blockNumber') return true
     }
+
+    // If the error is based on a user rejecting, it should not be considered an exception.
+    // TODO(WEB-2398): we should catch these errors and handle them gracefully instead.
+    if (didUserReject(error)) return true
 
     // If the error is a network change, it should not be considered an exception.
     if (error.message.match(/underlying network changed/)) return true
