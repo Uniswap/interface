@@ -1,5 +1,5 @@
 import { Currency, CurrencyAmount , Token} from '@uniswap/sdk-core'
-import { ApprovalState, useApproval, useFaucet } from 'lib/hooks/useApproval'
+import { ApprovalState, useApproval, useFaucet, useMaxApproval } from 'lib/hooks/useApproval'
 import { useCallback } from 'react'
 
 import { useHasPendingApproval, useTransactionAdder } from '../state/transactions/hooks'
@@ -24,6 +24,14 @@ export function useApproveCallback(
   spender?: string
 ): [ApprovalState, () => Promise<void>] {
   const [approval, getApproval] = useApproval(amountToApprove, spender, useHasPendingApproval)
+  return [approval, useGetAndTrackApproval(getApproval)]
+}
+
+export function useMaxApproveCallback(
+  amountToApprove?: CurrencyAmount<Currency>,
+  spender?: string
+): [ApprovalState, () => Promise<void>] {
+  const [approval, getApproval] = useMaxApproval(amountToApprove, spender, useHasPendingApproval)
   return [approval, useGetAndTrackApproval(getApproval)]
 }
 

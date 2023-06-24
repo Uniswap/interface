@@ -41,6 +41,7 @@ import { useWeb3React } from '@web3-react/core'
 import { useCurrencyBalances } from 'lib/hooks/useCurrencyBalance'
 import { Info } from 'react-feather'
 import Loader from 'components/Icons/LoadingSpinner'
+import { usePool } from 'hooks/usePools'
 
 
 function useDerivedLeverageReduceInfo(
@@ -85,7 +86,6 @@ function useDerivedLeverageReduceInfo(
         setState(DerivedInfoState.INVALID)
         return
       }
-
       const formattedSlippage = new BN(allowedSlippage).plus(100).shiftedBy(16).toFixed(0)
       const formattedReduceAmount = new BN(reduceAmount).shiftedBy(18).toFixed(0);
       const inputReduceAmount =
@@ -195,6 +195,8 @@ export function ReduceLeverageModalFooter({
   const token1 = useCurrency(position?.token1Address)
   const inputIsToken0 = !position?.isToken0
 
+  // const [, pool] = usePool(token0, token1, position?.poolFee)
+
   const handleReducePosition = useMemo(() => {
     if (
       leverageManagerContract && position && Number(reduceAmount) > 0 && Number(reduceAmount) <= Number(position.totalPosition) &&
@@ -243,8 +245,11 @@ export function ReduceLeverageModalFooter({
   const [debouncedReduceAmount, setDebouncedReduceAmount] = useDebouncedChangeHandler(reduceAmount, setReduceAmount);
 
   const approveAmount = useMemo(() => {
-    return position?.totalDebtInput ? new BN(position.totalDebtInput * 0.002).shiftedBy(18).toFixed(0) : "0"
-  }, [position])
+    // return position?.totalDebtInput ? new BN(( position.totalDebtInput - Number(reduceAmount)) * 0.002).shiftedBy(18).toFixed(0) : "0"
+    return 0
+  }, [position, reduceAmount])
+
+  // console.log("approveAmount", approveAmount)
 
   const inputCurrency = useCurrency(position?.isToken0 ? position?.token1Address : position?.token0Address)
 
@@ -259,8 +264,6 @@ export function ReduceLeverageModalFooter({
     userError
   } = useDerivedLeverageReduceInfo(leverageManagerAddress, trader, tokenId, debouncedSlippage, position, debouncedReduceAmount, setDerivedState, approvalState)
 
-
-
   const loading = useMemo(() => derivedState === DerivedInfoState.LOADING, [derivedState])
 
   const debt = position?.totalDebtInput;
@@ -268,7 +271,7 @@ export function ReduceLeverageModalFooter({
   // const received = inputIsToken0 ? (Math.abs(Number(transactionInfo?.token0Amount)) - Number(debt))
   //   : (Math.abs(Number(transactionInfo?.token1Amount)) - Number(debt))
 
-  console.log("footer: ", derivedState, userError, transactionInfo, )
+  // console.log("footer: ", derivedState, userError, transactionInfo)
   return (
     <AutoRow>
       <DarkCard marginTop="5px" padding="5px">
@@ -358,9 +361,7 @@ export function ReduceLeverageModalFooter({
                   </StyledPolling>
                 ) : (
                   <HideSmall>
-
                     <StyledInfoIcon color={leverageManagerAddress ? theme.textTertiary : theme.deprecated_bg3} />
-
                   </HideSmall>
                 ))}
                 {leverageManagerAddress ? (

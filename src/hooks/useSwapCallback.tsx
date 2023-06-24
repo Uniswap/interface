@@ -113,7 +113,7 @@ export function useAddLeveragePositionCallback(
   }
 
   let input = new BN(trade?.inputAmount.toExact() ?? 0).shiftedBy(decimals).toFixed(0)
-  let borrowedAmount = new BN(trade?.inputAmount.toExact() ?? 0).multipliedBy(leverageFactor ?? "0").minus(trade?.inputAmount.toExact() ?? 0).shiftedBy(decimals).toFixed(0)
+  let borrowedAmount = new BN(trade?.inputAmount.toExact() ?? 0).multipliedBy(Number(leverageFactor) - 1 ?? "0").shiftedBy(decimals).toFixed(0)
   const leverageManagerContract = new Contract(leverageManagerAddress, LeverageManagerData.abi, provider.getSigner())
   let slippage = new BN(1 + Number(allowedSlippage.toFixed(6)) / 100).shiftedBy(decimals).toFixed(0)
   // console.log("arguments: ", input, allowedSlippage.toFixed(6), slippage, borrowedAmount, isLong)

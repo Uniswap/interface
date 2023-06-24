@@ -67,7 +67,7 @@ export default function useDatafeed(
             useUniswapSubgraph
           } = JSON.parse(symbolName);
 
-          console.log("resolveSymbol", symbolName)
+          // console.log("resolveSymbol", symbolName)
           const symbolInfo = {
             name: baseSymbol + "/" + quoteSymbol,
             type: "crypto",
@@ -108,7 +108,7 @@ export default function useDatafeed(
 
           try {
             let { data, error } = await fetchPoolPriceData(poolAddress, from, to, countBack, invertPrice, useUniswapSubgraph ? uniswapClient : limitlessClient);
-            console.log("data", data)
+            // console.log("data", data)
             const noData = !data || data.length === 0;
             if (error) {
               console.error("subgraph error: ", error, data);
@@ -132,7 +132,7 @@ export default function useDatafeed(
             invertPrice,
             poolAddress
           } = symbolInfo
-          console.log("[subscribe bars]", useUniswapSubgraph)
+          // console.log("[subscribe bars]", useUniswapSubgraph)
           intervalRef.current && clearInterval(intervalRef.current);
           intervalRef.current = setInterval(function () {
             fetchLiveBar(

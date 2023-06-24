@@ -30,7 +30,7 @@ const Wrapper = styled(Row)`
   width: 100%;
   justify-content: center;
   border-radius: inherit;
-  padding: 8px 12px;
+  padding: 12px 12px;
   margin-top: 0;
   min-height: 32px;
   margin-bottom: 8px;
@@ -279,7 +279,7 @@ export function BorrowDetailsDropdown({ trade, tradeState, syncing, loading, all
   const { ltv } = useSwapState()
 
   const disabled = tradeState !== TradeState.VALID
-  console.log('borrow.state', tradeState, disabled, loading)
+  // console.log('borrow.state', tradeState, disabled, loading)
   return (
     <Wrapper style={{ marginTop: '0' }}>
       <AutoColumn gap="sm" style={{ width: '100%', marginBottom: '-8px' }}>
@@ -291,7 +291,7 @@ export function BorrowDetailsDropdown({ trade, tradeState, syncing, loading, all
         >
           <StyledHeaderRow onClick={() => !disabled ? setShowDetails(!showDetails) : null} disabled={disabled} open={showDetails}>
             <RowFixed style={{ position: 'relative' }}>
-              {(trade.state === TradeState.LOADING || trade.state === TradeState.SYNCING) ? (
+              {/* {(trade.state === TradeState.LOADING || trade.state === TradeState.SYNCING) ? (
                 <StyledPolling>
                   <StyledPollingDot>
                     <Spinner />
@@ -318,17 +318,28 @@ export function BorrowDetailsDropdown({ trade, tradeState, syncing, loading, all
                   </MouseoverTooltipContent>
                 </HideSmall>
               )
-              }
-              {trade.state === TradeState.LOADING ? (
-                <ThemedText.DeprecatedMain fontSize={14}>
-                  <Trans>Simulating position ...</Trans>
-                </ThemedText.DeprecatedMain>
-              ) : (
-                <LoadingOpacityContainer $loading={loading}>
-                  Trade Details
-                </LoadingOpacityContainer>
-              )
-              }
+              } */}
+              {Boolean(trade.state === TradeState.LOADING || trade.state === TradeState.SYNCING) && (
+                  <StyledPolling>
+                    <StyledPollingDot>
+                      <Spinner />
+                    </StyledPollingDot>
+                  </StyledPolling>
+                )}
+                {
+                  trade.state === TradeState.LOADING ? (
+                    <ThemedText.DeprecatedMain fontSize={14}>
+                      <Trans>Simulating position ...</Trans>
+                    </ThemedText.DeprecatedMain>
+                  ) : trade.state === TradeState.VALID ? (
+                    <LoadingOpacityContainer $loading={syncing}>
+                      <RowFixed>
+                        <Info size={12} />
+                        <ThemedText.DeprecatedMain marginLeft="5px">Trade Details</ThemedText.DeprecatedMain>
+                      </RowFixed>
+                    </LoadingOpacityContainer>
+                  )
+                    : null}
             </RowFixed>
             <RowFixed>
               <RotatingArrow
@@ -343,7 +354,9 @@ export function BorrowDetailsDropdown({ trade, tradeState, syncing, loading, all
         <AnimatedDropdown open={showDetails}>
           <AutoColumn gap="sm" style={{ padding: '0', paddingBottom: '8px' }}>
             <StyledCard>
-              <AdvancedBorrowSwapDetails borrowTrade={trade} syncing={syncing} />
+              {trade.state === TradeState.VALID ? (
+                 <AdvancedBorrowSwapDetails borrowTrade={trade} syncing={syncing} />
+              ) : null }
             </StyledCard>
           </AutoColumn>
         </AnimatedDropdown>
