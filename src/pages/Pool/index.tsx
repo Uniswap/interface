@@ -122,6 +122,8 @@ const InboxIcon = styled(Inbox)`
 `
 
 const ResponsiveButtonPrimary = styled(ButtonPrimary)`
+  margin-right: 10px;
+  margin-left: 10px;
   border-radius: 12px;
   font-size: 16px;
   padding: 6px 8px;
@@ -133,10 +135,13 @@ const ResponsiveButtonPrimary = styled(ButtonPrimary)`
 `
 
 const MainContentWrapper = styled.main`
-  background-color: ${({ theme }) => theme.backgroundSurface};
-  border: 1px solid ${({ theme }) => theme.backgroundOutline};
-  padding: 0;
-  border-radius: 16px;
+  margin-right: 10px;
+  margin-left: 10px;
+
+  background-color: ${({ theme }) => theme.backgroundBackdrop};
+  border: 2px solid ${({ theme }) => theme.backgroundBackdrop};
+  padding: 10px;
+  border-radius: 4px;
   display: flex;
   flex-direction: column;
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),

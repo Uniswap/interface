@@ -51,9 +51,13 @@ export default function RadialGradientByChainUpdater(): null {
       case SupportedChainId.ARBITRUM_GOERLI: {
         setBackground(backgroundResetStyles)
         const arbitrumLightGradient =
-          'radial-gradient(100% 100% at 50% 0%, rgba(205, 232, 251, 0.7) 0%, rgba(252, 243, 249, 0.6536) 49.48%, rgba(255, 255, 255, 0) 100%), #FFFFFF'
+                  'linear-gradient(180deg, #202738 0%, #070816 100%)'
+
+          // 'radial-gradient(100% 100% at 50% 0%, rgba(205, 232, 251, 0.7) 0%, rgba(252, 243, 249, 0.6536) 49.48%, rgba(255, 255, 255, 0) 100%), #FFFFFF'
         const arbitrumDarkGradient =
-          'radial-gradient(100% 100% at 50% 0%, rgba(10, 41, 75, 0.7) 0%, rgba(34, 30, 48, 0.6536) 49.48%, rgba(31, 33, 40, 0) 100%), #0D0E0E'
+          // 'radial-gradient(100% 100% at 50% 0%, rgba(10, 41, 75, 0.7) 0%, rgba(34, 30, 48, 0.6536) 49.48%, rgba(31, 33, 40, 0) 100%), #0D0E0E'
+                    'linear-gradient(180deg, #202738 0%, #070816 100%)'
+
         backgroundRadialGradientElement.style.background = darkMode ? arbitrumDarkGradient : arbitrumLightGradient
         break
       }
@@ -96,9 +100,13 @@ export default function RadialGradientByChainUpdater(): null {
       case SupportedChainId.BNB: {
         setBackground(backgroundResetStyles)
         const bscLightGradient =
-          'radial-gradient(100% 100% at 50% 0%, rgba(242 , 186, 8, 0.1) 0%, rgba(238, 182, 6, 0.08) 50%, rgba(140, 185, 11, 0) 100%), #FFFFFF'
+                  'linear-gradient(180deg, #202738 0%, #070816 100%)'
+
+          // 'radial-gradient(100% 100% at 50% 0%, rgba(242 , 186, 8, 0.1) 0%, rgba(238, 182, 6, 0.08) 50%, rgba(140, 185, 11, 0) 100%), #FFFFFF'
         const bscDarkGradient =
-          'radial-gradient(100% 100% at 50% 0%, rgba(169, 132, 17, 0.1) 0%, rgba(128, 100, 14, 0.08) 50%, rgba(140, 185, 11, 0) 100%), #0D0E0E'
+                  'linear-gradient(180deg, #202738 0%, #070816 100%)'
+
+          // 'radial-gradient(100% 100% at 50% 0%, rgba(169, 132, 17, 0.1) 0%, rgba(128, 100, 14, 0.08) 50%, rgba(140, 185, 11, 0) 100%), #0D0E0E'
         backgroundRadialGradientElement.style.background = darkMode ? bscDarkGradient : bscLightGradient
         break
       }

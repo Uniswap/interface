@@ -1,11 +1,13 @@
 import { AutoColumn } from 'components/Column'
 import CurrencyInputPanel from 'components/CurrencyInputPanel'
 import Input from 'components/NumericalInput'
-import { BodyWrapper } from 'pages/AppBody'
+import { BodyWrapper,BodyWrapperAdd } from 'pages/AppBody'
 import styled from 'styled-components/macro'
 
+
+
 export const PageWrapper = styled(BodyWrapper)<{ wide: boolean }>`
-  max-width: ${({ wide }) => (wide ? '880px' : '480px')};
+  max-width: ${({ wide }) => (wide ? '1200px' : '800px')};
   width: 100%;
 
   padding: ${({ wide }) => (wide ? '10px' : '0')};

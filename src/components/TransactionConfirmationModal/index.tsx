@@ -25,7 +25,7 @@ import AnimatedConfirmation from './AnimatedConfirmation'
 import { SmallButtonPrimary } from 'components/Button'
 
 const Wrapper = styled.div`
-  background-color: ${({ theme }) => theme.backgroundSurface};
+  background-color: ${({ theme }) => theme.backgroundFloating};
   border-radius: 20px;
   outline: 1px solid ${({ theme }) => theme.backgroundOutline};
   width: 100%;
