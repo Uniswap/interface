@@ -70,7 +70,7 @@ function shouldRejectError(error: EventHint['originalException']) {
     // For example, if a user runs an eval statement in console this error would still get thrown.
     // TODO(WEB-2348): We should extend this to filter out any type of CSP error.
     if (error.message.match(/'unsafe-eval'.*content security policy/i)) return true
-    if (error.message.match(/Blocked a frame with origin "*" from accessing a cross-origin frame./)) return true
+    if (error.message.match(/Blocked a frame with origin ".*" from accessing a cross-origin frame./)) return true
     if (error.message.match(/NotAllowedError: Write permission denied./)) return true
 
     // WebAssembly compilation fails because we do not allow 'unsafe-eval' in our CSP.
