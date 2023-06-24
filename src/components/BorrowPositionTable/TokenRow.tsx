@@ -389,7 +389,6 @@ export const HEADER_DESCRIPTIONS: Record<PositionSortMethod, ReactNode | undefin
   ),
   [PositionSortMethod.ACTIONS]: (
     <Trans>
-      (Reduce): reduce position size
       (Pay): pay premium
     </Trans>
   )

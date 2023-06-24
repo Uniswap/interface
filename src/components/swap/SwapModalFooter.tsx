@@ -63,6 +63,7 @@ import { useWeb3React } from '@web3-react/core'
 import { useCurrencyBalances } from 'lib/hooks/useCurrencyBalance'
 import { currencyId } from 'utils/currencyId'
 import { usePool } from 'hooks/usePools'
+import { ValueLabel } from './AdvancedSwapDetails'
 
 const StyledNumericalInput = styled(NumericalInput)`
   width: 70%;
@@ -487,7 +488,8 @@ function useDerivedBorrowReduceDebtInfo(
   reduceAmount: string | undefined,
   recieveCollateral: boolean,
   setState: (state: DerivedInfoState) => void,
-  approvalState: ApprovalState
+  approvalState: ApprovalState,
+  premium?: number
 ): {
   transactionInfo: {
     token0Amount: string 
@@ -586,9 +588,9 @@ function useDerivedBorrowReduceDebtInfo(
       </Trans>)
     }
 
-    if (relevantTokenBalances?.length > 0 && position) {
+    if (relevantTokenBalances?.length > 0 && position && premium) {
       const tokenBalance = position.isToken0 ? relevantTokenBalances[1] : relevantTokenBalances[0]
-      if (Number(tokenBalance) < position.totalDebtInput * 0.002) {
+      if (Number(tokenBalance?.toExact()) < premium) {
         error = (<Trans>
           Insufficient {position.isToken0 ? currency1?.symbol : currency0?.symbol} balance
         </Trans>)
@@ -596,7 +598,7 @@ function useDerivedBorrowReduceDebtInfo(
     }
 
     return error
-  }, [relevantTokenBalances, position, reduceAmount, approvalState])
+  }, [relevantTokenBalances, position, reduceAmount, approvalState, premium])
 
   return {
     transactionInfo,
@@ -629,6 +631,7 @@ function useDerivedAddLeveragePremiumInfo(
   isToken0: boolean | undefined,
   setState: (state: DerivedInfoState) => void,
   approvalState: ApprovalState,
+  premium?: number
 ): {
   tradeInfo: {
     remainingPremium: number,
@@ -694,21 +697,20 @@ function useDerivedAddLeveragePremiumInfo(
   ])
 
   const inputError = useMemo(() => {
-    if (position) {
+    if (position && premium) {
       const isToken0 = position.isToken0
       const token0Balance = relevantTokenBalances[0]
       const token1Balance = relevantTokenBalances[1]
       let inputError
-      if (isToken0 && Number(token1Balance?.toExact()) < position.totalDebtInput * 0.002) {
+      if (isToken0 && Number(token1Balance?.toExact()) < premium) {
         inputError = (<Trans>
           Insufficient {currency1?.symbol} balance
         </Trans>)
-      } else if (!isToken0 && Number(token0Balance?.toExact()) < position.totalDebtInput * 0.002) {
+      } else if (!isToken0 && Number(token0Balance?.toExact()) < premium) {
         inputError = (<Trans>
           Insufficient {currency0?.symbol} balance
         </Trans>)
       }
-
       return inputError
     }
     return undefined
@@ -724,6 +726,7 @@ function useDerivedAddBorrowPremiumInfo(
   isToken0: boolean | undefined,
   setState: (state: DerivedInfoState) => void,
   approvalState: ApprovalState,
+  premium?: number
 ): {
   tradeInfo: {
     // rate: string,
@@ -794,16 +797,16 @@ function useDerivedAddBorrowPremiumInfo(
   ])
 
   const inputError = useMemo(() => {
-    if (position) {
+    if (position && premium) {
       const isToken0 = position.isToken0
       const token0Balance = relevantTokenBalances[0]
       const token1Balance = relevantTokenBalances[1]
       let inputError
-      if (isToken0 && Number(token1Balance?.toExact()) < position.totalDebtInput * 0.002) {
+      if (isToken0 && Number(token1Balance?.toExact()) < premium) {
         inputError = (<Trans>
           Insufficient {currency1?.symbol} balance
         </Trans>)
-      } else if (!isToken0 && Number(token0Balance?.toExact()) < position.totalDebtInput * 0.002) {
+      } else if (!isToken0 && Number(token0Balance?.toExact()) < premium) {
         inputError = (<Trans>
           Insufficient {currency0?.symbol} balance
         </Trans>)
@@ -844,22 +847,18 @@ export function AddPremiumLeverageModalFooter({
   const token0 = useToken(position?.token0Address)
   const token1 = useToken(position?.token1Address)
   const inputCurrency = useCurrency(position?.isToken0 ? position?.token1Address : position?.token0Address)
-  const approveAmount = useMemo(() => {
-    return position?.totalDebtInput ? new BN(position.totalDebtInput * 0.002).shiftedBy(18).toFixed(0) : "0"
-    // return 0
+  const premium = useMemo(() => {
+    return position?.totalDebtInput ? position.totalDebtInput * 0.002 : 0
   }, [position])
 
   const [leverageApprovalState, approveLeverageManager] = useApproveCallback(
     inputCurrency ?
-      CurrencyAmount.fromRawAmount(inputCurrency, approveAmount) : undefined,
+      CurrencyAmount.fromRawAmount(inputCurrency, new BN(premium).shiftedBy(18).toFixed(0)) : undefined,
     position?.leverageManagerAddress ?? undefined
   )
-  const { tradeInfo, inputError } = useDerivedAddLeveragePremiumInfo(liquidityManagerAddress, trader, tokenId, position?.isToken0, setDerivedState, leverageApprovalState)
+  const { tradeInfo, inputError } = useDerivedAddLeveragePremiumInfo(liquidityManagerAddress, trader, tokenId, position?.isToken0, setDerivedState, leverageApprovalState, premium)
   const inputIsToken0 = !position?.isToken0
-  // console.log("tradeInfo: ", tradeInfo); 
-
-
-
+  // console.log("tradeInfo: ", tradeInfo);
 
   const updateLeverageAllowance = useCallback(async () => {
     try {
@@ -872,10 +871,17 @@ export function AddPremiumLeverageModalFooter({
   const loading = derivedState === DerivedInfoState.LOADING
   const valid = derivedState === DerivedInfoState.VALID
 
-  // console.log("tradeInfo", approveAmount)
-
   return (
     <AutoRow>
+      <ValueLabel 
+        value={premium}
+        label={"Expected Premium"}
+        description={"Expected Premium Amount"}
+        syncing={false}
+        symbolAppend={
+          position?.isToken0 ? token1?.symbol : token0?.symbol
+        }
+      />
       <TransactionDetails>
         <Wrapper style={{ marginTop: '0' }}>
           <AutoColumn gap="sm" style={{ width: '100%', marginBottom: '-8px' }}>
@@ -1044,22 +1050,22 @@ export function AddPremiumBorrowModalFooter({
   const { error, position } = useLimitlessPositionFromTokenId(tokenId)
   const theme = useTheme()
   const outputCurrency = useCurrency(position?.isToken0 ? position?.token1Address : position?.token0Address)
-  const approveAmount = useMemo(() => {
+  const premium = useMemo(() => {
     if (position) {
-      return new BN(position.totalDebtInput * 0.002).shiftedBy(18).toFixed(0)
+      return position.totalDebtInput * 0.002
     }
     return 0
   }, [position])
 
   const [approvalState, approveManager] = useApproveCallback(
     outputCurrency ?
-      CurrencyAmount.fromRawAmount(outputCurrency, approveAmount) : undefined,
+      CurrencyAmount.fromRawAmount(outputCurrency, new BN(premium).shiftedBy(18).toFixed(0)) : undefined,
     position?.borrowManagerAddress ?? undefined
   )
   const token0 = useCurrency(position?.token0Address)
   const token1 = useCurrency(position?.token1Address)
 
-  const { tradeInfo, inputError } = useDerivedAddBorrowPremiumInfo(liquidityManagerAddress, trader, tokenId, position?.isToken0, setDerivedState, approvalState)
+  const { tradeInfo, inputError } = useDerivedAddBorrowPremiumInfo(liquidityManagerAddress, trader, tokenId, position?.isToken0, setDerivedState, approvalState, premium)
   const inputIsToken0 = position?.isToken0
 
 
@@ -1075,10 +1081,14 @@ export function AddPremiumBorrowModalFooter({
 
   const loading = derivedState === DerivedInfoState.LOADING
 
-  // console.log("tradeInfo: ", !!inputError || !tradeInfo, inputError, approvalState, approveAmount, tradeInfo)
-
   return (
     <AutoRow>
+      <ValueLabel 
+        label={"Expected Premium"} 
+        description={"Expected Premium Amount"} 
+        value={premium} 
+        syncing={false} 
+        symbolAppend={position?.isToken0 ? token1?.symbol : token0?.symbol} />
       <TransactionDetails>
         <Wrapper style={{ marginTop: '0' }}>
           <AutoColumn gap="sm" style={{ width: '100%', marginBottom: '-8px' }}>
@@ -1201,7 +1211,7 @@ export function AddPremiumBorrowModalFooter({
                   <Info size={20} />
                 </MouseoverTooltip>
               </div>
-              <Trans>Approve use of {inputIsToken0 ? token0?.symbol : token1?.symbol}</Trans>
+              <Trans>Approve use of {inputIsToken0 ? token1?.symbol : token0?.symbol}</Trans>
             </>
           )}
         </ButtonPrimary>
@@ -1397,13 +1407,13 @@ export function BorrowReduceCollateralModalFooter({
   const [debouncedReduceAmount, setDebouncedReduceAmount] = useDebouncedChangeHandler(reduceAmount, setReduceAmount);
 
   const approvalAmount = useMemo(() => {
-    // if (position && token1 && token0) {
-    //   return position.isToken0 ?
-    //     CurrencyAmount.fromRawAmount(token1, position.totalDebtInput * 0.002) :
-    //     CurrencyAmount.fromRawAmount(token0, position.totalDebtInput * 0.002)
-    // }
-    return token0 ? CurrencyAmount.fromRawAmount(token0, 0) : undefined
-    // return undefined
+    if (position && token1 && token0) {
+      return position.isToken0 ?
+        CurrencyAmount.fromRawAmount(token1, position.totalDebtInput * 0.002) :
+        CurrencyAmount.fromRawAmount(token0, position.totalDebtInput * 0.002)
+    }
+    // return token0 ? CurrencyAmount.fromRawAmount(token0, 0) : undefined
+    return undefined
   }, [position])
 
   const [approvalState, approveManager] = useApproveCallback(approvalAmount, position?.borrowManagerAddress);
@@ -1769,17 +1779,19 @@ export function BorrowReduceDebtModalFooter({
   const [showDetails, setShowDetails] = useState(false)
   const theme = useTheme()
 
-  const approvalAmount = useMemo(() => {
-    // if (position && token1 && token0) {
-    //   return position.isToken0 ?
-    //     CurrencyAmount.fromRawAmount(token1, position.totalDebtInput * 0.002) :
-    //     CurrencyAmount.fromRawAmount(token0, position.totalDebtInput * 0.002)
-    // }
-    // return undefined
-    return token1 ? CurrencyAmount.fromRawAmount(token1, 0) : undefined
-  }, [position])
+  const premium = useMemo(() => {
+    if (position && token1 && token0 && Number(reduceAmount) > 0) {
+      return (position.totalDebtInput - Number(reduceAmount)) * 0.002
+    }
+    return 0
+  }, [position, reduceAmount, token0, token1])
 
-  const [approvalState, approveManager] = useApproveCallback(approvalAmount, position?.borrowManagerAddress);
+  const [approvalState, approveManager] = useApproveCallback(
+    position?.isToken0 && token1 ? 
+    CurrencyAmount.fromRawAmount(token1, new BN(premium).shiftedBy(18).toFixed(0)) : token0 ? 
+    CurrencyAmount.fromRawAmount(token0, new BN(premium).shiftedBy(18).toFixed(0)) : undefined
+    , position?.borrowManagerAddress
+    );
 
   // what do we need for the simulation
 
@@ -1789,17 +1801,16 @@ export function BorrowReduceDebtModalFooter({
   const {
     transactionInfo,
     userError
-  } = useDerivedBorrowReduceDebtInfo(trader, tokenId, position, debouncedReduceAmount, recieveCollateral, setDerivedState, approvalState)
+  } = useDerivedBorrowReduceDebtInfo(trader, tokenId, position, debouncedReduceAmount, recieveCollateral, setDerivedState, approvalState, Number(premium))
 
   const loading = useMemo(() => derivedState === DerivedInfoState.LOADING, [derivedState])
-  // console.log("here: ", token0Amount, token1Amount)
 
 
 
   const debt = position?.totalDebtInput;
-  const initCollateral = position?.initialCollateral;
-  const received = inputIsToken0 ? (Math.abs(Number(transactionInfo?.token0Amount)) - Number(debt))
-    : (Math.abs(Number(transactionInfo?.token1Amount)) - Number(debt))
+  // const initCollateral = position?.initialCollateral;
+  // const received = inputIsToken0 ? (Math.abs(Number(transactionInfo?.token0Amount)) - Number(debt))
+  //   : (Math.abs(Number(transactionInfo?.token1Amount)) - Number(debt))
   // console.log('returned amount', returnedAmount)
   return (
     <AutoRow>
@@ -1849,6 +1860,15 @@ export function BorrowReduceDebtModalFooter({
             </AutoColumn>
           </>
         </AutoColumn>
+        <ValueLabel 
+          label={"Expected Premium"}
+          value={premium}
+          description={"Expected Premium Amount"}
+          syncing={false}
+          symbolAppend={
+            position?.isToken0 ? token1?.symbol : token0?.symbol
+          }
+        />
       </DarkCard>
       <TransactionDetails>
         <Wrapper style={{ marginTop: '0' }}>
@@ -1967,7 +1987,7 @@ export function BorrowReduceDebtModalFooter({
                           </ThemedText.DeprecatedBlack>
                         </TextWithLoadingPlaceholder>
                       </RowBetween>
-                      <RowBetween>
+                      {/* <RowBetween>
                         <RowFixed>
                           <MouseoverTooltip
                             text={
@@ -1990,7 +2010,7 @@ export function BorrowReduceDebtModalFooter({
                             </TruncatedText>
                           </ThemedText.DeprecatedBlack>
                         </TextWithLoadingPlaceholder>
-                      </RowBetween>
+                      </RowBetween> */}
 
                     </AutoColumn>
 

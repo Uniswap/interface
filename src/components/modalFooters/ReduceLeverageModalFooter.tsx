@@ -34,7 +34,7 @@ import { useTransactionAdder } from 'state/transactions/hooks'
 import { TransactionType } from 'state/transactions/types'
 import { currencyId } from 'utils/currencyId'
 import {DerivedInfoState, SliderText, TransactionDetails, Wrapper, StyledHeaderRow, StyledPollingDot, StyledInfoIcon, Spinner, StyledPolling, RotatingArrow, TextWithLoadingPlaceholder, StyledCard, TruncatedText } from './common'
-import { useLeverageManagerContract } from 'hooks/useContract'
+import { useLeverageManagerContract, useQuoter } from 'hooks/useContract'
 import { CurrencyAmount } from '@uniswap/sdk-core'
 import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
 import { useWeb3React } from '@web3-react/core'
@@ -42,6 +42,8 @@ import { useCurrencyBalances } from 'lib/hooks/useCurrencyBalance'
 import { Info } from 'react-feather'
 import Loader from 'components/Icons/LoadingSpinner'
 import { usePool } from 'hooks/usePools'
+import { useSingleCallResult } from 'lib/hooks/multicall'
+import { QuoterV2 } from 'types/v3'
 
 
 function useDerivedLeverageReduceInfo(
@@ -55,6 +57,7 @@ function useDerivedLeverageReduceInfo(
   setState: (state: DerivedInfoState) => void,
   approvalState: ApprovalState,
   premium?: number
+  // setPremium: (premium: number) => void
 ): {
   transactionInfo: {
     token0Amount: string
@@ -189,11 +192,13 @@ export function ReduceLeverageModalFooter({
   const [slippage, setSlippage] = useState("1")
   // const [newPosition, setNewPosition] = useState("")
   const [reduceAmount, setReduceAmount] = useState("")
+  const [premium, setPremium ] = useState(0)
 
   const leverageManagerContract = useLeverageManagerContract(leverageManagerAddress, true)
   const addTransaction = useTransactionAdder()
-  const token0 = useCurrency(position?.token0Address)
-  const token1 = useCurrency(position?.token1Address)
+  const token0 = useToken(position?.token0Address)
+  const token1 = useToken(position?.token1Address)
+  
   const inputIsToken0 = !position?.isToken0
 
   // const [, pool] = usePool(token0, token1, position?.poolFee)
@@ -247,16 +252,36 @@ export function ReduceLeverageModalFooter({
   const [debouncedSlippage, setDebouncedSlippage] = useDebouncedChangeHandler(slippage, setSlippage)
   const [debouncedReduceAmount, setDebouncedReduceAmount] = useDebouncedChangeHandler(reduceAmount, setReduceAmount);
 
+  const quoter = useQuoter(true) as QuoterV2 | null;
 
-  const premium = useMemo(() => {
-
-    if (pool && position) {
-      const price = position.isToken0 ? Number(pool.token1Price.toFixed(18)) : Number(pool.token0Price.toFixed(18))
-      const amount =  (position.totalPosition - Number(reduceAmount)) * price
-      return amount < 0 ? 0 : amount
+  useEffect(() => {
+    async function getPremium() {
+      if (pool && position && token1 && token0 && position?.token1Address && position?.token0Address && quoter && Number(reduceAmount) > 0) {
+        const newTotalPosition = Number(position.totalPosition) - Number(reduceAmount)
+        try {
+          const result = await quoter?.callStatic.quoteExactInputSingle(
+            {
+              tokenIn: position.isToken0 ? position.token0Address : position.token1Address,
+              tokenOut: position.isToken0 ? position.token1Address : position.token0Address,
+              amountIn: new BN(newTotalPosition).shiftedBy(18).toFixed(0),
+              fee: pool.fee,
+              sqrtPriceLimitX96: 0
+            }
+          )
+          if (result) {
+            const amountOut = new BN(result.amountOut.toString()).shiftedBy(-18).toNumber()
+            setPremium(amountOut * 0.002)
+          }
+          return
+        } catch (err) {
+          console.log("error getting premium: ", err)
+        }
+      }
+      setPremium(0)
     }
-    return 0
-  }, [position, reduceAmount])
+
+    getPremium()
+  }, [position, reduceAmount, pool, quoter])
 
   const inputCurrency = useCurrency(position?.isToken0 ? position?.token1Address : position?.token0Address)
 
@@ -278,7 +303,7 @@ export function ReduceLeverageModalFooter({
   // const received = inputIsToken0 ? (Math.abs(Number(transactionInfo?.token0Amount)) - Number(debt))
   //   : (Math.abs(Number(transactionInfo?.token1Amount)) - Number(debt))
 
-  // console.log("footer: ", derivedState, userError, transactionInfo)
+  console.log("premium: ", premium)
   return (
     <AutoRow>
       <DarkCard marginTop="5px" padding="5px">
