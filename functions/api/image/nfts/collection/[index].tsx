@@ -1,7 +1,7 @@
 /* eslint-disable import/no-unused-modules */
 import { ApolloClient, InMemoryCache } from '@apollo/client'
 import { ImageResponse } from '@vercel/og'
-import Vibrant from 'node-vibrant/lib/bundle.js'
+import ColorThief from 'colorthief/src/color-thief-node'
 import React from 'react'
 
 import { CollectionDocument } from '../../../../../src/graphql/data/__generated__/types-and-hooks'
@@ -50,9 +50,17 @@ export async function onRequestGet({ params, request }) {
 
     const name = collection.name
     const image = collection.image?.url
+    let blue = 0
+    let red = 0
+    let green = 0
     try {
-      const palette = await Vibrant.from(image).getPalette()
-      console.log(palette)
+      const data = await fetch(image)
+        .then((res) => res.arrayBuffer())
+        .then((arrayBuffer) => Buffer.from(arrayBuffer))
+      const palette = ColorThief.getPalette(data)
+      red = palette[0][0]
+      green = palette[0][1]
+      blue = palette[0][2]
     } catch (e) {
       console.log(e)
     }
@@ -62,47 +70,54 @@ export async function onRequestGet({ params, request }) {
       (
         <div
           style={{
-            display: 'flex',
-            width: '1200px',
-            height: '630px',
-            alignItems: 'center',
             backgroundColor: 'black',
+            display: 'flex',
           }}
         >
-          <img
-            src={image}
-            alt={name}
-            width="500px"
-            style={{
-              borderRadius: '24px',
-              boxShadow: '0px 0px 24px rgba(0, 0, 0, 0.25)',
-              margin: '0px 72px 0px 72px',
-            }}
-          />
           <div
             style={{
-              position: 'absolute',
-              bottom: '72px',
-              left: '644px',
-              color: 'white',
               display: 'flex',
-              flexDirection: 'column',
-              gap: '32px',
+              alignItems: 'center',
+              backgroundColor: `rgba(${red}, ${green}, ${blue}, 0.8)`,
+              width: '1200px',
+              height: '630px',
             }}
           >
+            <img
+              src={image}
+              alt={name}
+              width="500px"
+              style={{
+                borderRadius: '24px',
+                boxShadow: '0px 0px 24px rgba(0, 0, 0, 0.25)',
+                margin: '0px 72px 0px 72px',
+              }}
+            />
             <div
               style={{
+                position: 'absolute',
+                bottom: '72px',
+                left: '644px',
+                color: 'white',
                 display: 'flex',
-                alignItems: 'center',
-                gap: '24px',
-                flexDirection: 'row',
-                fontSize: '72px',
-                fontFamily: 'Inter',
+                flexDirection: 'column',
+                gap: '32px',
               }}
             >
-              {name}
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '24px',
+                  flexDirection: 'row',
+                  fontSize: '72px',
+                  fontFamily: 'Inter',
+                }}
+              >
+                {name}
+              </div>
+              <img src={watermark} height="60px" />
             </div>
-            <img src={watermark} height="60px" />
           </div>
         </div>
       ),

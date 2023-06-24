@@ -1,4 +1,5 @@
 /* eslint-disable import/no-unused-modules */
+
 import { ApolloClient, InMemoryCache } from '@apollo/client'
 import { ImageResponse } from '@vercel/og'
 import React from 'react'
