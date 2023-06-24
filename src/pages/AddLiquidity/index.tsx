@@ -36,7 +36,7 @@ import LiquidityChartRangeInput from '../../components/LiquidityChartRangeInput'
 import { AddRemoveTabs } from '../../components/NavigationTabs'
 import { PositionPreview } from '../../components/PositionPreview'
 import RangeSelector from '../../components/RangeSelector'
-import PresetsButtons from '../../components/RangeSelector/PresetsButtons'
+import {PresetsButtons,PresetsButtonsFull }from '../../components/RangeSelector/PresetsButtons'
 import RateToggle from '../../components/RateToggle'
 import Row, { AutoRow, RowBetween, RowFixed } from '../../components/Row'
 import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
@@ -417,6 +417,21 @@ export default function AddLiquidity() {
   }`
 
   const [searchParams, setSearchParams] = useSearchParams()
+  const handleSetRecommendedRange = useCallback(() => {
+    getSetFullRange()
+
+    const minPrice = pricesAtLimit[Bound.LOWER]
+    if (minPrice) searchParams.set('minPrice', minPrice.toSignificant(5))
+    const maxPrice = pricesAtLimit[Bound.UPPER]
+    if (maxPrice) searchParams.set('maxPrice', maxPrice.toSignificant(5))
+    setSearchParams(searchParams)
+
+    sendEvent({
+      category: 'Liquidity',
+      action: 'Full Range Clicked',
+    })
+  }, [getSetFullRange, pricesAtLimit, searchParams, setSearchParams])
+
 
   const handleSetFullRange = useCallback(() => {
     getSetFullRange()
@@ -898,6 +913,8 @@ export default function AddLiquidity() {
                               ticksAtLimit={ticksAtLimit}
                             />
                             {!noLiquidity && <PresetsButtons onSetFullRange={handleSetFullRange} />}
+                            {!noLiquidity && <PresetsButtonsFull onSetFullRange={handleSetFullRange} />}
+
                           </AutoColumn>
                         </StackedItem>
                       </StackedContainer>
@@ -908,8 +925,9 @@ export default function AddLiquidity() {
                             {/*<AlertTriangle stroke={theme.deprecated_primary2} size="16px" />*/}
                             <ThemedText.DeprecatedLabel ml="12px" fontSize="12px">
                               <Trans>
-                                Your position will earn fees even when prices are outside your range. 
+                                Your position will earn only premiums when out of range, and trading fees as well when in range. 
                               </Trans>
+                         
                             </ThemedText.DeprecatedLabel>
                           </RowBetween>
                         </YellowCard>

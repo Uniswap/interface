@@ -64,7 +64,7 @@ const StyledTokenRow = styled.div<{
   background-color: transparent;
   display: grid;
   font-size: 18px;
-  grid-template-columns: 1fr 7fr 4fr 4fr 4fr 4fr 5fr;
+  grid-template-columns: 1fr 7fr 4fr 4fr 4fr 4fr 5fr 5fr;
   line-height: 24px;
   max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT};
   min-width: 390px;
@@ -136,7 +136,7 @@ const StyledHeaderRow = styled(StyledTokenRow)`
   border-radius: 8px 8px 0px 0px;
   color: ${({ theme }) => theme.textSecondary};
   font-size: 14px;
-  height: 48px;
+  height: 64px;
   line-height: 16px;
   padding: 0px 12px;
   width: 100%;
@@ -381,6 +381,7 @@ function TokenRow({
     <>
       <ListNumberCell header={header}>{listNumber}</ListNumberCell>
       <NameCell data-testid="name-cell">{tokenInfo}</NameCell>
+
       <PriceCell data-testid="price-cell" sortable={header}>
         {price}
       </PriceCell>
@@ -393,6 +394,10 @@ function TokenRow({
       <VolumeCell data-testid="volume-cell" sortable={header}>
         {volume}
       </VolumeCell>
+      <VolumeCell data-testid="volume-cell" sortable={header}>
+        {volume}
+      </VolumeCell>
+
       <SparkLineCell>{sparkLine}</SparkLineCell>
     </>
   )

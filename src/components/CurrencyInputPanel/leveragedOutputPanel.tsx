@@ -260,7 +260,7 @@ export default function LeveragedOutputPanel({
         </FixedContainer>
       )}
       <Container hideInput={hideInput}>
-       <Trans>Total Input Position</Trans>
+       <Trans>Total Input</Trans>
         <InputRow style={hideInput ? { padding: '0', borderRadius: '8px' } : {}}>
           {!hideInput && (
             <StyledNumericalInput

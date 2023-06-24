@@ -276,14 +276,14 @@ export function ReduceLeveragePositionDetails({
       <AutoColumn gap="sm">
         <MouseoverValueLabel 
           description='Total position size in the output token of the leverage trade'
-          label={<Trans>Total Output Position</Trans>}
+          label={<Trans>Added Position</Trans>}
           syncing={false}
           value={`${leverageTrade?.totalPosition ?? "-"}`}
           appendSymbol={inputIsToken0 ? token1?.symbol : token0?.symbol}
         />
         <MouseoverValueLabel
           description='Total debt of the position'
-          label={<Trans>Original Debt</Trans>}
+          label={<Trans>Debt</Trans>}
           value={`${Number(leverageTrade?.totalDebtInput) ?? "-"}`}
           appendSymbol={inputIsToken0 ? token0?.symbol : token1?.symbol}
           syncing={false}

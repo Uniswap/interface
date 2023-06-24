@@ -16,7 +16,18 @@ interface PresetsButtonsProps {
   onSetFullRange: () => void
 }
 
-export default function PresetsButtons({ onSetFullRange }: PresetsButtonsProps) {
+export  function PresetsButtons({ onSetFullRange }: PresetsButtonsProps) {
+  return (
+    <AutoRow gap="4px" width="auto">
+      <Button onClick={onSetFullRange}>
+        <ThemedText.DeprecatedBody fontSize={12}>
+          <Trans>Recommended Range</Trans>
+        </ThemedText.DeprecatedBody>
+      </Button>
+    </AutoRow>
+  )
+}
+export function PresetsButtonsFull({ onSetFullRange }: PresetsButtonsProps) {
   return (
     <AutoRow gap="4px" width="auto">
       <Button onClick={onSetFullRange}>
