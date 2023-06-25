@@ -94,7 +94,7 @@ import { Input as NumericalInput } from 'components/NumericalInput'
 import LeveragePositionsTable from 'components/LeveragePositionTable/TokenTable'
 import { PoolDataSection } from 'components/ExchangeChart'
 // import _ from 'lodash'
-import { FakeTokens } from "constants/fake-tokens"
+import { FakeTokens, FETH, FUSDC } from "constants/fake-tokens"
 import { TabContent, TabNavItem } from 'components/Tabs'
 import BorrowPositionsTable from "components/BorrowPositionTable/TokenTable"
 import { AllowanceWarning, WarningIcon } from 'components/TokenSafety/TokenSafetyIcon'
@@ -307,8 +307,8 @@ export default function Swap({ className }: { className?: string }) {
 
   // HACK
   // const addToken = useAddUserToken()
-  const fETH = useToken(feth)
-  const fUSDC = useToken(fusdc)
+  // const fETH = useToken(feth)
+  // const fUSDC = useToken(fusdc)
 
 
   // console.log("loadedUrlParams", loadedUrlParams)
@@ -411,11 +411,11 @@ export default function Swap({ className }: { className?: string }) {
 
   const inputIsToken0 = outputCurrency?.wrapped ? inputCurrency?.wrapped.sortsBefore(outputCurrency?.wrapped) : false; 
 
-  const { position: existingPosition } = useLimitlessPositionFromKeys(
-    account, 
-    activeTab === ActiveSwapTab.TRADE ? leverageManagerAddress ?? undefined : borrowManagerAddress ?? undefined, 
-    activeTab === ActiveSwapTab.TRADE ? !inputIsToken0 : inputIsToken0
-  )
+  // const { position: existingPosition } = useLimitlessPositionFromKeys(
+  //   account, 
+  //   activeTab === ActiveSwapTab.TRADE ? leverageManagerAddress ?? undefined : borrowManagerAddress ?? undefined, 
+  //   activeTab === ActiveSwapTab.TRADE ? !inputIsToken0 : inputIsToken0
+  // )
 
   // useEffect(() => {
   //   if (
@@ -546,13 +546,14 @@ export default function Swap({ className }: { className?: string }) {
 
   const [nonce, setNonce] = useState(0)
 
-  useEffect(() => {
-    if (fETH && fUSDC && nonce === 0 && chainId && account) {
-      onCurrencySelection(Field.INPUT, fUSDC)
-      onCurrencySelection(Field.OUTPUT, fETH)
-      setNonce(1)
-    }
-  }, [chainId, account, nonce])
+  // useEffect(() => {
+  //   // console.log("nonce", fETH, fUSDC, nonce)
+  //   if (nonce === 0 && chainId && account) {
+  //     onCurrencySelection(Field.INPUT, FUSDC)
+  //     onCurrencySelection(Field.OUTPUT, FETH)
+  //     setNonce(1)
+  //   }
+  // }, [chainId, account, nonce])
 
   const isValid = !swapInputError
   const dependentField: Field = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT
@@ -638,16 +639,16 @@ export default function Swap({ className }: { className?: string }) {
       onLeverageManagerAddress(computeLeverageManagerAddress(
         {
           factoryAddress: LEVERAGE_MANAGER_FACTORY_ADDRESSES[chainId ?? 80001],
-          tokenA: pool.token0.address,
-          tokenB: pool.token1.address,
+          tokenA: inputCurrency?.wrapped.address ?? "",
+          tokenB: outputCurrency?.wrapped.address ?? "",
           fee: pool.fee
         }
       ))
       onBorrowManagerAddress(computeBorrowManagerAddress(
         {
           factoryAddress: BORROW_MANAGER_FACTORY_ADDRESSES[chainId ?? 80001],
-          tokenA: pool.token0.address,
-          tokenB: pool.token1.address,
+          tokenA: inputCurrency?.wrapped.address ?? "",
+          tokenB: outputCurrency?.wrapped.address ?? "",
           fee: pool.fee
         }))
     }
@@ -1055,8 +1056,8 @@ export default function Swap({ className }: { className?: string }) {
                 </TokenInfoContainer>
                 <PoolDataSection
                   chainId={chainId ?? 80001}
-                  token0={pool?.token0}
-                  token1={pool?.token1}
+                  token0={inputIsToken0 ? inputCurrency?.wrapped : outputCurrency?.wrapped}
+                  token1={inputIsToken0 ? outputCurrency?.wrapped : inputCurrency?.wrapped}
                   fee={pool?.fee}
                 />
               </StatsContainer>
