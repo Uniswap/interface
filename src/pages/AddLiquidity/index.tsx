@@ -836,18 +836,17 @@ export default function AddLiquidity() {
                                 padding: '1rem 1rem',
                               }}
                             >
-                              <ThemedText.DeprecatedBody
+                              <Text
                                 fontSize={14}
                                 style={{ fontWeight: 500 }}
                                 textAlign="left"
-                                color={theme.accentAction}
+                                color={theme.textSecondary}
                               >
                                 <Trans>
                                   This pool must be initialized before you can add liquidity. To initialize, select a
-                                  starting price for the pool. Then, enter your liquidity price range and deposit
-                                  amount. Gas fees will be higher than usual due to the initialization transaction.
+                                  starting price for the pool. 
                                 </Trans>
-                              </ThemedText.DeprecatedBody>
+                              </Text>
                             </BlueCard>
                           )}
                           <OutlineCard padding="12px">
