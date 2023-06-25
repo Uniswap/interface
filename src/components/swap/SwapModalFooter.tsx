@@ -649,6 +649,27 @@ function useDerivedAddLeveragePremiumInfo(
     account ?? undefined,
     useMemo(() => [currency0 ?? undefined, currency1 ?? undefined], [currency0, currency1])
   )
+
+  const inputError = useMemo(() => {
+    if (position && premium) {
+      const isToken0 = position.isToken0
+      const token0Balance = relevantTokenBalances[0]
+      const token1Balance = relevantTokenBalances[1]
+      let inputError
+      if (isToken0 && Number(token1Balance?.toExact()) < premium) {
+        inputError = (<Trans>
+          Insufficient {currency1?.symbol} balance
+        </Trans>)
+      } else if (!isToken0 && Number(token0Balance?.toExact()) < premium) {
+        inputError = (<Trans>
+          Insufficient {currency0?.symbol} balance
+        </Trans>)
+      }
+      return inputError
+    }
+    return undefined
+  }, [relevantTokenBalances, account, position, approvalState])
+
   useEffect(() => {
     const laggedfxn = async () => {
       if (!liquidityManagerContract || !tokenId || !trader) {
@@ -674,8 +695,8 @@ function useDerivedAddLeveragePremiumInfo(
       }
     }
 
-    laggedfxn()
-  }, [liquidityManagerContract, trader, tokenId, isToken0, approvalState])
+    !inputError && laggedfxn()
+  }, [liquidityManagerContract, trader, tokenId, isToken0, approvalState, inputError])
 
   const info = useMemo(() => {
     if (contractResult) {
@@ -691,26 +712,6 @@ function useDerivedAddLeveragePremiumInfo(
   }, [
     contractResult, approvalState
   ])
-
-  const inputError = useMemo(() => {
-    if (position && premium) {
-      const isToken0 = position.isToken0
-      const token0Balance = relevantTokenBalances[0]
-      const token1Balance = relevantTokenBalances[1]
-      let inputError
-      if (isToken0 && Number(token1Balance?.toExact()) < premium) {
-        inputError = (<Trans>
-          Insufficient {currency1?.symbol} balance
-        </Trans>)
-      } else if (!isToken0 && Number(token0Balance?.toExact()) < premium) {
-        inputError = (<Trans>
-          Insufficient {currency0?.symbol} balance
-        </Trans>)
-      }
-      return inputError
-    }
-    return undefined
-  }, [relevantTokenBalances, account, position, approvalState])
 
   return { tradeInfo: info, inputError }
 }
@@ -747,6 +748,28 @@ function useDerivedAddBorrowPremiumInfo(
     useMemo(() => [currency0 ?? undefined, currency1 ?? undefined], [currency0, currency1])
   )
 
+  const inputError = useMemo(() => {
+    if (position && premium) {
+      const isToken0 = position.isToken0
+      const token0Balance = relevantTokenBalances[0]
+      const token1Balance = relevantTokenBalances[1]
+      let inputError
+      if (isToken0 && Number(token1Balance?.toExact()) < premium) {
+        inputError = (<Trans>
+          Insufficient {currency1?.symbol} balance
+        </Trans>)
+      } else if (!isToken0 && Number(token0Balance?.toExact()) < premium) {
+        inputError = (<Trans>
+          Insufficient {currency0?.symbol} balance
+        </Trans>)
+      }
+
+      return inputError
+    }
+    return undefined
+  }, [relevantTokenBalances, account, position, approvalState])
+
+
   useEffect(() => {
     const laggedfxn = async () => {
       if (!liquidityManagerContract || !tokenId || !trader) {
@@ -771,8 +794,8 @@ function useDerivedAddBorrowPremiumInfo(
       }
     }
 
-    laggedfxn()
-  }, [liquidityManagerContract, trader, tokenId, isToken0, approvalState])
+    !inputError && laggedfxn()
+  }, [liquidityManagerContract, trader, tokenId, isToken0, approvalState, inputError])
 
   const info = useMemo(() => {
     // console.log("addPosition2:", contractResult)
@@ -791,27 +814,6 @@ function useDerivedAddBorrowPremiumInfo(
   }, [
     contractResult, approvalState
   ])
-
-  const inputError = useMemo(() => {
-    if (position && premium) {
-      const isToken0 = position.isToken0
-      const token0Balance = relevantTokenBalances[0]
-      const token1Balance = relevantTokenBalances[1]
-      let inputError
-      if (isToken0 && Number(token1Balance?.toExact()) < premium) {
-        inputError = (<Trans>
-          Insufficient {currency1?.symbol} balance
-        </Trans>)
-      } else if (!isToken0 && Number(token0Balance?.toExact()) < premium) {
-        inputError = (<Trans>
-          Insufficient {currency0?.symbol} balance
-        </Trans>)
-      }
-
-      return inputError
-    }
-    return undefined
-  }, [relevantTokenBalances, account, position, approvalState])
 
   return {
     tradeInfo: info,
@@ -866,6 +868,8 @@ export function AddPremiumLeverageModalFooter({
 
   const loading = derivedState === DerivedInfoState.LOADING
   const valid = derivedState === DerivedInfoState.VALID
+
+  const premiumSymbol = inputIsToken0 ? token0?.symbol : token1?.symbol
 
   return (
     <AutoRow>
@@ -987,19 +991,36 @@ export function AddPremiumLeverageModalFooter({
             </>
           ) : (
             <>
-              <div style={{ height: 20 }}>
-                <MouseoverTooltip
+              <MouseoverTooltip
                   text={
                     <Trans>
-                      Permission is required.
+                      Permission is required for Limitless to use each token. {
+                        premium && premiumSymbol ? `Allowance of ${Number(premium)} ${premiumSymbol} required.` : null
+                      }
                     </Trans>
                   }
                 >
-                  <Info size={20} />
+                  <RowBetween>
+                  <Info size={20}/>
+                  <Trans>Approve use of {premiumSymbol}</Trans>
+                  </RowBetween>
                 </MouseoverTooltip>
-              </div>
-              <Trans>Approval needed for {inputIsToken0 ? token0?.symbol : token1?.symbol} premium payment</Trans>
             </>
+            // <>
+            
+            //   <div style={{ height: 20 }}>
+            //     <MouseoverTooltip
+            //       text={
+            //         <Trans>
+            //           Permission is required.
+            //         </Trans>
+            //       }
+            //     >
+            //       <Info size={20} />
+            //     </MouseoverTooltip>
+            //   </div>
+            //   <Trans>Approval needed for {inputIsToken0 ? token0?.symbol : token1?.symbol} premium payment</Trans>
+            // </>
           )}
         </ButtonPrimary>
       ) : (
@@ -1076,6 +1097,8 @@ export function AddPremiumBorrowModalFooter({
   }, [position, approveManager]) // add input to deps.
 
   const loading = derivedState === DerivedInfoState.LOADING
+
+  const premiumSymbol = inputIsToken0 ? token1?.symbol : token0?.symbol
 
   return (
     <AutoRow>
@@ -1196,19 +1219,35 @@ export function AddPremiumBorrowModalFooter({
             </>
           ) : (
             <>
-              <div style={{ height: 20 }}>
-                <MouseoverTooltip
-                  text={
-                    <Trans>
-                      Permission is required.
-                    </Trans>
-                  }
-                >
-                  <Info size={20} />
-                </MouseoverTooltip>
-              </div>
-              <Trans>Approve use of {inputIsToken0 ? token1?.symbol : token0?.symbol}</Trans>
-            </>
+                          <MouseoverTooltip
+                              text={
+                                <Trans>
+                                  Permission is required for Limitless to use each token. {
+                                    premium && premiumSymbol ? `Allowance of ${premium} ${premiumSymbol} required.` : null
+                                  }
+                                </Trans>
+                              }
+                            >
+                              <RowBetween>
+                              <Info size={20}/>
+                              <Trans>Approve use of {premiumSymbol}</Trans>
+                              </RowBetween>
+                            </MouseoverTooltip>
+                        </>
+            // <>
+            //   <div style={{ height: 20 }}>
+            //     <MouseoverTooltip
+            //       text={
+            //         <Trans>
+            //           Permission is required.
+            //         </Trans>
+            //       }
+            //     >
+            //       <Info size={20} />
+            //     </MouseoverTooltip>
+            //   </div>
+            //   <Trans>Approve use of {inputIsToken0 ? token1?.symbol : token0?.symbol}</Trans>
+            // </>
           )}
         </ButtonPrimary>
       ) : (

@@ -239,7 +239,7 @@ export function useDerivedBorrowCreationInfo({ allowance: {input: inputAllowance
   } {
 
   const { account } = useWeb3React()
-  const [tradeState, setTradeState] = useState<TradeState>(TradeState.LOADING)
+  const [tradeState, setTradeState] = useState<TradeState>(TradeState.INVALID)
   const [contractResult, setContractResult] = useState()
 
   const {
@@ -345,9 +345,50 @@ export function useDerivedBorrowCreationInfo({ allowance: {input: inputAllowance
   }, [inputAllowance, outputAllowance, currencies, borrowManager, ltv, debouncedAmount])
   //console.log("contractResultPost/tradestate", contractResult, tradeState)
 
+  const inputError = useMemo(() => {
+    let inputError: ReactNode | undefined
+
+    if (!account) {
+      inputError = <Trans>Connect Wallet</Trans>
+    }
+
+    if (!currencies[Field.INPUT] || !currencies[Field.OUTPUT]) {
+      inputError = inputError ?? <Trans>Select a token</Trans>
+    }
+
+    if (!parsedAmount) {
+      inputError = inputError ?? <Trans>Enter an amount</Trans>
+    }
+
+    if (!ltv || Number(ltv) >= 100 || Number(ltv) === 0 || ltv === "" ) {
+      inputError = inputError ?? <Trans>Invalid LTV</Trans>
+    }
+
+    // compare input balance to max input based on version
+    const [balanceIn, amountIn] = [currencyBalances[Field.INPUT], parsedAmount?.toExact()]
+    // const price = inputIsToken0 ? pool.token0Price.toFixed(18) : pool.token1Price.toFixed(18)
+    // new BN(parsedAmount?.toExact() ?? 0).times(ltv ?? "0").times(price).shiftedBy(18).toFixed(0)
+    const [balanceOut, premiumAmount] = [currencyBalances[Field.INPUT], parsedAmount?.toExact()]
+
+    // TODO add slippage to all the simulations
+    if (balanceIn && amountIn && Number(balanceIn.toExact()) < Number(amountIn)) {
+      inputError = <Trans>Insufficient {inputCurrency?.symbol} balance</Trans>
+    }
+
+    if (balanceOut && premiumAmount && Number(balanceOut.toExact()) < Number(premium)) {
+      inputError = inputError ?? <Trans>Insufficient {outputCurrency?.symbol} balance</Trans>
+    }
+
+    if (tradeState === TradeState.NO_ROUTE_FOUND) {
+      inputError = inputError ?? <Trans>Insufficient Liquidity</Trans>
+    }
+
+    return inputError
+  }, [inputAllowance, outputAllowance, account, allowedSlippage, currencies, currencyBalances, parsedAmount, borrowManager, ltv, inputCurrency])
+
   useEffect(() => {
-    activeTab === ActiveSwapTab.BORROW && simulate()
-  }, [activeTab, currencies, borrowManager, ltv, debouncedAmount, inputAllowance, outputAllowance])
+    activeTab === ActiveSwapTab.BORROW && !inputError && simulate()
+  }, [activeTab, currencies, borrowManager, ltv, debouncedAmount, inputError, inputAllowance, outputAllowance])
   // console.log("borrowContractResult", contractResult)
 
   const trade = useMemo(() => {
@@ -421,46 +462,7 @@ export function useDerivedBorrowCreationInfo({ allowance: {input: inputAllowance
     }
   }, [activeTab, tradeState, trade, typedValue, pool, ltv])
 
-  const inputError = useMemo(() => {
-    let inputError: ReactNode | undefined
 
-    if (!account) {
-      inputError = <Trans>Connect Wallet</Trans>
-    }
-
-    if (!currencies[Field.INPUT] || !currencies[Field.OUTPUT]) {
-      inputError = inputError ?? <Trans>Select a token</Trans>
-    }
-
-    if (!parsedAmount) {
-      inputError = inputError ?? <Trans>Enter an amount</Trans>
-    }
-
-    if (!ltv || Number(ltv) >= 100 || Number(ltv) === 0 || ltv === "" ) {
-      inputError = inputError ?? <Trans>Invalid LTV</Trans>
-    }
-
-    // compare input balance to max input based on version
-    const [balanceIn, amountIn] = [currencyBalances[Field.INPUT], parsedAmount?.toExact()]
-    // const price = inputIsToken0 ? pool.token0Price.toFixed(18) : pool.token1Price.toFixed(18)
-    // new BN(parsedAmount?.toExact() ?? 0).times(ltv ?? "0").times(price).shiftedBy(18).toFixed(0)
-    const [balanceOut, premiumAmount] = [currencyBalances[Field.INPUT], parsedAmount?.toExact()]
-
-    // TODO add slippage to all the simulations
-    if (balanceIn && amountIn && Number(balanceIn.toExact()) < Number(amountIn)) {
-      inputError = <Trans>Insufficient {inputCurrency?.symbol} balance</Trans>
-    }
-
-    if (balanceOut && premiumAmount && Number(balanceOut.toExact()) < Number(premium)) {
-      inputError = inputError ?? <Trans>Insufficient {outputCurrency?.symbol} balance</Trans>
-    }
-
-    if (tradeState === TradeState.NO_ROUTE_FOUND) {
-      inputError = inputError ?? <Trans>Insufficient Liquidity</Trans>
-    }
-
-    return inputError
-  }, [inputAllowance, outputAllowance, account, allowedSlippage, currencies, currencyBalances, parsedAmount, borrowManager, ltv, inputCurrency, trade])
 
   const contractError = useMemo(() => {
     let _contractError;
@@ -626,10 +628,42 @@ export function useDerivedLeverageCreationInfo()
   }, [currencies, leverageManager, leverage, leverageFactor, debouncedAmount, allowance])
 
   // console.log("contractResultPost/tradestate", contractResult, tradeState, parsedAmount?.toExact())
+  const inputError = useMemo(() => {
+    let inputError: ReactNode | undefined
+    if (!account) {
+      inputError = <Trans>Connect Wallet</Trans>
+    }
 
+    if (!currencies[Field.INPUT] || !currencies[Field.OUTPUT]) {
+      inputError = inputError ?? <Trans>Select a token</Trans>
+    }
+
+    if (!parsedAmount) {
+      inputError = inputError ?? <Trans>Enter an amount</Trans>
+    }
+
+    if (leverage && Number(leverageFactor) <= 1) {
+      inputError = inputError ?? <Trans>Invalid Leverage</Trans>
+    }
+
+    // compare input balance to max input based on version
+    const [balanceIn, amountIn] = [currencyBalances[Field.INPUT], parsedAmount?.toExact()]
+
+    // TODO add slippage to all the simulations
+    if (balanceIn && amountIn && Number(balanceIn.toExact()) < Number(amountIn) + Number(premium)) {
+      inputError = <Trans>Insufficient {inputCurrency?.symbol} balance</Trans>
+    }
+
+    if (tradeState === LeverageTradeState.NO_ROUTE_FOUND) {
+      inputError = inputError ?? <Trans>Insufficient Liquidity</Trans>
+    }
+
+    return inputError
+  }, [premium, allowance, account, allowedSlippage, currencies, currencyBalances, parsedAmount, leverage, leverageFactor, inputCurrency])
+ 
   useEffect(() => {
-    activeTab === ActiveSwapTab.TRADE && simulate()
-  }, [activeTab, currencies, leverageManager, leverage, leverageFactor, debouncedAmount, allowance])
+    activeTab === ActiveSwapTab.TRADE && !inputError && simulate()
+  }, [activeTab, currencies, leverageManager, leverage, leverageFactor, debouncedAmount, allowance, inputError])
 
   const trade = useMemo(() => {
     if (
@@ -709,39 +743,6 @@ export function useDerivedLeverageCreationInfo()
       }
     }
   }, [tradeState, typedValue, activeTab, leverage, leverageFactor, existingPosition])
-
-  const inputError = useMemo(() => {
-    let inputError: ReactNode | undefined
-    if (!account) {
-      inputError = <Trans>Connect Wallet</Trans>
-    }
-
-    if (!currencies[Field.INPUT] || !currencies[Field.OUTPUT]) {
-      inputError = inputError ?? <Trans>Select a token</Trans>
-    }
-
-    if (!parsedAmount) {
-      inputError = inputError ?? <Trans>Enter an amount</Trans>
-    }
-
-    if (leverage && Number(leverageFactor) <= 1) {
-      inputError = inputError ?? <Trans>Invalid Leverage</Trans>
-    }
-
-    // compare input balance to max input based on version
-    const [balanceIn, amountIn] = [currencyBalances[Field.INPUT], parsedAmount?.toExact()]
-
-    // TODO add slippage to all the simulations
-    if (balanceIn && amountIn && Number(balanceIn.toExact()) < Number(amountIn) + Number(premium)) {
-      inputError = <Trans>Insufficient {inputCurrency?.symbol} balance</Trans>
-    }
-
-    if (tradeState === LeverageTradeState.NO_ROUTE_FOUND) {
-      inputError = inputError ?? <Trans>Insufficient Liquidity</Trans>
-    }
-
-    return inputError
-  }, [trade, premium, allowance, account, allowedSlippage, currencies, currencyBalances, parsedAmount, leverage, leverageFactor, inputCurrency, trade])
 
   const contractError = useMemo(() => {
     let _contractError;
