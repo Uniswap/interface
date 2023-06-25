@@ -30,6 +30,7 @@ import { POOL_STATS_QUERY } from 'graphql/limitlessGraph/queries';
 import { BigNumber as BN } from "bignumber.js"
 import styled from 'styled-components';
 import { LATEST_POOL_DAY_QUERY, LATEST_POOL_INFO_QUERY } from 'graphql/limitlessGraph/poolPriceData';
+import { getFakeSymbol, isFakePair } from 'constants/fake-tokens';
 
 const POOL_STATE_INTERFACE = new Interface(IUniswapV3PoolStateABI)
 
@@ -239,16 +240,8 @@ export const PoolDataSection = ({
 	// })
 
 	useEffect(() => {
-		if (token0?.address.toLowerCase() === fusdc.toLowerCase() && token1?.address.toLowerCase() === feth.toLowerCase()) {
-			setSymbol(JSON.stringify(
-				{
-					poolAddress: "0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640",
-					baseSymbol: "fETH",
-					quoteSymbol: "fUSDC",
-					invertPrice: false,
-					useUniswapSubgraph: true
-				}
-			))
+		if (token0 && token1 && isFakePair(token0?.address, token1?.address)) {
+			setSymbol(getFakeSymbol(token0.address, token1.address))
 		}
 		else if (
 			uniswapPoolExists

@@ -32,12 +32,10 @@ type SymbolInfo = LibrarySymbolInfo & {
 
 export default function useDatafeed(
   {
-    chainId,
-    // symbol
+    chainId
   } :
   { 
-    chainId: number,
-    // symbol: string
+    chainId: number
   }
   ) {
 
