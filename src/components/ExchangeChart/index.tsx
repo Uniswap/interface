@@ -241,7 +241,7 @@ export const PoolDataSection = ({
 
 	useEffect(() => {
 		if (token0 && token1 && isFakePair(token0?.address, token1?.address)) {
-			setSymbol(getFakeSymbol(token0.address, token1.address))
+			setSymbol(getFakeSymbol(token0.address, token1.address) as string)
 		}
 		else if (
 			uniswapPoolExists
