@@ -1219,35 +1219,21 @@ export function AddPremiumBorrowModalFooter({
             </>
           ) : (
             <>
-                          <MouseoverTooltip
-                              text={
-                                <Trans>
-                                  Permission is required for Limitless to use each token. {
-                                    premium && premiumSymbol ? `Allowance of ${premium} ${premiumSymbol} required.` : null
-                                  }
-                                </Trans>
-                              }
-                            >
-                              <RowBetween>
-                              <Info size={20}/>
-                              <Trans>Approve use of {premiumSymbol}</Trans>
-                              </RowBetween>
-                            </MouseoverTooltip>
-                        </>
-            // <>
-            //   <div style={{ height: 20 }}>
-            //     <MouseoverTooltip
-            //       text={
-            //         <Trans>
-            //           Permission is required.
-            //         </Trans>
-            //       }
-            //     >
-            //       <Info size={20} />
-            //     </MouseoverTooltip>
-            //   </div>
-            //   <Trans>Approve use of {inputIsToken0 ? token1?.symbol : token0?.symbol}</Trans>
-            // </>
+              <MouseoverTooltip
+                  text={
+                    <Trans>
+                      Permission is required for Limitless to use each token. {
+                        premium && premiumSymbol ? `Allowance of ${premium} ${premiumSymbol} required.` : null
+                      }
+                    </Trans>
+                  }
+                >
+                  <RowBetween>
+                  <Info size={20}/>
+                  <Trans>Approve use of {premiumSymbol}</Trans>
+                  </RowBetween>
+                </MouseoverTooltip>
+            </>
           )}
         </ButtonPrimary>
       ) : (

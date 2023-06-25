@@ -1019,7 +1019,7 @@ export default function Swap({ className }: { className?: string }) {
   // console.log("borrowTrade", borrowInputApproveAmount?.toExact(), borrowOutputApproveAmount?.toExact(), borrowInputApprovalState, borrowOutputApprovalState)
   // console.log("leverageTrade", leverageTrade, leverageApproveAmount?.toExact(), leverageApprovalState)
 
-  console.log('lmt', borrowManagerAddress, leverageManagerAddress)
+  console.log('lmt', leverageApprovalState, leverageManagerAddress)
   return (
     <Trace page={InterfacePageName.SWAP_PAGE} shouldLogImpression>
       <>

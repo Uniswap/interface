@@ -152,6 +152,9 @@ export default function SwapDetailsDropdown({ trade, syncing, loading, allowedSl
       leverage && showDetails && setShowDetails(false) 
     }
   }, [leverageState, leverage])
+
+  console.log('leverageState', leverageState)
+
   return (
     (!leverage ? (
       <Wrapper>
@@ -220,8 +223,7 @@ export default function SwapDetailsDropdown({ trade, syncing, loading, allowedSl
           >
             <StyledHeaderRow onClick={() => !disabled ? setShowDetails(!showDetails) : null} disabled={disabled} open={showDetails}>
               <RowFixed style={{ position: 'relative' }}>
-
-                {Boolean(leverageState === LeverageTradeState.LOADING || leverageState === LeverageTradeState.SYNCING) && (
+                {Boolean(leverageState === LeverageTradeState.LOADING) && (
                   <StyledPolling>
                     <StyledPollingDot>
                       <Spinner />

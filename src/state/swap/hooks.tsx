@@ -498,7 +498,7 @@ export function useDerivedLeverageCreationInfo()
   } {
 
   const { account } = useWeb3React()
-  const [tradeState, setTradeState] = useState<LeverageTradeState>(LeverageTradeState.LOADING)
+  const [tradeState, setTradeState] = useState<LeverageTradeState>(LeverageTradeState.INVALID)
   const [contractResult, setContractResult] = useState()
 
   const {
@@ -540,6 +540,7 @@ export function useDerivedLeverageCreationInfo()
       return undefined
     }
   }, [inputCurrency, outputCurrency, premium])
+
   const [allowance, ] = useApproveCallback(
     leverageApproveAmount,
     leverageManagerAddress ?? undefined
