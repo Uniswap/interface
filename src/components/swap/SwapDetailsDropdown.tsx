@@ -281,9 +281,9 @@ export default function SwapDetailsDropdown({ trade, syncing, loading, allowedSl
 
 export function BorrowDetailsDropdown({ trade, tradeState, syncing, loading, allowedSlippage }: BorrowDetailsDropdownProps) {
   const theme = useTheme()
-  const { chainId } = useWeb3React()
+  // const { chainId } = useWeb3React()
   const [showDetails, setShowDetails] = useState(false)
-  const { ltv } = useSwapState()
+  // const { ltv } = useSwapState()
 
   useEffect(() => {
     if (tradeState !== TradeState.VALID) {
@@ -303,34 +303,6 @@ export function BorrowDetailsDropdown({ trade, tradeState, syncing, loading, all
         >
           <StyledHeaderRow onClick={() => !disabled ? setShowDetails(!showDetails) : null} disabled={disabled} open={showDetails}>
             <RowFixed style={{ position: 'relative' }}>
-              {/* {(trade.state === TradeState.LOADING || trade.state === TradeState.SYNCING) ? (
-                <StyledPolling>
-                  <StyledPollingDot>
-                    <Spinner />
-                  </StyledPollingDot>
-                </StyledPolling>
-              ) : (
-                <HideSmall>
-                  <MouseoverTooltipContent
-                    wrap={false}
-                    content={
-                      <ResponsiveTooltipContainer origin="top right" style={{ padding: '0' }}>
-                        <Card padding="12px">
-                          <AdvancedBorrowSwapDetails borrowTrade={trade} syncing={syncing} />
-                        </Card>
-                      </ResponsiveTooltipContainer>
-                    }
-                    placement="bottom"
-                    disableHover={
-                      //showDetails
-                      true
-                    }
-                  >
-                    <StyledInfoIcon color={trade ? theme.textTertiary : theme.deprecated_bg3} />
-                  </MouseoverTooltipContent>
-                </HideSmall>
-              )
-              } */}
               {Boolean(tradeState === TradeState.LOADING || tradeState === TradeState.SYNCING) && (
                   <StyledPolling>
                     <StyledPollingDot>

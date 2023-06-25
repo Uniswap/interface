@@ -1917,7 +1917,7 @@ export function BorrowReduceDebtModalFooter({
                           <MouseoverTooltip
                             text={
                               <Trans>
-                                The new premiums to be paid
+                                Amount of Collateral Returned
                               </Trans>
                             }
                           >
@@ -1960,30 +1960,6 @@ export function BorrowReduceDebtModalFooter({
                           </ThemedText.DeprecatedBlack>
                         </TextWithLoadingPlaceholder>
                       </RowBetween>
-                      {/* <RowBetween>
-                        <RowFixed>
-                          <MouseoverTooltip
-                            text={
-                              <Trans>
-                                The amount of premiums returned
-                              </Trans>
-                            }
-                          >
-                            <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
-                              <Trans>Premium Payment</Trans>
-                            </ThemedText.DeprecatedSubHeader>
-                          </MouseoverTooltip>
-                        </RowFixed>
-                        <TextWithLoadingPlaceholder syncing={loading} width={65}>
-                          <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
-                            <TruncatedText>
-                              {
-                                transactionInfo && `${Number(transactionInfo?.premium)}  ${inputIsToken0 ? token1?.symbol : token0?.symbol}`
-                              }
-                            </TruncatedText>
-                          </ThemedText.DeprecatedBlack>
-                        </TextWithLoadingPlaceholder>
-                      </RowBetween> */}
                     </AutoColumn>
 
                   </StyledCard>
@@ -1994,7 +1970,6 @@ export function BorrowReduceDebtModalFooter({
           </AutoColumn>
         </Wrapper>
       </TransactionDetails>
-
       <ButtonError
         onClick={handleReducePosition}
         disabled={!!userError || !transactionInfo}

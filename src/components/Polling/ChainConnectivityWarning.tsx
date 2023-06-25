@@ -4,6 +4,7 @@ import { getChainInfoOrDefault, L2ChainInfo } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
 import { AlertTriangle } from 'react-feather'
 import styled from 'styled-components/macro'
+import { Z_INDEX } from 'theme/zIndex'
 import { ExternalLink, MEDIA_WIDTHS } from 'theme'
 
 const BodyRow = styled.div`
@@ -46,6 +47,7 @@ const Wrapper = styled.div`
   @media screen and (min-width: ${MEDIA_WIDTHS.deprecated_upToMedium}px) {
     display: block;
   }
+  // z-index: ${Z_INDEX.modal};
 `
 
 export function ChainConnectivityWarning() {
