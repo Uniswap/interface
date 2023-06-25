@@ -166,7 +166,7 @@ export default function SwapModalHeader({
           <RowBetween>
             <RowFixed>
               <AlertTriangle size={20} style={{ marginRight: '8px', minWidth: 24 }} />
-              <ThemedText.DeprecatedMain color={theme.accentAction}>
+              <ThemedText.DeprecatedMain color={theme.textSecondary}>
                 <Trans>Price Updated</Trans>
               </ThemedText.DeprecatedMain>
             </RowFixed>
@@ -323,7 +323,7 @@ export function LeverageCloseModalHeader({
           <RowBetween>
             <RowFixed>
               <AlertTriangle size={20} style={{ marginRight: '8px', minWidth: 24 }} />
-              <ThemedText.DeprecatedMain color={theme.accentAction}>
+              <ThemedText.DeprecatedMain color={theme.textSecondary}>
                 <Trans>Price Updated</Trans>
               </ThemedText.DeprecatedMain>
             </RowFixed>
@@ -478,7 +478,7 @@ export function LeverageModalHeader({
               <TruncatedText
                 fontSize={24}
                 fontWeight={500}
-                color={showAcceptChanges && trade.tradeType === TradeType.EXACT_OUTPUT ? theme.accentAction : ''}
+                color={showAcceptChanges && trade.tradeType === TradeType.EXACT_OUTPUT ? theme.textSecondary : theme.textSecondary}
               >
                 {leverageTrade?.inputAmount?.toSignificant(18)} (+ {formatNumber(leverageTrade?.quotedPremium)})
               </TruncatedText>
@@ -505,7 +505,7 @@ export function LeverageModalHeader({
         <AutoColumn gap="sm">
           <RowBetween align="flex-end">
             <RowFixed gap="0px">
-              <TruncatedText fontSize={24} fontWeight={500}>
+              <TruncatedText fontSize={24} fontWeight={500} color = {theme.textSecondary}>
                 {displayValues.totalInput}
               </TruncatedText>
             </RowFixed>
@@ -531,7 +531,7 @@ export function LeverageModalHeader({
         <AutoColumn gap="sm">
           <RowBetween align="flex-end">
             <RowFixed gap="0px">
-              <TruncatedText fontSize={24} fontWeight={500}>
+              <TruncatedText fontSize={24} fontWeight={500} color = {theme.textSecondary}>
                 {displayValues.totalOutput}
               </TruncatedText>
             </RowFixed>
@@ -565,10 +565,10 @@ export function LeverageModalHeader({
         <SwapShowAcceptChanges justify="flex-start" gap="0px">
           <RowBetween>
             <RowFixed>
-              <AlertTriangle size={20} style={{ marginRight: '8px', minWidth: 24 }} />
-              <ThemedText.DeprecatedMain color={theme.accentAction}>
+              <AlertTriangle color={theme.textSecondary} size={20} style={{ marginRight: '8px', minWidth: 24 }} />
+              <Text color={theme.textSecondary}>
                 <Trans>Price Updated</Trans>
-              </ThemedText.DeprecatedMain>
+              </Text>
             </RowFixed>
             <ButtonPrimary
               style={{ padding: '.5rem', width: 'fit-content', fontSize: '0.825rem', borderRadius: '12px' }}

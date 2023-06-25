@@ -145,11 +145,15 @@ export function TransactionSubmittedContent({
             <ButtonLight mt="12px" padding="6px 12px" width="fit-content" onClick={addToken}>
               {!success ? (
                 <RowFixed>
+                <Text color={theme.accentTextLightPrimary}>
                   <Trans>Add {currencyToAdd.symbol}</Trans>
+                </Text>
                 </RowFixed>
               ) : (
                 <RowFixed>
-                  <Trans>Added {currencyToAdd.symbol} </Trans>
+                <Text color={theme.accentTextLightPrimary}>
+                  <Trans>Added {currencyToAdd.symbol}</Trans>
+                </Text>                
                   <CheckCircle size="16px" stroke={theme.accentSuccess} style={{ marginLeft: '6px' }} />
                 </RowFixed>
               )}
@@ -162,7 +166,7 @@ export function TransactionSubmittedContent({
           </ButtonPrimary>
           {chainId && hash && (
             <ExternalLink href={getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)}>
-              <Text fontWeight={600} fontSize={14} color={theme.accentAction}>
+              <Text fontWeight={600} fontSize={14} color={theme.accentTextLightPrimary}>
                 <Trans>View on {chainId === SupportedChainId.MAINNET ? 'Etherscan' : 'Block Explorer'}</Trans>
               </Text>
             </ExternalLink>

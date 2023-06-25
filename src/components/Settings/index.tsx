@@ -202,10 +202,10 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
               <Trans>Settings</Trans>
             </Text>
             <TransactionSettings placeholderSlippage={placeholderSlippage} />
-            <Text fontWeight={600} fontSize={14}>
+            {/*<Text fontWeight={600} fontSize={14}>
               <Trans>Interface Settings</Trans>
-            </Text>
-            {isSupportedChainId(chainId) && (
+            </Text>*/}
+            {/*isSupportedChainId(chainId) && (
               <RowBetween>
                 <RowFixed>
                   <ThemedText.DeprecatedBlack fontWeight={400} fontSize={14} color={theme.textSecondary}>
@@ -225,8 +225,8 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
                   }}
                 />
               </RowBetween>
-            )}
-            <RowBetween>
+            )*/}
+            {/*<RowBetween>
               <RowFixed>
                 <ThemedText.DeprecatedBlack fontWeight={400} fontSize={14} color={theme.textSecondary}>
                   <Trans>Expert Mode</Trans>
@@ -252,7 +252,7 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
                       }
                 }
               />
-            </RowBetween>
+            </RowBetween>*/}
           </AutoColumn>
         </MenuFlyout>
       )}

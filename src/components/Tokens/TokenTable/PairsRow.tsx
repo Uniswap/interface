@@ -302,19 +302,20 @@ const InfoIconContainer = styled.div`
   align-items: center;
   cursor: help;
 `
-
 export const HEADER_DESCRIPTIONS: Record<TokenSortMethod, ReactNode | undefined> = {
   [TokenSortMethod.PRICE]: undefined,
   [TokenSortMethod.PERCENT_CHANGE]: undefined,
   [TokenSortMethod.TOTAL_VALUE_LOCKED]: (
     <Trans>
-      Total value locked (TVL) is the aggregate amount of the asset available across all Uniswap v3 liquidity pools.
+      Total value locked (TVL) is the aggregate amount of the asset available in this liquidity pool.
     </Trans>
   ),
   [TokenSortMethod.VOLUME]: (
-    <Trans>Volume is the amount of the asset that has been traded on Uniswap v3 during the selected time frame.</Trans>
+    <Trans>Volume is the amount of the asset that has been traded on Limitless during the selected time frame.</Trans>
   ),
 }
+
+// price TVL, 
 
 /* Get singular header cell for header row */
 function HeaderCell({
@@ -385,12 +386,16 @@ function TokenRow({
       <PriceCell data-testid="price-cell" sortable={header}>
         {price}
       </PriceCell>
-      <PercentChangeCell data-testid="percent-change-cell" sortable={header}>
+      {/*<PercentChangeCell data-testid="percent-change-cell" sortable={header}>
         {percentChange}
-      </PercentChangeCell>
+      </PercentChangeCell> */}
       <TvlCell data-testid="tvl-cell" sortable={header}>
         {tvl}
       </TvlCell>
+      <VolumeCell data-testid="volume-cell" sortable={header}>
+        {volume}
+      </VolumeCell>
+
       <VolumeCell data-testid="volume-cell" sortable={header}>
         {volume}
       </VolumeCell>
@@ -416,6 +421,8 @@ export function PHeaderRow() {
       percentChange={<HeaderCell category={TokenSortMethod.PERCENT_CHANGE} />}
       tvl={<HeaderCell category={TokenSortMethod.TOTAL_VALUE_LOCKED} />}
       volume={<HeaderCell category={TokenSortMethod.VOLUME} />}
+      // volume={<HeaderCell category={""} />}
+
       sparkLine={null}
     />
   )

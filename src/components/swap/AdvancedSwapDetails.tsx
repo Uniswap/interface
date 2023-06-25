@@ -24,7 +24,7 @@ import { TruncatedText } from './styleds'
 import { Field } from 'state/swap/actions'
 import { DEFAULT_ERC20_DECIMALS } from 'constants/tokens'
 import { usePool } from 'hooks/usePools'
-
+ 
 const StyledCard = styled(Card)`
   padding: 0;
 `
@@ -228,6 +228,8 @@ export function AdvancedSwapDetails({
 }
 
 export function MouseoverValueLabel({description, label, value, appendSymbol, syncing}: {description: string, label: React.ReactNode, value: React.ReactNode | string, appendSymbol?: string, syncing?: boolean}) {
+    const theme = useTheme()
+
   return (
     <RowBetween>
           <RowFixed>
@@ -239,7 +241,7 @@ export function MouseoverValueLabel({description, label, value, appendSymbol, sy
               }
               disableHover={false}
             >
-              <ThemedText.DeprecatedSubHeader>
+              <ThemedText.DeprecatedSubHeader color={theme.textSecondary}>
                 {label}
               </ThemedText.DeprecatedSubHeader>
             </MouseoverTooltip>
@@ -599,9 +601,9 @@ export function ValueLabel({
               }
               disableHover={hideInfoTooltips}
             >
-              <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
+              <TruncatedText color={theme.textSecondary}>
                 <Trans>{label}</Trans>
-              </ThemedText.DeprecatedSubHeader>
+              </TruncatedText>
             </MouseoverTooltip>
           </RowFixed>
           
