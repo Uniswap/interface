@@ -87,6 +87,7 @@ export function CurrencySearch({
   }, [isAddressSearch])
 
   const defaultTokens = useDefaultActiveTokens()
+  
   console.log('defaultTokens', defaultTokens)
   const filteredTokens: Token[] = useMemo(() => {
     return Object.values(defaultTokens).filter(getTokenFilter(debouncedQuery))
@@ -130,12 +131,12 @@ export function CurrencySearch({
   const native = useNativeCurrency()
   const wrapped = native.wrapped
 
-  const fakeTokens = useMemo(() => {
-    // if (chainId === 80001) {
-    //   return FakeTokens
-    // }
-    return []
-  }, [chainId])
+  // const fakeTokens = useMemo(() => {
+  //   if (chainId === 80001) {
+  //     return FakeTokens
+  //   }
+  //   return []
+  // }, [chainId])
 
   const searchCurrencies: Currency[] = useMemo(() => {
     const s = debouncedQuery.toLowerCase().trim()
@@ -149,7 +150,7 @@ export function CurrencySearch({
       disableNonToken || native.equals(wrapped) ? [wrapped] : shouldShowWrapped ? [native, wrapped] : [native]
     ).filter((n) => n.symbol?.toLowerCase()?.indexOf(s) !== -1 || n.name?.toLowerCase()?.indexOf(s) !== -1)
 
-    return [...natives, ...tokens, ...fakeTokens]
+    return [...natives, ...tokens]
   }, [
     debouncedQuery,
     filteredSortedTokens,
@@ -158,8 +159,7 @@ export function CurrencySearch({
     balances,
     wrapped,
     disableNonToken,
-    native,
-    fakeTokens
+    native
   ])
 
   const handleCurrencySelect = useCallback(
