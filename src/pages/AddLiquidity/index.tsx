@@ -16,7 +16,6 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { Text } from 'rebass'
-import {PS_V3_POOL_FACTORY, tokenA, tokenB} from "../../constants/addresses"
 import {
   useRangeHopCallbacks,
   useV3DerivedMintInfo,

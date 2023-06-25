@@ -83,7 +83,7 @@ import TokenDetailsSkeleton, {
 } from 'components/Tokens/TokenDetails/Skeleton'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import { Checkbox } from 'nft/components/layout/Checkbox'
-import { BORROW_MANAGER_FACTORY_ADDRESSES, feth, fusdc, GlOBAL_STORAGE_ADDRESS, LEVERAGE_MANAGER_FACTORY_ADDRESSES, PS_ROUTER, V3_CORE_FACTORY_ADDRESSES } from 'constants/addresses'
+import { BORROW_MANAGER_FACTORY_ADDRESSES, GlOBAL_STORAGE_ADDRESS, LEVERAGE_MANAGER_FACTORY_ADDRESSES, PS_ROUTER, V3_CORE_FACTORY_ADDRESSES } from 'constants/addresses'
 import { computeBorrowManagerAddress, computeLeverageManagerAddress, computePoolAddress, usePool } from 'hooks/usePools'
 import { useTokenAllowance } from 'hooks/useTokenAllowance'
 import { ApprovalState } from 'lib/hooks/useApproval'
@@ -98,6 +98,8 @@ import { FakeTokens, FETH, FUSDC } from "constants/fake-tokens"
 import { TabContent, TabNavItem } from 'components/Tabs'
 import BorrowPositionsTable from "components/BorrowPositionTable/TokenTable"
 import { AllowanceWarning, WarningIcon } from 'components/TokenSafety/TokenSafetyIcon'
+
+import { useClearTransactions } from 'state/transactions/hooks'
 
 
 const Hr = styled.hr`
@@ -305,10 +307,14 @@ export default function Swap({ className }: { className?: string }) {
     onPremiumChange
   } = useSwapActionHandlers()
 
-  // HACK
-  // const addToken = useAddUserToken()
-  // const fETH = useToken(feth)
-  // const fUSDC = useToken(fusdc)
+  // const clear = useClearTransactions()
+  // const [nonce, setNonce] = useState(0)
+  // useEffect(() => {
+  //   if (!nonce && account && chainId) {
+  //     clear(80001)
+  //     setNonce(nonce + 1)
+  //   }
+  // }, [account, chainId])
 
 
   // console.log("loadedUrlParams", loadedUrlParams)
@@ -409,7 +415,7 @@ export default function Swap({ className }: { className?: string }) {
     [currencies, independentField, parsedAmount, showWrap, trade]
   )
 
-  const inputIsToken0 = outputCurrency?.wrapped ? inputCurrency?.wrapped.sortsBefore(outputCurrency?.wrapped) : false; 
+  const inputIsToken0 = outputCurrency?.wrapped ? inputCurrency?.wrapped.sortsBefore(outputCurrency?.wrapped) : false;
 
   // const { position: existingPosition } = useLimitlessPositionFromKeys(
   //   account, 
@@ -467,6 +473,7 @@ export default function Swap({ className }: { className?: string }) {
       && outputCurrency
       && premium
     ) {
+      console.log("wtf")
       return [
         CurrencyAmount.fromRawAmount(
           inputCurrency,
@@ -483,7 +490,7 @@ export default function Swap({ className }: { className?: string }) {
       ]
     }
     else {
-      return [undefined, undefined]
+      return [undefined, undefined, undefined]
     }
   }, [inputCurrency, parsedAmounts[Field.INPUT], ltv, pool, outputCurrency, premium])
 
@@ -502,8 +509,6 @@ export default function Swap({ className }: { className?: string }) {
 
   const [borrowInputApprovalState, approveInputBorrowManager] = useApproveCallback(borrowInputApproveAmount, borrowManagerAddress ?? undefined)
   const [borrowOutputApprovalState, approveOutputBorrowManager] = useApproveCallback(borrowOutputApproveAmount, borrowManagerAddress ?? undefined)
-
-  // console.log("lmt: ", borrowInputApprovalState, borrowOutputApprovalState )
 
   const {
     trade: borrowTrade,
@@ -543,17 +548,6 @@ export default function Swap({ className }: { className?: string }) {
         : computeFiatValuePriceImpact(fiatValueTradeInput.data, fiatValueTradeOutput.data),
     [fiatValueTradeInput, fiatValueTradeOutput, routeIsSyncing, trade]
   )
-
-  const [nonce, setNonce] = useState(0)
-
-  // useEffect(() => {
-  //   // console.log("nonce", fETH, fUSDC, nonce)
-  //   if (nonce === 0 && chainId && account) {
-  //     onCurrencySelection(Field.INPUT, FUSDC)
-  //     onCurrencySelection(Field.OUTPUT, FETH)
-  //     setNonce(1)
-  //   }
-  // }, [chainId, account, nonce])
 
   const isValid = !swapInputError
   const dependentField: Field = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT
@@ -839,6 +833,10 @@ export default function Swap({ className }: { className?: string }) {
       onLTVChange('')
       onPremiumChange(0)
     }
+    // onUserInput(Field.INPUT, '')
+    //   onLeverageFactorChange('1')
+    //   onLTVChange('')
+    //   onPremiumChange(0)
   }, [attemptingTxn, onUserInput, swapErrorMessage, tradeToConfirm, txHash])
 
   const handleAcceptChanges = useCallback(() => {
@@ -879,6 +877,7 @@ export default function Swap({ className }: { className?: string }) {
       showBorrowConfirm
     })
     borrowCallback().then((hash: any) => {
+      console.log
       setSwapState({ attemptingTxn: false, tradeToConfirm, showConfirm, swapErrorMessage: undefined, txHash: hash, showLeverageConfirm, showBorrowConfirm: false })
     })
       .catch((error: any) => {
@@ -1020,6 +1019,7 @@ export default function Swap({ className }: { className?: string }) {
   // console.log("borrowTrade", borrowInputApproveAmount?.toExact(), borrowOutputApproveAmount?.toExact(), borrowInputApprovalState, borrowOutputApprovalState)
   // console.log("leverageTrade", leverageTrade, leverageApproveAmount?.toExact(), leverageApprovalState)
 
+  console.log('lmt', borrowManagerAddress, leverageManagerAddress)
   return (
     <Trace page={InterfacePageName.SWAP_PAGE} shouldLogImpression>
       <>
@@ -1037,21 +1037,21 @@ export default function Swap({ className }: { className?: string }) {
 
               <StatsContainer>
                 <TokenInfoContainer data-testid="token-info-container">
-                          
+
                   <TokenNameCell>
                     {inputCurrency && outputCurrency && <DoubleCurrencyLogo currency0={inputCurrency as Currency} currency1={outputCurrency as Currency} size={40} margin />}
                     {inputCurrency && outputCurrency
                       ? <ThemedText.LargeHeader>{(outputCurrency.symbol)}/{(inputCurrency.symbol)}</ThemedText.LargeHeader>
                       : <ThemedText.LargeHeader>Pair not found</ThemedText.LargeHeader>}
-                      
-                      {inputApprovalState !== ApprovalState.APPROVED  && <SmallMaxButton onClick={() => inputApprove()} width="10%">
-                          <Trans><WarningIcon size="1.25em" />Approve {inputCurrency?.symbol}</Trans>
-                      </SmallMaxButton>}
-                      {outputApprovalState !== ApprovalState.APPROVED && <SmallMaxButton onClick={() => outputApprove()} width="10%">
-                          <Trans><WarningIcon size="1.25em" /> Approve {outputCurrency?.symbol}</Trans>
-                      </SmallMaxButton>}
+
+                    {inputApprovalState !== ApprovalState.APPROVED && <SmallMaxButton onClick={() => inputApprove()} width="10%">
+                      <Trans><WarningIcon size="1.25em" />Approve {inputCurrency?.symbol}</Trans>
+                    </SmallMaxButton>}
+                    {outputApprovalState !== ApprovalState.APPROVED && <SmallMaxButton onClick={() => outputApprove()} width="10%">
+                      <Trans><WarningIcon size="1.25em" /> Approve {outputCurrency?.symbol}</Trans>
+                    </SmallMaxButton>}
                   </TokenNameCell>
-                                             
+
 
                 </TokenInfoContainer>
                 <PoolDataSection
@@ -1146,7 +1146,7 @@ export default function Swap({ className }: { className?: string }) {
                         id={InterfaceSectionName.CURRENCY_INPUT_PANEL}
                         loading={independentField === Field.OUTPUT && routeIsSyncing}
                         isInput={true}
-                        premium={String(premium) ?? undefined}
+                        premium={inputCurrency && premium ? CurrencyAmount.fromRawAmount(inputCurrency, new BN(premium).shiftedBy(18).toFixed(0)) : undefined}
                         isLevered={leverage}
                       />
                     </Trace>
@@ -1441,7 +1441,7 @@ export default function Swap({ className }: { className?: string }) {
                               <MouseoverTooltip
                                 text={
                                   <Trans>
-                                    Permission is required for Limitless to trade each token. 
+                                    Permission is required for Limitless to trade each token.
                                   </Trans>
                                 }
                               >
@@ -1531,20 +1531,21 @@ export default function Swap({ className }: { className?: string }) {
                           </>
                         ) : (
                           <>
-                            <div style={{ height: 20 }}>
-                              <MouseoverTooltip
-                                text={
-                                  <Trans>
-                                    Permission is required for Uniswap to swap each token. This will expire after one
-                                    month for your security.
-                                  </Trans>
-                                }
-                              >
-                                <Info size={20} />
-                              </MouseoverTooltip>
-                            </div>
-                            <Trans>Approve use of {currencies[Field.INPUT]?.symbol}</Trans>
-                          </>
+                          <MouseoverTooltip
+                              text={
+                                <Trans>
+                                  Permission is required for Limitless to use each token. {
+                                    premium && typedValue && inputCurrency ? `Allowance of ${premium + Number(typedValue)} ${inputCurrency.symbol} required.` : null
+                                  }
+                                </Trans>
+                              }
+                            >
+                              <RowBetween>
+                              <Info size={20}/>
+                              <Trans>Approve use of {currencies[Field.INPUT]?.symbol}</Trans>
+                              </RowBetween>
+                            </MouseoverTooltip>
+                        </>
                         )}
                       </ButtonPrimary>
                     ) : (
@@ -1611,6 +1612,8 @@ export default function Swap({ className }: { className?: string }) {
                         id={InterfaceSectionName.CURRENCY_INPUT_PANEL}
                         loading={independentField === Field.OUTPUT && routeIsSyncing}
                         isInput={true}
+                        premium={outputCurrency && premium ? CurrencyAmount.fromRawAmount(outputCurrency, new BN(premium).shiftedBy(18).toFixed(0)) : undefined}
+
                       />
                     </Trace>
                   </InputSection>
@@ -1648,9 +1651,6 @@ export default function Swap({ className }: { className?: string }) {
                                 borrowTrade?.existingTotalDebtInput ?
                                   String(borrowTrade.borrowedAmount - borrowTrade.existingTotalDebtInput) : String(borrowTrade.borrowedAmount)
                               ) : "-"
-                            // (borrowTrade?.expectedOutput ?
-
-                            //   formatNumber(leverageTrade?.expectedOutput) : "-")
                           }
                           onUserInput={handleTypeOutput}
                           label={
@@ -1670,7 +1670,6 @@ export default function Swap({ className }: { className?: string }) {
                           isLevered={leverage}
                           disabled={leverage}
                           isTrade={false}
-                          premium={String(premium) ?? undefined}
                         />
                       </Trace>
 
@@ -1811,19 +1810,20 @@ export default function Swap({ className }: { className?: string }) {
                                   </>
                                 ) : (
                                   <>
-                                    {/* <div style={{ height: 20 }}>
                                     <MouseoverTooltip
-                                      text={
-                                        <Trans>
-                                          Permission is required for Uniswap to swap each token. This will expire after one
-                                          month for your security.
-                                        </Trans>
-                                      }
-                                    >
-                                      <Info size={20} />
-                                    </MouseoverTooltip>
-                                  </div> */}
-                                    <Trans>Approve use of {currencies[Field.INPUT]?.symbol}</Trans>
+                                        text={
+                                          <Trans>
+                                            Permission is required for Limitless to use each token. {
+                                              typedValue && inputCurrency ? `Allowance of ${typedValue} ${inputCurrency.symbol} required.` : null
+                                            }
+                                          </Trans>
+                                        }
+                                      >
+                                        <RowBetween>
+                                        <Info size={30}/>
+                                        <Trans>Approve use of {currencies[Field.INPUT]?.symbol}</Trans>
+                                        </RowBetween>
+                                      </MouseoverTooltip>
                                   </>
                                 )}
                               </ButtonPrimary>}
@@ -1836,12 +1836,25 @@ export default function Swap({ className }: { className?: string }) {
                               >
                                 {borrowOutputApprovalState === ApprovalState.PENDING ? (
                                   <>
-                                    <Loader size="20px" />
+                                    <Loader size="30px" />
                                     <Trans>Approval pending</Trans>
                                   </>
                                 ) : (
                                   <>
-                                    <Trans>Approve use of {currencies[Field.OUTPUT]?.symbol}</Trans>
+                                    <MouseoverTooltip
+                                        text={
+                                          <Trans>
+                                            Permission is required for Limitless to use each token. {
+                                              typedValue && outputCurrency ? `Allowance of ${premium} ${outputCurrency.symbol} required.` : null
+                                            }
+                                          </Trans>
+                                        }
+                                      >
+                                        <RowBetween>
+                                        <Info size={30}/>
+                                        <Trans>Approve use of {currencies[Field.OUTPUT]?.symbol}</Trans>
+                                        </RowBetween>
+                                      </MouseoverTooltip>
                                   </>
                                 )}
                               </ButtonPrimary>}

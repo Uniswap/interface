@@ -26,6 +26,7 @@ const transactionSlice = createSlice({
       transactions[chainId] = txs
     },
     clearAllTransactions(transactions, { payload: { chainId } }) {
+      console.log("clearAllTransactions", !transactions[chainId], chainId)
       if (!transactions[chainId]) return
       transactions[chainId] = {}
     },

@@ -146,6 +146,12 @@ export default function SwapDetailsDropdown({ trade, syncing, loading, allowedSl
 
   const disabled = (!leverage && !trade) || (leverage && leverageState!== LeverageTradeState.VALID)
   // console.log('leverageTrade.state', leverageTrade.state, disabled, leverage, leverageTrade)
+
+  useEffect(() => {
+    if (leverageState !== LeverageTradeState.VALID) {
+      leverage && showDetails && setShowDetails(false) 
+    }
+  }, [leverageState, leverage])
   return (
     (!leverage ? (
       <Wrapper>
@@ -279,6 +285,11 @@ export function BorrowDetailsDropdown({ trade, tradeState, syncing, loading, all
   const [showDetails, setShowDetails] = useState(false)
   const { ltv } = useSwapState()
 
+  useEffect(() => {
+    if (tradeState !== TradeState.VALID) {
+      showDetails ?? setShowDetails(false) 
+    }
+  }, [tradeState])
   const disabled = tradeState !== TradeState.VALID
   // console.log('borrow.state', tradeState, disabled, loading)
   return (

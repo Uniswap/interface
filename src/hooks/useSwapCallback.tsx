@@ -186,6 +186,7 @@ export function useAddBorrowPositionCallback(
         formattedLTV,
         []
       ).then((response: any) => {
+        console.log('borrowResponse', response)
         addTransaction(
           response,
           {

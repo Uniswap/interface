@@ -367,7 +367,7 @@ function useDerivedBorrowReduceCollateralInfo(
   reduceAmount: string | undefined,
   recieveCollateral: boolean,
   setState: (state: DerivedInfoState) => void,
-  approvalState: ApprovalState
+  // approvalState: ApprovalState
 ): {
   transactionInfo: {
     token0Amount: string
@@ -424,7 +424,7 @@ function useDerivedBorrowReduceCollateralInfo(
     }
 
     laggedfxn()
-  }, [borrowManagerContract, trader, tokenId, recieveCollateral, reduceAmount, approvalState])
+  }, [borrowManagerContract, trader, tokenId, recieveCollateral, reduceAmount])
 
   const transactionInfo = useMemo(() => {
     if (contractResult) {
@@ -448,7 +448,6 @@ function useDerivedBorrowReduceCollateralInfo(
     return undefined
   }, [
     contractResult,
-    approvalState,
     relevantTokenBalances
   ])
 
@@ -473,7 +472,7 @@ function useDerivedBorrowReduceCollateralInfo(
     }
     return error;
 
-  }, [relevantTokenBalances, position, reduceAmount, approvalState])
+  }, [relevantTokenBalances, position, reduceAmount])
 
   return {
     transactionInfo,
@@ -487,9 +486,7 @@ function useDerivedBorrowReduceDebtInfo(
   position: LimitlessPositionDetails | undefined,
   reduceAmount: string | undefined,
   recieveCollateral: boolean,
-  setState: (state: DerivedInfoState) => void,
-  approvalState: ApprovalState,
-  premium?: number
+  setState: (state: DerivedInfoState) => void
 ): {
   transactionInfo: {
     token0Amount: string
@@ -553,7 +550,7 @@ function useDerivedBorrowReduceDebtInfo(
     }
 
     laggedfxn()
-  }, [borrowManagerContract, trader, tokenId, recieveCollateral, reduceAmount, approvalState])
+  }, [borrowManagerContract, trader, tokenId, recieveCollateral, reduceAmount])
 
   const transactionInfo = useMemo(() => {
     if (contractResult) {
@@ -576,8 +573,7 @@ function useDerivedBorrowReduceDebtInfo(
     }
     return undefined
   }, [
-    contractResult,
-    approvalState
+    contractResult
   ])
 
   const userError = useMemo(() => {
@@ -588,17 +584,17 @@ function useDerivedBorrowReduceDebtInfo(
       </Trans>)
     }
 
-    if (relevantTokenBalances?.length > 0 && position && premium) {
-      const tokenBalance = position.isToken0 ? relevantTokenBalances[1] : relevantTokenBalances[0]
-      if (Number(tokenBalance?.toExact()) < premium) {
-        error = (<Trans>
-          Insufficient {position.isToken0 ? currency1?.symbol : currency0?.symbol} balance
-        </Trans>)
-      }
-    }
+    // if (relevantTokenBalances?.length > 0 && position && premium) {
+    //   const tokenBalance = position.isToken0 ? relevantTokenBalances[1] : relevantTokenBalances[0]
+    //   if (Number(tokenBalance?.toExact()) < premium) {
+    //     error = (<Trans>
+    //       Insufficient {position.isToken0 ? currency1?.symbol : currency0?.symbol} balance
+    //     </Trans>)
+    //   }
+    // }
 
     return error
-  }, [relevantTokenBalances, position, reduceAmount, approvalState, premium])
+  }, [relevantTokenBalances, position, reduceAmount])
 
   return {
     transactionInfo,
@@ -874,7 +870,7 @@ export function AddPremiumLeverageModalFooter({
   return (
     <AutoRow>
       <Card padding="0" marginTop="12px">
-        <MouseoverValueLabel 
+        <MouseoverValueLabel
           value={premium}
           label={"Expected Premium Payment"}
           description="expected premium payment"
@@ -1406,22 +1402,22 @@ export function BorrowReduceCollateralModalFooter({
 
   const [debouncedReduceAmount, setDebouncedReduceAmount] = useDebouncedChangeHandler(reduceAmount, setReduceAmount);
 
-  const approvalAmount = useMemo(() => {
-    if (position && token1 && token0) {
-      return position.isToken0 ?
-        CurrencyAmount.fromRawAmount(token1, position.totalDebtInput * 0.002) :
-        CurrencyAmount.fromRawAmount(token0, position.totalDebtInput * 0.002)
-    }
-    // return token0 ? CurrencyAmount.fromRawAmount(token0, 0) : undefined
-    return undefined
-  }, [position])
+  // const approvalAmount = useMemo(() => {
+  //   if (position && token1 && token0) {
+  //     return position.isToken0 ?
+  //       CurrencyAmount.fromRawAmount(token1, position.totalDebtInput * 0.002) :
+  //       CurrencyAmount.fromRawAmount(token0, position.totalDebtInput * 0.002)
+  //   }
+  //   // return token0 ? CurrencyAmount.fromRawAmount(token0, 0) : undefined
+  //   return undefined
+  // }, [position])
 
-  const [approvalState, approveManager] = useApproveCallback(approvalAmount, position?.borrowManagerAddress);
+  // const [approvalState, approveManager] = useApproveCallback(approvalAmount, position?.borrowManagerAddress);
 
   const {
     transactionInfo,
     userError
-  } = useDerivedBorrowReduceCollateralInfo(trader, tokenId, position, debouncedReduceAmount, recieveCollateral, setDerivedState, approvalState)
+  } = useDerivedBorrowReduceCollateralInfo(trader, tokenId, position, debouncedReduceAmount, recieveCollateral, setDerivedState)
 
 
   const loading = useMemo(() => derivedState === DerivedInfoState.LOADING, [derivedState])
@@ -1658,39 +1654,7 @@ export function BorrowReduceCollateralModalFooter({
         </Wrapper>
       </TransactionDetails>
 
-      {approvalState !== ApprovalState.APPROVED ? (
-        <ButtonPrimary
-          onClick={approveManager}
-          disabled={!!userError || approvalState === ApprovalState.PENDING}
-          style={{ gap: 14 }}
-        >
-          {!!userError ? (
-            <Trans>
-              {userError}
-            </Trans>
-          ) : approvalState === ApprovalState.PENDING ? (
-            <>
-              <Loader size="20px" />
-              <Trans>Approve pending</Trans>
-            </>
-          ) : (
-            <>
-              <div style={{ height: 20 }}>
-                <MouseoverTooltip
-                  text={
-                    <Trans>
-                      Permission is required.
-                    </Trans>
-                  }
-                >
-                  <Info size={20} />
-                </MouseoverTooltip>
-              </div>
-              <Trans>Approve use of {inputIsToken0 ? token1?.symbol : token0?.symbol}</Trans>
-            </>
-          )}
-        </ButtonPrimary>
-      ) : (
+      {(
         <ButtonError
           onClick={handleReducePosition}
           disabled={!!userError || !transactionInfo}
@@ -1808,19 +1772,19 @@ export function BorrowReduceDebtModalFooter({
   const [showDetails, setShowDetails] = useState(false)
   const theme = useTheme()
 
-  const premium = useMemo(() => {
-    if (position && token1 && token0 && Number(reduceAmount) > 0) {
-      return (position.totalDebtInput - Number(reduceAmount)) * 0.002
-    }
-    return 0
-  }, [position, reduceAmount, token0, token1])
+  // const premium = useMemo(() => {
+  //   if (position && token1 && token0 && Number(reduceAmount) > 0) {
+  //     return (position.totalDebtInput - Number(reduceAmount)) * 0.002
+  //   }
+  //   return 0
+  // }, [position, reduceAmount, token0, token1])
 
-  const [approvalState, approveManager] = useApproveCallback(
-    position?.isToken0 && token1 ?
-      CurrencyAmount.fromRawAmount(token1, new BN(premium).shiftedBy(18).toFixed(0)) : token0 ?
-        CurrencyAmount.fromRawAmount(token0, new BN(premium).shiftedBy(18).toFixed(0)) : undefined
-    , position?.borrowManagerAddress
-  );
+  // const [approvalState, approveManager] = useApproveCallback(
+  //   position?.isToken0 && token1 ?
+  //     CurrencyAmount.fromRawAmount(token1, new BN(premium).shiftedBy(18).toFixed(0)) : token0 ?
+  //       CurrencyAmount.fromRawAmount(token0, new BN(premium).shiftedBy(18).toFixed(0)) : undefined
+  //   , position?.borrowManagerAddress
+  // );
 
   // what do we need for the simulation
 
@@ -1830,17 +1794,17 @@ export function BorrowReduceDebtModalFooter({
   const {
     transactionInfo,
     userError
-  } = useDerivedBorrowReduceDebtInfo(trader, tokenId, position, debouncedReduceAmount, recieveCollateral, setDerivedState, approvalState, Number(premium))
+  } = useDerivedBorrowReduceDebtInfo(trader, tokenId, position, debouncedReduceAmount, recieveCollateral, setDerivedState)
 
   const loading = useMemo(() => derivedState === DerivedInfoState.LOADING, [derivedState])
 
-  const handleApprove = useCallback(async () => {
-    try {
-      await approveManager()
-    } catch (err) {
-      console.log("approve err: ", err)
-    }
-  }, [approveManager])
+  // const handleApprove = useCallback(async () => {
+  //   try {
+  //     await approveManager()
+  //   } catch (err) {
+  //     console.log("approve err: ", err)
+  //   }
+  // }, [approveManager])
 
   // const debt = position?.totalDebtInput;
   // const initCollateral = position?.initialCollateral;
@@ -1850,7 +1814,7 @@ export function BorrowReduceDebtModalFooter({
 
   return (
     <AutoRow>
-      <Card padding="0" marginTop="12px">
+      {/* <Card padding="0" marginTop="12px">
         <ValueLabel 
           value={premium}
           label="Expected Premium Payment"
@@ -1860,7 +1824,7 @@ export function BorrowReduceDebtModalFooter({
           }
           syncing={false}
         />
-      </Card>
+      </Card> */}
       <DarkCard marginTop="5px" padding="5px">
         <AutoColumn gap="4px">
           <RowBetween>
@@ -1996,7 +1960,7 @@ export function BorrowReduceDebtModalFooter({
                           </ThemedText.DeprecatedBlack>
                         </TextWithLoadingPlaceholder>
                       </RowBetween>
-                      <RowBetween>
+                      {/* <RowBetween>
                         <RowFixed>
                           <MouseoverTooltip
                             text={
@@ -2019,7 +1983,7 @@ export function BorrowReduceDebtModalFooter({
                             </TruncatedText>
                           </ThemedText.DeprecatedBlack>
                         </TextWithLoadingPlaceholder>
-                      </RowBetween>
+                      </RowBetween> */}
                     </AutoColumn>
 
                   </StyledCard>
@@ -2030,59 +1994,26 @@ export function BorrowReduceDebtModalFooter({
           </AutoColumn>
         </Wrapper>
       </TransactionDetails>
-      {approvalState !== ApprovalState.APPROVED ? (
-        <ButtonPrimary
-          onClick={handleApprove}
-          disabled={!!userError || approvalState === ApprovalState.PENDING}
-          style={{ gap: 14 }}
-        >
-          {!!userError ? (
-            <Trans>
-              {userError}
-            </Trans>
-          ) : approvalState === ApprovalState.PENDING ? (
-            <>
-              <Loader size="20px" />
-              <Trans>Approve pending</Trans>
-            </>
-          ) : (
-            <>
-              <div style={{ height: 20 }}>
-                <MouseoverTooltip
-                  text={
-                    <Trans>
-                      Permission is required.
-                    </Trans>
-                  }
-                >
-                  <Info size={20} />
-                </MouseoverTooltip>
-              </div>
-              <Trans>Allowance needed for {inputIsToken0 ? token1?.symbol : token0?.symbol} premium payment</Trans>
-            </>
-          )}
-        </ButtonPrimary>
-      ) : (
-        <ButtonError
-          onClick={handleReducePosition}
-          disabled={!!userError || !transactionInfo}
-          style={{ margin: '10px 0 0 0' }}
-          id={InterfaceElementName.CONFIRM_SWAP_BUTTON}
-        >
-          {userError ? (
-            userError
-          ) : transactionInfo ? (
-            <Text fontSize={20} fontWeight={500}>
-              <Trans>Reduce Position</Trans>
-            </Text>
-          ) : (
-            <Text fontSize={20} fontWeight={500}>
-              <Trans>Invalid</Trans>
-            </Text>
-          )}
-        </ButtonError>
-      )
-      }
+
+      <ButtonError
+        onClick={handleReducePosition}
+        disabled={!!userError || !transactionInfo}
+        style={{ margin: '10px 0 0 0' }}
+        id={InterfaceElementName.CONFIRM_SWAP_BUTTON}
+      >
+        {userError ? (
+          userError
+        ) : transactionInfo ? (
+          <Text fontSize={20} fontWeight={500}>
+            <Trans>Reduce Position</Trans>
+          </Text>
+        ) : (
+          <Text fontSize={20} fontWeight={500}>
+            <Trans>Invalid</Trans>
+          </Text>
+        )}
+      </ButtonError>
+
     </AutoRow>
   )
 }

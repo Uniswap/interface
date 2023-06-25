@@ -5,7 +5,7 @@ import { ALL_SUPPORTED_CHAIN_IDS, SupportedChainId } from 'constants/chains'
 import { useCallback, useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 
-import { addTransaction } from './reducer'
+import { addTransaction, clearAllTransactions } from './reducer'
 import { TransactionDetails, TransactionInfo, TransactionType } from './types'
 
 // helper that can take a ethers library transaction response and add it to the list of transactions
@@ -25,6 +25,17 @@ export function useTransactionAdder(): (response: TransactionResponse, info: Tra
       dispatch(addTransaction({ hash, from: account, info, chainId }))
     },
     [account, chainId, dispatch]
+  )
+}
+
+export function useClearTransactions(): (chainId: number) => void {
+  const dispatch = useAppDispatch()
+
+  return useCallback(
+    (chainId: number) => {
+      dispatch(clearAllTransactions({ chainId }))
+    },
+    [dispatch]
   )
 }
 

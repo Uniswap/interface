@@ -56,8 +56,7 @@ function useDerivedLeverageReduceInfo(
   reduceAmount: string | undefined,
   //newTotalPosition: string | undefined,
   setState: (state: DerivedInfoState) => void,
-  approvalState: ApprovalState,
-  premium?: number
+  // approvalState: ApprovalState,
   // setPremium: (premium: number) => void
 ): {
   transactionInfo: {
@@ -116,7 +115,7 @@ function useDerivedLeverageReduceInfo(
     }
 
     laggedfxn()
-  }, [leverageManager, trader, tokenId, allowedSlippage, reduceAmount, approvalState])
+  }, [leverageManager, trader, tokenId, allowedSlippage, reduceAmount])
 
   const transactionInfo = useMemo(() => {
     if (contractResult) {
@@ -150,23 +149,8 @@ function useDerivedLeverageReduceInfo(
         Invalid Amount
       </Trans>)
     }
-
-    if (position && premium) {
-      const isToken0 = position.isToken0
-      const token0Balance = relevantTokenBalances[0]
-      const token1Balance = relevantTokenBalances[1]
-      if (isToken0 && Number(token1Balance?.toExact()) < premium) {
-        error = (<Trans>
-          Insufficient {currency1?.symbol} balance
-        </Trans>)
-      } else if (!isToken0 && Number(token0Balance?.toExact()) < premium) {
-        error = (<Trans>
-          Insufficient {currency0?.symbol} balance
-        </Trans>)
-      }
-    }
     return error
-  }, [premium, position, relevantTokenBalances, reduceAmount, approvalState])
+  }, [ position, relevantTokenBalances, reduceAmount])
 
   return {
     transactionInfo,
@@ -193,7 +177,7 @@ export function ReduceLeverageModalFooter({
   const [slippage, setSlippage] = useState("1")
   // const [newPosition, setNewPosition] = useState("")
   const [reduceAmount, setReduceAmount] = useState("")
-  const [premium, setPremium ] = useState(0)
+  // const [premium, setPremium ] = useState(0)
 
   const leverageManagerContract = useLeverageManagerContract(leverageManagerAddress, true)
   const addTransaction = useTransactionAdder()
@@ -253,49 +237,49 @@ export function ReduceLeverageModalFooter({
   const [debouncedSlippage, setDebouncedSlippage] = useDebouncedChangeHandler(slippage, setSlippage)
   const [debouncedReduceAmount, setDebouncedReduceAmount] = useDebouncedChangeHandler(reduceAmount, setReduceAmount);
 
-  const quoter = useQuoter(true) as QuoterV2 | null;
+  // const quoter = useQuoter(true) as QuoterV2 | null;
 
-  useEffect(() => {
-    async function getPremium() {
-      if (pool && position && token1 && token0 && position?.token1Address && position?.token0Address && quoter && Number(reduceAmount) > 0) {
-        const newTotalPosition = Number(position.totalPosition) - Number(reduceAmount)
-        try {
-          const result = await quoter?.callStatic.quoteExactInputSingle(
-            {
-              tokenIn: position.isToken0 ? position.token0Address : position.token1Address,
-              tokenOut: position.isToken0 ? position.token1Address : position.token0Address,
-              amountIn: new BN(newTotalPosition).shiftedBy(18).toFixed(0),
-              fee: pool.fee,
-              sqrtPriceLimitX96: 0
-            }
-          )
-          if (result) {
-            const amountOut = new BN(result.amountOut.toString()).shiftedBy(-18).toNumber()
-            setPremium(amountOut * 0.002)
-          }
-          return
-        } catch (err) {
-          console.log("error getting premium: ", err)
-        }
-      }
-      setPremium(0)
-    }
+  // useEffect(() => {
+  //   async function getPremium() {
+  //     if (pool && position && token1 && token0 && position?.token1Address && position?.token0Address && quoter && Number(reduceAmount) > 0) {
+  //       const newTotalPosition = Number(position.totalPosition) - Number(reduceAmount)
+  //       try {
+  //         const result = await quoter?.callStatic.quoteExactInputSingle(
+  //           {
+  //             tokenIn: position.isToken0 ? position.token0Address : position.token1Address,
+  //             tokenOut: position.isToken0 ? position.token1Address : position.token0Address,
+  //             amountIn: new BN(newTotalPosition).shiftedBy(18).toFixed(0),
+  //             fee: pool.fee,
+  //             sqrtPriceLimitX96: 0
+  //           }
+  //         )
+  //         if (result) {
+  //           const amountOut = new BN(result.amountOut.toString()).shiftedBy(-18).toNumber()
+  //           setPremium(amountOut * 0.002)
+  //         }
+  //         return
+  //       } catch (err) {
+  //         console.log("error getting premium: ", err)
+  //       }
+  //     }
+  //     setPremium(0)
+  //   }
 
-    getPremium()
-  }, [position, reduceAmount, pool, quoter])
+  //   getPremium()
+  // }, [position, reduceAmount, pool, quoter])
 
   const inputCurrency = useCurrency(position?.isToken0 ? position?.token1Address : position?.token0Address)
 
-  const [approvalState, approveManager] = useApproveCallback(
-    inputCurrency ?
-      CurrencyAmount.fromRawAmount(inputCurrency, new BN(premium).shiftedBy(18).toFixed(0)) : undefined,
-    position?.leverageManagerAddress ?? undefined
-  )
+  // const [approvalState, approveManager] = useApproveCallback(
+  //   inputCurrency ?
+  //     CurrencyAmount.fromRawAmount(inputCurrency, new BN(premium).shiftedBy(18).toFixed(0)) : undefined,
+  //   position?.leverageManagerAddress ?? undefined
+  // )
 
   const {
     transactionInfo,
     userError
-  } = useDerivedLeverageReduceInfo(leverageManagerAddress, trader, tokenId, debouncedSlippage, position, debouncedReduceAmount, setDerivedState, approvalState, premium)
+  } = useDerivedLeverageReduceInfo(leverageManagerAddress, trader, tokenId, debouncedSlippage, position, debouncedReduceAmount, setDerivedState)
 
   const loading = useMemo(() => derivedState === DerivedInfoState.LOADING, [derivedState])
 
@@ -307,13 +291,13 @@ export function ReduceLeverageModalFooter({
   return (
     <AutoRow>
       <Card padding="0" marginTop="12px">
-        <MouseoverValueLabel 
+        {/* <MouseoverValueLabel 
           description="Estimated Premium Payment"
           value={premium}
           syncing={false}
           label={"Expected Premium Payment"}
           appendSymbol={position?.isToken0 ? token1?.symbol : token0?.symbol}
-        />
+        /> */}
       </Card>
       <DarkCard marginTop="5px" padding="5px">
         <AutoColumn gap="4px">
@@ -509,30 +493,6 @@ export function ReduceLeverageModalFooter({
                           <MouseoverTooltip
                             text={
                               <Trans>
-                                The new quoted premium to pay
-                              </Trans>
-                            }
-                          >
-                            <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
-                              <Trans>Premium To Pay</Trans>
-                            </ThemedText.DeprecatedSubHeader>
-                          </MouseoverTooltip>
-                        </RowFixed>
-                        <TextWithLoadingPlaceholder syncing={loading} width={65}>
-                          <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
-                            <TruncatedText>
-                              {
-                                 `${Number(transactionInfo?.premium)}  ${inputIsToken0 ? token0?.symbol : token1?.symbol}`
-                              }
-                            </TruncatedText>
-                          </ThemedText.DeprecatedBlack>
-                        </TextWithLoadingPlaceholder>
-                      </RowBetween>
-                      <RowBetween>
-                        <RowFixed>
-                          <MouseoverTooltip
-                            text={
-                              <Trans>
                                 Trade asset left after repaying debt
                               </Trans>
                             }
@@ -593,46 +553,6 @@ export function ReduceLeverageModalFooter({
           </AutoColumn>
         </Wrapper>
       </TransactionDetails>
-      <ButtonError
-        onClick={handleReducePosition}
-        disabled={!!userError || derivedState !== DerivedInfoState.VALID}
-        style={{ margin: '10px 0 0 0' }}
-        id={InterfaceElementName.CONFIRM_SWAP_BUTTON}
-      >
-        {approvalState !== ApprovalState.APPROVED ? (
-        <ButtonPrimary
-          onClick={approveManager}
-          disabled={!!userError || approvalState === ApprovalState.PENDING}
-          style={{ gap: 14 }}
-        >
-          {!!userError ? (
-            <Trans>
-              {userError}
-            </Trans>
-          ) : approvalState === ApprovalState.PENDING ? (
-            <>
-              <Loader size="20px" />
-              <Trans>Approve pending</Trans>
-            </>
-          ) : (
-            <>
-              <div style={{ height: 20 }}>
-                <MouseoverTooltip
-                  text={
-                    <Trans>
-                      Permission is required.
-                    </Trans>
-                  }
-                >
-                  <Info size={20} />
-                </MouseoverTooltip>
-              </div>
-              
-              <Trans>Approval needed for {inputIsToken0 ? token0?.symbol : token1?.symbol} premium payment</Trans>
-            </>
-          )}
-        </ButtonPrimary>
-      ) : (
         <ButtonError
           onClick={handleReducePosition}
           disabled={!!userError || !transactionInfo}
@@ -651,8 +571,8 @@ export function ReduceLeverageModalFooter({
             </Text>
           )}
         </ButtonError>
-      )
-      }
+      
+      
         {/* {userError ? (
           userError
         ) : derivedState !== DerivedInfoState.VALID ? (
@@ -665,7 +585,6 @@ export function ReduceLeverageModalFooter({
           </Text>
         )
         } */}
-      </ButtonError>
     </AutoRow>
   )
 }

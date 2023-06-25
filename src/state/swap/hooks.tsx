@@ -28,7 +28,7 @@ import JSBI from 'jsbi'
 import { BigNumber, ethers } from 'ethers'
 import { input } from 'nft/components/layout/Checkbox.css'
 import { useAllV3Routes } from 'hooks/useAllV3Routes'
-import { POOL_INIT_CODE_HASH, V3_CORE_FACTORY_ADDRESSES, feth } from 'constants/addresses'
+import { POOL_INIT_CODE_HASH, V3_CORE_FACTORY_ADDRESSES } from 'constants/addresses'
 import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
 import { useLimitlessPositionFromKeys } from 'hooks/useV3Positions'
 import { AllowanceState } from 'hooks/usePermit2Allowance'
@@ -403,6 +403,7 @@ export function useDerivedBorrowCreationInfo({ allowance: {input: inputAllowance
       const amount = Number(typedValue)
       const price = inputIsToken0 ? pool?.token0Price.toFixed(18) : pool?.token1Price.toFixed(18)
       const _ltv = Number(ltv) / 100;
+      // console.log("premiumBorrow", price, amount, _ltv)
       if (tradeState === TradeState.VALID && trade) {
         onPremiumChange(trade.quotedPremium)
       } else if (existingPosition && amount && Number(_ltv) > 0) {
@@ -412,11 +413,13 @@ export function useDerivedBorrowCreationInfo({ allowance: {input: inputAllowance
         )
       } else if (Number(_ltv) > 0 && amount) {
         onPremiumChange(Number(amount) * Number(price) * 0.002)
+        // console.log("zeke")
       } else {
         onPremiumChange(0)
+        // console.log("alli")
       }
     }
-  }, [activeTab, tradeState, trade, typedValue, pool])
+  }, [activeTab, tradeState, trade, typedValue, pool, ltv])
 
   const inputError = useMemo(() => {
     let inputError: ReactNode | undefined

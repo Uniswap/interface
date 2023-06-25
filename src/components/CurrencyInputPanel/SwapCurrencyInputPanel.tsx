@@ -209,7 +209,7 @@ interface SwapCurrencyInputPanelProps {
   isLevered?: boolean
   leverageFactor?: string
   disabled?: boolean
-  premium?: string
+  premium?: CurrencyAmount<Currency>
 }
 
 export default function SwapCurrencyInputPanel({
@@ -335,6 +335,18 @@ export default function SwapCurrencyInputPanel({
         {Boolean(!hideInput && !hideBalance) && (
           <FiatRow>
             <RowBetween>
+              {premium && (
+                <RowFixed style={{height: '17px'}}>
+                  <ThemedText.DeprecatedBody
+                    color={theme.textSecondary}
+                    fontWeight={400}
+                    fontSize={14}
+                    style={{ display: 'inline' }}
+                  >
+                    <Trans>Premium: {formatCurrencyAmount(premium, 4)} {premium.currency.symbol}</Trans>
+                  </ThemedText.DeprecatedBody>
+                </RowFixed>
+              )}
               <LoadingOpacityContainer $loading={loading}>
                 <FiatValue fiatValue={fiatValue} priceImpact={priceImpact} />
               </LoadingOpacityContainer>

@@ -14,7 +14,7 @@ import { Currency, Token } from '@uniswap/sdk-core';
 import { uniswapClient, useUniswapSubgraph } from 'graphql/limitlessGraph/uniswapClients';
 import { useLimitlessSubgraph, limitlessClient } from 'graphql/limitlessGraph/limitlessClients';
 import { V3_CORE_FACTORY_ADDRESSES as UNISWAP_FACTORIES } from "constants/addresses-uniswap"
-import { V3_CORE_FACTORY_ADDRESSES as LIMITLESS_FACTORIES, POOL_INIT_CODE_HASH, UNISWAP_POOL_INIT_CODE_HASH, feth, fusdc } from "constants/addresses"
+import { V3_CORE_FACTORY_ADDRESSES as LIMITLESS_FACTORIES, POOL_INIT_CODE_HASH } from "constants/addresses"
 import { useContract } from 'hooks/useContract';
 import { abi as IUniswapV3PoolStateABI } from '@uniswap/v3-core/artifacts/contracts/interfaces/pool/IUniswapV3PoolState.sol/IUniswapV3PoolState.json'
 import { Interface } from '@ethersproject/abi'
@@ -88,8 +88,8 @@ export const PoolDataSection = ({
 	})
 
 	const uniswapPoolAddress = useMemo(() => {
-		if (chainId && token0 && token1 && fee) {
-
+		if (chainId && token0 && token1) {
+			// console.log('getFakePool', getFakePool(token0.address.toLowerCase(), token1.address.toLowerCase()))
 			if (isFakePair(token0.address.toLowerCase(), token1.address.toLowerCase())) {
 				return getFakePool(token0.address.toLowerCase(), token1.address.toLowerCase());
 			}
@@ -147,6 +147,7 @@ export const PoolDataSection = ({
 	useEffect(() => {
 		if (token0 && token1) {
 			// fetch data and process it
+			// console.log("lmt: ", uniswapPoolAddress)
 			const fetch = async () => {
 				try {
 					if (uniswapPoolAddress) {
