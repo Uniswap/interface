@@ -30,7 +30,7 @@ import { POOL_STATS_QUERY } from 'graphql/limitlessGraph/queries';
 import { BigNumber as BN } from "bignumber.js"
 import styled from 'styled-components';
 import { LATEST_POOL_DAY_QUERY, LATEST_POOL_INFO_QUERY } from 'graphql/limitlessGraph/poolPriceData';
-import { getFakeSymbol, isFakePair } from 'constants/fake-tokens';
+import { getFakePool, getFakeSymbol, isFakePair } from 'constants/fake-tokens';
 
 const POOL_STATE_INTERFACE = new Interface(IUniswapV3PoolStateABI)
 
@@ -90,8 +90,8 @@ export const PoolDataSection = ({
 	const uniswapPoolAddress = useMemo(() => {
 		if (chainId && token0 && token1 && fee) {
 
-			if (token0?.address.toLowerCase() === fusdc.toLowerCase() && token1?.address.toLowerCase() === feth.toLowerCase()) {
-				return "0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640";
+			if (isFakePair(token0.address.toLowerCase(), token1.address.toLowerCase())) {
+				return getFakePool(token0.address.toLowerCase(), token1.address.toLowerCase());
 			}
 
 			// return computePoolAddress({
@@ -148,7 +148,6 @@ export const PoolDataSection = ({
 		if (token0 && token1) {
 			// fetch data and process it
 			const fetch = async () => {
-				// console.log("ABC", uniswapPoolAddress?.toLowerCase())
 				try {
 					if (uniswapPoolAddress) {
 						const result = await uniswapClient.query(
@@ -157,7 +156,7 @@ export const PoolDataSection = ({
 								variables: {
 									address: uniswapPoolAddress,
 								},
-								fetchPolicy: 'cache-first',
+								fetchPolicy: 'network-only',
 							}
 						)
 
@@ -167,7 +166,7 @@ export const PoolDataSection = ({
 								variables: {
 									address: uniswapPoolAddress
 								},
-								fetchPolicy: 'cache-first'
+								fetchPolicy: 'network-only'
 							}
 						)
 
@@ -210,7 +209,14 @@ export const PoolDataSection = ({
 						}
 					}
 				} catch (err) {
-					console.log("subgraph error: ", err)
+					// console.log("subgraph error: ", err)
+					setStats({
+						price: null,
+						delta: null,
+						high24h: null,
+						low24h: null,
+						invertPrice: false
+					})
 				}
 			}
 
@@ -240,7 +246,7 @@ export const PoolDataSection = ({
 	// })
 
 	useEffect(() => {
-		console.log("lmt", token0?.address.toLowerCase(), token1?.address.toLowerCase(), isFakePair(token0?.address.toLowerCase(), token1?.address.toLowerCase()))
+		// console.log("lmt", token0?.address.toLowerCase(), token1?.address.toLowerCase(), isFakePair(token0?.address.toLowerCase(), token1?.address.toLowerCase()))
 		if (token0 && token1 && isFakePair(token0?.address.toLowerCase(), token1?.address.toLowerCase())) {
 			setSymbol(getFakeSymbol(token0.address.toLowerCase(), token1.address.toLowerCase()) as string)
 		}
@@ -323,7 +329,7 @@ export const PoolDataSection = ({
 				setChartDataLoading(true);
 			}
 		};
-	}, [chainId, symbol, token0, token1, fee]);
+	}, [chainId, symbol, uniswapPoolAddress, fee]);
 
 	return (
 		<>

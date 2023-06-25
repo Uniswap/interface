@@ -33,6 +33,7 @@ import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
 import { useLimitlessPositionFromKeys } from 'hooks/useV3Positions'
 import { AllowanceState } from 'hooks/usePermit2Allowance'
 import { useSingleCallResult } from 'lib/hooks/multicall'
+import { FETH, FUSDC } from 'constants/fake-tokens'
 
 // import { useLeveragePosition } from 'hooks/useV3Positions'
 
@@ -957,8 +958,8 @@ export function useDefaultsFromURLSearch(): SwapState {
 
   useEffect(() => {
     if (!chainId) return
-    const inputCurrencyId = parsedSwapState[Field.INPUT].currencyId ?? undefined
-    const outputCurrencyId = parsedSwapState[Field.OUTPUT].currencyId ?? undefined
+    const inputCurrencyId = FUSDC.address// parsedSwapState[Field.INPUT].currencyId ?? undefined
+    const outputCurrencyId = FETH.address// parsedSwapState[Field.OUTPUT].currencyId ?? undefined
 
     dispatch(
       replaceSwapState({
