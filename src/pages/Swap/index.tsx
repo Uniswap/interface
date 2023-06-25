@@ -138,7 +138,7 @@ const LeverageInputSection = styled(ResponsiveHeaderText)`
 const SwapSection = styled.div`
   position: relative;
   background-color: ${({ theme }) => theme.background};
-  border-radius: 0px;
+  border-radius: 16px;
   padding: 16px;
   color: ${({ theme }) => theme.textSecondary};
   font-size: 14px;
@@ -227,17 +227,23 @@ const PositionsContainer = styled.div`
   margin-right: 20px;
   margin-top: 15px;
   background-color: ${({ theme }) => theme.backgroundSurface};
+  max-width: 1200px;
+  width: 100%;
   border-radius: 32px;
   padding: 32px;
+  margin-left: auto
+
 `
 
 const StatsContainer = styled.div`
   background-color: ${({ theme }) => theme.background};
   border-radius: 32px;
   padding: 32px;
-
+  max-width: 1200px;
+  width: 100%;
   margin-top: 0px;
   margin-right: 20px;
+  margin-left: auto
 `
 
 const LeftContainer = styled.div`
@@ -1434,8 +1440,7 @@ export default function Swap({ className }: { className?: string }) {
                               <MouseoverTooltip
                                 text={
                                   <Trans>
-                                    Permission is required for Uniswap to swap each token. This will expire after one
-                                    month for your security.
+                                    Permission is required for Limitless to trade each token. 
                                   </Trans>
                                 }
                               >
