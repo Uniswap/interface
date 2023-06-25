@@ -11,9 +11,10 @@ import { AutoColumn } from '../Column'
 
 export const PageWrapper = styled.div`
   padding: 10px 24px 0px;
-  // max-width: 480px;
+  max-width: 1700px;
   width: 100%;
-
+  margin-right: auto;
+  margin-left:auto;
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
     padding-top: 48px;
   }
@@ -32,10 +33,12 @@ export const SwapWrapper = styled.main<{ chainId: number | undefined }>`
   border-radius: 32px;
   border: 0px solid ${({ theme }) => theme.background};
   padding: 10px;
-  box-shadow: ${({ chainId }) => !!chainId && chainId === SupportedChainId.BNB && '0px 40px 120px 0px #f0b90b29'};
+  box-shadow:  '0px 40px 120px 0px #f0b90b29';
+
+  // box-shadow: ${({ chainId }) => !!chainId && chainId === SupportedChainId.BNB && '0px 40px 120px 0px #f0b90b29'};
   z-index: ${Z_INDEX.deprecated_content};
   transition: transform 250ms ease;
-
+  margin-left: 20px;
   &:hover {
     border: 0px solid ${({ theme }) => theme.backgroundOutline};
   }
