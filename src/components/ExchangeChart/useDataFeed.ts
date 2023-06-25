@@ -53,7 +53,7 @@ export default function useDatafeed(
         },
         // symbolName => JSON obj. w/ token0Symbol, token1Symbol, poolAddress
         resolveSymbol: (symbolName: string, onSymbolResolvedCallback: any, onResolveErrorCallback: any, extension: any) => {
-          // console.log('[resolveSymbol]: Method call', symbolName);
+          console.log('[resolveSymbol]: Method call', symbolName);
           if (symbolName === "") {
             return onResolveErrorCallback("Symbol cannot be empty");
           }

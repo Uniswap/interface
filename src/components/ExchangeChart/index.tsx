@@ -240,8 +240,9 @@ export const PoolDataSection = ({
 	// })
 
 	useEffect(() => {
-		if (token0 && token1 && isFakePair(token0?.address, token1?.address)) {
-			setSymbol(getFakeSymbol(token0.address, token1.address) as string)
+		console.log("lmt", token0?.address.toLowerCase(), token1?.address.toLowerCase(), isFakePair(token0?.address.toLowerCase(), token1?.address.toLowerCase()))
+		if (token0 && token1 && isFakePair(token0?.address.toLowerCase(), token1?.address.toLowerCase())) {
+			setSymbol(getFakeSymbol(token0.address.toLowerCase(), token1.address.toLowerCase()) as string)
 		}
 		else if (
 			uniswapPoolExists
