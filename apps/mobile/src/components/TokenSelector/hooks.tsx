@@ -163,12 +163,13 @@ export function usePortfolioBalancesForAddressById(
     error,
     refetch,
     loading,
-  } = usePortfolioBalances(
+  } = usePortfolioBalances({
     address,
-    /*shouldPoll=*/ false, // Home tab's TokenBalanceList will poll portfolio balances for activeAccount
-    /*hideSmallBalances=*/ false, // always show small balances in token selector
-    hideSpamTokens
-  )
+    shouldPoll: false, // Home tab's TokenBalanceList will poll portfolio balances for activeAccount
+    hideSmallBalances: false, // always show small balances in token selector
+    hideSpamTokens,
+    fetchPolicy: 'cache-first', // we want to avoid re-renders when token selector is opening
+  })
 
   return {
     data: portfolioBalancesById,
@@ -331,8 +332,13 @@ export function useFavoriteTokensOptions(
     (!portfolioBalancesById && portfolioBalancesByIdError) ||
     (!favoriteCurrencies && favoriteCurrenciesError)
 
+  const filteredFavoriteTokenOptions = useMemo(
+    () => favoriteTokenOptions && filter(favoriteTokenOptions, chainFilter),
+    [chainFilter, favoriteTokenOptions]
+  )
+
   return {
-    data: favoriteTokenOptions && filter(favoriteTokenOptions, chainFilter),
+    data: filteredFavoriteTokenOptions,
     refetch,
     error: error || undefined,
     loading: loadingPorfolioBalancesById || loadingFavoriteCurrencies,

@@ -72,13 +72,14 @@ export const TokenBalanceList = forwardRef<FlashList<any>, TokenBalanceListProps
       data: balancesById,
       networkStatus,
       refetch,
-    } = usePortfolioBalances(
-      owner,
-      /*shouldPoll=*/ true,
-      /*hideSmallBalances=*/ false,
-      /*hideSpamBalances=*/ false,
-      onCompleted
-    )
+    } = usePortfolioBalances({
+      address: owner,
+      shouldPoll: true,
+      hideSmallBalances: false,
+      hideSpamTokens: false,
+      onCompleted,
+      fetchPolicy: 'cache-and-network',
+    })
 
     const [isWarmLoading, setIsWarmLoading] = useState(false)
     const [hiddenTokensExpanded, setHiddenTokensExpanded] = useState(false)

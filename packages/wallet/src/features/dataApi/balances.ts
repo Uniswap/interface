@@ -1,4 +1,4 @@
-import { NetworkStatus } from '@apollo/client'
+import { NetworkStatus, WatchQueryFetchPolicy } from '@apollo/client'
 import { Token } from '@uniswap/sdk-core'
 import { useCallback, useMemo } from 'react'
 import { PollingInterval } from 'wallet/src/constants/misc'
@@ -32,13 +32,21 @@ type SortedPortfolioBalances = {
  * @param onCompleted
  * @returns
  */
-export function usePortfolioBalances(
-  address: Address,
-  shouldPoll?: boolean,
-  hideSmallBalances?: boolean,
-  hideSpamTokens?: boolean,
+export function usePortfolioBalances({
+  address,
+  shouldPoll,
+  hideSmallBalances,
+  hideSpamTokens,
+  onCompleted,
+  fetchPolicy,
+}: {
+  address: Address
+  shouldPoll?: boolean
+  hideSmallBalances?: boolean
+  hideSpamTokens?: boolean
   onCompleted?: () => void
-): GqlResult<Record<CurrencyId, PortfolioBalance>> & { networkStatus: NetworkStatus } {
+  fetchPolicy?: WatchQueryFetchPolicy
+}): GqlResult<Record<CurrencyId, PortfolioBalance>> & { networkStatus: NetworkStatus } {
   const {
     data: balancesData,
     loading,
@@ -46,9 +54,7 @@ export function usePortfolioBalances(
     refetch,
     error,
   } = usePortfolioBalancesQuery({
-    // query is re-used by multiple components
-    // load from cache and update it if the response has new data
-    fetchPolicy: 'cache-and-network',
+    fetchPolicy,
     notifyOnNetworkStatusChange: true,
     onCompleted,
     pollInterval: shouldPoll ? PollingInterval.KindaFast : undefined,
@@ -161,13 +167,14 @@ export function useSortedPortfolioBalances(
     loading,
     networkStatus,
     refetch,
-  } = usePortfolioBalances(
+  } = usePortfolioBalances({
     address,
     shouldPoll,
-    /*hideSmallBalances=*/ false,
-    /*hideSpamBalances=*/ false,
-    onCompleted
-  )
+    hideSmallBalances: false,
+    hideSpamTokens: false,
+    onCompleted,
+    fetchPolicy: 'cache-and-network',
+  })
 
   const formattedData = useMemo(() => {
     if (!balancesById) return

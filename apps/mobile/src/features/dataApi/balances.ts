@@ -7,7 +7,11 @@ import { CurrencyId } from 'wallet/src/utils/currencyId'
 /** Helper hook to retrieve balances for a set of currencies for the active account. */
 export function useBalances(currencies: CurrencyId[] | undefined): PortfolioBalance[] | null {
   const address = useActiveAccountAddressWithThrow()
-  const { data: balances } = usePortfolioBalances(address, /*shouldPoll=*/ false)
+  const { data: balances } = usePortfolioBalances({
+    address,
+    shouldPoll: false,
+    fetchPolicy: 'cache-and-network',
+  })
 
   return useMemo(() => {
     if (!currencies || !currencies.length || !balances) return null
