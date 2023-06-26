@@ -14,7 +14,7 @@ import {
   TokenApprovalPartsFragment,
   TokenTransferPartsFragment,
 } from 'graphql/data/__generated__/types-and-hooks'
-import { fromGraphQLChain } from 'graphql/data/util'
+import { fromGraphQLChain, GQL_SUPPORTED_CHAINS } from 'graphql/data/util'
 import ms from 'ms.macro'
 import { useEffect, useState } from 'react'
 import { isAddress } from 'utils'
@@ -290,11 +290,13 @@ function parseRemoteActivity(assetActivity: AssetActivityPartsFragment): Activit
 }
 
 export function parseRemoteActivities(assetActivities?: AssetActivityPartsFragment[]) {
-  return assetActivities?.reduce((acc: { [hash: string]: Activity }, assetActivity) => {
-    const activity = parseRemoteActivity(assetActivity)
-    if (activity) acc[activity.hash] = activity
-    return acc
-  }, {})
+  return assetActivities
+    ?.filter((activity) => GQL_SUPPORTED_CHAINS.includes(activity.chain))
+    .reduce((acc: { [hash: string]: Activity }, assetActivity) => {
+      const activity = parseRemoteActivity(assetActivity)
+      if (activity) acc[activity.hash] = activity
+      return acc
+    }, {})
 }
 
 const getTimeSince = (timestamp: number) => {
