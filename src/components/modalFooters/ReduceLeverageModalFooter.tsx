@@ -230,7 +230,7 @@ export function ReduceLeverageModalFooter({
   ])
 
   const [derivedState, setDerivedState] = useState<DerivedInfoState>(DerivedInfoState.INVALID)
-  const [showDetails, setShowDetails] = useState(false)
+  const [showDetails, setShowDetails] = useState(true)
   const theme = useTheme()
 
   const [, pool] = usePool(token0 ?? undefined, token1 ?? undefined, position?.poolFee)
@@ -285,7 +285,7 @@ export function ReduceLeverageModalFooter({
   } = useDerivedLeverageReduceInfo(leverageManagerAddress, trader, tokenId, debouncedSlippage, position, debouncedReduceAmount, setDerivedState)
   
   useEffect(() => {
-    (!!userError || !transactionInfo) && showDetails && setShowDetails(false)
+    (!!userError || !transactionInfo) && showDetails //&& setShowDetails(false)
   }, [userError, transactionInfo])
   const loading = useMemo(() => derivedState === DerivedInfoState.LOADING, [derivedState])
 

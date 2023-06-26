@@ -136,7 +136,7 @@ interface BorrowDetailsDropdownProps {
 export default function SwapDetailsDropdown({ trade, syncing, loading, allowedSlippage, leverageTrade, leverageState,leverageInputError }: SwapDetailsInlineProps) {
   const theme = useTheme()
   const { chainId } = useWeb3React()
-  const [showDetails, setShowDetails] = useState(false)
+  const [showDetails, setShowDetails] = useState(true)
   const { leverage } = useSwapState()
 
   // useEffect(() => {
@@ -150,7 +150,7 @@ export default function SwapDetailsDropdown({ trade, syncing, loading, allowedSl
 
   useEffect(() => {
     if (leverageState !== LeverageTradeState.VALID) {
-      leverage && showDetails && setShowDetails(false) 
+      leverage && showDetails// && setShowDetails(false) 
     }
   }, [leverageState, leverage])
 
