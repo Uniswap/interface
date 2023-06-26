@@ -1,10 +1,10 @@
-import { Trans } from '@lingui/macro'
+import { Trans, t } from '@lingui/macro'
 import { TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import { useAccountDrawer } from 'components/AccountDrawer'
 import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button'
 import Loader from 'components/Icons/LoadingSpinner'
-import { walletConnectV2Connection } from 'connection'
+import { walletConnectV1Connection, walletConnectV2Connection } from 'connection'
 import { ActivationStatus, useActivationState } from 'connection/activate'
 import { Connection, ConnectionType } from 'connection/types'
 import { useWalletConnectV2AsDefault } from 'featureFlags/flags/walletConnectV2'
@@ -18,6 +18,8 @@ import { flexColumnNoWrap, flexRowNoWrap } from 'theme/styles'
 import { Z_INDEX } from 'theme/zIndex'
 
 import NewBadge from './NewBadge'
+import { useWalletConnectFallback } from 'featureFlags/flags/walletConnectPopover'
+import { BaseVariant } from 'featureFlags'
 
 const OptionCardLeft = styled.div`
   ${flexColumnNoWrap};
@@ -79,7 +81,7 @@ const PopoverContent = styled(ThemeButton)`
   z-index: ${Z_INDEX.popover};
 `
 const TOGGLE_SIZE = 24
-const WCv2PopoverToggle = styled.button`
+const FallbackPopoverToggle = styled.button`
   align-items: center;
   background-color: transparent;
   border: none;
@@ -143,6 +145,8 @@ function PopupButtonContent({ connection, isDarkMode, show, onClick, onClose }: 
 
   useOnClickOutside(popoverElement, onClose)
 
+  const walletConnectV2AsDefault = useWalletConnectV2AsDefault()
+
   if (!show) return null
   return (
     <PopoverContent onClick={onClick} ref={popoverElement} size={ButtonSize.small} emphasis={ButtonEmphasis.medium}>
@@ -151,10 +155,12 @@ function PopupButtonContent({ connection, isDarkMode, show, onClick, onClose }: 
       </IconWrapper>
       <div>
         <PopoverBodyText>
-          <Trans>Connect with v2</Trans>
+          <Trans>Connect with {walletConnectV2AsDefault ? t`v1` : t`v2`}</Trans>
         </PopoverBodyText>
         <PopoverCaption color="textSecondary">
-          <Trans>Under development and unsupported by most wallets</Trans>
+          {walletConnectV2AsDefault
+            ? t`Support for v1 will be discontinued June 28.`
+            : t`Under development and unsupported by most wallets`}
         </PopoverCaption>
       </div>
     </PopoverContent>
@@ -179,10 +185,16 @@ export default function Option({ connection }: OptionProps) {
   const isDarkMode = useIsDarkMode()
 
   const walletConnectV2AsDefault = useWalletConnectV2AsDefault()
+  const shouldUseWalletConnectFallback = useWalletConnectFallback() === BaseVariant.Enabled
 
   const handleClickConnectViaPopover = (e: MouseEvent<HTMLButtonElement>) => {
+
+    const connector = walletConnectV2AsDefault
+      ? walletConnectV1Connection
+      : walletConnectV2Connection
+    
     e.stopPropagation()
-    tryActivation(walletConnectV2Connection, () => {
+    tryActivation(connector, () => {
       setPopoverOpen(false)
       toggleAccountDrawerOpen()
     })
@@ -194,7 +206,7 @@ export default function Option({ connection }: OptionProps) {
 
   const isWalletConnect =
     connection.type === ConnectionType.WALLET_CONNECT || connection.type === ConnectionType.WALLET_CONNECT_V2
-  const showExtraMenuToggle = isWalletConnect && !isCurrentOptionPending && !walletConnectV2AsDefault
+  const showExtraMenuToggle = isWalletConnect && !isCurrentOptionPending && shouldUseWalletConnectFallback
 
   return (
     <Wrapper disabled={isSomeOptionPending}>
@@ -223,9 +235,9 @@ export default function Option({ connection }: OptionProps) {
 
       {showExtraMenuToggle && (
         <>
-          <WCv2PopoverToggle onClick={handleClickOpenPopover} onMouseDown={handleClickOpenPopover}>
+          <FallbackPopoverToggle onClick={handleClickOpenPopover} onMouseDown={handleClickOpenPopover}>
             <MoreHorizontal />
-          </WCv2PopoverToggle>
+          </FallbackPopoverToggle>
           <PopupButtonContent
             connection={connection}
             isDarkMode={isDarkMode}
