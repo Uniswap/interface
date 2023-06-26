@@ -182,7 +182,7 @@ jobs:
               state: 'pending',
               context: 'Test / promotion',
               description: 'Running tests...',
-              target_url: 'https://github.com/Uniswap/interface/actions/runs/' + context.run_id
+              target_url: 'https://github.com/Uniswap/interface/actions/runs/' + context.runId
             })
 
   post:
@@ -200,7 +200,7 @@ jobs:
               state: ${{ env.STATUS }} ? 'success' : 'failure',
               context: 'Test / promotion',
               description: ${{ env.STATUS }} ? 'All tests passed' : 'One or more tests failed and are blocking promotion',
-              target_url: 'https://github.com/Uniswap/interface/actions/runs/' + context.run_id
+              target_url: 'https://github.com/Uniswap/interface/actions/runs/' + context.runId
             })
         env:
           STATUS: |
