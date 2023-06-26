@@ -172,7 +172,7 @@ interface OptionProps {
 }
 export default function Option({ connection }: OptionProps) {
   const { activationState, tryActivation } = useActivationState()
-  const [WC2PromptOpen, setPopoverOpen] = useState(false)
+  const [WCPopoverOpen, setWCPopoverOpen] = useState(false)
   const [accountDrawerOpen, toggleAccountDrawerOpen] = useAccountDrawer()
   const activate = () => tryActivation(connection, toggleAccountDrawerOpen)
 
