@@ -62,7 +62,7 @@ const MenuItem = ({ href, dataTestId, id, isActive, children, background }: Menu
 export const PageTabs = () => {
   const { pathname } = useLocation()
   const { chainId: connectedChainId } = useWeb3React()
-  const chainName = chainIdToBackendName(connectedChainId)
+  const chainName = chainIdToBackendName(connectedChainId).toLowerCase()
   const theme = useTheme()
   const isPoolActive = useIsPoolsPage()
   const isNftPage = useIsNftPage()
@@ -79,7 +79,7 @@ export const PageTabs = () => {
         <Trans>Swap</Trans>
       </MenuItem>
       <MenuItem
-        href={`/tokens/${chainName.toLowerCase()}`}
+        href={`/tokens/${chainName}`}
         isActive={pathname.startsWith('/tokens')}
         background={pathname.startsWith('/tokens') ? theme.backgroundNavBarButton : 'none'}
       >
