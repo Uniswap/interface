@@ -54,9 +54,9 @@ describe('beforeSend', () => {
     expect(beforeSend(ERROR, { originalException })).toBe(ERROR)
   })
 
-  it('propagates user rejected request errors', () => {
+  it('filters user rejected request errors', () => {
     const originalException = new Error('user rejected transaction')
-    expect(beforeSend(ERROR, { originalException })).toBe(ERROR)
+    expect(beforeSend(ERROR, { originalException })).toBeNull()
   })
 
   it('filters block number polling errors', () => {
