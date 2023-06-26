@@ -56,13 +56,22 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
   const showTestnets = useAtomValue(showTestnetsAtom)
   const walletSupportsChain = useWalletSupportedChains()
 
-  const chains = useMemo(
-    () =>
-      NETWORK_SELECTOR_CHAINS.filter((chain: number) => showTestnets || !TESTNET_CHAIN_IDS.includes(chain)).sort((a) =>
-        walletSupportsChain.includes(a) ? -1 : 1
-      ),
-    [showTestnets, walletSupportsChain]
-  )
+  const [supportedChains, unsupportedChains] = useMemo(() => {
+    const { supported, unsupported } = NETWORK_SELECTOR_CHAINS.filter(
+      (chain: number) => showTestnets || !TESTNET_CHAIN_IDS.includes(chain)
+    ).reduce(
+      (acc, chain) => {
+        if (walletSupportsChain.includes(chain)) {
+          acc.supported.push(chain)
+        } else {
+          acc.unsupported.push(chain)
+        }
+        return acc
+      },
+      { supported: [], unsupported: [] } as Record<string, ChainId[]>
+    )
+    return [supported, unsupported]
+  }, [showTestnets, walletSupportsChain])
 
   const ref = useRef<HTMLDivElement>(null)
   const modalRef = useRef<HTMLDivElement>(null)
@@ -94,13 +103,22 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
   const dropdown = (
     <NavDropdown top="56" left={leftAlign ? '0' : 'auto'} right={leftAlign ? 'auto' : '0'} ref={modalRef}>
       <Column paddingX="8" data-testid="chain-selector-options">
-        {chains.map((selectorChain: ChainId) => (
+        {supportedChains.map((selectorChain) => (
           <ChainSelectorRow
             disabled={!walletSupportsChain.includes(selectorChain)}
             onSelectChain={onSelectChain}
             targetChain={selectorChain}
             key={selectorChain}
             isPending={selectorChain === pendingChainId}
+          />
+        ))}
+        {unsupportedChains.map((selectorChain) => (
+          <ChainSelectorRow
+            disabled
+            onSelectChain={() => undefined}
+            targetChain={selectorChain}
+            key={selectorChain}
+            isPending={false}
           />
         ))}
       </Column>
