@@ -6,13 +6,7 @@ import { MouseoverTooltip } from 'components/Tooltip'
 import { getConnection } from 'connection'
 import { ConnectionType } from 'connection/types'
 import { getChainInfo } from 'constants/chainInfo'
-import {
-  L1_CHAIN_IDS,
-  L2_CHAIN_IDS,
-  SupportedChainId,
-  TESTNET_CHAIN_IDS,
-  UniWalletSupportedChains,
-} from 'constants/chains'
+import { L1_CHAIN_IDS, L2_CHAIN_IDS, SupportedChainId, TESTNET_CHAIN_IDS } from 'constants/chains'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useSelectChain from 'hooks/useSelectChain'
 import useSyncChainQuery from 'hooks/useSyncChainQuery'
@@ -43,9 +37,8 @@ function useWalletSupportedChains(): SupportedChainId[] {
 
   switch (connectionType) {
     case ConnectionType.WALLET_CONNECT_V2:
-      return getSupportedChainIdsFromWalletConnectSession((connector as WalletConnect).provider?.session)
     case ConnectionType.UNISWAP_WALLET:
-      return UniWalletSupportedChains
+      return getSupportedChainIdsFromWalletConnectSession((connector as WalletConnect).provider?.session)
     default:
       return NETWORK_SELECTOR_CHAINS
   }
@@ -61,13 +54,22 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
   const showTestnets = useAtomValue(showTestnetsAtom)
   const walletSupportsChain = useWalletSupportedChains()
 
-  const chains = useMemo(
-    () =>
-      NETWORK_SELECTOR_CHAINS.filter((chain) => showTestnets || !TESTNET_CHAIN_IDS.has(chain)).sort((a) =>
-        walletSupportsChain.includes(a) ? -1 : 1
-      ),
-    [showTestnets, walletSupportsChain]
-  )
+  const [supportedChains, unsupportedChains] = useMemo(() => {
+    const { supported, unsupported } = NETWORK_SELECTOR_CHAINS.filter(
+      (chain) => showTestnets || !TESTNET_CHAIN_IDS.has(chain)
+    ).reduce(
+      (acc, chain) => {
+        if (walletSupportsChain.includes(chain)) {
+          acc.supported.push(chain)
+        } else {
+          acc.unsupported.push(chain)
+        }
+        return acc
+      },
+      { supported: [], unsupported: [] } as Record<string, SupportedChainId[]>
+    )
+    return [supported, unsupported]
+  }, [showTestnets, walletSupportsChain])
 
   const ref = useRef<HTMLDivElement>(null)
   const modalRef = useRef<HTMLDivElement>(null)
@@ -99,13 +101,22 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
   const dropdown = (
     <NavDropdown top="56" left={leftAlign ? '0' : 'auto'} right={leftAlign ? 'auto' : '0'} ref={modalRef}>
       <Column paddingX="8" data-testid="chain-selector-options">
-        {chains.map((selectorChain: SupportedChainId) => (
+        {supportedChains.map((selectorChain) => (
           <ChainSelectorRow
             disabled={!walletSupportsChain.includes(selectorChain)}
             onSelectChain={onSelectChain}
             targetChain={selectorChain}
             key={selectorChain}
             isPending={selectorChain === pendingChainId}
+          />
+        ))}
+        {unsupportedChains.map((selectorChain) => (
+          <ChainSelectorRow
+            disabled
+            onSelectChain={() => undefined}
+            targetChain={selectorChain}
+            key={selectorChain}
+            isPending={false}
           />
         ))}
       </Column>
