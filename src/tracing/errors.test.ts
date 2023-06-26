@@ -128,6 +128,18 @@ describe('beforeSend', () => {
       expect(beforeSend(ERROR, { originalException })).toBeNull()
     })
 
+    it('filters blocked frame errors', () => {
+      const originalException = new Error(
+        'Blocked a frame with origin "https://app.uniswap.org" from accessing a cross-origin frame.'
+      )
+      expect(beforeSend(ERROR, { originalException })).toBeNull()
+    })
+
+    it('fiters write permission denied errors', () => {
+      const originalException = new Error('NotAllowedError: Write permission denied.')
+      expect(beforeSend(ERROR, { originalException })).toBeNull()
+    })
+
     it('filters CSP unsafe-eval compile/instatiate errors', () => {
       const originalException = new Error(
         "Refused to compile or instantiate WebAssembly module because 'unsafe-eval' is not an allowed source of script in the following Content Security Policy directive: \"script-src 'self' https://www.google-a..."
