@@ -114,6 +114,7 @@ export function validateUrlChainParam(chainName: string | undefined) {
 }
 
 // TODO(cartcrom): refactor into safer lookup & replace usage
+// TODO: Update when BE adds Avalanche to supported chains
 export const CHAIN_NAME_TO_CHAIN_ID: { [key in Chain]: ChainId } = {
   [Chain.Ethereum]: ChainId.MAINNET,
   [Chain.EthereumGoerli]: ChainId.GOERLI,
@@ -124,7 +125,7 @@ export const CHAIN_NAME_TO_CHAIN_ID: { [key in Chain]: ChainId } = {
   [Chain.Arbitrum]: ChainId.ARBITRUM_ONE,
   [Chain.UnknownChain]: ChainId.MAINNET,
   [Chain.Bnb]: ChainId.BNB,
-  [Chain.Avalanche]: ChainId.AVALANCHE,
+  // [Chain.Avalanche]: ChainId.AVALANCHE,
 }
 
 export function fromGraphQLChain(chain: Chain): ChainId {
