@@ -429,6 +429,7 @@ function useDerivedBorrowReduceCollateralInfo(
   const transactionInfo = useMemo(() => {
     if (contractResult) {
       const { reducePositionResult } = contractResult
+      console.log("reducePositionResult", reducePositionResult)
       let token0Amount = new BN(reducePositionResult[0].toString()).shiftedBy(-DEFAULT_ERC20_DECIMALS).toFixed(DEFAULT_ERC20_DECIMALS)
       let token1Amount = new BN(reducePositionResult[1].toString()).shiftedBy(-DEFAULT_ERC20_DECIMALS).toFixed(DEFAULT_ERC20_DECIMALS)
       let pnl = new BN(reducePositionResult[2].toString()).shiftedBy(-DEFAULT_ERC20_DECIMALS).toFixed(DEFAULT_ERC20_DECIMALS)
@@ -1109,6 +1110,11 @@ export function AddPremiumBorrowModalFooter({
 
   const premiumSymbol = inputIsToken0 ? token1?.symbol : token0?.symbol
 
+  useEffect(() => {
+    (!tradeInfo || !!inputError || approvalState !== ApprovalState.APPROVED) && showDetails && setShowDetails(false)
+  }, [tradeInfo, inputError, approvalState])
+  const disabled = !tradeInfo || !!inputError || approvalState !== ApprovalState.APPROVED
+
   return (
     <AutoRow>
       <ValueLabel
@@ -1121,11 +1127,11 @@ export function AddPremiumBorrowModalFooter({
         <Wrapper style={{ marginTop: '0' }}>
           <AutoColumn gap="sm" style={{ width: '100%', marginBottom: '-8px' }}>
             <StyledHeaderRow onClick={() => {
-              if (!!inputError || !tradeInfo) {
+              if (disabled) {
                 return
               }
               setShowDetails(!showDetails)
-            }} disabled={!!inputError || !tradeInfo} open={showDetails}>
+            }} disabled={disabled} open={showDetails}>
               <RowFixed style={{ position: 'relative' }}>
                 {(loading ? (
                   <StyledPolling>
@@ -1436,18 +1442,6 @@ export function BorrowReduceCollateralModalFooter({
 
   const [debouncedReduceAmount, setDebouncedReduceAmount] = useDebouncedChangeHandler(reduceAmount, setReduceAmount);
 
-  // const approvalAmount = useMemo(() => {
-  //   if (position && token1 && token0) {
-  //     return position.isToken0 ?
-  //       CurrencyAmount.fromRawAmount(token1, position.totalDebtInput * 0.002) :
-  //       CurrencyAmount.fromRawAmount(token0, position.totalDebtInput * 0.002)
-  //   }
-  //   // return token0 ? CurrencyAmount.fromRawAmount(token0, 0) : undefined
-  //   return undefined
-  // }, [position])
-
-  // const [approvalState, approveManager] = useApproveCallback(approvalAmount, position?.borrowManagerAddress);
-
   const {
     transactionInfo,
     userError
@@ -1458,6 +1452,14 @@ export function BorrowReduceCollateralModalFooter({
   // console.log("here: ", token0Amount, token1Amount
 
   const debt = position?.totalDebtInput;
+
+  useEffect(() => {
+    (!transactionInfo || !!userError) && showDetails && setShowDetails(false)
+  }, [transactionInfo, userError])
+
+  const disabled = !transactionInfo || !!userError
+
+  console.log("lmt", position, reduceAmount, transactionInfo, userError)
   // const initCollateral = position?.initialCollateral;
   // const received = inputIsToken0 ? (Math.abs(Number(token0Amount)) - Number(debt))
   //   : (Math.abs(Number(token1Amount)) - Number(debt))
@@ -1514,7 +1516,7 @@ export function BorrowReduceCollateralModalFooter({
       <TransactionDetails>
         <Wrapper style={{ marginTop: '0' }}>
           <AutoColumn gap="sm" style={{ width: '100%', marginBottom: '-8px' }}>
-            <StyledHeaderRow onClick={() => setShowDetails(!showDetails)} disabled={!position?.token0Address} open={showDetails}>
+            <StyledHeaderRow onClick={() => !disabled && setShowDetails(!showDetails)} disabled={disabled} open={showDetails}>
               <RowFixed style={{ position: 'relative' }}>
                 {(loading ? (
                   <StyledPolling>
@@ -1524,9 +1526,7 @@ export function BorrowReduceCollateralModalFooter({
                   </StyledPolling>
                 ) : (
                   <HideSmall>
-
                     <StyledInfoIcon color={theme.deprecated_bg3} />
-
                   </HideSmall>
                 ))}
                 {position?.borrowManagerAddress ? (
@@ -1712,36 +1712,6 @@ export function BorrowReduceCollateralModalFooter({
     </AutoRow>
   )
 }
-
-// function DetailsRow({ label, value, description, appendSymbol, loading }: { label: string, value?: number, description, appendSymbol?: string, loading? : boolean }) {
-//   return (
-//     <RowBetween>
-//       <RowFixed>
-//         <MouseoverTooltip
-//           text={
-//             <Trans>
-//               {description}
-//             </Trans>
-//           }
-//         >
-//           <ThemedText.DeprecatedSubHeader>
-//             <Trans>{label}</Trans>
-//           </ThemedText.DeprecatedSubHeader>
-//         </MouseoverTooltip>
-//       </RowFixed>
-//       <TextWithLoadingPlaceholder syncing={Boolean(loading)} width={65}>
-//         <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
-//           <TruncatedText>
-//             {
-//               value
-//             }
-//           </TruncatedText>
-//           {appendSymbol}
-//         </ThemedText.DeprecatedBlack>
-//       </TextWithLoadingPlaceholder>
-//     </RowBetween>
-//   )
-// }
 
 export function BorrowReduceDebtModalFooter({
   tokenId,
