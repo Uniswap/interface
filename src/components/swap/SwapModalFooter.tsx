@@ -869,11 +869,15 @@ export function AddPremiumLeverageModalFooter({
   const loading = derivedState === DerivedInfoState.LOADING
   const valid = derivedState === DerivedInfoState.VALID
 
-  const premiumSymbol = inputIsToken0 ? token0?.symbol : token1?.symbol
+  useEffect(() => {
+    (!tradeInfo || !!inputError || leverageApprovalState !== ApprovalState.APPROVED) && showDetails && setShowDetails(false)
+  }, [leverageApprovalState, tradeInfo, inputError])
 
+  const premiumSymbol = inputIsToken0 ? token0?.symbol : token1?.symbol
+  // console.log("lmt", inputError, leverageApprovalState, tradeInfo)
   return (
     <AutoRow>
-      <Card padding="0" marginTop="12px">
+      <Card padding="0" marginTop="0" marginBottom="10px">
         <MouseoverValueLabel
           value={premium}
           label={"Expected Premium Payment"}
@@ -885,7 +889,12 @@ export function AddPremiumLeverageModalFooter({
       <TransactionDetails>
         <Wrapper style={{ marginTop: '0' }}>
           <AutoColumn gap="sm" style={{ width: '100%', marginBottom: '-8px' }}>
-            <StyledHeaderRow onClick={() => setShowDetails(!showDetails)} disabled={true} open={showDetails}>
+            <StyledHeaderRow onClick={() => {
+              if (!tradeInfo || !!inputError || leverageApprovalState !== ApprovalState.APPROVED) {
+                return
+              }
+              setShowDetails(!showDetails)
+              }} disabled={true} open={showDetails}>
               <RowFixed style={{ position: 'relative' }}>
                 {(loading ? (
                   <StyledPolling>
@@ -915,7 +924,7 @@ export function AddPremiumLeverageModalFooter({
               <RowFixed>
                 <RotatingArrow
                   stroke={true ? theme.textTertiary : theme.deprecated_bg3}
-                  open={Boolean(true && showDetails)}
+                  open={Boolean(showDetails)}
                 />
               </RowFixed>
 

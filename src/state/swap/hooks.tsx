@@ -342,7 +342,7 @@ export function useDerivedBorrowCreationInfo({ allowance: {input: inputAllowance
     } else {
       setTradeState(TradeState.INVALID)
     }
-  }, [inputAllowance, outputAllowance, currencies, borrowManager, ltv, debouncedAmount])
+  }, [typedValue, inputAllowance, outputAllowance, currencies, borrowManager, ltv, debouncedAmount])
   //console.log("contractResultPost/tradestate", contractResult, tradeState)
 
   const inputError = useMemo(() => {
@@ -384,7 +384,7 @@ export function useDerivedBorrowCreationInfo({ allowance: {input: inputAllowance
     }
 
     return inputError
-  }, [inputAllowance, outputAllowance, account, allowedSlippage, currencies, currencyBalances, parsedAmount, borrowManager, ltv, inputCurrency])
+  }, [typedValue, inputAllowance, outputAllowance, account, allowedSlippage, currencies, currencyBalances, parsedAmount, borrowManager, ltv, inputCurrency])
 
   useEffect(() => {
     activeTab === ActiveSwapTab.BORROW && !inputError && simulate()
@@ -626,7 +626,7 @@ export function useDerivedLeverageCreationInfo()
     } else {
       setTradeState(LeverageTradeState.INVALID)
     }
-  }, [currencies, leverageManager, leverage, leverageFactor, debouncedAmount, allowance])
+  }, [typedValue, currencies, leverageManager, leverage, leverageFactor, debouncedAmount, allowance])
 
   // console.log("contractResultPost/tradestate", contractResult, tradeState, parsedAmount?.toExact())
   const inputError = useMemo(() => {
@@ -639,7 +639,7 @@ export function useDerivedLeverageCreationInfo()
       inputError = inputError ?? <Trans>Select a token</Trans>
     }
 
-    if (!parsedAmount) {
+    if (!parsedAmount || Number(parsedAmount) <= 0) {
       inputError = inputError ?? <Trans>Enter an amount</Trans>
     }
 
@@ -660,11 +660,11 @@ export function useDerivedLeverageCreationInfo()
     }
 
     return inputError
-  }, [premium, allowance, account, allowedSlippage, currencies, currencyBalances, parsedAmount, leverage, leverageFactor, inputCurrency])
+  }, [typedValue, premium, allowance, account, allowedSlippage, currencies, currencyBalances, parsedAmount, leverage, leverageFactor, inputCurrency])
  
   useEffect(() => {
     activeTab === ActiveSwapTab.TRADE && !inputError && simulate()
-  }, [activeTab, currencies, leverageManager, leverage, leverageFactor, debouncedAmount, allowance, inputError])
+  }, [typedValue, activeTab, currencies, leverageManager, leverage, leverageFactor, debouncedAmount, allowance, inputError])
 
   const trade = useMemo(() => {
     if (

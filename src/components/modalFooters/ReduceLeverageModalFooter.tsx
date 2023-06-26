@@ -83,7 +83,16 @@ function useDerivedLeverageReduceInfo(
     account ?? undefined,
     useMemo(() => [currency0 ?? undefined, currency1 ?? undefined], [currency0, currency1])
   )
-
+  const userError = useMemo(() => {
+    let error;
+    if (!reduceAmount || Number(reduceAmount) <= 0) {
+      error = (<Trans>
+        Invalid Amount
+      </Trans>)
+    }
+    return error
+  }, [ position, relevantTokenBalances, reduceAmount])
+  
   useEffect(() => {
     const laggedfxn = async () => {
       if (!leverageManagerContract || !tokenId || !trader || parseFloat(allowedSlippage) <= 0 && !position || !position?.totalPosition || Number(reduceAmount) <= 0 || !reduceAmount) {
@@ -114,8 +123,8 @@ function useDerivedLeverageReduceInfo(
       }
     }
 
-    laggedfxn()
-  }, [leverageManager, trader, tokenId, allowedSlippage, reduceAmount])
+    !userError && laggedfxn()
+  }, [userError, leverageManager, trader, tokenId, allowedSlippage, reduceAmount])
 
   const transactionInfo = useMemo(() => {
     if (contractResult) {
@@ -142,15 +151,7 @@ function useDerivedLeverageReduceInfo(
     contractResult
   ])
 
-  const userError = useMemo(() => {
-    let error;
-    if (!reduceAmount) {
-      error = (<Trans>
-        Invalid Amount
-      </Trans>)
-    }
-    return error
-  }, [ position, relevantTokenBalances, reduceAmount])
+
 
   return {
     transactionInfo,
@@ -268,7 +269,7 @@ export function ReduceLeverageModalFooter({
   //   getPremium()
   // }, [position, reduceAmount, pool, quoter])
 
-  const inputCurrency = useCurrency(position?.isToken0 ? position?.token1Address : position?.token0Address)
+  // const inputCurrency = useCurrency(position?.isToken0 ? position?.token1Address : position?.token0Address)
 
   // const [approvalState, approveManager] = useApproveCallback(
   //   inputCurrency ?
@@ -276,13 +277,19 @@ export function ReduceLeverageModalFooter({
   //   position?.leverageManagerAddress ?? undefined
   // )
 
+
+
   const {
     transactionInfo,
     userError
   } = useDerivedLeverageReduceInfo(leverageManagerAddress, trader, tokenId, debouncedSlippage, position, debouncedReduceAmount, setDerivedState)
-
+  
+  useEffect(() => {
+    (!!userError || !transactionInfo) && showDetails && setShowDetails(false)
+  }, [userError, transactionInfo])
   const loading = useMemo(() => derivedState === DerivedInfoState.LOADING, [derivedState])
 
+  const disabled = !!userError || !transactionInfo
   // const debt = position?.totalDebtInput;
   const initCollateral = position?.initialCollateral;
   // const received = inputIsToken0 ? (Math.abs(Number(transactionInfo?.token0Amount)) - Number(debt))
@@ -290,15 +297,6 @@ export function ReduceLeverageModalFooter({
 
   return (
     <AutoRow>
-      <Card padding="0" marginTop="12px">
-        {/* <MouseoverValueLabel 
-          description="Estimated Premium Payment"
-          value={premium}
-          syncing={false}
-          label={"Expected Premium Payment"}
-          appendSymbol={position?.isToken0 ? token1?.symbol : token0?.symbol}
-        /> */}
-      </Card>
       <DarkCard marginTop="5px" padding="5px">
         <AutoColumn gap="4px">
           <RowBetween>
@@ -356,7 +354,6 @@ export function ReduceLeverageModalFooter({
                       setDebouncedReduceAmount("")
                     } else if (new BN(str).isGreaterThan(new BN(position?.totalPosition))) {
                       return
-                      // setDebouncedReduceAmount(String(position?.totalPosition))
                     } else {
                       setDebouncedReduceAmount(str)
                     }
@@ -376,7 +373,7 @@ export function ReduceLeverageModalFooter({
       <TransactionDetails>
         <Wrapper style={{ marginTop: '0' }}>
           <AutoColumn gap="sm" style={{ width: '100%', marginBottom: '-8px' }}>
-            <StyledHeaderRow onClick={() => setShowDetails(!showDetails)} disabled={!position?.token0Address} open={showDetails}>
+            <StyledHeaderRow onClick={() => !disabled && setShowDetails(!showDetails)} disabled={disabled} open={showDetails}>
               <RowFixed style={{ position: 'relative' }}>
                 {(loading ? (
                   <StyledPolling>

@@ -1019,7 +1019,7 @@ export default function Swap({ className }: { className?: string }) {
   // console.log("borrowTrade", borrowInputApproveAmount?.toExact(), borrowOutputApproveAmount?.toExact(), borrowInputApprovalState, borrowOutputApprovalState)
   // console.log("leverageTrade", leverageTrade, leverageApproveAmount?.toExact(), leverageApprovalState)
 
-  console.log('lmt', leverageApprovalState, leverageManagerAddress)
+  console.log('lmt', borrowTrade,  borrowState, borrowInputApprovalState, borrowOutputApprovalState)
   return (
     <Trace page={InterfacePageName.SWAP_PAGE} shouldLogImpression>
       <>
@@ -1380,6 +1380,7 @@ export default function Swap({ className }: { className?: string }) {
                         allowedSlippage={allowedSlippage}
                         leverageTrade={leverageTrade}
                         leverageState={leverageState}
+                        leverageInputError={!!inputError}
                       />
                     </DetailsSwapSection>
 
@@ -1820,7 +1821,10 @@ export default function Swap({ className }: { className?: string }) {
                                         }
                                       >
                                         <RowBetween>
-                                        <Info size={30}/>
+                                        <div style={{marginRight: "4px"}}>
+                                        <Info size={20}/>
+                                        </div>
+                                        
                                         <Trans>Approve use of {currencies[Field.INPUT]?.symbol}</Trans>
                                         </RowBetween>
                                       </MouseoverTooltip>
@@ -1851,7 +1855,9 @@ export default function Swap({ className }: { className?: string }) {
                                         }
                                       >
                                         <RowBetween>
-                                        <Info size={30}/>
+                                        <div style={{marginRight: "4px"}}>
+                                        <Info size={20}/>
+                                        </div>
                                         <Trans>Approve use of {currencies[Field.OUTPUT]?.symbol}</Trans>
                                         </RowBetween>
                                       </MouseoverTooltip>

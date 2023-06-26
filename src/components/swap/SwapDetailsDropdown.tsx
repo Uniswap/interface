@@ -122,6 +122,7 @@ interface SwapDetailsInlineProps {
   allowedSlippage: Percent
   leverageTrade?: LeverageTrade
   leverageState: LeverageTradeState
+  leverageInputError: boolean
 }
 
 interface BorrowDetailsDropdownProps {
@@ -132,7 +133,7 @@ interface BorrowDetailsDropdownProps {
   allowedSlippage: Percent
 }
 
-export default function SwapDetailsDropdown({ trade, syncing, loading, allowedSlippage, leverageTrade, leverageState }: SwapDetailsInlineProps) {
+export default function SwapDetailsDropdown({ trade, syncing, loading, allowedSlippage, leverageTrade, leverageState,leverageInputError }: SwapDetailsInlineProps) {
   const theme = useTheme()
   const { chainId } = useWeb3React()
   const [showDetails, setShowDetails] = useState(false)
@@ -144,7 +145,7 @@ export default function SwapDetailsDropdown({ trade, syncing, loading, allowedSl
   //   }
   // }, [leverageTrade, leverage])
 
-  const disabled = (!leverage && !trade) || (leverage && leverageState!== LeverageTradeState.VALID)
+  const disabled = (!leverage && !trade) || (leverage && (leverageState!== LeverageTradeState.VALID || !!leverageInputError))
   // console.log('leverageTrade.state', leverageTrade.state, disabled, leverage, leverageTrade)
 
   useEffect(() => {
