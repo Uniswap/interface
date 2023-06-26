@@ -3,7 +3,7 @@ import { DetailsV2Variant, useDetailsV2Flag } from 'featureFlags/flags/nftDetail
 import { useRoutingAPIForPriceFlag } from 'featureFlags/flags/priceRoutingApi'
 import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
 import { UnifiedRouterVariant, useRoutingAPIV2Flag } from 'featureFlags/flags/unifiedRouter'
-import { useWalletConnectFallback } from 'featureFlags/flags/walletConnectPopover'
+import { useWalletConnectFallbackFlag } from 'featureFlags/flags/walletConnectPopover'
 import { useWalletConnectV2Flag } from 'featureFlags/flags/walletConnectV2'
 import { useUpdateAtom } from 'jotai/utils'
 import { Children, PropsWithChildren, ReactElement, ReactNode, useCallback, useState } from 'react'
@@ -231,7 +231,7 @@ export default function FeatureFlagModal() {
       />
       <FeatureFlagOption
         variant={BaseVariant}
-        value={useWalletConnectFallback()}
+        value={useWalletConnectFallbackFlag()}
         featureFlag={FeatureFlag.walletConnectFallback}
         label="Adds a ... menu to the connection option"
       />
