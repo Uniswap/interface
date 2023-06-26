@@ -97,7 +97,10 @@ describe('redux migrations', () => {
   })
 
   it('clears legacy redux_localstorage_simple values during the initial migration', async () => {
-    localStorage.setItem('redux_localstorage_simple_transactions', JSON.stringify({1: { test: { info: 'transactions' }}}))
+    localStorage.setItem(
+      'redux_localstorage_simple_transactions',
+      JSON.stringify({ 1: { test: { info: 'transactions' } } })
+    )
     localStorage.setItem('redux_localstorage_simple_user', JSON.stringify({ test: 'user' }))
     localStorage.setItem('redux_localstorage_simple_lists', JSON.stringify({ test: 'lists' }))
 
@@ -118,8 +121,8 @@ describe('redux migrations', () => {
       },
       transactions: {
         1: {
-          test: {info: 'transactions'},
-        }
+          test: { info: 'transactions' },
+        },
       },
       user: {
         test: 'user',
