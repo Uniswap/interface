@@ -6,7 +6,7 @@ import { useAppSelector } from 'state/hooks'
 const SELECTABLE_WALLETS = [
   ConnectionType.UNISWAP_WALLET,
   ConnectionType.INJECTED,
-  ConnectionType.WALLET_CONNECT,
+  ConnectionType.WALLET_CONNECT_V2,
   ConnectionType.COINBASE_WALLET,
 ]
 

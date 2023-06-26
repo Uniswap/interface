@@ -1,10 +1,5 @@
 import { Connector } from '@web3-react/types'
-import {
-  networkConnection,
-  uniwalletConnectConnection,
-  walletConnectV1Connection,
-  walletConnectV2Connection,
-} from 'connection'
+import { networkConnection, uniwalletConnectConnection, walletConnectV2Connection } from 'connection'
 import { getChainInfo } from 'constants/chainInfo'
 import { isSupportedChain, SupportedChainId } from 'constants/chains'
 import { FALLBACK_URLS, RPC_URLS } from 'constants/networks'
@@ -38,7 +33,6 @@ export function useSwitchChain() {
         try {
           if (
             [
-              walletConnectV1Connection.connector,
               walletConnectV2Connection.connector,
               uniwalletConnectConnection.connector,
               networkConnection.connector,

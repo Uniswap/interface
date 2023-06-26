@@ -19,7 +19,7 @@ describe('connection utility/metadata tests', () => {
     UserAgentMock.isMobile = isMobile
     global.window.ethereum = ethereum
 
-    const displayed = getConnections().filter((c) => c.shouldDisplay() && c.type !== ConnectionType.WALLET_CONNECT)
+    const displayed = getConnections().filter((c) => c.shouldDisplay())
     const injected = getConnection(ConnectionType.INJECTED)
     const coinbase = getConnection(ConnectionType.COINBASE_WALLET)
     const uniswap = getConnection(ConnectionType.UNISWAP_WALLET)
