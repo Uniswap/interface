@@ -3,6 +3,7 @@ import { URI_AVAILABLE, WalletConnect, WalletConnectConstructorArgs } from '@web
 import { L1_CHAIN_IDS, L2_CHAIN_IDS, SupportedChainId } from 'constants/chains'
 import { Z_INDEX } from 'theme/zIndex'
 import { isIOS } from 'utils/userAgent'
+
 import { RPC_URLS } from '../constants/networks'
 
 // Avoid testing for the best URL by only passing a single URL per chain.
