@@ -13,9 +13,6 @@ import {
 } from 'src/app/navigation/types'
 import { Chevron } from 'src/components/icons/Chevron'
 import { HorizontalEdgeGestureTarget } from 'src/components/layout/screens/EdgeGestureTarget'
-import { TokenDetailsPreloaders } from 'src/data/preload/TokenDetailsPreloader'
-import { useLowPriorityPreloadedQueries } from 'src/data/preload/useLowPriorityPreloadedQueries'
-import { usePreloadedHomeScreenQueries } from 'src/data/preload/usePreloadedHomeScreenQueries'
 import { useBiometricCheck } from 'src/features/biometrics/useBiometricCheck'
 import { CloudBackupPasswordConfirmScreen } from 'src/features/onboarding/CloudBackupConfirmPasswordConfirm'
 import { OnboardingEntryPoint } from 'src/features/onboarding/utils'
@@ -106,14 +103,7 @@ function SettingsStackGroup(): JSX.Element {
 
 export function WrappedHomeScreen(props: AppStackScreenProp<Screens.Home>): JSX.Element {
   useBiometricCheck()
-  useLowPriorityPreloadedQueries()
-
-  return (
-    <>
-      <TokenDetailsPreloaders />
-      <HomeScreen {...props} />
-    </>
-  )
+  return <HomeScreen {...props} />
 }
 
 export function ExploreStackNavigator(): JSX.Element {
@@ -263,10 +253,6 @@ export function OnboardingStackNavigator(): JSX.Element {
 
 export function AppStackNavigator(): JSX.Element {
   const finishedOnboarding = useAppSelector(selectFinishedOnboarding)
-
-  // preload home screen queries before `finishedOnboarding` is truthy
-  // this helps load the home screen fast from a fresh install
-  usePreloadedHomeScreenQueries()
 
   return (
     <AppStack.Navigator
