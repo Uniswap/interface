@@ -182,7 +182,7 @@ jobs:
               state: 'pending',
               context: 'Test / promotion',
               description: 'Running tests...',
-              target_url: 'https://github.com/Uniswap/interface/actions/runs/${{ github.run_id }}',
+              target_url: 'https://github.com/Uniswap/interface/actions/runs/${{ github.run_id }}'
             })
 
   post:
