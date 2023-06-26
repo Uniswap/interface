@@ -1,4 +1,4 @@
-import { Trans, t } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 import { TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import { useAccountDrawer } from 'components/AccountDrawer'
@@ -17,9 +17,9 @@ import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { flexColumnNoWrap, flexRowNoWrap } from 'theme/styles'
 import { Z_INDEX } from 'theme/zIndex'
 
-import NewBadge from './NewBadge'
-import { useWalletConnectFallback } from 'featureFlags/flags/walletConnectPopover'
 import { BaseVariant } from 'featureFlags'
+import { useWalletConnectFallback } from 'featureFlags/flags/walletConnectPopover'
+import NewBadge from './NewBadge'
 
 const OptionCardLeft = styled.div`
   ${flexColumnNoWrap};
