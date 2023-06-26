@@ -28,7 +28,7 @@ const OnboardingAnimation = (): JSX.Element => {
       animationName="Intro"
       artboardName="Unified"
       fit={fitValue}
-      resourceName={isDarkMode ? 'OnboardingDark' : 'OnboardingLight'}
+      resourceName={isDarkMode ? 'onboarding_dark' : 'onboarding_light'}
       stateMachineName={stateMachineName}
       style={animationStyles}
     />

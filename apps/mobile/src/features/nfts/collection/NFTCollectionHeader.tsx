@@ -88,7 +88,7 @@ export function NFTCollectionHeader({
           <Box
             style={[
               bannerImageStyle,
-              { backgroundColor: bannerColorsFallback?.background ?? theme.colors.background2 },
+              { backgroundColor: bannerColorsFallback?.base ?? theme.colors.background2 },
             ]}
           />
         )}

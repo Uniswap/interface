@@ -2,7 +2,7 @@ import { useHeaderHeight } from '@react-navigation/elements'
 import { useResponsiveProp } from '@shopify/restyle'
 import { LinearGradient } from 'expo-linear-gradient'
 import React, { PropsWithChildren } from 'react'
-import { KeyboardAvoidingView, ScrollView, StyleSheet } from 'react-native'
+import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAppTheme } from 'src/app/hooks'
@@ -11,6 +11,7 @@ import { Screen } from 'src/components/layout/Screen'
 import { Text } from 'src/components/Text'
 import { useKeyboardLayout } from 'src/utils/useKeyboardLayout'
 import { opacify } from 'ui/src/theme/color/utils'
+import { flex } from 'ui/src/theme/restyle/flex'
 import { Theme } from 'ui/src/theme/restyle/theme'
 
 type OnboardingScreenProps = {
@@ -97,10 +98,13 @@ export function SafeKeyboardOnboardingScreen({
   return (
     <Screen edges={['right', 'left']}>
       <KeyboardAvoidingView
-        behavior="padding"
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         contentContainerStyle={containerStyle}
         style={[styles.base, { marginBottom: responsiveBottom }]}>
-        <ScrollView bounces={false} keyboardShouldPersistTaps="handled">
+        <ScrollView
+          bounces={false}
+          contentContainerStyle={flex.grow}
+          keyboardShouldPersistTaps="handled">
           <AnimatedFlex
             entering={FadeIn}
             exiting={FadeOut}

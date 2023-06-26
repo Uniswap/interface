@@ -354,7 +354,7 @@ PODS:
   - CryptoSwift (1.6.0)
   - DoubleConversion (1.1.6)
   - EthersRS (0.0.1)
-  - EXApplication (5.0.1):
+  - EXApplication (5.1.1):
     - ExpoModulesCore
   - EXAV (13.0.2):
     - ExpoModulesCore
@@ -364,20 +364,30 @@ PODS:
     - ExpoModulesCore
     - ZXingObjC/OneD
     - ZXingObjC/PDF417
+  - EXBlur (12.0.1):
+    - ExpoModulesCore
+  - EXConstants (14.3.0):
+    - ExpoModulesCore
+  - EXFileSystem (15.3.0):
+    - ExpoModulesCore
+  - EXFont (11.1.1):
+    - ExpoModulesCore
   - EXImageLoader (4.1.1):
     - ExpoModulesCore
     - React-Core
-  - EXLocalAuthentication (12.1.0):
-    - ExpoModulesCore
   - experiment-react-native-client (1.0.0):
     - React-Core
-  - Expo (47.0.11):
+  - Expo (48.0.19):
     - ExpoModulesCore
   - ExpoClipboard (4.1.2):
     - ExpoModulesCore
   - ExpoHaptics (12.0.1):
     - ExpoModulesCore
-  - ExpoLinearGradient (12.1.2):
+  - ExpoKeepAwake (12.0.1):
+    - ExpoModulesCore
+  - ExpoLinearGradient (12.0.1):
+    - ExpoModulesCore
+  - ExpoLocalAuthentication (13.2.1):
     - ExpoModulesCore
   - ExpoModulesCore (1.0.3):
     - React-Core
@@ -809,7 +819,7 @@ PODS:
     - React
     - React-callinvoker
     - React-Core
-  - react-native-webview (11.14.3):
+  - react-native-webview (11.23.1):
     - React-Core
   - React-perflogger (0.70.8)
   - React-RCTActionSheet (0.70.8):
@@ -984,13 +994,18 @@ DEPENDENCIES:
   - EXApplication (from `../../../node_modules/expo-application/ios`)
   - EXAV (from `../../../node_modules/expo-av/ios`)
   - EXBarCodeScanner (from `../../../node_modules/expo-barcode-scanner/ios`)
+  - EXBlur (from `../../../node_modules/expo-blur/ios`)
+  - EXConstants (from `../../../node_modules/expo-constants/ios`)
+  - EXFileSystem (from `../../../node_modules/expo-file-system/ios`)
+  - EXFont (from `../../../node_modules/expo-font/ios`)
   - EXImageLoader (from `../../../node_modules/expo-image-loader/ios`)
-  - EXLocalAuthentication (from `../../../node_modules/expo-local-authentication/ios`)
   - "experiment-react-native-client (from `../../../node_modules/@amplitude/experiment-react-native-client`)"
   - Expo (from `../../../node_modules/expo`)
   - ExpoClipboard (from `../../../node_modules/expo-clipboard/ios`)
   - ExpoHaptics (from `../../../node_modules/expo-haptics/ios`)
+  - ExpoKeepAwake (from `../../../node_modules/expo-keep-awake/ios`)
   - ExpoLinearGradient (from `../../../node_modules/expo-linear-gradient/ios`)
+  - ExpoLocalAuthentication (from `../../../node_modules/expo-local-authentication/ios`)
   - ExpoModulesCore (from `../../../node_modules/expo-modules-core`)
   - ExpoWebBrowser (from `../../../node_modules/expo-web-browser/ios`)
   - EXScreenCapture (from `../../../node_modules/expo-screen-capture/ios`)
@@ -1119,10 +1134,16 @@ EXTERNAL SOURCES:
     :path: "../../../node_modules/expo-av/ios"
   EXBarCodeScanner:
     :path: "../../../node_modules/expo-barcode-scanner/ios"
+  EXBlur:
+    :path: "../../../node_modules/expo-blur/ios"
+  EXConstants:
+    :path: "../../../node_modules/expo-constants/ios"
+  EXFileSystem:
+    :path: "../../../node_modules/expo-file-system/ios"
+  EXFont:
+    :path: "../../../node_modules/expo-font/ios"
   EXImageLoader:
     :path: "../../../node_modules/expo-image-loader/ios"
-  EXLocalAuthentication:
-    :path: "../../../node_modules/expo-local-authentication/ios"
   experiment-react-native-client:
     :path: "../../../node_modules/@amplitude/experiment-react-native-client"
   Expo:
@@ -1131,8 +1152,12 @@ EXTERNAL SOURCES:
     :path: "../../../node_modules/expo-clipboard/ios"
   ExpoHaptics:
     :path: "../../../node_modules/expo-haptics/ios"
+  ExpoKeepAwake:
+    :path: "../../../node_modules/expo-keep-awake/ios"
   ExpoLinearGradient:
     :path: "../../../node_modules/expo-linear-gradient/ios"
+  ExpoLocalAuthentication:
+    :path: "../../../node_modules/expo-local-authentication/ios"
   ExpoModulesCore:
     :path: "../../../node_modules/expo-modules-core"
   ExpoWebBrowser:
@@ -1284,16 +1309,21 @@ SPEC CHECKSUMS:
   CryptoSwift: 562f8eceb40e80796fffc668b0cad9313284cfa6
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
   EthersRS: fcaf94e30ebdd795bfe1f9332cec8175566ba066
-  EXApplication: 034b1c40a8e9fe1bff76a1e511ee90dff64ad834
+  EXApplication: d8f53a7eee90a870a75656280e8d4b85726ea903
   EXAV: 9a45d37772c5329294c054a041dcc39931fc5032
   EXBarCodeScanner: 8e23fae8d267dbef9f04817833a494200f1fce35
+  EXBlur: d87af64a1b4ae264059983bf54baca72be2cbc7d
+  EXConstants: 29269f841ed8786d483b753021953264ac04818f
+  EXFileSystem: 0b4a2c08c2dc92146849772145d61c1773144283
+  EXFont: 6ea3800df746be7233208d80fe379b8ed74f4272
   EXImageLoader: fd053169a8ee932dd83bf1fe5487a50c26d27c2b
-  EXLocalAuthentication: 4c7166ed3133d2c75586093833936652e7d2c7fc
   experiment-react-native-client: c2af8630b6209c5d4dcebdcd71ba7ad38abdcc38
-  Expo: dedd83acfd4d70cbec6ac2f1b4433462d95c70bc
+  Expo: 8448e3a2aa1b295f029c81551e1ab6d986517fdb
   ExpoClipboard: 9b87df0ad145e3aa841614fab6aea54b7a604850
   ExpoHaptics: 5a56d30a87ea213dd00b09566dc4b441a4dff97f
-  ExpoLinearGradient: 8eaab76b7f55c612ed8348c8be8c2a18a9b4529f
+  ExpoKeepAwake: 69f5f627670d62318410392d03e0b5db0f85759a
+  ExpoLinearGradient: b40c2133ad57ae105b1b12a319e314463c817f6b
+  ExpoLocalAuthentication: b870b7a8df5e15b8b0be042185a2bb7764093096
   ExpoModulesCore: b5d21c8880afda6fb6ee95469f9ac2ec9b98e995
   ExpoWebBrowser: 073e50f16669d498fb49063b9b7fe780b24f7fda
   EXScreenCapture: cbee2204f313038a1819d31ad99a31e15f8e0f59
@@ -1353,7 +1383,7 @@ SPEC CHECKSUMS:
   react-native-restart: 45c8dca02491980f2958595333cbccd6877cb57e
   react-native-safe-area-context: 39c2d8be3328df5d437ac1700f4f3a4f75716acc
   react-native-skia: 7e0c4708449d4c07b5b5cc82390b2ffc54051747
-  react-native-webview: b83cf1aa6b4453fe53ffcc5896c36cdf37f0383f
+  react-native-webview: d33e2db8925d090871ffeb232dfa50cb3a727581
   React-perflogger: e9249a18e055cae96fdf685bf6145cbea62506c8
   React-RCTActionSheet: a6d2a544a4605a111ce80fa9319cc870ca3ea778
   React-RCTAnimation: 21b776b15aa5451a0b5bcb342fd2f346817c1101
@@ -1395,6 +1425,6 @@ SPEC CHECKSUMS:
   Yoga: d6133108734e69e8c0becc6ba587294b94829687
   ZXingObjC: fdbb269f25dd2032da343e06f10224d62f537bdb
 
-PODFILE CHECKSUM: 4a5627633c1e0cff017313d2b64f9afedd33e1d8
+PODFILE CHECKSUM: b004c3cab9f644b4dab21ef2f7263fcfad4dd80e
 
 COCOAPODS: 1.11.3

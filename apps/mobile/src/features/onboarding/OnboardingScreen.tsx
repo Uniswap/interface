@@ -1,7 +1,7 @@
 import { useHeaderHeight } from '@react-navigation/elements'
 import { useResponsiveProp } from '@shopify/restyle'
 import React, { PropsWithChildren } from 'react'
-import { KeyboardAvoidingView, StyleSheet } from 'react-native'
+import { KeyboardAvoidingView, Platform, StyleSheet } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAppTheme } from 'src/app/hooks'
@@ -57,7 +57,7 @@ export function OnboardingScreen({
   return (
     <Screen edges={['right', 'left']} style={{ paddingTop: responsiveHeaderHeight }}>
       <KeyboardAvoidingView
-        behavior="padding"
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         enabled={keyboardAvoidingViewEnabled}
         style={[WrapperStyle.base, { marginBottom: insets.bottom }]}>
         <AnimatedFlex

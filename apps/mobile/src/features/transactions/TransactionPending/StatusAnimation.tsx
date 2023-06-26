@@ -30,7 +30,7 @@ export function StatusAnimation({
       alignment={Alignment.BottomCenter}
       artboardName={transactionType === 'swap' ? 'Pending Swap Graphic' : 'Pending Send Graphic'}
       fit={Fit.FitHeight}
-      resourceName={transactionType === 'swap' ? 'PendingSwap' : 'PendingSend'}
+      resourceName={transactionType === 'swap' ? 'pending_swap' : 'pending_send'}
       stateMachineName={stateMachineName}
       style={{
         maxHeight: ANIMATION_HEIGHT,

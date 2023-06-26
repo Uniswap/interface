@@ -38,6 +38,11 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
   >
     <RCTScrollView
       bounces={false}
+      contentContainerStyle={
+        {
+          "flexGrow": 1,
+        }
+      }
       keyboardShouldPersistTaps="handled"
     >
       <View>

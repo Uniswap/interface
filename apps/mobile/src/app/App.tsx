@@ -6,6 +6,7 @@ import * as SplashScreen from 'expo-splash-screen'
 import React, { StrictMode, useCallback, useEffect, useState } from 'react'
 import { StatusBar } from 'react-native'
 import { getUniqueId } from 'react-native-device-info'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
@@ -30,6 +31,7 @@ import { TransactionHistoryUpdater } from 'src/features/transactions/Transaction
 import { DynamicThemeProvider } from 'src/theme/DynamicThemeProvider'
 import { getSentryEnvironment, getStatsigEnvironmentTier } from 'src/utils/version'
 import { StatsigProvider } from 'statsig-react-native'
+import { flex } from 'ui/src/theme/restyle/flex'
 import { config } from 'wallet/src/config'
 import { useTrmQuery } from 'wallet/src/features/trm/api'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
@@ -115,21 +117,23 @@ function App(): JSX.Element | null {
                 <PersistGate loading={null} persistor={persistor}>
                   <DynamicThemeProvider>
                     <ErrorBoundary>
-                      <WalletContextProvider>
-                        <BiometricContextProvider>
-                          <LockScreenContextProvider>
-                            <Sentry.TouchEventBoundary>
-                              <DataUpdaters />
-                              <BottomSheetModalProvider>
-                                <AppModals />
-                                <PerformanceProfiler onReportPrepared={onReportPrepared}>
-                                  <AppInner />
-                                </PerformanceProfiler>
-                              </BottomSheetModalProvider>
-                            </Sentry.TouchEventBoundary>
-                          </LockScreenContextProvider>
-                        </BiometricContextProvider>
-                      </WalletContextProvider>
+                      <GestureHandlerRootView style={flex.fill}>
+                        <WalletContextProvider>
+                          <BiometricContextProvider>
+                            <LockScreenContextProvider>
+                              <Sentry.TouchEventBoundary>
+                                <DataUpdaters />
+                                <BottomSheetModalProvider>
+                                  <AppModals />
+                                  <PerformanceProfiler onReportPrepared={onReportPrepared}>
+                                    <AppInner />
+                                  </PerformanceProfiler>
+                                </BottomSheetModalProvider>
+                              </Sentry.TouchEventBoundary>
+                            </LockScreenContextProvider>
+                          </BiometricContextProvider>
+                        </WalletContextProvider>
+                      </GestureHandlerRootView>
                     </ErrorBoundary>
                   </DynamicThemeProvider>
                 </PersistGate>
@@ -173,7 +177,11 @@ function NavStack({ isDarkMode }: { isDarkMode: boolean }): JSX.Element {
       <OfflineBanner />
       <NotificationToastWrapper />
       <AppStackNavigator />
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+      <StatusBar
+        translucent
+        backgroundColor="transparent"
+        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
+      />
     </NavigationContainer>
   )
 }

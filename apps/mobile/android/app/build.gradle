@@ -1,4 +1,5 @@
 apply plugin: "com.android.application"
+apply plugin: 'maven-publish'
 
 import com.android.build.OutputFile
 
@@ -77,11 +78,19 @@ import com.android.build.OutputFile
  * ]
  */
 
+def nodeModulesPath = "../../../../node_modules"
+def rnRoot = "../.."
+
 project.ext.react = [
-    enableHermes: false,  // clean and rebuild if changing
+    enableHermes: true,  // clean and rebuild if changing
+    root: "${rnRoot}/",
+    cliPath: "${nodeModulesPath}/react-native/cli.js",
+    entryFile: "index.js",
+    hermesCommand: "${nodeModulesPath}/react-native/sdks/hermesc/%OS-BIN%/hermesc",
+    composeSourceMapsPath: "../../node_modules/react-native/scripts/compose-source-maps.js", // This is relative to the project root.
 ]
 
-apply from: "../../node_modules/react-native/react.gradle"
+apply from: "${nodeModulesPath}/react-native/react.gradle"
 
 /**
  * Set this to true to create two separate APKs instead of one:
@@ -109,7 +118,7 @@ def enableProguardInReleaseBuilds = false
  * give correct results when using with locales other than en-US.  Note that
  * this variant is about 6MiB larger per architecture than default.
  */
-def jscFlavor = 'org.webkit:android-jsc:+'
+def jscFlavor = 'org.webkit:android-jsc-intl:+'
 
 /**
  * Whether to enable the Hermes VM.
@@ -200,9 +209,9 @@ dependencies {
     }
 
     if (enableHermes) {
-        def hermesPath = "../../node_modules/hermes-engine/android/";
-        debugImplementation files(hermesPath + "hermes-debug.aar")
-        releaseImplementation files(hermesPath + "hermes-release.aar")
+      implementation("com.facebook.react:hermes-engine:+") {
+        exclude group:'com.facebook.fbjni'
+      }
     } else {
         implementation jscFlavor
     }
@@ -215,4 +224,4 @@ task copyDownloadableDepsToLibs(type: Copy) {
     into 'libs'
 }
 
-apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)
+apply from: file("${nodeModulesPath}/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)

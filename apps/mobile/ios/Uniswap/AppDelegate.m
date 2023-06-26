@@ -58,8 +58,8 @@ static void InitializeFlipper(UIApplication *application) {
       }
     }
 
-  RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:newLaunchOptions];
-  RCTRootView *rootView = [[RCTRootView alloc] initWithBridge:bridge
+  RCTBridge *bridge = [self.reactDelegate createBridgeWithDelegate:self launchOptions:newLaunchOptions];
+  RCTRootView *rootView = [self.reactDelegate createRootViewWithBridge:bridge
                                                    moduleName:@"Uniswap"
                                             initialProperties:nil];
 
@@ -70,13 +70,14 @@ static void InitializeFlipper(UIApplication *application) {
   }
 
   self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
-  UIViewController *rootViewController = [UIViewController new];
+  UIViewController *rootViewController = [self.reactDelegate createRootViewController];
   rootViewController.view = rootView;
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
 
   [super application:application didFinishLaunchingWithOptions:newLaunchOptions];
 
+  [super application:application didFinishLaunchingWithOptions:launchOptions];
   return YES;
 }
 

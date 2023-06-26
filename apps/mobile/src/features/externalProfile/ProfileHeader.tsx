@@ -51,8 +51,8 @@ export default function ProfileHeader({ address }: ProfileHeaderProps): JSX.Elem
     if (isLoading || (hasAvatar && !avatarColors)) {
       return [theme.colors.background0, theme.colors.background0]
     }
-    if (hasAvatar && avatarColors) {
-      return [avatarColors.background, avatarColors.background]
+    if (hasAvatar && avatarColors && avatarColors.base) {
+      return [avatarColors.base, avatarColors.base]
     }
     return [uniconGradientStart, uniconGradientEnd]
   }, [

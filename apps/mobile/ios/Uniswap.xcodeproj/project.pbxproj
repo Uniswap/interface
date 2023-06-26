@@ -14,6 +14,10 @@
 		1440B371A1C9A42F3E91DAAE /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF5F26A06553EFDD4D99214 /* ExpoModulesProvider.swift */; };
 		158BE978A06245FDA665B4CE /* Inter-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E23718F30E2E4B749C40C8F2 /* Inter-SemiBold.ttf */; };
 		30564088BB6685F4F099D444 /* libPods-OneSignalNotificationServiceExtension.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 816850AA5E2EE808CDC32BCA /* libPods-OneSignalNotificationServiceExtension.a */; };
+		681301B12A3726EE00A5BF43 /* onboarding_dark.riv in Resources */ = {isa = PBXBuildFile; fileRef = 681301AD2A3726EE00A5BF43 /* onboarding_dark.riv */; };
+		681301B22A3726EE00A5BF43 /* pending_send.riv in Resources */ = {isa = PBXBuildFile; fileRef = 681301AE2A3726EE00A5BF43 /* pending_send.riv */; };
+		681301B32A3726EE00A5BF43 /* onboarding_light.riv in Resources */ = {isa = PBXBuildFile; fileRef = 681301AF2A3726EE00A5BF43 /* onboarding_light.riv */; };
+		681301B42A3726EE00A5BF43 /* pending_swap.riv in Resources */ = {isa = PBXBuildFile; fileRef = 681301B02A3726EE00A5BF43 /* pending_swap.riv */; };
 		6C13E36A28185E550065DBB1 /* WalletConnectAccountServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C13E36928185E550065DBB1 /* WalletConnectAccountServer.swift */; };
 		6C13E36C28185EA10065DBB1 /* WalletConnectSwitchChainHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C13E36B28185EA10065DBB1 /* WalletConnectSwitchChainHandler.swift */; };
 		6C13E36E28185ECF0065DBB1 /* WalletConnectSignRequestHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C13E36D28185ECF0065DBB1 /* WalletConnectSignRequestHandler.swift */; };
@@ -37,10 +41,6 @@
 		D63452452821BD540018ED83 /* WalletConnectSendTransactionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = D63452442821BD540018ED83 /* WalletConnectSendTransactionHandler.swift */; };
 		D63928FA27D704350004F5CC /* RNWalletConnect.swift in Sources */ = {isa = PBXBuildFile; fileRef = D63928F927D704350004F5CC /* RNWalletConnect.swift */; };
 		D63928FC27D70B510004F5CC /* RNWalletConnect.m in Sources */ = {isa = PBXBuildFile; fileRef = D63928FB27D70B510004F5CC /* RNWalletConnect.m */; };
-		E32C49862923F49B003603B4 /* OnboardingDark.riv in Resources */ = {isa = PBXBuildFile; fileRef = E32C49842923F49B003603B4 /* OnboardingDark.riv */; };
-		E32C49872923F49B003603B4 /* OnboardingLight.riv in Resources */ = {isa = PBXBuildFile; fileRef = E32C49852923F49B003603B4 /* OnboardingLight.riv */; };
-		E36F2BA1292290FE00D2730E /* PendingSwap.riv in Resources */ = {isa = PBXBuildFile; fileRef = E36F2B9F292290FD00D2730E /* PendingSwap.riv */; };
-		E36F2BA2292290FE00D2730E /* PendingSend.riv in Resources */ = {isa = PBXBuildFile; fileRef = E36F2BA0292290FE00D2730E /* PendingSend.riv */; };
 		E58AFCB5279DB5F9297D2D0D /* libPods-Uniswap-UniswapTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DAAE6F1B194B03FAC33323D /* libPods-Uniswap-UniswapTests.a */; };
 		E6063F6CDE8D4D9F84B2945E /* Inter-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D720622E155642CCBAEDD803 /* Inter-Bold.ttf */; };
 		F35AFD3E27EE49990011A725 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F35AFD3D27EE49990011A725 /* NotificationService.swift */; };
@@ -100,6 +100,10 @@
 		3155C0CF238C4436932B207D /* Inter-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Inter-Regular.ttf"; path = "../src/assets/fonts/Inter-Regular.ttf"; sourceTree = "<group>"; };
 		407451BE42C5147EBB181687 /* Pods-Uniswap-UniswapTests.dev.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Uniswap-UniswapTests.dev.xcconfig"; path = "Target Support Files/Pods-Uniswap-UniswapTests/Pods-Uniswap-UniswapTests.dev.xcconfig"; sourceTree = "<group>"; };
 		4DF5F26A06553EFDD4D99214 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-Uniswap/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
+		681301AD2A3726EE00A5BF43 /* onboarding_dark.riv */ = {isa = PBXFileReference; lastKnownFileType = file; path = onboarding_dark.riv; sourceTree = "<group>"; };
+		681301AE2A3726EE00A5BF43 /* pending_send.riv */ = {isa = PBXFileReference; lastKnownFileType = file; path = pending_send.riv; sourceTree = "<group>"; };
+		681301AF2A3726EE00A5BF43 /* onboarding_light.riv */ = {isa = PBXFileReference; lastKnownFileType = file; path = onboarding_light.riv; sourceTree = "<group>"; };
+		681301B02A3726EE00A5BF43 /* pending_swap.riv */ = {isa = PBXFileReference; lastKnownFileType = file; path = pending_swap.riv; sourceTree = "<group>"; };
 		6C13E36928185E550065DBB1 /* WalletConnectAccountServer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalletConnectAccountServer.swift; sourceTree = "<group>"; };
 		6C13E36B28185EA10065DBB1 /* WalletConnectSwitchChainHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletConnectSwitchChainHandler.swift; sourceTree = "<group>"; };
 		6C13E36D28185ECF0065DBB1 /* WalletConnectSignRequestHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletConnectSignRequestHandler.swift; sourceTree = "<group>"; };
@@ -133,10 +137,6 @@
 		D720622E155642CCBAEDD803 /* Inter-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Inter-Bold.ttf"; path = "../src/assets/fonts/Inter-Bold.ttf"; sourceTree = "<group>"; };
 		DB423A22FFE9EFFCA11E9E1A /* Pods-Uniswap.beta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Uniswap.beta.xcconfig"; path = "Target Support Files/Pods-Uniswap/Pods-Uniswap.beta.xcconfig"; sourceTree = "<group>"; };
 		E23718F30E2E4B749C40C8F2 /* Inter-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Inter-SemiBold.ttf"; path = "../src/assets/fonts/Inter-SemiBold.ttf"; sourceTree = "<group>"; };
-		E32C49842923F49B003603B4 /* OnboardingDark.riv */ = {isa = PBXFileReference; lastKnownFileType = file; path = OnboardingDark.riv; sourceTree = "<group>"; };
-		E32C49852923F49B003603B4 /* OnboardingLight.riv */ = {isa = PBXFileReference; lastKnownFileType = file; path = OnboardingLight.riv; sourceTree = "<group>"; };
-		E36F2B9F292290FD00D2730E /* PendingSwap.riv */ = {isa = PBXFileReference; lastKnownFileType = file; path = PendingSwap.riv; sourceTree = "<group>"; };
-		E36F2BA0292290FE00D2730E /* PendingSend.riv */ = {isa = PBXFileReference; lastKnownFileType = file; path = PendingSend.riv; sourceTree = "<group>"; };
 		E8A8C1523EA65F88E3DC16CD /* Pods-Uniswap-UniswapTests.beta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Uniswap-UniswapTests.beta.xcconfig"; path = "Target Support Files/Pods-Uniswap-UniswapTests/Pods-Uniswap-UniswapTests.beta.xcconfig"; sourceTree = "<group>"; };
 		EC813AD85060898D4DD580C5 /* Pods-Uniswap-UniswapTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Uniswap-UniswapTests.debug.xcconfig"; path = "Target Support Files/Pods-Uniswap-UniswapTests/Pods-Uniswap-UniswapTests.debug.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
@@ -365,10 +365,10 @@
 		E3C8C9DD291C4D2C000E00EA /* RiveAssets */ = {
 			isa = PBXGroup;
 			children = (
-				E32C49842923F49B003603B4 /* OnboardingDark.riv */,
-				E32C49852923F49B003603B4 /* OnboardingLight.riv */,
-				E36F2BA0292290FE00D2730E /* PendingSend.riv */,
-				E36F2B9F292290FD00D2730E /* PendingSwap.riv */,
+				681301AD2A3726EE00A5BF43 /* onboarding_dark.riv */,
+				681301AF2A3726EE00A5BF43 /* onboarding_light.riv */,
+				681301AE2A3726EE00A5BF43 /* pending_send.riv */,
+				681301B02A3726EE00A5BF43 /* pending_swap.riv */,
 			);
 			path = RiveAssets;
 			sourceTree = "<group>";
@@ -505,17 +505,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				FD7304CE28A364FC0085BDEA /* Colors.xcassets in Resources */,
+				681301B32A3726EE00A5BF43 /* onboarding_light.riv in Resources */,
 				A32F9FBD272343C9002CFCDB /* GoogleService-Info.plist in Resources */,
-				E32C49872923F49B003603B4 /* OnboardingLight.riv in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				77CF6065C8A24FE48204A2C1 /* SplashScreen.storyboard in Resources */,
+				681301B42A3726EE00A5BF43 /* pending_swap.riv in Resources */,
+				681301B22A3726EE00A5BF43 /* pending_send.riv in Resources */,
 				E6063F6CDE8D4D9F84B2945E /* Inter-Bold.ttf in Resources */,
 				A5EA9E9AE02E45D38A5829D7 /* Inter-Medium.ttf in Resources */,
 				9293C688E2BC4F0791E544E7 /* Inter-Regular.ttf in Resources */,
 				158BE978A06245FDA665B4CE /* Inter-SemiBold.ttf in Resources */,
-				E36F2BA1292290FE00D2730E /* PendingSwap.riv in Resources */,
-				E36F2BA2292290FE00D2730E /* PendingSend.riv in Resources */,
-				E32C49862923F49B003603B4 /* OnboardingDark.riv in Resources */,
+				681301B12A3726EE00A5BF43 /* onboarding_dark.riv in Resources */,
 				D3B63ACA9B0C42F68080B080 /* InputMono-Regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

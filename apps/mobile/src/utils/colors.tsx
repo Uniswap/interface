@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
 import ImageColors from 'react-native-image-colors'
-import { IOSImageColors } from 'react-native-image-colors/lib/typescript/types'
 import { useAppTheme } from 'src/app/hooks'
 import { colors as GlobalColors } from 'ui/src/theme/color'
 import { GlobalPalette } from 'ui/src/theme/color/types'
@@ -56,10 +55,12 @@ export function useNetworkColors(chainId: ChainId): { foreground: string; backgr
   }
 }
 
-export type ExtractedColors = Pick<
-  IOSImageColors,
-  'background' | 'detail' | 'secondary' | 'primary'
->
+export type ExtractedColors = {
+  primary?: string
+  secondary?: string
+  base?: string
+  detail?: string
+}
 
 const specialCaseTokenColors: { [key: string]: string } = {
   // WBTC
@@ -97,13 +98,22 @@ export function useExtractedColors(
       ...(fallback && { fallback }),
       ...(cache && { cache }),
     }).then((result) => {
-      const { background, detail, secondary, primary } = result as IOSImageColors
-      setColors({
-        background,
-        detail,
-        secondary,
-        primary,
-      })
+      switch (result.platform) {
+        case 'android':
+          setColors({
+            primary: result.dominant,
+            base: result.average,
+            detail: result.vibrant,
+          })
+          break
+        case 'ios':
+          setColors({
+            primary: result.primary,
+            secondary: result.secondary,
+            base: result.background,
+            detail: result.detail,
+          })
+      }
     })
     setColorsLoading(false)
   }, [imageUrl, fallback, cache])
@@ -191,7 +201,7 @@ export function passesContrast(
   contrastThreshold: number
 ): boolean {
   // sometimes the extracted colors come back as black or white, discard those
-  if (color === '#000000' || color === '#FFFFFF') {
+  if (!color || color === '#000000' || color === '#FFFFFF') {
     return false
   }
 
@@ -213,7 +223,12 @@ export function passesContrast(
 function pickContrastPassingColor(extractedColors: ExtractedColors, backgroundHex: string): string {
   const contrastThreshold = 1.95
 
-  const { background, detail, secondary, primary } = extractedColors
+  const colorsInOrder = [
+    extractedColors.base,
+    extractedColors.detail,
+    extractedColors.secondary,
+    extractedColors.primary,
+  ] as const
 
   // TODO(MOB-643): Define more robust color extraction logic. Some ideas:
   // - compute all extracted colors and find the highest contrast one (that isn't #000000 or #FFFFFF)
@@ -221,19 +236,11 @@ function pickContrastPassingColor(extractedColors: ExtractedColors, backgroundHe
   // - locally cache the result with the image logo URL as a key
   // - move this logic to the backend
 
-  if (passesContrast(background, backgroundHex, contrastThreshold)) {
-    return background
+  for (const c of colorsInOrder) {
+    if (!!c && passesContrast(c, backgroundHex, contrastThreshold)) {
+      return c
+    }
   }
-  if (passesContrast(primary, backgroundHex, contrastThreshold)) {
-    return primary
-  }
-  if (passesContrast(detail, backgroundHex, contrastThreshold)) {
-    return detail
-  }
-  if (passesContrast(secondary, backgroundHex, contrastThreshold)) {
-    return secondary
-  }
-
   return FixedTheme.colors.magentaVibrant
 }
 
@@ -252,10 +259,10 @@ export function useNearestThemeColorFromImageUri(uri: string | undefined): {
 
   // find nearest theme color and convert to darkest version from theme
   return useMemo(() => {
-    if (!extractedImageColor?.background) {
+    if (!extractedImageColor?.base) {
       return { color: undefined, colorDark: undefined, colorLight: undefined }
     }
-    const color = findNearestThemeColor(extractedImageColor.background)
+    const color = findNearestThemeColor(extractedImageColor.base)
     const colorDark = adjustColorVariant(color, AdjustmentType.Darken)
     const colorLight = adjustColorVariant(color, AdjustmentType.Lighten)
     return {
