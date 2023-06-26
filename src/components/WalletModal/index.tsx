@@ -47,9 +47,10 @@ export default function WalletModal({ openSettings }: { openSettings: () => void
   const { activationState } = useActivationState()
 
   const walletConnectV2AsDefault = useWalletConnectV2AsDefault()
-  const hiddenWalletConnectType = walletConnectV2AsDefault
-    ? ConnectionType.WALLET_CONNECT
-    : ConnectionType.WALLET_CONNECT_V2
+  const hiddenWalletConnectTypes = [
+    walletConnectV2AsDefault ? ConnectionType.WALLET_CONNECT : ConnectionType.WALLET_CONNECT_V2,
+    walletConnectV2AsDefault ? ConnectionType.UNISWAP_WALLET : ConnectionType.UNISWAP_WALLET_V2,
+  ]
 
   // Keep the network connector in sync with any active user connector to prevent chain-switching on wallet disconnection.
   useEffect(() => {
@@ -70,7 +71,7 @@ export default function WalletModal({ openSettings }: { openSettings: () => void
         <AutoColumn gap="16px">
           <OptionGrid data-testid="option-grid">
             {connections
-              .filter((connection) => connection.shouldDisplay() && connection.type !== hiddenWalletConnectType)
+              .filter((connection) => connection.shouldDisplay() && !hiddenWalletConnectTypes.includes(connection.type))
               .map((connection) => (
                 <Option key={connection.getName()} connection={connection} />
               ))}
