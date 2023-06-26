@@ -1,9 +1,18 @@
 import { createMigrate, MigrationManifest, PersistedState, PersistMigrate } from 'redux-persist'
 import { MigrationConfig } from 'redux-persist/es/createMigrate'
 
+import { legacyListsMigrations, legacyTransactionMigrations, legacyUserMigrations } from './legacyMigrations'
 import { initialState as initialListsState } from './lists/reducer'
 import { initialState as initialTransactionsState } from './transactions/reducer'
 import { initialState as initialUserState } from './user/reducer'
+
+function tryParseOldState<T>(value: string | null, fallback: T): T {
+  try {
+    return value ? JSON.parse(value) : fallback
+  } catch (e) {
+    return fallback
+  }
+}
 
 /**
  * These run once per state re-hydration when a version mismatch is detected.
@@ -20,27 +29,21 @@ export const migrations: MigrationManifest = {
     const oldUser = localStorage.getItem('redux_localstorage_simple_user')
     const oldLists = localStorage.getItem('redux_localstorage_simple_lists')
 
-    try {
-      const result = {
-        user: oldUser ? JSON.parse(oldUser) : initialUserState,
-        transactions: oldTransactions ? JSON.parse(oldTransactions) : initialTransactionsState,
-        lists: oldLists ? JSON.parse(oldLists) : initialListsState,
-        _persist: { version: 0, rehydrated: true },
-      }
+    const newTransactions = tryParseOldState(oldTransactions, initialTransactionsState)
+    const newUser = tryParseOldState(oldUser, initialUserState)
+    const newLists = tryParseOldState(oldLists, initialListsState)
 
-      localStorage.removeItem('redux_localstorage_simple_transactions')
-      localStorage.removeItem('redux_localstorage_simple_user')
-      localStorage.removeItem('redux_localstorage_simple_lists')
-      return result
-    } catch (e) {
-      // JSON parsing failed, use the default initial states.
-      return {
-        user: initialUserState,
-        transactions: initialTransactionsState,
-        lists: initialListsState,
-        _persist: { version: 0, rehydrated: true },
-      }
+    const result = {
+      user: legacyUserMigrations(newUser),
+      transactions: legacyTransactionMigrations(newTransactions),
+      lists: legacyListsMigrations(newLists),
+      _persist: { version: 0, rehydrated: true },
     }
+
+    localStorage.removeItem('redux_localstorage_simple_transactions')
+    localStorage.removeItem('redux_localstorage_simple_user')
+    localStorage.removeItem('redux_localstorage_simple_lists')
+    return result
   },
 }
 

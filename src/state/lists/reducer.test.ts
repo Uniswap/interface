@@ -1,7 +1,5 @@
 import { createStore, Store } from 'redux'
 
-import { DEFAULT_LIST_OF_LISTS } from '../../constants/lists'
-import { updateVersion } from '../global/actions'
 import { acceptListUpdate, addList, fetchTokenList, removeList } from './actions'
 import reducer, { ListsState } from './reducer'
 
@@ -298,111 +296,6 @@ describe('list reducer', () => {
       expect(store.getState()).toEqual({
         byUrl: {},
         activeListUrls: undefined,
-      })
-    })
-  })
-  describe('updateVersion', () => {
-    describe('never initialized', () => {
-      beforeEach(() => {
-        store = createStore(reducer, {
-          byUrl: {
-            'https://unpkg.com/@uniswap/default-token-list@latest/uniswap-default.tokenlist.json': {
-              error: null,
-              current: STUB_TOKEN_LIST,
-              loadingRequestId: null,
-              pendingUpdate: null,
-            },
-            'https://unpkg.com/@uniswap/default-token-list@latest': {
-              error: null,
-              current: STUB_TOKEN_LIST,
-              loadingRequestId: null,
-              pendingUpdate: null,
-            },
-          },
-        })
-        store.dispatch(updateVersion())
-      })
-
-      it('clears the current lists', () => {
-        expect(
-          store.getState().byUrl['https://unpkg.com/@uniswap/default-token-list@latest/uniswap-default.tokenlist.json']
-        ).toBeUndefined()
-        expect(store.getState().byUrl['https://unpkg.com/@uniswap/default-token-list@latest']).toBeUndefined()
-      })
-
-      it('puts in all the new lists', () => {
-        expect(Object.keys(store.getState().byUrl)).toEqual(DEFAULT_LIST_OF_LISTS)
-      })
-      it('all lists are empty', () => {
-        const s = store.getState()
-        Object.keys(s.byUrl).forEach((url) => {
-          expect(s.byUrl[url]).toEqual({
-            error: null,
-            current: null,
-            loadingRequestId: null,
-            pendingUpdate: null,
-          })
-        })
-      })
-      it('sets initialized lists', () => {
-        expect(store.getState().lastInitializedDefaultListOfLists).toEqual(DEFAULT_LIST_OF_LISTS)
-      })
-    })
-    describe('initialized with a different set of lists', () => {
-      beforeEach(() => {
-        store = createStore(reducer, {
-          byUrl: {
-            'https://unpkg.com/@uniswap/default-token-list@latest/uniswap-default.tokenlist.json': {
-              error: null,
-              current: STUB_TOKEN_LIST,
-              loadingRequestId: null,
-              pendingUpdate: null,
-            },
-            'https://unpkg.com/@uniswap/default-token-list@latest': {
-              error: null,
-              current: STUB_TOKEN_LIST,
-              loadingRequestId: null,
-              pendingUpdate: null,
-            },
-          },
-          lastInitializedDefaultListOfLists: ['https://unpkg.com/@uniswap/default-token-list@latest'],
-        })
-        store.dispatch(updateVersion())
-      })
-
-      it('does not remove lists not in last initialized list of lists', () => {
-        expect(
-          store.getState().byUrl['https://unpkg.com/@uniswap/default-token-list@latest/uniswap-default.tokenlist.json']
-        ).toEqual({
-          error: null,
-          current: STUB_TOKEN_LIST,
-          loadingRequestId: null,
-          pendingUpdate: null,
-        })
-      })
-      it('removes lists in the last initialized list of lists', () => {
-        expect(store.getState().byUrl['https://unpkg.com/@uniswap/default-token-list@latest']).toBeUndefined()
-      })
-
-      it('each of those initialized lists is empty', () => {
-        const byUrl = store.getState().byUrl
-        Object.entries(byUrl)
-          // We don't expect the Uniswap default list to be prepopulated
-          .filter(
-            ([url]) => url !== 'https://unpkg.com/@uniswap/default-token-list@latest/uniswap-default.tokenlist.json'
-          )
-          .forEach(([, state]) => {
-            expect(state).toEqual({
-              error: null,
-              current: null,
-              loadingRequestId: null,
-              pendingUpdate: null,
-            })
-          })
-      })
-
-      it('sets initialized lists', () => {
-        expect(store.getState().lastInitializedDefaultListOfLists).toEqual(DEFAULT_LIST_OF_LISTS)
       })
     })
   })

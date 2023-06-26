@@ -92,12 +92,12 @@ describe('redux migrations', () => {
 
   beforeEach(() => {
     localStorage.clear()
-    // We need to re-create the store before each test so it starts with undefined state.
+    // Re-create the store before each test so it starts with undefined state.
     store = createDefaultStore()
   })
 
   it('clears legacy redux_localstorage_simple values during the initial migration', async () => {
-    localStorage.setItem('redux_localstorage_simple_transactions', JSON.stringify({ test: 'transactions' }))
+    localStorage.setItem('redux_localstorage_simple_transactions', JSON.stringify({1: { test: { info: 'transactions' }}}))
     localStorage.setItem('redux_localstorage_simple_user', JSON.stringify({ test: 'user' }))
     localStorage.setItem('redux_localstorage_simple_lists', JSON.stringify({ test: 'lists' }))
 
@@ -117,7 +117,9 @@ describe('redux migrations', () => {
         test: 'lists',
       },
       transactions: {
-        test: 'transactions',
+        1: {
+          test: {info: 'transactions'},
+        }
       },
       user: {
         test: 'user',

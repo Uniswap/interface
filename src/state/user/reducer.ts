@@ -4,7 +4,6 @@ import { SupportedLocale } from 'constants/locales'
 import { RouterPreference } from 'state/routing/slice'
 
 import { DEFAULT_DEADLINE_FROM_NOW } from '../../constants/misc'
-import { updateVersion } from '../global/actions'
 import { SerializedPair, SerializedToken, SlippageTolerance } from './types'
 
 const currentTimestamp = () => new Date().getTime()
@@ -125,57 +124,6 @@ const userSlice = createSlice({
       }
       state.timestamp = currentTimestamp()
     },
-  },
-  extraReducers: (builder) => {
-    // After adding a new property to the state, its value will be `undefined` (instead of the default)
-    // for all existing users with a previous version of the state in their localStorage.
-    // In order to avoid this, we need to set a default value for each new property manually during hydration.
-    builder.addCase(updateVersion, (state) => {
-      // If `selectedWallet` is ConnectionType.UNI_WALLET (deprecated) switch it to ConnectionType.UNISWAP_WALLET
-      if (state.selectedWallet === 'UNIWALLET') {
-        state.selectedWallet = ConnectionType.UNISWAP_WALLET
-      }
-      // WALLET_CONNECT (v1) has been deprecated
-      // @ts-expect-error
-      if (state.selectedWallet === 'WALLET_CONNECT') {
-        state.selectedWallet = undefined
-      }
-
-      // If `userSlippageTolerance` is not present or its value is invalid, reset to default
-      if (
-        typeof state.userSlippageTolerance !== 'number' ||
-        !Number.isInteger(state.userSlippageTolerance) ||
-        state.userSlippageTolerance < 0 ||
-        state.userSlippageTolerance > 5000
-      ) {
-        state.userSlippageTolerance = SlippageTolerance.Auto
-      } else {
-        if (
-          !state.userSlippageToleranceHasBeenMigratedToAuto &&
-          [10, 50, 100].indexOf(state.userSlippageTolerance) !== -1
-        ) {
-          state.userSlippageTolerance = SlippageTolerance.Auto
-          state.userSlippageToleranceHasBeenMigratedToAuto = true
-        }
-      }
-
-      // If `userDeadline` is not present or its value is invalid, reset to default
-      if (
-        typeof state.userDeadline !== 'number' ||
-        !Number.isInteger(state.userDeadline) ||
-        state.userDeadline < 60 ||
-        state.userDeadline > 180 * 60
-      ) {
-        state.userDeadline = DEFAULT_DEADLINE_FROM_NOW
-      }
-
-      // If `userRouterPreference` is not present, reset to default
-      if (typeof state.userRouterPreference !== 'string') {
-        state.userRouterPreference = RouterPreference.AUTO
-      }
-
-      state.lastUpdateVersionTimestamp = currentTimestamp()
-    })
   },
 })
 

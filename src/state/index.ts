@@ -2,7 +2,6 @@ import { configureStore } from '@reduxjs/toolkit'
 import { setupListeners } from '@reduxjs/toolkit/query/react'
 import { persistStore } from 'redux-persist'
 
-import { updateVersion } from './global/actions'
 import { sentryEnhancer } from './logging'
 import reducer from './reducer'
 import { routingApi } from './routing/slice'
@@ -33,8 +32,6 @@ export function createDefaultStore() {
 }
 
 const store = createDefaultStore()
-
-store.dispatch(updateVersion())
 
 setupListeners(store.dispatch)
 
