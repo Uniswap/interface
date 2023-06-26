@@ -171,7 +171,7 @@ interface OptionProps {
 }
 export default function Option({ connection }: OptionProps) {
   const { activationState, tryActivation } = useActivationState()
-  const [WCPopoverOpen, setWCPopoverOpen] = useState(false)
+  const [wCPopoverOpen, setWCPopoverOpen] = useState(false)
   const [accountDrawerOpen, toggleAccountDrawerOpen] = useAccountDrawer()
   const activate = () => tryActivation(connection, toggleAccountDrawerOpen)
 
@@ -237,7 +237,7 @@ export default function Option({ connection }: OptionProps) {
           <PopupButtonContent
             connection={connection}
             isDarkMode={isDarkMode}
-            show={WCPopoverOpen}
+            show={wCPopoverOpen}
             onClick={handleClickConnectViaPopover}
             onClose={() => setWCPopoverOpen(false)}
           />
