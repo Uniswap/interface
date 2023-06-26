@@ -41,6 +41,7 @@ function updateRequestUrl(event: ErrorEvent) {
   }
 }
 
+// TODO(WEB-2400): Refactor to use a config instead of returning true for each condition.
 function shouldRejectError(error: EventHint['originalException']) {
   if (error instanceof Error) {
     // ethers aggressively polls for block number, and it sometimes fails (whether spuriously or through rate-limiting).
