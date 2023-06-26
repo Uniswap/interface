@@ -1,5 +1,6 @@
 overrideExisting: true
-schema: 'https://rollux.graph.pegasys.fi/subgraphs/name/pollum-io/pegasys-v2'
+schema: 'http://13.59.22.26/subgraphs/name/pollum-io/pegasys-v2'
+# schema: 'https://rollux.graph.pegasys.fi/subgraphs/name/pollum-io/pegasys-v2'
 generates:
   ./src/graphql/thegraph/schema/schema.graphql:
     plugins:
