@@ -272,7 +272,7 @@ export default function Pool() {
                 <Trans>Liquidity Positions</Trans>
               </ThemedText.LargeHeader>*/}
               <ButtonRow>
-                {showV2Features && (
+                {false && (
                   <PoolMenu
                     menuItems={menuItems}
                     flyoutAlignment={FlyoutAlignment.LEFT}
