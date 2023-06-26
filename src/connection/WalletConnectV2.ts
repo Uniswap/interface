@@ -37,7 +37,6 @@ export class WalletConnectV2 extends WalletConnect {
         // source: https://uniswapteam.slack.com/archives/C03R5G8T8BH/p1686858618164089?thread_ts=1686778867.145689&cid=C03R5G8T8BH
         optionalMethods: ['eth_signTypedData', 'eth_signTypedData_v4', 'eth_sign'],
         qrModalOptions: {
-          chainImages: undefined,
           desktopWallets: undefined,
           enableExplorer: true,
           explorerExcludedWalletIds: undefined,
@@ -50,7 +49,6 @@ export class WalletConnectV2 extends WalletConnect {
             '--w3m-font-family': '"Inter custom", sans-serif',
             '--w3m-z-index': Z_INDEX.modal.toString(),
           },
-          tokenImages: undefined,
           walletImages: undefined,
         },
       },
