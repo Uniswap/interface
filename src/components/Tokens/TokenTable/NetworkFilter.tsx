@@ -1,6 +1,11 @@
 import Badge from 'components/Badge'
 import { getChainInfo } from 'constants/chainInfo'
-import { BACKEND_CHAIN_NAMES, CHAIN_NAME_TO_CHAIN_ID, fromGraphQLChain, validateUrlChainParam } from 'graphql/data/util'
+import {
+  CHAIN_NAME_TO_CHAIN_ID,
+  fromGraphQLChain,
+  GQL_SUPPORTED_CHAINS,
+  validateUrlChainParam,
+} from 'graphql/data/util'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useRef } from 'react'
 import { Check, ChevronDown, ChevronUp } from 'react-feather'
@@ -142,7 +147,7 @@ export default function NetworkFilter() {
       </NetworkFilterOption>
       {open && (
         <MenuTimeFlyout>
-          {BACKEND_CHAIN_NAMES.map((network) => {
+          {GQL_SUPPORTED_CHAINS.map((network) => {
             const chainInfo = getChainInfo(CHAIN_NAME_TO_CHAIN_ID[network])
             if (!chainInfo) return null
             return (

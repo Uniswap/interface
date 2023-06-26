@@ -136,7 +136,14 @@ export function fromGraphQLChain(chain: Chain): SupportedChainId {
   return CHAIN_NAME_TO_CHAIN_ID[chain] ?? SupportedChainId.MAINNET
 }
 
-export const BACKEND_CHAIN_NAMES: Chain[] = [Chain.Ethereum, Chain.Polygon, Chain.Optimism, Chain.Arbitrum, Chain.Celo]
+export const GQL_SUPPORTED_CHAINS: Chain[] = [
+  Chain.Ethereum,
+  Chain.Polygon,
+  Chain.Optimism,
+  Chain.Arbitrum,
+  Chain.Celo,
+  Chain.Bnb,
+]
 
 export function getTokenDetailsURL({
   address,
