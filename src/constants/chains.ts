@@ -26,6 +26,13 @@ export enum SupportedChainId {
   BNB = 56,
 }
 
+export const UniWalletSupportedChains = [
+  SupportedChainId.MAINNET,
+  SupportedChainId.ARBITRUM_ONE,
+  SupportedChainId.OPTIMISM,
+  SupportedChainId.POLYGON,
+]
+
 export const CHAIN_IDS_TO_NAMES = {
   [SupportedChainId.MAINNET]: 'mainnet',
   [SupportedChainId.GOERLI]: 'goerli',
