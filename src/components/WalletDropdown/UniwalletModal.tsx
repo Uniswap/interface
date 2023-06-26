@@ -73,7 +73,7 @@ export default function UniwalletModal() {
       <UniwalletConnectWrapper>
         <HeaderRow>
           <ThemedText.SubHeader>
-            <Trans>Scan with Uniswap Wallet</Trans>
+            <Trans>Scan with Limitless Wallet</Trans>
           </ThemedText.SubHeader>
           <CloseIcon onClick={onClose} />
         </HeaderRow>
@@ -95,7 +95,7 @@ export default function UniwalletModal() {
           )}
         </QRCodeWrapper>
         <Divider />
-        <InfoSection onClose={onClose} />
+        {/*<InfoSection onClose={onClose} /> */}
       </UniwalletConnectWrapper>
     </Modal>
   )

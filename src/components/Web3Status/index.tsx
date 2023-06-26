@@ -138,7 +138,7 @@ function newTransactionsFirst(a: TransactionDetails, b: TransactionDetails) {
 }
 
 const StyledConnectButton = styled.button`
-  background-color: transparent;
+  background-color: black;
   border: none;
   border-top-left-radius: ${FULL_BORDER_RADIUS}px;
   border-bottom-left-radius: ${FULL_BORDER_RADIUS}px;
@@ -146,7 +146,7 @@ const StyledConnectButton = styled.button`
   font-weight: 600;
   font-size: 16px;
   padding: 10px 12px;
-  color: inherit;
+  color: white;
 `
 
 function Web3StatusInner() {
@@ -237,7 +237,7 @@ function Web3StatusInner() {
           onClick={handleWalletDropdownClick}
         >
           <StyledConnectButton tabIndex={-1} data-testid="navbar-connect-wallet">
-            <Trans>Connect</Trans>
+            <Trans>Connect Wallet</Trans>
           </StyledConnectButton>
         </Web3StatusConnectWrapper>
       </TraceEvent>
