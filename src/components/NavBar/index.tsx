@@ -62,7 +62,7 @@ const MenuItem = ({ href, dataTestId, id, isActive, children, background }: Menu
 export const PageTabs = () => {
   const { pathname } = useLocation()
   const { chainId: connectedChainId } = useWeb3React()
-  const chainName = chainIdToBackendName(connectedChainId).toLowerCase()
+  const chainName = chainIdToBackendName(connectedChainId)
   const theme = useTheme()
   const isPoolActive = useIsPoolsPage()
   const isNftPage = useIsNftPage()
