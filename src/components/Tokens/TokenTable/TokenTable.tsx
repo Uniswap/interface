@@ -143,21 +143,30 @@ export default function TokenTable() {
   const chainName = validateUrlChainParam(useParams<{ chainName?: string }>().chainName)
   const { tokens, tokenSortRank, loadingTokens, sparklines } = useTopTokens(chainName)
   const levManagerAddreses = ["0x184773ef390325BEbe7d49d8481A5914B35c6c4C"]
-  const _tokens = levManagerAddreses.map((value: string)=>{
-    const leverageManager = useLeverageManagerContract(value)
-    const { result: token0_, loading, error } = useSingleCallResult(leverageManager, 'token0', [])
-    const { result: token1_, loading: l, error:e } = useSingleCallResult(leverageManager, 'token1', [])
-    const token0 = useToken(token0_?.toString())
-    const token1 = useToken(token1_?.toString())
-    // names, price, percentchange, tvl, volume 
-    // const token0_ = useTokenContract(token0); 
-    // const token1_ = useTokenContract(token1); 
+  // const _tokens = levManagerAddreses.map((value: string)=>{
+  //   const leverageManager = useLeverageManagerContract(value)
+  //   const { result: token0_, loading, error } = useSingleCallResult(leverageManager, 'token0', [])
+  //   const { result: token1_, loading: l, error:e } = useSingleCallResult(leverageManager, 'token1', [])
+  //   const token0 = useToken(token0_?.toString())
+  //   const token1 = useToken(token1_?.toString())
+  //   // names, price, percentchange, tvl, volume 
+  //   // const token0_ = useTokenContract(token0); 
+  //   // const token1_ = useTokenContract(token1); 
 
-    // const{ result: name0, loading: l0, error:e0 } = useSingleCallResult(token0_, 'name', [])
-    // const{ result: name1, loading: l1, error:e1 } = useSingleCallResult(token1_, 'name', [])
+  //   // const{ result: name0, loading: l0, error:e0 } = useSingleCallResult(token0_, 'name', [])
+  //   // const{ result: name1, loading: l1, error:e1 } = useSingleCallResult(token1_, 'name', [])
 
-    return {token0, token1}
-  } )
+  //   return {token0, token1}
+  // } )
+  const tokenAddresses = [["0x54D374769278b45713549B85Ca9Dd9cae3e286cc","0xa826985DF0507632C7DAB6de761d8d4efC353d1F"],
+  ["0xcbd6235bb2cf6bc3eafd36c4a53691a198bd372b", "0x54D374769278b45713549B85Ca9Dd9cae3e286cc"], 
+  ["0xa826985DF0507632C7DAB6de761d8d4efC353d1F", "0xcbd6235bb2cf6bc3eafd36c4a53691a198bd372b"] ]
+  const _tokens = tokenAddresses.map((value:string[])=>{
+    const token0 = useToken(value[0])
+    const token1 = useToken(value[1])
+    return{token0, token1}
+  })
+
 
   /* loading and error state */
   if (loadingTokens && !tokens) {

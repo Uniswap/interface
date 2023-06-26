@@ -32,14 +32,18 @@ import {
   SMALL_MEDIA_BREAKPOINT,
 } from '../constants'
 import { LoadingBubble } from '../loading'
-import {
-  filterStringAtom,
-  filterTimeAtom,
-  sortAscendingAtom,
-  sortMethodAtom,
-  TokenSortMethod,
-  useSetSortMethod,
-} from '../state'
+// import {
+//   filterStringAtom,
+//   filterTimeAtom,
+//   sortAscendingAtom,
+//   sortMethodAtom,
+//   // TokenSortMethod,
+//   useSetSortMethod,
+// } from '../state'
+import { TimePeriod } from 'graphql/data/util'
+import { atom, useAtom } from 'jotai'
+import { atomWithReset } from 'jotai/utils'
+
 import { ArrowCell, DeltaText, formatDelta, getDeltaArrow } from '../TokenDetails/PriceChart'
 import {
   // useDefaultsFromURLSearch,
@@ -63,8 +67,8 @@ const StyledTokenRow = styled.div<{
 }>`
   background-color: transparent;
   display: grid;
-  font-size: 18px;
-  grid-template-columns: 1fr 7fr 4fr 4fr 4fr 4fr 5fr 5fr;
+  font-size: 14px;
+  grid-template-columns: 1fr 7fr 4fr 4fr 4fr 4fr 5fr 6fr;
   line-height: 24px;
   max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT};
   min-width: 390px;
@@ -97,7 +101,8 @@ const StyledTokenRow = styled.div<{
   }
 
   @media only screen and (max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT}) {
-    grid-template-columns: 1fr 6.5fr 4.5fr 4.5fr 4.5fr 4.5fr 1.7fr;
+    //grid-template-columns: 1fr 6.5fr 4.5fr 4.5fr 4.5fr 4.5fr 1.7fr;
+    grid-template-columns: 1fr 7fr 4fr 4fr 4fr 4fr 5fr 6fr
   }
 
   @media only screen and (max-width: ${LARGE_MEDIA_BREAKPOINT}) {
@@ -122,9 +127,13 @@ const StyledTokenRow = styled.div<{
 const ClickableContent = styled.div`
   display: flex;
   text-decoration: none;
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.textSecondary};
   align-items: center;
   cursor: pointer;
+
+  &:hover {
+    background-color: transparent;
+  }
 `
 const ClickableName = styled(ClickableContent)`
   gap: 8px;
@@ -135,7 +144,7 @@ const StyledHeaderRow = styled(StyledTokenRow)`
   border-color: ${({ theme }) => theme.backgroundOutline};
   border-radius: 8px 8px 0px 0px;
   color: ${({ theme }) => theme.textSecondary};
-  font-size: 14px;
+  font-size: 13px;
   height: 64px;
   line-height: 16px;
   padding: 0px 12px;
@@ -302,6 +311,38 @@ const InfoIconContainer = styled.div`
   align-items: center;
   cursor: help;
 `
+enum TokenSortMethod {
+  PRICE = 'Price',
+  PERCENT_CHANGE = 'Change',
+  TOTAL_VALUE_LOCKED = 'TVL',
+  VOLUME = 'Volume',
+  APR = "Estimated APR",
+  URate = "Utilization Rate", 
+}
+
+
+export const filterStringAtom = atomWithReset<string>('')
+export const filterTimeAtom = atom<TimePeriod>(TimePeriod.DAY)
+export const sortMethodAtom = atom<TokenSortMethod>(TokenSortMethod.VOLUME)
+export const sortAscendingAtom = atom<boolean>(false)
+
+/* keep track of sort category for token table */
+export function useSetSortMethod(newSortMethod: TokenSortMethod) {
+  const [sortMethod, setSortMethod] = useAtom(sortMethodAtom)
+  const [sortAscending, setSortAscending] = useAtom(sortAscendingAtom)
+
+  return useCallback(() => {
+    if (sortMethod === newSortMethod) {
+      setSortAscending(!sortAscending)
+    } else {
+      setSortMethod(newSortMethod)
+      setSortAscending(false)
+    }
+  }, [sortMethod, setSortMethod, setSortAscending, sortAscending, newSortMethod])
+}
+
+
+
 export const HEADER_DESCRIPTIONS: Record<TokenSortMethod, ReactNode | undefined> = {
   [TokenSortMethod.PRICE]: undefined,
   [TokenSortMethod.PERCENT_CHANGE]: undefined,
@@ -313,9 +354,15 @@ export const HEADER_DESCRIPTIONS: Record<TokenSortMethod, ReactNode | undefined>
   [TokenSortMethod.VOLUME]: (
     <Trans>Volume is the amount of the asset that has been traded on Limitless during the selected time frame.</Trans>
   ),
+  [TokenSortMethod.APR]:(
+    <Trans>Estimated APR is the expected APR, with the given volume and utilization rate, the return as an LP for providing liquidity between 50% and 200% of current price</Trans>
+    ), 
+  [TokenSortMethod.URate]:(
+    <Trans>Utilization rate is the averaged utilization rate across all ticks of the pool. The higher it is, the higher the APR.</Trans>
+    ), 
 }
 
-// price TVL, 
+// price, TVL, volume, util rate, expected apr
 
 /* Get singular header cell for header row */
 function HeaderCell({
@@ -362,7 +409,11 @@ function TokenRow({
   percentChange,
   tvl,
   volume,
+  APR, 
+  UtilRate, 
   sparkLine,
+  currency0,
+  currency1,
   ...rest
 }: {
   first?: boolean
@@ -375,11 +426,20 @@ function TokenRow({
   sparkLine?: ReactNode
   tokenInfo: ReactNode
   volume: ReactNode
+  APR: ReactNode
+  UtilRate:ReactNode
+  currency0?: string
+  currency1?: string
   last?: boolean
   style?: CSSProperties
 }) {
+
+  const navigate = useNavigate()
+
+
   const rowCells = (
     <>
+
       <ListNumberCell header={header}>{listNumber}</ListNumberCell>
       <NameCell data-testid="name-cell">{tokenInfo}</NameCell>
 
@@ -397,30 +457,55 @@ function TokenRow({
       </VolumeCell>
 
       <VolumeCell data-testid="volume-cell" sortable={header}>
-        {volume}
+        {APR}
       </VolumeCell>
       <VolumeCell data-testid="volume-cell" sortable={header}>
-        {volume}
+        {UtilRate}
       </VolumeCell>
+      {
+        !header && 
+      <ButtonPrimary
+        style={{ marginLeft: '20px', padding: '.3rem', width: 'fit-content', fontSize: '0.825rem', borderRadius: '12px' }}
+        onClick={() =>
+          {if(currency1&&currency0){
+            navigate('/add/'+currency0+"/"+currency1+"/"+"500", {state: {currency0:currency0, currency1: currency1 }})
+          }}
+          } >
+        <Trans>Provide Liquidity</Trans>
+      </ButtonPrimary>
+      }
+      {/*
+        !header && 
+      <ButtonPrimary
+        style={{ marginLeft: '20px', padding: '.3rem', width: 'fit-content', fontSize: '0.825rem', borderRadius: '12px' }}
+        onClick={() =>{if(currency1&&currency0){
+            navigate('/swap', {state: {currency0:currency0, currency1: currency1 }})}}
+        } >
+        <Trans>Go to pair</Trans>
+      </ButtonPrimary>
+      */}
 
-      <SparkLineCell>{sparkLine}</SparkLineCell>
+      {/*<SparkLineCell>{sparkLine}</SparkLineCell> */}
     </>
   )
   if (header) return <StyledHeaderRow data-testid="header-row">{rowCells}</StyledHeaderRow>
   return <StyledTokenRow {...rest}>{rowCells}</StyledTokenRow>
 }
 
+
 /* Header Row: top header row component for table */
 export function PHeaderRow() {
   return (
     <TokenRow
       header={true}
-      listNumber="#"
+      listNumber=""
       tokenInfo={<Trans>Pair</Trans>}
       price={<HeaderCell category={TokenSortMethod.PRICE} />}
       percentChange={<HeaderCell category={TokenSortMethod.PERCENT_CHANGE} />}
       tvl={<HeaderCell category={TokenSortMethod.TOTAL_VALUE_LOCKED} />}
       volume={<HeaderCell category={TokenSortMethod.VOLUME} />}
+      APR = {<HeaderCell category={TokenSortMethod.APR} />}
+      UtilRate = {<HeaderCell category={TokenSortMethod.URate} />}
       // volume={<HeaderCell category={""} />}
 
       sparkLine={null}
@@ -445,6 +530,9 @@ export function PLoadingRow(props: { first?: boolean; last?: boolean }) {
       percentChange={<LoadingBubble />}
       tvl={<LoadingBubble />}
       volume={<LoadingBubble />}
+      APR = {<LoadingBubble />}
+      UtilRate = {<LoadingBubble />}
+
       sparkLine={<SparkLineLoadingBubble />}
       {...props}
     />
@@ -519,24 +607,24 @@ export const PLoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<H
   const currency1 = useCurrency(token1.address )
   const [poolState, pool] = usePool(currency0 ?? undefined, currency1?? undefined, FeeAmount.LOW)
   const currentPrice = pool?.token0Price.toSignificant(3)
+  const priceRounded = (Math.round(1/Number(currentPrice) *10000)/10000).toString()
+  //const priceRounded = Math.round((1/Number(currentPrice)).toString()+" " + token0.symbol +"/"+token1.symbol *10000)/10000
   return (
     <div ref={ref} data-testid={`token-table-row-${token0.symbol}`}>
-      <ClickableContent
+      {/*<ClickableContent
         // to={'/swap'}
-        onClick={() =>
-          {if(currency1&&currency0){
-            navigate('/swap', {state: {currency0:currency0, currency1: currency1 }})
-          }
-        }
-          // sendAnalyticsEvent(InterfaceEventName.EXPLORE_TOKEN_ROW_CLICKED, exploreTokenSelectedEventProperties)
-        }
-      > 
+        // onClick={() =>{if(currency1&&currency0){
+        //     navigate('/swap', {state: {currency0:currency0, currency1: currency1 }})}}
+        // }
+      > */}
 
         <TokenRow
           header={false}
           listNumber={sortRank}
           tokenInfo={
-            <ClickableName>
+            <ClickableName         onClick={() =>{if(currency1&&currency0){
+            navigate('/swap', {state: {currency0:currency0, currency1: currency1 }})}}
+        }>
               {/*<QueryTokenLogo token={token} />*/}
               <TokenInfoCell>
                 <TokenName data-cy="token-name">{token1.symbol}/{token0.symbol}</TokenName>
@@ -545,9 +633,11 @@ export const PLoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<H
             </ClickableName>
           }
           price={
-            <ClickableContent>
+            <ClickableContent        onClick={() =>{if(currency1&&currency0){
+            navigate('/swap', {state: {currency0:currency0, currency1: currency1 }})}}
+        } >
               <PriceInfoCell>
-                {currentPrice &&((1/Number(currentPrice)).toString()+" " + token0.symbol +"/"+token1.symbol)}
+                {currentPrice &&(priceRounded+" " + token0.symbol +"/"+token1.symbol)}
                 <PercentChangeInfoCell>
                   <ArrowCell>{smallArrow}</ArrowCell>
                   <DeltaText delta={delta}>{formattedDelta}</DeltaText>
@@ -556,18 +646,36 @@ export const PLoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<H
             </ClickableContent>
           }
           percentChange={
-            <ClickableContent>
+            <ClickableContent         onClick={() =>{if(currency1&&currency0){
+            navigate('/swap', {state: {currency0:currency0, currency1: currency1 }})}}
+        }>
               <ArrowCell>{arrow}</ArrowCell>
               <DeltaText delta={delta}>{formattedDelta}</DeltaText>
             </ClickableContent>
           }
           tvl={
-            <ClickableContent>
-              {formatNumber(2323420000, NumberType.FiatTokenStats)}
+            <ClickableContent         onClick={() =>{if(currency1&&currency0){
+            navigate('/swap', {state: {currency0:currency0, currency1: currency1 }})}}
+        }>
+              {formatNumber(2000000000, NumberType.FiatTokenStats)}
             </ClickableContent>
           }
           volume={
-            <ClickableContent>{formatNumber(null, NumberType.FiatTokenStats)}</ClickableContent>
+            <ClickableContent        onClick={() =>{if(currency1&&currency0){
+            navigate('/swap', {state: {currency0:currency0, currency1: currency1 }})}}
+        }
+            >{formatNumber(null, NumberType.FiatTokenStats)}</ClickableContent>
+          }
+          APR = {
+            <ClickableContent         onClick={() =>{if(currency1&&currency0){
+            navigate('/swap', {state: {currency0:currency0, currency1: currency1 }})}}
+        }>{formatNumber(null, NumberType.FiatTokenStats)}</ClickableContent>
+
+          }
+          UtilRate = {
+            <ClickableContent         onClick={() =>{if(currency1&&currency0){
+            navigate('/swap', {state: {currency0:currency0, currency1: currency1 }})}}
+        }>{formatNumber(null, NumberType.FiatTokenStats)}</ClickableContent>            
           }
 
           // sparkLine={
@@ -589,10 +697,14 @@ export const PLoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<H
           // }
           first={tokenListIndex === 0}
           last={tokenListIndex === tokenListLength - 1}
+           // @ts-ignore
+          currency0={currency0?.address}
+           // @ts-ignore
+          currency1={currency1?.address}
 
         />
 
-      </ClickableContent>
+      {/*</ClickableContent> */}
 
     </div>
   )
