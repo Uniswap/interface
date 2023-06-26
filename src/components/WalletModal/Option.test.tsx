@@ -1,6 +1,6 @@
 import { Connector } from '@web3-react/types'
 import UNIWALLET_ICON from 'assets/images/uniwallet.png'
-import { useAccountDrawer, useToggleAccountDrawer } from 'components/AccountDrawer'
+import { useAccountDrawer } from 'components/AccountDrawer'
 import { Connection, ConnectionType } from 'connection/types'
 import { mocked } from 'test-utils/mocked'
 import { createDeferredPromise } from 'test-utils/promise'
@@ -14,7 +14,6 @@ jest.mock('components/AccountDrawer')
 beforeEach(() => {
   jest.spyOn(console, 'debug').mockReturnValue()
   mocked(useAccountDrawer).mockReturnValue([true, mockToggleDrawer])
-  mocked(useToggleAccountDrawer).mockReturnValue(mockToggleDrawer)
 })
 
 const mockConnection1: Connection = {

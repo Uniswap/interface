@@ -1,8 +1,7 @@
 import { sendAnalyticsEvent } from '@uniswap/analytics'
-import { URI_AVAILABLE, WalletConnect, WalletConnectConstructorArgs } from '@web3-react/walletconnect-v2'
+import { WalletConnect, WalletConnectConstructorArgs } from '@web3-react/walletconnect-v2'
 import { L1_CHAIN_IDS, L2_CHAIN_IDS, SupportedChainId } from 'constants/chains'
 import { Z_INDEX } from 'theme/zIndex'
-import { isIOS } from 'utils/userAgent'
 
 import { RPC_URLS } from '../constants/networks'
 
@@ -62,39 +61,5 @@ export class WalletConnectV2 extends WalletConnect {
   activate(chainId?: number) {
     sendAnalyticsEvent(this.ANALYTICS_EVENT)
     return super.activate(chainId)
-  }
-}
-
-// Custom class for Uniswap Wallet specific functionality
-export class UniwalletConnect extends WalletConnectV2 {
-  ANALYTICS_EVENT = 'Uniswap Wallet QR Scan'
-  static UNI_URI_AVAILABLE = 'uni_uri_available'
-
-  constructor({ actions, onError }: Omit<WalletConnectConstructorArgs, 'options'>) {
-    // disables walletconnect's proprietary qr code modal; instead UniwalletModal will listen for events to trigger our custom modal
-    super({ actions, qrcode: false, onError })
-
-    this.events.once(URI_AVAILABLE, () => {
-      this.provider?.events.on('disconnect', this.deactivate)
-    })
-
-    this.events.on(URI_AVAILABLE, (uri) => {
-      if (!uri) return
-      // Emits custom wallet connect code, parseable by the Uniswap Wallet
-      this.events.emit(UniwalletConnect.UNI_URI_AVAILABLE, `hello_uniwallet:${uri}`)
-
-      // Opens deeplink to Uniswap Wallet if on iOS
-      if (isIOS) {
-        const newTab = window.open(`https://uniswap.org/app/wc?uri=${encodeURIComponent(uri)}`)
-
-        // Fixes blank tab opening on mobile Chrome
-        newTab?.close()
-      }
-    })
-  }
-
-  deactivate() {
-    this.events.emit(URI_AVAILABLE)
-    return super.deactivate()
   }
 }

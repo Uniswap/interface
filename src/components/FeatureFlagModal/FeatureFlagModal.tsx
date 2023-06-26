@@ -3,6 +3,7 @@ import { DetailsV2Variant, useDetailsV2Flag } from 'featureFlags/flags/nftDetail
 import { useRoutingAPIForPriceFlag } from 'featureFlags/flags/priceRoutingApi'
 import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
 import { UnifiedRouterVariant, useRoutingAPIV2Flag } from 'featureFlags/flags/unifiedRouter'
+import { useWalletConnectV2Flag } from 'featureFlags/flags/walletConnectV2'
 import { useUpdateAtom } from 'jotai/utils'
 import { Children, PropsWithChildren, ReactElement, ReactNode, useCallback, useState } from 'react'
 import { X } from 'react-feather'
@@ -220,6 +221,12 @@ export default function FeatureFlagModal() {
         value={useRoutingAPIForPriceFlag()}
         featureFlag={FeatureFlag.routingAPIPrice}
         label="Use the URA or routing-api for price fetches"
+      />
+      <FeatureFlagOption
+        variant={BaseVariant}
+        value={useWalletConnectV2Flag()}
+        featureFlag={FeatureFlag.walletConnectV2}
+        label="Uses WalletConnect V2 as default wallet connect connection"
       />
       <FeatureFlagGroup name="Debug">
         <FeatureFlagOption
