@@ -3,6 +3,7 @@ import { ChainId, Currency, Token } from '@uniswap/sdk-core'
 
 import {
   AMPL,
+  ARB,
   BTC_BSC,
   BUSD_BSC,
   CAKE_BSC,
@@ -25,6 +26,7 @@ import {
   FXS,
   MATIC_BSC,
   nativeOnChain,
+  OP,
   PORTAL_ETH_CELO,
   PORTAL_USDC_CELO,
   renBTC,
@@ -145,6 +147,7 @@ export const COMMON_BASES: ChainCurrencyList = {
   [ChainId.SEPOLIA]: [nativeOnChain(ChainId.SEPOLIA), WRAPPED_NATIVE_CURRENCY[ChainId.SEPOLIA] as Token],
   [ChainId.ARBITRUM_ONE]: [
     nativeOnChain(ChainId.ARBITRUM_ONE),
+    ARB,
     DAI_ARBITRUM_ONE,
     USDC_ARBITRUM,
     USDT_ARBITRUM_ONE,
@@ -156,7 +159,7 @@ export const COMMON_BASES: ChainCurrencyList = {
     WRAPPED_NATIVE_CURRENCY[ChainId.ARBITRUM_GOERLI] as Token,
     USDC_ARBITRUM_GOERLI,
   ],
-  [ChainId.OPTIMISM]: [nativeOnChain(ChainId.OPTIMISM), DAI_OPTIMISM, USDC_OPTIMISM, USDT_OPTIMISM, WBTC_OPTIMISM],
+  [ChainId.OPTIMISM]: [nativeOnChain(ChainId.OPTIMISM), OP, DAI_OPTIMISM, USDC_OPTIMISM, USDT_OPTIMISM, WBTC_OPTIMISM],
   [ChainId.OPTIMISM_GOERLI]: [nativeOnChain(ChainId.OPTIMISM_GOERLI)],
   [ChainId.POLYGON]: [
     nativeOnChain(ChainId.POLYGON),

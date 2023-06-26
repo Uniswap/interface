@@ -10,6 +10,8 @@ import useMultiChainPositions from './useMultiChainPositions'
 
 jest.mock('./useMultiChainPositions')
 
+jest.spyOn(console, 'warn').mockImplementation()
+
 const owner = '0xf5b6bb25f5beaea03dd014c6ef9fa9f3926bf36c'
 
 const pool = new Pool(
