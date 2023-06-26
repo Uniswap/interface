@@ -96,7 +96,7 @@ type StatsSectionProps = {
 }
 export default function StatsSection(props: StatsSectionProps) {
   const { chainId, address, priceHigh24H, priceLow24H, delta, price, inversePrice, token0Symbol, token1Symbol } = props
-  const { label, infoLink } = getChainInfo(chainId)
+  const { label, infoLink } = getChainInfo(chainId) ? getChainInfo(chainId) : { label: null,  infoLink: null }
 
   // if inversePrice then token0 is base token, otherwise token0 is quote token
   const arrow = getDeltaArrow(delta, 18)
