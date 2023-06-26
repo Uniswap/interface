@@ -2,7 +2,7 @@ import { ConnectionType } from 'connection/types'
 import { DEFAULT_LIST_OF_LISTS } from 'constants/lists'
 import { DEFAULT_DEADLINE_FROM_NOW } from 'constants/misc'
 
-import { initialState, ListsState, NEW_LIST_STATE } from './lists/reducer'
+import { ListsState, NEW_LIST_STATE } from './lists/reducer'
 import { RouterPreference } from './routing/slice'
 import { TransactionState } from './transactions/reducer'
 import { UserState } from './user/reducer'
@@ -68,10 +68,6 @@ export function legacyUserMigrations(state: any): UserState {
   // If `selectedWallet` is ConnectionType.UNI_WALLET (deprecated) switch it to ConnectionType.UNISWAP_WALLET
   if (result.selectedWallet === 'UNIWALLET') {
     result.selectedWallet = ConnectionType.UNISWAP_WALLET
-  }
-  // WALLET_CONNECT (v1) has been deprecated
-  if (result.selectedWallet === 'WALLET_CONNECT') {
-    result.selectedWallet = undefined
   }
 
   // If `userSlippageTolerance` is not present or its value is invalid, reset to default
