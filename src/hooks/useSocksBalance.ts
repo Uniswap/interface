@@ -6,7 +6,7 @@ import { useTokenBalance } from 'state/connection/hooks'
 // const SOCKS = new Token(SupportedChainId.MAINNET, SOCKS_CONTROLLER_ADDRESSES[SupportedChainId.MAINNET], 0)
 
 export function useHasSocks(): boolean | undefined {
-  const { account, chainId } = useWeb3React()
+  const { account } = useWeb3React()
 
   const balance = useTokenBalance(account ?? undefined, undefined)
 

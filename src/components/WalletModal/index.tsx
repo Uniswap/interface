@@ -1,4 +1,3 @@
-import { getWalletMeta } from '@uniswap/conedison/provider/meta'
 import { useWeb3React } from '@web3-react/core'
 import { useAccountDrawer } from 'components/AccountDrawer'
 import IconButton from 'components/AccountDrawer/IconButton'
@@ -89,7 +88,6 @@ export default function WalletModal({ openSettings }: { openSettings: () => void
   useEffect(() => {
     if (account && account !== lastActiveWalletAddress) {
       const walletName = getConnection(connector).getName()
-      const peerWalletAgent = provider ? getWalletMeta(provider)?.agent : undefined
       const isReconnect =
         connectedWallets.filter((wallet) => wallet.account === account && wallet.walletType === walletName).length > 0
       if (!isReconnect) addWalletToConnectedWallets({ account, walletType: walletName })

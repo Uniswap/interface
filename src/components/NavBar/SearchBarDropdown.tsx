@@ -1,15 +1,10 @@
 import { Trans } from '@lingui/macro'
 import { Token } from '@pollum-io/sdk-core'
-import { useWeb3React } from '@web3-react/core'
-import { useNftGraphqlEnabled } from 'featureFlags/flags/nftlGraphql'
-import { SafetyLevel } from 'graphql/data/__generated__/types-and-hooks'
-import { SearchToken } from 'graphql/data/SearchTokens'
 import { TokenData } from 'graphql/tokens/TokenData'
 import { useIsNftPage } from 'hooks/useIsNftPage'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { subheadSmall } from 'nft/css/common.css'
-import { GenieCollection, TrendingCollection } from 'nft/types'
 import { ReactNode, useEffect, useMemo, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 
@@ -17,10 +12,6 @@ import { TrendingArrow } from '../../nft/components/icons'
 import { useRecentlySearchedAssets } from './RecentlySearchedAssets'
 import * as styles from './SearchBar.css'
 import { SkeletonRow, TokenRow } from './SuggestionRow'
-
-function isCollection(suggestion: GenieCollection | SearchToken | TrendingCollection) {
-  return (suggestion as SearchToken).decimals === undefined
-}
 
 interface SearchBarDropdownSectionProps {
   toggleOpen: () => void
@@ -77,11 +68,6 @@ const SearchBarDropdownSection = ({
   )
 }
 
-function isKnownToken(token: SearchToken) {
-  return token.project?.safetyLevel == SafetyLevel.Verified || token.project?.safetyLevel == SafetyLevel.MediumWarning
-}
-
-
 interface SearchBarDropdownProps {
   toggleOpen: () => void
   tokens: TokenData[]
@@ -90,30 +76,18 @@ interface SearchBarDropdownProps {
   isLoading: boolean
 }
 
-export const SearchBarDropdown = ({
-  toggleOpen,
-  tokens,
-  queryText,
-  hasInput,
-  isLoading,
-}: SearchBarDropdownProps) => {
+export const SearchBarDropdown = ({ toggleOpen, tokens, queryText, hasInput, isLoading }: SearchBarDropdownProps) => {
   const [hoveredIndex, setHoveredIndex] = useState<number | undefined>(0)
 
   const { data: searchHistory } = useRecentlySearchedAssets()
   const shortenedHistory = useMemo(() => searchHistory?.slice(0, 2) ?? [...Array<Token>(2)], [searchHistory])
 
   const { pathname } = useLocation()
-  const { chainId } = useWeb3React()
   const isNFTPage = useIsNftPage()
-  const isNftGraphqlEnabled = useNftGraphqlEnabled()
   const isTokenPage = pathname.includes('/tokens')
   const [resultsState, setResultsState] = useState<ReactNode>()
 
-
-
-  const totalSuggestions = hasInput
-    ? tokens.length
-    : Math.min(shortenedHistory.length, 2) + 3
+  const totalSuggestions = hasInput ? tokens.length : Math.min(shortenedHistory.length, 2) + 3
 
   // just want to get the tokens with PSYS and WSYS sybol.
   // const suggestions = tokens.
@@ -175,11 +149,7 @@ export const SearchBarDropdown = ({
         hasInput ? (
           // Empty or Up to 8 combined tokens and nfts
           <Column gap="20">
-            {
-              <>
-                {tokenSearchResults}
-              </>
-            }
+            <>{tokenSearchResults}</>
           </Column>
         ) : (
           // Recent Searches, Trending Tokens, Trending Collections
@@ -216,6 +186,7 @@ export const SearchBarDropdown = ({
     queryText,
     totalSuggestions,
     searchHistory,
+    suggestions,
   ])
 
   // const showBNBComingSoonBadge = chainId === SupportedChainId.BNB && !isLoading

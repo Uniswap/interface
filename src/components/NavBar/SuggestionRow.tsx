@@ -41,6 +41,7 @@ interface CollectionRowProps {
   eventProperties: Record<string, unknown>
 }
 
+// eslint-disable-next-line import/no-unused-modules
 export const CollectionRow = ({
   collection,
   isHovered,

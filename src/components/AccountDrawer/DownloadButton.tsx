@@ -1,7 +1,7 @@
-import { PropsWithChildren } from 'react'
 import styled from 'styled-components/macro'
 import { ClickableStyle } from 'theme'
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const StyledButton = styled.button<{ padded?: boolean; branded?: boolean }>`
   ${ClickableStyle}
   width: 100%;
@@ -21,20 +21,20 @@ const StyledButton = styled.button<{ padded?: boolean; branded?: boolean }>`
   color: ${({ theme, branded }) => (branded ? theme.accentTextLightPrimary : theme.textPrimary)};
 `
 
-function BaseButton({ onClick, branded, children }: PropsWithChildren<{ onClick?: () => void; branded?: boolean }>) {
-  return (
-    <StyledButton branded={branded} onClick={onClick}>
-      {children}
-    </StyledButton>
-  )
-}
+// function BaseButton({ onClick, branded, children }: PropsWithChildren<{ onClick?: () => void; branded?: boolean }>) {
+//   return (
+//     <StyledButton branded={branded} onClick={onClick}>
+//       {children}
+//     </StyledButton>
+//   )
+// }
 
-const APP_STORE_LINK = 'https://apps.apple.com/us/app/uniswap-wallet/id6443944476'
+// const APP_STORE_LINK = 'https://apps.apple.com/us/app/uniswap-wallet/id6443944476'
 const MICROSITE_LINK = 'https://paliwallet.com/'
 
-const openAppStore = () => {
-  window.open(APP_STORE_LINK, /* target = */ 'pali_wallet_appstore')
-}
+// const openAppStore = () => {
+//   window.open(APP_STORE_LINK, /* target = */ 'pali_wallet_appstore')
+// }
 export const openWalletMicrosite = () => {
   window.open(MICROSITE_LINK, /* target = */ 'pali_wallet_microsite')
 }

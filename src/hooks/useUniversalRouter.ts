@@ -110,7 +110,6 @@ export function useUniversalRouterSwapCallback(
   }, [
     account,
     chainId,
-    fiatValues,
     options.deadline,
     options.feeOptions,
     options.permit,

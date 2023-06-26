@@ -98,16 +98,6 @@ function PositionListItem({ positionInfo }: { positionInfo: PositionInfo }) {
     toggleWalletDrawer()
     navigate('/pool/' + details.tokenId)
   }, [walletChainId, chainId, connector, toggleWalletDrawer, navigate, details.tokenId])
-  const analyticsEventProperties = useMemo(
-    () => ({
-      chain_id: chainId,
-      pool_token_0_symbol: pool.token0.symbol,
-      pool_token_1_symbol: pool.token1.symbol,
-      pool_token_0_address: pool.token0.address,
-      pool_token_1_address: pool.token1.address,
-    }),
-    [chainId, pool.token0.address, pool.token0.symbol, pool.token1.address, pool.token1.symbol]
-  )
 
   const shouldHidePosition = hasURL(pool.token0.symbol) || hasURL(pool.token1.symbol)
 

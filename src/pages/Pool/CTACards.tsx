@@ -64,6 +64,7 @@ const ResponsiveColumn = styled(AutoColumn)`
 
 export default function CTACards() {
   const { chainId } = useWeb3React()
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { infoLink } = getChainInfoOrDefault(chainId)
   // TODO: check liquidity docs
 

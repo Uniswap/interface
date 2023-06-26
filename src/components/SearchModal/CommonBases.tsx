@@ -32,6 +32,7 @@ const BaseWrapper = styled.div<{ disable?: boolean }>`
   background-color: ${({ theme, disable }) => disable && theme.accentActiveSoft};
 `
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const formatAnalyticsEventProperties = (currency: Currency, searchQuery: string, isAddressSearch: string | false) => ({
   token_symbol: currency?.symbol,
   token_chain_id: currency?.chainId,
@@ -48,8 +49,6 @@ export default function CommonBases({
   chainId,
   onSelect,
   selectedCurrency,
-  searchQuery,
-  isAddressSearch,
 }: {
   chainId?: number
   selectedCurrency?: Currency | null

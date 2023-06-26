@@ -27,6 +27,7 @@ export const TOP_TOKENS = gql`
   }
 `
 
+// eslint-disable-next-line import/no-unused-modules
 export interface Token {
   decimals: string
   feesUSD: string

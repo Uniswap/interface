@@ -17,6 +17,7 @@ import { useTickLens } from './useContract'
 import { PoolState, usePool } from './usePools'
 
 const PRICE_FIXED_DIGITS = 8
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const CHAIN_IDS_MISSING_SUBGRAPH_DATA: SupportedChainId[] = []
 
 // Tick with fields parsed to JSBIs, and active liquidity computed.

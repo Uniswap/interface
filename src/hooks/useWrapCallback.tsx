@@ -2,7 +2,6 @@ import { Trans } from '@lingui/macro'
 import { Currency } from '@pollum-io/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
-import { formatToDecimal, getTokenAddress } from 'lib/utils/analytics'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useMemo, useState } from 'react'
 
@@ -80,15 +79,6 @@ export default function useWrapCallback(
 
     const hasInputAmount = Boolean(inputAmount?.greaterThan('0'))
     const sufficientBalance = inputAmount && balance && !balance.lessThan(inputAmount)
-
-    const eventProperties = {
-      token_in_address: getTokenAddress(inputCurrency),
-      token_out_address: getTokenAddress(outputCurrency),
-      token_in_symbol: inputCurrency.symbol,
-      token_out_symbol: outputCurrency.symbol,
-      chain_id: inputCurrency.chainId,
-      amount: inputAmount ? formatToDecimal(inputAmount, inputAmount?.currency.decimals) : undefined,
-    }
 
     if (inputCurrency.isNative && weth.equals(outputCurrency)) {
       return {

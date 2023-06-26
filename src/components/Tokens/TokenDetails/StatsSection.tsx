@@ -1,7 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { formatNumber, NumberType } from '@uniswap/conedison/format'
 import { MouseoverTooltip } from 'components/Tooltip'
-import { getChainInfo } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
 import { ReactNode } from 'react'
 import styled from 'styled-components/macro'
@@ -78,8 +77,7 @@ type StatsSectionProps = {
 }
 
 export default function StatsSection(props: StatsSectionProps) {
-  const { chainId, address, priceLow52W, priceHigh52W, TVL, volume24H, volume7D, fee24H } = props
-  const { label, infoLink } = getChainInfo(chainId)
+  const { priceLow52W, priceHigh52W, TVL, volume24H, volume7D, fee24H } = props
 
   if (TVL || volume24H || priceLow52W || priceHigh52W || volume7D || fee24H) {
     return (
