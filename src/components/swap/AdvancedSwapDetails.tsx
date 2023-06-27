@@ -664,7 +664,9 @@ export function AdvancedLeverageSwapDetails({
   const price = leverageTrade?.existingTotalPosition?(Number(leverageTrade?.expectedOutput ) - Number(leverageTrade?.existingTotalPosition))
   / (Number(leverageTrade?.borrowedAmount?.toExact()) - Number(leverageTrade?.existingTotalDebtInput) + Number(leverageTrade?.inputAmount?.toExact())  )
   : Number(leverageTrade?.expectedOutput )/(Number(leverageTrade?.borrowedAmount?.toExact()) + Number(leverageTrade?.inputAmount?.toExact()))
-  // const fees = (Number(leverageTrade?.borrowedAmount?.toExact()) + Number(leverageTrade?.inputAmount?.toExact())) * 0.0005
+  const fees= leverageTrade?.existingTotalPosition?(Number(leverageTrade?.borrowedAmount?.toExact())- Number(leverageTrade?.existingTotalDebtInput) + Number(leverageTrade?.inputAmount?.toExact())) * 0.0005
+  : (Number(leverageTrade?.borrowedAmount?.toExact())+ Number(leverageTrade?.inputAmount?.toExact())) * 0.0005
+  // const fees = (Number(leverageTrade?.borrowedAmount?.toExact())- Number(leverageTrade?.existingTotalDebtInput) + Number(leverageTrade?.inputAmount?.toExact())) * 0.0005
   const addedOutput = (leverageTrade?.expectedOutput) ? (
     leverageTrade?.existingPosition && leverageTrade?.existingTotalPosition ? leverageTrade?.expectedOutput -  leverageTrade?.existingTotalPosition : leverageTrade?.expectedOutput
               ) : 0
@@ -688,7 +690,7 @@ export function AdvancedLeverageSwapDetails({
           symbolAppend={`${trade?.outputAmount.currency.symbol} / ${trade?.inputAmount.currency.symbol}`}
         />
         <ValueLabel
-          description="The first premium payment required to open this position"
+          description="The premium payment required to open this position"
           label="Quoted Premium"
           value={Math.round(Number(leverageTrade?.quotedPremium) * 100000) / 100000}
           syncing={syncing}
@@ -701,13 +703,15 @@ export function AdvancedLeverageSwapDetails({
           syncing={syncing}
           symbolAppend={trade?.inputAmount.currency.symbol}
         />}
-        {/* <ValueLabel
+        <ValueLabel
           description="Fees paid for trade "
           label="Fees"
           value={Math.round(Number(fees) * 100000) / 100000}
           syncing={syncing}
           symbolAppend={trade?.inputAmount.currency.symbol}
-        /> */}
+        /> 
+
+
         <Separator />
         <RowBetween>
           <RowFixed style={{ marginRight: '20px' }}>
@@ -724,7 +728,7 @@ export function AdvancedLeverageSwapDetails({
                 {trade?.tradeType === TradeType.EXACT_INPUT ? (
                   <Trans>Minimum output</Trans>
                 ) : (
-                  <Trans>Maximum sent</Trans>
+                  <Trans>Minimum output</Trans>
                 )}{' '}
                 <Trans>after slippage</Trans> ({allowedSlippage.toFixed(2)}%)
               </ThemedText.DeprecatedSubHeader>

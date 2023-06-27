@@ -34,7 +34,7 @@ export function getWarningCopy(warning: Warning | null, plural = false) {
           <Plural
             value={plural ? 2 : 1}
             _1="This token isn't traded on leading centralized exchanges or frequently swapped on Limitless."
-            other="These tokens aren't traded on leading centralized exchanges or frequently swapped on UnisLimitlesswap."
+            other="These tokens aren't traded on leading centralized exchanges or frequently swapped on Limitless."
           />
         )
         description = <Trans>Always conduct your own research before trading.</Trans>

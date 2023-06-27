@@ -179,7 +179,7 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index,
         <Column className={styles.suggestionPrimaryContainer}>
           <Row gap="4" width="full">
             <Box className={styles.primaryText}>{token.name}</Box>
-            <TokenSafetyIcon warning={checkSearchTokenWarning(token)} />
+            {/*<TokenSafetyIcon warning={checkSearchTokenWarning(token)} />*/}
           </Row>
           <Box className={styles.secondaryText}>{token.symbol}</Box>
         </Column>

@@ -158,9 +158,9 @@ export default function TokenTable() {
 
   //   return {token0, token1}
   // } )
-  const tokenAddresses = [["0x54D374769278b45713549B85Ca9Dd9cae3e286cc","0xa826985DF0507632C7DAB6de761d8d4efC353d1F"],
-  ["0xcbd6235bb2cf6bc3eafd36c4a53691a198bd372b", "0x54D374769278b45713549B85Ca9Dd9cae3e286cc"], 
-  ["0xa826985DF0507632C7DAB6de761d8d4efC353d1F", "0xcbd6235bb2cf6bc3eafd36c4a53691a198bd372b"] ]
+  const tokenAddresses = [["0x569f3140FDc0f3B9Fc2E4919C35f35D39dd2B01A","0x4E3F175b38098326a34F2C8B2D07AF5fFdfc6fA9"],
+  ["0x569f3140FDc0f3B9Fc2E4919C35f35D39dd2B01A", "0xf24Ce4A61c1894219576f652cDF781BBB257Ec8F"], 
+  ["0x4E3F175b38098326a34F2C8B2D07AF5fFdfc6fA9", "0xf24Ce4A61c1894219576f652cDF781BBB257Ec8F"] ]
   const _tokens = tokenAddresses.map((value:string[])=>{
     const token0 = useToken(value[0])
     const token1 = useToken(value[1])

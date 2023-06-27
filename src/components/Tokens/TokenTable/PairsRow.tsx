@@ -465,7 +465,7 @@ function TokenRow({
       {
         !header && 
       <ButtonPrimary
-        style={{ marginLeft: '20px', padding: '.3rem', width: 'fit-content', fontSize: '0.825rem', borderRadius: '12px' }}
+        style={{ marginLeft: '20px', padding: '.5rem', width: 'fit-content', fontSize: '0.825rem', borderRadius: '32px' }}
         onClick={() =>
           {if(currency1&&currency0){
             navigate('/add/'+currency0+"/"+currency1+"/"+"500", {state: {currency0:currency0, currency1: currency1 }})
@@ -606,8 +606,11 @@ export const PLoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<H
   const currency0 = useCurrency(token0.address )
   const currency1 = useCurrency(token1.address )
   const [poolState, pool] = usePool(currency0 ?? undefined, currency1?? undefined, FeeAmount.LOW)
+  console.log('pools', currency0, currency1, pool);
   const currentPrice = pool?.token0Price.toSignificant(3)
-  const priceRounded = (Math.round(1/Number(currentPrice) *10000)/10000).toString()
+  const priceRounded = token1.address == "0xf24Ce4A61c1894219576f652cDF781BBB257Ec8F"? 
+    ((Math.round(1/Number(currentPrice)) *1000000)/1000000).toString()
+    :  (Math.round(Number(currentPrice) *1000000)/1000000).toString()
   //const priceRounded = Math.round((1/Number(currentPrice)).toString()+" " + token0.symbol +"/"+token1.symbol *10000)/10000
   return (
     <div ref={ref} data-testid={`token-table-row-${token0.symbol}`}>

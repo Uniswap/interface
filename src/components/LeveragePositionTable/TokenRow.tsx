@@ -368,7 +368,7 @@ export const HEADER_DESCRIPTIONS: Record<PositionSortMethod, ReactNode | undefin
   ),
   [PositionSortMethod.REPAYTIME]: (
     <Trans>
-      Time left for position repayment
+      Maximum time left until premium repayment
     </Trans>
   ),
   [PositionSortMethod.ENTRYPRICE]: (
