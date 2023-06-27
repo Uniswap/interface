@@ -248,7 +248,7 @@ export default function TokenDetails({
         </RightPanel> */}
         {detailedToken && <MobileBalanceSummaryFooter token={detailedToken} />}
 
-        <TokenSafetyModal
+        {/*<TokenSafetyModal
           isOpen={openTokenSafetyModal || !!continueSwap}
           tokenAddress={address}
           onContinue={() => onResolveSwap(true)}
@@ -257,7 +257,7 @@ export default function TokenDetails({
           }}
           onCancel={() => onResolveSwap(false)}
           showCancel={true}
-        />
+        />*/}
       </TokenDetailsLayout>
     </Trace>
   )

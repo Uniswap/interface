@@ -156,9 +156,9 @@ export function CurrencyRow({
         <AutoColumn style={{ opacity: isBlockedToken ? blockedTokenOpacity : '1' }}>
           <Row>
             <CurrencyName title={currency.name}>{currency.name}</CurrencyName>
-            <WarningContainer>
+            {/*<WarningContainer>
               <TokenSafetyIcon warning={warning} />
-            </WarningContainer>
+            </WarningContainer>*/}
           </Row>
           <ThemedText.DeprecatedDarkGray ml="0px" fontSize="12px" fontWeight={300}>
             {currency.symbol}

@@ -263,15 +263,15 @@ export default function TokenSafety({
         <AutoColumn>
           <LogoContainer>{logos}</LogoContainer>
         </AutoColumn>
-        <ShortColumn>
+        {/*<ShortColumn>
           <SafetyLabel warning={displayWarning} />
-        </ShortColumn>
+        </ShortColumn>*/}
         <ShortColumn>
           <InfoText>
-            {heading} {description} {learnMoreUrl}
+            {heading} {description} {/*learnMoreUrl*/}
           </InfoText>
         </ShortColumn>
-        <LinkColumn>{urls}</LinkColumn>
+        {/*<LinkColumn>{urls}</LinkColumn>*/}
         <Buttons
           warning={displayWarning}
           onContinue={acknowledge}
