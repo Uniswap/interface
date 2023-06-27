@@ -139,7 +139,7 @@ export function CurrencySearch({
   //   return []
   // }, [chainId])
 
-  const FakeTokens = chainId === SupportedChainId.SEPOLIA ? FakeTokens_SEPOLIA : FakeTokens_MUMBAI
+  // const FakeTokens = chainId === SupportedChainId.SEPOLIA ? FakeTokens_SEPOLIA : FakeTokens_MUMBAI
 
   const searchCurrencies: Currency[] = useMemo(() => {
     const s = debouncedQuery.toLowerCase().trim()
@@ -153,7 +153,7 @@ export function CurrencySearch({
       disableNonToken || native.equals(wrapped) ? [wrapped] : shouldShowWrapped ? [native, wrapped] : [native]
     ).filter((n) => n.symbol?.toLowerCase()?.indexOf(s) !== -1 || n.name?.toLowerCase()?.indexOf(s) !== -1)
 
-    return [...natives, ...tokens, ...FakeTokens]
+    return [...natives, ...tokens]
   }, [
     debouncedQuery,
     filteredSortedTokens,
@@ -206,7 +206,7 @@ export function CurrencySearch({
     [debouncedQuery, native, searchCurrencies, handleCurrencySelect]
   )
 
-  // console.log("searchCurrencies", searchCurrencies)
+  console.log("searchCurrencies", searchCurrencies)
 
   // menu ui
   const [open, toggle] = useToggle(false)
@@ -219,6 +219,8 @@ export function CurrencySearch({
       ? debouncedQuery
       : undefined
   )
+
+  console.log('filteredInactiveTokens', filteredInactiveTokens, searchCurrencies)
 
   // Timeout token loader after 3 seconds to avoid hanging in a loading state.
   useEffect(() => {
