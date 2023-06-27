@@ -660,7 +660,7 @@ export function PositionPage() {
                       <Trans>{new Percent(feeAmount, 1_000_000).toSignificant()}%</Trans>
                     </BadgeText>
                   </Badge>
-                  <RangeBadge removed={removed} inRange={inRange} />
+                  {/*<RangeBadge removed={removed} inRange={inRange} />*/}
                 </RowFixed>
                 {ownsNFT && (
                   <ActionButtonResponsiveRow>

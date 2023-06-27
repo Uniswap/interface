@@ -688,7 +688,7 @@ export function AdvancedLeverageSwapDetails({
           symbolAppend={`${trade?.outputAmount.currency.symbol} / ${trade?.inputAmount.currency.symbol}`}
         />
         <ValueLabel
-          description="The first premium payment required to open this position"
+          description="The premium payment required to open this position"
           label="Quoted Premium"
           value={Math.round(Number(leverageTrade?.quotedPremium) * 100000) / 100000}
           syncing={syncing}

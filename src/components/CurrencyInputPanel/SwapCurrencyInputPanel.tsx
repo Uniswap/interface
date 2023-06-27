@@ -343,7 +343,7 @@ export default function SwapCurrencyInputPanel({
                     fontSize={14}
                     style={{ display: 'inline' }}
                   >
-                    <Trans>Premium: {formatCurrencyAmount(premium, 4)} {premium.currency.symbol}</Trans>
+                    <Trans>Est. Premium: {formatCurrencyAmount(premium, 4)} {premium.currency.symbol}</Trans>
                   </ThemedText.DeprecatedBody>
                 </RowFixed>
               )}
