@@ -164,10 +164,7 @@ function Web3StatusInner() {
     toggleWalletDrawer()
   }, [toggleWalletDrawer])
   const isClaimAvailable = useIsNftClaimAvailable((state) => state.isClaimAvailable)
-
   const error = useAppSelector((state) => state.connection.errorByConnectionType[getConnection(connector).type])
-
-
 
   const allTransactions = useAllTransactions()  
 

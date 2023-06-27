@@ -6,7 +6,7 @@ import { FakeTokensMapMumbai, FakeTokensMapSepolia, FakeTokens_MUMBAI, FakeToken
 import { useFaucetCallback } from "hooks/useApproveCallback"
 import { MaxButton } from "pages/Pool/styleds"
 import { SmallMaxButton } from "pages/RemoveLiquidity/styled"
-import { useCallback } from "react"
+import { useCallback, useEffect, useState } from "react"
 import styled from "styled-components"
 import { ThemedText } from "theme"
 
@@ -35,28 +35,53 @@ const PageWrapper = styled(AutoColumn)`
 const FaucetsContainer = styled.div`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
+  grid-gap: 20px;
+  margin-top: 16px;
 `
 
 export default function FaucetsPage() {
-  const {chainId} = useWeb3React()
+  const {account, provider, chainId } = useWeb3React()
+
+  const [isHolder, setHolder] = useState<boolean>()
 
   const FakeTokens = chainId === SupportedChainId.SEPOLIA ? FakeTokens_SEPOLIA : FakeTokens_MUMBAI
+
+
+  useEffect(() => {
+    const getBeacon = async () => {
+      if (account && provider && chainId === SupportedChainId.SEPOLIA) {
+        let result = await fetch(`https://beacon.degenscore.com/v1/beacon/${account.toLowerCase()}`)
+        setHolder(result.status === 200)
+      }
+    }
+    getBeacon()
+  }, [account, provider, chainId])
+
   return (
     <PageWrapper>
       <AutoColumn>
         <ThemedText.HeadlineLarge>Faucet</ThemedText.HeadlineLarge>
       </AutoColumn>
       <FaucetsContainer>
-
-      </FaucetsContainer>
-      {FakeTokens.map((token, i) => {
+      {account && provider && isHolder && (chainId === SupportedChainId.SEPOLIA) && FakeTokens.map((token, i) => {
         return (
           <Faucet
           token={token}
           />
         )
-      })
-      }
+      })}
+      {(!account || !provider) ?
+      <ThemedText.DeprecatedLargeHeader>
+        Connect Account
+      </ThemedText.DeprecatedLargeHeader> : chainId !== SupportedChainId.SEPOLIA ? 
+      <ThemedText.DeprecatedLargeHeader>
+        Connect to Sepolia
+      </ThemedText.DeprecatedLargeHeader> : isHolder === false ? 
+      <ThemedText.DeprecatedLargeHeader>
+        Must be Beacon Owner...
+      </ThemedText.DeprecatedLargeHeader> 
+      : null}
+      </FaucetsContainer>
     </PageWrapper>
   )
 }
