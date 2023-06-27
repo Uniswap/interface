@@ -7,7 +7,7 @@ import { PasswordInput } from 'src/components/input/PasswordInput'
 import { Flex } from 'src/components/layout'
 import { PasswordError } from 'src/features/onboarding/PasswordError'
 import { ElementName } from 'src/features/telemetry/constants'
-import { isValidPassword } from 'wallet/src/utils/password'
+import { validatePassword } from 'wallet/src/utils/password'
 
 export enum PasswordErrors {
   InvalidPassword = 'InvalidPassword',
@@ -43,7 +43,7 @@ export function CloudBackupSetPassword({
   }
 
   const onPasswordSubmitEditing = (): void => {
-    if (!isValidPassword(password)) {
+    if (!validatePassword(password).valid) {
       setError(PasswordErrors.InvalidPassword)
       return
     }
@@ -53,7 +53,7 @@ export function CloudBackupSetPassword({
   }
 
   const onConfirmPasswordChangeText = (newConfirmPassword: string): void => {
-    if (isValidPassword(password) && newConfirmPassword === password) {
+    if (validatePassword(password).valid && newConfirmPassword === password) {
       setError(undefined)
     }
     setConfirmPassword(newConfirmPassword)
@@ -70,7 +70,7 @@ export function CloudBackupSetPassword({
   }
 
   const onPressNext = (): void => {
-    if (!isValidPassword(password)) {
+    if (!validatePassword(password).valid) {
       setError(PasswordErrors.InvalidPassword)
       return
     }

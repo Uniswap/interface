@@ -1,12 +1,12 @@
-import { isValidPassword } from './password'
+import { validatePassword } from './password'
 
-describe(isValidPassword, () => {
+describe(validatePassword, () => {
   it('returns true for valid password', () => {
-    expect(isValidPassword('a_very_long_password').valid).toBeTruthy()
+    expect(validatePassword('a_very_long_password').valid).toBeTruthy()
   })
 
   it('returns false for invalid passwords', () => {
-    expect(isValidPassword('short').valid).toBeFalsy()
-    expect(isValidPassword('short').validationErrorString).toBe('Password is too short.')
+    expect(validatePassword('short').valid).toBeFalsy()
+    expect(validatePassword('short').validationErrorString).toBe('Password is too short.')
   })
 })

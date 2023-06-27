@@ -5,7 +5,7 @@ interface PasswordValidationResult {
   validationErrorString?: string
 }
 
-export function isValidPassword(password: string): PasswordValidationResult {
+export function validatePassword(password: string): PasswordValidationResult {
   const validLength = password.length >= PASSWORD_LENGTH_MIN
   if (validLength) {
     return { valid: true }

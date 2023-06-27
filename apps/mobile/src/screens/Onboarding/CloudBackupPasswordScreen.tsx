@@ -12,7 +12,7 @@ import { PasswordError } from 'src/features/onboarding/PasswordError'
 import { SafeKeyboardOnboardingScreen } from 'src/features/onboarding/SafeKeyboardOnboardingScreen'
 import { ElementName } from 'src/features/telemetry/constants'
 import { OnboardingScreens } from 'src/screens/Screens'
-import { isValidPassword } from 'wallet/src/utils/password'
+import { validatePassword } from 'wallet/src/utils/password'
 
 export type Props = NativeStackScreenProps<
   OnboardingStackParamList,
@@ -35,7 +35,7 @@ export function CloudBackupPasswordScreen({ navigation, route: { params } }: Pro
   }
 
   const onPasswordSubmitEditing = (): void => {
-    if (!isValidPassword(password)) {
+    if (!validatePassword(password).valid) {
       setError(PasswordErrors.InvalidPassword)
       return
     }
@@ -43,7 +43,7 @@ export function CloudBackupPasswordScreen({ navigation, route: { params } }: Pro
   }
 
   const onPressNext = (): void => {
-    if (!isValidPassword(password)) {
+    if (!validatePassword(password).valid) {
       setError(PasswordErrors.InvalidPassword)
       return
     }

@@ -14,7 +14,7 @@ import {
   PendingAccountActions,
   pendingAccountActions,
 } from 'wallet/src/features/wallet/create/pendingAccountsSaga'
-import { isValidPassword } from 'wallet/src/utils/password'
+import { validatePassword } from 'wallet/src/utils/password'
 
 export function Password({
   nextPath,
@@ -34,7 +34,7 @@ export function Password({
   const enteredPassword = passwordInputProps.value
 
   const onSubmit = (): void => {
-    const passwordValidationResult = isValidPassword(enteredPassword)
+    const passwordValidationResult = validatePassword(enteredPassword)
     if (passwordValidationResult.valid) {
       setPassword(enteredPassword)
       setPasswordError(undefined)
