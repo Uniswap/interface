@@ -16,11 +16,12 @@ interface UseV3PositionsResults {
   positions: PositionDetails[] | undefined
 }
 
-export function useLimitlessPositionFromKeys(account: string | undefined, manager: string | undefined, isToken0: boolean | undefined): {loading: boolean, position: LimitlessPositionDetails | undefined} {
+export function useLimitlessPositionFromKeys(account: string | undefined, manager: string | undefined, isToken0: boolean | undefined, isBorrow: boolean): {loading: boolean, position: LimitlessPositionDetails | undefined} {
   const { loading, positions } = useLimitlessPositions(account)
+  // console.log("positions", positions)
   const position = useMemo(() => {
     if (positions) {
-      return positions.find(position => (position.leverageManagerAddress === manager || position.borrowManagerAddress === manager) && position.isToken0 === isToken0)
+      return positions.find(position => (isBorrow ? position.isBorrow && position.borrowManagerAddress === manager : !position.isBorrow && position.leverageManagerAddress === manager) && position.isToken0 === isToken0)
     }
     return undefined
   }

@@ -35,6 +35,7 @@ import { AllowanceState } from 'hooks/usePermit2Allowance'
 import { useSingleCallResult } from 'lib/hooks/multicall'
 import { FETH_MUMBAI, FUSDC_MUMBAI, FETH_SEPOLIA, FUSDC_SEPOLIA } from 'constants/fake-tokens'
 import { SupportedChainId } from 'constants/chains'
+import { LeverageManagerInterface } from 'hooks/useInterfaces'
 
 // import { useLeveragePosition } from 'hooks/useV3Positions'
 
@@ -242,6 +243,7 @@ export function useDerivedBorrowCreationInfo({ allowance: {input: inputAllowance
   const { account } = useWeb3React()
   const [tradeState, setTradeState] = useState<TradeState>(TradeState.INVALID)
   const [contractResult, setContractResult] = useState()
+  const [error, setError] = useState()
 
   const {
     typedValue,
@@ -308,7 +310,7 @@ export function useDerivedBorrowCreationInfo({ allowance: {input: inputAllowance
     }
   }, [globalStorageAddress])
 
-  const { loading, position: existingPosition } = useLimitlessPositionFromKeys(account, borrowManagerAddress ?? undefined, true)
+  const { loading, position: existingPosition } = useLimitlessPositionFromKeys(account, borrowManagerAddress ?? undefined, inputIsToken0, true)
 
   // TODO calculate slippage from the pool
   const allowedSlippage = new Percent(JSBI.BigInt(3), JSBI.BigInt(100)) // new Percent(JSBI.BigInt(50), JSBI.BigInt(10000))
@@ -335,9 +337,10 @@ export function useDerivedBorrowCreationInfo({ allowance: {input: inputAllowance
         setTradeState(TradeState.VALID)
 
         setContractResult(trade)
+        setError(undefined)
       } catch (err) {
-        console.log("addBorrowPosition simulation error: ", err, err.message)
-        // setContractError(err)
+        console.log("addBorrowPosition simulation error: ", err)
+        setError(err.reason)
         setTradeState(TradeState.INVALID)
       }
     } else {
@@ -440,6 +443,8 @@ export function useDerivedBorrowCreationInfo({ allowance: {input: inputAllowance
     }
   }, [inputAllowance, outputAllowance, ltv, initialPrice, tradeState, contractResult, borrowManager, debouncedAmount, currencies, inputCurrency, outputCurrency])
 
+  // console.log('trade', existingPosition, trade)
+
   useEffect(() => {
     if (activeTab === ActiveSwapTab.BORROW) {
       const amount = Number(typedValue)
@@ -468,11 +473,15 @@ export function useDerivedBorrowCreationInfo({ allowance: {input: inputAllowance
   const contractError = useMemo(() => {
     let _contractError;
 
+    if (error === '!liq') {
+      _contractError = <Trans>Insufficient liquidity for trade</Trans>
+    }
+
     if (tradeState === TradeState.INVALID) {
       _contractError = _contractError ?? <Trans>Invalid Trade</Trans>
     }
     return _contractError
-  }, [inputAllowance, outputAllowance, account, allowedSlippage, currencies, currencyBalances, parsedAmount, borrowManager, ltv, inputCurrency, trade])
+  }, [error, inputAllowance, outputAllowance, account, allowedSlippage, currencies, currencyBalances, parsedAmount, borrowManager, ltv, inputCurrency, trade])
 
   return {
     trade,
@@ -501,6 +510,7 @@ export function useDerivedLeverageCreationInfo()
   const { account } = useWeb3React()
   const [tradeState, setTradeState] = useState<LeverageTradeState>(LeverageTradeState.INVALID)
   const [contractResult, setContractResult] = useState()
+  const [error, setError] = useState()
 
   const {
     typedValue,
@@ -580,7 +590,7 @@ export function useDerivedLeverageCreationInfo()
 
   const isLong = !inputIsToken0
 
-  const { position: existingPosition } = useLimitlessPositionFromKeys(account, leverageManagerAddress ?? undefined, isLong)
+  const { position: existingPosition } = useLimitlessPositionFromKeys(account, leverageManagerAddress ?? undefined, isLong, false)
 
 
   // TODO calculate slippage from the pool
@@ -619,10 +629,12 @@ export function useDerivedLeverageCreationInfo()
         setTradeState(LeverageTradeState.VALID)
 
         setContractResult(trade)
+        setError(undefined)
       } catch (err) {
-        console.log("simulation error: ", err, err.message)
+        console.log("simulation error: ", err.reason)
         // setContractError(err)
         setTradeState(LeverageTradeState.INVALID)
+        setError(err.reason)
       }
     } else {
       setTradeState(LeverageTradeState.INVALID)
@@ -749,11 +761,18 @@ export function useDerivedLeverageCreationInfo()
   const contractError = useMemo(() => {
     let _contractError;
 
+    if (error === '!liq') {
+      _contractError = <Trans>Insufficient liquidity For trade</Trans>
+    }
+
     if (tradeState === LeverageTradeState.INVALID) {
       _contractError = _contractError ?? <Trans>Invalid Trade</Trans>
     }
+
+
+  
     return _contractError
-  }, [tradeState, allowance, account, allowedSlippage, currencies, currencyBalances, parsedAmount, leverage, leverageFactor, inputCurrency, trade])
+  }, [error, tradeState, allowance, account, allowedSlippage, currencies, currencyBalances, parsedAmount, leverage, leverageFactor, inputCurrency, trade])
 
   return {
     trade,
@@ -796,7 +815,7 @@ export function useDerivedSwapInfo(): {
   const inputCurrency = useCurrency(inputCurrencyId)
   const outputCurrency = useCurrency(outputCurrencyId)
 
-  console.log('inputCurrency', inputCurrency)
+  // console.log('inputCurrency', inputCurrency)
   const recipientLookup = useENS(recipient ?? undefined)
   const to: string | null = (recipient === null ? account : recipientLookup.address) ?? null
 

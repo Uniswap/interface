@@ -154,7 +154,7 @@ export default function SwapDetailsDropdown({ trade, syncing, loading, allowedSl
     }
   }, [leverageState, leverage])
 
-  console.log('leverageState', leverageState)
+  // console.log('leverageState', leverageState)
 
   return (
     (!leverage ? (
