@@ -308,7 +308,7 @@ export function useDerivedBorrowCreationInfo({ allowance: {input: inputAllowance
     }
   }, [globalStorageAddress])
 
-  const { loading, position: existingPosition } = useLimitlessPositionFromKeys(account, borrowManagerAddress ?? undefined, true)
+  const { loading, position: existingPosition } = useLimitlessPositionFromKeys(account, borrowManagerAddress ?? undefined, inputIsToken0, true)
 
   // TODO calculate slippage from the pool
   const allowedSlippage = new Percent(JSBI.BigInt(3), JSBI.BigInt(100)) // new Percent(JSBI.BigInt(50), JSBI.BigInt(10000))
@@ -439,6 +439,8 @@ export function useDerivedBorrowCreationInfo({ allowance: {input: inputAllowance
       return undefined
     }
   }, [inputAllowance, outputAllowance, ltv, initialPrice, tradeState, contractResult, borrowManager, debouncedAmount, currencies, inputCurrency, outputCurrency])
+
+  console.log('trade', existingPosition, trade)
 
   useEffect(() => {
     if (activeTab === ActiveSwapTab.BORROW) {
@@ -580,7 +582,7 @@ export function useDerivedLeverageCreationInfo()
 
   const isLong = !inputIsToken0
 
-  const { position: existingPosition } = useLimitlessPositionFromKeys(account, leverageManagerAddress ?? undefined, isLong)
+  const { position: existingPosition } = useLimitlessPositionFromKeys(account, leverageManagerAddress ?? undefined, isLong, false)
 
 
   // TODO calculate slippage from the pool
