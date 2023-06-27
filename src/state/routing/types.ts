@@ -108,6 +108,7 @@ export class ClassicTrade extends Trade<Currency, Currency, TradeType> {
   public readonly fillType = TradeFillType.Classic
   gasUseEstimateUSD: string | null | undefined
   blockNumber: string | null | undefined
+  isUniswapXBetter: boolean | undefined
   fromClientRouter: boolean | undefined
   requestId: string | undefined
   quoteMethod: QuoteMethod
@@ -115,12 +116,14 @@ export class ClassicTrade extends Trade<Currency, Currency, TradeType> {
   constructor({
     gasUseEstimateUSD,
     blockNumber,
+    isUniswapXBetter,
     requestId,
     quoteMethod,
     ...routes
   }: {
     gasUseEstimateUSD?: string | null
     blockNumber?: string | null
+    isUniswapXBetter?: boolean
     requestId?: string
     quoteMethod: QuoteMethod
     fromClientRouter?: boolean
@@ -144,6 +147,7 @@ export class ClassicTrade extends Trade<Currency, Currency, TradeType> {
     super(routes)
     this.blockNumber = blockNumber
     this.gasUseEstimateUSD = gasUseEstimateUSD
+    this.isUniswapXBetter = isUniswapXBetter
     this.requestId = requestId
     this.quoteMethod = quoteMethod
   }

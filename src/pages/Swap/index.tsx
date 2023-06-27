@@ -17,6 +17,7 @@ import { NetworkAlert } from 'components/NetworkAlert/NetworkAlert'
 import PriceImpactModal from 'components/swap/PriceImpactModal'
 import PriceImpactWarning from 'components/swap/PriceImpactWarning'
 import SwapDetailsDropdown from 'components/swap/SwapDetailsDropdown'
+import Toggle from 'components/Toggle'
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import { getChainInfo } from 'constants/chainInfo'
 import { isSupportedChain, SupportedChainId } from 'constants/chains'
@@ -27,16 +28,18 @@ import { SwapResult, useSwapCallback } from 'hooks/useSwapCallback'
 import { useSwitchChain } from 'hooks/useSwitchChain'
 import { useUSDPrice } from 'hooks/useUSDPrice'
 import JSBI from 'jsbi'
-import { formatSwapQuoteReceivedEventProperties } from 'lib/utils/analytics'
+import { formatCommonPropertiesForTrade, formatSwapQuoteReceivedEventProperties } from 'lib/utils/analytics'
 import { useCallback, useEffect, useMemo, useReducer, useState } from 'react'
 import { ReactNode } from 'react'
 import { ArrowDown } from 'react-feather'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { Text } from 'rebass'
 import { useAppSelector } from 'state/hooks'
+import { RouterPreference } from 'state/routing/slice'
 import { InterfaceTrade } from 'state/routing/types'
 import { TradeState } from 'state/routing/types'
 import { isClassicTrade, isUniswapXTrade } from 'state/routing/utils'
+import { useRouterPreference } from 'state/user/hooks'
 import styled, { useTheme } from 'styled-components/macro'
 import { currencyAmountToPreciseFloat, formatTransactionAmount } from 'utils/formatNumbers'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
@@ -46,7 +49,7 @@ import { ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button
 import { GrayCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
 import SwapCurrencyInputPanel from '../../components/CurrencyInputPanel/SwapCurrencyInputPanel'
-import { AutoRow } from '../../components/Row'
+import Row, { AutoRow } from '../../components/Row'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
 import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
 import { ArrowWrapper, PageWrapper, SwapWrapper } from '../../components/swap/styleds'
@@ -513,6 +516,8 @@ export function Swap({
   const switchChain = useSwitchChain()
   const switchingChain = useAppSelector((state) => state.wallets.switchingChain)
 
+  const [routerPreference, setRouterPreference] = useRouterPreference()
+
   return (
     <SwapWrapper chainId={chainId} className={className} id="swap-page">
       <TokenSafetyModal
@@ -731,6 +736,32 @@ export function Swap({
           )}
         </div>
       </AutoColumn>
+      {/* TODO (Gouda): Don't show if user has already turned on/off UniswapX manually */}
+      {isClassicTrade(trade) && trade.isUniswapXBetter && (
+        <Trace
+          shouldLogImpression
+          name="UniswapX Opt In Impression"
+          properties={formatCommonPropertiesForTrade(trade, allowedSlippage)}
+        >
+          <Row justify="space-between">
+            {/* TODO (Gouda): NATE THIS IS ALL YOU */}
+            <div>GOUDA IS BETTER SO TURN IT ON :D</div>
+            <Toggle
+              id="toggle-uniswap-x-button"
+              isActive={routerPreference === RouterPreference.X}
+              toggle={() => {
+                const newPreference =
+                  routerPreference === RouterPreference.X ? RouterPreference.API : RouterPreference.X
+                sendAnalyticsEvent('UniswapX Opt In Toggled', {
+                  ...formatCommonPropertiesForTrade(trade, allowedSlippage),
+                  new_preference: newPreference,
+                })
+                setRouterPreference(newPreference)
+              }}
+            />
+          </Row>
+        </Trace>
+      )}
     </SwapWrapper>
   )
 }

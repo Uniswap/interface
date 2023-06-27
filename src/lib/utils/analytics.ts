@@ -35,7 +35,7 @@ export const getPriceUpdateBasisPoints = (
 }
 
 // TODO (Gouda): rename this to formatEventPropertiesForTrade for easier merge later
-export function formatCommonPropertiesForTrade(trade: InterfaceTrade, allowedSlippage: Percent, method?: QuoteMethod) {
+export function formatCommonPropertiesForTrade(trade: InterfaceTrade, allowedSlippage: Percent) {
   return {
     routing: trade.fillType,
     type: trade.tradeType,
@@ -57,7 +57,7 @@ export function formatCommonPropertiesForTrade(trade: InterfaceTrade, allowedSli
     estimated_network_fee_usd: isClassicTrade(trade) ? trade.gasUseEstimateUSD : trade.classicGasUseEstimateUSD,
     minimum_output_after_slippage: trade.minimumAmountOut(allowedSlippage).toSignificant(6),
     allowed_slippage: formatPercentNumber(allowedSlippage),
-    method,
+    method: getQuoteMethod(trade),
   }
 }
 
@@ -90,7 +90,7 @@ export const formatSwapQuoteReceivedEventProperties = (
   swapQuoteReceivedDate: Date
 ) => {
   return {
-    ...formatCommonPropertiesForTrade(trade, allowedSlippage, getQuoteMethod(trade)),
+    ...formatCommonPropertiesForTrade(trade, allowedSlippage),
     swap_quote_block_number: isClassicTrade(trade) ? trade.blockNumber : undefined,
     swap_quote_received_timestamp: swapQuoteReceivedDate.getTime(),
     allowed_slippage_basis_points: formatPercentInBasisPointsNumber(allowedSlippage),
