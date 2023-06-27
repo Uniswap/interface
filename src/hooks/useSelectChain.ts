@@ -1,38 +1,38 @@
 import { useWeb3React } from '@web3-react/core'
-import { useGetConnection } from 'connection'
+import { getConnection } from 'connection'
+import { didUserReject } from 'connection/utils'
 import { SupportedChainId } from 'constants/chains'
 import { useCallback } from 'react'
 import { addPopup, PopupType } from 'state/application/reducer'
-import { updateConnectionError } from 'state/connection/reducer'
 import { useAppDispatch } from 'state/hooks'
-import { switchChain } from 'utils/switchChain'
+
+import { useSwitchChain } from './useSwitchChain'
 
 export default function useSelectChain() {
   const dispatch = useAppDispatch()
   const { connector } = useWeb3React()
-  const getConnection = useGetConnection()
+  const switchChain = useSwitchChain()
 
   return useCallback(
     async (targetChain: SupportedChainId) => {
       if (!connector) return
 
-      const connectionType = getConnection(connector).type
+      const connection = getConnection(connector)
 
       try {
-        dispatch(updateConnectionError({ connectionType, error: undefined }))
         await switchChain(connector, targetChain)
       } catch (error) {
-        console.error('Failed to switch networks', error)
-
-        dispatch(updateConnectionError({ connectionType, error: error.message }))
-        dispatch(
-          addPopup({
-            content: { type: PopupType.FailedSwitchNetwork, chainId: targetChain },
-            key: 'failed-network-switch',
-          })
-        )
+        if (!didUserReject(connection, error)) {
+          console.error('Failed to switch networks', error)
+          dispatch(
+            addPopup({
+              content: { failedSwitchNetwork: targetChain, type: PopupType.FailedSwitchNetwork, chainId: targetChain },
+              key: 'failed-network-switch',
+            })
+          )
+        }
       }
     },
-    [connector, dispatch, getConnection]
+    [connector, dispatch, switchChain]
   )
 }

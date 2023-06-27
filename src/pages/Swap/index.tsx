@@ -14,7 +14,6 @@ import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { useToggleAccountDrawer } from 'components/AccountDrawer'
 import { NetworkAlert } from 'components/NetworkAlert/NetworkAlert'
-import ConfirmSwapModal from 'components/swap/ConfirmSwapModal'
 import PriceImpactModal from 'components/swap/PriceImpactModal'
 import PriceImpactWarning from 'components/swap/PriceImpactWarning'
 import SwapDetailsDropdown from 'components/swap/SwapDetailsDropdown'
@@ -25,21 +24,22 @@ import { useMaxAmountIn } from 'hooks/useMaxAmountIn'
 import usePermit2Allowance, { AllowanceState } from 'hooks/usePermit2Allowance'
 import usePrevious from 'hooks/usePrevious'
 import { SwapResult, useSwapCallback } from 'hooks/useSwapCallback'
+import { useSwitchChain } from 'hooks/useSwitchChain'
 import { useUSDPrice } from 'hooks/useUSDPrice'
 import JSBI from 'jsbi'
 import { formatSwapQuoteReceivedEventProperties } from 'lib/utils/analytics'
 import { useCallback, useEffect, useMemo, useReducer, useState } from 'react'
 import { ReactNode } from 'react'
 import { ArrowDown } from 'react-feather'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { Text } from 'rebass'
+import { useAppSelector } from 'state/hooks'
 import { InterfaceTrade } from 'state/routing/types'
 import { TradeState } from 'state/routing/types'
 import { isClassicTrade, isUniswapXTrade } from 'state/routing/utils'
 import styled, { useTheme } from 'styled-components/macro'
 import { currencyAmountToPreciseFloat, formatTransactionAmount } from 'utils/formatNumbers'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
-import { switchChain } from 'utils/switchChain'
 
 import AddressInputPanel from '../../components/AddressInputPanel'
 import { ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
@@ -48,6 +48,7 @@ import { AutoColumn } from '../../components/Column'
 import SwapCurrencyInputPanel from '../../components/CurrencyInputPanel/SwapCurrencyInputPanel'
 import { AutoRow } from '../../components/Row'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
+import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
 import { ArrowWrapper, PageWrapper, SwapWrapper } from '../../components/swap/styleds'
 import SwapHeader from '../../components/swap/SwapHeader'
 import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
@@ -131,11 +132,12 @@ function largerPercentValue(a?: Percent, b?: Percent) {
   return undefined
 }
 
-const TRADE_STRING = 'SwapRouter'
-
 export default function SwapPage({ className }: { className?: string }) {
   const { chainId: connectedChainId } = useWeb3React()
   const loadedUrlParams = useDefaultsFromURLSearch()
+
+  const location = useLocation()
+
   return (
     <Trace page={InterfacePageName.SWAP_PAGE} shouldLogImpression>
       <PageWrapper>
@@ -149,7 +151,7 @@ export default function SwapPage({ className }: { className?: string }) {
         />
         <NetworkAlert />
       </PageWrapper>
-      <SwitchLocaleLink />
+      {location.pathname === '/swap' && <SwitchLocaleLink />}
     </Trace>
   )
 }
@@ -495,10 +497,10 @@ export function Swap({
   useEffect(() => {
     if (!trade || prevTrade === trade) return // no new swap quote to log
 
-    const receivedDate = new Date()
-    setSwapQuoteReceivedDate(receivedDate)
+    const now = new Date()
+    setSwapQuoteReceivedDate(now)
     sendAnalyticsEvent(SwapEventName.SWAP_QUOTE_RECEIVED, {
-      ...formatSwapQuoteReceivedEventProperties(trade, allowedSlippage, receivedDate),
+      ...formatSwapQuoteReceivedEventProperties(trade, allowedSlippage, now),
       ...trace,
     })
   }, [prevTrade, trade, trace, allowedSlippage])
@@ -508,6 +510,8 @@ export function Swap({
   )
 
   const inputCurrency = currencies[Field.INPUT]
+  const switchChain = useSwitchChain()
+  const switchingChain = useAppSelector((state) => state.wallets.switchingChain)
 
   return (
     <SwapWrapper chainId={chainId} className={className} id="swap-page">
@@ -642,6 +646,10 @@ export function Swap({
               <ThemedText.DeprecatedMain mb="4px">
                 <Trans>Unsupported Asset</Trans>
               </ThemedText.DeprecatedMain>
+            </ButtonPrimary>
+          ) : switchingChain ? (
+            <ButtonPrimary disabled={true}>
+              <Trans>Connecting to {getChainInfo(switchingChain)?.label}</Trans>
             </ButtonPrimary>
           ) : !account ? (
             <TraceEvent

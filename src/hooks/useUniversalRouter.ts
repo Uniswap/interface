@@ -43,7 +43,7 @@ interface SwapOptions {
   feeOptions?: FeeOptions
 }
 
-export default function useUniversalRouterSwapCallback(
+export function useUniversalRouterSwapCallback(
   trade: ClassicTrade | undefined,
   fiatValues: { amountIn?: number; amountOut?: number },
   options: SwapOptions
@@ -92,6 +92,7 @@ export default function useUniversalRouterSwapCallback(
             sendAnalyticsEvent(SwapEventName.SWAP_SIGNED, {
               ...formatSwapSignedAnalyticsEventProperties({
                 trade,
+                allowedSlippage: options.slippageTolerance,
                 fiatValues,
                 txHash: response.hash,
               }),

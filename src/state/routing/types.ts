@@ -7,8 +7,15 @@ import { Route as V3Route } from '@uniswap/v3-sdk'
 export enum TradeState {
   LOADING,
   INVALID,
+  STALE,
   NO_ROUTE_FOUND,
   VALID,
+}
+
+export enum QuoteMethod {
+  ROUTING_API = 'ROUTING_API',
+  CLIENT_SIDE = 'CLIENT_SIDE',
+  CLIENT_SIDE_FALLBACK = 'CLIENT_SIDE_FALLBACK', // If client-side was used after the routing-api call failed.
 }
 
 // from https://github.com/Uniswap/routing-api/blob/main/lib/handlers/schema.ts
@@ -103,17 +110,19 @@ export class ClassicTrade extends Trade<Currency, Currency, TradeType> {
   blockNumber: string | null | undefined
   fromClientRouter: boolean | undefined
   requestId: string | undefined
+  quoteMethod: QuoteMethod
 
   constructor({
     gasUseEstimateUSD,
     blockNumber,
     requestId,
-    fromClientRouter,
+    quoteMethod,
     ...routes
   }: {
     gasUseEstimateUSD?: string | null
     blockNumber?: string | null
     requestId?: string
+    quoteMethod: QuoteMethod
     fromClientRouter?: boolean
     v2Routes: {
       routev2: V2Route<Currency, Currency>
@@ -136,7 +145,7 @@ export class ClassicTrade extends Trade<Currency, Currency, TradeType> {
     this.blockNumber = blockNumber
     this.gasUseEstimateUSD = gasUseEstimateUSD
     this.requestId = requestId
-    this.fromClientRouter = fromClientRouter
+    this.quoteMethod = quoteMethod
   }
 }
 

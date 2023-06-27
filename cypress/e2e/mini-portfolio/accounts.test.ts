@@ -30,39 +30,21 @@ describe('Mini Portfolio account drawer', () => {
 
   it('fetches account information', () => {
     // Open the mini portfolio
-    cy.fixture('mini-portfolio/tokens.json').then((mockTokens) => {
-      cy.intercept(/graphql/, (req) => {
-        if (req.body.operationName === 'PortfolioBalances') {
-          req.reply(mockTokens)
-        }
-      })
-    })
+    cy.intercept(/graphql/, { fixture: 'mini-portfolio/tokens.json' })
     cy.get(getTestSelector('web3-status-connected')).click()
 
     // Verify that wallet state loads correctly
     cy.get(getTestSelector('mini-portfolio-navbar')).contains('Tokens')
     cy.get(getTestSelector('mini-portfolio-page')).contains('Hidden (201)')
 
-    cy.fixture('mini-portfolio/nfts.json').then((mockNfts) => {
-      cy.intercept(/graphql/, (req) => {
-        if (req.body.operationName === 'NftBalance') {
-          req.reply(mockNfts)
-        }
-      })
-    })
+    cy.intercept(/graphql/, { fixture: 'mini-portfolio/nfts.json' })
     cy.get(getTestSelector('mini-portfolio-navbar')).contains('NFTs').click()
     cy.get(getTestSelector('mini-portfolio-page')).contains('I Got Plenty')
 
     cy.get(getTestSelector('mini-portfolio-navbar')).contains('Pools').click()
     cy.get(getTestSelector('mini-portfolio-page')).contains('No pools yet')
 
-    cy.fixture('mini-portfolio/activity.json').then((mockActivity) => {
-      cy.intercept(/graphql/, (req) => {
-        if (req.body.operationName === 'Activity') {
-          req.reply(mockActivity)
-        }
-      })
-    })
+    cy.intercept(/graphql/, { fixture: 'mini-portfolio/activity.json' })
     cy.get(getTestSelector('mini-portfolio-navbar')).contains('Activity').click()
     cy.get(getTestSelector('mini-portfolio-page')).contains('Contract Interaction')
   })

@@ -13,11 +13,12 @@ import Row from 'components/Row'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { MouseoverTooltip } from 'components/Tooltip'
-import { SupportedChainId } from 'constants/chains'
+import { isSupportedChain, SupportedChainId } from 'constants/chains'
 import { useNftUniversalRouterAddress } from 'graphql/data/nft/NftUniversalRouterAddress'
 import { useCurrency } from 'hooks/Tokens'
 import { AllowanceState } from 'hooks/usePermit2Allowance'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
+import { useSwitchChain } from 'hooks/useSwitchChain'
 import { useTokenBalance } from 'lib/hooks/useCurrencyBalance'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useBag } from 'nft/hooks/useBag'
@@ -37,7 +38,6 @@ import { AlertTriangle, ChevronDown } from 'react-feather'
 import { InterfaceTrade, TradeState } from 'state/routing/types'
 import styled, { useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
-import { switchChain } from 'utils/switchChain'
 import { shallow } from 'zustand/shallow'
 
 import { BuyButtonStateData, BuyButtonStates, getBuyButtonStateData } from './ButtonStates'
@@ -349,6 +349,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
     setBagStatus(BagStatus.ADDING_TO_BAG)
   }, [inputCurrency, setBagStatus])
 
+  const switchChain = useSwitchChain()
   const {
     buttonText,
     buttonTextColor,
@@ -442,6 +443,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
     priceImpact,
     theme,
     fetchAssets,
+    switchChain,
     connector,
     toggleWalletDrawer,
     setBagExpanded,
@@ -462,23 +464,27 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
         <FooterHeader gap="xs">
           <CurrencyRow>
             <Column gap="xs">
-              <ThemedText.SubHeaderSmall>
-                <Trans>Pay with</Trans>
-              </ThemedText.SubHeaderSmall>
-              <CurrencyInput
-                onClick={() => {
-                  if (!bagIsLocked) {
-                    setTokenSelectorOpen(true)
-                    sendAnalyticsEvent(NFTEventName.NFT_BUY_TOKEN_SELECTOR_CLICKED)
-                  }
-                }}
-              >
-                <CurrencyLogo currency={activeCurrency} size="24px" />
-                <ThemedText.HeadlineSmall fontWeight={500} lineHeight="24px">
-                  {activeCurrency?.symbol}
-                </ThemedText.HeadlineSmall>
-                <ChevronDown size={20} color={theme.textSecondary} />
-              </CurrencyInput>
+              {isSupportedChain(chainId) && (
+                <>
+                  <ThemedText.SubHeaderSmall>
+                    <Trans>Pay with</Trans>
+                  </ThemedText.SubHeaderSmall>
+                  <CurrencyInput
+                    onClick={() => {
+                      if (!bagIsLocked) {
+                        setTokenSelectorOpen(true)
+                        sendAnalyticsEvent(NFTEventName.NFT_BUY_TOKEN_SELECTOR_CLICKED)
+                      }
+                    }}
+                  >
+                    <CurrencyLogo currency={activeCurrency} size="24px" />
+                    <ThemedText.HeadlineSmall fontWeight={500} lineHeight="24px">
+                      {activeCurrency?.symbol}
+                    </ThemedText.HeadlineSmall>
+                    <ChevronDown size={20} color={theme.textSecondary} />
+                  </CurrencyInput>
+                </>
+              )}
             </Column>
             <TotalColumn gap="xs">
               <ThemedText.SubHeaderSmall marginBottom="4px">

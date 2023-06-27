@@ -7,8 +7,15 @@ import { getClientSideQuote } from 'lib/hooks/routing/clientSideSmartOrderRouter
 import ms from 'ms.macro'
 import { trace } from 'tracing/trace'
 
-import { RoutingConfig, SwapRouterNativeAssets, TradeResult, URAQuoteResponse, URAQuoteType } from './types'
-import { getRouter, isExactInput, transformRoutesToTrade } from './utils'
+import {
+  QuoteMethod,
+  RoutingConfig,
+  SwapRouterNativeAssets,
+  TradeResult,
+  URAQuoteResponse,
+  URAQuoteType,
+} from './types'
+import { getRouter, isExactInput, shouldUseAPIRouter, transformRoutesToTrade } from './utils'
 
 export enum RouterPreference {
   X = 'uniswapx',
@@ -38,6 +45,7 @@ export interface GetQuoteArgs {
   routerPreference: RouterPreference | typeof INTERNAL_ROUTER_PREFERENCE_PRICE
   tradeType: TradeType
   needsWrapIfUniswapX: boolean
+  isRoutingAPIPrice?: boolean
 }
 
 enum QuoteState {
@@ -52,15 +60,7 @@ const DEFAULT_QUERY_PARAMS = {
   protocols,
 }
 
-type GetAPIOrUniswapXQuoteArgs = Omit<GetQuoteArgs, 'routerPreference'> & {
-  routerPreference: RouterPreference.API | RouterPreference.X
-}
-
-function isApiOrUniswapXQuote(args: GetQuoteArgs): args is GetAPIOrUniswapXQuoteArgs {
-  return args.routerPreference === RouterPreference.API || args.routerPreference === RouterPreference.X
-}
-
-function getConfigByRouterPreference(args: GetAPIOrUniswapXQuoteArgs): RoutingConfig {
+function getConfigByRouterPreference(args: GetQuoteArgs): RoutingConfig {
   const { account, routerPreference, tradeType, tokenOutAddress, tokenInChainId } = args
   const goudaDutchLimit = {
     offerer: account,
@@ -127,8 +127,9 @@ export const routingApi = createApi({
           }
         )
       },
-      async queryFn(args: GetQuoteArgs, _api, _extraOptions, fetch) {
-        if (isApiOrUniswapXQuote(args)) {
+      async queryFn(args, _api, _extraOptions, fetch) {
+        const fellBack = false
+        if (shouldUseAPIRouter(args)) {
           try {
             const { tokenInAddress, tokenInChainId, tokenOutAddress, tokenOutChainId, amount, tradeType } = args
             const type = isExactInput(tradeType) ? 'EXACT_INPUT' : 'EXACT_OUTPUT'
@@ -163,7 +164,7 @@ export const routingApi = createApi({
             }
 
             const uraQuoteResponse = response.data as URAQuoteResponse
-            const tradeResult = transformRoutesToTrade(args, uraQuoteResponse, false /* fromClientRouter */)
+            const tradeResult = transformRoutesToTrade(args, uraQuoteResponse, QuoteMethod.ROUTING_API)
 
             return { data: tradeResult }
           } catch (error: any) {
@@ -175,11 +176,12 @@ export const routingApi = createApi({
           }
         }
         try {
+          const method = fellBack ? QuoteMethod.CLIENT_SIDE_FALLBACK : QuoteMethod.CLIENT_SIDE
           const router = getRouter(args.tokenInChainId)
           const quoteResult = await getClientSideQuote(args, router, CLIENT_PARAMS)
           if (quoteResult.state === QuoteState.SUCCESS) {
             return {
-              data: transformRoutesToTrade(args, quoteResult.data, true /* fromClientRouter */),
+              data: transformRoutesToTrade(args, quoteResult.data, method),
             }
           } else {
             return { data: quoteResult }

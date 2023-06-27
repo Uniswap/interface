@@ -18,7 +18,7 @@ export const DEFAULT_GAS_LIMIT = 1_000_000
 const Erc20 = new Interface(ERC20_ABI) as Erc20Interface
 const Erc20Bytes32 = new Interface(ERC20_ABI) as Erc20Bytes32Interface // Used for tokens that return bytes32 for name/symbol rather than string
 
-// TODO(WEB-3060): cartcrom - adapt support for multi-function multi-interface multicalls into redux-multicall to remove than this custom cache/chunking logic
+// TODO(WEB-1760): cartcrom - adapt support for multi-function multi-interface multicalls into redux-multicall to remove than this custom cache/chunking logic
 // Infura rejects calls with gas costs > 10x the current block gas limit; in such case we split the call into 2 chunks
 async function fetchChunk(multicall: UniswapInterfaceMulticall, chunk: Call[]): Promise<CallResult[]> {
   try {

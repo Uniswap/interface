@@ -5,7 +5,7 @@ import { SupportedChainId } from 'constants/chains'
 import { nativeOnChain } from 'constants/tokens'
 import { BigNumber } from 'ethers/lib/ethers'
 import JSBI from 'jsbi'
-import { ClassicTrade, DutchOrderTrade } from 'state/routing/types'
+import { ClassicTrade, DutchOrderTrade, QuoteMethod } from 'state/routing/types'
 
 export const TEST_TOKEN_1 = new Token(1, '0x0000000000000000000000000000000000000001', 18, 'ABC', 'Abc')
 export const TEST_TOKEN_2 = new Token(1, '0x0000000000000000000000000000000000000002', 18, 'DEF', 'Def')
@@ -45,6 +45,7 @@ export const TEST_TRADE_EXACT_INPUT = new ClassicTrade({
   v2Routes: [],
   tradeType: TradeType.EXACT_INPUT,
   gasUseEstimateUSD: '1.00',
+  quoteMethod: QuoteMethod.CLIENT_SIDE,
 })
 
 export const TEST_TRADE_EXACT_OUTPUT = new ClassicTrade({
@@ -57,6 +58,7 @@ export const TEST_TRADE_EXACT_OUTPUT = new ClassicTrade({
   ],
   v2Routes: [],
   tradeType: TradeType.EXACT_OUTPUT,
+  quoteMethod: QuoteMethod.CLIENT_SIDE,
 })
 
 export const TEST_ALLOWED_SLIPPAGE = new Percent(2, 100)

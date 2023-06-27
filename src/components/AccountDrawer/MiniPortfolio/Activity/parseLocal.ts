@@ -1,3 +1,4 @@
+import { BigNumber } from '@ethersproject/bignumber'
 import { t } from '@lingui/macro'
 import { formatCurrencyAmount } from '@uniswap/conedison/format'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
@@ -80,12 +81,17 @@ function parseWrap(wrap: WrapTransactionInfo, chainId: SupportedChainId, status:
 function parseApproval(
   approval: ApproveTransactionInfo,
   chainId: SupportedChainId,
-  tokens: ChainTokenMap
+  tokens: ChainTokenMap,
+  status: TransactionStatus
 ): Partial<Activity> {
-  // TODO: Add 'amount' approved to ApproveTransactionInfo so we can distinguish between revoke and approve
   const currency = getCurrency(approval.tokenAddress, chainId, tokens)
   const descriptor = currency?.symbol ?? currency?.name ?? t`Unknown`
   return {
+    title: getActivityTitle(
+      TransactionType.APPROVAL,
+      status,
+      BigNumber.from(approval.amount).eq(0) /* use alternate if it's a revoke */
+    ),
     descriptor,
     currencies: [currency],
   }
@@ -160,7 +166,7 @@ export function transactionToActivity(
     if (info.type === TransactionType.SWAP) {
       additionalFields = parseSwap(info, chainId, tokens)
     } else if (info.type === TransactionType.APPROVAL) {
-      additionalFields = parseApproval(info, chainId, tokens)
+      additionalFields = parseApproval(info, chainId, tokens, status)
     } else if (info.type === TransactionType.WRAP) {
       additionalFields = parseWrap(info, chainId, status)
     } else if (

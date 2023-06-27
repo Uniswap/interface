@@ -1,11 +1,12 @@
 import { Trans } from '@lingui/macro'
-import { TraceEvent } from '@uniswap/analytics'
+import { TraceEvent, useTrace } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
 import { Percent } from '@uniswap/sdk-core'
 import AnimatedDropdown from 'components/AnimatedDropdown'
 import Column from 'components/Column'
 import { LoadingOpacityContainer } from 'components/Loader/styled'
 import { RowBetween, RowFixed } from 'components/Row'
+import { formatCommonPropertiesForTrade } from 'lib/utils/analytics'
 import { useState } from 'react'
 import { ChevronDown } from 'react-feather'
 import { InterfaceTrade } from 'state/routing/types'
@@ -99,6 +100,7 @@ interface SwapDetailsInlineProps {
 export default function SwapDetailsDropdown({ trade, syncing, loading, allowedSlippage }: SwapDetailsInlineProps) {
   const theme = useTheme()
   const [showDetails, setShowDetails] = useState(false)
+  const trace = useTrace()
 
   return (
     <Wrapper>
@@ -106,6 +108,10 @@ export default function SwapDetailsDropdown({ trade, syncing, loading, allowedSl
         events={[BrowserEvent.onClick]}
         name={SwapEventName.SWAP_DETAILS_EXPANDED}
         element={InterfaceElementName.SWAP_DETAILS_DROPDOWN}
+        properties={{
+          ...(trade ? formatCommonPropertiesForTrade(trade, allowedSlippage) : {}),
+          ...trace,
+        }}
         shouldLogImpression={!showDetails}
       >
         <StyledHeaderRow

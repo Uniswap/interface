@@ -1,9 +1,8 @@
 import { BaseVariant, FeatureFlag, featureFlagSettings, useUpdateFlag } from 'featureFlags'
 import { UniswapXVariant, useUniswapXFlag } from 'featureFlags/flags/gouda'
-import { useNativeUSDCArbitrumFlag } from 'featureFlags/flags/nativeUsdcArbitrum'
 import { DetailsV2Variant, useDetailsV2Flag } from 'featureFlags/flags/nftDetails'
+import { useRoutingAPIForPriceFlag } from 'featureFlags/flags/priceRoutingApi'
 import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
-import { UnifiedRouterVariant, useRoutingAPIV2Flag } from 'featureFlags/flags/unifiedRouter'
 import { useUpdateAtom } from 'jotai/utils'
 import { Children, PropsWithChildren, ReactElement, ReactNode, useCallback, useState } from 'react'
 import { X } from 'react-feather'
@@ -211,12 +210,6 @@ export default function FeatureFlagModal() {
         label="Use the new details page for nfts"
       />
       <FeatureFlagOption
-        variant={UnifiedRouterVariant}
-        value={useRoutingAPIV2Flag()}
-        featureFlag={FeatureFlag.uraEnabled}
-        label="Enable the Unified Routing API"
-      />
-      <FeatureFlagOption
         variant={UniswapXVariant}
         value={useUniswapXFlag()}
         featureFlag={FeatureFlag.uniswapXEnabled}
@@ -224,9 +217,9 @@ export default function FeatureFlagModal() {
       />
       <FeatureFlagOption
         variant={BaseVariant}
-        value={useNativeUSDCArbitrumFlag()}
-        featureFlag={FeatureFlag.nativeUsdcArbitrum}
-        label="Enable Circle native USDC on Arbitrum"
+        value={useRoutingAPIForPriceFlag()}
+        featureFlag={FeatureFlag.routingAPIPrice}
+        label="Use the URA or routing-api for price fetches"
       />
       <FeatureFlagGroup name="Debug">
         <FeatureFlagOption

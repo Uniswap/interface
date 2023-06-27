@@ -9,6 +9,7 @@ import useENSName from 'hooks/useENSName'
 import { useCallback } from 'react'
 import styled from 'styled-components/macro'
 import { EllipsisStyle, ThemedText } from 'theme'
+import { shortenAddress } from 'utils'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 import { PortfolioLogo } from '../PortfolioLogo'
@@ -80,7 +81,7 @@ export function ActivityRow({ activity }: { activity: Activity }) {
         descriptor={
           <ActivityRowDescriptor color="textSecondary">
             {descriptor}
-            {ENSName ?? otherAccount}
+            {ENSName ?? shortenAddress(otherAccount)}
           </ActivityRowDescriptor>
         }
         right={<StatusIndicator activity={activity} />}
