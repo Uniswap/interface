@@ -117,6 +117,7 @@ export interface StakeData {
   poolId: string
   poolContract?: Contract | null
   stakingPoolExists?: boolean
+  isPoolMoving?: boolean
 }
 
 export enum ProposalState {
@@ -460,12 +461,15 @@ export function usePoolIdByAddress(pool: string | undefined): {
 }
 
 // TODO: we must return a currency balance
-export function useStakeBalance(poolId: string | null | undefined): CurrencyAmount<Currency> | undefined {
+export function useStakeBalance(
+  poolId: string | null | undefined,
+  owner?: string
+): CurrencyAmount<Currency> | undefined {
   const { account, chainId } = useWeb3React()
   const grg = chainId ? GRG[chainId] : undefined
   const stakingContract = useStakingContract()
   const stake = useSingleCallResult(stakingContract ?? undefined, 'getStakeDelegatedToPoolByOwner', [
-    account,
+    owner ?? account,
     poolId ?? undefined,
   ])?.result?.[0]
 
@@ -616,10 +620,27 @@ export function useDeactivateStakeCallback(): (stakeData: StakeData | undefined)
         deactivateToInfo,
         stakeData.amount,
       ])
+
       const delegatee = stakeData.pool
+      const poolInstance = stakeData.poolContract ?? undefined
       if (!delegatee) return
-      const args = [[deactivateCall]]
+      // Rigoblock executes move stake inside stake method, in just 1 call
+      const args = stakeData.isPoolMoving ? [stakeData.amount] : [[deactivateCall]]
       if (!stakingProxy) throw new Error('No Staking Contract!')
+      if (stakeData.isPoolMoving && !poolInstance) throw new Error('No Pool Contract!')
+      if (stakeData.isPoolMoving && poolInstance)
+        return poolInstance.estimateGas.undelegateStake(...args, {}).then((estimatedGasLimit) => {
+          return poolInstance
+            .undelegateStake(...args, { value: null, gasLimit: calculateGasMargin(estimatedGasLimit) })
+            .then((response: TransactionResponse) => {
+              // TODO: add more transaction types in store
+              addTransaction(response, {
+                type: TransactionType.DELEGATE,
+                delegatee,
+              })
+              return response.hash
+            })
+        })
       return stakingProxy.estimateGas.batchExecute(...args, {}).then((estimatedGasLimit) => {
         return stakingProxy
           .batchExecute(...args, { value: null, gasLimit: calculateGasMargin(estimatedGasLimit) })
