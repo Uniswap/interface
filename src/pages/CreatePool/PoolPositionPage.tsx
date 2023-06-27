@@ -17,6 +17,7 @@ import SellModal from 'components/createPool/SellModal'
 import SetLockupModal from 'components/createPool/SetLockupModal'
 import SetSpreadModal from 'components/createPool/SetSpreadModal'
 import SetValueModal from 'components/createPool/SetValueModal'
+import HarvestYieldModal from 'components/earn/HarvestYieldModal'
 import MoveStakeModal from 'components/earn/MoveStakeModal'
 import UnstakeModal from 'components/earn/UnstakeModal'
 //import Loader from 'components/Loader'
@@ -44,7 +45,8 @@ import { Link, useParams } from 'react-router-dom'
 import { PoolInfo } from 'state/buy/hooks'
 //import { useTokenBalance } from 'state/connection/hooks'
 import { useCurrencyBalance } from 'state/connection/hooks'
-import { useFreeStakeBalance } from 'state/stake/hooks'
+import { usePoolIdByAddress } from 'state/governance/hooks'
+import { useFreeStakeBalance, useUnclaimedRewards } from 'state/stake/hooks'
 //import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'
 import styled /*, { useTheme }*/ from 'styled-components/macro'
 import { ExternalLink, /*HideExtraSmall,*/ ThemedText } from 'theme'
@@ -244,6 +246,7 @@ export function PoolPositionPage() {
   const [showMoveStakeModal, setShowMoveStakeModal] = useState(false)
   const [showUnstakeModal, setShowUnstakeModal] = useState(false)
   const [deactivate, setDeactivate] = useState(false)
+  const [showHarvestYieldModal, setShowHarvestYieldModal] = useState(false)
 
   // TODO: check how can reduce number of calls by limit update of poolStorage
   //  id is stored in registry so we could save rpc call by using storing in state?
@@ -286,6 +289,9 @@ export function PoolPositionPage() {
   const userBaseTokenBalance = useCurrencyBalance(account ?? undefined, base ?? undefined)
 
   // TODO: check how improve efficiency as this method is called each time a pool is loaded
+  const { poolId } = usePoolIdByAddress(poolAddressFromUrl ?? undefined)
+  const isPoolOperator = account === owner
+  const unclaimedRewards = useUnclaimedRewards(isPoolOperator && poolId ? [poolId] : [])
   const freeStakeBalance = useFreeStakeBalance()
   const hasFreeStake = JSBI.greaterThan(freeStakeBalance ? freeStakeBalance.quotient : JSBI.BigInt(0), JSBI.BigInt(0))
 
@@ -379,21 +385,46 @@ export function PoolPositionPage() {
               onDismiss={() => setShowUnstakeModal(false)}
               title={<Trans>Withdraw</Trans>}
             />
+            {unclaimedRewards && poolId && (
+              <HarvestYieldModal
+                isOpen={showHarvestYieldModal}
+                isPool={true}
+                yieldAmount={unclaimedRewards[0]?.yieldAmount}
+                poolIds={[poolId]}
+                onDismiss={() => setShowHarvestYieldModal(false)}
+                title={<Trans>Harvest Pool Yield</Trans>}
+              />
+            )}
           </>
         )}
         <AutoColumn gap="md">
           <AutoColumn gap="sm">
-            {originFromUrl && (
-              <Link
-                data-cy="visit-pool"
-                style={{ textDecoration: 'none', width: 'fit-content', marginBottom: '0.5rem' }}
-                to={originFromUrl === 'mint' ? '/mint' : '/stake'}
-              >
-                <HoverText>
-                  <Trans>← Back to Pools</Trans>
-                </HoverText>
-              </Link>
-            )}
+            <ResponsiveRow>
+              <RowFixed gap="lg">
+                {originFromUrl && (
+                  <Link
+                    data-cy="visit-pool"
+                    style={{ textDecoration: 'none', width: 'fit-content', marginBottom: '0.5rem' }}
+                    to={originFromUrl === 'mint' ? '/mint' : '/stake'}
+                  >
+                    <HoverText>
+                      <Trans>← Back to Pools</Trans>
+                    </HoverText>
+                  </Link>
+                )}
+                {unclaimedRewards && unclaimedRewards[0]?.yieldAmount && (
+                  <ResponsiveButtonPrimary
+                    style={{ marginRight: '8px' }}
+                    width="fit-content"
+                    padding="6px 8px"
+                    $borderRadius="12px"
+                    onClick={() => setShowHarvestYieldModal(true)}
+                  >
+                    <Trans>Harvest {formatCurrencyAmount(unclaimedRewards[0].yieldAmount, 4)} GRG</Trans>
+                  </ResponsiveButtonPrimary>
+                )}
+              </RowFixed>
+            </ResponsiveRow>
             <ResponsiveRow>
               <RowFixed>
                 <ThemedText.DeprecatedLabel fontSize="24px" mr="10px">

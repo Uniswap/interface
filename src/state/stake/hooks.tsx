@@ -253,6 +253,7 @@ interface UnclaimedRewardsData {
   yieldPoolId: string
 }
 
+// TODO: check as from pool page we are passing [] if not pool operator, i.e. we want to skip the rpc call when normal user
 export function useUnclaimedRewards(poolIds: string[]): UnclaimedRewardsData[] | undefined {
   const { account, chainId } = useWeb3React()
   const grg = useMemo(() => (chainId ? GRG[chainId] : undefined), [chainId])
@@ -336,13 +337,14 @@ export function useHarvestCallback(): (poolIds: string[], isPool?: boolean) => u
       if (isPool && !poolContract) throw new Error('No Pool Contract!')
       const harvestCalls: string[] = []
       // when withdrawing pool rewards we will pass an array of only 1 pool ids
+      // TODO: we encode pool calls but do not use them as we want to use direct method instead of multicall.
+      //  Check if should remove encoding call for pool.
       for (const poolId of poolIds) {
         const harvestCall = !isPool
           ? stakingContract.interface.encodeFunctionData('withdrawDelegatorRewards', [poolId])
-          : poolContract?.interface.encodeFunctionData('withdrawDelegatorRewards', [poolId])
+          : poolContract?.interface.encodeFunctionData('withdrawDelegatorRewards')
         if (harvestCall) harvestCalls.push(harvestCall)
       }
-      //console.log(harvestCalls)
       if (!isPool) {
         return stakingProxy.estimateGas.batchExecute(harvestCalls, {}).then((estimatedGasLimit) => {
           return stakingProxy.batchExecute(harvestCalls, {
@@ -351,8 +353,8 @@ export function useHarvestCallback(): (poolIds: string[], isPool?: boolean) => u
           })
         })
       } else {
-        return poolContract?.estimateGas.multicall(harvestCalls, {}).then((estimatedGasLimit) => {
-          return poolContract?.multicall(harvestCalls, {
+        return poolContract?.estimateGas.withdrawDelegatorRewards({}).then((estimatedGasLimit) => {
+          return poolContract?.withdrawDelegatorRewards({
             value: null,
             gasLimit: calculateGasMargin(estimatedGasLimit),
           })
