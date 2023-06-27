@@ -21,7 +21,7 @@ export function useLimitlessPositionFromKeys(account: string | undefined, manage
   // console.log("positions", positions)
   const position = useMemo(() => {
     if (positions) {
-      return positions.find(position => (isBorrow ? position.isBorrow && position.borrowManagerAddress === manager : position.leverageManagerAddress === manager) && position.isToken0 === isToken0)
+      return positions.find(position => (isBorrow ? position.isBorrow && position.borrowManagerAddress === manager : !position.isBorrow && position.leverageManagerAddress === manager) && position.isToken0 === isToken0)
     }
     return undefined
   }
