@@ -47,7 +47,7 @@ const StyledClosed = styled(X)`
   }
 `
 
-const TextButton = styled.div`
+export const TextButton = styled.div`
   :hover {
     cursor: pointer;
   }

@@ -8,6 +8,7 @@ import { X } from 'react-feather'
 import styled from 'styled-components/macro'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
+import { TextButton } from '../../components/vote/DelegateModal'
 import { ZERO_ADDRESS } from '../../constants/misc'
 import { GRG } from '../../constants/tokens'
 import useDebouncedChangeHandler from '../../hooks/useDebouncedChangeHandler'
@@ -20,6 +21,7 @@ import {
   StakeData,
   useDeactivateStakeCallback,
   useMoveStakeCallback,
+  usePoolExtendedContract,
   usePoolIdByAddress,
   useStakeBalance,
 } from '../../state/governance/hooks'
@@ -54,11 +56,12 @@ interface MoveStakeModalProps {
 }
 
 export default function MoveStakeModal({ isOpen, poolInfo, isDeactivate, onDismiss, title }: MoveStakeModalProps) {
-  const { chainId } = useWeb3React()
+  const { account, chainId } = useWeb3React()
 
   // state for delegate input
   const [currencyValue] = useState<Currency>(GRG[chainId ?? 1])
   const [typed, setTyped] = useState('')
+  const [isPoolMoving, setIsPoolMoving] = useState(false)
 
   function handleFromPoolType(val: string) {
     setTyped(val)
@@ -75,7 +78,11 @@ export default function MoveStakeModal({ isOpen, poolInfo, isDeactivate, onDismi
   const { poolId, stakingPoolExists } = usePoolIdByAddress(poolInfo.pool?.address)
   // hack to allow moving stake from deprecated pool
   const defaultPoolId = '0x0000000000000000000000000000000000000000000000000000000000000021'
-  const fromPoolStakeBalance = useStakeBalance(isDeactivate ? poolId : fromPoolId ?? defaultPoolId)
+  const fromPoolStakeBalance = useStakeBalance(
+    isDeactivate ? poolId : fromPoolId ?? defaultPoolId,
+    isPoolMoving ? poolInfo?.pool?.address : undefined
+  )
+  const poolContract = usePoolExtendedContract(poolInfo?.pool?.address)
 
   // boilerplate for the slider
   const [percentForSlider, onPercentSelectForSlider] = useDebouncedChangeHandler(percent, onPercentSelect)
@@ -97,8 +104,9 @@ export default function MoveStakeModal({ isOpen, poolInfo, isDeactivate, onDismi
     pool: poolInfo.pool?.address,
     fromPoolId: fromPoolId ?? defaultPoolId,
     poolId: poolId ?? defaultPoolId,
-    poolContract: undefined,
+    poolContract: isPoolMoving ? poolContract : null,
     stakingPoolExists,
+    isPoolMoving,
   }
 
   const moveStakeCallback = useMoveStakeCallback()
@@ -125,11 +133,19 @@ export default function MoveStakeModal({ isOpen, poolInfo, isDeactivate, onDismi
     setStakeAmount(parsedAmount)
 
     // if callback not returned properly ignore
-    if (!moveStakeCallback || !fromPoolStakeBalance || !moveStakeData || !currencyValue.isToken) return
+    if (
+      !moveStakeCallback ||
+      !deactivateStakeCallback ||
+      !fromPoolStakeBalance ||
+      !moveStakeData ||
+      !currencyValue.isToken
+    )
+      return
+
     const moveCallback = !isDeactivate ? moveStakeCallback : deactivateStakeCallback
 
     // try delegation and store hash
-    const hash = await moveCallback(moveStakeData ?? undefined)?.catch((error) => {
+    const hash = await moveCallback(moveStakeData)?.catch((error) => {
       setAttempting(false)
       console.log(error)
     })
@@ -196,9 +212,22 @@ export default function MoveStakeModal({ isOpen, poolInfo, isDeactivate, onDismi
               onClick={onMoveStake}
             >
               <ThemedText.DeprecatedMediumHeader color="white">
-                {!isDeactivate ? <Trans>Move Stake</Trans> : <Trans>Deactivate Stake</Trans>}{' '}
+                {!isDeactivate ? (
+                  <Trans>Move Stake</Trans>
+                ) : !isPoolMoving ? (
+                  <Trans>Deactivate Stake</Trans>
+                ) : (
+                  <Trans>Deactivate Pool Stake</Trans>
+                )}{' '}
               </ThemedText.DeprecatedMediumHeader>
             </ButtonPrimary>
+            {isDeactivate && poolInfo?.owner === account && (
+              <TextButton onClick={() => setIsPoolMoving(!isPoolMoving)}>
+                <ThemedText.DeprecatedBlue>
+                  {isPoolMoving ? <Trans>Deactivate Stake</Trans> : <Trans>Deactivate Pool Stake</Trans>}
+                </ThemedText.DeprecatedBlue>
+              </TextButton>
+            )}
           </AutoColumn>
         </ContentWrapper>
       )}
@@ -206,7 +235,13 @@ export default function MoveStakeModal({ isOpen, poolInfo, isDeactivate, onDismi
         <LoadingView onDismiss={wrappedOnDismiss}>
           <AutoColumn gap="12px" justify="center">
             <ThemedText.DeprecatedLargeHeader>
-              {!isDeactivate ? <Trans>Moving Stake</Trans> : <Trans>Deactivating Stake</Trans>}{' '}
+              {!isDeactivate ? (
+                <Trans>Moving Stake</Trans>
+              ) : isPoolMoving ? (
+                <Trans>Deactivating Pool Stake</Trans>
+              ) : (
+                <Trans>Deactivating Stake</Trans>
+              )}{' '}
             </ThemedText.DeprecatedLargeHeader>
             <ThemedText.DeprecatedMain fontSize={36}>{formatCurrencyAmount(parsedAmount, 4)}</ThemedText.DeprecatedMain>
           </AutoColumn>
