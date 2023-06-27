@@ -36,13 +36,13 @@ const API_QUERY_PARAMS = {
   protocols: 'v2,v3,mixed',
 }
 const CLIENT_PARAMS = {
-  protocols: [Protocol.V1, Protocol.V2, Protocol.MIXED],
+  protocols: [Protocol.V1, Protocol.V3, Protocol.MIXED],
 }
 // Price queries are tuned down to minimize the required RPCs to respond to them.
 // TODO(zzmp): This will be used after testing router caching.
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const PRICE_PARAMS = {
-  protocols: [Protocol.V1, Protocol.V2],
+  protocols: [Protocol.V1, Protocol.V3],
   v2PoolSelection: {
     topN: 2,
     topNDirectSwaps: 1,

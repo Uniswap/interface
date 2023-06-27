@@ -5,11 +5,9 @@ const GRAPHQL_URL = process.env.REACT_APP_AWS_API_ENDPOINT
 if (!GRAPHQL_URL) {
   throw new Error('AWS URL MISSING FROM ENVIRONMENT')
 }
-// url to testnet : http://13.59.22.26/subgraphs/name/pollum-io/pegasys-v2
-// url to mainnet: https://rollux.graph.pegasys.fi/subgraphs/name/pollum-io/pegasys-v2
 export const apolloClient = new ApolloClient({
   connectToDevTools: true,
-  uri: 'http://13.59.22.26/subgraphs/name/pollum-io/pegasys-v2',
+  uri: 'GRAPHQL_URL',
   cache: new InMemoryCache({
     typePolicies: {
       Query: {
@@ -42,19 +40,3 @@ export const apolloClient = new ApolloClient({
   },
 })
 
-// url to testnet : http://13.59.22.26/subgraphs/name/pollum-io/syscoin-blocks
-// url to mainnet: https://rollux.graph.pegasys.fi/subgraphs/name/pollum-io/syscoin-blocks
-export const blockClient = new ApolloClient({
-  uri: 'http://13.59.22.26/subgraphs/name/pollum-io/syscoin-blocks',
-  cache: new InMemoryCache(),
-  queryDeduplication: true,
-  defaultOptions: {
-    watchQuery: {
-      fetchPolicy: 'no-cache',
-    },
-    query: {
-      fetchPolicy: 'no-cache',
-      errorPolicy: 'all',
-    },
-  },
-})

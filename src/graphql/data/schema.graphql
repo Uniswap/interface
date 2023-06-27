@@ -1,11 +1,18 @@
 """This directive allows results to be deferred during execution"""
 directive @defer on FIELD
 
-"""Directs the schema to enforce authorization on a field"""
-directive @aws_auth(
+"""
+Tells the service this field/object has access authorized by a Cognito User Pools token.
+"""
+directive @aws_cognito_user_pools(
   """List of cognito user pool groups which have access on this field"""
   cognito_groups: [String]
-) on FIELD_DEFINITION
+) on OBJECT | FIELD_DEFINITION
+
+"""
+Tells the service this field/object has access authorized by an API key.
+"""
+directive @aws_api_key on OBJECT | FIELD_DEFINITION
 
 """Tells the service which mutation triggers this subscription."""
 directive @aws_subscribe(
@@ -16,22 +23,20 @@ directive @aws_subscribe(
 ) on FIELD_DEFINITION
 
 """
-Tells the service this field/object has access authorized by a Lambda Authorizer.
+Tells the service this field/object has access authorized by an OIDC token.
 """
-directive @aws_lambda on OBJECT | FIELD_DEFINITION
+directive @aws_oidc on OBJECT | FIELD_DEFINITION
 
 """
-Tells the service this field/object has access authorized by an API key.
+Tells the service this field/object has access authorized by sigv4 signing.
 """
-directive @aws_api_key on OBJECT | FIELD_DEFINITION
+directive @aws_iam on OBJECT | FIELD_DEFINITION
 
-"""
-Tells the service this field/object has access authorized by a Cognito User Pools token.
-"""
-directive @aws_cognito_user_pools(
+"""Directs the schema to enforce authorization on a field"""
+directive @aws_auth(
   """List of cognito user pool groups which have access on this field"""
   cognito_groups: [String]
-) on OBJECT | FIELD_DEFINITION
+) on FIELD_DEFINITION
 
 """
 Tells the service which subscriptions will be published to when this mutation is
@@ -45,14 +50,9 @@ directive @aws_publish(
 ) on FIELD_DEFINITION
 
 """
-Tells the service this field/object has access authorized by an OIDC token.
+Tells the service this field/object has access authorized by a Lambda Authorizer.
 """
-directive @aws_oidc on OBJECT | FIELD_DEFINITION
-
-"""
-Tells the service this field/object has access authorized by sigv4 signing.
-"""
-directive @aws_iam on OBJECT | FIELD_DEFINITION
+directive @aws_lambda on OBJECT | FIELD_DEFINITION
 
 union ActivityDetails = TransactionDetails | SwapOrderDetails
 
@@ -122,11 +122,11 @@ enum Chain {
   ARBITRUM
   ETHEREUM
   ETHEREUM_GOERLI
+  ETHEREUM_SEPOLIA
   OPTIMISM
   POLYGON
   CELO
   BNB
-  ROLLUX
   UNKNOWN_CHAIN
 }
 
@@ -391,6 +391,24 @@ type NftCollection {
   creator: NftProfile
 }
 
+type NftCollectionBalance {
+  id: ID!
+  address: String!
+  name: String!
+  logoImage: Image
+  balance: Float!
+}
+
+type NftCollectionBalanceConnection {
+  pageInfo: PageInfo!
+  edges: [NftCollectionBalanceEdge!]!
+}
+
+type NftCollectionBalanceEdge {
+  cursor: String!
+  node: NftCollectionBalance!
+}
+
 type NftCollectionConnection {
   pageInfo: PageInfo!
   edges: [NftCollectionEdge!]!
@@ -495,6 +513,7 @@ type NftOrder {
   taker: String
   auctionType: String
   protocolParameters: AWSJSON
+  poolPrices: [String!]
 }
 
 type NftOrderConnection {
@@ -631,31 +650,13 @@ type Portfolio {
   assetActivities(page: Int, pageSize: Int, includeOffChain: Boolean, _fs: String): [AssetActivity]
 }
 
-type TokenHourData @entity {
-  id: ID!
-  periodStartUnix: Int!
-  token: Token!
-  volume: Int!
-  volumeUSD: Int!
-  untrackedVolumeUSD: Int!
-  totalValueLocked: Int!
-  totalValueLockedUSD: Int!
-  priceUSD: Int!
-  feesUSD: Int!
-  open: Int!
-  high: Int!
-  low: Int!
-  close: Int!
-}
-
 type Query {
-  tokens(contracts: [ContractInput!]!, _fs: String): [Token]
-  token(chain: Chain!, address: String, _fs: String): Token
+  tokens(contracts: [ContractInput!]!): [Token]
+  token(chain: Chain!, address: String): Token
   ensEntry(ensDomainName: String!, chain: Chain!): EnsEntry
-  tokenProjects(contracts: [ContractInput!]!, _fs: String): [TokenProject]
-  searchTokens(searchQuery: String!, _fs: String): [Token]
-  searchTokenProjects(searchQuery: String!): [TokenProject] @deprecated(reason: "Use searchTokens")
-  portfolios(ownerAddresses: [String!]!, chains: [Chain!], _fs: String): [Portfolio]
+  tokenProjects(contracts: [ContractInput!]!): [TokenProject]
+  searchTokens(searchQuery: String!): [Token]
+  portfolios(ownerAddresses: [String!]!, chains: [Chain!], lookupTokens: [ContractInput!]): [Portfolio]
   nftCollectionsById(collectionIds: [String]): [NftCollection]
   topTokens(chain: Chain, page: Int, pageSize: Int, orderBy: TokenSortableField): [Token]
   topCollections(chains: [Chain!], orderBy: CollectionSortableField, duration: HistoryDuration, after: String, first: Int, cursor: String, limit: Int, _fs: String): NftCollectionConnection
@@ -664,7 +665,7 @@ type Query {
   nftBalances(chain: Chain, ownerAddress: String!, filter: NftBalancesFilterInput, after: String, first: Int, before: String, last: Int, _fs: String): NftBalanceConnection
   nftRoute(chain: Chain, senderAddress: String!, nftTrades: [NftTradeInput!]!, tokenTrades: [TokenTradeInput!]): NftRouteResponse
   nftActivity(chain: Chain, filter: NftActivityFilterInput, after: String, first: Int, _fs: String): NftActivityConnection
-  tokenHourDatas(startTime: Int!, skip: Int!, address: String!): TokenHourData
+  nftCollectionBalances(chain: Chain, ownerAddress: String!, after: String, first: Int, before: String, last: Int): NftCollectionBalanceConnection
 }
 
 enum SafetyLevel {
@@ -707,7 +708,7 @@ type Token implements IContract {
   decimals: Int
   name: String
   symbol: String
-  project(_fs: String): TokenProject
+  project: TokenProject
   market(currency: Currency): TokenMarket
 }
 
@@ -774,7 +775,7 @@ type TokenProject {
   isSpam: Boolean
   spamCode: Int
   safetyLevel: SafetyLevel
-  markets(currencies: [Currency!]!): [TokenProjectMarket]
+  markets(currencies: [Currency!]!, _fs: String): [TokenProjectMarket]
 }
 
 type TokenProjectMarket {
@@ -889,3 +890,4 @@ enum TransactionType {
   APPROVE
   UNKNOWN
 }
+

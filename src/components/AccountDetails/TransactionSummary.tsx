@@ -261,7 +261,7 @@ function AddLiquidityV2PoolSummary({
     <Trans>
       Add <FormattedCurrencyAmountManaged rawAmount={expectedAmountBaseRaw} currencyId={baseCurrencyId} sigFigs={3} />{' '}
       and <FormattedCurrencyAmountManaged rawAmount={expectedAmountQuoteRaw} currencyId={quoteCurrencyId} sigFigs={3} />{' '}
-      to Uniswap V2
+      to Pegasy V3
     </Trans>
   )
 }

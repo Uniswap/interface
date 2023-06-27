@@ -1,6 +1,6 @@
 import { CurrencyAmount, Token } from '@pollum-io/sdk-core'
-import { abi as IPegasysV2PoolStateABI } from '@pollum-io/v2-core/artifacts/contracts/interfaces/pool/IPegasysV2PoolState.sol/IPegasysV2PoolState.json'
-import { computePoolAddress, Pool, Position } from '@pollum-io/v2-sdk'
+import { abi as IPegasysV3PoolStateABI } from '@pollum-io/v3-core/artifacts/contracts/interfaces/pool/IPegasysV3PoolState.sol/IPegasysV3PoolState.json'
+import { computePoolAddress, Pool, Position } from '@pollum-io/v3-sdk'
 import { V3_CORE_FACTORY_ADDRESSES } from 'constants/addresses'
 import { SupportedChainId } from 'constants/chains'
 import { DEFAULT_ERC20_DECIMALS } from 'constants/tokens'
@@ -9,7 +9,7 @@ import { Interface } from 'ethers/lib/utils'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { PositionDetails } from 'types/position'
 import { NonfungiblePositionManager, PegasysInterfaceMulticall } from 'types/v3'
-import { PegasysV2PoolInterface } from 'types/v3/PegasysV2Pool'
+import { PegasysV3PoolInterface } from 'types/v3/PegasysV3Pool'
 import { currencyKey } from 'utils/currencyKey'
 
 import { PositionInfo, useCachedPositions, useGetCachedTokens, usePoolAddressCache } from './cache'
@@ -119,7 +119,7 @@ export default function useMultiChainPositions(account: string, chains = DEFAULT
   // Combines PositionDetails with Pool data to build our return type
   const fetchPositionInfo = useCallback(
     async (positionDetails: PositionDetails[], chainId: SupportedChainId, multicall: PegasysInterfaceMulticall) => {
-      const poolInterface = new Interface(IPegasysV2PoolStateABI) as PegasysV2PoolInterface
+      const poolInterface = new Interface(IPegasysV3PoolStateABI) as PegasysV3PoolInterface
       const tokens = await getTokens(
         positionDetails.flatMap((details) => [details.token0, details.token1]),
         chainId

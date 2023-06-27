@@ -1,6 +1,6 @@
 import { Protocol } from '@pollum-io/router-sdk'
 import { Currency, Percent } from '@pollum-io/sdk-core'
-import { FeeAmount } from '@pollum-io/v2-sdk'
+import { FeeAmount } from '@pollum-io/v3-sdk'
 import { RoutingDiagramEntry } from 'components/swap/SwapRoute'
 import { DAI, USDC_MAINNET, WBTC } from 'constants/tokens'
 import { render } from 'test-utils/render'
@@ -12,7 +12,7 @@ const percent = (strings: TemplateStringsArray) => new Percent(parseInt(strings[
 const singleRoute: RoutingDiagramEntry = {
   percent: percent`100`,
   path: [[USDC_MAINNET, DAI, FeeAmount.LOW]],
-  protocol: Protocol.V2,
+  protocol: Protocol.V3,
 }
 
 const multiRoute: RoutingDiagramEntry[] = [
@@ -23,7 +23,7 @@ const multiRoute: RoutingDiagramEntry[] = [
       [USDC_MAINNET, WBTC, FeeAmount.MEDIUM],
       [WBTC, DAI, FeeAmount.HIGH],
     ],
-    protocol: Protocol.V2,
+    protocol: Protocol.V3,
   },
 ]
 

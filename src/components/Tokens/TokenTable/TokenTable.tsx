@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { PAGE_SIZE, useTopTokens } from 'graphql/data/TopTokens'
+import { PAGE_SIZE } from 'graphql/tokens/TokenData'
 import { validateUrlChainParam } from 'graphql/data/util'
 import { useNewTopTokens } from 'graphql/tokens/NewTopTokens'
 import { useFetchedTokenData } from 'graphql/tokens/TokenData'
@@ -77,7 +77,6 @@ function LoadingTokenTable({ rowCount = PAGE_SIZE }: { rowCount?: number }) {
 
 export default function TokenTable() {
   const chainName = validateUrlChainParam(useParams<{ chainName?: string }>().chainName)
-  const { tokenSortRank } = useTopTokens(chainName)
 
   const { loading, tokens: newTokens } = useNewTopTokens()
   const tokensAddress = newTokens?.map((token) => token.id) || []
@@ -111,7 +110,7 @@ export default function TokenTable() {
                   tokenListIndex={index}
                   tokenListLength={tokenDatas.length}
                   token={token}
-                  sortRank={tokenSortRank[token.address]}
+                  sortRank={0}
                 />
               )
           )}

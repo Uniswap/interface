@@ -35,7 +35,7 @@ export default function QueryTokenLogo(
   const isNative = isNativeToken(token)
 
   const address = token && 'address' in token ? token.address : token && 'id' in token ? token.id : undefined
-  const backupImg = `https://raw.githubusercontent.com/pegasys-fi/pegasys-tokenlists/master/${chainId}/${address}/logo.png`
+  const backupImg = `https://raw.githubusercontent.com/pegasys-fi/default-token-list/master/src/logos/${chainId}/${address}/logo.png`
 
   return (
     <AssetLogo

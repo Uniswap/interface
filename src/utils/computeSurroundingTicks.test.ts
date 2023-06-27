@@ -1,5 +1,5 @@
 import { Token } from '@pollum-io/sdk-core'
-import { FeeAmount, TICK_SPACINGS } from '@pollum-io/v2-sdk'
+import { FeeAmount, TICK_SPACINGS } from '@pollum-io/v3-sdk'
 import { TickData } from 'graphql/thegraph/AllV3TicksQuery'
 import { TickProcessed } from 'hooks/usePoolTickData'
 import JSBI from 'jsbi'

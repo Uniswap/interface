@@ -1,5 +1,5 @@
 import { t } from '@lingui/macro'
-import { Position } from '@pollum-io/v2-sdk'
+import { Position } from '@pollum-io/v3-sdk'
 import { formatNumber, NumberType } from '@uniswap/conedison/format'
 import { useWeb3React } from '@web3-react/core'
 import { useToggleAccountDrawer } from 'components/AccountDrawer'

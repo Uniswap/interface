@@ -2,7 +2,7 @@ import { gql, useQuery } from '@apollo/client'
 import { SupportedChainId } from '@pollum-io/widgets'
 import { useMemo } from 'react'
 
-import { apolloClient } from '../data/apollo'
+import { apolloClient } from '../thegraph/apollo'
 import { unwrapTokenRollux } from '../data/util'
 
 // eslint-disable-next-line import/no-unused-modules

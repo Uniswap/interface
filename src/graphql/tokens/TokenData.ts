@@ -1,5 +1,5 @@
 import { useQuery } from '@apollo/client'
-import { apolloClient } from 'graphql/data/apollo'
+import { apolloClient } from 'graphql/thegraph/apollo'
 import gql from 'graphql-tag'
 import { useBlocksFromTimestamps } from 'hooks/useBlocksFromTimestamps'
 import { useEthPrices } from 'hooks/useEthPrices'
@@ -35,7 +35,7 @@ export type TokenData = {
   priceUSDChange: number
   priceUSDChangeWeek: number
 }
-
+export const PAGE_SIZE = 20
 const TOKENS_BULK = (block: number | undefined, tokens: string[]) => {
   let tokenString = `[`
   tokens.map((address) => {
