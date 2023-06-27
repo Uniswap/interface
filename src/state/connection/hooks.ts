@@ -20,5 +20,6 @@ export function useAllTokenBalances(): [{ [tokenAddress: string]: CurrencyAmount
   const allTokens = useDefaultActiveTokens()
   const allTokensArray = useMemo(() => Object.values(allTokens ?? {}), [allTokens])
   const [balances, balancesIsLoading] = useTokenBalancesWithLoadingIndicator(account ?? undefined, allTokensArray)
+  // console.log("stuff: ", allTokens, allTokensArray, balances, balancesIsLoading)
   return [balances ?? {}, balancesIsLoading]
 }

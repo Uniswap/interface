@@ -215,6 +215,16 @@ const CHAIN_INFO: ChainInfoMap = {
     color: darkTheme.chain_56,
     backgroundColor: darkTheme.chain_56_background,
   },
+  [SupportedChainId.SEPOLIA]: {
+    networkType: NetworkType.L1,
+    docs: 'https://limitless.gitbook.io/limitless',
+    explorer: 'https://sepolia.etherscan.io/',
+    infoLink: 'https://limitless.gitbook.io/limitless',
+    label: 'Sepolia',
+    logoUrl: ethereumLogoUrl,
+    nativeCurrency: { name: 'Sepolia Ether', symbol: 'sepoliaETH', decimals: 18 },
+    color: darkTheme.chain_5,
+  }
 }
 
 export function getChainInfo(chainId: SupportedL1ChainId): L1ChainInfo

@@ -39,12 +39,12 @@ import { CurrencyAmount } from '@uniswap/sdk-core'
 import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
 import { useWeb3React } from '@web3-react/core'
 import { useCurrencyBalances } from 'lib/hooks/useCurrencyBalance'
-import { Info } from 'react-feather'
-import Loader from 'components/Icons/LoadingSpinner'
+// import { Info } from 'react-feather'
+// import Loader from 'components/Icons/LoadingSpinner'
 import { usePool } from 'hooks/usePools'
-import { useSingleCallResult } from 'lib/hooks/multicall'
-import { QuoterV2 } from 'types/v3'
-import { MouseoverValueLabel } from 'components/swap/AdvancedSwapDetails'
+// import { useSingleCallResult } from 'lib/hooks/multicall'
+// import { QuoterV2 } from 'types/v3'
+// import { MouseoverValueLabel } from 'components/swap/AdvancedSwapDetails'
 
 
 function useDerivedLeverageReduceInfo(

@@ -83,7 +83,7 @@ import TokenDetailsSkeleton, {
 } from 'components/Tokens/TokenDetails/Skeleton'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import { Checkbox } from 'nft/components/layout/Checkbox'
-import { BORROW_MANAGER_FACTORY_ADDRESSES, GlOBAL_STORAGE_ADDRESS, LEVERAGE_MANAGER_FACTORY_ADDRESSES, PS_ROUTER, V3_CORE_FACTORY_ADDRESSES } from 'constants/addresses'
+import { BORROW_MANAGER_FACTORY_ADDRESSES, LEVERAGE_MANAGER_FACTORY_ADDRESSES, SEPOLIA_ROUTER, MUMBAI_ROUTER, V3_CORE_FACTORY_ADDRESSES, ROUTER_ADDRESSES } from 'constants/addresses'
 import { computeBorrowManagerAddress, computeLeverageManagerAddress, computePoolAddress, usePool } from 'hooks/usePools'
 import { useTokenAllowance } from 'hooks/useTokenAllowance'
 import { ApprovalState } from 'lib/hooks/useApproval'
@@ -94,7 +94,7 @@ import { Input as NumericalInput } from 'components/NumericalInput'
 import LeveragePositionsTable from 'components/LeveragePositionTable/TokenTable'
 import { PoolDataSection } from 'components/ExchangeChart'
 // import _ from 'lodash'
-import { FakeTokens, FETH, FUSDC } from "constants/fake-tokens"
+// import { FakeTokens, FETH, FUSDC } from "constants/fake-tokens"
 import { TabContent, TabNavItem } from 'components/Tabs'
 import BorrowPositionsTable from "components/BorrowPositionTable/TokenTable"
 import { AllowanceWarning, WarningIcon } from 'components/TokenSafety/TokenSafetyIcon'
@@ -395,6 +395,7 @@ export default function Swap({ className }: { className?: string }) {
     borrowManagerAddress,
     premium
   } = useSwapState()
+
   const isBorrowTab = ActiveSwapTab.BORROW == activeTab
 
 
@@ -627,7 +628,7 @@ export default function Swap({ className }: { className?: string }) {
       ? (parsedAmounts[Field.INPUT] as CurrencyAmount<Token>)
       : undefined),
     // isSupportedChain(chainId) ? UNIVERSAL_ROUTER_ADDRESS(chainId) : undefined
-    isSupportedChain(chainId) ? PS_ROUTER : undefined
+    isSupportedChain(chainId) ? ROUTER_ADDRESSES[chainId] : undefined
   )
 
   let poolAddress = useBestPoolAddress(currencies[Field.INPUT] ?? undefined, currencies[Field.OUTPUT] ?? undefined)
@@ -637,7 +638,7 @@ export default function Swap({ className }: { className?: string }) {
     if (pool && account && provider) {
       onLeverageManagerAddress(computeLeverageManagerAddress(
         {
-          factoryAddress: LEVERAGE_MANAGER_FACTORY_ADDRESSES[chainId ?? 80001],
+          factoryAddress: LEVERAGE_MANAGER_FACTORY_ADDRESSES[chainId ?? 11155111],
           tokenA: inputCurrency?.wrapped.address ?? "",
           tokenB: outputCurrency?.wrapped.address ?? "",
           fee: pool.fee
@@ -645,7 +646,7 @@ export default function Swap({ className }: { className?: string }) {
       ))
       onBorrowManagerAddress(computeBorrowManagerAddress(
         {
-          factoryAddress: BORROW_MANAGER_FACTORY_ADDRESSES[chainId ?? 80001],
+          factoryAddress: BORROW_MANAGER_FACTORY_ADDRESSES[chainId ?? 11155111],
           tokenA: inputCurrency?.wrapped.address ?? "",
           tokenB: outputCurrency?.wrapped.address ?? "",
           fee: pool.fee
@@ -907,6 +908,8 @@ export default function Swap({ className }: { className?: string }) {
   //   leverageCallback, leverageTrade, showLeverageConfirm, showBorrowConfirm
   // ])
 
+  // console.log('currencies', currencies)
+
   const swapIsUnsupported = useIsSwapUnsupported(currencies[Field.INPUT], currencies[Field.OUTPUT])
 
   // const priceImpactTooHigh = priceImpactSeverity > 3 && !isExpertMode
@@ -1021,7 +1024,7 @@ export default function Swap({ className }: { className?: string }) {
 
                 </TokenInfoContainer>
                 <PoolDataSection
-                  chainId={chainId ?? 80001}
+                  chainId={chainId ?? 11155111}
                   token0={inputIsToken0 ? inputCurrency?.wrapped : outputCurrency?.wrapped}
                   token1={inputIsToken0 ? outputCurrency?.wrapped : inputCurrency?.wrapped}
                   fee={pool?.fee}
