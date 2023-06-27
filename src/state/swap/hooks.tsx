@@ -369,19 +369,19 @@ export function useDerivedBorrowCreationInfo({ allowance: {input: inputAllowance
     }
 
     // compare input balance to max input based on version
-    const [balanceIn, amountIn] = [currencyBalances[Field.INPUT], parsedAmount?.toExact()]
+    // const [balanceIn, amountIn] = [currencyBalances[Field.INPUT], parsedAmount?.toExact()]
     // const price = inputIsToken0 ? pool.token0Price.toFixed(18) : pool.token1Price.toFixed(18)
     // new BN(parsedAmount?.toExact() ?? 0).times(ltv ?? "0").times(price).shiftedBy(18).toFixed(0)
-    const [balanceOut, premiumAmount] = [currencyBalances[Field.INPUT], parsedAmount?.toExact()]
+    // const [balanceOut, premiumAmount] = [currencyBalances[Field.INPUT], parsedAmount?.toExact()]
 
-    // TODO add slippage to all the simulations
-    if (balanceIn && amountIn && Number(balanceIn.toExact()) < Number(amountIn)) {
-      inputError = <Trans>Insufficient {inputCurrency?.symbol} balance</Trans>
-    }
+    // // TODO add slippage to all the simulations
+    // if (balanceIn && amountIn && Number(balanceIn.toExact()) < Number(amountIn)) {
+    //   inputError = <Trans>Insufficient {inputCurrency?.symbol} balance</Trans>
+    // }
 
-    if (balanceOut && premiumAmount && Number(balanceOut.toExact()) < Number(premium)) {
-      inputError = inputError ?? <Trans>Insufficient {outputCurrency?.symbol} balance</Trans>
-    }
+    // if (balanceOut && premiumAmount && Number(balanceOut.toExact()) < Number(premium)) {
+    //   inputError = inputError ?? <Trans>Insufficient {outputCurrency?.symbol} balance</Trans>
+    // }
 
     if (tradeState === TradeState.NO_ROUTE_FOUND) {
       inputError = inputError ?? <Trans>Insufficient Liquidity</Trans>
