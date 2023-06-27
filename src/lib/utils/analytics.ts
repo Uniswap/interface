@@ -1,6 +1,6 @@
 import { Currency, CurrencyAmount, Percent, Price, Token } from '@uniswap/sdk-core'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
-import { InterfaceTrade } from 'state/routing/types'
+import { InterfaceTrade, QuoteMethod } from 'state/routing/types'
 import { isClassicTrade, isUniswapXTrade } from 'state/routing/utils'
 import { computeRealizedPriceImpact } from 'utils/prices'
 
@@ -34,7 +34,8 @@ export const getPriceUpdateBasisPoints = (
   return formatPercentInBasisPointsNumber(changePercentage)
 }
 
-function formatCommonPropertiesForTrade(trade: InterfaceTrade) {
+// TODO (Gouda): rename this to formatEventPropertiesForTrade for easier merge later
+export function formatCommonPropertiesForTrade(trade: InterfaceTrade, allowedSlippage: Percent, method?: QuoteMethod) {
   return {
     routing: trade.fillType,
     type: trade.tradeType,
@@ -54,23 +55,34 @@ function formatCommonPropertiesForTrade(trade: InterfaceTrade) {
         ? trade.inputAmount.currency.chainId
         : undefined,
     estimated_network_fee_usd: isClassicTrade(trade) ? trade.gasUseEstimateUSD : trade.classicGasUseEstimateUSD,
+    minimum_output_after_slippage: trade.minimumAmountOut(allowedSlippage).toSignificant(6),
+    allowed_slippage: formatPercentNumber(allowedSlippage),
+    method,
   }
 }
 
 export const formatSwapSignedAnalyticsEventProperties = ({
   trade,
+  allowedSlippage,
   fiatValues,
   txHash,
 }: {
   trade: InterfaceTrade
+  allowedSlippage: Percent
   fiatValues: { amountIn?: number; amountOut?: number }
   txHash: string
 }) => ({
   transaction_hash: txHash,
   token_in_amount_usd: fiatValues.amountIn,
   token_out_amount_usd: fiatValues.amountOut,
-  ...formatCommonPropertiesForTrade(trade),
+  ...formatCommonPropertiesForTrade(trade, allowedSlippage),
 })
+
+function getQuoteMethod(trade: InterfaceTrade) {
+  if (isUniswapXTrade(trade)) return QuoteMethod.ROUTING_API
+
+  return trade.quoteMethod
+}
 
 export const formatSwapQuoteReceivedEventProperties = (
   trade: InterfaceTrade,
@@ -78,7 +90,7 @@ export const formatSwapQuoteReceivedEventProperties = (
   swapQuoteReceivedDate: Date
 ) => {
   return {
-    ...formatCommonPropertiesForTrade(trade),
+    ...formatCommonPropertiesForTrade(trade, allowedSlippage, getQuoteMethod(trade)),
     swap_quote_block_number: isClassicTrade(trade) ? trade.blockNumber : undefined,
     swap_quote_received_timestamp: swapQuoteReceivedDate.getTime(),
     allowed_slippage_basis_points: formatPercentInBasisPointsNumber(allowedSlippage),

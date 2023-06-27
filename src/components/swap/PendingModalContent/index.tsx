@@ -28,7 +28,7 @@ import {
 import { TradeSummary } from './TradeSummary'
 
 export const PendingModalContainer = styled(ColumnCenter)`
-  margin: 48px 0 28px;
+  margin: 48px 0 8px;
 `
 
 const HeaderContainer = styled(ColumnCenter)<{ $disabled?: boolean }>`
@@ -92,6 +92,7 @@ export type PendingConfirmModalState = Extract<
   | ConfirmModalState.PERMITTING
   | ConfirmModalState.PENDING_CONFIRMATION
   | ConfirmModalState.WRAPPING
+  | ConfirmModalState.RESETTING_USDT
 >
 
 interface PendingModalStep {
@@ -110,6 +111,7 @@ interface PendingModalContentProps {
   wrapTxHash?: string
   hideStepIndicators?: boolean
   tokenApprovalPending?: boolean
+  revocationPending?: boolean
 }
 
 interface ContentArgs {
@@ -120,6 +122,7 @@ interface ContentArgs {
   swapPending: boolean
   wrapPending: boolean
   tokenApprovalPending: boolean
+  revocationPending: boolean
   swapResult?: SwapResult
   chainId?: number
 }
@@ -132,6 +135,7 @@ function getContent(args: ContentArgs): PendingModalStep {
     swapConfirmed,
     swapPending,
     tokenApprovalPending,
+    revocationPending,
     trade,
     swapResult,
     chainId,
@@ -148,9 +152,15 @@ function getContent(args: ContentArgs): PendingModalStep {
         ),
         label: wrapPending ? t`Pending...` : t`Proceed in your wallet`,
       }
+    case ConfirmModalState.RESETTING_USDT:
+      return {
+        title: t`Reset USDT`,
+        subtitle: t`USDT requires resetting approval when spending limits are too low.`,
+        label: revocationPending ? t`Pending...` : t`Proceed in your wallet`,
+      }
     case ConfirmModalState.APPROVING_TOKEN:
       return {
-        title: t`Enable spending limits for ${approvalCurrency?.symbol ?? 'this token'} on Uniswap`,
+        title: t`Enable spending ${approvalCurrency?.symbol ?? 'this token'} on Uniswap`,
         subtitle: (
           <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/8120520483085">
             <Trans>Why is this required?</Trans>
@@ -201,6 +211,7 @@ export function PendingModalContent({
   wrapTxHash,
   hideStepIndicators,
   tokenApprovalPending = false,
+  revocationPending = false,
 }: PendingModalContentProps) {
   const { chainId } = useWeb3React()
 
@@ -223,10 +234,12 @@ export function PendingModalContent({
     swapPending,
     wrapPending,
     tokenApprovalPending,
+    revocationPending,
     swapResult,
     trade,
     chainId,
   })
+
   const currentStepContainerRef = useRef<HTMLDivElement>(null)
   useUnmountingAnimation(currentStepContainerRef, () => AnimationType.EXITING)
 
@@ -240,26 +253,31 @@ export function PendingModalContent({
   return (
     <PendingModalContainer gap="lg">
       <LogoContainer>
-        {/* Shown during the first step, and fades out afterwards. */}
+        {/* Shown during the setup approval step, and fades out afterwards. */}
         {currentStep === ConfirmModalState.APPROVING_TOKEN && <PaperIcon />}
-        {/* Shown during the first step as a small badge. */}
-        {/* Scales up once we transition from first to second step. */}
-        {/* Fades out after the second step. */}
+        {/* Shown during the setup approval step as a small badge. */}
+        {/* Scales up once we transition from setup approval to permit signature. */}
+        {/* Fades out after the permit signature. */}
         {currentStep !== ConfirmModalState.PENDING_CONFIRMATION && (
           <CurrencyLoader
             currency={trade?.inputAmount.currency}
             asBadge={currentStep === ConfirmModalState.APPROVING_TOKEN}
           />
         )}
-        {/* Shown only during the third step under "success" conditions, and scales in. */}
+        {/* Shown only during the final step under "success" conditions, and scales in. */}
         {currentStep === ConfirmModalState.PENDING_CONFIRMATION && showSuccess && <AnimatedEntranceConfirmationIcon />}
-        {/* Scales in for the first step if the approval is pending onchain confirmation. */}
-        {/* Scales in for the third step if the swap is pending user signature or onchain confirmation. */}
+        {/* Scales in for the USDT revoke allowance step if the revoke is pending onchain confirmation. */}
+        {/* Scales in for the setup approval step if the approval is pending onchain confirmation. */}
+        {/* Scales in for the final step if the swap is pending user signature or onchain confirmation. */}
         {((currentStep === ConfirmModalState.PENDING_CONFIRMATION && !showSuccess) ||
           tokenApprovalPending ||
-          wrapPending) && <LoadingIndicatorOverlay />}
+          wrapPending ||
+          revocationPending) && <LoadingIndicatorOverlay />}
       </LogoContainer>
-      <HeaderContainer gap="md" $disabled={tokenApprovalPending || swapPending || wrapPending}>
+      <HeaderContainer
+        gap="md"
+        $disabled={revocationPending || tokenApprovalPending || wrapPending || (swapPending && !showSuccess)}
+      >
         <AnimationWrapper>
           {steps.map((step) => {
             const { title, subtitle } = getContent({
@@ -268,6 +286,7 @@ export function PendingModalContent({
               swapConfirmed,
               swapPending,
               wrapPending,
+              revocationPending,
               tokenApprovalPending,
               swapResult,
               trade,
@@ -296,7 +315,7 @@ export function PendingModalContent({
         </Row>
       </HeaderContainer>
       {button && <Row justify="center">{button}</Row>}
-      {!hideStepIndicators && (
+      {!hideStepIndicators && !showSuccess && (
         <Row gap="14px" justify="center">
           {steps.map((_, i) => {
             return <StepCircle key={i} active={steps.indexOf(currentStep) === i} />

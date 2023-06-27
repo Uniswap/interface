@@ -131,6 +131,11 @@ const userSlice = createSlice({
     // for all existing users with a previous version of the state in their localStorage.
     // In order to avoid this, we need to set a default value for each new property manually during hydration.
     builder.addCase(updateVersion, (state) => {
+      // If `selectedWallet` is ConnectionType.UNI_WALLET (deprecated) switch it to ConnectionType.UNISWAP_WALLET
+      if (state.selectedWallet === 'UNIWALLET') {
+        state.selectedWallet = ConnectionType.UNISWAP_WALLET
+      }
+
       // If `userSlippageTolerance` is not present or its value is invalid, reset to default
       if (
         typeof state.userSlippageTolerance !== 'number' ||

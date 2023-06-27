@@ -17,6 +17,7 @@ import {
   InterfaceTrade,
   isClassicQuoteResponse,
   PoolType,
+  QuoteMethod,
   QuoteState,
   SwapRouterNativeAssets,
   TradeFillType,
@@ -166,7 +167,7 @@ function getTradeCurrencies(args: GetQuoteArgs, data: URAQuoteResponse): [Curren
 export function transformRoutesToTrade(
   args: GetQuoteArgs,
   data: URAQuoteResponse,
-  fromClientRouter: boolean
+  quoteMethod: QuoteMethod
 ): TradeResult {
   const { tradeType, needsWrapIfUniswapX } = args
 
@@ -219,7 +220,7 @@ export function transformRoutesToTrade(
     gasUseEstimateUSD: gasUseEstimateUSD ? parseFloat(gasUseEstimateUSD).toFixed(2).toString() : undefined,
     blockNumber,
     requestId: data.quote.requestId,
-    fromClientRouter,
+    quoteMethod,
   })
 
   if (data.routing === URAQuoteType.DUTCH_LIMIT) {
@@ -288,8 +289,11 @@ export function isUniswapXTrade(trade?: InterfaceTrade): trade is DutchOrderTrad
   return trade?.fillType === TradeFillType.UniswapX
 }
 
-export function shouldUseAPIRouter(
-  routerPreference?: RouterPreference | typeof INTERNAL_ROUTER_PREFERENCE_PRICE
-): boolean {
-  return routerPreference !== RouterPreference.CLIENT && routerPreference !== INTERNAL_ROUTER_PREFERENCE_PRICE
+export function shouldUseAPIRouter(args: GetQuoteArgs): boolean {
+  const { routerPreference, isRoutingAPIPrice } = args
+  if (routerPreference === INTERNAL_ROUTER_PREFERENCE_PRICE && isRoutingAPIPrice) {
+    return true
+  }
+
+  return routerPreference === RouterPreference.API || routerPreference === RouterPreference.X
 }

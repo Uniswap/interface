@@ -15,8 +15,9 @@ import {
 } from '../state/transactions/types'
 import { currencyId } from '../utils/currencyId'
 import useTransactionDeadline from './useTransactionDeadline'
+// TODO (Gouda): make this named export
 import useUniswapXSwapCallback from './useUniswapXSwapCallback'
-import useUniversalRouterSwapCallback from './useUniversalRouter'
+import { useUniversalRouterSwapCallback } from './useUniversalRouter'
 
 export type SwapResult = Awaited<ReturnType<ReturnType<typeof useSwapCallback>>>
 

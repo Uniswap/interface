@@ -37,6 +37,20 @@ describe('Swap', () => {
       cy.get('#swap-currency-input .token-amount-input').should('have.value', '')
     })
 
+    it('resets the dependent input when the independent input is cleared', () => {
+      cy.visit(`/swap?inputCurrency=ETH&outputCurrency=${UNI_MAINNET.address}`)
+      cy.get('#swap-currency-input .token-amount-input').should('have.value', '')
+      cy.get(`#swap-currency-output .token-amount-input`).should('have.value', '')
+
+      cy.get('#swap-currency-input .token-amount-input').type('0.01').should('have.value', '0.01')
+      cy.get(`#swap-currency-output .token-amount-input`).should('not.have.value', '')
+      cy.get('#swap-currency-input .token-amount-input').clear()
+      cy.get(`#swap-currency-output .token-amount-input`).should('not.have.value')
+
+      cy.window().trigger('blur')
+      cy.get(`#swap-currency-output .token-amount-input`).should('not.have.value')
+    })
+
     it('swaps ETH for USDC', () => {
       cy.visit('/swap', { ethereum: 'hardhat' })
       cy.hardhat({ automine: false })

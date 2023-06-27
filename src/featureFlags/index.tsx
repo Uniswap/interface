@@ -14,7 +14,7 @@ export enum FeatureFlag {
   debounceSwapQuote = 'debounce_swap_quote',
   // TODO (Gouda): update this when naming is finalized.
   uniswapXEnabled = 'gouda_enabled',
-  nativeUsdcArbitrum = 'web_usdc_arbitrum',
+  routingAPIPrice = 'routing_api_price',
 }
 
 interface FeatureFlagsContextType {

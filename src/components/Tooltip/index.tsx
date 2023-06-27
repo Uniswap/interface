@@ -50,7 +50,7 @@ type TooltipProps = Omit<PopoverProps, 'content'> & {
   timeout?: number
 }
 
-// TODO(WEB-3305)
+// TODO(WEB-2024)
 // Migrate to MouseoverTooltip and move this component inline to MouseoverTooltip
 export default function Tooltip({ text, open, close, disabled, size = TooltipSize.Small, ...rest }: TooltipProps) {
   return (
@@ -67,7 +67,7 @@ export default function Tooltip({ text, open, close, disabled, size = TooltipSiz
   )
 }
 
-// TODO(WEB-3305)
+// TODO(WEB-2024)
 // Do not pass through PopoverProps. Prefer higher-level interface to control MouseoverTooltip.
 type MouseoverTooltipProps = Omit<PopoverProps, 'content' | 'show'> &
   PropsWithChildren<{

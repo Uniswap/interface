@@ -4,7 +4,7 @@ import { SupportedChainId } from 'constants/chains'
 
 import {
   AMPL,
-  BRIDGED_USDC_ARBITRUM,
+  ARB,
   BTC_BSC,
   BUSD_BSC,
   CAKE_BSC,
@@ -26,6 +26,7 @@ import {
   FXS,
   MATIC_BSC,
   nativeOnChain,
+  OP,
   PORTAL_ETH_CELO,
   PORTAL_USDC_CELO,
   renBTC,
@@ -153,8 +154,9 @@ export const COMMON_BASES: ChainCurrencyList = {
   ],
   [SupportedChainId.ARBITRUM_ONE]: [
     nativeOnChain(SupportedChainId.ARBITRUM_ONE),
+    ARB,
     DAI_ARBITRUM_ONE,
-    BRIDGED_USDC_ARBITRUM,
+    USDC_ARBITRUM,
     USDT_ARBITRUM_ONE,
     WBTC_ARBITRUM_ONE,
     WRAPPED_NATIVE_CURRENCY[SupportedChainId.ARBITRUM_ONE] as Token,
@@ -166,6 +168,7 @@ export const COMMON_BASES: ChainCurrencyList = {
   ],
   [SupportedChainId.OPTIMISM]: [
     nativeOnChain(SupportedChainId.OPTIMISM),
+    OP,
     DAI_OPTIMISM,
     USDC_OPTIMISM,
     USDT_OPTIMISM,
@@ -208,19 +211,6 @@ export const COMMON_BASES: ChainCurrencyList = {
     ETH_BSC,
     BTC_BSC,
     BUSD_BSC,
-  ],
-}
-
-// This is the same as COMMON_BASES except it swaps out Bridged USDC on arbitrum for native USDC.
-export const COMMON_BASES_V2: ChainCurrencyList = {
-  ...COMMON_BASES,
-  [SupportedChainId.ARBITRUM_ONE]: [
-    nativeOnChain(SupportedChainId.ARBITRUM_ONE),
-    DAI_ARBITRUM_ONE,
-    USDC_ARBITRUM,
-    USDT_ARBITRUM_ONE,
-    WBTC_ARBITRUM_ONE,
-    WRAPPED_NATIVE_CURRENCY[SupportedChainId.ARBITRUM_ONE] as Token,
   ],
 }
 
