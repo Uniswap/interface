@@ -230,11 +230,13 @@ export default function DelegateModal({ isOpen, poolInfo, onDismiss, title }: Vo
                 {usingDelegate ? <Trans>Stake From Pool</Trans> : <Trans>Stake From Wallet</Trans>}
               </ThemedText.DeprecatedMediumHeader>
             </ButtonPrimary>
-            <TextButton onClick={() => setUsingDelegate(!usingDelegate)}>
-              <ThemedText.DeprecatedBlue>
-                {usingDelegate ? <Trans>Stake From Wallet</Trans> : <Trans>Stake From Pool</Trans>}
-              </ThemedText.DeprecatedBlue>
-            </TextButton>
+            {poolInfo?.owner === account && (
+              <TextButton onClick={() => setUsingDelegate(!usingDelegate)}>
+                <ThemedText.DeprecatedBlue>
+                  {usingDelegate ? <Trans>Stake From Wallet</Trans> : <Trans>Stake From Pool</Trans>}
+                </ThemedText.DeprecatedBlue>
+              </TextButton>
+            )}
           </AutoColumn>
         </ContentWrapper>
       )}

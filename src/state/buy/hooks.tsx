@@ -8,7 +8,9 @@ import { ReactNode } from 'react'
 export interface PoolInfo {
   // the smart pool token
   pool: Token
+  // TODO: check where we use recipient
   recipient: string
+  owner?: string
   // the amount of base tokens the user has available for purchase
   maxSlippage?: number
   // the total amount of pool tokens held by the account
