@@ -21,7 +21,7 @@ import WETH_ABI from 'abis/weth.json'
 import {
   ARGENT_WALLET_DETECTOR_ADDRESS,
   ENS_REGISTRAR_ADDRESSES,
-  GlOBAL_STORAGE_ADDRESS,
+  GLOBAL_STORAGE_ADDRESSES,
   MULTICALL_ADDRESS,
   NONFUNGIBLE_POSITION_MANAGER_ADDRESSES,
   QUOTER_ADDRESSES,
@@ -41,6 +41,7 @@ import { abi as GlobalStorageAbi } from "../perpspotContracts/GlobalStorage.json
 import { abi as BorrowManagerAbi } from "../perpspotContracts/BorrowManager.json"
 import { abi as LiquidityManagerAbi } from "../perpspotContracts/LiquidityManager.json"
 import { getContract } from '../utils'
+import { SupportedChainId } from '@looksrare/sdk'
 
 const { abi: IUniswapV2PairABI } = IUniswapV2PairJson
 const { abi: IUniswapV2Router02ABI } = IUniswapV2Router02Json
@@ -99,7 +100,7 @@ export function usePoolContract(poolAddress?: string, withSignerIfPossible?: boo
 }
 
 export function useGlobalStorageContract(withSignerIfPossible?:boolean) {
-  return useContract(GlOBAL_STORAGE_ADDRESS, GlobalStorageAbi, withSignerIfPossible)
+  return useContract(GLOBAL_STORAGE_ADDRESSES, GlobalStorageAbi, withSignerIfPossible)
 }
 
 export function useTestTokenContract(testTokenAd?: string, withSignerIfPossible?: boolean) {
@@ -155,6 +156,7 @@ export function useV2RouterContract(): Contract | null {
 }
 
 export function useInterfaceMulticall() {
+
   return useContract<UniswapInterfaceMulticall>(MULTICALL_ADDRESS, MulticallABI, false) as UniswapInterfaceMulticall
 }
 

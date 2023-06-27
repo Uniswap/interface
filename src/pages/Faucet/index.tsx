@@ -1,7 +1,8 @@
 import { Token } from "@uniswap/sdk-core"
 import { useWeb3React } from "@web3-react/core"
 import { AutoColumn } from "components/Column"
-import { FakeTokens } from "constants/fake-tokens"
+import { SupportedChainId } from "constants/chains"
+import { FakeTokensMapMumbai, FakeTokensMapSepolia, FakeTokens_MUMBAI, FakeTokens_SEPOLIA } from "constants/fake-tokens"
 import { useFaucetCallback } from "hooks/useApproveCallback"
 import { MaxButton } from "pages/Pool/styleds"
 import { SmallMaxButton } from "pages/RemoveLiquidity/styled"
@@ -37,7 +38,9 @@ const FaucetsContainer = styled.div`
 `
 
 export default function FaucetsPage() {
+  const {chainId} = useWeb3React()
 
+  const FakeTokens = chainId === SupportedChainId.SEPOLIA ? FakeTokens_SEPOLIA : FakeTokens_MUMBAI
   return (
     <PageWrapper>
       <AutoColumn>

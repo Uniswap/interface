@@ -90,8 +90,8 @@ export const PoolDataSection = ({
 	const uniswapPoolAddress = useMemo(() => {
 		if (chainId && token0 && token1) {
 			// console.log('getFakePool', getFakePool(token0.address.toLowerCase(), token1.address.toLowerCase()))
-			if (isFakePair(token0.address.toLowerCase(), token1.address.toLowerCase())) {
-				return getFakePool(token0.address.toLowerCase(), token1.address.toLowerCase());
+			if (isFakePair(chainId, token0.address.toLowerCase(), token1.address.toLowerCase())) {
+				return getFakePool(chainId, token0.address.toLowerCase(), token1.address.toLowerCase());
 			}
 
 			// return computePoolAddress({
@@ -245,11 +245,12 @@ export const PoolDataSection = ({
 
 	// 	fetch()
 	// })
-
+	// console.log('symbol', symbol)
 	useEffect(() => {
-		// console.log("lmt", token0?.address.toLowerCase(), token1?.address.toLowerCase(), isFakePair(token0?.address.toLowerCase(), token1?.address.toLowerCase()))
-		if (token0 && token1 && isFakePair(token0?.address.toLowerCase(), token1?.address.toLowerCase())) {
-			setSymbol(getFakeSymbol(token0.address.toLowerCase(), token1.address.toLowerCase()) as string)
+
+		if (token0 && token1 && isFakePair(chainId, token0?.address.toLowerCase(), token1?.address.toLowerCase())) {
+
+			setSymbol(getFakeSymbol(chainId, token0.address.toLowerCase(), token1.address.toLowerCase()) as string)
 		}
 		else if (
 			uniswapPoolExists

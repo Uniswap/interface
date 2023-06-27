@@ -5,7 +5,7 @@ import { sendEvent } from "components/analytics"
 import { Text } from 'rebass'
 import ConfirmSwapModal, { LeverageConfirmModal } from "components/swap/ConfirmSwapModal"
 import confirmPriceImpactWithoutFee from "components/swap/confirmPriceImpactWithoutFee"
-import { PS_ROUTER } from "constants/addresses"
+import { ROUTER_ADDRESSES } from "constants/addresses"
 import { isSupportedChain } from "constants/chains"
 import { useCurrency } from "hooks/Tokens"
 import useENSAddress from "hooks/useENSAddress"
@@ -182,7 +182,7 @@ const TradeTabContent = () => {
     (parsedAmounts[Field.INPUT]?.currency.isToken
       ? (parsedAmounts[Field.INPUT] as CurrencyAmount<Token>)
       : undefined),
-    isSupportedChain(chainId) ? PS_ROUTER : undefined
+    isSupportedChain(chainId) ? ROUTER_ADDRESSES[chainId] : undefined
   )
 
   const { callback: swapCallback } = useSwapCallback(

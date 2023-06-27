@@ -85,19 +85,19 @@ export function useLimitlessPositions(account: string | undefined): {loading: bo
         return {
           tokenId: tokenId.toString(),
           leverageManagerAddress: computeLeverageManagerAddress({
-            factoryAddress: LEVERAGE_MANAGER_FACTORY_ADDRESSES[chainId ?? 80001],
+            factoryAddress: LEVERAGE_MANAGER_FACTORY_ADDRESSES[chainId ?? 11155111],
             tokenA: key.token0,
             tokenB: key.token1,
             fee: (key.fee),
           }),
           borrowManagerAddress: computeBorrowManagerAddress({
-            factoryAddress: BORROW_MANAGER_FACTORY_ADDRESSES[chainId ?? 80001],
+            factoryAddress: BORROW_MANAGER_FACTORY_ADDRESSES[chainId ?? 11155111],
             tokenA: key.token0,
             tokenB: key.token1,
             fee: (key.fee),
           }),
           liquidityManagerAddress: computeLiquidityManagerAddress({
-            factoryAddress: LIQUIDITY_MANAGER_FACTORY_ADDRESSES[chainId ?? 80001],
+            factoryAddress: LIQUIDITY_MANAGER_FACTORY_ADDRESSES[chainId ?? 11155111],
             tokenA: key.token0,
             tokenB: key.token1,
             fee: (key.fee)
@@ -161,19 +161,19 @@ export function useLimitlessPositionFromTokenId(tokenId: string | undefined): { 
       const _position = {
         tokenId,
         leverageManagerAddress: computeLeverageManagerAddress({
-          factoryAddress: LEVERAGE_MANAGER_FACTORY_ADDRESSES[chainId ?? 80001],
+          factoryAddress: LEVERAGE_MANAGER_FACTORY_ADDRESSES[chainId ?? 11155111],
           tokenA: key.token0,
           tokenB: key.token1,
           fee: (key.fee),
         }),
         borrowManagerAddress: computeBorrowManagerAddress({
-          factoryAddress: BORROW_MANAGER_FACTORY_ADDRESSES[chainId ?? 80001],
+          factoryAddress: BORROW_MANAGER_FACTORY_ADDRESSES[chainId ?? 11155111],
           tokenA: key.token0,
           tokenB: key.token1,
           fee: (key.fee),
         }),
         liquidityManagerAddress: computeLiquidityManagerAddress({
-          factoryAddress: LIQUIDITY_MANAGER_FACTORY_ADDRESSES[chainId ?? 80001],
+          factoryAddress: LIQUIDITY_MANAGER_FACTORY_ADDRESSES[chainId ?? 11155111],
           tokenA: key.token0,
           tokenB: key.token1,
           fee: (key.fee)

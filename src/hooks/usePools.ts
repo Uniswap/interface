@@ -11,7 +11,7 @@ import { defaultAbiCoder } from '@ethersproject/abi'
 import { getCreate2Address } from '@ethersproject/address'
 import { keccak256 } from '@ethersproject/solidity'
 
-import { BORROW_INIT_CODE_HASH, LEVERAGE_INIT_CODE_HASH, LIQUITITY_INIT_CODE_HASH, POOL_INIT_CODE_HASH, PS_ROUTER, PS_V3_POOL_FACTORY, V3_CORE_FACTORY_ADDRESSES } from '../constants/addresses'
+import { BORROW_INIT_CODE_HASH, LEVERAGE_INIT_CODE_HASH, LIQUITITY_INIT_CODE_HASH, POOL_INIT_CODE_HASH, V3_CORE_FACTORY_ADDRESSES } from '../constants/addresses'
 import { IUniswapV3PoolStateInterface } from '../types/v3/IUniswapV3PoolState'
 
 const POOL_STATE_INTERFACE = new Interface(IUniswapV3PoolStateABI) as IUniswapV3PoolStateInterface

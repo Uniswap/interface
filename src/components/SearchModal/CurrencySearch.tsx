@@ -28,7 +28,8 @@ import CommonBases from './CommonBases'
 import { CurrencyRow, formatAnalyticsEventProperties } from './CurrencyList'
 import CurrencyList from './CurrencyList'
 import { PaddedColumn, SearchInput, Separator } from './styleds'
-import { FakeTokens } from 'constants/fake-tokens'
+import { FakeTokens_SEPOLIA,FakeTokens_MUMBAI } from 'constants/fake-tokens'
+import { SupportedChainId } from 'constants/chains'
 
 const ContentWrapper = styled(Column)`
   background-color: ${({ theme }) => theme.backgroundSurface};
@@ -88,7 +89,7 @@ export function CurrencySearch({
 
   const defaultTokens = useDefaultActiveTokens()
   
-  console.log('defaultTokens', defaultTokens)
+  // console.log('defaultTokens', defaultTokens)
   const filteredTokens: Token[] = useMemo(() => {
     return Object.values(defaultTokens).filter(getTokenFilter(debouncedQuery))
   }, [defaultTokens, debouncedQuery])
@@ -138,6 +139,8 @@ export function CurrencySearch({
   //   return []
   // }, [chainId])
 
+  const FakeTokens = chainId === SupportedChainId.SEPOLIA ? FakeTokens_SEPOLIA : FakeTokens_MUMBAI
+
   const searchCurrencies: Currency[] = useMemo(() => {
     const s = debouncedQuery.toLowerCase().trim()
 
@@ -150,7 +153,7 @@ export function CurrencySearch({
       disableNonToken || native.equals(wrapped) ? [wrapped] : shouldShowWrapped ? [native, wrapped] : [native]
     ).filter((n) => n.symbol?.toLowerCase()?.indexOf(s) !== -1 || n.name?.toLowerCase()?.indexOf(s) !== -1)
 
-    return [...natives, ...tokens]
+    return [...natives, ...tokens, ...FakeTokens]
   }, [
     debouncedQuery,
     filteredSortedTokens,

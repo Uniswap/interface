@@ -33,7 +33,8 @@ import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
 import { useLimitlessPositionFromKeys } from 'hooks/useV3Positions'
 import { AllowanceState } from 'hooks/usePermit2Allowance'
 import { useSingleCallResult } from 'lib/hooks/multicall'
-import { FETH, FUSDC } from 'constants/fake-tokens'
+import { FETH_MUMBAI, FUSDC_MUMBAI, FETH_SEPOLIA, FUSDC_SEPOLIA } from 'constants/fake-tokens'
+import { SupportedChainId } from 'constants/chains'
 
 // import { useLeveragePosition } from 'hooks/useV3Positions'
 
@@ -790,8 +791,12 @@ export function useDerivedSwapInfo(): {
     leverageFactor
   } = useSwapState()
 
+  // console.log("currencyId", inputCurrencyId, outputCurrencyId)
+
   const inputCurrency = useCurrency(inputCurrencyId)
   const outputCurrency = useCurrency(outputCurrencyId)
+
+  console.log('inputCurrency', inputCurrency)
   const recipientLookup = useENS(recipient ?? undefined)
   const to: string | null = (recipient === null ? account : recipientLookup.address) ?? null
 
@@ -963,8 +968,8 @@ export function useDefaultsFromURLSearch(): SwapState {
 
   useEffect(() => {
     if (!chainId) return
-    const inputCurrencyId = FUSDC.address// parsedSwapState[Field.INPUT].currencyId ?? undefined
-    const outputCurrencyId = FETH.address// parsedSwapState[Field.OUTPUT].currencyId ?? undefined
+    const inputCurrencyId = chainId === SupportedChainId.SEPOLIA ?  FUSDC_SEPOLIA.address : FUSDC_MUMBAI.address // parsedSwapState[Field.INPUT].currencyId ?? undefined
+    const outputCurrencyId = chainId === SupportedChainId.SEPOLIA ? FETH_SEPOLIA.address : FETH_MUMBAI.address // parsedSwapState[Field.OUTPUT].currencyId ?? undefined
 
     dispatch(
       replaceSwapState({
