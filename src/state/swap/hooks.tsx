@@ -151,6 +151,7 @@ export function useDerivedSwapInfo(
 
   // allowed slippage is either auto slippage, or custom user defined slippage if auto slippage disabled
   const autoSlippage = useAutoSlippageTolerance(isClassicTrade(trade.trade) ? trade.trade : undefined)
+  // TODO (Gouda): slippageTolerance for Gouda trades should be read from the backend response
   const allowedSlippage = useUserSlippageToleranceWithDefault(autoSlippage)
 
   const inputError = useMemo(() => {

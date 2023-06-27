@@ -1,4 +1,5 @@
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { useUniswapXEnabled } from 'featureFlags/flags/gouda'
 import { useRoutingAPIForPrice } from 'featureFlags/flags/priceRoutingApi'
 import { useMemo } from 'react'
 import { GetQuoteArgs, INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference } from 'state/routing/slice'
@@ -24,7 +25,9 @@ export function useRoutingAPIArguments({
   tradeType: TradeType
   routerPreference: RouterPreference | typeof INTERNAL_ROUTER_PREFERENCE_PRICE
 }): GetQuoteArgs | undefined {
+  const uniswapXEnabled = useUniswapXEnabled()
   const isRoutingAPIPrice = useRoutingAPIForPrice()
+
   return useMemo(
     () =>
       !tokenIn || !tokenOut || !amount || tokenIn.equals(tokenOut) || tokenIn.wrapped.equals(tokenOut.wrapped)
@@ -44,7 +47,8 @@ export function useRoutingAPIArguments({
             tradeType,
             isRoutingAPIPrice,
             needsWrapIfUniswapX: tokenIn.isNative,
+            uniswapXEnabled,
           },
-    [account, amount, routerPreference, tokenIn, tokenOut, tradeType, isRoutingAPIPrice]
+    [account, amount, routerPreference, tokenIn, tokenOut, tradeType, uniswapXEnabled, isRoutingAPIPrice]
   )
 }

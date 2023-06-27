@@ -45,6 +45,7 @@ export interface GetQuoteArgs {
   routerPreference: RouterPreference | typeof INTERNAL_ROUTER_PREFERENCE_PRICE
   tradeType: TradeType
   needsWrapIfUniswapX: boolean
+  uniswapXEnabled: boolean
   isRoutingAPIPrice?: boolean
 }
 
@@ -60,8 +61,9 @@ const DEFAULT_QUERY_PARAMS = {
   protocols,
 }
 
-function getConfigByRouterPreference(args: GetQuoteArgs): RoutingConfig {
-  const { account, routerPreference, tradeType, tokenOutAddress, tokenInChainId } = args
+function getRoutingAPIConfig(args: GetQuoteArgs): RoutingConfig {
+  const { account, tradeType, tokenOutAddress, tokenInChainId } = args
+
   const goudaDutchLimit = {
     offerer: account,
     // Protocol supports swap+send to different destination address, but
@@ -77,11 +79,10 @@ function getConfigByRouterPreference(args: GetQuoteArgs): RoutingConfig {
 
   const tokenOutIsNative = Object.values(SwapRouterNativeAssets).includes(tokenOutAddress as SwapRouterNativeAssets)
 
-  // TODO (Gouda): Update this comment (polygon tbd, can you only do UniswapX?)
-  // UniswapX doesn't support native out, exact-out, or non-mainnet/polygon trades (yet),
-  // so even if the user has selected ONLY UniswapX as their router preference, force them to receive a Classic quote.
+  // UniswapX doesn't support native out, exact-out, or non-mainnet trades (yet),
+  // so even if the user has selected UniswapX as their router preference, force them to receive a Classic quote.
   if (
-    routerPreference === RouterPreference.API ||
+    !args.uniswapXEnabled ||
     // TODO (Gouda): enable ETH out once api is ready
     tokenOutIsNative ||
     tradeType === TradeType.EXACT_OUTPUT ||
@@ -141,7 +142,7 @@ export const routingApi = createApi({
               tokenOut: tokenOutAddress,
               amount,
               type,
-              configs: getConfigByRouterPreference(args),
+              configs: getRoutingAPIConfig(args),
             }
 
             const response = await fetch({

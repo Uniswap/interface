@@ -164,6 +164,25 @@ function getTradeCurrencies(args: GetQuoteArgs, data: URAQuoteResponse): [Curren
   return [currencyIn.isNative ? currencyIn.wrapped : currencyIn, currencyOut]
 }
 
+function getClassicTradeDetails(
+  currencyIn: Currency,
+  currencyOut: Currency,
+  data: URAQuoteResponse
+): {
+  gasUseEstimateUSD?: string
+  blockNumber?: string
+  routes?: RouteResult[]
+} {
+  const classicQuote =
+    data.routing === URAQuoteType.CLASSIC ? data.quote : data.allQuotes.find(isClassicQuoteResponse)?.quote
+
+  return {
+    gasUseEstimateUSD: classicQuote?.gasUseEstimateUSD,
+    blockNumber: classicQuote?.blockNumber,
+    routes: classicQuote ? computeRoutes(currencyIn, currencyOut, classicQuote.route) : undefined,
+  }
+}
+
 export function transformRoutesToTrade(
   args: GetQuoteArgs,
   data: URAQuoteResponse,
@@ -172,22 +191,7 @@ export function transformRoutesToTrade(
   const { tradeType, needsWrapIfUniswapX } = args
 
   const [currencyIn, currencyOut] = getTradeCurrencies(args, data)
-
-  let gasUseEstimateUSD
-  let blockNumber
-  let routes: RouteResult[] | undefined
-
-  if (data.routing === URAQuoteType.CLASSIC) {
-    gasUseEstimateUSD = data.quote.gasUseEstimateUSD
-    blockNumber = data.quote.blockNumber
-    routes = computeRoutes(currencyIn, currencyOut, data.quote.route)
-  } else {
-    const classicAlternative = data.allQuotes.find(isClassicQuoteResponse)
-    gasUseEstimateUSD = classicAlternative?.quote.gasUseEstimateUSD
-    blockNumber = classicAlternative?.quote.blockNumber
-    const route = classicAlternative?.quote.route
-    routes = route ? computeRoutes(currencyIn, currencyOut, route) : []
-  }
+  const { gasUseEstimateUSD, blockNumber, routes } = getClassicTradeDetails(currencyIn, currencyOut, data)
 
   const classicTrade = new ClassicTrade({
     v2Routes:
@@ -219,11 +223,15 @@ export function transformRoutesToTrade(
     tradeType,
     gasUseEstimateUSD: gasUseEstimateUSD ? parseFloat(gasUseEstimateUSD).toFixed(2).toString() : undefined,
     blockNumber,
+    // If the top-level URA quote type is DUTCH_LIMIT, then UniswapX is better for the user
+    isUniswapXBetter: data.routing === URAQuoteType.DUTCH_LIMIT,
     requestId: data.quote.requestId,
     quoteMethod,
   })
 
-  if (data.routing === URAQuoteType.DUTCH_LIMIT) {
+  // During the opt-in period, only return Gouda quotes if the user has turned on the setting,
+  // even if it is the better quote.
+  if (data.routing === URAQuoteType.DUTCH_LIMIT && args.routerPreference === RouterPreference.X) {
     const orderInfo = toDutchOrderInfo(data.quote.orderInfo)
     return {
       state: QuoteState.SUCCESS,
