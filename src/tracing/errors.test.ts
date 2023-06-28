@@ -175,4 +175,9 @@ describe('beforeSend', () => {
       expect(beforeSend(ERROR, { originalException })).toBeNull()
     })
   })
+
+  it('filters WalletConnect re-try errors', () => {
+    const originalException = new Error('Attempt to connect to relay via `transportOpen` has stalled. Retrying...')
+    expect(beforeSend(ERROR, { originalException })).toBeNull()
+  })
 })

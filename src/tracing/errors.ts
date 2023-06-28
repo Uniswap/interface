@@ -94,6 +94,10 @@ function shouldRejectError(error: EventHint['originalException']) {
 
     // These are caused by user navigation away from the page before a request has finished.
     if (error instanceof DOMException && error.name === 'AbortError') return true
+
+    // This is an error thrown by WalletConnect when connection is lost after initial connection.
+    // The client will attempt to reconnect on it's own, so this error is non-actionable.
+    if (error.message.match(/Attempt to connect to relay via `transportOpen` has stalled. Retrying\.\.\./)) return true
   }
 
   return false
