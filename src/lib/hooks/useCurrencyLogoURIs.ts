@@ -3,7 +3,7 @@ import useHttpLocations from 'hooks/useHttpLocations'
 import { useMemo } from 'react'
 import { isAddress } from 'utils'
 
-import EthereumLogo from '../../assets/images/ethereum-logo.png'
+import sysLogo from '../../assets/images/syslogo.png'
 import { NATIVE_CHAIN_ID } from '../../constants/tokens'
 
 type Network = 'rollux' | 'rollux_tanenbaum'
@@ -29,19 +29,14 @@ export function chainIdToNetworkName(networkId: SupportedChainId): Network {
 
 export function getNativeLogoURI(chainId: SupportedChainId = SupportedChainId.ROLLUX): string {
   switch (chainId) {
-    // case SupportedChainId.POLYGON:
-    // case SupportedChainId.POLYGON_MUMBAI:
-    // return MaticLogo
-    // case SupportedChainId.BNB:
-    // return BnbLogo
-    // case SupportedChainId.CELO:
-    // case SupportedChainId.CELO_ALFAJORES:
-    // return CeloLogo
+    case SupportedChainId.ROLLUX:
+      return sysLogo
     default:
-      return EthereumLogo
+      return sysLogo
   }
 }
 
+// TODO: review token log with raw link
 function getTokenLogoURI(address: string, chainId: SupportedChainId = SupportedChainId.ROLLUX): string | void {
   // const networkName = chainIdToNetworkName(chainId)
   // const networksWithUrls = [

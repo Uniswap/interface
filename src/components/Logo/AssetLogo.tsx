@@ -76,6 +76,7 @@ export default function AssetLogo({
   }
 
   const [src, nextSrc] = useTokenLogoSource(address, chainId, isNative, backupImg)
+  console.log('logo', src)
   const L2Icon = getChainInfo(chainId)?.circleLogoUrl
 
   return (

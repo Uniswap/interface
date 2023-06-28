@@ -194,7 +194,7 @@ export const MenuDropdown = () => {
                   </Box>
                 </PaliButtonText>
                 {/* TODO: analytics link */}
-                <PrimaryMenuRow href="https://info.uniswap.org/#/">
+                <PrimaryMenuRow href="https://info.pegasys.fi/">
                   <Icon>
                     <BarChartIcon width={24} height={24} color={theme.textPrimary} />
                   </Icon>
@@ -214,7 +214,7 @@ export const MenuDropdown = () => {
                 <SecondaryLinkedText href="https://discord.com/invite/UzjWbWWERz">
                   <Trans>Help center</Trans> ↗
                 </SecondaryLinkedText>
-                <SecondaryLinkedText href="https://docs.pegasys.finance/">
+                <SecondaryLinkedText href="https://docs.pegasys.fi/">
                   <Trans>Documentation</Trans> ↗
                 </SecondaryLinkedText>
                 <SecondaryLinkedText href="https://discord.com/invite/UzjWbWWERz">

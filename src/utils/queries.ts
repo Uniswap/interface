@@ -16,7 +16,7 @@ export async function splitQuery<Type>(
   values: any[],
   skipCount = 1000
 ) {
-  let fetchedData = {}
+  let fetchedData: any = {}
   let allFound = false
   let skip = 0
   try {
@@ -26,6 +26,7 @@ export async function splitQuery<Type>(
         end = skip + skipCount
       }
       const sliced = values.slice(skip, end)
+      // TODO: refactor with correct interface to remove any type
       const result = await client.query<Type>({
         query: query(...vars, sliced),
         fetchPolicy: 'network-only',
@@ -34,7 +35,7 @@ export async function splitQuery<Type>(
         ...fetchedData,
         ...result.data,
       }
-      if (Object.keys(result.data).length < skipCount || skip + skipCount > values.length) {
+      if (Object.keys(result.data as any).length < skipCount || skip + skipCount > values.length) {
         allFound = true
       } else {
         skip += skipCount
