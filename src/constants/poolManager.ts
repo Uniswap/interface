@@ -1,4 +1,4 @@
-import { ChainId } from '@celo-tools/use-contractkit'
+import { ChainId } from '@celo/react-celo'
 
 //todo: replace Mainnet and Baklava PoolManager Addresses
 export const POOL_MANAGER: Record<number, string> = {

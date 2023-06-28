@@ -1,4 +1,4 @@
-import { useProvider } from '@celo-tools/use-contractkit'
+import { useProvider } from '@celo/react-celo'
 import { useEffect, useState } from 'react'
 
 export function useTimestampFromBlock(block: number | undefined): number | undefined {

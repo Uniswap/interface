@@ -1,4 +1,4 @@
-import { useContractKit } from '@celo-tools/use-contractkit'
+import { useCelo } from '@celo/react-celo'
 import { ChainId } from '@ubeswap/sdk'
 import React from 'react'
 import { isMobile } from 'react-device-detect'
@@ -35,7 +35,7 @@ const appURL: Record<string, string> = {
 export default function URLWarning() {
   const toggleURLWarning = useURLWarningToggle()
   const showURLWarning = useURLWarningVisible()
-  const { network } = useContractKit()
+  const { network } = useCelo()
   const chainId = network.chainId
 
   return isMobile ? (

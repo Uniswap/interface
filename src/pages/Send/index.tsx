@@ -1,4 +1,4 @@
-import { useContractKit, useProvider } from '@celo-tools/use-contractkit'
+import { useCelo, useProvider } from '@celo/react-celo'
 import { TokenAmount } from '@ubeswap/sdk'
 import SendHeader from 'components/send/SendHeader'
 import { useDoTransaction } from 'components/swap/routing'
@@ -24,7 +24,7 @@ import AppBody from '../AppBody'
 
 export default function Send() {
   // dismiss warning if all imported tokens are in active lists
-  const { address: account } = useContractKit()
+  const { address: account } = useCelo()
   const library = useProvider()
 
   // toggle wallet when disconnected

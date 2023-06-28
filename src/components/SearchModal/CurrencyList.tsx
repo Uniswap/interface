@@ -1,4 +1,4 @@
-import { useContractKit } from '@celo-tools/use-contractkit'
+import { useCelo } from '@celo/react-celo'
 import { currencyEquals, Token, TokenAmount } from '@ubeswap/sdk'
 import React, { CSSProperties, MutableRefObject, useCallback } from 'react'
 import { FixedSizeList } from 'react-window'
@@ -94,7 +94,7 @@ function CurrencyRow({
   otherSelected: boolean
   style: CSSProperties
 }) {
-  const { address: account } = useContractKit()
+  const { address: account } = useCelo()
 
   const key = currencyKey(currency)
   const selectedTokenList = useCombinedActiveList()

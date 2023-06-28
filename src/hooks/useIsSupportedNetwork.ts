@@ -1,7 +1,7 @@
-import { ChainId, useContractKit } from '@celo-tools/use-contractkit'
+import { ChainId, useCelo } from '@celo/react-celo'
 
 export const useIsSupportedNetwork = () => {
-  const { network } = useContractKit()
+  const { network } = useCelo()
 
   return [ChainId.Mainnet, ChainId.Alfajores].includes(network.chainId)
 }

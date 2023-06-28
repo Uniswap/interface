@@ -1,4 +1,4 @@
-import { useContractKit } from '@celo-tools/use-contractkit'
+import { useCelo } from '@celo/react-celo'
 import { JSBI } from '@ubeswap/sdk'
 import CurrencyLogo from 'components/CurrencyLogo'
 import React, { useCallback, useState } from 'react'
@@ -89,7 +89,7 @@ export default function ManageSingle({
   },
 }: RouteComponentProps<{ currencyId: string; stakingAddress: string }>) {
   const { t } = useTranslation()
-  const { address: account } = useContractKit()
+  const { address: account } = useCelo()
 
   const token = useCurrency(currencyId) ?? undefined
 

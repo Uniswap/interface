@@ -1,4 +1,4 @@
-import { useContractKit } from '@celo-tools/use-contractkit'
+import { useCelo } from '@celo/react-celo'
 import { ChainId } from '@ubeswap/sdk'
 import React, { useContext } from 'react'
 import { AlertTriangle, ArrowUpCircle } from 'react-feather'
@@ -72,7 +72,7 @@ function TransactionSubmittedContent({
   chainId: ChainId
 }) {
   const theme = useContext(ThemeContext)
-  const { network } = useContractKit()
+  const { network } = useCelo()
   const { t } = useTranslation()
 
   return (
@@ -177,7 +177,7 @@ export default function TransactionConfirmationModal({
   pendingText,
   content,
 }: ConfirmationModalProps) {
-  const { network } = useContractKit()
+  const { network } = useCelo()
   const chainId = network.chainId as unknown as ChainId
 
   if (!chainId) return null

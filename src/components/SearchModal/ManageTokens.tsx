@@ -1,4 +1,4 @@
-import { useContractKit } from '@celo-tools/use-contractkit'
+import { useCelo } from '@celo/react-celo'
 import { ChainId, Token } from '@ubeswap/sdk'
 import Card from 'components/Card'
 import Column from 'components/Column'
@@ -43,7 +43,7 @@ export default function ManageTokens({
   setModalView: (view: CurrencyModalView) => void
   setImportToken: (token: Token) => void
 }) {
-  const { network } = useContractKit()
+  const { network } = useCelo()
   const chainId = network.chainId as unknown as ChainId
 
   const [searchQuery, setSearchQuery] = useState<string>('')

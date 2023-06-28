@@ -1,4 +1,4 @@
-import { useContractKit } from '@celo-tools/use-contractkit'
+import { useCelo } from '@celo/react-celo'
 import { TokenAmount } from '@ubeswap/sdk'
 import { useDoTransaction } from 'components/swap/routing'
 import zip from 'lodash/zip'
@@ -28,7 +28,7 @@ interface StakingModalProps {
 }
 
 export default function ClaimRewardModal({ isOpen, onDismiss, stakingInfo }: StakingModalProps) {
-  const { address: account } = useContractKit()
+  const { address: account } = useCelo()
 
   // monitor call to help UI loading state
   const doTransaction = useDoTransaction()

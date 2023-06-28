@@ -1,4 +1,4 @@
-import { useContractKit } from '@celo-tools/use-contractkit'
+import { useCelo } from '@celo/react-celo'
 import { CELO, cEUR, ChainId, cUSD, JSBI, Pair, Percent, Price, Token, TokenAmount } from '@ubeswap/sdk'
 import { useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -59,7 +59,7 @@ export function useDerivedMintInfo(
   showRampA: boolean
   showRampB: boolean
 } {
-  const { address: account, network } = useContractKit()
+  const { address: account, network } = useCelo()
 
   const { independentField, typedValue, otherTypedValue } = useMintState()
 

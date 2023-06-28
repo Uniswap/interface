@@ -1,4 +1,4 @@
-import { useContractKit } from '@celo-tools/use-contractkit'
+import { useCelo } from '@celo/react-celo'
 import { JSBI, Token } from '@ubeswap/sdk'
 import { AutoColumn, TopSection } from 'components/Column'
 import { CardSection } from 'components/earn/styled'
@@ -20,7 +20,7 @@ const WarningCard = styled(AutoColumn)<{ disabled?: boolean }>`
 `
 
 export default function OpticsV1Warning() {
-  const { address: account, network } = useContractKit()
+  const { address: account, network } = useCelo()
   const theme = useContext(ThemeContext)
   const chainId = network.chainId
   const allTokens = useAllTokens(chainId)

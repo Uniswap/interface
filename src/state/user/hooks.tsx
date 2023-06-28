@@ -1,12 +1,13 @@
-import { useContractKit } from '@celo-tools/use-contractkit'
+import { useCelo } from '@celo/react-celo'
 import { Pair, Token } from '@ubeswap/sdk'
 import flatMap from 'lodash.flatmap'
-import { useCallback, useMemo } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import ReactGA from 'react-ga'
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 
 import { BASES_TO_TRACK_LIQUIDITY_FOR, PINNED_PAIRS } from '../../constants'
 import { useAllTokens } from '../../hooks/Tokens'
+import { colors } from '../../theme'
 import { AppDispatch, AppState } from '../index'
 import {
   addSerializedPair,
@@ -63,6 +64,21 @@ export function useIsDarkMode(): boolean {
 export function useDarkModeManager(): [boolean, () => void] {
   const dispatch = useDispatch<AppDispatch>()
   const darkMode = useIsDarkMode()
+  const { updateTheme } = useCelo()
+
+  useEffect(() => {
+    const _colors = colors(darkMode)
+    updateTheme({
+      background: _colors.bg2,
+      error: _colors.red1,
+      primary: _colors.primary1,
+      secondary: _colors.bg3,
+      text: _colors.text1,
+      textSecondary: _colors.text2,
+      textTertiary: _colors.text2,
+      muted: _colors.text4,
+    })
+  }, [updateTheme, darkMode])
 
   const toggleSetDarkMode = useCallback(() => {
     dispatch(updateUserDarkMode({ userDarkMode: !darkMode }))
@@ -200,7 +216,7 @@ export function useRemoveUserAddedToken(): (chainId: number, address: string) =>
 }
 
 export function useUserAddedTokens(): Token[] {
-  const { network } = useContractKit()
+  const { network } = useCelo()
   const chainId = network.chainId
   const serializedTokensMap = useSelector<AppState, AppState['user']['tokens']>(({ user: { tokens } }) => tokens)
 
@@ -250,7 +266,7 @@ export function toV2LiquidityToken([tokenA, tokenB]: [Token, Token]): Token {
  * Returns all the pairs of tokens that are tracked by the user for the current chain ID.
  */
 export function useTrackedTokenPairs(): [Token, Token][] {
-  const { network } = useContractKit()
+  const { network } = useCelo()
   const chainId = network.chainId
   const tokens = useAllTokens()
 

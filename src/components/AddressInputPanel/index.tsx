@@ -1,4 +1,4 @@
-import { useContractKit } from '@celo-tools/use-contractkit'
+import { useCelo } from '@celo/react-celo'
 import { ChainId } from '@ubeswap/sdk'
 import React, { useCallback, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -78,7 +78,7 @@ export default function AddressInputPanel({
   // triggers whenever the typed value changes
   onChange: (value: string) => void
 }) {
-  const { network } = useContractKit()
+  const { network } = useCelo()
   const chainId = network.chainId as unknown as ChainId
   const theme = useContext(ThemeContext)
 

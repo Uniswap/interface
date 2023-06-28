@@ -1,4 +1,4 @@
-import { useContractKit } from '@celo-tools/use-contractkit'
+import { useCelo } from '@celo/react-celo'
 import { Token } from '@ubeswap/sdk'
 import { ButtonPrimary } from 'components/Button'
 import { AutoColumn } from 'components/Column'
@@ -54,7 +54,7 @@ export default function ImportRow({
   setImportToken: (token: Token) => void
 }) {
   // gloabls
-  const { network } = useContractKit()
+  const { network } = useCelo()
   const chainId = network.chainId
   const theme = useTheme()
 

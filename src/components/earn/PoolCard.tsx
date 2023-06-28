@@ -1,4 +1,4 @@
-import { useContractKit } from '@celo-tools/use-contractkit'
+import { useCelo } from '@celo/react-celo'
 import { formatEther } from '@ethersproject/units'
 import { JSBI, TokenAmount } from '@ubeswap/sdk'
 import CurrencyLogo from 'components/CurrencyLogo'
@@ -102,7 +102,7 @@ const COMPOUNDS_PER_YEAR = 2
 
 export const PoolCard: React.FC<Props> = ({ farmSummary, onRemoveImportedFarm }: Props) => {
   const { t } = useTranslation()
-  const { address } = useContractKit()
+  const { address } = useCelo()
   const userAprMode = useIsAprMode()
   const dispatch = useDispatch()
   const [showRemoveModal, setShowRemoveModal] = useState<boolean>(false)

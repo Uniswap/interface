@@ -1,4 +1,4 @@
-import { ChainId, useContractKit } from '@celo-tools/use-contractkit'
+import { ChainId, useCelo } from '@celo/react-celo'
 import { Token, TokenAmount } from '@ubeswap/sdk'
 import { darken } from 'polished'
 import React from 'react'
@@ -112,7 +112,7 @@ export default function StakeInputField({
   stakeBalance,
   walletBalance,
 }: StakeInputFieldProps) {
-  const { address: account } = useContractKit()
+  const { address: account } = useCelo()
 
   const userBalance = useCurrencyBalance(account ?? undefined, currency ?? undefined)
   const selectedCurrencyBalance = walletBalance ?? userBalance

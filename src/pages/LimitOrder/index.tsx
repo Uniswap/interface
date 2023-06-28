@@ -1,4 +1,4 @@
-import { useContractKit, WalletTypes } from '@celo-tools/use-contractkit'
+import { useCelo, WalletTypes } from '@celo/react-celo'
 import { RampInstantSDK } from '@ramp-network/ramp-instant-sdk'
 import { ChainId as UbeswapChainId, cUSD, JSBI, TokenAmount, Trade } from '@ubeswap/sdk'
 import { CardNoise, CardSection, DataCard } from 'components/earn/styled'
@@ -39,7 +39,7 @@ import { LimitOrderHistory } from './LimitOrderHistory'
 export const BPS_DENOMINATOR = JSBI.BigInt(1_000_000)
 
 export default function LimitOrder() {
-  const { address: account, network, walletType } = useContractKit()
+  const { address: account, network, walletType } = useCelo()
   const chainId = network.chainId as unknown as UbeswapChainId
   const { queueLimitOrderCallback, loading: queueOrderLoading } = useQueueLimitOrderTrade()
 

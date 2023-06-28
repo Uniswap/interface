@@ -1,4 +1,4 @@
-import { ChainId, useContractKit, useProvider } from '@celo-tools/use-contractkit'
+import { ChainId, useCelo, useProvider } from '@celo/react-celo'
 import { BigNumber } from '@ethersproject/bignumber'
 import { ChainId as UbeswapChainId, JSBI, Pair, Token, TokenAmount } from '@ubeswap/sdk'
 import { POOL_MANAGER } from 'constants/poolManager'
@@ -186,7 +186,7 @@ interface UnclaimedInfo {
 }
 
 export const useUnclaimedStakingRewards = (): UnclaimedInfo => {
-  const { network } = useContractKit()
+  const { network } = useCelo()
   const { chainId } = network
   const ube = chainId ? UBE[chainId as unknown as UbeswapChainId] : undefined
   const ubeContract = useTokenContract(ube?.address)
@@ -255,7 +255,7 @@ interface IStakingPool {
 }
 
 export function useStakingPools(pairToFilterBy?: Pair | null, stakingAddress?: string): readonly IStakingPool[] {
-  const { network } = useContractKit()
+  const { network } = useCelo()
   const chainId = network.chainId as unknown as UbeswapChainId
   const ube = chainId ? UBE[chainId] : undefined
 
@@ -392,7 +392,7 @@ export function useStakingPoolsInfo(
 export function usePairDataFromAddresses(
   pairAddresses: readonly string[]
 ): readonly (readonly [Token, Token] | undefined)[] {
-  const { network } = useContractKit()
+  const { network } = useCelo()
   const chainId = network.chainId as unknown as UbeswapChainId
 
   const token0Data = useMultipleContractSingleData(
@@ -489,7 +489,7 @@ export function usePairDataFromAddresses(
 }
 
 export function useTotalUbeEarned(): TokenAmount | undefined {
-  const { network } = useContractKit()
+  const { network } = useCelo()
   const { chainId } = network
   const ube = chainId ? UBE[chainId as unknown as UbeswapChainId] : undefined
   const stakingInfos = useStakingInfo()
@@ -511,7 +511,7 @@ export function useTotalUbeEarned(): TokenAmount | undefined {
 }
 
 export function useFilteredStakingInfo(stakingAddresses: string[]): readonly StakingInfo[] | undefined {
-  const { network } = useContractKit()
+  const { network } = useCelo()
   const { chainId } = network
   const ube = chainId ? UBE[chainId as unknown as UbeswapChainId] : undefined
   const stakingInfos = useStakingInfo()
@@ -524,7 +524,7 @@ export function useFilteredStakingInfo(stakingAddresses: string[]): readonly Sta
 }
 
 export function useFarmRewardsInfo(stakingAddresses: string[]): readonly StakingInfo[] | undefined {
-  const { network } = useContractKit()
+  const { network } = useCelo()
   const { chainId } = network
   const ube = chainId ? UBE[chainId as unknown as UbeswapChainId] : undefined
   const stakingInfos = useStakingInfo()
@@ -545,7 +545,7 @@ export function useDerivedStakeInfo(
   parsedAmount?: TokenAmount
   error?: string
 } {
-  const { address } = useContractKit()
+  const { address } = useCelo()
 
   const parsedInput: TokenAmount | undefined = tryParseAmount(typedValue, stakingToken ?? undefined)
 
@@ -576,7 +576,7 @@ export function useDerivedUnstakeInfo(
   parsedAmount?: TokenAmount
   error?: string
 } {
-  const { address } = useContractKit()
+  const { address } = useCelo()
 
   const parsedInput: TokenAmount | undefined = tryParseAmount(typedValue, stakingAmount.token)
 

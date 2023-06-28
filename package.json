@@ -31,8 +31,6 @@
     "@typescript-eslint/parser": "^4.28.0",
     "@ubeswap/injected-connector": "^6.1.0",
     "@uniswap/token-lists": "^1.0.0-beta.24",
-    "@web3-react/core": "^6.1.9",
-    "@web3-react/types": "^6.0.7",
     "ajv": "^8.8.2",
     "awesome-typescript-loader": "^5.2.1",
     "cids": "^1.1.6",
@@ -52,6 +50,7 @@
     "i18next-browser-languagedetector": "^6.1.1",
     "i18next-xhr-backend": "^3.2.2",
     "jazzicon": "^1.5.0",
+    "jest-resolver-enhanced": "^1.1.0",
     "lint-staged": ">=11",
     "lodash.flatmap": "^4.5.0",
     "multicodec": "^3.0.1",
@@ -107,16 +106,16 @@
   },
   "license": "GPL-3.0-or-later",
   "resolutions": {
-    "@celo/wallet-walletconnect": "1.2.0",
     "@types/react": "^17.0.3",
     "@types/react-dom": "^17.0.3",
-    "prettier": "^2.3.0"
+    "prettier": "^2.3.0",
+    "react-error-overlay": "6.0.9"
   },
   "dependencies": {
     "@apollo/client": "^3.6.5",
-    "@celo-tools/use-contractkit": "^3.1.0",
-    "@celo/contractkit": "^1.2.0",
-    "@celo/utils": "^1.2.1",
+    "@celo/contractkit": "^4.1.0",
+    "@celo/react-celo": "^5.0.4",
+    "@celo/utils": "^4.1.0",
     "@craco/craco": "^6.1.2",
     "@emotion/react": "^11.10.5",
     "@ensdomains/ensjs": "^2.0.1",

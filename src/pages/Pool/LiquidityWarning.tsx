@@ -1,4 +1,4 @@
-import { useContractKit } from '@celo-tools/use-contractkit'
+import { useCelo } from '@celo/react-celo'
 import React, { useContext, useMemo } from 'react'
 import { AlertTriangle } from 'react-feather'
 import { Trans, useTranslation } from 'react-i18next'
@@ -15,7 +15,7 @@ import { useUniqueBestFarms, WarningInfo } from '../Earn/useFarmRegistry'
 
 export default function LiquidityWarning() {
   const theme = useContext(ThemeContext)
-  const { address: account } = useContractKit()
+  const { address: account } = useCelo()
 
   const trackedTokenPairs = useTrackedTokenPairs()
   const tokenPairsWithLiquidityTokens = useMemo(

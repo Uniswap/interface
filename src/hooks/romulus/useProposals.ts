@@ -1,4 +1,5 @@
-import { useContractKit } from '@celo-tools/use-contractkit'
+import { useCelo } from '@celo/react-celo'
+import { ChainId } from '@ubeswap/sdk'
 import { BigNumber } from 'ethers'
 import { TypedEvent } from 'generated/common'
 import { useRomulusDelegateContract } from 'hooks/useContract'
@@ -19,8 +20,8 @@ type Proposal = [BigNumber, string, string[], BigNumber[], string[], string[], B
 }
 
 export const useProposals = (): Array<TypedEvent<Proposal>> | undefined => {
-  const { network } = useContractKit()
-  const romulusAddress = ubeGovernanceAddresses[network.chainId]
+  const { network } = useCelo()
+  const romulusAddress = ubeGovernanceAddresses[network.chainId as ChainId]
   const romulusContract = useRomulusDelegateContract(romulusAddress)
   const [proposals, setProposals] = useState<Array<TypedEvent<Proposal>> | undefined>(undefined)
   const mountRef = useRef(true)

@@ -1,4 +1,4 @@
-import { useContractKit, useProvider } from '@celo-tools/use-contractkit'
+import { useCelo, useProvider } from '@celo/react-celo'
 import { ChainId, currencyEquals, JSBI, Pair, Route, Token, TokenAmount } from '@ubeswap/sdk'
 import { useMemo } from 'react'
 import { useUserAllowMoolaWithdrawal } from 'state/user/hooks'
@@ -12,7 +12,7 @@ export const useMoolaDirectRoute = (
   outputCurrency: Token | null | undefined
 ): Route | null => {
   const library = useProvider()
-  const { network } = useContractKit()
+  const { network } = useCelo()
   const chainId = network.chainId as unknown as ChainId
   const [allowMoolaWithdrawal] = useUserAllowMoolaWithdrawal()
 

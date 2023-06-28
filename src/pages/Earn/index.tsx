@@ -1,4 +1,4 @@
-import { useContractKit } from '@celo-tools/use-contractkit'
+import { useCelo } from '@celo/react-celo'
 import { formatEther } from '@ethersproject/units'
 import { faArrowDownWideShort } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -156,7 +156,7 @@ function useTokenFilter(): [Token | null, (t: Token | null) => void] {
 
 export default function Earn() {
   const { t } = useTranslation()
-  const { address: account } = useContractKit()
+  const { address: account } = useCelo()
 
   const importedFarmsAddress = localStorage.getItem(IMPORTED_FARMS)
   const [prevImportedFarmAddress, setPrevImportedFarmAddress] = useState<string | null>(null)

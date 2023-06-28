@@ -1,4 +1,4 @@
-import { ChainId, Network, NetworkNames } from '@celo-tools/use-contractkit'
+import { ChainId, Network, NetworkNames } from '@celo/react-celo'
 
 // We do an unsafe cast so we can use a custom network name
 export const Mainnet: Network = {

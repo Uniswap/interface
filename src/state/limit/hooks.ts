@@ -1,4 +1,4 @@
-import { useContractKit } from '@celo-tools/use-contractkit'
+import { useCelo } from '@celo/react-celo'
 import { parseUnits } from '@ethersproject/units'
 import { CELO, cEUR, ChainId as UbeswapChainId, cUSD, Fraction, Token, TokenAmount } from '@ubeswap/sdk'
 import { useUbeswapTradeExactIn, useUbeswapTradeExactOut } from 'components/swap/routing/hooks/useTrade'
@@ -46,7 +46,7 @@ export function useDerivedLimitOrderInfo(): {
   marketPriceDiffIndicator: Fraction | undefined
   aboveMarketPrice: boolean | undefined
 } {
-  const { address: account, network } = useContractKit()
+  const { address: account, network } = useCelo()
 
   const {
     priceTypedValue,

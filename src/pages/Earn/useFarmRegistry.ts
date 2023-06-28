@@ -1,5 +1,5 @@
 import { ApolloQueryResult, gql, useApolloClient, useQuery } from '@apollo/client'
-import { useContractKit } from '@celo-tools/use-contractkit'
+import { useCelo } from '@celo/react-celo'
 import { BigNumber } from '@ethersproject/bignumber'
 import { formatEther, parseEther } from '@ethersproject/units'
 import { Percent, TokenAmount } from '@ubeswap/sdk'
@@ -66,15 +66,15 @@ export interface WarningInfo {
 }
 
 export const useFarmRegistry = () => {
-  const { kit } = useContractKit()
+  const { kit } = useCelo()
   const client = useApolloClient()
   const [farmSummaries, setFarmSummaries] = React.useState<FarmSummary[]>([])
   const call = React.useCallback(async () => {
-    const farmRegistry = new kit.web3.eth.Contract(
+    const farmRegistry = new kit.connection.web3.eth.Contract(
       farmRegistryAbi as AbiItem[],
       '0xa2bf67e12EeEDA23C7cA1e5a34ae2441a17789Ec'
     )
-    const lastBlock = await kit.web3.eth.getBlockNumber()
+    const lastBlock = await kit.connection.web3.eth.getBlockNumber()
     const [farmInfoEvents, lpInfoEvents, farmDataEvents] = await Promise.all([
       farmRegistry
         .getPastEvents('FarmInfo', {
@@ -139,7 +139,7 @@ export const useFarmRegistry = () => {
         ...farmInfos[index],
       }))
     )
-  }, [kit.web3.eth, client])
+  }, [kit.connection.web3.eth, client])
 
   useEffect(() => {
     call()

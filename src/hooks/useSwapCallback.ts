@@ -1,6 +1,7 @@
-import { useContractKit, useGetConnectedSigner, useProvider } from '@celo-tools/use-contractkit'
+import { useCelo, useConnectedSigner, useProvider } from '@celo/react-celo'
 import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
+import { JsonRpcSigner } from '@ethersproject/providers'
 import { JSBI, Percent, Router, SwapParameters, Trade } from '@ubeswap/sdk'
 import { MoolaRouterTrade } from 'components/swap/routing/hooks/useTrade'
 import { ContractTransaction } from 'ethers'
@@ -48,7 +49,7 @@ function useSwapCallArguments(
   allowedSlippage: number = INITIAL_ALLOWED_SLIPPAGE, // in bips
   recipientAddressOrName: string | null // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
 ): SwapCall[] {
-  const { address: account, network } = useContractKit()
+  const { address: account, network } = useCelo()
   const library = useProvider()
   const chainId = network.chainId
 
@@ -100,9 +101,8 @@ export function useSwapCallback(
   allowedSlippage: number = INITIAL_ALLOWED_SLIPPAGE, // in bips
   recipientAddressOrName: string | null // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
 ): { state: SwapCallbackState; callback: null | (() => Promise<string>); error: string | null } {
-  const { network, address: account } = useContractKit()
+  const { network, address: account } = useCelo()
   const chainId = network.chainId
-  const library = useProvider()
 
   const swapCalls = useSwapCallArguments(trade, allowedSlippage, recipientAddressOrName)
 
@@ -111,10 +111,10 @@ export function useSwapCallback(
   const { address: recipientAddress } = useENS(recipientAddressOrName)
   const recipient = recipientAddressOrName === null ? account : recipientAddress
 
-  const getConnectedSigner = useGetConnectedSigner()
+  const signer = useConnectedSigner() as JsonRpcSigner
 
   return useMemo(() => {
-    if (!trade || !library || !account || !chainId) {
+    if (!trade || !account || !chainId) {
       return { state: SwapCallbackState.INVALID, callback: null, error: 'Missing dependencies' }
     }
     if (!recipient) {
@@ -189,7 +189,7 @@ export function useSwapCallback(
           gasEstimate,
         } = successfulEstimation
 
-        const contract = disconnectedContract.connect(await getConnectedSigner())
+        const contract = disconnectedContract.connect(signer)
         return contract[methodName](...args, {
           gasLimit: calculateGasMargin(gasEstimate),
         })
@@ -232,15 +232,5 @@ export function useSwapCallback(
       },
       error: null,
     }
-  }, [
-    trade,
-    library,
-    account,
-    chainId,
-    recipient,
-    recipientAddressOrName,
-    swapCalls,
-    getConnectedSigner,
-    addTransaction,
-  ])
+  }, [trade, account, chainId, recipient, recipientAddressOrName, swapCalls, signer, addTransaction])
 }

@@ -1,4 +1,4 @@
-import { useContractKit } from '@celo-tools/use-contractkit'
+import { useCelo } from '@celo/react-celo'
 import { ChainId as UbeswapChainId, TokenAmount } from '@ubeswap/sdk'
 import Loader from 'components/Loader'
 import React from 'react'
@@ -43,7 +43,7 @@ const StyledClose = styled(X)`
  * Content for balance stats modal
  */
 export default function UbeBalanceContent({ setShowUbeBalanceModal }: { setShowUbeBalanceModal: any }) {
-  const { address: account, network } = useContractKit()
+  const { address: account, network } = useCelo()
   const chainId = network.chainId
   const ube = chainId ? UBE[chainId as unknown as UbeswapChainId] : undefined
 

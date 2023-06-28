@@ -1,6 +1,6 @@
 import 'rc-drawer/assets/index.css'
 
-import { ChainId, useContractKit } from '@celo-tools/use-contractkit'
+import { ChainId, useCelo } from '@celo/react-celo'
 import { CELO, ChainId as UbeswapChainId, TokenAmount } from '@ubeswap/sdk'
 import { CardNoise } from 'components/earn/styled'
 import Modal from 'components/Modal'
@@ -357,8 +357,8 @@ const NETWORK_LABELS: { [chainId in ChainId]?: string } = {
 }
 
 export default function Header() {
-  const { address: account, network } = useContractKit()
-  const chainId = network.chainId
+  const { address: account, network } = useCelo()
+  const chainId = network.chainId as UbeswapChainId
   const { t } = useTranslation()
 
   const userCELOBalance = useTokenBalance(account ?? undefined, CELO[chainId as unknown as UbeswapChainId])

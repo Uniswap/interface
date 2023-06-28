@@ -1,4 +1,4 @@
-import { ChainId, useContractKit } from '@celo-tools/use-contractkit'
+import { ChainId, useCelo } from '@celo/react-celo'
 import { Pair, Token, TokenAmount } from '@ubeswap/sdk'
 import { darken } from 'polished'
 import React, { useCallback, useState } from 'react'
@@ -145,7 +145,7 @@ export default function CurrencyInputPanel({
   const { t } = useTranslation()
 
   const [modalOpen, setModalOpen] = useState(false)
-  const { address: account } = useContractKit()
+  const { address: account } = useCelo()
 
   const userBalance = useCurrencyBalance(account ?? undefined, currency ?? undefined)
   const selectedCurrencyBalance = balanceOverride ?? userBalance

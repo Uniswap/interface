@@ -1,4 +1,4 @@
-import { useContractKit } from '@celo-tools/use-contractkit'
+import { useCelo } from '@celo/react-celo'
 import { Pair } from '@ubeswap/sdk'
 import React, { useContext, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -75,7 +75,7 @@ const EmptyProposals = styled.div`
 export default function Pool() {
   const { t } = useTranslation()
   const theme = useContext(ThemeContext)
-  const { address: account } = useContractKit()
+  const { address: account } = useCelo()
 
   // fetch the user's balances of all tracked V2 LP tokens
   const trackedTokenPairs = useTrackedTokenPairs()

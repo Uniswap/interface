@@ -1,4 +1,4 @@
-import { useContractKit } from '@celo-tools/use-contractkit'
+import { useCelo } from '@celo/react-celo'
 import { ChainId as UbeswapChainId, JSBI, Pair, Token, TokenAmount } from '@ubeswap/sdk'
 import { STAKING_REWARDS_INTERFACE } from 'constants/abis/staking-rewards'
 import { UBE } from 'constants/tokens'
@@ -11,7 +11,7 @@ import { StakingInfo, useStakingPools } from './hooks'
 
 // Gets the staking info from the network for the active chain id
 export default function useStakingInfo(pairToFilterBy?: Pair | null, stakingAddress?: string): readonly StakingInfo[] {
-  const { network, address } = useContractKit()
+  const { network, address } = useCelo()
   const chainId = network.chainId as unknown as UbeswapChainId
   const ube = chainId ? UBE[chainId] : undefined
 

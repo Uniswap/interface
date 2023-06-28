@@ -75,6 +75,7 @@ function pairKey(token0Address: string, token1Address: string) {
   return `${token0Address};${token1Address}`
 }
 
+document.querySelector('html')?.classList.add('tw-dark')
 export const initialState: UserState = {
   userDarkMode: null,
   matchesDarkMode: false,

@@ -1,4 +1,4 @@
-import { ChainId, useContractKit, useProvider } from '@celo-tools/use-contractkit'
+import { ChainId, useCelo, useProvider } from '@celo/react-celo'
 import { currencyEquals, JSBI, Pair, Percent, Price, Token, TokenAmount, Trade, TradeType } from '@ubeswap/sdk'
 import { ERC20_ABI } from 'constants/abis/erc20'
 import {
@@ -35,7 +35,7 @@ import { useDirectTradeExactIn, useDirectTradeExactOut } from './directTrades'
  * @returns
  */
 export function useAllCommonPairsWithMoolaDuals(tokenA?: Token, tokenB?: Token): readonly Pair[] {
-  const { network } = useContractKit()
+  const { network } = useCelo()
   const chainId = network.chainId
 
   const bases: readonly Token[] = useMemo(() => (chainId ? BASES_TO_CHECK_TRADES_AGAINST[chainId] : []), [chainId])
@@ -324,8 +324,8 @@ export function useMinimaTrade(tokenAmountIn?: TokenAmount, tokenOut?: Token): M
   const [allowedSlippage] = useUserSlippageTolerance()
   const [fetchUpdatedData, setFetchUpdatedData] = React.useState<boolean>(true)
   const [fetchTimeout, setFetchTimeout] = React.useState<NodeJS.Timeout | undefined>(undefined)
-  const { address: account, network } = useContractKit()
-  const { chainId } = network
+  const { address: account, network } = useCelo()
+  const chainId = network.chainId as ChainId
   const library = useProvider()
   const provider = getProviderOrSigner(library, account || undefined)
   const tokens = useAllTokens()
@@ -337,7 +337,7 @@ export function useMinimaTrade(tokenAmountIn?: TokenAmount, tokenOut?: Token): M
     }
     const curDeps = {
       chainId,
-      account,
+      account: account || null,
       allowedSlippage,
       singleHopOnly,
       inputAddr: tokenAmountIn.currency.address,

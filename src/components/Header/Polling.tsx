@@ -1,4 +1,4 @@
-import { useContractKit } from '@celo-tools/use-contractkit'
+import { useCelo } from '@celo/react-celo'
 import { ChainId } from '@ubeswap/sdk'
 import React, { useEffect, useState } from 'react'
 import styled, { keyframes } from 'styled-components'
@@ -63,7 +63,7 @@ const Spinner = styled.div`
 `
 
 export default function Polling() {
-  const { network } = useContractKit()
+  const { network } = useCelo()
   const chainId = network.chainId as unknown as ChainId
 
   const blockNumber = useBlockNumber()

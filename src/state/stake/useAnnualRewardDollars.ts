@@ -1,11 +1,11 @@
-import { useContractKit } from '@celo-tools/use-contractkit'
+import { useCelo } from '@celo/react-celo'
 import { ChainId, cUSD, JSBI, Token, TokenAmount } from '@ubeswap/sdk'
 import { useCUSDPrices } from 'utils/useCUSDPrice'
 
 import { BIG_INT_SECONDS_IN_YEAR } from '../../constants'
 
 export const useAnnualRewardDollars = (rewardTokens: Token[], rewardRates: TokenAmount[]) => {
-  const { network } = useContractKit()
+  const { network } = useCelo()
   const chainId = network.chainId as unknown as ChainId
   const rewardPrices = useCUSDPrices(rewardTokens)
   if (!rewardPrices || !rewardRates) {

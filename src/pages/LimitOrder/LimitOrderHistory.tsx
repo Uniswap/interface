@@ -1,4 +1,4 @@
-import { useContractKit } from '@celo-tools/use-contractkit'
+import { useCelo } from '@celo/react-celo'
 import { ChainId as UbeswapChainId } from '@ubeswap/sdk'
 import { TabButton } from 'components/Button'
 import LimitOrderHistoryBody from 'components/LimitOrderHistory/LimitOrderHistoryBody'
@@ -13,7 +13,7 @@ import { ORDER_BOOK_REWARD_DISTRIBUTOR_ADDRESS } from '../../constants'
 import { useLimitOrdersHistory } from './useOrderBroadcasted'
 
 export const LimitOrderHistory: React.FC = () => {
-  const { network } = useContractKit()
+  const { network } = useCelo()
   const chainId = network.chainId as unknown as UbeswapChainId
   const limitOrderHistory = useLimitOrdersHistory()
 

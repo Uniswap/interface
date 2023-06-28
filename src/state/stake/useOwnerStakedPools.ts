@@ -1,4 +1,4 @@
-import { useContractKit } from '@celo-tools/use-contractkit'
+import { useCelo } from '@celo/react-celo'
 import { Interface } from '@ethersproject/abi'
 import partition from 'lodash/partition'
 import { FarmSummary } from 'pages/Earn/useFarmRegistry'
@@ -9,7 +9,7 @@ import DUAL_REWARDS_ABI from '../../constants/abis/moola/MoolaStakingRewards.jso
 
 // get all staked pools
 export const useOwnerStakedPools = (farmSummaries: FarmSummary[]) => {
-  const { address: owner } = useContractKit()
+  const { address: owner } = useCelo()
 
   const data = useMultipleContractSingleData(
     farmSummaries.map((farmSummaries) => farmSummaries.stakingAddress),

@@ -1,4 +1,4 @@
-import { useContractKit, useProvider } from '@celo-tools/use-contractkit'
+import { useCelo, useProvider } from '@celo/react-celo'
 import { ChainId } from '@ubeswap/sdk'
 import { useDoTransaction } from 'components/swap/routing'
 import { useMemo } from 'react'
@@ -13,7 +13,7 @@ import { executeCancelOrder } from './executCancelOrder'
 export const useCancelOrderCallback = (
   orderHash: string | undefined // orderHash of order to cancel
 ): { callback: null | (() => Promise<string>); error: string | null } => {
-  const { address: account, network } = useContractKit()
+  const { address: account, network } = useCelo()
   const library = useProvider()
   const chainId = network.chainId as unknown as ChainId
   const doTransaction = useDoTransaction()

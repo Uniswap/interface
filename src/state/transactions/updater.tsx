@@ -1,4 +1,4 @@
-import { useContractKit, useProvider } from '@celo-tools/use-contractkit'
+import { useCelo, useProvider } from '@celo/react-celo'
 import { ChainId } from '@ubeswap/sdk'
 import { useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -29,7 +29,7 @@ export function shouldCheck(
 }
 
 export default function Updater(): null {
-  const { network } = useContractKit()
+  const { network } = useCelo()
   const chainId = network.chainId as unknown as ChainId
   const library = useProvider()
 

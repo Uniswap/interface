@@ -1,4 +1,4 @@
-import { useContractKit, useProvider } from '@celo-tools/use-contractkit'
+import { useCelo, useProvider } from '@celo/react-celo'
 import { RampInstantSDK } from '@ramp-network/ramp-instant-sdk'
 import { CELO, ChainId as UbeswapChainId, Token, TokenAmount } from '@ubeswap/sdk'
 import { useDoTransaction } from 'components/swap/routing'
@@ -44,7 +44,7 @@ export default function AddLiquidity({
   },
   history,
 }: RouteComponentProps<{ currencyIdA?: string; currencyIdB?: string }>) {
-  const { address: account, network } = useContractKit()
+  const { address: account, network } = useCelo()
   const library = useProvider()
   const chainId = network.chainId
   const theme = useContext(ThemeContext)

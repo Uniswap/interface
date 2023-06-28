@@ -1,5 +1,5 @@
 import { Address } from '@celo/contractkit'
-import { useContractKit } from '@celo-tools/use-contractkit'
+import { useCelo } from '@celo/react-celo'
 import { BigNumber } from '@ethersproject/bignumber'
 import { JSBI, Token, TokenAmount } from '@ubeswap/sdk'
 import { useToken } from 'hooks/Tokens'
@@ -17,7 +17,7 @@ export const useMultiStakeRewards = (
   numRewards: number,
   active: boolean
 ): StakingInfo | null => {
-  const { address: owner } = useContractKit()
+  const { address: owner } = useCelo()
   const accountArg = useMemo(() => [owner ?? undefined], [owner])
   const stakeRewards = useMultiStakingContract(address)
 

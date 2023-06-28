@@ -1,9 +1,9 @@
 import './i18n'
-import '@celo-tools/use-contractkit/lib/styles.css'
+import '@celo/react-celo/lib/styles.css'
 import './index.css'
 
 import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client'
-import { ContractKitProvider, Mainnet } from '@celo-tools/use-contractkit'
+import { CeloProvider, Mainnet } from '@celo/react-celo'
 import * as Sentry from '@sentry/react'
 import { Integrations } from '@sentry/tracing'
 import { ChainId } from '@ubeswap/sdk'
@@ -114,16 +114,17 @@ function Updaters() {
 ReactDOM.render(
   <StrictMode>
     <FixedGlobalStyle />
-    {/* TODO: Mainnet, not alfajores */}
-    <ContractKitProvider
+    <CeloProvider
       dapp={{
         name: 'Ubeswap',
         description:
           'The interface for Ubeswap, a decentralized exchange and automated market maker protocol for Celo assets.',
         url: 'https://app.ubeswap.org',
         icon: 'https://info.ubeswap.org/favicon.png',
+        // TODO: this is Nico's Test Ubeswap WalletConnect id, this needs to be changed
+        walletConnectProjectId: '2cd4dd10e7376ef90e879c969939c89f',
       }}
-      network={Mainnet}
+      defaultNetwork={NETWORK_CHAIN_ID === Alfajores.chainId ? Alfajores.name : Mainnet.name}
       networks={[Mainnet, Alfajores]}
       connectModal={{
         reactModalProps: {
@@ -158,7 +159,7 @@ ReactDOM.render(
           </ThemeProvider>
         </ApolloProvider>
       </Provider>
-    </ContractKitProvider>
+    </CeloProvider>
   </StrictMode>,
   document.getElementById('root')
 )

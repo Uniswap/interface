@@ -1,4 +1,4 @@
-import { useContractKit } from '@celo-tools/use-contractkit'
+import { useCelo } from '@celo/react-celo'
 import { RampInstantSDK } from '@ramp-network/ramp-instant-sdk'
 import { CELO, ChainId as UbeswapChainId, JSBI, Token, TokenAmount, Trade } from '@ubeswap/sdk'
 import OpticsV1Warning from 'components/Header/OpticsV1Warning'
@@ -75,7 +75,7 @@ export default function Swap() {
       return !(token.address in defaultTokens)
     })
 
-  const { address: account, network } = useContractKit()
+  const { address: account, network } = useCelo()
   const chainId = network.chainId as unknown as UbeswapChainId
 
   const theme = useContext(ThemeContext)

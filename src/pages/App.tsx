@@ -1,8 +1,7 @@
-import { DappKitResponseStatus } from '@celo/utils'
-import { useContractKit } from '@celo-tools/use-contractkit'
+import { useCelo } from '@celo/react-celo'
 import { ErrorBoundary } from '@sentry/react'
 import React, { Suspense } from 'react'
-import { Route, Switch, useLocation } from 'react-router-dom'
+import { Route, Switch } from 'react-router-dom'
 import styled from 'styled-components'
 import { isBanned } from 'utils/isBannedUser'
 
@@ -12,7 +11,6 @@ import Polling from '../components/Header/Polling'
 import URLWarning from '../components/Header/URLWarning'
 import Popups from '../components/Popups'
 import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
-import { getMobileOperatingSystem, Mobile } from '../utils/mobile'
 import AddLiquidity from './AddLiquidity'
 import {
   RedirectDuplicateTokenIds,
@@ -69,30 +67,8 @@ const Marginer = styled.div`
   margin-top: 5rem;
 `
 
-const localStorageKey = 'valoraRedirect'
-
 export default function App() {
-  const location = useLocation()
-  const { address } = useContractKit()
-
-  React.useEffect(() => {
-    // Close window if search params from Valora redirect are present (handles Valora connection issue)
-    if (typeof window !== 'undefined') {
-      const url = window.location.href
-      const whereQuery = url.indexOf('?')
-      if (whereQuery !== -1) {
-        const query = url.slice(whereQuery)
-        const params = new URLSearchParams(query)
-        if (params.get('status') === DappKitResponseStatus.SUCCESS) {
-          localStorage.setItem(localStorageKey, window.location.href)
-          const mobileOS = getMobileOperatingSystem()
-          if (mobileOS === Mobile.ANDROID) {
-            window.close()
-          }
-        }
-      }
-    }
-  }, [location])
+  const { address } = useCelo()
 
   if (isBanned(address)) {
     return null

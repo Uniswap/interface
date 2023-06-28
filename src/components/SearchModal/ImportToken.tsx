@@ -1,4 +1,4 @@
-import { useContractKit } from '@celo-tools/use-contractkit'
+import { useCelo } from '@celo/react-celo'
 import { ChainId, Token } from '@ubeswap/sdk'
 import { ButtonPrimary } from 'components/Button'
 import Card from 'components/Card'
@@ -50,7 +50,7 @@ interface ImportProps {
 export function ImportToken({ tokens, onBack, onDismiss, handleCurrencySelect }: ImportProps) {
   const theme = useTheme()
 
-  const { network } = useContractKit()
+  const { network } = useCelo()
   const chainId = network.chainId as unknown as ChainId
 
   const [confirmed, setConfirmed] = useState(false)

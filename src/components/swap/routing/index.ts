@@ -1,4 +1,4 @@
-import { useContractKit, useGetConnectedSigner } from '@celo-tools/use-contractkit'
+import { useCelo, useConnectedSigner } from '@celo/react-celo'
 import { JsonRpcSigner, TransactionRequest } from '@ethersproject/providers'
 import { ChainId, Trade } from '@ubeswap/sdk'
 import { BigNumber, BigNumberish, CallOverrides, Contract, ContractTransaction, PayableOverrides } from 'ethers'
@@ -92,15 +92,17 @@ const estimateGas = async (call: ContractCall): Promise<BigNumber> => {
  */
 export const useDoTransaction = (): DoTransactionFn => {
   const addTransaction = useTransactionAdder()
-  const { network } = useContractKit()
-  const getConnectedSigner = useGetConnectedSigner()
+  const { network } = useCelo()
+  const connectedSigner = useConnectedSigner()
   const chainId = network.chainId as unknown as ChainId
   return useCallback(
     async (contractDisconnected, methodName, args): Promise<ContractTransaction> => {
       if (chainId === ChainId.BAKLAVA) {
         throw new Error('baklava not supported')
       }
-      const connectedSigner = await getConnectedSigner()
+      if (!connectedSigner) {
+        throw new Error('no signer')
+      }
       const contract = contractDisconnected.connect(connectedSigner)
       const call = { contract, methodName, args: args.args, value: args.overrides?.value }
       const gasEstimate = await estimateGas(call)
@@ -132,6 +134,6 @@ export const useDoTransaction = (): DoTransactionFn => {
         }
       }
     },
-    [addTransaction, chainId, getConnectedSigner]
+    [addTransaction, chainId, connectedSigner]
   )
 }

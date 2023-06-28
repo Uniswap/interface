@@ -1,4 +1,4 @@
-import { useContractKit, useProvider } from '@celo-tools/use-contractkit'
+import { useCelo, useProvider } from '@celo/react-celo'
 import IUniswapV2PairABI from '@ubeswap/core/build/abi/IUniswapV2Pair.json'
 import { JSBI, Token, TokenAmount } from '@ubeswap/sdk'
 import ERC20_ABI from 'constants/abis/erc20'
@@ -42,7 +42,7 @@ export interface CustomStakingInfo {
 }
 
 export const useCustomStakingInfo = (farmAddress: string): CustomStakingInfo => {
-  const { address: account, network } = useContractKit()
+  const { address: account, network } = useCelo()
   const { chainId } = network
   const library = useProvider()
   const provider = getProviderOrSigner(library, account || undefined)

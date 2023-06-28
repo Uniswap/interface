@@ -1,4 +1,4 @@
-import { useContractKit } from '@celo-tools/use-contractkit'
+import { useCelo } from '@celo/react-celo'
 import { ChainId as UbeswapChainId, JSBI, Token, TokenAmount } from '@ubeswap/sdk'
 import { BigNumber } from 'ethers'
 import { useToken } from 'hooks/Tokens'
@@ -115,7 +115,7 @@ interface LimitOrderHistoryItemProps {
 }
 
 export default function LimitOrderHistoryItem({ item, rewardCurrency, lastDisplayItem }: LimitOrderHistoryItemProps) {
-  const { network } = useContractKit()
+  const { network } = useCelo()
   const chainId = network.chainId as unknown as UbeswapChainId
   const { callback: cancelOrder } = useCancelOrderCallback(item.orderHash)
   const theme = useTheme()

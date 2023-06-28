@@ -1,4 +1,4 @@
-import { Network } from '@celo-tools/use-contractkit'
+import { Network } from '@celo/react-celo'
 import CurrencyLogo from 'components/CurrencyLogo'
 import React, { useCallback } from 'react'
 import { WrappedTokenInfo } from 'state/lists/hooks'

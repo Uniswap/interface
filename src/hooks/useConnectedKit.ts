@@ -1,8 +1,8 @@
-import { useContractKit } from '@celo-tools/use-contractkit'
+import { useCelo } from '@celo/react-celo'
 import { useEffect, useState } from 'react'
 
 export const useConnectedKit = () => {
-  const { getConnectedKit } = useContractKit()
+  const { getConnectedKit } = useCelo()
   const [error, setError] = useState<Error | null>(null)
 
   useEffect(() => {

@@ -1,4 +1,4 @@
-import { useContractKit, useProvider } from '@celo-tools/use-contractkit'
+import { useCelo, useProvider } from '@celo/react-celo'
 import { ChainId } from '@ubeswap/sdk'
 import { BigNumber } from 'ethers'
 import { OrderBook__factory } from 'generated'
@@ -52,7 +52,7 @@ type OrderBookEvent = {
 }
 
 export const useOrderBroadcasted = () => {
-  const { account, network } = useContractKit()
+  const { account, network } = useCelo()
   const provider = useProvider()
   const chainId = network.chainId as unknown as ChainId
   const orderBookAddr = ORDER_BOOK_ADDRESS[chainId]
@@ -89,7 +89,7 @@ export const useOrderBroadcasted = () => {
 
 export const useLimitOrdersHistory = (): LimitOrdersHistory[] => {
   const orderEvents = useOrderBroadcasted()
-  const { network } = useContractKit()
+  const { network } = useCelo()
   const chainId = network.chainId as unknown as ChainId
   const limitOrderAddr = LIMIT_ORDER_ADDRESS[chainId]
 

@@ -1,4 +1,4 @@
-import { ChainId } from '@celo-tools/use-contractkit'
+import { ChainId } from '@celo/react-celo'
 import UBESWAP_TOKEN_LIST from '@ubeswap/default-token-list'
 import { Token } from '@ubeswap/sdk'
 import UNISWAP_TOKEN_LIST from '@uniswap/default-token-list'

@@ -1,4 +1,4 @@
-import { useContractKit } from '@celo-tools/use-contractkit'
+import { useCelo } from '@celo/react-celo'
 import { ChainId as UbeswapChainId, cUSD, JSBI, Token, TokenAmount } from '@ubeswap/sdk'
 import { BIG_INT_ZERO } from 'constants/index'
 import { usePair } from 'data/Reserves'
@@ -25,7 +25,7 @@ export const useLPValue = (
   token1: Token | undefined,
   stakingToken: Token | undefined
 ): IStakingPoolValue => {
-  const { network } = useContractKit()
+  const { network } = useCelo()
   const chainId = network.chainId
   const totalSupplyOfStakingToken = useTotalSupply(stakingToken)
   const isSingle = Boolean(farmSummary ? farmSummary.token0Address === farmSummary.token1Address : undefined)

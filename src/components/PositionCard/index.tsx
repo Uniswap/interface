@@ -1,4 +1,4 @@
-import { useContractKit } from '@celo-tools/use-contractkit'
+import { useCelo } from '@celo/react-celo'
 import { JSBI, Pair, Percent, TokenAmount } from '@ubeswap/sdk'
 import { darken, transparentize } from 'polished'
 import React, { useState } from 'react'
@@ -48,7 +48,7 @@ interface PositionCardProps {
 }
 
 export function MinimalPositionCard({ pair, border }: PositionCardProps) {
-  const { address: account } = useContractKit()
+  const { address: account } = useCelo()
 
   const currency0 = pair.token0
   const currency1 = pair.token1
@@ -157,7 +157,7 @@ export function MinimalPositionCard({ pair, border }: PositionCardProps) {
 
 export default function FullPositionCard({ pair, border, stakedBalance }: PositionCardProps) {
   const { t } = useTranslation()
-  const { address: account } = useContractKit()
+  const { address: account } = useCelo()
 
   const currency0 = pair.token0
   const currency1 = pair.token1

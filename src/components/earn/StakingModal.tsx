@@ -1,4 +1,3 @@
-import { useProvider } from '@celo-tools/use-contractkit'
 import { Pair, TokenAmount } from '@ubeswap/sdk'
 import Loader from 'components/Loader'
 import { useDoTransaction } from 'components/swap/routing'
@@ -50,8 +49,6 @@ export default function StakingModal({
   userLiquidityUnstaked,
   dummyPair,
 }: StakingModalProps) {
-  const library = useProvider()
-
   // track and parse user input
   const [typedValue, setTypedValue] = useState('')
   const { parsedAmount, error } = useDerivedStakeInfo(typedValue, stakingInfo.stakingToken, userLiquidityUnstaked)
@@ -116,7 +113,7 @@ export default function StakingModal({
   }, [maxAmountInput, onUserInput])
 
   async function onAttemptToApprove() {
-    if ((dummyPair && !pairContract) || !library || !deadline) throw new Error('missing dependencies')
+    if ((dummyPair && !pairContract) || !deadline) throw new Error('missing dependencies')
     const liquidityAmount = parsedAmount
     if (!liquidityAmount) throw new Error('missing liquidity amount')
 

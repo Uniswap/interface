@@ -1,4 +1,4 @@
-import { useContractKit } from '@celo-tools/use-contractkit'
+import { useCelo } from '@celo/react-celo'
 import { ChainId } from '@ubeswap/sdk'
 import React, { useContext } from 'react'
 import { ArrowUpCircle } from 'react-feather'
@@ -50,7 +50,7 @@ export function SubmittedView({
   hash: string | undefined
 }) {
   const theme = useContext(ThemeContext)
-  const { network } = useContractKit()
+  const { network } = useCelo()
   const chainId = network.chainId as unknown as ChainId
 
   const { t } = useTranslation()

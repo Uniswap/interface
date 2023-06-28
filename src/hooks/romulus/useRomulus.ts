@@ -1,5 +1,5 @@
 import { Address } from '@celo/contractkit'
-import { useContractKit } from '@celo-tools/use-contractkit'
+import { useCelo } from '@celo/react-celo'
 import { ChainId as UbeswapChainId, JSBI, TokenAmount } from '@ubeswap/sdk'
 import { usePoofTokenContract } from 'hooks/useContract'
 import { useMemo } from 'react'
@@ -15,7 +15,7 @@ export const useRomulus = (
   quorumVotes: TokenAmount | undefined
   proposalThreshold: TokenAmount | undefined
 } => {
-  const { address, network } = useContractKit()
+  const { address, network } = useCelo()
   const chainId = network.chainId
   const ube = chainId ? UBE[chainId as unknown as UbeswapChainId] : undefined
 
