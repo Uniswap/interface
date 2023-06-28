@@ -11,7 +11,7 @@ export default function PrivacyPolicyNotice() {
   return (
     <ThemedText.Caption color="textSecondary">
       <Trans>By connecting a wallet, you agree to Pegasys Finance</Trans>{' '}
-      <StyledLink href="https://pegasys.finance/terms-of-service">
+      <StyledLink href="https://pegasys.fi/terms-of-service">
         <Trans>Terms of Service</Trans>{' '}
       </StyledLink>
     </ThemedText.Caption>

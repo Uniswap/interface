@@ -1,7 +1,7 @@
 import { MixedRouteSDK, Trade } from '@pollum-io/router-sdk'
 import { Currency, CurrencyAmount, Token, TradeType } from '@pollum-io/sdk-core'
 import { Route as V2Route } from '@pollum-io/v1-sdk'
-import { Route as V3Route } from '@pollum-io/v2-sdk'
+import { Route as V3Route } from '@pollum-io/v3-sdk'
 
 export enum TradeState {
   LOADING,
@@ -88,8 +88,8 @@ export class InterfaceTrade<
       inputAmount: CurrencyAmount<TInput>
       outputAmount: CurrencyAmount<TOutput>
     }[]
-    v2Routes: {
-      routev2: V3Route<TInput, TOutput>
+    v3Routes: {
+      routev3: V3Route<TInput, TOutput>
       inputAmount: CurrencyAmount<TInput>
       outputAmount: CurrencyAmount<TOutput>
     }[]

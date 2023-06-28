@@ -124,7 +124,7 @@ function PrivacyPolicy() {
       <AutoColumn gap="16px">
         <AutoColumn gap="sm" style={{ width: '100%' }}>
           <StyledExternalCard>
-            <ExternalLink href="https://pegasys.finance/terms-of-service">
+            <ExternalLink href="https://pegasys.fi/terms-of-service">
               <RowBetween>
                 <AutoRow gap="4px">
                   <Info size={20} />

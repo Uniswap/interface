@@ -4,7 +4,7 @@ import { SupportedChainId } from 'constants/chains'
 import store from '../../state/index'
 
 const CHAIN_SUBGRAPH_URL: Record<number, string> = {
-  [SupportedChainId.ROLLUX]: 'https://rollux.graph.pegasys.fi/subgraphs/name/pollum-io/pegasys-v2',
+  [SupportedChainId.ROLLUX]: 'https://rollux.graph.pegasys.fi/subgraphs/name/pollum-io/pegasys-v3',
 }
 
 const httpLink = new HttpLink({ uri: CHAIN_SUBGRAPH_URL[SupportedChainId.ROLLUX] })
@@ -28,4 +28,19 @@ const authMiddleware = new ApolloLink((operation, forward) => {
 export const apolloClient = new ApolloClient({
   cache: new InMemoryCache(),
   link: concat(authMiddleware, httpLink),
+})
+
+export const blockClient = new ApolloClient({
+  uri: 'https://rollux.graph.pegasys.fi/subgraphs/name/pollum-io/syscoin-blocks',
+  cache: new InMemoryCache(),
+  queryDeduplication: true,
+  defaultOptions: {
+    watchQuery: {
+      fetchPolicy: 'no-cache',
+    },
+    query: {
+      fetchPolicy: 'no-cache',
+      errorPolicy: 'all',
+    },
+  },
 })

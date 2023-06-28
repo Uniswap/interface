@@ -2,6 +2,7 @@ import { Trans } from '@lingui/macro'
 import { MAX_WIDTH_MEDIA_BREAKPOINT, MEDIUM_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import { filterStringAtom } from 'components/Tokens/state'
 import NetworkFilter from 'components/Tokens/TokenTable/NetworkFilter'
+import SearchBar from 'components/Tokens/TokenTable/SearchBar'
 import TimeSelector from 'components/Tokens/TokenTable/TimeSelector'
 import TokenTable from 'components/Tokens/TokenTable/TokenTable'
 import { MouseoverTooltip } from 'components/Tooltip'
@@ -90,10 +91,9 @@ const Tokens = () => {
           <NetworkFilter />
           <TimeSelector />
         </FiltersContainer>
-        {/* TODO: review filter */}
-        {/* <SearchContainer>
+        <SearchContainer>
           <SearchBar />
-        </SearchContainer> */}
+        </SearchContainer>
       </FiltersWrapper>
       <TokenTable />
     </ExploreContainer>

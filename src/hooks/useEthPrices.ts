@@ -1,5 +1,5 @@
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
-import { apolloClient } from 'graphql/data/apollo'
+import { apolloClient } from 'graphql/thegraph/apollo'
 import gql from 'graphql-tag'
 import { useBlocksFromTimestamps } from 'hooks/useBlocksFromTimestamps'
 import { useEffect, useMemo, useState } from 'react'

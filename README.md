@@ -65,9 +65,9 @@ Other things to note:
 
 ## Accessing Pegasys V1
 
-The Pegasys Interface supports swapping, adding liquidity, removing liquidity and migrating liquidity for Pegasys protocol V2.
+The Pegasys Interface supports swapping, adding liquidity, removing liquidity and migrating liquidity for Pegasys protocol V3.
 
-- Swap on Pegasys V1: <https://v1.app.pegasys.fi/#/swap?use=v2>
-- View V1 liquidity: <https://v1.app.pegasys.fi/#/pools/v2>
-- Add V1 liquidity: <https://v1.app.pegasys.fi/#/add/v2>
-- Migrate V1 liquidity to V2: <https://v1.app.pegasys.fi/#/migrate/v2>
+- Swap on Pegasys V1: <https://v1.pegasys.fi/>
+- View V1 liquidity: <https://app.pegasys.fi/#/pools/v2>
+- Add V1 liquidity: <https://app.pegasys.fi/#/add/v2>
+- Migrate V1 liquidity to V3: <https://app.pegasys.fi/#/migrate/v2>

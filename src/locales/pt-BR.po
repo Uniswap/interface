@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: uniswap-interface\n"
+"Project-Id-Version: pegasys-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
 "PO-Revision-Date: 2023-03-21 23:05\n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Crowdin-Project: uniswap-interface\n"
+"X-Crowdin-Project: pegasys-interface\n"
 "X-Crowdin-Project-ID: 458284\n"
 "X-Crowdin-Language: pt-BR\n"
 "X-Crowdin-File: en-US.po\n"
@@ -56,7 +56,7 @@ msgid "24H volume"
 msgstr ""
 
 #: src/components/Tokens/TokenDetails/StatsSection.tsx
-msgid "24H volume is the amount of the asset that has been traded on Uniswap v3 during the past 24 hours."
+msgid "24H volume is the amount of the asset that has been traded on Pegasys v3 during the past 24 hours."
 msgstr ""
 
 #: src/pages/RemoveLiquidity/V3.tsx
@@ -152,8 +152,8 @@ msgid "Add"
 msgstr "Adicionar"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
-msgid "Add <0/> and <1/> to Uniswap V2"
-msgstr "Adicione <0 /> e <1 /> ao Uniswap V2"
+msgid "Add <0/> and <1/> to Pegasys V2"
+msgstr "Adicione <0 /> e <1 /> ao Pegasys V2"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Add Delegate +"
@@ -246,8 +246,8 @@ msgid "An error occurred loading tokens. Please try again."
 msgstr ""
 
 #: src/utils/swapErrorToUserReadableMessage.tsx
-msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "Ocorreu um erro ao tentar executar esta troca. Pode ser necessário aumentar sua tolerância ao deslizamento. Se isso não funcionar, pode haver uma incompatibilidade com o token que você está negociando. Nota: a taxa de transferência e tokens de rebase são incompatíveis com Uniswap V3."
+msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Pegasys V3."
+msgstr "Ocorreu um erro ao tentar executar esta troca. Pode ser necessário aumentar sua tolerância ao deslizamento. Se isso não funcionar, pode haver uma incompatibilidade com o token que você está negociando. Nota: a taxa de transferência e tokens de rebase são incompatíveis com Pegasys V3."
 
 #: src/nft/components/bag/BagFooter.tsx
 #: src/pages/Swap/index.tsx
@@ -370,7 +370,7 @@ msgid "By adding liquidity you'll earn 0.3% of all trades on this pair proportio
 msgstr "Ao acrescentar liquidez, você ganha 0,3% de todas as negociações com esse par, proporcionalmente ao seu compartilhamento do lote. As taxas são adicionadas ao lote, são provisionadas em tempo real e podem ser resgatadas por meio de saques de sua liquidez."
 
 #: src/components/WalletModal/index.tsx
-msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and consent to its <1>Privacy Policy</1>."
+msgid "By connecting a wallet, you agree to Pegasys Labs’ <0>Terms of Service</0> and consent to its <1>Privacy Policy</1>."
 msgstr ""
 
 #: src/pages/Vote/styled.tsx
@@ -415,7 +415,7 @@ msgid "Claim UNI reward for {0}"
 msgstr "Reivindicar recompensa UNI por {0}"
 
 #: src/components/WalletDropdown/AuthenticatedHeader.tsx
-msgid "Claim Uniswap NFT Airdrop"
+msgid "Claim Pegasys NFT Airdrop"
 msgstr ""
 
 #: src/pages/Pool/PositionPage.tsx
@@ -720,8 +720,8 @@ msgid "Don’t see one of your v2 positions? <0>Import it.</0>"
 msgstr "Não está vendo uma de suas posições V2? <0>Importe-a.</0>"
 
 #: src/components/vote/DelegateModal.tsx
-msgid "Earned UNI tokens represent voting shares in Uniswap governance."
-msgstr "Os tokens UNI recebidos representam capital votante na governança do Uniswap."
+msgid "Earned UNI tokens represent voting shares in Pegasys governance."
+msgstr "Os tokens UNI recebidos representam capital votante na governança do Pegasys."
 
 #: src/components/FeeSelector/index.tsx
 msgid "Edit"
@@ -839,7 +839,7 @@ msgid "Explore NFTs"
 msgstr ""
 
 #: src/pages/Pool/CTACards.tsx
-msgid "Explore Uniswap Analytics."
+msgid "Explore Pegasys Analytics."
 msgstr ""
 
 #: src/components/Tokens/TokenDetails/InvalidTokenDetails.tsx
@@ -903,8 +903,8 @@ msgid "For"
 msgstr "Para"
 
 #: src/pages/MigrateV2/index.tsx
-msgid "For each pool shown below, click migrate to remove your liquidity from Uniswap V2 and deposit it into Uniswap V3."
-msgstr "Para cada lote exibido abaixo, clique em migrar para remover sua liquidez do Uniswap V2 e depositá-la it no Uniswap V3."
+msgid "For each pool shown below, click migrate to remove your liquidity from Pegasys V2 and deposit it into Pegasys V3."
+msgstr "Para cada lote exibido abaixo, clique em migrar para remover sua liquidez do Pegasys V2 e depositá-la it no Pegasys V3."
 
 #: src/pages/Swap/index.tsx
 msgid "From"
@@ -1184,8 +1184,8 @@ msgid "Migrate V2 Liquidity"
 msgstr "Migrar Liquidez V2"
 
 #: src/pages/MigrateV2/index.tsx
-msgid "Migrate your liquidity tokens from Uniswap V2 to Uniswap V3."
-msgstr "Migrar seus tokens de liquidez do Uniswap V2 para o Uniswap V3."
+msgid "Migrate your liquidity tokens from Pegasys V2 to Pegasys V3."
+msgstr "Migrar seus tokens de liquidez do Pegasys V2 para o Pegasys V3."
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Migrate {0}/{1} liquidity to V3"
@@ -1217,7 +1217,7 @@ msgid "Missing chart data"
 msgstr ""
 
 #: src/components/Tokens/TokenDetails/PriceChart.tsx
-msgid "Missing price data due to recently low trading volume on Uniswap v3"
+msgid "Missing price data due to recently low trading volume on Pegasys v3"
 msgstr ""
 
 #: src/components/FiatOnrampModal/index.tsx
@@ -1403,7 +1403,7 @@ msgid "Pending"
 msgstr ""
 
 #: src/pages/Swap/index.tsx
-msgid "Permission is required for Uniswap to swap each token. This will expire after one month for your security."
+msgid "Permission is required for Pegasys to swap each token. This will expire after one month for your security."
 msgstr ""
 
 #: src/components/vote/ProposalEmptyState.tsx
@@ -1566,8 +1566,8 @@ msgid "Rates"
 msgstr "Taxas"
 
 #: src/pages/Vote/Landing.tsx
-msgid "Read more about Uniswap governance"
-msgstr "Ler mais sobre governança no Uniswap"
+msgid "Read more about Pegasys governance"
+msgstr "Ler mais sobre governança no Pegasys"
 
 #: src/pages/Pool/v2.tsx
 msgid "Read more about providing liquidity"
@@ -1916,16 +1916,16 @@ msgid "TVL"
 msgstr ""
 
 #: src/components/Popups/ClaimPopup.tsx
-msgid "Thanks for being part of the Uniswap community <0/>"
-msgstr "Obrigado por fazer parte da comunidade Uniswap <0/>"
+msgid "Thanks for being part of the Pegasys community <0/>"
+msgstr "Obrigado por fazer parte da comunidade Pegasys <0/>"
 
 #: src/components/FeeSelector/index.tsx
 msgid "The % you will earn in fees."
 msgstr ""
 
 #: src/utils/swapErrorToUserReadableMessage.tsx
-msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
-msgstr "A invariante x*y=k do Uniswap não foi observada na conversão. Isto geralmente significa que um dos tokens que você está convertendo tem um comportamento de transferência personalizado."
+msgid "The Pegasys invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
+msgstr "A invariante x*y=k do Pegasys não foi observada na conversão. Isto geralmente significa que um dos tokens que você está convertendo tem um comportamento de transferência personalizado."
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "The amount you expect to receive at the current market price. You may receive less or more if the market price changes while your transaction is pending."
@@ -1940,7 +1940,7 @@ msgid "The app fetches on-chain data and constructs contract calls with an Infur
 msgstr ""
 
 #: src/components/PrivacyPolicy/index.tsx
-msgid "The app fetches the optimal trade route from a Uniswap Labs server."
+msgid "The app fetches the optimal trade route from a Pegasys Labs server."
 msgstr ""
 
 #: src/components/PrivacyPolicy/index.tsx
@@ -1990,8 +1990,8 @@ msgid "The output token cannot be transferred. There may be an issue with the ou
 msgstr "O token resultante não pode ser transferido. Pode haver um problema com o token resultante."
 
 #: src/utils/swapErrorToUserReadableMessage.tsx
-msgid "The output token cannot be transferred. There may be an issue with the output token. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "O token de saída não pode ser transferido. Pode haver um problema com o token de saída. Nota: a taxa de transferência e tokens de rebase são incompatíveis com Uniswap V3."
+msgid "The output token cannot be transferred. There may be an issue with the output token. Note: fee on transfer and rebase tokens are incompatible with Pegasys V3."
+msgstr "O token de saída não pode ser transferido. Pode haver um problema com o token de saída. Nota: a taxa de transferência e tokens de rebase são incompatíveis com Pegasys V3."
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "The price of this pool is outside of your selected range. Your position is not currently earning fees."
@@ -2010,7 +2010,7 @@ msgid "There is no liquidity data."
 msgstr ""
 
 #: src/components/ConnectedAccountBlocked/index.tsx
-msgid "This address is blocked on the Uniswap Labs interface because it is associated with one or more"
+msgid "This address is blocked on the Pegasys Labs interface because it is associated with one or more"
 msgstr ""
 
 #: src/components/PrivacyPolicy/index.tsx
@@ -2030,7 +2030,7 @@ msgid "This route optimizes your total output by considering split routes, multi
 msgstr ""
 
 #: src/pages/Tokens/index.tsx
-msgid "This table contains the top tokens by Uniswap volume, sorted based on your input."
+msgid "This table contains the top tokens by Pegasys volume, sorted based on your input."
 msgstr ""
 
 #: src/components/Tokens/TokenDetails/InvalidTokenDetails.tsx
@@ -2050,8 +2050,8 @@ msgid "This transaction could not be sent because the deadline has passed. Pleas
 msgstr ""
 
 #: src/utils/swapErrorToUserReadableMessage.tsx
-msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "Esta transação não terá sucesso devido ao movimento do preço. Tente aumentar sua tolerância ao deslizamento. Nota: a taxa de transferência e tokens de rebase são incompatíveis com Uniswap V3."
+msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Pegasys V3."
+msgstr "Esta transação não terá sucesso devido ao movimento do preço. Tente aumentar sua tolerância ao deslizamento. Nota: a taxa de transferência e tokens de rebase são incompatíveis com Pegasys V3."
 
 #: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance."
@@ -2073,7 +2073,7 @@ msgid "To (at least)"
 msgstr "Para (pelo menos)"
 
 #: src/components/Popups/FailedNetworkSwitchPopup.tsx
-msgid "To use Uniswap on {0}, switch the network in your wallet’s settings."
+msgid "To use Pegasys on {0}, switch the network in your wallet’s settings."
 msgstr ""
 
 #: src/components/Tokens/TokenTable/TokenRow.tsx
@@ -2094,7 +2094,7 @@ msgid "Top pools"
 msgstr "Lotes superiores"
 
 #: src/pages/Tokens/index.tsx
-msgid "Top tokens on Uniswap"
+msgid "Top tokens on Pegasys"
 msgstr ""
 
 #: src/nft/components/bag/BagFooter.tsx
@@ -2102,7 +2102,7 @@ msgid "Total"
 msgstr ""
 
 #: src/components/Tokens/TokenTable/TokenRow.tsx
-msgid "Total value locked (TVL) is the aggregate amount of the asset available across all Uniswap v3 liquidity pools."
+msgid "Total value locked (TVL) is the aggregate amount of the asset available across all Pegasys v3 liquidity pools."
 msgstr ""
 
 #: src/components/swap/RouterLabel.tsx
@@ -2162,8 +2162,8 @@ msgid "UNI has arrived"
 msgstr "A UNI chegou"
 
 #: src/pages/Vote/Landing.tsx
-msgid "UNI tokens represent voting shares in Uniswap governance. You can vote on each proposal yourself or delegate your votes to a third party."
-msgstr "Os tokens de UNI representam capital votante na governança do Uniswap. Você mesmo pode votar em cada proposta ou pode delegar seu voto a terceiros."
+msgid "UNI tokens represent voting shares in Pegasys governance. You can vote on each proposal yourself or delegate your votes to a third party."
+msgstr "Os tokens de UNI representam capital votante na governança do Pegasys. Você mesmo pode votar em cada proposta ou pode delegar seu voto a terceiros."
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "UNI {0}/{1} Burned"
@@ -2182,36 +2182,36 @@ msgid "Undetermined"
 msgstr ""
 
 #: src/pages/Vote/Landing.tsx
-msgid "Uniswap Governance"
-msgstr "Governança do Uniswap"
+msgid "Pegasys Governance"
+msgstr "Governança do Pegasys"
 
 #: src/components/TaxServiceModal/TaxServiceBanner.tsx
-msgid "Uniswap Labs can save you up to 20% on CoinTracker and TokenTax"
+msgid "Pegasys Labs can save you up to 20% on CoinTracker and TokenTax"
 msgstr ""
 
 #: src/components/PrivacyPolicy/index.tsx
-msgid "Uniswap Labs' Terms of Service"
+msgid "Pegasys Labs' Terms of Service"
 msgstr ""
 
 #: src/pages/Pool/v2.tsx
-msgid "Uniswap V2 is not available on this network."
+msgid "Pegasys V2 is not available on this network."
 msgstr ""
 
 #: src/components/SwitchLocaleLink/index.tsx
-msgid "Uniswap available in: <0>{0}</0>"
-msgstr "Uniswap disponível em: <0>{0}</0>"
+msgid "Pegasys available in: <0>{0}</0>"
+msgstr "Pegasys disponível em: <0>{0}</0>"
 
 #: src/components/vote/ProposalEmptyState.tsx
-msgid "Uniswap governance is only available on Layer 1. Switch your network to Ethereum Mainnet to view Proposals and Vote."
+msgid "Pegasys governance is only available on Layer 1. Switch your network to Ethereum Mainnet to view Proposals and Vote."
 msgstr ""
 
 #: src/nft/components/collection/TransactionCompleteModal.tsx
-msgid "Uniswap has granted your wish!"
+msgid "Pegasys has granted your wish!"
 msgstr ""
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
-msgid "Uniswap migration contract↗"
-msgstr "Contrato de migração no Uniswap↗"
+msgid "Pegasys migration contract↗"
+msgstr "Contrato de migração no Pegasys↗"
 
 #: src/pages/Vote/Landing.tsx
 #: src/pages/Vote/VotePage.tsx
@@ -2262,7 +2262,7 @@ msgid "Update Delegation"
 msgstr "Atualizar Delegação"
 
 #: src/components/Settings/index.tsx
-msgid "Use the Uniswap Labs API to get faster quotes."
+msgid "Use the Pegasys Labs API to get faster quotes."
 msgstr ""
 
 #: src/pages/Pool/index.tsx
@@ -2309,7 +2309,7 @@ msgid "View transaction on Explorer"
 msgstr "Visualizar a operação no Explorer"
 
 #: src/components/Tokens/TokenTable/TokenRow.tsx
-msgid "Volume is the amount of the asset that has been traded on Uniswap v3 during the selected time frame."
+msgid "Volume is the amount of the asset that has been traded on Pegasys v3 during the selected time frame."
 msgstr ""
 
 #: src/pages/Vote/VotePage.tsx
@@ -2433,8 +2433,8 @@ msgid "You are creating a pool"
 msgstr "Você está abrindo um novo lote"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
-msgid "You are the first liquidity provider for this Uniswap V3 pool. Your liquidity will migrate at the current {0} price."
-msgstr "Você é o primeiro fornecedor com liquidez neste lote do Uniswap V3. Sua liquidez será migrada ao preço atual de {0}."
+msgid "You are the first liquidity provider for this Pegasys V3 pool. Your liquidity will migrate at the current {0} price."
+msgstr "Você é o primeiro fornecedor com liquidez neste lote do Pegasys V3. Sua liquidez será migrada ao preço atual de {0}."
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "You are the first liquidity provider."
@@ -2470,8 +2470,8 @@ msgid "You receive"
 msgstr ""
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
-msgid "You should only deposit liquidity into Uniswap V3 at a price you believe is correct. <0/>If the price seems incorrect, you can either make a swap to move the price or wait for someone else to do so."
-msgstr "A liquidez deve ser depositada apenas no Uniswap V3 ao preço que você julgar correto. <0/>Se o preço parecer incorreto, você pode fazer uma conversão para alterar o preço ou aguardar até que outra pessoa o faça."
+msgid "You should only deposit liquidity into Pegasys V3 at a price you believe is correct. <0/>If the price seems incorrect, you can either make a swap to move the price or wait for someone else to do so."
+msgstr "A liquidez deve ser depositada apenas no Pegasys V3 ao preço que você julgar correto. <0/>Se o preço parecer incorreto, você pode fazer uma conversão para alterar o preço ou aguardar até que outra pessoa o faça."
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "You will also collect fees earned from this position."
@@ -2657,16 +2657,16 @@ msgid "{0, plural, =1 {Resolve issue} other {{1}}}"
 msgstr ""
 
 #: src/constants/tokenSafety.tsx
-msgid "{0, plural, =1 {This token isn't traded on leading U.S. centralized exchanges or frequently swapped on Uniswap.} other {These tokens aren't traded on leading U.S. centralized exchanges or frequently swapped on Uniswap.}}"
-msgstr "{0, plural, =1 {Este token não é negociado nas principais bolsas centralizadas dos EUA ou frequentemente trocado no Uniswap.} other {Esses tokens não são negociados nas principais bolsas centralizadas dos EUA ou frequentemente trocados no Uniswap.}}"
+msgid "{0, plural, =1 {This token isn't traded on leading U.S. centralized exchanges or frequently swapped on Pegasys.} other {These tokens aren't traded on leading U.S. centralized exchanges or frequently swapped on Pegasys.}}"
+msgstr "{0, plural, =1 {Este token não é negociado nas principais bolsas centralizadas dos EUA ou frequentemente trocado no Pegasys.} other {Esses tokens não são negociados nas principais bolsas centralizadas dos EUA ou frequentemente trocados no Pegasys.}}"
 
 #: src/constants/tokenSafety.tsx
 msgid "{0, plural, =1 {This token isn't traded on leading U.S. centralized exchanges.} other {These tokens aren't traded on leading U.S. centralized exchanges.}}"
 msgstr "{0, plural, =1 {Este token não é negociado nas principais bolsas centralizadas dos EUA.} other {Esses tokens não são negociados nas principais bolsas centralizadas dos EUA.}}"
 
 #: src/constants/tokenSafety.tsx
-msgid "{0, plural, =1 {You can't trade this token using the Uniswap App.} other {You can't trade these tokens using the Uniswap App.}}"
-msgstr "{0, plural, =1 {Você não pode negociar este token usando o aplicativo Uniswap.} other {Você não pode negociar esses tokens usando o aplicativo Uniswap.}}"
+msgid "{0, plural, =1 {You can't trade this token using the Pegasys App.} other {You can't trade these tokens using the Pegasys App.}}"
+msgstr "{0, plural, =1 {Você não pode negociar este token usando o aplicativo Pegasys.} other {Você não pode negociar esses tokens usando o aplicativo Pegasys.}}"
 
 #: src/nft/components/profile/list/Modal/ListModalSection.tsx
 msgid "{0, plural, =1 {listing} other {listings}}"
@@ -2759,7 +2759,7 @@ msgstr "{0}% selecionar"
 
 #: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "{0}. Try increasing your slippage tolerance.\n"
-"Note: fee-on-transfer and rebase tokens are incompatible with Uniswap V3."
+"Note: fee-on-transfer and rebase tokens are incompatible with Pegasys V3."
 msgstr ""
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx

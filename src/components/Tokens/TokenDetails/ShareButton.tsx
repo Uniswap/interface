@@ -80,7 +80,7 @@ export default function ShareButton({ currency }: { currency: Currency }) {
   }, [currency])
 
   const address = currency.isNative ? NATIVE_CHAIN_ID : addressReceived
-  console.log('currency', currency)
+  // console.log('currency', currency)s
 
   const shareTweet = () => {
     toggleShare()

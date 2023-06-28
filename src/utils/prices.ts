@@ -1,7 +1,7 @@
 import { Trade } from '@pollum-io/router-sdk'
 import { Currency, CurrencyAmount, Fraction, Percent, TradeType } from '@pollum-io/sdk-core'
 import { Pair } from '@pollum-io/v1-sdk'
-import { FeeAmount } from '@pollum-io/v2-sdk'
+import { FeeAmount } from '@pollum-io/v3-sdk'
 import JSBI from 'jsbi'
 
 import {

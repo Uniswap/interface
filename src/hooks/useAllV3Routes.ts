@@ -1,5 +1,5 @@
 import { Currency } from '@pollum-io/sdk-core'
-import { Pool, Route } from '@pollum-io/v2-sdk'
+import { Pool, Route } from '@pollum-io/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { useMemo } from 'react'
 

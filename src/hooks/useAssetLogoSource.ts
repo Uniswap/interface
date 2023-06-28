@@ -43,7 +43,7 @@ function getInitialUrl(address?: string | null, chainId?: number | null, isNativ
   // TODO: review check raw
   if (checksummedAddress) {
     // return `https://raw.githubusercontent.com/pegasys-fi/pegasys-tokenlists/master/${chainId}/${checksummedAddress}/logo.png`
-    return `https://raw.githubusercontent.com/pegasys-fi/pegasys-tokenlists/master/57000/${checksummedAddress}/logo.png`
+    return `https://raw.githubusercontent.com/pegasys-fi/default-token-list/master/src/logos/${chainId}/${checksummedAddress}/logo.png`
   } else {
     return undefined
   }

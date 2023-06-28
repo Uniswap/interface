@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { SupportedChainId, WETH9 } from '@pollum-io/sdk-core'
-import { FeeAmount, Pool, Position } from '@pollum-io/v2-sdk'
+import { FeeAmount, Pool, Position } from '@pollum-io/v3-sdk'
 import { USDC_MAINNET } from 'constants/tokens'
 import { mocked } from 'test-utils/mocked'
 import { render } from 'test-utils/render'

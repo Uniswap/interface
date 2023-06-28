@@ -46,11 +46,7 @@ function getTokenLogoURI(address: string, chainId: SupportedChainId = SupportedC
   //   SupportedChainId.ROLLUX_TANENBAUM,
   //   // SupportedChainId.BNB,
   // ]
-  if (chainId === 570) {
-    return `https://raw.githubusercontent.com/pegasys-fi/pegasys-tokenlists/master/${chainId}/${address}/logo.png`
-  } else {
-    return `https://raw.githubusercontent.com/pegasys-fi/pegasys-tokenlists/master/57000/${address}/logo.png`
-  }
+  return `https://raw.githubusercontent.com/pegasys-fi/default-token-list/master/src/logos/${chainId}/${address}/logo.png`
 
   // Celo logo logo is hosted elsewhere.
   // if (isCelo(chainId)) {

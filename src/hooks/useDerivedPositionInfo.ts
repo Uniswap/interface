@@ -1,4 +1,4 @@
-import { Pool, Position } from '@pollum-io/v2-sdk'
+import { Pool, Position } from '@pollum-io/v3-sdk'
 import { usePool } from 'hooks/usePools'
 import { PositionDetails } from 'types/position'
 

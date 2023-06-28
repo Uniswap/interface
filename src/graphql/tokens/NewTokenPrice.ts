@@ -5,7 +5,7 @@ import gql from 'graphql-tag'
 import { getBlocksFromTimestamps } from 'hooks/useBlocksFromTimestamps'
 import { PriceChartEntry } from 'types/chart'
 
-import { apolloClient, blockClient } from '../data/apollo'
+import { apolloClient, blockClient } from '../thegraph/apollo'
 
 const PRICE_CHART = gql`
   query tokenHourData($startTime: Int!, $skip: Int!, $address: Bytes!, $qtyDataPerTime: Int!) {

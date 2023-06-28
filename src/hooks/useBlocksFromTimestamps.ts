@@ -1,6 +1,6 @@
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 import { START_BLOCKS } from 'constants/blocks'
-import { blockClient } from 'graphql/data/apollo'
+import { blockClient } from 'graphql/thegraph/apollo'
 import gql from 'graphql-tag'
 import { useEffect, useMemo, useState } from 'react'
 import { splitQuery } from 'utils/queries'

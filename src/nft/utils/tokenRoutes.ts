@@ -1,7 +1,7 @@
 import { IRoute, Protocol } from '@pollum-io/router-sdk'
 import { Currency, CurrencyAmount, TradeType } from '@pollum-io/sdk-core'
 import { Pair } from '@pollum-io/v1-sdk'
-import { Pool } from '@pollum-io/v2-sdk'
+import { Pool } from '@pollum-io/v3-sdk'
 import { TokenAmountInput, TokenTradeRouteInput, TradePoolInput } from 'graphql/data/__generated__/types-and-hooks'
 import { InterfaceTrade } from 'state/routing/types'
 

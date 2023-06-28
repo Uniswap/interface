@@ -13,7 +13,7 @@
 
 # dependencies
 /node_modules
-
+yarn.lock
 # testing
 /coverage
 

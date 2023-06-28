@@ -1,4 +1,4 @@
-import { FeeAmount, nearestUsableTick, TICK_SPACINGS, TickMath } from '@pollum-io/v2-sdk'
+import { FeeAmount, nearestUsableTick, TICK_SPACINGS, TickMath } from '@pollum-io/v3-sdk'
 import { useMemo } from 'react'
 import { Bound } from 'state/mint/v3/actions'
 

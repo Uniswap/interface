@@ -281,11 +281,11 @@ export const HEADER_DESCRIPTIONS: Record<TokenSortMethod, ReactNode | undefined>
   [TokenSortMethod.PERCENT_CHANGE]: undefined,
   [TokenSortMethod.TOTAL_VALUE_LOCKED]: (
     <Trans>
-      Total value locked (TVL) is the aggregate amount of the asset available across all Uniswap v3 liquidity pools.
+      Total value locked (TVL) is the aggregate amount of the asset available across all Pegasys v3 liquidity pools.
     </Trans>
   ),
   [TokenSortMethod.VOLUME]: (
-    <Trans>Volume is the amount of the asset that has been traded on Uniswap v3 during the selected time frame.</Trans>
+    <Trans>Volume is the amount of the asset that has been traded on Pegasys v3 during the selected time frame.</Trans>
   ),
 }
 
@@ -424,7 +424,6 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
   const { tokenListIndex, tokenListLength, token, sortRank } = props
   const timePeriod = useAtomValue(filterTimeAtom)
 
-  // TODO: verify query to return price percent change on new graphql pegasys
   const delta = timePeriod === 0 ? token.priceUSDChange : token.priceUSDChangeWeek
   const arrow = getDeltaArrow(delta)
   const smallArrow = getDeltaArrow(delta, 14)
@@ -437,7 +436,6 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
 
   // TODO: currency logo sizing mobile (32px) vs. desktop (24px)
 
-  // TODO: review sort rank row of tokens
   return (
     <div ref={ref} data-testid={`token-table-row-${token.symbol}`}>
       <StyledLink to={to}>

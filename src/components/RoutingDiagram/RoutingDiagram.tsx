@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { Protocol } from '@pollum-io/router-sdk'
 import { Currency } from '@pollum-io/sdk-core'
-import { FeeAmount } from '@pollum-io/v2-sdk'
+import { FeeAmount } from '@pollum-io/v3-sdk'
 import Badge from 'components/Badge'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'

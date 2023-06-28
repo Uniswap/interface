@@ -1,12 +1,12 @@
 import { QueryResult } from '@apollo/client'
-import { Currency, Token } from '@pollum-io/sdk-core'
+import { Currency } from '@pollum-io/sdk-core'
 import { SupportedChainId } from 'constants/chains'
 import { NATIVE_CHAIN_ID, nativeOnChain, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import ms from 'ms.macro'
 import { useEffect } from 'react'
 import { getNativeTokenDBAddress } from 'utils/nativeTokens'
 
-import { Chain, ContractInput, HistoryDuration, TokenStandard } from './__generated__/types-and-hooks'
+import { Chain, ContractInput, HistoryDuration } from './__generated__/types-and-hooks'
 
 export enum PollingInterval {
   Slow = ms`5m`,
@@ -56,17 +56,8 @@ export function isPricePoint(p: PricePoint | null): p is PricePoint {
 }
 
 export const CHAIN_ID_TO_BACKEND_NAME: { [key: number]: Chain } = {
-  // [SupportedChainId.MAINNET]: Chain.Ethereum,
-  // [SupportedChainId.GOERLI]: Chain.EthereumGoerli,
-  // [SupportedChainId.POLYGON]: Chain.Polygon,
-  // [SupportedChainId.POLYGON_MUMBAI]: Chain.Polygon,
-  // [SupportedChainId.CELO]: Chain.Celo,
-  // [SupportedChainId.CELO_ALFAJORES]: Chain.Celo,
-  // [SupportedChainId.ARBITRUM_ONE]: Chain.Arbitrum,
-  // [SupportedChainId.ARBITRUM_GOERLI]: Chain.Arbitrum,
-  [SupportedChainId.ROLLUX]: Chain.Rollux,
-  [SupportedChainId.ROLLUX_TANENBAUM]: Chain.Rollux,
-  // [SupportedChainId.BNB]: Chain.Bnb,
+  [SupportedChainId.ROLLUX]: 'ROLLUX' as Chain,
+  [SupportedChainId.ROLLUX_TANENBAUM]: 'ROLLUX' as Chain,
 }
 
 export function chainIdToBackendName(chainId: number | undefined) {
@@ -91,51 +82,32 @@ export function toContractInput(currency: Currency): ContractInput {
   return { chain, address: currency.isToken ? currency.address : getNativeTokenDBAddress(chain) }
 }
 
-export function gqlToCurrency(token: {
-  address?: string
-  chain: Chain
-  standard?: TokenStandard
-  decimals?: number
-  name?: string
-  symbol?: string
-}): Currency {
-  const chainId = fromGraphQLChain(token.chain)
-  if (token.standard === TokenStandard.Native || !token.address) return nativeOnChain(chainId)
-  else return new Token(chainId, token.address, token.decimals ?? 18, token.name, token.symbol)
-}
-
 const URL_CHAIN_PARAM_TO_BACKEND: { [key: string]: Chain } = {
   // ethereum: Chain.Ethereum,
   // polygon: Chain.Polygon,
   // celo: Chain.Celo,
   // arbitrum: Chain.Arbitrum,
-  optimism: Chain.Optimism,
+  rollux: 'ROLLUX' as Chain,
   // bnb: Chain.Bnb,
 }
 
 export function validateUrlChainParam(chainName: string | undefined) {
-  return chainName && URL_CHAIN_PARAM_TO_BACKEND[chainName] ? URL_CHAIN_PARAM_TO_BACKEND[chainName] : Chain.Rollux
+  return chainName && URL_CHAIN_PARAM_TO_BACKEND[chainName]
+    ? URL_CHAIN_PARAM_TO_BACKEND[chainName]
+    : ('ROLLUX' as Chain)
 }
 
 // TODO(cartcrom): refactor into safer lookup & replace usage
 // TODO verify this later
-export const CHAIN_NAME_TO_CHAIN_ID: { [key in Chain]: SupportedChainId } = {
-  [Chain.Ethereum]: SupportedChainId.ROLLUX,
-  [Chain.EthereumGoerli]: SupportedChainId.ROLLUX,
-  [Chain.Polygon]: SupportedChainId.ROLLUX,
-  [Chain.Celo]: SupportedChainId.ROLLUX,
-  [Chain.Optimism]: SupportedChainId.ROLLUX,
-  [Chain.Arbitrum]: SupportedChainId.ROLLUX,
-  [Chain.UnknownChain]: SupportedChainId.ROLLUX,
-  [Chain.Bnb]: SupportedChainId.ROLLUX,
-  [Chain.Rollux]: SupportedChainId.ROLLUX,
+export const CHAIN_NAME_TO_CHAIN_ID: { [key in string]: SupportedChainId } = {
+  ['ROLLUX' as Chain]: SupportedChainId.ROLLUX,
 }
 
 export function fromGraphQLChain(chain: Chain): SupportedChainId {
   return CHAIN_NAME_TO_CHAIN_ID[chain]
 }
 
-export const BACKEND_CHAIN_NAMES: Chain[] = [Chain.Optimism]
+export const BACKEND_CHAIN_NAMES: Chain[] = ['ROLLUX' as Chain]
 
 export function getTokenDetailsURL({
   address,
