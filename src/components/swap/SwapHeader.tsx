@@ -2,6 +2,7 @@ import { Trans } from '@lingui/macro'
 import { Percent } from '@uniswap/sdk-core'
 import { useFiatOnRampButtonEnabled } from 'featureFlags/flags/fiatOnRampButton'
 import { useUniswapXEnabled } from 'featureFlags/flags/gouda'
+import { InterfaceTrade } from 'state/routing/types'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
@@ -19,7 +20,15 @@ const HeaderButtonContainer = styled(RowFixed)`
   gap: 16px;
 `
 
-export default function SwapHeader({ autoSlippage, chainId }: { autoSlippage: Percent; chainId?: number }) {
+export default function SwapHeader({
+  autoSlippage,
+  chainId,
+  trade,
+}: {
+  autoSlippage: Percent
+  chainId?: number
+  trade?: InterfaceTrade
+}) {
   const fiatOnRampButtonEnabled = useFiatOnRampButtonEnabled()
   const isUniswapXEnabled = useUniswapXEnabled()
 
@@ -33,7 +42,7 @@ export default function SwapHeader({ autoSlippage, chainId }: { autoSlippage: Pe
         {fiatOnRampButtonEnabled && <SwapBuyFiatButton />}
       </HeaderButtonContainer>
       <RowFixed>
-        <SettingsTab autoSlippage={autoSlippage} chainId={chainId} />
+        <SettingsTab autoSlippage={autoSlippage} chainId={chainId} trade={trade} />
       </RowFixed>
     </StyledSwapHeader>
   )

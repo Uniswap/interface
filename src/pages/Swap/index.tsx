@@ -528,7 +528,7 @@ export function Swap({
         onCancel={handleDismissTokenWarning}
         showCancel={true}
       />
-      <SwapHeader autoSlippage={autoSlippage} chainId={chainId} />
+      <SwapHeader trade={trade} autoSlippage={autoSlippage} chainId={chainId} />
       {trade && inputCurrency && showConfirm && (
         <ConfirmSwapModal
           trade={trade}

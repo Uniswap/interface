@@ -1,6 +1,7 @@
 // eslint-disable-next-line no-restricted-imports
 import { Percent } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import AnimatedDropdown from 'components/AnimatedDropdown'
 import { AutoColumn } from 'components/Column'
 import { L2_CHAIN_IDS } from 'constants/chains'
 import useDisableScrolling from 'hooks/useDisableScrolling'
@@ -9,6 +10,8 @@ import { isSupportedChainId } from 'lib/hooks/routing/clientSideSmartOrderRouter
 import { useRef } from 'react'
 import { useModalIsOpen, useToggleSettingsMenu } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
+import { InterfaceTrade } from 'state/routing/types'
+import { isUniswapXTrade } from 'state/routing/utils'
 import styled from 'styled-components/macro'
 import { Divider } from 'theme'
 
@@ -38,11 +41,23 @@ const MenuFlyout = styled(AutoColumn)`
     min-width: 18.125rem;
   `};
   user-select: none;
-  gap: 16px;
-  padding: 1rem;
+  padding: 16px;
 `
 
-export default function SettingsTab({ autoSlippage, chainId }: { autoSlippage: Percent; chainId?: number }) {
+const ExpandColumn = styled(AutoColumn)`
+  gap: 16px;
+  padding-top: 16px;
+`
+
+export default function SettingsTab({
+  autoSlippage,
+  chainId,
+  trade,
+}: {
+  autoSlippage: Percent
+  chainId?: number
+  trade?: InterfaceTrade
+}) {
   const { chainId: connectedChainId } = useWeb3React()
   const showDeadlineSettings = Boolean(chainId && !L2_CHAIN_IDS.includes(chainId))
 
@@ -61,15 +76,21 @@ export default function SettingsTab({ autoSlippage, chainId }: { autoSlippage: P
       <MenuButton disabled={!isSupportedChain || chainId !== connectedChainId} isActive={isOpen} onClick={toggleMenu} />
       {isOpen && (
         <MenuFlyout>
-          <RouterPreferenceSettings />
-          <Divider />
-          <MaxSlippageSettings autoSlippage={autoSlippage} />
-          {showDeadlineSettings && (
-            <>
+          <AutoColumn gap="16px">
+            <RouterPreferenceSettings />
+          </AutoColumn>
+          <AnimatedDropdown open={!isUniswapXTrade(trade)}>
+            <ExpandColumn>
               <Divider />
-              <TransactionDeadlineSettings />
-            </>
-          )}
+              <MaxSlippageSettings autoSlippage={autoSlippage} />
+              {showDeadlineSettings && (
+                <>
+                  <Divider />
+                  <TransactionDeadlineSettings />
+                </>
+              )}
+            </ExpandColumn>
+          </AnimatedDropdown>
         </MenuFlyout>
       )}
     </Menu>
