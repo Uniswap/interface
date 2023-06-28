@@ -1,13 +1,14 @@
 import { Token } from '@pollum-io/sdk-core'
 import { formatNumber, NumberType } from '@uniswap/conedison/format'
-import { useWeb3React } from '@web3-react/core'
 import Row from 'components/Row'
 import { formatDelta } from 'components/Tokens/TokenDetails/PriceChart'
+import { Chain } from 'graphql/data/__generated__/types-and-hooks'
 import { getTokenDetailsURL } from 'graphql/data/util'
 import { useNewTopTokens } from 'graphql/tokens/NewTopTokens'
 import { TokenData, useFetchedTokenData } from 'graphql/tokens/TokenData'
 import { useAtomValue } from 'jotai/utils'
-import { useTokenBalances } from 'lib/hooks/useCurrencyBalance'
+import { useNativeCurrencyBalances, useTokenBalances } from 'lib/hooks/useCurrencyBalance'
+import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { EmptyWalletModule } from 'nft/components/profile/view/EmptyWalletContent'
 import { useCallback, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -20,7 +21,6 @@ import { hideSmallBalancesAtom } from '../../SmallBalanceToggle'
 import { ExpandoRow } from '../ExpandoRow'
 import { PortfolioLogo } from '../PortfolioLogo'
 import PortfolioRow, { PortfolioSkeleton, PortfolioTabWrapper } from '../PortfolioRow'
-import { Chain } from 'graphql/data/__generated__/types-and-hooks'
 
 const HIDE_SMALL_USD_BALANCES_THRESHOLD = 1
 
@@ -41,7 +41,8 @@ export default function Tokens({ account }: { account: string }) {
   const [showHiddenTokens, setShowHiddenTokens] = useState(false)
 
   const { tokens } = useNewTopTokens()
-  const  chainId  = 570 //useWeb3React()
+  const nativeBalances = useNativeCurrencyBalances([account])
+  const chainId = 570 //useWeb3React()
 
   const tokensAddress = tokens?.map((token) => token.id) || []
   const ERC20Tokens: Token[] = []
@@ -56,6 +57,18 @@ export default function Tokens({ account }: { account: string }) {
       } as Token)
     )
 
+  const nativeBalancesEntries = Object.entries(nativeBalances)
+  if (nativeBalancesEntries && nativeBalancesEntries.length > 0) {
+    nativeBalancesEntries?.map((token) =>
+      ERC20Tokens.push({
+        address: 'NATIVE',
+        chainId,
+        symbol: token[1]?.currency.symbol,
+        name: token[1]?.currency.name,
+        decimals: Number(token[1]?.currency.decimals),
+      } as Token)
+    )
+  }
   const tokenBalances = useTokenBalances(account, ERC20Tokens)
   const tokenBalanceEntries = Object.entries(tokenBalances)
 
@@ -67,6 +80,7 @@ export default function Tokens({ account }: { account: string }) {
 
   const portifolio: TokenDataOwner[] = useMemo(() => {
     const newPortifolio = []
+
     for (const [tokenAddress, balance] of tokenBalanceEntries) {
       const tokenData = tokenDataMap[tokenAddress]
       if (tokenData && balance) {
@@ -79,8 +93,30 @@ export default function Tokens({ account }: { account: string }) {
         })
       }
     }
+
+    if (nativeBalances) {
+      for (const [tokenAddress, balance] of nativeBalancesEntries) {
+        if (tokenAddress && balance) {
+          const tokenData = tokenDataMap['0x4200000000000000000000000000000000000006']
+          const nativeData = {
+            ...tokenData,
+            name: balance.currency.name,
+            address: 'NATIVE',
+            symbol: balance.currency.symbol,
+          } as TokenData
+
+          newPortifolio.push({
+            token: nativeData,
+            decimals: balance.currency.decimals,
+            chainId: balance.currency.chainId,
+            balancePrice: parseFloat(balance?.toExact()) * nativeData.priceUSD,
+            balanceCurrency: parseFloat(balance?.toExact()),
+          })
+        }
+      }
+    }
     return newPortifolio
-  }, [tokenBalanceEntries, tokenDataMap])
+  }, [nativeBalances, nativeBalancesEntries, tokenBalanceEntries, tokenDataMap])
 
   const visibleTokens = useMemo(() => {
     return !hideSmallBalances
@@ -129,21 +165,34 @@ const TokenBalanceText = styled(ThemedText.BodySecondary)`
 
 function TokenRow(portifolio: NonNullable<TokenDataOwner>) {
   const percentChange = portifolio.token.priceUSDChange ?? 0
-
+  const native = useNativeCurrency()
   const navigate = useNavigate()
   const toggleWalletDrawer = useToggleAccountDrawer()
   const navigateToTokenDetails = useCallback(async () => {
-    navigate(getTokenDetailsURL({ address: portifolio.token.address.toLowerCase(), chain: 'ROLLUX'as Chain}))
+    navigate(getTokenDetailsURL({ address: portifolio.token.address.toLowerCase(), chain: 'ROLLUX' as Chain }))
     toggleWalletDrawer()
   }, [navigate, portifolio.token.address, toggleWalletDrawer])
 
-  const currency = new Token(
+  const currency = useMemo(() => {
+    if (portifolio.token.address === 'NATIVE') {
+      return native
+    } else {
+      return new Token(
+        portifolio.chainId,
+        portifolio.token.address,
+        portifolio.decimals ?? 18,
+        portifolio.token.name,
+        portifolio.token.symbol
+      )
+    }
+  }, [
+    native,
     portifolio.chainId,
+    portifolio.decimals,
     portifolio.token.address,
-    portifolio.decimals ?? 18,
     portifolio.token.name,
-    portifolio.token.symbol
-  )
+    portifolio.token.symbol,
+  ])
 
   return (
     <PortfolioRow
