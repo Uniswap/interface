@@ -76,10 +76,8 @@ export default function MoveStakeModal({ isOpen, poolInfo, isDeactivate, onDismi
   // TODO: we can save 1 rpc call here by using multicall
   const fromPoolId = usePoolIdByAddress(parsedAddress ?? undefined).poolId
   const { poolId, stakingPoolExists } = usePoolIdByAddress(poolInfo.pool?.address)
-  // hack to allow moving stake from deprecated pool
-  const defaultPoolId = '0x0000000000000000000000000000000000000000000000000000000000000021'
   const fromPoolStakeBalance = useStakeBalance(
-    isDeactivate ? poolId : fromPoolId ?? defaultPoolId,
+    isDeactivate ? poolId : fromPoolId,
     isPoolMoving ? poolInfo?.pool?.address : undefined
   )
   const poolContract = usePoolExtendedContract(poolInfo?.pool?.address)
@@ -98,12 +96,11 @@ export default function MoveStakeModal({ isOpen, poolInfo, isDeactivate, onDismi
     )
   )
 
-  // TODO: check if should return if no fromPoolId selected
-  const moveStakeData: StakeData | undefined = {
+  const moveStakeData: StakeData = {
     amount: parsedAmount?.quotient.toString(),
     pool: poolInfo.pool?.address,
-    fromPoolId: fromPoolId ?? defaultPoolId,
-    poolId: poolId ?? defaultPoolId,
+    fromPoolId,
+    poolId: poolId ?? '',
     poolContract: isPoolMoving ? poolContract : null,
     stakingPoolExists,
     isPoolMoving,
@@ -133,14 +130,7 @@ export default function MoveStakeModal({ isOpen, poolInfo, isDeactivate, onDismi
     setStakeAmount(parsedAmount)
 
     // if callback not returned properly ignore
-    if (
-      !moveStakeCallback ||
-      !deactivateStakeCallback ||
-      !fromPoolStakeBalance ||
-      !moveStakeData ||
-      !currencyValue.isToken
-    )
-      return
+    if (!moveStakeCallback || !deactivateStakeCallback || !fromPoolStakeBalance || !currencyValue.isToken) return
 
     const moveCallback = !isDeactivate ? moveStakeCallback : deactivateStakeCallback
 
