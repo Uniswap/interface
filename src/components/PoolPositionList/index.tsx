@@ -105,7 +105,10 @@ export default function PoolPositionList({ positions, filterByOperator }: PoolPo
               <Trans>IRR</Trans>
               <MouseoverTooltip
                 text={
-                  <Trans>The pool operator&apos;s annualized yield. Increases as more stakers join the pool.</Trans>
+                  <Trans>
+                    The pool operator&apos;s annualized yield. Increases as more stakers join the pool. Decreases as the
+                    pool operator shares more of his revenue.
+                  </Trans>
                 }
                 placement="right"
               >
