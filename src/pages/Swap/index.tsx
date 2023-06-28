@@ -237,7 +237,7 @@ const PositionsContainer = styled.div`
   max-width: 1200px;
   width: 100%;
   border-radius: 32px;
-  padding: 32px;
+  padding: 12px;
   margin-left: auto
 
 `
@@ -1032,10 +1032,10 @@ export default function Swap({ className }: { className?: string }) {
               </StatsContainer>
               <Hr />
               <PositionsContainer>
-                <ThemedText.MediumHeader>Leverage Positions</ThemedText.MediumHeader>
+                <ThemedText.MediumHeader marginTop="18px">Leverage Positions</ThemedText.MediumHeader>
                 <LeveragePositionsTable positions={leveragePositions} loading={limitlessPositionsLoading} />
                 <ThemedText.MediumHeader></ThemedText.MediumHeader>
-                <ThemedText.MediumHeader>Borrow Positions</ThemedText.MediumHeader>
+                <ThemedText.MediumHeader marginTop="18px">Borrow Positions</ThemedText.MediumHeader>
                 <BorrowPositionsTable positions={borrowPositions} loading={limitlessPositionsLoading} />
               </PositionsContainer>
             </LeftContainer>
