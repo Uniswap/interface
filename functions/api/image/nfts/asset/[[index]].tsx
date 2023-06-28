@@ -2,8 +2,7 @@
 import { ImageResponse } from '@vercel/og'
 import React from 'react'
 
-import { AssetDocument } from '../../../../../src/graphql/data/__generated__/types-and-hooks'
-import { getApolloClient } from '../../../../utils/getApolloClient'
+import getAsset from '../../../../utils/getAsset'
 
 export async function onRequestGet({ params, request }) {
   try {
@@ -20,22 +19,10 @@ export async function onRequestGet({ params, request }) {
     const collectionAddress = String(index[0])
     const tokenId = String(index[1])
 
-    const client = getApolloClient()
-    const { data } = await client.query({
-      query: AssetDocument,
-      variables: {
-        address: collectionAddress,
-        filter: {
-          tokenIds: [tokenId],
-        },
-      },
-    })
-    const asset = data?.nftAssets?.edges[0]?.node
-    if (!asset) {
-      return new Response('Asset not found', { status: 404 })
+    const data = await getAsset(collectionAddress, tokenId, request.url)
+    if (!data) {
+      return new Response('Asset not found.', { status: 404 })
     }
-    const name = asset.name ? asset.name : asset.collection?.name + ' #' + asset.tokenId
-    const image = asset.image?.url
 
     return new ImageResponse(
       (
@@ -49,7 +36,7 @@ export async function onRequestGet({ params, request }) {
             height: '630px',
           }}
         >
-          <img src={image} alt={name} width="1200px" />
+          <img src={data.image} alt={data.name} width="1200px" />
           <div
             style={{
               position: 'absolute',

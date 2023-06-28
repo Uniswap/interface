@@ -1,10 +1,9 @@
 /* eslint-disable import/no-unused-modules */
 import { ImageResponse } from '@vercel/og'
-import ColorThief from 'colorthief/src/color-thief-node'
 import React from 'react'
 
-import { TokenDocument } from '../../../../src/graphql/data/__generated__/types-and-hooks'
-import { getApolloClient } from '../../../utils/getApolloClient'
+import getColor from '../../../utils/getColor'
+import getToken from '../../../utils/getToken'
 
 export async function onRequestGet({ params, request }) {
   try {
@@ -24,39 +23,12 @@ export async function onRequestGet({ params, request }) {
       tokenAddress !== 'undefined' && tokenAddress === 'NATIVE'
         ? '0x0000000000000000000000000000000000000000'
         : tokenAddress
-    const client = getApolloClient()
-    const { data } = await client.query({
-      query: TokenDocument,
-      variables: {
-        chain: networkName,
-        address: tokenAddress,
-      },
-    })
-    const asset = data?.token
-    if (!asset) {
+    const data = await getToken(networkName, tokenAddress, request.url)
+    if (!data) {
       return new Response('Token not found', { status: 404 })
     }
 
-    const name = asset.name
-    const image = asset.project?.logoUrl
-    const symbol = asset.symbol
-
-    let blue = 0
-    let red = 0
-    let green = 0
-    try {
-      //get pixels in rgb format from image
-      const data = await fetch(image)
-        .then((res) => res.arrayBuffer())
-        .then((arrayBuffer) => Buffer.from(arrayBuffer))
-      const palette = ColorThief.getPalette(data)
-      red = palette[0][0]
-      green = palette[0][1]
-      blue = palette[0][2]
-    } catch (e) {
-      console.log(e)
-    }
-    //const isVerified = collection.isVerified
+    const palette = await getColor(data.image)
 
     return new ImageResponse(
       (
@@ -69,7 +41,7 @@ export async function onRequestGet({ params, request }) {
           <div
             style={{
               display: 'flex',
-              backgroundColor: `rgba(${red}, ${green}, ${blue}, 0.8)`,
+              backgroundColor: `rgba(${palette[0]}, ${palette[1]}, ${palette[2]}, 0.8)`,
               width: '1200px',
               height: '630px',
               padding: '72px',
@@ -85,14 +57,14 @@ export async function onRequestGet({ params, request }) {
                 width: '90%',
               }}
             >
-              <img src={image} width="168px" style={{ borderRadius: '50%' }} />
+              <img src={data.image} width="168px" style={{ borderRadius: '50%' }} />
               <div
                 style={{
                   fontFamily: 'Inter',
                   fontSize: '72px',
                 }}
               >
-                {name}
+                {data.name}
               </div>
               <div
                 style={{
@@ -110,7 +82,7 @@ export async function onRequestGet({ params, request }) {
                     fontSize: '168px',
                   }}
                 >
-                  {symbol}
+                  {data.symbol}
                 </div>
                 <img
                   src={watermark}

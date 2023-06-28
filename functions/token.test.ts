@@ -40,7 +40,7 @@ test('should inject metadata for valid tokens', async () => {
       address: '0x6982508145454ce325ddbe47a25d4ec3d2311933',
       network: 'ethereum',
       symbol: 'PEPE',
-      image: 'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6982508145454Ce325dDbE47a25d4ec3d2311933/logo.png'
+      image: 'https://assets.coingecko.com/coins/images/29850/thumb/pepe-token.jpeg?1682922725'
     }
   ]
   for (const token of tokens) {

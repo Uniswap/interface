@@ -2,6 +2,7 @@ type MetaTagInjectorInput = {
   name: any
   image: any
   uniswapUrl: any
+  isVerified: any
 }
 
 export class MetaTagInjector {
