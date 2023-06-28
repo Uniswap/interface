@@ -65,7 +65,7 @@ const CurrencySelect = styled(ButtonGray)<{
   color: ${({ selected, theme }) => (selected ? theme.textPrimary : theme.white)};
   cursor: pointer;
   height: unset;
-  border-radius: 16px;
+  border-radius: 8px;
   outline: none;
   user-select: none;
   border: none;
@@ -73,7 +73,7 @@ const CurrencySelect = styled(ButtonGray)<{
   font-weight: 400;
   width: ${({ hideInput }) => (hideInput ? '100%' : 'initial')};
   padding: ${({ selected }) => (selected ? '4px 8px 4px 4px' : '6px 6px 6px 8px')};
-  gap: 8px;
+  gap: 12px;
   justify-content: space-between;
   margin-left: ${({ hideInput }) => (hideInput ? '0' : '12px')};
 

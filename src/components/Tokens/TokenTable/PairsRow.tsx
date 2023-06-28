@@ -214,7 +214,7 @@ const PercentChangeInfoCell = styled(Cell)`
 const PriceInfoCell = styled(Cell)`
   justify-content: flex-end;
   flex: 1;
-
+  margin-left: 16px;
   @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
     flex-direction: column;
     align-items: flex-end;
@@ -606,12 +606,34 @@ export const PLoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<H
   const currency0 = useCurrency(token0.address )
   const currency1 = useCurrency(token1.address )
   const [poolState, pool] = usePool(currency0 ?? undefined, currency1?? undefined, FeeAmount.LOW)
-  console.log('pools', currency0, currency1, pool);
+  console.log('pools',token0.address, token1.address, pool);
   const currentPrice = pool?.token0Price.toSignificant(3)
   const priceRounded = token1.address == "0xf24Ce4A61c1894219576f652cDF781BBB257Ec8F"? 
     ((Math.round(1/Number(currentPrice)) *1000000)/1000000).toString()
     :  (Math.round(Number(currentPrice) *1000000)/1000000).toString()
-  //const priceRounded = Math.round((1/Number(currentPrice)).toString()+" " + token0.symbol +"/"+token1.symbol *10000)/10000
+
+  let tvl_; 
+  let volume_; 
+  let estimatedapr_; 
+  let urate_; 
+
+  if(token0.address == "0x569f3140FDc0f3B9Fc2E4919C35f35D39dd2B01A"&& token1.address == "0x4E3F175b38098326a34F2C8B2D07AF5fFdfc6fA9")
+  {
+    tvl_ = 2313000000
+    volume_ = 1300000
+    estimatedapr_ = 23.5
+    urate_ = 42.32
+  } else if(token0.address =="0x569f3140FDc0f3B9Fc2E4919C35f35D39dd2B01A"&& token1.address=="0xf24Ce4A61c1894219576f652cDF781BBB257Ec8F"){
+    tvl_ = 1530000000
+    volume_ = 210000
+    estimatedapr_ = 32.1
+    urate_ = 77.6   
+  } else{
+    tvl_ = 3212000000
+    volume_ = 2830000
+    estimatedapr_ = 25.7
+    urate_ = 56.3     
+  }
   return (
     <div ref={ref} data-testid={`token-table-row-${token0.symbol}`}>
       {/*<ClickableContent
@@ -641,10 +663,10 @@ export const PLoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<H
         } >
               <PriceInfoCell>
                 {currentPrice &&(priceRounded+" " + token0.symbol +"/"+token1.symbol)}
-                <PercentChangeInfoCell>
+                {/*<PercentChangeInfoCell>
                   <ArrowCell>{smallArrow}</ArrowCell>
                   <DeltaText delta={delta}>{formattedDelta}</DeltaText>
-                </PercentChangeInfoCell>
+                </PercentChangeInfoCell>*/}
               </PriceInfoCell>
             </ClickableContent>
           }
@@ -660,25 +682,25 @@ export const PLoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<H
             <ClickableContent         onClick={() =>{if(currency1&&currency0){
             navigate('/swap', {state: {currency0:currency0, currency1: currency1 }})}}
         }>
-              {formatNumber(2000000000, NumberType.FiatTokenStats)}
+              {formatNumber(tvl_, NumberType.FiatTokenStats)}
             </ClickableContent>
           }
           volume={
             <ClickableContent        onClick={() =>{if(currency1&&currency0){
             navigate('/swap', {state: {currency0:currency0, currency1: currency1 }})}}
         }
-            >{formatNumber(null, NumberType.FiatTokenStats)}</ClickableContent>
+            >{formatNumber(volume_, NumberType.FiatTokenStats)}</ClickableContent>
           }
           APR = {
             <ClickableContent         onClick={() =>{if(currency1&&currency0){
             navigate('/swap', {state: {currency0:currency0, currency1: currency1 }})}}
-        }>{formatNumber(null, NumberType.FiatTokenStats)}</ClickableContent>
+        }>{formatNumber(estimatedapr_)+"%"}</ClickableContent>
 
           }
           UtilRate = {
             <ClickableContent         onClick={() =>{if(currency1&&currency0){
             navigate('/swap', {state: {currency0:currency0, currency1: currency1 }})}}
-        }>{formatNumber(null, NumberType.FiatTokenStats)}</ClickableContent>            
+        }>{formatNumber(urate_)+"%"}</ClickableContent>            
           }
 
           // sparkLine={
