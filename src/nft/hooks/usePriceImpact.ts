@@ -1,4 +1,4 @@
-import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
+import { Currency, Percent, TradeType } from '@pollum-io/sdk-core'
 import { useMemo } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 import { useTheme } from 'styled-components/macro'

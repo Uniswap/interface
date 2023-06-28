@@ -1,24 +1,19 @@
-import { getDeviceId, sendAnalyticsEvent, Trace, user } from '@uniswap/analytics'
-import { CustomUserProperties, getBrowser, InterfacePageName, SharedEventName } from '@uniswap/analytics-events'
-import { useWeb3React } from '@web3-react/core'
-import Loader from 'components/Icons/LoadingSpinner'
+import LoadingGifLight from 'assets/images/lightLoading.gif'
+import LoadingGif from 'assets/images/loading.gif'
+import { LoaderGif } from 'components/Icons/LoadingSpinner'
 import TopLevelModals from 'components/TopLevelModals'
 import { useFeatureFlagsIsLoaded } from 'featureFlags'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
 import { useAtom } from 'jotai'
 import { useBag } from 'nft/hooks/useBag'
-import { lazy, Suspense, useEffect, useMemo, useState } from 'react'
+import { lazy, Suspense, useEffect, useState } from 'react'
 import { Navigate, Route, Routes, useLocation, useSearchParams } from 'react-router-dom'
 import { shouldDisableNFTRoutesAtom } from 'state/application/atoms'
-import { StatsigProvider, StatsigUser } from 'statsig-react'
 import styled from 'styled-components/macro'
 import { SpinnerSVG } from 'theme/components'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { flexRowNoWrap } from 'theme/styles'
 import { Z_INDEX } from 'theme/zIndex'
-import { STATSIG_DUMMY_KEY } from 'tracing'
-import { getEnvName } from 'utils/env'
-import { getCLS, getFCP, getFID, getLCP, Metric } from 'web-vitals'
 
 import { useAnalyticsReporter } from '../components/analytics'
 import ErrorBoundary from '../components/ErrorBoundary'
@@ -26,11 +21,11 @@ import { PageTabs } from '../components/NavBar'
 import NavBar from '../components/NavBar'
 import Polling from '../components/Polling'
 import Popups from '../components/Popups'
-import { useIsExpertMode } from '../state/user/hooks'
 import DarkModeQueryParamReader from '../theme/components/DarkModeQueryParamReader'
 import AddLiquidity from './AddLiquidity'
 import { RedirectDuplicateTokenIds } from './AddLiquidity/redirects'
 import { RedirectDuplicateTokenIdsV2 } from './AddLiquidityV2/redirects'
+import { BodyWrapper } from './AppBody'
 import Landing from './Landing'
 import MigrateV2 from './MigrateV2'
 import MigrateV2Pair from './MigrateV2/MigrateV2Pair'
@@ -51,17 +46,7 @@ const NftExplore = lazy(() => import('nft/pages/explore'))
 const Collection = lazy(() => import('nft/pages/collection'))
 const Profile = lazy(() => import('nft/pages/profile/profile'))
 const Asset = lazy(() => import('nft/pages/asset/Asset'))
-
-const BodyWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  min-height: 100vh;
-  padding: ${({ theme }) => theme.navHeight}px 0px 5rem 0px;
-  align-items: center;
-  flex: 1;
-`
-
+// TODO: check mobile border
 const MobileBottomBar = styled.div`
   z-index: ${Z_INDEX.sticky};
   position: fixed;
@@ -83,7 +68,7 @@ const MobileBottomBar = styled.div`
 
 const HeaderWrapper = styled.div<{ transparent?: boolean }>`
   ${flexRowNoWrap};
-  background-color: ${({ theme, transparent }) => !transparent && theme.backgroundSurface};
+  background-color: ${({ theme, transparent }) => !transparent && theme.backgroundScrolledSurface};
   border-bottom: ${({ theme, transparent }) => !transparent && `1px solid ${theme.backgroundOutline}`};
   width: 100%;
   justify-content: space-between;
@@ -91,30 +76,6 @@ const HeaderWrapper = styled.div<{ transparent?: boolean }>`
   top: 0;
   z-index: ${Z_INDEX.dropdown};
 `
-
-function getCurrentPageFromLocation(locationPathname: string): InterfacePageName | undefined {
-  switch (true) {
-    case locationPathname.startsWith('/swap'):
-      return InterfacePageName.SWAP_PAGE
-    case locationPathname.startsWith('/vote'):
-      return InterfacePageName.VOTE_PAGE
-    case locationPathname.startsWith('/pools'):
-    case locationPathname.startsWith('/pool'):
-      return InterfacePageName.POOL_PAGE
-    case locationPathname.startsWith('/tokens'):
-      return InterfacePageName.TOKENS_PAGE
-    case locationPathname.startsWith('/nfts/profile'):
-      return InterfacePageName.NFT_PROFILE_PAGE
-    case locationPathname.startsWith('/nfts/asset'):
-      return InterfacePageName.NFT_DETAILS_PAGE
-    case locationPathname.startsWith('/nfts/collection'):
-      return InterfacePageName.NFT_COLLECTION_PAGE
-    case locationPathname.startsWith('/nfts'):
-      return InterfacePageName.NFT_EXPLORE_PAGE
-    default:
-      return undefined
-  }
-}
 
 // this is the same svg defined in assets/images/blue-loader.svg
 // it is defined here because the remote asset may not have had time to load when this file is executing
@@ -135,9 +96,7 @@ export default function App() {
   const [shouldDisableNFTRoutes, setShouldDisableNFTRoutes] = useAtom(shouldDisableNFTRoutesAtom)
 
   const { pathname } = useLocation()
-  const currentPage = getCurrentPageFromLocation(pathname)
   const isDarkMode = useIsDarkMode()
-  const isExpertMode = useIsExpertMode()
   const [scrolledState, setScrolledState] = useState(false)
 
   useAnalyticsReporter()
@@ -157,31 +116,6 @@ export default function App() {
   }, [searchParams, setShouldDisableNFTRoutes])
 
   useEffect(() => {
-    // User properties *must* be set before sending corresponding event properties,
-    // so that the event contains the correct and up-to-date user properties.
-    user.set(CustomUserProperties.USER_AGENT, navigator.userAgent)
-    user.set(CustomUserProperties.BROWSER, getBrowser())
-    user.set(CustomUserProperties.SCREEN_RESOLUTION_HEIGHT, window.screen.height)
-    user.set(CustomUserProperties.SCREEN_RESOLUTION_WIDTH, window.screen.width)
-
-    sendAnalyticsEvent(SharedEventName.APP_LOADED)
-    getCLS(({ delta }: Metric) => sendAnalyticsEvent(SharedEventName.WEB_VITALS, { cumulative_layout_shift: delta }))
-    getFCP(({ delta }: Metric) => sendAnalyticsEvent(SharedEventName.WEB_VITALS, { first_contentful_paint_ms: delta }))
-    getFID(({ delta }: Metric) => sendAnalyticsEvent(SharedEventName.WEB_VITALS, { first_input_delay_ms: delta }))
-    getLCP(({ delta }: Metric) =>
-      sendAnalyticsEvent(SharedEventName.WEB_VITALS, { largest_contentful_paint_ms: delta })
-    )
-  }, [])
-
-  useEffect(() => {
-    user.set(CustomUserProperties.DARK_MODE, isDarkMode)
-  }, [isDarkMode])
-
-  useEffect(() => {
-    user.set(CustomUserProperties.EXPERT_MODE, isExpertMode)
-  }, [isExpertMode])
-
-  useEffect(() => {
     const scrollListener = () => {
       setScrolledState(window.scrollY > 0)
     }
@@ -192,154 +126,145 @@ export default function App() {
   const isBagExpanded = useBag((state) => state.bagExpanded)
   const isHeaderTransparent = !scrolledState && !isBagExpanded
 
-  const { account } = useWeb3React()
-  const statsigUser: StatsigUser = useMemo(
-    () => ({
-      userID: getDeviceId(),
-      customIDs: { address: account ?? '' },
-    }),
-    [account]
-  )
-
   return (
     <ErrorBoundary>
       <DarkModeQueryParamReader />
       <ApeModeQueryParamReader />
-      <Trace page={currentPage}>
-        <StatsigProvider
-          user={statsigUser}
-          // TODO: replace with proxy and cycle key
-          sdkKey={STATSIG_DUMMY_KEY}
-          waitForInitialization={false}
-          options={{
-            environment: { tier: getEnvName() },
-            api: process.env.REACT_APP_STATSIG_PROXY_URL,
-          }}
-        >
-          <HeaderWrapper transparent={isHeaderTransparent}>
-            <NavBar blur={isHeaderTransparent} />
-          </HeaderWrapper>
-          <BodyWrapper>
-            <Popups />
-            <Polling />
-            <TopLevelModals />
-            <Suspense fallback={<Loader />}>
-              {isLoaded ? (
-                <Routes>
-                  <Route path="/" element={<Landing />} />
+      {isDarkMode ? (
+        <>
+          <div id="starsLightMode"></div>
+          <div id="starsLightMode2"></div>
+          <div id="starsLightMode3"></div>
+        </>
+      ) : (
+        <>
+          <div id="stars"></div>
+          <div id="stars2"></div>
+          <div id="stars3"></div>
+        </>
+      )}
+      <HeaderWrapper transparent={isHeaderTransparent}>
+        <NavBar blur={isHeaderTransparent} />
+      </HeaderWrapper>
+      <BodyWrapper $maxWidth="100%">
+        <Popups />
+        <Polling />
+        <TopLevelModals />
+        <Suspense fallback={<LoaderGif gif={isDarkMode ? LoadingGif : LoadingGifLight} />}>
+          {isLoaded ? (
+            <Routes>
+              <Route path="/" element={<Landing />} />
 
-                  <Route path="tokens" element={<Tokens />}>
-                    <Route path=":chainName" />
-                  </Route>
-                  <Route path="tokens/:chainName/:tokenAddress" element={<TokenDetails />} />
+              <Route path="tokens" element={<Tokens />}>
+                <Route path=":chainName" />
+              </Route>
+              <Route path="tokens/:chainName/:tokenAddress" element={<TokenDetails />} />
+              <Route
+                path="vote/*"
+                element={
+                  <Suspense fallback={<LazyLoadSpinner />}>
+                    <Vote />
+                  </Suspense>
+                }
+              />
+              <Route path="create-proposal" element={<Navigate to="/vote/create-proposal" replace />} />
+              <Route path="send" element={<RedirectPathToSwapOnly />} />
+              <Route path="swap" element={<Swap />} />
+
+              <Route path="pool/v2/find" element={<PoolFinder />} />
+              <Route path="pool/v2" element={<PoolV2 />} />
+              <Route path="pool" element={<Pool />} />
+              <Route path="pool/:tokenId" element={<PositionPage />} />
+
+              <Route path="pools/v2/find" element={<PoolFinder />} />
+              <Route path="pools/v2" element={<PoolV2 />} />
+              <Route path="pools" element={<Pool />} />
+              <Route path="pools/:tokenId" element={<PositionPage />} />
+
+              <Route path="add/v2" element={<RedirectDuplicateTokenIdsV2 />}>
+                <Route path=":currencyIdA" />
+                <Route path=":currencyIdA/:currencyIdB" />
+              </Route>
+              <Route path="add" element={<RedirectDuplicateTokenIds />}>
+                {/* this is workaround since react-router-dom v6 doesn't support optional parameters any more */}
+                <Route path=":currencyIdA" />
+                <Route path=":currencyIdA/:currencyIdB" />
+                <Route path=":currencyIdA/:currencyIdB/:feeAmount" />
+              </Route>
+
+              <Route path="increase" element={<AddLiquidity />}>
+                <Route path=":currencyIdA" />
+                <Route path=":currencyIdA/:currencyIdB" />
+                <Route path=":currencyIdA/:currencyIdB/:feeAmount" />
+                <Route path=":currencyIdA/:currencyIdB/:feeAmount/:tokenId" />
+              </Route>
+
+              <Route path="remove/v2/:currencyIdA/:currencyIdB" element={<RemoveLiquidity />} />
+              <Route path="remove/:tokenId" element={<RemoveLiquidityV3 />} />
+
+              <Route path="migrate/v2" element={<MigrateV2 />} />
+              <Route path="migrate/v2/:address" element={<MigrateV2Pair />} />
+
+              {!shouldDisableNFTRoutes && (
+                <>
                   <Route
-                    path="vote/*"
+                    path="/nfts"
                     element={
-                      <Suspense fallback={<LazyLoadSpinner />}>
-                        <Vote />
+                      <Suspense fallback={null}>
+                        <NftExplore />
                       </Suspense>
                     }
                   />
-                  <Route path="create-proposal" element={<Navigate to="/vote/create-proposal" replace />} />
-                  <Route path="send" element={<RedirectPathToSwapOnly />} />
-                  <Route path="swap" element={<Swap />} />
 
-                  <Route path="pool/v2/find" element={<PoolFinder />} />
-                  <Route path="pool/v2" element={<PoolV2 />} />
-                  <Route path="pool" element={<Pool />} />
-                  <Route path="pool/:tokenId" element={<PositionPage />} />
+                  <Route
+                    path="/nfts/asset/:contractAddress/:tokenId"
+                    element={
+                      <Suspense fallback={null}>
+                        <Asset />
+                      </Suspense>
+                    }
+                  />
 
-                  <Route path="pools/v2/find" element={<PoolFinder />} />
-                  <Route path="pools/v2" element={<PoolV2 />} />
-                  <Route path="pools" element={<Pool />} />
-                  <Route path="pools/:tokenId" element={<PositionPage />} />
+                  <Route
+                    path="/nfts/profile"
+                    element={
+                      <Suspense fallback={null}>
+                        <Profile />
+                      </Suspense>
+                    }
+                  />
 
-                  <Route path="add/v2" element={<RedirectDuplicateTokenIdsV2 />}>
-                    <Route path=":currencyIdA" />
-                    <Route path=":currencyIdA/:currencyIdB" />
-                  </Route>
-                  <Route path="add" element={<RedirectDuplicateTokenIds />}>
-                    {/* this is workaround since react-router-dom v6 doesn't support optional parameters any more */}
-                    <Route path=":currencyIdA" />
-                    <Route path=":currencyIdA/:currencyIdB" />
-                    <Route path=":currencyIdA/:currencyIdB/:feeAmount" />
-                  </Route>
+                  <Route
+                    path="/nfts/collection/:contractAddress"
+                    element={
+                      <Suspense fallback={null}>
+                        <Collection />
+                      </Suspense>
+                    }
+                  />
 
-                  <Route path="increase" element={<AddLiquidity />}>
-                    <Route path=":currencyIdA" />
-                    <Route path=":currencyIdA/:currencyIdB" />
-                    <Route path=":currencyIdA/:currencyIdB/:feeAmount" />
-                    <Route path=":currencyIdA/:currencyIdB/:feeAmount/:tokenId" />
-                  </Route>
-
-                  <Route path="remove/v2/:currencyIdA/:currencyIdB" element={<RemoveLiquidity />} />
-                  <Route path="remove/:tokenId" element={<RemoveLiquidityV3 />} />
-
-                  <Route path="migrate/v2" element={<MigrateV2 />} />
-                  <Route path="migrate/v2/:address" element={<MigrateV2Pair />} />
-
-                  {!shouldDisableNFTRoutes && (
-                    <>
-                      <Route
-                        path="/nfts"
-                        element={
-                          <Suspense fallback={null}>
-                            <NftExplore />
-                          </Suspense>
-                        }
-                      />
-
-                      <Route
-                        path="/nfts/asset/:contractAddress/:tokenId"
-                        element={
-                          <Suspense fallback={null}>
-                            <Asset />
-                          </Suspense>
-                        }
-                      />
-
-                      <Route
-                        path="/nfts/profile"
-                        element={
-                          <Suspense fallback={null}>
-                            <Profile />
-                          </Suspense>
-                        }
-                      />
-
-                      <Route
-                        path="/nfts/collection/:contractAddress"
-                        element={
-                          <Suspense fallback={null}>
-                            <Collection />
-                          </Suspense>
-                        }
-                      />
-
-                      <Route
-                        path="/nfts/collection/:contractAddress/activity"
-                        element={
-                          <Suspense fallback={null}>
-                            <Collection />
-                          </Suspense>
-                        }
-                      />
-                    </>
-                  )}
-
-                  <Route path="*" element={<Navigate to="/not-found" replace />} />
-                  <Route path="/not-found" element={<NotFound />} />
-                </Routes>
-              ) : (
-                <Loader />
+                  <Route
+                    path="/nfts/collection/:contractAddress/activity"
+                    element={
+                      <Suspense fallback={null}>
+                        <Collection />
+                      </Suspense>
+                    }
+                  />
+                </>
               )}
-            </Suspense>
-          </BodyWrapper>
-          <MobileBottomBar>
-            <PageTabs />
-          </MobileBottomBar>
-        </StatsigProvider>
-      </Trace>
+
+              <Route path="*" element={<Navigate to="/not-found" replace />} />
+              <Route path="/not-found" element={<NotFound />} />
+            </Routes>
+          ) : (
+            <LoaderGif gif={isDarkMode ? LoadingGif : LoadingGifLight} />
+          )}
+        </Suspense>
+      </BodyWrapper>
+      <MobileBottomBar>
+        <PageTabs />
+      </MobileBottomBar>
     </ErrorBoundary>
   )
 }

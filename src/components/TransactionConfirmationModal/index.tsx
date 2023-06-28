@@ -1,32 +1,33 @@
 import { Trans } from '@lingui/macro'
-import { Currency } from '@uniswap/sdk-core'
+import { Currency } from '@pollum-io/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import LoadingGifLight from 'assets/images/lightLoading.gif'
+import LoadingGif from 'assets/images/loading.gif'
 import Badge from 'components/Badge'
+import { LoaderGif } from 'components/Icons/LoadingSpinner'
 import { getChainInfo } from 'constants/chainInfo'
-import { SupportedChainId, SupportedL2ChainId } from 'constants/chains'
+import { SupportedL2ChainId } from 'constants/chains'
 import useCurrencyLogoURIs from 'lib/hooks/useCurrencyLogoURIs'
 import { ReactNode, useCallback, useState } from 'react'
 import { AlertCircle, AlertTriangle, ArrowUpCircle, CheckCircle } from 'react-feather'
 import { Text } from 'rebass'
 import { useIsTransactionConfirmed, useTransaction } from 'state/transactions/hooks'
 import styled, { useTheme } from 'styled-components/macro'
+import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { isL2ChainId } from 'utils/chains'
 
-import Circle from '../../assets/images/blue-loader.svg'
 import { ExternalLink, ThemedText } from '../../theme'
-import { CloseIcon, CustomLightSpinner } from '../../theme'
+import { CloseIcon } from '../../theme'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import { TransactionSummary } from '../AccountDetails/TransactionSummary'
 import { ButtonLight, ButtonPrimary } from '../Button'
 import { AutoColumn, ColumnCenter } from '../Column'
 import Modal from '../Modal'
 import { RowBetween, RowFixed } from '../Row'
-import AnimatedConfirmation from './AnimatedConfirmation'
 
 const Wrapper = styled.div`
   background-color: ${({ theme }) => theme.backgroundSurface};
   border-radius: 20px;
-  outline: 1px solid ${({ theme }) => theme.backgroundOutline};
   width: 100%;
   padding: 1rem;
 `
@@ -60,6 +61,7 @@ function ConfirmationPendingContent({
   inline?: boolean // not in modal
 }) {
   const theme = useTheme()
+  const isDarkMode = useIsDarkMode()
 
   return (
     <Wrapper>
@@ -71,7 +73,7 @@ function ConfirmationPendingContent({
           </RowBetween>
         )}
         <ConfirmedIcon inline={inline}>
-          <CustomLightSpinner src={Circle} alt="loader" size={inline ? '40px' : '90px'} />
+          <LoaderGif gif={isDarkMode ? LoadingGif : LoadingGifLight} size={inline ? '40px' : '90px'} />
         </ConfirmedIcon>
         <AutoColumn gap="md" justify="center">
           <Text fontWeight={500} fontSize={20} color={theme.textPrimary} textAlign="center">
@@ -161,7 +163,7 @@ function TransactionSubmittedContent({
           {chainId && hash && (
             <ExternalLink href={getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)}>
               <Text fontWeight={600} fontSize={14} color={theme.accentAction}>
-                <Trans>View on {chainId === SupportedChainId.MAINNET ? 'Etherscan' : 'Block Explorer'}</Trans>
+                <Trans>View on Block Explorer</Trans>
               </Text>
             </ExternalLink>
           )}
@@ -238,7 +240,7 @@ function L2Content({
   inline?: boolean // not in modal
 }) {
   const theme = useTheme()
-
+  const isDarkMode = useIsDarkMode()
   const transaction = useTransaction(hash)
   const confirmed = useIsTransactionConfirmed(hash)
   const transactionSuccess = transaction?.receipt?.status === 1
@@ -267,13 +269,12 @@ function L2Content({
         <ConfirmedIcon inline={inline}>
           {confirmed ? (
             transactionSuccess ? (
-              // <CheckCircle strokeWidth={1} size={inline ? '40px' : '90px'} color={theme.accentSuccess} />
-              <AnimatedConfirmation />
+              <LoaderGif gif={isDarkMode ? LoadingGif : LoadingGifLight} size={inline ? '40px' : '90px'} />
             ) : (
               <AlertCircle strokeWidth={1} size={inline ? '40px' : '90px'} color={theme.accentFailure} />
             )
           ) : (
-            <CustomLightSpinner src={Circle} alt="loader" size={inline ? '40px' : '90px'} />
+            <LoaderGif gif={isDarkMode ? LoadingGif : LoadingGifLight} size={inline ? '40px' : '90px'} />
           )}
         </ConfirmedIcon>
         <AutoColumn gap="md" justify="center">
@@ -293,7 +294,7 @@ function L2Content({
           </Text>
           {chainId && hash ? (
             <ExternalLink href={getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)}>
-              <Text fontWeight={500} fontSize={14} color={theme.accentAction}>
+              <Text fontWeight={500} fontSize={14} color={theme.accentActive}>
                 <Trans>View on Explorer</Trans>
               </Text>
             </ExternalLink>

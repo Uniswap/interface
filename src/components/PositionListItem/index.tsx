@@ -1,11 +1,13 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Trans } from '@lingui/macro'
-import { Percent, Price, Token } from '@uniswap/sdk-core'
-import { Position } from '@uniswap/v3-sdk'
+import { Percent, Price, Token } from '@pollum-io/sdk-core'
+import { Position } from '@pollum-io/v3-sdk'
+import LoadingGifLight from 'assets/images/lightLoading.gif'
+import LoadingGif from 'assets/images/loading.gif'
 import RangeBadge from 'components/Badge/RangeBadge'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import HoverInlineText from 'components/HoverInlineText'
-import Loader from 'components/Icons/LoadingSpinner'
+import { LoaderGif } from 'components/Icons/LoadingSpinner'
 import { RowBetween } from 'components/Row'
 import { useToken } from 'hooks/Tokens'
 import useIsTickAtLimit from 'hooks/useIsTickAtLimit'
@@ -15,11 +17,12 @@ import { Link } from 'react-router-dom'
 import { Bound } from 'state/mint/v3/actions'
 import styled from 'styled-components/macro'
 import { HideSmall, MEDIA_WIDTHS, SmallOnly, ThemedText } from 'theme'
+import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { formatTickPrice } from 'utils/formatTickPrice'
 import { unwrappedToken } from 'utils/unwrappedToken'
 import { hasURL } from 'utils/urlChecks'
 
-import { DAI, USDC_MAINNET, USDT, WBTC, WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
+import { DAI_ROLLUX, USDC_ROLLUX, USDT_ROLLUX, WBTC_ROLLUX, WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
 
 const LinkRow = styled(Link)`
   align-items: center;
@@ -123,7 +126,7 @@ export function getPriceOrderingFromPositionForUI(position?: Position): {
   const token1 = position.amount1.currency
 
   // if token0 is a dollar-stable asset, set it as the quote token
-  const stables = [DAI, USDC_MAINNET, USDT]
+  const stables = [DAI_ROLLUX, USDC_ROLLUX, USDT_ROLLUX]
   if (stables.some((stable) => stable.equals(token0))) {
     return {
       priceLower: position.token0PriceUpper.invert(),
@@ -134,7 +137,7 @@ export function getPriceOrderingFromPositionForUI(position?: Position): {
   }
 
   // if token1 is an ETH-/BTC-stable asset, set it as the base token
-  const bases = [...Object.values(WRAPPED_NATIVE_CURRENCY), WBTC]
+  const bases = [...Object.values(WRAPPED_NATIVE_CURRENCY), WBTC_ROLLUX]
   if (bases.some((base) => base && base.equals(token1))) {
     return {
       priceLower: position.token0PriceUpper.invert(),
@@ -174,6 +177,7 @@ export default function PositionListItem({
 }: PositionListItemProps) {
   const token0 = useToken(token0Address)
   const token1 = useToken(token1Address)
+  const isDarkMode = useIsDarkMode()
 
   const currency0 = token0 ? unwrappedToken(token0) : undefined
   const currency1 = token1 ? unwrappedToken(token1) : undefined
@@ -266,7 +270,7 @@ export default function PositionListItem({
           </RangeText>
         </RangeLineItem>
       ) : (
-        <Loader />
+        <LoaderGif gif={isDarkMode ? LoadingGif : LoadingGifLight} size="40px" />
       )}
     </LinkRow>
   )

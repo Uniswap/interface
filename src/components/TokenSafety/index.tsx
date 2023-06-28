@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { Token } from '@uniswap/sdk-core'
+import { Token } from '@pollum-io/sdk-core'
 import { ButtonPrimary } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
@@ -145,11 +145,13 @@ const ExplorerLink = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  color: ${({ theme }) => theme.accentActive};
 `
 const ExplorerLinkIcon = styled(LinkIconFeather)`
   height: 16px;
   width: 18px;
   margin-left: 8px;
+  color: ${({ theme }) => theme.accentActive};
 `
 
 const LinkIconWrapper = styled.div`

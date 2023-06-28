@@ -1,10 +1,10 @@
-import { Token } from '@uniswap/sdk-core'
-import { SupportedChainId } from 'constants/chains'
+import { Token } from '@pollum-io/sdk-core'
 import uriToHttp from 'lib/utils/uriToHttp'
 import Vibrant from 'node-vibrant/lib/bundle.js'
 import { shade } from 'polished'
 import { useEffect, useState } from 'react'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
+import { useTheme } from 'styled-components/macro'
 import { hex } from 'wcag-contrast'
 
 function URIForEthToken(address: string) {
@@ -20,11 +20,11 @@ async function getColorFromToken(token: Token): Promise<string | null> {
   const { address } = wrappedToken
   let { logoURI } = wrappedToken
   if (!logoURI) {
-    if (token.chainId !== SupportedChainId.MAINNET) {
-      return null
-    } else {
-      logoURI = URIForEthToken(address)
-    }
+    // if (token.chainId !== SupportedChainId.MAINNET) {
+    return null
+    // } else {
+    //   logoURI = URIForEthToken(address)
+    // }
   }
 
   try {
@@ -69,7 +69,8 @@ async function getColorFromUriPath(uri: string): Promise<string | null> {
 }
 
 export function useColor(token?: Token) {
-  const [color, setColor] = useState('#2172E5')
+  const theme = useTheme()
+  const [color, setColor] = useState(theme.accentActive)
 
   useEffect(() => {
     let stale = false
@@ -84,9 +85,9 @@ export function useColor(token?: Token) {
 
     return () => {
       stale = true
-      setColor('#2172E5')
+      setColor(theme.accentActive)
     }
-  }, [token])
+  }, [theme.accentActive, token])
 
   return color
 }

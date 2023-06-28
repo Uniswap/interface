@@ -116,6 +116,7 @@ export default function AddressInputPanel({
                 <ExternalLink
                   href={getExplorerLink(chainId, name ?? address, ExplorerDataType.ADDRESS)}
                   style={{ fontSize: '14px' }}
+                  color={theme.accentActive}
                 >
                   <Trans>(View on Explorer)</Trans>
                 </ExternalLink>

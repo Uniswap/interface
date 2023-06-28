@@ -1,8 +1,6 @@
 import { t } from '@lingui/macro'
-import { TraceEvent } from '@uniswap/analytics'
-import { BrowserEvent, InterfaceElementName, SharedEventName } from '@uniswap/analytics-events'
+import { Position } from '@pollum-io/v3-sdk'
 import { formatNumber, NumberType } from '@uniswap/conedison/format'
-import { Position } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { useToggleAccountDrawer } from 'components/AccountDrawer'
 import Row from 'components/Row'
@@ -100,16 +98,6 @@ function PositionListItem({ positionInfo }: { positionInfo: PositionInfo }) {
     toggleWalletDrawer()
     navigate('/pool/' + details.tokenId)
   }, [walletChainId, chainId, connector, toggleWalletDrawer, navigate, details.tokenId])
-  const analyticsEventProperties = useMemo(
-    () => ({
-      chain_id: chainId,
-      pool_token_0_symbol: pool.token0.symbol,
-      pool_token_1_symbol: pool.token1.symbol,
-      pool_token_0_address: pool.token0.address,
-      pool_token_1_address: pool.token1.address,
-    }),
-    [chainId, pool.token0.address, pool.token0.symbol, pool.token1.address, pool.token1.symbol]
-  )
 
   const shouldHidePosition = hasURL(pool.token0.symbol) || hasURL(pool.token1.symbol)
 
@@ -118,50 +106,43 @@ function PositionListItem({ positionInfo }: { positionInfo: PositionInfo }) {
   }
 
   return (
-    <TraceEvent
-      events={[BrowserEvent.onClick]}
-      name={SharedEventName.ELEMENT_CLICKED}
-      element={InterfaceElementName.MINI_PORTFOLIO_POOLS_ROW}
-      properties={analyticsEventProperties}
-    >
-      <PortfolioRow
-        onClick={onClick}
-        left={<PortfolioLogo chainId={chainId} currencies={[pool.token0, pool.token1]} />}
-        title={
-          <Row>
+    <PortfolioRow
+      onClick={onClick}
+      left={<PortfolioLogo chainId={chainId} currencies={[pool.token0, pool.token1]} />}
+      title={
+        <Row>
+          <ThemedText.SubHeader fontWeight={500}>
+            {pool.token0.symbol} / {pool.token1?.symbol}
+          </ThemedText.SubHeader>
+        </Row>
+      }
+      descriptor={<ThemedText.Caption>{`${pool.fee / 10000}%`}</ThemedText.Caption>}
+      right={
+        <>
+          <MouseoverTooltip
+            placement="left"
+            text={
+              <div style={{ padding: '4px 0px' }}>
+                <ThemedText.Caption>{`${formatNumber(
+                  liquidityValue,
+                  NumberType.PortfolioBalance
+                )} (liquidity) + ${formatNumber(feeValue, NumberType.PortfolioBalance)} (fees)`}</ThemedText.Caption>
+              </div>
+            }
+          >
             <ThemedText.SubHeader fontWeight={500}>
-              {pool.token0.symbol} / {pool.token1?.symbol}
+              {formatNumber((liquidityValue ?? 0) + (feeValue ?? 0), NumberType.PortfolioBalance)}
             </ThemedText.SubHeader>
-          </Row>
-        }
-        descriptor={<ThemedText.Caption>{`${pool.fee / 10000}%`}</ThemedText.Caption>}
-        right={
-          <>
-            <MouseoverTooltip
-              placement="left"
-              text={
-                <div style={{ padding: '4px 0px' }}>
-                  <ThemedText.Caption>{`${formatNumber(
-                    liquidityValue,
-                    NumberType.PortfolioBalance
-                  )} (liquidity) + ${formatNumber(feeValue, NumberType.PortfolioBalance)} (fees)`}</ThemedText.Caption>
-                </div>
-              }
-            >
-              <ThemedText.SubHeader fontWeight={500}>
-                {formatNumber((liquidityValue ?? 0) + (feeValue ?? 0), NumberType.PortfolioBalance)}
-              </ThemedText.SubHeader>
-            </MouseoverTooltip>
+          </MouseoverTooltip>
 
-            <Row justify="flex-end">
-              <ThemedText.Caption color="textSecondary">
-                {closed ? t`Closed` : inRange ? t`In range` : t`Out of range`}
-              </ThemedText.Caption>
-              <ActiveDot closed={closed} outOfRange={!inRange} />
-            </Row>
-          </>
-        }
-      />
-    </TraceEvent>
+          <Row justify="flex-end">
+            <ThemedText.Caption color="textSecondary">
+              {closed ? t`Closed` : inRange ? t`In range` : t`Out of range`}
+            </ThemedText.Caption>
+            <ActiveDot closed={closed} outOfRange={!inRange} />
+          </Row>
+        </>
+      }
+    />
   )
 }

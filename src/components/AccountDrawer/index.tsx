@@ -1,5 +1,3 @@
-import { TraceEvent } from '@uniswap/analytics'
-import { BrowserEvent, InterfaceEventName } from '@uniswap/analytics-events'
 import { ScrollBarStyles } from 'components/Common'
 import { useWindowSize } from 'hooks/useWindowSize'
 import { atom } from 'jotai'
@@ -85,6 +83,7 @@ const Container = styled.div`
   right: ${DRAWER_MARGIN};
   top: ${DRAWER_MARGIN};
   z-index: ${Z_INDEX.fixed};
+  border-radius: 12px;
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
     top: 100%;
@@ -122,7 +121,6 @@ const AccountDrawerWrapper = styled.div<{ open: boolean }>`
   width: ${DRAWER_WIDTH};
   font-size: 16px;
   background-color: ${({ theme }) => theme.backgroundSurface};
-  border: ${({ theme }) => `1px solid ${theme.backgroundOutline}`};
 
   box-shadow: ${({ theme }) => theme.deepShadow};
   transition: margin-right ${({ theme }) => theme.transition.duration.medium};
@@ -195,15 +193,9 @@ function AccountDrawer() {
   return (
     <Container>
       {walletDrawerOpen && (
-        <TraceEvent
-          events={[BrowserEvent.onClick]}
-          name={InterfaceEventName.MINI_PORTFOLIO_TOGGLED}
-          properties={{ type: 'close' }}
-        >
-          <CloseDrawer onClick={toggleWalletDrawer}>
-            <CloseIcon />
-          </CloseDrawer>
-        </TraceEvent>
+        <CloseDrawer onClick={toggleWalletDrawer}>
+          <CloseIcon />
+        </CloseDrawer>
       )}
       <Scrim onClick={toggleWalletDrawer} open={walletDrawerOpen} />
       <AccountDrawerWrapper open={walletDrawerOpen}>

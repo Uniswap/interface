@@ -1,5 +1,3 @@
-import { TraceEvent } from '@uniswap/analytics'
-import { BrowserEvent, InterfaceElementName, NFTEventName } from '@uniswap/analytics-events'
 import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
 import { useIsCollectionLoading } from 'nft/hooks'
@@ -39,20 +37,15 @@ export const ActivitySwitcher = ({
           >
             Items
           </Box>
-          <TraceEvent
-            events={[BrowserEvent.onClick]}
-            element={InterfaceElementName.NFT_ACTIVITY_TAB}
-            name={NFTEventName.NFT_ACTIVITY_SELECTED}
+
+          <Box
+            as="button"
+            className={!showActivity ? styles.activitySwitcherToggle : styles.selectedActivitySwitcherToggle}
+            onClick={() => !showActivity && toggleActivity()}
+            data-testid="nft-activity"
           >
-            <Box
-              as="button"
-              className={!showActivity ? styles.activitySwitcherToggle : styles.selectedActivitySwitcherToggle}
-              onClick={() => !showActivity && toggleActivity()}
-              data-testid="nft-activity"
-            >
-              Activity
-            </Box>
-          </TraceEvent>
+            Activity
+          </Box>
         </>
       )}
     </BaseActivityContainer>

@@ -1,8 +1,8 @@
 import { getCreate2Address } from '@ethersproject/address'
 import { keccak256, pack } from '@ethersproject/solidity'
 import { Trans } from '@lingui/macro'
-import { Token } from '@uniswap/sdk-core'
-import { Pair } from '@uniswap/v2-sdk'
+import { Token } from '@pollum-io/sdk-core'
+import { Pair } from '@pollum-io/v1-sdk'
 import { useWeb3React } from '@web3-react/core'
 import MigrateSushiPositionCard from 'components/PositionCard/Sushi'
 import MigrateV2PositionCard from 'components/PositionCard/V2'
@@ -113,22 +113,30 @@ export default function MigrateV2() {
 
   return (
     <>
-      <BodyWrapper style={{ padding: 24 }}>
-        <AutoColumn gap="16px">
+      <BodyWrapper>
+        <AutoColumn
+          gap="16px"
+          style={{
+            background: theme.backgroundSurface,
+            borderRadius: '16px',
+            padding: '24px',
+            boxShadow: theme.deepShadow,
+          }}
+        >
           <AutoRow style={{ alignItems: 'center', justifyContent: 'space-between' }} gap="8px">
             <BackArrow to="/pools" />
             <ThemedText.DeprecatedMediumHeader>
               <Trans>Migrate V2 Liquidity</Trans>
             </ThemedText.DeprecatedMediumHeader>
             <div>
-              <QuestionHelper text={<Trans>Migrate your liquidity tokens from Uniswap V2 to Uniswap V3.</Trans>} />
+              <QuestionHelper text={<Trans>Migrate your liquidity tokens from Pegasys V1 to Pegasys V3.</Trans>} />
             </div>
           </AutoRow>
 
           <ThemedText.DeprecatedBody style={{ marginBottom: 8, fontWeight: 400 }}>
             <Trans>
-              For each pool shown below, click migrate to remove your liquidity from Uniswap V2 and deposit it into
-              Uniswap V3.
+              For each pool shown below, click migrate to remove your liquidity from Pegasys V1 and deposit it into
+              Pegasys V3.
             </Trans>
           </ThemedText.DeprecatedBody>
 

@@ -1,7 +1,7 @@
-import { IRoute, Protocol } from '@uniswap/router-sdk'
-import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
-import { Pair } from '@uniswap/v2-sdk'
-import { Pool } from '@uniswap/v3-sdk'
+import { IRoute, Protocol } from '@pollum-io/router-sdk'
+import { Currency, CurrencyAmount, TradeType } from '@pollum-io/sdk-core'
+import { Pair } from '@pollum-io/v1-sdk'
+import { Pool } from '@pollum-io/v3-sdk'
 import { TokenAmountInput, TokenTradeRouteInput, TradePoolInput } from 'graphql/data/__generated__/types-and-hooks'
 import { InterfaceTrade } from 'state/routing/types'
 
@@ -122,7 +122,7 @@ export function buildAllTradeRouteInputs(trade: InterfaceTrade<Currency, Currenc
   for (const swap of swaps) {
     if (swap.route.protocol === Protocol.MIXED) {
       mixedTokenTradeRouteInputs.push(buildTradeRouteInput(swap))
-    } else if (swap.route.protocol === Protocol.V2) {
+    } else if (swap.route.protocol === Protocol.V1) {
       v2TokenTradeRouteInputs.push(buildTradeRouteInput(swap))
     } else {
       v3TokenTradeRouteInputs.push(buildTradeRouteInput(swap))

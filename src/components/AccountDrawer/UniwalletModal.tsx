@@ -1,9 +1,7 @@
 import { Trans } from '@lingui/macro'
-import { sendAnalyticsEvent } from '@uniswap/analytics'
-import { InterfaceElementName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { WalletConnect } from '@web3-react/walletconnect'
-import Column, { AutoColumn } from 'components/Column'
+import { AutoColumn } from 'components/Column'
 import Modal from 'components/Modal'
 import { RowBetween } from 'components/Row'
 import { uniwalletConnectConnection } from 'connection'
@@ -16,7 +14,6 @@ import styled, { useTheme } from 'styled-components/macro'
 import { CloseIcon, ThemedText } from 'theme'
 
 import uniPng from '../../assets/images/uniwallet.svg'
-import { DownloadButton } from './DownloadButton'
 
 const UniwalletConnectWrapper = styled(RowBetween)`
   display: flex;
@@ -55,11 +52,8 @@ export default function UniwalletModal() {
 
   const { account } = useWeb3React()
   useEffect(() => {
-    if (open) {
-      sendAnalyticsEvent('Uniswap wallet modal opened', { userConnected: !!account })
-      if (account) {
-        toggle()
-      }
+    if (open && account) {
+      toggle()
     }
   }, [account, open, toggle])
 
@@ -122,9 +116,6 @@ function InfoSection() {
           </Trans>
         </ThemedText.Caption>
       </AutoColumn>
-      <Column>
-        <DownloadButton element={InterfaceElementName.UNISWAP_WALLET_MODAL_DOWNLOAD_BUTTON} />
-      </Column>
     </InfoSectionWrapper>
   )
 }

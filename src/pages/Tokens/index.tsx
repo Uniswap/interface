@@ -1,6 +1,4 @@
 import { Trans } from '@lingui/macro'
-import { Trace } from '@uniswap/analytics'
-import { InterfacePageName } from '@uniswap/analytics-events'
 import { MAX_WIDTH_MEDIA_BREAKPOINT, MEDIUM_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import { filterStringAtom } from 'components/Tokens/state'
 import NetworkFilter from 'components/Tokens/TokenTable/NetworkFilter'
@@ -43,6 +41,8 @@ const FiltersContainer = styled.div`
     order: 2;
   }
 `
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const SearchContainer = styled(FiltersContainer)`
   margin-left: 8px;
   width: 100%;
@@ -75,30 +75,28 @@ const Tokens = () => {
   }, [location, resetFilterString])
 
   return (
-    <Trace page={InterfacePageName.TOKENS_PAGE} shouldLogImpression>
-      <ExploreContainer>
-        <TitleContainer>
-          <MouseoverTooltip
-            text={<Trans>This table contains the top tokens by Uniswap volume, sorted based on your input.</Trans>}
-            placement="bottom"
-          >
-            <ThemedText.LargeHeader>
-              <Trans>Top tokens on Uniswap</Trans>
-            </ThemedText.LargeHeader>
-          </MouseoverTooltip>
-        </TitleContainer>
-        <FiltersWrapper>
-          <FiltersContainer>
-            <NetworkFilter />
-            <TimeSelector />
-          </FiltersContainer>
-          <SearchContainer>
-            <SearchBar />
-          </SearchContainer>
-        </FiltersWrapper>
-        <TokenTable />
-      </ExploreContainer>
-    </Trace>
+    <ExploreContainer>
+      <TitleContainer>
+        <MouseoverTooltip
+          text={<Trans>This table contains the top tokens by Pegasys volume, sorted based on your input.</Trans>}
+          placement="bottom"
+        >
+          <ThemedText.LargeHeader>
+            <Trans>Top tokens on Pegasys</Trans>
+          </ThemedText.LargeHeader>
+        </MouseoverTooltip>
+      </TitleContainer>
+      <FiltersWrapper>
+        <FiltersContainer>
+          <NetworkFilter />
+          <TimeSelector />
+        </FiltersContainer>
+        <SearchContainer>
+          <SearchBar />
+        </SearchContainer>
+      </FiltersWrapper>
+      <TokenTable />
+    </ExploreContainer>
   )
 }
 

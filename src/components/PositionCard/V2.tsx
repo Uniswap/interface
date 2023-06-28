@@ -1,17 +1,15 @@
 import { Trans } from '@lingui/macro'
-import { CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
-import { Pair } from '@uniswap/v2-sdk'
+import { CurrencyAmount, Percent, Token } from '@pollum-io/sdk-core'
+import { Pair } from '@pollum-io/v1-sdk'
 import { useWeb3React } from '@web3-react/core'
 import JSBI from 'jsbi'
-import { transparentize } from 'polished'
 import { useState } from 'react'
 import { ChevronDown, ChevronUp } from 'react-feather'
 import { Link } from 'react-router-dom'
 import { Text } from 'rebass'
-import styled from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components/macro'
 
 import { BIG_INT_ZERO } from '../../constants/misc'
-import { useColor } from '../../hooks/useColor'
 import { useTotalSupply } from '../../hooks/useTotalSupply'
 import { useTokenBalance } from '../../state/connection/hooks'
 import { currencyId } from '../../utils/currencyId'
@@ -26,10 +24,9 @@ import { AutoRow, RowBetween, RowFixed } from '../Row'
 import { Dots } from '../swap/styleds'
 import { FixedHeightRow } from '.'
 
-const StyledPositionCard = styled(LightCard)<{ bgColor: any }>`
+const StyledPositionCard = styled(LightCard)`
   border: none;
-  background: ${({ theme, bgColor }) =>
-    `radial-gradient(91.85% 100% at 1.84% 0%, ${transparentize(0.8, bgColor)} 0%, ${theme.deprecated_bg3} 100%) `};
+  /* background: ${({ theme }) => theme.backgroundInteractive}; */
   position: relative;
   overflow: hidden;
 `
@@ -43,7 +40,7 @@ interface PositionCardProps {
 
 export default function V2PositionCard({ pair, border, stakedBalance }: PositionCardProps) {
   const { account } = useWeb3React()
-
+  const theme = useTheme()
   const currency0 = unwrappedToken(pair.token0)
   const currency1 = unwrappedToken(pair.token1)
 
@@ -74,10 +71,8 @@ export default function V2PositionCard({ pair, border, stakedBalance }: Position
         ]
       : [undefined, undefined]
 
-  const backgroundColor = useColor(pair?.token0)
-
   return (
-    <StyledPositionCard border={border} bgColor={backgroundColor}>
+    <StyledPositionCard border={border} style={{ backgroundColor: theme.backgroundInteractive }}>
       <CardNoise />
       <AutoColumn gap="md">
         <FixedHeightRow>
@@ -183,21 +178,13 @@ export default function V2PositionCard({ pair, border, stakedBalance }: Position
             </FixedHeightRow>
 
             {userDefaultPoolBalance && JSBI.greaterThan(userDefaultPoolBalance.quotient, BIG_INT_ZERO) && (
-              <RowBetween marginTop="10px">
-                <ButtonPrimary
-                  padding="8px"
-                  $borderRadius="8px"
-                  as={Link}
-                  to={`/migrate/v2/${pair.liquidityToken.address}`}
-                  width="64%"
-                >
+              <RowBetween marginTop="10px" gap="10px">
+                <ButtonPrimary padding="8px !important" as={Link} to={`/migrate/v2/${pair.liquidityToken.address}`}>
                   <Trans>Migrate</Trans>
                 </ButtonPrimary>
                 <ButtonSecondary
                   padding="8px"
-                  $borderRadius="8px"
                   as={Link}
-                  width="32%"
                   to={`/remove/v2/${currencyId(currency0)}/${currencyId(currency1)}`}
                 >
                   <Trans>Remove</Trans>

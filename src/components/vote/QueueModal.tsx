@@ -1,12 +1,15 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
+import LoadingGifLight from 'assets/images/lightLoading.gif'
+import LoadingGif from 'assets/images/loading.gif'
+import { LoaderGif } from 'components/Icons/LoadingSpinner'
 import { useState } from 'react'
 import { ArrowUpCircle, X } from 'react-feather'
 import styled, { useTheme } from 'styled-components/macro'
+import { useIsDarkMode } from 'theme/components/ThemeToggle'
 
-import Circle from '../../assets/images/blue-loader.svg'
 import { useQueueCallback } from '../../state/governance/hooks'
-import { CustomLightSpinner, ThemedText } from '../../theme'
+import { ThemedText } from '../../theme'
 import { ExternalLink } from '../../theme'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import { ButtonPrimary } from '../Button'
@@ -50,6 +53,7 @@ export default function QueueModal({ isOpen, onDismiss, proposalId }: QueueModal
 
   // get theme for colors
   const theme = useTheme()
+  const isDarkMode = useIsDarkMode()
 
   // wrapper to reset state on modal close
   function wrappedOnDismiss() {
@@ -106,7 +110,7 @@ export default function QueueModal({ isOpen, onDismiss, proposalId }: QueueModal
             <StyledClosed onClick={wrappedOnDismiss} />
           </RowBetween>
           <ConfirmedIcon>
-            <CustomLightSpinner src={Circle} alt="loader" size="90px" />
+            <LoaderGif gif={isDarkMode ? LoadingGif : LoadingGifLight} size="90px" />
           </ConfirmedIcon>
           <AutoColumn gap="100px" justify="center">
             <AutoColumn gap="md" justify="center">

@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { Currency, TradeType } from '@uniswap/sdk-core'
+import { Currency, TradeType } from '@pollum-io/sdk-core'
 import { sendEvent } from 'components/analytics'
 import { AutoColumn } from 'components/Column'
 import { LoadingOpacityContainer } from 'components/Loader/styled'

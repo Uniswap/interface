@@ -1,4 +1,4 @@
-import { Currency, Token } from '@uniswap/sdk-core'
+import { Currency, Token } from '@pollum-io/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { getChainInfo } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
@@ -91,13 +91,13 @@ export function useUnsupportedTokens(): { [address: string]: Token } {
       const bridgeInfo = tokenInfo.extensions?.bridgeInfo as unknown as BridgeInfo
       if (
         bridgeInfo &&
-        bridgeInfo[SupportedChainId.MAINNET] &&
-        bridgeInfo[SupportedChainId.MAINNET].tokenAddress &&
-        unsupportedSet.has(bridgeInfo[SupportedChainId.MAINNET].tokenAddress)
+        bridgeInfo[SupportedChainId.ROLLUX] &&
+        bridgeInfo[SupportedChainId.ROLLUX].tokenAddress &&
+        unsupportedSet.has(bridgeInfo[SupportedChainId.ROLLUX].tokenAddress)
       ) {
-        const address = bridgeInfo[SupportedChainId.MAINNET].tokenAddress
+        const address = bridgeInfo[SupportedChainId.ROLLUX].tokenAddress
         // don't rely on decimals--it's possible that a token could be bridged w/ different decimals on the L2
-        return { ...acc, [address]: new Token(SupportedChainId.MAINNET, address, tokenInfo.decimals) }
+        return { ...acc, [address]: new Token(SupportedChainId.ROLLUX, address, tokenInfo.decimals) }
       }
       return acc
     }, {})
@@ -150,6 +150,7 @@ export function useIsUserAddedToken(currency: Currency | undefined | null): bool
 }
 
 // Check if currency on specific chain is included in custom list from user storage
+// eslint-disable-next-line import/no-unused-modules
 export function useIsUserAddedTokenOnChain(
   address: string | undefined | null,
   chain: number | undefined | null

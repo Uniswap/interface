@@ -1,8 +1,11 @@
+import LoadingGifLight from 'assets/images/lightLoading.gif'
+import LoadingGif from 'assets/images/loading.gif'
 import Column from 'components/Column'
-import Loader from 'components/Icons/LoadingSpinner'
+import { LoaderGif } from 'components/Icons/LoadingSpinner'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { ScreenBreakpointsPaddings } from 'nft/pages/collection/index.css'
 import styled, { useTheme } from 'styled-components/macro'
+import { useIsDarkMode } from 'theme/components/ThemeToggle'
 
 const BREAKPOINT = '960px'
 
@@ -119,12 +122,13 @@ const BuyNowLoadingMobile = styled(Column)`
 
 export const AssetDetailsLoading = () => {
   const theme = useTheme()
+  const isDarkMode = useIsDarkMode()
 
   return (
     <LoadingContainer>
       <StyledColumn>
         <LoaderContainer>
-          <Loader stroke={theme.accentAction} size="40px" />
+          <LoaderGif stroke={theme.accentAction} size="40px" gif={isDarkMode ? LoadingGif : LoadingGifLight} />
         </LoaderContainer>
         <BuyNowLoadingMobile>
           <Column>

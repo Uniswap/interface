@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { CurrencyAmount, Token } from '@pollum-io/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { sendEvent } from 'components/analytics'
 import { useCallback, useEffect } from 'react'
@@ -116,7 +116,7 @@ export default function ClaimPopup() {
             </ThemedText.DeprecatedWhite>
             <ThemedText.DeprecatedSubHeader style={{ paddingTop: '0.5rem', textAlign: 'center' }} color="white">
               <Trans>
-                Thanks for being part of the Uniswap community <Heart size={12} />
+                Thanks for being part of the Pegasys community <Heart size={12} />
               </Trans>
             </ThemedText.DeprecatedSubHeader>
           </AutoColumn>

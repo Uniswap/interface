@@ -1,14 +1,17 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
+import LoadingGifLight from 'assets/images/lightLoading.gif'
+import LoadingGif from 'assets/images/loading.gif'
+import { LoaderGif } from 'components/Icons/LoadingSpinner'
 import { useState } from 'react'
 import { ArrowUpCircle, X } from 'react-feather'
 import styled, { useTheme } from 'styled-components/macro'
+import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
-import Circle from '../../assets/images/blue-loader.svg'
 import { useUserVotes, useVoteCallback } from '../../state/governance/hooks'
 import { VoteOption } from '../../state/governance/types'
-import { CustomLightSpinner, ThemedText } from '../../theme'
+import { ThemedText } from '../../theme'
 import { ExternalLink } from '../../theme'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import { ButtonPrimary } from '../Button'
@@ -44,6 +47,7 @@ interface VoteModalProps {
 }
 
 export default function VoteModal({ isOpen, onDismiss, proposalId, voteOption }: VoteModalProps) {
+  const isDarkMode = useIsDarkMode()
   const { chainId } = useWeb3React()
   const voteCallback = useVoteCallback()
   const { votes: availableVotes } = useUserVotes()
@@ -120,7 +124,7 @@ export default function VoteModal({ isOpen, onDismiss, proposalId, voteOption }:
             <StyledClosed onClick={wrappedOnDismiss} />
           </RowBetween>
           <ConfirmedIcon>
-            <CustomLightSpinner src={Circle} alt="loader" size="90px" />
+            <LoaderGif gif={isDarkMode ? LoadingGif : LoadingGifLight} size="90px" />
           </ConfirmedIcon>
           <AutoColumn gap="100px" justify="center">
             <AutoColumn gap="md" justify="center">

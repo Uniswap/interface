@@ -19,55 +19,48 @@ const StyledRangeInput = styled.input<{ size: number }>`
     -webkit-appearance: none;
     height: ${({ size }) => size}px;
     width: ${({ size }) => size}px;
-    background-color: ${({ theme }) => theme.accentAction};
+    background-color: ${({ theme }) => theme.white};
     border-radius: 100%;
     border: none;
     transform: translateY(-50%);
-    color: ${({ theme }) => theme.deprecated_bg1};
+    box-shadow: ${({ theme }) => theme.deepShadow};
 
     &:hover,
     &:focus {
-      box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.1), 0px 4px 8px rgba(0, 0, 0, 0.08), 0px 16px 24px rgba(0, 0, 0, 0.06),
-        0px 24px 32px rgba(0, 0, 0, 0.04);
+      box-shadow: ${({ theme }) => theme.deepShadow};
     }
   }
 
   &::-moz-range-thumb {
     height: ${({ size }) => size}px;
     width: ${({ size }) => size}px;
-    background-color: #565a69;
     border-radius: 100%;
     border: none;
-    color: ${({ theme }) => theme.deprecated_bg1};
 
     &:hover,
     &:focus {
-      box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.1), 0px 4px 8px rgba(0, 0, 0, 0.08), 0px 16px 24px rgba(0, 0, 0, 0.06),
-        0px 24px 32px rgba(0, 0, 0, 0.04);
+      box-shadow: ${({ theme }) => theme.deepShadow};
     }
   }
 
   &::-ms-thumb {
     height: ${({ size }) => size}px;
     width: ${({ size }) => size}px;
-    background-color: #565a69;
     border-radius: 100%;
-    color: ${({ theme }) => theme.deprecated_bg1};
 
     &:hover,
     &:focus {
-      box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.1), 0px 4px 8px rgba(0, 0, 0, 0.08), 0px 16px 24px rgba(0, 0, 0, 0.06),
-        0px 24px 32px rgba(0, 0, 0, 0.04);
+      box-shadow: ${({ theme }) => theme.deepShadow};
     }
   }
 
   &::-webkit-slider-runnable-track {
-    background: linear-gradient(90deg, ${({ theme }) => theme.accentAction}, ${({ theme }) => theme.accentAction});
+    background: ${({ theme }) => theme.rainbowPegasysGradient};
     height: 2px;
   }
 
   &::-moz-range-track {
-    background: linear-gradient(90deg, ${({ theme }) => theme.deprecated_bg5}, ${({ theme }) => theme.deprecated_bg3});
+    background: ${({ theme }) => theme.rainbowPegasysGradient};
     height: 2px;
   }
 
@@ -76,14 +69,14 @@ const StyledRangeInput = styled.input<{ size: number }>`
     border-color: transparent;
     color: transparent;
 
-    background: ${({ theme }) => theme.deprecated_bg5};
+    background: ${({ theme }) => theme.rainbowPegasysGradient};
     height: 2px;
   }
   &::-ms-fill-lower {
-    background: ${({ theme }) => theme.deprecated_bg5};
+    background: ${({ theme }) => theme.rainbowPegasysGradient};
   }
   &::-ms-fill-upper {
-    background: ${({ theme }) => theme.deprecated_bg3};
+    background: ${({ theme }) => theme.rainbowPegasysGradient};
   }
 `
 

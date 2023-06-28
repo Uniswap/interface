@@ -11,6 +11,7 @@ import { BreadcrumbNavLink } from './BreadcrumbNavLink'
 import { TokenPrice } from './PriceChart'
 import { StatPair, StatsWrapper, StatWrapper } from './StatsSection'
 
+// eslint-disable-next-line import/no-unused-modules
 export const Hr = styled.hr`
   background-color: ${({ theme }) => theme.backgroundOutline};
   border: none;
@@ -38,6 +39,12 @@ export const LeftPanel = styled.div`
   flex: 1;
   max-width: 780px;
   overflow: hidden;
+  background: ${({ theme }) => theme.backgroundScrolledSurface};
+  box-shadow: ${({ theme }) => theme.deepShadow};
+  border-radius: 16px;
+  padding-left: 24px;
+  padding-right: 24px;
+  padding-top: 24px;
 `
 export const RightPanel = styled.div`
   display: none;
@@ -56,6 +63,8 @@ export const ChartContainer = styled.div`
   margin-bottom: 24px;
   align-items: flex-start;
   width: 100%;
+  background: ${({ theme }) => theme.backgroundModule};
+  border-radius: 16px;
 `
 const LoadingChartContainer = styled.div`
   display: flex;
@@ -64,13 +73,18 @@ const LoadingChartContainer = styled.div`
   height: 100%;
   margin-bottom: 44px;
   padding-bottom: 66px;
+  max-width: 732px;
   overflow: hidden;
+
+  @media screen and (max-width: ${({ theme }) => theme.breakpoint.md}px) {
+    max-width: 326px;
+  }
 `
 export const TokenInfoContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 4px;
+  margin-bottom: 10px;
   ${textFadeIn};
   animation-duration: ${({ theme }) => theme.transition.duration.medium};
 `

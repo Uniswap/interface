@@ -1,6 +1,4 @@
-import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
-import { InterfaceSectionName, SwapEventName } from '@uniswap/analytics-events'
-import { Currency, Field, SwapController, SwapEventHandlers, TradeType } from '@uniswap/widgets'
+import { Currency, Field, SwapController, SwapEventHandlers, TradeType } from '@pollum-io/widgets'
 import { useWeb3React } from '@web3-react/core'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
 import { isSupportedChain } from 'constants/chains'
@@ -49,8 +47,6 @@ export function useSyncWidgetInputs({
   defaultTokens: DefaultTokens
   onDefaultTokenChange?: (tokens: SwapTokens) => void
 }) {
-  const trace = useTrace({ section: InterfaceSectionName.WIDGET })
-
   const { chainId } = useWeb3React()
   const previousChainId = usePrevious(chainId)
 
@@ -87,26 +83,19 @@ export function useSyncWidgetInputs({
     }
   }, [chainId, defaultTokens, previousChainId, tokens])
 
-  const onAmountChange = useCallback(
-    (field: Field, amount: string, origin?: 'max') => {
-      if (origin === 'max') {
-        sendAnalyticsEvent(SwapEventName.SWAP_MAX_TOKEN_AMOUNT_SELECTED, { ...trace })
-      }
-      setType(field === Field.INPUT ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT)
-      setAmount(amount)
-    },
-    [trace]
-  )
+  const onAmountChange = useCallback((field: Field, amount: string) => {
+    setType(field === Field.INPUT ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT)
+    setAmount(amount)
+  }, [])
 
   const onSwitchTokens = useCallback(() => {
-    sendAnalyticsEvent(SwapEventName.SWAP_TOKENS_REVERSED, { ...trace })
     setType((type) => invertTradeType(type))
     setTokens((tokens) => ({
       [Field.INPUT]: tokens[Field.OUTPUT],
       [Field.OUTPUT]: tokens[Field.INPUT],
       default: tokens.default,
     }))
-  }, [trace])
+  }, [])
 
   const [selectingField, setSelectingField] = useState<Field>()
   const onTokenSelectorClick = useCallback((field: Field) => {
@@ -181,7 +170,7 @@ export function useSyncWidgetInputs({
   return { inputs: { value, ...valueHandlers }, tokenSelector }
 }
 
-// TODO(zzmp): Move to @uniswap/widgets.
+// TODO(zzmp): Move to @pollum-io/widgets.
 function invertField(field: Field) {
   switch (field) {
     case Field.INPUT:
@@ -191,7 +180,7 @@ function invertField(field: Field) {
   }
 }
 
-// TODO(zzmp): Include in @uniswap/sdk-core (on TradeType, if possible).
+// TODO(zzmp): Include in @pollum-io/sdk-core (on TradeType, if possible).
 function invertTradeType(tradeType: TradeType) {
   switch (tradeType) {
     case TradeType.EXACT_INPUT:

@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { Fraction, TradeType } from '@uniswap/sdk-core'
+import { Fraction, TradeType } from '@pollum-io/sdk-core'
 import JSBI from 'jsbi'
 
 import { nativeOnChain } from '../../constants/tokens'
@@ -149,11 +149,11 @@ function WrapSummary({ info: { chainId, currencyAmountRaw, unwrapped } }: { info
         Unwrap{' '}
         <FormattedCurrencyAmount
           rawAmount={currencyAmountRaw}
-          symbol={native?.wrapped?.symbol ?? 'WETH'}
+          symbol={native?.wrapped?.symbol ?? 'WSYS'}
           decimals={18}
           sigFigs={6}
         />{' '}
-        to {native?.symbol ?? 'ETH'}
+        to {native?.symbol ?? 'SYS'}
       </Trans>
     )
   } else {
@@ -162,11 +162,11 @@ function WrapSummary({ info: { chainId, currencyAmountRaw, unwrapped } }: { info
         Wrap{' '}
         <FormattedCurrencyAmount
           rawAmount={currencyAmountRaw}
-          symbol={native?.symbol ?? 'ETH'}
+          symbol={native?.symbol ?? 'SYS'}
           decimals={18}
           sigFigs={6}
         />{' '}
-        to {native?.wrapped?.symbol ?? 'WETH'}
+        to {native?.wrapped?.symbol ?? 'WSYS'}
       </Trans>
     )
   }
@@ -261,7 +261,7 @@ function AddLiquidityV2PoolSummary({
     <Trans>
       Add <FormattedCurrencyAmountManaged rawAmount={expectedAmountBaseRaw} currencyId={baseCurrencyId} sigFigs={3} />{' '}
       and <FormattedCurrencyAmountManaged rawAmount={expectedAmountQuoteRaw} currencyId={quoteCurrencyId} sigFigs={3} />{' '}
-      to Uniswap V2
+      to Pegasy V3
     </Trans>
   )
 }

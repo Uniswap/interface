@@ -29,6 +29,8 @@ export const darkTheme: Theme = {
     textPrimary: '#FFFFFF',
     textSecondary: vars.color.gray300,
     textTertiary: vars.color.gray500,
+    placeHolderSearch: '#FFFFFF',
+    headerItems: '#FFFFFF',
 
     dropShadow: `0px 4px 16px rgba(76, 130, 251, 0.4)`,
   },

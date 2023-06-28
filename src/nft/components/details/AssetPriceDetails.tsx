@@ -1,6 +1,3 @@
-import { useTrace } from '@uniswap/analytics'
-import { sendAnalyticsEvent } from '@uniswap/analytics'
-import { NFTEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { OpacityHoverState } from 'components/Common'
 import { useNftBalance } from 'graphql/data/nft/NftBalance'
@@ -224,17 +221,12 @@ const OwnerContainer = ({ asset }: { asset: WalletAsset }) => {
     () => (USDValue && asset.floor_sell_order_price ? USDValue * asset.floor_sell_order_price : undefined),
     [USDValue, asset.floor_sell_order_price]
   )
-  const trace = useTrace()
 
   const goToListPage = () => {
     resetSellAssets()
     navigate('/nfts/profile')
     selectSellAsset(asset)
-    sendAnalyticsEvent(NFTEventName.NFT_SELL_ITEM_ADDED, {
-      collection_address: asset.asset_contract.address,
-      token_id: asset.tokenId,
-      ...trace,
-    })
+
     setSellPageState(ProfilePageStateType.LISTING)
   }
 

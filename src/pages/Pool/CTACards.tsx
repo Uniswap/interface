@@ -9,7 +9,7 @@ import { ExternalLink } from '../../theme'
 
 const CTASection = styled.section`
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: 8px;
   opacity: 0.8;
 
@@ -24,7 +24,8 @@ const CTA = styled(ExternalLink)`
   border-radius: 20px;
   position: relative;
   overflow: hidden;
-  border: 1px solid ${({ theme }) => theme.deprecated_bg3};
+  box-shadow: ${({ theme }) => theme.deepShadow};
+  background: ${({ theme }) => theme.backgroundScrolledSurface};
 
   * {
     color: ${({ theme }) => theme.textPrimary};
@@ -32,8 +33,6 @@ const CTA = styled(ExternalLink)`
   }
 
   :hover {
-    border: 1px solid ${({ theme }) => theme.deprecated_bg4};
-
     text-decoration: none;
     * {
       text-decoration: none !important;
@@ -65,11 +64,13 @@ const ResponsiveColumn = styled(AutoColumn)`
 
 export default function CTACards() {
   const { chainId } = useWeb3React()
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { infoLink } = getChainInfoOrDefault(chainId)
+  // TODO: check liquidity docs
 
   return (
     <CTASection>
-      <CTA href="https://support.uniswap.org/hc/en-us/categories/8122334631437-Providing-Liquidity-">
+      <CTA href="https://docs.pegasys.fi/sdk/v3/guides/liquidity/minting">
         <ResponsiveColumn>
           <HeaderText>
             <Trans>Learn about providing liquidity</Trans> ↗
@@ -85,7 +86,7 @@ export default function CTACards() {
             <Trans>Top pools</Trans> ↗
           </HeaderText>
           <ThemedText.DeprecatedBody fontWeight={400} style={{ alignSelf: 'flex-start' }}>
-            <Trans>Explore Uniswap Analytics.</Trans>
+            <Trans>Explore Pegasys Analytics.</Trans>
           </ThemedText.DeprecatedBody>
         </ResponsiveColumn>
       </CTA>

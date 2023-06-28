@@ -15,25 +15,18 @@ export const ClickableText = styled(Text)`
 `
 export const MaxButton = styled.button<{ width: string }>`
   padding: 0.5rem 1rem;
-  background-color: ${({ theme }) => theme.deprecated_primary5};
-  border: 1px solid ${({ theme }) => theme.deprecated_primary5};
-  border-radius: 0.5rem;
+  background-color: transparent;
+  border: 1px solid transparent;
+  border-radius: 30px;
   font-size: 1rem;
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
     padding: 0.25rem 0.5rem;
   `};
-  font-weight: 500;
+  font-weight: 700;
   cursor: pointer;
   margin: 0.25rem;
   overflow: hidden;
-  color: ${({ theme }) => theme.accentAction};
-  :hover {
-    border: 1px solid ${({ theme }) => theme.accentAction};
-  }
-  :focus {
-    border: 1px solid ${({ theme }) => theme.accentAction};
-    outline: none;
-  }
+  color: ${({ theme }) => theme.accentActive};
 `
 
 export const Dots = styled.span`

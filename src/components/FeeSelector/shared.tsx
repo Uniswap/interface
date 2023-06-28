@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { FeeAmount } from '@uniswap/v3-sdk'
+import { FeeAmount } from '@pollum-io/v3-sdk'
 import { ALL_SUPPORTED_CHAIN_IDS, SupportedChainId } from 'constants/chains'
 import type { ReactNode } from 'react'
 
@@ -11,14 +11,14 @@ export const FEE_AMOUNT_DETAIL: Record<
     label: '0.01',
     description: <Trans>Best for very stable pairs.</Trans>,
     supportedChains: [
-      SupportedChainId.ARBITRUM_ONE,
-      SupportedChainId.BNB,
-      SupportedChainId.CELO,
-      SupportedChainId.CELO_ALFAJORES,
-      SupportedChainId.MAINNET,
-      SupportedChainId.OPTIMISM,
-      SupportedChainId.POLYGON,
-      SupportedChainId.POLYGON_MUMBAI,
+      // SupportedChainId.ARBITRUM_ONE,
+      // SupportedChainId.BNB,
+      // SupportedChainId.CELO,
+      // SupportedChainId.CELO_ALFAJORES,
+      // SupportedChainId.MAINNET,
+      SupportedChainId.ROLLUX,
+      // SupportedChainId.POLYGON,
+      // SupportedChainId.POLYGON_MUMBAI,
     ],
   },
   [FeeAmount.LOW]: {

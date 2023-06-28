@@ -1,5 +1,5 @@
-import Badge from 'components/Badge'
 import { getChainInfo } from 'constants/chainInfo'
+import { Chain } from 'graphql/data/Token'
 import { BACKEND_CHAIN_NAMES, CHAIN_NAME_TO_CHAIN_ID, validateUrlChainParam } from 'graphql/data/util'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useRef } from 'react'
@@ -48,7 +48,6 @@ const MenuTimeFlyout = styled.span`
   overflow: auto;
   background-color: ${({ theme }) => theme.backgroundSurface};
   box-shadow: ${({ theme }) => theme.deepShadow};
-  border: 0.5px solid ${({ theme }) => theme.backgroundOutline};
   border-radius: 12px;
   padding: 8px;
   display: flex;
@@ -97,13 +96,6 @@ const CheckContainer = styled.div`
 const NetworkFilterOption = styled(FilterOption)`
   min-width: 156px;
 `
-const Tag = styled(Badge)`
-  background-color: ${({ theme }) => theme.backgroundModule};
-  color: ${({ theme }) => theme.textSecondary};
-  font-size: 10px;
-  opacity: 1;
-  padding: 4px 6px;
-`
 
 export default function NetworkFilter() {
   const theme = useTheme()
@@ -114,10 +106,9 @@ export default function NetworkFilter() {
   const navigate = useNavigate()
 
   const { chainName } = useParams<{ chainName?: string }>()
-  const currentChainName = validateUrlChainParam(chainName)
+  const currentChainName = validateUrlChainParam(chainName) as Chain
 
   const chainInfo = getChainInfo(CHAIN_NAME_TO_CHAIN_ID[currentChainName])
-  const BNBChainInfo = getChainInfo(CHAIN_NAME_TO_CHAIN_ID.BNB)
 
   return (
     <StyledMenu ref={node}>
@@ -166,13 +157,6 @@ export default function NetworkFilter() {
               </InternalLinkMenuItem>
             )
           })}
-          <InternalLinkMenuItem data-testid="tokens-network-filter-option-bnb-chain" disabled>
-            <NetworkLabel>
-              <Logo src={BNBChainInfo.logoUrl} />
-              {BNBChainInfo.label}
-            </NetworkLabel>
-            <Tag>Coming soon</Tag>
-          </InternalLinkMenuItem>
         </MenuTimeFlyout>
       )}
     </StyledMenu>

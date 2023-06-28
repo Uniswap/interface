@@ -19,12 +19,14 @@ const Wrapper = styled.div<{ count: number }>`
 const Button = styled(ButtonGray)`
   &:hover {
     background-color: ${({ theme }) => theme.backgroundInteractive};
-    color: ${({ theme }) => theme.textPrimary};
+    color: ${({ theme }) => theme.accentActiveSoft};
   }
 
+  box-shadow: none;
   width: 32px;
   height: 32px;
   padding: 4px;
+  color: ${({ theme }) => theme.accentActive};
 `
 
 export const ZoomOverlay = styled.rect`

@@ -4,6 +4,7 @@ interface CollectionrRewardsResponse {
   data: Array<Rewards>
 }
 
+// TODO: Review this logic when we want to add NFT support to Pegasys
 export const CollectionRewardsFetcher = async (address: string): Promise<CollectionrRewardsResponse> => {
   const url = `${process.env.REACT_APP_TEMP_API_URL}/nft/rewards/${address}?category=GENIE_UNISWAP_USDC_AIRDROP`
 

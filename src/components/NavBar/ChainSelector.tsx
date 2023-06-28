@@ -13,20 +13,27 @@ import { Portal } from 'nft/components/common/Portal'
 import { Column, Row } from 'nft/components/Flex'
 import { useIsMobile } from 'nft/hooks'
 import { useCallback, useRef, useState } from 'react'
-import { AlertTriangle, ChevronDown, ChevronUp } from 'react-feather'
-import { useTheme } from 'styled-components/macro'
+import { AlertTriangle } from 'react-feather'
+import styled, { useTheme } from 'styled-components/macro'
 
 import * as styles from './ChainSelector.css'
 import ChainSelectorRow from './ChainSelectorRow'
 import { NavDropdown } from './NavDropdown'
 
+const Label = styled.div`
+  grid-column: 2;
+  grid-row: 1;
+  font-size: 16px;
+`
+
 const NETWORK_SELECTOR_CHAINS = [
-  SupportedChainId.MAINNET,
-  SupportedChainId.POLYGON,
-  SupportedChainId.OPTIMISM,
-  SupportedChainId.ARBITRUM_ONE,
-  SupportedChainId.CELO,
-  SupportedChainId.BNB,
+  // SupportedChainId.MAINNET,
+  // SupportedChainId.POLYGON,
+  SupportedChainId.ROLLUX,
+  SupportedChainId.ROLLUX_TANENBAUM,
+  // SupportedChainId.ARBITRUM_ONE,
+  // SupportedChainId.CELO,
+  // SupportedChainId.BNB,
 ]
 
 interface ChainSelectorProps {
@@ -76,7 +83,7 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
       <Column paddingX="8">
         {NETWORK_SELECTOR_CHAINS.map((chainId: SupportedChainId) => (
           <ChainSelectorRow
-            disabled={isUniWallet && chainId === SupportedChainId.CELO}
+            disabled={isUniWallet}
             onSelectChain={onSelectChain}
             targetChain={chainId}
             key={chainId}
@@ -86,12 +93,6 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
       </Column>
     </NavDropdown>
   )
-
-  const chevronProps = {
-    height: 20,
-    width: 20,
-    color: theme.textSecondary,
-  }
 
   return (
     <Box position="relative" ref={ref}>
@@ -108,7 +109,8 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
           ) : (
             <img src={info.logoUrl} alt={info.label} className={styles.Image} data-testid="chain-selector-logo" />
           )}
-          {isOpen ? <ChevronUp {...chevronProps} /> : <ChevronDown {...chevronProps} />}
+
+          <Label>{info?.label || ''}</Label>
         </Row>
       </MouseoverTooltip>
       {isOpen && (isMobile ? <Portal>{dropdown}</Portal> : <>{dropdown}</>)}

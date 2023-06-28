@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { Percent } from '@uniswap/sdk-core'
+import { Percent } from '@pollum-io/sdk-core'
 import { ReactNode } from 'react'
 import { ArrowLeft } from 'react-feather'
 import { Link as HistoryLink, useLocation } from 'react-router-dom'
@@ -41,7 +41,7 @@ const StyledArrowLeft = styled(ArrowLeft)`
 
 export function FindPoolTabs({ origin }: { origin: string }) {
   return (
-    <Tabs>
+    <Tabs style={{ width: '100%' }}>
       <RowBetween style={{ padding: '1rem 1rem 0 1rem', position: 'relative' }}>
         <HistoryLink to={origin}>
           <StyledArrowLeft />
@@ -79,7 +79,7 @@ export function AddRemoveTabs({
     : '/pools' + (positionID ? `/${positionID.toString()}` : '')
 
   return (
-    <Tabs>
+    <Tabs style={{ width: '100%' }}>
       <RowBetween style={{ padding: '1rem 1rem 0 1rem' }}>
         <StyledHistoryLink
           to={poolLink}

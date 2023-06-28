@@ -3,64 +3,57 @@ import useHttpLocations from 'hooks/useHttpLocations'
 import { useMemo } from 'react'
 import { isAddress } from 'utils'
 
-import EthereumLogo from '../../assets/images/ethereum-logo.png'
-import BnbLogo from '../../assets/svg/bnb-logo.svg'
-import CeloLogo from '../../assets/svg/celo_logo.svg'
-import MaticLogo from '../../assets/svg/matic-token-icon.svg'
-import { isCelo, NATIVE_CHAIN_ID, nativeOnChain } from '../../constants/tokens'
+import sysLogo from '../../assets/images/syslogo.png'
+import { NATIVE_CHAIN_ID } from '../../constants/tokens'
 
-type Network = 'ethereum' | 'arbitrum' | 'optimism' | 'polygon' | 'smartchain'
-
+type Network = 'rollux' | 'rollux_tanenbaum'
+// eslint-disable-next-line import/no-unused-modules
 export function chainIdToNetworkName(networkId: SupportedChainId): Network {
   switch (networkId) {
-    case SupportedChainId.MAINNET:
-      return 'ethereum'
-    case SupportedChainId.ARBITRUM_ONE:
-      return 'arbitrum'
-    case SupportedChainId.OPTIMISM:
-      return 'optimism'
-    case SupportedChainId.POLYGON:
-      return 'polygon'
-    case SupportedChainId.BNB:
-      return 'smartchain'
+    // case SupportedChainId.MAINNET:
+    // return 'ethereum'
+    // case SupportedChainId.ARBITRUM_ONE:
+    // return 'arbitrum'
+    case SupportedChainId.ROLLUX:
+      return 'rollux'
+    case SupportedChainId.ROLLUX_TANENBAUM:
+      return 'rollux_tanenbaum'
+    // case SupportedChainId.POLYGON:
+    // return 'polygon'
+    // case SupportedChainId.BNB:
+    // return 'smartchain'
     default:
-      return 'ethereum'
+      return 'rollux'
   }
 }
 
-export function getNativeLogoURI(chainId: SupportedChainId = SupportedChainId.MAINNET): string {
+export function getNativeLogoURI(chainId: SupportedChainId = SupportedChainId.ROLLUX): string {
   switch (chainId) {
-    case SupportedChainId.POLYGON:
-    case SupportedChainId.POLYGON_MUMBAI:
-      return MaticLogo
-    case SupportedChainId.BNB:
-      return BnbLogo
-    case SupportedChainId.CELO:
-    case SupportedChainId.CELO_ALFAJORES:
-      return CeloLogo
+    case SupportedChainId.ROLLUX:
+      return sysLogo
     default:
-      return EthereumLogo
+      return sysLogo
   }
 }
 
-function getTokenLogoURI(address: string, chainId: SupportedChainId = SupportedChainId.MAINNET): string | void {
-  const networkName = chainIdToNetworkName(chainId)
-  const networksWithUrls = [
-    SupportedChainId.ARBITRUM_ONE,
-    SupportedChainId.MAINNET,
-    SupportedChainId.OPTIMISM,
-    SupportedChainId.BNB,
-  ]
-  if (networksWithUrls.includes(chainId)) {
-    return `https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/${networkName}/assets/${address}/logo.png`
-  }
+// TODO: review token log with raw link
+function getTokenLogoURI(address: string, chainId: SupportedChainId = SupportedChainId.ROLLUX): string | void {
+  // const networkName = chainIdToNetworkName(chainId)
+  // const networksWithUrls = [
+  //   // SupportedChainId.ARBITRUM_ONE,
+  //   // SupportedChainId.MAINNET,
+  //   SupportedChainId.ROLLUX,
+  //   SupportedChainId.ROLLUX_TANENBAUM,
+  //   // SupportedChainId.BNB,
+  // ]
+  return `https://raw.githubusercontent.com/pegasys-fi/default-token-list/master/src/logos/${chainId}/${address}/logo.png`
 
   // Celo logo logo is hosted elsewhere.
-  if (isCelo(chainId)) {
-    if (address === nativeOnChain(chainId).wrapped.address) {
-      return 'https://raw.githubusercontent.com/ubeswap/default-token-list/master/assets/asset_CELO.png'
-    }
-  }
+  // if (isCelo(chainId)) {
+  //   if (address === nativeOnChain(chainId).wrapped.address) {
+  //     return 'https://raw.githubusercontent.com/ubeswap/default-token-list/master/assets/asset_CELO.png'
+  //   }
+  // }
 }
 
 export default function useCurrencyLogoURIs(

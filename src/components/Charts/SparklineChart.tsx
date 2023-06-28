@@ -1,9 +1,15 @@
+import { filterTimeAtom } from 'components/Tokens/state'
 import { SparkLineLoadingBubble } from 'components/Tokens/TokenTable/TokenRow'
 import { curveCardinal, scaleLinear } from 'd3'
-import { SparklineMap, TopToken } from 'graphql/data/TopTokens'
-import { PricePoint } from 'graphql/data/util'
-import { memo } from 'react'
+import dayjs from 'dayjs'
+import { PricePoint, TimePeriod } from 'graphql/data/util'
+import { fetchTokenPriceData } from 'graphql/tokens/NewTokenPrice'
+import { TokenData } from 'graphql/tokens/TokenData'
+import { useAtomValue } from 'jotai/utils'
+import { memo, useEffect, useMemo, useState } from 'react'
 import styled, { useTheme } from 'styled-components/macro'
+import { PriceChartEntry } from 'types/chart'
+import { ONE_HOUR_SECONDS } from 'utils/intervals'
 
 import { getPriceBounds } from '../Tokens/TokenDetails/PriceChart'
 import LineChart from './LineChart'
@@ -18,15 +24,59 @@ const LoadingContainer = styled.div`
 interface SparklineChartProps {
   width: number
   height: number
-  tokenData: TopToken
+  tokenData: TokenData
   pricePercentChange: number | undefined | null
-  sparklineMap: SparklineMap
 }
 
-function _SparklineChart({ width, height, tokenData, pricePercentChange, sparklineMap }: SparklineChartProps) {
+function _SparklineChart({ width, height, tokenData, pricePercentChange }: SparklineChartProps) {
   const theme = useTheme()
+  const timePeriod = useAtomValue(filterTimeAtom)
   // for sparkline
-  const pricePoints = tokenData?.address ? sparklineMap[tokenData.address] : null
+
+  const utcCurrentTime = dayjs()
+  const startTimestamp = useMemo(() => {
+    switch (timePeriod) {
+      case TimePeriod.DAY:
+        return utcCurrentTime.subtract(1, 'day').startOf('minute').unix()
+      case TimePeriod.WEEK:
+        return utcCurrentTime.subtract(1, 'week').startOf('hour').unix()
+      case TimePeriod.MONTH:
+        return utcCurrentTime.subtract(1, 'month').startOf('hour').unix()
+      case TimePeriod.YEAR:
+        return utcCurrentTime.subtract(1, 'year').startOf('day').unix()
+    }
+  }, [timePeriod, utcCurrentTime])
+
+  const qtyDataPerTime = useMemo(() => {
+    switch (timePeriod) {
+      case TimePeriod.DAY:
+        return 24
+      case TimePeriod.WEEK:
+        return 168
+      case TimePeriod.MONTH:
+        return 730
+      case TimePeriod.YEAR:
+        return 8760
+    }
+  }, [timePeriod])
+
+  const [data, setData] = useState<PriceChartEntry[]>([])
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const { data } = await fetchTokenPriceData(tokenData.address, ONE_HOUR_SECONDS, startTimestamp, qtyDataPerTime)
+      setData(data)
+    }
+
+    fetchData()
+  }, [startTimestamp, tokenData.address, qtyDataPerTime])
+
+  const pricePoint = [] as PricePoint[]
+  data.map((price) => {
+    pricePoint.push({ timestamp: price.time, value: price.close })
+  })
+
+  const pricePoints = tokenData?.address ? pricePoint : null
 
   // Don't display if there's one or less pricepoints
   if (!pricePoints || pricePoints.length <= 1) {

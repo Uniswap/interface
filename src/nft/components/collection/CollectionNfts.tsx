@@ -1,7 +1,4 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { TraceEvent } from '@uniswap/analytics'
-import { BrowserEvent, InterfaceElementName, NFTEventName } from '@uniswap/analytics-events'
-import { useWeb3React } from '@web3-react/core'
 import clsx from 'clsx'
 import { OpacityHoverState } from 'components/Common'
 import { parseEther } from 'ethers/lib/utils'
@@ -220,7 +217,6 @@ export const getSortDropdownOptions = (setSortBy: (sortBy: SortBy) => void, hasR
 }
 
 export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerified }: CollectionNftsProps) => {
-  const { chainId } = useWeb3React()
   const traits = useCollectionFilters((state) => state.traits)
   const minPrice = useCollectionFilters((state) => state.minPrice)
   const maxPrice = useCollectionFilters((state) => state.maxPrice)
@@ -492,23 +488,15 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
       >
         <ActionsContainer>
           <ActionsSubContainer>
-            <TraceEvent
-              events={[BrowserEvent.onClick]}
-              element={InterfaceElementName.NFT_FILTER_BUTTON}
-              name={NFTEventName.NFT_FILTER_OPENED}
-              shouldLogImpression={!isFiltersExpanded}
-              properties={{ collection_address: contractAddress, chain_id: chainId }}
-            >
-              <FilterButton
-                isMobile={isMobile}
-                isFiltersExpanded={isFiltersExpanded}
-                collectionCount={collectionAssets?.[0]?.totalCount ?? 0}
-                onClick={() => {
-                  if (bagExpanded && !screenSize['xl']) toggleBag()
-                  setFiltersExpanded(!isFiltersExpanded)
-                }}
-              />
-            </TraceEvent>
+            <FilterButton
+              isMobile={isMobile}
+              isFiltersExpanded={isFiltersExpanded}
+              collectionCount={collectionAssets?.[0]?.totalCount ?? 0}
+              onClick={() => {
+                if (bagExpanded && !screenSize['xl']) toggleBag()
+                setFiltersExpanded(!isFiltersExpanded)
+              }}
+            />
             <SortDropdownContainer isFiltersExpanded={isFiltersExpanded}>
               <SortDropdown dropDownOptions={sortDropDownOptions} />
             </SortDropdownContainer>

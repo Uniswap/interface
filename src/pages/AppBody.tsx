@@ -1,25 +1,29 @@
+import '../theme/backgroundStars.css'
+
 import React, { PropsWithChildren } from 'react'
 import styled from 'styled-components/macro'
-import { Z_INDEX } from 'theme/zIndex'
-
 interface BodyWrapperProps {
   $margin?: string
   $maxWidth?: string
+  $background?: string
 }
 
 export const BodyWrapper = styled.main<BodyWrapperProps>`
   position: relative;
-  margin-top: ${({ $margin }) => $margin ?? '0px'};
-  max-width: ${({ $maxWidth }) => $maxWidth ?? '420px'};
-  width: 100%;
-  background: ${({ theme }) => theme.backgroundSurface};
-  border-radius: 16px;
-  border: 1px solid ${({ theme }) => theme.backgroundOutline};
-  margin-top: 1rem;
+  margin-top: ${({ $margin }) => $margin || '0px'};
+  max-width: ${({ $maxWidth }) => $maxWidth || '420px'};
+  background: ${({ $background }) => $background || 'transparent'};
+  border-radius: 30px;
   margin-left: auto;
   margin-right: auto;
-  z-index: ${Z_INDEX.deprecated_content};
   font-feature-settings: 'ss01' on, 'ss02' on, 'cv01' on, 'cv03' on;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 100vh;
+  padding: ${({ theme }) => theme.navHeight}px 0px 5rem 0px;
+  align-items: center;
+  flex: 1;
 `
 
 /**

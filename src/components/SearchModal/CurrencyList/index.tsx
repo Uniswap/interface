@@ -1,8 +1,8 @@
-import { TraceEvent } from '@uniswap/analytics'
-import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
-import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Token } from '@pollum-io/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import Loader from 'components/Icons/LoadingSpinner'
+import LoadingGifLight from 'assets/images/lightLoading.gif'
+import LoadingGif from 'assets/images/loading.gif'
+import { LoaderGif } from 'components/Icons/LoadingSpinner'
 import TokenSafetyIcon from 'components/TokenSafety/TokenSafetyIcon'
 import { checkWarning } from 'constants/tokenSafety'
 import { CSSProperties, MutableRefObject, useCallback, useMemo } from 'react'
@@ -10,8 +10,8 @@ import { Check } from 'react-feather'
 import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
 import styled from 'styled-components/macro'
+import { useIsDarkMode } from 'theme/components/ThemeToggle'
 
-import { useIsUserAddedToken } from '../../../hooks/Tokens'
 import { useCurrencyBalance } from '../../../state/connection/hooks'
 import { WrappedTokenInfo } from '../../../state/lists/wrappedTokenInfo'
 import { ThemedText } from '../../../theme'
@@ -114,7 +114,6 @@ export function CurrencyRow({
   otherSelected,
   style,
   showCurrencyAmount,
-  eventProperties,
 }: {
   currency: Currency
   onSelect: (hasWarning: boolean) => void
@@ -126,67 +125,60 @@ export function CurrencyRow({
 }) {
   const { account } = useWeb3React()
   const key = currencyKey(currency)
-  const customAdded = useIsUserAddedToken(currency)
   const balance = useCurrencyBalance(account ?? undefined, currency)
   const warning = currency.isNative ? null : checkWarning(currency.address)
   const isBlockedToken = !!warning && !warning.canProceed
   const blockedTokenOpacity = '0.6'
+  const isDarkMode = useIsDarkMode()
 
   // only show add or remove buttons if not on selected list
   return (
-    <TraceEvent
-      events={[BrowserEvent.onClick, BrowserEvent.onKeyPress]}
-      name={InterfaceEventName.TOKEN_SELECTED}
-      properties={{ is_imported_by_user: customAdded, ...eventProperties }}
-      element={InterfaceElementName.TOKEN_SELECTOR_ROW}
+    <MenuItem
+      tabIndex={0}
+      style={style}
+      className={`token-item-${key}`}
+      onKeyPress={(e) => (!isSelected && e.key === 'Enter' ? onSelect(!!warning) : null)}
+      onClick={() => (isSelected ? null : onSelect(!!warning))}
+      disabled={isSelected}
+      selected={otherSelected}
+      dim={isBlockedToken}
     >
-      <MenuItem
-        tabIndex={0}
-        style={style}
-        className={`token-item-${key}`}
-        onKeyPress={(e) => (!isSelected && e.key === 'Enter' ? onSelect(!!warning) : null)}
-        onClick={() => (isSelected ? null : onSelect(!!warning))}
-        disabled={isSelected}
-        selected={otherSelected}
-        dim={isBlockedToken}
-      >
-        <Column>
-          <CurrencyLogo
-            currency={currency}
-            size="36px"
-            style={{ opacity: isBlockedToken ? blockedTokenOpacity : '1' }}
-          />
-        </Column>
-        <AutoColumn style={{ opacity: isBlockedToken ? blockedTokenOpacity : '1' }}>
-          <Row>
-            <CurrencyName title={currency.name}>{currency.name}</CurrencyName>
-            <WarningContainer>
-              <TokenSafetyIcon warning={warning} />
-            </WarningContainer>
-          </Row>
-          <ThemedText.DeprecatedDarkGray ml="0px" fontSize="12px" fontWeight={300}>
-            {currency.symbol}
-          </ThemedText.DeprecatedDarkGray>
-        </AutoColumn>
-        <Column>
+      <Column>
+        <CurrencyLogo currency={currency} size="36px" style={{ opacity: isBlockedToken ? blockedTokenOpacity : '1' }} />
+      </Column>
+      <AutoColumn style={{ opacity: isBlockedToken ? blockedTokenOpacity : '1' }}>
+        <Row>
+          <CurrencyName title={currency.name}>{currency.name}</CurrencyName>
+          <WarningContainer>
+            <TokenSafetyIcon warning={warning} />
+          </WarningContainer>
+        </Row>
+        <ThemedText.DeprecatedDarkGray ml="0px" fontSize="12px" fontWeight={300}>
+          {currency.symbol}
+        </ThemedText.DeprecatedDarkGray>
+      </AutoColumn>
+      <Column>
+        <RowFixed style={{ justifySelf: 'flex-end' }}>
+          <TokenTags currency={currency} />
+        </RowFixed>
+      </Column>
+      {showCurrencyAmount ? (
+        <RowFixed style={{ justifySelf: 'flex-end' }}>
+          {balance ? (
+            <Balance balance={balance} />
+          ) : account ? (
+            <LoaderGif gif={isDarkMode ? LoadingGif : LoadingGifLight} />
+          ) : null}
+          {isSelected && <CheckIcon />}
+        </RowFixed>
+      ) : (
+        isSelected && (
           <RowFixed style={{ justifySelf: 'flex-end' }}>
-            <TokenTags currency={currency} />
+            <CheckIcon />
           </RowFixed>
-        </Column>
-        {showCurrencyAmount ? (
-          <RowFixed style={{ justifySelf: 'flex-end' }}>
-            {balance ? <Balance balance={balance} /> : account ? <Loader /> : null}
-            {isSelected && <CheckIcon />}
-          </RowFixed>
-        ) : (
-          isSelected && (
-            <RowFixed style={{ justifySelf: 'flex-end' }}>
-              <CheckIcon />
-            </RowFixed>
-          )
-        )}
-      </MenuItem>
-    </TraceEvent>
+        )
+      )}
+    </MenuItem>
   )
 }
 

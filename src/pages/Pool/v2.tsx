@@ -1,7 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { Trace } from '@uniswap/analytics'
-import { InterfacePageName } from '@uniswap/analytics-events'
-import { Pair } from '@uniswap/v2-sdk'
+import { Pair } from '@pollum-io/v1-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { UNSUPPORTED_V2POOL_CHAIN_IDS } from 'constants/chains'
 import JSBI from 'jsbi'
@@ -14,7 +12,7 @@ import styled, { useTheme } from 'styled-components/macro'
 import { ButtonOutlined, ButtonPrimary, ButtonSecondary } from '../../components/Button'
 import Card from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
-import { CardBGImage, CardNoise, CardSection, DataCard } from '../../components/earn/styled'
+import { DataCard } from '../../components/earn/styled'
 import FullPositionCard from '../../components/PositionCard'
 import { RowBetween, RowFixed } from '../../components/Row'
 import { Dots } from '../../components/swap/styleds'
@@ -35,6 +33,7 @@ const PageWrapper = styled(AutoColumn)`
   `};
 `
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const VoteCard = styled(DataCard)`
   background: radial-gradient(76.02% 75.41% at 1.84% 0%, #27ae60 0%, #000000 100%);
   overflow: hidden;
@@ -61,7 +60,7 @@ const ButtonRow = styled(RowFixed)`
 const ResponsiveButtonPrimary = styled(ButtonPrimary)`
   height: 40px;
   width: fit-content;
-  border-radius: 12px;
+  border-radius: 30px;
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
     width: 48%;
   `};
@@ -142,148 +141,113 @@ export default function Pool() {
   })
 
   return (
-    <Trace page={InterfacePageName.POOL_PAGE} shouldLogImpression>
-      <>
-        <PageWrapper>
-          <VoteCard>
-            <CardBGImage />
-            <CardNoise />
-            <CardSection>
-              <AutoColumn gap="md">
-                <RowBetween>
-                  <ThemedText.DeprecatedWhite fontWeight={600}>
-                    <Trans>Liquidity provider rewards</Trans>
-                  </ThemedText.DeprecatedWhite>
-                </RowBetween>
-                <RowBetween>
-                  <ThemedText.DeprecatedWhite fontSize={14}>
-                    <Trans>
-                      Liquidity providers earn a 0.3% fee on all trades proportional to their share of the pool. Fees
-                      are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity.
-                    </Trans>
-                  </ThemedText.DeprecatedWhite>
-                </RowBetween>
-                <ExternalLink
-                  style={{ color: theme.white, textDecoration: 'underline' }}
-                  target="_blank"
-                  href="https://docs.uniswap.org/protocol/V2/concepts/core-concepts/pools"
-                >
-                  <ThemedText.DeprecatedWhite fontSize={14}>
-                    <Trans>Read more about providing liquidity</Trans>
-                  </ThemedText.DeprecatedWhite>
-                </ExternalLink>
-              </AutoColumn>
-            </CardSection>
-            <CardBGImage />
-            <CardNoise />
-          </VoteCard>
+    <>
+      <PageWrapper>
+        {unsupportedV2Network ? (
+          <AutoColumn gap="lg" justify="center">
+            <AutoColumn gap="md" style={{ width: '100%' }}>
+              <Layer2Prompt>
+                <ThemedText.DeprecatedBody color={theme.textTertiary} textAlign="center">
+                  <Trans>Pegasys V1 is not available on this network.</Trans>
+                </ThemedText.DeprecatedBody>
+              </Layer2Prompt>
+            </AutoColumn>
+          </AutoColumn>
+        ) : (
+          <AutoColumn gap="lg" justify="center" style={{ paddingTop: '50px' }}>
+            <AutoColumn gap="md" style={{ width: '100%' }}>
+              <TitleRow style={{ marginTop: '1rem' }} padding="0">
+                <HideSmall>
+                  <ThemedText.DeprecatedMediumHeader style={{ marginTop: '0.5rem', justifySelf: 'flex-start' }}>
+                    <Trans>Your V2 liquidity</Trans>
+                  </ThemedText.DeprecatedMediumHeader>
+                </HideSmall>
+                <ButtonRow>
+                  <ResponsiveButtonSecondary as={Link} padding="6px 8px" to="/add/v2/ETH">
+                    <Trans>Create a pair</Trans>
+                  </ResponsiveButtonSecondary>
+                  <ResponsiveButtonPrimary id="find-pool-button" as={Link} to="/pools/v2/find" padding="6px 8px">
+                    <Text fontWeight={500} fontSize={16}>
+                      <Trans>Import Pool</Trans>
+                    </Text>
+                  </ResponsiveButtonPrimary>
+                  <ResponsiveButtonPrimary id="join-pool-button" as={Link} to="/add/v2/ETH" padding="6px 8px">
+                    <Text fontWeight={500} fontSize={16}>
+                      <Trans>Add V2 Liquidity</Trans>
+                    </Text>
+                  </ResponsiveButtonPrimary>
+                </ButtonRow>
+              </TitleRow>
 
-          {unsupportedV2Network ? (
-            <AutoColumn gap="lg" justify="center">
-              <AutoColumn gap="md" style={{ width: '100%' }}>
-                <Layer2Prompt>
+              {!account ? (
+                <Card padding="40px">
                   <ThemedText.DeprecatedBody color={theme.textTertiary} textAlign="center">
-                    <Trans>Uniswap V2 is not available on this network.</Trans>
+                    <Trans>Connect to a wallet to view your liquidity.</Trans>
                   </ThemedText.DeprecatedBody>
-                </Layer2Prompt>
-              </AutoColumn>
+                </Card>
+              ) : v2IsLoading ? (
+                <EmptyProposals>
+                  <ThemedText.DeprecatedBody color={theme.textTertiary} textAlign="center">
+                    <Dots>
+                      <Trans>Loading</Trans>
+                    </Dots>
+                  </ThemedText.DeprecatedBody>
+                </EmptyProposals>
+              ) : allV2PairsWithLiquidity?.length > 0 || stakingPairs?.length > 0 ? (
+                <>
+                  <ButtonSecondary>
+                    <RowBetween>
+                      <Trans>
+                        <ExternalLink href={'https://v2.info.uniswap.org/account/' + account}>
+                          Account analytics and accrued fees
+                        </ExternalLink>
+                        <span> ↗ </span>
+                      </Trans>
+                    </RowBetween>
+                  </ButtonSecondary>
+                  {v2PairsWithoutStakedAmount.map((v2Pair) => (
+                    <FullPositionCard key={v2Pair.liquidityToken.address} pair={v2Pair} />
+                  ))}
+                  {stakingPairs.map(
+                    (stakingPair, i) =>
+                      stakingPair[1] && ( // skip pairs that arent loaded
+                        <FullPositionCard
+                          key={stakingInfosWithBalance[i].stakingRewardAddress}
+                          pair={stakingPair[1]}
+                          stakedBalance={stakingInfosWithBalance[i].stakedAmount}
+                        />
+                      )
+                  )}
+                  <RowFixed justify="center" style={{ width: '100%' }}>
+                    <ButtonOutlined
+                      as={Link}
+                      to="/migrate/v2"
+                      id="import-pool-link"
+                      style={{
+                        padding: '8px 16px',
+                        margin: '0 4px',
+                        borderRadius: '12px',
+                        width: 'fit-content',
+                        fontSize: '14px',
+                      }}
+                    >
+                      <ChevronsRight size={16} style={{ marginRight: '8px' }} />
+                      <Trans>Migrate Liquidity to V3</Trans>
+                    </ButtonOutlined>
+                  </RowFixed>
+                </>
+              ) : (
+                <EmptyProposals>
+                  <ThemedText.DeprecatedBody color={theme.textTertiary} textAlign="center">
+                    <Trans>No liquidity found.</Trans>
+                  </ThemedText.DeprecatedBody>
+                </EmptyProposals>
+              )}
             </AutoColumn>
-          ) : (
-            <AutoColumn gap="lg" justify="center">
-              <AutoColumn gap="md" style={{ width: '100%' }}>
-                <TitleRow style={{ marginTop: '1rem' }} padding="0">
-                  <HideSmall>
-                    <ThemedText.DeprecatedMediumHeader style={{ marginTop: '0.5rem', justifySelf: 'flex-start' }}>
-                      <Trans>Your V2 liquidity</Trans>
-                    </ThemedText.DeprecatedMediumHeader>
-                  </HideSmall>
-                  <ButtonRow>
-                    <ResponsiveButtonSecondary as={Link} padding="6px 8px" to="/add/v2/ETH">
-                      <Trans>Create a pair</Trans>
-                    </ResponsiveButtonSecondary>
-                    <ResponsiveButtonPrimary id="find-pool-button" as={Link} to="/pools/v2/find" padding="6px 8px">
-                      <Text fontWeight={500} fontSize={16}>
-                        <Trans>Import Pool</Trans>
-                      </Text>
-                    </ResponsiveButtonPrimary>
-                    <ResponsiveButtonPrimary id="join-pool-button" as={Link} to="/add/v2/ETH" padding="6px 8px">
-                      <Text fontWeight={500} fontSize={16}>
-                        <Trans>Add V2 Liquidity</Trans>
-                      </Text>
-                    </ResponsiveButtonPrimary>
-                  </ButtonRow>
-                </TitleRow>
-
-                {!account ? (
-                  <Card padding="40px">
-                    <ThemedText.DeprecatedBody color={theme.textTertiary} textAlign="center">
-                      <Trans>Connect to a wallet to view your liquidity.</Trans>
-                    </ThemedText.DeprecatedBody>
-                  </Card>
-                ) : v2IsLoading ? (
-                  <EmptyProposals>
-                    <ThemedText.DeprecatedBody color={theme.textTertiary} textAlign="center">
-                      <Dots>
-                        <Trans>Loading</Trans>
-                      </Dots>
-                    </ThemedText.DeprecatedBody>
-                  </EmptyProposals>
-                ) : allV2PairsWithLiquidity?.length > 0 || stakingPairs?.length > 0 ? (
-                  <>
-                    <ButtonSecondary>
-                      <RowBetween>
-                        <Trans>
-                          <ExternalLink href={'https://v2.info.uniswap.org/account/' + account}>
-                            Account analytics and accrued fees
-                          </ExternalLink>
-                          <span> ↗ </span>
-                        </Trans>
-                      </RowBetween>
-                    </ButtonSecondary>
-                    {v2PairsWithoutStakedAmount.map((v2Pair) => (
-                      <FullPositionCard key={v2Pair.liquidityToken.address} pair={v2Pair} />
-                    ))}
-                    {stakingPairs.map(
-                      (stakingPair, i) =>
-                        stakingPair[1] && ( // skip pairs that arent loaded
-                          <FullPositionCard
-                            key={stakingInfosWithBalance[i].stakingRewardAddress}
-                            pair={stakingPair[1]}
-                            stakedBalance={stakingInfosWithBalance[i].stakedAmount}
-                          />
-                        )
-                    )}
-                    <RowFixed justify="center" style={{ width: '100%' }}>
-                      <ButtonOutlined
-                        as={Link}
-                        to="/migrate/v2"
-                        id="import-pool-link"
-                        style={{
-                          padding: '8px 16px',
-                          margin: '0 4px',
-                          borderRadius: '12px',
-                          width: 'fit-content',
-                          fontSize: '14px',
-                        }}
-                      >
-                        <ChevronsRight size={16} style={{ marginRight: '8px' }} />
-                        <Trans>Migrate Liquidity to V3</Trans>
-                      </ButtonOutlined>
-                    </RowFixed>
-                  </>
-                ) : (
-                  <EmptyProposals>
-                    <ThemedText.DeprecatedBody color={theme.textTertiary} textAlign="center">
-                      <Trans>No liquidity found.</Trans>
-                    </ThemedText.DeprecatedBody>
-                  </EmptyProposals>
-                )}
-              </AutoColumn>
-            </AutoColumn>
-          )}
-        </PageWrapper>
-        <SwitchLocaleLink />
-      </>
-    </Trace>
+          </AutoColumn>
+        )}
+      </PageWrapper>
+      <SwitchLocaleLink />
+    </>
   )
 }

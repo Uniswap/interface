@@ -1,9 +1,8 @@
 import { Trans } from '@lingui/macro'
-import { CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
-import { Pair } from '@uniswap/v2-sdk'
+import { CurrencyAmount, Percent, Token } from '@pollum-io/sdk-core'
+import { Pair } from '@pollum-io/v1-sdk'
 import { useWeb3React } from '@web3-react/core'
 import JSBI from 'jsbi'
-import { transparentize } from 'polished'
 import { useState } from 'react'
 import { ChevronDown, ChevronUp } from 'react-feather'
 import { Link } from 'react-router-dom'
@@ -11,7 +10,6 @@ import { Text } from 'rebass'
 import styled from 'styled-components/macro'
 
 import { BIG_INT_ZERO } from '../../constants/misc'
-import { useColor } from '../../hooks/useColor'
 import { useTotalSupply } from '../../hooks/useTotalSupply'
 import { useTokenBalance } from '../../state/connection/hooks'
 import { ExternalLink, ThemedText } from '../../theme'
@@ -30,10 +28,10 @@ export const FixedHeightRow = styled(RowBetween)`
   height: 24px;
 `
 
-const StyledPositionCard = styled(LightCard)<{ bgColor: any }>`
+const StyledPositionCard = styled(LightCard)`
   border: none;
-  background: ${({ theme, bgColor }) =>
-    `radial-gradient(91.85% 100% at 1.84% 0%, ${transparentize(0.8, bgColor)} 0%, ${theme.deprecated_bg3} 100%) `};
+  background: ${({ theme }) => theme.backgroundScrolledSurface};
+  box-shadow: ${({ theme }) => theme.deepShadow};
   position: relative;
   overflow: hidden;
 `
@@ -190,15 +188,13 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
         ]
       : [undefined, undefined]
 
-  const backgroundColor = useColor(pair?.token0)
-
   return (
-    <StyledPositionCard border={border} bgColor={backgroundColor}>
+    <StyledPositionCard border={border}>
       <CardNoise />
       <AutoColumn gap="md">
         <FixedHeightRow>
           <AutoRow gap="8px" style={{ marginLeft: '8px' }}>
-            <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={20} />
+            <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={24} />
             <Text fontWeight={500} fontSize={20}>
               {!currency0 || !currency1 ? (
                 <Dots>
@@ -300,7 +296,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
             <ButtonSecondary padding="8px" $borderRadius="8px">
               <ExternalLink
                 style={{ width: '100%', textAlign: 'center' }}
-                href={`https://v2.info.uniswap.org/account/${account}`}
+                href={`https://v1.info.pegasys.fi/account/${account}`}
               >
                 <Trans>
                   View accrued fees and analytics<span style={{ fontSize: '11px' }}>↗</span>
@@ -309,18 +305,11 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
             </ButtonSecondary>
             {userDefaultPoolBalance && JSBI.greaterThan(userDefaultPoolBalance.quotient, BIG_INT_ZERO) && (
               <RowBetween marginTop="10px">
-                <ButtonPrimary
-                  padding="8px"
-                  $borderRadius="8px"
-                  as={Link}
-                  to={`/migrate/v2/${pair.liquidityToken.address}`}
-                  width="32%"
-                >
+                <ButtonPrimary padding="8px" as={Link} to={`/migrate/v2/${pair.liquidityToken.address}`} width="32%">
                   <Trans>Migrate</Trans>
                 </ButtonPrimary>
                 <ButtonPrimary
                   padding="8px"
-                  $borderRadius="8px"
                   as={Link}
                   to={`/add/v2/${currencyId(currency0)}/${currencyId(currency1)}`}
                   width="32%"
@@ -329,7 +318,6 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
                 </ButtonPrimary>
                 <ButtonPrimary
                   padding="8px"
-                  $borderRadius="8px"
                   as={Link}
                   width="32%"
                   to={`/remove/v2/${currencyId(currency0)}/${currencyId(currency1)}`}
@@ -341,7 +329,6 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
             {stakedBalance && JSBI.greaterThan(stakedBalance.quotient, BIG_INT_ZERO) && (
               <ButtonPrimary
                 padding="8px"
-                $borderRadius="8px"
                 as={Link}
                 to={`/uni/${currencyId(currency0)}/${currencyId(currency1)}`}
                 width="100%"

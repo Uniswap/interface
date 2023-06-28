@@ -1,30 +1,19 @@
 import { t, Trans } from '@lingui/macro'
-import { InterfaceElementName } from '@uniswap/analytics-events'
-import { openDownloadApp } from 'components/AccountDrawer/DownloadButton'
 import FeatureFlagModal from 'components/FeatureFlagModal/FeatureFlagModal'
+import { PaliMobileModal } from 'components/PaliMobile'
 import { PrivacyPolicyModal } from 'components/PrivacyPolicy'
-import { useMgtmEnabled } from 'featureFlags/flags/mgtm'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
-import {
-  BarChartIcon,
-  DiscordIconMenu,
-  EllipsisIcon,
-  GithubIconMenu,
-  GovernanceIcon,
-  PoolIcon,
-  TwitterIconMenu,
-} from 'nft/components/icons'
+import { BarChartIcon, DiscordIconMenu, EllipsisIcon, PoolIcon, TwitterIconMenu } from 'nft/components/icons'
 import { body, bodySmall } from 'nft/css/common.css'
-import { themeVars } from 'nft/css/sprinkles.css'
 import { ReactNode, useReducer, useRef } from 'react'
 import { NavLink, NavLinkProps } from 'react-router-dom'
 import { useToggleModal } from 'state/application/hooks'
 import styled, { useTheme } from 'styled-components/macro'
 import { isDevelopmentEnv, isStagingEnv } from 'utils/env'
 
-import { ReactComponent as AppleLogo } from '../../assets/svg/apple_logo.svg'
+import { ReactComponent as PaliLogo } from '../../assets/svg/pali.svg'
 import { ApplicationModal } from '../../state/application/reducer'
 import * as styles from './MenuDropdown.css'
 import { NavDropdown } from './NavDropdown'
@@ -35,20 +24,33 @@ const PrimaryMenuRow = ({
   href,
   close,
   children,
+  disabled,
 }: {
   to?: NavLinkProps['to']
   href?: string
   close?: () => void
   children: ReactNode
+  disabled?: boolean
 }) => {
   return (
     <>
-      {to ? (
-        <NavLink to={to} className={styles.MenuRow}>
+      {disabled ? (
+        <Row className={styles.MenuRow} style={{ cursor: 'pointer' }}>
+          {children}
+        </Row>
+      ) : to ? (
+        <NavLink to={to} className={styles.MenuRow} style={{ cursor: 'pointer' }}>
           <Row onClick={close}>{children}</Row>
         </NavLink>
       ) : (
-        <Row as="a" href={href} target="_blank" rel="noopener noreferrer" className={styles.MenuRow}>
+        <Row
+          as="a"
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={styles.MenuRow}
+          style={{ cursor: 'pointer' }}
+        >
           {children}
         </Row>
       )}
@@ -76,6 +78,7 @@ const SecondaryLinkedText = ({
   onClick?: () => void
   children: ReactNode
 }) => {
+  const theme = useTheme()
   return (
     <Box
       as={href ? 'a' : 'div'}
@@ -83,6 +86,24 @@ const SecondaryLinkedText = ({
       target={href ? '_blank' : undefined}
       rel={href ? 'noopener noreferrer' : undefined}
       className={`${styles.SecondaryText} ${bodySmall}`}
+      style={{ color: theme.accentActive }}
+      onClick={onClick}
+      cursor="pointer"
+    >
+      {children}
+    </Box>
+  )
+}
+
+const PaliButtonText = ({ href, onClick, children }: { href?: string; onClick?: () => void; children: ReactNode }) => {
+  return (
+    <Box
+      as="a"
+      href={href ?? undefined}
+      target={href ? '_blank' : undefined}
+      rel={href ? 'noopener noreferrer' : undefined}
+      className={styles.MenuRow}
+      style={{ cursor: 'pointer' }}
       onClick={onClick}
       cursor="pointer"
     >
@@ -99,7 +120,7 @@ const IconRow = ({ children }: { children: ReactNode }) => {
   return <Row className={styles.IconRow}>{children}</Row>
 }
 
-const Icon = ({ href, children }: { href?: string; children: ReactNode }) => {
+export const Icon = ({ href, children }: { href?: string; children: ReactNode }) => {
   return (
     <>
       <Box
@@ -127,20 +148,29 @@ export const MenuDropdown = () => {
   const [isOpen, toggleOpen] = useReducer((s) => !s, false)
   const togglePrivacyPolicy = useToggleModal(ApplicationModal.PRIVACY_POLICY)
   const openFeatureFlagsModal = useToggleModal(ApplicationModal.FEATURE_FLAGS)
+  const togglePaliMobile = useToggleModal(ApplicationModal.PALI_MOBILE)
   const ref = useRef<HTMLDivElement>(null)
   useOnClickOutside(ref, isOpen ? toggleOpen : undefined)
-
-  const mgtmEnabled = useMgtmEnabled()
 
   return (
     <>
       <Box position="relative" ref={ref}>
         <NavIcon isActive={isOpen} onClick={toggleOpen} label={isOpen ? t`Show resources` : t`Hide resources`}>
-          <EllipsisIcon viewBox="0 0 20 20" width={24} height={24} />
+          <EllipsisIcon
+            viewBox="0 0 20 20"
+            width={24}
+            height={24}
+            color={theme.darkMode ? 'white' : theme.textSecondary}
+          />
         </NavIcon>
 
         {isOpen && (
-          <NavDropdown top={{ sm: 'unset', lg: '56' }} bottom={{ sm: '56', lg: 'unset' }} right="0">
+          <NavDropdown
+            top={{ sm: 'unset', lg: '56' }}
+            bottom={{ sm: '56', lg: 'unset' }}
+            right="0"
+            style={{ boxShadow: theme.deepShadow, background: theme.backgroundModule }}
+          >
             <Column gap="16">
               <Column paddingX="8" gap="4">
                 <Box display={{ sm: 'none', lg: 'flex', xxl: 'none' }}>
@@ -153,28 +183,18 @@ export const MenuDropdown = () => {
                     </PrimaryMenuRow.Text>
                   </PrimaryMenuRow>
                 </Box>
-                <Box
-                  display={mgtmEnabled ? 'flex' : 'none'}
-                  onClick={() => openDownloadApp(InterfaceElementName.UNISWAP_WALLET_MODAL_DOWNLOAD_BUTTON)}
-                >
-                  <PrimaryMenuRow close={toggleOpen}>
+                <PaliButtonText onClick={() => togglePaliMobile()}>
+                  <Box display="flex">
                     <Icon>
-                      <AppleLogo width="24px" height="24px" fill={theme.textPrimary} />
+                      <PaliLogo width="24px" height="24px" />
                     </Icon>
                     <PrimaryMenuRow.Text>
-                      <Trans>Download Uniswap Wallet</Trans>
+                      <Trans>Download Pali Mobile Wallet</Trans>
                     </PrimaryMenuRow.Text>
-                  </PrimaryMenuRow>
-                </Box>
-                <PrimaryMenuRow to="/vote" close={toggleOpen}>
-                  <Icon>
-                    <GovernanceIcon width={24} height={24} color={theme.textPrimary} />
-                  </Icon>
-                  <PrimaryMenuRow.Text>
-                    <Trans>Vote in governance</Trans>
-                  </PrimaryMenuRow.Text>
-                </PrimaryMenuRow>
-                <PrimaryMenuRow href="https://info.uniswap.org/#/">
+                  </Box>
+                </PaliButtonText>
+                {/* TODO: analytics link */}
+                <PrimaryMenuRow href="https://info.pegasys.fi/">
                   <Icon>
                     <BarChartIcon width={24} height={24} color={theme.textPrimary} />
                   </Icon>
@@ -191,13 +211,13 @@ export const MenuDropdown = () => {
                 alignItems={{ sm: 'center', md: 'flex-start' }}
                 paddingX="8"
               >
-                <SecondaryLinkedText href="https://help.uniswap.org/en/">
+                <SecondaryLinkedText href="https://discord.com/invite/UzjWbWWERz">
                   <Trans>Help center</Trans> ↗
                 </SecondaryLinkedText>
-                <SecondaryLinkedText href="https://docs.uniswap.org/">
+                <SecondaryLinkedText href="https://docs.pegasys.fi/">
                   <Trans>Documentation</Trans> ↗
                 </SecondaryLinkedText>
-                <SecondaryLinkedText href="https://uniswap.canny.io/feature-requests">
+                <SecondaryLinkedText href="https://discord.com/invite/UzjWbWWERz">
                   <Trans>Feedback</Trans> ↗
                 </SecondaryLinkedText>
                 <SecondaryLinkedText
@@ -215,29 +235,11 @@ export const MenuDropdown = () => {
                 )}
               </Box>
               <IconRow>
-                <Icon href="https://discord.com/invite/FCfyBSbCU5">
-                  <DiscordIconMenu
-                    className={styles.hover}
-                    width={24}
-                    height={24}
-                    color={themeVars.colors.textSecondary}
-                  />
+                <Icon href="https://discord.com/invite/UzjWbWWERz">
+                  <DiscordIconMenu className={styles.hover} width={24} height={24} color={theme.accentActive} />
                 </Icon>
-                <Icon href="https://twitter.com/Uniswap">
-                  <TwitterIconMenu
-                    className={styles.hover}
-                    width={24}
-                    height={24}
-                    color={themeVars.colors.textSecondary}
-                  />
-                </Icon>
-                <Icon href="https://github.com/Uniswap">
-                  <GithubIconMenu
-                    className={styles.hover}
-                    width={24}
-                    height={24}
-                    color={themeVars.colors.textSecondary}
-                  />
+                <Icon href="https://twitter.com/PegasysDEX">
+                  <TwitterIconMenu className={styles.hover} width={24} height={24} color={theme.accentActive} />
                 </Icon>
               </IconRow>
             </Column>
@@ -246,6 +248,7 @@ export const MenuDropdown = () => {
       </Box>
       <PrivacyPolicyModal />
       <FeatureFlagModal />
+      <PaliMobileModal />
     </>
   )
 }

@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { FeeAmount } from '@uniswap/v3-sdk'
+import { FeeAmount } from '@pollum-io/v3-sdk'
 import { ButtonGray } from 'components/Button'
 import { OutlineCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
@@ -31,13 +31,15 @@ const InputRow = styled.div`
 `
 
 const SmallButton = styled(ButtonGray)`
-  border-radius: 8px;
-  padding: 4px;
+  padding: 4px 4px 2px 4px;
+  box-shadow: none;
+  background: ${({ theme }) => theme.accentActionSoft};
 `
 
 const FocusedOutlineCard = styled(OutlineCard)<{ active?: boolean; pulsing?: boolean }>`
   border-color: ${({ active, theme }) => active && theme.accentAction};
   padding: 12px;
+  background: ${({ theme }) => theme.backgroundModule};
   animation: ${({ pulsing, theme }) => pulsing && pulse(theme.accentAction)} 0.8s linear;
 `
 
@@ -64,7 +66,7 @@ const InputTitle = styled(ThemedText.DeprecatedSmall)`
 `
 
 const ButtonLabel = styled(ThemedText.DeprecatedWhite)<{ disabled: boolean }>`
-  color: ${({ theme, disabled }) => (disabled ? theme.textSecondary : theme.textPrimary)} !important;
+  color: ${({ theme, disabled }) => (disabled ? theme.textSecondary : theme.accentActive)} !important;
 `
 
 interface StepCounterProps {

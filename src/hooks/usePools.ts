@@ -1,17 +1,17 @@
 import { Interface } from '@ethersproject/abi'
-import { BigintIsh, Currency, Token } from '@uniswap/sdk-core'
-import { abi as IUniswapV3PoolStateABI } from '@uniswap/v3-core/artifacts/contracts/interfaces/pool/IUniswapV3PoolState.sol/IUniswapV3PoolState.json'
-import { computePoolAddress } from '@uniswap/v3-sdk'
-import { FeeAmount, Pool } from '@uniswap/v3-sdk'
+import { BigintIsh, Currency, Token } from '@pollum-io/sdk-core'
+import { abi as IPegasysV3PoolStateABI } from '@pollum-io/v3-core/artifacts/contracts/interfaces/pool/IPegasysV3PoolState.sol/IPegasysV3PoolState.json'
+import { computePoolAddress } from '@pollum-io/v3-sdk'
+import { FeeAmount, Pool } from '@pollum-io/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 import JSBI from 'jsbi'
 import { useMultipleContractSingleData } from 'lib/hooks/multicall'
 import { useMemo } from 'react'
 
 import { V3_CORE_FACTORY_ADDRESSES } from '../constants/addresses'
-import { IUniswapV3PoolStateInterface } from '../types/v3/IUniswapV3PoolState'
+import { IPegasysV3PoolStateInterface } from '../types/v3/IPegasysV3PoolState'
 
-const POOL_STATE_INTERFACE = new Interface(IUniswapV3PoolStateABI) as IUniswapV3PoolStateInterface
+const POOL_STATE_INTERFACE = new Interface(IPegasysV3PoolStateABI) as IPegasysV3PoolStateInterface
 
 // Classes are expensive to instantiate, so this caches the recently instantiated pools.
 // This avoids re-instantiating pools as the other pools in the same request are loaded.

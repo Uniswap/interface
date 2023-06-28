@@ -1,5 +1,5 @@
 import type { TransactionResponse } from '@ethersproject/providers'
-import { Token } from '@uniswap/sdk-core'
+import { Token } from '@pollum-io/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { ALL_SUPPORTED_CHAIN_IDS, SupportedChainId } from 'constants/chains'
 import { useCallback, useMemo } from 'react'

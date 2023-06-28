@@ -1,8 +1,6 @@
 import { Trans } from '@lingui/macro'
-import { Trace } from '@uniswap/analytics'
-import { InterfaceModalName } from '@uniswap/analytics-events'
-import { Trade } from '@uniswap/router-sdk'
-import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
+import { Trade } from '@pollum-io/router-sdk'
+import { Currency, Percent, TradeType } from '@pollum-io/sdk-core'
 import { ReactNode, useCallback, useMemo, useState } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 import { tradeMeaningfullyDiffers } from 'utils/tradeMeaningFullyDiffer'
@@ -122,16 +120,14 @@ export default function ConfirmSwapModal({
   )
 
   return (
-    <Trace modal={InterfaceModalName.CONFIRM_SWAP}>
-      <TransactionConfirmationModal
-        isOpen={isOpen}
-        onDismiss={onModalDismiss}
-        attemptingTxn={attemptingTxn}
-        hash={txHash}
-        content={confirmationContent}
-        pendingText={pendingText}
-        currencyToAdd={trade?.outputAmount.currency}
-      />
-    </Trace>
+    <TransactionConfirmationModal
+      isOpen={isOpen}
+      onDismiss={onModalDismiss}
+      attemptingTxn={attemptingTxn}
+      hash={txHash}
+      content={confirmationContent}
+      pendingText={pendingText}
+      currencyToAdd={trade?.outputAmount.currency}
+    />
   )
 }

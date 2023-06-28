@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { readableColor } from 'polished'
 import { PropsWithChildren } from 'react'
 import styled, { DefaultTheme } from 'styled-components/macro'
@@ -45,7 +46,7 @@ function pickBackgroundColor(variant: BadgeVariant | undefined, theme: DefaultTh
 function pickBorder(variant: BadgeVariant | undefined, theme: DefaultTheme): string {
   switch (variant) {
     case BadgeVariant.WARNING_OUTLINE:
-      return `1px solid ${theme.accentWarning}`
+      return `1px solid ${theme.goldVibrant}`
     default:
       return 'unset'
   }
@@ -64,7 +65,7 @@ function pickFontColor(variant: BadgeVariant | undefined, theme: DefaultTheme): 
     case BadgeVariant.WARNING:
       return readableColor(theme.accentWarning)
     case BadgeVariant.WARNING_OUTLINE:
-      return theme.accentWarning
+      return theme.goldVibrant
     default:
       return readableColor(theme.backgroundInteractive)
   }
@@ -72,7 +73,7 @@ function pickFontColor(variant: BadgeVariant | undefined, theme: DefaultTheme): 
 
 const Badge = styled.div<PropsWithChildren<BadgeProps>>`
   align-items: center;
-  background: ${({ theme, variant }) => pickBackgroundColor(variant, theme)};
+  background: ${({ theme }) => theme.accentActiveSoft};
   border: ${({ theme, variant }) => pickBorder(variant, theme)};
   border-radius: 0.5rem;
   color: ${({ theme, variant }) => pickFontColor(variant, theme)};

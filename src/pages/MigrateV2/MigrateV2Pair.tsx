@@ -1,8 +1,8 @@
 import { Contract } from '@ethersproject/contracts'
 import type { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
-import { CurrencyAmount, Fraction, Percent, Price, Token } from '@uniswap/sdk-core'
-import { FeeAmount, Pool, Position, priceToClosestTick, TickMath } from '@uniswap/v3-sdk'
+import { CurrencyAmount, Fraction, Percent, Price, Token } from '@pollum-io/sdk-core'
+import { FeeAmount, Pool, Position, priceToClosestTick, TickMath } from '@pollum-io/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { sendEvent } from 'components/analytics'
 import Badge, { BadgeVariant } from 'components/Badge'
@@ -385,11 +385,12 @@ function V2PairMigration({
       <ThemedText.DeprecatedBody my={9} style={{ fontWeight: 400 }}>
         <Trans>
           This tool will safely migrate your {isNotUniswap ? 'SushiSwap' : 'V2'} liquidity to V3. The process is
-          completely trustless thanks to the{' '}
+          completely trustless thanks to the
         </Trans>
         {chainId && migrator && (
           <ExternalLink href={getExplorerLink(chainId, migrator.address, ExplorerDataType.ADDRESS)}>
             <ThemedText.DeprecatedBlue display="inline">
+              {' '}
               <Trans>Uniswap migration contract↗</Trans>
             </ThemedText.DeprecatedBlue>
           </ExternalLink>
@@ -397,7 +398,7 @@ function V2PairMigration({
         .
       </ThemedText.DeprecatedBody>
 
-      <LightCard>
+      <LightCard style={{ border: 'none' }}>
         <AutoColumn gap="lg">
           <RowBetween>
             <RowFixed style={{ marginLeft: '8px' }}>
@@ -408,7 +409,7 @@ function V2PairMigration({
                 </Trans>
               </ThemedText.DeprecatedMediumHeader>
             </RowFixed>
-            <Badge variant={BadgeVariant.WARNING}>{isNotUniswap ? 'Sushi' : 'V2'}</Badge>
+            <Badge variant={BadgeVariant.WARNING_OUTLINE}>{isNotUniswap ? 'Sushi' : 'V2'}</Badge>
           </RowBetween>
           <LiquidityInfo token0Amount={token0Value} token1Amount={token1Value} />
         </AutoColumn>
@@ -418,7 +419,7 @@ function V2PairMigration({
         <ArrowDown size={24} />
       </div>
 
-      <LightCard>
+      <LightCard style={{ border: 'none' }}>
         <AutoColumn gap="lg">
           <RowBetween>
             <RowFixed style={{ marginLeft: '8px' }}>
@@ -664,6 +665,7 @@ function V2PairMigration({
 
 export default function MigrateV2Pair() {
   const { address } = useParams<{ address: string }>()
+  const theme = useTheme()
   // reset mint state on component mount, and as a cleanup (on unmount)
   const dispatch = useAppDispatch()
   useEffect(() => {
@@ -722,8 +724,11 @@ export default function MigrateV2Pair() {
   }
 
   return (
-    <BodyWrapper style={{ padding: 24 }}>
-      <AutoColumn gap="16px">
+    <BodyWrapper $maxWidth="520px">
+      <AutoColumn
+        gap="16px"
+        style={{ background: theme.backgroundScrolledSurface, borderRadius: '16px', padding: '24px' }}
+      >
         <AutoRow style={{ alignItems: 'center', justifyContent: 'space-between' }} gap="8px">
           <BackArrow to="/migrate/v2" />
           <ThemedText.DeprecatedMediumHeader>

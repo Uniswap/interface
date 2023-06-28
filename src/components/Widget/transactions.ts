@@ -1,7 +1,5 @@
-import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
-import { InterfaceEventName, InterfaceSectionName, SwapEventName } from '@uniswap/analytics-events'
-import { Trade } from '@uniswap/router-sdk'
-import { Currency, Percent } from '@uniswap/sdk-core'
+import { Trade } from '@pollum-io/router-sdk'
+import { Currency, Percent } from '@pollum-io/sdk-core'
 import {
   OnTxSuccess,
   TradeType,
@@ -10,7 +8,7 @@ import {
   TransactionInfo,
   TransactionType,
   TransactionType as WidgetTransactionType,
-} from '@uniswap/widgets'
+} from '@pollum-io/widgets'
 import { useWeb3React } from '@web3-react/core'
 import {
   formatPercentInBasisPointsNumber,
@@ -38,6 +36,7 @@ interface AnalyticsEventProps {
   succeeded: boolean
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const formatAnalyticsEventProperties = ({
   trade,
   hash,
@@ -66,8 +65,6 @@ const formatAnalyticsEventProperties = ({
 
 /** Integrates the Widget's transactions, showing the widget's transactions in the app. */
 export function useSyncWidgetTransactions() {
-  const trace = useTrace({ section: InterfaceSectionName.WIDGET })
-
   const { chainId } = useWeb3React()
   const addTransaction = useTransactionAdder()
 
@@ -80,6 +77,7 @@ export function useSyncWidgetTransactions() {
       } else if (type === WidgetTransactionType.WRAP || type === WidgetTransactionType.UNWRAP) {
         const { type, amount: transactionAmount } = transaction.info
 
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const eventProperties = {
           // get this info from widget handlers
           token_in_address: getTokenAddress(transactionAmount.currency),
@@ -91,9 +89,7 @@ export function useSyncWidgetTransactions() {
             ? formatToDecimal(transactionAmount, transactionAmount?.currency.decimals)
             : undefined,
           type: type === WidgetTransactionType.WRAP ? TransactionType.WRAP : TransactionType.UNWRAP,
-          ...trace,
         }
-        sendAnalyticsEvent(InterfaceEventName.WRAP_TOKEN_TXN_SUBMITTED, eventProperties)
         const { amount } = transaction.info
         addTransaction(response, {
           type: AppTransactionType.WRAP,
@@ -104,6 +100,7 @@ export function useSyncWidgetTransactions() {
       } else if (type === WidgetTransactionType.SWAP) {
         const { slippageTolerance, trade, tradeType } = transaction.info
 
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const eventProperties = {
           ...formatSwapSignedAnalyticsEventProperties({
             trade,
@@ -111,9 +108,7 @@ export function useSyncWidgetTransactions() {
             fiatValues: { amountIn: undefined, amountOut: undefined },
             txHash: transaction.receipt?.transactionHash ?? '',
           }),
-          ...trace,
         }
-        sendAnalyticsEvent(SwapEventName.SWAP_SIGNED, eventProperties)
         const baseTxInfo = {
           type: AppTransactionType.SWAP,
           tradeType,
@@ -137,23 +132,13 @@ export function useSyncWidgetTransactions() {
         }
       }
     },
-    [addTransaction, chainId, trace]
+    [addTransaction, chainId]
   )
 
   const onTxSuccess: OnTxSuccess = useCallback((hash: string, tx) => {
     if (tx.info.type === TransactionType.SWAP) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { trade, slippageTolerance } = tx.info
-      sendAnalyticsEvent(
-        SwapEventName.SWAP_TRANSACTION_COMPLETED,
-        formatAnalyticsEventProperties({
-          trade,
-          hash,
-          gasUsed: tx.receipt?.gasUsed?.toString(),
-          blockNumber: tx.receipt?.blockNumber,
-          allowedSlippage: slippageTolerance,
-          succeeded: tx.receipt?.status === 1,
-        })
-      )
     }
   }, [])
 

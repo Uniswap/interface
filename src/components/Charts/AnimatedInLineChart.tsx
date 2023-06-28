@@ -4,9 +4,9 @@ import { easeSinOut } from 'd3'
 import ms from 'ms.macro'
 import React from 'react'
 import { useEffect, useRef, useState } from 'react'
-import { animated, useSpring } from 'react-spring'
-import { useTheme } from 'styled-components/macro'
+import { useSpring } from 'react-spring'
 
+import { AnimatedLineColors } from './AnimatedLineColor'
 import { LineChartProps } from './LineChart'
 
 type AnimatedInLineChartProps<T> = Omit<LineChartProps<T>, 'height' | 'width' | 'children'>
@@ -18,15 +18,7 @@ const config = {
 
 // code reference: https://airbnb.io/visx/lineradial
 
-function AnimatedInLineChart<T>({
-  data,
-  getX,
-  getY,
-  marginTop,
-  curve,
-  color,
-  strokeWidth,
-}: AnimatedInLineChartProps<T>) {
+function AnimatedInLineChart<T>({ data, getX, getY, marginTop, curve, strokeWidth }: AnimatedInLineChartProps<T>) {
   const lineRef = useRef<SVGPathElement>(null)
   const [lineLength, setLineLength] = useState(0)
   const [shouldAnimate, setShouldAnimate] = useState(false)
@@ -56,8 +48,6 @@ function AnimatedInLineChart<T>({
       }
     }
   })
-  const theme = useTheme()
-  const lineColor = color ?? theme.accentAction
 
   return (
     <Group top={marginTop}>
@@ -66,24 +56,15 @@ function AnimatedInLineChart<T>({
           const d = path(data) || ''
           return (
             <>
-              <animated.path
+              <AnimatedLineColors
                 d={d}
-                ref={lineRef}
                 strokeWidth={strokeWidth}
-                strokeOpacity={hasAnimatedIn ? 1 : 0}
-                fill="none"
-                stroke={lineColor}
+                hasAnimatedIn={hasAnimatedIn}
+                lineRef={lineRef}
+                shouldAnimate={shouldAnimate}
+                lineLength={lineLength}
+                spring={spring.frame}
               />
-              {shouldAnimate && lineLength !== 0 && (
-                <animated.path
-                  d={d}
-                  strokeWidth={strokeWidth}
-                  fill="none"
-                  stroke={lineColor}
-                  strokeDashoffset={spring.frame.to((v) => v * lineLength)}
-                  strokeDasharray={lineLength}
-                />
-              )}
             </>
           )
         }}

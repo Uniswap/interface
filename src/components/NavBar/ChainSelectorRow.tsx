@@ -1,10 +1,13 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
-import Loader from 'components/Icons/LoadingSpinner'
+import LoadingGifLight from 'assets/images/lightLoading.gif'
+import LoadingGif from 'assets/images/loading.gif'
+import { LoaderGif } from 'components/Icons/LoadingSpinner'
 import { getChainInfo } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
 import { CheckMarkIcon } from 'nft/components/icons'
 import styled, { useTheme } from 'styled-components/macro'
+import { useIsDarkMode } from 'theme/components/ThemeToggle'
 
 const LOGO_SIZE = 20
 
@@ -12,7 +15,7 @@ const Container = styled.button<{ disabled: boolean }>`
   align-items: center;
   background: none;
   border: none;
-  border-radius: 12px;
+  border-radius: 30px;
   color: ${({ theme }) => theme.textPrimary};
   cursor: ${({ disabled }) => (disabled ? 'auto' : 'pointer')};
   display: grid;
@@ -71,7 +74,7 @@ export default function ChainSelectorRow({ disabled, targetChain, onSelectChain,
   const { chainId } = useWeb3React()
   const active = chainId === targetChain
   const { label, logoUrl } = getChainInfo(targetChain)
-
+  const isDarkMode = useIsDarkMode()
   const theme = useTheme()
 
   return (
@@ -96,7 +99,9 @@ export default function ChainSelectorRow({ disabled, targetChain, onSelectChain,
       )}
       <Status>
         {active && <CheckMarkIcon width={LOGO_SIZE} height={LOGO_SIZE} color={theme.accentActive} />}
-        {isPending && <Loader width={LOGO_SIZE} height={LOGO_SIZE} />}
+        {isPending && (
+          <LoaderGif width={LOGO_SIZE} height={LOGO_SIZE} gif={isDarkMode ? LoadingGif : LoadingGifLight} />
+        )}
       </Status>
     </Container>
   )

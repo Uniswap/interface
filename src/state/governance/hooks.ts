@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { defaultAbiCoder, Interface } from '@ethersproject/abi'
 import { isAddress } from '@ethersproject/address'
 import { BigNumber } from '@ethersproject/bignumber'
@@ -6,9 +7,9 @@ import type { TransactionResponse } from '@ethersproject/providers'
 import { toUtf8String, Utf8ErrorFuncs, Utf8ErrorReason } from '@ethersproject/strings'
 // eslint-disable-next-line no-restricted-imports
 import { t } from '@lingui/macro'
+import { CurrencyAmount, Token } from '@pollum-io/sdk-core'
 import { abi as GOVERNANCE_ABI } from '@uniswap/governance/build/GovernorAlpha.json'
 import { abi as UNI_ABI } from '@uniswap/governance/build/Uni.json'
-import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import GOVERNOR_BRAVO_ABI from 'abis/governor-bravo.json'
 import {
@@ -16,7 +17,6 @@ import {
   GOVERNANCE_ALPHA_V1_ADDRESSES,
   GOVERNANCE_BRAVO_ADDRESSES,
 } from 'constants/addresses'
-import { SupportedChainId } from 'constants/chains'
 import { LATEST_GOVERNOR_INDEX } from 'constants/governance'
 import { POLYGON_PROPOSAL_TITLE } from 'constants/proposals/polygon_proposal_title'
 import { UNISWAP_GRANTS_PROPOSAL_DESCRIPTION } from 'constants/proposals/uniswap_grants_proposal_description'
@@ -240,11 +240,11 @@ export function useAllProposalData(): { data: ProposalData[]; loading: boolean }
   const proposalCount2 = useProposalCount(gov2)
 
   const gov0ProposalIndexes = useMemo(() => {
-    return chainId === SupportedChainId.MAINNET ? V0_PROPOSAL_IDS : countToIndices(proposalCount0)
-  }, [chainId, proposalCount0])
+    return countToIndices(proposalCount0) // chainId === SupportedChainId.MAINNET ? V0_PROPOSAL_IDS :
+  }, [proposalCount0])
   const gov1ProposalIndexes = useMemo(() => {
-    return chainId === SupportedChainId.MAINNET ? V1_PROPOSAL_IDS : countToIndices(proposalCount1)
-  }, [chainId, proposalCount1])
+    return countToIndices(proposalCount1) // chainId === SupportedChainId.MAINNET ? V1_PROPOSAL_IDS :
+  }, [proposalCount1])
   const gov2ProposalIndexes = useMemo(() => {
     return countToIndices(proposalCount2, 8)
   }, [proposalCount2])
@@ -342,15 +342,14 @@ export function useQuorum(governorIndex: number): CurrencyAmount<Token> | undefi
   const uni = useMemo(() => (chainId ? UNI[chainId] : undefined), [chainId])
 
   if (
+    // eslint-disable-next-line no-constant-condition
     !latestGovernanceContract ||
     !quorumVotes ||
-    chainId !== SupportedChainId.MAINNET ||
+    true || // chainId !== SupportedChainId.MAINNET ||
     !uni ||
     governorIndex !== LATEST_GOVERNOR_INDEX
   )
     return undefined
-
-  return CurrencyAmount.fromRawAmount(uni, quorumVotes)
 }
 
 // get the users delegatee if it exists

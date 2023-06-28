@@ -1,13 +1,13 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { formatEther, parseEther } from '@ethersproject/units'
 import { t, Trans } from '@lingui/macro'
-import { sendAnalyticsEvent, TraceEvent } from '@uniswap/analytics'
-import { BrowserEvent, InterfaceElementName, NFTEventName } from '@uniswap/analytics-events'
-import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Token, TradeType } from '@pollum-io/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import LoadingGifLight from 'assets/images/lightLoading.gif'
+import LoadingGif from 'assets/images/loading.gif'
 import { useToggleAccountDrawer } from 'components/AccountDrawer'
 import Column from 'components/Column'
-import Loader from 'components/Icons/LoadingSpinner'
+import { LoaderGif } from 'components/Icons/LoadingSpinner'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import Row from 'components/Row'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
@@ -37,9 +37,8 @@ import { AlertTriangle, ChevronDown } from 'react-feather'
 import { InterfaceTrade, TradeState } from 'state/routing/types'
 import styled, { useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
-import { switchChain } from 'utils/switchChain'
+import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { shallow } from 'zustand/shallow'
-
 const FooterContainer = styled.div`
   padding: 0px 12px;
 `
@@ -286,10 +285,11 @@ const PENDING_BAG_STATUSES = [
   BagStatus.PROCESSING_TRANSACTION,
 ]
 
-export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) => {
+export const BagFooter = ({ setModalIsOpen }: BagFooterProps) => {
   const toggleWalletDrawer = useToggleAccountDrawer()
   const theme = useTheme()
-  const { account, chainId, connector } = useWeb3React()
+  const isDarkMode = useIsDarkMode()
+  const { account, chainId } = useWeb3React()
   const connected = Boolean(account && chainId)
   const totalEthPrice = useBagTotalEthPrice()
   const shouldUsePayWithAnyToken = usePayWithAnyTokenEnabled()
@@ -317,7 +317,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
   const [tokenSelectorOpen, setTokenSelectorOpen] = useState(false)
   const isPending = PENDING_BAG_STATUSES.includes(bagStatus)
   const activeCurrency = inputCurrency ?? defaultCurrency
-  const usingPayWithAnyToken = !!inputCurrency && shouldUsePayWithAnyToken && chainId === SupportedChainId.MAINNET
+  const usingPayWithAnyToken = false //!!inputCurrency && shouldUsePayWithAnyToken && chainId === SupportedChainId.MAINNET
 
   useSubscribeTransactionState(setModalIsOpen)
   const fetchAssets = useFetchAssets()
@@ -345,7 +345,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
 
   const { balance: balanceInEth } = useWalletBalance()
   const sufficientBalance = useMemo(() => {
-    if (!connected || chainId !== SupportedChainId.MAINNET) {
+    if (!connected || chainId !== SupportedChainId.ROLLUX) {
       return undefined
     }
 
@@ -387,12 +387,13 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
     let buttonColor = theme.accentAction
     let buttonTextColor = theme.accentTextLightPrimary
 
-    if (connected && chainId !== SupportedChainId.MAINNET) {
-      handleClick = () => switchChain(connector, SupportedChainId.MAINNET)
-      buttonText = <Trans>Switch networks</Trans>
-      disabled = false
-      warningText = <Trans>Wrong network</Trans>
-    } else if (sufficientBalance === false) {
+    // if (connected && chainId !== SupportedChainId.MAINNET) {
+    //   handleClick = () => switchChain(connector, SupportedChainId.MAINNET)
+    //   buttonText = <Trans>Switch networks</Trans>
+    //   disabled = false
+    //   warningText = <Trans>Wrong network</Trans>
+    // } else
+    if (sufficientBalance === false) {
       buttonText = <Trans>Pay</Trans>
       disabled = true
       warningText = <Trans>Insufficient funds</Trans>
@@ -476,26 +477,18 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
     theme.backgroundInteractive,
     theme.textPrimary,
     connected,
-    chainId,
     sufficientBalance,
     bagStatus,
     usingPayWithAnyToken,
     tradeState,
     allowance.state,
     priceImpact,
-    connector,
     toggleWalletDrawer,
     setBagExpanded,
     isAllowancePending,
     isApprovalLoading,
     updateAllowance,
   ])
-
-  const traceEventProperties = {
-    usd_value: usdcValue?.toExact(),
-    using_erc20: !!inputCurrency,
-    ...eventProperties,
-  }
 
   return (
     <FooterContainer>
@@ -511,7 +504,6 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
                   onClick={() => {
                     if (!bagIsLocked) {
                       setTokenSelectorOpen(true)
-                      sendAnalyticsEvent(NFTEventName.NFT_BUY_TOKEN_SELECTOR_CLICKED)
                     }
                   }}
                 >
@@ -564,37 +556,24 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
             />
           </FooterHeader>
         )}
-        <TraceEvent
-          events={[BrowserEvent.onClick]}
-          name={NFTEventName.NFT_BUY_BAG_PAY}
-          element={InterfaceElementName.NFT_BUY_BAG_PAY_BUTTON}
-          properties={{ ...traceEventProperties }}
-          shouldLogImpression={connected && !disabled}
+
+        <Warning color={warningTextColor}>{warningText}</Warning>
+        <Helper color={helperTextColor}>{helperText}</Helper>
+        <ActionButton
+          onClick={handleClick}
+          disabled={disabled || isPending}
+          backgroundColor={buttonColor}
+          textColor={buttonTextColor}
         >
-          <Warning color={warningTextColor}>{warningText}</Warning>
-          <Helper color={helperTextColor}>{helperText}</Helper>
-          <ActionButton
-            onClick={handleClick}
-            disabled={disabled || isPending}
-            backgroundColor={buttonColor}
-            textColor={buttonTextColor}
-          >
-            {isPending && <Loader size="20px" stroke="white" />}
-            {buttonText}
-          </ActionButton>
-        </TraceEvent>
+          {isPending && <LoaderGif gif={isDarkMode ? LoadingGif : LoadingGifLight} size="20px" stroke="white" />}
+          {buttonText}
+        </ActionButton>
       </Footer>
       <CurrencySearchModal
         isOpen={tokenSelectorOpen}
         onDismiss={() => setTokenSelectorOpen(false)}
         onCurrencySelect={(currency: Currency) => {
           setInputCurrency(currency.isNative ? undefined : currency)
-          if (currency.isToken) {
-            sendAnalyticsEvent(NFTEventName.NFT_BUY_TOKEN_SELECTED, {
-              token_address: currency.address,
-              token_symbol: currency.symbol,
-            })
-          }
         }}
         selectedCurrency={activeCurrency ?? undefined}
         onlyShowCurrenciesWithBalance={true}

@@ -1,6 +1,6 @@
-import { Protocol } from '@uniswap/router-sdk'
-import { Currency, Percent } from '@uniswap/sdk-core'
-import { FeeAmount } from '@uniswap/v3-sdk'
+import { Protocol } from '@pollum-io/router-sdk'
+import { Currency, Percent } from '@pollum-io/sdk-core'
+import { FeeAmount } from '@pollum-io/v3-sdk'
 import { RoutingDiagramEntry } from 'components/swap/SwapRoute'
 import { DAI, USDC_MAINNET, WBTC } from 'constants/tokens'
 import { render } from 'test-utils/render'
@@ -16,7 +16,7 @@ const singleRoute: RoutingDiagramEntry = {
 }
 
 const multiRoute: RoutingDiagramEntry[] = [
-  { percent: percent`75`, path: [[USDC_MAINNET, DAI, FeeAmount.LOWEST]], protocol: Protocol.V2 },
+  { percent: percent`75`, path: [[USDC_MAINNET, DAI, FeeAmount.LOWEST]], protocol: Protocol.V1 },
   {
     percent: percent`25`,
     path: [

@@ -1,17 +1,20 @@
 import { isAddress } from '@ethersproject/address'
 import { Trans } from '@lingui/macro'
-import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { CurrencyAmount, Token } from '@pollum-io/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import LoadingGifLight from 'assets/images/lightLoading.gif'
+import LoadingGif from 'assets/images/loading.gif'
+import { LoaderGif } from 'components/Icons/LoadingSpinner'
 import { useState } from 'react'
 import { Text } from 'rebass'
 import styled from 'styled-components/macro'
+import { useIsDarkMode } from 'theme/components/ThemeToggle'
 
-import Circle from '../../assets/images/blue-loader.svg'
 import tokenLogo from '../../assets/images/token-logo.png'
 import useENS from '../../hooks/useENS'
 import { useClaimCallback, useUserHasAvailableClaim, useUserUnclaimedAmount } from '../../state/claim/hooks'
 import { useIsTransactionPending } from '../../state/transactions/hooks'
-import { CloseIcon, CustomLightSpinner, ExternalLink, ThemedText, UniTokenAnimated } from '../../theme'
+import { CloseIcon, ExternalLink, ThemedText, UniTokenAnimated } from '../../theme'
 import { shortenAddress } from '../../utils'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import AddressInputPanel from '../AddressInputPanel'
@@ -46,7 +49,7 @@ const ConfirmedIcon = styled(ColumnCenter)`
 
 export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () => void }) {
   const { chainId } = useWeb3React()
-
+  const isDarkMode = useIsDarkMode()
   // state for smart contract input
   const [typed, setTyped] = useState('')
   function handleRecipientType(val: string) {
@@ -150,7 +153,7 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
           </RowBetween>
           <ConfirmedIcon>
             {!claimConfirmed ? (
-              <CustomLightSpinner src={Circle} alt="loader" size="90px" />
+              <LoaderGif gif={isDarkMode ? LoadingGif : LoadingGifLight} size="90px" />
             ) : (
               <UniTokenAnimated width="72px" src={tokenLogo} alt="UNI logo" />
             )}

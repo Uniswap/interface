@@ -20,14 +20,14 @@ const Wrapper = styled.div`
 `
 
 const StyledExternalCard = styled(Card)`
-  background-color: ${({ theme }) => theme.deprecated_primary5};
+  background-color: ${({ theme }) => theme.backgroundInteractive};
   padding: 0.5rem;
   width: 100%;
 
   :hover,
   :focus,
   :active {
-    background-color: ${({ theme }) => theme.deprecated_primary4};
+    background-color: ${({ theme }) => theme.backgroundInteractive};
   }
 `
 
@@ -124,25 +124,12 @@ function PrivacyPolicy() {
       <AutoColumn gap="16px">
         <AutoColumn gap="sm" style={{ width: '100%' }}>
           <StyledExternalCard>
-            <ExternalLink href="https://uniswap.org/terms-of-service">
+            <ExternalLink href="https://pegasys.fi/terms-of-service">
               <RowBetween>
                 <AutoRow gap="4px">
                   <Info size={20} />
-                  <ThemedText.DeprecatedMain fontSize={14} color="accentAction">
-                    <Trans>Uniswap Labs&apos; Terms of Service</Trans>
-                  </ThemedText.DeprecatedMain>
-                </AutoRow>
-                <StyledLinkOut size={20} />
-              </RowBetween>
-            </ExternalLink>
-          </StyledExternalCard>
-          <StyledExternalCard>
-            <ExternalLink href="https://uniswap.org/privacy-policy/">
-              <RowBetween>
-                <AutoRow gap="4px">
-                  <Info size={20} />
-                  <ThemedText.DeprecatedMain fontSize={14} color="accentAction">
-                    <Trans>Privacy Policy</Trans>
+                  <ThemedText.DeprecatedMain fontSize={14} color="accentActive">
+                    <Trans>Pegasys Finance Terms of Service</Trans>
                   </ThemedText.DeprecatedMain>
                 </AutoRow>
                 <StyledLinkOut size={20} />

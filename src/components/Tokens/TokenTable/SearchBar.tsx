@@ -1,6 +1,4 @@
 import { Trans } from '@lingui/macro'
-import { TraceEvent } from '@uniswap/analytics'
-import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import searchIcon from 'assets/svg/search.svg'
 import xIcon from 'assets/svg/x.svg'
 import useDebounce from 'hooks/useDebounce'
@@ -21,29 +19,29 @@ const SearchInput = styled.input`
   background-image: url(${searchIcon});
   background-size: 20px 20px;
   background-position: 12px center;
-  background-color: ${({ theme }) => theme.backgroundModule};
+  background-color: ${({ theme }) => theme.backgroundSurface};
   border-radius: 12px;
-  border: 1.5px solid ${({ theme }) => theme.backgroundOutline};
+  border: 1.5px solid transparent;
   height: 100%;
   width: min(200px, 100%);
   font-size: 14px;
   padding-left: 40px;
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.accentActive};
   transition-duration: ${({ theme }) => theme.transition.duration.fast};
 
   :hover {
-    background-color: ${({ theme }) => theme.backgroundSurface};
+    background-color: ${({ theme }) => theme.accentActiveSoft};
   }
 
   :focus {
     outline: none;
-    background-color: ${({ theme }) => theme.backgroundSurface};
-    border-color: ${({ theme }) => theme.accentActionSoft};
+    background-color: ${({ theme }) => theme.accentActiveSoft};
   }
 
   ::placeholder {
     color: ${({ theme }) => theme.textTertiary};
   }
+
   ::-webkit-search-cancel-button {
     -webkit-appearance: none;
     appearance: none;
@@ -60,6 +58,7 @@ const SearchInput = styled.input`
   }
 `
 
+// eslint-disable-next-line import/no-unused-modules
 export default function SearchBar() {
   const currentString = useAtomValue(filterStringAtom)
   const [localFilterString, setLocalFilterString] = useState(currentString)
@@ -78,21 +77,15 @@ export default function SearchBar() {
     <SearchBarContainer>
       <Trans
         render={({ translation }) => (
-          <TraceEvent
-            events={[BrowserEvent.onFocus]}
-            name={InterfaceEventName.EXPLORE_SEARCH_SELECTED}
-            element={InterfaceElementName.EXPLORE_SEARCH_INPUT}
-          >
-            <SearchInput
-              data-cy="explore-tokens-search-input"
-              type="search"
-              placeholder={`${translation}`}
-              id="searchBar"
-              autoComplete="off"
-              value={localFilterString}
-              onChange={({ target: { value } }) => setLocalFilterString(value)}
-            />
-          </TraceEvent>
+          <SearchInput
+            data-cy="explore-tokens-search-input"
+            type="search"
+            placeholder={`${translation}`}
+            id="searchBar"
+            autoComplete="off"
+            value={localFilterString}
+            onChange={({ target: { value } }) => setLocalFilterString(value)}
+          />
         )}
       >
         Filter tokens

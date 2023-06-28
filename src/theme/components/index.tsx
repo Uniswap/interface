@@ -1,3 +1,4 @@
+/* eslint-disable import/no-unused-modules */
 import { Trans } from '@lingui/macro'
 import { outboundLink } from 'components/analytics'
 import { MOBILE_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
@@ -106,8 +107,8 @@ export const ClickableStyle = css`
 `
 
 export const LinkStyle = css`
-  color: ${({ theme }) => theme.accentAction};
-  stroke: ${({ theme }) => theme.accentAction};
+  color: ${({ theme }) => theme.accentActive};
+  stroke: ${({ theme }) => theme.accentActive};
   font-weight: 500;
 `
 
@@ -139,7 +140,7 @@ const CopyIcon = styled(Copy)`
   ${IconStyle}
   ${ClickableStyle}
   ${LinkStyle}
-  stroke: ${({ theme }) => theme.accentAction};
+  stroke: ${({ theme }) => theme.accentActive};
 `
 
 const rotateImg = keyframes`
@@ -450,6 +451,7 @@ const SpinnerCss = css`
   animation: 2s ${rotate} linear infinite;
 `
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const Spinner = styled.img`
   ${SpinnerCss}
   width: 16px;
@@ -469,11 +471,6 @@ export function BackArrow({ to }: { to: string }) {
     </BackArrowLink>
   )
 }
-
-export const CustomLightSpinner = styled(Spinner)<{ size: string }>`
-  height: ${({ size }) => size};
-  width: ${({ size }) => size};
-`
 
 export const HideSmall = styled.span`
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`

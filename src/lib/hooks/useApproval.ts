@@ -1,12 +1,9 @@
 import { MaxUint256 } from '@ethersproject/constants'
 import type { TransactionResponse } from '@ethersproject/providers'
-import { sendAnalyticsEvent } from '@uniswap/analytics'
-import { InterfaceEventName } from '@uniswap/analytics-events'
-import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Token } from '@pollum-io/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { useTokenContract } from 'hooks/useContract'
 import { useTokenAllowance } from 'hooks/useTokenAllowance'
-import { getTokenAddress } from 'lib/utils/analytics'
 import { useCallback, useMemo } from 'react'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
 
@@ -92,12 +89,6 @@ export function useApproval(
         gasLimit: calculateGasMargin(estimatedGas),
       })
       .then((response) => {
-        const eventProperties = {
-          chain_id: chainId,
-          token_symbol: token?.symbol,
-          token_address: getTokenAddress(token),
-        }
-        sendAnalyticsEvent(InterfaceEventName.APPROVE_TOKEN_TXN_SUBMITTED, eventProperties)
         return {
           response,
           tokenAddress: token.address,

@@ -1,9 +1,7 @@
 import { Trans } from '@lingui/macro'
-import { Trace, TraceEvent } from '@uniswap/analytics'
-import { BrowserEvent, InterfaceElementName, InterfaceEventName, InterfacePageName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { useToggleAccountDrawer } from 'components/AccountDrawer'
-import { ButtonGray, ButtonPrimary, ButtonText } from 'components/Button'
+import { ButtonPrimary, ButtonText } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import { FlyoutAlignment, Menu } from 'components/Menu'
 import PositionList from 'components/PositionList'
@@ -83,16 +81,17 @@ const PoolMenuItem = styled.div`
   width: 100%;
   font-weight: 500;
 `
-const MoreOptionsButton = styled(ButtonGray)`
-  border-radius: 12px;
+const MoreOptionsButton = styled(ButtonPrimary)`
+  border-radius: 30px;
   flex: 1 1 auto;
   padding: 6px 8px;
   width: 100%;
-  background-color: ${({ theme }) => theme.backgroundSurface};
+  background: ${({ theme }) => theme.accentActionSoft};
   margin-right: 8px;
 `
 
 const MoreOptionsText = styled(ThemedText.DeprecatedBody)`
+  color: ${({ theme }) => theme.white};
   align-items: center;
   display: flex;
 `
@@ -122,7 +121,7 @@ const InboxIcon = styled(Inbox)`
 `
 
 const ResponsiveButtonPrimary = styled(ButtonPrimary)`
-  border-radius: 12px;
+  border-radius: 30px;
   font-size: 16px;
   padding: 6px 8px;
   width: fit-content;
@@ -134,13 +133,11 @@ const ResponsiveButtonPrimary = styled(ButtonPrimary)`
 
 const MainContentWrapper = styled.main`
   background-color: ${({ theme }) => theme.backgroundSurface};
-  border: 1px solid ${({ theme }) => theme.backgroundOutline};
+  box-shadow: ${({ theme }) => theme.deepShadow};
   padding: 0;
   border-radius: 16px;
   display: flex;
   flex-direction: column;
-  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
-    0px 24px 32px rgba(0, 0, 0, 0.01);
 `
 
 function PositionsLoadingPlaceholder() {
@@ -251,13 +248,13 @@ export default function Pool() {
           <BookOpen size={16} />
         </PoolMenuItem>
       ),
-      link: 'https://support.uniswap.org/hc/en-us/categories/8122334631437-Providing-Liquidity-',
+      link: 'https://docs.pegasys.fi/sdk/v3/guides/liquidity/minting',
       external: true,
     },
   ]
 
   return (
-    <Trace page={InterfacePageName.POOL_PAGE} shouldLogImpression>
+    <>
       <PageWrapper>
         <AutoColumn gap="lg" justify="center">
           <AutoColumn gap="lg" style={{ width: '100%' }}>
@@ -298,7 +295,7 @@ export default function Pool() {
               ) : (
                 <ErrorContainer>
                   <ThemedText.DeprecatedBody color={theme.textTertiary} textAlign="center">
-                    <InboxIcon strokeWidth={1} style={{ marginTop: '2em' }} />
+                    <InboxIcon strokeWidth={2} style={{ marginTop: '2em' }} />
                     <div>
                       <Trans>Your active V3 liquidity positions will appear here.</Trans>
                     </div>
@@ -312,19 +309,12 @@ export default function Pool() {
                     </ButtonText>
                   )}
                   {showConnectAWallet && (
-                    <TraceEvent
-                      events={[BrowserEvent.onClick]}
-                      name={InterfaceEventName.CONNECT_WALLET_BUTTON_CLICKED}
-                      properties={{ received_swap_quote: false }}
-                      element={InterfaceElementName.CONNECT_WALLET_BUTTON}
+                    <ButtonPrimary
+                      style={{ marginTop: '2em', marginBottom: '2em', padding: '8px 16px' }}
+                      onClick={toggleWalletDrawer}
                     >
-                      <ButtonPrimary
-                        style={{ marginTop: '2em', marginBottom: '2em', padding: '8px 16px' }}
-                        onClick={toggleWalletDrawer}
-                      >
-                        <Trans>Connect a wallet</Trans>
-                      </ButtonPrimary>
-                    </TraceEvent>
+                      <Trans>Connect a wallet</Trans>
+                    </ButtonPrimary>
                   )}
                 </ErrorContainer>
               )}
@@ -336,6 +326,6 @@ export default function Pool() {
         </AutoColumn>
       </PageWrapper>
       <SwitchLocaleLink />
-    </Trace>
+    </>
   )
 }

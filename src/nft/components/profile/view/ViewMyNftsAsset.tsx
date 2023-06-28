@@ -1,7 +1,4 @@
 import { Trans } from '@lingui/macro'
-import { useTrace } from '@uniswap/analytics'
-import { sendAnalyticsEvent } from '@uniswap/analytics'
-import { NFTEventName } from '@uniswap/analytics-events'
 import { NftCard, NftCardDisplayProps } from 'nft/components/card'
 import { detailsHref } from 'nft/components/card/utils'
 import { VerifiedIcon } from 'nft/components/icons'
@@ -37,7 +34,6 @@ export const ViewMyNftsAsset = ({
     )
   }, [asset, sellAssets])
 
-  const trace = useTrace()
   const toggleSelect = () => handleSelect(isSelected)
 
   const handleSelect = (removeAsset: boolean) => {
@@ -45,11 +41,6 @@ export const ViewMyNftsAsset = ({
       removeSellAsset(asset)
     } else {
       selectSellAsset(asset)
-      sendAnalyticsEvent(NFTEventName.NFT_SELL_ITEM_ADDED, {
-        collection_address: asset.asset_contract.address,
-        token_id: asset.tokenId,
-        ...trace,
-      })
     }
     if (
       !cartExpanded &&

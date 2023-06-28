@@ -1,10 +1,8 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import type { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
-import { TraceEvent } from '@uniswap/analytics'
-import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
-import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
-import { FeeAmount, NonfungiblePositionManager } from '@uniswap/v3-sdk'
+import { Currency, CurrencyAmount, Percent } from '@pollum-io/sdk-core'
+import { FeeAmount, NonfungiblePositionManager } from '@pollum-io/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { useToggleAccountDrawer } from 'components/AccountDrawer'
 import OwnershipWarning from 'components/addLiquidity/OwnershipWarning'
@@ -463,22 +461,15 @@ export default function AddLiquidity() {
 
   const Buttons = () =>
     addIsUnsupported ? (
-      <ButtonPrimary disabled={true} $borderRadius="12px" padding="12px">
+      <ButtonPrimary disabled={true} $borderRadius="16px" padding="12px">
         <ThemedText.DeprecatedMain mb="4px">
           <Trans>Unsupported Asset</Trans>
         </ThemedText.DeprecatedMain>
       </ButtonPrimary>
     ) : !account ? (
-      <TraceEvent
-        events={[BrowserEvent.onClick]}
-        name={InterfaceEventName.CONNECT_WALLET_BUTTON_CLICKED}
-        properties={{ received_swap_quote: false }}
-        element={InterfaceElementName.CONNECT_WALLET_BUTTON}
-      >
-        <ButtonLight onClick={toggleWalletDrawer} $borderRadius="12px" padding="12px">
-          <Trans>Connect Wallet</Trans>
-        </ButtonLight>
-      </TraceEvent>
+      <ButtonLight onClick={toggleWalletDrawer} $borderRadius="16px" padding="12px">
+        <Trans>Connect Wallet</Trans>
+      </ButtonLight>
     ) : (
       <AutoColumn gap="md">
         {(approvalA === ApprovalState.NOT_APPROVED ||
@@ -603,7 +594,7 @@ export default function AddLiquidity() {
               <Row justifyContent="flex-end" style={{ width: 'fit-content', minWidth: 'fit-content' }}>
                 <MediumOnly>
                   <ButtonText onClick={clearAll} margin="0 15px 0 0">
-                    <ThemedText.DeprecatedBlue fontSize="12px">
+                    <ThemedText.DeprecatedBlue fontSize="14px">
                       <Trans>Clear All</Trans>
                     </ThemedText.DeprecatedBlue>
                   </ButtonText>
@@ -772,7 +763,6 @@ export default function AddLiquidity() {
                               </Trans>
                             </AutoRow>
                           )}
-
                           <LiquidityChartRangeInput
                             currencyA={baseCurrency ?? undefined}
                             currencyB={quoteCurrency ?? undefined}
@@ -823,10 +813,11 @@ export default function AddLiquidity() {
                               className="start-price-input"
                               value={startPriceTypedValue}
                               onUserInput={onStartPriceInput}
+                              style={{ background: 'none' }}
                             />
                           </OutlineCard>
                           <RowBetween
-                            style={{ backgroundColor: theme.deprecated_bg1, padding: '12px', borderRadius: '12px' }}
+                            style={{ backgroundColor: theme.backgroundModule, padding: '12px', borderRadius: '16px' }}
                           >
                             <ThemedText.DeprecatedMain>
                               <Trans>Current {baseCurrency?.symbol} Price:</Trans>
@@ -885,7 +876,7 @@ export default function AddLiquidity() {
                       </StackedContainer>
 
                       {outOfRange ? (
-                        <YellowCard padding="8px 12px" $borderRadius="12px">
+                        <YellowCard padding="8px 12px" $borderRadius="16px">
                           <RowBetween>
                             <AlertTriangle stroke={theme.deprecated_yellow3} size="16px" />
                             <ThemedText.DeprecatedYellow ml="12px" fontSize="12px">
@@ -899,7 +890,7 @@ export default function AddLiquidity() {
                       ) : null}
 
                       {invalidRange ? (
-                        <YellowCard padding="8px 12px" $borderRadius="12px">
+                        <YellowCard padding="8px 12px" $borderRadius="16px">
                           <RowBetween>
                             <AlertTriangle stroke={theme.deprecated_yellow3} size="16px" />
                             <ThemedText.DeprecatedYellow ml="12px" fontSize="12px">

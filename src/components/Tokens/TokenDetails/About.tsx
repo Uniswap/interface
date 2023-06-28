@@ -9,11 +9,13 @@ import { textFadeIn } from 'theme/styles'
 
 import Resource from './Resource'
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const NoInfoAvailable = styled.span`
   color: ${({ theme }) => theme.textTertiary};
   font-weight: 400;
   font-size: 16px;
 `
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const TokenDescriptionContainer = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
@@ -23,7 +25,7 @@ const TokenDescriptionContainer = styled.div`
   line-height: 24px;
   white-space: pre-wrap;
 `
-
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const TruncateDescriptionButton = styled.div`
   color: ${({ theme }) => theme.textSecondary};
   font-weight: 400;
@@ -74,16 +76,17 @@ type AboutSectionProps = {
 }
 
 export function AboutSection({ address, chainId, description, homepageUrl, twitterName }: AboutSectionProps) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isDescriptionTruncated, setIsDescriptionTruncated] = useState(true)
   const shouldTruncate = !!description && description.length > TRUNCATE_CHARACTER_COUNT
-
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const tokenDescription = shouldTruncate && isDescriptionTruncated ? truncateDescription(description) : description
 
   const { explorer, infoLink } = getChainInfo(chainId)
 
   return (
     <AboutContainer data-testid="token-details-about-section">
-      <AboutHeader>
+      {/* <AboutHeader>
         <Trans>About</Trans>
       </AboutHeader>
       <TokenDescriptionContainer>
@@ -98,16 +101,13 @@ export function AboutSection({ address, chainId, description, homepageUrl, twitt
             {isDescriptionTruncated ? <Trans>Show more</Trans> : <Trans>Hide</Trans>}
           </TruncateDescriptionButton>
         )}
-      </TokenDescriptionContainer>
-      <br />
+      </TokenDescriptionContainer> */}
+      {/* <br /> */}
       <ThemedText.SubHeaderSmall>
         <Trans>Links</Trans>
       </ThemedText.SubHeaderSmall>
       <ResourcesContainer data-cy="resources-container">
-        <Resource
-          name={chainId === SupportedChainId.MAINNET ? 'Etherscan' : 'Block Explorer'}
-          link={`${explorer}${address === 'NATIVE' ? '' : 'address/' + address}`}
-        />
+        <Resource name="Block Explorer" link={`${explorer}${address === 'NATIVE' ? '' : 'address/' + address}`} />
         <Resource name="More analytics" link={`${infoLink}tokens/${address}`} />
         {homepageUrl && <Resource name="Website" link={homepageUrl} />}
         {twitterName && <Resource name="Twitter" link={`https://twitter.com/${twitterName}`} />}

@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { Token } from '@uniswap/sdk-core'
+import { Token } from '@pollum-io/sdk-core'
 import Badge, { BadgeVariant } from 'components/Badge'
 import { transparentize } from 'polished'
 import { Link } from 'react-router-dom'
@@ -60,7 +60,7 @@ export default function SushiPositionCard({ tokenA, tokenB, liquidityToken, bord
           <RowFixed gap="8px">
             <ButtonEmpty
               padding="0px 35px 0px 0px"
-              $borderRadius="12px"
+              $borderRadius="30px"
               width="fit-content"
               as={Link}
               to={`/migrate/v2/${liquidityToken.address}`}

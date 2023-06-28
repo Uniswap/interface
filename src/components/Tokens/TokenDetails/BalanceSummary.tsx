@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
+import { Currency } from '@pollum-io/sdk-core'
 import { formatCurrencyAmount, NumberType } from '@uniswap/conedison/format'
-import { Currency } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { getChainInfo } from 'constants/chainInfo'
@@ -12,9 +12,8 @@ import styled, { useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
 const BalancesCard = styled.div`
-  box-shadow: ${({ theme }) => theme.shallowShadow};
+  box-shadow: ${({ theme }) => theme.deepShadow};
   background-color: ${({ theme }) => theme.backgroundSurface};
-  border: ${({ theme }) => `1px solid ${theme.backgroundOutline}`};
   border-radius: 16px;
   color: ${({ theme }) => theme.textPrimary};
   display: none;
@@ -67,7 +66,7 @@ const StyledNetworkLabel = styled.div`
 export default function BalanceSummary({ token }: { token: Currency }) {
   const { account, chainId } = useWeb3React()
   const theme = useTheme()
-  const { label, color } = getChainInfo(isSupportedChain(chainId) ? chainId : SupportedChainId.MAINNET)
+  const { label, color } = getChainInfo(isSupportedChain(chainId) ? chainId : SupportedChainId.ROLLUX)
   const balance = useCurrencyBalance(account, token)
   const formattedBalance = formatCurrencyAmount(balance, NumberType.TokenNonTx)
   const formattedUsdValue = formatCurrencyAmount(useStablecoinValue(balance), NumberType.FiatTokenStats)
@@ -75,6 +74,7 @@ export default function BalanceSummary({ token }: { token: Currency }) {
   if (!account || !balance) {
     return null
   }
+
   return (
     <BalancesCard>
       <BalanceSection>

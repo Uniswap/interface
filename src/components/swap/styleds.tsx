@@ -1,5 +1,4 @@
 import { TooltipContainer } from 'components/Tooltip'
-import { SupportedChainId } from 'constants/chains'
 import { transparentize } from 'polished'
 import { ReactNode } from 'react'
 import { AlertTriangle } from 'react-feather'
@@ -9,8 +8,9 @@ import { Z_INDEX } from 'theme/zIndex'
 
 import { AutoColumn } from '../Column'
 
-export const PageWrapper = styled.div`
-  padding: 68px 8px 0px;
+export const PageWrapper = styled.div<{ isOnSwapPage?: boolean }>`
+  padding: ${(props) => (props.isOnSwapPage ? '68px 8px 0px' : '0px')};
+
   max-width: 480px;
   width: 100%;
 
@@ -27,10 +27,9 @@ export const PageWrapper = styled.div`
 export const SwapWrapper = styled.main<{ chainId: number | undefined }>`
   position: relative;
   background: ${({ theme }) => theme.backgroundSurface};
-  border-radius: 16px;
-  border: 1px solid ${({ theme }) => theme.backgroundOutline};
+  border-radius: 30px;
+  border: 1px solid ${({ theme }) => theme.backgroundBorderGradient};
   padding: 8px;
-  box-shadow: ${({ chainId }) => !!chainId && chainId === SupportedChainId.BNB && '0px 40px 120px 0px #f0b90b29'};
   z-index: ${Z_INDEX.deprecated_content};
   transition: transform 250ms ease;
 

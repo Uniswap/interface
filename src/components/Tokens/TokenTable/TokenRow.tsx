@@ -1,18 +1,16 @@
 import { Trans } from '@lingui/macro'
-import { sendAnalyticsEvent } from '@uniswap/analytics'
-import { InterfaceEventName } from '@uniswap/analytics-events'
 import { formatNumber, formatUSDPrice, NumberType } from '@uniswap/conedison/format'
 import { ParentSize } from '@visx/responsive'
 import SparklineChart from 'components/Charts/SparklineChart'
 import QueryTokenLogo from 'components/Logo/QueryTokenLogo'
 import { MouseoverTooltip } from 'components/Tooltip'
-import { SparklineMap, TopToken } from 'graphql/data/TopTokens'
-import { CHAIN_NAME_TO_CHAIN_ID, getTokenDetailsURL, validateUrlChainParam } from 'graphql/data/util'
+import { getTokenDetailsURL } from 'graphql/data/util'
+import { TokenData } from 'graphql/tokens/TokenData'
 import { useAtomValue } from 'jotai/utils'
 import { ForwardedRef, forwardRef } from 'react'
 import { CSSProperties, ReactNode } from 'react'
 import { ArrowDown, ArrowUp, Info } from 'react-feather'
-import { Link, useParams } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import styled, { css, useTheme } from 'styled-components/macro'
 import { ClickableStyle } from 'theme'
 
@@ -23,14 +21,7 @@ import {
   SMALL_MEDIA_BREAKPOINT,
 } from '../constants'
 import { LoadingBubble } from '../loading'
-import {
-  filterStringAtom,
-  filterTimeAtom,
-  sortAscendingAtom,
-  sortMethodAtom,
-  TokenSortMethod,
-  useSetSortMethod,
-} from '../state'
+import { filterTimeAtom, sortAscendingAtom, sortMethodAtom, TokenSortMethod, useSetSortMethod } from '../state'
 import { ArrowCell, DeltaText, formatDelta, getDeltaArrow } from '../TokenDetails/PriceChart'
 
 const Cell = styled.div`
@@ -290,11 +281,11 @@ export const HEADER_DESCRIPTIONS: Record<TokenSortMethod, ReactNode | undefined>
   [TokenSortMethod.PERCENT_CHANGE]: undefined,
   [TokenSortMethod.TOTAL_VALUE_LOCKED]: (
     <Trans>
-      Total value locked (TVL) is the aggregate amount of the asset available across all Uniswap v3 liquidity pools.
+      Total value locked (TVL) is the aggregate amount of the asset available across all Pegasys v3 liquidity pools.
     </Trans>
   ),
   [TokenSortMethod.VOLUME]: (
-    <Trans>Volume is the amount of the asset that has been traded on Uniswap v3 during the selected time frame.</Trans>
+    <Trans>Volume is the amount of the asset that has been traded on Pegasys v3 during the selected time frame.</Trans>
   ),
 }
 
@@ -424,44 +415,30 @@ export function LoadingRow(props: { first?: boolean; last?: boolean }) {
 interface LoadedRowProps {
   tokenListIndex: number
   tokenListLength: number
-  token: NonNullable<TopToken>
-  sparklineMap: SparklineMap
+  token: NonNullable<TokenData>
   sortRank: number
 }
 
 /* Loaded State: row component with token information */
 export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HTMLDivElement>) => {
   const { tokenListIndex, tokenListLength, token, sortRank } = props
-  const filterString = useAtomValue(filterStringAtom)
-
-  const filterNetwork = validateUrlChainParam(useParams<{ chainName?: string }>().chainName?.toUpperCase())
-  const chainId = CHAIN_NAME_TO_CHAIN_ID[filterNetwork]
   const timePeriod = useAtomValue(filterTimeAtom)
-  const delta = token.market?.pricePercentChange?.value
+
+  const delta = timePeriod === 0 ? token.priceUSDChange : token.priceUSDChangeWeek
   const arrow = getDeltaArrow(delta)
   const smallArrow = getDeltaArrow(delta, 14)
   const formattedDelta = formatDelta(delta)
 
-  const exploreTokenSelectedEventProperties = {
-    chain_id: chainId,
-    token_address: token.address,
-    token_symbol: token.symbol,
-    token_list_index: tokenListIndex,
-    token_list_rank: sortRank,
-    token_list_length: tokenListLength,
-    time_frame: timePeriod,
-    search_token_address_input: filterString,
-  }
+  const to = getTokenDetailsURL({ address: token.address, chain: '570' })
+  const priceUSD = formatUSDPrice(token.priceUSD)
+  const tvl = formatNumber(token.tvlUSD, NumberType.FiatTokenStats)
+  const volume = formatNumber(timePeriod === 0 ? token.volumeUSD : token.volumeUSDWeek, NumberType.FiatTokenStats)
 
   // TODO: currency logo sizing mobile (32px) vs. desktop (24px)
+
   return (
     <div ref={ref} data-testid={`token-table-row-${token.symbol}`}>
-      <StyledLink
-        to={getTokenDetailsURL(token)}
-        onClick={() =>
-          sendAnalyticsEvent(InterfaceEventName.EXPLORE_TOKEN_ROW_CLICKED, exploreTokenSelectedEventProperties)
-        }
-      >
+      <StyledLink to={to}>
         <TokenRow
           header={false}
           listNumber={sortRank}
@@ -477,7 +454,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
           price={
             <ClickableContent>
               <PriceInfoCell>
-                {formatUSDPrice(token.market?.price?.value)}
+                {priceUSD}
                 <PercentChangeInfoCell>
                   <ArrowCell>{smallArrow}</ArrowCell>
                   <DeltaText delta={delta}>{formattedDelta}</DeltaText>
@@ -491,28 +468,19 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
               <DeltaText delta={delta}>{formattedDelta}</DeltaText>
             </ClickableContent>
           }
-          tvl={
-            <ClickableContent>
-              {formatNumber(token.market?.totalValueLocked?.value, NumberType.FiatTokenStats)}
-            </ClickableContent>
-          }
-          volume={
-            <ClickableContent>{formatNumber(token.market?.volume?.value, NumberType.FiatTokenStats)}</ClickableContent>
-          }
+          tvl={<ClickableContent>{tvl}</ClickableContent>}
+          volume={<ClickableContent>{volume}</ClickableContent>}
           sparkLine={
             <SparkLine>
               <ParentSize>
-                {({ width, height }) =>
-                  props.sparklineMap && (
-                    <SparklineChart
-                      width={width}
-                      height={height}
-                      tokenData={token}
-                      pricePercentChange={token.market?.pricePercentChange?.value}
-                      sparklineMap={props.sparklineMap}
-                    />
-                  )
-                }
+                {({ width, height }) => (
+                  <SparklineChart
+                    width={width}
+                    height={height}
+                    tokenData={token}
+                    pricePercentChange={token.priceUSDChange}
+                  />
+                )}
               </ParentSize>
             </SparkLine>
           }

@@ -1,10 +1,13 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
+import LoadingGifLight from 'assets/images/lightLoading.gif'
+import LoadingGif from 'assets/images/loading.gif'
+import { LoaderGif } from 'components/Icons/LoadingSpinner'
 import { ArrowUpCircle } from 'react-feather'
 import styled, { useTheme } from 'styled-components/macro'
+import { useIsDarkMode } from 'theme/components/ThemeToggle'
 
-import Circle from '../../assets/images/blue-loader.svg'
-import { CloseIcon, CustomLightSpinner, ThemedText } from '../../theme'
+import { CloseIcon, ThemedText } from '../../theme'
 import { ExternalLink } from '../../theme/components'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import { AutoColumn, ColumnCenter } from '../Column'
@@ -20,6 +23,7 @@ const ConfirmedIcon = styled(ColumnCenter)`
 `
 
 export function LoadingView({ children, onDismiss }: { children: any; onDismiss: () => void }) {
+  const isDarkMode = useIsDarkMode()
   return (
     <ConfirmOrLoadingWrapper>
       <RowBetween>
@@ -27,7 +31,7 @@ export function LoadingView({ children, onDismiss }: { children: any; onDismiss:
         <CloseIcon onClick={onDismiss} />
       </RowBetween>
       <ConfirmedIcon>
-        <CustomLightSpinner src={Circle} alt="loader" size="90px" />
+        <LoaderGif gif={isDarkMode ? LoadingGif : LoadingGifLight} size="90px" />
       </ConfirmedIcon>
       <AutoColumn gap="100px" justify="center">
         {children}

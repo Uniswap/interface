@@ -1,4 +1,4 @@
-import styled, { css, keyframes } from 'styled-components/macro'
+import styled, { keyframes } from 'styled-components/macro'
 
 const rotateAnimation = keyframes`
   from {
@@ -9,8 +9,20 @@ const rotateAnimation = keyframes`
   }
 `
 
-const RotationStyle = css`
+const RotationStyle = styled.svg<{ size: string; stroke: string }>`
   animation: 2s ${rotateAnimation} linear infinite;
+  width: ${(props) => props.size};
+  height: ${(props) => props.size};
+  stroke: ${(props) => props.stroke};
+
+  @keyframes rotation {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(359deg);
+    }
+  }
 `
 
 export const StyledSVG = styled.svg<{ size: string; stroke?: string; fill?: string }>`
@@ -25,4 +37,14 @@ export const StyledSVG = styled.svg<{ size: string; stroke?: string; fill?: stri
 
 export const StyledRotatingSVG = styled(StyledSVG)`
   ${RotationStyle}
+`
+
+export const GifLoaderWrapper = styled.div<{ size: string }>`
+  width: ${(props) => props.size};
+  height: ${(props) => props.size};
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 `

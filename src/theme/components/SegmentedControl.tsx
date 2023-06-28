@@ -24,7 +24,7 @@ const SegmentWrapper = styled(AutoRow)<{ active?: boolean }>`
     active &&
     css`
       background-color: ${theme.accentActionSoft};
-      color: ${({ theme }) => theme.accentAction};
+      color: ${({ theme }) => theme.accentActive};
     `};
 
   :hover {

@@ -1,5 +1,5 @@
-import { Percent } from '@uniswap/sdk-core'
-import { RouterPreference, Slippage, SwapController, SwapEventHandlers } from '@uniswap/widgets'
+import { Percent } from '@pollum-io/sdk-core'
+import { RouterPreference, Slippage, SwapController, SwapEventHandlers } from '@pollum-io/widgets'
 import { DEFAULT_DEADLINE_FROM_NOW } from 'constants/misc'
 import { useCallback, useMemo, useState } from 'react'
 import { useUserSlippageTolerance, useUserTransactionTTL } from 'state/user/hooks'

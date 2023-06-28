@@ -1,4 +1,4 @@
-import { Theme } from '@uniswap/widgets'
+import { Theme } from '@pollum-io/widgets'
 import { darkTheme, lightTheme } from 'theme/colors'
 import { Z_INDEX } from 'theme/zIndex'
 
@@ -13,6 +13,7 @@ const fonts = {
 export const LIGHT_THEME: Theme = {
   // surface
   accent: lightTheme.accentAction,
+  // accentActive: lightTheme.accentActive,
   accentSoft: lightTheme.accentActionSoft,
   container: lightTheme.backgroundSurface,
   module: lightTheme.backgroundModule,
@@ -20,6 +21,7 @@ export const LIGHT_THEME: Theme = {
   outline: lightTheme.backgroundOutline,
   dialog: lightTheme.backgroundBackdrop,
   scrim: lightTheme.backgroundScrim,
+  // backgroundScrim: lightTheme.backgroundScrolledSurface,
   // text
   onAccent: lightTheme.white,
   primary: lightTheme.textPrimary,
@@ -42,6 +44,7 @@ export const LIGHT_THEME: Theme = {
 export const DARK_THEME: Theme = {
   // surface
   accent: darkTheme.accentAction,
+  // accentActive: darkTheme.accentActive,
   accentSoft: darkTheme.accentActionSoft,
   container: darkTheme.backgroundSurface,
   module: darkTheme.backgroundModule,
@@ -49,6 +52,7 @@ export const DARK_THEME: Theme = {
   outline: darkTheme.backgroundOutline,
   dialog: darkTheme.backgroundBackdrop,
   scrim: darkTheme.backgroundScrim,
+  // backgroundScrim: darkTheme.backgroundScrolledSurface,
   // text
   onAccent: darkTheme.white,
   primary: darkTheme.textPrimary,

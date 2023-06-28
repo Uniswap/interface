@@ -1,6 +1,6 @@
-import { TraceEvent } from '@uniswap/analytics'
-import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
-import Loader from 'components/Icons/LoadingSpinner'
+import LoadingGifLight from 'assets/images/lightLoading.gif'
+import LoadingGif from 'assets/images/loading.gif'
+import { LoaderGif } from 'components/Icons/LoadingSpinner'
 import { Connection, ConnectionType } from 'connection'
 import styled from 'styled-components/macro'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
@@ -71,28 +71,21 @@ export default function Option({ connection, pendingConnectionType, activate }: 
   const isPending = pendingConnectionType === connection.type
   const isDarkMode = useIsDarkMode()
   const content = (
-    <TraceEvent
-      events={[BrowserEvent.onClick]}
-      name={InterfaceEventName.WALLET_SELECTED}
-      properties={{ wallet_type: connection.getName() }}
-      element={InterfaceElementName.WALLET_TYPE_OPTION}
+    <OptionCardClickable
+      onClick={!pendingConnectionType ? activate : undefined}
+      clickable={!pendingConnectionType}
+      disabled={Boolean(!isPending && !!pendingConnectionType)}
+      data-testid="wallet-modal-option"
     >
-      <OptionCardClickable
-        onClick={!pendingConnectionType ? activate : undefined}
-        clickable={!pendingConnectionType}
-        disabled={Boolean(!isPending && !!pendingConnectionType)}
-        data-testid="wallet-modal-option"
-      >
-        <OptionCardLeft>
-          <IconWrapper>
-            <img src={connection.getIcon?.(isDarkMode)} alt="Icon" />
-          </IconWrapper>
-          <HeaderText>{connection.getName()}</HeaderText>
-          {connection.isNew && <NewBadge />}
-        </OptionCardLeft>
-        {isPending && <Loader />}
-      </OptionCardClickable>
-    </TraceEvent>
+      <OptionCardLeft>
+        <IconWrapper>
+          <img src={connection.getIcon?.(isDarkMode)} alt="Icon" />
+        </IconWrapper>
+        <HeaderText>{connection.getName()}</HeaderText>
+        {connection.isNew && <NewBadge />}
+      </OptionCardLeft>
+      {isPending && <LoaderGif gif={isDarkMode ? LoadingGif : LoadingGifLight} />}
+    </OptionCardClickable>
   )
 
   return content

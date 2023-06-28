@@ -1,11 +1,9 @@
-import { TraceEvent } from '@uniswap/analytics'
-import { BrowserEvent, SharedEventName } from '@uniswap/analytics-events'
 import { Link } from 'react-router-dom'
 import styled, { DefaultTheme } from 'styled-components/macro'
 import { BREAKPOINTS } from 'theme'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 
-export enum CardType {
+enum CardType {
   Primary = 'Primary',
   Secondary = 'Secondary',
 }
@@ -18,7 +16,7 @@ const StyledCard = styled.div<{ isDarkMode: boolean; backgroundImgSrc?: string; 
           backgroundImgSrc ? ` url(${backgroundImgSrc})` : ''
         }`
       : `${type === CardType.Primary ? 'white' : theme.backgroundModule} url(${backgroundImgSrc})`};
-  background-size: auto 100%;
+  background-size: cover;
   background-position: right;
   background-repeat: no-repeat;
   background-origin: border-box;
@@ -26,17 +24,18 @@ const StyledCard = styled.div<{ isDarkMode: boolean; backgroundImgSrc?: string; 
   flex-direction: column;
   justify-content: space-between;
   text-decoration: none;
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.white};
   padding: 24px;
   height: 212px;
   border-radius: 24px;
-  border: 1px solid ${({ theme, type }) => (type === CardType.Primary ? 'transparent' : theme.backgroundOutline)};
+  border: 1px solid ${({ theme }) => theme.backgroundBorderGradient};
   box-shadow: 0px 10px 24px 0px rgba(51, 53, 72, 0.04);
   transition: ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.ease} border`};
 
   &:hover {
-    border: 1px solid ${({ theme, isDarkMode }) => (isDarkMode ? theme.backgroundInteractive : theme.textTertiary)};
+    border: 1px solid ${({ theme }) => theme.accentAction};
   }
+
   @media screen and (min-width: ${BREAKPOINTS.sm}px) {
     height: ${({ backgroundImgSrc }) => (backgroundImgSrc ? 360 : 260)}px;
   }
@@ -67,7 +66,7 @@ const getCardDescriptionColor = (type: CardType, theme: DefaultTheme) => {
     case CardType.Secondary:
       return theme.textSecondary
     default:
-      return theme.textPrimary
+      return theme.white
   }
 }
 
@@ -88,7 +87,7 @@ const CardDescription = styled.div<{ type: CardType }>`
 `
 
 const CardCTA = styled(CardDescription)`
-  color: ${({ theme }) => theme.accentAction};
+  color: ${({ theme }) => theme.accentActive};
   font-weight: 500;
   margin: 24px 0 0;
   cursor: pointer;
@@ -109,7 +108,6 @@ const Card = ({
   external,
   backgroundImgSrc,
   icon,
-  elementName,
 }: {
   type?: CardType
   title: string
@@ -119,31 +117,28 @@ const Card = ({
   external?: boolean
   backgroundImgSrc?: string
   icon?: React.ReactNode
-  elementName?: string
 }) => {
   const isDarkMode = useIsDarkMode()
   return (
-    <TraceEvent events={[BrowserEvent.onClick]} name={SharedEventName.ELEMENT_CLICKED} element={elementName}>
-      <StyledCard
-        type={type}
-        as={external ? 'a' : Link}
-        to={external ? undefined : to}
-        href={external ? to : undefined}
-        target={external ? '_blank' : undefined}
-        rel={external ? 'noopenener noreferrer' : undefined}
-        isDarkMode={isDarkMode}
-        backgroundImgSrc={backgroundImgSrc}
-      >
-        <TitleRow>
-          <CardTitle>{title}</CardTitle>
-          {icon}
-        </TitleRow>
-        <CardDescription type={type}>
-          {description}
-          <CardCTA type={type}>{cta}</CardCTA>
-        </CardDescription>
-      </StyledCard>
-    </TraceEvent>
+    <StyledCard
+      type={type}
+      as={external ? 'a' : Link}
+      to={external ? undefined : to}
+      href={external ? to : undefined}
+      target={external ? '_blank' : undefined}
+      rel={external ? 'noopenener noreferrer' : undefined}
+      isDarkMode={isDarkMode}
+      backgroundImgSrc={backgroundImgSrc}
+    >
+      <TitleRow>
+        <CardTitle>{title}</CardTitle>
+        {icon}
+      </TitleRow>
+      <CardDescription type={type}>
+        {description}
+        <CardCTA type={type}>{cta}</CardCTA>
+      </CardDescription>
+    </StyledCard>
   )
 }
 

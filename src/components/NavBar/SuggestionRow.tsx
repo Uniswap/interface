@@ -1,13 +1,11 @@
-import { sendAnalyticsEvent } from '@uniswap/analytics'
-import { InterfaceEventName } from '@uniswap/analytics-events'
 import { formatUSDPrice } from '@uniswap/conedison/format'
 import clsx from 'clsx'
 import QueryTokenLogo from 'components/Logo/QueryTokenLogo'
 import TokenSafetyIcon from 'components/TokenSafety/TokenSafetyIcon'
 import { checkSearchTokenWarning } from 'constants/tokenSafety'
-import { Chain, TokenStandard } from 'graphql/data/__generated__/types-and-hooks'
-import { SearchToken } from 'graphql/data/SearchTokens'
+import { Chain } from 'graphql/data/__generated__/types-and-hooks'
 import { getTokenDetailsURL } from 'graphql/data/util'
+import { TokenData } from 'graphql/tokens/TokenData'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { VerifiedIcon } from 'nft/components/icons'
@@ -43,6 +41,7 @@ interface CollectionRowProps {
   eventProperties: Record<string, unknown>
 }
 
+// eslint-disable-next-line import/no-unused-modules
 export const CollectionRow = ({
   collection,
   isHovered,
@@ -55,27 +54,12 @@ export const CollectionRow = ({
   const [loaded, setLoaded] = useState(false)
 
   const addRecentlySearchedAsset = useAddRecentlySearchedAsset()
-  const navigate = useNavigate()
 
   const handleClick = useCallback(() => {
-    addRecentlySearchedAsset({ ...collection, isNft: true, chain: Chain.Ethereum })
+    // addRecentlySearchedAsset({ ...collection, isNft: true, chain: Chain.Rollux })
     toggleOpen()
-    sendAnalyticsEvent(InterfaceEventName.NAVBAR_RESULT_SELECTED, { ...eventProperties })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [addRecentlySearchedAsset, collection, toggleOpen, eventProperties])
-
-  useEffect(() => {
-    const keyDownHandler = (event: KeyboardEvent) => {
-      if (event.key === 'Enter' && isHovered) {
-        event.preventDefault()
-        navigate(`/nfts/collection/${collection.address}`)
-        handleClick()
-      }
-    }
-    document.addEventListener('keydown', keyDownHandler)
-    return () => {
-      document.removeEventListener('keydown', keyDownHandler)
-    }
-  }, [toggleOpen, isHovered, collection, navigate, handleClick])
 
   return (
     <Link
@@ -120,7 +104,7 @@ export const CollectionRow = ({
 }
 
 interface TokenRowProps {
-  token: SearchToken
+  token: TokenData
   isHovered: boolean
   setHoveredIndex: (index: number | undefined) => void
   toggleOpen: () => void
@@ -133,14 +117,15 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index,
   const navigate = useNavigate()
 
   const handleClick = useCallback(() => {
-    const address = !token.address && token.standard === TokenStandard.Native ? 'NATIVE' : token.address
-    address && addRecentlySearchedAsset({ address, chain: token.chain })
+    const address =
+      !token.address && token.address == '0x4200000000000000000000000000000000000006' ? 'NATIVE' : token.address
+    address && addRecentlySearchedAsset({ address, chain: 'ROLLUX' as Chain })
 
     toggleOpen()
-    sendAnalyticsEvent(InterfaceEventName.NAVBAR_RESULT_SELECTED, { ...eventProperties })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [addRecentlySearchedAsset, token, toggleOpen, eventProperties])
 
-  const tokenDetailsPath = getTokenDetailsURL(token)
+  const tokenDetailsPath = getTokenDetailsURL({ address: token.address.toLowerCase(), chain: 'ROLLUX' as Chain })
   // Close the modal on escape
   useEffect(() => {
     const keyDownHandler = (event: KeyboardEvent) => {
@@ -156,7 +141,7 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index,
     }
   }, [toggleOpen, isHovered, token, navigate, handleClick, tokenDetailsPath])
 
-  const arrow = getDeltaArrow(token.market?.pricePercentChange?.value, 18)
+  const arrow = getDeltaArrow(token.priceUSDChange, 18)
 
   return (
     <Link
@@ -169,13 +154,7 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index,
       style={{ background: isHovered ? vars.color.lightGrayOverlay : 'none' }}
     >
       <Row style={{ width: '65%' }}>
-        <QueryTokenLogo
-          token={token}
-          symbol={token.symbol}
-          size="36px"
-          backupImg={token.project?.logoUrl}
-          style={{ paddingRight: '8px' }}
-        />
+        <QueryTokenLogo token={token} symbol={token.symbol} size="36px" style={{ paddingRight: '8px' }} />
         <Column className={styles.suggestionPrimaryContainer}>
           <Row gap="4" width="full">
             <Box className={styles.primaryText}>{token.name}</Box>
@@ -186,17 +165,15 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index,
       </Row>
 
       <Column className={styles.suggestionSecondaryContainer}>
-        {!!token.market?.price?.value && (
+        {!!token.priceUSD && (
           <>
             <Row gap="4">
-              <Box className={styles.primaryText}>{formatUSDPrice(token.market.price.value)}</Box>
+              <Box className={styles.primaryText}>{formatUSDPrice(token.priceUSD)}</Box>
             </Row>
             <PriceChangeContainer>
               <ArrowCell>{arrow}</ArrowCell>
               <ThemedText.BodySmall>
-                <DeltaText delta={token.market?.pricePercentChange?.value}>
-                  {Math.abs(token.market?.pricePercentChange?.value ?? 0).toFixed(2)}%
-                </DeltaText>
+                <DeltaText delta={token.priceUSDChange}>{Math.abs(token.priceUSDChange ?? 0).toFixed(2)}%</DeltaText>
               </ThemedText.BodySmall>
             </PriceChangeContainer>
           </>

@@ -68,7 +68,7 @@ export const searchBarContainerNft = style([
   }),
   {
     backdropFilter: 'blur(60px)',
-    borderRadius: '12px',
+    borderRadius: '30px',
   },
 ])
 
@@ -96,7 +96,7 @@ export const searchBarInput = style([
     padding: '0',
     fontWeight: 'normal',
     fontSize: '16',
-    color: { default: 'textPrimary', placeholder: 'textSecondary' },
+    color: { default: 'textPrimary', placeholder: 'placeHolderSearch' },
     border: 'none',
     background: 'none',
     lineHeight: '24',

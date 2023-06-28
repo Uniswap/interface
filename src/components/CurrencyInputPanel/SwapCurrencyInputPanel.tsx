@@ -1,8 +1,6 @@
 import { Trans } from '@lingui/macro'
-import { TraceEvent } from '@uniswap/analytics'
-import { BrowserEvent, InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
-import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
-import { Pair } from '@uniswap/v2-sdk'
+import { Currency, CurrencyAmount, Percent } from '@pollum-io/sdk-core'
+import { Pair } from '@pollum-io/v1-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { AutoColumn } from 'components/Column'
 import { LoadingOpacityContainer, loadingOpacityMixin } from 'components/Loader/styled'
@@ -59,10 +57,10 @@ const CurrencySelect = styled(ButtonGray)<{
   disabled?: boolean
 }>`
   align-items: center;
-  background-color: ${({ selected, theme }) => (selected ? theme.backgroundInteractive : theme.accentAction)};
+  background-color: ${({ selected, theme }) => (selected ? theme.backgroundInteractive : theme.accentActionSoft)};
   opacity: ${({ disabled }) => (!disabled ? 1 : 0.4)};
   box-shadow: ${({ selected }) => (selected ? 'none' : '0px 6px 10px rgba(0, 0, 0, 0.075)')};
-  color: ${({ selected, theme }) => (selected ? theme.textPrimary : theme.white)};
+  color: ${({ selected, theme }) => (selected ? theme.textPrimary : theme.accentActive)};
   cursor: pointer;
   height: unset;
   border-radius: 16px;
@@ -79,7 +77,7 @@ const CurrencySelect = styled(ButtonGray)<{
 
   &:hover,
   &:active {
-    background-color: ${({ theme, selected }) => (selected ? theme.backgroundInteractive : theme.accentAction)};
+    background-color: ${({ theme, selected }) => (selected ? theme.backgroundInteractive : theme.accentActionSoft)};
   }
 
   &:before {
@@ -144,21 +142,21 @@ const StyledDropDown = styled(DropDown)<{ selected: boolean }>`
   margin-left: 8px;
 
   path {
-    stroke: ${({ selected, theme }) => (selected ? theme.textPrimary : theme.white)};
+    stroke: ${({ selected, theme }) => (selected ? theme.textPrimary : theme.accentActive)};
     stroke-width: 2px;
   }
 `
 
 const StyledTokenName = styled.span<{ active?: boolean }>`
   ${({ active }) => (active ? '  margin: 0 0.25rem 0 0.25rem;' : '  margin: 0 0.25rem 0 0.25rem;')}
-  font-size: 20px;
-  font-weight: 600;
+  font-size: 16px;
+  font-weight: 500;
 `
 
 const StyledBalanceMax = styled.button<{ disabled?: boolean }>`
   background-color: transparent;
   border: none;
-  color: ${({ theme }) => theme.accentAction};
+  color: ${({ theme }) => theme.accentActive};
   cursor: pointer;
   font-size: 14px;
   font-weight: 600;
@@ -178,7 +176,7 @@ const StyledBalanceMax = styled.button<{ disabled?: boolean }>`
 const StyledNumericalInput = styled(NumericalInput)<{ $loading: boolean }>`
   ${loadingOpacityMixin};
   text-align: left;
-  font-size: 36px;
+  font-size: 24px;
   line-height: 44px;
   font-variant: small-caps;
 `
@@ -325,15 +323,9 @@ export default function SwapCurrencyInputPanel({
                     ) : null}
                   </ThemedText.DeprecatedBody>
                   {showMaxButton && selectedCurrencyBalance ? (
-                    <TraceEvent
-                      events={[BrowserEvent.onClick]}
-                      name={SwapEventName.SWAP_MAX_TOKEN_AMOUNT_SELECTED}
-                      element={InterfaceElementName.MAX_TOKEN_AMOUNT_BUTTON}
-                    >
-                      <StyledBalanceMax onClick={onMax}>
-                        <Trans>Max</Trans>
-                      </StyledBalanceMax>
-                    </TraceEvent>
+                    <StyledBalanceMax onClick={onMax}>
+                      <Trans>Max</Trans>
+                    </StyledBalanceMax>
                   ) : null}
                 </RowFixed>
               ) : (

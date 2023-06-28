@@ -46,17 +46,34 @@ const ToggleElementHoverStyle = (hasBgColor: boolean, theme: any, isActive?: boo
         color: isActive ? theme.white : theme.textTertiary,
       }
 
+const getBackgroundColor = ({ theme, bgColor, isActive }: any) => {
+  const isBgColorProvided = Boolean(bgColor)
+  const isActionActive = isActive && !isBgColorProvided
+
+  if (isActionActive) {
+    return theme.accentActive
+  }
+
+  if (isBgColorProvided) {
+    return bgColor
+  }
+
+  return theme.textTertiary
+}
+
 const ToggleElement = styled.span<{ isActive?: boolean; bgColor?: string; isInitialToggleLoad?: boolean }>`
   animation: 0.1s
     ${({ isActive, isInitialToggleLoad }) => (isInitialToggleLoad ? 'none' : isActive ? turnOnToggle : turnOffToggle)}
     ease-in;
-  background: ${({ theme, bgColor, isActive }) =>
-    isActive ? bgColor ?? theme.accentAction : bgColor ? theme.deprecated_bg4 : theme.textTertiary};
+
+  background: ${({ theme, bgColor, isActive }) => getBackgroundColor({ theme, bgColor, isActive })};
   border-radius: 50%;
   height: 24px;
+
   :hover {
     ${({ bgColor, theme, isActive }) => ToggleElementHoverStyle(!!bgColor, theme, isActive)}
   }
+
   margin-left: ${({ isActive }) => isActive && '2.2em'};
   margin-right: ${({ isActive }) => !isActive && '2.2em'};
   width: 24px;

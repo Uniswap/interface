@@ -31,6 +31,8 @@ const themeContractValues = {
     textPrimary: '',
     textSecondary: '',
     textTertiary: '',
+    placeHolderSearch: '',
+    headerItems: '',
 
     dropShadow: '',
   },
@@ -52,6 +54,7 @@ const themeContractValues = {
 export type Theme = typeof themeContractValues
 
 export const themeVars = createGlobalThemeContract(themeContractValues, (_, path) => `genie-${path.join('-')}`)
+// const   = DefaultTheme
 
 const dimensions = {
   '0': '0',
@@ -165,7 +168,7 @@ export const vars = createGlobalTheme(':root', {
     none: 'none',
     white: '#FFF',
 
-    // new uniswap colors:
+    // // new uniswap colors:
     blue400: '#4C82FB',
     blue200: '#ADBCFF30',
     pink400: '#FB118E',
@@ -198,6 +201,8 @@ export const vars = createGlobalTheme(':root', {
     gray850: '#0E1524',
     gray900: '#0D111C',
     gray950: '#080B11',
+    deep: '#081120',
+    input: '#0B172C',
     accentTextLightTertiary: 'rgba(255, 255, 255, 0.12)',
     outline: 'rgba(153, 161, 189, 0.24)',
     lightGrayOverlay: '#99A1BD14',
@@ -265,8 +270,9 @@ export const vars = createGlobalTheme(':root', {
     '500': '500ms',
   },
   fonts: {
-    body: 'Inter, sans-serif',
-    heading: 'Adieu, sans-serif',
+    heading: 'Inter',
+    body: 'Inter',
+    mono: 'Roboto Mono',
   },
 })
 

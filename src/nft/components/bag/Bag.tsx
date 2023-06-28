@@ -1,6 +1,4 @@
 import { Trans } from '@lingui/macro'
-import { sendAnalyticsEvent } from '@uniswap/analytics'
-import { NFTEventName } from '@uniswap/analytics-events'
 import { useIsNftDetailsPage, useIsNftPage, useIsNftProfilePage } from 'hooks/useIsNftPage'
 import { BagFooter } from 'nft/components/bag/BagFooter'
 import { Box } from 'nft/components/Box'
@@ -189,11 +187,6 @@ const Bag = () => {
             onClick={() => {
               toggleBag()
               setProfilePageState(ProfilePageStateType.LISTING)
-              sendAnalyticsEvent(NFTEventName.NFT_PROFILE_PAGE_START_SELL, {
-                list_quantity: sellAssets.length,
-                collection_addresses: sellAssets.map((asset) => asset.asset_contract.address),
-                token_ids: sellAssets.map((asset) => asset.tokenId),
-              })
             }}
           >
             <Trans>Continue</Trans>

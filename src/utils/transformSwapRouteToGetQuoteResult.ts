@@ -1,7 +1,7 @@
-import { Protocol } from '@uniswap/router-sdk'
-import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import { routeAmountsToString, SwapRoute } from '@uniswap/smart-order-router'
-import { Pool } from '@uniswap/v3-sdk'
+import { Protocol } from '@pollum-io/router-sdk'
+import { Currency, CurrencyAmount } from '@pollum-io/sdk-core'
+import { routeAmountsToString, SwapRoute } from '@pollum-io/smart-order-router'
+import { Pool } from '@pollum-io/v3-sdk'
 import { GetQuoteResult, V2PoolInRoute, V3PoolInRoute } from 'state/routing/types'
 
 // from routing-api (https://github.com/Uniswap/routing-api/blob/main/lib/handlers/quote/quote.ts#L243-L311)
@@ -25,7 +25,7 @@ export function transformSwapRouteToGetQuoteResult(
   for (const subRoute of route) {
     const { amount, quote, tokenPath } = subRoute
 
-    const pools = subRoute.protocol === Protocol.V2 ? subRoute.route.pairs : subRoute.route.pools
+    const pools = subRoute.protocol === Protocol.V1 ? subRoute.route.pairs : subRoute.route.pools
     const curRoute: (V3PoolInRoute | V2PoolInRoute)[] = []
     for (let i = 0; i < pools.length; i++) {
       const nextPool = pools[i]

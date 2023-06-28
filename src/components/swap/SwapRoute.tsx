@@ -1,10 +1,8 @@
 import { Trans } from '@lingui/macro'
-import { TraceEvent } from '@uniswap/analytics'
-import { BrowserEvent, InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
-import { Protocol } from '@uniswap/router-sdk'
-import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
-import { Pair } from '@uniswap/v2-sdk'
-import { FeeAmount } from '@uniswap/v3-sdk'
+import { Protocol } from '@pollum-io/router-sdk'
+import { Currency, Percent, TradeType } from '@pollum-io/sdk-core'
+import { Pair } from '@pollum-io/v1-sdk'
+import { FeeAmount } from '@pollum-io/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 import AnimatedDropdown from 'components/AnimatedDropdown'
 import { AutoColumn } from 'components/Column'
@@ -64,20 +62,13 @@ export default memo(function SwapRoute({ trade, syncing, fixedOpen = false, ...r
 
   return (
     <Wrapper {...rest} darkMode={darkMode} fixedOpen={fixedOpen}>
-      <TraceEvent
-        events={[BrowserEvent.onClick]}
-        name={SwapEventName.SWAP_AUTOROUTER_VISUALIZATION_EXPANDED}
-        element={InterfaceElementName.AUTOROUTER_VISUALIZATION_ROW}
-        shouldLogImpression={!open}
-      >
-        <RowBetween onClick={() => setOpen(!open)}>
-          <AutoRow gap="4px" width="auto">
-            <AutoRouterLogo />
-            <AutoRouterLabel />
-          </AutoRow>
-          {fixedOpen ? null : <OpenCloseIcon open={open} />}
-        </RowBetween>
-      </TraceEvent>
+      <RowBetween onClick={() => setOpen(!open)}>
+        <AutoRow gap="4px" width="auto">
+          <AutoRouterLogo />
+          <AutoRouterLabel />
+        </AutoRow>
+        {fixedOpen ? null : <OpenCloseIcon open={open} />}
+      </RowBetween>
       <AnimatedDropdown open={open || fixedOpen}>
         <AutoRow gap="4px" width="auto" style={{ paddingTop: '12px', margin: 0 }}>
           {syncing ? (
@@ -129,6 +120,7 @@ const V2_DEFAULT_FEE_TIER = 3000
 /**
  * Loops through all routes on a trade and returns an array of diagram entries.
  */
+// eslint-disable-next-line import/no-unused-modules
 export function getTokenPath(trade: InterfaceTrade<Currency, Currency, TradeType>): RoutingDiagramEntry[] {
   return trade.swaps.map(({ route: { path: tokenPath, pools, protocol }, inputAmount, outputAmount }) => {
     const portion =

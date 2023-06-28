@@ -4,20 +4,10 @@ import { SupportedChainId } from 'constants/chains'
 import store from '../../state/index'
 
 const CHAIN_SUBGRAPH_URL: Record<number, string> = {
-  [SupportedChainId.MAINNET]: 'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3',
-
-  [SupportedChainId.ARBITRUM_ONE]: 'https://api.thegraph.com/subgraphs/name/ianlapham/arbitrum-minimal',
-
-  [SupportedChainId.OPTIMISM]: 'https://api.thegraph.com/subgraphs/name/ianlapham/optimism-post-regenesis',
-
-  [SupportedChainId.POLYGON]: 'https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-v3-polygon',
-
-  [SupportedChainId.CELO]: 'https://api.thegraph.com/subgraphs/name/jesse-sawa/uniswap-celo',
-
-  [SupportedChainId.BNB]: 'https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-v3-bsc',
+  [SupportedChainId.ROLLUX]: 'https://rollux.graph.pegasys.fi/subgraphs/name/pollum-io/pegasys-v3',
 }
 
-const httpLink = new HttpLink({ uri: CHAIN_SUBGRAPH_URL[SupportedChainId.MAINNET] })
+const httpLink = new HttpLink({ uri: CHAIN_SUBGRAPH_URL[SupportedChainId.ROLLUX] })
 
 // This middleware will allow us to dynamically update the uri for the requests based off chainId
 // For more information: https://www.apollographql.com/docs/react/networking/advanced-http-networking/
@@ -29,7 +19,7 @@ const authMiddleware = new ApolloLink((operation, forward) => {
     uri:
       chainId && CHAIN_SUBGRAPH_URL[chainId]
         ? CHAIN_SUBGRAPH_URL[chainId]
-        : CHAIN_SUBGRAPH_URL[SupportedChainId.MAINNET],
+        : CHAIN_SUBGRAPH_URL[SupportedChainId.ROLLUX],
   }))
 
   return forward(operation)
@@ -38,4 +28,19 @@ const authMiddleware = new ApolloLink((operation, forward) => {
 export const apolloClient = new ApolloClient({
   cache: new InMemoryCache(),
   link: concat(authMiddleware, httpLink),
+})
+
+export const blockClient = new ApolloClient({
+  uri: 'https://rollux.graph.pegasys.fi/subgraphs/name/pollum-io/syscoin-blocks',
+  cache: new InMemoryCache(),
+  queryDeduplication: true,
+  defaultOptions: {
+    watchQuery: {
+      fetchPolicy: 'no-cache',
+    },
+    query: {
+      fetchPolicy: 'no-cache',
+      errorPolicy: 'all',
+    },
+  },
 })

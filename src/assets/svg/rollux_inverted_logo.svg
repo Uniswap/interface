@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="rollux_B1_black_yellow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 288 288">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #dbef88;
+      }
+    </style>
+  </defs>
+  <circle cx="144" cy="144" r="127.49"/>
+  <g>
+    <polygon class="cls-1" points="87.69 78.17 92.96 78.17 219.35 194.03 219.35 209.83 87.69 209.83 87.69 78.17"/>
+    <path class="cls-1" d="m187.36,154.61c3.62-7.14,5.66-15.22,5.66-23.78,0-29.09-23.58-52.66-52.66-52.66-10.19,0-19.7,2.9-27.76,7.91l74.76,68.53Z"/>
+  </g>
+</svg>
