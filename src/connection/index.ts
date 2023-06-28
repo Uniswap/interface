@@ -3,7 +3,7 @@ import { initializeConnector } from '@web3-react/core'
 import { GnosisSafe } from '@web3-react/gnosis-safe'
 import { MetaMask } from '@web3-react/metamask'
 import { Network } from '@web3-react/network'
-import { Connector } from '@web3-react/types'
+import { Actions, Connector } from '@web3-react/types'
 import GNOSIS_ICON from 'assets/images/gnosis.png'
 import UNISWAP_LOGO from 'assets/svg/logo.svg'
 import COINBASE_ICON from 'assets/wallets/coinbase-icon.svg'
@@ -82,17 +82,28 @@ export const walletConnectV1Connection: Connection = {
   shouldDisplay: () => !getIsInjectedMobileBrowser(),
 }
 
-const [web3WalletConnectV2, web3WalletConnectV2Hooks] = initializeConnector<WalletConnectV2>(
-  (actions) => new WalletConnectV2({ actions, onError })
-)
-export const walletConnectV2Connection: Connection = {
-  getName: () => 'WalletConnect',
-  connector: web3WalletConnectV2,
-  hooks: web3WalletConnectV2Hooks,
-  type: ConnectionType.WALLET_CONNECT_V2,
-  getIcon: () => WALLET_CONNECT_ICON,
-  shouldDisplay: () => !getIsInjectedMobileBrowser(),
-}
+export const walletConnectV2Connection: Connection = new (class implements Connection {
+  private initializer = (actions: Actions, defaultChainId = SupportedChainId.MAINNET) =>
+    new WalletConnectV2({ actions, defaultChainId, onError })
+
+  type = ConnectionType.WALLET_CONNECT_V2
+  getName = () => 'WalletConnect'
+  getIcon = () => WALLET_CONNECT_ICON
+  shouldDisplay = () => !getIsInjectedMobileBrowser()
+
+  private _connector = initializeConnector<WalletConnectV2>(this.initializer)
+  overrideActivate = (chainId?: SupportedChainId) => {
+    // Always re-create the connector, so that the chainId is updated.
+    this._connector = initializeConnector((actions) => this.initializer(actions, chainId))
+    return false
+  }
+  get connector() {
+    return this._connector[0]
+  }
+  get hooks() {
+    return this._connector[1]
+  }
+})()
 
 const [web3UniwalletConnect, web3UniwalletConnectHooks] = initializeConnector<UniwalletConnect>(
   (actions) => new UniwalletConnect({ actions, onError })
@@ -133,7 +144,6 @@ const [web3CoinbaseWallet, web3CoinbaseWalletHooks] = initializeConnector<Coinba
       onError,
     })
 )
-
 const coinbaseWalletConnection: Connection = {
   getName: () => 'Coinbase Wallet',
   connector: web3CoinbaseWallet,
