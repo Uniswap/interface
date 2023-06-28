@@ -5,8 +5,7 @@ import { useCallback, useMemo } from 'react'
 import { useDispatch } from 'react-redux'
 import { useAppSelector } from 'state/hooks'
 
-import { addTransaction } from '../transactions/reducer'
-import { addSignature, updateSignature } from './reducer'
+import { addSignature } from './reducer'
 import { SignatureDetails, SignatureType, UniswapXOrderDetails } from './types'
 
 function isPendingOrder(signature: SignatureDetails): signature is UniswapXOrderDetails {
@@ -70,21 +69,6 @@ export function isFinalizedOrder(orderStatus: UniswapXOrderStatus) {
 
 export function isOnChainOrder(orderStatus: UniswapXOrderStatus) {
   return orderStatus === UniswapXOrderStatus.FILLED || orderStatus === UniswapXOrderStatus.CANCELLED
-}
-
-export function useUpdateOrder() {
-  const dispatch = useDispatch()
-
-  return useCallback(
-    (order: UniswapXOrderDetails, status: UniswapXOrderStatus, txHash?: string) => {
-      if (txHash && isOnChainOrder(status)) {
-        // Creates an entry for the transaction which resulted from the order
-        dispatch(addTransaction({ chainId: order.chainId, from: order.offerer, hash: txHash, info: order.swapInfo }))
-      }
-      dispatch(updateSignature({ ...order, status, txHash }))
-    },
-    [dispatch]
-  )
 }
 
 export function useAllSignatures(): { [id: string]: SignatureDetails } {
