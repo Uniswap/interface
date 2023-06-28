@@ -23,7 +23,7 @@ const mockConnection1: Connection = {
     deactivate: jest.fn(),
   } as unknown as Connector,
   getIcon: () => UNIWALLET_ICON,
-  type: ConnectionType.UNISWAP_WALLET,
+  type: ConnectionType.UNISWAP_WALLET_V2,
 } as unknown as Connection
 
 const mockConnection2: Connection = {
@@ -39,7 +39,7 @@ const mockConnection2: Connection = {
 describe('Wallet Option', () => {
   it('renders default state', () => {
     const component = render(<Option connection={mockConnection1} />)
-    const option = component.getByTestId('wallet-option-UNISWAP_WALLET')
+    const option = component.getByTestId('wallet-option-UNISWAP_WALLET_V2')
     expect(option).toBeEnabled()
     expect(option).toHaveProperty('selected', false)
 
