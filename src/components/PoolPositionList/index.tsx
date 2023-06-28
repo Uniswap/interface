@@ -4,13 +4,16 @@ import { useWeb3React } from '@web3-react/core'
 import POOL_EXTENDED_ABI from 'abis/pool-extended.json'
 import PoolPositionListItem from 'components/PoolPositionListItem'
 import { RowFixed } from 'components/Row'
+import { InfoIconContainer } from 'components/Tokens/TokenTable/TokenRow'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { useMultipleContractSingleData } from 'lib/hooks/multicall'
 import React, { useMemo } from 'react'
+import { Info } from 'react-feather'
 import styled from 'styled-components/macro'
 import { MEDIA_WIDTHS } from 'theme'
 import { PoolPositionDetails } from 'types/position'
 
+// TODO: check if we want to keep margin right 12px by keeping list item margin right at 12px
 const DesktopHeader = styled.div`
   display: none;
   font-size: 14px;
@@ -97,34 +100,51 @@ export default function PoolPositionList({ positions, filterByOperator }: PoolPo
           {positions && ' (' + operatedPools.length + ')'}
         </div>
         {!filterByOperator && (
-          <RowFixed style={{ gap: '40px' }}>
-            <MouseoverTooltip
-              text={<Trans>The pool operator&apos;s annualized yield. Increases as more stakers join the pool.</Trans>}
-            >
-              irr&ensp;
-            </MouseoverTooltip>
-            <MouseoverTooltip
-              text={
-                <Trans>
-                  The stakers&apos; annualized yield. Increases as the pool increases its own stake or as the pool
-                  operator increases the percent of rewards shared.
-                </Trans>
-              }
-            >
-              apr&ensp;
-            </MouseoverTooltip>
+          <RowFixed gap="32px">
+            <RowFixed gap="2px">
+              <Trans>IRR</Trans>
+              <MouseoverTooltip
+                text={
+                  <Trans>
+                    The pool operator&apos;s annualized yield. Increases as more stakers join the pool. Decreases as the
+                    pool operator shares more of his revenue.
+                  </Trans>
+                }
+                placement="right"
+              >
+                <InfoIconContainer>
+                  <Info size={14} />
+                </InfoIconContainer>
+              </MouseoverTooltip>
+            </RowFixed>
+            <RowFixed gap="2px">
+              <Trans>APR</Trans>
+              <MouseoverTooltip
+                text={
+                  <Trans>
+                    The stakers&apos; annualized yield. Increases as the pool increases its own stake or as the pool
+                    operator increases the percent of rewards shared.
+                  </Trans>
+                }
+                placement="right"
+              >
+                <InfoIconContainer>
+                  <Info size={14} />
+                </InfoIconContainer>
+              </MouseoverTooltip>
+            </RowFixed>
           </RowFixed>
         )}
       </DesktopHeader>
       <MobileHeader>
         <div>{filterByOperator ? <Trans>Operated pools</Trans> : <Trans>Loaded pools</Trans>}</div>
         {!filterByOperator && (
-          <RowFixed style={{ gap: '40px' }}>
+          <RowFixed style={{ gap: '40px', marginRight: '8px' }}>
             <div>
-              <Trans>irr&ensp;</Trans>
+              <Trans>IRR</Trans>
             </div>
             <div>
-              <Trans>apr&ensp;</Trans>
+              <Trans>APR</Trans>
             </div>
           </RowFixed>
         )}

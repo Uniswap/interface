@@ -108,9 +108,9 @@ export default function PoolPositionListItem({ positionDetails, returnPage }: Po
         {returnPage === 'mint' ? (
           <DataText>{symbol}</DataText>
         ) : (
-          <RowFixed style={{ gap: '20px' }}>
+          <RowFixed style={{ gap: '24px', marginRight: '8px' }}>
             <DataText>{(Number(irr) * 100).toFixed(1)}%</DataText>
-            <DataText>{(Number(apr) * 100).toFixed(1)}%</DataText>
+            <DataText style={{ minWidth: '50px' }}>{(Number(apr) * 100).toFixed(1)}%</DataText>
           </RowFixed>
         )}
       </RowBetween>
