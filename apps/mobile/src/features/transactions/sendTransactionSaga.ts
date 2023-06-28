@@ -75,8 +75,6 @@ export async function signAndSendTransaction(
   populatedRequest: providers.TransactionRequest
 }> {
   const signer = await signerManager.getSignerForAccount(account)
-  if (!signer) return Promise.reject(`No signer found for ${account}`)
-
   const connectedSigner = signer.connect(provider)
   const hexRequest = hexlifyTransaction(request)
   const populatedRequest = await connectedSigner.populateTransaction(hexRequest)

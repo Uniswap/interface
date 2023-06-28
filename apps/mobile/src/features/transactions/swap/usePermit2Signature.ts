@@ -11,7 +11,8 @@ import dayjs from 'dayjs'
 import { BigNumber, providers } from 'ethers'
 import { useCallback } from 'react'
 import { ChainId } from 'wallet/src/constants/chains'
-import { Account } from 'wallet/src/features/wallet/accounts/types'
+import { logger } from 'wallet/src/features/logger/logger'
+import { Account, AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useProvider, useWalletSigners } from 'wallet/src/features/wallet/context'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
@@ -56,40 +57,58 @@ async function getPermit2PermitSignature(
   chainId: ChainId,
   tokenInAmount: string
 ): Promise<PermitSignatureInfo | undefined> {
-  const user = account.address
-  const allowanceProvider = new AllowanceProvider(provider, PERMIT2_ADDRESS)
-  const universalRouterAddress = UNIVERSAL_ROUTER_ADDRESS(chainId)
-  const {
-    amount: permitAmount,
-    expiration,
-    nonce,
-  } = await allowanceProvider.getAllowanceData(tokenAddress, user, universalRouterAddress)
+  try {
+    if (account.type === AccountType.Readonly) {
+      logger.debug(
+        'usePermit2PermitSignature',
+        'getPermit2Signature',
+        'Cannot sign with a view-only wallet'
+      )
+      return
+    }
 
-  if (!permitAmount.lt(tokenInAmount) && expiration > currentTimeInSeconds()) {
-    return
-  }
+    const user = account.address
+    const allowanceProvider = new AllowanceProvider(provider, PERMIT2_ADDRESS)
+    const universalRouterAddress = UNIVERSAL_ROUTER_ADDRESS(chainId)
+    const {
+      amount: permitAmount,
+      expiration,
+      nonce,
+    } = await allowanceProvider.getAllowanceData(tokenAddress, user, universalRouterAddress)
 
-  const permitMessage = getPermitStruct(tokenAddress, nonce, universalRouterAddress)
-  const { domain, types, values } = AllowanceTransfer.getPermitData(
-    permitMessage,
-    PERMIT2_ADDRESS,
-    chainId
-  )
+    if (!permitAmount.lt(tokenInAmount) && expiration > currentTimeInSeconds()) {
+      return
+    }
 
-  const signature = await signTypedData(
-    domain,
-    types,
-    // required to makes values less specific than `Record<string, unknown>`
-    // alternative would be to modify the sdk to use type aliases over interfaces
-    { ...values },
-    account,
-    signerManager
-  )
-  return {
-    signature,
-    permitMessage,
-    nonce,
-    expiry: BigNumber.from(permitMessage.sigDeadline).toNumber(),
+    const permitMessage = getPermitStruct(tokenAddress, nonce, universalRouterAddress)
+    const { domain, types, values } = AllowanceTransfer.getPermitData(
+      permitMessage,
+      PERMIT2_ADDRESS,
+      chainId
+    )
+
+    const signature = await signTypedData(
+      domain,
+      types,
+      // required to makes values less specific than `Record<string, unknown>`
+      // alternative would be to modify the sdk to use type aliases over interfaces
+      { ...values },
+      account,
+      signerManager
+    )
+    return {
+      signature,
+      permitMessage,
+      nonce,
+      expiry: BigNumber.from(permitMessage.sigDeadline).toNumber(),
+    }
+  } catch (error) {
+    logger.error('Error signing permit message', {
+      tags: {
+        file: 'usePermit2Signature',
+        function: 'getPermit2Signature',
+      },
+    })
   }
 }
 

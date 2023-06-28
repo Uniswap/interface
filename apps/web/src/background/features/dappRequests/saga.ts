@@ -157,10 +157,6 @@ export async function signAndSendTransaction(
   signerManager: SignerManager
 ): Promise<ethers.providers.TransactionResponse> {
   const signer = await signerManager.getSignerForAccount(account)
-  if (!signer) {
-    throw new Error(`No signer found for ${account}`)
-  }
-
   const connectedSigner = signer.connect(provider)
   const hexRequest = hexlifyTransaction(request)
   const populatedRequest = await connectedSigner.populateTransaction(hexRequest)

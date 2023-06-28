@@ -10,7 +10,7 @@ import EIP_2612 from 'wallet/src/abis/eip_2612.json'
 import { SWAP_ROUTER_ADDRESSES } from 'wallet/src/constants/addresses'
 import { ChainId } from 'wallet/src/constants/chains'
 import { logger } from 'wallet/src/features/logger/logger'
-import { Account } from 'wallet/src/features/wallet/accounts/types'
+import { Account, AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useProvider, useWalletSigners } from 'wallet/src/features/wallet/context'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
@@ -114,87 +114,106 @@ async function getPermitSignature(
   signerManager: SignerManager,
   params: PermitTokenParams
 ): Promise<PermitOptions | null> {
-  const { account, chainId, tokenAddress, spender } = params
-  const { address } = account
-  const permittableTokens = PERMITTABLE_TOKENS[chainId]
+  try {
+    const { account, chainId, tokenAddress, spender } = params
+    const { address } = account
+    const permittableTokens = PERMITTABLE_TOKENS[chainId]
 
-  if (!permittableTokens) {
-    logger.debug(
-      'usePermitSignature',
-      'getPermitSignature',
-      'No permittable tokens on the given chain'
-    )
-    return null
+    if (!permittableTokens) {
+      logger.debug(
+        'usePermitSignature',
+        'getPermitSignature',
+        'No permittable tokens on the given chain'
+      )
+      return null
+    }
+
+    if (account.type === AccountType.Readonly) {
+      logger.debug(
+        'usePermitSignature',
+        'getPermitSignature',
+        'Cannot sign with a view-only wallet'
+      )
+      return null
+    }
+
+    const permitInfo = Object.entries(permittableTokens).filter(([permittableAddress]) =>
+      areAddressesEqual(tokenAddress, permittableAddress)
+    )[0]?.[1]
+
+    if (!permitInfo) {
+      logger.debug('usePermitSignature', 'getPermitSignature', 'Permit not needed or not possible')
+      return null
+    }
+
+    // Need to instantiate the contract directly because ContractManager
+    // pulls the cached ERC20 contract, which we don't want here
+    const contract = new Contract(tokenAddress, EIP_2612, provider)
+    const nonce = ((await contract.nonces(address)) as BigNumber).toNumber()
+    const allowed = permitInfo.type === PermitType.ALLOWED
+    const value = MaxUint256.toString()
+    const deadline = inXMinutesUnix(PERMIT_VALIDITY_TIME)
+
+    const message = allowed
+      ? {
+          holder: address,
+          spender,
+          allowed,
+          nonce,
+          expiry: deadline,
+        }
+      : {
+          owner: address,
+          spender,
+          value,
+          nonce,
+          deadline,
+        }
+
+    const domain = permitInfo.version
+      ? {
+          name: permitInfo.name,
+          version: permitInfo.version,
+          verifyingContract: tokenAddress,
+          chainId,
+        }
+      : {
+          name: permitInfo.name,
+          verifyingContract: tokenAddress,
+          chainId,
+        }
+
+    const permitTypes = {
+      Permit: allowed ? PERMIT_ALLOWED_TYPE : EIP2612_TYPE,
+    }
+
+    const signature = await signTypedData(domain, permitTypes, message, account, signerManager)
+    const signatureData = splitSignature(signature)
+    const v = signatureData.v as 0 | 1 | 27 | 28
+    const permitOptions: PermitOptions = allowed
+      ? {
+          expiry: deadline,
+          nonce,
+          s: signatureData.s,
+          r: signatureData.r,
+          v,
+        }
+      : {
+          deadline,
+          amount: value,
+          s: signatureData.s,
+          r: signatureData.r,
+          v,
+        }
+
+    return permitOptions
+  } catch (error) {
+    logger.error('Error signing permit message', {
+      tags: {
+        file: 'usePermitSignature',
+        function: 'getPermitSignature',
+      },
+    })
   }
-
-  const permitInfo = Object.entries(permittableTokens).filter(([permittableAddress]) =>
-    areAddressesEqual(tokenAddress, permittableAddress)
-  )[0]?.[1]
-
-  if (!permitInfo) {
-    logger.debug('usePermitSignature', 'getPermitSignature', 'Permit not needed or not possible')
-    return null
-  }
-
-  // Need to instantiate the contract directly because ContractManager
-  // pulls the cached ERC20 contract, which we don't want here
-  const contract = new Contract(tokenAddress, EIP_2612, provider)
-  const nonce = ((await contract.nonces(address)) as BigNumber).toNumber()
-  const allowed = permitInfo.type === PermitType.ALLOWED
-  const value = MaxUint256.toString()
-  const deadline = inXMinutesUnix(PERMIT_VALIDITY_TIME)
-
-  const message = allowed
-    ? {
-        holder: address,
-        spender,
-        allowed,
-        nonce,
-        expiry: deadline,
-      }
-    : {
-        owner: address,
-        spender,
-        value,
-        nonce,
-        deadline,
-      }
-
-  const domain = permitInfo.version
-    ? {
-        name: permitInfo.name,
-        version: permitInfo.version,
-        verifyingContract: tokenAddress,
-        chainId,
-      }
-    : {
-        name: permitInfo.name,
-        verifyingContract: tokenAddress,
-        chainId,
-      }
-
-  const permitTypes = {
-    Permit: allowed ? PERMIT_ALLOWED_TYPE : EIP2612_TYPE,
-  }
-
-  const signature = await signTypedData(domain, permitTypes, message, account, signerManager)
-  const signatureData = splitSignature(signature)
-  const v = signatureData.v as 0 | 1 | 27 | 28
-  const permitOptions: PermitOptions = allowed
-    ? {
-        expiry: deadline,
-        nonce,
-        s: signatureData.s,
-        r: signatureData.r,
-        v,
-      }
-    : {
-        deadline,
-        amount: value,
-        s: signatureData.s,
-        r: signatureData.r,
-        v,
-      }
-
-  return permitOptions
+  return null
 }

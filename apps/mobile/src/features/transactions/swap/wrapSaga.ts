@@ -5,6 +5,7 @@ import { call } from 'typed-redux-saga'
 import { Weth } from 'wallet/src/abis/types'
 import WETH_ABI from 'wallet/src/abis/weth.json'
 import { ChainId } from 'wallet/src/constants/chains'
+import { logger } from 'wallet/src/features/logger/logger'
 import {
   TransactionOptions,
   TransactionType,
@@ -35,34 +36,44 @@ export async function getWethContract(
 }
 
 export function* wrap(params: Params) {
-  const { account, inputCurrencyAmount, txRequest, txId } = params
-  let typeInfo: TransactionTypeInfo
+  try {
+    const { account, inputCurrencyAmount, txRequest, txId } = params
+    let typeInfo: TransactionTypeInfo
 
-  if (inputCurrencyAmount.currency.isNative) {
-    typeInfo = {
-      type: TransactionType.Wrap,
-      unwrapped: false,
-      currencyAmountRaw: inputCurrencyAmount.quotient.toString(),
+    if (inputCurrencyAmount.currency.isNative) {
+      typeInfo = {
+        type: TransactionType.Wrap,
+        unwrapped: false,
+        currencyAmountRaw: inputCurrencyAmount.quotient.toString(),
+      }
+    } else {
+      typeInfo = {
+        type: TransactionType.Wrap,
+        unwrapped: true,
+        currencyAmountRaw: inputCurrencyAmount.quotient.toString(),
+      }
     }
-  } else {
-    typeInfo = {
-      type: TransactionType.Wrap,
-      unwrapped: true,
-      currencyAmountRaw: inputCurrencyAmount.quotient.toString(),
+
+    const options: TransactionOptions = {
+      request: txRequest,
     }
-  }
 
-  const options: TransactionOptions = {
-    request: txRequest,
+    yield* call(sendTransaction, {
+      txId,
+      chainId: inputCurrencyAmount.currency.chainId,
+      account,
+      options,
+      typeInfo,
+    })
+  } catch (error) {
+    logger.error('Wrap failed', {
+      tags: {
+        file: 'wrapSaga',
+        function: 'wrap',
+        error: JSON.stringify(error),
+      },
+    })
   }
-
-  yield* call(sendTransaction, {
-    txId,
-    chainId: inputCurrencyAmount.currency.chainId,
-    account,
-    options,
-    typeInfo,
-  })
 }
 
 export const {

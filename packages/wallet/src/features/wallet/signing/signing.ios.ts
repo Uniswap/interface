@@ -2,7 +2,6 @@
 
 import { TypedDataDomain, TypedDataField, Wallet } from 'ethers'
 import { arrayify, isHexString } from 'ethers/lib/utils'
-import { logger } from 'wallet/src/features/logger/logger'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { NativeSigner } from 'wallet/src/features/wallet/signing/NativeSigner'
 import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
@@ -16,25 +15,8 @@ export async function signMessage(
   signerManager: SignerManager
 ): Promise<string> {
   const signer = await signerManager.getSignerForAccount(account)
-  if (!signer) {
-    logger.error('Error signing signing message', {
-      tags: {
-        file: 'signing.ios',
-        function: 'signMessage',
-        message,
-        account: JSON.stringify(account),
-      },
-    })
-    return ''
-  }
-
-  let signature
-  if (isHexString(message)) {
-    signature = await signer.signMessage(arrayify(message))
-  } else {
-    signature = await signer.signMessage(message)
-  }
-
+  const formattedMessage = isHexString(message) ? arrayify(message) : message
+  const signature = await signer.signMessage(formattedMessage)
   return ensureLeading0x(signature)
 }
 
@@ -50,17 +32,10 @@ export async function signTypedData(
   // https://github.com/LedgerHQ/ledgerjs/issues/86
   // Ledger does not support signTypedData yet
   if (!(signer instanceof NativeSigner) && !(signer instanceof Wallet)) {
-    logger.error('Error signing typed data with account', {
-      tags: {
-        file: 'signing.ios',
-        function: 'signTypedData',
-      },
-    })
-    return ''
+    throw new Error('Incompatible account for signing typed data')
   }
 
   const signature = await signer._signTypedData(domain, types, value)
-
   return ensureLeading0x(signature)
 }
 
