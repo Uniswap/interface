@@ -1,6 +1,7 @@
 import { t, Trans } from '@lingui/macro'
 import { TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
+import { useWeb3React } from '@web3-react/core'
 import { useAccountDrawer } from 'components/AccountDrawer'
 import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button'
 import Loader from 'components/Icons/LoadingSpinner'
@@ -173,7 +174,8 @@ export default function Option({ connection }: OptionProps) {
   const { activationState, tryActivation } = useActivationState()
   const [wCPopoverOpen, setWCPopoverOpen] = useState(false)
   const [accountDrawerOpen, toggleAccountDrawerOpen] = useAccountDrawer()
-  const activate = () => tryActivation(connection, toggleAccountDrawerOpen)
+  const { chainId } = useWeb3React()
+  const activate = () => tryActivation(connection, toggleAccountDrawerOpen, chainId)
 
   useEffect(() => {
     if (!accountDrawerOpen) setWCPopoverOpen(false)
