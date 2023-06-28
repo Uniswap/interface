@@ -56,17 +56,8 @@ export function isPricePoint(p: PricePoint | null): p is PricePoint {
 }
 
 export const CHAIN_ID_TO_BACKEND_NAME: { [key: number]: Chain } = {
-  // [SupportedChainId.MAINNET]: Chain.Ethereum,
-  // [SupportedChainId.GOERLI]: Chain.EthereumGoerli,
-  // [SupportedChainId.POLYGON]: Chain.Polygon,
-  // [SupportedChainId.POLYGON_MUMBAI]: Chain.Polygon,
-  // [SupportedChainId.CELO]: Chain.Celo,
-  // [SupportedChainId.CELO_ALFAJORES]: Chain.Celo,
-  // [SupportedChainId.ARBITRUM_ONE]: Chain.Arbitrum,
-  // [SupportedChainId.ARBITRUM_GOERLI]: Chain.Arbitrum,
-  [SupportedChainId.ROLLUX]: 'ROLLUX' as Chain,
-  [SupportedChainId.ROLLUX_TANENBAUM]: 'ROLLUX' as Chain,
-  // [SupportedChainId.BNB]: Chain.Bnb,
+  [SupportedChainId.ROLLUX]: "ROLLUX" as Chain,
+  [SupportedChainId.ROLLUX_TANENBAUM]: "ROLLUX" as Chain,
 }
 
 export function chainIdToBackendName(chainId: number | undefined) {
@@ -96,36 +87,25 @@ const URL_CHAIN_PARAM_TO_BACKEND: { [key: string]: Chain } = {
   // polygon: Chain.Polygon,
   // celo: Chain.Celo,
   // arbitrum: Chain.Arbitrum,
-  optimism: Chain.Optimism,
+  rollux:  "ROLLUX" as Chain,
   // bnb: Chain.Bnb,
 }
 
 export function validateUrlChainParam(chainName: string | undefined) {
-  return chainName && URL_CHAIN_PARAM_TO_BACKEND[chainName]
-    ? URL_CHAIN_PARAM_TO_BACKEND[chainName]
-    : ('ROLLUX' as Chain)
+  return chainName && URL_CHAIN_PARAM_TO_BACKEND[chainName] ? URL_CHAIN_PARAM_TO_BACKEND[chainName] : "ROLLUX" as Chain
 }
 
 // TODO(cartcrom): refactor into safer lookup & replace usage
 // TODO verify this later
-export const CHAIN_NAME_TO_CHAIN_ID: { [key in Chain]: SupportedChainId } = {
-  [Chain.Ethereum]: SupportedChainId.ROLLUX,
-  [Chain.EthereumGoerli]: SupportedChainId.ROLLUX,
-  [Chain.Polygon]: SupportedChainId.ROLLUX,
-  [Chain.Celo]: SupportedChainId.ROLLUX,
-  [Chain.Optimism]: SupportedChainId.ROLLUX,
-  [Chain.Arbitrum]: SupportedChainId.ROLLUX,
-  [Chain.UnknownChain]: SupportedChainId.ROLLUX,
-  [Chain.Bnb]: SupportedChainId.ROLLUX,
-  ['ROLLUX' as Chain]: SupportedChainId.ROLLUX,
-  [Chain.EthereumSepolia]: SupportedChainId.ROLLUX,
+export const CHAIN_NAME_TO_CHAIN_ID: { [key in string]: SupportedChainId } = {
+  ["ROLLUX" as Chain]: SupportedChainId.ROLLUX,
 }
 
 export function fromGraphQLChain(chain: Chain): SupportedChainId {
   return CHAIN_NAME_TO_CHAIN_ID[chain]
 }
 
-export const BACKEND_CHAIN_NAMES: Chain[] = [Chain.Optimism]
+export const BACKEND_CHAIN_NAMES: Chain[] = ["ROLLUX" as Chain]
 
 export function getTokenDetailsURL({
   address,
