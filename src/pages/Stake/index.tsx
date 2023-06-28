@@ -85,8 +85,8 @@ const WrapSmall = styled(RowBetween)`
   `};
 `
 
-function highestAprFirst(a: any, b: any) {
-  return b.apr - a.apr
+function biggestOwnStakeFirst(a: any, b: any) {
+  return b.poolOwnStake - a.poolOwnStake
 }
 
 export default function Stake() {
@@ -136,13 +136,15 @@ export default function Stake() {
       .map((p, i) => {
         const apr = stakingPools?.[i].apr
         const irr = stakingPools?.[i].irr
+        const poolOwnStake = stakingPools?.[i].poolOwnStake
         return {
           ...p,
           irr,
           apr,
+          poolOwnStake,
         }
       })
-      .sort(highestAprFirst)
+      .sort(biggestOwnStakeFirst)
   }, [allPools, stakingPools])
 
   // TODO: useStakingPools hook also returns stake, ownStake, can use as filter and add stake to page
