@@ -119,13 +119,13 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index,
   const handleClick = useCallback(() => {
     const address =
       !token.address && token.address == '0x4200000000000000000000000000000000000006' ? 'NATIVE' : token.address
-    address && addRecentlySearchedAsset({ address, chain: "ROLLUX" as Chain })
+    address && addRecentlySearchedAsset({ address, chain: 'ROLLUX' as Chain })
 
     toggleOpen()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [addRecentlySearchedAsset, token, toggleOpen, eventProperties])
 
-  const tokenDetailsPath = getTokenDetailsURL({ address: token.address.toLowerCase(), chain: "ROLLUX" as Chain })
+  const tokenDetailsPath = getTokenDetailsURL({ address: token.address.toLowerCase(), chain: 'ROLLUX' as Chain })
   // Close the modal on escape
   useEffect(() => {
     const keyDownHandler = (event: KeyboardEvent) => {

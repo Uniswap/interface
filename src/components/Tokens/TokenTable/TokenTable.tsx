@@ -1,14 +1,14 @@
 import { Trans } from '@lingui/macro'
-import { validateUrlChainParam } from 'graphql/data/util'
 import { useNewTopTokens } from 'graphql/tokens/NewTopTokens'
 import { PAGE_SIZE } from 'graphql/tokens/TokenData'
 import { useFetchedTokenData } from 'graphql/tokens/TokenData'
-import { ReactNode } from 'react'
+import { useAtomValue } from 'jotai/utils'
+import { ReactNode, useMemo } from 'react'
 import { AlertTriangle } from 'react-feather'
-import { useParams } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from '../constants'
+import { filterStringAtom } from '../state'
 import { HeaderRow, LoadedRow, LoadingRow } from './TokenRow'
 
 const GridContainer = styled.div`
@@ -76,17 +76,23 @@ function LoadingTokenTable({ rowCount = PAGE_SIZE }: { rowCount?: number }) {
 }
 
 export default function TokenTable() {
-  const chainName = validateUrlChainParam(useParams<{ chainName?: string }>().chainName)
-
   const { loading, tokens: newTokens } = useNewTopTokens()
   const tokensAddress = newTokens?.map((token) => token.id) || []
+  const filterString = useAtomValue(filterStringAtom)
+  const { loading: tokenDataLoading, data: tokenData } = useFetchedTokenData(tokensAddress)
 
-  const { loading: tokenDataLoading, data: tokenDatas } = useFetchedTokenData(tokensAddress)
+  const filteredData = useMemo(() => {
+    return tokenData?.filter((obj) => {
+      const nameMatch = obj.name.toLowerCase().includes(filterString.toLowerCase())
+      const symbolMatch = obj.symbol.toLowerCase().includes(filterString.toLowerCase())
+      return nameMatch || symbolMatch
+    })
+  }, [filterString, tokenData])
 
   /* loading and error state */
-  if (loading && tokenDataLoading && !newTokens && !tokenDatas) {
+  if (loading && tokenDataLoading && !newTokens && !tokenData) {
     return <LoadingTokenTable rowCount={PAGE_SIZE} />
-  } else if (!tokenDatas) {
+  } else if (!filteredData) {
     return (
       <NoTokensState
         message={
@@ -102,15 +108,15 @@ export default function TokenTable() {
       <GridContainer>
         <HeaderRow />
         <TokenDataContainer>
-          {tokenDatas?.map(
+          {filteredData?.map(
             (token, index) =>
               token?.address && (
                 <LoadedRow
                   key={token.address}
                   tokenListIndex={index}
-                  tokenListLength={tokenDatas.length}
+                  tokenListLength={filteredData.length}
                   token={token}
-                  sortRank={0}
+                  sortRank={index + 1}
                 />
               )
           )}

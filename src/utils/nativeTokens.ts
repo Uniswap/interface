@@ -7,7 +7,7 @@ export function getNativeTokenDBAddress(chain: Chain): string | undefined {
     return undefined
   }
   switch (chain) {
-    case "ROLLUX" as Chain:
+    case 'ROLLUX' as Chain:
     default:
       return undefined
   }
