@@ -15,6 +15,8 @@ import { CallStateResult, useSingleCallResult, useSingleContractMultipleData } f
 import { useLeverageManagerContract, useTokenContract } from 'hooks/useContract'
 // import {useToken} from 'hooks/Tokens'
 import { useToken } from '../../../hooks/Tokens'
+import { SupportedChainId } from 'constants/chains'
+import { useWeb3React } from '@web3-react/core'
 
 const GridContainer = styled.div`
   display: flex;
@@ -167,9 +169,14 @@ export default function TokenTable() {
     return{token0, token1}
   })
 
+  const { chainId, account, provider } = useWeb3React()
+
 
   /* loading and error state */
-  if (loadingTokens && !tokens) {
+  if (chainId !== SupportedChainId.SEPOLIA || !account || !provider) {
+    return <Trans>Connect Wallet to Sepolia</Trans>
+  }
+  else if (loadingTokens && !tokens) {
     return <LoadingTokenTable rowCount={PAGE_SIZE} />
   } else if (!tokens) {
     return (
