@@ -11,7 +11,7 @@ export const UNI_ADDRESS: AddressMap = {
   [SupportedChainId.ROLLUX]: '0x48023b16c3e81AA7F6eFFbdEB35Bb83f4f31a8fd',
 }
 
-export const UNISWAP_NFT_AIRDROP_CLAIM_ADDRESS = '0x0000000000000000000000000000000000000000'
+export const UNISWAP_NFT_AIRDROP_CLAIM_ADDRESS = '0x8B799381ac40b838BBA4131ffB26197C432AFe78'
 
 export const V2_FACTORY_ADDRESSES: AddressMap = {
   [SupportedChainId.ROLLUX_TANENBAUM]: V2_FACTORY_ADDRESS,
@@ -37,31 +37,25 @@ export const MULTICALL_ADDRESS: AddressMap = {
  * The oldest V0 governance address
  */
 export const GOVERNANCE_ALPHA_V0_ADDRESSES: AddressMap = {
-  [SupportedChainId.ROLLUX]: '0x0000000000000000000000000000000000000000', //TODO: deploy this contract to Rollux
 }
 /**
  * The older V1 governance address
  */
 export const GOVERNANCE_ALPHA_V1_ADDRESSES: AddressMap = {
-  [SupportedChainId.ROLLUX]: '0x0000000000000000000000000000000000000000', //TODO: deploy this contract to Rollux
 }
 /**
  * The latest governor bravo that is currently admin of timelock
  */
 export const GOVERNANCE_BRAVO_ADDRESSES: AddressMap = {
-  [SupportedChainId.ROLLUX]: '0x0000000000000000000000000000000000000000', //TODO: deploy this contract to Rollux
 }
 
 export const TIMELOCK_ADDRESS: AddressMap = {
-  [SupportedChainId.ROLLUX]: '0x0000000000000000000000000000000000000000', //TODO: deploy this contract to Rollux
 }
 
 export const MERKLE_DISTRIBUTOR_ADDRESS: AddressMap = {
-  [SupportedChainId.ROLLUX]: '0x0000000000000000000000000000000000000000', //TODO: deploy this contract to Rollux
 }
 
 export const ARGENT_WALLET_DETECTOR_ADDRESS: AddressMap = {
-  [SupportedChainId.ROLLUX]: '0x0000000000000000000000000000000000000000', //TODO: deploy this contract to Rollux
 }
 
 export const QUOTER_ADDRESSES: AddressMap = {

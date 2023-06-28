@@ -33,7 +33,7 @@ function getRouter(chainId: ChainId): AlphaRouter {
 
 // routing API quote params: https://github.com/Uniswap/routing-api/blob/main/lib/handlers/quote/schema/quote-schema.ts
 const API_QUERY_PARAMS = {
-  protocols: 'v2,v3,mixed',
+  protocols: 'v1,v3,mixed',
 }
 const CLIENT_PARAMS = {
   protocols: [Protocol.V1, Protocol.V3, Protocol.MIXED],
@@ -82,7 +82,7 @@ interface GetQuoteArgs {
 export const routingApi = createApi({
   reducerPath: 'routingApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'east-2.amazonaws.com/prod/https://',
+    baseUrl: 'api.pegasys.fi/prod',
   }),
   endpoints: (build) => ({
     getQuote: build.query<GetQuoteResult, GetQuoteArgs>({

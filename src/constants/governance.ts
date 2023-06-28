@@ -9,16 +9,16 @@ import {
 } from './addresses'
 
 export const COMMON_CONTRACT_NAMES: Record<number, { [address: string]: string }> = {
-  [SupportedChainId.ROLLUX]: {
-    [UNI_ADDRESS[SupportedChainId.ROLLUX]]: 'PSYS',
-    [TIMELOCK_ADDRESS[SupportedChainId.ROLLUX]]: 'Timelock',
-    [GOVERNANCE_ALPHA_V0_ADDRESSES[SupportedChainId.ROLLUX]]: 'Governance (V0)',
-    [GOVERNANCE_ALPHA_V1_ADDRESSES[SupportedChainId.ROLLUX]]: 'Governance (V1)',
-    [GOVERNANCE_BRAVO_ADDRESSES[SupportedChainId.ROLLUX]]: 'Governance',
-    '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e': 'ENS Registry',
-    '0x4976fb03C32e5B8cfe2b6cCB31c09Ba78EBaBa41': 'ENS Public Resolver',
-    '0xf754A7E347F81cFdc70AF9FbCCe9Df3D826360FA': 'Franchiser Factory',
-  },
+  // [SupportedChainId.ROLLUX]: {
+  //   [UNI_ADDRESS[SupportedChainId.ROLLUX]]: 'PSYS',
+  //   [TIMELOCK_ADDRESS[SupportedChainId.ROLLUX]]: 'Timelock',
+  //   [GOVERNANCE_ALPHA_V0_ADDRESSES[SupportedChainId.ROLLUX]]: 'Governance (V0)',
+  //   [GOVERNANCE_ALPHA_V1_ADDRESSES[SupportedChainId.ROLLUX]]: 'Governance (V1)',
+  //   [GOVERNANCE_BRAVO_ADDRESSES[SupportedChainId.ROLLUX]]: 'Governance',
+  //   '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e': 'ENS Registry',
+  //   '0x4976fb03C32e5B8cfe2b6cCB31c09Ba78EBaBa41': 'ENS Public Resolver',
+  //   '0xf754A7E347F81cFdc70AF9FbCCe9Df3D826360FA': 'Franchiser Factory',
+  // },
 }
 
 // in PoS, ethereum block time is 12s, see https://ethereum.org/en/developers/docs/blocks/#block-time

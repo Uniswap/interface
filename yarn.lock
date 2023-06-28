@@ -3039,6 +3039,33 @@
     node-cache "^5.1.2"
     stats-lite "^2.2.0"
 
+"@pollum-io/smart-order-router@0.0.12":
+  version "0.0.12"
+  resolved "https://registry.yarnpkg.com/@pollum-io/smart-order-router/-/smart-order-router-0.0.12.tgz#f99733d635a95c6c596911f99d1691bc2cfdd250"
+  integrity sha512-dJ3AptP+cB7sWSFtofVKOfQba6yxOhkhRfXZzSQlBwhq4SrXrTAccI64f07EL/2ZvubHp2bj/ur04aRCr8+6WQ==
+  dependencies:
+    "@pollum-io/default-token-list" latest
+    "@pollum-io/router-sdk" "0.0.3"
+    "@pollum-io/swap-router-contracts" "0.0.5"
+    "@pollum-io/universal-router" "0.0.4"
+    "@pollum-io/universal-router-sdk" "0.0.3"
+    "@pollum-io/v1-sdk" "0.0.2"
+    "@pollum-io/v3-sdk" "0.0.1"
+    "@uniswap/permit2-sdk" "^1.2.0"
+    "@uniswap/token-lists" "^1.0.0-beta.25"
+    async-retry "^1.3.1"
+    await-timeout "^1.1.1"
+    axios "^0.21.1"
+    bunyan "^1.8.15"
+    bunyan-blackhole "^1.1.1"
+    ethers "^5.7.2"
+    graphql "^15.5.0"
+    graphql-request "^3.4.0"
+    lodash "^4.17.21"
+    mnemonist "^0.38.3"
+    node-cache "^5.1.2"
+    stats-lite "^2.2.0"
+
 "@pollum-io/swap-router-contracts@0.0.4":
   version "0.0.4"
   resolved "https://registry.yarnpkg.com/@pollum-io/swap-router-contracts/-/swap-router-contracts-0.0.4.tgz#d3af8a34a472ba3c04b989d60c0b63734d67a849"
@@ -3067,6 +3094,20 @@
   version "0.0.3"
   resolved "https://registry.yarnpkg.com/@pollum-io/universal-router-sdk/-/universal-router-sdk-0.0.3.tgz#1f4436cfb16c06393a5043b774f496971805aa28"
   integrity sha512-CIM7yD8TDwiA45t62Uy9CkUxdLk/VDwzOMHCZAkVJie4yoNf04Uls+z32JBHEozPe0BSvr81WlUuWJIDFikAWA==
+  dependencies:
+    "@pollum-io/router-sdk" "0.0.3"
+    "@pollum-io/sdk-core" "0.0.3"
+    "@pollum-io/universal-router" "0.0.4"
+    "@pollum-io/v1-sdk" "0.0.2"
+    "@pollum-io/v3-sdk" "0.0.1"
+    "@uniswap/permit2-sdk" "^1.2.0"
+    bignumber.js "^9.0.2"
+    ethers "^5.3.1"
+
+"@pollum-io/universal-router-sdk@0.0.4":
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/@pollum-io/universal-router-sdk/-/universal-router-sdk-0.0.4.tgz#b45333760afe7b73e9015d96a00ab8384fc90226"
+  integrity sha512-DQGetyfSnLImWOfpp4vTIOCpyQl9ryzVok5DWpTuqtZ3wRbpQebbAlgscW5q1OQ4lb0zXm6NbF2RAv4sNcjh8w==
   dependencies:
     "@pollum-io/router-sdk" "0.0.3"
     "@pollum-io/sdk-core" "0.0.3"

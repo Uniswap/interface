@@ -129,6 +129,7 @@ export const CHAIN_NAME_TO_CHAIN_ID: { [key in Chain]: SupportedChainId } = {
   [Chain.UnknownChain]: SupportedChainId.ROLLUX,
   [Chain.Bnb]: SupportedChainId.ROLLUX,
   [Chain.Rollux]: SupportedChainId.ROLLUX,
+  [Chain.EthereumSepolia]: SupportedChainId.ROLLUX,
 }
 
 export function fromGraphQLChain(chain: Chain): SupportedChainId {
