@@ -13,7 +13,7 @@ export const MAIN_CARDS = [
   {
     to: '/swap',
     title: 'Swap tokens',
-    description: 'Buy, sell, and explore tokens on Syscoin, Rollux, Optimism, and more.',
+    description: 'Buy, sell, and explore tokens on Syscoin, Rollux and more.',
     cta: 'Trade Tokens',
     darkBackgroundImgSrc: isMobile ? swapCardMobileImgSrc : swapCardImgSrc,
     lightBackgroundImgSrc: isMobile ? swapCardMobileLightImgSrc : swapCardLightImgSrc,
@@ -22,7 +22,7 @@ export const MAIN_CARDS = [
   {
     to: '/pools',
     title: 'Earn',
-    description: 'Provide liquidity to pools on Uniswap and earn fees on swaps.',
+    description: 'Provide liquidity to pools on Pegasys and earn fees on swaps.',
     cta: 'Provide liquidity',
     darkBackgroundImgSrc: isMobile ? BannerMobilePools : BannerPools,
     lightBackgroundImgSrc: isMobile ? BannerMobileLightPools : BannerLightPools,

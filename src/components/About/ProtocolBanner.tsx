@@ -85,12 +85,11 @@ const BannerButton = styled(ButtonEmpty)`
 `
 
 const ProtocolBanner = () => {
-  // TODO: add on protocol link https://pegasys.finance/
   const isDarkMode = useIsDarkMode()
   return (
     <Banner isDarkMode={isDarkMode}>
       <TextContainer>
-        <HeaderText>Powered by the Uniswap Protocol</HeaderText>
+        <HeaderText>Powered by the Pegasys Finance</HeaderText>
         <DescriptionText>
           The leading decentralized crypto trading protocol, governed by a global community.
         </DescriptionText>
