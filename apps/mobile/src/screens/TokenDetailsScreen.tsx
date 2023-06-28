@@ -283,6 +283,7 @@ function TokenDetails({
     currencyId: _currencyId,
     owner: activeAccountAddress,
     isSpam: currentChainBalance?.currencyInfo.isSpam,
+    isNative: currentChainBalance?.currencyInfo.currency.isNative,
     balanceUSD: currentChainBalance?.balanceUSD,
     tokenSymbolForNotification: data?.token?.symbol,
   })

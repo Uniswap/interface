@@ -38,6 +38,7 @@ export const TokenBalanceItem = memo(
       owner,
       isSpam,
       balanceUSD,
+      isNative: currency.isNative,
     })
 
     return (

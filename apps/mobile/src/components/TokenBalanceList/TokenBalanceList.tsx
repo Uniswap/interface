@@ -128,7 +128,7 @@ export const TokenBalanceList = forwardRef<FlashList<any>, TokenBalanceListProps
       <ReactNavigationPerformanceView
         interactive={balancesById !== undefined}
         screenName={
-          // Marks the home screen as intereactive when balances are defined
+          // Marks the home screen as interactive when balances are defined
           Screens.Home
         }>
         {!balancesById ? (
