@@ -67,7 +67,7 @@ export default function HarvestYieldModal({
     setAttempting(true)
 
     // try delegation and store hash
-    const hash = await harvestCallback(poolIds)?.catch((error) => {
+    const hash = await harvestCallback(poolIds, isPool)?.catch((error) => {
       setAttempting(false)
       console.log(error)
     })
@@ -88,7 +88,7 @@ export default function HarvestYieldModal({
             </RowBetween>
             <RowBetween>
               {isPool ? (
-                <Trans>Harvesting your pool operator yield.</Trans>
+                <Trans>Harvesting your pool&apos;s staker yield.</Trans>
               ) : (
                 <Trans>Harvesting your staker yield.</Trans>
               )}
