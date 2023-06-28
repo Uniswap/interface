@@ -27,7 +27,7 @@ const DesktopHeader = styled.div`
     justify-content: space-between;
     & > div:last-child {
       text-align: right;
-      margin-right: 8px;
+      margin-right: 12px;
     }
   }
 `
@@ -100,7 +100,7 @@ export default function PoolPositionList({ positions, filterByOperator }: PoolPo
           {positions && ' (' + operatedPools.length + ')'}
         </div>
         {!filterByOperator && (
-          <RowFixed gap="30px">
+          <RowFixed gap="32px">
             <RowFixed gap="2px">
               <Trans>IRR</Trans>
               <MouseoverTooltip
@@ -136,12 +136,12 @@ export default function PoolPositionList({ positions, filterByOperator }: PoolPo
       <MobileHeader>
         <div>{filterByOperator ? <Trans>Operated pools</Trans> : <Trans>Loaded pools</Trans>}</div>
         {!filterByOperator && (
-          <RowFixed style={{ gap: '40px' }}>
+          <RowFixed style={{ gap: '40px', marginRight: '8px' }}>
             <div>
-              <Trans>IRR&ensp;</Trans>
+              <Trans>IRR</Trans>
             </div>
             <div>
-              <Trans>APR&ensp;</Trans>
+              <Trans>APR</Trans>
             </div>
           </RowFixed>
         )}
