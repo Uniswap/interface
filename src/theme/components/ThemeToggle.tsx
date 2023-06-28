@@ -24,7 +24,7 @@ const systemThemeAtom = atom<ThemeMode.LIGHT | ThemeMode.DARK>(
 )
 
 // Tracks the user's selected theme mode
-const themeModeAtom = atomWithStorage<ThemeMode>('interface_color_theme', ThemeMode.AUTO)
+const themeModeAtom = atomWithStorage<ThemeMode>('interface_color_theme', ThemeMode.DARK)
 
 export function SystemThemeUpdater() {
   const setSystemTheme = useUpdateAtom(systemThemeAtom)

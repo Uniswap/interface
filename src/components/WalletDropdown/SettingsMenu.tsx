@@ -65,7 +65,7 @@ export default function SettingsMenu({ onClose }: { onClose: () => void }) {
         <Trans>Preferences</Trans>
       </SectionTitle>
       <ThemeToggleContainer>
-        <ThemeToggle disabled={isWalletPage} />
+        <ThemeToggle disabled={true} />
       </ThemeToggleContainer>
       <BalanceToggleContainer>
         <SmallBalanceToggle />

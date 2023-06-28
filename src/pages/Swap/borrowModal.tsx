@@ -168,6 +168,8 @@ const BorrowTabContent = () => {
     }
   })
 
+  console.log('borrowInputApprovalState', borrowInputApprovalState, borrowOutputApprovalState)
+
   const { callback: borrowCallback } = useAddBorrowPositionCallback(
     borrowManagerAddress ?? undefined,
     borrowAllowedSlippage,
