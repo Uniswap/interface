@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { Currency, Price, Token } from '@pollum-io/sdk-core'
-import { FeeAmount } from '@pollum-io/v2-sdk'
+import { FeeAmount } from '@pollum-io/v3-sdk'
 import LoadingGifLight from 'assets/images/lightLoading.gif'
 import LoadingGif from 'assets/images/loading.gif'
 import { AutoColumn, ColumnCenter } from 'components/Column'

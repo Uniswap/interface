@@ -6,4 +6,5 @@ export const SMALL_MEDIA_BREAKPOINT = '540px'
 export const MOBILE_MEDIA_BREAKPOINT = '420px'
 
 // includes chains that the backend does not current source off-chain metadata for
+// eslint-disable-next-line import/no-unused-modules
 export const UNSUPPORTED_METADATA_CHAINS = []

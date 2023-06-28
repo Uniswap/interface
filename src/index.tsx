@@ -5,7 +5,7 @@ import 'tracing'
 
 import { ApolloProvider } from '@apollo/client'
 import { FeatureFlagsProvider } from 'featureFlags'
-import { apolloClient } from 'graphql/data/apollo'
+import { apolloClient } from 'graphql/thegraph/apollo'
 import { BlockNumberProvider } from 'lib/hooks/useBlockNumber'
 import { MulticallUpdater } from 'lib/state/multicall'
 import { StrictMode } from 'react'

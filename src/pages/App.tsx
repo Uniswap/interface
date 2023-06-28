@@ -1,4 +1,3 @@
-import { useWeb3React } from '@web3-react/core'
 import LoadingGifLight from 'assets/images/lightLoading.gif'
 import LoadingGif from 'assets/images/loading.gif'
 import { LoaderGif } from 'components/Icons/LoadingSpinner'
@@ -22,7 +21,6 @@ import { PageTabs } from '../components/NavBar'
 import NavBar from '../components/NavBar'
 import Polling from '../components/Polling'
 import Popups from '../components/Popups'
-import { useIsExpertMode } from '../state/user/hooks'
 import DarkModeQueryParamReader from '../theme/components/DarkModeQueryParamReader'
 import AddLiquidity from './AddLiquidity'
 import { RedirectDuplicateTokenIds } from './AddLiquidity/redirects'
@@ -99,7 +97,6 @@ export default function App() {
 
   const { pathname } = useLocation()
   const isDarkMode = useIsDarkMode()
-  const isExpertMode = useIsExpertMode()
   const [scrolledState, setScrolledState] = useState(false)
 
   useAnalyticsReporter()
@@ -128,8 +125,6 @@ export default function App() {
 
   const isBagExpanded = useBag((state) => state.bagExpanded)
   const isHeaderTransparent = !scrolledState && !isBagExpanded
-
-  const { account } = useWeb3React()
 
   return (
     <ErrorBoundary>

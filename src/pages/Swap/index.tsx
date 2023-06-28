@@ -23,11 +23,9 @@ import { useSwapCallback } from 'hooks/useSwapCallback'
 import { useUSDPrice } from 'hooks/useUSDPrice'
 import JSBI from 'jsbi'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { ReactNode } from 'react'
 import { ArrowDown, Info, RefreshCcw } from 'react-feather'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { Text } from 'rebass'
-import { InterfaceTrade } from 'state/routing/types'
 import { TradeState } from 'state/routing/types'
 import styled, { useTheme } from 'styled-components/macro'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
@@ -120,13 +118,13 @@ const DetailsSwapSection = styled(SwapSection)`
   border-top-right-radius: 0;
 `
 
-function getIsValidSwapQuote(
-  trade: InterfaceTrade<Currency, Currency, TradeType> | undefined,
-  tradeState: TradeState,
-  swapInputError?: ReactNode
-): boolean {
-  return !!swapInputError && !!trade && (tradeState === TradeState.VALID || tradeState === TradeState.SYNCING)
-}
+// function getIsValidSwapQuote(
+//   trade: InterfaceTrade<Currency, Currency, TradeType> | undefined,
+//   tradeState: TradeState,
+//   swapInputError?: ReactNode
+// ): boolean {
+//   return !!swapInputError && !!trade && (tradeState === TradeState.VALID || tradeState === TradeState.SYNCING)
+// }
 
 function largerPercentValue(a?: Percent, b?: Percent) {
   if (a && b) {
@@ -208,6 +206,7 @@ export default function Swap({ className }: { className?: string }) {
     execute: onWrap,
     inputError: wrapInputError,
   } = useWrapCallback(currencies[Field.INPUT], currencies[Field.OUTPUT], typedValue)
+
   const showWrap: boolean = wrapType !== WrapType.NOT_APPLICABLE
   const { address: recipientAddress } = useENSAddress(recipient)
 
@@ -298,6 +297,7 @@ export default function Swap({ className }: { className?: string }) {
     const maximumAmountIn = trade?.maximumAmountIn(allowedSlippage)
     return maximumAmountIn?.currency.isToken ? (maximumAmountIn as CurrencyAmount<Token>) : undefined
   }, [allowedSlippage, trade])
+
   const allowance = usePermit2Allowance(
     maximumAmountIn ??
       (parsedAmounts[Field.INPUT]?.currency.isToken
@@ -305,6 +305,7 @@ export default function Swap({ className }: { className?: string }) {
         : undefined),
     isSupportedChain(chainId) ? UNIVERSAL_ROUTER_ADDRESS(chainId) : undefined
   )
+
   const isApprovalLoading = allowance.state === AllowanceState.REQUIRED && allowance.isApprovalLoading
   const [isAllowancePending, setIsAllowancePending] = useState(false)
   const updateAllowance = useCallback(async () => {
@@ -317,7 +318,7 @@ export default function Swap({ className }: { className?: string }) {
     } finally {
       setIsAllowancePending(false)
     }
-  }, [allowance, chainId, maximumAmountIn?.currency.address, maximumAmountIn?.currency.symbol])
+  }, [allowance])
 
   const maxInputAmount: CurrencyAmount<Currency> | undefined = useMemo(
     () => maxAmountSpend(currencyBalances[Field.INPUT]),
@@ -464,6 +465,9 @@ export default function Swap({ className }: { className?: string }) {
     !showWrap && userHasSpecifiedInputOutput && (trade || routeIsLoading || routeIsSyncing)
   )
 
+  const location = useLocation()
+  const isOnSwapPage = location.pathname.includes('/swap')
+
   return (
     <>
       <TokenSafetyModal
@@ -474,7 +478,7 @@ export default function Swap({ className }: { className?: string }) {
         onCancel={handleDismissTokenWarning}
         showCancel={true}
       />
-      <PageWrapper>
+      <PageWrapper isOnSwapPage={isOnSwapPage}>
         {swapWidgetEnabled ? (
           <Widget
             defaultTokens={{
@@ -629,7 +633,7 @@ export default function Swap({ className }: { className?: string }) {
                           <MouseoverTooltip
                             text={
                               <Trans>
-                                Permission is required for Uniswap to swap each token. This will expire after one month
+                                Permission is required for Pegasys to swap each token. This will expire after one month
                                 for your security.
                               </Trans>
                             }

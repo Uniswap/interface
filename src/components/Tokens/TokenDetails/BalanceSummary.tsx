@@ -74,6 +74,7 @@ export default function BalanceSummary({ token }: { token: Currency }) {
   if (!account || !balance) {
     return null
   }
+
   return (
     <BalancesCard>
       <BalanceSection>

@@ -12,7 +12,7 @@ export { trace } from './trace'
 // Dump some metadata into the window to allow client verification.
 window.GIT_COMMIT_HASH = process.env.REACT_APP_GIT_COMMIT_HASH
 
-export const STATSIG_DUMMY_KEY = 'client-0000000000000000000000000000000000000000000'
+// export const STATSIG_DUMMY_KEY = 'client-0000000000000000000000000000000000000000000'
 
 Sentry.init({
   dsn: process.env.REACT_APP_SENTRY_DSN,

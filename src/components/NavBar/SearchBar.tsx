@@ -1,22 +1,17 @@
 // eslint-disable-next-line no-restricted-imports
 import { t, Trans } from '@lingui/macro'
-import { useWeb3React } from '@web3-react/core'
 import clsx from 'clsx'
-import { useNftGraphqlEnabled } from 'featureFlags/flags/nftlGraphql'
-import { useCollectionSearch } from 'graphql/data/nft/CollectionSearch'
-import { useSearchTokens } from 'graphql/data/SearchTokens'
+import { useNewTopTokens } from 'graphql/tokens/NewTopTokens'
+import { TokenData, useFetchedTokenData } from 'graphql/tokens/TokenData'
 import useDebounce from 'hooks/useDebounce'
-import { useIsNftPage } from 'hooks/useIsNftPage'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
-import { organizeSearchResults } from 'lib/utils/searchBar'
+import { getTokenFilter } from 'lib/hooks/useTokenList/filtering'
 import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
 import { magicalGradientOnHover } from 'nft/css/common.css'
 import { useIsMobile, useIsTablet } from 'nft/hooks'
 import { useIsNavSearchInputVisible } from 'nft/hooks/useIsNavSearchInputVisible'
-import { fetchSearchCollections } from 'nft/queries'
 import { ChangeEvent, useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react'
-import { useQuery } from 'react-query'
 import { useLocation } from 'react-router-dom'
 import styled, { useTheme } from 'styled-components/macro'
 
@@ -50,7 +45,7 @@ export const SearchBar = () => {
   const { pathname } = useLocation()
   const isMobile = useIsMobile()
   const isTablet = useIsTablet()
-  const isNftGraphqlEnabled = useNftGraphqlEnabled()
+  // const isNftGraphqlEnabled = useNftGraphqlEnabled()
   const isNavSearchInputVisible = useIsNavSearchInputVisible()
   const theme = useTheme()
 
@@ -58,37 +53,18 @@ export const SearchBar = () => {
     isOpen && toggleOpen()
   })
 
-  const { data: queryCollections, isLoading: queryCollectionsAreLoading } = useQuery(
-    ['searchCollections', debouncedSearchValue],
-    () => fetchSearchCollections(debouncedSearchValue),
-    {
-      refetchOnWindowFocus: false,
-      refetchOnMount: false,
-      refetchOnReconnect: false,
-      enabled: !!debouncedSearchValue.length,
-    }
-  )
+  // const { chainId } = useWeb3React()
 
-  const { data: gqlCollections, loading: gqlCollectionsAreLoading } = useCollectionSearch(debouncedSearchValue)
+  const { loading, tokens: newTokens } = useNewTopTokens()
+  const tokensAddress = newTokens?.map((token) => token.id) || []
+  const { loading: tokenDataLoading, data: tokens } = useFetchedTokenData(tokensAddress)
 
-  const { gatedCollections, gatedCollectionsAreLoading } = useMemo(() => {
-    return isNftGraphqlEnabled
-      ? {
-          gatedCollections: gqlCollections,
-          gatedCollectionsAreLoading: gqlCollectionsAreLoading,
-        }
-      : {
-          gatedCollections: queryCollections,
-          gatedCollectionsAreLoading: queryCollectionsAreLoading,
-        }
-  }, [gqlCollections, gqlCollectionsAreLoading, isNftGraphqlEnabled, queryCollections, queryCollectionsAreLoading])
+  const reducedTokens: TokenData[] = useMemo(() => {
+    if (!tokens) return []
+    return Object.values(tokens).filter(getTokenFilter(debouncedSearchValue))
+  }, [tokens, debouncedSearchValue])
 
-  const { chainId } = useWeb3React()
-  const { data: tokens, loading: tokensAreLoading } = useSearchTokens(debouncedSearchValue, chainId ?? 1)
-
-  const isNFTPage = useIsNftPage()
-
-  const [reducedTokens, reducedCollections] = organizeSearchResults(isNFTPage, tokens ?? [], gatedCollections ?? [])
+  // const isNFTPage = useIsNftPage()
 
   // close dropdown on escape
   useEffect(() => {
@@ -104,7 +80,7 @@ export const SearchBar = () => {
     return () => {
       document.removeEventListener('keydown', escapeKeyDownHandler)
     }
-  }, [isOpen, toggleOpen, gatedCollections])
+  }, [isOpen, toggleOpen])
 
   // clear searchbar when changing pages
   useEffect(() => {
@@ -120,10 +96,10 @@ export const SearchBar = () => {
 
   const isMobileOrTablet = isMobile || isTablet || !isNavSearchInputVisible
 
-  const navbarSearchEventProperties = {
-    navbar_search_input_text: debouncedSearchValue,
-    hasInput: debouncedSearchValue && debouncedSearchValue.length > 0,
-  }
+  // const navbarSearchEventProperties = {
+  //   navbar_search_input_text: debouncedSearchValue,
+  //   hasInput: debouncedSearchValue && debouncedSearchValue.length > 0,
+  // }
   const placeholderText = useMemo(() => {
     return isMobileOrTablet ? t`Search` : t`Search tokens`
   }, [isMobileOrTablet])
@@ -211,10 +187,9 @@ export const SearchBar = () => {
             <SearchBarDropdown
               toggleOpen={toggleOpen}
               tokens={reducedTokens}
-              collections={reducedCollections}
               queryText={debouncedSearchValue}
               hasInput={debouncedSearchValue.length > 0}
-              isLoading={tokensAreLoading || gatedCollectionsAreLoading}
+              isLoading={loading && tokenDataLoading}
             />
           )}
         </Box>

@@ -33,6 +33,7 @@ const PageWrapper = styled(AutoColumn)`
   `};
 `
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const VoteCard = styled(DataCard)`
   background: radial-gradient(76.02% 75.41% at 1.84% 0%, #27ae60 0%, #000000 100%);
   overflow: hidden;
@@ -147,7 +148,7 @@ export default function Pool() {
             <AutoColumn gap="md" style={{ width: '100%' }}>
               <Layer2Prompt>
                 <ThemedText.DeprecatedBody color={theme.textTertiary} textAlign="center">
-                  <Trans>Uniswap V2 is not available on this network.</Trans>
+                  <Trans>Pegasys V1 is not available on this network.</Trans>
                 </ThemedText.DeprecatedBody>
               </Layer2Prompt>
             </AutoColumn>

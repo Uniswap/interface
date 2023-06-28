@@ -184,12 +184,14 @@ enum RewardAmounts {
 
 const AirdropModal = () => {
   const { account, provider } = useWeb3React()
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [claim, setClaim] = useState<Rewards>()
   const [isClaimed, setIsClaimed] = useState(false)
   const [hash, setHash] = useState('')
   const [error, setError] = useState(false)
   const setIsClaimAvailable = useIsNftClaimAvailable((state) => state.setIsClaimAvailable)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [totalAmount, setTotalAmount] = useState(0)
   const isOpen = useModalIsOpen(ApplicationModal.UNISWAP_NFT_AIRDROP_CLAIM)
   const usdcAirdropToggle = useToggleModal(ApplicationModal.UNISWAP_NFT_AIRDROP_CLAIM)

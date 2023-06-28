@@ -1,7 +1,7 @@
 import { Trade } from '@pollum-io/router-sdk'
 import { CurrencyAmount, Percent, Token, TradeType } from '@pollum-io/sdk-core'
 import { Pair, Route as V2Route } from '@pollum-io/v1-sdk'
-import { FeeAmount, Pool, Route as V3Route } from '@pollum-io/v2-sdk'
+import { FeeAmount, Pool, Route as V3Route } from '@pollum-io/v3-sdk'
 import JSBI from 'jsbi'
 
 import { computeRealizedLPFeeAmount, warningSeverity } from './prices'
@@ -49,7 +49,7 @@ describe('prices', () => {
                 outputAmount: currencyAmount(token2, 1000),
               },
             ],
-            v2Routes: [],
+            v3Routes: [],
             tradeType: TradeType.EXACT_INPUT,
           })
         )
@@ -61,9 +61,9 @@ describe('prices', () => {
       expect(
         computeRealizedLPFeeAmount(
           new Trade({
-            v2Routes: [
+            v3Routes: [
               {
-                routev2: new V3Route([pool12], token1, token2),
+                routev3: new V3Route([pool12], token1, token2),
                 inputAmount: currencyAmount(token1, 1000),
                 outputAmount: currencyAmount(token2, 1000),
               },
@@ -86,7 +86,7 @@ describe('prices', () => {
                 outputAmount: currencyAmount(token3, 1000),
               },
             ],
-            v2Routes: [],
+            v3Routes: [],
             tradeType: TradeType.EXACT_INPUT,
           })
         )
@@ -104,9 +104,9 @@ describe('prices', () => {
                 outputAmount: currencyAmount(token3, 1000),
               },
             ],
-            v2Routes: [
+            v3Routes: [
               {
-                routev2: new V3Route([pool13], token1, token3),
+                routev3: new V3Route([pool13], token1, token3),
                 inputAmount: currencyAmount(token1, 1000),
                 outputAmount: currencyAmount(token3, 1000),
               },

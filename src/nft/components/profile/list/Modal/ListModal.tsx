@@ -72,6 +72,7 @@ export const ListModal = ({ overlayClick }: { overlayClick: () => void }) => {
   const nativeCurrency = useNativeCurrency()
   const parsedAmount = tryParseCurrencyAmount(totalEthListingValue.toString(), nativeCurrency)
   const usdcValue = useStablecoinValue(parsedAmount)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const usdcAmount = formatCurrencyAmount(usdcValue, NumberType.FiatTokenPrice)
 
   const allCollectionsApproved = useMemo(

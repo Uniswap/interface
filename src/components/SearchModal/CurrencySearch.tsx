@@ -135,7 +135,6 @@ export function CurrencySearch({
     const natives = (
       disableNonToken || native.equals(wrapped) ? [wrapped] : shouldShowWrapped ? [native, wrapped] : [native]
     ).filter((n) => n.symbol?.toLowerCase()?.indexOf(s) !== -1 || n.name?.toLowerCase()?.indexOf(s) !== -1)
-
     return [...natives, ...tokens]
   }, [
     debouncedQuery,

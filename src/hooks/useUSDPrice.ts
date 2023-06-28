@@ -59,7 +59,7 @@ export function useUSDPrice(currencyAmount?: CurrencyAmount<Currency>): {
   const { data: ethValue, isLoading: isEthValueLoading } = useETHValue(currencyAmount)
 
   const { data, networkStatus } = useTokenSpotPriceQuery({
-    variables: { chain: chain ?? Chain.Optimism, address: getNativeTokenDBAddress(chain ?? Chain.Optimism) },
+    variables: { chain: chain ?? ('ROLLUX' as Chain), address: getNativeTokenDBAddress(chain ?? ('ROLLUX' as Chain)) },
     skip: !chain || !isGqlSupportedChain(currency?.chainId),
     pollInterval: PollingInterval.Normal,
     notifyOnNetworkStatusChange: true,

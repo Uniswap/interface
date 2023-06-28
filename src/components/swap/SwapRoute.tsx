@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 import { Protocol } from '@pollum-io/router-sdk'
 import { Currency, Percent, TradeType } from '@pollum-io/sdk-core'
 import { Pair } from '@pollum-io/v1-sdk'
-import { FeeAmount } from '@pollum-io/v2-sdk'
+import { FeeAmount } from '@pollum-io/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 import AnimatedDropdown from 'components/AnimatedDropdown'
 import { AutoColumn } from 'components/Column'
@@ -120,6 +120,7 @@ const V2_DEFAULT_FEE_TIER = 3000
 /**
  * Loops through all routes on a trade and returns an array of diagram entries.
  */
+// eslint-disable-next-line import/no-unused-modules
 export function getTokenPath(trade: InterfaceTrade<Currency, Currency, TradeType>): RoutingDiagramEntry[] {
   return trade.swaps.map(({ route: { path: tokenPath, pools, protocol }, inputAmount, outputAmount }) => {
     const portion =

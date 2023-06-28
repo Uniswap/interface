@@ -161,13 +161,13 @@ export default function Landing() {
               <AutoColumn gap="md">
                 <RowBetween>
                   <ThemedText.DeprecatedWhite fontWeight={600}>
-                    <Trans>Uniswap Governance</Trans>
+                    <Trans>Pegasys Governance</Trans>
                   </ThemedText.DeprecatedWhite>
                 </RowBetween>
                 <RowBetween>
                   <ThemedText.DeprecatedWhite fontSize={14}>
                     <Trans>
-                      UNI tokens represent voting shares in Uniswap governance. You can vote on each proposal yourself
+                      UNI tokens represent voting shares in Pegasys governance. You can vote on each proposal yourself
                       or delegate your votes to a third party.
                     </Trans>
                   </ThemedText.DeprecatedWhite>
@@ -177,11 +177,11 @@ export default function Landing() {
                     color: theme.white,
                     textDecoration: 'underline',
                   }}
-                  href="https://uniswap.org/blog/uni"
+                  href="https://gov.pegasys.fi"
                   target="_blank"
                 >
                   <ThemedText.DeprecatedWhite fontSize={14}>
-                    <Trans>Read more about Uniswap governance</Trans>
+                    <Trans>Read more about Pegasys governance</Trans>
                   </ThemedText.DeprecatedWhite>
                 </ExternalLink>
               </AutoColumn>

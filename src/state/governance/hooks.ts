@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { defaultAbiCoder, Interface } from '@ethersproject/abi'
 import { isAddress } from '@ethersproject/address'
 import { BigNumber } from '@ethersproject/bignumber'
@@ -240,10 +241,10 @@ export function useAllProposalData(): { data: ProposalData[]; loading: boolean }
 
   const gov0ProposalIndexes = useMemo(() => {
     return countToIndices(proposalCount0) // chainId === SupportedChainId.MAINNET ? V0_PROPOSAL_IDS :
-  }, [chainId, proposalCount0])
+  }, [proposalCount0])
   const gov1ProposalIndexes = useMemo(() => {
     return countToIndices(proposalCount1) // chainId === SupportedChainId.MAINNET ? V1_PROPOSAL_IDS :
-  }, [chainId, proposalCount1])
+  }, [proposalCount1])
   const gov2ProposalIndexes = useMemo(() => {
     return countToIndices(proposalCount2, 8)
   }, [proposalCount2])
@@ -341,6 +342,7 @@ export function useQuorum(governorIndex: number): CurrencyAmount<Token> | undefi
   const uni = useMemo(() => (chainId ? UNI[chainId] : undefined), [chainId])
 
   if (
+    // eslint-disable-next-line no-constant-condition
     !latestGovernanceContract ||
     !quorumVotes ||
     true || // chainId !== SupportedChainId.MAINNET ||

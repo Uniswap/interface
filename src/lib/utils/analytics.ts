@@ -4,6 +4,7 @@ import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { InterfaceTrade } from 'state/routing/types'
 import { computeRealizedPriceImpact } from 'utils/prices'
 
+// eslint-disable-next-line import/no-unused-modules
 export const getDurationUntilTimestampSeconds = (futureTimestampInSecondsSinceEpoch?: number): number | undefined => {
   if (!futureTimestampInSecondsSinceEpoch) return undefined
   return futureTimestampInSecondsSinceEpoch - new Date().getTime() / 1000

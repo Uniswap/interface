@@ -125,6 +125,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
 
 // only want to enable this when app hook called
 class GAMetric extends IMetric {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   setProperty(key: string, value: unknown): void {
     return
   }

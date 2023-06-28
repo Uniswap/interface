@@ -1,4 +1,3 @@
-import { useWeb3React } from '@web3-react/core'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { useWindowSize } from 'hooks/useWindowSize'
 import { useIsMobile } from 'nft/hooks'
@@ -100,7 +99,6 @@ export function Table<D extends Record<string, unknown>>({
   ...props
 }: TableProps<D>) {
   const theme = useTheme()
-  const { chainId } = useWeb3React()
   const { width } = useWindowSize()
   const isMobile = useIsMobile()
 

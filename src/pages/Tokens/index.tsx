@@ -41,6 +41,8 @@ const FiltersContainer = styled.div`
     order: 2;
   }
 `
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const SearchContainer = styled(FiltersContainer)`
   margin-left: 8px;
   width: 100%;

@@ -1,5 +1,5 @@
 import { Currency } from '@pollum-io/sdk-core'
-import { FeeAmount, nearestUsableTick, Pool, TICK_SPACINGS, tickToPrice } from '@pollum-io/v2-sdk'
+import { FeeAmount, nearestUsableTick, Pool, TICK_SPACINGS, tickToPrice } from '@pollum-io/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { SupportedChainId } from 'constants/chains'
 import { ZERO_ADDRESS } from 'constants/misc'
@@ -17,6 +17,7 @@ import { useTickLens } from './useContract'
 import { PoolState, usePool } from './usePools'
 
 const PRICE_FIXED_DIGITS = 8
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const CHAIN_IDS_MISSING_SUBGRAPH_DATA: SupportedChainId[] = []
 
 // Tick with fields parsed to JSBIs, and active liquidity computed.
@@ -176,7 +177,7 @@ function useAllV3Ticks(
   error: unknown
   ticks: TickData[] | undefined
 } {
-  const useSubgraph = currencyA ? !CHAIN_IDS_MISSING_SUBGRAPH_DATA.includes(currencyA.chainId) : true
+  const useSubgraph = false //currencyA ? !CHAIN_IDS_MISSING_SUBGRAPH_DATA.includes(currencyA.chainId) : true
 
   const tickLensTickData = useTicksFromTickLens(!useSubgraph ? currencyA : undefined, currencyB, feeAmount)
 

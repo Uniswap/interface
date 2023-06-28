@@ -1,5 +1,5 @@
 import TokenLogoLookupTable from 'constants/TokenLogoLookupTable'
-import { chainIdToNetworkName, getNativeLogoURI } from 'lib/hooks/useCurrencyLogoURIs'
+import { getNativeLogoURI } from 'lib/hooks/useCurrencyLogoURIs'
 import uriToHttp from 'lib/utils/uriToHttp'
 import { useCallback, useEffect, useState } from 'react'
 import { isAddress } from 'utils'
@@ -30,7 +30,6 @@ function prioritizeLogoSources(uris: string[]) {
       preferredUris.push(uri)
     }
   })
-  console.log('coingeckoUrl', coingeckoUrl, preferredUris)
   // Places coingecko urls in the back of the source array
   return coingeckoUrl ? [...preferredUris, coingeckoUrl] : preferredUris
 }
@@ -38,13 +37,13 @@ function prioritizeLogoSources(uris: string[]) {
 function getInitialUrl(address?: string | null, chainId?: number | null, isNative?: boolean) {
   if (chainId && isNative) return getNativeLogoURI(chainId)
 
-  const networkName = chainId ? chainIdToNetworkName(chainId) : 'ethereum'
-  console.log('networkName', networkName)
+  // const networkName = chainId ? chainIdToNetworkName(chainId) : 'ethereum'
 
   const checksummedAddress = isAddress(address)
-  console.log('checksummedAddress', checksummedAddress)
+  // TODO: review check raw
   if (checksummedAddress) {
-    return `https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/${networkName}/assets/${checksummedAddress}/logo.png`
+    // return `https://raw.githubusercontent.com/pegasys-fi/pegasys-tokenlists/master/${chainId}/${checksummedAddress}/logo.png`
+    return `https://raw.githubusercontent.com/pegasys-fi/default-token-list/master/src/logos/${chainId}/${checksummedAddress}/logo.png`
   } else {
     return undefined
   }

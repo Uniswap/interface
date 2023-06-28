@@ -4,7 +4,7 @@ import { t } from '@lingui/macro'
 import { Trade } from '@pollum-io/router-sdk'
 import { Currency, Percent, TradeType } from '@pollum-io/sdk-core'
 import { SwapRouter, UNIVERSAL_ROUTER_ADDRESS } from '@pollum-io/universal-router-sdk'
-import { FeeOptions, toHex } from '@pollum-io/v2-sdk'
+import { FeeOptions, toHex } from '@pollum-io/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { useCallback } from 'react'
 import { trace } from 'tracing'
@@ -110,7 +110,6 @@ export function useUniversalRouterSwapCallback(
   }, [
     account,
     chainId,
-    fiatValues,
     options.deadline,
     options.feeOptions,
     options.permit,

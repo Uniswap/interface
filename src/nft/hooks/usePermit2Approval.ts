@@ -28,7 +28,7 @@ export default function usePermit2Approval(
     } finally {
       setIsAllowancePending(false)
     }
-  }, [allowance, chainId, maximumAmount?.currency.address, maximumAmount?.currency.symbol])
+  }, [allowance])
 
   return useMemo(() => {
     return {

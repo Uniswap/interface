@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { Currency } from '@pollum-io/sdk-core'
-import { Position } from '@pollum-io/v2-sdk'
+import { Position } from '@pollum-io/v3-sdk'
 import RangeBadge from 'components/Badge/RangeBadge'
 import { LightCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'

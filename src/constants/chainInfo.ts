@@ -5,7 +5,7 @@ import ms from 'ms.macro'
 import { darkTheme } from 'theme/colors'
 
 import { SupportedL1ChainId, SupportedL2ChainId } from './chains'
-import { ROLLUX_LIST, ROLLUX_TANENBAUM_LIST } from './lists'
+import { ROLLUX_LIST } from './lists'
 
 export const AVERAGE_L1_BLOCK_TIME = ms`12s`
 
@@ -54,11 +54,11 @@ const CHAIN_INFO: ChainInfoMap = {
   [SupportedChainId.ROLLUX]: {
     networkType: NetworkType.L2,
     blockWaitMsBeforeWarning: ms`25m`,
-    bridge: 'https://rollux.com/',
+    bridge: 'http://bridge.rollux.com/',
     defaultListUrl: ROLLUX_LIST,
     docs: 'https://rollux.com/',
     explorer: 'https://explorer.rollux.com/',
-    infoLink: 'https://info.pegasys.fi/#/rollux/',
+    infoLink: 'https://info.pegasys.fi/#/',
     label: 'Rollux',
     logoUrl: rolluxLogoUrl,
     // Optimism perfers same icon for both
@@ -72,16 +72,16 @@ const CHAIN_INFO: ChainInfoMap = {
   [SupportedChainId.ROLLUX_TANENBAUM]: {
     networkType: NetworkType.L2,
     blockWaitMsBeforeWarning: ms`25m`,
-    bridge: 'https://rollux.com/',
-    defaultListUrl: ROLLUX_TANENBAUM_LIST,
+    bridge: 'http://bridge.rollux.com/',
+    defaultListUrl: ROLLUX_LIST,
     docs: 'https://rollux.com/',
     explorer: 'https://rollux.tanenbaum.io/',
-    infoLink: 'https://info.pegasys.fi/#/rollux/',
+    infoLink: 'https://info.pegasys.fi/#/',
     label: 'Rollux Tanenbaum',
     logoUrl: rolluxTennenbalLogoUrl,
     statusPage: 'https://rollux.com/',
     helpCenterUrl: 'https://pegasys.fi/',
-    nativeCurrency: { name: 'Tanenbaum Syscoin', symbol: 'TSYS', decimals: 18 },
+    nativeCurrency: { name: 'Syscoin', symbol: 'SYS', decimals: 18 },
     color: darkTheme.chain_57000_background,
   },
 }

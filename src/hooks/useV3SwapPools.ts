@@ -1,6 +1,5 @@
 import { Currency, Token } from '@pollum-io/sdk-core'
-import { FeeAmount, Pool } from '@pollum-io/v2-sdk'
-import { useWeb3React } from '@web3-react/core'
+import { FeeAmount, Pool } from '@pollum-io/v3-sdk'
 import { useMemo } from 'react'
 
 import { useAllCurrencyCombinations } from './useAllCurrencyCombinations'
@@ -18,8 +17,6 @@ export function useV3SwapPools(
   pools: Pool[]
   loading: boolean
 } {
-  const { chainId } = useWeb3React()
-
   const allCurrencyCombinations = useAllCurrencyCombinations(currencyIn, currencyOut)
 
   const allCurrencyCombinationsWithAllFees: [Token, Token, FeeAmount][] = useMemo(
@@ -39,7 +36,7 @@ export function useV3SwapPools(
           [tokenA, tokenB, FeeAmount.HIGH],
         ])
       }, []),
-    [allCurrencyCombinations, chainId]
+    [allCurrencyCombinations]
   )
 
   const pools = usePools(allCurrencyCombinationsWithAllFees)

@@ -1,5 +1,5 @@
 import { Token } from '@pollum-io/sdk-core'
-import { Pool, Position } from '@pollum-io/v2-sdk'
+import { Pool, Position } from '@pollum-io/v3-sdk'
 import { SupportedChainId } from 'constants/chains'
 import { useAllTokensMultichain } from 'hooks/Tokens'
 import { atom, useAtom } from 'jotai'

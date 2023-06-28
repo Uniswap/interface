@@ -285,11 +285,11 @@ const PENDING_BAG_STATUSES = [
   BagStatus.PROCESSING_TRANSACTION,
 ]
 
-export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) => {
+export const BagFooter = ({ setModalIsOpen }: BagFooterProps) => {
   const toggleWalletDrawer = useToggleAccountDrawer()
   const theme = useTheme()
   const isDarkMode = useIsDarkMode()
-  const { account, chainId, connector } = useWeb3React()
+  const { account, chainId } = useWeb3React()
   const connected = Boolean(account && chainId)
   const totalEthPrice = useBagTotalEthPrice()
   const shouldUsePayWithAnyToken = usePayWithAnyTokenEnabled()
@@ -477,26 +477,18 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
     theme.backgroundInteractive,
     theme.textPrimary,
     connected,
-    chainId,
     sufficientBalance,
     bagStatus,
     usingPayWithAnyToken,
     tradeState,
     allowance.state,
     priceImpact,
-    connector,
     toggleWalletDrawer,
     setBagExpanded,
     isAllowancePending,
     isApprovalLoading,
     updateAllowance,
   ])
-
-  const traceEventProperties = {
-    usd_value: usdcValue?.toExact(),
-    using_erc20: !!inputCurrency,
-    ...eventProperties,
-  }
 
   return (
     <FooterContainer>

@@ -36,6 +36,7 @@ interface AnalyticsEventProps {
   succeeded: boolean
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const formatAnalyticsEventProperties = ({
   trade,
   hash,
@@ -76,6 +77,7 @@ export function useSyncWidgetTransactions() {
       } else if (type === WidgetTransactionType.WRAP || type === WidgetTransactionType.UNWRAP) {
         const { type, amount: transactionAmount } = transaction.info
 
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const eventProperties = {
           // get this info from widget handlers
           token_in_address: getTokenAddress(transactionAmount.currency),
@@ -98,6 +100,7 @@ export function useSyncWidgetTransactions() {
       } else if (type === WidgetTransactionType.SWAP) {
         const { slippageTolerance, trade, tradeType } = transaction.info
 
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const eventProperties = {
           ...formatSwapSignedAnalyticsEventProperties({
             trade,
@@ -134,6 +137,7 @@ export function useSyncWidgetTransactions() {
 
   const onTxSuccess: OnTxSuccess = useCallback((hash: string, tx) => {
     if (tx.info.type === TransactionType.SWAP) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { trade, slippageTolerance } = tx.info
     }
   }, [])

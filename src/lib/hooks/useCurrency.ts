@@ -25,6 +25,7 @@ function parseStringOrBytes32(str: string | undefined, bytes32: string | undefin
     : defaultValue
 }
 
+// eslint-disable-next-line import/no-unused-modules
 export const UNKNOWN_TOKEN_SYMBOL = 'UNKNOWN'
 const UNKNOWN_TOKEN_NAME = 'Unknown Token'
 
@@ -33,6 +34,7 @@ const UNKNOWN_TOKEN_NAME = 'Unknown Token'
  * Returns null if token is loading or null was passed.
  * Returns undefined if tokenAddress is invalid or token does not exist.
  */
+// eslint-disable-next-line import/no-unused-modules
 export function useTokenFromActiveNetwork(tokenAddress: string | undefined): Token | null | undefined {
   const { chainId } = useWeb3React()
 

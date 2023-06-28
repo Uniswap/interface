@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { readableColor } from 'polished'
 import { PropsWithChildren } from 'react'
 import styled, { DefaultTheme } from 'styled-components/macro'

@@ -64,12 +64,13 @@ const ResponsiveColumn = styled(AutoColumn)`
 
 export default function CTACards() {
   const { chainId } = useWeb3React()
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { infoLink } = getChainInfoOrDefault(chainId)
   // TODO: check liquidity docs
 
   return (
     <CTASection>
-      <CTA href="https://support.uniswap.org/hc/en-us/categories/8122334631437-Providing-Liquidity-">
+      <CTA href="https://docs.pegasys.fi/sdk/v3/guides/liquidity/minting">
         <ResponsiveColumn>
           <HeaderText>
             <Trans>Learn about providing liquidity</Trans> ↗
@@ -79,17 +80,16 @@ export default function CTACards() {
           </ThemedText.DeprecatedBody>
         </ResponsiveColumn>
       </CTA>
-      {/* TODO: add after review pegasys pools */}
-      {/* <CTA data-testid="cta-infolink" href={infoLink + 'pools'}>
+      <CTA data-testid="cta-infolink" href={infoLink + 'pools'}>
         <ResponsiveColumn>
           <HeaderText style={{ alignSelf: 'flex-start' }}>
             <Trans>Top pools</Trans> ↗
           </HeaderText>
           <ThemedText.DeprecatedBody fontWeight={400} style={{ alignSelf: 'flex-start' }}>
-            <Trans>Explore Uniswap Analytics.</Trans>
+            <Trans>Explore Pegasys Analytics.</Trans>
           </ThemedText.DeprecatedBody>
         </ResponsiveColumn>
-      </CTA> */}
+      </CTA>
     </CTASection>
   )
 }

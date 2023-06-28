@@ -46,7 +46,6 @@ const TxCompleteModal = () => {
   const [ethPrice, setEthPrice] = useState(3000)
   const [showUnavailable, setShowUnavailable] = useState(false)
   const txHash = useSendTransaction((state) => state.txHash)
-  const purchasedWithErc20 = useSendTransaction((state) => state.purchasedWithErc20)
   const setTxState = useSendTransaction((state) => state.setState)
   const txState = useSendTransaction((state) => state.state)
   const transactionStateRef = useRef(txState)
@@ -112,7 +111,7 @@ const TxCompleteModal = () => {
                     <Trans>Complete!</Trans>
                   </h1>
                   <p className={styles.subHeading}>
-                    <Trans>Uniswap has granted your wish!</Trans>
+                    <Trans>Pegasys has granted your wish!</Trans>
                   </p>
                 </Box>
                 <UploadLink onClick={shareTweet} target="_blank">

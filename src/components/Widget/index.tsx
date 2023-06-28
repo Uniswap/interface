@@ -75,6 +75,7 @@ export default function Widget({
   const [initialQuoteDate, setInitialQuoteDate] = useState<Date>()
   const onInitialSwapQuote = useCallback((trade: Trade<Currency, Currency, TradeType>) => {
     setInitialQuoteDate(new Date())
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const eventProperties = {
       // TODO(1416): Include undefined values.
       ...formatSwapQuoteReceivedEventProperties(
@@ -87,6 +88,7 @@ export default function Widget({
   const onApproveToken = useCallback(() => {
     const input = inputs.value.INPUT
     if (!input) return
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const eventProperties = {
       chain_id: input.chainId,
       token_symbol: input.symbol,
@@ -95,6 +97,7 @@ export default function Widget({
   }, [inputs.value.INPUT])
   const onSwapPriceUpdateAck = useCallback(
     (stale: Trade<Currency, Currency, TradeType>, update: Trade<Currency, Currency, TradeType>) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const eventProperties = {
         chain_id: update.inputAmount.currency.chainId,
         token_in_symbol: update.inputAmount.currency.symbol,
@@ -106,6 +109,7 @@ export default function Widget({
   )
   const onSubmitSwapClick = useCallback(
     (trade: Trade<Currency, Currency, TradeType>) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const eventProperties = {
         // TODO(1416): Include undefined values.
         estimated_network_fee_usd: undefined,

@@ -150,6 +150,7 @@ export function useIsUserAddedToken(currency: Currency | undefined | null): bool
 }
 
 // Check if currency on specific chain is included in custom list from user storage
+// eslint-disable-next-line import/no-unused-modules
 export function useIsUserAddedTokenOnChain(
   address: string | undefined | null,
   chain: number | undefined | null

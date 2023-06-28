@@ -1,12 +1,11 @@
 import { Plural, Trans } from '@lingui/macro'
-import { TokenStandard } from 'graphql/data/__generated__/types-and-hooks'
-import { SearchToken } from 'graphql/data/SearchTokens'
+import { TokenData } from 'graphql/tokens/TokenData'
 
 import { ZERO_ADDRESS } from './misc'
 import { NATIVE_CHAIN_ID } from './tokens'
 import WarningCache, { TOKEN_LIST_TYPES } from './TokenSafetyLookupTable'
 
-export const TOKEN_SAFETY_ARTICLE = 'https://support.uniswap.org/hc/en-us/articles/8723118437133'
+export const TOKEN_SAFETY_ARTICLE = 'https://docs.pegasys.fi/'
 
 export enum WARNING_LEVEL {
   MEDIUM,
@@ -33,8 +32,8 @@ export function getWarningCopy(warning: Warning | null, plural = false) {
         heading = (
           <Plural
             value={plural ? 2 : 1}
-            _1="This token isn't traded on leading U.S. centralized exchanges or frequently swapped on Uniswap."
-            other="These tokens aren't traded on leading U.S. centralized exchanges or frequently swapped on Uniswap."
+            _1="This token isn't traded on leading U.S. centralized exchanges or frequently swapped on Pegasys."
+            other="These tokens aren't traded on leading U.S. centralized exchanges or frequently swapped on Pegasys."
           />
         )
         description = <Trans>Always conduct your own research before trading.</Trans>
@@ -43,8 +42,8 @@ export function getWarningCopy(warning: Warning | null, plural = false) {
         description = (
           <Plural
             value={plural ? 2 : 1}
-            _1="You can't trade this token using the Uniswap App."
-            other="You can't trade these tokens using the Uniswap App."
+            _1="You can't trade this token using the Pegasys App."
+            other="You can't trade these tokens using the Pegasys App."
           />
         )
         break
@@ -84,7 +83,7 @@ export function checkWarning(tokenAddress: string) {
     return null
   }
   switch (WarningCache.checkToken(tokenAddress.toLowerCase())) {
-    case TOKEN_LIST_TYPES.UNI_DEFAULT:
+    case TOKEN_LIST_TYPES.ROLLUX_LIST:
       return null
     case TOKEN_LIST_TYPES.UNI_EXTENDED:
       return MediumWarning
@@ -98,9 +97,9 @@ export function checkWarning(tokenAddress: string) {
 }
 
 // TODO(cartcrom): Replace all usage of WARNING_LEVEL with SafetyLevel
-export function checkSearchTokenWarning(token: SearchToken) {
+export function checkSearchTokenWarning(token: TokenData) {
   if (!token.address) {
-    return token.standard === TokenStandard.Native ? null : StrongWarning
+    return token.address == '0x4200000000000000000000000000000000000006' ? null : StrongWarning
   }
   return checkWarning(token.address)
 }

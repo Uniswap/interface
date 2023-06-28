@@ -191,7 +191,7 @@ export const ListPage = () => {
     }),
     shallow
   )
-  const { listings, collectionsRequiringApproval, setLooksRareNonce, setCollectionStatusAndCallback } = useNFTList(
+  const { collectionsRequiringApproval, setLooksRareNonce, setCollectionStatusAndCallback } = useNFTList(
     ({ listings, collectionsRequiringApproval, setLooksRareNonce, setCollectionStatusAndCallback }) => ({
       listings,
       collectionsRequiringApproval,
@@ -216,14 +216,6 @@ export const ListPage = () => {
   useEffect(() => {
     setGlobalMarketplaces(selectedMarkets)
   }, [selectedMarkets, setGlobalMarketplaces])
-
-  const startListingEventProperties = {
-    collection_addresses: sellAssets.map((asset) => asset.asset_contract.address),
-    token_ids: sellAssets.map((asset) => asset.tokenId),
-    marketplaces: Array.from(new Set(listings.map((asset) => asset.marketplace.name))),
-    list_quantity: listings.length,
-    usd_value: usdcAmount,
-  }
 
   const startListingFlow = async () => {
     if (!signer) return
