@@ -1,12 +1,10 @@
 /* eslint-disable import/no-unused-modules */
-
-import { ApolloClient, InMemoryCache } from '@apollo/client'
 import { ImageResponse } from '@vercel/og'
 import React from 'react'
 
 import { AssetDocument } from '../../../../../src/graphql/data/__generated__/types-and-hooks'
+import { getApolloClient } from '../../../../utils/getApolloClient'
 
-const GRAPHQL_ENDPOINT = 'https://api.uniswap.org/v1/graphql'
 export async function onRequestGet({ params, request }) {
   try {
     const font = fetch(
@@ -22,22 +20,7 @@ export async function onRequestGet({ params, request }) {
     const collectionAddress = String(index[0])
     const tokenId = String(index[1])
 
-    const client = new ApolloClient({
-      connectToDevTools: true,
-      uri: GRAPHQL_ENDPOINT,
-      headers: {
-        'Content-Type': 'application/json',
-        Origin: 'https://app.uniswap.org',
-        'User-Agent':
-          'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.5735.110 Safari/537.36',
-      },
-      cache: new InMemoryCache(),
-      defaultOptions: {
-        watchQuery: {
-          fetchPolicy: 'cache-and-network',
-        },
-      },
-    })
+    const client = getApolloClient()
     const { data } = await client.query({
       query: AssetDocument,
       variables: {

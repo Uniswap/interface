@@ -1,12 +1,10 @@
 /* eslint-disable import/no-unused-modules */
-import { ApolloClient, InMemoryCache } from '@apollo/client'
 import { ImageResponse } from '@vercel/og'
 import ColorThief from 'colorthief/src/color-thief-node'
 import React from 'react'
 
 import { CollectionDocument } from '../../../../../src/graphql/data/__generated__/types-and-hooks'
-
-const GRAPHQL_ENDPOINT = 'https://api.uniswap.org/v1/graphql'
+import { getApolloClient } from '../../../../utils/getApolloClient'
 
 export async function onRequestGet({ params, request }) {
   try {
@@ -18,25 +16,11 @@ export async function onRequestGet({ params, request }) {
 
     const origin = new URL(request.url).origin
     const watermark = origin + '/images/640x125_App_Watermark.png'
+    const check = origin + '/images/54x54_Verified_Check.svg'
 
     const { index } = params
     const collectionAddress = String(index)
-    const client = new ApolloClient({
-      connectToDevTools: true,
-      uri: GRAPHQL_ENDPOINT,
-      headers: {
-        'Content-Type': 'application/json',
-        Origin: 'https://app.uniswap.org',
-        'User-Agent':
-          'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.5735.110 Safari/537.36',
-      },
-      cache: new InMemoryCache(),
-      defaultOptions: {
-        watchQuery: {
-          fetchPolicy: 'cache-and-network',
-        },
-      },
-    })
+    const client = getApolloClient()
     const { data } = await client.query({
       query: CollectionDocument,
       variables: {
@@ -108,15 +92,22 @@ export async function onRequestGet({ params, request }) {
                 style={{
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '24px',
+                  gap: '12px',
                   flexDirection: 'row',
                   fontSize: '72px',
                   fontFamily: 'Inter',
                 }}
               >
                 {name}
+                <img src={check} height="54px" />
               </div>
-              <img src={watermark} height="60px" />
+              <img
+                src={watermark}
+                height="60px"
+                style={{
+                  opacity: '0.5',
+                }}
+              />
             </div>
           </div>
         </div>
