@@ -53,5 +53,5 @@
   },
   "typescript.preferences.importModuleSpecifier": "non-relative",
   "typescript.tsdk": "node_modules/typescript/lib",
-  "typescript.updateImportsOnFileMove.enabled": "always"
+  "typescript.updateImportsOnFileMove.enabled": "always",
 }

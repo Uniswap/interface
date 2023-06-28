@@ -7,6 +7,10 @@ import mockRNCNetInfo from '@react-native-community/netinfo/jest/netinfo-mock.js
 import 'cross-fetch/polyfill'
 import mockRNDeviceInfo from 'react-native-device-info/jest/react-native-device-info-mock'
 
+// NOTE: I tried adding this to jest.config.js globals, but it doesn't seem to pass it
+// so added it here and it works. This fixes the "Must set TAMAGUI_TARGET" warnings during tests
+process.env.TAMAGUI_TARGET = 'native'
+
 // avoids polutting console in test runs, while keeping important log levels
 global.console = {
   ...console,
