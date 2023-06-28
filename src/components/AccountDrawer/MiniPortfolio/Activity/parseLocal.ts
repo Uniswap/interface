@@ -56,7 +56,7 @@ function parseSwap(
   const tokenOut = getCurrency(swap.outputCurrencyId, chainId, tokens)
   const [inputRaw, outputRaw] =
     swap.tradeType === TradeType.EXACT_INPUT
-      ? [swap.inputCurrencyAmountRaw, swap.expectedOutputCurrencyAmountRaw]
+      ? [swap.inputCurrencyAmountRaw, swap.settledOutputCurrencyAmountRaw ?? swap.expectedOutputCurrencyAmountRaw]
       : [swap.expectedInputCurrencyAmountRaw, swap.outputCurrencyAmountRaw]
 
   return {

@@ -109,7 +109,10 @@ function useOrderAmounts(
   if (swapInfo.tradeType === TradeType.EXACT_INPUT) {
     return {
       inputAmount: CurrencyAmount.fromRawAmount(inputCurrency, swapInfo.inputCurrencyAmountRaw),
-      outputAmount: CurrencyAmount.fromRawAmount(outputCurrency, swapInfo.expectedOutputCurrencyAmountRaw),
+      outputAmount: CurrencyAmount.fromRawAmount(
+        outputCurrency,
+        swapInfo.settledOutputCurrencyAmountRaw ?? swapInfo.expectedOutputCurrencyAmountRaw
+      ),
     }
   } else {
     return {

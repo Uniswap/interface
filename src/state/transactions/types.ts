@@ -95,6 +95,7 @@ export interface ExactInputSwapTransactionInfo extends BaseSwapTransactionInfo {
   inputCurrencyAmountRaw: string
   expectedOutputCurrencyAmountRaw: string
   minimumOutputCurrencyAmountRaw: string
+  settledOutputCurrencyAmountRaw?: string
 }
 export interface ExactOutputSwapTransactionInfo extends BaseSwapTransactionInfo {
   tradeType: TradeType.EXACT_OUTPUT
