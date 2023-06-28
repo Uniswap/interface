@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
-import { PAGE_SIZE } from 'graphql/tokens/TokenData'
 import { validateUrlChainParam } from 'graphql/data/util'
 import { useNewTopTokens } from 'graphql/tokens/NewTopTokens'
+import { PAGE_SIZE } from 'graphql/tokens/TokenData'
 import { useFetchedTokenData } from 'graphql/tokens/TokenData'
 import { ReactNode } from 'react'
 import { AlertTriangle } from 'react-feather'

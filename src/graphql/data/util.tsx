@@ -1,12 +1,12 @@
 import { QueryResult } from '@apollo/client'
-import { Currency, Token } from '@pollum-io/sdk-core'
+import { Currency } from '@pollum-io/sdk-core'
 import { SupportedChainId } from 'constants/chains'
 import { NATIVE_CHAIN_ID, nativeOnChain, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import ms from 'ms.macro'
 import { useEffect } from 'react'
 import { getNativeTokenDBAddress } from 'utils/nativeTokens'
 
-import { Chain, ContractInput, HistoryDuration, TokenStandard } from './__generated__/types-and-hooks'
+import { Chain, ContractInput, HistoryDuration } from './__generated__/types-and-hooks'
 
 export enum PollingInterval {
   Slow = ms`5m`,
@@ -64,8 +64,8 @@ export const CHAIN_ID_TO_BACKEND_NAME: { [key: number]: Chain } = {
   // [SupportedChainId.CELO_ALFAJORES]: Chain.Celo,
   // [SupportedChainId.ARBITRUM_ONE]: Chain.Arbitrum,
   // [SupportedChainId.ARBITRUM_GOERLI]: Chain.Arbitrum,
-  [SupportedChainId.ROLLUX]: Chain.Rollux,
-  [SupportedChainId.ROLLUX_TANENBAUM]: Chain.Rollux,
+  [SupportedChainId.ROLLUX]: 'ROLLUX' as Chain,
+  [SupportedChainId.ROLLUX_TANENBAUM]: 'ROLLUX' as Chain,
   // [SupportedChainId.BNB]: Chain.Bnb,
 }
 
@@ -91,19 +91,6 @@ export function toContractInput(currency: Currency): ContractInput {
   return { chain, address: currency.isToken ? currency.address : getNativeTokenDBAddress(chain) }
 }
 
-export function gqlToCurrency(token: {
-  address?: string
-  chain: Chain
-  standard?: TokenStandard
-  decimals?: number
-  name?: string
-  symbol?: string
-}): Currency {
-  const chainId = fromGraphQLChain(token.chain)
-  if (token.standard === TokenStandard.Native || !token.address) return nativeOnChain(chainId)
-  else return new Token(chainId, token.address, token.decimals ?? 18, token.name, token.symbol)
-}
-
 const URL_CHAIN_PARAM_TO_BACKEND: { [key: string]: Chain } = {
   // ethereum: Chain.Ethereum,
   // polygon: Chain.Polygon,
@@ -114,7 +101,9 @@ const URL_CHAIN_PARAM_TO_BACKEND: { [key: string]: Chain } = {
 }
 
 export function validateUrlChainParam(chainName: string | undefined) {
-  return chainName && URL_CHAIN_PARAM_TO_BACKEND[chainName] ? URL_CHAIN_PARAM_TO_BACKEND[chainName] : Chain.Rollux
+  return chainName && URL_CHAIN_PARAM_TO_BACKEND[chainName]
+    ? URL_CHAIN_PARAM_TO_BACKEND[chainName]
+    : ('ROLLUX' as Chain)
 }
 
 // TODO(cartcrom): refactor into safer lookup & replace usage
@@ -128,7 +117,7 @@ export const CHAIN_NAME_TO_CHAIN_ID: { [key in Chain]: SupportedChainId } = {
   [Chain.Arbitrum]: SupportedChainId.ROLLUX,
   [Chain.UnknownChain]: SupportedChainId.ROLLUX,
   [Chain.Bnb]: SupportedChainId.ROLLUX,
-  [Chain.Rollux]: SupportedChainId.ROLLUX,
+  ['ROLLUX' as Chain]: SupportedChainId.ROLLUX,
   [Chain.EthereumSepolia]: SupportedChainId.ROLLUX,
 }
 
