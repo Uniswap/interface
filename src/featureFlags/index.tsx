@@ -15,7 +15,6 @@ export enum FeatureFlag {
   nativeUsdcArbitrum = 'web_usdc_arbitrum',
   routingAPIPrice = 'routing_api_price',
   walletConnectV2 = 'walletconnect_v2',
-  walletConnectFallback = 'walletconnect_fallback',
 }
 
 interface FeatureFlagsContextType {
