@@ -98,6 +98,7 @@ function shouldRejectError(error: EventHint['originalException']) {
     // This is an error thrown by WalletConnect when connection is lost after initial connection.
     // The client will attempt to reconnect on its own, so this error is non-actionable.
     if (error.message.match(/Attempt to connect to relay via `transportOpen` has stalled. Retrying\.\.\./)) return true
+    if (error.message.match(/WebSocket connection failed for URL: wss:\/\/relay\.walletconnect\.com.*/)) return true
   }
 
   return false

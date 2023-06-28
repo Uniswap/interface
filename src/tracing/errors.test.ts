@@ -176,8 +176,17 @@ describe('beforeSend', () => {
     })
   })
 
-  it('filters WalletConnect re-try errors', () => {
-    const originalException = new Error('Attempt to connect to relay via `transportOpen` has stalled. Retrying...')
-    expect(beforeSend(ERROR, { originalException })).toBeNull()
+  describe('WalletConnect', () => {
+    it('filters WalletConnect `transportOpen` errors', () => {
+      const originalException = new Error('Attempt to connect to relay via `transportOpen` has stalled. Retrying...')
+      expect(beforeSend(ERROR, { originalException })).toBeNull()
+    })
+
+    it('filters WalletConnect relay connection errors', () => {
+      const originalException = new Error(
+        'WebSocket connection failed for URL: wss://relay.walletconnect.com?auth=gjoiewjaowejgoawijgaweg...'
+      )
+      expect(beforeSend(ERROR, { originalException })).toBeNull()
+    })
   })
 })
