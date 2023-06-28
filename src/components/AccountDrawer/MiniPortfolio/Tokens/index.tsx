@@ -20,6 +20,7 @@ import { hideSmallBalancesAtom } from '../../SmallBalanceToggle'
 import { ExpandoRow } from '../ExpandoRow'
 import { PortfolioLogo } from '../PortfolioLogo'
 import PortfolioRow, { PortfolioSkeleton, PortfolioTabWrapper } from '../PortfolioRow'
+import { Chain } from 'graphql/data/__generated__/types-and-hooks'
 
 const HIDE_SMALL_USD_BALANCES_THRESHOLD = 1
 
@@ -40,7 +41,7 @@ export default function Tokens({ account }: { account: string }) {
   const [showHiddenTokens, setShowHiddenTokens] = useState(false)
 
   const { tokens } = useNewTopTokens()
-  const { chainId } = useWeb3React()
+  const  chainId  = 570 //useWeb3React()
 
   const tokensAddress = tokens?.map((token) => token.id) || []
   const ERC20Tokens: Token[] = []
@@ -132,7 +133,7 @@ function TokenRow(portifolio: NonNullable<TokenDataOwner>) {
   const navigate = useNavigate()
   const toggleWalletDrawer = useToggleAccountDrawer()
   const navigateToTokenDetails = useCallback(async () => {
-    navigate(getTokenDetailsURL({ address: portifolio.token.address.toLowerCase(), chain: '570' }))
+    navigate(getTokenDetailsURL({ address: portifolio.token.address.toLowerCase(), chain: 'ROLLUX'as Chain}))
     toggleWalletDrawer()
   }, [navigate, portifolio.token.address, toggleWalletDrawer])
 
