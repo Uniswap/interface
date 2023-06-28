@@ -633,7 +633,7 @@ export default function Swap({ className }: { className?: string }) {
                           <MouseoverTooltip
                             text={
                               <Trans>
-                                Permission is required for Uniswap to swap each token. This will expire after one month
+                                Permission is required for Pegasys to swap each token. This will expire after one month
                                 for your security.
                               </Trans>
                             }

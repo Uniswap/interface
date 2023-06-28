@@ -80,17 +80,16 @@ export default function CTACards() {
           </ThemedText.DeprecatedBody>
         </ResponsiveColumn>
       </CTA>
-      {/* TODO: add after review pegasys pools */}
-      {/* <CTA data-testid="cta-infolink" href={infoLink + 'pools'}>
+      <CTA data-testid="cta-infolink" href={infoLink + 'pools'}>
         <ResponsiveColumn>
           <HeaderText style={{ alignSelf: 'flex-start' }}>
             <Trans>Top pools</Trans> ↗
           </HeaderText>
           <ThemedText.DeprecatedBody fontWeight={400} style={{ alignSelf: 'flex-start' }}>
-            <Trans>Explore Uniswap Analytics.</Trans>
+            <Trans>Explore Pegasys Analytics.</Trans>
           </ThemedText.DeprecatedBody>
         </ResponsiveColumn>
-      </CTA> */}
+      </CTA>
     </CTASection>
   )
 }
