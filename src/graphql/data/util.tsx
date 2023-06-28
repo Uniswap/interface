@@ -87,12 +87,14 @@ const URL_CHAIN_PARAM_TO_BACKEND: { [key: string]: Chain } = {
   // polygon: Chain.Polygon,
   // celo: Chain.Celo,
   // arbitrum: Chain.Arbitrum,
-  rollux:  'ROLLUX' as Chain,
+  rollux: 'ROLLUX' as Chain,
   // bnb: Chain.Bnb,
 }
 
 export function validateUrlChainParam(chainName: string | undefined) {
-  return chainName && URL_CHAIN_PARAM_TO_BACKEND[chainName] ? URL_CHAIN_PARAM_TO_BACKEND[chainName] : 'ROLLUX' as Chain
+  return chainName && URL_CHAIN_PARAM_TO_BACKEND[chainName]
+    ? URL_CHAIN_PARAM_TO_BACKEND[chainName]
+    : ('ROLLUX' as Chain)
 }
 
 // TODO(cartcrom): refactor into safer lookup & replace usage

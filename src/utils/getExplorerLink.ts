@@ -57,7 +57,7 @@ export function getExplorerLink(chainId: number, data: string, type: ExplorerDat
       return `${prefix}/token/${data}`
 
     case ExplorerDataType.BLOCK:
-        return `${prefix}/block/${data}`
+      return `${prefix}/block/${data}`
 
     case ExplorerDataType.ADDRESS:
       return `${prefix}/address/${data}`

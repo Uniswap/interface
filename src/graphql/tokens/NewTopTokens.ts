@@ -2,8 +2,8 @@ import { gql, useQuery } from '@apollo/client'
 import { SupportedChainId } from '@pollum-io/widgets'
 import { useMemo } from 'react'
 
-import { apolloClient } from '../thegraph/apollo'
 import { unwrapTokenRollux } from '../data/util'
+import { apolloClient } from '../thegraph/apollo'
 
 // eslint-disable-next-line import/no-unused-modules
 export const TOP_TOKENS = gql`

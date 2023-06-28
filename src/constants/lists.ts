@@ -1,4 +1,5 @@
-export const ROLLUX_LIST = 'https://raw.githubusercontent.com/pegasys-fi/default-token-list/main/build/pegasys-default.tokenlist.json'
+export const ROLLUX_LIST =
+  'https://raw.githubusercontent.com/pegasys-fi/default-token-list/main/build/pegasys-default.tokenlist.json'
 
 export const UNSUPPORTED_LIST_URLS: string[] = []
 

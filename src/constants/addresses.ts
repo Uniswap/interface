@@ -36,27 +36,21 @@ export const MULTICALL_ADDRESS: AddressMap = {
 /**
  * The oldest V0 governance address
  */
-export const GOVERNANCE_ALPHA_V0_ADDRESSES: AddressMap = {
-}
+export const GOVERNANCE_ALPHA_V0_ADDRESSES: AddressMap = {}
 /**
  * The older V1 governance address
  */
-export const GOVERNANCE_ALPHA_V1_ADDRESSES: AddressMap = {
-}
+export const GOVERNANCE_ALPHA_V1_ADDRESSES: AddressMap = {}
 /**
  * The latest governor bravo that is currently admin of timelock
  */
-export const GOVERNANCE_BRAVO_ADDRESSES: AddressMap = {
-}
+export const GOVERNANCE_BRAVO_ADDRESSES: AddressMap = {}
 
-export const TIMELOCK_ADDRESS: AddressMap = {
-}
+// export const TIMELOCK_ADDRESS: AddressMap = {}
 
-export const MERKLE_DISTRIBUTOR_ADDRESS: AddressMap = {
-}
+export const MERKLE_DISTRIBUTOR_ADDRESS: AddressMap = {}
 
-export const ARGENT_WALLET_DETECTOR_ADDRESS: AddressMap = {
-}
+export const ARGENT_WALLET_DETECTOR_ADDRESS: AddressMap = {}
 
 export const QUOTER_ADDRESSES: AddressMap = {
   ...constructSameAddressMap('0x4aa7D3a3D8025e653886EbD5f2e9416a7b4ADe22'),
