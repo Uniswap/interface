@@ -23,7 +23,7 @@ import PoolPositionList from '../../components/PoolPositionList'
 import { RowBetween, RowFixed } from '../../components/Row'
 //import { LoadingSparkle } from '../../nft/components/common/Loading/LoadingSparkle'
 import { Center } from '../../nft/components/Flex'
-import { PoolRegisteredLog, useBscPools, useRegisteredPools, useRegistryContract } from '../../state/pool/hooks'
+import { PoolRegisteredLog, useAllPoolsData, useBscPools, useRegistryContract } from '../../state/pool/hooks'
 import { useUnclaimedRewards } from '../../state/stake/hooks'
 import { ThemedText } from '../../theme'
 //import { PoolPositionDetails } from '../../types/position'
@@ -97,8 +97,8 @@ export default function Stake() {
   const [hasMore, setHasMore] = useState(true)
   const [records, setRecords] = useState(itemsPerPage)
 
-  // TODO: return loading
-  const smartPoolsLogs = useRegisteredPools()
+  // we retrieve logs again as we want to be able to load pools when switching chain from stake page.
+  const { data: smartPoolsLogs, loading } = useAllPoolsData()
   const registry = useRegistryContract()
   const bscPools = useBscPools(registry)
 
@@ -107,9 +107,10 @@ export default function Stake() {
   const hasFreeStake = JSBI.greaterThan(freeStakeBalance ? freeStakeBalance.quotient : JSBI.BigInt(0), JSBI.BigInt(0))
 
   const allPools: PoolRegisteredLog[] = useMemo(() => {
+    if (loading) return []
     if (chainId === SupportedChainId.BNB) return [...(smartPoolsLogs ?? []), ...(bscPools ?? [])]
     return [...(smartPoolsLogs ?? [])]
-  }, [chainId, smartPoolsLogs, bscPools])
+  }, [chainId, loading, smartPoolsLogs, bscPools])
 
   const poolAddresses = allPools.map((p) => p.pool)
   const poolIds = allPools.map((p) => p.id)
