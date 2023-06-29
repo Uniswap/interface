@@ -174,7 +174,7 @@ export default function TokenTable() {
 
   /* loading and error state */
   if (chainId !== SupportedChainId.SEPOLIA || !account || !provider) {
-    return <Trans>Connect Wallet to Sepolia</Trans>
+    return <GridContainer><Trans>Connect Wallet to Sepolia</Trans></GridContainer>
   }
   else if (loadingTokens && !tokens) {
     return <LoadingTokenTable rowCount={PAGE_SIZE} />
