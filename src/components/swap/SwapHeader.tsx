@@ -13,7 +13,7 @@ import { useSwapActionHandlers } from 'state/swap/hooks'
 import { useCallback } from 'react'
 
 const StyledSwapHeader = styled.div`
-  padding: 8px 12px;
+  padding: 0px 12px;
   margin-bottom: 8px;
   width: 100%;
   color: ${({ theme }) => theme.textSecondary};

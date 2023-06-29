@@ -88,15 +88,6 @@ const Tokens = () => {
             </ThemedText.HeadlineLarge>
           </MouseoverTooltip>
         </TitleContainer>
-        {/*<FiltersWrapper>
-          <FiltersContainer>
-            <NetworkFilter />
-            <TimeSelector />
-          </FiltersContainer>
-          <SearchContainer>
-            <SearchBar />
-          </SearchContainer>
-        </FiltersWrapper> */}
         <TokenTable />
       </ExploreContainer>
     </Trace>

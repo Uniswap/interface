@@ -97,10 +97,10 @@ import { PoolDataSection } from 'components/ExchangeChart'
 // import { FakeTokens, FETH, FUSDC } from "constants/fake-tokens"
 import { TabContent, TabNavItem } from 'components/Tabs'
 import BorrowPositionsTable from "components/BorrowPositionTable/TokenTable"
-import { AllowanceWarning, WarningIcon } from 'components/TokenSafety/TokenSafetyIcon'
+import { WarningIcon } from 'components/TokenSafety/TokenSafetyIcon'
 
-import { useClearTransactions } from 'state/transactions/hooks'
 import BorrowTabContent from "./borrowModal"
+import moment from 'moment'
 
 const TradeTabContent = React.lazy(() => import('./swapModal'));
 
@@ -245,7 +245,7 @@ const PositionsContainer = styled.div`
 const StatsContainer = styled.div`
   background-color: ${({ theme }) => theme.background};
   border-radius: 32px;
-  padding: 32px;
+  padding: 18px;
   max-width: 1200px;
   width: 100%;
   margin-top: 0px;
@@ -312,17 +312,6 @@ export default function Swap({ className }: { className?: string }) {
     onPremiumChange
   } = useSwapActionHandlers()
 
-  // const clear = useClearTransactions()
-  // const [nonce, setNonce] = useState(0)
-  // useEffect(() => {
-  //   if (!nonce && account && chainId) {
-  //     clear(80001)
-  //     setNonce(nonce + 1)
-  //   }
-  // }, [account, chainId])
-
-
-  // console.log("loadedUrlParams", loadedUrlParams)
   // token warning stuff
   const [loadedInputCurrency, loadedOutputCurrency] = [
     useCurrency(loadedUrlParams?.[Field.INPUT]?.currencyId),
@@ -422,54 +411,6 @@ export default function Swap({ className }: { className?: string }) {
   )
 
   const inputIsToken0 = outputCurrency?.wrapped ? inputCurrency?.wrapped.sortsBefore(outputCurrency?.wrapped) : false;
-
-  // const { position: existingPosition } = useLimitlessPositionFromKeys(
-  //   account, 
-  //   activeTab === ActiveSwapTab.TRADE ? leverageManagerAddress ?? undefined : borrowManagerAddress ?? undefined, 
-  //   activeTab === ActiveSwapTab.TRADE ? !inputIsToken0 : inputIsToken0
-  // )
-
-  // useEffect(() => {
-  //   if (
-  //     inputCurrency &&
-  //     outputCurrency &&
-  //     pool?.token0Price &&
-  //     pool?.token1Price &&
-  //     parsedAmounts[Field.INPUT]
-  //   ) {
-  //     let amount = Number(parsedAmounts[Field.INPUT]?.toExact());
-  //     if (activeTab === ActiveSwapTab.TRADE) {
-  //       // leverage premium, in input currency amount
-  //       if (existingPosition && Number(leverageFactor) > 1 && amount) {
-  //         let addedDebt = Number(amount) * (Number(leverageFactor) - 1);
-  //         onPremiumChange(
-  //           String(( addedDebt + Number(existingPosition?.totalDebtInput) ) * 0.002)
-  //         )
-  //         return
-  //       } else if (Number(leverageFactor) > 1 && amount) {
-  //         onPremiumChange(String(Number(amount) * (Number(leverageFactor) - 1) * 0.002 ))
-  //         return
-  //       }
-  //     } else if(activeTab === ActiveSwapTab.BORROW) {
-  //       // borrow premium, in output currency amount
-  //       const price = inputIsToken0 ? pool.token0Price.toFixed(18) : pool.token1Price.toFixed(18)
-  //       const _ltv = Number(ltv) / 100;
-  //       if (existingPosition && Number(_ltv) > 0 && amount) {
-  //         let addedDebt = Number(amount) * Number(price);
-  //         onPremiumChange(
-  //           new BN(( addedDebt + Number(existingPosition?.totalDebtInput) ) * 0.002).toFixed(18)
-  //         )
-  //         return
-  //       } else if (Number(_ltv) > 0 && amount) {
-  //         // console.log("lmt" , Number(amount) * _ltv * Number(price) * 0.002)
-  //         onPremiumChange(new BN(Number(amount) * Number(price) * 0.002).toFixed(18))
-  //         return
-  //       }
-  //     }
-  //   }
-  //   onPremiumChange("0")
-  // }, [typedValue, parsedAmounts[Field.INPUT], ltv, pool, leverage, activeTab, leverage, leverageFactor, existingPosition])
-
 
   const [inputApprovalState, inputApprove] = useMaxApproveCallback(inputCurrency ? CurrencyAmount.fromRawAmount(inputCurrency, MaxUint256) : undefined, isBorrowTab ? borrowManagerAddress ?? undefined : leverageManagerAddress ?? undefined)
   const [outputApprovalState, outputApprove] = useMaxApproveCallback(outputCurrency ? CurrencyAmount.fromRawAmount(outputCurrency, MaxUint256) : undefined, isBorrowTab ? borrowManagerAddress ?? undefined : leverageManagerAddress ?? undefined)
@@ -968,27 +909,24 @@ export default function Swap({ className }: { className?: string }) {
 
   const { loading: limitlessPositionsLoading, positions: limitlessPositions } = useLimitlessPositions(account)
 
-  const leveragePositions = limitlessPositions ?
-    limitlessPositions.filter((position) => (!position.isBorrow)) : []
-  const borrowPositions = limitlessPositions ?
-    limitlessPositions.filter((position) => (position.isBorrow)) : []
-  // console.log("leverageTrade: ", leverageTrade)
-  // console.log("leverageTrade:", leverageTrade, lmtRouteNotFound, poolAddress, leverageManagerAddress, limitlessPositions)
+  const leveragePositions = useMemo(() => {
+    const  now = moment()
+    const timestamp = now.unix()
 
-  // const [debouncedLeverageFactor, onDebouncedLeverageFactor] = useDebouncedChangeHandler(leverageFactor ?? "1", onLeverageFactorChange);
+    return limitlessPositions ?
+    limitlessPositions.filter((position) => {
+      return !position.isBorrow && Number(position.unusedPremium) > 0 && Number(position.repayTime) + 86400 > timestamp
+    }) : []
+  }, [limitlessPositionsLoading, limitlessPositions ])
+  const borrowPositions = useMemo(() => {
+    const  now = moment()
+    const timestamp = now.unix()
+    return limitlessPositions ?
+    limitlessPositions.filter((position) => {
+      return position.isBorrow && Number(position.unusedPremium) > 0 && Number(position.repayTime) + 86400 > timestamp 
+    }) : []
+  }, [limitlessPositionsLoading, limitlessPositions])
 
-  // usePool(currencies.INPUT ?? undefined, currencies.OUTPUT ?? undefined, FeeAmount.LOW)
-  // part of borrow integration
-
-  // const [debouncedLTV, debouncedSetLTV] = useDebouncedChangeHandler(ltv ?? "", onLTVChange);
-
-  // const showBorrowInputApproval = borrowInputApprovalState !== ApprovalState.APPROVED
-  // const showBorrowOutputApproval = borrowOutputApprovalState !== ApprovalState.APPROVED
-
-  // console.log("borrowTrade", borrowInputApproveAmount?.toExact(), borrowOutputApproveAmount?.toExact(), borrowInputApprovalState, borrowOutputApprovalState)
-  // console.log("leverageTrade", leverageTrade, leverageApproveAmount?.toExact(), leverageApprovalState)
-
-   // console.log('lmt', borrowTrade,  borrowState, borrowInputApprovalState, borrowOutputApprovalState)
   return (
     <Trace page={InterfacePageName.SWAP_PAGE} shouldLogImpression>
       <>

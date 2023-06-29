@@ -32,7 +32,7 @@ export const SwapWrapper = styled.main<{ chainId: number | undefined }>`
   background: ${({ theme }) => theme.background};
   border-radius: 32px;
   border: 0px solid ${({ theme }) => theme.background};
-  padding: 0px;
+  padding: 18px;
   box-shadow:  '0px 40px 120px 0px #f0b90b29';
 
   // box-shadow: ${({ chainId }) => !!chainId && chainId === SupportedChainId.BNB && '0px 40px 120px 0px #f0b90b29'};

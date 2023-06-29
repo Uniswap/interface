@@ -164,7 +164,7 @@ export const darkTheme = {
 
   // backgroundSurface: limitlessColors.darkPurple,
  backgroundSurface: colors.gray900,//"#030216", //"#0d0517", //colors.black,// colors.gray900
-  backgroundModule: "#181926", // colors.gray800
+  backgroundModule: opacify(8, colors.gray300), // #293249', // "#181926", // colors.gray800
   backgroundInteractive: colors.gray700,
   backgroundFloating: opacify(12, colors.black),
   backgroundOutline: opacify(24, colors.gray900),
@@ -199,7 +199,7 @@ export const darkTheme = {
 
   networkDefaultShadow: `0px 40px 120px ${opacify(16, colors.blue400)}`,
 
-  stateOverlayHover: opacify(8, colors.gray300),
+  stateOverlayHover: opacify(12, colors.gray300),
   stateOverlayPressed: opacify(24, colors.gray200),
 
   searchBackground: `rgba(255,255,255,0.07)`,

@@ -210,19 +210,6 @@ export default function TokenTable() {
                 />
               )
           )}
-          {/*tokens.map(
-            (token, index) =>
-              token?.address && (
-                <LoadedRow
-                  key={token.address}
-                  tokenListIndex={index}
-                  tokenListLength={tokens.length}
-                  token={token}
-                  sparklineMap={sparklines}
-                  sortRank={tokenSortRank[token.address]}
-                />
-              )
-          )*/}
         </TokenDataContainer>
       </GridContainer>
     )
