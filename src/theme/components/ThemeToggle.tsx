@@ -20,7 +20,8 @@ export enum ThemeMode {
 
 // Tracks the device theme
 const systemThemeAtom = atom<ThemeMode.LIGHT | ThemeMode.DARK>(
-  DARKMODE_MEDIA_QUERY.matches ? ThemeMode.DARK : ThemeMode.LIGHT
+  ThemeMode.DARK
+ // DARKMODE_MEDIA_QUERY.matches ? ThemeMode.DARK : ThemeMode.LIGHT
 )
 
 // Tracks the user's selected theme mode
@@ -42,8 +43,8 @@ export function SystemThemeUpdater() {
 export function useIsDarkMode(): boolean {
   const mode = useAtomValue(themeModeAtom)
   const systemTheme = useAtomValue(systemThemeAtom)
-
-  return (mode === ThemeMode.AUTO ? systemTheme : mode) === ThemeMode.DARK
+  return true; 
+ // return (mode === ThemeMode.AUTO ? systemTheme : mode) === ThemeMode.DARK
 }
 
 export function useDarkModeManager(): [boolean, (mode: ThemeMode) => void] {
