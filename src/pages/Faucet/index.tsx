@@ -50,8 +50,12 @@ export default function FaucetsPage() {
   useEffect(() => {
     const getBeacon = async () => {
       if (account && provider && chainId === SupportedChainId.SEPOLIA) {
-        let result = await fetch(`https://beacon.degenscore.com/v1/beacon/${account.toLowerCase()}`)
+        try {
+          let result = await fetch(`https://beacon.degenscore.com/v1/beacon/${account.toLowerCase()}`)
         setHolder(result.status === 200)
+        } catch (err) {
+          console.log(err)
+        }
       }
     }
     getBeacon()
