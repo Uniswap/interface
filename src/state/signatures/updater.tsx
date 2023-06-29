@@ -14,7 +14,7 @@ import { updateSignature } from './reducer'
 import { SignatureType, UniswapXOrderDetails } from './types'
 
 export default function Updater() {
-  const { account } = useWeb3React()
+  const { account, provider } = useWeb3React()
   const addPopup = useAddPopup()
   const signatures = useAppSelector((state) => state.signatures)
 
@@ -43,20 +43,26 @@ export default function Updater() {
             settledOutputCurrencyAmountRaw: update.settledAmounts?.[0]?.amountOut,
           }
         }
-        dispatch(
-          addTransaction({
-            chainId: updatedOrder.chainId,
-            from: updatedOrder.offerer, // TODO(WEB-2053): use filler as from once tx reducer is organized by account
-            hash: updatedOrder.txHash,
-            info: updatedOrder.swapInfo,
-          })
-        )
+        // Updates redux state after fetching the transaction receipt
+        provider?.getTransactionReceipt(update.txHash).then((receipt) => {
+          dispatch(
+            addTransaction({
+              chainId: updatedOrder.chainId,
+              from: updatedOrder.offerer, // TODO(WEB-2053): use filler as from once tx reducer is organized by account
+              hash: update.txHash,
+              info: updatedOrder.swapInfo,
+              receipt,
+            })
+          )
+          dispatch(updateSignature(updatedOrder))
+          addPopup({ type: PopupType.Transaction, hash: update.txHash }, update.txHash, popupDismissalTime)
+        })
       } else {
+        dispatch(updateSignature(updatedOrder))
         addPopup({ type: PopupType.Order, orderHash: order.orderHash }, updatedOrder.orderHash, popupDismissalTime)
       }
-      dispatch(updateSignature(updatedOrder))
     },
-    [addPopup, dispatch]
+    [addPopup, dispatch, provider]
   )
 
   return <OrderUpdater pendingOrders={pendingOrders} onOrderUpdate={onOrderUpdate} />
