@@ -191,7 +191,7 @@
     "@web3-react/core": "^8.2.0",
     "@web3-react/eip1193": "^8.2.0",
     "@web3-react/empty": "^8.2.0",
-    "@web3-react/gnosis-safe": "^8.2.0",
+    "@web3-react/gnosis-safe": "^8.2.1",
     "@web3-react/metamask": "^8.2.0",
     "@web3-react/network": "^8.2.0",
     "@web3-react/types": "^8.2.0",
