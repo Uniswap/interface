@@ -99,13 +99,6 @@ export function useUniversalRouterSwapCallback(
               }),
               ...analyticsContext,
             })
-            if (tx.data !== response.data) {
-              sendAnalyticsEvent(SwapEventName.SWAP_MODIFIED_IN_WALLET, {
-                txHash: response.hash,
-                ...analyticsContext,
-              })
-              throw new ModifiedSwapError()
-            }
             return response
           })
         return response
