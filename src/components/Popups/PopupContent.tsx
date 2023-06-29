@@ -1,4 +1,5 @@
 import { Trans } from '@lingui/macro'
+import { useOpenOffchainActivityModal } from 'components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal'
 import { signatureToActivity, transactionToActivity } from 'components/AccountDrawer/MiniPortfolio/Activity/parseLocal'
 import { Activity } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
@@ -89,13 +90,10 @@ const Descriptor = styled(ThemedText.BodySmall)`
   ${EllipsisStyle}
 `
 
-function ActivityPopupContent({ activity, onClose }: { activity?: Activity; onClose: () => void }) {
-  const success = activity?.status === TransactionStatus.Confirmed
+type ActivityPopupContentProps = { activity: Activity; onClick: () => void; onClose: () => void }
+function ActivityPopupContent({ activity, onClick, onClose }: ActivityPopupContentProps) {
+  const success = activity.status === TransactionStatus.Confirmed
   const { ENSName } = useENSName(activity?.otherAccount)
-
-  if (!activity) return null
-
-  const explorerUrl = getExplorerLink(activity.chainId, activity.hash, ExplorerDataType.TRANSACTION)
 
   return (
     <PopupContainer>
@@ -122,7 +120,7 @@ function ActivityPopupContent({ activity, onClose }: { activity?: Activity; onCl
             {ENSName ?? activity.otherAccount}
           </Descriptor>
         }
-        onClick={() => window.open(explorerUrl, '_blank')}
+        onClick={onClick}
       />
     </PopupContainer>
   )
@@ -143,15 +141,25 @@ export function TransactionPopupContent({
 
   const activity = transactionToActivity(transaction, chainId, tokens)
 
-  return <ActivityPopupContent activity={activity} onClose={onClose} />
+  if (!activity) return null
+
+  const onClick = () =>
+    window.open(getExplorerLink(activity.chainId, activity.hash, ExplorerDataType.TRANSACTION), '_blank')
+
+  return <ActivityPopupContent activity={activity} onClose={onClose} onClick={onClick} />
 }
 
 export function UniswapXOrderPopupContent({ orderHash, onClose }: { orderHash: string; onClose: () => void }) {
   const order = useOrder(orderHash)
   const tokens = useAllTokensMultichain()
+  const openOffchainActivityModal = useOpenOffchainActivityModal()
   if (!order) return null
 
   const activity = signatureToActivity(order, tokens)
 
-  return <ActivityPopupContent activity={activity} onClose={onClose} />
+  if (!activity) return null
+
+  const onClick = () => openOffchainActivityModal({ orderHash, status: order.status })
+
+  return <ActivityPopupContent activity={activity} onClose={onClose} onClick={onClick} />
 }
