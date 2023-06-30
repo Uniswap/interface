@@ -12,6 +12,7 @@ import { UserPropertyName } from 'src/features/telemetry/constants'
 import { EventProperties } from 'src/features/telemetry/types'
 import { uniswapUrls } from 'wallet/src/constants/urls'
 import { logger } from 'wallet/src/features/logger/logger'
+import serializeError from 'wallet/src/utils/serializeError'
 
 const DUMMY_KEY = '00000000000000000000000000000000'
 
@@ -41,7 +42,7 @@ export async function initAnalytics(): Promise<void> {
       tags: {
         file: 'telemetry/index',
         function: 'initAnalytics',
-        error: JSON.stringify(error),
+        error: serializeError(error),
       },
     })
   }

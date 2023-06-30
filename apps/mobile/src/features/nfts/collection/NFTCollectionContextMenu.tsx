@@ -10,6 +10,7 @@ import { NFTCollectionData } from 'src/features/nfts/collection/NFTCollectionHea
 import { getTwitterLink, getUniswapCollectionUrl, openUri } from 'src/utils/linking'
 import { theme as FixedTheme, Theme } from 'ui/src/theme/restyle/theme'
 import { logger } from 'wallet/src/features/logger/logger'
+import serializeError from 'wallet/src/utils/serializeError'
 
 type MenuOption = {
   title: string
@@ -58,7 +59,7 @@ export function NFTCollectionContextMenu({
         tags: {
           file: 'NFTCollectionContextMenu',
           function: 'onSharePress',
-          error: JSON.stringify(error),
+          error: serializeError(error),
         },
       })
     }

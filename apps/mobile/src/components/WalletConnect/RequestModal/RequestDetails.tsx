@@ -21,6 +21,7 @@ import { useENS } from 'wallet/src/features/ens/useENS'
 import { logger } from 'wallet/src/features/logger/logger'
 import { EthMethod, EthTransaction } from 'wallet/src/features/walletConnect/types'
 import { getValidAddress, shortenAddress } from 'wallet/src/utils/addresses'
+import serializeError from 'wallet/src/utils/serializeError'
 
 const getStrMessage = (request: WalletConnectRequest): string => {
   if (request.type === EthMethod.PersonalSign || request.type === EthMethod.EthSign) {
@@ -204,7 +205,7 @@ function RequestDetailsContent({ request }: Props): JSX.Element {
         tags: {
           file: 'RequestDetails',
           function: 'RequestDetailsContent',
-          error: JSON.stringify(error),
+          error: serializeError(error),
         },
       })
       return <Text />

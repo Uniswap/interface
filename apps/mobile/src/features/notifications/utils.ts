@@ -22,6 +22,7 @@ import { getValidAddress, shortenAddress } from 'wallet/src/utils/addresses'
 import { convertScientificNotationToNumber } from 'wallet/src/utils/convertScientificNotation'
 import { currencyIdToAddress } from 'wallet/src/utils/currencyId'
 import { formatCurrencyAmount, formatUSDPrice } from 'wallet/src/utils/format'
+import serializeError from 'wallet/src/utils/serializeError'
 
 export const formWCNotificationTitle = (appNotification: WalletConnectNotification): string => {
   const { event, dappName, chainId } = appNotification
@@ -301,7 +302,7 @@ export const getFormattedCurrencyAmount = (
       tags: {
         file: 'notifications/utils',
         function: 'getFormattedCurrencyAmount',
-        error: JSON.stringify(error),
+        error: serializeError(error),
       },
     })
     return ''

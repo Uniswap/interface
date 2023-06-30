@@ -2,6 +2,7 @@ import { call, cancel, cancelled, delay, fork, take } from 'typed-redux-saga'
 import { authActions } from 'wallet/src/features/auth/saga'
 import { logger } from 'wallet/src/features/logger/logger'
 import { SagaStatus } from 'wallet/src/utils/saga'
+import serializeError from 'wallet/src/utils/serializeError'
 
 const KEEP_ALIVE_INTERVAL_MS = 5000 // * 60 * 1000 // 5 minutes
 const KEEP_ALIVE_PING = { content: 'keep_alive_ping' }
@@ -121,7 +122,7 @@ function doWork(): void {
         tags: {
           file: 'keepaliveSaga',
           function: 'doWork',
-          error: JSON.stringify(chrome.runtime.lastError),
+          error: serializeError(chrome.runtime.lastError),
         },
       })
     } else {

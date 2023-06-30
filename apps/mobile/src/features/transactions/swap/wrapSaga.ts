@@ -14,6 +14,7 @@ import {
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { getWrappedNativeCurrencyAddressForChain } from 'wallet/src/utils/currencyId'
 import { createMonitoredSaga } from 'wallet/src/utils/saga'
+import serializeError from 'wallet/src/utils/serializeError'
 
 export enum WrapType {
   NotApplicable,
@@ -70,7 +71,7 @@ export function* wrap(params: Params) {
       tags: {
         file: 'wrapSaga',
         function: 'wrap',
-        error: JSON.stringify(error),
+        error: serializeError(error),
       },
     })
   }

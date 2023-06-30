@@ -51,6 +51,7 @@ import {
   WCEventType,
 } from 'wallet/src/features/walletConnect/types'
 import { createSaga } from 'wallet/src/utils/saga'
+import serializeError from 'wallet/src/utils/serializeError'
 import { ONE_SECOND_MS } from 'wallet/src/utils/time'
 
 function createWalletConnectChannel(
@@ -224,7 +225,7 @@ function createWalletConnectChannel(
             tags: {
               file: 'walletConnect/saga',
               function: 'errorHandler',
-              error: JSON.stringify(req),
+              error: serializeError(req),
             },
           })
       }
@@ -274,7 +275,7 @@ export function* watchWalletConnectEvents() {
         tags: {
           file: 'walletConnect/saga',
           function: 'watchWalletConnectEvents',
-          error: JSON.stringify(error),
+          error: serializeError(error),
         },
       })
     }
@@ -369,7 +370,7 @@ export function* signWcRequest(params: SignMessageParams | SignTransactionParams
       tags: {
         file: 'walletConnect/saga',
         function: 'signWcRequest',
-        error: JSON.stringify(error),
+        error: serializeError(error),
       },
     })
   }

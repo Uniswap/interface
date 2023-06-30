@@ -5,6 +5,7 @@ import { ChainId, CHAIN_INFO } from 'wallet/src/constants/chains'
 import { uniswapUrls } from 'wallet/src/constants/urls'
 import { logger } from 'wallet/src/features/logger/logger'
 import { FiatPurchaseTransactionInfo } from 'wallet/src/features/transactions/types'
+import serializeError from 'wallet/src/utils/serializeError'
 
 const ALLOWED_EXTERNAL_URI_SCHEMES = ['http://', 'https://']
 
@@ -57,7 +58,7 @@ export async function openUri(
       tags: {
         file: 'linking',
         function: 'openUri',
-        error: JSON.stringify(error),
+        error: serializeError(error),
       },
     })
   }

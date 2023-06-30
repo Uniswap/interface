@@ -22,6 +22,7 @@ import {
   selectAccounts,
 } from 'wallet/src/features/wallet/selectors'
 import { editAccount } from 'wallet/src/features/wallet/slice'
+import serializeError from 'wallet/src/utils/serializeError'
 
 interface AccountMetadata {
   name?: string
@@ -69,7 +70,7 @@ function* addAccountToFirebase(account: Account) {
       tags: {
         file: 'firebaseDataSaga',
         function: 'addAccountToFirebase',
-        error: JSON.stringify(error),
+        error: serializeError(error),
       },
     })
   }
@@ -85,7 +86,7 @@ export function* removeAccountFromFirebase(address: Address, notificationsEnable
       tags: {
         file: 'firebaseDataSaga',
         function: 'removeAccountFromFirebase',
-        error: JSON.stringify(error),
+        error: serializeError(error),
       },
     })
   }
@@ -101,7 +102,7 @@ export function* renameAccountInFirebase(address: Address, newName: string) {
       tags: {
         file: 'firebaseDataSaga',
         function: 'renameAccountInFirebase',
-        error: JSON.stringify(error),
+        error: serializeError(error),
       },
     })
   }
@@ -136,7 +137,7 @@ export function* toggleFirebaseNotificationSettings({
       tags: {
         file: 'firebaseDataSaga',
         function: 'toggleFirebaseNotificationSettings',
-        error: JSON.stringify(error),
+        error: serializeError(error),
       },
     })
   }
@@ -188,7 +189,7 @@ async function updateFirebaseMetadata(address: Address, metadata: AccountMetadat
       tags: {
         file: 'firebaseDataSaga',
         function: 'updateFirebaseMetadata',
-        error: JSON.stringify(error),
+        error: serializeError(error),
       },
     })
   }

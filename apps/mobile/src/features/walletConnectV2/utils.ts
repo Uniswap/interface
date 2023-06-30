@@ -8,6 +8,7 @@ import { EMPTY_ARRAY } from 'wallet/src/constants/misc'
 import { toSupportedChainId } from 'wallet/src/features/chains/utils'
 import { logger } from 'wallet/src/features/logger/logger'
 import { EthMethod, EthSignMethod } from 'wallet/src/features/walletConnect/types'
+import serializeError from 'wallet/src/utils/serializeError'
 
 /**
  * Construct WalletConnect 2.0 session namespaces to complete a new pairing. Used when approving a new pairing request.
@@ -190,7 +191,7 @@ export async function pairWithWalletConnectURI(uri: string): Promise<void | Pair
       tags: {
         file: 'walletConnectV2/utils',
         function: 'pairWithWalletConnectURI',
-        error: JSON.stringify(error),
+        error: serializeError(error),
       },
     })
 

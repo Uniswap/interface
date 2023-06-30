@@ -7,6 +7,7 @@ import { Erc20 } from 'wallet/src/abis/types'
 import { ChainId } from 'wallet/src/constants/chains'
 import { logger } from 'wallet/src/features/logger/logger'
 import { useContractManager, useProviderManager } from 'wallet/src/features/wallet/context'
+import serializeError from 'wallet/src/utils/serializeError'
 
 export function useContract<T extends Contract = Contract>(
   chainId: ChainId,
@@ -30,7 +31,7 @@ export function useContract<T extends Contract = Contract>(
         tags: {
           file: 'useContract',
           function: 'useContract',
-          error: JSON.stringify(error),
+          error: serializeError(error),
         },
       })
       return null

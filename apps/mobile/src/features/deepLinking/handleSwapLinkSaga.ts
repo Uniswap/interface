@@ -11,6 +11,7 @@ import { selectActiveChainIds } from 'wallet/src/features/chains/saga'
 import { logger } from 'wallet/src/features/logger/logger'
 import { getValidAddress } from 'wallet/src/utils/addresses'
 import { currencyIdToAddress, currencyIdToChain } from 'wallet/src/utils/currencyId'
+import serializeError from 'wallet/src/utils/serializeError'
 
 export function* handleSwapLink(url: URL) {
   try {
@@ -48,7 +49,7 @@ export function* handleSwapLink(url: URL) {
       tags: {
         file: 'handleSwapLinkSaga',
         function: 'handleSwapLink',
-        error: JSON.stringify(error),
+        error: serializeError(error),
       },
     })
     yield* put(openModal({ name: ModalName.Swap }))

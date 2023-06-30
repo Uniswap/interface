@@ -1,5 +1,6 @@
 import * as Clipboard from 'expo-clipboard'
 import { logger } from 'wallet/src/features/logger/logger'
+import serializeError from 'wallet/src/utils/serializeError'
 
 export function setClipboard(value: string): void {
   try {
@@ -9,7 +10,7 @@ export function setClipboard(value: string): void {
       tags: {
         file: 'clipboard',
         function: 'setClipboard',
-        error: JSON.stringify(error),
+        error: serializeError(error),
       },
     })
   }
@@ -24,7 +25,7 @@ export async function getClipboard(): Promise<string | void> {
       tags: {
         file: 'clipboard',
         function: 'getClipboard',
-        error: JSON.stringify(error),
+        error: serializeError(error),
       },
     })
   }
@@ -56,7 +57,7 @@ export async function setClipboardImage(imageUrl: string | undefined): Promise<v
       tags: {
         file: 'clipboard',
         function: 'setClipboardImage',
-        error: JSON.stringify(error),
+        error: serializeError(error),
         imageUrl,
       },
     })

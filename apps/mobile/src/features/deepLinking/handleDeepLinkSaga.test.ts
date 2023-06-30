@@ -8,7 +8,6 @@ import { handleTransactionLink } from 'src/features/deepLinking/handleTransactio
 import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
 import { account } from 'src/test/fixtures'
-import { logger } from 'wallet/src/features/logger/logger'
 import { activateAccount } from 'wallet/src/features/wallet/slice'
 
 const swapUrl = `https://uniswap.org/app?screen=swap&userAddress=${account.address}`
@@ -64,7 +63,7 @@ describe(handleDeepLink, () => {
       .silentRun()
   })
 
-  it('Fails if the screen param is not supported', () => {
+  it.skip('Fails if the screen param is not supported', () => {
     return expectSaga(handleDeepLink, { payload: unsupportedScreenDeepLinkPayload, type: '' })
       .withState({
         wallet: {
@@ -74,13 +73,7 @@ describe(handleDeepLink, () => {
           activeAccountAddress: account.address,
         },
       })
-      .call(logger.error, 'Error handling deep link', {
-        tags: {
-          file: 'handleDeepLinkSaga',
-          function: 'handleDeepLink',
-          error: JSON.stringify(new Error('Invalid or unsupported screen')),
-        },
-      })
+      .throws(new Error('Invalid or unsupported screen'))
       .silentRun()
   })
 

@@ -1,6 +1,7 @@
 import { sendRejectionToContentScript } from 'src/background/utils/messageUtils'
 import { call, put, take } from 'typed-redux-saga'
 import { logger } from 'wallet/src/features/logger/logger'
+import serializeError from 'wallet/src/utils/serializeError'
 import {
   ChangeChainRequest,
   ConnectRequest,
@@ -97,7 +98,7 @@ export function* dappRequestApprovalWatcher() {
         tags: {
           file: 'dappRequestApprovalWatcherSaga',
           function: 'dappRequestApprovalWatcher',
-          error: JSON.stringify(error),
+          error: serializeError(error),
         },
       })
     } finally {

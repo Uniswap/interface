@@ -5,6 +5,7 @@ import {
   InjectFrameRequest,
 } from 'src/types/requests'
 import { logger } from 'wallet/src/features/logger/logger'
+import serializeError from 'wallet/src/utils/serializeError'
 
 const DEFAULT_WINDOW_WIDTH = 2000
 export const REQUESTS_WINDOW_URL = 'requestsWindow.html'
@@ -101,7 +102,7 @@ export function extractBaseUrl(url?: string): string | undefined {
         file: 'dappRequests/utils',
         function: 'extractBaseUrl',
         url,
-        error: JSON.stringify(error),
+        error: serializeError(error),
       },
     })
   }

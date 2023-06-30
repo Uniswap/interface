@@ -30,6 +30,7 @@ import { ALL_SUPPORTED_CHAIN_IDS, ChainId, CHAIN_INFO } from 'wallet/src/constan
 import { logger } from 'wallet/src/features/logger/logger'
 import { selectAccounts, selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
 import { EthEvent, EthMethod } from 'wallet/src/features/walletConnect/types'
+import serializeError from 'wallet/src/utils/serializeError'
 
 export let wcWeb3Wallet: IWeb3Wallet
 
@@ -108,7 +109,7 @@ function* watchWalletConnectV2Events() {
         tags: {
           file: 'walletConnectV2/saga',
           function: 'watchWalletConnectV2Events',
-          error: JSON.stringify(error),
+          error: serializeError(error),
         },
       })
     }

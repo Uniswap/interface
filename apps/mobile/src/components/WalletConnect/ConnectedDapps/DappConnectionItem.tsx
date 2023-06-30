@@ -29,6 +29,7 @@ import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 import { WalletConnectEvent } from 'wallet/src/features/walletConnect/types'
+import serializeError from 'wallet/src/utils/serializeError'
 import { ONE_SECOND_MS } from 'wallet/src/utils/time'
 
 export function DappConnectionItem({
@@ -76,7 +77,7 @@ export function DappConnectionItem({
           tags: {
             file: 'DappConnectionItem',
             function: 'onDisconnect',
-            error: JSON.stringify(error),
+            error: serializeError(error),
           },
         })
       }

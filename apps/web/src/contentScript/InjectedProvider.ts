@@ -34,6 +34,7 @@ import {
 import { v4 as uuidv4 } from 'uuid'
 import { chainIdtoHexadecimalString } from 'wallet/src/features/chains/utils'
 import { logger } from 'wallet/src/features/logger/logger'
+import serializeError from 'wallet/src/utils/serializeError'
 
 export type EthersSendCallback = (error: unknown, response: unknown) => void
 const TIMEOUT_MS = 30000
@@ -323,7 +324,7 @@ export class InjectedProvider extends EventEmitter {
           tags: {
             file: 'InjectedProvider',
             function: 'request',
-            error: JSON.stringify(error),
+            error: serializeError(error),
           },
         })
         return reject(error)

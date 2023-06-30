@@ -8,6 +8,7 @@ import { logger } from 'wallet/src/features/logger/logger'
 import { TransactionDetails, TransactionType } from 'wallet/src/features/transactions/types'
 import { currencyAddress, currencyIdToAddress } from 'wallet/src/utils/currencyId'
 import { getCurrencyAmount, ValueType } from 'wallet/src/utils/getCurrencyAmount'
+import serializeError from 'wallet/src/utils/serializeError'
 
 interface Props {
   transactionDetails: TransactionDetails
@@ -84,7 +85,7 @@ export function createSwapFormFromTxDetails({
       tags: {
         file: 'createSwapFormFromTxDetails',
         function: 'createSwapFormFromTxDetails',
-        error: JSON.stringify(error),
+        error: serializeError(error),
       },
     })
   }
@@ -148,7 +149,7 @@ export function createWrapFormFromTxDetails({
       tags: {
         file: 'createSwapFormFromTxDetails',
         function: 'createWrapFormFromTxDetails',
-        error: JSON.stringify(error),
+        error: serializeError(error),
       },
     })
   }

@@ -16,6 +16,7 @@ import { call, fork, put, takeLatest } from 'typed-redux-saga'
 import { logger } from 'wallet/src/features/logger/logger'
 import { selectAccounts, selectActiveAccount } from 'wallet/src/features/wallet/selectors'
 import { activateAccount } from 'wallet/src/features/wallet/slice'
+import serializeError from 'wallet/src/utils/serializeError'
 
 export interface DeepLink {
   url: string
@@ -101,7 +102,7 @@ export function* handleDeepLink(action: ReturnType<typeof openDeepLink>) {
       tags: {
         file: 'handleDeepLinkSaga',
         function: 'handleDeepLink',
-        error: JSON.stringify(error),
+        error: serializeError(error),
       },
     })
   }

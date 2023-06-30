@@ -17,6 +17,7 @@ import {
 } from 'wallet/src/features/wallet/accounts/editAccountSaga'
 import { BackupType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
+import serializeError from 'wallet/src/utils/serializeError'
 import { ONE_SECOND_MS } from 'wallet/src/utils/time'
 import { promiseMinDelay } from 'wallet/src/utils/timing'
 
@@ -80,7 +81,7 @@ export function CloudBackupProcessingScreen({
           tags: {
             file: 'CloudBackupProcessingScreen',
             function: 'onPressNext',
-            error: JSON.stringify(error),
+            error: serializeError(error),
           },
         })
 

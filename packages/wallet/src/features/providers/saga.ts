@@ -10,6 +10,7 @@ import { logger } from 'wallet/src/features/logger/logger'
 import { ProviderManager } from 'wallet/src/features/providers/ProviderManager'
 import { getProviderManager } from 'wallet/src/features/wallet/context'
 import { RootState } from 'wallet/src/state'
+import serializeError from 'wallet/src/utils/serializeError'
 
 // Initialize Ethers providers for the chains the wallet interacts with
 export function* initProviders() {
@@ -45,7 +46,7 @@ function* initProvider(chainId: ChainId, manager: ProviderManager) {
         file: 'providers/saga',
         function: 'initProvider',
         chainId,
-        error: JSON.stringify(error),
+        error: serializeError(error),
       },
     })
   }
@@ -75,7 +76,7 @@ function* modifyProviders(action: PayloadAction<{ chainId: ChainId; isActive: bo
         file: 'providers/saga',
         function: 'modifyProviders',
         chainId,
-        error: JSON.stringify(error),
+        error: serializeError(error),
       },
     })
   }

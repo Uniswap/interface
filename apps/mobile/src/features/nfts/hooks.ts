@@ -15,6 +15,7 @@ import { logger } from 'wallet/src/features/logger/logger'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
+import serializeError from 'wallet/src/utils/serializeError'
 import { ONE_SECOND_MS } from 'wallet/src/utils/time'
 
 export const HIDDEN_NFTS_ROW_LEFT_ITEM = 'HIDDEN_NFTS_ROW_LEFT_ITEM'
@@ -115,7 +116,7 @@ export function useNFTMenu({
                     tags: {
                       file: 'nfts/hooks',
                       function: 'useNFTMenu',
-                      error: JSON.stringify(error),
+                      error: serializeError(error),
                     },
                   })
                 }

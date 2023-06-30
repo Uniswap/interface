@@ -23,6 +23,7 @@ import {
 } from 'wallet/src/features/wallet/accounts/editAccountSaga'
 import { BackupType, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
+import serializeError from 'wallet/src/utils/serializeError'
 
 type Props = NativeStackScreenProps<SettingsStackParamList, Screens.SettingsCloudBackupScreen>
 
@@ -60,7 +61,7 @@ export function SettingsCloudBackupScreen({
         tags: {
           file: 'SettingsCloudBackupScreen',
           function: 'onPressNext',
-          error: JSON.stringify(error),
+          error: serializeError(error),
         },
       })
 

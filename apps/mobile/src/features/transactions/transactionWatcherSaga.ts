@@ -37,6 +37,7 @@ import {
   TransactionType,
 } from 'wallet/src/features/transactions/types'
 import { getProvider } from 'wallet/src/features/wallet/context'
+import serializeError from 'wallet/src/utils/serializeError'
 
 export function* transactionWatcher() {
   logger.debug('transactionWatcherSaga', 'transactionWatcher', 'Starting tx watcher')
@@ -70,7 +71,7 @@ export function* transactionWatcher() {
           file: 'transactionWatcherSaga',
           function: 'watchTransaction',
           txHash: transaction.hash,
-          error: JSON.stringify(error),
+          error: serializeError(error),
         },
       })
 
@@ -141,7 +142,7 @@ export function* watchFiatOnRampTransaction(transaction: TransactionDetails) {
       tags: {
         file: 'transactionWatcherSaga',
         function: 'watchFiatOnRampTransaction',
-        error: JSON.stringify(error),
+        error: serializeError(error),
       },
     })
   }

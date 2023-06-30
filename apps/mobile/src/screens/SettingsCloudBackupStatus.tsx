@@ -27,6 +27,7 @@ import {
   SignerMnemonicAccount,
 } from 'wallet/src/features/wallet/accounts/types'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
+import serializeError from 'wallet/src/utils/serializeError'
 
 type Props = NativeStackScreenProps<SettingsStackParamList, Screens.SettingsCloudBackupStatus>
 
@@ -73,7 +74,7 @@ export function SettingsCloudBackupStatus({
         tags: {
           file: 'SettingsCloudBackupStatus',
           function: 'deleteBackup',
-          error: JSON.stringify(error),
+          error: serializeError(error),
         },
       })
 

@@ -5,6 +5,7 @@ import { foundCloudBackup } from 'src/features/CloudBackup/cloudBackupSlice'
 import { ICloudBackupsManagerEventType, ICloudMnemonicBackup } from 'src/features/CloudBackup/types'
 import { call, fork, put, take } from 'typed-redux-saga'
 import { logger } from 'wallet/src/features/logger/logger'
+import serializeError from 'wallet/src/utils/serializeError'
 
 function createICloudBackupManagerChannel(eventEmitter: NativeEventEmitter) {
   return eventChannel<Action>((emit) => {
@@ -51,7 +52,7 @@ export function* watchICloudBackupEvents() {
         tags: {
           file: 'CloudBackup/saga',
           function: 'watchICloudBackupEvents',
-          error: JSON.stringify(error),
+          error: serializeError(error),
         },
       })
     }

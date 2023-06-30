@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import { View } from 'react-native'
 import { parse, SvgXml } from 'react-native-svg'
 import { logger } from 'wallet/src/features/logger/logger'
+import serializeError from 'wallet/src/utils/serializeError'
 
 type Props = {
   backgroundColor?: string
@@ -33,7 +34,7 @@ export const RemoteSvg = ({
           tags: {
             file: 'mobile/src/components/images/RemoteSvg',
             function: 'fetchSvg',
-            error: JSON.stringify(e),
+            error: serializeError(e),
           },
         })
       }

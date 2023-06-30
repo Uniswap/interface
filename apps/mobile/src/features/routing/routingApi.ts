@@ -11,6 +11,7 @@ import { ChainId } from 'wallet/src/constants/chains'
 import { uniswapUrls } from 'wallet/src/constants/urls'
 import { logger } from 'wallet/src/features/logger/logger'
 import { SwapRouterNativeAssets } from 'wallet/src/utils/currencyId'
+import serializeError from 'wallet/src/utils/serializeError'
 
 const DEFAULT_DEADLINE_S = 60 * 30 // 30 minutes in seconds
 
@@ -119,7 +120,7 @@ export const routingApi = createApi({
               file: 'routingApi',
               function: 'quote',
               args: JSON.stringify(args),
-              error: JSON.stringify(error.data),
+              error: serializeError(error.data),
             },
           })
         }

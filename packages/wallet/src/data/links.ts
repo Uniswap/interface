@@ -8,6 +8,7 @@ import {
   getOnChainBalancesFetch,
   STUB_ONCHAIN_BALANCES_ENDPOINT,
 } from 'wallet/src/features/portfolio/api'
+import serializeError from 'wallet/src/utils/serializeError'
 
 const REST_API_URL = uniswapUrls.apiBaseUrl
 
@@ -96,7 +97,7 @@ export function getErrorLink(
             tags: {
               file: 'data/links',
               function: 'getErrorLink',
-              error: JSON.stringify(networkError),
+              error: serializeError(networkError),
             },
           }),
         networkErrorSamplingRate

@@ -5,6 +5,7 @@ import { ChainId, CHAIN_INFO, L1ChainInfo, L2ChainInfo } from 'wallet/src/consta
 import { logger } from 'wallet/src/features/logger/logger'
 
 import { getEthersProvider } from 'wallet/src/features/providers/getEthersProvider'
+import serializeError from 'wallet/src/utils/serializeError'
 import { getInfuraChainName } from './utils'
 
 enum ProviderStatus {
@@ -139,7 +140,7 @@ export class ProviderManager {
           file: 'ProviderManager',
           function: 'initProvider',
           chainId,
-          error: JSON.stringify(error),
+          error: serializeError(error),
         },
       })
       return null

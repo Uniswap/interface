@@ -9,6 +9,7 @@ import {
   TransactionType,
 } from 'wallet/src/features/transactions/types'
 import { getNativeCurrencyAddressForChain } from 'wallet/src/utils/currencyId'
+import serializeError from 'wallet/src/utils/serializeError'
 
 const MOONPAY_ETH_CONTRACT_ADDRESS = '0x0000000000000000000000000000000000000000'
 
@@ -118,7 +119,7 @@ export function extractFiatOnRampTransactionDetails(
       tags: {
         file: 'extractFiatPurchaseTransactionDetails',
         function: 'extractFiatOnRampTransactionDetails',
-        error: JSON.stringify(error),
+        error: serializeError(error),
       },
     })
   }

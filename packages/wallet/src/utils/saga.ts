@@ -3,6 +3,7 @@ import { call, delay, put, race, take } from 'typed-redux-saga'
 import { logger } from 'wallet/src/features/logger/logger'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
+import serializeError from 'wallet/src/utils/serializeError'
 import { errorToString } from './validation'
 
 /**
@@ -35,7 +36,7 @@ export function createSaga<SagaParams = void>(
             file: 'utils/saga',
             function: 'createSaga',
             sagaName: name,
-            error: JSON.stringify(error),
+            error: serializeError(error),
           },
         })
       }
@@ -151,7 +152,7 @@ export function createMonitoredSaga<SagaParams = void>(
             file: 'utils/saga',
             function: 'createMonitoredSaga',
             sagaName: name,
-            error: JSON.stringify(error),
+            error: serializeError(error),
           },
         })
 

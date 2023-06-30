@@ -12,6 +12,7 @@ import { SendTokenTransactionInfo, TransactionType } from 'wallet/src/features/t
 import { getContractManager, getProvider } from 'wallet/src/features/wallet/context'
 import { isNativeCurrencyAddress } from 'wallet/src/utils/currencyId'
 import { createMonitoredSaga } from 'wallet/src/utils/saga'
+import serializeError from 'wallet/src/utils/serializeError'
 
 type Params = {
   transferTokenParams: TransferTokenParams
@@ -37,7 +38,7 @@ export function* transferToken(params: Params) {
       tags: {
         file: 'transferTokenSaga',
         function: 'transferToken',
-        error: JSON.stringify(error),
+        error: serializeError(error),
       },
     })
   }

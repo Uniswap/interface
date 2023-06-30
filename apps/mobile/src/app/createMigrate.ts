@@ -2,6 +2,7 @@
 import type { MigrationManifest, PersistedState } from 'redux-persist'
 import { DEFAULT_VERSION } from 'redux-persist/es/constants'
 import { logger } from 'wallet/src/features/logger/logger'
+import serializeError from 'wallet/src/utils/serializeError'
 
 export default function createMigrate(
   migrations: MigrationManifest
@@ -53,7 +54,11 @@ export default function createMigrate(
       return Promise.resolve(migratedState)
     } catch (error) {
       logger.error('Redux migration error', {
-        tags: { file: 'redux-persist', function: 'createMigrate', error: JSON.stringify(error) },
+        tags: {
+          file: 'redux-persist',
+          function: 'createMigrate',
+          error: serializeError(error),
+        },
       })
       return Promise.reject(error)
     }

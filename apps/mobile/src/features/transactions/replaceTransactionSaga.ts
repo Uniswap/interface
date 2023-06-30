@@ -15,6 +15,7 @@ import { TransactionDetails, TransactionStatus } from 'wallet/src/features/trans
 import { getProvider, getSignerManager } from 'wallet/src/features/wallet/context'
 import { selectAccounts } from 'wallet/src/features/wallet/selectors'
 import { getValidAddress } from 'wallet/src/utils/addresses'
+import serializeError from 'wallet/src/utils/serializeError'
 
 export function* attemptReplaceTransaction(
   transaction: TransactionDetails,
@@ -81,7 +82,7 @@ export function* attemptReplaceTransaction(
         file: 'replaceTransactionSaga',
         function: 'attemptReplaceTransaction',
         txHash: hash,
-        error: JSON.stringify(error),
+        error: serializeError(error),
       },
     })
 
