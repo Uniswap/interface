@@ -41,7 +41,7 @@ export async function onRequestGet({ params, request }) {
               display: 'flex',
               alignItems: 'center',
               backgroundColor: `rgba(${palette[0]}, ${palette[1]}, ${palette[2]}, 0.75)`,
-              padding: '75px',
+              padding: '72px',
             }}
           >
             <div

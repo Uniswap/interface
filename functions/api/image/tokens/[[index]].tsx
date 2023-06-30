@@ -44,6 +44,8 @@ export async function onRequestGet({ params, request }) {
             style={{
               display: 'flex',
               backgroundColor: `rgba(${palette[0]}, ${palette[1]}, ${palette[2]}, 0.8)`,
+              alignItems: 'center',
+              height: '100%',
               padding: '72px',
             }}
           >
@@ -51,18 +53,27 @@ export async function onRequestGet({ params, request }) {
               style={{
                 display: 'flex',
                 flexDirection: 'column',
-                justifyContent: 'center',
+                justifyContent: 'space-between',
                 alignItems: 'flex-start',
                 width: '100%',
-                gap: '32px',
+                height: '100%',
                 color: 'white',
               }}
             >
-              <img src={data.image} width="168px" style={{ borderRadius: '50%' }} />
+              <img
+                src={data.image}
+                width="168px"
+                style={{
+                  marginTop: 'auto',
+                  marginBottom: 'auto',
+                }}
+              />
               <div
                 style={{
                   fontFamily: 'Inter',
                   fontSize: '72px',
+                  marginTop: 'auto',
+                  marginBottom: 'auto',
                 }}
               >
                 {data.name}
@@ -73,8 +84,10 @@ export async function onRequestGet({ params, request }) {
                   flexDirection: 'row',
                   justifyContent: 'space-between',
                   alignItems: 'center',
-                  marginLeft: '-9px',
                   width: '100%',
+                  marginTop: 'auto',
+                  marginLeft: '-9px',
+                  marginBottom: '-9px',
                 }}
               >
                 <div

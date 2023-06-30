@@ -6,7 +6,6 @@ export default async function getColor(image: string) {
       .then((res) => res.arrayBuffer())
       .then((arrayBuffer) => Buffer.from(arrayBuffer))
     const palette = await ColorThief.getPalette(data, 5)
-    console.log(palette)
     return palette[0]
   } catch (e) {
     return
