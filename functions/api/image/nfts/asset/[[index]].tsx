@@ -3,17 +3,11 @@ import { ImageResponse } from '@vercel/og'
 import React from 'react'
 
 import getAsset from '../../../../utils/getAsset'
+import getSetup from '../../../../utils/getSetup'
 
 export async function onRequestGet({ params, request }) {
   try {
-    const font = fetch(
-      new URL('https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZFhjQ.ttf'),
-      import.meta.url
-    ).then((res) => res.arrayBuffer())
-    const fontData = await font
-
-    const origin = new URL(request.url).origin
-    const watermark = origin + '/images/640x125_App_Watermark.png'
+    const { fontData, watermark } = await getSetup(request)
 
     const { index } = params
     const collectionAddress = String(index[0])
