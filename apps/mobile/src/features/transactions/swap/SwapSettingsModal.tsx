@@ -19,10 +19,6 @@ import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { AnimatedFlex, Box, Flex } from 'src/components/layout'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { Text } from 'src/components/Text'
-import {
-  DEFAULT_SLIPPAGE_TOLERANCE,
-  MAX_CUSTOM_SLIPPAGE_TOLERANCE,
-} from 'src/constants/transactions'
 import { ModalName } from 'src/features/telemetry/constants'
 import { DerivedSwapInfo } from 'src/features/transactions/swap/hooks'
 import { slippageToleranceToPercent } from 'src/features/transactions/swap/utils'
@@ -31,6 +27,10 @@ import { openUri } from 'src/utils/linking'
 import AlertTriangleIcon from 'ui/src/assets/icons/alert-triangle.svg'
 import SettingsIcon from 'ui/src/assets/icons/settings.svg'
 import { opacify } from 'ui/src/theme/color/utils'
+import {
+  DEFAULT_SLIPPAGE_TOLERANCE,
+  MAX_CUSTOM_SLIPPAGE_TOLERANCE,
+} from 'wallet/src/constants/transactions'
 import { SWAP_SLIPPAGE_HELP_PAGE_URL } from 'wallet/src/constants/urls'
 import { formatCurrencyAmount, NumberType } from 'wallet/src/utils/format'
 

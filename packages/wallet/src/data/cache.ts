@@ -10,6 +10,16 @@ export function setupCache(): InMemoryCache {
     typePolicies: {
       Query: {
         fields: {
+          data: {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            merge(_, incoming): any {
+              return {
+                ...incoming,
+                // add a timestamp because there is no cache-ttl in Apollo and in some cases (i.e. routing API quotes) we cannot show stale quotes
+                timestamp: Date.now(),
+              }
+            },
+          },
           // relayStylePagination function unfortunately generates a field policy that ignores args
           // Note: all non-pagination related query args should be added for cache to work properly.
           // ^ This ensures that cache doesnt get overwritten by similar queries with different args (e.g. different filter on NFT Items)

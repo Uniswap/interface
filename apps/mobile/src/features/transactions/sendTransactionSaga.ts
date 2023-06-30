@@ -3,7 +3,6 @@ import { providers } from 'ethers'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
 import { transactionActions } from 'src/features/transactions/slice'
-import { Trade } from 'src/features/transactions/swap/useTrade'
 import {
   createTransactionId,
   getSerializableTransactionRequest,
@@ -11,6 +10,7 @@ import {
 import { call, put } from 'typed-redux-saga'
 import { ChainId, CHAIN_INFO } from 'wallet/src/constants/chains'
 import { logger } from 'wallet/src/features/logger/logger'
+import { Trade } from 'wallet/src/features/transactions/swap/trade'
 import {
   TransactionDetails,
   TransactionOptions,

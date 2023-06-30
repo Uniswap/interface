@@ -1,5 +1,5 @@
 import { Token } from '@uniswap/sdk-core'
-import { Trade } from 'src/features/transactions/swap/useTrade'
+import { Trade } from 'wallet/src/features/transactions/swap/trade'
 
 // Routing API types
 
@@ -21,6 +21,7 @@ export interface QuoteResult {
   route: Array<(V3PoolInRoute | V2PoolInRoute)[]>
   routeString: string
   simulationError?: boolean
+  timestamp: number // used as a cache ttl
 }
 
 export interface TradeQuoteResult {

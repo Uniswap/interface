@@ -21,8 +21,7 @@ import { PERMITTABLE_TOKENS } from 'src/features/transactions/permit/permittable
 import { usePermitSignature } from 'src/features/transactions/permit/usePermitSignature'
 import { getBaseTradeAnalyticsProperties } from 'src/features/transactions/swap/analytics'
 import { swapActions } from 'src/features/transactions/swap/swapSaga'
-import { usePermit2Signature } from 'src/features/transactions/swap/usePermit2Signature'
-import { Trade, useSetTradeSlippage, useTrade } from 'src/features/transactions/swap/useTrade'
+import { useSetTradeSlippage, useTrade } from 'src/features/transactions/swap/useTrade'
 import {
   getSwapMethodParameters,
   getWrapType,
@@ -56,6 +55,8 @@ import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { useOnChainCurrencyBalance } from 'wallet/src/features/portfolio/api'
 import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
+import { Trade } from 'wallet/src/features/transactions/swap/trade'
+import { usePermit2Signature } from 'wallet/src/features/transactions/swap/usePermit2Signature'
 import { useContractManager, useProvider } from 'wallet/src/features/wallet/context'
 import {
   useActiveAccount,

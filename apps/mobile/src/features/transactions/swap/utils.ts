@@ -8,8 +8,6 @@ import { BigNumber } from 'ethers'
 import { TFunction } from 'i18next'
 import { ElementName } from 'src/features/telemetry/constants'
 import { PermitOptions } from 'src/features/transactions/permit/usePermitSignature'
-import { PermitSignatureInfo } from 'src/features/transactions/swap/usePermit2Signature'
-import { Trade } from 'src/features/transactions/swap/useTrade'
 import { WrapType } from 'src/features/transactions/swap/wrapSaga'
 import {
   CurrencyField,
@@ -17,6 +15,8 @@ import {
 } from 'src/features/transactions/transactionState/transactionState'
 import { ChainId } from 'wallet/src/constants/chains'
 import { AssetType } from 'wallet/src/entities/assets'
+import { Trade } from 'wallet/src/features/transactions/swap/trade'
+import { PermitSignatureInfo } from 'wallet/src/features/transactions/swap/usePermit2Signature'
 import {
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,
@@ -32,16 +32,6 @@ import {
   currencyIdToChain,
 } from 'wallet/src/utils/currencyId'
 import { formatPrice, NumberType } from 'wallet/src/utils/format'
-
-export function serializeQueryParams(
-  params: Record<string, Parameters<typeof encodeURIComponent>[0]>
-): string {
-  const queryString = []
-  for (const [param, value] of Object.entries(params)) {
-    queryString.push(`${encodeURIComponent(param)}=${encodeURIComponent(value)}`)
-  }
-  return queryString.join('&')
-}
 
 export function getWrapType(
   inputCurrency: Currency | null | undefined,

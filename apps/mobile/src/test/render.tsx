@@ -15,7 +15,6 @@ import { ReactTestRendererJSON } from 'react-test-renderer'
 import type { MobileState } from 'src/app/reducer'
 import type { AppStore } from 'src/app/store'
 import { persistedReducer } from 'src/app/store'
-import { routingApi } from 'src/features/routing/routingApi'
 import { theme } from 'ui/src/theme/restyle/theme'
 import { setupCache } from 'wallet/src/data/cache'
 import { getErrorLink } from 'wallet/src/data/links'
@@ -48,7 +47,7 @@ export function renderWithProviders(
       middleware: (getDefaultMiddleware) =>
         // TODO: fix typing
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        getDefaultMiddleware().concat(routingApi.middleware, ensApi.middleware) as any,
+        getDefaultMiddleware().concat(ensApi.middleware) as any,
     }),
     ...renderOptions
   }: ExtendedRenderOptions = {}

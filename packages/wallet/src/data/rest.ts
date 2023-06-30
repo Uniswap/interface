@@ -14,11 +14,12 @@ export function useRestQuery<
   variables: TVariables,
   // Fields requested from the endpoint
   fields: string[],
-  options?: Omit<QueryHookOptions<{ data: TData }, { input: TVariables }>, 'variables'>
+  options?: Omit<QueryHookOptions<{ data: TData }, { input: TVariables }>, 'variables'>,
+  method: 'GET' | 'POST' = 'POST'
 ): GqlResult<TData> {
   const document = gql`
     query Query($input: REST!) {
-      data(input: $input) @rest(type: "${path}Response", path: "${path}", method: "POST") {
+      data(input: $input) @rest(type: "${path}Response", path: "${path}", method: "${method}") {
         ${fields.join('\n')}
       }
     }

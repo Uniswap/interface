@@ -1,13 +1,13 @@
 import { SerializedError } from '@reduxjs/toolkit'
-import { FetchBaseQueryError, skipToken } from '@reduxjs/toolkit/dist/query'
+import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
-import { useQuoteQuery } from 'src/features/routing/routingApi'
-import { PermitSignatureInfo } from 'src/features/transactions/swap/usePermit2Signature'
 import { ChainId } from 'wallet/src/constants/chains'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
 import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
+import { useQuoteQuery } from 'wallet/src/features/routing/api'
+import { PermitSignatureInfo } from 'wallet/src/features/transactions/swap/usePermit2Signature'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
 import {
   areCurrencyIdsEqual,
@@ -15,7 +15,6 @@ import {
   currencyId,
 } from 'wallet/src/utils/currencyId'
 import { useDebounceWithStatus } from 'wallet/src/utils/timing'
-
 export interface UseQuoteProps {
   amountSpecified: CurrencyAmount<Currency> | null | undefined
   otherCurrency: Currency | null | undefined
@@ -73,7 +72,7 @@ export function useRouterQuote(params: UseQuoteProps) {
 
   const result = useQuoteQuery(
     skipQuery
-      ? skipToken
+      ? undefined
       : {
           enableUniversalRouter,
           tokenInAddress,
@@ -91,7 +90,7 @@ export function useRouterQuote(params: UseQuoteProps) {
           },
         },
     {
-      pollingInterval,
+      pollInterval: pollingInterval,
     }
   )
 
@@ -122,7 +121,7 @@ export function useSimulatedGasLimit(
 } {
   const [debouncedAmountSpecified, isDebouncing] = useDebounceWithStatus(amountSpecified)
 
-  const { isLoading, error, data } = useRouterQuote({
+  const { loading, error, data } = useRouterQuote({
     amountSpecified: debouncedAmountSpecified,
     otherCurrency,
     tradeType,
@@ -133,7 +132,7 @@ export function useSimulatedGasLimit(
 
   return useMemo(
     () => ({
-      isLoading: isLoading || isDebouncing,
+      isLoading: loading || isDebouncing,
       error: error || data?.simulationError,
       // if there is a simulation error, gasUseEstimate will be the router-api estimate instead of the accurate
       // Tenderly estimate, and the router-api estimate isn't accurate enough for submitting on-chain
@@ -142,6 +141,6 @@ export function useSimulatedGasLimit(
         (data && !data.simulationError && data.gasUseEstimate) || SWAP_GAS_LIMIT_FALLBACKS[chainId],
       gasFallbackUsed: !skip && !!data?.simulationError,
     }),
-    [isLoading, isDebouncing, error, data, chainId, skip]
+    [loading, isDebouncing, error, data, chainId, skip]
   )
 }

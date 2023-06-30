@@ -1,20 +1,8 @@
-import { getWrapType, serializeQueryParams } from 'src/features/transactions/swap/utils'
+import { getWrapType } from 'src/features/transactions/swap/utils'
 import { WrapType } from 'src/features/transactions/swap/wrapSaga'
 import { ChainId } from 'wallet/src/constants/chains'
 import { WRAPPED_NATIVE_CURRENCY } from 'wallet/src/constants/tokens'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
-
-describe(serializeQueryParams, () => {
-  it('handles the correct types', () => {
-    expect(
-      serializeQueryParams({ a: '0x6B175474E89094C44Da98b954EedeAC495271d0F', b: 2, c: false })
-    ).toBe('a=0x6B175474E89094C44Da98b954EedeAC495271d0F&b=2&c=false')
-  })
-
-  it('escapes characters', () => {
-    expect(serializeQueryParams({ space: ' ', bang: '!' })).toEqual('space=%20&bang=!')
-  })
-})
 
 describe(getWrapType, () => {
   const eth = NativeCurrency.onChain(ChainId.Mainnet)

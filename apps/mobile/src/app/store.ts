@@ -7,7 +7,6 @@ import createMigrate from 'src/app/createMigrate'
 import { migrations } from 'src/app/migrations'
 import { fiatOnRampApi } from 'src/features/fiatOnRamp/api'
 import { importAccountSagaName } from 'src/features/import/importAccountSaga'
-import { routingApi } from 'src/features/routing/routingApi'
 import { ensApi } from 'wallet/src/features/ens/api'
 import { logger } from 'wallet/src/features/logger/logger'
 import { createStore } from 'wallet/src/state'
@@ -36,7 +35,6 @@ export const reduxStorage: Storage = {
 // list of apis to ignore when logging errors, i.e. logging is handled by api
 const rtkQueryErrorLoggerIgnoreList: Array<ReducerNames> = [
   ensApi.reducerPath, // verbose
-  routingApi.reducerPath, // verbose, handled in routing hook
 ]
 const rtkQueryErrorLogger: Middleware = () => (next) => (action: PayloadAction<unknown>) => {
   if (!isRejectedWithValue(action)) {
@@ -123,7 +121,6 @@ export const setupStore = (
     middlewareAfter: [
       ensApi.middleware,
       fiatOnRampApi.middleware,
-      routingApi.middleware,
       rtkQueryErrorLogger,
       ...middlewares,
     ],

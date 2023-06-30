@@ -10,10 +10,10 @@ import { TracePressEvent } from 'src/components/telemetry/TraceEvent'
 import { Text } from 'src/components/Text'
 import { useUSDCPrice } from 'src/features/routing/useUSDCPrice'
 import { ElementName } from 'src/features/telemetry/constants'
-import { Trade } from 'src/features/transactions/swap/useTrade'
 import { getRateToDisplay } from 'src/features/transactions/swap/utils'
 import { TransactionDetails } from 'src/features/transactions/TransactionDetails'
 import InfoCircle from 'ui/src/assets/icons/info-circle.svg'
+import { Trade } from 'wallet/src/features/transactions/swap/trade'
 import { formatPrice, NumberType } from 'wallet/src/utils/format'
 
 interface SwapDetailsProps {
