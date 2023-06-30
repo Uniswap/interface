@@ -24,6 +24,7 @@ export async function onRequestGet({ params, request }) {
       return new Response('Collection not found', { status: 404 })
     }
     const palette = await getColor(data.image)
+    const words = data.name.split(' ')
 
     return new ImageResponse(
       (
@@ -31,60 +32,69 @@ export async function onRequestGet({ params, request }) {
           style={{
             backgroundColor: 'black',
             display: 'flex',
+            width: '1200px',
+            height: '630px',
           }}
         >
           <div
             style={{
               display: 'flex',
               alignItems: 'center',
-              backgroundColor: `rgba(${palette[0]}, ${palette[1]}, ${palette[2]}, 0.8)`,
-              width: '1200px',
-              height: '630px',
+              backgroundColor: `rgba(${palette[0]}, ${palette[1]}, ${palette[2]}, 0.75)`,
+              padding: '75px',
             }}
           >
-            <img
-              src={data.image}
-              alt={data.name}
-              width="500px"
-              style={{
-                borderRadius: '24px',
-                boxShadow: '0px 0px 24px rgba(0, 0, 0, 0.25)',
-                margin: '0px 72px 0px 72px',
-              }}
-            />
             <div
               style={{
-                position: 'absolute',
-                bottom: '72px',
-                left: '644px',
-                color: 'white',
                 display: 'flex',
-                flexDirection: 'column',
-                gap: '32px',
+                flexDirection: 'row',
+                alignItems: 'flex-end',
+                gap: '64px',
+                width: '100%',
               }}
             >
+              <img
+                src={data.image}
+                alt={data.name}
+                width="500px"
+                style={{
+                  borderRadius: '24px',
+                  boxShadow: '0px 0px 24px rgba(0, 0, 0, 0.25)',
+                }}
+              />
               <div
                 style={{
                   display: 'flex',
-                  alignItems: 'center',
-                  gap: '12px',
-                  flexDirection: 'row',
-                  fontSize: '72px',
-                  fontFamily: 'Inter',
+                  flexDirection: 'column',
+                  gap: '32px',
+                  width: '50%',
                 }}
               >
-                {data.name}
-                <img src={check} height="54px" />
-              </div>
-              {data.isVerified && (
+                <div
+                  style={{
+                    gap: '12px',
+                    fontSize: '72px',
+                    fontFamily: 'Inter',
+                    color: 'white',
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    flexWrap: 'wrap',
+                  }}
+                >
+                  {words.map((word) => (
+                    <text key={word}>{word}</text>
+                  ))}
+                  {data.isVerified && <img src={check} height="54px" />}
+                </div>
                 <img
                   src={watermark}
-                  height="60px"
+                  height="72px"
                   style={{
                     opacity: '0.5',
                   }}
                 />
-              )}
+              </div>
             </div>
           </div>
         </div>

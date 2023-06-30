@@ -36,14 +36,14 @@ export async function onRequestGet({ params, request }) {
           style={{
             backgroundColor: 'black',
             display: 'flex',
+            width: '1200px',
+            height: '630px',
           }}
         >
           <div
             style={{
               display: 'flex',
               backgroundColor: `rgba(${palette[0]}, ${palette[1]}, ${palette[2]}, 0.8)`,
-              width: '1200px',
-              height: '630px',
               padding: '72px',
             }}
           >
@@ -53,8 +53,9 @@ export async function onRequestGet({ params, request }) {
                 flexDirection: 'column',
                 justifyContent: 'center',
                 alignItems: 'flex-start',
-                gap: '24px',
-                width: '90%',
+                width: '100%',
+                gap: '32px',
+                color: 'white',
               }}
             >
               <img src={data.image} width="168px" style={{ borderRadius: '50%' }} />
@@ -72,8 +73,8 @@ export async function onRequestGet({ params, request }) {
                   flexDirection: 'row',
                   justifyContent: 'space-between',
                   alignItems: 'center',
+                  marginLeft: '-9px',
                   width: '100%',
-                  marginLeft: '-8px',
                 }}
               >
                 <div
