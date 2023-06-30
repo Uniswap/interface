@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { SupportedChainId } from 'constants/chains'
+//import { SupportedChainId } from 'constants/chains'
 import { GRG } from 'constants/tokens'
 import JSBI from 'jsbi'
 import { useMemo, useState } from 'react'
@@ -23,7 +23,7 @@ import PoolPositionList from '../../components/PoolPositionList'
 import { RowBetween, RowFixed } from '../../components/Row'
 //import { LoadingSparkle } from '../../nft/components/common/Loading/LoadingSparkle'
 import { Center } from '../../nft/components/Flex'
-import { PoolRegisteredLog, useAllPoolsData, useBscPools, useRegistryContract } from '../../state/pool/hooks'
+import { PoolRegisteredLog, useAllPoolsData } from '../../state/pool/hooks'
 import { useUnclaimedRewards } from '../../state/stake/hooks'
 import { ThemedText } from '../../theme'
 //import { PoolPositionDetails } from '../../types/position'
@@ -98,25 +98,17 @@ export default function Stake() {
   const [records, setRecords] = useState(itemsPerPage)
 
   // we retrieve logs again as we want to be able to load pools when switching chain from stake page.
-  const { data: smartPoolsLogs, loading } = useAllPoolsData()
-  const registry = useRegistryContract()
-  const bscPools = useBscPools(registry)
+  const { data: allPools, loading } = useAllPoolsData()
 
   const { chainId } = useWeb3React()
   const freeStakeBalance = useFreeStakeBalance()
   const hasFreeStake = JSBI.greaterThan(freeStakeBalance ? freeStakeBalance.quotient : JSBI.BigInt(0), JSBI.BigInt(0))
 
-  const allPools: PoolRegisteredLog[] = useMemo(() => {
-    if (loading) return []
-    if (chainId === SupportedChainId.BNB) return [...(smartPoolsLogs ?? []), ...(bscPools ?? [])]
-    return [...(smartPoolsLogs ?? [])]
-  }, [chainId, loading, smartPoolsLogs, bscPools])
-
-  const poolAddresses = allPools.map((p) => p.pool)
-  const poolIds = allPools.map((p) => p.id)
+  const poolAddresses = allPools?.map((p) => p.pool)
+  const poolIds = allPools?.map((p) => p.id)
   const { stakingPools, loading: loadingPools } = useStakingPools(poolAddresses, poolIds)
   const grg = useMemo(() => (chainId ? GRG[chainId] : undefined), [chainId])
-  const unclaimedRewards = useUnclaimedRewards(poolIds)
+  const unclaimedRewards = useUnclaimedRewards(poolIds ?? [])
   // TODO: check if want to return null, but returning undefined will simplify displaying only if positive reward
   const yieldAmount: CurrencyAmount<Token> | undefined = useMemo(() => {
     if (!grg || !unclaimedRewards || unclaimedRewards?.length === 0) return undefined
@@ -132,6 +124,7 @@ export default function Stake() {
 
   // TODO: check PoolPositionDetails type as irr and apr are number not string
   const poolsWithStats: PoolRegisteredLog[] = useMemo(() => {
+    if (!allPools || !stakingPools) return []
     return allPools
       .map((p, i) => {
         const apr = stakingPools?.[i].apr
@@ -247,12 +240,11 @@ export default function Stake() {
         </DataRow>
 
         <MainContentWrapper>
-          {/* TODO: check why on some mobile wallets pool list not rendered */}
-          {!poolsWithStats ? (
+          {!allPools ? (
             <OutlineCard>
               <Trans>Please connect your wallet</Trans>
             </OutlineCard>
-          ) : loadingPools ? (
+          ) : loading || loadingPools ? (
             <Loader style={{ margin: 'auto' }} />
           ) : poolsWithStats?.length > 0 ? (
             <InfiniteScroll
