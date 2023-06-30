@@ -187,7 +187,7 @@ jobs:
 
   post:
     if: always()
-    needs: [lint, typecheck, deps-tests, unit-tests, cypress-test-matrix]
+    needs: [pre, lint, typecheck, deps-tests, unit-tests, cypress-test-matrix]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/github-script@v6.4.1
