@@ -2,6 +2,7 @@ import { Connector } from '@web3-react/types'
 import {
   networkConnection,
   uniwalletConnectConnection,
+  uniwalletWCV2ConnectConnection,
   walletConnectV1Connection,
   walletConnectV2Connection,
 } from 'connection'
@@ -41,6 +42,7 @@ export function useSwitchChain() {
               walletConnectV1Connection.connector,
               walletConnectV2Connection.connector,
               uniwalletConnectConnection.connector,
+              uniwalletWCV2ConnectConnection.connector,
               networkConnection.connector,
             ].includes(connector)
           ) {
