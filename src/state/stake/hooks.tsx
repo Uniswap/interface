@@ -291,6 +291,41 @@ export function useUnclaimedRewards(poolIds: string[]): UnclaimedRewardsData[] |
   }, [grg, unclaimedRewards, poolIds])
 }
 
+interface UserStakeData {
+  stake: CurrencyAmount<Token>
+  hasStake: boolean
+}
+
+export function useUserStakeBalances(poolIds: string[]): UserStakeData[] | undefined {
+  const { account, chainId } = useWeb3React()
+  const grg = useMemo(() => (chainId ? GRG[chainId] : undefined), [chainId])
+  const stakingContract = useStakingContract()
+
+  const inputs = useMemo(() => {
+    return poolIds.map((poolId) => {
+      return [account, poolId]
+    })
+  }, [account, poolIds])
+
+  const userStakeBalances = useSingleContractMultipleData(
+    stakingContract ?? undefined,
+    'getStakeDelegatedToPoolByOwner',
+    inputs
+  )
+
+  return useMemo(() => {
+    if (!userStakeBalances || !grg) return undefined
+    return userStakeBalances.map((balance) => {
+      const stake = balance?.result?.[0].nextEpochBalance
+      const stakeAmount = CurrencyAmount.fromRawAmount(grg, stake ?? JSBI.BigInt(0))
+      return {
+        stake: stakeAmount,
+        hasStake: JSBI.greaterThan(stakeAmount.quotient, JSBI.BigInt(0)),
+      }
+    })
+  }, [grg, userStakeBalances])
+}
+
 export function useUnstakeCallback(): (amount: CurrencyAmount<Token>, isPool?: boolean) => undefined | Promise<string> {
   const { account, chainId, provider } = useWeb3React()
   const stakingContract = useStakingContract()

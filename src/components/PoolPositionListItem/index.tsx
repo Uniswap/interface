@@ -90,7 +90,7 @@ interface PoolPositionListItemProps {
 }
 
 export default function PoolPositionListItem({ positionDetails, returnPage }: PoolPositionListItemProps) {
-  const { name, symbol, apr, irr } = positionDetails
+  const { name, symbol, apr, irr, userHasStake } = positionDetails
 
   //const position = useMemo(() => {
   //  return new PoolPosition({ name, symbol, pool, id })
@@ -99,11 +99,13 @@ export default function PoolPositionListItem({ positionDetails, returnPage }: Po
   //const positionSummaryLink = '/smart-pool/' + positionDetails.pool '/' + positionDetails.id
   const positionSummaryLink = `/smart-pool/${positionDetails.address}/${returnPage}` ///${positionDetails.id}
 
+  // TODO: change >staked< to something more sexy
   return (
     <LinkRow to={positionSummaryLink}>
       <RowBetween>
         <PrimaryPositionIdData>
           <DataText>{name}</DataText>
+          {userHasStake && <Trans>staked</Trans>}
         </PrimaryPositionIdData>
         {returnPage === 'mint' ? (
           <DataText>{symbol}</DataText>

@@ -1,14 +1,10 @@
 import { Trans } from '@lingui/macro'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-//import { SupportedChainId } from 'constants/chains'
 import { GRG } from 'constants/tokens'
 import JSBI from 'jsbi'
 import { useMemo, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
-//import { useInfiniteQuery } from 'react-query'
-import { useStakingPools } from 'state/pool/hooks'
-import { useFreeStakeBalance } from 'state/stake/hooks'
 import styled from 'styled-components/macro'
 
 import { ButtonPrimary } from '../../components/Button'
@@ -23,8 +19,8 @@ import PoolPositionList from '../../components/PoolPositionList'
 import { RowBetween, RowFixed } from '../../components/Row'
 //import { LoadingSparkle } from '../../nft/components/common/Loading/LoadingSparkle'
 import { Center } from '../../nft/components/Flex'
-import { PoolRegisteredLog, useAllPoolsData } from '../../state/pool/hooks'
-import { useUnclaimedRewards } from '../../state/stake/hooks'
+import { PoolRegisteredLog, useAllPoolsData, useStakingPools } from '../../state/pool/hooks'
+import { useFreeStakeBalance, useUnclaimedRewards, useUserStakeBalances } from '../../state/stake/hooks'
 import { ThemedText } from '../../theme'
 //import { PoolPositionDetails } from '../../types/position'
 
@@ -85,8 +81,9 @@ const WrapSmall = styled(RowBetween)`
   `};
 `
 
+// TODO: check method renaming as we display staked pools first
 function biggestOwnStakeFirst(a: any, b: any) {
-  return b.poolOwnStake - a.poolOwnStake
+  return b.hasStake - a.hasStake || b.poolOwnStake - a.poolOwnStake
 }
 
 export default function Stake() {
@@ -121,6 +118,7 @@ export default function Stake() {
     const ids = unclaimedRewards?.map((reward) => reward?.yieldPoolId)
     return ids && ids?.length > 0 ? ids : undefined
   }, [unclaimedRewards])
+  const userStakeBalances = useUserStakeBalances(poolIds ?? [])
 
   // TODO: check PoolPositionDetails type as irr and apr are number not string
   const poolsWithStats: PoolRegisteredLog[] = useMemo(() => {
@@ -130,15 +128,17 @@ export default function Stake() {
         const apr = stakingPools?.[i].apr
         const irr = stakingPools?.[i].irr
         const poolOwnStake = stakingPools?.[i].poolOwnStake
+        const userHasStake = userStakeBalances?.[i].hasStake
         return {
           ...p,
           irr,
           apr,
           poolOwnStake,
+          userHasStake,
         }
       })
       .sort(biggestOwnStakeFirst)
-  }, [allPools, stakingPools])
+  }, [allPools, stakingPools, userStakeBalances])
 
   // TODO: useStakingPools hook also returns stake, ownStake, can use as filter and add stake to page
   //const [activeFilters, filtersDispatch] = useReducer(reduceFilters, initialFilterState)

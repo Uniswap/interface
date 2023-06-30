@@ -82,6 +82,7 @@ export default function PoolPositionList({ positions, filterByOperator }: PoolPo
           ...result,
           apr: positions[i].apr,
           irr: positions[i].irr,
+          userHasStake: positions[i].userHasStake,
           address,
           decimals,
           symbol,
@@ -163,11 +164,17 @@ export default function PoolPositionList({ positions, filterByOperator }: PoolPo
         <>
           <DesktopHeader>
             <div>
-              <Trans>You are not operating a pool. Click the &quot;Create Pool&quot; button to deploy one.</Trans>
+              <Trans>
+                You are not operating a pool. Click the &quot;Create Pool&quot; button to deploy one or search through
+                the existing ones.
+              </Trans>
             </div>
           </DesktopHeader>
           <MobileHeader>
-            <Trans>You are not operating a pool. Click the &quot;Create Pool&quot; button to deploy one.</Trans>
+            <Trans>
+              You are not operating a pool. Click the &quot;Create Pool&quot; button to deploy one or search through the
+              existing ones.
+            </Trans>
           </MobileHeader>
         </>
       )}
