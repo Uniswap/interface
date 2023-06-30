@@ -81,9 +81,8 @@ const WrapSmall = styled(RowBetween)`
   `};
 `
 
-// TODO: check method renaming as we display staked pools first
 function biggestOwnStakeFirst(a: any, b: any) {
-  return b.hasStake - a.hasStake || b.poolOwnStake - a.poolOwnStake
+  return b.poolOwnStake - a.poolOwnStake
 }
 
 export default function Stake() {
