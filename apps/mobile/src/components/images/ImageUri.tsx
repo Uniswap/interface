@@ -4,16 +4,7 @@ import FastImage, { FastImageProps, ImageStyle, ResizeMode } from 'react-native-
 import { Box, BoxProps } from 'src/components/layout'
 import { Loader } from 'src/components/loading'
 
-export function ImageUri({
-  maxHeight,
-  uri,
-  fallback,
-  imageStyle,
-  resizeMode,
-  loadingContainerStyle,
-  imageDimensions,
-  ...rest
-}: {
+export type ImageUriProps = {
   maxHeight?: number
   uri?: string
   fallback?: JSX.Element
@@ -25,7 +16,18 @@ export function ImageUri({
    * which allows us to avoid setting state in this component
    */
   imageDimensions?: { width: number; height: number } | undefined
-} & Pick<FastImageProps, 'shouldRasterizeIOS'>): JSX.Element | null {
+} & Pick<FastImageProps, 'shouldRasterizeIOS'>
+
+export function ImageUri({
+  maxHeight,
+  uri,
+  fallback,
+  imageStyle,
+  resizeMode,
+  loadingContainerStyle,
+  imageDimensions,
+  ...rest
+}: ImageUriProps): JSX.Element | null {
   const [height, setHeight] = useState<number | null>(imageDimensions?.height ?? null)
   const [width, setWidth] = useState<number | null>(imageDimensions?.width ?? null)
   const [isError, setIsError] = useState(false)

@@ -30,7 +30,7 @@ export function RemoteImage({
     return fallback ?? null
   }
 
-  if (imageHttpUrl.endsWith('.svg')) {
+  if (imageHttpUrl.includes('.svg')) {
     return (
       <RemoteSvg
         backgroundColor={backgroundColor}

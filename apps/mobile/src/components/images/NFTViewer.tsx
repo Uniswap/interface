@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleSheet } from 'react-native'
-import { ImageUri } from 'src/components/images/ImageUri'
+import { ImageUri, ImageUriProps } from 'src/components/images/ImageUri'
 import { WebSvgUri } from 'src/components/images/WebSvgUri'
 import { Box } from 'src/components/layout'
 import { Text } from 'src/components/Text'
@@ -30,7 +30,7 @@ export function NFTViewer({
   imageDimensions,
 }: Props): JSX.Element {
   const { t } = useTranslation()
-  const imageHttpUri = useMemo(() => (uri ? uriToHttp(uri)[0] : undefined), [uri])
+  const imageHttpUri = uri ? uriToHttp(uri)[0] : undefined
 
   const fallback = useMemo(
     () => (
@@ -54,7 +54,7 @@ export function NFTViewer({
     return fallback
   }
 
-  if (imageHttpUri.endsWith('.svg')) {
+  if (imageHttpUri.includes('.svg')) {
     return squareGridView ? (
       <WebSvgUri autoplay={autoplay} uri={imageHttpUri} />
     ) : (
@@ -76,25 +76,20 @@ export function NFTViewer({
       ? convertGIFUriToSmallImageFormat(imageHttpUri, limitGIFSize)
       : imageHttpUri
 
-  return squareGridView ? (
-    <ImageUri
-      fallback={fallback}
-      imageDimensions={imageDimensions}
-      imageStyle={style.squareImageStyle}
-      resizeMode="cover"
-      // render as Blitmap to help GIFs recycle on scroll
-      shouldRasterizeIOS={isGif && Boolean(limitGIFSize)}
-      uri={formattedUri}
-    />
-  ) : (
-    <ImageUri
-      fallback={fallback}
-      imageDimensions={imageDimensions}
-      maxHeight={maxHeight}
-      shouldRasterizeIOS={isGif && Boolean(limitGIFSize)}
-      uri={formattedUri}
-    />
-  )
+  const imageProps: ImageUriProps = {
+    fallback,
+    imageDimensions,
+    maxHeight,
+    shouldRasterizeIOS: isGif && Boolean(limitGIFSize),
+    uri: formattedUri,
+  }
+
+  if (squareGridView) {
+    imageProps.imageStyle = style.squareImageStyle
+    imageProps.resizeMode = 'cover'
+  }
+
+  return <ImageUri {...imageProps} />
 }
 
 const style = StyleSheet.create({
