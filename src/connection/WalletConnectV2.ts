@@ -15,22 +15,21 @@ const RPC_URLS_WITHOUT_FALLBACKS = Object.entries(RPC_URLS).reduce(
   }),
   {}
 )
-const optionalChains = [...L1_CHAIN_IDS, ...L2_CHAIN_IDS].filter((x) => x !== SupportedChainId.MAINNET)
-
 export class WalletConnectV2 extends WalletConnect {
   ANALYTICS_EVENT = 'Wallet Connect QR Scan'
   constructor({
     actions,
-    onError,
+    defaultChainId,
     qrcode = true,
-  }: Omit<WalletConnectConstructorArgs, 'options'> & { qrcode?: boolean }) {
+    onError,
+  }: Omit<WalletConnectConstructorArgs, 'options'> & { defaultChainId: number; qrcode?: boolean }) {
     const darkmode = Boolean(window.matchMedia('(prefers-color-scheme: dark)'))
     super({
       actions,
       options: {
         projectId: process.env.REACT_APP_WALLET_CONNECT_PROJECT_ID as string,
-        optionalChains,
-        chains: [SupportedChainId.MAINNET],
+        chains: [defaultChainId],
+        optionalChains: [...L1_CHAIN_IDS, ...L2_CHAIN_IDS],
         showQrModal: qrcode,
         rpcMap: RPC_URLS_WITHOUT_FALLBACKS,
         // as of 6/16/2023 there are no docs for `optionalMethods`
@@ -38,7 +37,6 @@ export class WalletConnectV2 extends WalletConnect {
         // source: https://uniswapteam.slack.com/archives/C03R5G8T8BH/p1686858618164089?thread_ts=1686778867.145689&cid=C03R5G8T8BH
         optionalMethods: ['eth_signTypedData', 'eth_signTypedData_v4', 'eth_sign'],
         qrModalOptions: {
-          chainImages: undefined,
           desktopWallets: undefined,
           enableExplorer: true,
           explorerExcludedWalletIds: undefined,
@@ -48,10 +46,9 @@ export class WalletConnectV2 extends WalletConnect {
           termsOfServiceUrl: undefined,
           themeMode: darkmode ? 'dark' : 'light',
           themeVariables: {
-            '--w3m-font-family': '"Inter custom", sans-serif',
-            '--w3m-z-index': Z_INDEX.modal.toString(),
+            '--wcm-font-family': '"Inter custom", sans-serif',
+            '--wcm-z-index': Z_INDEX.modal.toString(),
           },
-          tokenImages: undefined,
           walletImages: undefined,
         },
       },
@@ -72,7 +69,7 @@ export class UniwalletConnect extends WalletConnectV2 {
 
   constructor({ actions, onError }: Omit<WalletConnectConstructorArgs, 'options'>) {
     // disables walletconnect's proprietary qr code modal; instead UniwalletModal will listen for events to trigger our custom modal
-    super({ actions, qrcode: false, onError })
+    super({ actions, defaultChainId: SupportedChainId.MAINNET, qrcode: false, onError })
 
     this.events.once(URI_AVAILABLE, () => {
       this.provider?.events.on('disconnect', this.deactivate)
