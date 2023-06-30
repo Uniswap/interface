@@ -164,17 +164,11 @@ export default function PoolPositionList({ positions, filterByOperator }: PoolPo
         <>
           <DesktopHeader>
             <div>
-              <Trans>
-                You are not operating a pool. Click the &quot;Create Pool&quot; button to deploy one or search through
-                the existing ones.
-              </Trans>
+              <Trans>You are not operating a smart pool. Create yours or search an existing one.</Trans>
             </div>
           </DesktopHeader>
           <MobileHeader>
-            <Trans>
-              You are not operating a pool. Click the &quot;Create Pool&quot; button to deploy one or search through the
-              existing ones.
-            </Trans>
+            <Trans>You are not operating a smart pool. Create yours or search an existing one.</Trans>
           </MobileHeader>
         </>
       )}

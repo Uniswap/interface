@@ -1,4 +1,4 @@
-import { t, Trans } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 //import Badge from 'components/Badge'
 //import RangeBadge from 'components/Badge/RangeBadge'
 //import Loader from 'components/Loader'
@@ -6,8 +6,8 @@ import Row, { RowBetween, RowFixed } from 'components/Row'
 //import { useToken } from 'hooks/Tokens'
 //import { useMemo } from 'react'
 import { Link } from 'react-router-dom'
-import styled from 'styled-components/macro'
-import { MEDIA_WIDTHS, ThemedText } from 'theme'
+import styled, { useTheme } from 'styled-components/macro'
+import { MEDIA_WIDTHS } from 'theme'
 import { PoolPositionDetails } from 'types/position'
 
 const LinkRow = styled(Link)`
@@ -84,14 +84,26 @@ const ExtentsText = styled.span`
   `};
 `
 
-const ActiveDot = styled.span<{ closed: boolean; outOfRange: boolean }>`
-  background-color: ${({ theme, closed, outOfRange }) =>
-    closed ? theme.textSecondary : outOfRange ? theme.accentWarning : theme.accentSuccess};
+const LabelText = styled.div<{ color: string }>`
+  align-items: center;
+  color: ${({ color }) => color};
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+`
+
+const BadgeText = styled.div`
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 14px;
+  margin-right: 4px;
+`
+
+const ActiveDot = styled.span`
+  background-color: ${({ theme }) => theme.accentSuccess};
   border-radius: 50%;
   height: 8px;
   width: 8px;
-  margin-left: 4px;
-  margin-top: 1px;
 `
 
 interface PoolPositionListItemProps {
@@ -100,6 +112,7 @@ interface PoolPositionListItemProps {
 }
 
 export default function PoolPositionListItem({ positionDetails, returnPage }: PoolPositionListItemProps) {
+  const theme = useTheme()
   const { name, symbol, apr, irr, userHasStake } = positionDetails
 
   //const position = useMemo(() => {
@@ -109,20 +122,19 @@ export default function PoolPositionListItem({ positionDetails, returnPage }: Po
   //const positionSummaryLink = '/smart-pool/' + positionDetails.pool '/' + positionDetails.id
   const positionSummaryLink = `/smart-pool/${positionDetails.address}/${returnPage}` ///${positionDetails.id}
 
-  // TODO: change >staked< to something more sexy
   return (
     <LinkRow to={positionSummaryLink}>
       <RowBetween>
         <PrimaryPositionIdData>
           <Row gap="sm" justify="flex-end">
-            <Row>
-              <DataText>{name}</DataText>
-            </Row>
+            <DataText>{name}</DataText>
             {userHasStake && (
-              <>
-                <ThemedText.Caption color="textSecondary">{t`active`}</ThemedText.Caption>
-                <ActiveDot closed={false} outOfRange={false} />
-              </>
+              <LabelText color={theme.accentSuccess}>
+                <BadgeText>
+                  <Trans>active</Trans>
+                </BadgeText>
+                <ActiveDot />
+              </LabelText>
             )}
           </Row>
         </PrimaryPositionIdData>
