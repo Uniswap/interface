@@ -140,11 +140,23 @@ export default function Stake() {
       .sort(biggestOwnStakeFirst)
   }, [allPools, stakingPools, userStakeBalances])
 
+  // TODO: check as we always return at least []
+  const [stakedPools, nonStakedPools] = poolsWithStats?.reduce<[PoolRegisteredLog[], PoolRegisteredLog[]]>(
+    (acc, p) => {
+      acc[p.userHasStake ? 1 : 0].push(p)
+      return acc
+    },
+    [[], []]
+  ) ?? [[], []]
+
+  // we first display the pools where user has an active stake of.
+  const orderedPools = useMemo(() => [...nonStakedPools, ...stakedPools], [stakedPools, nonStakedPools])
+
   // TODO: useStakingPools hook also returns stake, ownStake, can use as filter and add stake to page
   //const [activeFilters, filtersDispatch] = useReducer(reduceFilters, initialFilterState)
 
   const fetchMoreData = () => {
-    if (poolsWithStats && records === poolsWithStats.length) {
+    if (orderedPools && records === orderedPools.length) {
       setHasMore(false)
     } else {
       setTimeout(() => {
@@ -153,12 +165,12 @@ export default function Stake() {
     }
   }
 
-  const showItems = (records: number, poolsWithStats: PoolRegisteredLog[]) => {
+  const showItems = (records: number, orderedPools: PoolRegisteredLog[]) => {
     const items: PoolRegisteredLog[] = []
 
     for (let i = 0; i < records; i++) {
-      if (poolsWithStats[i] !== undefined) {
-        items.push(poolsWithStats[i])
+      if (orderedPools[i] !== undefined) {
+        items.push(orderedPools[i])
       }
     }
 
@@ -166,9 +178,9 @@ export default function Stake() {
   }
 
   const items = useMemo(() => {
-    if (!poolsWithStats) return []
-    return showItems(records, poolsWithStats)
-  }, [records, poolsWithStats])
+    if (!orderedPools) return []
+    return showItems(records, orderedPools)
+  }, [records, orderedPools])
 
   return (
     <PageWrapper gap="lg" justify="center">
@@ -246,7 +258,7 @@ export default function Stake() {
             </OutlineCard>
           ) : loading || loadingPools ? (
             <Loader style={{ margin: 'auto' }} />
-          ) : poolsWithStats?.length > 0 ? (
+          ) : orderedPools?.length > 0 ? (
             <InfiniteScroll
               next={fetchMoreData}
               hasMore={!!hasMore}
@@ -257,12 +269,12 @@ export default function Stake() {
                   </Center>
                 ) : null
               }
-              dataLength={poolsWithStats.length}
+              dataLength={orderedPools.length}
               style={{ overflow: 'unset' }}
             >
               <PoolPositionList positions={items} filterByOperator={false} />
             </InfiniteScroll>
-          ) : poolsWithStats?.length === 0 ? (
+          ) : orderedPools?.length === 0 ? (
             <OutlineCard>
               <Trans>No pool found</Trans>
             </OutlineCard>
