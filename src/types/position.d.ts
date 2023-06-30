@@ -26,4 +26,5 @@ export interface PoolPositionDetails {
   address?: string
   apr?: string
   irr?: string
+  userHasStake?: boolean
 }

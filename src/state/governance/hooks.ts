@@ -460,7 +460,6 @@ export function usePoolIdByAddress(pool: string | undefined): {
   else return { poolId, stakingPoolExists }
 }
 
-// TODO: we must return a currency balance
 export function useStakeBalance(
   poolId: string | null | undefined,
   owner?: string

@@ -223,7 +223,11 @@ export default function DelegateModal({ isOpen, poolInfo, onDismiss, title }: Vo
               </AutoColumn>
             </LightCard>
             <ButtonPrimary
-              disabled={!isAddress(parsedAddress ?? '') || approval !== ApprovalState.APPROVED}
+              disabled={
+                !isAddress(parsedAddress ?? '') ||
+                approval !== ApprovalState.APPROVED ||
+                formatCurrencyAmount(parsedAmount, 4) === '0'
+              }
               onClick={onDelegate}
             >
               <ThemedText.DeprecatedMediumHeader color="white">

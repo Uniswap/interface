@@ -2,11 +2,11 @@ import { Trans } from '@lingui/macro'
 //import Badge from 'components/Badge'
 //import RangeBadge from 'components/Badge/RangeBadge'
 //import Loader from 'components/Loader'
-import { RowBetween, RowFixed } from 'components/Row'
+import Row, { RowBetween, RowFixed } from 'components/Row'
 //import { useToken } from 'hooks/Tokens'
 //import { useMemo } from 'react'
 import { Link } from 'react-router-dom'
-import styled from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components/macro'
 import { MEDIA_WIDTHS } from 'theme'
 import { PoolPositionDetails } from 'types/position'
 
@@ -84,13 +84,36 @@ const ExtentsText = styled.span`
   `};
 `
 
+const LabelText = styled.div<{ color: string }>`
+  align-items: center;
+  color: ${({ color }) => color};
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+`
+
+const BadgeText = styled.div`
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 14px;
+  margin-right: 4px;
+`
+
+const ActiveDot = styled.span`
+  background-color: ${({ theme }) => theme.accentSuccess};
+  border-radius: 50%;
+  height: 8px;
+  width: 8px;
+`
+
 interface PoolPositionListItemProps {
   positionDetails: PoolPositionDetails
   returnPage: string
 }
 
 export default function PoolPositionListItem({ positionDetails, returnPage }: PoolPositionListItemProps) {
-  const { name, symbol, apr, irr } = positionDetails
+  const theme = useTheme()
+  const { name, symbol, apr, irr, userHasStake } = positionDetails
 
   //const position = useMemo(() => {
   //  return new PoolPosition({ name, symbol, pool, id })
@@ -103,7 +126,17 @@ export default function PoolPositionListItem({ positionDetails, returnPage }: Po
     <LinkRow to={positionSummaryLink}>
       <RowBetween>
         <PrimaryPositionIdData>
-          <DataText>{name}</DataText>
+          <Row gap="sm" justify="flex-end">
+            <DataText>{name}</DataText>
+            {userHasStake && (
+              <LabelText color={theme.accentSuccess}>
+                <BadgeText>
+                  <Trans>active</Trans>
+                </BadgeText>
+                <ActiveDot />
+              </LabelText>
+            )}
+          </Row>
         </PrimaryPositionIdData>
         {returnPage === 'mint' ? (
           <DataText>{symbol}</DataText>

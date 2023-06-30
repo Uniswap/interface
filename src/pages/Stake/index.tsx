@@ -1,14 +1,10 @@
 import { Trans } from '@lingui/macro'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { SupportedChainId } from 'constants/chains'
 import { GRG } from 'constants/tokens'
 import JSBI from 'jsbi'
 import { useMemo, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
-//import { useInfiniteQuery } from 'react-query'
-import { useStakingPools } from 'state/pool/hooks'
-import { useFreeStakeBalance } from 'state/stake/hooks'
 import styled from 'styled-components/macro'
 
 import { ButtonPrimary } from '../../components/Button'
@@ -23,8 +19,8 @@ import PoolPositionList from '../../components/PoolPositionList'
 import { RowBetween, RowFixed } from '../../components/Row'
 //import { LoadingSparkle } from '../../nft/components/common/Loading/LoadingSparkle'
 import { Center } from '../../nft/components/Flex'
-import { PoolRegisteredLog, useAllPoolsData, useBscPools, useRegistryContract } from '../../state/pool/hooks'
-import { useUnclaimedRewards } from '../../state/stake/hooks'
+import { PoolRegisteredLog, useAllPoolsData, useStakingPools } from '../../state/pool/hooks'
+import { useFreeStakeBalance, useUnclaimedRewards, useUserStakeBalances } from '../../state/stake/hooks'
 import { ThemedText } from '../../theme'
 //import { PoolPositionDetails } from '../../types/position'
 
@@ -98,25 +94,17 @@ export default function Stake() {
   const [records, setRecords] = useState(itemsPerPage)
 
   // we retrieve logs again as we want to be able to load pools when switching chain from stake page.
-  const { data: smartPoolsLogs, loading } = useAllPoolsData()
-  const registry = useRegistryContract()
-  const bscPools = useBscPools(registry)
+  const { data: allPools, loading } = useAllPoolsData()
 
   const { chainId } = useWeb3React()
   const freeStakeBalance = useFreeStakeBalance()
   const hasFreeStake = JSBI.greaterThan(freeStakeBalance ? freeStakeBalance.quotient : JSBI.BigInt(0), JSBI.BigInt(0))
 
-  const allPools: PoolRegisteredLog[] = useMemo(() => {
-    if (loading) return []
-    if (chainId === SupportedChainId.BNB) return [...(smartPoolsLogs ?? []), ...(bscPools ?? [])]
-    return [...(smartPoolsLogs ?? [])]
-  }, [chainId, loading, smartPoolsLogs, bscPools])
-
-  const poolAddresses = allPools.map((p) => p.pool)
-  const poolIds = allPools.map((p) => p.id)
+  const poolAddresses = allPools?.map((p) => p.pool)
+  const poolIds = allPools?.map((p) => p.id)
   const { stakingPools, loading: loadingPools } = useStakingPools(poolAddresses, poolIds)
   const grg = useMemo(() => (chainId ? GRG[chainId] : undefined), [chainId])
-  const unclaimedRewards = useUnclaimedRewards(poolIds)
+  const unclaimedRewards = useUnclaimedRewards(poolIds ?? [])
   // TODO: check if want to return null, but returning undefined will simplify displaying only if positive reward
   const yieldAmount: CurrencyAmount<Token> | undefined = useMemo(() => {
     if (!grg || !unclaimedRewards || unclaimedRewards?.length === 0) return undefined
@@ -129,29 +117,45 @@ export default function Stake() {
     const ids = unclaimedRewards?.map((reward) => reward?.yieldPoolId)
     return ids && ids?.length > 0 ? ids : undefined
   }, [unclaimedRewards])
+  const userStakeBalances = useUserStakeBalances(poolIds ?? [])
 
   // TODO: check PoolPositionDetails type as irr and apr are number not string
   const poolsWithStats: PoolRegisteredLog[] = useMemo(() => {
+    if (!allPools || !stakingPools) return []
     return allPools
       .map((p, i) => {
         const apr = stakingPools?.[i].apr
         const irr = stakingPools?.[i].irr
         const poolOwnStake = stakingPools?.[i].poolOwnStake
+        const userHasStake = userStakeBalances?.[i].hasStake
         return {
           ...p,
           irr,
           apr,
           poolOwnStake,
+          userHasStake,
         }
       })
       .sort(biggestOwnStakeFirst)
-  }, [allPools, stakingPools])
+  }, [allPools, stakingPools, userStakeBalances])
+
+  // TODO: check as we always return at least []
+  const [stakedPools, nonStakedPools] = poolsWithStats?.reduce<[PoolRegisteredLog[], PoolRegisteredLog[]]>(
+    (acc, p) => {
+      acc[p.userHasStake ? 1 : 0].push(p)
+      return acc
+    },
+    [[], []]
+  ) ?? [[], []]
+
+  // we first display the pools where user has an active stake of.
+  const orderedPools = useMemo(() => [...nonStakedPools, ...stakedPools], [stakedPools, nonStakedPools])
 
   // TODO: useStakingPools hook also returns stake, ownStake, can use as filter and add stake to page
   //const [activeFilters, filtersDispatch] = useReducer(reduceFilters, initialFilterState)
 
   const fetchMoreData = () => {
-    if (poolsWithStats && records === poolsWithStats.length) {
+    if (orderedPools && records === orderedPools.length) {
       setHasMore(false)
     } else {
       setTimeout(() => {
@@ -160,12 +164,12 @@ export default function Stake() {
     }
   }
 
-  const showItems = (records: number, poolsWithStats: PoolRegisteredLog[]) => {
+  const showItems = (records: number, orderedPools: PoolRegisteredLog[]) => {
     const items: PoolRegisteredLog[] = []
 
     for (let i = 0; i < records; i++) {
-      if (poolsWithStats[i] !== undefined) {
-        items.push(poolsWithStats[i])
+      if (orderedPools[i] !== undefined) {
+        items.push(orderedPools[i])
       }
     }
 
@@ -173,9 +177,9 @@ export default function Stake() {
   }
 
   const items = useMemo(() => {
-    if (!poolsWithStats) return []
-    return showItems(records, poolsWithStats)
-  }, [records, poolsWithStats])
+    if (!orderedPools) return []
+    return showItems(records, orderedPools)
+  }, [records, orderedPools])
 
   return (
     <PageWrapper gap="lg" justify="center">
@@ -247,14 +251,13 @@ export default function Stake() {
         </DataRow>
 
         <MainContentWrapper>
-          {/* TODO: check why on some mobile wallets pool list not rendered */}
-          {!poolsWithStats ? (
+          {!allPools ? (
             <OutlineCard>
               <Trans>Please connect your wallet</Trans>
             </OutlineCard>
-          ) : loadingPools ? (
+          ) : loading || loadingPools ? (
             <Loader style={{ margin: 'auto' }} />
-          ) : poolsWithStats?.length > 0 ? (
+          ) : orderedPools?.length > 0 ? (
             <InfiniteScroll
               next={fetchMoreData}
               hasMore={!!hasMore}
@@ -265,12 +268,12 @@ export default function Stake() {
                   </Center>
                 ) : null
               }
-              dataLength={poolsWithStats.length}
+              dataLength={orderedPools.length}
               style={{ overflow: 'unset' }}
             >
               <PoolPositionList positions={items} filterByOperator={false} />
             </InfiniteScroll>
-          ) : poolsWithStats?.length === 0 ? (
+          ) : orderedPools?.length === 0 ? (
             <OutlineCard>
               <Trans>No pool found</Trans>
             </OutlineCard>

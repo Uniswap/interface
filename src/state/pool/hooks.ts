@@ -49,6 +49,7 @@ export interface PoolRegisteredLog {
   name: string
   symbol: string
   id: string
+  userHasStake?: boolean
 }
 
 function useStartBlock(chainId: number | undefined): number | undefined {
@@ -338,7 +339,7 @@ export function useStakingPools(addresses: string[] | undefined, poolIds: string
 
   const poolsData = useSingleContractMultipleData(stakingContract, 'getStakingPool', inputs)
   const poolsStakes = useSingleContractMultipleData(stakingContract, 'getTotalStakeDelegatedToPool', inputs)
-  // TODO: if we allow pools to stake pools other then self we'll have to use getStakeDelegateToPoolByOwner
+  // TODO: if we allow pools to stake pools other then self we'll have to use getStakeDelegatedToPoolByOwner
   const poolsOwnStakes = useSingleContractMultipleData(stakingContract, 'getOwnerStakeByStatus', poolAddresses)
 
   const poolsLoading = useMemo(() => poolsData.some(({ loading }) => loading), [poolsData])

@@ -69,7 +69,7 @@ export default function PoolPositionList({ positions, filterByOperator }: PoolPo
   const results = useMultipleContractSingleData(poolAddresses, PoolInterface, 'getPool')
   // TODO: if we initiate this in state, we can later query from state instead of making rpc call
   //  in 1) swap and 2) each pool url, we could also store poolId at that point
-  const operatedPools = useMemo(() => {
+  const poolsWithStats = useMemo(() => {
     return results
       .map((result, i) => {
         const { result: pools, loading } = result
@@ -82,6 +82,7 @@ export default function PoolPositionList({ positions, filterByOperator }: PoolPo
           ...result,
           apr: positions[i].apr,
           irr: positions[i].irr,
+          userHasStake: positions[i].userHasStake,
           address,
           decimals,
           symbol,
@@ -97,7 +98,7 @@ export default function PoolPositionList({ positions, filterByOperator }: PoolPo
       <DesktopHeader>
         <div>
           {filterByOperator ? <Trans>Operated pools</Trans> : <Trans>Loaded pools</Trans>}
-          {positions && ' (' + operatedPools.length + ')'}
+          {positions && ' (' + poolsWithStats.length + ')'}
         </div>
         {!filterByOperator && (
           <RowFixed gap="32px">
@@ -149,8 +150,8 @@ export default function PoolPositionList({ positions, filterByOperator }: PoolPo
           </RowFixed>
         )}
       </MobileHeader>
-      {operatedPools.length !== 0 ? (
-        operatedPools.map((p: any) => {
+      {poolsWithStats.length !== 0 ? (
+        poolsWithStats.map((p: any) => {
           return (
             <PoolPositionListItem
               key={p?.address.toString()}
@@ -163,11 +164,11 @@ export default function PoolPositionList({ positions, filterByOperator }: PoolPo
         <>
           <DesktopHeader>
             <div>
-              <Trans>You are not operating a pool. Click the &quot;Create Pool&quot; button to deploy one.</Trans>
+              <Trans>You are not operating a smart pool. Create yours or search an existing one.</Trans>
             </div>
           </DesktopHeader>
           <MobileHeader>
-            <Trans>You are not operating a pool. Click the &quot;Create Pool&quot; button to deploy one.</Trans>
+            <Trans>You are not operating a smart pool. Create yours or search an existing one.</Trans>
           </MobileHeader>
         </>
       )}
