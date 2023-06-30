@@ -14,7 +14,7 @@ import { ThemedText } from 'theme'
 const GridContainer = styled.div`
   display: flex;
   flex-direction: column;
-  margin-top: 8px;
+  // margin-top: 8px;
   width:100%;
   max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT};
   background-color: ${({ theme }) => theme.backgroundSurface};
@@ -23,6 +23,7 @@ const GridContainer = styled.div`
   margin-left: auto;
   margin-right: auto;
   border-radius: 12px;
+  border-top-left-radius: 0;
   justify-content: center;
   align-items: center;
   border: 1px solid ${({ theme }) => theme.backgroundOutline};

@@ -11,7 +11,7 @@ const TabContainer = styled.div;
 
 const TabHeader = styled.div<{ isActive: boolean}>`
   padding: 10px 20px;
-  background-color: ${({ theme, isActive }) => isActive ? theme.background : 'black'};
+  // background-color: ${({ theme, isActive }) => isActive ? theme.background : 'black'};
 `
 
 

@@ -114,6 +114,10 @@ const Hr = styled.hr`
   height: 0.5px;
 `
 
+const TableHeader = styled(RowFixed)`
+  flex-flow: row nowrap;
+`
+
 export const StyledNumericalInput = styled(NumericalInput)`
   width: 100px;
   text-align:left;
@@ -151,6 +155,7 @@ export const SwapSection = styled.div`
   font-size: 14px;
   line-height: 20px;
   font-weight: 500;
+  
 
   &:before {
     box-sizing: border-box;
@@ -175,6 +180,13 @@ export const SwapSection = styled.div`
   &:focus-within:before {
     border-color: ${({ theme }) => theme.stateOverlayPressed};
   }
+`
+
+const TabHeader = styled.div<{ active: boolean }>`
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+  width: 200px;
+  background: ${({active, theme}) => active ? theme.backgroundSurface : theme.backgroundBackdrop }
 `
 
 const MainSwapContainer = styled(RowBetween)`
@@ -233,7 +245,7 @@ const ChartContainer = styled(AutoColumn)`
 const PositionsContainer = styled.div`
   margin-right: 20px;
   margin-top: 15px;
-  background-color: ${({ theme }) => theme.backgroundSurface};
+  // background-color: ${({ theme }) => theme.backgroundSurface};
   max-width: 1200px;
   width: 100%;
   border-radius: 32px;
@@ -243,7 +255,7 @@ const PositionsContainer = styled.div`
 `
 
 const StatsContainer = styled.div`
-  background-color: ${({ theme }) => theme.background};
+  background-color: ${({ theme }) => theme.backgroundSurface};
   border-radius: 32px;
   padding: 18px;
   max-width: 1200px;
@@ -595,51 +607,6 @@ export default function Swap({ className }: { className?: string }) {
     }
   }, [poolAddress, account, trade, currencies, account, provider])
 
-  // const isApprovalLoading = allowance.state === AllowanceState.REQUIRED && allowance.isApprovalLoading
-  // const [isAllowancePending, setIsAllowancePending] = useState(false)
-
-  // const updateAllowance = useCallback(async () => {
-  //   invariant(allowance.state === AllowanceState.REQUIRED)
-  //   setIsAllowancePending(true)
-  //   try {
-  //     await allowance.approveAndPermit()
-  //     sendAnalyticsEvent(InterfaceEventName.APPROVE_TOKEN_TXN_SUBMITTED, {
-  //       chain_id: chainId,
-  //       token_symbol: maximumAmountIn?.currency.symbol,
-  //       token_address: maximumAmountIn?.currency.address,
-  //     })
-  //   } catch (e) {
-  //     console.error(e)
-  //   } finally {
-  //     setIsAllowancePending(false)
-  //   }
-  // }, [allowance, chainId, maximumAmountIn?.currency.address, maximumAmountIn?.currency.symbol])
-
-
-  // const updateLeverageAllowance = useCallback(async () => {
-  //   try {
-  //     await approveLeverageManager()
-  //   } catch (err) {
-  //     console.log("approveLeverageManager err: ", err)
-  //   }
-  // }, [leverageManagerAddress, parsedAmounts[Field.INPUT], approveLeverageManager])
-
-  // const updateInputBorrowAllowance = useCallback(async () => {
-  //   try {
-  //     await approveInputBorrowManager()
-  //   } catch (err) {
-  //     console.log("approveBorrowManager err: ", err)
-  //   }
-  // }, [borrowManagerAddress, parsedAmounts[Field.INPUT], approveInputBorrowManager])
-
-  // const updateOutputBorrowAllowance = useCallback(async () => {
-  //   try {
-  //     await approveOutputBorrowManager()
-  //   } catch (err) {
-  //     console.log("approveBorrowManager err: ", err)
-  //   }
-  // }, [borrowManagerAddress, parsedAmounts[Field.INPUT], approveOutputBorrowManager])
-
   const maxInputAmount: CurrencyAmount<Currency> | undefined = useMemo(
     () => maxAmountSpend(currencyBalances[Field.INPUT]),
     [currencyBalances]
@@ -658,98 +625,9 @@ export default function Swap({ className }: { className?: string }) {
     allowance.state === AllowanceState.ALLOWED ? allowance.permitSignature : undefined
   )
 
-  // const handleSwap = useCallback(() => {
-  //   if (!swapCallback) {
-  //     return
-  //   }
-  //   if (stablecoinPriceImpact && !confirmPriceImpactWithoutFee(stablecoinPriceImpact)) {
-  //     return
-  //   }
-  //   setSwapState({ attemptingTxn: true, tradeToConfirm, showConfirm, swapErrorMessage: undefined, txHash: undefined, showLeverageConfirm: false, showBorrowConfirm: false })
-  //   swapCallback()
-  //     .then((hash) => {
-  //       setSwapState({ attemptingTxn: false, tradeToConfirm, showConfirm, swapErrorMessage: undefined, txHash: hash, showLeverageConfirm: false, showBorrowConfirm: false })
-  //       sendEvent({
-  //         category: 'Swap',
-  //         action: 'transaction hash',
-  //         label: hash,
-  //       })
-  //       sendEvent({
-  //         category: 'Swap',
-  //         action:
-  //           recipient === null
-  //             ? 'Swap w/o Send'
-  //             : (recipientAddress ?? recipient) === account
-  //               ? 'Swap w/o Send + recipient'
-  //               : 'Swap w/ Send',
-  //         label: [TRADE_STRING, trade?.inputAmount?.currency?.symbol, trade?.outputAmount?.currency?.symbol, 'MH'].join(
-  //           '/'
-  //         ),
-  //       })
-  //     })
-  //     .catch((error) => {
-  //       setSwapState({
-  //         attemptingTxn: false,
-  //         tradeToConfirm,
-  //         showConfirm,
-  //         swapErrorMessage: error.message,
-  //         txHash: undefined,
-  //         showLeverageConfirm: false,
-  //         showBorrowConfirm: false
-  //       })
-  //     })
-  // }, [
-  //   swapCallback,
-  //   stablecoinPriceImpact,
-  //   tradeToConfirm,
-  //   showConfirm,
-  //   recipient,
-  //   recipientAddress,
-  //   account,
-  //   trade?.inputAmount?.currency?.symbol,
-  //   trade?.outputAmount?.currency?.symbol,
-  // ])
-
-  // const { callback: leverageCallback } = useAddLeveragePositionCallback(
-  //   leverageManagerAddress ?? undefined,
-  //   trade,
-  //   leverageAllowedSlippage,
-  //   leverageFactor ?? undefined,
-  // )
-
-  // const { callback: borrowCallback } = useAddBorrowPositionCallback(
-  //   borrowManagerAddress ?? undefined,
-  //   borrowAllowedSlippage,
-  //   ltv ?? undefined,
-  //   parsedAmount,
-  //   inputCurrency ?? undefined,
-  //   outputCurrency ?? undefined,
-  //   borrowState,
-  //   borrowTrade
-  // )
-
   // errors
   const [swapQuoteReceivedDate, setSwapQuoteReceivedDate] = useState<Date | undefined>()
   // warnings on the greater of fiat value price impact and execution price impact
-  // const { priceImpactSeverity, largerPriceImpact } = useMemo(() => {
-  //   const marketPriceImpact = trade?.priceImpact ? computeRealizedPriceImpact(trade) : undefined
-  //   const largerPriceImpact = largerPercentValue(marketPriceImpact, stablecoinPriceImpact)
-  //   return { priceImpactSeverity: warningSeverity(largerPriceImpact), largerPriceImpact }
-  // }, [stablecoinPriceImpact, trade])
-
-  // const handleConfirmDismiss = useCallback(() => {
-  //   setSwapState({ showConfirm: false, tradeToConfirm, attemptingTxn, swapErrorMessage, txHash, showLeverageConfirm: false, showBorrowConfirm: false })
-  //   if (txHash) {
-  //     onUserInput(Field.INPUT, '')
-  //     onLeverageFactorChange('1')
-  //     onLTVChange('')
-  //     onPremiumChange(0)
-  //   }
-  // }, [attemptingTxn, onUserInput, swapErrorMessage, tradeToConfirm, txHash])
-
-  // const handleAcceptChanges = useCallback(() => {
-  //   setSwapState({ tradeToConfirm: trade, swapErrorMessage, txHash, attemptingTxn, showConfirm, showLeverageConfirm: false, showBorrowConfirm: false })
-  // }, [attemptingTxn, showConfirm, swapErrorMessage, trade, txHash])
 
   const handleInputSelect = useCallback(
     (inputCurrency: Currency) => {
@@ -758,98 +636,13 @@ export default function Swap({ className }: { className?: string }) {
     [onCurrencySelection]
   )
 
-  // const handleMaxInput = useCallback(() => {
-  //   maxInputAmount && onUserInput(Field.INPUT, maxInputAmount.toExact())
-  //   sendEvent({
-  //     category: 'Swap',
-  //     action: 'Max',
-  //   })
-  // }, [maxInputAmount, onUserInput])
 
   const handleOutputSelect = useCallback(
     (outputCurrency: Currency) => onCurrencySelection(Field.OUTPUT, outputCurrency),
     [onCurrencySelection]
   )
 
-  // const handleAddBorrowPosition = useCallback(() => {
-  //   if (!borrowCallback) {
-  //     return
-  //   }
-  //   setSwapState({
-  //     attemptingTxn: true,
-  //     tradeToConfirm,
-  //     showConfirm,
-  //     swapErrorMessage: undefined,
-  //     txHash: undefined,
-  //     showLeverageConfirm,
-  //     showBorrowConfirm
-  //   })
-  //   borrowCallback().then((hash: any) => {
-  //     console.log
-  //     setSwapState({ attemptingTxn: false, tradeToConfirm, showConfirm, swapErrorMessage: undefined, txHash: hash, showLeverageConfirm, showBorrowConfirm: false })
-  //   })
-  //     .catch((error: any) => {
-  //       console.log("borrowCreationError: ", error)
-  //       setSwapState({
-  //         attemptingTxn: false,
-  //         tradeToConfirm,
-  //         showConfirm,
-  //         swapErrorMessage: "Failed creation",//error.message,
-  //         txHash: undefined,
-  //         showLeverageConfirm,
-  //         showBorrowConfirm: false
-  //       })
-  //     })
-  // }, [
-  //   borrowCallback
-  // ])
 
-  // poolAddress: string,
-  // trade: Trade<Currency, Currency, TradeType> | undefined,  
-  // allowedSlippage: Percent, // in bips
-  // leverageFactor: string
-  // const handleLeverageCreation = useCallback(() => {
-  //   if (!leverageCallback) {
-  //     return
-  //   }
-  //   setSwapState({ attemptingTxn: true, tradeToConfirm, showConfirm, swapErrorMessage: undefined, txHash: undefined, showLeverageConfirm, showBorrowConfirm: false })
-  //   leverageCallback().then((hash: any) => {
-  //     setSwapState({ attemptingTxn: false, tradeToConfirm, showConfirm, swapErrorMessage: undefined, txHash: hash, showLeverageConfirm, showBorrowConfirm: false })
-  //     sendEvent({
-  //       category: 'Swap',
-  //       action: 'transaction hash',
-  //       label: hash,
-  //     })
-  //     sendEvent({
-  //       category: 'Swap',
-  //       action:
-  //         recipient === null
-  //           ? 'Swap w/o Send'
-  //           : (recipientAddress ?? recipient) === account
-  //             ? 'Swap w/o Send + recipient'
-  //             : 'Swap w/ Send',
-  //       label: [TRADE_STRING, trade?.inputAmount?.currency?.symbol, trade?.outputAmount?.currency?.symbol, 'MH'].join(
-  //         '/'
-  //       ),
-  //     })
-  //   })
-  //     .catch((error: any) => {
-  //       console.log("leverageCreationError: ", error)
-  //       setSwapState({
-  //         attemptingTxn: false,
-  //         tradeToConfirm,
-  //         showConfirm,
-  //         swapErrorMessage: "Failed creation",//error.message,
-  //         txHash: undefined,
-  //         showLeverageConfirm,
-  //         showBorrowConfirm
-  //       })
-  //     })
-  // }, [
-  //   leverageCallback, leverageTrade, showLeverageConfirm, showBorrowConfirm
-  // ])
-
-  // console.log('currencies', currencies)
 
   const swapIsUnsupported = useIsSwapUnsupported(currencies[Field.INPUT], currencies[Field.OUTPUT])
 
@@ -927,6 +720,8 @@ export default function Swap({ className }: { className?: string }) {
     }) : []
   }, [limitlessPositionsLoading, limitlessPositions])
 
+  const [activePositionTable, setActiveTable] = useState(1)
+
   return (
     <Trace page={InterfacePageName.SWAP_PAGE} shouldLogImpression>
       <>
@@ -970,11 +765,24 @@ export default function Swap({ className }: { className?: string }) {
               </StatsContainer>
               <Hr />
               <PositionsContainer>
-                <ThemedText.MediumHeader marginTop="18px">Leverage Positions</ThemedText.MediumHeader>
+                <TableHeader>
+                  <TabHeader active={activePositionTable === 1}>
+                  <TabNavItem id={1} activeTab={activePositionTable} setActiveTab={setActiveTable}>
+                    Leverage Positions
+                  </TabNavItem>
+                  </TabHeader>
+                  <TabHeader active={activePositionTable === 2}>
+                  <TabNavItem id={2} activeTab={activePositionTable} setActiveTab={setActiveTable}>
+                    Borrow Positions
+                  </TabNavItem>
+                  </TabHeader>
+                </TableHeader>
+                <TabContent id={1} activeTab={activePositionTable}>
                 <LeveragePositionsTable positions={leveragePositions} loading={limitlessPositionsLoading} />
-                <ThemedText.MediumHeader></ThemedText.MediumHeader>
-                <ThemedText.MediumHeader marginTop="18px">Borrow Positions</ThemedText.MediumHeader>
+                </TabContent>
+                <TabContent id={2} activeTab={activePositionTable}>
                 <BorrowPositionsTable positions={borrowPositions} loading={limitlessPositionsLoading} />
+                </TabContent>
               </PositionsContainer>
             </LeftContainer>
 

@@ -29,7 +29,7 @@ export const SwapWrapper = styled.main<{ chainId: number | undefined }>`
   min-width: 400px;
   max-width: 600px;
   position: relative;
-  background: ${({ theme }) => theme.background};
+  background: ${({ theme }) => theme.backgroundSurface};
   border-radius: 32px;
   border: 0px solid ${({ theme }) => theme.background};
   padding: 18px;
