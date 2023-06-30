@@ -1,13 +1,13 @@
-import { Trans } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 //import Badge from 'components/Badge'
 //import RangeBadge from 'components/Badge/RangeBadge'
 //import Loader from 'components/Loader'
-import { RowBetween, RowFixed } from 'components/Row'
+import Row, { RowBetween, RowFixed } from 'components/Row'
 //import { useToken } from 'hooks/Tokens'
 //import { useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components/macro'
-import { MEDIA_WIDTHS } from 'theme'
+import { MEDIA_WIDTHS, ThemedText } from 'theme'
 import { PoolPositionDetails } from 'types/position'
 
 const LinkRow = styled(Link)`
@@ -84,6 +84,16 @@ const ExtentsText = styled.span`
   `};
 `
 
+const ActiveDot = styled.span<{ closed: boolean; outOfRange: boolean }>`
+  background-color: ${({ theme, closed, outOfRange }) =>
+    closed ? theme.textSecondary : outOfRange ? theme.accentWarning : theme.accentSuccess};
+  border-radius: 50%;
+  height: 8px;
+  width: 8px;
+  margin-left: 4px;
+  margin-top: 1px;
+`
+
 interface PoolPositionListItemProps {
   positionDetails: PoolPositionDetails
   returnPage: string
@@ -104,8 +114,17 @@ export default function PoolPositionListItem({ positionDetails, returnPage }: Po
     <LinkRow to={positionSummaryLink}>
       <RowBetween>
         <PrimaryPositionIdData>
-          <DataText>{name}</DataText>
-          {userHasStake && <Trans>staked</Trans>}
+          <Row gap="sm" justify="flex-end">
+            <Row>
+              <DataText>{name}</DataText>
+            </Row>
+            {userHasStake && (
+              <>
+                <ThemedText.Caption color="textSecondary">{t`active`}</ThemedText.Caption>
+                <ActiveDot closed={false} outOfRange={false} />
+              </>
+            )}
+          </Row>
         </PrimaryPositionIdData>
         {returnPage === 'mint' ? (
           <DataText>{symbol}</DataText>
