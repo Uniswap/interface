@@ -265,10 +265,12 @@ export default function CurrencyList({
 
       const currency = row
 
-      const balance = tryParseCurrencyAmount(
-        String(balances[currency.isNative ? 'ETH' : currency.address?.toLowerCase()]?.balance ?? 0),
-        currency
-      )
+      const balance =
+        tryParseCurrencyAmount(
+          String(balances[currency.isNative ? 'ETH' : currency.address?.toLowerCase()]?.balance ?? 0),
+          currency
+        ) ?? CurrencyAmount.fromRawAmount(currency, 0)
+
       const isSelected = Boolean(currency && selectedCurrency && selectedCurrency.equals(currency))
       const otherSelected = Boolean(currency && otherCurrency && otherCurrency.equals(currency))
       const handleSelect = (hasWarning: boolean) => currency && onCurrencySelect(currency, hasWarning)
