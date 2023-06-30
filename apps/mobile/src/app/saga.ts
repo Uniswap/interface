@@ -36,7 +36,7 @@ import {
   transferTokenSaga,
   transferTokenSagaName,
 } from 'src/features/transactions/transfer/transferTokenSaga'
-import { signWcRequestSaga, walletConnectSaga } from 'src/features/walletConnect/saga'
+import { signWcRequestSaga } from 'src/features/walletConnect/saga'
 import { walletConnectV2Saga } from 'src/features/walletConnectV2/saga'
 import { spawn } from 'typed-redux-saga'
 import {
@@ -62,7 +62,6 @@ const sagas = [
   transactionWatcher,
   firebaseDataWatcher,
   notificationWatcher,
-  walletConnectSaga,
   walletConnectV2Saga,
   signWcRequestSaga,
   cloudBackupsManagerSaga,
