@@ -70,28 +70,28 @@ export async function deregisterWcPushNotifications(
  * @param clientId WalletConnect 2.0 clientId
  */
 export async function registerWCv2ClientForPushNotifications(clientId: string): Promise<void> {
-  const pushToken = await getOnesignalPushTokenOrError()
-  const apnsEnvironment = await getIosPushNotificationServiceEnvironmentAsync()
-  const type = apnsEnvironment === 'production' ? 'apns' : 'apns-sandbox'
-
-  const request = {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      client_id: clientId,
-      type,
-      token: pushToken,
-    }),
-  }
-
   try {
+    const pushToken = await getOnesignalPushTokenOrError()
+    const apnsEnvironment = await getIosPushNotificationServiceEnvironmentAsync()
+
+    const request = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        client_id: clientId,
+        type: apnsEnvironment === 'production' ? 'apns' : 'apns-sandbox',
+        token: pushToken,
+      }),
+    }
+
     await fetch(`${WCV2_HOSTED_PUSH_SERVER_URL}/clients`, request)
   } catch (error) {
-    logger.warn(
-      'walletConnectApi',
-      'registerWCv2ClientForPushNotifications',
-      `Error registering client for WalletConnect 2.0 Push Notifications`,
-      error
-    )
+    logger.error('Error registering client for WalletConnect 2.0 Push Notifications', {
+      tags: {
+        file: 'walletConnectApi',
+        function: 'registerWCv2ClientForPushNotifications',
+        error: JSON.stringify(error),
+      },
+    })
   }
 }
