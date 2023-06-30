@@ -10,6 +10,6 @@ ignore:
   SNYK-JS-WORDWRAP-3149973:
     - '*':
         reason: monorepo migration
-        expires: 2023-06-30T00:00:00.000Z
+        expires: 2023-10-31T00:00:00.000Z
         created: 2023-04-19T21:50:49.953Z
 patch: {}

@@ -8,6 +8,6 @@ ignore:
   SNYK-COCOAPODS-LIBWEBP-5489511:
     - '*':
         reason: 'No known upgrade'
-        expires: 2023-06-30T00:00:00.000Z
+        expires: 2023-10-31T00:00:00.000Z
         created: 2023-05-01T00:00:00.000Z
 patch: {}
